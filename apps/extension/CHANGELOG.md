@@ -40,6 +40,45 @@
 
 ---
 
+## [6.104.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.103.1...@leather.io/extension-v6.104.0) (2026-06-23)
+
+
+### Features
+
+* custom network for sendTransfer and signMessage ([#2392](https://github.com/leather-io/mono/issues/2392)) ([46a158d](https://github.com/leather-io/mono/commit/46a158d3287fe872143fee998e785558a4324d58))
+* **extension:** refine Ledger account indication ([5d1a602](https://github.com/leather-io/mono/commit/5d1a602bd52013912f8e2f4051bc1de5d5361387))
+* multisig fixed address account ([#2415](https://github.com/leather-io/mono/issues/2415)) ([964ff42](https://github.com/leather-io/mono/commit/964ff421f0b83ca688859f9bae7d2863adc9c183))
+* multiwallet UI ([#2356](https://github.com/leather-io/mono/issues/2356)) ([34e7419](https://github.com/leather-io/mono/commit/34e7419c4a870546500e3896d2ec2890fe309f33))
+
+
+### Bug Fixes
+
+* **extension:** account picker, header & logo visual polish (LEA-3591, LEA-3589, LEA-3594) ([#2411](https://github.com/leather-io/mono/issues/2411)) ([9a54be2](https://github.com/leather-io/mono/commit/9a54be237891d601dc7110e106589c2c51f5d502))
+* **extension:** update multi-wallet announcement visual ([#2423](https://github.com/leather-io/mono/issues/2423)) ([503a28c](https://github.com/leather-io/mono/commit/503a28caea9d9ad672af396f07e6a31fc790c052))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.20.3
+    * @leather.io/bitcoin bumped to 0.38.1
+    * @leather.io/constants bumped to 0.36.2
+    * @leather.io/crypto bumped to 1.13.0
+    * @leather.io/features bumped to 1.4.7
+    * @leather.io/models bumped to 0.58.0
+    * @leather.io/provider bumped to 1.6.28
+    * @leather.io/queries bumped to 0.11.0
+    * @leather.io/query bumped to 2.50.0
+    * @leather.io/rpc bumped to 2.22.3
+    * @leather.io/services bumped to 1.58.0
+    * @leather.io/stacks bumped to 1.20.3
+    * @leather.io/tokens bumped to 0.27.0
+    * @leather.io/ui bumped to 1.113.0
+    * @leather.io/utils bumped to 0.52.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.16.3
+
 ## [6.103.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.103.0...@leather.io/extension-v6.103.1) (2026-06-15)
 
 
