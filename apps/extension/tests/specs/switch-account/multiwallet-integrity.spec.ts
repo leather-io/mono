@@ -79,8 +79,8 @@ test.describe('Multiwallet integrity', () => {
     page,
   }) => {
     await switchAccountPage.open();
-    await switchAccountPage.openAddWalletSheet();
-    await page.getByText('Restore wallet').click();
+    await switchAccountPage.openAddWalletMenu();
+    await page.getByRole('menuitem', { name: 'Restore wallet' }).click();
 
     const words = TEST_ACCOUNT_SECRET_KEY.split(' ');
     for (let i = 0; i < words.length; i++) {
@@ -183,8 +183,8 @@ test.describe('Multiwallet integrity', () => {
     page,
   }) => {
     await switchAccountPage.open();
-    await switchAccountPage.openAddWalletSheet();
-    await page.getByText('Restore wallet').click();
+    await switchAccountPage.openAddWalletMenu();
+    await page.getByRole('menuitem', { name: 'Restore wallet' }).click();
     await page.getByText('Have a 12-word Secret Key?').click();
 
     for (let i = 0; i < 12; i++) {
