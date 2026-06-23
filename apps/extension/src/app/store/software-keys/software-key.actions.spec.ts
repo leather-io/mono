@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { fetchNamesForAddress } from '@leather.io/query';
 import {
   type WalletStore,
   fingerprintMigration,
@@ -33,10 +32,6 @@ vi.mock('@app/store', () => ({
 vi.mock('@app/store/session-restore', () => ({
   getWalletSessionKey: vi.fn(() => Promise.resolve({ success: false })),
   initalizeWalletSession: vi.fn(() => Promise.resolve()),
-}));
-
-vi.mock('@app/common/persistence', () => ({
-  queryClient: { setQueryData: vi.fn() },
 }));
 
 vi.mock('@app/common/account-restoration/account-restore', () => ({
@@ -73,9 +68,10 @@ vi.mock('@leather.io/crypto', async importOriginal => {
   };
 });
 
-vi.mock('@leather.io/query', () => ({
-  BnsV2QueryPrefixes: { GetBnsNamesByAddress: 'GetBnsNamesByAddress' },
-  fetchNamesForAddress: vi.fn(),
+vi.mock('@leather.io/services', () => ({
+  getLeatherApiClient: vi.fn(),
+  getHiroStacksApiClient: vi.fn(),
+  getBnsV2ApiClient: vi.fn(),
 }));
 
 vi.mock('./utils', () => ({
@@ -271,7 +267,6 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(inMemoryStore.getKey).mockReturnValue('decrypted-mnemonic');
-    vi.mocked(fetchNamesForAddress).mockResolvedValue({ names: [] } as never);
     vi.mocked(recurseAccountsForActivity).mockImplementation(({ onActivityFound }) => {
       onActivityFound?.(4);
       return Promise.resolve(4);
@@ -301,44 +296,49 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
         },
       },
     });
-    const stxClient = {
-      getStxAddressBalance: vi.fn().mockResolvedValue({ balance: '0' }),
-      getAccountTransactionsWithTransfers: vi.fn().mockResolvedValue({ total: 0, results: [] }),
+    const hiroClient = {
+      getAddressStxBalance: vi.fn().mockResolvedValue({ balance: '0' }),
+      getAddressTransactions: vi.fn().mockResolvedValue([]),
     };
-    const btcClient = {
-      addressApi: {
-        getUtxosByAddress: vi.fn().mockResolvedValue([]),
-        getTransactionsByAddress: vi.fn((address: string) =>
-          Promise.resolve(address === 'taproot-3' ? [{ txid: 'txid' }] : [])
-        ),
-      },
+    const leatherApiClient = {
+      fetchUtxosByAddress: vi.fn().mockResolvedValue([]),
+      fetchBitcoinTransactionsByAddress: vi.fn((address: string) =>
+        Promise.resolve(
+          address === 'taproot-3' ? { data: [{ txid: 'txid' }], meta: {} } : { data: [], meta: {} }
+        )
+      ),
+    };
+    const bnsClient = {
+      fetchAddressBnsNames: vi.fn().mockResolvedValue({ names: [] }),
     };
     const dispatch = vi.fn();
     const getState = vi.fn().mockReturnValue(state);
 
     await keyActions.probeNextAccountAndDiscoverAccounts({
-      bnsV2Client: {} as never,
-      btcClient: btcClient as never,
-      stxClient: stxClient as never,
+      leatherApiClient: leatherApiClient as never,
+      hiroClient: hiroClient as never,
+      bnsClient: bnsClient as never,
     })(dispatch, getState, undefined);
     await flushPromises();
 
-    expect(stxClient.getStxAddressBalance).toHaveBeenCalledWith('stx-3', expect.any(AbortSignal));
-    expect(btcClient.addressApi.getUtxosByAddress).toHaveBeenCalledWith(
+    expect(hiroClient.getAddressStxBalance).toHaveBeenCalledWith('stx-3', {
+      signal: expect.any(AbortSignal),
+    });
+    expect(leatherApiClient.fetchUtxosByAddress).toHaveBeenCalledWith('segwit-3', {
+      signal: expect.any(AbortSignal),
+    });
+    expect(leatherApiClient.fetchUtxosByAddress).toHaveBeenCalledWith('taproot-3', {
+      signal: expect.any(AbortSignal),
+    });
+    expect(leatherApiClient.fetchBitcoinTransactionsByAddress).toHaveBeenCalledWith(
       'segwit-3',
-      expect.any(AbortSignal)
+      { page: 1, pageSize: 1 },
+      { signal: expect.any(AbortSignal) }
     );
-    expect(btcClient.addressApi.getUtxosByAddress).toHaveBeenCalledWith(
+    expect(leatherApiClient.fetchBitcoinTransactionsByAddress).toHaveBeenCalledWith(
       'taproot-3',
-      expect.any(AbortSignal)
-    );
-    expect(btcClient.addressApi.getTransactionsByAddress).toHaveBeenCalledWith(
-      'segwit-3',
-      expect.any(AbortSignal)
-    );
-    expect(btcClient.addressApi.getTransactionsByAddress).toHaveBeenCalledWith(
-      'taproot-3',
-      expect.any(AbortSignal)
+      { page: 1, pageSize: 1 },
+      { signal: expect.any(AbortSignal) }
     );
     expect(recurseAccountsForActivity).toHaveBeenCalledTimes(1);
     expect(recurseAccountsForActivity).toHaveBeenCalledWith(
@@ -368,26 +368,29 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
         },
       },
     });
-    const stxClient = {
-      getStxAddressBalance: vi.fn().mockResolvedValue({ balance: '0' }),
-      getAccountTransactionsWithTransfers: vi.fn().mockResolvedValue({ total: 0, results: [] }),
+    const hiroClient = {
+      getAddressStxBalance: vi.fn().mockResolvedValue({ balance: '0' }),
+      getAddressTransactions: vi.fn().mockResolvedValue([]),
     };
-    const btcClient = {
-      addressApi: {
-        getUtxosByAddress: vi.fn().mockResolvedValue([]),
-        getTransactionsByAddress: vi.fn().mockResolvedValue([]),
-      },
+    const leatherApiClient = {
+      fetchUtxosByAddress: vi.fn().mockResolvedValue([]),
+      fetchBitcoinTransactionsByAddress: vi.fn().mockResolvedValue({ data: [], meta: {} }),
+    };
+    const bnsClient = {
+      fetchAddressBnsNames: vi.fn().mockResolvedValue({ names: [] }),
     };
     const dispatch = vi.fn();
     const getState = vi.fn().mockReturnValue(state);
 
     await keyActions.probeNextAccountAndDiscoverAccounts({
-      bnsV2Client: {} as never,
-      btcClient: btcClient as never,
-      stxClient: stxClient as never,
+      leatherApiClient: leatherApiClient as never,
+      hiroClient: hiroClient as never,
+      bnsClient: bnsClient as never,
     })(dispatch, getState, undefined);
 
-    expect(stxClient.getStxAddressBalance).toHaveBeenCalledWith('stx-2', expect.any(AbortSignal));
+    expect(hiroClient.getAddressStxBalance).toHaveBeenCalledWith('stx-2', {
+      signal: expect.any(AbortSignal),
+    });
     expect(recurseAccountsForActivity).not.toHaveBeenCalled();
     expect(dispatch).not.toHaveBeenCalled();
     expect(broadcastReplayAction).not.toHaveBeenCalled();

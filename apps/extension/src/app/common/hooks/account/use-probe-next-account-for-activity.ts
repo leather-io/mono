@@ -1,18 +1,18 @@
 import { useEffect, useRef } from 'react';
 
-import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
-import { useBnsV2Client } from '@app/query/stacks/bns/bns-v2-client';
+import {
+  getBnsV2ApiClient,
+  getHiroStacksApiClient,
+  getLeatherApiClient,
+} from '@leather.io/services';
+
 import { useAppDispatch } from '@app/store';
-import { useStacksClient } from '@app/store/common/api-clients.hooks';
 import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
 import { useWallets } from '@app/store/wallets/wallet.selectors';
 
 export function useProbeNextAccountForActivity(enabled: boolean) {
   const dispatch = useAppDispatch();
-  const btcClient = useBitcoinClient();
-  const stxClient = useStacksClient();
-  const bnsV2Client = useBnsV2Client();
   const wallets = useWallets();
   const { hasKey } = useInMemoryKeys();
   const hasProbed = useRef(false);
@@ -28,10 +28,10 @@ export function useProbeNextAccountForActivity(enabled: boolean) {
     hasProbed.current = true;
     void dispatch(
       keyActions.probeNextAccountAndDiscoverAccounts({
-        bnsV2Client,
-        btcClient,
-        stxClient,
+        leatherApiClient: getLeatherApiClient(),
+        hiroClient: getHiroStacksApiClient(),
+        bnsClient: getBnsV2ApiClient(),
       })
     );
-  }, [bnsV2Client, btcClient, dispatch, enabled, hasSoftwareWalletKey, stxClient]);
+  }, [dispatch, enabled, hasSoftwareWalletKey]);
 }

@@ -2,12 +2,10 @@ import { AddressVersion } from '@stacks/transactions';
 
 import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
 import {
-  type BitcoinClient,
-  type BnsV2Client,
-  BnsV2QueryPrefixes,
-  type StacksClient,
-  fetchNamesForAddress,
-} from '@leather.io/query';
+  getBnsV2ApiClient,
+  getHiroStacksApiClient,
+  getLeatherApiClient,
+} from '@leather.io/services';
 import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 import { secondsInMs } from '@leather.io/utils';
 
@@ -18,7 +16,6 @@ import { assumedZeroFingerprint } from '@shared/utils';
 import { identifyUser } from '@shared/utils/analytics';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
-import { queryClient } from '@app/common/persistence';
 import { AppThunk, persistor } from '@app/store';
 import { getWalletSessionKey, initalizeWalletSession } from '@app/store/session-restore';
 
@@ -35,9 +32,9 @@ import { keySlice } from './software-key.slice';
 import { checkPassword } from './utils';
 
 interface AccountDiscoveryClients {
-  stxClient: StacksClient;
-  btcClient: BitcoinClient;
-  bnsV2Client: BnsV2Client;
+  leatherApiClient: ReturnType<typeof getLeatherApiClient>;
+  hiroClient: ReturnType<typeof getHiroStacksApiClient>;
+  bnsClient: ReturnType<typeof getBnsV2ApiClient>;
 }
 
 interface AccountActivityCheckerArgs extends AccountDiscoveryClients {
@@ -53,10 +50,10 @@ function validHighestAccountIndex(index: number | undefined) {
 }
 
 function createAccountActivityChecker({
-  bnsV2Client,
-  btcClient,
+  bnsClient,
+  hiroClient,
+  leatherApiClient,
   mnemonic,
-  stxClient,
 }: AccountActivityCheckerArgs) {
   const rootKeychain = deriveRootKeychainFromMnemonicSync(mnemonic);
   const deriveStacksAddress = getStacksAddressByIndex(
@@ -67,34 +64,32 @@ function createAccountActivityChecker({
   const deriveTaprootAddress = getTaprootMainnetAddressFromRootKeychain(rootKeychain);
 
   async function doesStacksAddressHaveBalance(address: string, signal: AbortSignal) {
-    const resp = await stxClient.getStxAddressBalance(address, signal);
+    const resp = await hiroClient.getAddressStxBalance(address, { signal });
     return Number(resp.balance) > 0;
   }
 
   async function doesStacksAddressHaveBnsName(address: string, signal: AbortSignal) {
-    const resp = await fetchNamesForAddress({
-      client: bnsV2Client,
-      address: address,
-      network: 'mainnet',
-      signal,
-    });
-    queryClient.setQueryData([BnsV2QueryPrefixes.GetBnsNamesByAddress, address], resp);
+    const resp = await bnsClient.fetchAddressBnsNames(address, { signal });
     return resp.names.length > 0;
   }
 
   async function doesStacksAddressHaveTransactionHistory(address: string, signal: AbortSignal) {
-    const resp = await stxClient.getAccountTransactionsWithTransfers(address, signal);
-    return resp.total > 0 || resp.results.length > 0;
+    const resp = await hiroClient.getAddressTransactions(address, { pages: 1 }, { signal });
+    return resp.length > 0;
   }
 
   async function doesBitcoinAddressHaveBalance(address: string, signal: AbortSignal) {
-    const resp = await btcClient.addressApi.getUtxosByAddress(address, signal);
+    const resp = await leatherApiClient.fetchUtxosByAddress(address, { signal });
     return resp.length > 0;
   }
 
   async function doesBitcoinAddressHaveTransactionHistory(address: string, signal: AbortSignal) {
-    const resp = await btcClient.addressApi.getTransactionsByAddress(address, signal);
-    return resp.length > 0;
+    const resp = await leatherApiClient.fetchBitcoinTransactionsByAddress(
+      address,
+      { page: 1, pageSize: 1 },
+      { signal }
+    );
+    return resp.data.length > 0;
   }
 
   return async function doesAccountHaveActivity(index: number) {
@@ -216,15 +211,14 @@ function probeNextAccountAndDiscoverAccounts(clients: AccountDiscoveryClients): 
   };
 }
 
-function setWalletEncryptionPassword(args: {
-  password: string;
-  mnemonic: string;
-  fingerprint: string;
-  stxClient: StacksClient;
-  btcClient: BitcoinClient;
-  bnsV2Client: BnsV2Client;
-}): AppThunk {
-  const { password, mnemonic, fingerprint, stxClient, btcClient, bnsV2Client } = args;
+function setWalletEncryptionPassword(
+  args: {
+    password: string;
+    mnemonic: string;
+    fingerprint: string;
+  } & AccountDiscoveryClients
+): AppThunk {
+  const { password, mnemonic, fingerprint, leatherApiClient, hiroClient, bnsClient } = args;
 
   return async (dispatch, getState) => {
     const softwareKeys = selectSoftwareKeys(getState());
@@ -297,10 +291,10 @@ function setWalletEncryptionPassword(args: {
     startRecursiveAccountDiscovery({
       dispatch,
       doesAddressHaveActivityFn: createAccountActivityChecker({
-        bnsV2Client,
-        btcClient,
+        bnsClient,
+        hiroClient,
+        leatherApiClient,
         mnemonic,
-        stxClient,
       }),
       fingerprint,
       fromAccountIndex: 0,
