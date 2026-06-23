@@ -1,9 +1,11 @@
+import { AccountSelectors } from '@tests/selectors/account.selectors';
 import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 import { Box, Stack } from 'leather-styles/jsx';
 
 import { Caption, Flag, Logo } from '@leather.io/ui';
 
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
+import { getLedgerAccountIndicator } from '@app/components/account/ledger-account-indicator';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderGrid, HeaderGridRightCol } from '@app/components/layout/headers/header-grid';
 import { CurrentAccountAvatar } from '@app/features/current-account/current-account-avatar';
@@ -22,6 +24,7 @@ export function PopupHeader({ showSwitchAccount, balance }: PopupHeaderProps) {
   const current = useCurrentAccountId();
   const walletEntities = useWalletEntities();
   const walletName = walletEntities[current.fingerprint]?.name;
+  const walletType = walletEntities[current.fingerprint]?.type;
 
   return (
     <Header>
@@ -32,7 +35,14 @@ export function PopupHeader({ showSwitchAccount, balance }: PopupHeaderProps) {
             {showSwitchAccount ? (
               <Flag
                 align="middle"
-                img={<CurrentAccountAvatar />}
+                img={
+                  <CurrentAccountAvatar
+                    indicator={getLedgerAccountIndicator(
+                      walletType,
+                      AccountSelectors.LedgerIndicator
+                    )}
+                  />
+                }
                 onClick={() => setIsShowingSwitchAccount(!isShowingSwitchAccount)}
                 cursor="pointer"
                 width="100%"

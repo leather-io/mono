@@ -28,6 +28,9 @@ vi.mock('@app/store/wallets/wallet.selectors', async importOriginal => ({
 }));
 
 vi.mock('@leather.io/ui', () => ({
+  BulletSeparator({ children }: { children: React.ReactNode }) {
+    return <>{children}</>;
+  },
   Caption({ children }: { children: React.ReactNode }) {
     return <span>{children}</span>;
   },
