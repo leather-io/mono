@@ -4,4 +4,5 @@ export function getSwitchAccountSheetAccountNameSelector(index: number) {
 
 export const AccountSelectors = {
   SwitchAccountSheetAccountName: 'switch-account-sheet-account-name-{index}',
+  LedgerIndicator: 'ledger-account-indicator',
 };
