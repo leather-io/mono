@@ -144,6 +144,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.27.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.26.0...@leather.io/tokens-v0.27.0) (2026-06-23)
+
+
+### Features
+
+* **web:** multisig vaults UI (create, view, invites) ([#2385](https://github.com/leather-io/mono/issues/2385)) ([8d55381](https://github.com/leather-io/mono/commit/8d55381d7a0d90a2ab36f70f528b174ae79d251f))
+
 ## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.25.2...@leather.io/tokens-v0.26.0) (2026-03-02)
 
 

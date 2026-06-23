@@ -7,7 +7,7 @@ import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
-import { Button, PlusIcon, Pressable, Sheet, SheetHeader, WalletPlusIcon } from '@leather.io/ui';
+import { Button, PlusIcon, Pressable, Sheet, SheetHeader } from '@leather.io/ui';
 import { noop } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -20,7 +20,7 @@ import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
 import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';
 
-import { AddWalletSheet } from '../add-wallet-sheet/add-wallet-sheet';
+import { AddWalletMenu } from '../add-wallet-menu/add-wallet-menu';
 import { AccountActionMenu } from './components/account-action-menu';
 import { RemoveWalletDialog } from './components/remove-wallet-dialog';
 import { RenameAccountDialog } from './components/rename-account-dialog';
@@ -53,7 +53,6 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
   const hiddenAccountIds = useHiddenAccountIds();
   const isCreatingAccountRef = useRef(false);
   const [creatingFingerprint, setCreatingFingerprint] = useState<string | null>(null);
-  const [isAddWalletSheetOpen, setIsAddWalletSheetOpen] = useState(false);
   const [isManageMode, setIsManageMode] = useState(false);
   const [renamingWallet, setRenamingWallet] = useState<RenamingWallet | null>(null);
   const [removingWallet, setRemovingWallet] = useState<RenamingWallet | null>(null);
@@ -109,17 +108,8 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
     });
   }
 
-  function onAddWallet() {
-    setIsAddWalletSheetOpen(true);
-  }
-
-  function onCloseAddWalletSheet() {
-    setIsAddWalletSheetOpen(false);
-  }
-
   const closeSheets = useCallback(() => {
     onClose();
-    setIsAddWalletSheetOpen(false);
   }, [onClose]);
 
   const { onCreateNewWallet, onRestoreWallet, onConnectLedger } = useAddWalletNavigation({
@@ -269,14 +259,11 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
               minWidth={0}
               p="space.05"
             >
-              <Button
-                onClick={onAddWallet}
-                variant="outline"
-                flex={1}
-                iconStart={<WalletPlusIcon />}
-              >
-                Add wallet
-              </Button>
+              <AddWalletMenu
+                onCreateNewWallet={onCreateNewWallet}
+                onRestoreWallet={onRestoreWallet}
+                onConnectLedger={onConnectLedger}
+              />
               <Button onClick={onManage} variant="outline" flex={1}>
                 {isManageMode ? 'Done' : 'Manage'}
               </Button>
@@ -308,13 +295,6 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
           accountId={renamingAccount}
         />
       )}
-      <AddWalletSheet
-        isShowing={isAddWalletSheetOpen}
-        onClose={onCloseAddWalletSheet}
-        onCreateNewWallet={onCreateNewWallet}
-        onRestoreWallet={onRestoreWallet}
-        onConnectLedger={onConnectLedger}
-      />
     </>
   );
 }

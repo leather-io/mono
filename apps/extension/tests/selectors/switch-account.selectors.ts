@@ -3,6 +3,7 @@ export enum SwitchAccountSelectors {
   AccountActionMenuTrigger = 'account-action-menu-trigger',
   CreateAccountBtn = 'create-account-btn',
   WalletHeaderName = 'wallet-header-name',
+  WalletHeaderLedgerIndicator = 'wallet-header-ledger-indicator',
   RenameWalletInput = 'rename-wallet-input',
   RenameWalletSaveBtn = 'rename-wallet-save-btn',
   RenameAccountInput = 'rename-account-input',

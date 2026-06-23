@@ -69,8 +69,9 @@ export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsP
   const taprootQuote = taprootBalance.value.quote.totalBalance;
   const fiatBalance = createMoney(nativeQuote.amount.plus(taprootQuote.amount), nativeQuote.symbol);
 
-  const nativeSegwitAddress = account.bitcoin?.zeroIndexNativeSegwitPayerAddress;
-  const taprootAddress = account.bitcoin?.zeroIndexTaprootPayerAddress;
+  const hdBitcoin = account.bitcoin?.type === 'hd' ? account.bitcoin : undefined;
+  const nativeSegwitAddress = hdBitcoin?.zeroIndexNativeSegwitPayerAddress;
+  const taprootAddress = hdBitcoin?.zeroIndexTaprootPayerAddress;
 
   const balances = [
     {

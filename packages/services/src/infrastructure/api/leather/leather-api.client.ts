@@ -107,6 +107,34 @@ export class LeatherApiClient {
       : await this.cacheService.fetchWithCache(['leather-api-utxos', network, descriptor], fetchFn);
   }
 
+  async fetchUtxosByAddress(
+    address: string,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<LeatherApiUtxo[]> {
+    const network = this.settingsService.getSettings().network.chain.bitcoin.bitcoinNetwork;
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET(`/v1/utxos/addresses/{address}`, {
+            params: { path: { address }, query: { network } },
+            signal,
+          }),
+        {
+          priority: leatherApiPriorities.utxos,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-utxos-address', network, address],
+          fetchFn
+        );
+  }
+
   async fetchBitcoinTransactions(
     descriptor: string,
     pageRequest: LeatherApiPageRequest,
@@ -140,6 +168,43 @@ export class LeatherApiClient {
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(
           ['leather-api-bitcoin-descriptor-transactions', descriptor, params.toString()],
+          fetchFn
+        );
+  }
+
+  async fetchBitcoinTransactionsByAddress(
+    address: string,
+    pageRequest: LeatherApiPageRequest,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ) {
+    const params = getPageRequestQueryParams(pageRequest);
+    const network = selectBitcoinNetwork(this.settingsService.getSettings());
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET(`/v1/transactions/bitcoin/addresses/{address}`, {
+            params: {
+              path: { address },
+              query: {
+                network,
+                page: pageRequest.page.toString(),
+                pageSize: pageRequest.pageSize.toString(),
+              },
+            },
+            signal,
+          }),
+        {
+          priority: leatherApiPriorities.bitcoinTransactions,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-bitcoin-address-transactions', address, params.toString()],
           fetchFn
         );
   }

@@ -368,6 +368,22 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.52.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.51.5...@leather.io/utils-v0.52.0) (2026-06-23)
+
+
+### Features
+
+* multisig fixed address account ([#2415](https://github.com/leather-io/mono/issues/2415)) ([964ff42](https://github.com/leather-io/mono/commit/964ff421f0b83ca688859f9bae7d2863adc9c183))
+* multiwallet UI ([#2356](https://github.com/leather-io/mono/issues/2356)) ([34e7419](https://github.com/leather-io/mono/commit/34e7419c4a870546500e3896d2ec2890fe309f33))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.36.2
+    * @leather.io/models bumped to 0.58.0
+
 ## [0.51.5](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.51.4...@leather.io/utils-v0.51.5) (2026-06-15)
 
 
