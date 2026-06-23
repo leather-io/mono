@@ -3,10 +3,9 @@ import { ReactNode } from 'react';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
 import type { AccountId } from '@leather.io/models';
-import { Flag, ItemLayout, LedgerIcon, Pressable, Spinner } from '@leather.io/ui';
+import { ItemLayout, Pressable, Spinner } from '@leather.io/ui';
 
 import { useWindowMinWidth } from '@app/common/hooks/use-media-query';
-import { WalletType } from '@app/store/common/wallet-type.selectors';
 
 interface AccountListItemLayoutProps extends AccountId {
   accountAddresses: ReactNode;
@@ -17,7 +16,6 @@ interface AccountListItemLayoutProps extends AccountId {
   isLoading: boolean;
   isSelected: boolean;
   onSelectAccount(accountId: AccountId): void;
-  walletType?: WalletType;
 }
 export function AccountListItemLayout(props: AccountListItemLayoutProps) {
   const {
@@ -31,7 +29,6 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
     isLoading,
     isSelected,
     onSelectAccount,
-    walletType,
   } = props;
 
   const isGreaterThanTinyWidth = useWindowMinWidth(320);
@@ -52,15 +49,6 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
     />
   );
 
-  const content =
-    walletType === 'ledger' ? (
-      <Flag img={<LedgerIcon variant="small" />} width="100%">
-        {itemContent}
-      </Flag>
-    ) : (
-      itemContent
-    );
-
   return (
     <Pressable
       data-testid={SettingsSelectors.SwitchAccountItemIndex.replace('[index]', `${accountIndex}`)}
@@ -68,7 +56,7 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
       aria-disabled={nonInteractive || undefined}
       onClick={nonInteractive ? undefined : () => onSelectAccount({ fingerprint, accountIndex })}
     >
-      {content}
+      {itemContent}
     </Pressable>
   );
 }
