@@ -8,7 +8,7 @@ import {
 } from '@leather.io/queries';
 import { isDefined, sumMoney } from '@leather.io/utils';
 
-import { getMultisigAccountAddresses } from './use-multisig-account-addresses';
+import { getMultisigAccountAddresses } from './multisig-account-addresses';
 
 interface VaultAccountBalance {
   crypto?: Money;
