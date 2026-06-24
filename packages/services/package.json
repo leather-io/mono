@@ -42,7 +42,7 @@
     "@leather.io/utils": "workspace:*",
     "@stacks/network": "7.0.2",
     "@stacks/stacks-blockchain-api-types": "7.14.1",
-    "@stacks/transactions": "7.4.0",
+    "@stacks/transactions": "7.5.0",
     "@velarprotocol/velar-sdk": "0.7.5-beta",
     "alex-sdk": "3.1.0",
     "axios": "1.16.1",
