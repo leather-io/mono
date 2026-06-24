@@ -14,6 +14,7 @@ import {
   findAccountKeyByPubkey,
   getDescriptorInputsWithDisallowedSighash,
   getDescriptorMatchingInputIndexes,
+  getWshDescriptorAddress,
   isWshDescriptor,
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
@@ -74,6 +75,30 @@ describe('wsh-descriptor', () => {
 
   it('rejects non-wsh descriptors', () => {
     expect(() => compileWshDescriptor(`wpkh(${xpubA})`)).toThrow();
+  });
+
+  it('derives the mainnet p2wsh address for a multisig descriptor', () => {
+    const multisigDescriptor = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`;
+    const { scriptPubKey } = compileWshDescriptor(multisigDescriptor);
+    const address = getWshDescriptorAddress(multisigDescriptor);
+
+    expect(address.startsWith('bc1q')).toBe(true);
+    expect(address).toBe(btc.Address(btc.NETWORK).encode(btc.OutScript.decode(scriptPubKey)));
+  });
+
+  it('derives the testnet p2wsh address from testnet keys', () => {
+    const tpubA = makeMultisigAccountTpub(1);
+    const tpubB = makeMultisigAccountTpub(2);
+    const testnetDescriptor = `wsh(sortedmulti(2,${tpubA}/0/0,${tpubB}/0/0))`;
+    const { scriptPubKey } = compileWshDescriptor(testnetDescriptor);
+    const address = getWshDescriptorAddress(testnetDescriptor);
+
+    expect(address.startsWith('tb1q')).toBe(true);
+    expect(address).toBe(btc.Address(btc.TEST_NETWORK).encode(btc.OutScript.decode(scriptPubKey)));
+  });
+
+  it('throws for a non-wsh descriptor', () => {
+    expect(() => getWshDescriptorAddress(`wpkh(${xpubA})`)).toThrow();
   });
 
   it('compiles to a p2wsh scriptPubKey and witness script', () => {

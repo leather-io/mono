@@ -1,6 +1,12 @@
 import { useMemo } from 'react';
 
-import { createRequestEncoder, createRpcSuccessResponse, stxAddAccount } from '@leather.io/rpc';
+import {
+  RpcErrorCode,
+  createRequestEncoder,
+  createRpcErrorResponse,
+  createRpcSuccessResponse,
+  stxAddAccount,
+} from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
 
@@ -11,7 +17,7 @@ import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/s
 
 import { usePolicyAccountFeatureGate } from '../policy-account-feature-gate';
 import { type PolicyAccountMatchStatus } from '../policy-account-match';
-import { registerStxPolicyAccount } from './register-stx-policy-account';
+import { useRegisterStxPolicyAccount } from './register-stx-policy-account';
 
 const { decode } = createRequestEncoder(stxAddAccount.request);
 
@@ -25,6 +31,7 @@ function useStxAddAccountParams() {
 export function useStxAddAccount() {
   const { tabId, origin, request } = useStxAddAccountParams();
   const stacksAccount = useCurrentStacksAccount();
+  const registerStxPolicyAccount = useRegisterStxPolicyAccount();
   const { isFeatureEnabled, rejectAsUnsupported } = usePolicyAccountFeatureGate({
     method: request.method,
     id: request.id,
@@ -67,6 +74,19 @@ export function useStxAddAccount() {
       }
 
       const result = registerStxPolicyAccount(request.params);
+      if (!result) {
+        void chrome.tabs.sendMessage(
+          tabId,
+          createRpcErrorResponse(request.method, {
+            id: request.id,
+            error: {
+              code: RpcErrorCode.INTERNAL_ERROR,
+              message: 'Failed to register policy account',
+            },
+          })
+        );
+        return;
+      }
 
       void chrome.tabs.sendMessage(
         tabId,

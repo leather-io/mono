@@ -155,6 +155,17 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
   };
 }
 
+// Derives the P2WSH (bech32) receive address a `wsh(...)` descriptor locks to.
+// The network is auto-detected from the descriptor's own key prefixes (see
+// getNetworkForDescriptor), so this is independent of the wallet's active
+// network. Reuses makeWshDescriptorInstance, which already validates the
+// descriptor and throws on malformed or non-wsh() input.
+export function getWshDescriptorAddress(descriptor: string): string {
+  const address = makeWshDescriptorInstance(descriptor).getAddress();
+  if (!address) throw new Error('Descriptor does not produce an address');
+  return address;
+}
+
 // Finds the descriptor key whose concrete public key equals the given pubkey.
 // Matching on the resolved pubkey (rather than the xpub string) works for both
 // xpub key expressions (resolved at the descriptor's index) and raw-pubkey key

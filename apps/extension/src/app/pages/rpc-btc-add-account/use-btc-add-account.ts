@@ -1,7 +1,13 @@
 import { useMemo } from 'react';
 
 import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
-import { btcAddAccount, createRequestEncoder, createRpcSuccessResponse } from '@leather.io/rpc';
+import {
+  RpcErrorCode,
+  btcAddAccount,
+  createRequestEncoder,
+  createRpcErrorResponse,
+  createRpcSuccessResponse,
+} from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
 
@@ -12,7 +18,7 @@ import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bi
 
 import { usePolicyAccountFeatureGate } from '../policy-account-feature-gate';
 import { type PolicyAccountMatchStatus } from '../policy-account-match';
-import { registerBtcPolicyAccount } from './register-btc-policy-account';
+import { useRegisterBtcPolicyAccount } from './register-btc-policy-account';
 
 const { decode } = createRequestEncoder(btcAddAccount.request);
 
@@ -26,6 +32,7 @@ function useBtcAddAccountParams() {
 export function useBtcAddAccount() {
   const { tabId, origin, request } = useBtcAddAccountParams();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
+  const registerBtcPolicyAccount = useRegisterBtcPolicyAccount();
   const { isFeatureEnabled, rejectAsUnsupported } = usePolicyAccountFeatureGate({
     method: request.method,
     id: request.id,
@@ -72,6 +79,19 @@ export function useBtcAddAccount() {
       }
 
       const result = registerBtcPolicyAccount(request.params);
+      if (!result) {
+        void chrome.tabs.sendMessage(
+          tabId,
+          createRpcErrorResponse(request.method, {
+            id: request.id,
+            error: {
+              code: RpcErrorCode.INTERNAL_ERROR,
+              message: 'Failed to register policy account',
+            },
+          })
+        );
+        return;
+      }
 
       void chrome.tabs.sendMessage(
         tabId,
