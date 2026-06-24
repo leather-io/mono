@@ -14,11 +14,10 @@ const h = vi.hoisted(() => ({
     | undefined,
   activeAccountId: { accountIndex: 0, fingerprint: 'fp-active' },
   useAccountNameOverride: vi.fn<(args: unknown) => unknown>(() => undefined),
-  bnsQueryOptions: vi.fn<(args: unknown) => unknown>(() => ({})),
-}));
-
-vi.mock('@leather.io/bitcoin', () => ({
-  bitcoinNetworkModeToCoreNetworkMode: (mode: string) => mode,
+  createAccountAddresses: vi.fn<
+    (id: unknown, descriptors: unknown, stxAddress?: string) => unknown
+  >((id, _descriptors, stxAddress) => ({ id, stacks: stxAddress ? { stxAddress } : undefined })),
+  bnsQueryConfig: vi.fn<(request: unknown, settings: unknown) => unknown>(() => ({})),
 }));
 
 vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
@@ -33,16 +32,22 @@ vi.mock('@app/store/accounts/accounts.selectors', () => ({
   useAccountNameOverride: (args: unknown) => h.useAccountNameOverride(args),
 }));
 
-vi.mock('@leather.io/query', () => ({
-  createGetBnsNamesOwnedByAddressQueryOptions: (args: unknown) => h.bnsQueryOptions(args),
+vi.mock('@leather.io/queries', () => ({
+  createAccountBnsNamesQueryConfig: (request: unknown, settings: unknown) =>
+    h.bnsQueryConfig(request, settings),
 }));
 
-vi.mock('@app/store/networks/networks.hooks', () => ({
-  useCurrentNetworkState: () => ({ chain: { bitcoin: { mode: 'mainnet' } } }),
+vi.mock('@leather.io/utils', () => ({
+  createAccountAddresses: (id: unknown, descriptors: unknown, stxAddress?: string) =>
+    h.createAccountAddresses(id, descriptors, stxAddress),
 }));
 
-vi.mock('@app/query/stacks/bns/bns-v2-client', () => ({
-  useBnsV2Client: () => ({}),
+vi.mock('@app/hooks/use-user-settings', () => ({
+  useUserSettings: () => ({
+    network: { id: 'mainnet' },
+    quoteCurrency: 'USD',
+    assetVisibility: {},
+  }),
 }));
 
 vi.mock('@tanstack/react-query', () => ({
@@ -90,8 +95,16 @@ describe('useCurrentAccountDisplayName', () => {
       fingerprint: 'fp-effective',
       accountIndex: 5,
     });
-    expect(h.bnsQueryOptions).toHaveBeenCalledWith(
-      expect.objectContaining({ address: 'SP_EFFECTIVE' })
+    expect(h.createAccountAddresses).toHaveBeenCalledWith(
+      { fingerprint: 'fp-effective', accountIndex: 5 },
+      [],
+      'SP_EFFECTIVE'
+    );
+    expect(h.bnsQueryConfig).toHaveBeenCalledWith(
+      expect.objectContaining({
+        account: expect.objectContaining({ stacks: { stxAddress: 'SP_EFFECTIVE' } }),
+      }),
+      expect.anything()
     );
   });
 
@@ -111,8 +124,16 @@ describe('useCurrentAccountDisplayName', () => {
       fingerprint: 'fp-active',
       accountIndex: 0,
     });
-    expect(h.bnsQueryOptions).toHaveBeenCalledWith(
-      expect.objectContaining({ address: 'SP_ACTIVE' })
+    expect(h.createAccountAddresses).toHaveBeenCalledWith(
+      { fingerprint: 'fp-active', accountIndex: 0 },
+      [],
+      'SP_ACTIVE'
+    );
+    expect(h.bnsQueryConfig).toHaveBeenCalledWith(
+      expect.objectContaining({
+        account: expect.objectContaining({ stacks: { stxAddress: 'SP_ACTIVE' } }),
+      }),
+      expect.anything()
     );
   });
 
@@ -126,6 +147,10 @@ describe('useCurrentAccountDisplayName', () => {
       fingerprint: 'fp-active',
       accountIndex: 3,
     });
-    expect(h.bnsQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ address: '' }));
+    expect(h.createAccountAddresses).toHaveBeenCalledWith(
+      { fingerprint: 'fp-active', accountIndex: 3 },
+      [],
+      ''
+    );
   });
 });

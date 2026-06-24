@@ -496,10 +496,7 @@ export class OnboardingPage {
       iterationCounter.increment();
     } while (!(await isSignedIn()));
 
-    await this.page.evaluate(
-      fingerprint => window.debug.setHighestAccountIndex(fingerprint, 2),
-      testFingerprint
-    );
+    await this.page.evaluate(() => window.debug.setHighestAccountIndex(2));
 
     await this.dismissFeatureIntroducer();
   }
