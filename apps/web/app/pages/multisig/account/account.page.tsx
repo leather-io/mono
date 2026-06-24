@@ -19,6 +19,7 @@ import { MultisigHero } from '../components/multisig-hero';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { AccountDetailsCard } from './components/account-details-card';
+import { AccountTransactions } from './components/account-transactions';
 
 function SectionLabel({ children, noGutter }: { children: string; noGutter?: boolean }) {
   return (
@@ -30,23 +31,6 @@ function SectionLabel({ children, noGutter }: { children: string; noGutter?: boo
     >
       {children}
     </styled.h3>
-  );
-}
-
-function ComingSoon({ children }: { children: string }) {
-  return (
-    <Box
-      borderRadius="md"
-      borderWidth="1px"
-      borderStyle="dashed"
-      borderColor="ink.border-default"
-      p="space.05"
-      textAlign="center"
-    >
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        {children}
-      </styled.span>
-    </Box>
   );
 }
 
@@ -124,9 +108,7 @@ export function AccountDetailPage() {
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
           <SectionLabel>Transactions</SectionLabel>
-          <ComingSoon>
-            Transactions will appear here once the activity feed is available.
-          </ComingSoon>
+          <AccountTransactions network={network} accountId={accountId} />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>
