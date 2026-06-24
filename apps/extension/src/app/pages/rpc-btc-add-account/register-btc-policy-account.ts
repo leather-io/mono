@@ -5,6 +5,7 @@ import { makeAccountIdentifer } from '@leather.io/crypto';
 import { type RpcParams, type RpcResult, btcAddAccount } from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
+import { broadcastReplayAction } from '@shared/messages';
 
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
@@ -27,19 +28,19 @@ export function useRegisterBtcPolicyAccount() {
         // The approval gate guarantees the active account is a cosigner.
         const role = 'signer' as const;
 
-        dispatch(
-          userAddsPolicyAccount({
-            policy: {
-              id: makePolicyId(parentAccountId, address),
-              parentAccountId,
-              chain: 'bitcoin',
-              address,
-              descriptor: params.descriptor,
-              role,
-            },
-            name: params.name,
-          })
-        );
+        const action = userAddsPolicyAccount({
+          policy: {
+            id: makePolicyId(parentAccountId, address),
+            parentAccountId,
+            chain: 'bitcoin',
+            address,
+            descriptor: params.descriptor,
+            role,
+          },
+          name: params.name,
+        });
+        dispatch(action);
+        void broadcastReplayAction(action);
 
         return { address, descriptor: params.descriptor, accountId: address, role };
       } catch (e) {

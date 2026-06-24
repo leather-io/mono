@@ -5,6 +5,7 @@ import { type RpcParams, type RpcResult, stxAddAccount } from '@leather.io/rpc';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 
 import { logger } from '@shared/logger';
+import { broadcastReplayAction } from '@shared/messages';
 
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
@@ -34,20 +35,20 @@ export function useRegisterStxPolicyAccount() {
         // The approval gate guarantees the active account is a cosigner.
         const role = 'signer' as const;
 
-        dispatch(
-          userAddsPolicyAccount({
-            policy: {
-              id: makePolicyId(parentAccountId, address),
-              parentAccountId,
-              chain: 'stacks',
-              address,
-              publicKeys: params.publicKeys,
-              threshold: params.threshold,
-              role,
-            },
-            name: params.name,
-          })
-        );
+        const action = userAddsPolicyAccount({
+          policy: {
+            id: makePolicyId(parentAccountId, address),
+            parentAccountId,
+            chain: 'stacks',
+            address,
+            publicKeys: params.publicKeys,
+            threshold: params.threshold,
+            role,
+          },
+          name: params.name,
+        });
+        dispatch(action);
+        void broadcastReplayAction(action);
 
         return {
           address,
