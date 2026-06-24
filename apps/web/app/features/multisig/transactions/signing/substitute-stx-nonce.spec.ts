@@ -1,7 +1,7 @@
-import { hexToBytes } from '@noble/hashes/utils';
+import { hexToBytes } from '@stacks/common';
 import { deserializeTransaction } from '@stacks/transactions';
 
-import { substituteStxNonce } from './multisig-nonce';
+import { substituteStxNonce } from './substitute-stx-nonce';
 
 // A real proposed stx:mainnet 2-of-3 multisig STX transfer (StandardAuth,
 // P2SHNonSequential), placeholder nonce 0.
@@ -17,16 +17,16 @@ describe(substituteStxNonce.name, () => {
     const nonce = 42;
     const tx = deserializeTransaction(realPayload);
     tx.setNonce(nonce);
-    expect(substituteStxNonce(realPayload, nonce)).toEqual(tx.serialize());
+    expect(substituteStxNonce({ rawPayload: realPayload, nonce })).toEqual(tx.serialize());
   });
 
   test('is a no-op when substituting the existing nonce', () => {
-    expect(substituteStxNonce(realPayload, 0)).toEqual(realPayload);
+    expect(substituteStxNonce({ rawPayload: realPayload, nonce: 0 })).toEqual(realPayload);
   });
 
   test('overwrites only the 8-byte nonce field at the computed offset', () => {
     const before = hexToBytes(realPayload);
-    const after = hexToBytes(substituteStxNonce(realPayload, 123456));
+    const after = hexToBytes(substituteStxNonce({ rawPayload: realPayload, nonce: 123456 }));
 
     for (let i = 0; i < before.length; i++) {
       if (i >= nonceStart && i < nonceEnd) continue;
@@ -36,13 +36,13 @@ describe(substituteStxNonce.name, () => {
     expect([...after.slice(nonceStart, nonceEnd)]).toEqual([0, 0, 0, 0, 0, 1, 0xe2, 0x40]);
   });
 
-  test('rejects an unsupported hash mode', () => {
+  test('rejects an unexpected hash mode', () => {
     const tampered = `${realPayload.slice(0, 12)}00${realPayload.slice(14)}`;
-    expect(() => substituteStxNonce(tampered, 1)).toThrow('hash mode');
+    expect(() => substituteStxNonce({ rawPayload: tampered, nonce: 1 })).toThrow('hash mode');
   });
 
   test('rejects sponsored auth', () => {
     const tampered = `${realPayload.slice(0, 10)}05${realPayload.slice(12)}`;
-    expect(() => substituteStxNonce(tampered, 1)).toThrow('auth type');
+    expect(() => substituteStxNonce({ rawPayload: tampered, nonce: 1 })).toThrow('auth type');
   });
 });

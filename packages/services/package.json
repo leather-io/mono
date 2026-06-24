@@ -17,7 +17,7 @@
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "gen-api-types:bitflow": "openapi-typescript https://bff.bitflowapis.finance/api/quotes/openapi.json -o ./src/infrastructure/api/bitflow/bitflow-bff-api.types.ts && pnpm format",
-    "gen-api-types:leather": "dotenv -e .env -- openapi-typescript --redocly ./redocly.yaml http://localhost:8789/docs/openapi.json -o ./src/infrastructure/api/leather/leather-api.types.ts && pnpm format",
+    "gen-api-types:leather": "dotenv -e .env -- openapi-typescript --redocly ./redocly.yaml https://staging.api.leather.io/docs/openapi.json -o ./src/infrastructure/api/leather/leather-api.types.ts && pnpm format",
     "lint": "eslint --cache --max-warnings 0",
     "lint:fix": "pnpm lint --fix",
     "test:activity": "node ./scripts/activity-test.mjs",

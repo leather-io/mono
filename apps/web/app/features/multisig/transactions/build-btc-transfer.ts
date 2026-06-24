@@ -1,7 +1,6 @@
 import {
   assembleWshMultisigPsbt,
   compileWshDescriptor,
-  getAddressFromOutScript,
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import type { AuthNetworkId, BitcoinNetworkModes, Money, VaultAccount } from '@leather.io/models';
@@ -9,6 +8,7 @@ import { getBitcoinCoinSelectionService } from '@leather.io/services';
 
 import { createMultisigAccountAddresses } from '../vaults/multisig-account-addresses';
 import { getMultisigDescriptor } from './btc-multisig-descriptor';
+import { deriveMultisigAddress } from './derive-multisig-address';
 
 interface BuildMultisigBtcTransferArgs {
   account: VaultAccount;
@@ -30,10 +30,9 @@ export async function buildUnsignedMultisigBtcTransfer({
   const network = getBtcSignerLibNetworkConfigByMode(getBitcoinNetworkMode(account.network));
   const { scriptPubKey, witnessScript } = compileWshDescriptor(getMultisigDescriptor(account));
 
-  const derivedAddress = getAddressFromOutScript(scriptPubKey, network);
-  if (derivedAddress !== account.multisigAddress)
+  if (deriveMultisigAddress(account) !== account.multisigAddress)
     throw new Error(
-      `Derived multisig address ${derivedAddress} does not match vault address ${account.multisigAddress}`
+      `Derived multisig address does not match vault address ${account.multisigAddress}`
     );
 
   const { inputs, outputs } = await getBitcoinCoinSelectionService().performCoinSelection({

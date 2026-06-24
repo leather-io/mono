@@ -1,11 +1,13 @@
 import { privateKeyToPublic, publicKeyToHex } from '@stacks/transactions';
 
+import {
+  TransactionTypes,
+  generateStacksUnsignedTransaction,
+  signStacksTransaction,
+} from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
-import { signStacksTransaction } from '../signer/signer';
-import { generateStacksUnsignedTransaction } from './generate-unsigned-transaction';
-import { extractStxMultisigSignature } from './multisig-signature';
-import { TransactionTypes } from './transaction.types';
+import { extractStxMultisigSignature } from './extract-stx-multisig-signature';
 
 const privateKeys = ['11'.repeat(32) + '01', '22'.repeat(32) + '01', '33'.repeat(32) + '01'];
 const publicKeys = privateKeys.map(key => publicKeyToHex(privateKeyToPublic(key)));

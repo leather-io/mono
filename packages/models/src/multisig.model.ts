@@ -68,7 +68,6 @@ export interface VaultAccountSigner {
   readonly xpubOriginPath: string | null;
   readonly signerIndex: number;
   readonly signingPubkey: string;
-  readonly derivationIndex: number | null;
 }
 
 interface VaultAccountBase {

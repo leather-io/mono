@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
+import { useSession } from '~/features/multisig/auth/use-session';
 import { signBtcTransaction } from '~/features/multisig/transactions/signing/sign-btc-transaction';
 import { signStxTransaction } from '~/features/multisig/transactions/signing/sign-stx-transaction';
 
-import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
+import type { AuthNetworkId, MultisigTransaction, VaultAccount } from '@leather.io/models';
 import { getMultisigService } from '@leather.io/services';
 import { Button } from '@leather.io/ui';
 
@@ -25,6 +26,12 @@ function assertSignable(transaction: MultisigTransaction): void {
     );
 }
 
+function getMySigningPubkey(account: VaultAccount, myAddress: string | undefined): string {
+  const mySigner = account.signers.find(signer => signer.address === myAddress);
+  if (!mySigner) throw new Error('Connected account is not a signer on this vault account');
+  return mySigner.signingPubkey;
+}
+
 // Fetches a proposed multisig transaction by ID, signs it with the extension, and
 // submits the signature(s) to the backend. The signing ceremony lives in the
 // reusable `signing/` functions; this dev tool is just orchestration + UI.
@@ -34,6 +41,7 @@ export function SignTool() {
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<MultisigTransaction | null>(null);
+  const myAddress = useSession(network)?.identity.address;
 
   async function run() {
     setIsRunning(true);
@@ -46,7 +54,7 @@ export function SignTool() {
       assertSignable(transaction);
       const account = await service.getVaultAccount(network, transaction.vaultAccountId);
       const signatures = network.startsWith('btc')
-        ? await signBtcTransaction(transaction, account)
+        ? await signBtcTransaction(transaction, account, getMySigningPubkey(account, myAddress))
         : await signStxTransaction(transaction, account);
       setResult(await service.addTransactionSignatures(network, id, { signatures }));
     } catch (err) {

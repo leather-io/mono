@@ -1,10 +1,9 @@
 import { StacksWireType, deserializeTransaction } from '@stacks/transactions';
 
-// Reads the single signature a wallet contributed to a signed multisig Stacks
-// transaction. Signing replaces the signer's slot in the spending condition with
-// a MessageSignature (the 65-byte recoverable VRS signature, hex) in place of its
-// public key. A freshly proposed payload carries no signatures, so exactly one is
-// present after the current signer signs — theirs.
+// Reads the lone signature this participant contributed to a Leather multisig
+// STX transaction. Leather multisig is non-sequential (P2SHNonSequential): each
+// signer independently signs the same tx with one key, so a signed tx carries
+// exactly one MessageSignature (65-byte recoverable VRS, hex).
 export function extractStxMultisigSignature(signedTxHex: string): string {
   const { spendingCondition } = deserializeTransaction(signedTxHex).auth;
   if (!('fields' in spendingCondition))

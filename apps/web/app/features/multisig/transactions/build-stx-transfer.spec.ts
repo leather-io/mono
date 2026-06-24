@@ -42,7 +42,6 @@ function makeSigner(signerIndex: number, signingPubkey: string): VaultAccountSig
     xpubOriginPath: null,
     signerIndex,
     signingPubkey,
-    derivationIndex: null,
   };
 }
 

@@ -6079,7 +6079,6 @@ export interface paths {
                 userId: string;
                 signerIndex: number;
                 signingPubkey: string;
-                derivationIndex: number | null;
               }[];
               pendingTransactionCount: number;
               queuedTransactionCount: number;
@@ -6186,7 +6185,6 @@ export interface paths {
                 userId: string;
                 signerIndex: number;
                 signingPubkey: string;
-                derivationIndex: number | null;
               }[];
               pendingTransactionCount: number;
               queuedTransactionCount: number;
@@ -6281,7 +6279,6 @@ export interface paths {
                 userId: string;
                 signerIndex: number;
                 signingPubkey: string;
-                derivationIndex: number | null;
               }[];
               pendingTransactionCount: number;
               queuedTransactionCount: number;
