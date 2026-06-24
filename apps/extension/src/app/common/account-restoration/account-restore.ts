@@ -27,11 +27,26 @@ async function recurseUntilGeneratorDone(generator: AsyncGenerator): Promise<any
 
 interface RecurseAccountsForActivityArgs {
   doesAddressHaveActivityFn(index: number): Promise<boolean>;
+  fromAccountIndex?: number;
+  onActivityFound?(highestAccountIndex: number): void;
 }
 
 export async function recurseAccountsForActivity({
   doesAddressHaveActivityFn,
+  fromAccountIndex = 0,
+  onActivityFound,
 }: RecurseAccountsForActivityArgs): Promise<number> {
+  const knownActivityFloor = Math.max(0, fromAccountIndex);
+  let highestActivityIndex = knownActivityFloor;
+
+  function reportProgress(activity: AccountIndexActivityCheckHistory[]) {
+    const highest = returnHighestIndex(activity);
+    if (highest > highestActivityIndex) {
+      highestActivityIndex = highest;
+      onActivityFound?.(highestActivityIndex);
+    }
+  }
+
   async function* findHighestAddressIndexExponent() {
     const fibonacci = fibonacciGenerator(2);
     const activity: AccountIndexActivityCheckHistory[] = [];
@@ -42,7 +57,7 @@ export async function recurseAccountsForActivity({
       for (let i = 0; i < batchSize; i++) {
         const nextResult = fibonacci.next();
         if (nextResult.done) break;
-        indices.push(nextResult.value);
+        indices.push(knownActivityFloor + nextResult.value);
       }
       if (!indices.length) break;
       const results = await Promise.all(
@@ -52,12 +67,16 @@ export async function recurseAccountsForActivity({
         })
       );
       activity.push(...results);
+      reportProgress(activity);
       yield;
     }
     return returnHighestIndex(activity);
   }
 
-  const knownActivityAtIndex = await recurseUntilGeneratorDone(findHighestAddressIndexExponent());
+  const knownActivityAtIndex = Math.max(
+    knownActivityFloor,
+    await recurseUntilGeneratorDone(findHighestAddressIndexExponent())
+  );
 
   async function* checkForMostRecentAccount() {
     const indexCounter = createCounter(knownActivityAtIndex + 1);
@@ -80,6 +99,7 @@ export async function recurseAccountsForActivity({
         })
       );
       activity.push(...results);
+      reportProgress(activity);
       yield;
     }
     return returnHighestIndex(activity);

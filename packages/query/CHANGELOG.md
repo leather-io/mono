@@ -779,6 +779,24 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.50.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.49.1...@leather.io/query-v2.50.0) (2026-06-23)
+
+
+### Features
+
+* multiwallet UI ([#2356](https://github.com/leather-io/mono/issues/2356)) ([34e7419](https://github.com/leather-io/mono/commit/34e7419c4a870546500e3896d2ec2890fe309f33))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.38.1
+    * @leather.io/constants bumped to 0.36.2
+    * @leather.io/models bumped to 0.58.0
+    * @leather.io/stacks bumped to 1.20.3
+    * @leather.io/utils bumped to 0.52.0
+
 ## [2.49.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.49.0...@leather.io/query-v2.49.1) (2026-06-15)
 
 

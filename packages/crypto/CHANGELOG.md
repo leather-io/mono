@@ -492,6 +492,22 @@
   * dependencies
     * @leather.io/utils bumped to 0.46.4
 
+## [1.13.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.24...@leather.io/crypto-v1.13.0) (2026-06-23)
+
+
+### Features
+
+* multisig service transactions ([#2404](https://github.com/leather-io/mono/issues/2404)) ([8c3a1d4](https://github.com/leather-io/mono/commit/8c3a1d41b09c1caf4f526ac9b567d479c1436c40))
+* multiwallet UI ([#2356](https://github.com/leather-io/mono/issues/2356)) ([34e7419](https://github.com/leather-io/mono/commit/34e7419c4a870546500e3896d2ec2890fe309f33))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.36.2
+    * @leather.io/utils bumped to 0.52.0
+
 ## [1.12.24](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.23...@leather.io/crypto-v1.12.24) (2026-06-15)
 
 

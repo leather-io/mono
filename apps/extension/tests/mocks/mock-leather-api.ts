@@ -204,8 +204,11 @@ export async function mockLeatherApiRequests(page: Page | BrowserContext) {
     })
   );
 
-  await page.route('**/v1/utxos/**', route =>
-    route.fulfill({
+  await page.route('**/v1/utxos/**', route => {
+    if (route.request().url().includes('/v1/utxos/addresses/')) {
+      return route.fulfill({ json: [] });
+    }
+    return route.fulfill({
       json: [
         {
           txid: 'b7f3c61e89524a1d7f8e0b2c3d4a5f6e7d8c9b0a1f2e3d4c5b6a7f8e9d0c1b2a',
@@ -224,11 +227,19 @@ export async function mockLeatherApiRequests(page: Page | BrowserContext) {
           path: "m/84'/1'/0'/0/0",
         },
       ],
-    })
-  );
+    });
+  });
 
-  await page.route('**/v1/transactions/**', route =>
-    route.fulfill({
+  await page.route('**/v1/transactions/**', route => {
+    if (route.request().url().includes('/v1/transactions/bitcoin/addresses/')) {
+      return route.fulfill({
+        json: {
+          meta: { page: 1, pageSize: 1, totalPages: 1, totalItems: 0 },
+          data: [],
+        },
+      });
+    }
+    return route.fulfill({
       json: {
         meta: {
           page: 1,
@@ -278,8 +289,8 @@ export async function mockLeatherApiRequests(page: Page | BrowserContext) {
           },
         ],
       },
-    })
-  );
+    });
+  });
 
   await page.route('**/v1/defi/bitflow/pools**', route =>
     route.fulfill({

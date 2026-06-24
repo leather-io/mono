@@ -38,9 +38,7 @@ import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transactio
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 
 import {
-  checkUnsignedStacksTransactionFee,
   checkUnsignedStacksTransactionHashMode,
-  checkUnsignedStacksTransactionNonce,
   getUnsignedStacksTransactionFromRpcRequest,
 } from './rpc-stx-sign-transaction.utils';
 
@@ -59,22 +57,16 @@ export function RpcStxSignTransaction() {
   const signStacksTx = useSignStacksTransaction();
 
   const unsignedTxForBroadcast = useMemo(() => getUnsignedStacksTransactionFromRpcRequest(), []);
-  const txRequestHasAlreadySetFee = checkUnsignedStacksTransactionFee(unsignedTxForBroadcast);
-  const txRequestHasAlreadySetNonce = checkUnsignedStacksTransactionNonce(unsignedTxForBroadcast);
 
   // Handle multisig transactions
   const isMultisig = checkUnsignedStacksTransactionHashMode(unsignedTxForBroadcast);
-  const txRequestWasAlreadySignedByOthers =
-    isMultisig &&
-    'fields' in unsignedTxForBroadcast.auth.spendingCondition &&
-    unsignedTxForBroadcast.auth.spendingCondition.fields.length > 0;
-  const enableFeeEditor = !(txRequestWasAlreadySignedByOthers || txRequestHasAlreadySetFee);
-  const enableNonceEditor = !(txRequestWasAlreadySignedByOthers || txRequestHasAlreadySetNonce);
+  const canEditFeeAndNonce = !isMultisig;
 
   async function onApproveTransaction() {
-    if (!txRequestHasAlreadySetFee)
+    if (canEditFeeAndNonce) {
       unsignedTxForBroadcast.setFee(selectedFee.txFee.amount.toString());
-    if (!txRequestHasAlreadySetNonce) unsignedTxForBroadcast.setNonce(nonce);
+      unsignedTxForBroadcast.setNonce(nonce);
+    }
 
     if (isSponsored) unsignedTxForBroadcast.setFee(0);
 
@@ -173,7 +165,7 @@ export function RpcStxSignTransaction() {
           codeBody={unsignedTxForBroadcast.payload.codeBody.content}
         />
       )}
-      {enableFeeEditor && (
+      {canEditFeeAndNonce && (
         <FeeEditor.Trigger
           feeType="fee-value"
           isLoading={isLoadingFees}
@@ -183,7 +175,7 @@ export function RpcStxSignTransaction() {
           selectedFee={selectedFee}
         />
       )}
-      {enableNonceEditor && (
+      {canEditFeeAndNonce && (
         <NonceEditor.Trigger nonce={nonce} onEditNonce={onUserActivatesNonceEditor} />
       )}
     </RpcTransactionRequestLayout>

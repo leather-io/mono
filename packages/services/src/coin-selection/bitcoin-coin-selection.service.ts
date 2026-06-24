@@ -13,6 +13,7 @@ import { Money, OwnedUtxo } from '@leather.io/models';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { AccountRequest } from '../types';
 import { UtxosService } from '../utxos/utxos.service';
+import { getInputSizing } from './bitcoin-coin-selection.utils';
 
 export interface CalculateMaxSpendRequest {
   account: AccountRequest;
@@ -53,9 +54,10 @@ export class BitcoinCoinSelectionService {
       const feeRates = await this.leatherApiClient.fetchBitcoinFeeRates({ signal });
       feeRate = feeRates.standard.rate;
     }
+    const inputSizing = getInputSizing(account.account);
     const result = isMaxSpend
-      ? determineUtxosForSpendAll({ feeRate, recipients, utxos: availableInputUtxos })
-      : determineUtxosForSpend({ feeRate, recipients, utxos: availableInputUtxos });
+      ? determineUtxosForSpendAll({ feeRate, recipients, utxos: availableInputUtxos, inputSizing })
+      : determineUtxosForSpend({ feeRate, recipients, utxos: availableInputUtxos, inputSizing });
     return {
       inputs: result.inputs,
       outputs: result.outputs,
@@ -77,6 +79,7 @@ export class BitcoinCoinSelectionService {
       recipient: recipient,
       utxos: utxos.available,
       feeRate,
+      inputSizing: getInputSizing(account.account),
     });
   }
 }
