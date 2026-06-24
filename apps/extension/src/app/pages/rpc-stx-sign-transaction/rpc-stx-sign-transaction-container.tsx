@@ -43,12 +43,12 @@ export function RpcStxSignTransactionContainer({ account }: RpcStxSignTransactio
             <StacksFeeEditorProvider
               availableBalance={balance.availableBalance}
               marketData={stxMarketData}
-              onGoBack={() => navigate(RouteUrls.RpcStxTransferSip10Ft)}
+              onGoBack={() => navigate(RouteUrls.RpcStxSignTransaction)}
               unsignedTx={unsignedTxForFeeEstimation}
             >
               <NonceEditorProvider
                 nonce={nonceCalc.nonce}
-                onGoBack={() => navigate(RouteUrls.RpcStxTransferSip10Ft)}
+                onGoBack={() => navigate(RouteUrls.RpcStxSignTransaction)}
               >
                 <StacksRpcTransactionRequestProvider
                   value={{
