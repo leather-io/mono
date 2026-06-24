@@ -19,6 +19,7 @@ const replayableActionTypes = new Set<string>([
   userAddsAccount.type,
   userSwitchesAccount.type,
   stxChainSlice.actions.createNewAccount.type,
+  stxChainSlice.actions.restoreAccountIndex.type,
 ]);
 
 export function isReplayableAction(action: UnknownAction) {

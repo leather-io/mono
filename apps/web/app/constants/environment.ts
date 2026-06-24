@@ -15,7 +15,7 @@ export const LEATHER_API_URL = leatherApiUrlSchema.parse(import.meta.env.LEATHER
 const envTargetSchema = z.enum(['development', 'branch', 'staging', 'production']);
 type EnvTarget = z.infer<typeof envTargetSchema>;
 
-const TARGET = envTargetSchema
+export const TARGET = envTargetSchema
   .default('production')
   .parse(import.meta.env.CLOUDFLARE_ENV ?? import.meta.env.LEATHER_TARGET);
 
