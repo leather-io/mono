@@ -15,6 +15,7 @@ export function createAccountAddresses(
   const nativeSegwitDescriptor = btcDescriptors.find(desc => desc.startsWith('wpkh('));
   if (taprootDescriptor && nativeSegwitDescriptor) {
     accountAddresses.bitcoin = {
+      type: 'hd',
       taprootDescriptor,
       nativeSegwitDescriptor,
     };

@@ -45,6 +45,10 @@ export class BitcoinTransactionsService {
   ): Promise<BitcoinTransaction[]> {
     if (!hasBitcoinAddress(account)) return [];
 
+    if (account.bitcoin.type === 'fixedAddress') {
+      return this.getAddressTransactions(account.bitcoin.address, signal);
+    }
+
     const [nativeSegwitTxs, taprootTxs] = await Promise.all([
       this.getDescriptorTransactions(account.bitcoin.nativeSegwitDescriptor, signal),
       this.getDescriptorTransactions(account.bitcoin.taprootDescriptor, signal),
@@ -86,6 +90,32 @@ export class BitcoinTransactionsService {
       Array.from({ length: pagesToFetch - 1 }, (_, i) =>
         this.leatherApiClient.fetchBitcoinTransactions(
           descriptor,
+          { page: i + 2, pageSize: 150 },
+          { signal }
+        )
+      )
+    );
+    return [firstPage, ...remainingPages].flatMap(p =>
+      p.data.map(createBitcoinTransactionFromLeather)
+    );
+  }
+
+  public async getAddressTransactions(
+    address: string,
+    signal?: AbortSignal
+  ): Promise<BitcoinTransaction[]> {
+    const firstPage = await this.leatherApiClient.fetchBitcoinTransactionsByAddress(
+      address,
+      { page: 1, pageSize: 150 },
+      { signal }
+    );
+    const pagesToFetch = Math.min(firstPage.meta.totalPages, 5);
+    if (pagesToFetch <= 1) return firstPage.data.map(createBitcoinTransactionFromLeather);
+
+    const remainingPages = await Promise.all(
+      Array.from({ length: pagesToFetch - 1 }, (_, i) =>
+        this.leatherApiClient.fetchBitcoinTransactionsByAddress(
+          address,
           { page: i + 2, pageSize: 150 },
           { signal }
         )

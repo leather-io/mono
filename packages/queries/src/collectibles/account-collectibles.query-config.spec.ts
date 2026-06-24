@@ -29,6 +29,7 @@ const settings: UserSettings = {
 const account = {
   id: { fingerprint: 'fp', accountIndex: 1 },
   bitcoin: {
+    type: 'hd',
     taprootDescriptor: 'tr',
     nativeSegwitDescriptor: 'nw',
     zeroIndexNativeSegwitPayerAddress: 'bc1p123',

@@ -413,6 +413,29 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.58.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.57.0...@leather.io/services-v1.58.0) (2026-06-23)
+
+
+### Features
+
+* multisig fixed address account ([#2415](https://github.com/leather-io/mono/issues/2415)) ([964ff42](https://github.com/leather-io/mono/commit/964ff421f0b83ca688859f9bae7d2863adc9c183))
+* multisig service transactions ([#2404](https://github.com/leather-io/mono/issues/2404)) ([8c3a1d4](https://github.com/leather-io/mono/commit/8c3a1d41b09c1caf4f526ac9b567d479c1436c40))
+* **services:** multisig service accounts ([#2383](https://github.com/leather-io/mono/issues/2383)) ([5a0513e](https://github.com/leather-io/mono/commit/5a0513e1c077a5b62ed49aff04d1e946c4d1ea22))
+* **web:** multisig vaults UI (create, view, invites) ([#2385](https://github.com/leather-io/mono/issues/2385)) ([8d55381](https://github.com/leather-io/mono/commit/8d55381d7a0d90a2ab36f70f528b174ae79d251f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.38.1
+    * @leather.io/constants bumped to 0.36.2
+    * @leather.io/models bumped to 0.58.0
+    * @leather.io/stacks bumped to 1.20.3
+    * @leather.io/utils bumped to 0.52.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.22.3
+
 ## [1.57.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.56.0...@leather.io/services-v1.57.0) (2026-06-15)
 
 

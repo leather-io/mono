@@ -1,31 +1,34 @@
-import { z } from 'zod';
+export interface WalletId {
+  fingerprint: string;
+}
 
-export const walletIdSchema = z.object({
-  fingerprint: z.string(),
-});
+export interface AccountId extends WalletId {
+  accountIndex: number;
+}
 
-export const accountIdSchema = walletIdSchema.and(z.object({ accountIndex: z.number() }));
+export interface HdBitcoinAddressInfo {
+  type: 'hd';
+  taprootDescriptor: string;
+  nativeSegwitDescriptor: string;
+  zeroIndexTaprootPayerAddress?: string;
+  zeroIndexNativeSegwitPayerAddress?: string;
+}
 
-export const bitcoinAddressInfoSchema = z.object({
-  taprootDescriptor: z.string(),
-  nativeSegwitDescriptor: z.string(),
-  zeroIndexTaprootPayerAddress: z.string().optional(),
-  zeroIndexNativeSegwitPayerAddress: z.string().optional(),
-});
+export interface FixedBitcoinAddressInfo {
+  type: 'fixedAddress';
+  address: string;
+  paymentType: 'p2wsh';
+  multisig: { threshold: number; signerCount: number };
+}
 
-export const stacksAddressInfoSchema = z.object({
-  stxAddress: z.string(),
-});
+export type BitcoinAddressInfo = HdBitcoinAddressInfo | FixedBitcoinAddressInfo;
 
-export const accountAddressesSchema = z.object({
-  id: accountIdSchema,
-  bitcoin: bitcoinAddressInfoSchema.optional(),
-  stacks: stacksAddressInfoSchema.optional(),
-});
+export interface StacksAddressInfo {
+  stxAddress: string;
+}
 
-export type WalletId = z.infer<typeof walletIdSchema>;
-export type AccountId = z.infer<typeof accountIdSchema>;
-
-export type BitcoinAddressInfo = z.infer<typeof bitcoinAddressInfoSchema>;
-export type StacksAddressInfo = z.infer<typeof stacksAddressInfoSchema>;
-export type AccountAddresses = z.infer<typeof accountAddressesSchema>;
+export interface AccountAddresses {
+  id: AccountId;
+  bitcoin?: BitcoinAddressInfo;
+  stacks?: StacksAddressInfo;
+}

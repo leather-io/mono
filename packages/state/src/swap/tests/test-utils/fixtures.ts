@@ -125,6 +125,7 @@ export function createAccountRequest(): AccountRequest {
         accountIndex: 0,
       },
       bitcoin: {
+        type: 'hd',
         taprootDescriptor: 'tr(test)',
         nativeSegwitDescriptor: 'wpkh(test)',
       },

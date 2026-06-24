@@ -35,7 +35,9 @@ export type HttpCacheKey =
 
   // LeatherApiClient
   | 'leather-api-utxos'
+  | 'leather-api-utxos-address'
   | 'leather-api-bitcoin-descriptor-transactions'
+  | 'leather-api-bitcoin-address-transactions'
   | 'leather-api-bitcoin-transaction-by-txid'
   | 'leather-api-usd-exchange-rates'
   | 'leather-api-bitcoin-fee-rates'
@@ -117,7 +119,9 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'mempool-api-transaction-by-txid': { ttl: secondsInMs(5) },
 
   'leather-api-utxos': { ttl: secondsInMs(10) },
+  'leather-api-utxos-address': { ttl: secondsInMs(10) },
   'leather-api-bitcoin-descriptor-transactions': { ttl: secondsInMs(10) },
+  'leather-api-bitcoin-address-transactions': { ttl: secondsInMs(10) },
   'leather-api-bitcoin-transaction-by-txid': { ttl: secondsInMs(10) },
   'leather-api-usd-exchange-rates': { ttl: daysInMs(1) },
   'leather-api-bitcoin-fee-rates': { ttl: secondsInMs(10) },
