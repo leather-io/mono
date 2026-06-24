@@ -6,7 +6,7 @@ import { useSessionBootstrap } from '~/features/multisig/auth/use-session-bootst
 import { SignInSlotProvider } from '~/layouts/page/sign-in-slot';
 
 import { MultisigConnectDropdown } from './components/connection-dropdown/multisig-connect-dropdown';
-import { DevToolsPanel } from './components/dev-tools-panel';
+import { DevToolsPanel } from './components/dev-tools/dev-tools-panel';
 import { multisigEnabled, multisigPaths } from './multisig.constants';
 import { MultisigSessionProvider } from './store/multisig-session';
 
