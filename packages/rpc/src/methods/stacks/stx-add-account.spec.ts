@@ -9,7 +9,6 @@ describe('stxAddAccount', () => {
     publicKeys: [pubkeyA, pubkeyB, pubkeyC],
     threshold: 2,
     name: 'Treasury vault',
-    vaultAccountId: 'vault-account-id',
   };
 
   test('accepts a valid multisig payload', () => {
@@ -41,16 +40,6 @@ describe('stxAddAccount', () => {
     expect(
       stxAddAccount.params.safeParse({ ...validParams, publicKeys: [pubkeyA, 'not-a-pubkey'] })
         .success
-    ).toEqual(false);
-  });
-
-  test('rejects a missing vaultAccountId', () => {
-    expect(
-      stxAddAccount.params.safeParse({
-        publicKeys: validParams.publicKeys,
-        threshold: validParams.threshold,
-        name: validParams.name,
-      }).success
     ).toEqual(false);
   });
 });

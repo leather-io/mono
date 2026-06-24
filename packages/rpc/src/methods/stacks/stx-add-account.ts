@@ -10,7 +10,6 @@ const stxAddAccountRequestParamsSchema = z
     publicKeys: z.array(compressedSecp256k1PublicKeySchema).min(2),
     threshold: z.number().int().min(1),
     name: z.string(),
-    vaultAccountId: z.string(),
     network: z.string().optional(),
   })
   .refine(params => params.threshold <= params.publicKeys.length, {
