@@ -14,7 +14,7 @@ import { ensurePostConditionWireFormat, getPostConditions } from './post-conditi
 import {
   StacksUnsignedContractCallOptions,
   StacksUnsignedContractDeployOptions,
-  StacksUnsignedTokenTransferOptions,
+  StacksUnsignedStxTokenTransferOptions,
   StacksUnsignedTransactionOptions,
   TransactionTypes,
   isTransactionTypeSupported,
@@ -50,7 +50,7 @@ export function getUnsignedContractDeployParsedOptions(
 }
 
 export function getUnsignedStxTokenTransferParsedOptions(
-  options: StacksUnsignedTokenTransferOptions
+  options: StacksUnsignedStxTokenTransferOptions
 ): Parameters<typeof makeUnsignedSTXTokenTransfer>[0] {
   return {
     ...options,

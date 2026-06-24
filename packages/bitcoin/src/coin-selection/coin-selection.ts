@@ -8,6 +8,7 @@ import { createMoney, sumMoney } from '@leather.io/utils';
 import { BitcoinError } from '../validation/bitcoin-error';
 import {
   type InputData,
+  type InputSizing,
   filterUneconomicalUtxos,
   getSizeInfo,
   getUtxoTotal,
@@ -27,16 +28,18 @@ export interface DetermineUtxosForSpendArgs<T> {
   feeRate: number;
   recipients: CoinSelectionRecipient[];
   utxos: T[];
+  inputSizing?: InputSizing;
 }
 export function determineUtxosForSpendAll<T extends InputData>({
   feeRate,
   recipients,
   utxos,
+  inputSizing,
 }: DetermineUtxosForSpendArgs<T>) {
   recipients.forEach(recipient => {
     if (!validate(recipient.address)) throw new BitcoinError('InvalidAddress');
   });
-  const filteredUtxos = filterUneconomicalUtxos({ utxos, feeRate, recipients });
+  const filteredUtxos = filterUneconomicalUtxos({ utxos, feeRate, recipients, inputSizing });
 
   if (!filteredUtxos.length) throw new BitcoinError('InsufficientFunds');
 
@@ -44,6 +47,7 @@ export function determineUtxosForSpendAll<T extends InputData>({
     utxos: filteredUtxos,
     isSendMax: true,
     recipients,
+    inputSizing,
   });
 
   // Fee has already been deducted from the amount with send all
@@ -66,6 +70,7 @@ export function determineUtxosForSpend<T extends InputData>({
   feeRate,
   recipients,
   utxos,
+  inputSizing,
 }: DetermineUtxosForSpendArgs<T>) {
   recipients.forEach(recipient => {
     if (!validate(recipient.address)) throw new BitcoinError('InvalidAddress');
@@ -74,6 +79,7 @@ export function determineUtxosForSpend<T extends InputData>({
     utxos: utxos.sort((a, b) => b.value - a.value),
     feeRate,
     recipients,
+    inputSizing,
   });
   if (!filteredUtxos.length) throw new BitcoinError('InsufficientFunds');
 
@@ -86,6 +92,7 @@ export function determineUtxosForSpend<T extends InputData>({
     return getSizeInfo({
       utxos: neededUtxos,
       recipients,
+      inputSizing,
     });
   }
 

@@ -10,6 +10,7 @@ import {
 import {
   countInputsByScriptType,
   filterUneconomicalUtxos,
+  getSizeInfo,
   getSpendableAmount,
 } from './coin-selection.utils';
 
@@ -151,6 +152,44 @@ describe(filterUneconomicalUtxos.name, () => {
       expect(result.length).toEqual(1);
       expect(result[0].value).toEqual(50000000);
     });
+  });
+});
+
+describe(getSizeInfo.name, () => {
+  const recipients = [{ address: recipientAddress, amount: createMoney(0, 'BTC') }];
+  const utxos = generateMockTransactions([100000, 100000]);
+
+  test('sizes p2wsh multisig inputs heavier than the default single-sig path', () => {
+    const singleSig = getSizeInfo({ utxos, recipients });
+    const multisig = getSizeInfo({
+      utxos,
+      recipients,
+      inputSizing: { paymentType: 'p2wsh', threshold: 2, signerCount: 3 },
+    });
+
+    expect(multisig.txVBytes).toBeGreaterThan(singleSig.txVBytes);
+  });
+
+  test('grows with the m-of-n, confirming threshold and signer count reach the estimator', () => {
+    const twoOfThree = getSizeInfo({
+      utxos,
+      recipients,
+      inputSizing: { paymentType: 'p2wsh', threshold: 2, signerCount: 3 },
+    });
+    const threeOfFive = getSizeInfo({
+      utxos,
+      recipients,
+      inputSizing: { paymentType: 'p2wsh', threshold: 3, signerCount: 5 },
+    });
+
+    expect(threeOfFive.txVBytes).toBeGreaterThan(twoOfThree.txVBytes);
+  });
+
+  test('leaves the default single-sig sizing unchanged when no inputSizing is given', () => {
+    const omitted = getSizeInfo({ utxos, recipients });
+    const explicitUndefined = getSizeInfo({ utxos, recipients, inputSizing: undefined });
+
+    expect(omitted.txVBytes).toEqual(explicitUndefined.txVBytes);
   });
 });
 

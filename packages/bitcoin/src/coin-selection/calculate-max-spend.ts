@@ -5,6 +5,7 @@ import { createMoney, satToBtc } from '@leather.io/utils';
 
 import {
   type InputData,
+  type InputSizing,
   filterUneconomicalUtxos,
   getSpendableAmount,
 } from './coin-selection.utils';
@@ -13,6 +14,7 @@ interface CalculateMaxSpendParams {
   recipient: string;
   utxos: InputData[];
   feeRate: number;
+  inputSizing?: InputSizing;
 }
 
 export interface CalculateMaxSpendResponse {
@@ -24,6 +26,7 @@ export function calculateMaxSpend({
   recipient,
   utxos,
   feeRate,
+  inputSizing,
 }: CalculateMaxSpendParams): CalculateMaxSpendResponse {
   if (!utxos.length)
     return {
@@ -36,6 +39,7 @@ export function calculateMaxSpend({
     utxos,
     feeRate,
     recipients: [{ address: recipient, amount: createMoney(0, 'BTC') }],
+    inputSizing,
   });
 
   const { spendableAmount, fee } = getSpendableAmount({
@@ -43,6 +47,7 @@ export function calculateMaxSpend({
     feeRate,
     recipients: [{ address: recipient, amount: createMoney(0, 'BTC') }],
     isSendMax: true,
+    inputSizing,
   });
 
   return {
