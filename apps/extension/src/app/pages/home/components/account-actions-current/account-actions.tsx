@@ -68,7 +68,7 @@ export function AccountActions() {
       <FundButtons />
       <TransferButtons />
 
-      <BasicTooltip label={swapDisabledTooltipLabel} side="left" asChild>
+      <BasicTooltip label={swapDisabledTooltipLabel} side="top" asChild>
         <styled.span
           display="flex"
           flexGrow={1}
