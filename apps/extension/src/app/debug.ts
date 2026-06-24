@@ -9,6 +9,7 @@ import { persistConfig } from '@shared/storage/redux-persist';
 
 import { queryClient } from './common/persistence';
 import { store } from './store';
+import { selectActiveAccount } from './store/active/active.selectors';
 import { stxChainSlice } from './store/chains/stx-chain.slice';
 import { settingsSlice } from './store/settings/settings.slice';
 import { submittedTransactionsActions } from './store/submitted-transactions/submitted-transactions.actions';
@@ -37,9 +38,19 @@ const debug = {
     // eslint-disable-next-line no-console
     void reduxPersist.getStoredState(persistConfig).then(state => console.log(state));
   },
-  setHighestAccountIndex(fingerprint: string, accountIndex: number) {
+  setHighestAccountIndex(accountIndex: number) {
+    const activeAccount = selectActiveAccount(store.getState());
+    if (!activeAccount) {
+      logger.warn('Cannot set highest account index: no active wallet');
+      return;
+    }
     logger.info(`Highest account index set to ${accountIndex}`);
-    store.dispatch(stxChainSlice.actions.restoreAccountIndex({ fingerprint, accountIndex }));
+    store.dispatch(
+      stxChainSlice.actions.setHighestAccountIndex({
+        fingerprint: activeAccount.fingerprint,
+        accountIndex,
+      })
+    );
   },
   resetMessages() {
     store.dispatch(settingsSlice.actions.resetMessages());

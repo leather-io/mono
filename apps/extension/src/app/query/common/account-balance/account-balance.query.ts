@@ -34,6 +34,11 @@ export function useAccountTotalBalance(accountId: AccountId) {
   return toFetchState(useGetAccountTotalBalanceQuery({ account }));
 }
 
+export function useAccountTotalBalanceQuery(accountId: AccountId) {
+  const account = useAccountAddresses(accountId);
+  return useGetAccountTotalBalanceQuery({ account });
+}
+
 function useGetAccountAvailableBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();
   return useQuery({

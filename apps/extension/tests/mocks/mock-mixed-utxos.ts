@@ -24,6 +24,7 @@ export async function mockMixedUtxosForSend(page: Page) {
   await page.unroute('**/v1/utxos/**');
   await page.route('**/v1/utxos/**', route => {
     const url = route.request().url();
+    if (url.includes('/v1/utxos/addresses/')) return route.fulfill({ json: [] });
     if (url.includes(encodeURIComponent('tr('))) {
       return route.fulfill({ json: [mockTaprootUtxo] });
     }

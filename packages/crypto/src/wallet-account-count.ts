@@ -15,15 +15,8 @@ export interface CountWalletAccountsArgs {
   keychains?: CountWalletAccountsKeychain[];
 }
 
-const maxReasonableAccountIndex = 1000;
-
 export function isValidAccountIndex(index?: number): index is number {
-  return (
-    typeof index === 'number' &&
-    Number.isInteger(index) &&
-    index >= 0 &&
-    index <= maxReasonableAccountIndex
-  );
+  return typeof index === 'number' && Number.isInteger(index) && index >= 0;
 }
 
 export function softwareAccountCountFromHighestIndex(highestAccountIndex?: number): number {
