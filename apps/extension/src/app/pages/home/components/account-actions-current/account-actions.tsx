@@ -1,7 +1,8 @@
+import { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
-import { Flex } from 'leather-styles/jsx';
+import { Flex, styled } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
@@ -16,6 +17,31 @@ import { ActionButton } from './action-button';
 import { FundButtons } from './fund-buttons';
 import { TransferButtons } from './transfer-buttons';
 
+interface SwapDisabledTooltipArgs {
+  swapsEnabled: boolean;
+  isTestnet: boolean;
+  hasStacksAccount: boolean;
+}
+
+function getSwapDisabledTooltipLabel({
+  swapsEnabled,
+  isTestnet,
+  hasStacksAccount,
+}: SwapDisabledTooltipArgs): ReactNode {
+  if (!swapsEnabled) return <SwapsDisabledTooltipLabel />;
+  if (isTestnet) {
+    return (
+      <styled.span textStyle="caption.01">
+        Swaps are only available on mainnet. Switch networks to swap.
+      </styled.span>
+    );
+  }
+  if (!hasStacksAccount) {
+    return <styled.span textStyle="caption.01">Swaps require a Stacks account.</styled.span>;
+  }
+  return null;
+}
+
 export function AccountActions() {
   const navigate = useNavigate();
   const stacksAccount = useCurrentStacksAccount();
@@ -23,6 +49,11 @@ export function AccountActions() {
 
   const swapsEnabled = useConfigSwapsEnabled();
   const swapsBtnDisabled = !swapsEnabled || !stacksAccount || isTestnet;
+  const swapDisabledTooltipLabel = getSwapDisabledTooltipLabel({
+    swapsEnabled,
+    isTestnet,
+    hasStacksAccount: !!stacksAccount,
+  });
   function navigateToDefaultSwapRoute() {
     return navigate(
       replaceRouteParams(RouteUrls.Swap, {
@@ -37,15 +68,24 @@ export function AccountActions() {
       <FundButtons />
       <TransferButtons />
 
-      <BasicTooltip label={swapsEnabled ? '' : <SwapsDisabledTooltipLabel />} side="left" asChild>
-        <ActionButton
-          data-testid={HomePageSelectors.SwapBtn}
-          disabled={swapsBtnDisabled}
-          onClick={navigateToDefaultSwapRoute}
-          variant="outline"
+      <BasicTooltip label={swapDisabledTooltipLabel} side="left" asChild>
+        <styled.span
+          display="flex"
+          flexGrow={1}
+          cursor={swapsBtnDisabled ? 'not-allowed' : undefined}
+          tabIndex={swapsBtnDisabled ? 0 : undefined}
+          aria-disabled={swapsBtnDisabled || undefined}
         >
-          Swap
-        </ActionButton>
+          <ActionButton
+            data-testid={HomePageSelectors.SwapBtn}
+            disabled={swapsBtnDisabled}
+            onClick={navigateToDefaultSwapRoute}
+            variant="outline"
+            pointerEvents={swapsBtnDisabled ? 'none' : undefined}
+          >
+            Swap
+          </ActionButton>
+        </styled.span>
       </BasicTooltip>
     </Flex>
   );
