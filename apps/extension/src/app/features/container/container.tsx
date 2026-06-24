@@ -5,6 +5,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { initalizeAnalytics, useHandleQueuedBackgroundAnalytics } from '@app/common/app-analytics';
+import { useProbeNextAccountForActivity } from '@app/common/hooks/account/use-probe-next-account-for-activity';
 import type { ReceiveView } from '@app/common/receive/receive';
 import { ContainerLayout } from '@app/components/layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
@@ -35,6 +36,7 @@ export function Container() {
 
   const dispatch = useAppDispatch();
   const hasStateRehydrated = useHasStateRehydrated();
+  useProbeNextAccountForActivity(hasStateRehydrated);
   useSyncAddressMonitor();
   useOnWalletLock(() => {
     inMemoryStore.clearAll();

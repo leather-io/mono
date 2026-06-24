@@ -18,6 +18,7 @@ export interface FixedBitcoinAddressInfo {
   type: 'fixedAddress';
   address: string;
   paymentType: 'p2wsh';
+  multisig: { threshold: number; signerCount: number };
 }
 
 export type BitcoinAddressInfo = HdBitcoinAddressInfo | FixedBitcoinAddressInfo;

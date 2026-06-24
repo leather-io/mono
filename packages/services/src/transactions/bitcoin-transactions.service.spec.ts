@@ -70,7 +70,12 @@ describe(BitcoinTransactionsService.name, () => {
       );
       const mockAccount: AccountAddresses = {
         id: { fingerprint: 'multisig-fp', accountIndex: 0 },
-        bitcoin: { type: 'fixedAddress', address: 'bc1qmultisig', paymentType: 'p2wsh' },
+        bitcoin: {
+          type: 'fixedAddress',
+          address: 'bc1qmultisig',
+          paymentType: 'p2wsh',
+          multisig: { threshold: 2, signerCount: 3 },
+        },
       };
       const result = await service.getAccountTransactions(mockAccount);
       expect(requestedAddress).toEqual('bc1qmultisig');
