@@ -27,6 +27,7 @@ export * from './psbt/utils';
 export * from './signer/bitcoin-payer';
 
 export * from './transactions/generate-unsigned-transaction';
+export * from './transactions/wsh-multisig-transaction';
 
 export * from './validation/address-validation';
 export * from './validation/amount-validation';

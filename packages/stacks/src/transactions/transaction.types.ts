@@ -1,6 +1,7 @@
 import {
   UnsignedContractCallOptions,
   UnsignedContractDeployOptions,
+  UnsignedMultiSigTokenTransferOptions,
   UnsignedTokenTransferOptions,
 } from '@stacks/transactions';
 
@@ -46,7 +47,20 @@ export type StacksUnsignedTokenTransferOptions = ReplaceTypes<
   }
 > & { txType: TransactionTypes.StxTokenTransfer };
 
+export type StacksUnsignedMultiSigTokenTransferOptions = ReplaceTypes<
+  UnsignedMultiSigTokenTransferOptions,
+  {
+    amount: Money;
+    fee: Money;
+    nonce: number | string;
+  }
+> & { txType: TransactionTypes.StxTokenTransfer };
+
+export type StacksUnsignedStxTokenTransferOptions =
+  | StacksUnsignedTokenTransferOptions
+  | StacksUnsignedMultiSigTokenTransferOptions;
+
 export type StacksUnsignedTransactionOptions =
   | StacksUnsignedContractCallOptions
   | StacksUnsignedContractDeployOptions
-  | StacksUnsignedTokenTransferOptions;
+  | StacksUnsignedStxTokenTransferOptions;
