@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react';
 
-import type { Chain, MultisigTransaction, NewMemberInput, Vault } from '../data/multisig-types';
+import type { Chain, NewMemberInput } from '../data/multisig-types';
 import { MultisigSessionContext } from './multisig-session';
 
 function useSession() {
@@ -9,41 +9,6 @@ function useSession() {
   // state — surfacing it loudly is correct.
   if (!ctx) throw new Error('useMultisig hooks must be used within <MultisigSessionProvider>');
   return ctx;
-}
-
-function useVaults(): Vault[] {
-  return useSession().state.vaults;
-}
-
-function useVault(vaultId: string | undefined): Vault | undefined {
-  const { state } = useSession();
-  return state.vaults.find(vault => vault.id === vaultId);
-}
-
-export function useVaultTx(
-  vaultId: string | undefined,
-  txId: string | undefined
-): { vault: Vault | undefined; tx: MultisigTransaction | undefined } {
-  const vault = useVault(vaultId);
-  const tx = vault?.transactions.find(t => t.id === txId);
-  return { vault, tx };
-}
-
-interface RecentTransaction extends MultisigTransaction {
-  vault: Vault;
-}
-
-export function useRecentTransactions(limit = 5): RecentTransaction[] {
-  const vaults = useVaults();
-  const out: RecentTransaction[] = [];
-  for (const vault of vaults) {
-    if (vault.invited) continue;
-    for (const tx of vault.transactions) out.push({ ...tx, vault });
-  }
-  return out
-    .slice()
-    .sort((a, b) => (b.highlight ? 1 : 0) - (a.highlight ? 1 : 0))
-    .slice(0, limit);
 }
 
 interface MultisigActions {

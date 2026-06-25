@@ -34,4 +34,7 @@ export const multisigVaultKeys = {
   ) {
     return [...multisigVaultKeys.account(network, address, accountId), 'transactions'] as const;
   },
+  transaction(network: AuthNetworkId, address: string | undefined, txId: string | undefined) {
+    return [...multisigVaultKeys.scope(network, address), 'transaction', txId ?? null] as const;
+  },
 };

@@ -26,3 +26,16 @@ export function useVaultAccountTransactions(network: AuthNetworkId, accountId: s
     retry: retryMultisigQuery,
   });
 }
+
+export function useMultisigTransaction(network: AuthNetworkId, txId: string | undefined) {
+  const session = useSession(network);
+  return useQuery({
+    queryKey: multisigVaultKeys.transaction(network, session?.identity.address, txId),
+    queryFn: ({ signal }) => {
+      if (!txId) throw new Error('useMultisigTransaction requires a txId');
+      return getMultisigService().getTransaction(network, txId, signal);
+    },
+    enabled: Boolean(session) && Boolean(txId),
+    retry: retryMultisigQuery,
+  });
+}

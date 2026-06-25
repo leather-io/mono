@@ -12,10 +12,8 @@ import { Button } from '@leather.io/ui';
 
 import { ChainAvatar } from '../components/chain-avatar';
 import { InvitationModal } from '../components/invitation-modal';
-import { TxRow } from '../components/tx-row';
 import type { Chain } from '../data/multisig-types';
 import { multisigPaths } from '../multisig.constants';
-import { useRecentTransactions } from '../store/use-multisig';
 import { CreateVaultTile } from './components/create-vault-tile';
 import { VaultCard } from './components/vault-card';
 
@@ -113,7 +111,6 @@ export function MultisigDashboardPage() {
   const stxSession = useSession('stx:mainnet');
   const btcSignIn = useSignIn('btc:mainnet');
   const stxSignIn = useSignIn('stx:mainnet');
-  const recentTxs = useRecentTransactions(5);
 
   const vaults = [...(btcVaults.data ?? []), ...(stxVaults.data ?? [])];
 
@@ -212,16 +209,7 @@ export function MultisigDashboardPage() {
             borderColor="ink.border-default"
             p="space.02"
           >
-            {recentTxs.length === 0 && <EmptyActivity />}
-            {recentTxs.map(tx => (
-              <TxRow
-                key={`${tx.vault.id}-${tx.id}`}
-                tx={tx}
-                vault={tx.vault}
-                showVaultName
-                onClick={() => navigate(multisigPaths.tx(tx.vault.id, tx.id))}
-              />
-            ))}
+            <EmptyActivity />
           </Box>
         </Box>
       </Flex>

@@ -1,12 +1,21 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
+import type { MultisigTransaction } from '@leather.io/models';
+
+import { Badge } from '../../components/badge';
 import { CopyAddress } from '../../components/copy-address';
-import { StatusPill } from '../../components/status-pill';
-import type { MultisigTransaction, Vault } from '../../data/multisig-types';
+import { transactionStatusBadge } from '../../components/transaction-status';
+import { chainFromNetwork } from '../../multisig.utils';
+import { formatRelativeTime } from '../relative-time';
+
+// Placeholder until recipient / amount / fee are decoded from the proposal
+// payload (pending backend-provided decoded fields).
+const pendingValue = '—';
 
 interface TxDetailsTableProps {
-  vault: Vault;
-  tx: MultisigTransaction;
+  transaction: MultisigTransaction;
+  proposerLabel: string;
+  initiationDate: string;
 }
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
@@ -31,11 +40,14 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   );
 }
 
-export function TxDetailsTable({ vault, tx }: TxDetailsTableProps) {
-  const isBtc = vault.chain === 'btc';
-  const recipient = isBtc
-    ? 'bc1qsnpv5h9k3p7w2x8r4tnvyu0d5h6f0jgk8m4cqfltm9phf8x2axqs4vym3p'
-    : 'SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR';
+export function TxDetailsTable({
+  transaction,
+  proposerLabel,
+  initiationDate,
+}: TxDetailsTableProps) {
+  const isBtc = chainFromNetwork(transaction.network) === 'btc';
+  const mode = transaction.network.endsWith('mainnet') ? 'mainnet' : 'testnet';
+  const status = transactionStatusBadge(transaction.status);
   return (
     <Box
       borderRadius="md"
@@ -48,19 +60,22 @@ export function TxDetailsTable({ vault, tx }: TxDetailsTableProps) {
         <styled.span textStyle="caption.01" color="ink.text-subdued">
           Status
         </styled.span>
-        <StatusPill status={tx.status} />
+        <Badge variant={status.variant} label={status.label} />
       </Flex>
-      <Row label="Initiator">
-        {tx.proposerName}
-        {tx.proposerUserId === 'me' ? ' (you)' : ''}
+      <Row label="Initiator">{proposerLabel}</Row>
+      <Row label="Initiation date">{initiationDate}</Row>
+      <Row label="Recipient">{pendingValue}</Row>
+      <Row label="Amount">{pendingValue}</Row>
+      <Row label="Fee">{pendingValue}</Row>
+      <Row label="Broadcast date">
+        {transaction.broadcastAt
+          ? formatRelativeTime(new Date(transaction.broadcastAt))
+          : pendingValue}
       </Row>
-      <Row label="Initiation date">{tx.proposedAt}</Row>
-      <Row label="Recipient">
-        <CopyAddress addr={recipient} grouped />
+      <Row label="Network">{`${isBtc ? 'Bitcoin' : 'Stacks'} ${mode}`}</Row>
+      <Row label="Transaction ID">
+        {transaction.txId ? <CopyAddress addr={transaction.txId} /> : pendingValue}
       </Row>
-      <Row label="Amount">{tx.amount}</Row>
-      <Row label="Fee">{isBtc ? '0.00023 BTC ≈ $15.50' : '0.0125 STX ≈ $0.01'}</Row>
-      <Row label="Network">{isBtc ? 'Bitcoin mainnet' : 'Stacks mainnet'}</Row>
       <Row label="Signature type">{isBtc ? 'PSBT (BIP-174)' : 'Standard multisig (SIP-005)'}</Row>
     </Box>
   );

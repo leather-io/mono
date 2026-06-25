@@ -108,7 +108,7 @@ export function AccountDetailPage() {
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
           <SectionLabel>Transactions</SectionLabel>
-          <AccountTransactions network={network} accountId={accountId} />
+          <AccountTransactions network={network} vaultId={vaultId} accountId={accountId} />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>

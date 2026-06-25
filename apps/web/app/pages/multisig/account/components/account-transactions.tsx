@@ -1,16 +1,21 @@
+import { useNavigate } from 'react-router';
+
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useVaultAccountTransactions } from '~/features/multisig/vaults/use-vault-transactions';
 
 import type { AuthNetworkId } from '@leather.io/models';
 
 import { TransactionRow } from '../../components/transaction-row';
+import { multisigPaths } from '../../multisig.constants';
 
 interface AccountTransactionsProps {
   network: AuthNetworkId;
+  vaultId: string | undefined;
   accountId: string | undefined;
 }
 
-export function AccountTransactions({ network, accountId }: AccountTransactionsProps) {
+export function AccountTransactions({ network, vaultId, accountId }: AccountTransactionsProps) {
+  const navigate = useNavigate();
   const transactions = useVaultAccountTransactions(network, accountId);
   const items = transactions.data?.data ?? [];
 
@@ -56,15 +61,23 @@ export function AccountTransactions({ network, accountId }: AccountTransactionsP
       overflow="hidden"
     >
       {items.map((transaction, index) => (
-        <Box
+        <styled.button
           key={transaction.id}
+          type="button"
+          onClick={() => vaultId && void navigate(multisigPaths.tx(vaultId, transaction.id))}
+          display="block"
+          width="100%"
+          textAlign="left"
+          cursor="pointer"
+          bg="transparent"
           p="space.04"
           borderTopWidth={index === 0 ? '0' : '1px'}
           borderTopStyle="solid"
           borderTopColor="ink.border-default"
+          _hover={{ bg: 'ink.component-background-hover' }}
         >
           <TransactionRow transaction={transaction} />
-        </Box>
+        </styled.button>
       ))}
     </Box>
   );
