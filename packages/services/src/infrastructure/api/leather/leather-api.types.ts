@@ -6076,9 +6076,9 @@ export interface paths {
                 xpub: string | null;
                 xpubOriginFingerprint: string | null;
                 xpubOriginPath: string | null;
+                userId: string;
                 signerIndex: number;
                 signingPubkey: string;
-                derivationIndex: number | null;
               }[];
               pendingTransactionCount: number;
               queuedTransactionCount: number;
@@ -6182,9 +6182,9 @@ export interface paths {
                 xpub: string | null;
                 xpubOriginFingerprint: string | null;
                 xpubOriginPath: string | null;
+                userId: string;
                 signerIndex: number;
                 signingPubkey: string;
-                derivationIndex: number | null;
               }[];
               pendingTransactionCount: number;
               queuedTransactionCount: number;
@@ -6276,9 +6276,9 @@ export interface paths {
                 xpub: string | null;
                 xpubOriginFingerprint: string | null;
                 xpubOriginPath: string | null;
+                userId: string;
                 signerIndex: number;
                 signingPubkey: string;
-                derivationIndex: number | null;
               }[];
               pendingTransactionCount: number;
               queuedTransactionCount: number;

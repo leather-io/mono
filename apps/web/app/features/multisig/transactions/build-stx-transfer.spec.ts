@@ -36,12 +36,12 @@ function makeSigner(signerIndex: number, signingPubkey: string): VaultAccountSig
     publicKey: signingPubkey,
     address: 'ST000000000000000000002AMW42H',
     id: `signer-${signerIndex}`,
+    userId: `user-${signerIndex}`,
     xpub: null,
     xpubOriginFingerprint: null,
     xpubOriginPath: null,
     signerIndex,
     signingPubkey,
-    derivationIndex: null,
   };
 }
 
