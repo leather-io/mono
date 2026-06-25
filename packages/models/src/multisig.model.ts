@@ -62,12 +62,12 @@ export interface VaultAccountSigner {
   readonly publicKey: string;
   readonly address: string;
   readonly id: string;
+  readonly userId: string;
   readonly xpub: string | null;
   readonly xpubOriginFingerprint: string | null;
   readonly xpubOriginPath: string | null;
   readonly signerIndex: number;
   readonly signingPubkey: string;
-  readonly derivationIndex: number | null;
 }
 
 interface VaultAccountBase {
