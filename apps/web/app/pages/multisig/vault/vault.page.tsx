@@ -112,7 +112,7 @@ export function VaultDetailPage() {
 
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accounts = useVaultAccounts(network, vaultNetworkKnown ? vaultId : undefined);
-  const accountsBalance = useVaultAccountsBalance();
+  const accountsBalance = useVaultAccountsBalance(accounts.data);
   const cancelVault = useCancelVault(network);
   const joinVault = useJoinVault(network);
   const declineVault = useDeclineVault(network);

@@ -5,6 +5,10 @@ import type {
   VaultAccountSummary,
 } from '@leather.io/models';
 
+const emptyAccountAddresses: AccountAddresses = {
+  id: { fingerprint: 'multisig:none', accountIndex: 0 },
+};
+
 export function createMultisigAccountAddresses(
   account: VaultAccount | VaultAccountSummary
 ): AccountAddresses {
@@ -27,4 +31,11 @@ export function createMultisigAccountAddresses(
         id,
         stacks: { stxAddress: account.multisigAddress },
       };
+}
+
+export function getMultisigAccountAddresses(
+  account?: VaultAccount | VaultAccountSummary
+): AccountAddresses {
+  if (!account) return emptyAccountAddresses;
+  return createMultisigAccountAddresses(account);
 }
