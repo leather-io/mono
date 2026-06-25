@@ -1,6 +1,7 @@
 export * from './bip21/bip21';
 export * from './bip322/bip322-utils';
 export * from './bip322/sign-message-bip322-bitcoinjs';
+export * from './bip322/verify-message-bip322';
 
 export * from './coin-selection/calculate-max-spend';
 export * from './coin-selection/coin-selection';
@@ -37,5 +38,6 @@ export * from './validation/bitcoin-error';
 export * from './utils/bitcoin.descriptors';
 export * from './utils/bitcoin.network';
 export * from './utils/bitcoin.utils';
+export * from './utils/derive-xpub-child-public-key';
 export * from './utils/lookup-derivation-by-address';
 export * from './utils/deconstruct-btc-address';
