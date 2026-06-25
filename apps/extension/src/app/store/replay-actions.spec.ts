@@ -21,6 +21,7 @@ const broadcastActionTypes = [
   userAddsAccount.type,
   userSwitchesAccount.type,
   stxChainSlice.actions.createNewAccount.type,
+  stxChainSlice.actions.restoreAccountIndex.type,
 ];
 
 describe('isReplayableAction', () => {

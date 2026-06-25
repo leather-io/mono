@@ -2,9 +2,15 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
+import { HDKey } from '@scure/bip32';
 import { Psbt } from 'bitcoinjs-lib';
 
-import { ecdsaPublicKeyToSchnorr, getTaprootPaymentFromAddressIndex } from '@leather.io/bitcoin';
+import {
+  deriveTaprootAccount,
+  deriveTaprootReceiveAddressIndexZero,
+  ecdsaPublicKeyToSchnorr,
+  getTaprootPaymentFromAddressIndex,
+} from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { type AccountId } from '@leather.io/models';
 
@@ -18,6 +24,16 @@ import { selectCurrentAccount } from '@app/store/software-keys/software-key.sele
 import { useCurrentAccountId } from '../../account';
 import { selectCurrentNetworkBitcoinAccountLookup } from './bitcoin-keychain';
 import { bitcoinSoftwarePayerFactory } from './bitcoin-payer';
+
+export function getTaprootMainnetAddressFromRootKeychain(rootKeychain: HDKey) {
+  return (accountIndex: number) => {
+    const account = deriveTaprootAccount(rootKeychain, 'mainnet')(accountIndex);
+    return deriveTaprootReceiveAddressIndexZero({
+      keychain: account.keychain,
+      network: 'mainnet',
+    }).payment.address;
+  };
+}
 
 const selectTaprootAccountId = createSelector(
   selectCurrentNetworkBitcoinAccountLookup,

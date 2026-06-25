@@ -180,6 +180,7 @@ interface LeatherUtxoMock {
 export async function mockMixedUtxoRequests(page: Page, utxos: LeatherUtxoMock[]) {
   await page.route('**/v1/utxos/**', route => {
     const url = route.request().url();
+    if (url.includes('/v1/utxos/addresses/')) return route.fulfill({ json: [] });
     const trUtxos = utxos.filter(u => u.path.startsWith("m/86'"));
     const nsUtxos = utxos.filter(u => u.path.startsWith("m/84'"));
     if (url.includes(encodeURIComponent('tr('))) {

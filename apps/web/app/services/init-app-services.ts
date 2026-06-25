@@ -1,4 +1,4 @@
-import { LEATHER_API_URL, MODE } from '~/constants/environment';
+import { LEATHER_API_URL, MODE, TARGET } from '~/constants/environment';
 
 import { initServicesContainer } from '@leather.io/services';
 
@@ -9,7 +9,7 @@ import { WebSettingsService } from './web-settings.service';
 export function initAppServices() {
   initServicesContainer({
     env: {
-      environment: MODE ?? 'development',
+      environment: MODE === 'production' && TARGET === 'production' ? 'production' : 'development',
       leatherApiUrl: LEATHER_API_URL,
     },
     cacheService: WebHttpCacheService,

@@ -1,4 +1,4 @@
-import { base64 } from '@scure/base';
+import { base64, hex } from '@scure/base';
 import * as btc from '@scure/btc-signer';
 
 import { BtcSignerNetwork } from '../utils/bitcoin.network';
@@ -48,4 +48,33 @@ export function assembleWshMultisigPsbt({
     tx.addOutputAddress(output.address ?? changeAddress, output.value, network);
   }
   return base64.encode(tx.toPSBT());
+}
+
+export function psbtBase64ToHex(psbtBase64: string): string {
+  return hex.encode(base64.decode(psbtBase64));
+}
+
+export interface WshMultisigSignature {
+  inputIndex: number;
+  signature: string;
+}
+
+// Reads the partial signatures a wallet added to a signed P2WSH multisig PSBT,
+// one per input. Each `signature` is the DER-encoded ECDSA signature with the
+// trailing sighash flag, hex-encoded.
+export function extractWshMultisigSignatures(
+  signedPsbtHex: string,
+  signerPubkey: string
+): WshMultisigSignature[] {
+  const tx = btc.Transaction.fromPSBT(hex.decode(signedPsbtHex));
+  const expectedPubkey = signerPubkey.toLowerCase();
+  const signatures: WshMultisigSignature[] = [];
+  for (let inputIndex = 0; inputIndex < tx.inputsLength; inputIndex++) {
+    const match = tx
+      .getInput(inputIndex)
+      .partialSig?.find(([pub]) => hex.encode(pub) === expectedPubkey);
+    if (!match) continue;
+    signatures.push({ inputIndex, signature: hex.encode(match[1]) });
+  }
+  return signatures;
 }
