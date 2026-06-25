@@ -1,10 +1,6 @@
 import { useSelector } from 'react-redux';
 
 import { AccountSelectors } from '@tests/selectors/account.selectors';
-import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
-import { Box, HStack } from 'leather-styles/jsx';
-
-import { BulletSeparator, Caption } from '@leather.io/ui';
 
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { AccountTotalBalance } from '@app/components/account-total-balance';
@@ -27,7 +23,6 @@ export function CurrentAccountDisplayer({ onSelectAccount }: CurrentAccountDispl
   const currentAccount = useSelector(selectCurrentAccount);
   const stacksAccount = useStacksAccount(currentAccount);
   const walletEntities = useWalletEntities();
-  const walletName = walletEntities[current.fingerprint]?.name;
   const walletType = walletEntities[current.fingerprint]?.type;
   const { data: name } = useAccountDisplayName({
     address: stacksAccount?.address,
@@ -38,16 +33,7 @@ export function CurrentAccountDisplayer({ onSelectAccount }: CurrentAccountDispl
     <AccountListItemLayout
       fingerprint={currentAccount.fingerprint}
       accountIndex={current.accountIndex}
-      accountAddresses={
-        <HStack alignItems="center" color="ink.text-subdued" gap="space.02" whiteSpace="nowrap">
-          <BulletSeparator>
-            {walletName ? (
-              <Caption data-testid={ConnectAccountSelectors.WalletName}>{walletName}</Caption>
-            ) : null}
-            <AccountAddresses accountId={current} />
-          </BulletSeparator>
-        </HStack>
-      }
+      accountAddresses={<AccountAddresses accountId={current} />}
       accountName={<AccountNameLayout isLoading={false}>{name}</AccountNameLayout>}
       avatar={
         <AccountAvatarItem
@@ -56,15 +42,11 @@ export function CurrentAccountDisplayer({ onSelectAccount }: CurrentAccountDispl
           indicator={getLedgerAccountIndicator(walletType, AccountSelectors.LedgerIndicator)}
         />
       }
-      balanceLabel={
-        // Hack to center element without adjusting AccountListItemLayout
-        <Box pos="relative" top={12}>
-          <AccountTotalBalance accountId={current} />
-        </Box>
-      }
+      balanceLabel={<AccountTotalBalance accountId={current} />}
       isLoading={false}
       isSelected={false}
       onSelectAccount={() => onSelectAccount()}
+      showChevron
     />
   );
 }
