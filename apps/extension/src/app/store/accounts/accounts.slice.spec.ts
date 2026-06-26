@@ -5,9 +5,12 @@ import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leathe
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
+import { makePolicyId } from '../policy/policy-store.utils';
+import { userAddsPolicy } from '../policy/policy.slice';
 import { accountsAdapter, accountsSlice, userClearsAccountName } from './accounts.slice';
 
 const realFingerprint = 'abcd1234';
+const multisigAddress = 'bc1qexampleexampleexampleexampleexampleexamplexyz';
 
 describe('accountsSlice', () => {
   describe('fingerprintMigration', () => {
@@ -75,6 +78,56 @@ describe('accountsSlice', () => {
       const result = accountsSlice.reducer(seeded, fingerprintMigration('99999999'));
 
       expect(result).toEqual(seeded);
+    });
+  });
+
+  describe('userAddsPolicy', () => {
+    test('creates an account row carrying the policy name and active status', () => {
+      const parentAccountId = makeAccountIdentifer(realFingerprint, 0);
+      const networkId = 'mainnet';
+      const id = makePolicyId(parentAccountId, multisigAddress, networkId);
+
+      const result = accountsSlice.reducer(
+        accountsAdapter.getInitialState(),
+        userAddsPolicy({
+          policy: {
+            id,
+            parentAccountId,
+            networkId,
+            chain: 'bitcoin',
+            address: multisigAddress,
+            descriptor: 'wsh(sortedmulti(2,xpubA/0/0,xpubB/0/0))',
+            role: 'signer',
+          },
+          name: 'Family vault',
+        })
+      );
+
+      expect(result.entities[id]).toEqual({ id, name: 'Family vault', status: 'active' });
+    });
+
+    test('re-adds idempotently, updating the name in place', () => {
+      const parentAccountId = makeAccountIdentifer(realFingerprint, 0);
+      const networkId = 'mainnet';
+      const id = makePolicyId(parentAccountId, multisigAddress, networkId);
+      const policy = {
+        id,
+        parentAccountId,
+        networkId,
+        chain: 'bitcoin' as const,
+        address: multisigAddress,
+        descriptor: 'wsh(sortedmulti(2,xpubA/0/0,xpubB/0/0))',
+        role: 'signer' as const,
+      };
+
+      let state = accountsSlice.reducer(
+        accountsAdapter.getInitialState(),
+        userAddsPolicy({ policy, name: 'Family vault' })
+      );
+      state = accountsSlice.reducer(state, userAddsPolicy({ policy, name: 'Renamed vault' }));
+
+      expect(state.ids).toEqual([id]);
+      expect(state.entities[id]).toEqual({ id, name: 'Renamed vault', status: 'active' });
     });
   });
 

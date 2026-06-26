@@ -17,9 +17,9 @@ import { whenStacksChainId } from '@leather.io/stacks';
 
 import { useAppDispatch } from '@app/store';
 
-import { networksActions } from './networks.actions';
+import { networksActions, userEditsNetwork, userRemovesNetwork } from './networks.actions';
 import { selectAppRequestedNetworkId, useCurrentNetwork } from './networks.selectors';
-import { PersistedNetworkConfiguration } from './networks.slice';
+import type { PersistedNetworkConfiguration } from './networks.slice';
 
 export function getStacksNetworkFromChainId(chainId: number) {
   if (chainId === ChainId.Mainnet) return STACKS_MAINNET;
@@ -57,40 +57,46 @@ export function useCurrentStacksNetworkState(): StacksNetwork {
   );
 }
 
+function toNetworkActionPayload({
+  id,
+  name,
+  chainId,
+  subnetChainId,
+  url,
+  bitcoinNetwork,
+  bitcoinUrl,
+}: PersistedNetworkConfiguration): PersistedNetworkConfiguration {
+  return {
+    id,
+    name,
+    chainId,
+    subnetChainId,
+    url,
+    bitcoinNetwork,
+    mode: bitcoinNetworkToNetworkMode(bitcoinNetwork),
+    bitcoinUrl,
+  };
+}
+
 export function useNetworksActions() {
   const dispatch = useAppDispatch();
 
   return useMemo(
     () => ({
-      addNetwork({
-        id,
-        name,
-        chainId,
-        subnetChainId,
-        url,
-        bitcoinNetwork,
-        bitcoinUrl,
-      }: PersistedNetworkConfiguration) {
-        dispatch(
-          networksActions.addNetwork({
-            id,
-            name,
-            chainId,
-            subnetChainId,
-            url,
-            bitcoinNetwork,
-            mode: bitcoinNetworkToNetworkMode(bitcoinNetwork),
-            bitcoinUrl,
-          })
-        );
-        dispatch(networksActions.changeNetwork(id));
+      addNetwork(network: PersistedNetworkConfiguration) {
+        const networkPayload = toNetworkActionPayload(network);
+        dispatch(networksActions.addNetwork(networkPayload));
+        dispatch(networksActions.changeNetwork(networkPayload.id));
         return;
+      },
+      editNetwork(currentId: string, network: PersistedNetworkConfiguration) {
+        void dispatch(userEditsNetwork({ currentId, network: toNetworkActionPayload(network) }));
       },
       changeNetwork(id: string) {
         return dispatch(networksActions.changeNetwork(id));
       },
       removeNetwork(id: string) {
-        return dispatch(networksActions.removeNetwork(id));
+        void dispatch(userRemovesNetwork(id));
       },
     }),
     [dispatch]

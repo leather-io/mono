@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
 import { Stack } from 'leather-styles/jsx';
 
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
 import { Button, Input, Sheet, SheetHeader } from '@leather.io/ui';
@@ -12,8 +13,6 @@ import { ButtonRow } from '@app/components/layout/card/components/button-row';
 import { useAppDispatch } from '@app/store';
 import { clearAccountName, renameAccount } from '@app/store/accounts/accounts.actions';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-
-const ACCOUNT_MAX_NAME_LENGTH = 35;
 
 interface RenameAccountDialogProps {
   accountId: AccountId;

@@ -9,7 +9,7 @@ import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-acc
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
-import { policyAccountCallout } from '../policy-account-match';
+import { policyCallout } from '../policy-match';
 import { useBtcAddAccount } from './use-btc-add-account';
 
 export function RpcBtcAddAccount() {
@@ -45,7 +45,7 @@ export function RpcBtcAddAccount() {
     closeWindow();
   }
 
-  const callout = policyAccountCallout(matchStatus, 'Bitcoin');
+  const callout = policyCallout(matchStatus, 'Bitcoin');
 
   return (
     <Approver requester={origin} width="100%">
