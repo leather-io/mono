@@ -38,6 +38,7 @@ interface FeatureFlags {
   activityRevamp: boolean;
   swapRevamp: boolean;
   releaseTrendingTokens: boolean;
+  releaseAddAccount: boolean;
 }
 
 export function useFlags() {

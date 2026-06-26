@@ -90,21 +90,12 @@ function renderCard() {
 }
 
 describe(SigningAccountCard.name, () => {
-  test('renders the wallet name of the current account', () => {
+  test('renders the account name under the "With account" subheader', () => {
     walletEntitiesMock.mockReturnValue({ abc123: { name: 'Wallet 3' } });
 
     const html = renderCard();
 
-    expect(html).toContain('Wallet 3');
-    expect(html).toContain('Account 1');
-  });
-
-  test('omits the wallet name when the wallet has no entry', () => {
-    walletEntitiesMock.mockReturnValue({});
-
-    const html = renderCard();
-
-    expect(html).not.toContain('Wallet 3');
+    expect(html).toContain('With account');
     expect(html).toContain('Account 1');
   });
 });

@@ -2,6 +2,11 @@ import { useMemo } from 'react';
 
 import { generateMnemonic, getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
+import {
+  getBnsV2ApiClient,
+  getHiroStacksApiClient,
+  getLeatherApiClient,
+} from '@leather.io/services';
 import { resetWallet } from '@leather.io/state';
 
 import { broadcastWalletLock } from '@shared/messages';
@@ -10,13 +15,10 @@ import { analytics } from '@shared/utils/analytics';
 
 import { queryClient } from '@app/common/persistence';
 import { partiallyClearLocalStorage } from '@app/common/store-utils';
-import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
-import { useBnsV2Client } from '@app/query/stacks/bns/bns-v2-client';
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { changeActiveAccount } from '@app/store/active/active.actions';
 import { createNewAccount } from '@app/store/chains/stx-chain.actions';
-import { useStacksClient } from '@app/store/common/api-clients.hooks';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
 import { clearWalletSession } from '@app/store/session-restore';
@@ -25,9 +27,6 @@ import { keyActions } from '@app/store/software-keys/software-key.actions';
 export function useKeyActions() {
   const dispatch = useAppDispatch();
   const activeAccount = useCurrentAccountId();
-  const btcClient = useBitcoinClient();
-  const stxClient = useStacksClient();
-  const bnsV2Client = useBnsV2Client();
 
   return useMemo(
     () => ({
@@ -45,9 +44,9 @@ export function useKeyActions() {
             mnemonic,
             fingerprint,
             password,
-            stxClient,
-            btcClient,
-            bnsV2Client,
+            leatherApiClient: getLeatherApiClient(),
+            hiroClient: getHiroStacksApiClient(),
+            bnsClient: getBnsV2ApiClient(),
           })
         );
       },
@@ -91,6 +90,6 @@ export function useKeyActions() {
         window.location.reload();
       },
     }),
-    [activeAccount, bnsV2Client, btcClient, dispatch, stxClient]
+    [activeAccount, dispatch]
   );
 }

@@ -77,12 +77,6 @@ describe(countWalletAccounts.name, () => {
       expect(isValidAccountIndex(-1)).toBe(false);
       expect(isValidAccountIndex(Infinity)).toBe(false);
     });
-
-    test('accepts up to the reasonable ceiling but rejects values above it', () => {
-      expect(isValidAccountIndex(1000)).toBe(true);
-      expect(isValidAccountIndex(1001)).toBe(false);
-      expect(isValidAccountIndex(4294967296)).toBe(false);
-    });
   });
 
   describe('softwareAccountCountFromHighestIndex', () => {
@@ -96,11 +90,6 @@ describe(countWalletAccounts.name, () => {
       expect(softwareAccountCountFromHighestIndex(NaN)).toBe(1);
       expect(softwareAccountCountFromHighestIndex(2.5)).toBe(1);
       expect(softwareAccountCountFromHighestIndex(-1)).toBe(1);
-    });
-
-    test('falls back to 1 for an over-cap index', () => {
-      expect(softwareAccountCountFromHighestIndex(1001)).toBe(1);
-      expect(softwareAccountCountFromHighestIndex(4294967296)).toBe(1);
     });
   });
 

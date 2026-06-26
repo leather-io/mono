@@ -1,6 +1,5 @@
 import { AccountSelectors } from '@tests/selectors/account.selectors';
-import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
-import { Box, Stack, styled } from 'leather-styles/jsx';
+import { Box, styled } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
 import { Approver, Caption, ItemLayout, SkeletonLoader } from '@leather.io/ui';
@@ -27,7 +26,6 @@ export function SigningAccountCard({
 }: SigningAccountCardProps) {
   const account = useCurrentStacksAccount();
   const walletEntities = useWalletEntities();
-  const walletName = walletEntities[account?.fingerprint ?? '']?.name;
   const walletType = walletEntities[account?.fingerprint ?? '']?.type;
 
   const stxAddress = account?.address || '';
@@ -65,14 +63,7 @@ export function SigningAccountCard({
             />
           }
           titleLeft={<AccountNameLayout isLoading={isLoadingName}>{name}</AccountNameLayout>}
-          captionLeft={
-            <Stack gap="space.01" alignItems="flex-start">
-              {walletName ? (
-                <Caption data-testid={ConnectAccountSelectors.WalletName}>{walletName}</Caption>
-              ) : null}
-              {address}
-            </Stack>
-          }
+          captionLeft={address}
           titleRight={titleRight}
           captionRight={captionRight}
         />

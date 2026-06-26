@@ -1,0 +1,47 @@
+name: web:staging-deploy
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+
+env:
+  DO_NOT_TRACK: 1
+
+concurrency:
+  group: web-staging-deploy
+  cancel-in-progress: true
+
+jobs:
+  staging:
+    name: staging
+    runs-on: ubuntu-latest
+    environment: web:staging
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/provision
+
+      - name: build-web-app-dependencies
+        run: pnpm turbo run build --filter=@leather.io/web^...
+
+      - name: build-web-app
+        working-directory: apps/web
+        env:
+          LEATHER_FRONT_WEB_APP_API_TOKEN: ${{ secrets.FRONT_WEB_APP_API_TOKEN }}
+          LEATHER_TARGET: staging
+        run: pnpm run build
+
+      - name: upload-staging-version
+        working-directory: apps/web
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_STAGING_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
+        run: pnpm wrangler versions upload --preview-alias dev

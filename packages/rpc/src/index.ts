@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { ValueOf } from '@leather.io/models';
 
+import { btcAddAccount } from './methods/bitcoin/btc-add-account';
 import { sendTransfer } from './methods/bitcoin/send-transfer';
 import { signMessage } from './methods/bitcoin/sign-message';
 import { signPsbt } from './methods/bitcoin/sign-psbt';
@@ -9,6 +10,7 @@ import { getAddresses } from './methods/get-addresses';
 import { getInfo } from './methods/get-info';
 import { open } from './methods/open';
 import { openSwap } from './methods/open-swap';
+import { stxAddAccount } from './methods/stacks/stx-add-account';
 import { stxCallContract } from './methods/stacks/stx-call-contract';
 import { stxDeployContract } from './methods/stacks/stx-deploy-contract';
 import { stxGetAddresses } from './methods/stacks/stx-get-addresses';
@@ -26,7 +28,9 @@ import { ExtractErrorResponse, ExtractSuccessResponse } from './rpc/schemas';
 export * from './rpc/schemas';
 export * from './rpc/helpers';
 export * from './methods/get-info';
+export * from './methods/bitcoin/btc-add-account';
 export * from './methods/bitcoin/sign-psbt';
+export * from './methods/stacks/stx-add-account';
 export * from './methods/get-addresses';
 export * from './methods/bitcoin/send-transfer';
 export * from './methods/bitcoin/sign-message';
@@ -47,6 +51,7 @@ export * from './methods/open';
 export * from './methods/open-swap';
 
 export const endpoints = {
+  btcAddAccount,
   getAddresses,
   getInfo,
   open,
@@ -54,6 +59,7 @@ export const endpoints = {
   sendTransfer,
   signMessage,
   signPsbt,
+  stxAddAccount,
   stxCallContract,
   stxDeployContract,
   stxGetAddresses,
