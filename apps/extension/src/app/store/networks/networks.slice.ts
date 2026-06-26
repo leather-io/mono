@@ -1,4 +1,4 @@
-import { EntityId, PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import {
   type NetworkConfiguration,
@@ -6,7 +6,7 @@ import {
 } from '@leather.io/models';
 import { resetWallet } from '@leather.io/state';
 
-const defaultCurrentNetworkId = WalletDefaultNetworkConfigurationIds.mainnet as EntityId;
+const defaultCurrentNetworkId = WalletDefaultNetworkConfigurationIds.mainnet as string;
 
 // Creates type that replicates network store before addition of Bitcoin.
 // Current implementation uses a static btc config, based on stx config, so
@@ -35,7 +35,7 @@ export const networksSlice = createSlice({
       state.currentNetworkId = action.payload;
     },
     removeNetwork(state, action: PayloadAction<string>) {
-      networksAdapter.removeOne(state, action.payload as any);
+      networksAdapter.removeOne(state, action.payload);
     },
   },
   extraReducers: builder =>

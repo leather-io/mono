@@ -97,6 +97,22 @@ describe('wsh-descriptor', () => {
     expect(address).toBe(btc.Address(btc.TEST_NETWORK).encode(btc.OutScript.decode(scriptPubKey)));
   });
 
+  it('derives raw-pubkey-only p2wsh addresses from the explicit network', () => {
+    const rawPubkeyDescriptor = `wsh(pk(${bytesToHex(pubkeyA)}))`;
+    const { scriptPubKey } = compileWshDescriptor(rawPubkeyDescriptor);
+    const mainnetAddress = getWshDescriptorAddress(rawPubkeyDescriptor, 'mainnet');
+    const testnetAddress = getWshDescriptorAddress(rawPubkeyDescriptor, 'testnet');
+
+    expect(mainnetAddress.startsWith('bc1q')).toBe(true);
+    expect(testnetAddress.startsWith('tb1q')).toBe(true);
+    expect(mainnetAddress).toBe(
+      btc.Address(btc.NETWORK).encode(btc.OutScript.decode(scriptPubKey))
+    );
+    expect(testnetAddress).toBe(
+      btc.Address(btc.TEST_NETWORK).encode(btc.OutScript.decode(scriptPubKey))
+    );
+  });
+
   it('throws for a non-wsh descriptor', () => {
     expect(() => getWshDescriptorAddress(`wpkh(${xpubA})`)).toThrow();
   });

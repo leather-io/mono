@@ -9,6 +9,9 @@ import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { type Network, Psbt, networks } from 'bitcoinjs-lib';
 
+import { type BitcoinNetworkModes } from '@leather.io/models';
+
+import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
 
 const { Descriptor, parseKeyExpression } = DescriptorsFactory(secp256k1);
@@ -23,13 +26,10 @@ const testnetExtendedKeyPrefixes = ['tpub', 'tprv', 'upub', 'uprv', 'vpub', 'vpr
 const keyExpressionStarts = ['(', ',', ']'];
 
 // A P2WSH witness script and its scriptPubKey are network-independent — the same
-// keys and policy compile to identical bytes on mainnet and testnet. The network
-// only governs extended-key version-byte validation (and bech32 address
-// encoding, which we don't use). We therefore pick the network that matches the
-// descriptor's keys so parsing succeeds regardless of the wallet's active
-// network — coordinators build descriptors from keys shared as xpubs or
-// tpubs (getAddresses encodes them for whichever network was active), so
-// the descriptor's key encoding need not match our current network.
+// keys and policy compile to identical bytes on mainnet and testnet. This
+// parsing network only governs extended-key version-byte validation. Callers
+// that need a bech32 address should pass an explicit network to
+// getWshDescriptorAddress instead of treating this fallback as policy identity.
 function getNetworkForDescriptor(descriptor: string): Network {
   const compactDescriptor = descriptor.replace(/\s/g, '');
   const hasTestnetKey = keyExpressionStarts.some(start =>
@@ -156,11 +156,20 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
 }
 
 // Derives the P2WSH (bech32) receive address a `wsh(...)` descriptor locks to.
-// The network is auto-detected from the descriptor's own key prefixes (see
-// getNetworkForDescriptor), so this is independent of the wallet's active
-// network. Reuses makeWshDescriptorInstance, which already validates the
-// descriptor and throws on malformed or non-wsh() input.
-export function getWshDescriptorAddress(descriptor: string): string {
+// Pass `networkMode` when policy/network identity is known. If omitted, the
+// address network is inferred from the descriptor's key prefixes for backwards
+// compatibility with existing callers.
+export function getWshDescriptorAddress(
+  descriptor: string,
+  networkMode?: BitcoinNetworkModes
+): string {
+  if (networkMode) {
+    const { scriptPubKey } = compileWshDescriptor(descriptor);
+    return btc.Address(getBtcSignerLibNetworkConfigByMode(networkMode)).encode(
+      btc.OutScript.decode(scriptPubKey)
+    );
+  }
+
   const address = makeWshDescriptorInstance(descriptor).getAddress();
   if (!address) throw new Error('Descriptor does not produce an address');
   return address;
