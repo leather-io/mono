@@ -19,6 +19,7 @@ import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
 import { TransactionRow } from '../components/transaction-row';
 import type { Chain } from '../data/multisig-types';
+import { collectingSignaturesGradient } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { CreateVaultTile } from './components/create-vault-tile';
 import { VaultCard } from './components/vault-card';
@@ -104,6 +105,7 @@ function ActivityFeed({
           textAlign="left"
           cursor="pointer"
           bg="transparent"
+          bgImage={item.transaction.status === 'pending' ? collectingSignaturesGradient : undefined}
           p="space.03"
           borderRadius="md"
           _hover={{ bg: 'ink.component-background-hover' }}

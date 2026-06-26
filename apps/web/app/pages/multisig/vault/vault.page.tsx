@@ -149,8 +149,12 @@ export function VaultDetailPage() {
         </Callout>
       )}
 
-      <Flex direction={{ base: 'column', xl: 'row' }} gap="space.06" alignItems="flex-start">
-        <Box flex={{ xl: '1' }} minWidth={0} width={{ base: '100%', xl: 'auto' }}>
+      <Flex
+        direction={['column', 'column', 'row']}
+        gap={['space.06', 'space.06', 'space.08', 'space.10']}
+        alignItems="flex-start"
+      >
+        <Box flex={['1', '1', '1.6']} width="100%">
           <VaultBalanceHero
             vault={vault}
             crypto={accountsBalance.crypto}
@@ -181,7 +185,7 @@ export function VaultDetailPage() {
             onShareInvite={() => setIsSharingInvites(true)}
           />
         </Box>
-        <Box width={{ base: '100%', xl: '420px' }} flexShrink={0}>
+        <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>{vaultDetailsHeading}</SectionLabel>
           <VaultStatusCard
             vault={vault}

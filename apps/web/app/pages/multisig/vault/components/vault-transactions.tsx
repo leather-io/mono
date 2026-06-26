@@ -6,6 +6,7 @@ import { useVaultTransactions } from '~/features/multisig/vaults/use-vault-trans
 import type { AuthNetworkId, VaultAccountSummary } from '@leather.io/models';
 
 import { TransactionRow } from '../../components/transaction-row';
+import { collectingSignaturesGradient } from '../../multisig-tokens';
 import { multisigPaths } from '../../multisig.constants';
 
 interface VaultTransactionsProps {
@@ -69,6 +70,7 @@ export function VaultTransactions({ network, vaultId, accounts }: VaultTransacti
           textAlign="left"
           cursor="pointer"
           bg="transparent"
+          bgImage={transaction.status === 'pending' ? collectingSignaturesGradient : undefined}
           p="space.04"
           borderTopWidth={index === 0 ? '0' : '1px'}
           borderTopStyle="solid"

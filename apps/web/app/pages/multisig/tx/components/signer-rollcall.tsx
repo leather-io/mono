@@ -1,7 +1,8 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { SignIcon } from '~/components/icons/sign-icon';
 
 import type { MultisigTransaction, Vault, VaultAccount } from '@leather.io/models';
-import { Button } from '@leather.io/ui';
+import { Button, Spinner } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
@@ -76,8 +77,14 @@ export function SignerRollcall({
               caption={<CopyAddress addr={signer.address} />}
               trailingTitle={
                 canSign ? (
-                  <Button variant="solid" size="sm" disabled={busy} onClick={onSign}>
-                    {isSigning ? 'Signing…' : 'Sign'}
+                  <Button
+                    variant="solid"
+                    size="sm"
+                    disabled={busy}
+                    onClick={onSign}
+                    iconStart={<SignIcon />}
+                  >
+                    Sign
                   </Button>
                 ) : (
                   <styled.span
@@ -92,6 +99,31 @@ export function SignerRollcall({
           </Box>
         );
       })}
+
+      {isSigning && (
+        <Flex
+          gap="space.03"
+          alignItems="flex-start"
+          p="space.04"
+          bg="blue.background-primary"
+          borderTopWidth="1px"
+          borderTopStyle="solid"
+          borderTopColor="blue.border"
+        >
+          <Box pt="space.01">
+            <Spinner size="14px" color="blue.action-primary-default" />
+          </Box>
+          <Box>
+            <styled.div textStyle="label.02" color="blue.text-primary">
+              Verifying transaction…
+            </styled.div>
+            <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
+              Re-deriving the multisig script and checking signer order. The wallet popup will open
+              once this completes.
+            </styled.div>
+          </Box>
+        </Flex>
+      )}
 
       {canCancel && (
         <Flex

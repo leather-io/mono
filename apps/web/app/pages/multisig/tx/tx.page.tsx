@@ -4,6 +4,8 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 import { Box, Flex } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
+import { decodeProposalSummary } from '~/features/multisig/transactions/decode-proposal-summary';
+import { useOnChainTransaction } from '~/features/multisig/transactions/use-onchain-transaction';
 import {
   useBroadcastTransaction,
   useCancelTransaction,
@@ -14,9 +16,16 @@ import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useMultisigTransaction } from '~/features/multisig/vaults/use-vault-transactions';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
+import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
-import type { AuthNetworkId } from '@leather.io/models';
-import { truncateMiddle } from '@leather.io/utils';
+import { btcAsset, stxAsset } from '@leather.io/constants';
+import type {
+  AuthNetworkId,
+  MarketData,
+  Money,
+  MultisigTransactionStatus,
+} from '@leather.io/models';
+import { baseCurrencyAmountInQuote, truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../components/avatar-circle';
 import { Badge } from '../components/badge';
@@ -30,6 +39,22 @@ import { multisigPaths } from '../multisig.constants';
 import { SignerRollcall } from './components/signer-rollcall';
 import { TxDetailsTable } from './components/tx-details-table';
 import { formatRelativeTime } from './relative-time';
+
+// The chain is the source of truth once a tx is on it: a confirmed/failed
+// on-chain result supersedes the backend's "broadcast" status.
+function reconcileStatus(
+  backendStatus: MultisigTransactionStatus,
+  onChainStatus: 'confirmed' | 'pending' | 'failed' | undefined
+): MultisigTransactionStatus {
+  if (onChainStatus === 'confirmed') return 'confirmed';
+  if (onChainStatus === 'failed') return 'failed';
+  return backendStatus;
+}
+
+function toFiat(money: Money | undefined, marketData: MarketData | undefined): Money | undefined {
+  if (!money || !marketData || money.symbol !== marketData.pair.base) return undefined;
+  return baseCurrencyAmountInQuote(money, marketData);
+}
 
 export function TxDetailPage() {
   const { vaultId, txId } = useParams();
@@ -52,6 +77,12 @@ export function TxDetailPage() {
   const transaction = useMultisigTransaction(network, vaultNetworkKnown ? txId : undefined);
   const account = useVaultAccount(network, transaction.data?.vaultAccountId);
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
+  const onChain = useOnChainTransaction(
+    network,
+    transaction.data?.txId ?? null,
+    account.data?.multisigAddress ?? ''
+  );
+  const marketData = useMarketDataQuery(network.startsWith('btc') ? btcAsset : stxAsset);
 
   const signTransaction = useSignTransaction(network);
   const cancelTransaction = useCancelTransaction(network);
@@ -108,10 +139,19 @@ export function TxDetailPage() {
   const iSigned = mySigner
     ? tx.signatures.some(sig => sig.signerIndex === mySigner.signerIndex)
     : false;
+  // On-chain values are authoritative once broadcast; before that, decode the
+  // proposal payload so recipient/amount/fee still show while collecting signatures.
+  const decoded = decodeProposalSummary(acct, tx);
+  const recipient = onChain.recipient ?? decoded.recipient;
+  const amount = onChain.amount ?? decoded.amount;
+  const fee = onChain.fee ?? decoded.fee;
+  const amountFiat = toFiat(amount, marketData.data);
+  const feeFiat = toFiat(fee, marketData.data);
+  const effectiveStatus = reconcileStatus(tx.status, onChain.status);
   const awaitingMySignature = tx.status === 'pending' && Boolean(mySigner) && !iSigned;
   const heroStatus = awaitingMySignature
     ? { label: 'Awaiting your signature', variant: 'pending' as const }
-    : transactionStatusBadge(tx.status);
+    : transactionStatusBadge(effectiveStatus);
 
   function onSign() {
     signTransaction.mutate(
@@ -141,8 +181,12 @@ export function TxDetailPage() {
       backTo={multisigPaths.account(vault.data.id, tx.vaultAccountId)}
       onBack={canGoBack ? () => navigate(-1) : undefined}
     >
-      <Flex direction={{ base: 'column', xl: 'row' }} gap="space.06" alignItems="flex-start">
-        <Box flex={{ xl: '1' }} minWidth={0} width={{ base: '100%', xl: 'auto' }}>
+      <Flex
+        direction={['column', 'column', 'row']}
+        gap={['space.06', 'space.06', 'space.08', 'space.10']}
+        alignItems="flex-start"
+      >
+        <Box flex={['1', '1', '1.6']} width="100%">
           <MultisigHero
             themeId={vaultThemeFromName(vault.data.theme).id}
             primary="Transfer"
@@ -162,11 +206,17 @@ export function TxDetailPage() {
           <SectionLabel>Transaction details</SectionLabel>
           <TxDetailsTable
             transaction={tx}
+            status={effectiveStatus}
             proposerLabel={proposerLabel}
             initiationDate={initiationDate}
+            recipient={recipient}
+            amount={amount}
+            amountFiat={amountFiat}
+            fee={fee}
+            feeFiat={feeFiat}
           />
         </Box>
-        <Box width={{ base: '100%', xl: '420px' }} flexShrink={0}>
+        <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel>Signatures</SectionLabel>
           <SignerRollcall
             vault={vault.data}

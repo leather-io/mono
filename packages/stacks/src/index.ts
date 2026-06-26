@@ -3,6 +3,7 @@ export * from './mocks/mocks';
 export * from './signer/signer';
 export * from './stacks.utils';
 export * from './transactions/create-tx-hex';
+export * from './transactions/decode-stx-transfer';
 export * from './transactions/generate-unsigned-transaction';
 export * from './transactions/get-contract-fn-args';
 export * from './transactions/get-error-message';
