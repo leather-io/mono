@@ -1,5 +1,8 @@
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { type NetworkConfiguration } from '@leather.io/models';
+import {
+  type NetworkConfiguration,
+  WalletDefaultNetworkConfigurationIds,
+} from '@leather.io/models';
 import { type RpcParams, stxAddAccount } from '@leather.io/rpc';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 
@@ -7,31 +10,22 @@ import { makePolicyId } from '@app/store/policy/policy-store.utils';
 
 interface ResolveStxPolicyNetworkArgs {
   paramsNetwork: string | undefined;
-  defaultNetwork: NetworkConfiguration;
-  defaultNetworkId: string;
   networks: Record<string, NetworkConfiguration>;
 }
 
-function resolveStxPolicyNetwork({
-  paramsNetwork,
-  defaultNetwork,
-  defaultNetworkId,
-  networks,
-}: ResolveStxPolicyNetworkArgs) {
-  if (!paramsNetwork) return { network: defaultNetwork, networkId: defaultNetworkId };
+function resolveStxPolicyNetwork({ paramsNetwork, networks }: ResolveStxPolicyNetworkArgs) {
+  const networkKey = paramsNetwork ?? WalletDefaultNetworkConfigurationIds.mainnet;
 
-  const requestedNetwork = networks[paramsNetwork];
-  if (!requestedNetwork) throw new Error(`Unknown STX add account network: ${paramsNetwork}`);
+  const network = networks[networkKey];
+  if (!network) throw new Error(`Unknown STX add account network: ${networkKey}`);
 
-  return { network: requestedNetwork, networkId: requestedNetwork.id };
+  return { network, networkId: network.id };
 }
 
 interface CreateStxPolicyRegistrationArgs {
   params: RpcParams<typeof stxAddAccount>;
   fingerprint: string;
   accountIndex: number;
-  defaultNetwork: NetworkConfiguration;
-  defaultNetworkId: string;
   networks: Record<string, NetworkConfiguration>;
 }
 
@@ -39,14 +33,10 @@ export function createStxPolicyRegistration({
   params,
   fingerprint,
   accountIndex,
-  defaultNetwork,
-  defaultNetworkId,
   networks,
 }: CreateStxPolicyRegistrationArgs) {
   const { network, networkId } = resolveStxPolicyNetwork({
     paramsNetwork: params.network,
-    defaultNetwork,
-    defaultNetworkId,
     networks,
   });
   const address = deriveStxMultisigAddress({

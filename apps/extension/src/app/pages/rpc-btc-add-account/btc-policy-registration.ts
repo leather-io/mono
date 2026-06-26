@@ -4,38 +4,32 @@ import {
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { type NetworkConfiguration } from '@leather.io/models';
+import {
+  type NetworkConfiguration,
+  WalletDefaultNetworkConfigurationIds,
+} from '@leather.io/models';
 import { type RpcParams, btcAddAccount } from '@leather.io/rpc';
 
 import { makePolicyId } from '@app/store/policy/policy-store.utils';
 
 interface ResolveBtcPolicyNetworkArgs {
   paramsNetwork: string | undefined;
-  defaultNetwork: NetworkConfiguration;
-  defaultNetworkId: string;
   networks: Record<string, NetworkConfiguration>;
 }
 
-function resolveBtcPolicyNetwork({
-  paramsNetwork,
-  defaultNetwork,
-  defaultNetworkId,
-  networks,
-}: ResolveBtcPolicyNetworkArgs) {
-  if (!paramsNetwork) return { network: defaultNetwork, networkId: defaultNetworkId };
+function resolveBtcPolicyNetwork({ paramsNetwork, networks }: ResolveBtcPolicyNetworkArgs) {
+  const networkKey = paramsNetwork ?? WalletDefaultNetworkConfigurationIds.mainnet;
 
-  const requestedNetwork = networks[paramsNetwork];
-  if (!requestedNetwork) throw new Error(`Unknown BTC add account network: ${paramsNetwork}`);
+  const network = networks[networkKey];
+  if (!network) throw new Error(`Unknown BTC add account network: ${networkKey}`);
 
-  return { network: requestedNetwork, networkId: requestedNetwork.id };
+  return { network, networkId: network.id };
 }
 
 interface CreateBtcPolicyRegistrationArgs {
   params: RpcParams<typeof btcAddAccount>;
   fingerprint: string;
   accountIndex: number;
-  defaultNetwork: NetworkConfiguration;
-  defaultNetworkId: string;
   networks: Record<string, NetworkConfiguration>;
 }
 
@@ -43,14 +37,10 @@ export function createBtcPolicyRegistration({
   params,
   fingerprint,
   accountIndex,
-  defaultNetwork,
-  defaultNetworkId,
   networks,
 }: CreateBtcPolicyRegistrationArgs) {
   const { network, networkId } = resolveBtcPolicyNetwork({
     paramsNetwork: params.network,
-    defaultNetwork,
-    defaultNetworkId,
     networks,
   });
   const { scriptPubKey } = compileWshDescriptor(params.descriptor);

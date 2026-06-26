@@ -7,11 +7,7 @@ import { broadcastReplayAction } from '@shared/messages';
 
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
-import {
-  useCurrentNetwork,
-  useCurrentNetworkId,
-  useNetworks,
-} from '@app/store/networks/networks.selectors';
+import { useNetworks } from '@app/store/networks/networks.selectors';
 import { userAddsPolicy } from '@app/store/policy/policy.slice';
 
 import { createStxPolicyRegistration } from './stx-policy-registration';
@@ -24,8 +20,6 @@ import { createStxPolicyRegistration } from './stx-policy-registration';
 export function useRegisterStxPolicy() {
   const dispatch = useAppDispatch();
   const { fingerprint, accountIndex } = useCurrentAccountId();
-  const defaultNetwork = useCurrentNetwork();
-  const defaultNetworkId = useCurrentNetworkId();
   const networks = useNetworks();
 
   return useCallback(
@@ -35,8 +29,6 @@ export function useRegisterStxPolicy() {
           params,
           fingerprint,
           accountIndex,
-          defaultNetwork,
-          defaultNetworkId,
           networks,
         });
         const action = userAddsPolicy(addPolicyPayload);
@@ -49,6 +41,6 @@ export function useRegisterStxPolicy() {
         return null;
       }
     },
-    [dispatch, fingerprint, accountIndex, defaultNetwork, defaultNetworkId, networks]
+    [dispatch, fingerprint, accountIndex, networks]
   );
 }

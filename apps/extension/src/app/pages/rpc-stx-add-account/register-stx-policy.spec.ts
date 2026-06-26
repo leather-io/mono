@@ -21,8 +21,6 @@ describe(createStxPolicyRegistration.name, () => {
       params: { ...baseParams, network: 'testnet' },
       fingerprint: 'deadbeef',
       accountIndex: 0,
-      defaultNetwork: defaultNetworksKeyedById.mainnet,
-      defaultNetworkId: 'mainnet',
       networks,
     });
 
@@ -36,13 +34,11 @@ describe(createStxPolicyRegistration.name, () => {
     );
   });
 
-  test('falls back to the default network when the request omits network', () => {
+  test('defaults to mainnet when the request omits network', () => {
     const registration = createStxPolicyRegistration({
       params: baseParams,
       fingerprint: 'deadbeef',
       accountIndex: 0,
-      defaultNetwork: defaultNetworksKeyedById.mainnet,
-      defaultNetworkId: 'mainnet',
       networks,
     });
 
@@ -50,14 +46,12 @@ describe(createStxPolicyRegistration.name, () => {
     expect(registration.addPolicyPayload.policy.networkId).toBe('mainnet');
   });
 
-  test('rejects an unknown requested network instead of falling back to the active network', () => {
+  test('rejects an unknown requested network instead of defaulting to mainnet', () => {
     expect(() =>
       createStxPolicyRegistration({
         params: { ...baseParams, network: 'unknown-network' },
         fingerprint: 'deadbeef',
         accountIndex: 0,
-        defaultNetwork: defaultNetworksKeyedById.mainnet,
-        defaultNetworkId: 'mainnet',
         networks,
       })
     ).toThrow('Unknown STX add account network: unknown-network');
