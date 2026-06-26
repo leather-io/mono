@@ -3,25 +3,18 @@ import { useParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useToast } from '~/features/toasts/use-toast';
-import { Page } from '~/layouts/page/page';
 
 import { AvatarCircle } from '../components/avatar-circle';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
+import { MultisigPage } from '../components/multisig-page';
+import { SectionLabel } from '../components/section-label';
 import { multisigPaths } from '../multisig.constants';
 import { useMultisigActions, useVaultTx } from '../store/use-multisig';
 import { SignerRollcall } from './components/signer-rollcall';
 import { TxDetailsTable } from './components/tx-details-table';
 
 const VERIFY_MS = 900;
-
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.03" mt="space.05">
-      {children}
-    </styled.h3>
-  );
-}
 
 function TxAlert({
   tone,
@@ -70,13 +63,12 @@ export function TxDetailPage() {
 
   if (!vault || !tx) {
     return (
-      <Page>
-        <Page.Header
-          title="Transaction"
-          backTo={vault ? multisigPaths.vault(vault.id) : multisigPaths.index}
-        />
+      <MultisigPage
+        title="Transaction"
+        backTo={vault ? multisigPaths.vault(vault.id) : multisigPaths.index}
+      >
         <MultisigErrorState body="This transaction isn't part of the current session." />
-      </Page>
+      </MultisigPage>
     );
   }
 
@@ -101,9 +93,12 @@ export function TxDetailPage() {
   const showFailedAlert = tx.status === 'failed' || tx.status === 'dropped';
 
   return (
-    <Page>
-      <Page.Header title="Transaction details" backTo={multisigPaths.vault(vault.id)} />
-      <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
+    <MultisigPage title="Transaction details" backTo={multisigPaths.vault(vault.id)}>
+      <Flex
+        direction={['column', 'column', 'row']}
+        gap={['space.06', 'space.06', 'space.08', 'space.10']}
+        alignItems="flex-start"
+      >
         <Box flex={['1', '1', '1.6']} width="100%">
           <MultisigHero
             themeId={vault.theme}
@@ -142,7 +137,7 @@ export function TxDetailPage() {
           <TxDetailsTable vault={vault} tx={tx} />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
-          <SectionLabel>Signatures</SectionLabel>
+          <SectionLabel noGutter>Signatures</SectionLabel>
           <SignerRollcall
             vault={vault}
             tx={tx}
@@ -153,6 +148,6 @@ export function TxDetailPage() {
           />
         </Box>
       </Flex>
-    </Page>
+    </MultisigPage>
   );
 }
