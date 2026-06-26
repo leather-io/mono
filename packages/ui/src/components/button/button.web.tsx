@@ -92,7 +92,7 @@ const StyledButton = styled('button', {
         },
         _disabled: {
           _hover: { bg: 'unset' },
-          border: '1px solid {colors.ink.text-non-interactive}',
+          border: '1px solid {colors.ink.border-default}',
           color: 'ink.text-non-interactive',
           cursor: 'not-allowed',
         },
