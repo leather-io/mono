@@ -8,7 +8,7 @@ import { policyAdapter } from './policy.slice';
 
 const selectors = policyAdapter.getSelectors((state: RootState) => state.policy);
 
-export const selectPolicyNetworkIds = createSelector(selectors.selectAll, policies => {
+const selectPolicyNetworkIds = createSelector(selectors.selectAll, policies => {
   return new Set(policies.map(policy => policy.networkId));
 });
 
