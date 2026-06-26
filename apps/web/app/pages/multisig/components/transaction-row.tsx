@@ -10,9 +10,10 @@ import { VaultListItem } from './vault-list-item';
 
 interface TransactionRowProps {
   transaction: MultisigTransactionSummary;
+  subtitle?: string;
 }
 
-export function TransactionRow({ transaction }: TransactionRowProps) {
+export function TransactionRow({ transaction, subtitle }: TransactionRowProps) {
   const asset = chainFromNetwork(transaction.network) === 'btc' ? 'BTC' : 'STX';
   const status = transactionStatusBadge(transaction.status);
   return (
@@ -36,6 +37,13 @@ export function TransactionRow({ transaction }: TransactionRowProps) {
           <styled.span textStyle="label.02">Send {asset}</styled.span>
           <Badge variant={status.variant} label={status.label} />
         </Flex>
+      }
+      caption={
+        subtitle ? (
+          <styled.span pl="space.02" textStyle="caption.01" color="ink.text-subdued">
+            {subtitle}
+          </styled.span>
+        ) : undefined
       }
     />
   );

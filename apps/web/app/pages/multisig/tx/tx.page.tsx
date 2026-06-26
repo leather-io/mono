@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
+import {
+  useBroadcastTransaction,
+  useCancelTransaction,
+  useSignTransaction,
+} from '~/features/multisig/transactions/use-transaction-mutations';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useMultisigTransaction } from '~/features/multisig/vaults/use-vault-transactions';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
+import { useToast } from '~/features/toasts/use-toast';
 import { Page } from '~/layouts/page/page';
 
 import type { AuthNetworkId } from '@leather.io/models';
@@ -34,6 +40,11 @@ function SectionLabel({ children }: { children: string }) {
 
 export function TxDetailPage() {
   const { vaultId, txId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  // location.key is 'default' only when this is the first entry in the session's
+  // history (deep link / refresh), where there is nowhere to go back to.
+  const canGoBack = location.key !== 'default';
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
 
@@ -48,6 +59,11 @@ export function TxDetailPage() {
   const transaction = useMultisigTransaction(network, vaultNetworkKnown ? txId : undefined);
   const account = useVaultAccount(network, transaction.data?.vaultAccountId);
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
+
+  const signTransaction = useSignTransaction(network);
+  const cancelTransaction = useCancelTransaction(network);
+  const broadcastTransaction = useBroadcastTransaction(network);
+  const toast = useToast();
 
   const btcSession = useSession('btc:mainnet');
   const stxSession = useSession('stx:mainnet');
@@ -85,27 +101,62 @@ export function TxDetailPage() {
     );
   }
 
-  const proposer = vault.data.members.find(
-    member => member.user?.id === transaction.data.proposerUserId
-  );
-  const isMine = transaction.data.proposerUserId === me.data?.id;
+  const tx = transaction.data;
+  const acct = account.data;
+
+  const proposer = vault.data.members.find(member => member.user?.id === tx.proposerUserId);
+  const isMine = tx.proposerUserId === me.data?.id;
   const proposerName = isMine
     ? 'Me'
     : proposer?.name || (proposer ? truncateMiddle(proposer.address) : 'Unknown');
   const proposerLabel = `${proposerName}${isMine ? ' (you)' : ''}`;
-  const initiationDate = formatRelativeTime(new Date(transaction.data.proposalTimestamp * 1000));
-  const status = transactionStatusBadge(transaction.data.status);
+  const initiationDate = formatRelativeTime(new Date(tx.proposalTimestamp * 1000));
+
+  const mySigner = acct.signers.find(signer => signer.address === me.data?.address);
+  const iSigned = mySigner
+    ? tx.signatures.some(sig => sig.signerIndex === mySigner.signerIndex)
+    : false;
+  const awaitingMySignature = tx.status === 'pending' && Boolean(mySigner) && !iSigned;
+  const heroStatus = awaitingMySignature
+    ? { label: 'Awaiting your signature', variant: 'pending' as const }
+    : transactionStatusBadge(tx.status);
+
+  function onSign() {
+    signTransaction.mutate(
+      { transaction: tx, account: acct },
+      {
+        onSuccess: () => toast.success('Signature added'),
+        onError: err => toast.error(err.message),
+      }
+    );
+  }
+  function onCancel() {
+    cancelTransaction.mutate(tx.id, {
+      onSuccess: () => toast.success('Transaction cancelled'),
+      onError: err => toast.error(err.message),
+    });
+  }
+  function onBroadcast() {
+    broadcastTransaction.mutate(tx.id, {
+      onSuccess: () => toast.success('Broadcasting transaction'),
+      onError: err => toast.error(err.message),
+    });
+  }
 
   return (
     <Page>
-      <Page.Header title="Transaction details" backTo={multisigPaths.vault(vault.data.id)} />
+      <Page.Header
+        title="Transaction details"
+        backTo={multisigPaths.account(vault.data.id, tx.vaultAccountId)}
+        onBack={canGoBack ? () => navigate(-1) : undefined}
+      />
       <Flex
-        direction={['column', 'column', 'row']}
+        direction={{ base: 'column', xl: 'row' }}
         gap="space.06"
         alignItems="flex-start"
         mt="space.07"
       >
-        <Box flex={['1', '1', '1.6']} width="100%">
+        <Box flex={{ xl: '1' }} minWidth={0} width={{ base: '100%', xl: 'auto' }}>
           <MultisigHero
             themeId={vaultThemeFromName(vault.data.theme).id}
             primary="Transfer"
@@ -119,23 +170,29 @@ export function TxDetailPage() {
             }
           >
             <Box mt="space.03">
-              <Badge variant={status.variant} label={status.label} />
+              <Badge variant={heroStatus.variant} label={heroStatus.label} />
             </Box>
           </MultisigHero>
           <SectionLabel>Transaction details</SectionLabel>
           <TxDetailsTable
-            transaction={transaction.data}
+            transaction={tx}
             proposerLabel={proposerLabel}
             initiationDate={initiationDate}
           />
         </Box>
-        <Box flex={['1', '1', '1']} width="100%">
+        <Box width={{ base: '100%', xl: '420px' }} flexShrink={0}>
           <SectionLabel>Signatures</SectionLabel>
           <SignerRollcall
             vault={vault.data}
-            account={account.data}
-            transaction={transaction.data}
-            currentUserId={me.data?.id}
+            account={acct}
+            transaction={tx}
+            currentUserAddress={me.data?.address}
+            isSigning={signTransaction.isPending}
+            isCancelling={cancelTransaction.isPending}
+            isBroadcasting={broadcastTransaction.isPending}
+            onSign={onSign}
+            onCancel={onCancel}
+            onBroadcast={onBroadcast}
           />
         </Box>
       </Flex>

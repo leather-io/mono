@@ -29,6 +29,7 @@ import { MembersSection } from './components/members-section';
 import { ShareInvitationsModal } from './components/share-invitations-modal';
 import { VaultBalanceHero } from './components/vault-balance-hero';
 import { VaultStatusCard } from './components/vault-status-card';
+import { VaultTransactions } from './components/vault-transactions';
 
 function SectionLabel({
   children,
@@ -61,23 +62,6 @@ function accountCreationBlockedReason(vault: Vault): string {
     return "A member declined, so this vault can't add accounts. The creator can cancel and start over.";
   }
   return 'All members must accept their invitation before accounts can be created.';
-}
-
-function ComingSoon({ children }: { children: string }) {
-  return (
-    <Box
-      borderRadius="md"
-      borderWidth="1px"
-      borderStyle="dashed"
-      borderColor="ink.border-default"
-      p="space.05"
-      textAlign="center"
-    >
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        {children}
-      </styled.span>
-    </Box>
-  );
 }
 
 export function VaultDetailPage() {
@@ -193,12 +177,12 @@ export function VaultDetailPage() {
       )}
 
       <Flex
-        direction={['column', 'column', 'row']}
+        direction={{ base: 'column', xl: 'row' }}
         gap="space.06"
         alignItems="flex-start"
         mt="space.07"
       >
-        <Box flex={['1', '1', '1.6']} width="100%">
+        <Box flex={{ xl: '1' }} minWidth={0} width={{ base: '100%', xl: 'auto' }}>
           <VaultBalanceHero
             vault={vault}
             crypto={accountsBalance.crypto}
@@ -229,7 +213,7 @@ export function VaultDetailPage() {
             onShareInvite={() => setIsSharingInvites(true)}
           />
         </Box>
-        <Box flex={['1', '1', '1']} width="100%">
+        <Box width={{ base: '100%', xl: '420px' }} flexShrink={0}>
           <SectionLabel noGutter>{vaultDetailsHeading}</SectionLabel>
           <VaultStatusCard
             vault={vault}
@@ -240,7 +224,7 @@ export function VaultDetailPage() {
             onCancelVault={() => setIsConfirmingCancel(true)}
           />
           <SectionLabel>Transactions</SectionLabel>
-          <ComingSoon>No transactions yet.</ComingSoon>
+          <VaultTransactions network={network} vaultId={vault.id} accounts={accounts.data} />
         </Box>
       </Flex>
 
