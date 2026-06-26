@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 
 import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
 
-import { createBtcPolicyAccountRegistration } from './register-btc-policy-account';
+import { createBtcPolicyAccountRegistration } from './btc-policy-account-registration';
 
 function makeNativeSegwitAccountXpub(seedByte: number) {
   return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'")

@@ -165,9 +165,9 @@ export function getWshDescriptorAddress(
 ): string {
   if (networkMode) {
     const { scriptPubKey } = compileWshDescriptor(descriptor);
-    return btc.Address(getBtcSignerLibNetworkConfigByMode(networkMode)).encode(
-      btc.OutScript.decode(scriptPubKey)
-    );
+    return btc
+      .Address(getBtcSignerLibNetworkConfigByMode(networkMode))
+      .encode(btc.OutScript.decode(scriptPubKey));
   }
 
   const address = makeWshDescriptorInstance(descriptor).getAddress();
