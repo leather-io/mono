@@ -5,7 +5,7 @@ import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { PolicyStore } from './policy-store.utils';
 
-const policyAdapter = createEntityAdapter<PolicyStore, string>({
+export const policyAdapter = createEntityAdapter<PolicyStore, string>({
   selectId: policy => policy.id,
 });
 
@@ -26,8 +26,9 @@ export const policySlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      // `upsertOne` so re-adding the same (parent, address) policy account is
-      // idempotent — a second registration replaces the existing row in place.
+      // `upsertOne` so re-adding the same (parent, address, network) policy
+      // account is idempotent — a second registration replaces the existing row
+      // in place.
       .addCase(userAddsPolicyAccount, (state, action) => {
         policyAdapter.upsertOne(state, action.payload.policy);
       })

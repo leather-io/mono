@@ -14,14 +14,16 @@ const fingerprintB = 'beef5678';
 const parentAccountIdA = makeAccountIdentifer(fingerprintA, 0);
 const parentAccountIdB = makeAccountIdentifer(fingerprintB, 0);
 const multisigAddress = 'bc1qexampleexampleexampleexampleexampleexamplexyz';
+const networkId = 'mainnet';
 
 function makeBitcoinPolicy(
   parentAccountId: string,
-  { address = multisigAddress } = {}
+  { address = multisigAddress, network = networkId } = {}
 ): PolicyStore {
   return {
-    id: makePolicyId(parentAccountId, address),
+    id: makePolicyId(parentAccountId, address, network),
     parentAccountId,
+    networkId: network,
     chain: 'bitcoin',
     address,
     descriptor: `wsh(sortedmulti(2,xpubA/0/0,xpubB/0/0))`,
@@ -30,8 +32,9 @@ function makeBitcoinPolicy(
 }
 
 const stacksPolicy: PolicyStore = {
-  id: makePolicyId(parentAccountIdA, 'SM3CFXKD81GREH6MYFW4P9VKSSR2N525W3KDRH3P1'),
+  id: makePolicyId(parentAccountIdA, 'SM3CFXKD81GREH6MYFW4P9VKSSR2N525W3KDRH3P1', networkId),
   parentAccountId: parentAccountIdA,
+  networkId,
   chain: 'stacks',
   address: 'SM3CFXKD81GREH6MYFW4P9VKSSR2N525W3KDRH3P1',
   publicKeys: ['03aa', '02bb'],
@@ -84,6 +87,16 @@ describe('policySlice', () => {
   test('keeps separate rows for the same address under different parent accounts', () => {
     const policyA = makeBitcoinPolicy(parentAccountIdA);
     const policyB = makeBitcoinPolicy(parentAccountIdB);
+    const state = seed(policyA, policyB);
+
+    expect(state.ids).toHaveLength(2);
+    expect(state.entities[policyA.id]).toBeDefined();
+    expect(state.entities[policyB.id]).toBeDefined();
+  });
+
+  test('keeps separate rows for the same parent and address on different networks', () => {
+    const policyA = makeBitcoinPolicy(parentAccountIdA, { network: 'mainnet' });
+    const policyB = makeBitcoinPolicy(parentAccountIdA, { network: 'testnet4' });
     const state = seed(policyA, policyB);
 
     expect(state.ids).toHaveLength(2);

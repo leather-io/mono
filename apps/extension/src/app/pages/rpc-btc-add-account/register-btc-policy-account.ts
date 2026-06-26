@@ -9,6 +9,7 @@ import { broadcastReplayAction } from '@shared/messages';
 
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useCurrentNetworkId } from '@app/store/networks/networks.selectors';
 import { makePolicyId } from '@app/store/policy/policy-store.utils';
 import { userAddsPolicyAccount } from '@app/store/policy/policy.slice';
 
@@ -19,6 +20,7 @@ import { userAddsPolicyAccount } from '@app/store/policy/policy.slice';
 export function useRegisterBtcPolicyAccount() {
   const dispatch = useAppDispatch();
   const { fingerprint, accountIndex } = useCurrentAccountId();
+  const networkId = String(useCurrentNetworkId());
 
   return useCallback(
     (params: RpcParams<typeof btcAddAccount>): RpcResult<typeof btcAddAccount> | null => {
@@ -30,8 +32,9 @@ export function useRegisterBtcPolicyAccount() {
 
         const action = userAddsPolicyAccount({
           policy: {
-            id: makePolicyId(parentAccountId, address),
+            id: makePolicyId(parentAccountId, address, networkId),
             parentAccountId,
+            networkId,
             chain: 'bitcoin',
             address,
             descriptor: params.descriptor,
@@ -48,6 +51,6 @@ export function useRegisterBtcPolicyAccount() {
         return null;
       }
     },
-    [dispatch, fingerprint, accountIndex]
+    [dispatch, fingerprint, accountIndex, networkId]
   );
 }

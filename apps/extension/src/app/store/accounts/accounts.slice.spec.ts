@@ -84,7 +84,8 @@ describe('accountsSlice', () => {
   describe('userAddsPolicyAccount', () => {
     test('creates an account row carrying the policy name and active status', () => {
       const parentAccountId = makeAccountIdentifer(realFingerprint, 0);
-      const id = makePolicyId(parentAccountId, multisigAddress);
+      const networkId = 'mainnet';
+      const id = makePolicyId(parentAccountId, multisigAddress, networkId);
 
       const result = accountsSlice.reducer(
         accountsAdapter.getInitialState(),
@@ -92,6 +93,7 @@ describe('accountsSlice', () => {
           policy: {
             id,
             parentAccountId,
+            networkId,
             chain: 'bitcoin',
             address: multisigAddress,
             descriptor: 'wsh(sortedmulti(2,xpubA/0/0,xpubB/0/0))',
@@ -106,10 +108,12 @@ describe('accountsSlice', () => {
 
     test('re-adds idempotently, updating the name in place', () => {
       const parentAccountId = makeAccountIdentifer(realFingerprint, 0);
-      const id = makePolicyId(parentAccountId, multisigAddress);
+      const networkId = 'mainnet';
+      const id = makePolicyId(parentAccountId, multisigAddress, networkId);
       const policy = {
         id,
         parentAccountId,
+        networkId,
         chain: 'bitcoin' as const,
         address: multisigAddress,
         descriptor: 'wsh(sortedmulti(2,xpubA/0/0,xpubB/0/0))',

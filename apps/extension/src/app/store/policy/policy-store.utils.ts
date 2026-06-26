@@ -1,12 +1,13 @@
 // A policy account is a multisig the active singlesig account is a cosigner of:
 // BTC via a `wsh(...)` descriptor, STX via ordered public keys + threshold. It is
-// keyed by `${parentAccountId}/${address}`, so the same multisig can be
-// associated with more than one singlesig account at a time.
+// keyed by `${parentAccountId}/${address}/${networkId}`, so the same multisig can
+// be associated with more than one singlesig account and network at a time.
 type PolicyRole = 'signer' | 'watch-only';
 
 interface BasePolicyStore {
   id: string;
   parentAccountId: string;
+  networkId: string;
   address: string;
   role: PolicyRole;
 }
@@ -24,6 +25,6 @@ interface StacksPolicyStore extends BasePolicyStore {
 
 export type PolicyStore = BitcoinPolicyStore | StacksPolicyStore;
 
-export function makePolicyId(parentAccountId: string, address: string) {
-  return `${parentAccountId}/${address}`;
+export function makePolicyId(parentAccountId: string, address: string, networkId: string) {
+  return `${parentAccountId}/${address}/${networkId}`;
 }

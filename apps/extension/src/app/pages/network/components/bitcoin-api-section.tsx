@@ -35,12 +35,14 @@ const networks: {
 
 interface BitcoinApiSectionProps {
   handleChange: FormikHandlers['handleChange'];
+  isEditNetworkMode?: boolean;
   setFieldValue: FormikHelpers<AddNetworkFormValues>['setFieldValue'];
   setNetworkUrls(value: BitcoinNetwork): void;
   values: AddNetworkFormValues;
 }
 export function BitcoinApiSection({
   handleChange,
+  isEditNetworkMode,
   setFieldValue,
   setNetworkUrls,
   values,
@@ -106,6 +108,7 @@ export function BitcoinApiSection({
         <Input.Field
           data-testid={NetworkSelectors.NetworkKey}
           onChange={handleChange}
+          disabled={isEditNetworkMode}
           name="key"
           value={values.key}
           width="100%"

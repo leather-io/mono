@@ -9,7 +9,7 @@ import { broadcastReplayAction } from '@shared/messages';
 
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
-import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { useCurrentNetwork, useCurrentNetworkId } from '@app/store/networks/networks.selectors';
 import { makePolicyId } from '@app/store/policy/policy-store.utils';
 import { userAddsPolicyAccount } from '@app/store/policy/policy.slice';
 
@@ -22,6 +22,7 @@ export function useRegisterStxPolicyAccount() {
   const dispatch = useAppDispatch();
   const { fingerprint, accountIndex } = useCurrentAccountId();
   const network = useCurrentNetwork();
+  const networkId = String(useCurrentNetworkId());
 
   return useCallback(
     (params: RpcParams<typeof stxAddAccount>): RpcResult<typeof stxAddAccount> | null => {
@@ -37,8 +38,9 @@ export function useRegisterStxPolicyAccount() {
 
         const action = userAddsPolicyAccount({
           policy: {
-            id: makePolicyId(parentAccountId, address),
+            id: makePolicyId(parentAccountId, address, networkId),
             parentAccountId,
+            networkId,
             chain: 'stacks',
             address,
             publicKeys: params.publicKeys,
@@ -62,6 +64,6 @@ export function useRegisterStxPolicyAccount() {
         return null;
       }
     },
-    [dispatch, fingerprint, accountIndex, network.chain.stacks.chainId]
+    [dispatch, fingerprint, accountIndex, network.chain.stacks.chainId, networkId]
   );
 }
