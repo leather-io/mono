@@ -1,7 +1,7 @@
 import { NetworkSelectors } from '@tests/selectors/network.selectors';
 
 import { MEMPOOL_BASE_URL } from '@leather.io/constants';
-import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
+import { BITCOIN_API_BASE_URL_MAINNET, BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -19,6 +19,45 @@ test.describe('Networks tests', () => {
     const bitcoinUrl = page.getByTestId(NetworkSelectors.NetworkBitcoinAddress);
 
     test.expect(await bitcoinUrl.inputValue()).toEqual(BITCOIN_API_BASE_URL_TESTNET4);
+  });
+
+  test('bitcoin api dropdown relabels to Custom when values diverge from a preset', async ({
+    page,
+    networkPage,
+  }) => {
+    const selector = page.getByTestId(NetworkSelectors.AddNetworkBitcoinAPISelector);
+
+    await test.expect(selector).toContainText('Mainnet');
+
+    await networkPage.inputNetworkBitcoinAddressField('https://my-own-node.example/api');
+    await test.expect(selector).toContainText('Custom');
+
+    await selector.click();
+    await page.getByTestId(NetworkSelectors.BitcoinApiOptionTestnet).click();
+    await test.expect(selector).toContainText('Testnet4');
+    await test.expect(selector).not.toContainText('Custom');
+
+    await selector.click();
+    await test.expect(page.locator('[data-testid^="bitcoin-api-option-"]')).toHaveCount(5);
+  });
+
+  test('reselecting the active preset after a custom edit resets its URLs', async ({
+    page,
+    networkPage,
+  }) => {
+    const selector = page.getByTestId(NetworkSelectors.AddNetworkBitcoinAPISelector);
+    const bitcoinUrl = page.getByTestId(NetworkSelectors.NetworkBitcoinAddress);
+
+    await test.expect(selector).toContainText('Mainnet');
+
+    await networkPage.inputNetworkBitcoinAddressField('https://my-own-node.example/api');
+    await test.expect(selector).toContainText('Custom');
+
+    await selector.click();
+    await page.getByTestId('bitcoin-api-option-mainnet').click();
+
+    await test.expect(selector).toContainText('Mainnet');
+    test.expect(await bitcoinUrl.inputValue()).toEqual(BITCOIN_API_BASE_URL_MAINNET);
   });
 
   test('validation error when stacks api url is empty', async ({ networkPage }) => {
