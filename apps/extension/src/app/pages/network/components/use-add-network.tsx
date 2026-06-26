@@ -18,6 +18,7 @@ import { isValidUrl } from '@shared/utils/urls';
 
 import { removeTrailingSlash } from '@app/common/url-join';
 import { useNetworksActions } from '@app/store/networks/networks.hooks';
+import type { PersistedNetworkConfiguration } from '@app/store/networks/networks.slice';
 
 /**
  * The **peer** network ID.
@@ -84,6 +85,14 @@ export function useAddNetwork() {
   const initialValues = useInitialValues();
   const { isEditNetworkMode } = useAddNetworkState();
   const fetchFn = createFetchFn();
+
+  function saveNetwork(network: PersistedNetworkConfiguration) {
+    if (initialValues.key) {
+      networksActions.editNetwork(initialValues.key, network);
+      return;
+    }
+    networksActions.addNetwork(network);
+  }
 
   return {
     error,
@@ -153,17 +162,11 @@ export function useAddNetwork() {
         isSubnet &&
         (parentNetworkId === PeerNetworkID.Mainnet || parentNetworkId === PeerNetworkID.Testnet);
 
-      function removeEditedNetwork() {
-        if (initialValues.key) {
-          networksActions.removeNetwork(initialValues.key);
-        }
-      }
       // Currently, only subnets of mainnet and testnet are supported in the wallet
       if (isFirstLevelSubnet) {
         const parentChainId =
           parentNetworkId === PeerNetworkID.Mainnet ? ChainId.Mainnet : ChainId.Testnet;
-        removeEditedNetwork();
-        networksActions.addNetwork({
+        saveNetwork({
           id: key as DefaultNetworkConfigurations,
           name: name,
           chainId: parentChainId, // Used for differentiating control flow in the wallet
@@ -175,8 +178,7 @@ export function useAddNetwork() {
         });
         return navigate(RouteUrls.Home);
       } else if (isDefined(chainId)) {
-        removeEditedNetwork();
-        networksActions.addNetwork({
+        saveNetwork({
           id: key as DefaultNetworkConfigurations,
           name: name,
           chainId: chainId,

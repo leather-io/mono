@@ -9,7 +9,6 @@ import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
-import { Page } from '~/layouts/page/page';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import type { AuthNetworkId } from '@leather.io/models';
@@ -17,24 +16,13 @@ import { PlusIcon } from '@leather.io/ui';
 
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
+import { MultisigPage } from '../components/multisig-page';
+import { SectionLabel } from '../components/section-label';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
-
-function SectionLabel({ children, noGutter }: { children: string; noGutter?: boolean }) {
-  return (
-    <styled.h3
-      textStyle="label.01"
-      color="ink.text-primary"
-      mb="space.03"
-      mt={noGutter ? undefined : 'space.05'}
-    >
-      {children}
-    </styled.h3>
-  );
-}
 
 export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
@@ -65,13 +53,12 @@ export function AccountDetailPage() {
 
   if (!vault.data || !account.data) {
     return (
-      <Page>
-        <Page.Header
-          title="Vault account"
-          backTo={vaultId ? multisigPaths.vault(vaultId) : multisigPaths.index}
-        />
+      <MultisigPage
+        title="Vault account"
+        backTo={vaultId ? multisigPaths.vault(vaultId) : multisigPaths.index}
+      >
         {isResolving ? (
-          <Flex direction="column" gap="space.03" mt="space.05">
+          <Flex direction="column" gap="space.03">
             {[0, 1, 2].map(index => (
               <Box
                 key={index}
@@ -85,7 +72,7 @@ export function AccountDetailPage() {
         ) : (
           <MultisigErrorState body="No account found. It may not exist, or you may not be a member." />
         )}
-      </Page>
+      </MultisigPage>
     );
   }
 
@@ -97,14 +84,8 @@ export function AccountDetailPage() {
   }
 
   return (
-    <Page>
-      <Page.Header title="Vault account" backTo={multisigPaths.vault(vault.data.id)} />
-      <Flex
-        direction={{ base: 'column', xl: 'row' }}
-        gap="space.06"
-        alignItems="flex-start"
-        mt="space.07"
-      >
+    <MultisigPage title="Vault account" backTo={multisigPaths.vault(vault.data.id)}>
+      <Flex direction={{ base: 'column', xl: 'row' }} gap="space.06" alignItems="flex-start">
         <Box flex={{ xl: '1' }} minWidth={0} width={{ base: '100%', xl: 'auto' }}>
           <MultisigHero
             themeId={theme.id}
@@ -166,6 +147,6 @@ export function AccountDetailPage() {
         isShowing={isProposing}
         onClose={() => setIsProposing(false)}
       />
-    </Page>
+    </MultisigPage>
   );
 }

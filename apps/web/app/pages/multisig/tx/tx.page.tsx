@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import {
@@ -14,7 +14,6 @@ import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useMultisigTransaction } from '~/features/multisig/vaults/use-vault-transactions';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
-import { Page } from '~/layouts/page/page';
 
 import type { AuthNetworkId } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
@@ -23,20 +22,14 @@ import { AvatarCircle } from '../components/avatar-circle';
 import { Badge } from '../components/badge';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
+import { MultisigPage } from '../components/multisig-page';
+import { SectionLabel } from '../components/section-label';
 import { transactionStatusBadge } from '../components/transaction-status';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { SignerRollcall } from './components/signer-rollcall';
 import { TxDetailsTable } from './components/tx-details-table';
 import { formatRelativeTime } from './relative-time';
-
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.03" mt="space.05">
-      {children}
-    </styled.h3>
-  );
-}
 
 export function TxDetailPage() {
   const { vaultId, txId } = useParams();
@@ -77,13 +70,12 @@ export function TxDetailPage() {
 
   if (!vault.data || !transaction.data || !account.data) {
     return (
-      <Page>
-        <Page.Header
-          title="Transaction details"
-          backTo={vaultId ? multisigPaths.vault(vaultId) : multisigPaths.index}
-        />
+      <MultisigPage
+        title="Transaction details"
+        backTo={vaultId ? multisigPaths.vault(vaultId) : multisigPaths.index}
+      >
         {isResolving ? (
-          <Flex direction="column" gap="space.03" mt="space.05">
+          <Flex direction="column" gap="space.03">
             {[0, 1, 2].map(index => (
               <Box
                 key={index}
@@ -97,7 +89,7 @@ export function TxDetailPage() {
         ) : (
           <MultisigErrorState body="No transaction found. It may not exist, or you may not be a member." />
         )}
-      </Page>
+      </MultisigPage>
     );
   }
 
@@ -144,18 +136,12 @@ export function TxDetailPage() {
   }
 
   return (
-    <Page>
-      <Page.Header
-        title="Transaction details"
-        backTo={multisigPaths.account(vault.data.id, tx.vaultAccountId)}
-        onBack={canGoBack ? () => navigate(-1) : undefined}
-      />
-      <Flex
-        direction={{ base: 'column', xl: 'row' }}
-        gap="space.06"
-        alignItems="flex-start"
-        mt="space.07"
-      >
+    <MultisigPage
+      title="Transaction details"
+      backTo={multisigPaths.account(vault.data.id, tx.vaultAccountId)}
+      onBack={canGoBack ? () => navigate(-1) : undefined}
+    >
+      <Flex direction={{ base: 'column', xl: 'row' }} gap="space.06" alignItems="flex-start">
         <Box flex={{ xl: '1' }} minWidth={0} width={{ base: '100%', xl: 'auto' }}>
           <MultisigHero
             themeId={vaultThemeFromName(vault.data.theme).id}
@@ -196,6 +182,6 @@ export function TxDetailPage() {
           />
         </Box>
       </Flex>
-    </Page>
+    </MultisigPage>
   );
 }

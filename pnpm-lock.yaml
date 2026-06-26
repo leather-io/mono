@@ -1865,6 +1865,9 @@ importers:
 
   packages/rpc:
     dependencies:
+      '@leather.io/constants':
+        specifier: workspace:*
+        version: link:../constants
       '@leather.io/models':
         specifier: workspace:*
         version: link:../models

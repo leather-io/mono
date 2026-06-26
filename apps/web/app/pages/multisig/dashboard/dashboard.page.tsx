@@ -9,26 +9,19 @@ import {
   useDashboardActivity,
 } from '~/features/multisig/vaults/use-dashboard-activity';
 import { useVaults } from '~/features/multisig/vaults/use-vaults';
-import { Page } from '~/layouts/page/page';
 
 import type { VaultSummary } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
 
 import { ChainAvatar } from '../components/chain-avatar';
 import { InvitationModal } from '../components/invitation-modal';
+import { MultisigPage } from '../components/multisig-page';
+import { SectionLabel } from '../components/section-label';
 import { TransactionRow } from '../components/transaction-row';
 import type { Chain } from '../data/multisig-types';
 import { multisigPaths } from '../multisig.constants';
 import { CreateVaultTile } from './components/create-vault-tile';
 import { VaultCard } from './components/vault-card';
-
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <styled.h3 textStyle="label.01" color="ink.text-primary" mb="space.03">
-      {children}
-    </styled.h3>
-  );
-}
 
 function EmptyVaults({ onCreate }: { onCreate(): void }) {
   return (
@@ -199,16 +192,14 @@ export function MultisigDashboardPage() {
     );
 
   return (
-    <Page>
-      <Page.Header title="Multisig" />
+    <MultisigPage title="Multisig">
       <Flex
         direction={['column', 'column', 'row']}
-        gap="space.06"
+        gap={['space.06', 'space.06', 'space.08', 'space.10']}
         alignItems="flex-start"
-        mt="space.07"
       >
         <Box flex={['1', '1', '1.6']} width="100%">
-          <SectionLabel>My vaults</SectionLabel>
+          <SectionLabel noGutter>My vaults</SectionLabel>
           <Flex direction="column" gap="space.03">
             {isResolvingVaults &&
               sortedVaults.length === 0 &&
@@ -255,7 +246,7 @@ export function MultisigDashboardPage() {
           )}
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
-          <SectionLabel>Activity</SectionLabel>
+          <SectionLabel noGutter>Activity</SectionLabel>
           <Box
             borderRadius="md"
             borderWidth="1px"
@@ -275,15 +266,17 @@ export function MultisigDashboardPage() {
       {inviteVault && (
         <InvitationModal vault={inviteVault} isShowing onClose={() => setInviteVault(null)} />
       )}
-    </Page>
+    </MultisigPage>
   );
 }
 
 export function MultisigDashboardSkeleton() {
   return (
-    <Page>
-      <Page.Header title="Multisig" />
-      <Flex direction={['column', 'column', 'row']} gap="space.06" mt="space.07">
+    <MultisigPage title="Multisig">
+      <Flex
+        direction={['column', 'column', 'row']}
+        gap={['space.06', 'space.06', 'space.08', 'space.10']}
+      >
         <Box flex={['1', '1', '1.6']} width="100%">
           <Flex direction="column" gap="space.03">
             {[0, 1, 2].map(i => (
@@ -306,6 +299,6 @@ export function MultisigDashboardSkeleton() {
           />
         </Box>
       </Flex>
-    </Page>
+    </MultisigPage>
   );
 }

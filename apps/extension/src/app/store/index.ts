@@ -34,6 +34,7 @@ import { appPermissionsSlice } from './app-permissions/app-permissions.slice';
 import { stxChainSlice } from './chains/stx-chain.slice';
 import { manageTokensSlice } from './manage-tokens/manage-tokens.slice';
 import { networksSlice } from './networks/networks.slice';
+import { policySlice } from './policy/policy.slice';
 import { settingsSlice } from './settings/settings.slice';
 import { keySlice } from './software-keys/software-key.slice';
 import { submittedTransactionsSlice } from './submitted-transactions/submitted-transactions.slice';
@@ -42,6 +43,7 @@ import { broadcastActionTypeToOtherFramesMiddleware } from './utils/broadcast-ac
 
 export interface LocalRootState {
   accounts: ReturnType<typeof accountsSlice.reducer>;
+  policy: ReturnType<typeof policySlice.reducer>;
   active: ReturnType<typeof activeSlice.reducer>;
   appPermissions: ReturnType<typeof appPermissionsSlice.reducer>;
   chains: {
@@ -61,6 +63,7 @@ export type RootState = LocalRootState & PersistedState;
 
 const appReducer = combineReducers({
   accounts: accountsSlice.reducer,
+  policy: policySlice.reducer,
   active: activeSlice.reducer,
   appPermissions: appPermissionsSlice.reducer,
   chains: combineReducers({
