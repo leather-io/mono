@@ -2,7 +2,7 @@
 // BTC via a `wsh(...)` descriptor, STX via ordered public keys + threshold. It is
 // keyed by `${parentAccountId}/${address}/${networkId}`, so the same multisig can
 // be associated with more than one singlesig account and network at a time.
-type PolicyRole = 'signer' | 'watch-only';
+type PolicyRole = 'signer';
 
 interface BasePolicyStore {
   id: string;
