@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { Page } from '~/layouts/page/page';
 
 import { ChainPill } from '../components/chain-pill';
+import { MultisigPage } from '../components/multisig-page';
 import type { Chain } from '../data/multisig-types';
 import { multisigPaths } from '../multisig.constants';
 import { SettingsRow } from './components/settings-row';
@@ -91,8 +91,7 @@ function ChainSettings({ chain }: { chain: Chain }) {
 
 export function MultisigSettingsPage() {
   return (
-    <Page>
-      <Page.Header title="Multisig settings" backTo={multisigPaths.index} />
+    <MultisigPage title="Multisig settings" backTo={multisigPaths.index}>
       <Flex direction="column" gap="space.06" maxWidth="640px">
         <SettingsSection
           head={
@@ -123,6 +122,6 @@ export function MultisigSettingsPage() {
         <ChainSettings chain="btc" />
         <ChainSettings chain="stx" />
       </Flex>
-    </Page>
+    </MultisigPage>
   );
 }
