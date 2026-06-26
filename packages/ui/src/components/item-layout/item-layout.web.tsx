@@ -17,6 +17,7 @@ function componentWithFallback(component: ReactNode, fallback: ReactNode) {
 interface ItemLayoutProps {
   captionLeft: ReactNode;
   captionRight?: ReactNode;
+  chevronDirection?: 'down' | 'right';
   gap?: SpacingToken;
   img?: ReactNode;
   isDisabled?: boolean;
@@ -28,6 +29,7 @@ interface ItemLayoutProps {
 export function ItemLayout({
   captionLeft,
   captionRight,
+  chevronDirection = 'down',
   gap = 'space.00',
   img,
   isSelected,
@@ -71,7 +73,7 @@ export function ItemLayout({
           </styled.span>
         )}
       </Stack>
-      <HStack gap={gap} flexShrink={0}>
+      <HStack gap={showChevron && chevronDirection === 'right' ? 'space.02' : gap} flexShrink={0}>
         <Stack alignItems="end" gap={gap}>
           {componentWithFallback(
             titleRight,
@@ -87,7 +89,7 @@ export function ItemLayout({
         {showChevron && (
           <ChevronRightIcon
             className={pressableChevronStyles}
-            transform="rotate(90deg)"
+            transform={chevronDirection === 'down' ? 'rotate(90deg)' : undefined}
             variant="small"
           />
         )}
