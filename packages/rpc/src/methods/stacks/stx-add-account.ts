@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
+
 import { defineRpcEndpoint } from '../../rpc/schemas';
 import { policyRoleSchema } from '../bitcoin/btc-add-account';
 
@@ -9,7 +11,7 @@ const stxAddAccountRequestParamsSchema = z
   .object({
     publicKeys: z.array(compressedSecp256k1PublicKeySchema).min(2),
     threshold: z.number().int().min(1),
-    name: z.string(),
+    name: z.string().max(ACCOUNT_MAX_NAME_LENGTH),
     network: z.string().optional(),
   })
   .refine(params => params.threshold <= params.publicKeys.length, {
