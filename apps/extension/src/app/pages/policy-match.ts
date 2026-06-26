@@ -1,4 +1,4 @@
-// Whether the wallet's active account may register the requested policy account:
+// Whether the wallet's active account may register the requested policy:
 // - `match`: the active account's key is part of the descriptor / public keys
 // - `mismatch`: there is an active account, but it is not a signer on the policy
 // - `no-active-account`: there is no active account of the relevant chain

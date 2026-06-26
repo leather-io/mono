@@ -10,8 +10,7 @@ import { TokenList } from '@app/features/asset-list/token-list';
 import { useFlags } from '@app/features/feature-flags';
 import { TrendingTokens } from '@app/features/trending-tokens/trending-tokens';
 import { useActivity } from '@app/query/activity/activity.query';
-import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 
 import { AeusdcRetirementCallout } from './aeusdc-retirement-callout';
 import { FirstTokenBanner } from './first-token-banner';
@@ -22,8 +21,7 @@ export function Tokens() {
   const navigate = useNavigate();
   const location = useLocation();
   const { releaseTrendingTokens } = useFlags();
-  const accountId = useCurrentAccountId();
-  const account = useAccountAddresses(accountId);
+  const account = useCurrentAccountAddresses();
   const activityQuery = useActivity(account);
   const showFirstTokenBanner = activityQuery.isSuccess && !activityQuery.data?.length;
 

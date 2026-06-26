@@ -6,8 +6,7 @@ import { type ActivityView } from '@leather.io/features';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useActivity } from '@app/query/activity/activity.query';
-import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 
 import { ActivityItem } from './components/activity-item';
 import { ActivityListLayout } from './components/activity-list.layout';
@@ -22,8 +21,7 @@ import { ActivityListLayout } from './components/activity-list.layout';
  */
 
 export function ActivityList() {
-  const currentAccount = useCurrentAccountId();
-  const accountAddresses = useAccountAddresses(currentAccount);
+  const accountAddresses = useCurrentAccountAddresses();
   const activityQuery = useActivity(accountAddresses);
 
   const activity = activityQuery.data ?? [];

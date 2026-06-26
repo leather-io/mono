@@ -35,13 +35,13 @@ function runEditThunk(currentId: string) {
 }
 
 describe(userRemovesNetwork.name, () => {
-  test('removes a network that has no policy account', () => {
+  test('removes a network that has no policy', () => {
     vi.mocked(selectPolicyNetworkIds).mockReturnValue(new Set());
     const dispatch = runRemoveThunk('custom-network');
     expect(dispatch).toHaveBeenCalledWith(networksActions.removeNetwork('custom-network'));
   });
 
-  test('does not remove a network that has a policy account', () => {
+  test('does not remove a network that has a policy', () => {
     vi.mocked(selectPolicyNetworkIds).mockReturnValue(new Set(['custom-network']));
     const dispatch = runRemoveThunk('custom-network');
     expect(dispatch).not.toHaveBeenCalled();
@@ -49,7 +49,7 @@ describe(userRemovesNetwork.name, () => {
 });
 
 describe(userEditsNetwork.name, () => {
-  test('edits a network that has no policy account', () => {
+  test('edits a network that has no policy', () => {
     vi.mocked(selectPolicyNetworkIds).mockReturnValue(new Set());
     const dispatch = runEditThunk('custom-network');
     expect(dispatch).toHaveBeenNthCalledWith(1, networksActions.removeNetwork('custom-network'));
@@ -60,7 +60,7 @@ describe(userEditsNetwork.name, () => {
     );
   });
 
-  test('does not edit a network that has a policy account', () => {
+  test('does not edit a network that has a policy', () => {
     vi.mocked(selectPolicyNetworkIds).mockReturnValue(new Set(['custom-network']));
     const dispatch = runEditThunk('custom-network');
     expect(dispatch).not.toHaveBeenCalled();

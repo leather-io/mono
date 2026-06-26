@@ -64,11 +64,11 @@ describe('policySlice', () => {
     expect(result.entities[stacksPolicy.id]).toEqual(stacksPolicy);
   });
 
-  test('does not store a name on the policy', () => {
+  test('does not persist the provided name on the policy entity', () => {
     const policy = makeBitcoinPolicy(parentAccountIdA);
     const result = reducer(getInitialState(), userAddsPolicy({ policy, name: 'Family vault' }));
 
-    expect(result.entities[policy.id]).not.toHaveProperty('name');
+    expect(result.entities[policy.id]).toEqual(policy);
   });
 
   test('is idempotent: re-adding the same (parent, address) replaces in place', () => {

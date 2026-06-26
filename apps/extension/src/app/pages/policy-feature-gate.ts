@@ -10,7 +10,7 @@ interface PolicyFeatureGateArgs {
   tabId?: number;
 }
 
-// Gates the policy account RPC methods (btc_addAccount / stx_addAccount) behind
+// Gates the policy RPC methods (btc_addAccount / stx_addAccount) behind
 // the `releaseAddAccount` flag. The flag is only readable in the React layer
 // (LaunchDarkly client SDK), so when it is off the approval page rejects the
 // request as unsupported and closes instead of showing the approval UI.

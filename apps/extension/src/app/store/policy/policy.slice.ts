@@ -25,16 +25,16 @@ export const policySlice = createSlice({
   extraReducers: builder =>
     builder
       // `upsertOne` so re-adding the same (parent, address, network) policy
-      // account is idempotent — a second registration replaces the existing row
-      // in place.
+      // is idempotent — a second registration replaces the existing row in
+      // place.
       .addCase(userAddsPolicy, (state, action) => {
         policyAdapter.upsertOne(state, action.payload.policy);
       })
 
-      // Removing a wallet cascades to its policy accounts. Their ids start with
+      // Removing a wallet cascades to its policies. Their ids start with
       // `${fingerprint}/` (parentAccountId is `${fingerprint}/${accountIndex}`),
       // so the same prefix match the accounts slice uses works here too. No
-      // `fingerprintMigration` re-keying is needed: a policy account is only
+      // `fingerprintMigration` re-keying is needed: a policy is only
       // created by an unlocked, real-fingerprint account, never under the
       // assumed-zero fingerprint.
       .addCase(userRemovesWallet, (state, action) => {

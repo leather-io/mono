@@ -16,6 +16,7 @@ import {
   getDescriptorMatchingInputIndexes,
   getWshDescriptorAddress,
   getWshDescriptorNetwork,
+  getWshDescriptorThreshold,
   isWshDescriptor,
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
@@ -939,5 +940,13 @@ describe('extractWshDescriptorPreimages', () => {
       witnessUtxo: { script: btc.p2wpkh(pubkeyA).script, amount: 10_000n },
     });
     expect(extractWshDescriptorPreimages(tx, [0])).toEqual([]);
+  });
+
+  it('reads the threshold from a sortedmulti descriptor', () => {
+    expect(getWshDescriptorThreshold(`wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`)).toBe(2);
+  });
+
+  it('reads the threshold from a multi descriptor', () => {
+    expect(getWshDescriptorThreshold(`wsh(multi(1,${xpubA}/0/0,${xpubB}/0/0))`)).toBe(1);
   });
 });

@@ -17,8 +17,7 @@ import { NotFoundContent } from '@app/pages/not-found/not-found';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
-import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 
 import { AccountActions } from './components/account-actions-current/account-actions';
 import { AccountCard } from './components/account-card';
@@ -38,8 +37,7 @@ interface HomeProps {
 
 export function Home({ isBackground }: HomeProps) {
   const { activityRevamp } = useFlags();
-  const accountId = useCurrentAccountId();
-  const account = useAccountAddresses(accountId);
+  const account = useCurrentAccountAddresses();
   useAccountCollectibles(account);
 
   const shouldAnimate = !isBackground && !animationState.hasPlayed;

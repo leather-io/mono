@@ -7,13 +7,17 @@ import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/walle
 import { assumedZeroFingerprint } from '@shared/utils';
 
 export const userSwitchesAccount = createAction<AccountId | null>('active/userSwitchesAccount');
+export const userSwitchesToPolicy = createAction<{ parent: AccountId; policyId: string }>(
+  'active/userSwitchesToPolicy'
+);
 export const walletKeyGenerated = createAction<string>('active/walletKeyGenerated');
 
 interface ActiveState {
   account: AccountId | null;
+  activePolicyId: string | null;
 }
 
-const initialState: ActiveState = { account: null };
+const initialState: ActiveState = { account: null, activePolicyId: null };
 
 export const activeSlice = createSlice({
   name: 'active',
@@ -23,15 +27,22 @@ export const activeSlice = createSlice({
     builder
       .addCase(resetWallet, state => {
         state.account = null;
+        state.activePolicyId = null;
       })
       .addCase(userSwitchesAccount, (state, action) => {
         state.account = action.payload;
+        state.activePolicyId = null;
+      })
+      .addCase(userSwitchesToPolicy, (state, action) => {
+        state.account = action.payload.parent;
+        state.activePolicyId = action.payload.policyId;
       })
       .addCase(walletKeyGenerated, (state, action) => {
         state.account = {
           fingerprint: action.payload,
           accountIndex: 0,
         };
+        state.activePolicyId = null;
       })
       .addCase(fingerprintMigration, (state, action) => {
         if (!state.account) return;
@@ -43,6 +54,9 @@ export const activeSlice = createSlice({
       .addCase(userRemovesWallet, (state, action) => {
         if (state.account?.fingerprint === action.payload.fingerprint) {
           state.account = null;
+        }
+        if (state.activePolicyId?.startsWith(`${action.payload.fingerprint}/`)) {
+          state.activePolicyId = null;
         }
       }),
 });

@@ -18,6 +18,8 @@ import { analytics } from '@shared/utils/analytics';
 import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
+import { useFlags } from '@app/features/feature-flags';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import {
   useCurrentAccountNativeSegwitPayer,
   useCurrentNativeSegwitAccount,
@@ -29,6 +31,7 @@ import {
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useAppPermissions } from '@app/store/app-permissions/app-permissions.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { usePoliciesByParent } from '@app/store/policy/policy.selectors';
 
 // We reuse this flow for both of these requests, so here we make a union of two
 // possible requests
@@ -66,6 +69,9 @@ export function useGetAddresses() {
   const createTaprootPayer = useCurrentAccountTaprootPayer();
   const stacksAccount = useCurrentStacksAccount();
   const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
+  const { releaseAddAccount } = useFlags();
+  const policies = usePoliciesByParent(useCurrentAccountId());
+  const allowPolicyAccounts = Boolean(request.params?.allowPolicyAccounts) && releaseAddAccount;
 
   function focusInitiatingTab() {
     analytics.track('user_clicked_requested_by_link', { endpoint: request.method });
@@ -122,11 +128,35 @@ export function useGetAddresses() {
       if (stacksAccount) {
         const stacksAddressResponse = {
           symbol: 'STX',
+          kind: 'single-sig',
           address: stacksAccount.address,
           publicKey: stacksAccount.stxPublicKey,
         } satisfies StxAddress;
 
         keysToIncludeInResponse.push(stacksAddressResponse);
+      }
+
+      if (allowPolicyAccounts) {
+        for (const policy of policies) {
+          if (policy.chain === 'bitcoin') {
+            const policyAddressResponse: BtcAddress = {
+              symbol: 'BTC',
+              type: 'p2wsh',
+              address: policy.address,
+              descriptor: policy.descriptor,
+            };
+            keysToIncludeInResponse.push(policyAddressResponse);
+          } else {
+            const multisigStacksAddressResponse: StxAddress = {
+              symbol: 'STX',
+              kind: 'multisig',
+              address: policy.address,
+              threshold: policy.threshold,
+              publicKeys: policy.publicKeys,
+            };
+            keysToIncludeInResponse.push(multisigStacksAddressResponse);
+          }
+        }
       }
 
       void chrome.tabs.sendMessage(

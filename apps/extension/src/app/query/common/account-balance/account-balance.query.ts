@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { AccountId } from '@leather.io/models';
+import type { AccountAddresses, AccountId } from '@leather.io/models';
 import {
   createAccountAvailableBalanceQueryConfig,
   createAccountTotalBalanceQueryConfig,
@@ -8,25 +8,22 @@ import {
 import type { AccountRequest } from '@leather.io/services';
 
 import { useUserSettings } from '@app/hooks/use-user-settings';
-import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
+import {
+  useAccountAddresses,
+  useCurrentAccountAddresses,
+} from '@app/services/accounts/use-account-addresses';
 import { toFetchState } from '@app/services/fetch-state';
-import { useCurrentAccountId } from '@app/store/accounts/account';
 
 import { balanceQueryOptions } from '../balance-query-options';
 
 export function useCurrentAccountAvailableBalance() {
-  const currentAccount = useCurrentAccountId();
-  return useAccountAvailableBalance(currentAccount);
-}
-
-function useAccountAvailableBalance(accountId: AccountId) {
-  const account = useAccountAddresses(accountId);
+  const account = useCurrentAccountAddresses();
   return toFetchState(useGetAccountAvailableBalanceQuery({ account }));
 }
 
 export function useCurrentAccountTotalBalance() {
-  const currentAccount = useCurrentAccountId();
-  return useAccountTotalBalance(currentAccount);
+  const account = useCurrentAccountAddresses();
+  return toFetchState(useGetAccountTotalBalanceQuery({ account }));
 }
 
 export function useAccountTotalBalance(accountId: AccountId) {
@@ -36,6 +33,10 @@ export function useAccountTotalBalance(accountId: AccountId) {
 
 export function useAccountTotalBalanceQuery(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
+  return useGetAccountTotalBalanceQuery({ account });
+}
+
+export function useAccountTotalBalanceByAddressesQuery(account: AccountAddresses) {
   return useGetAccountTotalBalanceQuery({ account });
 }
 

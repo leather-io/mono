@@ -1,6 +1,7 @@
 import {
   addressResponseBodySchema,
   btcAddressBaseSchema,
+  btcAddressSchema,
   getAddresses,
   stxAddressSchema,
 } from './get-addresses';
@@ -17,8 +18,24 @@ describe('getAddresses', () => {
 
   const baseRespnseBodyStx = {
     symbol: 'STX',
+    kind: 'single-sig',
     address: 'SP1P72Z370VRYK5V9V3YVQAS1Z4X6D6GKQJ8K2JGK',
     publicKey: '02d9b4b6e',
+  };
+
+  const policyBtcAddress = {
+    symbol: 'BTC',
+    type: 'p2wsh',
+    address: 'bc1qexamplemultisigaddressxyz',
+    descriptor: 'wsh(sortedmulti(2,02aa,02bb))#checksum0',
+  };
+
+  const multisigStxAddress = {
+    symbol: 'STX',
+    kind: 'multisig',
+    address: 'SM3CFXKD81GREH6MYFW4P9VKSSR2N525W3KDRH3P1',
+    threshold: 2,
+    publicKeys: ['02aa', '03bb'],
   };
 
   describe('btcAddressBaseSchema', () => {
@@ -44,12 +61,33 @@ describe('getAddresses', () => {
       });
       expect(result.success).toEqual(true);
     });
+
+    test('parses a multisig STX address', () => {
+      const result = stxAddressSchema.safeParse(multisigStxAddress);
+      expect(result.success).toEqual(true);
+    });
+
+    test('rejects a single-sig STX address missing kind', () => {
+      const result = stxAddressSchema.safeParse({
+        symbol: baseRespnseBodyStx.symbol,
+        address: baseRespnseBodyStx.address,
+        publicKey: baseRespnseBodyStx.publicKey,
+      });
+      expect(result.success).toEqual(false);
+    });
+  });
+
+  describe('btcPolicyAddressSchema', () => {
+    test('parses a p2wsh policy address', () => {
+      const result = btcAddressSchema.safeParse(policyBtcAddress);
+      expect(result.success).toEqual(true);
+    });
   });
 
   describe('getAddressesResponseBody', () => {
     test('schema matches test data', () => {
       const result = addressResponseBodySchema.safeParse({
-        addresses: [baseRespnseBodyBtc, baseRespnseBodyStx],
+        addresses: [baseRespnseBodyBtc, baseRespnseBodyStx, policyBtcAddress, multisigStxAddress],
       });
       expect(result.success).toEqual(true);
     });
@@ -57,6 +95,11 @@ describe('getAddresses', () => {
 
   test('network being added conditionally', () => {
     const result = getAddresses.params.safeParse({ network: 'testnet' });
+    expect(result.success).toEqual(true);
+  });
+
+  test('allowPolicyAccounts flag is accepted', () => {
+    const result = getAddresses.params.safeParse({ allowPolicyAccounts: true });
     expect(result.success).toEqual(true);
   });
 
