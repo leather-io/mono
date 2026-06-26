@@ -16,6 +16,7 @@ interface AccountListItemLayoutProps extends AccountId {
   isLoading: boolean;
   isSelected: boolean;
   onSelectAccount(accountId: AccountId): void;
+  showChevron?: boolean;
 }
 export function AccountListItemLayout(props: AccountListItemLayoutProps) {
   const {
@@ -29,6 +30,7 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
     isLoading,
     isSelected,
     onSelectAccount,
+    showChevron,
   } = props;
 
   const isGreaterThanTinyWidth = useWindowMinWidth(320);
@@ -46,6 +48,8 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
         )
       }
       captionLeft={accountAddresses}
+      showChevron={showChevron}
+      chevronDirection="right"
     />
   );
 

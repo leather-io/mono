@@ -5,7 +5,7 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { Button, Popover, SettingsSliderIcon } from '@leather.io/ui';
 
 import { useMultisigActions } from '../../store/use-multisig';
-import { ProposeTool } from './propose-tool';
+import { TransactionTools } from './transaction-tools';
 
 function ToolRow({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -61,7 +61,7 @@ export function DevToolsPanel() {
                 Empty
               </Button>
             </ToolRow>
-            <ProposeTool />
+            <TransactionTools />
           </Flex>
         </Popover.Content>
       </Popover.Portal>

@@ -1,4 +1,5 @@
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Flex, styled } from 'leather-styles/jsx';
+import { ConnectActionRow } from '~/components/connect-card/connect-card';
 
 import type { AuthSession } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
@@ -6,7 +7,6 @@ import { truncateMiddle } from '@leather.io/utils';
 
 import { Badge } from '../../components/badge';
 import { ChainAvatar } from '../../components/chain-avatar';
-import { VaultListItem } from '../../components/vault-list-item';
 import type { Chain } from '../../data/multisig-types';
 
 interface OnboardingConnectRowProps {
@@ -30,42 +30,49 @@ export function OnboardingConnectRow({
 }: OnboardingConnectRowProps) {
   const label = chain === 'btc' ? 'Bitcoin' : 'Stacks';
   const desc = chain === 'btc' ? 'Sign PSBT-based BTC vaults' : 'Sign on-chain STX & sBTC vaults';
-  return (
-    <Box
-      p="space.04"
-      borderRadius="lg"
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor="ink.border-default"
-    >
-      <VaultListItem
-        leading={<ChainAvatar chain={chain} size="lg" />}
-        title={session ? `Connected to ${label}` : `Connect ${label}`}
-        caption={session ? truncateMiddle(session.identity.address, 4) : desc}
-        trailingTitle={
-          session ? (
-            <Flex alignItems="center" gap="space.03">
-              {isRestoring ? (
-                <Badge variant="default" label="Restoring…" />
-              ) : (
-                <Badge variant="success" label="Signed in" />
-              )}
-              <Button variant="ghost" onClick={onSignOut}>
-                Sign out
-              </Button>
-            </Flex>
-          ) : (
-            <Button variant="solid" minWidth="124px" disabled={isPending} onClick={onSignIn}>
-              {isPending ? 'Connecting…' : 'Connect'}
-            </Button>
-          )
-        }
-      />
-      {error?.message?.trim() && (
-        <styled.div textStyle="caption.01" color="red.action-primary-default" mt="space.03">
-          {error.message}
-        </styled.div>
+
+  const trailing = session ? (
+    <Flex alignItems="center" gap="space.02">
+      {isRestoring ? (
+        <Badge variant="default" label="Restoring…" />
+      ) : (
+        <Badge variant="success" label="Signed in" />
       )}
-    </Box>
+      <Button variant="ghost" size="md" onClick={onSignOut}>
+        Sign out
+      </Button>
+    </Flex>
+  ) : (
+    <Button
+      width="100px"
+      height="48px"
+      variant="solid"
+      disabled={isPending}
+      aria-busy={isPending}
+      onClick={onSignIn}
+    >
+      {isPending ? 'Connecting…' : 'Connect'}
+    </Button>
+  );
+
+  return (
+    <ConnectActionRow
+      img={<ChainAvatar chain={chain} boxSize="48px" />}
+      title={session ? `Connected to ${label}` : `Connect ${label}`}
+      description={session ? truncateMiddle(session.identity.address, 4) : desc}
+      trailing={trailing}
+      error={
+        error?.message?.trim() ? (
+          <styled.div
+            textStyle="caption.01"
+            color="red.action-primary-default"
+            mt="space.02"
+            ml="space.04"
+          >
+            {error.message}
+          </styled.div>
+        ) : undefined
+      }
+    />
   );
 }

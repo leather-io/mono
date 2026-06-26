@@ -1,3 +1,4 @@
+import { hexToBytes } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
@@ -58,6 +59,19 @@ export function getNativeSegwitPaymentFromAddressIndex(
   if (!keychain.publicKey) throw new Error('Keychain does not have a public key');
 
   return btc.p2wpkh(keychain.publicKey, getBtcSignerLibNetworkConfigByMode(network));
+}
+
+// Derives the p2wpkh (native segwit) address for a compressed public key
+export function getP2wpkhAddressFromPublicKey(
+  publicKey: string,
+  network: BitcoinNetworkModes
+): string {
+  const { address } = btc.p2wpkh(
+    hexToBytes(publicKey),
+    getBtcSignerLibNetworkConfigByMode(network)
+  );
+  if (!address) throw new Error('Could not derive p2wpkh address from public key');
+  return address;
 }
 
 interface DeriveNativeSegwitReceiveAddressIndexArgs {

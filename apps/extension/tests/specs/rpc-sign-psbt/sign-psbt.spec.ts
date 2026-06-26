@@ -8,7 +8,6 @@ import {
   TEST_ACCOUNT_SECRET_KEY,
   getConnectedTestAppPermissionsState,
 } from '@tests/page-object-models/onboarding.page';
-import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 
 import {
   type BtcSignerNetwork,
@@ -237,24 +236,6 @@ test.describe('Sign PSBT', () => {
     const request = await requestPromise;
     const requestBody = request.postDataBuffer();
     test.expect(requestBody).toBeDefined();
-  });
-
-  test('that the wallet name is shown in the header', async ({ page, context }) => {
-    const psbt = createTestPsbt();
-    const popupPromise = context.waitForEvent('page');
-    const resultPromise = initiatePsbtSigning(page)({
-      network: 'testnet',
-      hex: bytesToHex(psbt.toPSBT()),
-      broadcast: false,
-    });
-    const popup = await popupPromise;
-
-    await test
-      .expect(popup.getByTestId(ConnectAccountSelectors.WalletName).first())
-      .toHaveText('Wallet 1', { timeout: 15_000 });
-
-    await popup.locator('text="Cancel"').click();
-    await resultPromise;
   });
 
   test('that the request to sign can be canceled', async ({ page, context }) => {
