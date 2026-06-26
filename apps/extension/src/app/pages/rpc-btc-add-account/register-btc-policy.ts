@@ -12,15 +12,15 @@ import {
   useCurrentNetworkId,
   useNetworks,
 } from '@app/store/networks/networks.selectors';
-import { userAddsPolicyAccount } from '@app/store/policy/policy.slice';
+import { userAddsPolicy } from '@app/store/policy/policy.slice';
 
-import { createBtcPolicyAccountRegistration } from './btc-policy-account-registration';
+import { createBtcPolicyRegistration } from './btc-policy-registration';
 
 // Derives the policy account's address from the descriptor, saves it to state
 // associated with the active singlesig account, and returns the RPC result.
 // Returns null if address derivation unexpectedly fails (the descriptor is
 // validated upstream), so the caller can surface an RPC error rather than hang.
-export function useRegisterBtcPolicyAccount() {
+export function useRegisterBtcPolicy() {
   const dispatch = useAppDispatch();
   const { fingerprint, accountIndex } = useCurrentAccountId();
   const defaultNetwork = useCurrentNetwork();
@@ -30,7 +30,7 @@ export function useRegisterBtcPolicyAccount() {
   return useCallback(
     (params: RpcParams<typeof btcAddAccount>): RpcResult<typeof btcAddAccount> | null => {
       try {
-        const { addPolicyAccountPayload, result } = createBtcPolicyAccountRegistration({
+        const { addPolicyPayload, result } = createBtcPolicyRegistration({
           params,
           fingerprint,
           accountIndex,
@@ -38,13 +38,13 @@ export function useRegisterBtcPolicyAccount() {
           defaultNetworkId,
           networks,
         });
-        const action = userAddsPolicyAccount(addPolicyAccountPayload);
+        const action = userAddsPolicy(addPolicyPayload);
         dispatch(action);
         void broadcastReplayAction(action);
 
         return result;
       } catch (e) {
-        logger.error('Failed to register BTC policy account', e);
+        logger.error('Failed to register BTC policy', e);
         return null;
       }
     },

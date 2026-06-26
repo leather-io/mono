@@ -7,7 +7,7 @@ import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leathe
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import { userAddsPolicyAccount } from '../policy/policy.slice';
+import { userAddsPolicy } from '../policy/policy.slice';
 import { AccountStatus, AccountStore } from './account-store.utils';
 
 export const accountsAdapter = createEntityAdapter<AccountStore, string>({
@@ -55,7 +55,7 @@ export const accountsSlice = createSlice({
         accountsAdapter.addOne(state, { id: action.payload.account.id });
       })
 
-      .addCase(userAddsPolicyAccount, (state, action) => {
+      .addCase(userAddsPolicy, (state, action) => {
         const { policy, name } = action.payload;
         const status: AccountStatus = 'active';
         accountsAdapter.upsertOne(state, { id: policy.id, name, status });

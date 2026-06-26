@@ -11,14 +11,12 @@ export const policyAdapter = createEntityAdapter<PolicyStore, string>({
 
 const initialState = policyAdapter.getInitialState();
 
-interface AddPolicyAccountPayload {
+interface AddPolicyPayload {
   policy: PolicyStore;
   name?: string;
 }
 
-export const userAddsPolicyAccount = createAction<AddPolicyAccountPayload>(
-  'policy/userAddsPolicyAccount'
-);
+export const userAddsPolicy = createAction<AddPolicyPayload>('policy/userAddsPolicy');
 
 export const policySlice = createSlice({
   name: 'policy',
@@ -29,7 +27,7 @@ export const policySlice = createSlice({
       // `upsertOne` so re-adding the same (parent, address, network) policy
       // account is idempotent — a second registration replaces the existing row
       // in place.
-      .addCase(userAddsPolicyAccount, (state, action) => {
+      .addCase(userAddsPolicy, (state, action) => {
         policyAdapter.upsertOne(state, action.payload.policy);
       })
 

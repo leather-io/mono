@@ -11,7 +11,7 @@ import {
 } from './accounts/accounts.slice';
 import { userSwitchesAccount } from './active/active.slice';
 import { stxChainSlice } from './chains/stx-chain.slice';
-import { userAddsPolicyAccount } from './policy/policy.slice';
+import { userAddsPolicy } from './policy/policy.slice';
 import { isReplayableAction } from './replay-actions';
 
 const broadcastActionTypes = [
@@ -21,7 +21,7 @@ const broadcastActionTypes = [
   userTogglesHideAccount.type,
   userAddsAccount.type,
   userSwitchesAccount.type,
-  userAddsPolicyAccount.type,
+  userAddsPolicy.type,
   stxChainSlice.actions.createNewAccount.type,
   stxChainSlice.actions.restoreAccountIndex.type,
 ];

@@ -12,8 +12,8 @@ interface Props {
   onClickDeleteNetwork(): void;
 }
 
-const editDisabledTooltip = 'Remove multisig policy accounts before editing this network.';
-const deleteDisabledTooltip = 'Remove multisig policy accounts before deleting this network.';
+const editDisabledTooltip = 'Remove multisig policies before editing this network.';
+const deleteDisabledTooltip = 'Remove multisig policies before deleting this network.';
 
 export function NetworkItemMenu({ isPolicyLocked, onClickDeleteNetwork, onEditNetwork }: Props) {
   const { theme } = useThemeSwitcher();

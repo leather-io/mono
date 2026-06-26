@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 
 import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
 
-import { createBtcPolicyAccountRegistration } from './btc-policy-account-registration';
+import { createBtcPolicyRegistration } from './btc-policy-registration';
 
 function makeNativeSegwitAccountXpub(seedByte: number) {
   return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'")
@@ -20,9 +20,9 @@ const baseParams = {
   name: 'Treasury vault',
 };
 
-describe(createBtcPolicyAccountRegistration.name, () => {
+describe(createBtcPolicyRegistration.name, () => {
   test('uses the requested network for BTC address derivation and policy identity', () => {
-    const registration = createBtcPolicyAccountRegistration({
+    const registration = createBtcPolicyRegistration({
       params: { ...baseParams, network: 'testnet' },
       fingerprint: 'deadbeef',
       accountIndex: 0,
@@ -32,7 +32,7 @@ describe(createBtcPolicyAccountRegistration.name, () => {
     });
 
     expect(registration.result.address.startsWith('tb1q')).toBe(true);
-    expect(registration.addPolicyAccountPayload.policy).toEqual(
+    expect(registration.addPolicyPayload.policy).toEqual(
       expect.objectContaining({
         id: `deadbeef/0/${registration.result.address}/testnet`,
         networkId: 'testnet',
@@ -42,7 +42,7 @@ describe(createBtcPolicyAccountRegistration.name, () => {
   });
 
   test('falls back to the default network when the request omits network', () => {
-    const registration = createBtcPolicyAccountRegistration({
+    const registration = createBtcPolicyRegistration({
       params: baseParams,
       fingerprint: 'deadbeef',
       accountIndex: 0,
@@ -52,12 +52,12 @@ describe(createBtcPolicyAccountRegistration.name, () => {
     });
 
     expect(registration.result.address.startsWith('bc1q')).toBe(true);
-    expect(registration.addPolicyAccountPayload.policy.networkId).toBe('mainnet');
+    expect(registration.addPolicyPayload.policy.networkId).toBe('mainnet');
   });
 
   test('rejects an unknown requested network instead of falling back to the active network', () => {
     expect(() =>
-      createBtcPolicyAccountRegistration({
+      createBtcPolicyRegistration({
         params: { ...baseParams, network: 'unknown-network' },
         fingerprint: 'deadbeef',
         accountIndex: 0,

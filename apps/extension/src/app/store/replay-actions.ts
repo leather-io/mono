@@ -10,7 +10,7 @@ import {
 } from './accounts/accounts.slice';
 import { userSwitchesAccount } from './active/active.slice';
 import { stxChainSlice } from './chains/stx-chain.slice';
-import { userAddsPolicyAccount } from './policy/policy.slice';
+import { userAddsPolicy } from './policy/policy.slice';
 
 const replayableActionTypes = new Set<string>([
   userRenamesWallet.type,
@@ -19,7 +19,7 @@ const replayableActionTypes = new Set<string>([
   userTogglesHideAccount.type,
   userAddsAccount.type,
   userSwitchesAccount.type,
-  userAddsPolicyAccount.type,
+  userAddsPolicy.type,
   stxChainSlice.actions.createNewAccount.type,
   stxChainSlice.actions.restoreAccountIndex.type,
 ]);

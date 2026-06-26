@@ -6,7 +6,7 @@ import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leathe
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { makePolicyId } from '../policy/policy-store.utils';
-import { userAddsPolicyAccount } from '../policy/policy.slice';
+import { userAddsPolicy } from '../policy/policy.slice';
 import { accountsAdapter, accountsSlice, userClearsAccountName } from './accounts.slice';
 
 const realFingerprint = 'abcd1234';
@@ -81,7 +81,7 @@ describe('accountsSlice', () => {
     });
   });
 
-  describe('userAddsPolicyAccount', () => {
+  describe('userAddsPolicy', () => {
     test('creates an account row carrying the policy name and active status', () => {
       const parentAccountId = makeAccountIdentifer(realFingerprint, 0);
       const networkId = 'mainnet';
@@ -89,7 +89,7 @@ describe('accountsSlice', () => {
 
       const result = accountsSlice.reducer(
         accountsAdapter.getInitialState(),
-        userAddsPolicyAccount({
+        userAddsPolicy({
           policy: {
             id,
             parentAccountId,
@@ -122,12 +122,9 @@ describe('accountsSlice', () => {
 
       let state = accountsSlice.reducer(
         accountsAdapter.getInitialState(),
-        userAddsPolicyAccount({ policy, name: 'Family vault' })
+        userAddsPolicy({ policy, name: 'Family vault' })
       );
-      state = accountsSlice.reducer(
-        state,
-        userAddsPolicyAccount({ policy, name: 'Renamed vault' })
-      );
+      state = accountsSlice.reducer(state, userAddsPolicy({ policy, name: 'Renamed vault' }));
 
       expect(state.ids).toEqual([id]);
       expect(state.entities[id]).toEqual({ id, name: 'Renamed vault', status: 'active' });

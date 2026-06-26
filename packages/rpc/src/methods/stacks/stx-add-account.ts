@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { defineRpcEndpoint } from '../../rpc/schemas';
-import { policyAccountRoleSchema } from '../bitcoin/btc-add-account';
+import { policyRoleSchema } from '../bitcoin/btc-add-account';
 
 const compressedSecp256k1PublicKeySchema = z.string().regex(/^0[23][0-9a-fA-F]{64}$/);
 
@@ -21,7 +21,7 @@ const stxAddAccountResponseBodySchema = z.object({
   address: z.string(),
   publicKeys: z.array(z.string()),
   threshold: z.number(),
-  role: policyAccountRoleSchema,
+  role: policyRoleSchema,
   accountId: z.string(),
 });
 

@@ -5,7 +5,7 @@ import { resetWallet } from '@leather.io/state';
 import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { type PolicyStore, makePolicyId } from './policy-store.utils';
-import { policySlice, userAddsPolicyAccount } from './policy.slice';
+import { policySlice, userAddsPolicy } from './policy.slice';
 
 const { reducer, getInitialState } = policySlice;
 
@@ -44,7 +44,7 @@ const stacksPolicy: PolicyStore = {
 
 function seed(...policies: PolicyStore[]) {
   return policies.reduce(
-    (state, policy) => reducer(state, userAddsPolicyAccount({ policy })),
+    (state, policy) => reducer(state, userAddsPolicy({ policy })),
     getInitialState()
   );
 }
@@ -52,24 +52,21 @@ function seed(...policies: PolicyStore[]) {
 describe('policySlice', () => {
   test('adds a bitcoin policy', () => {
     const policy = makeBitcoinPolicy(parentAccountIdA);
-    const result = reducer(getInitialState(), userAddsPolicyAccount({ policy }));
+    const result = reducer(getInitialState(), userAddsPolicy({ policy }));
 
     expect(result.ids).toEqual([policy.id]);
     expect(result.entities[policy.id]).toEqual(policy);
   });
 
   test('adds a stacks policy', () => {
-    const result = reducer(getInitialState(), userAddsPolicyAccount({ policy: stacksPolicy }));
+    const result = reducer(getInitialState(), userAddsPolicy({ policy: stacksPolicy }));
 
     expect(result.entities[stacksPolicy.id]).toEqual(stacksPolicy);
   });
 
   test('does not store a name on the policy', () => {
     const policy = makeBitcoinPolicy(parentAccountIdA);
-    const result = reducer(
-      getInitialState(),
-      userAddsPolicyAccount({ policy, name: 'Family vault' })
-    );
+    const result = reducer(getInitialState(), userAddsPolicy({ policy, name: 'Family vault' }));
 
     expect(result.entities[policy.id]).not.toHaveProperty('name');
   });
@@ -77,8 +74,8 @@ describe('policySlice', () => {
   test('is idempotent: re-adding the same (parent, address) replaces in place', () => {
     const policy = makeBitcoinPolicy(parentAccountIdA);
     const updated = { ...policy, descriptor: 'wsh(sortedmulti(2,xpubC/0/0,xpubD/0/0))' };
-    let state = reducer(getInitialState(), userAddsPolicyAccount({ policy }));
-    state = reducer(state, userAddsPolicyAccount({ policy: updated }));
+    let state = reducer(getInitialState(), userAddsPolicy({ policy }));
+    state = reducer(state, userAddsPolicy({ policy: updated }));
 
     expect(state.ids).toHaveLength(1);
     expect(state.entities[policy.id]).toEqual(updated);

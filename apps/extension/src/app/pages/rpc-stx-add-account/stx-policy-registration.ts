@@ -1,37 +1,33 @@
-import {
-  compileWshDescriptor,
-  getAddressFromOutScript,
-  getBtcSignerLibNetworkConfigByMode,
-} from '@leather.io/bitcoin';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { type NetworkConfiguration } from '@leather.io/models';
-import { type RpcParams, btcAddAccount } from '@leather.io/rpc';
+import { type RpcParams, stxAddAccount } from '@leather.io/rpc';
+import { deriveStxMultisigAddress } from '@leather.io/stacks';
 
 import { makePolicyId } from '@app/store/policy/policy-store.utils';
 
-interface ResolveBtcPolicyNetworkArgs {
+interface ResolveStxPolicyNetworkArgs {
   paramsNetwork: string | undefined;
   defaultNetwork: NetworkConfiguration;
   defaultNetworkId: string;
   networks: Record<string, NetworkConfiguration>;
 }
 
-function resolveBtcPolicyNetwork({
+function resolveStxPolicyNetwork({
   paramsNetwork,
   defaultNetwork,
   defaultNetworkId,
   networks,
-}: ResolveBtcPolicyNetworkArgs) {
+}: ResolveStxPolicyNetworkArgs) {
   if (!paramsNetwork) return { network: defaultNetwork, networkId: defaultNetworkId };
 
   const requestedNetwork = networks[paramsNetwork];
-  if (!requestedNetwork) throw new Error(`Unknown BTC add account network: ${paramsNetwork}`);
+  if (!requestedNetwork) throw new Error(`Unknown STX add account network: ${paramsNetwork}`);
 
   return { network: requestedNetwork, networkId: requestedNetwork.id };
 }
 
-interface CreateBtcPolicyAccountRegistrationArgs {
-  params: RpcParams<typeof btcAddAccount>;
+interface CreateStxPolicyRegistrationArgs {
+  params: RpcParams<typeof stxAddAccount>;
   fingerprint: string;
   accountIndex: number;
   defaultNetwork: NetworkConfiguration;
@@ -39,43 +35,48 @@ interface CreateBtcPolicyAccountRegistrationArgs {
   networks: Record<string, NetworkConfiguration>;
 }
 
-export function createBtcPolicyAccountRegistration({
+export function createStxPolicyRegistration({
   params,
   fingerprint,
   accountIndex,
   defaultNetwork,
   defaultNetworkId,
   networks,
-}: CreateBtcPolicyAccountRegistrationArgs) {
-  const { network, networkId } = resolveBtcPolicyNetwork({
+}: CreateStxPolicyRegistrationArgs) {
+  const { network, networkId } = resolveStxPolicyNetwork({
     paramsNetwork: params.network,
     defaultNetwork,
     defaultNetworkId,
     networks,
   });
-  const { scriptPubKey } = compileWshDescriptor(params.descriptor);
-  const address = getAddressFromOutScript(
-    scriptPubKey,
-    getBtcSignerLibNetworkConfigByMode(network.chain.bitcoin.mode)
-  );
-  if (!address) throw new Error('Descriptor does not produce an address');
-
+  const address = deriveStxMultisigAddress({
+    publicKeys: params.publicKeys,
+    threshold: params.threshold,
+    chainId: network.chain.stacks.chainId,
+  });
   const parentAccountId = makeAccountIdentifer(fingerprint, accountIndex);
   const role = 'signer' as const;
 
   return {
-    addPolicyAccountPayload: {
+    addPolicyPayload: {
       policy: {
         id: makePolicyId(parentAccountId, address, networkId),
         parentAccountId,
         networkId,
-        chain: 'bitcoin' as const,
+        chain: 'stacks' as const,
         address,
-        descriptor: params.descriptor,
+        publicKeys: params.publicKeys,
+        threshold: params.threshold,
         role,
       },
       name: params.name,
     },
-    result: { address, descriptor: params.descriptor, accountId: address, role },
+    result: {
+      address,
+      publicKeys: params.publicKeys,
+      threshold: params.threshold,
+      role,
+      accountId: address,
+    },
   };
 }
