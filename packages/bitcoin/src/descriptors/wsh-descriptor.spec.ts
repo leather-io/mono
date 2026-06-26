@@ -15,6 +15,7 @@ import {
   getDescriptorInputsWithDisallowedSighash,
   getDescriptorMatchingInputIndexes,
   getWshDescriptorAddress,
+  getWshDescriptorNetwork,
   isWshDescriptor,
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
@@ -115,6 +116,24 @@ describe('wsh-descriptor', () => {
 
   it('throws for a non-wsh descriptor', () => {
     expect(() => getWshDescriptorAddress(`wpkh(${xpubA})`)).toThrow();
+  });
+
+  it('classifies a descriptor with mainnet extended keys as mainnet', () => {
+    const mainnetDescriptor = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`;
+    expect(getWshDescriptorNetwork(mainnetDescriptor)).toBe('mainnet');
+    expect(getWshDescriptorNetwork(descriptor)).toBe('mainnet');
+  });
+
+  it('classifies a descriptor with testnet extended keys as testnet', () => {
+    const tpubA = makeMultisigAccountTpub(1);
+    const tpubB = makeMultisigAccountTpub(2);
+    const testnetDescriptor = `wsh(sortedmulti(2,${tpubA}/0/0,${tpubB}/0/0))`;
+    expect(getWshDescriptorNetwork(testnetDescriptor)).toBe('testnet');
+  });
+
+  it('returns undefined for a raw-pubkey-only descriptor with no network signal', () => {
+    const rawPubkeyDescriptor = `wsh(pk(${bytesToHex(pubkeyA)}))`;
+    expect(getWshDescriptorNetwork(rawPubkeyDescriptor)).toBeUndefined();
   });
 
   it('compiles to a p2wsh scriptPubKey and witness script', () => {

@@ -2,6 +2,7 @@ import {
   compileWshDescriptor,
   getAddressFromOutScript,
   getBtcSignerLibNetworkConfigByMode,
+  getWshDescriptorNetwork,
 } from '@leather.io/bitcoin';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import {
@@ -43,6 +44,14 @@ export function createBtcPolicyRegistration({
     paramsNetwork: params.network,
     networks,
   });
+
+  const descriptorNetwork = getWshDescriptorNetwork(params.descriptor);
+  const resolvedNetwork = network.chain.bitcoin.mode === 'mainnet' ? 'mainnet' : 'testnet';
+  if (descriptorNetwork && descriptorNetwork !== resolvedNetwork)
+    throw new Error(
+      `BTC descriptor network (${descriptorNetwork}) does not match requested network (${networkId})`
+    );
+
   const { scriptPubKey } = compileWshDescriptor(params.descriptor);
   const address = getAddressFromOutScript(
     scriptPubKey,

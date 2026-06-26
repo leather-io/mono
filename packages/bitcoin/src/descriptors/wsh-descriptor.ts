@@ -9,7 +9,7 @@ import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { type Network, Psbt, networks } from 'bitcoinjs-lib';
 
-import { type BitcoinNetworkModes } from '@leather.io/models';
+import { type BitcoinNetworkModes, type NetworkModes } from '@leather.io/models';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
@@ -23,7 +23,21 @@ export function isWshDescriptor(descriptor: string) {
 }
 
 const testnetExtendedKeyPrefixes = ['tpub', 'tprv', 'upub', 'uprv', 'vpub', 'vprv'];
+const mainnetExtendedKeyPrefixes = ['xpub', 'xprv', 'ypub', 'yprv', 'zpub', 'zprv'];
 const keyExpressionStarts = ['(', ',', ']'];
+
+function descriptorHasKeyPrefix(descriptor: string, prefixes: string[]) {
+  const compactDescriptor = descriptor.replace(/\s/g, '');
+  return keyExpressionStarts.some(start =>
+    prefixes.some(prefix => compactDescriptor.includes(start + prefix))
+  );
+}
+
+export function getWshDescriptorNetwork(descriptor: string): NetworkModes | undefined {
+  if (descriptorHasKeyPrefix(descriptor, testnetExtendedKeyPrefixes)) return 'testnet';
+  if (descriptorHasKeyPrefix(descriptor, mainnetExtendedKeyPrefixes)) return 'mainnet';
+  return undefined;
+}
 
 // A P2WSH witness script and its scriptPubKey are network-independent — the same
 // keys and policy compile to identical bytes on mainnet and testnet. This
@@ -31,11 +45,7 @@ const keyExpressionStarts = ['(', ',', ']'];
 // that need a bech32 address should pass an explicit network to
 // getWshDescriptorAddress instead of treating this fallback as policy identity.
 function getNetworkForDescriptor(descriptor: string): Network {
-  const compactDescriptor = descriptor.replace(/\s/g, '');
-  const hasTestnetKey = keyExpressionStarts.some(start =>
-    testnetExtendedKeyPrefixes.some(prefix => compactDescriptor.includes(start + prefix))
-  );
-  return hasTestnetKey ? networks.testnet : networks.bitcoin;
+  return getWshDescriptorNetwork(descriptor) === 'testnet' ? networks.testnet : networks.bitcoin;
 }
 
 function deriveKeyExpressionPubkeyHex(keyExpression: string, network: Network, index: number) {

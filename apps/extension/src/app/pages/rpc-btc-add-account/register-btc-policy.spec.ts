@@ -10,9 +10,20 @@ function makeNativeSegwitAccountXpub(seedByte: number) {
     .publicExtendedKey;
 }
 
+const testnetBip32Versions = { private: 0x04358394, public: 0x043587cf };
+
+function makeNativeSegwitAccountTpub(seedByte: number) {
+  return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte), testnetBip32Versions).derive(
+    "m/84'/1'/0'"
+  ).publicExtendedKey;
+}
+
 const descriptor = `wsh(sortedmulti(2,${makeNativeSegwitAccountXpub(
   1
 )}/0/0,${makeNativeSegwitAccountXpub(2)}/0/0))`;
+const testnetDescriptor = `wsh(sortedmulti(2,${makeNativeSegwitAccountTpub(
+  1
+)}/0/0,${makeNativeSegwitAccountTpub(2)}/0/0))`;
 const networks = defaultNetworksKeyedById as Record<string, NetworkConfiguration>;
 
 const baseParams = {
@@ -23,7 +34,7 @@ const baseParams = {
 describe(createBtcPolicyRegistration.name, () => {
   test('uses the requested network for BTC address derivation and policy identity', () => {
     const registration = createBtcPolicyRegistration({
-      params: { ...baseParams, network: 'testnet' },
+      params: { ...baseParams, descriptor: testnetDescriptor, network: 'testnet' },
       fingerprint: 'deadbeef',
       accountIndex: 0,
       networks,
@@ -60,5 +71,16 @@ describe(createBtcPolicyRegistration.name, () => {
         networks,
       })
     ).toThrow('Unknown BTC add account network: unknown-network');
+  });
+
+  test('rejects a descriptor whose network disagrees with the requested network', () => {
+    expect(() =>
+      createBtcPolicyRegistration({
+        params: { ...baseParams, network: 'testnet' },
+        fingerprint: 'deadbeef',
+        accountIndex: 0,
+        networks,
+      })
+    ).toThrow('does not match requested network');
   });
 });
