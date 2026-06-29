@@ -12,6 +12,7 @@ export const multisigRoutes: RouteConfigEntry[] = prefix('multisig', [
   route('transaction-preview', 'pages/multisig/preview/transaction-list-preview.route.tsx'),
   route('sidebar-preview', 'pages/multisig/preview/sidebar-preview.route.tsx'),
   route('context-preview', 'pages/multisig/preview/context-preview.route.tsx'),
+  route('gallery-preview', 'pages/multisig/preview/gallery-preview.route.tsx'),
   layout('pages/multisig/multisig.layout.tsx', [
     index('pages/multisig/multisig.route.tsx'),
     route('onboarding', 'pages/multisig/onboarding/onboarding.route.tsx'),
