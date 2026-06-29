@@ -13,9 +13,17 @@ import type {
 import { ListContainer, ListItemBox } from '@leather.io/ui';
 
 import { AccountDetailsCard } from '../account/components/account-details-card';
+import { AvatarCircle } from '../components/avatar-circle';
+import { AvatarSq } from '../components/avatar-sq';
+import { Badge, type BadgeVariant } from '../components/badge';
 import { ChainAvatar } from '../components/chain-avatar';
+import { ChainPill } from '../components/chain-pill';
+import { CopyAddress } from '../components/copy-address';
+import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
+import { TextField } from '../components/text-field';
 import { TransactionList, type TransactionListItem } from '../components/transaction-list';
+import { CreateVaultTile } from '../dashboard/components/create-vault-tile';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { VaultStatusCard } from '../vault/components/vault-status-card';
 
@@ -269,6 +277,97 @@ export function GalleryPreviewPage() {
                 onClick={() => undefined}
               />
             </ListContainer>
+          </Slot>
+        </Flex>
+      </Section>
+
+      <Section title="Badges" note="All status variants.">
+        <Flex gap="space.03" flexWrap="wrap" alignItems="center">
+          {(['default', 'error', 'info', 'pending', 'success', 'warning'] as BadgeVariant[]).map(
+            v => (
+              <Badge key={v} variant={v} label={v} />
+            )
+          )}
+        </Flex>
+      </Section>
+
+      <Section
+        title="Avatars & pills"
+        note="AvatarCircle (sizes), AvatarSq (icons/chains/badge), ChainAvatar, ChainPill."
+      >
+        <Flex direction="column" gap="space.06">
+          <Slot label="AvatarCircle — xs / sm / md / lg / xl" width="100%">
+            <Flex gap="space.04" alignItems="center">
+              {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map(s => (
+                <AvatarCircle key={s} name="Amber" size={s} />
+              ))}
+            </Flex>
+          </Slot>
+          <Slot label="AvatarSq — chains / icons / chain badge" width="100%">
+            <Flex gap="space.04" alignItems="center">
+              <AvatarSq chain="stx" icon="vault" themeId={orangeTheme} size="lg" />
+              <AvatarSq chain="btc" icon="vault" themeId={blueTheme} size="lg" />
+              <AvatarSq
+                chain="stx"
+                icon="piggybank"
+                themeId={orangeTheme}
+                size="md"
+                withChainBadge
+              />
+              <AvatarSq chain="btc" icon="piggybank" themeId={blueTheme} size="sm" />
+            </Flex>
+          </Slot>
+          <Slot label="ChainAvatar — sizes / chains" width="100%">
+            <Flex gap="space.04" alignItems="center">
+              <ChainAvatar chain="stx" size="sm" />
+              <ChainAvatar chain="stx" size="md" />
+              <ChainAvatar chain="btc" size="lg" />
+            </Flex>
+          </Slot>
+          <Slot label="ChainPill" width="100%">
+            <Flex gap="space.04" alignItems="center">
+              <ChainPill chain="stx" />
+              <ChainPill chain="btc" />
+              <ChainPill chain="btc" logo />
+            </Flex>
+          </Slot>
+        </Flex>
+      </Section>
+
+      <Section title="CopyAddress" note="Truncated / grouped / full / emphasis.">
+        <Flex direction="column" gap="space.03" maxWidth="520px">
+          <CopyAddress addr={ME} />
+          <CopyAddress addr={ME} grouped />
+          <CopyAddress addr={ME} full />
+          <CopyAddress addr={ME} emphasis />
+        </Flex>
+      </Section>
+
+      <Section title="Form fields & states" note="TextField, CreateVaultTile, error state.">
+        <Flex gap="space.06" flexWrap="wrap" alignItems="flex-start">
+          <Slot label="TextField">
+            <Flex direction="column" gap="space.04">
+              <TextField label="Vault name" value="Team Treasury" onChange={() => undefined} />
+              <TextField
+                label="Address"
+                value="SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKQVX8X0G"
+                mono
+                onChange={() => undefined}
+              />
+              <TextField
+                label="Invalid"
+                value="not-an-address"
+                invalid
+                help="Enter a valid address"
+                onChange={() => undefined}
+              />
+            </Flex>
+          </Slot>
+          <Slot label="CreateVaultTile">
+            <CreateVaultTile onClick={() => undefined} />
+          </Slot>
+          <Slot label="MultisigErrorState">
+            <MultisigErrorState body="No vault found. It may not exist, or you may not be a member." />
           </Slot>
         </Flex>
       </Section>
