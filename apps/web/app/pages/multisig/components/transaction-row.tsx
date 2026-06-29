@@ -4,7 +4,7 @@ import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 
 import type { MultisigTransactionSummary } from '@leather.io/models';
-import { FailedIcon, ListItemBox, SentIcon } from '@leather.io/ui';
+import { Button, FailedIcon, ListItemBox, SentIcon } from '@leather.io/ui';
 
 import { chainFromNetwork } from '../multisig.utils';
 import { formatRelativeTime } from '../tx/relative-time';
@@ -19,6 +19,10 @@ interface TransactionRowProps {
   // Signing threshold of the transaction's account, when known — lets a
   // collecting transaction read "2 of 3 signed" instead of a generic label.
   threshold?: number;
+  // Settled value shown right-aligned on history rows: token amount over its
+  // fiat equivalent. Only rendered on confirmed transactions, when provided.
+  amount?: ReactNode;
+  fiat?: ReactNode;
   // 'regular' for a main column, 'compact' for the narrower sidebar variant —
   // steps avatar, status icon, title type and leading down a notch.
   scale?: TransactionRowScale;
@@ -73,6 +77,8 @@ export function TransactionRow({
   transaction,
   subtitle,
   threshold,
+  amount,
+  fiat,
   scale = 'regular',
   needsAttention,
   onClick,
@@ -81,6 +87,9 @@ export function TransactionRow({
   const chain = chainFromNetwork(transaction.network);
   const asset = chain === 'btc' ? 'BTC' : 'STX';
   const indicator = renderIndicator(transaction.status, cfg.indicator);
+  // Shown on every row except the action rows — those carry a Review CTA on the
+  // right instead, so the value would have nowhere to sit without competing.
+  const showValue = !needsAttention && amount != null;
 
   function renderCaption(): ReactNode {
     const { status } = transaction;
@@ -121,6 +130,27 @@ export function TransactionRow({
         </styled.span>
       }
       caption={renderCaption()}
+      trailing={
+        showValue ? (
+          <styled.span textStyle={cfg.title} whiteSpace="nowrap">
+            {amount}
+          </styled.span>
+        ) : undefined
+      }
+      trailingCaption={
+        showValue && fiat != null ? (
+          <styled.span textStyle="caption.01" color="ink.text-subdued" whiteSpace="nowrap">
+            {fiat}
+          </styled.span>
+        ) : undefined
+      }
+      action={
+        needsAttention ? (
+          <Button size="sm" onClick={onClick}>
+            Review
+          </Button>
+        ) : undefined
+      }
     />
   );
 }

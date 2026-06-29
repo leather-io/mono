@@ -1,85 +1,131 @@
-import { useEffect, useRef, useState } from 'react';
+import { type KeyboardEvent } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
-import { AddressDisplayer, CheckmarkIcon, CopyIcon } from '@leather.io/ui';
-import { truncateMiddle } from '@leather.io/utils';
+import { CheckmarkIcon, CopyIcon, useClipboard } from '@leather.io/ui';
+import { isEven, truncateMiddle } from '@leather.io/utils';
 
 interface CopyAddressProps {
   addr: string;
   full?: boolean;
   grouped?: boolean;
-  emphasis?: boolean;
 }
 
-const COPIED_RESET_MS = 1400;
+const iconSize = 12;
 
-// Mono-font address with click-to-copy. Uses the Clipboard API directly (a
-// design-only convenience); production extraction routes through the app's
-// clipboard hook.
-export function CopyAddress({ addr, full, grouped, emphasis }: CopyAddressProps) {
-  const [copied, setCopied] = useState(false);
-  const resetTimeout = useRef<ReturnType<typeof setTimeout>>();
-  const multiline = grouped || full;
-  useEffect(() => {
-    return () => {
-      if (resetTimeout.current) clearTimeout(resetTimeout.current);
-    };
-  }, []);
-  async function onCopy() {
-    try {
-      await navigator.clipboard?.writeText(addr);
-    } catch {
-      return;
+function groupByFour(addr: string): string[] {
+  return addr.match(/.{1,4}/g) ?? [];
+}
+
+// Mono-font address with click-to-copy via the app's shared useClipboard
+// hook. One muted style for truncated + full (full just wraps); grouped is
+// the multi-line block where the copy icon trails the address.
+export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
+  const { onCopy, hasCopied } = useClipboard(addr);
+
+  const icon = (
+    <styled.span flexShrink={0} display="inline-flex" alignItems="center" verticalAlign="middle">
+      {hasCopied ? (
+        <CheckmarkIcon
+          variant="small"
+          width={iconSize}
+          height={iconSize}
+          color="green.text-secondary"
+        />
+      ) : (
+        <CopyIcon variant="small" width={iconSize} height={iconSize} color="ink.text-subdued" />
+      )}
+    </styled.span>
+  );
+
+  function onKeyActivate(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onCopy();
     }
-    setCopied(true);
-    if (resetTimeout.current) clearTimeout(resetTimeout.current);
-    resetTimeout.current = setTimeout(() => setCopied(false), COPIED_RESET_MS);
   }
+
+  if (grouped) {
+    // Per-line background (box-decoration-break: clone) so the hover wraps around
+    // the text — each wrapped line is hugged, not one filled rectangle. The tight
+    // line-height overlaps the lines (opaque bg) into one connected shape. The
+    // line-end corners are convex: a single hugging shape with concave step
+    // corners isn't possible in clean CSS (it needs a filter/JS hack). The block
+    // wrapper + negative margin keep every line aligned with the label above.
+    return (
+      <styled.span display="block" ml="-space.01">
+        <styled.span
+          role="button"
+          tabIndex={0}
+          onClick={onCopy}
+          onKeyDown={onKeyActivate}
+          title="Copy address"
+          display="inline"
+          style={{ WebkitBoxDecorationBreak: 'clone', boxDecorationBreak: 'clone' }}
+          cursor="pointer"
+          px="space.01"
+          py="space.01"
+          lineHeight="1.4"
+          borderRadius="sm"
+          transition="background 0.1s ease"
+          _hover={{ bg: 'ink.background-secondary' }}
+        >
+          {groupByFour(addr).map((group, index) => (
+            <styled.span
+              key={index}
+              textStyle="address"
+              color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued'}
+            >
+              {group}{' '}
+            </styled.span>
+          ))}
+          {icon}
+        </styled.span>
+      </styled.span>
+    );
+  }
+
   return (
     <styled.button
       type="button"
-      onClick={() => void onCopy()}
+      onClick={onCopy}
       title="Copy address"
       display="inline-flex"
-      alignItems={multiline ? 'flex-start' : 'center'}
-      gap="space.02"
+      alignItems="center"
+      gap="space.01"
       maxWidth="100%"
       textAlign="left"
       cursor="pointer"
-      px="space.02"
-      py="space.01"
+      px="space.01"
+      // No vertical padding: the hover container is one text-line tall, so an
+      // address caption takes the same row height as a plain-text caption — rows
+      // don't grow taller just because they show an address.
+      py="0"
+      // Negative left margin cancels the left padding so the address text lines up
+      // with the title/label above it — the hover container keeps its padding and
+      // just extends outward instead of denting the text inward.
+      ml="-space.01"
       borderRadius="sm"
       bg="transparent"
-      color={emphasis ? 'ink.text-primary' : 'ink.text-subdued'}
+      color="ink.text-subdued"
       transition="background 0.1s ease"
       _hover={{ bg: 'ink.component-background-hover', color: 'ink.text-primary' }}
     >
-      {grouped ? (
-        <AddressDisplayer address={addr} minWidth={0} />
-      ) : (
-        <styled.span
-          textStyle="code"
-          fontSize={emphasis ? '1rem' : undefined}
-          flexShrink={0}
-          whiteSpace={full ? 'normal' : 'nowrap'}
-          wordBreak={full ? 'break-all' : 'normal'}
-        >
-          {full ? addr : truncateMiddle(addr)}
-        </styled.span>
-      )}
       <styled.span
+        textStyle="code"
+        // 12px (one down from the 13px `code` size): a monospace face reads larger
+        // than the proportional caption text on the line above, so a notch smaller
+        // sits more harmoniously. Line height stays 20px (the caption.01 line) so the
+        // address caption is exactly as tall as a plain-text caption.
+        fontSize="12px"
+        lineHeight="20px"
         flexShrink={0}
-        display="inline-flex"
-        alignItems="center"
-        mt={multiline ? 'space.01' : '0'}
+        whiteSpace={full ? 'normal' : 'nowrap'}
+        wordBreak={full ? 'break-all' : 'normal'}
       >
-        {copied ? (
-          <CheckmarkIcon variant="small" color="green.text-secondary" />
-        ) : (
-          <CopyIcon variant="small" />
-        )}
+        {full ? addr : truncateMiddle(addr)}
       </styled.span>
+      {icon}
     </styled.button>
   );
 }

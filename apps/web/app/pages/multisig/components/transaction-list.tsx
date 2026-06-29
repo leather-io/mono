@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { Box, styled } from 'leather-styles/jsx';
 
 import type { MultisigTransactionSummary } from '@leather.io/models';
@@ -15,6 +17,11 @@ export interface TransactionListItem {
   vaultId: string;
   subtitle?: string;
   threshold?: number;
+  // Settled transaction value, right-aligned on history rows: token amount over
+  // its fiat equivalent. Optional because the feed summary carries no amount —
+  // it is populated only where the value has been resolved (decoded / on-chain).
+  amount?: ReactNode;
+  fiat?: ReactNode;
 }
 
 interface TransactionListProps {
@@ -66,6 +73,8 @@ export function TransactionList({ items, scale, onSelect }: TransactionListProps
         transaction={item.transaction}
         subtitle={item.subtitle}
         threshold={item.threshold}
+        amount={item.amount}
+        fiat={item.fiat}
         scale={scale}
         needsAttention={needsAttention}
         onClick={() => onSelect(item.vaultId, item.transaction.id)}

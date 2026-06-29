@@ -15,12 +15,15 @@ function mockItem(
   status: MultisigTransactionStatus,
   minutesAgo: number,
   approvalCount: number,
-  threshold: number
+  threshold: number,
+  value?: { amount: string; fiat: string }
 ): TransactionListItem {
   return {
     vaultId: 'vault-preview',
     subtitle: 'Team Treasury',
     threshold,
+    amount: value?.amount,
+    fiat: value?.fiat,
     transaction: {
       id,
       vaultAccountId: 'account-preview',
@@ -41,10 +44,11 @@ function mockItem(
 const items: TransactionListItem[] = [
   mockItem('1', 'stx:mainnet', 'pending', 8, 1, 3),
   mockItem('2', 'btc:mainnet', 'pending', 26, 2, 3),
-  mockItem('3', 'stx:mainnet', 'signed', 55, 3, 3),
-  mockItem('4', 'btc:mainnet', 'broadcast', 70, 3, 3),
-  mockItem('5', 'stx:mainnet', 'confirmed', 240, 3, 3),
-  mockItem('6', 'stx:mainnet', 'failed', 1500, 3, 3),
+  mockItem('3', 'stx:mainnet', 'signed', 55, 3, 3, { amount: '40.00 STX', fiat: '$79.60' }),
+  mockItem('4', 'btc:mainnet', 'broadcast', 70, 3, 3, { amount: '0.0150 BTC', fiat: '$990.00' }),
+  mockItem('5', 'stx:mainnet', 'confirmed', 240, 3, 3, { amount: '125.00 STX', fiat: '$248.75' }),
+  mockItem('7', 'btc:mainnet', 'confirmed', 900, 2, 2, { amount: '0.0425 BTC', fiat: '$2,810.00' }),
+  mockItem('6', 'stx:mainnet', 'failed', 1500, 3, 3, { amount: '8.50 STX', fiat: '$16.91' }),
 ];
 
 function Column({

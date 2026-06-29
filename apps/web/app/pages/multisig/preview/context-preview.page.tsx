@@ -107,12 +107,15 @@ function txSummary(
   status: MultisigTransactionStatus,
   minutesAgo: number,
   approvalCount: number,
-  vaultName: string
+  vaultName: string,
+  value?: { amount: string; fiat: string }
 ): TransactionListItem {
   return {
     vaultId: vault.id,
     threshold: account.threshold,
     subtitle: vaultName,
+    amount: value?.amount,
+    fiat: value?.fiat,
     transaction: {
       id,
       vaultAccountId: account.id,
@@ -133,9 +136,22 @@ function txSummary(
 const txItems: TransactionListItem[] = [
   txSummary('1', 'stx:mainnet', 'pending', 8, 1, 'Team Treasury'),
   txSummary('2', 'btc:mainnet', 'pending', 26, 1, 'Vault One'),
-  txSummary('3', 'stx:mainnet', 'broadcast', 70, 2, 'Team Treasury'),
-  txSummary('4', 'stx:mainnet', 'confirmed', 240, 2, 'Team Treasury'),
-  txSummary('5', 'btc:mainnet', 'failed', 1440, 1, 'Vault One'),
+  txSummary('3', 'stx:mainnet', 'broadcast', 70, 2, 'Team Treasury', {
+    amount: '40.00 STX',
+    fiat: '$79.60',
+  }),
+  txSummary('4', 'stx:mainnet', 'confirmed', 240, 2, 'Team Treasury', {
+    amount: '125.00 STX',
+    fiat: '$248.75',
+  }),
+  txSummary('6', 'btc:mainnet', 'confirmed', 900, 2, 'Vault One', {
+    amount: '0.0425 BTC',
+    fiat: '$2,810.00',
+  }),
+  txSummary('5', 'btc:mainnet', 'failed', 1440, 1, 'Vault One', {
+    amount: '8.50 STX',
+    fiat: '$16.91',
+  }),
 ];
 
 const accountItems = txItems.map(item => ({ ...item, subtitle: undefined }));

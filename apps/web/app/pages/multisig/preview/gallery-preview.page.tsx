@@ -88,12 +88,15 @@ function txSummary(
   status: MultisigTransactionStatus,
   minutesAgo: number,
   approvalCount: number,
-  vaultName: string
+  vaultName: string,
+  value?: { amount: string; fiat: string }
 ): TransactionListItem {
   return {
     vaultId: vault.id,
     threshold: account.threshold,
     subtitle: vaultName,
+    amount: value?.amount,
+    fiat: value?.fiat,
     transaction: {
       id,
       vaultAccountId: account.id,
@@ -114,9 +117,22 @@ function txSummary(
 const txItems: TransactionListItem[] = [
   txSummary('1', 'stx:mainnet', 'pending', 8, 1, 'Team Treasury'),
   txSummary('2', 'btc:mainnet', 'pending', 26, 1, 'Vault One'),
-  txSummary('3', 'stx:mainnet', 'broadcast', 70, 2, 'Team Treasury'),
-  txSummary('4', 'stx:mainnet', 'confirmed', 240, 2, 'Team Treasury'),
-  txSummary('5', 'btc:mainnet', 'failed', 1440, 1, 'Vault One'),
+  txSummary('3', 'stx:mainnet', 'broadcast', 70, 2, 'Team Treasury', {
+    amount: '40.00 STX',
+    fiat: '$79.60',
+  }),
+  txSummary('4', 'stx:mainnet', 'confirmed', 240, 2, 'Team Treasury', {
+    amount: '125.00 STX',
+    fiat: '$248.75',
+  }),
+  txSummary('6', 'btc:mainnet', 'confirmed', 900, 2, 'Vault One', {
+    amount: '0.0425 BTC',
+    fiat: '$2,810.00',
+  }),
+  txSummary('5', 'btc:mainnet', 'failed', 1440, 1, 'Vault One', {
+    amount: '8.50 STX',
+    fiat: '$16.91',
+  }),
 ];
 const accountItems = txItems.map(item => ({ ...item, subtitle: undefined }));
 
@@ -156,6 +172,8 @@ function Slot({ label, width, children }: { label: string; width?: string; child
     </Box>
   );
 }
+
+const badgeVariants: BadgeVariant[] = ['default', 'error', 'info', 'pending', 'success', 'warning'];
 
 export function GalleryPreviewPage() {
   return (
@@ -283,11 +301,9 @@ export function GalleryPreviewPage() {
 
       <Section title="Badges" note="All status variants.">
         <Flex gap="space.03" flexWrap="wrap" alignItems="center">
-          {(['default', 'error', 'info', 'pending', 'success', 'warning'] as BadgeVariant[]).map(
-            v => (
-              <Badge key={v} variant={v} label={v} />
-            )
-          )}
+          {badgeVariants.map(v => (
+            <Badge key={v} variant={v} label={v} />
+          ))}
         </Flex>
       </Section>
 
@@ -334,12 +350,14 @@ export function GalleryPreviewPage() {
         </Flex>
       </Section>
 
-      <Section title="CopyAddress" note="Truncated / grouped / full / emphasis.">
-        <Flex direction="column" gap="space.03" maxWidth="520px">
+      <Section
+        title="CopyAddress"
+        note="One muted style for truncated + full; grouped is the multi-line block with the icon trailing the address."
+      >
+        <Flex direction="column" gap="space.03" maxWidth="520px" alignItems="flex-start">
           <CopyAddress addr={ME} />
-          <CopyAddress addr={ME} grouped />
           <CopyAddress addr={ME} full />
-          <CopyAddress addr={ME} emphasis />
+          <CopyAddress addr={ME} grouped />
         </Flex>
       </Section>
 

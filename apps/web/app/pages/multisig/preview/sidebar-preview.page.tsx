@@ -93,11 +93,14 @@ function txSummary(
   id: string,
   status: MultisigTransactionStatus,
   minutesAgo: number,
-  approvalCount: number
+  approvalCount: number,
+  value?: { amount: string; fiat: string }
 ): TransactionListItem {
   return {
     vaultId: vault.id,
     threshold: account.threshold,
+    amount: value?.amount,
+    fiat: value?.fiat,
     transaction: {
       id,
       vaultAccountId: account.id,
@@ -117,8 +120,8 @@ function txSummary(
 
 const txItems: TransactionListItem[] = [
   txSummary('1', 'pending', 8, 1),
-  txSummary('2', 'broadcast', 70, 2),
-  txSummary('3', 'confirmed', 240, 2),
+  txSummary('2', 'broadcast', 70, 2, { amount: '40.00 STX', fiat: '$79.60' }),
+  txSummary('3', 'confirmed', 240, 2, { amount: '125.00 STX', fiat: '$248.75' }),
 ];
 
 function SectionLabel({ children }: { children: string }) {

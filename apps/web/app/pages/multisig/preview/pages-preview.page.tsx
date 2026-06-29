@@ -15,7 +15,7 @@ import type {
   VaultMember,
   VaultSummary,
 } from '@leather.io/models';
-import { Button } from '@leather.io/ui';
+import { Button, ListItemBox } from '@leather.io/ui';
 
 import { AccountDetailsCard } from '../account/components/account-details-card';
 import { AvatarSq } from '../components/avatar-sq';
@@ -24,13 +24,16 @@ import { InvitationModal } from '../components/invitation-modal';
 import { MultisigHero } from '../components/multisig-hero';
 import { SectionLabel } from '../components/section-label';
 import { TransactionList, type TransactionListItem } from '../components/transaction-list';
-import { VaultListItem } from '../components/vault-list-item';
 import { ChainPicker } from '../create-vault/components/chain-picker';
 import { type MemberDraft, MemberRows } from '../create-vault/components/member-rows';
 import { ThemePicker } from '../create-vault/components/theme-picker';
 import { VaultPreviewCard } from '../create-vault/components/vault-preview-card';
 import { CreateVaultTile } from '../dashboard/components/create-vault-tile';
-import { vaultThemeFromName } from '../multisig-tokens';
+import {
+  collectingSignaturesGradient,
+  collectingSignaturesGradientHover,
+  vaultThemeFromName,
+} from '../multisig-tokens';
 import { SignerRollcall } from '../tx/components/signer-rollcall';
 import { TxDetailsTable } from '../tx/components/tx-details-table';
 import { AccountsSection } from '../vault/components/accounts-section';
@@ -184,12 +187,15 @@ function txSummary(
   status: MultisigTransactionStatus,
   minutesAgo: number,
   approvalCount: number,
-  vaultName: string
+  vaultName: string,
+  value?: { amount: string; fiat: string }
 ): TransactionListItem {
   return {
     vaultId: vault.id,
     threshold: account.threshold,
     subtitle: vaultName,
+    amount: value?.amount,
+    fiat: value?.fiat,
     transaction: {
       id,
       vaultAccountId: account.id,
@@ -210,9 +216,22 @@ function txSummary(
 const txItems: TransactionListItem[] = [
   txSummary('1', 'stx:mainnet', 'pending', 8, 1, 'Team Treasury'),
   txSummary('2', 'btc:mainnet', 'pending', 26, 1, 'Vault One'),
-  txSummary('3', 'stx:mainnet', 'broadcast', 70, 2, 'Team Treasury'),
-  txSummary('4', 'stx:mainnet', 'confirmed', 240, 2, 'Team Treasury'),
-  txSummary('5', 'btc:mainnet', 'failed', 1440, 1, 'Vault One'),
+  txSummary('3', 'stx:mainnet', 'broadcast', 70, 2, 'Team Treasury', {
+    amount: '40.00 STX',
+    fiat: '$79.60',
+  }),
+  txSummary('4', 'stx:mainnet', 'confirmed', 240, 2, 'Team Treasury', {
+    amount: '125.00 STX',
+    fiat: '$248.75',
+  }),
+  txSummary('6', 'btc:mainnet', 'confirmed', 900, 2, 'Vault One', {
+    amount: '0.0425 BTC',
+    fiat: '$2,810.00',
+  }),
+  txSummary('5', 'btc:mainnet', 'failed', 1440, 1, 'Vault One', {
+    amount: '8.50 STX',
+    fiat: '$16.91',
+  }),
 ];
 const accountItems = txItems.map(item => ({ ...item, subtitle: undefined }));
 
@@ -240,6 +259,7 @@ function VaultCardMock({ summary, onClick }: { summary: VaultSummary; onClick?()
   const chain = summary.network.startsWith('btc') ? 'btc' : 'stx';
   const chainLabel = chain === 'btc' ? 'Bitcoin' : 'Stacks';
   const invited = summary.membershipStatus === 'invited';
+  const interactiveHover = onClick ? { bg: 'ink.component-background-hover' } : undefined;
   return (
     <Box
       onClick={onClick}
@@ -249,13 +269,15 @@ function VaultCardMock({ summary, onClick }: { summary: VaultSummary; onClick?()
       borderWidth="1px"
       borderStyle="solid"
       borderColor="ink.border-default"
-      _hover={onClick ? { bg: 'ink.component-background-hover' } : undefined}
+      bgImage={invited ? collectingSignaturesGradient : undefined}
+      _hover={invited ? { bgImage: collectingSignaturesGradientHover } : interactiveHover}
     >
-      <VaultListItem
+      <ListItemBox
+        variant="plain"
         leading={<AvatarSq chain={chain} icon="vault" themeId={orangeTheme} size="md" />}
         title={<styled.span textStyle="heading.05">{summary.name}</styled.span>}
         caption={`${chainLabel} vault · ${summary.accountCount} ${summary.accountCount === 1 ? 'account' : 'accounts'}`}
-        trailingTitle={
+        trailing={
           invited ? (
             <Badge variant="pending" label="Invitation" />
           ) : (
@@ -524,14 +546,11 @@ export function PagesPreviewPage() {
           main={
             <>
               <MultisigHero
+                variant="balance"
                 themeId={orangeTheme}
-                primary={<styled.span>Transfer</styled.span>}
+                primary="Transfer"
                 secondary={<styled.span>Proposed 2h ago by Amber</styled.span>}
-              >
-                <Box mt="space.03">
-                  <Badge variant="pending" label="Collecting signatures" />
-                </Box>
-              </MultisigHero>
+              />
               <SectionLabel>Transaction details</SectionLabel>
               <TxDetailsTable
                 transaction={mockTx}

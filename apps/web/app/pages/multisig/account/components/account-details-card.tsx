@@ -3,13 +3,12 @@ import type { ReactNode } from 'react';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type { Vault, VaultAccount } from '@leather.io/models';
-import { Button, PlusIcon } from '@leather.io/ui';
+import { Button, ListItemBox, PlusIcon } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
 import { AvatarSq } from '../../components/avatar-sq';
 import { CopyAddress } from '../../components/copy-address';
-import { VaultListItem } from '../../components/vault-list-item';
 import { vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
@@ -55,23 +54,24 @@ export function AccountDetailsCard({
       overflow="hidden"
     >
       <Box p="space.04">
-        <VaultListItem
-          tightLeading
+        <ListItemBox
+          variant="plain"
+          density="compact"
           leading={
             <AvatarSq
               chain={chain}
               icon={account.icon ?? 'piggybank'}
               themeId={theme.id}
-              size="md"
+              size="sm"
             />
           }
-          title={account.name}
+          title={<styled.span textStyle="label.03">{account.name}</styled.span>}
           caption={`${chainLabel} Vault Account`}
         />
       </Box>
 
       <CardRow>
-        <styled.div textStyle="label.03" mb="space.02">
+        <styled.div textStyle="label.03" color="ink.text-subdued" mb="space.02">
           Address
         </styled.div>
         <CopyAddress addr={account.multisigAddress} grouped />
@@ -79,7 +79,9 @@ export function AccountDetailsCard({
 
       <CardRow>
         <Flex justifyContent="space-between" alignItems="center" gap="space.02">
-          <styled.span textStyle="label.03">Threshold</styled.span>
+          <styled.span textStyle="label.03" color="ink.text-subdued">
+            Threshold
+          </styled.span>
           <styled.span textStyle="caption.01" color="ink.text-subdued">
             {account.threshold} of {signerCount}
           </styled.span>
@@ -90,19 +92,23 @@ export function AccountDetailsCard({
       </CardRow>
 
       <CardRow>
-        <styled.div textStyle="label.03" mb="space.03">
+        <styled.div textStyle="label.03" color="ink.text-subdued" mb="space.03">
           Signers
         </styled.div>
-        <Flex gap="space.04" flexWrap="wrap">
+        <Flex direction="column" gap="space.03">
           {account.signers.map(signer => {
             const isMe = signer.address === currentUserAddress;
             const member = vault.members.find(item => item.address === signer.address);
             const name = isMe ? 'Me' : member?.name || truncateMiddle(signer.address);
             return (
-              <Flex key={signer.id} alignItems="center" gap="space.02">
-                <AvatarCircle name={name} size="sm" />
-                <styled.span textStyle="label.03">{name}</styled.span>
-              </Flex>
+              <ListItemBox
+                key={signer.id}
+                variant="plain"
+                density="compact"
+                leading={<AvatarCircle name={name} size="md" />}
+                title={<styled.span textStyle="label.03">{name}</styled.span>}
+                caption={<CopyAddress addr={signer.address} />}
+              />
             );
           })}
         </Flex>

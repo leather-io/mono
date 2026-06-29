@@ -4,7 +4,7 @@ import { useDeclineVault, useJoinVault } from '~/features/multisig/vaults/use-va
 import { useVault } from '~/features/multisig/vaults/use-vaults';
 
 import type { VaultMember, VaultSummary } from '@leather.io/models';
-import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
+import { Button, CloseIcon, IconButton, ListItemBox, Sheet } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { vaultThemeFromName } from '../multisig-tokens';
@@ -12,7 +12,6 @@ import { chainFromNetwork } from '../multisig.utils';
 import { AvatarCircle } from './avatar-circle';
 import { AvatarSq } from './avatar-sq';
 import { CopyAddress } from './copy-address';
-import { VaultListItem } from './vault-list-item';
 
 interface InvitationModalProps {
   vault: VaultSummary;
@@ -154,20 +153,18 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
                   borderTopStyle="solid"
                   borderTopColor="ink.border-default"
                 >
-                  <VaultListItem
-                    tightLeading
+                  <ListItemBox
+                    variant="plain"
                     leading={<AvatarCircle name={member.name || member.address} size="lg" />}
                     title={
-                      <styled.span pl="space.02" textStyle="label.02">
+                      <styled.span textStyle="label.02">
                         {`${member.name || truncateMiddle(member.address)}${
                           member.address === myAddress ? ' (me)' : ''
                         }`}
                       </styled.span>
                     }
-                    caption={
-                      member.name ? <CopyAddress addr={member.address} emphasis /> : undefined
-                    }
-                    trailingTitle={
+                    caption={member.name ? <CopyAddress addr={member.address} /> : undefined}
+                    trailing={
                       <styled.span textStyle="caption.01" color="ink.text-subdued">
                         {memberStatusLabel(member, myAddress)}
                       </styled.span>

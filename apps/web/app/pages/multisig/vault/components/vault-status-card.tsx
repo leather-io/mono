@@ -1,10 +1,9 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type { Vault } from '@leather.io/models';
-import { ArrowTopRightIcon } from '@leather.io/ui';
+import { ArrowTopRightIcon, ListItemBox } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
-import { VaultListItem } from '../../components/vault-list-item';
 import { vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
@@ -34,7 +33,7 @@ function Row({
       borderTopColor="ink.border-default"
     >
       <Flex justifyContent="space-between" alignItems="center" gap="space.02">
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
+        <styled.span textStyle="label.03" color="ink.text-subdued">
           {label}
         </styled.span>
         {value && (
@@ -72,10 +71,11 @@ export function VaultStatusCard({
       overflow="hidden"
     >
       <Box p="space.04">
-        <VaultListItem
-          tightLeading
-          leading={<AvatarSq chain={chain} icon="vault" themeId={theme.id} size="md" />}
-          title={vault.name}
+        <ListItemBox
+          variant="plain"
+          density="compact"
+          leading={<AvatarSq chain={chain} icon="vault" themeId={theme.id} size="sm" />}
+          title={<styled.span textStyle="label.03">{vault.name}</styled.span>}
           caption={`${chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault`}
         />
       </Box>

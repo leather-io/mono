@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { cva } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 
@@ -8,20 +10,20 @@ const badge = cva({
     display: 'flex',
     alignItems: 'center',
     width: 'fit-content',
-    height: '16px',
-    gap: 'space.01',
-    pl: 'space.01',
-    pr: 'space.02',
+    // Sized to match a size="sm" Button (32px, label.02) so a status chip and an
+    // adjacent action button read as the same size class on a row.
+    height: '32px',
+    gap: 'space.02',
+    pl: 'space.02',
+    pr: 'space.03',
     borderRadius: 'round',
     borderWidth: '1px',
     borderStyle: 'solid',
-    textStyle: 'label.03',
-    fontSize: '11px',
+    textStyle: 'label.02',
   },
   variants: {
     variant: {
       default: {
-        pl: 'space.02',
         bg: 'ink.background-secondary',
         borderColor: 'ink.border-transparent',
         color: 'ink.text-subdued',
@@ -59,26 +61,32 @@ const badge = cva({
 interface BadgeProps {
   label: string;
   variant?: BadgeVariant;
+  // Optional leading icon, shown in place of the status dot (e.g. a key for a
+  // "Creator" chip). Render it at 16px to sit right in the 32px pill.
+  icon?: ReactNode;
 }
 
-export function Badge({ label, variant = 'default' }: BadgeProps) {
-  const showDot = variant !== 'default';
+export function Badge({ label, variant = 'default', icon }: BadgeProps) {
+  const showDot = variant !== 'default' && !icon;
   return (
     <styled.span className={badge({ variant })}>
+      {icon ? (
+        <styled.span aria-hidden display="inline-flex" flexShrink={0}>
+          {icon}
+        </styled.span>
+      ) : null}
       {showDot && (
         <styled.span
           aria-hidden
           data-dot
-          width="6px"
-          height="6px"
+          width="8px"
+          height="8px"
           flexShrink={0}
           borderRadius="round"
           bg="currentColor"
         />
       )}
-      <styled.span position="relative" top="1px">
-        {label}
-      </styled.span>
+      <styled.span>{label}</styled.span>
     </styled.span>
   );
 }
