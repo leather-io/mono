@@ -68,9 +68,9 @@ export function SignerRollcall({
           >
             <VaultListItem
               tightLeading
-              leading={<AvatarCircle name={name} size="lg" />}
+              leading={<AvatarCircle name={name} size="md" />}
               title={
-                <styled.span pl="space.02" textStyle="label.02">
+                <styled.span pl="space.02" textStyle="label.03">
                   {`${name}${isMe ? ' (me)' : ''}`}
                 </styled.span>
               }
@@ -135,10 +135,10 @@ export function SignerRollcall({
           borderTopStyle="solid"
           borderTopColor="ink.border-default"
         >
-          <Button variant="ghost" intent="danger" disabled={busy} onClick={onCancel}>
+          <Button variant="ghost" intent="danger" size="sm" disabled={busy} onClick={onCancel}>
             {isCancelling ? 'Cancelling…' : 'Cancel transaction'}
           </Button>
-          <Button variant="solid" disabled={busy || !thresholdMet} onClick={onBroadcast}>
+          <Button variant="solid" size="sm" disabled={busy || !thresholdMet} onClick={onBroadcast}>
             {isBroadcasting ? 'Broadcasting…' : 'Broadcast transaction'}
           </Button>
         </Flex>

@@ -56,6 +56,7 @@ export function AccountDetailsCard({
     >
       <Box p="space.04">
         <VaultListItem
+          tightLeading
           leading={
             <AvatarSq
               chain={chain}
@@ -70,7 +71,7 @@ export function AccountDetailsCard({
       </Box>
 
       <CardRow>
-        <styled.div textStyle="label.02" mb="space.02">
+        <styled.div textStyle="label.03" mb="space.02">
           Address
         </styled.div>
         <CopyAddress addr={account.multisigAddress} grouped />
@@ -78,7 +79,7 @@ export function AccountDetailsCard({
 
       <CardRow>
         <Flex justifyContent="space-between" alignItems="center" gap="space.02">
-          <styled.span textStyle="label.02">Threshold</styled.span>
+          <styled.span textStyle="label.03">Threshold</styled.span>
           <styled.span textStyle="caption.01" color="ink.text-subdued">
             {account.threshold} of {signerCount}
           </styled.span>
@@ -89,7 +90,7 @@ export function AccountDetailsCard({
       </CardRow>
 
       <CardRow>
-        <styled.div textStyle="label.02" mb="space.03">
+        <styled.div textStyle="label.03" mb="space.03">
           Signers
         </styled.div>
         <Flex gap="space.04" flexWrap="wrap">
@@ -110,6 +111,7 @@ export function AccountDetailsCard({
       <CardRow>
         <Button
           variant="solid"
+          size="sm"
           fullWidth
           onClick={onAddToWallet}
           aria-busy={isAddingToWallet}

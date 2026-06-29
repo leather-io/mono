@@ -73,6 +73,7 @@ export function VaultStatusCard({
     >
       <Box p="space.04">
         <VaultListItem
+          tightLeading
           leading={<AvatarSq chain={chain} icon="vault" themeId={theme.id} size="md" />}
           title={vault.name}
           caption={`${chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault`}
@@ -80,7 +81,7 @@ export function VaultStatusCard({
       </Box>
 
       <Row label="Status" value={statusLabel}>
-        <styled.div textStyle="body.02" color="ink.text-primary" mt="space.01">
+        <styled.div textStyle="caption.01" color="ink.text-primary" mt="space.01">
           {allJoined ? 'All members joined' : `${joined.length} of ${vault.members.length} joined`}
         </styled.div>
       </Row>
@@ -115,7 +116,7 @@ export function VaultStatusCard({
             type="button"
             onClick={onShareInvite}
             width="100%"
-            height="48px"
+            height="32px"
             borderRadius="round"
             bg="ink.action-primary-default"
             color="ink.background-primary"
@@ -150,7 +151,7 @@ export function VaultStatusCard({
             aria-busy={isCancelling}
             onClick={onCancelVault}
             width="100%"
-            height="48px"
+            height="32px"
             borderRadius="round"
             borderWidth="1px"
             borderStyle="solid"

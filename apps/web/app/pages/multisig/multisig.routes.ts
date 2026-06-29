@@ -6,6 +6,12 @@ import { type RouteConfigEntry, index, layout, prefix, route } from '@react-rout
 // multisig.layout.tsx) scopes to /multisig/* only. Subsequent units add their
 // screen routes to the children array below as the screens land.
 export const multisigRoutes: RouteConfigEntry[] = prefix('multisig', [
+  // Dev-only: renders the transaction feed / sidebar panels with mock data
+  // outside the auth layout so the design can be reviewed locally without a
+  // wallet. Safe to drop.
+  route('transaction-preview', 'pages/multisig/preview/transaction-list-preview.route.tsx'),
+  route('sidebar-preview', 'pages/multisig/preview/sidebar-preview.route.tsx'),
+  route('context-preview', 'pages/multisig/preview/context-preview.route.tsx'),
   layout('pages/multisig/multisig.layout.tsx', [
     index('pages/multisig/multisig.route.tsx'),
     route('onboarding', 'pages/multisig/onboarding/onboarding.route.tsx'),

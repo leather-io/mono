@@ -5,8 +5,7 @@ import { useVaultTransactions } from '~/features/multisig/vaults/use-vault-trans
 
 import type { AuthNetworkId, VaultAccountSummary } from '@leather.io/models';
 
-import { TransactionRow } from '../../components/transaction-row';
-import { collectingSignaturesGradient } from '../../multisig-tokens';
+import { TransactionList } from '../../components/transaction-list';
 import { multisigPaths } from '../../multisig.constants';
 
 interface VaultTransactionsProps {
@@ -52,34 +51,19 @@ export function VaultTransactions({ network, vaultId, accounts }: VaultTransacti
     );
   }
 
+  const thresholdByAccount = new Map(
+    (accounts ?? []).map(account => [account.id, account.threshold])
+  );
+
   return (
-    <Box
-      borderRadius="md"
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor="ink.border-default"
-      overflow="hidden"
-    >
-      {transactions.map((transaction, index) => (
-        <styled.button
-          key={transaction.id}
-          type="button"
-          onClick={() => void navigate(multisigPaths.tx(vaultId, transaction.id))}
-          display="block"
-          width="100%"
-          textAlign="left"
-          cursor="pointer"
-          bg="transparent"
-          bgImage={transaction.status === 'pending' ? collectingSignaturesGradient : undefined}
-          p="space.04"
-          borderTopWidth={index === 0 ? '0' : '1px'}
-          borderTopStyle="solid"
-          borderTopColor="ink.border-default"
-          _hover={{ bg: 'ink.component-background-hover' }}
-        >
-          <TransactionRow transaction={transaction} />
-        </styled.button>
-      ))}
-    </Box>
+    <TransactionList
+      scale="compact"
+      items={transactions.map(transaction => ({
+        transaction,
+        vaultId,
+        threshold: thresholdByAccount.get(transaction.vaultAccountId),
+      }))}
+      onSelect={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
+    />
   );
 }
