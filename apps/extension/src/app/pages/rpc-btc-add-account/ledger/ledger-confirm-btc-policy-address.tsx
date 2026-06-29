@@ -52,7 +52,10 @@ function LedgerConfirmBtcPolicyAddress() {
         closeWindow();
       },
       async pullKeysFromDevice(app) {
-        void ledgerNavigate.toDeviceBusyStep('Confirm the address on your Ledger…');
+        void ledgerNavigate.toDeviceBusyStep(
+          'Confirm the address on your Ledger…',
+          address ?? undefined
+        );
         const onDeviceAddress = await displayLedgerDescriptorAddress(app, descriptor);
         if (!address || onDeviceAddress !== address) {
           void ledgerNavigate.toErrorStep(
