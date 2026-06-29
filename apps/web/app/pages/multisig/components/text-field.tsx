@@ -42,7 +42,7 @@ export function TextField({
         borderColor={invalid ? 'red.action-primary-default' : 'ink.border-default'}
         bg="ink.background-primary"
         textStyle="body.02"
-        fontFamily={mono ? 'firaCode' : undefined}
+        fontFamily={mono ? 'Fira Code' : undefined}
         _focusVisible={{ outline: 'none', borderColor: 'ink.action-primary-default' }}
       />
       {help && (

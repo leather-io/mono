@@ -1,32 +1,48 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { SignIcon } from '~/components/icons/sign-icon';
 
-import { Button } from '@leather.io/ui';
+import type { MultisigTransaction, Vault, VaultAccount } from '@leather.io/models';
+import { Button, Spinner } from '@leather.io/ui';
+import { truncateMiddle } from '@leather.io/utils';
 
-import { AddressText } from '../../components/address-text';
 import { AvatarCircle } from '../../components/avatar-circle';
+import { CopyAddress } from '../../components/copy-address';
 import { VaultListItem } from '../../components/vault-list-item';
-import type { MultisigTransaction, Vault } from '../../data/multisig-types';
+
+const cancellableStatuses = ['queued', 'pending', 'signed'];
 
 interface SignerRollcallProps {
   vault: Vault;
-  tx: MultisigTransaction;
-  verifying: boolean;
+  account: VaultAccount;
+  transaction: MultisigTransaction;
+  currentUserAddress?: string;
+  isSigning: boolean;
+  isCancelling: boolean;
+  isBroadcasting: boolean;
   onSign(): void;
   onCancel(): void;
   onBroadcast(): void;
 }
 
+// Signer list with the sign / cancel / broadcast controls for a proposed
+// transaction. Sign shows on the current user's row while collecting; cancel and
+// broadcast sit in the footer, broadcast enabling once the threshold is met.
 export function SignerRollcall({
   vault,
-  tx,
-  verifying,
+  account,
+  transaction,
+  currentUserAddress,
+  isSigning,
+  isCancelling,
+  isBroadcasting,
   onSign,
   onCancel,
   onBroadcast,
 }: SignerRollcallProps) {
-  const canCancel = tx.status === 'queued' || tx.status === 'pending' || tx.status === 'signed';
-  const canBroadcast = tx.status === 'signed';
-  const collecting = tx.status === 'pending' || tx.status === 'queued';
+  const signers = [...account.signers].sort((a, b) => a.signerIndex - b.signerIndex);
+  const canCancel = cancellableStatuses.includes(transaction.status);
+  const thresholdMet = transaction.signatures.length >= account.threshold;
+  const busy = isSigning || isCancelling || isBroadcasting;
 
   return (
     <Box
@@ -36,26 +52,39 @@ export function SignerRollcall({
       borderColor="ink.border-default"
       overflow="hidden"
     >
-      {vault.members.map((member, index) => {
-        const signed = tx.signed.includes(member.name);
-        const isMe = member.isCreator || member.name === 'Me';
-        const showSign = !signed && isMe && collecting;
+      {signers.map((signer, index) => {
+        const member = vault.members.find(m => m.user?.id === signer.userId);
+        const isMe = signer.address === currentUserAddress;
+        const name = isMe ? 'Me' : member?.name || truncateMiddle(signer.address);
+        const signed = transaction.signatures.some(sig => sig.signerIndex === signer.signerIndex);
+        const canSign = isMe && transaction.status === 'pending' && !signed;
         return (
           <Box
-            key={member.addr}
+            key={signer.id}
             p="space.04"
             borderTopWidth={index === 0 ? '0' : '1px'}
             borderTopStyle="solid"
             borderTopColor="ink.border-default"
           >
             <VaultListItem
-              leading={<AvatarCircle name={member.name} size="lg" />}
-              title={`${member.name}${isMe ? ' (me)' : ''}`}
-              caption={<AddressText addr={member.addr} />}
+              tightLeading
+              leading={<AvatarCircle name={name} size="lg" />}
+              title={
+                <styled.span pl="space.02" textStyle="label.02">
+                  {`${name}${isMe ? ' (me)' : ''}`}
+                </styled.span>
+              }
+              caption={<CopyAddress addr={signer.address} />}
               trailingTitle={
-                showSign ? (
-                  <Button variant="solid" disabled={verifying} onClick={onSign}>
-                    {verifying ? 'Verifying…' : 'Sign'}
+                canSign ? (
+                  <Button
+                    variant="solid"
+                    size="sm"
+                    disabled={busy}
+                    onClick={onSign}
+                    iconStart={<SignIcon />}
+                  >
+                    Sign
                   </Button>
                 ) : (
                   <styled.span
@@ -71,34 +100,46 @@ export function SignerRollcall({
         );
       })}
 
-      {verifying && (
-        <Box
+      {isSigning && (
+        <Flex
+          gap="space.03"
+          alignItems="flex-start"
           p="space.04"
+          bg="blue.background-primary"
           borderTopWidth="1px"
           borderTopStyle="solid"
-          borderTopColor="ink.border-default"
+          borderTopColor="blue.border"
         >
-          <styled.div textStyle="label.03">Verifying transaction…</styled.div>
-          <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
-            Re-deriving the multisig script and checking signer order.
-          </styled.div>
-        </Box>
+          <Box pt="space.01">
+            <Spinner size="14px" color="blue.action-primary-default" />
+          </Box>
+          <Box>
+            <styled.div textStyle="label.02" color="blue.text-primary">
+              Verifying transaction…
+            </styled.div>
+            <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
+              Re-deriving the multisig script and checking signer order. The wallet popup will open
+              once this completes.
+            </styled.div>
+          </Box>
+        </Flex>
       )}
 
       {canCancel && (
         <Flex
           gap="space.03"
           justifyContent="flex-end"
+          flexWrap="wrap"
           p="space.04"
           borderTopWidth="1px"
           borderTopStyle="solid"
           borderTopColor="ink.border-default"
         >
-          <Button variant="ghost" intent="danger" onClick={onCancel}>
-            Cancel transaction
+          <Button variant="ghost" intent="danger" disabled={busy} onClick={onCancel}>
+            {isCancelling ? 'Cancelling…' : 'Cancel transaction'}
           </Button>
-          <Button variant="solid" disabled={!canBroadcast} onClick={onBroadcast}>
-            Broadcast transaction
+          <Button variant="solid" disabled={busy || !thresholdMet} onClick={onBroadcast}>
+            {isBroadcasting ? 'Broadcasting…' : 'Broadcast transaction'}
           </Button>
         </Flex>
       )}

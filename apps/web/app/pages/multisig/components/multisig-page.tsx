@@ -6,13 +6,14 @@ import { Page } from '~/layouts/page/page';
 interface MultisigPageProps {
   title?: ReactNode;
   backTo?: string;
+  onBack?(): void;
   children: ReactNode;
 }
 
-export function MultisigPage({ title, backTo, children }: MultisigPageProps) {
+export function MultisigPage({ title, backTo, onBack, children }: MultisigPageProps) {
   return (
     <Page>
-      <Page.Header title={title} backTo={backTo} />
+      <Page.Header title={title} backTo={backTo} onBack={onBack} />
       <Box mt="space.08">{children}</Box>
     </Page>
   );

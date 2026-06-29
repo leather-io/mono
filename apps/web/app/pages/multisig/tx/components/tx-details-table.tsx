@@ -1,12 +1,32 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { ExternalLink } from '~/components/external-link';
+import { formatCurrency } from '~/utils/currency-formatter';
 
+import type { Money, MultisigTransaction, MultisigTransactionStatus } from '@leather.io/models';
+
+import { Badge } from '../../components/badge';
 import { CopyAddress } from '../../components/copy-address';
-import { StatusPill } from '../../components/status-pill';
-import type { MultisigTransaction, Vault } from '../../data/multisig-types';
+import { transactionStatusBadge } from '../../components/transaction-status';
+import { collectingSignaturesGradient } from '../../multisig-tokens';
+import { chainFromNetwork, transactionExplorerUrl } from '../../multisig.utils';
+import { formatRelativeTime } from '../relative-time';
+
+const pendingValue = '—';
 
 interface TxDetailsTableProps {
-  vault: Vault;
-  tx: MultisigTransaction;
+  transaction: MultisigTransaction;
+  status: MultisigTransactionStatus;
+  proposerLabel: string;
+  initiationDate: string;
+  recipient?: string;
+  amount?: Money;
+  amountFiat?: Money;
+  fee?: Money;
+  feeFiat?: Money;
+}
+
+function moneyWithFiat(money: Money, fiat: Money | undefined): string {
+  return fiat ? `${formatCurrency(money)} ≈ ${formatCurrency(fiat)}` : formatCurrency(money);
 }
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
@@ -31,11 +51,21 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   );
 }
 
-export function TxDetailsTable({ vault, tx }: TxDetailsTableProps) {
-  const isBtc = vault.chain === 'btc';
-  const recipient = isBtc
-    ? 'bc1qsnpv5h9k3p7w2x8r4tnvyu0d5h6f0jgk8m4cqfltm9phf8x2axqs4vym3p'
-    : 'SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR';
+export function TxDetailsTable({
+  transaction,
+  status,
+  proposerLabel,
+  initiationDate,
+  recipient,
+  amount,
+  amountFiat,
+  fee,
+  feeFiat,
+}: TxDetailsTableProps) {
+  const isBtc = chainFromNetwork(transaction.network) === 'btc';
+  const mode = transaction.network.endsWith('mainnet') ? 'mainnet' : 'testnet';
+  const statusDisplay = transactionStatusBadge(status);
+  const isCollecting = status === 'pending';
   return (
     <Box
       borderRadius="md"
@@ -44,23 +74,47 @@ export function TxDetailsTable({ vault, tx }: TxDetailsTableProps) {
       borderColor="ink.border-default"
       overflow="hidden"
     >
-      <Flex justifyContent="space-between" alignItems="center" px="space.04" py="space.03">
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
+      <Flex
+        justifyContent="space-between"
+        alignItems="center"
+        px="space.04"
+        py="space.03"
+        bgImage={isCollecting ? collectingSignaturesGradient : undefined}
+      >
+        <styled.span
+          textStyle="caption.01"
+          color={isCollecting ? 'orange.text-primary' : 'ink.text-subdued'}
+        >
           Status
         </styled.span>
-        <StatusPill status={tx.status} />
+        <Badge variant={statusDisplay.variant} label={statusDisplay.label} />
       </Flex>
-      <Row label="Initiator">
-        {tx.proposerName}
-        {tx.proposerUserId === 'me' ? ' (you)' : ''}
+      <Row label="Initiator">{proposerLabel}</Row>
+      <Row label="Initiation date">{initiationDate}</Row>
+      <Row label="Recipient">{recipient ? <CopyAddress addr={recipient} /> : pendingValue}</Row>
+      <Row label="Amount">{amount ? moneyWithFiat(amount, amountFiat) : pendingValue}</Row>
+      <Row label="Fee">{fee ? moneyWithFiat(fee, feeFiat) : pendingValue}</Row>
+      <Row label="Broadcast date">
+        {transaction.broadcastAt
+          ? formatRelativeTime(new Date(transaction.broadcastAt))
+          : pendingValue}
       </Row>
-      <Row label="Initiation date">{tx.proposedAt}</Row>
-      <Row label="Recipient">
-        <CopyAddress addr={recipient} grouped />
+      <Row label="Network">{`${isBtc ? 'Bitcoin' : 'Stacks'} ${mode}`}</Row>
+      <Row label="Transaction ID">
+        {transaction.txId ? <CopyAddress addr={transaction.txId} /> : pendingValue}
       </Row>
-      <Row label="Amount">{tx.amount}</Row>
-      <Row label="Fee">{isBtc ? '0.00023 BTC ≈ $15.50' : '0.0125 STX ≈ $0.01'}</Row>
-      <Row label="Network">{isBtc ? 'Bitcoin mainnet' : 'Stacks mainnet'}</Row>
+      <Row label="Explorer">
+        {transaction.txId ? (
+          <ExternalLink
+            href={transactionExplorerUrl(transaction.network, transaction.txId)}
+            withIcon
+          >
+            View transaction
+          </ExternalLink>
+        ) : (
+          pendingValue
+        )}
+      </Row>
       <Row label="Signature type">{isBtc ? 'PSBT (BIP-174)' : 'Standard multisig (SIP-005)'}</Row>
     </Box>
   );

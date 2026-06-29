@@ -1,99 +1,186 @@
-import { useState } from 'react';
-import { useParams } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex } from 'leather-styles/jsx';
+import { useSession } from '~/features/multisig/auth/use-session';
+import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
+import { decodeProposalSummary } from '~/features/multisig/transactions/decode-proposal-summary';
+import { useOnChainTransaction } from '~/features/multisig/transactions/use-onchain-transaction';
+import {
+  useBroadcastTransaction,
+  useCancelTransaction,
+  useSignTransaction,
+} from '~/features/multisig/transactions/use-transaction-mutations';
+import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
+import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
+import { useMultisigTransaction } from '~/features/multisig/vaults/use-vault-transactions';
+import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
+import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
+
+import { btcAsset, stxAsset } from '@leather.io/constants';
+import type {
+  AuthNetworkId,
+  MarketData,
+  Money,
+  MultisigTransactionStatus,
+} from '@leather.io/models';
+import { baseCurrencyAmountInQuote, truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../components/avatar-circle';
+import { Badge } from '../components/badge';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
 import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
+import { transactionStatusBadge } from '../components/transaction-status';
+import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
-import { useMultisigActions, useVaultTx } from '../store/use-multisig';
 import { SignerRollcall } from './components/signer-rollcall';
 import { TxDetailsTable } from './components/tx-details-table';
+import { formatRelativeTime } from './relative-time';
 
-const VERIFY_MS = 900;
+// The chain is the source of truth once a tx is on it: a confirmed/failed
+// on-chain result supersedes the backend's "broadcast" status.
+function reconcileStatus(
+  backendStatus: MultisigTransactionStatus,
+  onChainStatus: 'confirmed' | 'pending' | 'failed' | undefined
+): MultisigTransactionStatus {
+  if (onChainStatus === 'confirmed') return 'confirmed';
+  if (onChainStatus === 'failed') return 'failed';
+  return backendStatus;
+}
 
-function TxAlert({
-  tone,
-  title,
-  body,
-}: {
-  tone: 'error' | 'info' | 'muted';
-  title: string;
-  body: string;
-}) {
-  const toneStyles = {
-    error: { bg: 'red.background-primary', border: 'red.border', color: 'red.text-primary' },
-    info: { bg: 'blue.background-primary', border: 'blue.border', color: 'blue.text-primary' },
-    muted: {
-      bg: 'ink.background-secondary',
-      border: 'ink.border-default',
-      color: 'ink.text-primary',
-    },
-  }[tone];
-  return (
-    <Box
-      mb="space.04"
-      p="space.04"
-      borderRadius="md"
-      bg={toneStyles.bg}
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor={toneStyles.border}
-    >
-      <styled.div textStyle="label.02" color={toneStyles.color}>
-        {title}
-      </styled.div>
-      <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
-        {body}
-      </styled.div>
-    </Box>
-  );
+function toFiat(money: Money | undefined, marketData: MarketData | undefined): Money | undefined {
+  if (!money || !marketData || money.symbol !== marketData.pair.base) return undefined;
+  return baseCurrencyAmountInQuote(money, marketData);
 }
 
 export function TxDetailPage() {
   const { vaultId, txId } = useParams();
-  const { vault, tx } = useVaultTx(vaultId, txId);
-  const { signTransaction, broadcastTransaction, cancelTransaction } = useMultisigActions();
-  const { success: showToast } = useToast();
-  const [verifying, setVerifying] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  // location.key is 'default' only when this is the first entry in the session's
+  // history (deep link / refresh), where there is nowhere to go back to.
+  const canGoBack = location.key !== 'default';
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
 
-  if (!vault || !tx) {
+  const btcVaults = useVaults('btc:mainnet');
+  const stxVaults = useVaults('stx:mainnet');
+  const inBtc = btcVaults.data?.some(summary => summary.id === vaultId) ?? false;
+  const inStx = stxVaults.data?.some(summary => summary.id === vaultId) ?? false;
+  const vaultNetworkKnown = inBtc || inStx;
+  const network: AuthNetworkId = inStx ? 'stx:mainnet' : 'btc:mainnet';
+
+  const vault = useVault(network, vaultNetworkKnown ? vaultId : undefined);
+  const transaction = useMultisigTransaction(network, vaultNetworkKnown ? txId : undefined);
+  const account = useVaultAccount(network, transaction.data?.vaultAccountId);
+  const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
+  const onChain = useOnChainTransaction(
+    network,
+    transaction.data?.txId ?? null,
+    account.data?.multisigAddress ?? ''
+  );
+  const marketData = useMarketDataQuery(network.startsWith('btc') ? btcAsset : stxAsset);
+
+  const signTransaction = useSignTransaction(network);
+  const cancelTransaction = useCancelTransaction(network);
+  const broadcastTransaction = useBroadcastTransaction(network);
+  const toast = useToast();
+
+  const btcSession = useSession('btc:mainnet');
+  const stxSession = useSession('stx:mainnet');
+  const restoringBtc = useIsRestoringSession('btc:mainnet');
+  const restoringStx = useIsRestoringSession('stx:mainnet');
+  const sessionsRestoring = restoringBtc || restoringStx;
+  const listsSettled = (!btcSession || btcVaults.isSuccess) && (!stxSession || stxVaults.isSuccess);
+  const detailResolving =
+    vaultNetworkKnown && !(vault.isSuccess && transaction.isSuccess && account.isSuccess);
+  const isResolving = !hydrated || sessionsRestoring || !listsSettled || detailResolving;
+
+  if (!vault.data || !transaction.data || !account.data) {
     return (
       <MultisigPage
-        title="Transaction"
-        backTo={vault ? multisigPaths.vault(vault.id) : multisigPaths.index}
+        title="Transaction details"
+        backTo={vaultId ? multisigPaths.vault(vaultId) : multisigPaths.index}
       >
-        <MultisigErrorState body="This transaction isn't part of the current session." />
+        {isResolving ? (
+          <Flex direction="column" gap="space.03">
+            {[0, 1, 2].map(index => (
+              <Box
+                key={index}
+                height="64px"
+                borderRadius="md"
+                bg="ink.component-background-default"
+                opacity={0.6}
+              />
+            ))}
+          </Flex>
+        ) : (
+          <MultisigErrorState body="No transaction found. It may not exist, or you may not be a member." />
+        )}
       </MultisigPage>
     );
   }
 
+  const tx = transaction.data;
+  const acct = account.data;
+
+  const proposer = vault.data.members.find(member => member.user?.id === tx.proposerUserId);
+  const isMine = tx.proposerUserId === me.data?.id;
+  const proposerName = isMine
+    ? 'Me'
+    : proposer?.name || (proposer ? truncateMiddle(proposer.address) : 'Unknown');
+  const proposerLabel = `${proposerName}${isMine ? ' (you)' : ''}`;
+  const initiationDate = formatRelativeTime(new Date(tx.proposalTimestamp * 1000));
+
+  const mySigner = acct.signers.find(signer => signer.address === me.data?.address);
+  const iSigned = mySigner
+    ? tx.signatures.some(sig => sig.signerIndex === mySigner.signerIndex)
+    : false;
+  // On-chain values are authoritative once broadcast; before that, decode the
+  // proposal payload so recipient/amount/fee still show while collecting signatures.
+  const decoded = decodeProposalSummary(acct, tx);
+  const recipient = onChain.recipient ?? decoded.recipient;
+  const amount = onChain.amount ?? decoded.amount;
+  const fee = onChain.fee ?? decoded.fee;
+  const amountFiat = toFiat(amount, marketData.data);
+  const feeFiat = toFiat(fee, marketData.data);
+  const effectiveStatus = reconcileStatus(tx.status, onChain.status);
+  const awaitingMySignature = tx.status === 'pending' && Boolean(mySigner) && !iSigned;
+  const heroStatus = awaitingMySignature
+    ? { label: 'Awaiting your signature', variant: 'pending' as const }
+    : transactionStatusBadge(effectiveStatus);
+
   function onSign() {
-    setVerifying(true);
-    // Simulate the non-bypassable verification gate before signing.
-    setTimeout(() => {
-      signTransaction({ vaultId: vault.id, txId: tx.id, signer: 'Me' });
-      setVerifying(false);
-      showToast('Signature added');
-    }, VERIFY_MS);
-  }
-  function onBroadcast() {
-    broadcastTransaction(vault.id, tx.id);
-    showToast('Broadcasting transaction');
+    signTransaction.mutate(
+      { transaction: tx, account: acct },
+      {
+        onSuccess: () => toast.success('Signature added'),
+        onError: err => toast.error(err.message),
+      }
+    );
   }
   function onCancel() {
-    cancelTransaction(vault.id, tx.id);
-    showToast('Transaction cancelled');
+    cancelTransaction.mutate(tx.id, {
+      onSuccess: () => toast.success('Transaction cancelled'),
+      onError: err => toast.error(err.message),
+    });
+  }
+  function onBroadcast() {
+    broadcastTransaction.mutate(tx.id, {
+      onSuccess: () => toast.success('Broadcasting transaction'),
+      onError: err => toast.error(err.message),
+    });
   }
 
-  const showFailedAlert = tx.status === 'failed' || tx.status === 'dropped';
-
   return (
-    <MultisigPage title="Transaction details" backTo={multisigPaths.vault(vault.id)}>
+    <MultisigPage
+      title="Transaction details"
+      backTo={multisigPaths.account(vault.data.id, tx.vaultAccountId)}
+      onBack={canGoBack ? () => navigate(-1) : undefined}
+    >
       <Flex
         direction={['column', 'column', 'row']}
         gap={['space.06', 'space.06', 'space.08', 'space.10']}
@@ -101,50 +188,47 @@ export function TxDetailPage() {
       >
         <Box flex={['1', '1', '1.6']} width="100%">
           <MultisigHero
-            themeId={vault.theme}
+            themeId={vaultThemeFromName(vault.data.theme).id}
             primary="Transfer"
             secondary={
               <Flex alignItems="center" gap="space.02">
                 <span>
-                  Proposed {tx.proposedAt} by {tx.proposerName}
+                  Proposed {initiationDate} by {proposerName}
                 </span>
-                <AvatarCircle name={tx.proposerName} size="xs" />
+                <AvatarCircle name={proposerName} size="xs" />
               </Flex>
             }
-          />
-          {showFailedAlert && (
-            <TxAlert
-              tone="error"
-              title={tx.status === 'dropped' ? 'Dropped from the mempool' : 'Failed to broadcast'}
-              body="The network refused this transaction. Cancel it and propose a fresh one."
-            />
-          )}
-          {tx.status === 'broadcast' && (
-            <TxAlert
-              tone="info"
-              title="Submitted to network"
-              body="Waiting for confirmation on the network explorer."
-            />
-          )}
-          {tx.status === 'cancelled' && (
-            <TxAlert
-              tone="muted"
-              title="Transaction cancelled"
-              body="Collected signatures were discarded. This cannot be undone."
-            />
-          )}
+          >
+            <Box mt="space.03">
+              <Badge variant={heroStatus.variant} label={heroStatus.label} />
+            </Box>
+          </MultisigHero>
           <SectionLabel>Transaction details</SectionLabel>
-          <TxDetailsTable vault={vault} tx={tx} />
+          <TxDetailsTable
+            transaction={tx}
+            status={effectiveStatus}
+            proposerLabel={proposerLabel}
+            initiationDate={initiationDate}
+            recipient={recipient}
+            amount={amount}
+            amountFiat={amountFiat}
+            fee={fee}
+            feeFiat={feeFiat}
+          />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
-          <SectionLabel noGutter>Signatures</SectionLabel>
+          <SectionLabel>Signatures</SectionLabel>
           <SignerRollcall
-            vault={vault}
-            tx={tx}
-            verifying={verifying}
+            vault={vault.data}
+            account={acct}
+            transaction={tx}
+            currentUserAddress={me.data?.address}
+            isSigning={signTransaction.isPending}
+            isCancelling={cancelTransaction.isPending}
+            isBroadcasting={broadcastTransaction.isPending}
             onSign={onSign}
-            onBroadcast={onBroadcast}
             onCancel={onCancel}
+            onBroadcast={onBroadcast}
           />
         </Box>
       </Flex>

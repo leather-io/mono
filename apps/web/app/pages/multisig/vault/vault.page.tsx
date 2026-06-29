@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
@@ -30,6 +30,7 @@ import { MembersSection } from './components/members-section';
 import { ShareInvitationsModal } from './components/share-invitations-modal';
 import { VaultBalanceHero } from './components/vault-balance-hero';
 import { VaultStatusCard } from './components/vault-status-card';
+import { VaultTransactions } from './components/vault-transactions';
 
 function accountCreationBlockedReason(vault: Vault): string {
   if (vault.status === 'cancelled') return 'This vault has been cancelled.';
@@ -37,23 +38,6 @@ function accountCreationBlockedReason(vault: Vault): string {
     return "A member declined, so this vault can't add accounts. The creator can cancel and start over.";
   }
   return 'All members must accept their invitation before accounts can be created.';
-}
-
-function ComingSoon({ children }: { children: string }) {
-  return (
-    <Box
-      borderRadius="md"
-      borderWidth="1px"
-      borderStyle="dashed"
-      borderColor="ink.border-default"
-      p="space.05"
-      textAlign="center"
-    >
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        {children}
-      </styled.span>
-    </Box>
-  );
 }
 
 export function VaultDetailPage() {
@@ -212,7 +196,7 @@ export function VaultDetailPage() {
             onCancelVault={() => setIsConfirmingCancel(true)}
           />
           <SectionLabel>Transactions</SectionLabel>
-          <ComingSoon>No transactions yet.</ComingSoon>
+          <VaultTransactions network={network} vaultId={vault.id} accounts={accounts.data} />
         </Box>
       </Flex>
 
