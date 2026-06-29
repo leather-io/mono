@@ -1,3 +1,5 @@
+import { IS_DEV_ENV } from './environment';
+
 export const GITHUB_ORG = 'leather-io';
 export const GITHUB_REPO = 'extension';
 
@@ -7,13 +9,17 @@ export const GITHUB_REPO = 'extension';
 // TODO: set the real multisig dApp origin(s) before shipping the policy methods
 const policyAllowedOrigins: readonly string[] = ['https://app.leather.io'];
 
+const loopbackHostnames: readonly string[] = ['localhost', '127.0.0.1', '[::1]'];
+
 // Exact-match the normalized origin (scheme + host + port). Never use
 // includes/startsWith/hostname-only matching — those are classic whitelist
 // bypasses (e.g. `https://app.leather.io.evil.com`).
 export function isWhitelistedOrigin(origin: string | null | undefined) {
   if (!origin) return false;
   try {
-    return policyAllowedOrigins.includes(new URL(origin).origin);
+    const url = new URL(origin);
+    if (IS_DEV_ENV && loopbackHostnames.includes(url.hostname)) return true;
+    return policyAllowedOrigins.includes(url.origin);
   } catch {
     return false;
   }

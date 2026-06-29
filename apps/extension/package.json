@@ -20,7 +20,7 @@
     "build:test:watch": "cross-env WALLET_ENVIRONMENT=testing webpack --config webpack/webpack.config.prod.js",
     "clean": "rm -rf ./dist",
     "clean:all": "rm -rf ./dist && rm -rf ./coverage && rm -rf ./node_modules",
-    "dev": "concurrently --raw \"node webpack/dev-server.js\" \"redux-devtools --hostname=localhost --port=8000\"",
+    "dev": "cross-env WALLET_ENVIRONMENT=development concurrently --raw \"node webpack/dev-server.js\" \"redux-devtools --hostname=localhost --port=8000\"",
     "dev:test-app": "webpack serve --config test-app/webpack/webpack.config.dev.cjs",
     "format": "pnpm lint:prettier:fix",
     "format:check": "pnpm lint:prettier",
