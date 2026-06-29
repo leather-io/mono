@@ -90,9 +90,23 @@ export const addressSchema = z.union([btcAddressSchema, stxAddressSchema]);
 
 export type Address = z.infer<typeof addressSchema>;
 
+export const singleSigAddressSchema = z.union([
+  nativeSegwitAddressSchema,
+  taprootAddressSchema,
+  stxSingleSigAddressSchema,
+]);
+
+export type SingleSigAddress = z.infer<typeof singleSigAddressSchema>;
+
 //
 // Combined addresses response
 export const addressResponseBodySchema = z.object({ addresses: z.array(addressSchema) });
+
+export const singleSigAddressResponseBodySchema = z.object({
+  addresses: z.array(singleSigAddressSchema),
+});
+
+export type SingleSigAddressResponseBody = z.infer<typeof singleSigAddressResponseBodySchema>;
 
 export const getAddresses = defineRpcEndpoint({
   method: 'getAddresses',

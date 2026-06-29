@@ -3,6 +3,7 @@ import {
   btcAddressBaseSchema,
   btcAddressSchema,
   getAddresses,
+  singleSigAddressResponseBodySchema,
   stxAddressSchema,
 } from './get-addresses';
 
@@ -90,6 +91,29 @@ describe('getAddresses', () => {
         addresses: [baseRespnseBodyBtc, baseRespnseBodyStx, policyBtcAddress, multisigStxAddress],
       });
       expect(result.success).toEqual(true);
+    });
+  });
+
+  describe('singleSigAddressResponseBodySchema', () => {
+    test('accepts single-sig BTC and STX addresses', () => {
+      const result = singleSigAddressResponseBodySchema.safeParse({
+        addresses: [baseRespnseBodyBtc, baseRespnseBodyStx],
+      });
+      expect(result.success).toEqual(true);
+    });
+
+    test('rejects a p2wsh policy BTC address', () => {
+      const result = singleSigAddressResponseBodySchema.safeParse({
+        addresses: [baseRespnseBodyBtc, policyBtcAddress],
+      });
+      expect(result.success).toEqual(false);
+    });
+
+    test('rejects a multisig STX address', () => {
+      const result = singleSigAddressResponseBodySchema.safeParse({
+        addresses: [baseRespnseBodyStx, multisigStxAddress],
+      });
+      expect(result.success).toEqual(false);
     });
   });
 
