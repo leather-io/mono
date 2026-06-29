@@ -1,6 +1,6 @@
 import { Navigate, Outlet, data, useLocation } from 'react-router';
 
-import { Box } from 'leather-styles/jsx';
+import { Box, Flex } from 'leather-styles/jsx';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useSessionBootstrap } from '~/features/multisig/auth/use-session-bootstrap';
@@ -8,6 +8,8 @@ import { SignInSlotProvider } from '~/layouts/page/sign-in-slot';
 
 import { MultisigConnectDropdown } from './components/connection-dropdown/multisig-connect-dropdown';
 import { DevToolsPanel } from './components/dev-tools/dev-tools-panel';
+import { NetworkModeGlow } from './components/network-mode-glow';
+import { NetworkModeSwitcher } from './components/network-mode-switcher';
 import { multisigEnabled, multisigPaths } from './multisig.constants';
 import { MultisigSessionProvider } from './store/multisig-session';
 
@@ -33,8 +35,16 @@ export default function MultisigLayout() {
   }
 
   return (
-    <SignInSlotProvider slot={<MultisigConnectDropdown />}>
+    <SignInSlotProvider
+      slot={
+        <Flex gap="space.02" alignItems="center">
+          <NetworkModeSwitcher />
+          <MultisigConnectDropdown />
+        </Flex>
+      }
+    >
       <MultisigSessionProvider>
+        <NetworkModeGlow />
         <Box pb="space.11">
           <Outlet />
         </Box>
