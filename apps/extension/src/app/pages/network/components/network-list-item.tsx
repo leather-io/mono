@@ -19,6 +19,7 @@ function getCursorStyle(isOnline: boolean, isActive: boolean) {
 interface NetworkListItemProps {
   networkId: string;
   isCustom: boolean;
+  isPolicyLocked: boolean;
   onSelectNetwork(): void;
   onRemoveNetwork(): void;
   onEditNetwork(): void;
@@ -28,6 +29,7 @@ export function NetworkListItem({
   onSelectNetwork,
   onRemoveNetwork,
   isCustom,
+  isPolicyLocked,
   onEditNetwork,
 }: NetworkListItemProps) {
   const currentNetworkId = useCurrentNetworkId();
@@ -88,6 +90,7 @@ export function NetworkListItem({
               ) : null}
               {isOnline && isCustom && (
                 <NetworkItemMenu
+                  isPolicyLocked={isPolicyLocked}
                   onClickDeleteNetwork={onRemoveNetwork}
                   onEditNetwork={onEditNetwork}
                 />

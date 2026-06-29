@@ -4,7 +4,7 @@ import { closeWindow } from '@shared/utils';
 
 import { useFlags } from '@app/features/feature-flags';
 
-interface PolicyAccountFeatureGateArgs {
+interface PolicyFeatureGateArgs {
   method: RpcMethodNames;
   id: string;
   tabId?: number;
@@ -14,7 +14,7 @@ interface PolicyAccountFeatureGateArgs {
 // the `releaseAddAccount` flag. The flag is only readable in the React layer
 // (LaunchDarkly client SDK), so when it is off the approval page rejects the
 // request as unsupported and closes instead of showing the approval UI.
-export function usePolicyAccountFeatureGate({ method, id, tabId }: PolicyAccountFeatureGateArgs) {
+export function usePolicyFeatureGate({ method, id, tabId }: PolicyFeatureGateArgs) {
   const { releaseAddAccount } = useFlags();
 
   return {

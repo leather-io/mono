@@ -52,6 +52,7 @@ export function NetworkFormFields({ isEditNetworkMode }: NetworkFormFieldsProps)
       <NetworkNameSection handleChange={handleChange} values={values} />
       <BitcoinApiSection
         handleChange={handleChange}
+        isEditNetworkMode={isEditNetworkMode}
         setFieldValue={setFieldValue}
         setNetworkUrls={setNetworkUrls}
         values={values}

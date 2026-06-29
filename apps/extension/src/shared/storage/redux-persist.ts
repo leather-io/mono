@@ -23,6 +23,7 @@ export const persistConfig: PersistConfig<LocalRootState> & HiddenUntypeDeserial
   deserialize: false,
   whitelist: [
     'accounts',
+    'policy',
     'active',
     'analytics',
     'chains',

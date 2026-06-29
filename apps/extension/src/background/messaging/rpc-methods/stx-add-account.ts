@@ -29,6 +29,7 @@ export const stxAddAccountHandler = defineRpcRequestHandler(
       ['requestId', request.id],
       ['rpcRequest', encodeBase64Json(request)],
     ]);
+    if (request.params.network) urlParams.append('network', request.params.network);
 
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcStxAddAccount, urlParams);
     void trackRpcRequestSuccess({ endpoint: request.method });

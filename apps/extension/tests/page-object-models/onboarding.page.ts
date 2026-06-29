@@ -67,6 +67,7 @@ export function getTestSoftwareAccountDefaultWalletState() {
       ids: [],
     },
     networks: { ids: [], entities: {}, currentNetworkId: 'mainnet' },
+    policy: { entities: {}, ids: [] },
     settings: {
       userSelectedTheme: 'system',
       dismissedMessages: [],
