@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { userRemovesWallet } from '@leather.io/state/wallet';
 
+import { userRemovesPolicy } from '../policy/policy.slice';
 import { activeSlice, userSwitchesAccount, userSwitchesToPolicy } from './active.slice';
 
 const fingerprint = 'deadbeef';
@@ -82,5 +83,22 @@ describe('activeSlice policy pointer', () => {
       userRemovesWallet({ fingerprint: otherFingerprint })
     );
     expect(withPolicy.activePolicyId).toBe(policyId);
+  });
+
+  test('removing the active policy clears the pointer and keeps the parent account', () => {
+    const result = activeSlice.reducer(
+      { account: { fingerprint, accountIndex: 0 }, activePolicyId: policyId },
+      userRemovesPolicy({ policyId })
+    );
+    expect(result.activePolicyId).toBeNull();
+    expect(result.account).toEqual({ fingerprint, accountIndex: 0 });
+  });
+
+  test('removing a non-active policy keeps the pointer', () => {
+    const result = activeSlice.reducer(
+      { account: { fingerprint, accountIndex: 0 }, activePolicyId: policyId },
+      userRemovesPolicy({ policyId: `${otherFingerprint}/0/bc1qothermultisig` })
+    );
+    expect(result.activePolicyId).toBe(policyId);
   });
 });

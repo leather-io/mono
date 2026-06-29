@@ -6,7 +6,7 @@ import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leathe
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { makePolicyId } from '../policy/policy-store.utils';
-import { userAddsPolicy } from '../policy/policy.slice';
+import { userAddsPolicy, userRemovesPolicy } from '../policy/policy.slice';
 import { accountsAdapter, accountsSlice, userClearsAccountName } from './accounts.slice';
 
 const realFingerprint = 'abcd1234';
@@ -128,6 +128,48 @@ describe('accountsSlice', () => {
 
       expect(state.ids).toEqual([id]);
       expect(state.entities[id]).toEqual({ id, name: 'Renamed vault', status: 'active' });
+    });
+  });
+
+  describe('userRemovesPolicy', () => {
+    test('removes the policy name/metadata row', () => {
+      const parentAccountId = makeAccountIdentifer(realFingerprint, 0);
+      const networkId = 'mainnet';
+      const id = makePolicyId(parentAccountId, multisigAddress, networkId);
+
+      let state = accountsSlice.reducer(
+        accountsAdapter.getInitialState(),
+        userAddsPolicy({
+          policy: {
+            id,
+            parentAccountId,
+            networkId,
+            chain: 'bitcoin',
+            address: multisigAddress,
+            descriptor: 'wsh(sortedmulti(2,xpubA/0/0,xpubB/0/0))',
+            role: 'signer',
+          },
+          name: 'Family vault',
+        })
+      );
+      state = accountsSlice.reducer(state, userRemovesPolicy({ policyId: id }));
+
+      expect(state.entities[id]).toBeUndefined();
+    });
+
+    test('leaves sibling account rows intact', () => {
+      const accountId = makeAccountIdentifer(realFingerprint, 0);
+      const seeded = accountsAdapter.addOne(accountsAdapter.getInitialState(), {
+        id: accountId,
+        name: 'Custom',
+      });
+
+      const result = accountsSlice.reducer(
+        seeded,
+        userRemovesPolicy({ policyId: 'someparent/0/addr/mainnet' })
+      );
+
+      expect(result.entities[accountId]).toEqual({ id: accountId, name: 'Custom' });
     });
   });
 

@@ -18,6 +18,12 @@ interface AddPolicyPayload {
 
 export const userAddsPolicy = createAction<AddPolicyPayload>('policy/userAddsPolicy');
 
+interface RemovePolicyPayload {
+  policyId: string;
+}
+
+export const userRemovesPolicy = createAction<RemovePolicyPayload>('policy/userRemovesPolicy');
+
 export const policySlice = createSlice({
   name: 'policy',
   initialState,
@@ -29,6 +35,10 @@ export const policySlice = createSlice({
       // place.
       .addCase(userAddsPolicy, (state, action) => {
         policyAdapter.upsertOne(state, action.payload.policy);
+      })
+
+      .addCase(userRemovesPolicy, (state, action) => {
+        policyAdapter.removeOne(state, action.payload.policyId);
       })
 
       // Removing a wallet cascades to its policies. Their ids start with

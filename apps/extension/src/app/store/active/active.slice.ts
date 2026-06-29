@@ -6,6 +6,8 @@ import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/walle
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
+import { userRemovesPolicy } from '../policy/policy.slice';
+
 export const userSwitchesAccount = createAction<AccountId | null>('active/userSwitchesAccount');
 export const userSwitchesToPolicy = createAction<{ parent: AccountId; policyId: string }>(
   'active/userSwitchesToPolicy'
@@ -56,6 +58,11 @@ export const activeSlice = createSlice({
           state.account = null;
         }
         if (state.activePolicyId?.startsWith(`${action.payload.fingerprint}/`)) {
+          state.activePolicyId = null;
+        }
+      })
+      .addCase(userRemovesPolicy, (state, action) => {
+        if (state.activePolicyId === action.payload.policyId) {
           state.activePolicyId = null;
         }
       }),

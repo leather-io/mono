@@ -19,14 +19,18 @@ import { useCurrentAccountId } from '@app/store/accounts/account';
 import { toggleHideAccount } from '@app/store/accounts/accounts.actions';
 import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
 import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
+import { type PolicyStore } from '@app/store/policy/policy-store.utils';
 import { selectAllPolicies } from '@app/store/policy/policy.selectors';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';
 
 import { AddWalletMenu } from '../add-wallet-menu/add-wallet-menu';
 import { AccountActionMenu } from './components/account-action-menu';
+import { PolicyActionMenu } from './components/policy-action-menu';
 import { PolicyListItem } from './components/policy-list-item';
+import { RemovePolicyDialog } from './components/remove-policy-dialog';
 import { RemoveWalletDialog } from './components/remove-wallet-dialog';
 import { RenameAccountDialog } from './components/rename-account-dialog';
+import { RenamePolicyDialog } from './components/rename-policy-dialog';
 import { RenameWalletDialog } from './components/rename-wallet-dialog';
 import { SwitchAccountListItem } from './components/switch-account-list-item';
 import { WalletHeader } from './components/wallet-header';
@@ -56,6 +60,8 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
   const [renamingWallet, setRenamingWallet] = useState<RenamingWallet | null>(null);
   const [removingWallet, setRemovingWallet] = useState<RenamingWallet | null>(null);
   const [renamingAccount, setRenamingAccount] = useState<AccountId | null>(null);
+  const [renamingPolicy, setRenamingPolicy] = useState<PolicyStore | null>(null);
+  const [removingPolicy, setRemovingPolicy] = useState<PolicyStore | null>(null);
 
   const allPolicies = useSelector(selectAllPolicies);
 
@@ -222,13 +228,26 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
 
                 if (row.kind === 'policy') {
                   return (
-                    <Box pl="space.06" pr="space.05" py="space.03">
+                    <Box position="relative" pl="space.06" pr="space.05" py="space.03">
                       <PolicyListItem
                         policy={row.policy}
                         handleClose={isManageMode ? noop : onClose}
                         hideBalance={isManageMode}
                         nonInteractive={isManageMode}
                       />
+                      {isManageMode && (
+                        <Box
+                          position="absolute"
+                          top="50%"
+                          right="space.04"
+                          transform="translateY(-50%)"
+                        >
+                          <PolicyActionMenu
+                            onRename={() => setRenamingPolicy(row.policy)}
+                            onRemove={() => setRemovingPolicy(row.policy)}
+                          />
+                        </Box>
+                      )}
                     </Box>
                   );
                 }
@@ -320,6 +339,22 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
           isShowing
           onClose={() => setRenamingAccount(null)}
           accountId={renamingAccount}
+        />
+      )}
+      {renamingPolicy && (
+        <RenamePolicyDialog
+          key={renamingPolicy.id}
+          isShowing
+          onClose={() => setRenamingPolicy(null)}
+          policy={renamingPolicy}
+        />
+      )}
+      {removingPolicy && (
+        <RemovePolicyDialog
+          key={removingPolicy.id}
+          isShowing
+          onClose={() => setRemovingPolicy(null)}
+          policy={removingPolicy}
         />
       )}
     </>
