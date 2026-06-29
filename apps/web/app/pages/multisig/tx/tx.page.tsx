@@ -23,7 +23,9 @@ import type {
   AuthNetworkId,
   MarketData,
   Money,
+  MultisigTransaction,
   MultisigTransactionStatus,
+  VaultAccount,
 } from '@leather.io/models';
 import { baseCurrencyAmountInQuote, truncateMiddle } from '@leather.io/utils';
 
@@ -56,6 +58,23 @@ function toFiat(money: Money | undefined, marketData: MarketData | undefined): M
   return baseCurrencyAmountInQuote(money, marketData);
 }
 
+function isAwaitingSignatureFrom(
+  transaction: MultisigTransaction,
+  account: VaultAccount,
+  address: string | undefined
+) {
+  const signer = account.signers.find(s => s.address === address);
+  if (!signer) return false;
+  const signed = transaction.signatures.some(sig => sig.signerIndex === signer.signerIndex);
+  return transaction.status === 'pending' && !signed;
+}
+
+function readAutoSign(state: unknown): boolean {
+  return (
+    typeof state === 'object' && state !== null && 'autoSign' in state && state.autoSign === true
+  );
+}
+
 export function TxDetailPage() {
   const { vaultId, txId } = useParams();
   const navigate = useNavigate();
@@ -64,6 +83,7 @@ export function TxDetailPage() {
   // history (deep link / refresh), where there is nowhere to go back to.
   const canGoBack = location.key !== 'default';
   const [hydrated, setHydrated] = useState(false);
+  const [autoSignStarted, setAutoSignStarted] = useState(false);
   useEffect(() => setHydrated(true), []);
 
   const btcVaults = useVaults('btc:mainnet');
@@ -88,6 +108,29 @@ export function TxDetailPage() {
   const cancelTransaction = useCancelTransaction(network);
   const broadcastTransaction = useBroadcastTransaction(network);
   const toast = useToast();
+
+  useEffect(() => {
+    if (autoSignStarted) return;
+    if (!readAutoSign(location.state)) return;
+    if (!transaction.data || !account.data) return;
+    if (!isAwaitingSignatureFrom(transaction.data, account.data, me.data?.address)) return;
+    setAutoSignStarted(true);
+    void navigate(location.pathname, { replace: true, state: null });
+    signTransaction.mutate(
+      { transaction: transaction.data, account: account.data },
+      { onSuccess: () => toast.success('Signature added') }
+    );
+  }, [
+    autoSignStarted,
+    location.state,
+    location.pathname,
+    transaction.data,
+    account.data,
+    me.data?.address,
+    navigate,
+    signTransaction,
+    toast,
+  ]);
 
   const btcSession = useSession('btc:mainnet');
   const stxSession = useSession('stx:mainnet');
@@ -135,10 +178,6 @@ export function TxDetailPage() {
   const proposerLabel = `${proposerName}${isMine ? ' (you)' : ''}`;
   const initiationDate = formatRelativeTime(new Date(tx.proposalTimestamp * 1000));
 
-  const mySigner = acct.signers.find(signer => signer.address === me.data?.address);
-  const iSigned = mySigner
-    ? tx.signatures.some(sig => sig.signerIndex === mySigner.signerIndex)
-    : false;
   // On-chain values are authoritative once broadcast; before that, decode the
   // proposal payload so recipient/amount/fee still show while collecting signatures.
   const decoded = decodeProposalSummary(acct, tx);
@@ -148,7 +187,7 @@ export function TxDetailPage() {
   const amountFiat = toFiat(amount, marketData.data);
   const feeFiat = toFiat(fee, marketData.data);
   const effectiveStatus = reconcileStatus(tx.status, onChain.status);
-  const awaitingMySignature = tx.status === 'pending' && Boolean(mySigner) && !iSigned;
+  const awaitingMySignature = isAwaitingSignatureFrom(tx, acct, me.data?.address);
   const heroStatus = awaitingMySignature
     ? { label: 'Awaiting your signature', variant: 'pending' as const }
     : transactionStatusBadge(effectiveStatus);

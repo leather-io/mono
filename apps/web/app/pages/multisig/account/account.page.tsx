@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
@@ -11,7 +11,7 @@ import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import type { AuthNetworkId } from '@leather.io/models';
+import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
 import { PlusIcon } from '@leather.io/ui';
 
 import { MultisigErrorState } from '../components/multisig-error-state';
@@ -26,9 +26,16 @@ import { ProposeTransactionModal } from './components/propose-transaction-modal'
 
 export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
+  const navigate = useNavigate();
   const [hydrated, setHydrated] = useState(false);
   const [isProposing, setIsProposing] = useState(false);
   useEffect(() => setHydrated(true), []);
+
+  function onProposed(transaction: MultisigTransaction) {
+    setIsProposing(false);
+    if (!vaultId) return;
+    void navigate(multisigPaths.tx(vaultId, transaction.id), { state: { autoSign: true } });
+  }
 
   const btcVaults = useVaults('btc:mainnet');
   const stxVaults = useVaults('stx:mainnet');
@@ -150,6 +157,7 @@ export function AccountDetailPage() {
         memberCount={vault.data.members.length}
         isShowing={isProposing}
         onClose={() => setIsProposing(false)}
+        onProposed={onProposed}
       />
     </MultisigPage>
   );
