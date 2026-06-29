@@ -18,6 +18,7 @@ interface AccountDetailsCardProps {
   account: VaultAccount;
   currentUserAddress?: string;
   onAddToWallet(): void;
+  isAddingToWallet?: boolean;
 }
 
 function CardRow({ children }: { children: ReactNode }) {
@@ -38,6 +39,7 @@ export function AccountDetailsCard({
   account,
   currentUserAddress,
   onAddToWallet,
+  isAddingToWallet,
 }: AccountDetailsCardProps) {
   const theme = vaultThemeFromName(vault.theme);
   const chain = chainFromNetwork(vault.network);
@@ -106,7 +108,7 @@ export function AccountDetailsCard({
       </CardRow>
 
       <CardRow>
-        <Button variant="solid" fullWidth onClick={onAddToWallet}>
+        <Button variant="solid" fullWidth onClick={onAddToWallet} aria-busy={isAddingToWallet}>
           <Flex alignItems="center" gap="space.02">
             <PlusIcon variant="small" color="ink.background-primary" />
             Add to wallet
