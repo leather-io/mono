@@ -16,6 +16,7 @@ import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 import { useCurrentNetworkState } from '@app/query/leather-query-provider';
 import { useNetworksActions } from '@app/store/networks/networks.hooks';
 import { useNetworks } from '@app/store/networks/networks.selectors';
+import { usePolicyNetworkIds } from '@app/store/policy/policy.selectors';
 import { useToggleNetworkBadgeAlwaysOn } from '@app/store/settings/settings.actions';
 import { useNetworkBadgeAlwaysOn } from '@app/store/settings/settings.selectors';
 
@@ -28,6 +29,7 @@ export function SelectNetwork() {
   const navigate = useNavigate();
   const networks = useNetworks();
   const networksActions = useNetworksActions();
+  const policyNetworkIds = usePolicyNetworkIds();
   const currentNetwork = useCurrentNetworkState();
   const networkBadgeAlwaysOn = useNetworkBadgeAlwaysOn();
   const toggleNetworkBadgeAlwaysOn = useToggleNetworkBadgeAlwaysOn();
@@ -72,6 +74,7 @@ export function SelectNetwork() {
                   networkId={id}
                   onSelectNetwork={() => selectNetwork(id)}
                   isCustom={!defaultNetworkIds.includes(id)}
+                  isPolicyLocked={policyNetworkIds.has(id)}
                   onRemoveNetwork={() => {
                     if (id === currentNetwork.id) networksActions.changeNetwork('mainnet');
                     removeNetwork(id);

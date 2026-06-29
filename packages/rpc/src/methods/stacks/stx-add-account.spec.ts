@@ -42,4 +42,10 @@ describe('stxAddAccount', () => {
         .success
     ).toEqual(false);
   });
+
+  test('rejects a name longer than the account name cap', () => {
+    expect(
+      stxAddAccount.params.safeParse({ ...validParams, name: 'a'.repeat(36) }).success
+    ).toEqual(false);
+  });
 });

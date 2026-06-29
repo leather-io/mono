@@ -62,6 +62,7 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
       ['requestId', request.id],
       ['rpcRequest', encodeBase64Json(request)],
     ]);
+    if (request.params.network) urlParams.append('network', request.params.network);
 
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcBtcAddAccount, urlParams);
     void trackRpcRequestSuccess({ endpoint: request.method });

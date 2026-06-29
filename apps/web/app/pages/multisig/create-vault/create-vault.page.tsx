@@ -6,7 +6,6 @@ import { useSession } from '~/features/multisig/auth/use-session';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useCreateVault } from '~/features/multisig/vaults/use-vault-mutations';
 import { useToast } from '~/features/toasts/use-toast';
-import { Page } from '~/layouts/page/page';
 
 import { isValidBitcoinAddress } from '@leather.io/bitcoin';
 import type { AuthNetworkId } from '@leather.io/models';
@@ -14,6 +13,7 @@ import { LeatherApiError } from '@leather.io/services';
 import { isValidStacksAddress } from '@leather.io/stacks';
 import { Button, InfoCircleIcon } from '@leather.io/ui';
 
+import { MultisigPage } from '../components/multisig-page';
 import { TextField } from '../components/text-field';
 import type { Chain } from '../data/multisig-types';
 import { vaultThemeName } from '../multisig-tokens';
@@ -199,13 +199,11 @@ export function CreateVaultPage() {
   }
 
   return (
-    <Page>
-      <Page.Header title="Create vault" backTo={multisigPaths.index} />
+    <MultisigPage title="Create vault" backTo={multisigPaths.index}>
       <Flex
         direction={['column', 'column', 'row']}
-        gap="space.07"
+        gap={['space.06', 'space.06', 'space.08', 'space.10']}
         alignItems="flex-start"
-        mt="space.07"
       >
         <Box flex={['1', '1', '1.4']} width="100%">
           <Section label="Vault name">
@@ -278,6 +276,6 @@ export function CreateVaultPage() {
           />
         </Box>
       </Flex>
-    </Page>
+    </MultisigPage>
   );
 }

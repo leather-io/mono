@@ -14,6 +14,8 @@ import {
   findAccountKeyByPubkey,
   getDescriptorInputsWithDisallowedSighash,
   getDescriptorMatchingInputIndexes,
+  getWshDescriptorAddress,
+  getWshDescriptorNetwork,
   isWshDescriptor,
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
@@ -74,6 +76,64 @@ describe('wsh-descriptor', () => {
 
   it('rejects non-wsh descriptors', () => {
     expect(() => compileWshDescriptor(`wpkh(${xpubA})`)).toThrow();
+  });
+
+  it('derives the mainnet p2wsh address for a multisig descriptor', () => {
+    const multisigDescriptor = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`;
+    const { scriptPubKey } = compileWshDescriptor(multisigDescriptor);
+    const address = getWshDescriptorAddress(multisigDescriptor);
+
+    expect(address.startsWith('bc1q')).toBe(true);
+    expect(address).toBe(btc.Address(btc.NETWORK).encode(btc.OutScript.decode(scriptPubKey)));
+  });
+
+  it('derives the testnet p2wsh address from testnet keys', () => {
+    const tpubA = makeMultisigAccountTpub(1);
+    const tpubB = makeMultisigAccountTpub(2);
+    const testnetDescriptor = `wsh(sortedmulti(2,${tpubA}/0/0,${tpubB}/0/0))`;
+    const { scriptPubKey } = compileWshDescriptor(testnetDescriptor);
+    const address = getWshDescriptorAddress(testnetDescriptor);
+
+    expect(address.startsWith('tb1q')).toBe(true);
+    expect(address).toBe(btc.Address(btc.TEST_NETWORK).encode(btc.OutScript.decode(scriptPubKey)));
+  });
+
+  it('derives raw-pubkey-only p2wsh addresses from the explicit network', () => {
+    const rawPubkeyDescriptor = `wsh(pk(${bytesToHex(pubkeyA)}))`;
+    const { scriptPubKey } = compileWshDescriptor(rawPubkeyDescriptor);
+    const mainnetAddress = getWshDescriptorAddress(rawPubkeyDescriptor, 'mainnet');
+    const testnetAddress = getWshDescriptorAddress(rawPubkeyDescriptor, 'testnet');
+
+    expect(mainnetAddress.startsWith('bc1q')).toBe(true);
+    expect(testnetAddress.startsWith('tb1q')).toBe(true);
+    expect(mainnetAddress).toBe(
+      btc.Address(btc.NETWORK).encode(btc.OutScript.decode(scriptPubKey))
+    );
+    expect(testnetAddress).toBe(
+      btc.Address(btc.TEST_NETWORK).encode(btc.OutScript.decode(scriptPubKey))
+    );
+  });
+
+  it('throws for a non-wsh descriptor', () => {
+    expect(() => getWshDescriptorAddress(`wpkh(${xpubA})`)).toThrow();
+  });
+
+  it('classifies a descriptor with mainnet extended keys as mainnet', () => {
+    const mainnetDescriptor = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`;
+    expect(getWshDescriptorNetwork(mainnetDescriptor)).toBe('mainnet');
+    expect(getWshDescriptorNetwork(descriptor)).toBe('mainnet');
+  });
+
+  it('classifies a descriptor with testnet extended keys as testnet', () => {
+    const tpubA = makeMultisigAccountTpub(1);
+    const tpubB = makeMultisigAccountTpub(2);
+    const testnetDescriptor = `wsh(sortedmulti(2,${tpubA}/0/0,${tpubB}/0/0))`;
+    expect(getWshDescriptorNetwork(testnetDescriptor)).toBe('testnet');
+  });
+
+  it('returns undefined for a raw-pubkey-only descriptor with no network signal', () => {
+    const rawPubkeyDescriptor = `wsh(pk(${bytesToHex(pubkeyA)}))`;
+    expect(getWshDescriptorNetwork(rawPubkeyDescriptor)).toBeUndefined();
   });
 
   it('compiles to a p2wsh scriptPubKey and witness script', () => {

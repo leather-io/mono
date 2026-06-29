@@ -7,40 +7,18 @@ import { CheckmarkIcon, ChevronDownIcon, Input, Select, SelectItemLayout } from 
 
 import type { AddNetworkFormValues } from '@app/pages/network/components/use-add-network';
 
-const networks: {
-  label: string;
-  value: BitcoinNetwork;
-}[] = [
-  {
-    label: 'Mainnet',
-    value: 'mainnet',
-  },
-  {
-    label: 'Testnet3',
-    value: 'testnet3',
-  },
-  {
-    label: 'Testnet4',
-    value: 'testnet4',
-  },
-  {
-    label: 'Signet',
-    value: 'signet',
-  },
-  {
-    label: 'Regtest',
-    value: 'regtest',
-  },
-];
+import { getSelectedNetworkLabel, getSelectedNetworkValue, networks } from './network-presets';
 
 interface BitcoinApiSectionProps {
   handleChange: FormikHandlers['handleChange'];
+  isEditNetworkMode?: boolean;
   setFieldValue: FormikHelpers<AddNetworkFormValues>['setFieldValue'];
   setNetworkUrls(value: BitcoinNetwork): void;
   values: AddNetworkFormValues;
 }
 export function BitcoinApiSection({
   handleChange,
+  isEditNetworkMode,
   setFieldValue,
   setNetworkUrls,
   values,
@@ -50,14 +28,14 @@ export function BitcoinApiSection({
       <styled.p textStyle="label.02">Bitcoin API</styled.p>
 
       <Select.Root
-        defaultValue={values.bitcoinNetwork || networks[0].value}
+        value={getSelectedNetworkValue(values)}
         onValueChange={(value: BitcoinNetwork) => {
           setNetworkUrls(value);
           void setFieldValue('bitcoinNetwork', value);
         }}
       >
         <Select.Trigger data-testid={NetworkSelectors.AddNetworkBitcoinAPISelector}>
-          <Select.Value />
+          <styled.span textStyle="label.02">{getSelectedNetworkLabel(values)}</styled.span>
           <Select.Icon>
             <ChevronDownIcon variant="small" />
           </Select.Icon>
@@ -106,6 +84,7 @@ export function BitcoinApiSection({
         <Input.Field
           data-testid={NetworkSelectors.NetworkKey}
           onChange={handleChange}
+          disabled={isEditNetworkMode}
           name="key"
           value={values.key}
           width="100%"

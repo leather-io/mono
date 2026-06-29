@@ -9,6 +9,9 @@ import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { type Network, Psbt, networks } from 'bitcoinjs-lib';
 
+import { type BitcoinNetworkModes, type NetworkModes } from '@leather.io/models';
+
+import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
 
 const { Descriptor, parseKeyExpression } = DescriptorsFactory(secp256k1);
@@ -20,22 +23,29 @@ export function isWshDescriptor(descriptor: string) {
 }
 
 const testnetExtendedKeyPrefixes = ['tpub', 'tprv', 'upub', 'uprv', 'vpub', 'vprv'];
+const mainnetExtendedKeyPrefixes = ['xpub', 'xprv', 'ypub', 'yprv', 'zpub', 'zprv'];
 const keyExpressionStarts = ['(', ',', ']'];
 
-// A P2WSH witness script and its scriptPubKey are network-independent — the same
-// keys and policy compile to identical bytes on mainnet and testnet. The network
-// only governs extended-key version-byte validation (and bech32 address
-// encoding, which we don't use). We therefore pick the network that matches the
-// descriptor's keys so parsing succeeds regardless of the wallet's active
-// network — coordinators build descriptors from keys shared as xpubs or
-// tpubs (getAddresses encodes them for whichever network was active), so
-// the descriptor's key encoding need not match our current network.
-function getNetworkForDescriptor(descriptor: string): Network {
+function descriptorHasKeyPrefix(descriptor: string, prefixes: string[]) {
   const compactDescriptor = descriptor.replace(/\s/g, '');
-  const hasTestnetKey = keyExpressionStarts.some(start =>
-    testnetExtendedKeyPrefixes.some(prefix => compactDescriptor.includes(start + prefix))
+  return keyExpressionStarts.some(start =>
+    prefixes.some(prefix => compactDescriptor.includes(start + prefix))
   );
-  return hasTestnetKey ? networks.testnet : networks.bitcoin;
+}
+
+export function getWshDescriptorNetwork(descriptor: string): NetworkModes | undefined {
+  if (descriptorHasKeyPrefix(descriptor, testnetExtendedKeyPrefixes)) return 'testnet';
+  if (descriptorHasKeyPrefix(descriptor, mainnetExtendedKeyPrefixes)) return 'mainnet';
+  return undefined;
+}
+
+// A P2WSH witness script and its scriptPubKey are network-independent — the same
+// keys and policy compile to identical bytes on mainnet and testnet. This
+// parsing network only governs extended-key version-byte validation. Callers
+// that need a bech32 address should pass an explicit network to
+// getWshDescriptorAddress instead of treating this fallback as policy identity.
+function getNetworkForDescriptor(descriptor: string): Network {
+  return getWshDescriptorNetwork(descriptor) === 'testnet' ? networks.testnet : networks.bitcoin;
 }
 
 function deriveKeyExpressionPubkeyHex(keyExpression: string, network: Network, index: number) {
@@ -153,6 +163,26 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
     keys,
     keyPathIndexes: getUniformKeyPathIndexes(keys),
   };
+}
+
+// Derives the P2WSH (bech32) receive address a `wsh(...)` descriptor locks to.
+// Pass `networkMode` when policy/network identity is known. If omitted, the
+// address network is inferred from the descriptor's key prefixes for backwards
+// compatibility with existing callers.
+export function getWshDescriptorAddress(
+  descriptor: string,
+  networkMode?: BitcoinNetworkModes
+): string {
+  if (networkMode) {
+    const { scriptPubKey } = compileWshDescriptor(descriptor);
+    return btc
+      .Address(getBtcSignerLibNetworkConfigByMode(networkMode))
+      .encode(btc.OutScript.decode(scriptPubKey));
+  }
+
+  const address = makeWshDescriptorInstance(descriptor).getAddress();
+  if (!address) throw new Error('Descriptor does not produce an address');
+  return address;
 }
 
 // Finds the descriptor key whose concrete public key equals the given pubkey.

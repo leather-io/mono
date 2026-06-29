@@ -14,7 +14,7 @@ export function AccountAddresses({ accountId }: AccountAddressesProps) {
   const account = useStacksAccountLoader({ accountId });
   const signer = useBitcoinNativeSegwitAccountLoader({ accountId });
   return (
-    <HStack alignItems="center" gap="space.02" whiteSpace="nowrap">
+    <HStack alignItems="center" color="ink.text-subdued" gap="space.02" whiteSpace="nowrap">
       <BulletSeparator>
         {account ? <Caption>{truncateMiddle(account.address, 4)}</Caption> : null}
         {signer ? <Caption>{truncateMiddle(signer.address, 4)}</Caption> : null}

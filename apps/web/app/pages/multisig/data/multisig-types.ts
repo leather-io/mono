@@ -23,17 +23,6 @@ export type TxStatus =
   | 'dropped'
   | 'cancelled';
 
-export const txStatusLabel: Record<TxStatus, string> = {
-  queued: 'Queued',
-  pending: 'Collecting signatures',
-  signed: 'Ready to broadcast',
-  broadcast: 'Broadcasting…',
-  confirmed: 'Confirmed',
-  failed: 'Failed',
-  dropped: 'Dropped',
-  cancelled: 'Cancelled',
-};
-
 export interface Member {
   name: string;
   handle: string;

@@ -1,7 +1,7 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
@@ -14,13 +14,14 @@ import {
 } from '~/features/multisig/vaults/use-vault-mutations';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
-import { Page } from '~/layouts/page/page';
 
 import type { AuthNetworkId, Vault } from '@leather.io/models';
 import { Button, Callout } from '@leather.io/ui';
 
 import { Badge } from '../components/badge';
 import { MultisigErrorState } from '../components/multisig-error-state';
+import { MultisigPage } from '../components/multisig-page';
+import { SectionLabel } from '../components/section-label';
 import { multisigPaths } from '../multisig.constants';
 import { AccountsSection } from './components/accounts-section';
 import { CancelVaultModal } from './components/cancel-vault-modal';
@@ -29,31 +30,7 @@ import { MembersSection } from './components/members-section';
 import { ShareInvitationsModal } from './components/share-invitations-modal';
 import { VaultBalanceHero } from './components/vault-balance-hero';
 import { VaultStatusCard } from './components/vault-status-card';
-
-function SectionLabel({
-  children,
-  accessory,
-  noGutter,
-}: {
-  children: string;
-  accessory?: ReactNode;
-  noGutter?: boolean;
-}) {
-  return (
-    <Flex
-      alignItems="center"
-      justifyContent="space-between"
-      gap="space.03"
-      mb="space.03"
-      mt={noGutter ? undefined : 'space.05'}
-    >
-      <styled.h3 textStyle="label.01" color="ink.text-primary">
-        {children}
-      </styled.h3>
-      {accessory}
-    </Flex>
-  );
-}
+import { VaultTransactions } from './components/vault-transactions';
 
 function accountCreationBlockedReason(vault: Vault): string {
   if (vault.status === 'cancelled') return 'This vault has been cancelled.';
@@ -61,23 +38,6 @@ function accountCreationBlockedReason(vault: Vault): string {
     return "A member declined, so this vault can't add accounts. The creator can cancel and start over.";
   }
   return 'All members must accept their invitation before accounts can be created.';
-}
-
-function ComingSoon({ children }: { children: string }) {
-  return (
-    <Box
-      borderRadius="md"
-      borderWidth="1px"
-      borderStyle="dashed"
-      borderColor="ink.border-default"
-      p="space.05"
-      textAlign="center"
-    >
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        {children}
-      </styled.span>
-    </Box>
-  );
 }
 
 export function VaultDetailPage() {
@@ -112,17 +72,16 @@ export function VaultDetailPage() {
 
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accounts = useVaultAccounts(network, vaultNetworkKnown ? vaultId : undefined);
-  const accountsBalance = useVaultAccountsBalance();
+  const accountsBalance = useVaultAccountsBalance(accounts.data);
   const cancelVault = useCancelVault(network);
   const joinVault = useJoinVault(network);
   const declineVault = useDeclineVault(network);
 
   if (!vault) {
     return (
-      <Page>
-        <Page.Header title="Vault" backTo={multisigPaths.index} />
+      <MultisigPage title="Vault" backTo={multisigPaths.index}>
         {isResolving ? (
-          <Flex direction="column" gap="space.03" mt="space.05">
+          <Flex direction="column" gap="space.03">
             {[0, 1, 2].map(index => (
               <Box
                 key={index}
@@ -136,7 +95,7 @@ export function VaultDetailPage() {
         ) : (
           <MultisigErrorState body="No vault found. It may not exist, or you may not be a member." />
         )}
-      </Page>
+      </MultisigPage>
     );
   }
 
@@ -162,9 +121,7 @@ export function VaultDetailPage() {
   }
 
   return (
-    <Page>
-      <Page.Header title={vault.name} backTo={multisigPaths.index} />
-
+    <MultisigPage title={vault.name} backTo={multisigPaths.index}>
       {isInvited && myMembership && (
         <Callout variant="info" title="You've been invited to this vault">
           <Flex gap="space.03" mt="space.03">
@@ -194,9 +151,8 @@ export function VaultDetailPage() {
 
       <Flex
         direction={['column', 'column', 'row']}
-        gap="space.06"
+        gap={['space.06', 'space.06', 'space.08', 'space.10']}
         alignItems="flex-start"
-        mt="space.07"
       >
         <Box flex={['1', '1', '1.6']} width="100%">
           <VaultBalanceHero
@@ -240,7 +196,7 @@ export function VaultDetailPage() {
             onCancelVault={() => setIsConfirmingCancel(true)}
           />
           <SectionLabel>Transactions</SectionLabel>
-          <ComingSoon>No transactions yet.</ComingSoon>
+          <VaultTransactions network={network} vaultId={vault.id} accounts={accounts.data} />
         </Box>
       </Flex>
 
@@ -265,6 +221,6 @@ export function VaultDetailPage() {
         onConfirm={onCancel}
         onClose={() => setIsConfirmingCancel(false)}
       />
-    </Page>
+    </MultisigPage>
   );
 }

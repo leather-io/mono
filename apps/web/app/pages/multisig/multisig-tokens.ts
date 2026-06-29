@@ -67,3 +67,8 @@ export const avatarSquircleRadius = '14px';
 export function accountIconUrl(icon: string): string {
   return `/multisig/icons/account/${icon}.svg`;
 }
+
+// Warm peach gradient marking an in-progress / collecting-signatures state, used
+// across multisig (status row, invited members, pending transaction rows).
+export const collectingSignaturesGradient =
+  'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.16), rgb(from token(colors.orange.action-primary-default) r g b / 0) 70%)';

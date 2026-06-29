@@ -72,21 +72,20 @@ vi.mock('@app/ui/components/account/account-avatar/account-avatar-item', () => (
 }));
 
 describe(CurrentAccountDisplayer.name, () => {
-  test('renders the wallet name of the current account', () => {
+  test('renders the current account name and addresses', () => {
     walletEntitiesMock.mockReturnValue({ abc123: { name: 'Wallet 3' } });
 
     const html = renderToString(<CurrentAccountDisplayer onSelectAccount={() => null} />);
 
-    expect(html).toContain('Wallet 3');
     expect(html).toContain('Account 1');
+    expect(html).toContain('addresses');
   });
 
-  test('omits the wallet name when the wallet has no entry', () => {
-    walletEntitiesMock.mockReturnValue({});
+  test('does not render the wallet name in the account row', () => {
+    walletEntitiesMock.mockReturnValue({ abc123: { name: 'Wallet 3' } });
 
     const html = renderToString(<CurrentAccountDisplayer onSelectAccount={() => null} />);
 
     expect(html).not.toContain('Wallet 3');
-    expect(html).toContain('Account 1');
   });
 });

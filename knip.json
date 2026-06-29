@@ -36,6 +36,7 @@
     "*/**/panda.config.ts",
     "*/**/postcss.config.cjs",
     ".husky/**",
+    ".agents/**",
     ".claude/**",
     "apps/extension/src/app/store/active/active.actions.ts",
     "packages/services/src/infrastructure/api/leather/leather-api.types.ts",

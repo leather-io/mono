@@ -1,7 +1,13 @@
 import { useMemo } from 'react';
 
 import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
-import { btcAddAccount, createRequestEncoder, createRpcSuccessResponse } from '@leather.io/rpc';
+import {
+  RpcErrorCode,
+  btcAddAccount,
+  createRequestEncoder,
+  createRpcErrorResponse,
+  createRpcSuccessResponse,
+} from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
 
@@ -10,9 +16,9 @@ import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
-import { usePolicyAccountFeatureGate } from '../policy-account-feature-gate';
-import { type PolicyAccountMatchStatus } from '../policy-account-match';
-import { registerBtcPolicyAccount } from './register-btc-policy-account';
+import { usePolicyFeatureGate } from '../policy-feature-gate';
+import { type PolicyMatchStatus } from '../policy-match';
+import { useRegisterBtcPolicy } from './register-btc-policy';
 
 const { decode } = createRequestEncoder(btcAddAccount.request);
 
@@ -26,7 +32,8 @@ function useBtcAddAccountParams() {
 export function useBtcAddAccount() {
   const { tabId, origin, request } = useBtcAddAccountParams();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
-  const { isFeatureEnabled, rejectAsUnsupported } = usePolicyAccountFeatureGate({
+  const registerBtcPolicy = useRegisterBtcPolicy();
+  const { isFeatureEnabled, rejectAsUnsupported } = usePolicyFeatureGate({
     method: request.method,
     id: request.id,
     tabId,
@@ -36,7 +43,7 @@ export function useBtcAddAccount() {
   // can confirm. We only consider the native segwit account's xpub or its 0/0
   // public key: `findAccountDescriptorKey` matches the account xpub, or the raw
   // 0/0 public key, against the compiled descriptor — the same check signPsbt uses.
-  const matchStatus: PolicyAccountMatchStatus = useMemo(() => {
+  const matchStatus: PolicyMatchStatus = useMemo(() => {
     if (!nativeSegwitAccount) return 'no-active-account';
     try {
       const compiled = compileWshDescriptor(request.params.descriptor);
@@ -71,7 +78,20 @@ export function useBtcAddAccount() {
         return;
       }
 
-      const result = registerBtcPolicyAccount(request.params);
+      const result = registerBtcPolicy(request.params);
+      if (!result) {
+        void chrome.tabs.sendMessage(
+          tabId,
+          createRpcErrorResponse(request.method, {
+            id: request.id,
+            error: {
+              code: RpcErrorCode.INTERNAL_ERROR,
+              message: 'Failed to register policy',
+            },
+          })
+        );
+        return;
+      }
 
       void chrome.tabs.sendMessage(
         tabId,

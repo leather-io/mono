@@ -25,6 +25,7 @@
     }
   },
   "dependencies": {
+    "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/stacks": "workspace:*",
     "@leather.io/utils": "workspace:*",

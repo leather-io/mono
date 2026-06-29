@@ -3,20 +3,14 @@ import { useCallback } from 'react';
 import { useFormikContext } from 'formik';
 import { Flex } from 'leather-styles/jsx';
 
-import { MEMPOOL_BASE_URL } from '@leather.io/constants';
-import {
-  BITCOIN_API_BASE_URL_MAINNET,
-  BITCOIN_API_BASE_URL_TESTNET3,
-  BITCOIN_API_BASE_URL_TESTNET4,
-  type BitcoinNetwork,
-} from '@leather.io/models';
-import { assertUnreachable } from '@leather.io/utils';
+import { type BitcoinNetwork } from '@leather.io/models';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 import type { AddNetworkFormValues } from '@app/pages/network/components/use-add-network';
 
 import { BitcoinApiSection } from './bitcoin-api-section';
 import { NetworkNameSection } from './network-name-section';
+import { bitcoinNetworkPresets } from './network-presets';
 import { StacksApiSection } from './stacks-api-section';
 
 interface NetworkFormFieldsProps {
@@ -40,30 +34,9 @@ export function NetworkFormFields({ isEditNetworkMode }: NetworkFormFieldsProps)
   );
 
   function setNetworkUrls(value: BitcoinNetwork) {
-    switch (value) {
-      case 'mainnet':
-        setStacksUrl('https://api.hiro.so');
-        setBitcoinUrl(BITCOIN_API_BASE_URL_MAINNET);
-        break;
-      case 'testnet3':
-        setStacksUrl('https://api.testnet.hiro.so');
-        setBitcoinUrl(BITCOIN_API_BASE_URL_TESTNET3);
-        break;
-      case 'testnet4':
-        setStacksUrl('https://api.testnet.hiro.so');
-        setBitcoinUrl(BITCOIN_API_BASE_URL_TESTNET4);
-        break;
-      case 'signet':
-        setStacksUrl('https://api.testnet.hiro.so');
-        setBitcoinUrl(`${MEMPOOL_BASE_URL}/signet/api`);
-        break;
-      case 'regtest':
-        setStacksUrl('https://api.testnet.hiro.so');
-        setBitcoinUrl(`${MEMPOOL_BASE_URL}/testnet/api`);
-        break;
-      default:
-        assertUnreachable(value);
-    }
+    const preset = bitcoinNetworkPresets[value];
+    setStacksUrl(preset.stacksUrl);
+    setBitcoinUrl(preset.bitcoinUrl);
   }
 
   useOnMount(() => {
@@ -79,6 +52,7 @@ export function NetworkFormFields({ isEditNetworkMode }: NetworkFormFieldsProps)
       <NetworkNameSection handleChange={handleChange} values={values} />
       <BitcoinApiSection
         handleChange={handleChange}
+        isEditNetworkMode={isEditNetworkMode}
         setFieldValue={setFieldValue}
         setNetworkUrls={setNetworkUrls}
         values={values}

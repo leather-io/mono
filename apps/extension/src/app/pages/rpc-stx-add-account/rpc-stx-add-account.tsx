@@ -9,7 +9,7 @@ import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-acc
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
-import { policyAccountCallout } from '../policy-account-match';
+import { policyCallout } from '../policy-match';
 import { useStxAddAccount } from './use-stx-add-account';
 
 export function RpcStxAddAccount() {
@@ -46,7 +46,7 @@ export function RpcStxAddAccount() {
     closeWindow();
   }
 
-  const callout = policyAccountCallout(matchStatus, 'Stacks');
+  const callout = policyCallout(matchStatus, 'Stacks');
 
   return (
     <Approver requester={origin} width="100%">

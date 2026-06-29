@@ -9,50 +9,25 @@ import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
-import { Page } from '~/layouts/page/page';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import type { AuthNetworkId } from '@leather.io/models';
+import { PlusIcon } from '@leather.io/ui';
 
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
+import { MultisigPage } from '../components/multisig-page';
+import { SectionLabel } from '../components/section-label';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { AccountDetailsCard } from './components/account-details-card';
-
-function SectionLabel({ children, noGutter }: { children: string; noGutter?: boolean }) {
-  return (
-    <styled.h3
-      textStyle="label.01"
-      color="ink.text-primary"
-      mb="space.03"
-      mt={noGutter ? undefined : 'space.05'}
-    >
-      {children}
-    </styled.h3>
-  );
-}
-
-function ComingSoon({ children }: { children: string }) {
-  return (
-    <Box
-      borderRadius="md"
-      borderWidth="1px"
-      borderStyle="dashed"
-      borderColor="ink.border-default"
-      p="space.05"
-      textAlign="center"
-    >
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        {children}
-      </styled.span>
-    </Box>
-  );
-}
+import { AccountTransactions } from './components/account-transactions';
+import { ProposeTransactionModal } from './components/propose-transaction-modal';
 
 export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
   const [hydrated, setHydrated] = useState(false);
+  const [isProposing, setIsProposing] = useState(false);
   useEffect(() => setHydrated(true), []);
 
   const btcVaults = useVaults('btc:mainnet');
@@ -78,13 +53,12 @@ export function AccountDetailPage() {
 
   if (!vault.data || !account.data) {
     return (
-      <Page>
-        <Page.Header
-          title="Vault account"
-          backTo={vaultId ? multisigPaths.vault(vaultId) : multisigPaths.index}
-        />
+      <MultisigPage
+        title="Vault account"
+        backTo={vaultId ? multisigPaths.vault(vaultId) : multisigPaths.index}
+      >
         {isResolving ? (
-          <Flex direction="column" gap="space.03" mt="space.05">
+          <Flex direction="column" gap="space.03">
             {[0, 1, 2].map(index => (
               <Box
                 key={index}
@@ -98,24 +72,23 @@ export function AccountDetailPage() {
         ) : (
           <MultisigErrorState body="No account found. It may not exist, or you may not be a member." />
         )}
-      </Page>
+      </MultisigPage>
     );
   }
 
   const theme = vaultThemeFromName(vault.data.theme);
+  const chainLabel = account.data.network.startsWith('btc') ? 'BTC' : 'STX';
 
   function onAddToWallet() {
     // TODO: add this multisig account to the extension wallet
   }
 
   return (
-    <Page>
-      <Page.Header title="Vault account" backTo={multisigPaths.vault(vault.data.id)} />
+    <MultisigPage title="Vault account" backTo={multisigPaths.vault(vault.data.id)}>
       <Flex
         direction={['column', 'column', 'row']}
-        gap="space.06"
+        gap={['space.06', 'space.06', 'space.08', 'space.10']}
         alignItems="flex-start"
-        mt="space.07"
       >
         <Box flex={['1', '1', '1.6']} width="100%">
           <MultisigHero
@@ -124,9 +97,43 @@ export function AccountDetailPage() {
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
           <SectionLabel>Transactions</SectionLabel>
-          <ComingSoon>
-            Transactions will appear here once the activity feed is available.
-          </ComingSoon>
+          <styled.button
+            type="button"
+            onClick={() => setIsProposing(true)}
+            width="100%"
+            display="flex"
+            alignItems="center"
+            gap="space.03"
+            p="space.04"
+            mb="space.03"
+            borderRadius="md"
+            borderWidth="1px"
+            borderStyle="solid"
+            borderColor="ink.border-default"
+            bg="transparent"
+            cursor="pointer"
+            textAlign="left"
+            _hover={{ bg: 'ink.component-background-hover' }}
+          >
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              width="40px"
+              height="40px"
+              borderRadius="round"
+              bg="ink.text-primary"
+              flexShrink={0}
+            >
+              <PlusIcon variant="small" color="ink.background-primary" />
+            </Flex>
+            <Box>
+              <styled.div textStyle="label.02">Create transaction</styled.div>
+              <styled.div textStyle="caption.01" color="ink.text-subdued">
+                Propose a new {chainLabel} transfer for this account
+              </styled.div>
+            </Box>
+          </styled.button>
+          <AccountTransactions network={network} vaultId={vaultId} accountId={accountId} />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>
@@ -138,6 +145,12 @@ export function AccountDetailPage() {
           />
         </Box>
       </Flex>
-    </Page>
+      <ProposeTransactionModal
+        account={account.data}
+        memberCount={vault.data.members.length}
+        isShowing={isProposing}
+        onClose={() => setIsProposing(false)}
+      />
+    </MultisigPage>
   );
 }

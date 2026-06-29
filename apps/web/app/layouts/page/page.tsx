@@ -66,25 +66,28 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
 interface PageHeaderProps {
   title?: React.ReactNode;
   backTo?: string;
+  onBack?(): void;
   children?: React.ReactElement | React.ReactElement[];
 }
-function PageHeader({ title, backTo, children }: PageHeaderProps) {
+function PageHeader({ title, backTo, onBack, children }: PageHeaderProps) {
   const signInSlot = useSignInSlot();
+  const backButton = (
+    <Button variant="ghost" size="sm" iconStart={ArrowLeftIcon} width="32px" px="0" gap="0" />
+  );
   return (
     <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
         <Flex alignItems="center" gap="space.02" minWidth={0}>
-          {backTo && (
-            <RouterLink to={backTo} aria-label="Back">
-              <Button
-                variant="ghost"
-                size="sm"
-                iconStart={ArrowLeftIcon}
-                width="32px"
-                px="0"
-                gap="0"
-              />
-            </RouterLink>
+          {onBack ? (
+            <styled.button type="button" onClick={onBack} aria-label="Back" bg="transparent">
+              {backButton}
+            </styled.button>
+          ) : (
+            backTo && (
+              <RouterLink to={backTo} aria-label="Back">
+                {backButton}
+              </RouterLink>
+            )
           )}
           {title && <styled.h1 textStyle="heading.05">{title}</styled.h1>}
         </Flex>

@@ -7,6 +7,7 @@ import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leathe
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
+import { userAddsPolicy } from '../policy/policy.slice';
 import { AccountStatus, AccountStore } from './account-store.utils';
 
 export const accountsAdapter = createEntityAdapter<AccountStore, string>({
@@ -52,6 +53,12 @@ export const accountsSlice = createSlice({
 
       .addCase(userAddsAccount, (state, action) => {
         accountsAdapter.addOne(state, { id: action.payload.account.id });
+      })
+
+      .addCase(userAddsPolicy, (state, action) => {
+        const { policy, name } = action.payload;
+        const status: AccountStatus = 'active';
+        accountsAdapter.upsertOne(state, { id: policy.id, name, status });
       })
 
       // Removing a wallet cascades to all of its accounts and their metadata
