@@ -57,8 +57,13 @@ export const accountsSlice = createSlice({
 
       .addCase(userAddsPolicy, (state, action) => {
         const { policy, name } = action.payload;
-        const status: AccountStatus = 'active';
-        accountsAdapter.upsertOne(state, { id: policy.id, name, status });
+        const existing = state.entities[policy.id];
+        const status: AccountStatus = existing?.status ?? 'active';
+        accountsAdapter.upsertOne(state, {
+          id: policy.id,
+          name: existing?.name ?? name,
+          status,
+        });
       })
 
       .addCase(userRemovesPolicy, (state, action) => {

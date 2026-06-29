@@ -22,16 +22,27 @@ const selectCurrentPolicy = createSelector(
   (policies, activePolicyId) => (activePolicyId ? (policies[activePolicyId] ?? null) : null)
 );
 
-const selectPoliciesByParent = createSelector(
+export function filterPoliciesByParentAndNetwork(
+  policies: PolicyStore[],
+  parentAccountId: string,
+  networkId: string
+) {
+  return policies.filter(
+    policy =>
+      policy.parentAccountId === parentAccountId &&
+      policy.role === 'signer' &&
+      policy.networkId === networkId
+  );
+}
+
+const selectPoliciesByParentAndNetwork = createSelector(
   [
     selectAllPolicies,
     (_state: RootState, accountId: AccountId) =>
       makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex),
+    (_state: RootState, _accountId: AccountId, networkId: string) => networkId,
   ],
-  (policies, parentAccountId) =>
-    policies.filter(
-      policy => policy.parentAccountId === parentAccountId && policy.role === 'signer'
-    )
+  filterPoliciesByParentAndNetwork
 );
 
 export const selectPolicyNetworkIds = createSelector(selectAllPolicies, policies => {
@@ -42,8 +53,10 @@ export function useCurrentPolicy() {
   return useSelector(selectCurrentPolicy);
 }
 
-export function usePoliciesByParent(accountId: AccountId) {
-  return useSelector((state: RootState) => selectPoliciesByParent(state, accountId));
+export function usePoliciesByParentAndNetwork(accountId: AccountId, networkId: string) {
+  return useSelector((state: RootState) =>
+    selectPoliciesByParentAndNetwork(state, accountId, networkId)
+  );
 }
 
 export function usePolicyNetworkIds() {

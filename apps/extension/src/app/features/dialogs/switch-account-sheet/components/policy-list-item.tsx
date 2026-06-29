@@ -1,5 +1,6 @@
 import { memo, useMemo } from 'react';
 
+import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { styled } from 'leather-styles/jsx';
 
 import { Caption, SkeletonLoader, shimmerStyles } from '@leather.io/ui';
@@ -58,6 +59,7 @@ export function PolicyListItem({
   return (
     <AccountListItemLayout
       {...parent}
+      dataTestId={SettingsSelectors.SwitchAccountPolicyItem.replace('[id]', policy.id)}
       accountAddresses={<Caption>{truncateMiddle(policy.address, 5)}</Caption>}
       accountName={<AccountNameLayout>{displayName}</AccountNameLayout>}
       avatar={<AccountAvatarItem index={parent.accountIndex} publicKey={policy.address} />}

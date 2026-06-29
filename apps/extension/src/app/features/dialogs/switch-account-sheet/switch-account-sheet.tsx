@@ -19,8 +19,12 @@ import { useCurrentAccountId } from '@app/store/accounts/account';
 import { toggleHideAccount } from '@app/store/accounts/accounts.actions';
 import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
 import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { type PolicyStore } from '@app/store/policy/policy-store.utils';
-import { selectAllPolicies } from '@app/store/policy/policy.selectors';
+import {
+  filterPoliciesByParentAndNetwork,
+  selectAllPolicies,
+} from '@app/store/policy/policy.selectors';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';
 
 import { AddWalletMenu } from '../add-wallet-menu/add-wallet-menu';
@@ -64,6 +68,7 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
   const [removingPolicy, setRemovingPolicy] = useState<PolicyStore | null>(null);
 
   const allPolicies = useSelector(selectAllPolicies);
+  const network = useCurrentNetwork();
 
   const filteredWalletTree = useMemo(() => {
     if (isManageMode) return walletTree;
@@ -78,11 +83,9 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
   const getPolicies = useCallback(
     (acc: AccountId) => {
       const parentAccountId = makeAccountIdentifer(acc.fingerprint, acc.accountIndex);
-      return allPolicies.filter(
-        policy => policy.parentAccountId === parentAccountId && policy.role === 'signer'
-      );
+      return filterPoliciesByParentAndNetwork(allPolicies, parentAccountId, network.id);
     },
-    [allPolicies]
+    [allPolicies, network.id]
   );
 
   const walletRows = useMemo(

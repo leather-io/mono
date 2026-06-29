@@ -31,7 +31,7 @@ import {
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useAppPermissions } from '@app/store/app-permissions/app-permissions.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { usePoliciesByParent } from '@app/store/policy/policy.selectors';
+import { usePoliciesByParentAndNetwork } from '@app/store/policy/policy.selectors';
 
 // We reuse this flow for both of these requests, so here we make a union of two
 // possible requests
@@ -70,7 +70,8 @@ export function useGetAddresses() {
   const stacksAccount = useCurrentStacksAccount();
   const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
   const { releaseAddAccount } = useFlags();
-  const policies = usePoliciesByParent(useCurrentAccountId());
+  const network = useCurrentNetwork();
+  const policies = usePoliciesByParentAndNetwork(useCurrentAccountId(), network.id);
   const allowPolicyAccounts = Boolean(request.params?.allowPolicyAccounts) && releaseAddAccount;
 
   function focusInitiatingTab() {

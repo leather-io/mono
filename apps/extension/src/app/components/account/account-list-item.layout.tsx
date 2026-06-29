@@ -17,6 +17,7 @@ interface AccountListItemLayoutProps extends AccountId {
   isSelected: boolean;
   onSelectAccount(accountId: AccountId): void;
   showChevron?: boolean;
+  dataTestId?: string;
 }
 export function AccountListItemLayout(props: AccountListItemLayoutProps) {
   const {
@@ -31,6 +32,7 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
     isSelected,
     onSelectAccount,
     showChevron,
+    dataTestId,
   } = props;
 
   const isGreaterThanTinyWidth = useWindowMinWidth(320);
@@ -55,7 +57,9 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
 
   return (
     <Pressable
-      data-testid={SettingsSelectors.SwitchAccountItemIndex.replace('[index]', `${accountIndex}`)}
+      data-testid={
+        dataTestId ?? SettingsSelectors.SwitchAccountItemIndex.replace('[index]', `${accountIndex}`)
+      }
       key={`account-${accountIndex}`}
       aria-disabled={nonInteractive || undefined}
       onClick={nonInteractive ? undefined : () => onSelectAccount({ fingerprint, accountIndex })}

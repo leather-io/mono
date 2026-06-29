@@ -7,7 +7,13 @@ import { assumedZeroFingerprint } from '@shared/utils';
 
 import { makePolicyId } from '../policy/policy-store.utils';
 import { userAddsPolicy, userRemovesPolicy } from '../policy/policy.slice';
-import { accountsAdapter, accountsSlice, userClearsAccountName } from './accounts.slice';
+import {
+  accountsAdapter,
+  accountsSlice,
+  userClearsAccountName,
+  userRenamesAccount,
+  userTogglesHideAccount,
+} from './accounts.slice';
 
 const realFingerprint = 'abcd1234';
 const multisigAddress = 'bc1qexampleexampleexampleexampleexampleexamplexyz';
@@ -82,52 +88,70 @@ describe('accountsSlice', () => {
   });
 
   describe('userAddsPolicy', () => {
-    test('creates an account row carrying the policy name and active status', () => {
-      const parentAccountId = makeAccountIdentifer(realFingerprint, 0);
-      const networkId = 'mainnet';
-      const id = makePolicyId(parentAccountId, multisigAddress, networkId);
+    const parentAccountId = makeAccountIdentifer(realFingerprint, 0);
+    const networkId = 'mainnet';
+    const id = makePolicyId(parentAccountId, multisigAddress, networkId);
+    const policy = {
+      id,
+      parentAccountId,
+      networkId,
+      chain: 'bitcoin' as const,
+      address: multisigAddress,
+      descriptor: 'wsh(sortedmulti(2,xpubA/0/0,xpubB/0/0))',
+      role: 'signer' as const,
+    };
 
+    test('creates an account row carrying the policy name and active status', () => {
       const result = accountsSlice.reducer(
         accountsAdapter.getInitialState(),
-        userAddsPolicy({
-          policy: {
-            id,
-            parentAccountId,
-            networkId,
-            chain: 'bitcoin',
-            address: multisigAddress,
-            descriptor: 'wsh(sortedmulti(2,xpubA/0/0,xpubB/0/0))',
-            role: 'signer',
-          },
-          name: 'Family vault',
-        })
+        userAddsPolicy({ policy, name: 'Family vault' })
       );
 
       expect(result.entities[id]).toEqual({ id, name: 'Family vault', status: 'active' });
     });
 
-    test('re-adds idempotently, updating the name in place', () => {
-      const parentAccountId = makeAccountIdentifer(realFingerprint, 0);
-      const networkId = 'mainnet';
-      const id = makePolicyId(parentAccountId, multisigAddress, networkId);
-      const policy = {
-        id,
-        parentAccountId,
-        networkId,
-        chain: 'bitcoin' as const,
-        address: multisigAddress,
-        descriptor: 'wsh(sortedmulti(2,xpubA/0/0,xpubB/0/0))',
-        role: 'signer' as const,
-      };
+    test('re-adds idempotently, keeping a single row', () => {
+      let state = accountsSlice.reducer(
+        accountsAdapter.getInitialState(),
+        userAddsPolicy({ policy, name: 'Family vault' })
+      );
+      state = accountsSlice.reducer(state, userAddsPolicy({ policy, name: undefined }));
 
+      expect(state.ids).toEqual([id]);
+    });
+
+    test('preserves a user rename when the policy is re-registered without a name', () => {
+      let state = accountsSlice.reducer(
+        accountsAdapter.getInitialState(),
+        userAddsPolicy({ policy, name: 'Family vault' })
+      );
+      state = accountsSlice.reducer(state, userRenamesAccount({ accountId: id, name: 'My vault' }));
+      state = accountsSlice.reducer(state, userAddsPolicy({ policy, name: undefined }));
+
+      expect(state.entities[id]).toEqual({ id, name: 'My vault', status: 'active' });
+    });
+
+    test('does not overwrite an existing name when re-registered with a different name', () => {
       let state = accountsSlice.reducer(
         accountsAdapter.getInitialState(),
         userAddsPolicy({ policy, name: 'Family vault' })
       );
       state = accountsSlice.reducer(state, userAddsPolicy({ policy, name: 'Renamed vault' }));
 
-      expect(state.ids).toEqual([id]);
-      expect(state.entities[id]).toEqual({ id, name: 'Renamed vault', status: 'active' });
+      expect(state.entities[id]).toEqual({ id, name: 'Family vault', status: 'active' });
+    });
+
+    test('does not un-hide a hidden policy when re-registered', () => {
+      let state = accountsSlice.reducer(
+        accountsAdapter.getInitialState(),
+        userAddsPolicy({ policy, name: 'Family vault' })
+      );
+      state = accountsSlice.reducer(state, userTogglesHideAccount({ accountId: id }));
+      expect(state.entities[id]?.status).toBe('hidden');
+
+      state = accountsSlice.reducer(state, userAddsPolicy({ policy, name: undefined }));
+
+      expect(state.entities[id]).toEqual({ id, name: 'Family vault', status: 'hidden' });
     });
   });
 
