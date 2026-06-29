@@ -22,9 +22,12 @@ export function ReceiveBtcModal({ type = 'btc', onClose }: ReceiveBtcModalProps)
   const nativeSegwitAddress = useNativeSegwitAccountIndexAddressIndexZero(currentAccount);
   const taprootAddress = useZeroIndexTaprootAddress(currentAccount);
 
-  const singleSigAddress = type === 'btc-taproot' ? taprootAddress : nativeSegwitAddress;
+  const singleSigBtcAddress = type === 'btc-taproot' ? taprootAddress : nativeSegwitAddress;
+  const singleSigAddress = policy ? undefined : singleSigBtcAddress;
   const address = policy?.chain === 'bitcoin' ? policy.address : singleSigAddress;
   const title = type === 'btc-taproot' ? 'BTC TAPROOT' : 'BTC';
+
+  if (!address) return null;
 
   return (
     <ReceiveTokensLayout

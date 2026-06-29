@@ -20,7 +20,8 @@ export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
   const { data: accountName = 'Account' } = useCurrentAccountDisplayName();
   const policyName = usePolicyDisplayName(policy);
 
-  const address = policy?.chain === 'stacks' ? policy.address : currentAccount?.address;
+  const singleSigAddress = policy ? undefined : currentAccount?.address;
+  const address = policy?.chain === 'stacks' ? policy.address : singleSigAddress;
   if (!address) return null;
 
   return (

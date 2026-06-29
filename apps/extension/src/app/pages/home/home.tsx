@@ -18,6 +18,7 @@ import { useAccountCollectibles } from '@app/query/collectibles/account-collecti
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
 import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { AccountActions } from './components/account-actions-current/account-actions';
 import { AccountCard } from './components/account-card';
@@ -38,6 +39,7 @@ interface HomeProps {
 export function Home({ isBackground }: HomeProps) {
   const { activityRevamp } = useFlags();
   const account = useCurrentAccountAddresses();
+  const policy = useCurrentPolicy();
   useAccountCollectibles(account);
 
   const shouldAnimate = !isBackground && !animationState.hasPlayed;
@@ -63,7 +65,7 @@ export function Home({ isBackground }: HomeProps) {
         <MultiWalletIntroducer />
       </Flex>
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
-      <HomeTabs>
+      <HomeTabs showCollectibles={policy?.chain !== 'bitcoin'}>
         <ModalBackgroundWrapper>
           <Route index element={<Tokens />} />
           <Route
