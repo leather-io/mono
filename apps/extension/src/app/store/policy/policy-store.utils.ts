@@ -15,12 +15,12 @@ interface BasePolicyStore {
   role: PolicyRole;
 }
 
-export interface BitcoinPolicyStore extends BasePolicyStore {
+interface BitcoinPolicyStore extends BasePolicyStore {
   chain: 'bitcoin';
   descriptor: string;
 }
 
-export interface StacksPolicyStore extends BasePolicyStore {
+interface StacksPolicyStore extends BasePolicyStore {
   chain: 'stacks';
   publicKeys: string[];
   threshold: number;

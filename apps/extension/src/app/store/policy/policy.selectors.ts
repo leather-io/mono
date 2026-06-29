@@ -16,13 +16,13 @@ const selectors = policyAdapter.getSelectors((state: RootState) => state.policy)
 
 export const selectAllPolicies = selectors.selectAll;
 
-export const selectCurrentPolicy = createSelector(
+const selectCurrentPolicy = createSelector(
   selectors.selectEntities,
   selectActivePolicyId,
   (policies, activePolicyId) => (activePolicyId ? (policies[activePolicyId] ?? null) : null)
 );
 
-export const selectPoliciesByParent = createSelector(
+const selectPoliciesByParent = createSelector(
   [
     selectAllPolicies,
     (_state: RootState, accountId: AccountId) =>

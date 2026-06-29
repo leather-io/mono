@@ -26,6 +26,7 @@ export function getTestSoftwareAccountDefaultWalletState() {
         fingerprint: testFingerprint,
         accountIndex: 0,
       },
+      activePolicyId: null,
     },
     chains: {
       stx: {
