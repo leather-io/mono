@@ -15,8 +15,9 @@ const btcAddAccountRequestParamsSchema = z.object({
 const btcAddAccountResponseBodySchema = z.object({
   address: z.string(),
   descriptor: z.string(),
-  accountId: z.string(),
+  accountId: z.string().optional(),
   role: policyRoleSchema,
+  added: z.boolean(),
 });
 
 export const btcAddAccount = defineRpcEndpoint({

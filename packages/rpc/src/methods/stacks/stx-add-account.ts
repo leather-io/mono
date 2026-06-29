@@ -24,7 +24,8 @@ const stxAddAccountResponseBodySchema = z.object({
   publicKeys: z.array(z.string()),
   threshold: z.number(),
   role: policyRoleSchema,
-  accountId: z.string(),
+  accountId: z.string().optional(),
+  added: z.boolean(),
 });
 
 export const stxAddAccount = defineRpcEndpoint({

@@ -8,10 +8,6 @@ import {
 import { logger } from '@shared/logger';
 
 import { methodsRequiringConnectedWallet } from './methods-requiring-connected-wallet';
-import {
-  isOriginAllowedForRestrictedMethod,
-  methodsRestrictedToOrigin,
-} from './methods-restricted-to-origin';
 import { btcAddAccountHandler } from './rpc-methods/btc-add-account';
 import { getAddressesHandler, stxGetAddressesHandler } from './rpc-methods/get-addresses';
 import { openHandler } from './rpc-methods/open';
@@ -32,7 +28,6 @@ import { stxTransferSip10FtHandler } from './rpc-methods/stx-transfer-sip10-ft';
 import { stxTransferStxHandler } from './rpc-methods/stx-transfer-stx';
 import { supportedMethodsHandler } from './rpc-methods/supported-methods';
 import {
-  getOriginFromPort,
   getTabIdFromPort,
   listenForOriginTabClose,
   validateConnectedWalletExists,
@@ -71,23 +66,6 @@ export async function rpcMessageHandler(request: RpcRequests, port: chrome.runti
   const handler = rpcHandlers[request.method] as RpcHandler<any>;
 
   if (handler) {
-    if (
-      methodsRestrictedToOrigin.has(request.method) &&
-      !isOriginAllowedForRestrictedMethod(getOriginFromPort(port))
-    ) {
-      void chrome.tabs.sendMessage(
-        getTabIdFromPort(port),
-        createRpcErrorResponse(request.method, {
-          id: request.id,
-          error: {
-            code: RpcErrorCode.PERMISSION_DENIED,
-            message: `"${request.method}" is not available to this origin`,
-          },
-        })
-      );
-      return;
-    }
-
     if (methodsRequiringConnectedWallet.has(request.method)) {
       const { status } = await validateConnectedWalletExists(request, port);
       if (status === 'failure') return;
