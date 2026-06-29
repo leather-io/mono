@@ -23,6 +23,7 @@ import {
 } from '@leather.io/ui';
 
 import { NavItem } from './nav-item.layout';
+import { NetworkSwitcher } from './network-switcher';
 
 function LeatherLogoHomeLink(props: HTMLStyledProps<'a'>) {
   return (
@@ -84,6 +85,7 @@ function NavContents() {
       )}
 
       <styled.div mt="auto" mb={[null, null, 'space.06']}>
+        <NetworkSwitcher />
         <NavItem href="/changelog" icon={<ChangelogIcon variant="small" />}>
           Changelog
         </NavItem>

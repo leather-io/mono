@@ -1,6 +1,7 @@
 import { Navigate, Outlet, data, useLocation } from 'react-router';
 
 import { Box } from 'leather-styles/jsx';
+import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useSessionBootstrap } from '~/features/multisig/auth/use-session-bootstrap';
 import { SignInSlotProvider } from '~/layouts/page/sign-in-slot';
@@ -23,8 +24,9 @@ export function loader() {
 export default function MultisigLayout() {
   useSessionBootstrap();
   const location = useLocation();
-  const btcSession = useSession('btc:mainnet');
-  const stxSession = useSession('stx:mainnet');
+  const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
 
   if (!btcSession && !stxSession && location.pathname !== multisigPaths.onboarding) {
     return <Navigate to={multisigPaths.onboarding} replace />;

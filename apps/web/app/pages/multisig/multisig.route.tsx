@@ -1,6 +1,7 @@
 import { type MetaDescriptor, Navigate, useSearchParams } from 'react-router';
 
 import { WhenClient } from '~/components/when-client';
+import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 
 import { MultisigDashboardPage, MultisigDashboardSkeleton } from './dashboard/dashboard.page';
@@ -14,8 +15,9 @@ export function meta() {
 }
 
 function MultisigIndex() {
-  const btcSession = useSession('btc:mainnet');
-  const stxSession = useSession('stx:mainnet');
+  const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
   const [searchParams] = useSearchParams();
 
   if (!btcSession && !stxSession) {
