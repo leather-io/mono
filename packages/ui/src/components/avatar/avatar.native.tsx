@@ -9,7 +9,13 @@ import { IconProps } from '../../icons/icon/create-icon.native';
 import { Theme } from '../../theme-native';
 import { Box, BoxProps } from '../box/box.native';
 import { Text } from '../text/text.native';
-import { AvatarSize, AvatarVariant, defaultFallbackDelay, iconSizeMap } from './avatar.shared';
+import {
+  AvatarSize,
+  AvatarVariant,
+  badgeSizeMap,
+  defaultFallbackDelay,
+  iconSizeMap,
+} from './avatar.shared';
 
 type ImageLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
@@ -116,10 +122,10 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
           bg="ink.background-primary"
           borderRadius="round"
           position="absolute"
-          bottom={-2}
-          right={-2}
-          width={20}
-          height={20}
+          bottom={badgeSizeMap[size].offset}
+          right={badgeSizeMap[size].offset}
+          width={badgeSizeMap[size].size}
+          height={badgeSizeMap[size].size}
           alignItems="center"
           justifyContent="center"
           overflow="hidden"

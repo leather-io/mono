@@ -1,6 +1,7 @@
 import { Box, styled } from 'leather-styles/jsx';
 
 import type { MultisigTransactionSummary } from '@leather.io/models';
+import { ListContainer } from '@leather.io/ui';
 
 import { TransactionRow, type TransactionRowScale } from './transaction-row';
 import { isTransactionProcessed, transactionNeedsSignatures } from './transaction-status';
@@ -8,14 +9,6 @@ import { isTransactionProcessed, transactionNeedsSignatures } from './transactio
 // How many processed transactions the history group shows before a dedicated
 // full-history view would be needed.
 const historyLimit = 5;
-
-// The same orange "needs attention" wash used on invited vault cards, reused
-// here for transactions still waiting on signatures since the row is itself the
-// click target and can't carry an inline action button.
-const actionGradient =
-  'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.16), rgb(from token(colors.orange.action-primary-default) r g b / 0) 70%)';
-const actionGradientHover =
-  'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.28), rgb(from token(colors.orange.action-primary-default) r g b / 0) 80%)';
 
 export interface TransactionListItem {
   transaction: MultisigTransactionSummary;
@@ -66,60 +59,37 @@ export function TransactionList({ items, scale, onSelect }: TransactionListProps
   inProgress.sort(byNewest);
   history.sort(byNewest);
 
-  function renderRow(item: TransactionListItem, needsAction: boolean) {
+  function renderRow(item: TransactionListItem, needsAttention: boolean) {
     return (
-      <styled.button
+      <TransactionRow
         key={item.transaction.id}
-        type="button"
+        transaction={item.transaction}
+        subtitle={item.subtitle}
+        threshold={item.threshold}
+        scale={scale}
+        needsAttention={needsAttention}
         onClick={() => onSelect(item.vaultId, item.transaction.id)}
-        display="block"
-        width="100%"
-        textAlign="left"
-        cursor="pointer"
-        border="none"
-        bg="transparent"
-        borderRadius="sm"
-        px="space.03"
-        py={scale === 'compact' ? 'space.02' : 'space.03'}
-        bgImage={needsAction ? actionGradient : undefined}
-        _hover={
-          needsAction ? { bgImage: actionGradientHover } : { bg: 'ink.component-background-hover' }
-        }
-      >
-        <TransactionRow
-          transaction={item.transaction}
-          subtitle={item.subtitle}
-          threshold={item.threshold}
-          scale={scale}
-        />
-      </styled.button>
+      />
     );
   }
 
-  function renderGroup(label: string, group: TransactionListItem[], needsAction = false) {
+  function renderGroup(label: string, group: TransactionListItem[], needsAttention = false) {
     if (group.length === 0) return null;
     return (
       <Box>
         <GroupLabel>{label}</GroupLabel>
         <Box display="flex" flexDirection="column" gap="space.01">
-          {group.map(item => renderRow(item, needsAction))}
+          {group.map(item => renderRow(item, needsAttention))}
         </Box>
       </Box>
     );
   }
 
   return (
-    <Box
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor="ink.border-default"
-      borderRadius="md"
-      bg="ink.background-primary"
-      p="space.02"
-    >
+    <ListContainer>
       {renderGroup('Needs signatures', needsSignatures, true)}
       {renderGroup('In progress', inProgress)}
       {renderGroup('History', history.slice(0, historyLimit))}
-    </Box>
+    </ListContainer>
   );
 }

@@ -4,13 +4,12 @@ import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 
 import type { MultisigTransactionSummary } from '@leather.io/models';
-import { FailedIcon, SentIcon } from '@leather.io/ui';
+import { FailedIcon, ListItemBox, SentIcon } from '@leather.io/ui';
 
 import { chainFromNetwork } from '../multisig.utils';
 import { formatRelativeTime } from '../tx/relative-time';
 import { ChainAvatar } from './chain-avatar';
 import { transactionStatusIndicator, transactionStatusLabel } from './transaction-status';
-import { VaultListItem } from './vault-list-item';
 
 export type TransactionRowScale = 'regular' | 'compact';
 
@@ -23,6 +22,8 @@ interface TransactionRowProps {
   // 'regular' for a main column, 'compact' for the narrower sidebar variant —
   // steps avatar, status icon, title type and leading down a notch.
   scale?: TransactionRowScale;
+  needsAttention?: boolean;
+  onClick?(): void;
 }
 
 const spinnerClass = css({ animation: 'spin', transformOrigin: 'center' });
@@ -59,20 +60,22 @@ function renderIndicator(status: MultisigTransactionSummary['status'], size: num
 }
 
 const scaleConfig = {
-  regular: { avatarSize: 'lg', indicator: 16, title: 'label.02', tight: false },
-  compact: { avatarSize: 'md', indicator: 16, title: 'label.03', tight: true },
+  regular: { avatarSize: 'lg', indicator: 16, title: 'label.02' },
+  compact: { avatarSize: 'md', indicator: 12, title: 'label.03' },
 } as const;
 
 // A single transaction in a feed. Status never sits inline with the title (it
 // crowded out long titles and won't survive a narrow sidebar): it reads as a
 // plain sentence on the second line, in-flight state shows in the avatar
-// sub-icon, and confirmed history stays quiet. Click handling lives on the
-// wrapping button supplied by the list, so this stays presentational.
+// sub-icon, and confirmed history stays quiet. The row is a ListItemBox, which
+// carries the click target and the orange attention wash.
 export function TransactionRow({
   transaction,
   subtitle,
   threshold,
   scale = 'regular',
+  needsAttention,
+  onClick,
 }: TransactionRowProps) {
   const cfg = scaleConfig[scale];
   const chain = chainFromNetwork(transaction.network);
@@ -100,8 +103,10 @@ export function TransactionRow({
   }
 
   return (
-    <VaultListItem
-      tightLeading={cfg.tight}
+    <ListItemBox
+      density={scale === 'compact' ? 'compact' : 'default'}
+      highlight={needsAttention ? 'attention' : undefined}
+      onClick={onClick}
       leading={<ChainAvatar chain={chain} size={cfg.avatarSize} indicator={indicator} />}
       title={
         <styled.span
