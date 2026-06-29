@@ -165,15 +165,15 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
   };
 }
 
-const opPushNumberOne = 0x50;
+const opReserved = 0x50;
 const maxMultisigOpcode = 0x60;
 
 export function getWshDescriptorThreshold(descriptor: string, index = 0): number {
   const { witnessScript } = compileWshDescriptor(descriptor, index);
   const opcode = witnessScript[0];
-  if (opcode === undefined || opcode <= opPushNumberOne || opcode > maxMultisigOpcode)
+  if (opcode === undefined || opcode <= opReserved || opcode > maxMultisigOpcode)
     throw new Error('Descriptor witness script does not start with a multisig threshold opcode');
-  return opcode - opPushNumberOne;
+  return opcode - opReserved;
 }
 
 // Derives the P2WSH (bech32) receive address a `wsh(...)` descriptor locks to.

@@ -16,7 +16,11 @@ import { type PolicyStore, parsePolicyParent } from '@app/store/policy/policy-st
 import { usePolicyDisplayName } from '@app/store/policy/policy.selectors';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
-const PolicyTotalBalance = memo(function PolicyTotalBalance({ policy }: { policy: PolicyStore }) {
+interface PolicyTotalBalanceProps {
+  policy: PolicyStore;
+}
+
+const PolicyTotalBalance = memo(function PolicyTotalBalance({ policy }: PolicyTotalBalanceProps) {
   const account = useMemo(() => createPolicyAddresses(policy), [policy]);
   const { data: totalBalance, isLoading } = useAccountTotalBalanceByAddressesQuery(account);
 

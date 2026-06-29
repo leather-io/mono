@@ -18,6 +18,8 @@ export function RenamePolicyDialog({ policy, isShowing, onClose }: RenamePolicyD
     <RenameEntityDialog
       id={policy.id}
       currentName={currentName}
+      title="Rename multisig"
+      nameLabel="Multisig name"
       inputTestId={SwitchAccountSelectors.RenamePolicyInput}
       saveTestId={SwitchAccountSelectors.RenamePolicySaveBtn}
       isShowing={isShowing}

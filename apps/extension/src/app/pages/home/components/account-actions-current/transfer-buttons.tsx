@@ -43,6 +43,18 @@ export function TransferButtons() {
     setIsDrawerOpen(false);
   }
 
+  if (policy) {
+    return (
+      <ActionButton
+        data-testid={HomePageSelectors.ReceiveCryptoAssetBtn}
+        onClick={onReceive}
+        variant="outline"
+      >
+        Receive
+      </ActionButton>
+    );
+  }
+
   if (isAtLeastMd) {
     return (
       <>

@@ -13,6 +13,8 @@ import { clearAccountName, renameAccount } from '@app/store/accounts/accounts.ac
 interface RenameEntityDialogProps {
   id: string;
   currentName: string;
+  title: string;
+  nameLabel: string;
   inputTestId: SwitchAccountSelectors;
   saveTestId: SwitchAccountSelectors;
   isShowing: boolean;
@@ -22,6 +24,8 @@ interface RenameEntityDialogProps {
 export function RenameEntityDialog({
   id,
   currentName,
+  title,
+  nameLabel,
   inputTestId,
   saveTestId,
   isShowing,
@@ -47,7 +51,7 @@ export function RenameEntityDialog({
 
   return (
     <Sheet
-      header={<SheetHeader title="Rename account" />}
+      header={<SheetHeader title={title} />}
       isShowing={isShowing}
       onClose={onClose}
       footer={
@@ -63,7 +67,7 @@ export function RenameEntityDialog({
     >
       <Stack gap="space.05" px="space.05" pt="space.05" pb="space.05">
         <Input.Root>
-          <Input.Label>Account name</Input.Label>
+          <Input.Label>{nameLabel}</Input.Label>
           <Input.Field
             autoFocus
             data-testid={inputTestId}

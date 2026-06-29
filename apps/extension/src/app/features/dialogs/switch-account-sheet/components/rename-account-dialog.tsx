@@ -26,6 +26,8 @@ export function RenameAccountDialog({ accountId, isShowing, onClose }: RenameAcc
     <RenameEntityDialog
       id={makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex)}
       currentName={resolvedName ?? ''}
+      title="Rename account"
+      nameLabel="Account name"
       inputTestId={SwitchAccountSelectors.RenameAccountInput}
       saveTestId={SwitchAccountSelectors.RenameAccountSaveBtn}
       isShowing={isShowing}

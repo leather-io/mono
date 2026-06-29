@@ -6,6 +6,7 @@ import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/walle
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
+import { networksSlice } from '../networks/networks.slice';
 import { userRemovesPolicy } from '../policy/policy.slice';
 
 export const userSwitchesAccount = createAction<AccountId | null>('active/userSwitchesAccount');
@@ -38,6 +39,9 @@ export const activeSlice = createSlice({
       .addCase(userSwitchesToPolicy, (state, action) => {
         state.account = action.payload.parent;
         state.activePolicyId = action.payload.policyId;
+      })
+      .addCase(networksSlice.actions.changeNetwork, state => {
+        state.activePolicyId = null;
       })
       .addCase(walletKeyGenerated, (state, action) => {
         state.account = {
