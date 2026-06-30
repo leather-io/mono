@@ -70,7 +70,7 @@ export function Home({ isBackground }: HomeProps) {
           <Route index element={<Tokens />} />
           <Route
             path={RouteUrls.Activity}
-            element={activityRevamp ? <ActivityList /> : <ActivityListLegacy />}
+            element={activityRevamp || policy ? <ActivityList /> : <ActivityListLegacy />}
           />
           <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
           {homePageModalRoutes}

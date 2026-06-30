@@ -6,6 +6,7 @@ import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { BtcAssetItemBalanceLoaderByAddresses } from '@app/components/loaders/btc-balance-loader';
 import { StxAssetItemBalanceLoaderByAddresses } from '@app/components/loaders/stx-balance-loader';
+import { Sip10TokenAssetListByAddresses } from '@app/features/asset-list/stacks/sip10-token-list/sip10-token-list-by-addresses';
 import { StxCryptoAssetItem } from '@app/features/asset-list/stacks/stx-crypo-asset-item/stx-crypto-asset-item';
 import { createPolicyAddresses } from '@app/store/policy/policy-addresses';
 import { type PolicyStore } from '@app/store/policy/policy-store.utils';
@@ -43,17 +44,20 @@ export function PolicyTokenList({
         </BtcAssetItemBalanceLoaderByAddresses>
       )}
       {policy.chain === 'stacks' && (
-        <StxAssetItemBalanceLoaderByAddresses account={account}>
-          {(balance, isLoading) => (
-            <StxCryptoAssetItem
-              balance={balance}
-              isLoading={isLoading}
-              isPrivate={isPrivate}
-              onSelectAsset={onSelectAsset}
-              showDepositButtons={showDepositButtons}
-            />
-          )}
-        </StxAssetItemBalanceLoaderByAddresses>
+        <>
+          <StxAssetItemBalanceLoaderByAddresses account={account}>
+            {(balance, isLoading) => (
+              <StxCryptoAssetItem
+                balance={balance}
+                isLoading={isLoading}
+                isPrivate={isPrivate}
+                onSelectAsset={onSelectAsset}
+                showDepositButtons={showDepositButtons}
+              />
+            )}
+          </StxAssetItemBalanceLoaderByAddresses>
+          <Sip10TokenAssetListByAddresses account={account} onSelectAsset={onSelectAsset} />
+        </>
       )}
     </Stack>
   );
