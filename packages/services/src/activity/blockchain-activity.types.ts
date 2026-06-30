@@ -1,35 +1,15 @@
-import type {
-  AccountAddresses,
-  BlockchainActivity,
-  CryptoAsset,
-  CryptoAssetChain,
-  StacksProtocolId,
-} from '@leather.io/models';
+import type { AccountAddresses, BlockchainActivity } from '@leather.io/models';
 
-interface ActivityFilter {
-  asset?: CryptoAsset;
-  protocol?: StacksProtocolId;
-  chain?: CryptoAssetChain;
-}
-
-interface ActivityPagination {
-  limit: number;
-  offset: number;
-}
+import type { ActivitySourceCursor } from './activity-paginator';
 
 export interface ActivityRequest {
   account: AccountAddresses;
-  filter?: ActivityFilter;
-  pagination?: ActivityPagination;
-}
-
-export interface ActivityMeta {
-  total: number;
-  limit: number;
-  offset: number;
+  cursor?: ActivitySourceCursor;
+  limit?: number;
 }
 
 export interface ActivityResponse {
   items: BlockchainActivity[];
-  meta: ActivityMeta;
+  nextCursor: ActivitySourceCursor | null;
+  hasMore: boolean;
 }

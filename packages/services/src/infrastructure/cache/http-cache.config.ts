@@ -18,6 +18,8 @@ export type HttpCacheKey =
   | 'hiro-stacks-get-address-stx-balance'
   | 'hiro-stacks-get-address-ft-balances'
   | 'hiro-stacks-get-address-transactions'
+  | 'hiro-stacks-get-principal-transactions'
+  | 'hiro-stacks-get-principal-balance-changes'
   | 'hiro-stacks-get-transaction-events'
   | 'hiro-stacks-get-address-mempool-transactions'
   | 'hiro-stacks-get-transaction-by-id'
@@ -104,6 +106,8 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'hiro-stacks-get-address-stx-balance': { ttl: secondsInMs(10) },
   'hiro-stacks-get-address-ft-balances': { ttl: secondsInMs(10) },
   'hiro-stacks-get-address-transactions': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-principal-transactions': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-principal-balance-changes': { ttl: secondsInMs(10) },
   'hiro-stacks-get-transaction-events': { ttl: secondsInMs(10) },
   'hiro-stacks-get-address-mempool-transactions': { ttl: secondsInMs(10) },
   'hiro-stacks-get-transaction-by-id': { ttl: secondsInMs(10) },

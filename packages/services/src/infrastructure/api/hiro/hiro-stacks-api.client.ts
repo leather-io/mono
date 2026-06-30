@@ -24,10 +24,12 @@ import {
   HiroAddressStxBalanceResponse,
   HiroAddressTransaction,
   HiroAddressTransactionsResponse,
+  HiroBalanceChangesResponse,
   HiroMempoolTransactionListResponse,
   HiroMetadata,
   HiroNftHolding,
   HiroPageRequest,
+  HiroPrincipalTransactionsResponse,
   HiroReadOnlyFunctionResponse,
   HiroServerStatusResponse,
   HiroStacksMempoolTransaction,
@@ -37,6 +39,8 @@ import {
   HiroTransactionFeeEstimateResponse,
 } from './hiro-stacks-api.types';
 import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
+
+const balanceChangesResultLimit = 50;
 
 @injectable()
 export class HiroStacksApiClient {
@@ -116,6 +120,83 @@ export class HiroStacksApiClient {
           [
             'hiro-stacks-get-address-stx-balance',
             address,
+            selectStacksChainId(this.settings.getSettings()),
+          ],
+          fetchFn
+        );
+  }
+
+  public async getPrincipalTransactions(
+    principal: string,
+    { cursor, limit = DEFAULT_LIST_LIMIT }: { cursor?: string | null; limit?: number } = {},
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<HiroPrincipalTransactionsResponse> {
+    const fetchFn = async () => {
+      const params = new URLSearchParams({ limit: String(limit) });
+      if (cursor) params.set('cursor', cursor);
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroPrincipalTransactionsResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/principals/${principal}/transactions?${params.toString()}`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getAccountTransactions,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          [
+            'hiro-stacks-get-principal-transactions',
+            principal,
+            cursor ?? 'start',
+            limit,
+            selectStacksChainId(this.settings.getSettings()),
+          ],
+          fetchFn
+        );
+  }
+
+  public async getPrincipalBalanceChanges(
+    principal: string,
+    { txIds, cursor }: { txIds: string[]; cursor?: string | null },
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<HiroBalanceChangesResponse> {
+    const fetchFn = async () => {
+      const params = new URLSearchParams({
+        tx_id: txIds.join(','),
+        limit: String(balanceChangesResultLimit),
+      });
+      if (cursor) params.set('cursor', cursor);
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroBalanceChangesResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/principals/${principal}/balance-changes?${params.toString()}`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getAccountTransactions,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          [
+            'hiro-stacks-get-principal-balance-changes',
+            principal,
+            txIds.join(','),
+            cursor ?? 'start',
             selectStacksChainId(this.settings.getSettings()),
           ],
           fetchFn
