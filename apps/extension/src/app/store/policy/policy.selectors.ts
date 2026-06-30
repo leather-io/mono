@@ -2,9 +2,6 @@ import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import { makeAccountIdentifer } from '@leather.io/crypto';
-import type { AccountId } from '@leather.io/models';
-
 import { RootState } from '@app/store';
 
 import { useNameOverrideById } from '../accounts/accounts.selectors';
@@ -35,28 +32,12 @@ export function filterPoliciesByParentAndNetwork(
   );
 }
 
-const selectPoliciesByParentAndNetwork = createSelector(
-  [
-    selectAllPolicies,
-    (_state: RootState, accountId: AccountId) =>
-      makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex),
-    (_state: RootState, _accountId: AccountId, networkId: string) => networkId,
-  ],
-  filterPoliciesByParentAndNetwork
-);
-
 export const selectPolicyNetworkIds = createSelector(selectAllPolicies, policies => {
   return new Set(policies.map(policy => policy.networkId));
 });
 
 export function useCurrentPolicy() {
   return useSelector(selectCurrentPolicy);
-}
-
-export function usePoliciesByParentAndNetwork(accountId: AccountId, networkId: string) {
-  return useSelector((state: RootState) =>
-    selectPoliciesByParentAndNetwork(state, accountId, networkId)
-  );
 }
 
 export function usePolicyNetworkIds() {

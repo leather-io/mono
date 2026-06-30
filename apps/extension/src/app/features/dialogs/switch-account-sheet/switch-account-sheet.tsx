@@ -44,6 +44,7 @@ import { useAddWalletNavigation } from './use-add-wallet-navigation';
 interface SwitchAccountSheetProps {
   isShowing: boolean;
   onClose(): void;
+  allowPolicyAccounts?: boolean;
 }
 
 interface RenamingWallet {
@@ -51,7 +52,11 @@ interface RenamingWallet {
   name: string;
 }
 
-export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetProps) {
+export function SwitchAccountSheet({
+  isShowing,
+  onClose,
+  allowPolicyAccounts = true,
+}: SwitchAccountSheetProps) {
   const currentAccountId = useCurrentAccountId();
   const createAccount = useCreateAccount();
   const dispatch = useAppDispatch();
@@ -82,10 +87,11 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
 
   const getPolicies = useCallback(
     (acc: AccountId) => {
+      if (!allowPolicyAccounts) return [];
       const parentAccountId = makeAccountIdentifer(acc.fingerprint, acc.accountIndex);
       return filterPoliciesByParentAndNetwork(allPolicies, parentAccountId, network.id);
     },
-    [allPolicies, network.id]
+    [allPolicies, network.id, allowPolicyAccounts]
   );
 
   const walletRows = useMemo(
