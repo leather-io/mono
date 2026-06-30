@@ -1,4 +1,14 @@
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, onlineManager } from '@tanstack/react-query';
+
+import { getLeatherMockMode } from './environment';
+
+const mockMode = getLeatherMockMode();
+const networkMode: 'always' | undefined = mockMode ? 'always' : undefined;
+
+if (mockMode) {
+  onlineManager.setEventListener(() => () => undefined);
+  onlineManager.setOnline(true);
+}
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -8,6 +18,7 @@ export const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       refetchInterval: false,
+      networkMode,
     },
   },
 });

@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
+import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
@@ -30,22 +31,23 @@ export function AccountDetailPage() {
   const [isProposing, setIsProposing] = useState(false);
   useEffect(() => setHydrated(true), []);
 
-  const btcVaults = useVaults('btc:mainnet');
-  const stxVaults = useVaults('stx:mainnet');
+  const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
+  const btcVaults = useVaults(btcNetwork);
+  const stxVaults = useVaults(stxNetwork);
   const inBtc = btcVaults.data?.some(summary => summary.id === vaultId) ?? false;
   const inStx = stxVaults.data?.some(summary => summary.id === vaultId) ?? false;
   const vaultNetworkKnown = inBtc || inStx;
-  const network: AuthNetworkId = inStx ? 'stx:mainnet' : 'btc:mainnet';
+  const network: AuthNetworkId = inStx ? stxNetwork : btcNetwork;
 
   const vault = useVault(network, vaultNetworkKnown ? vaultId : undefined);
   const account = useVaultAccount(network, vaultNetworkKnown ? accountId : undefined);
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accountBalance = useVaultAccountBalance(account.data);
 
-  const btcSession = useSession('btc:mainnet');
-  const stxSession = useSession('stx:mainnet');
-  const restoringBtc = useIsRestoringSession('btc:mainnet');
-  const restoringStx = useIsRestoringSession('stx:mainnet');
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
+  const restoringBtc = useIsRestoringSession(btcNetwork);
+  const restoringStx = useIsRestoringSession(stxNetwork);
   const sessionsRestoring = restoringBtc || restoringStx;
   const listsSettled = (!btcSession || btcVaults.isSuccess) && (!stxSession || stxVaults.isSuccess);
   const detailResolving = vaultNetworkKnown && !(vault.isSuccess && account.isSuccess);
