@@ -108,7 +108,13 @@ export function AccountDetailsCard({
       </CardRow>
 
       <CardRow>
-        <Button variant="solid" fullWidth onClick={onAddToWallet} aria-busy={isAddingToWallet}>
+        <Button
+          variant="solid"
+          fullWidth
+          onClick={onAddToWallet}
+          aria-busy={isAddingToWallet}
+          disabled={isAddingToWallet}
+        >
           <Flex alignItems="center" gap="space.02">
             <PlusIcon variant="small" color="ink.background-primary" />
             Add to wallet

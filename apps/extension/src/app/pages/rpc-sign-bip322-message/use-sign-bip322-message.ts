@@ -37,7 +37,6 @@ function useRpcSignBitcoinMessage() {
       ...defaultParams,
       requestId: initialSearchParams.get('requestId') ?? '',
       message: initialSearchParams.get('message') ?? '',
-      networkMode: initialSearchParams.get('network') ?? 'mainnet',
       paymentType: (initialSearchParams.get('paymentType') ?? 'p2wpkh') as Extract<
         'p2tr' | 'p2wpkh',
         PaymentTypes
@@ -56,11 +55,12 @@ interface SignBip322MessageFactoryArgs {
 }
 function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFactoryArgs) {
   const network = useCurrentNetwork();
+  const networkMode = network.chain.bitcoin.mode;
 
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
-  const { tabId, origin, requestId, message, networkMode } = useRpcSignBitcoinMessage();
+  const { tabId, origin, requestId, message } = useRpcSignBitcoinMessage();
 
   return {
     origin,
@@ -95,7 +95,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
         message,
         address,
         signPsbt,
-        network: network.chain.bitcoin.mode,
+        network: networkMode,
       });
 
       await shortPauseBeforeToast();
