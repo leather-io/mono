@@ -18,6 +18,9 @@ Sentry.init({
 async function enableApiMocking() {
   if (!getLeatherMockMode()) return;
 
+  const { seedMultisigMockSessions } = await import('./mocks/multisig-session-seed');
+  seedMultisigMockSessions();
+
   const { worker } = await import('./mocks/api/browser');
 
   type BypassCheck = (url: URL) => boolean;
