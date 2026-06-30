@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import {
@@ -153,12 +154,13 @@ function ConnectChainPrompt({
 export function MultisigDashboardPage() {
   const navigate = useNavigate();
   const [inviteVault, setInviteVault] = useState<VaultSummary | null>(null);
-  const btcVaults = useVaults('btc:mainnet');
-  const stxVaults = useVaults('stx:mainnet');
-  const btcSession = useSession('btc:mainnet');
-  const stxSession = useSession('stx:mainnet');
-  const btcSignIn = useSignIn('btc:mainnet');
-  const stxSignIn = useSignIn('stx:mainnet');
+  const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
+  const btcVaults = useVaults(btcNetwork);
+  const stxVaults = useVaults(stxNetwork);
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
+  const btcSignIn = useSignIn(btcNetwork);
+  const stxSignIn = useSignIn(stxNetwork);
 
   const vaults = [...(btcVaults.data ?? []), ...(stxVaults.data ?? [])];
   const { activity, isLoading: isLoadingActivity } = useDashboardActivity(vaults);

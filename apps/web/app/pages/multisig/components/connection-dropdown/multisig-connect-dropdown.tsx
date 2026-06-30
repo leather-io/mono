@@ -1,4 +1,5 @@
 import { Flex, styled } from 'leather-styles/jsx';
+import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 
 import { Button, ChevronDownIcon, DropdownMenu, Flag, WalletIcon } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
@@ -6,11 +7,12 @@ import { truncateMiddle } from '@leather.io/utils';
 import { ChainAvatar } from '../chain-avatar';
 import { ChooseChainMenu } from './choose-chain-menu';
 import { ConnectedMenu } from './connected-menu';
-import { multisigV1Networks, useChainConnection } from './use-chain-connection';
+import { useChainConnection } from './use-chain-connection';
 
 export function MultisigConnectDropdown() {
-  const btc = useChainConnection('btc', multisigV1Networks.btc);
-  const stx = useChainConnection('stx', multisigV1Networks.stx);
+  const networks = useMultisigNetworks();
+  const btc = useChainConnection('btc', networks.btc);
+  const stx = useChainConnection('stx', networks.stx);
   const chains = [btc, stx];
 
   const anySignedIn = chains.some(c => c.session);

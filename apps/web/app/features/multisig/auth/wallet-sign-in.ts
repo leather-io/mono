@@ -12,21 +12,50 @@ interface WalletSignInParams {
   timestamp: number;
 }
 
-async function fetchWalletAddresses() {
-  const result = await leather.getAddresses();
+type NetworkMode = 'mainnet' | 'testnet';
+
+function networkModeOf(network: AuthNetworkId): NetworkMode {
+  return network.endsWith('mainnet') ? 'mainnet' : 'testnet';
+}
+
+async function fetchWalletAddresses(network: NetworkMode) {
+  const result = await leather.getAddresses({ network });
   return result.addresses;
 }
 
+function networkModeOfAddress(address: string): 'mainnet' | 'testnet' {
+  if (address.startsWith('bc1')) return 'mainnet';
+  if (address.startsWith('tb1') || address.startsWith('bcrt1')) return 'testnet';
+  if (address.startsWith('SP') || address.startsWith('SM')) return 'mainnet';
+  return 'testnet';
+}
+
+// The wallet returns addresses for its own active network, independent of the web
+// app's. If they disagree, the sign-in would send a mismatched address and the
+// backend would reject it, so fail early with an actionable message instead.
+function assertWalletMatchesNetwork(address: string, network: AuthNetworkId) {
+  const requested = network.endsWith('mainnet') ? 'mainnet' : 'testnet';
+  const walletMode = networkModeOfAddress(address);
+  if (walletMode !== requested) {
+    throw new Error(
+      `Your Leather wallet is on ${walletMode}, but this is a ${requested} vault. Switch the extension to ${requested} and try again.`
+    );
+  }
+}
+
 async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
-  const addresses = await fetchWalletAddresses();
+  const mode = networkModeOf(params.network);
+  const addresses = await fetchWalletAddresses(mode);
   const account = addresses.find(address => address.symbol === 'BTC' && address.type === 'p2wpkh');
   if (!account) {
     throw new Error('No Bitcoin account available in the connected wallet');
   }
+  assertWalletMatchesNetwork(account.address, params.network);
 
   const signed = await leather.signMessage({
     message: params.message,
     paymentType: 'p2wpkh',
+    network: mode,
   });
 
   if (signed.address !== account.address) {
@@ -46,13 +75,15 @@ async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
 }
 
 async function stxSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
-  const addresses = await fetchWalletAddresses();
+  const mode = networkModeOf(params.network);
+  const addresses = await fetchWalletAddresses(mode);
   const account = addresses.find(address => address.symbol === 'STX');
   if (!account) {
     throw new Error('No Stacks account available in the connected wallet');
   }
+  assertWalletMatchesNetwork(account.address, params.network);
 
-  const signed = await leather.stxSignMessage({ message: params.message });
+  const signed = await leather.stxSignMessage({ message: params.message, network: mode });
 
   if (signed.publicKey !== account.publicKey) {
     throw new Error('Active wallet account changed during sign-in. Please try again.');

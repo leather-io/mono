@@ -15,6 +15,7 @@ import { MockLeatherDialog } from './features/mock-dialog/mock-dialog';
 import { Footer } from './layouts/footer/footer';
 import { GlobalLoader } from './layouts/nav/global-loader';
 import { Nav } from './layouts/nav/nav';
+import { NetworkGate } from './layouts/network-gate/network-gate';
 import { ErrorPage } from './layouts/page/error';
 
 // Polyfill global Buffer
@@ -57,7 +58,7 @@ export function Layout({ children }: HasChildren) {
           px={['space.04', null, 'space.07']}
         >
           <styled.main flex={1} bg="ink.background-primary" className={maxWidthCss}>
-            {children}
+            <NetworkGate>{children}</NetworkGate>
           </styled.main>
           <Box className={maxWidthCss}>
             <Footer />

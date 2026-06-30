@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { Box, Flex } from 'leather-styles/jsx';
+import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { decodeProposalSummary } from '~/features/multisig/transactions/decode-proposal-summary';
@@ -86,12 +87,13 @@ export function TxDetailPage() {
   const [autoSignStarted, setAutoSignStarted] = useState(false);
   useEffect(() => setHydrated(true), []);
 
-  const btcVaults = useVaults('btc:mainnet');
-  const stxVaults = useVaults('stx:mainnet');
+  const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
+  const btcVaults = useVaults(btcNetwork);
+  const stxVaults = useVaults(stxNetwork);
   const inBtc = btcVaults.data?.some(summary => summary.id === vaultId) ?? false;
   const inStx = stxVaults.data?.some(summary => summary.id === vaultId) ?? false;
   const vaultNetworkKnown = inBtc || inStx;
-  const network: AuthNetworkId = inStx ? 'stx:mainnet' : 'btc:mainnet';
+  const network: AuthNetworkId = inStx ? stxNetwork : btcNetwork;
 
   const vault = useVault(network, vaultNetworkKnown ? vaultId : undefined);
   const transaction = useMultisigTransaction(network, vaultNetworkKnown ? txId : undefined);
@@ -132,10 +134,11 @@ export function TxDetailPage() {
     toast,
   ]);
 
-  const btcSession = useSession('btc:mainnet');
-  const stxSession = useSession('stx:mainnet');
-  const restoringBtc = useIsRestoringSession('btc:mainnet');
-  const restoringStx = useIsRestoringSession('stx:mainnet');
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
+  const restoringBtc = useIsRestoringSession(btcNetwork);
+  const restoringStx = useIsRestoringSession(stxNetwork);
+
   const sessionsRestoring = restoringBtc || restoringStx;
   const listsSettled = (!btcSession || btcVaults.isSuccess) && (!stxSession || stxVaults.isSuccess);
   const detailResolving =
