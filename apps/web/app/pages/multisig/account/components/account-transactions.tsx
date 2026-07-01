@@ -5,17 +5,22 @@ import { useVaultAccountTransactions } from '~/features/multisig/vaults/use-vaul
 
 import type { AuthNetworkId } from '@leather.io/models';
 
-import { TransactionRow } from '../../components/transaction-row';
-import { collectingSignaturesGradient } from '../../multisig-tokens';
+import { TransactionList } from '../../components/transaction-list';
 import { multisigPaths } from '../../multisig.constants';
 
 interface AccountTransactionsProps {
   network: AuthNetworkId;
   vaultId: string | undefined;
   accountId: string | undefined;
+  threshold: number;
 }
 
-export function AccountTransactions({ network, vaultId, accountId }: AccountTransactionsProps) {
+export function AccountTransactions({
+  network,
+  vaultId,
+  accountId,
+  threshold,
+}: AccountTransactionsProps) {
   const navigate = useNavigate();
   const transactions = useVaultAccountTransactions(network, accountId);
   const items = transactions.data?.data ?? [];
@@ -54,33 +59,11 @@ export function AccountTransactions({ network, vaultId, accountId }: AccountTran
   }
 
   return (
-    <Box
-      borderRadius="md"
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor="ink.border-default"
-      overflow="hidden"
-    >
-      {items.map((transaction, index) => (
-        <styled.button
-          key={transaction.id}
-          type="button"
-          onClick={() => vaultId && void navigate(multisigPaths.tx(vaultId, transaction.id))}
-          display="block"
-          width="100%"
-          textAlign="left"
-          cursor="pointer"
-          bg="transparent"
-          bgImage={transaction.status === 'pending' ? collectingSignaturesGradient : undefined}
-          p="space.04"
-          borderTopWidth={index === 0 ? '0' : '1px'}
-          borderTopStyle="solid"
-          borderTopColor="ink.border-default"
-          _hover={{ bg: 'ink.component-background-hover' }}
-        >
-          <TransactionRow transaction={transaction} />
-        </styled.button>
-      ))}
-    </Box>
+    <TransactionList
+      items={items.map(transaction => ({ transaction, vaultId: vaultId ?? '', threshold }))}
+      onSelect={(targetVaultId, txId) =>
+        targetVaultId && void navigate(multisigPaths.tx(targetVaultId, txId))
+      }
+    />
   );
 }

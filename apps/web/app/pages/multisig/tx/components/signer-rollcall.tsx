@@ -2,12 +2,12 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { SignIcon } from '~/components/icons/sign-icon';
 
 import type { MultisigTransaction, Vault, VaultAccount } from '@leather.io/models';
-import { Button, Spinner } from '@leather.io/ui';
+import { Button, CheckmarkCircleIcon, ListItemBox, Spinner } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
+import { Badge } from '../../components/badge';
 import { CopyAddress } from '../../components/copy-address';
-import { VaultListItem } from '../../components/vault-list-item';
 
 const cancellableStatuses = ['queued', 'pending', 'signed'];
 
@@ -22,6 +22,47 @@ interface SignerRollcallProps {
   onSign(): void;
   onCancel(): void;
   onBroadcast(): void;
+}
+
+function SignerStatus({
+  canSign,
+  signed,
+  busy,
+  onSign,
+}: {
+  canSign: boolean;
+  signed: boolean;
+  busy: boolean;
+  onSign(): void;
+}) {
+  if (canSign) {
+    return (
+      <Button variant="solid" size="sm" disabled={busy} onClick={onSign} iconStart={<SignIcon />}>
+        Sign
+      </Button>
+    );
+  }
+  if (signed) {
+    return (
+      <Badge
+        variant="success"
+        icon={
+          <CheckmarkCircleIcon
+            variant="small"
+            width={16}
+            height={16}
+            color="green.action-primary-default"
+          />
+        }
+        label="Signed"
+      />
+    );
+  }
+  return (
+    <styled.span textStyle="caption.01" color="ink.text-subdued">
+      Not signed yet
+    </styled.span>
+  );
 }
 
 // Signer list with the sign / cancel / broadcast controls for a proposed
@@ -66,34 +107,16 @@ export function SignerRollcall({
             borderTopStyle="solid"
             borderTopColor="ink.border-default"
           >
-            <VaultListItem
-              tightLeading
-              leading={<AvatarCircle name={name} size="lg" />}
+            <ListItemBox
+              variant="plain"
+              density="compact"
+              leading={<AvatarCircle name={name} size="md" />}
               title={
-                <styled.span pl="space.02" textStyle="label.02">
-                  {`${name}${isMe ? ' (me)' : ''}`}
-                </styled.span>
+                <styled.span textStyle="label.03">{`${name}${isMe ? ' (me)' : ''}`}</styled.span>
               }
               caption={<CopyAddress addr={signer.address} />}
-              trailingTitle={
-                canSign ? (
-                  <Button
-                    variant="solid"
-                    size="sm"
-                    disabled={busy}
-                    onClick={onSign}
-                    iconStart={<SignIcon />}
-                  >
-                    Sign
-                  </Button>
-                ) : (
-                  <styled.span
-                    textStyle="caption.01"
-                    color={signed ? 'green.action-primary-default' : 'ink.text-subdued'}
-                  >
-                    {signed ? 'Signed' : 'Not signed yet'}
-                  </styled.span>
-                )
+              trailing={
+                <SignerStatus canSign={canSign} signed={signed} busy={busy} onSign={onSign} />
               }
             />
           </Box>
@@ -135,10 +158,10 @@ export function SignerRollcall({
           borderTopStyle="solid"
           borderTopColor="ink.border-default"
         >
-          <Button variant="ghost" intent="danger" disabled={busy} onClick={onCancel}>
+          <Button variant="ghost" intent="danger" size="sm" disabled={busy} onClick={onCancel}>
             {isCancelling ? 'Cancelling…' : 'Cancel transaction'}
           </Button>
-          <Button variant="solid" disabled={busy || !thresholdMet} onClick={onBroadcast}>
+          <Button variant="solid" size="sm" disabled={busy || !thresholdMet} onClick={onBroadcast}>
             {isBroadcasting ? 'Broadcasting…' : 'Broadcast transaction'}
           </Button>
         </Flex>

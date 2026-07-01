@@ -14,6 +14,7 @@ export interface DashboardActivityItem {
   transaction: MultisigTransactionSummary;
   vaultId: string;
   vaultName: string;
+  threshold?: number;
 }
 
 // Aggregates transactions across every active vault's accounts for the dashboard
@@ -65,6 +66,7 @@ export function useDashboardActivity(vaults: VaultSummary[], limit = 5) {
   });
 
   const accountVaultId = new Map(accounts.map(account => [account.id, account.vaultId]));
+  const accountThreshold = new Map(accounts.map(account => [account.id, account.threshold]));
 
   const activity: DashboardActivityItem[] = transactionResults
     .flatMap(result => result.data?.data ?? [])
@@ -73,7 +75,14 @@ export function useDashboardActivity(vaults: VaultSummary[], limit = 5) {
     .flatMap(transaction => {
       const vaultId = accountVaultId.get(transaction.vaultAccountId);
       if (!vaultId) return [];
-      return [{ transaction, vaultId, vaultName: vaultNames.get(vaultId) ?? '' }];
+      return [
+        {
+          transaction,
+          vaultId,
+          vaultName: vaultNames.get(vaultId) ?? '',
+          threshold: accountThreshold.get(transaction.vaultAccountId),
+        },
+      ];
     });
 
   const isLoading =

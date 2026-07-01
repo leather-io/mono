@@ -140,6 +140,7 @@ export function AccountDetailPage() {
       >
         <Box flex={['1', '1', '1.6']} width="100%">
           <MultisigHero
+            variant="balance"
             themeId={theme.id}
             primary={<Balance balance={accountBalance.crypto} formatCurrency={formatCurrency} />}
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
@@ -181,7 +182,12 @@ export function AccountDetailPage() {
               </styled.div>
             </Box>
           </styled.button>
-          <AccountTransactions network={network} vaultId={vaultId} accountId={accountId} />
+          <AccountTransactions
+            network={network}
+            vaultId={vaultId}
+            accountId={accountId}
+            threshold={account.data.threshold}
+          />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>

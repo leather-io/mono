@@ -17,6 +17,10 @@ interface AvatarSqProps {
 
 const tileSize: Record<AvatarSqSize, number> = { sm: 32, md: 40, lg: 56 };
 const glyphSize: Record<AvatarSqSize, number> = { sm: 16, md: 22, lg: 30 };
+// Chain badge sized to match the transaction-row status indicator at the
+// equivalent avatar size (compact 32px -> 12px, regular 40px -> 16px), so the
+// bottom-right indicator reads the same across both.
+const chainBadgeSize: Record<AvatarSqSize, number> = { sm: 12, md: 16, lg: 16 };
 
 // Squircle account/vault avatar: a theme-textured tile with a recolorable
 // account glyph (CSS mask) and an optional chain badge. Built locally rather
@@ -76,7 +80,7 @@ export function AvatarSq({
           display="flex"
           lineHeight="0"
         >
-          <ChainAvatar chain={chain} boxSize="16px" />
+          <ChainAvatar chain={chain} boxSize={`${chainBadgeSize[size]}px`} />
         </Box>
       )}
     </Box>

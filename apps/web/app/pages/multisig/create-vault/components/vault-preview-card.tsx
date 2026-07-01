@@ -1,11 +1,11 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { Button } from '@leather.io/ui';
-import { truncateMiddle } from '@leather.io/utils';
+import { Button, ListItemBox } from '@leather.io/ui';
 
 import { AvatarCircle } from '../../components/avatar-circle';
 import { AvatarSq } from '../../components/avatar-sq';
 import { ChainAvatar } from '../../components/chain-avatar';
+import { CopyAddress } from '../../components/copy-address';
 import type { Chain } from '../../data/multisig-types';
 import { vaultTheme } from '../../multisig-tokens';
 import type { MemberDraft } from './member-rows';
@@ -29,7 +29,7 @@ function PreviewSection({ label, children }: { label: string; children: React.Re
       borderTopStyle="solid"
       borderTopColor="ink.border-default"
     >
-      <styled.div textStyle="caption.01" color="ink.text-subdued" mb="space.02">
+      <styled.div textStyle="label.03" color="ink.text-subdued" mb="space.02">
         {label}
       </styled.div>
       {children}
@@ -74,18 +74,12 @@ export function VaultPreviewCard({
       </Flex>
 
       <PreviewSection label="Chain">
-        <Flex
-          display="inline-flex"
-          alignItems="center"
-          gap="space.02"
-          px="space.02"
-          py="space.01"
-          borderRadius="round"
-          bg="ink.background-secondary"
-        >
-          <ChainAvatar chain={chain} boxSize="16px" />
-          <styled.span textStyle="label.02">{chainLabel}</styled.span>
-        </Flex>
+        <ListItemBox
+          variant="plain"
+          density="compact"
+          leading={<ChainAvatar chain={chain} size="md" />}
+          title={<styled.span textStyle="label.03">{chainLabel}</styled.span>}
+        />
       </PreviewSection>
 
       <PreviewSection label={`Members (${filled.length})`}>
@@ -105,18 +99,19 @@ export function VaultPreviewCard({
         ) : (
           <Flex direction="column" gap="space.03">
             {filled.map(member => (
-              <Flex key={member.id} alignItems="center" gap="space.02">
-                <AvatarCircle name={member.name} size="sm" />
-                <Box minWidth={0}>
-                  <styled.div textStyle="caption.01">
+              <ListItemBox
+                key={member.id}
+                variant="plain"
+                density="compact"
+                leading={<AvatarCircle name={member.name} size="md" />}
+                title={
+                  <styled.span textStyle="label.03">
                     {member.name || '—'}
                     {member.isMe ? ' (me)' : ''}
-                  </styled.div>
-                  <styled.div textStyle="caption.01" color="ink.text-subdued" wordBreak="break-all">
-                    {truncateMiddle(member.addr)}
-                  </styled.div>
-                </Box>
-              </Flex>
+                  </styled.span>
+                }
+                caption={<CopyAddress addr={member.addr} />}
+              />
             ))}
           </Flex>
         )}
