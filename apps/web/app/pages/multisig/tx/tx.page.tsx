@@ -24,15 +24,19 @@ import type {
   AuthNetworkId,
   MarketData,
   Money,
+  MultisigTransaction,
   MultisigTransactionStatus,
+  VaultAccount,
 } from '@leather.io/models';
 import { baseCurrencyAmountInQuote, truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../components/avatar-circle';
+import { Badge } from '../components/badge';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
 import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
+import { transactionStatusBadge } from '../components/transaction-status';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { SignerRollcall } from './components/signer-rollcall';
@@ -55,6 +59,23 @@ function toFiat(money: Money | undefined, marketData: MarketData | undefined): M
   return baseCurrencyAmountInQuote(money, marketData);
 }
 
+function isAwaitingSignatureFrom(
+  transaction: MultisigTransaction,
+  account: VaultAccount,
+  address: string | undefined
+) {
+  const signer = account.signers.find(s => s.address === address);
+  if (!signer) return false;
+  const signed = transaction.signatures.some(sig => sig.signerIndex === signer.signerIndex);
+  return transaction.status === 'pending' && !signed;
+}
+
+function readAutoSign(state: unknown): boolean {
+  return (
+    typeof state === 'object' && state !== null && 'autoSign' in state && state.autoSign === true
+  );
+}
+
 export function TxDetailPage() {
   const { vaultId, txId } = useParams();
   const navigate = useNavigate();
@@ -63,6 +84,7 @@ export function TxDetailPage() {
   // history (deep link / refresh), where there is nowhere to go back to.
   const canGoBack = location.key !== 'default';
   const [hydrated, setHydrated] = useState(false);
+  const [autoSignStarted, setAutoSignStarted] = useState(false);
   useEffect(() => setHydrated(true), []);
 
   const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
@@ -89,10 +111,34 @@ export function TxDetailPage() {
   const broadcastTransaction = useBroadcastTransaction(network);
   const toast = useToast();
 
+  useEffect(() => {
+    if (autoSignStarted) return;
+    if (!readAutoSign(location.state)) return;
+    if (!transaction.data || !account.data) return;
+    if (!isAwaitingSignatureFrom(transaction.data, account.data, me.data?.address)) return;
+    setAutoSignStarted(true);
+    void navigate(location.pathname, { replace: true, state: null });
+    signTransaction.mutate(
+      { transaction: transaction.data, account: account.data },
+      { onSuccess: () => toast.success('Signature added') }
+    );
+  }, [
+    autoSignStarted,
+    location.state,
+    location.pathname,
+    transaction.data,
+    account.data,
+    me.data?.address,
+    navigate,
+    signTransaction,
+    toast,
+  ]);
+
   const btcSession = useSession(btcNetwork);
   const stxSession = useSession(stxNetwork);
   const restoringBtc = useIsRestoringSession(btcNetwork);
   const restoringStx = useIsRestoringSession(stxNetwork);
+
   const sessionsRestoring = restoringBtc || restoringStx;
   const listsSettled = (!btcSession || btcVaults.isSuccess) && (!stxSession || stxVaults.isSuccess);
   const detailResolving =
@@ -144,6 +190,10 @@ export function TxDetailPage() {
   const amountFiat = toFiat(amount, marketData.data);
   const feeFiat = toFiat(fee, marketData.data);
   const effectiveStatus = reconcileStatus(tx.status, onChain.status);
+  const awaitingMySignature = isAwaitingSignatureFrom(tx, acct, me.data?.address);
+  const heroStatus = awaitingMySignature
+    ? { label: 'Awaiting your signature', variant: 'pending' as const }
+    : transactionStatusBadge(effectiveStatus);
 
   function onSign() {
     signTransaction.mutate(
@@ -191,7 +241,11 @@ export function TxDetailPage() {
                 <AvatarCircle name={proposerName} size="xs" />
               </Flex>
             }
-          />
+          >
+            <Box mt="space.03">
+              <Badge variant={heroStatus.variant} label={heroStatus.label} />
+            </Box>
+          </MultisigHero>
           <SectionLabel>Transaction details</SectionLabel>
           <TxDetailsTable
             transaction={tx}

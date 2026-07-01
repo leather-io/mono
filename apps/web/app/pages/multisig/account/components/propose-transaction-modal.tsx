@@ -12,7 +12,7 @@ import { useToast } from '~/features/toasts/use-toast';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
-import type { Money, VaultAccount } from '@leather.io/models';
+import type { Money, MultisigTransaction, VaultAccount } from '@leather.io/models';
 import { isValidStacksAddress } from '@leather.io/stacks';
 import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 import { btcToSat, createMoney, stxToMicroStx } from '@leather.io/utils';
@@ -207,14 +207,16 @@ function BtcProposeForm({
   account,
   memberCount,
   onClose,
+  onProposed,
 }: {
   account: VaultAccount;
   memberCount: number;
   onClose(): void;
+  onProposed(transaction: MultisigTransaction): void;
 }) {
   const [recipient, setRecipient] = useState('');
   const [amountInput, setAmountInput] = useState('');
-  const { success, error } = useToast();
+  const { error } = useToast();
 
   const mode = account.network === 'btc:mainnet' ? 'mainnet' : 'testnet';
   const recipientAddress = recipient.trim() || undefined;
@@ -246,9 +248,8 @@ function BtcProposeForm({
       propose.mutate(
         { multisigAddress: account.multisigAddress, rawPayload },
         {
-          onSuccess() {
-            success('Transaction proposed');
-            onClose();
+          onSuccess(transaction) {
+            onProposed(transaction);
           },
           onError: err => error(err.message),
         }
@@ -288,14 +289,16 @@ function StxProposeForm({
   account,
   memberCount,
   onClose,
+  onProposed,
 }: {
   account: VaultAccount;
   memberCount: number;
   onClose(): void;
+  onProposed(transaction: MultisigTransaction): void;
 }) {
   const [recipient, setRecipient] = useState('');
   const [amountInput, setAmountInput] = useState('');
-  const { success, error } = useToast();
+  const { error } = useToast();
 
   const recipientAddress = recipient.trim() || undefined;
   const amount = parseStxAmount(amountInput);
@@ -325,9 +328,8 @@ function StxProposeForm({
       propose.mutate(
         { multisigAddress: account.multisigAddress, rawPayload: tx.serialize() },
         {
-          onSuccess() {
-            success('Transaction proposed');
-            onClose();
+          onSuccess(transaction) {
+            onProposed(transaction);
           },
           onError: err => error(err.message),
         }
@@ -366,6 +368,7 @@ interface ProposeTransactionModalProps {
   memberCount: number;
   isShowing: boolean;
   onClose(): void;
+  onProposed(transaction: MultisigTransaction): void;
 }
 
 export function ProposeTransactionModal({
@@ -373,6 +376,7 @@ export function ProposeTransactionModal({
   memberCount,
   isShowing,
   onClose,
+  onProposed,
 }: ProposeTransactionModalProps) {
   const isBtc = account.network.startsWith('btc');
   return (
@@ -396,9 +400,19 @@ export function ProposeTransactionModal({
     >
       <Box>
         {isBtc ? (
-          <BtcProposeForm account={account} memberCount={memberCount} onClose={onClose} />
+          <BtcProposeForm
+            account={account}
+            memberCount={memberCount}
+            onClose={onClose}
+            onProposed={onProposed}
+          />
         ) : (
-          <StxProposeForm account={account} memberCount={memberCount} onClose={onClose} />
+          <StxProposeForm
+            account={account}
+            memberCount={memberCount}
+            onClose={onClose}
+            onProposed={onProposed}
+          />
         )}
       </Box>
     </Sheet>

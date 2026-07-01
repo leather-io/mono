@@ -44,6 +44,14 @@ function borderColorForStatus(state: MemberFieldStatus['state']) {
   return 'ink.border-default';
 }
 
+const maxMemberNameLength = 32;
+const disallowedNameChars =
+  /[.\u00B7\u2024\u2027\u3002\uFF0E\u200B-\u200D\uFEFF\u202A-\u202E\u2066-\u2069]/g;
+
+function sanitizeMemberName(value: string) {
+  return value.replace(disallowedNameChars, '').slice(0, maxMemberNameLength);
+}
+
 export function MemberRows({ chain, members, myAddress, statuses, onChange }: MemberRowsProps) {
   const placeholder = chain === 'btc' ? 'bc1q… address' : 'SP… address';
 
@@ -96,7 +104,7 @@ export function MemberRows({ chain, members, myAddress, statuses, onChange }: Me
                 placeholder={member.isMe ? 'My name' : 'Name (optional)'}
                 value={member.name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  update(index, { name: e.target.value })
+                  update(index, { name: sanitizeMemberName(e.target.value) })
                 }
               />
               <styled.button
