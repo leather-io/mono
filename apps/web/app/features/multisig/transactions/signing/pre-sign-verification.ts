@@ -9,6 +9,7 @@ import { computeProposalHash, decodeProposalPayload } from '@leather.io/crypto';
 import type { MultisigTransaction, VaultAccount, VaultAccountSigner } from '@leather.io/models';
 import { verifySip018Signature } from '@leather.io/stacks';
 
+import { resolveBtcNetworkMode } from '../../network/resolve-btc-network-mode';
 import { deriveMultisigAddress } from '../derive-multisig-address';
 import { buildStxProposalDomain } from '../stx-proposal-domain';
 
@@ -62,7 +63,7 @@ function assertProposalCommitment(
   // BTC re-derives the identity address from the bound publicKey (the served
   // `address` is unbound); STX verifies against the signing key (bound to the
   // multisig address), which for STX is also the identity key.
-  const mode = account.network === 'btc:mainnet' ? 'mainnet' : 'testnet';
+  const mode = resolveBtcNetworkMode(account.network);
   const valid =
     chain === 'btc'
       ? verifyP2wpkhBip322Signature(
