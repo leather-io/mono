@@ -26,6 +26,7 @@ import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useBtcAddAccount } from '../use-btc-add-account';
+import { isLedgerOnDeviceAddressConfirmed } from './ledger-descriptor-address';
 import { useDisplayLedgerDescriptorAddress } from './use-display-ledger-descriptor-address';
 
 // Drives the on-device confirmation for btc_addAccount on a Ledger wallet. It
@@ -57,7 +58,7 @@ function LedgerConfirmBtcPolicyAddress() {
           address ?? undefined
         );
         const onDeviceAddress = await displayLedgerDescriptorAddress(app, descriptor);
-        if (!address || onDeviceAddress !== address) {
+        if (!isLedgerOnDeviceAddressConfirmed(onDeviceAddress, address)) {
           void ledgerNavigate.toErrorStep(
             'bitcoin',
             'The address shown on your Ledger does not match the one in Leather.'

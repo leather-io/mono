@@ -1,6 +1,7 @@
 import { type BrowserContext, type Page, expect } from '@playwright/test';
 import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
 import { exampleStacksMultisigPublicKeys, exampleWshDescriptor } from '@tests/mocks/mock-policies';
+import { testFingerprint } from '@tests/page-object-models/onboarding.page';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -122,6 +123,71 @@ test.describe('Rpc: add account in verify mode (non-whitelisted origin)', () => 
     expect(result.result.accountId).toBeUndefined();
 
     expect(await getPersistedPolicyIds(page, extensionId)).toEqual([]);
+  });
+});
+
+const whitelistedOrigin = 'https://app.leather.io';
+
+async function stubWhitelistedOriginPage(context: BrowserContext) {
+  await context.route(
+    url => url.hostname === 'app.leather.io',
+    route =>
+      route.fulfill({
+        contentType: 'text/html',
+        body: '<!doctype html><html><head><title>Leather</title></head><body></body></html>',
+      })
+  );
+}
+
+async function waitForProvider(page: Page) {
+  await page.waitForFunction(() =>
+    Boolean((window as { LeatherProvider?: unknown }).LeatherProvider)
+  );
+}
+
+async function readPersistedPolicyIds(page: Page) {
+  return page.evaluate(async () => {
+    const store = await window.debug.getPersistedStore();
+    return (store as { policy?: { ids?: string[] } } | undefined)?.policy?.ids ?? [];
+  });
+}
+
+test.describe('Rpc: add account in add mode (whitelisted origin)', () => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await overrideLaunchDarklyFlags(context, { releaseAddAccount: true });
+    await stubWhitelistedOriginPage(context);
+    await onboardingPage.signInWithTestAccount(extensionId);
+  });
+
+  test('registers a Bitcoin multisig and persists it', async ({ page, context }) => {
+    const dappPage = await context.newPage();
+    await dappPage.goto(whitelistedOrigin);
+    await waitForProvider(dappPage);
+
+    const requestPromise = initiateRequest(dappPage, 'btc_addAccount', {
+      name: 'Shared cold storage',
+      descriptor: exampleWshDescriptor,
+    });
+
+    const popup = await waitForPopup(context);
+    await expect(popup.getByText('Add multisig account')).toBeVisible();
+    const confirmButton = popup.getByTestId('btc-add-account-approve-button');
+    await expect(confirmButton).toHaveText('Confirm');
+    await expect(confirmButton).toBeEnabled();
+    await confirmButton.click();
+
+    const result = await requestPromise;
+    expect(result.result).toMatchObject({
+      added: true,
+      role: 'signer',
+      descriptor: exampleWshDescriptor,
+    });
+    expect(result.result.address).toMatch(/^bc1q/);
+    expect(result.result.accountId).toBe(result.result.address);
+
+    const expectedPolicyId = `${testFingerprint}/0/${result.result.address}/mainnet`;
+    await expect.poll(() => readPersistedPolicyIds(page)).toEqual([expectedPolicyId]);
   });
 });
 
