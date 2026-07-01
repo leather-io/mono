@@ -44,18 +44,22 @@ export function createToSpendTx(
   return { virtualToSpend, script };
 }
 
-function createToSignTx(toSpendTxHex: Buffer, script: Buffer, network: BitcoinNetworkModes) {
+function createToSignTx(
+  toSpendTx: bitcoin.Transaction,
+  script: Buffer,
+  network: BitcoinNetworkModes
+) {
   const virtualToSign = new bitcoin.Psbt({ network: getBitcoinJsLibNetworkConfigByMode(network) });
   virtualToSign.setVersion(0);
-  const prevTxHash = toSpendTxHex;
   const prevOutIndex = 0;
   const toSignScriptSig = bitcoin.script.compile([bitcoin.script.OPS.OP_RETURN]);
 
   virtualToSign.addInput({
-    hash: prevTxHash,
+    hash: toSpendTx.getHash(),
     index: prevOutIndex,
     sequence: 0,
     witnessUtxo: { script, value: 0 },
+    nonWitnessUtxo: toSpendTx.toBuffer(),
   });
 
   virtualToSign.addOutput({ script: toSignScriptSig, value: 0 });
@@ -73,7 +77,7 @@ export async function signBip322MessageSimple(args: SignBip322MessageSimple) {
 
   const { virtualToSpend, script } = createToSpendTx(address, message, network);
 
-  const virtualToSign = createToSignTx(virtualToSpend.getHash(), script, network);
+  const virtualToSign = createToSignTx(virtualToSpend, script, network);
 
   const signedTx = await signPsbt(virtualToSign);
 

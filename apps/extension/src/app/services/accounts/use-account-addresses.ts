@@ -1,14 +1,17 @@
 import { useMemo } from 'react';
 
 import { deriveBitcoinPayerFromAccount } from '@leather.io/bitcoin';
-import type { AccountId } from '@leather.io/models';
+import type { AccountAddresses, AccountId } from '@leather.io/models';
 import { createAccountAddresses } from '@leather.io/utils';
 
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useBitcoinAccountXpubs } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useTaprootAccount } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { createPolicyAddresses } from '@app/store/policy/policy-addresses';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 export function useAccountAddresses(accountId: AccountId) {
   const accountXpubs = useBitcoinAccountXpubs(accountId);
@@ -45,4 +48,15 @@ export function useAccountAddresses(accountId: AccountId) {
       },
     };
   }, [accountXpubs, stxAccount, accountId, nativeSegwitAccount, taprootAccount, network]);
+}
+
+export function useCurrentAccountAddresses(): AccountAddresses {
+  const currentAccountId = useCurrentAccountId();
+  const singleSigAddresses = useAccountAddresses(currentAccountId);
+  const policy = useCurrentPolicy();
+
+  return useMemo(
+    () => (policy ? createPolicyAddresses(policy) : singleSigAddresses),
+    [policy, singleSigAddresses]
+  );
 }

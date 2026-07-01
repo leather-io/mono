@@ -9,4 +9,8 @@ export enum SwitchAccountSelectors {
   RenameAccountInput = 'rename-account-input',
   RenameAccountSaveBtn = 'rename-account-save-btn',
   RemoveWalletConfirmBtn = 'remove-wallet-confirm-btn',
+  PolicyActionMenuTrigger = 'policy-action-menu-trigger',
+  RenamePolicyInput = 'rename-policy-input',
+  RenamePolicySaveBtn = 'rename-policy-save-btn',
+  RemovePolicyConfirmBtn = 'remove-policy-confirm-btn',
 }

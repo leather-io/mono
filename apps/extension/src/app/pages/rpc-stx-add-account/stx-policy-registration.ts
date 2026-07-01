@@ -22,6 +22,27 @@ function resolveStxPolicyNetwork({ paramsNetwork, networks }: ResolveStxPolicyNe
   return { network, networkId: network.id };
 }
 
+interface DeriveStxPolicyAddressArgs {
+  params: RpcParams<typeof stxAddAccount>;
+  networks: Record<string, NetworkConfiguration>;
+}
+
+// Derives the multisig address from the ordered public keys + threshold,
+// resolving the requested network the same way registration does so the address
+// shown in the approver is byte-identical to what gets stored and returned.
+export function deriveStxPolicyAddress({ params, networks }: DeriveStxPolicyAddressArgs) {
+  const { network, networkId } = resolveStxPolicyNetwork({
+    paramsNetwork: params.network,
+    networks,
+  });
+  const address = deriveStxMultisigAddress({
+    publicKeys: params.publicKeys,
+    threshold: params.threshold,
+    chainId: network.chain.stacks.chainId,
+  });
+  return { address, networkId };
+}
+
 interface CreateStxPolicyRegistrationArgs {
   params: RpcParams<typeof stxAddAccount>;
   fingerprint: string;
@@ -35,15 +56,7 @@ export function createStxPolicyRegistration({
   accountIndex,
   networks,
 }: CreateStxPolicyRegistrationArgs) {
-  const { network, networkId } = resolveStxPolicyNetwork({
-    paramsNetwork: params.network,
-    networks,
-  });
-  const address = deriveStxMultisigAddress({
-    publicKeys: params.publicKeys,
-    threshold: params.threshold,
-    chainId: network.chain.stacks.chainId,
-  });
+  const { address, networkId } = deriveStxPolicyAddress({ params, networks });
   const parentAccountId = makeAccountIdentifer(fingerprint, accountIndex);
   const role = 'signer' as const;
 
@@ -67,6 +80,7 @@ export function createStxPolicyRegistration({
       threshold: params.threshold,
       role,
       accountId: address,
+      added: true,
     },
   };
 }

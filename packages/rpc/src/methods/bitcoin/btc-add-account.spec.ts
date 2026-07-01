@@ -33,12 +33,23 @@ describe('btcAddAccount', () => {
     ).toEqual(false);
   });
 
-  test('result schema matches expected shape', () => {
+  test('result schema matches the added shape', () => {
     const result = btcAddAccount.result.safeParse({
       address: 'bc1qexampleaddress',
       descriptor: validParams.descriptor,
       accountId: 'account-id',
       role: 'signer',
+      added: true,
+    });
+    expect(result.success).toEqual(true);
+  });
+
+  test('result schema matches the verified shape without an account id', () => {
+    const result = btcAddAccount.result.safeParse({
+      address: 'bc1qexampleaddress',
+      descriptor: validParams.descriptor,
+      role: 'signer',
+      added: false,
     });
     expect(result.success).toEqual(true);
   });
@@ -49,6 +60,7 @@ describe('btcAddAccount', () => {
       descriptor: validParams.descriptor,
       accountId: 'account-id',
       role: 'owner',
+      added: true,
     });
     expect(result.success).toEqual(false);
   });

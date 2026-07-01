@@ -1,4 +1,4 @@
-import type { AccountId } from '@leather.io/models';
+import type { AccountAddresses, AccountId } from '@leather.io/models';
 import type { AccountRequest } from '@leather.io/services';
 import { createBtcBalance, createMoney } from '@leather.io/utils';
 
@@ -27,6 +27,10 @@ export function useCurrentBtcBalanceWithFallback() {
 
 export function useBtcAccountBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
+  return toFetchState(useGetBtcAccountBalanceQuery({ account }));
+}
+
+export function useBtcAccountBalanceByAddresses(account: AccountAddresses) {
   return toFetchState(useGetBtcAccountBalanceQuery({ account }));
 }
 

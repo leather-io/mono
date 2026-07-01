@@ -55,6 +55,7 @@ interface SignBip322MessageFactoryArgs {
 }
 function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFactoryArgs) {
   const network = useCurrentNetwork();
+  const networkMode = network.chain.bitcoin.mode;
 
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
@@ -64,6 +65,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
   return {
     origin,
     message,
+    networkMode,
     isLoading,
     formattedOrigin: new URL(origin ?? '').host,
     address,
@@ -93,7 +95,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
         message,
         address,
         signPsbt,
-        network: network.chain.bitcoin.mode,
+        network: networkMode,
       });
 
       await shortPauseBeforeToast();

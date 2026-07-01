@@ -2,17 +2,22 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { RpcErrorCode, type RpcRequests } from '@leather.io/rpc';
 
-import { validateConnectedWalletExists } from './rpc-request-utils';
+import { validateConnectedWalletExists, validateNoActivePolicy } from './rpc-request-utils';
 
 const mocks = vi.hoisted(() => ({
   getRootState: vi.fn(),
   sendMissingStateErrorToTab: vi.fn(),
   sendMessage: vi.fn(),
+  trackRpcRequestError: vi.fn(),
 }));
 
 vi.mock('@shared/storage/get-root-state', () => ({
   getRootState: mocks.getRootState,
   sendMissingStateErrorToTab: mocks.sendMissingStateErrorToTab,
+}));
+
+vi.mock('./rpc-helpers', () => ({
+  trackRpcRequestError: mocks.trackRpcRequestError,
 }));
 
 const hostname = 'app.example.com';
@@ -166,5 +171,59 @@ describe('validateConnectedWalletExists', () => {
       tabId,
       expect.objectContaining({ error: expect.objectContaining({ message: errorMessage }) })
     );
+  });
+});
+
+describe('validateNoActivePolicy', () => {
+  beforeEach(() => {
+    vi.stubGlobal('chrome', { tabs: { sendMessage: mocks.sendMessage } });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.clearAllMocks();
+  });
+
+  test('succeeds when no policy account is active', async () => {
+    mocks.getRootState.mockResolvedValue({
+      active: { account: { fingerprint, accountIndex: 0 }, activePolicyId: null },
+    });
+
+    const result = await validateNoActivePolicy(request, buildPort());
+
+    expect(result).toEqual({ status: 'success' });
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+  });
+
+  test('rejects with INVALID_REQUEST when a multisig policy account is active', async () => {
+    mocks.getRootState.mockResolvedValue({
+      active: {
+        account: { fingerprint, accountIndex: 0 },
+        activePolicyId: `${fingerprint}/0/bc1qexamplemultisig/mainnet`,
+      },
+    });
+
+    const result = await validateNoActivePolicy(request, buildPort());
+
+    expect(result).toEqual({ status: 'failure' });
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      expect.objectContaining({
+        id: request.id,
+        error: expect.objectContaining({
+          code: RpcErrorCode.INVALID_REQUEST,
+          message: expect.stringContaining('multisig account'),
+        }),
+      })
+    );
+  });
+
+  test('succeeds when persisted state is unavailable', async () => {
+    mocks.getRootState.mockResolvedValue(null);
+
+    const result = await validateNoActivePolicy(request, buildPort());
+
+    expect(result).toEqual({ status: 'success' });
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
   });
 });

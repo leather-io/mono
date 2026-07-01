@@ -11,13 +11,15 @@ import {
   useCurrentAccountAvailableBalance,
   useCurrentAccountTotalBalance,
 } from '@app/query/common/account-balance/account-balance.query';
-import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
+import { useStxAccountBalanceByAddresses } from '@app/query/stacks/balance/stx-balance.hooks';
+import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import {
   refreshLeatherTabs,
   useOnFinishedOnboarding,
 } from '@app/store/onboarding/onboarding.hooks';
+import { useCurrentPolicy, usePolicyDisplayName } from '@app/store/policy/policy.selectors';
 import { useTogglePrivateMode } from '@app/store/settings/settings.actions';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
@@ -27,21 +29,27 @@ export function useHomePageState() {
   const navigate = useNavigate();
   const account = useCurrentStacksAccount();
   const currentAccount = useCurrentAccountId();
+  const currentAccountAddresses = useCurrentAccountAddresses();
+  const policy = useCurrentPolicy();
   const isPrivateMode = useIsPrivateMode();
   const togglePrivateMode = useTogglePrivateMode();
 
   useAccountScaledBalanceAnalytics(currentAccount);
   useOnFinishedOnboarding(() => refreshLeatherTabs());
 
-  const { data: name = '', isFetching: isFetchingBnsName } = useAccountDisplayName({
+  const { data: bnsName = '', isFetching } = useAccountDisplayName({
     address: account?.address,
     index: currentAccount.accountIndex || 0,
     fingerprint: currentAccount.fingerprint,
   });
 
+  const policyName = usePolicyDisplayName(policy);
+  const name = policyName ?? bnsName;
+  const isFetchingBnsName = policy ? false : isFetching;
+
   const totalBalance = useCurrentAccountTotalBalance();
   const availableBalance = useCurrentAccountAvailableBalance();
-  const stxAccountBalance = useStxAccountBalance(currentAccount);
+  const stxAccountBalance = useStxAccountBalanceByAddresses(currentAccountAddresses);
 
   useOnMount(() => {
     if (decodedAuthRequest) return navigate(RouteUrls.ChooseAccount);

@@ -62,6 +62,18 @@ describe(createBtcPolicyRegistration.name, () => {
     expect(registration.addPolicyPayload.policy.networkId).toBe('mainnet');
   });
 
+  test('returns an added result with the derived address as the account id', () => {
+    const registration = createBtcPolicyRegistration({
+      params: baseParams,
+      fingerprint: 'deadbeef',
+      accountIndex: 0,
+      networks,
+    });
+
+    expect(registration.result.added).toBe(true);
+    expect(registration.result.accountId).toBe(registration.result.address);
+  });
+
   test('rejects an unknown requested network instead of defaulting to mainnet', () => {
     expect(() =>
       createBtcPolicyRegistration({

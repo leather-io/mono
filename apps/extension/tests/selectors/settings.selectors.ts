@@ -26,6 +26,7 @@ export enum SettingsSelectors {
   SigningAccountCard = 'switch-account-trigger',
   SwitchAccountMenuItem = 'switch-account-menu-item',
   SwitchAccountItemIndex = 'switch-account-item-[index]',
+  SwitchAccountPolicyItem = 'switch-account-policy-[id]',
   OpenWalletInNewTab = 'open-wallet-in-new-tab',
   TogglePrivacy = 'toggle-privacy',
   ResetProtectionBtn = 'reset-protection-btn',

@@ -1,4 +1,3 @@
-import type { AccountId } from '@leather.io/models';
 import { getPrincipalFromAssetString } from '@leather.io/stacks';
 import { delay } from '@leather.io/utils';
 
@@ -35,12 +34,4 @@ export function safeCall<T>(fn: () => T): Ok<T> | Err {
   } catch (e) {
     return [null, e] as const;
   }
-}
-
-export function isMatchingAccountId(...args: AccountId[]) {
-  const [first, ...rest] = args;
-  return rest.every(
-    account =>
-      account.fingerprint === first.fingerprint && account.accountIndex === first.accountIndex
-  );
 }

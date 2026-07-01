@@ -2,6 +2,7 @@ import { makeAccountIdentifer } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
 
 import type { WalletType } from '@app/store/common/wallet-type.selectors';
+import type { PolicyStore } from '@app/store/policy/policy-store.utils';
 
 export const accountActionMenuTriggerSize = '40px';
 
@@ -10,12 +11,24 @@ interface WalletGroup {
   accounts: AccountId[];
 }
 
-export function getWalletGroupCounts(walletTree: WalletGroup[]): number[] {
-  return walletTree.map(wallet => wallet.accounts.length + (wallet.type === 'software' ? 1 : 0));
-}
+type SwitchAccountRow =
+  | { kind: 'account'; accountId: AccountId }
+  | { kind: 'policy'; policy: PolicyStore }
+  | { kind: 'addAccount' };
 
-export function isAddAccountRow(wallet: WalletGroup, localIndex: number): boolean {
-  return wallet.type === 'software' && localIndex >= wallet.accounts.length;
+export function buildWalletRows(
+  wallet: WalletGroup,
+  getPolicies: (account: AccountId) => PolicyStore[]
+): SwitchAccountRow[] {
+  const rows: SwitchAccountRow[] = [];
+  for (const accountId of wallet.accounts) {
+    rows.push({ kind: 'account', accountId });
+    for (const policy of getPolicies(accountId)) {
+      rows.push({ kind: 'policy', policy });
+    }
+  }
+  if (wallet.type === 'software') rows.push({ kind: 'addAccount' });
+  return rows;
 }
 
 interface CanHideAccountArgs {

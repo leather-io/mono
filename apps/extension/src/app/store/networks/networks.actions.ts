@@ -14,7 +14,7 @@ interface UserEditsNetworkArgs {
 export function userRemovesNetwork(id: string): AppThunk {
   return (dispatch, getState) => {
     if (selectPolicyNetworkIds(getState()).has(id)) {
-      logger.warn('Cannot remove a network that has a policy account', { id });
+      logger.warn('Cannot remove a network that has a policy', { id });
       return;
     }
     dispatch(networksActions.removeNetwork(id));
@@ -24,7 +24,7 @@ export function userRemovesNetwork(id: string): AppThunk {
 export function userEditsNetwork({ currentId, network }: UserEditsNetworkArgs): AppThunk {
   return (dispatch, getState) => {
     if (selectPolicyNetworkIds(getState()).has(currentId)) {
-      logger.warn('Cannot edit a network that has a policy account', { id: currentId });
+      logger.warn('Cannot edit a network that has a policy', { id: currentId });
       return;
     }
     dispatch(networksActions.removeNetwork(currentId));

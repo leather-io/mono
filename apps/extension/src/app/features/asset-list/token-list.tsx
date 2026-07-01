@@ -18,10 +18,12 @@ import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { ConnectLedgerAssetItemFallback } from './_components/connect-ledger-asset-item-fallback';
 import { BtcCryptoAssetItem } from './bitcoin/btc-crypto-asset-item/btc-crypto-asset-item';
+import { PolicyTokenList } from './policy-token-list';
 import { Sip10TokenItem } from './stacks/sip10-token-list/sip10-token-item';
 import { Sip10TokenAssetList } from './stacks/sip10-token-list/sip10-token-list';
 
@@ -53,6 +55,17 @@ export function TokenList({
   const currentBtcNativeSegwitAccount = useCurrentAccountNativeSegwitPayer();
   const isLedger = useActiveWalletType() === 'ledger';
   const isPrivate = useIsPrivateMode();
+  const policy = useCurrentPolicy();
+
+  if (policy) {
+    return (
+      <PolicyTokenList
+        policy={policy}
+        showDepositButtons={showDepositButtons}
+        onSelectAsset={onSelectAsset}
+      />
+    );
+  }
 
   return (
     <Stack>
