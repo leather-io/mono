@@ -4,7 +4,16 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useToast } from '~/features/toasts/use-toast';
 
 import type { Vault, VaultMember } from '@leather.io/models';
-import { Button, ChevronDownIcon, CloseIcon, CopyIcon, IconButton, Sheet } from '@leather.io/ui';
+import {
+  Button,
+  ChevronDownIcon,
+  CloseIcon,
+  CopyIcon,
+  IconButton,
+  ListItemBox,
+  Sheet,
+  useClipboard,
+} from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
@@ -41,15 +50,6 @@ function inviteMessage(vault: Vault, member: VaultMember, creatorName: string | 
   return lines.join('\n');
 }
 
-async function copyToClipboard(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard?.writeText(text);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function ShareHeader({ onClose }: { onClose?(): void }) {
   return (
     <Flex
@@ -69,6 +69,7 @@ function ShareHeader({ onClose }: { onClose?(): void }) {
 
 function CopyMessageButton({ message }: { message: string }) {
   const { success: showToast } = useToast();
+  const { onCopy } = useClipboard(message);
   return (
     <Button
       variant="solid"
@@ -77,9 +78,8 @@ function CopyMessageButton({ message }: { message: string }) {
       px="space.03"
       textStyle="label.03"
       onClick={() => {
-        void copyToClipboard(message).then(ok => {
-          if (ok) showToast('Invite message copied');
-        });
+        onCopy();
+        showToast('Invite message copied');
       }}
     >
       <Flex alignItems="center" gap="space.01">
@@ -105,6 +105,7 @@ function PendingInviteCard({
 }) {
   const { success: showToast } = useToast();
   const message = inviteMessage(vault, member, creatorName);
+  const { onCopy: onCopyLink } = useClipboard(inviteLink(vault));
   return (
     <Box
       borderRadius="md"
@@ -124,39 +125,38 @@ function PendingInviteCard({
           bg="transparent"
           cursor="pointer"
         />
-        <Flex
-          alignItems="center"
-          gap="space.03"
-          p="space.04"
-          position="relative"
-          zIndex={1}
-          pointerEvents="none"
-        >
-          <AvatarCircle name={member.name || member.address} size="md" />
-          <Box flex={1} minWidth={0}>
-            <Flex alignItems="center" gap="space.02">
+        <Box p="space.04" position="relative" zIndex={1} pointerEvents="none">
+          <ListItemBox
+            variant="plain"
+            density="compact"
+            leading={<AvatarCircle name={member.name || member.address} size="md" />}
+            title={
               <styled.span textStyle="label.02">
                 {member.name || truncateMiddle(member.address)}
               </styled.span>
-              <Badge variant="pending" label="Invite pending" />
-            </Flex>
-            <styled.span display="inline-flex" pointerEvents="auto">
-              <CopyAddress addr={member.address} />
-            </styled.span>
-          </Box>
-          <Flex alignItems="center" gap="space.03" flexShrink={0}>
-            <styled.span pointerEvents="auto">
-              <CopyMessageButton message={message} />
-            </styled.span>
-            <Box
-              display="flex"
-              transform={isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'}
-              transition="transform 150ms ease"
-            >
-              <ChevronDownIcon variant="small" color="ink.text-subdued" />
-            </Box>
-          </Flex>
-        </Flex>
+            }
+            titleAccessory={<Badge variant="pending" label="Invite pending" />}
+            caption={
+              <styled.span display="inline-flex" pointerEvents="auto">
+                <CopyAddress addr={member.address} />
+              </styled.span>
+            }
+            action={
+              <Flex alignItems="center" gap="space.03" flexShrink={0}>
+                <styled.span pointerEvents="auto">
+                  <CopyMessageButton message={message} />
+                </styled.span>
+                <Box
+                  display="flex"
+                  transform={isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'}
+                  transition="transform 150ms ease"
+                >
+                  <ChevronDownIcon variant="small" color="ink.text-subdued" />
+                </Box>
+              </Flex>
+            }
+          />
+        </Box>
       </Box>
 
       {isExpanded && (
@@ -182,9 +182,8 @@ function PendingInviteCard({
               variant="outline"
               size="sm"
               onClick={() => {
-                void copyToClipboard(inviteLink(vault)).then(ok => {
-                  if (ok) showToast('Invite link copied');
-                });
+                onCopyLink();
+                showToast('Invite link copied');
               }}
             >
               <Flex alignItems="center" gap="space.02">
@@ -238,7 +237,7 @@ export function ShareInvitationsModal({
 
         {joined.length > 0 && (
           <Box mt="space.02">
-            <styled.div textStyle="caption.01" color="ink.text-subdued" mb="space.02">
+            <styled.div textStyle="label.03" color="ink.text-subdued" mb="space.02">
               Already joined · {joined.length}
             </styled.div>
             <Flex flexWrap="wrap" gap="space.02">

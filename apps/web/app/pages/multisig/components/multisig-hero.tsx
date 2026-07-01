@@ -8,26 +8,42 @@ interface MultisigHeroProps {
   themeId: number;
   primary: ReactNode;
   secondary?: ReactNode;
+  variant?: 'standard' | 'balance';
   children?: ReactNode;
 }
 
 // Themed hero surface shared by vault / account / tx detail. The theme texture
 // is a saturated mid-tone, so text switches to light on dark themes.
-export function MultisigHero({ themeId, primary, secondary, children }: MultisigHeroProps) {
+export function MultisigHero({
+  themeId,
+  primary,
+  secondary,
+  variant = 'standard',
+  children,
+}: MultisigHeroProps) {
   const theme = vaultTheme(themeId);
   const fg = theme.dark ? 'white' : 'ink.text-primary';
+  const bold = variant === 'balance';
   return (
     <Box
-      borderRadius="lg"
-      p="space.06"
+      borderRadius={bold ? 'md' : 'lg'}
+      p={bold ? 'space.05' : 'space.06'}
       mb="space.05"
+      minHeight={bold ? '220px' : undefined}
+      display={bold ? 'flex' : undefined}
+      flexDirection={bold ? 'column' : undefined}
+      justifyContent={bold ? 'flex-end' : undefined}
       color={fg}
       overflow="hidden"
       style={{ background: theme.background }}
     >
-      <styled.div textStyle="heading.04">{primary}</styled.div>
+      <styled.div textStyle={bold ? 'heading.02' : 'heading.04'}>{primary}</styled.div>
       {secondary && (
-        <styled.div mt="space.02" textStyle="label.02" opacity={0.85}>
+        <styled.div
+          mt={bold ? 'space.01' : 'space.02'}
+          textStyle={bold ? 'label.01' : 'label.02'}
+          opacity={bold ? 0.8 : 0.85}
+        >
           {secondary}
         </styled.div>
       )}

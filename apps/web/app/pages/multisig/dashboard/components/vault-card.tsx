@@ -8,12 +8,16 @@ import { useVault } from '~/features/multisig/vaults/use-vaults';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import type { VaultSummary } from '@leather.io/models';
+import { ListItemBox } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { Badge } from '../../components/badge';
-import { VaultListItem } from '../../components/vault-list-item';
-import { vaultThemeFromName } from '../../multisig-tokens';
+import {
+  collectingSignaturesGradient,
+  collectingSignaturesGradientHover,
+  vaultThemeFromName,
+} from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface VaultCardProps {
@@ -103,27 +107,21 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
       borderStyle="solid"
       borderColor="ink.border-default"
       bg="ink.background-primary"
-      bgImage={
-        needsAttention
-          ? 'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.16), rgb(from token(colors.orange.action-primary-default) r g b / 0) 70%)'
-          : undefined
-      }
+      bgImage={needsAttention ? collectingSignaturesGradient : undefined}
       _hover={
         needsAttention
-          ? {
-              bgImage:
-                'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.28), rgb(from token(colors.orange.action-primary-default) r g b / 0) 80%)',
-            }
+          ? { bgImage: collectingSignaturesGradientHover }
           : { bg: 'ink.component-background-hover' }
       }
       _disabled={{ cursor: 'default' }}
     >
-      <VaultListItem
+      <ListItemBox
+        variant="plain"
         leading={<AvatarSq chain={chain} icon="vault" themeId={theme.id} size="md" />}
         title={<styled.span textStyle="heading.05">{vault.name}</styled.span>}
         caption={`${chainLabel} vault · ${vault.accountCount} ${accountLabel}`}
-        trailingTitle={trailing.title}
-        trailingSubtitle={trailing.subtitle}
+        trailing={trailing.title}
+        trailingCaption={trailing.subtitle}
       />
     </styled.button>
   );

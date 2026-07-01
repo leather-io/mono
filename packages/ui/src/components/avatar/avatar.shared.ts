@@ -14,6 +14,14 @@ export const iconSizeMap: Record<
   xl: { variant: 'medium' },
 };
 
+export const badgeSizeMap: Record<AvatarSize, { size: number; offset: number }> = {
+  xs: { size: 8, offset: -1 },
+  sm: { size: 12, offset: -1 },
+  md: { size: 16, offset: -2 },
+  lg: { size: 20, offset: -2 },
+  xl: { size: 20, offset: -2 },
+};
+
 const sbtcContractIds = [
   'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token',
   'SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70.sbtc-token',
