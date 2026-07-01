@@ -31,10 +31,12 @@ import type {
 import { baseCurrencyAmountInQuote, truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../components/avatar-circle';
+import { Badge } from '../components/badge';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
 import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
+import { transactionStatusBadge } from '../components/transaction-status';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { SignerRollcall } from './components/signer-rollcall';
@@ -239,7 +241,11 @@ export function TxDetailPage() {
                 <AvatarCircle name={proposerName} size="xs" />
               </Flex>
             }
-          />
+          >
+            <Box mt="space.03">
+              <Badge variant={heroStatus.variant} label={heroStatus.label} />
+            </Box>
+          </MultisigHero>
           <SectionLabel>Transaction details</SectionLabel>
           <TxDetailsTable
             transaction={tx}
