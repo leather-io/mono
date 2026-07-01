@@ -1,9 +1,9 @@
 import { stxAsset } from '@leather.io/constants';
-import type { AccountAddresses, AccountId } from '@leather.io/models';
+import type { AccountAddresses } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui';
 
 import { useActivityByAsset } from '@app/query/activity/activity.query';
-import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
+import { useStxAccountBalanceByAddresses } from '@app/query/stacks/balance/stx-balance.hooks';
 
 import { useTokenMarketInfo } from './hooks/use-token-market-info';
 import { StacksTokenDetailsLayout } from './stacks-token-details.layout';
@@ -11,12 +11,11 @@ import { TokenDetailsError } from './token-details-error';
 import { TokenDetailsLoading } from './token-details-loading';
 
 interface StacksTokenDetailsProps {
-  accountId: AccountId;
   account: AccountAddresses;
 }
 
-export function StacksTokenDetails({ accountId, account }: StacksTokenDetailsProps) {
-  const balance = useStxAccountBalance(accountId);
+export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
+  const balance = useStxAccountBalanceByAddresses(account);
   const marketInfo = useTokenMarketInfo(stxAsset);
   const activityQuery = useActivityByAsset(account, stxAsset);
 

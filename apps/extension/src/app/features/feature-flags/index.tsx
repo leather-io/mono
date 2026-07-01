@@ -39,6 +39,7 @@ interface FeatureFlags {
   swapRevamp: boolean;
   releaseTrendingTokens: boolean;
   releaseAddAccount: boolean;
+  enableAllowPolicyAccounts: boolean;
 }
 
 export function useFlags() {

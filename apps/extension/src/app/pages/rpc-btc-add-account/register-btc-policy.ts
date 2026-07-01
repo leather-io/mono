@@ -12,7 +12,7 @@ import { userAddsPolicy } from '@app/store/policy/policy.slice';
 
 import { createBtcPolicyRegistration } from './btc-policy-registration';
 
-// Derives the policy account's address from the descriptor, saves it to state
+// Derives the policy's address from the descriptor, saves it to state
 // associated with the active singlesig account, and returns the RPC result.
 // Returns null if address derivation unexpectedly fails (the descriptor is
 // validated upstream), so the caller can surface an RPC error rather than hang.

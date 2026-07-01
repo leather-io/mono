@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 
+import { ChainId } from '@stacks/network';
+
 import { truncateMiddle } from '@leather.io/utils';
 
 import { closeWindow } from '@shared/utils';
@@ -11,7 +13,6 @@ import { PopupHeader } from '@app/features/container/headers/popup.header';
 import { MessagePreviewBox } from '@app/features/message-signer/message-preview-box';
 import { MessageSigningRequestLayout } from '@app/features/message-signer/message-signing-request.layout';
 import { AccountGate } from '@app/routes/account-gate';
-import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { MessageSigningHeader } from '../../features/message-signer/message-signing-header';
 import { SignMessageActions } from '../../features/message-signer/stacks-sign-message-action';
@@ -32,13 +33,13 @@ function RpcSignBip322Message() {
     origin,
     message,
     address,
+    networkMode,
     isLoading: signBip322MessageIsLoading,
     onUserApproveBip322MessageSigningRequest,
     onUserRejectBip322MessageSigningRequest,
   } = useSignBip322Message();
 
   const location = useLocation();
-  const { chain } = useCurrentNetwork();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -66,7 +67,7 @@ function RpcSignBip322Message() {
           additionalText={`. This message is signed by ${truncateMiddle(address)}`}
         />
         <MessagePreviewBox message={message} />
-        <NoFeesWarningRow chainId={chain.stacks.chainId} />
+        <NoFeesWarningRow chainId={networkMode === 'mainnet' ? ChainId.Mainnet : ChainId.Testnet} />
         <SignMessageActions
           isLoading={isLoading}
           onSignMessage={() => onUserApproveBip322MessageSigningRequest()}

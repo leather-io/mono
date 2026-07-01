@@ -27,6 +27,7 @@ export function createMockGetAddressesResponse(id: string) {
         },
         {
           symbol: 'STX',
+          kind: 'single-sig',
           address: 'SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST',
           publicKey: '03bb26a318d5b88f493cb648e5b04ebbb363cda8135c2f8e4cd26d22cdaaa2ae42',
         },

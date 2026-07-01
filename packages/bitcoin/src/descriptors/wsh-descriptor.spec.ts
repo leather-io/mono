@@ -16,6 +16,7 @@ import {
   getDescriptorMatchingInputIndexes,
   getWshDescriptorAddress,
   getWshDescriptorNetwork,
+  getWshDescriptorThreshold,
   isWshDescriptor,
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
@@ -939,5 +940,32 @@ describe('extractWshDescriptorPreimages', () => {
       witnessUtxo: { script: btc.p2wpkh(pubkeyA).script, amount: 10_000n },
     });
     expect(extractWshDescriptorPreimages(tx, [0])).toEqual([]);
+  });
+
+  it('reads the threshold from a sortedmulti descriptor', () => {
+    expect(getWshDescriptorThreshold(`wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`)).toBe(2);
+  });
+
+  it('reads the threshold from a multi descriptor', () => {
+    expect(getWshDescriptorThreshold(`wsh(multi(1,${xpubA}/0/0,${xpubB}/0/0))`)).toBe(1);
+  });
+});
+
+describe('getWshDescriptorThreshold', () => {
+  it('reads the maximum OP_16 threshold from a 16-of-16 multisig', () => {
+    const keys = Array.from({ length: 16 }, (_, i) => `${makeNativeSegwitAccountXpub(i + 1)}/0/0`);
+    expect(getWshDescriptorThreshold(`wsh(multi(16,${keys.join(',')}))`)).toBe(16);
+  });
+
+  it('throws for a single-key descriptor whose script starts with a key push, not a threshold', () => {
+    expect(() => getWshDescriptorThreshold(`wsh(pk(${xpubA}/0/0))`)).toThrow(
+      'does not start with a multisig threshold opcode'
+    );
+  });
+
+  it('throws for a miniscript policy whose witness script is not a bare multisig', () => {
+    expect(() => getWshDescriptorThreshold(descriptor)).toThrow(
+      'does not start with a multisig threshold opcode'
+    );
   });
 });

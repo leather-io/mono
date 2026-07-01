@@ -1,6 +1,6 @@
 import { VStack, styled } from 'leather-styles/jsx';
 
-import { Approver, Button, Callout } from '@leather.io/ui';
+import { AddressDisplayer, Approver, Button, Callout } from '@leather.io/ui';
 
 import { closeWindow } from '@shared/utils';
 
@@ -9,7 +9,7 @@ import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-acc
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
-import { policyCallout } from '../policy-match';
+import { policyCallout, verifyModeCalloutMessage } from '../policy-match';
 import { useStxAddAccount } from './use-stx-add-account';
 
 export function RpcStxAddAccount() {
@@ -18,12 +18,14 @@ export function RpcStxAddAccount() {
     name,
     publicKeys,
     threshold,
+    address,
     matchStatus,
+    mode,
     canApprove,
     isFeatureEnabled,
     rejectAsUnsupported,
     focusInitiatingTab,
-    onUserApprovesAddAccount,
+    finalize,
   } = useStxAddAccount();
 
   useOnOriginTabClose(() => closeWindow());
@@ -42,15 +44,38 @@ export function RpcStxAddAccount() {
   }
 
   function onApprove() {
-    onUserApprovesAddAccount();
+    finalize();
     closeWindow();
   }
 
+  const isVerifyMode = mode === 'verify';
   const callout = policyCallout(matchStatus, 'Stacks');
 
   return (
     <Approver requester={origin} width="100%">
-      <Approver.Header title="Add multisig account" onPressRequestedByLink={focusInitiatingTab} />
+      <Approver.Header
+        title={isVerifyMode ? 'Verify multisig address' : 'Add multisig account'}
+        onPressRequestedByLink={focusInitiatingTab}
+      />
+      {isVerifyMode && (
+        <Approver.Section>
+          <Callout variant="warning" mt="space.03">
+            {verifyModeCalloutMessage}
+          </Callout>
+        </Approver.Section>
+      )}
+      <Approver.Section>
+        <Approver.Subheader>Multisig address</Approver.Subheader>
+        {address ? (
+          <styled.div pb="space.03">
+            <AddressDisplayer address={address} />
+          </styled.div>
+        ) : (
+          <Callout variant="error" mt="space.03" mb="space.03">
+            Could not derive the address for this multisig account.
+          </Callout>
+        )}
+      </Approver.Section>
       <Approver.Section>
         <Approver.Subheader>With account</Approver.Subheader>
         <CurrentAccountDisplayer onSelectAccount={toggleSwitchAccount} />
@@ -91,7 +116,7 @@ export function RpcStxAddAccount() {
             onClick={onApprove}
             data-testid="stx-add-account-approve-button"
           >
-            Confirm
+            {isVerifyMode ? 'Verify' : 'Confirm'}
           </Button>,
         ]}
       />

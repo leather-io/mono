@@ -27,19 +27,15 @@ function resolveBtcPolicyNetwork({ paramsNetwork, networks }: ResolveBtcPolicyNe
   return { network, networkId: network.id };
 }
 
-interface CreateBtcPolicyRegistrationArgs {
+interface DeriveBtcPolicyAddressArgs {
   params: RpcParams<typeof btcAddAccount>;
-  fingerprint: string;
-  accountIndex: number;
   networks: Record<string, NetworkConfiguration>;
 }
 
-export function createBtcPolicyRegistration({
-  params,
-  fingerprint,
-  accountIndex,
-  networks,
-}: CreateBtcPolicyRegistrationArgs) {
+// Derives the multisig address from the descriptor, resolving the requested
+// network the same way registration does so the address shown in the approver
+// (and verified on Ledger) is byte-identical to what gets stored and returned.
+export function deriveBtcPolicyAddress({ params, networks }: DeriveBtcPolicyAddressArgs) {
   const { network, networkId } = resolveBtcPolicyNetwork({
     paramsNetwork: params.network,
     networks,
@@ -59,6 +55,24 @@ export function createBtcPolicyRegistration({
   );
   if (!address) throw new Error('Descriptor does not produce an address');
 
+  return { address, networkId };
+}
+
+interface CreateBtcPolicyRegistrationArgs {
+  params: RpcParams<typeof btcAddAccount>;
+  fingerprint: string;
+  accountIndex: number;
+  networks: Record<string, NetworkConfiguration>;
+}
+
+export function createBtcPolicyRegistration({
+  params,
+  fingerprint,
+  accountIndex,
+  networks,
+}: CreateBtcPolicyRegistrationArgs) {
+  const { address, networkId } = deriveBtcPolicyAddress({ params, networks });
+
   const parentAccountId = makeAccountIdentifer(fingerprint, accountIndex);
   const role = 'signer' as const;
 
@@ -75,6 +89,6 @@ export function createBtcPolicyRegistration({
       },
       name: params.name,
     },
-    result: { address, descriptor: params.descriptor, accountId: address, role },
+    result: { address, descriptor: params.descriptor, accountId: address, role, added: true },
   };
 }

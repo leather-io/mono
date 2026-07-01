@@ -1,9 +1,10 @@
-import type { AccountId, StxBalance } from '@leather.io/models';
+import type { AccountAddresses, AccountId, StxBalance } from '@leather.io/models';
 import type { AddressQuotedStxBalance } from '@leather.io/services';
 import { StxAvatarIcon } from '@leather.io/ui';
 
 import {
   useStxAccountBalance,
+  useStxAccountBalanceByAddresses,
   useStxAddressBalance,
 } from '@app/query/stacks/balance/stx-balance.hooks';
 
@@ -32,8 +33,10 @@ interface StxAssetItemBalanceLoaderProps {
     isLoadingAdditionalData: boolean
   ): React.ReactNode;
 }
-export function StxAssetItemBalanceLoader({ accountId, children }: StxAssetItemBalanceLoaderProps) {
-  const stxBalance = useStxAccountBalance(accountId);
+function renderStxBalance(
+  stxBalance: ReturnType<typeof useStxAccountBalance>,
+  children: StxAssetItemBalanceLoaderProps['children']
+) {
   const isLoading = stxBalance.state === 'loading';
   if (isLoading) return <CryptoAssetItemPlaceholder />;
   if (stxBalance.state === 'error') {
@@ -41,4 +44,23 @@ export function StxAssetItemBalanceLoader({ accountId, children }: StxAssetItemB
   }
 
   return children(stxBalance.value, isLoading, false);
+}
+
+export function StxAssetItemBalanceLoader({ accountId, children }: StxAssetItemBalanceLoaderProps) {
+  return renderStxBalance(useStxAccountBalance(accountId), children);
+}
+
+interface StxAssetItemBalanceLoaderByAddressesProps {
+  account: AccountAddresses;
+  children(
+    balance: AddressQuotedStxBalance,
+    isLoading: boolean,
+    isLoadingAdditionalData: boolean
+  ): React.ReactNode;
+}
+export function StxAssetItemBalanceLoaderByAddresses({
+  account,
+  children,
+}: StxAssetItemBalanceLoaderByAddressesProps) {
+  return renderStxBalance(useStxAccountBalanceByAddresses(account), children);
 }

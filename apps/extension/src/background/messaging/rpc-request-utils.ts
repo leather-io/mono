@@ -254,3 +254,35 @@ export async function validateConnectedWalletExists(
 
   return { status: 'success' };
 }
+
+const multisigAccountNotSupportedMessage =
+  'This request is not supported while a multisig account is selected. Switch to a standard account and try again.';
+
+export async function validateNoActivePolicy(
+  request: RpcRequests,
+  port: chrome.runtime.Port
+): Promise<{ status: ValidationResult }> {
+  const state = await getRootState();
+
+  if (state?.active.activePolicyId) {
+    void trackRpcRequestError({
+      endpoint: request.method,
+      error: multisigAccountNotSupportedMessage,
+    });
+
+    void chrome.tabs.sendMessage(
+      getTabIdFromPort(port),
+      createRpcErrorResponse(request.method, {
+        id: request.id,
+        error: {
+          code: RpcErrorCode.INVALID_REQUEST,
+          message: multisigAccountNotSupportedMessage,
+        },
+      })
+    );
+
+    return { status: 'failure' };
+  }
+
+  return { status: 'success' };
+}

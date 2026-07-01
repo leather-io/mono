@@ -109,6 +109,55 @@ describe(signBip322MessageSimple.name, () => {
         'AkgwRQIhAOzyynlqt93lOKJr+wmmxIens//zPzl9tqIOua93wO6MAiBi5n5EyAcPScOjf1lAqIUIQtr3zKNeavYabHyR8eGhowEhAsfxIAMZZEKUPYWI4BruhAQjzFT8FSFSajuFwrDL1Yhy'
       );
     });
+
+    describe('PSBT shape required for hardware-wallet (Ledger) signing', () => {
+      async function captureToSignPsbt(message: string) {
+        let captured: bitcoin.Psbt | undefined;
+        function signPsbt(psbt: bitcoin.Psbt) {
+          captured = psbt;
+          psbt.signAllInputs(createNativeSegwitBitcoinJsSigner(Buffer.from(testVectorKey)));
+          return Promise.resolve(btc.Transaction.fromPSBT(psbt.toBuffer()));
+        }
+        const { virtualToSpend } = await signBip322MessageSimple({
+          address: nativeSegwitAddress,
+          message,
+          network: 'mainnet',
+          signPsbt,
+        });
+        if (!captured) throw new Error('signPsbt was never called');
+        return { psbt: captured, virtualToSpend };
+      }
+
+      test('the to-sign input carries the nonWitnessUtxo of the to-spend tx', async () => {
+        const { psbt, virtualToSpend } = await captureToSignPsbt(helloWorld);
+        const input = psbt.data.inputs[0];
+        if (!input) throw new Error('expected a to-sign input');
+
+        expect(input.witnessUtxo).toBeDefined();
+        const { nonWitnessUtxo } = input;
+        if (!nonWitnessUtxo) throw new Error('expected nonWitnessUtxo on the to-sign input');
+
+        expect(Buffer.from(nonWitnessUtxo).toString('hex')).toEqual(
+          virtualToSpend.toBuffer().toString('hex')
+        );
+      });
+
+      test('the nonWitnessUtxo hashes to the input prevout, so a Ledger accepts it', async () => {
+        const { psbt } = await captureToSignPsbt(helloWorld);
+        const input = psbt.data.inputs[0];
+        if (!input?.nonWitnessUtxo) throw new Error('expected nonWitnessUtxo on the to-sign input');
+
+        const prevoutHash = psbt.txInputs[0]?.hash;
+        if (!prevoutHash) throw new Error('expected a prevout hash on the to-sign input');
+
+        const nonWitnessTxHash = bitcoin.Transaction.fromBuffer(
+          Buffer.from(input.nonWitnessUtxo)
+        ).getHash();
+        expect(Buffer.from(nonWitnessTxHash).toString('hex')).toEqual(
+          Buffer.from(prevoutHash).toString('hex')
+        );
+      });
+    });
   });
 
   describe('Message Signing, Taproot', () => {

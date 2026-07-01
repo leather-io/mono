@@ -17,7 +17,7 @@ import { queryClient } from '@app/common/persistence';
 import { partiallyClearLocalStorage } from '@app/common/store-utils';
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
-import { changeActiveAccount } from '@app/store/active/active.actions';
+import { changeActiveAccount, changeActiveToPolicy } from '@app/store/active/active.actions';
 import { createNewAccount } from '@app/store/chains/stx-chain.actions';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
@@ -63,6 +63,10 @@ export function useKeyActions() {
 
       switchAccount(accountId: AccountId) {
         void dispatch(changeActiveAccount(accountId));
+      },
+
+      switchAccountToPolicy(policyId: string) {
+        void dispatch(changeActiveToPolicy(policyId));
       },
 
       createNewAccount(fingerprint?: string) {

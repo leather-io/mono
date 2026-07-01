@@ -119,6 +119,43 @@ export class SwitchAccountPage {
     await this.page.getByTestId(`switch-account-item-${accountIndex}`).click();
   }
 
+  policyRow(policyId: string) {
+    return this.page.getByTestId(`switch-account-policy-${policyId}`);
+  }
+
+  async openPolicyMenu(nth = 0) {
+    await this.page.getByTestId(SwitchAccountSelectors.PolicyActionMenuTrigger).nth(nth).click();
+  }
+
+  async renamePolicy(name: string, nth = 0) {
+    await this.openPolicyMenu(nth);
+    await this.clickMenuItem('Rename');
+    await this.page.getByTestId(SwitchAccountSelectors.RenamePolicyInput).fill(name);
+    await this.page.getByTestId(SwitchAccountSelectors.RenamePolicySaveBtn).click();
+  }
+
+  async removePolicy(nth = 0) {
+    await this.openPolicyMenu(nth);
+    await this.clickMenuItem('Remove');
+    await this.page.getByTestId(SwitchAccountSelectors.RemovePolicyConfirmBtn).click();
+  }
+
+  async getPersistedPolicyIds() {
+    return this.page.evaluate(async () => {
+      const store = await window.debug.getPersistedStore();
+      const policy = (store as { policy?: { ids?: string[] } } | undefined)?.policy;
+      return policy?.ids ?? [];
+    });
+  }
+
+  async getActivePolicyId() {
+    return this.page.evaluate(async () => {
+      const store = await window.debug.getPersistedStore();
+      const active = (store as { active?: { activePolicyId?: string | null } } | undefined)?.active;
+      return active?.activePolicyId ?? null;
+    });
+  }
+
   async addAccount(nth = 0) {
     await this.page.getByTestId(SwitchAccountSelectors.CreateAccountBtn).nth(nth).click();
     await this.selectAccountHeader.waitFor({ state: 'hidden' });

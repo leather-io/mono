@@ -24,7 +24,7 @@ export function SignatureRequestStructuredDataContent({
   return (
     <>
       <StructuredDataBox message={payload.message} domain={payload.domain} />
-      <NoFeesWarningRow chainId={payload.network?.chainId ?? ChainId.Testnet} />
+      <NoFeesWarningRow chainId={payload.network?.chainId ?? ChainId.Mainnet} />
       <SignMessageActions
         isLoading={isLoading}
         onSignMessageCancel={onCancelMessageSigning}

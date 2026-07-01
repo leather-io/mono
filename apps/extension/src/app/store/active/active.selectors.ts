@@ -7,3 +7,5 @@ function selectActive(state: RootState) {
 }
 
 export const selectActiveAccount = createSelector(selectActive, state => state.account);
+
+export const selectActivePolicyId = createSelector(selectActive, state => state.activePolicyId);

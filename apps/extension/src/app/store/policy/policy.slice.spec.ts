@@ -5,7 +5,7 @@ import { resetWallet } from '@leather.io/state';
 import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { type PolicyStore, makePolicyId } from './policy-store.utils';
-import { policySlice, userAddsPolicy } from './policy.slice';
+import { policySlice, userAddsPolicy, userRemovesPolicy } from './policy.slice';
 
 const { reducer, getInitialState } = policySlice;
 
@@ -64,11 +64,11 @@ describe('policySlice', () => {
     expect(result.entities[stacksPolicy.id]).toEqual(stacksPolicy);
   });
 
-  test('does not store a name on the policy', () => {
+  test('does not persist the provided name on the policy entity', () => {
     const policy = makeBitcoinPolicy(parentAccountIdA);
     const result = reducer(getInitialState(), userAddsPolicy({ policy, name: 'Family vault' }));
 
-    expect(result.entities[policy.id]).not.toHaveProperty('name');
+    expect(result.entities[policy.id]).toEqual(policy);
   });
 
   test('is idempotent: re-adding the same (parent, address) replaces in place', () => {
@@ -112,6 +112,21 @@ describe('policySlice', () => {
   test('is a no-op when removing a wallet with no policies', () => {
     const seeded = seed(makeBitcoinPolicy(parentAccountIdA));
     const result = reducer(seeded, userRemovesWallet({ fingerprint: '99999999' }));
+
+    expect(result).toEqual(seeded);
+  });
+
+  test('removes a single policy by id, leaving siblings', () => {
+    const policyA = makeBitcoinPolicy(parentAccountIdA);
+    const policyB = makeBitcoinPolicy(parentAccountIdB);
+    const state = reducer(seed(policyA, policyB), userRemovesPolicy({ policyId: policyA.id }));
+
+    expect(state.ids).toEqual([policyB.id]);
+  });
+
+  test('is a no-op when removing an unknown policy id', () => {
+    const seeded = seed(makeBitcoinPolicy(parentAccountIdA));
+    const result = reducer(seeded, userRemovesPolicy({ policyId: 'unknown/0/addr/mainnet' }));
 
     expect(result).toEqual(seeded);
   });
