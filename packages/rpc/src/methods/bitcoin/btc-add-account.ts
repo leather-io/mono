@@ -12,13 +12,25 @@ const btcAddAccountRequestParamsSchema = z.object({
   network: z.string().optional(),
 });
 
-const btcAddAccountResponseBodySchema = z.object({
+const btcAddAccountResultBaseSchema = z.object({
   address: z.string(),
   descriptor: z.string(),
-  accountId: z.string().optional(),
   role: policyRoleSchema,
-  added: z.boolean(),
 });
+
+const btcAccountAddedResultSchema = btcAddAccountResultBaseSchema.extend({
+  added: z.literal(true),
+  accountId: z.string(),
+});
+
+const btcAccountVerifiedResultSchema = btcAddAccountResultBaseSchema.extend({
+  added: z.literal(false),
+});
+
+const btcAddAccountResponseBodySchema = z.discriminatedUnion('added', [
+  btcAccountAddedResultSchema,
+  btcAccountVerifiedResultSchema,
+]);
 
 export const btcAddAccount = defineRpcEndpoint({
   method: 'btc_addAccount',

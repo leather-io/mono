@@ -19,14 +19,26 @@ const stxAddAccountRequestParamsSchema = z
     path: ['threshold'],
   });
 
-const stxAddAccountResponseBodySchema = z.object({
+const stxAddAccountResultBaseSchema = z.object({
   address: z.string(),
   publicKeys: z.array(z.string()),
   threshold: z.number(),
   role: policyRoleSchema,
-  accountId: z.string().optional(),
-  added: z.boolean(),
 });
+
+const stxAccountAddedResultSchema = stxAddAccountResultBaseSchema.extend({
+  added: z.literal(true),
+  accountId: z.string(),
+});
+
+const stxAccountVerifiedResultSchema = stxAddAccountResultBaseSchema.extend({
+  added: z.literal(false),
+});
+
+const stxAddAccountResponseBodySchema = z.discriminatedUnion('added', [
+  stxAccountAddedResultSchema,
+  stxAccountVerifiedResultSchema,
+]);
 
 export const stxAddAccount = defineRpcEndpoint({
   method: 'stx_addAccount',
