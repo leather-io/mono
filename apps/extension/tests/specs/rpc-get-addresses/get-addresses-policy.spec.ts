@@ -148,10 +148,13 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
         policyStateOverrides({ policies: [bitcoinPolicy, stacksPolicy] })
       );
       await page.goto('localhost:3000');
-      void initiateGetAddresses(page, { allowPolicyAccounts: true });
+      const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: true });
 
       const popup = await openSwitcher(context);
       await expect(popup.getByTestId(`switch-account-policy-${bitcoinPolicy.id}`)).toBeVisible();
+
+      await popup.close();
+      await expect(requestPromise).rejects.toThrow();
     });
 
     test('omits policy accounts and returns singlesig when the param is not set', async ({
@@ -206,10 +209,13 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
         policyStateOverrides({ policies: [bitcoinPolicy, stacksPolicy] })
       );
       await page.goto('localhost:3000');
-      void initiateGetAddresses(page, {});
+      const requestPromise = initiateGetAddresses(page, {});
 
       const popup = await openSwitcher(context);
       await expect(popup.getByTestId(`switch-account-policy-${bitcoinPolicy.id}`)).toHaveCount(0);
+
+      await popup.close();
+      await expect(requestPromise).rejects.toThrow();
     });
   });
 
@@ -260,10 +266,13 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
         policyStateOverrides({ policies: [bitcoinPolicy, stacksPolicy] })
       );
       await page.goto('localhost:3000');
-      void initiateGetAddresses(page, {});
+      const requestPromise = initiateGetAddresses(page, {});
 
       const popup = await openSwitcher(context);
       await expect(popup.getByTestId(`switch-account-policy-${bitcoinPolicy.id}`)).toBeVisible();
+
+      await popup.close();
+      await expect(requestPromise).rejects.toThrow();
     });
   });
 });

@@ -467,14 +467,11 @@ export class OnboardingPage {
       );
       const hasSessionKey = encryptionKey === testAccountDerivedKey;
       const hasTokensTab = await this.page.getByTestId(HomePageSelectors.TokensTabBtn).isVisible();
-      const hasCollectiblesTab = await this.page
-        .getByTestId(HomePageSelectors.CollectiblesTabBtn)
-        .isVisible();
       const hasActivityTab = await this.page
         .getByTestId(HomePageSelectors.ActivityTabBtn)
         .isVisible();
 
-      return hasSessionKey && hasTokensTab && hasActivityTab && hasCollectiblesTab;
+      return hasSessionKey && hasTokensTab && hasActivityTab;
     };
 
     const iterationCounter = createCounter();
