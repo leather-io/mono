@@ -168,9 +168,10 @@ export class HiroStacksApiClient {
     { txIds, cursor }: { txIds: string[]; cursor?: string | null },
     { signal, skipCache }: ApiRequestOptions = {}
   ): Promise<HiroBalanceChangesResponse> {
+    const sortedTxIds = [...txIds].sort();
     const fetchFn = async () => {
       const params = new URLSearchParams({
-        tx_id: txIds.join(','),
+        tx_id: sortedTxIds.join(','),
         limit: String(balanceChangesResultLimit),
       });
       if (cursor) params.set('cursor', cursor);
@@ -195,7 +196,7 @@ export class HiroStacksApiClient {
           [
             'hiro-stacks-get-principal-balance-changes',
             principal,
-            txIds.join(','),
+            sortedTxIds.join(','),
             cursor ?? 'start',
             selectStacksChainId(this.settings.getSettings()),
           ],

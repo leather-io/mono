@@ -4,6 +4,7 @@ import { AccountAddresses, BitcoinTransaction } from '@leather.io/models';
 import { hasBitcoinAddress } from '@leather.io/utils';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import type { LeatherApiPageRequest } from '../infrastructure/api/leather/leather-api.pagination';
 import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
 import { selectBitcoinNetworkMode } from '../infrastructure/settings/settings.selectors';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
@@ -41,17 +42,18 @@ export class BitcoinTransactionsService {
   */
   public async getAccountTransactions(
     account: AccountAddresses,
+    pageRequest: LeatherApiPageRequest,
     signal?: AbortSignal
   ): Promise<BitcoinTransaction[]> {
     if (!hasBitcoinAddress(account)) return [];
 
     if (account.bitcoin.type === 'fixedAddress') {
-      return this.getAddressTransactions(account.bitcoin.address, signal);
+      return this.getAddressTransactions(account.bitcoin.address, pageRequest, signal);
     }
 
     const [nativeSegwitTxs, taprootTxs] = await Promise.all([
-      this.getDescriptorTransactions(account.bitcoin.nativeSegwitDescriptor, signal),
-      this.getDescriptorTransactions(account.bitcoin.taprootDescriptor, signal),
+      this.getDescriptorTransactions(account.bitcoin.nativeSegwitDescriptor, pageRequest, signal),
+      this.getDescriptorTransactions(account.bitcoin.taprootDescriptor, pageRequest, signal),
     ]);
 
     const uniqueTxsMap = new Map<string, BitcoinTransaction>();
@@ -69,6 +71,7 @@ export class BitcoinTransactionsService {
   */
   public async getDescriptorTransactions(
     descriptor: string,
+    pageRequest: LeatherApiPageRequest,
     signal?: AbortSignal
   ): Promise<BitcoinTransaction[]> {
     const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
@@ -78,51 +81,22 @@ export class BitcoinTransactionsService {
       });
       return mempoolTxs.map(createBitcoinTransactionFromMempool);
     }
-    const firstPage = await this.leatherApiClient.fetchBitcoinTransactions(
-      descriptor,
-      { page: 1, pageSize: 150 },
-      { signal }
-    );
-    const pagesToFetch = Math.min(firstPage.meta.totalPages, 5);
-    if (pagesToFetch <= 1) return firstPage.data.map(createBitcoinTransactionFromLeather);
-
-    const remainingPages = await Promise.all(
-      Array.from({ length: pagesToFetch - 1 }, (_, i) =>
-        this.leatherApiClient.fetchBitcoinTransactions(
-          descriptor,
-          { page: i + 2, pageSize: 150 },
-          { signal }
-        )
-      )
-    );
-    return [firstPage, ...remainingPages].flatMap(p =>
-      p.data.map(createBitcoinTransactionFromLeather)
-    );
+    const page = await this.leatherApiClient.fetchBitcoinTransactions(descriptor, pageRequest, {
+      signal,
+    });
+    return page.data.map(createBitcoinTransactionFromLeather);
   }
 
   public async getAddressTransactions(
     address: string,
+    pageRequest: LeatherApiPageRequest,
     signal?: AbortSignal
   ): Promise<BitcoinTransaction[]> {
-    const firstPage = await this.leatherApiClient.fetchBitcoinTransactionsByAddress(
+    const page = await this.leatherApiClient.fetchBitcoinTransactionsByAddress(
       address,
-      { page: 1, pageSize: 150 },
+      pageRequest,
       { signal }
     );
-    const pagesToFetch = Math.min(firstPage.meta.totalPages, 5);
-    if (pagesToFetch <= 1) return firstPage.data.map(createBitcoinTransactionFromLeather);
-
-    const remainingPages = await Promise.all(
-      Array.from({ length: pagesToFetch - 1 }, (_, i) =>
-        this.leatherApiClient.fetchBitcoinTransactionsByAddress(
-          address,
-          { page: i + 2, pageSize: 150 },
-          { signal }
-        )
-      )
-    );
-    return [firstPage, ...remainingPages].flatMap(p =>
-      p.data.map(createBitcoinTransactionFromLeather)
-    );
+    return page.data.map(createBitcoinTransactionFromLeather);
   }
 }

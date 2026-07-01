@@ -42,6 +42,8 @@ import {
   mapTokenTransferActivity,
 } from './stacks-tx-activity.utils';
 
+const btcTxPageRequest = { page: 1, pageSize: 750 };
+
 @injectable()
 export class ActivityService {
   constructor(
@@ -132,7 +134,7 @@ export class ActivityService {
     if (!hasBitcoinAddress(account)) return [];
 
     const [bitcoinTransactions] = await Promise.all([
-      this.bitcoinTransactionsService.getAccountTransactions(account, signal),
+      this.bitcoinTransactionsService.getAccountTransactions(account, btcTxPageRequest, signal),
       this.marketDataService.getMarketData(btcAsset, signal),
     ]);
     const activityList: OnChainActivity[] = [];

@@ -10,8 +10,12 @@ import {
 } from './activity-paginator';
 
 function stx(timestamp: number): ActivitySourceItem {
+  return stxTagged(timestamp, String(timestamp));
+}
+
+function stxTagged(timestamp: number, tag: string): ActivitySourceItem {
   return {
-    txid: `stx-${timestamp}`,
+    txid: `stx-${tag}`,
     chain: 'stacks',
     timestamp,
     raw: {
@@ -45,21 +49,40 @@ function btc(timestamp: number): ActivitySourceItem {
 function makeSources(
   stxAll: ActivitySourceItem[],
   btcAll: ActivitySourceItem[],
-  stxPageSize: number
+  stacksTxPageSize: number
 ): ActivitySources {
   const stxSorted = [...stxAll].sort(compareActivitySourceNewestFirst);
   return {
-    fetchAllBtc() {
+    fetchAllBtcTx() {
       return Promise.resolve([...btcAll]);
     },
-    fetchStxPage(cursor: string | null) {
+    fetchStacksTxPage(cursor: string | null) {
       const offset = cursor === null ? 0 : Number(cursor);
-      const items = stxSorted.slice(offset, offset + stxPageSize);
-      const nextOffset = offset + stxPageSize;
+      const items = stxSorted.slice(offset, offset + stacksTxPageSize);
+      const nextOffset = offset + stacksTxPageSize;
       return Promise.resolve({
         items,
         currentCursor: cursor,
         nextCursor: nextOffset < stxSorted.length ? String(nextOffset) : null,
+      });
+    },
+  };
+}
+
+function makeExplicitPagedSources(
+  stacksPages: ActivitySourceItem[][],
+  btcAll: ActivitySourceItem[]
+): ActivitySources {
+  return {
+    fetchAllBtcTx() {
+      return Promise.resolve([...btcAll]);
+    },
+    fetchStacksTxPage(cursor: string | null) {
+      const index = cursor === null ? 0 : Number(cursor);
+      return Promise.resolve({
+        items: [...(stacksPages[index] ?? [])],
+        currentCursor: cursor,
+        nextCursor: index + 1 < stacksPages.length ? String(index + 1) : null,
       });
     },
   };
@@ -156,6 +179,45 @@ describe('getActivitySourcePage', () => {
 
     expect(page.items).toEqual([]);
     expect(page.nextCursor).toBeNull();
+  });
+
+  it('does not drop same-timestamp Stacks txs split across source pages in non-key order', async () => {
+    const tiedC = stxTagged(100, 'c');
+    const tiedA = stxTagged(100, 'a');
+    const tiedZ = stxTagged(100, 'z');
+    const stacksPages = [
+      [stx(120), tiedC, tiedA],
+      [tiedZ, stx(90)],
+    ];
+    const expected = [stx(120), tiedC, tiedA, tiedZ, stx(90)].sort(
+      compareActivitySourceNewestFirst
+    );
+
+    for (const limit of [1, 2, 3, 4]) {
+      const pages = await collectPages(makeExplicitPagedSources(stacksPages, []), limit);
+      expect(txids(flatten(pages))).toEqual(txids(expected));
+    }
+  });
+
+  it('holds back Bitcoin at the frontier timestamp until the Stacks tie group is complete', async () => {
+    const stacksPages = [
+      [stx(120), stxTagged(100, 'c')],
+      [stxTagged(100, 'z'), stx(90)],
+    ];
+    const btcAll = [btc(100), btc(95)];
+    const expected = [
+      stx(120),
+      stxTagged(100, 'c'),
+      stxTagged(100, 'z'),
+      btc(100),
+      btc(95),
+      stx(90),
+    ].sort(compareActivitySourceNewestFirst);
+
+    for (const limit of [1, 2, 3]) {
+      const pages = await collectPages(makeExplicitPagedSources(stacksPages, btcAll), limit);
+      expect(txids(flatten(pages))).toEqual(txids(expected));
+    }
   });
 
   it('stays strictly descending across a Bitcoin-dense window', async () => {

@@ -35,6 +35,7 @@ export interface BlockchainActivity {
   readonly initiatedByUser: boolean;
   readonly action: StacksProtocolAction;
   readonly protocol?: StacksProtocolId;
+  readonly protocolName?: string;
   readonly counterparty?: string;
   readonly balanceChanges: BlockchainActivityBalanceChange[];
   readonly contract?: BlockchainActivityContractCall | BlockchainActivityContractDeploy;

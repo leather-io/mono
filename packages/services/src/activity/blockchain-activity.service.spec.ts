@@ -7,7 +7,6 @@ import type {
   Sip10Asset,
 } from '@leather.io/models';
 
-import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import type {
@@ -40,7 +39,7 @@ function baseTx() {
     tx_id: '0x1',
     sender: { address: 'SP1', nonce: 0 },
     sponsor: null,
-    fee_rate: '100',
+    fee_rate: '0',
     block: { height: 1, hash: '0x', index_hash: '0x', time: 1000, tx_index: 0 },
     bitcoin_block: { height: 1, time: 1000 },
     status: 'success' as const,
@@ -87,7 +86,6 @@ describe(BlockchainActivityService.name, () => {
   const mockBtcTx = { getAccountTransactions: vi.fn() } as unknown as BitcoinTransactionsService;
   const mockMarketData = { getMarketData: vi.fn() } as unknown as MarketDataService;
   const mockSip10 = { getAsset: vi.fn() } as unknown as Sip10AssetService;
-  const mockSip9 = {} as unknown as Sip9AssetService;
   const mockStacksProtocol = {
     getProtocolByAddress: vi.fn(),
     getContractActionType: vi.fn(),
@@ -99,7 +97,6 @@ describe(BlockchainActivityService.name, () => {
     mockBtcTx,
     mockMarketData,
     mockSip10,
-    mockSip9,
     mockStacksProtocol
   );
 
@@ -209,6 +206,73 @@ describe(BlockchainActivityService.name, () => {
       expect(result[0].balanceChanges[0].asset).toMatchObject({ assetId: 'SP.token::tok' });
     });
 
+    it('skips classification for txs whose affected_balances rule the asset out', async () => {
+      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xnostx',
+              type: 'contract_call',
+              contract_call: { contract_id: 'SP.dex', function_name: 'swap' },
+            },
+            { affected_balances: { stx: false, ft: true, nft: false } }
+          ),
+        ],
+      });
+      const result = await service.getActivityByAssetId(account, {
+        protocol: 'nativeStx',
+        id: 'STX',
+      });
+      expect(result).toEqual([]);
+      expect(mockStacksProtocol.getProtocolByAddress).not.toHaveBeenCalled();
+      expect(mockHiro.getPrincipalBalanceChanges).not.toHaveBeenCalled();
+    });
+
+    it('propagates cancellation instead of degrading ft changes to null', async () => {
+      const controller = new AbortController();
+      controller.abort();
+      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xft',
+              type: 'contract_call',
+              contract_call: { contract_id: 'SP.token', function_name: 'transfer' },
+            },
+            { affected_balances: { stx: false, ft: true, nft: false } }
+          ),
+        ],
+      });
+      mockHiro.getPrincipalBalanceChanges = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          {
+            tx_id: '0xft',
+            asset: { type: 'ft', identifier: 'SP.token::tok' },
+            balance_change: { sent: '0', received: '500', net: '500' },
+          },
+        ],
+      });
+      mockSip10.getAsset = vi.fn().mockRejectedValue(new Error('aborted'));
+      await expect(
+        service.getActivityByAssetId(
+          account,
+          { protocol: 'sip10', id: 'SP.token::tok' },
+          controller.signal
+        )
+      ).rejects.toThrow();
+    });
+
     it('reclassifies an unmapped SIP-10 transfer contract call as receive', async () => {
       mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
         total: 1,
@@ -248,6 +312,206 @@ describe(BlockchainActivityService.name, () => {
         contractId: 'SP.token',
         functionName: 'transfer',
       });
+    });
+  });
+
+  describe('getActivity', () => {
+    it('stitches pending above confirmed on the first page and dedups a tx present in both', async () => {
+      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xdup',
+              type: 'token_transfer',
+              token_transfer: { recipient: 'SP2', amount: '1000', memo: null },
+            },
+            { balance_changes: { stx: { sent: '1000', received: '0', net: '-1000' } } }
+          ),
+        ],
+      });
+      mockStacksTx.getPendingTransactions = vi.fn().mockResolvedValue([
+        {
+          tx_id: '0xdup',
+          tx_type: 'token_transfer',
+          sender_address: 'SP1',
+          sponsored: false,
+          fee_rate: '100',
+          receipt_time: 2000,
+          token_transfer: { recipient_address: 'SP2', amount: '1000', memo: '' },
+        },
+        {
+          tx_id: '0xmempoolonly',
+          tx_type: 'token_transfer',
+          sender_address: 'SP1',
+          sponsored: false,
+          fee_rate: '100',
+          receipt_time: 2001,
+          token_transfer: { recipient_address: 'SP3', amount: '500', memo: '' },
+        },
+      ]);
+      const response = await service.getActivity({ account });
+      expect(response.items.map(item => item.txid)).toEqual(['0xmempoolonly', '0xdup']);
+      expect(response.items[0].status).toBe('pending');
+      expect(response.items[1].status).toBe('success');
+      expect(response.nextCursor).toBeNull();
+      expect(response.hasMore).toBe(false);
+    });
+
+    it('emits an unconfirmed BTC tx that carries a time only as pending, never in the merge', async () => {
+      mockBtcTx.getAccountTransactions = vi
+        .fn()
+        .mockResolvedValue([btcTx({ txid: 'btc-inflight', height: undefined, time: 500 })]);
+      const response = await service.getActivity({ account });
+      const inflight = response.items.filter(item => item.txid === 'btc-inflight');
+      expect(inflight).toHaveLength(1);
+      expect(inflight[0].status).toBe('pending');
+      expect(response.nextCursor).toBeNull();
+    });
+  });
+
+  describe('STX fee handling', () => {
+    async function nativeStxActivity() {
+      return service.getActivityByAssetId(account, { protocol: 'nativeStx', id: 'STX' });
+    }
+
+    it('drops the fee-only phantom STX change on a non-STX contract call', async () => {
+      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xfeeonly',
+              fee_rate: '100',
+              type: 'contract_call',
+              contract_call: { contract_id: 'SP.dex', function_name: 'swap' },
+            },
+            {
+              balance_changes: { stx: { sent: '100', received: '0', net: '-100' } },
+              affected_balances: { stx: true, ft: false, nft: false },
+            }
+          ),
+        ],
+      });
+      expect(await nativeStxActivity()).toEqual([]);
+    });
+
+    it('nets the fee out of a STX-moving contract call', async () => {
+      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xstxswap',
+              fee_rate: '100',
+              type: 'contract_call',
+              contract_call: { contract_id: 'SP.dex', function_name: 'swap' },
+            },
+            { balance_changes: { stx: { sent: '1100', received: '0', net: '-1100' } } }
+          ),
+        ],
+      });
+      const result = await nativeStxActivity();
+      expect(result).toHaveLength(1);
+      expect(result[0].balanceChanges[0].direction).toBe('sent');
+      expect(result[0].balanceChanges[0].amount.crypto.amount.toString()).toBe('1000');
+    });
+
+    it('does not add the fee back on a sponsored tx (the sponsor pays it)', async () => {
+      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xsponsored',
+              fee_rate: '100',
+              type: 'contract_call',
+              sponsor: { address: 'SPSPONSOR', nonce: 0 },
+              contract_call: { contract_id: 'SP.dex', function_name: 'swap' },
+            },
+            { balance_changes: { stx: { sent: '0', received: '0', net: '0' } } }
+          ),
+        ],
+      });
+      expect(await nativeStxActivity()).toEqual([]);
+    });
+
+    it('attaches no fee to a confirmed sponsored tx the user initiated', async () => {
+      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xsponsoredmove',
+              fee_rate: '100',
+              type: 'contract_call',
+              sponsor: { address: 'SPSPONSOR', nonce: 0 },
+              contract_call: { contract_id: 'SP.dex', function_name: 'swap' },
+            },
+            { balance_changes: { stx: { sent: '500', received: '0', net: '-500' } } }
+          ),
+        ],
+      });
+      const result = await nativeStxActivity();
+      expect(result).toHaveLength(1);
+      expect(result[0].fee).toBeUndefined();
+      expect(result[0].balanceChanges[0].amount.crypto.amount.toString()).toBe('500');
+    });
+
+    it('attaches no fee to a pending sponsored tx the user initiated', async () => {
+      mockStacksTx.getPendingTransactions = vi.fn().mockResolvedValue([
+        {
+          tx_id: '0xpendingsponsored',
+          tx_type: 'token_transfer',
+          sender_address: 'SP1',
+          sponsored: true,
+          fee_rate: '100',
+          receipt_time: 2000,
+          token_transfer: { recipient_address: 'SP2', amount: '1000', memo: '' },
+        },
+      ]);
+      const result = await nativeStxActivity();
+      expect(result).toHaveLength(1);
+      expect(result[0].txid).toBe('0xpendingsponsored');
+      expect(result[0].fee).toBeUndefined();
+    });
+
+    it('shows the transfer amount, not amount+fee, on a confirmed send', async () => {
+      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xsend',
+              fee_rate: '100',
+              type: 'token_transfer',
+              token_transfer: { recipient: 'SP2', amount: '1000', memo: null },
+            },
+            { balance_changes: { stx: { sent: '1100', received: '0', net: '-1100' } } }
+          ),
+        ],
+      });
+      const result = await nativeStxActivity();
+      expect(result[0].balanceChanges[0].amount.crypto.amount.toString()).toBe('1000');
+      expect(result[0].fee?.amount.toString()).toBe('100');
     });
   });
 });

@@ -20,8 +20,8 @@ export type ActivitySourceItem = BitcoinActivitySourceItem | StacksActivitySourc
 
 export interface ActivitySourceCursor {
   readonly afterKey: string;
-  readonly stxToken: string | null;
-  readonly stxDone: boolean;
+  readonly stacksTxPageToken: string | null;
+  readonly stacksTxDone: boolean;
 }
 
 export interface ActivitySourcePage {
@@ -30,20 +30,20 @@ export interface ActivitySourcePage {
 }
 
 export interface ActivitySources {
-  fetchStxPage(cursor: string | null): Promise<{
+  fetchStacksTxPage(cursor: string | null): Promise<{
     items: ActivitySourceItem[];
     currentCursor: string | null;
     nextCursor: string | null;
   }>;
-  fetchAllBtc(): Promise<ActivitySourceItem[]>;
+  fetchAllBtcTx(): Promise<ActivitySourceItem[]>;
 }
 
-const TIMESTAMP_KEY_WIDTH = 16;
-const stxPageFetchLimit = 20;
+const timestampKeyWidth = 16;
+const maxStacksTxPageFetches = 20;
 
 // Strict total order so a cursor can resume at an exact boundary with no gaps or duplicates.
 function activitySourceItemKey(item: ActivitySourceItem): string {
-  return `${String(item.timestamp).padStart(TIMESTAMP_KEY_WIDTH, '0')}:${item.chain}:${item.txid}`;
+  return `${String(item.timestamp).padStart(timestampKeyWidth, '0')}:${item.chain}:${item.txid}`;
 }
 
 export function compareActivitySourceNewestFirst(
@@ -61,16 +61,19 @@ function sortNewestFirst(items: ActivitySourceItem[]): ActivitySourceItem[] {
   return [...items].sort(compareActivitySourceNewestFirst);
 }
 
-interface AccumulatedStxPage {
+interface AccumulatedStacksTxPage {
   readonly current: string | null;
   readonly items: ActivitySourceItem[];
 }
 
-function countItems(pages: AccumulatedStxPage[]): number {
-  return pages.reduce((total, page) => total + page.items.length, 0);
+function countNewerThan(pages: AccumulatedStacksTxPage[], timestamp: number): number {
+  return pages.reduce(
+    (total, page) => total + page.items.filter(item => item.timestamp > timestamp).length,
+    0
+  );
 }
 
-function lowestKey(pages: AccumulatedStxPage[]): string | null {
+function lowestKey(pages: AccumulatedStacksTxPage[]): string | null {
   let lowest: string | null = null;
   for (const page of pages) {
     for (const item of page.items) {
@@ -81,14 +84,114 @@ function lowestKey(pages: AccumulatedStxPage[]): string | null {
   return lowest;
 }
 
-function resumeStxToken(
-  boundaryPage: AccumulatedStxPage | undefined,
-  stxExhausted: boolean,
+interface StacksTxWindow {
+  readonly pages: AccumulatedStacksTxPage[];
+  readonly oldestFetchedTimestamp: number | null;
+  readonly exhausted: boolean;
+  readonly lastNext: string | null;
+}
+
+// Accumulates Stacks pages until the emit-safe region can fill a page or the stream ends.
+// Safety is timestamp-based: txs in the same block share block.time, and the source pages
+// ties in block order while the merge key orders them by txid, so a timestamp group is only
+// safe to emit once a fetched page has moved strictly past it (the group is then complete —
+// nothing that sorts inside it can arrive on a later page).
+async function accumulateStacksTxWindow(
+  sources: ActivitySources,
+  afterKey: string | null,
+  btcTxRemaining: ActivitySourceItem[],
+  limit: number,
+  startToken: string | null
+): Promise<StacksTxWindow> {
+  const pages: AccumulatedStacksTxPage[] = [];
+  let token = startToken;
+  let lastNext: string | null = null;
+  let oldestFetchedTimestamp: number | null = null;
+
+  for (let fetched = 0; fetched < maxStacksTxPageFetches; fetched++) {
+    const page = await sources.fetchStacksTxPage(token);
+    const fresh =
+      afterKey === null
+        ? page.items
+        : page.items.filter(item => activitySourceItemKey(item) < afterKey);
+    pages.push({ current: page.currentCursor, items: fresh });
+    lastNext = page.nextCursor;
+    const pageOldest = page.items[page.items.length - 1]?.timestamp;
+    if (pageOldest !== undefined) oldestFetchedTimestamp = pageOldest;
+    if (page.nextCursor === null) {
+      return { pages, oldestFetchedTimestamp, exhausted: true, lastNext };
+    }
+    if (oldestFetchedTimestamp !== null) {
+      const frontier = oldestFetchedTimestamp;
+      const safeStacksTx = countNewerThan(pages, frontier);
+      const safeBtcTx = btcTxRemaining.filter(item => item.timestamp > frontier).length;
+      if (safeStacksTx + safeBtcTx >= limit) break;
+    }
+    token = page.nextCursor;
+  }
+  return { pages, oldestFetchedTimestamp, exhausted: false, lastNext };
+}
+
+// A single timestamp group larger than the entire fetch window: emit on the full-key order
+// rather than stall (accepts the theoretical tie-order drop over making no progress).
+function fallbackSafeItems(
+  stacksTxItems: ActivitySourceItem[],
+  btcTxRemaining: ActivitySourceItem[],
+  pages: AccumulatedStacksTxPage[]
+): ActivitySourceItem[] {
+  const frontierKey = lowestKey(pages);
+  if (frontierKey === null) return [...stacksTxItems, ...btcTxRemaining];
+  return [
+    ...stacksTxItems,
+    ...btcTxRemaining.filter(item => activitySourceItemKey(item) >= frontierKey),
+  ];
+}
+
+function resumeStacksTxPageToken(
+  boundaryPage: AccumulatedStacksTxPage | undefined,
+  stacksTxExhausted: boolean,
   lastNext: string | null
 ): string | null {
   if (boundaryPage !== undefined) return boundaryPage.current;
-  if (stxExhausted) return null;
+  if (stacksTxExhausted) return null;
   return lastNext;
+}
+
+// Emit-safety is timestamp-based (see accumulateStacksTxWindow): only items strictly newer
+// than the oldest fetched Stacks timestamp are guaranteed complete, unless the stream ended.
+function selectEmitSafeItems(
+  window: StacksTxWindow,
+  stacksTxItems: ActivitySourceItem[],
+  btcTxRemaining: ActivitySourceItem[]
+): ActivitySourceItem[] {
+  const frontier = window.oldestFetchedTimestamp;
+  function emitSafe(item: ActivitySourceItem): boolean {
+    return window.exhausted || frontier === null || item.timestamp > frontier;
+  }
+  const tieSafeItems = [...stacksTxItems.filter(emitSafe), ...btcTxRemaining.filter(emitSafe)];
+  if (tieSafeItems.length > 0) return tieSafeItems;
+  return fallbackSafeItems(stacksTxItems, btcTxRemaining, window.pages);
+}
+
+// Resume state from the emitted boundary: a mid-page boundary re-reads that page's current
+// token next call; null means the whole feed is drained.
+function buildNextCursor(
+  items: ActivitySourceItem[],
+  window: StacksTxWindow,
+  btcTxRemaining: ActivitySourceItem[]
+): ActivitySourceCursor | null {
+  const lastKey = activitySourceItemKey(items[items.length - 1]);
+  const boundaryPage = window.pages.find(page =>
+    page.items.some(item => activitySourceItemKey(item) < lastKey)
+  );
+  const stacksTxMore = boundaryPage !== undefined || !window.exhausted;
+  const bitcoinTailRemains = btcTxRemaining.some(item => activitySourceItemKey(item) < lastKey);
+  if (!stacksTxMore && !bitcoinTailRemains) return null;
+  return {
+    afterKey: lastKey,
+    stacksTxPageToken: resumeStacksTxPageToken(boundaryPage, window.exhausted, window.lastNext),
+    stacksTxDone: !stacksTxMore,
+  };
 }
 
 // Bitcoin transactions are fetched whole (the endpoint has no page-size limit), so Bitcoin is
@@ -99,84 +202,41 @@ export async function getActivitySourcePage(
   { limit, cursor }: { limit: number; cursor?: ActivitySourceCursor }
 ): Promise<ActivitySourcePage> {
   const afterKey = cursor?.afterKey ?? null;
-  const allBtc = sortNewestFirst(await sources.fetchAllBtc());
-  const btcRemaining =
-    afterKey === null ? allBtc : allBtc.filter(item => activitySourceItemKey(item) < afterKey);
+  const allBtcTx = sortNewestFirst(await sources.fetchAllBtcTx());
+  const btcTxRemaining =
+    afterKey === null ? allBtcTx : allBtcTx.filter(item => activitySourceItemKey(item) < afterKey);
 
-  if (cursor?.stxDone) {
-    return emitBitcoinTail(btcRemaining, limit);
+  if (cursor?.stacksTxDone) {
+    return emitBitcoinTail(btcTxRemaining, limit);
   }
 
-  const stxPages: AccumulatedStxPage[] = [];
-  let token = cursor?.stxToken ?? null;
-  let lastNext: string | null = null;
-  let stxExhausted = false;
-
-  for (let fetched = 0; fetched < stxPageFetchLimit; fetched++) {
-    const page = await sources.fetchStxPage(token);
-    const fresh =
-      afterKey === null
-        ? page.items
-        : page.items.filter(item => activitySourceItemKey(item) < afterKey);
-    stxPages.push({ current: page.currentCursor, items: fresh });
-    lastNext = page.nextCursor;
-    if (page.nextCursor === null) {
-      stxExhausted = true;
-      break;
-    }
-    const frontier = lowestKey(stxPages);
-    const safeBtc =
-      frontier === null
-        ? 0
-        : btcRemaining.filter(item => activitySourceItemKey(item) >= frontier).length;
-    if (countItems(stxPages) + safeBtc >= limit) break;
-    token = page.nextCursor;
-  }
-
-  const stxItems = stxPages.flatMap(page => page.items);
-  if (stxItems.length === 0) {
-    return emitBitcoinTail(btcRemaining, limit);
-  }
-
-  const frontier = lowestKey(stxPages);
-  const safeBtc =
-    stxExhausted || frontier === null
-      ? btcRemaining
-      : btcRemaining.filter(item => activitySourceItemKey(item) >= frontier);
-  const merged = sortNewestFirst([...stxItems, ...safeBtc]);
-  const items = merged.slice(0, limit);
-  const lastKey = activitySourceItemKey(items[items.length - 1]);
-
-  const boundaryPage = stxPages.find(page =>
-    page.items.some(item => activitySourceItemKey(item) < lastKey)
+  const window = await accumulateStacksTxWindow(
+    sources,
+    afterKey,
+    btcTxRemaining,
+    limit,
+    cursor?.stacksTxPageToken ?? null
   );
-  const stxMore = boundaryPage !== undefined || !stxExhausted;
-  const bitcoinTailRemains = btcRemaining.some(item => activitySourceItemKey(item) < lastKey);
-
-  if (!stxMore && !bitcoinTailRemains) {
-    return { items, nextCursor: null };
+  const stacksTxItems = window.pages.flatMap(page => page.items);
+  if (stacksTxItems.length === 0) {
+    return emitBitcoinTail(btcTxRemaining, limit);
   }
 
-  return {
-    items,
-    nextCursor: {
-      afterKey: lastKey,
-      stxToken: resumeStxToken(boundaryPage, stxExhausted, lastNext),
-      stxDone: !stxMore,
-    },
-  };
+  const merged = sortNewestFirst(selectEmitSafeItems(window, stacksTxItems, btcTxRemaining));
+  const items = merged.slice(0, limit);
+  return { items, nextCursor: buildNextCursor(items, window, btcTxRemaining) };
 }
 
-function emitBitcoinTail(btcRemaining: ActivitySourceItem[], limit: number): ActivitySourcePage {
-  const items = btcRemaining.slice(0, limit);
+function emitBitcoinTail(btcTxRemaining: ActivitySourceItem[], limit: number): ActivitySourcePage {
+  const items = btcTxRemaining.slice(0, limit);
   if (items.length === 0) return { items: [], nextCursor: null };
-  if (btcRemaining.length <= limit) return { items, nextCursor: null };
+  if (btcTxRemaining.length <= limit) return { items, nextCursor: null };
   return {
     items,
     nextCursor: {
       afterKey: activitySourceItemKey(items[items.length - 1]),
-      stxToken: null,
-      stxDone: true,
+      stacksTxPageToken: null,
+      stacksTxDone: true,
     },
   };
 }

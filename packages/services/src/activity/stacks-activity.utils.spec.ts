@@ -7,6 +7,7 @@ import type {
   HiroPrincipalTransactionsResultItem,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
+  buildConfirmedStacksActivity,
   buildStacksActivity,
   buildStxBalanceChange,
   isStacksActivityResultItem,
@@ -246,5 +247,42 @@ describe(reclassifySip10Transfer.name, () => {
         change('sip10', 'received'),
       ]).action
     ).toBe('contract-execution');
+  });
+});
+
+describe(buildConfirmedStacksActivity.name, () => {
+  it('nets the fee out and attaches it for the sponsor of a contract call', () => {
+    const result: HiroPrincipalTransactionsResultItem = {
+      transaction: {
+        ...baseTx(),
+        sponsor: { address: 'SPME', nonce: 0 },
+        type: 'contract_call',
+        contract_call: { contract_id: 'SP2.dex', function_name: 'swap' },
+      },
+      involvement: 'sponsor',
+      balance_changes: { stx: { sent: '100', received: '0', net: '-100' } },
+      affected_balances: { stx: true, ft: false, nft: false },
+    };
+    const activity = buildConfirmedStacksActivity(result, []);
+    expect(activity?.balanceChanges).toEqual([]);
+    expect(activity?.fee?.amount.toNumber()).toBe(100);
+    expect(activity?.initiatedByUser).toBe(false);
+  });
+
+  it('does not mint a phantom sent change for the sponsor of a token transfer', () => {
+    const result: HiroPrincipalTransactionsResultItem = {
+      transaction: {
+        ...baseTx(),
+        sponsor: { address: 'SPME', nonce: 0 },
+        type: 'token_transfer',
+        token_transfer: { recipient: 'SP3', amount: '500', memo: null },
+      },
+      involvement: 'sponsor',
+      balance_changes: { stx: { sent: '100', received: '0', net: '-100' } },
+      affected_balances: { stx: true, ft: false, nft: false },
+    };
+    const activity = buildConfirmedStacksActivity(result, []);
+    expect(activity?.balanceChanges).toEqual([]);
+    expect(activity?.fee?.amount.toNumber()).toBe(100);
   });
 });

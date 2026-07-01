@@ -172,7 +172,7 @@ async function runBtcDiagnostics(container, account) {
   console.log('\n--- Bitcoin Transaction Diagnostics ---');
 
   const start = performance.now();
-  const txs = await btcService.getAccountTransactions(account);
+  const txs = await btcService.getAccountTransactions(account, { page: 1, pageSize: 1000 });
   const fetchMs = Math.round(performance.now() - start);
 
   console.log(`  Fetch time: ${fetchMs}ms`);
@@ -413,7 +413,7 @@ async function main() {
 
       if (nextCursor) {
         console.log(
-          `  → cursor: afterKey=${nextCursor.afterKey?.slice(0, 24)}… stxToken=${nextCursor.stxToken ?? 'null'} stxDone=${nextCursor.stxDone}`
+          `  → cursor: afterKey=${nextCursor.afterKey?.slice(0, 24)}… stacksTxPageToken=${nextCursor.stacksTxPageToken ?? 'null'} stacksTxDone=${nextCursor.stacksTxDone}`
         );
       }
       if (!hasMore || !nextCursor) break;
