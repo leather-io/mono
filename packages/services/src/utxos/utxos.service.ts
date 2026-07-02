@@ -125,6 +125,15 @@ export class UtxosService {
     fingerprint: string,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
+    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
+    if (networkMode === 'regtest') {
+      const mempoolApiUtxos = await this.mempoolApiClient.fetchAddressUtxos(address, undefined, {
+        signal,
+      });
+      return mempoolApiUtxos.map(utxo =>
+        createOwnedUtxoFromMempool({ ...utxo, address, path: '' }, fingerprint)
+      );
+    }
     const leatherApiUtxos = await this.leatherApiClient.fetchUtxosByAddress(address, { signal });
     return leatherApiUtxos.map(utxo => createOwnedUtxoFromLeather(utxo, fingerprint));
   }
