@@ -37,7 +37,12 @@ async function signProposalCommitment(
   proposalHash: string
 ): Promise<string> {
   if (network.startsWith('btc')) {
-    const signed = await leather.signMessage({ message: proposalHash, paymentType: 'p2wpkh' });
+    const mode = network.endsWith('mainnet') ? 'mainnet' : 'testnet';
+    const signed = await leather.signMessage({
+      message: proposalHash,
+      paymentType: 'p2wpkh',
+      network: mode,
+    });
     return signed.signature;
   }
   const signed = await leather.stxSignMessage({

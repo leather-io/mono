@@ -27,12 +27,23 @@ interface SignTransactionArgs {
   account: VaultAccount;
 }
 
+function findSignerPublicKey(account: VaultAccount, identityPublicKey?: string): string {
+  const signer = account.signers.find(signer => signer.publicKey === identityPublicKey);
+  if (!signer) throw new Error('You are not a signer on this account.');
+  return signer.signingPubkey;
+}
+
 export function useSignTransaction(network: AuthNetworkId) {
+  const session = useSession(network);
   const invalidate = useInvalidateTransaction(network);
   return useMutation<MultisigTransaction, Error, SignTransactionArgs>({
     async mutationFn({ transaction, account }) {
       const signatures = network.startsWith('btc')
-        ? await signBtcTransaction(transaction, account)
+        ? await signBtcTransaction(
+            transaction,
+            account,
+            findSignerPublicKey(account, session?.identity.publicKey)
+          )
         : await signStxTransaction(transaction, account);
       return getMultisigService().addTransactionSignatures(network, transaction.id, { signatures });
     },

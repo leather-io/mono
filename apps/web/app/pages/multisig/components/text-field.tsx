@@ -7,6 +7,7 @@ interface TextFieldProps {
   placeholder?: string;
   value: string;
   onChange(value: string): void;
+  onBlur?(value: string): void;
   help?: ReactNode;
   mono?: boolean;
   invalid?: boolean;
@@ -19,6 +20,7 @@ export function TextField({
   placeholder,
   value,
   onChange,
+  onBlur,
   help,
   mono,
   invalid,
@@ -34,6 +36,7 @@ export function TextField({
         value={value}
         placeholder={placeholder}
         onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+        onBlur={onBlur ? (e: ChangeEvent<HTMLInputElement>) => onBlur(e.target.value) : undefined}
         px="space.04"
         py="space.03"
         borderRadius="sm"
