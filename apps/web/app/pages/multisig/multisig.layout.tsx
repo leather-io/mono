@@ -1,9 +1,13 @@
+import { useEffect, useState } from 'react';
 import { Navigate, Outlet, data, useLocation } from 'react-router';
 
 import { Box, Flex } from 'leather-styles/jsx';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
-import { useSessionBootstrap } from '~/features/multisig/auth/use-session-bootstrap';
+import {
+  useIsRestoringSession,
+  useSessionBootstrap,
+} from '~/features/multisig/auth/use-session-bootstrap';
 import { SignInSlotProvider } from '~/layouts/page/sign-in-slot';
 
 import { MultisigConnectDropdown } from './components/connection-dropdown/multisig-connect-dropdown';
@@ -30,7 +34,17 @@ export default function MultisigLayout() {
   const btcSession = useSession(btcNetwork);
   const stxSession = useSession(stxNetwork);
 
-  if (!btcSession && !stxSession && location.pathname !== multisigPaths.onboarding) {
+  // On reload the session is read from localStorage after the first (SSR/hydration)
+  // render and refreshed asynchronously, so both sessions are briefly null. Only
+  // redirect once hydrated and no longer restoring, otherwise a genuine deep link
+  // or refresh bounces to onboarding before the session settles.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+  const restoringBtc = useIsRestoringSession(btcNetwork);
+  const restoringStx = useIsRestoringSession(stxNetwork);
+  const settled = hydrated && !restoringBtc && !restoringStx;
+
+  if (settled && !btcSession && !stxSession && location.pathname !== multisigPaths.onboarding) {
     return <Navigate to={multisigPaths.onboarding} replace />;
   }
 
