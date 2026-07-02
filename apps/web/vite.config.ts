@@ -95,8 +95,7 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     {
       name: 'cloudflare-vite-plugin-fix',
       configEnvironment(name, config) {
-        const isDev = process.env.npm_lifecycle_script?.endsWith('react-router dev');
-        if (name === 'ssr' && !isDev) {
+        if (name === 'ssr' && command !== 'serve') {
           delete config.dev;
         }
       },
