@@ -1,8 +1,6 @@
 import builder from 'content-security-policy-builder';
 
-// The backend origin is api.leather.io in production (already allowed below), but a
-// custom/dev build points LEATHER_API_URL at a local or private gateway that must be
-// allowed to connect. Unset in production, so this is a no-op there.
+// Allow the custom/dev backend origin; unset in production, so a no-op there.
 const backendConnectSrc = import.meta.env.LEATHER_API_URL ? [import.meta.env.LEATHER_API_URL] : [];
 
 export const csp = builder({

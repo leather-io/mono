@@ -7,8 +7,7 @@ import type { AuthNetworkId } from '@leather.io/models';
 const stxMainnetChainId = 1;
 const stxTestnetChainId = 2147483648;
 
-// SIP-018 domain for the STX proposal commitment. The custom network signs with its
-// own chain id, which must match what the transaction is built with.
+// SIP-018 domain for the STX proposal commitment.
 export function buildStxProposalDomain(network: AuthNetworkId): TupleCV {
   const testnetChainId = customNetwork?.stacksChainId ?? stxTestnetChainId;
   const chainId = network === 'stx:mainnet' ? stxMainnetChainId : testnetChainId;

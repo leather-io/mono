@@ -1,9 +1,6 @@
 import { z } from 'zod';
 
-// Custom "private" network config for internal testing. Bridged from Edgar's
-// unprefixed docker env vars into import.meta.env.LEATHER_* by vite.config.ts.
-// Kept separate from environment.ts so the signing/settings paths can import it
-// without pulling in environment.ts's MODE parse.
+// Custom "private" network config for internal testing (null in production).
 const privateNetworkFlavor = z
   .enum(['regtest', 'testnet'])
   .optional()

@@ -34,10 +34,7 @@ export default function MultisigLayout() {
   const btcSession = useSession(btcNetwork);
   const stxSession = useSession(stxNetwork);
 
-  // On reload the session is read from localStorage after the first (SSR/hydration)
-  // render and refreshed asynchronously, so both sessions are briefly null. Only
-  // redirect once hydrated and no longer restoring, otherwise a genuine deep link
-  // or refresh bounces to onboarding before the session settles.
+  // Wait for hydration and session restore before redirecting, so reloads don't bounce to onboarding.
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
   const restoringBtc = useIsRestoringSession(btcNetwork);

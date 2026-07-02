@@ -18,9 +18,7 @@ interface BuildMultisigStxTransferArgs {
   memo?: string;
 }
 
-// The custom network shares the testnet address version but signs with its own Stacks
-// chain id, which must be baked into the transaction bytes or the node rejects the
-// broadcast. Public networks keep their standard name-derived chain id.
+// Custom network keeps the testnet address version but signs with its own chain id.
 function getStxTransactionNetwork(network: AuthNetworkId) {
   if (network === 'stx:mainnet') return 'mainnet';
   if (customNetwork?.stacksChainId !== undefined)
