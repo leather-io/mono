@@ -1,10 +1,13 @@
+import { customNetwork } from '~/constants/custom-network';
 import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
-import { extractXpubFromDescriptor } from '@leather.io/bitcoin';
+import { extractXpubFromDescriptor, getP2wpkhAddressFromPublicKey } from '@leather.io/bitcoin';
 import { extractAccountPathFromFullPath } from '@leather.io/crypto';
 import type { AuthNetworkId } from '@leather.io/models';
 import type { WalletSignInPayload } from '@leather.io/services';
+
+import { resolveBtcNetworkMode } from '../network/resolve-btc-network-mode';
 
 interface WalletSignInParams {
   network: AuthNetworkId;
@@ -62,13 +65,18 @@ async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
     throw new Error('Active wallet account changed during sign-in. Please try again.');
   }
 
+  // Match the backend: derive the auth address from the pubkey in the resolved mode.
+  const address = customNetwork
+    ? getP2wpkhAddressFromPublicKey(account.publicKey, resolveBtcNetworkMode(params.network))
+    : account.address;
+
   return {
     signature: signed.signature,
     publicKey: account.publicKey,
     xpub: extractXpubFromDescriptor(account.descriptor),
     xpubOriginFingerprint: 'd34db33f', // temp mock
     xpubOriginPath: extractAccountPathFromFullPath(account.derivationPath),
-    address: account.address,
+    address,
     message: params.message,
     timestamp: params.timestamp,
   };

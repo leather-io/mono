@@ -2,6 +2,7 @@ import { type ChangeEvent, useState } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
+import { resolveBtcNetworkMode } from '~/features/multisig/network/resolve-btc-network-mode';
 import { buildUnsignedMultisigBtcTransfer } from '~/features/multisig/transactions/build-btc-transfer';
 import { buildUnsignedMultisigStxTransfer } from '~/features/multisig/transactions/build-stx-transfer';
 import { useProposeTransaction } from '~/features/multisig/transactions/use-propose-transaction';
@@ -218,7 +219,7 @@ function BtcProposeForm({
   const [amountInput, setAmountInput] = useState('');
   const { error } = useToast();
 
-  const mode = account.network === 'btc:mainnet' ? 'mainnet' : 'testnet';
+  const mode = resolveBtcNetworkMode(account.network);
   const recipientAddress = recipient.trim() || undefined;
   const amount = parseBtcAmount(amountInput);
   const balance = useVaultAccountBalance(account);

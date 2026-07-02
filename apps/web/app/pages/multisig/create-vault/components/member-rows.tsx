@@ -24,6 +24,7 @@ interface MemberRowsProps {
   myAddress?: string;
   statuses: MemberFieldStatus[];
   onChange(members: MemberDraft[]): void;
+  onNormalizeAddress?(address: string): string;
 }
 
 const inputStyles = {
@@ -52,7 +53,14 @@ function sanitizeMemberName(value: string) {
   return value.replace(disallowedNameChars, '').slice(0, maxMemberNameLength);
 }
 
-export function MemberRows({ chain, members, myAddress, statuses, onChange }: MemberRowsProps) {
+export function MemberRows({
+  chain,
+  members,
+  myAddress,
+  statuses,
+  onChange,
+  onNormalizeAddress,
+}: MemberRowsProps) {
   const placeholder = chain === 'btc' ? 'bc1q… address' : 'SP… address';
 
   function update(index: number, patch: Partial<MemberDraft>) {
@@ -84,6 +92,12 @@ export function MemberRows({ chain, members, myAddress, statuses, onChange }: Me
                   value={member.isMe ? (myAddress ?? '') : member.addr}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     !member.isMe && update(index, { addr: e.target.value })
+                  }
+                  onBlur={() =>
+                    !member.isMe &&
+                    onNormalizeAddress &&
+                    member.addr.trim() !== '' &&
+                    update(index, { addr: onNormalizeAddress(member.addr.trim()) })
                   }
                 />
                 {status.state === 'valid' && (
