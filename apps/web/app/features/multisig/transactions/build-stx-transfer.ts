@@ -1,4 +1,6 @@
+import { STACKS_TESTNET } from '@stacks/network';
 import { type StacksTransactionWire } from '@stacks/transactions';
+import { customNetwork } from '~/constants/custom-network';
 
 import type { AuthNetworkId, Money, VaultAccount } from '@leather.io/models';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
@@ -16,10 +18,14 @@ interface BuildMultisigStxTransferArgs {
   memo?: string;
 }
 
-type StacksNetworkName = 'mainnet' | 'testnet';
-
-function getStacksNetworkName(network: AuthNetworkId): StacksNetworkName {
-  return network === 'stx:mainnet' ? 'mainnet' : 'testnet';
+// The custom network shares the testnet address version but signs with its own Stacks
+// chain id, which must be baked into the transaction bytes or the node rejects the
+// broadcast. Public networks keep their standard name-derived chain id.
+function getStxTransactionNetwork(network: AuthNetworkId) {
+  if (network === 'stx:mainnet') return 'mainnet';
+  if (customNetwork?.stacksChainId !== undefined)
+    return { ...STACKS_TESTNET, chainId: customNetwork.stacksChainId };
+  return 'testnet';
 }
 
 export async function buildUnsignedMultisigStxTransfer({
@@ -29,7 +35,6 @@ export async function buildUnsignedMultisigStxTransfer({
   fee = createMoney(0, 'STX'),
   memo,
 }: BuildMultisigStxTransferArgs): Promise<StacksTransactionWire> {
-  const networkName = getStacksNetworkName(account.network);
   const publicKeys = getOrderedSigningPubkeys(account);
   if (deriveMultisigAddress(account) !== account.multisigAddress)
     throw new Error(
@@ -41,7 +46,7 @@ export async function buildUnsignedMultisigStxTransfer({
     amount,
     fee,
     nonce: placeholderNonce,
-    network: networkName,
+    network: getStxTransactionNetwork(account.network),
     publicKeys,
     numSignatures: account.threshold,
     useNonSequentialMultiSig: true,
