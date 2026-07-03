@@ -5,6 +5,7 @@ import { computeProposalHash, decodeProposalPayload } from '@leather.io/crypto';
 import type { AuthNetworkId } from '@leather.io/models';
 import type { ProposeTransactionRequest } from '@leather.io/services';
 
+import { resolveWalletRpcNetwork } from '../network/resolve-wallet-rpc-network';
 import { buildStxProposalDomain } from './stx-proposal-domain';
 
 interface WalletProposeParams {
@@ -36,12 +37,12 @@ async function signProposalCommitment(
   network: AuthNetworkId,
   proposalHash: string
 ): Promise<string> {
+  const rpcNetwork = resolveWalletRpcNetwork(network);
   if (network.startsWith('btc')) {
-    const mode = network.endsWith('mainnet') ? 'mainnet' : 'testnet';
     const signed = await leather.signMessage({
       message: proposalHash,
       paymentType: 'p2wpkh',
-      network: mode,
+      network: rpcNetwork,
     });
     return signed.signature;
   }
@@ -49,6 +50,7 @@ async function signProposalCommitment(
     messageType: 'structured',
     domain: serializeCV(buildStxProposalDomain(network)),
     message: serializeCV(stringAsciiCV(proposalHash)),
+    network: rpcNetwork,
   });
   return signed.signature;
 }
