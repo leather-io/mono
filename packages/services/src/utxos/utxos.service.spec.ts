@@ -28,7 +28,9 @@ describe(UtxosService.name, () => {
         mockLeatherApiClient,
         {} as unknown as MempoolApiClient,
         mockBitcoinTransactionsService,
-        {} as unknown as SettingsService
+        {
+          getSettings: () => ({ network: { chain: { bitcoin: { mode: 'mainnet' } } } }),
+        } as unknown as SettingsService
       );
       const mockAccount: AccountAddresses = {
         id: { fingerprint: 'multisig-fp', accountIndex: 0 },
