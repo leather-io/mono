@@ -1,14 +1,24 @@
 import { BrowserContext, Page } from '@playwright/test';
-import { TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS } from '@tests/mocks/constants';
+import {
+  TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
+  TEST_ACCOUNT_2_TAPROOT_ADDRESS,
+  TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
+} from '@tests/mocks/constants';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
 import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
-import { makeBitcoinPolicy, policyStateOverrides } from '@tests/mocks/mock-policies';
+import {
+  makeBitcoinPolicy,
+  makeStacksPolicy,
+  policyStateOverrides,
+} from '@tests/mocks/mock-policies';
+import { mockFundedBitcoinAddressUtxos } from '@tests/mocks/mock-utxos';
 import {
   getConnectedTestAppPermissionsState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
 
 import { RpcErrorCode, type RpcParams, type sendTransfer } from '@leather.io/rpc';
+import { truncateMiddle } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -103,13 +113,13 @@ test.describe('RPC: sendTransfer', () => {
   });
 });
 
-test.describe('RPC: sendTransfer with an active multisig policy account', () => {
-  const bitcoinPolicy = makeBitcoinPolicy();
+test.describe('RPC: sendTransfer with an active Stacks multisig policy account', () => {
+  const stacksPolicy = makeStacksPolicy();
 
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, {
-      ...policyStateOverrides({ policies: [bitcoinPolicy], activePolicyId: bitcoinPolicy.id }),
+      ...policyStateOverrides({ policies: [stacksPolicy], activePolicyId: stacksPolicy.id }),
       ...getConnectedTestAppPermissionsState(),
     });
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
@@ -126,6 +136,58 @@ test.describe('RPC: sendTransfer with an active multisig policy account', () => 
     test.expect(result.error.code).toBe(RpcErrorCode.INVALID_REQUEST);
     test.expect(result.error.message).toContain('multisig account');
     test.expect(popupOpened).toBe(false);
+  });
+});
+
+test.describe('RPC: sendTransfer with an active Bitcoin multisig policy account', () => {
+  const bitcoinPolicy = makeBitcoinPolicy();
+
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    // Register on the context so the approval popup inherits the mocks before it
+    // renders (the fee/coin-selection step runs eagerly and would otherwise throw
+    // InsufficientFunds for the unfunded multisig address).
+    await mockLeatherApiRequests(context);
+    await mockFundedBitcoinAddressUtxos(context, bitcoinPolicy.address);
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      ...policyStateOverrides({
+        policies: [bitcoinPolicy],
+        activePolicyId: bitcoinPolicy.id,
+        names: { [bitcoinPolicy.id]: 'Bitcoin vault' },
+      }),
+      ...getConnectedTestAppPermissionsState(),
+    });
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+  });
+
+  test('shows both the multisig and the signer on the propose screen', async ({
+    page,
+    context,
+  }) => {
+    test.slow();
+
+    // Recipient distinct from the signer's own native-segwit address so the
+    // "Signing with account" caption isn't ambiguous with the recipient row.
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: TEST_ACCOUNT_2_TAPROOT_ADDRESS, amount: '1000' }],
+      network: 'mainnet',
+    });
+    const popup = await context.waitForEvent('page');
+
+    await test.expect(popup.getByText('Send token')).toBeVisible({ timeout: 15_000 });
+    // "Transacting with account" shows the multisig.
+    await test.expect(popup.getByText('Transacting with account')).toBeVisible({ timeout: 15_000 });
+    await test.expect(popup.getByText('Bitcoin vault')).toBeVisible();
+    await test.expect(popup.getByText(truncateMiddle(bitcoinPolicy.address, 4))).toBeVisible();
+    // "Signing with account" shows the single-sig signer's Bitcoin address.
+    await test.expect(popup.getByText('Signing with account')).toBeVisible();
+    await test
+      .expect(popup.getByText(truncateMiddle(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS, 4)))
+      .toBeVisible();
+
+    // Close the popup so the pending request resolves before teardown
+    await popup.close();
+    await resultPromise;
   });
 });
 

@@ -24,13 +24,15 @@ import {
   getTabIdFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
-  validateNoActivePolicy,
+  validateActivePolicyChain,
 } from '../rpc-request-utils';
 
 export const sendTransferHandler = defineRpcRequestHandler(
   sendTransfer.method,
   async (request, port) => {
-    if ((await validateNoActivePolicy(request, port)).status === 'failure') return;
+    // A Bitcoin policy proposes the transfer (handled in the approval page); any
+    // other active policy is rejected so it can't fall through to single-sig.
+    if ((await validateActivePolicyChain(request, port, 'bitcoin')).status === 'failure') return;
 
     if (isUndefined(request.params)) {
       void trackRpcRequestError({ endpoint: 'sendTransfer', error: 'Undefined parameters' });

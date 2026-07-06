@@ -5,6 +5,8 @@ import { createMoney } from '@leather.io/utils';
 import { SigningAccountCard } from './signing-account-card';
 
 const walletEntitiesMock = vi.fn();
+const currentPolicyMock = vi.fn();
+const policyDisplayNameMock = vi.fn();
 
 vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
   useCurrentStacksAccount: () => ({
@@ -17,6 +19,15 @@ vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
 
 vi.mock('@app/common/hooks/account/use-account-names', () => ({
   useAccountDisplayName: () => ({ data: 'Account 1', isLoading: false }),
+}));
+
+vi.mock('@app/store/policy/policy.selectors', () => ({
+  useCurrentPolicy: () => currentPolicyMock(),
+  usePolicyDisplayName: () => policyDisplayNameMock(),
+}));
+
+vi.mock('@app/store/policy/policy-store.utils', () => ({
+  parsePolicyParent: () => ({ fingerprint: 'abc123', accountIndex: 1 }),
 }));
 
 vi.mock('@app/store/wallets/wallet.selectors', async importOriginal => ({
@@ -90,6 +101,11 @@ function renderCard() {
 }
 
 describe(SigningAccountCard.name, () => {
+  beforeEach(() => {
+    currentPolicyMock.mockReturnValue(null);
+    policyDisplayNameMock.mockReturnValue(null);
+  });
+
   test('renders the account name under the "With account" subheader', () => {
     walletEntitiesMock.mockReturnValue({ abc123: { name: 'Wallet 3' } });
 
@@ -97,5 +113,28 @@ describe(SigningAccountCard.name, () => {
 
     expect(html).toContain('With account');
     expect(html).toContain('Account 1');
+  });
+
+  test('shows both the multisig and the signer when a policy is active', () => {
+    walletEntitiesMock.mockReturnValue({ abc123: { name: 'Wallet 3' } });
+    currentPolicyMock.mockReturnValue({
+      id: 'abc123/1/mainnet',
+      chain: 'stacks',
+      parentAccountId: 'abc123/1',
+      address: 'SM3KJBA4RZ7Z20KD2HBXNSXVPCR1D3CRAV6Q05MKN',
+    });
+    policyDisplayNameMock.mockReturnValue('Family vault');
+
+    const html = renderCard();
+
+    // Transacting with account -> the multisig
+    expect(html).toContain('Transacting with account');
+    expect(html).toContain('Family vault');
+    expect(html).toContain('SM3K…5MKN');
+
+    // Signing with account -> the single-sig signer
+    expect(html).toContain('Signing with account');
+    expect(html).toContain('Account 1');
+    expect(html).toContain('SP3W…TDE0');
   });
 });

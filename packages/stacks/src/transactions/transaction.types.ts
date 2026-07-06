@@ -1,6 +1,8 @@
 import {
   UnsignedContractCallOptions,
   UnsignedContractDeployOptions,
+  UnsignedMultiSigContractCallOptions,
+  UnsignedMultiSigContractDeployOptions,
   UnsignedMultiSigTokenTransferOptions,
   UnsignedTokenTransferOptions,
 } from '@stacks/transactions';
@@ -21,7 +23,7 @@ export function isTransactionTypeSupported(txType: TransactionTypes) {
   );
 }
 
-export type StacksUnsignedContractCallOptions = ReplaceTypes<
+export type StacksUnsignedSingleSigContractCallOptions = ReplaceTypes<
   UnsignedContractCallOptions,
   {
     fee: Money;
@@ -30,13 +32,38 @@ export type StacksUnsignedContractCallOptions = ReplaceTypes<
   }
 > & { txType: TransactionTypes.ContractCall };
 
-export type StacksUnsignedContractDeployOptions = ReplaceTypes<
+export type StacksUnsignedMultiSigContractCallOptions = ReplaceTypes<
+  UnsignedMultiSigContractCallOptions,
+  {
+    fee: Money;
+    functionArgs: string[];
+    nonce: number | string;
+  }
+> & { txType: TransactionTypes.ContractCall };
+
+export type StacksUnsignedContractCallOptions =
+  | StacksUnsignedSingleSigContractCallOptions
+  | StacksUnsignedMultiSigContractCallOptions;
+
+export type StacksUnsignedSingleSigContractDeployOptions = ReplaceTypes<
   UnsignedContractDeployOptions,
   {
     fee: Money;
     nonce: number | string;
   }
 > & { txType: TransactionTypes.ContractDeploy };
+
+export type StacksUnsignedMultiSigContractDeployOptions = ReplaceTypes<
+  UnsignedMultiSigContractDeployOptions,
+  {
+    fee: Money;
+    nonce: number | string;
+  }
+> & { txType: TransactionTypes.ContractDeploy };
+
+export type StacksUnsignedContractDeployOptions =
+  | StacksUnsignedSingleSigContractDeployOptions
+  | StacksUnsignedMultiSigContractDeployOptions;
 
 export type StacksUnsignedTokenTransferOptions = ReplaceTypes<
   UnsignedTokenTransferOptions,
@@ -64,3 +91,13 @@ export type StacksUnsignedTransactionOptions =
   | StacksUnsignedContractCallOptions
   | StacksUnsignedContractDeployOptions
   | StacksUnsignedStxTokenTransferOptions;
+
+export type StacksUnsignedSingleSigTransactionOptions =
+  | StacksUnsignedSingleSigContractCallOptions
+  | StacksUnsignedSingleSigContractDeployOptions
+  | StacksUnsignedTokenTransferOptions;
+
+export type StacksUnsignedMultiSigTransactionOptions =
+  | StacksUnsignedMultiSigContractCallOptions
+  | StacksUnsignedMultiSigContractDeployOptions
+  | StacksUnsignedMultiSigTokenTransferOptions;

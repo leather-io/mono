@@ -255,6 +255,38 @@ export async function validateConnectedWalletExists(
   return { status: 'success' };
 }
 
+function policyChainMismatchMessage(allowedChain: 'bitcoin' | 'stacks') {
+  return `This request is not supported by the selected multisig account. Switch to a ${allowedChain} account and try again.`;
+}
+
+// Allows the request when there is no active policy, or when the active policy is
+// on the expected chain (so it can be proposed). Rejects when a policy of the
+// wrong chain is active — e.g. a Stacks multisig cannot propose a Bitcoin send,
+// and must not fall through to the parent's single-sig path.
+export async function validateActivePolicyChain(
+  request: RpcRequests,
+  port: chrome.runtime.Port,
+  allowedChain: 'bitcoin' | 'stacks'
+): Promise<{ status: ValidationResult }> {
+  const state = await getRootState();
+  const activePolicyId = state?.active.activePolicyId;
+  if (!activePolicyId) return { status: 'success' };
+
+  const policy = state?.policy.entities[activePolicyId];
+  if (policy && policy.chain === allowedChain) return { status: 'success' };
+
+  const message = policyChainMismatchMessage(allowedChain);
+  void trackRpcRequestError({ endpoint: request.method, error: message });
+  void chrome.tabs.sendMessage(
+    getTabIdFromPort(port),
+    createRpcErrorResponse(request.method, {
+      id: request.id,
+      error: { code: RpcErrorCode.INVALID_REQUEST, message },
+    })
+  );
+  return { status: 'failure' };
+}
+
 const multisigAccountNotSupportedMessage =
   'This request is not supported while a multisig account is selected. Switch to a standard account and try again.';
 

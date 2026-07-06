@@ -2,10 +2,9 @@ import { privateKeyToPublic, stringAsciiCV } from '@stacks/transactions';
 
 import { computeProposalHash, decodeProposalPayload } from '@leather.io/crypto';
 import type { MultisigTransaction, VaultAccount, VaultAccountSigner } from '@leather.io/models';
-import { signStructuredDataMessage } from '@leather.io/stacks';
+import { buildStxProposalDomain, signStructuredDataMessage } from '@leather.io/stacks';
 
 import { deriveMultisigAddress } from '../derive-multisig-address';
-import { buildStxProposalDomain } from '../stx-proposal-domain';
 import { preSignVerification } from './pre-sign-verification';
 
 const proposerUserId = '5ac53c09-7d42-4d0b-876f-15ef03b0ece5';

@@ -2,7 +2,11 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { RpcErrorCode, type RpcRequests } from '@leather.io/rpc';
 
-import { validateConnectedWalletExists, validateNoActivePolicy } from './rpc-request-utils';
+import {
+  validateActivePolicyChain,
+  validateConnectedWalletExists,
+  validateNoActivePolicy,
+} from './rpc-request-utils';
 
 const mocks = vi.hoisted(() => ({
   getRootState: vi.fn(),
@@ -225,5 +229,60 @@ describe('validateNoActivePolicy', () => {
 
     expect(result).toEqual({ status: 'success' });
     expect(mocks.sendMessage).not.toHaveBeenCalled();
+  });
+});
+
+describe('validateActivePolicyChain', () => {
+  const policyId = `${fingerprint}/0/bc1qexamplemultisig/mainnet`;
+
+  beforeEach(() => {
+    vi.stubGlobal('chrome', { tabs: { sendMessage: mocks.sendMessage } });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.clearAllMocks();
+  });
+
+  test('succeeds when no policy account is active', async () => {
+    mocks.getRootState.mockResolvedValue({
+      active: { activePolicyId: null },
+      policy: { entities: {} },
+    });
+
+    const result = await validateActivePolicyChain(request, buildPort(), 'bitcoin');
+
+    expect(result).toEqual({ status: 'success' });
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+  });
+
+  test('succeeds when the active policy is on the allowed chain', async () => {
+    mocks.getRootState.mockResolvedValue({
+      active: { activePolicyId: policyId },
+      policy: { entities: { [policyId]: { id: policyId, chain: 'bitcoin' } } },
+    });
+
+    const result = await validateActivePolicyChain(request, buildPort(), 'bitcoin');
+
+    expect(result).toEqual({ status: 'success' });
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+  });
+
+  test('rejects when the active policy is on a different chain', async () => {
+    mocks.getRootState.mockResolvedValue({
+      active: { activePolicyId: policyId },
+      policy: { entities: { [policyId]: { id: policyId, chain: 'stacks' } } },
+    });
+
+    const result = await validateActivePolicyChain(request, buildPort(), 'bitcoin');
+
+    expect(result).toEqual({ status: 'failure' });
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      expect.objectContaining({
+        id: request.id,
+        error: expect.objectContaining({ code: RpcErrorCode.INVALID_REQUEST }),
+      })
+    );
   });
 });

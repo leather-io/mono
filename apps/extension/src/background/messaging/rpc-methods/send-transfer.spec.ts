@@ -7,7 +7,7 @@ import { sendTransferHandler } from './send-transfer';
 type SendTransferRequest = Parameters<(typeof sendTransferHandler)[1]>[0];
 
 const mocks = vi.hoisted(() => ({
-  validateNoActivePolicy: vi.fn(),
+  validateActivePolicyChain: vi.fn(),
   createConnectingAppSearchParamsWithLastKnownAccount: vi.fn(),
   triggerRequestPopupWindowOpen: vi.fn(),
   sendErrorResponseOnUserPopupClose: vi.fn(),
@@ -21,7 +21,7 @@ vi.mock('../rpc-message-handler', () => ({
 }));
 
 vi.mock('../rpc-request-utils', () => ({
-  validateNoActivePolicy: mocks.validateNoActivePolicy,
+  validateActivePolicyChain: mocks.validateActivePolicyChain,
   getTabIdFromPort: (port: chrome.runtime.Port) => port.sender?.tab?.id ?? 0,
   createConnectingAppSearchParamsWithLastKnownAccount:
     mocks.createConnectingAppSearchParamsWithLastKnownAccount,
@@ -72,16 +72,20 @@ describe('sendTransferHandler', () => {
     vi.clearAllMocks();
   });
 
-  test('validates there is no active policy before doing anything else', async () => {
-    mocks.validateNoActivePolicy.mockResolvedValue({ status: 'success' });
+  test('validates the active policy is on the Bitcoin chain before doing anything else', async () => {
+    mocks.validateActivePolicyChain.mockResolvedValue({ status: 'success' });
 
     await invokeHandler(buildPort());
 
-    expect(mocks.validateNoActivePolicy).toHaveBeenCalledWith(request, expect.anything());
+    expect(mocks.validateActivePolicyChain).toHaveBeenCalledWith(
+      request,
+      expect.anything(),
+      'bitcoin'
+    );
   });
 
-  test('short-circuits without opening a popup when a policy account is active', async () => {
-    mocks.validateNoActivePolicy.mockResolvedValue({ status: 'failure' });
+  test('short-circuits without opening a popup when the policy chain check fails', async () => {
+    mocks.validateActivePolicyChain.mockResolvedValue({ status: 'failure' });
 
     await invokeHandler(buildPort());
 
@@ -90,8 +94,8 @@ describe('sendTransferHandler', () => {
     expect(mocks.trackRpcRequestSuccess).not.toHaveBeenCalled();
   });
 
-  test('opens the send-transfer popup when no policy account is active', async () => {
-    mocks.validateNoActivePolicy.mockResolvedValue({ status: 'success' });
+  test('opens the send-transfer popup when the policy chain check passes', async () => {
+    mocks.validateActivePolicyChain.mockResolvedValue({ status: 'success' });
 
     await invokeHandler(buildPort());
 
@@ -101,7 +105,7 @@ describe('sendTransferHandler', () => {
   });
 
   test('rejects undefined parameters after passing the policy check', async () => {
-    mocks.validateNoActivePolicy.mockResolvedValue({ status: 'success' });
+    mocks.validateActivePolicyChain.mockResolvedValue({ status: 'success' });
 
     const [, handler] = sendTransferHandler;
     await handler(

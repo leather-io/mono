@@ -1,4 +1,5 @@
 import { BrowserContext, Page } from '@playwright/test';
+import { ChainId } from '@stacks/network';
 import {
   MultiSigSpendingCondition,
   type TokenTransferPayloadWire,
@@ -9,9 +10,17 @@ import {
   TEST_ACCOUNT_2_STX_ADDRESS,
   TEST_ACCOUNT_3_PUBKEY,
 } from '@tests/mocks/constants';
+import { mockFundedStacksAddress } from '@tests/mocks/mock-multisig';
+import {
+  exampleStacksMultisigPublicKeys,
+  makeStacksPolicy,
+  policyStateOverrides,
+} from '@tests/mocks/mock-policies';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { generateMultisigUnsignedStxTransfer, generateUnsignedStxTransfer } from '@tests/utils';
+
+import { deriveStxMultisigAddress } from '@leather.io/stacks';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -168,5 +177,74 @@ test.describe('RPC: stx_signTransaction', () => {
         },
       });
     });
+  });
+});
+
+test.describe('RPC: stx_signTransaction with an active multisig policy', () => {
+  // Must be the connected account's real STX pubkey (+ a cosigner) — the co-sign
+  // flow validates the signer key is a member of the policy.
+  const activePolicyPublicKeys = exampleStacksMultisigPublicKeys;
+  const activePolicyThreshold = 2;
+  const stacksPolicy = makeStacksPolicy({
+    address: deriveStxMultisigAddress({
+      publicKeys: activePolicyPublicKeys,
+      threshold: activePolicyThreshold,
+      chainId: ChainId.Mainnet,
+    }),
+    publicKeys: activePolicyPublicKeys,
+    threshold: activePolicyThreshold,
+  });
+
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await mockFundedStacksAddress(context, stacksPolicy.address);
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      ...getConnectedTestAppPermissionsState(),
+      ...policyStateOverrides({ policies: [stacksPolicy], activePolicyId: stacksPolicy.id }),
+    });
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+  });
+
+  test('co-signs the multisig transaction with the member singlesig instead of proposing', async ({
+    page,
+    context,
+  }) => {
+    test.slow();
+
+    const multiSignatureTxHex = await generateMultisigUnsignedStxTransfer(
+      TEST_ACCOUNT_2_STX_ADDRESS,
+      500,
+      100,
+      'mainnet',
+      activePolicyPublicKeys,
+      activePolicyThreshold,
+      0,
+      undefined,
+      true
+    );
+
+    const [result] = await Promise.all([
+      page.evaluate(
+        txHex =>
+          (window as any).LeatherProvider.request('stx_signTransaction', {
+            txHex,
+            network: 'mainnet',
+          }).catch((e: unknown) => e),
+        multiSignatureTxHex
+      ),
+      (async () => {
+        const popup = await context.waitForEvent('page');
+        await popup.waitForSelector('text="Account 1"');
+        await test.expect(popup.locator('text="Propose transaction"')).toHaveCount(0);
+        await popup.locator('text="Approve"').click({ timeout: 20_000 });
+      })(),
+    ]);
+
+    const deserializedSignedTx = deserializeTransaction(result.result.txHex);
+    test
+      .expect(
+        (deserializedSignedTx.auth.spendingCondition as MultiSigSpendingCondition).fields.length
+      )
+      .toEqual(1);
   });
 });
