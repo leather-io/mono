@@ -2,12 +2,13 @@ import { BrowserContext, Page } from '@playwright/test';
 import { TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS } from '@tests/mocks/constants';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
 import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
+import { makeBitcoinPolicy, policyStateOverrides } from '@tests/mocks/mock-policies';
 import {
   getConnectedTestAppPermissionsState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
 
-import type { RpcParams, sendTransfer } from '@leather.io/rpc';
+import { RpcErrorCode, type RpcParams, type sendTransfer } from '@leather.io/rpc';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -99,6 +100,32 @@ test.describe('RPC: sendTransfer', () => {
         message: 'User rejected request',
       },
     });
+  });
+});
+
+test.describe('RPC: sendTransfer with an active multisig policy account', () => {
+  const bitcoinPolicy = makeBitcoinPolicy();
+
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      ...policyStateOverrides({ policies: [bitcoinPolicy], activePolicyId: bitcoinPolicy.id }),
+      ...getConnectedTestAppPermissionsState(),
+    });
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+  });
+
+  test('rejects the request without opening an approval popup', async ({ page, context }) => {
+    let popupOpened = false;
+    context.on('page', () => {
+      popupOpened = true;
+    });
+
+    const result = await openSendTransfer(page)(baseParams);
+
+    test.expect(result.error.code).toBe(RpcErrorCode.INVALID_REQUEST);
+    test.expect(result.error.message).toContain('multisig account');
+    test.expect(popupOpened).toBe(false);
   });
 });
 

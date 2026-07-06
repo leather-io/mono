@@ -1,17 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
+import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
+import { getMultisigDescriptor } from '~/features/multisig/transactions/btc-multisig-descriptor';
+import { getOrderedSigningPubkeys } from '~/features/multisig/transactions/derive-multisig-address';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
+import { useToast } from '~/features/toasts/use-toast';
 import { formatCurrency } from '~/utils/currency-formatter';
+import { leather } from '~/utils/leather-sdk';
+import { isLeatherInstalled } from '~/utils/utils';
 
-import type { AuthNetworkId } from '@leather.io/models';
+import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
 import { PlusIcon } from '@leather.io/ui';
 
 import { MultisigErrorState } from '../components/multisig-error-state';
@@ -20,32 +26,44 @@ import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
+import { chainFromNetwork } from '../multisig.utils';
 import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
 
 export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
+  const navigate = useNavigate();
   const [hydrated, setHydrated] = useState(false);
   const [isProposing, setIsProposing] = useState(false);
+  const [isAddingToWallet, setIsAddingToWallet] = useState(false);
+  const { success, error } = useToast();
   useEffect(() => setHydrated(true), []);
 
-  const btcVaults = useVaults('btc:mainnet');
-  const stxVaults = useVaults('stx:mainnet');
+  function onProposed(transaction: MultisigTransaction) {
+    setIsProposing(false);
+    if (!vaultId) return;
+    void navigate(multisigPaths.tx(vaultId, transaction.id), { state: { autoSign: true } });
+  }
+
+  const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
+  const btcVaults = useVaults(btcNetwork);
+  const stxVaults = useVaults(stxNetwork);
+
   const inBtc = btcVaults.data?.some(summary => summary.id === vaultId) ?? false;
   const inStx = stxVaults.data?.some(summary => summary.id === vaultId) ?? false;
   const vaultNetworkKnown = inBtc || inStx;
-  const network: AuthNetworkId = inStx ? 'stx:mainnet' : 'btc:mainnet';
+  const network: AuthNetworkId = inStx ? stxNetwork : btcNetwork;
 
   const vault = useVault(network, vaultNetworkKnown ? vaultId : undefined);
   const account = useVaultAccount(network, vaultNetworkKnown ? accountId : undefined);
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accountBalance = useVaultAccountBalance(account.data);
 
-  const btcSession = useSession('btc:mainnet');
-  const stxSession = useSession('stx:mainnet');
-  const restoringBtc = useIsRestoringSession('btc:mainnet');
-  const restoringStx = useIsRestoringSession('stx:mainnet');
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
+  const restoringBtc = useIsRestoringSession(btcNetwork);
+  const restoringStx = useIsRestoringSession(stxNetwork);
   const sessionsRestoring = restoringBtc || restoringStx;
   const listsSettled = (!btcSession || btcVaults.isSuccess) && (!stxSession || stxVaults.isSuccess);
   const detailResolving = vaultNetworkKnown && !(vault.isSuccess && account.isSuccess);
@@ -79,8 +97,38 @@ export function AccountDetailPage() {
   const theme = vaultThemeFromName(vault.data.theme);
   const chainLabel = account.data.network.startsWith('btc') ? 'BTC' : 'STX';
 
-  function onAddToWallet() {
-    // TODO: add this multisig account to the extension wallet
+  async function onAddToWallet() {
+    if (!vault.data || !account.data) return;
+    if (!isLeatherInstalled()) {
+      error('Leather wallet not detected. Install the Leather extension to add this account.');
+      return;
+    }
+
+    const accountData = account.data;
+    const network = vault.data.network.endsWith('testnet') ? 'testnet' : 'mainnet';
+
+    setIsAddingToWallet(true);
+    try {
+      if (chainFromNetwork(accountData.network) === 'btc') {
+        await leather.btcAddAccount({
+          descriptor: getMultisigDescriptor(accountData),
+          name: accountData.name,
+          network,
+        });
+      } else {
+        await leather.stxAddAccount({
+          publicKeys: getOrderedSigningPubkeys(accountData),
+          threshold: accountData.threshold,
+          name: accountData.name,
+          network,
+        });
+      }
+      success(`Added "${accountData.name}" to your wallet`);
+    } catch (err) {
+      error(err instanceof Error ? err.message : 'Failed to add account to wallet');
+    } finally {
+      setIsAddingToWallet(false);
+    }
   }
 
   return (
@@ -92,6 +140,7 @@ export function AccountDetailPage() {
       >
         <Box flex={['1', '1', '1.6']} width="100%">
           <MultisigHero
+            variant="balance"
             themeId={theme.id}
             primary={<Balance balance={accountBalance.crypto} formatCurrency={formatCurrency} />}
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
@@ -133,7 +182,12 @@ export function AccountDetailPage() {
               </styled.div>
             </Box>
           </styled.button>
-          <AccountTransactions network={network} vaultId={vaultId} accountId={accountId} />
+          <AccountTransactions
+            network={network}
+            vaultId={vaultId}
+            accountId={accountId}
+            threshold={account.data.threshold}
+          />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>
@@ -142,6 +196,7 @@ export function AccountDetailPage() {
             account={account.data}
             currentUserAddress={me.data?.address}
             onAddToWallet={onAddToWallet}
+            isAddingToWallet={isAddingToWallet}
           />
         </Box>
       </Flex>
@@ -150,6 +205,7 @@ export function AccountDetailPage() {
         memberCount={vault.data.members.length}
         isShowing={isProposing}
         onClose={() => setIsProposing(false)}
+        onProposed={onProposed}
       />
     </MultisigPage>
   );

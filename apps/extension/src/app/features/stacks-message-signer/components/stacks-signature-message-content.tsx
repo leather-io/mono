@@ -29,7 +29,7 @@ export function StacksSignatureRequestMessageContent({
         message={payload.message}
         hash={bytesToHex(hashMessage(payload.message))}
       />
-      <NoFeesWarningRow chainId={payload.network?.chainId ?? ChainId.Testnet} />
+      <NoFeesWarningRow chainId={payload.network?.chainId ?? ChainId.Mainnet} />
       <SignMessageActions
         isLoading={isLoading}
         onSignMessageCancel={onCancelMessageSigning}

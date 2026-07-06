@@ -2,33 +2,28 @@ import { Navigate, useSearchParams } from 'react-router';
 
 import { Flex, styled } from 'leather-styles/jsx';
 import { ConnectCard } from '~/components/connect-card/connect-card';
+import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useSignOut } from '~/features/multisig/auth/use-sign-out';
 import { Page } from '~/layouts/page/page';
 
-import type { AuthNetworkId } from '@leather.io/models';
 import { Link as UiLink } from '@leather.io/ui';
 
-import type { Chain } from '../data/multisig-types';
 import { multisigPaths } from '../multisig.constants';
 import { OnboardingConnectRow } from './components/onboarding-connect-row';
 
-const chainNetwork: Record<Chain, AuthNetworkId> = {
-  btc: 'btc:mainnet',
-  stx: 'stx:mainnet',
-};
-
 export function MultisigOnboardingPage() {
-  const btcSession = useSession(chainNetwork.btc);
-  const stxSession = useSession(chainNetwork.stx);
-  const btcSignIn = useSignIn(chainNetwork.btc);
-  const stxSignIn = useSignIn(chainNetwork.stx);
-  const btcSignOut = useSignOut(chainNetwork.btc);
-  const stxSignOut = useSignOut(chainNetwork.stx);
-  const btcRestoring = useIsRestoringSession(chainNetwork.btc);
-  const stxRestoring = useIsRestoringSession(chainNetwork.stx);
+  const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
+  const btcSignIn = useSignIn(btcNetwork);
+  const stxSignIn = useSignIn(stxNetwork);
+  const btcSignOut = useSignOut(btcNetwork);
+  const stxSignOut = useSignOut(stxNetwork);
+  const btcRestoring = useIsRestoringSession(btcNetwork);
+  const stxRestoring = useIsRestoringSession(stxNetwork);
   const [searchParams] = useSearchParams();
 
   if (btcSession || stxSession) {

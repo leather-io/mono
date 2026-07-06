@@ -17,12 +17,6 @@ const chainSignInDescriptions: Record<Chain, string> = {
   stx: 'STX & sBTC vaults · Stacks signers',
 };
 
-// V1 is mainnet-pinned (spec §2.2); the wallet inherits the web app's network.
-export const multisigV1Networks: Record<Chain, AuthNetworkId> = {
-  btc: 'btc:mainnet',
-  stx: 'stx:mainnet',
-};
-
 export function useChainConnection(chain: Chain, network: AuthNetworkId) {
   const session = useSession(network);
   const signIn = useSignIn(network);

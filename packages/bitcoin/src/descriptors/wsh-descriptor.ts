@@ -165,6 +165,17 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
   };
 }
 
+const opReserved = 0x50;
+const maxMultisigOpcode = 0x60;
+
+export function getWshDescriptorThreshold(descriptor: string, index = 0): number {
+  const { witnessScript } = compileWshDescriptor(descriptor, index);
+  const opcode = witnessScript[0];
+  if (opcode === undefined || opcode <= opReserved || opcode > maxMultisigOpcode)
+    throw new Error('Descriptor witness script does not start with a multisig threshold opcode');
+  return opcode - opReserved;
+}
+
 // Derives the P2WSH (bech32) receive address a `wsh(...)` descriptor locks to.
 // Pass `networkMode` when policy/network identity is known. If omitted, the
 // address network is inferred from the descriptor's key prefixes for backwards

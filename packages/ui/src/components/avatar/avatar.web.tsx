@@ -54,28 +54,34 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
       <AvatarImage src={image} alt={imageAlt ?? fallback} />
       <AvatarIcon avatarSize={size} icon={icon} />
       {fallback ? <AvatarFallback delayMs={fallbackDelayMs}>{fallback}</AvatarFallback> : null}
-      {indicator ? (
-        <styled.div
-          bg="ink.background-primary"
-          borderRadius="round"
-          position="absolute"
-          bottom={-2}
-          right={-2}
-          width="20px"
-          height="20px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          overflow="hidden"
-        >
-          {indicator}
-        </styled.div>
-      ) : null}
+      {indicator ? <AvatarIndicatorBadge size={size}>{indicator}</AvatarIndicatorBadge> : null}
     </AvatarRoot>
   );
 });
 
 Avatar.displayName = 'Avatar';
+
+const AvatarIndicatorBadge = styled('div', {
+  base: {
+    bg: 'ink.background-primary',
+    borderRadius: 'round',
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  variants: {
+    size: {
+      xs: { width: '8px', height: '8px', bottom: '-1px', right: '-1px' },
+      sm: { width: '12px', height: '12px', bottom: '-1px', right: '-1px' },
+      md: { width: '16px', height: '16px', bottom: '-2px', right: '-2px' },
+      lg: { width: '20px', height: '20px', bottom: '-2px', right: '-2px' },
+      xl: { width: '20px', height: '20px', bottom: '-2px', right: '-2px' },
+    },
+  },
+  defaultVariants: { size: 'xl' },
+});
 
 const AvatarRoot = styled(RadixAvatar.Root, {
   base: {

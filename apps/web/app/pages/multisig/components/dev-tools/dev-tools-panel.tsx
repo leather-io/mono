@@ -1,11 +1,22 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
+import { getLeatherMockMode, setLocalStorageMockMode } from '~/constants/environment';
 
 import { Button, Popover, SettingsSliderIcon } from '@leather.io/ui';
+import { delay } from '@leather.io/utils';
 
 import { useMultisigActions } from '../../store/use-multisig';
 import { TransactionTools } from './transaction-tools';
+
+const mockScenarioKey = 'leather:mock:scenario';
+
+type PreviewMode = 'live' | 'populated' | 'empty';
+
+function currentPreviewMode(): PreviewMode {
+  if (!getLeatherMockMode()) return 'live';
+  return localStorage.getItem(mockScenarioKey) === 'empty' ? 'empty' : 'populated';
+}
 
 function ToolRow({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -22,6 +33,25 @@ function ToolRow({ label, children }: { label: string; children: ReactNode }) {
 
 export function DevToolsPanel() {
   const { resetSession } = useMultisigActions();
+  const [previewMode, setPreviewMode] = useState<PreviewMode>('live');
+
+  useEffect(() => {
+    setPreviewMode(currentPreviewMode());
+  }, []);
+
+  async function applyPreview(next: PreviewMode) {
+    setPreviewMode(next);
+    setLocalStorageMockMode(next !== 'live');
+    if (next === 'empty') localStorage.setItem(mockScenarioKey, 'empty');
+    else localStorage.removeItem(mockScenarioKey);
+    if (next !== 'live') resetSession(next === 'empty' ? 'empty' : 'seed');
+    const { worker } = await import('~/mocks/api/browser');
+    if (next === 'live') worker.stop();
+    else await worker.start();
+    await delay(200);
+    window.location.reload();
+  }
+
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
@@ -54,10 +84,25 @@ export function DevToolsPanel() {
           <Flex direction="column" gap="space.04" minWidth="260px">
             <styled.span textStyle="label.02">Dev tools</styled.span>
             <ToolRow label="Preview data">
-              <Button variant="ghost" size="sm" onClick={() => resetSession('seed')}>
+              <Button
+                variant={previewMode === 'live' ? 'solid' : 'ghost'}
+                size="sm"
+                onClick={() => applyPreview('live')}
+              >
+                Live
+              </Button>
+              <Button
+                variant={previewMode === 'populated' ? 'solid' : 'ghost'}
+                size="sm"
+                onClick={() => applyPreview('populated')}
+              >
                 Populated
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => resetSession('empty')}>
+              <Button
+                variant={previewMode === 'empty' ? 'solid' : 'ghost'}
+                size="sm"
+                onClick={() => applyPreview('empty')}
+              >
                 Empty
               </Button>
             </ToolRow>

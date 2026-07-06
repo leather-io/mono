@@ -25,3 +25,8 @@ export function useAccountNameOverride(accountId: AccountId) {
   const entities = useSelector(selectors.selectEntities);
   return entities[makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex)]?.name;
 }
+
+export function useNameOverrideById(id: string | undefined) {
+  const entities = useSelector(selectors.selectEntities);
+  return id ? entities[id]?.name : undefined;
+}

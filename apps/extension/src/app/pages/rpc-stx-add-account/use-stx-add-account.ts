@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import {
   RpcErrorCode,
+  type RpcResult,
   createRequestEncoder,
   createRpcErrorResponse,
   createRpcSuccessResponse,
@@ -14,10 +15,16 @@ import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useNetworks } from '@app/store/networks/networks.selectors';
 
 import { usePolicyFeatureGate } from '../policy-feature-gate';
-import { type PolicyMatchStatus } from '../policy-match';
+import {
+  type PolicyApprovalMode,
+  type PolicyMatchStatus,
+  getPolicyApprovalMode,
+} from '../policy-match';
 import { useRegisterStxPolicy } from './register-stx-policy';
+import { deriveStxPolicyAddress } from './stx-policy-registration';
 
 const { decode } = createRequestEncoder(stxAddAccount.request);
 
@@ -32,11 +39,16 @@ export function useStxAddAccount() {
   const { tabId, origin, request } = useStxAddAccountParams();
   const stacksAccount = useCurrentStacksAccount();
   const registerStxPolicy = useRegisterStxPolicy();
+  const networks = useNetworks();
   const { isFeatureEnabled, rejectAsUnsupported } = usePolicyFeatureGate({
     method: request.method,
     id: request.id,
     tabId,
   });
+
+  // Whitelisted origins may register the policy; any other origin may only let
+  // the user verify the derived address (nothing is written to the extension).
+  const mode: PolicyApprovalMode = getPolicyApprovalMode(origin);
 
   // The active account's public key must be one of the policy's public keys
   // before the user can confirm.
@@ -49,8 +61,73 @@ export function useStxAddAccount() {
     return isSigner ? 'match' : 'mismatch';
   }, [stacksAccount, request.params.publicKeys]);
 
+  // Derived locally and identically to registration, so what the user verifies
+  // equals what is stored / returned. Null on an unexpected derivation failure
+  // (never throw in render); the page disables confirm and warns.
+  const address = useMemo(() => {
+    try {
+      return deriveStxPolicyAddress({ params: request.params, networks }).address;
+    } catch {
+      return null;
+    }
+  }, [request.params, networks]);
+
   function focusInitiatingTab() {
     focusTabAndWindow(tabId);
+  }
+
+  function sendError(message: string) {
+    if (!tabId) return;
+    void chrome.tabs.sendMessage(
+      tabId,
+      createRpcErrorResponse(request.method, {
+        id: request.id,
+        error: { code: RpcErrorCode.INTERNAL_ERROR, message },
+      })
+    );
+  }
+
+  function sendSuccess(result: RpcResult<typeof stxAddAccount>) {
+    if (!tabId) return;
+    void chrome.tabs.sendMessage(
+      tabId,
+      createRpcSuccessResponse(request.method, { id: request.id, result })
+    );
+  }
+
+  // Terminal action: register the policy (add mode) or just return the verified
+  // address without writing any state (verify mode), then respond to the dApp.
+  function finalize() {
+    if (!tabId || !origin) {
+      logger.error('Cannot complete add account: missing tabId, origin');
+      return;
+    }
+    if (matchStatus !== 'match') {
+      logger.error('Cannot complete add account: active account is not part of the policy');
+      return;
+    }
+    if (!address) {
+      sendError('Failed to derive policy address');
+      return;
+    }
+
+    if (mode === 'add') {
+      const result = registerStxPolicy(request.params);
+      if (!result) {
+        sendError('Failed to register policy');
+        return;
+      }
+      sendSuccess(result);
+      return;
+    }
+
+    sendSuccess({
+      address,
+      publicKeys: request.params.publicKeys,
+      threshold: request.params.threshold,
+      role: 'signer',
+      added: false,
+    });
   }
 
   return {
@@ -58,43 +135,13 @@ export function useStxAddAccount() {
     name: request.params.name,
     publicKeys: request.params.publicKeys,
     threshold: request.params.threshold,
+    address,
     matchStatus,
-    canApprove: matchStatus === 'match',
+    mode,
+    canApprove: matchStatus === 'match' && address !== null,
     isFeatureEnabled,
     rejectAsUnsupported,
     focusInitiatingTab,
-    onUserApprovesAddAccount() {
-      if (!tabId || !origin) {
-        logger.error('Cannot add account: missing tabId, origin');
-        return;
-      }
-      if (matchStatus !== 'match') {
-        logger.error('Cannot add account: active account is not part of the policy');
-        return;
-      }
-
-      const result = registerStxPolicy(request.params);
-      if (!result) {
-        void chrome.tabs.sendMessage(
-          tabId,
-          createRpcErrorResponse(request.method, {
-            id: request.id,
-            error: {
-              code: RpcErrorCode.INTERNAL_ERROR,
-              message: 'Failed to register policy',
-            },
-          })
-        );
-        return;
-      }
-
-      void chrome.tabs.sendMessage(
-        tabId,
-        createRpcSuccessResponse(request.method, {
-          id: request.id,
-          result,
-        })
-      );
-    },
+    finalize,
   };
 }

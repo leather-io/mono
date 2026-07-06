@@ -32,6 +32,7 @@ export function Container() {
   const { pathname: locationPathname } = useLocation();
   const pathname = locationPathname as RouteUrls;
   const [isShowingSwitchAccount, setIsShowingSwitchAccount] = useState(false);
+  const [allowPolicyAccounts, setAllowPolicyAccounts] = useState(true);
   const [receiveView, setReceiveView] = useState<ReceiveView | null>(null);
 
   const dispatch = useAppDispatch();
@@ -75,6 +76,7 @@ export function Container() {
         <SwitchAccountSheet
           isShowing={isShowingSwitchAccount}
           onClose={() => setIsShowingSwitchAccount(false)}
+          allowPolicyAccounts={allowPolicyAccounts}
         />
       )}
       {receiveView && (
@@ -90,6 +92,8 @@ export function Container() {
           context={{
             isShowingSwitchAccount,
             setIsShowingSwitchAccount,
+            allowPolicyAccounts,
+            setAllowPolicyAccounts,
             receiveView,
             setReceiveView,
           }}

@@ -11,6 +11,7 @@ import { useWalletType } from '@app/common/use-wallet-type';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useHasCurrentBitcoinAccount } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { ActionButton } from './action-button';
 import { TransferSheet } from './transfer-sheet';
@@ -18,6 +19,7 @@ import { TransferSheet } from './transfer-sheet';
 export function TransferButtons() {
   const navigate = useNavigate();
   const hasBitcoinKeys = useHasCurrentBitcoinAccount();
+  const policy = useCurrentPolicy();
   const { showReceive } = useReceiveDialog();
 
   const { whenWallet } = useWalletType();
@@ -36,8 +38,21 @@ export function TransferButtons() {
   }
 
   function onReceive() {
-    showReceive(hasBitcoinKeys ? 'full' : 'stx');
+    if (policy) showReceive(policy.chain === 'bitcoin' ? 'btc' : 'stx');
+    else showReceive(hasBitcoinKeys ? 'full' : 'stx');
     setIsDrawerOpen(false);
+  }
+
+  if (policy) {
+    return (
+      <ActionButton
+        data-testid={HomePageSelectors.ReceiveCryptoAssetBtn}
+        onClick={onReceive}
+        variant="outline"
+      >
+        Receive
+      </ActionButton>
+    );
   }
 
   if (isAtLeastMd) {

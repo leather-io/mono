@@ -3,6 +3,7 @@ import { useQueries } from '@tanstack/react-query';
 import type { MultisigTransactionSummary, VaultSummary } from '@leather.io/models';
 import { getMultisigService } from '@leather.io/services';
 
+import { useMultisigNetworks } from '../auth/use-multisig-networks';
 import { useSession } from '../auth/use-session';
 import { retryMultisigQuery } from './use-vaults';
 import { multisigVaultKeys } from './vault-query-keys';
@@ -13,14 +14,16 @@ export interface DashboardActivityItem {
   transaction: MultisigTransactionSummary;
   vaultId: string;
   vaultName: string;
+  threshold?: number;
 }
 
 // Aggregates transactions across every active vault's accounts for the dashboard
 // feed: a nested fan-out (vault -> accounts -> transactions) over both networks,
 // newest first. The backend lists only per account, so this is client-side.
 export function useDashboardActivity(vaults: VaultSummary[], limit = 5) {
-  const btcSession = useSession('btc:mainnet');
-  const stxSession = useSession('stx:mainnet');
+  const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
 
   const activeVaults = vaults.filter(
     vault => vault.membershipStatus === 'joined' && vault.status === 'active'
@@ -28,15 +31,13 @@ export function useDashboardActivity(vaults: VaultSummary[], limit = 5) {
 
   const accountResults = useQueries({
     queries: activeVaults.map(vault => {
-      const address =
-        vault.network === 'btc:mainnet'
-          ? btcSession?.identity.address
-          : stxSession?.identity.address;
+      const isBtc = vault.network.startsWith('btc');
+      const address = isBtc ? btcSession?.identity.address : stxSession?.identity.address;
       return {
         queryKey: multisigVaultKeys.accounts(vault.network, address, vault.id),
         queryFn: ({ signal }: { signal: AbortSignal }) =>
           getMultisigService().listVaultAccounts(vault.network, vault.id, signal),
-        enabled: vault.network === 'btc:mainnet' ? Boolean(btcSession) : Boolean(stxSession),
+        enabled: isBtc ? Boolean(btcSession) : Boolean(stxSession),
         retry: retryMultisigQuery,
       };
     }),
@@ -47,10 +48,9 @@ export function useDashboardActivity(vaults: VaultSummary[], limit = 5) {
 
   const transactionResults = useQueries({
     queries: accounts.map(account => {
-      const address =
-        account.network === 'btc:mainnet'
-          ? btcSession?.identity.address
-          : stxSession?.identity.address;
+      const address = account.network.startsWith('btc')
+        ? btcSession?.identity.address
+        : stxSession?.identity.address;
       return {
         queryKey: multisigVaultKeys.accountTransactions(account.network, address, account.id),
         queryFn: ({ signal }: { signal: AbortSignal }) =>
@@ -66,6 +66,7 @@ export function useDashboardActivity(vaults: VaultSummary[], limit = 5) {
   });
 
   const accountVaultId = new Map(accounts.map(account => [account.id, account.vaultId]));
+  const accountThreshold = new Map(accounts.map(account => [account.id, account.threshold]));
 
   const activity: DashboardActivityItem[] = transactionResults
     .flatMap(result => result.data?.data ?? [])
@@ -74,7 +75,14 @@ export function useDashboardActivity(vaults: VaultSummary[], limit = 5) {
     .flatMap(transaction => {
       const vaultId = accountVaultId.get(transaction.vaultAccountId);
       if (!vaultId) return [];
-      return [{ transaction, vaultId, vaultName: vaultNames.get(vaultId) ?? '' }];
+      return [
+        {
+          transaction,
+          vaultId,
+          vaultName: vaultNames.get(vaultId) ?? '',
+          threshold: accountThreshold.get(transaction.vaultAccountId),
+        },
+      ];
     });
 
   const isLoading =

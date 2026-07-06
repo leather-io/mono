@@ -17,8 +17,8 @@ import { NotFoundContent } from '@app/pages/not-found/not-found';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
-import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { AccountActions } from './components/account-actions-current/account-actions';
 import { AccountCard } from './components/account-card';
@@ -38,8 +38,8 @@ interface HomeProps {
 
 export function Home({ isBackground }: HomeProps) {
   const { activityRevamp } = useFlags();
-  const accountId = useCurrentAccountId();
-  const account = useAccountAddresses(accountId);
+  const account = useCurrentAccountAddresses();
+  const policy = useCurrentPolicy();
   useAccountCollectibles(account);
 
   const shouldAnimate = !isBackground && !animationState.hasPlayed;
@@ -65,12 +65,12 @@ export function Home({ isBackground }: HomeProps) {
         <MultiWalletIntroducer />
       </Flex>
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
-      <HomeTabs>
+      <HomeTabs showCollectibles={policy?.chain !== 'bitcoin'}>
         <ModalBackgroundWrapper>
           <Route index element={<Tokens />} />
           <Route
             path={RouteUrls.Activity}
-            element={activityRevamp ? <ActivityList /> : <ActivityListLegacy />}
+            element={activityRevamp || policy ? <ActivityList /> : <ActivityListLegacy />}
           />
           <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
           {homePageModalRoutes}

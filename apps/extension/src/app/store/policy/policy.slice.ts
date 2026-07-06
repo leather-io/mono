@@ -18,6 +18,12 @@ interface AddPolicyPayload {
 
 export const userAddsPolicy = createAction<AddPolicyPayload>('policy/userAddsPolicy');
 
+interface RemovePolicyPayload {
+  policyId: string;
+}
+
+export const userRemovesPolicy = createAction<RemovePolicyPayload>('policy/userRemovesPolicy');
+
 export const policySlice = createSlice({
   name: 'policy',
   initialState,
@@ -25,16 +31,20 @@ export const policySlice = createSlice({
   extraReducers: builder =>
     builder
       // `upsertOne` so re-adding the same (parent, address, network) policy
-      // account is idempotent — a second registration replaces the existing row
-      // in place.
+      // is idempotent — a second registration replaces the existing row in
+      // place.
       .addCase(userAddsPolicy, (state, action) => {
         policyAdapter.upsertOne(state, action.payload.policy);
       })
 
-      // Removing a wallet cascades to its policy accounts. Their ids start with
+      .addCase(userRemovesPolicy, (state, action) => {
+        policyAdapter.removeOne(state, action.payload.policyId);
+      })
+
+      // Removing a wallet cascades to its policies. Their ids start with
       // `${fingerprint}/` (parentAccountId is `${fingerprint}/${accountIndex}`),
       // so the same prefix match the accounts slice uses works here too. No
-      // `fingerprintMigration` re-keying is needed: a policy account is only
+      // `fingerprintMigration` re-keying is needed: a policy is only
       // created by an unlocked, real-fingerprint account, never under the
       // assumed-zero fingerprint.
       .addCase(userRemovesWallet, (state, action) => {

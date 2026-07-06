@@ -1,13 +1,9 @@
-import { useSelector } from 'react-redux';
-
 import {
   AccountSelectors,
   getSwitchAccountSheetAccountNameSelector,
 } from '@tests/selectors/account.selectors';
 
 import type { AccountId } from '@leather.io/models';
-
-import { isMatchingAccountId } from '@shared/utils';
 
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { useSwitchAccount } from '@app/common/hooks/account/use-switch-account';
@@ -19,7 +15,6 @@ import { getLedgerAccountIndicator } from '@app/components/account/ledger-accoun
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { WalletType } from '@app/store/common/wallet-type.selectors';
-import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 import { useLoading } from '@app/store/ui/ui.hooks';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
@@ -41,12 +36,11 @@ export function SwitchAccountListItem({
   const stxAddress = stacksAccount?.address ?? '';
   const bitcoinSigner = useNativeSegwitPayer(accountId);
   const btcAddress = bitcoinSigner?.({ changeIndex: 0, addressIndex: 0 }).address ?? '';
-  const currentAccount = useSelector(selectCurrentAccount);
 
   const { isLoading, setIsLoading, setIsIdle } = useLoading(
     'SWITCH_ACCOUNTS' + stxAddress || btcAddress
   );
-  const { handleSwitchAccount } = useSwitchAccount(handleClose);
+  const { handleSwitchAccount, getIsActive } = useSwitchAccount(handleClose);
   const { data: name, isFetching: isFetchingBnsName } = useAccountDisplayName({
     address: stacksAccount?.address,
     index: accountId.accountIndex,
@@ -59,7 +53,7 @@ export function SwitchAccountListItem({
     setIsIdle();
   }
 
-  const isSelected = isMatchingAccountId(currentAccount, accountId);
+  const isSelected = getIsActive(accountId);
 
   return (
     <AccountListItemLayout

@@ -5,6 +5,7 @@ import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useNativeSegwitAccountIndexAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { ReceiveTokensLayout } from './components/receive-tokens.layout';
 
@@ -17,11 +18,16 @@ export function ReceiveBtcModal({ type = 'btc', onClose }: ReceiveBtcModalProps)
   const toast = useToast();
 
   const currentAccount = useCurrentAccountId();
+  const policy = useCurrentPolicy();
   const nativeSegwitAddress = useNativeSegwitAccountIndexAddressIndexZero(currentAccount);
   const taprootAddress = useZeroIndexTaprootAddress(currentAccount);
 
-  const address = type === 'btc-taproot' ? taprootAddress : nativeSegwitAddress;
+  const singleSigBtcAddress = type === 'btc-taproot' ? taprootAddress : nativeSegwitAddress;
+  const singleSigAddress = policy ? undefined : singleSigBtcAddress;
+  const address = policy?.chain === 'bitcoin' ? policy.address : singleSigAddress;
   const title = type === 'btc-taproot' ? 'BTC TAPROOT' : 'BTC';
+
+  if (!address) return null;
 
   return (
     <ReceiveTokensLayout

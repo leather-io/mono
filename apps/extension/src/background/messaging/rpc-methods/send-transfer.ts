@@ -24,11 +24,14 @@ import {
   getTabIdFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateNoActivePolicy,
 } from '../rpc-request-utils';
 
 export const sendTransferHandler = defineRpcRequestHandler(
   sendTransfer.method,
   async (request, port) => {
+    if ((await validateNoActivePolicy(request, port)).status === 'failure') return;
+
     if (isUndefined(request.params)) {
       void trackRpcRequestError({ endpoint: 'sendTransfer', error: 'Undefined parameters' });
 

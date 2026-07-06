@@ -6,8 +6,7 @@ import type { NonFungibleCryptoAsset } from '@leather.io/models';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
-import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 
 import { CollectibleTypeIconOverlay } from './components/collectible-type-icon-overlay';
 import { CollectiblesLayout } from './components/collectibles.layout';
@@ -27,8 +26,7 @@ function CollectibleItem({ view, onSelect }: CollectibleItemProps) {
 }
 
 export function Collectibles() {
-  const accountId = useCurrentAccountId();
-  const account = useAccountAddresses(accountId);
+  const account = useCurrentAccountAddresses();
   const navigate = useNavigate();
   const location = useLocation();
   const {

@@ -32,6 +32,8 @@ export { Input } from './components/input/input.web';
 export { ItemLayout } from './components/item-layout/item-layout.web';
 export { ItemLayoutWithButtons } from './components/item-layout/item-layout-with-buttons.web';
 export { Link } from './components/link/link.web';
+export { ListContainer } from './components/list-container/list-container.web';
+export { ListItemBox, type ListItemDensity } from './components/list-item-box/list-item-box.web';
 export { LoadingSpinner, Spinner } from './components/spinner/index.web';
 export { Logo } from './components/logo.web';
 export { NumericInput, type NumericInputProps } from './components/numeric-input/numeric-input.web';

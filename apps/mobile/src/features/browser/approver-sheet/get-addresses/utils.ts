@@ -1,7 +1,7 @@
 import { bytesToHex } from '@stacks/common';
 
 import { ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
-import { BtcAddress, getAddresses } from '@leather.io/rpc';
+import { BtcAddress, StxAddress, getAddresses } from '@leather.io/rpc';
 
 interface FormatAddressesForGetAddresses {
   taproot: {
@@ -51,8 +51,9 @@ export function formatAddressesForGetAddresses({
   };
   keysToIncludeInResponse.push(taprootAddressResponse);
 
-  const stacksAddressResponse = {
+  const stacksAddressResponse: StxAddress = {
     symbol: 'STX',
+    kind: 'single-sig',
     address: stacksAccount.address,
     publicKey: bytesToHex(stacksAccount.publicKey),
   };

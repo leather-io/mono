@@ -4,12 +4,9 @@ import { makeAccountIdentifer } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
 
 import type { WalletType } from '@app/store/common/wallet-type.selectors';
+import type { PolicyStore } from '@app/store/policy/policy-store.utils';
 
-import {
-  canHideAccount,
-  getWalletGroupCounts,
-  isAddAccountRow,
-} from './switch-account-sheet.utils';
+import { buildWalletRows, canHideAccount } from './switch-account-sheet.utils';
 
 const fingerprint = 'a1b2c3d4';
 function account(accountIndex: number): AccountId {
@@ -24,38 +21,42 @@ function walletGroup(type: WalletType, accountCount: number) {
     accounts: Array.from({ length: accountCount }, (_, accountIndex) => account(accountIndex)),
   };
 }
+function policyOf(parent: AccountId, address: string): PolicyStore {
+  const parentAccountId = idOf(parent);
+  const networkId = 'mainnet';
+  return {
+    id: `${parentAccountId}/${address}/${networkId}`,
+    parentAccountId,
+    networkId,
+    chain: 'stacks',
+    address,
+    publicKeys: ['03aa', '02bb'],
+    threshold: 2,
+    role: 'signer',
+  };
+}
 
-describe(getWalletGroupCounts.name, () => {
-  test('software wallets reserve an extra row for the add-account button', () => {
-    expect(getWalletGroupCounts([walletGroup('software', 3)])).toEqual([4]);
+function noPolicies(): PolicyStore[] {
+  return [];
+}
+
+describe(buildWalletRows.name, () => {
+  test('software wallets append an add-account row', () => {
+    const rows = buildWalletRows(walletGroup('software', 3), noPolicies);
+    expect(rows.map(row => row.kind)).toEqual(['account', 'account', 'account', 'addAccount']);
   });
 
   test('ledger wallets have no add-account row', () => {
-    expect(getWalletGroupCounts([walletGroup('ledger', 3)])).toEqual([3]);
+    const rows = buildWalletRows(walletGroup('ledger', 3), noPolicies);
+    expect(rows.map(row => row.kind)).toEqual(['account', 'account', 'account']);
   });
 
-  test('counts each wallet in a mixed tree', () => {
-    expect(
-      getWalletGroupCounts([
-        walletGroup('software', 2),
-        walletGroup('ledger', 1),
-        walletGroup('software', 0),
-      ])
-    ).toEqual([3, 1, 1]);
-  });
-});
-
-describe(isAddAccountRow.name, () => {
-  test('the row past the last software account is the add-account row', () => {
-    const wallet = walletGroup('software', 2);
-    expect(isAddAccountRow(wallet, 0)).toBe(false);
-    expect(isAddAccountRow(wallet, 1)).toBe(false);
-    expect(isAddAccountRow(wallet, 2)).toBe(true);
-  });
-
-  test('ledger wallets never render an add-account row', () => {
-    const wallet = walletGroup('ledger', 2);
-    expect(isAddAccountRow(wallet, 2)).toBe(false);
+  test('nests policies directly beneath their parent account', () => {
+    const policy = policyOf(account(0), 'SM3CFXKD81GREH6MYFW4P9VKSSR2N525W3KDRH3P1');
+    const rows = buildWalletRows(walletGroup('ledger', 2), acc =>
+      acc.accountIndex === 0 ? [policy] : []
+    );
+    expect(rows.map(row => row.kind)).toEqual(['account', 'policy', 'account']);
   });
 });
 

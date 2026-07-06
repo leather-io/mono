@@ -4,11 +4,12 @@ import { parseTokenDetailsAssetId } from '@leather.io/features';
 import { CryptoAssetProtocols } from '@leather.io/models';
 import { deserializeAssetId } from '@leather.io/utils';
 
-import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
+import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 
 import { BitcoinTokenDetails } from './bitcoin-token-details';
 import { CollectibleDetails } from './collectible-details';
+import { PolicyBitcoinTokenDetails } from './policy-bitcoin-token-details';
 import { Sip10TokenDetails } from './sip10-token-details';
 import { StacksTokenDetails } from './stacks-token-details';
 import { TokenDetailsError } from './token-details-error';
@@ -18,7 +19,7 @@ export function TokenDetails() {
   const assetId = parseTokenDetailsAssetId(encodedAssetId);
 
   const accountId = useCurrentAccountId();
-  const account = useAccountAddresses(accountId);
+  const account = useCurrentAccountAddresses();
 
   if (!assetId) {
     return <TokenDetailsError />;
@@ -28,11 +29,15 @@ export function TokenDetails() {
 
   switch (protocol) {
     case CryptoAssetProtocols.nativeBtc:
-      return <BitcoinTokenDetails accountId={accountId} account={account} />;
+      return account.bitcoin?.type === 'fixedAddress' ? (
+        <PolicyBitcoinTokenDetails account={account} />
+      ) : (
+        <BitcoinTokenDetails accountId={accountId} account={account} />
+      );
     case CryptoAssetProtocols.nativeStx:
-      return <StacksTokenDetails accountId={accountId} account={account} />;
+      return <StacksTokenDetails account={account} />;
     case CryptoAssetProtocols.sip10:
-      return <Sip10TokenDetails accountId={accountId} account={account} assetId={assetId} />;
+      return <Sip10TokenDetails account={account} assetId={assetId} />;
     case CryptoAssetProtocols.sip9:
       return <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />;
     default:

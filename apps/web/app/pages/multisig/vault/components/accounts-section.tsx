@@ -4,10 +4,10 @@ import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-acc
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import type { Vault, VaultAccountSummary } from '@leather.io/models';
+import { ListItemBox } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { CopyAddress } from '../../components/copy-address';
-import { VaultListItem } from '../../components/vault-list-item';
 import { vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
@@ -55,8 +55,8 @@ function AccountCard({
         borderRadius="md"
       />
       <Box position="relative" zIndex={1} pointerEvents="none">
-        <VaultListItem
-          tightLeading
+        <ListItemBox
+          variant="plain"
           leading={
             <AvatarSq
               chain={chain}
@@ -65,20 +65,16 @@ function AccountCard({
               size="lg"
             />
           }
-          title={
-            <styled.span pl="space.02" textStyle="heading.05">
-              {account.name}
-            </styled.span>
-          }
+          title={<styled.span textStyle="heading.05">{account.name}</styled.span>}
           caption={
             <styled.span display="inline-flex" pointerEvents="auto">
               <CopyAddress addr={account.multisigAddress} />
             </styled.span>
           }
-          trailingTitle={
+          trailing={
             <Balance balance={fiat} formatCurrency={formatCurrency} textStyle="heading.05" />
           }
-          trailingSubtitle={
+          trailingCaption={
             <Balance
               balance={crypto}
               formatCurrency={formatCurrency}

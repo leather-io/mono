@@ -10,6 +10,7 @@ import { replaceRouteParams } from '@shared/utils/replace-route-params';
 import { useConfigSwapsEnabled } from '@app/query/common/remote-config/remote-config.query';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { SwapsDisabledTooltipLabel } from '../swaps-disabled-tooltip-label';
@@ -46,9 +47,10 @@ export function AccountActions() {
   const navigate = useNavigate();
   const stacksAccount = useCurrentStacksAccount();
   const { isTestnet } = useCurrentNetworkState();
+  const policy = useCurrentPolicy();
 
   const swapsEnabled = useConfigSwapsEnabled();
-  const swapsBtnDisabled = !swapsEnabled || !stacksAccount || isTestnet;
+  const swapsBtnDisabled = !swapsEnabled || !stacksAccount || isTestnet || Boolean(policy);
   const swapDisabledTooltipLabel = getSwapDisabledTooltipLabel({
     swapsEnabled,
     isTestnet,

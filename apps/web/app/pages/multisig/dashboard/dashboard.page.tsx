@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import {
@@ -17,9 +18,8 @@ import { ChainAvatar } from '../components/chain-avatar';
 import { InvitationModal } from '../components/invitation-modal';
 import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
-import { TransactionRow } from '../components/transaction-row';
+import { TransactionList } from '../components/transaction-list';
 import type { Chain } from '../data/multisig-types';
-import { collectingSignaturesGradient } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { CreateVaultTile } from './components/create-vault-tile';
 import { VaultCard } from './components/vault-card';
@@ -94,26 +94,16 @@ function ActivityFeed({
   }
   if (activity.length === 0) return <EmptyActivity />;
   return (
-    <>
-      {activity.map(item => (
-        <styled.button
-          key={item.transaction.id}
-          type="button"
-          onClick={() => onOpen(item.vaultId, item.transaction.id)}
-          display="block"
-          width="100%"
-          textAlign="left"
-          cursor="pointer"
-          bg="transparent"
-          bgImage={item.transaction.status === 'pending' ? collectingSignaturesGradient : undefined}
-          p="space.03"
-          borderRadius="md"
-          _hover={{ bg: 'ink.component-background-hover' }}
-        >
-          <TransactionRow transaction={item.transaction} subtitle={item.vaultName} />
-        </styled.button>
-      ))}
-    </>
+    <TransactionList
+      scale="compact"
+      items={activity.map(item => ({
+        transaction: item.transaction,
+        vaultId: item.vaultId,
+        subtitle: item.vaultName,
+        threshold: item.threshold,
+      }))}
+      onSelect={onOpen}
+    />
   );
 }
 
@@ -153,12 +143,13 @@ function ConnectChainPrompt({
 export function MultisigDashboardPage() {
   const navigate = useNavigate();
   const [inviteVault, setInviteVault] = useState<VaultSummary | null>(null);
-  const btcVaults = useVaults('btc:mainnet');
-  const stxVaults = useVaults('stx:mainnet');
-  const btcSession = useSession('btc:mainnet');
-  const stxSession = useSession('stx:mainnet');
-  const btcSignIn = useSignIn('btc:mainnet');
-  const stxSignIn = useSignIn('stx:mainnet');
+  const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
+  const btcVaults = useVaults(btcNetwork);
+  const stxVaults = useVaults(stxNetwork);
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
+  const btcSignIn = useSignIn(btcNetwork);
+  const stxSignIn = useSignIn(stxNetwork);
 
   const vaults = [...(btcVaults.data ?? []), ...(stxVaults.data ?? [])];
   const { activity, isLoading: isLoadingActivity } = useDashboardActivity(vaults);
@@ -249,19 +240,11 @@ export function MultisigDashboardPage() {
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Activity</SectionLabel>
-          <Box
-            borderRadius="md"
-            borderWidth="1px"
-            borderStyle="solid"
-            borderColor="ink.border-default"
-            p="space.02"
-          >
-            <ActivityFeed
-              activity={activity}
-              isLoading={isLoadingActivity}
-              onOpen={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
-            />
-          </Box>
+          <ActivityFeed
+            activity={activity}
+            isLoading={isLoadingActivity}
+            onOpen={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
+          />
         </Box>
       </Flex>
 

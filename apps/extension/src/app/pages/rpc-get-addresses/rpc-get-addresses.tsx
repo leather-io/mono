@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { closeWindow } from '@shared/utils';
 
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
@@ -8,11 +10,16 @@ import { ConnectAccountLayout } from '../../components/connect-account/connect-a
 import { useGetAddresses } from './use-get-addresses';
 
 export function RpcGetAddresses() {
-  const { focusInitiatingTab, origin, onUserApproveGetAddresses } = useGetAddresses();
+  const { focusInitiatingTab, origin, onUserApproveGetAddresses, allowPolicyAccounts } =
+    useGetAddresses();
 
   useOnOriginTabClose(() => closeWindow());
 
-  const { toggleSwitchAccount } = useSwitchAccountSheet();
+  const { toggleSwitchAccount, setAllowPolicyAccounts } = useSwitchAccountSheet();
+
+  useEffect(() => {
+    setAllowPolicyAccounts(allowPolicyAccounts);
+  }, [allowPolicyAccounts, setAllowPolicyAccounts]);
 
   if (origin === null) {
     closeWindow();
@@ -23,7 +30,12 @@ export function RpcGetAddresses() {
     <ConnectAccountLayout
       requester={origin}
       onClickRequestedByLink={focusInitiatingTab}
-      switchAccount={<CurrentAccountDisplayer onSelectAccount={toggleSwitchAccount} />}
+      switchAccount={
+        <CurrentAccountDisplayer
+          onSelectAccount={toggleSwitchAccount}
+          allowPolicyAccounts={allowPolicyAccounts}
+        />
+      }
       onUserApprovesGetAddresses={onUserApproveGetAddresses}
     />
   );

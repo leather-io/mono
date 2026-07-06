@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useCreateVault } from '~/features/multisig/vaults/use-vault-mutations';
 import { useToast } from '~/features/toasts/use-toast';
 
-import { isValidBitcoinAddress } from '@leather.io/bitcoin';
-import type { AuthNetworkId } from '@leather.io/models';
+import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import { LeatherApiError } from '@leather.io/services';
 import { isValidStacksAddress } from '@leather.io/stacks';
 import { Button, InfoCircleIcon } from '@leather.io/ui';
@@ -22,10 +22,6 @@ import { ChainPicker } from './components/chain-picker';
 import { type MemberDraft, type MemberFieldStatus, MemberRows } from './components/member-rows';
 import { ThemePicker } from './components/theme-picker';
 import { VaultPreviewCard } from './components/vault-preview-card';
-
-function networkForChain(chain: Chain): AuthNetworkId {
-  return chain === 'btc' ? 'btc:mainnet' : 'stx:mainnet';
-}
 
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -95,12 +91,13 @@ export function CreateVaultPage() {
   const [members, setMembers] = useState<MemberDraft[]>(initialMembers);
   const [attempted, setAttempted] = useState(false);
 
-  const network = networkForChain(chain);
+  const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
+  const network = chain === 'btc' ? btcNetwork : stxNetwork;
   const createVault = useCreateVault(network);
   const signIn = useSignIn(network);
 
-  const btcSession = useSession('btc:mainnet');
-  const stxSession = useSession('stx:mainnet');
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
   const connected: Record<Chain, boolean> = {
     btc: Boolean(btcSession),
     stx: Boolean(stxSession),
@@ -108,10 +105,15 @@ export function CreateVaultPage() {
   const myAddress = (chain === 'btc' ? btcSession : stxSession)?.identity.address;
   const chainLabel = chain === 'btc' ? 'Bitcoin' : 'Stacks';
 
+  const networkMode = network.endsWith('mainnet') ? 'mainnet' : 'testnet';
+  const btcNativeSegwitPrefix = networkMode === 'mainnet' ? 'bc1q' : 'tb1q';
+  const stxPrefixes = networkMode === 'mainnet' ? ['SP', 'SM'] : ['ST', 'SN'];
+
   function isValidMemberAddress(address: string) {
     return chain === 'btc'
-      ? isValidBitcoinAddress(address) && address.toLowerCase().startsWith('bc1q')
-      : isValidStacksAddress(address) && (address.startsWith('SP') || address.startsWith('SM'));
+      ? isValidBitcoinNetworkAddress(address, networkMode) &&
+          address.toLowerCase().startsWith(btcNativeSegwitPrefix)
+      : isValidStacksAddress(address) && stxPrefixes.some(prefix => address.startsWith(prefix));
   }
 
   function normalizeAddress(value: string) {
@@ -138,8 +140,8 @@ export function CreateVaultPage() {
         state: 'invalid',
         error:
           chain === 'btc'
-            ? 'Enter a native SegWit address (bc1q…). Taproot is not supported.'
-            : 'Enter a Stacks mainnet address (SP…).',
+            ? `Enter a native SegWit address (${btcNativeSegwitPrefix}…). Taproot is not supported.`
+            : `Enter a Stacks ${networkMode} address (${stxPrefixes[0]}…).`,
       };
     const normalized = normalizeAddress(address);
     if (myAddress && normalizeAddress(myAddress) === normalized)

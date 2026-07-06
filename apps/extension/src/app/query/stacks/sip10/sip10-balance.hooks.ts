@@ -1,5 +1,5 @@
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
-import type { AccountId } from '@leather.io/models';
+import type { AccountAddresses, AccountId } from '@leather.io/models';
 import type { Sip10Balance } from '@leather.io/services';
 import { isSameAsset } from '@leather.io/utils';
 
@@ -13,8 +13,10 @@ import {
   useGetSip10BalanceByAssetIdQuery,
 } from './sip10-balance.query';
 
-export function useSip10BalanceByAssetId(accountId: AccountId, assetIdentifier: string) {
-  const account = useAccountAddresses(accountId);
+export function useSip10BalanceByAssetIdByAddresses(
+  account: AccountAddresses,
+  assetIdentifier: string
+) {
   return toFetchState(useGetSip10BalanceByAssetIdQuery({ account }, assetIdentifier));
 }
 
@@ -65,6 +67,18 @@ export function useSip10AccountBalance(
   options?: { includeHiddenAssets?: boolean }
 ) {
   const account = useAccountAddresses(accountId);
+  return toFetchState(
+    useGetSip10AccountBalanceQuery({
+      account,
+      assets: { includeHiddenAssets: options?.includeHiddenAssets },
+    })
+  );
+}
+
+export function useSip10AccountBalanceByAddresses(
+  account: AccountAddresses,
+  options?: { includeHiddenAssets?: boolean }
+) {
   return toFetchState(
     useGetSip10AccountBalanceQuery({
       account,

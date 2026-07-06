@@ -90,8 +90,8 @@ function GlyphButton({
       _hover={{ borderColor: 'ink.action-primary-default' }}
     >
       <Box
-        width="20px"
-        height="20px"
+        width="24px"
+        height="24px"
         bg="ink.text-primary"
         style={{
           WebkitMaskImage: `url(${accountIconUrl(icon)})`,
@@ -269,18 +269,9 @@ export function CreateAccountModal({
               />
             </Flex>
             {isPickerOpen && (
-              <Box
-                position="absolute"
-                top="100%"
-                left="0"
-                width="270px"
-                maxWidth="100%"
-                mt="space.02"
-                pb="space.05"
-                zIndex={20}
-              >
+              <Box position="absolute" top="100%" left="0" width="100%" mt="space.02" zIndex={20}>
                 <Box
-                  p="space.04"
+                  p="space.03"
                   borderRadius="sm"
                   borderWidth="1px"
                   borderStyle="solid"
@@ -288,7 +279,7 @@ export function CreateAccountModal({
                   bg="ink.background-primary"
                   boxShadow="0px 12px 32px rgba(0, 0, 0, 0.16)"
                   display="grid"
-                  gridTemplateColumns="repeat(5, 1fr)"
+                  gridTemplateColumns="repeat(7, 1fr)"
                   gap="space.02"
                 >
                   {accountIcons.map(option => (

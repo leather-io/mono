@@ -74,10 +74,10 @@ export function useLedgerNavigate() {
         });
       },
 
-      toDeviceBusyStep(description?: string) {
+      toDeviceBusyStep(description?: string, address?: string) {
         return navigate(RouteUrls.DeviceBusy, {
           replace: true,
-          state: { description, backgroundLocation: { pathname: RouteUrls.Home } },
+          state: { description, address, backgroundLocation: { pathname: RouteUrls.Home } },
         });
       },
 

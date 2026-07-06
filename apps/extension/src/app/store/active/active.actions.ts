@@ -10,14 +10,24 @@ import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '../in-memory-key/keychain-selector-cache';
+import { parsePolicyParent } from '../policy/policy-store.utils';
 import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 import { selectAllWallets } from '../wallets/wallet.selectors';
-import { userSwitchesAccount } from './active.slice';
+import { userSwitchesAccount, userSwitchesToPolicy } from './active.slice';
 
 export function changeActiveAccount(accountId: AccountId): AppThunk {
   return dispatch => {
     void sendMessage({ method: InternalMethods.AccountChanged, payload: accountId });
     dispatch(userSwitchesAccount(accountId));
+  };
+}
+
+export function changeActiveToPolicy(policyId: string): AppThunk {
+  return dispatch => {
+    const parent = parsePolicyParent(policyId);
+    const action = userSwitchesToPolicy({ parent, policyId });
+    dispatch(action);
+    void broadcastReplayAction(action);
   };
 }
 

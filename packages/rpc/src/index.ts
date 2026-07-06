@@ -6,7 +6,7 @@ import { btcAddAccount } from './methods/bitcoin/btc-add-account';
 import { sendTransfer } from './methods/bitcoin/send-transfer';
 import { signMessage } from './methods/bitcoin/sign-message';
 import { signPsbt } from './methods/bitcoin/sign-psbt';
-import { getAddresses } from './methods/get-addresses';
+import { type SingleSigAddressResponseBody, getAddresses } from './methods/get-addresses';
 import { getInfo } from './methods/get-info';
 import { open } from './methods/open';
 import { openSwap } from './methods/open-swap';
@@ -23,7 +23,7 @@ import { stxTransferSip10Ft } from './methods/stacks/stx-transfer-sip10-ft';
 import { stxTransferStx } from './methods/stacks/stx-transfer-stx';
 import { stxUpdateProfile } from './methods/stacks/stx-update-profile';
 import { supportedMethods } from './methods/supported-methods';
-import { ExtractErrorResponse, ExtractSuccessResponse } from './rpc/schemas';
+import { ExtractErrorResponse, ExtractSuccessResponse, RpcSuccessResponse } from './rpc/schemas';
 
 export * from './rpc/schemas';
 export * from './rpc/helpers';
@@ -96,6 +96,14 @@ export type RpcResponses = ValueOf<RpcEndpointMap>['response'];
 export type RpcMethodNames = keyof RpcEndpointMap;
 
 export interface RequestFn {
+  (
+    arg: 'getAddresses',
+    params: { network?: string; allowPolicyAccounts: true }
+  ): Promise<ExtractSuccessResponse<RpcEndpointMap['getAddresses']['response']>>;
+  (
+    arg: 'getAddresses',
+    params?: { network?: string; allowPolicyAccounts?: false }
+  ): Promise<RpcSuccessResponse<SingleSigAddressResponseBody>>;
   <
     T extends RpcMethodNames,
     P extends RpcEndpointMap[T]['request'] extends { params?: infer P } ? P : never,
