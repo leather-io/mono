@@ -54,7 +54,7 @@ export function useSignProposalCommitment(): SignProposalCommitment {
       };
 
       return whenWallet({
-        async software() {
+        software() {
           const signed = signStacksMessage(unsignedMessage);
           if (!signed) throw new Error('Unable to sign the multisig proposal commitment');
           return signed.signature;

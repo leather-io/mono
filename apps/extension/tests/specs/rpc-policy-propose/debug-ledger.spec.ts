@@ -83,26 +83,13 @@ test.describe('DEBUG ledger propose', () => {
       .expect(popup.getByText('Connect & unlock your Ledger'))
       .toBeVisible({ timeout: 20_000 });
 
-    console.log('URL at connect step:', popup.url());
-
     await popup.keyboard.press('Escape');
     await popup.waitForTimeout(3000);
 
-    console.log('URL after Escape:', popup.url());
-    const bodyText = await popup.evaluate(() => document.body.innerText);
-    console.log('BODY after Escape:', JSON.stringify(bodyText.slice(0, 1200)));
-
     // Try clicking the header close icon if sheet still open
     const stillConnect = await popup.getByText('Connect & unlock your Ledger').isVisible();
-    console.log('Still on connect step:', stillConnect);
     if (stillConnect) {
-      const buttons = popup.locator('button');
-      const count = await buttons.count();
-      console.log('button count:', count);
-      for (let i = 0; i < count; i++) {
-        const html = await buttons.nth(i).evaluate(el => el.outerHTML.slice(0, 120));
-        console.log(`button[${i}]:`, html);
-      }
+      await popup.getByRole('button', { name: 'Close' }).first().click();
     }
   });
 });

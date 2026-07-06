@@ -78,9 +78,12 @@ test.describe('Compliance checks', () => {
   test('the addresses of all recipients are checked', async ({ context, page }) => {
     let entityCheckCount = 0;
 
+    await mockChainalysisEntityRegistrationRequest(context)(route =>
+      route.fulfill({ json: { address: 'registered' } })
+    );
     await mockChainalysisEntityCheckRequest(context)(route => {
       entityCheckCount += 1;
-      return route.abort();
+      return route.fulfill({ json: { risk: 'Low' } });
     });
 
     await Promise.all([context.waitForEvent('page'), openIllegalTransfer(page)]);

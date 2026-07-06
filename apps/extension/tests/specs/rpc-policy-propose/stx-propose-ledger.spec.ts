@@ -101,7 +101,7 @@ test.describe('RPC: stx_callContract propose from a Ledger policy account', () =
     await test.expect(popup.getByText('user cancelled the signing operation')).toBeVisible();
 
     // Dismissing the error returns to the approver, ready to retry
-    await popup.getByRole('button', { name: 'Close' }).click();
+    await popup.getByRole('button', { name: 'Close' }).last().click();
     await test
       .expect(popup.getByRole('button', { name: 'Propose transaction' }))
       .toBeVisible({ timeout: 20_000 });
