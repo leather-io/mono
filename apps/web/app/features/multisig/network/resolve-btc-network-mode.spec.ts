@@ -27,10 +27,15 @@ describe('resolveBtcNetworkMode', () => {
     expect(resolveBtcNetworkMode('btc:testnet')).toBe('testnet');
   });
 
-  test('btc:testnet resolves to regtest when a custom regtest network is active', async () => {
+  test('btc:testnet stays testnet when a custom regtest network is active', async () => {
     stubRegtestNetwork();
     const { resolveBtcNetworkMode } = await loadResolver();
-    expect(resolveBtcNetworkMode('btc:testnet')).toBe('regtest');
+    expect(resolveBtcNetworkMode('btc:testnet')).toBe('testnet');
+  });
+
+  test('btc:regtest resolves to regtest', async () => {
+    const { resolveBtcNetworkMode } = await loadResolver();
+    expect(resolveBtcNetworkMode('btc:regtest')).toBe('regtest');
   });
 
   test('btc:mainnet stays mainnet even when a custom regtest network is active', async () => {

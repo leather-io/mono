@@ -32,6 +32,10 @@ const mockIdentities: Record<AuthNetworkId, MockIdentity> = {
     address: 'tb1q9z3kfn8gz7jx5sd6f2h0u3sxnmke7vu4srv0pj',
     publicKey: '0299beef88cafe77dead66beef55feed44face33cafe22beef11dead00cafe9988',
   },
+  'btc:regtest': {
+    address: 'bcrt1q9z3kfn8gz7jx5sd6f2h0u3sxnmke7vu4l7zwfk',
+    publicKey: '03aa00cafe11dead22beef33face44feed55bead66cafe77dead88beef99cafe22',
+  },
 };
 
 function base64Url(value: string): string {
@@ -67,7 +71,13 @@ function networkFromAuthHeader(request: Request): AuthNetworkId {
 }
 
 function networkFromRefreshToken(token: string): AuthNetworkId {
-  const known: AuthNetworkId[] = ['stx:mainnet', 'btc:mainnet', 'stx:testnet', 'btc:testnet'];
+  const known: AuthNetworkId[] = [
+    'stx:mainnet',
+    'btc:mainnet',
+    'stx:testnet',
+    'btc:testnet',
+    'btc:regtest',
+  ];
   return known.find(network => token === `mock-refresh-${network}`) ?? 'stx:mainnet';
 }
 

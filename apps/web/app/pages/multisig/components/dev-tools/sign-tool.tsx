@@ -11,12 +11,23 @@ import { Button } from '@leather.io/ui';
 
 import { TextField } from '../text-field';
 
-const networks: AuthNetworkId[] = ['btc:mainnet', 'btc:testnet', 'stx:mainnet', 'stx:testnet'];
+const networks: AuthNetworkId[] = [
+  'btc:mainnet',
+  'btc:testnet',
+  'btc:regtest',
+  'stx:mainnet',
+  'stx:testnet',
+];
+
+function modeLabel(network: AuthNetworkId): string {
+  if (network.endsWith('mainnet')) return 'main';
+  if (network.endsWith('regtest')) return 'regtest';
+  return 'test';
+}
 
 function networkLabel(network: AuthNetworkId): string {
   const chain = network.startsWith('btc') ? 'BTC' : 'STX';
-  const mode = network.endsWith('mainnet') ? 'main' : 'test';
-  return `${chain} ${mode}`;
+  return `${chain} ${modeLabel(network)}`;
 }
 
 function assertSignable(transaction: MultisigTransaction): void {

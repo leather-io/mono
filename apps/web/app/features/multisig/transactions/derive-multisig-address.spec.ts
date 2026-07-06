@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 import type { AuthNetworkId, VaultAccount, VaultAccountSigner } from '@leather.io/models';
 
@@ -56,11 +56,6 @@ function makeAccount(network: AuthNetworkId): VaultAccount {
   };
 }
 
-afterEach(() => {
-  vi.unstubAllEnvs();
-  vi.resetModules();
-});
-
 describe('deriveMultisigAddress (BTC)', () => {
   test('derives a bc1 mainnet address for btc:mainnet', () => {
     expect(deriveMultisigAddress(makeAccount('btc:mainnet'))).toBe(mainnetAddress);
@@ -70,12 +65,7 @@ describe('deriveMultisigAddress (BTC)', () => {
     expect(deriveMultisigAddress(makeAccount('btc:testnet')).startsWith('tb1')).toBe(true);
   });
 
-  test('derives a bcrt1 regtest address for btc:testnet when a custom regtest network is active', async () => {
-    vi.stubEnv('LEATHER_PRIVATE_NETWORK_FLAVOR', 'regtest');
-    vi.stubEnv('LEATHER_BITCOIN_API_URL', 'https://bitcoin.example/api');
-    vi.stubEnv('LEATHER_STACKS_API_URL', 'https://stacks.example');
-    vi.resetModules();
-    const { deriveMultisigAddress: derive } = await import('./derive-multisig-address');
-    expect(derive(makeAccount('btc:testnet')).startsWith('bcrt1')).toBe(true);
+  test('derives a bcrt1 regtest address for btc:regtest', () => {
+    expect(deriveMultisigAddress(makeAccount('btc:regtest')).startsWith('bcrt1')).toBe(true);
   });
 });

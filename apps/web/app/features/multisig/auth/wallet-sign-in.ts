@@ -21,10 +21,19 @@ async function fetchWalletAddresses(network: string) {
   return result.addresses;
 }
 
-function networkModeOfAddress(address: string): 'mainnet' | 'testnet' {
+type SignInNetworkMode = 'mainnet' | 'testnet' | 'regtest';
+
+function networkModeOfAddress(address: string): SignInNetworkMode {
   if (address.startsWith('bc1')) return 'mainnet';
-  if (address.startsWith('tb1') || address.startsWith('bcrt1')) return 'testnet';
+  if (address.startsWith('bcrt1')) return 'regtest';
+  if (address.startsWith('tb1')) return 'testnet';
   if (address.startsWith('SP') || address.startsWith('SM')) return 'mainnet';
+  return 'testnet';
+}
+
+function networkModeOfAuthNetwork(network: AuthNetworkId): SignInNetworkMode {
+  if (network.endsWith('mainnet')) return 'mainnet';
+  if (network.endsWith('regtest')) return 'regtest';
   return 'testnet';
 }
 
@@ -32,7 +41,7 @@ function networkModeOfAddress(address: string): 'mainnet' | 'testnet' {
 // app's. If they disagree, the sign-in would send a mismatched address and the
 // backend would reject it, so fail early with an actionable message instead.
 function assertWalletMatchesNetwork(address: string, network: AuthNetworkId) {
-  const requested = network.endsWith('mainnet') ? 'mainnet' : 'testnet';
+  const requested = networkModeOfAuthNetwork(network);
   const walletMode = networkModeOfAddress(address);
   if (walletMode !== requested) {
     throw new Error(
