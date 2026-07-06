@@ -85,7 +85,6 @@ export function RpcStxCallContract() {
           onApprove={onApproveTransaction}
           approveLabel={isStacksPolicy ? 'Propose transaction' : undefined}
           busyLabel={isStacksPolicy ? 'Proposing...' : undefined}
-          isProposeFlow={isStacksPolicy}
         />
       }
     >

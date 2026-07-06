@@ -8,13 +8,15 @@ import type { AuthNetworkId } from '@leather.io/models';
 import type { SignProposalCommitment } from '@leather.io/services';
 import { buildStxProposalDomain } from '@leather.io/stacks';
 
+import type { UnsignedMessage } from '@shared/signature/signature-types';
+
 import { useWalletType } from '@app/common/use-wallet-type';
+import { listenForStacksMessageSigning } from '@app/features/ledger/flows/stacks-message-signing/stacks-message-signing-event-listeners';
+import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import { useMessageSignerStacksSoftwareWallet } from '@app/features/stacks-message-signer/stacks-message-signing.utils';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
-
-import { ledgerMultisigProposalsUnsupportedMessage } from './multisig-ledger.constants';
 
 // Signs the multisig proposal commitment hash with the PARENT singlesig key — the
 // cosigner key registered in the multisig. BTC uses BIP-322 p2wpkh, STX uses the
@@ -26,12 +28,10 @@ export function useSignProposalCommitment(): SignProposalCommitment {
   const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
   const signBitcoinTx = useSignBitcoinTx();
   const signStacksMessage = useMessageSignerStacksSoftwareWallet();
+  const ledgerNavigate = useLedgerNavigate();
 
   return useCallback<SignProposalCommitment>(
     async (authNetwork: AuthNetworkId, proposalHash: string) => {
-      if (whenWallet({ software: false, ledger: true }))
-        throw new Error(ledgerMultisigProposalsUnsupportedMessage);
-
       if (authNetwork.startsWith('btc')) {
         if (!createNativeSegwitPayer)
           throw new Error('No native segwit signer for the current account');
@@ -47,13 +47,32 @@ export function useSignProposalCommitment(): SignProposalCommitment {
         return signature;
       }
 
-      const signed = signStacksMessage({
+      const unsignedMessage: UnsignedMessage = {
+        messageType: 'structured',
         message: stringAsciiCV(proposalHash),
         domain: buildStxProposalDomain(authNetwork),
-      });
-      if (!signed) throw new Error('Unable to sign the multisig proposal commitment');
-      return signed.signature;
+      };
+
+      return whenWallet({
+        async software() {
+          const signed = signStacksMessage(unsignedMessage);
+          if (!signed) throw new Error('Unable to sign the multisig proposal commitment');
+          return signed.signature;
+        },
+        async ledger() {
+          void ledgerNavigate.toConnectAndSignStacksProposalStep(unsignedMessage);
+          const { signature } = await listenForStacksMessageSigning(unsignedMessage);
+          return signature;
+        },
+      })();
     },
-    [whenWallet, createNativeSegwitPayer, signBitcoinTx, signStacksMessage, networkMode]
+    [
+      whenWallet,
+      createNativeSegwitPayer,
+      signBitcoinTx,
+      signStacksMessage,
+      networkMode,
+      ledgerNavigate,
+    ]
   );
 }

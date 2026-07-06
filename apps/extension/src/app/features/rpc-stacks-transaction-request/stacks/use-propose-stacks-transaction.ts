@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { type StacksTransactionWire } from '@stacks/transactions';
 
@@ -39,6 +39,7 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
   const account = useCurrentStacksAccount();
   const network = useCurrentNetwork();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { mutateAsync: proposeMultisigTransaction } = useProposeMultisigTransaction();
 
   return useCallback(
@@ -88,7 +89,12 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
         closeWindow();
       } catch (error) {
         onSetTransactionStatus('idle');
-        return navigate(RouteUrls.BroadcastError, { state: { message: getErrorMessage(error) } });
+        // Absolute path: with a Ledger wallet the popup is on the nested ledger
+        // signing route when this rejects, so a relative navigation would
+        // resolve against the wrong parent.
+        return navigate(`${pathname}/${RouteUrls.BroadcastError}`, {
+          state: { message: getErrorMessage(error) },
+        });
       }
     },
     [
@@ -97,6 +103,7 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
       account,
       network,
       navigate,
+      pathname,
       proposeMultisigTransaction,
       onSetTransactionStatus,
       tabId,

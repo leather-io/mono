@@ -158,6 +158,11 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
     }
   }
 
+  function closeAction() {
+    appEvents.publish('ledgerStacksMessageSigningCancelled', { unsignedMessage });
+    void ledgerNavigate.cancelLedgerAction();
+  }
+
   const ledgerContextValue: LedgerMessageSigningContext = {
     message: unsignedMessage,
     signMessage,
@@ -171,7 +176,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       <Sheet
         isShowing
         header={<SheetHeader />}
-        onClose={canCancelLedgerAction ? () => ledgerNavigate.cancelLedgerAction() : undefined}
+        onClose={canCancelLedgerAction ? closeAction : undefined}
       >
         <Outlet />
       </Sheet>
