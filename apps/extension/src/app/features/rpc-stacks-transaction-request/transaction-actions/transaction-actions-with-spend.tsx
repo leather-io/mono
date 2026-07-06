@@ -25,7 +25,6 @@ interface TransactionActionsWithSpendProps {
   approveLabel?: string;
   busyLabel?: string;
   isProposeFlow?: boolean;
-  approvalError?: string;
 }
 export function TransactionActionsWithSpend({
   isLoading,
@@ -35,14 +34,12 @@ export function TransactionActionsWithSpend({
   approveLabel,
   busyLabel,
   isProposeFlow,
-  approvalError,
 }: TransactionActionsWithSpendProps) {
   const { availableBalance, marketData, selectedFee } = useFeeEditorContext();
   const { status } = useRpcTransactionRequest();
   const { walletType } = useWalletType();
 
   const isProposeUnsupportedOnLedger = Boolean(isProposeFlow) && walletType === 'ledger';
-  const hasApprovalError = Boolean(approvalError);
 
   const totalSpend = useMemo(() => {
     const fee = selectedFee?.txFee;
@@ -61,7 +58,7 @@ export function TransactionActionsWithSpend({
         isBroadcasting: status === 'broadcasting',
         isSubmitted: status === 'submitted',
         isError: isInsufficientBalance,
-        isApproveDisabled: isProposeUnsupportedOnLedger || hasApprovalError,
+        isApproveDisabled: isProposeUnsupportedOnLedger,
         onCancel: () => closeWindow(),
         onApprove,
         approveLabel,
@@ -70,7 +67,6 @@ export function TransactionActionsWithSpend({
     >
       <TransactionActionsTitle isLoading={isLoading} amount={formatCurrency(totalSpend)} />
       <TransactionError isInsufficientBalance={isInsufficientBalance} isLoading={isLoading} />
-      {!isLoading && approvalError && <FormError text={approvalError} />}
       {isProposeUnsupportedOnLedger && (
         <FormError text={ledgerMultisigProposalsUnsupportedMessage} />
       )}

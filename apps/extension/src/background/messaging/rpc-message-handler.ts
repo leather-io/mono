@@ -7,10 +7,7 @@ import {
 
 import { logger } from '@shared/logger';
 
-import {
-  methodsRequiringConnectedWallet,
-  methodsUnsupportedWithActivePolicy,
-} from './methods-requiring-connected-wallet';
+import { methodsRequiringConnectedWallet } from './methods-requiring-connected-wallet';
 import { btcAddAccountHandler } from './rpc-methods/btc-add-account';
 import { getAddressesHandler, stxGetAddressesHandler } from './rpc-methods/get-addresses';
 import { openHandler } from './rpc-methods/open';
@@ -34,7 +31,6 @@ import {
   getTabIdFromPort,
   listenForOriginTabClose,
   validateConnectedWalletExists,
-  validateNoActivePolicy,
 } from './rpc-request-utils';
 
 type RpcHandler<T> = (request: T, port: chrome.runtime.Port) => Promise<void> | void;
@@ -72,10 +68,6 @@ export async function rpcMessageHandler(request: RpcRequests, port: chrome.runti
   if (handler) {
     if (methodsRequiringConnectedWallet.has(request.method)) {
       const { status } = await validateConnectedWalletExists(request, port);
-      if (status === 'failure') return;
-    }
-    if (methodsUnsupportedWithActivePolicy.has(request.method)) {
-      const { status } = await validateNoActivePolicy(request, port);
       if (status === 'failure') return;
     }
     return await handler(request, port);

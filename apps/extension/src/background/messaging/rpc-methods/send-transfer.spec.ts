@@ -7,7 +7,6 @@ import { sendTransferHandler } from './send-transfer';
 type SendTransferRequest = Parameters<(typeof sendTransferHandler)[1]>[0];
 
 const mocks = vi.hoisted(() => ({
-  validateActivePolicyChain: vi.fn(),
   createConnectingAppSearchParamsWithLastKnownAccount: vi.fn(),
   triggerRequestPopupWindowOpen: vi.fn(),
   sendErrorResponseOnUserPopupClose: vi.fn(),
@@ -21,7 +20,6 @@ vi.mock('../rpc-message-handler', () => ({
 }));
 
 vi.mock('../rpc-request-utils', () => ({
-  validateActivePolicyChain: mocks.validateActivePolicyChain,
   getTabIdFromPort: (port: chrome.runtime.Port) => port.sender?.tab?.id ?? 0,
   createConnectingAppSearchParamsWithLastKnownAccount:
     mocks.createConnectingAppSearchParamsWithLastKnownAccount,
@@ -72,31 +70,7 @@ describe('sendTransferHandler', () => {
     vi.clearAllMocks();
   });
 
-  test('validates the active policy is on the Bitcoin chain before doing anything else', async () => {
-    mocks.validateActivePolicyChain.mockResolvedValue({ status: 'success' });
-
-    await invokeHandler(buildPort());
-
-    expect(mocks.validateActivePolicyChain).toHaveBeenCalledWith(
-      request,
-      expect.anything(),
-      'bitcoin'
-    );
-  });
-
-  test('short-circuits without opening a popup when the policy chain check fails', async () => {
-    mocks.validateActivePolicyChain.mockResolvedValue({ status: 'failure' });
-
-    await invokeHandler(buildPort());
-
-    expect(mocks.triggerRequestPopupWindowOpen).not.toHaveBeenCalled();
-    expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).not.toHaveBeenCalled();
-    expect(mocks.trackRpcRequestSuccess).not.toHaveBeenCalled();
-  });
-
-  test('opens the send-transfer popup when the policy chain check passes', async () => {
-    mocks.validateActivePolicyChain.mockResolvedValue({ status: 'success' });
-
+  test('opens the send-transfer popup for a valid request', async () => {
     await invokeHandler(buildPort());
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledTimes(1);
@@ -104,9 +78,7 @@ describe('sendTransferHandler', () => {
     expect(mocks.sendErrorResponseOnUserPopupClose).toHaveBeenCalledTimes(1);
   });
 
-  test('rejects undefined parameters after passing the policy check', async () => {
-    mocks.validateActivePolicyChain.mockResolvedValue({ status: 'success' });
-
+  test('rejects undefined parameters', async () => {
     const [, handler] = sendTransferHandler;
     await handler(
       { jsonrpc: '2.0', id: 'req-2', method: 'sendTransfer' } as unknown as SendTransferRequest,

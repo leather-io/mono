@@ -14,15 +14,12 @@ import {
   createConnectingAppSearchParamsWithLastKnownAccount,
   listenForPopupClose,
   triggerRequestPopupWindowOpen,
-  validateActivePolicyChain,
   validateRequestParams,
 } from '../rpc-request-utils';
 
 export const stxCallContractHandler = defineRpcRequestHandler(
   stxCallContract.method,
   async (request, port) => {
-    if ((await validateActivePolicyChain(request, port, 'stacks')).status === 'failure') return;
-
     const { id: requestId, method, params } = request;
     const { status } = validateRequestParams({
       id: requestId,

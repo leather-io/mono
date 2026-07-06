@@ -14,15 +14,12 @@ import {
   createConnectingAppSearchParamsWithLastKnownAccount,
   listenForPopupClose,
   triggerRequestPopupWindowOpen,
-  validateNoActivePolicy,
   validateRequestParams,
 } from '../rpc-request-utils';
 
 export const stxTransferSip9NftHandler = defineRpcRequestHandler(
   stxTransferSip9Nft.method,
   async (request, port) => {
-    if ((await validateNoActivePolicy(request, port)).status === 'failure') return;
-
     const { id: requestId, method, params } = request;
     const { status } = validateRequestParams({
       id: requestId,

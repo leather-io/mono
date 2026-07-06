@@ -47,8 +47,7 @@ export async function generateMultisigUnsignedStxTransfer(
   publicKeys: string[],
   threshold: number,
   nonce: number,
-  memo?: string,
-  useNonSequentialMultiSig?: boolean
+  memo?: string
 ) {
   const options = {
     fee,
@@ -59,7 +58,6 @@ export async function generateMultisigUnsignedStxTransfer(
     numSignatures: threshold,
     amount,
     network,
-    useNonSequentialMultiSig,
   };
   return (await makeUnsignedSTXTokenTransfer(options)).serialize();
 }

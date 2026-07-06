@@ -100,6 +100,7 @@ export function RpcStxCallContract() {
         availableBalance={availableBalance}
         fiatBalance={convertToFiatAmount(availableBalance)}
         isLoadingBalance={isLoadingBalance}
+        showPolicyAccount={isStacksPolicy}
       />
       <ContractCallDetailsLayout
         contractAddress={txOptionsForBroadcast.contractAddress}

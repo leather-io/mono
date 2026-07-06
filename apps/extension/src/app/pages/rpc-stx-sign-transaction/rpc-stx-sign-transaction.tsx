@@ -35,24 +35,15 @@ import { ContractDeployDetailsLayout } from '@app/features/rpc-stacks-transactio
 import { PostConditionsDetailsLayout } from '@app/features/rpc-stacks-transaction-request/stacks/post-conditions/post-conditions-details.layout';
 import { useStacksRpcTransactionRequestContext } from '@app/features/rpc-stacks-transaction-request/stacks/stacks-rpc-transaction-request.context';
 import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transaction-request/transaction-actions/transaction-actions-with-spend';
-import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 
 import {
   checkUnsignedStacksTransactionHashMode,
   getUnsignedStacksTransactionFromRpcRequest,
-  isUnsignedStacksTransactionForPolicy,
 } from './rpc-stx-sign-transaction.utils';
 
-const nonMultisigPolicyTransactionMessage =
-  'This transaction is not a multisig transaction for the selected account. Switch to a standard account to sign it.';
-const mismatchedPolicyTransactionMessage =
-  'This transaction does not match the selected multisig account. Switch accounts or request a transaction for the selected account.';
-
 export function RpcStxSignTransaction() {
-  const { address, isLoadingBalance, publicKey, requestId, tabId } =
-    useStacksRpcTransactionRequestContext();
+  const { address, isLoadingBalance, requestId, tabId } = useStacksRpcTransactionRequestContext();
   const {
     availableBalance,
     isLoadingFees,
@@ -64,73 +55,14 @@ export function RpcStxSignTransaction() {
   const { nonce, onUserActivatesNonceEditor } = useNonceEditorContext();
   const convertToFiatAmount = useConvertCryptoCurrencyToFiatAmount('STX');
   const signStacksTx = useSignStacksTransaction();
-  const policy = useCurrentPolicy();
-  const network = useCurrentNetwork();
 
   const unsignedTxForBroadcast = useMemo(() => getUnsignedStacksTransactionFromRpcRequest(), []);
 
   // Handle multisig transactions
   const isMultisig = checkUnsignedStacksTransactionHashMode(unsignedTxForBroadcast);
   const canEditFeeAndNonce = !isMultisig;
-  const isStacksPolicy = policy?.chain === 'stacks';
-  const policyTransactionError = useMemo(() => {
-    if (policy?.chain !== 'stacks') return null;
-    if (!isMultisig) return nonMultisigPolicyTransactionMessage;
-    if (
-      isUnsignedStacksTransactionForPolicy({
-        tx: unsignedTxForBroadcast,
-        policy,
-        signerPublicKey: publicKey,
-        chainId: network.chain.stacks.chainId,
-        networkId: network.id,
-      })
-    )
-      return null;
-    return mismatchedPolicyTransactionMessage;
-  }, [
-    isMultisig,
-    network.chain.stacks.chainId,
-    network.id,
-    policy,
-    publicKey,
-    unsignedTxForBroadcast,
-  ]);
 
   async function onApproveTransaction() {
-    if (isStacksPolicy) {
-      // Only an already-multisig transaction can be proposed from a multisig
-      // account; a single-sig transaction would belong to the parent account.
-      if (!isMultisig) {
-        void chrome.tabs.sendMessage(
-          tabId,
-          createRpcErrorResponse('stx_signTransaction', {
-            id: requestId,
-            error: {
-              code: RpcErrorCode.INVALID_REQUEST,
-              message: nonMultisigPolicyTransactionMessage,
-            },
-          })
-        );
-        closeWindow();
-        return;
-      }
-
-      if (policyTransactionError) {
-        void chrome.tabs.sendMessage(
-          tabId,
-          createRpcErrorResponse('stx_signTransaction', {
-            id: requestId,
-            error: {
-              code: RpcErrorCode.INVALID_REQUEST,
-              message: policyTransactionError,
-            },
-          })
-        );
-        closeWindow();
-        return;
-      }
-    }
-
     if (canEditFeeAndNonce) {
       unsignedTxForBroadcast.setFee(selectedFee.txFee.amount.toString());
       unsignedTxForBroadcast.setNonce(nonce);
@@ -188,7 +120,6 @@ export function RpcStxSignTransaction() {
           // TODO: Calculate amount if more than fees
           txAmount={createMoney(0, 'STX')}
           onApprove={onApproveTransaction}
-          approvalError={policyTransactionError ?? undefined}
         />
       }
     >

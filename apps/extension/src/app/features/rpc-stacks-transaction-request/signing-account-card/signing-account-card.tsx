@@ -54,12 +54,14 @@ interface SigningAccountCardProps {
   availableBalance: Money;
   fiatBalance: Money;
   isLoadingBalance: boolean;
+  showPolicyAccount?: boolean;
 }
 export function SigningAccountCard({
   address,
   availableBalance,
   fiatBalance,
   isLoadingBalance,
+  showPolicyAccount = false,
 }: SigningAccountCardProps) {
   const account = useCurrentStacksAccount();
   const policy = useCurrentPolicy();
@@ -99,7 +101,7 @@ export function SigningAccountCard({
     </SkeletonLoader>
   );
 
-  if (policy && policyParent) {
+  if (showPolicyAccount && policy && policyParent) {
     return (
       <>
         <AccountApproverSection
