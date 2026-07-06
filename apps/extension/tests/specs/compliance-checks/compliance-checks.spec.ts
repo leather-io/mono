@@ -78,6 +78,9 @@ test.describe('Compliance checks', () => {
   test('the addresses of all recipients are checked', async ({ context, page }) => {
     let entityCheckCount = 0;
 
+    await mockChainalysisEntityRegistrationRequest(context)(route =>
+      route.fulfill({ json: { address: '12QtD5BFwRsdNsAZY76UVE1xyCGNTojH9h' } })
+    );
     await mockChainalysisEntityCheckRequest(context)(route => {
       entityCheckCount += 1;
       return route.abort();
