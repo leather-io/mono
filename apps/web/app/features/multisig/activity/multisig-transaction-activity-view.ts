@@ -23,7 +23,9 @@ import {
   decodeProposalPayload,
 } from '../transactions/decode-proposal-summary';
 
-function mapMultisigTransactionStatus(status: MultisigTransactionStatus): OnChainActivityStatus {
+export function mapMultisigTransactionStatus(
+  status: MultisigTransactionStatus
+): OnChainActivityStatus {
   switch (status) {
     case 'confirmed':
       return 'success';
@@ -65,7 +67,7 @@ export interface MultisigActivityClassification {
 interface CreateMultisigTransactionActivityViewOptions {
   rawPayload?: string;
   marketData?: MarketData;
-  classification?: MultisigActivityClassification;
+  classifyContract?(contractId: string): MultisigActivityClassification | undefined;
 }
 
 interface ActivityCommonFields {
@@ -96,12 +98,13 @@ function buildProposalActivity(
           options.marketData
         ),
       };
-    case 'contractCall':
+    case 'contractCall': {
+      const classification = options.classifyContract?.(payload.contractId);
       return {
         ...common,
-        action: options.classification?.action ?? 'contract-execution',
-        protocol: options.classification?.protocol,
-        protocolName: options.classification?.protocolName,
+        action: classification?.action ?? 'contract-execution',
+        protocol: classification?.protocol,
+        protocolName: classification?.protocolName,
         fee: payload.fee,
         contract: {
           type: 'call',
@@ -110,6 +113,7 @@ function buildProposalActivity(
         },
         balanceChanges: [],
       };
+    }
     case 'contractDeploy':
       return {
         ...common,

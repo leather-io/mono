@@ -136,7 +136,10 @@ describe(createMultisigTransactionActivityView.name, () => {
     const rawPayload = await generateContractCallPayload();
     const view = createMultisigTransactionActivityView(stxContext, makeTransaction(), {
       rawPayload,
-      classification: { action: 'stack', protocolName: 'Fast Pool' },
+      classifyContract: contractId =>
+        contractId === 'ST000000000000000000002AMW42H.pox-4'
+          ? { action: 'stack', protocolName: 'Fast Pool' }
+          : undefined,
     });
 
     expect(view.action).toBe('stack');

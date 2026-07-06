@@ -5,7 +5,7 @@ import { assertUnreachable, createMoney } from '@leather.io/utils';
 
 import { resolveBtcNetworkMode } from '../network/resolve-btc-network-mode';
 
-export interface ProposalSummary {
+interface ProposalSummary {
   recipient?: string;
   amount?: Money;
   fee?: Money;
