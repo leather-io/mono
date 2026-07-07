@@ -6,7 +6,7 @@ import {
   type ProposeTransactionRequest,
   walletPropose as buildSharedProposeRequest,
 } from '@leather.io/services';
-import { buildStxProposalDomain } from '@leather.io/stacks';
+import { buildStxProposalDomain, stxChainIdByAuthNetworkId } from '@leather.io/stacks';
 
 interface WalletProposeParams {
   network: AuthNetworkId;
@@ -40,7 +40,7 @@ async function signProposalCommitment(
   }
   const signed = await leather.stxSignMessage({
     messageType: 'structured',
-    domain: serializeCV(buildStxProposalDomain(network)),
+    domain: serializeCV(buildStxProposalDomain(stxChainIdByAuthNetworkId[network])),
     message: serializeCV(stringAsciiCV(proposalHash)),
   });
   return signed.signature;

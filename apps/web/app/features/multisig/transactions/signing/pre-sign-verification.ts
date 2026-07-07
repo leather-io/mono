@@ -7,7 +7,11 @@ import {
 } from '@leather.io/bitcoin';
 import { computeProposalHash, decodeProposalPayload } from '@leather.io/crypto';
 import type { MultisigTransaction, VaultAccount, VaultAccountSigner } from '@leather.io/models';
-import { buildStxProposalDomain, verifySip018Signature } from '@leather.io/stacks';
+import {
+  buildStxProposalDomain,
+  stxChainIdByAuthNetworkId,
+  verifySip018Signature,
+} from '@leather.io/stacks';
 
 import { deriveMultisigAddress } from '../derive-multisig-address';
 
@@ -71,7 +75,7 @@ function assertProposalCommitment(
         )
       : verifySip018Signature({
           message: stringAsciiCV(proposalHash),
-          domain: buildStxProposalDomain(account.network),
+          domain: buildStxProposalDomain(stxChainIdByAuthNetworkId[account.network]),
           signature: transaction.proposalSignature,
           publicKey: proposer.signingPubkey,
         });

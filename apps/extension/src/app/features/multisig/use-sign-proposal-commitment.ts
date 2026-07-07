@@ -24,6 +24,7 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 export function useSignProposalCommitment(): SignProposalCommitment {
   const network = useCurrentNetwork();
   const networkMode = network.chain.bitcoin.mode;
+  const stacksChainId = network.chain.stacks.subnetChainId ?? network.chain.stacks.chainId;
   const { whenWallet } = useWalletType();
   const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
   const signBitcoinTx = useSignBitcoinTx();
@@ -51,7 +52,7 @@ export function useSignProposalCommitment(): SignProposalCommitment {
       const unsignedMessage: UnsignedMessage = {
         messageType: 'structured',
         message: stringAsciiCV(proposalHash),
-        domain: buildStxProposalDomain(authNetwork),
+        domain: buildStxProposalDomain(stacksChainId),
       };
 
       return whenWallet({
@@ -73,6 +74,7 @@ export function useSignProposalCommitment(): SignProposalCommitment {
       signBitcoinTx,
       signStacksMessage,
       networkMode,
+      stacksChainId,
       ledgerNavigate,
     ]
   );

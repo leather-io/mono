@@ -1,7 +1,7 @@
 import { signStructuredData, stringAsciiCV } from '@stacks/transactions';
 import { describe, expect, it } from 'vitest';
 
-import { buildStxProposalDomain } from './stx-proposal-domain';
+import { buildStxProposalDomain, stxChainIdByAuthNetworkId } from './stx-proposal-domain';
 
 describe('buildStxProposalDomain', () => {
   const privateKey = '753b7cc01a1a2e86221266a154af739463fc75c354d29169b58f20da43e8e1d601';
@@ -14,7 +14,7 @@ describe('buildStxProposalDomain', () => {
   it('reproduces the expected mainnet SIP-018 signature for the test key', () => {
     const signature = signStructuredData({
       message: stringAsciiCV(proposalHash),
-      domain: buildStxProposalDomain('stx:mainnet'),
+      domain: buildStxProposalDomain(stxChainIdByAuthNetworkId['stx:mainnet']),
       privateKey,
     });
     expect(signature).toBe(expectedSignature);
@@ -23,14 +23,28 @@ describe('buildStxProposalDomain', () => {
   it('binds chain-id — testnet domain yields a different signature', () => {
     const mainnet = signStructuredData({
       message: stringAsciiCV(proposalHash),
-      domain: buildStxProposalDomain('stx:mainnet'),
+      domain: buildStxProposalDomain(stxChainIdByAuthNetworkId['stx:mainnet']),
       privateKey,
     });
     const testnet = signStructuredData({
       message: stringAsciiCV(proposalHash),
-      domain: buildStxProposalDomain('stx:testnet'),
+      domain: buildStxProposalDomain(stxChainIdByAuthNetworkId['stx:testnet']),
       privateKey,
     });
     expect(testnet).not.toBe(mainnet);
+  });
+
+  it('uses a custom chain-id when provided', () => {
+    const mainnet = signStructuredData({
+      message: stringAsciiCV(proposalHash),
+      domain: buildStxProposalDomain(stxChainIdByAuthNetworkId['stx:mainnet']),
+      privateKey,
+    });
+    const custom = signStructuredData({
+      message: stringAsciiCV(proposalHash),
+      domain: buildStxProposalDomain(256),
+      privateKey,
+    });
+    expect(custom).not.toBe(mainnet);
   });
 });
