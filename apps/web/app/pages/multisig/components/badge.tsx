@@ -10,18 +10,29 @@ const badge = cva({
     display: 'flex',
     alignItems: 'center',
     width: 'fit-content',
-    // Sized to match a size="sm" Button (32px, label.02) so a status chip and an
-    // adjacent action button read as the same size class on a row.
-    height: '32px',
-    gap: 'space.02',
-    pl: 'space.02',
-    pr: 'space.03',
     borderRadius: 'round',
     borderWidth: '1px',
     borderStyle: 'solid',
-    textStyle: 'label.02',
   },
   variants: {
+    size: {
+      md: {
+        // Sized to match a size="sm" Button (32px, label.02) so a status chip and an
+        // adjacent action button read as the same size class on a row.
+        height: '32px',
+        gap: 'space.02',
+        pl: 'space.02',
+        pr: 'space.03',
+        textStyle: 'label.02',
+      },
+      sm: {
+        height: '20px',
+        gap: 'space.01',
+        pl: 'space.01',
+        pr: 'space.02',
+        textStyle: 'caption.01',
+      },
+    },
     variant: {
       default: {
         bg: 'ink.background-secondary',
@@ -58,18 +69,21 @@ const badge = cva({
   },
 });
 
+type BadgeSize = 'md' | 'sm';
+
 interface BadgeProps {
   label: string;
   variant?: BadgeVariant;
+  size?: BadgeSize;
   // Optional leading icon, shown in place of the status dot (e.g. a key for a
   // "Creator" chip). Render it at 16px to sit right in the 32px pill.
   icon?: ReactNode;
 }
 
-export function Badge({ label, variant = 'default', icon }: BadgeProps) {
+export function Badge({ label, variant = 'default', size = 'md', icon }: BadgeProps) {
   const showDot = variant !== 'default' && !icon;
   return (
-    <styled.span className={badge({ variant })}>
+    <styled.span className={badge({ variant, size })}>
       {icon ? (
         <styled.span aria-hidden display="inline-flex" flexShrink={0}>
           {icon}

@@ -14,7 +14,7 @@ import { createMultisigAccountAddresses } from '../vaults/multisig-account-addre
 import { retryMultisigQuery } from '../vaults/use-vaults';
 import { multisigVaultKeys } from '../vaults/vault-query-keys';
 import {
-  type HarmonizedVaultActivity,
+  type VaultActivityItem,
   type VaultMultisigTransaction,
   harmonizeVaultActivity,
   selectTransactionIdsNeedingPayload,
@@ -22,7 +22,8 @@ import {
 
 const transactionsPageRequest = { page: 1, pageSize: 20 };
 
-export interface UseVaultActivityResult extends HarmonizedVaultActivity {
+interface UseVaultActivityResult {
+  items: VaultActivityItem[];
   isLoading: boolean;
 }
 
@@ -94,18 +95,19 @@ export function useVaultActivity(
   );
 
   const payloadResults = useQueries({
-    queries: transactionIdsNeedingPayload.map(id => {
+    queries: transactionIdsNeedingPayload.flatMap(id => {
       const network = networkById.get(id);
-      const session = network ? sessionForNetwork(network) : null;
-      return {
-        queryKey: multisigVaultKeys.transaction(network, session?.identity.address, id),
-        queryFn: ({ signal }: { signal: AbortSignal }) => {
-          if (!network) throw new Error('useVaultActivity requires a network for each payload');
-          return getMultisigService().getTransaction(network, id, signal);
+      if (!network) return [];
+      const session = sessionForNetwork(network);
+      return [
+        {
+          queryKey: multisigVaultKeys.transaction(network, session?.identity.address, id),
+          queryFn: ({ signal }: { signal: AbortSignal }) =>
+            getMultisigService().getTransaction(network, id, signal),
+          enabled: Boolean(session),
+          retry: retryMultisigQuery,
         },
-        enabled: Boolean(session) && Boolean(network),
-        retry: retryMultisigQuery,
-      };
+      ];
     }),
   });
 
@@ -116,7 +118,7 @@ export function useVaultActivity(
       .map(transaction => [transaction.id, transaction.proposalRawPayload])
   );
 
-  const { active, history } = harmonizeVaultActivity({
+  const items = harmonizeVaultActivity({
     onchain,
     multisigTransactions,
     payloadsById,
@@ -128,5 +130,5 @@ export function useVaultActivity(
     (onchainResults.some(result => result.isLoading) ||
       summaryResults.some(result => result.isLoading));
 
-  return { active, history, isLoading };
+  return { items, isLoading };
 }

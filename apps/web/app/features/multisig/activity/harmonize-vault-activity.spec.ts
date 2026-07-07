@@ -3,7 +3,7 @@ import { privateKeyToPublic, publicKeyToHex } from '@stacks/transactions';
 import type { BlockchainActivityView } from '@leather.io/features';
 import type { MultisigTransactionSummary } from '@leather.io/models';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import { createMoney } from '@leather.io/utils';
+import { createMoney, truncateMiddle } from '@leather.io/utils';
 
 import {
   type VaultMultisigTransaction,
@@ -85,71 +85,69 @@ function makeVaultTransaction(
 
 describe(harmonizeVaultActivity.name, () => {
   test('the on-chain view wins for a broadcast transaction and is not duplicated', () => {
-    const twin = makeView({ txid: 'abc123', status: 'pending', title: 'STX from chain' });
+    const twin = makeView({ txid: 'abc123', status: 'pending' });
     const item = makeVaultTransaction({ txId: '0xabc123', status: 'broadcast' });
 
-    const result = harmonizeVaultActivity({
+    const items = harmonizeVaultActivity({
       onchain: [twin],
       multisigTransactions: [item],
     });
 
-    expect(result.active).toHaveLength(1);
-    expect(result.active[0].view).toBe(twin);
-    expect(result.active[0].multisig).toBe(item);
-    expect(result.history).toHaveLength(0);
+    expect(items).toHaveLength(1);
+    expect(items[0].view).toBe(twin);
+    expect(items[0].multisig).toBe(item);
   });
 
-  test('a confirmed transaction with a twin lands in history with multisig context', () => {
+  test('a confirmed transaction with a twin keeps its multisig context', () => {
     const twin = makeView({ txid: 'abc123', status: 'success' });
     const item = makeVaultTransaction({ txId: '0xABC123', status: 'confirmed' });
 
-    const result = harmonizeVaultActivity({
+    const items = harmonizeVaultActivity({
       onchain: [twin],
       multisigTransactions: [item],
     });
 
-    expect(result.active).toHaveLength(0);
-    expect(result.history).toHaveLength(1);
-    expect(result.history[0].view).toBe(twin);
-    expect(result.history[0].multisig).toBe(item);
+    expect(items).toHaveLength(1);
+    expect(items[0].view).toBe(twin);
+    expect(items[0].multisig).toBe(item);
   });
 
   test('an unmatched pending transaction without a payload synthesizes a placeholder view', () => {
-    const result = harmonizeVaultActivity({
+    const items = harmonizeVaultActivity({
       onchain: [],
       multisigTransactions: [makeVaultTransaction()],
     });
 
-    expect(result.active).toHaveLength(1);
-    expect(result.active[0].view.action).toBe('contract-execution');
-    expect(result.active[0].view.title).toBe('');
-    expect(result.active[0].view.status).toBe('pending');
+    expect(items).toHaveLength(1);
+    expect(items[0].view.action).toBe('contract-execution');
+    expect(items[0].view.title).toBe('');
+    expect(items[0].view.status).toBe('pending');
   });
 
   test('an unmatched pending transaction with a payload synthesizes the full send view', async () => {
     const rawPayload = await generateStxTransferPayload();
 
-    const result = harmonizeVaultActivity({
+    const items = harmonizeVaultActivity({
       onchain: [],
       multisigTransactions: [makeVaultTransaction()],
       payloadsById: new Map([['multisig-tx-1', rawPayload]]),
     });
 
-    expect(result.active[0].view.action).toBe('send');
-    expect(result.active[0].view.subtitle).toBe(`Sending to ${recipient}`);
+    expect(items[0].view.action).toBe('send');
+    expect(items[0].view.subtitle).toBe(`Sending to ${truncateMiddle(recipient)}`);
   });
 
-  test('on-chain rows without a multisig transaction pass through to history', () => {
+  test('on-chain rows without a multisig transaction pass through', () => {
     const external = makeView({ txid: 'external1' });
 
-    const result = harmonizeVaultActivity({
+    const items = harmonizeVaultActivity({
       onchain: [external],
       multisigTransactions: [],
     });
 
-    expect(result.history).toHaveLength(1);
-    expect(result.history[0].view).toBe(external);
-    expect(result.history[0].multisig).toBeUndefined();
+    expect(items).toHaveLength(1);
+    expect(items[0].view).toBe(external);
+    expect(items[0].multisig).toBeUndefined();
   });
 
   test('holds back terminal synthesized rows older than the frontier', () => {
@@ -164,55 +162,75 @@ describe(harmonizeVaultActivity.name, () => {
       proposalTimestamp: 1752000000,
     });
 
-    const result = harmonizeVaultActivity({
+    const items = harmonizeVaultActivity({
       onchain: [],
       multisigTransactions: [older, newer],
       frontier: 1751000000,
     });
 
-    expect(result.history).toHaveLength(1);
-    expect(result.history[0].multisig?.transaction.id).toBe('newer');
+    expect(items).toHaveLength(1);
+    expect(items[0].multisig?.transaction.id).toBe('newer');
   });
 
-  test('never holds back active rows regardless of the frontier', () => {
+  test('never holds back in-flight rows regardless of the frontier', () => {
     const item = makeVaultTransaction({ proposalTimestamp: 1700000000 });
 
-    const result = harmonizeVaultActivity({
+    const items = harmonizeVaultActivity({
       onchain: [],
       multisigTransactions: [item],
       frontier: 1751000000,
     });
 
-    expect(result.active).toHaveLength(1);
+    expect(items).toHaveLength(1);
   });
 
   test('emits terminal synthesized rows freely when no frontier is set', () => {
     const item = makeVaultTransaction({ status: 'cancelled', proposalTimestamp: 1700000000 });
 
-    const result = harmonizeVaultActivity({
+    const items = harmonizeVaultActivity({
       onchain: [],
       multisigTransactions: [item],
     });
 
-    expect(result.history).toHaveLength(1);
+    expect(items).toHaveLength(1);
   });
 
-  test('sorts both tiers newest first', () => {
+  test('pools all rows into one list sorted newest first', () => {
     const olderView = makeView({ txid: 'older-view', timestamp: 1750000000 });
     const newerView = makeView({ txid: 'newer-view', timestamp: 1752000000 });
-    const olderActive = makeVaultTransaction({ id: 'older-active', proposalTimestamp: 1750000000 });
-    const newerActive = makeVaultTransaction({ id: 'newer-active', proposalTimestamp: 1752000000 });
-
-    const result = harmonizeVaultActivity({
-      onchain: [olderView, newerView],
-      multisigTransactions: [olderActive, newerActive],
+    const activeBetween = makeVaultTransaction({
+      id: 'active-between',
+      proposalTimestamp: 1751000000,
     });
 
-    expect(result.active.map(row => row.multisig?.transaction.id)).toEqual([
-      'newer-active',
-      'older-active',
+    const items = harmonizeVaultActivity({
+      onchain: [olderView, newerView],
+      multisigTransactions: [activeBetween],
+    });
+
+    expect(items.map(item => item.multisig?.transaction.id ?? item.view.txid)).toEqual([
+      'newer-view',
+      'active-between',
+      'older-view',
     ]);
-    expect(result.history.map(row => row.view.txid)).toEqual(['newer-view', 'older-view']);
+  });
+
+  test('sorts an in-flight row by proposal time even when its twin carries no timestamp', () => {
+    const pendingTwin = makeView({ txid: 'btc-pending', chain: 'bitcoin', timestamp: 0 });
+    const broadcast = makeVaultTransaction({
+      id: 'broadcast',
+      txId: 'btc-pending',
+      status: 'broadcast',
+      proposalTimestamp: 1752000000,
+    });
+    const confirmedView = makeView({ txid: 'settled', timestamp: 1751000000 });
+
+    const items = harmonizeVaultActivity({
+      onchain: [pendingTwin, confirmedView],
+      multisigTransactions: [broadcast],
+    });
+
+    expect(items.map(item => item.view.txid)).toEqual(['btc-pending', 'settled']);
   });
 });
 

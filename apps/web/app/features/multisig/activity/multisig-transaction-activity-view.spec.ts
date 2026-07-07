@@ -8,7 +8,7 @@ import {
   createMarketPair,
 } from '@leather.io/models';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import { createMoney } from '@leather.io/utils';
+import { createMoney, truncateMiddle } from '@leather.io/utils';
 
 import { createMultisigTransactionActivityView } from './multisig-transaction-activity-view';
 
@@ -99,7 +99,7 @@ describe(createMultisigTransactionActivityView.name, () => {
     expect(view.chain).toBe('stacks');
     expect(view.timestamp).toBe(1751000000);
     expect(view.title).toBe('STX');
-    expect(view.subtitle).toBe(`Sending to ${recipient}`);
+    expect(view.subtitle).toBe(`Sending to ${truncateMiddle(recipient)}`);
     expect(view.avatar).toEqual({
       kind: 'single',
       asset: expect.objectContaining({ symbol: 'STX' }),
@@ -164,7 +164,7 @@ describe(createMultisigTransactionActivityView.name, () => {
       rawPayload,
     });
 
-    expect(view.subtitle).toBe(`Sending to ${recipient}`);
+    expect(view.subtitle).toBe(`Sending to ${truncateMiddle(recipient)}`);
     expect(view.amount).toBeUndefined();
   });
 

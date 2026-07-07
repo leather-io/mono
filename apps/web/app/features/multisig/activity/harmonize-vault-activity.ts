@@ -21,12 +21,7 @@ export interface VaultActivityItem {
   multisig?: VaultMultisigTransaction;
 }
 
-export interface HarmonizedVaultActivity {
-  active: VaultActivityItem[];
-  history: VaultActivityItem[];
-}
-
-export interface HarmonizeVaultActivityInput {
+interface HarmonizeVaultActivityInput {
   onchain: BlockchainActivityView[];
   multisigTransactions: VaultMultisigTransaction[];
   payloadsById?: ReadonlyMap<string, string>;
@@ -43,18 +38,6 @@ function isActiveTransaction(transaction: MultisigTransactionSummary) {
   return mapMultisigTransactionStatus(transaction.status) === 'pending';
 }
 
-function byNewestProposal(a: VaultActivityItem, b: VaultActivityItem) {
-  const aTimestamp = a.multisig?.transaction.proposalTimestamp ?? a.view.timestamp;
-  const bTimestamp = b.multisig?.transaction.proposalTimestamp ?? b.view.timestamp;
-  if (bTimestamp !== aTimestamp) return bTimestamp - aTimestamp;
-  return a.view.txid.localeCompare(b.view.txid);
-}
-
-function byNewestView(a: VaultActivityItem, b: VaultActivityItem) {
-  if (b.view.timestamp !== a.view.timestamp) return b.view.timestamp - a.view.timestamp;
-  return a.view.txid.localeCompare(b.view.txid);
-}
-
 export function selectTransactionIdsNeedingPayload(
   onchain: BlockchainActivityView[],
   multisigTransactions: VaultMultisigTransaction[]
@@ -68,16 +51,13 @@ export function selectTransactionIdsNeedingPayload(
     .map(({ transaction }) => transaction.id);
 }
 
-export function harmonizeVaultActivity(
-  input: HarmonizeVaultActivityInput
-): HarmonizedVaultActivity {
+export function harmonizeVaultActivity(input: HarmonizeVaultActivityInput): VaultActivityItem[] {
   const { onchain, multisigTransactions, payloadsById, classifyContract, marketData, frontier } =
     input;
 
   const onchainByTxid = new Map(onchain.map(view => [normalizeTxid(view.txid), view]));
   const matchedTxids = new Set<string>();
-  const active: VaultActivityItem[] = [];
-  const history: VaultActivityItem[] = [];
+  const rows: { item: VaultActivityItem; sortKey: number }[] = [];
 
   for (const item of multisigTransactions) {
     const { transaction, payloadContext } = item;
@@ -87,9 +67,10 @@ export function harmonizeVaultActivity(
 
     if (twin !== undefined && twinKey !== null) {
       matchedTxids.add(twinKey);
-      const row = { view: twin, multisig: item };
-      if (isActive) active.push(row);
-      else history.push(row);
+      rows.push({
+        item: { view: twin, multisig: item },
+        sortKey: isActive ? transaction.proposalTimestamp : twin.timestamp,
+      });
       continue;
     }
 
@@ -98,21 +79,18 @@ export function harmonizeVaultActivity(
       marketData: payloadContext.network.startsWith('btc') ? marketData?.btc : marketData?.stx,
       classifyContract,
     });
-    if (isActive) {
-      active.push({ view, multisig: item });
-      continue;
-    }
-    if (frontier === undefined || view.timestamp >= frontier) {
-      history.push({ view, multisig: item });
-    }
+    if (!isActive && frontier !== undefined && view.timestamp < frontier) continue;
+    rows.push({
+      item: { view, multisig: item },
+      sortKey: isActive ? transaction.proposalTimestamp : view.timestamp,
+    });
   }
 
   for (const view of onchain) {
     if (matchedTxids.has(normalizeTxid(view.txid))) continue;
-    history.push({ view });
+    rows.push({ item: { view }, sortKey: view.timestamp });
   }
 
-  active.sort(byNewestProposal);
-  history.sort(byNewestView);
-  return { active, history };
+  rows.sort((a, b) => b.sortKey - a.sortKey || a.item.view.txid.localeCompare(b.item.view.txid));
+  return rows.map(row => row.item);
 }
