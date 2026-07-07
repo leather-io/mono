@@ -1,9 +1,9 @@
 import type { BrowserContext, Page, Route } from '@playwright/test';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 
-import { delay } from '@leather.io/utils';
-
 import { test } from '../../fixtures/fixtures';
+
+const entityCheckPollTimeoutMs = 10_000;
 
 function mockChainalysisEntityRegistrationRequest(context: BrowserContext) {
   return async (routeHandler: (route: Route) => void) => {
@@ -78,6 +78,9 @@ test.describe('Compliance checks', () => {
   test('the addresses of all recipients are checked', async ({ context, page }) => {
     let entityCheckCount = 0;
 
+    await mockChainalysisEntityRegistrationRequest(context)(route =>
+      route.fulfill({ json: { address: '12QtD5BFwRsdNsAZY76UVE1xyCGNTojH9h' } })
+    );
     await mockChainalysisEntityCheckRequest(context)(route => {
       entityCheckCount += 1;
       return route.abort();
@@ -85,13 +88,10 @@ test.describe('Compliance checks', () => {
 
     await Promise.all([context.waitForEvent('page'), openIllegalTransfer(page)]);
 
-    // Please forgive this timeout, we need to give the page time in order to
-    // make the request, to be sure it was made. If this test ends up failing
-    // due to a race condition, please let the author know.
-    await delay(2000);
-
     const userAndRecipientAddressCount = 2;
 
-    test.expect(entityCheckCount).toEqual(userAndRecipientAddressCount);
+    await test.expect
+      .poll(() => entityCheckCount, { timeout: entityCheckPollTimeoutMs })
+      .toEqual(userAndRecipientAddressCount);
   });
 });
