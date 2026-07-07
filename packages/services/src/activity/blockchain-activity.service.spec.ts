@@ -371,6 +371,39 @@ describe(BlockchainActivityService.name, () => {
       expect(inflight[0].status).toBe('pending');
       expect(response.nextCursor).toBeNull();
     });
+
+    it('fills a full page of activities when non-activity txs (coinbase) are interleaved', async () => {
+      const results = Array.from({ length: 8 }, (_, i) =>
+        i % 2 === 0
+          ? stxResult(
+              {
+                ...baseTx(),
+                tx_id: `0xtransfer-${i}`,
+                block: { ...baseTx().block, time: 1000 - i },
+                type: 'token_transfer',
+                token_transfer: { recipient: 'SP2', amount: '100', memo: null },
+              },
+              { balance_changes: { stx: { sent: '100', received: '0', net: '-100' } } }
+            )
+          : stxResult({
+              ...baseTx(),
+              tx_id: `0xcoinbase-${i}`,
+              block: { ...baseTx().block, time: 1000 - i },
+              type: 'coinbase',
+              coinbase: { alt_recipient: null },
+            })
+      );
+      mockHiro.getPrincipalTransactions = vi
+        .fn()
+        .mockResolvedValue({ total: 8, limit: 50, cursor: emptyCursor, results });
+
+      const response = await service.getActivity({ account, limit: 3 });
+
+      expect(response.items).toHaveLength(3);
+      expect(response.items.every(item => item.action === 'send')).toBe(true);
+      expect(response.nextCursor).not.toBeNull();
+      expect(response.hasMore).toBe(true);
+    });
   });
 
   describe('STX fee handling', () => {

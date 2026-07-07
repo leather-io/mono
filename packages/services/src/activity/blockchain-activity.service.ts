@@ -43,6 +43,7 @@ import {
   buildPendingStacksActivity,
   groupFtChangesByTxId,
   isFtBalanceChangeRow,
+  isStacksActivityResultItem,
   mayTouchStacksAsset,
   toStacksSourceItem,
 } from './stacks-activity.utils';
@@ -184,7 +185,7 @@ export class BlockchainActivityService {
         { cursor, limit: stacksTxPageSize },
         { signal }
       );
-      items.push(...res.results.map(toStacksSourceItem));
+      items.push(...res.results.filter(isStacksActivityResultItem).map(toStacksSourceItem));
       if (res.cursor.next === null) break;
       cursor = res.cursor.next;
     }
@@ -447,7 +448,7 @@ export class BlockchainActivityService {
           { signal }
         );
         return {
-          items: res.results.map(toStacksSourceItem),
+          items: res.results.filter(isStacksActivityResultItem).map(toStacksSourceItem),
           currentCursor: res.cursor.current,
           nextCursor: res.cursor.next,
         };
