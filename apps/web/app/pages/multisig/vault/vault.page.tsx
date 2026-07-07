@@ -197,7 +197,7 @@ export function VaultDetailPage() {
             onShareInvite={() => setIsSharingInvites(true)}
             onCancelVault={() => setIsConfirmingCancel(true)}
           />
-          <SectionLabel>Transactions</SectionLabel>
+          <SectionLabel>Activity</SectionLabel>
           <VaultTransactions accounts={accounts.data} />
         </Box>
       </Flex>

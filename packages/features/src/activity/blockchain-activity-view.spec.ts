@@ -242,7 +242,7 @@ describe('createBlockchainActivityView', () => {
     );
     expect(view.avatar).toEqual({ kind: 'icon', icon: 'contract-call' });
     expect(view.title).toBe('collateralize');
-    expect(view.subtitle).toBe('Via Arkadiko - vault-manager');
+    expect(view.subtitle).toBe('vault-manager - Arkadiko');
   });
 
   it('renders contract-deploy with a status-conjugated verb title', () => {

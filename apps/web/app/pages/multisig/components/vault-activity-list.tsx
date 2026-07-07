@@ -4,7 +4,6 @@ import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-v
 import { ListContainer } from '@leather.io/ui';
 
 import { type TransactionRowScale } from './transaction-row';
-import { transactionNeedsSignatures } from './transaction-status';
 import { VaultActivityRow } from './vault-activity-row';
 
 interface VaultActivityListProps {
@@ -31,13 +30,7 @@ export function VaultActivityList({ items, scale, limit, onSelect }: VaultActivi
       >
         {visibleItems.map(item => {
           const multisig = item.multisig;
-          const needsAttention = multisig
-            ? transactionNeedsSignatures(
-                multisig.transaction.status,
-                multisig.transaction.approvalCount,
-                multisig.threshold
-              )
-            : false;
+          const needsAttention = Boolean(multisig) && item.view.status === 'pending';
           return (
             <VaultActivityRow
               key={item.view.key}
