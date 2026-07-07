@@ -38,9 +38,10 @@ export function useSignProposalCommitment(): SignProposalCommitment {
         const {
           payment: { address },
         } = createNativeSegwitPayer({ addressIndex: 0, changeIndex: 0 });
+        if (!address) throw new Error('No native segwit address for the current account');
         const { signature } = await signBip322MessageSimple({
           message: proposalHash,
-          address: createBitcoinAddress(address ?? ''),
+          address: createBitcoinAddress(address),
           signPsbt: async (psbt: bitcoin.Psbt) => signBitcoinTx(psbt.toBuffer()),
           network: networkMode,
         });
