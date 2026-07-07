@@ -172,6 +172,30 @@ describe(harmonizeVaultActivity.name, () => {
     expect(items[0].multisig?.transaction.id).toBe('newer');
   });
 
+  test('a confirmed twin supersedes a stale broadcasting status and ranks as settled', () => {
+    const confirmedTwin = makeView({
+      txid: 'settled-tx',
+      timestamp: 1750000000,
+      status: 'success',
+    });
+    const staleBroadcast = makeVaultTransaction({
+      id: 'stale-broadcast',
+      txId: '0xsettled-tx',
+      status: 'broadcast',
+      proposalTimestamp: 1749000000,
+    });
+    const newerExternal = makeView({ txid: 'newer-external', timestamp: 1752000000 });
+
+    const items = harmonizeVaultActivity({
+      onchain: [confirmedTwin, newerExternal],
+      multisigTransactions: [staleBroadcast],
+    });
+
+    expect(items.map(item => item.view.txid)).toEqual(['newer-external', 'settled-tx']);
+    expect(items[1].view).toBe(confirmedTwin);
+    expect(items[1].multisig?.transaction.id).toBe('stale-broadcast');
+  });
+
   test('never holds back in-flight rows regardless of the frontier', () => {
     const item = makeVaultTransaction({ proposalTimestamp: 1700000000 });
 
@@ -195,28 +219,40 @@ describe(harmonizeVaultActivity.name, () => {
     expect(items).toHaveLength(1);
   });
 
-  test('pools all rows into one list sorted newest first', () => {
+  test('sorts in-flight rows above settled ones, newest first within each group', () => {
     const olderView = makeView({ txid: 'older-view', timestamp: 1750000000 });
     const newerView = makeView({ txid: 'newer-view', timestamp: 1752000000 });
-    const activeBetween = makeVaultTransaction({
-      id: 'active-between',
-      proposalTimestamp: 1751000000,
+    const olderBroadcast = makeVaultTransaction({
+      id: 'older-broadcast',
+      status: 'broadcast',
+      proposalTimestamp: 1749000000,
+    });
+    const newerCancelled = makeVaultTransaction({
+      id: 'newer-cancelled',
+      status: 'cancelled',
+      proposalTimestamp: 1753000000,
     });
 
     const items = harmonizeVaultActivity({
       onchain: [olderView, newerView],
-      multisigTransactions: [activeBetween],
+      multisigTransactions: [olderBroadcast, newerCancelled],
     });
 
     expect(items.map(item => item.multisig?.transaction.id ?? item.view.txid)).toEqual([
+      'older-broadcast',
+      'newer-cancelled',
       'newer-view',
-      'active-between',
       'older-view',
     ]);
   });
 
   test('sorts an in-flight row by proposal time even when its twin carries no timestamp', () => {
-    const pendingTwin = makeView({ txid: 'btc-pending', chain: 'bitcoin', timestamp: 0 });
+    const pendingTwin = makeView({
+      txid: 'btc-pending',
+      chain: 'bitcoin',
+      timestamp: 0,
+      status: 'pending',
+    });
     const broadcast = makeVaultTransaction({
       id: 'broadcast',
       txId: 'btc-pending',

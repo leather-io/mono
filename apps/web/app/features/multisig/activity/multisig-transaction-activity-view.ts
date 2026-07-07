@@ -1,4 +1,4 @@
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatActivityMoney } from '~/queries/activity/blockchain-activity.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import { type BlockchainActivityView, createBlockchainActivityView } from '@leather.io/features';
@@ -67,7 +67,10 @@ export interface MultisigActivityClassification {
 interface CreateMultisigTransactionActivityViewOptions {
   rawPayload?: string;
   marketData?: MarketData;
-  classifyContract?(contractId: string): MultisigActivityClassification | undefined;
+  classifyContract?(
+    contractId: string,
+    functionName: string
+  ): MultisigActivityClassification | undefined;
 }
 
 interface ActivityCommonFields {
@@ -99,7 +102,7 @@ function buildProposalActivity(
         ),
       };
     case 'contractCall': {
-      const classification = options.classifyContract?.(payload.contractId);
+      const classification = options.classifyContract?.(payload.contractId, payload.functionName);
       return {
         ...common,
         action: classification?.action ?? 'contract-execution',
@@ -144,6 +147,6 @@ export function createMultisigTransactionActivityView(
   };
 
   return createBlockchainActivityView(buildProposalActivity(common, payload, options), {
-    formatMoney: formatCurrency,
+    formatMoney: formatActivityMoney,
   });
 }

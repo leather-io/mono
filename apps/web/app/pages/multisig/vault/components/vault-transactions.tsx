@@ -53,6 +53,7 @@ export function VaultTransactions({ accounts }: VaultTransactionsProps) {
     <VaultActivityList
       items={items}
       scale="compact"
+      limit={10}
       onSelect={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
     />
   );

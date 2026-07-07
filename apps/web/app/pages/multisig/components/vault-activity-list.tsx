@@ -7,19 +7,29 @@ import { type TransactionRowScale } from './transaction-row';
 import { transactionNeedsSignatures } from './transaction-status';
 import { VaultActivityRow } from './vault-activity-row';
 
-const previewLimit = 10;
-
 interface VaultActivityListProps {
   items: VaultActivityItem[];
   scale?: TransactionRowScale;
+  limit?: number;
   onSelect(vaultId: string, txId: string): void;
 }
 
-export function VaultActivityList({ items, scale, onSelect }: VaultActivityListProps) {
+export function VaultActivityList({ items, scale, limit, onSelect }: VaultActivityListProps) {
+  const visibleItems = limit === undefined ? items : items.slice(0, limit);
   return (
-    <ListContainer>
-      <Box display="flex" flexDirection="column" gap="space.01">
-        {items.slice(0, previewLimit).map(item => {
+    <ListContainer p="space.00" overflow="hidden">
+      <Box
+        display="flex"
+        flexDirection="column"
+        css={{
+          '& > * + *': {
+            borderTopWidth: '1px',
+            borderTopStyle: 'solid',
+            borderColor: 'ink.border-default',
+          },
+        }}
+      >
+        {visibleItems.map(item => {
           const multisig = item.multisig;
           const needsAttention = multisig
             ? transactionNeedsSignatures(

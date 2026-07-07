@@ -2,12 +2,18 @@ import type { ReactNode } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
+import { mapMultisigTransactionStatus } from '~/features/multisig/activity/multisig-transaction-activity-view';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import { type BlockchainActivityIndicator, addOperator } from '@leather.io/features';
 import {
+  type BlockchainActivityDirection,
+  type BlockchainActivityIndicator,
+  addOperator,
+} from '@leather.io/features';
+import {
+  BlockchainActivityAvatarIcon,
   FailedIcon,
-  FunctionIcon,
+  FunctionActivityIcon,
   ListItemBox,
   ReceivedIcon,
   SentIcon,
@@ -17,7 +23,6 @@ import { assertUnreachable } from '@leather.io/utils';
 
 import { formatRelativeTime } from '../tx/relative-time';
 import { Badge } from './badge';
-import { ChainAvatar } from './chain-avatar';
 import { PendingIndicatorIcon, type TransactionRowScale, scaleConfig } from './transaction-row';
 import { transactionStatusBadge } from './transaction-status';
 
@@ -26,6 +31,15 @@ interface VaultActivityRowProps {
   scale?: TransactionRowScale;
   needsAttention?: boolean;
   onClick?(): void;
+}
+
+function resolveQuoteColor(
+  indicator: BlockchainActivityIndicator,
+  direction: BlockchainActivityDirection
+) {
+  if (indicator === 'pending' || indicator === 'failed') return 'ink.text-subdued';
+  if (direction === 'received') return 'green.action-primary-default';
+  return 'ink.text-primary';
 }
 
 function renderIndicator(indicator: BlockchainActivityIndicator, size: number) {
@@ -39,7 +53,7 @@ function renderIndicator(indicator: BlockchainActivityIndicator, size: number) {
     case 'swap':
       return <SwapIcon width={size} height={size} />;
     case 'function':
-      return <FunctionIcon width={size} height={size} />;
+      return <FunctionActivityIcon width={size} height={size} />;
     case 'sent':
       return <SentIcon width={size} height={size} />;
     default:
@@ -57,6 +71,8 @@ function renderCaption(item: VaultActivityItem): ReactNode {
 function renderStatusChip(item: VaultActivityItem): ReactNode {
   const multisig = item.multisig;
   if (!multisig || multisig.transaction.status === 'confirmed') return undefined;
+  const backendInFlight = mapMultisigTransactionStatus(multisig.transaction.status) === 'pending';
+  if (backendInFlight && item.view.status !== 'pending') return undefined;
 
   const { status, approvalCount } = multisig.transaction;
   const display = transactionStatusBadge(status);
@@ -80,18 +96,19 @@ export function VaultActivityRow({
   return (
     <ListItemBox
       density={scale === 'compact' ? 'compact' : 'default'}
+      flush
       highlight={needsAttention ? 'attention' : undefined}
       onClick={onClick}
       leading={
-        <ChainAvatar
-          chain={view.chain === 'bitcoin' ? 'btc' : 'stx'}
-          size={cfg.avatarSize}
-          indicator={renderIndicator(view.indicator, cfg.indicator)}
+        <BlockchainActivityAvatarIcon
+          avatar={view.avatar}
+          indicator={renderIndicator(view.indicator, 12)}
         />
       }
       title={
         <styled.span
           textStyle={cfg.title}
+          color={view.status === 'success' ? 'ink.text-primary' : 'ink.text-subdued'}
           display="block"
           minWidth={0}
           overflow="hidden"
@@ -105,7 +122,11 @@ export function VaultActivityRow({
       caption={renderCaption(item)}
       trailing={
         amount ? (
-          <styled.span textStyle={cfg.title} whiteSpace="nowrap">
+          <styled.span
+            textStyle={cfg.title}
+            whiteSpace="nowrap"
+            color={resolveQuoteColor(view.indicator, amount.direction)}
+          >
             {addOperator(formatCurrency(amount.quote), amount.direction === 'received' ? '+' : '−')}
           </styled.span>
         ) : undefined

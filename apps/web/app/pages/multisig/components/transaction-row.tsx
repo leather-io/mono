@@ -65,7 +65,7 @@ function renderIndicator(status: MultisigTransactionSummary['status'], size: num
 
 export const scaleConfig = {
   regular: { avatarSize: 'lg', indicator: 16, title: 'label.02' },
-  compact: { avatarSize: 'md', indicator: 12, title: 'label.03' },
+  compact: { avatarSize: 'md', indicator: 12, title: 'label.02' },
 } as const;
 
 // A single transaction in a feed. Status never sits inline with the title (it

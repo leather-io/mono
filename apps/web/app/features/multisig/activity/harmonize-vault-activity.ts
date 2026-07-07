@@ -25,7 +25,10 @@ interface HarmonizeVaultActivityInput {
   onchain: BlockchainActivityView[];
   multisigTransactions: VaultMultisigTransaction[];
   payloadsById?: ReadonlyMap<string, string>;
-  classifyContract?(contractId: string): MultisigActivityClassification | undefined;
+  classifyContract?(
+    contractId: string,
+    functionName: string
+  ): MultisigActivityClassification | undefined;
   marketData?: { btc?: MarketData; stx?: MarketData };
   frontier?: number;
 }
@@ -57,7 +60,7 @@ export function harmonizeVaultActivity(input: HarmonizeVaultActivityInput): Vaul
 
   const onchainByTxid = new Map(onchain.map(view => [normalizeTxid(view.txid), view]));
   const matchedTxids = new Set<string>();
-  const rows: { item: VaultActivityItem; sortKey: number }[] = [];
+  const rows: { item: VaultActivityItem; inFlight: boolean; sortKey: number }[] = [];
 
   for (const item of multisigTransactions) {
     const { transaction, payloadContext } = item;
@@ -67,9 +70,11 @@ export function harmonizeVaultActivity(input: HarmonizeVaultActivityInput): Vaul
 
     if (twin !== undefined && twinKey !== null) {
       matchedTxids.add(twinKey);
+      const inFlight = isActive && twin.status === 'pending';
       rows.push({
         item: { view: twin, multisig: item },
-        sortKey: isActive ? transaction.proposalTimestamp : twin.timestamp,
+        inFlight,
+        sortKey: inFlight ? transaction.proposalTimestamp : twin.timestamp,
       });
       continue;
     }
@@ -82,15 +87,21 @@ export function harmonizeVaultActivity(input: HarmonizeVaultActivityInput): Vaul
     if (!isActive && frontier !== undefined && view.timestamp < frontier) continue;
     rows.push({
       item: { view, multisig: item },
+      inFlight: isActive,
       sortKey: isActive ? transaction.proposalTimestamp : view.timestamp,
     });
   }
 
   for (const view of onchain) {
     if (matchedTxids.has(normalizeTxid(view.txid))) continue;
-    rows.push({ item: { view }, sortKey: view.timestamp });
+    rows.push({ item: { view }, inFlight: view.status === 'pending', sortKey: view.timestamp });
   }
 
-  rows.sort((a, b) => b.sortKey - a.sortKey || a.item.view.txid.localeCompare(b.item.view.txid));
+  rows.sort(
+    (a, b) =>
+      Number(b.inFlight) - Number(a.inFlight) ||
+      b.sortKey - a.sortKey ||
+      a.item.view.txid.localeCompare(b.item.view.txid)
+  );
   return rows.map(row => row.item);
 }

@@ -136,8 +136,8 @@ describe(createMultisigTransactionActivityView.name, () => {
     const rawPayload = await generateContractCallPayload();
     const view = createMultisigTransactionActivityView(stxContext, makeTransaction(), {
       rawPayload,
-      classifyContract: contractId =>
-        contractId === 'ST000000000000000000002AMW42H.pox-4'
+      classifyContract: (contractId, functionName) =>
+        contractId === 'ST000000000000000000002AMW42H.pox-4' && functionName === 'delegate-stx'
           ? { action: 'stack', protocolName: 'Fast Pool' }
           : undefined,
     });

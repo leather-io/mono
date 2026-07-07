@@ -27,8 +27,8 @@ const badge = cva({
       },
       sm: {
         height: '20px',
-        gap: 'space.01',
-        pl: 'space.01',
+        gap: 'space.02',
+        pl: 'space.02',
         pr: 'space.02',
         textStyle: 'caption.01',
       },
@@ -93,8 +93,8 @@ export function Badge({ label, variant = 'default', size = 'md', icon }: BadgePr
         <styled.span
           aria-hidden
           data-dot
-          width="8px"
-          height="8px"
+          width={size === 'sm' ? '6px' : '8px'}
+          height={size === 'sm' ? '6px' : '8px'}
           flexShrink={0}
           borderRadius="round"
           bg="currentColor"

@@ -125,7 +125,7 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
     avatar: { kind: 'single', from: 'stx' },
     indicator: 'sent',
     title: { kind: 'symbol', from: 'stx' },
-    amount: { kind: 'none' },
+    amount: { kind: 'single', from: 'sent' },
   },
   'initiate-unstack': {
     avatar: { kind: 'single', from: 'stx' },
@@ -137,7 +137,7 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
     avatar: { kind: 'single', from: 'stx' },
     indicator: 'function',
     title: { kind: 'symbol', from: 'stx' },
-    amount: { kind: 'none' },
+    amount: { kind: 'single', from: 'received' },
   },
   'liquid-stack': {
     avatar: { kind: 'pair' },
