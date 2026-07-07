@@ -1,7 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { useMutation } from '@tanstack/react-query';
+
 import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
+import { createProposeMultisigTransactionMutationConfig } from '@leather.io/queries';
 import { createRpcSuccessResponse } from '@leather.io/rpc';
 import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
 import { delay } from '@leather.io/utils';
@@ -15,7 +18,7 @@ import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/u
 import { getTransactionActions } from '@app/components/rpc-transaction-request/get-transaction-actions';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
-import { useProposeMultisigTransaction } from '@app/features/multisig/use-propose-multisig-transaction';
+import { useSignProposalCommitment } from '@app/features/multisig/use-sign-proposal-commitment';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -38,7 +41,10 @@ export function useRpcSendTransferActions() {
   const policy = useCurrentPolicy();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
   const network = useCurrentNetwork();
-  const { mutateAsync: proposeMultisigTransaction } = useProposeMultisigTransaction();
+  const signProposalCommitment = useSignProposalCommitment();
+  const { mutateAsync: proposeMultisigTransaction } = useMutation(
+    createProposeMultisigTransactionMutationConfig({ signProposalCommitment })
+  );
   const isBitcoinPolicy = policy?.chain === 'bitcoin';
 
   const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
