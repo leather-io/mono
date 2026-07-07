@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const stacksTransactionDetailsSchema = z.object({
-  txid: z.string(),
+  txid: z.string().optional(),
   transaction: z.string(),
   // Present (with `status: 'proposed'`) when the active account is a multisig
   // policy: the transaction was proposed to the coordinator, not broadcast, so

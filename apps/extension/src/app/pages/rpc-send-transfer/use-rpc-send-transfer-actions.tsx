@@ -103,7 +103,7 @@ export function useRpcSendTransferActions() {
             tabId ?? 0,
             createRpcSuccessResponse('sendTransfer', {
               id: requestId,
-              result: { txid: '', proposalId: proposal.id, status: 'proposed' },
+              result: { proposalId: proposal.id, status: 'proposed' },
             })
           );
 

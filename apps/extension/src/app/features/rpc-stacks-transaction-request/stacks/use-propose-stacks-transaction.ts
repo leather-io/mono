@@ -82,7 +82,6 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
           createRpcSuccessResponse(method, {
             id: requestId,
             result: {
-              txid: '',
               transaction: rawPayload,
               proposalId: proposal.id,
               status: 'proposed',

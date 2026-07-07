@@ -61,7 +61,6 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
           createRpcSuccessResponse(method, {
             id: requestId,
             result: {
-              txid: '',
               transaction: signedTx.serialize(),
             },
           })

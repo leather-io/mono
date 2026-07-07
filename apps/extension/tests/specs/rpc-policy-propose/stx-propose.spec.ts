@@ -104,7 +104,6 @@ test.describe('RPC: stx_callContract from a policy (multisig) account', () => {
     delete result.id;
 
     test.expect(result.result).toMatchObject({
-      txid: '',
       proposalId: exampleMultisigTransactionId,
       status: 'proposed',
     });
@@ -126,7 +125,6 @@ test.describe('RPC: stx_callContract from a policy (multisig) account', () => {
     delete result.id;
 
     test.expect(result.result).toMatchObject({
-      txid: '',
       proposalId: exampleMultisigTransactionId,
       status: 'proposed',
     });
@@ -209,7 +207,6 @@ test.describe('RPC: stx_callContract signer defaults to the policy owner account
     delete result.id;
 
     test.expect(result.result).toMatchObject({
-      txid: '',
       proposalId: exampleMultisigTransactionId,
       status: 'proposed',
     });
