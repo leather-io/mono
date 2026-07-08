@@ -19,7 +19,13 @@ function MenuDivider() {
   return <styled.div height="1px" bg="ink.border-default" my="space.01" />;
 }
 
-function AccountSection({ connection }: { connection: ChainConnection }) {
+function AccountSection({
+  connection,
+  bnsName,
+}: {
+  connection: ChainConnection;
+  bnsName?: string;
+}) {
   const { session } = connection;
   if (!session) return null;
   return (
@@ -28,7 +34,7 @@ function AccountSection({ connection }: { connection: ChainConnection }) {
         <ChainAvatar chain={connection.chain} boxSize="32px" />
         <Box minWidth={0}>
           <styled.span display="block" textStyle="label.03">
-            {connection.label}
+            {bnsName ?? connection.label}
           </styled.span>
           {connection.isRestoring ? (
             <styled.span display="block" textStyle="caption.01" color="ink.text-subdued">
@@ -56,7 +62,13 @@ function AccountSection({ connection }: { connection: ChainConnection }) {
   );
 }
 
-export function ConnectedMenu({ chains }: { chains: ChainConnection[] }) {
+export function ConnectedMenu({
+  chains,
+  bnsName,
+}: {
+  chains: ChainConnection[];
+  bnsName?: string;
+}) {
   const signedIn = chains.filter(c => c.session);
   const notSignedIn = chains.filter(c => !c.session);
 
@@ -65,7 +77,7 @@ export function ConnectedMenu({ chains }: { chains: ChainConnection[] }) {
       {signedIn.map((c, index) => (
         <Fragment key={c.chain}>
           {index > 0 && <MenuDivider />}
-          <AccountSection connection={c} />
+          <AccountSection connection={c} bnsName={c.chain === 'stx' ? bnsName : undefined} />
         </Fragment>
       ))}
 

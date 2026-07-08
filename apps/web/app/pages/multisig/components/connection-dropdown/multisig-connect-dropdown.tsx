@@ -1,5 +1,6 @@
 import { Flex, styled } from 'leather-styles/jsx';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
+import { useAddressBnsName } from '~/queries/bns/bns.query';
 
 import { Button, ChevronDownIcon, DropdownMenu, Flag, WalletIcon } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
@@ -17,6 +18,13 @@ export function MultisigConnectDropdown() {
 
   const anySignedIn = chains.some(c => c.session);
   const primaryAddress = (stx.session ?? btc.session)?.identity.address;
+  // BNS is Stacks-only, so the name comes from the connected Stacks identity and
+  // labels the same person on both chain rows; Bitcoin-only falls back to address.
+  const bnsName = useAddressBnsName(
+    stx.session?.identity.address,
+    networks.stx.endsWith('mainnet')
+  );
+  const connectedLabel = bnsName ?? (primaryAddress ? truncateMiddle(primaryAddress) : undefined);
 
   return (
     <DropdownMenu.Root modal={false}>
@@ -42,7 +50,7 @@ export function MultisigConnectDropdown() {
                     </Flex>
                   ))}
                 </Flex>
-                {primaryAddress && <styled.span>{truncateMiddle(primaryAddress)}</styled.span>}
+                {connectedLabel && <styled.span>{connectedLabel}</styled.span>}
               </Flex>
             </Flag>
           </Button>
@@ -64,7 +72,11 @@ export function MultisigConnectDropdown() {
       <DropdownMenu.Portal>
         <DropdownMenu.Content sideOffset={8} align="end">
           <styled.div mx="space.02" py="space.02" width="300px">
-            {anySignedIn ? <ConnectedMenu chains={chains} /> : <ChooseChainMenu chains={chains} />}
+            {anySignedIn ? (
+              <ConnectedMenu chains={chains} bnsName={bnsName} />
+            ) : (
+              <ChooseChainMenu chains={chains} />
+            )}
           </styled.div>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

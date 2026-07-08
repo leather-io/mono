@@ -25,6 +25,7 @@ export const csp = builder({
       'https://sbtc-emily.com',
       'https://webhook.frontapp.com',
       'leatherapi.bestinslot.xyz',
+      'api.bnsv2.com',
     ],
   },
 });
