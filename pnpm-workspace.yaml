@@ -1,6 +1,9 @@
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - axios
+  - "@stacks/transactions"
+  - "@stacks/common"
+  - "@stacks/network"
 packages:
   - 'apps/*'
   - 'packages/*'

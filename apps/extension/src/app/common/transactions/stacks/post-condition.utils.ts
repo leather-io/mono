@@ -1,13 +1,12 @@
 import {
   FungibleConditionCode,
-  type FungiblePostConditionWire,
   NonFungibleConditionCode,
-  type NonFungiblePostConditionWire,
   PostConditionMode,
   type PostConditionModeName,
   PostConditionType,
   type PostConditionWire,
-  type STXPostConditionWire,
+  PoxConditionCode,
+  type PoxPostConditionWire,
   addressToString,
   parsePrincipalString,
 } from '@stacks/transactions';
@@ -28,38 +27,34 @@ export function rpcPostConditionModeToEnum(mode?: PostConditionModeName) {
   return PostConditionMode.Deny;
 }
 
-export function getIconStringFromPostCondition(
-  pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
-) {
+export type NonPoxPostConditionWire = Exclude<PostConditionWire, PoxPostConditionWire>;
+
+export type PostConditionVerb = 'transfer' | 'stake';
+
+export function getIconStringFromPostCondition(pc: NonPoxPostConditionWire) {
   if (pc.conditionType === PostConditionType.Fungible)
     return `${addressToString(pc.asset.address)}.${pc.asset.contractName.content}.${
       pc.asset.assetName.content
     }`;
-  if (pc.conditionType === PostConditionType.STX) return 'STX';
-  return pc.asset.assetName.content;
+  if (pc.conditionType === PostConditionType.NonFungible) return pc.asset.assetName.content;
+  return 'STX';
 }
 
-export function getAmountFromPostCondition(
-  pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
-) {
+export function getAmountFromPostCondition(pc: NonPoxPostConditionWire) {
   if (pc.conditionType === PostConditionType.Fungible) return pc.amount.toString();
-  if (pc.conditionType === PostConditionType.STX)
+  if (pc.conditionType === PostConditionType.STX || pc.conditionType === PostConditionType.Staking)
     return stacksValue({ value: pc.amount.toString(), withTicker: false });
   return '';
 }
 
-export function getSymbolFromPostCondition(
-  pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
-) {
+export function getSymbolFromPostCondition(pc: NonPoxPostConditionWire) {
   if ('asset' in pc) {
     return pc.asset.assetName.content.slice(0, 3).toUpperCase();
   }
   return 'STX';
 }
 
-export function getNameFromPostCondition(
-  pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
-) {
+export function getNameFromPostCondition(pc: NonPoxPostConditionWire) {
   if ('asset' in pc) {
     return pc.asset.assetName.content;
   }
@@ -68,26 +63,42 @@ export function getNameFromPostCondition(
 
 export function getPostConditionCodeMessage(
   code: FungibleConditionCode | NonFungibleConditionCode,
-  isSender: boolean
+  isSender: boolean,
+  context: PostConditionVerb = 'transfer'
 ) {
   const sender = isSender ? 'You' : 'The contract';
+  const verb = context === 'stake' ? 'stake' : 'transfer';
   switch (code) {
     case FungibleConditionCode.Equal:
-      return `${sender} will transfer exactly`;
+      return `${sender} will ${verb} exactly`;
     case FungibleConditionCode.Greater:
-      return `${sender} will transfer more than`;
+      return `${sender} will ${verb} more than`;
     case FungibleConditionCode.GreaterEqual:
-      return `${sender} will transfer at least`;
+      return `${sender} will ${verb} at least`;
     case FungibleConditionCode.Less:
-      return `${sender} will transfer less than`;
+      return `${sender} will ${verb} less than`;
     case FungibleConditionCode.LessEqual:
-      return `${sender} will transfer at most`;
+      return `${sender} will ${verb} at most`;
     case NonFungibleConditionCode.Sends:
       return `${sender} will transfer`;
     case NonFungibleConditionCode.DoesNotSend:
       return `${sender} will keep or receive`;
     case NonFungibleConditionCode.MaybeSent:
       return `${sender} may transfer`;
+    default:
+      assertUnreachable(code);
+  }
+}
+
+export function getPoxConditionCodeMessage(code: PoxConditionCode, isSender: boolean) {
+  const sender = isSender ? 'You' : 'The contract';
+  switch (code) {
+    case PoxConditionCode.WillNotPerform:
+      return `${sender} must not perform any PoX actions`;
+    case PoxConditionCode.MayPerform:
+      return `${sender} may perform PoX actions`;
+    case PoxConditionCode.WillPerform:
+      return `${sender} must perform a PoX action`;
     default:
       assertUnreachable(code);
   }
@@ -131,18 +142,22 @@ export function handlePostConditions(
   });
 }
 
-function getTitleFromConditionCode(code: FungibleConditionCode | NonFungibleConditionCode) {
+function getTitleFromConditionCode(
+  code: FungibleConditionCode | NonFungibleConditionCode,
+  context: PostConditionVerb = 'transfer'
+) {
+  const verb = context === 'stake' ? 'stake' : 'transfer';
   switch (code) {
     case FungibleConditionCode.Equal:
-      return 'will transfer exactly';
+      return `will ${verb} exactly`;
     case FungibleConditionCode.Greater:
-      return 'will transfer more than';
+      return `will ${verb} more than`;
     case FungibleConditionCode.GreaterEqual:
-      return 'will transfer equal to or greater than';
+      return `will ${verb} equal to or greater than`;
     case FungibleConditionCode.Less:
-      return 'will transfer less than';
+      return `will ${verb} less than`;
     case FungibleConditionCode.LessEqual:
-      return 'will transfer less than or equal to';
+      return `will ${verb} less than or equal to`;
     case NonFungibleConditionCode.Sends:
       return 'will transfer';
     case NonFungibleConditionCode.DoesNotSend:
@@ -155,7 +170,21 @@ function getTitleFromConditionCode(code: FungibleConditionCode | NonFungibleCond
 }
 
 export function getPostConditionTitle(
-  pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
+  pc: NonPoxPostConditionWire,
+  context: PostConditionVerb = 'transfer'
 ) {
-  return getTitleFromConditionCode(pc.conditionCode) || '';
+  return getTitleFromConditionCode(pc.conditionCode, context) || '';
+}
+
+export function getPoxConditionTitle(code: PoxConditionCode) {
+  switch (code) {
+    case PoxConditionCode.WillNotPerform:
+      return 'must not perform any PoX actions';
+    case PoxConditionCode.MayPerform:
+      return 'may perform PoX actions';
+    case PoxConditionCode.WillPerform:
+      return 'must perform a PoX action';
+    default:
+      return '';
+  }
 }
