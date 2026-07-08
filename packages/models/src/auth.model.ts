@@ -1,4 +1,6 @@
-export type AuthNetworkId = `${'stx' | 'btc'}:${'mainnet' | 'testnet'}`;
+export type AuthNetworkId =
+  | `stx:${'mainnet' | 'testnet'}`
+  | `btc:${'mainnet' | 'testnet' | 'regtest'}`;
 
 export const authApplications = ['multisig'] as const;
 export type AuthApplication = (typeof authApplications)[number];

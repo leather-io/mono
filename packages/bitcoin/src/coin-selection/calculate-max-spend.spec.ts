@@ -21,8 +21,8 @@ describe(calculateMaxSpend.name, () => {
       utxos: mockUtxos,
       feeRate: 1,
     });
-    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50087979);
-    expect(maxBitcoinSpend.spendAllFee).toEqual(621);
+    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50087977);
+    expect(maxBitcoinSpend.spendAllFee).toEqual(623);
   });
 
   test('with 5 sat/vb fee', () => {
@@ -31,8 +31,8 @@ describe(calculateMaxSpend.name, () => {
       utxos: mockUtxos,
       feeRate: 5,
     });
-    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50085497);
-    expect(maxBitcoinSpend.spendAllFee).toEqual(3103);
+    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50085487);
+    expect(maxBitcoinSpend.spendAllFee).toEqual(3113);
   });
 
   test('with 30 sat/vb fee', () => {
@@ -41,8 +41,8 @@ describe(calculateMaxSpend.name, () => {
       utxos: mockUtxos,
       feeRate: 30,
     });
-    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50074515);
-    expect(maxBitcoinSpend.spendAllFee).toEqual(10485);
+    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50074485);
+    expect(maxBitcoinSpend.spendAllFee).toEqual(10515);
   });
 
   test('with 100 sat/vb fee', () => {
@@ -51,8 +51,8 @@ describe(calculateMaxSpend.name, () => {
       utxos: mockUtxos,
       feeRate: 100,
     });
-    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50050050);
-    expect(maxBitcoinSpend.spendAllFee).toEqual(34950);
+    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50049950);
+    expect(maxBitcoinSpend.spendAllFee).toEqual(35050);
   });
 
   test('with 400 sat/vb fee', () => {
@@ -61,8 +61,8 @@ describe(calculateMaxSpend.name, () => {
       utxos: mockUtxos,
       feeRate: 400,
     });
-    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(49981500);
-    expect(maxBitcoinSpend.spendAllFee).toEqual(58500);
+    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(49981400);
+    expect(maxBitcoinSpend.spendAllFee).toEqual(58600);
   });
 
   describe('with taproot UTXOs', () => {
@@ -74,9 +74,9 @@ describe(calculateMaxSpend.name, () => {
         utxos: mockTaprootUtxos,
         feeRate: 1,
       });
-      expect(result.amount.amount.toNumber()).toEqual(50088043);
-      expect(result.spendAllFee).toEqual(557);
-      expect(result.spendableBitcoin.toNumber()).toEqual(0.50088043);
+      expect(result.amount.amount.toNumber()).toEqual(50088041);
+      expect(result.spendAllFee).toEqual(559);
+      expect(result.spendableBitcoin.toNumber()).toEqual(0.50088041);
     });
 
     test('with 5 sat/vb fee', () => {
@@ -85,8 +85,8 @@ describe(calculateMaxSpend.name, () => {
         utxos: mockTaprootUtxos,
         feeRate: 5,
       });
-      expect(result.amount.amount.toNumber()).toEqual(50085815);
-      expect(result.spendAllFee).toEqual(2785);
+      expect(result.amount.amount.toNumber()).toEqual(50085805);
+      expect(result.spendAllFee).toEqual(2795);
     });
 
     test('with 30 sat/vb fee', () => {
@@ -95,8 +95,8 @@ describe(calculateMaxSpend.name, () => {
         utxos: mockTaprootUtxos,
         feeRate: 30,
       });
-      expect(result.amount.amount.toNumber()).toEqual(50075160);
-      expect(result.spendAllFee).toEqual(9840);
+      expect(result.amount.amount.toNumber()).toEqual(50075130);
+      expect(result.spendAllFee).toEqual(9870);
     });
 
     test('with 100 sat/vb fee', () => {
@@ -105,8 +105,8 @@ describe(calculateMaxSpend.name, () => {
         utxos: mockTaprootUtxos,
         feeRate: 100,
       });
-      expect(result.amount.amount.toNumber()).toEqual(50052200);
-      expect(result.spendAllFee).toEqual(32800);
+      expect(result.amount.amount.toNumber()).toEqual(50052100);
+      expect(result.spendAllFee).toEqual(32900);
     });
 
     test('with 400 sat/vb fee', () => {
@@ -115,8 +115,8 @@ describe(calculateMaxSpend.name, () => {
         utxos: mockTaprootUtxos,
         feeRate: 400,
       });
-      expect(result.amount.amount.toNumber()).toEqual(49979600);
-      expect(result.spendAllFee).toEqual(85400);
+      expect(result.amount.amount.toNumber()).toEqual(49979400);
+      expect(result.spendAllFee).toEqual(85600);
     });
 
     test('taproot inputs have lower fees than native segwit at same fee rate', () => {
@@ -162,8 +162,8 @@ describe(calculateMaxSpend.name, () => {
         utxos: mockUtxos,
         feeRate: 30,
       });
-      expect(segwitRecipientResult.amount.amount.toNumber()).toEqual(50073585);
-      expect(taprootRecipientResult.amount.amount.toNumber()).toEqual(50073225);
+      expect(segwitRecipientResult.amount.amount.toNumber()).toEqual(50073555);
+      expect(taprootRecipientResult.amount.amount.toNumber()).toEqual(50073195);
       expect(taprootRecipientResult.spendAllFee).toBeGreaterThan(segwitRecipientResult.spendAllFee);
     });
   });

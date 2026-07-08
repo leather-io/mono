@@ -1,47 +1,76 @@
 import { injectable } from 'inversify';
+import { chunk } from 'remeda';
 
-import { stxAsset } from '@leather.io/constants';
 import {
-  AccountAddresses,
-  BlockchainActivity,
-  BlockchainActivityEvent,
-  CryptoAssetCategories,
-  StacksProtocolAction,
-  StacksProtocolId,
-  isFungibleAsset,
+  type AccountAddresses,
+  type BitcoinTransaction,
+  type BlockchainActivity,
+  type BlockchainActivityBalanceChange,
+  type CryptoAssetId,
+  type FungibleCryptoAsset,
+  type MarketData,
+  type StacksTx,
 } from '@leather.io/models';
-import {
-  baseCurrencyAmountInQuote,
-  createMoney,
-  hasBitcoinAddress,
-  hasStacksAddress,
-  initBigNumber,
-  isDefined,
-} from '@leather.io/utils';
+import { assertUnreachable, createMoney, hasStacksAddress, initBigNumber } from '@leather.io/utils';
 
-import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
-import {
-  HiroStacksMempoolTransaction,
-  HiroStacksTransaction,
-  HiroTransactionEvent,
+import type {
+  HiroBalanceChangeResultItem,
+  HiroPrincipalTransactionsResultItem,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { MarketDataService } from '../market/market-data.service';
 import { StacksProtocolService } from '../protocols/stacks-protocol.service';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
-import { filterActivityByAsset, sortActivityByTimestampDesc } from './activity.utils';
-import { mapBitcoinTxToActivity } from './bitcoin-blockchain-activity.utils';
-import type { ActivityRequest, ActivityResponse } from './blockchain-activity.types';
-import { StacksRawActivityEvent, extractStacksRawEvents } from './stacks-activity-event.utils';
-import { StacksAssetTransfer, getStacksAssetTransfers } from './stacks-asset-transfer.utils';
 import {
-  mapStacksContractCall,
-  mapStacksSmartContractDeploy,
-  mapStacksTokenTransfer,
-} from './stacks-blockchain-activity.utils';
-import { getEventsByTxId, isMempoolTx } from './stacks-tx-activity.utils';
+  type ActivitySourceCursor,
+  type ActivitySourceItem,
+  type ActivitySources,
+  getActivitySourcePage,
+} from './activity-paginator';
+import {
+  activityTouchesAsset,
+  applyMarketData,
+  assetQuoteKey,
+  sortActivityByTimestampDesc,
+} from './activity.utils';
+import { mapBitcoinActivity } from './bitcoin-activity.utils';
+import {
+  type ClassifiedContractCall,
+  type FtBalanceChangeRow,
+  buildConfirmedStacksActivity,
+  buildPendingStacksActivity,
+  groupFtChangesByTxId,
+  isFtBalanceChangeRow,
+  isStacksActivityResultItem,
+  mayTouchStacksAsset,
+  toStacksSourceItem,
+} from './stacks-activity.utils';
+
+export type { ActivitySourceCursor } from './activity-paginator';
+
+export interface ActivityRequest {
+  account: AccountAddresses;
+  cursor?: ActivitySourceCursor;
+  limit?: number;
+}
+
+export interface ActivityResponse {
+  items: BlockchainActivity[];
+  nextCursor: ActivitySourceCursor | null;
+  hasMore: boolean;
+}
+
+// Hiro v3 caps /principals/{p}/transactions at 50 results per page.
+const stacksTxPageSize = 50;
+const defaultActivityPageSize = 50;
+// Hiro v3 caps /balance-changes at 20 tx_ids per call, so ft lookups are chunked.
+const balanceChangesBatchSize = 20;
+const activityByAssetScanPages = 10;
+// BTC is fetched wholesale in a single request; this depth IS the BTC visibility horizon —
+// older BTC activity is silently absent (the server imposes no page-size maximum).
+const btcTxHorizonPageRequest = { page: 1, pageSize: 1000 };
 
 @injectable()
 export class BlockchainActivityService {
@@ -51,7 +80,6 @@ export class BlockchainActivityService {
     private readonly bitcoinTransactionsService: BitcoinTransactionsService,
     private readonly marketDataService: MarketDataService,
     private readonly sip10AssetService: Sip10AssetService,
-    private readonly sip9AssetService: Sip9AssetService,
     private readonly stacksProtocolService: StacksProtocolService
   ) {}
 
@@ -59,272 +87,219 @@ export class BlockchainActivityService {
     request: ActivityRequest,
     signal?: AbortSignal
   ): Promise<ActivityResponse> {
-    let allActivity = await this.fetchAllActivity(request.account, signal);
-
-    if (request.filter?.asset) {
-      allActivity = filterActivityByAsset(allActivity, request.filter.asset);
-    } else if (request.filter?.protocol) {
-      allActivity = allActivity.filter(
-        a => a.contract?.type === 'call' && a.contract.protocol === request.filter!.protocol
-      );
-    } else if (request.filter?.chain) {
-      allActivity = allActivity.filter(a => a.chain === request.filter!.chain);
-    }
-
-    const total = allActivity.length;
-    const pagination = request.pagination;
-    const page = pagination
-      ? allActivity.slice(pagination.offset, pagination.offset + pagination.limit)
-      : allActivity;
-
-    const items = await Promise.all(page.map(a => this.enrichWithMarketData(a, signal)));
-
+    const btcTxs = this.bitcoinTransactionsService.getAccountTransactions(
+      request.account,
+      btcTxHorizonPageRequest,
+      signal
+    );
+    const page = await getActivitySourcePage(this.createSources(request.account, btcTxs, signal), {
+      limit: request.limit ?? defaultActivityPageSize,
+      cursor: request.cursor,
+    });
+    // Pending is stitched onto the first page only and sits above the cursor keyspace, so
+    // pages 2+ never re-emit it. Dedup by txid, confirmed wins: a tx that confirms between
+    // refetches transitions atomically (leaves pending, appears confirmed, exactly once).
+    const [confirmed, allPending] = await Promise.all([
+      this.mapSourceItems(request.account, page.items, signal),
+      request.cursor === undefined
+        ? this.getPendingActivity(request.account, btcTxs, signal)
+        : Promise.resolve([]),
+    ]);
+    const confirmedTxids = new Set(confirmed.map(activity => activity.txid));
+    const pending = allPending.filter(activity => !confirmedTxids.has(activity.txid));
+    const items = await this.enrichWithMarketData([...pending, ...confirmed], signal);
     return {
       items,
-      meta: {
-        total,
-        limit: pagination?.limit ?? total,
-        offset: pagination?.offset ?? 0,
-      },
+      nextCursor: page.nextCursor,
+      hasMore: page.nextCursor !== null,
     };
   }
 
-  private async fetchAllActivity(
+  public async getActivityByAssetId(
     account: AccountAddresses,
+    assetId: CryptoAssetId,
     signal?: AbortSignal
   ): Promise<BlockchainActivity[]> {
-    const [btcActivity, stacksActivity] = await Promise.all([
-      this.getBtcActivity(account, signal),
-      this.getStacksActivity(account, signal),
-    ]);
-    return [...btcActivity, ...stacksActivity].sort(sortActivityByTimestampDesc);
+    switch (assetId.protocol) {
+      case 'nativeBtc':
+        return this.getBitcoinActivity(account, signal);
+      case 'nativeStx':
+      case 'sip10':
+        return this.getStacksActivityByAssetId(account, assetId, signal);
+      case 'sip9':
+        // NFT balance changes aren't modeled yet (deferred), so there is nothing to filter on.
+        return [];
+      default:
+        return assertUnreachable(assetId.protocol);
+    }
   }
 
-  private async getBtcActivity(
+  private async getBitcoinActivity(
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<BlockchainActivity[]> {
-    if (!hasBitcoinAddress(account)) return [];
-
-    const bitcoinTxs = await this.bitcoinTransactionsService.getAccountTransactions(
+    const btcTxs = this.bitcoinTransactionsService.getAccountTransactions(
       account,
+      btcTxHorizonPageRequest,
       signal
     );
-    return bitcoinTxs
-      .map(mapBitcoinTxToActivity)
-      .filter(isDefined)
+    const [txs, pending] = await Promise.all([btcTxs, this.getPendingBitcoinActivity(btcTxs)]);
+    const confirmed = txs
+      .filter(tx => tx.height !== undefined)
+      .map(mapBitcoinActivity)
+      .filter((activity): activity is BlockchainActivity => activity !== null)
       .sort(sortActivityByTimestampDesc);
+    return this.enrichWithMarketData([...pending, ...confirmed], signal);
   }
 
-  private async getStacksActivity(
+  private async getStacksActivityByAssetId(
+    account: AccountAddresses,
+    assetId: CryptoAssetId,
+    signal?: AbortSignal
+  ): Promise<BlockchainActivity[]> {
+    const sourceItems = await this.getRecentStacksSourceItems(account, signal);
+    const candidates = sourceItems.filter(item => mayTouchStacksAsset(item, assetId));
+    const [confirmedAll, pendingAll] = await Promise.all([
+      this.mapSourceItems(account, candidates, signal),
+      this.getPendingStacksActivity(account, signal),
+    ]);
+    return this.enrichWithMarketData(
+      [
+        ...pendingAll.filter(activity => activityTouchesAsset(activity, assetId)),
+        ...confirmedAll.filter(activity => activityTouchesAsset(activity, assetId)),
+      ],
+      signal
+    );
+  }
+
+  private async getRecentStacksSourceItems(
+    account: AccountAddresses,
+    signal?: AbortSignal
+  ): Promise<ActivitySourceItem[]> {
+    if (!hasStacksAddress(account)) return [];
+    const items: ActivitySourceItem[] = [];
+    let cursor: string | null = null;
+    for (let page = 0; page < activityByAssetScanPages; page++) {
+      const res = await this.hiroStacksApiClient.getPrincipalTransactions(
+        account.stacks.stxAddress,
+        { cursor, limit: stacksTxPageSize },
+        { signal }
+      );
+      items.push(...res.results.filter(isStacksActivityResultItem).map(toStacksSourceItem));
+      if (res.cursor.next === null) break;
+      cursor = res.cursor.next;
+    }
+    return items;
+  }
+
+  private async mapSourceItems(
+    account: AccountAddresses,
+    sourceItems: ActivitySourceItem[],
+    signal?: AbortSignal
+  ): Promise<BlockchainActivity[]> {
+    const ftChangesByTxId = await this.fetchFtBalanceChanges(account, sourceItems, signal);
+    const mapped = await Promise.all(
+      sourceItems.map(item =>
+        this.mapSourceItem(item, ftChangesByTxId.get(item.txid) ?? [], signal)
+      )
+    );
+    return mapped.filter((activity): activity is BlockchainActivity => activity !== null);
+  }
+
+  // BTC pending carry no timestamp, so they sit above the receipt_time-sorted STX pending.
+  private async getPendingActivity(
+    account: AccountAddresses,
+    btcTxs: Promise<BitcoinTransaction[]>,
+    signal?: AbortSignal
+  ): Promise<BlockchainActivity[]> {
+    const [stxPending, btcPending] = await Promise.all([
+      this.getPendingStacksActivity(account, signal),
+      this.getPendingBitcoinActivity(btcTxs),
+    ]);
+    return [...btcPending, ...stxPending];
+  }
+
+  private async getPendingStacksActivity(
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<BlockchainActivity[]> {
     if (!hasStacksAddress(account)) return [];
-
-    const [pendingTxs, txs, txEvents] = await Promise.all([
-      this.stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
-      this.hiroStacksApiClient.getAddressTransactions(
-        account.stacks.stxAddress,
-        { allPages: true, stopAfter: 20 },
-        { signal }
-      ),
-      this.hiroStacksApiClient.getTransactionEvents(
-        account.stacks.stxAddress,
-        { allPages: true, stopAfter: 20 },
-        { signal }
-      ),
-    ]);
-
-    const eventsByTxId = getEventsByTxId(txEvents);
-    const allTxs = [...pendingTxs, ...txs.map(t => t.tx)];
-    const results = await Promise.all(
-      allTxs.map(tx =>
-        this.getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id) ?? [], account, signal)
-      )
+    const txs = await this.stacksTransactionsService.getPendingTransactions(
+      account.stacks.stxAddress,
+      signal
     );
-    return results.filter(isDefined).sort(sortActivityByTimestampDesc);
+    const mapped = await Promise.all(
+      txs.map(tx => this.mapPendingStacksTx(tx, account.stacks.stxAddress, signal))
+    );
+    return mapped
+      .filter((activity): activity is BlockchainActivity => activity !== null)
+      .sort(sortActivityByTimestampDesc);
   }
 
-  private async getStacksTxActivity(
-    tx: HiroStacksTransaction | HiroStacksMempoolTransaction,
-    txEvents: HiroTransactionEvent[],
-    account: AccountAddresses,
+  private async getPendingBitcoinActivity(
+    btcTxs: Promise<BitcoinTransaction[]>
+  ): Promise<BlockchainActivity[]> {
+    const txs = await btcTxs;
+    return txs
+      .filter(tx => tx.height === undefined)
+      .map(mapBitcoinActivity)
+      .filter((activity): activity is BlockchainActivity => activity !== null);
+  }
+
+  // Classification is the only async dependency in mapping; the pure builders do the rest.
+  private async mapPendingStacksTx(
+    tx: StacksTx,
+    stxAddress: string,
     signal?: AbortSignal
-  ): Promise<BlockchainActivity | undefined> {
-    switch (tx.tx_type) {
-      case 'token_transfer':
-        return mapStacksTokenTransfer(tx, account);
-      case 'smart_contract': {
-        const events = await this.resolveStacksEvents(tx, txEvents, account, signal);
-        return mapStacksSmartContractDeploy(tx, account, events);
-      }
-      case 'contract_call': {
-        const [events, protocolInfo] = await Promise.all([
-          this.resolveStacksEvents(tx, txEvents, account, signal),
-          this.resolveProtocolInfo(
+  ): Promise<BlockchainActivity | null> {
+    const classified =
+      tx.tx_type === 'contract_call'
+        ? await this.classifyContractCall(
             tx.contract_call.contract_id,
             tx.contract_call.function_name,
             signal
-          ),
-        ]);
-        return mapStacksContractCall(tx, account, events, protocolInfo);
-      }
-      default:
-        return;
-    }
+          )
+        : undefined;
+    return buildPendingStacksActivity(tx, stxAddress, classified);
   }
 
-  private async resolveStacksEvents(
-    tx: HiroStacksTransaction | HiroStacksMempoolTransaction,
-    txEvents: HiroTransactionEvent[],
-    account: AccountAddresses,
+  private async mapSourceItem(
+    item: ActivitySourceItem,
+    ftChanges: BlockchainActivityBalanceChange[],
     signal?: AbortSignal
-  ): Promise<BlockchainActivityEvent[]> {
-    const stxAddress = account.stacks?.stxAddress;
-    if (!stxAddress) return [];
-
-    if (isMempoolTx(tx)) {
-      const transfers = getStacksAssetTransfers(tx, []);
-      return this.resolveTransfersToEvents(transfers, stxAddress, signal);
-    }
-
-    const rawEvents = extractStacksRawEvents(txEvents, stxAddress);
-    return this.resolveRawEvents(rawEvents, signal);
+  ): Promise<BlockchainActivity | null> {
+    if (item.chain === 'bitcoin') return mapBitcoinActivity(item.raw);
+    return this.mapStacksSourceItem(item.raw, ftChanges, signal);
   }
 
-  private async resolveRawEvents(
-    rawEvents: StacksRawActivityEvent[],
+  private async mapStacksSourceItem(
+    result: HiroPrincipalTransactionsResultItem,
+    ftChanges: BlockchainActivityBalanceChange[],
     signal?: AbortSignal
-  ): Promise<BlockchainActivityEvent[]> {
-    const events = await Promise.all(rawEvents.map(raw => this.resolveRawEvent(raw, signal)));
-    return events.filter(isDefined);
+  ): Promise<BlockchainActivity | null> {
+    const tx = result.transaction;
+    const classified =
+      tx.type === 'contract_call'
+        ? await this.classifyContractCall(
+            tx.contract_call.contract_id,
+            tx.contract_call.function_name,
+            signal
+          )
+        : undefined;
+    return buildConfirmedStacksActivity(result, ftChanges, classified);
   }
 
-  private async resolveRawEvent(
-    raw: StacksRawActivityEvent,
-    signal?: AbortSignal
-  ): Promise<BlockchainActivityEvent | undefined> {
-    try {
-      if (raw.assetIdentifier === 'STX') {
-        return {
-          action: raw.action,
-          asset: stxAsset,
-          counterparty: raw.counterparty,
-          amount: {
-            crypto: createMoney(initBigNumber(raw.rawAmount), 'STX'),
-            quote: createMoney(0, 'USD'),
-          },
-        };
-      }
-
-      if (raw.nftTokenHex) {
-        const sip9Asset = await this.sip9AssetService.getAsset(
-          raw.assetIdentifier,
-          raw.nftTokenHex,
-          signal
-        );
-        return {
-          action: raw.action,
-          asset: sip9Asset,
-          counterparty: raw.counterparty,
-          amount: {
-            crypto: createMoney(1, sip9Asset.name, 0),
-            quote: createMoney(0, 'USD'),
-          },
-        };
-      }
-
-      const sip10Asset = await this.sip10AssetService.getAsset(raw.assetIdentifier, signal);
-      return {
-        action: raw.action,
-        asset: sip10Asset,
-        counterparty: raw.counterparty,
-        amount: {
-          crypto: createMoney(initBigNumber(raw.rawAmount), sip10Asset.symbol, sip10Asset.decimals),
-          quote: createMoney(0, 'USD'),
-        },
-      };
-    } catch {
-      return undefined;
-    }
-  }
-
-  private async resolveTransfersToEvents(
-    transfers: StacksAssetTransfer[],
-    stxAddress: string,
-    signal?: AbortSignal
-  ): Promise<BlockchainActivityEvent[]> {
-    const events = await Promise.all(
-      transfers.map(t => this.resolveTransferToEvent(t, stxAddress, signal))
-    );
-    return events.filter(isDefined);
-  }
-
-  private async resolveTransferToEvent(
-    transfer: StacksAssetTransfer,
-    stxAddress: string,
-    signal?: AbortSignal
-  ): Promise<BlockchainActivityEvent | undefined> {
-    try {
-      const isSent = transfer.sender === stxAddress;
-
-      if (transfer.assetId === 'STX') {
-        return {
-          action: isSent ? 'sent' : 'received',
-          asset: stxAsset,
-          counterparty: isSent ? transfer.receiver : transfer.sender,
-          amount: {
-            crypto: createMoney(initBigNumber(transfer.tokenValue ?? '0'), 'STX'),
-            quote: createMoney(0, 'USD'),
-          },
-        };
-      }
-
-      if (transfer.assetCategory === CryptoAssetCategories.nft && transfer.tokenValue) {
-        const sip9Asset = await this.sip9AssetService.getAsset(
-          transfer.assetId,
-          transfer.tokenValue,
-          signal
-        );
-        return {
-          action: isSent ? 'sent' : 'received',
-          asset: sip9Asset,
-          counterparty: isSent ? transfer.receiver : transfer.sender,
-          amount: {
-            crypto: createMoney(1, sip9Asset.name, 0),
-            quote: createMoney(0, 'USD'),
-          },
-        };
-      }
-
-      const sip10Asset = await this.sip10AssetService.getAsset(transfer.assetId, signal);
-      return {
-        action: isSent ? 'sent' : 'received',
-        asset: sip10Asset,
-        counterparty: isSent ? transfer.receiver : transfer.sender,
-        amount: {
-          crypto: createMoney(
-            initBigNumber(transfer.tokenValue ?? '0'),
-            sip10Asset.symbol,
-            sip10Asset.decimals
-          ),
-          quote: createMoney(0, 'USD'),
-        },
-      };
-    } catch {
-      return undefined;
-    }
-  }
-
-  private async resolveProtocolInfo(
+  private async classifyContractCall(
     contractId: string,
     functionName: string,
     signal?: AbortSignal
-  ): Promise<{ protocol?: StacksProtocolId; action?: StacksProtocolAction }> {
+  ): Promise<ClassifiedContractCall> {
     const [address, contractName] = contractId.split('.');
+    if (address === undefined || contractName === undefined) {
+      return { action: 'contract-execution' };
+    }
     const protocol = await this.stacksProtocolService.getProtocolByAddress(address, signal);
-    if (!protocol) return {};
+    if (protocol === null) return { action: 'contract-execution' };
     const action = await this.stacksProtocolService.getContractActionType(
       protocol.id,
       contractName,
@@ -332,38 +307,152 @@ export class BlockchainActivityService {
       signal
     );
     return {
+      action: action ?? 'contract-execution',
       protocol: protocol.id,
-      action: action ?? undefined,
+      protocolName: protocol.name,
     };
   }
 
-  private async enrichWithMarketData(
-    activity: BlockchainActivity,
+  private async fetchFtBalanceChanges(
+    account: AccountAddresses,
+    sourceItems: ActivitySourceItem[],
     signal?: AbortSignal
-  ): Promise<BlockchainActivity> {
-    if (activity.events.length === 0) return activity;
-    const enrichedEvents = await Promise.all(
-      activity.events.map(event => this.enrichEventWithMarketData(event, signal))
+  ): Promise<Map<string, BlockchainActivityBalanceChange[]>> {
+    const txIds = sourceItems
+      .filter(item => item.chain === 'stacks' && item.raw.affected_balances.ft)
+      .map(item => item.txid);
+    if (txIds.length === 0) return new Map();
+
+    const principal = account.stacks?.stxAddress;
+    if (principal === undefined) return new Map();
+    const batches = chunk(txIds, balanceChangesBatchSize);
+    const rawBalanceChanges = (
+      await Promise.all(
+        batches.map(batch => this.fetchBalanceChangesBatch(principal, batch, signal))
+      )
+    ).flat();
+
+    const balanceChanges = await Promise.all(
+      rawBalanceChanges.filter(isFtBalanceChangeRow).map(async c => {
+        const mapped = await this.mapBalanceChange(c, signal);
+        return mapped === null ? null : { txId: c.tx_id, change: mapped };
+      })
     );
-    return { ...activity, events: enrichedEvents };
+
+    return groupFtChangesByTxId(balanceChanges);
   }
 
-  private async enrichEventWithMarketData(
-    event: BlockchainActivityEvent,
+  // One batch can still span multiple response pages (≤ 50 rows per call), so drain the cursor.
+  private async fetchBalanceChangesBatch(
+    principal: string,
+    txIds: string[],
     signal?: AbortSignal
-  ): Promise<BlockchainActivityEvent> {
-    if (!isFungibleAsset(event.asset)) return event;
+  ): Promise<HiroBalanceChangeResultItem[]> {
+    const rows: HiroBalanceChangeResultItem[] = [];
+    let cursor: string | null = null;
+    do {
+      const res = await this.hiroStacksApiClient.getPrincipalBalanceChanges(
+        principal,
+        { txIds, cursor },
+        { signal }
+      );
+      rows.push(...res.results);
+      cursor = res.cursor.next;
+    } while (cursor !== null);
+    return rows;
+  }
+
+  private async mapBalanceChange(
+    raw: FtBalanceChangeRow,
+    signal?: AbortSignal
+  ): Promise<BlockchainActivityBalanceChange | null> {
+    const amount = initBigNumber(raw.balance_change.net);
+    if (amount.isZero()) return null;
     try {
-      const marketData = await this.marketDataService.getMarketData(event.asset, signal);
+      const asset = await this.sip10AssetService.getAsset(raw.asset.identifier, signal);
       return {
-        ...event,
+        direction: amount.isNegative() ? 'sent' : 'received',
+        asset,
         amount: {
-          crypto: event.amount.crypto,
-          quote: baseCurrencyAmountInQuote(event.amount.crypto, marketData),
+          crypto: createMoney(amount.abs(), asset.symbol, asset.decimals),
+          quote: createMoney(0, 'USD'),
         },
       };
-    } catch {
-      return event;
+    } catch (error) {
+      // Cancellation must propagate — only genuine lookup failures degrade to null.
+      if (signal?.aborted) throw error;
+      return null;
     }
+  }
+
+  private async enrichWithMarketData(
+    activities: BlockchainActivity[],
+    signal?: AbortSignal
+  ): Promise<BlockchainActivity[]> {
+    const marketDataByKey = await this.fetchMarketData(activities, signal);
+    return applyMarketData(activities, marketDataByKey);
+  }
+
+  private async fetchMarketData(
+    activities: BlockchainActivity[],
+    signal?: AbortSignal
+  ): Promise<Map<string, MarketData>> {
+    const assetsByKey = new Map<string, FungibleCryptoAsset>();
+    for (const activity of activities) {
+      for (const change of activity.balanceChanges) {
+        if (change.asset.category === 'fungible') {
+          assetsByKey.set(assetQuoteKey(change.asset), change.asset);
+        }
+      }
+    }
+    const entries = await Promise.all(
+      [...assetsByKey].map(async ([key, asset]) => {
+        try {
+          return [key, await this.marketDataService.getMarketData(asset, signal)] as const;
+        } catch (error) {
+          // Cancellation must propagate — only genuine quote failures degrade to null.
+          if (signal?.aborted) throw error;
+          return null;
+        }
+      })
+    );
+    return new Map(
+      entries.filter((entry): entry is readonly [string, MarketData] => entry !== null)
+    );
+  }
+
+  private createSources(
+    account: AccountAddresses,
+    btcTxs: Promise<BitcoinTransaction[]>,
+    signal?: AbortSignal
+  ): ActivitySources {
+    return {
+      fetchAllBtcTx: async () => {
+        const txs = await btcTxs;
+        const items: ActivitySourceItem[] = [];
+        for (const tx of txs) {
+          // The merge keyspace is confirmed-only: unconfirmed txs belong to the pending
+          // stitch, and an unconfirmed timestamp would be an unstable cursor anchor.
+          if (tx.height === undefined || tx.time === undefined) continue;
+          items.push({ txid: tx.txid, chain: 'bitcoin', timestamp: tx.time, raw: tx });
+        }
+        return items;
+      },
+      fetchStacksTxPage: async (cursor: string | null) => {
+        if (!hasStacksAddress(account)) {
+          return { items: [], currentCursor: cursor, nextCursor: null };
+        }
+        const res = await this.hiroStacksApiClient.getPrincipalTransactions(
+          account.stacks.stxAddress,
+          { cursor, limit: stacksTxPageSize },
+          { signal }
+        );
+        return {
+          items: res.results.filter(isStacksActivityResultItem).map(toStacksSourceItem),
+          currentCursor: res.cursor.current,
+          nextCursor: res.cursor.next,
+        };
+      },
+    };
   }
 }

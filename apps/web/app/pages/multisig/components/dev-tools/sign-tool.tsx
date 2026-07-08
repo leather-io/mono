@@ -12,12 +12,23 @@ import { Button } from '@leather.io/ui';
 
 import { TextField } from '../text-field';
 
-const networks: AuthNetworkId[] = ['btc:mainnet', 'btc:testnet', 'stx:mainnet', 'stx:testnet'];
+const networks: AuthNetworkId[] = [
+  'btc:mainnet',
+  'btc:testnet',
+  'btc:regtest',
+  'stx:mainnet',
+  'stx:testnet',
+];
+
+function modeLabel(network: AuthNetworkId): string {
+  if (network.endsWith('mainnet')) return 'main';
+  if (network.endsWith('regtest')) return 'regtest';
+  return 'test';
+}
 
 function networkLabel(network: AuthNetworkId): string {
   const chain = network.startsWith('btc') ? 'BTC' : 'STX';
-  const mode = network.endsWith('mainnet') ? 'main' : 'test';
-  return `${chain} ${mode}`;
+  return `${chain} ${modeLabel(network)}`;
 }
 
 function assertSignable(transaction: MultisigTransaction): void {
@@ -36,7 +47,7 @@ export function SignTool() {
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<MultisigTransaction | null>(null);
-  const myAddress = useSession(network)?.identity.address;
+  const myPublicKey = useSession(network)?.identity.publicKey;
 
   async function run() {
     setIsRunning(true);
@@ -49,7 +60,7 @@ export function SignTool() {
       assertSignable(transaction);
       const account = await service.getVaultAccount(network, transaction.vaultAccountId);
       const signatures = network.startsWith('btc')
-        ? await signBtcTransaction(transaction, account, getMySigningPubkey(account, myAddress))
+        ? await signBtcTransaction(transaction, account, getMySigningPubkey(account, myPublicKey))
         : await signStxTransaction(transaction, account);
       setResult(await service.addTransactionSignatures(network, id, { signatures }));
     } catch (err) {

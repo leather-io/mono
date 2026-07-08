@@ -13,8 +13,14 @@ import { btcToSat, createMoney, satToBtc } from '@leather.io/utils';
 
 import { TextField } from '../text-field';
 
-const btcNetworks: AuthNetworkId[] = ['btc:mainnet', 'btc:testnet'];
+const btcNetworks: AuthNetworkId[] = ['btc:mainnet', 'btc:testnet', 'btc:regtest'];
 const feeTiers: TransactionFeeTier[] = ['low', 'standard', 'high'];
+
+function networkLabel(network: AuthNetworkId): string {
+  if (network === 'btc:mainnet') return 'mainnet';
+  if (network === 'btc:regtest') return 'regtest';
+  return 'testnet';
+}
 
 function parseBtcAmount(value: string): Money | undefined {
   const trimmed = value.trim();
@@ -83,7 +89,7 @@ export function BtcProposeTool() {
             size="sm"
             onClick={() => setNetwork(option)}
           >
-            {option === 'btc:mainnet' ? 'mainnet' : 'testnet'}
+            {networkLabel(option)}
           </Button>
         ))}
       </Flex>

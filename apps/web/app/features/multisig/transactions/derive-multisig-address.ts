@@ -13,6 +13,7 @@ import {
 } from '@leather.io/bitcoin';
 import type { VaultAccount } from '@leather.io/models';
 
+import { resolveBtcNetworkMode } from '../network/resolve-btc-network-mode';
 import { getMultisigDescriptor } from './btc-multisig-descriptor';
 
 // Signing pubkeys in signerIndex order — the canonical ordering the multisig
@@ -25,9 +26,7 @@ export function getOrderedSigningPubkeys(account: VaultAccount): string[] {
 
 function deriveBtcMultisigAddress(account: VaultAccount): string {
   const { scriptPubKey } = compileWshDescriptor(getMultisigDescriptor(account));
-  const network = getBtcSignerLibNetworkConfigByMode(
-    account.network === 'btc:mainnet' ? 'mainnet' : 'testnet'
-  );
+  const network = getBtcSignerLibNetworkConfigByMode(resolveBtcNetworkMode(account.network));
   const address = getAddressFromOutScript(scriptPubKey, network);
   if (!address) throw new Error('Could not derive BTC multisig address from descriptor');
   return address;

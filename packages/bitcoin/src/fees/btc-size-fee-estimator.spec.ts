@@ -86,9 +86,37 @@ describe('BtcSizeFeeEstimator', () => {
         p2tr_output_count: 1,
       });
 
-      expect(txVBytes).toEqual(393.25);
-      expect(txBytes).toEqual(609.5);
-      expect(txWeight).toEqual(1573);
+      expect(txVBytes).toEqual(393.5);
+      expect(txBytes).toEqual(610.5);
+      expect(txWeight).toEqual(1574);
+    });
+
+    it('should calculate p2wsh multisig transaction size covering the worst-case final vsize', () => {
+      const { txVBytes } = estimator.calcTxSize({
+        input_count: 1,
+        input_script: 'p2wsh',
+        input_m: 2,
+        input_n: 2,
+        p2wpkh_output_count: 1,
+        p2wsh_output_count: 1,
+      });
+
+      expect(txVBytes).toEqual(180.5);
+      expect(Math.ceil(txVBytes)).toBeGreaterThanOrEqual(181);
+    });
+
+    it('should calculate multi-input p2wsh multisig transaction size covering the worst-case final vsize', () => {
+      const { txVBytes } = estimator.calcTxSize({
+        input_count: 2,
+        input_script: 'p2wsh',
+        input_m: 2,
+        input_n: 3,
+        p2wpkh_output_count: 1,
+        p2wsh_output_count: 1,
+      });
+
+      expect(txVBytes).toEqual(294);
+      expect(Math.ceil(txVBytes)).toBeGreaterThanOrEqual(294);
     });
   });
 
@@ -119,11 +147,11 @@ describe('BtcSizeFeeEstimator', () => {
         p2wpkh_output_count: 1,
       });
 
-      // overhead: 10.75, inputs: 2 * 67.75 = 135.5, outputs: 1 * 31 = 31
-      expect(txVBytes).toEqual(177.25);
-      // extraRawBytes: 2.25, witnessBytes: 2 * 107 = 214
-      expect(txBytes).toEqual(393.5);
-      expect(txWeight).toEqual(709);
+      // overhead: 11, inputs: 2 * 67.75 = 135.5, outputs: 1 * 31 = 31
+      expect(txVBytes).toEqual(177.5);
+      // extraRawBytes: 3, witnessBytes: 2 * 107 = 214
+      expect(txBytes).toEqual(394.5);
+      expect(txWeight).toEqual(710);
     });
 
     it('should calculate size for p2tr-only inputs', () => {
@@ -133,11 +161,11 @@ describe('BtcSizeFeeEstimator', () => {
         p2tr_output_count: 1,
       });
 
-      // overhead: 10.75, inputs: 2 * 57.25 = 114.5, outputs: 1 * 43 = 43
-      expect(txVBytes).toEqual(168.25);
-      // extraRawBytes: 2.25, witnessBytes: 2 * 65 = 130
-      expect(txBytes).toEqual(300.5);
-      expect(txWeight).toEqual(673);
+      // overhead: 11, inputs: 2 * 57.25 = 114.5, outputs: 1 * 43 = 43
+      expect(txVBytes).toEqual(168.5);
+      // extraRawBytes: 3, witnessBytes: 2 * 65 = 130
+      expect(txBytes).toEqual(301.5);
+      expect(txWeight).toEqual(674);
     });
 
     it('should calculate size for mixed p2wpkh and p2tr inputs', () => {
@@ -148,11 +176,11 @@ describe('BtcSizeFeeEstimator', () => {
         p2tr_output_count: 1,
       });
 
-      // overhead: 10.75, inputs: 1 * 67.75 + 1 * 57.25 = 125, outputs: 31 + 43 = 74
-      expect(txVBytes).toEqual(209.75);
-      // extraRawBytes: 2.25, witnessBytes: 107 + 65 = 172
-      expect(txBytes).toEqual(384);
-      expect(txWeight).toEqual(839);
+      // overhead: 11, inputs: 1 * 67.75 + 1 * 57.25 = 125, outputs: 31 + 43 = 74
+      expect(txVBytes).toEqual(210);
+      // extraRawBytes: 3, witnessBytes: 107 + 65 = 172
+      expect(txBytes).toEqual(385);
+      expect(txWeight).toEqual(840);
     });
 
     it('should default optional output counts to zero', () => {
@@ -175,13 +203,13 @@ describe('BtcSizeFeeEstimator', () => {
         p2tr_output_count: 1,
       });
 
-      // overhead: getTxOverheadVBytes('p2wpkh', 3, 4) = 4 + 1 + 1 + 4 + 0.75 = 10.75
+      // overhead: getTxOverheadVBytes('p2wpkh', 3, 4) = 4 + 1 + 1 + 4 + 1.25 = 11.25
       // inputs: 2 * 67.75 + 1 * 57.25 = 192.75
       // outputs: 34 + 32 + 31 + 43 = 140
-      expect(txVBytes).toEqual(343.5);
-      // extraRawBytes: 2.25, witnessBytes: 2 * 107 + 1 * 65 = 279
-      expect(txBytes).toEqual(624.75);
-      expect(txWeight).toEqual(1374);
+      expect(txVBytes).toEqual(344);
+      // extraRawBytes: 3.75, witnessBytes: 2 * 107 + 1 * 65 = 279
+      expect(txBytes).toEqual(626.75);
+      expect(txWeight).toEqual(1376);
     });
   });
 });

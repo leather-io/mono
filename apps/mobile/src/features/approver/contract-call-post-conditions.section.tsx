@@ -10,6 +10,8 @@ import { assertExistence } from '@leather.io/utils';
 
 import { FTPostCondition } from './components/post-conditions/ft-post-condition';
 import { NFTPostCondition } from './components/post-conditions/nft-post-condition';
+import { PoxPostCondition } from './components/post-conditions/pox-post-condition';
+import { StakingPostCondition } from './components/post-conditions/staking-post-condition';
 import { StxPostCondition } from './components/post-conditions/stx-post-condition';
 
 export function ContractCallPostConditionsSection({
@@ -48,6 +50,26 @@ export function ContractCallPostConditionsSection({
           return (
             <NFTPostCondition
               key={`nft-${index}`}
+              stacksAddress={stacksAddress}
+              postCondition={pc}
+            />
+          );
+        }
+
+        if (pc.conditionType === PostConditionType.Staking) {
+          return (
+            <StakingPostCondition
+              key={`staking-${index}`}
+              stacksAddress={stacksAddress}
+              postCondition={pc}
+            />
+          );
+        }
+
+        if (pc.conditionType === PostConditionType.PoX) {
+          return (
+            <PoxPostCondition
+              key={`pox-${index}`}
               stacksAddress={stacksAddress}
               postCondition={pc}
             />

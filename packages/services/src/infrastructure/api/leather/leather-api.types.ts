@@ -1353,7 +1353,7 @@ export interface paths {
         content: {
           'application/json': {
             /** @enum {string} */
-            network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+            network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet' | 'btc:regtest';
             signature: string;
             publicKey: string;
             timestamp: number;
@@ -3225,19 +3225,26 @@ export interface paths {
             'application/json': {
               [key: string]: {
                 [key: string]:
+                  | 'send'
+                  | 'receive'
+                  | 'contract-execution'
+                  | 'contract-deploy'
                   | 'swap'
-                  | 'add-liquidity'
-                  | 'remove-liquidity'
-                  | 'stake'
-                  | 'unstake'
-                  | 'stack'
-                  | 'unstack'
+                  | 'bridge'
                   | 'deposit'
                   | 'withdraw'
-                  | 'borrow'
-                  | 'repay'
                   | 'claim-rewards'
-                  | 'bridge';
+                  | 'add-liquidity'
+                  | 'remove-liquidity'
+                  | 'stake-lp'
+                  | 'unstake-lp'
+                  | 'stack'
+                  | 'initiate-unstack'
+                  | 'complete-unstack'
+                  | 'liquid-stack'
+                  | 'liquid-unstack'
+                  | 'borrow'
+                  | 'repay';
               };
             };
           };
@@ -4504,7 +4511,12 @@ export interface paths {
           content: {
             'application/json': {
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               publicKey: string;
               address: string;
               id: string;
@@ -4583,7 +4595,12 @@ export interface paths {
               id: string;
               vaultAccountId: string;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               proposerUserId: string;
               proposalTimestamp: number;
               nonce: number | null;
@@ -4694,7 +4711,12 @@ export interface paths {
                 id: string;
                 vaultAccountId: string;
                 /** @enum {string} */
-                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                network:
+                  | 'stx:mainnet'
+                  | 'stx:testnet'
+                  | 'btc:mainnet'
+                  | 'btc:testnet'
+                  | 'btc:regtest';
                 proposerUserId: string;
                 proposalTimestamp: number;
                 nonce: number | null;
@@ -4789,7 +4811,12 @@ export interface paths {
               id: string;
               vaultAccountId: string;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               proposerUserId: string;
               proposalTimestamp: number;
               nonce: number | null;
@@ -4903,7 +4930,12 @@ export interface paths {
               id: string;
               vaultAccountId: string;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               proposerUserId: string;
               proposalTimestamp: number;
               nonce: number | null;
@@ -5017,7 +5049,12 @@ export interface paths {
               id: string;
               vaultAccountId: string;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               proposerUserId: string;
               proposalTimestamp: number;
               nonce: number | null;
@@ -5131,7 +5168,12 @@ export interface paths {
               id: string;
               vaultAccountId: string;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               proposerUserId: string;
               proposalTimestamp: number;
               nonce: number | null;
@@ -5246,7 +5288,12 @@ export interface paths {
               theme: string | null;
               icon: string | null;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               /** @enum {string} */
               status: 'pending' | 'active' | 'cancelled';
               /** @enum {string} */
@@ -5298,7 +5345,7 @@ export interface paths {
             theme?: string;
             icon?: string;
             /** @enum {string} */
-            network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+            network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet' | 'btc:regtest';
             members: {
               address: string;
               name?: string;
@@ -5319,7 +5366,12 @@ export interface paths {
               theme: string | null;
               icon: string | null;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               /** @enum {string} */
               status: 'pending' | 'active' | 'cancelled';
               members: {
@@ -5330,7 +5382,12 @@ export interface paths {
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
                   /** @enum {string} */
-                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  network:
+                    | 'stx:mainnet'
+                    | 'stx:testnet'
+                    | 'btc:mainnet'
+                    | 'btc:testnet'
+                    | 'btc:regtest';
                   publicKey: string;
                   address: string;
                   id: string;
@@ -5416,7 +5473,12 @@ export interface paths {
               theme: string | null;
               icon: string | null;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               /** @enum {string} */
               status: 'pending' | 'active' | 'cancelled';
               members: {
@@ -5427,7 +5489,12 @@ export interface paths {
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
                   /** @enum {string} */
-                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  network:
+                    | 'stx:mainnet'
+                    | 'stx:testnet'
+                    | 'btc:mainnet'
+                    | 'btc:testnet'
+                    | 'btc:regtest';
                   publicKey: string;
                   address: string;
                   id: string;
@@ -5513,7 +5580,12 @@ export interface paths {
               theme: string | null;
               icon: string | null;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               /** @enum {string} */
               status: 'pending' | 'active' | 'cancelled';
               members: {
@@ -5524,7 +5596,12 @@ export interface paths {
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
                   /** @enum {string} */
-                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  network:
+                    | 'stx:mainnet'
+                    | 'stx:testnet'
+                    | 'btc:mainnet'
+                    | 'btc:testnet'
+                    | 'btc:regtest';
                   publicKey: string;
                   address: string;
                   id: string;
@@ -5619,7 +5696,12 @@ export interface paths {
               theme: string | null;
               icon: string | null;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               /** @enum {string} */
               status: 'pending' | 'active' | 'cancelled';
               members: {
@@ -5630,7 +5712,12 @@ export interface paths {
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
                   /** @enum {string} */
-                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  network:
+                    | 'stx:mainnet'
+                    | 'stx:testnet'
+                    | 'btc:mainnet'
+                    | 'btc:testnet'
+                    | 'btc:regtest';
                   publicKey: string;
                   address: string;
                   id: string;
@@ -5732,7 +5819,12 @@ export interface paths {
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
                   /** @enum {string} */
-                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  network:
+                    | 'stx:mainnet'
+                    | 'stx:testnet'
+                    | 'btc:mainnet'
+                    | 'btc:testnet'
+                    | 'btc:regtest';
                   publicKey: string;
                   address: string;
                   id: string;
@@ -5747,7 +5839,12 @@ export interface paths {
                 theme: string | null;
                 icon: string | null;
                 /** @enum {string} */
-                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                network:
+                  | 'stx:mainnet'
+                  | 'stx:testnet'
+                  | 'btc:mainnet'
+                  | 'btc:testnet'
+                  | 'btc:regtest';
                 /** @enum {string} */
                 status: 'pending' | 'active' | 'cancelled';
                 members: {
@@ -5758,7 +5855,12 @@ export interface paths {
                   membershipStatus: 'invited' | 'joined' | 'declined';
                   user: {
                     /** @enum {string} */
-                    network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                    network:
+                      | 'stx:mainnet'
+                      | 'stx:testnet'
+                      | 'btc:mainnet'
+                      | 'btc:testnet'
+                      | 'btc:regtest';
                     publicKey: string;
                     address: string;
                     id: string;
@@ -5861,7 +5963,12 @@ export interface paths {
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
                   /** @enum {string} */
-                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  network:
+                    | 'stx:mainnet'
+                    | 'stx:testnet'
+                    | 'btc:mainnet'
+                    | 'btc:testnet'
+                    | 'btc:regtest';
                   publicKey: string;
                   address: string;
                   id: string;
@@ -5876,7 +5983,12 @@ export interface paths {
                 theme: string | null;
                 icon: string | null;
                 /** @enum {string} */
-                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                network:
+                  | 'stx:mainnet'
+                  | 'stx:testnet'
+                  | 'btc:mainnet'
+                  | 'btc:testnet'
+                  | 'btc:regtest';
                 /** @enum {string} */
                 status: 'pending' | 'active' | 'cancelled';
                 members: {
@@ -5887,7 +5999,12 @@ export interface paths {
                   membershipStatus: 'invited' | 'joined' | 'declined';
                   user: {
                     /** @enum {string} */
-                    network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                    network:
+                      | 'stx:mainnet'
+                      | 'stx:testnet'
+                      | 'btc:mainnet'
+                      | 'btc:testnet'
+                      | 'btc:regtest';
                     publicKey: string;
                     address: string;
                     id: string;
@@ -5985,7 +6102,12 @@ export interface paths {
               name: string;
               icon: string | null;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               threshold: number;
               multisigAddress: string;
               accountIndex: number;
@@ -6063,13 +6185,23 @@ export interface paths {
               name: string;
               icon: string | null;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               threshold: number;
               multisigAddress: string;
               accountIndex: number;
               signers: {
                 /** @enum {string} */
-                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                network:
+                  | 'stx:mainnet'
+                  | 'stx:testnet'
+                  | 'btc:mainnet'
+                  | 'btc:testnet'
+                  | 'btc:regtest';
                 publicKey: string;
                 address: string;
                 id: string;
@@ -6169,13 +6301,23 @@ export interface paths {
               name: string;
               icon: string | null;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               threshold: number;
               multisigAddress: string;
               accountIndex: number;
               signers: {
                 /** @enum {string} */
-                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                network:
+                  | 'stx:mainnet'
+                  | 'stx:testnet'
+                  | 'btc:mainnet'
+                  | 'btc:testnet'
+                  | 'btc:regtest';
                 publicKey: string;
                 address: string;
                 id: string;
@@ -6263,13 +6405,23 @@ export interface paths {
               name: string;
               icon: string | null;
               /** @enum {string} */
-              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
               threshold: number;
               multisigAddress: string;
               accountIndex: number;
               signers: {
                 /** @enum {string} */
-                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                network:
+                  | 'stx:mainnet'
+                  | 'stx:testnet'
+                  | 'btc:mainnet'
+                  | 'btc:testnet'
+                  | 'btc:regtest';
                 publicKey: string;
                 address: string;
                 id: string;

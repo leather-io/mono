@@ -58,6 +58,12 @@ describe('buildSignInMessage', () => {
       'Sign in to Leather\nNetwork: testnet\nIssued: 1780651887'
     );
   });
+
+  it('reflects the regtest network mode', () => {
+    expect(buildSignInMessage('btc:regtest', 1780651887).message).toBe(
+      'Sign in to Leather\nNetwork: regtest\nIssued: 1780651887'
+    );
+  });
 });
 
 describe('getJwtExpiry', () => {
