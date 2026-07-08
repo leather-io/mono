@@ -806,7 +806,7 @@ msgstr "Failed"
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:238
+#: src/features/psbt-signer/psbt-signer.tsx:242
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
 
@@ -850,7 +850,7 @@ msgstr "Feature waitlist notification"
 msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
-#: src/features/psbt-signer/psbt-signer.tsx:203
+#: src/features/psbt-signer/psbt-signer.tsx:207
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -955,7 +955,7 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
-#: src/features/psbt-signer/psbt-signer.tsx:300
+#: src/features/psbt-signer/psbt-signer.tsx:310
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -1310,6 +1310,10 @@ msgstr "Paste"
 msgid "Paste or type Secret Key to add wallet"
 msgstr "Paste or type Secret Key to add wallet"
 
+#: src/features/psbt-signer/components/unrecognized-outputs-card.tsx:12
+msgid "Pay-to-anchor output"
+msgstr "Pay-to-anchor output"
+
 #: src/features/approver/components/status-row/status-row-base.tsx:27
 #: src/features/approver/components/status-row/status-row-base.tsx:30
 msgid "Pending"
@@ -1550,7 +1554,7 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:268
+#: src/features/psbt-signer/psbt-signer.tsx:272
 msgid "Send token"
 msgstr "Send token"
 
@@ -1584,7 +1588,7 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
-#: src/features/psbt-signer/psbt-signer.tsx:299
+#: src/features/psbt-signer/psbt-signer.tsx:309
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1832,11 +1836,19 @@ msgstr "This is your Taproot address for receiving tokens on the Bitcoin network
 msgid "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
 msgstr "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
 
+#: src/features/psbt-signer/components/psbt-request-unknown-output-warning-label.tsx:14
+msgid "This transaction sends funds to an output Leather can’t display as an address. Continue only if you trust {origin}"
+msgstr "This transaction sends funds to an output Leather can’t display as an address. Continue only if you trust {origin}"
+
+#: src/features/psbt-signer/components/psbt-request-unknown-output-warning-label.tsx:15
+msgid "This transaction sends funds to an output Leather can’t display as an address. Continue only if you trust this app."
+msgstr "This transaction sends funds to an output Leather can’t display as an address. Continue only if you trust this app."
+
 #: src/features/account/components/available-account-balance.tsx:57
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
-#: src/features/psbt-signer/psbt-signer.tsx:281
+#: src/features/psbt-signer/psbt-signer.tsx:288
 msgid "To address"
 msgstr "To address"
 
@@ -1869,7 +1881,7 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:312
+#: src/features/psbt-signer/psbt-signer.tsx:322
 msgid "Total spend"
 msgstr "Total spend"
 
@@ -1946,6 +1958,14 @@ msgstr "Unknown error during version check"
 #: src/components/splash-screen-guard/splash-screen-guard.tsx:137
 msgid "Unlock"
 msgstr "Unlock"
+
+#: src/features/psbt-signer/components/unrecognized-outputs-card.tsx:13
+msgid "Unrecognized output"
+msgstr "Unrecognized output"
+
+#: src/features/psbt-signer/components/psbt-request-unknown-output-warning-label.tsx:12
+msgid "Unverified recipient"
+msgstr "Unverified recipient"
 
 #: src/utils/app-store-utils.ts:51
 msgid "Update from {storeName}"
@@ -2077,7 +2097,7 @@ msgstr "You will transfer less than or equal to"
 msgid "You will transfer more than"
 msgstr "You will transfer more than"
 
-#: src/features/psbt-signer/psbt-signer.tsx:275
+#: src/features/psbt-signer/psbt-signer.tsx:282
 msgid "You’ll send"
 msgstr "You’ll send"
 

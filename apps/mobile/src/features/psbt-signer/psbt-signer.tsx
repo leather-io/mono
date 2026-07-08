@@ -49,6 +49,8 @@ import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet'
 import { BtcStatusRow } from '../approver/components/status-row/btc-status-row';
 import { useOpenUrl } from '../browser/browser/use-open-url';
 import { PsbtRequestSighashWarningLabel } from './components/psbt-request-sighash-warning-label';
+import { PsbtRequestUnknownOutputWarningLabel } from './components/psbt-request-unknown-output-warning-label';
+import { UnrecognizedOutputsCard } from './components/unrecognized-outputs-card';
 import { signTx } from './signer';
 import { useAccountsFromPsbt } from './use-accounts-from-psbt';
 import { usePsbtPayers } from './use-psbt-payers';
@@ -138,6 +140,8 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
       amount: createMoney(new BigNumber(output.value), 'BTC'),
       address: output.address,
     }));
+
+  const unrecognizedOutputs = psbtDetails.psbtOutputs.filter(output => output.address === null);
 
   const coinSelectionUtxos = utxos.value?.available ?? [];
 
@@ -267,6 +271,9 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
         <Approver.Container>
           <Approver.Header title={t`Send token`} />
           {psbtDetails.isPsbtMutable && <PsbtRequestSighashWarningLabel origin={origin} />}
+          {unrecognizedOutputs.length > 0 && (
+            <PsbtRequestUnknownOutputWarningLabel origin={origin} />
+          )}
           {broadcastedTxid && <BtcStatusRow txid={broadcastedTxid} />}
 
           <Approver.Overview>
@@ -280,6 +287,9 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
             <Approver.Section>
               <Approver.Subheader>{t`To address`}</Approver.Subheader>
               <OutcomeAddressesCard addresses={recipients.map(r => r.address)} />
+              {unrecognizedOutputs.length > 0 && (
+                <UnrecognizedOutputsCard outputs={unrecognizedOutputs} />
+              )}
             </Approver.Section>
           </Approver.Overview>
 
