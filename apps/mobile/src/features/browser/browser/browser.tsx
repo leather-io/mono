@@ -10,10 +10,11 @@ import { useAppDispatch } from '@/store/utils';
 import * as Linking from 'expo-linking';
 
 import injectedProvider from '@leather.io/provider/mobile';
-import { RpcResponses, getInfo, parseEndpointRequest, supportedMethods } from '@leather.io/rpc';
+import { RpcResponses } from '@leather.io/rpc';
 import { Box, useTheme } from '@leather.io/ui/native';
 
 import { ApproverSheet } from '../approver-sheet/approver-sheet';
+import { resolveBrowserRpcRequest } from './message-routing';
 import { captureScreenshot, createGetInfoResponse, createSupportedMethodsResponse } from './utils';
 
 const CONTENT_OFFSET_FOR_BROWSER_CLOSE = 150;
@@ -111,21 +112,22 @@ export function Browser({
   }
 
   function onMessageHandler(event: WebViewMessageEvent) {
-    const newMessage = JSON.parse(event.nativeEvent.data);
-    const parsedMessage = parseEndpointRequest(newMessage);
+    const action = resolveBrowserRpcRequest({
+      data: event.nativeEvent.data,
+      frameUrl: event.nativeEvent.url,
+      topFrameOrigin: origin,
+    });
 
-    if (!parsedMessage) return;
-
-    const getInfoMessage = getInfo.request.safeParse(parsedMessage);
-    if (getInfoMessage.success) {
-      return sendResult(createGetInfoResponse(getInfoMessage.data));
+    switch (action.type) {
+      case 'get-info':
+        return sendResult(createGetInfoResponse(action.request));
+      case 'supported-methods':
+        return sendResult(createSupportedMethodsResponse(action.request));
+      case 'present':
+        return approverSheetRef.current?.present(action.request, action.origin);
+      default:
+        return;
     }
-
-    const supportedMethodsMessage = supportedMethods.request.safeParse(parsedMessage);
-    if (supportedMethodsMessage.success) {
-      return sendResult(createSupportedMethodsResponse(supportedMethodsMessage.data));
-    }
-    if (origin) approverSheetRef.current?.present(parsedMessage, origin);
   }
 
   return (
