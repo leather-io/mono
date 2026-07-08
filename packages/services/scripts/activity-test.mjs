@@ -22,11 +22,11 @@ loadEnv();
 const args = process.argv.slice(2);
 const rawMode = args.includes('--raw');
 const diagMode = args.includes('--diag');
-const filterChain = args.find(a => a.startsWith('--chain='))?.split('=')[1];
-const filterAsset = args.find(a => a.startsWith('--asset='))?.split('=')[1];
-const filterProtocol = args.find(a => a.startsWith('--protocol='))?.split('=')[1];
+const walkAll = args.includes('--all');
+const txidsMode = args.includes('--txids');
 const limitArg = args.find(a => a.startsWith('--limit='))?.split('=')[1];
-const offsetArg = args.find(a => a.startsWith('--offset='))?.split('=')[1];
+const pagesArg = args.find(a => a.startsWith('--pages='))?.split('=')[1];
+const assetArg = args.find(a => a.startsWith('--asset='))?.split('=')[1];
 
 const Types = {
   Environment: Symbol.for('Environment'),
@@ -100,23 +100,26 @@ function truncateAddress(addr) {
 function logActivityDetailed(activities) {
   for (const a of activities) {
     const time = formatTimestamp(a.timestamp);
-    const txShort = a.txid?.slice(0, 16) + '...';
+    const txShort = a.txid?.slice(0, 12) + '…';
+    const proto = a.protocol ? ` [${a.protocol}]` : '';
     const contractInfo = a.contract
-      ? ` | ${a.contract.type}${a.contract.protocol ? ` [${a.contract.protocol}${a.contract.action ? `:${a.contract.action}` : ''}]` : ''}`
+      ? a.contract.type === 'call'
+        ? ` ${a.contract.functionName}()`
+        : ` deploy ${a.contract.contractId}`
       : '';
+    const counterparty = a.counterparty ? ` ↔ ${truncateAddress(a.counterparty)}` : '';
 
     const fee = formatAmount(a.fee);
     const height = a.blockHeight ?? '-';
     console.log(
-      `  ${time} | ${a.status.padEnd(7)} | ${a.chain.padEnd(7)} | ${a.initiatedByUser ? 'SENT' : 'RECV'} | blk ${String(height).padEnd(7)} | fee ${fee} | ${txShort}${contractInfo}`
+      `  ${time} | ${a.status.padEnd(7)} | ${a.chain.padEnd(7)} | ${(a.initiatedByUser ? 'OUT' : 'IN').padEnd(3)} | ${a.action.padEnd(16)} | blk ${String(height).padEnd(8)} | fee ${fee} | ${txShort}${proto}${contractInfo}${counterparty}`
     );
 
-    for (const e of a.events) {
-      const amount = formatAmount(e.amount?.crypto);
-      const quote = formatQuote(e.amount?.quote);
-      const counterparty = e.counterparty ? truncateAddress(e.counterparty) : '';
+    for (const bc of a.balanceChanges) {
+      const amount = formatAmount(bc.amount?.crypto);
+      const quote = formatQuote(bc.amount?.quote);
       console.log(
-        `    ${e.action.padEnd(8)} ${amount}${quote !== '-' ? ` (${quote})` : ''}${counterparty ? ` ↔ ${counterparty}` : ''}`
+        `    ${bc.direction.padEnd(8)} ${amount} ${bc.asset?.symbol ?? ''}${quote !== '-' ? ` (${quote})` : ''}`
       );
     }
   }
@@ -169,7 +172,7 @@ async function runBtcDiagnostics(container, account) {
   console.log('\n--- Bitcoin Transaction Diagnostics ---');
 
   const start = performance.now();
-  const txs = await btcService.getAccountTransactions(account);
+  const txs = await btcService.getAccountTransactions(account, { page: 1, pageSize: 1000 });
   const fetchMs = Math.round(performance.now() - start);
 
   console.log(`  Fetch time: ${fetchMs}ms`);
@@ -291,6 +294,57 @@ async function runDiagnostics(container, account) {
   }
 }
 
+function parseAssetId(raw) {
+  const idx = raw.indexOf(':');
+  if (idx === -1) return { protocol: raw, id: '' };
+  return { protocol: raw.slice(0, idx), id: raw.slice(idx + 1) };
+}
+
+async function runActivityByAsset(service, account, raw) {
+  const assetId = parseAssetId(raw);
+  console.log(
+    `\n--- Activity by asset: protocol=${assetId.protocol} id=${assetId.id || '(none)'} ---`
+  );
+
+  const start = performance.now();
+  const items = await service.getActivityByAssetId(account, assetId);
+  const duration = Math.round(performance.now() - start);
+  console.log(`  ${items.length} items (${duration}ms)`);
+
+  if (rawMode) console.log(JSON.stringify(items, null, 2));
+  else logActivityDetailed(items);
+
+  let pendingAfterConfirmed = 0;
+  let seenConfirmed = false;
+  let assetMismatches = 0;
+  const isNative = assetId.protocol === 'nativeBtc' || assetId.protocol === 'nativeStx';
+  for (const a of items) {
+    if (a.status === 'pending' && seenConfirmed) pendingAfterConfirmed++;
+    if (a.status !== 'pending') seenConfirmed = true;
+    if (assetId.protocol === 'nativeBtc') {
+      if (a.chain !== 'bitcoin') assetMismatches++;
+    } else if (a.status !== 'pending') {
+      const matches = a.balanceChanges.some(bc =>
+        assetId.protocol === 'sip10'
+          ? bc.asset.assetId === assetId.id
+          : isNative && bc.asset.symbol === assetId.id
+      );
+      if (!matches) assetMismatches++;
+    }
+  }
+
+  console.log(`\n  Invariants:`);
+  console.log(
+    `    Pending above confirmed:  ${pendingAfterConfirmed} ${pendingAfterConfirmed === 0 ? '✓' : '✗'}`
+  );
+  console.log(
+    `    Confirmed match asset:    ${assetMismatches} mismatch ${assetMismatches === 0 ? '✓' : '✗'}`
+  );
+
+  console.log('\n' + '='.repeat(60));
+  console.log('Done');
+}
+
 async function main() {
   const { BlockchainActivityService } = await import('@leather.io/services');
 
@@ -307,87 +361,106 @@ async function main() {
   console.log(`BTC: ${account.bitcoin?.zeroIndexNativeSegwitPayerAddress ?? 'none'}`);
   console.log(`STX: ${account.stacks?.stxAddress ?? 'none'}`);
   console.log(`Mode: ${rawMode ? 'raw JSON' : diagMode ? 'diagnostics' : 'formatted'}`);
-  if (filterChain) console.log(`Chain filter: ${filterChain}`);
-  if (filterAsset) console.log(`Asset filter: ${filterAsset}`);
-  if (filterProtocol) console.log(`Protocol filter: ${filterProtocol}`);
-  if (limitArg) console.log(`Limit: ${limitArg}`);
-  if (offsetArg) console.log(`Offset: ${offsetArg}`);
+  console.log(`Page size: ${limitArg ?? 50} | Max pages: ${walkAll ? 'all' : (pagesArg ?? 5)}`);
   console.log('='.repeat(60));
+
+  if (assetArg) {
+    await runActivityByAsset(service, account, assetArg);
+    return;
+  }
 
   if (diagMode) {
     await runDiagnostics(container, account);
   }
 
-  const filter = {};
-  if (filterAsset) {
-    filter.asset = {
-      protocol: 'sip10',
-      chain: 'stacks',
-      symbol: '',
-      assetId: filterAsset,
-      decimals: 0,
-      name: '',
-      imageUrl: '',
-    };
-  } else if (filterProtocol) {
-    filter.protocol = filterProtocol;
-  } else if (filterChain) {
-    filter.chain = filterChain;
-  }
+  const pageLimit = limitArg ? Number(limitArg) : 50;
+  const maxPages = walkAll ? Infinity : pagesArg ? Number(pagesArg) : 5;
 
-  const request = { account };
-  if (Object.keys(filter).length > 0) request.filter = filter;
-  if (limitArg) {
-    request.pagination = {
-      limit: Number(limitArg),
-      offset: Number(offsetArg ?? 0),
-    };
-  }
+  const allItems = [];
+  const seenTxids = new Set();
+  let duplicates = 0;
+  let sizeViolations = 0;
+  let cursor;
+  let pageNum = 0;
 
   const start = performance.now();
   try {
-    const { items, meta } = await service.getActivity(request);
+    while (pageNum < maxPages) {
+      const { items, nextCursor, hasMore } = await service.getActivity({
+        account,
+        limit: pageLimit,
+        cursor,
+      });
+      pageNum++;
+
+      console.log(`\n--- Page ${pageNum} | ${items.length} items | hasMore=${hasMore} ---`);
+      if (hasMore && items.length !== pageLimit) {
+        sizeViolations++;
+        console.log(`  ⚠️  non-final page has ${items.length} items, expected ${pageLimit}`);
+      }
+      for (const a of items) {
+        if (seenTxids.has(a.txid)) {
+          duplicates++;
+          console.log(`  ⚠️  DUPLICATE txid across pages: ${a.txid}`);
+        }
+        seenTxids.add(a.txid);
+      }
+
+      if (rawMode) console.log(JSON.stringify(items, null, 2));
+      else logActivityDetailed(items);
+
+      allItems.push(...items);
+
+      if (nextCursor) {
+        console.log(
+          `  → cursor: afterKey=${nextCursor.afterKey?.slice(0, 24)}… stacksTxPageToken=${nextCursor.stacksTxPageToken ?? 'null'} stacksTxDone=${nextCursor.stacksTxDone}`
+        );
+      }
+      if (!hasMore || !nextCursor) break;
+      cursor = nextCursor;
+    }
     const duration = Math.round(performance.now() - start);
 
-    console.log(`\n--- Activity (${duration}ms) ---`);
+    // Confirmed items must be strictly newest-first; pending sit on top and are exempt.
+    const confirmed = allItems.filter(a => a.status !== 'pending');
+    let orderViolations = 0;
+    for (let i = 1; i < confirmed.length; i++) {
+      if (confirmed[i].timestamp > confirmed[i - 1].timestamp) orderViolations++;
+    }
+
+    const chains = new Map();
+    const actions = new Map();
+    const statuses = new Map();
+    for (const a of allItems) {
+      chains.set(a.chain, (chains.get(a.chain) ?? 0) + 1);
+      statuses.set(a.status, (statuses.get(a.status) ?? 0) + 1);
+      actions.set(a.action, (actions.get(a.action) ?? 0) + 1);
+    }
+
+    console.log(`\n--- Summary (${duration}ms, ${pageNum} pages) ---`);
+    console.log(`  Total items: ${allItems.length}`);
+    console.log(`  Chains: ${[...chains.entries()].map(([k, v]) => `${k}=${v}`).join(', ')}`);
+    console.log(`  Statuses: ${[...statuses.entries()].map(([k, v]) => `${k}=${v}`).join(', ')}`);
+    console.log(`  Actions: ${[...actions.entries()].map(([k, v]) => `${k}=${v}`).join(', ')}`);
+    console.log(`\n  Invariants:`);
+    console.log(`    Duplicate txids across pages: ${duplicates} ${duplicates === 0 ? '✓' : '✗'}`);
     console.log(
-      `Showing: ${items.length} | Total: ${meta.total} | Offset: ${meta.offset} | Limit: ${meta.limit}`
+      `    Non-final pages off-size:     ${sizeViolations} ${sizeViolations === 0 ? '✓' : '✗'}`
+    );
+    console.log(
+      `    Confirmed order violations:   ${orderViolations} ${orderViolations === 0 ? '✓' : '✗'}`
     );
 
-    if (items.length === 0) {
-      console.log('  (no activity found)');
-    } else if (rawMode) {
-      console.log(JSON.stringify(items, null, 2));
-    } else {
-      const displayLimit = 30;
-      logActivityDetailed(items.slice(0, displayLimit));
-      if (items.length > displayLimit) {
-        console.log(`  ... and ${items.length - displayLimit} more in this page`);
-      }
-
-      const chains = new Map();
-      const actions = new Map();
-      const statuses = new Map();
-      for (const a of items) {
-        chains.set(a.chain, (chains.get(a.chain) ?? 0) + 1);
-        statuses.set(a.status, (statuses.get(a.status) ?? 0) + 1);
-        for (const e of a.events) {
-          actions.set(e.action, (actions.get(e.action) ?? 0) + 1);
-        }
-      }
-      console.log(`\n  Summary:`);
-      console.log(`    Chains: ${[...chains.entries()].map(([k, v]) => `${k}=${v}`).join(', ')}`);
-      console.log(
-        `    Statuses: ${[...statuses.entries()].map(([k, v]) => `${k}=${v}`).join(', ')}`
-      );
-      console.log(`    Actions: ${[...actions.entries()].map(([k, v]) => `${k}=${v}`).join(', ')}`);
+    if (txidsMode) {
+      console.log('--- TXID SEQUENCE ---');
+      for (const a of allItems) console.log(`TXID ${a.txid}`);
     }
   } catch (err) {
     const duration = Math.round(performance.now() - start);
-    console.error(`\n--- Activity FAILED (${duration}ms) ---`);
+    console.error(`\n--- Activity FAILED (${duration}ms, page ${pageNum + 1}) ---`);
     console.error(`  ERROR: ${err.message}`);
     if (err.stack) {
-      console.error(err.stack.split('\n').slice(0, 5).join('\n'));
+      console.error(err.stack.split('\n').slice(0, 6).join('\n'));
     }
   }
 

@@ -8,6 +8,7 @@ const seededNetworks: AuthNetworkId[] = [
   'btc:mainnet',
   'stx:testnet',
   'btc:testnet',
+  'btc:regtest',
 ];
 
 export function seedMultisigMockSessions(): void {

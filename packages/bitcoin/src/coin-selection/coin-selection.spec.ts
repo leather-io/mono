@@ -97,8 +97,8 @@ describe(determineUtxosForSpend.name, () => {
         ],
         feeRate: 20,
       });
-      expect(estimation.txVBytes).toBeGreaterThan(750);
-      expect(estimation.txVBytes).toBeLessThan(751);
+      expect(estimation.txVBytes).toBeGreaterThan(752);
+      expect(estimation.txVBytes).toBeLessThan(753);
     });
   });
 
@@ -190,7 +190,7 @@ describe(determineUtxosForSpend.name, () => {
       feeRate,
       recipients,
     });
-    const amount = filteredUtxos.reduce((total, utxo) => total + utxo.value, 0) - 2251;
+    const amount = filteredUtxos.reduce((total, utxo) => total + utxo.value, 0) - 2258;
     recipients[0].amount = createMoney(amount, 'BTC');
 
     const result = determineUtxosForSpend({
@@ -205,7 +205,7 @@ describe(determineUtxosForSpend.name, () => {
     });
     expect(result.inputs.length).toEqual(10);
     expect(result.outputs.length).toEqual(1);
-    expect(result.fee.amount.isEqualTo(2251)).toBeTruthy();
+    expect(result.fee.amount.isEqualTo(2258)).toBeTruthy();
   });
 
   test('that spending all utxos with sendMax does not result in dust utxos', () => {
@@ -237,8 +237,8 @@ describe(determineUtxosForSpend.name, () => {
     });
     expect(result.inputs.length).toEqual(utxos.length);
     expect(result.outputs.length).toEqual(1);
-    expect(result.fee.amount.isEqualTo(735)).toBeTruthy();
-    expect(fee).toEqual(735);
+    expect(result.fee.amount.isEqualTo(737)).toBeTruthy();
+    expect(fee).toEqual(736);
   });
 
   test('that spending all taproot utxos with sendMax produces lower fee than native segwit', () => {

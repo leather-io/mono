@@ -1,12 +1,21 @@
 import { injectable } from 'inversify';
 import { values } from 'remeda';
 
-import type { StacksProtocol, StacksProtocolAction, StacksProtocolId } from '@leather.io/models';
+import {
+  type StacksProtocol,
+  type StacksProtocolAction,
+  type StacksProtocolId,
+  stacksProtocolActions,
+} from '@leather.io/models';
 
 import {
   LeatherApiClient,
   type LeatherApiProtocol,
 } from '../infrastructure/api/leather/leather-api.client';
+
+function isStacksProtocolAction(value: string): value is StacksProtocolAction {
+  return stacksProtocolActions.some(candidate => candidate === value);
+}
 
 @injectable()
 export class StacksProtocolService {
@@ -43,7 +52,7 @@ export class StacksProtocolService {
   ): Promise<StacksProtocolAction | null> {
     const contractMap = await this.leatherApiClient.fetchProtocolContracts(protocolId, { signal });
     const action = contractMap[contractName]?.[functionName];
-    return action ?? null;
+    return action !== undefined && isStacksProtocolAction(action) ? action : null;
   }
 
   private mapApiProtocol(apiProtocol: LeatherApiProtocol): StacksProtocol {

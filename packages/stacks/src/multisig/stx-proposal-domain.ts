@@ -18,6 +18,7 @@ export const stxChainIdByAuthNetworkId: Record<AuthNetworkId, number> = {
   'stx:testnet': stxTestnetChainId,
   'btc:mainnet': stxTestnetChainId,
   'btc:testnet': stxTestnetChainId,
+  'btc:regtest': stxTestnetChainId,
 };
 
 // SIP-018 domain for the STX proposal commitment

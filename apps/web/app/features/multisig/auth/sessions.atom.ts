@@ -9,6 +9,7 @@ export const sessionNetworks: AuthNetworkId[] = [
   'btc:mainnet',
   'stx:testnet',
   'btc:testnet',
+  'btc:regtest',
 ];
 
 const defaultSessions: SessionsRecord = {
@@ -16,6 +17,7 @@ const defaultSessions: SessionsRecord = {
   'btc:mainnet': null,
   'stx:testnet': null,
   'btc:testnet': null,
+  'btc:regtest': null,
 };
 
 export const sessionsAtom = atomWithStorage<SessionsRecord>(

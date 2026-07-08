@@ -33,10 +33,12 @@ export function RpcStxSignTransactionContainer({ account }: RpcStxSignTransactio
     []
   );
 
-  useBreakOnNonCompliantEntity([getTxSenderAddress(unsignedTxForFeeEstimation)].filter(isDefined));
+  const txSenderAddress = getTxSenderAddress(unsignedTxForFeeEstimation);
+
+  useBreakOnNonCompliantEntity([txSenderAddress].filter(isDefined));
 
   return (
-    <StxBalanceLoader address={account.address}>
+    <StxBalanceLoader address={txSenderAddress ?? account.address}>
       {(balance, isLoadingAdditionalData) => (
         <StacksNonceLoader>
           {nonceCalc => (
