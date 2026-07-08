@@ -177,6 +177,31 @@ interface LeatherUtxoMock {
   path: string;
 }
 
+// Funds a specific Bitcoin address (e.g. a multisig P2WSH policy address) with a
+// single confirmed UTXO so the fee/coin-selection step doesn't throw
+// InsufficientFunds when rendering the approval screen. Register after the
+// wildcard utxo mock so this address-specific route takes precedence.
+export async function mockFundedBitcoinAddressUtxos(
+  target: Page | BrowserContext,
+  address: string,
+  value = '1000000'
+) {
+  await target.route(`**/v1/utxos/addresses/${address}**`, route =>
+    route.fulfill({
+      json: [
+        {
+          txid: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce',
+          vout: 0,
+          value,
+          height: 810183,
+          address,
+          path: '',
+        },
+      ],
+    })
+  );
+}
+
 export async function mockMixedUtxoRequests(page: Page, utxos: LeatherUtxoMock[]) {
   await page.route('**/v1/utxos/**', route => {
     const url = route.request().url();

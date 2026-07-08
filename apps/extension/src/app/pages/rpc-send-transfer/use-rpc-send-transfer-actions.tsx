@@ -1,7 +1,12 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { useMutation } from '@tanstack/react-query';
+
+import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
+import { createProposeMultisigTransactionMutationConfig } from '@leather.io/queries';
 import { createRpcSuccessResponse } from '@leather.io/rpc';
+import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
 import { delay } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
@@ -12,8 +17,14 @@ import { analytics } from '@shared/utils/analytics';
 import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { getTransactionActions } from '@app/components/rpc-transaction-request/get-transaction-actions';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
+import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
+import { useSignProposalCommitment } from '@app/features/multisig/use-sign-proposal-commitment';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { createPolicyAddresses } from '@app/store/policy/policy-addresses';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useRpcSendTransferContext } from './rpc-send-transfer.context';
 
@@ -27,6 +38,14 @@ export function useRpcSendTransferActions() {
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx } = useBitcoinBroadcastTransaction();
   const navigate = useNavigate();
+  const policy = useCurrentPolicy();
+  const nativeSegwitAccount = useCurrentNativeSegwitAccount();
+  const network = useCurrentNetwork();
+  const signProposalCommitment = useSignProposalCommitment();
+  const { mutateAsync: proposeMultisigTransaction } = useMutation(
+    createProposeMultisigTransactionMutationConfig({ signProposalCommitment })
+  );
+  const isBitcoinPolicy = policy?.chain === 'bitcoin';
 
   const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
 
@@ -51,6 +70,49 @@ export function useRpcSendTransferActions() {
       try {
         const feeRate = selectedFee?.feeRate;
         if (!feeRate) return logger.error('No fee rate to generate tx');
+
+        // Bitcoin policy account: build the unsigned multisig PSBT and propose it
+        // to the coordinator instead of signing + broadcasting.
+        if (policy && policy.chain === 'bitcoin') {
+          const descriptorKey =
+            nativeSegwitAccount &&
+            findAccountDescriptorKey(
+              compileWshDescriptor(policy.descriptor),
+              nativeSegwitAccount.keychain
+            );
+          if (!descriptorKey)
+            throw new Error('Current account is not a signer of this multisig policy');
+
+          const rawPayload = await buildUnsignedMultisigBtcTransfer({
+            descriptor: policy.descriptor,
+            multisigAddress: policy.address,
+            network: network.chain.bitcoin.mode,
+            accountAddresses: createPolicyAddresses(policy),
+            recipients,
+            feeRate,
+          });
+          const proposal = await proposeMultisigTransaction({
+            network: getPolicyAuthNetworkId('bitcoin', network),
+            multisigAddress: policy.address,
+            rawPayload,
+          });
+
+          analytics.track('propose_multisig_transaction', { symbol: 'btc' });
+
+          void chrome.tabs.sendMessage(
+            tabId ?? 0,
+            createRpcSuccessResponse('sendTransfer', {
+              id: requestId,
+              result: { proposalId: proposal.id, status: 'proposed' },
+            })
+          );
+
+          setIsSubmitted(true);
+          await delay(500);
+          closeWindow();
+          return;
+        }
+
         const resp = generateTx({ amount, recipients }, feeRate, utxos);
         if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
 
@@ -96,6 +158,8 @@ export function useRpcSendTransferActions() {
       isSubmitted,
       onCancel,
       onApprove,
+      approveLabel: isBitcoinPolicy ? 'Propose transaction' : undefined,
+      busyLabel: isBitcoinPolicy ? 'Proposing...' : undefined,
     });
   }, [
     isLoadingBalance,
@@ -112,6 +176,11 @@ export function useRpcSendTransferActions() {
     broadcastTx,
     tabId,
     requestId,
+    policy,
+    nativeSegwitAccount,
+    network,
+    proposeMultisigTransaction,
+    isBitcoinPolicy,
   ]);
 
   return {

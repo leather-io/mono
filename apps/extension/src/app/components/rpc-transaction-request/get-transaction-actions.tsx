@@ -7,16 +7,22 @@ interface GetTransactionActionsArgs {
   isError: boolean;
   isBroadcasting: boolean;
   isSubmitted: boolean;
+  isApproveDisabled?: boolean;
   onCancel(): void;
   onApprove(): Promise<void> | void;
+  approveLabel?: string;
+  busyLabel?: string;
 }
 export function getTransactionActions({
   isError,
   isLoading,
   isBroadcasting,
   isSubmitted,
+  isApproveDisabled = false,
   onCancel,
   onApprove,
+  approveLabel = 'Approve',
+  busyLabel = 'Submitting...',
 }: GetTransactionActionsArgs) {
   if (isLoading) {
     return [
@@ -30,7 +36,7 @@ export function getTransactionActions({
   if (isBroadcasting) {
     return [
       <Button key="submitting" fullWidth aria-busy disabled>
-        Submitting...
+        {busyLabel}
       </Button>,
     ];
   }
@@ -50,8 +56,8 @@ export function getTransactionActions({
     <Button key="cancel" onClick={onCancel} fullWidth variant="outline">
       <styled.span textStyle="label.02">Cancel</styled.span>
     </Button>,
-    <Button type="submit" key="approve" onClick={onApprove} fullWidth>
-      <styled.span textStyle="label.02">Approve</styled.span>
+    <Button type="submit" key="approve" onClick={onApprove} fullWidth disabled={isApproveDisabled}>
+      <styled.span textStyle="label.02">{approveLabel}</styled.span>
     </Button>,
   ];
 }

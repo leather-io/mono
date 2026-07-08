@@ -1,9 +1,11 @@
 import Transport from '@ledgerhq/hw-transport-webusb';
 import {
   AddressVersion,
-  SingleSigSpendingCondition,
+  PubKeyEncoding,
   createMessageSignature,
+  createTransactionAuthField,
   deserializeTransaction,
+  isSingleSig,
 } from '@stacks/transactions';
 import StacksApp, { LedgerError, ResponseSign, ResponseVersion } from '@zondax/ledger-stacks';
 import { compare } from 'compare-versions';
@@ -76,9 +78,15 @@ export function signLedgerStacksStructuredMessage(app: StacksApp) {
 
 export function signStacksTransactionWithSignature(transaction: string, signatureVRS: Buffer) {
   const deserializedTx = deserializeTransaction(transaction);
-  const spendingCondition = createMessageSignature(signatureVRS.toString('hex'));
-  (deserializedTx.auth.spendingCondition as SingleSigSpendingCondition).signature =
-    spendingCondition;
+  const signature = createMessageSignature(signatureVRS.toString('hex'));
+  const spendingCondition = deserializedTx.auth.spendingCondition;
+
+  if (isSingleSig(spendingCondition)) {
+    spendingCondition.signature = signature;
+    return deserializedTx;
+  }
+
+  spendingCondition.fields.push(createTransactionAuthField(PubKeyEncoding.Compressed, signature));
   return deserializedTx;
 }
 

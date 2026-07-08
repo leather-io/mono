@@ -1,10 +1,5 @@
-import {
-  assembleWshMultisigPsbt,
-  compileWshDescriptor,
-  getBtcSignerLibNetworkConfigByMode,
-} from '@leather.io/bitcoin';
-import type { AuthNetworkId, BitcoinNetworkModes, Money, VaultAccount } from '@leather.io/models';
-import { getBitcoinCoinSelectionService } from '@leather.io/services';
+import type { BitcoinNetworkModes, Money, VaultAccount } from '@leather.io/models';
+import { buildUnsignedMultisigBtcTransfer as buildSharedMultisigBtcTransfer } from '@leather.io/services';
 
 import { createMultisigAccountAddresses } from '../vaults/multisig-account-addresses';
 import { getMultisigDescriptor } from './btc-multisig-descriptor';
@@ -17,7 +12,7 @@ interface BuildMultisigBtcTransferArgs {
   feeRate: number;
 }
 
-function getBitcoinNetworkMode(network: AuthNetworkId): BitcoinNetworkModes {
+function getBitcoinNetworkMode(network: VaultAccount['network']): BitcoinNetworkModes {
   return network === 'btc:mainnet' ? 'mainnet' : 'testnet';
 }
 
@@ -27,26 +22,16 @@ export async function buildUnsignedMultisigBtcTransfer({
   amount,
   feeRate,
 }: BuildMultisigBtcTransferArgs): Promise<string> {
-  const network = getBtcSignerLibNetworkConfigByMode(getBitcoinNetworkMode(account.network));
-  const { scriptPubKey, witnessScript } = compileWshDescriptor(getMultisigDescriptor(account));
-
   if (deriveMultisigAddress(account) !== account.multisigAddress)
     throw new Error(
       `Derived multisig address does not match vault address ${account.multisigAddress}`
     );
-
-  const { inputs, outputs } = await getBitcoinCoinSelectionService().performCoinSelection({
-    account: { account: createMultisigAccountAddresses(account) },
+  return buildSharedMultisigBtcTransfer({
+    descriptor: getMultisigDescriptor(account),
+    multisigAddress: account.multisigAddress,
+    network: getBitcoinNetworkMode(account.network),
+    accountAddresses: createMultisigAccountAddresses(account),
     recipients: [{ address: recipient, amount }],
     feeRate,
-  });
-
-  return assembleWshMultisigPsbt({
-    scriptPubKey,
-    witnessScript,
-    inputs,
-    outputs,
-    changeAddress: account.multisigAddress,
-    network,
   });
 }
