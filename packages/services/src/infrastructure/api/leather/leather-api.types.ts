@@ -3225,19 +3225,26 @@ export interface paths {
             'application/json': {
               [key: string]: {
                 [key: string]:
+                  | 'send'
+                  | 'receive'
+                  | 'contract-execution'
+                  | 'contract-deploy'
                   | 'swap'
-                  | 'add-liquidity'
-                  | 'remove-liquidity'
-                  | 'stake'
-                  | 'unstake'
-                  | 'stack'
-                  | 'unstack'
+                  | 'bridge'
                   | 'deposit'
                   | 'withdraw'
-                  | 'borrow'
-                  | 'repay'
                   | 'claim-rewards'
-                  | 'bridge';
+                  | 'add-liquidity'
+                  | 'remove-liquidity'
+                  | 'stake-lp'
+                  | 'unstake-lp'
+                  | 'stack'
+                  | 'initiate-unstack'
+                  | 'complete-unstack'
+                  | 'liquid-stack'
+                  | 'liquid-unstack'
+                  | 'borrow'
+                  | 'repay';
               };
             };
           };
