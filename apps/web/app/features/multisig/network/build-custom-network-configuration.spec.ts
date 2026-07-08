@@ -1,11 +1,11 @@
-import type { CustomNetworkConfig } from '~/constants/custom-network';
+import type { CustomNetworkConfig } from '~/constants/custom-network-config';
 
 import { ChainId } from '@leather.io/models';
 
-import { buildCustomNetworkConfiguration } from './custom-network-config';
+import { buildCustomNetworkConfiguration } from './build-custom-network-configuration';
 
 const regtestConfig: CustomNetworkConfig = {
-  flavor: 'regtest',
+  bitcoinNetworkMode: 'regtest',
   name: 'Private',
   key: 'private',
   bitcoinApiUrl: 'https://mempool.bitcoin.private-1.hiro.so/api',
@@ -18,7 +18,7 @@ describe('buildCustomNetworkConfiguration', () => {
     expect(buildCustomNetworkConfiguration(regtestConfig).id).toBe('private');
   });
 
-  test('maps a regtest flavor to regtest bitcoin mode + custom urls', () => {
+  test('maps a regtest bitcoin network mode to regtest bitcoin mode + custom urls', () => {
     const config = buildCustomNetworkConfiguration(regtestConfig);
     expect(config.chain.bitcoin.mode).toBe('regtest');
     expect(config.chain.bitcoin.bitcoinNetwork).toBe('regtest');
@@ -27,8 +27,11 @@ describe('buildCustomNetworkConfiguration', () => {
     expect(config.chain.stacks.chainId).toBe(2147483648);
   });
 
-  test('maps a testnet flavor to testnet bitcoin mode', () => {
-    const config = buildCustomNetworkConfiguration({ ...regtestConfig, flavor: 'testnet' });
+  test('maps a testnet bitcoin network mode to testnet bitcoin mode', () => {
+    const config = buildCustomNetworkConfiguration({
+      ...regtestConfig,
+      bitcoinNetworkMode: 'testnet',
+    });
     expect(config.chain.bitcoin.mode).toBe('testnet');
     expect(config.chain.bitcoin.bitcoinNetwork).toBe('testnet3');
   });

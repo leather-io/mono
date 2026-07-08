@@ -1,9 +1,9 @@
-import type { CustomNetworkConfig } from '~/constants/custom-network';
+import type { CustomNetworkConfig } from '~/constants/custom-network-config';
 
 import { ChainId, type NetworkConfiguration } from '@leather.io/models';
 
 export function buildCustomNetworkConfiguration(config: CustomNetworkConfig): NetworkConfiguration {
-  const bitcoinNetwork = config.flavor === 'regtest' ? 'regtest' : 'testnet3';
+  const bitcoinNetwork = config.bitcoinNetworkMode === 'regtest' ? 'regtest' : 'testnet3';
   return {
     id: config.key,
     name: config.name,
@@ -12,7 +12,7 @@ export function buildCustomNetworkConfiguration(config: CustomNetworkConfig): Ne
         blockchain: 'bitcoin',
         bitcoinUrl: config.bitcoinApiUrl,
         bitcoinNetwork,
-        mode: config.flavor,
+        mode: config.bitcoinNetworkMode,
       },
       stacks: {
         blockchain: 'stacks',

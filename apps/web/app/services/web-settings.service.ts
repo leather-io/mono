@@ -1,6 +1,6 @@
 import { getDefaultStore } from 'jotai';
-import { customNetwork } from '~/constants/custom-network';
-import { buildCustomNetworkConfiguration } from '~/features/multisig/network/custom-network-config';
+import { customNetworkConfig } from '~/constants/custom-network-config';
+import { buildCustomNetworkConfiguration } from '~/features/multisig/network/build-custom-network-configuration';
 import { quoteCurrencyAtom } from '~/store/quote-currency';
 import { networkNameAtom } from '~/store/stacks-network';
 
@@ -16,8 +16,8 @@ export class WebSettingsService implements SettingsService {
     if (network === 'mocknet') throw Error('Mocknet is not supported.');
 
     const networkConfiguration =
-      customNetwork && network === 'testnet'
-        ? buildCustomNetworkConfiguration(customNetwork)
+      customNetworkConfig && network === 'testnet'
+        ? buildCustomNetworkConfiguration(customNetworkConfig)
         : defaultNetworksKeyedById[network];
 
     return {

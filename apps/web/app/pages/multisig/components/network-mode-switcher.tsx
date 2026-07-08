@@ -1,5 +1,5 @@
 import { Flex, styled } from 'leather-styles/jsx';
-import { customNetwork } from '~/constants/custom-network';
+import { customNetworkConfig } from '~/constants/custom-network-config';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useStacksNetwork } from '~/store/stacks-network';
@@ -64,7 +64,9 @@ export function NetworkModeSwitcher() {
               </styled.span>
               {!active.isProduction && (
                 <styled.span>
-                  {customNetwork && mode === 'testnet' ? customNetwork.name : active.label}
+                  {customNetworkConfig && mode === 'testnet'
+                    ? customNetworkConfig.name
+                    : active.label}
                 </styled.span>
               )}
             </Flex>
@@ -89,7 +91,7 @@ export function NetworkModeSwitcher() {
                     <styled.div minWidth={0}>
                       <Flex alignItems="center" gap="space.02">
                         <styled.div textStyle="label.03">{info.label}</styled.div>
-                        {customNetwork && id === 'testnet' && (
+                        {customNetworkConfig && id === 'testnet' && (
                           <styled.span
                             flexShrink={0}
                             textStyle="caption.01"
@@ -98,13 +100,13 @@ export function NetworkModeSwitcher() {
                             bg="blue.background-primary"
                             color="blue.action-primary-default"
                           >
-                            {customNetwork.name}
+                            {customNetworkConfig.name}
                           </styled.span>
                         )}
                       </Flex>
                       <styled.div textStyle="caption.01" color="ink.text-subdued">
-                        {customNetwork && id === 'testnet'
-                          ? `${customNetwork.flavor} · local`
+                        {customNetworkConfig && id === 'testnet'
+                          ? `${customNetworkConfig.bitcoinNetworkMode} · local`
                           : chainNetworkSummary(id)}
                       </styled.div>
                     </styled.div>

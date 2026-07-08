@@ -1,5 +1,5 @@
 import type { StacksNetworkName } from '@stacks/network';
-import { customNetwork } from '~/constants/custom-network';
+import { customNetworkConfig } from '~/constants/custom-network-config';
 
 import type { AuthNetworkId } from '@leather.io/models';
 
@@ -12,7 +12,7 @@ export interface MultisigNetworks {
 
 function resolveBtcNetwork(mode: MultisigNetworkMode): AuthNetworkId {
   if (mode === 'mainnet') return 'btc:mainnet';
-  if (customNetwork?.flavor === 'regtest') return 'btc:regtest';
+  if (customNetworkConfig?.bitcoinNetworkMode === 'regtest') return 'btc:regtest';
   return 'btc:testnet';
 }
 

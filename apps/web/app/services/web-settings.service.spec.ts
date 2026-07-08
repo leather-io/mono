@@ -1,17 +1,17 @@
 import { getDefaultStore } from 'jotai';
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import type { CustomNetworkConfig } from '~/constants/custom-network';
+import type { CustomNetworkConfig } from '~/constants/custom-network-config';
 import { networkNameAtom } from '~/store/stacks-network';
 
 import { defaultNetworksKeyedById } from '@leather.io/models';
 
 import { WebSettingsService } from './web-settings.service';
 
-const mocks = vi.hoisted(() => ({ customNetwork: null as CustomNetworkConfig | null }));
+const mocks = vi.hoisted(() => ({ customNetworkConfig: null as CustomNetworkConfig | null }));
 
-vi.mock('~/constants/custom-network', () => ({
-  get customNetwork() {
-    return mocks.customNetwork;
+vi.mock('~/constants/custom-network-config', () => ({
+  get customNetworkConfig() {
+    return mocks.customNetworkConfig;
   },
 }));
 
@@ -19,7 +19,7 @@ const store = getDefaultStore();
 const service = new WebSettingsService();
 
 afterEach(() => {
-  mocks.customNetwork = null;
+  mocks.customNetworkConfig = null;
   store.set(networkNameAtom, 'mainnet');
 });
 
@@ -30,8 +30,8 @@ describe('WebSettingsService', () => {
   });
 
   test('overrides the testnet slot with the custom network when active', () => {
-    mocks.customNetwork = {
-      flavor: 'regtest',
+    mocks.customNetworkConfig = {
+      bitcoinNetworkMode: 'regtest',
       name: 'Private',
       key: 'private',
       bitcoinApiUrl: 'https://mempool.bitcoin.private-1.hiro.so/api',
@@ -47,8 +47,8 @@ describe('WebSettingsService', () => {
   });
 
   test('leaves mainnet untouched even when a custom network is active', () => {
-    mocks.customNetwork = {
-      flavor: 'regtest',
+    mocks.customNetworkConfig = {
+      bitcoinNetworkMode: 'regtest',
       name: 'Private',
       key: 'private',
       bitcoinApiUrl: 'https://mempool.bitcoin.private-1.hiro.so/api',

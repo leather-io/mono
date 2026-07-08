@@ -5,8 +5,8 @@ async function loadNetworks() {
   return import('./multisig-networks');
 }
 
-function stubCustomNetwork(flavor: 'regtest' | 'testnet') {
-  vi.stubEnv('LEATHER_PRIVATE_NETWORK_FLAVOR', flavor);
+function stubCustomNetwork(bitcoinNetworkMode: 'regtest' | 'testnet') {
+  vi.stubEnv('LEATHER_PRIVATE_NETWORK_FLAVOR', bitcoinNetworkMode);
   vi.stubEnv('LEATHER_BITCOIN_API_URL', 'https://bitcoin.example/api');
   vi.stubEnv('LEATHER_STACKS_API_URL', 'https://stacks.example');
 }
@@ -33,7 +33,7 @@ describe('resolveMultisigNetworks', () => {
     });
   });
 
-  test('resolves custom testnet flavor as btc:testnet and stx:testnet', async () => {
+  test('resolves custom testnet bitcoin network mode as btc:testnet and stx:testnet', async () => {
     stubCustomNetwork('testnet');
     const { resolveMultisigNetworks } = await loadNetworks();
     expect(resolveMultisigNetworks('testnet')).toEqual({
@@ -42,7 +42,7 @@ describe('resolveMultisigNetworks', () => {
     });
   });
 
-  test('resolves custom regtest flavor as btc:regtest and stx:testnet', async () => {
+  test('resolves custom regtest bitcoin network mode as btc:regtest and stx:testnet', async () => {
     stubCustomNetwork('regtest');
     const { resolveMultisigNetworks } = await loadNetworks();
     expect(resolveMultisigNetworks('testnet')).toEqual({

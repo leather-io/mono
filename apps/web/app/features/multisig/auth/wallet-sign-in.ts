@@ -1,4 +1,4 @@
-import { customNetwork } from '~/constants/custom-network';
+import { customNetworkConfig } from '~/constants/custom-network-config';
 import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
@@ -70,7 +70,7 @@ async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
   }
 
   // Match the backend: derive the auth address from the pubkey in the resolved mode.
-  const address = customNetwork
+  const address = customNetworkConfig
     ? getP2wpkhAddressFromPublicKey(account.publicKey, resolveBtcNetworkMode(params.network))
     : account.address;
 

@@ -1,6 +1,6 @@
 import { STACKS_TESTNET } from '@stacks/network';
 import { type StacksTransactionWire } from '@stacks/transactions';
-import { customNetwork } from '~/constants/custom-network';
+import { customNetworkConfig } from '~/constants/custom-network-config';
 
 import type { AuthNetworkId, Money, VaultAccount } from '@leather.io/models';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
@@ -21,8 +21,8 @@ interface BuildMultisigStxTransferArgs {
 // Custom network keeps the testnet address version but signs with its own chain id.
 function getStxTransactionNetwork(network: AuthNetworkId) {
   if (network === 'stx:mainnet') return 'mainnet';
-  if (customNetwork?.stacksChainId !== undefined)
-    return { ...STACKS_TESTNET, chainId: customNetwork.stacksChainId };
+  if (customNetworkConfig?.stacksChainId !== undefined)
+    return { ...STACKS_TESTNET, chainId: customNetworkConfig.stacksChainId };
   return 'testnet';
 }
 
