@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { useUserSettings } from '~/hooks/use-user-settings';
 
@@ -9,6 +11,18 @@ export type BnsResolution =
   | { status: 'found'; owner: string }
   | { status: 'not-found' };
 
+function useStableMap<V>(entries: [string, V][]): Map<string, V> {
+  const signature = entries.map(([key, value]) => `${key}=${JSON.stringify(value)}`).join('|');
+  const cache = useRef<{ signature: string; map: Map<string, V> }>();
+  const current = cache.current;
+  if (!current || current.signature !== signature) {
+    const map = new Map(entries);
+    cache.current = { signature, map };
+    return map;
+  }
+  return current.map;
+}
+
 export function useBnsNames(fullNames: string[]): Map<string, BnsResolution> {
   const settings = useUserSettings();
   const unique = [...new Set(fullNames)];
@@ -17,19 +31,15 @@ export function useBnsNames(fullNames: string[]): Map<string, BnsResolution> {
     queries: unique.map(name => createBnsNameQueryConfig(name, settings)),
   });
 
-  const resolutions = new Map<string, BnsResolution>();
-  unique.forEach((name, index) => {
+  const entries = unique.map<[string, BnsResolution]>((name, index) => {
     const result = results[index];
-    if (result.isLoading) {
-      resolutions.set(name, { status: 'loading' });
-      return;
-    }
-    resolutions.set(
+    if (result.isLoading) return [name, { status: 'loading' }];
+    return [
       name,
-      result.data ? { status: 'found', owner: result.data.owner } : { status: 'not-found' }
-    );
+      result.data ? { status: 'found', owner: result.data.owner } : { status: 'not-found' },
+    ];
   });
-  return resolutions;
+  return useStableMap(entries);
 }
 
 export function useAddressBnsName(
@@ -73,7 +83,9 @@ export function useBnsPrimaryNames(addresses: string[]): Map<string, string | un
     })),
   });
 
-  const names = new Map<string, string | undefined>();
-  unique.forEach((address, index) => names.set(address, results[index].data));
-  return names;
+  const entries = unique.map<[string, string | undefined]>((address, index) => [
+    address,
+    results[index].data,
+  ]);
+  return useStableMap(entries);
 }
