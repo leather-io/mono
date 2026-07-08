@@ -5,21 +5,23 @@ import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import type { BlockchainActivityView } from '@leather.io/features';
-import type {
-  AuthNetworkId,
-  MarketData,
-  VaultAccount,
-  VaultAccountSummary,
-} from '@leather.io/models';
+import type { AuthNetworkId, MarketData } from '@leather.io/models';
 import { getMultisigService, getStacksProtocolService } from '@leather.io/services';
 import { isDefined } from '@leather.io/utils';
 
 import { useMultisigNetworks } from '../auth/use-multisig-networks';
 import { useSession } from '../auth/use-session';
-import { decodeProposalPayload } from '../transactions/decode-proposal-summary';
 import { createMultisigAccountAddresses } from '../vaults/multisig-account-addresses';
 import { retryMultisigQuery } from '../vaults/use-vaults';
 import { multisigVaultKeys } from '../vaults/vault-query-keys';
+import {
+  type ActivityAccount,
+  buildClassifications,
+  buildContractActionTargets,
+  buildVaultMultisigTransactions,
+  collectContractAddresses,
+  decodeContractCallPayloads,
+} from './build-multisig-activity-inputs';
 import {
   type VaultActivityItem,
   type VaultMultisigTransaction,
@@ -31,8 +33,6 @@ import type { MultisigActivityClassification } from './multisig-transaction-acti
 const transactionsPageRequest = { page: 1, pageSize: 100 };
 
 const protocolRegistryCacheOptions = { staleTime: 300_000, gcTime: 300_000 } as const;
-
-type ActivityAccount = VaultAccount | VaultAccountSummary;
 
 interface MultisigActivityInputs {
   multisigTransactions: VaultMultisigTransaction[];
@@ -83,16 +83,11 @@ export function useMultisigActivityInputs(
     }),
   });
 
-  const multisigTransactions: VaultMultisigTransaction[] = accounts.flatMap((account, index) => {
-    const summaries = summaryResults[index]?.data?.data ?? [];
-    return summaries.map(transaction => ({
-      transaction,
-      payloadContext: { network: account.network, multisigAddress: account.multisigAddress },
-      vaultId: account.vaultId,
-      vaultName: vaultNamesById?.get(account.vaultId),
-      threshold: account.threshold,
-    }));
-  });
+  const multisigTransactions = buildVaultMultisigTransactions(
+    accounts,
+    summaryResults.map(result => result.data?.data ?? []),
+    vaultNamesById
+  );
 
   const networkById = new Map(
     multisigTransactions.map(({ transaction, payloadContext }) => [
@@ -129,18 +124,9 @@ export function useMultisigActivityInputs(
       .map(transaction => [transaction.id, transaction.proposalRawPayload])
   );
 
-  const decodedContractCalls = multisigTransactions.flatMap(({ transaction, payloadContext }) => {
-    if (payloadContext.network.startsWith('btc')) return [];
-    const rawPayload = payloadsById.get(transaction.id);
-    if (!rawPayload) return [];
-    const payload = decodeProposalPayload(payloadContext, rawPayload);
-    if (!payload || payload.type !== 'contractCall') return [];
-    return [payload];
-  });
+  const decodedContractCalls = decodeContractCallPayloads(multisigTransactions, payloadsById);
 
-  const contractAddresses = [
-    ...new Set(decodedContractCalls.map(payload => payload.contractId.split('.')[0])),
-  ].filter(isDefined);
+  const contractAddresses = collectContractAddresses(decodedContractCalls);
 
   const protocolResults = useQueries({
     queries: contractAddresses.map(address => ({
@@ -154,24 +140,10 @@ export function useMultisigActivityInputs(
     contractAddresses.map((address, index) => [address, protocolResults[index]?.data ?? null])
   );
 
-  const actionTargets = [
-    ...new Map(
-      decodedContractCalls.flatMap(payload => {
-        const [address, contractName] = payload.contractId.split('.');
-        const protocol = address === undefined ? null : protocolByAddress.get(address);
-        if (!protocol || contractName === undefined) return [];
-        return [
-          [
-            `${payload.contractId}|${payload.functionName}`,
-            { protocol, contractName, functionName: payload.functionName },
-          ] as const,
-        ];
-      })
-    ).entries(),
-  ];
+  const actionTargets = buildContractActionTargets(decodedContractCalls, protocolByAddress);
 
   const actionResults = useQueries({
-    queries: actionTargets.map(([, target]) => ({
+    queries: actionTargets.map(target => ({
       queryKey: [
         'stacks-protocol-action',
         settings.network.id,
@@ -190,15 +162,9 @@ export function useMultisigActivityInputs(
     })),
   });
 
-  const classifications = new Map<string, MultisigActivityClassification>(
-    actionTargets.map(([key, target], index) => [
-      key,
-      {
-        action: actionResults[index]?.data ?? 'contract-execution',
-        protocol: target.protocol.id,
-        protocolName: target.protocol.name,
-      },
-    ])
+  const classifications = buildClassifications(
+    actionTargets,
+    actionResults.map(result => result.data)
   );
 
   function classifyContract(contractId: string, functionName: string) {

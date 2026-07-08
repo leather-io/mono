@@ -33,8 +33,22 @@ interface HarmonizeVaultActivityInput {
   frontier?: number;
 }
 
+interface ActivityRow {
+  item: VaultActivityItem;
+  inFlight: boolean;
+  sortKey: number;
+}
+
 function normalizeTxid(txid: string) {
   return txid.toLowerCase().replace(/^0x/, '');
+}
+
+function compareActivityRows(a: ActivityRow, b: ActivityRow): number {
+  return (
+    Number(b.inFlight) - Number(a.inFlight) ||
+    b.sortKey - a.sortKey ||
+    a.item.view.txid.localeCompare(b.item.view.txid)
+  );
 }
 
 function isActiveTransaction(transaction: MultisigTransactionSummary) {
@@ -54,13 +68,17 @@ export function selectTransactionIdsNeedingPayload(
     .map(({ transaction }) => transaction.id);
 }
 
-export function harmonizeVaultActivity(input: HarmonizeVaultActivityInput): VaultActivityItem[] {
-  const { onchain, multisigTransactions, payloadsById, classifyContract, marketData, frontier } =
-    input;
-
+export function harmonizeVaultActivity({
+  onchain,
+  multisigTransactions,
+  payloadsById,
+  classifyContract,
+  marketData,
+  frontier,
+}: HarmonizeVaultActivityInput): VaultActivityItem[] {
   const onchainByTxid = new Map(onchain.map(view => [normalizeTxid(view.txid), view]));
   const matchedTxids = new Set<string>();
-  const rows: { item: VaultActivityItem; inFlight: boolean; sortKey: number }[] = [];
+  const rows: ActivityRow[] = [];
 
   for (const item of multisigTransactions) {
     const { transaction, payloadContext } = item;
@@ -97,11 +115,6 @@ export function harmonizeVaultActivity(input: HarmonizeVaultActivityInput): Vaul
     rows.push({ item: { view }, inFlight: view.status === 'pending', sortKey: view.timestamp });
   }
 
-  rows.sort(
-    (a, b) =>
-      Number(b.inFlight) - Number(a.inFlight) ||
-      b.sortKey - a.sortKey ||
-      a.item.view.txid.localeCompare(b.item.view.txid)
-  );
+  rows.sort(compareActivityRows);
   return rows.map(row => row.item);
 }
