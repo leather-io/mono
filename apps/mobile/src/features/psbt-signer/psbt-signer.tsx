@@ -48,6 +48,7 @@ import { ApproverButtons } from '../approver/components/approver-buttons';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { BtcStatusRow } from '../approver/components/status-row/btc-status-row';
 import { useOpenUrl } from '../browser/browser/use-open-url';
+import { PsbtRequestSighashWarningLabel } from './components/psbt-request-sighash-warning-label';
 import { signTx } from './signer';
 import { useAccountsFromPsbt } from './use-accounts-from-psbt';
 import { usePsbtPayers } from './use-psbt-payers';
@@ -265,6 +266,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
       <Approver requester={origin}>
         <Approver.Container>
           <Approver.Header title={t`Send token`} />
+          {psbtDetails.isPsbtMutable && <PsbtRequestSighashWarningLabel origin={origin} />}
           {broadcastedTxid && <BtcStatusRow txid={broadcastedTxid} />}
 
           <Approver.Overview>
