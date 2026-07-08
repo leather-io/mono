@@ -7,8 +7,6 @@ export interface BlockchainActivityContractCall {
   readonly type: 'call';
   readonly contractId: string;
   readonly functionName: string;
-  readonly protocol?: StacksProtocolId;
-  readonly action?: StacksProtocolAction;
 }
 
 export interface BlockchainActivityContractDeploy {
@@ -16,12 +14,11 @@ export interface BlockchainActivityContractDeploy {
   readonly contractId: string;
 }
 
-export type BlockchainActivityEventAction = 'sent' | 'received' | 'locked' | 'minted' | 'burned';
+export type BlockchainActivityBalanceChangeDirection = 'sent' | 'received';
 
-export interface BlockchainActivityEvent {
-  readonly action: BlockchainActivityEventAction;
+export interface BlockchainActivityBalanceChange {
+  readonly direction: BlockchainActivityBalanceChangeDirection;
   readonly asset: CryptoAsset;
-  readonly counterparty?: string;
   readonly amount: {
     readonly crypto: Money;
     readonly quote: Money;
@@ -36,6 +33,10 @@ export interface BlockchainActivity {
   readonly status: OnChainActivityStatus;
   readonly chain: CryptoAssetChain;
   readonly initiatedByUser: boolean;
-  readonly events: BlockchainActivityEvent[];
+  readonly action: StacksProtocolAction;
+  readonly protocol?: StacksProtocolId;
+  readonly protocolName?: string;
+  readonly counterparty?: string;
+  readonly balanceChanges: BlockchainActivityBalanceChange[];
   readonly contract?: BlockchainActivityContractCall | BlockchainActivityContractDeploy;
 }
