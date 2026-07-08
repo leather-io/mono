@@ -51,8 +51,7 @@ const disallowedNameChars =
 
 function sanitizeMemberName(value: string, allowDots: boolean) {
   const stripped = value.replace(disallowedNameChars, '');
-  // The ASCII dot is only allowed where a dotted name can be verified as a BNS
-  // name that resolves to the member's address; elsewhere it is a spoof vector.
+  // Dots are only kept where the name can be verified against the member's address.
   const dotHandled = allowDots ? stripped : stripped.replace(/\./g, '');
   return dotHandled.slice(0, maxMemberNameLength);
 }

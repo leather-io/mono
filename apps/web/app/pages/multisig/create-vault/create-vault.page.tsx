@@ -7,12 +7,12 @@ import { useSession } from '~/features/multisig/auth/use-session';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useCreateVault } from '~/features/multisig/vaults/use-vault-mutations';
 import { useToast } from '~/features/toasts/use-toast';
-import { useAddressBnsName, useBnsNames } from '~/queries/bns/bns.query';
+import { useAddressBnsName, useBnsNames, useBnsPrimaryNames } from '~/queries/bns/bns.query';
 
 import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import { LeatherApiError } from '@leather.io/services';
 import { isValidStacksAddress } from '@leather.io/stacks';
-import { Button, InfoCircleIcon } from '@leather.io/ui';
+import { Button, InfoCircleIcon, useDebouncedValue } from '@leather.io/ui';
 
 import { MultisigPage } from '../components/multisig-page';
 import { TextField } from '../components/text-field';
@@ -122,8 +122,6 @@ export function CreateVaultPage() {
     return chain === 'btc' ? value.toLowerCase() : value;
   }
 
-  // BNS resolves to a Stacks address, so name-based invites apply to mainnet Stacks
-  // vaults only; Bitcoin and testnet members stay address-only.
   const bnsEnabled = chain === 'stx' && networkMode === 'mainnet';
   const bnsCandidates = bnsEnabled
     ? members.flatMap(member => {
@@ -134,7 +132,9 @@ export function CreateVaultPage() {
         return candidates;
       })
     : [];
-  const bnsResolutions = useBnsNames(bnsCandidates);
+  // Debounced so a name resolving mid-type doesn't fire a lookup on every keystroke.
+  const debouncedCandidateKey = useDebouncedValue(bnsCandidates.join('|'), 300);
+  const bnsResolutions = useBnsNames(debouncedCandidateKey ? debouncedCandidateKey.split('|') : []);
   const reconciledMembers = members.map(member =>
     bnsEnabled && !member.isMe
       ? reconcileMemberBns(member, candidate => bnsResolutions.get(candidate.trim()))
@@ -157,6 +157,31 @@ export function CreateVaultPage() {
     });
     if (changed) setMembers(next);
   }, [bnsEnabled, members, bnsResolutions]);
+
+  // A member entered by address gets their own BNS name auto-filled as the label,
+  // once per address and only while the name is empty, so it stays editable.
+  const memberAddresses = bnsEnabled
+    ? members
+        .filter(member => !member.isMe && isValidMemberAddress(member.addr.trim()))
+        .map(member => member.addr.trim())
+    : [];
+  const reverseBnsNames = useBnsPrimaryNames(memberAddresses);
+  const filledMemberNames = useRef<Record<string, string>>({});
+  useEffect(() => {
+    if (!bnsEnabled) return;
+    let changed = false;
+    const next = members.map(member => {
+      const addr = member.addr.trim();
+      if (member.isMe || member.name.trim() !== '') return member;
+      if (filledMemberNames.current[member.id] === addr) return member;
+      const name = reverseBnsNames.get(addr);
+      if (!name) return member;
+      filledMemberNames.current[member.id] = addr;
+      changed = true;
+      return { ...member, name };
+    });
+    if (changed) setMembers(next);
+  }, [bnsEnabled, members, reverseBnsNames]);
 
   // Pre-label the signed-in user with their own BNS name, once, and only while
   // they haven't typed a name of their own.

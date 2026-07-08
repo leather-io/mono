@@ -18,8 +18,6 @@ export function MultisigConnectDropdown() {
 
   const anySignedIn = chains.some(c => c.session);
   const primaryAddress = (stx.session ?? btc.session)?.identity.address;
-  // BNS is Stacks-only, so the name comes from the connected Stacks identity and
-  // labels the same person on both chain rows; Bitcoin-only falls back to address.
   const bnsName = useAddressBnsName(
     stx.session?.identity.address,
     networks.stx.endsWith('mainnet')

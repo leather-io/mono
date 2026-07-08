@@ -2,15 +2,13 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { useUserSettings } from '~/hooks/use-user-settings';
 
 import { createAccountBnsNamesQueryConfig, createBnsNameQueryConfig } from '@leather.io/queries';
+import type { AccountBnsName } from '@leather.io/services';
 
 export type BnsResolution =
   | { status: 'loading' }
   | { status: 'found'; owner: string }
   | { status: 'not-found' };
 
-// Resolves a dynamic set of BNS names to their owning Stacks address, keyed by
-// full name. Feeds the vault member fields, where the candidate names change as
-// the user types. Callers pass only BNS-shaped strings so every query is enabled.
 export function useBnsNames(fullNames: string[]): Map<string, BnsResolution> {
   const settings = useUserSettings();
   const unique = [...new Set(fullNames)];
@@ -34,9 +32,6 @@ export function useBnsNames(fullNames: string[]): Map<string, BnsResolution> {
   return resolutions;
 }
 
-// The BNS name to display for a Stacks address: its primary name, else the first
-// name it owns — matching how the wallet extension labels an account. (The extension
-// can also apply a local custom rename, which the web app has no way to see.)
 export function useAddressBnsName(
   stxAddress: string | undefined,
   enabled: boolean
@@ -56,4 +51,29 @@ export function useAddressBnsName(
     select: names => names.find(name => name.isPrimary)?.fullName ?? names[0]?.fullName,
   });
   return query.data;
+}
+
+export function useBnsPrimaryNames(addresses: string[]): Map<string, string | undefined> {
+  const settings = useUserSettings();
+  const unique = [...new Set(addresses)];
+
+  const results = useQueries({
+    queries: unique.map(address => ({
+      ...createAccountBnsNamesQueryConfig(
+        {
+          account: {
+            id: { fingerprint: 'multisig:member', accountIndex: 0 },
+            stacks: { stxAddress: address },
+          },
+        },
+        settings
+      ),
+      select: (names: AccountBnsName[]) =>
+        names.find(name => name.isPrimary)?.fullName ?? names[0]?.fullName,
+    })),
+  });
+
+  const names = new Map<string, string | undefined>();
+  unique.forEach((address, index) => names.set(address, results[index].data));
+  return names;
 }
