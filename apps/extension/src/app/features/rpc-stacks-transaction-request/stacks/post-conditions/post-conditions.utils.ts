@@ -1,11 +1,13 @@
 import type { FtMetadataResponse } from '@hirosystems/token-metadata-api-client';
-import { type PostConditionWire, addressToString } from '@stacks/transactions';
+import { addressToString } from '@stacks/transactions';
 
 import { formatContractId } from '@leather.io/stacks';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { ftDecimals } from '@app/common/stacks-utils';
 import {
+  type NonPoxPostConditionWire,
+  type PostConditionVerb,
   getAmountFromPostCondition,
   getIconStringFromPostCondition,
   getNameFromPostCondition,
@@ -18,16 +20,18 @@ import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks
 interface FormatPostConditionMessageArgs {
   account?: StacksAccount;
   asset?: FtMetadataResponse;
+  context?: PostConditionVerb;
   isContractPrincipal: boolean;
-  postCondition: PostConditionWire;
+  postCondition: NonPoxPostConditionWire;
 }
 export function formatPostConditionMessage({
   account,
   asset,
+  context = 'transfer',
   isContractPrincipal,
   postCondition: pc,
 }: FormatPostConditionMessageArgs) {
-  const pcTitle = getPostConditionTitle(pc);
+  const pcTitle = getPostConditionTitle(pc, context);
   const pcIconString = getIconStringFromPostCondition(pc);
   const pcTicker = getSymbolFromPostCondition(pc);
   const pcAmount = getAmountFromPostCondition(pc);
@@ -44,7 +48,8 @@ export function formatPostConditionMessage({
   const message = pc.conditionCode
     ? `${getPostConditionCodeMessage(
         pc.conditionCode,
-        isSending
+        isSending,
+        context
       )} ${amount} ${ticker} or the transaction will abort.`
     : undefined;
 
