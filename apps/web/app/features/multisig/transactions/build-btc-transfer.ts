@@ -13,7 +13,7 @@ interface BuildMultisigBtcTransferArgs {
   feeRate: number;
 }
 
-export function buildUnsignedMultisigBtcTransfer({
+export async function buildUnsignedMultisigBtcTransfer({
   account,
   recipient,
   amount,
