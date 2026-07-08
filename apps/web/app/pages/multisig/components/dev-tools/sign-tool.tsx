@@ -47,7 +47,7 @@ export function SignTool() {
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<MultisigTransaction | null>(null);
-  const myAddress = useSession(network)?.identity.address;
+  const myPublicKey = useSession(network)?.identity.publicKey;
 
   async function run() {
     setIsRunning(true);
@@ -60,7 +60,7 @@ export function SignTool() {
       assertSignable(transaction);
       const account = await service.getVaultAccount(network, transaction.vaultAccountId);
       const signatures = network.startsWith('btc')
-        ? await signBtcTransaction(transaction, account, getMySigningPubkey(account, myAddress))
+        ? await signBtcTransaction(transaction, account, getMySigningPubkey(account, myPublicKey))
         : await signStxTransaction(transaction, account);
       setResult(await service.addTransactionSignatures(network, id, { signatures }));
     } catch (err) {
