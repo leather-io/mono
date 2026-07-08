@@ -1,5 +1,17 @@
 import builder from 'content-security-policy-builder';
 
+function getUrlOrigin(url: string | undefined): string[] {
+  if (!url) return [];
+  return [new URL(url).origin];
+}
+
+// Allow the custom/dev backend origin; unset in production, so a no-op there.
+const backendConnectSrc = getUrlOrigin(import.meta.env.LEATHER_API_URL);
+const customApiConnectSrc = [
+  ...getUrlOrigin(import.meta.env.LEATHER_BITCOIN_API_URL),
+  ...getUrlOrigin(import.meta.env.LEATHER_STACKS_API_URL),
+];
+
 export const csp = builder({
   directives: {
     defaultSrc: [`'self'`],
@@ -26,6 +38,8 @@ export const csp = builder({
       'https://webhook.frontapp.com',
       'leatherapi.bestinslot.xyz',
       'api.bnsv2.com',
+      ...backendConnectSrc,
+      ...customApiConnectSrc,
     ],
   },
 });

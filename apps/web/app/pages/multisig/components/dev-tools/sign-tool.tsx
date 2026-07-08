@@ -2,21 +2,33 @@ import { useState } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
+import { getMySigningPubkey } from '~/features/multisig/transactions/signing/get-my-signing-pubkey';
 import { signBtcTransaction } from '~/features/multisig/transactions/signing/sign-btc-transaction';
 import { signStxTransaction } from '~/features/multisig/transactions/signing/sign-stx-transaction';
 
-import type { AuthNetworkId, MultisigTransaction, VaultAccount } from '@leather.io/models';
+import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
 import { getMultisigService } from '@leather.io/services';
 import { Button } from '@leather.io/ui';
 
 import { TextField } from '../text-field';
 
-const networks: AuthNetworkId[] = ['btc:mainnet', 'btc:testnet', 'stx:mainnet', 'stx:testnet'];
+const networks: AuthNetworkId[] = [
+  'btc:mainnet',
+  'btc:testnet',
+  'btc:regtest',
+  'stx:mainnet',
+  'stx:testnet',
+];
+
+function modeLabel(network: AuthNetworkId): string {
+  if (network.endsWith('mainnet')) return 'main';
+  if (network.endsWith('regtest')) return 'regtest';
+  return 'test';
+}
 
 function networkLabel(network: AuthNetworkId): string {
   const chain = network.startsWith('btc') ? 'BTC' : 'STX';
-  const mode = network.endsWith('mainnet') ? 'main' : 'test';
-  return `${chain} ${mode}`;
+  return `${chain} ${modeLabel(network)}`;
 }
 
 function assertSignable(transaction: MultisigTransaction): void {
@@ -24,12 +36,6 @@ function assertSignable(transaction: MultisigTransaction): void {
     throw new Error(
       `Transaction is ${transaction.status}; only pending transactions can be signed`
     );
-}
-
-function getMySigningPubkey(account: VaultAccount, myAddress: string | undefined): string {
-  const mySigner = account.signers.find(signer => signer.address === myAddress);
-  if (!mySigner) throw new Error('Connected account is not a signer on this vault account');
-  return mySigner.signingPubkey;
 }
 
 // Fetches a proposed multisig transaction by ID, signs it with the extension, and
@@ -41,7 +47,7 @@ export function SignTool() {
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<MultisigTransaction | null>(null);
-  const myAddress = useSession(network)?.identity.address;
+  const myPublicKey = useSession(network)?.identity.publicKey;
 
   async function run() {
     setIsRunning(true);
@@ -54,7 +60,7 @@ export function SignTool() {
       assertSignable(transaction);
       const account = await service.getVaultAccount(network, transaction.vaultAccountId);
       const signatures = network.startsWith('btc')
-        ? await signBtcTransaction(transaction, account, getMySigningPubkey(account, myAddress))
+        ? await signBtcTransaction(transaction, account, getMySigningPubkey(account, myPublicKey))
         : await signStxTransaction(transaction, account);
       setResult(await service.addTransactionSignatures(network, id, { signatures }));
     } catch (err) {

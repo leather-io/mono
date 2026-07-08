@@ -19,6 +19,7 @@ export enum RouteUrls {
   LedgerOutdatedAppWarning = 'outdated-app-warning',
   LedgerUnexpectedFingerprint = 'unexpected-device-fingerprint',
   LedgerBroadcastError = 'transaction-broadcast-error',
+  LedgerSignStacksProposal = 'sign-stacks-proposal',
   ConnectLedgerStart = 'connect-ledger',
   OutdatedStacksAppWarning = 'outdated-stacks-app-warning',
 

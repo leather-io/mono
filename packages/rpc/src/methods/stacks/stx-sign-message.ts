@@ -8,7 +8,15 @@ export type StxSignMessageTypes = z.infer<typeof stxSignMessageTypeSchema>;
 
 export const stxSignMessageRequestBaseSchema = z.object({
   messageType: stxSignMessageTypeSchema.optional().default('utf8'),
-  network: z.optional(z.enum(['mainnet', 'testnet', 'devnet', 'mocknet'])),
+  network: z
+    .union([
+      z.literal('mainnet'),
+      z.literal('testnet'),
+      z.literal('devnet'),
+      z.literal('mocknet'),
+      z.string(),
+    ])
+    .optional(),
 });
 export type StxSignMessageRequestParamsBase = z.infer<typeof stxSignMessageRequestBaseSchema>;
 

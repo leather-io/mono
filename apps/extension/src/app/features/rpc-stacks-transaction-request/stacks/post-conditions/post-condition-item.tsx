@@ -1,20 +1,27 @@
-import { NonFungiblePostConditionWire, STXPostConditionWire } from '@stacks/transactions';
+import {
+  NonFungiblePostConditionWire,
+  STXPostConditionWire,
+  StakingPostConditionWire,
+} from '@stacks/transactions';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { AssetAvatarIcon, ItemLayout, StxAvatarIcon } from '@leather.io/ui';
 
 import { isValidUrl } from '@shared/utils/urls';
 
+import { type PostConditionVerb } from '@app/common/transactions/stacks/post-condition.utils';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 import { formatPostConditionMessage } from './post-conditions.utils';
 
 interface PostConditionItemProps {
+  context?: PostConditionVerb;
   isContractPrincipal: boolean;
   isLast: boolean;
-  postCondition: STXPostConditionWire | NonFungiblePostConditionWire;
+  postCondition: STXPostConditionWire | NonFungiblePostConditionWire | StakingPostConditionWire;
 }
 export function PostConditionItem({
+  context,
   isContractPrincipal,
   isLast,
   postCondition,
@@ -24,6 +31,7 @@ export function PostConditionItem({
   const { amount, contract, contractId, iconString, message, name, ticker, title } =
     formatPostConditionMessage({
       account: currentAccount,
+      context,
       isContractPrincipal,
       postCondition,
     });

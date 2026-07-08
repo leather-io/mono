@@ -1,11 +1,15 @@
 import { serializeCV, stringAsciiCV } from '@stacks/transactions';
 import { leather } from '~/utils/leather-sdk';
 
-import { computeProposalHash, decodeProposalPayload } from '@leather.io/crypto';
 import type { AuthNetworkId } from '@leather.io/models';
-import type { ProposeTransactionRequest } from '@leather.io/services';
+import {
+  type ProposeTransactionRequest,
+  walletPropose as buildSharedProposeRequest,
+} from '@leather.io/services';
+import { buildStxProposalDomain } from '@leather.io/stacks';
 
-import { buildStxProposalDomain } from './stx-proposal-domain';
+import { resolveStxChainId } from '../network/resolve-stx-chain-id';
+import { resolveWalletRpcNetwork } from '../network/resolve-wallet-rpc-network';
 
 interface WalletProposeParams {
   network: AuthNetworkId;
@@ -14,36 +18,39 @@ interface WalletProposeParams {
   rawPayload: string;
 }
 
-// Constructs the proposal hash, obtains the STX/BTC signature,
-// and assembles the sig-as-auth propose request.
-export async function walletPropose({
+// Constructs the proposal hash, obtains the STX/BTC signature via the Leather
+// SDK, and assembles the sig-as-auth propose request.
+export function walletPropose({
   network,
   multisigAddress,
   rawPayload,
 }: WalletProposeParams): Promise<ProposeTransactionRequest> {
-  const chain = network.startsWith('btc') ? 'btc' : 'stx';
-  const proposalTimestamp = Math.floor(Date.now() / 1000);
-  const proposalHash = computeProposalHash({
+  return buildSharedProposeRequest({
+    network,
     multisigAddress,
-    rawPayload: decodeProposalPayload(chain, rawPayload),
-    proposalTimestamp,
+    rawPayload,
+    signProposalCommitment,
   });
-  const proposalSignature = await signProposalCommitment(network, proposalHash);
-  return { multisigAddress, rawPayload, proposalSignature, proposalTimestamp };
 }
 
 async function signProposalCommitment(
   network: AuthNetworkId,
   proposalHash: string
 ): Promise<string> {
+  const rpcNetwork = resolveWalletRpcNetwork(network);
   if (network.startsWith('btc')) {
-    const signed = await leather.signMessage({ message: proposalHash, paymentType: 'p2wpkh' });
+    const signed = await leather.signMessage({
+      message: proposalHash,
+      paymentType: 'p2wpkh',
+      network: rpcNetwork,
+    });
     return signed.signature;
   }
   const signed = await leather.stxSignMessage({
     messageType: 'structured',
-    domain: serializeCV(buildStxProposalDomain(network)),
+    domain: serializeCV(buildStxProposalDomain(resolveStxChainId(network))),
     message: serializeCV(stringAsciiCV(proposalHash)),
+    network: rpcNetwork,
   });
   return signed.signature;
 }

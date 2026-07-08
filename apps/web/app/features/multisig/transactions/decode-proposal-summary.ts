@@ -3,6 +3,8 @@ import type { Money, MultisigTransaction, VaultAccount } from '@leather.io/model
 import { decodeStxTransferPayload } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
+import { resolveBtcNetworkMode } from '../network/resolve-btc-network-mode';
+
 interface ProposalSummary {
   recipient?: string;
   amount?: Money;
@@ -19,7 +21,7 @@ export function decodeProposalSummary(
 ): ProposalSummary {
   try {
     if (account.network.startsWith('btc')) {
-      const networkMode = account.network === 'btc:mainnet' ? 'mainnet' : 'testnet';
+      const networkMode = resolveBtcNetworkMode(account.network);
       const { psbtOutputs, fee } = getPsbtDetails({
         psbtHex: psbtBase64ToHex(transaction.proposalRawPayload),
         psbtAddresses: [account.multisigAddress],

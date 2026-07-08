@@ -23,19 +23,26 @@ export interface StacksProtocol {
 }
 
 export const stacksProtocolActions = [
+  'send',
+  'receive',
+  'contract-execution',
+  'contract-deploy',
   'swap',
-  'add-liquidity',
-  'remove-liquidity',
-  'stake',
-  'unstake',
-  'stack',
-  'unstack',
+  'bridge',
   'deposit',
   'withdraw',
+  'claim-rewards',
+  'add-liquidity',
+  'remove-liquidity',
+  'stake-lp',
+  'unstake-lp',
+  'stack',
+  'initiate-unstack',
+  'complete-unstack',
+  'liquid-stack',
+  'liquid-unstack',
   'borrow',
   'repay',
-  'claim-rewards',
-  'bridge',
 ] as const;
 
 export type StacksProtocolAction = (typeof stacksProtocolActions)[number];

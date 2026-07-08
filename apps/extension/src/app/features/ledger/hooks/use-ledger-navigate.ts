@@ -67,6 +67,13 @@ export function useLedgerNavigate() {
         });
       },
 
+      toConnectAndSignStacksProposalStep(message: UnsignedMessage) {
+        return navigate(`${RouteUrls.LedgerSignStacksProposal}/${RouteUrls.ConnectLedger}`, {
+          replace: true,
+          state: { ...toSerializableUnsignedMessage(message) },
+        });
+      },
+
       toCheckingAppVersion() {
         return navigate(RouteUrls.LedgerCheckingAppVersion, {
           replace: true,

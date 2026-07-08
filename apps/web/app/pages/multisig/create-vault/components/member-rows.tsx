@@ -25,6 +25,7 @@ interface MemberRowsProps {
   statuses: MemberFieldStatus[];
   allowBnsName?: boolean;
   onChange(members: MemberDraft[]): void;
+  onNormalizeAddress?(address: string): string;
 }
 
 const inputStyles = {
@@ -63,6 +64,7 @@ export function MemberRows({
   statuses,
   allowBnsName = false,
   onChange,
+  onNormalizeAddress,
 }: MemberRowsProps) {
   const stacksPlaceholder = allowBnsName ? 'SP… address or BNS name' : 'SP… address';
   const placeholder = chain === 'btc' ? 'bc1q… address' : stacksPlaceholder;
@@ -96,6 +98,12 @@ export function MemberRows({
                   value={member.isMe ? (myAddress ?? '') : member.addr}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     !member.isMe && update(index, { addr: e.target.value })
+                  }
+                  onBlur={() =>
+                    !member.isMe &&
+                    onNormalizeAddress &&
+                    member.addr.trim() !== '' &&
+                    update(index, { addr: onNormalizeAddress(member.addr.trim()) })
                   }
                 />
                 {status.state === 'valid' && (
