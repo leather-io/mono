@@ -19,12 +19,16 @@ interface TransactionActionsWithSpendProps {
   isSponsored: boolean;
   txAmount: Money;
   onApprove(): Promise<void>;
+  approveLabel?: string;
+  busyLabel?: string;
 }
 export function TransactionActionsWithSpend({
   isLoading,
   isSponsored,
   txAmount,
   onApprove,
+  approveLabel,
+  busyLabel,
 }: TransactionActionsWithSpendProps) {
   const { availableBalance, marketData, selectedFee } = useFeeEditorContext();
   const { status } = useRpcTransactionRequest();
@@ -48,6 +52,8 @@ export function TransactionActionsWithSpend({
         isError: isInsufficientBalance,
         onCancel: () => closeWindow(),
         onApprove,
+        approveLabel,
+        busyLabel,
       })}
     >
       <TransactionActionsTitle isLoading={isLoading} amount={formatCurrency(totalSpend)} />

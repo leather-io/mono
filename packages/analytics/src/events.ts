@@ -115,6 +115,7 @@ interface HistoricalEvents {
     outputs?: number;
   };
   broadcast_btc_error: { error: any };
+  propose_multisig_transaction: { symbol: string };
   copy_btc_address_to_clipboard: { type: string };
   copy_secret_key_to_clipboard: undefined;
   copy_stx_address_to_clipboard: undefined;

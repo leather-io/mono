@@ -4,6 +4,7 @@ import { stxCallContract } from '@leather.io/rpc';
 import {
   ensurePostConditionWireFormat,
   generateStacksUnsignedTransaction,
+  toUnsignedMultiSigStacksOptions,
 } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
@@ -18,8 +19,10 @@ import { SigningAccountCard } from '@app/features/rpc-stacks-transaction-request
 import { ContractCallDetailsLayout } from '@app/features/rpc-stacks-transaction-request/stacks/contract-call/contract-call-details.layout';
 import { PostConditionsDetailsLayout } from '@app/features/rpc-stacks-transaction-request/stacks/post-conditions/post-conditions-details.layout';
 import { useStacksRpcTransactionRequestContext } from '@app/features/rpc-stacks-transaction-request/stacks/stacks-rpc-transaction-request.context';
+import { useProposeStacksTransaction } from '@app/features/rpc-stacks-transaction-request/stacks/use-propose-stacks-transaction';
 import { useSignAndBroadcastStacksTransaction } from '@app/features/rpc-stacks-transaction-request/stacks/use-sign-and-broadcast-stacks-transaction';
 import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transaction-request/transaction-actions/transaction-actions-with-spend';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import {
   getDecodedRpcStxCallContractRequest,
@@ -38,6 +41,9 @@ export function RpcStxCallContract() {
   } = useFeeEditorContext();
   const { nonce, onUserActivatesNonceEditor } = useNonceEditorContext();
   const signAndBroadcastTransaction = useSignAndBroadcastStacksTransaction(stxCallContract.method);
+  const proposeTransaction = useProposeStacksTransaction(stxCallContract.method);
+  const policy = useCurrentPolicy();
+  const isStacksPolicy = policy?.chain === 'stacks';
   const convertToFiatAmount = useConvertCryptoCurrencyToFiatAmount('STX');
 
   const rpcRequest = useMemo(() => getDecodedRpcStxCallContractRequest(), []);
@@ -53,6 +59,15 @@ export function RpcStxCallContract() {
   );
 
   async function onApproveTransaction() {
+    if (isStacksPolicy) {
+      const unsignedMultisigTx = await generateStacksUnsignedTransaction(
+        toUnsignedMultiSigStacksOptions(txOptionsForBroadcast, {
+          publicKeys: policy.publicKeys,
+          numSignatures: policy.threshold,
+        })
+      );
+      return proposeTransaction(unsignedMultisigTx);
+    }
     const unsignedTx = await generateStacksUnsignedTransaction(txOptionsForBroadcast);
     await signAndBroadcastTransaction(unsignedTx);
   }
@@ -68,6 +83,8 @@ export function RpcStxCallContract() {
           // TODO: Calculate total request
           txAmount={createMoney(0, 'STX')}
           onApprove={onApproveTransaction}
+          approveLabel={isStacksPolicy ? 'Propose transaction' : undefined}
+          busyLabel={isStacksPolicy ? 'Proposing...' : undefined}
         />
       }
     >
@@ -82,6 +99,7 @@ export function RpcStxCallContract() {
         availableBalance={availableBalance}
         fiatBalance={convertToFiatAmount(availableBalance)}
         isLoadingBalance={isLoadingBalance}
+        showPolicyAccount={isStacksPolicy}
       />
       <ContractCallDetailsLayout
         contractAddress={txOptionsForBroadcast.contractAddress}
