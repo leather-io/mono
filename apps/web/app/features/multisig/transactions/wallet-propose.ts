@@ -6,7 +6,10 @@ import {
   type ProposeTransactionRequest,
   walletPropose as buildSharedProposeRequest,
 } from '@leather.io/services';
-import { buildStxProposalDomain, stxChainIdByAuthNetworkId } from '@leather.io/stacks';
+import { buildStxProposalDomain } from '@leather.io/stacks';
+
+import { resolveStxChainId } from '../network/resolve-stx-chain-id';
+import { resolveWalletRpcNetwork } from '../network/resolve-wallet-rpc-network';
 
 interface WalletProposeParams {
   network: AuthNetworkId;
@@ -17,7 +20,7 @@ interface WalletProposeParams {
 
 // Constructs the proposal hash, obtains the STX/BTC signature via the Leather
 // SDK, and assembles the sig-as-auth propose request.
-export async function walletPropose({
+export function walletPropose({
   network,
   multisigAddress,
   rawPayload,
@@ -34,14 +37,20 @@ async function signProposalCommitment(
   network: AuthNetworkId,
   proposalHash: string
 ): Promise<string> {
+  const rpcNetwork = resolveWalletRpcNetwork(network);
   if (network.startsWith('btc')) {
-    const signed = await leather.signMessage({ message: proposalHash, paymentType: 'p2wpkh' });
+    const signed = await leather.signMessage({
+      message: proposalHash,
+      paymentType: 'p2wpkh',
+      network: rpcNetwork,
+    });
     return signed.signature;
   }
   const signed = await leather.stxSignMessage({
     messageType: 'structured',
-    domain: serializeCV(buildStxProposalDomain(stxChainIdByAuthNetworkId[network])),
+    domain: serializeCV(buildStxProposalDomain(resolveStxChainId(network))),
     message: serializeCV(stringAsciiCV(proposalHash)),
+    network: rpcNetwork,
   });
   return signed.signature;
 }

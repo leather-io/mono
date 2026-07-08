@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+export const stacksRpcNetworkSchema = z.string().min(1).max(64);
+
 export const stacksTransactionDetailsSchema = z.object({
   txid: z.string().optional(),
   transaction: z.string(),
@@ -12,16 +14,7 @@ export const stacksTransactionDetailsSchema = z.object({
 
 export const baseStacksTransactionConfigSchema = z.object({
   address: z.string().optional(),
-  network: z
-    .union([
-      z.literal('mainnet'),
-      z.literal('testnet'),
-      z.literal('regtest'),
-      z.literal('devnet'),
-      z.literal('mocknet'),
-      z.string(),
-    ])
-    .optional(),
+  network: stacksRpcNetworkSchema.optional(),
   fee: z.coerce.number().optional(),
   nonce: z.coerce.number().optional(),
   // add pc later when imported from stacks.js

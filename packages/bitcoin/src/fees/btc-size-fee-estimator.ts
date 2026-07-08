@@ -123,7 +123,7 @@ export class BtcSizeFeeEstimator {
       witness_vbytes =
         0.25 + // segwit marker
         0.25 + // segwit flag
-        this.getSizeOfletInt(input_count) / 4; // witness element count
+        input_count / 4; // witness element count
     }
 
     return (
@@ -144,7 +144,7 @@ export class BtcSizeFeeEstimator {
       witness_vbytes =
         0.25 + // segwit marker
         0.25 + // segwit flag
-        this.getSizeOfletInt(input_count) / 4; // witness element count
+        input_count / 4; // witness element count
     }
 
     return witness_vbytes * 3;
@@ -289,6 +289,7 @@ export class BtcSizeFeeEstimator {
           redeemScriptSize;
         inputSize =
           36 + // outpoint (spent UTXO ID)
+          1 + // scriptSig length (empty for native segwit)
           inputWitnessSize / 4 + // witness program
           4; // nSequence
         if (this.params.input_script === 'p2sh-p2wsh') {
