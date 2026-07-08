@@ -281,8 +281,8 @@ importers:
         specifier: 1.0.3
         version: 1.0.3(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.4.0
-        version: 7.4.0(encoding@0.1.13)
+        specifier: 7.5.0
+        version: 7.5.0(encoding@0.1.13)
       '@stacks/wallet-sdk':
         specifier: 7.1.2
         version: 7.1.2(encoding@0.1.13)
@@ -306,7 +306,7 @@ importers:
         version: 1.1.1(encoding@0.1.13)
       alex-sdk:
         specifier: 3.1.0
-        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13))
+        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.5.0(encoding@0.1.13))
       are-passive-events-supported:
         specifier: 1.1.1
         version: 1.1.1
@@ -813,8 +813,8 @@ importers:
         specifier: 7.14.1
         version: 7.14.1
       '@stacks/transactions':
-        specifier: 7.4.0
-        version: 7.4.0(encoding@0.1.13)
+        specifier: 7.5.0
+        version: 7.5.0(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.1.0)
@@ -1168,8 +1168,8 @@ importers:
         specifier: 7.14.1
         version: 7.14.1
       '@stacks/transactions':
-        specifier: 7.4.0
-        version: 7.4.0(encoding@0.1.13)
+        specifier: 7.5.0
+        version: 7.5.0(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.1.0)
@@ -1757,8 +1757,8 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@stacks/transactions':
-        specifier: 7.4.0
-        version: 7.4.0(encoding@0.1.13)
+        specifier: 7.5.0
+        version: 7.5.0(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.2.3)
@@ -1812,11 +1812,11 @@ importers:
         specifier: 7.14.1
         version: 7.14.1
       '@stacks/transactions':
-        specifier: 7.4.0
-        version: 7.4.0(encoding@0.1.13)
+        specifier: 7.5.0
+        version: 7.5.0(encoding@0.1.13)
       alex-sdk:
         specifier: 3.1.0
-        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13))
+        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.5.0(encoding@0.1.13))
       axios:
         specifier: 1.16.1
         version: 1.16.1
@@ -1876,8 +1876,8 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@stacks/transactions':
-        specifier: 7.4.0
-        version: 7.4.0(encoding@0.1.13)
+        specifier: 7.5.0
+        version: 7.5.0(encoding@0.1.13)
       zod:
         specifier: 4.0.17
         version: 4.0.17
@@ -1962,14 +1962,14 @@ importers:
         specifier: 7.14.1
         version: 7.14.1
       '@stacks/transactions':
-        specifier: 7.4.0
-        version: 7.4.0(encoding@0.1.13)
+        specifier: 7.5.0
+        version: 7.5.0(encoding@0.1.13)
       '@velarprotocol/velar-sdk':
         specifier: 0.7.5-beta
-        version: 0.7.5-beta(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13))
+        version: 0.7.5-beta(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.5.0(encoding@0.1.13))
       alex-sdk:
         specifier: 3.1.0
-        version: 3.1.0(@stacks/common@7.3.1)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13))
+        version: 3.1.0(@stacks/common@7.5.0)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.5.0(encoding@0.1.13))
       axios:
         specifier: 1.16.1
         version: 1.16.1
@@ -2056,8 +2056,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.4.0
-        version: 7.4.0(encoding@0.1.13)
+        specifier: 7.5.0
+        version: 7.5.0(encoding@0.1.13)
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -2129,8 +2129,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.4.0
-        version: 7.4.0(encoding@0.1.13)
+        specifier: 7.5.0
+        version: 7.5.0(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.1.0)
@@ -8259,6 +8259,9 @@ packages:
   '@stacks/common@7.3.1':
     resolution: {integrity: sha512-29ANTFcSSlXnGQlgDVWg7OQ74lgQhu3x8JkeN19Q+UE/1lbQrzcctgPHG74XHjWNp8NPBqskUYA8/HLgIKuKNQ==}
 
+  '@stacks/common@7.5.0':
+    resolution: {integrity: sha512-UkKM3J7VufGEEuHLYRAFZQFbiQeACMpMMzGbBL6qo/6YLXvPPXA8MBffeCsXE65/a0bJSbh+0Q7rfdio9IvZ1w==}
+
   '@stacks/connect-react@22.2.0':
     resolution: {integrity: sha512-sH4yzndaTzQ+NrdNKYbpYFmBSeATYAwFJ6PZM81/m1iTh4DSQIVGR1nTIFpbuC0ynIMcLB45/hhyPO8O/fYr9Q==}
     peerDependencies:
@@ -8298,6 +8301,9 @@ packages:
   '@stacks/network@7.3.1':
     resolution: {integrity: sha512-dQjhcwkz8lihSYSCUMf7OYeEh/Eh0++NebDtXbIB3pHWTvNCYEH7sxhYTB1iyunurv31/QEi0RuWdlfXK/BjeA==}
 
+  '@stacks/network@7.5.0':
+    resolution: {integrity: sha512-FKfw864+ipj0RBa0kXBCKp+6Bm/8IS1pk+jg5NJhi//NzG8fZsC4MsER1F8qvzVoFrLfZjqxo+3sJDYfvHbVOQ==}
+
   '@stacks/profile@6.17.0':
     resolution: {integrity: sha512-EoYe0NapFc6bgA+vyCVY2sYYRHk3pbsbRnm3eaSp8y9Drfy8dBqsM10W1jjTwOn0R+IMmDT52lojdW7Pw3c7Mw==}
 
@@ -8325,8 +8331,8 @@ packages:
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
 
-  '@stacks/transactions@7.4.0':
-    resolution: {integrity: sha512-scsQO3rSNNKcPHp56Wy5OeZiIpQNmmZOORz8bkQKWjzvzycAodtSWmAoHiMFAKSleR1NyeRIz642fReqlZU9tw==}
+  '@stacks/transactions@7.5.0':
+    resolution: {integrity: sha512-PhKe8ZIaVWvTbsTDE/26z9Dm6oYYZ2Cfhpg7xabE97bCE59KwuujBkvLVCJKEdlUn/P187120Go79UbGf9BywA==}
 
   '@stacks/wallet-sdk@7.1.2':
     resolution: {integrity: sha512-LQNCu3aj5SsAEn1pTDTo4CDjEXFfgpN/ssF9evWdHOTQlyFK3E8lnEDbnD+Ulyjyak0aGz7ut+G93z2Y448mrQ==}
@@ -22250,7 +22256,7 @@ snapshots:
     dependencies:
       '@stacks/connect': 7.10.2(encoding@0.1.13)
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
       dotenv: 16.6.1
     transitivePeerDependencies:
       - encoding
@@ -23072,7 +23078,7 @@ snapshots:
 
   '@emotion/sheet@1.4.0': {}
 
-  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)':
+  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@emotion/babel-plugin': 11.13.5
@@ -26784,20 +26790,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@redux-devtools/app-core@2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)(redux-persist@6.0.0(react@19.1.0)(redux@5.0.1))(redux@5.0.1)':
+  '@redux-devtools/app-core@2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)(redux-persist@6.0.0(react@19.1.0)(redux@5.0.1))(redux@5.0.1)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
       '@redux-devtools/chart-monitor': 5.1.1(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react@19.2.3)(redux@5.0.1)
       '@redux-devtools/core': 4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)(redux@5.0.1)
       '@redux-devtools/inspector-monitor': 6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(redux@5.0.1)
-      '@redux-devtools/inspector-monitor-test-tab': 5.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
-      '@redux-devtools/inspector-monitor-trace-tab': 4.1.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
+      '@redux-devtools/inspector-monitor-test-tab': 5.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
+      '@redux-devtools/inspector-monitor-trace-tab': 4.1.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
       '@redux-devtools/log-monitor': 5.1.1(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react@19.2.3)(redux@5.0.1)
-      '@redux-devtools/rtk-query-monitor': 6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
-      '@redux-devtools/slider-monitor': 6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
-      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@redux-devtools/rtk-query-monitor': 6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
+      '@redux-devtools/slider-monitor': 6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
+      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)
       '@types/react': 19.1.17
       d3-state-visualizer: 3.0.0
@@ -26814,12 +26820,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@redux-devtools/app@7.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@redux-devtools/app@7.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
-      '@redux-devtools/app-core': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)(redux-persist@6.0.0(react@19.1.0)(redux@5.0.1))(redux@5.0.1)
-      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
+      '@redux-devtools/app-core': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)(redux-persist@6.0.0(react@19.1.0)(redux@5.0.1))(redux@5.0.1)
+      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)
       '@types/react': 19.1.17
       jsan: 3.1.14
@@ -26851,8 +26857,8 @@ snapshots:
       '@apollo/server': 4.13.0(encoding@0.1.13)(graphql@16.12.0)
       '@as-integrations/express5': 1.1.2(@apollo/server@4.13.0(encoding@0.1.13)(graphql@16.12.0))(express@5.2.1)
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
-      '@redux-devtools/app': 7.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
+      '@redux-devtools/app': 7.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)
       '@types/react': 19.1.17
       body-parser: 2.2.1
@@ -26905,13 +26911,13 @@ snapshots:
       react-redux: 9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1)
       redux: 5.0.1
 
-  '@redux-devtools/inspector-monitor-test-tab@5.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
+  '@redux-devtools/inspector-monitor-test-tab@5.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
       '@redux-devtools/inspector-monitor': 6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(redux@5.0.1)
-      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@types/react': 19.1.17
       es6template: 1.0.5
       javascript-stringify: 2.1.0
@@ -26925,7 +26931,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@redux-devtools/inspector-monitor-trace-tab@4.1.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
+  '@redux-devtools/inspector-monitor-trace-tab@4.1.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
     dependencies:
       '@babel/code-frame': 8.0.0-rc.2
       '@babel/runtime': 7.28.4
@@ -26998,13 +27004,13 @@ snapshots:
       - immutable
       - utf-8-validate
 
-  '@redux-devtools/rtk-query-monitor@6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
+  '@redux-devtools/rtk-query-monitor@6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
       '@redux-devtools/core': 4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1)
-      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)
       '@types/lodash': 4.17.21
       '@types/react': 19.1.17
@@ -27025,13 +27031,13 @@ snapshots:
       immutable: 5.1.5
       jsan: 3.1.14
 
-  '@redux-devtools/slider-monitor@6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
+  '@redux-devtools/slider-monitor@6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
       '@redux-devtools/core': 4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1)
-      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@types/react': 19.1.17
       react: 19.2.3
       react-base16-styling: 0.10.0
@@ -27040,11 +27046,11 @@ snapshots:
       - react-dom
       - supports-color
 
-  '@redux-devtools/ui@2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@redux-devtools/ui@2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
       '@rjsf/core': 5.24.13(@rjsf/utils@5.24.13(react@19.1.0))(react@19.2.3)
       '@rjsf/utils': 5.24.13(react@19.2.3)
       '@rjsf/validator-ajv8': 5.24.13(@rjsf/utils@5.24.13(react@19.1.0))
@@ -28395,6 +28401,8 @@ snapshots:
 
   '@stacks/common@7.3.1': {}
 
+  '@stacks/common@7.5.0': {}
+
   '@stacks/connect-react@22.2.0(encoding@0.1.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@stacks/connect': 7.4.0(encoding@0.1.13)
@@ -28420,7 +28428,7 @@ snapshots:
       '@stacks/network': 7.0.2(encoding@0.1.13)
       '@stacks/network-v6': '@stacks/network@6.17.0(encoding@0.1.13)'
       '@stacks/profile': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
       '@stacks/transactions-v6': '@stacks/transactions@6.17.0(encoding@0.1.13)'
       jsontokens: 4.0.1
     transitivePeerDependencies:
@@ -28499,6 +28507,13 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@stacks/network@7.5.0(encoding@0.1.13)':
+    dependencies:
+      '@stacks/common': 7.5.0
+      cross-fetch: 3.2.0(encoding@0.1.13)
+    transitivePeerDependencies:
+      - encoding
+
   '@stacks/profile@6.17.0(encoding@0.1.13)':
     dependencies:
       '@stacks/common': 6.16.0
@@ -28514,7 +28529,7 @@ snapshots:
     dependencies:
       '@stacks/common': 7.0.2
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
       jsontokens: 4.0.1
       schema-inspector: 2.0.2
       zone-file: 2.0.0-beta.3
@@ -28525,7 +28540,7 @@ snapshots:
     dependencies:
       '@stacks/common': 7.0.2
       '@stacks/network': 7.3.1(encoding@0.1.13)
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
       jsontokens: 4.0.1
       schema-inspector: 2.0.2
       zone-file: 2.0.0-beta.3
@@ -28547,7 +28562,7 @@ snapshots:
       '@stacks/encryption': 7.4.0
       '@stacks/network': 7.0.2(encoding@0.1.13)
       '@stacks/stacks-blockchain-api-types': 0.61.0
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
       bs58: 5.0.0
     transitivePeerDependencies:
       - encoding
@@ -28578,12 +28593,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/transactions@7.4.0(encoding@0.1.13)':
+  '@stacks/transactions@7.5.0(encoding@0.1.13)':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
-      '@stacks/common': 7.3.1
-      '@stacks/network': 7.3.1(encoding@0.1.13)
+      '@stacks/common': 7.5.0
+      '@stacks/network': 7.5.0(encoding@0.1.13)
       c32check: 2.0.0
       lodash.clonedeep: 4.5.0
     transitivePeerDependencies:
@@ -28599,7 +28614,7 @@ snapshots:
       '@stacks/network': 7.0.2(encoding@0.1.13)
       '@stacks/profile': 7.2.0(encoding@0.1.13)
       '@stacks/storage': 7.2.0(encoding@0.1.13)
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
       c32check: 2.0.0
       jsontokens: 4.0.1
       zone-file: 2.0.0-beta.3
@@ -29808,10 +29823,10 @@ snapshots:
       '@urql/core': 5.1.1(graphql@16.12.0)
       wonka: 6.3.5
 
-  '@velarprotocol/velar-sdk@0.7.5-beta(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13))':
+  '@velarprotocol/velar-sdk@0.7.5-beta(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.5.0(encoding@0.1.13))':
     dependencies:
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
 
   '@vercel/edge@1.2.2': {}
 
@@ -30041,7 +30056,7 @@ snapshots:
   '@zondax/ledger-stacks@1.1.1(encoding@0.1.13)':
     dependencies:
       '@ledgerhq/hw-transport': 6.32.0
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
       varuint-bitcoin: 2.0.0
     transitivePeerDependencies:
       - encoding
@@ -30300,21 +30315,21 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
-  alex-sdk@3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13)):
+  alex-sdk@3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.5.0(encoding@0.1.13)):
     dependencies:
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
-      clarity-codegen: 1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.4.0(encoding@0.1.13))
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
+      clarity-codegen: 1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.5.0(encoding@0.1.13))
     transitivePeerDependencies:
       - '@stacks/common'
       - debug
       - supports-color
 
-  alex-sdk@3.1.0(@stacks/common@7.3.1)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13)):
+  alex-sdk@3.1.0(@stacks/common@7.5.0)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.5.0(encoding@0.1.13)):
     dependencies:
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
-      clarity-codegen: 1.0.0-beta.1(@stacks/common@7.3.1)(@stacks/transactions@7.4.0(encoding@0.1.13))
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
+      clarity-codegen: 1.0.0-beta.1(@stacks/common@7.5.0)(@stacks/transactions@7.5.0(encoding@0.1.13))
     transitivePeerDependencies:
       - '@stacks/common'
       - debug
@@ -31501,11 +31516,11 @@ snapshots:
 
   cjs-module-lexer@1.4.3: {}
 
-  clarity-codegen@1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.4.0(encoding@0.1.13)):
+  clarity-codegen@1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.5.0(encoding@0.1.13)):
     dependencies:
       '@stacks/common': 7.0.2
       '@stacks/stacks-blockchain-api-types': 7.14.1
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
       axios: 1.16.1
       lodash: 4.18.1
       yargs: 17.7.2
@@ -31514,11 +31529,11 @@ snapshots:
       - debug
       - supports-color
 
-  clarity-codegen@1.0.0-beta.1(@stacks/common@7.3.1)(@stacks/transactions@7.4.0(encoding@0.1.13)):
+  clarity-codegen@1.0.0-beta.1(@stacks/common@7.5.0)(@stacks/transactions@7.5.0(encoding@0.1.13)):
     dependencies:
-      '@stacks/common': 7.3.1
+      '@stacks/common': 7.5.0
       '@stacks/stacks-blockchain-api-types': 7.14.1
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
       axios: 1.16.1
       lodash: 4.18.1
       yargs: 17.7.2
@@ -40229,7 +40244,7 @@ snapshots:
       '@stacks/common': 7.0.2
       '@stacks/encryption': 7.0.2
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      '@stacks/transactions': 7.5.0(encoding@0.1.13)
       c32check: 2.0.0
       micro-packed: 0.6.3
     transitivePeerDependencies:
