@@ -18,6 +18,7 @@ import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-check
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { getUnsignedStacksContractCallOptionsForFeeEstimation } from './rpc-stx-call-contract.utils';
 
@@ -29,6 +30,8 @@ export function RpcStxCallContractContainer({ account }: RpcStxCallContractConta
   const network = useCurrentStacksNetworkState();
   const stxMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
   const navigate = useNavigate();
+  const policy = useCurrentPolicy();
+  const balanceAddress = policy?.chain === 'stacks' ? policy.address : account.address;
 
   const txOptionsForFeeEstimation = useMemo(
     () =>
@@ -55,7 +58,7 @@ export function RpcStxCallContractContainer({ account }: RpcStxCallContractConta
 
   return (
     <>
-      <StxBalanceLoader address={account.address}>
+      <StxBalanceLoader address={balanceAddress}>
         {(balance, isLoadingAdditionalData) => (
           <StacksNonceLoader>
             {nonceCalc => (

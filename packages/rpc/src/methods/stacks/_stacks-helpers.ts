@@ -3,8 +3,13 @@ import { z } from 'zod';
 export const stacksRpcNetworkSchema = z.string().min(1).max(64);
 
 export const stacksTransactionDetailsSchema = z.object({
-  txid: z.string(),
+  txid: z.string().optional(),
   transaction: z.string(),
+  // Present (with `status: 'proposed'`) when the active account is a multisig
+  // policy: the transaction was proposed to the coordinator, not broadcast, so
+  // `txid` is empty until co-signers complete and broadcast it.
+  proposalId: z.string().optional(),
+  status: z.enum(['broadcast', 'proposed']).optional(),
 });
 
 export const baseStacksTransactionConfigSchema = z.object({

@@ -1,6 +1,7 @@
 import { base64, hex } from '@scure/base';
 import * as btc from '@scure/btc-signer';
 
+import { compileWshDescriptor } from '../descriptors/wsh-descriptor';
 import { BtcSignerNetwork } from '../utils/bitcoin.network';
 
 export interface WshMultisigPsbtInput {
@@ -48,6 +49,36 @@ export function assembleWshMultisigPsbt({
     tx.addOutputAddress(output.address ?? changeAddress, output.value, network);
   }
   return base64.encode(tx.toPSBT());
+}
+
+export interface BuildUnsignedMultisigBtcPsbtArgs {
+  descriptor: string;
+  inputs: WshMultisigPsbtInput[];
+  outputs: WshMultisigPsbtOutput[];
+  changeAddress: string;
+  network: BtcSignerNetwork;
+}
+
+// Compiles a `wsh(...)` descriptor and assembles an unsigned multisig PSBT from
+// the given coin-selection inputs/outputs. Coin selection itself lives in the
+// orchestration layer (@leather.io/services) so this package stays free of a
+// services dependency.
+export function buildUnsignedMultisigBtcPsbt({
+  descriptor,
+  inputs,
+  outputs,
+  changeAddress,
+  network,
+}: BuildUnsignedMultisigBtcPsbtArgs): string {
+  const { scriptPubKey, witnessScript } = compileWshDescriptor(descriptor);
+  return assembleWshMultisigPsbt({
+    scriptPubKey,
+    witnessScript,
+    inputs,
+    outputs,
+    changeAddress,
+    network,
+  });
 }
 
 export function psbtBase64ToHex(psbtBase64: string): string {

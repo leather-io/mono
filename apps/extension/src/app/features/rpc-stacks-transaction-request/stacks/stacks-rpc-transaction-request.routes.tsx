@@ -1,9 +1,10 @@
-import { Route } from 'react-router';
+import { Navigate, Route } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { BroadcastErrorSheet } from '@app/components/broadcast-error-dialog/broadcast-error-dialog';
 import { FeeEditor } from '@app/features/fee-editor/fee-editor';
+import { ledgerStacksMessageSigningRoutes } from '@app/features/ledger/flows/stacks-message-signing/ledger-stacks-sign-msg.routes';
 import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-tx-signing/ledger-sign-stacks-tx-container';
 import { NonceEditor } from '@app/features/nonce-editor/nonce-editor';
 import { AccountGate } from '@app/routes/account-gate';
@@ -33,6 +34,10 @@ export function generateStacksRpcTransactionRequestRoutes({
       <Route path={RouteUrls.NonceEditor} element={<NonceEditor />} />
       <Route path={RouteUrls.BroadcastError} element={<BroadcastErrorSheet />} />
       {ledgerStacksTxSigningRoutes}
+      <Route path={RouteUrls.LedgerSignStacksProposal}>
+        {ledgerStacksMessageSigningRoutes}
+        <Route index element={<Navigate to=".." replace />} />
+      </Route>
     </Route>
   );
 }

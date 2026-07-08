@@ -11,6 +11,7 @@ import {
   WALLET_ENVIRONMENT,
 } from '@shared/environment';
 
+import { ExtensionAuthSessionService } from './extension-auth-session.service';
 import { ExtensionHttpCacheService } from './extension-http-cache.service';
 import { ExtensionSettingsService } from './extension-settings.service';
 
@@ -30,5 +31,6 @@ export function initAppServices() {
     },
     cacheService: ExtensionHttpCacheService,
     settingsService: ExtensionSettingsService,
+    authSessionService: ExtensionAuthSessionService,
   });
 }

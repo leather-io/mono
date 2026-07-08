@@ -2,10 +2,13 @@ import { privateKeyToPublic, stringAsciiCV } from '@stacks/transactions';
 
 import { computeProposalHash, decodeProposalPayload } from '@leather.io/crypto';
 import type { MultisigTransaction, VaultAccount, VaultAccountSigner } from '@leather.io/models';
-import { signStructuredDataMessage } from '@leather.io/stacks';
+import {
+  buildStxProposalDomain,
+  signStructuredDataMessage,
+  stxChainIdByAuthNetworkId,
+} from '@leather.io/stacks';
 
 import { deriveMultisigAddress } from '../derive-multisig-address';
-import { buildStxProposalDomain } from '../stx-proposal-domain';
 import { preSignVerification } from './pre-sign-verification';
 
 const proposerUserId = '5ac53c09-7d42-4d0b-876f-15ef03b0ece5';
@@ -238,7 +241,7 @@ const stxTransaction: MultisigTransaction = {
   proposalRawPayload: stxProposalRawPayload,
   proposalSignature: signStructuredDataMessage(
     stringAsciiCV(stxProposalHash),
-    buildStxProposalDomain('stx:testnet'),
+    buildStxProposalDomain(stxChainIdByAuthNetworkId['stx:testnet']),
     stxPrivateKeys[0]
   ).signature,
   proposalTimestamp: stxProposalTimestamp,
@@ -298,7 +301,7 @@ describe(`${preSignVerification.name} (STX)`, () => {
     );
     const attackerSignature = signStructuredDataMessage(
       stringAsciiCV(stxProposalHash),
-      buildStxProposalDomain('stx:testnet'),
+      buildStxProposalDomain(stxChainIdByAuthNetworkId['stx:testnet']),
       attackerPrivateKey
     ).signature;
     expect(() =>

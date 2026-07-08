@@ -2,10 +2,11 @@ import { useState } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
+import { getMySigningPubkey } from '~/features/multisig/transactions/signing/get-my-signing-pubkey';
 import { signBtcTransaction } from '~/features/multisig/transactions/signing/sign-btc-transaction';
 import { signStxTransaction } from '~/features/multisig/transactions/signing/sign-stx-transaction';
 
-import type { AuthNetworkId, MultisigTransaction, VaultAccount } from '@leather.io/models';
+import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
 import { getMultisigService } from '@leather.io/services';
 import { Button } from '@leather.io/ui';
 
@@ -35,12 +36,6 @@ function assertSignable(transaction: MultisigTransaction): void {
     throw new Error(
       `Transaction is ${transaction.status}; only pending transactions can be signed`
     );
-}
-
-function getMySigningPubkey(account: VaultAccount, myAddress: string | undefined): string {
-  const mySigner = account.signers.find(signer => signer.address === myAddress);
-  if (!mySigner) throw new Error('Connected account is not a signer on this vault account');
-  return mySigner.signingPubkey;
 }
 
 // Fetches a proposed multisig transaction by ID, signs it with the extension, and

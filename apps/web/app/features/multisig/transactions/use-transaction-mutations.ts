@@ -5,6 +5,7 @@ import { getMultisigService } from '@leather.io/services';
 
 import { useSession } from '../auth/use-session';
 import { multisigVaultKeys } from '../vaults/vault-query-keys';
+import { getMySigningPubkey } from './signing/get-my-signing-pubkey';
 import { signBtcTransaction } from './signing/sign-btc-transaction';
 import { signStxTransaction } from './signing/sign-stx-transaction';
 
@@ -27,23 +28,13 @@ interface SignTransactionArgs {
   account: VaultAccount;
 }
 
-function findSignerPublicKey(account: VaultAccount, identityPublicKey?: string): string {
-  const signer = account.signers.find(signer => signer.publicKey === identityPublicKey);
-  if (!signer) throw new Error('You are not a signer on this account.');
-  return signer.signingPubkey;
-}
-
 export function useSignTransaction(network: AuthNetworkId) {
-  const session = useSession(network);
   const invalidate = useInvalidateTransaction(network);
+  const myAddress = useSession(network)?.identity.address;
   return useMutation<MultisigTransaction, Error, SignTransactionArgs>({
     async mutationFn({ transaction, account }) {
       const signatures = network.startsWith('btc')
-        ? await signBtcTransaction(
-            transaction,
-            account,
-            findSignerPublicKey(account, session?.identity.publicKey)
-          )
+        ? await signBtcTransaction(transaction, account, getMySigningPubkey(account, myAddress))
         : await signStxTransaction(transaction, account);
       return getMultisigService().addTransactionSignatures(network, transaction.id, { signatures });
     },

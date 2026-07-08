@@ -7,7 +7,6 @@ import { sendTransferHandler } from './send-transfer';
 type SendTransferRequest = Parameters<(typeof sendTransferHandler)[1]>[0];
 
 const mocks = vi.hoisted(() => ({
-  validateNoActivePolicy: vi.fn(),
   createConnectingAppSearchParamsWithLastKnownAccount: vi.fn(),
   triggerRequestPopupWindowOpen: vi.fn(),
   sendErrorResponseOnUserPopupClose: vi.fn(),
@@ -21,7 +20,6 @@ vi.mock('../rpc-message-handler', () => ({
 }));
 
 vi.mock('../rpc-request-utils', () => ({
-  validateNoActivePolicy: mocks.validateNoActivePolicy,
   getTabIdFromPort: (port: chrome.runtime.Port) => port.sender?.tab?.id ?? 0,
   createConnectingAppSearchParamsWithLastKnownAccount:
     mocks.createConnectingAppSearchParamsWithLastKnownAccount,
@@ -72,27 +70,7 @@ describe('sendTransferHandler', () => {
     vi.clearAllMocks();
   });
 
-  test('validates there is no active policy before doing anything else', async () => {
-    mocks.validateNoActivePolicy.mockResolvedValue({ status: 'success' });
-
-    await invokeHandler(buildPort());
-
-    expect(mocks.validateNoActivePolicy).toHaveBeenCalledWith(request, expect.anything());
-  });
-
-  test('short-circuits without opening a popup when a policy account is active', async () => {
-    mocks.validateNoActivePolicy.mockResolvedValue({ status: 'failure' });
-
-    await invokeHandler(buildPort());
-
-    expect(mocks.triggerRequestPopupWindowOpen).not.toHaveBeenCalled();
-    expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).not.toHaveBeenCalled();
-    expect(mocks.trackRpcRequestSuccess).not.toHaveBeenCalled();
-  });
-
-  test('opens the send-transfer popup when no policy account is active', async () => {
-    mocks.validateNoActivePolicy.mockResolvedValue({ status: 'success' });
-
+  test('opens the send-transfer popup for a valid request', async () => {
     await invokeHandler(buildPort());
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledTimes(1);
@@ -100,9 +78,7 @@ describe('sendTransferHandler', () => {
     expect(mocks.sendErrorResponseOnUserPopupClose).toHaveBeenCalledTimes(1);
   });
 
-  test('rejects undefined parameters after passing the policy check', async () => {
-    mocks.validateNoActivePolicy.mockResolvedValue({ status: 'success' });
-
+  test('rejects undefined parameters', async () => {
     const [, handler] = sendTransferHandler;
     await handler(
       { jsonrpc: '2.0', id: 'req-2', method: 'sendTransfer' } as unknown as SendTransferRequest,
