@@ -7,13 +7,10 @@ import {
 } from '@leather.io/bitcoin';
 import { computeProposalHash, decodeProposalPayload } from '@leather.io/crypto';
 import type { MultisigTransaction, VaultAccount, VaultAccountSigner } from '@leather.io/models';
-import {
-  buildStxProposalDomain,
-  stxChainIdByAuthNetworkId,
-  verifySip018Signature,
-} from '@leather.io/stacks';
+import { buildStxProposalDomain, verifySip018Signature } from '@leather.io/stacks';
 
 import { resolveBtcNetworkMode } from '../../network/resolve-btc-network-mode';
+import { resolveStxChainId } from '../../network/resolve-stx-chain-id';
 import { deriveMultisigAddress } from '../derive-multisig-address';
 
 // The served signer set must re-derive the served multisig address; otherwise the
@@ -76,7 +73,7 @@ function assertProposalCommitment(
         )
       : verifySip018Signature({
           message: stringAsciiCV(proposalHash),
-          domain: buildStxProposalDomain(stxChainIdByAuthNetworkId[account.network]),
+          domain: buildStxProposalDomain(resolveStxChainId(account.network)),
           signature: transaction.proposalSignature,
           publicKey: proposer.signingPubkey,
         });
