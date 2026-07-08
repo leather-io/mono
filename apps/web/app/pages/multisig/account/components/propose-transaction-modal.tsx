@@ -2,6 +2,8 @@ import { type ChangeEvent, useState } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
+import { normalizeNativeSegwitAddress } from '~/features/multisig/network/normalize-btc-address';
+import { resolveBtcNetworkMode } from '~/features/multisig/network/resolve-btc-network-mode';
 import { buildUnsignedMultisigBtcTransfer } from '~/features/multisig/transactions/build-btc-transfer';
 import { buildUnsignedMultisigStxTransfer } from '~/features/multisig/transactions/build-stx-transfer';
 import { useProposeTransaction } from '~/features/multisig/transactions/use-propose-transaction';
@@ -55,6 +57,7 @@ interface ProposeFormFieldsProps {
   recipientPlaceholder: string;
   recipient: string;
   onRecipient(value: string): void;
+  onRecipientBlur?(value: string): void;
   amountInput: string;
   onAmount(value: string): void;
   available?: Money;
@@ -76,6 +79,7 @@ function ProposeFormFields({
   recipientPlaceholder,
   recipient,
   onRecipient,
+  onRecipientBlur,
   amountInput,
   onAmount,
   available,
@@ -102,6 +106,7 @@ function ProposeFormFields({
         placeholder={recipientPlaceholder}
         value={recipient}
         onChange={onRecipient}
+        onBlur={onRecipientBlur}
         invalid={Boolean(recipientError)}
         help={
           recipientError ? (
@@ -218,13 +223,15 @@ function BtcProposeForm({
   const [amountInput, setAmountInput] = useState('');
   const { error } = useToast();
 
-  const mode = account.network === 'btc:mainnet' ? 'mainnet' : 'testnet';
-  const recipientAddress = recipient.trim() || undefined;
+  const mode = resolveBtcNetworkMode(account.network);
+  const recipientAddress = recipient.trim()
+    ? normalizeNativeSegwitAddress(recipient.trim().toLowerCase(), mode)
+    : undefined;
   const amount = parseBtcAmount(amountInput);
   const balance = useVaultAccountBalance(account);
   const recipientError = getRecipientError(
     recipient,
-    Boolean(recipientAddress) && isValidBitcoinNetworkAddress(recipient.trim(), mode)
+    Boolean(recipientAddress) && isValidBitcoinNetworkAddress(recipientAddress ?? '', mode)
   );
   const amountError = getAmountError(amountInput, amount, balance.crypto);
   const feesQuery = useVaultBtcTransactionFees({
@@ -266,6 +273,10 @@ function BtcProposeForm({
       recipientPlaceholder="bc1q… address"
       recipient={recipient}
       onRecipient={setRecipient}
+      onRecipientBlur={value => {
+        const trimmed = value.trim();
+        if (trimmed) setRecipient(normalizeNativeSegwitAddress(trimmed.toLowerCase(), mode));
+      }}
       amountInput={amountInput}
       onAmount={setAmountInput}
       available={balance.crypto}

@@ -34,6 +34,8 @@ export const emptyUtxos: UtxoTotals = {
   available: [],
 };
 
+const btcTxPageRequest = { page: 1, pageSize: 750 };
+
 @injectable()
 export class UtxosService {
   constructor(
@@ -87,7 +89,11 @@ export class UtxosService {
   ): Promise<UtxoTotals> {
     const [totalUtxos, btcTxs] = await Promise.all([
       this.getDescriptorTotalUtxos(descriptor, fingerprint, signal),
-      this.bitcoinTransactionsService.getDescriptorTransactions(descriptor, signal),
+      this.bitcoinTransactionsService.getDescriptorTransactions(
+        descriptor,
+        btcTxPageRequest,
+        signal
+      ),
     ]);
     return getUtxoTotals(fingerprint, totalUtxos, btcTxs);
   }
@@ -115,7 +121,7 @@ export class UtxosService {
   ): Promise<UtxoTotals> {
     const [totalUtxos, btcTxs] = await Promise.all([
       this.getAddressTotalUtxos(address, fingerprint, signal),
-      this.bitcoinTransactionsService.getAddressTransactions(address, signal),
+      this.bitcoinTransactionsService.getAddressTransactions(address, btcTxPageRequest, signal),
     ]);
     return getUtxoTotals(fingerprint, totalUtxos, btcTxs);
   }
@@ -125,6 +131,15 @@ export class UtxosService {
     fingerprint: string,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
+    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
+    if (networkMode === 'regtest') {
+      const mempoolApiUtxos = await this.mempoolApiClient.fetchAddressUtxos(address, undefined, {
+        signal,
+      });
+      return mempoolApiUtxos.map(utxo =>
+        createOwnedUtxoFromMempool({ ...utxo, address, path: '' }, fingerprint)
+      );
+    }
     const leatherApiUtxos = await this.leatherApiClient.fetchUtxosByAddress(address, { signal });
     return leatherApiUtxos.map(utxo => createOwnedUtxoFromLeather(utxo, fingerprint));
   }

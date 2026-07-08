@@ -63,6 +63,16 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     // Required for some libs e.g. pbkdf2
     global: 'globalThis',
     'import.meta.env.CLOUDFLARE_ENV': JSON.stringify(process.env.CLOUDFLARE_ENV),
+    'import.meta.env.LEATHER_PRIVATE_NETWORK_FLAVOR': JSON.stringify(
+      process.env.PRIVATE_NETWORK_FLAVOR
+    ),
+    'import.meta.env.LEATHER_PRIVATE_NETWORK_NAME': JSON.stringify(
+      process.env.PRIVATE_NETWORK_NAME
+    ),
+    'import.meta.env.LEATHER_PRIVATE_NETWORK_KEY': JSON.stringify(process.env.PRIVATE_NETWORK_KEY),
+    'import.meta.env.LEATHER_BITCOIN_API_URL': JSON.stringify(process.env.BITCOIN_API_URL),
+    'import.meta.env.LEATHER_STACKS_API_URL': JSON.stringify(process.env.STACKS_API_URL),
+    'import.meta.env.LEATHER_STACKS_CHAIN_ID': JSON.stringify(process.env.STACKS_CHAIN_ID),
   },
   plugins: [
     nodePolyfills({
@@ -85,8 +95,7 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     {
       name: 'cloudflare-vite-plugin-fix',
       configEnvironment(name, config) {
-        const isDev = process.env.npm_lifecycle_script?.endsWith('react-router dev');
-        if (name === 'ssr' && !isDev) {
+        if (name === 'ssr' && command !== 'serve') {
           delete config.dev;
         }
       },

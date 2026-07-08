@@ -1,4 +1,8 @@
-import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
+import {
+  type QueryFunctionContext,
+  type UseQueryOptions,
+  infiniteQueryOptions,
+} from '@tanstack/react-query';
 
 import {
   type ActivityRequest,
@@ -24,4 +28,35 @@ export function createBlockchainActivityQueryConfig(
       getBlockchainActivityService().getActivity(request, signal),
     ...activityQueryOptions,
   } satisfies UseQueryOptions<ActivityResponse, Error>;
+}
+
+type BlockchainActivityFeedRequest = Omit<ActivityRequest, 'cursor'>;
+
+export function createBlockchainActivityInfiniteQueryKey(
+  request: BlockchainActivityFeedRequest,
+  settings: UserSettings
+) {
+  return createServiceQueryKey(
+    'blockchain-activity-service--get-activity-infinite',
+    [request],
+    settings
+  );
+}
+
+export function createBlockchainActivityInfiniteQueryConfig(
+  request: BlockchainActivityFeedRequest,
+  settings: UserSettings
+) {
+  const initialCursor: ActivityResponse['nextCursor'] = null;
+  return infiniteQueryOptions({
+    queryKey: createBlockchainActivityInfiniteQueryKey(request, settings),
+    queryFn: ({ pageParam, signal }) =>
+      getBlockchainActivityService().getActivity(
+        { ...request, cursor: pageParam ?? undefined },
+        signal
+      ),
+    initialPageParam: initialCursor,
+    getNextPageParam: (lastPage: ActivityResponse) => lastPage.nextCursor,
+    ...activityQueryOptions,
+  });
 }

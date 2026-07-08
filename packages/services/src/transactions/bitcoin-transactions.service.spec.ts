@@ -46,7 +46,7 @@ describe(BitcoinTransactionsService.name, () => {
           getSettings: () => ({ network: { chain: { bitcoin: { bitcoinNetwork: 'mainnet' } } } }),
         } as unknown as SettingsService
       );
-      const result = await service.getAccountTransactions(mockAccount);
+      const result = await service.getAccountTransactions(mockAccount, { page: 1, pageSize: 150 });
       expect(result).toHaveLength(2);
       expect(result[0].txid).toEqual(duplicateTx.txid);
       expect(result[1].txid).toEqual(uniqueTx.txid);
@@ -77,7 +77,7 @@ describe(BitcoinTransactionsService.name, () => {
           multisig: { threshold: 2, signerCount: 3 },
         },
       };
-      const result = await service.getAccountTransactions(mockAccount);
+      const result = await service.getAccountTransactions(mockAccount, { page: 1, pageSize: 150 });
       expect(requestedAddress).toEqual('bc1qmultisig');
       expect(result).toHaveLength(1);
       expect(result[0].txid).toEqual(tx.txid);
@@ -95,7 +95,7 @@ describe(BitcoinTransactionsService.name, () => {
         {} as unknown as MempoolApiClient,
         {} as unknown as SettingsService
       );
-      const result = await service.getAccountTransactions(mockAccount);
+      const result = await service.getAccountTransactions(mockAccount, { page: 1, pageSize: 150 });
       expect(result).toEqual([]);
     });
   });

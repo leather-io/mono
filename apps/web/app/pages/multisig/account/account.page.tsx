@@ -6,6 +6,7 @@ import { Balance } from '~/components/balance/balance';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
+import { resolveWalletRpcNetwork } from '~/features/multisig/network/resolve-wallet-rpc-network';
 import { getMultisigDescriptor } from '~/features/multisig/transactions/btc-multisig-descriptor';
 import { getOrderedSigningPubkeys } from '~/features/multisig/transactions/derive-multisig-address';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
@@ -105,7 +106,7 @@ export function AccountDetailPage() {
     }
 
     const accountData = account.data;
-    const network = vault.data.network.endsWith('testnet') ? 'testnet' : 'mainnet';
+    const network = resolveWalletRpcNetwork(vault.data.network);
 
     setIsAddingToWallet(true);
     try {
