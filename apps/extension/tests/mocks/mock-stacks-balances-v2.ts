@@ -1,8 +1,16 @@
 import type { BrowserContext, Page } from '@playwright/test';
 
-import { TEST_ACCOUNT_1_STX_ADDRESS, TEST_TESTNET_ACCOUNT_1_STX_ADDRESS } from './constants';
+import {
+  TEST_ACCOUNT_1_STX_ADDRESS,
+  TEST_MULTISIG_ACCOUNTS_3_1_STX_ADDRESS,
+  TEST_TESTNET_ACCOUNT_1_STX_ADDRESS,
+} from './constants';
 
-const fundedStxAddresses = [TEST_ACCOUNT_1_STX_ADDRESS, TEST_TESTNET_ACCOUNT_1_STX_ADDRESS];
+const fundedStxAddresses = [
+  TEST_ACCOUNT_1_STX_ADDRESS,
+  TEST_TESTNET_ACCOUNT_1_STX_ADDRESS,
+  TEST_MULTISIG_ACCOUNTS_3_1_STX_ADDRESS,
+];
 
 const mockedEmptyFtBalancesV2 = {
   limit: 100,

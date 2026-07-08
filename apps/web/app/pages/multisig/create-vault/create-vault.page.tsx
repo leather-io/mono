@@ -5,10 +5,13 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
+import { normalizeNativeSegwitAddress } from '~/features/multisig/network/normalize-btc-address';
+import { resolveBtcNetworkMode } from '~/features/multisig/network/resolve-btc-network-mode';
 import { useCreateVault } from '~/features/multisig/vaults/use-vault-mutations';
 import { useToast } from '~/features/toasts/use-toast';
 
 import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
+import type { BitcoinNetworkModes } from '@leather.io/models';
 import { LeatherApiError } from '@leather.io/services';
 import { isValidStacksAddress } from '@leather.io/stacks';
 import { Button, InfoCircleIcon } from '@leather.io/ui';
@@ -39,6 +42,21 @@ const initialMembers: MemberDraft[] = [
   { id: 'member-1', addr: '', name: '' },
   { id: 'member-2', addr: '', name: '' },
 ];
+
+function btcSegwitPrefixForMode(mode: BitcoinNetworkModes): string {
+  if (mode === 'mainnet') return 'bc1q';
+  if (mode === 'regtest') return 'bcrt1q';
+  return 'tb1q';
+}
+
+function btcMemberAddressError(address: string, expectedPrefix: string): string {
+  const lower = address.toLowerCase();
+  const isTaproot =
+    lower.startsWith('bc1p') || lower.startsWith('tb1p') || lower.startsWith('bcrt1p');
+  return isTaproot
+    ? `Taproot addresses aren't supported. Enter a native SegWit address (${expectedPrefix}…).`
+    : `Enter a native SegWit address for this network (${expectedPrefix}…).`;
+}
 
 function ConnectChainCallout({
   chainLabel,
@@ -106,18 +124,21 @@ export function CreateVaultPage() {
   const chainLabel = chain === 'btc' ? 'Bitcoin' : 'Stacks';
 
   const networkMode = network.endsWith('mainnet') ? 'mainnet' : 'testnet';
-  const btcNativeSegwitPrefix = networkMode === 'mainnet' ? 'bc1q' : 'tb1q';
+  const btcNetworkMode = resolveBtcNetworkMode(network);
+  const btcNativeSegwitPrefix = btcSegwitPrefixForMode(btcNetworkMode);
   const stxPrefixes = networkMode === 'mainnet' ? ['SP', 'SM'] : ['ST', 'SN'];
 
   function isValidMemberAddress(address: string) {
     return chain === 'btc'
-      ? isValidBitcoinNetworkAddress(address, networkMode) &&
+      ? isValidBitcoinNetworkAddress(address, btcNetworkMode) &&
           address.toLowerCase().startsWith(btcNativeSegwitPrefix)
       : isValidStacksAddress(address) && stxPrefixes.some(prefix => address.startsWith(prefix));
   }
 
   function normalizeAddress(value: string) {
-    return chain === 'btc' ? value.toLowerCase() : value;
+    return chain === 'btc'
+      ? normalizeNativeSegwitAddress(value.toLowerCase(), btcNetworkMode)
+      : value;
   }
 
   const meName = members.find(member => member.isMe)?.name.trim();
@@ -133,26 +154,25 @@ export function CreateVaultPage() {
 
   function getMemberStatus(member: MemberDraft, index: number): MemberFieldStatus {
     if (member.isMe) return { state: 'empty' };
-    const address = member.addr.trim();
-    if (address === '') return { state: 'empty' };
+    const raw = member.addr.trim();
+    if (raw === '') return { state: 'empty' };
+    const address = normalizeAddress(raw);
     if (!isValidMemberAddress(address))
       return {
         state: 'invalid',
         error:
           chain === 'btc'
-            ? `Enter a native SegWit address (${btcNativeSegwitPrefix}…). Taproot is not supported.`
+            ? btcMemberAddressError(address, btcNativeSegwitPrefix)
             : `Enter a Stacks ${networkMode} address (${stxPrefixes[0]}…).`,
       };
-    const normalized = normalizeAddress(address);
-    if (myAddress && normalizeAddress(myAddress) === normalized)
+    if (myAddress && normalizeAddress(myAddress) === address)
       return {
         state: 'invalid',
         error: "You're added automatically — enter another member's address.",
       };
     if (
       members.some(
-        (other, i) =>
-          i !== index && !other.isMe && normalizeAddress(other.addr.trim()) === normalized
+        (other, i) => i !== index && !other.isMe && normalizeAddress(other.addr.trim()) === address
       )
     )
       return { state: 'invalid', error: 'This address is already added.' };
@@ -257,6 +277,7 @@ export function CreateVaultPage() {
               }}
               myAddress={myAddress}
               statuses={memberStatuses}
+              onNormalizeAddress={normalizeAddress}
             />
           </Section>
         </Box>

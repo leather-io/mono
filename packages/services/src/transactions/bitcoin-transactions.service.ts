@@ -92,6 +92,13 @@ export class BitcoinTransactionsService {
     pageRequest: LeatherApiPageRequest,
     signal?: AbortSignal
   ): Promise<BitcoinTransaction[]> {
+    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
+    if (networkMode === 'regtest') {
+      const mempoolTxs = await this.mempoolApiClient.fetchAddressTransactions(address, undefined, {
+        signal,
+      });
+      return mempoolTxs.map(createBitcoinTransactionFromMempool);
+    }
     const page = await this.leatherApiClient.fetchBitcoinTransactionsByAddress(
       address,
       pageRequest,
