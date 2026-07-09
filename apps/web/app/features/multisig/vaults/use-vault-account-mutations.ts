@@ -2,20 +2,51 @@ import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-q
 import { useToast } from '~/features/toasts/use-toast';
 
 import type { AuthNetworkId, VaultAccount, VaultAccountSummary } from '@leather.io/models';
-import { type CreateVaultAccountRequest, getMultisigService } from '@leather.io/services';
+import { LeatherApiError, getMultisigService } from '@leather.io/services';
 
 import { useSession } from '../auth/use-session';
+import { nextAccountIndexForThreshold } from './vault-account-index';
 import { multisigVaultKeys } from './vault-query-keys';
 
 const recoverVaultAccountsMutationKey = 'multisig-recover-vault-accounts';
 
+interface CreateVaultAccountParams {
+  name: string;
+  icon?: string;
+  threshold: number;
+}
+
+function isAccountCreateConflict(error: unknown): boolean {
+  return LeatherApiError.isLeatherApiError(error) && (error.status === 400 || error.status === 409);
+}
+
 export function useCreateVaultAccount(network: AuthNetworkId, vaultId: string) {
   const queryClient = useQueryClient();
   const address = useSession(network)?.identity.address;
-  return useMutation<VaultAccount, Error, CreateVaultAccountRequest>({
+  return useMutation<VaultAccount, Error, CreateVaultAccountParams>({
     mutationKey: ['multisig-create-vault-account', network, vaultId],
-    mutationFn(params) {
-      return getMultisigService().createVaultAccount(network, vaultId, params);
+    async mutationFn({ name, icon, threshold }) {
+      const service = getMultisigService();
+      const accountsKey = multisigVaultKeys.accounts(network, address, vaultId);
+      const knownAccounts =
+        queryClient.getQueryData<VaultAccountSummary[]>(accountsKey) ??
+        (await service.listVaultAccounts(network, vaultId));
+      const index = nextAccountIndexForThreshold(knownAccounts, threshold);
+      try {
+        return await service.createVaultAccount(network, vaultId, { name, icon, threshold, index });
+      } catch (error) {
+        if (!isAccountCreateConflict(error)) throw error;
+        const freshAccounts = await service.listVaultAccounts(network, vaultId);
+        queryClient.setQueryData(accountsKey, freshAccounts);
+        const freshIndex = nextAccountIndexForThreshold(freshAccounts, threshold);
+        if (freshIndex === index) throw error;
+        return service.createVaultAccount(network, vaultId, {
+          name,
+          icon,
+          threshold,
+          index: freshIndex,
+        });
+      }
     },
     onSuccess() {
       void queryClient.invalidateQueries({
