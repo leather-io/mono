@@ -58,6 +58,9 @@ export async function signTx(tx: Uint8Array, options?: SignOptions) {
   const pkMap = Object.fromEntries(privateKeychains);
 
   inputs.forEach((input, index) => {
+    const shouldSign = options?.signAtIndex?.includes(index) ?? true;
+    if (!shouldSign) return;
+
     const keys = extractRequiredKeyOrigins(input.bip32Derivation ?? input.tapBip32Derivation ?? []);
 
     const key = keys[0];

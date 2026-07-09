@@ -4,13 +4,14 @@ import { BitcoinAddress, BitcoinNetworkModes } from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
-import { getAddressFromOutScript } from '../utils/bitcoin.utils';
+import { getAddressFromOutScript, getOutputScriptType } from '../utils/bitcoin.utils';
 
 export interface PsbtOutput {
   address: BitcoinAddress | null;
   isMutable: boolean;
   toSign: boolean;
   value: number;
+  scriptType: string;
 }
 
 export interface PsbtOutputWithAddress extends PsbtOutput {
@@ -48,6 +49,7 @@ export function getParsedOutputs({
         isMutable: isPsbtMutable,
         toSign: isCurrentAddress,
         value: Number(output.amount),
+        scriptType: getOutputScriptType(output.script),
       };
     })
     .filter(isDefined);
