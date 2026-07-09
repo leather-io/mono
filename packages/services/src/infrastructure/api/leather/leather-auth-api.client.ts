@@ -234,6 +234,23 @@ export class LeatherAuthApiClient {
     );
   }
 
+  async recoverMultisigVaultAccounts(
+    network: AuthNetworkId,
+    vaultId: string,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.POST('/v1/multisig/vaults/{id}/accounts/recover', {
+          params: { path: { id: vaultId } },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
   async fetchMultisigVaultAccount(
     network: AuthNetworkId,
     accountId: string,

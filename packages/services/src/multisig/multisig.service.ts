@@ -130,6 +130,14 @@ export class MultisigService {
     return this.authApiClient.fetchMultisigVaultAccounts(network, vaultId, { signal });
   }
 
+  async recoverVaultAccounts(
+    network: AuthNetworkId,
+    vaultId: string,
+    signal?: AbortSignal
+  ): Promise<VaultAccountSummary[]> {
+    return this.authApiClient.recoverMultisigVaultAccounts(network, vaultId, { signal });
+  }
+
   async getVaultAccount(
     network: AuthNetworkId,
     accountId: string,
