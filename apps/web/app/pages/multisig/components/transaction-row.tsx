@@ -35,7 +35,7 @@ const spinnerClass = css({ animation: 'spin', transformOrigin: 'center' });
 // The shared PendingIcon asset is an invisible Figma conic-gradient export, so
 // collecting transactions use a spinner badge matching the sent/failed sub-icons:
 // a dark disc with a spinning ¾ ring.
-function PendingIndicatorIcon({ size }: { size: number }) {
+export function PendingIndicatorIcon({ size }: { size: number }) {
   return (
     <svg
       className={spinnerClass}
@@ -63,9 +63,9 @@ function renderIndicator(status: MultisigTransactionSummary['status'], size: num
   return <SentIcon width={size} height={size} />;
 }
 
-const scaleConfig = {
+export const scaleConfig = {
   regular: { avatarSize: 'lg', indicator: 16, title: 'label.02' },
-  compact: { avatarSize: 'md', indicator: 12, title: 'label.03' },
+  compact: { avatarSize: 'md', indicator: 12, title: 'label.02' },
 } as const;
 
 // A single transaction in a feed. Status never sits inline with the title (it

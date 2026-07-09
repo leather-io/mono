@@ -8,7 +8,7 @@ import { PostConditionModeName } from '@stacks/transactions';
 import { Money } from '@leather.io/models';
 import { BaseStacksTransactionRpcParams } from '@leather.io/rpc';
 import { StacksSigner } from '@leather.io/stacks';
-import { createMoneyFromDecimal, initBigNumber } from '@leather.io/utils';
+import { createMoney, initBigNumber } from '@leather.io/utils';
 
 export function getAccountIdFromConnectedApp(app: App) {
   assertAppIsConnected(app);
@@ -39,7 +39,7 @@ export function getAccountIdFromRequestParams({
 
 function getFeeFromRequestParams({ params }: { params: BaseStacksTransactionRpcParams }) {
   if (params.fee) {
-    return createMoneyFromDecimal(initBigNumber(params.fee), 'STX');
+    return createMoney(initBigNumber(params.fee).integerValue(), 'STX');
   }
   return getDefaultFee();
 }

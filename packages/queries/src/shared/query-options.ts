@@ -12,7 +12,7 @@ export const balanceQueryOptions = {
   refetchOnMount: true,
   retryOnMount: false,
   staleTime: 5000,
-  gcTime: 5000,
+  gcTime: minutesInMs(5),
 } satisfies Partial<UseQueryOptions>;
 
 export const activityQueryOptions = {
@@ -21,7 +21,7 @@ export const activityQueryOptions = {
   refetchOnMount: 'always',
   retryOnMount: false,
   staleTime: 5000,
-  gcTime: 5000,
+  gcTime: minutesInMs(5),
 } satisfies Partial<UseQueryOptions>;
 
 /**

@@ -183,15 +183,40 @@ describe('createBlockchainActivityView', () => {
     expect(view.amount).toMatchObject({ direction: 'sent' });
   });
 
-  it('renders stack with hardcoded STX and no amount', () => {
+  it('renders stack with hardcoded STX and the sent amount', () => {
+    const sentStx = {
+      direction: 'sent' as const,
+      asset: stxAsset,
+      amount: { crypto: createMoney(5000, 'STX'), quote: createMoney(7500, 'USD') },
+    };
     const view = createBlockchainActivityView(
-      makeActivity({ action: 'stack', protocolName: 'Stacking DAO', balanceChanges: [] }),
+      makeActivity({ action: 'stack', protocolName: 'Stacking DAO', balanceChanges: [sentStx] }),
       deps
     );
     expect(view.avatar).toEqual({ kind: 'single', asset: stxAsset });
     expect(view.title).toBe('STX');
     expect(view.subtitle).toBe('Stacked via Stacking DAO');
-    expect(view.amount).toBeUndefined();
+    expect(view.amount).toMatchObject({ direction: 'sent' });
+    expect(view.amount?.quote.amount.toNumber()).toBe(7500);
+  });
+
+  it('renders complete-unstack with the received amount', () => {
+    const receivedStx = {
+      direction: 'received' as const,
+      asset: stxAsset,
+      amount: { crypto: createMoney(5000, 'STX'), quote: createMoney(7500, 'USD') },
+    };
+    const view = createBlockchainActivityView(
+      makeActivity({
+        action: 'complete-unstack',
+        protocolName: 'Stacking DAO',
+        balanceChanges: [receivedStx],
+      }),
+      deps
+    );
+    expect(view.title).toBe('STX');
+    expect(view.indicator).toBe('function');
+    expect(view.amount).toMatchObject({ direction: 'received' });
   });
 
   it('drops "via {protocol}" when a protocol-action has no protocol name', () => {
@@ -217,7 +242,7 @@ describe('createBlockchainActivityView', () => {
     );
     expect(view.avatar).toEqual({ kind: 'icon', icon: 'contract-call' });
     expect(view.title).toBe('collateralize');
-    expect(view.subtitle).toBe('Via Arkadiko - vault-manager');
+    expect(view.subtitle).toBe('vault-manager - Arkadiko');
   });
 
   it('renders contract-deploy with a status-conjugated verb title', () => {

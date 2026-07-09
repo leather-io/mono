@@ -11,25 +11,18 @@ import {
 } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { destructAccountIdentifier } from '@/store/utils';
 import { bytesToHex } from '@noble/hashes/utils';
-import BigNumber from 'bignumber.js';
 
 import {
-  createBitcoinAddress,
   generateBitcoinUnsignedTransaction,
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import { extractAccountIndexFromDescriptor } from '@leather.io/crypto';
 import { AverageBitcoinFeeRates } from '@leather.io/models';
-import {
-  RpcRequest,
-  RpcResponse,
-  createRpcSuccessResponse,
-  rpcSendTransferLegacyParamSchema,
-  rpcSendTransferNewParamsSchema,
-  sendTransfer,
-} from '@leather.io/rpc';
+import { RpcRequest, RpcResponse, createRpcSuccessResponse, sendTransfer } from '@leather.io/rpc';
 import { UtxoTotals } from '@leather.io/services';
-import { createMoneyFromDecimal, isDefined } from '@leather.io/utils';
+import { isDefined } from '@leather.io/utils';
+
+import { getSendTransferRecipients } from './send-transfer.utils';
 
 interface SendTransferApproverProps {
   request: RpcRequest<typeof sendTransfer>;
@@ -48,27 +41,6 @@ export function SendTransferApprover(props: SendTransferApproverProps) {
   if (!feeRates) return null;
 
   return <BaseSendTransferApprover {...props} utxos={utxos.value} feeRates={feeRates} />;
-}
-
-function getSendTransferRecipients(params: RpcRequest<typeof sendTransfer>['params']) {
-  const parsedNewParams = rpcSendTransferNewParamsSchema.safeParse(params);
-  const parsedLegacyParams = rpcSendTransferLegacyParamSchema.safeParse(params);
-
-  if (parsedNewParams.success) {
-    return parsedNewParams.data.recipients.map(rec => ({
-      address: createBitcoinAddress(rec.address),
-      amount: createMoneyFromDecimal(new BigNumber(rec.amount), 'BTC'),
-    }));
-  }
-  if (parsedLegacyParams.success) {
-    return [
-      {
-        address: createBitcoinAddress(parsedLegacyParams.data.address),
-        amount: createMoneyFromDecimal(new BigNumber(parsedLegacyParams.data.amount), 'BTC'),
-      },
-    ];
-  }
-  throw new Error("Send transfer params don't pass zod validation");
 }
 
 function BaseSendTransferApprover(

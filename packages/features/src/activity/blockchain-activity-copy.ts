@@ -153,7 +153,7 @@ export function buildBlockchainActivitySubtitle(
         : t(transferSubtitlesWithoutCounterparty.received[status]);
     case 'contract-execution':
       return protocolName
-        ? t('Via {protocol} - {contract}', { protocol: protocolName, contract: contractName ?? '' })
+        ? t('{contract} - {protocol}', { protocol: protocolName, contract: contractName ?? '' })
         : t('{contract}', { contract: contractName ?? '' });
     case 'contract-deploy':
       return t('{contract}', { contract: contractName ?? '' });

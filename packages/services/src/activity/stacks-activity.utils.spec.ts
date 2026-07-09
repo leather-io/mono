@@ -169,6 +169,32 @@ describe(buildStacksActivity.name, () => {
     expect(result.protocol).toBe('bitflow');
   });
 
+  it('attaches the counterparty to a contract_call when one is supplied', () => {
+    const result = buildStacksActivity({
+      common,
+      core: { kind: 'contract_call', contractId: 'SP.token', functionName: 'transfer' },
+      action: 'receive',
+      counterparty: 'SP_FROM',
+      balanceChanges: [],
+    });
+    expect(result.counterparty).toBe('SP_FROM');
+    expect(result.contract).toEqual({
+      type: 'call',
+      contractId: 'SP.token',
+      functionName: 'transfer',
+    });
+  });
+
+  it('omits the counterparty from a contract_call when none is supplied', () => {
+    const result = buildStacksActivity({
+      common,
+      core: { kind: 'contract_call', contractId: 'SP.x', functionName: 'run' },
+      action: 'contract-execution',
+      balanceChanges: [],
+    });
+    expect(result.counterparty).toBeUndefined();
+  });
+
   it('omits protocol when the contract_call is unclassified', () => {
     const result = buildStacksActivity({
       common,
@@ -194,6 +220,7 @@ describe(buildStacksActivity.name, () => {
 
 describe(reclassifySip10Transfer.name, () => {
   const unmapped = { action: 'contract-execution' as const };
+  const sender = 'SP_SENDER';
   function change(
     protocol: CryptoAsset['protocol'],
     direction: BlockchainActivityBalanceChange['direction']
@@ -202,50 +229,59 @@ describe(reclassifySip10Transfer.name, () => {
   }
 
   it('reclassifies a sent SIP-10 transfer as send', () => {
-    expect(reclassifySip10Transfer(unmapped, 'transfer', [change('sip10', 'sent')]).action).toBe(
-      'send'
-    );
+    const result = reclassifySip10Transfer(unmapped, 'transfer', [change('sip10', 'sent')], sender);
+    expect(result.action).toBe('send');
+    expect(result.counterparty).toBeUndefined();
   });
 
-  it('reclassifies a received SIP-10 transfer as receive', () => {
-    expect(
-      reclassifySip10Transfer(unmapped, 'transfer', [change('sip10', 'received')]).action
-    ).toBe('receive');
+  it('reclassifies a received SIP-10 transfer as receive with the sender as counterparty', () => {
+    const result = reclassifySip10Transfer(
+      unmapped,
+      'transfer',
+      [change('sip10', 'received')],
+      sender
+    );
+    expect(result.action).toBe('receive');
+    expect(result.counterparty).toBe(sender);
   });
 
   it('ignores the incidental STX fee change and keys off the single SIP-10 change', () => {
-    const result = reclassifySip10Transfer(unmapped, 'transfer', [
-      change('nativeStx', 'sent'),
-      change('sip10', 'sent'),
-    ]);
+    const result = reclassifySip10Transfer(
+      unmapped,
+      'transfer',
+      [change('nativeStx', 'sent'), change('sip10', 'sent')],
+      sender
+    );
     expect(result.action).toBe('send');
   });
 
   it('leaves a classified protocol action untouched', () => {
     const classified = { action: 'swap' as const, protocol: 'bitflow' as const };
-    expect(reclassifySip10Transfer(classified, 'transfer', [change('sip10', 'sent')])).toBe(
+    expect(reclassifySip10Transfer(classified, 'transfer', [change('sip10', 'sent')], sender)).toBe(
       classified
     );
   });
 
   it('does not reclassify a non-transfer function', () => {
-    expect(reclassifySip10Transfer(unmapped, 'stack-stx', [change('sip10', 'sent')]).action).toBe(
-      'contract-execution'
-    );
+    expect(
+      reclassifySip10Transfer(unmapped, 'stack-stx', [change('sip10', 'sent')], sender).action
+    ).toBe('contract-execution');
   });
 
   it('does not reclassify when no SIP-10 change is present', () => {
     expect(
-      reclassifySip10Transfer(unmapped, 'transfer', [change('nativeStx', 'sent')]).action
+      reclassifySip10Transfer(unmapped, 'transfer', [change('nativeStx', 'sent')], sender).action
     ).toBe('contract-execution');
   });
 
   it('does not reclassify when multiple SIP-10 changes are present', () => {
     expect(
-      reclassifySip10Transfer(unmapped, 'transfer', [
-        change('sip10', 'sent'),
-        change('sip10', 'received'),
-      ]).action
+      reclassifySip10Transfer(
+        unmapped,
+        'transfer',
+        [change('sip10', 'sent'), change('sip10', 'received')],
+        sender
+      ).action
     ).toBe('contract-execution');
   });
 });
