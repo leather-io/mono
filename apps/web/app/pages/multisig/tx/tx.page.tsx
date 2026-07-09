@@ -6,6 +6,7 @@ import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-netwo
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { decodeProposalSummary } from '~/features/multisig/transactions/decode-proposal-summary';
+import { useContractProtocolName } from '~/features/multisig/transactions/use-contract-protocol';
 import { useOnChainTransaction } from '~/features/multisig/transactions/use-onchain-transaction';
 import {
   useBroadcastTransaction,
@@ -59,6 +60,15 @@ function toFiat(money: Money | undefined, marketData: MarketData | undefined): M
   return baseCurrencyAmountInQuote(money, marketData);
 }
 
+function proposalHeroTitle(
+  kind: 'transfer' | 'contractCall' | 'contractDeploy' | undefined,
+  functionName: string | undefined
+): string {
+  if (kind === 'contractCall') return functionName ?? 'Contract call';
+  if (kind === 'contractDeploy') return 'Contract deploy';
+  return 'Transfer';
+}
+
 function isAwaitingSignatureFrom(
   transaction: MultisigTransaction,
   account: VaultAccount,
@@ -105,6 +115,14 @@ export function TxDetailPage() {
     account.data?.multisigAddress ?? ''
   );
   const marketData = useMarketDataQuery(network.startsWith('btc') ? btcAsset : stxAsset);
+
+  // On-chain values are authoritative once broadcast; before that, decode the
+  // proposal payload so recipient/amount/fee still show while collecting signatures.
+  const decoded =
+    transaction.data && account.data
+      ? decodeProposalSummary(account.data, transaction.data)
+      : undefined;
+  const protocolName = useContractProtocolName(decoded?.contractId);
 
   const signTransaction = useSignTransaction(network);
   const cancelTransaction = useCancelTransaction(network);
@@ -181,14 +199,12 @@ export function TxDetailPage() {
   const proposerLabel = `${proposerName}${isMine ? ' (you)' : ''}`;
   const initiationDate = formatRelativeTime(new Date(tx.proposalTimestamp * 1000));
 
-  // On-chain values are authoritative once broadcast; before that, decode the
-  // proposal payload so recipient/amount/fee still show while collecting signatures.
-  const decoded = decodeProposalSummary(acct, tx);
-  const recipient = onChain.recipient ?? decoded.recipient;
-  const amount = onChain.amount ?? decoded.amount;
-  const fee = onChain.fee ?? decoded.fee;
+  const recipient = onChain.recipient ?? decoded?.recipient;
+  const amount = onChain.amount ?? decoded?.amount;
+  const fee = onChain.fee ?? decoded?.fee;
   const amountFiat = toFiat(amount, marketData.data);
   const feeFiat = toFiat(fee, marketData.data);
+  const heroTitle = proposalHeroTitle(decoded?.kind, decoded?.functionName);
   const effectiveStatus = reconcileStatus(tx.status, onChain.status);
   const awaitingMySignature = isAwaitingSignatureFrom(tx, acct, me.data?.address);
   const heroStatus = awaitingMySignature
@@ -232,7 +248,7 @@ export function TxDetailPage() {
           <MultisigHero
             variant="balance"
             themeId={vaultThemeFromName(vault.data.theme).id}
-            primary="Transfer"
+            primary={heroTitle}
             secondary={
               <Flex alignItems="center" gap="space.02">
                 <span>
@@ -257,6 +273,9 @@ export function TxDetailPage() {
             amountFiat={amountFiat}
             fee={fee}
             feeFiat={feeFiat}
+            contractId={decoded?.contractId}
+            functionName={decoded?.functionName}
+            protocolName={protocolName}
           />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">

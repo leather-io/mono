@@ -34,6 +34,9 @@ interface TxDetailsTableProps {
   amountFiat?: Money;
   fee?: Money;
   feeFiat?: Money;
+  contractId?: string;
+  functionName?: string;
+  protocolName?: string;
 }
 
 function moneyWithFiat(money: Money, fiat: Money | undefined): string {
@@ -72,6 +75,9 @@ export function TxDetailsTable({
   amountFiat,
   fee,
   feeFiat,
+  contractId,
+  functionName,
+  protocolName,
 }: TxDetailsTableProps) {
   const isBtc = chainFromNetwork(transaction.network) === 'btc';
   const mode = transaction.network.endsWith('mainnet') ? 'mainnet' : 'testnet';
@@ -114,21 +120,44 @@ export function TxDetailsTable({
       </Flex>
       <Row label="Initiator">{proposerLabel}</Row>
       <Row label="Initiation date">{initiationDate}</Row>
-      <Box
-        px="space.04"
-        py="space.03"
-        borderTopWidth="1px"
-        borderTopStyle="solid"
-        borderTopColor="ink.border-default"
-      >
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
-          Recipient
-        </styled.span>
-        <Box mt="space.01" textStyle="label.02">
-          {recipient ? <CopyAddress addr={recipient} grouped /> : pendingValue}
-        </Box>
-      </Box>
-      <Row label="Amount">{amount ? moneyWithFiat(amount, amountFiat) : pendingValue}</Row>
+      {contractId ? (
+        <>
+          <Box
+            px="space.04"
+            py="space.03"
+            borderTopWidth="1px"
+            borderTopStyle="solid"
+            borderTopColor="ink.border-default"
+          >
+            <styled.span textStyle="caption.01" color="ink.text-subdued">
+              Contract
+            </styled.span>
+            <Box mt="space.01" textStyle="label.02">
+              <CopyAddress addr={contractId} />
+            </Box>
+          </Box>
+          {protocolName ? <Row label="Protocol">{protocolName}</Row> : null}
+          {functionName ? <Row label="Function">{functionName}</Row> : null}
+        </>
+      ) : (
+        <>
+          <Box
+            px="space.04"
+            py="space.03"
+            borderTopWidth="1px"
+            borderTopStyle="solid"
+            borderTopColor="ink.border-default"
+          >
+            <styled.span textStyle="caption.01" color="ink.text-subdued">
+              Recipient
+            </styled.span>
+            <Box mt="space.01" textStyle="label.02">
+              {recipient ? <CopyAddress addr={recipient} grouped /> : pendingValue}
+            </Box>
+          </Box>
+          <Row label="Amount">{amount ? moneyWithFiat(amount, amountFiat) : pendingValue}</Row>
+        </>
+      )}
       <Row label="Fee">{fee ? moneyWithFiat(fee, feeFiat) : pendingValue}</Row>
       <Row label="Broadcast date">
         {transaction.broadcastAt
