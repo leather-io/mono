@@ -23,7 +23,7 @@ export async function buildUnsignedMultisigBtcTransfer({
     throw new Error(
       `Derived multisig address does not match vault address ${account.multisigAddress}`
     );
-  return buildSharedMultisigBtcTransfer({
+  return await buildSharedMultisigBtcTransfer({
     descriptor: getMultisigDescriptor(account),
     multisigAddress: account.multisigAddress,
     network: resolveBtcNetworkMode(account.network),

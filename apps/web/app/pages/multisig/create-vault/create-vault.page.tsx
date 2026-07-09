@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
@@ -9,12 +9,18 @@ import { normalizeNativeSegwitAddress } from '~/features/multisig/network/normal
 import { resolveBtcNetworkMode } from '~/features/multisig/network/resolve-btc-network-mode';
 import { useCreateVault } from '~/features/multisig/vaults/use-vault-mutations';
 import { useToast } from '~/features/toasts/use-toast';
+import {
+  type BnsResolution,
+  useAddressBnsName,
+  useBnsNames,
+  useBnsPrimaryNames,
+} from '~/queries/bns/bns.query';
 
 import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import type { BitcoinNetworkModes } from '@leather.io/models';
 import { LeatherApiError } from '@leather.io/services';
 import { isValidStacksAddress } from '@leather.io/stacks';
-import { Button, InfoCircleIcon } from '@leather.io/ui';
+import { Button, InfoCircleIcon, useDebouncedValue } from '@leather.io/ui';
 
 import { MultisigPage } from '../components/multisig-page';
 import { TextField } from '../components/text-field';
@@ -25,6 +31,7 @@ import { ChainPicker } from './components/chain-picker';
 import { type MemberDraft, type MemberFieldStatus, MemberRows } from './components/member-rows';
 import { ThemePicker } from './components/theme-picker';
 import { VaultPreviewCard } from './components/vault-preview-card';
+import { looksLikeBnsName, reconcileMemberBns } from './member-bns';
 
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -56,6 +63,28 @@ function btcMemberAddressError(address: string, expectedPrefix: string): string 
   return isTaproot
     ? `Taproot addresses aren't supported. Enter a native SegWit address (${expectedPrefix}…).`
     : `Enter a native SegWit address for this network (${expectedPrefix}…).`;
+}
+
+function applyBnsReconciliation(
+  member: MemberDraft,
+  resolve: (candidate: string) => BnsResolution | undefined
+): MemberDraft {
+  const reconciled = reconcileMemberBns(member, resolve);
+  if (reconciled.addr === member.addr && reconciled.name === member.name) return member;
+  return { ...member, addr: reconciled.addr, name: reconciled.name };
+}
+
+function applyReverseBnsName(
+  member: MemberDraft,
+  reverseNames: Map<string, string | undefined>,
+  filledByAddress: Record<string, string>
+): MemberDraft {
+  const address = member.addr.trim();
+  if (member.name.trim() !== '' || filledByAddress[member.id] === address) return member;
+  const name = reverseNames.get(address);
+  if (!name) return member;
+  filledByAddress[member.id] = address;
+  return { ...member, name };
 }
 
 function ConnectChainCallout({
@@ -141,20 +170,82 @@ export function CreateVaultPage() {
       : value;
   }
 
+  const bnsEnabled = chain === 'stx' && networkMode === 'mainnet';
+  const bnsCandidates = bnsEnabled
+    ? members.flatMap(member => {
+        if (member.isMe) return [];
+        const candidates: string[] = [];
+        if (looksLikeBnsName(member.addr)) candidates.push(member.addr.trim());
+        if (looksLikeBnsName(member.name)) candidates.push(member.name.trim());
+        return candidates;
+      })
+    : [];
+  // Debounced so a name resolving mid-type doesn't fire a lookup on every keystroke.
+  const debouncedCandidateKey = useDebouncedValue(bnsCandidates.join('|'), 300);
+  const bnsResolutions = useBnsNames(debouncedCandidateKey ? debouncedCandidateKey.split('|') : []);
+  const reconciledMembers = members.map(member =>
+    bnsEnabled && !member.isMe
+      ? reconcileMemberBns(member, candidate => bnsResolutions.get(candidate.trim()))
+      : { addr: member.addr, name: member.name, bns: 'none' as const }
+  );
+
+  // A member entered by address gets their own BNS name auto-filled as the label,
+  // once per address and only while the name is empty, so it stays editable.
+  const memberAddresses = bnsEnabled
+    ? members
+        .filter(member => !member.isMe && isValidMemberAddress(member.addr.trim()))
+        .map(member => member.addr.trim())
+    : [];
+  const reverseBnsNames = useBnsPrimaryNames(memberAddresses);
+  const filledMemberNames = useRef<Record<string, string>>({});
+  useEffect(() => {
+    if (!bnsEnabled) return;
+    let changed = false;
+    const next = members.map(member => {
+      if (member.isMe) return member;
+      const reconciled = applyBnsReconciliation(member, candidate =>
+        bnsResolutions.get(candidate.trim())
+      );
+      const filled = applyReverseBnsName(reconciled, reverseBnsNames, filledMemberNames.current);
+      if (filled !== member) changed = true;
+      return filled;
+    });
+    if (changed) setMembers(next);
+  }, [bnsEnabled, members, bnsResolutions, reverseBnsNames]);
+
+  // Pre-label the signed-in user with their own BNS name, once, and only while
+  // they haven't typed a name of their own.
+  const myBnsName = useAddressBnsName(myAddress, bnsEnabled);
+  const didPrefillMyName = useRef(false);
+  useEffect(() => {
+    if (didPrefillMyName.current || !myBnsName) return;
+    const me = members.find(member => member.isMe);
+    if (!me || me.name.trim() !== '') return;
+    didPrefillMyName.current = true;
+    setMembers(current =>
+      current.map(member => (member.isMe ? { ...member, name: myBnsName } : member))
+    );
+  }, [myBnsName, members]);
+
   const meName = members.find(member => member.isMe)?.name.trim();
   const memberPayload: { address: string; name?: string }[] = [
     ...(myAddress ? [{ address: normalizeAddress(myAddress), name: meName || undefined }] : []),
-    ...members
-      .filter(member => !member.isMe && member.addr.trim() !== '')
-      .map(member => ({
-        address: normalizeAddress(member.addr.trim()),
-        name: member.name.trim() || undefined,
+    ...reconciledMembers
+      .filter((reconciled, index) => !members[index].isMe && reconciled.addr.trim() !== '')
+      .map(reconciled => ({
+        address: normalizeAddress(reconciled.addr.trim()),
+        name: reconciled.name.trim() || undefined,
       })),
   ];
 
   function getMemberStatus(member: MemberDraft, index: number): MemberFieldStatus {
     if (member.isMe) return { state: 'empty' };
-    const raw = member.addr.trim();
+    const reconciled = reconciledMembers[index];
+    if (reconciled.bns === 'resolving') return { state: 'resolving' };
+    if (reconciled.bns === 'not-found') return { state: 'invalid', error: 'Not a valid BNS name.' };
+    if (reconciled.bns === 'mismatch')
+      return { state: 'invalid', error: 'BNS name does not match address.' };
+    const raw = reconciled.addr.trim();
     if (raw === '') return { state: 'empty' };
     const address = normalizeAddress(raw);
     if (!isValidMemberAddress(address))
@@ -171,8 +262,9 @@ export function CreateVaultPage() {
         error: "You're added automatically — enter another member's address.",
       };
     if (
-      members.some(
-        (other, i) => i !== index && !other.isMe && normalizeAddress(other.addr.trim()) === address
+      reconciledMembers.some(
+        (other, i) =>
+          i !== index && !members[i].isMe && normalizeAddress(other.addr.trim()) === address
       )
     )
       return { state: 'invalid', error: 'This address is already added.' };
@@ -181,11 +273,13 @@ export function CreateVaultPage() {
 
   const memberStatuses = members.map(getMemberStatus);
   const hasInvalidMember = memberStatuses.some(status => status.state === 'invalid');
+  const hasResolvingMember = memberStatuses.some(status => status.state === 'resolving');
 
   function validationError(): string | null {
     if (!connected[chain]) return `Connect your ${chainLabel} wallet to continue.`;
     if (name.trim() === '') return 'Give your vault a name to continue.';
     if (memberPayload.length < 2) return 'Add at least one other member to continue.';
+    if (hasResolvingMember) return 'Waiting for BNS names to resolve…';
     if (hasInvalidMember) return 'Fix the highlighted member addresses.';
     return null;
   }
@@ -277,6 +371,7 @@ export function CreateVaultPage() {
               }}
               myAddress={myAddress}
               statuses={memberStatuses}
+              allowBnsName={bnsEnabled}
               onNormalizeAddress={normalizeAddress}
             />
           </Section>

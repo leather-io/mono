@@ -14,7 +14,7 @@ export interface MemberDraft {
 }
 
 export interface MemberFieldStatus {
-  state: 'empty' | 'valid' | 'invalid';
+  state: 'empty' | 'valid' | 'invalid' | 'resolving';
   error?: string;
 }
 
@@ -23,6 +23,7 @@ interface MemberRowsProps {
   members: MemberDraft[];
   myAddress?: string;
   statuses: MemberFieldStatus[];
+  allowBnsName?: boolean;
   onChange(members: MemberDraft[]): void;
   onNormalizeAddress?(address: string): string;
 }
@@ -47,10 +48,13 @@ function borderColorForStatus(state: MemberFieldStatus['state']) {
 
 const maxMemberNameLength = 32;
 const disallowedNameChars =
-  /[.\u00B7\u2024\u2027\u3002\uFF0E\u200B-\u200D\uFEFF\u202A-\u202E\u2066-\u2069]/g;
+  /[\u00B7\u2024\u2027\u3002\uFF0E\u200B-\u200D\uFEFF\u202A-\u202E\u2066-\u2069]/g;
 
-function sanitizeMemberName(value: string) {
-  return value.replace(disallowedNameChars, '').slice(0, maxMemberNameLength);
+function sanitizeMemberName(value: string, allowDots: boolean) {
+  const stripped = value.replace(disallowedNameChars, '');
+  // Dots are only kept where the name can be verified against the member's address.
+  const dotHandled = allowDots ? stripped : stripped.replace(/\./g, '');
+  return dotHandled.slice(0, maxMemberNameLength);
 }
 
 export function MemberRows({
@@ -58,10 +62,12 @@ export function MemberRows({
   members,
   myAddress,
   statuses,
+  allowBnsName = false,
   onChange,
   onNormalizeAddress,
 }: MemberRowsProps) {
-  const placeholder = chain === 'btc' ? 'bc1q… address' : 'SP… address';
+  const stacksPlaceholder = allowBnsName ? 'SP… address or BNS name' : 'SP… address';
+  const placeholder = chain === 'btc' ? 'bc1q… address' : stacksPlaceholder;
 
   function update(index: number, patch: Partial<MemberDraft>) {
     onChange(members.map((m, i) => (i === index ? { ...m, ...patch } : m)));
@@ -118,7 +124,7 @@ export function MemberRows({
                 placeholder={member.isMe ? 'My name' : 'Name (optional)'}
                 value={member.name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  update(index, { name: sanitizeMemberName(e.target.value) })
+                  update(index, { name: sanitizeMemberName(e.target.value, allowBnsName) })
                 }
               />
               <styled.button
@@ -135,6 +141,11 @@ export function MemberRows({
                 ✕
               </styled.button>
             </Flex>
+            {status.state === 'resolving' && (
+              <styled.span textStyle="caption.01" color="ink.text-subdued">
+                Looking up BNS name…
+              </styled.span>
+            )}
             {status.error && (
               <styled.span textStyle="caption.01" color="red.action-primary-default">
                 {status.error}
