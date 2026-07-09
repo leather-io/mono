@@ -7,6 +7,7 @@ import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccountsBalance } from '~/features/multisig/vaults/use-vault-account-balance';
+import { useVaultAccountRecovery } from '~/features/multisig/vaults/use-vault-account-mutations';
 import { useVaultAccounts } from '~/features/multisig/vaults/use-vault-accounts';
 import {
   useCancelVault,
@@ -74,6 +75,7 @@ export function VaultDetailPage() {
 
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accounts = useVaultAccounts(network, vaultNetworkKnown ? vaultId : undefined);
+  const accountRecovery = useVaultAccountRecovery(network, vaultNetworkKnown ? vaultId : undefined);
   const accountsBalance = useVaultAccountsBalance(accounts.data);
   const cancelVault = useCancelVault(network);
   const joinVault = useJoinVault(network);
@@ -167,6 +169,9 @@ export function VaultDetailPage() {
             vault={vault}
             accounts={accounts.data}
             isLoading={accounts.isLoading}
+            isRecovering={accountRecovery.isRecovering}
+            recoveryFailed={accountRecovery.recoveryFailed}
+            onRetryRecovery={accountRecovery.retry}
             canCreate={canCreateAccount}
             disabledReason={accountCreationBlockedReason(vault)}
             onCreateAccount={() => setIsCreatingAccount(true)}
