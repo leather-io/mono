@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   AuthType,
@@ -22,6 +23,7 @@ import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 import { closeWindow } from '@shared/utils';
 
 import { useConvertCryptoCurrencyToFiatAmount } from '@app/common/hooks/use-convert-to-fiat-amount';
+import { getTxSenderAddress } from '@app/common/transactions/stacks/transaction.utils';
 import { AccountStacksAddress } from '@app/components/account/account-stacks-address';
 import { TransactionRecipientsLayout } from '@app/components/rpc-transaction-request/transaction-recipients.layout';
 import { FeeEditor } from '@app/features/fee-editor/fee-editor';
@@ -35,7 +37,11 @@ import { ContractDeployDetailsLayout } from '@app/features/rpc-stacks-transactio
 import { PostConditionsDetailsLayout } from '@app/features/rpc-stacks-transaction-request/stacks/post-conditions/post-conditions-details.layout';
 import { useStacksRpcTransactionRequestContext } from '@app/features/rpc-stacks-transaction-request/stacks/stacks-rpc-transaction-request.context';
 import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transaction-request/transaction-actions/transaction-actions-with-spend';
-import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
+import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { parsePolicyParent } from '@app/store/policy/policy-store.utils';
+import { selectAllPolicies, useCurrentPolicy } from '@app/store/policy/policy.selectors';
+import { useSignStacksTransactionWithAccount } from '@app/store/transactions/transaction.hooks';
 
 import {
   checkUnsignedStacksTransactionHashMode,
@@ -54,13 +60,30 @@ export function RpcStxSignTransaction() {
   } = useFeeEditorContext();
   const { nonce, onUserActivatesNonceEditor } = useNonceEditorContext();
   const convertToFiatAmount = useConvertCryptoCurrencyToFiatAmount('STX');
-  const signStacksTx = useSignStacksTransaction();
 
   const unsignedTxForBroadcast = useMemo(() => getUnsignedStacksTransactionFromRpcRequest(), []);
 
   // Handle multisig transactions
   const isMultisig = checkUnsignedStacksTransactionHashMode(unsignedTxForBroadcast);
   const canEditFeeAndNonce = !isMultisig;
+
+  const currentAccountId = useCurrentAccountId();
+  const policies = useSelector(selectAllPolicies);
+  const currentPolicy = useCurrentPolicy();
+  const signerPolicy = useMemo(() => {
+    if (!isMultisig) return undefined;
+    const txSenderAddress = getTxSenderAddress(unsignedTxForBroadcast);
+    const matches = policies.filter(
+      policy => policy.chain === 'stacks' && policy.address === txSenderAddress
+    );
+    return matches.find(policy => policy.id === currentPolicy?.id) ?? matches[0];
+  }, [isMultisig, unsignedTxForBroadcast, policies, currentPolicy]);
+  const signerAccountId = useMemo(
+    () => (signerPolicy ? parsePolicyParent(signerPolicy.parentAccountId) : currentAccountId),
+    [signerPolicy, currentAccountId]
+  );
+  const signerAccount = useStacksAccount(signerAccountId);
+  const signStacksTx = useSignStacksTransactionWithAccount(signerAccount);
 
   async function onApproveTransaction() {
     if (canEditFeeAndNonce) {
@@ -105,6 +128,7 @@ export function RpcStxSignTransaction() {
       availableBalance={availableBalance}
       fiatBalance={convertToFiatAmount(availableBalance)}
       isLoadingBalance={isLoadingBalance}
+      showPolicyAccount={Boolean(signerPolicy)}
     />
   );
 

@@ -14,7 +14,6 @@ import {
   GenerateUnsignedTransactionOptions,
   generateUnsignedTransaction,
 } from '@app/common/transactions/stacks/generate-unsigned-txs';
-import { useWalletType } from '@app/common/use-wallet-type';
 import { listenForStacksTxLedgerSigning } from '@app/features/ledger/flows/stacks-tx-signing/stacks-tx-signing-event-listeners';
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import { useToast } from '@app/features/toasts/use-toast';
@@ -23,6 +22,7 @@ import {
   useCurrentStacksAccount,
   useCurrentStacksAccountAddress,
 } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 
 import { usePostConditionState } from './post-conditions.hooks';
@@ -101,9 +101,8 @@ function useUnsignedStacksTransaction(values: StacksTransactionFormValues) {
   return tx.result;
 }
 
-function useSignTransactionSoftwareWallet() {
+function useSignTransactionSoftwareWallet(account: StacksAccount | undefined) {
   const toast = useToast();
-  const account = useCurrentStacksAccount();
 
   return useCallback(
     (tx: StacksTransactionWire) => {
@@ -113,7 +112,6 @@ function useSignTransactionSoftwareWallet() {
         );
         return;
       }
-      if (!account) return null;
       const signer = new TransactionSigner(tx);
       signer.signOrigin(account.stxPrivateKey);
       return tx;
@@ -122,20 +120,24 @@ function useSignTransactionSoftwareWallet() {
   );
 }
 
-export function useSignStacksTransaction() {
-  const { whenWallet } = useWalletType();
+export function useSignStacksTransactionWithAccount(account: StacksAccount | undefined) {
   const ledgerNavigate = useLedgerNavigate();
-  const signSoftwareTx = useSignTransactionSoftwareWallet();
+  const signSoftwareTx = useSignTransactionSoftwareWallet(account);
 
-  return (tx: StacksTransactionWire) =>
-    whenWallet({
-      async ledger(tx: StacksTransactionWire) {
-        const serializedTx = tx.serialize();
-        void ledgerNavigate.toConnectAndSignStacksTransactionStep(serializedTx);
-        return listenForStacksTxLedgerSigning(serializedTx);
-      },
-      software(tx: StacksTransactionWire) {
-        return signSoftwareTx(tx);
-      },
-    })(tx);
+  return (tx: StacksTransactionWire) => {
+    if (!account) return null;
+
+    if (account.type === 'ledger') {
+      const serializedTx = tx.serialize();
+      void ledgerNavigate.toConnectAndSignStacksTransactionStep(serializedTx);
+      return listenForStacksTxLedgerSigning(serializedTx);
+    }
+
+    return signSoftwareTx(tx);
+  };
+}
+
+export function useSignStacksTransaction() {
+  const account = useCurrentStacksAccount();
+  return useSignStacksTransactionWithAccount(account);
 }
