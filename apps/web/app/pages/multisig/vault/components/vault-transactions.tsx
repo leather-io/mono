@@ -1,22 +1,20 @@
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { useVaultTransactions } from '~/features/multisig/vaults/use-vault-transactions';
+import { useVaultActivity } from '~/features/multisig/activity/use-vault-activity';
 
-import type { AuthNetworkId, VaultAccountSummary } from '@leather.io/models';
+import type { VaultAccountSummary } from '@leather.io/models';
 
-import { TransactionList } from '../../components/transaction-list';
+import { VaultActivityList } from '../../components/vault-activity-list';
 import { multisigPaths } from '../../multisig.constants';
 
 interface VaultTransactionsProps {
-  network: AuthNetworkId;
-  vaultId: string;
   accounts: VaultAccountSummary[] | undefined;
 }
 
-export function VaultTransactions({ network, vaultId, accounts }: VaultTransactionsProps) {
+export function VaultTransactions({ accounts }: VaultTransactionsProps) {
   const navigate = useNavigate();
-  const { transactions, isLoading } = useVaultTransactions(network, accounts);
+  const { items, isLoading } = useVaultActivity(accounts ?? []);
 
   if (isLoading) {
     return (
@@ -34,7 +32,7 @@ export function VaultTransactions({ network, vaultId, accounts }: VaultTransacti
     );
   }
 
-  if (transactions.length === 0) {
+  if (items.length === 0) {
     return (
       <Box
         borderRadius="md"
@@ -51,18 +49,11 @@ export function VaultTransactions({ network, vaultId, accounts }: VaultTransacti
     );
   }
 
-  const thresholdByAccount = new Map(
-    (accounts ?? []).map(account => [account.id, account.threshold])
-  );
-
   return (
-    <TransactionList
+    <VaultActivityList
+      items={items}
       scale="compact"
-      items={transactions.map(transaction => ({
-        transaction,
-        vaultId,
-        threshold: thresholdByAccount.get(transaction.vaultAccountId),
-      }))}
+      limit={10}
       onSelect={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
     />
   );

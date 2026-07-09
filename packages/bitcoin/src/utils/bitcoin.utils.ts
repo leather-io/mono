@@ -132,6 +132,10 @@ export function getAddressFromOutScript(
       return null;
   }
 }
+
+export function getOutputScriptType(script: Uint8Array) {
+  return btc.OutScript.decode(script).type;
+}
 /**
  * Payment type identifiers, as described by `@scure/btc-signer` library
  */

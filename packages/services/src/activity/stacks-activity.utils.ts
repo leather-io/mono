@@ -59,6 +59,7 @@ export function buildStacksActivity({
   action,
   protocol,
   protocolName,
+  counterparty,
   balanceChanges,
 }: {
   common: StacksActivityCommon;
@@ -66,6 +67,7 @@ export function buildStacksActivity({
   action: StacksProtocolAction;
   protocol?: StacksProtocolId;
   protocolName?: string;
+  counterparty?: string;
   balanceChanges: BlockchainActivityBalanceChange[];
 }): BlockchainActivity {
   const base = {
@@ -84,6 +86,7 @@ export function buildStacksActivity({
     case 'contract_call':
       return {
         ...base,
+        ...(counterparty ? { counterparty } : {}),
         contract: { type: 'call', contractId: core.contractId, functionName: core.functionName },
       };
     default:
@@ -107,12 +110,14 @@ export interface ClassifiedContractCall {
   readonly action: StacksProtocolAction;
   readonly protocol?: StacksProtocolId;
   readonly protocolName?: string;
+  readonly counterparty?: string;
 }
 
 export function reclassifySip10Transfer(
   classified: ClassifiedContractCall,
   functionName: string,
-  balanceChanges: BlockchainActivityBalanceChange[]
+  balanceChanges: BlockchainActivityBalanceChange[],
+  sender: string
 ): ClassifiedContractCall {
   if (classified.protocol !== undefined || classified.action !== 'contract-execution') {
     return classified;
@@ -120,7 +125,9 @@ export function reclassifySip10Transfer(
   if (functionName !== sip10TransferFunctionName) return classified;
   const sip10Changes = balanceChanges.filter(change => change.asset.protocol === 'sip10');
   if (sip10Changes.length !== 1) return classified;
-  return { action: sip10Changes[0].direction === 'sent' ? 'send' : 'receive' };
+  return sip10Changes[0].direction === 'sent'
+    ? { action: 'send' }
+    : { action: 'receive', counterparty: sender };
 }
 
 // /balance-changes returns stx + ft + nft rows mixed; only ft rows are consumed here
@@ -275,10 +282,11 @@ export function buildConfirmedStacksActivity(
         balanceChanges,
       });
     case 'contract_call': {
-      const { action, protocol, protocolName } = reclassifySip10Transfer(
+      const { action, protocol, protocolName, counterparty } = reclassifySip10Transfer(
         classified ?? { action: 'contract-execution' },
         tx.contract_call.function_name,
-        balanceChanges
+        balanceChanges,
+        tx.sender.address
       );
       return buildStacksActivity({
         common,
@@ -290,6 +298,7 @@ export function buildConfirmedStacksActivity(
         action,
         protocol,
         protocolName,
+        counterparty,
         balanceChanges,
       });
     }

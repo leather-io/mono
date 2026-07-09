@@ -22,15 +22,19 @@ interface ListItemBoxProps {
   // content row, for use inside a card that already supplies per-row padding,
   // dividers and any highlight wash.
   variant?: ListItemVariant;
+  // Full-bleed mode for rows sitting flush inside a bordered list container
+  // with dividers: drops the row's own corner radius so hover and attention
+  // washes run edge to edge.
+  flush?: boolean;
   highlight?: 'attention';
   action?: ReactNode;
   onClick?(): void;
 }
 
 const attentionGradient =
-  'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.16), rgb(from token(colors.orange.action-primary-default) r g b / 0.025))';
+  'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.1), rgb(from token(colors.orange.action-primary-default) r g b / 0))';
 const attentionGradientHover =
-  'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.22), rgb(from token(colors.orange.action-primary-default) r g b / 0.045))';
+  'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.14), rgb(from token(colors.orange.action-primary-default) r g b / 0))';
 
 export function ListItemBox({
   title,
@@ -41,6 +45,7 @@ export function ListItemBox({
   trailingCaption,
   density = 'default',
   variant = 'boxed',
+  flush = false,
   highlight,
   action,
   onClick,
@@ -48,7 +53,7 @@ export function ListItemBox({
   const attention = highlight === 'attention';
   const gap = density === 'compact' ? 'space.03' : 'space.04';
   const titleNode = titleAccessory ? (
-    <HStack gap="space.01" minWidth={0} alignItems="center">
+    <HStack gap="space.02" minWidth={0} alignItems="center">
       {title}
       {titleAccessory}
     </HStack>
@@ -58,6 +63,7 @@ export function ListItemBox({
   const layout = (
     <ItemLayout
       gap="space.00"
+      columnGap="space.04"
       titleLeft={titleNode}
       captionLeft={caption}
       titleRight={trailing}
@@ -102,9 +108,9 @@ export function ListItemBox({
       alignItems="center"
       gap={gap}
       width="100%"
-      borderRadius="sm"
-      px="space.03"
-      py={density === 'compact' ? 'space.02' : 'space.03'}
+      borderRadius={flush ? 'none' : 'sm'}
+      px="space.04"
+      py={density === 'compact' ? 'space.03' : 'space.04'}
       bgImage={attention ? attentionGradient : undefined}
       _hover={onClick ? interactiveHover : undefined}
     >

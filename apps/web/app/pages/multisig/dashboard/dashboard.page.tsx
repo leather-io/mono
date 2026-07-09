@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
-import {
-  type DashboardActivityItem,
-  useDashboardActivity,
-} from '~/features/multisig/vaults/use-dashboard-activity';
+import { useDashboardActivity } from '~/features/multisig/vaults/use-dashboard-activity';
 import { useVaults } from '~/features/multisig/vaults/use-vaults';
 
 import type { VaultSummary } from '@leather.io/models';
@@ -18,7 +16,7 @@ import { ChainAvatar } from '../components/chain-avatar';
 import { InvitationModal } from '../components/invitation-modal';
 import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
-import { TransactionList } from '../components/transaction-list';
+import { VaultActivityList } from '../components/vault-activity-list';
 import type { Chain } from '../data/multisig-types';
 import { multisigPaths } from '../multisig.constants';
 import { CreateVaultTile } from './components/create-vault-tile';
@@ -69,11 +67,11 @@ function EmptyActivity() {
 }
 
 function ActivityFeed({
-  activity,
+  items,
   isLoading,
   onOpen,
 }: {
-  activity: DashboardActivityItem[];
+  items: VaultActivityItem[];
   isLoading: boolean;
   onOpen(vaultId: string, txId: string): void;
 }) {
@@ -92,19 +90,8 @@ function ActivityFeed({
       </Flex>
     );
   }
-  if (activity.length === 0) return <EmptyActivity />;
-  return (
-    <TransactionList
-      scale="compact"
-      items={activity.map(item => ({
-        transaction: item.transaction,
-        vaultId: item.vaultId,
-        subtitle: item.vaultName,
-        threshold: item.threshold,
-      }))}
-      onSelect={onOpen}
-    />
-  );
+  if (items.length === 0) return <EmptyActivity />;
+  return <VaultActivityList items={items} scale="compact" limit={10} onSelect={onOpen} />;
 }
 
 function ConnectChainPrompt({
@@ -152,7 +139,7 @@ export function MultisigDashboardPage() {
   const stxSignIn = useSignIn(stxNetwork);
 
   const vaults = [...(btcVaults.data ?? []), ...(stxVaults.data ?? [])];
-  const { activity, isLoading: isLoadingActivity } = useDashboardActivity(vaults);
+  const { items: activityItems, isLoading: isLoadingActivity } = useDashboardActivity(vaults);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const inviteParam = searchParams.get('invite');
@@ -241,7 +228,7 @@ export function MultisigDashboardPage() {
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Activity</SectionLabel>
           <ActivityFeed
-            activity={activity}
+            items={activityItems}
             isLoading={isLoadingActivity}
             onOpen={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
           />
