@@ -32,6 +32,8 @@ import type { MultisigActivityClassification } from './multisig-transaction-acti
 
 const transactionsPageRequest = { page: 1, pageSize: 100 };
 
+const previewActivityLimit = 15;
+
 const protocolRegistryCacheOptions = { staleTime: 300_000, gcTime: 300_000 } as const;
 
 interface MultisigActivityInputs {
@@ -201,7 +203,11 @@ export function useVaultActivity(
 
   const onchainResults = useQueries({
     queries: accounts.map(account =>
-      createBlockchainActivityViewsQuery(createMultisigAccountAddresses(account), settings)
+      createBlockchainActivityViewsQuery(
+        createMultisigAccountAddresses(account),
+        settings,
+        previewActivityLimit
+      )
     ),
   });
   const onchain = onchainResults.flatMap(result => result.data ?? []);

@@ -46,13 +46,13 @@ export function decodeProposalPayload(
     }
     const payload = decodeStxTransactionPayload(rawPayload);
     if (!payload) return null;
-    const fee = createMoney(Number(payload.fee), 'STX');
+    const fee = createMoney(payload.fee, 'STX');
     switch (payload.type) {
       case 'stxTransfer':
         return {
           type: 'stxTransfer',
           recipient: payload.recipient,
-          amount: createMoney(Number(payload.amount), 'STX'),
+          amount: createMoney(payload.amount, 'STX'),
           fee,
         };
       case 'contractCall':
@@ -95,7 +95,7 @@ export function decodeProposalSummary(
       return { recipient: payload.recipient, amount: payload.amount, fee: payload.fee };
     case 'contractCall':
     case 'contractDeploy':
-      return {};
+      return { fee: payload.fee };
     default:
       return assertUnreachable(payload);
   }

@@ -34,10 +34,11 @@ function selectBlockchainActivityFeedViews(data: InfiniteData<ActivityResponse>)
 
 export function createBlockchainActivityViewsQuery(
   account: AccountAddresses,
-  settings: UserSettings
+  settings: UserSettings,
+  limit?: number
 ) {
   return {
-    ...createBlockchainActivityQueryConfig({ account }, settings),
+    ...createBlockchainActivityQueryConfig({ account, limit }, settings),
     ...activityFeedCacheOptions,
     select: selectBlockchainActivityViews,
   };
