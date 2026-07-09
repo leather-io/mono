@@ -44,7 +44,7 @@ function createBtcSendFormSchema({ networkMode, calculateBtcMaxSpend }: SchemaCr
           .string()
           .refine(isValidBitcoinAddress, errorMessages.invalidAddress)
           .refine(btcAddressNetworkValidator(networkMode), errorMessages.incorrectNetworkAddress)
-          .refine(btcComplianceValidator(networkMode), errorMessages.nonCompliantAddress),
+          .refine(btcComplianceValidator(), errorMessages.nonCompliantAddress),
         feeRate: z.number(),
         isSendingMax: z.boolean(),
       })
@@ -65,11 +65,10 @@ function btcAddressNetworkValidator(networkMode: BitcoinNetworkModes) {
   return (address: string) => isValidBitcoinNetworkAddress(address, networkMode);
 }
 
-function btcComplianceValidator(networkMode: BitcoinNetworkModes) {
+function btcComplianceValidator() {
   return (address: string) =>
     addressComplianceValidator({
       address,
-      chain: networkMode,
       shouldCheckCompliance: isValidBitcoinAddress(address),
     });
 }

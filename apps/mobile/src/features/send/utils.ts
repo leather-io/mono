@@ -1,9 +1,10 @@
 import { type BtcFormSchema } from '@/features/send/forms/btc/btc-form-schema';
 import { type StxFormSchema } from '@/features/send/forms/stx/stx-form-schema';
 import { PayerLookupFn } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { analytics } from '@/utils/analytics';
 import { bytesToHex } from '@noble/hashes/utils';
 import { type PublicKey } from '@stacks/common';
-import { ChainId, StacksNetwork } from '@stacks/network';
+import { StacksNetwork } from '@stacks/network';
 import BigNumber from 'bignumber.js';
 import memoize from 'p-memoize';
 
@@ -13,7 +14,8 @@ import {
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import { type BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
-import { defaultStacksFees, isAddressCompliant } from '@leather.io/query';
+import { defaultStacksFees } from '@leather.io/query';
+import { getComplianceService } from '@leather.io/services';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import {
   convertAmountToBaseUnit,
@@ -96,18 +98,24 @@ export async function stxFormValuesToSerializedTransaction(
 
 interface addressComplianceValidatorParams {
   address: string;
-  chain: ChainId | BitcoinNetworkModes;
   shouldCheckCompliance: boolean;
 }
 
 async function rawAddressComplianceValidator({
   address,
-  chain,
   shouldCheckCompliance,
 }: addressComplianceValidatorParams) {
   if (!shouldCheckCompliance) return true;
 
-  return isAddressCompliant({ address, chain });
+  const result = await getComplianceService().checkAddressCompliance(address);
+  if (result.status === 'non_compliant') {
+    analytics.track('non_compliant_entity_detected', { address });
+    return false;
+  }
+  if (result.status === 'unavailable') {
+    analytics.track('compliance_check_unavailable', { address, reason: result.reason });
+  }
+  return true;
 }
 
 export const addressComplianceValidator = memoize(rawAddressComplianceValidator, {

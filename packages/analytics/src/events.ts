@@ -169,6 +169,7 @@ interface HistoricalEvents {
   request_signature_sign: { type: 'software' | 'ledger' };
   switch_account: { index: number; hasStxBalance: boolean };
   non_compliant_entity_detected: { address: string | string[] };
+  compliance_check_unavailable: { address: string; reason: string };
   ledger_transaction_publish_error: { error: { message: string; error: any } };
   native_segwit_tx_hex_to_ledger_tx: { success: boolean };
   psbt_sign_request_p2tr_missing_taproot_internal_key: undefined;

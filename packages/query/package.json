@@ -32,7 +32,6 @@
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
     "@hirosystems/token-metadata-api-client": "1.2.0",
-    "@leather.io/bitcoin": "workspace:*",
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/stacks": "workspace:*",
