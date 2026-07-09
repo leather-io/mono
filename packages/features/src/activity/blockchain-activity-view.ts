@@ -6,7 +6,7 @@ import type {
   OnChainActivityStatus,
   StacksProtocolAction,
 } from '@leather.io/models';
-import { sumMoney } from '@leather.io/utils';
+import { sumMoney, truncateMiddle } from '@leather.io/utils';
 
 import type { FormatMoney } from './activity-balance';
 import {
@@ -125,7 +125,7 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
     avatar: { kind: 'single', from: 'stx' },
     indicator: 'sent',
     title: { kind: 'symbol', from: 'stx' },
-    amount: { kind: 'none' },
+    amount: { kind: 'single', from: 'sent' },
   },
   'initiate-unstack': {
     avatar: { kind: 'single', from: 'stx' },
@@ -137,7 +137,7 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
     avatar: { kind: 'single', from: 'stx' },
     indicator: 'function',
     title: { kind: 'symbol', from: 'stx' },
-    amount: { kind: 'none' },
+    amount: { kind: 'single', from: 'received' },
   },
   'liquid-stack': {
     avatar: { kind: 'pair' },
@@ -332,6 +332,11 @@ function getContractName(activity: BlockchainActivity): string | undefined {
   return activity.contract ? activity.contract.contractId.split('.')[1] : undefined;
 }
 
+function truncateCounterparty(counterparty: string): string {
+  const truncated = truncateMiddle(counterparty);
+  return truncated.length < counterparty.length ? truncated : counterparty;
+}
+
 export function createBlockchainActivityView(
   activity: BlockchainActivity,
   deps: { formatMoney: FormatMoney; translate?: BlockchainActivityTranslate }
@@ -360,7 +365,9 @@ export function createBlockchainActivityView(
         action: activity.action,
         status: activity.status,
         protocolName: activity.protocolName,
-        counterparty: activity.counterparty,
+        counterparty: activity.counterparty
+          ? truncateCounterparty(activity.counterparty)
+          : undefined,
         contractName: getContractName(activity),
       },
       t

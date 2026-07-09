@@ -1,31 +1,24 @@
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { useVaultAccountTransactions } from '~/features/multisig/vaults/use-vault-transactions';
+import { useVaultAccountActivityFeed } from '~/features/multisig/activity/use-vault-account-activity-feed';
 
-import type { AuthNetworkId } from '@leather.io/models';
+import type { VaultAccount } from '@leather.io/models';
+import { Button } from '@leather.io/ui';
 
-import { TransactionList } from '../../components/transaction-list';
+import { VaultActivityList } from '../../components/vault-activity-list';
 import { multisigPaths } from '../../multisig.constants';
 
 interface AccountTransactionsProps {
-  network: AuthNetworkId;
-  vaultId: string | undefined;
-  accountId: string | undefined;
-  threshold: number;
+  account: VaultAccount | undefined;
 }
 
-export function AccountTransactions({
-  network,
-  vaultId,
-  accountId,
-  threshold,
-}: AccountTransactionsProps) {
+export function AccountTransactions({ account }: AccountTransactionsProps) {
   const navigate = useNavigate();
-  const transactions = useVaultAccountTransactions(network, accountId);
-  const items = transactions.data?.data ?? [];
+  const { items, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useVaultAccountActivityFeed(account);
 
-  if (transactions.isLoading) {
+  if (isLoading) {
     return (
       <Flex direction="column" gap="space.03">
         {[0, 1].map(index => (
@@ -59,11 +52,23 @@ export function AccountTransactions({
   }
 
   return (
-    <TransactionList
-      items={items.map(transaction => ({ transaction, vaultId: vaultId ?? '', threshold }))}
-      onSelect={(targetVaultId, txId) =>
-        targetVaultId && void navigate(multisigPaths.tx(targetVaultId, txId))
-      }
-    />
+    <Flex direction="column" gap="space.04">
+      <VaultActivityList
+        items={items}
+        onSelect={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
+      />
+      {hasNextPage && (
+        <Flex justifyContent="center">
+          <Button
+            variant="outline"
+            disabled={isFetchingNextPage}
+            aria-busy={isFetchingNextPage}
+            onClick={fetchNextPage}
+          >
+            {isFetchingNextPage ? 'Loading…' : 'Load more'}
+          </Button>
+        </Flex>
+      )}
+    </Flex>
   );
 }

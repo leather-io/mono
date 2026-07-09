@@ -183,12 +183,7 @@ export function AccountDetailPage() {
               </styled.div>
             </Box>
           </styled.button>
-          <AccountTransactions
-            network={network}
-            vaultId={vaultId}
-            accountId={accountId}
-            threshold={account.data.threshold}
-          />
+          <AccountTransactions account={account.data} />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>

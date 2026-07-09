@@ -18,6 +18,7 @@ interface ItemLayoutProps {
   captionLeft: ReactNode;
   captionRight?: ReactNode;
   chevronDirection?: 'down' | 'right';
+  columnGap?: SpacingToken;
   gap?: SpacingToken;
   img?: ReactNode;
   isDisabled?: boolean;
@@ -30,6 +31,7 @@ export function ItemLayout({
   captionLeft,
   captionRight,
   chevronDirection = 'down',
+  columnGap = 'space.00',
   gap = 'space.00',
   img,
   isSelected,
@@ -38,7 +40,7 @@ export function ItemLayout({
   titleRight,
 }: ItemLayoutProps) {
   const content = (
-    <Flex alignItems="center" justifyContent="space-between" width="100%">
+    <Flex alignItems="center" justifyContent="space-between" width="100%" gap={columnGap}>
       <Stack
         alignItems="start"
         flexGrow={2}

@@ -283,6 +283,7 @@ describe(BlockchainActivityService.name, () => {
             {
               ...baseTx(),
               tx_id: '0xft',
+              sender: { address: 'SP2', nonce: 0 },
               type: 'contract_call',
               contract_call: { contract_id: 'SP.token', function_name: 'transfer' },
             },
@@ -307,6 +308,7 @@ describe(BlockchainActivityService.name, () => {
         id: 'SP.token::tok',
       });
       expect(result[0].action).toBe('receive');
+      expect(result[0].counterparty).toBe('SP2');
       expect(result[0].contract).toEqual({
         type: 'call',
         contractId: 'SP.token',

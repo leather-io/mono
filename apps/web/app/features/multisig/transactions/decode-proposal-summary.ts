@@ -1,7 +1,7 @@
 import { getPsbtDetails, psbtBase64ToHex } from '@leather.io/bitcoin';
-import type { Money, MultisigTransaction, VaultAccount } from '@leather.io/models';
-import { decodeStxTransferPayload } from '@leather.io/stacks';
-import { createMoney } from '@leather.io/utils';
+import type { AuthNetworkId, Money, MultisigTransaction, VaultAccount } from '@leather.io/models';
+import { decodeStxTransactionPayload } from '@leather.io/stacks';
+import { assertUnreachable, createMoney } from '@leather.io/utils';
 
 import { resolveBtcNetworkMode } from '../network/resolve-btc-network-mode';
 
@@ -9,6 +9,71 @@ interface ProposalSummary {
   recipient?: string;
   amount?: Money;
   fee?: Money;
+}
+
+export interface ProposalPayloadContext {
+  network: AuthNetworkId;
+  multisigAddress: string;
+}
+
+export type DecodedProposalPayload =
+  | { type: 'btcTransfer'; recipient?: string; amount?: Money; fee?: Money }
+  | { type: 'stxTransfer'; recipient: string; amount: Money; fee: Money }
+  | { type: 'contractCall'; contractId: string; functionName: string; fee: Money }
+  | { type: 'contractDeploy'; contractId: string; fee: Money };
+
+export function decodeProposalPayload(
+  context: ProposalPayloadContext,
+  rawPayload: string
+): DecodedProposalPayload | null {
+  try {
+    if (context.network.startsWith('btc')) {
+      const networkMode = resolveBtcNetworkMode(context.network);
+      const { psbtOutputs, fee } = getPsbtDetails({
+        psbtHex: psbtBase64ToHex(rawPayload),
+        psbtAddresses: [context.multisigAddress],
+        networkMode,
+      });
+      const recipientOutput = psbtOutputs.find(
+        output => output.address && output.address !== context.multisigAddress
+      );
+      return {
+        type: 'btcTransfer',
+        recipient: recipientOutput?.address ?? undefined,
+        amount: recipientOutput ? createMoney(recipientOutput.value, 'BTC') : undefined,
+        fee,
+      };
+    }
+    const payload = decodeStxTransactionPayload(rawPayload);
+    if (!payload) return null;
+    const fee = createMoney(Number(payload.fee), 'STX');
+    switch (payload.type) {
+      case 'stxTransfer':
+        return {
+          type: 'stxTransfer',
+          recipient: payload.recipient,
+          amount: createMoney(Number(payload.amount), 'STX'),
+          fee,
+        };
+      case 'contractCall':
+        return {
+          type: 'contractCall',
+          contractId: `${payload.contractAddress}.${payload.contractName}`,
+          functionName: payload.functionName,
+          fee,
+        };
+      case 'contractDeploy':
+        return {
+          type: 'contractDeploy',
+          contractId: `${context.multisigAddress}.${payload.contractName}`,
+          fee,
+        };
+      default:
+        return assertUnreachable(payload);
+    }
+  } catch {
+    return null;
+  }
 }
 
 // Decodes the recipient / amount / fee out of a proposed transaction's raw
@@ -19,31 +84,19 @@ export function decodeProposalSummary(
   account: VaultAccount,
   transaction: MultisigTransaction
 ): ProposalSummary {
-  try {
-    if (account.network.startsWith('btc')) {
-      const networkMode = resolveBtcNetworkMode(account.network);
-      const { psbtOutputs, fee } = getPsbtDetails({
-        psbtHex: psbtBase64ToHex(transaction.proposalRawPayload),
-        psbtAddresses: [account.multisigAddress],
-        networkMode,
-      });
-      const recipientOutput = psbtOutputs.find(
-        output => output.address && output.address !== account.multisigAddress
-      );
-      return {
-        recipient: recipientOutput?.address ?? undefined,
-        amount: recipientOutput ? createMoney(recipientOutput.value, 'BTC') : undefined,
-        fee,
-      };
-    }
-    const transfer = decodeStxTransferPayload(transaction.proposalRawPayload);
-    if (!transfer) return {};
-    return {
-      recipient: transfer.recipient,
-      amount: createMoney(Number(transfer.amount), 'STX'),
-      fee: createMoney(Number(transfer.fee), 'STX'),
-    };
-  } catch {
-    return {};
+  const payload = decodeProposalPayload(
+    { network: account.network, multisigAddress: account.multisigAddress },
+    transaction.proposalRawPayload
+  );
+  if (!payload) return {};
+  switch (payload.type) {
+    case 'btcTransfer':
+    case 'stxTransfer':
+      return { recipient: payload.recipient, amount: payload.amount, fee: payload.fee };
+    case 'contractCall':
+    case 'contractDeploy':
+      return {};
+    default:
+      return assertUnreachable(payload);
   }
 }
