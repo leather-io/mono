@@ -19,10 +19,18 @@ export interface VaultMultisigTransaction {
 export interface VaultActivityItem {
   view: BlockchainActivityView;
   multisig?: VaultMultisigTransaction;
+  vaultId?: string;
+  vaultAccountId?: string;
+}
+
+export interface OnchainActivityItem {
+  view: BlockchainActivityView;
+  vaultId: string;
+  vaultAccountId: string;
 }
 
 interface HarmonizeVaultActivityInput {
-  onchain: BlockchainActivityView[];
+  onchain: OnchainActivityItem[];
   multisigTransactions: VaultMultisigTransaction[];
   payloadsById?: ReadonlyMap<string, string>;
   classifyContract?(
@@ -43,6 +51,12 @@ function normalizeTxid(txid: string) {
   return txid.toLowerCase().replace(/^0x/, '');
 }
 
+// Twins are matched per account, not per txid alone: an internal transfer between two vault
+// accounts is one txid seen twice (a send and a receive), and each side belongs to its own account.
+function twinKey(txid: string, vaultAccountId: string) {
+  return `${normalizeTxid(txid)}::${vaultAccountId}`;
+}
+
 function compareActivityRows(a: ActivityRow, b: ActivityRow): number {
   return (
     Number(b.inFlight) - Number(a.inFlight) ||
@@ -56,14 +70,15 @@ function isActiveTransaction(transaction: MultisigTransactionSummary) {
 }
 
 export function selectTransactionIdsNeedingPayload(
-  onchain: BlockchainActivityView[],
+  onchain: OnchainActivityItem[],
   multisigTransactions: VaultMultisigTransaction[]
 ): string[] {
-  const onchainTxids = new Set(onchain.map(view => normalizeTxid(view.txid)));
+  const onchainKeys = new Set(onchain.map(item => twinKey(item.view.txid, item.vaultAccountId)));
   return multisigTransactions
     .filter(
       ({ transaction }) =>
-        transaction.txId === null || !onchainTxids.has(normalizeTxid(transaction.txId))
+        transaction.txId === null ||
+        !onchainKeys.has(twinKey(transaction.txId, transaction.vaultAccountId))
     )
     .map(({ transaction }) => transaction.id);
 }
@@ -76,23 +91,31 @@ export function harmonizeVaultActivity({
   marketData,
   frontier,
 }: HarmonizeVaultActivityInput): VaultActivityItem[] {
-  const onchainByTxid = new Map(onchain.map(view => [normalizeTxid(view.txid), view]));
-  const matchedTxids = new Set<string>();
+  const onchainByKey = new Map(
+    onchain.map(item => [twinKey(item.view.txid, item.vaultAccountId), item])
+  );
+  const matchedKeys = new Set<string>();
   const rows: ActivityRow[] = [];
 
   for (const item of multisigTransactions) {
     const { transaction, payloadContext } = item;
-    const twinKey = transaction.txId === null ? null : normalizeTxid(transaction.txId);
-    const twin = twinKey === null ? undefined : onchainByTxid.get(twinKey);
+    const key =
+      transaction.txId === null ? null : twinKey(transaction.txId, transaction.vaultAccountId);
+    const twin = key === null ? undefined : onchainByKey.get(key);
     const isActive = isActiveTransaction(transaction);
 
-    if (twin !== undefined && twinKey !== null) {
-      matchedTxids.add(twinKey);
-      const inFlight = isActive && twin.status === 'pending';
+    if (twin !== undefined && key !== null) {
+      matchedKeys.add(key);
+      const inFlight = isActive && twin.view.status === 'pending';
       rows.push({
-        item: { view: twin, multisig: item },
+        item: {
+          view: twin.view,
+          multisig: item,
+          vaultId: item.vaultId,
+          vaultAccountId: transaction.vaultAccountId,
+        },
         inFlight,
-        sortKey: inFlight ? transaction.proposalTimestamp : twin.timestamp,
+        sortKey: inFlight ? transaction.proposalTimestamp : twin.view.timestamp,
       });
       continue;
     }
@@ -104,15 +127,28 @@ export function harmonizeVaultActivity({
     });
     if (!isActive && frontier !== undefined && view.timestamp < frontier) continue;
     rows.push({
-      item: { view, multisig: item },
+      item: {
+        view,
+        multisig: item,
+        vaultId: item.vaultId,
+        vaultAccountId: transaction.vaultAccountId,
+      },
       inFlight: isActive,
       sortKey: isActive ? transaction.proposalTimestamp : view.timestamp,
     });
   }
 
-  for (const view of onchain) {
-    if (matchedTxids.has(normalizeTxid(view.txid))) continue;
-    rows.push({ item: { view }, inFlight: view.status === 'pending', sortKey: view.timestamp });
+  for (const onchainItem of onchain) {
+    if (matchedKeys.has(twinKey(onchainItem.view.txid, onchainItem.vaultAccountId))) continue;
+    rows.push({
+      item: {
+        view: onchainItem.view,
+        vaultId: onchainItem.vaultId,
+        vaultAccountId: onchainItem.vaultAccountId,
+      },
+      inFlight: onchainItem.view.status === 'pending',
+      sortKey: onchainItem.view.timestamp,
+    });
   }
 
   rows.sort(compareActivityRows);

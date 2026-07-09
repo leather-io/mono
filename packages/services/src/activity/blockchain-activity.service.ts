@@ -40,6 +40,7 @@ import {
   type ClassifiedContractCall,
   type FtBalanceChangeRow,
   buildConfirmedStacksActivity,
+  buildOnchainStacksActivity,
   buildPendingStacksActivity,
   groupFtChangesByTxId,
   isFtBalanceChangeRow,
@@ -132,6 +133,74 @@ export class BlockchainActivityService {
       default:
         return assertUnreachable(assetId.protocol);
     }
+  }
+
+  // Reconstructs one activity from a txid alone, for the read-only detail of proposal-less activity.
+  public async getActivityByTxId(
+    account: AccountAddresses,
+    txid: string,
+    signal?: AbortSignal
+  ): Promise<BlockchainActivity | null> {
+    const activity = hasStacksAddress(account)
+      ? await this.getStacksActivityByTxId(account.stacks.stxAddress, txid, signal)
+      : await this.getBitcoinActivityByTxId(account, txid, signal);
+    if (activity === null) return null;
+    const [enriched] = await this.enrichWithMarketData([activity], signal);
+    return enriched ?? null;
+  }
+
+  private async getBitcoinActivityByTxId(
+    account: AccountAddresses,
+    txid: string,
+    signal?: AbortSignal
+  ): Promise<BlockchainActivity | null> {
+    if (account.bitcoin?.type !== 'fixedAddress') return null;
+    const tx = await this.bitcoinTransactionsService.getTransactionByTxId(txid, signal);
+    if (tx === null) return null;
+    const { address } = account.bitcoin;
+    return mapBitcoinActivity({
+      ...tx,
+      vin: tx.vin.map(input => ({ ...input, owned: input.address === address })),
+      vout: tx.vout.map(output => ({ ...output, owned: output.address === address })),
+    });
+  }
+
+  private async getStacksActivityByTxId(
+    stxAddress: string,
+    txid: string,
+    signal?: AbortSignal
+  ): Promise<BlockchainActivity | null> {
+    const tx = await this.stacksTransactionsService.getTransactionById(txid, signal);
+    if (tx === null) return null;
+    const balanceChanges = await this.fetchTxStacksBalanceChanges(stxAddress, tx, signal);
+    const classified =
+      tx.tx_type === 'contract_call'
+        ? await this.classifyContractCall(
+            tx.contract_call.contract_id,
+            tx.contract_call.function_name,
+            signal
+          )
+        : undefined;
+    return buildOnchainStacksActivity(tx, stxAddress, balanceChanges, classified);
+  }
+
+  // Only contract calls / deploys need this lookup; token transfers carry their stx amount inline.
+  private async fetchTxStacksBalanceChanges(
+    principal: string,
+    tx: StacksTx,
+    signal?: AbortSignal
+  ): Promise<{ stxNet: string; ftChanges: BlockchainActivityBalanceChange[] }> {
+    if (tx.tx_type !== 'contract_call' && tx.tx_type !== 'smart_contract') {
+      return { stxNet: '0', ftChanges: [] };
+    }
+    const rows = await this.fetchBalanceChangesBatch(principal, [tx.tx_id], signal);
+    const stxNet = rows.find(row => row.asset.type === 'stx')?.balance_change.net ?? '0';
+    const ftChanges = (
+      await Promise.all(
+        rows.filter(isFtBalanceChangeRow).map(row => this.mapBalanceChange(row, signal))
+      )
+    ).filter((change): change is BlockchainActivityBalanceChange => change !== null);
+    return { stxNet, ftChanges };
   }
 
   private async getBitcoinActivity(

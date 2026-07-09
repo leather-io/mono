@@ -25,4 +25,7 @@ export const multisigPaths = {
   tx(vaultId: string, txId: string) {
     return `/multisig/vault/${vaultId}/tx/${txId}`;
   },
+  activityDetail(vaultId: string, accountId: string, txid: string) {
+    return `/multisig/vault/${vaultId}/account/${accountId}/activity/${txid}`;
+  },
 };
