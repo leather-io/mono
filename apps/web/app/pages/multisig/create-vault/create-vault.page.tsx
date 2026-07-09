@@ -9,7 +9,12 @@ import { normalizeNativeSegwitAddress } from '~/features/multisig/network/normal
 import { resolveBtcNetworkMode } from '~/features/multisig/network/resolve-btc-network-mode';
 import { useCreateVault } from '~/features/multisig/vaults/use-vault-mutations';
 import { useToast } from '~/features/toasts/use-toast';
-import { useAddressBnsName, useBnsNames, useBnsPrimaryNames } from '~/queries/bns/bns.query';
+import {
+  type BnsResolution,
+  useAddressBnsName,
+  useBnsNames,
+  useBnsPrimaryNames,
+} from '~/queries/bns/bns.query';
 
 import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import type { BitcoinNetworkModes } from '@leather.io/models';
@@ -58,6 +63,28 @@ function btcMemberAddressError(address: string, expectedPrefix: string): string 
   return isTaproot
     ? `Taproot addresses aren't supported. Enter a native SegWit address (${expectedPrefix}…).`
     : `Enter a native SegWit address for this network (${expectedPrefix}…).`;
+}
+
+function applyBnsReconciliation(
+  member: MemberDraft,
+  resolve: (candidate: string) => BnsResolution | undefined
+): MemberDraft {
+  const reconciled = reconcileMemberBns(member, resolve);
+  if (reconciled.addr === member.addr && reconciled.name === member.name) return member;
+  return { ...member, addr: reconciled.addr, name: reconciled.name };
+}
+
+function applyReverseBnsName(
+  member: MemberDraft,
+  reverseNames: Map<string, string | undefined>,
+  filledByAddress: Record<string, string>
+): MemberDraft {
+  const address = member.addr.trim();
+  if (member.name.trim() !== '' || filledByAddress[member.id] === address) return member;
+  const name = reverseNames.get(address);
+  if (!name) return member;
+  filledByAddress[member.id] = address;
+  return { ...member, name };
 }
 
 function ConnectChainCallout({
@@ -162,23 +189,6 @@ export function CreateVaultPage() {
       : { addr: member.addr, name: member.name, bns: 'none' as const }
   );
 
-  useEffect(() => {
-    if (!bnsEnabled) return;
-    let changed = false;
-    const next = members.map(member => {
-      if (member.isMe) return member;
-      const reconciled = reconcileMemberBns(member, candidate =>
-        bnsResolutions.get(candidate.trim())
-      );
-      if (reconciled.addr !== member.addr || reconciled.name !== member.name) {
-        changed = true;
-        return { ...member, addr: reconciled.addr, name: reconciled.name };
-      }
-      return member;
-    });
-    if (changed) setMembers(next);
-  }, [bnsEnabled, members, bnsResolutions]);
-
   // A member entered by address gets their own BNS name auto-filled as the label,
   // once per address and only while the name is empty, so it stays editable.
   const memberAddresses = bnsEnabled
@@ -192,17 +202,16 @@ export function CreateVaultPage() {
     if (!bnsEnabled) return;
     let changed = false;
     const next = members.map(member => {
-      const addr = member.addr.trim();
-      if (member.isMe || member.name.trim() !== '') return member;
-      if (filledMemberNames.current[member.id] === addr) return member;
-      const name = reverseBnsNames.get(addr);
-      if (!name) return member;
-      filledMemberNames.current[member.id] = addr;
-      changed = true;
-      return { ...member, name };
+      if (member.isMe) return member;
+      const reconciled = applyBnsReconciliation(member, candidate =>
+        bnsResolutions.get(candidate.trim())
+      );
+      const filled = applyReverseBnsName(reconciled, reverseBnsNames, filledMemberNames.current);
+      if (filled !== member) changed = true;
+      return filled;
     });
     if (changed) setMembers(next);
-  }, [bnsEnabled, members, reverseBnsNames]);
+  }, [bnsEnabled, members, bnsResolutions, reverseBnsNames]);
 
   // Pre-label the signed-in user with their own BNS name, once, and only while
   // they haven't typed a name of their own.
