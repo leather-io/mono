@@ -207,7 +207,7 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
           .style('cursor', 'pointer')
           .on('mouseover', (_event, d) => {
             emitAssetHoverOn(d.token);
-            tooltip.style('visibility', 'visible').html(`${d.token}: ${d.percentage.toFixed(1)}%`);
+            tooltip.style('visibility', 'visible').text(`${d.token}: ${d.percentage.toFixed(1)}%`);
           })
           .on('mousemove', handleMouseMove)
           .on('mouseleave', () => {
