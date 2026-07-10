@@ -779,6 +779,24 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.51.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.50.0...@leather.io/query-v2.51.0) (2026-07-10)
+
+
+### Features
+
+* add new postconditions ([#2422](https://github.com/leather-io/mono/issues/2422)) ([2416d06](https://github.com/leather-io/mono/commit/2416d0668a194e0de7ede0c724238b92cb361e81))
+* migrate compliance check call to new service ([#2484](https://github.com/leather-io/mono/issues/2484)) ([b410f39](https://github.com/leather-io/mono/commit/b410f39a9f3e490dd35bded04d73bdf8f4bb3533))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.37.0
+    * @leather.io/models bumped to 0.59.0
+    * @leather.io/stacks bumped to 1.21.0
+    * @leather.io/utils bumped to 0.52.1
+
 ## [2.50.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.49.1...@leather.io/query-v2.50.0) (2026-06-23)
 
 
