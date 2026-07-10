@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
 import { useVaultAccountAssets } from '~/features/multisig/assets/use-vault-account-assets';
+import type { VaultAssetItem } from '~/features/multisig/assets/vault-asset-items';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
@@ -32,6 +33,7 @@ import { chainFromNetwork } from '../multisig.utils';
 import { AccountAssets } from './components/account-assets';
 import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
+import { AssetDetailModal } from './components/asset-detail-modal';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
 
 export function AccountDetailPage() {
@@ -40,6 +42,7 @@ export function AccountDetailPage() {
   const [hydrated, setHydrated] = useState(false);
   const [isProposing, setIsProposing] = useState(false);
   const [isAddingToWallet, setIsAddingToWallet] = useState(false);
+  const [assetDetail, setAssetDetail] = useState<VaultAssetItem | null>(null);
   const { success, error } = useToast();
   useEffect(() => setHydrated(true), []);
 
@@ -198,7 +201,7 @@ export function AccountDetailPage() {
             </Tabs.Content>
             <Tabs.Content value="assets">
               <Box mt="space.04">
-                <AccountAssets assets={accountAssets} />
+                <AccountAssets assets={accountAssets} onSelectAsset={setAssetDetail} />
               </Box>
             </Tabs.Content>
           </Tabs.Root>
@@ -221,6 +224,13 @@ export function AccountDetailPage() {
         onClose={() => setIsProposing(false)}
         onProposed={onProposed}
       />
+      {assetDetail ? (
+        <AssetDetailModal
+          account={account.data}
+          item={assetDetail}
+          onClose={() => setAssetDetail(null)}
+        />
+      ) : null}
     </MultisigPage>
   );
 }

@@ -1,13 +1,15 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import type { VaultAccountAssets } from '~/features/multisig/assets/use-vault-account-assets';
+import type { VaultAssetItem } from '~/features/multisig/assets/vault-asset-items';
 
 import { VaultAssetList } from '../../components/vault-asset-list';
 
 interface AccountAssetsProps {
   assets: VaultAccountAssets;
+  onSelectAsset?(item: VaultAssetItem): void;
 }
 
-export function AccountAssets({ assets }: AccountAssetsProps) {
+export function AccountAssets({ assets, onSelectAsset }: AccountAssetsProps) {
   const { items, isPending } = assets;
 
   if (isPending) {
@@ -43,5 +45,5 @@ export function AccountAssets({ assets }: AccountAssetsProps) {
     );
   }
 
-  return <VaultAssetList items={items} />;
+  return <VaultAssetList items={items} onSelect={onSelectAsset} />;
 }

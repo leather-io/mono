@@ -6,12 +6,14 @@ import { AssetAvatarIcon, ListItemBox } from '@leather.io/ui';
 
 interface VaultAssetRowProps {
   item: VaultAssetItem;
+  onClick?(): void;
 }
 
-export function VaultAssetRow({ item }: VaultAssetRowProps) {
+export function VaultAssetRow({ item, onClick }: VaultAssetRowProps) {
   return (
     <ListItemBox
       flush
+      onClick={onClick}
       leading={<AssetAvatarIcon asset={item.asset} size="lg" />}
       title={
         <styled.span

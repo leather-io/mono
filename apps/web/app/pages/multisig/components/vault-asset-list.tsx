@@ -7,9 +7,10 @@ import { VaultAssetRow } from './vault-asset-row';
 
 interface VaultAssetListProps {
   items: VaultAssetItem[];
+  onSelect?(item: VaultAssetItem): void;
 }
 
-export function VaultAssetList({ items }: VaultAssetListProps) {
+export function VaultAssetList({ items, onSelect }: VaultAssetListProps) {
   return (
     <ListContainer p="space.00" overflow="hidden">
       <Box
@@ -24,7 +25,11 @@ export function VaultAssetList({ items }: VaultAssetListProps) {
         }}
       >
         {items.map(item => (
-          <VaultAssetRow key={item.id} item={item} />
+          <VaultAssetRow
+            key={item.id}
+            item={item}
+            onClick={onSelect ? () => onSelect(item) : undefined}
+          />
         ))}
       </Box>
     </ListContainer>
