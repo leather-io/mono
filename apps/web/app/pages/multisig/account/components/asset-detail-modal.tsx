@@ -115,7 +115,11 @@ function DescriptionSection({ isPending, text }: DescriptionSectionProps) {
   );
 }
 
-function PriceChange({ change }: { change: number | null | undefined }) {
+interface PriceChangeProps {
+  change: number | null | undefined;
+}
+
+function PriceChange({ change }: PriceChangeProps) {
   if (change === null || change === undefined) return <>—</>;
   return (
     <styled.span color={getPriceChangeColor(change)} fontWeight={change === 0 ? undefined : 500}>
@@ -124,7 +128,11 @@ function PriceChange({ change }: { change: number | null | undefined }) {
   );
 }
 
-function RecentActivity({ activity }: { activity: VaultAssetActivity }) {
+interface RecentActivityProps {
+  activity: VaultAssetActivity;
+}
+
+function RecentActivity({ activity }: RecentActivityProps) {
   if (activity.isPending) {
     return (
       <Flex direction="column" gap="space.03">
@@ -180,13 +188,21 @@ export function AssetDetailModal({ account, item, onClose }: AssetDetailModalPro
     <Sheet
       isShowing
       onClose={onClose}
+      wrapChildren={false}
       header={
         <Flex justifyContent="flex-end" px="space.03" py="space.03" width="100%">
           <IconButton icon={<CloseIcon />} onClick={onClose} />
         </Flex>
       }
     >
-      <Box px="space.05" pb="space.05">
+      <Box
+        px="space.05"
+        pb="space.05"
+        flex={{ base: '1', md: 'none' }}
+        height={{ md: '70vh' }}
+        minHeight={0}
+        overflowY="auto"
+      >
         <Flex direction="column" alignItems="center" gap="space.03" pb="space.05">
           <AssetAvatarIcon asset={asset} size="xl" />
           <Flex direction="column" alignItems="center" gap="space.00" textAlign="center">
