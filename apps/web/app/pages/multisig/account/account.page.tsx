@@ -21,8 +21,9 @@ import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
-import { PlusIcon, Tabs } from '@leather.io/ui';
+import { PlusIcon } from '@leather.io/ui';
 
+import { InlineTabs } from '../components/inline-tabs';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
 import { MultisigPage } from '../components/multisig-page';
@@ -161,7 +162,7 @@ export function AccountDetailPage() {
             gap="space.03"
             p="space.04"
             mt="space.05"
-            mb="space.05"
+            mb="space.03"
             borderRadius="md"
             borderWidth="1px"
             borderStyle="solid"
@@ -189,22 +190,22 @@ export function AccountDetailPage() {
               </styled.div>
             </Box>
           </styled.button>
-          <Tabs.Root defaultValue="transactions">
-            <Tabs.List>
-              <Tabs.Trigger value="transactions">Transactions</Tabs.Trigger>
-              <Tabs.Trigger value="assets">Assets</Tabs.Trigger>
-            </Tabs.List>
-            <Tabs.Content value="transactions">
+          <InlineTabs.Root defaultValue="transactions">
+            <InlineTabs.List>
+              <InlineTabs.Trigger value="transactions">Transactions</InlineTabs.Trigger>
+              <InlineTabs.Trigger value="assets">Assets</InlineTabs.Trigger>
+            </InlineTabs.List>
+            <InlineTabs.Content value="transactions">
               <Box mt="space.04">
                 <AccountTransactions account={account.data} />
               </Box>
-            </Tabs.Content>
-            <Tabs.Content value="assets">
+            </InlineTabs.Content>
+            <InlineTabs.Content value="assets">
               <Box mt="space.04">
                 <AccountAssets assets={accountAssets} onSelectAsset={setAssetDetail} />
               </Box>
-            </Tabs.Content>
-          </Tabs.Root>
+            </InlineTabs.Content>
+          </InlineTabs.Root>
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>
