@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
 
+import { styled } from 'leather-styles/jsx';
+
 import { stxTransferStx } from '@leather.io/rpc';
 import { generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import { StxAvatarIcon } from '@leather.io/ui';
+import { Approver, StxAvatarIcon } from '@leather.io/ui';
 import { isString } from '@leather.io/utils';
 
 import { useConvertCryptoCurrencyToFiatAmount } from '@app/common/hooks/use-convert-to-fiat-amount';
@@ -44,6 +46,7 @@ export function RpcStxTransferStx() {
       }),
     [network, nonce, publicKey, selectedFee.txFee]
   );
+  const memoDisplayText = txOptionsForBroadcast.memo || 'No memo';
 
   async function onApproveTransaction() {
     const unsignedTx = await generateStacksUnsignedTransaction(txOptionsForBroadcast);
@@ -85,6 +88,12 @@ export function RpcStxTransferStx() {
           },
         ]}
       />
+      <Approver.Section>
+        <Approver.Subheader>Memo</Approver.Subheader>
+        <styled.span textStyle="label.01" wordBreak="break-all">
+          {memoDisplayText}
+        </styled.span>
+      </Approver.Section>
       <FeeEditor.Trigger
         feeType="fee-value"
         isLoading={isLoadingFees}
