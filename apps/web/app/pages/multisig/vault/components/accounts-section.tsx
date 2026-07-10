@@ -4,7 +4,7 @@ import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-acc
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import type { Vault, VaultAccountSummary } from '@leather.io/models';
-import { ListItemBox } from '@leather.io/ui';
+import { Button, ListItemBox } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { CopyAddress } from '../../components/copy-address';
@@ -15,6 +15,9 @@ interface AccountsSectionProps {
   vault: Vault;
   accounts: VaultAccountSummary[] | undefined;
   isLoading: boolean;
+  isRecovering: boolean;
+  recoveryFailed: boolean;
+  onRetryRecovery(): void;
   canCreate: boolean;
   disabledReason?: string;
   onCreateAccount(): void;
@@ -139,6 +142,9 @@ export function AccountsSection({
   vault,
   accounts,
   isLoading,
+  isRecovering,
+  recoveryFailed,
+  onRetryRecovery,
   canCreate,
   disabledReason,
   onCreateAccount,
@@ -164,6 +170,39 @@ export function AccountsSection({
               onOpen={() => onOpenAccount(account.id)}
             />
           ))}
+      {isRecovering && (
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          height="76px"
+          borderRadius="md"
+          bg="ink.component-background-default"
+          opacity={0.6}
+        >
+          <styled.span textStyle="caption.01" color="ink.text-subdued">
+            Scanning for existing accounts…
+          </styled.span>
+        </Flex>
+      )}
+      {!isRecovering && recoveryFailed && (
+        <Flex
+          alignItems="center"
+          justifyContent="space-between"
+          gap="space.03"
+          p="space.04"
+          borderRadius="md"
+          borderWidth="1px"
+          borderStyle="solid"
+          borderColor="red.border"
+        >
+          <styled.span textStyle="caption.01" color="ink.text-subdued">
+            Account recovery failed
+          </styled.span>
+          <Button variant="outline" size="sm" onClick={onRetryRecovery}>
+            Try again
+          </Button>
+        </Flex>
+      )}
       {canCreate ? (
         <CreateAccountTile onClick={onCreateAccount} />
       ) : (

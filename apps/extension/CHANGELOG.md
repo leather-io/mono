@@ -40,6 +40,48 @@
 
 ---
 
+## [6.105.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.104.0...@leather.io/extension-v6.105.0) (2026-07-10)
+
+
+### Features
+
+* add btc/stx_addAccount rpc approver flow ([#2421](https://github.com/leather-io/mono/issues/2421)) ([e3cd9b4](https://github.com/leather-io/mono/commit/e3cd9b45eab45eef54446943adfb3830522ee7ed))
+* add new postconditions ([#2422](https://github.com/leather-io/mono/issues/2422)) ([2416d06](https://github.com/leather-io/mono/commit/2416d0668a194e0de7ede0c724238b92cb361e81))
+* migrate compliance check call to new service ([#2484](https://github.com/leather-io/mono/issues/2484)) ([b410f39](https://github.com/leather-io/mono/commit/b410f39a9f3e490dd35bded04d73bdf8f4bb3533))
+* policy account state ([#2430](https://github.com/leather-io/mono/issues/2430)) ([01e4ea0](https://github.com/leather-io/mono/commit/01e4ea07d67a8dbf4209912aa1c14304b770d521))
+* policy accounts ([#2438](https://github.com/leather-io/mono/issues/2438)) ([08d3861](https://github.com/leather-io/mono/commit/08d3861dfd5cced3ae2cd23b547007b84a83a5b9))
+* tx proposal in extension via rpc requests ([#2472](https://github.com/leather-io/mono/issues/2472)) ([ef5f7d2](https://github.com/leather-io/mono/commit/ef5f7d202e1d78862d350443fe622732db25961e))
+* **web:** support custom private regtest network for multisig internal testing ([#2476](https://github.com/leather-io/mono/issues/2476)) ([143950b](https://github.com/leather-io/mono/commit/143950b3c49711ac643a3e04ae4b5bec6fa63572))
+
+
+### Bug Fixes
+
+* account lookup ([#2416](https://github.com/leather-io/mono/issues/2416)) ([a250a30](https://github.com/leather-io/mono/commit/a250a30a2be396846c9af017c3ac94eeb7a92fc6))
+* **extension:** correct disabled swap button outline and add explanatory tooltip ([#2429](https://github.com/leather-io/mono/issues/2429)) ([0b2bf4f](https://github.com/leather-io/mono/commit/0b2bf4ff2ebe55d33fb6d9acfc5168a16986c6ec))
+* **extension:** label Bitcoin API dropdown as Custom when values diverge from a preset ([#2428](https://github.com/leather-io/mono/issues/2428)) ([b5d5f5e](https://github.com/leather-io/mono/commit/b5d5f5eb733b5e9e5b636f4d52759498a5b07cb7))
+* **extension:** tidy up the multi-wallet account row in approval views ([#2433](https://github.com/leather-io/mono/issues/2433)) ([8ff20d9](https://github.com/leather-io/mono/commit/8ff20d9fe5e34dff42e149926b823b91e54626a3))
+* signTransaction fee-nonce bug ([#2420](https://github.com/leather-io/mono/issues/2420)) ([61028c4](https://github.com/leather-io/mono/commit/61028c406c3ee6c7b02df36444a430920a61b4ff))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.21.0
+    * @leather.io/bitcoin bumped to 0.39.0
+    * @leather.io/constants bumped to 0.37.0
+    * @leather.io/crypto bumped to 1.13.1
+    * @leather.io/features bumped to 1.5.0
+    * @leather.io/models bumped to 0.59.0
+    * @leather.io/provider bumped to 1.6.29
+    * @leather.io/queries bumped to 0.12.0
+    * @leather.io/query bumped to 2.51.0
+    * @leather.io/rpc bumped to 2.23.0
+    * @leather.io/services bumped to 1.59.0
+    * @leather.io/stacks bumped to 1.21.0
+    * @leather.io/ui bumped to 1.114.0
+    * @leather.io/utils bumped to 0.52.1
+
 ## [6.104.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.103.1...@leather.io/extension-v6.104.0) (2026-06-23)
 
 

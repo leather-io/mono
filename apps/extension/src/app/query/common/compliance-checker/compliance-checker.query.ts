@@ -1,70 +1,54 @@
-import { useQueries } from '@tanstack/react-query';
-import axios from 'axios';
+import { useRef } from 'react';
 
-import { makeComplianceQuery } from '@leather.io/query';
+import { useQueries } from '@tanstack/react-query';
+
+import { createAddressComplianceCheckQueryConfig } from '@leather.io/queries';
 import { ensureArray, isEmptyString, uniqueArray } from '@leather.io/utils';
 
 import { analytics } from '@shared/utils/analytics';
 
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
-
-const checkApi = 'https://api.chainalysis.com/api/risk/v2/entities';
-
-const headers = {
-  // Known public key, do not open a vulnerability report for this
-  Token: '51d3c7529eb08a8c62d41d70d006bdcd4248150fbd6826d5828ac908e7c12073',
-};
-
-async function registerEntityAddressComplianceCheck(address: string) {
-  const resp = await axios.post(checkApi, { address }, { headers });
-  return resp.data;
-}
-
-async function checkEntityAddressComplianceCheck(address: string) {
-  const resp = await axios.get(checkApi + '/' + address, { headers });
-  return resp.data;
-}
-
-type ComplianceReportSeverity = 'None' | 'Low' | 'Moderate' | 'Severe';
-
-interface ComplianceReport {
-  risk: ComplianceReportSeverity;
-  isOnSanctionsList: boolean;
-}
-export async function checkEntityAddressIsCompliant(address: string): Promise<ComplianceReport> {
-  await registerEntityAddressComplianceCheck(address);
-  const entityReport = await checkEntityAddressComplianceCheck(address);
-
-  const isOnSanctionsList = entityReport.risk === 'Severe';
-
-  if (isOnSanctionsList) analytics.track('non_compliant_entity_detected', { address });
-
-  return { ...entityReport, isOnSanctionsList };
-}
 
 function useCheckAddressComplianceQueries(addresses: string[]) {
-  const network = useCurrentNetwork();
-  const filteredAddresses = addresses.filter(address => !isEmptyString(address));
-  const uniqueAddresses = uniqueArray(filteredAddresses);
-  return useQueries({
+  const settings = useUserSettings();
+  const uniqueAddresses = uniqueArray(addresses.filter(address => !isEmptyString(address)));
+  const results = useQueries({
     queries: uniqueAddresses.map(address =>
-      makeComplianceQuery({ address, networkMode: network.chain.bitcoin.mode })
+      createAddressComplianceCheckQueryConfig(address, settings)
     ),
   });
+  return results.map((result, index) => ({
+    address: uniqueAddresses[index],
+    check: result.data,
+  }));
 }
 
 export const compliantErrorBody = 'Unable to handle request, errorCode: 1398';
 
 export function useBreakOnNonCompliantEntity(address: string | string[] = '') {
+  const trackedUnavailableAddresses = useRef(new Set<string>());
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
 
-  const complianceReports = useCheckAddressComplianceQueries([
+  const complianceChecks = useCheckAddressComplianceQueries([
     nativeSegwitSigner?.address ?? '',
     ...ensureArray(address),
   ]);
 
-  if (complianceReports.some(report => report.data?.isOnSanctionsList)) {
+  complianceChecks.forEach(({ address: checkedAddress, check }) => {
+    if (
+      check?.status === 'unavailable' &&
+      !trackedUnavailableAddresses.current.has(checkedAddress)
+    ) {
+      trackedUnavailableAddresses.current.add(checkedAddress);
+      analytics.track('compliance_check_unavailable', {
+        address: checkedAddress,
+        reason: check.reason,
+      });
+    }
+  });
+
+  if (complianceChecks.some(({ check }) => check?.status === 'non_compliant')) {
     analytics.track('non_compliant_entity_detected', { address });
     throw new Error(compliantErrorBody);
   }

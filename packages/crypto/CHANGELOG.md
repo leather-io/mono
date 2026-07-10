@@ -492,6 +492,21 @@
   * dependencies
     * @leather.io/utils bumped to 0.46.4
 
+## [1.13.1](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.0...@leather.io/crypto-v1.13.1) (2026-07-10)
+
+
+### Bug Fixes
+
+* account lookup ([#2416](https://github.com/leather-io/mono/issues/2416)) ([a250a30](https://github.com/leather-io/mono/commit/a250a30a2be396846c9af017c3ac94eeb7a92fc6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.37.0
+    * @leather.io/utils bumped to 0.52.1
+
 ## [1.13.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.24...@leather.io/crypto-v1.13.0) (2026-06-23)
 
 

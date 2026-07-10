@@ -1,7 +1,6 @@
 import * as yup from 'yup';
 
 import type { NetworkConfiguration } from '@leather.io/models';
-import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
 
 import { FormErrorMessages } from '@shared/error-messages';
 
@@ -22,10 +21,5 @@ export function stxRecipientValidator(
     .concat(stxAddressValidator(FormErrorMessages.InvalidAddress))
     .concat(stxAddressNetworkValidator(currentNetwork))
     .concat(notCurrentAddressValidator(currentAddress))
-    .concat(
-      complianceValidator(
-        stxAddressValidator(FormErrorMessages.InvalidAddress),
-        stacksChainIdToCoreNetworkMode(currentNetwork.chain.stacks.chainId)
-      )
-    );
+    .concat(complianceValidator(stxAddressValidator(FormErrorMessages.InvalidAddress)));
 }

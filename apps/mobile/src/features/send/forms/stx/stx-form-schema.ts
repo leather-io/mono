@@ -53,7 +53,7 @@ function createStxSendFormSchema({
       .refine(isValidStacksAddress, errorMessages.invalidAddress)
       .refine(stxAddressNetworkValidator(chainId), errorMessages.incorrectNetworkAddress)
       .refine(stxNotCurrentAddressValidator(payerAddress), errorMessages.recipientIsPayer)
-      .refine(stxComplianceValidator(chainId), errorMessages.nonCompliantAddress),
+      .refine(stxComplianceValidator(), errorMessages.nonCompliantAddress),
 
     memo: z.string().refine(isValidStacksMemo, errorMessages.memoExceedsLimit),
     nonce: z.number(),
@@ -70,11 +70,10 @@ function stxNotCurrentAddressValidator(payerAddress: string) {
   return (address: string) => validatePayerNotRecipient(payerAddress, address);
 }
 
-function stxComplianceValidator(chainId: ChainId) {
+function stxComplianceValidator() {
   return (address: string) =>
     addressComplianceValidator({
       address,
-      chain: chainId,
       shouldCheckCompliance: isValidStacksAddress(address),
     });
 }

@@ -23,6 +23,42 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.111.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.110.0...@leather.io/mobile-v2.111.0) (2026-07-10)
+
+
+### Features
+
+* add new postconditions ([#2422](https://github.com/leather-io/mono/issues/2422)) ([2416d06](https://github.com/leather-io/mono/commit/2416d0668a194e0de7ede0c724238b92cb361e81))
+* migrate compliance check call to new service ([#2484](https://github.com/leather-io/mono/issues/2484)) ([b410f39](https://github.com/leather-io/mono/commit/b410f39a9f3e490dd35bded04d73bdf8f4bb3533))
+* policy accounts ([#2438](https://github.com/leather-io/mono/issues/2438)) ([08d3861](https://github.com/leather-io/mono/commit/08d3861dfd5cced3ae2cd23b547007b84a83a5b9))
+
+
+### Bug Fixes
+
+* **mobile:** decimals on btc and stx in rpc calls ([#2480](https://github.com/leather-io/mono/issues/2480)) ([a63c0c3](https://github.com/leather-io/mono/commit/a63c0c3d3e795fef816dbe4f278319e21584f692))
+* **mobile:** signPsbt issues ([#2478](https://github.com/leather-io/mono/issues/2478)) ([bfdeb52](https://github.com/leather-io/mono/commit/bfdeb52641b522ecc537e1d853d35102b4645e0f))
+* subframe rpc misattribution ([#2479](https://github.com/leather-io/mono/issues/2479)) ([823b58b](https://github.com/leather-io/mono/commit/823b58b8033580a53e3239a1e578628f70deef2d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.21.0
+    * @leather.io/bitcoin bumped to 0.39.0
+    * @leather.io/constants bumped to 0.37.0
+    * @leather.io/crypto bumped to 1.13.1
+    * @leather.io/features bumped to 1.5.0
+    * @leather.io/models bumped to 0.59.0
+    * @leather.io/provider bumped to 1.6.29
+    * @leather.io/queries bumped to 0.12.0
+    * @leather.io/query bumped to 2.51.0
+    * @leather.io/rpc bumped to 2.23.0
+    * @leather.io/services bumped to 1.59.0
+    * @leather.io/stacks bumped to 1.21.0
+    * @leather.io/ui bumped to 1.114.0
+    * @leather.io/utils bumped to 0.52.1
+
 ## [2.110.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.109.0...@leather.io/mobile-v2.110.0) (2026-06-23)
 
 

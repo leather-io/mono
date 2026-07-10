@@ -489,6 +489,30 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.114.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.113.0...@leather.io/ui-v1.114.0) (2026-07-10)
+
+
+### Features
+
+* multisig activity ([#2482](https://github.com/leather-io/mono/issues/2482)) ([864d9a6](https://github.com/leather-io/mono/commit/864d9a6774a758396c97bb6bca2923d0fef45960))
+* **web:** multisig design QA — list-item consistency + UI polish ([#2471](https://github.com/leather-io/mono/issues/2471)) ([79a4034](https://github.com/leather-io/mono/commit/79a403405eb7034d9856de09c1640d04efa55b84))
+
+
+### Bug Fixes
+
+* **extension:** correct disabled swap button outline and add explanatory tooltip ([#2429](https://github.com/leather-io/mono/issues/2429)) ([0b2bf4f](https://github.com/leather-io/mono/commit/0b2bf4ff2ebe55d33fb6d9acfc5168a16986c6ec))
+* **extension:** tidy up the multi-wallet account row in approval views ([#2433](https://github.com/leather-io/mono/issues/2433)) ([8ff20d9](https://github.com/leather-io/mono/commit/8ff20d9fe5e34dff42e149926b823b91e54626a3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.52.1
+  * devDependencies
+    * @leather.io/features bumped to 1.5.0
+    * @leather.io/models bumped to 0.59.0
+
 ## [1.113.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.112.0...@leather.io/ui-v1.113.0) (2026-06-23)
 
 
