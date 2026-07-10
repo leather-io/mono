@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
+import { useVaultAccountAssets } from '~/features/multisig/assets/use-vault-account-assets';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
@@ -19,7 +20,7 @@ import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
-import { PlusIcon } from '@leather.io/ui';
+import { PlusIcon, Tabs } from '@leather.io/ui';
 
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
@@ -28,6 +29,7 @@ import { SectionLabel } from '../components/section-label';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { chainFromNetwork } from '../multisig.utils';
+import { AccountAssets } from './components/account-assets';
 import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
@@ -60,6 +62,7 @@ export function AccountDetailPage() {
   const account = useVaultAccount(network, vaultNetworkKnown ? accountId : undefined);
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accountBalance = useVaultAccountBalance(account.data);
+  const accountAssets = useVaultAccountAssets(account.data);
 
   const btcSession = useSession(btcNetwork);
   const stxSession = useSession(stxNetwork);
@@ -146,7 +149,6 @@ export function AccountDetailPage() {
             primary={<Balance balance={accountBalance.crypto} formatCurrency={formatCurrency} />}
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
-          <SectionLabel>Transactions</SectionLabel>
           <styled.button
             type="button"
             onClick={() => setIsProposing(true)}
@@ -155,7 +157,8 @@ export function AccountDetailPage() {
             alignItems="center"
             gap="space.03"
             p="space.04"
-            mb="space.03"
+            mt="space.05"
+            mb="space.05"
             borderRadius="md"
             borderWidth="1px"
             borderStyle="solid"
@@ -183,7 +186,22 @@ export function AccountDetailPage() {
               </styled.div>
             </Box>
           </styled.button>
-          <AccountTransactions account={account.data} />
+          <Tabs.Root defaultValue="transactions">
+            <Tabs.List>
+              <Tabs.Trigger value="transactions">Transactions</Tabs.Trigger>
+              <Tabs.Trigger value="assets">Assets</Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content value="transactions">
+              <Box mt="space.04">
+                <AccountTransactions account={account.data} />
+              </Box>
+            </Tabs.Content>
+            <Tabs.Content value="assets">
+              <Box mt="space.04">
+                <AccountAssets assets={accountAssets} />
+              </Box>
+            </Tabs.Content>
+          </Tabs.Root>
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>
