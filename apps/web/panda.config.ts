@@ -12,6 +12,12 @@ export default defineConfig({
   globalCss: {
     ...globalLoaderCss,
     'button:not(:disabled)': { cursor: 'pointer' },
+    ':root': {
+      '--multisig-collecting-wash':
+        'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.16), rgb(from token(colors.orange.action-primary-default) r g b / 0.025))',
+      '--multisig-collecting-wash-hover':
+        'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.22), rgb(from token(colors.orange.action-primary-default) r g b / 0.045))',
+    },
   },
 
   presets: ['@leather.io/panda-preset/config'],

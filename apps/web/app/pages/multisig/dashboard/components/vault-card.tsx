@@ -14,11 +14,7 @@ import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { Badge } from '../../components/badge';
-import {
-  collectingSignaturesGradient,
-  collectingSignaturesGradientHover,
-  vaultThemeFromName,
-} from '../../multisig-tokens';
+import { vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface VaultCardProps {
@@ -109,10 +105,10 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
       borderStyle="solid"
       borderColor="ink.border-default"
       bg="ink.background-primary"
-      bgImage={needsAttention ? collectingSignaturesGradient : undefined}
+      bgImage={needsAttention ? 'var(--multisig-collecting-wash)' : undefined}
       _hover={
         needsAttention
-          ? { bgImage: collectingSignaturesGradientHover }
+          ? { bgImage: 'var(--multisig-collecting-wash-hover)' }
           : { bg: 'ink.component-background-hover' }
       }
       _disabled={{ cursor: 'default' }}

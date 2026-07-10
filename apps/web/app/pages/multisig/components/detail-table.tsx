@@ -6,7 +6,6 @@ import { formatCurrency } from '~/utils/currency-formatter';
 
 import type { BlockchainActivityBalanceChange, Money } from '@leather.io/models';
 
-import { collectingSignaturesGradient } from '../multisig-tokens';
 import { Badge, type BadgeVariant } from './badge';
 
 export const pendingValue = '—';
@@ -49,7 +48,7 @@ export function DetailStatusRow({
       alignItems="center"
       px="space.04"
       py="space.03"
-      bgImage={highlight ? collectingSignaturesGradient : undefined}
+      bgImage={highlight ? 'var(--multisig-collecting-wash)' : undefined}
     >
       <styled.span
         textStyle="caption.01"

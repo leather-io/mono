@@ -353,7 +353,13 @@ describe(buildOnchainStacksActivity.name, () => {
   }
 
   it('maps a confirmed received transfer with the sender as counterparty', () => {
-    const activity = buildOnchainStacksActivity(tokenTransfer(), stxAddress, noChanges);
+    const activity = buildOnchainStacksActivity(
+      tokenTransfer({
+        token_transfer: { recipient_address: stxAddress, amount: '5000000', memo: '' },
+      }),
+      stxAddress,
+      noChanges
+    );
     expect(activity?.action).toBe('receive');
     expect(activity?.initiatedByUser).toBe(false);
     expect(activity?.counterparty).toBe('SP_SENDER');
@@ -389,13 +395,50 @@ describe(buildOnchainStacksActivity.name, () => {
     expect(activity?.fee).toBeUndefined();
   });
 
-  it('maps an aborted transaction as failed', () => {
+  it('maps an aborted transaction as failed with no balance change', () => {
     const activity = buildOnchainStacksActivity(
-      tokenTransfer({ tx_status: 'abort_by_response' }),
+      tokenTransfer({
+        tx_status: 'abort_by_response',
+        token_transfer: { recipient_address: stxAddress, amount: '5000000', memo: '' },
+      }),
       stxAddress,
       noChanges
     );
     expect(activity?.status).toBe('failed');
+    expect(activity?.balanceChanges).toHaveLength(0);
+  });
+
+  it('returns null for a transfer the account neither sent nor received', () => {
+    expect(buildOnchainStacksActivity(tokenTransfer(), stxAddress, noChanges)).toBeNull();
+  });
+
+  it('returns null for a contract call the account neither sent nor was affected by', () => {
+    const tx = {
+      tx_id: '0x5',
+      tx_type: 'contract_call',
+      tx_status: 'success',
+      sender_address: 'SP_SENDER',
+      sponsored: false,
+      fee_rate: '200',
+      block_height: 10,
+      block_time: 1000,
+      burn_block_time: 1000,
+      contract_call: { contract_id: 'SP.dex', function_name: 'swap-x-for-y' },
+    } as ContractCallTransaction;
+    expect(buildOnchainStacksActivity(tx, stxAddress, noChanges)).toBeNull();
+  });
+
+  it('returns null for a contract deploy the account did not send', () => {
+    const tx = {
+      tx_id: '0x6',
+      tx_type: 'smart_contract',
+      tx_status: 'success',
+      sender_address: 'SP_SENDER',
+      sponsored: false,
+      fee_rate: '200',
+      smart_contract: { contract_id: 'SP.deployed' },
+    } as SmartContractTransaction;
+    expect(buildOnchainStacksActivity(tx, stxAddress, noChanges)).toBeNull();
   });
 
   it('maps a mempool transfer as pending with no block height', () => {

@@ -67,12 +67,3 @@ export const avatarSquircleRadius = '14px';
 export function accountIconUrl(icon: string): string {
   return `/multisig/icons/account/${icon}.svg`;
 }
-
-// Warm peach gradient marking an attention / collecting-signatures state, used
-// across multisig (status row, invited members, invited vaults, pending
-// transaction rows). Fades from 16% to a faint 2.5% so the whole row keeps a
-// hint of tint rather than going fully transparent.
-export const collectingSignaturesGradient =
-  'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.16), rgb(from token(colors.orange.action-primary-default) r g b / 0.025))';
-export const collectingSignaturesGradientHover =
-  'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.22), rgb(from token(colors.orange.action-primary-default) r g b / 0.045))';

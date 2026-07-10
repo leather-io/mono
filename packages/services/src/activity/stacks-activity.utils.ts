@@ -327,10 +327,11 @@ export function buildOnchainStacksActivity(
   const initiatedByUser = tx.sender_address === stxAddress;
   const paidFee = initiatedByUser && !tx.sponsored;
   const blockHeight = mapStacksTxBlockHeight(tx);
+  const status = mapStacksTxActivityStatus(tx);
   const common = {
     timestamp: mapStacksTxBlockTime(tx),
     txid: tx.tx_id,
-    status: mapStacksTxActivityStatus(tx),
+    status,
     initiatedByUser,
     ...(blockHeight !== undefined ? { blockHeight } : {}),
     ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
@@ -338,12 +339,19 @@ export function buildOnchainStacksActivity(
   const netStxWithFee = paidFee
     ? initBigNumber(balanceChanges.stxNet).plus(initBigNumber(tx.fee_rate)).toString()
     : balanceChanges.stxNet;
+  const hasAssetChange =
+    !initBigNumber(balanceChanges.stxNet).isZero() || balanceChanges.ftChanges.length > 0;
 
   switch (tx.tx_type) {
     case 'token_transfer': {
-      const stxChange = buildStxBalanceChange(
-        initiatedByUser ? `-${tx.token_transfer.amount}` : tx.token_transfer.amount
-      );
+      const isRecipient = tx.token_transfer.recipient_address === stxAddress;
+      if (!initiatedByUser && !isRecipient) return null;
+      const stxChange =
+        status === 'failed'
+          ? null
+          : buildStxBalanceChange(
+              initiatedByUser ? `-${tx.token_transfer.amount}` : tx.token_transfer.amount
+            );
       return buildStacksActivity({
         common,
         core: {
@@ -356,6 +364,7 @@ export function buildOnchainStacksActivity(
       });
     }
     case 'smart_contract': {
+      if (!initiatedByUser && !hasAssetChange) return null;
       const stxChange = buildStxBalanceChange(netStxWithFee);
       return buildStacksActivity({
         common,
@@ -365,6 +374,7 @@ export function buildOnchainStacksActivity(
       });
     }
     case 'contract_call': {
+      if (!initiatedByUser && !hasAssetChange) return null;
       const stxChange = buildStxBalanceChange(netStxWithFee);
       const allChanges = [...(stxChange === null ? [] : [stxChange]), ...balanceChanges.ftChanges];
       const { action, protocol, protocolName, counterparty } = reclassifySip10Transfer(

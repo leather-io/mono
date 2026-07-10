@@ -64,7 +64,7 @@ export function TxDetailsTable({
   const isBtc = chainFromNetwork(transaction.network) === 'btc';
   const mode = transaction.network.endsWith('mainnet') ? 'mainnet' : 'testnet';
   const statusDisplay = transactionStatusBadge(status);
-  const isCollecting = status === 'pending';
+  const isCollecting = status === 'pending' || status === 'queued';
   return (
     <DetailTable>
       <DetailStatusRow
