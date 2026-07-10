@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.5.0](https://github.com/leather-io/mono/compare/@leather.io/features-v1.4.7...@leather.io/features-v1.5.0) (2026-07-10)
+
+
+### Features
+
+* blockchain activity paging and view mapping ([#2473](https://github.com/leather-io/mono/issues/2473)) ([a279b9e](https://github.com/leather-io/mono/commit/a279b9eaaee43587bc7894b5b7288a748758c15c))
+* multisig activity ([#2482](https://github.com/leather-io/mono/issues/2482)) ([864d9a6](https://github.com/leather-io/mono/commit/864d9a6774a758396c97bb6bca2923d0fef45960))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.37.0
+    * @leather.io/models bumped to 0.59.0
+    * @leather.io/services bumped to 1.59.0
+    * @leather.io/stacks bumped to 1.21.0
+    * @leather.io/utils bumped to 0.52.1
+
 ## [1.4.7](https://github.com/leather-io/mono/compare/@leather.io/features-v1.4.6...@leather.io/features-v1.4.7) (2026-06-23)
 
 
