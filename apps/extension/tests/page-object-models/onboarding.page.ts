@@ -91,10 +91,10 @@ export function getConnectedTestAppPermissionsState({
 }: { accountIndex?: number; policyId?: string } = {}) {
   return {
     appPermissions: {
-      ids: ['localhost:3000'],
+      ids: ['http://localhost:3000'],
       entities: {
-        'localhost:3000': {
-          origin: 'localhost:3000',
+        'http://localhost:3000': {
+          origin: 'http://localhost:3000',
           fingerprint: testFingerprint,
           accountIndex,
           requestedAccounts: '2024-01-01T00:00:00.000Z',

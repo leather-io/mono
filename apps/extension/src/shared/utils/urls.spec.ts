@@ -1,7 +1,7 @@
 // @ts-ignore
 import bigListOfNaughtyStrings from 'blns';
 
-import { getHostnameFromUrl, isValidUrl } from './urls';
+import { getOriginFromUrl, isValidUrl } from './urls';
 
 describe('isValidUrl', () => {
   test('accepts normal URLs', () => {
@@ -36,46 +36,32 @@ describe('isValidUrl', () => {
   });
 });
 
-describe('getHostnameFromUrl', () => {
-  test('returns hostname for valid URLs', () => {
-    const urls = [
-      'http://example.com',
-      'https://leather.io',
-      'https://blockstack.com',
-      'https://blockstack.org/asdf#anchor',
-      'https://subdomain.leather.io',
-    ];
-
-    const expected = [
-      'example.com',
-      'leather.io',
-      'blockstack.com',
-      'blockstack.org',
-      'subdomain.leather.io',
-    ];
-
-    urls.forEach((url, index) => expect(getHostnameFromUrl(url)).toEqual(expected[index]));
+describe('getOriginFromUrl', () => {
+  test.each([
+    ['HTTPS://EXAMPLE.COM:443/path?query=value#fragment', 'https://example.com'],
+    ['http://example.com:80/path', 'http://example.com'],
+    ['https://example.com:8443/path', 'https://example.com:8443'],
+    ['http://localhost:3000/path', 'http://localhost:3000'],
+  ])('returns the canonical web origin of %s', (url, expected) => {
+    expect(getOriginFromUrl(url)).toEqual(expected);
   });
 
-  test('returns hostname with port for localhost URLs', () => {
-    const localhostUrls = [
-      'http://localhost:3000',
-      'https://localhost:8080',
-      'http://localhost:1234',
-    ];
-
-    const expected = ['localhost:3000', 'localhost:8080', 'localhost:1234'];
-
-    localhostUrls.forEach((url, index) => {
-      expect(getHostnameFromUrl(url)).toEqual(expected[index]);
-    });
+  test('keeps different schemes and non-default ports isolated', () => {
+    expect(getOriginFromUrl('https://example.com')).not.toEqual(
+      getOriginFromUrl('http://example.com')
+    );
+    expect(getOriginFromUrl('https://example.com')).not.toEqual(
+      getOriginFromUrl('https://example.com:8443')
+    );
   });
 
-  test('throws error for invalid URLs', () => {
-    const invalidUrls = ['not-a-url', 'file:////path/name', 'http://', 'localhost:3000'];
-
-    invalidUrls.forEach(url => {
-      expect(() => getHostnameFromUrl(url)).toThrowError();
-    });
+  test.each([
+    'not-a-url',
+    'file:////path/name',
+    'data:text/plain,value',
+    'about:blank',
+    'javascript:void(0)',
+  ])('throws for the malformed or non-web URL %s', url => {
+    expect(() => getOriginFromUrl(url)).toThrowError();
   });
 });
