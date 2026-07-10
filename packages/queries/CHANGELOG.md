@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.12.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.11.0...@leather.io/queries-v0.12.0) (2026-07-10)
+
+
+### Features
+
+* add new postconditions ([#2422](https://github.com/leather-io/mono/issues/2422)) ([2416d06](https://github.com/leather-io/mono/commit/2416d0668a194e0de7ede0c724238b92cb361e81))
+* blockchain activity paging and view mapping ([#2473](https://github.com/leather-io/mono/issues/2473)) ([a279b9e](https://github.com/leather-io/mono/commit/a279b9eaaee43587bc7894b5b7288a748758c15c))
+* migrate compliance check call to new service ([#2484](https://github.com/leather-io/mono/issues/2484)) ([b410f39](https://github.com/leather-io/mono/commit/b410f39a9f3e490dd35bded04d73bdf8f4bb3533))
+* multisig activity ([#2482](https://github.com/leather-io/mono/issues/2482)) ([864d9a6](https://github.com/leather-io/mono/commit/864d9a6774a758396c97bb6bca2923d0fef45960))
+* tx proposal in extension via rpc requests ([#2472](https://github.com/leather-io/mono/issues/2472)) ([ef5f7d2](https://github.com/leather-io/mono/commit/ef5f7d202e1d78862d350443fe622732db25961e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.59.0
+    * @leather.io/services bumped to 1.59.0
+    * @leather.io/utils bumped to 0.52.1
+
 ## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.10.2...@leather.io/queries-v0.11.0) (2026-06-23)
 
 

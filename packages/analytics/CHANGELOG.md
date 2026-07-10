@@ -114,6 +114,21 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.21.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.20.3...@leather.io/analytics-v3.21.0) (2026-07-10)
+
+
+### Features
+
+* migrate compliance check call to new service ([#2484](https://github.com/leather-io/mono/issues/2484)) ([b410f39](https://github.com/leather-io/mono/commit/b410f39a9f3e490dd35bded04d73bdf8f4bb3533))
+* tx proposal in extension via rpc requests ([#2472](https://github.com/leather-io/mono/issues/2472)) ([ef5f7d2](https://github.com/leather-io/mono/commit/ef5f7d202e1d78862d350443fe622732db25961e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.59.0
+
 ## [3.20.3](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.20.2...@leather.io/analytics-v3.20.3) (2026-06-23)
 
 
