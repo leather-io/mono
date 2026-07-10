@@ -2,12 +2,12 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { SignIcon } from '~/components/icons/sign-icon';
 
 import type { MultisigTransaction, Vault, VaultAccount } from '@leather.io/models';
-import { Button, CheckmarkCircleIcon, ListItemBox, Spinner } from '@leather.io/ui';
+import { Button, ListItemBox, Spinner } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
-import { Badge } from '../../components/badge';
 import { CopyAddress } from '../../components/copy-address';
+import { formatDateTime } from '../relative-time';
 
 const cancellableStatuses = ['queued', 'pending', 'signed'];
 
@@ -27,11 +27,13 @@ interface SignerRollcallProps {
 function SignerStatus({
   canSign,
   signed,
+  signedAt,
   busy,
   onSign,
 }: {
   canSign: boolean;
   signed: boolean;
+  signedAt?: string;
   busy: boolean;
   onSign(): void;
 }) {
@@ -44,18 +46,9 @@ function SignerStatus({
   }
   if (signed) {
     return (
-      <Badge
-        variant="success"
-        icon={
-          <CheckmarkCircleIcon
-            variant="small"
-            width={16}
-            height={16}
-            color="green.action-primary-default"
-          />
-        }
-        label="Signed"
-      />
+      <styled.span textStyle="caption.01" color="green.action-primary-default">
+        {signedAt ? `Signed ${formatDateTime(new Date(signedAt))}` : 'Signed'}
+      </styled.span>
     );
   }
   return (
@@ -93,11 +86,31 @@ export function SignerRollcall({
       borderColor="ink.border-default"
       overflow="hidden"
     >
+      {transaction.status === 'queued' && (
+        <Box
+          p="space.04"
+          bg="blue.background-primary"
+          borderBottomWidth="1px"
+          borderBottomStyle="solid"
+          borderBottomColor="ink.border-default"
+        >
+          <styled.div textStyle="label.02" color="blue.text-primary">
+            Queued behind an active transaction
+          </styled.div>
+          <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
+            You can sign this once this account&rsquo;s active transaction is broadcast or
+            cancelled.
+          </styled.div>
+        </Box>
+      )}
       {signers.map((signer, index) => {
         const member = vault.members.find(m => m.user?.id === signer.userId);
         const isMe = signer.address === currentUserAddress;
         const name = isMe ? 'Me' : member?.name || truncateMiddle(signer.address);
-        const signed = transaction.signatures.some(sig => sig.signerIndex === signer.signerIndex);
+        const signature = transaction.signatures.find(
+          sig => sig.signerIndex === signer.signerIndex
+        );
+        const signed = signature !== undefined;
         const canSign = isMe && transaction.status === 'pending' && !signed;
         return (
           <Box
@@ -116,7 +129,13 @@ export function SignerRollcall({
               }
               caption={<CopyAddress addr={signer.address} />}
               trailing={
-                <SignerStatus canSign={canSign} signed={signed} busy={busy} onSign={onSign} />
+                <SignerStatus
+                  canSign={canSign}
+                  signed={signed}
+                  signedAt={signature?.createdAt}
+                  busy={busy}
+                  onSign={onSign}
+                />
               }
             />
           </Box>

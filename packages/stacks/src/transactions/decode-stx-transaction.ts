@@ -9,6 +9,7 @@ export interface StxTransferPayloadDetails {
   type: 'stxTransfer';
   recipient: string;
   amount: bigint;
+  memo: string;
   fee: bigint;
 }
 
@@ -40,6 +41,7 @@ export function decodeStxTransactionPayload(rawTx: string): StxTransactionPayloa
         type: 'stxTransfer',
         recipient: cvToString(tx.payload.recipient),
         amount: tx.payload.amount,
+        memo: tx.payload.memo.content,
         fee,
       };
     case PayloadType.ContractCall:

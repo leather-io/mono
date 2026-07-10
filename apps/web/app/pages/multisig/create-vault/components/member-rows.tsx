@@ -20,6 +20,7 @@ export interface MemberFieldStatus {
 
 interface MemberRowsProps {
   chain: Chain;
+  addressPrefix: string;
   members: MemberDraft[];
   myAddress?: string;
   statuses: MemberFieldStatus[];
@@ -59,6 +60,7 @@ function sanitizeMemberName(value: string, allowDots: boolean) {
 
 export function MemberRows({
   chain,
+  addressPrefix,
   members,
   myAddress,
   statuses,
@@ -66,8 +68,10 @@ export function MemberRows({
   onChange,
   onNormalizeAddress,
 }: MemberRowsProps) {
-  const stacksPlaceholder = allowBnsName ? 'SP… address or BNS name' : 'SP… address';
-  const placeholder = chain === 'btc' ? 'bc1q… address' : stacksPlaceholder;
+  const stacksPlaceholder = allowBnsName
+    ? `${addressPrefix}… address or BNS name`
+    : `${addressPrefix}… address`;
+  const placeholder = chain === 'btc' ? `${addressPrefix}… address` : stacksPlaceholder;
 
   function update(index: number, patch: Partial<MemberDraft>) {
     onChange(members.map((m, i) => (i === index ? { ...m, ...patch } : m)));

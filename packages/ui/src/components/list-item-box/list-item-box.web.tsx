@@ -28,6 +28,9 @@ interface ListItemBoxProps {
   flush?: boolean;
   highlight?: 'attention';
   action?: ReactNode;
+  // A full-row navigation target. When set, the row renders as a real <a> so
+  // cmd/ctrl/middle-click open a new tab; plain left-click still calls onClick.
+  href?: string;
   onClick?(): void;
 }
 
@@ -48,6 +51,7 @@ export function ListItemBox({
   flush = false,
   highlight,
   action,
+  href,
   onClick,
 }: ListItemBoxProps) {
   const attention = highlight === 'attention';
@@ -103,6 +107,64 @@ export function ListItemBox({
   const interactiveHover = attention
     ? { bgImage: attentionGradientHover }
     : { bg: 'ink.component-background-hover' };
+  if (href && !action) {
+    return (
+      <styled.a
+        href={href}
+        onClick={event => {
+          if (
+            event.button !== 0 ||
+            event.metaKey ||
+            event.altKey ||
+            event.ctrlKey ||
+            event.shiftKey
+          ) {
+            return;
+          }
+          event.preventDefault();
+          onClick?.();
+        }}
+        display="flex"
+        alignItems="center"
+        gap={gap}
+        width="100%"
+        textDecoration="none"
+        color="inherit"
+        cursor="pointer"
+        borderRadius={flush ? 'none' : 'sm'}
+        px="space.04"
+        py={density === 'compact' ? 'space.03' : 'space.04'}
+        backgroundColor="transparent"
+        bgImage={attention ? attentionGradient : undefined}
+        _hover={interactiveHover}
+      >
+        {content}
+      </styled.a>
+    );
+  }
+  if (onClick && !action) {
+    return (
+      <styled.button
+        type="button"
+        onClick={onClick}
+        display="flex"
+        alignItems="center"
+        gap={gap}
+        width="100%"
+        textAlign="left"
+        cursor="pointer"
+        border="none"
+        borderRadius={flush ? 'none' : 'sm'}
+        px="space.04"
+        py={density === 'compact' ? 'space.03' : 'space.04'}
+        backgroundColor="transparent"
+        bgImage={attention ? attentionGradient : undefined}
+        _hover={interactiveHover}
+      >
+        {content}
+      </styled.button>
+    );
+  }
   return (
     <Flex
       alignItems="center"

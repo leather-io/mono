@@ -27,6 +27,7 @@ describe(decodeStxTransactionPayload.name, () => {
       type: 'stxTransfer',
       recipient,
       amount: 1000n,
+      memo: '',
       fee: 250n,
     });
   });

@@ -10,6 +10,7 @@ interface ProposalSummary {
   recipient?: string;
   amount?: Money;
   fee?: Money;
+  memo?: string;
   contractId?: string;
   functionName?: string;
 }
@@ -21,7 +22,7 @@ export interface ProposalPayloadContext {
 
 export type DecodedProposalPayload =
   | { type: 'btcTransfer'; recipient?: string; amount?: Money; fee?: Money }
-  | { type: 'stxTransfer'; recipient: string; amount: Money; fee: Money }
+  | { type: 'stxTransfer'; recipient: string; amount: Money; memo: string; fee: Money }
   | { type: 'contractCall'; contractId: string; functionName: string; fee: Money }
   | { type: 'contractDeploy'; contractId: string; fee: Money };
 
@@ -56,6 +57,7 @@ export function decodeProposalPayload(
           type: 'stxTransfer',
           recipient: payload.recipient,
           amount: createMoney(payload.amount, 'STX'),
+          memo: payload.memo,
           fee,
         };
       case 'contractCall':
@@ -100,6 +102,7 @@ export function decodeProposalSummary(
         recipient: payload.recipient,
         amount: payload.amount,
         fee: payload.fee,
+        memo: 'memo' in payload ? payload.memo : undefined,
       };
     case 'contractCall':
       return {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
+import { useQuery } from '@tanstack/react-query';
 import { Box, Flex } from 'leather-styles/jsx';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
@@ -13,11 +14,14 @@ import {
   useCancelTransaction,
   useSignTransaction,
 } from '~/features/multisig/transactions/use-transaction-mutations';
+import { getMultisigAccountAddresses } from '~/features/multisig/vaults/multisig-account-addresses';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useMultisigTransaction } from '~/features/multisig/vaults/use-vault-transactions';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
+import { useUserSettings } from '~/hooks/use-user-settings';
+import { createBlockchainActivityByTxIdDetailQuery } from '~/queries/activity/blockchain-activity.query';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
@@ -27,6 +31,7 @@ import type {
   Money,
   MultisigTransaction,
   MultisigTransactionStatus,
+  StacksProtocolAction,
   VaultAccount,
 } from '@leather.io/models';
 import { baseCurrencyAmountInQuote, truncateMiddle } from '@leather.io/utils';
@@ -60,13 +65,22 @@ function toFiat(money: Money | undefined, marketData: MarketData | undefined): M
   return baseCurrencyAmountInQuote(money, marketData);
 }
 
+function humanizeProtocolAction(action: string): string {
+  const spaced = action.replace(/-/g, ' ');
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+
 function proposalHeroTitle(
   kind: 'transfer' | 'contractCall' | 'contractDeploy' | undefined,
-  functionName: string | undefined
+  functionName: string | undefined,
+  action: StacksProtocolAction | undefined
 ): string {
-  if (kind === 'contractCall') return functionName ?? 'Contract call';
   if (kind === 'contractDeploy') return 'Contract deploy';
-  return 'Transfer';
+  if (kind !== 'contractCall') return 'Transfer';
+  if (action !== undefined && action !== 'contract-execution') {
+    return humanizeProtocolAction(action);
+  }
+  return functionName ?? 'Contract call';
 }
 
 function isAwaitingSignatureFrom(
@@ -97,6 +111,7 @@ export function TxDetailPage() {
   const [autoSignStarted, setAutoSignStarted] = useState(false);
   useEffect(() => setHydrated(true), []);
 
+  const settings = useUserSettings();
   const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
   const btcVaults = useVaults(btcNetwork);
   const stxVaults = useVaults(stxNetwork);
@@ -124,6 +139,19 @@ export function TxDetailPage() {
       : undefined;
   const protocolName = useContractProtocolName(decoded?.contractId);
 
+  const onchainActivity = useQuery({
+    ...createBlockchainActivityByTxIdDetailQuery(
+      getMultisigAccountAddresses(account.data),
+      transaction.data?.txId ?? '',
+      settings
+    ),
+    enabled: Boolean(
+      account.data &&
+        transaction.data?.txId &&
+        (decoded?.kind === 'contractCall' || decoded?.kind === 'contractDeploy')
+    ),
+  });
+
   const signTransaction = useSignTransaction(network);
   const cancelTransaction = useCancelTransaction(network);
   const broadcastTransaction = useBroadcastTransaction(network);
@@ -138,7 +166,13 @@ export function TxDetailPage() {
     void navigate(location.pathname, { replace: true, state: null });
     signTransaction.mutate(
       { transaction: transaction.data, account: account.data },
-      { onSuccess: () => toast.success('Signature added') }
+      {
+        onSuccess: () => toast.success('Signature added'),
+        onError: err => {
+          const message = err.message?.trim();
+          if (message) toast.error(message);
+        },
+      }
     );
   }, [
     autoSignStarted,
@@ -204,19 +238,32 @@ export function TxDetailPage() {
   const fee = onChain.fee ?? decoded?.fee;
   const amountFiat = toFiat(amount, marketData.data);
   const feeFiat = toFiat(fee, marketData.data);
-  const heroTitle = proposalHeroTitle(decoded?.kind, decoded?.functionName);
+  const onchainDetail = onchainActivity.data ?? undefined;
+  const heroTitle = proposalHeroTitle(
+    decoded?.kind,
+    decoded?.functionName,
+    onchainDetail?.activity.action
+  );
+  const heroSubtitle = onchainDetail?.view.subtitle;
+  const heroTimeline = tx.broadcastAt
+    ? { verb: 'Broadcast', when: formatRelativeTime(new Date(tx.broadcastAt)) }
+    : { verb: 'Proposed', when: initiationDate };
   const effectiveStatus = reconcileStatus(tx.status, onChain.status);
   const awaitingMySignature = isAwaitingSignatureFrom(tx, acct, me.data?.address);
   const heroStatus = awaitingMySignature
     ? { label: 'Awaiting your signature', variant: 'pending' as const }
     : transactionStatusBadge(effectiveStatus);
 
+  function showSigningError(err: Error) {
+    const message = err.message?.trim();
+    if (message) toast.error(message);
+  }
   function onSign() {
     signTransaction.mutate(
       { transaction: tx, account: acct },
       {
         onSuccess: () => toast.success('Signature added'),
-        onError: err => toast.error(err.message),
+        onError: showSigningError,
       }
     );
   }
@@ -250,11 +297,14 @@ export function TxDetailPage() {
             themeId={vaultThemeFromName(vault.data.theme).id}
             primary={heroTitle}
             secondary={
-              <Flex alignItems="center" gap="space.02">
-                <span>
-                  Proposed {initiationDate} by {proposerName}
-                </span>
-                <AvatarCircle name={proposerName} size="xs" />
+              <Flex direction="column" gap="space.01">
+                {heroSubtitle ? <span>{heroSubtitle}</span> : null}
+                <Flex alignItems="center" gap="space.02">
+                  <span>
+                    {heroTimeline.verb} {heroTimeline.when} by {proposerName}
+                  </span>
+                  <AvatarCircle name={proposerName} size="xs" />
+                </Flex>
               </Flex>
             }
           >
@@ -266,6 +316,11 @@ export function TxDetailPage() {
           <TxDetailsTable
             transaction={tx}
             status={effectiveStatus}
+            vaultLink={{ name: vault.data.name, to: multisigPaths.vault(vault.data.id) }}
+            accountLink={{
+              name: acct.name,
+              to: multisigPaths.account(vault.data.id, acct.id),
+            }}
             proposerLabel={proposerLabel}
             initiationDate={initiationDate}
             recipient={recipient}
@@ -276,6 +331,8 @@ export function TxDetailPage() {
             contractId={decoded?.contractId}
             functionName={decoded?.functionName}
             protocolName={protocolName}
+            balanceChanges={onchainDetail?.activity.balanceChanges}
+            memo={decoded?.memo}
           />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">

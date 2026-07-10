@@ -354,7 +354,7 @@ function StxProposeForm({
     <ProposeFormFields
       memberCount={memberCount}
       unit="STX"
-      recipientPlaceholder="ST… address"
+      recipientPlaceholder="Stacks address"
       recipient={recipient}
       onRecipient={setRecipient}
       amountInput={amountInput}

@@ -30,6 +30,7 @@ interface VaultActivityRowProps {
   item: VaultActivityItem;
   scale?: TransactionRowScale;
   needsAttention?: boolean;
+  href?: string;
   onClick?(): void;
 }
 
@@ -87,6 +88,7 @@ export function VaultActivityRow({
   item,
   scale = 'regular',
   needsAttention,
+  href,
   onClick,
 }: VaultActivityRowProps) {
   const { view } = item;
@@ -98,6 +100,7 @@ export function VaultActivityRow({
       density={scale === 'compact' ? 'compact' : 'default'}
       flush
       highlight={needsAttention ? 'attention' : undefined}
+      href={href}
       onClick={onClick}
       leading={
         <BlockchainActivityAvatarIcon

@@ -10,6 +10,7 @@ import { sumMoney, truncateMiddle } from '@leather.io/utils';
 
 import type { FormatMoney } from './activity-balance';
 import {
+  buildBlockchainActivityActionTitle,
   buildBlockchainActivityDeployTitle,
   buildBlockchainActivitySubtitle,
   interpolateActivityTemplate,
@@ -31,7 +32,8 @@ interface RowShape {
     | { kind: 'icon'; icon: 'contract-call' | 'contract-deploy' };
   indicator: 'sent' | 'received' | 'swap' | 'function';
   title:
-    | { kind: 'symbol'; from: AssetSlot }
+    | { kind: 'transfer'; from: 'sent' | 'received'; verb: string }
+    | { kind: 'action-label' }
     | { kind: 'two-leg' }
     | { kind: 'symbol-pair'; from: 'sent' | 'received' }
     | { kind: 'function-name' }
@@ -46,13 +48,13 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
   send: {
     avatar: { kind: 'single', from: 'sent' },
     indicator: 'sent',
-    title: { kind: 'symbol', from: 'sent' },
+    title: { kind: 'transfer', from: 'sent', verb: 'Send' },
     amount: { kind: 'single', from: 'sent' },
   },
   receive: {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'received',
-    title: { kind: 'symbol', from: 'received' },
+    title: { kind: 'transfer', from: 'received', verb: 'Receive' },
     amount: { kind: 'single', from: 'received' },
   },
   'contract-execution': {
@@ -82,61 +84,61 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
   deposit: {
     avatar: { kind: 'single', from: 'sent' },
     indicator: 'sent',
-    title: { kind: 'symbol', from: 'sent' },
+    title: { kind: 'action-label' },
     amount: { kind: 'single', from: 'sent' },
   },
   withdraw: {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'received',
-    title: { kind: 'symbol', from: 'received' },
+    title: { kind: 'action-label' },
     amount: { kind: 'single', from: 'received' },
   },
   'claim-rewards': {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'received',
-    title: { kind: 'symbol', from: 'received' },
+    title: { kind: 'action-label' },
     amount: { kind: 'single', from: 'received' },
   },
   'add-liquidity': {
     avatar: { kind: 'single', from: 'sent' },
     indicator: 'function',
-    title: { kind: 'symbol', from: 'sent' },
+    title: { kind: 'action-label' },
     amount: { kind: 'single', from: 'sent' },
   },
   'remove-liquidity': {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'function',
-    title: { kind: 'symbol', from: 'received' },
+    title: { kind: 'action-label' },
     amount: { kind: 'single', from: 'received' },
   },
   'stake-lp': {
     avatar: { kind: 'single', from: 'sent' },
     indicator: 'sent',
-    title: { kind: 'symbol', from: 'sent' },
+    title: { kind: 'action-label' },
     amount: { kind: 'none' },
   },
   'unstake-lp': {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'received',
-    title: { kind: 'symbol', from: 'received' },
+    title: { kind: 'action-label' },
     amount: { kind: 'none' },
   },
   stack: {
     avatar: { kind: 'single', from: 'stx' },
     indicator: 'sent',
-    title: { kind: 'symbol', from: 'stx' },
+    title: { kind: 'action-label' },
     amount: { kind: 'single', from: 'sent' },
   },
   'initiate-unstack': {
     avatar: { kind: 'single', from: 'stx' },
     indicator: 'function',
-    title: { kind: 'symbol', from: 'stx' },
+    title: { kind: 'action-label' },
     amount: { kind: 'none' },
   },
   'complete-unstack': {
     avatar: { kind: 'single', from: 'stx' },
     indicator: 'function',
-    title: { kind: 'symbol', from: 'stx' },
+    title: { kind: 'action-label' },
     amount: { kind: 'single', from: 'received' },
   },
   'liquid-stack': {
@@ -154,13 +156,13 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
   borrow: {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'received',
-    title: { kind: 'symbol', from: 'received' },
+    title: { kind: 'action-label' },
     amount: { kind: 'single', from: 'received' },
   },
   repay: {
     avatar: { kind: 'single', from: 'sent' },
     indicator: 'sent',
-    title: { kind: 'symbol', from: 'sent' },
+    title: { kind: 'action-label' },
     amount: { kind: 'single', from: 'sent' },
   },
 };
@@ -265,9 +267,11 @@ function buildTitle(
   t: BlockchainActivityTranslate
 ): string {
   switch (shape.title.kind) {
-    case 'symbol': {
+    case 'action-label':
+      return buildBlockchainActivityActionTitle(activity.action, t) || degradedTitle(activity);
+    case 'transfer': {
       const asset = pickAsset(shape.title.from, sent, received);
-      return asset ? assetSymbol(asset) : degradedTitle(activity);
+      return asset ? `${shape.title.verb} ${assetSymbol(asset)}` : degradedTitle(activity);
     }
     case 'two-leg': {
       if (sent.length >= 1 && received.length >= 1) {
@@ -369,6 +373,7 @@ export function createBlockchainActivityView(
           ? truncateCounterparty(activity.counterparty)
           : undefined,
         contractName: getContractName(activity),
+        actionInTitle: shape.title.kind === 'action-label',
       },
       t
     ),
