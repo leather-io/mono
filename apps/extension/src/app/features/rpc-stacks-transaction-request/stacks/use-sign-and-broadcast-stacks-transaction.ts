@@ -16,18 +16,17 @@ import { RouteUrls } from '@shared/route-urls';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 import { closeWindow } from '@shared/utils';
 
-import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { stacksBroadcastTransaction } from '@app/common/transactions/stacks/stacks-broadcast-transaction';
 import { createError } from '@app/common/utils';
 import { useAnalyticsOnlyStacksNonceTracker } from '@app/components/loaders/stacks-nonce-loader';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 
-import { useRpcTransactionRequest } from '../use-rpc-transaction-request';
+import { useStacksRpcTransactionRequestContext } from './stacks-rpc-transaction-request.context';
 
 export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
-  const { onSetTransactionStatus } = useRpcTransactionRequest();
-  const { frameId, tabId, requestId } = useRpcRequestParams();
+  const { onSetTransactionStatus, tabId, requestId, frameId } =
+    useStacksRpcTransactionRequestContext();
   const signStacksTransaction = useSignStacksTransaction();
   const network = useCurrentStacksNetworkState();
   const navigate = useNavigate();
