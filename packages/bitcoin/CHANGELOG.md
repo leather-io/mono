@@ -939,6 +939,35 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.39.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.38.1...@leather.io/bitcoin-v0.39.0) (2026-07-10)
+
+
+### Features
+
+* build multisig transfer transactions ([#2418](https://github.com/leather-io/mono/issues/2418)) ([c72b145](https://github.com/leather-io/mono/commit/c72b1453cffbcbaa3d972823ce173bc10cb85731))
+* multisig tx signing ([#2431](https://github.com/leather-io/mono/issues/2431)) ([1997d3d](https://github.com/leather-io/mono/commit/1997d3d8bb0314ef4fd4104fb3303a600a46b0e7))
+* policy account state ([#2430](https://github.com/leather-io/mono/issues/2430)) ([01e4ea0](https://github.com/leather-io/mono/commit/01e4ea07d67a8dbf4209912aa1c14304b770d521))
+* policy accounts ([#2438](https://github.com/leather-io/mono/issues/2438)) ([08d3861](https://github.com/leather-io/mono/commit/08d3861dfd5cced3ae2cd23b547007b84a83a5b9))
+* tx proposal in extension via rpc requests ([#2472](https://github.com/leather-io/mono/issues/2472)) ([ef5f7d2](https://github.com/leather-io/mono/commit/ef5f7d202e1d78862d350443fe622732db25961e))
+* **web:** support custom private regtest network for multisig internal testing ([#2476](https://github.com/leather-io/mono/issues/2476)) ([143950b](https://github.com/leather-io/mono/commit/143950b3c49711ac643a3e04ae4b5bec6fa63572))
+
+
+### Bug Fixes
+
+* **mobile:** signPsbt issues ([#2478](https://github.com/leather-io/mono/issues/2478)) ([bfdeb52](https://github.com/leather-io/mono/commit/bfdeb52641b522ecc537e1d853d35102b4645e0f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.37.0
+    * @leather.io/crypto bumped to 1.13.1
+    * @leather.io/models bumped to 0.59.0
+    * @leather.io/utils bumped to 0.52.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.23.0
+
 ## [0.38.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.38.0...@leather.io/bitcoin-v0.38.1) (2026-06-23)
 
 
