@@ -36,6 +36,16 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.59.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.58.0...@leather.io/models-v0.59.0) (2026-07-10)
+
+
+### Features
+
+* blockchain activity paging and view mapping ([#2473](https://github.com/leather-io/mono/issues/2473)) ([a279b9e](https://github.com/leather-io/mono/commit/a279b9eaaee43587bc7894b5b7288a748758c15c))
+* build multisig transfer transactions ([#2418](https://github.com/leather-io/mono/issues/2418)) ([c72b145](https://github.com/leather-io/mono/commit/c72b1453cffbcbaa3d972823ce173bc10cb85731))
+* multisig tx signing ([#2431](https://github.com/leather-io/mono/issues/2431)) ([1997d3d](https://github.com/leather-io/mono/commit/1997d3d8bb0314ef4fd4104fb3303a600a46b0e7))
+* **web:** support custom private regtest network for multisig internal testing ([#2476](https://github.com/leather-io/mono/issues/2476)) ([143950b](https://github.com/leather-io/mono/commit/143950b3c49711ac643a3e04ae4b5bec6fa63572))
+
 ## [0.58.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.57.0...@leather.io/models-v0.58.0) (2026-06-23)
 
 

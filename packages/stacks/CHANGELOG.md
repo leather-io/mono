@@ -577,6 +577,29 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/utils bumped to 0.46.4
 
+## [1.21.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.20.3...@leather.io/stacks-v1.21.0) (2026-07-10)
+
+
+### Features
+
+* add new postconditions ([#2422](https://github.com/leather-io/mono/issues/2422)) ([2416d06](https://github.com/leather-io/mono/commit/2416d0668a194e0de7ede0c724238b92cb361e81))
+* build multisig transfer transactions ([#2418](https://github.com/leather-io/mono/issues/2418)) ([c72b145](https://github.com/leather-io/mono/commit/c72b1453cffbcbaa3d972823ce173bc10cb85731))
+* multisig activity ([#2482](https://github.com/leather-io/mono/issues/2482)) ([864d9a6](https://github.com/leather-io/mono/commit/864d9a6774a758396c97bb6bca2923d0fef45960))
+* multisig tx signing ([#2431](https://github.com/leather-io/mono/issues/2431)) ([1997d3d](https://github.com/leather-io/mono/commit/1997d3d8bb0314ef4fd4104fb3303a600a46b0e7))
+* policy account state ([#2430](https://github.com/leather-io/mono/issues/2430)) ([01e4ea0](https://github.com/leather-io/mono/commit/01e4ea07d67a8dbf4209912aa1c14304b770d521))
+* tx proposal in extension via rpc requests ([#2472](https://github.com/leather-io/mono/issues/2472)) ([ef5f7d2](https://github.com/leather-io/mono/commit/ef5f7d202e1d78862d350443fe622732db25961e))
+* **web:** support custom private regtest network for multisig internal testing ([#2476](https://github.com/leather-io/mono/issues/2476)) ([143950b](https://github.com/leather-io/mono/commit/143950b3c49711ac643a3e04ae4b5bec6fa63572))
+* **web:** transactions list + details, proposal + sign flow ([#2435](https://github.com/leather-io/mono/issues/2435)) ([a878d5f](https://github.com/leather-io/mono/commit/a878d5fe3d392b10c787d9a39f94553e59be018a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.1
+    * @leather.io/models bumped to 0.59.0
+    * @leather.io/utils bumped to 0.52.1
+
 ## [1.20.3](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.20.2...@leather.io/stacks-v1.20.3) (2026-06-23)
 
 
