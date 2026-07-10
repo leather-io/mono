@@ -13,6 +13,7 @@ import { BnsService } from './bns/bns.service';
 import { BitcoinCoinSelectionService } from './coin-selection/bitcoin-coin-selection.service';
 import { CollectiblesService } from './collectibles/collectibles.service';
 import { Sip9sService } from './collectibles/sip9s.service';
+import { ComplianceService } from './compliance/compliance.service';
 import { BitcoinTransactionFeesService } from './fees/bitcoin-transaction-fees.service';
 import { StacksTransactionFeesService } from './fees/stacks-transaction-fees.service';
 import { BnsV2ApiClient } from './infrastructure/api/bns-v2/bns-v2-api.client';
@@ -153,6 +154,9 @@ export function getBitcoinTransactionFeesService() {
 }
 export function getBitcoinCoinSelectionService() {
   return getServicesContainer().get(BitcoinCoinSelectionService);
+}
+export function getComplianceService() {
+  return getServicesContainer().get(ComplianceService);
 }
 export function getZestBorrowService() {
   return getServicesContainer().get(ZestBorrowService);

@@ -3,8 +3,6 @@ import { useRef, useState } from 'react';
 import { FormikHelpers, FormikProps } from 'formik';
 import * as yup from 'yup';
 
-import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
-
 import {
   btcAddressNetworkValidator,
   btcAddressValidator,
@@ -75,12 +73,7 @@ export function useBtcSendForm() {
       recipient: nonEmptyStringValidator()
         .concat(btcAddressValidator())
         .concat(btcAddressNetworkValidator(currentNetwork.chain.bitcoin.mode))
-        .concat(
-          complianceValidator(
-            btcAddressValidator(),
-            bitcoinNetworkModeToCoreNetworkMode(currentNetwork.chain.bitcoin.mode)
-          )
-        ),
+        .concat(complianceValidator(btcAddressValidator())),
     }),
 
     async chooseTransactionFee(

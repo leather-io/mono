@@ -8,6 +8,7 @@ export * from './balances/sip10-balances.service';
 export * from './balances/stx-balances.service';
 export * from './bns/bns.service';
 export * from './coin-selection/bitcoin-coin-selection.service';
+export * from './compliance/compliance.service';
 export * from './fees/bitcoin-transaction-fees.service';
 export * from './fees/stacks-transaction-fees.service';
 export * from './infrastructure/api/gamma/gamma-api.schema';
