@@ -2,9 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useCreateVaultAccount } from '~/features/multisig/vaults/use-vault-account-mutations';
+import {
+  accountLimitForThreshold,
+  isThresholdAtAccountLimit,
+} from '~/features/multisig/vaults/vault-account-index';
 import { useToast } from '~/features/toasts/use-toast';
 
-import type { Vault } from '@leather.io/models';
+import type { Vault, VaultAccountSummary } from '@leather.io/models';
 import { Button, ChevronDownIcon, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
@@ -13,7 +17,7 @@ import { chainFromNetwork } from '../../multisig.utils';
 
 interface CreateAccountModalProps {
   vault: Vault;
-  nextIndex: number;
+  accounts: VaultAccountSummary[] | undefined;
   isShowing: boolean;
   onClose(): void;
 }
@@ -110,7 +114,7 @@ function GlyphButton({
 
 export function CreateAccountModal({
   vault,
-  nextIndex,
+  accounts,
   isShowing,
   onClose,
 }: CreateAccountModalProps) {
@@ -137,7 +141,17 @@ export function CreateAccountModal({
   const theme = vaultThemeFromName(vault.theme);
   const chain = chainFromNetwork(vault.network);
   const memberCount = vault.members.filter(member => member.membershipStatus === 'joined').length;
-  const canSubmit = name.trim() !== '' && threshold !== null && !createAccount.isPending;
+  const accountList = accounts ?? [];
+  const accountLimit = accountLimitForThreshold(vault.network, memberCount);
+  const anyThresholdAtLimit = Array.from(
+    { length: memberCount },
+    (_unused, index) => index + 1
+  ).some(value => isThresholdAtAccountLimit(accountList, value, accountLimit));
+  const canSubmit =
+    name.trim() !== '' &&
+    threshold !== null &&
+    !isThresholdAtAccountLimit(accountList, threshold, accountLimit) &&
+    !createAccount.isPending;
   const thresholdColumns = Math.min(memberCount, 4);
 
   function reset() {
@@ -145,6 +159,7 @@ export function CreateAccountModal({
     setThreshold(null);
     setIcon(defaultAccountIcon);
     setIsPickerOpen(false);
+    createAccount.reset();
   }
 
   function handleClose() {
@@ -155,7 +170,7 @@ export function CreateAccountModal({
   function submit() {
     if (!canSubmit || threshold === null) return;
     createAccount.mutate(
-      { name: name.trim(), icon, threshold, index: nextIndex },
+      { name: name.trim(), icon, threshold },
       {
         onSuccess(account) {
           showToast(`Account “${account.name}” created`);
@@ -313,10 +328,12 @@ export function CreateAccountModal({
           >
             {Array.from({ length: memberCount }, (_unused, index) => index + 1).map(value => {
               const selected = threshold === value;
+              const atLimit = isThresholdAtAccountLimit(accountList, value, accountLimit);
               return (
                 <styled.button
                   key={value}
                   type="button"
+                  disabled={atLimit}
                   onClick={() => setThreshold(value)}
                   aria-pressed={selected}
                   py="space.04"
@@ -329,12 +346,22 @@ export function CreateAccountModal({
                   textStyle="label.01"
                   cursor="pointer"
                   _hover={{ borderColor: 'ink.action-primary-default' }}
+                  _disabled={{
+                    opacity: 0.4,
+                    cursor: 'not-allowed',
+                    borderColor: 'ink.border-default',
+                  }}
                 >
                   {value}
                 </styled.button>
               );
             })}
           </Box>
+          {anyThresholdAtLimit && (
+            <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.02">
+              Thresholds at their account limit are disabled.
+            </styled.p>
+          )}
           {threshold === null ? (
             <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.03">
               Pick a threshold to continue. Leather doesn't choose this for you.
@@ -357,6 +384,21 @@ export function CreateAccountModal({
             </Box>
           )}
         </Box>
+
+        {createAccount.isError && (
+          <Box
+            p="space.04"
+            borderRadius="md"
+            borderWidth="1px"
+            borderStyle="solid"
+            borderColor="red.border"
+            bg="red.background-primary"
+          >
+            <styled.p textStyle="caption.01" color="ink.text-subdued">
+              Couldn't create this account. Try again.
+            </styled.p>
+          </Box>
+        )}
       </Flex>
     </Sheet>
   );
