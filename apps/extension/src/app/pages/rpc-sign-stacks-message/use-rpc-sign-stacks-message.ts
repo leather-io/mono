@@ -5,6 +5,7 @@ import { deserializeCV } from '@stacks/transactions';
 
 import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import {
   isSignableMessageType,
   isStructuredMessageType,
@@ -60,7 +61,7 @@ export function useRpcStacksMessagePayload() {
 }
 
 export function useRpcSignStacksMessageParams() {
-  const { origin, tabId } = useDefaultRequestParams();
+  const { frameId, origin, tabId } = useDefaultRequestParams();
   const requestId = initialSearchParams.get('requestId');
   const network = initialSearchParams.get('network');
   const appName = initialSearchParams.get('appName');
@@ -74,6 +75,7 @@ export function useRpcSignStacksMessageParams() {
   return useMemo(
     () => ({
       origin,
+      frameId,
       tabId: tabId ?? 0,
       requestId,
       network,
@@ -82,18 +84,18 @@ export function useRpcSignStacksMessageParams() {
       appName,
       domain,
     }),
-    [origin, requestId, network, message, messageType, tabId, appName, domain]
+    [origin, frameId, requestId, network, message, messageType, tabId, appName, domain]
   );
 }
 
 export function useRpcSignStacksMessage() {
-  const { tabId, requestId } = useRpcSignStacksMessageParams();
+  const { frameId, tabId, requestId } = useRpcSignStacksMessageParams();
   if (!tabId) throw new Error('Requests can only be made with corresponding tab');
 
   const { isLoading, signMessage } = useSignStacksMessage({
     onSignMessageCompleted(messageSignature) {
-      void chrome.tabs.sendMessage(
-        tabId,
+      void sendMessageToOriginatingFrame(
+        { frameId, tabId },
         createRpcSuccessResponse('stx_signMessage', {
           id: requestId,
           result: {
@@ -110,8 +112,8 @@ export function useRpcSignStacksMessage() {
   function onCancelMessageSigning() {
     if (!requestId || !tabId) return;
     analytics.track('request_signature_cancel');
-    void chrome.tabs.sendMessage(
-      tabId,
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
       createRpcErrorResponse('stx_signMessage', {
         id: requestId,
         error: {

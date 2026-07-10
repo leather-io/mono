@@ -1,6 +1,7 @@
 import { PsbtData } from '@stacks/connect-jwt';
 
 import { ExternalMethods, MESSAGE_SOURCE, PsbtResponseMessage } from '@shared/message-types';
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { closeWindow } from '@shared/utils';
 
 interface FormatPsbtResponseArgs {
@@ -23,11 +24,12 @@ export function formatPsbtResponse({
 
 interface FinalizePsbtArgs {
   data: PsbtData | string;
+  frameId: number;
   requestPayload: string;
   tabId: number;
 }
-export function finalizePsbt({ data, requestPayload, tabId }: FinalizePsbtArgs) {
+export function finalizePsbt({ data, frameId, requestPayload, tabId }: FinalizePsbtArgs) {
   const responseMessage = formatPsbtResponse({ request: requestPayload, response: data });
-  void chrome.tabs.sendMessage(tabId, responseMessage);
+  void sendMessageToOriginatingFrame({ frameId, tabId }, responseMessage);
   closeWindow();
 }

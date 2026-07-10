@@ -13,6 +13,7 @@ import {
 } from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { closeWindow, createDelay } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
@@ -60,7 +61,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
-  const { tabId, origin, requestId, message } = useRpcSignBitcoinMessage();
+  const { frameId, tabId, origin, requestId, message } = useRpcSignBitcoinMessage();
 
   return {
     origin,
@@ -71,8 +72,8 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
     address,
     onUserRejectBip322MessageSigningRequest() {
       if (!tabId) return;
-      void chrome.tabs.sendMessage(
-        tabId,
+      void sendMessageToOriginatingFrame(
+        { frameId, tabId },
         createRpcErrorResponse('signMessage', {
           id: requestId,
           error: {
@@ -101,8 +102,8 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
       await shortPauseBeforeToast();
       toast.success('Message signed successfully');
 
-      void chrome.tabs.sendMessage(
-        tabId,
+      void sendMessageToOriginatingFrame(
+        { frameId, tabId },
         createRpcSuccessResponse('signMessage', {
           id: requestId,
           result: { signature, address, message },

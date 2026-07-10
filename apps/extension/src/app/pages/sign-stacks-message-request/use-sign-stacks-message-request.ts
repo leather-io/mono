@@ -45,13 +45,18 @@ export function useStacksMessageRequestPayload() {
 }
 
 export function useSignStacksMessageRequest() {
-  const { requestToken, tabId } = useSignatureRequestSearchParams();
+  const { frameId, requestToken, tabId } = useSignatureRequestSearchParams();
   if (!tabId) throw new Error('Requests can only be made with corresponding tab');
   if (!requestToken) throw new Error('Missing request token');
 
   const { isLoading, signMessage } = useSignStacksMessage({
     onSignMessageCompleted: messageSignature => {
-      finalizeMessageSignature({ requestPayload: requestToken, tabId, data: messageSignature });
+      finalizeMessageSignature({
+        frameId,
+        requestPayload: requestToken,
+        tabId,
+        data: messageSignature,
+      });
     },
     onSignMessageCancelled: onCancelMessageSigning,
   });
@@ -59,7 +64,7 @@ export function useSignStacksMessageRequest() {
   function onCancelMessageSigning() {
     if (!requestToken || !tabId) return;
     analytics.track('request_signature_cancel');
-    finalizeMessageSignature({ requestPayload: requestToken, tabId, data: 'cancel' });
+    finalizeMessageSignature({ frameId, requestPayload: requestToken, tabId, data: 'cancel' });
   }
 
   return { isLoading, signMessage, onCancelMessageSigning };

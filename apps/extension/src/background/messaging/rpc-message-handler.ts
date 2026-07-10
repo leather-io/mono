@@ -6,6 +6,7 @@ import {
 } from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 
 import { methodsRequiringConnectedWallet } from './methods-requiring-connected-wallet';
 import { btcAddAccountHandler } from './rpc-methods/btc-add-account';
@@ -28,7 +29,7 @@ import { stxTransferSip10FtHandler } from './rpc-methods/stx-transfer-sip10-ft';
 import { stxTransferStxHandler } from './rpc-methods/stx-transfer-stx';
 import { supportedMethodsHandler } from './rpc-methods/supported-methods';
 import {
-  getTabIdFromPort,
+  getOriginatingFrameFromPort,
   listenForOriginTabClose,
   validateConnectedWalletExists,
 } from './rpc-request-utils';
@@ -73,8 +74,8 @@ export async function rpcMessageHandler(request: RpcRequests, port: chrome.runti
     return await handler(request, port);
   }
 
-  void chrome.tabs.sendMessage(
-    getTabIdFromPort(port),
+  void sendMessageToOriginatingFrame(
+    getOriginatingFrameFromPort(port),
     createRpcErrorResponse(request.method, {
       id: request.id,
       error: {

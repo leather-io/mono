@@ -1,5 +1,6 @@
 import { createRpcSuccessResponse, open } from '@leather.io/rpc';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 
 import { openNewTabWithWallet, trackRpcRequestSuccess } from '../rpc-helpers';
@@ -11,9 +12,10 @@ import {
 } from '../rpc-request-utils';
 
 export const openHandler = defineRpcRequestHandler(open.method, async (request, port) => {
-  const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
-    ['requestId', request.id],
-  ]);
+  const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+    port,
+    [['requestId', request.id]]
+  );
 
   const { status } = await validateConnectedWalletExists(
     request,
@@ -34,8 +36,8 @@ export const openHandler = defineRpcRequestHandler(open.method, async (request, 
 
   void trackRpcRequestSuccess({ endpoint: request.method });
 
-  void chrome.tabs.sendMessage(
-    tabId,
+  void sendMessageToOriginatingFrame(
+    { frameId, tabId },
     createRpcSuccessResponse('open', {
       id: request.id,
       result: { success: true },

@@ -65,7 +65,7 @@ export function LedgerSignJwtContainer() {
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
 
   const [jwtPayloadHash, setJwtPayloadHash] = useState<null | string>(null);
-  const { origin, tabId } = useDefaultRequestParams();
+  const { frameId, origin, tabId } = useDefaultRequestParams();
 
   const chain = 'stacks';
 
@@ -167,6 +167,7 @@ export function LedgerSignJwtContainer() {
 
       finalizeAuthResponse({
         decodedAuthRequest,
+        frameId,
         authRequest,
         authResponse,
         requestingOrigin: origin,

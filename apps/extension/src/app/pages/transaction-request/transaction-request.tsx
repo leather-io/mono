@@ -56,7 +56,7 @@ import {
 
 function TransactionRequestBase() {
   const sbtcConfig = useConfigSbtc();
-  const { origin, flow, tabId } = useDefaultRequestParams();
+  const { frameId, origin, flow, tabId } = useDefaultRequestParams();
   const requestToken = useTransactionRequest();
 
   const transactionRequest = useTransactionRequestState();
@@ -104,6 +104,7 @@ function TransactionRequestBase() {
         }
         if (requestToken && tabId) {
           finalizeTxSignature({
+            frameId,
             requestPayload: requestToken,
             tabId: tabId,
             data: {

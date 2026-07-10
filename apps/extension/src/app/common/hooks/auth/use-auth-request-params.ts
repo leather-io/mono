@@ -30,12 +30,12 @@ function parseAuthRequestValues(authRequest: string | null, origin: string | nul
 }
 
 export function useAuthRequestParams() {
-  const { origin, tabId } = useDefaultRequestParams();
+  const { frameId, origin, tabId } = useDefaultRequestParams();
 
   return useMemo(() => {
     const authRequest = initialSearchParams.get('authRequest');
     const authDetails = parseAuthRequestValues(authRequest, origin);
 
-    return { origin, tabId, authRequest, authDetails };
-  }, [origin, tabId]);
+    return { frameId, origin, tabId, authRequest, authDetails };
+  }, [frameId, origin, tabId]);
 }
