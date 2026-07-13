@@ -7,6 +7,17 @@ import { resolveWalletRpcNetwork } from '../../network/resolve-wallet-rpc-networ
 import { getMultisigDescriptor } from '../btc-multisig-descriptor';
 import { preSignVerification } from './pre-sign-verification';
 
+function walletAccountIndexFromPath(path: string | null): number | undefined {
+  if (!path) return undefined;
+  const last = path
+    .split('/')
+    .filter(segment => segment && segment !== 'm')
+    .at(-1);
+  if (!last) return undefined;
+  const index = Number.parseInt(last.replace(/['h]/gi, ''), 10);
+  return Number.isNaN(index) ? undefined : index;
+}
+
 export async function signBtcTransaction(
   transaction: MultisigTransaction,
   account: VaultAccount,
@@ -15,10 +26,13 @@ export async function signBtcTransaction(
   preSignVerification({ transaction, account });
   const descriptor = getMultisigDescriptor(account);
   const psbtHex = psbtBase64ToHex(transaction.proposalRawPayload);
+  const mySigner = account.signers.find(signer => signer.signingPubkey === signerPubkey);
+  const walletAccount = walletAccountIndexFromPath(mySigner?.xpubOriginPath ?? null);
   const { hex } = await leather.signPsbt({
     hex: psbtHex,
     descriptor,
     network: resolveWalletRpcNetwork(transaction.network),
+    ...(walletAccount !== undefined ? { account: walletAccount } : {}),
   });
   return extractWshMultisigSignatures(hex, signerPubkey);
 }

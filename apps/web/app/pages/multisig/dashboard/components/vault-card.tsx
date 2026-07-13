@@ -10,7 +10,7 @@ import { formatCurrency } from '~/utils/currency-formatter';
 
 import type { VaultSummary } from '@leather.io/models';
 import { ListItemBox } from '@leather.io/ui';
-import { truncateMiddle } from '@leather.io/utils';
+import { createMoney, truncateMiddle } from '@leather.io/utils';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { Badge } from '../../components/badge';
@@ -75,11 +75,16 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
         ),
       };
     }
+    const hasNoAccounts = vault.accountCount === 0;
+    const fiatBalance = hasNoAccounts ? createMoney(0, 'USD') : fiat;
+    const cryptoBalance = hasNoAccounts ? createMoney(0, chain === 'btc' ? 'BTC' : 'STX') : crypto;
     return {
-      title: <Balance balance={fiat} formatCurrency={formatCurrency} textStyle="heading.05" />,
+      title: (
+        <Balance balance={fiatBalance} formatCurrency={formatCurrency} textStyle="heading.05" />
+      ),
       subtitle: (
         <Balance
-          balance={crypto}
+          balance={cryptoBalance}
           formatCurrency={formatCurrency}
           textStyle="caption.01"
           color="ink.text-subdued"
