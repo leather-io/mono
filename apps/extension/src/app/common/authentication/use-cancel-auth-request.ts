@@ -7,7 +7,7 @@ import { useDefaultRequestParams } from '../hooks/use-default-request-search-par
 
 export function useCancelAuthRequest() {
   const { decodedAuthRequest, authRequest } = useOnboardingState();
-  const { origin, tabId } = useDefaultRequestParams();
+  const { frameId, origin, tabId } = useDefaultRequestParams();
 
   return useCallback(() => {
     if (!decodedAuthRequest || !authRequest || !origin || !tabId) {
@@ -16,10 +16,11 @@ export function useCancelAuthRequest() {
     const authResponse = 'cancel';
     finalizeAuthResponse({
       decodedAuthRequest,
+      frameId,
       authRequest,
       authResponse,
       requestingOrigin: origin,
       tabId,
     });
-  }, [decodedAuthRequest, authRequest, origin, tabId]);
+  }, [decodedAuthRequest, authRequest, frameId, origin, tabId]);
 }

@@ -1,5 +1,7 @@
 import { RpcErrorCode, type RpcMethodNames, createRpcErrorResponse } from '@leather.io/rpc';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
+
 import type { RootState } from '@app/store';
 
 export async function getRootState() {
@@ -9,13 +11,19 @@ export async function getRootState() {
 }
 
 interface SendMissingStateErrorToTabArgs {
+  frameId: number;
   tabId: number;
   method: RpcMethodNames;
   id: string;
 }
-export function sendMissingStateErrorToTab({ tabId, method, id }: SendMissingStateErrorToTabArgs) {
-  return chrome.tabs.sendMessage(
-    tabId,
+export function sendMissingStateErrorToTab({
+  frameId,
+  tabId,
+  method,
+  id,
+}: SendMissingStateErrorToTabArgs) {
+  return sendMessageToOriginatingFrame(
+    { frameId, tabId },
     createRpcErrorResponse(method, {
       id,
       error: {

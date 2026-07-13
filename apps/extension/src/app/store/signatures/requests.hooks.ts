@@ -10,19 +10,20 @@ import { getGenericSignaturePayloadFromToken } from '@app/common/signature/reque
 import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 export function useSignatureRequestSearchParams() {
-  const { origin, tabId } = useDefaultRequestParams();
+  const { frameId, origin, tabId } = useDefaultRequestParams();
 
   return useMemo(() => {
     const requestToken = initialSearchParams.get('request');
     const messageType = initialSearchParams.get('messageType') as SignedMessageType;
 
     return {
+      frameId,
       tabId,
       requestToken,
       origin,
       messageType,
     };
-  }, [origin, tabId]);
+  }, [frameId, origin, tabId]);
 }
 
 function useSignatureRequestState() {

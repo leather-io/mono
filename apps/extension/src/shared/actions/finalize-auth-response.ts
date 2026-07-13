@@ -1,3 +1,4 @@
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { DecodedAuthRequest } from '@shared/models/decoded-auth-request';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
@@ -10,6 +11,7 @@ interface FinalizeAuthParams {
   authResponse: string;
   authRequest: string;
   requestingOrigin: string;
+  frameId: number;
   tabId: number;
 }
 
@@ -25,6 +27,7 @@ export function finalizeAuthResponse({
   decodedAuthRequest,
   authRequest,
   authResponse,
+  frameId,
   requestingOrigin,
   tabId,
 }: FinalizeAuthParams) {
@@ -41,6 +44,6 @@ export function finalizeAuthResponse({
   }
 
   const responseMessage = formatAuthResponse({ request: authRequest, response: authResponse });
-  void chrome.tabs.sendMessage(tabId, responseMessage);
+  void sendMessageToOriginatingFrame({ frameId, tabId }, responseMessage);
   closeWindow();
 }

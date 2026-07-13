@@ -12,7 +12,7 @@ import { TransactionActionsTitle } from '@app/components/rpc-transaction-request
 import { TransactionError } from '@app/components/rpc-transaction-request/transaction-error';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
 
-import { useRpcTransactionRequest } from '../use-rpc-transaction-request';
+import { useStacksRpcTransactionRequestContext } from '../stacks/stacks-rpc-transaction-request.context';
 
 interface TransactionActionsWithSpendProps {
   isLoading: boolean;
@@ -31,7 +31,7 @@ export function TransactionActionsWithSpend({
   busyLabel,
 }: TransactionActionsWithSpendProps) {
   const { availableBalance, marketData, selectedFee } = useFeeEditorContext();
-  const { status } = useRpcTransactionRequest();
+  const { status } = useStacksRpcTransactionRequestContext();
 
   const totalSpend = useMemo(() => {
     const fee = selectedFee?.txFee;
@@ -42,13 +42,15 @@ export function TransactionActionsWithSpend({
   // TODO LEA-2537: Refactor error state
   const isInsufficientBalance =
     !isSponsored && availableBalance.amount.isLessThan(totalSpend.amount);
+  const isBroadcasting = status === 'broadcasting';
+  const isSubmitted = status === 'submitted';
 
   return (
     <Approver.Actions
       actions={getTransactionActions({
         isLoading,
-        isBroadcasting: status === 'broadcasting',
-        isSubmitted: status === 'submitted',
+        isBroadcasting,
+        isSubmitted,
         isError: isInsufficientBalance,
         onCancel: () => closeWindow(),
         onApprove,

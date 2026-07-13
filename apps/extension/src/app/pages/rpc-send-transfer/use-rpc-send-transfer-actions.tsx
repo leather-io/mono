@@ -10,6 +10,7 @@ import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
 import { delay } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
@@ -30,7 +31,7 @@ import { useRpcSendTransferContext } from './rpc-send-transfer.context';
 
 export function useRpcSendTransferActions() {
   const { availableBalance, selectedFee } = useFeeEditorContext();
-  const { amount, isLoadingBalance, recipients, requestId, tabId, utxos } =
+  const { amount, frameId, isLoadingBalance, recipients, requestId, tabId, utxos } =
     useRpcSendTransferContext();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
@@ -99,8 +100,8 @@ export function useRpcSendTransferActions() {
 
           analytics.track('propose_multisig_transaction', { symbol: 'btc' });
 
-          void chrome.tabs.sendMessage(
-            tabId ?? 0,
+          void sendMessageToOriginatingFrame(
+            { frameId, tabId },
             createRpcSuccessResponse('sendTransfer', {
               id: requestId,
               result: { proposalId: proposal.id, status: 'proposed' },
@@ -130,8 +131,8 @@ export function useRpcSendTransferActions() {
               amount: amount.amount.toNumber(),
             });
 
-            void chrome.tabs.sendMessage(
-              tabId ?? 0,
+            void sendMessageToOriginatingFrame(
+              { frameId, tabId },
               createRpcSuccessResponse('sendTransfer', {
                 id: requestId,
                 result: { txid },
@@ -170,6 +171,7 @@ export function useRpcSendTransferActions() {
     selectedFee?.feeRate,
     generateTx,
     amount,
+    frameId,
     recipients,
     utxos,
     signTransaction,

@@ -9,18 +9,18 @@ import { type RpcMethodNames, createRpcSuccessResponse } from '@leather.io/rpc';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 import { delay, isString } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
-import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
 import { useSignProposalCommitment } from '@app/features/multisig/use-sign-proposal-commitment';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
-import { useRpcTransactionRequest } from '../use-rpc-transaction-request';
+import { useStacksRpcTransactionRequestContext } from './stacks-rpc-transaction-request.context';
 
 const placeholderNonce = 0;
 
@@ -35,8 +35,8 @@ function getErrorMessage(error: unknown) {
 // (commitment signed in-process with the parent key) and returns a proposed
 // result to the dApp.
 export function useProposeStacksTransaction(method: RpcMethodNames) {
-  const { onSetTransactionStatus } = useRpcTransactionRequest();
-  const { tabId, requestId } = useRpcRequestParams();
+  const { onSetTransactionStatus, tabId, requestId, frameId } =
+    useStacksRpcTransactionRequestContext();
   const policy = useCurrentPolicy();
   const account = useCurrentStacksAccount();
   const network = useCurrentNetwork();
@@ -77,8 +77,8 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
         analytics.track('propose_multisig_transaction', { symbol: 'stx' });
         onSetTransactionStatus('submitted');
 
-        void chrome.tabs.sendMessage(
-          tabId,
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
           createRpcSuccessResponse(method, {
             id: requestId,
             result: {
@@ -103,6 +103,7 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
     },
     [
       method,
+      frameId,
       policy,
       account,
       network,

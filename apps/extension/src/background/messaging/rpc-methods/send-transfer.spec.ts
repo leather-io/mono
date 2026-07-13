@@ -20,7 +20,10 @@ vi.mock('../rpc-message-handler', () => ({
 }));
 
 vi.mock('../rpc-request-utils', () => ({
-  getTabIdFromPort: (port: chrome.runtime.Port) => port.sender?.tab?.id ?? 0,
+  getOriginatingFrameFromPort: (port: chrome.runtime.Port) => ({
+    frameId: port.sender?.frameId ?? 0,
+    tabId: port.sender?.tab?.id ?? 0,
+  }),
   createConnectingAppSearchParamsWithLastKnownAccount:
     mocks.createConnectingAppSearchParamsWithLastKnownAccount,
   triggerRequestPopupWindowOpen: mocks.triggerRequestPopupWindowOpen,
@@ -32,6 +35,7 @@ vi.mock('../rpc-helpers', () => ({
   trackRpcRequestSuccess: mocks.trackRpcRequestSuccess,
 }));
 
+const frameId = 42;
 const tabId = 7;
 
 const request = {
@@ -46,7 +50,7 @@ const request = {
 
 function buildPort() {
   return {
-    sender: { url: 'https://app.example.com', tab: { id: tabId } },
+    sender: { frameId, url: 'https://app.example.com', tab: { id: tabId } },
   } as unknown as chrome.runtime.Port;
 }
 
@@ -59,6 +63,7 @@ describe('sendTransferHandler', () => {
   beforeEach(() => {
     vi.stubGlobal('chrome', { tabs: { sendMessage: mocks.sendMessage } });
     mocks.createConnectingAppSearchParamsWithLastKnownAccount.mockResolvedValue({
+      frameId,
       urlParams: new URLSearchParams(),
       tabId,
     });
@@ -90,7 +95,8 @@ describe('sendTransferHandler', () => {
       tabId,
       expect.objectContaining({
         error: expect.objectContaining({ code: RpcErrorCode.INVALID_REQUEST }),
-      })
+      }),
+      { frameId }
     );
   });
 });

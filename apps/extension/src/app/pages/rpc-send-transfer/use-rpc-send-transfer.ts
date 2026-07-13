@@ -23,7 +23,7 @@ function useRpcSendTransferRequestParams() {
 }
 
 export function useRpcSendTransfer() {
-  const { amounts, origin, recipientAddresses, requestId, tabId } =
+  const { amounts, frameId, origin, recipientAddresses, requestId, tabId } =
     useRpcSendTransferRequestParams();
 
   if (origin === null) {
@@ -38,6 +38,7 @@ export function useRpcSendTransfer() {
 
   return {
     amount: createMoney(new BigNumber(sumNumbers(amounts.map(Number))), 'BTC'),
+    frameId,
     origin,
     recipients,
     recipientAddresses,

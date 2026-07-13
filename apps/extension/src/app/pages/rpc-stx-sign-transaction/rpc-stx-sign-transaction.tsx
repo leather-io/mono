@@ -18,6 +18,7 @@ import {
 import { StxAvatarIcon } from '@leather.io/ui';
 import { createMoney, isString } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 import { closeWindow } from '@shared/utils';
 
@@ -34,6 +35,7 @@ import { ContractCallDetailsLayout } from '@app/features/rpc-stacks-transaction-
 import { ContractDeployDetailsLayout } from '@app/features/rpc-stacks-transaction-request/stacks/contract-deploy/contract-deploy-details.layout';
 import { PostConditionsDetailsLayout } from '@app/features/rpc-stacks-transaction-request/stacks/post-conditions/post-conditions-details.layout';
 import { useStacksRpcTransactionRequestContext } from '@app/features/rpc-stacks-transaction-request/stacks/stacks-rpc-transaction-request.context';
+import { useStacksRpcTransactionRequestApproval } from '@app/features/rpc-stacks-transaction-request/stacks/use-stacks-rpc-transaction-request-approval';
 import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transaction-request/transaction-actions/transaction-actions-with-spend';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 
@@ -43,7 +45,8 @@ import {
 } from './rpc-stx-sign-transaction.utils';
 
 export function RpcStxSignTransaction() {
-  const { address, isLoadingBalance, requestId, tabId } = useStacksRpcTransactionRequestContext();
+  const { address, frameId, isLoadingBalance, requestId, tabId } =
+    useStacksRpcTransactionRequestContext();
   const {
     availableBalance,
     isLoadingFees,
@@ -73,8 +76,8 @@ export function RpcStxSignTransaction() {
     const signedTransaction = await signStacksTx(unsignedTxForBroadcast);
 
     if (!signedTransaction) {
-      void chrome.tabs.sendMessage(
-        tabId,
+      void sendMessageToOriginatingFrame(
+        { frameId, tabId },
         createRpcErrorResponse('stx_signTransaction', {
           id: requestId,
           error: {
@@ -86,8 +89,8 @@ export function RpcStxSignTransaction() {
       throw new Error('Error signing stacks transaction');
     }
 
-    void chrome.tabs.sendMessage(
-      tabId,
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
       createRpcSuccessResponse('stx_signTransaction', {
         id: requestId,
         result: {
@@ -98,6 +101,7 @@ export function RpcStxSignTransaction() {
     );
     closeWindow();
   }
+  const onApprove = useStacksRpcTransactionRequestApproval(onApproveTransaction);
 
   const signer = (
     <SigningAccountCard
@@ -119,7 +123,7 @@ export function RpcStxSignTransaction() {
           isSponsored={unsignedTxForBroadcast.auth.authType === AuthType.Sponsored}
           // TODO: Calculate amount if more than fees
           txAmount={createMoney(0, 'STX')}
-          onApprove={onApproveTransaction}
+          onApprove={onApprove}
         />
       }
     >

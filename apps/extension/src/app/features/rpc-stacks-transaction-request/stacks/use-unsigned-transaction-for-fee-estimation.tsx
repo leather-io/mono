@@ -6,6 +6,7 @@ import {
   generateStacksUnsignedTransaction,
 } from '@leather.io/stacks';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 
 import type { RpcTransactionRequest } from '../use-rpc-transaction-request';
@@ -25,8 +26,8 @@ export function useUnsignedStacksTransactionForFeeEstimation({
     [txOptions]
   );
   if (unsignedTx.error) {
-    void chrome.tabs.sendMessage(
-      request.tabId,
+    void sendMessageToOriginatingFrame(
+      request,
       createRpcErrorResponse(method, {
         id: request.requestId,
         error: {
