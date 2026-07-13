@@ -26,12 +26,34 @@ import { Badge } from './badge';
 import { PendingIndicatorIcon, type TransactionRowScale, scaleConfig } from './transaction-row';
 import { transactionStatusBadge } from './transaction-status';
 
+export interface ActivityRowLocation {
+  vault?: string;
+  account?: string;
+}
+
 interface VaultActivityRowProps {
   item: VaultActivityItem;
   scale?: TransactionRowScale;
   needsAttention?: boolean;
+  location?: ActivityRowLocation;
   href?: string;
   onClick?(): void;
+}
+
+function renderLocation({ vault, account }: ActivityRowLocation): ReactNode {
+  const truncating = {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    minWidth: 0,
+  } as const;
+  return (
+    <styled.span display="flex" width="100%" minWidth={0} gap="space.01">
+      {vault ? <styled.span {...truncating}>{vault}</styled.span> : null}
+      {vault && account ? <styled.span flexShrink={0}>·</styled.span> : null}
+      {account ? <styled.span {...truncating}>{account}</styled.span> : null}
+    </styled.span>
+  );
 }
 
 function resolveQuoteColor(
@@ -78,7 +100,7 @@ function renderStatusChip(item: VaultActivityItem): ReactNode {
   const { status, approvalCount } = multisig.transaction;
   const display = transactionStatusBadge(status);
   const label =
-    (status === 'pending' || status === 'queued') && multisig.threshold !== undefined
+    status === 'pending' && multisig.threshold !== undefined
       ? `${approvalCount} of ${multisig.threshold} signed`
       : display.label;
   return <Badge label={label} variant={display.variant} size="sm" />;
@@ -88,6 +110,7 @@ export function VaultActivityRow({
   item,
   scale = 'regular',
   needsAttention,
+  location,
   href,
   onClick,
 }: VaultActivityRowProps) {
@@ -122,7 +145,22 @@ export function VaultActivityRow({
         </styled.span>
       }
       titleAccessory={renderStatusChip(item)}
-      caption={renderCaption(item)}
+      caption={
+        location ? (
+          <styled.span
+            display="block"
+            alignSelf="stretch"
+            minWidth={0}
+            textStyle="caption.01"
+            color="ink.text-subdued"
+          >
+            {renderLocation(location)}
+            <styled.span display="block">{renderCaption(item)}</styled.span>
+          </styled.span>
+        ) : (
+          renderCaption(item)
+        )
+      }
       trailing={
         amount ? (
           <styled.span

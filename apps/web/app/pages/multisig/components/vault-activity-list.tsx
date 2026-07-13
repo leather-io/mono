@@ -7,13 +7,30 @@ import { ListContainer } from '@leather.io/ui';
 
 import { multisigPaths } from '../multisig.constants';
 import { type TransactionRowScale } from './transaction-row';
-import { VaultActivityRow } from './vault-activity-row';
+import { type ActivityRowLocation, VaultActivityRow } from './vault-activity-row';
 
 interface VaultActivityListProps {
   items: VaultActivityItem[];
   scale?: TransactionRowScale;
   limit?: number;
+  vaultNamesById?: ReadonlyMap<string, string>;
+  accountNamesById?: ReadonlyMap<string, string>;
   onSelect(vaultId: string, txId: string): void;
+}
+
+function resolveLocation(
+  item: VaultActivityItem,
+  vaultNamesById?: ReadonlyMap<string, string>,
+  accountNamesById?: ReadonlyMap<string, string>
+): ActivityRowLocation | undefined {
+  const vault =
+    vaultNamesById && item.vaultId
+      ? (vaultNamesById.get(item.vaultId) ?? item.multisig?.vaultName)
+      : undefined;
+  const account =
+    accountNamesById && item.vaultAccountId ? accountNamesById.get(item.vaultAccountId) : undefined;
+  if (!vault && !account) return undefined;
+  return { vault, account };
 }
 
 // Proposal rows open the multisig transaction; proposal-less rows open the on-chain detail.
@@ -34,7 +51,14 @@ function resolveRowLink(
   return { href, onClick: () => void navigate(href) };
 }
 
-export function VaultActivityList({ items, scale, limit, onSelect }: VaultActivityListProps) {
+export function VaultActivityList({
+  items,
+  scale,
+  limit,
+  vaultNamesById,
+  accountNamesById,
+  onSelect,
+}: VaultActivityListProps) {
   const navigate = useNavigate();
   const visibleItems = limit === undefined ? items : items.slice(0, limit);
   return (
@@ -53,12 +77,14 @@ export function VaultActivityList({ items, scale, limit, onSelect }: VaultActivi
         {visibleItems.map(item => {
           const needsAttention = Boolean(item.multisig) && item.view.status === 'pending';
           const link = resolveRowLink(item, onSelect, navigate);
+          const location = resolveLocation(item, vaultNamesById, accountNamesById);
           return (
             <VaultActivityRow
               key={item.view.key}
               item={item}
               scale={scale}
               needsAttention={needsAttention}
+              location={location}
               href={link?.href}
               onClick={link?.onClick}
             />

@@ -1,9 +1,12 @@
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { useQuery } from '@tanstack/react-query';
 import { Box, Flex } from 'leather-styles/jsx';
 import { ExternalLink } from '~/components/external-link';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
+import { useSession } from '~/features/multisig/auth/use-session';
+import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { getMultisigAccountAddresses } from '~/features/multisig/vaults/multisig-account-addresses';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
@@ -26,7 +29,7 @@ import type {
 } from '@leather.io/models';
 import { baseCurrencyAmountInQuote } from '@leather.io/utils';
 
-import { Badge, type BadgeVariant } from '../components/badge';
+import { type BadgeVariant } from '../components/badge';
 import { CopyAddress } from '../components/copy-address';
 import {
   DetailLocationRow,
@@ -79,11 +82,17 @@ export function ActivityDetailPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const canGoBack = location.key !== 'default';
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
   const settings = useUserSettings();
 
   const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
   const btcVaults = useVaults(btcNetwork);
   const stxVaults = useVaults(stxNetwork);
+  const btcSession = useSession(btcNetwork);
+  const stxSession = useSession(stxNetwork);
+  const restoringBtc = useIsRestoringSession(btcNetwork);
+  const restoringStx = useIsRestoringSession(stxNetwork);
   const inBtc = btcVaults.data?.some(summary => summary.id === vaultId) ?? false;
   const inStx = stxVaults.data?.some(summary => summary.id === vaultId) ?? false;
   const vaultNetworkKnown = inBtc || inStx;
@@ -104,17 +113,17 @@ export function ActivityDetailPage() {
     vaultId && accountId ? multisigPaths.account(vaultId, accountId) : multisigPaths.index;
   const onBack = canGoBack ? () => navigate(-1) : undefined;
 
-  const isResolving =
-    btcVaults.isLoading ||
-    stxVaults.isLoading ||
-    (vaultNetworkKnown && (account.isLoading || vault.isLoading)) ||
-    (activityEnabled && activity.isPending);
+  const sessionsRestoring = restoringBtc || restoringStx;
+  const listsSettled = (!btcSession || btcVaults.isSuccess) && (!stxSession || stxVaults.isSuccess);
+  const detailResolving =
+    vaultNetworkKnown && !(vault.isSuccess && account.isSuccess && activity.isSuccess);
+  const isResolving = !hydrated || sessionsRestoring || !listsSettled || detailResolving;
 
   const detail = activity.data ?? undefined;
 
   if (!detail) {
     return (
-      <MultisigPage title="Activity" backTo={backTo} onBack={onBack}>
+      <MultisigPage title="Activity" backTo={backTo} onBack={onBack} maxWidth="685px">
         {isResolving ? (
           <Flex direction="column" gap="space.03">
             {[0, 1, 2].map(index => (
@@ -148,17 +157,13 @@ export function ActivityDetailPage() {
       : undefined;
 
   return (
-    <MultisigPage title="Activity" backTo={backTo} onBack={onBack}>
+    <MultisigPage title="Activity" backTo={backTo} onBack={onBack} maxWidth="685px">
       <MultisigHero
         variant="balance"
         themeId={vaultThemeFromName(vault.data?.theme).id}
         primary={view.title || '—'}
         secondary={view.subtitle || formatRelativeTime(new Date(view.timestamp * 1000))}
-      >
-        <Box mt="space.03">
-          <Badge variant={status.variant} label={status.label} />
-        </Box>
-      </MultisigHero>
+      />
 
       <SectionLabel>Transaction details</SectionLabel>
       <DetailTable>
