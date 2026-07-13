@@ -7,6 +7,7 @@ import {
 } from '@leather.io/rpc';
 import { isUndefined } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import {
   convertRpcSendTransferLegacyParamsToNew,
@@ -21,7 +22,7 @@ import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
-  getTabIdFromPort,
+  getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
 } from '../rpc-request-utils';
@@ -32,8 +33,8 @@ export const sendTransferHandler = defineRpcRequestHandler(
     if (isUndefined(request.params)) {
       void trackRpcRequestError({ endpoint: 'sendTransfer', error: 'Undefined parameters' });
 
-      void chrome.tabs.sendMessage(
-        getTabIdFromPort(port),
+      void sendMessageToOriginatingFrame(
+        getOriginatingFrameFromPort(port),
         createRpcErrorResponse('sendTransfer', {
           id: request.id,
           error: { code: RpcErrorCode.INVALID_REQUEST, message: 'Parameters undefined' },
@@ -50,8 +51,8 @@ export const sendTransferHandler = defineRpcRequestHandler(
     if (!validateRpcSendTransferParams(params)) {
       void trackRpcRequestError({ endpoint: 'sendTransfer', error: 'Invalid parameters' });
 
-      void chrome.tabs.sendMessage(
-        getTabIdFromPort(port),
+      void sendMessageToOriginatingFrame(
+        getOriginatingFrameFromPort(port),
         createRpcErrorResponse('sendTransfer', {
           id: request.id,
           error: {
@@ -82,13 +83,13 @@ export const sendTransferHandler = defineRpcRequestHandler(
       requestParams.push(['accountIndex', params.account.toString()]);
     }
 
-    const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+    const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
       port,
       requestParams
     );
 
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcSendTransfer, urlParams);
 
-    sendErrorResponseOnUserPopupClose({ tabId, id, request });
+    sendErrorResponseOnUserPopupClose({ frameId, tabId, id, request });
   }
 );

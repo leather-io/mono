@@ -31,7 +31,7 @@ export function useFinishAuthRequest() {
   const dispatch = useDispatch();
   const currentNetwork = useCurrentNetwork();
 
-  const { origin, tabId } = useAuthRequestParams();
+  const { frameId, origin, tabId } = useAuthRequestParams();
   const hasSecretKey = !!useActiveWalletSecretKey();
   const { version } = useInMemoryKeys();
 
@@ -87,6 +87,7 @@ export function useFinishAuthRequest() {
 
           finalizeAuthResponse({
             decodedAuthRequest,
+            frameId,
             authRequest,
             authResponse,
             requestingOrigin: origin,
@@ -100,6 +101,7 @@ export function useFinishAuthRequest() {
     [
       decodedAuthRequest,
       authRequest,
+      frameId,
       origin,
       tabId,
       walletType,

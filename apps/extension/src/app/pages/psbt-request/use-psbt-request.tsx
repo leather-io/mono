@@ -17,7 +17,7 @@ export function usePsbtRequest() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { appName, origin, payload, requestToken, signAtIndex, tabId } =
+  const { appName, frameId, origin, payload, requestToken, signAtIndex, tabId } =
     usePsbtRequestSearchParams();
   const { signPsbt, getRawPsbt, getPsbtAsTransaction } = usePsbtSigner();
   const getDefaultSigningConfig = useGetAssumedZeroIndexSigningConfig();
@@ -34,6 +34,7 @@ export function usePsbtRequest() {
         analytics.track('request_psbt_cancel');
         finalizePsbt({
           data: 'PSBT request was canceled',
+          frameId,
           requestPayload: requestToken,
           tabId,
         });
@@ -54,6 +55,7 @@ export function usePsbtRequest() {
 
           finalizePsbt({
             data: { hex: bytesToHex(signedPsbt) },
+            frameId,
             requestPayload: requestToken,
             tabId,
           });
@@ -69,6 +71,7 @@ export function usePsbtRequest() {
     signAtIndex,
     isLoading,
     getRawPsbt,
+    frameId,
     origin,
     payload.hex,
     requestToken,

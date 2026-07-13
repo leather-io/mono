@@ -40,7 +40,7 @@ export function useStacksBroadcastTransaction({
 }: UseStacksBroadcastTransactionArgs) {
   const signStacksTransaction = useSignStacksTransaction();
   const [isBroadcasting, setIsBroadcasting] = useState(false);
-  const { tabId } = useDefaultRequestParams();
+  const { frameId, tabId } = useDefaultRequestParams();
   const requestToken = useTransactionRequest();
 
   const navigate = useNavigate();
@@ -60,6 +60,7 @@ export function useStacksBroadcastTransaction({
     function handlePreviewSuccess(signedTx: StacksTransactionWire, txid?: string) {
       if (requestToken && tabId) {
         finalizeTxSignature({
+          frameId,
           requestPayload: requestToken,
           tabId,
           data: {
@@ -135,6 +136,7 @@ export function useStacksBroadcastTransaction({
   }, [
     isBroadcasting,
     requestToken,
+    frameId,
     tabId,
     redirectToSuccessPage,
     navigate,

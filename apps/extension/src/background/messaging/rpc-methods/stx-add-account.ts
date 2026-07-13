@@ -25,7 +25,7 @@ export const stxAddAccountHandler = defineRpcRequestHandler(
     });
     if (status === 'failure') return;
 
-    const { urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
+    const { frameId, urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
       ['requestId', request.id],
       ['rpcRequest', encodeBase64Json(request)],
     ]);
@@ -34,6 +34,6 @@ export const stxAddAccountHandler = defineRpcRequestHandler(
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcStxAddAccount, urlParams);
     void trackRpcRequestSuccess({ endpoint: request.method });
 
-    sendErrorResponseOnUserPopupClose({ tabId, id, request });
+    sendErrorResponseOnUserPopupClose({ frameId, tabId, id, request });
   }
 );

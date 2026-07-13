@@ -29,10 +29,13 @@ export const stxDeployContractHandler = defineRpcRequestHandler(
       schema: stxDeployContract.params,
     });
     if (status === 'failure') return;
-    const { tabId, urlParams } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
-      ['requestId', request.id],
-      ['rpcRequest', encodeBase64Json(request)],
-    ]);
+    const { frameId, tabId, urlParams } = await createConnectingAppSearchParamsWithLastKnownAccount(
+      port,
+      [
+        ['requestId', request.id],
+        ['rpcRequest', encodeBase64Json(request)],
+      ]
+    );
 
     if (request.params && request.params.network) {
       urlParams.append('network', request.params.network);
@@ -41,6 +44,7 @@ export const stxDeployContractHandler = defineRpcRequestHandler(
     void trackRpcRequestSuccess({ endpoint: request.method });
 
     listenForPopupClose({
+      frameId,
       tabId,
       id,
       response: createRpcErrorResponse(method, {

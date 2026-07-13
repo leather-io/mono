@@ -8,6 +8,7 @@ import type { Money } from '@leather.io/models';
 import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
 import { createMoney, isError, sumMoney } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 import { closeWindow } from '@shared/utils';
@@ -37,7 +38,7 @@ interface BroadcastSignedPsbtTxArgs {
 }
 export function useRpcSignPsbt() {
   const navigate = useNavigate();
-  const { broadcast, descriptor, origin, psbtHex, requestId, signAtIndex, tabId } =
+  const { broadcast, descriptor, frameId, origin, psbtHex, requestId, signAtIndex, tabId } =
     useRpcSignPsbtParams();
   const { signPsbt, getPsbtAsTransaction } = usePsbtSigner();
   const signDescriptorPsbt = useSignDescriptorPsbt();
@@ -69,8 +70,8 @@ export function useRpcSignPsbt() {
       async onSuccess(txid) {
         if (!requestId) throw new Error('Invalid request id');
 
-        void chrome.tabs.sendMessage(
-          tabId,
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
           createRpcSuccessResponse('signPsbt', {
             id: requestId,
             result: { hex: psbt, txid },
@@ -98,8 +99,8 @@ export function useRpcSignPsbt() {
       onError(e) {
         if (!requestId) throw new Error('Invalid request id');
 
-        void chrome.tabs.sendMessage(
-          tabId,
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
           createRpcErrorResponse('signPsbt', {
             id: requestId,
             error: {
@@ -158,8 +159,8 @@ export function useRpcSignPsbt() {
             }
           }
 
-          void chrome.tabs.sendMessage(
-            tabId,
+          void sendMessageToOriginatingFrame(
+            { frameId, tabId },
             createRpcSuccessResponse('signPsbt', {
               id: requestId,
               result: { hex: signedPsbtHex },
@@ -168,8 +169,8 @@ export function useRpcSignPsbt() {
           closeWindow();
           return;
         } catch (e) {
-          void chrome.tabs.sendMessage(
-            tabId,
+          void sendMessageToOriginatingFrame(
+            { frameId, tabId },
             createRpcErrorResponse('signPsbt', {
               id: requestId,
               error: {
@@ -195,8 +196,8 @@ export function useRpcSignPsbt() {
         const psbt = signedTx.toPSBT();
 
         if (!broadcast) {
-          void chrome.tabs.sendMessage(
-            tabId,
+          void sendMessageToOriginatingFrame(
+            { frameId, tabId },
             createRpcSuccessResponse('signPsbt', {
               id: requestId,
               result: { hex: bytesToHex(psbt) },
@@ -237,8 +238,8 @@ export function useRpcSignPsbt() {
       }
     },
     onCancel() {
-      void chrome.tabs.sendMessage(
-        tabId,
+      void sendMessageToOriginatingFrame(
+        { frameId, tabId },
         createRpcErrorResponse('signPsbt', {
           id: requestId,
           error: {

@@ -6,13 +6,14 @@ import {
   encodeBase64Json,
 } from '@leather.io/rpc';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   createConnectingAppMetadataSearchParams,
-  getTabIdFromPort,
+  getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
   validateRequestParams,
@@ -45,8 +46,8 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
 
     if (!isSupportedMultisigDescriptor(request.params.descriptor)) {
       void trackRpcRequestError({ endpoint: request.method, error: 'Invalid descriptor' });
-      void chrome.tabs.sendMessage(
-        getTabIdFromPort(port),
+      void sendMessageToOriginatingFrame(
+        getOriginatingFrameFromPort(port),
         createRpcErrorResponse(request.method, {
           id: request.id,
           error: {
@@ -58,7 +59,7 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
       return;
     }
 
-    const { urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
+    const { frameId, urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
       ['requestId', request.id],
       ['rpcRequest', encodeBase64Json(request)],
     ]);
@@ -67,6 +68,6 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcBtcAddAccount, urlParams);
     void trackRpcRequestSuccess({ endpoint: request.method });
 
-    sendErrorResponseOnUserPopupClose({ tabId, id, request });
+    sendErrorResponseOnUserPopupClose({ frameId, tabId, id, request });
   }
 );

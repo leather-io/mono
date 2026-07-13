@@ -10,6 +10,7 @@ import {
 } from '@leather.io/rpc';
 import { isDefined, isString, isUndefined } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import {
   getRpcSignStacksMessageParamErrors,
@@ -21,7 +22,7 @@ import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
-  getTabIdFromPort,
+  getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
 } from '../rpc-request-utils';
@@ -34,8 +35,8 @@ async function handleRpcSignStacksMessage(
 ) {
   if (isUndefined(request.params)) {
     void trackRpcRequestError({ endpoint: method, error: 'Undefined parameters' });
-    void chrome.tabs.sendMessage(
-      getTabIdFromPort(port),
+    void sendMessageToOriginatingFrame(
+      getOriginatingFrameFromPort(port),
       createRpcErrorResponse(method, {
         id: request.id,
         error: { code: RpcErrorCode.INVALID_REQUEST, message: 'Parameters undefined' },
@@ -46,8 +47,8 @@ async function handleRpcSignStacksMessage(
 
   if (!validateRpcSignStacksMessageParams(request.params)) {
     void trackRpcRequestError({ endpoint: method, error: 'Invalid parameters' });
-    void chrome.tabs.sendMessage(
-      getTabIdFromPort(port),
+    void sendMessageToOriginatingFrame(
+      getOriginatingFrameFromPort(port),
       createRpcErrorResponse(method, {
         id: request.id,
         error: {
@@ -61,13 +62,13 @@ async function handleRpcSignStacksMessage(
 
   void trackRpcRequestSuccess({ endpoint: method });
 
-  const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+  const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
     port,
     requestParams
   );
 
   const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcStacksSignature, urlParams);
-  sendErrorResponseOnUserPopupClose({ tabId, id, request });
+  sendErrorResponseOnUserPopupClose({ frameId, tabId, id, request });
 }
 export const stxSignMessageHandler = defineRpcRequestHandler(
   stxSignMessage.method,

@@ -1,5 +1,6 @@
 import { createRpcSuccessResponse, openSwap } from '@leather.io/rpc';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
@@ -11,9 +12,10 @@ import {
 } from '../rpc-request-utils';
 
 export const openSwapHandler = defineRpcRequestHandler(openSwap.method, async (request, port) => {
-  const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
-    ['requestId', request.id],
-  ]);
+  const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+    port,
+    [['requestId', request.id]]
+  );
   const { base = 'STX', quote } = request?.params || {};
 
   if (base === 'BTC') {
@@ -36,8 +38,8 @@ export const openSwapHandler = defineRpcRequestHandler(openSwap.method, async (r
 
   void trackRpcRequestSuccess({ endpoint: request.method });
 
-  void chrome.tabs.sendMessage(
-    tabId,
+  void sendMessageToOriginatingFrame(
+    { frameId, tabId },
     createRpcSuccessResponse('openSwap', {
       id: request.id,
       result: { message: 'Success' },

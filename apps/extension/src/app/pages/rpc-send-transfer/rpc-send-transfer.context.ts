@@ -5,6 +5,7 @@ import type { Money, OwnedUtxo } from '@leather.io/models';
 import type { TransferRecipient } from '@shared/models/form.model';
 
 interface RpcTransactionRequestContext {
+  frameId: number;
   origin: string;
   requestId: string;
   tabId: number;
