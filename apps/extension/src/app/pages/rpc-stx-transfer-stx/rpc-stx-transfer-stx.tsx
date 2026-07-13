@@ -18,6 +18,7 @@ import { RpcTransactionRequestLayout } from '@app/features/rpc-stacks-transactio
 import { SigningAccountCard } from '@app/features/rpc-stacks-transaction-request/signing-account-card/signing-account-card';
 import { useStacksRpcTransactionRequestContext } from '@app/features/rpc-stacks-transaction-request/stacks/stacks-rpc-transaction-request.context';
 import { useSignAndBroadcastStacksTransaction } from '@app/features/rpc-stacks-transaction-request/stacks/use-sign-and-broadcast-stacks-transaction';
+import { useStacksRpcTransactionRequestApproval } from '@app/features/rpc-stacks-transaction-request/stacks/use-stacks-rpc-transaction-request-approval';
 import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transaction-request/transaction-actions/transaction-actions-with-spend';
 
 import { getUnsignedStacksTokenTransferOptions } from './rpc-stx-transfer-stx.utils';
@@ -53,6 +54,7 @@ export function RpcStxTransferStx() {
     if (isSponsored) unsignedTx.setFee(0);
     await signAndBroadcastTransaction(unsignedTx);
   }
+  const onApprove = useStacksRpcTransactionRequestApproval(onApproveTransaction);
 
   return (
     <RpcTransactionRequestLayout
@@ -64,7 +66,7 @@ export function RpcStxTransferStx() {
           isLoading={isLoadingBalance || isLoadingFees}
           isSponsored={isSponsored}
           txAmount={txOptionsForBroadcast.amount}
-          onApprove={onApproveTransaction}
+          onApprove={onApprove}
         />
       }
     >
