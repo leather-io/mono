@@ -19,6 +19,7 @@ import { ContractCallDetailsLayout } from '@app/features/rpc-stacks-transaction-
 import { PostConditionsDetailsLayout } from '@app/features/rpc-stacks-transaction-request/stacks/post-conditions/post-conditions-details.layout';
 import { useStacksRpcTransactionRequestContext } from '@app/features/rpc-stacks-transaction-request/stacks/stacks-rpc-transaction-request.context';
 import { useSignAndBroadcastStacksTransaction } from '@app/features/rpc-stacks-transaction-request/stacks/use-sign-and-broadcast-stacks-transaction';
+import { useStacksRpcTransactionRequestApproval } from '@app/features/rpc-stacks-transaction-request/stacks/use-stacks-rpc-transaction-request-approval';
 import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transaction-request/transaction-actions/transaction-actions-with-spend';
 
 import { getUnsignedStacksContractCallOptions } from './rpc-stx-transfer-sip9-nft.utils';
@@ -56,6 +57,7 @@ export function RpcStxTransferSip9Nft() {
     if (isSponsored) unsignedTx.setFee(0);
     await signAndBroadcastTransaction(unsignedTx);
   }
+  const onApprove = useStacksRpcTransactionRequestApproval(onApproveTransaction);
 
   return (
     <RpcTransactionRequestLayout
@@ -67,7 +69,7 @@ export function RpcStxTransferSip9Nft() {
           isLoading={isLoadingBalance || isLoadingFees}
           isSponsored={isSponsored}
           txAmount={createMoney(0, 'STX')}
-          onApprove={onApproveTransaction}
+          onApprove={onApprove}
         />
       }
     >

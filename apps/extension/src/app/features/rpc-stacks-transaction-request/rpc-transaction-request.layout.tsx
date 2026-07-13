@@ -11,7 +11,7 @@ import { TransactionHeader } from '@app/components/rpc-transaction-request/trans
 import { TransactionWrapper } from '@app/components/rpc-transaction-request/transaction-wrapper';
 
 import { RequestingTabClosedWarningMessage } from '../errors/requesting-tab-closed-error-msg';
-import { useRpcTransactionRequest } from './use-rpc-transaction-request';
+import { useStacksRpcTransactionRequestContext } from './stacks/stacks-rpc-transaction-request.context';
 
 interface RpcTransactionRequestLayoutProps extends HasChildren {
   actions: React.ReactNode;
@@ -26,7 +26,7 @@ export function RpcTransactionRequestLayout({
   method,
   title,
 }: RpcTransactionRequestLayoutProps) {
-  const { origin, status, onClickRequestedByLink } = useRpcTransactionRequest();
+  const { origin, status, onClickRequestedByLink } = useStacksRpcTransactionRequestContext();
 
   const showOverlay = status === 'broadcasting' || status === 'submitted';
 

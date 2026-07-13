@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
 
+import { styled } from 'leather-styles/jsx';
+
 import { stxTransferStx } from '@leather.io/rpc';
 import { generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import { StxAvatarIcon } from '@leather.io/ui';
+import { Approver, StxAvatarIcon } from '@leather.io/ui';
 import { isString } from '@leather.io/utils';
 
 import { useConvertCryptoCurrencyToFiatAmount } from '@app/common/hooks/use-convert-to-fiat-amount';
@@ -16,6 +18,7 @@ import { RpcTransactionRequestLayout } from '@app/features/rpc-stacks-transactio
 import { SigningAccountCard } from '@app/features/rpc-stacks-transaction-request/signing-account-card/signing-account-card';
 import { useStacksRpcTransactionRequestContext } from '@app/features/rpc-stacks-transaction-request/stacks/stacks-rpc-transaction-request.context';
 import { useSignAndBroadcastStacksTransaction } from '@app/features/rpc-stacks-transaction-request/stacks/use-sign-and-broadcast-stacks-transaction';
+import { useStacksRpcTransactionRequestApproval } from '@app/features/rpc-stacks-transaction-request/stacks/use-stacks-rpc-transaction-request-approval';
 import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transaction-request/transaction-actions/transaction-actions-with-spend';
 
 import { getUnsignedStacksTokenTransferOptions } from './rpc-stx-transfer-stx.utils';
@@ -44,12 +47,14 @@ export function RpcStxTransferStx() {
       }),
     [network, nonce, publicKey, selectedFee.txFee]
   );
+  const memoDisplayText = txOptionsForBroadcast.memo || 'No memo';
 
   async function onApproveTransaction() {
     const unsignedTx = await generateStacksUnsignedTransaction(txOptionsForBroadcast);
     if (isSponsored) unsignedTx.setFee(0);
     await signAndBroadcastTransaction(unsignedTx);
   }
+  const onApprove = useStacksRpcTransactionRequestApproval(onApproveTransaction);
 
   return (
     <RpcTransactionRequestLayout
@@ -61,7 +66,7 @@ export function RpcStxTransferStx() {
           isLoading={isLoadingBalance || isLoadingFees}
           isSponsored={isSponsored}
           txAmount={txOptionsForBroadcast.amount}
-          onApprove={onApproveTransaction}
+          onApprove={onApprove}
         />
       }
     >
@@ -85,6 +90,12 @@ export function RpcStxTransferStx() {
           },
         ]}
       />
+      <Approver.Section>
+        <Approver.Subheader>Memo</Approver.Subheader>
+        <styled.span textStyle="label.01" wordBreak="break-all">
+          {memoDisplayText}
+        </styled.span>
+      </Approver.Section>
       <FeeEditor.Trigger
         feeType="fee-value"
         isLoading={isLoadingFees}

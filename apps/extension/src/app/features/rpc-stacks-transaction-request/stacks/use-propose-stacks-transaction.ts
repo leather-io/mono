@@ -14,14 +14,13 @@ import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
-import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
 import { useSignProposalCommitment } from '@app/features/multisig/use-sign-proposal-commitment';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
-import { useRpcTransactionRequest } from '../use-rpc-transaction-request';
+import { useStacksRpcTransactionRequestContext } from './stacks-rpc-transaction-request.context';
 
 const placeholderNonce = 0;
 
@@ -36,8 +35,8 @@ function getErrorMessage(error: unknown) {
 // (commitment signed in-process with the parent key) and returns a proposed
 // result to the dApp.
 export function useProposeStacksTransaction(method: RpcMethodNames) {
-  const { onSetTransactionStatus } = useRpcTransactionRequest();
-  const { frameId, tabId, requestId } = useRpcRequestParams();
+  const { onSetTransactionStatus, tabId, requestId, frameId } =
+    useStacksRpcTransactionRequestContext();
   const policy = useCurrentPolicy();
   const account = useCurrentStacksAccount();
   const network = useCurrentNetwork();
