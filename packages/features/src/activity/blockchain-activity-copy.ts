@@ -129,6 +129,8 @@ const deployTitles: StatusTemplates = {
 const viaProtocolSuffix = ' via {protocol}';
 
 const protocolActionTitles: Partial<Record<StacksProtocolAction, string>> = {
+  swap: 'Swap',
+  bridge: 'Bridge',
   deposit: 'Deposit',
   withdraw: 'Withdraw',
   'claim-rewards': 'Claim rewards',
@@ -139,6 +141,8 @@ const protocolActionTitles: Partial<Record<StacksProtocolAction, string>> = {
   stack: 'Stack',
   'initiate-unstack': 'Initiate unstack',
   'complete-unstack': 'Complete unstack',
+  'liquid-stack': 'Liquid stack',
+  'liquid-unstack': 'Liquid unstack',
   borrow: 'Borrow',
   repay: 'Repay',
 };

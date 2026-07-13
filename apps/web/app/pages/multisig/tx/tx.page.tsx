@@ -25,6 +25,10 @@ import { createBlockchainActivityByTxIdDetailQuery } from '~/queries/activity/bl
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
+import {
+  buildBlockchainActivityActionTitle,
+  interpolateActivityTemplate,
+} from '@leather.io/features';
 import type {
   AuthNetworkId,
   MarketData,
@@ -65,11 +69,6 @@ function toFiat(money: Money | undefined, marketData: MarketData | undefined): M
   return baseCurrencyAmountInQuote(money, marketData);
 }
 
-function humanizeProtocolAction(action: string): string {
-  const spaced = action.replace(/-/g, ' ');
-  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
-}
-
 function proposalHeroTitle(
   kind: 'transfer' | 'contractCall' | 'contractDeploy' | undefined,
   functionName: string | undefined,
@@ -77,10 +76,11 @@ function proposalHeroTitle(
 ): string {
   if (kind === 'contractDeploy') return 'Contract deploy';
   if (kind !== 'contractCall') return 'Transfer';
-  if (action !== undefined && action !== 'contract-execution') {
-    return humanizeProtocolAction(action);
-  }
-  return functionName ?? 'Contract call';
+  const actionTitle =
+    action !== undefined && action !== 'contract-execution'
+      ? buildBlockchainActivityActionTitle(action, interpolateActivityTemplate)
+      : '';
+  return actionTitle || functionName || 'Contract call';
 }
 
 function isAwaitingSignatureFrom(
