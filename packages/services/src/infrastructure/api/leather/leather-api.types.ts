@@ -4735,6 +4735,7 @@ export interface paths {
                 createdAt: string;
                 updatedAt: string;
                 approvalCount: number;
+                signedByMe: boolean;
               }[];
             };
           };
