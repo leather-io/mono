@@ -156,6 +156,8 @@ export function CreateVaultPage() {
   const btcNetworkMode = resolveBtcNetworkMode(network);
   const btcNativeSegwitPrefix = btcSegwitPrefixForMode(btcNetworkMode);
   const stxPrefixes = networkMode === 'mainnet' ? ['SP', 'SM'] : ['ST', 'SN'];
+  const stxAddressPrefix = networkMode === 'mainnet' ? 'SP' : 'ST';
+  const memberAddressPrefix = chain === 'btc' ? btcNativeSegwitPrefix : stxAddressPrefix;
 
   function isValidMemberAddress(address: string) {
     return chain === 'btc'
@@ -364,6 +366,7 @@ export function CreateVaultPage() {
           <Section label="Members">
             <MemberRows
               chain={chain}
+              addressPrefix={memberAddressPrefix}
               members={members}
               onChange={value => {
                 setMembers(value);

@@ -45,6 +45,7 @@ export const querySettingsDepsRegistry = {
   // activity
   'blockchain-activity-service--get-activity': ['network'],
   'blockchain-activity-service--get-activity-infinite': ['network'],
+  'blockchain-activity-service--get-activity-by-tx-id': ['network'],
   'blockchain-activity-service--get-activity-by-asset-id': ['network'],
   'activity-service--get-activity': ['network'],
   'activity-service--get-activity-by-asset': ['network'],

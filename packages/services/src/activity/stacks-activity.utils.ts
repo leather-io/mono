@@ -20,6 +20,11 @@ import type {
   HiroPrincipalTxStatus,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import type { ActivitySourceItem } from './activity-paginator';
+import {
+  isMempoolTx,
+  mapStacksTxBlockHeight,
+  mapStacksTxBlockTime,
+} from './stacks-tx-activity.utils';
 
 type StacksActivityResultItem = HiroPrincipalTransactionsResultItem & {
   readonly transaction: Extract<
@@ -304,5 +309,95 @@ export function buildConfirmedStacksActivity(
     }
     default:
       return assertUnreachable(tx);
+  }
+}
+
+function mapStacksTxActivityStatus(tx: StacksTx): OnChainActivityStatus {
+  if (isMempoolTx(tx)) return 'pending';
+  return tx.tx_status === 'success' ? 'success' : 'failed';
+}
+
+// Single-tx sibling of buildPendingStacksActivity reading the v1 tx shape from get-tx-by-id.
+export function buildOnchainStacksActivity(
+  tx: StacksTx,
+  stxAddress: string,
+  balanceChanges: { stxNet: string; ftChanges: BlockchainActivityBalanceChange[] },
+  classified?: ClassifiedContractCall
+): BlockchainActivity | null {
+  const initiatedByUser = tx.sender_address === stxAddress;
+  const paidFee = initiatedByUser && !tx.sponsored;
+  const blockHeight = mapStacksTxBlockHeight(tx);
+  const status = mapStacksTxActivityStatus(tx);
+  const common = {
+    timestamp: mapStacksTxBlockTime(tx),
+    txid: tx.tx_id,
+    status,
+    initiatedByUser,
+    ...(blockHeight !== undefined ? { blockHeight } : {}),
+    ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
+  };
+  const netStxWithFee = paidFee
+    ? initBigNumber(balanceChanges.stxNet).plus(initBigNumber(tx.fee_rate)).toString()
+    : balanceChanges.stxNet;
+  const hasAssetChange =
+    !initBigNumber(balanceChanges.stxNet).isZero() || balanceChanges.ftChanges.length > 0;
+
+  switch (tx.tx_type) {
+    case 'token_transfer': {
+      const isRecipient = tx.token_transfer.recipient_address === stxAddress;
+      if (!initiatedByUser && !isRecipient) return null;
+      const stxChange =
+        status === 'failed'
+          ? null
+          : buildStxBalanceChange(
+              initiatedByUser ? `-${tx.token_transfer.amount}` : tx.token_transfer.amount
+            );
+      return buildStacksActivity({
+        common,
+        core: {
+          kind: 'token_transfer',
+          recipient: tx.token_transfer.recipient_address,
+          sender: tx.sender_address,
+        },
+        action: initiatedByUser ? 'send' : 'receive',
+        balanceChanges: stxChange === null ? [] : [stxChange],
+      });
+    }
+    case 'smart_contract': {
+      if (!initiatedByUser && !hasAssetChange) return null;
+      const stxChange = buildStxBalanceChange(netStxWithFee);
+      return buildStacksActivity({
+        common,
+        core: { kind: 'smart_contract', contractId: tx.smart_contract.contract_id },
+        action: 'contract-deploy',
+        balanceChanges: [...(stxChange === null ? [] : [stxChange]), ...balanceChanges.ftChanges],
+      });
+    }
+    case 'contract_call': {
+      if (!initiatedByUser && !hasAssetChange) return null;
+      const stxChange = buildStxBalanceChange(netStxWithFee);
+      const allChanges = [...(stxChange === null ? [] : [stxChange]), ...balanceChanges.ftChanges];
+      const { action, protocol, protocolName, counterparty } = reclassifySip10Transfer(
+        classified ?? { action: 'contract-execution' },
+        tx.contract_call.function_name,
+        allChanges,
+        tx.sender_address
+      );
+      return buildStacksActivity({
+        common,
+        core: {
+          kind: 'contract_call',
+          contractId: tx.contract_call.contract_id,
+          functionName: tx.contract_call.function_name,
+        },
+        action,
+        protocol,
+        protocolName,
+        counterparty,
+        balanceChanges: allChanges,
+      });
+    }
+    default:
+      return null;
   }
 }

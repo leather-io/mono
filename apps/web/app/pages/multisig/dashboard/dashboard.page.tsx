@@ -69,10 +69,14 @@ function EmptyActivity() {
 function ActivityFeed({
   items,
   isLoading,
+  vaultNamesById,
+  accountNamesById,
   onOpen,
 }: {
   items: VaultActivityItem[];
   isLoading: boolean;
+  vaultNamesById: ReadonlyMap<string, string>;
+  accountNamesById: ReadonlyMap<string, string>;
   onOpen(vaultId: string, txId: string): void;
 }) {
   if (isLoading) {
@@ -91,7 +95,16 @@ function ActivityFeed({
     );
   }
   if (items.length === 0) return <EmptyActivity />;
-  return <VaultActivityList items={items} scale="compact" limit={10} onSelect={onOpen} />;
+  return (
+    <VaultActivityList
+      items={items}
+      scale="compact"
+      limit={10}
+      vaultNamesById={vaultNamesById}
+      accountNamesById={accountNamesById}
+      onSelect={onOpen}
+    />
+  );
 }
 
 function ConnectChainPrompt({
@@ -139,7 +152,12 @@ export function MultisigDashboardPage() {
   const stxSignIn = useSignIn(stxNetwork);
 
   const vaults = [...(btcVaults.data ?? []), ...(stxVaults.data ?? [])];
-  const { items: activityItems, isLoading: isLoadingActivity } = useDashboardActivity(vaults);
+  const {
+    items: activityItems,
+    isLoading: isLoadingActivity,
+    vaultNamesById,
+    accountNamesById,
+  } = useDashboardActivity(vaults);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const inviteParam = searchParams.get('invite');
@@ -225,11 +243,13 @@ export function MultisigDashboardPage() {
             />
           )}
         </Box>
-        <Box flex={['1', '1', '1']} width="100%">
+        <Box flex={['1', '1', '1']} width="100%" maxWidth={['unset', 'unset', '450px']}>
           <SectionLabel noGutter>Activity</SectionLabel>
           <ActivityFeed
             items={activityItems}
             isLoading={isLoadingActivity}
+            vaultNamesById={vaultNamesById}
+            accountNamesById={accountNamesById}
             onOpen={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
           />
         </Box>

@@ -4,7 +4,6 @@ import { createBlockchainActivityViewsQuery } from '~/queries/activity/blockchai
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import type { BlockchainActivityView } from '@leather.io/features';
 import type { AuthNetworkId, MarketData } from '@leather.io/models';
 import { getMultisigService, getStacksProtocolService } from '@leather.io/services';
 import { isDefined } from '@leather.io/utils';
@@ -23,6 +22,7 @@ import {
   decodeContractCallPayloads,
 } from './build-multisig-activity-inputs';
 import {
+  type OnchainActivityItem,
   type VaultActivityItem,
   type VaultMultisigTransaction,
   harmonizeVaultActivity,
@@ -31,6 +31,8 @@ import {
 import type { MultisigActivityClassification } from './multisig-transaction-activity-view';
 
 const transactionsPageRequest = { page: 1, pageSize: 100 };
+
+const previewActivityLimit = 15;
 
 const protocolRegistryCacheOptions = { staleTime: 300_000, gcTime: 300_000 } as const;
 
@@ -47,7 +49,7 @@ interface MultisigActivityInputs {
 
 export function useMultisigActivityInputs(
   accounts: ActivityAccount[],
-  onchain: BlockchainActivityView[],
+  onchain: OnchainActivityItem[],
   vaultNamesById?: ReadonlyMap<string, string>
 ): MultisigActivityInputs {
   const settings = useUserSettings();
@@ -201,10 +203,20 @@ export function useVaultActivity(
 
   const onchainResults = useQueries({
     queries: accounts.map(account =>
-      createBlockchainActivityViewsQuery(createMultisigAccountAddresses(account), settings)
+      createBlockchainActivityViewsQuery(
+        createMultisigAccountAddresses(account),
+        settings,
+        previewActivityLimit
+      )
     ),
   });
-  const onchain = onchainResults.flatMap(result => result.data ?? []);
+  const onchain = onchainResults.flatMap((result, index) =>
+    (result.data ?? []).map(view => ({
+      view,
+      vaultId: accounts[index].vaultId,
+      vaultAccountId: accounts[index].id,
+    }))
+  );
 
   const {
     multisigTransactions,

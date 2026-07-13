@@ -1,31 +1,41 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
+import { useQuery } from '@tanstack/react-query';
 import { Box, Flex } from 'leather-styles/jsx';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { decodeProposalSummary } from '~/features/multisig/transactions/decode-proposal-summary';
+import { useContractProtocolName } from '~/features/multisig/transactions/use-contract-protocol';
 import { useOnChainTransaction } from '~/features/multisig/transactions/use-onchain-transaction';
 import {
   useBroadcastTransaction,
   useCancelTransaction,
   useSignTransaction,
 } from '~/features/multisig/transactions/use-transaction-mutations';
+import { getMultisigAccountAddresses } from '~/features/multisig/vaults/multisig-account-addresses';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useMultisigTransaction } from '~/features/multisig/vaults/use-vault-transactions';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
+import { useUserSettings } from '~/hooks/use-user-settings';
+import { createBlockchainActivityByTxIdDetailQuery } from '~/queries/activity/blockchain-activity.query';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
+import {
+  buildBlockchainActivityActionTitle,
+  interpolateActivityTemplate,
+} from '@leather.io/features';
 import type {
   AuthNetworkId,
   MarketData,
   Money,
   MultisigTransaction,
   MultisigTransactionStatus,
+  StacksProtocolAction,
   VaultAccount,
 } from '@leather.io/models';
 import { baseCurrencyAmountInQuote, truncateMiddle } from '@leather.io/utils';
@@ -59,6 +69,20 @@ function toFiat(money: Money | undefined, marketData: MarketData | undefined): M
   return baseCurrencyAmountInQuote(money, marketData);
 }
 
+function proposalHeroTitle(
+  kind: 'transfer' | 'contractCall' | 'contractDeploy' | undefined,
+  functionName: string | undefined,
+  action: StacksProtocolAction | undefined
+): string {
+  if (kind === 'contractDeploy') return 'Contract deploy';
+  if (kind !== 'contractCall') return 'Transfer';
+  const actionTitle =
+    action !== undefined && action !== 'contract-execution'
+      ? buildBlockchainActivityActionTitle(action, interpolateActivityTemplate)
+      : '';
+  return actionTitle || functionName || 'Contract call';
+}
+
 function isAwaitingSignatureFrom(
   transaction: MultisigTransaction,
   account: VaultAccount,
@@ -87,6 +111,7 @@ export function TxDetailPage() {
   const [autoSignStarted, setAutoSignStarted] = useState(false);
   useEffect(() => setHydrated(true), []);
 
+  const settings = useUserSettings();
   const { btc: btcNetwork, stx: stxNetwork } = useMultisigNetworks();
   const btcVaults = useVaults(btcNetwork);
   const stxVaults = useVaults(stxNetwork);
@@ -106,6 +131,27 @@ export function TxDetailPage() {
   );
   const marketData = useMarketDataQuery(network.startsWith('btc') ? btcAsset : stxAsset);
 
+  // On-chain values are authoritative once broadcast; before that, decode the
+  // proposal payload so recipient/amount/fee still show while collecting signatures.
+  const decoded =
+    transaction.data && account.data
+      ? decodeProposalSummary(account.data, transaction.data)
+      : undefined;
+  const protocolName = useContractProtocolName(decoded?.contractId);
+
+  const onchainActivity = useQuery({
+    ...createBlockchainActivityByTxIdDetailQuery(
+      getMultisigAccountAddresses(account.data),
+      transaction.data?.txId ?? '',
+      settings
+    ),
+    enabled: Boolean(
+      account.data &&
+        transaction.data?.txId &&
+        (decoded?.kind === 'contractCall' || decoded?.kind === 'contractDeploy')
+    ),
+  });
+
   const signTransaction = useSignTransaction(network);
   const cancelTransaction = useCancelTransaction(network);
   const broadcastTransaction = useBroadcastTransaction(network);
@@ -120,7 +166,13 @@ export function TxDetailPage() {
     void navigate(location.pathname, { replace: true, state: null });
     signTransaction.mutate(
       { transaction: transaction.data, account: account.data },
-      { onSuccess: () => toast.success('Signature added') }
+      {
+        onSuccess: () => toast.success('Signature added'),
+        onError: err => {
+          const message = err.message?.trim();
+          if (message) toast.error(message);
+        },
+      }
     );
   }, [
     autoSignStarted,
@@ -181,26 +233,37 @@ export function TxDetailPage() {
   const proposerLabel = `${proposerName}${isMine ? ' (you)' : ''}`;
   const initiationDate = formatRelativeTime(new Date(tx.proposalTimestamp * 1000));
 
-  // On-chain values are authoritative once broadcast; before that, decode the
-  // proposal payload so recipient/amount/fee still show while collecting signatures.
-  const decoded = decodeProposalSummary(acct, tx);
-  const recipient = onChain.recipient ?? decoded.recipient;
-  const amount = onChain.amount ?? decoded.amount;
-  const fee = onChain.fee ?? decoded.fee;
+  const recipient = onChain.recipient ?? decoded?.recipient;
+  const amount = onChain.amount ?? decoded?.amount;
+  const fee = onChain.fee ?? decoded?.fee;
   const amountFiat = toFiat(amount, marketData.data);
   const feeFiat = toFiat(fee, marketData.data);
+  const onchainDetail = onchainActivity.data ?? undefined;
+  const heroTitle = proposalHeroTitle(
+    decoded?.kind,
+    decoded?.functionName,
+    onchainDetail?.activity.action
+  );
+  const heroSubtitle = onchainDetail?.view.subtitle;
+  const heroTimeline = tx.broadcastAt
+    ? { verb: 'Broadcast', when: formatRelativeTime(new Date(tx.broadcastAt)) }
+    : { verb: 'Proposed', when: initiationDate };
   const effectiveStatus = reconcileStatus(tx.status, onChain.status);
   const awaitingMySignature = isAwaitingSignatureFrom(tx, acct, me.data?.address);
   const heroStatus = awaitingMySignature
     ? { label: 'Awaiting your signature', variant: 'pending' as const }
     : transactionStatusBadge(effectiveStatus);
 
+  function showSigningError(err: Error) {
+    const message = err.message?.trim();
+    if (message) toast.error(message);
+  }
   function onSign() {
     signTransaction.mutate(
       { transaction: tx, account: acct },
       {
         onSuccess: () => toast.success('Signature added'),
-        onError: err => toast.error(err.message),
+        onError: showSigningError,
       }
     );
   }
@@ -232,13 +295,16 @@ export function TxDetailPage() {
           <MultisigHero
             variant="balance"
             themeId={vaultThemeFromName(vault.data.theme).id}
-            primary="Transfer"
+            primary={heroTitle}
             secondary={
-              <Flex alignItems="center" gap="space.02">
-                <span>
-                  Proposed {initiationDate} by {proposerName}
-                </span>
-                <AvatarCircle name={proposerName} size="xs" />
+              <Flex direction="column" gap="space.01">
+                {heroSubtitle ? <span>{heroSubtitle}</span> : null}
+                <Flex alignItems="center" gap="space.02">
+                  <span>
+                    {heroTimeline.verb} {heroTimeline.when} by {proposerName}
+                  </span>
+                  <AvatarCircle name={proposerName} size="xs" />
+                </Flex>
               </Flex>
             }
           >
@@ -250,6 +316,11 @@ export function TxDetailPage() {
           <TxDetailsTable
             transaction={tx}
             status={effectiveStatus}
+            vaultLink={{ name: vault.data.name, to: multisigPaths.vault(vault.data.id) }}
+            accountLink={{
+              name: acct.name,
+              to: multisigPaths.account(vault.data.id, acct.id),
+            }}
             proposerLabel={proposerLabel}
             initiationDate={initiationDate}
             recipient={recipient}
@@ -257,6 +328,11 @@ export function TxDetailPage() {
             amountFiat={amountFiat}
             fee={fee}
             feeFiat={feeFiat}
+            contractId={decoded?.contractId}
+            functionName={decoded?.functionName}
+            protocolName={protocolName}
+            balanceChanges={onchainDetail?.activity.balanceChanges}
+            memo={decoded?.memo}
           />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">

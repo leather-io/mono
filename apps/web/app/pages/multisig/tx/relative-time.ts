@@ -20,3 +20,13 @@ export function formatRelativeTime(date: Date): string {
   if (days < monthDays) return `${days} ${days === 1 ? 'day' : 'days'} ago`;
   return date.toLocaleDateString();
 }
+
+export function formatDateTime(date: Date): string {
+  const day = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const time = date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+  return `${day}, ${time}`;
+}

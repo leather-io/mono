@@ -27,6 +27,10 @@ export type { ActivityStatusIndicatorId, ActivityAvatar, ActivityView } from './
 export { formatActivityCaption } from './activity/activity-timestamp';
 export { createActivityView } from './activity/activity-view';
 export { createBlockchainActivityView } from './activity/blockchain-activity-view';
+export {
+  buildBlockchainActivityActionTitle,
+  interpolateActivityTemplate,
+} from './activity/blockchain-activity-copy';
 export type {
   BlockchainActivityAmount,
   BlockchainActivityAvatar,

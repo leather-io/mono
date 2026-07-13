@@ -1,6 +1,12 @@
+import type {
+  ContractCallTransaction,
+  MempoolTokenTransferTransaction,
+  SmartContractTransaction,
+  TokenTransferTransaction,
+} from '@stacks/stacks-blockchain-api-types';
 import { describe, expect, it } from 'vitest';
 
-import type { BlockchainActivityBalanceChange, CryptoAsset } from '@leather.io/models';
+import type { BlockchainActivityBalanceChange, CryptoAsset, StacksTx } from '@leather.io/models';
 
 import type {
   HiroPrincipalTransaction,
@@ -8,6 +14,7 @@ import type {
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
   buildConfirmedStacksActivity,
+  buildOnchainStacksActivity,
   buildStacksActivity,
   buildStxBalanceChange,
   isStacksActivityResultItem,
@@ -320,5 +327,220 @@ describe(buildConfirmedStacksActivity.name, () => {
     const activity = buildConfirmedStacksActivity(result, []);
     expect(activity?.balanceChanges).toEqual([]);
     expect(activity?.fee?.amount.toNumber()).toBe(100);
+  });
+});
+
+describe(buildOnchainStacksActivity.name, () => {
+  const stxAddress = 'SP_ME';
+  const noChanges = { stxNet: '0', ftChanges: [] };
+
+  function tokenTransfer(
+    overrides: Partial<TokenTransferTransaction> = {}
+  ): TokenTransferTransaction {
+    return {
+      tx_id: '0xabc',
+      tx_type: 'token_transfer',
+      tx_status: 'success',
+      sender_address: 'SP_SENDER',
+      sponsored: false,
+      fee_rate: '200',
+      block_height: 42,
+      block_time: 1_700_000_000,
+      burn_block_time: 1_700_000_000,
+      token_transfer: { recipient_address: 'SP_TO', amount: '5000000', memo: '' },
+      ...overrides,
+    } as TokenTransferTransaction;
+  }
+
+  it('maps a confirmed received transfer with the sender as counterparty', () => {
+    const activity = buildOnchainStacksActivity(
+      tokenTransfer({
+        token_transfer: { recipient_address: stxAddress, amount: '5000000', memo: '' },
+      }),
+      stxAddress,
+      noChanges
+    );
+    expect(activity?.action).toBe('receive');
+    expect(activity?.initiatedByUser).toBe(false);
+    expect(activity?.counterparty).toBe('SP_SENDER');
+    expect(activity?.status).toBe('success');
+    expect(activity?.blockHeight).toBe(42);
+    expect(activity?.timestamp).toBe(1_700_000_000);
+    expect(activity?.fee).toBeUndefined();
+    expect(activity?.balanceChanges).toHaveLength(1);
+    expect(activity?.balanceChanges[0].direction).toBe('received');
+    expect(activity?.balanceChanges[0].amount.crypto.amount.toString()).toBe('5000000');
+  });
+
+  it('maps a confirmed sent transfer with the recipient as counterparty and attaches the fee', () => {
+    const activity = buildOnchainStacksActivity(
+      tokenTransfer({ sender_address: stxAddress }),
+      stxAddress,
+      noChanges
+    );
+    expect(activity?.action).toBe('send');
+    expect(activity?.initiatedByUser).toBe(true);
+    expect(activity?.counterparty).toBe('SP_TO');
+    expect(activity?.fee?.amount.toNumber()).toBe(200);
+    expect(activity?.balanceChanges[0].direction).toBe('sent');
+    expect(activity?.balanceChanges[0].amount.crypto.amount.toString()).toBe('5000000');
+  });
+
+  it('does not attach a fee for a sponsored send', () => {
+    const activity = buildOnchainStacksActivity(
+      tokenTransfer({ sender_address: stxAddress, sponsored: true }),
+      stxAddress,
+      noChanges
+    );
+    expect(activity?.fee).toBeUndefined();
+  });
+
+  it('maps an aborted transaction as failed with no balance change', () => {
+    const activity = buildOnchainStacksActivity(
+      tokenTransfer({
+        tx_status: 'abort_by_response',
+        token_transfer: { recipient_address: stxAddress, amount: '5000000', memo: '' },
+      }),
+      stxAddress,
+      noChanges
+    );
+    expect(activity?.status).toBe('failed');
+    expect(activity?.balanceChanges).toHaveLength(0);
+  });
+
+  it('returns null for a transfer the account neither sent nor received', () => {
+    expect(buildOnchainStacksActivity(tokenTransfer(), stxAddress, noChanges)).toBeNull();
+  });
+
+  it('returns null for a contract call the account neither sent nor was affected by', () => {
+    const tx = {
+      tx_id: '0x5',
+      tx_type: 'contract_call',
+      tx_status: 'success',
+      sender_address: 'SP_SENDER',
+      sponsored: false,
+      fee_rate: '200',
+      block_height: 10,
+      block_time: 1000,
+      burn_block_time: 1000,
+      contract_call: { contract_id: 'SP.dex', function_name: 'swap-x-for-y' },
+    } as ContractCallTransaction;
+    expect(buildOnchainStacksActivity(tx, stxAddress, noChanges)).toBeNull();
+  });
+
+  it('returns null for a contract deploy the account did not send', () => {
+    const tx = {
+      tx_id: '0x6',
+      tx_type: 'smart_contract',
+      tx_status: 'success',
+      sender_address: 'SP_SENDER',
+      sponsored: false,
+      fee_rate: '200',
+      smart_contract: { contract_id: 'SP.deployed' },
+    } as SmartContractTransaction;
+    expect(buildOnchainStacksActivity(tx, stxAddress, noChanges)).toBeNull();
+  });
+
+  it('maps a mempool transfer as pending with no block height', () => {
+    const tx = {
+      tx_id: '0xdef',
+      tx_type: 'token_transfer',
+      tx_status: 'pending',
+      sender_address: 'SP_SENDER',
+      sponsored: false,
+      fee_rate: '200',
+      receipt_time: 1_700_000_500,
+      token_transfer: { recipient_address: stxAddress, amount: '1000', memo: '' },
+    } as MempoolTokenTransferTransaction;
+    const activity = buildOnchainStacksActivity(tx, stxAddress, noChanges);
+    expect(activity?.status).toBe('pending');
+    expect(activity?.blockHeight).toBeUndefined();
+    expect(activity?.timestamp).toBe(1_700_000_500);
+  });
+
+  it('nets the fee out of the stx balance change for a contract call the account paid for', () => {
+    const tx = {
+      tx_id: '0x1',
+      tx_type: 'contract_call',
+      tx_status: 'success',
+      sender_address: stxAddress,
+      sponsored: false,
+      fee_rate: '200',
+      block_height: 10,
+      block_time: 1000,
+      burn_block_time: 1000,
+      contract_call: { contract_id: 'SP.dex', function_name: 'swap-x-for-y' },
+    } as ContractCallTransaction;
+    const activity = buildOnchainStacksActivity(
+      tx,
+      stxAddress,
+      { stxNet: '-1000', ftChanges: [] },
+      { action: 'swap', protocol: 'bitflow', protocolName: 'Bitflow' }
+    );
+    expect(activity?.action).toBe('swap');
+    expect(activity?.protocol).toBe('bitflow');
+    expect(activity?.contract).toEqual({
+      type: 'call',
+      contractId: 'SP.dex',
+      functionName: 'swap-x-for-y',
+    });
+    expect(activity?.balanceChanges[0].amount.crypto.amount.toString()).toBe('800');
+    expect(activity?.fee?.amount.toNumber()).toBe(200);
+  });
+
+  it('reclassifies a received SIP-10 transfer using the supplied ft change', () => {
+    const tx = {
+      tx_id: '0x2',
+      tx_type: 'contract_call',
+      tx_status: 'success',
+      sender_address: 'SP_SENDER',
+      sponsored: false,
+      fee_rate: '200',
+      block_height: 10,
+      block_time: 1000,
+      burn_block_time: 1000,
+      contract_call: { contract_id: 'SP.token', function_name: 'transfer' },
+    } as ContractCallTransaction;
+    const ftChange: BlockchainActivityBalanceChange = {
+      direction: 'received',
+      asset: { protocol: 'sip10' } as CryptoAsset,
+      amount: {} as never,
+    };
+    const activity = buildOnchainStacksActivity(tx, stxAddress, {
+      stxNet: '0',
+      ftChanges: [ftChange],
+    });
+    expect(activity?.action).toBe('receive');
+    expect(activity?.counterparty).toBe('SP_SENDER');
+  });
+
+  it('maps a smart_contract deploy', () => {
+    const tx = {
+      tx_id: '0x3',
+      tx_type: 'smart_contract',
+      tx_status: 'success',
+      sender_address: stxAddress,
+      sponsored: false,
+      fee_rate: '200',
+      smart_contract: { contract_id: 'SP.deployed' },
+    } as SmartContractTransaction;
+    const activity = buildOnchainStacksActivity(tx, stxAddress, { stxNet: '-200', ftChanges: [] });
+    expect(activity?.action).toBe('contract-deploy');
+    expect(activity?.contract).toEqual({ type: 'deploy', contractId: 'SP.deployed' });
+  });
+
+  it('returns null for a non-activity transaction type', () => {
+    const tx = {
+      tx_id: '0x4',
+      tx_type: 'coinbase',
+      tx_status: 'success',
+      sender_address: stxAddress,
+      sponsored: false,
+      fee_rate: '0',
+      block_height: 1,
+      block_time: 1,
+      burn_block_time: 1,
+    } as StacksTx;
+    expect(buildOnchainStacksActivity(tx, stxAddress, noChanges)).toBeNull();
   });
 });

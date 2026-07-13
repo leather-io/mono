@@ -33,19 +33,22 @@ export function useVaultAccountActivityFeed(
   });
 
   const onchain = feedQuery.data ?? [];
+  const onchainItems = account
+    ? onchain.map(view => ({ view, vaultId: account.vaultId, vaultAccountId: account.id }))
+    : [];
   const {
     multisigTransactions,
     payloadsById,
     marketData,
     classifyContract,
     isLoading: isLoadingInputs,
-  } = useMultisigActivityInputs(account ? [account] : [], onchain);
+  } = useMultisigActivityInputs(account ? [account] : [], onchainItems);
 
   const oldestLoaded = onchain.length > 0 ? onchain[onchain.length - 1].timestamp : undefined;
   const frontier = feedQuery.hasNextPage ? oldestLoaded : undefined;
 
   const items = harmonizeVaultActivity({
-    onchain,
+    onchain: onchainItems,
     multisigTransactions,
     payloadsById,
     marketData,

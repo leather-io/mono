@@ -15,6 +15,7 @@ interface VaultTransactionsProps {
 export function VaultTransactions({ accounts }: VaultTransactionsProps) {
   const navigate = useNavigate();
   const { items, isLoading } = useVaultActivity(accounts ?? []);
+  const accountNamesById = new Map((accounts ?? []).map(account => [account.id, account.name]));
 
   if (isLoading) {
     return (
@@ -54,6 +55,7 @@ export function VaultTransactions({ accounts }: VaultTransactionsProps) {
       items={items}
       scale="compact"
       limit={10}
+      accountNamesById={accountNamesById}
       onSelect={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
     />
   );

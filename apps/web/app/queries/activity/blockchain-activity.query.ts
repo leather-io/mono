@@ -1,9 +1,10 @@
 import type { InfiniteData } from '@tanstack/react-query';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import { createBlockchainActivityView } from '@leather.io/features';
-import type { AccountAddresses, Money } from '@leather.io/models';
+import { type BlockchainActivityView, createBlockchainActivityView } from '@leather.io/features';
+import type { AccountAddresses, BlockchainActivity, Money } from '@leather.io/models';
 import {
+  createBlockchainActivityByTxIdQueryConfig,
   createBlockchainActivityInfiniteQueryConfig,
   createBlockchainActivityQueryConfig,
 } from '@leather.io/queries';
@@ -32,12 +33,41 @@ function selectBlockchainActivityFeedViews(data: InfiniteData<ActivityResponse>)
   );
 }
 
-export function createBlockchainActivityViewsQuery(
+interface BlockchainActivityDetail {
+  activity: BlockchainActivity;
+  view: BlockchainActivityView;
+}
+
+function selectBlockchainActivityDetail(
+  activity: BlockchainActivity | null
+): BlockchainActivityDetail | null {
+  return activity === null
+    ? null
+    : {
+        activity,
+        view: createBlockchainActivityView(activity, { formatMoney: formatActivityMoney }),
+      };
+}
+
+export function createBlockchainActivityByTxIdDetailQuery(
   account: AccountAddresses,
+  txid: string,
   settings: UserSettings
 ) {
   return {
-    ...createBlockchainActivityQueryConfig({ account }, settings),
+    ...createBlockchainActivityByTxIdQueryConfig(account, txid, settings),
+    ...activityFeedCacheOptions,
+    select: selectBlockchainActivityDetail,
+  };
+}
+
+export function createBlockchainActivityViewsQuery(
+  account: AccountAddresses,
+  settings: UserSettings,
+  limit?: number
+) {
+  return {
+    ...createBlockchainActivityQueryConfig({ account, limit }, settings),
     ...activityFeedCacheOptions,
     select: selectBlockchainActivityViews,
   };

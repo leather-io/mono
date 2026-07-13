@@ -128,19 +128,47 @@ const deployTitles: StatusTemplates = {
 
 const viaProtocolSuffix = ' via {protocol}';
 
+const protocolActionTitles: Partial<Record<StacksProtocolAction, string>> = {
+  swap: 'Swap',
+  bridge: 'Bridge',
+  deposit: 'Deposit',
+  withdraw: 'Withdraw',
+  'claim-rewards': 'Claim rewards',
+  'add-liquidity': 'Add liquidity',
+  'remove-liquidity': 'Remove liquidity',
+  'stake-lp': 'Stake LP',
+  'unstake-lp': 'Unstake LP',
+  stack: 'Stack',
+  'initiate-unstack': 'Initiate unstack',
+  'complete-unstack': 'Complete unstack',
+  'liquid-stack': 'Liquid stack',
+  'liquid-unstack': 'Liquid unstack',
+  borrow: 'Borrow',
+  repay: 'Repay',
+};
+
+export function buildBlockchainActivityActionTitle(
+  action: StacksProtocolAction,
+  t: BlockchainActivityTranslate
+): string {
+  const title = protocolActionTitles[action];
+  return title ? t(title) : '';
+}
+
 interface SubtitleParams {
   action: StacksProtocolAction;
   status: OnChainActivityStatus;
   protocolName?: string;
   counterparty?: string;
   contractName?: string;
+  actionInTitle?: boolean;
 }
 
 export function buildBlockchainActivitySubtitle(
   params: SubtitleParams,
   t: BlockchainActivityTranslate
 ): string {
-  const { action, status, protocolName, counterparty, contractName } = params;
+  const { action, status, protocolName, counterparty, contractName, actionInTitle } = params;
 
   switch (action) {
     case 'send':
@@ -160,6 +188,9 @@ export function buildBlockchainActivitySubtitle(
     default: {
       const entry = protocolActionSubtitles[action];
       if (!entry) return '';
+      if (actionInTitle) {
+        return protocolName ? t('via {protocol}', { protocol: protocolName }) : '';
+      }
       const template = protocolName ? entry[status] : entry[status].replace(viaProtocolSuffix, '');
       return t(template, protocolName ? { protocol: protocolName } : {});
     }

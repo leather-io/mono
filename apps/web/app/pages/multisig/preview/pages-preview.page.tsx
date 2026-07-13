@@ -29,11 +29,7 @@ import { type MemberDraft, MemberRows } from '../create-vault/components/member-
 import { ThemePicker } from '../create-vault/components/theme-picker';
 import { VaultPreviewCard } from '../create-vault/components/vault-preview-card';
 import { CreateVaultTile } from '../dashboard/components/create-vault-tile';
-import {
-  collectingSignaturesGradient,
-  collectingSignaturesGradientHover,
-  vaultThemeFromName,
-} from '../multisig-tokens';
+import { vaultThemeFromName } from '../multisig-tokens';
 import { SignerRollcall } from '../tx/components/signer-rollcall';
 import { TxDetailsTable } from '../tx/components/tx-details-table';
 import { AccountsSection } from '../vault/components/accounts-section';
@@ -269,8 +265,8 @@ function VaultCardMock({ summary, onClick }: { summary: VaultSummary; onClick?()
       borderWidth="1px"
       borderStyle="solid"
       borderColor="ink.border-default"
-      bgImage={invited ? collectingSignaturesGradient : undefined}
-      _hover={invited ? { bgImage: collectingSignaturesGradientHover } : interactiveHover}
+      bgImage={invited ? 'var(--multisig-collecting-wash)' : undefined}
+      _hover={invited ? { bgImage: 'var(--multisig-collecting-wash-hover)' } : interactiveHover}
     >
       <ListItemBox
         variant="plain"

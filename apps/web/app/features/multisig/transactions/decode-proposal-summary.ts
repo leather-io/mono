@@ -6,9 +6,13 @@ import { assertUnreachable, createMoney } from '@leather.io/utils';
 import { resolveBtcNetworkMode } from '../network/resolve-btc-network-mode';
 
 interface ProposalSummary {
+  kind?: 'transfer' | 'contractCall' | 'contractDeploy';
   recipient?: string;
   amount?: Money;
   fee?: Money;
+  memo?: string;
+  contractId?: string;
+  functionName?: string;
 }
 
 export interface ProposalPayloadContext {
@@ -18,7 +22,7 @@ export interface ProposalPayloadContext {
 
 export type DecodedProposalPayload =
   | { type: 'btcTransfer'; recipient?: string; amount?: Money; fee?: Money }
-  | { type: 'stxTransfer'; recipient: string; amount: Money; fee: Money }
+  | { type: 'stxTransfer'; recipient: string; amount: Money; memo: string; fee: Money }
   | { type: 'contractCall'; contractId: string; functionName: string; fee: Money }
   | { type: 'contractDeploy'; contractId: string; fee: Money };
 
@@ -46,13 +50,14 @@ export function decodeProposalPayload(
     }
     const payload = decodeStxTransactionPayload(rawPayload);
     if (!payload) return null;
-    const fee = createMoney(Number(payload.fee), 'STX');
+    const fee = createMoney(payload.fee, 'STX');
     switch (payload.type) {
       case 'stxTransfer':
         return {
           type: 'stxTransfer',
           recipient: payload.recipient,
-          amount: createMoney(Number(payload.amount), 'STX'),
+          amount: createMoney(payload.amount, 'STX'),
+          memo: payload.memo,
           fee,
         };
       case 'contractCall':
@@ -92,10 +97,22 @@ export function decodeProposalSummary(
   switch (payload.type) {
     case 'btcTransfer':
     case 'stxTransfer':
-      return { recipient: payload.recipient, amount: payload.amount, fee: payload.fee };
+      return {
+        kind: 'transfer',
+        recipient: payload.recipient,
+        amount: payload.amount,
+        fee: payload.fee,
+        memo: 'memo' in payload ? payload.memo : undefined,
+      };
     case 'contractCall':
+      return {
+        kind: 'contractCall',
+        contractId: payload.contractId,
+        functionName: payload.functionName,
+        fee: payload.fee,
+      };
     case 'contractDeploy':
-      return {};
+      return { kind: 'contractDeploy', contractId: payload.contractId, fee: payload.fee };
     default:
       return assertUnreachable(payload);
   }

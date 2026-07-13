@@ -29,6 +29,10 @@ export const multisigRoutes: RouteConfigEntry[] = prefix('multisig', [
     route('settings', 'pages/multisig/settings/settings.route.tsx'),
     route('vault/:vaultId', 'pages/multisig/vault/vault.route.tsx'),
     route('vault/:vaultId/account/:accountId', 'pages/multisig/account/account.route.tsx'),
+    route(
+      'vault/:vaultId/account/:accountId/activity/:txid',
+      'pages/multisig/activity/activity-detail.route.tsx'
+    ),
     route('vault/:vaultId/tx/:txId', 'pages/multisig/tx/tx.route.tsx'),
   ]),
 ]);

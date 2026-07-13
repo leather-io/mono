@@ -6,6 +6,7 @@ import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io
 import { createMoney, truncateMiddle } from '@leather.io/utils';
 
 import {
+  type OnchainActivityItem,
   type VaultMultisigTransaction,
   harmonizeVaultActivity,
   selectTransactionIdsNeedingPayload,
@@ -51,6 +52,14 @@ function makeView(
   };
 }
 
+function onchainItem(
+  view: BlockchainActivityView,
+  vaultAccountId = 'vault-account-1',
+  vaultId = 'vault-1'
+): OnchainActivityItem {
+  return { view, vaultId, vaultAccountId };
+}
+
 function makeTransaction(
   overrides: Partial<MultisigTransactionSummary> = {}
 ): MultisigTransactionSummary {
@@ -89,7 +98,7 @@ describe(harmonizeVaultActivity.name, () => {
     const item = makeVaultTransaction({ txId: '0xabc123', status: 'broadcast' });
 
     const items = harmonizeVaultActivity({
-      onchain: [twin],
+      onchain: [onchainItem(twin)],
       multisigTransactions: [item],
     });
 
@@ -103,7 +112,7 @@ describe(harmonizeVaultActivity.name, () => {
     const item = makeVaultTransaction({ txId: '0xABC123', status: 'confirmed' });
 
     const items = harmonizeVaultActivity({
-      onchain: [twin],
+      onchain: [onchainItem(twin)],
       multisigTransactions: [item],
     });
 
@@ -141,13 +150,30 @@ describe(harmonizeVaultActivity.name, () => {
     const external = makeView({ txid: 'external1' });
 
     const items = harmonizeVaultActivity({
-      onchain: [external],
+      onchain: [onchainItem(external)],
       multisigTransactions: [],
     });
 
     expect(items).toHaveLength(1);
     expect(items[0].view).toBe(external);
     expect(items[0].multisig).toBeUndefined();
+  });
+
+  test('keeps a proposal and a same-txid on-chain view on different accounts separate', () => {
+    const receiveView = makeView({ txid: 'shared-tx', action: 'receive' });
+    const sendProposal = makeVaultTransaction({ txId: '0xshared-tx', status: 'confirmed' });
+
+    const items = harmonizeVaultActivity({
+      onchain: [onchainItem(receiveView, 'receiving-account')],
+      multisigTransactions: [sendProposal],
+    });
+
+    expect(items).toHaveLength(2);
+    const receiveRow = items.find(item => item.multisig === undefined);
+    const proposalRow = items.find(item => item.multisig !== undefined);
+    expect(receiveRow?.view).toBe(receiveView);
+    expect(receiveRow?.vaultAccountId).toBe('receiving-account');
+    expect(proposalRow?.vaultAccountId).toBe('vault-account-1');
   });
 
   test('holds back terminal synthesized rows older than the frontier', () => {
@@ -187,7 +213,7 @@ describe(harmonizeVaultActivity.name, () => {
     const newerExternal = makeView({ txid: 'newer-external', timestamp: 1752000000 });
 
     const items = harmonizeVaultActivity({
-      onchain: [confirmedTwin, newerExternal],
+      onchain: [onchainItem(confirmedTwin), onchainItem(newerExternal)],
       multisigTransactions: [staleBroadcast],
     });
 
@@ -234,7 +260,7 @@ describe(harmonizeVaultActivity.name, () => {
     });
 
     const items = harmonizeVaultActivity({
-      onchain: [olderView, newerView],
+      onchain: [onchainItem(olderView), onchainItem(newerView)],
       multisigTransactions: [olderBroadcast, newerCancelled],
     });
 
@@ -262,7 +288,7 @@ describe(harmonizeVaultActivity.name, () => {
     const confirmedView = makeView({ txid: 'settled', timestamp: 1751000000 });
 
     const items = harmonizeVaultActivity({
-      onchain: [pendingTwin, confirmedView],
+      onchain: [onchainItem(pendingTwin), onchainItem(confirmedView)],
       multisigTransactions: [broadcast],
     });
 
@@ -277,7 +303,7 @@ describe(selectTransactionIdsNeedingPayload.name, () => {
     const orphaned = makeVaultTransaction({ id: 'orphaned', txId: '0xdef456' });
 
     const ids = selectTransactionIdsNeedingPayload(
-      [makeView({ txid: 'abc123' })],
+      [onchainItem(makeView({ txid: 'abc123' }))],
       [matched, unbroadcast, orphaned]
     );
 

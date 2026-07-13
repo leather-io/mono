@@ -7,7 +7,6 @@ import { truncateMiddle } from '@leather.io/utils';
 import { AvatarCircle } from '../../components/avatar-circle';
 import { Badge } from '../../components/badge';
 import { CopyAddress } from '../../components/copy-address';
-import { collectingSignaturesGradient } from '../../multisig-tokens';
 
 interface MembersSectionProps {
   vault: Vault;
@@ -76,7 +75,7 @@ export function MembersSection({ vault, currentUserAddress, onShareInvite }: Mem
             borderTopWidth={index === 0 ? '0' : '1px'}
             borderTopStyle="solid"
             borderTopColor="ink.border-default"
-            bgImage={isInvited ? collectingSignaturesGradient : undefined}
+            bgImage={isInvited ? 'var(--multisig-collecting-wash)' : undefined}
           >
             <ListItemBox
               variant="plain"

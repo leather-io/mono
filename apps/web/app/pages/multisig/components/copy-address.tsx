@@ -9,6 +9,7 @@ interface CopyAddressProps {
   addr: string;
   full?: boolean;
   grouped?: boolean;
+  emphasis?: boolean;
 }
 
 const iconSize = 12;
@@ -20,7 +21,7 @@ function groupByFour(addr: string): string[] {
 // Mono-font address with click-to-copy via the app's shared useClipboard
 // hook. One muted style for truncated + full (full just wraps); grouped is
 // the multi-line block where the copy icon trails the address.
-export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
+export function CopyAddress({ addr, full, grouped, emphasis }: CopyAddressProps) {
   const { onCopy, hasCopied } = useClipboard(addr);
 
   const icon = (
@@ -107,17 +108,13 @@ export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
       ml="-space.01"
       borderRadius="sm"
       bg="transparent"
-      color="ink.text-subdued"
+      color={emphasis ? 'ink.text-primary' : 'ink.text-subdued'}
       transition="background 0.1s ease"
       _hover={{ bg: 'ink.component-background-hover', color: 'ink.text-primary' }}
     >
       <styled.span
         textStyle="code"
-        // 12px (one down from the 13px `code` size): a monospace face reads larger
-        // than the proportional caption text on the line above, so a notch smaller
-        // sits more harmoniously. Line height stays 20px (the caption.01 line) so the
-        // address caption is exactly as tall as a plain-text caption.
-        fontSize="12px"
+        fontSize={emphasis ? '15px' : '12px'}
         lineHeight="20px"
         flexShrink={0}
         whiteSpace={full ? 'normal' : 'nowrap'}

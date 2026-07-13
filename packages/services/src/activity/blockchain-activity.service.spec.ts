@@ -113,6 +113,8 @@ describe(BlockchainActivityService.name, () => {
     mockMarketData.getMarketData = vi.fn().mockRejectedValue(new Error('no quote'));
     mockSip10.getAsset = vi.fn().mockResolvedValue(sip10Asset);
     mockStacksProtocol.getProtocolByAddress = vi.fn().mockResolvedValue(null);
+    mockBtcTx.getTransactionByTxId = vi.fn().mockResolvedValue(null);
+    mockStacksTx.getTransactionById = vi.fn().mockResolvedValue(null);
   });
 
   describe('getActivityByAssetId', () => {
@@ -547,6 +549,88 @@ describe(BlockchainActivityService.name, () => {
       const result = await nativeStxActivity();
       expect(result[0].balanceChanges[0].amount.crypto.amount.toString()).toBe('1000');
       expect(result[0].fee?.amount.toString()).toBe('100');
+    });
+  });
+
+  describe('getActivityByTxId', () => {
+    const btcAccount = {
+      id: { fingerprint: 'fp', accountIndex: 0 },
+      bitcoin: { type: 'fixedAddress', address: 'bc1qmine' },
+    } as unknown as AccountAddresses;
+    const stxAccount = {
+      id: { fingerprint: 'fp', accountIndex: 0 },
+      stacks: { stxAddress: 'SP1' },
+    } as unknown as AccountAddresses;
+
+    it('marks bitcoin ownership by the account address, not the fetched owned flags', async () => {
+      mockBtcTx.getTransactionByTxId = vi.fn().mockResolvedValue(
+        btcTx({
+          txid: 'btc-rx',
+          vin: [{ owned: true, value: '1000', address: 'ext', n: 0 }],
+          vout: [{ owned: false, value: '900', address: 'bc1qmine', n: 0 }],
+        })
+      );
+      const result = await service.getActivityByTxId(btcAccount, 'btc-rx');
+      expect(result?.chain).toBe('bitcoin');
+      expect(result?.action).toBe('receive');
+      expect(result?.txid).toBe('btc-rx');
+    });
+
+    it('maps an stx receive without a balance-changes call', async () => {
+      mockStacksTx.getTransactionById = vi.fn().mockResolvedValue({
+        tx_id: '0xrx',
+        tx_type: 'token_transfer',
+        tx_status: 'success',
+        sender_address: 'SP2',
+        sponsored: false,
+        fee_rate: '100',
+        block_height: 5,
+        burn_block_time: 1000,
+        token_transfer: { recipient_address: 'SP1', amount: '5000', memo: '' },
+      });
+      const result = await service.getActivityByTxId(stxAccount, '0xrx');
+      expect(result?.action).toBe('receive');
+      expect(result?.counterparty).toBe('SP2');
+      expect(result?.balanceChanges[0].amount.crypto.amount.toString()).toBe('5000');
+      expect(mockHiro.getPrincipalBalanceChanges).not.toHaveBeenCalled();
+    });
+
+    it('fetches balance changes for a contract call and reclassifies a received sip10 transfer', async () => {
+      mockStacksTx.getTransactionById = vi.fn().mockResolvedValue({
+        tx_id: '0xcall',
+        tx_type: 'contract_call',
+        tx_status: 'success',
+        sender_address: 'SP2',
+        sponsored: false,
+        fee_rate: '100',
+        block_height: 5,
+        burn_block_time: 1000,
+        contract_call: { contract_id: 'SP.token', function_name: 'transfer' },
+      });
+      mockHiro.getPrincipalBalanceChanges = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          {
+            tx_id: '0xcall',
+            asset: { type: 'ft', identifier: 'SP.token::tok' },
+            balance_change: { sent: '0', received: '500', net: '500' },
+          },
+        ],
+      });
+      const result = await service.getActivityByTxId(stxAccount, '0xcall');
+      expect(mockHiro.getPrincipalBalanceChanges).toHaveBeenCalled();
+      expect(result?.action).toBe('receive');
+      expect(result?.counterparty).toBe('SP2');
+      expect(result?.balanceChanges.some(change => change.asset.category === 'fungible')).toBe(
+        true
+      );
+    });
+
+    it('returns null when the transaction is not found', async () => {
+      const result = await service.getActivityByTxId(stxAccount, '0xmissing');
+      expect(result).toBeNull();
     });
   });
 });
