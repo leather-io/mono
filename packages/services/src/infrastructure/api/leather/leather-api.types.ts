@@ -6270,6 +6270,105 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/multisig/vaults/{id}/accounts/recover': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Scan the chain for accounts this vault has already used and create the active ones */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              vaultId: string;
+              name: string;
+              icon: string | null;
+              /** @enum {string} */
+              network:
+                | 'stx:mainnet'
+                | 'stx:testnet'
+                | 'btc:mainnet'
+                | 'btc:testnet'
+                | 'btc:regtest';
+              threshold: number;
+              multisigAddress: string;
+              accountIndex: number;
+              signerCount: number;
+              createdAt: string;
+            }[];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/multisig/vault-accounts/{id}': {
     parameters: {
       query?: never;

@@ -3,6 +3,7 @@ import { type ReactNode } from 'react';
 import { styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
 import { useVaultAccountsBalance } from '~/features/multisig/vaults/use-vault-account-balance';
+import { useVaultAccountRecovery } from '~/features/multisig/vaults/use-vault-account-mutations';
 import { useVaultAccounts } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault } from '~/features/multisig/vaults/use-vaults';
 import { formatCurrency } from '~/utils/currency-formatter';
@@ -42,6 +43,7 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
   const theme = vaultThemeFromName(vault.theme);
 
   const accounts = useVaultAccounts(vault.network, isActive ? vault.id : undefined);
+  const accountRecovery = useVaultAccountRecovery(vault.network, vault.id);
   const { crypto, fiat } = useVaultAccountsBalance(accounts.data);
   const detail = useVault(vault.network, isPendingMember || isInvite ? vault.id : undefined);
   const pendingInviteCount =
@@ -119,7 +121,11 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
         variant="plain"
         leading={<AvatarSq chain={chain} icon="vault" themeId={theme.id} size="md" />}
         title={<styled.span textStyle="heading.05">{vault.name}</styled.span>}
-        caption={`${chainLabel} vault · ${vault.accountCount} ${accountLabel}`}
+        caption={
+          accountRecovery.isRecovering
+            ? `${chainLabel} vault · Scanning for accounts…`
+            : `${chainLabel} vault · ${vault.accountCount} ${accountLabel}`
+        }
         trailing={trailing.title}
         trailingCaption={trailing.subtitle}
       />
