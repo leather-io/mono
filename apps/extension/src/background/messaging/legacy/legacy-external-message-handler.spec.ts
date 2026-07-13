@@ -34,12 +34,13 @@ vi.mock('@background/popup', () => ({
 
 const hostname = 'app.example.com';
 const fingerprint = 'abcd1234';
+const frameId = 42;
 const payload = 'request-token';
 const tabId = 7;
 
 function buildPort() {
   return {
-    sender: { url: `https://${hostname}/page`, tab: { id: tabId } },
+    sender: { frameId, url: `https://${hostname}/page`, tab: { id: tabId } },
   } as unknown as chrome.runtime.Port;
 }
 
@@ -102,7 +103,8 @@ function expectLegacyUnavailableResponse({
         [responseKey]: walletNoLongerAvailableMessage,
       }),
       source: MESSAGE_SOURCE,
-    })
+    }),
+    { frameId }
   );
 }
 

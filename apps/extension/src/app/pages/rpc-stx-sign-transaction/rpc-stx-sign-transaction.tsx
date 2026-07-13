@@ -18,6 +18,7 @@ import {
 import { StxAvatarIcon } from '@leather.io/ui';
 import { createMoney, isString } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 import { closeWindow } from '@shared/utils';
 
@@ -43,7 +44,8 @@ import {
 } from './rpc-stx-sign-transaction.utils';
 
 export function RpcStxSignTransaction() {
-  const { address, isLoadingBalance, requestId, tabId } = useStacksRpcTransactionRequestContext();
+  const { address, frameId, isLoadingBalance, requestId, tabId } =
+    useStacksRpcTransactionRequestContext();
   const {
     availableBalance,
     isLoadingFees,
@@ -73,8 +75,8 @@ export function RpcStxSignTransaction() {
     const signedTransaction = await signStacksTx(unsignedTxForBroadcast);
 
     if (!signedTransaction) {
-      void chrome.tabs.sendMessage(
-        tabId,
+      void sendMessageToOriginatingFrame(
+        { frameId, tabId },
         createRpcErrorResponse('stx_signTransaction', {
           id: requestId,
           error: {
@@ -86,8 +88,8 @@ export function RpcStxSignTransaction() {
       throw new Error('Error signing stacks transaction');
     }
 
-    void chrome.tabs.sendMessage(
-      tabId,
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
       createRpcSuccessResponse('stx_signTransaction', {
         id: requestId,
         result: {

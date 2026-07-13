@@ -7,6 +7,7 @@ import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccountsBalance } from '~/features/multisig/vaults/use-vault-account-balance';
+import { useVaultAccountRecovery } from '~/features/multisig/vaults/use-vault-account-mutations';
 import { useVaultAccounts } from '~/features/multisig/vaults/use-vault-accounts';
 import {
   useCancelVault,
@@ -14,6 +15,10 @@ import {
   useJoinVault,
 } from '~/features/multisig/vaults/use-vault-mutations';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
+import {
+  accountLimitForThreshold,
+  isThresholdAtAccountLimit,
+} from '~/features/multisig/vaults/vault-account-index';
 import { useToast } from '~/features/toasts/use-toast';
 
 import type { AuthNetworkId, Vault } from '@leather.io/models';
@@ -33,11 +38,12 @@ import { VaultBalanceHero } from './components/vault-balance-hero';
 import { VaultStatusCard } from './components/vault-status-card';
 import { VaultTransactions } from './components/vault-transactions';
 
-function accountCreationBlockedReason(vault: Vault): string {
+function accountCreationBlockedReason(vault: Vault, atAccountLimit: boolean): string {
   if (vault.status === 'cancelled') return 'This vault has been cancelled.';
   if (vault.members.some(member => member.membershipStatus === 'declined')) {
     return "A member declined, so this vault can't add accounts. The creator can cancel and start over.";
   }
+  if (atAccountLimit) return 'This vault has reached its account limit.';
   return 'All members must accept their invitation before accounts can be created.';
 }
 
@@ -74,6 +80,7 @@ export function VaultDetailPage() {
 
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accounts = useVaultAccounts(network, vaultNetworkKnown ? vaultId : undefined);
+  const accountRecovery = useVaultAccountRecovery(network, vaultNetworkKnown ? vaultId : undefined);
   const accountsBalance = useVaultAccountsBalance(accounts.data);
   const cancelVault = useCancelVault(network);
   const joinVault = useJoinVault(network);
@@ -107,11 +114,16 @@ export function VaultDetailPage() {
   const canCancel = isCreator && vault.status === 'pending';
   const allMembersJoined = vault.members.every(member => member.membershipStatus === 'joined');
   const pendingCount = vault.members.filter(member => member.membershipStatus === 'invited').length;
-  const canCreateAccount = vault.status !== 'cancelled' && allMembersJoined;
+  const accountList = accounts.data;
+  const accountLimit = accountLimitForThreshold(vault.network, vault.members.length);
+  const atAccountLimit =
+    allMembersJoined &&
+    accountList !== undefined &&
+    Array.from({ length: vault.members.length }, (_unused, index) => index + 1).every(value =>
+      isThresholdAtAccountLimit(accountList, value, accountLimit)
+    );
+  const canCreateAccount = vault.status !== 'cancelled' && allMembersJoined && !atAccountLimit;
   const vaultDetailsHeading = `${vault.name.charAt(0).toUpperCase()}${vault.name.slice(1)} details`;
-  const nextAccountIndex = accounts.data?.length
-    ? Math.max(...accounts.data.map(account => account.accountIndex)) + 1
-    : 0;
 
   function onCancel() {
     cancelVault.mutate(vault.id, {
@@ -167,8 +179,11 @@ export function VaultDetailPage() {
             vault={vault}
             accounts={accounts.data}
             isLoading={accounts.isLoading}
+            isRecovering={accountRecovery.isRecovering}
+            recoveryFailed={accountRecovery.recoveryFailed}
+            onRetryRecovery={accountRecovery.retry}
             canCreate={canCreateAccount}
-            disabledReason={accountCreationBlockedReason(vault)}
+            disabledReason={accountCreationBlockedReason(vault, atAccountLimit)}
             onCreateAccount={() => setIsCreatingAccount(true)}
             onOpenAccount={accountId => navigate(multisigPaths.account(vault.id, accountId))}
           />
@@ -204,7 +219,7 @@ export function VaultDetailPage() {
 
       <CreateAccountModal
         vault={vault}
-        nextIndex={nextAccountIndex}
+        accounts={accounts.data}
         isShowing={isCreatingAccount}
         onClose={() => setIsCreatingAccount(false)}
       />

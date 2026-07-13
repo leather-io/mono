@@ -14,7 +14,7 @@ async function sharedGetAddressesHandler(
   request: RpcRequest<typeof getAddresses> | RpcRequest<typeof stxGetAddresses>,
   port: chrome.runtime.Port
 ) {
-  const { urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
+  const { frameId, urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
     ['requestId', request.id],
     ['rpcRequest', encodeBase64Json(request)],
   ]);
@@ -26,7 +26,7 @@ async function sharedGetAddressesHandler(
   const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcGetAddresses, urlParams);
   void trackRpcRequestSuccess({ endpoint: request.method });
 
-  sendErrorResponseOnUserPopupClose({ tabId, id, request });
+  sendErrorResponseOnUserPopupClose({ frameId, tabId, id, request });
 }
 
 export const getAddressesHandler = defineRpcRequestHandler(

@@ -1,14 +1,16 @@
 import { createRpcSuccessResponse, supportedMethods } from '@leather.io/rpc';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
+
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import { createConnectingAppSearchParamsWithLastKnownAccount } from '../rpc-request-utils';
 
 export const supportedMethodsHandler = defineRpcRequestHandler(
   supportedMethods.method,
   async (request, port) => {
-    const { tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port);
-    void chrome.tabs.sendMessage(
-      tabId,
+    const { frameId, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port);
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
       createRpcSuccessResponse(supportedMethods.method, {
         id: request.id,
         result: {

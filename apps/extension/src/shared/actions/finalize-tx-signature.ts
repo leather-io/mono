@@ -1,5 +1,6 @@
 import { logger } from '@shared/logger';
 import { TxResult } from '@shared/message-types';
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
@@ -8,13 +9,19 @@ import { formatTxSignatureResponse } from './finalize-tx-signature-format';
 interface FinalizeTxSignatureArgs {
   requestPayload: string;
   data: TxResult | 'cancel';
+  frameId: number;
   tabId: number;
 }
 
-export function finalizeTxSignature({ requestPayload, data, tabId }: FinalizeTxSignatureArgs) {
+export function finalizeTxSignature({
+  requestPayload,
+  data,
+  frameId,
+  tabId,
+}: FinalizeTxSignatureArgs) {
   try {
     const responseMessage = formatTxSignatureResponse({ payload: requestPayload, response: data });
-    void chrome.tabs.sendMessage(tabId, responseMessage);
+    void sendMessageToOriginatingFrame({ frameId, tabId }, responseMessage);
     closeWindow();
   } catch (e) {
     // EXPERIMENT:

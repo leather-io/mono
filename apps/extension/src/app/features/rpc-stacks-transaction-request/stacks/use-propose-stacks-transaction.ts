@@ -9,6 +9,7 @@ import { type RpcMethodNames, createRpcSuccessResponse } from '@leather.io/rpc';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 import { delay, isString } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
@@ -36,7 +37,7 @@ function getErrorMessage(error: unknown) {
 // result to the dApp.
 export function useProposeStacksTransaction(method: RpcMethodNames) {
   const { onSetTransactionStatus } = useRpcTransactionRequest();
-  const { tabId, requestId } = useRpcRequestParams();
+  const { frameId, tabId, requestId } = useRpcRequestParams();
   const policy = useCurrentPolicy();
   const account = useCurrentStacksAccount();
   const network = useCurrentNetwork();
@@ -77,8 +78,8 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
         analytics.track('propose_multisig_transaction', { symbol: 'stx' });
         onSetTransactionStatus('submitted');
 
-        void chrome.tabs.sendMessage(
-          tabId,
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
           createRpcSuccessResponse(method, {
             id: requestId,
             result: {
@@ -103,6 +104,7 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
     },
     [
       method,
+      frameId,
       policy,
       account,
       network,

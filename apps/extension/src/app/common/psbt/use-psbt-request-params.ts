@@ -7,7 +7,7 @@ import { initialSearchParams } from '../initial-search-params';
 import { getPsbtPayloadFromToken } from './requests';
 
 export function usePsbtRequestSearchParams() {
-  const { origin, tabId } = useDefaultRequestParams();
+  const { frameId, origin, tabId } = useDefaultRequestParams();
   const requestToken = initialSearchParams.get('request');
 
   if (!requestToken) throw new Error('Cannot decode psbt without request token');
@@ -17,6 +17,7 @@ export function usePsbtRequestSearchParams() {
   return useMemo(
     () => ({
       appName: payload?.appDetails?.name,
+      frameId,
       origin,
       payload,
       requestToken,
@@ -25,12 +26,12 @@ export function usePsbtRequestSearchParams() {
         : undefined,
       tabId: tabId ?? 1,
     }),
-    [origin, payload, requestToken, tabId]
+    [frameId, origin, payload, requestToken, tabId]
   );
 }
 
 export function useRpcSignPsbtParams() {
-  const { origin, tabId } = useDefaultRequestParams();
+  const { frameId, origin, tabId } = useDefaultRequestParams();
   const broadcast = initialSearchParams.get('broadcast');
   const descriptor = initialSearchParams.get('descriptor');
   const psbtHex = initialSearchParams.get('hex');
@@ -41,12 +42,13 @@ export function useRpcSignPsbtParams() {
     () => ({
       broadcast: broadcast === 'true',
       descriptor: descriptor ?? undefined,
+      frameId,
       origin,
       psbtHex,
       requestId,
       signAtIndex: undefinedIfLengthZero(ensureArray(signAtIndex).map(h => Number(h))),
       tabId: tabId ?? 0,
     }),
-    [broadcast, descriptor, origin, psbtHex, requestId, signAtIndex, tabId]
+    [broadcast, descriptor, frameId, origin, psbtHex, requestId, signAtIndex, tabId]
   );
 }

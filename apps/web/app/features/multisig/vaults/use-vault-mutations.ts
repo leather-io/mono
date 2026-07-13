@@ -4,6 +4,7 @@ import type { AuthNetworkId, Vault, VaultMembershipResult } from '@leather.io/mo
 import { type CreateVaultRequest, getMultisigService } from '@leather.io/services';
 
 import { useSession } from '../auth/use-session';
+import { useRecoverVaultAccounts } from './use-vault-account-mutations';
 import { multisigVaultKeys } from './vault-query-keys';
 
 export function useCreateVault(network: AuthNetworkId) {
@@ -40,12 +41,16 @@ export function useCancelVault(network: AuthNetworkId) {
 export function useJoinVault(network: AuthNetworkId) {
   const queryClient = useQueryClient();
   const address = useSession(network)?.identity.address;
+  const recoverAccounts = useRecoverVaultAccounts(network);
   return useMutation<VaultMembershipResult, Error, string>({
     mutationKey: ['multisig-join-vault', network],
     mutationFn(membershipId) {
       return getMultisigService().joinVault(network, membershipId);
     },
     onSuccess(result) {
+      if (result.vault.status === 'active') {
+        recoverAccounts.mutate(result.vault.id);
+      }
       void queryClient.invalidateQueries({ queryKey: multisigVaultKeys.lists(network, address) });
       void queryClient.invalidateQueries({
         queryKey: multisigVaultKeys.detail(network, address, result.vault.id),

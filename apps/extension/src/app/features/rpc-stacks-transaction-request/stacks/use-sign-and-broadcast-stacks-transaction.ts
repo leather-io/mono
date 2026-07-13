@@ -11,6 +11,7 @@ import {
 } from '@leather.io/rpc';
 import { delay, isString } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 import { closeWindow } from '@shared/utils';
@@ -26,7 +27,7 @@ import { useRpcTransactionRequest } from '../use-rpc-transaction-request';
 
 export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
   const { onSetTransactionStatus } = useRpcTransactionRequest();
-  const { tabId, requestId } = useRpcRequestParams();
+  const { frameId, tabId, requestId } = useRpcRequestParams();
   const signStacksTransaction = useSignStacksTransaction();
   const network = useCurrentStacksNetworkState();
   const navigate = useNavigate();
@@ -37,8 +38,8 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
       const signedTx = await signStacksTransaction(unsignedTx);
 
       if (!signedTx) {
-        void chrome.tabs.sendMessage(
-          tabId,
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
           createRpcErrorResponse(method, {
             id: requestId,
             error: {
@@ -56,8 +57,8 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
       // If the transaction is sponsored, we do not broadcast it
       const isSponsored = signedTx.auth?.authType === AuthType.Sponsored;
       if (isSponsored) {
-        void chrome.tabs.sendMessage(
-          tabId,
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
           createRpcSuccessResponse(method, {
             id: requestId,
             result: {
@@ -79,8 +80,8 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
       async function onSuccess(txid: string, transaction: StacksTransactionWire) {
         onSetTransactionStatus('submitted');
 
-        void chrome.tabs.sendMessage(
-          tabId,
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
           createRpcSuccessResponse(method, {
             id: requestId,
             result: {
@@ -99,6 +100,7 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
     },
     [
       method,
+      frameId,
       navigate,
       network,
       onSetTransactionStatus,

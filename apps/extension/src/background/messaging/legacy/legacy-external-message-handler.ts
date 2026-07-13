@@ -5,6 +5,7 @@ import { formatMessageSigningResponse } from '@shared/actions/finalize-message-s
 import { formatPsbtResponse } from '@shared/actions/finalize-psbt';
 import { formatTxSignatureResponse } from '@shared/actions/finalize-tx-signature-format';
 import { ExternalMethods, LegacyMessageFromContentScript } from '@shared/message-types';
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import { getLegacyTransactionPayloadFromToken } from '@shared/utils/legacy-requests';
 
@@ -99,7 +100,7 @@ export async function handleLegacyExternalMethodFormat(
   if (legacyMethodsRequiringConnectedWallet.has(messageMethod)) {
     const result = await checkConnectedWalletExists(port);
     if (result.status === 'failure') {
-      void chrome.tabs.sendMessage(result.tabId, createLegacyWalletUnavailableResponse(message));
+      void sendMessageToOriginatingFrame(result, createLegacyWalletUnavailableResponse(message));
       return;
     }
   }
@@ -108,13 +109,15 @@ export async function handleLegacyExternalMethodFormat(
     case ExternalMethods.authenticationRequest: {
       void trackLegacyRequestInitiated({ method: ExternalMethods.authenticationRequest, origin });
 
-      const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
-        ['authRequest', payload],
-        ['flow', ExternalMethods.authenticationRequest],
-      ]);
+      const { frameId, urlParams, tabId } =
+        await createConnectingAppSearchParamsWithLastKnownAccount(port, [
+          ['authRequest', payload],
+          ['flow', ExternalMethods.authenticationRequest],
+        ]);
 
       const { id } = await triggerRequestPopupWindowOpen(RouteUrls.ChooseAccount, urlParams);
       listenForPopupClose({
+        frameId,
         id,
         tabId,
         response: formatAuthResponse({ request: payload, response: 'cancel' }),
@@ -126,14 +129,16 @@ export async function handleLegacyExternalMethodFormat(
     case ExternalMethods.transactionRequest: {
       void trackLegacyRequestInitiated({ method: ExternalMethods.transactionRequest, origin });
 
-      const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
-        ['request', payload],
-        ['flow', ExternalMethods.transactionRequest],
-        ...getNetworkParamsFromPayload(payload),
-      ]);
+      const { frameId, urlParams, tabId } =
+        await createConnectingAppSearchParamsWithLastKnownAccount(port, [
+          ['request', payload],
+          ['flow', ExternalMethods.transactionRequest],
+          ...getNetworkParamsFromPayload(payload),
+        ]);
 
       const { id } = await triggerRequestPopupWindowOpen(RouteUrls.TransactionRequest, urlParams);
       listenForPopupClose({
+        frameId,
         id,
         tabId,
         response: formatTxSignatureResponse({ payload, response: 'cancel' }),
@@ -145,15 +150,17 @@ export async function handleLegacyExternalMethodFormat(
     case ExternalMethods.signatureRequest: {
       void trackLegacyRequestInitiated({ method: ExternalMethods.signatureRequest, origin });
 
-      const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
-        ['request', payload],
-        ['messageType', 'utf8'],
-        ['flow', ExternalMethods.signatureRequest],
-        ...getNetworkParamsFromPayload(payload),
-      ]);
+      const { frameId, urlParams, tabId } =
+        await createConnectingAppSearchParamsWithLastKnownAccount(port, [
+          ['request', payload],
+          ['messageType', 'utf8'],
+          ['flow', ExternalMethods.signatureRequest],
+          ...getNetworkParamsFromPayload(payload),
+        ]);
 
       const { id } = await triggerRequestPopupWindowOpen(RouteUrls.SignatureRequest, urlParams);
       listenForPopupClose({
+        frameId,
         id,
         tabId,
         response: formatMessageSigningResponse({ request: payload, response: 'cancel' }),
@@ -168,15 +175,17 @@ export async function handleLegacyExternalMethodFormat(
         origin,
       });
 
-      const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
-        ['request', payload],
-        ['messageType', 'structured'],
-        ['flow', ExternalMethods.structuredDataSignatureRequest],
-        ...getNetworkParamsFromPayload(payload),
-      ]);
+      const { frameId, urlParams, tabId } =
+        await createConnectingAppSearchParamsWithLastKnownAccount(port, [
+          ['request', payload],
+          ['messageType', 'structured'],
+          ['flow', ExternalMethods.structuredDataSignatureRequest],
+          ...getNetworkParamsFromPayload(payload),
+        ]);
 
       const { id } = await triggerRequestPopupWindowOpen(RouteUrls.SignatureRequest, urlParams);
       listenForPopupClose({
+        frameId,
         id,
         tabId,
         response: formatMessageSigningResponse({ request: payload, response: 'cancel' }),
@@ -188,13 +197,15 @@ export async function handleLegacyExternalMethodFormat(
     case ExternalMethods.psbtRequest: {
       void trackLegacyRequestInitiated({ method: ExternalMethods.psbtRequest, origin });
 
-      const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
-        ['request', payload],
-        ['flow', ExternalMethods.psbtRequest],
-      ]);
+      const { frameId, urlParams, tabId } =
+        await createConnectingAppSearchParamsWithLastKnownAccount(port, [
+          ['request', payload],
+          ['flow', ExternalMethods.psbtRequest],
+        ]);
 
       const { id } = await triggerRequestPopupWindowOpen(RouteUrls.PsbtRequest, urlParams);
       listenForPopupClose({
+        frameId,
         id,
         tabId,
         response: formatPsbtResponse({ request: payload, response: 'cancel' }),
