@@ -125,6 +125,7 @@ export interface MultisigTransactionSummary {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly approvalCount: number;
+  readonly signedByMe: boolean;
 }
 
 export interface MultisigTransaction {
