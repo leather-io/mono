@@ -21,6 +21,7 @@ import { PostConditionsDetailsLayout } from '@app/features/rpc-stacks-transactio
 import { useStacksRpcTransactionRequestContext } from '@app/features/rpc-stacks-transaction-request/stacks/stacks-rpc-transaction-request.context';
 import { useProposeStacksTransaction } from '@app/features/rpc-stacks-transaction-request/stacks/use-propose-stacks-transaction';
 import { useSignAndBroadcastStacksTransaction } from '@app/features/rpc-stacks-transaction-request/stacks/use-sign-and-broadcast-stacks-transaction';
+import { useStacksRpcTransactionRequestApproval } from '@app/features/rpc-stacks-transaction-request/stacks/use-stacks-rpc-transaction-request-approval';
 import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transaction-request/transaction-actions/transaction-actions-with-spend';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
@@ -71,6 +72,7 @@ export function RpcStxCallContract() {
     const unsignedTx = await generateStacksUnsignedTransaction(txOptionsForBroadcast);
     await signAndBroadcastTransaction(unsignedTx);
   }
+  const onApprove = useStacksRpcTransactionRequestApproval(onApproveTransaction);
 
   return (
     <RpcTransactionRequestLayout
@@ -82,7 +84,7 @@ export function RpcStxCallContract() {
           isSponsored={isSponsored}
           // TODO: Calculate total request
           txAmount={createMoney(0, 'STX')}
-          onApprove={onApproveTransaction}
+          onApprove={onApprove}
           approveLabel={isStacksPolicy ? 'Propose transaction' : undefined}
           busyLabel={isStacksPolicy ? 'Proposing...' : undefined}
         />

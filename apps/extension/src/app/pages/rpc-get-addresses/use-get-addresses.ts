@@ -13,6 +13,7 @@ import {
 } from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { analytics } from '@shared/utils/analytics';
 
 import { focusTabAndWindow } from '@app/common/focus-tab';
@@ -38,10 +39,10 @@ const getAddressesRequests = z.union([getAddresses.request, stxGetAddresses.requ
 const { decode } = createRequestEncoder(getAddressesRequests);
 
 function useGetAddressesParams() {
-  const { tabId, origin } = useRpcRequestParams();
+  const { frameId, tabId, origin } = useRpcRequestParams();
   const request = initialSearchParams.get('rpcRequest');
   if (!request) throw new Error('Missing rpcRequest');
-  return { tabId, origin, request: decode(request) };
+  return { frameId, tabId, origin, request: decode(request) };
 }
 
 function useGetDescriptors() {
@@ -63,7 +64,7 @@ function useGetDescriptors() {
 
 export function useGetAddresses() {
   const permissions = useAppPermissions();
-  const { tabId, origin, request } = useGetAddressesParams();
+  const { frameId, tabId, origin, request } = useGetAddressesParams();
   const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
   const createTaprootPayer = useCurrentAccountTaprootPayer();
   const stacksAccount = useCurrentStacksAccount();
@@ -159,8 +160,8 @@ export function useGetAddresses() {
         }
       }
 
-      void chrome.tabs.sendMessage(
-        tabId,
+      void sendMessageToOriginatingFrame(
+        { frameId, tabId },
         createRpcSuccessResponse(request.method, {
           id: request.id,
           result: { addresses: keysToIncludeInResponse },

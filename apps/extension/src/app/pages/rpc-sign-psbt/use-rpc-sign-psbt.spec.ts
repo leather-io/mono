@@ -115,6 +115,7 @@ const singleSigDescriptor = `wsh(pk(${xpubA}/0/0))`;
 const multiSigDescriptor = `wsh(multi(2,${xpubB}/0/0,${xpubA}/0/0))`;
 const requestId = 'request-id';
 const origin = 'https://example.com';
+const frameId = 42;
 const tabId = 7;
 
 function buildPolicyTx(descriptor: string, signWith: number[]) {
@@ -163,6 +164,7 @@ function setRpcSignPsbtParams({
   mocks.useRpcSignPsbtParams.mockReturnValue({
     broadcast,
     descriptor,
+    frameId,
     origin,
     psbtHex,
     requestId,
@@ -204,6 +206,7 @@ describe(useRpcSignPsbt.name, () => {
     mocks.useRpcSignPsbtParams.mockReturnValue({
       broadcast: false,
       descriptor: undefined,
+      frameId,
       origin,
       psbtHex: null,
       requestId,
@@ -235,7 +238,8 @@ describe(useRpcSignPsbt.name, () => {
       createRpcSuccessResponse('signPsbt', {
         id: requestId,
         result: { hex: signedPsbtHex, txid: 'txid-123' },
-      })
+      }),
+      { frameId }
     );
     expect(mocks.refetchUtxos).toHaveBeenCalled();
     expect(mocks.navigate).toHaveBeenCalledWith(
@@ -260,7 +264,8 @@ describe(useRpcSignPsbt.name, () => {
       createRpcSuccessResponse('signPsbt', {
         id: requestId,
         result: { hex: signedPsbtHex },
-      })
+      }),
+      { frameId }
     );
     expect(mocks.closeWindow).toHaveBeenCalled();
     expect(mocks.navigate).not.toHaveBeenCalled();
@@ -281,7 +286,8 @@ describe(useRpcSignPsbt.name, () => {
       createRpcSuccessResponse('signPsbt', {
         id: requestId,
         result: { hex: signedPsbtHex },
-      })
+      }),
+      { frameId }
     );
     expect(mocks.closeWindow).toHaveBeenCalled();
   });
@@ -302,7 +308,8 @@ describe(useRpcSignPsbt.name, () => {
           code: RpcErrorCode.INVALID_REQUEST,
           message: RpcErrorMessage.UnsignedTransaction,
         },
-      })
+      }),
+      { frameId }
     );
     expect(mocks.navigate).toHaveBeenCalledWith(RouteUrls.RequestError, {
       state: { message: 'Ledger rejected', title: 'Failed to sign' },
@@ -330,7 +337,8 @@ describe(useRpcSignPsbt.name, () => {
           message: 'Failed to broadcast transaction',
           data: { hex: signedPsbtHex },
         },
-      })
+      }),
+      { frameId }
     );
     expect(mocks.navigate).toHaveBeenCalledWith(RouteUrls.RequestError, {
       state: { message: 'mempool rejected', title: 'Failed to broadcast' },
@@ -356,7 +364,8 @@ describe(useRpcSignPsbt.name, () => {
       createRpcSuccessResponse('signPsbt', {
         id: requestId,
         result: { hex: signedPsbtHex, txid: 'txid-456' },
-      })
+      }),
+      { frameId }
     );
     expect(mocks.navigate).toHaveBeenCalledWith(
       RouteUrls.RpcSignPsbtSummary,
@@ -414,7 +423,8 @@ describe(useRpcSignPsbt.name, () => {
           code: RpcErrorCode.USER_REJECTION,
           message: 'User rejected signing PSBT request',
         },
-      })
+      }),
+      { frameId }
     );
     expect(mocks.closeWindow).toHaveBeenCalled();
   });

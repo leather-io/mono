@@ -5,6 +5,7 @@ import { isWshDescriptor } from '@leather.io/bitcoin';
 import { RpcErrorCode, createRpcErrorResponse, signPsbt } from '@leather.io/rpc';
 import { ensureArray, isDefined, isUndefined } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import {
   formatValidationErrors,
@@ -17,7 +18,7 @@ import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
-  getTabIdFromPort,
+  getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
 } from '../rpc-request-utils';
@@ -41,8 +42,8 @@ function getRpcSignPsbtParamErrors(obj: unknown) {
 export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (request, port) => {
   if (isUndefined(request.params)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Undefined parameters' });
-    void chrome.tabs.sendMessage(
-      getTabIdFromPort(port),
+    void sendMessageToOriginatingFrame(
+      getOriginatingFrameFromPort(port),
       createRpcErrorResponse(request.method, {
         id: request.id,
         error: { code: RpcErrorCode.INVALID_REQUEST, message: 'Parameters undefined' },
@@ -53,8 +54,8 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
 
   if (!validateRpcSignPsbtParams(request.params)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Invalid parameters' });
-    void chrome.tabs.sendMessage(
-      getTabIdFromPort(port),
+    void sendMessageToOriginatingFrame(
+      getOriginatingFrameFromPort(port),
       createRpcErrorResponse(request.method, {
         id: request.id,
         error: {
@@ -69,8 +70,8 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
   if (!validatePsbt(request.params.hex)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Invalid PSBT' });
 
-    void chrome.tabs.sendMessage(
-      getTabIdFromPort(port),
+    void sendMessageToOriginatingFrame(
+      getOriginatingFrameFromPort(port),
       createRpcErrorResponse('signPsbt', {
         id: request.id,
         error: { code: RpcErrorCode.INVALID_PARAMS, message: 'Invalid PSBT hex' },
@@ -82,8 +83,8 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
   if (isDefined(request.params.descriptor) && !isWshDescriptor(request.params.descriptor)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Invalid descriptor' });
 
-    void chrome.tabs.sendMessage(
-      getTabIdFromPort(port),
+    void sendMessageToOriginatingFrame(
+      getOriginatingFrameFromPort(port),
       createRpcErrorResponse('signPsbt', {
         id: request.id,
         error: {
@@ -123,7 +124,7 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
 
   void trackRpcRequestSuccess({ endpoint: request.method });
 
-  const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+  const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
     port,
     requestParams
   );
@@ -131,6 +132,7 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
   const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcSignPsbt, urlParams);
 
   sendErrorResponseOnUserPopupClose({
+    frameId,
     tabId,
     id,
     request,

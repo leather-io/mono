@@ -7,6 +7,7 @@ import {
 } from '@leather.io/rpc';
 import { isDefined, isUndefined } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import {
   getRpcSignMessageParamErrors,
@@ -18,7 +19,7 @@ import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
-  getTabIdFromPort,
+  getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
 } from '../rpc-request-utils';
@@ -28,8 +29,8 @@ export const signMessageHandler = defineRpcRequestHandler(
   async (request, port) => {
     if (isUndefined(request.params)) {
       void trackRpcRequestError({ endpoint: 'signMessage', error: 'Undefined parameters' });
-      void chrome.tabs.sendMessage(
-        getTabIdFromPort(port),
+      void sendMessageToOriginatingFrame(
+        getOriginatingFrameFromPort(port),
         createRpcErrorResponse('signMessage', {
           id: request.id,
           error: { code: RpcErrorCode.INVALID_REQUEST, message: 'Parameters undefined' },
@@ -41,8 +42,8 @@ export const signMessageHandler = defineRpcRequestHandler(
     if (!validateRpcSignMessageParams(request.params)) {
       void trackRpcRequestError({ endpoint: 'signMessage', error: 'Invalid parameters' });
 
-      void chrome.tabs.sendMessage(
-        getTabIdFromPort(port),
+      void sendMessageToOriginatingFrame(
+        getOriginatingFrameFromPort(port),
         createRpcErrorResponse('signMessage', {
           id: request.id,
           error: {
@@ -60,8 +61,8 @@ export const signMessageHandler = defineRpcRequestHandler(
     if (!isSupportedMessageSigningPaymentType(paymentType)) {
       void trackRpcRequestError({ endpoint: 'signMessage', error: 'Unsupported payment type' });
 
-      void chrome.tabs.sendMessage(
-        getTabIdFromPort(port),
+      void sendMessageToOriginatingFrame(
+        getOriginatingFrameFromPort(port),
         createRpcErrorResponse('signMessage', {
           id: request.id,
           error: {
@@ -87,12 +88,12 @@ export const signMessageHandler = defineRpcRequestHandler(
       requestParams.push(['accountIndex', (request.params as any).account.toString()]);
     }
 
-    const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+    const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
       port,
       requestParams
     );
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcSignBip322Message, urlParams);
 
-    sendErrorResponseOnUserPopupClose({ tabId, id, request });
+    sendErrorResponseOnUserPopupClose({ frameId, tabId, id, request });
   }
 );

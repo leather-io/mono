@@ -16,12 +16,14 @@ test.describe('RPC: stx_transferStx', () => {
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });
 
-  function checkVisibleContent(context: BrowserContext) {
+  function checkVisibleContent(context: BrowserContext, expectedMemo: string) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
 
       await popup.waitForSelector('text="Account 1"');
       await popup.waitForSelector('text="0.0001 STX"');
+      await test.expect(popup.getByText('Memo', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText(expectedMemo, { exact: true })).toBeVisible();
       const displayerAddress = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
         .innerText()
@@ -50,14 +52,34 @@ test.describe('RPC: stx_transferStx', () => {
       );
   }
 
-  test('SIP-30 transfer stx', async ({ page, context }) => {
+  test('shows memo on SIP-30 STX transfer approval', async ({ page, context }) => {
     const [result] = await Promise.all([
       initiateSip30RpcTransferStx(page)({
         amount: 100,
         memo: 'mock-memo',
         recipient: TEST_ACCOUNT_2_STX_ADDRESS,
       }),
-      checkVisibleContent(context)('Cancel'),
+      checkVisibleContent(context, 'mock-memo')('Cancel'),
+    ]);
+
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      error: {
+        code: 4001,
+        message: RpcErrorMessage.UserRejectedOperation,
+      },
+    });
+  });
+
+  test('shows when SIP-30 STX transfer has no memo', async ({ page, context }) => {
+    const [result] = await Promise.all([
+      initiateSip30RpcTransferStx(page)({
+        amount: 100,
+        recipient: TEST_ACCOUNT_2_STX_ADDRESS,
+      }),
+      checkVisibleContent(context, 'No memo')('Cancel'),
     ]);
 
     delete result.id;

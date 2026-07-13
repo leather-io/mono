@@ -11,6 +11,7 @@ import {
 } from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 
 import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
@@ -31,20 +32,21 @@ import { useRegisterBtcPolicy } from './register-btc-policy';
 const { decode } = createRequestEncoder(btcAddAccount.request);
 
 function useBtcAddAccountParams() {
-  const { tabId, origin } = useRpcRequestParams();
+  const { frameId, tabId, origin } = useRpcRequestParams();
   const request = initialSearchParams.get('rpcRequest');
   if (!request) throw new Error('Missing rpcRequest');
-  return { tabId, origin, request: decode(request) };
+  return { frameId, tabId, origin, request: decode(request) };
 }
 
 export function useBtcAddAccount() {
-  const { tabId, origin, request } = useBtcAddAccountParams();
+  const { frameId, tabId, origin, request } = useBtcAddAccountParams();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
   const registerBtcPolicy = useRegisterBtcPolicy();
   const networks = useNetworks();
   const walletType = useActiveWalletType();
   const { isFeatureEnabled, rejectAsUnsupported } = usePolicyFeatureGate({
     method: request.method,
+    frameId,
     id: request.id,
     tabId,
   });
@@ -86,8 +88,8 @@ export function useBtcAddAccount() {
 
   function sendError(message: string) {
     if (!tabId) return;
-    void chrome.tabs.sendMessage(
-      tabId,
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
       createRpcErrorResponse(request.method, {
         id: request.id,
         error: { code: RpcErrorCode.INTERNAL_ERROR, message },
@@ -97,8 +99,8 @@ export function useBtcAddAccount() {
 
   function sendSuccess(result: RpcResult<typeof btcAddAccount>) {
     if (!tabId) return;
-    void chrome.tabs.sendMessage(
-      tabId,
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
       createRpcSuccessResponse(request.method, { id: request.id, result })
     );
   }

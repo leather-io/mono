@@ -10,6 +10,7 @@ import {
 } from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 
 import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
@@ -29,19 +30,20 @@ import { deriveStxPolicyAddress } from './stx-policy-registration';
 const { decode } = createRequestEncoder(stxAddAccount.request);
 
 function useStxAddAccountParams() {
-  const { tabId, origin } = useRpcRequestParams();
+  const { frameId, tabId, origin } = useRpcRequestParams();
   const request = initialSearchParams.get('rpcRequest');
   if (!request) throw new Error('Missing rpcRequest');
-  return { tabId, origin, request: decode(request) };
+  return { frameId, tabId, origin, request: decode(request) };
 }
 
 export function useStxAddAccount() {
-  const { tabId, origin, request } = useStxAddAccountParams();
+  const { frameId, tabId, origin, request } = useStxAddAccountParams();
   const stacksAccount = useCurrentStacksAccount();
   const registerStxPolicy = useRegisterStxPolicy();
   const networks = useNetworks();
   const { isFeatureEnabled, rejectAsUnsupported } = usePolicyFeatureGate({
     method: request.method,
+    frameId,
     id: request.id,
     tabId,
   });
@@ -78,8 +80,8 @@ export function useStxAddAccount() {
 
   function sendError(message: string) {
     if (!tabId) return;
-    void chrome.tabs.sendMessage(
-      tabId,
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
       createRpcErrorResponse(request.method, {
         id: request.id,
         error: { code: RpcErrorCode.INTERNAL_ERROR, message },
@@ -89,8 +91,8 @@ export function useStxAddAccount() {
 
   function sendSuccess(result: RpcResult<typeof stxAddAccount>) {
     if (!tabId) return;
-    void chrome.tabs.sendMessage(
-      tabId,
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
       createRpcSuccessResponse(request.method, { id: request.id, result })
     );
   }

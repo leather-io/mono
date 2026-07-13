@@ -12,6 +12,7 @@ import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 type TransactionStatus = 'idle' | 'broadcasting' | 'submitted' | 'pending' | 'error';
 
 export interface RpcTransactionRequest {
+  frameId: number;
   origin: string;
   requestId: string;
   tabId: number;
@@ -21,7 +22,7 @@ export interface RpcTransactionRequest {
 }
 export function useRpcTransactionRequest(): RpcTransactionRequest {
   const [status, setStatus] = useState<TransactionStatus>('idle');
-  const { origin, requestId, tabId } = useRpcRequestParams();
+  const { frameId, origin, requestId, tabId } = useRpcRequestParams();
 
   if (origin === null) {
     closeWindow();
@@ -36,6 +37,7 @@ export function useRpcTransactionRequest(): RpcTransactionRequest {
   }
 
   return {
+    frameId,
     origin,
     requestId,
     tabId,

@@ -11,22 +11,22 @@ import {
 } from '@leather.io/rpc';
 import { delay, isString } from '@leather.io/utils';
 
+import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 import { closeWindow } from '@shared/utils';
 
-import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { stacksBroadcastTransaction } from '@app/common/transactions/stacks/stacks-broadcast-transaction';
 import { createError } from '@app/common/utils';
 import { useAnalyticsOnlyStacksNonceTracker } from '@app/components/loaders/stacks-nonce-loader';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 
-import { useRpcTransactionRequest } from '../use-rpc-transaction-request';
+import { useStacksRpcTransactionRequestContext } from './stacks-rpc-transaction-request.context';
 
 export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
-  const { onSetTransactionStatus } = useRpcTransactionRequest();
-  const { tabId, requestId } = useRpcRequestParams();
+  const { onSetTransactionStatus, tabId, requestId, frameId } =
+    useStacksRpcTransactionRequestContext();
   const signStacksTransaction = useSignStacksTransaction();
   const network = useCurrentStacksNetworkState();
   const navigate = useNavigate();
@@ -37,8 +37,8 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
       const signedTx = await signStacksTransaction(unsignedTx);
 
       if (!signedTx) {
-        void chrome.tabs.sendMessage(
-          tabId,
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
           createRpcErrorResponse(method, {
             id: requestId,
             error: {
@@ -56,8 +56,8 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
       // If the transaction is sponsored, we do not broadcast it
       const isSponsored = signedTx.auth?.authType === AuthType.Sponsored;
       if (isSponsored) {
-        void chrome.tabs.sendMessage(
-          tabId,
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
           createRpcSuccessResponse(method, {
             id: requestId,
             result: {
@@ -79,8 +79,8 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
       async function onSuccess(txid: string, transaction: StacksTransactionWire) {
         onSetTransactionStatus('submitted');
 
-        void chrome.tabs.sendMessage(
-          tabId,
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
           createRpcSuccessResponse(method, {
             id: requestId,
             result: {
@@ -99,6 +99,7 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
     },
     [
       method,
+      frameId,
       navigate,
       network,
       onSetTransactionStatus,

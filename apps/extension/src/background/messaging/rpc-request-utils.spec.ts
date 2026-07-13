@@ -2,7 +2,10 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { RpcErrorCode, type RpcRequests } from '@leather.io/rpc';
 
-import { validateConnectedWalletExists } from './rpc-request-utils';
+import {
+  createConnectingAppMetadataSearchParams,
+  validateConnectedWalletExists,
+} from './rpc-request-utils';
 
 const mocks = vi.hoisted(() => ({
   getRootState: vi.fn(),
@@ -22,12 +25,13 @@ vi.mock('./rpc-helpers', () => ({
 
 const hostname = 'app.example.com';
 const fingerprint = 'abcd1234';
+const frameId = 42;
 const tabId = 7;
 const request: RpcRequests = { jsonrpc: '2.0', id: 'req-1', method: 'supportedMethods' };
 
 function buildPort() {
   return {
-    sender: { url: `https://${hostname}`, tab: { id: tabId } },
+    sender: { frameId, url: `https://${hostname}`, tab: { id: tabId } },
   } as unknown as chrome.runtime.Port;
 }
 
@@ -61,6 +65,17 @@ function buildState({
     wallets: { entities: buildWalletEntities(walletFingerprints) },
   };
 }
+
+describe(createConnectingAppMetadataSearchParams.name, () => {
+  test('preserves the originating frame in popup request metadata', () => {
+    const result = createConnectingAppMetadataSearchParams(buildPort());
+
+    expect(result.frameId).toBe(frameId);
+    expect(result.tabId).toBe(tabId);
+    expect(result.urlParams.get('frameId')).toBe(frameId.toString());
+    expect(result.urlParams.get('tabId')).toBe(tabId.toString());
+  });
+});
 
 describe('validateConnectedWalletExists', () => {
   beforeEach(() => {
@@ -97,7 +112,8 @@ describe('validateConnectedWalletExists', () => {
       expect.objectContaining({
         id: request.id,
         error: expect.objectContaining({ code: RpcErrorCode.UNAUTHENTICATED }),
-      })
+      }),
+      { frameId }
     );
   });
 
@@ -111,7 +127,8 @@ describe('validateConnectedWalletExists', () => {
       tabId,
       expect.objectContaining({
         error: expect.objectContaining({ code: RpcErrorCode.UNAUTHENTICATED }),
-      })
+      }),
+      { frameId }
     );
   });
 
@@ -136,6 +153,7 @@ describe('validateConnectedWalletExists', () => {
 
     expect(result).toEqual({ status: 'failure' });
     expect(mocks.sendMissingStateErrorToTab).toHaveBeenCalledWith({
+      frameId,
       tabId,
       method: request.method,
       id: request.id,
@@ -152,6 +170,7 @@ describe('validateConnectedWalletExists', () => {
 
     expect(result).toEqual({ status: 'failure' });
     expect(mocks.sendMissingStateErrorToTab).toHaveBeenCalledWith({
+      frameId,
       tabId,
       method: request.method,
       id: request.id,
@@ -169,7 +188,8 @@ describe('validateConnectedWalletExists', () => {
 
     expect(mocks.sendMessage).toHaveBeenCalledWith(
       tabId,
-      expect.objectContaining({ error: expect.objectContaining({ message: errorMessage }) })
+      expect.objectContaining({ error: expect.objectContaining({ message: errorMessage }) }),
+      { frameId }
     );
   });
 });
