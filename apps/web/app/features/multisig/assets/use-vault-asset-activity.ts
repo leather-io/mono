@@ -32,9 +32,9 @@ export function useVaultAssetActivity(
 
   const views = useMemo(
     () =>
-      (query.data ?? [])
-        .filter(item => item.status !== 'pending')
-        .map(item => createBlockchainActivityView(item, { formatMoney: formatActivityMoney })),
+      (query.data ?? []).map(item =>
+        createBlockchainActivityView(item, { formatMoney: formatActivityMoney })
+      ),
     [query.data]
   );
 

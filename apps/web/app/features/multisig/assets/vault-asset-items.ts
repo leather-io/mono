@@ -55,9 +55,6 @@ function compareVaultAssetItems(mode: VaultNetworkMode) {
     const fiatDiff = Number(b.fiat.amount) - Number(a.fiat.amount);
     if (fiatDiff !== 0) return fiatDiff;
 
-    const cryptoDiff = Number(b.crypto.amount) - Number(a.crypto.amount);
-    if (cryptoDiff !== 0) return cryptoDiff;
-
     return a.asset.symbol.localeCompare(b.asset.symbol);
   };
 }

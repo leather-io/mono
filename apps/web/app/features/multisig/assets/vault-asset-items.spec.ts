@@ -145,7 +145,7 @@ describe(buildVaultAssetItems.name, () => {
     expect(items.map(item => item.asset.symbol)).toEqual(['STX', 'USDCx', 'sBTC', 'WHALE']);
   });
 
-  it('sorts remaining assets by fiat balance, then crypto balance, then symbol', () => {
+  it('sorts remaining assets by fiat balance, then symbol', () => {
     const alpha = makeSip10Asset({ symbol: 'AAA', assetId: 'SP9.aaa::aaa', contractId: 'SP9.aaa' });
     const bravo = makeSip10Asset({ symbol: 'BBB', assetId: 'SP9.bbb::bbb', contractId: 'SP9.bbb' });
     const rich = makeSip10Asset({
@@ -155,7 +155,7 @@ describe(buildVaultAssetItems.name, () => {
     });
     const items = buildVaultAssetItems(
       [
-        makeItem(bravo, makeBalance(bravo, 10, 1)),
+        makeItem(bravo, makeBalance(bravo, 100, 1)),
         makeItem(rich, makeBalance(rich, 1, 50)),
         makeItem(alpha, makeBalance(alpha, 10, 1)),
       ],
