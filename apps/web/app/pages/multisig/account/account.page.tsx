@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
+import { useVaultAccountAssets } from '~/features/multisig/assets/use-vault-account-assets';
+import type { VaultAssetItem } from '~/features/multisig/assets/vault-asset-items';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
@@ -21,6 +23,7 @@ import { isLeatherInstalled } from '~/utils/utils';
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
 import { PlusIcon } from '@leather.io/ui';
 
+import { InlineTabs } from '../components/inline-tabs';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
 import { MultisigPage } from '../components/multisig-page';
@@ -28,8 +31,10 @@ import { SectionLabel } from '../components/section-label';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { chainFromNetwork } from '../multisig.utils';
+import { AccountAssets } from './components/account-assets';
 import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
+import { AssetDetailModal } from './components/asset-detail-modal';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
 
 export function AccountDetailPage() {
@@ -38,6 +43,7 @@ export function AccountDetailPage() {
   const [hydrated, setHydrated] = useState(false);
   const [isProposing, setIsProposing] = useState(false);
   const [isAddingToWallet, setIsAddingToWallet] = useState(false);
+  const [assetDetail, setAssetDetail] = useState<VaultAssetItem | null>(null);
   const { success, error } = useToast();
   useEffect(() => setHydrated(true), []);
 
@@ -60,6 +66,7 @@ export function AccountDetailPage() {
   const account = useVaultAccount(network, vaultNetworkKnown ? accountId : undefined);
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accountBalance = useVaultAccountBalance(account.data);
+  const accountAssets = useVaultAccountAssets(account.data);
 
   const btcSession = useSession(btcNetwork);
   const stxSession = useSession(stxNetwork);
@@ -146,7 +153,6 @@ export function AccountDetailPage() {
             primary={<Balance balance={accountBalance.crypto} formatCurrency={formatCurrency} />}
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
-          <SectionLabel>Transactions</SectionLabel>
           <styled.button
             type="button"
             onClick={() => setIsProposing(true)}
@@ -155,6 +161,7 @@ export function AccountDetailPage() {
             alignItems="center"
             gap="space.03"
             p="space.04"
+            mt="space.05"
             mb="space.03"
             borderRadius="md"
             borderWidth="1px"
@@ -183,7 +190,22 @@ export function AccountDetailPage() {
               </styled.div>
             </Box>
           </styled.button>
-          <AccountTransactions account={account.data} />
+          <InlineTabs.Root defaultValue="transactions">
+            <InlineTabs.List>
+              <InlineTabs.Trigger value="transactions">Transactions</InlineTabs.Trigger>
+              <InlineTabs.Trigger value="assets">Assets</InlineTabs.Trigger>
+            </InlineTabs.List>
+            <InlineTabs.Content value="transactions">
+              <Box mt="space.04">
+                <AccountTransactions account={account.data} />
+              </Box>
+            </InlineTabs.Content>
+            <InlineTabs.Content value="assets">
+              <Box mt="space.04">
+                <AccountAssets assets={accountAssets} onSelectAsset={setAssetDetail} />
+              </Box>
+            </InlineTabs.Content>
+          </InlineTabs.Root>
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>
@@ -203,6 +225,13 @@ export function AccountDetailPage() {
         onClose={() => setIsProposing(false)}
         onProposed={onProposed}
       />
+      {assetDetail ? (
+        <AssetDetailModal
+          account={account.data}
+          item={assetDetail}
+          onClose={() => setAssetDetail(null)}
+        />
+      ) : null}
     </MultisigPage>
   );
 }
