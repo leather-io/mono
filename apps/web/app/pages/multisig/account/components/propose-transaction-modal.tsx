@@ -322,17 +322,21 @@ function BtcProposeForm({
 function StxProposeForm({
   account,
   memberCount,
+  initialAssetId,
   onClose,
   onProposed,
 }: {
   account: VaultAccount;
   memberCount: number;
+  initialAssetId?: SerializedCryptoAssetId;
   onClose(): void;
   onProposed(transaction: MultisigTransaction): void;
 }) {
   const [recipient, setRecipient] = useState('');
   const [amountInput, setAmountInput] = useState('');
-  const [selectedAssetId, setSelectedAssetId] = useState<SerializedCryptoAssetId>();
+  const [selectedAssetId, setSelectedAssetId] = useState<SerializedCryptoAssetId | undefined>(
+    initialAssetId
+  );
   const [isSelectorShowing, setIsSelectorShowing] = useState(false);
   const { error } = useToast();
 
@@ -436,6 +440,7 @@ interface ProposeTransactionModalProps {
   account: VaultAccount;
   memberCount: number;
   isShowing: boolean;
+  initialAssetId?: SerializedCryptoAssetId;
   onClose(): void;
   onProposed(transaction: MultisigTransaction): void;
 }
@@ -444,6 +449,7 @@ export function ProposeTransactionModal({
   account,
   memberCount,
   isShowing,
+  initialAssetId,
   onClose,
   onProposed,
 }: ProposeTransactionModalProps) {
@@ -479,6 +485,7 @@ export function ProposeTransactionModal({
           <StxProposeForm
             account={account}
             memberCount={memberCount}
+            initialAssetId={initialAssetId}
             onClose={onClose}
             onProposed={onProposed}
           />
