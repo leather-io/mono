@@ -75,3 +75,9 @@ export function buildVaultAssetItems(
     }))
     .sort(compareVaultAssetItems(mode));
 }
+
+export function filterSendableVaultAssets(items: VaultAssetItem[]): VaultAssetItem[] {
+  return items.filter(
+    item => item.asset.protocol === 'nativeStx' || item.crypto.amount.isGreaterThan(0)
+  );
+}

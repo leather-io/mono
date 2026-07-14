@@ -17,7 +17,7 @@ import type {
 import type { AssetListItem, AssetListItemBalance } from '@leather.io/services';
 import { createMoney, getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { buildVaultAssetItems } from './vault-asset-items';
+import { buildVaultAssetItems, filterSendableVaultAssets } from './vault-asset-items';
 
 const usdcxAsset = makeSip10Asset({
   name: 'USDCx',
@@ -201,5 +201,50 @@ describe(buildVaultAssetItems.name, () => {
     expect(items.map(item => item.asset.symbol)).toEqual(['BTC']);
     expect(Number(items[0].crypto.amount)).toBe(0);
     expect(items[0].crypto.symbol).toBe('BTC');
+  });
+});
+
+describe(filterSendableVaultAssets.name, () => {
+  it('keeps STX even with a zero balance', () => {
+    const items = buildVaultAssetItems([makeItem(stxAsset)], 'USD', 'mainnet');
+    expect(filterSendableVaultAssets(items).map(item => item.asset.symbol)).toEqual(['STX']);
+  });
+
+  it('drops zero-balance pinned tokens and keeps held ones', () => {
+    const items = buildVaultAssetItems(
+      [
+        makeItem(stxAsset),
+        makeItem(usdcxAsset, makeBalance(usdcxAsset, 500_000_000, 500)),
+        makeItem(sbtcAsset),
+      ],
+      'USD',
+      'mainnet'
+    );
+    expect(filterSendableVaultAssets(items).map(item => item.asset.symbol)).toEqual([
+      'STX',
+      'USDCx',
+    ]);
+  });
+
+  it('preserves the pin-sorted order of the input', () => {
+    const meme = makeSip10Asset({
+      symbol: 'MEME',
+      assetId: 'SP9.meme::meme',
+      contractId: 'SP9.meme',
+    });
+    const items = buildVaultAssetItems(
+      [
+        makeItem(meme, makeBalance(meme, 900, 9000)),
+        makeItem(stxAsset),
+        makeItem(sbtcAsset, makeBalance(sbtcAsset, 1_000_000, 600)),
+      ],
+      'USD',
+      'mainnet'
+    );
+    expect(filterSendableVaultAssets(items).map(item => item.asset.symbol)).toEqual([
+      'STX',
+      'sBTC',
+      'MEME',
+    ]);
   });
 });

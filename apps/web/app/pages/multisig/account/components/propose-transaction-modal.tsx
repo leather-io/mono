@@ -1,10 +1,14 @@
-import { type ChangeEvent, useState } from 'react';
+import { type ChangeEvent, type ReactNode, useState } from 'react';
 
+import BigNumber from 'bignumber.js';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
+import { useVaultAccountAssets } from '~/features/multisig/assets/use-vault-account-assets';
+import { filterSendableVaultAssets } from '~/features/multisig/assets/vault-asset-items';
 import { normalizeNativeSegwitAddress } from '~/features/multisig/network/normalize-btc-address';
 import { resolveBtcNetworkMode } from '~/features/multisig/network/resolve-btc-network-mode';
 import { buildUnsignedMultisigBtcTransfer } from '~/features/multisig/transactions/build-btc-transfer';
+import { buildUnsignedMultisigSip10Transfer } from '~/features/multisig/transactions/build-sip10-transfer';
 import { buildUnsignedMultisigStxTransfer } from '~/features/multisig/transactions/build-stx-transfer';
 import { useProposeTransaction } from '~/features/multisig/transactions/use-propose-transaction';
 import { useVaultBtcTransactionFees } from '~/features/multisig/transactions/use-vault-btc-transaction-fees';
@@ -14,12 +18,19 @@ import { useToast } from '~/features/toasts/use-toast';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
+import { STX_DECIMALS } from '@leather.io/constants';
 import type { Money, MultisigTransaction, VaultAccount } from '@leather.io/models';
 import { isValidStacksAddress } from '@leather.io/stacks';
 import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
-import { btcToSat, createMoney, stxToMicroStx } from '@leather.io/utils';
+import {
+  type SerializedCryptoAssetId,
+  btcToSat,
+  createMoney,
+  createMoneyFromDecimal,
+} from '@leather.io/utils';
 
 import { TextField } from '../../components/text-field';
+import { AssetSelectorSheet, AssetSelectorToggle } from './asset-selector';
 
 function parseBtcAmount(value: string): Money | undefined {
   const sats = btcToSat(value.trim());
@@ -27,10 +38,11 @@ function parseBtcAmount(value: string): Money | undefined {
   return createMoney(sats, 'BTC');
 }
 
-function parseStxAmount(value: string): Money | undefined {
-  const microStx = stxToMicroStx(value.trim());
-  if (microStx.isNaN() || microStx.isLessThanOrEqualTo(0)) return undefined;
-  return createMoney(microStx, 'STX');
+function parseAssetAmount(value: string, decimals: number, symbol: string): Money | undefined {
+  const decimalAmount = new BigNumber(value.trim());
+  if (decimalAmount.isNaN() || decimalAmount.isLessThanOrEqualTo(0)) return undefined;
+  if ((decimalAmount.decimalPlaces() ?? 0) > decimals) return undefined;
+  return createMoneyFromDecimal(decimalAmount, symbol, decimals);
 }
 
 // Errors only surface once the field has input, so the form isn't pre-flagged.
@@ -54,6 +66,7 @@ function getRecipientError(recipient: string, isValid: boolean): string | undefi
 interface ProposeFormFieldsProps {
   memberCount: number;
   unit: string;
+  assetToggle?: ReactNode;
   recipientPlaceholder: string;
   recipient: string;
   onRecipient(value: string): void;
@@ -76,6 +89,7 @@ interface ProposeFormFieldsProps {
 function ProposeFormFields({
   memberCount,
   unit,
+  assetToggle,
   recipientPlaceholder,
   recipient,
   onRecipient,
@@ -141,18 +155,20 @@ function ProposeFormFields({
             textStyle="body.02"
             _focusVisible={{ outline: 'none' }}
           />
-          <styled.span
-            display="flex"
-            alignItems="center"
-            px="space.04"
-            textStyle="label.02"
-            color="ink.text-subdued"
-            borderLeftWidth="1px"
-            borderLeftStyle="solid"
-            borderLeftColor="ink.border-default"
-          >
-            {unit}
-          </styled.span>
+          {assetToggle ?? (
+            <styled.span
+              display="flex"
+              alignItems="center"
+              px="space.04"
+              textStyle="label.02"
+              color="ink.text-subdued"
+              borderLeftWidth="1px"
+              borderLeftStyle="solid"
+              borderLeftColor="ink.border-default"
+            >
+              {unit}
+            </styled.span>
+          )}
         </Flex>
         {amountError ? (
           <styled.span textStyle="caption.01" color="red.action-primary-default">
@@ -309,20 +325,30 @@ function StxProposeForm({
 }) {
   const [recipient, setRecipient] = useState('');
   const [amountInput, setAmountInput] = useState('');
+  const [selectedAssetId, setSelectedAssetId] = useState<SerializedCryptoAssetId>();
+  const [isSelectorShowing, setIsSelectorShowing] = useState(false);
   const { error } = useToast();
 
   const recipientAddress = recipient.trim() || undefined;
-  const amount = parseStxAmount(amountInput);
-  const balance = useVaultAccountBalance(account);
+  const assets = useVaultAccountAssets(account);
+  const sendableItems = filterSendableVaultAssets(assets.items);
+  const selectedItem =
+    sendableItems.find(item => item.id === selectedAssetId) ??
+    sendableItems.find(item => item.asset.protocol === 'nativeStx');
+  const decimals = selectedItem?.asset.decimals ?? STX_DECIMALS;
+  const symbol = selectedItem?.asset.symbol ?? 'STX';
+  const amount = parseAssetAmount(amountInput, decimals, symbol);
+  const sip10Asset = selectedItem?.asset.protocol === 'sip10' ? selectedItem.asset : undefined;
   const recipientError = getRecipientError(
     recipient,
     Boolean(recipientAddress) && isValidStacksAddress(recipient.trim())
   );
-  const amountError = getAmountError(amountInput, amount, balance.crypto);
+  const amountError = getAmountError(amountInput, amount, selectedItem?.crypto);
   const feesQuery = useVaultStxTransactionFees({
     account,
     recipient: recipientError ? undefined : recipientAddress,
     amount: amountError ? undefined : amount,
+    asset: sip10Asset,
   });
   const propose = useProposeTransaction(account.network);
   const fee = feesQuery.data?.options.standard.value;
@@ -330,12 +356,20 @@ function StxProposeForm({
   async function submit() {
     if (!recipientAddress || !amount || !fee || recipientError || amountError) return;
     try {
-      const tx = await buildUnsignedMultisigStxTransfer({
-        account,
-        recipient: recipientAddress,
-        amount,
-        fee,
-      });
+      const tx = sip10Asset
+        ? await buildUnsignedMultisigSip10Transfer({
+            account,
+            assetId: sip10Asset.assetId,
+            recipient: recipientAddress,
+            amount,
+            fee,
+          })
+        : await buildUnsignedMultisigStxTransfer({
+            account,
+            recipient: recipientAddress,
+            amount,
+            fee,
+          });
       propose.mutate(
         { multisigAddress: account.multisigAddress, rawPayload: tx.serialize() },
         {
@@ -351,26 +385,42 @@ function StxProposeForm({
   }
 
   return (
-    <ProposeFormFields
-      memberCount={memberCount}
-      unit="STX"
-      recipientPlaceholder="Stacks address"
-      recipient={recipient}
-      onRecipient={setRecipient}
-      amountInput={amountInput}
-      onAmount={setAmountInput}
-      available={balance.crypto}
-      fee={fee}
-      threshold={account.threshold}
-      signerCount={account.signers.length}
-      isProposing={propose.isPending}
-      canPropose={Boolean(recipientAddress && amount && fee && !recipientError && !amountError)}
-      recipientError={recipientError}
-      amountError={amountError}
-      errorMessage={feesQuery.error instanceof Error ? feesQuery.error.message : undefined}
-      onClose={onClose}
-      onSubmit={() => void submit()}
-    />
+    <>
+      <ProposeFormFields
+        memberCount={memberCount}
+        unit={symbol}
+        assetToggle={
+          selectedItem ? (
+            <AssetSelectorToggle item={selectedItem} onClick={() => setIsSelectorShowing(true)} />
+          ) : undefined
+        }
+        recipientPlaceholder="Stacks address"
+        recipient={recipient}
+        onRecipient={setRecipient}
+        amountInput={amountInput}
+        onAmount={setAmountInput}
+        available={selectedItem?.crypto}
+        fee={fee}
+        threshold={account.threshold}
+        signerCount={account.signers.length}
+        isProposing={propose.isPending}
+        canPropose={Boolean(recipientAddress && amount && fee && !recipientError && !amountError)}
+        recipientError={recipientError}
+        amountError={amountError}
+        errorMessage={feesQuery.error instanceof Error ? feesQuery.error.message : undefined}
+        onClose={onClose}
+        onSubmit={() => void submit()}
+      />
+      <AssetSelectorSheet
+        items={sendableItems}
+        isShowing={isSelectorShowing}
+        onSelect={item => {
+          setSelectedAssetId(item.id);
+          setIsSelectorShowing(false);
+        }}
+        onClose={() => setIsSelectorShowing(false)}
+      />
+    </>
   );
 }
 
