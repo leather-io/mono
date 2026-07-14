@@ -153,7 +153,7 @@ export function SignerRollcall({
           borderTopColor="blue.border"
         >
           <Box pt="space.01">
-            <Spinner size="14px" color="blue.action-primary-default" />
+            <Spinner size="16px" color="blue.action-primary-default" borderRadius="round" />
           </Box>
           <Box>
             <styled.div textStyle="label.02" color="blue.text-primary">

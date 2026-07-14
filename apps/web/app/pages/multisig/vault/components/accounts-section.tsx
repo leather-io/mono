@@ -71,7 +71,7 @@ function AccountCard({
           title={<styled.span textStyle="heading.05">{account.name}</styled.span>}
           caption={
             <styled.span display="inline-flex" pointerEvents="auto">
-              <CopyAddress addr={account.multisigAddress} />
+              <CopyAddress addr={account.multisigAddress} full />
             </styled.span>
           }
           trailing={

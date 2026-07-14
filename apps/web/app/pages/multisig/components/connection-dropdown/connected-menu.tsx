@@ -1,10 +1,12 @@
 import { Fragment } from 'react';
+import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { leather } from '~/utils/leather-sdk';
 
 import { DropdownMenu, ExitIcon, Flag, WalletSparkleIcon } from '@leather.io/ui';
 
+import { multisigPaths } from '../../multisig.constants';
 import { ChainAvatar } from '../chain-avatar';
 import { DropdownAddress } from './dropdown-address';
 import { IconSlot } from './icon-slot';
@@ -26,8 +28,13 @@ function AccountSection({
   connection: ChainConnection;
   bnsName?: string;
 }) {
+  const navigate = useNavigate();
   const { session } = connection;
   if (!session) return null;
+  function onDisconnect() {
+    connection.signOut();
+    void navigate(multisigPaths.index);
+  }
   return (
     <>
       <Flex alignItems="center" gap="space.03" px="space.03" py="space.02">
@@ -45,7 +52,7 @@ function AccountSection({
           )}
         </Box>
       </Flex>
-      <DropdownMenu.Item onSelect={connection.signOut}>
+      <DropdownMenu.Item onSelect={onDisconnect}>
         <Flag
           color="red.action-primary-default"
           textStyle="label.03"
