@@ -65,8 +65,8 @@ test.describe('RPC: stx_callContract propose from a Ledger policy account', () =
     await mockFundedStacksAddress(context, stacksPolicy.address);
     await onboardingPage.signInWithLedgerAccount(extensionId, {
       ...makeLedgerTestAccountWalletState(['stacks']),
-      ...getConnectedTestAppPermissionsState(),
-      ...policyStateOverrides({ policies: [stacksPolicy], activePolicyId: stacksPolicy.id }),
+      ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
+      ...policyStateOverrides({ policies: [stacksPolicy] }),
     });
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });

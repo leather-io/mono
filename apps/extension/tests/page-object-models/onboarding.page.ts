@@ -85,7 +85,10 @@ export function getTestSoftwareAccountDefaultWalletState() {
 // Seeds the demo app (localhost:3000) as connected to the test software wallet.
 // Signing methods (sendTransfer, stx_*, etc.) now require a connected wallet, so
 // tests that dispatch them without an explicit connect step must seed this.
-export function getConnectedTestAppPermissionsState() {
+export function getConnectedTestAppPermissionsState({
+  accountIndex = 0,
+  policyId,
+}: { accountIndex?: number; policyId?: string } = {}) {
   return {
     appPermissions: {
       ids: ['localhost:3000'],
@@ -93,9 +96,10 @@ export function getConnectedTestAppPermissionsState() {
         'localhost:3000': {
           origin: 'localhost:3000',
           fingerprint: testFingerprint,
-          accountIndex: 0,
+          accountIndex,
           requestedAccounts: '2024-01-01T00:00:00.000Z',
           networkMode: 'mainnet',
+          ...(policyId ? { policyId } : {}),
         },
       },
     },

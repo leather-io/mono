@@ -1,10 +1,10 @@
 import { describe, expect, test, vi } from 'vitest';
 
-import { selectPolicyNetworkIds } from '../policy/policy.selectors';
+import { selectPolicyNetworkIds } from '../policy/policy-network.selectors';
 import { networksActions, userEditsNetwork, userRemovesNetwork } from './networks.actions';
 import type { PersistedNetworkConfiguration } from './networks.slice';
 
-vi.mock('../policy/policy.selectors', () => ({
+vi.mock('../policy/policy-network.selectors', () => ({
   selectPolicyNetworkIds: vi.fn(),
 }));
 

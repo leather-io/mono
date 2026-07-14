@@ -31,12 +31,7 @@ describe('selectCurrentAccount', () => {
     mocks.searchParams.set('fingerprint', 'feedface');
 
     expect(
-      selectCurrentAccount.resultFunc(
-        activeAccount,
-        false,
-        createWalletEntities(['feedface']),
-        null
-      )
+      selectCurrentAccount.resultFunc(activeAccount, false, createWalletEntities(['feedface']))
     ).toEqual({
       fingerprint: 'feedface',
       accountIndex: 5,
@@ -47,9 +42,9 @@ describe('selectCurrentAccount', () => {
     mocks.searchParams.set('accountIndex', '5');
     mocks.searchParams.set('fingerprint', 'feedface');
 
-    expect(
-      selectCurrentAccount.resultFunc(activeAccount, false, createWalletEntities([]), null)
-    ).toEqual(activeAccount);
+    expect(selectCurrentAccount.resultFunc(activeAccount, false, createWalletEntities([]))).toEqual(
+      activeAccount
+    );
   });
 
   test('uses the active account once the user switches accounts', () => {
@@ -57,18 +52,18 @@ describe('selectCurrentAccount', () => {
     mocks.searchParams.set('fingerprint', 'feedface');
 
     expect(
-      selectCurrentAccount.resultFunc(activeAccount, true, createWalletEntities(['feedface']), null)
+      selectCurrentAccount.resultFunc(activeAccount, true, createWalletEntities(['feedface']))
     ).toEqual(activeAccount);
   });
 
   test('uses the active account when no account is pinned in the url params', () => {
-    expect(
-      selectCurrentAccount.resultFunc(activeAccount, false, createWalletEntities([]), null)
-    ).toEqual(activeAccount);
+    expect(selectCurrentAccount.resultFunc(activeAccount, false, createWalletEntities([]))).toEqual(
+      activeAccount
+    );
   });
 
   test('falls back to the first account of the assumed-zero fingerprint', () => {
-    expect(selectCurrentAccount.resultFunc(null, false, createWalletEntities([]), null)).toEqual({
+    expect(selectCurrentAccount.resultFunc(null, false, createWalletEntities([]))).toEqual({
       fingerprint: assumedZeroFingerprint,
       accountIndex: 0,
     });
@@ -79,60 +74,7 @@ describe('selectCurrentAccount', () => {
     mocks.searchParams.set('fingerprint', 'feedface');
 
     expect(
-      selectCurrentAccount.resultFunc(
-        activeAccount,
-        false,
-        createWalletEntities(['feedface']),
-        null
-      )
+      selectCurrentAccount.resultFunc(activeAccount, false, createWalletEntities(['feedface']))
     ).toEqual({ fingerprint: 'feedface', accountIndex: 1 });
-  });
-
-  test('ignores the pinned url account and uses the active account when a policy is active', () => {
-    mocks.searchParams.set('accountIndex', '5');
-    mocks.searchParams.set('fingerprint', 'feedface');
-
-    expect(
-      selectCurrentAccount.resultFunc(
-        activeAccount,
-        false,
-        createWalletEntities(['feedface']),
-        'abcd1234/0/mainnet'
-      )
-    ).toEqual(activeAccount);
-  });
-
-  test('uses the pinned url account when no policy is active', () => {
-    mocks.searchParams.set('accountIndex', '5');
-    mocks.searchParams.set('fingerprint', 'feedface');
-
-    expect(
-      selectCurrentAccount.resultFunc(
-        activeAccount,
-        false,
-        createWalletEntities(['feedface']),
-        null
-      )
-    ).toEqual({ fingerprint: 'feedface', accountIndex: 5 });
-  });
-
-  test('uses the active account when the user has switched and no policy is active', () => {
-    mocks.searchParams.set('accountIndex', '5');
-    mocks.searchParams.set('fingerprint', 'feedface');
-
-    expect(
-      selectCurrentAccount.resultFunc(activeAccount, true, createWalletEntities(['feedface']), null)
-    ).toEqual(activeAccount);
-  });
-
-  test('uses the active account when a policy is active and no account is pinned', () => {
-    expect(
-      selectCurrentAccount.resultFunc(
-        activeAccount,
-        false,
-        createWalletEntities([]),
-        'abcd1234/0/mainnet'
-      )
-    ).toEqual(activeAccount);
   });
 });

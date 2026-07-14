@@ -9,6 +9,7 @@ export interface AppPermission extends AccountId {
   // has given permission
   requestedAccounts?: string;
   networkMode: BitcoinNetworkModes;
+  policyId?: string;
 }
 
 function hasRequestedAccountPermission(permission?: AppPermission) {
