@@ -3,9 +3,8 @@ import { useCallback } from 'react';
 import { type RpcParams, type RpcResult, stxAddAccount } from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
-import { broadcastReplayAction } from '@shared/messages';
 
-import { useAppDispatch } from '@app/store';
+import { persistor, useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useNetworks } from '@app/store/networks/networks.selectors';
 import { userAddsPolicy } from '@app/store/policy/policy.slice';
@@ -23,7 +22,9 @@ export function useRegisterStxPolicy() {
   const networks = useNetworks();
 
   return useCallback(
-    (params: RpcParams<typeof stxAddAccount>): RpcResult<typeof stxAddAccount> | null => {
+    async (
+      params: RpcParams<typeof stxAddAccount>
+    ): Promise<RpcResult<typeof stxAddAccount> | null> => {
       try {
         const { addPolicyPayload, result } = createStxPolicyRegistration({
           params,
@@ -31,9 +32,11 @@ export function useRegisterStxPolicy() {
           accountIndex,
           networks,
         });
-        const action = userAddsPolicy(addPolicyPayload);
-        dispatch(action);
-        void broadcastReplayAction(action);
+        dispatch(userAddsPolicy(addPolicyPayload));
+        // The approval window closes right after responding; the write must be
+        // on disk before then or the dApp gets a success for a policy that was
+        // never persisted
+        await persistor.flush();
 
         return result;
       } catch (e) {

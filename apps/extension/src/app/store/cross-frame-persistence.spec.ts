@@ -1,0 +1,212 @@
+import {
+  type Action,
+  type Middleware,
+  Tuple,
+  combineReducers,
+  configureStore,
+  isAction,
+} from '@reduxjs/toolkit';
+import { ChainId } from '@stacks/network';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  type PersistConfig,
+  REGISTER,
+  REHYDRATE,
+  persistReducer,
+  persistStore,
+} from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import { isPlainObject } from 'remeda';
+import { describe, expect, test } from 'vitest';
+
+import { createDirtySliceTracker } from '@shared/storage/dirty-slice-tracker';
+import { createMergePersistStorage } from '@shared/storage/merge-persist-storage';
+import { persistWhitelist } from '@shared/storage/persist-whitelist';
+
+import { manageTokensSlice } from './manage-tokens/manage-tokens.slice';
+import { type PersistedNetworkConfiguration, networksSlice } from './networks/networks.slice';
+import { settingsSlice } from './settings/settings.slice';
+import { hydrateSlicesFromStorage, initCrossFrameStorageSync } from './utils/storage-sync';
+import { createTrackDirtySlicesMiddleware } from './utils/track-dirty-slices';
+
+const persistRootKey = 'persist:root';
+
+const frameReducer = combineReducers({
+  networks: networksSlice.reducer,
+  settings: settingsSlice.reducer,
+  manageTokens: manageTokensSlice.reducer,
+});
+
+type FrameState = ReturnType<typeof frameReducer>;
+
+function frameRootReducer(state: FrameState | undefined, action: Action) {
+  if (hydrateSlicesFromStorage.match(action) && state) return { ...state, ...action.payload };
+  return frameReducer(state, action);
+}
+
+interface CreateFrameArgs {
+  withSync?: boolean;
+}
+
+// Each frame mirrors how a real extension context assembles its store: its own
+// dirty tracker, merging storage driver, redux-persist instance and sync
+// listener, all sharing the one chrome.storage.local mock
+function createFrame({ withSync = true }: CreateFrameArgs = {}) {
+  const tracker = createDirtySliceTracker();
+  const dispatchedActionTypes: string[] = [];
+
+  function recordActionTypes(): ReturnType<Middleware> {
+    return next => action => {
+      if (isAction(action)) dispatchedActionTypes.push(action.type);
+      return next(action);
+    };
+  }
+
+  const persistConfig: PersistConfig<FrameState> & { deserialize?: boolean } = {
+    key: 'root',
+    stateReconciler: autoMergeLevel2,
+    version: 4,
+    storage: createMergePersistStorage(tracker),
+    serialize: false,
+    deserialize: false,
+    whitelist: [...persistWhitelist],
+  };
+
+  const store = configureStore({
+    reducer: persistReducer(persistConfig, frameRootReducer),
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }).concat(new Tuple(createTrackDirtySlicesMiddleware(tracker), recordActionTypes)),
+  });
+
+  const persistor = persistStore(store);
+  if (withSync) initCrossFrameStorageSync(store, tracker);
+
+  async function waitForRehydration() {
+    if (store.getState()._persist.rehydrated) return;
+    await new Promise<void>(resolve => {
+      const unsubscribe = store.subscribe(() => {
+        if (!store.getState()._persist.rehydrated) return;
+        unsubscribe();
+        resolve();
+      });
+    });
+  }
+
+  async function settle() {
+    await persistor.flush();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise(resolve => setTimeout(resolve, 0));
+  }
+
+  return { store, persistor, tracker, dispatchedActionTypes, waitForRehydration, settle };
+}
+
+type Frame = ReturnType<typeof createFrame>;
+
+async function bootFrame(args: CreateFrameArgs = {}): Promise<Frame> {
+  const frame = createFrame(args);
+  await frame.waitForRehydration();
+  await frame.settle();
+  return frame;
+}
+
+const devnetNetwork: PersistedNetworkConfiguration = {
+  id: 'devnet',
+  name: 'Devnet',
+  chainId: ChainId.Testnet,
+  url: 'http://localhost:3999',
+  bitcoinNetwork: 'regtest',
+  mode: 'testnet',
+  bitcoinUrl: 'http://localhost:8999/api',
+};
+
+async function readStoredRoot() {
+  const stored = await chrome.storage.local.get(persistRootKey);
+  const root = stored[persistRootKey];
+  if (!isPlainObject(root)) throw new Error('persist:root is not an object');
+  return root;
+}
+
+describe('cross-frame persistence', () => {
+  test('a stale frame writing another slice does not clobber a newly added network', async () => {
+    const frameA = await bootFrame();
+    const staleFrame = await bootFrame({ withSync: false });
+
+    frameA.store.dispatch(networksSlice.actions.addNetwork(devnetNetwork));
+    await frameA.settle();
+
+    staleFrame.store.dispatch(settingsSlice.actions.setUserSelectedTheme('dark'));
+    await staleFrame.settle();
+
+    const root = await readStoredRoot();
+    expect(root.networks).toMatchObject({ entities: { devnet: devnetNetwork } });
+    expect(root.settings).toMatchObject({ userSelectedTheme: 'dark' });
+  });
+
+  test('other frames adopt a persisted network via storage sync', async () => {
+    const frameA = await bootFrame();
+    const frameB = await bootFrame();
+
+    frameA.store.dispatch(networksSlice.actions.addNetwork(devnetNetwork));
+    await frameA.settle();
+    await frameB.settle();
+
+    expect(frameB.store.getState().networks.entities.devnet).toEqual(devnetNetwork);
+  });
+
+  test('a frame never hydrates from its own writes', async () => {
+    const frameA = await bootFrame();
+    const frameB = await bootFrame();
+
+    frameA.store.dispatch(networksSlice.actions.addNetwork(devnetNetwork));
+    await frameA.settle();
+    await frameB.settle();
+
+    expect(frameA.dispatchedActionTypes).not.toContain(hydrateSlicesFromStorage.type);
+    expect(
+      frameB.dispatchedActionTypes.filter(type => type === hydrateSlicesFromStorage.type)
+    ).toHaveLength(1);
+  });
+
+  test('an un-flushed local edit survives an incoming sync and both changes persist', async () => {
+    const frameA = await bootFrame();
+    const frameB = await bootFrame();
+
+    frameB.store.dispatch(
+      manageTokensSlice.actions.userTogglesTokenVisibility({ id: 'token-x', enabled: false })
+    );
+    frameA.store.dispatch(networksSlice.actions.addNetwork(devnetNetwork));
+    await frameA.settle();
+    await frameB.settle();
+
+    const frameBState = frameB.store.getState();
+    expect(frameBState.networks.entities.devnet).toEqual(devnetNetwork);
+    expect(frameBState.manageTokens.entities['token-x']).toEqual({
+      id: 'token-x',
+      enabled: false,
+    });
+
+    const root = await readStoredRoot();
+    expect(root.networks).toMatchObject({ entities: { devnet: devnetNetwork } });
+    expect(root.manageTokens).toMatchObject({
+      entities: { 'token-x': { id: 'token-x', enabled: false } },
+    });
+  });
+
+  test('flush resolves with pending changes committed to storage', async () => {
+    const frame = await bootFrame();
+
+    frame.store.dispatch(networksSlice.actions.addNetwork(devnetNetwork));
+    await frame.persistor.flush();
+
+    const root = await readStoredRoot();
+    expect(root.networks).toMatchObject({ entities: { devnet: devnetNetwork } });
+  });
+});

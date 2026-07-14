@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
 import { Stack } from 'leather-styles/jsx';
 
+import { userRenamesWallet } from '@leather.io/state/wallet';
 import { Button, Input, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { ButtonRow } from '@app/components/layout/card/components/button-row';
 import { useAppDispatch } from '@app/store';
-import { renameWallet } from '@app/store/active/active.actions';
 
 const WALLET_MAX_NAME_LENGTH = 40;
 
@@ -30,7 +30,7 @@ export function RenameWalletDialog({
   function handleSave() {
     const trimmed = name.trim().substring(0, WALLET_MAX_NAME_LENGTH);
     if (!trimmed) return;
-    void dispatch(renameWallet(fingerprint, trimmed));
+    dispatch(userRenamesWallet({ fingerprint, name: trimmed }));
     onClose();
   }
 

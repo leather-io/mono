@@ -3,8 +3,9 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 import type { LocalRootState } from '@app/store';
 
+import { mergePersistStorage } from './merge-persist-storage';
 import { migrations } from './migrations/migrations';
-import { storage } from './storage-driver';
+import { persistWhitelist } from './persist-whitelist';
 
 export async function clearChromeStorage(): Promise<void> {
   return new Promise(resolve => chrome.storage.local.clear(resolve));
@@ -17,22 +18,9 @@ export const persistConfig: PersistConfig<LocalRootState> & HiddenUntypeDeserial
   key: 'root',
   stateReconciler: autoMergeLevel2,
   version: 4,
-  storage,
+  storage: mergePersistStorage,
   serialize: false,
   migrate: migrations,
   deserialize: false,
-  whitelist: [
-    'accounts',
-    'policy',
-    'active',
-    'analytics',
-    'chains',
-    'softwareKeys',
-    'appPermissions',
-    'networks',
-    'settings',
-    'wallets',
-    'keychains',
-    'manageTokens',
-  ],
+  whitelist: [...persistWhitelist],
 };
