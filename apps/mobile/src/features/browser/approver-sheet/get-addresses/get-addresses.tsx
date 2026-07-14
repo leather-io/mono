@@ -38,6 +38,7 @@ export function GetAddressesApprover(props: GetAddressesApproverProps) {
   function onApprove() {
     if (isSubmitDisabled) return;
     const keysToIncludeInResponse = formatAddressesForGetAddresses({
+      fingerprint: account.fingerprint,
       taproot: {
         address: account.taprootPayer.address,
         publicKey: account.taprootPayer.publicKey,

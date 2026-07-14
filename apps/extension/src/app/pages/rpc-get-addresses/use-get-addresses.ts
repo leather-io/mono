@@ -20,6 +20,7 @@ import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { useFlags } from '@app/features/feature-flags';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import {
   useCurrentAccountNativeSegwitPayer,
   useCurrentNativeSegwitAccount,
@@ -67,6 +68,7 @@ export function useGetAddresses() {
   const { frameId, tabId, origin, request } = useGetAddressesParams();
   const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
   const createTaprootPayer = useCurrentAccountTaprootPayer();
+  const currentAccount = useCurrentAccountId();
   const stacksAccount = useCurrentStacksAccount();
   const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
   const { releaseAddAccount, enableAllowPolicyAccounts } = useFlags();
@@ -129,6 +131,7 @@ export function useGetAddresses() {
             publicKey: bytesToHex(nativeSegwitSigner.publicKey),
             derivationPath: keyOriginToDerivationPath(nativeSegwitSigner.keyOrigin),
             descriptor: nativeSegwitDescriptor ?? '',
+            fingerprint: currentAccount.fingerprint,
           };
 
           keysToIncludeInResponse.push(nativeSegwitAddressResponse);
@@ -144,6 +147,7 @@ export function useGetAddresses() {
             tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taprootPayer.publicKey)),
             derivationPath: keyOriginToDerivationPath(taprootPayer.keyOrigin),
             descriptor: taprootDescriptor ?? '',
+            fingerprint: currentAccount.fingerprint,
           };
           keysToIncludeInResponse.push(taprootAddressResponse);
         }
