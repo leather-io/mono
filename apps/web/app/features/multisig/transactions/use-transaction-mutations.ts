@@ -36,6 +36,11 @@ export function useSignTransaction(network: AuthNetworkId) {
       const signatures = network.startsWith('btc')
         ? await signBtcTransaction(transaction, account, getMySigningPubkey(account, myPublicKey))
         : await signStxTransaction(transaction, account);
+      if (signatures.length === 0) {
+        throw new Error(
+          'Your wallet did not add a signature. Make sure the account active in the extension is the one that joined this vault, then try again.'
+        );
+      }
       return getMultisigService().addTransactionSignatures(network, transaction.id, { signatures });
     },
     onSuccess: invalidate,
