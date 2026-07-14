@@ -1,5 +1,11 @@
 import { getPsbtDetails, psbtBase64ToHex } from '@leather.io/bitcoin';
-import type { AuthNetworkId, Money, MultisigTransaction, VaultAccount } from '@leather.io/models';
+import type {
+  AuthNetworkId,
+  Money,
+  MultisigTransaction,
+  Sip10Asset,
+  VaultAccount,
+} from '@leather.io/models';
 import { decodeStxTransactionPayload } from '@leather.io/stacks';
 import { assertUnreachable, createMoney } from '@leather.io/utils';
 
@@ -13,6 +19,13 @@ interface ProposalSummary {
   memo?: string;
   contractId?: string;
   functionName?: string;
+  token?: ProposalTokenTransfer;
+}
+
+interface ProposalTokenTransfer {
+  contractId: string;
+  assetName: string;
+  baseUnitAmount: bigint;
 }
 
 export interface ProposalPayloadContext {
@@ -20,9 +33,22 @@ export interface ProposalPayloadContext {
   multisigAddress: string;
 }
 
+export function matchesProposalTokenAsset(asset: Sip10Asset, assetName: string): boolean {
+  if (!asset.assetId.includes('::')) return true;
+  return asset.assetId.endsWith(`::${assetName}`);
+}
+
 export type DecodedProposalPayload =
   | { type: 'btcTransfer'; recipient?: string; amount?: Money; fee?: Money }
   | { type: 'stxTransfer'; recipient: string; amount: Money; memo: string; fee: Money }
+  | {
+      type: 'sip10Transfer';
+      token: ProposalTokenTransfer;
+      sender: string;
+      recipient: string;
+      memo?: string;
+      fee: Money;
+    }
   | { type: 'contractCall'; contractId: string; functionName: string; fee: Money }
   | { type: 'contractDeploy'; contractId: string; fee: Money };
 
@@ -57,6 +83,26 @@ export function decodeProposalPayload(
           type: 'stxTransfer',
           recipient: payload.recipient,
           amount: createMoney(payload.amount, 'STX'),
+          memo: payload.memo,
+          fee,
+        };
+      case 'sip10Transfer':
+        if (payload.sender !== context.multisigAddress)
+          return {
+            type: 'contractCall',
+            contractId: payload.contractId,
+            functionName: 'transfer',
+            fee,
+          };
+        return {
+          type: 'sip10Transfer',
+          token: {
+            contractId: payload.contractId,
+            assetName: payload.assetName,
+            baseUnitAmount: payload.amount,
+          },
+          sender: payload.sender,
+          recipient: payload.recipient,
           memo: payload.memo,
           fee,
         };
@@ -103,6 +149,14 @@ export function decodeProposalSummary(
         amount: payload.amount,
         fee: payload.fee,
         memo: 'memo' in payload ? payload.memo : undefined,
+      };
+    case 'sip10Transfer':
+      return {
+        kind: 'transfer',
+        recipient: payload.recipient,
+        fee: payload.fee,
+        memo: payload.memo,
+        token: payload.token,
       };
     case 'contractCall':
       return {

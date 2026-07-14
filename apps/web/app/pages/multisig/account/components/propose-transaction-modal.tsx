@@ -58,9 +58,15 @@ function getAmountError(
   return undefined;
 }
 
-function getRecipientError(recipient: string, isValid: boolean): string | undefined {
+function getRecipientError(
+  recipient: string,
+  isValid: boolean,
+  isSelf: boolean
+): string | undefined {
   if (!recipient.trim()) return undefined;
-  return isValid ? undefined : 'Enter a valid address';
+  if (!isValid) return 'Enter a valid address';
+  if (isSelf) return 'Cannot send to yourself';
+  return undefined;
 }
 
 interface ProposeFormFieldsProps {
@@ -247,7 +253,8 @@ function BtcProposeForm({
   const balance = useVaultAccountBalance(account);
   const recipientError = getRecipientError(
     recipient,
-    Boolean(recipientAddress) && isValidBitcoinNetworkAddress(recipientAddress ?? '', mode)
+    Boolean(recipientAddress) && isValidBitcoinNetworkAddress(recipientAddress ?? '', mode),
+    recipientAddress === account.multisigAddress
   );
   const amountError = getAmountError(amountInput, amount, balance.crypto);
   const feesQuery = useVaultBtcTransactionFees({
@@ -341,7 +348,8 @@ function StxProposeForm({
   const sip10Asset = selectedItem?.asset.protocol === 'sip10' ? selectedItem.asset : undefined;
   const recipientError = getRecipientError(
     recipient,
-    Boolean(recipientAddress) && isValidStacksAddress(recipient.trim())
+    Boolean(recipientAddress) && isValidStacksAddress(recipient.trim()),
+    recipientAddress === account.multisigAddress
   );
   const amountError = getAmountError(amountInput, amount, selectedItem?.crypto);
   const feesQuery = useVaultStxTransactionFees({
