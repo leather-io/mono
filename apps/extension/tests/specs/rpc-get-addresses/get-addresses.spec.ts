@@ -1,6 +1,9 @@
 import type { BrowserContext, Page } from '@playwright/test';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
-import { makeLedgerTestAccountWalletState } from '@tests/page-object-models/onboarding.page';
+import {
+  makeLedgerTestAccountWalletState,
+  testFingerprint,
+} from '@tests/page-object-models/onboarding.page';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 
@@ -35,6 +38,7 @@ function getExpectedResponseForKeys(keys: SupportedBlockchains[]) {
       derivationPath: "m/84'/0'/0'/0/0",
       descriptor:
         'wpkh(xpub6BuKrNqTrGfsy8VAAdUW2KCxbHywuSKjg7hZuAXERXDv7GfuxUgUWdVRKNsgujcwdjEHCjaXWouPKi1m5gMgdWX8JpRcyMkrSxPe4Da3Lx8)',
+      fingerprint: testFingerprint,
     },
     {
       symbol: 'BTC',
@@ -45,6 +49,7 @@ function getExpectedResponseForKeys(keys: SupportedBlockchains[]) {
       derivationPath: "m/86'/0'/0'/0/0",
       descriptor:
         'tr(xpub6C4MQD2bVDTfdnVe5AYKB6gE7BE4yQeKBRgukQ4Hi3phDB5fCYKEAdViQ2n7kZQ1t728QV4wKGgiR5qGigjNNrm5DCGWYUZDRVNWYb8ZWGK)',
+      fingerprint: testFingerprint,
     },
   ];
   const stacksKeys = [

@@ -14,6 +14,7 @@ export function createMockGetAddressesResponse(id: string) {
           derivationPath: "m/84'/0'/0'/0/0",
           descriptor:
             'wpkh(xpub6BuKrNqTrGfsy8VAAdUW2KCxbHywuSKjg7hZuAXERXDv7GfuxUgUWdVRKNsgujcwdjEHCjaXWouPKi1m5gMgdWX8JpRcyMkrSxPe4Da3Lx8)',
+          fingerprint: 'e87a850b',
         },
         {
           symbol: 'BTC',
@@ -24,6 +25,7 @@ export function createMockGetAddressesResponse(id: string) {
           derivationPath: "m/86'/0'/0'/0/0",
           descriptor:
             'tr(xpub6C4MQD2bVDTfdnVe5AYKB6gE7BE4yQeKBRgukQ4Hi3phDB5fCYKEAdViQ2n7kZQ1t728QV4wKGgiR5qGigjNNrm5DCGWYUZDRVNWYb8ZWGK)',
+          fingerprint: 'e87a850b',
         },
         {
           symbol: 'STX',
