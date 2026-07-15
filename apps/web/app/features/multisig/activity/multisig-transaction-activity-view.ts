@@ -12,16 +12,23 @@ import type {
   MultisigTransactionStatus,
   MultisigTransactionSummary,
   OnChainActivityStatus,
+  Sip10Asset,
   StacksProtocolAction,
   StacksProtocolId,
 } from '@leather.io/models';
-import { assertUnreachable, baseCurrencyAmountInQuote } from '@leather.io/utils';
+import { assertUnreachable, baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import {
   type DecodedProposalPayload,
   type ProposalPayloadContext,
   decodeProposalPayload,
+  matchesProposalTokenAsset,
 } from '../transactions/decode-proposal-summary';
+
+export interface ProposalTokenInfo {
+  asset: Sip10Asset;
+  marketData?: MarketData;
+}
 
 export function mapMultisigTransactionStatus(
   status: MultisigTransactionStatus
@@ -71,6 +78,7 @@ interface CreateMultisigTransactionActivityViewOptions {
     contractId: string,
     functionName: string
   ): MultisigActivityClassification | undefined;
+  getTokenInfo?(contractId: string): ProposalTokenInfo | undefined;
 }
 
 interface ActivityCommonFields {
@@ -101,6 +109,43 @@ function buildProposalActivity(
           options.marketData
         ),
       };
+    case 'sip10Transfer': {
+      const token = options.getTokenInfo?.(payload.token.contractId);
+      if (!token || !matchesProposalTokenAsset(token.asset, payload.token.assetName))
+        return {
+          ...common,
+          action: 'contract-execution',
+          fee: payload.fee,
+          contract: {
+            type: 'call',
+            contractId: payload.token.contractId,
+            functionName: 'transfer',
+          },
+          balanceChanges: [],
+        };
+      const crypto = createMoney(
+        payload.token.baseUnitAmount,
+        token.asset.symbol,
+        token.asset.decimals
+      );
+      const quote =
+        token.marketData && token.marketData.pair.base === crypto.symbol
+          ? baseCurrencyAmountInQuote(crypto, token.marketData)
+          : createMoney(0, 'USD');
+      return {
+        ...common,
+        action: 'send',
+        counterparty: payload.recipient,
+        fee: payload.fee,
+        balanceChanges: [
+          {
+            direction: 'sent',
+            asset: token.asset,
+            amount: { crypto, quote },
+          },
+        ],
+      };
+    }
     case 'contractCall': {
       const classification = options.classifyContract?.(payload.contractId, payload.functionName);
       return {
