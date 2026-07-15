@@ -77,8 +77,9 @@ export function useUpdateVaultAccount(network: AuthNetworkId, vaultId: string) {
     mutationFn({ accountId, update }) {
       return getMultisigService().updateVaultAccount(network, accountId, update);
     },
-    onMutate({ accountId, update }) {
+    async onMutate({ accountId, update }) {
       const key = multisigVaultKeys.account(network, address, accountId);
+      await queryClient.cancelQueries({ queryKey: key });
       const previous = queryClient.getQueryData<VaultAccount>(key);
       if (previous) queryClient.setQueryData<VaultAccount>(key, { ...previous, name: update.name });
       return { previous };
