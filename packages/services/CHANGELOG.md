@@ -413,6 +413,23 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.60.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.60.0...@leather.io/services-v1.60.1) (2026-07-15)
+
+
+### Bug Fixes
+
+* **extension:** propose transaction to staging ([#2507](https://github.com/leather-io/mono/issues/2507)) ([b0677ae](https://github.com/leather-io/mono/commit/b0677ae1cee2e097f24f2bcb087426f8168068ec))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.39.2
+    * @leather.io/stacks bumped to 1.22.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.24.1
+
 ## [1.60.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.59.0...@leather.io/services-v1.60.0) (2026-07-15)
 
 

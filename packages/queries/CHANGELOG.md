@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.14.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.13.0...@leather.io/queries-v0.14.0) (2026-07-15)
+
+
+### Features
+
+* multisig sip10 transfers ([#2502](https://github.com/leather-io/mono/issues/2502)) ([4550325](https://github.com/leather-io/mono/commit/455032542e11e1d13eb40b8567feddd060f528c7))
+
+
+### Bug Fixes
+
+* **extension:** propose transaction to staging ([#2507](https://github.com/leather-io/mono/issues/2507)) ([b0677ae](https://github.com/leather-io/mono/commit/b0677ae1cee2e097f24f2bcb087426f8168068ec))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.60.1
+
 ## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.12.0...@leather.io/queries-v0.13.0) (2026-07-15)
 
 

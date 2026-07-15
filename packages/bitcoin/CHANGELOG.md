@@ -939,6 +939,15 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.39.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.39.1...@leather.io/bitcoin-v0.39.2) (2026-07-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/rpc bumped to 2.24.1
+
 ## [0.39.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.39.0...@leather.io/bitcoin-v0.39.1) (2026-07-15)
 
 
