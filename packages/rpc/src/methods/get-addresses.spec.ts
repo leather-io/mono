@@ -15,6 +15,7 @@ describe('getAddresses', () => {
     publicKey: '02d9b4b6e',
     derivationPath: "m/44'/0'/0'/0/0",
     descriptor: 'wpkh(testing-xpub)',
+    fingerprint: 'e87a850b',
   };
 
   const baseRespnseBodyStx = {
@@ -51,6 +52,18 @@ describe('getAddresses', () => {
         additionalProperties: 'should not be allowed',
       });
       expect(result.success).toEqual(true);
+    });
+
+    test('schema requires a fingerprint', () => {
+      const result = btcAddressBaseSchema.safeParse({
+        symbol: baseRespnseBodyBtc.symbol,
+        type: baseRespnseBodyBtc.type,
+        address: baseRespnseBodyBtc.address,
+        publicKey: baseRespnseBodyBtc.publicKey,
+        derivationPath: baseRespnseBodyBtc.derivationPath,
+        descriptor: baseRespnseBodyBtc.descriptor,
+      });
+      expect(result.success).toEqual(false);
     });
   });
 

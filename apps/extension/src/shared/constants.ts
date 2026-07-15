@@ -7,7 +7,10 @@ export const GITHUB_REPO = 'extension';
 // btc_addAccount / stx_addAccount. Any other origin can still open the approver,
 // but only to let the user verify the derived address — nothing is registered.
 // TODO: set the real multisig dApp origin(s) before shipping the policy methods
-const POLICY_ALLOWED_ORIGINS: readonly string[] = ['https://app.leather.io'];
+const POLICY_ALLOWED_ORIGINS: readonly string[] = [
+  'https://app.leather.io',
+  'https://dev-leather-web.wallet-6d1.workers.dev',
+];
 
 const LOOPBACK_HOSTNAMES: readonly string[] = ['localhost', '127.0.0.1', '[::1]'];
 

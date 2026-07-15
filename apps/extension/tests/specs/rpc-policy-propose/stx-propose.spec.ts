@@ -18,10 +18,7 @@ import {
   makeStacksPolicy,
   policyStateOverrides,
 } from '@tests/mocks/mock-policies';
-import {
-  getConnectedTestAppPermissionsState,
-  testFingerprint,
-} from '@tests/page-object-models/onboarding.page';
+import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 import { truncateMiddle } from '@leather.io/utils';
@@ -84,8 +81,8 @@ test.describe('RPC: stx_callContract from a policy (multisig) account', () => {
     await mockProposeMultisigTransaction(context);
     await mockFundedStacksAddress(context, stacksPolicy.address);
     await onboardingPage.signInWithTestAccount(extensionId, {
-      ...getConnectedTestAppPermissionsState(),
-      ...policyStateOverrides({ policies: [stacksPolicy], activePolicyId: stacksPolicy.id }),
+      ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
+      ...policyStateOverrides({ policies: [stacksPolicy] }),
     });
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });
@@ -151,27 +148,15 @@ test.describe('RPC: stx_callContract from a policy (multisig) account', () => {
   });
 });
 
-test.describe('RPC: stx_callContract signer defaults to the policy owner account', () => {
+test.describe('RPC: stx_callContract acts on the per-origin policy binding', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await mockProposeMultisigTransaction(context);
     await mockFundedStacksAddress(context, stacksPolicy.address);
     await onboardingPage.signInWithTestAccount(extensionId, {
-      appPermissions: {
-        ids: ['localhost:3000'],
-        entities: {
-          'localhost:3000': {
-            origin: 'localhost:3000',
-            fingerprint: testFingerprint,
-            accountIndex: 1,
-            requestedAccounts: '2024-01-01T00:00:00.000Z',
-            networkMode: 'mainnet',
-          },
-        },
-      },
+      ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
       ...policyStateOverrides({
         policies: [stacksPolicy],
-        activePolicyId: stacksPolicy.id,
         names: { [stacksPolicy.id]: 'Family vault' },
       }),
     });

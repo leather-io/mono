@@ -4,6 +4,7 @@ import { ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
 import { BtcAddress, StxAddress, getAddresses } from '@leather.io/rpc';
 
 interface FormatAddressesForGetAddresses {
+  fingerprint: string;
   taproot: {
     address: string;
     publicKey: Uint8Array;
@@ -24,6 +25,7 @@ interface FormatAddressesForGetAddresses {
 
 // We could think of making the arguments optional here.
 export function formatAddressesForGetAddresses({
+  fingerprint,
   taproot,
   nativeSegwit,
   stacksAccount,
@@ -36,6 +38,7 @@ export function formatAddressesForGetAddresses({
     publicKey: bytesToHex(nativeSegwit.publicKey),
     derivationPath: nativeSegwit.derivationPath,
     descriptor: nativeSegwit.descriptor ?? '',
+    fingerprint,
   };
 
   keysToIncludeInResponse.push(nativeSegwitAddressResponse);
@@ -48,6 +51,7 @@ export function formatAddressesForGetAddresses({
     tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taproot.publicKey)),
     derivationPath: taproot.derivationPath,
     descriptor: taproot.descriptor ?? '',
+    fingerprint,
   };
   keysToIncludeInResponse.push(taprootAddressResponse);
 

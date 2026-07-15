@@ -122,10 +122,9 @@ test.describe('RPC: sendTransfer with an active Bitcoin multisig policy account'
     await onboardingPage.signInWithTestAccount(extensionId, {
       ...policyStateOverrides({
         policies: [bitcoinPolicy],
-        activePolicyId: bitcoinPolicy.id,
         names: { [bitcoinPolicy.id]: 'Bitcoin vault' },
       }),
-      ...getConnectedTestAppPermissionsState(),
+      ...getConnectedTestAppPermissionsState({ policyId: bitcoinPolicy.id }),
     });
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });

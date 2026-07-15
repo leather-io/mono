@@ -9,7 +9,7 @@ import { assumedZeroFingerprint } from '@shared/utils';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { RootState } from '@app/store';
 
-import { selectActiveAccount, selectActivePolicyId } from '../active/active.selectors';
+import { selectActiveAccount } from '../active/active.selectors';
 import { selectHasSwitched } from '../ui/ui.selectors';
 import { selectWalletEntities } from '../wallets/wallet.selectors';
 import { keyAdapter } from './software-key.slice';
@@ -22,14 +22,13 @@ export const selectCurrentAccount = createSelector(
   selectActiveAccount,
   selectHasSwitched,
   selectWalletEntities,
-  selectActivePolicyId,
-  (activeAccount, hasSwitched, walletEntities, activePolicyId) => {
+  (activeAccount, hasSwitched, walletEntities) => {
     const fallback = {
       fingerprint: activeAccount?.fingerprint ?? assumedZeroFingerprint,
       accountIndex: activeAccount?.accountIndex ?? 0,
     };
 
-    const ignoreSearchParams = hasSwitched || Boolean(activePolicyId);
+    const ignoreSearchParams = hasSwitched;
     const customAccountIndex = ignoreSearchParams ? null : initialSearchParams.get('accountIndex');
     const customFingerprint = ignoreSearchParams ? null : initialSearchParams.get('fingerprint');
 

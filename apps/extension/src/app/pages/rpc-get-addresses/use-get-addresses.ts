@@ -20,6 +20,8 @@ import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { useFlags } from '@app/features/feature-flags';
+import { persistor } from '@app/store';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import {
   useCurrentAccountNativeSegwitPayer,
   useCurrentNativeSegwitAccount,
@@ -67,6 +69,7 @@ export function useGetAddresses() {
   const { frameId, tabId, origin, request } = useGetAddressesParams();
   const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
   const createTaprootPayer = useCurrentAccountTaprootPayer();
+  const currentAccount = useCurrentAccountId();
   const stacksAccount = useCurrentStacksAccount();
   const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
   const { releaseAddAccount, enableAllowPolicyAccounts } = useFlags();
@@ -84,7 +87,7 @@ export function useGetAddresses() {
     origin,
     allowPolicyAccounts,
     focusInitiatingTab,
-    onUserApproveGetAddresses() {
+    async onUserApproveGetAddresses() {
       if (!tabId || !origin) {
         logger.error('Cannot give app accounts: missing tabId, origin');
         return;
@@ -92,26 +95,28 @@ export function useGetAddresses() {
 
       analytics.track('user_approved_get_addresses', { origin });
 
-      permissions.hasRequestedAccounts(origin);
+      const connectedPolicy = allowPolicyAccounts && currentPolicy ? currentPolicy : null;
+
+      permissions.hasRequestedAccounts(origin, connectedPolicy?.id);
 
       const keysToIncludeInResponse = [];
 
-      if (allowPolicyAccounts && currentPolicy) {
-        if (currentPolicy.chain === 'bitcoin') {
+      if (connectedPolicy) {
+        if (connectedPolicy.chain === 'bitcoin') {
           const policyAddressResponse: BtcAddress = {
             symbol: 'BTC',
             type: 'p2wsh',
-            address: currentPolicy.address,
-            descriptor: currentPolicy.descriptor,
+            address: connectedPolicy.address,
+            descriptor: connectedPolicy.descriptor,
           };
           keysToIncludeInResponse.push(policyAddressResponse);
         } else {
           const multisigStacksAddressResponse: StxAddress = {
             symbol: 'STX',
             kind: 'multisig',
-            address: currentPolicy.address,
-            threshold: currentPolicy.threshold,
-            publicKeys: currentPolicy.publicKeys,
+            address: connectedPolicy.address,
+            threshold: connectedPolicy.threshold,
+            publicKeys: connectedPolicy.publicKeys,
           };
           keysToIncludeInResponse.push(multisigStacksAddressResponse);
         }
@@ -129,6 +134,7 @@ export function useGetAddresses() {
             publicKey: bytesToHex(nativeSegwitSigner.publicKey),
             derivationPath: keyOriginToDerivationPath(nativeSegwitSigner.keyOrigin),
             descriptor: nativeSegwitDescriptor ?? '',
+            fingerprint: currentAccount.fingerprint,
           };
 
           keysToIncludeInResponse.push(nativeSegwitAddressResponse);
@@ -144,6 +150,7 @@ export function useGetAddresses() {
             tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taprootPayer.publicKey)),
             derivationPath: keyOriginToDerivationPath(taprootPayer.keyOrigin),
             descriptor: taprootDescriptor ?? '',
+            fingerprint: currentAccount.fingerprint,
           };
           keysToIncludeInResponse.push(taprootAddressResponse);
         }
@@ -159,6 +166,8 @@ export function useGetAddresses() {
           keysToIncludeInResponse.push(stacksAddressResponse);
         }
       }
+
+      await persistor.flush();
 
       void sendMessageToOriginatingFrame(
         { frameId, tabId },
