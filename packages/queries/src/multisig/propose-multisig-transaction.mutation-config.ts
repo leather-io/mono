@@ -11,10 +11,12 @@ import {
 export type ProposeMultisigTransactionArgs = Omit<WalletProposeArgs, 'signProposalCommitment'>;
 
 interface CreateProposeMultisigTransactionMutationConfigArgs {
+  baseUrl?: string;
   signProposalCommitment: SignProposalCommitment;
 }
 
 export function createProposeMultisigTransactionMutationConfig({
+  baseUrl,
   signProposalCommitment,
 }: CreateProposeMultisigTransactionMutationConfigArgs) {
   return {
@@ -26,7 +28,7 @@ export function createProposeMultisigTransactionMutationConfig({
         rawPayload,
         signProposalCommitment,
       });
-      return getMultisigService().proposeTransaction(request);
+      return getMultisigService().proposeTransaction(request, undefined, baseUrl);
     },
   } satisfies UseMutationOptions<MultisigTransaction, Error, ProposeMultisigTransactionArgs>;
 }

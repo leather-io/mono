@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { type StacksTransactionWire } from '@stacks/transactions';
 import { useMutation } from '@tanstack/react-query';
 
+import { LEATHER_API_URL_STAGING } from '@leather.io/constants';
 import { createProposeMultisigTransactionMutationConfig } from '@leather.io/queries';
 import { type RpcMethodNames, createRpcSuccessResponse } from '@leather.io/rpc';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
@@ -44,7 +45,10 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
   const { pathname } = useLocation();
   const signProposalCommitment = useSignProposalCommitment();
   const { mutateAsync: proposeMultisigTransaction } = useMutation(
-    createProposeMultisigTransactionMutationConfig({ signProposalCommitment })
+    createProposeMultisigTransactionMutationConfig({
+      baseUrl: LEATHER_API_URL_STAGING,
+      signProposalCommitment,
+    })
   );
 
   return useCallback(

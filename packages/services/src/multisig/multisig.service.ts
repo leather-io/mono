@@ -215,8 +215,9 @@ export class MultisigService {
 
   async proposeTransaction(
     request: ProposeTransactionRequest,
-    signal?: AbortSignal
+    signal?: AbortSignal,
+    baseUrl?: string
   ): Promise<MultisigTransaction> {
-    return this.apiClient.proposeMultisigTransaction(request, { signal });
+    return this.apiClient.proposeMultisigTransaction(request, { baseUrl, signal });
   }
 }
