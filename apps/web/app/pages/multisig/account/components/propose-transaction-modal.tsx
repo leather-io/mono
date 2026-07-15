@@ -14,7 +14,14 @@ import { useToast } from '~/features/toasts/use-toast';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
-import type { Money, MultisigTransaction, VaultAccount } from '@leather.io/models';
+import {
+  type Money,
+  type MultisigTransaction,
+  type TransactionFeeTier,
+  type TransactionFees,
+  type VaultAccount,
+  transactionFeeTiers,
+} from '@leather.io/models';
 import { isValidStacksAddress } from '@leather.io/stacks';
 import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 import { btcToSat, createMoney, stxToMicroStx } from '@leather.io/utils';
@@ -51,6 +58,69 @@ function getRecipientError(recipient: string, isValid: boolean): string | undefi
   return isValid ? undefined : 'Enter a valid address';
 }
 
+function feeTierValues(fees?: TransactionFees): Record<TransactionFeeTier, Money> | undefined {
+  if (!fees) return undefined;
+  return {
+    low: fees.options.low.value,
+    standard: fees.options.standard.value,
+    high: fees.options.high.value,
+  };
+}
+
+function FeeTierSelector({
+  options,
+  selected,
+  onSelect,
+}: {
+  options?: Record<TransactionFeeTier, Money>;
+  selected: TransactionFeeTier;
+  onSelect(tier: TransactionFeeTier): void;
+}) {
+  return (
+    <Flex direction="column" gap="space.02">
+      <styled.span textStyle="caption.01" color="ink.text-subdued">
+        Network fee
+      </styled.span>
+      <Flex gap="space.02">
+        {transactionFeeTiers.map(tier => {
+          const isSelected = tier === selected;
+          const money = options?.[tier];
+          return (
+            <styled.button
+              key={tier}
+              type="button"
+              onClick={() => onSelect(tier)}
+              flex={1}
+              display="flex"
+              flexDirection="column"
+              alignItems="flex-start"
+              gap="space.01"
+              p="space.02"
+              borderRadius="sm"
+              borderWidth="1px"
+              borderStyle="solid"
+              borderColor={isSelected ? 'ink.text-primary' : 'ink.border-default'}
+              bg={isSelected ? 'ink.component-background-hover' : 'transparent'}
+              cursor="pointer"
+            >
+              <styled.span
+                textStyle="caption.01"
+                textTransform="capitalize"
+                color={isSelected ? 'ink.text-primary' : 'ink.text-subdued'}
+              >
+                {tier}
+              </styled.span>
+              <styled.span textStyle="label.03">
+                {money ? <Balance balance={money} formatCurrency={formatCurrency} /> : '—'}
+              </styled.span>
+            </styled.button>
+          );
+        })}
+      </Flex>
+    </Flex>
+  );
+}
+
 interface ProposeFormFieldsProps {
   memberCount: number;
   unit: string;
@@ -61,7 +131,9 @@ interface ProposeFormFieldsProps {
   amountInput: string;
   onAmount(value: string): void;
   available?: Money;
-  fee?: Money;
+  feeOptions?: Record<TransactionFeeTier, Money>;
+  feeTier: TransactionFeeTier;
+  onFeeTier(tier: TransactionFeeTier): void;
   threshold: number;
   signerCount: number;
   isProposing: boolean;
@@ -83,7 +155,9 @@ function ProposeFormFields({
   amountInput,
   onAmount,
   available,
-  fee,
+  feeOptions,
+  feeTier,
+  onFeeTier,
   threshold,
   signerCount,
   isProposing,
@@ -172,14 +246,7 @@ function ProposeFormFields({
         borderRadius="md"
         bg="ink.background-secondary"
       >
-        <Flex justifyContent="space-between" gap="space.04">
-          <styled.span textStyle="caption.01" color="ink.text-subdued">
-            Network fee
-          </styled.span>
-          <styled.span textStyle="label.02">
-            ~<Balance balance={fee} formatCurrency={formatCurrency} />
-          </styled.span>
-        </Flex>
+        <FeeTierSelector options={feeOptions} selected={feeTier} onSelect={onFeeTier} />
         <Flex justifyContent="space-between" gap="space.04">
           <styled.span textStyle="caption.01" color="ink.text-subdued">
             Threshold
@@ -240,7 +307,9 @@ function BtcProposeForm({
     amount: amountError ? undefined : amount,
   });
   const propose = useProposeTransaction(account.network);
-  const feeQuote = feesQuery.data?.options.standard;
+  const [feeTier, setFeeTier] = useState<TransactionFeeTier>('standard');
+  const feeQuote = feesQuery.data?.options[feeTier];
+  const feeOptions = feeTierValues(feesQuery.data);
 
   async function submit() {
     if (!recipientAddress || !amount || feeQuote === undefined || recipientError || amountError)
@@ -280,7 +349,9 @@ function BtcProposeForm({
       amountInput={amountInput}
       onAmount={setAmountInput}
       available={balance.crypto}
-      fee={feeQuote?.value}
+      feeOptions={feeOptions}
+      feeTier={feeTier}
+      onFeeTier={setFeeTier}
       threshold={account.threshold}
       signerCount={account.signers.length}
       isProposing={propose.isPending}
@@ -325,7 +396,9 @@ function StxProposeForm({
     amount: amountError ? undefined : amount,
   });
   const propose = useProposeTransaction(account.network);
-  const fee = feesQuery.data?.options.standard.value;
+  const [feeTier, setFeeTier] = useState<TransactionFeeTier>('standard');
+  const fee = feesQuery.data?.options[feeTier].value;
+  const feeOptions = feeTierValues(feesQuery.data);
 
   async function submit() {
     if (!recipientAddress || !amount || !fee || recipientError || amountError) return;
@@ -360,7 +433,9 @@ function StxProposeForm({
       amountInput={amountInput}
       onAmount={setAmountInput}
       available={balance.crypto}
-      fee={fee}
+      feeOptions={feeOptions}
+      feeTier={feeTier}
+      onFeeTier={setFeeTier}
       threshold={account.threshold}
       signerCount={account.signers.length}
       isProposing={propose.isPending}

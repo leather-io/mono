@@ -41,12 +41,10 @@ import type {
 import { baseCurrencyAmountInQuote, truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../components/avatar-circle';
-import { Badge } from '../components/badge';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
 import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
-import { transactionStatusBadge } from '../components/transaction-status';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { SignerRollcall } from './components/signer-rollcall';
@@ -249,10 +247,6 @@ export function TxDetailPage() {
     ? { verb: 'Broadcast', when: formatRelativeTime(new Date(tx.broadcastAt)) }
     : { verb: 'Proposed', when: initiationDate };
   const effectiveStatus = reconcileStatus(tx.status, onChain.status);
-  const awaitingMySignature = isAwaitingSignatureFrom(tx, acct, me.data?.address);
-  const heroStatus = awaitingMySignature
-    ? { label: 'Awaiting your signature', variant: 'pending' as const }
-    : transactionStatusBadge(effectiveStatus);
 
   function showSigningError(err: Error) {
     const message = err.message?.trim();
@@ -307,11 +301,7 @@ export function TxDetailPage() {
                 </Flex>
               </Flex>
             }
-          >
-            <Box mt="space.03">
-              <Badge variant={heroStatus.variant} label={heroStatus.label} />
-            </Box>
-          </MultisigHero>
+          />
           <SectionLabel>Transaction details</SectionLabel>
           <TxDetailsTable
             transaction={tx}

@@ -2,7 +2,11 @@ import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-q
 import { useToast } from '~/features/toasts/use-toast';
 
 import type { AuthNetworkId, Vault, VaultAccount, VaultAccountSummary } from '@leather.io/models';
-import { LeatherApiError, getMultisigService } from '@leather.io/services';
+import {
+  LeatherApiError,
+  type UpdateVaultAccountRequest,
+  getMultisigService,
+} from '@leather.io/services';
 
 import { useSession } from '../auth/use-session';
 import { nextAccountIndexForThreshold } from './vault-account-index';
@@ -55,6 +59,42 @@ export function useCreateVaultAccount(network: AuthNetworkId, vaultId: string) {
       });
       void queryClient.invalidateQueries({
         queryKey: multisigVaultKeys.detail(network, address, vaultId),
+      });
+    },
+  });
+}
+
+export function useUpdateVaultAccount(network: AuthNetworkId, vaultId: string) {
+  const queryClient = useQueryClient();
+  const address = useSession(network)?.identity.address;
+  return useMutation<
+    VaultAccount,
+    Error,
+    { accountId: string; update: UpdateVaultAccountRequest },
+    { previous: VaultAccount | undefined }
+  >({
+    mutationKey: ['multisig-update-vault-account', network, vaultId],
+    mutationFn({ accountId, update }) {
+      return getMultisigService().updateVaultAccount(network, accountId, update);
+    },
+    onMutate({ accountId, update }) {
+      const key = multisigVaultKeys.account(network, address, accountId);
+      const previous = queryClient.getQueryData<VaultAccount>(key);
+      if (previous) queryClient.setQueryData<VaultAccount>(key, { ...previous, name: update.name });
+      return { previous };
+    },
+    onError(_error, { accountId }, context) {
+      if (context?.previous) {
+        queryClient.setQueryData(
+          multisigVaultKeys.account(network, address, accountId),
+          context.previous
+        );
+      }
+    },
+    onSuccess(account, { accountId }) {
+      queryClient.setQueryData(multisigVaultKeys.account(network, address, accountId), account);
+      void queryClient.invalidateQueries({
+        queryKey: multisigVaultKeys.accounts(network, address, vaultId),
       });
     },
   });

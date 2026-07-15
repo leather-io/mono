@@ -97,7 +97,10 @@ function renderStatusChip(item: VaultActivityItem): ReactNode {
   const backendInFlight = mapMultisigTransactionStatus(multisig.transaction.status) === 'pending';
   if (backendInFlight && item.view.status !== 'pending') return undefined;
 
-  const { status, approvalCount } = multisig.transaction;
+  const { status, approvalCount, signedByMe } = multisig.transaction;
+  if (status === 'pending' && !signedByMe) {
+    return <Badge label="Awaiting your signature" variant="pending" size="sm" />;
+  }
   const display = transactionStatusBadge(status);
   const label =
     status === 'pending' && multisig.threshold !== undefined

@@ -13,6 +13,7 @@ import { getMultisigDescriptor } from '~/features/multisig/transactions/btc-mult
 import { getOrderedSigningPubkeys } from '~/features/multisig/transactions/derive-multisig-address';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
+import { useUpdateVaultAccount } from '~/features/multisig/vaults/use-vault-account-mutations';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
@@ -23,6 +24,7 @@ import { isLeatherInstalled } from '~/utils/utils';
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
 import { PlusIcon } from '@leather.io/ui';
 
+import { EditableName } from '../components/editable-name';
 import { InlineTabs } from '../components/inline-tabs';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
@@ -67,6 +69,7 @@ export function AccountDetailPage() {
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accountBalance = useVaultAccountBalance(account.data);
   const accountAssets = useVaultAccountAssets(account.data);
+  const updateAccount = useUpdateVaultAccount(network, vaultId ?? '');
 
   const btcSession = useSession(btcNetwork);
   const stxSession = useSession(stxNetwork);
@@ -140,7 +143,17 @@ export function AccountDetailPage() {
   }
 
   return (
-    <MultisigPage title="Vault account" backTo={multisigPaths.vault(vault.data.id)}>
+    <MultisigPage
+      title={
+        <EditableName
+          value={account.data.name}
+          onSave={name => updateAccount.mutate({ accountId: account.data.id, update: { name } })}
+          title="Rename account"
+          label="account name"
+        />
+      }
+      backTo={multisigPaths.vault(vault.data.id)}
+    >
       <Flex
         direction={['column', 'column', 'row']}
         gap={['space.06', 'space.06', 'space.08', 'space.10']}

@@ -75,12 +75,14 @@ export function VaultActivityList({
         }}
       >
         {visibleItems.map(item => {
-          const needsAttention = Boolean(item.multisig) && item.view.status === 'pending';
+          const needsAttention = Boolean(
+            item.multisig && item.view.status === 'pending' && !item.multisig.transaction.signedByMe
+          );
           const link = resolveRowLink(item, onSelect, navigate);
           const location = resolveLocation(item, vaultNamesById, accountNamesById);
           return (
             <VaultActivityRow
-              key={item.view.key}
+              key={`${item.view.key}:${item.vaultAccountId ?? ''}`}
               item={item}
               scale={scale}
               needsAttention={needsAttention}
