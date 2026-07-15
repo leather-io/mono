@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.12.0...@leather.io/queries-v0.13.0) (2026-07-15)
+
+
+### Features
+
+* multisig asset list and token details ([#2493](https://github.com/leather-io/mono/issues/2493)) ([32a441a](https://github.com/leather-io/mono/commit/32a441a0168023db7f113ed4f12a55f0415a4441))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.60.0
+    * @leather.io/services bumped to 1.60.0
+    * @leather.io/utils bumped to 0.52.2
+
 ## [0.12.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.11.0...@leather.io/queries-v0.12.0) (2026-07-10)
 
 
