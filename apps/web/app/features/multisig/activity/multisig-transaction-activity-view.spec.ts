@@ -1,9 +1,19 @@
-import { privateKeyToPublic, publicKeyToHex } from '@stacks/transactions';
+import {
+  Pc,
+  PostConditionMode,
+  noneCV,
+  principalCV,
+  privateKeyToPublic,
+  publicKeyToHex,
+  serializeCV,
+  uintCV,
+} from '@stacks/transactions';
 
 import {
   type MultisigTransactionStatus,
   type MultisigTransactionSummary,
   type OnChainActivityStatus,
+  type Sip10Asset,
   createMarketData,
   createMarketPair,
 } from '@leather.io/models';
@@ -54,6 +64,48 @@ async function generateContractCallPayload() {
   return tx.serialize();
 }
 
+const tokenContractId = 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token';
+
+const sbtcAsset: Sip10Asset = {
+  category: 'fungible',
+  chain: 'stacks',
+  protocol: 'sip10',
+  name: 'sBTC',
+  symbol: 'sBTC',
+  decimals: 8,
+  hasMemo: true,
+  canTransfer: true,
+  assetId: `${tokenContractId}::sbtc-token`,
+  contractId: tokenContractId,
+  imageCanonicalUri: '',
+};
+
+async function generateSip10TransferPayload() {
+  const functionArgs = [
+    uintCV(2_500_000),
+    principalCV(stxContext.multisigAddress),
+    principalCV(recipient),
+    noneCV(),
+  ];
+  const tx = await generateStacksUnsignedTransaction({
+    txType: TransactionTypes.ContractCall,
+    contractAddress: 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT',
+    contractName: 'sbtc-token',
+    functionName: 'transfer',
+    functionArgs: functionArgs.map(arg => serializeCV(arg)),
+    postConditionMode: PostConditionMode.Deny,
+    postConditions: [
+      Pc.principal(stxContext.multisigAddress)
+        .willSendEq(2_500_000)
+        .ft(tokenContractId, 'sbtc-token'),
+    ],
+    fee: createMoney(250, 'STX'),
+    nonce: 0,
+    publicKey: publicKeys[0],
+  });
+  return tx.serialize();
+}
+
 async function generateContractDeployPayload() {
   const tx = await generateStacksUnsignedTransaction({
     txType: TransactionTypes.ContractDeploy,
@@ -87,6 +139,62 @@ function makeTransaction(
 }
 
 describe(createMultisigTransactionActivityView.name, () => {
+  test('builds a token send view when the token asset resolves', async () => {
+    const rawPayload = await generateSip10TransferPayload();
+    const view = createMultisigTransactionActivityView(stxContext, makeTransaction(), {
+      rawPayload,
+      getTokenInfo: () => ({ asset: sbtcAsset }),
+    });
+
+    expect(view.action).toBe('send');
+    expect(view.status).toBe('pending');
+    expect(view.subtitle).toBe(`Sending to ${truncateMiddle(recipient)}`);
+    expect(view.amount?.direction).toBe('sent');
+    expect(view.amount?.crypto?.amount.toNumber()).toBe(2_500_000);
+    expect(view.amount?.crypto?.decimals).toBe(8);
+    expect(view.amount?.crypto?.symbol).toBe('sBTC');
+  });
+
+  test('quotes the token send in fiat when market data is available', async () => {
+    const rawPayload = await generateSip10TransferPayload();
+    const view = createMultisigTransactionActivityView(stxContext, makeTransaction(), {
+      rawPayload,
+      getTokenInfo: () => ({
+        asset: sbtcAsset,
+        marketData: createMarketData(
+          createMarketPair('sBTC', 'USD'),
+          createMoney(5_000_000, 'USD')
+        ),
+      }),
+    });
+
+    expect(view.amount?.quote.symbol).toBe('USD');
+    expect(view.amount?.quote.amount.toNumber()).toBe(125_000);
+  });
+
+  test('falls back to a contract call view when the token is unknown', async () => {
+    const rawPayload = await generateSip10TransferPayload();
+    const view = createMultisigTransactionActivityView(stxContext, makeTransaction(), {
+      rawPayload,
+    });
+
+    expect(view.action).toBe('contract-execution');
+    expect(view.amount).toBeUndefined();
+  });
+
+  test('falls back to a contract call view when the resolved asset names a different token', async () => {
+    const rawPayload = await generateSip10TransferPayload();
+    const view = createMultisigTransactionActivityView(stxContext, makeTransaction(), {
+      rawPayload,
+      getTokenInfo: () => ({
+        asset: { ...sbtcAsset, assetId: `${tokenContractId}::other-token` },
+      }),
+    });
+
+    expect(view.action).toBe('contract-execution');
+    expect(view.amount).toBeUndefined();
+  });
+
   test('builds the full send view from a decoded payload and market data', async () => {
     const rawPayload = await generateStxTransferPayload();
     const view = createMultisigTransactionActivityView(stxContext, makeTransaction(), {

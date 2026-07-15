@@ -6,7 +6,10 @@ import { Box, Flex } from 'leather-styles/jsx';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
-import { decodeProposalSummary } from '~/features/multisig/transactions/decode-proposal-summary';
+import {
+  decodeProposalSummary,
+  matchesProposalTokenAsset,
+} from '~/features/multisig/transactions/decode-proposal-summary';
 import { useContractProtocolName } from '~/features/multisig/transactions/use-contract-protocol';
 import { useOnChainTransaction } from '~/features/multisig/transactions/use-onchain-transaction';
 import {
@@ -38,7 +41,11 @@ import type {
   StacksProtocolAction,
   VaultAccount,
 } from '@leather.io/models';
-import { baseCurrencyAmountInQuote, truncateMiddle } from '@leather.io/utils';
+import {
+  createMarketDataQueryConfig,
+  createSip10AssetByPrincipalQueryConfig,
+} from '@leather.io/queries';
+import { baseCurrencyAmountInQuote, createMoney, truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../components/avatar-circle';
 import { Badge } from '../components/badge';
@@ -72,10 +79,11 @@ function toFiat(money: Money | undefined, marketData: MarketData | undefined): M
 function proposalHeroTitle(
   kind: 'transfer' | 'contractCall' | 'contractDeploy' | undefined,
   functionName: string | undefined,
-  action: StacksProtocolAction | undefined
+  action: StacksProtocolAction | undefined,
+  tokenSymbol: string | undefined
 ): string {
   if (kind === 'contractDeploy') return 'Contract deploy';
-  if (kind !== 'contractCall') return 'Transfer';
+  if (kind !== 'contractCall') return tokenSymbol ? `Send ${tokenSymbol}` : 'Transfer';
   const actionTitle =
     action !== undefined && action !== 'contract-execution'
       ? buildBlockchainActivityActionTitle(action, interpolateActivityTemplate)
@@ -138,6 +146,20 @@ export function TxDetailPage() {
       ? decodeProposalSummary(account.data, transaction.data)
       : undefined;
   const protocolName = useContractProtocolName(decoded?.contractId);
+  const tokenAsset = useQuery({
+    ...createSip10AssetByPrincipalQueryConfig(decoded?.token?.contractId ?? '', settings),
+    enabled: Boolean(decoded?.token),
+  });
+  const verifiedTokenAsset =
+    decoded?.token &&
+    tokenAsset.data &&
+    matchesProposalTokenAsset(tokenAsset.data, decoded.token.assetName)
+      ? tokenAsset.data
+      : undefined;
+  const tokenMarketData = useQuery({
+    ...createMarketDataQueryConfig(verifiedTokenAsset ?? stxAsset, settings),
+    enabled: Boolean(verifiedTokenAsset),
+  });
 
   const onchainActivity = useQuery({
     ...createBlockchainActivityByTxIdDetailQuery(
@@ -233,16 +255,25 @@ export function TxDetailPage() {
   const proposerLabel = `${proposerName}${isMine ? ' (you)' : ''}`;
   const initiationDate = formatRelativeTime(new Date(tx.proposalTimestamp * 1000));
 
+  const tokenAmount =
+    decoded?.token && verifiedTokenAsset
+      ? createMoney(
+          decoded.token.baseUnitAmount,
+          verifiedTokenAsset.symbol,
+          verifiedTokenAsset.decimals
+        )
+      : undefined;
   const recipient = onChain.recipient ?? decoded?.recipient;
-  const amount = onChain.amount ?? decoded?.amount;
+  const amount = onChain.amount ?? decoded?.amount ?? tokenAmount;
   const fee = onChain.fee ?? decoded?.fee;
-  const amountFiat = toFiat(amount, marketData.data);
+  const amountFiat = toFiat(amount, marketData.data) ?? toFiat(amount, tokenMarketData.data);
   const feeFiat = toFiat(fee, marketData.data);
   const onchainDetail = onchainActivity.data ?? undefined;
   const heroTitle = proposalHeroTitle(
     decoded?.kind,
     decoded?.functionName,
-    onchainDetail?.activity.action
+    onchainDetail?.activity.action,
+    verifiedTokenAsset?.symbol
   );
   const heroSubtitle = onchainDetail?.view.subtitle;
   const heroTimeline = tx.broadcastAt
@@ -328,7 +359,11 @@ export function TxDetailPage() {
             amountFiat={amountFiat}
             fee={fee}
             feeFiat={feeFiat}
-            contractId={decoded?.contractId}
+            contractId={
+              decoded?.token && !verifiedTokenAsset && !tokenAsset.isPending
+                ? decoded.token.contractId
+                : decoded?.contractId
+            }
             functionName={decoded?.functionName}
             protocolName={protocolName}
             balanceChanges={onchainDetail?.activity.balanceChanges}

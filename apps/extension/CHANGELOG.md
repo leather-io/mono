@@ -40,6 +40,28 @@
 
 ---
 
+## [6.106.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.106.0...@leather.io/extension-v6.106.1) (2026-07-15)
+
+
+### Bug Fixes
+
+* **extension:** propose transaction to staging ([#2507](https://github.com/leather-io/mono/issues/2507)) ([b0677ae](https://github.com/leather-io/mono/commit/b0677ae1cee2e097f24f2bcb087426f8168068ec))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.39.2
+    * @leather.io/features bumped to 1.5.2
+    * @leather.io/provider bumped to 1.6.31
+    * @leather.io/queries bumped to 0.14.0
+    * @leather.io/query bumped to 2.51.2
+    * @leather.io/rpc bumped to 2.24.1
+    * @leather.io/services bumped to 1.60.1
+    * @leather.io/stacks bumped to 1.22.0
+    * @leather.io/ui bumped to 1.114.2
+
 ## [6.106.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.105.0...@leather.io/extension-v6.106.0) (2026-07-15)
 
 

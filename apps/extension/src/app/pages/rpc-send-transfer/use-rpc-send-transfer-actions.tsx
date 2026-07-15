@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
 
 import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
+import { LEATHER_API_URL_STAGING } from '@leather.io/constants';
 import { createProposeMultisigTransactionMutationConfig } from '@leather.io/queries';
 import { createRpcSuccessResponse } from '@leather.io/rpc';
 import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
@@ -44,7 +45,10 @@ export function useRpcSendTransferActions() {
   const network = useCurrentNetwork();
   const signProposalCommitment = useSignProposalCommitment();
   const { mutateAsync: proposeMultisigTransaction } = useMutation(
-    createProposeMultisigTransactionMutationConfig({ signProposalCommitment })
+    createProposeMultisigTransactionMutationConfig({
+      baseUrl: LEATHER_API_URL_STAGING,
+      signProposalCommitment,
+    })
   );
   const isBitcoinPolicy = policy?.chain === 'bitcoin';
 

@@ -5,6 +5,10 @@ import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import type { AuthNetworkId, MarketData } from '@leather.io/models';
+import {
+  createMarketDataQueryConfig,
+  createSip10AssetByPrincipalQueryConfig,
+} from '@leather.io/queries';
 import { getMultisigService, getStacksProtocolService } from '@leather.io/services';
 import { isDefined } from '@leather.io/utils';
 
@@ -19,6 +23,7 @@ import {
   buildContractActionTargets,
   buildVaultMultisigTransactions,
   collectContractAddresses,
+  collectTokenContractIds,
   decodeContractCallPayloads,
 } from './build-multisig-activity-inputs';
 import {
@@ -28,7 +33,10 @@ import {
   harmonizeVaultActivity,
   selectTransactionIdsNeedingPayload,
 } from './harmonize-vault-activity';
-import type { MultisigActivityClassification } from './multisig-transaction-activity-view';
+import type {
+  MultisigActivityClassification,
+  ProposalTokenInfo,
+} from './multisig-transaction-activity-view';
 
 const transactionsPageRequest = { page: 1, pageSize: 100 };
 
@@ -44,6 +52,7 @@ interface MultisigActivityInputs {
     contractId: string,
     functionName: string
   ): MultisigActivityClassification | undefined;
+  getTokenInfo(contractId: string): ProposalTokenInfo | undefined;
   isLoading: boolean;
 }
 
@@ -173,11 +182,42 @@ export function useMultisigActivityInputs(
     return classifications.get(`${contractId}|${functionName}`);
   }
 
+  const tokenContractIds = collectTokenContractIds(multisigTransactions, payloadsById);
+
+  const tokenResults = useQueries({
+    queries: tokenContractIds.map(contractId =>
+      createSip10AssetByPrincipalQueryConfig(contractId, settings)
+    ),
+  });
+
+  const resolvedTokens = tokenContractIds.flatMap((contractId, index) => {
+    const asset = tokenResults[index]?.data;
+    return asset ? [{ contractId, asset }] : [];
+  });
+
+  const tokenMarketDataResults = useQueries({
+    queries: resolvedTokens.map(token => createMarketDataQueryConfig(token.asset, settings)),
+  });
+
+  const tokenInfoByContractId = new Map<string, ProposalTokenInfo>();
+  resolvedTokens.forEach((token, index) => {
+    tokenInfoByContractId.set(token.contractId, {
+      asset: token.asset,
+      marketData: tokenMarketDataResults[index]?.data,
+    });
+  });
+
+  function getTokenInfo(contractId: string) {
+    return tokenInfoByContractId.get(contractId);
+  }
+
   const isLoading =
     (accounts.length > 0 && summaryResults.some(result => result.isLoading)) ||
     payloadResults.some(result => result.isLoading) ||
     protocolResults.some(result => result.isLoading) ||
     actionResults.some(result => result.isLoading) ||
+    tokenResults.some(result => result.isLoading) ||
+    tokenMarketDataResults.some(result => result.isLoading) ||
     btcMarketData.isLoading ||
     stxMarketData.isLoading;
 
@@ -186,6 +226,7 @@ export function useMultisigActivityInputs(
     payloadsById,
     marketData: { btc: btcMarketData.data, stx: stxMarketData.data },
     classifyContract,
+    getTokenInfo,
     isLoading,
   };
 }
@@ -223,6 +264,7 @@ export function useVaultActivity(
     payloadsById,
     marketData,
     classifyContract,
+    getTokenInfo,
     isLoading: isLoadingInputs,
   } = useMultisigActivityInputs(accounts, onchain, vaultNamesById);
 
@@ -232,6 +274,7 @@ export function useVaultActivity(
     payloadsById,
     marketData,
     classifyContract,
+    getTokenInfo,
   });
 
   const isAwaitingOnchain =

@@ -4,6 +4,7 @@ import type { MarketData, MultisigTransactionSummary } from '@leather.io/models'
 import type { ProposalPayloadContext } from '../transactions/decode-proposal-summary';
 import {
   type MultisigActivityClassification,
+  type ProposalTokenInfo,
   createMultisigTransactionActivityView,
   mapMultisigTransactionStatus,
 } from './multisig-transaction-activity-view';
@@ -37,6 +38,7 @@ interface HarmonizeVaultActivityInput {
     contractId: string,
     functionName: string
   ): MultisigActivityClassification | undefined;
+  getTokenInfo?(contractId: string): ProposalTokenInfo | undefined;
   marketData?: { btc?: MarketData; stx?: MarketData };
   frontier?: number;
 }
@@ -88,6 +90,7 @@ export function harmonizeVaultActivity({
   multisigTransactions,
   payloadsById,
   classifyContract,
+  getTokenInfo,
   marketData,
   frontier,
 }: HarmonizeVaultActivityInput): VaultActivityItem[] {
@@ -124,6 +127,7 @@ export function harmonizeVaultActivity({
       rawPayload: payloadsById?.get(transaction.id),
       marketData: payloadContext.network.startsWith('btc') ? marketData?.btc : marketData?.stx,
       classifyContract,
+      getTokenInfo,
     });
     if (!isActive && frontier !== undefined && view.timestamp < frontier) continue;
     rows.push({
