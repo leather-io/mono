@@ -10,6 +10,7 @@ import {
   isValidAddressChain,
   isValidStacksAddress,
   principalSchema,
+  stacksAddressNetwork,
   standardPrincipalSchema,
   validatePayerNotRecipient,
 } from './address-validation';
@@ -76,6 +77,22 @@ describe('isValidAddressChain', () => {
   it('returns false for mainnet address on an unknown custom chain id', () => {
     expect(isValidAddressChain(TEST_ACCOUNT_1_STX_ADDRESS, 256)).toBe(false);
     expect(isValidAddressChain(TEST_ACCOUNT_2_STX_ADDRESS, 256)).toBe(false);
+  });
+});
+
+describe('stacksAddressNetwork', () => {
+  it('returns mainnet for a mainnet address', () => {
+    expect(stacksAddressNetwork(TEST_ACCOUNT_1_STX_ADDRESS)).toBe('mainnet');
+    expect(stacksAddressNetwork(TEST_ACCOUNT_2_STX_ADDRESS)).toBe('mainnet');
+  });
+
+  it('returns testnet for a testnet address', () => {
+    expect(stacksAddressNetwork(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS)).toBe('testnet');
+  });
+
+  it('returns undefined for an address with an unrecognized prefix', () => {
+    expect(stacksAddressNetwork('InvalidAddress')).toBeUndefined();
+    expect(stacksAddressNetwork('')).toBeUndefined();
   });
 });
 

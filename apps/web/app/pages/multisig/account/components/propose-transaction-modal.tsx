@@ -29,7 +29,7 @@ import {
   type VaultAccount,
   transactionFeeTiers,
 } from '@leather.io/models';
-import { isValidStacksAddress } from '@leather.io/stacks';
+import { isValidStacksAddress, stacksAddressNetwork } from '@leather.io/stacks';
 import { BasicTooltip, Button, CloseIcon, IconButton, InfoCircleIcon, Sheet } from '@leather.io/ui';
 import {
   type SerializedCryptoAssetId,
@@ -190,13 +190,6 @@ function FeeTierSelector({
       </Flex>
     </Flex>
   );
-}
-
-function stacksAddressNetwork(address: string): 'mainnet' | 'testnet' | undefined {
-  const prefix = address.slice(0, 2);
-  if (prefix === 'SP' || prefix === 'SM') return 'mainnet';
-  if (prefix === 'ST' || prefix === 'SN') return 'testnet';
-  return undefined;
 }
 
 function getStacksNetworkError(
