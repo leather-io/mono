@@ -368,6 +368,16 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.52.2](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.52.1...@leather.io/utils-v0.52.2) (2026-07-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.37.1
+    * @leather.io/models bumped to 0.60.0
+
 ## [0.52.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.52.0...@leather.io/utils-v0.52.1) (2026-07-10)
 
 
