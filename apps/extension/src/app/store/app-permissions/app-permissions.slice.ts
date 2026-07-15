@@ -5,7 +5,9 @@ import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/walle
 import type { AppPermission } from '@shared/permissions/permission.helpers';
 import { assumedZeroFingerprint } from '@shared/utils';
 
-const appPermissionsAdapter = createEntityAdapter<AppPermission, string>({
+import { userRemovesPolicy } from '../policy/policy.slice';
+
+export const appPermissionsAdapter = createEntityAdapter<AppPermission, string>({
   selectId: permission => permission.origin,
 });
 
@@ -14,7 +16,7 @@ const initialState = appPermissionsAdapter.getInitialState();
 export const appPermissionsSlice = createSlice({
   name: 'appPermissions',
   initialState,
-  reducers: { updatePermission: appPermissionsAdapter.upsertOne },
+  reducers: { updatePermission: appPermissionsAdapter.setOne },
   extraReducers: builder =>
     builder
       .addCase(userRemovesWallet, (state, action) => {
@@ -22,6 +24,13 @@ export const appPermissionsSlice = createSlice({
           origin => state.entities[origin]?.fingerprint === action.payload.fingerprint
         );
         appPermissionsAdapter.removeMany(state, origins);
+      })
+
+      .addCase(userRemovesPolicy, (state, action) => {
+        const updates = state.ids
+          .filter(origin => state.entities[origin]?.policyId === action.payload.policyId)
+          .map(origin => ({ id: origin, changes: { policyId: undefined } }));
+        appPermissionsAdapter.updateMany(state, updates);
       })
 
       .addCase(fingerprintMigration, (state, action) => {

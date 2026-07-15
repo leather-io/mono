@@ -16,7 +16,7 @@ import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 import { useCurrentNetworkState } from '@app/query/leather-query-provider';
 import { useNetworksActions } from '@app/store/networks/networks.hooks';
 import { useNetworks } from '@app/store/networks/networks.selectors';
-import { usePolicyNetworkIds } from '@app/store/policy/policy.selectors';
+import { usePolicyNetworkIds } from '@app/store/policy/policy-network.selectors';
 import { useToggleNetworkBadgeAlwaysOn } from '@app/store/settings/settings.actions';
 import { useNetworkBadgeAlwaysOn } from '@app/store/settings/settings.selectors';
 

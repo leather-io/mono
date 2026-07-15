@@ -148,9 +148,12 @@ export async function createConnectingAppSearchParamsWithLastKnownAccount(
   if (origin) {
     const appPermissions = await getPermissionsByOrigin(getHostnameFromPort(port));
     if (appPermissions) {
-      if (!urlParams.has('accountIndex'))
+      const hasRequestScopedAccount = urlParams.has('accountIndex');
+      if (!hasRequestScopedAccount)
         urlParams.set('accountIndex', appPermissions.accountIndex.toString());
       urlParams.set('fingerprint', appPermissions.fingerprint);
+      if (!hasRequestScopedAccount && appPermissions.policyId)
+        urlParams.set('policyId', appPermissions.policyId);
     }
   }
   return { urlParams, origin, frameId, tabId };

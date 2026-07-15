@@ -4,6 +4,7 @@ import { RpcErrorCode, type RpcRequests } from '@leather.io/rpc';
 
 import {
   createConnectingAppMetadataSearchParams,
+  createConnectingAppSearchParamsWithLastKnownAccount,
   validateConnectedWalletExists,
 } from './rpc-request-utils';
 
@@ -74,6 +75,62 @@ describe(createConnectingAppMetadataSearchParams.name, () => {
     expect(result.tabId).toBe(tabId);
     expect(result.urlParams.get('frameId')).toBe(frameId.toString());
     expect(result.urlParams.get('tabId')).toBe(tabId.toString());
+  });
+});
+
+describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test('pins the last known account from the origin permission', async () => {
+    mocks.getRootState.mockResolvedValue(
+      buildState({ permission: buildPermission({ accountIndex: 3 }), walletFingerprints: [] })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
+
+    expect(result.urlParams.get('accountIndex')).toBe('3');
+    expect(result.urlParams.get('fingerprint')).toBe(fingerprint);
+    expect(result.urlParams.get('policyId')).toBeNull();
+  });
+
+  test('pins the bound policy from the origin permission', async () => {
+    const policyId = `${fingerprint}/0/bc1qaddr/mainnet`;
+    mocks.getRootState.mockResolvedValue(
+      buildState({ permission: buildPermission({ policyId }), walletFingerprints: [] })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
+
+    expect(result.urlParams.get('accountIndex')).toBe('0');
+    expect(result.urlParams.get('fingerprint')).toBe(fingerprint);
+    expect(result.urlParams.get('policyId')).toBe(policyId);
+  });
+
+  test('keeps a request-scoped account and suppresses the policy binding', async () => {
+    const policyId = `${fingerprint}/0/bc1qaddr/mainnet`;
+    mocks.getRootState.mockResolvedValue(
+      buildState({ permission: buildPermission({ policyId }), walletFingerprints: [] })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort(), [
+      ['accountIndex', '2'],
+    ]);
+
+    expect(result.urlParams.get('accountIndex')).toBe('2');
+    expect(result.urlParams.get('fingerprint')).toBe(fingerprint);
+    expect(result.urlParams.get('policyId')).toBeNull();
+  });
+
+  test('pins nothing when the origin has no permission', async () => {
+    mocks.getRootState.mockResolvedValue(buildState({ walletFingerprints: [] }));
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
+
+    expect(result.urlParams.get('accountIndex')).toBeNull();
+    expect(result.urlParams.get('fingerprint')).toBeNull();
+    expect(result.urlParams.get('policyId')).toBeNull();
   });
 });
 
