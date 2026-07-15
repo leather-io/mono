@@ -1,7 +1,7 @@
 import { logger } from '@shared/logger';
 
 import { AppThunk } from '..';
-import { selectPolicyNetworkIds } from '../policy/policy.selectors';
+import { selectPolicyNetworkIds } from '../policy/policy-network.selectors';
 import { type PersistedNetworkConfiguration, networksSlice } from './networks.slice';
 
 export const networksActions = networksSlice.actions;

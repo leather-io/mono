@@ -60,8 +60,8 @@ test.describe('DEBUG ledger propose', () => {
     await mockFundedStacksAddress(context, stacksPolicy.address);
     await onboardingPage.signInWithLedgerAccount(extensionId, {
       ...makeLedgerTestAccountWalletState(['stacks']),
-      ...getConnectedTestAppPermissionsState(),
-      ...policyStateOverrides({ policies: [stacksPolicy], activePolicyId: stacksPolicy.id }),
+      ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
+      ...policyStateOverrides({ policies: [stacksPolicy] }),
     });
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });

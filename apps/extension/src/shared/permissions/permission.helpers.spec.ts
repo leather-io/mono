@@ -49,4 +49,9 @@ describe('isConnectedToExistingWallet', () => {
     const permission = createPermission({ fingerprint });
     expect(isConnectedToExistingWallet(permission, createWalletEntities([fingerprint]))).toBe(true);
   });
+
+  test('returns true regardless of a policy binding on the permission', () => {
+    const permission = createPermission({ policyId: `${fingerprint}/0/bc1qaddr/mainnet` });
+    expect(isConnectedToExistingWallet(permission, createWalletEntities([fingerprint]))).toBe(true);
+  });
 });
