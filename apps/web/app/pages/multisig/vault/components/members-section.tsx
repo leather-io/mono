@@ -1,4 +1,5 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useBnsPrimaryNames } from '~/queries/bns/bns.query';
 
 import type { Vault, VaultMember } from '@leather.io/models';
 import { Button, KeyIcon, ListItemBox, PaperPlaneIcon } from '@leather.io/ui';
@@ -7,11 +8,14 @@ import { truncateMiddle } from '@leather.io/utils';
 import { AvatarCircle } from '../../components/avatar-circle';
 import { Badge } from '../../components/badge';
 import { CopyAddress } from '../../components/copy-address';
+import { EditableName } from '../../components/editable-name';
 
 interface MembersSectionProps {
   vault: Vault;
   currentUserAddress?: string;
+  currentUserIsCreator: boolean;
   onShareInvite(): void;
+  onRenameMember(membershipId: string, name: string): void;
 }
 
 function isCreatorMember(member: VaultMember, createdBy: string): boolean {
@@ -54,7 +58,17 @@ function MemberTrailing({
   return null;
 }
 
-export function MembersSection({ vault, currentUserAddress, onShareInvite }: MembersSectionProps) {
+export function MembersSection({
+  vault,
+  currentUserAddress,
+  currentUserIsCreator,
+  onShareInvite,
+  onRenameMember,
+}: MembersSectionProps) {
+  const isStacksVault = vault.network.startsWith('stx');
+  const bnsPrimaryNames = useBnsPrimaryNames(
+    isStacksVault ? vault.members.map(member => member.address) : []
+  );
   return (
     <Box
       borderRadius="md"
@@ -67,7 +81,22 @@ export function MembersSection({ vault, currentUserAddress, onShareInvite }: Mem
         const isCreator = isCreatorMember(member, vault.createdBy);
         const isMe = member.address === currentUserAddress;
         const isInvited = member.membershipStatus === 'invited';
-        const displayName = isMe ? 'Me (you)' : member.name || truncateMiddle(member.address);
+        const nameLabel = member.name || truncateMiddle(member.address);
+        const canRename = currentUserIsCreator || isMe;
+        const primaryBns = bnsPrimaryNames.get(member.address);
+        const bnsToShow = primaryBns && primaryBns !== member.name ? primaryBns : undefined;
+        const nameStyledDisplay = (
+          <styled.span textStyle="label.02">
+            {nameLabel}
+            {isMe ? ' (you)' : ''}
+            {bnsToShow ? (
+              <styled.span color="ink.text-subdued" fontWeight="normal">
+                {' · '}
+                {bnsToShow}
+              </styled.span>
+            ) : null}
+          </styled.span>
+        );
         return (
           <Box
             key={member.membershipId}
@@ -79,8 +108,21 @@ export function MembersSection({ vault, currentUserAddress, onShareInvite }: Mem
           >
             <ListItemBox
               variant="plain"
-              leading={<AvatarCircle name={displayName} size="lg" />}
-              title={<styled.span textStyle="label.02">{displayName}</styled.span>}
+              leading={<AvatarCircle name={nameLabel} size="lg" />}
+              title={
+                canRename ? (
+                  <EditableName
+                    value={member.name ?? ''}
+                    display={nameStyledDisplay}
+                    onSave={name => onRenameMember(member.membershipId, name)}
+                    title="Rename member"
+                    label="member name"
+                    placeholder="Member name"
+                  />
+                ) : (
+                  nameStyledDisplay
+                )
+              }
               caption={<CopyAddress addr={member.address} />}
               trailing={
                 <MemberTrailing

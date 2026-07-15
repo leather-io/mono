@@ -1,4 +1,4 @@
-import { type ChangeEvent, type KeyboardEvent, useState } from 'react';
+import { type ChangeEvent, type KeyboardEvent, type ReactNode, useState } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
@@ -18,6 +18,8 @@ interface EditableNameProps {
   title: string;
   label?: string;
   canEdit?: boolean;
+  display?: ReactNode;
+  placeholder?: string;
 }
 
 export function EditableName({
@@ -26,11 +28,13 @@ export function EditableName({
   title,
   label = 'name',
   canEdit = true,
+  display,
+  placeholder,
 }: EditableNameProps) {
   const [isShowing, setIsShowing] = useState(false);
   const [draft, setDraft] = useState(value);
 
-  if (!canEdit) return <>{value}</>;
+  if (!canEdit) return <>{display ?? value}</>;
 
   function open() {
     setDraft(value);
@@ -55,7 +59,7 @@ export function EditableName({
     <>
       <Flex alignItems="center" gap="space.02" minWidth={0}>
         <styled.span overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
-          {value}
+          {display ?? value}
         </styled.span>
         <BasicTooltip asChild label={`Edit ${label}`}>
           <styled.button
@@ -101,6 +105,7 @@ export function EditableName({
             <Input.Field
               autoFocus
               value={draft}
+              placeholder={placeholder}
               onChange={(event: ChangeEvent<HTMLInputElement>) => setDraft(event.target.value)}
               onKeyDown={onKeyDown}
               aria-label={`Rename ${label}`}
