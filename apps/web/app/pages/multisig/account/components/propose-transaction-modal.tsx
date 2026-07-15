@@ -15,11 +15,13 @@ import { useVaultBtcTransactionFees } from '~/features/multisig/transactions/use
 import { useVaultStxTransactionFees } from '~/features/multisig/transactions/use-vault-stx-transaction-fees';
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
 import { useToast } from '~/features/toasts/use-toast';
+import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
-import { STX_DECIMALS } from '@leather.io/constants';
+import { STX_DECIMALS, btcAsset, stxAsset } from '@leather.io/constants';
 import {
+  type MarketData,
   type Money,
   type MultisigTransaction,
   type TransactionFeeTier,
@@ -31,6 +33,7 @@ import { isValidStacksAddress } from '@leather.io/stacks';
 import { BasicTooltip, Button, CloseIcon, IconButton, InfoCircleIcon, Sheet } from '@leather.io/ui';
 import {
   type SerializedCryptoAssetId,
+  baseCurrencyAmountInQuote,
   btcToSat,
   createMoney,
   createMoneyFromDecimal,
@@ -85,15 +88,35 @@ function feeTierValues(fees?: TransactionFees): Record<TransactionFeeTier, Money
   };
 }
 
+function toFiat(money: Money, marketData?: MarketData): Money | undefined {
+  if (!marketData || money.symbol !== marketData.pair.base) return undefined;
+  return baseCurrencyAmountInQuote(money, marketData);
+}
+
+function feeTierFiatValues(
+  fees?: TransactionFees,
+  marketData?: MarketData
+): Record<TransactionFeeTier, Money | undefined> | undefined {
+  if (!fees) return undefined;
+  return {
+    low: toFiat(fees.options.low.value, marketData),
+    standard: toFiat(fees.options.standard.value, marketData),
+    high: toFiat(fees.options.high.value, marketData),
+  };
+}
+
 function FeeTierSelector({
   options,
   selected,
   onSelect,
+  fiatOptions,
 }: {
   options?: Record<TransactionFeeTier, Money>;
   selected: TransactionFeeTier;
   onSelect(tier: TransactionFeeTier): void;
+  fiatOptions?: Record<TransactionFeeTier, Money | undefined>;
 }) {
+  if (!options) return null;
   return (
     <Flex direction="column" gap="space.02">
       <Flex alignItems="center" gap="space.01">
@@ -125,7 +148,9 @@ function FeeTierSelector({
       <Flex gap="space.02">
         {transactionFeeTiers.map(tier => {
           const isSelected = tier === selected;
-          const money = options?.[tier];
+          const money = options[tier];
+          const fiat = fiatOptions?.[tier];
+          const fiatText = fiat ? formatCurrency(fiat) : undefined;
           return (
             <styled.button
               key={tier}
@@ -152,8 +177,13 @@ function FeeTierSelector({
                 {tier}
               </styled.span>
               <styled.span textStyle="label.03">
-                {money ? <Balance balance={money} formatCurrency={formatCurrency} /> : '—'}
+                <Balance balance={money} formatCurrency={formatCurrency} />
               </styled.span>
+              {fiatText ? (
+                <styled.span textStyle="caption.01" color="ink.text-subdued">
+                  {fiatText.startsWith('<') ? fiatText : `~${fiatText}`}
+                </styled.span>
+              ) : null}
             </styled.button>
           );
         })}
@@ -174,6 +204,7 @@ interface ProposeFormFieldsProps {
   onAmount(value: string): void;
   available?: Money;
   feeOptions?: Record<TransactionFeeTier, Money>;
+  feeFiatOptions?: Record<TransactionFeeTier, Money | undefined>;
   feeTier: TransactionFeeTier;
   onFeeTier(tier: TransactionFeeTier): void;
   threshold: number;
@@ -199,6 +230,7 @@ function ProposeFormFields({
   onAmount,
   available,
   feeOptions,
+  feeFiatOptions,
   feeTier,
   onFeeTier,
   threshold,
@@ -291,7 +323,12 @@ function ProposeFormFields({
         borderRadius="md"
         bg="ink.background-secondary"
       >
-        <FeeTierSelector options={feeOptions} selected={feeTier} onSelect={onFeeTier} />
+        <FeeTierSelector
+          options={feeOptions}
+          fiatOptions={feeFiatOptions}
+          selected={feeTier}
+          onSelect={onFeeTier}
+        />
         <Flex justifyContent="space-between" gap="space.04">
           <styled.span textStyle="caption.01" color="ink.text-subdued">
             Threshold
@@ -353,9 +390,11 @@ function BtcProposeForm({
     amount: amountError ? undefined : amount,
   });
   const propose = useProposeTransaction(account.network);
+  const marketData = useMarketDataQuery(btcAsset);
   const [feeTier, setFeeTier] = useState<TransactionFeeTier>('standard');
   const feeQuote = feesQuery.data?.options[feeTier];
   const feeOptions = feeTierValues(feesQuery.data);
+  const feeFiatOptions = feeTierFiatValues(feesQuery.data, marketData.data);
 
   async function submit() {
     if (!recipientAddress || !amount || feeQuote === undefined || recipientError || amountError)
@@ -396,6 +435,7 @@ function BtcProposeForm({
       onAmount={setAmountInput}
       available={balance.crypto}
       feeOptions={feeOptions}
+      feeFiatOptions={feeFiatOptions}
       feeTier={feeTier}
       onFeeTier={setFeeTier}
       threshold={account.threshold}
@@ -457,9 +497,11 @@ function StxProposeForm({
     asset: sip10Asset,
   });
   const propose = useProposeTransaction(account.network);
+  const marketData = useMarketDataQuery(stxAsset);
   const [feeTier, setFeeTier] = useState<TransactionFeeTier>('standard');
   const fee = feesQuery.data?.options[feeTier].value;
   const feeOptions = feeTierValues(feesQuery.data);
+  const feeFiatOptions = feeTierFiatValues(feesQuery.data, marketData.data);
 
   async function submit() {
     if (!recipientAddress || !amount || !fee || recipientError || amountError) return;
@@ -509,6 +551,7 @@ function StxProposeForm({
         onAmount={setAmountInput}
         available={selectedItem?.crypto}
         feeOptions={feeOptions}
+        feeFiatOptions={feeFiatOptions}
         feeTier={feeTier}
         onFeeTier={setFeeTier}
         threshold={account.threshold}
