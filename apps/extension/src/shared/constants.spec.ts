@@ -7,6 +7,12 @@ describe(isWhitelistedOrigin.name, () => {
     expect(isWhitelistedOrigin('https://app.leather.io')).toBe(true);
   });
 
+  test('accepts the multisig onboarding origin', () => {
+    expect(
+      isWhitelistedOrigin('https://dev-leather-web.wallet-6d1.workers.dev/multisig/onboarding')
+    ).toBe(true);
+  });
+
   test('rejects a localhost origin when not in development', () => {
     expect(isWhitelistedOrigin('http://localhost:3000')).toBe(false);
   });
