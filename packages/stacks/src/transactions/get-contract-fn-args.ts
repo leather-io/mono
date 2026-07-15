@@ -10,7 +10,7 @@ import {
 } from '@stacks/transactions';
 
 interface GetSip10FnArgs {
-  amount: number;
+  amount: number | string;
   senderStacksAddress: string;
   recipientStacksAddress: string;
   memo?: string;

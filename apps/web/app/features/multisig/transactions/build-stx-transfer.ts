@@ -19,7 +19,7 @@ interface BuildMultisigStxTransferArgs {
 }
 
 // Custom network keeps the testnet address version but signs with its own chain id.
-function getStxTransactionNetwork(network: AuthNetworkId) {
+export function getStxTransactionNetwork(network: AuthNetworkId) {
   if (network === 'stx:mainnet') return 'mainnet';
   if (customNetworkConfig?.stacksChainId !== undefined)
     return { ...STACKS_TESTNET, chainId: customNetworkConfig.stacksChainId };

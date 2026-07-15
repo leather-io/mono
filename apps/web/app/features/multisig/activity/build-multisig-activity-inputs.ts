@@ -18,6 +18,8 @@ export type ActivityAccount = VaultAccount | VaultAccountSummary;
 
 type DecodedContractCall = Extract<DecodedProposalPayload, { type: 'contractCall' }>;
 
+type DecodedSip10Transfer = Extract<DecodedProposalPayload, { type: 'sip10Transfer' }>;
+
 export interface ContractActionTarget {
   key: string;
   protocol: StacksProtocol;
@@ -53,6 +55,23 @@ export function decodeContractCallPayloads(
     if (!payload || payload.type !== 'contractCall') return [];
     return [payload];
   });
+}
+
+export function collectTokenContractIds(
+  multisigTransactions: VaultMultisigTransaction[],
+  payloadsById: ReadonlyMap<string, string>
+): string[] {
+  const decoded = multisigTransactions.flatMap<DecodedSip10Transfer>(
+    ({ transaction, payloadContext }) => {
+      if (payloadContext.network.startsWith('btc')) return [];
+      const rawPayload = payloadsById.get(transaction.id);
+      if (!rawPayload) return [];
+      const payload = decodeProposalPayload(payloadContext, rawPayload);
+      if (!payload || payload.type !== 'sip10Transfer') return [];
+      return [payload];
+    }
+  );
+  return [...new Set(decoded.map(payload => payload.token.contractId))];
 }
 
 export function collectContractAddresses(decodedContractCalls: DecodedContractCall[]): string[] {

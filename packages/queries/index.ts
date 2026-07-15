@@ -14,6 +14,7 @@ export * from './src/balances/stx-balances.query-config';
 export * from './src/balances/sip10-balances.query-config';
 export * from './src/balances/account-balances.query-config';
 export * from './src/assets/fungible-asset-info.query-config';
+export * from './src/assets/sip10-asset.query-config';
 export * from './src/utxos/utxos.query-config';
 export * from './src/bns/bns.query-config';
 export * from './src/transactions/transactions.query-config';

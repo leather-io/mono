@@ -22,6 +22,7 @@ import { isLeatherInstalled } from '~/utils/utils';
 
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
 import { PlusIcon } from '@leather.io/ui';
+import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { InlineTabs } from '../components/inline-tabs';
 import { MultisigErrorState } from '../components/multisig-error-state';
@@ -36,12 +37,15 @@ import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
 import { AssetDetailModal } from './components/asset-detail-modal';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
+import { ReceiveModal } from './components/receive-modal';
 
 export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
   const navigate = useNavigate();
   const [hydrated, setHydrated] = useState(false);
   const [isProposing, setIsProposing] = useState(false);
+  const [isReceiving, setIsReceiving] = useState(false);
+  const [proposeAssetId, setProposeAssetId] = useState<SerializedCryptoAssetId>();
   const [isAddingToWallet, setIsAddingToWallet] = useState(false);
   const [assetDetail, setAssetDetail] = useState<VaultAssetItem | null>(null);
   const { success, error } = useToast();
@@ -155,7 +159,10 @@ export function AccountDetailPage() {
           />
           <styled.button
             type="button"
-            onClick={() => setIsProposing(true)}
+            onClick={() => {
+              setProposeAssetId(undefined);
+              setIsProposing(true);
+            }}
             width="100%"
             display="flex"
             alignItems="center"
@@ -219,9 +226,11 @@ export function AccountDetailPage() {
         </Box>
       </Flex>
       <ProposeTransactionModal
+        key={proposeAssetId ?? 'default'}
         account={account.data}
         memberCount={vault.data.members.length}
         isShowing={isProposing}
+        initialAssetId={proposeAssetId}
         onClose={() => setIsProposing(false)}
         onProposed={onProposed}
       />
@@ -230,7 +239,19 @@ export function AccountDetailPage() {
           account={account.data}
           item={assetDetail}
           onClose={() => setAssetDetail(null)}
+          onSend={item => {
+            setAssetDetail(null);
+            setProposeAssetId(item.id);
+            setIsProposing(true);
+          }}
+          onReceive={() => {
+            setAssetDetail(null);
+            setIsReceiving(true);
+          }}
         />
+      ) : null}
+      {isReceiving ? (
+        <ReceiveModal account={account.data} onClose={() => setIsReceiving(false)} />
       ) : null}
     </MultisigPage>
   );
