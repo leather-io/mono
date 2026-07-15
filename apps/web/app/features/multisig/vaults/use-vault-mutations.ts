@@ -1,7 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { AuthNetworkId, Vault, VaultMembershipResult } from '@leather.io/models';
-import { type CreateVaultRequest, getMultisigService } from '@leather.io/services';
+import {
+  type CreateVaultRequest,
+  type UpdateVaultRequest,
+  getMultisigService,
+} from '@leather.io/services';
 
 import { useSession } from '../auth/use-session';
 import { useRecoverVaultAccounts } from './use-vault-account-mutations';
@@ -34,6 +38,41 @@ export function useCancelVault(network: AuthNetworkId) {
       void queryClient.invalidateQueries({
         queryKey: multisigVaultKeys.detail(network, address, vaultId),
       });
+    },
+  });
+}
+
+export function useUpdateVault(network: AuthNetworkId) {
+  const queryClient = useQueryClient();
+  const address = useSession(network)?.identity.address;
+  return useMutation<
+    Vault,
+    Error,
+    { vaultId: string; update: UpdateVaultRequest },
+    { previous: Vault | undefined }
+  >({
+    mutationKey: ['multisig-update-vault', network],
+    mutationFn({ vaultId, update }) {
+      return getMultisigService().updateVault(network, vaultId, update);
+    },
+    async onMutate({ vaultId, update }) {
+      const key = multisigVaultKeys.detail(network, address, vaultId);
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData<Vault>(key);
+      if (previous) queryClient.setQueryData<Vault>(key, { ...previous, name: update.name });
+      return { previous };
+    },
+    onError(_error, { vaultId }, context) {
+      if (context?.previous) {
+        queryClient.setQueryData(
+          multisigVaultKeys.detail(network, address, vaultId),
+          context.previous
+        );
+      }
+    },
+    onSuccess(vault, { vaultId }) {
+      queryClient.setQueryData(multisigVaultKeys.detail(network, address, vaultId), vault);
+      void queryClient.invalidateQueries({ queryKey: multisigVaultKeys.lists(network, address) });
     },
   });
 }

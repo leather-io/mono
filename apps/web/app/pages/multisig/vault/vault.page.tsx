@@ -13,6 +13,7 @@ import {
   useCancelVault,
   useDeclineVault,
   useJoinVault,
+  useUpdateVault,
 } from '~/features/multisig/vaults/use-vault-mutations';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import {
@@ -25,6 +26,7 @@ import type { AuthNetworkId, Vault } from '@leather.io/models';
 import { Button, Callout } from '@leather.io/ui';
 
 import { Badge } from '../components/badge';
+import { EditableName } from '../components/editable-name';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
@@ -85,6 +87,7 @@ export function VaultDetailPage() {
   const cancelVault = useCancelVault(network);
   const joinVault = useJoinVault(network);
   const declineVault = useDeclineVault(network);
+  const updateVault = useUpdateVault(network);
 
   if (!vault) {
     return (
@@ -135,7 +138,18 @@ export function VaultDetailPage() {
   }
 
   return (
-    <MultisigPage title={vault.name} backTo={multisigPaths.index}>
+    <MultisigPage
+      title={
+        <EditableName
+          value={vault.name}
+          onSave={name => updateVault.mutate({ vaultId: vault.id, update: { name } })}
+          title="Rename vault"
+          label="vault name"
+          canEdit={isCreator && vault.status !== 'cancelled'}
+        />
+      }
+      backTo={multisigPaths.index}
+    >
       {isInvited && myMembership && (
         <Callout variant="info" title="You've been invited to this vault">
           <Flex gap="space.03" mt="space.03">

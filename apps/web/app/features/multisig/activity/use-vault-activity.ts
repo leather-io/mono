@@ -15,7 +15,7 @@ import { isDefined } from '@leather.io/utils';
 import { useMultisigNetworks } from '../auth/use-multisig-networks';
 import { useSession } from '../auth/use-session';
 import { createMultisigAccountAddresses } from '../vaults/multisig-account-addresses';
-import { retryMultisigQuery } from '../vaults/use-vaults';
+import { multisigLiveRefetchInterval, retryMultisigQuery } from '../vaults/use-vaults';
 import { multisigVaultKeys } from '../vaults/vault-query-keys';
 import {
   type ActivityAccount,
@@ -90,6 +90,7 @@ export function useMultisigActivityInputs(
           ),
         enabled: Boolean(session),
         retry: retryMultisigQuery,
+        refetchInterval: multisigLiveRefetchInterval,
       };
     }),
   });
@@ -243,13 +244,14 @@ export function useVaultActivity(
   const settings = useUserSettings();
 
   const onchainResults = useQueries({
-    queries: accounts.map(account =>
-      createBlockchainActivityViewsQuery(
+    queries: accounts.map(account => ({
+      ...createBlockchainActivityViewsQuery(
         createMultisigAccountAddresses(account),
         settings,
         previewActivityLimit
-      )
-    ),
+      ),
+      refetchInterval: multisigLiveRefetchInterval,
+    })),
   });
   const onchain = onchainResults.flatMap((result, index) =>
     (result.data ?? []).map(view => ({
