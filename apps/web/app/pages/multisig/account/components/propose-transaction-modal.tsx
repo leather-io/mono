@@ -192,6 +192,25 @@ function FeeTierSelector({
   );
 }
 
+function stacksAddressNetwork(address: string): 'mainnet' | 'testnet' | undefined {
+  const prefix = address.slice(0, 2);
+  if (prefix === 'SP' || prefix === 'SM') return 'mainnet';
+  if (prefix === 'ST' || prefix === 'SN') return 'testnet';
+  return undefined;
+}
+
+function getStacksNetworkError(
+  address: string | undefined,
+  accountIsMainnet: boolean
+): string | undefined {
+  if (!address || !isValidStacksAddress(address)) return undefined;
+  const recipientNetwork = stacksAddressNetwork(address);
+  if (!recipientNetwork) return undefined;
+  const accountNetwork = accountIsMainnet ? 'mainnet' : 'testnet';
+  if (recipientNetwork === accountNetwork) return undefined;
+  return `Recipient must be a ${accountNetwork} address`;
+}
+
 interface ProposeFormFieldsProps {
   memberCount: number;
   unit: string;
@@ -484,11 +503,12 @@ function StxProposeForm({
   const symbol = selectedItem?.asset.symbol ?? 'STX';
   const amount = parseAssetAmount(amountInput, decimals, symbol);
   const sip10Asset = selectedItem?.asset.protocol === 'sip10' ? selectedItem.asset : undefined;
-  const recipientError = getRecipientError(
-    recipient,
-    Boolean(recipientAddress) && isValidStacksAddress(recipient.trim()),
-    recipientAddress === account.multisigAddress
-  );
+  const recipientError =
+    getRecipientError(
+      recipient,
+      Boolean(recipientAddress) && isValidStacksAddress(recipient.trim()),
+      recipientAddress === account.multisigAddress
+    ) ?? getStacksNetworkError(recipientAddress, account.network === 'stx:mainnet');
   const amountError = getAmountError(amountInput, amount, selectedItem?.crypto);
   const feesQuery = useVaultStxTransactionFees({
     account,
