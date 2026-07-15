@@ -65,9 +65,9 @@ export function MembersSection({
   onShareInvite,
   onRenameMember,
 }: MembersSectionProps) {
-  const isStacksVault = vault.network.startsWith('stx');
+  const isStacksMainnetVault = vault.network === 'stx:mainnet';
   const bnsPrimaryNames = useBnsPrimaryNames(
-    isStacksVault ? vault.members.map(member => member.address) : []
+    isStacksMainnetVault ? vault.members.map(member => member.address) : []
   );
   return (
     <Box
