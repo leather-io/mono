@@ -2,7 +2,15 @@ import { type ChangeEvent, type KeyboardEvent, useState } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { Button, CloseIcon, IconButton, Input, PencilIcon, Sheet } from '@leather.io/ui';
+import {
+  BasicTooltip,
+  Button,
+  CloseIcon,
+  IconButton,
+  Input,
+  PencilIcon,
+  Sheet,
+} from '@leather.io/ui';
 
 interface EditableNameProps {
   value: string;
@@ -49,24 +57,26 @@ export function EditableName({
         <styled.span overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
           {value}
         </styled.span>
-        <styled.button
-          type="button"
-          onClick={open}
-          aria-label={`Rename ${label}`}
-          display="inline-flex"
-          alignItems="center"
-          justifyContent="center"
-          flexShrink={0}
-          bg="transparent"
-          border="none"
-          cursor="pointer"
-          color="ink.text-subdued"
-          p="space.01"
-          borderRadius="sm"
-          _hover={{ color: 'ink.text-primary', bg: 'ink.component-background-hover' }}
-        >
-          <PencilIcon variant="small" />
-        </styled.button>
+        <BasicTooltip asChild label={`Edit ${label}`}>
+          <styled.button
+            type="button"
+            onClick={open}
+            aria-label={`Edit ${label}`}
+            display="inline-flex"
+            alignItems="center"
+            justifyContent="center"
+            flexShrink={0}
+            bg="transparent"
+            border="none"
+            cursor="pointer"
+            color="ink.text-subdued"
+            p="space.01"
+            borderRadius="sm"
+            _hover={{ color: 'ink.text-primary', bg: 'ink.component-background-hover' }}
+          >
+            <PencilIcon variant="small" />
+          </styled.button>
+        </BasicTooltip>
       </Flex>
       <Sheet
         isShowing={isShowing}

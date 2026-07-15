@@ -23,7 +23,7 @@ import {
   transactionFeeTiers,
 } from '@leather.io/models';
 import { isValidStacksAddress } from '@leather.io/stacks';
-import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
+import { BasicTooltip, Button, CloseIcon, IconButton, InfoCircleIcon, Sheet } from '@leather.io/ui';
 import { btcToSat, createMoney, stxToMicroStx } from '@leather.io/utils';
 
 import { TextField } from '../../components/text-field';
@@ -78,9 +78,32 @@ function FeeTierSelector({
 }) {
   return (
     <Flex direction="column" gap="space.02">
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        Network fee
-      </styled.span>
+      <Flex alignItems="center" gap="space.01">
+        <styled.span textStyle="caption.01" color="ink.text-subdued">
+          Network fee
+        </styled.span>
+        <BasicTooltip asChild label="Learn about network fees">
+          <styled.button
+            type="button"
+            onClick={() =>
+              window.open(
+                'https://leather.gitbook.io/guides/transactions/fees',
+                '_blank',
+                'noopener,noreferrer'
+              )
+            }
+            aria-label="Learn about network fees"
+            display="inline-flex"
+            alignItems="center"
+            bg="transparent"
+            border="none"
+            cursor="pointer"
+            p="0"
+          >
+            <InfoCircleIcon variant="small" color="ink.text-subdued" />
+          </styled.button>
+        </BasicTooltip>
+      </Flex>
       <Flex gap="space.02">
         {transactionFeeTiers.map(tier => {
           const isSelected = tier === selected;
