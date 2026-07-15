@@ -19,7 +19,7 @@ async function withPersistRootWriteLock<T>(fn: () => Promise<T>): Promise<T> {
   return fn();
 }
 
-function getPersistVersion(root: Record<string, unknown>) {
+export function getPersistVersion(root: Record<string, unknown>) {
   const persistMeta = root._persist;
   if (!isPlainObject(persistMeta)) return undefined;
   return typeof persistMeta.version === 'number' ? persistMeta.version : undefined;

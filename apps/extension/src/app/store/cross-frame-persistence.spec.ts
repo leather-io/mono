@@ -200,6 +200,28 @@ describe('cross-frame persistence', () => {
     });
   });
 
+  test('a live frame leaves an externally seeded older-version root for migrations', async () => {
+    const frame = await bootFrame();
+
+    await chrome.storage.local.set({
+      [persistRootKey]: {
+        networks: {
+          ids: ['devnet'],
+          entities: { devnet: devnetNetwork },
+          currentNetworkId: 'mainnet',
+        },
+        _persist: { version: 2, rehydrated: true },
+      },
+    });
+    await frame.settle();
+
+    expect(frame.dispatchedActionTypes).not.toContain(hydrateSlicesFromStorage.type);
+
+    const root = await readStoredRoot();
+    expect(root._persist).toMatchObject({ version: 2 });
+    expect(root.networks).toMatchObject({ ids: ['devnet'] });
+  });
+
   test('flush resolves with pending changes committed to storage', async () => {
     const frame = await bootFrame();
 

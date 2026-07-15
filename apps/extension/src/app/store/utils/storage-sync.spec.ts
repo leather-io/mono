@@ -13,7 +13,7 @@ interface CreateFakeStoreArgs {
 }
 
 function createFakeStore({ rehydrated, slices }: CreateFakeStoreArgs) {
-  let state = { ...slices, _persist: { rehydrated } };
+  let state = { ...slices, _persist: { rehydrated, version: 4 } };
   const listeners = new Set<() => void>();
   const dispatch = vi.fn();
   return {
@@ -26,7 +26,7 @@ function createFakeStore({ rehydrated, slices }: CreateFakeStoreArgs) {
       return () => listeners.delete(listener);
     },
     markRehydrated() {
-      state = { ...state, _persist: { rehydrated: true } };
+      state = { ...state, _persist: { rehydrated: true, version: 4 } };
       for (const listener of [...listeners]) listener();
     },
   };
@@ -140,6 +140,33 @@ describe(initCrossFrameStorageSync.name, () => {
       type: hydrateSlicesFromStorage.type,
       payload: { networks: { ids: ['devnet'] } },
     });
+  });
+
+  test('ignores roots persisted at a different version', async () => {
+    const store = createFakeStore({ rehydrated: true, slices: { networks: { ids: [] } } });
+    initCrossFrameStorageSync(store, createDirtySliceTracker());
+
+    await chrome.storage.local.set({
+      [persistRootKey]: {
+        networks: { ids: ['devnet'] },
+        _persist: { version: 2, rehydrated: true },
+      },
+    });
+    await drainAsync();
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+
+  test('ignores roots missing persist metadata', async () => {
+    const store = createFakeStore({ rehydrated: true, slices: { networks: { ids: [] } } });
+    initCrossFrameStorageSync(store, createDirtySliceTracker());
+
+    await chrome.storage.local.set({
+      [persistRootKey]: { networks: { ids: ['devnet'] } },
+    });
+    await drainAsync();
+
+    expect(store.dispatch).not.toHaveBeenCalled();
   });
 
   test('ignores the record being cleared on sign-out', async () => {

@@ -2,6 +2,7 @@ import { createAction } from '@reduxjs/toolkit';
 import { isDeepEqual, isPlainObject } from 'remeda';
 
 import type { DirtySliceTracker } from '@shared/storage/dirty-slice-tracker';
+import { getPersistVersion } from '@shared/storage/merge-persist-storage';
 import { type PersistedSliceKey, persistWhitelist } from '@shared/storage/persist-whitelist';
 
 import type { LocalRootState } from '@app/store';
@@ -17,7 +18,7 @@ export const hydrateSlicesFromStorage = createAction<HydratedSlices>(
 );
 
 interface SyncStoreState extends Partial<Record<PersistedSliceKey, unknown>> {
-  _persist?: { rehydrated: boolean };
+  _persist?: { rehydrated: boolean; version: number };
 }
 
 interface SyncStore {
@@ -41,6 +42,7 @@ function isHydratedSlices(
 function applyRemoteRoot(store: SyncStore, tracker: DirtySliceTracker, root: unknown) {
   if (!isPlainObject(root)) return;
   const state = store.getState();
+  if (getPersistVersion(root) !== state._persist?.version) return;
   const changedSlices: Partial<Record<PersistedSliceKey, unknown>> = {};
   let hasChanges = false;
   for (const key of persistWhitelist) {
