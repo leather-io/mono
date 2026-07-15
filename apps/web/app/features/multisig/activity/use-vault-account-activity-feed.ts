@@ -41,6 +41,7 @@ export function useVaultAccountActivityFeed(
     payloadsById,
     marketData,
     classifyContract,
+    getTokenInfo,
     isLoading: isLoadingInputs,
   } = useMultisigActivityInputs(account ? [account] : [], onchainItems);
 
@@ -53,6 +54,7 @@ export function useVaultAccountActivityFeed(
     payloadsById,
     marketData,
     classifyContract,
+    getTokenInfo,
     frontier,
   });
 

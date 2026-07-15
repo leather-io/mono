@@ -52,9 +52,31 @@ export type LeatherApiTokenAnalyticsMapEntry = Extract<
   paths['/v1/analytics/native']['get']['responses'][200]['content']['application/json'],
   { format: 'map' }
 >['data'][string];
+
+interface ProposeMultisigTransactionOptions extends ApiRequestOptions {
+  baseUrl?: string;
+}
+
+function createLeatherOpenApiClient(baseUrl: string, clientId: string) {
+  const client = createClient<paths>({ baseUrl });
+  client.use({
+    onRequest({ request }) {
+      request.headers.set('X-Client-ID', clientId);
+      return request;
+    },
+    onResponse({ response }) {
+      if (!response.ok) {
+        throw new LeatherApiError(response.url, response.status, response.statusText);
+      }
+    },
+  });
+  return client;
+}
+
 @injectable()
 export class LeatherApiClient {
   private readonly client;
+  private readonly clientId = uuidv4();
 
   constructor(
     @inject(Types.CacheService) private readonly cacheService: HttpCacheService,
@@ -62,24 +84,11 @@ export class LeatherApiClient {
     @inject(Types.Environment) env: Environment,
     private readonly rateLimiter: RateLimiterService
   ) {
-    const clientId = uuidv4();
-    this.client = createClient<paths>({
-      baseUrl:
-        env.environment === 'production'
-          ? LEATHER_API_URL_PRODUCTION
-          : (env.leatherApiUrl ?? LEATHER_API_URL_STAGING),
-    });
-    this.client.use({
-      onRequest({ request }) {
-        request.headers.set('X-Client-ID', clientId);
-        return request;
-      },
-      onResponse({ response }) {
-        if (!response.ok) {
-          throw new LeatherApiError(response.url, response.status, response.statusText);
-        }
-      },
-    });
+    const baseUrl =
+      env.environment === 'production'
+        ? LEATHER_API_URL_PRODUCTION
+        : (env.leatherApiUrl ?? LEATHER_API_URL_STAGING);
+    this.client = createLeatherOpenApiClient(baseUrl, this.clientId);
   }
 
   async fetchUtxos(
@@ -974,11 +983,12 @@ export class LeatherApiClient {
       proposalSignature: string;
       proposalTimestamp: number;
     },
-    { signal }: ApiRequestOptions = {}
+    { baseUrl, signal }: ProposeMultisigTransactionOptions = {}
   ) {
+    const client = baseUrl ? createLeatherOpenApiClient(baseUrl, this.clientId) : this.client;
     const { data } = await this.rateLimiter.add(
       RateLimiterType.Leather,
-      () => this.client.POST('/v1/multisig-ext/propose', { body, signal }),
+      () => client.POST('/v1/multisig-ext/propose', { body, signal }),
       {
         priority: leatherApiPriorities.proposeMultisigTransaction,
         signal,

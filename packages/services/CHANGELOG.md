@@ -413,6 +413,45 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.60.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.60.0...@leather.io/services-v1.60.1) (2026-07-15)
+
+
+### Bug Fixes
+
+* **extension:** propose transaction to staging ([#2507](https://github.com/leather-io/mono/issues/2507)) ([b0677ae](https://github.com/leather-io/mono/commit/b0677ae1cee2e097f24f2bcb087426f8168068ec))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.39.2
+    * @leather.io/stacks bumped to 1.22.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.24.1
+
+## [1.60.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.59.0...@leather.io/services-v1.60.0) (2026-07-15)
+
+
+### Features
+
+* multisig account recovery ([#2486](https://github.com/leather-io/mono/issues/2486)) ([a711892](https://github.com/leather-io/mono/commit/a7118922a0569fd1bdad9010f6e02169b362629a))
+* **services:** add signedByMe field to multisig tx summary ([#2496](https://github.com/leather-io/mono/issues/2496)) ([1a70094](https://github.com/leather-io/mono/commit/1a700948a3ad74b1b8c944a39268754c2006bf75))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.39.1
+    * @leather.io/constants bumped to 0.37.1
+    * @leather.io/crypto bumped to 1.13.2
+    * @leather.io/models bumped to 0.60.0
+    * @leather.io/stacks bumped to 1.21.1
+    * @leather.io/utils bumped to 0.52.2
+  * devDependencies
+    * @leather.io/rpc bumped to 2.24.0
+
 ## [1.59.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.58.0...@leather.io/services-v1.59.0) (2026-07-10)
 
 

@@ -40,6 +40,64 @@
 
 ---
 
+## [6.106.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.106.0...@leather.io/extension-v6.106.1) (2026-07-15)
+
+
+### Bug Fixes
+
+* **extension:** propose transaction to staging ([#2507](https://github.com/leather-io/mono/issues/2507)) ([b0677ae](https://github.com/leather-io/mono/commit/b0677ae1cee2e097f24f2bcb087426f8168068ec))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.39.2
+    * @leather.io/features bumped to 1.5.2
+    * @leather.io/provider bumped to 1.6.31
+    * @leather.io/queries bumped to 0.14.0
+    * @leather.io/query bumped to 2.51.2
+    * @leather.io/rpc bumped to 2.24.1
+    * @leather.io/services bumped to 1.60.1
+    * @leather.io/stacks bumped to 1.22.0
+    * @leather.io/ui bumped to 1.114.2
+
+## [6.106.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.105.0...@leather.io/extension-v6.106.0) (2026-07-15)
+
+
+### Features
+
+* **extension:** add wallet fingerprint to getAddresses ([#2499](https://github.com/leather-io/mono/issues/2499)) ([8e13787](https://github.com/leather-io/mono/commit/8e13787b37de92b334ea98dbb371ac03c622848f))
+
+
+### Bug Fixes
+
+* extension rpc memo ([#2491](https://github.com/leather-io/mono/issues/2491)) ([adc473e](https://github.com/leather-io/mono/commit/adc473eaa7daa0e44bf93fcb1ef11dc8a90ea006))
+* **extension:** set correct app permissions for policy accounts ([#2501](https://github.com/leather-io/mono/issues/2501)) ([ba23dcc](https://github.com/leather-io/mono/commit/ba23dcc957e2717746580e2e3934f44a236d9b7c))
+* implement frameId for rpc requests ([#2487](https://github.com/leather-io/mono/issues/2487)) ([2fd3af3](https://github.com/leather-io/mono/commit/2fd3af36586f94b23a3aa0a4bb45a467d464b953))
+* use shared state in stx rpc flow ([#2488](https://github.com/leather-io/mono/issues/2488)) ([9c78a2d](https://github.com/leather-io/mono/commit/9c78a2de5384ac0091441c68d9ab3c398c9f3724))
+* whitelist dev leather url ([#2505](https://github.com/leather-io/mono/issues/2505)) ([c0e1c49](https://github.com/leather-io/mono/commit/c0e1c49241290fe7b8979916957a1c68506cc169))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.21.1
+    * @leather.io/bitcoin bumped to 0.39.1
+    * @leather.io/constants bumped to 0.37.1
+    * @leather.io/crypto bumped to 1.13.2
+    * @leather.io/features bumped to 1.5.1
+    * @leather.io/models bumped to 0.60.0
+    * @leather.io/provider bumped to 1.6.30
+    * @leather.io/queries bumped to 0.13.0
+    * @leather.io/query bumped to 2.51.1
+    * @leather.io/rpc bumped to 2.24.0
+    * @leather.io/services bumped to 1.60.0
+    * @leather.io/stacks bumped to 1.21.1
+    * @leather.io/ui bumped to 1.114.1
+    * @leather.io/utils bumped to 0.52.2
+
 ## [6.105.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.104.0...@leather.io/extension-v6.105.0) (2026-07-10)
 
 

@@ -6,19 +6,21 @@ import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/walle
 import type { AppPermission } from '@shared/permissions/permission.helpers';
 import { assumedZeroFingerprint } from '@shared/utils';
 
+import { userRemovesPolicy } from '../policy/policy.slice';
 import { appPermissionsSlice } from './app-permissions.slice';
 
 const fingerprintA = 'a1b2c3d4';
 const fingerprintB = 'e5f6a7b8';
 const mainnet: BitcoinNetworkModes = 'mainnet';
 
-function createPermission(origin: string, fingerprint: string): AppPermission {
+function createPermission(origin: string, fingerprint: string, policyId?: string): AppPermission {
   return {
     origin,
     fingerprint,
     accountIndex: 0,
     requestedAccounts: '2026-01-01T00:00:00.000Z',
     networkMode: mainnet,
+    ...(policyId ? { policyId } : {}),
   };
 }
 
@@ -69,5 +71,37 @@ describe('appPermissionsSlice', () => {
     expect(result.ids).toEqual(['legacy.com', 'other.com']);
     expect(result.entities['legacy.com']?.fingerprint).toBe(fingerprintA);
     expect(result.entities['other.com']?.fingerprint).toBe(fingerprintB);
+  });
+
+  test('replaces the whole permission on update, dropping a previously bound policy', () => {
+    const policyId = `${fingerprintA}/0/bc1qaddr/mainnet`;
+    const state = createState([createPermission('app-a.com', fingerprintA, policyId)]);
+
+    const result = appPermissionsSlice.reducer(
+      state,
+      appPermissionsSlice.actions.updatePermission(createPermission('app-a.com', fingerprintA))
+    );
+
+    expect(result.entities['app-a.com']).toEqual(createPermission('app-a.com', fingerprintA));
+    expect(result.entities['app-a.com']?.policyId).toBeUndefined();
+  });
+
+  test('strips the policy binding only from origins bound to the removed policy', () => {
+    const policyId = `${fingerprintA}/0/bc1qaddr/mainnet`;
+    const otherPolicyId = `${fingerprintB}/0/bc1qother/mainnet`;
+    const state = createState([
+      createPermission('app-a.com', fingerprintA, policyId),
+      createPermission('app-b.com', fingerprintB, otherPolicyId),
+      createPermission('app-c.com', fingerprintA),
+    ]);
+
+    const result = appPermissionsSlice.reducer(state, userRemovesPolicy({ policyId }));
+
+    expect(result.ids).toEqual(['app-a.com', 'app-b.com', 'app-c.com']);
+    expect(result.entities['app-a.com']?.policyId).toBeUndefined();
+    expect(result.entities['app-a.com']?.fingerprint).toBe(fingerprintA);
+    expect(result.entities['app-a.com']?.requestedAccounts).toBe('2026-01-01T00:00:00.000Z');
+    expect(result.entities['app-b.com']?.policyId).toBe(otherPolicyId);
+    expect(result.entities['app-c.com']).toEqual(createPermission('app-c.com', fingerprintA));
   });
 });

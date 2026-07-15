@@ -577,6 +577,24 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/utils bumped to 0.46.4
 
+## [1.22.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.21.1...@leather.io/stacks-v1.22.0) (2026-07-15)
+
+
+### Features
+
+* multisig sip10 transfers ([#2502](https://github.com/leather-io/mono/issues/2502)) ([4550325](https://github.com/leather-io/mono/commit/455032542e11e1d13eb40b8567feddd060f528c7))
+
+## [1.21.1](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.21.0...@leather.io/stacks-v1.21.1) (2026-07-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.2
+    * @leather.io/models bumped to 0.60.0
+    * @leather.io/utils bumped to 0.52.2
+
 ## [1.21.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.20.3...@leather.io/stacks-v1.21.0) (2026-07-10)
 
 

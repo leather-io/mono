@@ -36,6 +36,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.60.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.59.0...@leather.io/models-v0.60.0) (2026-07-15)
+
+
+### Features
+
+* **services:** add signedByMe field to multisig tx summary ([#2496](https://github.com/leather-io/mono/issues/2496)) ([1a70094](https://github.com/leather-io/mono/commit/1a700948a3ad74b1b8c944a39268754c2006bf75))
+
 ## [0.59.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.58.0...@leather.io/models-v0.59.0) (2026-07-10)
 
 

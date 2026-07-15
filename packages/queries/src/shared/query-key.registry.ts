@@ -33,6 +33,7 @@ export const querySettingsDepsRegistry = {
   'utxos-service--get-account-utxos': ['network'],
   // fungible asset info
   'fungible-asset-info-service--get-asset-description': [],
+  'sip10-asset-service--get-asset-by-principal': ['network'],
   // bns
   'bns-service--get-bns-name': [],
   'bns-service--get-account-primary-bns-profile': [],

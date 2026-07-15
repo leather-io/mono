@@ -411,6 +411,32 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.24.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.24.0...@leather.io/rpc-v2.24.1) (2026-07-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/stacks bumped to 1.22.0
+
+## [2.24.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.23.0...@leather.io/rpc-v2.24.0) (2026-07-15)
+
+
+### Features
+
+* **extension:** add wallet fingerprint to getAddresses ([#2499](https://github.com/leather-io/mono/issues/2499)) ([8e13787](https://github.com/leather-io/mono/commit/8e13787b37de92b334ea98dbb371ac03c622848f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.37.1
+    * @leather.io/models bumped to 0.60.0
+    * @leather.io/stacks bumped to 1.21.1
+    * @leather.io/utils bumped to 0.52.2
+
 ## [2.23.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.22.3...@leather.io/rpc-v2.23.0) (2026-07-10)
 
 

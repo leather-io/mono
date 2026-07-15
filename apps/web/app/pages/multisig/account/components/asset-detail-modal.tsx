@@ -17,7 +17,7 @@ import {
   createFungibleAssetDescriptionQueryConfig,
   createMarketStatsQueryConfig,
 } from '@leather.io/queries';
-import { AssetAvatarIcon, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
+import { AssetAvatarIcon, Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 
 import { CopyAddress } from '../../components/copy-address';
 import { VaultActivityList } from '../../components/vault-activity-list';
@@ -28,6 +28,8 @@ interface AssetDetailModalProps {
   account: VaultAccount;
   item: VaultAssetItem;
   onClose(): void;
+  onSend(item: VaultAssetItem): void;
+  onReceive(): void;
 }
 
 interface SectionProps {
@@ -175,9 +177,19 @@ function RecentActivity({ activity }: RecentActivityProps) {
   );
 }
 
-export function AssetDetailModal({ account, item, onClose }: AssetDetailModalProps) {
+export function AssetDetailModal({
+  account,
+  item,
+  onClose,
+  onSend,
+  onReceive,
+}: AssetDetailModalProps) {
   const settings = useUserSettings();
   const { asset } = item;
+  const canSend =
+    asset.protocol === 'nativeStx' ||
+    asset.protocol === 'nativeBtc' ||
+    item.crypto.amount.isGreaterThan(0);
 
   const description = useQuery(createFungibleAssetDescriptionQueryConfig(asset, settings));
   const marketData = useMarketDataQuery(asset);
@@ -203,7 +215,7 @@ export function AssetDetailModal({ account, item, onClose }: AssetDetailModalPro
         minHeight={0}
         overflowY="auto"
       >
-        <Flex direction="column" alignItems="center" gap="space.03" pb="space.05">
+        <Flex direction="column" alignItems="center" gap="space.03" pb="space.04">
           <AssetAvatarIcon asset={asset} size="xl" />
           <Flex direction="column" alignItems="center" gap="space.00" textAlign="center">
             <styled.div textStyle="heading.03">
@@ -213,6 +225,20 @@ export function AssetDetailModal({ account, item, onClose }: AssetDetailModalPro
             <styled.div textStyle="label.01" color="ink.text-primary">
               {formatCurrency(item.fiat)}
             </styled.div>
+          </Flex>
+          <Flex gap="space.03" justifyContent="center" pt="space.02">
+            <Button
+              variant="outline"
+              size="md"
+              px="space.04"
+              disabled={!canSend}
+              onClick={() => onSend(item)}
+            >
+              Send
+            </Button>
+            <Button variant="outline" size="md" onClick={onReceive}>
+              Receive
+            </Button>
           </Flex>
         </Flex>
 
