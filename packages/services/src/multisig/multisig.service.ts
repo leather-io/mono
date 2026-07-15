@@ -51,6 +51,10 @@ export interface UpdateVaultAccountRequest {
   icon?: string | null;
 }
 
+export interface UpdateVaultMemberRequest {
+  name: string;
+}
+
 export interface ProposeTransactionRequest {
   multisigAddress: string;
   rawPayload: string;
@@ -120,6 +124,15 @@ export class MultisigService {
     signal?: AbortSignal
   ): Promise<VaultMembershipResult> {
     return this.authApiClient.declineMultisigVault(network, membershipId, { signal });
+  }
+
+  async updateVaultMember(
+    network: AuthNetworkId,
+    membershipId: string,
+    update: UpdateVaultMemberRequest,
+    signal?: AbortSignal
+  ): Promise<VaultMembershipResult> {
+    return this.authApiClient.updateMultisigVaultMember(network, membershipId, update, { signal });
   }
 
   async listVaultAccounts(
