@@ -14,6 +14,7 @@ const publicKeys = [
   '02410c8e39987b918021268fcd601670fc75e138e7b0027fc690abd954bc03aa20',
 ];
 const messageSignatureWireByteLength = 66;
+const publicKeyWireByteLength = 34;
 
 describe('estimateStacksTransactionByteLength', () => {
   it('matches the library estimate for single-signature transactions', async () => {
@@ -46,5 +47,25 @@ describe('estimateStacksTransactionByteLength', () => {
       estimateTransactionByteLength(tx) + numSignatures * messageSignatureWireByteLength
     );
     expect(estimateStacksTransactionByteLength(tx)).toBeGreaterThan(tx.serializeBytes().byteLength);
+  });
+
+  it('reserves signature and remaining public key space when signers exceed the threshold', async () => {
+    const numSignatures = 1;
+    const tx = await generateStacksUnsignedTransaction({
+      txType: TransactionTypes.StxTokenTransfer,
+      recipient,
+      amount: createMoney(new BigNumber(1000), 'STX'),
+      fee: createMoney(new BigNumber(0), 'STX'),
+      nonce: '0',
+      network: 'testnet',
+      publicKeys,
+      numSignatures,
+      useNonSequentialMultiSig: true,
+    });
+    const expected =
+      estimateTransactionByteLength(tx) +
+      numSignatures * messageSignatureWireByteLength +
+      (publicKeys.length - numSignatures) * publicKeyWireByteLength;
+    expect(estimateStacksTransactionByteLength(tx, publicKeys.length)).toBe(expected);
   });
 });

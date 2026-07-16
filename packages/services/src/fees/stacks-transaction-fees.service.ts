@@ -24,9 +24,10 @@ export class StacksTransactionFeesService {
 
   async getStacksTransactionFees(
     unsignedTx: StacksTransactionWire,
+    signerCount?: number,
     signal?: AbortSignal
   ): Promise<StacksTransactionFees> {
-    const estimatedTxSize = estimateStacksTransactionByteLength(unsignedTx);
+    const estimatedTxSize = estimateStacksTransactionByteLength(unsignedTx, signerCount);
     const fees = await this.getTieredFeeAmounts(unsignedTx, estimatedTxSize, signal);
     return {
       chain: 'stacks',
