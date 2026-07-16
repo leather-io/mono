@@ -114,7 +114,13 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-initCrossFrameStorageSync(store, persistDirtyTracker);
+const initialStateProbeAction = { type: 'storageSync/initialStateProbe' };
+
+initCrossFrameStorageSync(
+  store,
+  persistDirtyTracker,
+  appReducer(undefined, initialStateProbeAction)
+);
 
 export type AppThunk<ReturnType = void> = ThunkAction<
   Promise<ReturnType> | ReturnType,

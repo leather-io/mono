@@ -48,6 +48,8 @@ function frameRootReducer(state: FrameState | undefined, action: Action) {
   return frameReducer(state, action);
 }
 
+const frameInitialState = frameReducer(undefined, { type: 'test/initialStateProbe' });
+
 interface CreateFrameArgs {
   withSync?: boolean;
 }
@@ -87,7 +89,7 @@ function createFrame({ withSync = true }: CreateFrameArgs = {}) {
   });
 
   const persistor = persistStore(store);
-  if (withSync) initCrossFrameStorageSync(store, tracker);
+  if (withSync) initCrossFrameStorageSync(store, tracker, frameInitialState);
 
   async function waitForRehydration() {
     if (store.getState()._persist.rehydrated) return;
@@ -257,6 +259,54 @@ describe('cross-frame persistence', () => {
     expect(rootAfterMergeWrite.manageTokens).toMatchObject({
       entities: { 'token-x': { id: 'token-x', enabled: false } },
     });
+  });
+
+  test('boot reconcile keeps defaults absent from a stored slice', async () => {
+    await chrome.storage.local.set({
+      [persistRootKey]: {
+        settings: {
+          userSelectedTheme: 'dark',
+          dismissedMessages: [],
+          dismissedPromoIndexes: [],
+          seenFeatureIntros: [],
+          discardedInscriptions: [],
+        },
+        _persist: { version: 4, rehydrated: true },
+      },
+    });
+
+    const frame = await bootFrame();
+
+    const { settings } = frame.store.getState();
+    expect(settings.userSelectedTheme).toBe('dark');
+    expect(settings.isNotificationsEnabled).toBe(true);
+  });
+
+  test('a peer write lacking a default keeps that default in live frames', async () => {
+    const frameA = await bootFrame();
+    const frameB = await bootFrame();
+
+    const root = await readStoredRoot();
+    await chrome.storage.local.set({
+      [persistRootKey]: {
+        ...root,
+        settings: {
+          userSelectedTheme: 'light',
+          dismissedMessages: [],
+          dismissedPromoIndexes: [],
+          seenFeatureIntros: [],
+          discardedInscriptions: [],
+        },
+      },
+    });
+    await frameA.settle();
+    await frameB.settle();
+
+    for (const frame of [frameA, frameB]) {
+      const { settings } = frame.store.getState();
+      expect(settings.userSelectedTheme).toBe('light');
+      expect(settings.isNotificationsEnabled).toBe(true);
+    }
   });
 
   test('a frame that never observed a stored root still persists wholesale', async () => {

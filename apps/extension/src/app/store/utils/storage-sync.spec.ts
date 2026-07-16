@@ -44,7 +44,7 @@ function makeRoot(slices: Record<string, unknown>) {
 describe(initCrossFrameStorageSync.name, () => {
   test('adopts remote slice changes from storage', async () => {
     const store = createFakeStore({ rehydrated: true, slices: { networks: { ids: [] } } });
-    initCrossFrameStorageSync(store, createDirtySliceTracker());
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {});
 
     await chrome.storage.local.set({
       [persistRootKey]: makeRoot({ networks: { ids: ['devnet'] } }),
@@ -63,7 +63,7 @@ describe(initCrossFrameStorageSync.name, () => {
       rehydrated: true,
       slices: { networks: { ids: [] }, settings: { theme: 'dark' } },
     });
-    initCrossFrameStorageSync(store, createDirtySliceTracker());
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {});
 
     await chrome.storage.local.set({
       [persistRootKey]: makeRoot({ networks: { ids: ['devnet'] }, settings: { theme: 'light' } }),
@@ -87,7 +87,7 @@ describe(initCrossFrameStorageSync.name, () => {
     });
     const tracker = createDirtySliceTracker();
     tracker.markDirty('networks');
-    initCrossFrameStorageSync(store, tracker);
+    initCrossFrameStorageSync(store, tracker, {});
 
     await chrome.storage.local.set({
       [persistRootKey]: makeRoot({ networks: { ids: ['devnet'] }, settings: { theme: 'light' } }),
@@ -102,7 +102,7 @@ describe(initCrossFrameStorageSync.name, () => {
 
   test('ignores echo events where storage matches local state', async () => {
     const store = createFakeStore({ rehydrated: true, slices: { networks: { ids: ['devnet'] } } });
-    initCrossFrameStorageSync(store, createDirtySliceTracker());
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {});
 
     await chrome.storage.local.set({
       [persistRootKey]: makeRoot({ networks: { ids: ['devnet'] } }),
@@ -114,7 +114,7 @@ describe(initCrossFrameStorageSync.name, () => {
 
   test('ignores events until the frame has rehydrated', async () => {
     const store = createFakeStore({ rehydrated: false, slices: { networks: { ids: [] } } });
-    initCrossFrameStorageSync(store, createDirtySliceTracker());
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {});
 
     await chrome.storage.local.set({
       [persistRootKey]: makeRoot({ networks: { ids: ['devnet'] } }),
@@ -126,7 +126,7 @@ describe(initCrossFrameStorageSync.name, () => {
 
   test('reconciles against storage once rehydration completes', async () => {
     const store = createFakeStore({ rehydrated: false, slices: { networks: { ids: [] } } });
-    initCrossFrameStorageSync(store, createDirtySliceTracker());
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {});
     await chrome.storage.local.set({
       [persistRootKey]: makeRoot({ networks: { ids: ['devnet'] } }),
     });
@@ -144,7 +144,7 @@ describe(initCrossFrameStorageSync.name, () => {
 
   test('ignores roots persisted at a different version', async () => {
     const store = createFakeStore({ rehydrated: true, slices: { networks: { ids: [] } } });
-    initCrossFrameStorageSync(store, createDirtySliceTracker());
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {});
 
     await chrome.storage.local.set({
       [persistRootKey]: {
@@ -159,7 +159,7 @@ describe(initCrossFrameStorageSync.name, () => {
 
   test('ignores roots missing persist metadata', async () => {
     const store = createFakeStore({ rehydrated: true, slices: { networks: { ids: [] } } });
-    initCrossFrameStorageSync(store, createDirtySliceTracker());
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {});
 
     await chrome.storage.local.set({
       [persistRootKey]: { networks: { ids: ['devnet'] } },
@@ -174,7 +174,7 @@ describe(initCrossFrameStorageSync.name, () => {
     await chrome.storage.local.set({
       [persistRootKey]: makeRoot({ networks: { ids: ['devnet'] } }),
     });
-    initCrossFrameStorageSync(store, createDirtySliceTracker());
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {});
 
     await chrome.storage.local.remove(persistRootKey);
     await drainAsync();
@@ -184,7 +184,7 @@ describe(initCrossFrameStorageSync.name, () => {
 
   test('ignores changes in other storage areas', async () => {
     const store = createFakeStore({ rehydrated: true, slices: { networks: { ids: [] } } });
-    initCrossFrameStorageSync(store, createDirtySliceTracker());
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {});
 
     await chrome.storage.session.set({
       [persistRootKey]: makeRoot({ networks: { ids: ['devnet'] } }),
@@ -196,9 +196,47 @@ describe(initCrossFrameStorageSync.name, () => {
 
   test('ignores changes to other storage keys', async () => {
     const store = createFakeStore({ rehydrated: true, slices: { networks: { ids: [] } } });
-    initCrossFrameStorageSync(store, createDirtySliceTracker());
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {});
 
     await chrome.storage.local.set({ logs: ['entry'] });
+    await drainAsync();
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+
+  test('injects initial-state defaults missing from a stored slice', async () => {
+    const store = createFakeStore({
+      rehydrated: true,
+      slices: { settings: { theme: 'dark', isNotificationsEnabled: true } },
+    });
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {
+      settings: { theme: 'system', isNotificationsEnabled: true },
+    });
+
+    await chrome.storage.local.set({
+      [persistRootKey]: makeRoot({ settings: { theme: 'light' } }),
+    });
+    await drainAsync();
+
+    expect(store.dispatch).toHaveBeenCalledOnce();
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: hydrateSlicesFromStorage.type,
+      payload: { settings: { theme: 'light', isNotificationsEnabled: true } },
+    });
+  });
+
+  test('skips slices whose only difference from local state is missing defaults', async () => {
+    const store = createFakeStore({
+      rehydrated: true,
+      slices: { settings: { theme: 'dark', isNotificationsEnabled: true } },
+    });
+    initCrossFrameStorageSync(store, createDirtySliceTracker(), {
+      settings: { theme: 'system', isNotificationsEnabled: true },
+    });
+
+    await chrome.storage.local.set({
+      [persistRootKey]: makeRoot({ settings: { theme: 'dark' } }),
+    });
     await drainAsync();
 
     expect(store.dispatch).not.toHaveBeenCalled();
@@ -208,7 +246,7 @@ describe(initCrossFrameStorageSync.name, () => {
     const store = createFakeStore({ rehydrated: true, slices: { networks: { ids: [] } } });
     const tracker = createDirtySliceTracker();
     tracker.suspendWrites();
-    initCrossFrameStorageSync(store, tracker);
+    initCrossFrameStorageSync(store, tracker, {});
 
     await chrome.storage.local.set({
       [persistRootKey]: makeRoot({ networks: { ids: ['devnet'] } }),
