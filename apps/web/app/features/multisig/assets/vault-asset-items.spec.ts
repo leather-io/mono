@@ -2,9 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   SBTC_ASSET_ID_MAINNET,
-  SBTC_ASSET_ID_TESTNET,
   USDCX_ASSET_ID_MAINNET,
-  USDCX_ASSET_ID_TESTNET,
   btcAsset,
   stxAsset,
 } from '@leather.io/constants';
@@ -24,13 +22,6 @@ const usdcxAsset = makeSip10Asset({
   symbol: 'USDCx',
   assetId: USDCX_ASSET_ID_MAINNET,
   contractId: USDCX_ASSET_ID_MAINNET.split('::')[0],
-});
-
-const testnetUsdcxAsset = makeSip10Asset({
-  name: 'USDCx',
-  symbol: 'USDCx',
-  assetId: USDCX_ASSET_ID_TESTNET,
-  contractId: USDCX_ASSET_ID_TESTNET.split('::')[0],
 });
 
 const sbtcAsset = makeSip10Asset({
@@ -92,8 +83,7 @@ describe(buildVaultAssetItems.name, () => {
     });
     const items = buildVaultAssetItems(
       [makeItem(junk), makeItem(junk, makeBalance(junk, 0, 0))],
-      'USD',
-      'mainnet'
+      'USD'
     );
     expect(items).toHaveLength(0);
   });
@@ -104,29 +94,33 @@ describe(buildVaultAssetItems.name, () => {
       assetId: 'SP9.meme::meme',
       contractId: 'SP9.meme',
     });
-    const items = buildVaultAssetItems(
-      [makeItem(meme, makeBalance(meme, 500, 12))],
-      'USD',
-      'mainnet'
-    );
+    const items = buildVaultAssetItems([makeItem(meme, makeBalance(meme, 500, 12))], 'USD');
     expect(items).toHaveLength(1);
     expect(items[0].asset.symbol).toBe('MEME');
   });
 
-  it('always includes STX, USDCx and sBTC with zero-filled balances', () => {
-    const items = buildVaultAssetItems(
-      [makeItem(stxAsset), makeItem(sbtcAsset), makeItem(usdcxAsset)],
-      'USD',
-      'mainnet'
-    );
-    expect(items.map(item => item.asset.symbol)).toEqual(['STX', 'USDCx', 'sBTC']);
-    expect(items.map(item => Number(item.crypto.amount))).toEqual([0, 0, 0]);
+  it('always includes STX with a zero-filled balance', () => {
+    const items = buildVaultAssetItems([makeItem(stxAsset)], 'USD');
+    expect(items.map(item => item.asset.symbol)).toEqual(['STX']);
+    expect(Number(items[0].crypto.amount)).toBe(0);
     expect(items[0].crypto.symbol).toBe('STX');
     expect(items[0].fiat.symbol).toBe('USD');
-    expect(items[2].crypto.decimals).toBe(8);
   });
 
-  it('pins STX, USDCx and sBTC above assets with larger balances', () => {
+  it('pins STX above assets with larger balances', () => {
+    const whale = makeSip10Asset({
+      symbol: 'WHALE',
+      assetId: 'SP9.whale::whale',
+      contractId: 'SP9.whale',
+    });
+    const items = buildVaultAssetItems(
+      [makeItem(whale, makeBalance(whale, 1_000_000, 99_999)), makeItem(stxAsset)],
+      'USD'
+    );
+    expect(items.map(item => item.asset.symbol)).toEqual(['STX', 'WHALE']);
+  });
+
+  it('renders USDCx and sBTC normally — dropped at zero balance, unpinned when held', () => {
     const whale = makeSip10Asset({
       symbol: 'WHALE',
       assetId: 'SP9.whale::whale',
@@ -134,15 +128,14 @@ describe(buildVaultAssetItems.name, () => {
     });
     const items = buildVaultAssetItems(
       [
+        makeItem(usdcxAsset),
+        makeItem(sbtcAsset, makeBalance(sbtcAsset, 1_000_000, 100)),
         makeItem(whale, makeBalance(whale, 1_000_000, 99_999)),
-        makeItem(usdcxAsset, makeBalance(usdcxAsset, 5, 5)),
         makeItem(stxAsset),
-        makeItem(sbtcAsset),
       ],
-      'USD',
-      'mainnet'
+      'USD'
     );
-    expect(items.map(item => item.asset.symbol)).toEqual(['STX', 'USDCx', 'sBTC', 'WHALE']);
+    expect(items.map(item => item.asset.symbol)).toEqual(['STX', 'WHALE', 'sBTC']);
   });
 
   it('sorts remaining assets by fiat balance, then symbol', () => {
@@ -159,45 +152,13 @@ describe(buildVaultAssetItems.name, () => {
         makeItem(rich, makeBalance(rich, 1, 50)),
         makeItem(alpha, makeBalance(alpha, 10, 1)),
       ],
-      'USD',
-      'mainnet'
+      'USD'
     );
     expect(items.map(item => item.asset.symbol)).toEqual(['RICH', 'AAA', 'BBB']);
   });
 
-  it('drops the other network variant of a pinned token when not held', () => {
-    const items = buildVaultAssetItems(
-      [makeItem(usdcxAsset, makeBalance(usdcxAsset, 100, 100)), makeItem(testnetUsdcxAsset)],
-      'USD',
-      'mainnet'
-    );
-    expect(items.map(item => item.asset.assetId)).toEqual([USDCX_ASSET_ID_MAINNET]);
-  });
-
-  it('pins the testnet variants on testnet vaults', () => {
-    const items = buildVaultAssetItems(
-      [makeItem(usdcxAsset), makeItem(testnetUsdcxAsset)],
-      'USD',
-      'testnet'
-    );
-    expect(items.map(item => item.asset.assetId)).toEqual([USDCX_ASSET_ID_TESTNET]);
-  });
-
-  it('matches testnet sBTC by contract id when the constant has no asset name suffix', () => {
-    const testnetSbtc = makeSip10Asset({
-      name: 'sBTC',
-      symbol: 'sBTC',
-      decimals: 8,
-      assetId: `${SBTC_ASSET_ID_TESTNET}::sbtc-token`,
-      contractId: SBTC_ASSET_ID_TESTNET,
-    });
-    const items = buildVaultAssetItems([makeItem(testnetSbtc)], 'USD', 'testnet');
-    expect(items).toHaveLength(1);
-    expect(items[0].asset.symbol).toBe('sBTC');
-  });
-
   it('keeps a lone zero-balance BTC row for bitcoin vaults', () => {
-    const items = buildVaultAssetItems([makeItem(btcAsset)], 'USD', 'mainnet');
+    const items = buildVaultAssetItems([makeItem(btcAsset)], 'USD');
     expect(items.map(item => item.asset.symbol)).toEqual(['BTC']);
     expect(Number(items[0].crypto.amount)).toBe(0);
     expect(items[0].crypto.symbol).toBe('BTC');
@@ -206,19 +167,14 @@ describe(buildVaultAssetItems.name, () => {
 
 describe(filterSendableVaultAssets.name, () => {
   it('keeps STX even with a zero balance', () => {
-    const items = buildVaultAssetItems([makeItem(stxAsset)], 'USD', 'mainnet');
+    const items = buildVaultAssetItems([makeItem(stxAsset)], 'USD');
     expect(filterSendableVaultAssets(items).map(item => item.asset.symbol)).toEqual(['STX']);
   });
 
-  it('drops zero-balance pinned tokens and keeps held ones', () => {
+  it('keeps held tokens alongside STX', () => {
     const items = buildVaultAssetItems(
-      [
-        makeItem(stxAsset),
-        makeItem(usdcxAsset, makeBalance(usdcxAsset, 500_000_000, 500)),
-        makeItem(sbtcAsset),
-      ],
-      'USD',
-      'mainnet'
+      [makeItem(stxAsset), makeItem(usdcxAsset, makeBalance(usdcxAsset, 500_000_000, 500))],
+      'USD'
     );
     expect(filterSendableVaultAssets(items).map(item => item.asset.symbol)).toEqual([
       'STX',
@@ -238,13 +194,12 @@ describe(filterSendableVaultAssets.name, () => {
         makeItem(stxAsset),
         makeItem(sbtcAsset, makeBalance(sbtcAsset, 1_000_000, 600)),
       ],
-      'USD',
-      'mainnet'
+      'USD'
     );
     expect(filterSendableVaultAssets(items).map(item => item.asset.symbol)).toEqual([
       'STX',
-      'sBTC',
       'MEME',
+      'sBTC',
     ]);
   });
 });
