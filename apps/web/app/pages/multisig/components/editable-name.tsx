@@ -76,9 +76,13 @@ export function EditableName({
             color="ink.text-subdued"
             p="space.01"
             borderRadius="sm"
-            _hover={{ color: 'ink.text-primary', bg: 'ink.component-background-hover' }}
+            _hover={{
+              color: 'ink.action-primary-default',
+              bg: 'ink.component-background-hover',
+              '& [data-edit-icon]': { color: 'ink.action-primary-default' },
+            }}
           >
-            <PencilIcon variant="small" />
+            <PencilIcon data-edit-icon variant="small" color="ink.text-subdued" />
           </styled.button>
         </BasicTooltip>
       </Flex>
