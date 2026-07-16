@@ -47,6 +47,7 @@ function borderColorForStatus(state: MemberFieldStatus['state']) {
   return 'ink.border-default';
 }
 
+const maxMembers = 15;
 const maxMemberNameLength = 32;
 const disallowedNameChars =
   /[\u00B7\u2024\u2027\u3002\uFF0E\u200B-\u200D\uFEFF\u202A-\u202E\u2066-\u2069]/g;
@@ -77,6 +78,7 @@ export function MemberRows({
     onChange(members.map((m, i) => (i === index ? { ...m, ...patch } : m)));
   }
   function add() {
+    if (members.length >= maxMembers) return;
     onChange([...members, { id: crypto.randomUUID(), addr: '', name: '' }]);
   }
   function remove(index: number) {
@@ -158,15 +160,17 @@ export function MemberRows({
           </Flex>
         );
       })}
-      <Button
-        variant="ghost"
-        size="md"
-        onClick={add}
-        alignSelf="flex-start"
-        iconStart={<PlusIcon variant="small" />}
-      >
-        Add member
-      </Button>
+      {members.length < maxMembers && (
+        <Button
+          variant="ghost"
+          size="md"
+          onClick={add}
+          alignSelf="flex-start"
+          iconStart={<PlusIcon variant="small" />}
+        >
+          Add member
+        </Button>
+      )}
     </Flex>
   );
 }

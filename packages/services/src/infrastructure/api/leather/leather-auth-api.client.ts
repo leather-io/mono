@@ -287,6 +287,25 @@ export class LeatherAuthApiClient {
     );
   }
 
+  async updateMultisigVaultMember(
+    network: AuthNetworkId,
+    membershipId: string,
+    update: { name: string },
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.PATCH('/v1/multisig/vault-members/{id}', {
+          params: { path: { id: membershipId } },
+          body: update,
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
   async fetchMultisigVaultAccountTransactions(
     network: AuthNetworkId,
     vaultAccountId: string,

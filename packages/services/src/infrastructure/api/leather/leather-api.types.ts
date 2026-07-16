@@ -4613,7 +4613,6 @@ export interface paths {
                 | 'broadcast'
                 | 'confirmed'
                 | 'failed'
-                | 'dropped'
                 | 'cancelled';
               broadcastAt: string | null;
               createdAt: string;
@@ -4729,7 +4728,6 @@ export interface paths {
                   | 'broadcast'
                   | 'confirmed'
                   | 'failed'
-                  | 'dropped'
                   | 'cancelled';
                 broadcastAt: string | null;
                 createdAt: string;
@@ -4830,7 +4828,6 @@ export interface paths {
                 | 'broadcast'
                 | 'confirmed'
                 | 'failed'
-                | 'dropped'
                 | 'cancelled';
               broadcastAt: string | null;
               createdAt: string;
@@ -4949,7 +4946,6 @@ export interface paths {
                 | 'broadcast'
                 | 'confirmed'
                 | 'failed'
-                | 'dropped'
                 | 'cancelled';
               broadcastAt: string | null;
               createdAt: string;
@@ -5068,7 +5064,6 @@ export interface paths {
                 | 'broadcast'
                 | 'confirmed'
                 | 'failed'
-                | 'dropped'
                 | 'cancelled';
               broadcastAt: string | null;
               createdAt: string;
@@ -5187,7 +5182,6 @@ export interface paths {
                 | 'broadcast'
                 | 'confirmed'
                 | 'failed'
-                | 'dropped'
                 | 'cancelled';
               broadcastAt: string | null;
               createdAt: string;
@@ -6070,6 +6064,156 @@ export interface paths {
     options?: never;
     head?: never;
     patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/vault-members/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** @description Rename a vault member */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              membership: {
+                membershipId: string;
+                address: string;
+                name: string | null;
+                /** @enum {string} */
+                membershipStatus: 'invited' | 'joined' | 'declined';
+                user: {
+                  /** @enum {string} */
+                  network:
+                    | 'stx:mainnet'
+                    | 'stx:testnet'
+                    | 'btc:mainnet'
+                    | 'btc:testnet'
+                    | 'btc:regtest';
+                  publicKey: string;
+                  address: string;
+                  id: string;
+                  xpub: string | null;
+                  xpubOriginFingerprint: string | null;
+                  xpubOriginPath: string | null;
+                } | null;
+              };
+              vault: {
+                id: string;
+                name: string;
+                theme: string | null;
+                icon: string | null;
+                /** @enum {string} */
+                network:
+                  | 'stx:mainnet'
+                  | 'stx:testnet'
+                  | 'btc:mainnet'
+                  | 'btc:testnet'
+                  | 'btc:regtest';
+                /** @enum {string} */
+                status: 'pending' | 'active' | 'cancelled';
+                members: {
+                  membershipId: string;
+                  address: string;
+                  name: string | null;
+                  /** @enum {string} */
+                  membershipStatus: 'invited' | 'joined' | 'declined';
+                  user: {
+                    /** @enum {string} */
+                    network:
+                      | 'stx:mainnet'
+                      | 'stx:testnet'
+                      | 'btc:mainnet'
+                      | 'btc:testnet'
+                      | 'btc:regtest';
+                    publicKey: string;
+                    address: string;
+                    id: string;
+                    xpub: string | null;
+                    xpubOriginFingerprint: string | null;
+                    xpubOriginPath: string | null;
+                  } | null;
+                }[];
+                createdBy: string;
+                createdAt: string;
+              };
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
     trace?: never;
   };
   '/v1/multisig/vaults/{id}/accounts': {

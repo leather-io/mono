@@ -43,6 +43,7 @@ export const Tooltip = {
 };
 
 const defaultContentStyles = css({
+  zIndex: 1000,
   bg: 'ink.action-primary-default',
   borderRadius: 'xs',
   px: 'space.03',
