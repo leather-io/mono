@@ -91,10 +91,12 @@ function ConnectChainCallout({
   chainLabel,
   isPending,
   onConnect,
+  error,
 }: {
   chainLabel: string;
   isPending: boolean;
   onConnect(): void;
+  error?: string;
 }) {
   return (
     <Flex
@@ -115,6 +117,11 @@ function ConnectChainCallout({
         <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.01">
           Leather needs your {chainLabel} key to add you as the first signer.
         </styled.p>
+        {error && (
+          <styled.p textStyle="caption.01" color="red.action-primary-default" mt="space.02">
+            {error}
+          </styled.p>
+        )}
       </Box>
       <Button
         variant="solid"
@@ -350,6 +357,7 @@ export function CreateVaultPage() {
                   chainLabel={chainLabel}
                   isPending={signIn.isPending}
                   onConnect={() => signIn.mutate()}
+                  error={signIn.error?.message}
                 />
               </Box>
             )}
