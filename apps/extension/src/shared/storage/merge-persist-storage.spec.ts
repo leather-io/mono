@@ -56,6 +56,86 @@ describe(createMergePersistStorage.name, () => {
     expect(await readStorage()).toEqual(staged);
   });
 
+  test('writes only dirty slices when the stored root vanished mid-session', async () => {
+    const { tracker, driver } = setup();
+    await seedStorage(
+      makeRoot({ slices: { softwareKeys: { entities: { wallet: 'ciphertext' } } } })
+    );
+    await driver.getItem(persistRootKey);
+    await chrome.storage.local.clear();
+    tracker.markDirty('settings');
+
+    await driver.setItem(
+      persistRootKey,
+      makeRoot({
+        slices: {
+          softwareKeys: { entities: { wallet: 'ciphertext' } },
+          settings: { theme: 'dark' },
+        },
+      })
+    );
+
+    expect(await readStorage()).toEqual(makeRoot({ slices: { settings: { theme: 'dark' } } }));
+  });
+
+  test('skips the write when the stored root vanished and nothing is dirty', async () => {
+    const { driver } = setup();
+    await seedStorage(
+      makeRoot({ slices: { softwareKeys: { entities: { wallet: 'ciphertext' } } } })
+    );
+    await driver.getItem(persistRootKey);
+    await chrome.storage.local.clear();
+
+    await driver.setItem(
+      persistRootKey,
+      makeRoot({ slices: { softwareKeys: { entities: { wallet: 'ciphertext' } } } })
+    );
+
+    expect(await readStorage()).toBeUndefined();
+  });
+
+  test('does not backfill slices erased mid-session into a partial root', async () => {
+    const { tracker, driver } = setup();
+    await seedStorage(
+      makeRoot({
+        slices: {
+          softwareKeys: { entities: { wallet: 'ciphertext' } },
+          settings: { theme: 'dark' },
+        },
+      })
+    );
+    await driver.getItem(persistRootKey);
+    await chrome.storage.local.clear();
+    await seedStorage(makeRoot({ slices: { settings: { theme: 'dark' } } }));
+    tracker.markDirty('settings');
+
+    await driver.setItem(
+      persistRootKey,
+      makeRoot({
+        slices: {
+          softwareKeys: { entities: { wallet: 'ciphertext' } },
+          settings: { theme: 'light' },
+        },
+      })
+    );
+
+    expect(await readStorage()).toEqual(makeRoot({ slices: { settings: { theme: 'light' } } }));
+  });
+
+  test('writes wholesale into cleared storage only until a root has been observed', async () => {
+    const { tracker, driver } = setup();
+    await driver.setItem(persistRootKey, makeRoot({ slices: { settings: { theme: 'dark' } } }));
+    await chrome.storage.local.clear();
+    tracker.markDirty('settings');
+
+    await driver.setItem(
+      persistRootKey,
+      makeRoot({ slices: { networks: { ids: [] }, settings: { theme: 'light' } } })
+    );
+
+    expect(await readStorage()).toEqual(makeRoot({ slices: { settings: { theme: 'light' } } }));
+  });
+
   test('writes staged root wholesale when the persist version changed', async () => {
     const { driver } = setup();
     await seedStorage(makeRoot({ version: 4, slices: { networks: { ids: ['devnet'] } } }));

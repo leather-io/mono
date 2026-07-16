@@ -25,6 +25,7 @@ import { describe, expect, test } from 'vitest';
 import { createDirtySliceTracker } from '@shared/storage/dirty-slice-tracker';
 import { createMergePersistStorage } from '@shared/storage/merge-persist-storage';
 import { persistWhitelist } from '@shared/storage/persist-whitelist';
+import { clearChromeStorage } from '@shared/storage/redux-persist';
 
 import { manageTokensSlice } from './manage-tokens/manage-tokens.slice';
 import { type PersistedNetworkConfiguration, networksSlice } from './networks/networks.slice';
@@ -230,5 +231,43 @@ describe('cross-frame persistence', () => {
 
     const root = await readStoredRoot();
     expect(root.networks).toMatchObject({ entities: { devnet: devnetNetwork } });
+  });
+
+  test('a surviving frame cannot restore wallet storage cleared by sign-out', async () => {
+    const frameA = await bootFrame();
+    frameA.store.dispatch(networksSlice.actions.addNetwork(devnetNetwork));
+    await frameA.settle();
+
+    const staleFrame = await bootFrame({ withSync: false });
+    staleFrame.store.dispatch(settingsSlice.actions.setUserSelectedTheme('dark'));
+    await clearChromeStorage();
+    await staleFrame.settle();
+
+    const root = await readStoredRoot();
+    expect(root.networks).toBeUndefined();
+    expect(root.settings).toMatchObject({ userSelectedTheme: 'dark' });
+
+    staleFrame.store.dispatch(
+      manageTokensSlice.actions.userTogglesTokenVisibility({ id: 'token-x', enabled: false })
+    );
+    await staleFrame.settle();
+
+    const rootAfterMergeWrite = await readStoredRoot();
+    expect(rootAfterMergeWrite.networks).toBeUndefined();
+    expect(rootAfterMergeWrite.manageTokens).toMatchObject({
+      entities: { 'token-x': { id: 'token-x', enabled: false } },
+    });
+  });
+
+  test('a frame that never observed a stored root still persists wholesale', async () => {
+    const frame = await bootFrame();
+
+    frame.store.dispatch(networksSlice.actions.addNetwork(devnetNetwork));
+    await frame.settle();
+
+    const root = await readStoredRoot();
+    expect(root.networks).toMatchObject({ entities: { devnet: devnetNetwork } });
+    expect(root.settings).toBeDefined();
+    expect(root.manageTokens).toBeDefined();
   });
 });

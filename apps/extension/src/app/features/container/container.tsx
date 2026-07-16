@@ -43,6 +43,8 @@ export function Container() {
     window.location.reload();
   });
   useOnSignOut(() => {
+    persistor.pause();
+    persistDirtyTracker.suspendWrites();
     inMemoryStore.clearAll();
     clearKeychainSelectorCaches();
     window.location.reload();

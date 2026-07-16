@@ -79,10 +79,10 @@ export function useKeyActions() {
         await clearWalletSession();
         inMemoryStore.clearAll();
         clearKeychainSelectorCaches();
+        void broadcastSignOut();
         dispatch(resetWallet());
         await clearChromeStorage();
         partiallyClearLocalStorage();
-        void broadcastSignOut();
         analytics.track('sign_out');
         queryClient.clear();
       },
