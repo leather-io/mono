@@ -75,25 +75,18 @@ export class BnsService {
       return [];
     }
 
-    let bnsV2ApiAddressNamesRes;
-    try {
-      bnsV2ApiAddressNamesRes = await this.bnsV2ApiClient.fetchAddressBnsNames(stxAddress, {
-        signal,
-      });
-    } catch {
-      try {
-        bnsV2ApiAddressNamesRes = await this.bnsV2ApiClient.fetchAddressBnsNames(stxAddress, {
-          signal,
-          skipCache: true,
-        });
-      } catch {
-        return [];
-      }
-    }
+    const namesResPromise = this.bnsV2ApiClient
+      .fetchAddressBnsNames(stxAddress, { signal })
+      .catch(() =>
+        this.bnsV2ApiClient.fetchAddressBnsNames(stxAddress, { signal, skipCache: true })
+      );
 
-    const primaryBnsName = await this.getAddressPrimaryBnsName(stxAddress, signal).catch(
-      () => null
-    );
+    const [bnsV2ApiAddressNamesRes, primaryBnsName] = await Promise.all([
+      namesResPromise.catch(() => null),
+      this.getAddressPrimaryBnsName(stxAddress, signal),
+    ]);
+
+    if (!bnsV2ApiAddressNamesRes) return [];
 
     return bnsV2ApiAddressNamesRes.names.map(n => ({
       ...mapBnsNameFromV2ApiAddressName(n),
