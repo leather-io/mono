@@ -111,10 +111,12 @@ function ConnectChainPrompt({
   chain,
   onConnect,
   isPending,
+  error,
 }: {
   chain: Chain;
   onConnect(): void;
   isPending: boolean;
+  error?: string;
 }) {
   const label = chain === 'btc' ? 'Bitcoin' : 'Stacks';
   return (
@@ -132,6 +134,11 @@ function ConnectChainPrompt({
         <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.01">
           You'll be able to create and join {label} multisig vaults alongside your existing ones.
         </styled.p>
+        {error && (
+          <styled.p textStyle="caption.01" color="red.action-primary-default" mt="space.02">
+            {error}
+          </styled.p>
+        )}
       </Box>
       <Button variant="outline" disabled={isPending} aria-busy={isPending} onClick={onConnect}>
         Connect {label}
@@ -233,6 +240,7 @@ export function MultisigDashboardPage() {
               chain="btc"
               onConnect={() => btcSignIn.mutate()}
               isPending={btcSignIn.isPending}
+              error={btcSignIn.error?.message}
             />
           )}
           {!stxSession && (
@@ -240,6 +248,7 @@ export function MultisigDashboardPage() {
               chain="stx"
               onConnect={() => stxSignIn.mutate()}
               isPending={stxSignIn.isPending}
+              error={stxSignIn.error?.message}
             />
           )}
         </Box>
