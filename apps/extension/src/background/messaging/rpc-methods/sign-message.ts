@@ -20,6 +20,7 @@ import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
+  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
 } from '../rpc-request-utils';
@@ -79,7 +80,7 @@ export const signMessageHandler = defineRpcRequestHandler(
 
     const requestParams: RequestParams = [
       ['message', request.params.message],
-      ['network', (request.params as any).network ?? 'mainnet'],
+      makeNetworkRequestParam((request.params as any).network),
       ['paymentType', paymentType],
       ['requestId', request.id],
     ];

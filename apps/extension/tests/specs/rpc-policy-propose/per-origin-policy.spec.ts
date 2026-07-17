@@ -177,7 +177,7 @@ test.describe('RPC: per-origin policy binding', () => {
     });
   });
 
-  test('re-connecting single-sig clears a previously bound policy', async ({
+  test('re-connecting defaults to the previously bound policy', async ({
     page,
     context,
     extensionId,
@@ -198,6 +198,51 @@ test.describe('RPC: per-origin policy binding', () => {
     const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: true });
     await approveGetAddresses(context);
     const connectResult = await requestPromise;
+    test.expect(connectResult.result.addresses).toEqual([
+      {
+        symbol: 'STX',
+        kind: 'multisig',
+        address: stacksPolicy.address,
+        threshold: stacksPolicy.threshold,
+        publicKeys: stacksPolicy.publicKeys,
+      },
+    ]);
+
+    const permission = await readPersistedPermission(page, extensionId)();
+    test.expect(permission.policyId).toBe(stacksPolicy.id);
+  });
+
+  test('switching to a single-sig account while re-connecting clears the bound policy', async ({
+    page,
+    context,
+    extensionId,
+    onboardingPage,
+  }) => {
+    test.slow();
+
+    await overrideLaunchDarklyFlags(context, {
+      releaseAddAccount: true,
+      enableAllowPolicyAccounts: true,
+    });
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
+      ...policyStateOverrides({ policies: [stacksPolicy] }),
+    });
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+
+    const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: true });
+    const popup = await context.waitForEvent('page');
+    const currentAccount = popup.getByTestId('switch-account-item-0');
+    await expect(currentAccount).toBeVisible({ timeout: 10_000 });
+    await currentAccount.click();
+    const secondAccount = popup.getByTestId('switch-account-item-1');
+    await expect(secondAccount).toBeVisible({ timeout: 10_000 });
+    await secondAccount.click();
+    const approveButton = popup.getByTestId('get-addresses-approve-button');
+    await expect(approveButton).toBeVisible();
+    await approveButton.click();
+
+    const connectResult = await requestPromise;
     test
       .expect(
         connectResult.result.addresses.some(
@@ -208,5 +253,6 @@ test.describe('RPC: per-origin policy binding', () => {
 
     const permission = await readPersistedPermission(page, extensionId)();
     test.expect(permission.policyId).toBeUndefined();
+    test.expect(permission.accountIndex).toBe(1);
   });
 });

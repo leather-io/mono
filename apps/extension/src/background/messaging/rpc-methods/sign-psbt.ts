@@ -19,6 +19,7 @@ import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
+  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
 } from '../rpc-request-utils';
@@ -99,6 +100,7 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
   const requestParams: RequestParams = [
     ['hex', request.params.hex],
     ['requestId', request.id],
+    makeNetworkRequestParam(request.params.network),
   ];
 
   if (isDefined(request.params.account)) {
@@ -107,10 +109,6 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
 
   if (isDefined(request.params.broadcast)) {
     requestParams.push(['broadcast', request.params.broadcast.toString()]);
-  }
-
-  if (isDefined(request.params.network)) {
-    requestParams.push(['network', request.params.network.toString()]);
   }
 
   if (isDefined(request.params.descriptor)) {

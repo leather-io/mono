@@ -12,8 +12,9 @@ import { RouteUrls } from '@shared/route-urls';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
-  createConnectingAppMetadataSearchParams,
+  createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
+  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
   validateRequestParams,
@@ -59,11 +60,14 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
       return;
     }
 
-    const { frameId, urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
-      ['requestId', request.id],
-      ['rpcRequest', encodeBase64Json(request)],
-    ]);
-    if (request.params.network) urlParams.append('network', request.params.network);
+    const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+      port,
+      [
+        ['requestId', request.id],
+        ['rpcRequest', encodeBase64Json(request)],
+        makeNetworkRequestParam(request.params.network),
+      ]
+    );
 
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcBtcAddAccount, urlParams);
     void trackRpcRequestSuccess({ endpoint: request.method });

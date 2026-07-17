@@ -93,3 +93,34 @@ test.describe('RPC: stx_transferStx', () => {
     });
   });
 });
+
+test.describe('RPC: stx_transferStx network defaulting', () => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      ...getConnectedTestAppPermissionsState(),
+      networks: { ids: [], entities: {}, currentNetworkId: 'testnet' },
+    });
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+  });
+
+  test('defaults to mainnet when the wallet is set to testnet and the request omits network', async ({
+    page,
+    context,
+  }) => {
+    const [popup] = await Promise.all([
+      context.waitForEvent('page'),
+      page.evaluate(
+        params =>
+          void (window as any).LeatherProvider.request('stx_transferStx', params).catch(
+            (e: unknown) => e
+          ),
+        { amount: 100, recipient: TEST_ACCOUNT_2_STX_ADDRESS }
+      ),
+    ]);
+
+    await popup.waitForSelector('text="Account 1"');
+    await test.expect(popup.getByText('SPS8…WSFE')).toBeVisible();
+    await popup.close();
+  });
+});

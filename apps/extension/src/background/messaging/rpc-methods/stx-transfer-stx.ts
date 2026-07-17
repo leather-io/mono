@@ -13,6 +13,7 @@ import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   createConnectingAppSearchParamsWithLastKnownAccount,
   listenForPopupClose,
+  makeNetworkRequestParam,
   triggerRequestPopupWindowOpen,
   validateRequestParams,
 } from '../rpc-request-utils';
@@ -34,12 +35,10 @@ export const stxTransferStxHandler = defineRpcRequestHandler(
       [
         ['requestId', request.id],
         ['rpcRequest', encodeBase64Json(request)],
+        makeNetworkRequestParam(request.params?.network),
       ]
     );
 
-    if (request.params && request.params.network) {
-      urlParams.append('network', request.params.network);
-    }
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcStxTransferStx, urlParams);
     void trackRpcRequestSuccess({ endpoint: request.method });
 

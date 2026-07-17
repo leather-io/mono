@@ -122,7 +122,13 @@ export function listenForOriginTabClose({ tabId }: ListenForOriginTabCloseArgs) 
 
 export type RequestParams = [string, string][];
 
-export function createConnectingAppMetadataSearchParams(
+const defaultRpcRequestNetwork = 'mainnet';
+
+export function makeNetworkRequestParam(network?: string): [string, string] {
+  return ['network', network ?? defaultRpcRequestNetwork];
+}
+
+function createConnectingAppMetadataSearchParams(
   port: chrome.runtime.Port,
   otherParams: RequestParams = []
 ) {
@@ -149,10 +155,11 @@ export async function createConnectingAppSearchParamsWithLastKnownAccount(
     const appPermissions = await getPermissionsByOrigin(getHostnameFromPort(port));
     if (appPermissions) {
       const hasRequestScopedAccount = urlParams.has('accountIndex');
-      if (!hasRequestScopedAccount)
+      const hasStoredAccountIndex = Number.isInteger(appPermissions.accountIndex);
+      if (!hasRequestScopedAccount && hasStoredAccountIndex)
         urlParams.set('accountIndex', appPermissions.accountIndex.toString());
       urlParams.set('fingerprint', appPermissions.fingerprint);
-      if (!hasRequestScopedAccount && appPermissions.policyId)
+      if (!hasRequestScopedAccount && hasStoredAccountIndex && appPermissions.policyId)
         urlParams.set('policyId', appPermissions.policyId);
     }
   }

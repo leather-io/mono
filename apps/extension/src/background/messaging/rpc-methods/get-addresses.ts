@@ -5,7 +5,8 @@ import { RouteUrls } from '@shared/route-urls';
 import { trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
-  createConnectingAppMetadataSearchParams,
+  createConnectingAppSearchParamsWithLastKnownAccount,
+  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
 } from '../rpc-request-utils';
@@ -14,14 +15,14 @@ async function sharedGetAddressesHandler(
   request: RpcRequest<typeof getAddresses> | RpcRequest<typeof stxGetAddresses>,
   port: chrome.runtime.Port
 ) {
-  const { frameId, urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
-    ['requestId', request.id],
-    ['rpcRequest', encodeBase64Json(request)],
-  ]);
-
-  if (request.params && request.params.network) {
-    urlParams.append('network', request.params.network);
-  }
+  const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+    port,
+    [
+      ['requestId', request.id],
+      ['rpcRequest', encodeBase64Json(request)],
+      makeNetworkRequestParam(request.params?.network),
+    ]
+  );
 
   const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcGetAddresses, urlParams);
   void trackRpcRequestSuccess({ endpoint: request.method });

@@ -1,18 +1,15 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { RpcErrorCode } from '@leather.io/rpc';
+import { getAddressesHandler, stxGetAddressesHandler } from './get-addresses';
 
-import { sendTransferHandler } from './send-transfer';
-
-type SendTransferRequest = Parameters<(typeof sendTransferHandler)[1]>[0];
+type GetAddressesRequest = Parameters<(typeof getAddressesHandler)[1]>[0];
+type StxGetAddressesRequest = Parameters<(typeof stxGetAddressesHandler)[1]>[0];
 
 const mocks = vi.hoisted(() => ({
   createConnectingAppSearchParamsWithLastKnownAccount: vi.fn(),
   triggerRequestPopupWindowOpen: vi.fn(),
   sendErrorResponseOnUserPopupClose: vi.fn(),
-  trackRpcRequestError: vi.fn(),
   trackRpcRequestSuccess: vi.fn(),
-  sendMessage: vi.fn(),
 }));
 
 vi.mock('../rpc-message-handler', () => ({
@@ -20,10 +17,6 @@ vi.mock('../rpc-message-handler', () => ({
 }));
 
 vi.mock('../rpc-request-utils', () => ({
-  getOriginatingFrameFromPort: (port: chrome.runtime.Port) => ({
-    frameId: port.sender?.frameId ?? 0,
-    tabId: port.sender?.tab?.id ?? 0,
-  }),
   createConnectingAppSearchParamsWithLastKnownAccount:
     mocks.createConnectingAppSearchParamsWithLastKnownAccount,
   makeNetworkRequestParam: (network?: string) => ['network', network ?? 'mainnet'],
@@ -32,22 +25,11 @@ vi.mock('../rpc-request-utils', () => ({
 }));
 
 vi.mock('../rpc-helpers', () => ({
-  trackRpcRequestError: mocks.trackRpcRequestError,
   trackRpcRequestSuccess: mocks.trackRpcRequestSuccess,
 }));
 
 const frameId = 42;
 const tabId = 7;
-
-const request = {
-  jsonrpc: '2.0',
-  id: 'req-1',
-  method: 'sendTransfer',
-  params: {
-    recipients: [{ address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', amount: '10000' }],
-    network: 'mainnet',
-  },
-} as unknown as SendTransferRequest;
 
 function buildPort() {
   return {
@@ -55,14 +37,12 @@ function buildPort() {
   } as unknown as chrome.runtime.Port;
 }
 
-function invokeHandler(port: chrome.runtime.Port) {
-  const [, handler] = sendTransferHandler;
-  return handler(request, port);
+function buildRequest(method: string, params?: Record<string, unknown>) {
+  return { jsonrpc: '2.0', id: 'req-1', method, ...(params ? { params } : {}) };
 }
 
-describe('sendTransferHandler', () => {
+describe('sharedGetAddressesHandler', () => {
   beforeEach(() => {
-    vi.stubGlobal('chrome', { tabs: { sendMessage: mocks.sendMessage } });
     mocks.createConnectingAppSearchParamsWithLastKnownAccount.mockResolvedValue({
       frameId,
       urlParams: new URLSearchParams(),
@@ -72,12 +52,12 @@ describe('sendTransferHandler', () => {
   });
 
   afterEach(() => {
-    vi.unstubAllGlobals();
     vi.clearAllMocks();
   });
 
-  test('opens the send-transfer popup for a valid request', async () => {
-    await invokeHandler(buildPort());
+  test('pins the last known account from the origin permission', async () => {
+    const [, handler] = getAddressesHandler;
+    await handler(buildRequest('getAddresses') as unknown as GetAddressesRequest, buildPort());
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledTimes(1);
     expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalledTimes(1);
@@ -85,18 +65,8 @@ describe('sendTransferHandler', () => {
   });
 
   test('defaults the network param to mainnet when the request omits network', async () => {
-    const [, handler] = sendTransferHandler;
-    await handler(
-      {
-        jsonrpc: '2.0',
-        id: 'req-3',
-        method: 'sendTransfer',
-        params: {
-          recipients: [{ address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', amount: '10000' }],
-        },
-      } as unknown as SendTransferRequest,
-      buildPort()
-    );
+    const [, handler] = getAddressesHandler;
+    await handler(buildRequest('getAddresses') as unknown as GetAddressesRequest, buildPort());
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
       expect.anything(),
@@ -105,17 +75,9 @@ describe('sendTransferHandler', () => {
   });
 
   test('passes through the requested network param', async () => {
-    const [, handler] = sendTransferHandler;
+    const [, handler] = getAddressesHandler;
     await handler(
-      {
-        jsonrpc: '2.0',
-        id: 'req-4',
-        method: 'sendTransfer',
-        params: {
-          recipients: [{ address: 'tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx', amount: '10000' }],
-          network: 'testnet',
-        },
-      } as unknown as SendTransferRequest,
+      buildRequest('getAddresses', { network: 'testnet' }) as unknown as GetAddressesRequest,
       buildPort()
     );
 
@@ -125,20 +87,17 @@ describe('sendTransferHandler', () => {
     );
   });
 
-  test('rejects undefined parameters', async () => {
-    const [, handler] = sendTransferHandler;
+  test('handles stx_getAddresses identically', async () => {
+    const [, handler] = stxGetAddressesHandler;
     await handler(
-      { jsonrpc: '2.0', id: 'req-2', method: 'sendTransfer' } as unknown as SendTransferRequest,
+      buildRequest('stx_getAddresses') as unknown as StxGetAddressesRequest,
       buildPort()
     );
 
-    expect(mocks.triggerRequestPopupWindowOpen).not.toHaveBeenCalled();
-    expect(mocks.sendMessage).toHaveBeenCalledWith(
-      tabId,
-      expect.objectContaining({
-        error: expect.objectContaining({ code: RpcErrorCode.INVALID_REQUEST }),
-      }),
-      { frameId }
+    expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.arrayContaining([['network', 'mainnet']])
     );
+    expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalledTimes(1);
   });
 });

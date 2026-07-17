@@ -11,7 +11,6 @@ import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to
 import { RouteUrls } from '@shared/route-urls';
 import {
   convertRpcSendTransferLegacyParamsToNew,
-  defaultRpcSendTransferNetwork,
   getRpcSendTransferParamErrors,
   validateRpcSendTransferLegacyParams,
   validateRpcSendTransferParams,
@@ -23,6 +22,7 @@ import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
+  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
 } from '../rpc-request-utils';
@@ -75,7 +75,7 @@ export const sendTransferHandler = defineRpcRequestHandler(
     const requestParams: RequestParams = [
       ...recipients,
       ...amounts,
-      ['network', params.network ?? defaultRpcSendTransferNetwork],
+      makeNetworkRequestParam(params.network),
       ['requestId', request.id],
     ];
 

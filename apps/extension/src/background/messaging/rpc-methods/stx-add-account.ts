@@ -5,7 +5,8 @@ import { RouteUrls } from '@shared/route-urls';
 import { trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
-  createConnectingAppMetadataSearchParams,
+  createConnectingAppSearchParamsWithLastKnownAccount,
+  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
   validateRequestParams,
@@ -25,11 +26,14 @@ export const stxAddAccountHandler = defineRpcRequestHandler(
     });
     if (status === 'failure') return;
 
-    const { frameId, urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
-      ['requestId', request.id],
-      ['rpcRequest', encodeBase64Json(request)],
-    ]);
-    if (request.params.network) urlParams.append('network', request.params.network);
+    const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+      port,
+      [
+        ['requestId', request.id],
+        ['rpcRequest', encodeBase64Json(request)],
+        makeNetworkRequestParam(request.params.network),
+      ]
+    );
 
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcStxAddAccount, urlParams);
     void trackRpcRequestSuccess({ endpoint: request.method });

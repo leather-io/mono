@@ -3,8 +3,8 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { RpcErrorCode, type RpcRequests } from '@leather.io/rpc';
 
 import {
-  createConnectingAppMetadataSearchParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
+  makeNetworkRequestParam,
   validateConnectedWalletExists,
 } from './rpc-request-utils';
 
@@ -67,20 +67,32 @@ function buildState({
   };
 }
 
-describe(createConnectingAppMetadataSearchParams.name, () => {
-  test('preserves the originating frame in popup request metadata', () => {
-    const result = createConnectingAppMetadataSearchParams(buildPort());
+describe(makeNetworkRequestParam.name, () => {
+  test('defaults to mainnet when the request omits network', () => {
+    expect(makeNetworkRequestParam()).toEqual(['network', 'mainnet']);
+    expect(makeNetworkRequestParam(undefined)).toEqual(['network', 'mainnet']);
+  });
 
-    expect(result.frameId).toBe(frameId);
-    expect(result.tabId).toBe(tabId);
-    expect(result.urlParams.get('frameId')).toBe(frameId.toString());
-    expect(result.urlParams.get('tabId')).toBe(tabId.toString());
+  test('passes through the requested network', () => {
+    expect(makeNetworkRequestParam('testnet')).toEqual(['network', 'testnet']);
+    expect(makeNetworkRequestParam('signet')).toEqual(['network', 'signet']);
   });
 });
 
 describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  test('preserves the originating frame in popup request metadata', async () => {
+    mocks.getRootState.mockResolvedValue(buildState({ walletFingerprints: [] }));
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
+
+    expect(result.frameId).toBe(frameId);
+    expect(result.tabId).toBe(tabId);
+    expect(result.urlParams.get('frameId')).toBe(frameId.toString());
+    expect(result.urlParams.get('tabId')).toBe(tabId.toString());
   });
 
   test('pins the last known account from the origin permission', async () => {
@@ -119,6 +131,22 @@ describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
     ]);
 
     expect(result.urlParams.get('accountIndex')).toBe('2');
+    expect(result.urlParams.get('fingerprint')).toBe(fingerprint);
+    expect(result.urlParams.get('policyId')).toBeNull();
+  });
+
+  test('pins only the fingerprint when the permission lacks an account index', async () => {
+    const policyId = `${fingerprint}/0/bc1qaddr/mainnet`;
+    mocks.getRootState.mockResolvedValue(
+      buildState({
+        permission: buildPermission({ accountIndex: undefined, policyId }),
+        walletFingerprints: [],
+      })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
+
+    expect(result.urlParams.get('accountIndex')).toBeNull();
     expect(result.urlParams.get('fingerprint')).toBe(fingerprint);
     expect(result.urlParams.get('policyId')).toBeNull();
   });
