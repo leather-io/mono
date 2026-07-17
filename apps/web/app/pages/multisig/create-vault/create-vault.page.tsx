@@ -56,13 +56,22 @@ function btcSegwitPrefixForMode(mode: BitcoinNetworkModes): string {
   return 'tb1q';
 }
 
-function btcMemberAddressError(address: string, expectedPrefix: string): string {
+function btcMemberAddressError(
+  address: string,
+  expectedPrefix: string,
+  mode: BitcoinNetworkModes
+): string {
   const lower = address.toLowerCase();
   const isTaproot =
     lower.startsWith('bc1p') || lower.startsWith('tb1p') || lower.startsWith('bcrt1p');
-  return isTaproot
-    ? `Taproot addresses aren't supported. Enter a native SegWit address (${expectedPrefix}…).`
-    : `Enter a native SegWit address for this network (${expectedPrefix}…).`;
+  if (isTaproot)
+    return `Taproot addresses aren't supported. Enter a native SegWit address (${expectedPrefix}…).`;
+  const isTestNetworkAddress =
+    isValidBitcoinNetworkAddress(address, 'testnet') ||
+    isValidBitcoinNetworkAddress(address, 'regtest');
+  if (mode === 'mainnet' && isTestNetworkAddress)
+    return 'Testnet addresses are not allowed in mainnet vaults.';
+  return `Enter a native SegWit address for this network (${expectedPrefix}…).`;
 }
 
 function applyBnsReconciliation(
@@ -262,7 +271,7 @@ export function CreateVaultPage() {
         state: 'invalid',
         error:
           chain === 'btc'
-            ? btcMemberAddressError(address, btcNativeSegwitPrefix)
+            ? btcMemberAddressError(address, btcNativeSegwitPrefix, btcNetworkMode)
             : `Enter a Stacks ${networkMode} address (${stxPrefixes[0]}…).`,
       };
     if (myAddress && normalizeAddress(myAddress) === address)
