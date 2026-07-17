@@ -56,6 +56,7 @@ import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { SignerRollcall } from './components/signer-rollcall';
 import { TxDetailsTable } from './components/tx-details-table';
+import { formatTransactionActionError } from './format-transaction-error';
 import { formatRelativeTime } from './relative-time';
 
 // The chain is the source of truth once a tx is on it: a confirmed/failed
@@ -189,7 +190,7 @@ export function TxDetailPage() {
       {
         onSuccess: () => toast.success('Signature added'),
         onError: err => {
-          const message = err.message?.trim();
+          const message = formatTransactionActionError(err);
           if (message) toast.error(message);
         },
       }
@@ -279,8 +280,8 @@ export function TxDetailPage() {
     : { verb: 'Proposed', when: initiationDate };
   const effectiveStatus = reconcileStatus(tx.status, onChain.status);
 
-  function showSigningError(err: Error) {
-    const message = err.message?.trim();
+  function showActionError(err: Error) {
+    const message = formatTransactionActionError(err);
     if (message) toast.error(message);
   }
   function onSign() {
@@ -288,20 +289,20 @@ export function TxDetailPage() {
       { transaction: tx, account: acct },
       {
         onSuccess: () => toast.success('Signature added'),
-        onError: showSigningError,
+        onError: showActionError,
       }
     );
   }
   function onCancel() {
     cancelTransaction.mutate(tx.id, {
       onSuccess: () => toast.success('Transaction cancelled'),
-      onError: err => toast.error(err.message),
+      onError: showActionError,
     });
   }
   function onBroadcast() {
     broadcastTransaction.mutate(tx.id, {
       onSuccess: () => toast.success('Broadcasting transaction'),
-      onError: err => toast.error(err.message),
+      onError: showActionError,
     });
   }
 

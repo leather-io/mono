@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { AuthNetworkId, Vault, VaultMembershipResult } from '@leather.io/models';
 import {
   type CreateVaultRequest,
+  type UpdateVaultMemberRequest,
   type UpdateVaultRequest,
   getMultisigService,
 } from '@leather.io/services';
@@ -72,6 +73,48 @@ export function useUpdateVault(network: AuthNetworkId) {
     },
     onSuccess(vault, { vaultId }) {
       queryClient.setQueryData(multisigVaultKeys.detail(network, address, vaultId), vault);
+      void queryClient.invalidateQueries({ queryKey: multisigVaultKeys.lists(network, address) });
+    },
+  });
+}
+
+export function useUpdateVaultMember(network: AuthNetworkId, vaultId: string) {
+  const queryClient = useQueryClient();
+  const address = useSession(network)?.identity.address;
+  return useMutation<
+    VaultMembershipResult,
+    Error,
+    { membershipId: string; update: UpdateVaultMemberRequest },
+    { previous: Vault | undefined }
+  >({
+    mutationKey: ['multisig-update-vault-member', network, vaultId],
+    mutationFn({ membershipId, update }) {
+      return getMultisigService().updateVaultMember(network, membershipId, update);
+    },
+    async onMutate({ membershipId, update }) {
+      const key = multisigVaultKeys.detail(network, address, vaultId);
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData<Vault>(key);
+      if (previous) {
+        queryClient.setQueryData<Vault>(key, {
+          ...previous,
+          members: previous.members.map(member =>
+            member.membershipId === membershipId ? { ...member, name: update.name } : member
+          ),
+        });
+      }
+      return { previous };
+    },
+    onError(_error, _variables, context) {
+      if (context?.previous) {
+        queryClient.setQueryData(
+          multisigVaultKeys.detail(network, address, vaultId),
+          context.previous
+        );
+      }
+    },
+    onSuccess(result) {
+      queryClient.setQueryData(multisigVaultKeys.detail(network, address, vaultId), result.vault);
       void queryClient.invalidateQueries({ queryKey: multisigVaultKeys.lists(network, address) });
     },
   });

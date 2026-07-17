@@ -5,12 +5,15 @@ import { Toast, ToastLayout, type ToastProps } from '@leather.io/ui';
 import { ToastContext } from './use-toast';
 
 const toastDurationMs = 2600;
+const errorToastDurationMs = 6000;
+
+type StoredToast = ToastProps & { duration?: number };
 
 export function ToastsProvider({ children }: { children: ReactNode }) {
-  const [toasts, setToasts] = useState<Map<string, ToastProps>>(new Map());
+  const [toasts, setToasts] = useState<Map<string, StoredToast>>(new Map());
   const nextId = useRef(0);
 
-  const addToast = useCallback((toast: ToastProps) => {
+  const addToast = useCallback((toast: StoredToast) => {
     const key = String(nextId.current);
     nextId.current += 1;
     setToasts(prev => new Map(prev).set(key, toast));
@@ -30,7 +33,7 @@ export function ToastsProvider({ children }: { children: ReactNode }) {
         addToast({ message, variant: 'success' });
       },
       error(message: string) {
-        addToast({ message, variant: 'error' });
+        addToast({ message, variant: 'error', duration: errorToastDurationMs });
       },
       info(message: string) {
         addToast({ message, variant: 'info' });
@@ -48,6 +51,7 @@ export function ToastsProvider({ children }: { children: ReactNode }) {
             asChild
             forceMount
             key={key}
+            duration={toast.duration}
             onOpenChange={open => {
               if (!open) removeToast(key);
             }}

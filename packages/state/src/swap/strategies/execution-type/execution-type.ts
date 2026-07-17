@@ -58,7 +58,11 @@ const stacksContractCallStrategy: ExecutionStrategy = {
       stacks.stacksNetwork,
       stacks.stacksSigner
     );
-    return services.stacksTransactionFeesService.getStacksTransactionFees(unsignedTx, signal);
+    return services.stacksTransactionFeesService.getStacksTransactionFees(
+      unsignedTx,
+      undefined,
+      signal
+    );
   },
   async submitSwap(dependencies, fee) {
     const { executionData, stacks, nonce } = dependencies;
