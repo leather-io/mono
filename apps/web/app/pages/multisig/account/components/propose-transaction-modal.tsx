@@ -29,7 +29,7 @@ import {
   type VaultAccount,
   transactionFeeTiers,
 } from '@leather.io/models';
-import { isValidStacksAddress } from '@leather.io/stacks';
+import { isValidStacksAddress, stacksAddressNetwork } from '@leather.io/stacks';
 import { BasicTooltip, Button, CloseIcon, IconButton, InfoCircleIcon, Sheet } from '@leather.io/ui';
 import {
   type SerializedCryptoAssetId,
@@ -190,6 +190,18 @@ function FeeTierSelector({
       </Flex>
     </Flex>
   );
+}
+
+function getStacksNetworkError(
+  address: string | undefined,
+  accountIsMainnet: boolean
+): string | undefined {
+  if (!address || !isValidStacksAddress(address)) return undefined;
+  const recipientNetwork = stacksAddressNetwork(address);
+  if (!recipientNetwork) return undefined;
+  const accountNetwork = accountIsMainnet ? 'mainnet' : 'testnet';
+  if (recipientNetwork === accountNetwork) return undefined;
+  return `Recipient must be a ${accountNetwork} address`;
 }
 
 interface ProposeFormFieldsProps {
@@ -484,11 +496,12 @@ function StxProposeForm({
   const symbol = selectedItem?.asset.symbol ?? 'STX';
   const amount = parseAssetAmount(amountInput, decimals, symbol);
   const sip10Asset = selectedItem?.asset.protocol === 'sip10' ? selectedItem.asset : undefined;
-  const recipientError = getRecipientError(
-    recipient,
-    Boolean(recipientAddress) && isValidStacksAddress(recipient.trim()),
-    recipientAddress === account.multisigAddress
-  );
+  const recipientError =
+    getRecipientError(
+      recipient,
+      Boolean(recipientAddress) && isValidStacksAddress(recipient.trim()),
+      recipientAddress === account.multisigAddress
+    ) ?? getStacksNetworkError(recipientAddress, account.network === 'stx:mainnet');
   const amountError = getAmountError(amountInput, amount, selectedItem?.crypto);
   const feesQuery = useVaultStxTransactionFees({
     account,

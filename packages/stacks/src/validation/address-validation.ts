@@ -17,18 +17,25 @@ export function isValidStacksAddress(address: string) {
   }
 }
 
+export function stacksAddressNetwork(address: string): 'mainnet' | 'testnet' | undefined {
+  const prefix = address.slice(0, 2);
+  if (prefix === 'SP' || prefix === 'SM') return 'mainnet';
+  if (prefix === 'ST' || prefix === 'SN') return 'testnet';
+  return undefined;
+}
+
 export function isValidAddressChain(address: string, chainId: number) {
   if (!address) {
     return false;
   }
 
-  const prefix = address.slice(0, 2);
+  const network = stacksAddressNetwork(address);
   switch (chainId) {
     case ChainId.Mainnet:
-      return prefix === 'SM' || prefix === 'SP';
+      return network === 'mainnet';
     case ChainId.Testnet:
     default:
-      return prefix === 'SN' || prefix === 'ST';
+      return network === 'testnet';
   }
 }
 
