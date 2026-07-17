@@ -14,6 +14,7 @@ import {
   useDeclineVault,
   useJoinVault,
   useUpdateVault,
+  useUpdateVaultMember,
 } from '~/features/multisig/vaults/use-vault-mutations';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import {
@@ -88,6 +89,7 @@ export function VaultDetailPage() {
   const joinVault = useJoinVault(network);
   const declineVault = useDeclineVault(network);
   const updateVault = useUpdateVault(network);
+  const updateMember = useUpdateVaultMember(network, vaultId ?? '');
 
   if (!vault) {
     return (
@@ -213,7 +215,11 @@ export function VaultDetailPage() {
           <MembersSection
             vault={vault}
             currentUserAddress={me.data?.address}
+            currentUserIsCreator={isCreator}
             onShareInvite={() => setIsSharingInvites(true)}
+            onRenameMember={(membershipId, name) =>
+              updateMember.mutate({ membershipId, update: { name } })
+            }
           />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">

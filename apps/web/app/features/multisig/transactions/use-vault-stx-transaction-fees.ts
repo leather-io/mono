@@ -40,7 +40,7 @@ export function useVaultStxTransactionFees({
 
   const draftTx = draftQuery.data;
   const feesConfig = draftTx
-    ? createStacksTransactionFeesQueryConfig(draftTx, settings)
+    ? createStacksTransactionFeesQueryConfig(draftTx, settings, account?.signers.length)
     : {
         queryKey: ['multisig-stx-transaction-fees-disabled'],
         queryFn: () => Promise.reject(new Error('No draft transaction')),

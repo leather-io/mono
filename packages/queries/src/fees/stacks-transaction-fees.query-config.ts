@@ -8,24 +8,26 @@ import { createServiceQueryKey } from '../shared/query-key.factory';
 
 export function createStacksTransactionFeesQueryKey(
   unsignedTx: StacksTransactionWire,
-  settings: UserSettings
+  settings: UserSettings,
+  signerCount?: number
 ) {
   const payloadHex = serializePayload(unsignedTx.payload);
   return createServiceQueryKey(
     'stacks-transaction-fees-service--get-stacks-transaction-fees',
-    [payloadHex],
+    [payloadHex, signerCount ?? 1],
     settings
   );
 }
 
 export function createStacksTransactionFeesQueryConfig(
   unsignedTx: StacksTransactionWire,
-  settings: UserSettings
+  settings: UserSettings,
+  signerCount?: number
 ) {
   return {
-    queryKey: createStacksTransactionFeesQueryKey(unsignedTx, settings),
+    queryKey: createStacksTransactionFeesQueryKey(unsignedTx, settings, signerCount),
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getStacksTransactionFeesService().getStacksTransactionFees(unsignedTx, signal),
+      getStacksTransactionFeesService().getStacksTransactionFees(unsignedTx, signerCount, signal),
     refetchOnWindowFocus: false,
     refetchInterval: minutesInMs(2),
     refetchOnMount: true,
