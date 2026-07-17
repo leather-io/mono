@@ -6,7 +6,11 @@ import type { AccountId } from '@leather.io/models';
 import type { WalletType } from '@app/store/common/wallet-type.selectors';
 import type { PolicyStore } from '@app/store/policy/policy-store.utils';
 
-import { buildWalletRows, canHideAccount } from './switch-account-sheet.utils';
+import {
+  buildWalletRows,
+  canHideAccount,
+  filterWalletTreeToBitcoinAccounts,
+} from './switch-account-sheet.utils';
 
 const fingerprint = 'a1b2c3d4';
 function account(accountIndex: number): AccountId {
@@ -57,6 +61,46 @@ describe(buildWalletRows.name, () => {
       acc.accountIndex === 0 ? [policy] : []
     );
     expect(rows.map(row => row.kind)).toEqual(['account', 'policy', 'account']);
+  });
+});
+
+describe(filterWalletTreeToBitcoinAccounts.name, () => {
+  const ledgerFingerprint = 'e5f6a7b8';
+  function ledgerAccount(accountIndex: number): AccountId {
+    return { fingerprint: ledgerFingerprint, accountIndex };
+  }
+  const ledgerWallet: { type: WalletType; accounts: AccountId[] } = {
+    type: 'ledger',
+    accounts: [ledgerAccount(0), ledgerAccount(1)],
+  };
+
+  test('keeps software wallets regardless of hardware bitcoin keychains', () => {
+    const result = filterWalletTreeToBitcoinAccounts(
+      [walletGroup('software', 2)],
+      new Set<string>()
+    );
+
+    expect(result).toHaveLength(1);
+    expect(result[0].accounts).toHaveLength(2);
+  });
+
+  test('drops ledger wallets with no bitcoin keychains', () => {
+    const result = filterWalletTreeToBitcoinAccounts(
+      [walletGroup('software', 2), ledgerWallet],
+      new Set<string>()
+    );
+
+    expect(result).toHaveLength(1);
+    expect(result[0].type).toBe('software');
+  });
+
+  test('filters individual ledger accounts by their bitcoin keychains', () => {
+    const hardwareBitcoinAccountIds = new Set([idOf(ledgerAccount(1))]);
+
+    const result = filterWalletTreeToBitcoinAccounts([ledgerWallet], hardwareBitcoinAccountIds);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].accounts).toEqual([ledgerAccount(1)]);
   });
 });
 

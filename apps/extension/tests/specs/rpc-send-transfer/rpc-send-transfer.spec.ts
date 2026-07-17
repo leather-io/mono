@@ -109,6 +109,92 @@ test.describe('RPC: sendTransfer', () => {
   });
 });
 
+test.describe('RPC: sendTransfer with insufficient funds', () => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await mockLeatherApiRequests(context);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+  });
+
+  test('that it shows an error comparing amounts instead of crashing', async ({
+    page,
+    context,
+  }) => {
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS, amount: '100000000' }],
+      network: 'testnet4',
+    });
+    const popup = await context.waitForEvent('page');
+
+    await test.expect(popup.getByText('Requested amount')).toBeVisible({ timeout: 15_000 });
+    await test.expect(popup.getByText('Available to send')).toBeVisible();
+    await test.expect(popup.getByText("doesn't have enough funds")).toBeVisible();
+    await test.expect(popup.getByText('Something went wrong')).toHaveCount(0);
+    await test.expect(popup.getByText('Approve')).toHaveCount(0);
+
+    await popup.locator('text="Cancel"').click();
+
+    const result = await resultPromise;
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      error: {
+        code: 4001,
+        message: 'User rejected request',
+      },
+    });
+  });
+
+  test('that it recovers after switching to a funded account', async ({ page, context }) => {
+    test.slow();
+
+    let fundAccounts = false;
+    await context.route('**/v1/utxos/**', route => {
+      if (route.request().url().includes('/v1/utxos/addresses/')) {
+        return route.fulfill({ json: [] });
+      }
+      if (!fundAccounts) return route.fulfill({ json: [] });
+      return route.fulfill({
+        json: [
+          {
+            txid: 'b7f3c61e89524a1d7f8e0b2c3d4a5f6e7d8c9b0a1f2e3d4c5b6a7f8e9d0c1b2a',
+            vout: 0,
+            value: '2000000',
+            height: 98330,
+            address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
+            path: "m/84'/1'/1'/0/0",
+          },
+        ],
+      });
+    });
+
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS, amount: '100000' }],
+      network: 'testnet4',
+    });
+    const popup = await context.waitForEvent('page');
+
+    await test.expect(popup.getByText("doesn't have enough funds")).toBeVisible({
+      timeout: 15_000,
+    });
+
+    fundAccounts = true;
+
+    await popup.getByTestId('signing-account-card').click();
+    const secondAccountInListButton = popup.getByTestId('switch-account-item-1');
+    await test.expect(secondAccountInListButton).toBeVisible({ timeout: 10_000 });
+    await secondAccountInListButton.click();
+
+    await test.expect(popup.getByText('Approve')).toBeVisible({ timeout: 15_000 });
+    await test.expect(popup.getByText('Something went wrong')).toHaveCount(0);
+
+    await popup.close();
+    await resultPromise;
+  });
+});
+
 test.describe('RPC: sendTransfer with an active Bitcoin multisig policy account', () => {
   const bitcoinPolicy = makeBitcoinPolicy();
 

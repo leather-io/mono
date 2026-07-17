@@ -140,6 +140,7 @@ export function AccountDetailPage() {
       }
       success(`Added "${accountData.name}" to your wallet`);
     } catch (err) {
+      console.log(err);
       error(err instanceof Error ? err.message : 'Failed to add account to wallet');
     } finally {
       setIsAddingToWallet(false);

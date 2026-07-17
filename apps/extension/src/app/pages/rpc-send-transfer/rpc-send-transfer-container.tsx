@@ -1,8 +1,10 @@
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, useNavigate, useOutletContext } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import type { SwitchAccountOutletContext } from '@app/common/switch-account/switch-account';
 import { BitcoinUtxosLoader } from '@app/components/loaders/bitcoin-utxos-loader';
+import { LoadingSpinner } from '@app/components/loading-spinner';
 import { BitcoinFeeEditorProvider } from '@app/features/fee-editor/bitcoin/bitcoin-fee-editor.provider';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
@@ -16,6 +18,7 @@ export function RpcSendTransferContainer() {
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
   const { isLoading: isLoadingBalance, btc: btcBalance } = useCurrentBtcBalanceWithFallback();
   const account = useAccountRequest();
+  const switchAccountOutletContext = useOutletContext<SwitchAccountOutletContext>();
 
   const navigate = useNavigate();
 
@@ -28,6 +31,7 @@ export function RpcSendTransferContainer() {
           account={account}
           availableBalance={btcBalance.availableBalance}
           isSendingMax={false}
+          loadingFallback={<LoadingSpinner />}
           marketData={btcMarketData}
           onGoBack={() => navigate(RouteUrls.RpcSendTransfer)}
           recipients={recipients}
@@ -40,7 +44,7 @@ export function RpcSendTransferContainer() {
               utxos,
             }}
           >
-            <Outlet />
+            <Outlet context={switchAccountOutletContext} />
           </RpcSendTransferProvider>
         </BitcoinFeeEditorProvider>
       )}

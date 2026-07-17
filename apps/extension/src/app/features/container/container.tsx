@@ -7,6 +7,7 @@ import { analytics } from '@shared/utils/analytics';
 import { initalizeAnalytics, useHandleQueuedBackgroundAnalytics } from '@app/common/app-analytics';
 import { useProbeNextAccountForActivity } from '@app/common/hooks/account/use-probe-next-account-for-activity';
 import type { ReceiveView } from '@app/common/receive/receive';
+import type { SwitchAccountFilter } from '@app/common/switch-account/switch-account';
 import { ContainerLayout } from '@app/components/layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { SwitchAccountSheet } from '@app/features/dialogs/switch-account-sheet/switch-account-sheet';
@@ -33,6 +34,7 @@ export function Container() {
   const pathname = locationPathname as RouteUrls;
   const [isShowingSwitchAccount, setIsShowingSwitchAccount] = useState(false);
   const [allowPolicyAccounts, setAllowPolicyAccounts] = useState(true);
+  const [accountFilter, setAccountFilter] = useState<SwitchAccountFilter>('all');
   const [receiveView, setReceiveView] = useState<ReceiveView | null>(null);
 
   const dispatch = useAppDispatch();
@@ -77,6 +79,7 @@ export function Container() {
           isShowing={isShowingSwitchAccount}
           onClose={() => setIsShowingSwitchAccount(false)}
           allowPolicyAccounts={allowPolicyAccounts}
+          accountFilter={accountFilter}
         />
       )}
       {receiveView && (
@@ -94,6 +97,8 @@ export function Container() {
             setIsShowingSwitchAccount,
             allowPolicyAccounts,
             setAllowPolicyAccounts,
+            accountFilter,
+            setAccountFilter,
             receiveView,
             setReceiveView,
           }}
