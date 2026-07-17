@@ -9,7 +9,7 @@ import { Types } from '../../../inversify.types';
 import type { AuthSessionService } from '../../auth/auth-session.service';
 import type { Environment } from '../../environment';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
-import { LeatherApiError } from './leather-api.error';
+import { LeatherApiError, readLeatherApiErrorData } from './leather-api.error';
 import { LeatherApiPageRequest } from './leather-api.pagination';
 import { paths } from './leather-api.types';
 
@@ -41,9 +41,14 @@ export class LeatherAuthApiClient {
         request.headers.set('X-Client-ID', clientId);
         return request;
       },
-      onResponse({ response }) {
+      async onResponse({ response }) {
         if (!response.ok) {
-          throw new LeatherApiError(response.url, response.status, response.statusText);
+          throw new LeatherApiError(
+            response.url,
+            response.status,
+            response.statusText,
+            await readLeatherApiErrorData(response)
+          );
         }
       },
     });

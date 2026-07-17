@@ -21,3 +21,17 @@ export class LeatherApiError extends Error {
     return this.status === 422;
   }
 }
+
+export async function readLeatherApiErrorData(
+  response: Response
+): Promise<{ error: string } | undefined> {
+  try {
+    const body: unknown = await response.clone().json();
+    if (body && typeof body === 'object' && 'error' in body && typeof body.error === 'string') {
+      return { error: body.error };
+    }
+  } catch {
+    return undefined;
+  }
+  return undefined;
+}
