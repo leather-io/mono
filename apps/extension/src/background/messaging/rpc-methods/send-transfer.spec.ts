@@ -86,6 +86,29 @@ describe('sendTransferHandler', () => {
     expect(mocks.sendErrorResponseOnUserPopupClose).toHaveBeenCalledTimes(1);
   });
 
+  test('forwards an explicit account 0 as a request-scoped account', async () => {
+    const [, handler] = sendTransferHandler;
+    await handler(
+      {
+        jsonrpc: '2.0',
+        id: 'req-6',
+        method: 'sendTransfer',
+        params: {
+          recipients: [{ address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', amount: '10000' }],
+          network: 'mainnet',
+          account: 0,
+        },
+      } as unknown as SendTransferRequest,
+      buildPort()
+    );
+
+    expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.arrayContaining([['accountIndex', '0']]),
+      { network: 'mainnet' }
+    );
+  });
+
   test('passes an undefined network when the request omits network', async () => {
     const [, handler] = sendTransferHandler;
     await handler(
