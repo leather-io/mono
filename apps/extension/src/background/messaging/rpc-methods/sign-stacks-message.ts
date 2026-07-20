@@ -26,13 +26,15 @@ import {
   makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
 } from '../rpc-request-utils';
 
 async function handleRpcSignStacksMessage(
   method: 'stx_signMessage' | 'stx_signStructuredMessage',
   request: RpcRequest<typeof stxSignMessage> | RpcRequest<typeof stxSignStructuredMessage>,
   port: chrome.runtime.Port,
-  requestParams: RequestParams
+  requestParams: RequestParams,
+  network?: string
 ) {
   if (isUndefined(request.params)) {
     void trackRpcRequestError({ endpoint: method, error: 'Undefined parameters' });
@@ -61,6 +63,9 @@ async function handleRpcSignStacksMessage(
     return;
   }
 
+  const networkValidation = await validateRequestNetwork({ id: request.id, method, network, port });
+  if (networkValidation.status === 'failure') return;
+
   void trackRpcRequestSuccess({ endpoint: method });
 
   const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
@@ -88,7 +93,13 @@ export const stxSignMessageHandler = defineRpcRequestHandler(
       ]);
     }
 
-    return handleRpcSignStacksMessage(request.method, request, port, requestParams);
+    return handleRpcSignStacksMessage(
+      request.method,
+      request,
+      port,
+      requestParams,
+      request.params.network
+    );
   }
 );
 

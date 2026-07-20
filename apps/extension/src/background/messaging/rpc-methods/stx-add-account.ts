@@ -9,6 +9,7 @@ import {
   makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
   validateRequestParams,
 } from '../rpc-request-utils';
 
@@ -25,6 +26,14 @@ export const stxAddAccountHandler = defineRpcRequestHandler(
       schema: stxAddAccount.params,
     });
     if (status === 'failure') return;
+
+    const networkValidation = await validateRequestNetwork({
+      id: request.id,
+      method: request.method,
+      network: request.params.network,
+      port,
+    });
+    if (networkValidation.status === 'failure') return;
 
     const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
       port,

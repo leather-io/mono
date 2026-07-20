@@ -6,6 +6,7 @@ import {
   createConnectingAppSearchParamsWithLastKnownAccount,
   makeNetworkRequestParam,
   validateConnectedWalletExists,
+  validateRequestNetwork,
 } from './rpc-request-utils';
 
 const mocks = vi.hoisted(() => ({
@@ -76,6 +77,112 @@ describe(makeNetworkRequestParam.name, () => {
   test('passes through the requested network', () => {
     expect(makeNetworkRequestParam('testnet')).toEqual(['network', 'testnet']);
     expect(makeNetworkRequestParam('signet')).toEqual(['network', 'signet']);
+  });
+});
+
+describe(validateRequestNetwork.name, () => {
+  beforeEach(() => {
+    vi.stubGlobal('chrome', { tabs: { sendMessage: mocks.sendMessage } });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.clearAllMocks();
+  });
+
+  test('succeeds when the request omits network', async () => {
+    const result = await validateRequestNetwork({
+      id: 'req-1',
+      method: 'getAddresses',
+      network: undefined,
+      port: buildPort(),
+    });
+
+    expect(result).toEqual({ status: 'success' });
+    expect(mocks.getRootState).not.toHaveBeenCalled();
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+  });
+
+  test('accepts the wallet default networks', async () => {
+    mocks.getRootState.mockResolvedValue(null);
+
+    for (const network of [
+      'mainnet',
+      'testnet',
+      'testnet4',
+      'signet',
+      'sbtcTestnet',
+      'sbtcDevenv',
+      'devnet',
+    ]) {
+      const result = await validateRequestNetwork({
+        id: 'req-1',
+        method: 'getAddresses',
+        network,
+        port: buildPort(),
+      });
+      expect(result).toEqual({ status: 'success' });
+    }
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+  });
+
+  test('accepts the id of a custom network added to the wallet', async () => {
+    mocks.getRootState.mockResolvedValue({ networks: { ids: ['private'], entities: {} } });
+
+    const result = await validateRequestNetwork({
+      id: 'req-1',
+      method: 'signPsbt',
+      network: 'private',
+      port: buildPort(),
+    });
+
+    expect(result).toEqual({ status: 'success' });
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+  });
+
+  test('rejects unknown networks with INVALID_PARAMS', async () => {
+    mocks.getRootState.mockResolvedValue(null);
+
+    const result = await validateRequestNetwork({
+      id: 'req-1',
+      method: 'stx_callContract',
+      network: 'mocknet',
+      port: buildPort(),
+    });
+
+    expect(result).toEqual({ status: 'failure' });
+    expect(mocks.trackRpcRequestError).toHaveBeenCalledTimes(1);
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      expect.objectContaining({
+        id: 'req-1',
+        error: expect.objectContaining({
+          code: RpcErrorCode.INVALID_PARAMS,
+          message: expect.stringContaining("Unknown network: 'mocknet'"),
+        }),
+      }),
+      { frameId }
+    );
+  });
+
+  test('rejects casing variants of known networks', async () => {
+    mocks.getRootState.mockResolvedValue(null);
+
+    const result = await validateRequestNetwork({
+      id: 'req-1',
+      method: 'stx_transferStx',
+      network: 'Testnet',
+      port: buildPort(),
+    });
+
+    expect(result).toEqual({ status: 'failure' });
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      expect.objectContaining({
+        error: expect.objectContaining({ code: RpcErrorCode.INVALID_PARAMS }),
+      }),
+      { frameId }
+    );
   });
 });
 

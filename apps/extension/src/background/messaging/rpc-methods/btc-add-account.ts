@@ -17,6 +17,7 @@ import {
   makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
   validateRequestParams,
 } from '../rpc-request-utils';
 
@@ -44,6 +45,14 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
       schema: btcAddAccount.params,
     });
     if (status === 'failure') return;
+
+    const networkValidation = await validateRequestNetwork({
+      id: request.id,
+      method: request.method,
+      network: request.params.network,
+      port,
+    });
+    if (networkValidation.status === 'failure') return;
 
     if (!isSupportedMultisigDescriptor(request.params.descriptor)) {
       void trackRpcRequestError({ endpoint: request.method, error: 'Invalid descriptor' });

@@ -23,6 +23,7 @@ import {
   makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
 } from '../rpc-request-utils';
 
 export const signMessageHandler = defineRpcRequestHandler(
@@ -75,6 +76,14 @@ export const signMessageHandler = defineRpcRequestHandler(
       );
       return;
     }
+
+    const networkValidation = await validateRequestNetwork({
+      id: request.id,
+      method: request.method,
+      network: request.params.network,
+      port,
+    });
+    if (networkValidation.status === 'failure') return;
 
     void trackRpcRequestSuccess({ endpoint: request.method });
 

@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   triggerRequestPopupWindowOpen: vi.fn(),
   sendErrorResponseOnUserPopupClose: vi.fn(),
   trackRpcRequestSuccess: vi.fn(),
+  validateRequestNetwork: vi.fn(),
 }));
 
 vi.mock('../rpc-message-handler', () => ({
@@ -22,6 +23,7 @@ vi.mock('../rpc-request-utils', () => ({
   makeNetworkRequestParam: (network?: string) => ['network', network ?? 'mainnet'],
   triggerRequestPopupWindowOpen: mocks.triggerRequestPopupWindowOpen,
   sendErrorResponseOnUserPopupClose: mocks.sendErrorResponseOnUserPopupClose,
+  validateRequestNetwork: mocks.validateRequestNetwork,
 }));
 
 vi.mock('../rpc-helpers', () => ({
@@ -49,6 +51,7 @@ describe('sharedGetAddressesHandler', () => {
       tabId,
     });
     mocks.triggerRequestPopupWindowOpen.mockResolvedValue({ id: 1 });
+    mocks.validateRequestNetwork.mockResolvedValue({ status: 'success' });
   });
 
   afterEach(() => {
@@ -85,6 +88,22 @@ describe('sharedGetAddressesHandler', () => {
       expect.anything(),
       expect.arrayContaining([['network', 'testnet']])
     );
+  });
+
+  test('rejects unknown network values before opening the popup', async () => {
+    mocks.validateRequestNetwork.mockResolvedValue({ status: 'failure' });
+
+    const [, handler] = getAddressesHandler;
+    await handler(
+      buildRequest('getAddresses', { network: 'mocknet' }) as unknown as GetAddressesRequest,
+      buildPort()
+    );
+
+    expect(mocks.validateRequestNetwork).toHaveBeenCalledWith(
+      expect.objectContaining({ network: 'mocknet' })
+    );
+    expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).not.toHaveBeenCalled();
+    expect(mocks.triggerRequestPopupWindowOpen).not.toHaveBeenCalled();
   });
 
   test('handles stx_getAddresses identically', async () => {

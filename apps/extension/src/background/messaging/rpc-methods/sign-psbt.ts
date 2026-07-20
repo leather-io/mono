@@ -22,6 +22,7 @@ import {
   makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
 } from '../rpc-request-utils';
 
 function validatePsbt(hex: string) {
@@ -67,6 +68,14 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
     );
     return;
   }
+
+  const networkValidation = await validateRequestNetwork({
+    id: request.id,
+    method: request.method,
+    network: request.params.network,
+    port,
+  });
+  if (networkValidation.status === 'failure') return;
 
   if (!validatePsbt(request.params.hex)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Invalid PSBT' });

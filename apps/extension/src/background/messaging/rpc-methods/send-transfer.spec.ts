@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   trackRpcRequestError: vi.fn(),
   trackRpcRequestSuccess: vi.fn(),
   sendMessage: vi.fn(),
+  validateRequestNetwork: vi.fn(),
 }));
 
 vi.mock('../rpc-message-handler', () => ({
@@ -29,6 +30,7 @@ vi.mock('../rpc-request-utils', () => ({
   makeNetworkRequestParam: (network?: string) => ['network', network ?? 'mainnet'],
   triggerRequestPopupWindowOpen: mocks.triggerRequestPopupWindowOpen,
   sendErrorResponseOnUserPopupClose: mocks.sendErrorResponseOnUserPopupClose,
+  validateRequestNetwork: mocks.validateRequestNetwork,
 }));
 
 vi.mock('../rpc-helpers', () => ({
@@ -69,6 +71,7 @@ describe('sendTransferHandler', () => {
       tabId,
     });
     mocks.triggerRequestPopupWindowOpen.mockResolvedValue({ id: 1 });
+    mocks.validateRequestNetwork.mockResolvedValue({ status: 'success' });
   });
 
   afterEach(() => {
@@ -123,6 +126,30 @@ describe('sendTransferHandler', () => {
       expect.anything(),
       expect.arrayContaining([['network', 'testnet']])
     );
+  });
+
+  test('rejects unknown network values before opening the popup', async () => {
+    mocks.validateRequestNetwork.mockResolvedValue({ status: 'failure' });
+
+    const [, handler] = sendTransferHandler;
+    await handler(
+      {
+        jsonrpc: '2.0',
+        id: 'req-5',
+        method: 'sendTransfer',
+        params: {
+          recipients: [{ address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', amount: '10000' }],
+          network: 'Testnet',
+        },
+      } as unknown as SendTransferRequest,
+      buildPort()
+    );
+
+    expect(mocks.validateRequestNetwork).toHaveBeenCalledWith(
+      expect.objectContaining({ network: 'Testnet' })
+    );
+    expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).not.toHaveBeenCalled();
+    expect(mocks.triggerRequestPopupWindowOpen).not.toHaveBeenCalled();
   });
 
   test('rejects undefined parameters', async () => {

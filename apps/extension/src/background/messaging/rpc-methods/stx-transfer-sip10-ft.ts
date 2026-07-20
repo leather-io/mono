@@ -15,6 +15,7 @@ import {
   listenForPopupClose,
   makeNetworkRequestParam,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
   validateRequestParams,
 } from '../rpc-request-utils';
 
@@ -30,6 +31,13 @@ export const stxTransferSip10FtHandler = defineRpcRequestHandler(
       schema: stxTransferSip10Ft.params,
     });
     if (status === 'failure') return;
+    const networkValidation = await validateRequestNetwork({
+      id: requestId,
+      method,
+      network: params?.network,
+      port,
+    });
+    if (networkValidation.status === 'failure') return;
     const { frameId, tabId, urlParams } = await createConnectingAppSearchParamsWithLastKnownAccount(
       port,
       [

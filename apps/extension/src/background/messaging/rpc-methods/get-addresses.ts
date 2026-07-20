@@ -9,12 +9,21 @@ import {
   makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
 } from '../rpc-request-utils';
 
 async function sharedGetAddressesHandler(
   request: RpcRequest<typeof getAddresses> | RpcRequest<typeof stxGetAddresses>,
   port: chrome.runtime.Port
 ) {
+  const networkValidation = await validateRequestNetwork({
+    id: request.id,
+    method: request.method,
+    network: request.params?.network,
+    port,
+  });
+  if (networkValidation.status === 'failure') return;
+
   const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
     port,
     [
