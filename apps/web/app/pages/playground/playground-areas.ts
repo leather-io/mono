@@ -23,4 +23,12 @@ export const playgroundAreas: PlaygroundArea[] = [
     description: 'How the playground works: areas, variants, sharing.',
     status: 'living',
   },
+  {
+    slug: 'content-rendering',
+    title: 'Typography, values & addresses',
+    description:
+      'Multisig content rendering: sidebar type scale, BTC/STX decimal conventions, address display.',
+    status: 'exploration',
+    issue: 2527,
+  },
 ];

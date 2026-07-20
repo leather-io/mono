@@ -7,29 +7,31 @@ interface PlaygroundVariant {
   label: string;
 }
 
-const variantParam = 'v';
+const defaultVariantParam = 'v';
 
 // The active variant is kept in the URL (?v=) so any specific variant is
 // directly linkable — a share or feedback comment can point at exactly one
-// iteration.
-export function useActiveVariant(variants: PlaygroundVariant[]) {
+// iteration. Areas with several boards on one page give each board its own
+// param so their switchers stay independent (and combinations stay linkable).
+export function useActiveVariant(variants: PlaygroundVariant[], param = defaultVariantParam) {
   const [searchParams] = useSearchParams();
-  const requested = searchParams.get(variantParam);
+  const requested = searchParams.get(param);
   const match = variants.find(variant => variant.id === requested);
   return match ?? variants[0];
 }
 
 interface VariantSwitcherProps {
   variants: PlaygroundVariant[];
+  param?: string;
 }
 
-export function VariantSwitcher({ variants }: VariantSwitcherProps) {
+export function VariantSwitcher({ variants, param = defaultVariantParam }: VariantSwitcherProps) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const active = useActiveVariant(variants);
+  const active = useActiveVariant(variants, param);
 
   function selectVariant(id: string) {
     const next = new URLSearchParams(searchParams);
-    next.set(variantParam, id);
+    next.set(param, id);
     setSearchParams(next, { replace: true, preventScrollReset: true });
   }
 
