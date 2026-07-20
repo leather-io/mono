@@ -19,6 +19,13 @@ multisig).
 
 The active variant lives in the URL, so a share link points at exactly one iteration.
 
+## Chrome
+
+The playground adds no visible structure of its own — an area may render anything up
+to a full app surface, so the canvas must dominate. The only chrome is a floating
+dock (bottom-center pill) that expands into area navigation. Keep it that way: new
+playground-level controls belong in the dock, not in page furniture around areas.
+
 ## Adding an area
 
 Each area contributes exactly three things (keeps parallel area PRs conflict-free):

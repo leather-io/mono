@@ -50,7 +50,7 @@ function AreaCard({ area }: { area: PlaygroundArea }) {
 
 export default function PlaygroundIndexRoute() {
   return (
-    <Flex direction="column" gap="space.05" maxWidth="1120px">
+    <Flex direction="column" gap="space.05" maxWidth="1120px" p="space.06">
       <Box>
         <styled.h1 textStyle="heading.03" color="ink.text-primary">
           Playground

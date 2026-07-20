@@ -17,33 +17,38 @@ import type {
 } from '@leather.io/models';
 import { Button, ListItemBox } from '@leather.io/ui';
 
-import { AccountDetailsCard } from '../account/components/account-details-card';
-import { AvatarSq } from '../components/avatar-sq';
-import { Badge } from '../components/badge';
-import { InvitationModal } from '../components/invitation-modal';
-import { MultisigHero } from '../components/multisig-hero';
-import { SectionLabel } from '../components/section-label';
-import { TransactionList, type TransactionListItem } from '../components/transaction-list';
-import { ChainPicker } from '../create-vault/components/chain-picker';
-import { type MemberDraft, MemberRows } from '../create-vault/components/member-rows';
-import { ThemePicker } from '../create-vault/components/theme-picker';
-import { VaultPreviewCard } from '../create-vault/components/vault-preview-card';
-import { CreateVaultTile } from '../dashboard/components/create-vault-tile';
-import { vaultThemeFromName } from '../multisig-tokens';
-import { SignerRollcall } from '../tx/components/signer-rollcall';
-import { TxDetailsTable } from '../tx/components/tx-details-table';
-import { AccountsSection } from '../vault/components/accounts-section';
-import { CancelVaultModal } from '../vault/components/cancel-vault-modal';
-import { CreateAccountModal } from '../vault/components/create-account-modal';
-import { MembersSection } from '../vault/components/members-section';
-import { ShareInvitationsModal } from '../vault/components/share-invitations-modal';
-import { VaultStatusCard } from '../vault/components/vault-status-card';
+import { AccountDetailsCard } from '../../../multisig/account/components/account-details-card';
+import { AvatarSq } from '../../../multisig/components/avatar-sq';
+import { Badge } from '../../../multisig/components/badge';
+import { InvitationModal } from '../../../multisig/components/invitation-modal';
+import { MultisigHero } from '../../../multisig/components/multisig-hero';
+import { SectionLabel } from '../../../multisig/components/section-label';
+import {
+  TransactionList,
+  type TransactionListItem,
+} from '../../../multisig/components/transaction-list';
+import { ChainPicker } from '../../../multisig/create-vault/components/chain-picker';
+import {
+  type MemberDraft,
+  MemberRows,
+} from '../../../multisig/create-vault/components/member-rows';
+import { ThemePicker } from '../../../multisig/create-vault/components/theme-picker';
+import { VaultPreviewCard } from '../../../multisig/create-vault/components/vault-preview-card';
+import { CreateVaultTile } from '../../../multisig/dashboard/components/create-vault-tile';
+import { vaultThemeFromName } from '../../../multisig/multisig-tokens';
+import { SignerRollcall } from '../../../multisig/tx/components/signer-rollcall';
+import { TxDetailsTable } from '../../../multisig/tx/components/tx-details-table';
+import { AccountsSection } from '../../../multisig/vault/components/accounts-section';
+import { CancelVaultModal } from '../../../multisig/vault/components/cancel-vault-modal';
+import { CreateAccountModal } from '../../../multisig/vault/components/create-account-modal';
+import { MembersSection } from '../../../multisig/vault/components/members-section';
+import { ShareInvitationsModal } from '../../../multisig/vault/components/share-invitations-modal';
+import { VaultStatusCard } from '../../../multisig/vault/components/vault-status-card';
 
-// Dev-only: every multisig page reconstructed with mock data + the real
-// presentational components (stand-ins where a component self-fetches), stacked
-// main + sidebar so the views can be compared and tweaked. The 3 passive modals
-// are wired open via buttons; the 2 self-fetch-on-render modals are omitted.
-// Strip before the PR.
+// Living playground area: every multisig page reconstructed with mock data + the
+// real presentational components (stand-ins where a component self-fetches),
+// stacked main + sidebar so the views can be compared and tweaked. The 3 passive
+// modals are wired open via buttons; the 2 self-fetch-on-render modals are omitted.
 const NETWORK: AuthNetworkId = 'stx:mainnet';
 const ME = 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKQVX8X0G';
 const ADDR_2 = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE';
@@ -413,7 +418,7 @@ function ModalsPreview() {
   );
 }
 
-export function PagesPreviewPage() {
+export function PageGalleryPage() {
   const [showInvite, setShowInvite] = useState(false);
   const queryClient = useQueryClient();
   useEffect(() => {
@@ -425,11 +430,11 @@ export function PagesPreviewPage() {
   return (
     <Box p="space.07" maxWidth="1200px">
       <styled.h1 textStyle="heading.04" mb="space.02">
-        Multisig pages in context — local preview
+        Multisig pages in context
       </styled.h1>
       <styled.p textStyle="caption.01" color="ink.text-subdued" mb="space.09">
         Every view reconstructed with mock data + the real components, main + sidebar stacked.
-        Dev-only — stripped before the PR.
+        Living playground area.
       </styled.p>
 
       <PageFrame label="Dashboard">

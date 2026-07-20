@@ -12,24 +12,27 @@ import type {
 } from '@leather.io/models';
 import { ListContainer, ListItemBox } from '@leather.io/ui';
 
-import { AccountDetailsCard } from '../account/components/account-details-card';
-import { AvatarCircle } from '../components/avatar-circle';
-import { AvatarSq } from '../components/avatar-sq';
-import { Badge, type BadgeVariant } from '../components/badge';
-import { ChainAvatar } from '../components/chain-avatar';
-import { ChainPill } from '../components/chain-pill';
-import { CopyAddress } from '../components/copy-address';
-import { MultisigErrorState } from '../components/multisig-error-state';
-import { MultisigHero } from '../components/multisig-hero';
-import { TextField } from '../components/text-field';
-import { TransactionList, type TransactionListItem } from '../components/transaction-list';
-import { CreateVaultTile } from '../dashboard/components/create-vault-tile';
-import { vaultThemeFromName } from '../multisig-tokens';
-import { VaultStatusCard } from '../vault/components/vault-status-card';
+import { AccountDetailsCard } from '../../../multisig/account/components/account-details-card';
+import { AvatarCircle } from '../../../multisig/components/avatar-circle';
+import { AvatarSq } from '../../../multisig/components/avatar-sq';
+import { Badge, type BadgeVariant } from '../../../multisig/components/badge';
+import { ChainAvatar } from '../../../multisig/components/chain-avatar';
+import { ChainPill } from '../../../multisig/components/chain-pill';
+import { CopyAddress } from '../../../multisig/components/copy-address';
+import { MultisigErrorState } from '../../../multisig/components/multisig-error-state';
+import { MultisigHero } from '../../../multisig/components/multisig-hero';
+import { TextField } from '../../../multisig/components/text-field';
+import {
+  TransactionList,
+  type TransactionListItem,
+} from '../../../multisig/components/transaction-list';
+import { CreateVaultTile } from '../../../multisig/dashboard/components/create-vault-tile';
+import { vaultThemeFromName } from '../../../multisig/multisig-tokens';
+import { VaultStatusCard } from '../../../multisig/vault/components/vault-status-card';
 
-// Dev-only: every multisig view-surface and component permutation stacked on one
-// page with mock data, so the real components can be eyeballed and tweaked
-// without the wallet/backend gate. Strip before the PR.
+// Living playground area: every multisig view-surface and component permutation
+// stacked on one page with mock data, so the real components can be eyeballed
+// and tweaked without the wallet/backend gate.
 const NETWORK: AuthNetworkId = 'stx:mainnet';
 const ME = 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKQVX8X0G';
 const ADDR_2 = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE';
@@ -175,14 +178,14 @@ function Slot({ label, width, children }: { label: string; width?: string; child
 
 const badgeVariants: BadgeVariant[] = ['default', 'error', 'info', 'pending', 'success', 'warning'];
 
-export function GalleryPreviewPage() {
+export function ComponentGalleryPage() {
   return (
     <Box p="space.07" maxWidth="1100px">
       <styled.h1 textStyle="heading.04" mb="space.02">
-        Multisig component gallery — local preview
+        Multisig component gallery
       </styled.h1>
       <styled.p textStyle="caption.01" color="ink.text-subdued" mb="space.09">
-        Every surface + permutation stacked with mock data. Dev-only — stripped before the PR.
+        Every surface + permutation stacked with mock data. Living playground area.
       </styled.p>
 
       <Section

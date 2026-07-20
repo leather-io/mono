@@ -8,5 +8,10 @@ export const playgroundRoutes: RouteConfigEntry[] = prefix('playground', [
   layout('pages/playground/playground.layout.tsx', [
     index('pages/playground/playground-index.route.tsx'),
     route('welcome', 'pages/playground/areas/welcome/welcome.route.tsx'),
+    route(
+      'component-gallery',
+      'pages/playground/areas/component-gallery/component-gallery.route.tsx'
+    ),
+    route('page-gallery', 'pages/playground/areas/page-gallery/page-gallery.route.tsx'),
   ]),
 ]);
