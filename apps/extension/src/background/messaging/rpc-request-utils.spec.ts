@@ -174,6 +174,28 @@ describe(validateRequestNetwork.name, () => {
       { frameId }
     );
   });
+
+  test('rejects empty and whitespace networks with INVALID_PARAMS', async () => {
+    mocks.getRootState.mockResolvedValue(null);
+
+    for (const network of ['', ' ', 'mainnet ']) {
+      const result = await validateRequestNetwork({
+        id: 'req-1',
+        method: 'stx_transferStx',
+        network,
+        port: buildPort(),
+      });
+      expect(result).toEqual({ status: 'failure' });
+    }
+    expect(mocks.sendMessage).toHaveBeenCalledTimes(3);
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      expect.objectContaining({
+        error: expect.objectContaining({ code: RpcErrorCode.INVALID_PARAMS }),
+      }),
+      { frameId }
+    );
+  });
 });
 
 describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
