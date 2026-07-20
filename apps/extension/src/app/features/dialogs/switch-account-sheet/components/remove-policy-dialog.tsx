@@ -5,8 +5,8 @@ import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { useAppDispatch } from '@app/store';
 import { type PolicyStore } from '@app/store/policy/policy-store.utils';
-import { removePolicy } from '@app/store/policy/policy.actions';
 import { usePolicyDisplayName } from '@app/store/policy/policy.selectors';
+import { userRemovesPolicy } from '@app/store/policy/policy.slice';
 
 interface RemovePolicyDialogProps {
   policy: PolicyStore;
@@ -19,7 +19,7 @@ export function RemovePolicyDialog({ policy, isShowing, onClose }: RemovePolicyD
   const name = usePolicyDisplayName(policy);
 
   function handleRemove() {
-    void dispatch(removePolicy(policy.id));
+    dispatch(userRemovesPolicy({ policyId: policy.id }));
     onClose();
   }
 

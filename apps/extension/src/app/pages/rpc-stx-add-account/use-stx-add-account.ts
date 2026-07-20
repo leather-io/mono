@@ -100,7 +100,7 @@ export function useStxAddAccount() {
 
   // Terminal action: register the policy (add mode) or just return the verified
   // address without writing any state (verify mode), then respond to the dApp.
-  function finalize() {
+  async function finalize() {
     if (!tabId || !origin) {
       logger.error('Cannot complete add account: missing tabId, origin');
       return;
@@ -115,7 +115,7 @@ export function useStxAddAccount() {
     }
 
     if (mode === 'add') {
-      const result = registerStxPolicy(request.params);
+      const result = await registerStxPolicy(request.params);
       if (!result) {
         sendError('Failed to register policy');
         return;
