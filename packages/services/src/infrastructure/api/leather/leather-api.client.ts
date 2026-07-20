@@ -13,7 +13,7 @@ import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-lim
 import { selectBitcoinNetwork } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { ApiRequestOptions } from '../types';
-import { LeatherApiError } from './leather-api.error';
+import { LeatherApiError, readLeatherApiErrorData } from './leather-api.error';
 import { LeatherApiPageRequest, getPageRequestQueryParams } from './leather-api.pagination';
 import { paths } from './leather-api.types';
 
@@ -64,9 +64,14 @@ function createLeatherOpenApiClient(baseUrl: string, clientId: string) {
       request.headers.set('X-Client-ID', clientId);
       return request;
     },
-    onResponse({ response }) {
+    async onResponse({ response }) {
       if (!response.ok) {
-        throw new LeatherApiError(response.url, response.status, response.statusText);
+        throw new LeatherApiError(
+          response.url,
+          response.status,
+          response.statusText,
+          await readLeatherApiErrorData(response)
+        );
       }
     },
   });
