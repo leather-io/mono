@@ -52,7 +52,7 @@ function DensityDemoBoard() {
 
 export default function WelcomeRoute() {
   return (
-    <Flex direction="column" gap="space.06" maxWidth="720px">
+    <Flex direction="column" gap="space.06" maxWidth="720px" p="space.06">
       <Box>
         <styled.h1 textStyle="heading.04" color="ink.text-primary">
           How the playground works

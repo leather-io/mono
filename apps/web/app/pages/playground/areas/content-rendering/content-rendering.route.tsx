@@ -9,7 +9,7 @@ import { ValuesBoard } from './values-board';
 // the issue; each board's active variant is linkable via its own URL param.
 export default function ContentRenderingRoute() {
   return (
-    <Flex direction="column" gap="space.07" maxWidth="960px">
+    <Flex direction="column" gap="space.07" maxWidth="960px" p="space.06">
       <Flex direction="column" gap="space.01">
         <styled.h1 textStyle="heading.04" color="ink.text-primary">
           Typography, values &amp; addresses
