@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { userRemovesWallet } from '@leather.io/state/wallet';
 
-import { broadcastWalletListChanged, sendMessage } from '@shared/messages';
+import { broadcastWalletListChanged } from '@shared/messages';
 
 import { persistor } from '@app/store';
 
@@ -51,8 +51,6 @@ vi.mock('../in-memory-key/keychain-selector-cache', () => ({
 
 vi.mock('@shared/messages', () => ({
   broadcastWalletListChanged: vi.fn(),
-  broadcastReplayAction: vi.fn(),
-  sendMessage: vi.fn(),
 }));
 
 const fingerprint = 'deadbeef';
@@ -273,7 +271,6 @@ describe(applyRemoteWalletRemoval.name, () => {
   test('does not re-broadcast — each frame heals its own pointer', () => {
     vi.mocked(selectCurrentAccount).mockReturnValue({ fingerprint, accountIndex: 0 });
     runApplyRemoteRemovalThunk();
-    expect(sendMessage).not.toHaveBeenCalled();
     expect(broadcastWalletListChanged).not.toHaveBeenCalled();
   });
 

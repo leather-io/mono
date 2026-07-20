@@ -1,35 +1,17 @@
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
-import { userRemovesWallet, userRenamesWallet } from '@leather.io/state/wallet';
+import { userRemovesWallet } from '@leather.io/state/wallet';
 
-import { InternalMethods } from '@shared/message-types';
-import { broadcastReplayAction, broadcastWalletListChanged, sendMessage } from '@shared/messages';
+import { broadcastWalletListChanged } from '@shared/messages';
 
 import { AppThunk, RootState, persistor } from '..';
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '../in-memory-key/keychain-selector-cache';
-import { parsePolicyParent } from '../policy/policy-store.utils';
 import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 import { selectAllWallets } from '../wallets/wallet.selectors';
-import { userSwitchesAccount, userSwitchesToPolicy } from './active.slice';
-
-export function changeActiveAccount(accountId: AccountId): AppThunk {
-  return dispatch => {
-    void sendMessage({ method: InternalMethods.AccountChanged, payload: accountId });
-    dispatch(userSwitchesAccount(accountId));
-  };
-}
-
-export function changeActiveToPolicy(policyId: string): AppThunk {
-  return dispatch => {
-    const parent = parsePolicyParent(policyId);
-    const action = userSwitchesToPolicy({ parent, policyId });
-    dispatch(action);
-    void broadcastReplayAction(action);
-  };
-}
+import { userSwitchesAccount } from './active.slice';
 
 function pickFirstVisibleAccountIndex(accounts: AccountId[], hiddenAccountIds: string[]): number {
   const firstVisibleAccount = accounts.find(
@@ -82,7 +64,7 @@ export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
 
     if (currentAccount?.fingerprint === fingerprint) {
       const nextAccount = selectFirstRemainingAccount(state, fingerprint);
-      if (nextAccount) void dispatch(changeActiveAccount(nextAccount));
+      if (nextAccount) dispatch(userSwitchesAccount(nextAccount));
       else dispatch(userSwitchesAccount(null));
     }
 
@@ -101,13 +83,5 @@ export function applyRemoteWalletRemoval(removedFingerprint: string): AppThunk {
     if (currentAccount?.fingerprint !== removedFingerprint) return;
 
     dispatch(userSwitchesAccount(selectFirstRemainingAccount(state, removedFingerprint)));
-  };
-}
-
-export function renameWallet(fingerprint: string, name: string): AppThunk {
-  return dispatch => {
-    const action = userRenamesWallet({ fingerprint, name });
-    dispatch(action);
-    void broadcastReplayAction(action);
   };
 }

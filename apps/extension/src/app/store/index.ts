@@ -26,6 +26,7 @@ import { resetWallet } from '@leather.io/state';
 import { keychainSlice } from '@leather.io/state/keychains';
 import { walletSlice } from '@leather.io/state/wallet';
 
+import { persistDirtyTracker } from '@shared/storage/dirty-slice-tracker';
 import { persistConfig } from '@shared/storage/redux-persist';
 
 import { accountsSlice } from './accounts/accounts.slice';
@@ -39,7 +40,8 @@ import { settingsSlice } from './settings/settings.slice';
 import { keySlice } from './software-keys/software-key.slice';
 import { submittedTransactionsSlice } from './submitted-transactions/submitted-transactions.slice';
 import { uiSlice } from './ui/ui.slice';
-import { broadcastActionTypeToOtherFramesMiddleware } from './utils/broadcast-action-types';
+import { hydrateSlicesFromStorage, initCrossFrameStorageSync } from './utils/storage-sync';
+import { createTrackDirtySlicesMiddleware } from './utils/track-dirty-slices';
 
 export interface LocalRootState {
   accounts: ReturnType<typeof accountsSlice.reducer>;
@@ -81,6 +83,7 @@ const appReducer = combineReducers({
 
 function rootReducer(state: LocalRootState | undefined, action: Action) {
   if (action.type === resetWallet.type) return appReducer(undefined, action);
+  if (hydrateSlicesFromStorage.match(action) && state) return { ...state, ...action.payload };
   return appReducer(state, action);
 }
 
@@ -93,7 +96,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(new Tuple(broadcastActionTypeToOtherFramesMiddleware)),
+    }).concat(new Tuple(createTrackDirtySlicesMiddleware(persistDirtyTracker))),
   enhancers: getDefaultEnhancers =>
     getDefaultEnhancers().concat(
       process.env.WALLET_ENVIRONMENT === 'development'
@@ -110,6 +113,14 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+
+const initialStateProbeAction = { type: 'storageSync/initialStateProbe' };
+
+initCrossFrameStorageSync(
+  store,
+  persistDirtyTracker,
+  appReducer(undefined, initialStateProbeAction)
+);
 
 export type AppThunk<ReturnType = void> = ThunkAction<
   Promise<ReturnType> | ReturnType,

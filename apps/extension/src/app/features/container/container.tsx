@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
+import { persistDirtyTracker } from '@shared/storage/dirty-slice-tracker';
 import { analytics } from '@shared/utils/analytics';
 
 import { initalizeAnalytics, useHandleQueuedBackgroundAnalytics } from '@app/common/app-analytics';
@@ -12,14 +13,11 @@ import { LoadingSpinner } from '@app/components/loading-spinner';
 import { SwitchAccountSheet } from '@app/features/dialogs/switch-account-sheet/switch-account-sheet';
 import { InAppMessages } from '@app/features/in-app-messages/in-app-messages';
 import { ReceiveDialog } from '@app/pages/receive/receive-dialog';
-import { useOnChangeAccount } from '@app/routes/hooks/use-on-change-account';
-import { useOnReplayAction } from '@app/routes/hooks/use-on-replay-action';
 import { useOnSignOut } from '@app/routes/hooks/use-on-sign-out';
 import { useOnWalletListChanged } from '@app/routes/hooks/use-on-wallet-list-changed';
 import { useOnWalletLock } from '@app/routes/hooks/use-on-wallet-lock';
 import { persistor, useAppDispatch, useHasStateRehydrated } from '@app/store';
 import { applyRemoteWalletRemoval } from '@app/store/active/active.actions';
-import { userSwitchesAccount } from '@app/store/active/active.slice';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
 
@@ -45,6 +43,8 @@ export function Container() {
     window.location.reload();
   });
   useOnSignOut(() => {
+    persistor.pause();
+    persistDirtyTracker.suspendWrites();
     inMemoryStore.clearAll();
     clearKeychainSelectorCaches();
     window.location.reload();
@@ -57,12 +57,11 @@ export function Container() {
       return;
     }
     persistor.pause();
+    persistDirtyTracker.suspendWrites();
     window.location.reload();
   });
-  useOnReplayAction();
   useRestoreFormState();
   useHandleQueuedBackgroundAnalytics();
-  useOnChangeAccount(accountId => dispatch(userSwitchesAccount(accountId)));
 
   useEffect(() => {
     analytics.page('view', `${pathname}`);

@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import { VStack, styled } from 'leather-styles/jsx';
 
 import { AddressDisplayer, Approver, Button, Callout } from '@leather.io/ui';
@@ -28,6 +30,8 @@ export function RpcStxAddAccount() {
     finalize,
   } = useStxAddAccount();
 
+  const isFinalizingRef = useRef(false);
+
   useOnOriginTabClose(() => closeWindow());
 
   const { toggleSwitchAccount } = useSwitchAccountSheet();
@@ -43,8 +47,10 @@ export function RpcStxAddAccount() {
     throw new Error('Origin is null');
   }
 
-  function onApprove() {
-    finalize();
+  async function onApprove() {
+    if (isFinalizingRef.current) return;
+    isFinalizingRef.current = true;
+    await finalize();
     closeWindow();
   }
 
@@ -113,7 +119,7 @@ export function RpcStxAddAccount() {
           <Button
             key="confirm"
             disabled={!canApprove}
-            onClick={onApprove}
+            onClick={() => void onApprove()}
             data-testid="stx-add-account-approve-button"
           >
             {isVerifyMode ? 'Verify' : 'Confirm'}

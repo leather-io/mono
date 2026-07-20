@@ -1,12 +1,8 @@
-import type { UnknownAction } from '@reduxjs/toolkit';
-
-import type { AccountId } from '@leather.io/models';
-
 import {
   ExtensionMethods,
   InternalMethods,
   Message,
-  REPLAY_ACTION_MESSAGE,
+  SIGN_OUT_MESSAGE,
   WALLET_LIST_CHANGED_MESSAGE,
   WALLET_LOCK_MESSAGE,
 } from '@shared/message-types';
@@ -26,14 +22,12 @@ type OriginatingTabClosed = BackgroundMessage<
   { tabId: number }
 >;
 
-type AccountChanged = BackgroundMessage<InternalMethods.AccountChanged, AccountId>;
-
 type AddressMonitorUpdated = BackgroundMessage<
   InternalMethods.AddressMonitorUpdated,
   { addresses: MonitoredAddress[] }
 >;
 
-export type BackgroundMessages = OriginatingTabClosed | AccountChanged | AddressMonitorUpdated;
+export type BackgroundMessages = OriginatingTabClosed | AddressMonitorUpdated;
 
 export function sendMessage(message: BackgroundMessages) {
   return chrome.runtime.sendMessage(message);
@@ -50,6 +44,17 @@ export function addWalletLockListener(handler: () => void) {
   });
 }
 
+export function broadcastSignOut() {
+  return chrome.runtime.sendMessage({ method: SIGN_OUT_MESSAGE });
+}
+
+export function addSignOutListener(handler: () => void) {
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message?.method === SIGN_OUT_MESSAGE) handler();
+    sendResponse();
+  });
+}
+
 interface WalletListChangedPayload {
   removedFingerprint?: string;
 }
@@ -61,17 +66,6 @@ export function broadcastWalletListChanged(payload: WalletListChangedPayload) {
 export function addWalletListChangedListener(handler: (payload: WalletListChangedPayload) => void) {
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.method === WALLET_LIST_CHANGED_MESSAGE) handler(message.payload ?? {});
-    sendResponse();
-  });
-}
-
-export function broadcastReplayAction(action: UnknownAction) {
-  return chrome.runtime.sendMessage({ method: REPLAY_ACTION_MESSAGE, action });
-}
-
-export function addReplayActionListener(handler: (action: UnknownAction) => void) {
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    if (message?.method === REPLAY_ACTION_MESSAGE) handler(message.action);
     sendResponse();
   });
 }
