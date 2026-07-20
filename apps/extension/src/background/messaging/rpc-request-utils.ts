@@ -173,14 +173,15 @@ export async function createConnectingAppSearchParamsWithLastKnownAccount(
     }
   }
   if (networkParam) {
-    const boundPolicyId = urlParams.get('policyId');
-    const boundPolicyNetworkId = boundPolicyId
-      ? await getBoundPolicyNetworkId(boundPolicyId)
-      : undefined;
-    urlParams.set(
-      'network',
-      networkParam.network ?? boundPolicyNetworkId ?? defaultRpcRequestNetwork
-    );
+    if (isUndefined(networkParam.network)) {
+      const boundPolicyId = urlParams.get('policyId');
+      const boundPolicyNetworkId = boundPolicyId
+        ? await getBoundPolicyNetworkId(boundPolicyId)
+        : undefined;
+      urlParams.set('network', boundPolicyNetworkId ?? defaultRpcRequestNetwork);
+    } else {
+      urlParams.set('network', networkParam.network);
+    }
   }
   return { urlParams, origin, frameId, tabId };
 }

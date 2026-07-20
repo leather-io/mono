@@ -1,10 +1,5 @@
 import { isSupportedMessageSigningPaymentType } from '@leather.io/bitcoin';
-import {
-  type PaymentTypes,
-  RpcErrorCode,
-  createRpcErrorResponse,
-  signMessage,
-} from '@leather.io/rpc';
+import { RpcErrorCode, createRpcErrorResponse, signMessage } from '@leather.io/rpc';
 import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
@@ -56,8 +51,7 @@ export const signMessageHandler = defineRpcRequestHandler(
       return;
     }
 
-    const paymentType: Extract<'p2tr' | 'p2wpkh', PaymentTypes> =
-      (request.params as any).paymentType ?? 'p2wpkh';
+    const paymentType = request.params.paymentType ?? 'p2wpkh';
 
     if (!isSupportedMessageSigningPaymentType(paymentType)) {
       void trackRpcRequestError({ endpoint: 'signMessage', error: 'Unsupported payment type' });
@@ -92,8 +86,8 @@ export const signMessageHandler = defineRpcRequestHandler(
       ['requestId', request.id],
     ];
 
-    if (isDefined((request.params as any).account)) {
-      requestParams.push(['accountIndex', (request.params as any).account.toString()]);
+    if (isDefined(request.params.account)) {
+      requestParams.push(['accountIndex', request.params.account.toString()]);
     }
 
     const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(

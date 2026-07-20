@@ -32,8 +32,7 @@ async function handleRpcSignStacksMessage(
   method: 'stx_signMessage' | 'stx_signStructuredMessage',
   request: RpcRequest<typeof stxSignMessage> | RpcRequest<typeof stxSignStructuredMessage>,
   port: chrome.runtime.Port,
-  requestParams: RequestParams,
-  network?: string
+  buildPopupParams: () => { requestParams: RequestParams; network: string | undefined }
 ) {
   if (isUndefined(request.params)) {
     void trackRpcRequestError({ endpoint: method, error: 'Undefined parameters' });
@@ -62,6 +61,8 @@ async function handleRpcSignStacksMessage(
     return;
   }
 
+  const { requestParams, network } = buildPopupParams();
+
   const networkValidation = await validateRequestNetwork({ id: request.id, method, network, port });
   if (networkValidation.status === 'failure') return;
 
@@ -79,55 +80,47 @@ async function handleRpcSignStacksMessage(
 export const stxSignMessageHandler = defineRpcRequestHandler(
   stxSignMessage.method,
   async (request, port) => {
-    const requestParams: RequestParams = [
-      ['message', request.params.message],
-      ['messageType', request.params.messageType ?? 'utf8'],
-      ['requestId', request.id],
-    ];
+    return handleRpcSignStacksMessage(request.method, request, port, () => {
+      const requestParams: RequestParams = [
+        ['message', request.params.message],
+        ['messageType', request.params.messageType ?? 'utf8'],
+        ['requestId', request.id],
+      ];
 
-    if ('domain' in request.params) {
-      requestParams.push([
-        'domain',
-        (request.params as StxSignMessageRequestParamsStructured).domain.toString(),
-      ]);
-    }
+      if ('domain' in request.params) {
+        requestParams.push([
+          'domain',
+          (request.params as StxSignMessageRequestParamsStructured).domain.toString(),
+        ]);
+      }
 
-    return handleRpcSignStacksMessage(
-      request.method,
-      request,
-      port,
-      requestParams,
-      request.params.network
-    );
+      return { requestParams, network: request.params.network };
+    });
   }
 );
 
 export const stxSignStructuredMessageHandler = defineRpcRequestHandler(
   stxSignStructuredMessage.method,
   async (request, port) => {
-    const requestParams: RequestParams = [
-      ['requestId', request.id],
-      ['messageType', 'structured'],
-      [
-        'message',
-        isString(request.params.message)
-          ? request.params.message
-          : serializeCV(request.params.message),
-      ],
-      [
-        'domain',
-        isString(request.params.domain)
-          ? request.params.domain
-          : serializeCV(request.params.domain),
-      ],
-    ];
+    return handleRpcSignStacksMessage(request.method, request, port, () => {
+      const requestParams: RequestParams = [
+        ['requestId', request.id],
+        ['messageType', 'structured'],
+        [
+          'message',
+          isString(request.params.message)
+            ? request.params.message
+            : serializeCV(request.params.message),
+        ],
+        [
+          'domain',
+          isString(request.params.domain)
+            ? request.params.domain
+            : serializeCV(request.params.domain),
+        ],
+      ];
 
-    return handleRpcSignStacksMessage(
-      request.method,
-      request,
-      port,
-      requestParams,
-      request.params.network
-    );
+      return { requestParams, network: request.params.network };
+    });
   }
 );

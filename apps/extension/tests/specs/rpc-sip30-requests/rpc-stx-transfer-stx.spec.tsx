@@ -3,7 +3,7 @@ import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
-import type { RpcParams, stxTransferStx } from '@leather.io/rpc';
+import { RpcErrorCode, type RpcParams, type stxTransferStx } from '@leather.io/rpc';
 
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 
@@ -71,6 +71,33 @@ test.describe('RPC: stx_transferStx', () => {
         message: RpcErrorMessage.UserRejectedOperation,
       },
     });
+  });
+
+  test('rejects a request with an unknown network before opening a popup', async ({
+    page,
+    context,
+  }) => {
+    let popupOpened = false;
+    context.on('page', () => {
+      popupOpened = true;
+    });
+
+    const result = await page.evaluate(
+      params =>
+        (window as any).LeatherProvider.request('stx_transferStx', params).catch((e: unknown) => e),
+      { amount: 100, recipient: TEST_ACCOUNT_2_STX_ADDRESS, network: 'mocknet' }
+    );
+
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      error: {
+        code: RpcErrorCode.INVALID_PARAMS,
+        message: test.expect.stringContaining("Unknown network: 'mocknet'"),
+      },
+    });
+    test.expect(popupOpened).toBe(false);
   });
 
   test('shows when SIP-30 STX transfer has no memo', async ({ page, context }) => {

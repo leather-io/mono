@@ -378,6 +378,23 @@ describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
     expect(result.urlParams.get('network')).toBe('mainnet');
   });
 
+  test('skips the bound policy lookup when the request specifies a network', async () => {
+    const policyId = `${fingerprint}/0/tb1qaddr/testnet`;
+    mocks.getRootState.mockResolvedValue(
+      buildState({
+        permission: buildPermission({ policyId }),
+        walletFingerprints: [],
+        policies: { [policyId]: { id: policyId, networkId: 'testnet' } },
+      })
+    );
+
+    await createConnectingAppSearchParamsWithLastKnownAccount(buildPort(), [], {
+      network: 'mainnet',
+    });
+
+    expect(mocks.getRootState).toHaveBeenCalledTimes(1);
+  });
+
   test('defaults the network param to mainnet when the bound policy is missing from state', async () => {
     const policyId = `${fingerprint}/0/tb1qaddr/testnet`;
     mocks.getRootState.mockResolvedValue(

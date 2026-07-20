@@ -25,12 +25,21 @@ import { deriveStxMultisigAddress } from '@leather.io/stacks';
 import { test } from '../../fixtures/fixtures';
 
 const mainnetChainId = 1;
+const testnetChainId = 2147483648;
 const stacksPolicy = makeStacksPolicy({
   address: deriveStxMultisigAddress({
     publicKeys: exampleStacksMultisigPublicKeys,
     threshold: 2,
     chainId: mainnetChainId,
   }),
+});
+const testnetStacksPolicy = makeStacksPolicy({
+  address: deriveStxMultisigAddress({
+    publicKeys: exampleStacksMultisigPublicKeys,
+    threshold: 2,
+    chainId: testnetChainId,
+  }),
+  networkId: 'testnet',
 });
 
 function makeCallContractParams(recipient: string) {
@@ -171,6 +180,44 @@ test.describe('RPC: per-origin policy binding', () => {
 
     delete result.id;
 
+    test.expect(result.result).toMatchObject({
+      proposalId: exampleMultisigTransactionId,
+      status: 'proposed',
+    });
+  });
+
+  test('a request omitting network proposes on the bound policy network', async ({
+    page,
+    context,
+    extensionId,
+    onboardingPage,
+  }) => {
+    test.slow();
+
+    await overrideLaunchDarklyFlags(context, {
+      releaseAddAccount: true,
+      enableAllowPolicyAccounts: true,
+    });
+    await mockProposeMultisigTransaction(context);
+    await mockFundedStacksAddress(context, testnetStacksPolicy.address);
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      ...getConnectedTestAppPermissionsState({ policyId: testnetStacksPolicy.id }),
+      ...policyStateOverrides({ policies: [testnetStacksPolicy] }),
+    });
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+
+    const resultPromise = requestStxCallContract(page, TEST_ACCOUNT_2_STX_ADDRESS);
+    const popup = await context.waitForEvent('page');
+    const proposeRequestPromise = popup.waitForRequest('**/v1/multisig-ext/propose');
+    await popup.waitForTimeout(1500);
+    await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
+
+    const proposeRequest = await proposeRequestPromise;
+    const proposeBody = proposeRequest.postDataJSON();
+    test.expect(proposeBody.multisigAddress).toBe(testnetStacksPolicy.address);
+    test.expect(proposeBody.rawPayload.startsWith('80')).toBe(true);
+
+    const result = await resultPromise;
     test.expect(result.result).toMatchObject({
       proposalId: exampleMultisigTransactionId,
       status: 'proposed',
