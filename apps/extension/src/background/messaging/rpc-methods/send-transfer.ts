@@ -5,7 +5,7 @@ import {
   createRpcErrorResponse,
   sendTransfer,
 } from '@leather.io/rpc';
-import { isUndefined } from '@leather.io/utils';
+import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
@@ -82,7 +82,7 @@ export const sendTransferHandler = defineRpcRequestHandler(
 
     const requestParams: RequestParams = [...recipients, ...amounts, ['requestId', request.id]];
 
-    if (params.account) {
+    if (isDefined(params.account)) {
       requestParams.push(['accountIndex', params.account.toString()]);
     }
 

@@ -254,7 +254,7 @@ describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
     expect(result.urlParams.get('policyId')).toBeNull();
   });
 
-  test('pins only the fingerprint when the permission lacks an account index', async () => {
+  test('pins account index 0 when the permission lacks an account index', async () => {
     const policyId = `${fingerprint}/0/bc1qaddr/mainnet`;
     mocks.getRootState.mockResolvedValue(
       buildState({
@@ -265,9 +265,23 @@ describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
 
     const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
 
-    expect(result.urlParams.get('accountIndex')).toBeNull();
+    expect(result.urlParams.get('accountIndex')).toBe('0');
     expect(result.urlParams.get('fingerprint')).toBe(fingerprint);
     expect(result.urlParams.get('policyId')).toBeNull();
+  });
+
+  test('pins account index 0 when the stored account index is not an integer', async () => {
+    mocks.getRootState.mockResolvedValue(
+      buildState({
+        permission: buildPermission({ accountIndex: '3' }),
+        walletFingerprints: [],
+      })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
+
+    expect(result.urlParams.get('accountIndex')).toBe('0');
+    expect(result.urlParams.get('fingerprint')).toBe(fingerprint);
   });
 
   test('pins nothing when the origin has no permission', async () => {
