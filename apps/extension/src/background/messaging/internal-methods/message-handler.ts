@@ -1,5 +1,5 @@
 import { logger } from '@shared/logger';
-import { InternalMethods } from '@shared/message-types';
+import { InternalMethods, SIGN_OUT_MESSAGE } from '@shared/message-types';
 import { BackgroundMessages } from '@shared/messages';
 
 import { syncAddressMonitor } from '@background/monitors/address-monitor';
@@ -21,7 +21,6 @@ async function removeFormState(tabId: number) {
 chrome.tabs.onRemoved.addListener(tabId => removeFormState(tabId));
 
 function logInternalMessage(message: { method: string }) {
-  if (['persist/REHYDRATE', 'persist/PERSIST'].includes(message.method)) return;
   logger.debug('Internal message', message);
 }
 
@@ -46,7 +45,8 @@ export async function internalBackgroundMessageHandler(
       break;
   }
 
-  if (message.method.includes('bitcoinKeys/signOut')) {
+  const method: string = message.method;
+  if (method === SIGN_OUT_MESSAGE) {
     await syncAddressMonitor([]);
   }
 

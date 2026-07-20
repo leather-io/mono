@@ -48,8 +48,8 @@ function LedgerConfirmBtcPolicyAddress() {
       connectApp: connectLedgerBitcoinApp(network.chain.bitcoin.mode),
       getAppVersion: getBitcoinAppVersion,
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
-      onSuccess() {
-        finalize();
+      async onSuccess() {
+        await finalize();
         closeWindow();
       },
       async pullKeysFromDevice(app) {

@@ -108,7 +108,7 @@ export function useBtcAddAccount() {
   // Terminal action: register the policy (add mode) or just return the verified
   // address without writing any state (verify mode), then respond to the dApp.
   // Called inline for software wallets and after on-device confirmation for Ledger.
-  function finalize() {
+  async function finalize() {
     if (!tabId || !origin) {
       logger.error('Cannot complete add account: missing tabId, origin');
       return;
@@ -123,7 +123,7 @@ export function useBtcAddAccount() {
     }
 
     if (mode === 'add') {
-      const result = registerBtcPolicy(request.params);
+      const result = await registerBtcPolicy(request.params);
       if (!result) {
         sendError('Failed to register policy');
         return;

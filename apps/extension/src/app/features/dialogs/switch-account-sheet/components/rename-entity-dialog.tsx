@@ -8,7 +8,7 @@ import { Button, Input, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { ButtonRow } from '@app/components/layout/card/components/button-row';
 import { useAppDispatch } from '@app/store';
-import { clearAccountName, renameAccount } from '@app/store/accounts/accounts.actions';
+import { userClearsAccountName, userRenamesAccount } from '@app/store/accounts/accounts.slice';
 
 interface RenameEntityDialogProps {
   id: string;
@@ -39,9 +39,9 @@ export function RenameEntityDialog({
     if (name !== currentName) {
       const trimmed = name.trim().substring(0, ACCOUNT_MAX_NAME_LENGTH);
       if (trimmed) {
-        void dispatch(renameAccount(id, trimmed));
+        dispatch(userRenamesAccount({ accountId: id, name: trimmed }));
       } else {
-        void dispatch(clearAccountName(id));
+        dispatch(userClearsAccountName({ accountId: id }));
       }
     }
     onClose();
