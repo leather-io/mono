@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import {
   RpcErrorCode,
   type RpcResult,
@@ -142,7 +143,7 @@ export function useBtcAddAccount() {
 
   return {
     origin,
-    name: request.params.name,
+    name: request.params.name.substring(0, ACCOUNT_MAX_NAME_LENGTH),
     descriptor: request.params.descriptor,
     address,
     matchStatus,

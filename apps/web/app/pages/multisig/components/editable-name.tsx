@@ -20,6 +20,7 @@ interface EditableNameProps {
   canEdit?: boolean;
   display?: ReactNode;
   placeholder?: string;
+  maxLength?: number;
 }
 
 export function EditableName({
@@ -30,6 +31,7 @@ export function EditableName({
   canEdit = true,
   display,
   placeholder,
+  maxLength,
 }: EditableNameProps) {
   const [isShowing, setIsShowing] = useState(false);
   const [draft, setDraft] = useState(value);
@@ -110,6 +112,7 @@ export function EditableName({
               autoFocus
               value={draft}
               placeholder={placeholder}
+              maxLength={maxLength}
               onChange={(event: ChangeEvent<HTMLInputElement>) => setDraft(event.target.value)}
               onKeyDown={onKeyDown}
               aria-label={`Rename ${label}`}

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import {
   RpcErrorCode,
   type RpcResult,
@@ -134,7 +135,7 @@ export function useStxAddAccount() {
 
   return {
     origin,
-    name: request.params.name,
+    name: request.params.name.substring(0, ACCOUNT_MAX_NAME_LENGTH),
     publicKeys: request.params.publicKeys,
     threshold: request.params.threshold,
     address,
