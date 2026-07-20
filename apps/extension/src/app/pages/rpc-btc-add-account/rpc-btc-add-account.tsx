@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Outlet, useNavigate } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
@@ -32,6 +33,7 @@ export function RpcBtcAddAccount() {
   } = useBtcAddAccount();
 
   const navigate = useNavigate();
+  const isFinalizingRef = useRef(false);
 
   useOnOriginTabClose(() => closeWindow());
 
@@ -48,7 +50,7 @@ export function RpcBtcAddAccount() {
     throw new Error('Origin is null');
   }
 
-  function onApprove() {
+  async function onApprove() {
     // Ledger confirms the address on-device first; the nested flow finalizes and
     // responds to the dApp once the user approves on the device.
     if (walletType === 'ledger') {
@@ -58,7 +60,9 @@ export function RpcBtcAddAccount() {
       });
       return;
     }
-    finalize();
+    if (isFinalizingRef.current) return;
+    isFinalizingRef.current = true;
+    await finalize();
     closeWindow();
   }
 
@@ -119,7 +123,7 @@ export function RpcBtcAddAccount() {
             <Button
               key="confirm"
               disabled={!canApprove}
-              onClick={onApprove}
+              onClick={() => void onApprove()}
               data-testid="btc-add-account-approve-button"
             >
               {confirmLabel}

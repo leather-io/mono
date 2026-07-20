@@ -18,6 +18,7 @@ import { isValidUrl } from '@shared/utils/urls';
 
 import { removeTrailingSlash } from '@app/common/url-join';
 import { useNetworksActions } from '@app/store/networks/networks.hooks';
+import { useNetworks } from '@app/store/networks/networks.selectors';
 import type { PersistedNetworkConfiguration } from '@app/store/networks/networks.slice';
 
 /**
@@ -82,6 +83,7 @@ export function useAddNetwork() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const networksActions = useNetworksActions();
+  const networks = useNetworks();
   const initialValues = useInitialValues();
   const { isEditNetworkMode } = useAddNetworkState();
   const fetchFn = createFetchFn();
@@ -119,6 +121,11 @@ export function useAddNetwork() {
 
       if (!key) {
         setError('Enter a unique key');
+        return;
+      }
+
+      if (key !== initialValues.key && key in networks) {
+        setError('A network with this key already exists');
         return;
       }
 
