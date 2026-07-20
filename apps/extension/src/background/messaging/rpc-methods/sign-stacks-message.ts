@@ -122,6 +122,12 @@ export const stxSignStructuredMessageHandler = defineRpcRequestHandler(
       ],
     ];
 
-    return handleRpcSignStacksMessage(request.method, request, port, requestParams);
+    return handleRpcSignStacksMessage(
+      request.method,
+      request,
+      port,
+      requestParams,
+      request.params.network
+    );
   }
 );
