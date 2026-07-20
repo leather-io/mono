@@ -27,7 +27,6 @@ vi.mock('../rpc-request-utils', () => ({
   }),
   createConnectingAppSearchParamsWithLastKnownAccount:
     mocks.createConnectingAppSearchParamsWithLastKnownAccount,
-  makeNetworkRequestParam: (network?: string) => ['network', network ?? 'mainnet'],
   triggerRequestPopupWindowOpen: mocks.triggerRequestPopupWindowOpen,
   sendErrorResponseOnUserPopupClose: mocks.sendErrorResponseOnUserPopupClose,
   validateRequestNetwork: mocks.validateRequestNetwork,
@@ -87,7 +86,7 @@ describe('sendTransferHandler', () => {
     expect(mocks.sendErrorResponseOnUserPopupClose).toHaveBeenCalledTimes(1);
   });
 
-  test('defaults the network param to mainnet when the request omits network', async () => {
+  test('passes an undefined network when the request omits network', async () => {
     const [, handler] = sendTransferHandler;
     await handler(
       {
@@ -103,7 +102,8 @@ describe('sendTransferHandler', () => {
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
       expect.anything(),
-      expect.arrayContaining([['network', 'mainnet']])
+      expect.anything(),
+      { network: undefined }
     );
   });
 
@@ -124,7 +124,8 @@ describe('sendTransferHandler', () => {
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
       expect.anything(),
-      expect.arrayContaining([['network', 'testnet']])
+      expect.anything(),
+      { network: 'testnet' }
     );
   });
 

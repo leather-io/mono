@@ -23,7 +23,6 @@ import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
-  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
   validateRequestNetwork,
@@ -70,7 +69,8 @@ async function handleRpcSignStacksMessage(
 
   const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
     port,
-    requestParams
+    requestParams,
+    { network }
   );
 
   const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcStacksSignature, urlParams);
@@ -83,7 +83,6 @@ export const stxSignMessageHandler = defineRpcRequestHandler(
       ['message', request.params.message],
       ['messageType', request.params.messageType ?? 'utf8'],
       ['requestId', request.id],
-      makeNetworkRequestParam(request.params.network),
     ];
 
     if ('domain' in request.params) {
@@ -121,7 +120,6 @@ export const stxSignStructuredMessageHandler = defineRpcRequestHandler(
           ? request.params.domain
           : serializeCV(request.params.domain),
       ],
-      makeNetworkRequestParam(),
     ];
 
     return handleRpcSignStacksMessage(request.method, request, port, requestParams);

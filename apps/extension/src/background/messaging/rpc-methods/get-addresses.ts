@@ -6,7 +6,6 @@ import { trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   createConnectingAppSearchParamsWithLastKnownAccount,
-  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
   validateRequestNetwork,
@@ -29,8 +28,8 @@ async function sharedGetAddressesHandler(
     [
       ['requestId', request.id],
       ['rpcRequest', encodeBase64Json(request)],
-      makeNetworkRequestParam(request.params?.network),
-    ]
+    ],
+    { network: request.params?.network }
   );
 
   const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcGetAddresses, urlParams);

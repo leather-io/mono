@@ -4,7 +4,6 @@ import { RpcErrorCode, type RpcRequests } from '@leather.io/rpc';
 
 import {
   createConnectingAppSearchParamsWithLastKnownAccount,
-  makeNetworkRequestParam,
   validateConnectedWalletExists,
   validateRequestNetwork,
 } from './rpc-request-utils';
@@ -58,27 +57,18 @@ function buildPermission(overrides: Record<string, unknown> = {}) {
 function buildState({
   permission,
   walletFingerprints,
+  policies,
 }: {
   permission?: Record<string, unknown>;
   walletFingerprints: string[];
+  policies?: Record<string, Record<string, unknown>>;
 }) {
   return {
     appPermissions: { entities: permission ? { [hostname]: permission } : {} },
     wallets: { entities: buildWalletEntities(walletFingerprints) },
+    policy: { entities: policies ?? {} },
   };
 }
-
-describe(makeNetworkRequestParam.name, () => {
-  test('defaults to mainnet when the request omits network', () => {
-    expect(makeNetworkRequestParam()).toEqual(['network', 'mainnet']);
-    expect(makeNetworkRequestParam(undefined)).toEqual(['network', 'mainnet']);
-  });
-
-  test('passes through the requested network', () => {
-    expect(makeNetworkRequestParam('testnet')).toEqual(['network', 'testnet']);
-    expect(makeNetworkRequestParam('signet')).toEqual(['network', 'signet']);
-  });
-});
 
 describe(validateRequestNetwork.name, () => {
   beforeEach(() => {
@@ -266,6 +256,105 @@ describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
     expect(result.urlParams.get('accountIndex')).toBeNull();
     expect(result.urlParams.get('fingerprint')).toBeNull();
     expect(result.urlParams.get('policyId')).toBeNull();
+  });
+
+  test('omits the network param when the handler passes no network', async () => {
+    mocks.getRootState.mockResolvedValue(buildState({ walletFingerprints: [] }));
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
+
+    expect(result.urlParams.get('network')).toBeNull();
+  });
+
+  test('sets the requested network param', async () => {
+    mocks.getRootState.mockResolvedValue(buildState({ walletFingerprints: [] }));
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort(), [], {
+      network: 'signet',
+    });
+
+    expect(result.urlParams.get('network')).toBe('signet');
+  });
+
+  test('defaults the network param to mainnet when the request omits network', async () => {
+    mocks.getRootState.mockResolvedValue(
+      buildState({ permission: buildPermission(), walletFingerprints: [] })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort(), [], {
+      network: undefined,
+    });
+
+    expect(result.urlParams.get('network')).toBe('mainnet');
+  });
+
+  test("defaults the network param to the bound policy's network when the request omits network", async () => {
+    const policyId = `${fingerprint}/0/tb1qaddr/testnet`;
+    mocks.getRootState.mockResolvedValue(
+      buildState({
+        permission: buildPermission({ policyId }),
+        walletFingerprints: [],
+        policies: { [policyId]: { id: policyId, networkId: 'testnet' } },
+      })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort(), [], {
+      network: undefined,
+    });
+
+    expect(result.urlParams.get('policyId')).toBe(policyId);
+    expect(result.urlParams.get('network')).toBe('testnet');
+  });
+
+  test("the requested network wins over the bound policy's network", async () => {
+    const policyId = `${fingerprint}/0/tb1qaddr/testnet`;
+    mocks.getRootState.mockResolvedValue(
+      buildState({
+        permission: buildPermission({ policyId }),
+        walletFingerprints: [],
+        policies: { [policyId]: { id: policyId, networkId: 'testnet' } },
+      })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort(), [], {
+      network: 'mainnet',
+    });
+
+    expect(result.urlParams.get('policyId')).toBe(policyId);
+    expect(result.urlParams.get('network')).toBe('mainnet');
+  });
+
+  test('defaults the network param to mainnet when the bound policy is missing from state', async () => {
+    const policyId = `${fingerprint}/0/tb1qaddr/testnet`;
+    mocks.getRootState.mockResolvedValue(
+      buildState({ permission: buildPermission({ policyId }), walletFingerprints: [] })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort(), [], {
+      network: undefined,
+    });
+
+    expect(result.urlParams.get('network')).toBe('mainnet');
+  });
+
+  test('defaults the network param to mainnet when a request-scoped account suppresses the policy binding', async () => {
+    const policyId = `${fingerprint}/0/tb1qaddr/testnet`;
+    mocks.getRootState.mockResolvedValue(
+      buildState({
+        permission: buildPermission({ policyId }),
+        walletFingerprints: [],
+        policies: { [policyId]: { id: policyId, networkId: 'testnet' } },
+      })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(
+      buildPort(),
+      [['accountIndex', '2']],
+      { network: undefined }
+    );
+
+    expect(result.urlParams.get('policyId')).toBeNull();
+    expect(result.urlParams.get('network')).toBe('mainnet');
   });
 });
 

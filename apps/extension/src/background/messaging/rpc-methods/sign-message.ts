@@ -20,7 +20,6 @@ import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
-  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
   validateRequestNetwork,
@@ -89,7 +88,6 @@ export const signMessageHandler = defineRpcRequestHandler(
 
     const requestParams: RequestParams = [
       ['message', request.params.message],
-      makeNetworkRequestParam((request.params as any).network),
       ['paymentType', paymentType],
       ['requestId', request.id],
     ];
@@ -100,7 +98,8 @@ export const signMessageHandler = defineRpcRequestHandler(
 
     const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
       port,
-      requestParams
+      requestParams,
+      { network: request.params.network }
     );
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcSignBip322Message, urlParams);
 

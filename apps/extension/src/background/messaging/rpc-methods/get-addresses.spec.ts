@@ -20,7 +20,6 @@ vi.mock('../rpc-message-handler', () => ({
 vi.mock('../rpc-request-utils', () => ({
   createConnectingAppSearchParamsWithLastKnownAccount:
     mocks.createConnectingAppSearchParamsWithLastKnownAccount,
-  makeNetworkRequestParam: (network?: string) => ['network', network ?? 'mainnet'],
   triggerRequestPopupWindowOpen: mocks.triggerRequestPopupWindowOpen,
   sendErrorResponseOnUserPopupClose: mocks.sendErrorResponseOnUserPopupClose,
   validateRequestNetwork: mocks.validateRequestNetwork,
@@ -67,13 +66,14 @@ describe('sharedGetAddressesHandler', () => {
     expect(mocks.sendErrorResponseOnUserPopupClose).toHaveBeenCalledTimes(1);
   });
 
-  test('defaults the network param to mainnet when the request omits network', async () => {
+  test('passes an undefined network when the request omits network', async () => {
     const [, handler] = getAddressesHandler;
     await handler(buildRequest('getAddresses') as unknown as GetAddressesRequest, buildPort());
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
       expect.anything(),
-      expect.arrayContaining([['network', 'mainnet']])
+      expect.anything(),
+      { network: undefined }
     );
   });
 
@@ -86,7 +86,8 @@ describe('sharedGetAddressesHandler', () => {
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
       expect.anything(),
-      expect.arrayContaining([['network', 'testnet']])
+      expect.anything(),
+      { network: 'testnet' }
     );
   });
 
@@ -115,7 +116,8 @@ describe('sharedGetAddressesHandler', () => {
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
       expect.anything(),
-      expect.arrayContaining([['network', 'mainnet']])
+      expect.anything(),
+      { network: undefined }
     );
     expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalledTimes(1);
   });

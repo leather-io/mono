@@ -125,8 +125,13 @@ export type RequestParams = [string, string][];
 
 const defaultRpcRequestNetwork = 'mainnet';
 
-export function makeNetworkRequestParam(network?: string): [string, string] {
-  return ['network', network ?? defaultRpcRequestNetwork];
+interface RequestNetworkParam {
+  network: string | undefined;
+}
+
+async function getBoundPolicyNetworkId(policyId: string) {
+  const state = await getRootState();
+  return state?.policy?.entities[policyId]?.networkId;
 }
 
 function createConnectingAppMetadataSearchParams(
@@ -146,7 +151,8 @@ function createConnectingAppMetadataSearchParams(
 
 export async function createConnectingAppSearchParamsWithLastKnownAccount(
   port: chrome.runtime.Port,
-  otherParams: RequestParams = []
+  otherParams: RequestParams = [],
+  networkParam?: RequestNetworkParam
 ) {
   const { urlParams, origin, frameId, tabId } = createConnectingAppMetadataSearchParams(
     port,
@@ -163,6 +169,16 @@ export async function createConnectingAppSearchParamsWithLastKnownAccount(
       if (!hasRequestScopedAccount && hasStoredAccountIndex && appPermissions.policyId)
         urlParams.set('policyId', appPermissions.policyId);
     }
+  }
+  if (networkParam) {
+    const boundPolicyId = urlParams.get('policyId');
+    const boundPolicyNetworkId = boundPolicyId
+      ? await getBoundPolicyNetworkId(boundPolicyId)
+      : undefined;
+    urlParams.set(
+      'network',
+      networkParam.network ?? boundPolicyNetworkId ?? defaultRpcRequestNetwork
+    );
   }
   return { urlParams, origin, frameId, tabId };
 }

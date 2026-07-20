@@ -22,7 +22,6 @@ import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
-  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
   validateRequestNetwork,
@@ -81,12 +80,7 @@ export const sendTransferHandler = defineRpcRequestHandler(
     ]);
     const amounts: [string, string][] = params.recipients.map(({ amount }) => ['amount', amount]);
 
-    const requestParams: RequestParams = [
-      ...recipients,
-      ...amounts,
-      makeNetworkRequestParam(params.network),
-      ['requestId', request.id],
-    ];
+    const requestParams: RequestParams = [...recipients, ...amounts, ['requestId', request.id]];
 
     if (params.account) {
       requestParams.push(['accountIndex', params.account.toString()]);
@@ -94,7 +88,8 @@ export const sendTransferHandler = defineRpcRequestHandler(
 
     const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
       port,
-      requestParams
+      requestParams,
+      { network: params.network }
     );
 
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcSendTransfer, urlParams);

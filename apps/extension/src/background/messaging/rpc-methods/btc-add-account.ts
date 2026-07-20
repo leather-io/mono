@@ -14,7 +14,6 @@ import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
-  makeNetworkRequestParam,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
   validateRequestNetwork,
@@ -74,8 +73,8 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
       [
         ['requestId', request.id],
         ['rpcRequest', encodeBase64Json(request)],
-        makeNetworkRequestParam(request.params.network),
-      ]
+      ],
+      { network: request.params.network }
     );
 
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcBtcAddAccount, urlParams);
