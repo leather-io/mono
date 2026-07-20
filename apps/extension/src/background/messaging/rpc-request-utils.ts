@@ -163,14 +163,13 @@ export async function createConnectingAppSearchParamsWithLastKnownAccount(
     if (appPermissions) {
       const hasRequestScopedAccount = urlParams.has('accountIndex');
       const hasStoredAccountIndex = Number.isInteger(appPermissions.accountIndex);
-      if (!hasRequestScopedAccount)
-        urlParams.set(
-          'accountIndex',
-          hasStoredAccountIndex ? appPermissions.accountIndex.toString() : '0'
-        );
-      urlParams.set('fingerprint', appPermissions.fingerprint);
-      if (!hasRequestScopedAccount && hasStoredAccountIndex && appPermissions.policyId)
-        urlParams.set('policyId', appPermissions.policyId);
+      if (hasRequestScopedAccount) {
+        urlParams.set('fingerprint', appPermissions.fingerprint);
+      } else if (hasStoredAccountIndex) {
+        urlParams.set('accountIndex', appPermissions.accountIndex.toString());
+        urlParams.set('fingerprint', appPermissions.fingerprint);
+        if (appPermissions.policyId) urlParams.set('policyId', appPermissions.policyId);
+      }
     }
   }
   if (networkParam) {

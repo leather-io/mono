@@ -254,7 +254,7 @@ describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
     expect(result.urlParams.get('policyId')).toBeNull();
   });
 
-  test('pins account index 0 when the permission lacks an account index', async () => {
+  test('ignores the binding when the permission lacks an account index', async () => {
     const policyId = `${fingerprint}/0/bc1qaddr/mainnet`;
     mocks.getRootState.mockResolvedValue(
       buildState({
@@ -265,12 +265,12 @@ describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
 
     const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
 
-    expect(result.urlParams.get('accountIndex')).toBe('0');
-    expect(result.urlParams.get('fingerprint')).toBe(fingerprint);
+    expect(result.urlParams.get('accountIndex')).toBeNull();
+    expect(result.urlParams.get('fingerprint')).toBeNull();
     expect(result.urlParams.get('policyId')).toBeNull();
   });
 
-  test('pins account index 0 when the stored account index is not an integer', async () => {
+  test('ignores the binding when the stored account index is not an integer', async () => {
     mocks.getRootState.mockResolvedValue(
       buildState({
         permission: buildPermission({ accountIndex: '3' }),
@@ -280,8 +280,26 @@ describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
 
     const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
 
-    expect(result.urlParams.get('accountIndex')).toBe('0');
+    expect(result.urlParams.get('accountIndex')).toBeNull();
+    expect(result.urlParams.get('fingerprint')).toBeNull();
+    expect(result.urlParams.get('policyId')).toBeNull();
+  });
+
+  test('keeps a request-scoped account when the stored account index is invalid', async () => {
+    mocks.getRootState.mockResolvedValue(
+      buildState({
+        permission: buildPermission({ accountIndex: undefined }),
+        walletFingerprints: [],
+      })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort(), [
+      ['accountIndex', '2'],
+    ]);
+
+    expect(result.urlParams.get('accountIndex')).toBe('2');
     expect(result.urlParams.get('fingerprint')).toBe(fingerprint);
+    expect(result.urlParams.get('policyId')).toBeNull();
   });
 
   test('pins nothing when the origin has no permission', async () => {
@@ -419,6 +437,27 @@ describe('validateConnectedWalletExists', () => {
   test('fails with UNAUTHENTICATED when the pinned wallet was removed', async () => {
     mocks.getRootState.mockResolvedValue(
       buildState({ permission: buildPermission(), walletFingerprints: [] })
+    );
+
+    const result = await validateConnectedWalletExists(request, buildPort());
+
+    expect(result).toEqual({ status: 'failure' });
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      expect.objectContaining({
+        id: request.id,
+        error: expect.objectContaining({ code: RpcErrorCode.UNAUTHENTICATED }),
+      }),
+      { frameId }
+    );
+  });
+
+  test('fails with UNAUTHENTICATED when the permission lacks a valid account index', async () => {
+    mocks.getRootState.mockResolvedValue(
+      buildState({
+        permission: buildPermission({ accountIndex: undefined }),
+        walletFingerprints: [fingerprint],
+      })
     );
 
     const result = await validateConnectedWalletExists(request, buildPort());
