@@ -36,4 +36,23 @@ export interface PlaygroundArea {
   appShell?: boolean;
 }
 
-export const playgroundAreas: PlaygroundArea[] = [];
+export const playgroundAreas: PlaygroundArea[] = [
+  {
+    slug: 'component-gallery',
+    title: 'Component gallery',
+    description:
+      'Every multisig view-surface and component permutation on one page, with mock data.',
+    status: 'living',
+    section: 'multisig',
+    appShell: true,
+  },
+  {
+    slug: 'page-gallery',
+    title: 'Page gallery',
+    description:
+      'Every multisig page reconstructed with mock data and the real presentational components.',
+    status: 'living',
+    section: 'multisig',
+    appShell: true,
+  },
+];

@@ -15,8 +15,6 @@ const previewRoutes: RouteConfigEntry[] =
         route('transaction-preview', 'pages/multisig/preview/transaction-list-preview.route.tsx'),
         route('sidebar-preview', 'pages/multisig/preview/sidebar-preview.route.tsx'),
         route('context-preview', 'pages/multisig/preview/context-preview.route.tsx'),
-        route('gallery-preview', 'pages/multisig/preview/gallery-preview.route.tsx'),
-        route('pages-preview', 'pages/multisig/preview/pages-preview.route.tsx'),
       ]
     : [];
 
