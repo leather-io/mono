@@ -5,47 +5,25 @@ import {
   getWshDescriptorNetwork,
 } from '@leather.io/bitcoin';
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import {
-  type NetworkConfiguration,
-  WalletDefaultNetworkConfigurationIds,
-} from '@leather.io/models';
+import { type NetworkConfiguration } from '@leather.io/models';
 import { type RpcParams, btcAddAccount } from '@leather.io/rpc';
 
 import { makePolicyId } from '@app/store/policy/policy-store.utils';
 
-interface ResolveBtcPolicyNetworkArgs {
-  paramsNetwork: string | undefined;
-  networks: Record<string, NetworkConfiguration>;
-}
-
-function resolveBtcPolicyNetwork({ paramsNetwork, networks }: ResolveBtcPolicyNetworkArgs) {
-  const networkKey = paramsNetwork ?? WalletDefaultNetworkConfigurationIds.mainnet;
-
-  const network = networks[networkKey];
-  if (!network) throw new Error(`Unknown BTC add account network: ${networkKey}`);
-
-  return { network, networkId: network.id };
-}
-
 interface DeriveBtcPolicyAddressArgs {
   params: RpcParams<typeof btcAddAccount>;
-  networks: Record<string, NetworkConfiguration>;
+  network: NetworkConfiguration;
 }
 
 // Derives the multisig address from the descriptor, resolving the requested
 // network the same way registration does so the address shown in the approver
 // (and verified on Ledger) is byte-identical to what gets stored and returned.
-export function deriveBtcPolicyAddress({ params, networks }: DeriveBtcPolicyAddressArgs) {
-  const { network, networkId } = resolveBtcPolicyNetwork({
-    paramsNetwork: params.network,
-    networks,
-  });
-
+export function deriveBtcPolicyAddress({ params, network }: DeriveBtcPolicyAddressArgs) {
   const descriptorNetwork = getWshDescriptorNetwork(params.descriptor);
   const resolvedNetwork = network.chain.bitcoin.mode === 'mainnet' ? 'mainnet' : 'testnet';
   if (descriptorNetwork && descriptorNetwork !== resolvedNetwork)
     throw new Error(
-      `BTC descriptor network (${descriptorNetwork}) does not match requested network (${networkId})`
+      `BTC descriptor network (${descriptorNetwork}) does not match requested network (${network.id})`
     );
 
   const { scriptPubKey } = compileWshDescriptor(params.descriptor);
@@ -55,23 +33,23 @@ export function deriveBtcPolicyAddress({ params, networks }: DeriveBtcPolicyAddr
   );
   if (!address) throw new Error('Descriptor does not produce an address');
 
-  return { address, networkId };
+  return { address, networkId: network.id };
 }
 
 interface CreateBtcPolicyRegistrationArgs {
   params: RpcParams<typeof btcAddAccount>;
   fingerprint: string;
   accountIndex: number;
-  networks: Record<string, NetworkConfiguration>;
+  network: NetworkConfiguration;
 }
 
 export function createBtcPolicyRegistration({
   params,
   fingerprint,
   accountIndex,
-  networks,
+  network,
 }: CreateBtcPolicyRegistrationArgs) {
-  const { address, networkId } = deriveBtcPolicyAddress({ params, networks });
+  const { address, networkId } = deriveBtcPolicyAddress({ params, network });
 
   const parentAccountId = makeAccountIdentifer(fingerprint, accountIndex);
   const role = 'signer' as const;

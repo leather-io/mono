@@ -6,7 +6,7 @@ import { logger } from '@shared/logger';
 
 import { persistor, useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
-import { useNetworks } from '@app/store/networks/networks.selectors';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { userAddsPolicy } from '@app/store/policy/policy.slice';
 
 import { createBtcPolicyRegistration } from './btc-policy-registration';
@@ -18,7 +18,7 @@ import { createBtcPolicyRegistration } from './btc-policy-registration';
 export function useRegisterBtcPolicy() {
   const dispatch = useAppDispatch();
   const { fingerprint, accountIndex } = useCurrentAccountId();
-  const networks = useNetworks();
+  const network = useCurrentNetwork();
 
   return useCallback(
     async (
@@ -29,7 +29,7 @@ export function useRegisterBtcPolicy() {
           params,
           fingerprint,
           accountIndex,
-          networks,
+          network,
         });
         dispatch(userAddsPolicy(addPolicyPayload));
         // The approval window closes right after responding; the write must be
@@ -43,6 +43,6 @@ export function useRegisterBtcPolicy() {
         return null;
       }
     },
-    [dispatch, fingerprint, accountIndex, networks]
+    [dispatch, fingerprint, accountIndex, network]
   );
 }

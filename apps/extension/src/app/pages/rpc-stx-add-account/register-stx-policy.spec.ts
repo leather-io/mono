@@ -1,13 +1,11 @@
 import { describe, expect, test } from 'vitest';
 
-import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
+import { defaultNetworksKeyedById } from '@leather.io/models';
 
 import { createStxPolicyRegistration } from './stx-policy-registration';
 
 const pubkeyA = '031b84c5567b126440995d3ed5aaba0565d71e1834604819ff9c17f5e9d5dd078f';
 const pubkeyB = '024d4b6cd1361032ca9bd2aeb9d900aa4d45d9ead80ac9423374c451a7254d0766';
-
-const networks = defaultNetworksKeyedById as Record<string, NetworkConfiguration>;
 
 const baseParams = {
   publicKeys: [pubkeyA, pubkeyB],
@@ -16,12 +14,12 @@ const baseParams = {
 };
 
 describe(createStxPolicyRegistration.name, () => {
-  test('uses the requested network for STX address derivation and policy identity', () => {
+  test('uses the resolved network for STX address derivation and policy identity', () => {
     const registration = createStxPolicyRegistration({
-      params: { ...baseParams, network: 'testnet' },
+      params: baseParams,
       fingerprint: 'deadbeef',
       accountIndex: 0,
-      networks,
+      network: defaultNetworksKeyedById.testnet,
     });
 
     expect(registration.result.address).toBe('SN3CFXKD81GREH6MYFW4P9VKSSR2N525W3K30KYER');
@@ -34,16 +32,28 @@ describe(createStxPolicyRegistration.name, () => {
     );
   });
 
-  test('defaults to mainnet when the request omits network', () => {
+  test('derives a mainnet address and policy identity on mainnet', () => {
     const registration = createStxPolicyRegistration({
       params: baseParams,
       fingerprint: 'deadbeef',
       accountIndex: 0,
-      networks,
+      network: defaultNetworksKeyedById.mainnet,
     });
 
     expect(registration.result.address).toBe('SM3CFXKD81GREH6MYFW4P9VKSSR2N525W3KDRH3P1');
     expect(registration.addPolicyPayload.policy.networkId).toBe('mainnet');
+  });
+
+  test('ignores the raw request network in favor of the resolved network', () => {
+    const registration = createStxPolicyRegistration({
+      params: { ...baseParams, network: 'mainnet' },
+      fingerprint: 'deadbeef',
+      accountIndex: 0,
+      network: defaultNetworksKeyedById.testnet,
+    });
+
+    expect(registration.result.address).toBe('SN3CFXKD81GREH6MYFW4P9VKSSR2N525W3K30KYER');
+    expect(registration.addPolicyPayload.policy.networkId).toBe('testnet');
   });
 
   test('returns an added result with the derived address as the account id', () => {
@@ -51,21 +61,10 @@ describe(createStxPolicyRegistration.name, () => {
       params: baseParams,
       fingerprint: 'deadbeef',
       accountIndex: 0,
-      networks,
+      network: defaultNetworksKeyedById.mainnet,
     });
 
     expect(registration.result.added).toBe(true);
     expect(registration.result.accountId).toBe(registration.result.address);
-  });
-
-  test('rejects an unknown requested network instead of defaulting to mainnet', () => {
-    expect(() =>
-      createStxPolicyRegistration({
-        params: { ...baseParams, network: 'unknown-network' },
-        fingerprint: 'deadbeef',
-        accountIndex: 0,
-        networks,
-      })
-    ).toThrow('Unknown STX add account network: unknown-network');
   });
 });

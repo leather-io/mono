@@ -16,7 +16,7 @@ import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { useNetworks } from '@app/store/networks/networks.selectors';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { usePolicyFeatureGate } from '../policy-feature-gate';
 import {
@@ -40,7 +40,7 @@ export function useStxAddAccount() {
   const { frameId, tabId, origin, request } = useStxAddAccountParams();
   const stacksAccount = useCurrentStacksAccount();
   const registerStxPolicy = useRegisterStxPolicy();
-  const networks = useNetworks();
+  const network = useCurrentNetwork();
   const { isFeatureEnabled, rejectAsUnsupported } = usePolicyFeatureGate({
     method: request.method,
     frameId,
@@ -68,11 +68,11 @@ export function useStxAddAccount() {
   // (never throw in render); the page disables confirm and warns.
   const address = useMemo(() => {
     try {
-      return deriveStxPolicyAddress({ params: request.params, networks }).address;
+      return deriveStxPolicyAddress({ params: request.params, network }).address;
     } catch {
       return null;
     }
-  }, [request.params, networks]);
+  }, [request.params, network]);
 
   function focusInitiatingTab() {
     focusTabAndWindow(tabId);

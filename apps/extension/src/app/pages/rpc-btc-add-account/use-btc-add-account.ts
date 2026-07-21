@@ -18,7 +18,7 @@ import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
-import { useNetworks } from '@app/store/networks/networks.selectors';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { usePolicyFeatureGate } from '../policy-feature-gate';
 import {
@@ -42,7 +42,7 @@ export function useBtcAddAccount() {
   const { frameId, tabId, origin, request } = useBtcAddAccountParams();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
   const registerBtcPolicy = useRegisterBtcPolicy();
-  const networks = useNetworks();
+  const network = useCurrentNetwork();
   const walletType = useActiveWalletType();
   const { isFeatureEnabled, rejectAsUnsupported } = usePolicyFeatureGate({
     method: request.method,
@@ -76,11 +76,11 @@ export function useBtcAddAccount() {
   // a descriptor/network mismatch (never throw in render); confirm is disabled.
   const address = useMemo(() => {
     try {
-      return deriveBtcPolicyAddress({ params: request.params, networks }).address;
+      return deriveBtcPolicyAddress({ params: request.params, network }).address;
     } catch {
       return null;
     }
-  }, [request.params, networks]);
+  }, [request.params, network]);
 
   function focusInitiatingTab() {
     focusTabAndWindow(tabId);
