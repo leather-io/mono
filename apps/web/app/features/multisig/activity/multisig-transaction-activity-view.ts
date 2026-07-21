@@ -1,4 +1,7 @@
-import { formatActivityMoney } from '~/queries/activity/blockchain-activity.query';
+import {
+  activityCounterpartyOffset,
+  formatActivityMoney,
+} from '~/queries/activity/blockchain-activity.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import { type BlockchainActivityView, createBlockchainActivityView } from '@leather.io/features';
@@ -193,5 +196,6 @@ export function createMultisigTransactionActivityView(
 
   return createBlockchainActivityView(buildProposalActivity(common, payload, options), {
     formatMoney: formatActivityMoney,
+    counterpartyTruncateOffset: activityCounterpartyOffset,
   });
 }

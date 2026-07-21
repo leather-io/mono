@@ -2,7 +2,10 @@ import { useMemo } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { useUserSettings } from '~/hooks/use-user-settings';
-import { formatActivityMoney } from '~/queries/activity/blockchain-activity.query';
+import {
+  activityCounterpartyOffset,
+  formatActivityMoney,
+} from '~/queries/activity/blockchain-activity.query';
 
 import { type BlockchainActivityView, createBlockchainActivityView } from '@leather.io/features';
 import type { FungibleCryptoAsset, VaultAccount } from '@leather.io/models';
@@ -33,7 +36,10 @@ export function useVaultAssetActivity(
   const views = useMemo(
     () =>
       (query.data ?? []).map(item =>
-        createBlockchainActivityView(item, { formatMoney: formatActivityMoney })
+        createBlockchainActivityView(item, {
+          formatMoney: formatActivityMoney,
+          counterpartyTruncateOffset: activityCounterpartyOffset,
+        })
       ),
     [query.data]
   );

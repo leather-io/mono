@@ -95,6 +95,34 @@ export function buildContractActionTargets(
   return [...targetsByKey.values()];
 }
 
+// Last-resort verb inference for registry-known protocols whose function
+// mapping is missing from the protocol registry. Clarity function names
+// follow strong conventions, so a conservative keyword match still beats
+// rendering a verb-less "via {protocol}" row. Ordered most-specific first;
+// explicit registry data always wins.
+const inferredActionRules: readonly (readonly [string, StacksProtocolAction])[] = [
+  ['add-liquidity', 'add-liquidity'],
+  ['provide-liquidity', 'add-liquidity'],
+  ['remove-liquidity', 'remove-liquidity'],
+  ['withdraw-liquidity', 'remove-liquidity'],
+  ['unstake-lp', 'unstake-lp'],
+  ['stake-lp', 'stake-lp'],
+  ['claim', 'claim-rewards'],
+  ['swap', 'swap'],
+  ['bridge', 'bridge'],
+  ['borrow', 'borrow'],
+  ['repay', 'repay'],
+  ['supply', 'deposit'],
+  ['deposit', 'deposit'],
+  ['withdraw', 'withdraw'],
+  ['stack-stx', 'stack'],
+];
+
+function inferActionFromFunctionName(functionName: string): StacksProtocolAction | undefined {
+  const name = functionName.toLowerCase();
+  return inferredActionRules.find(([keyword]) => name.includes(keyword))?.[1];
+}
+
 export function buildClassifications(
   actionTargets: ContractActionTarget[],
   actionsByTarget: (StacksProtocolAction | null | undefined)[]
@@ -103,7 +131,10 @@ export function buildClassifications(
     actionTargets.map((target, index) => [
       target.key,
       {
-        action: actionsByTarget[index] ?? 'contract-execution',
+        action:
+          actionsByTarget[index] ??
+          inferActionFromFunctionName(target.functionName) ??
+          'contract-execution',
         protocol: target.protocol.id,
         protocolName: target.protocol.name,
       },
