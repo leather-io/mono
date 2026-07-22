@@ -40,7 +40,11 @@ export function AvatarSq({
   const radiusPx = Math.round(px * avatarSquircleRatio);
   const maskUrl = icon ? `url(${accountIconUrl(icon)})` : undefined;
   return (
-    <Box position="relative" width={`${px}px`} height={`${px}px`} flexShrink={0}>
+    <Box
+      position="relative"
+      flexShrink={0}
+      style={{ width: `${px}px`, height: `${px}px`, minWidth: `${px}px`, minHeight: `${px}px` }}
+    >
       <Box
         width="100%"
         height="100%"
@@ -52,10 +56,10 @@ export function AvatarSq({
       >
         {icon && (
           <Box
-            width={`${glyphPx}px`}
-            height={`${glyphPx}px`}
             bg={theme.dark ? 'white' : 'ink.text-primary'}
             style={{
+              width: `${glyphPx}px`,
+              height: `${glyphPx}px`,
               WebkitMaskImage: maskUrl,
               maskImage: maskUrl,
               WebkitMaskRepeat: 'no-repeat',
