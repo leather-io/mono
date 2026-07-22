@@ -58,6 +58,17 @@ describe(createStxPolicyRegistration.name, () => {
     expect(registration.result.accountId).toBe(registration.result.address);
   });
 
+  test('truncates the stored name to the account name cap', () => {
+    const registration = createStxPolicyRegistration({
+      params: { ...baseParams, name: 'a'.repeat(50) },
+      fingerprint: 'deadbeef',
+      accountIndex: 0,
+      networks,
+    });
+
+    expect(registration.addPolicyPayload.name).toBe('a'.repeat(35));
+  });
+
   test('rejects an unknown requested network instead of defaulting to mainnet', () => {
     expect(() =>
       createStxPolicyRegistration({

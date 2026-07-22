@@ -21,6 +21,7 @@ import { formatCurrency } from '~/utils/currency-formatter';
 import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
 import { PlusIcon } from '@leather.io/ui';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
@@ -154,6 +155,7 @@ export function AccountDetailPage() {
           onSave={name => updateAccount.mutate({ accountId: account.data.id, update: { name } })}
           title="Rename account"
           label="account name"
+          maxLength={ACCOUNT_MAX_NAME_LENGTH}
         />
       }
       backTo={multisigPaths.vault(vault.data.id)}

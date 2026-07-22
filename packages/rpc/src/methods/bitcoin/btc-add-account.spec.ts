@@ -27,10 +27,10 @@ describe('btcAddAccount', () => {
     );
   });
 
-  test('rejects a name longer than the account name cap', () => {
+  test('accepts a name longer than the account name cap', () => {
     expect(
       btcAddAccount.params.safeParse({ ...validParams, name: 'a'.repeat(36) }).success
-    ).toEqual(false);
+    ).toEqual(true);
   });
 
   test('result schema matches the added shape', () => {
