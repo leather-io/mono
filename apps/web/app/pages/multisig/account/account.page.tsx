@@ -149,7 +149,6 @@ export function AccountDetailPage() {
 
   return (
     <MultisigPage title={account.data.name} backTo={multisigPaths.vault(vault.data.id)}>
-
       <Flex
         direction={['column', 'column', 'row']}
         gap={['space.06', 'space.06', 'space.08', 'space.10']}
