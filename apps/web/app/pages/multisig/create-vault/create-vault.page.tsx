@@ -56,13 +56,22 @@ function btcSegwitPrefixForMode(mode: BitcoinNetworkModes): string {
   return 'tb1q';
 }
 
-function btcMemberAddressError(address: string, expectedPrefix: string): string {
+function btcMemberAddressError(
+  address: string,
+  expectedPrefix: string,
+  mode: BitcoinNetworkModes
+): string {
   const lower = address.toLowerCase();
   const isTaproot =
     lower.startsWith('bc1p') || lower.startsWith('tb1p') || lower.startsWith('bcrt1p');
-  return isTaproot
-    ? `Taproot addresses aren't supported. Enter a native SegWit address (${expectedPrefix}…).`
-    : `Enter a native SegWit address for this network (${expectedPrefix}…).`;
+  if (isTaproot)
+    return `Taproot addresses aren't supported. Enter a native SegWit address (${expectedPrefix}…).`;
+  const isTestNetworkAddress =
+    isValidBitcoinNetworkAddress(address, 'testnet') ||
+    isValidBitcoinNetworkAddress(address, 'regtest');
+  if (mode === 'mainnet' && isTestNetworkAddress)
+    return 'Testnet addresses are not allowed in mainnet vaults.';
+  return `Enter a native SegWit address for this network (${expectedPrefix}…).`;
 }
 
 function applyBnsReconciliation(
@@ -91,10 +100,12 @@ function ConnectChainCallout({
   chainLabel,
   isPending,
   onConnect,
+  error,
 }: {
   chainLabel: string;
   isPending: boolean;
   onConnect(): void;
+  error?: string;
 }) {
   return (
     <Flex
@@ -115,6 +126,11 @@ function ConnectChainCallout({
         <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.01">
           Leather needs your {chainLabel} key to add you as the first signer.
         </styled.p>
+        {error && (
+          <styled.p textStyle="caption.01" color="red.action-primary-default" mt="space.02">
+            {error}
+          </styled.p>
+        )}
       </Box>
       <Button
         variant="solid"
@@ -255,7 +271,7 @@ export function CreateVaultPage() {
         state: 'invalid',
         error:
           chain === 'btc'
-            ? btcMemberAddressError(address, btcNativeSegwitPrefix)
+            ? btcMemberAddressError(address, btcNativeSegwitPrefix, btcNetworkMode)
             : `Enter a Stacks ${networkMode} address (${stxPrefixes[0]}…).`,
       };
     if (myAddress && normalizeAddress(myAddress) === address)
@@ -350,6 +366,7 @@ export function CreateVaultPage() {
                   chainLabel={chainLabel}
                   isPending={signIn.isPending}
                   onConnect={() => signIn.mutate()}
+                  error={signIn.error?.message}
                 />
               </Box>
             )}

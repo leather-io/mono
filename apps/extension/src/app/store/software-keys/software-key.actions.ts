@@ -11,7 +11,7 @@ import { secondsInMs } from '@leather.io/utils';
 
 import { decryptMnemonic, encryptMnemonic } from '@shared/crypto/mnemonic-encryption';
 import { logger } from '@shared/logger';
-import { broadcastReplayAction, broadcastWalletListChanged } from '@shared/messages';
+import { broadcastWalletListChanged } from '@shared/messages';
 import { assumedZeroFingerprint } from '@shared/utils';
 import { identifyUser } from '@shared/utils/analytics';
 
@@ -143,10 +143,8 @@ function startRecursiveAccountDiscovery({
   const start = performance.now();
 
   function persistDiscoveredAccountIndex(accountIndex: number) {
-    const action = stxChainSlice.actions.restoreAccountIndex({ fingerprint, accountIndex });
-    dispatch(action);
+    dispatch(stxChainSlice.actions.restoreAccountIndex({ fingerprint, accountIndex }));
     void persistor.flush();
-    void broadcastReplayAction(action);
   }
 
   void recurseAccountsForActivity({

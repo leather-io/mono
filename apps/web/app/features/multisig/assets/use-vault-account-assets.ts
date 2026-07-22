@@ -8,11 +8,7 @@ import { createAssetListQueryConfig } from '@leather.io/queries';
 import type { AssetListRequest } from '@leather.io/services';
 
 import { getMultisigAccountAddresses } from '../vaults/multisig-account-addresses';
-import {
-  type VaultAssetItem,
-  type VaultNetworkMode,
-  buildVaultAssetItems,
-} from './vault-asset-items';
+import { type VaultAssetItem, buildVaultAssetItems } from './vault-asset-items';
 
 const assetListCacheOptions = {
   refetchOnMount: true,
@@ -30,9 +26,6 @@ export function useVaultAccountAssets(
 ): VaultAccountAssets {
   const settings = useUserSettings();
   const isBitcoin = account?.network.startsWith('btc') ?? false;
-  const networkMode: VaultNetworkMode = account?.network.endsWith('mainnet')
-    ? 'mainnet'
-    : 'testnet';
 
   const request: AssetListRequest = {
     filters: { chain: isBitcoin ? 'bitcoin' : 'stacks' },
@@ -47,9 +40,8 @@ export function useVaultAccountAssets(
   });
 
   const items = useMemo<VaultAssetItem[]>(
-    () =>
-      query.data ? buildVaultAssetItems(query.data.items, settings.quoteCurrency, networkMode) : [],
-    [query.data, settings.quoteCurrency, networkMode]
+    () => (query.data ? buildVaultAssetItems(query.data.items, settings.quoteCurrency) : []),
+    [query.data, settings.quoteCurrency]
   );
 
   return { items, isPending: query.isPending };

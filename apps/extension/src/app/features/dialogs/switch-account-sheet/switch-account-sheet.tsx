@@ -17,8 +17,8 @@ import { useCreateAccount } from '@app/common/hooks/account/use-create-account';
 import type { SwitchAccountFilter } from '@app/common/switch-account/switch-account';
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
-import { toggleHideAccount } from '@app/store/accounts/accounts.actions';
 import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
+import { userTogglesHideAccount } from '@app/store/accounts/accounts.slice';
 import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
 import { useBitcoinAccountIdentifiers } from '@app/store/keychains/keychain.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -306,9 +306,12 @@ export function SwitchAccountSheet({
                           onRename={() => setRenamingAccount(accountId)}
                           onHide={() =>
                             dispatch(
-                              toggleHideAccount(
-                                makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex)
-                              )
+                              userTogglesHideAccount({
+                                accountId: makeAccountIdentifer(
+                                  accountId.fingerprint,
+                                  accountId.accountIndex
+                                ),
+                              })
                             )
                           }
                         />
