@@ -35,9 +35,6 @@ export function useBtcChooseFee() {
       const feeRowValue = formFeeRowValue(feeRate, isCustomFee);
 
       if (policy?.chain === 'bitcoin') {
-        if (isSendingMax)
-          return logger.error('Send max is not supported for multisig policy accounts');
-
         const descriptorKey =
           nativeSegwitAccount &&
           findAccountDescriptorKey(
@@ -49,14 +46,19 @@ export function useBtcChooseFee() {
             new Error('Current account is not a signer of this multisig policy')
           );
 
+        const maxSpend = isSendingMax ? calcMaxSpend(txValues.recipient, utxos, feeRate) : null;
+
         try {
           const psbt = await buildUnsignedMultisigBtcTransfer({
             descriptor: policy.descriptor,
             multisigAddress: policy.address,
             network: network.chain.bitcoin.mode,
             accountAddresses: createPolicyAddresses(policy),
-            recipients: [{ address: txValues.recipient, amount: amountAsMoney }],
+            recipients: [
+              { address: txValues.recipient, amount: maxSpend ? maxSpend.amount : amountAsMoney },
+            ],
             feeRate,
+            isMaxSpend: isSendingMax,
           });
           return void sendFormNavigate.toConfirmBtcProposal({
             psbt,
@@ -64,7 +66,7 @@ export function useBtcChooseFee() {
             fee: feeValue,
             feeRowValue,
             time,
-            amount: String(txValues.amount),
+            amount: maxSpend ? maxSpend.spendableBitcoin.toString() : String(txValues.amount),
           });
         } catch (error) {
           return sendFormNavigate.toErrorPage(error);

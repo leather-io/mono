@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router';
+import { Navigate, useLocation, useNavigate } from 'react-router';
 
 import { Stack } from 'leather-styles/jsx';
 
@@ -26,11 +26,14 @@ export interface ProposalSentSummaryState {
   recipient: string;
   feeRowValue?: string;
   memoDisplayText?: string;
+  proposalId?: string;
 }
 
 export function ProposalSentSummary() {
   const { state } = useLocation();
   const navigate = useNavigate();
+
+  if (!state) return <Navigate to={RouteUrls.Home} replace />;
 
   const {
     symbol,

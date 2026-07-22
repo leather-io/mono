@@ -19,6 +19,9 @@ export interface BuildUnsignedMultisigBtcTransferArgs {
   accountAddresses: AccountAddresses;
   recipients: CoinSelectionRecipient[];
   feeRate: number;
+  // Send-all: recipients carry the fee-deducted spendable amount and no change
+  // output is created, matching the coin-selection service's isMaxSpend contract.
+  isMaxSpend?: boolean;
 }
 
 // Builds an unsigned P2WSH multisig PSBT (base64) for a policy/vault account:
@@ -33,6 +36,7 @@ export async function buildUnsignedMultisigBtcTransfer(
     accountAddresses,
     recipients,
     feeRate,
+    isMaxSpend,
   }: BuildUnsignedMultisigBtcTransferArgs,
   signal?: AbortSignal
 ): Promise<string> {
@@ -40,7 +44,7 @@ export async function buildUnsignedMultisigBtcTransfer(
     throw new Error(`Derived multisig address does not match multisig address ${multisigAddress}`);
 
   const { inputs, outputs } = await getBitcoinCoinSelectionService().performCoinSelection(
-    { account: { account: accountAddresses }, recipients, feeRate },
+    { account: { account: accountAddresses }, recipients, feeRate, isMaxSpend },
     signal
   );
 
