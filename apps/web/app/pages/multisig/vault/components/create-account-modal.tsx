@@ -8,6 +8,7 @@ import {
 } from '~/features/multisig/vaults/vault-account-index';
 import { useToast } from '~/features/toasts/use-toast';
 
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { Vault, VaultAccountSummary } from '@leather.io/models';
 import { Button, ChevronDownIcon, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 
@@ -275,6 +276,7 @@ export function CreateAccountModal({
                 flex={1}
                 value={name}
                 placeholder="Account name"
+                maxLength={ACCOUNT_MAX_NAME_LENGTH}
                 onChange={event => setName(event.target.value)}
                 border="none"
                 bg="transparent"

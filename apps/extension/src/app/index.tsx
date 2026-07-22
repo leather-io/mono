@@ -8,6 +8,7 @@ import { initSentry } from '@shared/utils/analytics';
 import { warnUsersAboutDevToolsDangers } from '@shared/utils/dev-tools-warning-log';
 
 import { persistAndRenderApp } from '@app/common/persistence';
+import { persistor } from '@app/store';
 import { restoreWalletSession } from '@app/store/session-restore';
 
 import { App } from './app';
@@ -31,6 +32,16 @@ declare global {
 }
 
 window.__APP_VERSION__ = VERSION;
+
+// Persist writes are staged asynchronously; a closing popup would otherwise
+// lose changes made moments before it was dismissed
+function flushPersistenceBeforeHide() {
+  void persistor.flush();
+}
+window.addEventListener('pagehide', flushPersistenceBeforeHide);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') flushPersistenceBeforeHide();
+});
 
 async function renderApp() {
   await restoreWalletSession();

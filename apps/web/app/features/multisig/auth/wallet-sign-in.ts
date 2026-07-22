@@ -16,8 +16,10 @@ interface WalletSignInParams {
   timestamp: number;
 }
 
-async function fetchWalletAddresses(network: string) {
-  const result = await leather.getAddresses({ network });
+type GetAddressesParams = NonNullable<Parameters<typeof leather.getAddresses>[0]>;
+
+async function fetchWalletAddresses(network: string, chains: GetAddressesParams['chains']) {
+  const result = await leather.getAddresses({ network, chains });
   return result.addresses;
 }
 
@@ -52,7 +54,7 @@ function assertWalletMatchesNetwork(address: string, network: AuthNetworkId) {
 
 async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
   const rpcNetwork = resolveWalletRpcNetwork(params.network);
-  const addresses = await fetchWalletAddresses(rpcNetwork);
+  const addresses = await fetchWalletAddresses(rpcNetwork, ['bitcoin']);
   const account = addresses.find(address => address.symbol === 'BTC' && address.type === 'p2wpkh');
   if (!account) {
     throw new Error('No Bitcoin account available in the connected wallet');
@@ -88,7 +90,7 @@ async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
 
 async function stxSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
   const rpcNetwork = resolveWalletRpcNetwork(params.network);
-  const addresses = await fetchWalletAddresses(rpcNetwork);
+  const addresses = await fetchWalletAddresses(rpcNetwork, ['stacks']);
   const account = addresses.find(address => address.symbol === 'STX');
   if (!account) {
     throw new Error('No Stacks account available in the connected wallet');

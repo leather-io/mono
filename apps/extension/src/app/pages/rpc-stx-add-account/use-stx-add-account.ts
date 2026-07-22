@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import {
   RpcErrorCode,
   type RpcResult,
@@ -99,7 +100,7 @@ export function useStxAddAccount() {
 
   // Terminal action: register the policy (add mode) or just return the verified
   // address without writing any state (verify mode), then respond to the dApp.
-  function finalize() {
+  async function finalize() {
     if (!tabId || !origin) {
       logger.error('Cannot complete add account: missing tabId, origin');
       return;
@@ -114,7 +115,7 @@ export function useStxAddAccount() {
     }
 
     if (mode === 'add') {
-      const result = registerStxPolicy(request.params);
+      const result = await registerStxPolicy(request.params);
       if (!result) {
         sendError('Failed to register policy');
         return;
@@ -134,7 +135,7 @@ export function useStxAddAccount() {
 
   return {
     origin,
-    name: request.params.name,
+    name: request.params.name.substring(0, ACCOUNT_MAX_NAME_LENGTH),
     publicKeys: request.params.publicKeys,
     threshold: request.params.threshold,
     address,

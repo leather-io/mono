@@ -109,10 +109,18 @@ export const singleSigAddressResponseBodySchema = z.object({
 
 export type SingleSigAddressResponseBody = z.infer<typeof singleSigAddressResponseBodySchema>;
 
+export const getAddressesChainsSchema = z.array(z.enum(['bitcoin', 'stacks'])).nonempty();
+
+export type GetAddressesChain = z.infer<typeof getAddressesChainsSchema>[number];
+
 export const getAddresses = defineRpcEndpoint({
   method: 'getAddresses',
   params: z
-    .object({ network: z.string().optional(), allowPolicyAccounts: z.boolean().optional() })
+    .object({
+      network: z.string().optional(),
+      allowPolicyAccounts: z.boolean().optional(),
+      chains: getAddressesChainsSchema.optional(),
+    })
     .optional(),
   result: addressResponseBodySchema,
 });
