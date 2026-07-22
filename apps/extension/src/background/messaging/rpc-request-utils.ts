@@ -2,6 +2,7 @@ import type { To } from 'react-router';
 
 import { z } from 'zod';
 
+import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
 import {
   RpcErrorCode,
   type RpcMethodNames,
@@ -122,7 +123,18 @@ export function listenForOriginTabClose({ tabId }: ListenForOriginTabCloseArgs) 
 
 export type RequestParams = [string, string][];
 
-export function createConnectingAppMetadataSearchParams(
+const defaultRpcRequestNetwork = 'mainnet';
+
+interface RequestNetworkParam {
+  network: string | undefined;
+}
+
+async function getBoundPolicyNetworkId(policyId: string) {
+  const state = await getRootState();
+  return state?.policy?.entities[policyId]?.networkId;
+}
+
+function createConnectingAppMetadataSearchParams(
   port: chrome.runtime.Port,
   otherParams: RequestParams = []
 ) {
@@ -139,7 +151,8 @@ export function createConnectingAppMetadataSearchParams(
 
 export async function createConnectingAppSearchParamsWithLastKnownAccount(
   port: chrome.runtime.Port,
-  otherParams: RequestParams = []
+  otherParams: RequestParams = [],
+  networkParam?: RequestNetworkParam
 ) {
   const { urlParams, origin, frameId, tabId } = createConnectingAppMetadataSearchParams(
     port,
@@ -149,11 +162,25 @@ export async function createConnectingAppSearchParamsWithLastKnownAccount(
     const appPermissions = await getPermissionsByOrigin(getHostnameFromPort(port));
     if (appPermissions) {
       const hasRequestScopedAccount = urlParams.has('accountIndex');
-      if (!hasRequestScopedAccount)
+      const hasStoredAccountIndex = Number.isInteger(appPermissions.accountIndex);
+      if (hasRequestScopedAccount) {
+        urlParams.set('fingerprint', appPermissions.fingerprint);
+      } else if (hasStoredAccountIndex) {
         urlParams.set('accountIndex', appPermissions.accountIndex.toString());
-      urlParams.set('fingerprint', appPermissions.fingerprint);
-      if (!hasRequestScopedAccount && appPermissions.policyId)
-        urlParams.set('policyId', appPermissions.policyId);
+        urlParams.set('fingerprint', appPermissions.fingerprint);
+        if (appPermissions.policyId) urlParams.set('policyId', appPermissions.policyId);
+      }
+    }
+  }
+  if (networkParam) {
+    if (isUndefined(networkParam.network)) {
+      const boundPolicyId = urlParams.get('policyId');
+      const boundPolicyNetworkId = boundPolicyId
+        ? await getBoundPolicyNetworkId(boundPolicyId)
+        : undefined;
+      urlParams.set('network', boundPolicyNetworkId ?? defaultRpcRequestNetwork);
+    } else {
+      urlParams.set('network', networkParam.network);
     }
   }
   return { urlParams, origin, frameId, tabId };
@@ -215,6 +242,47 @@ export function validateRequestParams({
     return { status: 'failure' };
   }
   return { status: 'success' };
+}
+
+async function getKnownNetworkIds(): Promise<Set<string>> {
+  const knownNetworkIds = new Set<string>(Object.values(WalletDefaultNetworkConfigurationIds));
+  const state = await getRootState();
+  const customNetworkIds = state?.networks?.ids ?? [];
+  customNetworkIds.forEach(networkId => knownNetworkIds.add(networkId.toString()));
+  return knownNetworkIds;
+}
+
+interface ValidateRequestNetworkArgs {
+  id: string;
+  method: RpcMethodNames;
+  network: string | undefined;
+  port: chrome.runtime.Port;
+}
+export async function validateRequestNetwork({
+  id,
+  method,
+  network,
+  port,
+}: ValidateRequestNetworkArgs): Promise<{ status: ValidationResult }> {
+  if (isUndefined(network)) return { status: 'success' };
+
+  const knownNetworkIds = await getKnownNetworkIds();
+  if (knownNetworkIds.has(network)) return { status: 'success' };
+
+  void trackRpcRequestError({ endpoint: method, error: RpcErrorMessage.UnknownNetwork });
+  void sendMessageToOriginatingFrame(
+    getOriginatingFrameFromPort(port),
+    createRpcErrorResponse(method, {
+      id,
+      error: {
+        code: RpcErrorCode.INVALID_PARAMS,
+        message: `Unknown network: '${network}'. Expected one of the wallet's default networks (${Object.values(
+          WalletDefaultNetworkConfigurationIds
+        ).join(', ')}) or the id of a custom network added to the wallet`,
+      },
+    })
+  );
+  return { status: 'failure' };
 }
 
 export const walletNoLongerAvailableMessage =

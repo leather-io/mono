@@ -25,12 +25,21 @@ import { deriveStxMultisigAddress } from '@leather.io/stacks';
 import { test } from '../../fixtures/fixtures';
 
 const mainnetChainId = 1;
+const testnetChainId = 2147483648;
 const stacksPolicy = makeStacksPolicy({
   address: deriveStxMultisigAddress({
     publicKeys: exampleStacksMultisigPublicKeys,
     threshold: 2,
     chainId: mainnetChainId,
   }),
+});
+const testnetStacksPolicy = makeStacksPolicy({
+  address: deriveStxMultisigAddress({
+    publicKeys: exampleStacksMultisigPublicKeys,
+    threshold: 2,
+    chainId: testnetChainId,
+  }),
+  networkId: 'testnet',
 });
 
 function makeCallContractParams(recipient: string) {
@@ -177,7 +186,45 @@ test.describe('RPC: per-origin policy binding', () => {
     });
   });
 
-  test('re-connecting single-sig clears a previously bound policy', async ({
+  test('a request omitting network proposes on the bound policy network', async ({
+    page,
+    context,
+    extensionId,
+    onboardingPage,
+  }) => {
+    test.slow();
+
+    await overrideLaunchDarklyFlags(context, {
+      releaseAddAccount: true,
+      enableAllowPolicyAccounts: true,
+    });
+    await mockProposeMultisigTransaction(context);
+    await mockFundedStacksAddress(context, testnetStacksPolicy.address);
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      ...getConnectedTestAppPermissionsState({ policyId: testnetStacksPolicy.id }),
+      ...policyStateOverrides({ policies: [testnetStacksPolicy] }),
+    });
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+
+    const resultPromise = requestStxCallContract(page, TEST_ACCOUNT_2_STX_ADDRESS);
+    const popup = await context.waitForEvent('page');
+    const proposeRequestPromise = popup.waitForRequest('**/v1/multisig-ext/propose');
+    await popup.waitForTimeout(1500);
+    await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
+
+    const proposeRequest = await proposeRequestPromise;
+    const proposeBody = proposeRequest.postDataJSON();
+    test.expect(proposeBody.multisigAddress).toBe(testnetStacksPolicy.address);
+    test.expect(proposeBody.rawPayload.startsWith('80')).toBe(true);
+
+    const result = await resultPromise;
+    test.expect(result.result).toMatchObject({
+      proposalId: exampleMultisigTransactionId,
+      status: 'proposed',
+    });
+  });
+
+  test('re-connecting defaults to the previously bound policy', async ({
     page,
     context,
     extensionId,
@@ -198,6 +245,51 @@ test.describe('RPC: per-origin policy binding', () => {
     const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: true });
     await approveGetAddresses(context);
     const connectResult = await requestPromise;
+    test.expect(connectResult.result.addresses).toEqual([
+      {
+        symbol: 'STX',
+        kind: 'multisig',
+        address: stacksPolicy.address,
+        threshold: stacksPolicy.threshold,
+        publicKeys: stacksPolicy.publicKeys,
+      },
+    ]);
+
+    const permission = await readPersistedPermission(page, extensionId)();
+    test.expect(permission.policyId).toBe(stacksPolicy.id);
+  });
+
+  test('switching to a single-sig account while re-connecting clears the bound policy', async ({
+    page,
+    context,
+    extensionId,
+    onboardingPage,
+  }) => {
+    test.slow();
+
+    await overrideLaunchDarklyFlags(context, {
+      releaseAddAccount: true,
+      enableAllowPolicyAccounts: true,
+    });
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
+      ...policyStateOverrides({ policies: [stacksPolicy] }),
+    });
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+
+    const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: true });
+    const popup = await context.waitForEvent('page');
+    const currentAccount = popup.getByTestId('switch-account-item-0');
+    await expect(currentAccount).toBeVisible({ timeout: 10_000 });
+    await currentAccount.click();
+    const secondAccount = popup.getByTestId('switch-account-item-1');
+    await expect(secondAccount).toBeVisible({ timeout: 10_000 });
+    await secondAccount.click();
+    const approveButton = popup.getByTestId('get-addresses-approve-button');
+    await expect(approveButton).toBeVisible();
+    await approveButton.click();
+
+    const connectResult = await requestPromise;
     test
       .expect(
         connectResult.result.addresses.some(
@@ -208,5 +300,6 @@ test.describe('RPC: per-origin policy binding', () => {
 
     const permission = await readPersistedPermission(page, extensionId)();
     test.expect(permission.policyId).toBeUndefined();
+    test.expect(permission.accountIndex).toBe(1);
   });
 });

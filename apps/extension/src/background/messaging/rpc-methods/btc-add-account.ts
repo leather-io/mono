@@ -12,10 +12,11 @@ import { RouteUrls } from '@shared/route-urls';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
-  createConnectingAppMetadataSearchParams,
+  createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
   validateRequestParams,
 } from '../rpc-request-utils';
 
@@ -44,6 +45,14 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
     });
     if (status === 'failure') return;
 
+    const networkValidation = await validateRequestNetwork({
+      id: request.id,
+      method: request.method,
+      network: request.params.network,
+      port,
+    });
+    if (networkValidation.status === 'failure') return;
+
     if (!isSupportedMultisigDescriptor(request.params.descriptor)) {
       void trackRpcRequestError({ endpoint: request.method, error: 'Invalid descriptor' });
       void sendMessageToOriginatingFrame(
@@ -59,11 +68,14 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
       return;
     }
 
-    const { frameId, urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
-      ['requestId', request.id],
-      ['rpcRequest', encodeBase64Json(request)],
-    ]);
-    if (request.params.network) urlParams.append('network', request.params.network);
+    const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+      port,
+      [
+        ['requestId', request.id],
+        ['rpcRequest', encodeBase64Json(request)],
+      ],
+      { network: request.params.network }
+    );
 
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcBtcAddAccount, urlParams);
     void trackRpcRequestSuccess({ endpoint: request.method });

@@ -1,6 +1,7 @@
 import type { BrowserContext, Page } from '@playwright/test';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import {
+  getConnectedTestAppPermissionsState,
   makeLedgerTestAccountWalletState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
@@ -196,5 +197,60 @@ getAddressesMethods.forEach(method => {
         }
       });
     });
+  });
+});
+
+test.describe('Rpc: getAddresses defaults', () => {
+  test.beforeEach(
+    async ({ extensionId, globalPage }) => await globalPage.setupAndUseApiCalls(extensionId)
+  );
+
+  test('it returns mainnet addresses when the wallet is set to testnet and the request omits network', async ({
+    page,
+    context,
+    extensionId,
+    onboardingPage,
+  }) => {
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      networks: { ids: [], entities: {}, currentNetworkId: 'testnet' },
+    });
+    await page.goto('localhost:3000');
+    const getAddressesPromise = initiateGetAddresses(page, 'getAddresses');
+    const popup = await interceptRequestPopup(context);
+    await clickConnectLeatherButton(popup);
+
+    const result = await getAddressesPromise;
+    test
+      .expect(result.result.addresses[0].address)
+      .toEqual('bc1q530dz4h80kwlzywlhx2qn0k6vdtftd93c499yq');
+  });
+
+  test('it defaults to the account the app originally connected with', async ({
+    page,
+    context,
+    extensionId,
+    onboardingPage,
+  }) => {
+    await onboardingPage.signInWithTestAccount(
+      extensionId,
+      getConnectedTestAppPermissionsState({ accountIndex: 1 })
+    );
+    await page.goto('localhost:3000');
+    const getAddressesPromise = initiateGetAddresses(page, 'getAddresses');
+    const popup = await interceptRequestPopup(context);
+    await clickConnectLeatherButton(popup);
+
+    const result = await getAddressesPromise;
+    test
+      .expect(result.result.addresses[0].address)
+      .toEqual('bc1qr9wmz342txkcmxxq5ysmfqrd5rvmxtu6nldjgp');
+
+    await page.goto(`chrome-extension://${extensionId}/index.html`);
+    const permission = await page.evaluate(async () =>
+      chrome.storage.local
+        .get(['persist:root'])
+        .then(state => state['persist:root'].appPermissions.entities['localhost:3000'])
+    );
+    test.expect(permission.accountIndex).toBe(1);
   });
 });

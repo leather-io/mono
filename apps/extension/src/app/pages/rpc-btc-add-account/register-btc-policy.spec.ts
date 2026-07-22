@@ -1,7 +1,7 @@
 import { HDKey } from '@scure/bip32';
 import { describe, expect, test } from 'vitest';
 
-import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
+import { defaultNetworksKeyedById } from '@leather.io/models';
 
 import { createBtcPolicyRegistration } from './btc-policy-registration';
 
@@ -24,7 +24,6 @@ const descriptor = `wsh(sortedmulti(2,${makeNativeSegwitAccountXpub(
 const testnetDescriptor = `wsh(sortedmulti(2,${makeNativeSegwitAccountTpub(
   1
 )}/0/0,${makeNativeSegwitAccountTpub(2)}/0/0))`;
-const networks = defaultNetworksKeyedById as Record<string, NetworkConfiguration>;
 
 const baseParams = {
   descriptor,
@@ -32,12 +31,12 @@ const baseParams = {
 };
 
 describe(createBtcPolicyRegistration.name, () => {
-  test('uses the requested network for BTC address derivation and policy identity', () => {
+  test('uses the resolved network for BTC address derivation and policy identity', () => {
     const registration = createBtcPolicyRegistration({
-      params: { ...baseParams, descriptor: testnetDescriptor, network: 'testnet' },
+      params: { ...baseParams, descriptor: testnetDescriptor },
       fingerprint: 'deadbeef',
       accountIndex: 0,
-      networks,
+      network: defaultNetworksKeyedById.testnet,
     });
 
     expect(registration.result.address.startsWith('tb1q')).toBe(true);
@@ -50,16 +49,28 @@ describe(createBtcPolicyRegistration.name, () => {
     );
   });
 
-  test('defaults to mainnet when the request omits network', () => {
+  test('derives a mainnet address and policy identity on mainnet', () => {
     const registration = createBtcPolicyRegistration({
       params: baseParams,
       fingerprint: 'deadbeef',
       accountIndex: 0,
-      networks,
+      network: defaultNetworksKeyedById.mainnet,
     });
 
     expect(registration.result.address.startsWith('bc1q')).toBe(true);
     expect(registration.addPolicyPayload.policy.networkId).toBe('mainnet');
+  });
+
+  test('ignores the raw request network in favor of the resolved network', () => {
+    const registration = createBtcPolicyRegistration({
+      params: { ...baseParams, descriptor: testnetDescriptor, network: 'mainnet' },
+      fingerprint: 'deadbeef',
+      accountIndex: 0,
+      network: defaultNetworksKeyedById.testnet,
+    });
+
+    expect(registration.result.address.startsWith('tb1q')).toBe(true);
+    expect(registration.addPolicyPayload.policy.networkId).toBe('testnet');
   });
 
   test('returns an added result with the derived address as the account id', () => {
@@ -67,31 +78,20 @@ describe(createBtcPolicyRegistration.name, () => {
       params: baseParams,
       fingerprint: 'deadbeef',
       accountIndex: 0,
-      networks,
+      network: defaultNetworksKeyedById.mainnet,
     });
 
     expect(registration.result.added).toBe(true);
     expect(registration.result.accountId).toBe(registration.result.address);
   });
 
-  test('rejects an unknown requested network instead of defaulting to mainnet', () => {
+  test('rejects a descriptor whose network disagrees with the resolved network', () => {
     expect(() =>
       createBtcPolicyRegistration({
-        params: { ...baseParams, network: 'unknown-network' },
+        params: baseParams,
         fingerprint: 'deadbeef',
         accountIndex: 0,
-        networks,
-      })
-    ).toThrow('Unknown BTC add account network: unknown-network');
-  });
-
-  test('rejects a descriptor whose network disagrees with the requested network', () => {
-    expect(() =>
-      createBtcPolicyRegistration({
-        params: { ...baseParams, network: 'testnet' },
-        fingerprint: 'deadbeef',
-        accountIndex: 0,
-        networks,
+        network: defaultNetworksKeyedById.testnet,
       })
     ).toThrow('does not match requested network');
   });

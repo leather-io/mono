@@ -5,9 +5,10 @@ import { RouteUrls } from '@shared/route-urls';
 import { trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
-  createConnectingAppMetadataSearchParams,
+  createConnectingAppSearchParamsWithLastKnownAccount,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
   validateRequestParams,
 } from '../rpc-request-utils';
 
@@ -25,11 +26,22 @@ export const stxAddAccountHandler = defineRpcRequestHandler(
     });
     if (status === 'failure') return;
 
-    const { frameId, urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
-      ['requestId', request.id],
-      ['rpcRequest', encodeBase64Json(request)],
-    ]);
-    if (request.params.network) urlParams.append('network', request.params.network);
+    const networkValidation = await validateRequestNetwork({
+      id: request.id,
+      method: request.method,
+      network: request.params.network,
+      port,
+    });
+    if (networkValidation.status === 'failure') return;
+
+    const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+      port,
+      [
+        ['requestId', request.id],
+        ['rpcRequest', encodeBase64Json(request)],
+      ],
+      { network: request.params.network }
+    );
 
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcStxAddAccount, urlParams);
     void trackRpcRequestSuccess({ endpoint: request.method });

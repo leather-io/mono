@@ -45,6 +45,20 @@ describe('isConnectedToExistingWallet', () => {
     );
   });
 
+  test('returns false when the permission lacks an account index', () => {
+    const permission = createPermission({ accountIndex: undefined });
+    expect(isConnectedToExistingWallet(permission, createWalletEntities([fingerprint]))).toBe(
+      false
+    );
+  });
+
+  test('returns false when the stored account index is not an integer', () => {
+    const permission = createPermission({ accountIndex: Number.NaN });
+    expect(isConnectedToExistingWallet(permission, createWalletEntities([fingerprint]))).toBe(
+      false
+    );
+  });
+
   test('returns true when the permission is granted and its wallet still exists', () => {
     const permission = createPermission({ fingerprint });
     expect(isConnectedToExistingWallet(permission, createWalletEntities([fingerprint]))).toBe(true);

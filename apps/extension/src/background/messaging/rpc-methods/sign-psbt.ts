@@ -21,6 +21,7 @@ import {
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
 } from '../rpc-request-utils';
 
 function validatePsbt(hex: string) {
@@ -67,6 +68,14 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
     return;
   }
 
+  const networkValidation = await validateRequestNetwork({
+    id: request.id,
+    method: request.method,
+    network: request.params.network,
+    port,
+  });
+  if (networkValidation.status === 'failure') return;
+
   if (!validatePsbt(request.params.hex)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Invalid PSBT' });
 
@@ -109,10 +118,6 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
     requestParams.push(['broadcast', request.params.broadcast.toString()]);
   }
 
-  if (isDefined(request.params.network)) {
-    requestParams.push(['network', request.params.network.toString()]);
-  }
-
   if (isDefined(request.params.descriptor)) {
     requestParams.push(['descriptor', request.params.descriptor]);
   }
@@ -126,7 +131,8 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
 
   const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
     port,
-    requestParams
+    requestParams,
+    { network: request.params.network }
   );
 
   const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcSignPsbt, urlParams);

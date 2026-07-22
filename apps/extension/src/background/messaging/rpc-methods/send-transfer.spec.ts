@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   trackRpcRequestError: vi.fn(),
   trackRpcRequestSuccess: vi.fn(),
   sendMessage: vi.fn(),
+  validateRequestNetwork: vi.fn(),
 }));
 
 vi.mock('../rpc-message-handler', () => ({
@@ -28,6 +29,7 @@ vi.mock('../rpc-request-utils', () => ({
     mocks.createConnectingAppSearchParamsWithLastKnownAccount,
   triggerRequestPopupWindowOpen: mocks.triggerRequestPopupWindowOpen,
   sendErrorResponseOnUserPopupClose: mocks.sendErrorResponseOnUserPopupClose,
+  validateRequestNetwork: mocks.validateRequestNetwork,
 }));
 
 vi.mock('../rpc-helpers', () => ({
@@ -68,6 +70,7 @@ describe('sendTransferHandler', () => {
       tabId,
     });
     mocks.triggerRequestPopupWindowOpen.mockResolvedValue({ id: 1 });
+    mocks.validateRequestNetwork.mockResolvedValue({ status: 'success' });
   });
 
   afterEach(() => {
@@ -81,6 +84,96 @@ describe('sendTransferHandler', () => {
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledTimes(1);
     expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalledTimes(1);
     expect(mocks.sendErrorResponseOnUserPopupClose).toHaveBeenCalledTimes(1);
+  });
+
+  test('forwards an explicit account 0 as a request-scoped account', async () => {
+    const [, handler] = sendTransferHandler;
+    await handler(
+      {
+        jsonrpc: '2.0',
+        id: 'req-6',
+        method: 'sendTransfer',
+        params: {
+          recipients: [{ address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', amount: '10000' }],
+          network: 'mainnet',
+          account: 0,
+        },
+      } as unknown as SendTransferRequest,
+      buildPort()
+    );
+
+    expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.arrayContaining([['accountIndex', '0']]),
+      { network: 'mainnet' }
+    );
+  });
+
+  test('passes an undefined network when the request omits network', async () => {
+    const [, handler] = sendTransferHandler;
+    await handler(
+      {
+        jsonrpc: '2.0',
+        id: 'req-3',
+        method: 'sendTransfer',
+        params: {
+          recipients: [{ address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', amount: '10000' }],
+        },
+      } as unknown as SendTransferRequest,
+      buildPort()
+    );
+
+    expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      { network: undefined }
+    );
+  });
+
+  test('passes through the requested network param', async () => {
+    const [, handler] = sendTransferHandler;
+    await handler(
+      {
+        jsonrpc: '2.0',
+        id: 'req-4',
+        method: 'sendTransfer',
+        params: {
+          recipients: [{ address: 'tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx', amount: '10000' }],
+          network: 'testnet',
+        },
+      } as unknown as SendTransferRequest,
+      buildPort()
+    );
+
+    expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      { network: 'testnet' }
+    );
+  });
+
+  test('rejects unknown network values before opening the popup', async () => {
+    mocks.validateRequestNetwork.mockResolvedValue({ status: 'failure' });
+
+    const [, handler] = sendTransferHandler;
+    await handler(
+      {
+        jsonrpc: '2.0',
+        id: 'req-5',
+        method: 'sendTransfer',
+        params: {
+          recipients: [{ address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', amount: '10000' }],
+          network: 'Testnet',
+        },
+      } as unknown as SendTransferRequest,
+      buildPort()
+    );
+
+    expect(mocks.validateRequestNetwork).toHaveBeenCalledWith(
+      expect.objectContaining({ network: 'Testnet' })
+    );
+    expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).not.toHaveBeenCalled();
+    expect(mocks.triggerRequestPopupWindowOpen).not.toHaveBeenCalled();
   });
 
   test('rejects undefined parameters', async () => {

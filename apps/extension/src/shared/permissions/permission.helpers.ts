@@ -21,6 +21,7 @@ export function isConnectedToExistingWallet(
   walletEntities: Partial<Record<string, WalletStore>>
 ): boolean {
   if (!permission || !hasRequestedAccountPermission(permission)) return false;
+  if (!Number.isInteger(permission.accountIndex)) return false;
   return !!walletEntities[permission.fingerprint];
 }
 
