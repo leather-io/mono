@@ -18,29 +18,9 @@ interface WalletSignInParams {
 
 type GetAddressesParams = NonNullable<Parameters<typeof leather.getAddresses>[0]>;
 
-function getRpcRejectionMessage(error: unknown) {
-  if (
-    typeof error === 'object' &&
-    error !== null &&
-    'error' in error &&
-    typeof error.error === 'object' &&
-    error.error !== null &&
-    'message' in error.error &&
-    typeof error.error.message === 'string'
-  )
-    return error.error.message;
-  return null;
-}
-
 async function fetchWalletAddresses(network: string, chains: GetAddressesParams['chains']) {
-  try {
-    const result = await leather.getAddresses({ network, chains });
-    return result.addresses;
-  } catch (error) {
-    throw new Error(
-      getRpcRejectionMessage(error) ?? 'Leather rejected the connection request. Please try again.'
-    );
-  }
+  const result = await leather.getAddresses({ network, chains });
+  return result.addresses;
 }
 
 type SignInNetworkMode = 'mainnet' | 'testnet' | 'regtest';

@@ -1,9 +1,6 @@
 import { type GetAddressesChain } from '@leather.io/rpc';
 import { Callout } from '@leather.io/ui';
 
-import { analytics } from '@shared/utils/analytics';
-
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { capitalize } from '@app/common/utils';
 
 interface GetAddressesMissingAccountCalloutProps {
@@ -16,11 +13,6 @@ export function GetAddressesMissingAccountCallout({
 }: GetAddressesMissingAccountCalloutProps) {
   const missingChainName = capitalize(missingChain);
   const availableChainName = missingChain === 'bitcoin' ? 'Stacks' : 'Bitcoin';
-
-  useOnMount(() => {
-    if (!hasAvailableRequestedChain)
-      analytics.track('request_get_addresses_cannot_connect_no_account');
-  });
 
   const title = hasAvailableRequestedChain
     ? `Connecting with ${availableChainName} only`

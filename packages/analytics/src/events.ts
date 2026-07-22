@@ -166,7 +166,6 @@ interface HistoricalEvents {
     error: string;
   };
   request_signature_cannot_sign_message_no_account: undefined;
-  request_get_addresses_cannot_connect_no_account: undefined;
   request_signature_sign: { type: 'software' | 'ledger' };
   switch_account: { index: number; hasStxBalance: boolean };
   non_compliant_entity_detected: { address: string | string[] };
