@@ -34,8 +34,10 @@ import { PageHeader } from '@app/features/container/headers/page.header';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
+import { BtcProposeConfirmation } from './btc-propose-confirmation';
 
 const symbol: CryptoCurrency = 'BTC';
 
@@ -51,6 +53,12 @@ function useBtcSendFormConfirmationState() {
 }
 
 export function BtcSendFormConfirmation() {
+  const policy = useCurrentPolicy();
+  if (policy?.chain === 'bitcoin') return <BtcProposeConfirmation />;
+  return <BtcBroadcastConfirmation />;
+}
+
+function BtcBroadcastConfirmation() {
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const navigate = useNavigate();
   const { tx, recipient, fee, arrivesIn, feeRowValue } = useBtcSendFormConfirmationState();

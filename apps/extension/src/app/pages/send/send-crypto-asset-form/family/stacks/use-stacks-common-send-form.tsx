@@ -12,6 +12,7 @@ import { useStacksHighFeeWarningContext } from '@app/features/stacks-high-fee-wa
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useSendFormRouteState } from '../../hooks/use-send-form-route-state';
 import { createDefaultInitialFormValues } from '../../send-form.utils';
@@ -28,6 +29,8 @@ export function useStacksCommonSendForm({
   const stxAddress = useCurrentStacksAccountAddress();
   const { data: nextNonce } = useNextNonce(stxAddress);
   const currentNetwork = useCurrentNetworkState();
+  const policy = useCurrentPolicy();
+  const isStacksPolicy = policy?.chain === 'stacks';
   const { isHighFeeWithNoFormErrors, setShowHighFeeWarningSheet } =
     useStacksHighFeeWarningContext();
 
@@ -38,7 +41,7 @@ export function useStacksCommonSendForm({
     feeCurrency: 'STX',
     feeType: FeeTypes[FeeTypes.Unknown],
     memo: '',
-    nonce: nextNonce?.nonce,
+    nonce: isStacksPolicy ? 0 : nextNonce?.nonce,
     recipientBnsName: '',
     symbol,
     ...routeState,
@@ -61,7 +64,10 @@ export function useStacksCommonSendForm({
     initialValues,
     availableTokenBalance,
     checkFormValidation,
-    recipient: stxRecipientValidator(stxAddress, currentNetwork),
+    recipient: stxRecipientValidator(
+      policy?.chain === 'stacks' ? policy.address : stxAddress,
+      currentNetwork
+    ),
     memo: stxMemoValidator(FormErrorMessages.MemoExceedsLimit),
     nonce: nonceValidator,
   };

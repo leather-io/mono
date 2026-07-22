@@ -29,6 +29,15 @@ interface ConfirmationRouteBtcArgs {
   time: string;
 }
 
+interface ConfirmationRouteBtcProposalArgs {
+  psbt: string;
+  recipient: string;
+  fee: number;
+  feeRowValue: string;
+  time: string;
+  amount: string;
+}
+
 export function useSendFormNavigate() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,6 +72,11 @@ export function useSendFormNavigate() {
             feeRowValue,
             time,
           } as ConfirmationRouteState,
+        });
+      },
+      toConfirmBtcProposal(args: ConfirmationRouteBtcProposalArgs) {
+        return navigate(RouteUrls.SendBtcConfirmation, {
+          state: args,
         });
       },
       toConfirmAndSignStxTransaction(tx: StacksTransactionWire, showFeeChangeWarning: boolean) {

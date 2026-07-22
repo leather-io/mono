@@ -11,6 +11,7 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { AvailableBalance, ButtonRow, Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { AmountField } from '../../components/amount-field';
@@ -28,6 +29,8 @@ export function BtcSendForm() {
   const routeState = useSendFormRouteState();
   const isPrivate = useIsPrivateMode();
   const marketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
+  const policy = useCurrentPolicy();
+  const isBitcoinPolicy = policy?.chain === 'bitcoin';
   const {
     balance,
     calcMaxSpend,
@@ -84,11 +87,13 @@ export function BtcSendForm() {
                       autoComplete="off"
                       balance={balance.availableBalance}
                       bottomInputOverlay={
-                        <BitcoinSendMaxButton
-                          balance={balance.availableBalance}
-                          isSendingMax={isSendingMax}
-                          onSetIsSendingMax={onSetIsSendingMax}
-                        />
+                        isBitcoinPolicy ? undefined : (
+                          <BitcoinSendMaxButton
+                            balance={balance.availableBalance}
+                            isSendingMax={isSendingMax}
+                            onSetIsSendingMax={onSetIsSendingMax}
+                          />
+                        )
                       }
                       onSetIsSendingMax={onSetIsSendingMax}
                       isSendingMax={isSendingMax}

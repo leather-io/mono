@@ -21,7 +21,7 @@ import {
   getStacksAssetStringParts,
   inferPrincipalTypeFromAddress,
 } from '@leather.io/stacks';
-import { stxToMicroStx } from '@leather.io/utils';
+import { createMoney, stxToMicroStx } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 import type { StacksSendFormValues, StacksTransactionFormValues } from '@shared/models/form.model';
@@ -32,8 +32,13 @@ import {
   GenerateUnsignedTransactionOptions,
   generateUnsignedTransaction,
 } from '@app/common/transactions/stacks/generate-unsigned-txs';
+import {
+  buildUnsignedPolicySip10Transfer,
+  buildUnsignedPolicyStxTransfer,
+} from '@app/features/multisig/build-policy-stacks-transfer';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useCurrentStacksAccount } from '../accounts/blockchain/stacks/stacks-account.hooks';
 
@@ -54,10 +59,26 @@ export function useGenerateStxTokenTransferUnsignedTx() {
   const account = useCurrentStacksAccount();
   const { data: nextNonce } = useNextNonce(account?.address ?? '');
   const network = useCurrentStacksNetworkState();
+  const policy = useCurrentPolicy();
 
   return useCallback(
     async (values?: StacksSendFormValues) => {
       if (!account) return;
+
+      if (policy?.chain === 'stacks') {
+        if (!policy.publicKeys.includes(account.stxPublicKey)) {
+          logger.error('Current account is not a signer of this multisig policy');
+          return;
+        }
+        return buildUnsignedPolicyStxTransfer({
+          policy,
+          network,
+          recipient: values?.recipient || policy.address,
+          amount: createMoney(stxToMicroStx(values?.amount || 0), 'STX'),
+          fee: createMoney(stxToMicroStx(values?.fee || 0), 'STX'),
+          memo: values?.memo || undefined,
+        });
+      }
 
       const options: GenerateUnsignedTransactionOptions = {
         publicKey: account.stxPublicKey,
@@ -79,7 +100,7 @@ export function useGenerateStxTokenTransferUnsignedTx() {
       };
       return generateUnsignedTransaction(options);
     },
-    [account, nextNonce, network]
+    [account, nextNonce, network, policy]
   );
 }
 
@@ -88,10 +109,11 @@ export function useStxTokenTransferUnsignedTxState(values?: StacksSendFormValues
   const account = useCurrentStacksAccount();
   const { data: nextNonce } = useNextNonce(account?.address ?? '');
   const network = useCurrentStacksNetworkState();
+  const policy = useCurrentPolicy();
 
   const tx = useAsync(
     async () => generateTx(values ?? undefined),
-    [values, network, account, nextNonce]
+    [values, network, account, nextNonce, policy]
   );
 
   return tx.result;
@@ -101,12 +123,36 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
   const account = useCurrentStacksAccount();
   const { data: nextNonce } = useNextNonce(account?.address ?? '');
   const network = useCurrentStacksNetworkState();
+  const policy = useCurrentPolicy();
   const { assetId } = info;
   const { contractAddress, contractAssetName, contractName } = getStacksAssetStringParts(assetId);
   return useCallback(
     async (values?: StacksSendFormValues | StacksTransactionFormValues) => {
       try {
         if (!account) return;
+
+        if (policy?.chain === 'stacks') {
+          if (!policy.publicKeys.includes(account.stxPublicKey)) {
+            logger.error('Current account is not a signer of this multisig policy');
+            return;
+          }
+          const amountInBaseUnits = ftUnshiftDecimals(
+            values && 'amount' in values ? values.amount || 0 : 0,
+            info.decimals || 0
+          );
+          return await buildUnsignedPolicySip10Transfer({
+            policy,
+            network,
+            assetId,
+            recipient:
+              values && 'recipient' in values && values.recipient
+                ? values.recipient
+                : policy.address,
+            baseUnitAmount: amountInBaseUnits,
+            fee: createMoney(stxToMicroStx(values?.fee || 0), 'STX'),
+            memo: values && 'memo' in values && values.memo !== '' ? values.memo : undefined,
+          });
+        }
 
         const functionName = 'transfer';
         const recipientAddressClarityValue =
@@ -170,6 +216,8 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
       contractName,
       contractAssetName,
       contractAddress,
+      policy,
+      assetId,
     ]
   );
 }
@@ -178,6 +226,6 @@ export function useFtTokenTransferUnsignedTx(info: Sip10Asset) {
   const account = useCurrentStacksAccount();
   const generateTx = useGenerateFtTokenTransferUnsignedTx(info);
 
-  const tx = useAsync(async () => generateTx(), [account]);
+  const tx = useAsync(async () => generateTx(), [account, generateTx]);
   return tx.result;
 }
