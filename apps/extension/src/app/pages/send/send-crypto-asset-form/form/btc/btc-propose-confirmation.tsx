@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Navigate, Outlet, useNavigate } from 'react-router';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -6,12 +6,18 @@ import { Stack } from 'leather-styles/jsx';
 
 import type { CryptoCurrency } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
-import { baseCurrencyAmountInQuote, createMoneyFromDecimal, satToBtc } from '@leather.io/utils';
+import {
+  baseCurrencyAmountInQuote,
+  createMoneyFromDecimal,
+  isUndefined,
+  satToBtc,
+} from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import {
   InfoCardAssetValue,
@@ -32,14 +38,29 @@ const symbol: CryptoCurrency = 'BTC';
 
 export function BtcProposeConfirmation() {
   const navigate = useNavigate();
-  const { state } = useLocation();
   const policy = useCurrentPolicy();
   const network = useCurrentNetwork();
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
   const { proposeMultisigTransaction, isProposing } = useProposeMultisigTransaction();
   const nav = useSendFormNavigate();
 
-  const { psbt, recipient, fee, feeRowValue, time, amount } = state;
+  const psbt = useLocationStateWithCache<string>('psbt');
+  const recipient = useLocationStateWithCache<string>('recipient');
+  const fee = useLocationStateWithCache<number>('fee');
+  const feeRowValue = useLocationStateWithCache<string>('feeRowValue');
+  const time = useLocationStateWithCache<string>('time');
+  const amount = useLocationStateWithCache<string>('amount');
+
+  if (
+    isUndefined(psbt) ||
+    isUndefined(recipient) ||
+    isUndefined(fee) ||
+    isUndefined(feeRowValue) ||
+    isUndefined(amount)
+  )
+    return <Navigate to={RouteUrls.SendCryptoAssetForm.replace(':symbol', 'btc')} replace />;
+
+  if (policy?.chain !== 'bitcoin') return null;
 
   const txFiatValue = formatCurrency(
     baseCurrencyAmountInQuote(createMoneyFromDecimal(Number(amount), symbol), btcMarketData)
@@ -55,10 +76,8 @@ export function BtcProposeConfirmation() {
     preset: 'pad-decimals',
   });
 
-  if (policy?.chain !== 'bitcoin') return null;
-
   async function initiateProposal() {
-    if (policy?.chain !== 'bitcoin') return;
+    if (policy?.chain !== 'bitcoin' || isUndefined(psbt)) return;
     try {
       const proposal = await proposeMultisigTransaction({
         network: getPolicyAuthNetworkId('bitcoin', network),
