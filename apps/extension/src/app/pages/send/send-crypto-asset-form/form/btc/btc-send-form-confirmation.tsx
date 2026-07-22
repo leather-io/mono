@@ -15,6 +15,7 @@ import {
   baseCurrencyAmountInQuote,
   createMoney,
   createMoneyFromDecimal,
+  isDefined,
   satToBtc,
 } from '@leather.io/utils';
 
@@ -22,6 +23,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { queryClient } from '@app/common/persistence';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import {
@@ -34,7 +36,6 @@ import { PageHeader } from '@app/features/container/headers/page.header';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
-import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 import { BtcProposeConfirmation } from './btc-propose-confirmation';
@@ -53,8 +54,8 @@ function useBtcSendFormConfirmationState() {
 }
 
 export function BtcSendFormConfirmation() {
-  const policy = useCurrentPolicy();
-  if (policy?.chain === 'bitcoin') return <BtcProposeConfirmation />;
+  const psbt = useLocationStateWithCache<string>('psbt');
+  if (isDefined(psbt)) return <BtcProposeConfirmation />;
   return <BtcBroadcastConfirmation />;
 }
 

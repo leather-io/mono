@@ -60,7 +60,8 @@ export function BtcProposeConfirmation() {
   )
     return <Navigate to={RouteUrls.SendCryptoAssetForm.replace(':symbol', 'btc')} replace />;
 
-  if (policy?.chain !== 'bitcoin') return null;
+  if (policy?.chain !== 'bitcoin')
+    return <Navigate to={RouteUrls.SendCryptoAssetForm.replace(':symbol', 'btc')} replace />;
 
   const txFiatValue = formatCurrency(
     baseCurrencyAmountInQuote(createMoneyFromDecimal(Number(amount), symbol), btcMarketData)

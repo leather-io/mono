@@ -16,13 +16,13 @@ import {
   getStacksTransactionFee,
   getTokenTransferAmount,
   getTokenTransferMemoDisplayText,
+  isNonSequentialMultisigTransaction,
   isSip10TransferContactCall,
 } from '@app/common/transactions/stacks/transaction.utils';
 import { Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useStacksBroadcastTransaction } from '@app/features/stacks-transaction-request/hooks/use-legacy-stacks-broadcast-transaction';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
-import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import type { ProposalSentSummaryState } from '../../../sent-summary/proposal-sent-summary';
@@ -43,9 +43,6 @@ export function StacksSendFormConfirmation() {
 
   const { symbol = 'STX' } = useParams();
 
-  const policy = useCurrentPolicy();
-  const isStacksPolicy = policy?.chain === 'stacks';
-
   const { stacksBroadcastTransaction, isBroadcasting } = useStacksBroadcastTransaction({
     token: symbol.toUpperCase(),
     redirectToSuccessPage: true,
@@ -53,6 +50,7 @@ export function StacksSendFormConfirmation() {
   const { proposeSendTransaction, isProposing } = useProposeStacksSendTransaction();
 
   const tx = deserializeTransaction(txHex);
+  const isMultisigProposal = isNonSequentialMultisigTransaction(tx);
 
   const feeWarningTooltip = showFeeChangeWarning ? (
     <BasicTooltip
@@ -97,7 +95,11 @@ export function StacksSendFormConfirmation() {
   const proposalSummary = getProposalSummary();
 
   function onConfirmTransaction() {
-    if (isStacksPolicy && proposalSummary) return proposeSendTransaction(tx, proposalSummary);
+    if (isMultisigProposal) {
+      if (!proposalSummary)
+        throw new Error('Unsupported payload for a multisig transaction proposal');
+      return proposeSendTransaction(tx, proposalSummary);
+    }
     return stacksBroadcastTransaction(tx);
   }
 
@@ -106,10 +108,10 @@ export function StacksSendFormConfirmation() {
     onBroadcastTransaction: onConfirmTransaction,
     recipient: getRecipientFromStacksTransaction(tx),
     fee: getStacksTransactionFee(tx),
-    nonce: isStacksPolicy ? undefined : getNonceFromStacksTransaction(tx).toString(),
+    nonce: isMultisigProposal ? undefined : getNonceFromStacksTransaction(tx).toString(),
     isLoading: isBroadcasting || isProposing,
     feeWarningTooltip: feeWarningTooltip,
-    confirmButtonLabel: isStacksPolicy ? 'Propose transaction' : undefined,
+    confirmButtonLabel: isMultisigProposal ? 'Propose transaction' : undefined,
   } as const;
 
   return (

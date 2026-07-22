@@ -8,6 +8,7 @@ import { isString } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { getTxSenderAddress } from '@app/common/transactions/stacks/transaction.utils';
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
 import { useProposeMultisigTransaction } from '@app/features/multisig/use-propose-multisig-transaction';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
@@ -36,24 +37,27 @@ export function useProposeStacksSendTransaction() {
     unsignedTx: StacksTransactionWire,
     summary: ProposalSentSummaryState
   ) {
-    if (policy?.chain !== 'stacks')
-      throw new Error('No active Stacks policy to propose the transaction from');
-
-    if (!account || !policy.publicKeys.includes(account.stxPublicKey))
-      throw new Error('Current account is not a signer of this multisig policy');
-
-    const derivedAddress = deriveStxMultisigAddress({
-      publicKeys: policy.publicKeys,
-      threshold: policy.threshold,
-      chainId: network.chain.stacks.chainId,
-    });
-    if (derivedAddress !== policy.address)
-      throw new Error('Derived multisig sender does not match the policy address');
-
-    unsignedTx.setNonce(placeholderNonce);
-    const rawPayload = unsignedTx.serialize();
-
     try {
+      if (policy?.chain !== 'stacks')
+        throw new Error('No active Stacks policy to propose the transaction from');
+
+      if (!account || !policy.publicKeys.includes(account.stxPublicKey))
+        throw new Error('Current account is not a signer of this multisig policy');
+
+      const derivedAddress = deriveStxMultisigAddress({
+        publicKeys: policy.publicKeys,
+        threshold: policy.threshold,
+        chainId: network.chain.stacks.chainId,
+      });
+      if (derivedAddress !== policy.address)
+        throw new Error('Derived multisig sender does not match the policy address');
+
+      if (getTxSenderAddress(unsignedTx) !== policy.address)
+        throw new Error('Transaction sender does not match the policy address');
+
+      unsignedTx.setNonce(placeholderNonce);
+      const rawPayload = unsignedTx.serialize();
+
       const proposal = await proposeMultisigTransaction({
         network: getPolicyAuthNetworkId('stacks', network),
         multisigAddress: policy.address,
