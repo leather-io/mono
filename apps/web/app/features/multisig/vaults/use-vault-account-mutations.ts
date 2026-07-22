@@ -81,7 +81,13 @@ export function useUpdateVaultAccount(network: AuthNetworkId, vaultId: string) {
       const key = multisigVaultKeys.account(network, address, accountId);
       await queryClient.cancelQueries({ queryKey: key });
       const previous = queryClient.getQueryData<VaultAccount>(key);
-      if (previous) queryClient.setQueryData<VaultAccount>(key, { ...previous, name: update.name });
+      if (previous) {
+        queryClient.setQueryData<VaultAccount>(key, {
+          ...previous,
+          name: update.name,
+          icon: update.icon === undefined ? previous.icon : update.icon,
+        });
+      }
       return { previous };
     },
     onError(_error, { accountId }, context) {

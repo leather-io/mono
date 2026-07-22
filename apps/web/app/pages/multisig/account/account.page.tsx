@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
 import { useVaultAccountAssets } from '~/features/multisig/assets/use-vault-account-assets';
 import type { VaultAssetItem } from '~/features/multisig/assets/vault-asset-items';
@@ -22,10 +22,8 @@ import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
-import { PlusIcon } from '@leather.io/ui';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { EditableName } from '../components/editable-name';
 import { InlineTabs } from '../components/inline-tabs';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
@@ -38,6 +36,8 @@ import { AccountAssets } from './components/account-assets';
 import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
 import { AssetDetailModal } from './components/asset-detail-modal';
+import { CreateTransactionButton } from './components/create-transaction-button';
+import { EditAccountModal } from './components/edit-account-modal';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
 import { ReceiveModal } from './components/receive-modal';
 
@@ -47,6 +47,7 @@ export function AccountDetailPage() {
   const [hydrated, setHydrated] = useState(false);
   const [isProposing, setIsProposing] = useState(false);
   const [isReceiving, setIsReceiving] = useState(false);
+  const [isEditingAccount, setIsEditingAccount] = useState(false);
   const [proposeAssetId, setProposeAssetId] = useState<SerializedCryptoAssetId>();
   const [isAddingToWallet, setIsAddingToWallet] = useState(false);
   const [assetDetail, setAssetDetail] = useState<VaultAssetItem | null>(null);
@@ -147,17 +148,7 @@ export function AccountDetailPage() {
   }
 
   return (
-    <MultisigPage
-      title={
-        <EditableName
-          value={account.data.name}
-          onSave={name => updateAccount.mutate({ accountId: account.data.id, update: { name } })}
-          title="Rename account"
-          label="account name"
-        />
-      }
-      backTo={multisigPaths.vault(vault.data.id)}
-    >
+    <MultisigPage title={account.data.name} backTo={multisigPaths.vault(vault.data.id)}>
       <Flex
         direction={['column', 'column', 'row']}
         gap={['space.06', 'space.06', 'space.08', 'space.10']}
@@ -170,62 +161,31 @@ export function AccountDetailPage() {
             primary={<Balance balance={accountBalance.crypto} formatCurrency={formatCurrency} />}
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
-          <styled.button
-            type="button"
-            onClick={() => {
-              setProposeAssetId(undefined);
-              setIsProposing(true);
-            }}
-            width="100%"
-            display="flex"
-            alignItems="center"
-            gap="space.03"
-            p="space.04"
-            mt="space.05"
-            mb="space.03"
-            borderRadius="md"
-            borderWidth="1px"
-            borderStyle="solid"
-            borderColor="ink.border-default"
-            bg="transparent"
-            cursor="pointer"
-            textAlign="left"
-            _hover={{ bg: 'ink.component-background-hover' }}
-          >
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              width="40px"
-              height="40px"
-              borderRadius="round"
-              bg="ink.text-primary"
-              flexShrink={0}
-            >
-              <PlusIcon variant="small" color="ink.background-primary" />
-            </Flex>
-            <Box>
-              <styled.div textStyle="label.02">Create transaction</styled.div>
-              <styled.div textStyle="caption.01" color="ink.text-subdued">
-                Propose a new {chainLabel} transfer for this account
-              </styled.div>
-            </Box>
-          </styled.button>
-          <InlineTabs.Root defaultValue="transactions">
-            <InlineTabs.List>
-              <InlineTabs.Trigger value="transactions">Transactions</InlineTabs.Trigger>
-              <InlineTabs.Trigger value="assets">Assets</InlineTabs.Trigger>
-            </InlineTabs.List>
-            <InlineTabs.Content value="transactions">
-              <Box mt="space.04">
-                <AccountTransactions account={account.data} />
-              </Box>
-            </InlineTabs.Content>
-            <InlineTabs.Content value="assets">
-              <Box mt="space.04">
-                <AccountAssets assets={accountAssets} onSelectAsset={setAssetDetail} />
-              </Box>
-            </InlineTabs.Content>
-          </InlineTabs.Root>
+          <Box mt="space.05">
+            <InlineTabs.Root defaultValue="transactions">
+              <InlineTabs.List>
+                <InlineTabs.Trigger value="transactions">Transactions</InlineTabs.Trigger>
+                <InlineTabs.Trigger value="assets">Assets</InlineTabs.Trigger>
+              </InlineTabs.List>
+              <InlineTabs.Content value="transactions">
+                <Box mt="space.04">
+                  <CreateTransactionButton
+                    chainLabel={chainLabel}
+                    onClick={() => {
+                      setProposeAssetId(undefined);
+                      setIsProposing(true);
+                    }}
+                  />
+                  <AccountTransactions account={account.data} />
+                </Box>
+              </InlineTabs.Content>
+              <InlineTabs.Content value="assets">
+                <Box mt="space.04">
+                  <AccountAssets assets={accountAssets} onSelectAsset={setAssetDetail} />
+                </Box>
+              </InlineTabs.Content>
+            </InlineTabs.Root>
+          </Box>
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>
@@ -235,6 +195,7 @@ export function AccountDetailPage() {
             currentUserAddress={me.data?.address}
             onAddToWallet={onAddToWallet}
             isAddingToWallet={isAddingToWallet}
+            onEdit={() => setIsEditingAccount(true)}
           />
         </Box>
       </Flex>
@@ -266,6 +227,19 @@ export function AccountDetailPage() {
       {isReceiving ? (
         <ReceiveModal account={account.data} onClose={() => setIsReceiving(false)} />
       ) : null}
+      <EditAccountModal
+        vault={vault.data}
+        account={account.data}
+        isShowing={isEditingAccount}
+        isSaving={updateAccount.isPending}
+        onClose={() => setIsEditingAccount(false)}
+        onSave={({ name, icon }) =>
+          updateAccount.mutate(
+            { accountId: account.data.id, update: { name, icon } },
+            { onSuccess: () => setIsEditingAccount(false) }
+          )
+        }
+      />
     </MultisigPage>
   );
 }
