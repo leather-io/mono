@@ -5,6 +5,7 @@ import { ecdsaPublicKeyToSchnorr, encodeExtendedPublicKeyForNetwork } from '@lea
 import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import {
   type BtcAddress,
+  type GetAddressesChain,
   type StxAddress,
   createRequestEncoder,
   createRpcSuccessResponse,
@@ -78,6 +79,19 @@ export function useGetAddresses() {
     releaseAddAccount &&
     (enableAllowPolicyAccounts ? Boolean(request.params?.allowPolicyAccounts) : true);
 
+  const requestedChains: GetAddressesChain[] =
+    request.method === 'getAddresses' && request.params?.chains
+      ? request.params.chains
+      : ['bitcoin', 'stacks'];
+
+  const chainAvailability: Record<GetAddressesChain, boolean> = {
+    bitcoin: Boolean(createNativeSegwitPayer) || Boolean(createTaprootPayer),
+    stacks: Boolean(stacksAccount),
+  };
+  const missingChains = requestedChains.filter(chain => !chainAvailability[chain]);
+  const missingChain = missingChains[0] ?? null;
+  const hasAvailableRequestedChain = missingChains.length < requestedChains.length;
+
   function focusInitiatingTab() {
     analytics.track('user_clicked_requested_by_link', { endpoint: request.method });
     focusTabAndWindow(tabId);
@@ -86,6 +100,8 @@ export function useGetAddresses() {
   return {
     origin,
     allowPolicyAccounts,
+    missingChain,
+    hasAvailableRequestedChain,
     focusInitiatingTab,
     async onUserApproveGetAddresses() {
       if (!tabId || !origin) {
@@ -121,7 +137,7 @@ export function useGetAddresses() {
           keysToIncludeInResponse.push(multisigStacksAddressResponse);
         }
       } else {
-        if (createNativeSegwitPayer) {
+        if (requestedChains.includes('bitcoin') && createNativeSegwitPayer) {
           const nativeSegwitSigner = createNativeSegwitPayer({
             changeIndex: 0,
             addressIndex: 0,
@@ -140,7 +156,7 @@ export function useGetAddresses() {
           keysToIncludeInResponse.push(nativeSegwitAddressResponse);
         }
 
-        if (createTaprootPayer) {
+        if (requestedChains.includes('bitcoin') && createTaprootPayer) {
           const taprootPayer = createTaprootPayer({ changeIndex: 0, addressIndex: 0 });
           const taprootAddressResponse: BtcAddress = {
             symbol: 'BTC',
@@ -155,7 +171,7 @@ export function useGetAddresses() {
           keysToIncludeInResponse.push(taprootAddressResponse);
         }
 
-        if (stacksAccount) {
+        if (requestedChains.includes('stacks') && stacksAccount) {
           const stacksAddressResponse = {
             symbol: 'STX',
             kind: 'single-sig',
