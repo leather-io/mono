@@ -3,7 +3,14 @@ import type { ReactNode } from 'react';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type { Vault, VaultAccount } from '@leather.io/models';
-import { Button, ListItemBox, PlusIcon } from '@leather.io/ui';
+import {
+  BasicTooltip,
+  Button,
+  IconButton,
+  ListItemBox,
+  PencilIcon,
+  PlusIcon,
+} from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
@@ -18,6 +25,7 @@ interface AccountDetailsCardProps {
   currentUserAddress?: string;
   onAddToWallet(): void;
   isAddingToWallet?: boolean;
+  onEdit?(): void;
 }
 
 function CardRow({ children }: { children: ReactNode }) {
@@ -39,6 +47,7 @@ export function AccountDetailsCard({
   currentUserAddress,
   onAddToWallet,
   isAddingToWallet,
+  onEdit,
 }: AccountDetailsCardProps) {
   const theme = vaultThemeFromName(vault.theme);
   const chain = chainFromNetwork(vault.network);
@@ -67,6 +76,18 @@ export function AccountDetailsCard({
           }
           title={account.name}
           caption={`${chainLabel} Vault Account`}
+          trailing={
+            onEdit ? (
+              <BasicTooltip asChild label="Edit account">
+                <IconButton
+                  icon={<PencilIcon variant="small" color="ink.text-subdued" />}
+                  onClick={onEdit}
+                  aria-label="Edit account"
+                  size="sm"
+                />
+              </BasicTooltip>
+            ) : undefined
+          }
         />
       </Box>
 

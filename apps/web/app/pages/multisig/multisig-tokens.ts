@@ -69,3 +69,29 @@ export const avatarSquircleRatio = 0.35;
 export function accountIconUrl(icon: string): string {
   return `/multisig/icons/account/${icon}.svg`;
 }
+
+export const accountIcons = [
+  'piggybank',
+  'sparkles',
+  'orange',
+  'saturn',
+  'car',
+  'alien',
+  'space',
+  'bank',
+  'rocket',
+  'folder',
+  'smile',
+  'code',
+  'zap',
+  'gift',
+  'palette',
+  'home',
+  'person',
+  'inbox',
+  'heart',
+  'flag',
+  'pizza',
+];
+
+export const defaultAccountIcon = 'piggybank';

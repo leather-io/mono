@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useCreateVaultAccount } from '~/features/multisig/vaults/use-vault-account-mutations';
@@ -8,12 +8,11 @@ import {
 } from '~/features/multisig/vaults/vault-account-index';
 import { useToast } from '~/features/toasts/use-toast';
 
-import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { Vault, VaultAccountSummary } from '@leather.io/models';
-import { Button, ChevronDownIcon, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
+import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 
-import { AvatarSq } from '../../components/avatar-sq';
-import { accountIconUrl, vaultThemeFromName } from '../../multisig-tokens';
+import { AccountIconNameField } from '../../components/account-icon-name-field';
+import { defaultAccountIcon, vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface CreateAccountModalProps {
@@ -22,32 +21,6 @@ interface CreateAccountModalProps {
   isShowing: boolean;
   onClose(): void;
 }
-
-const accountIcons = [
-  'piggybank',
-  'sparkles',
-  'orange',
-  'saturn',
-  'car',
-  'alien',
-  'space',
-  'bank',
-  'rocket',
-  'folder',
-  'smile',
-  'code',
-  'zap',
-  'gift',
-  'palette',
-  'home',
-  'person',
-  'inbox',
-  'heart',
-  'flag',
-  'pizza',
-];
-
-const defaultAccountIcon = 'piggybank';
 
 function CreateAccountHeader({ onClose }: { onClose?(): void }) {
   return (
@@ -66,53 +39,6 @@ function CreateAccountHeader({ onClose }: { onClose?(): void }) {
   );
 }
 
-function GlyphButton({
-  icon,
-  selected,
-  onClick,
-}: {
-  icon: string;
-  selected: boolean;
-  onClick(): void;
-}) {
-  return (
-    <styled.button
-      type="button"
-      onClick={onClick}
-      aria-label={icon}
-      aria-pressed={selected}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      width="100%"
-      aspectRatio="1"
-      borderRadius="sm"
-      borderWidth={selected ? '2px' : '1px'}
-      borderStyle="solid"
-      borderColor={selected ? 'ink.text-primary' : 'ink.border-default'}
-      bg="transparent"
-      cursor="pointer"
-      _hover={{ borderColor: 'ink.action-primary-default' }}
-    >
-      <Box
-        width="24px"
-        height="24px"
-        bg="ink.text-primary"
-        style={{
-          WebkitMaskImage: `url(${accountIconUrl(icon)})`,
-          maskImage: `url(${accountIconUrl(icon)})`,
-          WebkitMaskRepeat: 'no-repeat',
-          maskRepeat: 'no-repeat',
-          WebkitMaskPosition: 'center',
-          maskPosition: 'center',
-          WebkitMaskSize: 'contain',
-          maskSize: 'contain',
-        }}
-      />
-    </styled.button>
-  );
-}
-
 export function CreateAccountModal({
   vault,
   accounts,
@@ -124,20 +50,6 @@ export function CreateAccountModal({
   const [name, setName] = useState('');
   const [threshold, setThreshold] = useState<number | null>(null);
   const [icon, setIcon] = useState(defaultAccountIcon);
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
-  const pickerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!isPickerOpen) return;
-    function onPointerDown(event: PointerEvent) {
-      const target = event.target;
-      if (target instanceof Node && pickerRef.current && !pickerRef.current.contains(target)) {
-        setIsPickerOpen(false);
-      }
-    }
-    document.addEventListener('pointerdown', onPointerDown);
-    return () => document.removeEventListener('pointerdown', onPointerDown);
-  }, [isPickerOpen]);
 
   const theme = vaultThemeFromName(vault.theme);
   const chain = chainFromNetwork(vault.network);
@@ -159,7 +71,6 @@ export function CreateAccountModal({
     setName('');
     setThreshold(null);
     setIcon(defaultAccountIcon);
-    setIsPickerOpen(false);
     createAccount.reset();
   }
 
@@ -213,107 +124,15 @@ export function CreateAccountModal({
           <styled.div textStyle="label.02" color="ink.text-primary" mb="space.02">
             Account name
           </styled.div>
-          <Box position="relative" ref={pickerRef}>
-            <Flex
-              alignItems="center"
-              gap="space.03"
-              pl="space.03"
-              pr="space.04"
-              py="space.03"
-              borderRadius="sm"
-              borderWidth="1px"
-              borderStyle="solid"
-              borderColor="ink.border-default"
-              bg="ink.background-primary"
-            >
-              <styled.button
-                type="button"
-                onClick={() => setIsPickerOpen(open => !open)}
-                aria-label="Choose account icon"
-                position="relative"
-                flexShrink={0}
-                lineHeight="0"
-                bg="transparent"
-                cursor="pointer"
-              >
-                <AvatarSq
-                  chain={chain}
-                  icon={icon}
-                  themeId={theme.id}
-                  size="md"
-                  withChainBadge={false}
-                />
-                <Box
-                  position="absolute"
-                  bottom="-2px"
-                  right="-2px"
-                  width="20px"
-                  height="20px"
-                  borderRadius="round"
-                  borderWidth="2px"
-                  borderStyle="solid"
-                  borderColor="ink.background-primary"
-                  bg="ink.text-primary"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Box
-                    display="flex"
-                    transform={isPickerOpen ? 'rotate(180deg)' : 'rotate(0deg)'}
-                    transition="transform 150ms ease"
-                  >
-                    <ChevronDownIcon
-                      variant="small"
-                      color="ink.background-primary"
-                      width={12}
-                      height={12}
-                    />
-                  </Box>
-                </Box>
-              </styled.button>
-              <styled.input
-                flex={1}
-                value={name}
-                placeholder="Account name"
-                maxLength={ACCOUNT_MAX_NAME_LENGTH}
-                onChange={event => setName(event.target.value)}
-                border="none"
-                bg="transparent"
-                textStyle="body.02"
-                _placeholder={{ color: 'ink.text-subdued' }}
-                _focusVisible={{ outline: 'none' }}
-              />
-            </Flex>
-            {isPickerOpen && (
-              <Box position="absolute" top="100%" left="0" width="100%" mt="space.02" zIndex={20}>
-                <Box
-                  p="space.03"
-                  borderRadius="sm"
-                  borderWidth="1px"
-                  borderStyle="solid"
-                  borderColor="ink.border-default"
-                  bg="ink.background-primary"
-                  boxShadow="0px 12px 32px rgba(0, 0, 0, 0.16)"
-                  display="grid"
-                  gridTemplateColumns="repeat(7, 1fr)"
-                  gap="space.02"
-                >
-                  {accountIcons.map(option => (
-                    <GlyphButton
-                      key={option}
-                      icon={option}
-                      selected={icon === option}
-                      onClick={() => {
-                        setIcon(option);
-                        setIsPickerOpen(false);
-                      }}
-                    />
-                  ))}
-                </Box>
-              </Box>
-            )}
-          </Box>
+          <AccountIconNameField
+            chain={chain}
+            themeId={theme.id}
+            name={name}
+            icon={icon}
+            onNameChange={setName}
+            onIconChange={setIcon}
+            placeholder="Account name"
+          />
         </Box>
 
         <Box>
