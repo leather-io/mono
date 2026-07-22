@@ -10,9 +10,15 @@ interface CopyAddressProps {
   full?: boolean;
   grouped?: boolean;
   emphasis?: boolean;
+  // wide: fill the available width. The full address shows when it fits;
+  // when it doesn't, the head ellipsizes against a fixed tail so it reads as
+  // middle truncation — never wrapping to a second line. Pure CSS, so the
+  // cutover adapts to the container without measurement.
+  wide?: boolean;
 }
 
 const iconSize = 12;
+const wideTailChars = 5;
 
 function groupByFour(addr: string): string[] {
   return addr.match(/.{1,4}/g) ?? [];
@@ -21,7 +27,7 @@ function groupByFour(addr: string): string[] {
 // Mono-font address with click-to-copy via the app's shared useClipboard
 // hook. One muted style for truncated + full (full just wraps); grouped is
 // the multi-line block where the copy icon trails the address.
-export function CopyAddress({ addr, full, grouped, emphasis }: CopyAddressProps) {
+export function CopyAddress({ addr, full, grouped, emphasis, wide }: CopyAddressProps) {
   const { onCopy, hasCopied } = useClipboard(addr);
 
   const icon = (
@@ -74,7 +80,7 @@ export function CopyAddress({ addr, full, grouped, emphasis }: CopyAddressProps)
           {groupByFour(addr).map((group, index) => (
             <styled.span
               key={index}
-              textStyle="address"
+              textStyle="code"
               color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued'}
             >
               {group}{' '}
@@ -112,16 +118,30 @@ export function CopyAddress({ addr, full, grouped, emphasis }: CopyAddressProps)
       transition="background 0.1s ease"
       _hover={{ bg: 'ink.component-background-hover', color: 'ink.text-primary' }}
     >
-      <styled.span
-        textStyle="code"
-        fontSize={emphasis ? '15px' : '12px'}
-        lineHeight="20px"
-        flexShrink={0}
-        whiteSpace={full ? 'normal' : 'nowrap'}
-        wordBreak={full ? 'break-all' : 'normal'}
-      >
-        {full ? addr : truncateMiddle(addr)}
-      </styled.span>
+      {wide ? (
+        <styled.span
+          textStyle="code"
+          lineHeight="20px"
+          display="flex"
+          minWidth={0}
+          whiteSpace="nowrap"
+        >
+          <styled.span overflow="hidden" textOverflow="ellipsis" minWidth={0}>
+            {addr.slice(0, -wideTailChars)}
+          </styled.span>
+          <styled.span flexShrink={0}>{addr.slice(-wideTailChars)}</styled.span>
+        </styled.span>
+      ) : (
+        <styled.span
+          textStyle="code"
+          lineHeight="20px"
+          flexShrink={0}
+          whiteSpace={full ? 'normal' : 'nowrap'}
+          wordBreak={full ? 'break-all' : 'normal'}
+        >
+          {full ? addr : truncateMiddle(addr)}
+        </styled.span>
+      )}
       {icon}
     </styled.button>
   );

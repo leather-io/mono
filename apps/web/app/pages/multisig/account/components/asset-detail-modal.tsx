@@ -9,7 +9,7 @@ import {
 import type { VaultAssetItem } from '~/features/multisig/assets/vault-asset-items';
 import { useUserSettings } from '~/hooks/use-user-settings';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
 import { formatPriceChangeText, getPriceChangeColor } from '@leather.io/features';
 import type { VaultAccount } from '@leather.io/models';
@@ -219,7 +219,7 @@ export function AssetDetailModal({
           <AssetAvatarIcon asset={asset} size="xl" />
           <Flex direction="column" alignItems="center" gap="space.00" textAlign="center">
             <styled.div textStyle="heading.03">
-              {formatCurrency(item.crypto, { showCurrency: false })}
+              {formatCryptoGlanceable(item.crypto, { showCurrency: false })}
               <styled.span color="ink.text-subdued"> {asset.symbol.toUpperCase()}</styled.span>
             </styled.div>
             <styled.div textStyle="label.01" color="ink.text-primary">

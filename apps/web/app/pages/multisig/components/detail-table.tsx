@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoPrecise, formatCurrency } from '~/utils/currency-formatter';
 
 import type { BlockchainActivityBalanceChange, Money } from '@leather.io/models';
 
@@ -11,7 +11,9 @@ import { Badge, type BadgeVariant } from './badge';
 export const pendingValue = '—';
 
 export function moneyWithFiat(money: Money, fiat: Money | undefined): string {
-  return fiat ? `${formatCurrency(money)} ≈ ${formatCurrency(fiat)}` : formatCurrency(money);
+  return fiat
+    ? `${formatCryptoPrecise(money)} ≈ ${formatCurrency(fiat)}`
+    : formatCryptoPrecise(money);
 }
 
 export function balanceChangeValue(change: BlockchainActivityBalanceChange): string {
@@ -109,7 +111,7 @@ export function DetailRow({ label, children }: { label: string; children: ReactN
       py="space.03"
       borderTopWidth="1px"
       borderTopStyle="solid"
-      borderTopColor="ink.border-default"
+      borderTopColor="ink.border-transparent"
     >
       <styled.span textStyle="caption.01" color="ink.text-subdued" flexShrink={0}>
         {label}
@@ -118,24 +120,5 @@ export function DetailRow({ label, children }: { label: string; children: ReactN
         {children}
       </Box>
     </Flex>
-  );
-}
-
-export function DetailAddressRow({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <Box
-      px="space.04"
-      py="space.03"
-      borderTopWidth="1px"
-      borderTopStyle="solid"
-      borderTopColor="ink.border-default"
-    >
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        {label}
-      </styled.span>
-      <Box mt="space.01" textStyle="label.02">
-        {children}
-      </Box>
-    </Box>
   );
 }

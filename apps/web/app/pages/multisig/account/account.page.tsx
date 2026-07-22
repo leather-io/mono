@@ -17,7 +17,7 @@ import { useUpdateVaultAccount } from '~/features/multisig/vaults/use-vault-acco
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
@@ -169,7 +169,9 @@ export function AccountDetailPage() {
           <MultisigHero
             variant="balance"
             themeId={theme.id}
-            primary={<Balance balance={accountBalance.crypto} formatCurrency={formatCurrency} />}
+            primary={
+              <Balance balance={accountBalance.crypto} formatCurrency={formatCryptoGlanceable} />
+            }
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
           <styled.button

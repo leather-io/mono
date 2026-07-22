@@ -16,7 +16,7 @@ import { useVaultStxTransactionFees } from '~/features/multisig/transactions/use
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
 import { useToast } from '~/features/toasts/use-toast';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoPrecise, formatCurrency } from '~/utils/currency-formatter';
 
 import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import { STX_DECIMALS, btcAsset, stxAsset } from '@leather.io/constants';
@@ -177,7 +177,7 @@ function FeeTierSelector({
                 {tier}
               </styled.span>
               <styled.span textStyle="label.03">
-                <Balance balance={money} formatCurrency={formatCurrency} />
+                <Balance balance={money} formatCurrency={formatCryptoPrecise} />
               </styled.span>
               {fiatText ? (
                 <styled.span textStyle="caption.01" color="ink.text-subdued">
@@ -323,7 +323,7 @@ function ProposeFormFields({
           </styled.span>
         ) : (
           <styled.span textStyle="caption.01" color="ink.text-subdued">
-            Available: <Balance balance={available} formatCurrency={formatCurrency} />
+            Available: <Balance balance={available} formatCurrency={formatCryptoPrecise} />
           </styled.span>
         )}
       </Flex>

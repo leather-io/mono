@@ -1,7 +1,7 @@
 import { Box } from 'leather-styles/jsx';
 
 import type { Chain } from '../data/multisig-types';
-import { accountIconUrl, avatarSquircleRadius, vaultTheme } from '../multisig-tokens';
+import { accountIconUrl, avatarSquircleRatio, vaultTheme } from '../multisig-tokens';
 import { ChainAvatar } from './chain-avatar';
 
 type AvatarSqSize = 'sm' | 'md' | 'lg';
@@ -37,18 +37,18 @@ export function AvatarSq({
   const theme = vaultTheme(themeId);
   const px = tileSize[size];
   const glyphPx = glyphSize[size];
+  const radiusPx = Math.round(px * avatarSquircleRatio);
   const maskUrl = icon ? `url(${accountIconUrl(icon)})` : undefined;
   return (
     <Box position="relative" width={`${px}px`} height={`${px}px`} flexShrink={0}>
       <Box
         width="100%"
         height="100%"
-        borderRadius={avatarSquircleRadius}
         display="flex"
         alignItems="center"
         justifyContent="center"
         overflow="hidden"
-        style={{ background: theme.background }}
+        style={{ background: theme.background, borderRadius: `${radiusPx}px` }}
       >
         {icon && (
           <Box
