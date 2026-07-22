@@ -27,7 +27,7 @@ function PreviewSection({ label, children }: { label: string; children: React.Re
       p="space.04"
       borderTopWidth="1px"
       borderTopStyle="solid"
-      borderTopColor="ink.border-default"
+      borderTopColor="ink.border-transparent"
     >
       <styled.div textStyle="label.03" color="ink.text-subdued" mb="space.02">
         {label}
@@ -117,13 +117,20 @@ export function VaultPreviewCard({
         )}
       </PreviewSection>
 
+      <PreviewSection label="Good to know">
+        <styled.p textStyle="body.02" color="ink.text-primary">
+          No threshold to pick yet. You&rsquo;ll set one later, for each account you create in this
+          vault.
+        </styled.p>
+      </PreviewSection>
+
       {disabled && (
         <Box
           px="space.04"
           py="space.03"
           borderTopWidth="1px"
           borderTopStyle="solid"
-          borderTopColor="ink.border-default"
+          borderTopColor="ink.border-transparent"
           bg="ink.background-secondary"
         >
           <styled.span textStyle="caption.01" color="ink.text-subdued">
@@ -136,7 +143,7 @@ export function VaultPreviewCard({
         p="space.04"
         borderTopWidth="1px"
         borderTopStyle="solid"
-        borderTopColor="ink.border-default"
+        borderTopColor="ink.border-transparent"
       >
         {error && (
           <styled.div textStyle="caption.01" color="red.action-primary-default" mb="space.03">

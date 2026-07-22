@@ -216,10 +216,42 @@ describe(buildClassifications.name, () => {
     });
   });
 
-  it('falls back to contract-execution when an action is unresolved', () => {
+  it('infers the action from the function name when unresolved', () => {
     const classifications = buildClassifications(targets, ['swap', null]);
 
     expect(classifications.get('velar|deposit')).toEqual({
+      action: 'deposit',
+      protocol: 'velar',
+      protocolName: 'Velar',
+    });
+  });
+
+  it('prefers the more specific keyword when function names overlap (unstake vs stake)', () => {
+    const unstakeTargets: ContractActionTarget[] = [
+      {
+        key: 'velar|unstake-lp',
+        protocol: velarProtocol,
+        contractName: 'farm',
+        functionName: 'unstake-lp',
+      },
+    ];
+    const classifications = buildClassifications(unstakeTargets, [null]);
+
+    expect(classifications.get('velar|unstake-lp')?.action).toBe('unstake-lp');
+  });
+
+  it('falls back to contract-execution when the function name matches no convention', () => {
+    const opaqueTargets: ContractActionTarget[] = [
+      {
+        key: 'velar|execute',
+        protocol: velarProtocol,
+        contractName: 'vault',
+        functionName: 'execute',
+      },
+    ];
+    const classifications = buildClassifications(opaqueTargets, [null]);
+
+    expect(classifications.get('velar|execute')).toEqual({
       action: 'contract-execution',
       protocol: 'velar',
       protocolName: 'Velar',

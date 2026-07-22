@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import { ChevronDownIcon } from '@leather.io/ui';
 
 import type { Chain } from '../data/multisig-types';
@@ -148,6 +149,7 @@ export function AccountIconNameField({
           flex={1}
           value={name}
           placeholder={placeholder}
+          maxLength={ACCOUNT_MAX_NAME_LENGTH}
           onChange={event => onNameChange(event.target.value)}
           border="none"
           bg="transparent"

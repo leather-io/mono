@@ -34,7 +34,7 @@ function CardRow({ children }: { children: ReactNode }) {
       p="space.04"
       borderTopWidth="1px"
       borderTopStyle="solid"
-      borderTopColor="ink.border-default"
+      borderTopColor="ink.border-transparent"
     >
       {children}
     </Box>
@@ -74,7 +74,7 @@ export function AccountDetailsCard({
               size="sm"
             />
           }
-          title={<styled.span textStyle="label.03">{account.name}</styled.span>}
+          title={account.name}
           caption={`${chainLabel} Vault Account`}
           trailing={
             onEdit ? (
@@ -99,15 +99,10 @@ export function AccountDetailsCard({
       </CardRow>
 
       <CardRow>
-        <Flex justifyContent="space-between" alignItems="center" gap="space.02">
-          <styled.span textStyle="label.03" color="ink.text-subdued">
-            Threshold
-          </styled.span>
-          <styled.span textStyle="caption.01" color="ink.text-subdued">
-            {account.threshold} of {signerCount}
-          </styled.span>
-        </Flex>
-        <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
+        <styled.div textStyle="label.03" color="ink.text-subdued">
+          Threshold
+        </styled.div>
+        <styled.div textStyle="body.02" color="ink.text-primary" mt="space.01">
           Any {account.threshold} of {signerCount} members can approve transactions on this account.
         </styled.div>
       </CardRow>
@@ -127,8 +122,8 @@ export function AccountDetailsCard({
                 variant="plain"
                 density="compact"
                 leading={<AvatarCircle name={name} size="md" />}
-                title={<styled.span textStyle="label.03">{name}</styled.span>}
-                caption={<CopyAddress addr={signer.address} />}
+                title={name}
+                caption={<CopyAddress addr={signer.address} wide />}
               />
             );
           })}

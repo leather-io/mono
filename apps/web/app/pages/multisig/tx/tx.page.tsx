@@ -45,6 +45,7 @@ import {
   createMarketDataQueryConfig,
   createSip10AssetByPrincipalQueryConfig,
 } from '@leather.io/queries';
+import { BlockchainActivityAvatarIcon } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote, createMoney, truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../components/avatar-circle';
@@ -52,6 +53,7 @@ import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
 import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
+import { renderActivityIndicator } from '../components/vault-activity-row';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { SignerRollcall } from './components/signer-rollcall';
@@ -321,6 +323,15 @@ export function TxDetailPage() {
           <MultisigHero
             variant="balance"
             themeId={vaultThemeFromName(vault.data.theme).id}
+            media={
+              onchainDetail ? (
+                <BlockchainActivityAvatarIcon
+                  size={48}
+                  avatar={onchainDetail.view.avatar}
+                  indicator={renderActivityIndicator(onchainDetail.view.indicator, 16)}
+                />
+              ) : undefined
+            }
             primary={heroTitle}
             secondary={
               <Flex direction="column" gap="space.01">

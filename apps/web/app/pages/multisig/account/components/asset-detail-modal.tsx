@@ -9,7 +9,7 @@ import {
 import type { VaultAssetItem } from '~/features/multisig/assets/vault-asset-items';
 import { useUserSettings } from '~/hooks/use-user-settings';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
 import { formatPriceChangeText, getPriceChangeColor } from '@leather.io/features';
 import type { VaultAccount } from '@leather.io/models';
@@ -19,6 +19,7 @@ import {
 } from '@leather.io/queries';
 import { AssetAvatarIcon, Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 
+import { ActivityEmptyState } from '../../components/activity-empty-state';
 import { CopyAddress } from '../../components/copy-address';
 import { VaultActivityList } from '../../components/vault-activity-list';
 
@@ -213,20 +214,7 @@ function RecentActivity({ activity }: RecentActivityProps) {
   }
 
   if (activity.views.length === 0) {
-    return (
-      <Box
-        borderRadius="md"
-        borderWidth="1px"
-        borderStyle="dashed"
-        borderColor="ink.border-default"
-        p="space.05"
-        textAlign="center"
-      >
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
-          No activity yet.
-        </styled.span>
-      </Box>
-    );
+    return <ActivityEmptyState description="Activity for this asset will appear here." />;
   }
 
   return (
@@ -280,7 +268,7 @@ export function AssetDetailModal({
           <AssetAvatarIcon asset={asset} size="xl" />
           <Flex direction="column" alignItems="center" gap="space.00" textAlign="center">
             <styled.div textStyle="heading.03">
-              {formatCurrency(item.crypto, { showCurrency: false })}
+              {formatCryptoGlanceable(item.crypto, { showCurrency: false })}
               <styled.span color="ink.text-subdued"> {asset.symbol.toUpperCase()}</styled.span>
             </styled.div>
             <styled.div textStyle="label.01" color="ink.text-primary">

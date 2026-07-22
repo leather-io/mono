@@ -1,12 +1,10 @@
-import { useState } from 'react';
-
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useToast } from '~/features/toasts/use-toast';
 
 import type { Vault, VaultMember } from '@leather.io/models';
 import {
+  BasicTooltip,
   Button,
-  ChevronDownIcon,
   CloseIcon,
   CopyIcon,
   IconButton,
@@ -17,7 +15,6 @@ import {
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
-import { Badge } from '../../components/badge';
 import { CopyAddress } from '../../components/copy-address';
 import { chainFromNetwork } from '../../multisig.utils';
 
@@ -38,7 +35,7 @@ function inviteMessage(vault: Vault, member: VaultMember, creatorName: string | 
   const lines = [
     `Hey ${name},`,
     '',
-    `You're invited to "${vault.name}", a ${chainLabel} multisig vault on Leather with ${vault.memberCount} members.`,
+    `You're invited to "${vault.name}", a ${chainLabel} multisig vault on Leather with ${vault.members.length} members.`,
     '',
     `1. Open ${inviteLink(vault)}`,
     `2. Connect this wallet: ${member.address}`,
@@ -67,9 +64,72 @@ function ShareHeader({ onClose }: { onClose?(): void }) {
   );
 }
 
+// Chain-link glyph for the Copy link action, distinguishing it from the copy
+// glyph on Copy message. Inherits the button's text color via currentColor.
+function LinkIcon() {
+  return (
+    <styled.svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      flexShrink={0}
+      aria-hidden="true"
+    >
+      <path
+        d="M6.7 9.3 9.3 6.7M7.3 4.7l1-1a2.36 2.36 0 0 1 3.34 0l.66.66a2.36 2.36 0 0 1 0 3.34l-1 1M8.7 11.3l-1 1a2.36 2.36 0 0 1-3.34 0l-.66-.66a2.36 2.36 0 0 1 0-3.34l1-1"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </styled.svg>
+  );
+}
+
+function PendingStatus() {
+  return (
+    <Flex alignItems="center" gap="space.02" flexShrink={0}>
+      <Box width="6px" height="6px" borderRadius="round" bg="orange.action-primary-default" />
+      <styled.span textStyle="caption.01" color="ink.text-subdued">
+        Pending
+      </styled.span>
+    </Flex>
+  );
+}
+
 function CopyMessageButton({ message }: { message: string }) {
   const { success: showToast } = useToast();
   const { onCopy } = useClipboard(message);
+  return (
+    <BasicTooltip
+      asChild
+      label="Includes a personal message, instructions and the vault link for that member"
+    >
+      <styled.span display="inline-flex" flexShrink={0}>
+        <Button
+          variant="outline"
+          size="sm"
+          height="30px"
+          px="space.03"
+          textStyle="label.03"
+          onClick={() => {
+            onCopy();
+            showToast('Invite message copied');
+          }}
+        >
+          <Flex alignItems="center" gap="space.01">
+            <CopyIcon variant="small" />
+            Copy message
+          </Flex>
+        </Button>
+      </styled.span>
+    </BasicTooltip>
+  );
+}
+
+function CopyLinkButton({ link }: { link: string }) {
+  const { success: showToast } = useToast();
+  const { onCopy } = useClipboard(link);
   return (
     <Button
       variant="solid"
@@ -77,124 +137,59 @@ function CopyMessageButton({ message }: { message: string }) {
       height="30px"
       px="space.03"
       textStyle="label.03"
+      flexShrink={0}
       onClick={() => {
         onCopy();
-        showToast('Invite message copied');
+        showToast('Invite link copied');
       }}
     >
-      <Flex alignItems="center" gap="space.01">
-        <CopyIcon variant="small" color="ink.background-primary" />
-        Copy message
+      <Flex alignItems="center" gap="space.01" color="ink.background-primary">
+        <LinkIcon />
+        Copy link
       </Flex>
     </Button>
   );
 }
 
-function PendingInviteCard({
+// A pending invitee, rendered with the same member-row layout used elsewhere
+// (avatar + name + adaptive address). Each row carries its own share actions;
+// the invite message is copied directly — no expand step.
+function PendingInviteRow({
   vault,
   member,
   creatorName,
-  isExpanded,
-  onToggle,
+  showDivider,
 }: {
   vault: Vault;
   member: VaultMember;
   creatorName: string | null;
-  isExpanded: boolean;
-  onToggle(): void;
+  showDivider: boolean;
 }) {
-  const { success: showToast } = useToast();
-  const message = inviteMessage(vault, member, creatorName);
-  const { onCopy: onCopyLink } = useClipboard(inviteLink(vault));
   return (
     <Box
-      borderRadius="md"
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor="ink.border-default"
-      overflow="hidden"
+      px="space.04"
+      py="space.03"
+      borderTopWidth={showDivider ? '1px' : '0'}
+      borderTopStyle="solid"
+      borderTopColor="ink.border-transparent"
     >
-      <Box position="relative" _hover={{ bg: 'ink.component-background-hover' }}>
-        <styled.button
-          type="button"
-          onClick={onToggle}
-          aria-label={isExpanded ? 'Collapse invite message' : 'Expand invite message'}
-          position="absolute"
-          inset="0"
-          zIndex={0}
-          bg="transparent"
-          cursor="pointer"
-        />
-        <Box p="space.04" position="relative" zIndex={1} pointerEvents="none">
-          <ListItemBox
-            variant="plain"
-            density="compact"
-            leading={<AvatarCircle name={member.name || member.address} size="md" />}
-            title={
-              <styled.span textStyle="label.02">
-                {member.name || truncateMiddle(member.address)}
-              </styled.span>
-            }
-            titleAccessory={<Badge variant="pending" label="Invite pending" />}
-            caption={
-              <styled.span display="inline-flex" pointerEvents="auto">
-                <CopyAddress addr={member.address} />
-              </styled.span>
-            }
-            action={
-              <Flex alignItems="center" gap="space.03" flexShrink={0}>
-                <styled.span pointerEvents="auto">
-                  <CopyMessageButton message={message} />
-                </styled.span>
-                <Box
-                  display="flex"
-                  transform={isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'}
-                  transition="transform 150ms ease"
-                >
-                  <ChevronDownIcon variant="small" color="ink.text-subdued" />
-                </Box>
-              </Flex>
-            }
-          />
-        </Box>
-      </Box>
-
-      {isExpanded && (
-        <Box p="space.04" bg="ink.background-secondary">
-          <styled.textarea
-            readOnly
-            value={message}
-            rows={10}
-            width="100%"
-            p="space.04"
-            borderRadius="sm"
-            borderWidth="1px"
-            borderStyle="solid"
-            borderColor="ink.border-default"
-            bg="ink.background-primary"
-            textStyle="body.02"
-            color="ink.text-primary"
-            resize="vertical"
-            _focusVisible={{ outline: 'none', borderColor: 'ink.action-primary-default' }}
-          />
-          <Flex justifyContent="flex-end" gap="space.03" mt="space.03">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                onCopyLink();
-                showToast('Invite link copied');
-              }}
-            >
-              <Flex alignItems="center" gap="space.02">
-                <CopyIcon variant="small" />
-                Copy link only
-              </Flex>
-            </Button>
-            <CopyMessageButton message={message} />
+      <ListItemBox
+        variant="plain"
+        leading={<AvatarCircle name={member.name || member.address} size="md" />}
+        title={
+          <styled.span textStyle="label.02">
+            {member.name || truncateMiddle(member.address)}
+          </styled.span>
+        }
+        titleAccessory={<PendingStatus />}
+        caption={<CopyAddress addr={member.address} wide />}
+        action={
+          <Flex alignItems="center" gap="space.02" flexShrink={0}>
+            <CopyMessageButton message={inviteMessage(vault, member, creatorName)} />
+            <CopyLinkButton link={inviteLink(vault)} />
           </Flex>
-        </Box>
-      )}
+        }
+      />
     </Box>
   );
 }
@@ -209,7 +204,6 @@ export function ShareInvitationsModal({
   const joined = vault.members.filter(member => member.membershipStatus === 'joined');
   const creator = vault.members.find(member => member.user?.id === vault.createdBy);
   const creatorName = creator?.name ?? null;
-  const [expandedId, setExpandedId] = useState<string | null>(pending[0]?.membershipId ?? null);
 
   return (
     <Sheet
@@ -219,24 +213,29 @@ export function ShareInvitationsModal({
       maxWidth="680px"
       header={<ShareHeader />}
     >
-      <Flex direction="column" gap="space.04" px="space.05" pb="space.05">
-        {pending.map(member => (
-          <PendingInviteCard
-            key={member.membershipId}
-            vault={vault}
-            member={member}
-            creatorName={creatorName}
-            isExpanded={expandedId === member.membershipId}
-            onToggle={() =>
-              setExpandedId(current =>
-                current === member.membershipId ? null : member.membershipId
-              )
-            }
-          />
-        ))}
+      <Flex direction="column" gap="space.05" px="space.05" pb="space.05">
+        {pending.length > 0 && (
+          <Box
+            borderRadius="md"
+            borderWidth="1px"
+            borderStyle="solid"
+            borderColor="ink.border-default"
+            overflow="hidden"
+          >
+            {pending.map((member, index) => (
+              <PendingInviteRow
+                key={member.membershipId}
+                vault={vault}
+                member={member}
+                creatorName={creatorName}
+                showDivider={index > 0}
+              />
+            ))}
+          </Box>
+        )}
 
         {joined.length > 0 && (
-          <Box mt="space.02">
+          <Box>
             <styled.div textStyle="label.03" color="ink.text-subdued" mb="space.02">
               Already joined · {joined.length}
             </styled.div>

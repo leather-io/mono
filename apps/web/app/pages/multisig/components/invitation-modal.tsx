@@ -135,7 +135,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
                   p="space.04"
                   borderTopWidth={index === 0 ? '0' : '1px'}
                   borderTopStyle="solid"
-                  borderTopColor="ink.border-default"
+                  borderTopColor="ink.border-transparent"
                 >
                   <Box
                     height="40px"
@@ -151,7 +151,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
                   p="space.04"
                   borderTopWidth={index === 0 ? '0' : '1px'}
                   borderTopStyle="solid"
-                  borderTopColor="ink.border-default"
+                  borderTopColor="ink.border-transparent"
                 >
                   <ListItemBox
                     variant="plain"

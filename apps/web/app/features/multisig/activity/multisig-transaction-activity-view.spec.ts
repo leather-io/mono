@@ -8,6 +8,7 @@ import {
   serializeCV,
   uintCV,
 } from '@stacks/transactions';
+import { activityCounterpartyOffset } from '~/queries/activity/blockchain-activity.query';
 
 import {
   type MultisigTransactionStatus,
@@ -148,7 +149,9 @@ describe(createMultisigTransactionActivityView.name, () => {
 
     expect(view.action).toBe('send');
     expect(view.status).toBe('pending');
-    expect(view.subtitle).toBe(`Sending to ${truncateMiddle(recipient)}`);
+    expect(view.subtitle).toBe(
+      `Sending to ${truncateMiddle(recipient, activityCounterpartyOffset)}`
+    );
     expect(view.amount?.direction).toBe('sent');
     expect(view.amount?.crypto?.amount.toNumber()).toBe(2_500_000);
     expect(view.amount?.crypto?.decimals).toBe(8);
@@ -207,7 +210,9 @@ describe(createMultisigTransactionActivityView.name, () => {
     expect(view.chain).toBe('stacks');
     expect(view.timestamp).toBe(1751000000);
     expect(view.title).toBe('Send STX');
-    expect(view.subtitle).toBe(`Sending to ${truncateMiddle(recipient)}`);
+    expect(view.subtitle).toBe(
+      `Sending to ${truncateMiddle(recipient, activityCounterpartyOffset)}`
+    );
     expect(view.avatar).toEqual({
       kind: 'single',
       asset: expect.objectContaining({ symbol: 'STX' }),
@@ -272,7 +277,9 @@ describe(createMultisigTransactionActivityView.name, () => {
       rawPayload,
     });
 
-    expect(view.subtitle).toBe(`Sending to ${truncateMiddle(recipient)}`);
+    expect(view.subtitle).toBe(
+      `Sending to ${truncateMiddle(recipient, activityCounterpartyOffset)}`
+    );
     expect(view.amount).toBeUndefined();
   });
 

@@ -59,9 +59,11 @@ export function vaultThemeFromName(name: string | null | undefined): VaultTheme 
   return vaultThemes.find(theme => theme.name === name) ?? vaultThemes[fallbackVaultThemeId];
 }
 
-// Squircle radius for AvatarSq tiles — the prototype uses a soft-rounded
-// square; no token radius matches (tokens stop at lg = 12px / round).
-export const avatarSquircleRadius = '14px';
+// Squircle corner radius for AvatarSq tiles, as a fraction of the tile size, so
+// the rounding stays proportional across sizes (a fixed radius reads too round
+// on the small tile and too square on the large one). Tuned on the 40px tile,
+// where 14px looked right (14 / 40 = 0.35); no token radius matches.
+export const avatarSquircleRatio = 0.35;
 
 // Account-icon glyph asset path (mask-image source, recolorable per theme).
 export function accountIconUrl(icon: string): string {
