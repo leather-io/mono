@@ -16,9 +16,31 @@ interface WalletSignInParams {
   timestamp: number;
 }
 
-async function fetchWalletAddresses(network: string) {
-  const result = await leather.getAddresses({ network });
-  return result.addresses;
+type GetAddressesParams = NonNullable<Parameters<typeof leather.getAddresses>[0]>;
+
+function getRpcRejectionMessage(error: unknown) {
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'error' in error &&
+    typeof error.error === 'object' &&
+    error.error !== null &&
+    'message' in error.error &&
+    typeof error.error.message === 'string'
+  )
+    return error.error.message;
+  return null;
+}
+
+async function fetchWalletAddresses(network: string, chains: GetAddressesParams['chains']) {
+  try {
+    const result = await leather.getAddresses({ network, chains });
+    return result.addresses;
+  } catch (error) {
+    throw new Error(
+      getRpcRejectionMessage(error) ?? 'Leather rejected the connection request. Please try again.'
+    );
+  }
 }
 
 type SignInNetworkMode = 'mainnet' | 'testnet' | 'regtest';
@@ -52,7 +74,7 @@ function assertWalletMatchesNetwork(address: string, network: AuthNetworkId) {
 
 async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
   const rpcNetwork = resolveWalletRpcNetwork(params.network);
-  const addresses = await fetchWalletAddresses(rpcNetwork);
+  const addresses = await fetchWalletAddresses(rpcNetwork, ['bitcoin']);
   const account = addresses.find(address => address.symbol === 'BTC' && address.type === 'p2wpkh');
   if (!account) {
     throw new Error('No Bitcoin account available in the connected wallet');
@@ -88,7 +110,7 @@ async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
 
 async function stxSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
   const rpcNetwork = resolveWalletRpcNetwork(params.network);
-  const addresses = await fetchWalletAddresses(rpcNetwork);
+  const addresses = await fetchWalletAddresses(rpcNetwork, ['stacks']);
   const account = addresses.find(address => address.symbol === 'STX');
   if (!account) {
     throw new Error('No Stacks account available in the connected wallet');
