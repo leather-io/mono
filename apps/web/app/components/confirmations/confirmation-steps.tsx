@@ -8,7 +8,12 @@ export type PooledStackingConfirmationStepId = 'terms' | 'allowContractCaller' |
 
 export type LiquidStackingConfirmationStepId = 'terms' | 'depositStx';
 
-type ConfirmationStepId = PooledStackingConfirmationStepId | LiquidStackingConfirmationStepId;
+type BitcoinStakingConfirmationStepId = 'terms' | 'stake' | 'stakeUpdate' | 'unstake';
+
+type ConfirmationStepId =
+  | PooledStackingConfirmationStepId
+  | LiquidStackingConfirmationStepId
+  | BitcoinStakingConfirmationStepId;
 
 export interface ConfirmationStep<T extends ConfirmationStepId> {
   id: T;
@@ -86,6 +91,7 @@ export function ConfirmationSteps<T extends ConfirmationStepId>({
                     }}
                     px="space.06"
                     size="sm"
+                    data-testid={`confirmation-${confirmation.id}-button`}
                   >
                     {confirmation.actionText}
                   </Button>

@@ -25,6 +25,9 @@ export const validationMessages = {
   mustDelegateAtLeast: 'You must delegate at least',
   addressNotValid: 'Address is not valid',
   addressIncorrectNetwork: 'Address is for incorrect network',
+  cannotStackMoreThanBalance: 'You cannot stake more than your available balance',
+  chooseStakingCycles: 'Choose between 1 and 96 cycles',
+  enterMaxWithdrawalFee: 'Enter a max withdrawal fee in sats',
 } as const;
 
 export const statusMessages = {

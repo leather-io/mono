@@ -30,6 +30,23 @@ export interface Events extends HistoricalEvents {
     amount: number;
     provider?: string;
   };
+  bitcoin_staking_started: {
+    provider: string;
+    amountMicroStx: string;
+    numCycles: number;
+  };
+  bitcoin_staking_updated: {
+    provider: string;
+    amountIncreaseMicroStx: string;
+    cyclesToExtend: number;
+  };
+  bitcoin_staking_unstaked: {
+    provider: string;
+  };
+  bitcoin_staking_rewards_claimed: {
+    provider: string;
+    rewardCycle: number;
+  };
   liquid_stacking_increased: {
     amount: number;
   };

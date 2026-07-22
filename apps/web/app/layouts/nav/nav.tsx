@@ -8,6 +8,7 @@ import { LeatherLogo } from '~/components/icons/leather-logo';
 import { SbtcMonogramIcon } from '~/components/icons/sbtc-monogram-icon';
 import { StackingIcon } from '~/components/icons/stacking-icon';
 import { advancedModeEnabled } from '~/pages/advanced/advanced.route';
+import { bitcoinStakingEnabled } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { multisigEnabled } from '~/pages/multisig/multisig.constants';
 import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
@@ -46,6 +47,12 @@ function NavContents() {
       <NavItem href="/sbtc" icon={<StackingIcon />}>
         sBTC
       </NavItem>
+
+      {bitcoinStakingEnabled && (
+        <NavItem href="/staking" icon={<StackingIcon />}>
+          Staking
+        </NavItem>
+      )}
 
       <NavItem href={externalLeatherNavigator.apps} icon={<GridIcon variant="small" />}>
         Apps

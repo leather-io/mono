@@ -1,5 +1,6 @@
 import { type RouteConfig, index, prefix, route } from '@react-router/dev/routes';
 
+import { bitcoinStakingRoutes } from './pages/bitcoin-staking/bitcoin-staking.routes';
 import { multisigRoutes } from './pages/multisig/multisig.routes';
 import { playgroundRoutes } from './pages/playground/playground.routes';
 
@@ -40,6 +41,7 @@ export default [
   route('help-center/*', 'pages/redirects/help-center-wildcard.route.tsx'),
   ...multisigRoutes,
   ...playgroundRoutes,
+  ...bitcoinStakingRoutes,
   // Fallback route
   route('*', 'pages/error/error-not-found.route.tsx'),
 ] satisfies RouteConfig;

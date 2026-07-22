@@ -241,6 +241,7 @@ export const liquidStackingProvidersList = Object.values(liquidStackingPoolData)
 export const stackingContractMap = {
   mainnet: {
     Pox4: 'SP000000000000000000002Q6VF78.pox-4',
+    Pox5: 'SP000000000000000000002Q6VF78.pox-5',
     WrapperOneCycle: 'SP001SFSMC2ZY76PD4M68P3WGX154XCH7NE3TYMX.pox4-pools',
     WrapperFastPool: 'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.pox4-fast-pool-v3',
     WrapperFastPoolV2: 'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.pox4-multi-pool-v1',
@@ -249,6 +250,7 @@ export const stackingContractMap = {
   },
   testnet: {
     Pox4: 'ST000000000000000000002AMW42H.pox-4',
+    Pox5: 'ST000000000000000000002AMW42H.pox-5',
     WrapperOneCycle: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-pools',
     WrapperFastPool: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
     WrapperFastPoolV2: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
@@ -257,6 +259,7 @@ export const stackingContractMap = {
   },
   devnet: {
     Pox4: 'ST000000000000000000002AMW42H.pox-4',
+    Pox5: 'ST000000000000000000002AMW42H.pox-5',
     WrapperOneCycle: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.pox4-pools',
     WrapperFastPool: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.pox4-self-service',
     WrapperFastPoolV2: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',

@@ -325,7 +325,14 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
   );
 }
 
-export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>): ReactElement {
+interface LiquidStackingProviderTableProps extends HTMLStyledProps<'div'> {
+  providers?: LiquidStackingPool[];
+}
+
+export function LiquidStackingProviderTable({
+  providers = liquidStackingProvidersList,
+  ...props
+}: LiquidStackingProviderTableProps): ReactElement {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [isMounted, setIsMounted] = useState(false);
   const isLargeViewport = useViewportMinWidth('md');
@@ -527,7 +534,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>): Reac
 
   const table = useReactTable({
     columns,
-    data: liquidStackingProvidersList,
+    data: providers,
     debugTable: false,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
