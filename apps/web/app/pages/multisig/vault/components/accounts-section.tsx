@@ -127,7 +127,7 @@ function CreateAccountDisabled({ reason }: { reason?: string }) {
       p="space.05"
       borderRadius="md"
       borderWidth="1px"
-      borderStyle="dashed"
+      borderStyle="solid"
       borderColor="ink.border-default"
       textAlign="center"
     >

@@ -19,6 +19,7 @@ import {
 } from '@leather.io/queries';
 import { AssetAvatarIcon, Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 
+import { ActivityEmptyState } from '../../components/activity-empty-state';
 import { CopyAddress } from '../../components/copy-address';
 import { VaultActivityList } from '../../components/vault-activity-list';
 
@@ -152,20 +153,7 @@ function RecentActivity({ activity }: RecentActivityProps) {
   }
 
   if (activity.views.length === 0) {
-    return (
-      <Box
-        borderRadius="md"
-        borderWidth="1px"
-        borderStyle="dashed"
-        borderColor="ink.border-default"
-        p="space.05"
-        textAlign="center"
-      >
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
-          No activity yet.
-        </styled.span>
-      </Box>
-    );
+    return <ActivityEmptyState description="Activity for this asset will appear here." />;
   }
 
   return (
