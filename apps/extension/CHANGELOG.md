@@ -40,6 +40,23 @@
 
 ---
 
+## [6.106.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.106.1...@leather.io/extension-v6.106.2) (2026-07-20)
+
+
+### Bug Fixes
+
+* **extension:** redux store sync between tabs ([#2503](https://github.com/leather-io/mono/issues/2503)) ([b11f6ed](https://github.com/leather-io/mono/commit/b11f6ed03fdd61f07a61ba14edaf83361536c74b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/features bumped to 1.5.3
+    * @leather.io/queries bumped to 0.14.1
+    * @leather.io/services bumped to 1.61.0
+    * @leather.io/ui bumped to 1.114.3
+
 ## [6.106.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.106.0...@leather.io/extension-v6.106.1) (2026-07-15)
 
 

@@ -413,6 +413,14 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.61.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.60.1...@leather.io/services-v1.61.0) (2026-07-20)
+
+
+### Features
+
+* add leather api vault member update endpoint ([#2509](https://github.com/leather-io/mono/issues/2509)) ([ef65d04](https://github.com/leather-io/mono/commit/ef65d048ed5629c64c816e717fcd70ab4b8ee601))
+* **web:** edit multisig member names and show resolved bns names ([#2512](https://github.com/leather-io/mono/issues/2512)) ([cc8d94a](https://github.com/leather-io/mono/commit/cc8d94a20ce4d9c0ece5c2209b6818d0515d57d1))
+
 ## [1.60.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.60.0...@leather.io/services-v1.60.1) (2026-07-15)
 
 
