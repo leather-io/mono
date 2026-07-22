@@ -6,6 +6,7 @@ import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-v
 import { ListContainer } from '@leather.io/ui';
 
 import { multisigPaths } from '../multisig.constants';
+import { GroupLabel } from './transaction-list';
 import { type TransactionRowScale } from './transaction-row';
 import { type ActivityRowLocation, VaultActivityRow } from './vault-activity-row';
 
@@ -15,13 +16,15 @@ interface VaultActivityListProps {
   limit?: number;
   vaultNamesById?: ReadonlyMap<string, string>;
   accountNamesById?: ReadonlyMap<string, string>;
+  accountThresholdsById?: ReadonlyMap<string, string>;
   onSelect(vaultId: string, txId: string): void;
 }
 
 function resolveLocation(
   item: VaultActivityItem,
   vaultNamesById?: ReadonlyMap<string, string>,
-  accountNamesById?: ReadonlyMap<string, string>
+  accountNamesById?: ReadonlyMap<string, string>,
+  accountThresholdsById?: ReadonlyMap<string, string>
 ): ActivityRowLocation | undefined {
   const vault =
     vaultNamesById && item.vaultId
@@ -30,7 +33,11 @@ function resolveLocation(
   const account =
     accountNamesById && item.vaultAccountId ? accountNamesById.get(item.vaultAccountId) : undefined;
   if (!vault && !account) return undefined;
-  return { vault, account };
+  const threshold =
+    accountThresholdsById && item.vaultAccountId
+      ? accountThresholdsById.get(item.vaultAccountId)
+      : undefined;
+  return { vault, account, threshold };
 }
 
 // Proposal rows open the multisig transaction; proposal-less rows open the on-chain detail.
@@ -51,48 +58,67 @@ function resolveRowLink(
   return { href, onClick: () => void navigate(href) };
 }
 
+function needsAttention(item: VaultActivityItem) {
+  return Boolean(
+    item.multisig && item.view.status === 'pending' && !item.multisig.transaction.signedByMe
+  );
+}
+
+function tierOf(item: VaultActivityItem): 'action' | 'inFlight' | 'history' {
+  if (needsAttention(item)) return 'action';
+  if (item.view.status === 'pending') return 'inFlight';
+  return 'history';
+}
+
+// One flat container, no divider lines between rows: the feed is grouped into
+// three tiers instead — transactions waiting on signatures (highlighted, they
+// want action), other in-flight work, then processed history.
 export function VaultActivityList({
   items,
   scale,
   limit,
   vaultNamesById,
   accountNamesById,
+  accountThresholdsById,
   onSelect,
 }: VaultActivityListProps) {
   const navigate = useNavigate();
   const visibleItems = limit === undefined ? items : items.slice(0, limit);
+
+  function renderRow(item: VaultActivityItem) {
+    const link = resolveRowLink(item, onSelect, navigate);
+    const location = resolveLocation(item, vaultNamesById, accountNamesById, accountThresholdsById);
+    return (
+      <VaultActivityRow
+        key={`${item.view.key}:${item.vaultAccountId ?? ''}`}
+        item={item}
+        scale={scale}
+        needsAttention={needsAttention(item)}
+        location={location}
+        href={link?.href}
+        onClick={link?.onClick}
+      />
+    );
+  }
+
+  const tiers = [
+    { label: 'Needs signatures', items: visibleItems.filter(item => tierOf(item) === 'action') },
+    { label: 'In progress', items: visibleItems.filter(item => tierOf(item) === 'inFlight') },
+    { label: 'History', items: visibleItems.filter(item => tierOf(item) === 'history') },
+  ].filter(tier => tier.items.length > 0);
+
+  // Labels only earn their place when they separate more than one tier; a feed
+  // with a single tier (e.g. history only) renders as a plain list.
+  const showLabels = tiers.length > 1;
+
   return (
-    <ListContainer p="space.00" overflow="hidden">
-      <Box
-        display="flex"
-        flexDirection="column"
-        css={{
-          '& > * + *': {
-            borderTopWidth: '1px',
-            borderTopStyle: 'solid',
-            borderColor: 'ink.border-default',
-          },
-        }}
-      >
-        {visibleItems.map(item => {
-          const needsAttention = Boolean(
-            item.multisig && item.view.status === 'pending' && !item.multisig.transaction.signedByMe
-          );
-          const link = resolveRowLink(item, onSelect, navigate);
-          const location = resolveLocation(item, vaultNamesById, accountNamesById);
-          return (
-            <VaultActivityRow
-              key={`${item.view.key}:${item.vaultAccountId ?? ''}`}
-              item={item}
-              scale={scale}
-              needsAttention={needsAttention}
-              location={location}
-              href={link?.href}
-              onClick={link?.onClick}
-            />
-          );
-        })}
-      </Box>
+    <ListContainer p="space.02">
+      {tiers.map(tier => (
+        <Box key={tier.label}>
+          {showLabels ? <GroupLabel>{tier.label}</GroupLabel> : null}
+          {tier.items.map(renderRow)}
+        </Box>
+      ))}
       {limit !== undefined && items.length > limit ? (
         <styled.p
           textStyle="caption.01"
@@ -100,9 +126,6 @@ export function VaultActivityList({
           textAlign="center"
           px="space.04"
           py="space.03"
-          borderTopWidth="1px"
-          borderTopStyle="solid"
-          borderColor="ink.border-default"
         >
           Open an account to view its full history
         </styled.p>

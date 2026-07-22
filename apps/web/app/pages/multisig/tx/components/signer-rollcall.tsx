@@ -92,7 +92,7 @@ export function SignerRollcall({
           bg="blue.background-primary"
           borderBottomWidth="1px"
           borderBottomStyle="solid"
-          borderBottomColor="ink.border-default"
+          borderBottomColor="ink.border-transparent"
         >
           <styled.div textStyle="label.02" color="blue.text-primary">
             Queued behind an active transaction
@@ -103,7 +103,7 @@ export function SignerRollcall({
           </styled.div>
         </Box>
       )}
-      {signers.map((signer, index) => {
+      {signers.map(signer => {
         const member = vault.members.find(m => m.user?.id === signer.userId);
         const isMe = signer.address === currentUserAddress;
         const name = isMe ? 'Me' : member?.name || truncateMiddle(signer.address);
@@ -113,29 +113,26 @@ export function SignerRollcall({
         const signed = signature !== undefined;
         const canSign = isMe && transaction.status === 'pending' && !signed;
         return (
-          <Box
-            key={signer.id}
-            p="space.04"
-            borderTopWidth={index === 0 ? '0' : '1px'}
-            borderTopStyle="solid"
-            borderTopColor="ink.border-default"
-          >
+          <Box key={signer.id} p="space.04">
             <ListItemBox
               variant="plain"
               density="compact"
               leading={<AvatarCircle name={name} size="md" />}
-              title={
-                <styled.span textStyle="label.03">{`${name}${isMe ? ' (me)' : ''}`}</styled.span>
-              }
-              caption={<CopyAddress addr={signer.address} />}
+              title={`${name}${isMe ? ' (me)' : ''}`}
+              caption={<CopyAddress addr={signer.address} wide />}
               trailing={
-                <SignerStatus
-                  canSign={canSign}
-                  signed={signed}
-                  signedAt={signature?.createdAt}
-                  busy={busy}
-                  onSign={onSign}
-                />
+                // Fixed-width lane sized to the longest status ("Signed <date>")
+                // so every row's trailing column lines up and the adaptive
+                // addresses truncate at one even edge.
+                <Flex width="128px" flexShrink={0} justifyContent="flex-end" textAlign="right">
+                  <SignerStatus
+                    canSign={canSign}
+                    signed={signed}
+                    signedAt={signature?.createdAt}
+                    busy={busy}
+                    onSign={onSign}
+                  />
+                </Flex>
               }
             />
           </Box>
@@ -175,7 +172,7 @@ export function SignerRollcall({
           p="space.04"
           borderTopWidth="1px"
           borderTopStyle="solid"
-          borderTopColor="ink.border-default"
+          borderTopColor="ink.border-transparent"
         >
           <Button variant="ghost" intent="danger" size="sm" disabled={busy} onClick={onCancel}>
             {isCancelling ? 'Cancelling…' : 'Cancel transaction'}

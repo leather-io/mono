@@ -37,3 +37,7 @@ export enum SendCryptoAssetSelectors {
 export function getRecipientSelectAccountTestId(fingerprint: string, accountIndex: number) {
   return `recipient-select-account-${fingerprint}-${accountIndex}`;
 }
+
+export function getRecipientSelectPolicyTestId(policyId: string) {
+  return `recipient-select-policy-${policyId}`;
+}

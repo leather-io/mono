@@ -17,10 +17,11 @@ import { useUpdateVaultAccount } from '~/features/multisig/vaults/use-vault-acco
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
 import { PlusIcon } from '@leather.io/ui';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
@@ -154,6 +155,7 @@ export function AccountDetailPage() {
           onSave={name => updateAccount.mutate({ accountId: account.data.id, update: { name } })}
           title="Rename account"
           label="account name"
+          maxLength={ACCOUNT_MAX_NAME_LENGTH}
         />
       }
       backTo={multisigPaths.vault(vault.data.id)}
@@ -167,7 +169,9 @@ export function AccountDetailPage() {
           <MultisigHero
             variant="balance"
             themeId={theme.id}
-            primary={<Balance balance={accountBalance.crypto} formatCurrency={formatCurrency} />}
+            primary={
+              <Balance balance={accountBalance.crypto} formatCurrency={formatCryptoGlanceable} />
+            }
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
           <styled.button

@@ -58,12 +58,14 @@ function ActivityFeed({
   isLoading,
   vaultNamesById,
   accountNamesById,
+  accountThresholdsById,
   onOpen,
 }: {
   items: VaultActivityItem[];
   isLoading: boolean;
   vaultNamesById: ReadonlyMap<string, string>;
   accountNamesById: ReadonlyMap<string, string>;
+  accountThresholdsById: ReadonlyMap<string, string>;
   onOpen(vaultId: string, txId: string): void;
 }) {
   if (isLoading) {
@@ -90,6 +92,7 @@ function ActivityFeed({
       limit={10}
       vaultNamesById={vaultNamesById}
       accountNamesById={accountNamesById}
+      accountThresholdsById={accountThresholdsById}
       onSelect={onOpen}
     />
   );
@@ -152,6 +155,7 @@ export function MultisigDashboardPage() {
     isLoading: isLoadingActivity,
     vaultNamesById,
     accountNamesById,
+    accountThresholdsById,
   } = useDashboardActivity(vaults);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -247,6 +251,7 @@ export function MultisigDashboardPage() {
             isLoading={isLoadingActivity}
             vaultNamesById={vaultNamesById}
             accountNamesById={accountNamesById}
+            accountThresholdsById={accountThresholdsById}
             onOpen={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
           />
         </Box>

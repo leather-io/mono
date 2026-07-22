@@ -1,3 +1,4 @@
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import {
   type NetworkConfiguration,
@@ -72,7 +73,7 @@ export function createStxPolicyRegistration({
         threshold: params.threshold,
         role,
       },
-      name: params.name,
+      name: params.name.substring(0, ACCOUNT_MAX_NAME_LENGTH),
     },
     result: {
       address,
