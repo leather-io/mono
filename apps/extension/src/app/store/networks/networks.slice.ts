@@ -29,7 +29,7 @@ export const networksSlice = createSlice({
   initialState: initialNetworksState,
   reducers: {
     addNetwork(state, action: PayloadAction<PersistedNetworkConfiguration>) {
-      networksAdapter.addOne(state, action.payload);
+      networksAdapter.setOne(state, action.payload);
     },
     changeNetwork(state, action: PayloadAction<string>) {
       state.currentNetworkId = action.payload;

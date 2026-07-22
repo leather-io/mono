@@ -9,7 +9,6 @@ import {
 } from '@leather.io/state/wallet';
 
 import { decryptMnemonic } from '@shared/crypto/mnemonic-encryption';
-import { broadcastReplayAction } from '@shared/messages';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
@@ -351,7 +350,6 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
     });
     expect(dispatch).toHaveBeenCalledWith(restoreAction);
     expect(persistor.flush).toHaveBeenCalled();
-    expect(broadcastReplayAction).toHaveBeenCalledWith(restoreAction);
   });
 
   test('does not start recursive discovery when the next account has no activity', async () => {
@@ -393,6 +391,5 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
     });
     expect(recurseAccountsForActivity).not.toHaveBeenCalled();
     expect(dispatch).not.toHaveBeenCalled();
-    expect(broadcastReplayAction).not.toHaveBeenCalled();
   });
 });

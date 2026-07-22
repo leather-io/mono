@@ -9,7 +9,7 @@ import {
 } from '@leather.io/services';
 import { resetWallet } from '@leather.io/state';
 
-import { broadcastWalletLock } from '@shared/messages';
+import { broadcastSignOut, broadcastWalletLock } from '@shared/messages';
 import { clearChromeStorage } from '@shared/storage/redux-persist';
 import { analytics } from '@shared/utils/analytics';
 
@@ -17,10 +17,11 @@ import { queryClient } from '@app/common/persistence';
 import { partiallyClearLocalStorage } from '@app/common/store-utils';
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
-import { changeActiveAccount, changeActiveToPolicy } from '@app/store/active/active.actions';
+import { userSwitchesAccount, userSwitchesToPolicy } from '@app/store/active/active.slice';
 import { createNewAccount } from '@app/store/chains/stx-chain.actions';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
+import { parsePolicyParent } from '@app/store/policy/policy-store.utils';
 import { clearWalletSession } from '@app/store/session-restore';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
 
@@ -62,11 +63,11 @@ export function useKeyActions() {
       },
 
       switchAccount(accountId: AccountId) {
-        void dispatch(changeActiveAccount(accountId));
+        dispatch(userSwitchesAccount(accountId));
       },
 
       switchAccountToPolicy(policyId: string) {
-        void dispatch(changeActiveToPolicy(policyId));
+        dispatch(userSwitchesToPolicy({ parent: parsePolicyParent(policyId), policyId }));
       },
 
       createNewAccount(fingerprint?: string) {
@@ -78,6 +79,7 @@ export function useKeyActions() {
         await clearWalletSession();
         inMemoryStore.clearAll();
         clearKeychainSelectorCaches();
+        void broadcastSignOut();
         dispatch(resetWallet());
         await clearChromeStorage();
         partiallyClearLocalStorage();
