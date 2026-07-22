@@ -4,11 +4,19 @@ import {
   TEST_ACCOUNT_1_STX_ADDRESS,
   TEST_ACCOUNT_2_STX_ADDRESS,
 } from '@tests/mocks/constants';
+import {
+  makeBitcoinPolicy,
+  makeStacksPolicy,
+  policyStateOverrides,
+} from '@tests/mocks/mock-policies';
 import { mockBnsV2NamesRequestEmpty } from '@tests/mocks/mock-stacks-bns';
 import { HomePage } from '@tests/page-object-models/home.page';
 import { mixedLedgerFingerprint, testFingerprint } from '@tests/page-object-models/onboarding.page';
 import { SendPage } from '@tests/page-object-models/send.page';
-import { getRecipientSelectAccountTestId } from '@tests/selectors/send.selectors';
+import {
+  getRecipientSelectAccountTestId,
+  getRecipientSelectPolicyTestId,
+} from '@tests/selectors/send.selectors';
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
 
 import { test } from '../../fixtures/fixtures';
@@ -113,5 +121,47 @@ test.describe('send recipient account selector (multiwallet)', () => {
     await reopenRecipientAccounts({ sendPage, page });
     await page.getByTestId(ledgerAccountRow(0)).click();
     await expect(sendPage.recipientInput).toHaveValue(/^SP[0-9A-Z]{37,}$/);
+  });
+});
+
+const bitcoinPolicy = makeBitcoinPolicy();
+const stacksPolicy = makeStacksPolicy();
+
+test.describe('send recipient account selector (policy accounts)', () => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await mockBnsV2NamesRequestEmpty(page);
+    await onboardingPage.signInWithTestAccount(
+      extensionId,
+      policyStateOverrides({ policies: [bitcoinPolicy, stacksPolicy] })
+    );
+  });
+
+  test('that the STX flow lists only the Stacks multisig and fills its address', async ({
+    homePage,
+    sendPage,
+    page,
+  }) => {
+    await openRecipientAccounts('stx', { homePage, sendPage, page });
+
+    await expect(page.getByTestId(getRecipientSelectPolicyTestId(stacksPolicy.id))).toBeVisible();
+    await expect(page.getByTestId(getRecipientSelectPolicyTestId(bitcoinPolicy.id))).toHaveCount(0);
+
+    await page.getByTestId(getRecipientSelectPolicyTestId(stacksPolicy.id)).click();
+    await expect(sendPage.recipientInput).toHaveValue(stacksPolicy.address);
+  });
+
+  test('that the BTC flow lists only the Bitcoin multisig and fills its address', async ({
+    homePage,
+    sendPage,
+    page,
+  }) => {
+    await openRecipientAccounts('btc', { homePage, sendPage, page });
+
+    await expect(page.getByTestId(getRecipientSelectPolicyTestId(bitcoinPolicy.id))).toBeVisible();
+    await expect(page.getByTestId(getRecipientSelectPolicyTestId(stacksPolicy.id))).toHaveCount(0);
+
+    await page.getByTestId(getRecipientSelectPolicyTestId(bitcoinPolicy.id)).click();
+    await expect(sendPage.recipientInput).toHaveValue(bitcoinPolicy.address);
   });
 });

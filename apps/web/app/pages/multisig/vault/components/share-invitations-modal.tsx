@@ -38,7 +38,7 @@ function inviteMessage(vault: Vault, member: VaultMember, creatorName: string | 
   const lines = [
     `Hey ${name},`,
     '',
-    `You're invited to "${vault.name}", a ${chainLabel} multisig vault on Leather with ${vault.memberCount} members.`,
+    `You're invited to "${vault.name}", a ${chainLabel} multisig vault on Leather with ${vault.members.length} members.`,
     '',
     `1. Open ${inviteLink(vault)}`,
     `2. Connect this wallet: ${member.address}`,

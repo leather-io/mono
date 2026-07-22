@@ -1,31 +1,63 @@
 import { useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { GroupedVirtuoso } from 'react-virtuoso';
 
-import { getRecipientSelectAccountTestId } from '@tests/selectors/send.selectors';
+import {
+  getRecipientSelectAccountTestId,
+  getRecipientSelectPolicyTestId,
+} from '@tests/selectors/send.selectors';
+import { useFormikContext } from 'formik';
 import { Box } from 'leather-styles/jsx';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
+import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
+
 import { WalletHeader } from '@app/features/dialogs/switch-account-sheet/components/wallet-header';
 import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
 import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { selectAllPolicies } from '@app/store/policy/policy.selectors';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';
 
 import { AccountListItem } from './account-list-item';
-import { getAccountAt, getVisibleWalletAccountGroups } from './recipient-accounts-dialog.utils';
+import { PolicyListItem } from './policy-list-item';
+import {
+  buildRecipientRows,
+  getRecipientPolicies,
+  getRowAt,
+  getVisibleWalletAccountGroups,
+} from './recipient-accounts-dialog.utils';
 
 export function RecipientAccountsSheet() {
   const navigate = useNavigate();
   const walletTree = useWalletAccountRefTree();
   const hiddenAccountIds = useHiddenAccountIds();
+  const allPolicies = useSelector(selectAllPolicies);
+  const network = useCurrentNetwork();
+  const { values } = useFormikContext<BitcoinSendFormValues | StacksSendFormValues>();
 
   const onGoBack = useCallback(() => navigate('..', { replace: true }), [navigate]);
 
-  const { groups, groupCounts } = useMemo(
+  const { groups } = useMemo(
     () => getVisibleWalletAccountGroups(walletTree, hiddenAccountIds),
     [walletTree, hiddenAccountIds]
   );
+
+  const chain = values.symbol === 'BTC' ? 'bitcoin' : 'stacks';
+
+  const rowGroups = useMemo(
+    () =>
+      groups.map(wallet =>
+        buildRecipientRows(wallet, account =>
+          getRecipientPolicies(allPolicies, account, network.id, chain)
+        )
+      ),
+    [groups, allPolicies, network.id, chain]
+  );
+
+  const groupCounts = useMemo(() => rowGroups.map(rows => rows.length), [rowGroups]);
 
   if (groups.length === 0) return null;
 
@@ -54,19 +86,33 @@ export function RecipientAccountsSheet() {
           }}
           itemContent={(index, groupIndex) => {
             const wallet = groups[groupIndex];
-            const accountId = getAccountAt(groups, groupCounts, index);
-            if (!wallet || !accountId) return null;
+            const row = getRowAt(rowGroups, index);
+            if (!wallet || !row) return null;
+
+            if (row.kind === 'policy') {
+              return (
+                <Box
+                  data-testid={getRecipientSelectPolicyTestId(row.policy.id)}
+                  pl="space.06"
+                  pr="space.05"
+                  py="space.03"
+                >
+                  <PolicyListItem policy={row.policy} onClose={onGoBack} />
+                </Box>
+              );
+            }
+
             return (
               <Box
                 data-testid={getRecipientSelectAccountTestId(
-                  accountId.fingerprint,
-                  accountId.accountIndex
+                  row.accountId.fingerprint,
+                  row.accountId.accountIndex
                 )}
                 px="space.05"
                 py="space.03"
               >
                 <AccountListItem
-                  accountId={accountId}
+                  accountId={row.accountId}
                   walletType={wallet.type}
                   onClose={onGoBack}
                 />
