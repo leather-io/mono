@@ -1,6 +1,6 @@
 import {
-  ClarityVersion,
   PostConditionMode,
+  createSmartContractPayload,
   deserializeCV,
   makeUnsignedContractCall,
   makeUnsignedContractDeploy,
@@ -67,7 +67,7 @@ function generateUnsignedContractCallTx(args: GenerateUnsignedContractCallTxArgs
 
 type GenerateUnsignedContractDeployTxArgs = GenerateUnsignedTxArgs<ContractDeployPayload>;
 
-function generateUnsignedContractDeployTx(args: GenerateUnsignedContractDeployTxArgs) {
+async function generateUnsignedContractDeployTx(args: GenerateUnsignedContractDeployTxArgs) {
   const { txData, publicKey, nonce, fee } = args;
   const { contractName, codeBody, network, postConditions, postConditionMode } = txData;
   const options = {
@@ -79,10 +79,11 @@ function generateUnsignedContractDeployTx(args: GenerateUnsignedContractDeployTx
     postConditionMode: postConditionMode ?? PostConditionMode.Deny,
     postConditions: getPostConditions(postConditions),
     network,
-    clarityVersion: ClarityVersion.Clarity3,
   };
 
-  return makeUnsignedContractDeploy(options);
+  const transaction = await makeUnsignedContractDeploy(options);
+  transaction.payload = createSmartContractPayload(contractName, codeBody);
+  return transaction;
 }
 
 type GenerateUnsignedStxTransferTxArgs = GenerateUnsignedTxArgs<STXTransferPayload>;
