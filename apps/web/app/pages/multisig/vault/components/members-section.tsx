@@ -1,6 +1,7 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useBnsPrimaryNames } from '~/queries/bns/bns.query';
 
+import { MEMBER_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { Vault, VaultMember } from '@leather.io/models';
 import { Button, KeyIcon, ListItemBox, PaperPlaneIcon } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
@@ -115,6 +116,7 @@ export function MembersSection({
                     title="Rename member"
                     label="member name"
                     placeholder="Member name"
+                    maxLength={MEMBER_MAX_NAME_LENGTH}
                   />
                 ) : (
                   nameStyledDisplay
