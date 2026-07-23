@@ -215,6 +215,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.37.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.37.1...@leather.io/constants-v0.37.2) (2026-07-23)
+
+
+### Bug Fixes
+
+* **web:** cap multisig member/vault names and truncate account address ([#2544](https://github.com/leather-io/mono/issues/2544)) ([ed3697c](https://github.com/leather-io/mono/commit/ed3697cb98d1e31997302798ba4cc994cb856617))
+
 ## [0.37.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.37.0...@leather.io/constants-v0.37.1) (2026-07-15)
 
 

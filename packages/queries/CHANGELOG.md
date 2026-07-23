@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.14.1...@leather.io/queries-v0.15.0) (2026-07-23)
+
+
+### Features
+
+* extension proposal ([#2538](https://github.com/leather-io/mono/issues/2538)) ([933f90e](https://github.com/leather-io/mono/commit/933f90e4e3c79ede5107672623ba73fc9fb9dfbc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.62.0
+    * @leather.io/utils bumped to 0.52.3
+
 ## [0.14.1](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.14.0...@leather.io/queries-v0.14.1) (2026-07-20)
 
 

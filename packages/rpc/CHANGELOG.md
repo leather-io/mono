@@ -411,6 +411,22 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.24.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.24.1...@leather.io/rpc-v2.24.2) (2026-07-23)
+
+
+### Bug Fixes
+
+* account name cap ([#2534](https://github.com/leather-io/mono/issues/2534)) ([e52375b](https://github.com/leather-io/mono/commit/e52375b3cadc5522f9034a040833b9044200fe19))
+* no keychain warning ([#2537](https://github.com/leather-io/mono/issues/2537)) ([17549ee](https://github.com/leather-io/mono/commit/17549ee7b2b8b141bbd66b576495ae5ef33f0da0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/stacks bumped to 1.22.1
+    * @leather.io/utils bumped to 0.52.3
+
 ## [2.24.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.24.0...@leather.io/rpc-v2.24.1) (2026-07-15)
 
 

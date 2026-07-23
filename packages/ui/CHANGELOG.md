@@ -489,6 +489,27 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.115.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.114.3...@leather.io/ui-v1.115.0) (2026-07-23)
+
+
+### Features
+
+* **web:** playground design surface + multisig content refinements ([#2527](https://github.com/leather-io/mono/issues/2527)) ([#2532](https://github.com/leather-io/mono/issues/2532)) ([6580b89](https://github.com/leather-io/mono/commit/6580b892a307bca0f66db2b159ea656d3998af19))
+
+
+### Bug Fixes
+
+* clipboard in multisig vault invites ([#2530](https://github.com/leather-io/mono/issues/2530)) ([8e04bfb](https://github.com/leather-io/mono/commit/8e04bfbead39ff2d437385bb26667158103aff9d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.52.3
+  * devDependencies
+    * @leather.io/features bumped to 1.6.0
+
 ## [1.114.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.114.2...@leather.io/ui-v1.114.3) (2026-07-20)
 
 

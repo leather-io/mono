@@ -40,6 +40,41 @@
 
 ---
 
+## [6.107.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.106.2...@leather.io/extension-v6.107.0) (2026-07-23)
+
+
+### Features
+
+* extension proposal ([#2538](https://github.com/leather-io/mono/issues/2538)) ([933f90e](https://github.com/leather-io/mono/commit/933f90e4e3c79ede5107672623ba73fc9fb9dfbc))
+* policy receive in send flow ([#2535](https://github.com/leather-io/mono/issues/2535)) ([087a4b0](https://github.com/leather-io/mono/commit/087a4b009008f4160c52ccfcaad3db01a6ce58c8))
+
+
+### Bug Fixes
+
+* account name cap ([#2534](https://github.com/leather-io/mono/issues/2534)) ([e52375b](https://github.com/leather-io/mono/commit/e52375b3cadc5522f9034a040833b9044200fe19))
+* audit issues ([#2536](https://github.com/leather-io/mono/issues/2536)) ([812123e](https://github.com/leather-io/mono/commit/812123ef33b712cb3ef380e21525c8fb67cf1928))
+* clarity 6 contract deployment ([#2545](https://github.com/leather-io/mono/issues/2545)) ([2c04085](https://github.com/leather-io/mono/commit/2c0408553bdad021dad7430beb81d22cf565c95d))
+* no keychain warning ([#2537](https://github.com/leather-io/mono/issues/2537)) ([17549ee](https://github.com/leather-io/mono/commit/17549ee7b2b8b141bbd66b576495ae5ef33f0da0))
+* postcss audit ([#2546](https://github.com/leather-io/mono/issues/2546)) ([2f27e90](https://github.com/leather-io/mono/commit/2f27e90175e73bc6933316e024c9604c8c5a6bfb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.39.3
+    * @leather.io/constants bumped to 0.37.2
+    * @leather.io/crypto bumped to 1.13.3
+    * @leather.io/features bumped to 1.6.0
+    * @leather.io/provider bumped to 1.6.32
+    * @leather.io/queries bumped to 0.15.0
+    * @leather.io/query bumped to 2.51.3
+    * @leather.io/rpc bumped to 2.24.2
+    * @leather.io/services bumped to 1.62.0
+    * @leather.io/stacks bumped to 1.22.1
+    * @leather.io/ui bumped to 1.115.0
+    * @leather.io/utils bumped to 0.52.3
+
 ## [6.106.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.106.1...@leather.io/extension-v6.106.2) (2026-07-20)
 
 
