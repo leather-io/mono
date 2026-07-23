@@ -2,6 +2,7 @@ import { type ChangeEvent } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
+import { MEMBER_MAX_NAME_LENGTH } from '@leather.io/constants';
 import { Button, CheckmarkIcon, PlusIcon } from '@leather.io/ui';
 
 import type { Chain } from '../../data/multisig-types';
@@ -48,7 +49,6 @@ function borderColorForStatus(state: MemberFieldStatus['state']) {
 }
 
 const maxMembers = 15;
-const maxMemberNameLength = 32;
 const disallowedNameChars =
   /[\u00B7\u2024\u2027\u3002\uFF0E\u200B-\u200D\uFEFF\u202A-\u202E\u2066-\u2069]/g;
 
@@ -56,7 +56,7 @@ function sanitizeMemberName(value: string, allowDots: boolean) {
   const stripped = value.replace(disallowedNameChars, '');
   // Dots are only kept where the name can be verified against the member's address.
   const dotHandled = allowDots ? stripped : stripped.replace(/\./g, '');
-  return dotHandled.slice(0, maxMemberNameLength);
+  return dotHandled.slice(0, MEMBER_MAX_NAME_LENGTH);
 }
 
 export function MemberRows({

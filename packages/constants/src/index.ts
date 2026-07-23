@@ -81,6 +81,10 @@ export const TOKEN_NAME_LENGTH = 4;
 
 export const ACCOUNT_MAX_NAME_LENGTH = 35;
 
+export const VAULT_MAX_NAME_LENGTH = 35;
+
+export const MEMBER_MAX_NAME_LENGTH = 32;
+
 export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
 export const LEATHER_APP_URL = 'https://app.leather.io';
