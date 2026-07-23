@@ -779,6 +779,22 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.51.3](https://github.com/leather-io/mono/compare/@leather.io/query-v2.51.2...@leather.io/query-v2.51.3) (2026-07-23)
+
+
+### Bug Fixes
+
+* audit issues ([#2536](https://github.com/leather-io/mono/issues/2536)) ([812123e](https://github.com/leather-io/mono/commit/812123ef33b712cb3ef380e21525c8fb67cf1928))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.37.2
+    * @leather.io/stacks bumped to 1.22.1
+    * @leather.io/utils bumped to 0.52.3
+
 ## [2.51.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.51.1...@leather.io/query-v2.51.2) (2026-07-15)
 
 

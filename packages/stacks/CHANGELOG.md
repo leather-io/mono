@@ -577,6 +577,21 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/utils bumped to 0.46.4
 
+## [1.22.1](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.0...@leather.io/stacks-v1.22.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* clarity 6 contract deployment ([#2545](https://github.com/leather-io/mono/issues/2545)) ([2c04085](https://github.com/leather-io/mono/commit/2c0408553bdad021dad7430beb81d22cf565c95d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.3
+    * @leather.io/utils bumped to 0.52.3
+
 ## [1.22.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.21.1...@leather.io/stacks-v1.22.0) (2026-07-15)
 
 
