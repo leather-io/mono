@@ -1,6 +1,7 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useBnsPrimaryNames } from '~/queries/bns/bns.query';
 
+import { MEMBER_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { Vault, VaultMember } from '@leather.io/models';
 import { Button, KeyIcon, ListItemBox, PaperPlaneIcon } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
@@ -77,7 +78,7 @@ export function MembersSection({
       borderColor="ink.border-default"
       overflow="hidden"
     >
-      {vault.members.map((member, index) => {
+      {vault.members.map(member => {
         const isCreator = isCreatorMember(member, vault.createdBy);
         const isMe = member.address === currentUserAddress;
         const isInvited = member.membershipStatus === 'invited';
@@ -101,9 +102,6 @@ export function MembersSection({
           <Box
             key={member.membershipId}
             p="space.04"
-            borderTopWidth={index === 0 ? '0' : '1px'}
-            borderTopStyle="solid"
-            borderTopColor="ink.border-default"
             bgImage={isInvited ? 'var(--multisig-collecting-wash)' : undefined}
           >
             <ListItemBox
@@ -118,12 +116,13 @@ export function MembersSection({
                     title="Rename member"
                     label="member name"
                     placeholder="Member name"
+                    maxLength={MEMBER_MAX_NAME_LENGTH}
                   />
                 ) : (
                   nameStyledDisplay
                 )
               }
-              caption={<CopyAddress addr={member.address} />}
+              caption={<CopyAddress addr={member.address} wide />}
               trailing={
                 <MemberTrailing
                   member={member}

@@ -336,14 +336,19 @@ function getContractName(activity: BlockchainActivity): string | undefined {
   return activity.contract ? activity.contract.contractId.split('.')[1] : undefined;
 }
 
-function truncateCounterparty(counterparty: string): string {
-  const truncated = truncateMiddle(counterparty);
+function truncateCounterparty(counterparty: string, offset?: number): string {
+  const truncated = truncateMiddle(counterparty, offset);
   return truncated.length < counterparty.length ? truncated : counterparty;
 }
 
 export function createBlockchainActivityView(
   activity: BlockchainActivity,
-  deps: { formatMoney: FormatMoney; translate?: BlockchainActivityTranslate }
+  deps: {
+    formatMoney: FormatMoney;
+    translate?: BlockchainActivityTranslate;
+    // Defaults to truncateMiddle's own offset; callers can compact it further.
+    counterpartyTruncateOffset?: number;
+  }
 ): BlockchainActivityView {
   const t = deps.translate ?? interpolateActivityTemplate;
   const { formatMoney } = deps;
@@ -370,7 +375,7 @@ export function createBlockchainActivityView(
         status: activity.status,
         protocolName: activity.protocolName,
         counterparty: activity.counterparty
-          ? truncateCounterparty(activity.counterparty)
+          ? truncateCounterparty(activity.counterparty, deps.counterpartyTruncateOffset)
           : undefined,
         contractName: getContractName(activity),
         actionInTitle: shape.title.kind === 'action-label',
