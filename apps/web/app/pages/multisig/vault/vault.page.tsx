@@ -23,6 +23,7 @@ import {
 } from '~/features/multisig/vaults/vault-account-index';
 import { useToast } from '~/features/toasts/use-toast';
 
+import { VAULT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { AuthNetworkId, Vault } from '@leather.io/models';
 import { Button, Callout } from '@leather.io/ui';
 
@@ -148,6 +149,7 @@ export function VaultDetailPage() {
           title="Rename vault"
           label="vault name"
           canEdit={isCreator && vault.status !== 'cancelled'}
+          maxLength={VAULT_MAX_NAME_LENGTH}
         />
       }
       backTo={multisigPaths.index}
