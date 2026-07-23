@@ -48,7 +48,13 @@ export function PageHeader({
             <LogoBox onClick={() => navigate(RouteUrls.Home)} />
           </>
         }
-        centerCol={title && <styled.span textStyle="heading.05">{title}</styled.span>}
+        centerCol={
+          title && (
+            <styled.span textStyle="heading.05" whiteSpace="nowrap">
+              {title}
+            </styled.span>
+          )
+        }
         rightCol={
           <HeaderGridRightCol>
             {isSummaryPage ? (
