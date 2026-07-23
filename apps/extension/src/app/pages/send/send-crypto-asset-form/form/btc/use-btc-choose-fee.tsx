@@ -1,3 +1,5 @@
+import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
+import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
 import { btcToSat, createMoney } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
@@ -6,6 +8,10 @@ import { formFeeRowValue } from '@app/common/send/utils';
 import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { createPolicyAddresses } from '@app/store/policy/policy-addresses';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useCalculateMaxBitcoinSpend } from '../../../../../common/hooks/balance/use-calculate-max-spend';
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
@@ -17,12 +23,56 @@ export function useBtcChooseFee() {
   const generateTx = useGenerateUnsignedBitcoinTx();
   const calcMaxSpend = useCalculateMaxBitcoinSpend();
   const signTx = useSignBitcoinTx();
+  const policy = useCurrentPolicy();
+  const nativeSegwitAccount = useCurrentNativeSegwitAccount();
+  const network = useCurrentNetwork();
   const amountAsMoney = createMoney(btcToSat(txValues.amount).toNumber(), 'BTC');
 
   return {
     amountAsMoney,
 
     async previewTransaction({ feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs) {
+      const feeRowValue = formFeeRowValue(feeRate, isCustomFee);
+
+      if (policy?.chain === 'bitcoin') {
+        const descriptorKey =
+          nativeSegwitAccount &&
+          findAccountDescriptorKey(
+            compileWshDescriptor(policy.descriptor),
+            nativeSegwitAccount.keychain
+          );
+        if (!descriptorKey)
+          return sendFormNavigate.toErrorPage(
+            new Error('Current account is not a signer of this multisig policy')
+          );
+
+        const maxSpend = isSendingMax ? calcMaxSpend(txValues.recipient, utxos, feeRate) : null;
+
+        try {
+          const psbt = await buildUnsignedMultisigBtcTransfer({
+            descriptor: policy.descriptor,
+            multisigAddress: policy.address,
+            network: network.chain.bitcoin.mode,
+            accountAddresses: createPolicyAddresses(policy),
+            recipients: [
+              { address: txValues.recipient, amount: maxSpend ? maxSpend.amount : amountAsMoney },
+            ],
+            feeRate,
+            isMaxSpend: isSendingMax,
+          });
+          return void sendFormNavigate.toConfirmBtcProposal({
+            psbt,
+            recipient: txValues.recipient,
+            fee: feeValue,
+            feeRowValue,
+            time,
+            amount: maxSpend ? maxSpend.spendableBitcoin.toString() : String(txValues.amount),
+          });
+        } catch (error) {
+          return sendFormNavigate.toErrorPage(error);
+        }
+      }
+
       const amount = isSendingMax
         ? calcMaxSpend(txValues.recipient, utxos, feeRate).amount
         : amountAsMoney;
@@ -41,7 +91,6 @@ export function useBtcChooseFee() {
         utxos,
         isSendingMax
       );
-      const feeRowValue = formFeeRowValue(feeRate, isCustomFee);
       if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
 
       const signedTx = await signTx(resp.psbt, resp.signingConfig);

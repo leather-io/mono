@@ -8,8 +8,8 @@ import { Content } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useMarketDataByAssetId } from '@app/query/common/market-data/market-data.query';
-import { useSip10AccountBalance } from '@app/query/stacks/sip10/sip10-balance.hooks';
-import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useSip10AccountBalanceByAddresses } from '@app/query/stacks/sip10/sip10-balance.hooks';
+import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 
 import { Sip10TokenSendFormContainer } from './sip10-token-send-form-container';
 
@@ -22,8 +22,8 @@ interface Sip10TokenSendFormLoaderProps {
 }
 function Sip10TokenSendFormLoader({ children }: Sip10TokenSendFormLoaderProps) {
   const { contractId } = useParams();
-  const currentAccount = useCurrentAccountId();
-  const sip10Balances = useSip10AccountBalance(currentAccount);
+  const currentAccountAddresses = useCurrentAccountAddresses();
+  const sip10Balances = useSip10AccountBalanceByAddresses(currentAccountAddresses);
   const marketData = useMarketDataByAssetId({ protocol: 'sip10', id: contractId ?? '' });
   const toast = useToast();
   const navigate = useNavigate();

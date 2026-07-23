@@ -74,6 +74,25 @@ describe(calculateMaxBitcoinSpend.name, () => {
     });
     expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(49981400);
   });
+
+  test('with p2wsh multisig input sizing the spendable amount shrinks', () => {
+    const fee = 30;
+    const singleSigSpend = calculateMaxBitcoinSpend({
+      address: '',
+      utxos,
+      feeRate: fee,
+    });
+    const multisigSpend = calculateMaxBitcoinSpend({
+      address: '',
+      utxos,
+      feeRate: fee,
+      inputSizing: { paymentType: 'p2wsh', threshold: 2, signerCount: 3 },
+    });
+    expect(multisigSpend.amount.amount.toNumber()).toBeLessThan(
+      singleSigSpend.amount.amount.toNumber()
+    );
+    expect(multisigSpend.spendAllFee).toBeGreaterThan(singleSigSpend.spendAllFee);
+  });
 });
 
 describe(filterUneconomicalUtxos.name, () => {

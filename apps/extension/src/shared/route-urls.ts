@@ -67,6 +67,7 @@ export enum RouteUrls {
   SendStacksSip10Confirmation = '/send/:symbol/confirm',
   SentBtcTxSummary = '/sent/btc/:txId',
   SentStxTxSummary = '/sent/:symbol/:txid',
+  SentProposalSummary = '/sent/proposal',
 
   // Swap routes
   Swap = '/swap/{chain}/:base/:quote?',

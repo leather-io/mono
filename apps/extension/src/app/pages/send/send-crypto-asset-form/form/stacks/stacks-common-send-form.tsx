@@ -18,6 +18,7 @@ import { AvailableBalance, ButtonRow, Card, Page } from '@app/components/layout'
 import { NonceSetter } from '@app/components/nonce-setter';
 import { useUpdatePersistedSendFormValues } from '@app/features/popup-send-form-restoration/use-update-persisted-send-form-values';
 import { HighFeeSheet } from '@app/features/stacks-high-fee-warning/stacks-high-fee-dialog';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { MemoField } from '../../components/memo-field';
@@ -49,6 +50,8 @@ export function StacksCommonSendForm({
   const navigate = useNavigate();
   const { onFormStateChange } = useUpdatePersistedSendFormValues();
   const isPrivate = useIsPrivateMode();
+  const policy = useCurrentPolicy();
+  const isStacksPolicy = policy?.chain === 'stacks';
   return (
     <Page>
       <Formik
@@ -94,13 +97,15 @@ export function StacksCommonSendForm({
                     <Box mt="space.04" width="100%">
                       <FeesRow fees={fees} isSponsored={false} />
                     </Box>
-                    <Link
-                      alignSelf="flex-end"
-                      mt="space.04"
-                      onClick={() => navigate(RouteUrls.EditNonce)}
-                    >
-                      Edit nonce
-                    </Link>
+                    {!isStacksPolicy && (
+                      <Link
+                        alignSelf="flex-end"
+                        mt="space.04"
+                        onClick={() => navigate(RouteUrls.EditNonce)}
+                      >
+                        Edit nonce
+                      </Link>
+                    )}
                   </Flex>
                 </Card>
                 <HighFeeSheet learnMoreUrl={HIGH_FEE_WARNING_LEARN_MORE_URL_STX} />

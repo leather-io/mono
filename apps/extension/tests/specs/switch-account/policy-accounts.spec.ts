@@ -50,7 +50,7 @@ test.describe('Policy (multisig) accounts', () => {
       // offers only a receive action
       await expect(page.getByTestId(HomePageSelectors.CollectiblesTabBtn)).toHaveCount(0);
       await expect(page.getByTestId(HomePageSelectors.ReceiveCryptoAssetBtn)).toBeVisible();
-      await expect(page.getByTestId(HomePageSelectors.SendCryptoAssetBtn)).toHaveCount(0);
+      await expect(page.getByTestId(HomePageSelectors.SendCryptoAssetBtn)).toBeVisible();
     });
 
     test('renames the multisig from manage mode', async ({ switchAccountPage }) => {

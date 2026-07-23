@@ -4,7 +4,7 @@ import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transact
 import { Box, Stack } from 'leather-styles/jsx';
 
 import { InfoCircleIcon } from '@leather.io/ui';
-import { baseCurrencyAmountInQuote, sumMoney } from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, convertAmountToBaseUnit, sumMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
@@ -16,6 +16,7 @@ import {
   getStacksTransactionFee,
   getTokenTransferAmount,
   getTokenTransferMemoDisplayText,
+  isNonSequentialMultisigTransaction,
   isSip10TransferContactCall,
 } from '@app/common/transactions/stacks/transaction.utils';
 import { Content, Page } from '@app/components/layout';
@@ -24,7 +25,9 @@ import { useStacksBroadcastTransaction } from '@app/features/stacks-transaction-
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
+import type { ProposalSentSummaryState } from '../../../sent-summary/proposal-sent-summary';
 import { SendFormConfirmationLayout } from '../send-form-confirmation.layout';
+import { useProposeStacksSendTransaction } from './use-propose-stacks-send-transaction';
 
 function useStacksSendFormConfirmationState() {
   return {
@@ -44,8 +47,10 @@ export function StacksSendFormConfirmation() {
     token: symbol.toUpperCase(),
     redirectToSuccessPage: true,
   });
+  const { proposeSendTransaction, isProposing } = useProposeStacksSendTransaction();
 
   const tx = deserializeTransaction(txHex);
+  const isMultisigProposal = isNonSequentialMultisigTransaction(tx);
 
   const feeWarningTooltip = showFeeChangeWarning ? (
     <BasicTooltip
@@ -60,14 +65,53 @@ export function StacksSendFormConfirmation() {
     </BasicTooltip>
   ) : null;
 
+  function getProposalSummary(): ProposalSentSummaryState | null {
+    const base = {
+      symbol: symbol.toUpperCase(),
+      recipient: getRecipientFromStacksTransaction(tx) ?? '',
+      feeRowValue: formatCurrency(getStacksTransactionFee(tx)),
+    };
+    if (isTokenTransferPayload(tx.payload)) {
+      const amount = getTokenTransferAmount(tx.payload);
+      return {
+        ...base,
+        txValue: convertAmountToBaseUnit(amount).toString(),
+        txFiatValue: formatCurrency(baseCurrencyAmountInQuote(amount, tokenMarketData)),
+        txFiatValueSymbol: tokenMarketData.price.symbol,
+        memoDisplayText: getTokenTransferMemoDisplayText(tx.payload) || 'No memo',
+      };
+    }
+    if (isSip10TransferContactCall(tx)) {
+      const amount = getSip10TransferAmount(tx.payload, symbol, decimals);
+      return {
+        ...base,
+        txValue: convertAmountToBaseUnit(amount).toString(),
+        memoDisplayText: getSip10MemoDisplayText(tx.payload) ?? 'No memo',
+      };
+    }
+    return null;
+  }
+
+  const proposalSummary = getProposalSummary();
+
+  function onConfirmTransaction() {
+    if (isMultisigProposal) {
+      if (!proposalSummary)
+        throw new Error('Unsupported payload for a multisig transaction proposal');
+      return proposeSendTransaction(tx, proposalSummary);
+    }
+    return stacksBroadcastTransaction(tx);
+  }
+
   const sharedProps = {
     symbol: symbol.toUpperCase(),
-    onBroadcastTransaction: () => stacksBroadcastTransaction(tx),
+    onBroadcastTransaction: onConfirmTransaction,
     recipient: getRecipientFromStacksTransaction(tx),
     fee: getStacksTransactionFee(tx),
-    nonce: getNonceFromStacksTransaction(tx).toString(),
-    isLoading: isBroadcasting,
+    nonce: isMultisigProposal ? undefined : getNonceFromStacksTransaction(tx).toString(),
+    isLoading: isBroadcasting || isProposing,
     feeWarningTooltip: feeWarningTooltip,
+    confirmButtonLabel: isMultisigProposal ? 'Propose transaction' : undefined,
   } as const;
 
   return (

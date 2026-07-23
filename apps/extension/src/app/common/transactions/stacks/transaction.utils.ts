@@ -135,6 +135,14 @@ export function getTxSenderAddress(tx: StacksTransactionWire): string | undefine
   return txSender;
 }
 
+export function isNonSequentialMultisigTransaction(tx: StacksTransactionWire) {
+  const hashMode = tx.auth.spendingCondition.hashMode;
+  return (
+    hashMode === AddressHashMode.P2SHNonSequential ||
+    hashMode === AddressHashMode.P2WSHNonSequential
+  );
+}
+
 export function isPendingTx(tx: StacksTx) {
   return tx.tx_status === 'pending';
 }

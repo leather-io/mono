@@ -28,6 +28,7 @@ export function createBitcoinTransactionFeesQueryKey(
   const serializedParams = {
     fingerprint: params.account.account.id.fingerprint,
     accountIndex: params.account.account.id.accountIndex,
+    bitcoin: params.account.account.bitcoin,
     recipients: params.recipients.map(r => ({
       address: r.address,
       amount: r.amount.amount.toString(),

@@ -15,6 +15,7 @@ import {
   baseCurrencyAmountInQuote,
   createMoney,
   createMoneyFromDecimal,
+  isDefined,
   satToBtc,
 } from '@leather.io/utils';
 
@@ -22,6 +23,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { queryClient } from '@app/common/persistence';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import {
@@ -36,6 +38,7 @@ import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
+import { BtcProposeConfirmation } from './btc-propose-confirmation';
 
 const symbol: CryptoCurrency = 'BTC';
 
@@ -51,6 +54,12 @@ function useBtcSendFormConfirmationState() {
 }
 
 export function BtcSendFormConfirmation() {
+  const psbt = useLocationStateWithCache<string>('psbt');
+  if (isDefined(psbt)) return <BtcProposeConfirmation />;
+  return <BtcBroadcastConfirmation />;
+}
+
+function BtcBroadcastConfirmation() {
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const navigate = useNavigate();
   const { tx, recipient, fee, arrivesIn, feeRowValue } = useBtcSendFormConfirmationState();

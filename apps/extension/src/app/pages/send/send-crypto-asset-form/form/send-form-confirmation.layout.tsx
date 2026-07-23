@@ -23,10 +23,11 @@ interface SendFormConfirmationLayoutProps {
   sendingValue: string;
   txFiatValue?: string;
   txFiatValueSymbol?: string;
-  nonce: string;
+  nonce?: string;
   memoDisplayText: string;
   isLoading: boolean;
   feeWarningTooltip?: React.ReactNode;
+  confirmButtonLabel?: string;
   onBroadcastTransaction(): void;
 }
 export function SendFormConfirmationLayout({
@@ -43,6 +44,7 @@ export function SendFormConfirmationLayout({
   memoDisplayText,
   symbol,
   feeWarningTooltip,
+  confirmButtonLabel,
 }: SendFormConfirmationLayoutProps) {
   const principalType = recipient ? inferPrincipalTypeFromAddress(recipient) : 'invalid';
 
@@ -57,7 +59,7 @@ export function SendFormConfirmationLayout({
           onClick={onBroadcastTransaction}
           width="100%"
         >
-          Confirm and send transaction
+          {confirmButtonLabel ?? 'Confirm and send transaction'}
         </Button>
       }
     >
@@ -107,7 +109,7 @@ export function SendFormConfirmationLayout({
           value={memoDisplayText}
           data-testid={SendCryptoAssetSelectors.ConfirmationDetailsMemo}
         />
-        <InfoCardRow title="Nonce" value={nonce} />
+        {nonce && <InfoCardRow title="Nonce" value={nonce} />}
       </Stack>
     </Card>
   );
