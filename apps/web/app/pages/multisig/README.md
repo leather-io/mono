@@ -83,7 +83,8 @@ and is documented, not silent.)
   coral mark, not the purple `stacks` token.)
 - The four **vault theme** textures (`themes/{blue,bronze,green,orange}.jpg`) — decorative
   hero backgrounds, not design tokens.
-- `avatarSquircleRadius` (`14px`) — no token radius matches the squircle avatar tile.
+- `avatarSquircleRatio` (`0.35`) — squircle avatar corner radius as a fraction of tile
+  size, so rounding stays proportional across sizes; no token radius matches.
 
 ## Fonts
 

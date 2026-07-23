@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { Box, Flex, styled } from 'leather-styles/jsx';
@@ -9,7 +9,7 @@ import {
 import type { VaultAssetItem } from '~/features/multisig/assets/vault-asset-items';
 import { useUserSettings } from '~/hooks/use-user-settings';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
 import { formatPriceChangeText, getPriceChangeColor } from '@leather.io/features';
 import type { VaultAccount } from '@leather.io/models';
@@ -19,6 +19,7 @@ import {
 } from '@leather.io/queries';
 import { AssetAvatarIcon, Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 
+import { ActivityEmptyState } from '../../components/activity-empty-state';
 import { CopyAddress } from '../../components/copy-address';
 import { VaultActivityList } from '../../components/vault-activity-list';
 
@@ -83,7 +84,26 @@ interface DescriptionSectionProps {
   text: string | null | undefined;
 }
 
+const descriptionCollapsedLines = 2;
+const descriptionFadeMask =
+  'linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%)';
+
 function DescriptionSection({ isPending, text }: DescriptionSectionProps) {
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [collapsedHeight, setCollapsedHeight] = useState<number>();
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    const element = textRef.current;
+    if (!element) return;
+    const lineHeight = parseFloat(getComputedStyle(element).lineHeight);
+    const resolvedLineHeight = Number.isFinite(lineHeight) ? lineHeight : 20;
+    const maxHeight = Math.round(resolvedLineHeight * descriptionCollapsedLines);
+    setCollapsedHeight(maxHeight);
+    setIsOverflowing(element.scrollHeight > maxHeight + 1);
+  }, [text]);
+
   if (isPending) {
     return (
       <Section title="Description">
@@ -108,12 +128,54 @@ function DescriptionSection({ isPending, text }: DescriptionSectionProps) {
 
   if (!text) return null;
 
+  const collapsed = isOverflowing && !expanded;
+
   return (
-    <Section title="Description">
-      <styled.p textStyle="caption.01" color="ink.text-subdued">
+    <Box
+      borderTopWidth="1px"
+      borderTopStyle="solid"
+      borderColor="ink.border-default"
+      pt="space.04"
+      mt="space.04"
+    >
+      <Flex justifyContent="space-between" alignItems="baseline" gap="space.04" mb="space.03">
+        <styled.h3 textStyle="label.02" color="ink.text-primary">
+          Description
+        </styled.h3>
+        {isOverflowing ? (
+          <styled.button
+            type="button"
+            onClick={() => setExpanded(value => !value)}
+            textStyle="label.03"
+            color="ink.text-subdued"
+            bg="transparent"
+            border="none"
+            cursor="pointer"
+            flexShrink={0}
+            _hover={{ color: 'ink.text-primary' }}
+          >
+            {expanded ? 'Show less' : 'Show more'}
+          </styled.button>
+        ) : null}
+      </Flex>
+      <styled.p
+        ref={textRef}
+        textStyle="caption.01"
+        color="ink.text-subdued"
+        style={
+          collapsed && collapsedHeight
+            ? {
+                maxHeight: `${collapsedHeight}px`,
+                overflow: 'hidden',
+                maskImage: descriptionFadeMask,
+                WebkitMaskImage: descriptionFadeMask,
+              }
+            : undefined
+        }
+      >
         {text}
       </styled.p>
-    </Section>
+    </Box>
   );
 }
 
@@ -152,20 +214,7 @@ function RecentActivity({ activity }: RecentActivityProps) {
   }
 
   if (activity.views.length === 0) {
-    return (
-      <Box
-        borderRadius="md"
-        borderWidth="1px"
-        borderStyle="dashed"
-        borderColor="ink.border-default"
-        p="space.05"
-        textAlign="center"
-      >
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
-          No activity yet.
-        </styled.span>
-      </Box>
-    );
+    return <ActivityEmptyState description="Activity for this asset will appear here." />;
   }
 
   return (
@@ -219,7 +268,7 @@ export function AssetDetailModal({
           <AssetAvatarIcon asset={asset} size="xl" />
           <Flex direction="column" alignItems="center" gap="space.00" textAlign="center">
             <styled.div textStyle="heading.03">
-              {formatCurrency(item.crypto, { showCurrency: false })}
+              {formatCryptoGlanceable(item.crypto, { showCurrency: false })}
               <styled.span color="ink.text-subdued"> {asset.symbol.toUpperCase()}</styled.span>
             </styled.div>
             <styled.div textStyle="label.01" color="ink.text-primary">

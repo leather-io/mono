@@ -77,7 +77,7 @@ export function MembersSection({
       borderColor="ink.border-default"
       overflow="hidden"
     >
-      {vault.members.map((member, index) => {
+      {vault.members.map(member => {
         const isCreator = isCreatorMember(member, vault.createdBy);
         const isMe = member.address === currentUserAddress;
         const isInvited = member.membershipStatus === 'invited';
@@ -101,9 +101,6 @@ export function MembersSection({
           <Box
             key={member.membershipId}
             p="space.04"
-            borderTopWidth={index === 0 ? '0' : '1px'}
-            borderTopStyle="solid"
-            borderTopColor="ink.border-default"
             bgImage={isInvited ? 'var(--multisig-collecting-wash)' : undefined}
           >
             <ListItemBox
@@ -123,7 +120,7 @@ export function MembersSection({
                   nameStyledDisplay
                 )
               }
-              caption={<CopyAddress addr={member.address} />}
+              caption={<CopyAddress addr={member.address} wide />}
               trailing={
                 <MemberTrailing
                   member={member}

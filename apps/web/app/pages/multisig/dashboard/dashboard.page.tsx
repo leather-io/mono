@@ -10,8 +10,9 @@ import { useDashboardActivity } from '~/features/multisig/vaults/use-dashboard-a
 import { useVaults } from '~/features/multisig/vaults/use-vaults';
 
 import type { VaultSummary } from '@leather.io/models';
-import { Button } from '@leather.io/ui';
+import { Button, ListContainer, PlusIcon } from '@leather.io/ui';
 
+import { ActivityEmptyState } from '../components/activity-empty-state';
 import { ChainAvatar } from '../components/chain-avatar';
 import { InvitationModal } from '../components/invitation-modal';
 import { MultisigPage } from '../components/multisig-page';
@@ -24,45 +25,31 @@ import { VaultCard } from './components/vault-card';
 
 function EmptyVaults({ onCreate }: { onCreate(): void }) {
   return (
-    <Flex
-      direction="column"
-      alignItems="center"
-      textAlign="center"
-      gap="space.03"
-      py="space.08"
-      px="space.04"
-      borderRadius="md"
-      borderWidth="1px"
-      borderStyle="dashed"
-      borderColor="ink.border-default"
-    >
-      <styled.img src="/multisig/illustrations/no-funds.png" alt="" width="72px" height="72px" />
-      <styled.h4 textStyle="label.01">No vaults yet</styled.h4>
-      <styled.p textStyle="body.02" color="ink.text-subdued" maxWidth="320px">
-        Vaults are chain-specific. Create one to get started, or accept an invite to join an
-        existing one.
-      </styled.p>
-      <Button variant="solid" onClick={onCreate}>
-        Create vault
-      </Button>
-    </Flex>
-  );
-}
-
-function EmptyActivity() {
-  return (
-    <Flex direction="column" alignItems="center" textAlign="center" gap="space.02" py="space.07">
-      <styled.img
-        src="/multisig/illustrations/no-activity.png"
-        alt=""
-        width="56px"
-        height="56px"
-        style={{ opacity: 0.9 }}
-      />
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        No activity yet.
-      </styled.span>
-    </Flex>
+    <ListContainer height="100%">
+      <Flex
+        direction="column"
+        alignItems="flex-start"
+        justifyContent="center"
+        textAlign="left"
+        gap="space.03"
+        minHeight="288px"
+        py="space.06"
+        px="space.05"
+      >
+        <styled.h3 textStyle="heading.05" color="ink.text-primary">
+          No vaults yet
+        </styled.h3>
+        <styled.p textStyle="body.02" color="ink.text-subdued" maxWidth="360px">
+          Vaults are chain-specific. Create one to get started. Any invite you receive shows up here
+          automatically.
+        </styled.p>
+        <Box mt="space.02">
+          <Button variant="solid" iconStart={PlusIcon} onClick={onCreate}>
+            Create vault
+          </Button>
+        </Box>
+      </Flex>
+    </ListContainer>
   );
 }
 
@@ -71,12 +58,14 @@ function ActivityFeed({
   isLoading,
   vaultNamesById,
   accountNamesById,
+  accountThresholdsById,
   onOpen,
 }: {
   items: VaultActivityItem[];
   isLoading: boolean;
   vaultNamesById: ReadonlyMap<string, string>;
   accountNamesById: ReadonlyMap<string, string>;
+  accountThresholdsById: ReadonlyMap<string, string>;
   onOpen(vaultId: string, txId: string): void;
 }) {
   if (isLoading) {
@@ -94,7 +83,8 @@ function ActivityFeed({
       </Flex>
     );
   }
-  if (items.length === 0) return <EmptyActivity />;
+  if (items.length === 0)
+    return <ActivityEmptyState description="Transactions across your vaults will appear here." />;
   return (
     <VaultActivityList
       items={items}
@@ -102,6 +92,7 @@ function ActivityFeed({
       limit={10}
       vaultNamesById={vaultNamesById}
       accountNamesById={accountNamesById}
+      accountThresholdsById={accountThresholdsById}
       onSelect={onOpen}
     />
   );
@@ -164,6 +155,7 @@ export function MultisigDashboardPage() {
     isLoading: isLoadingActivity,
     vaultNamesById,
     accountNamesById,
+    accountThresholdsById,
   } = useDashboardActivity(vaults);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -259,6 +251,7 @@ export function MultisigDashboardPage() {
             isLoading={isLoadingActivity}
             vaultNamesById={vaultNamesById}
             accountNamesById={accountNamesById}
+            accountThresholdsById={accountThresholdsById}
             onOpen={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
           />
         </Box>

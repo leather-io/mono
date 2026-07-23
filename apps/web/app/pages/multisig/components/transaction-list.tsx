@@ -30,7 +30,7 @@ interface TransactionListProps {
   onSelect(vaultId: string, txId: string): void;
 }
 
-function GroupLabel({ children }: { children: string }) {
+export function GroupLabel({ children }: { children: string }) {
   return (
     <styled.h4
       textStyle="label.03"

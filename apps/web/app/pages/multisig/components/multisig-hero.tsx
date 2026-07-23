@@ -9,6 +9,7 @@ interface MultisigHeroProps {
   primary: ReactNode;
   secondary?: ReactNode;
   variant?: 'standard' | 'balance';
+  media?: ReactNode;
   children?: ReactNode;
 }
 
@@ -19,6 +20,7 @@ export function MultisigHero({
   primary,
   secondary,
   variant = 'standard',
+  media,
   children,
 }: MultisigHeroProps) {
   const theme = vaultTheme(themeId);
@@ -37,6 +39,7 @@ export function MultisigHero({
       overflow="hidden"
       style={{ background: theme.background }}
     >
+      {media && <Box mb="space.03">{media}</Box>}
       <styled.div textStyle={bold ? 'heading.02' : 'heading.04'}>{primary}</styled.div>
       {secondary && (
         <styled.div

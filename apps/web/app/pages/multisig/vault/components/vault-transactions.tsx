@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router';
 
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex } from 'leather-styles/jsx';
 import { useVaultActivity } from '~/features/multisig/activity/use-vault-activity';
 
 import type { VaultAccountSummary } from '@leather.io/models';
 
+import { ActivityEmptyState } from '../../components/activity-empty-state';
 import { VaultActivityList } from '../../components/vault-activity-list';
 import { multisigPaths } from '../../multisig.constants';
 
@@ -16,6 +17,9 @@ export function VaultTransactions({ accounts }: VaultTransactionsProps) {
   const navigate = useNavigate();
   const { items, isLoading } = useVaultActivity(accounts ?? []);
   const accountNamesById = new Map((accounts ?? []).map(account => [account.id, account.name]));
+  const accountThresholdsById = new Map(
+    (accounts ?? []).map(account => [account.id, `${account.threshold} of ${account.signerCount}`])
+  );
 
   if (isLoading) {
     return (
@@ -34,20 +38,7 @@ export function VaultTransactions({ accounts }: VaultTransactionsProps) {
   }
 
   if (items.length === 0) {
-    return (
-      <Box
-        borderRadius="md"
-        borderWidth="1px"
-        borderStyle="dashed"
-        borderColor="ink.border-default"
-        p="space.05"
-        textAlign="center"
-      >
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
-          No transactions yet.
-        </styled.span>
-      </Box>
-    );
+    return <ActivityEmptyState description="Transactions for this vault will appear here." />;
   }
 
   return (
@@ -56,6 +47,7 @@ export function VaultTransactions({ accounts }: VaultTransactionsProps) {
       scale="compact"
       limit={10}
       accountNamesById={accountNamesById}
+      accountThresholdsById={accountThresholdsById}
       onSelect={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
     />
   );

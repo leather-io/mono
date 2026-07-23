@@ -6,7 +6,7 @@ import { useVaultAccountsBalance } from '~/features/multisig/vaults/use-vault-ac
 import { useVaultAccountRecovery } from '~/features/multisig/vaults/use-vault-account-mutations';
 import { useVaultAccounts } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault } from '~/features/multisig/vaults/use-vaults';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
 import type { VaultSummary } from '@leather.io/models';
 import { ListItemBox } from '@leather.io/ui';
@@ -85,7 +85,7 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
       subtitle: (
         <Balance
           balance={cryptoBalance}
-          formatCurrency={formatCurrency}
+          formatCurrency={formatCryptoGlanceable}
           textStyle="caption.01"
           color="ink.text-subdued"
         />

@@ -3,7 +3,14 @@ import type { ReactNode } from 'react';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type { Vault, VaultAccount } from '@leather.io/models';
-import { Button, ListItemBox, PlusIcon } from '@leather.io/ui';
+import {
+  BasicTooltip,
+  Button,
+  IconButton,
+  ListItemBox,
+  PencilIcon,
+  PlusIcon,
+} from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
@@ -18,6 +25,7 @@ interface AccountDetailsCardProps {
   currentUserAddress?: string;
   onAddToWallet(): void;
   isAddingToWallet?: boolean;
+  onEdit?(): void;
 }
 
 function CardRow({ children }: { children: ReactNode }) {
@@ -26,7 +34,7 @@ function CardRow({ children }: { children: ReactNode }) {
       p="space.04"
       borderTopWidth="1px"
       borderTopStyle="solid"
-      borderTopColor="ink.border-default"
+      borderTopColor="ink.border-transparent"
     >
       {children}
     </Box>
@@ -39,6 +47,7 @@ export function AccountDetailsCard({
   currentUserAddress,
   onAddToWallet,
   isAddingToWallet,
+  onEdit,
 }: AccountDetailsCardProps) {
   const theme = vaultThemeFromName(vault.theme);
   const chain = chainFromNetwork(vault.network);
@@ -65,8 +74,20 @@ export function AccountDetailsCard({
               size="sm"
             />
           }
-          title={<styled.span textStyle="label.03">{account.name}</styled.span>}
+          title={account.name}
           caption={`${chainLabel} Vault Account`}
+          trailing={
+            onEdit ? (
+              <BasicTooltip asChild label="Edit account">
+                <IconButton
+                  icon={<PencilIcon variant="small" color="ink.text-subdued" />}
+                  onClick={onEdit}
+                  aria-label="Edit account"
+                  size="sm"
+                />
+              </BasicTooltip>
+            ) : undefined
+          }
         />
       </Box>
 
@@ -78,15 +99,10 @@ export function AccountDetailsCard({
       </CardRow>
 
       <CardRow>
-        <Flex justifyContent="space-between" alignItems="center" gap="space.02">
-          <styled.span textStyle="label.03" color="ink.text-subdued">
-            Threshold
-          </styled.span>
-          <styled.span textStyle="caption.01" color="ink.text-subdued">
-            {account.threshold} of {signerCount}
-          </styled.span>
-        </Flex>
-        <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
+        <styled.div textStyle="label.03" color="ink.text-subdued">
+          Threshold
+        </styled.div>
+        <styled.div textStyle="body.02" color="ink.text-primary" mt="space.01">
           Any {account.threshold} of {signerCount} members can approve transactions on this account.
         </styled.div>
       </CardRow>
@@ -106,8 +122,8 @@ export function AccountDetailsCard({
                 variant="plain"
                 density="compact"
                 leading={<AvatarCircle name={name} size="md" />}
-                title={<styled.span textStyle="label.03">{name}</styled.span>}
-                caption={<CopyAddress addr={signer.address} />}
+                title={name}
+                caption={<CopyAddress addr={signer.address} wide />}
               />
             );
           })}
