@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useNavigate } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -14,7 +14,6 @@ import {
 } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
-import { analytics } from '@shared/utils/analytics';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
@@ -26,23 +25,17 @@ import {
 } from '@app/components/info-card/info-card';
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
-import { useProposeMultisigTransaction } from '@app/features/multisig/use-propose-multisig-transaction';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
-import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
-import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
+import { useProposeBtcSendTransaction } from './use-propose-btc-send-transaction';
 
 const symbol: CryptoCurrency = 'BTC';
 
 export function BtcProposeConfirmation() {
-  const navigate = useNavigate();
   const policy = useCurrentPolicy();
-  const network = useCurrentNetwork();
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
-  const { proposeMultisigTransaction, isProposing } = useProposeMultisigTransaction();
-  const nav = useSendFormNavigate();
+  const { proposeSendTransaction, isProposing } = useProposeBtcSendTransaction();
 
   const psbt = useLocationStateWithCache<string>('psbt');
   const recipient = useLocationStateWithCache<string>('recipient');
@@ -78,30 +71,15 @@ export function BtcProposeConfirmation() {
   });
 
   async function initiateProposal() {
-    if (policy?.chain !== 'bitcoin' || isUndefined(psbt)) return;
-    try {
-      const proposal = await proposeMultisigTransaction({
-        network: getPolicyAuthNetworkId('bitcoin', network),
-        multisigAddress: policy.address,
-        rawPayload: psbt,
-      });
-
-      analytics.track('propose_multisig_transaction', { symbol: 'btc' });
-
-      void navigate(RouteUrls.SentProposalSummary, {
-        state: {
-          symbol,
-          txValue: String(amount),
-          txFiatValue,
-          txFiatValueSymbol,
-          recipient,
-          feeRowValue,
-          proposalId: proposal.id,
-        },
-      });
-    } catch (error) {
-      void nav.toErrorPage(error);
-    }
+    if (isUndefined(psbt) || isUndefined(recipient)) return;
+    await proposeSendTransaction(psbt, {
+      symbol,
+      txValue: String(amount),
+      txFiatValue,
+      txFiatValueSymbol,
+      recipient,
+      feeRowValue,
+    });
   }
 
   return (
