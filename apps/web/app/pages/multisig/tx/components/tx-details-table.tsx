@@ -11,7 +11,6 @@ import { truncateMiddle } from '@leather.io/utils';
 
 import { CopyAddress } from '../../components/copy-address';
 import {
-  DetailAddressRow,
   DetailLocationRow,
   DetailRow,
   DetailStatusRow,
@@ -98,9 +97,9 @@ export function TxDetailsTable({
         </>
       ) : (
         <>
-          <DetailAddressRow label="Recipient">
+          <DetailRow label="Recipient">
             {recipient ? <CopyAddress addr={recipient} grouped /> : pendingValue}
-          </DetailAddressRow>
+          </DetailRow>
           <DetailRow label="Amount">
             {amount ? moneyWithFiat(amount, amountFiat) : pendingValue}
           </DetailRow>

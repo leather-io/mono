@@ -7,7 +7,6 @@ import { multisigVaultKeys } from '~/features/multisig/vaults/vault-query-keys';
 import type {
   AuthNetworkId,
   MultisigTransaction,
-  MultisigTransactionStatus,
   Vault,
   VaultAccount,
   VaultAccountSigner,
@@ -15,35 +14,46 @@ import type {
   VaultMember,
   VaultSummary,
 } from '@leather.io/models';
-import { Button, ListItemBox } from '@leather.io/ui';
+import { BlockchainActivityAvatarIcon, Button, ListItemBox } from '@leather.io/ui';
 
-import { AccountDetailsCard } from '../account/components/account-details-card';
-import { AvatarSq } from '../components/avatar-sq';
-import { Badge } from '../components/badge';
-import { InvitationModal } from '../components/invitation-modal';
-import { MultisigHero } from '../components/multisig-hero';
-import { SectionLabel } from '../components/section-label';
-import { TransactionList, type TransactionListItem } from '../components/transaction-list';
-import { ChainPicker } from '../create-vault/components/chain-picker';
-import { type MemberDraft, MemberRows } from '../create-vault/components/member-rows';
-import { ThemePicker } from '../create-vault/components/theme-picker';
-import { VaultPreviewCard } from '../create-vault/components/vault-preview-card';
-import { CreateVaultTile } from '../dashboard/components/create-vault-tile';
-import { vaultThemeFromName } from '../multisig-tokens';
-import { SignerRollcall } from '../tx/components/signer-rollcall';
-import { TxDetailsTable } from '../tx/components/tx-details-table';
-import { AccountsSection } from '../vault/components/accounts-section';
-import { CancelVaultModal } from '../vault/components/cancel-vault-modal';
-import { CreateAccountModal } from '../vault/components/create-account-modal';
-import { MembersSection } from '../vault/components/members-section';
-import { ShareInvitationsModal } from '../vault/components/share-invitations-modal';
-import { VaultStatusCard } from '../vault/components/vault-status-card';
+import { AccountDetailsCard } from '../../../multisig/account/components/account-details-card';
+import { AvatarCircle } from '../../../multisig/components/avatar-circle';
+import { AvatarSq } from '../../../multisig/components/avatar-sq';
+import { Badge } from '../../../multisig/components/badge';
+import { InvitationModal } from '../../../multisig/components/invitation-modal';
+import { MultisigHero } from '../../../multisig/components/multisig-hero';
+import { SectionLabel } from '../../../multisig/components/section-label';
+import { VaultActivityList } from '../../../multisig/components/vault-activity-list';
+import { renderActivityIndicator } from '../../../multisig/components/vault-activity-row';
+import { ChainPicker } from '../../../multisig/create-vault/components/chain-picker';
+import {
+  type MemberDraft,
+  MemberRows,
+} from '../../../multisig/create-vault/components/member-rows';
+import { ThemePicker } from '../../../multisig/create-vault/components/theme-picker';
+import { VaultPreviewCard } from '../../../multisig/create-vault/components/vault-preview-card';
+import { CreateVaultTile } from '../../../multisig/dashboard/components/create-vault-tile';
+import { vaultThemeFromName } from '../../../multisig/multisig-tokens';
+import { SignerRollcall } from '../../../multisig/tx/components/signer-rollcall';
+import { TxDetailsTable } from '../../../multisig/tx/components/tx-details-table';
+import { AccountsSection } from '../../../multisig/vault/components/accounts-section';
+import { CancelVaultModal } from '../../../multisig/vault/components/cancel-vault-modal';
+import { CreateAccountModal } from '../../../multisig/vault/components/create-account-modal';
+import { MembersSection } from '../../../multisig/vault/components/members-section';
+import { ShareInvitationsModal } from '../../../multisig/vault/components/share-invitations-modal';
+import { VaultStatusCard } from '../../../multisig/vault/components/vault-status-card';
+import {
+  mockAccountNames,
+  mockAccountThresholds,
+  mockActivityItems,
+  mockStxAvatar,
+  mockVaultNames,
+} from '../../data/activity-mock-data';
 
-// Dev-only: every multisig page reconstructed with mock data + the real
-// presentational components (stand-ins where a component self-fetches), stacked
-// main + sidebar so the views can be compared and tweaked. The 3 passive modals
-// are wired open via buttons; the 2 self-fetch-on-render modals are omitted.
-// Strip before the PR.
+// Living playground area: every multisig page reconstructed with mock data + the
+// real presentational components (stand-ins where a component self-fetches),
+// stacked main + sidebar so the views can be compared and tweaked. The 3 passive
+// modals are wired open via buttons; the 2 self-fetch-on-render modals are omitted.
 const NETWORK: AuthNetworkId = 'stx:mainnet';
 const ME = 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKQVX8X0G';
 const ADDR_2 = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE';
@@ -177,60 +187,6 @@ const invitedDetail: Vault = {
   ],
 };
 
-function txSummary(
-  id: string,
-  network: AuthNetworkId,
-  status: MultisigTransactionStatus,
-  minutesAgo: number,
-  approvalCount: number,
-  vaultName: string,
-  value?: { amount: string; fiat: string }
-): TransactionListItem {
-  return {
-    vaultId: vault.id,
-    threshold: account.threshold,
-    subtitle: vaultName,
-    amount: value?.amount,
-    fiat: value?.fiat,
-    transaction: {
-      id,
-      vaultAccountId: account.id,
-      network,
-      proposerUserId: 'u1',
-      proposalTimestamp: nowSeconds - minutesAgo * 60,
-      nonce: null,
-      txId: null,
-      status,
-      broadcastAt: null,
-      createdAt: '',
-      updatedAt: '',
-      approvalCount,
-    },
-  };
-}
-
-const txItems: TransactionListItem[] = [
-  txSummary('1', 'stx:mainnet', 'pending', 8, 1, 'Team Treasury'),
-  txSummary('2', 'btc:mainnet', 'pending', 26, 1, 'Vault One'),
-  txSummary('3', 'stx:mainnet', 'broadcast', 70, 2, 'Team Treasury', {
-    amount: '40.00 STX',
-    fiat: '$79.60',
-  }),
-  txSummary('4', 'stx:mainnet', 'confirmed', 240, 2, 'Team Treasury', {
-    amount: '125.00 STX',
-    fiat: '$248.75',
-  }),
-  txSummary('6', 'btc:mainnet', 'confirmed', 900, 2, 'Vault One', {
-    amount: '0.0425 BTC',
-    fiat: '$2,810.00',
-  }),
-  txSummary('5', 'btc:mainnet', 'failed', 1440, 1, 'Vault One', {
-    amount: '8.50 STX',
-    fiat: '$16.91',
-  }),
-];
-const accountItems = txItems.map(item => ({ ...item, subtitle: undefined }));
-
 const mockTx: MultisigTransaction = {
   id: 'tx-preview',
   vaultAccountId: account.id,
@@ -313,7 +269,7 @@ function TwoCol({ main, side }: { main: ReactNode; side: ReactNode }) {
       <Box flex={['1', '1', '1.6']} minWidth={0} width="100%">
         {main}
       </Box>
-      <Box width={{ base: '100%', xl: '420px' }} flexShrink={0}>
+      <Box width={['100%', '100%', '420px']} flexShrink={0}>
         {side}
       </Box>
     </Flex>
@@ -351,6 +307,7 @@ function CreateVaultPreview() {
             <SectionLabel>Members</SectionLabel>
             <MemberRows
               chain="stx"
+              addressPrefix="SP"
               members={draftMembers}
               myAddress={ME}
               statuses={statuses}
@@ -398,7 +355,7 @@ function ModalsPreview() {
       />
       <CreateAccountModal
         vault={vault}
-        nextIndex={1}
+        accounts={mockAccountSummaries}
         isShowing={showCreateAccount}
         onClose={() => setShowCreateAccount(false)}
       />
@@ -413,7 +370,7 @@ function ModalsPreview() {
   );
 }
 
-export function PagesPreviewPage() {
+export function PageGalleryPage() {
   const [showInvite, setShowInvite] = useState(false);
   const queryClient = useQueryClient();
   useEffect(() => {
@@ -425,11 +382,11 @@ export function PagesPreviewPage() {
   return (
     <Box p="space.07" maxWidth="1200px">
       <styled.h1 textStyle="heading.04" mb="space.02">
-        Multisig pages in context — local preview
+        Multisig pages in context
       </styled.h1>
       <styled.p textStyle="caption.01" color="ink.text-subdued" mb="space.09">
         Every view reconstructed with mock data + the real components, main + sidebar stacked.
-        Dev-only — stripped before the PR.
+        Living playground area.
       </styled.p>
 
       <PageFrame label="Dashboard">
@@ -454,7 +411,15 @@ export function PagesPreviewPage() {
           side={
             <>
               <SectionLabel noGutter>Activity</SectionLabel>
-              <TransactionList items={txItems} scale="compact" onSelect={() => undefined} />
+              <VaultActivityList
+                items={mockActivityItems}
+                scale="compact"
+                limit={10}
+                vaultNamesById={mockVaultNames}
+                accountNamesById={mockAccountNames}
+                accountThresholdsById={mockAccountThresholds}
+                onSelect={() => undefined}
+              />
             </>
           }
         />
@@ -471,7 +436,11 @@ export function PagesPreviewPage() {
                 secondary={<styled.span>$2,318.40</styled.span>}
               />
               <SectionLabel>Transactions</SectionLabel>
-              <TransactionList items={accountItems} scale="regular" onSelect={() => undefined} />
+              <VaultActivityList
+                items={mockActivityItems}
+                scale="regular"
+                onSelect={() => undefined}
+              />
             </>
           }
           side={
@@ -503,6 +472,9 @@ export function PagesPreviewPage() {
                 vault={vault}
                 accounts={mockAccountSummaries}
                 isLoading={false}
+                isRecovering={false}
+                recoveryFailed={false}
+                onRetryRecovery={() => undefined}
                 canCreate
                 onCreateAccount={() => undefined}
                 onOpenAccount={() => undefined}
@@ -511,7 +483,9 @@ export function PagesPreviewPage() {
               <MembersSection
                 vault={vault}
                 currentUserAddress={ME}
+                currentUserIsCreator
                 onShareInvite={() => undefined}
+                onRenameMember={() => undefined}
               />
             </>
           }
@@ -527,7 +501,13 @@ export function PagesPreviewPage() {
                 onCancelVault={() => undefined}
               />
               <SectionLabel>Transactions</SectionLabel>
-              <TransactionList items={txItems} scale="compact" onSelect={() => undefined} />
+              <VaultActivityList
+                items={mockActivityItems}
+                scale="compact"
+                accountNamesById={mockAccountNames}
+                accountThresholdsById={mockAccountThresholds}
+                onSelect={() => undefined}
+              />
             </>
           }
         />
@@ -544,8 +524,20 @@ export function PagesPreviewPage() {
               <MultisigHero
                 variant="balance"
                 themeId={orangeTheme}
-                primary="Transfer"
-                secondary={<styled.span>Proposed 2h ago by Amber</styled.span>}
+                media={
+                  <BlockchainActivityAvatarIcon
+                    size={48}
+                    avatar={mockStxAvatar}
+                    indicator={renderActivityIndicator('sent', 16)}
+                  />
+                }
+                primary="Send STX"
+                secondary={
+                  <Flex alignItems="center" gap="space.02">
+                    <styled.span>Proposed 2h ago by Amber</styled.span>
+                    <AvatarCircle name="Amber" size="xs" />
+                  </Flex>
+                }
               />
               <SectionLabel>Transaction details</SectionLabel>
               <TxDetailsTable

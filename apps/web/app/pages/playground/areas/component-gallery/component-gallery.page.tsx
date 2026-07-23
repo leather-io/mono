@@ -4,37 +4,43 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type {
   AuthNetworkId,
-  MultisigTransactionStatus,
   Vault,
   VaultAccount,
   VaultAccountSigner,
   VaultMember,
 } from '@leather.io/models';
-import { ListContainer, ListItemBox } from '@leather.io/ui';
+import { BlockchainActivityAvatarIcon, ListContainer, ListItemBox } from '@leather.io/ui';
 
-import { AccountDetailsCard } from '../account/components/account-details-card';
-import { AvatarCircle } from '../components/avatar-circle';
-import { AvatarSq } from '../components/avatar-sq';
-import { Badge, type BadgeVariant } from '../components/badge';
-import { ChainAvatar } from '../components/chain-avatar';
-import { ChainPill } from '../components/chain-pill';
-import { CopyAddress } from '../components/copy-address';
-import { MultisigErrorState } from '../components/multisig-error-state';
-import { MultisigHero } from '../components/multisig-hero';
-import { TextField } from '../components/text-field';
-import { TransactionList, type TransactionListItem } from '../components/transaction-list';
-import { CreateVaultTile } from '../dashboard/components/create-vault-tile';
-import { vaultThemeFromName } from '../multisig-tokens';
-import { VaultStatusCard } from '../vault/components/vault-status-card';
+import { AccountDetailsCard } from '../../../multisig/account/components/account-details-card';
+import { AvatarCircle } from '../../../multisig/components/avatar-circle';
+import { AvatarSq } from '../../../multisig/components/avatar-sq';
+import { Badge, type BadgeVariant } from '../../../multisig/components/badge';
+import { ChainAvatar } from '../../../multisig/components/chain-avatar';
+import { ChainPill } from '../../../multisig/components/chain-pill';
+import { CopyAddress } from '../../../multisig/components/copy-address';
+import { MultisigErrorState } from '../../../multisig/components/multisig-error-state';
+import { MultisigHero } from '../../../multisig/components/multisig-hero';
+import { TextField } from '../../../multisig/components/text-field';
+import { VaultActivityList } from '../../../multisig/components/vault-activity-list';
+import { renderActivityIndicator } from '../../../multisig/components/vault-activity-row';
+import { CreateVaultTile } from '../../../multisig/dashboard/components/create-vault-tile';
+import { vaultThemeFromName } from '../../../multisig/multisig-tokens';
+import { VaultStatusCard } from '../../../multisig/vault/components/vault-status-card';
+import {
+  mockAccountNames,
+  mockAccountThresholds,
+  mockActivityItems,
+  mockStxAvatar,
+  mockVaultNames,
+} from '../../data/activity-mock-data';
 
-// Dev-only: every multisig view-surface and component permutation stacked on one
-// page with mock data, so the real components can be eyeballed and tweaked
-// without the wallet/backend gate. Strip before the PR.
+// Living playground area: every multisig view-surface and component permutation
+// stacked on one page with mock data, so the real components can be eyeballed
+// and tweaked without the wallet/backend gate.
 const NETWORK: AuthNetworkId = 'stx:mainnet';
 const ME = 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKQVX8X0G';
 const ADDR_2 = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE';
 const ADDR_3 = 'SP1H1733V5MZ3SZ9XRW9FKYGEZT0JDGEB8Y634C7R';
-const nowSeconds = Math.floor(Date.now() / 1000);
 
 const members: VaultMember[] = [
   { membershipId: 'm1', address: ME, name: 'Me', membershipStatus: 'joined', user: null },
@@ -82,60 +88,6 @@ const account: VaultAccount = {
   queuedTransactionCount: 0,
 };
 
-function txSummary(
-  id: string,
-  network: AuthNetworkId,
-  status: MultisigTransactionStatus,
-  minutesAgo: number,
-  approvalCount: number,
-  vaultName: string,
-  value?: { amount: string; fiat: string }
-): TransactionListItem {
-  return {
-    vaultId: vault.id,
-    threshold: account.threshold,
-    subtitle: vaultName,
-    amount: value?.amount,
-    fiat: value?.fiat,
-    transaction: {
-      id,
-      vaultAccountId: account.id,
-      network,
-      proposerUserId: 'u1',
-      proposalTimestamp: nowSeconds - minutesAgo * 60,
-      nonce: null,
-      txId: null,
-      status,
-      broadcastAt: null,
-      createdAt: '',
-      updatedAt: '',
-      approvalCount,
-    },
-  };
-}
-
-const txItems: TransactionListItem[] = [
-  txSummary('1', 'stx:mainnet', 'pending', 8, 1, 'Team Treasury'),
-  txSummary('2', 'btc:mainnet', 'pending', 26, 1, 'Vault One'),
-  txSummary('3', 'stx:mainnet', 'broadcast', 70, 2, 'Team Treasury', {
-    amount: '40.00 STX',
-    fiat: '$79.60',
-  }),
-  txSummary('4', 'stx:mainnet', 'confirmed', 240, 2, 'Team Treasury', {
-    amount: '125.00 STX',
-    fiat: '$248.75',
-  }),
-  txSummary('6', 'btc:mainnet', 'confirmed', 900, 2, 'Vault One', {
-    amount: '0.0425 BTC',
-    fiat: '$2,810.00',
-  }),
-  txSummary('5', 'btc:mainnet', 'failed', 1440, 1, 'Vault One', {
-    amount: '8.50 STX',
-    fiat: '$16.91',
-  }),
-];
-const accountItems = txItems.map(item => ({ ...item, subtitle: undefined }));
-
 const orangeTheme = vaultThemeFromName('Orange').id;
 const blueTheme = vaultThemeFromName('Blue').id;
 
@@ -175,19 +127,19 @@ function Slot({ label, width, children }: { label: string; width?: string; child
 
 const badgeVariants: BadgeVariant[] = ['default', 'error', 'info', 'pending', 'success', 'warning'];
 
-export function GalleryPreviewPage() {
+export function ComponentGalleryPage() {
   return (
     <Box p="space.07" maxWidth="1100px">
       <styled.h1 textStyle="heading.04" mb="space.02">
-        Multisig component gallery — local preview
+        Multisig component gallery
       </styled.h1>
       <styled.p textStyle="caption.01" color="ink.text-subdued" mb="space.09">
-        Every surface + permutation stacked with mock data. Dev-only — stripped before the PR.
+        Every surface + permutation stacked with mock data. Living playground area.
       </styled.p>
 
       <Section
         title="Balance heroes"
-        note="Account and vault now share the same bold MultisigHero (variant=balance). Tx-detail uses the standard variant for contrast."
+        note="Account, vault and tx-detail share the bold MultisigHero (variant=balance). Tx-detail leads with the asset avatar + indicator and a proposer byline."
       >
         <Flex direction="column" gap="space.05" maxWidth="640px">
           <Slot label="Account hero — balance variant" width="100%">
@@ -206,11 +158,24 @@ export function GalleryPreviewPage() {
               secondary={<styled.span>$3,140.00</styled.span>}
             />
           </Slot>
-          <Slot label="Tx-detail hero — standard variant" width="100%">
+          <Slot label="Tx-detail hero — balance variant" width="100%">
             <MultisigHero
+              variant="balance"
               themeId={orangeTheme}
-              primary={<styled.span>Transfer</styled.span>}
-              secondary={<styled.span>Proposed 2h ago by Amber</styled.span>}
+              media={
+                <BlockchainActivityAvatarIcon
+                  size={48}
+                  avatar={mockStxAvatar}
+                  indicator={renderActivityIndicator('sent', 16)}
+                />
+              }
+              primary={<styled.span>Send STX</styled.span>}
+              secondary={
+                <Flex alignItems="center" gap="space.02">
+                  <styled.span>Proposed 2h ago by Amber</styled.span>
+                  <AvatarCircle name="Amber" size="xs" />
+                </Flex>
+              }
             />
           </Slot>
         </Flex>
@@ -240,15 +205,36 @@ export function GalleryPreviewPage() {
       </Section>
 
       <Section
-        title="Transaction feed"
-        note="Compact (sidebar) and regular (main column) scales — Needs signatures / In progress / History tiers."
+        title="Activity feed"
+        note="VaultActivityList: two-line rows in a flat tiered feed (Needs signatures / In progress / History). Transaction detail leads the row; the vault account name + signature progress sit beneath. Review CTA + attention wash on actionable rows; crypto value leading (precision policy), fiat beneath. Tier labels are dropped when only one tier has items."
       >
         <Flex gap="space.08" flexWrap="wrap" alignItems="flex-start">
-          <Slot label="scale=compact">
-            <TransactionList items={txItems} scale="compact" onSelect={() => undefined} />
+          <Slot label="dashboard context (vault names)" width="480px">
+            <VaultActivityList
+              items={mockActivityItems}
+              scale="compact"
+              vaultNamesById={mockVaultNames}
+              accountNamesById={mockAccountNames}
+              accountThresholdsById={mockAccountThresholds}
+              onSelect={() => undefined}
+            />
           </Slot>
-          <Slot label="scale=regular" width="480px">
-            <TransactionList items={accountItems} scale="regular" onSelect={() => undefined} />
+          <Slot label="account context (no location)" width="480px">
+            <VaultActivityList
+              items={mockActivityItems}
+              scale="compact"
+              onSelect={() => undefined}
+            />
+          </Slot>
+          <Slot label="single tier (history only) — no labels" width="480px">
+            <VaultActivityList
+              items={mockActivityItems.filter(item => item.view.status === 'success')}
+              scale="compact"
+              vaultNamesById={mockVaultNames}
+              accountNamesById={mockAccountNames}
+              accountThresholdsById={mockAccountThresholds}
+              onSelect={() => undefined}
+            />
           </Slot>
         </Flex>
       </Section>
@@ -352,12 +338,44 @@ export function GalleryPreviewPage() {
 
       <Section
         title="CopyAddress"
-        note="One muted style for truncated + full; grouped is the multi-line block with the icon trailing the address."
+        note="One muted style for truncated + full; grouped is the multi-line block with the icon trailing the address. Wide fills the available width and middle-truncates only when the container is too tight — never wrapping."
       >
         <Flex direction="column" gap="space.03" maxWidth="520px" alignItems="flex-start">
           <CopyAddress addr={ME} />
           <CopyAddress addr={ME} full />
           <CopyAddress addr={ME} grouped />
+        </Flex>
+        <Flex direction="column" gap="space.02" mt="space.05" alignItems="flex-start">
+          <Flex
+            width="440px"
+            borderRadius="sm"
+            borderWidth="1px"
+            borderStyle="dashed"
+            borderColor="ink.border-transparent"
+          >
+            <CopyAddress addr={ME} wide />
+          </Flex>
+          <Flex
+            width="300px"
+            borderRadius="sm"
+            borderWidth="1px"
+            borderStyle="dashed"
+            borderColor="ink.border-transparent"
+          >
+            <CopyAddress addr={ME} wide />
+          </Flex>
+          <Flex
+            width="200px"
+            borderRadius="sm"
+            borderWidth="1px"
+            borderStyle="dashed"
+            borderColor="ink.border-transparent"
+          >
+            <CopyAddress addr={ME} wide />
+          </Flex>
+          <styled.span textStyle="caption.01" color="ink.text-subdued">
+            wide — one address in 440 / 300 / 200px containers
+          </styled.span>
         </Flex>
       </Section>
 

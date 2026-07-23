@@ -10,26 +10,38 @@ import { NoteTextIcon } from '../../icons/note-text-icon.web';
 import { AssetAvatarIcon } from './asset-avatar-icon.web';
 import { Avatar } from './avatar.web';
 
-const avatarSize = '36px';
-const pairGeometry = { sub: '24px', indicatorSize: '16px' } as const;
+const defaultAvatarSize = 36;
 
 const dimmedOpacity = 0.6;
 
 interface BlockchainActivityAvatarIconProps {
   avatar: BlockchainActivityAvatar;
   indicator?: ReactElement;
+  // Diameter in px. Defaults to the list-row size; larger values (e.g. a
+  // detail hero) scale the pair geometry and indicator ring proportionally.
+  size?: number;
 }
 
 export function BlockchainActivityAvatarIcon({
   avatar,
   indicator,
+  size = defaultAvatarSize,
 }: BlockchainActivityAvatarIconProps) {
+  const scale = size / defaultAvatarSize;
+  const avatarSize = `${size}px`;
+  // Grow the indicator badge with the box: the size presets carry the badge
+  // dimensions (md = 16px, xl = 20px), so a hero-scale avatar uses xl.
+  const avatarPreset = size >= 44 ? 'xl' : 'md';
+  const pairGeometry = {
+    sub: `${Math.round(24 * scale)}px`,
+    indicatorSize: `${Math.round(16 * scale)}px`,
+  } as const;
   switch (avatar.kind) {
     case 'single':
       return (
         <AssetAvatarIcon
           asset={avatar.asset}
-          size="md"
+          size={avatarPreset}
           width={avatarSize}
           height={avatarSize}
           indicator={indicator}
@@ -38,7 +50,7 @@ export function BlockchainActivityAvatarIcon({
     case 'icon':
       return (
         <Avatar
-          size="md"
+          size={avatarPreset}
           width={avatarSize}
           height={avatarSize}
           outlineColor="ink.border-default"

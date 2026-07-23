@@ -1,6 +1,7 @@
 import { type RouteConfig, index, prefix, route } from '@react-router/dev/routes';
 
 import { multisigRoutes } from './pages/multisig/multisig.routes';
+import { playgroundRoutes } from './pages/playground/playground.routes';
 
 export default [
   index('pages/index.route.tsx'),
@@ -38,6 +39,7 @@ export default [
   route('help-center', 'pages/redirects/help-center-redirect.route.tsx'),
   route('help-center/*', 'pages/redirects/help-center-wildcard.route.tsx'),
   ...multisigRoutes,
+  ...playgroundRoutes,
   // Fallback route
   route('*', 'pages/error/error-not-found.route.tsx'),
 ] satisfies RouteConfig;
