@@ -2,12 +2,14 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useMutation } from '@tanstack/react-query';
+import { styled } from 'leather-styles/jsx';
 
 import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
 import { LEATHER_API_URL_STAGING } from '@leather.io/constants';
 import { createProposeMultisigTransactionMutationConfig } from '@leather.io/queries';
 import { createRpcSuccessResponse } from '@leather.io/rpc';
 import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
+import { Button } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
@@ -31,7 +33,7 @@ import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 import { useRpcSendTransferContext } from './rpc-send-transfer.context';
 
 export function useRpcSendTransferActions() {
-  const { availableBalance, selectedFee } = useFeeEditorContext();
+  const { availableBalance, feesError, selectedFee } = useFeeEditorContext();
   const { amount, frameId, isLoadingBalance, recipients, requestId, tabId, utxos } =
     useRpcSendTransferContext();
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -52,7 +54,8 @@ export function useRpcSendTransferActions() {
   );
   const isBitcoinPolicy = policy?.chain === 'bitcoin';
 
-  const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
+  const isInsufficientBalance =
+    !isLoadingBalance && availableBalance.amount.isLessThan(amount.amount);
 
   const approverActions = useMemo(() => {
     function onCancel() {
@@ -156,9 +159,17 @@ export function useRpcSendTransferActions() {
       }
     }
 
+    if (!isLoadingBalance && (feesError || isInsufficientBalance)) {
+      return [
+        <Button key="cancel" onClick={onCancel} fullWidth variant="outline">
+          <styled.span textStyle="label.02">Cancel</styled.span>
+        </Button>,
+      ];
+    }
+
     return getTransactionActions({
       isLoading: isLoadingBalance,
-      isError: isInsufficientBalance,
+      isError: false,
       isBroadcasting,
       isSubmitted,
       onCancel,
@@ -168,6 +179,7 @@ export function useRpcSendTransferActions() {
     });
   }, [
     isLoadingBalance,
+    feesError,
     isInsufficientBalance,
     isBroadcasting,
     isSubmitted,

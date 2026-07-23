@@ -12,6 +12,7 @@ interface BitcoinFeeEditorProviderProps extends HasChildren {
   account: AccountRequest;
   availableBalance: Money;
   isSendingMax?: boolean;
+  loadingFallback: React.ReactNode;
   marketData: MarketData;
   onGoBack(): void;
   recipients: TransferRecipient[];
@@ -22,6 +23,7 @@ export function BitcoinFeeEditorProvider({
   availableBalance,
   children,
   isSendingMax,
+  loadingFallback,
   marketData,
   onGoBack,
   recipients,
@@ -31,14 +33,16 @@ export function BitcoinFeeEditorProvider({
     <BitcoinFeesLoader
       account={account}
       isSendingMax={isSendingMax}
+      loadingFallback={loadingFallback}
       recipients={recipients}
       utxos={utxos}
     >
-      {({ fees, isLoading, getCustomFee }) => {
+      {({ fees, feesError, isLoading, getCustomFee }) => {
         return (
           <FeeEditorProvider
             availableBalance={availableBalance}
             fees={fees}
+            feesError={feesError}
             feeType="fee-rate"
             getCustomFee={getCustomFee}
             isLoadingFees={isLoading}

@@ -8,6 +8,8 @@ export function useSwitchAccountSheet() {
     setIsShowingSwitchAccount,
     allowPolicyAccounts,
     setAllowPolicyAccounts,
+    accountFilter,
+    setAccountFilter,
   } = useOutletContext<SwitchAccountOutletContext>();
 
   return {
@@ -15,6 +17,8 @@ export function useSwitchAccountSheet() {
     setIsShowingSwitchAccount,
     allowPolicyAccounts,
     setAllowPolicyAccounts,
+    accountFilter,
+    setAccountFilter,
     toggleSwitchAccount() {
       setIsShowingSwitchAccount(!isShowingSwitchAccount);
     },

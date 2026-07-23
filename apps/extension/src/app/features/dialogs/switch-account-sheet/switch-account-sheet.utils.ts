@@ -16,6 +16,24 @@ type SwitchAccountRow =
   | { kind: 'policy'; policy: PolicyStore }
   | { kind: 'addAccount' };
 
+export function filterWalletTreeToBitcoinAccounts<
+  T extends { type: WalletType; accounts: AccountId[] },
+>(wallets: T[], hardwareBitcoinAccountIds: Set<string>): T[] {
+  return wallets
+    .map(wallet => ({
+      ...wallet,
+      accounts:
+        wallet.type === 'software'
+          ? wallet.accounts
+          : wallet.accounts.filter(account =>
+              hardwareBitcoinAccountIds.has(
+                makeAccountIdentifer(account.fingerprint, account.accountIndex)
+              )
+            ),
+    }))
+    .filter(wallet => wallet.accounts.length > 0);
+}
+
 export function buildWalletRows(
   wallet: WalletGroup,
   getPolicies: (account: AccountId) => PolicyStore[]

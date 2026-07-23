@@ -7,20 +7,33 @@ import type { TransferRecipient } from '@shared/models/form.model';
 
 import { useBitcoinTransactionFees } from '@app/query/bitcoin/fees/bitcoin-transaction-fees.hooks';
 
-import type { Fee, Fees } from '../fee-editor.context';
+import type { Fee, Fees, FeesErrorReason } from '../fee-editor.context';
 import { getBitcoinFee, getBitcoinSendMaxFee } from './bitcoin-fees.utils';
 import { useBitcoinFees } from './use-bitcoin-fees';
 
 interface BitcoinFees {
   fees: Fees;
+  feesError?: FeesErrorReason;
   isLoading: boolean;
   getCustomFee(rate: number): Fee;
 }
 
+function createEmptyFee(priority: Fee['priority']): Fee {
+  return { priority, feeRate: 0, txFee: createMoney(0, 'BTC'), time: '' };
+}
+
+const emptyFees: Fees = {
+  slow: createEmptyFee('slow'),
+  standard: createEmptyFee('standard'),
+  fast: createEmptyFee('fast'),
+  custom: createEmptyFee('custom'),
+};
+
 interface BitcoinFeesLoaderProps {
   account: AccountRequest;
-  children({ fees, isLoading, getCustomFee }: BitcoinFees): React.ReactNode;
+  children({ fees, feesError, isLoading, getCustomFee }: BitcoinFees): React.ReactNode;
   isSendingMax?: boolean;
+  loadingFallback: React.ReactNode;
   recipients: TransferRecipient[];
   utxos: OwnedUtxo[];
 }
@@ -28,6 +41,7 @@ export function BitcoinFeesLoader({
   account,
   children,
   isSendingMax,
+  loadingFallback,
   recipients,
   utxos,
 }: BitcoinFeesLoaderProps) {
@@ -60,9 +74,22 @@ export function BitcoinFeesLoader({
     };
   }
   if (error instanceof BitcoinError && error.message === 'InsufficientFunds') {
-    throw error;
+    return children({
+      fees: fees ?? emptyFees,
+      feesError: 'insufficient-funds',
+      isLoading: false,
+      getCustomFee,
+    });
   }
 
-  if (!fees) return null;
-  return children({ fees, isLoading, getCustomFee });
+  if (fees) return children({ fees, isLoading, getCustomFee });
+  if (error) {
+    return children({
+      fees: emptyFees,
+      feesError: 'fee-estimation-failed',
+      isLoading: false,
+      getCustomFee,
+    });
+  }
+  return loadingFallback;
 }

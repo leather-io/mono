@@ -14,11 +14,13 @@ export interface Fee {
 
 export type Fees = Record<FeePriority, Fee>;
 export type FeeType = 'fee-rate' | 'fee-value';
+export type FeesErrorReason = 'insufficient-funds' | 'fee-estimation-failed';
 
 interface FeeEditorContext {
   availableBalance: Money;
   customFee: string;
   feeType: FeeType;
+  feesError?: FeesErrorReason;
   loadedFee: Fee;
   isLoadingFees: boolean;
   isSponsored: boolean;
