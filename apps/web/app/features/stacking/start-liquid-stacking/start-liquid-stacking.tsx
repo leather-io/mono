@@ -23,6 +23,7 @@ import {
 } from '~/features/stacking/start-liquid-stacking/utils/stacking-liquid-schema';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { createDepositStxMutationOptions } from '~/features/stacking/start-liquid-stacking/utils/utils-liquid-stacking-stx';
+import { useIsHydrated } from '~/hooks/use-is-hydrated';
 import {
   useStxAvailableUnlockedBalance,
   useStxBalance,
@@ -46,8 +47,17 @@ const initialStackingFormValues: Partial<StackingLiquidFormSchema> = {
 };
 
 export function StartLiquidStacking({ protocolSlug }: StartLiquidStackingProps) {
+  const isHydrated = useIsHydrated();
   const { client } = useStackingClient();
   const { stacksAccount } = useLeatherConnect();
+
+  if (!isHydrated) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100%">
+        <LoadingSpinner fill="ink.text-subdued" />
+      </Flex>
+    );
+  }
 
   if (!stacksAccount || !client) return <Navigate to="/stacking" replace />;
 

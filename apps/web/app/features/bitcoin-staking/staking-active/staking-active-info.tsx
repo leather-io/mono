@@ -2,7 +2,8 @@ import { Navigate } from 'react-router';
 
 import { Flex, VStack } from 'leather-styles/jsx';
 import { StakingPoolSlug, getStakingPoolFromSlug } from '~/data/bitcoin-staking-data';
-import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
+import { usePox5StackingClient } from '~/features/bitcoin-staking/hooks/use-pox5-clients';
+import { useIsHydrated } from '~/hooks/use-is-hydrated';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
 
@@ -19,8 +20,17 @@ interface StakingActiveInfoProps {
 }
 
 export function StakingActiveInfo({ poolSlug }: StakingActiveInfoProps) {
-  const { client } = useStackingClient();
+  const isHydrated = useIsHydrated();
+  const client = usePox5StackingClient();
   const { stacksAccount } = useLeatherConnect();
+
+  if (!isHydrated) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100%">
+        <LoadingSpinner fill="ink.text-subdued" />
+      </Flex>
+    );
+  }
 
   if (!stacksAccount || !client) return <Navigate to={stakingPaths.index} replace />;
 

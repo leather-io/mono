@@ -1,8 +1,15 @@
-import { StacksNetworkName } from '@stacks/network';
 import { StackingClient } from '@stacks/stacking';
-import { ClarityValue, contractPrincipalCV, serializeCV } from '@stacks/transactions';
+import {
+  ClarityValue,
+  contractPrincipalCV,
+  postConditionToHex,
+  serializeCV,
+} from '@stacks/transactions';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
-import { getNetworkInstanceByName } from '~/features/stacking/utils/stacking-network-utils';
+import {
+  POX5_WALLET_RPC_CONTRACT_NETWORK,
+  POX5_WALLET_RPC_NETWORK,
+} from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { analytics } from '~/utils/analytics/analytics';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
@@ -17,7 +24,7 @@ interface UnstakeArgs {
 }
 
 export function getUnstakeOptions(
-  args: UnstakeArgs & { pox5ContractId: string; network: StacksNetworkName }
+  args: UnstakeArgs & { pox5ContractId: string; network: string }
 ): StxCallContractParams {
   const { currentSignerManagerContractId, pox5ContractId, network } = args;
   const signerManager = parseContractId(currentSignerManagerContractId);
@@ -30,6 +37,16 @@ export function getUnstakeOptions(
     functionName: 'unstake',
     functionArgs: functionArgs.map(arg => serializeCV(arg)),
     network,
+    // Epoch 4.0 Pox post-condition (deny mode): unstake is a gated
+    // position-altering action the sender expects to perform.
+    postConditions: [
+      postConditionToHex({
+        type: 'pox-postcondition',
+        address: 'origin',
+        condition: 'will-perform',
+      }),
+    ],
+    postConditionMode: 'deny',
   } satisfies StxCallContractParams;
 }
 
@@ -40,16 +57,14 @@ interface UnstakeMutationValues extends UnstakeArgs {
 interface CreateUnstakeMutationOptionsArgs {
   leather: LeatherSdk;
   client: StackingClient;
-  network: StacksNetworkName;
 }
 
 export function createUnstakeMutationOptions({
   leather,
   client,
-  network,
 }: CreateUnstakeMutationOptionsArgs) {
   return {
-    mutationKey: ['pox5-unstake', leather, client, network],
+    mutationKey: ['pox5-unstake', leather, client],
     mutationFn: async (values: UnstakeMutationValues) => {
       const poxInfo = await client.getPoxInfo();
       const { clock } = getCycleContextFromPoxInfo(poxInfo);
@@ -59,8 +74,8 @@ export function createUnstakeMutationOptions({
 
       const options = getUnstakeOptions({
         currentSignerManagerContractId: values.currentSignerManagerContractId,
-        pox5ContractId: getPox5ContractId(getNetworkInstanceByName(network)),
-        network,
+        pox5ContractId: getPox5ContractId(POX5_WALLET_RPC_CONTRACT_NETWORK),
+        network: POX5_WALLET_RPC_NETWORK,
       });
 
       analytics.track('bitcoin_staking_unstaked', { provider: values.providerId });

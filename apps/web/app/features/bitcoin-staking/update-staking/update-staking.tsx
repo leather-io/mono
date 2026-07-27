@@ -7,31 +7,42 @@ import BigNumber from 'bignumber.js';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { z } from 'zod';
 import { ErrorLabel } from '~/components/error-label';
+import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { validationMessages } from '~/content/messages';
-import { StakingPoolSlug, getStakingPoolFromSlug } from '~/data/bitcoin-staking-data';
-import { useStackingClientRequired } from '~/features/stacking/providers/stacking-client-provider';
 import {
+  BitcoinStakingPool,
+  StakingPoolSlug,
+  getStakingPoolFromSlug,
+} from '~/data/bitcoin-staking-data';
+import { usePox5StackingClientRequired } from '~/features/bitcoin-staking/hooks/use-pox5-clients';
+import { useIsHydrated } from '~/hooks/use-is-hydrated';
+import {
+  POX5_BITCOIN_NETWORK_MODE,
   POX5_MAX_NUM_CYCLES,
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-import { useStxAvailableUnlockedBalance } from '~/queries/balance/account-balance.hooks';
 import { useLeatherConnect } from '~/store/addresses';
-import { useStacksNetwork } from '~/store/stacks-network';
 import { leather } from '~/utils/leather-sdk';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import { validateAvailableBalance } from '~/utils/validators/stx-amount-validator';
 
+import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
+import { BitcoinNetworkModes } from '@leather.io/models';
 import { Button, Input, LoadingSpinner } from '@leather.io/ui';
 import { isDefined, stxToMicroStx } from '@leather.io/utils';
 
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
 import { usePox5Position } from '../hooks/use-pox5-position';
+import { Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-options';
+import { usePox5AvailableUnlockedBalance } from '../queries/pox5-node.query';
+import { usePox5PayoutPreferenceQuery } from '../queries/pox5-stacking.query';
+import { ChoosePayoutPreference } from '../start-staking/components/choose-payout-preference';
+import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 import { createStakeUpdateMutationOptions } from '../transactions/pox5-stake-update';
 
 const updateStakingMessages = {
-  chooseExtendCycles: `Choose between 0 and ${POX5_MAX_NUM_CYCLES} cycles`,
-  nothingToUpdate: 'Extend your lock, increase your amount, or both',
+  nothingToUpdate: 'Extend your lock, increase your amount, or change your payout preference',
 };
 
 function toInputValue(value: unknown): string | number {
@@ -39,14 +50,42 @@ function toInputValue(value: unknown): string | number {
   return '';
 }
 
-function createUpdateStakingSchema(availableBalance: ReturnType<typeof stxToMicroStx>) {
+// The payout preference lives in the signer-manager and is RESTATED by every
+// stake-update: present calldata stores it, absent calldata deletes it. The
+// form therefore always resolves to an explicit payout end state (defaulting
+// to the on-chain one) so an unrelated extend/top-up can never silently wipe
+// an existing BTC payout setting.
+function normalizePayout(payout: Pox5PayoutPreference | null | undefined): string | null {
+  if (!payout) return null;
+  return `${payout.btcRewardAddress}:${payout.maxFeeSats}`;
+}
+
+interface CreateUpdateStakingSchemaArgs {
+  availableBalance: ReturnType<typeof stxToMicroStx>;
+  maxCyclesToExtend: number;
+  supportsBtcPayout: boolean;
+  networkMode: BitcoinNetworkModes;
+  currentPayout: Pox5PayoutPreference | null;
+}
+
+function createUpdateStakingSchema({
+  availableBalance,
+  maxCyclesToExtend,
+  supportsBtcPayout,
+  networkMode,
+  currentPayout,
+}: CreateUpdateStakingSchemaArgs) {
+  const chooseExtendCycles =
+    maxCyclesToExtend === 0
+      ? `Your lock already spans the maximum ${POX5_MAX_NUM_CYCLES} cycles — only an amount increase is possible`
+      : `Choose between 0 and ${maxCyclesToExtend} cycles`;
   return z
     .object({
       cyclesToExtend: z.coerce
-        .number({ error: () => updateStakingMessages.chooseExtendCycles })
-        .int(updateStakingMessages.chooseExtendCycles)
-        .min(0, updateStakingMessages.chooseExtendCycles)
-        .max(POX5_MAX_NUM_CYCLES, updateStakingMessages.chooseExtendCycles),
+        .number({ error: () => chooseExtendCycles })
+        .int(chooseExtendCycles)
+        .min(0, chooseExtendCycles)
+        .max(maxCyclesToExtend, chooseExtendCycles),
       amountIncrease: z
         .string()
         .optional()
@@ -55,10 +94,41 @@ function createUpdateStakingSchema(availableBalance: ReturnType<typeof stxToMicr
           value => !value || validateAvailableBalance(Number(value), availableBalance),
           validationMessages.cannotStackMoreThanBalance
         ),
+      payoutEnabled: z.boolean(),
+      rewardAddress: z.string().optional(),
+      maxFeeSats: z.string().optional(),
     })
     .superRefine((data, ctx) => {
+      if (supportsBtcPayout && data.payoutEnabled) {
+        if (!data.rewardAddress || !isValidBitcoinAddress(data.rewardAddress)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: validationMessages.addressNotValid,
+            path: ['rewardAddress'],
+          });
+        } else if (!isValidBitcoinNetworkAddress(data.rewardAddress, networkMode)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: validationMessages.addressIncorrectNetwork,
+            path: ['rewardAddress'],
+          });
+        }
+        if (!data.maxFeeSats || !/^\d+$/.test(data.maxFeeSats) || BigInt(data.maxFeeSats) <= 0n) {
+          ctx.addIssue({
+            code: 'custom',
+            message: validationMessages.enterMaxWithdrawalFee,
+            path: ['maxFeeSats'],
+          });
+        }
+      }
+
       const increase = data.amountIncrease ? Number(data.amountIncrease) : 0;
-      if (data.cyclesToExtend === 0 && increase === 0) {
+      const formPayout =
+        supportsBtcPayout && data.payoutEnabled && data.rewardAddress && data.maxFeeSats
+          ? `${data.rewardAddress}:${data.maxFeeSats}`
+          : null;
+      const payoutChanged = formPayout !== normalizePayout(currentPayout);
+      if (data.cyclesToExtend === 0 && increase === 0 && !payoutChanged) {
         ctx.addIssue({
           code: 'custom',
           message: updateStakingMessages.nothingToUpdate,
@@ -73,7 +143,16 @@ interface UpdateStakingProps {
 }
 
 export function UpdateStaking({ poolSlug }: UpdateStakingProps) {
+  const isHydrated = useIsHydrated();
   const { stacksAccount } = useLeatherConnect();
+
+  if (!isHydrated) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100%">
+        <LoadingSpinner fill="ink.text-subdued" />
+      </Flex>
+    );
+  }
 
   if (!stacksAccount) return 'You need to connect Leather';
 
@@ -86,30 +165,17 @@ interface UpdateStakingLayoutProps {
 }
 
 function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
-  const navigate = useNavigate();
-  const { client } = useStackingClientRequired();
-  const { networkInstance } = useStacksNetwork();
   const pool = getStakingPoolFromSlug(poolSlug);
-
   const { isLoading, position } = usePox5Position();
-  const { cycleClock } = usePox5CycleClock();
-  const availableBalance = useStxAvailableUnlockedBalance(address);
 
-  const formMethods = useForm({
-    mode: 'onTouched',
-    defaultValues: { cyclesToExtend: 0, amountIncrease: '' },
-    resolver: zodResolver(createUpdateStakingSchema(availableBalance.amount)),
-  });
-
-  const { mutateAsync: handleStakeUpdateSubmit, isPending } = useMutation(
-    createStakeUpdateMutationOptions({
-      leather,
-      client,
-      network: networkInstance,
-    })
+  const activeInfo = position?.status === 'active' ? position.info : undefined;
+  // The form's defaults must include the stored payout preference, so the form
+  // only mounts once this query settles (see the wipe note on normalizePayout).
+  const payoutQuery = usePox5PayoutPreferenceQuery(
+    pool.supportsBtcPayout ? activeInfo?.signerManagerContractId : undefined
   );
 
-  if (isLoading) {
+  if (isLoading || (pool.supportsBtcPayout && activeInfo && payoutQuery.isLoading)) {
     return (
       <Flex justifyContent="center" alignItems="center" h="100%">
         <LoadingSpinner fill="ink.text-subdued" />
@@ -121,6 +187,77 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
     return <Navigate to={stakingPaths.pool(poolSlug)} replace />;
   }
 
+  return (
+    <UpdateStakingForm
+      poolSlug={poolSlug}
+      pool={pool}
+      address={address}
+      info={position.info}
+      currentPayout={payoutQuery.data ?? null}
+    />
+  );
+}
+
+interface UpdateStakingFormProps {
+  poolSlug: StakingPoolSlug;
+  pool: BitcoinStakingPool;
+  address: string;
+  info: Pox5StakerInfo;
+  currentPayout: Pox5PayoutPreference | null;
+}
+
+function UpdateStakingForm({
+  poolSlug,
+  pool,
+  address,
+  info,
+  currentPayout,
+}: UpdateStakingFormProps) {
+  const navigate = useNavigate();
+  const client = usePox5StackingClientRequired();
+  const { btcAddressP2wpkh } = useLeatherConnect();
+
+  const { cycleClock } = usePox5CycleClock();
+  const { availableBalance } = usePox5AvailableUnlockedBalance(address);
+
+  // pox-5 stake-update recomputes the TOTAL remaining lock — (unlock-cycle −
+  // current-cycle − 1) + cycles-to-extend — and aborts with
+  // ERR_INVALID_NUM_CYCLES beyond MAX_NUM_CYCLES, so the real extend limit is
+  // the maximum minus the cycles still remaining on the position.
+  const currentCycleId = cycleClock?.clock.currentCycleId;
+  const remainingCycles =
+    currentCycleId !== undefined
+      ? Math.max(0, info.firstRewardCycle + info.numCycles - currentCycleId - 1)
+      : undefined;
+  const maxCyclesToExtend =
+    remainingCycles === undefined
+      ? POX5_MAX_NUM_CYCLES
+      : Math.max(0, POX5_MAX_NUM_CYCLES - remainingCycles);
+
+  const formMethods = useForm({
+    mode: 'onTouched',
+    defaultValues: {
+      cyclesToExtend: 0,
+      amountIncrease: '',
+      payoutEnabled: currentPayout !== null,
+      rewardAddress: currentPayout?.btcRewardAddress ?? btcAddressP2wpkh?.address,
+      maxFeeSats: currentPayout ? String(currentPayout.maxFeeSats) : '',
+    },
+    resolver: zodResolver(
+      createUpdateStakingSchema({
+        availableBalance: availableBalance.amount,
+        maxCyclesToExtend,
+        supportsBtcPayout: pool.supportsBtcPayout,
+        networkMode: POX5_BITCOIN_NETWORK_MODE,
+        currentPayout,
+      })
+    ),
+  });
+
+  const { mutateAsync: handleStakeUpdateSubmit, isPending } = useMutation(
+    createStakeUpdateMutationOptions({ leather, client })
+  );
+
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
 
   const handleUpdate = formMethods.handleSubmit(values => {
@@ -128,12 +265,25 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
       ? BigInt(stxToMicroStx(Number(values.amountIncrease)).toString())
       : 0n;
 
+    // The submitted value is always the full intended end state: the (kept or
+    // edited) preference when the toggle is on, or an explicit clear back to
+    // sBTC when it is off (absent calldata deletes the stored preference).
+    const payoutPreference: Pox5PayoutPreference | undefined =
+      pool.supportsBtcPayout && values.payoutEnabled && values.rewardAddress && values.maxFeeSats
+        ? {
+            btcRewardAddress: values.rewardAddress,
+            maxFeeSats: BigInt(values.maxFeeSats),
+          }
+        : undefined;
+
     return handleStakeUpdateSubmit({
       providerId: pool.providerId,
-      newSignerManagerContractId: position.info.signerManagerContractId,
-      currentSignerManagerContractId: position.info.signerManagerContractId,
+      newSignerManagerContractId: info.signerManagerContractId,
+      currentSignerManagerContractId: info.signerManagerContractId,
       cyclesToExtend: values.cyclesToExtend,
       amountIncreaseMicroStx: increaseMicroStx,
+      currentAmountMicroStx: info.amountMicroStx,
+      payoutPreference,
     }).then(() => navigate(stakingPaths.active(poolSlug)));
   });
 
@@ -143,9 +293,9 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
         <styled.h1 textStyle="heading.04">Update stake</styled.h1>
         <styled.p textStyle="caption.01" color="ink.text-subdued">
           You currently have{' '}
-          {toHumanReadableMicroStx(new BigNumber(position.info.amountMicroStx.toString()))} locked
-          with {pool.name}. Extend the lock, add more STX, or both — changes take effect from the
-          next cycle.
+          {toHumanReadableMicroStx(new BigNumber(info.amountMicroStx.toString()))} locked with{' '}
+          {pool.name}. Extend the lock, add more STX, or both — changes take effect from the next
+          cycle.
         </styled.p>
 
         {isInPreparePhase && cycleClock && (
@@ -175,6 +325,13 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
                   />
                 </Input.Root>
                 {invalid && error && <ErrorLabel mt="space.02">{error.message}</ErrorLabel>}
+                {remainingCycles !== undefined && (
+                  <styled.p textStyle="caption.02" color="ink.text-subdued" mt="space.02">
+                    Locked for {remainingCycles} more{' '}
+                    {remainingCycles === 1 ? 'cycle' : 'cycles'} — extendable by up to{' '}
+                    {maxCyclesToExtend}.
+                  </styled.p>
+                )}
               </>
             )}
           />
@@ -204,6 +361,16 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
             )}
           />
         </Box>
+
+        {pool.supportsBtcPayout && (
+          <Stack gap="space.02">
+            <styled.p textStyle="label.02">Rewards payout</styled.p>
+            <ChoosePayoutPreference />
+            <styled.p textStyle="caption.02" color="ink.text-subdued">
+              {bitcoinStakingContent.payoutPreference.updateHelper}
+            </styled.p>
+          </Stack>
+        )}
 
         <Button
           size="md"

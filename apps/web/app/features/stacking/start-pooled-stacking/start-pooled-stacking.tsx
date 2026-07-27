@@ -29,6 +29,7 @@ import {
   getPoxWrapperContract2,
   requiresAllowContractCaller,
 } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
+import { useIsHydrated } from '~/hooks/use-is-hydrated';
 import {
   useStxAvailableUnlockedBalance,
   useStxBalance,
@@ -62,8 +63,17 @@ interface StartPooledStackingProps {
 }
 
 export function StartPooledStacking({ poolSlug }: StartPooledStackingProps) {
+  const isHydrated = useIsHydrated();
   const { client } = useStackingClient();
   const { stacksAccount } = useLeatherConnect();
+
+  if (!isHydrated) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100%">
+        <LoadingSpinner fill="ink.text-subdued" />
+      </Flex>
+    );
+  }
 
   if (!stacksAccount || !client) return 'You need to connect Leather';
 

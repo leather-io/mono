@@ -1,4 +1,4 @@
-import { ClarityType, deserializeCV } from '@stacks/transactions';
+import { ClarityType, deserializeCV, postConditionToHex } from '@stacks/transactions';
 
 import { getStakeUpdateOptions } from './pox5-stake-update';
 
@@ -11,6 +11,7 @@ const baseArgs = {
   currentSignerManagerContractId,
   cyclesToExtend: 6,
   amountIncreaseMicroStx: 10_000_000n,
+  currentAmountMicroStx: 100_000_000n,
   pox5ContractId,
   network: 'mainnet',
 } as const;
@@ -51,5 +52,33 @@ describe(getStakeUpdateOptions.name, () => {
     expect(() =>
       getStakeUpdateOptions({ ...baseArgs, amountIncreaseMicroStx: -1n })
     ).toThrowError();
+  });
+
+  // With an increase the node logs the RESULTING TOTAL as the staked amount —
+  // a condition on just the increase rolls the transaction back (observed on
+  // devnet: "10000000000 SentEq 110000000000"). Cycles-only extends log 0 on
+  // some node builds and the unchanged total on others, so they get lte
+  // (observed rollback with eq-total: "110000000000 SentEq 0").
+  test('staking post-condition: eq resulting total on increase, lte total on cycles-only', () => {
+    const options = getStakeUpdateOptions(baseArgs);
+    expect(options.postConditionMode).toEqual('deny');
+    expect(options.postConditions).toEqual([
+      postConditionToHex({
+        type: 'staking-postcondition',
+        address: 'origin',
+        condition: 'eq',
+        amount: 110_000_000n,
+      }),
+    ]);
+
+    const extendOnly = getStakeUpdateOptions({ ...baseArgs, amountIncreaseMicroStx: 0n });
+    expect(extendOnly.postConditions).toEqual([
+      postConditionToHex({
+        type: 'staking-postcondition',
+        address: 'origin',
+        condition: 'lte',
+        amount: 100_000_000n,
+      }),
+    ]);
   });
 });

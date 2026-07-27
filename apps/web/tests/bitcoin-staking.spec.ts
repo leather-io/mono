@@ -15,14 +15,14 @@ async function setMockFlag(page: Page, key: string, value: string) {
 const fundedBalanceMicroStx = '1000000000000';
 
 test.describe('Bitcoin Staking', () => {
-  test('users can start staking with Fast Pool', async ({ page, mode }) => {
+  test('users can start staking with the Special pool', async ({ page, mode }) => {
     await mode({ mode: 'mock-connected' });
     await setMockFlag(page, 'leather-mock-stx-balance', fundedBalanceMicroStx);
 
     // Let the connect-quest POST settle before a full-page navigation aborts it
     await page.waitForLoadState('networkidle');
     await page.goto('/staking');
-    await page.getByTestId('start-staking-button-fast-pool').click();
+    await page.getByTestId('start-staking-button-special').click();
     await page.locator('#amount').fill('500');
     await page.getByTestId('duration-preset-12').click();
     await page.getByTestId('confirmation-terms-button').click();
@@ -30,7 +30,7 @@ test.describe('Bitcoin Staking', () => {
     await setMockFlag(page, 'leather-mock-pox5-staked', 'true');
     await page.getByRole('button', { name: 'Resolve' }).click();
 
-    await page.waitForURL('**/staking/pool/fast-pool/active', { timeout: 15_000 });
+    await page.waitForURL('**/staking/pool/special/active', { timeout: 15_000 });
     await test.expect(page.getByTestId('claimable-rewards-card')).toBeVisible({ timeout: 15_000 });
     await test.expect(page.getByTestId('unstake-button')).toBeVisible({ timeout: 15_000 });
     await test.expect(page.getByTestId('update-stake-button')).toBeVisible({ timeout: 15_000 });
@@ -41,9 +41,9 @@ test.describe('Bitcoin Staking', () => {
     await setMockFlag(page, 'leather-mock-pox5-staked', 'true');
 
     await page.waitForLoadState('networkidle');
-    await page.goto('/staking/pool/fast-pool');
+    await page.goto('/staking/pool/special');
 
-    await page.waitForURL('**/staking/pool/fast-pool/active', { timeout: 15_000 });
+    await page.waitForURL('**/staking/pool/special/active', { timeout: 15_000 });
     await test.expect(page.getByTestId('claimable-rewards-card')).toBeVisible();
   });
 
@@ -54,8 +54,8 @@ test.describe('Bitcoin Staking', () => {
     // Approach via the pool page: a direct full-page load of /active renders
     // before the persisted connection hydrates and bounces to the landing.
     await page.waitForLoadState('networkidle');
-    await page.goto('/staking/pool/fast-pool');
-    await page.waitForURL('**/staking/pool/fast-pool/active', { timeout: 15_000 });
+    await page.goto('/staking/pool/special');
+    await page.waitForURL('**/staking/pool/special/active', { timeout: 15_000 });
 
     const claimButton = page.getByTestId('claim-rewards-button');
     await test.expect(claimButton).toBeEnabled({ timeout: 15_000 });
@@ -69,7 +69,7 @@ test.describe('Bitcoin Staking', () => {
     await setMockFlag(page, 'leather-mock-burn-height', '907460');
 
     await page.waitForLoadState('networkidle');
-    await page.goto('/staking/pool/fast-pool');
+    await page.goto('/staking/pool/special');
     await page.locator('#amount').fill('500');
     await page.getByTestId('confirmation-terms-button').click();
 
@@ -82,7 +82,7 @@ test.describe('Bitcoin Staking', () => {
     await setMockFlag(page, 'leather-mock-stx-balance', fundedBalanceMicroStx);
 
     await page.waitForLoadState('networkidle');
-    await page.goto('/staking/pool/fast-pool');
+    await page.goto('/staking/pool/special');
 
     await page.locator('#amount').fill('2000000');
     await page.locator('#amount').blur();

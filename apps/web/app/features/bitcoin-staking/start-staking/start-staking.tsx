@@ -18,20 +18,12 @@ import { StackingFormItemTitle } from '~/features/stacking/components/stacking-f
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
 import {
-  useGetPoxInfoQuery,
-  useGetSecondsUntilNextCycleQuery,
-} from '~/features/stacking/hooks/stacking.query';
-import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
-import {
   DEFAULT_STAKING_CYCLES,
+  POX5_BITCOIN_NETWORK_MODE,
+  POX5_WALLET_RPC_CONTRACT_NETWORK,
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-import {
-  useStxAvailableUnlockedBalance,
-  useStxBalance,
-} from '~/queries/balance/account-balance.hooks';
 import { useLeatherConnect } from '~/store/addresses';
-import { useStacksNetwork } from '~/store/stacks-network';
 import { leather } from '~/utils/leather-sdk';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
@@ -41,8 +33,14 @@ import { PendingStakePanel } from '../components/pending-stake-panel';
 import { PoolHealthWarning } from '../components/pool-health-warning';
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
 import { StakingPoolOverview } from '../components/staking-pool-overview';
+import { usePox5StackingClient } from '../hooks/use-pox5-clients';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
 import { usePox5Position } from '../hooks/use-pox5-position';
+import {
+  usePox5AvailableUnlockedBalance,
+  usePox5PoxInfoQuery,
+  usePox5SecondsUntilNextCycleQuery,
+} from '../queries/pox5-node.query';
 import { usePox5ContractId } from '../queries/pox5-stacking.query';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 import { createStakeMutationOptions } from '../transactions/pox5-stake';
@@ -61,7 +59,7 @@ interface StartStakingProps {
 }
 
 export function StartStaking({ poolSlug }: StartStakingProps) {
-  const { client } = useStackingClient();
+  const client = usePox5StackingClient();
   const { stacksAccount } = useLeatherConnect();
 
   if (!stacksAccount || !client) return 'You need to connect Leather';
@@ -78,40 +76,35 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
   const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No STX address available');
 
-  const { networkInstance, networkPreference } = useStacksNetwork();
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [termsConfirmed, setTermsConfirmed] = useState(false);
 
   const pool = getStakingPoolFromSlug(poolSlug);
-  const signerManagerContractId = getSignerManagerContract(pool.providerId, networkInstance);
+  const signerManagerContractId = getSignerManagerContract(
+    pool.providerId,
+    POX5_WALLET_RPC_CONTRACT_NETWORK
+  );
   const pox5ContractId = usePox5ContractId();
 
   const { isLoading: positionIsLoading, position } = usePox5Position();
   const { cycleClock } = usePox5CycleClock();
 
-  const poxInfoQuery = useGetPoxInfoQuery();
-  const getSecondsUntilNextCycleQuery = useGetSecondsUntilNextCycleQuery();
+  const poxInfoQuery = usePox5PoxInfoQuery();
+  const getSecondsUntilNextCycleQuery = usePox5SecondsUntilNextCycleQuery();
 
-  const {
-    filteredBalanceQuery: { isLoading: totalAvailableBalanceIsLoading },
-  } = useStxBalance(stacksAccount.address);
-  const totalAvailableBalance = useStxAvailableUnlockedBalance(stacksAccount.address);
+  const { isLoading: totalAvailableBalanceIsLoading, availableBalance: totalAvailableBalance } =
+    usePox5AvailableUnlockedBalance(stacksAccount.address);
 
   const schema = useMemo(
     () =>
       createStakingFormSchema({
-        networkMode: networkPreference.chain.bitcoin.mode,
+        networkMode: POX5_BITCOIN_NETWORK_MODE,
         availableBalance: totalAvailableBalance,
         minimumStakeAmount: pool.minimumStakeAmount,
         supportsBtcPayout: pool.supportsBtcPayout,
       }),
-    [
-      networkPreference.chain.bitcoin.mode,
-      totalAvailableBalance,
-      pool.minimumStakeAmount,
-      pool.supportsBtcPayout,
-    ]
+    [totalAvailableBalance, pool.minimumStakeAmount, pool.supportsBtcPayout]
   );
 
   const formMethods = useForm({
@@ -132,13 +125,7 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
     data: stakeResult,
     mutateAsync: handleStakeSubmit,
     isPending: handleStakePending,
-  } = useMutation(
-    createStakeMutationOptions({
-      leather,
-      client,
-      network: networkInstance,
-    })
-  );
+  } = useMutation(createStakeMutationOptions({ leather, client }));
 
   const handleStake = formMethods.handleSubmit(values => {
     if (!signerManagerContractId) return;

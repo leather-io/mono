@@ -11,7 +11,7 @@ import {
   isPoolAvailableOnNetwork,
   stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';
-import { useStacksNetwork } from '~/store/stacks-network';
+import { POX5_WALLET_RPC_CONTRACT_NETWORK } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Flag } from '@leather.io/ui';
@@ -19,9 +19,12 @@ import { Flag } from '@leather.io/ui';
 import { StartStakingButton } from './start-staking-button';
 
 // Static-config table: pox-5 pool stats (TVL, realized yield) have no external
-// data source yet — the stacking-tracker API only covers pox-4 pools.
+// data source yet — the stacking-tracker API only covers pox-4 pools. Only
+// pools we hold a signer-manager contract id for are displayed.
 export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
-  const { networkInstance } = useStacksNetwork();
+  const availablePools = bitcoinStakingPoolList.filter(pool =>
+    isPoolAvailableOnNetwork(pool, POX5_WALLET_RPC_CONTRACT_NETWORK)
+  );
 
   return (
     <Table.Root width="100%" overflowX="auto" {...props}>
@@ -62,16 +65,10 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
           </Table.Row>
         </Table.Head>
         <Table.Body>
-          {bitcoinStakingPoolList.map(pool => {
-            const available = isPoolAvailableOnNetwork(pool, networkInstance);
+          {availablePools.map(pool => {
             const slug = stakingProviderIdToSlug(pool.providerId);
             return (
-              <Table.Row
-                key={pool.providerId}
-                height="64px"
-                className={rowPadding}
-                opacity={available ? undefined : 0.5}
-              >
+              <Table.Row key={pool.providerId} height="64px" className={rowPadding}>
                 <styled.td px="space.04" align="left" color="black">
                   <Flag
                     img={<ProviderIcon providerId={pool.providerId} />}
@@ -96,7 +93,7 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
                   {pool.fee}
                 </styled.td>
                 <styled.td px="space.04" align="right" style={{ textAlign: 'right' }}>
-                  <StartStakingButton slug={slug} available={available} />
+                  <StartStakingButton slug={slug} />
                 </styled.td>
               </Table.Row>
             );

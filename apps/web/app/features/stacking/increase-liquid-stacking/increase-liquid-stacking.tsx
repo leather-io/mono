@@ -28,6 +28,7 @@ import { useStackingClient } from '~/features/stacking/providers/stacking-client
 import { ChooseLiquidStackingConditions } from '~/features/stacking/start-liquid-stacking/components/choose-liquid-stacking-conditions';
 import { LiquidStackingConfirmationSteps } from '~/features/stacking/start-liquid-stacking/components/liquid-stacking-confirmation-steps';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
+import { useIsHydrated } from '~/hooks/use-is-hydrated';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { leather } from '~/utils/leather-sdk';
@@ -53,8 +54,17 @@ const initialStackingFormValues: Partial<IncreaseLiquidFormSchema> = {
 };
 
 export function IncreaseLiquidStacking({ protocolSlug }: StartLiquidStackingProps) {
+  const isHydrated = useIsHydrated();
   const { client } = useStackingClient();
   const { stacksAccount } = useLeatherConnect();
+
+  if (!isHydrated) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100%">
+        <LoadingSpinner fill="ink.text-subdued" />
+      </Flex>
+    );
+  }
 
   if (!stacksAccount || !client) return <Navigate to="/stacking" replace />;
   return <IncreaseLiquidStackingLayout client={client} protocolSlug={protocolSlug} />;

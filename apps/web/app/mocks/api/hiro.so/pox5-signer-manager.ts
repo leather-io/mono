@@ -1,7 +1,7 @@
 import { serializeCV, tupleCV, uintCV } from '@stacks/transactions';
 
 const signerManagerBasePath =
-  'https://api.hiro.so/v2/contracts/call-read/SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP/pox5-signer-manager-placeholder';
+  'https://api.testnet-pox5.hiro.so/v2/contracts/call-read/ST3TB3AJ0XMZ9S6CGY2CQ6R06H1Z6DJQ1SK5QGMWP/signer-manager';
 
 const earnedRewardsResult = tupleCV({
   earned: uintCV(12_500n),

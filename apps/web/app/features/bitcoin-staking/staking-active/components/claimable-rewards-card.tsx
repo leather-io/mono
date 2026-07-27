@@ -5,7 +5,6 @@ import BigNumber from 'bignumber.js';
 import { Box, HStack, Stack, styled } from 'leather-styles/jsx';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
 import { useLeatherConnect } from '~/store/addresses';
-import { useStacksNetwork } from '~/store/stacks-network';
 import { leather } from '~/utils/leather-sdk';
 
 import { Button } from '@leather.io/ui';
@@ -29,11 +28,10 @@ export function ClaimableRewardsCard({
   claimable,
 }: ClaimableRewardsCardProps) {
   const { stacksAccount } = useLeatherConnect();
-  const { networkInstance } = useStacksNetwork();
   const [showHistory, setShowHistory] = useState(false);
 
   const { mutateAsync: claimRewards, isPending } = useMutation(
-    createClaimRewardsMutationOptions({ leather, network: networkInstance })
+    createClaimRewardsMutationOptions({ leather })
   );
 
   // Claims are per-cycle transactions; claim the oldest unclaimed cycle first.

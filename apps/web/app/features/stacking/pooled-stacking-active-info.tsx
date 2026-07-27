@@ -10,6 +10,7 @@ import {
   PoolSlug,
   getPoolFromSlug,
 } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
+import { useIsHydrated } from '~/hooks/use-is-hydrated';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { formatPoxAddressToNetwork } from '~/utils/stacking-pox';
@@ -21,8 +22,17 @@ interface PooledStackingActiveInfoProps {
 }
 
 export function PooledStackingActiveInfo({ poolSlug }: PooledStackingActiveInfoProps) {
+  const isHydrated = useIsHydrated();
   const { client } = useStackingClient();
   const { stacksAccount: stxAddress } = useLeatherConnect();
+
+  if (!isHydrated) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100%">
+        <LoadingSpinner fill="ink.text-subdued" />
+      </Flex>
+    );
+  }
 
   if (!stxAddress || !client) return <Navigate to="/stacking" replace />;
   if (!client) return 'Expected client to be defined';

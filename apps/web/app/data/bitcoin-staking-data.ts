@@ -3,19 +3,23 @@ import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
 
 // PoX-5 pool registry. Deliberately separate from stackingPoolData: under pox-5
 // a pool's identity is its signer-manager contract, and per-pool wrapper
-// contracts and argument shapes no longer exist. An absent signerManagerContract
-// entry for a network means the pool has not migrated there yet and renders
-// disabled. IDs below are placeholders until pool partners deliver their
-// signer-manager contracts: the devnet id targets the reference signer-manager
-// deployment, and the fastPool mainnet id is a deliberately non-existent
-// contract that exists only so the dark-launched flow is drivable in mock mode
-// and E2E — it must be replaced before the feature is un-gated.
+// contracts and argument shapes no longer exist. Only pools with a
+// signerManagerContract entry are displayed; an absent entry means we have no
+// contract id from that partner yet. The "special" pool holds the single
+// signer-manager contract we currently have — the reference deployment on the
+// local pox-5 devnet (seeded by leather-workspace/devnet), keyed under every
+// network mode so the dark-launched page can display it regardless of the
+// app's network selector (all wallet RPC is pinned to the devnet, see
+// bitcoin-staking.constants.ts).
 export type BitcoinStakingProviderId =
+  | 'special'
   | 'fastPool'
   | 'planbetter'
   | 'restake'
   | 'xversePool'
   | 'stackingDao';
+
+const specialSignerManagerContract = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.signer-manager';
 
 export interface BitcoinStakingPool {
   providerId: BitcoinStakingProviderId;
@@ -29,16 +33,34 @@ export interface BitcoinStakingPool {
 }
 
 const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPool> = {
+  special: {
+    providerId: 'special',
+    name: 'Special',
+    url: 'https://leather.io',
+    description:
+      'Staking pool on the local pox-5 devnet. Rewards accrue as sBTC each cycle and can be claimed anytime.',
+    signerManagerContract: {
+      mainnet: specialSignerManagerContract,
+      testnet: specialSignerManagerContract,
+      devnet: specialSignerManagerContract,
+    },
+    // The reference signer-manager on devnet supports the L1 payout preference
+    // (get-pox-addr + sbtc-withdrawal routing in claim-staker-rewards).
+    supportsBtcPayout: true,
+    // No pool-imposed minimum: the devnet signer-manager's validate-stake!
+    // accepts any amount, and the amount schema already rejects zero/empty.
+    // The protocol still needs >= 50k STX pool-wide per cycle to earn
+    // (SIGNER_SET_MIN_USTX) — that is a pool-total threshold, not per staker.
+    minimumStakeAmount: 0,
+    fee: '—',
+  },
   fastPool: {
     providerId: 'fastPool',
     name: 'Fast Pool',
     url: 'https://fastpool.org',
     description:
       'Enjoy automatic pool operations. Rewards accrue as sBTC each cycle and can be claimed anytime.',
-    signerManagerContract: {
-      mainnet: 'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.pox5-signer-manager-placeholder',
-      devnet: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.signer-manager',
-    },
+    signerManagerContract: {},
     supportsBtcPayout: false,
     minimumStakeAmount: 40_000_000,
     fee: '5%',
@@ -90,6 +112,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
 export const bitcoinStakingPoolList = Object.values(bitcoinStakingPoolData);
 
 const stakingPoolSlugMap = {
+  special: 'special',
   'fast-pool': 'fastPool',
   planbetter: 'planbetter',
   restake: 'restake',

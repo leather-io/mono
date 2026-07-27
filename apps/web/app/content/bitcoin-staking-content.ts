@@ -21,7 +21,8 @@ export const bitcoinStakingContent = {
   payoutPreference: {
     toggleLabel: `Receive rewards as BTC on Bitcoin (optional)`,
     collapsedHelper: `By default, rewards accrue as sBTC on Stacks and can be claimed anytime.`,
-    expandedHelper: `The pool pays rewards as an sBTC-to-BTC withdrawal to this address. The max fee caps what you pay per withdrawal.`,
+    expandedHelper: `The pool pays rewards as an sBTC-to-BTC withdrawal to this address. The max fee caps what you pay per withdrawal — claims smaller than the max fee cannot be paid out until it is lowered.`,
+    updateHelper: `This is your standing payout setting, applied to every future claim. Leave it as is to keep it, edit the address or fee to change it, or untick it to switch future claims back to sBTC.`,
   },
   preparePhase: {
     title: `Staking is briefly paused`,
@@ -86,5 +87,4 @@ export const bitcoinStakingLabels = {
   fee: `Fee`,
   startEarning: `Start earning`,
   viewPosition: `View position`,
-  comingSoon: `Coming soon`,
 };

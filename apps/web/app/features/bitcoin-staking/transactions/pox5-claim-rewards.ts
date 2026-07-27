@@ -1,6 +1,6 @@
-import { StacksNetworkName } from '@stacks/network';
 import { ClarityValue, noneCV, principalCV, serializeCV, uintCV } from '@stacks/transactions';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
+import { POX5_WALLET_RPC_NETWORK } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { analytics } from '~/utils/analytics/analytics';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
@@ -18,7 +18,7 @@ interface ClaimStakerRewardsArgs {
 }
 
 export function getClaimStakerRewardsOptions(
-  args: ClaimStakerRewardsArgs & { network: StacksNetworkName }
+  args: ClaimStakerRewardsArgs & { network: string }
 ): StxCallContractParams {
   const { signerManagerContractId, stakerAddress, rewardCycle, network } = args;
 
@@ -33,6 +33,13 @@ export function getClaimStakerRewardsOptions(
     functionName: 'claim-staker-rewards',
     functionArgs: functionArgs.map(arg => serializeCV(arg)),
     network,
+    // The sBTC here moves FROM the signer-manager TO the sender; the sender
+    // moves nothing. Originator mode (epoch 4.0) enforces coverage only for
+    // the sender's own assets, so no post-conditions are needed while still
+    // rejecting any unexpected movement of the sender's funds. An exact FT
+    // post-condition is not possible client-side: the claimable amount net of
+    // pool fees is only known at execution.
+    postConditionMode: 'originator',
   } satisfies StxCallContractParams;
 }
 
@@ -42,21 +49,19 @@ interface ClaimRewardsMutationValues extends ClaimStakerRewardsArgs {
 
 interface CreateClaimRewardsMutationOptionsArgs {
   leather: LeatherSdk;
-  network: StacksNetworkName;
 }
 
 export function createClaimRewardsMutationOptions({
   leather,
-  network,
 }: CreateClaimRewardsMutationOptionsArgs) {
   return {
-    mutationKey: ['pox5-claim-rewards', leather, network],
+    mutationKey: ['pox5-claim-rewards', leather],
     mutationFn: async (values: ClaimRewardsMutationValues) => {
       const options = getClaimStakerRewardsOptions({
         signerManagerContractId: values.signerManagerContractId,
         stakerAddress: values.stakerAddress,
         rewardCycle: values.rewardCycle,
-        network,
+        network: POX5_WALLET_RPC_NETWORK,
       });
 
       analytics.track('bitcoin_staking_rewards_claimed', {

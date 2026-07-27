@@ -1,10 +1,8 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { useGetPoxInfoQuery } from '~/features/stacking/hooks/stacking.query';
-import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
-import { useStacksClient } from '~/queries/stacks/stacks-client';
+import { POX5_WALLET_RPC_CONTRACT_NETWORK } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
-import { useStacksNetwork } from '~/store/stacks-network';
 
+import { usePox5StackingClient, usePox5StacksClient } from '../hooks/use-pox5-clients';
 import { getPox5ContractId } from '../utils/pox5-contracts';
 import {
   Pox5EarnedRewards,
@@ -16,15 +14,18 @@ import {
   createGetPox5StakerInfoQueryOptions,
 } from './create-get-pox5-staker-info-query-options';
 import { getPendingPox5Transaction } from './get-pending-pox5-txs';
+import { usePox5PoxInfoQuery } from './pox5-node.query';
 
+// All pox-5 interaction happens on the local devnet, so the contract id and
+// every read below are pinned there rather than following the app's network
+// selector.
 export function usePox5ContractId(): string {
-  const { networkInstance } = useStacksNetwork();
-  return getPox5ContractId(networkInstance);
+  return getPox5ContractId(POX5_WALLET_RPC_CONTRACT_NETWORK);
 }
 
 export function usePox5StakerInfoQuery() {
   const { stacksAccount } = useLeatherConnect();
-  const client = useStacksClient();
+  const client = usePox5StacksClient();
   const pox5ContractId = usePox5ContractId();
 
   return useQuery(
@@ -38,23 +39,22 @@ export function usePox5StakerInfoQuery() {
 
 export function usePox5PayoutPreferenceQuery(signerManagerContractId: string | undefined) {
   const { stacksAccount } = useLeatherConnect();
-  const { networkName } = useStacksNetwork();
-  const client = useStacksClient();
+  const client = usePox5StacksClient();
 
   return useQuery(
     createGetPox5PayoutPreferenceQueryOptions({
       address: stacksAccount?.address,
       signerManagerContractId,
-      networkName,
+      networkName: 'devnet',
       client,
     })
   );
 }
 
 export function usePox5PendingTxQuery() {
-  const { client } = useStackingClient();
+  const client = usePox5StackingClient();
   const { stacksAccount } = useLeatherConnect();
-  const stacksClient = useStacksClient();
+  const stacksClient = usePox5StacksClient();
   const pox5ContractId = usePox5ContractId();
   const address = stacksAccount?.address;
 
@@ -106,9 +106,9 @@ export interface Pox5ClaimableRewards {
 
 export function usePox5ClaimableRewards(): Pox5ClaimableRewards {
   const { stacksAccount } = useLeatherConnect();
-  const client = useStacksClient();
+  const client = usePox5StacksClient();
   const stakerInfoQuery = usePox5StakerInfoQuery();
-  const poxInfoQuery = useGetPoxInfoQuery();
+  const poxInfoQuery = usePox5PoxInfoQuery();
 
   const stakerInfo = stakerInfoQuery.data;
   const cycles = getClaimableCycles(stakerInfo, poxInfoQuery.data?.current_cycle.id);

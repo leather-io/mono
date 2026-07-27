@@ -26,10 +26,9 @@ function StartStakingButtonLayout({ children, ...buttonProps }: StartStakingButt
 
 interface StartStakingButtonProps {
   slug: StakingPoolSlug;
-  available: boolean;
 }
 
-function StartStakingPositionCheck({ slug, available }: StartStakingButtonProps) {
+function StartStakingPositionCheck({ slug }: StartStakingButtonProps) {
   const { isLoading, position } = usePox5Position();
 
   if (isLoading) {
@@ -54,14 +53,6 @@ function StartStakingPositionCheck({ slug, available }: StartStakingButtonProps)
     return <StartStakingButtonLayout disabled />;
   }
 
-  if (!available) {
-    return (
-      <StartStakingButtonLayout disabled>
-        {bitcoinStakingLabels.comingSoon}
-      </StartStakingButtonLayout>
-    );
-  }
-
   return (
     <Link to={stakingPaths.pool(slug)}>
       <StartStakingButtonLayout data-testid={`start-staking-button-${slug}`} />
@@ -69,7 +60,7 @@ function StartStakingPositionCheck({ slug, available }: StartStakingButtonProps)
   );
 }
 
-export function StartStakingButton({ slug, available }: StartStakingButtonProps) {
+export function StartStakingButton({ slug }: StartStakingButtonProps) {
   const { whenExtensionState, setShowInstallLeatherDialog, connect } = useLeatherConnect();
   const navigate = useNavigate();
 
@@ -80,16 +71,8 @@ export function StartStakingButton({ slug, available }: StartStakingButtonProps)
     return <StartStakingButtonLayout aria-busy />;
   }
 
-  if (!available) {
-    return (
-      <StartStakingButtonLayout disabled>
-        {bitcoinStakingLabels.comingSoon}
-      </StartStakingButtonLayout>
-    );
-  }
-
   return whenExtensionState({
-    connected: <StartStakingPositionCheck slug={slug} available={available} />,
+    connected: <StartStakingPositionCheck slug={slug} />,
     detected: (
       <StartStakingButtonLayout
         onClick={async () => {

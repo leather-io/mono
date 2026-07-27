@@ -1,5 +1,4 @@
-import { useGetCoreInfoQuery, useGetPoxInfoQuery } from '~/features/stacking/hooks/stacking.query';
-
+import { usePox5CoreInfoQuery, usePox5PoxInfoQuery } from '../queries/pox5-node.query';
 import {
   CycleClockInfo,
   estimateDateFromBurnBlocks,
@@ -19,8 +18,8 @@ interface UsePox5CycleClockResult {
 }
 
 export function usePox5CycleClock(): UsePox5CycleClockResult {
-  const poxInfoQuery = useGetPoxInfoQuery();
-  const coreInfoQuery = useGetCoreInfoQuery();
+  const poxInfoQuery = usePox5PoxInfoQuery();
+  const coreInfoQuery = usePox5CoreInfoQuery();
 
   const poxInfo = poxInfoQuery.data;
   const currentBurnHeight =

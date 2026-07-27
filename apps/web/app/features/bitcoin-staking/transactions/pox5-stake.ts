@@ -1,9 +1,17 @@
-import { StacksNetworkName } from '@stacks/network';
 import { StackingClient } from '@stacks/stacking';
-import { ClarityValue, contractPrincipalCV, serializeCV, uintCV } from '@stacks/transactions';
+import {
+  ClarityValue,
+  contractPrincipalCV,
+  postConditionToHex,
+  serializeCV,
+  uintCV,
+} from '@stacks/transactions';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
-import { getNetworkInstanceByName } from '~/features/stacking/utils/stacking-network-utils';
-import { POX5_MAX_NUM_CYCLES } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import {
+  POX5_MAX_NUM_CYCLES,
+  POX5_WALLET_RPC_CONTRACT_NETWORK,
+  POX5_WALLET_RPC_NETWORK,
+} from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { analytics } from '~/utils/analytics/analytics';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
@@ -23,7 +31,7 @@ interface StakeArgs {
 }
 
 export function getStakeOptions(
-  args: StakeArgs & { pox5ContractId: string; network: StacksNetworkName }
+  args: StakeArgs & { pox5ContractId: string; network: string }
 ): StxCallContractParams {
   const {
     signerManagerContractId,
@@ -53,6 +61,17 @@ export function getStakeOptions(
     functionName: 'stake',
     functionArgs: functionArgs.map(arg => serializeCV(arg)),
     network,
+    // Epoch 4.0 requires the staked amount to be covered by a Staking
+    // post-condition under deny mode: exactly amount-ustx staked by the sender.
+    postConditions: [
+      postConditionToHex({
+        type: 'staking-postcondition',
+        address: 'origin',
+        condition: 'eq',
+        amount: amountMicroStx,
+      }),
+    ],
+    postConditionMode: 'deny',
   } satisfies StxCallContractParams;
 }
 
@@ -67,16 +86,11 @@ interface StakeMutationValues {
 interface CreateStakeMutationOptionsArgs {
   leather: LeatherSdk;
   client: StackingClient;
-  network: StacksNetworkName;
 }
 
-export function createStakeMutationOptions({
-  leather,
-  client,
-  network,
-}: CreateStakeMutationOptionsArgs) {
+export function createStakeMutationOptions({ leather, client }: CreateStakeMutationOptionsArgs) {
   return {
-    mutationKey: ['pox5-stake', leather, client, network],
+    mutationKey: ['pox5-stake', leather, client],
     mutationFn: async (values: StakeMutationValues) => {
       // Fetched at submit time: the contract rejects a start-burn-ht that does
       // not resolve to the next reward cycle, so a cached height near a cycle
@@ -93,8 +107,8 @@ export function createStakeMutationOptions({
         numCycles: values.numCycles,
         payoutPreference: values.payoutPreference,
         startBurnHeight: getStakeStartBurnHeight(currentBurnHeight),
-        pox5ContractId: getPox5ContractId(getNetworkInstanceByName(network)),
-        network,
+        pox5ContractId: getPox5ContractId(POX5_WALLET_RPC_CONTRACT_NETWORK),
+        network: POX5_WALLET_RPC_NETWORK,
       });
 
       analytics.track('bitcoin_staking_started', {

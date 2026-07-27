@@ -1,9 +1,17 @@
-import { StacksNetworkName } from '@stacks/network';
 import { StackingClient } from '@stacks/stacking';
-import { ClarityValue, contractPrincipalCV, serializeCV, uintCV } from '@stacks/transactions';
+import {
+  ClarityValue,
+  contractPrincipalCV,
+  postConditionToHex,
+  serializeCV,
+  uintCV,
+} from '@stacks/transactions';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
-import { getNetworkInstanceByName } from '~/features/stacking/utils/stacking-network-utils';
-import { POX5_MAX_NUM_CYCLES } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import {
+  POX5_MAX_NUM_CYCLES,
+  POX5_WALLET_RPC_CONTRACT_NETWORK,
+  POX5_WALLET_RPC_NETWORK,
+} from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { analytics } from '~/utils/analytics/analytics';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
@@ -22,17 +30,23 @@ interface StakeUpdateArgs {
   currentSignerManagerContractId: string;
   cyclesToExtend: number;
   amountIncreaseMicroStx: bigint;
+  // The position's currently locked amount, needed for the staking
+  // post-condition: with an amount increase the node logs the RESULTING TOTAL
+  // (current + increase) as the staked amount (pox-locking pox_5.rs
+  // handle_stake_lockup_update_pox_v5).
+  currentAmountMicroStx: bigint;
   payoutPreference?: Pox5PayoutPreference;
 }
 
 export function getStakeUpdateOptions(
-  args: StakeUpdateArgs & { pox5ContractId: string; network: StacksNetworkName }
+  args: StakeUpdateArgs & { pox5ContractId: string; network: string }
 ): StxCallContractParams {
   const {
     newSignerManagerContractId,
     currentSignerManagerContractId,
     cyclesToExtend,
     amountIncreaseMicroStx,
+    currentAmountMicroStx,
     payoutPreference,
     pox5ContractId,
     network,
@@ -66,6 +80,22 @@ export function getStakeUpdateOptions(
     functionName: 'stake-update',
     functionArgs: functionArgs.map(arg => serializeCV(arg)),
     network,
+    // Epoch 4.0 Staking post-condition (deny mode). With an amount increase
+    // the node logs the RESULTING TOTAL (current + increase) as the staked
+    // amount, so eq checks the total, not the increase. For cycles-only
+    // extends node builds disagree: the pinned devnet image logs no staking
+    // amount (0) while the pox-wf-integration tip logs the unchanged total
+    // (pox-locking pox_5.rs handle_stake_lockup_update_pox_v5) — lte the
+    // total passes on both while still capping what may be staked.
+    postConditions: [
+      postConditionToHex({
+        type: 'staking-postcondition',
+        address: 'origin',
+        condition: amountIncreaseMicroStx > 0n ? 'eq' : 'lte',
+        amount: currentAmountMicroStx + amountIncreaseMicroStx,
+      }),
+    ],
+    postConditionMode: 'deny',
   } satisfies StxCallContractParams;
 }
 
@@ -76,16 +106,14 @@ interface StakeUpdateMutationValues extends StakeUpdateArgs {
 interface CreateStakeUpdateMutationOptionsArgs {
   leather: LeatherSdk;
   client: StackingClient;
-  network: StacksNetworkName;
 }
 
 export function createStakeUpdateMutationOptions({
   leather,
   client,
-  network,
 }: CreateStakeUpdateMutationOptionsArgs) {
   return {
-    mutationKey: ['pox5-stake-update', leather, client, network],
+    mutationKey: ['pox5-stake-update', leather, client],
     mutationFn: async (values: StakeUpdateMutationValues) => {
       const poxInfo = await client.getPoxInfo();
       const { clock } = getCycleContextFromPoxInfo(poxInfo);
@@ -98,9 +126,10 @@ export function createStakeUpdateMutationOptions({
         currentSignerManagerContractId: values.currentSignerManagerContractId,
         cyclesToExtend: values.cyclesToExtend,
         amountIncreaseMicroStx: values.amountIncreaseMicroStx,
+        currentAmountMicroStx: values.currentAmountMicroStx,
         payoutPreference: values.payoutPreference,
-        pox5ContractId: getPox5ContractId(getNetworkInstanceByName(network)),
-        network,
+        pox5ContractId: getPox5ContractId(POX5_WALLET_RPC_CONTRACT_NETWORK),
+        network: POX5_WALLET_RPC_NETWORK,
       });
 
       analytics.track('bitcoin_staking_updated', {

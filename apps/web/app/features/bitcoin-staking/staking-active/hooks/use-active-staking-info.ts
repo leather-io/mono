@@ -1,10 +1,9 @@
-import {
-  useGetPoxInfoQuery,
-  useGetSecondsUntilNextCycleQuery,
-} from '~/features/stacking/hooks/stacking.query';
-
 import { usePox5CycleClock } from '../../hooks/use-pox5-cycle-clock';
 import { Pox5Position, usePox5Position } from '../../hooks/use-pox5-position';
+import {
+  usePox5PoxInfoQuery,
+  usePox5SecondsUntilNextCycleQuery,
+} from '../../queries/pox5-node.query';
 import {
   Pox5ClaimableRewards,
   usePox5ClaimableRewards,
@@ -36,8 +35,8 @@ export function useActiveStakingInfo(): UseActiveStakingInfoResult {
   const { isLoading: positionIsLoading, position } = usePox5Position();
   const { cycleClock } = usePox5CycleClock();
   const claimable = usePox5ClaimableRewards();
-  const poxInfoQuery = useGetPoxInfoQuery();
-  const secondsUntilNextCycleQuery = useGetSecondsUntilNextCycleQuery();
+  const poxInfoQuery = usePox5PoxInfoQuery();
+  const secondsUntilNextCycleQuery = usePox5SecondsUntilNextCycleQuery();
 
   const signerManagerContractId =
     position.status === 'active' ? position.info.signerManagerContractId : undefined;
