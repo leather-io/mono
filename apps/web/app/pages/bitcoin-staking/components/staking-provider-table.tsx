@@ -1,4 +1,4 @@
-import { styled } from 'leather-styles/jsx';
+import { HStack, styled } from 'leather-styles/jsx';
 import { HTMLStyledProps } from 'leather-styles/types';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { ProviderIcon } from '~/components/icons/provider-icon';
@@ -16,6 +16,7 @@ import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Flag } from '@leather.io/ui';
 
+import { ClaimRewardsButton } from './claim-rewards-button';
 import { StartStakingButton } from './start-staking-button';
 
 // Static-config table: pox-5 pool stats (TVL, realized yield) have no external
@@ -93,7 +94,10 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
                   {pool.fee}
                 </styled.td>
                 <styled.td px="space.04" align="right" style={{ textAlign: 'right' }}>
-                  <StartStakingButton slug={slug} />
+                  <HStack gap="space.02" justifyContent="flex-end">
+                    <ClaimRewardsButton slug={slug} />
+                    <StartStakingButton slug={slug} />
+                  </HStack>
                 </styled.td>
               </Table.Row>
             );
