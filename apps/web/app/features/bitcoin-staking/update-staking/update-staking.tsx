@@ -327,9 +327,8 @@ function UpdateStakingForm({
                 {invalid && error && <ErrorLabel mt="space.02">{error.message}</ErrorLabel>}
                 {remainingCycles !== undefined && (
                   <styled.p textStyle="caption.02" color="ink.text-subdued" mt="space.02">
-                    Locked for {remainingCycles} more{' '}
-                    {remainingCycles === 1 ? 'cycle' : 'cycles'} — extendable by up to{' '}
-                    {maxCyclesToExtend}.
+                    Locked for {remainingCycles} more {remainingCycles === 1 ? 'cycle' : 'cycles'} —
+                    extendable by up to {maxCyclesToExtend}.
                   </styled.p>
                 )}
               </>
