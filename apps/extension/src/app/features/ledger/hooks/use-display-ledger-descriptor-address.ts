@@ -10,7 +10,7 @@ import {
 
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
-import { descriptorHasNonAccountRawKey } from './ledger-descriptor-address';
+import { descriptorHasNonAccountRawKey } from '../utils/ledger-descriptor-address';
 
 // Displays the `wsh(...)` multisig address on the Ledger screen so the user can
 // confirm it against the extension. Ledger can only show a non-standard

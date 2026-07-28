@@ -1,5 +1,14 @@
-import { CopyIcon, IconButton, ItemLayoutWithButtons, Pressable, QrCodeIcon } from '@leather.io/ui';
+import {
+  CopyIcon,
+  IconButton,
+  ItemLayoutWithButtons,
+  Pressable,
+  QrCodeIcon,
+  ShieldIcon,
+} from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
+
+import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface ReceiveItemProps {
   address?: string;
@@ -7,6 +16,8 @@ interface ReceiveItemProps {
   icon: React.ReactNode;
   onCopyAddress(): void;
   onClickQrCode?(): void;
+  onClickVerifyAddress?(): void;
+  verifyDataTestId?: string;
   title: string;
 }
 export function ReceiveItem({
@@ -15,6 +26,8 @@ export function ReceiveItem({
   icon,
   onCopyAddress,
   onClickQrCode,
+  onClickVerifyAddress,
+  verifyDataTestId,
   title,
 }: ReceiveItemProps) {
   if (!address) return null;
@@ -26,6 +39,16 @@ export function ReceiveItem({
         caption={truncateMiddle(address, 6)}
         buttons={
           <>
+            {onClickVerifyAddress && (
+              <BasicTooltip asChild label="Verify on device">
+                <IconButton
+                  data-testid={verifyDataTestId}
+                  icon={<ShieldIcon />}
+                  mr="space.02"
+                  onClick={onClickVerifyAddress}
+                />
+              </BasicTooltip>
+            )}
             <IconButton icon={<CopyIcon />} onClick={onCopyAddress} />
             {onClickQrCode && (
               <IconButton

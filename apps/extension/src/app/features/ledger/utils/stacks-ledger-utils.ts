@@ -1,4 +1,5 @@
 import Transport from '@ledgerhq/hw-transport-webusb';
+import { ChainId } from '@stacks/network';
 import {
   AddressVersion,
   PubKeyEncoding,
@@ -7,10 +8,19 @@ import {
   deserializeTransaction,
   isSingleSig,
 } from '@stacks/transactions';
-import StacksApp, { LedgerError, ResponseSign, ResponseVersion } from '@zondax/ledger-stacks';
+import StacksApp, {
+  LedgerError,
+  ResponseAddress,
+  ResponseSign,
+  ResponseVersion,
+} from '@zondax/ledger-stacks';
 import { compare } from 'compare-versions';
 
-import { makeStxDerivationPath, stxDerivationWithAccount } from '@leather.io/stacks';
+import {
+  makeStxDerivationPath,
+  stxDerivationWithAccount,
+  whenStacksChainId,
+} from '@leather.io/stacks';
 
 import {
   LEDGER_APPS_MAP,
@@ -29,6 +39,26 @@ export function requestPublicKeyForStxAccount(app: StacksApp) {
       // We only need the public key, and can derive the address later in any network format
       AddressVersion.MainnetSingleSig
     );
+}
+
+export function showStxAddressOnDevice(app: StacksApp) {
+  return async (index: number, version: AddressVersion): Promise<ResponseAddress> =>
+    app.showAddressAndPubKey(makeStxDerivationPath(index), version);
+}
+
+export function stacksChainIdToSingleSigAddressVersion(chainId: number): AddressVersion {
+  return whenStacksChainId(chainId)({
+    [ChainId.Mainnet]: AddressVersion.MainnetSingleSig,
+    [ChainId.Testnet]: AddressVersion.TestnetSingleSig,
+  });
+}
+
+export function isStxAddressResponseRejected(response: ResponseAddress) {
+  return response.returnCode === LedgerError.TransactionRejected;
+}
+
+export function isStxAddressResponseSuccess(response: ResponseAddress) {
+  return response.returnCode === LedgerError.NoErrors;
 }
 
 export interface StacksAppKeysResponseItem {

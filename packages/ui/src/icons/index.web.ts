@@ -101,6 +101,7 @@ export * from './search-icon.web';
 export * from './settings-gear-icon.web';
 export * from './sbtc-icon.web';
 export * from './settings-slider-icon.web';
+export * from './shield-icon.web';
 export * from './square-lines-bottom-icon.web';
 export * from './stacks-icon.web';
 export * from './stacks-filled-circle-icon.web';

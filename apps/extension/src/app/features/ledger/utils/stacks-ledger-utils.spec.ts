@@ -1,10 +1,19 @@
+import { ChainId } from '@stacks/network';
 import {
+  AddressVersion,
   deserializeTransaction,
   isSingleSig,
   makeUnsignedSTXTokenTransfer,
 } from '@stacks/transactions';
+import StacksApp, { LedgerError } from '@zondax/ledger-stacks';
 
-import { signStacksTransactionWithSignature } from './stacks-ledger-utils';
+import {
+  isStxAddressResponseRejected,
+  isStxAddressResponseSuccess,
+  showStxAddressOnDevice,
+  signStacksTransactionWithSignature,
+  stacksChainIdToSingleSigAddressVersion,
+} from './stacks-ledger-utils';
 
 const recipient = 'SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB';
 const signerPublicKey = '02b6b0afe5f620bc8e532b640b148dd9dea0ed19d11f8ab420fcce488fe3974893';
@@ -59,5 +68,72 @@ describe(signStacksTransactionWithSignature.name, () => {
       throw new Error('Expected deserialized multisig spending condition');
 
     expect(deserializedSpendingCondition.fields).toHaveLength(1);
+  });
+});
+
+function makeAddressResponse(returnCode: number) {
+  return {
+    returnCode,
+    errorMessage: '',
+    publicKey: Buffer.alloc(33),
+    address: 'SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB',
+  };
+}
+
+describe(stacksChainIdToSingleSigAddressVersion.name, () => {
+  test('maps the mainnet chain id to the mainnet single sig version', () => {
+    expect(stacksChainIdToSingleSigAddressVersion(ChainId.Mainnet)).toBe(
+      AddressVersion.MainnetSingleSig
+    );
+  });
+
+  test('maps the testnet chain id to the testnet single sig version', () => {
+    expect(stacksChainIdToSingleSigAddressVersion(ChainId.Testnet)).toBe(
+      AddressVersion.TestnetSingleSig
+    );
+  });
+
+  test('falls back to the testnet version for custom chain ids', () => {
+    expect(stacksChainIdToSingleSigAddressVersion(256)).toBe(AddressVersion.TestnetSingleSig);
+  });
+});
+
+describe(isStxAddressResponseRejected.name, () => {
+  test('detects an on-device rejection', () => {
+    expect(isStxAddressResponseRejected(makeAddressResponse(LedgerError.TransactionRejected))).toBe(
+      true
+    );
+  });
+
+  test('does not flag a successful response', () => {
+    expect(isStxAddressResponseRejected(makeAddressResponse(LedgerError.NoErrors))).toBe(false);
+  });
+});
+
+describe(isStxAddressResponseSuccess.name, () => {
+  test('accepts a successful response', () => {
+    expect(isStxAddressResponseSuccess(makeAddressResponse(LedgerError.NoErrors))).toBe(true);
+  });
+
+  test('rejects any error return code', () => {
+    expect(isStxAddressResponseSuccess(makeAddressResponse(LedgerError.TransactionRejected))).toBe(
+      false
+    );
+  });
+});
+
+describe(showStxAddressOnDevice.name, () => {
+  test('shows the account derivation path with the given address version', async () => {
+    const app: StacksApp = Object.create(StacksApp.prototype);
+    app.showAddressAndPubKey = vi.fn(() =>
+      Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
+    );
+
+    await showStxAddressOnDevice(app)(3, AddressVersion.MainnetSingleSig);
+
+    expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
+      "m/44'/5757'/0'/0/3",
+      AddressVersion.MainnetSingleSig
+    );
   });
 });
