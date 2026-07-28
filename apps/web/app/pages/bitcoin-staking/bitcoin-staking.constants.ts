@@ -23,8 +23,7 @@ export const stakingPaths = {
 // prepare-phase length is per-network and must always be read from pox-info.
 export const POX5_MAX_NUM_CYCLES = 96;
 export const POX5_SIGNER_SET_MIN_USTX = 50_000_000_000;
-export const DEFAULT_STAKING_CYCLES = 12;
-export const STAKING_CYCLE_PRESETS = [1, 3, 6, 12];
+export const DEFAULT_STAKING_CYCLES = 96;
 export const MEAN_BURN_BLOCK_SECONDS = 600;
 
 // Which chain the whole feature is pinned to — API, contract ids, wallet RPC
