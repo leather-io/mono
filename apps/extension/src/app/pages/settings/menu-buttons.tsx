@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 
+import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
@@ -8,6 +9,7 @@ import {
   BellAlarmIcon,
   BellIcon,
   CodeIcon,
+  CoinsStackIcon,
   GlobeTiltedIcon,
   KeyIcon,
   MegaphoneIcon,
@@ -57,6 +59,17 @@ export function MenuButtons() {
           void navigate(RouteUrls.SelectTheme);
         }}
         icon={<SunInCloudIcon />}
+      />
+
+      <SettingsButton
+        data-testid={AllBalancesSelectors.AllBalancesMenuItem}
+        variant="chevron"
+        title="All balances"
+        onClick={() => {
+          analytics.track('click_all_balances_menu_item');
+          void navigate(RouteUrls.AllBalances);
+        }}
+        icon={<CoinsStackIcon />}
       />
 
       <SettingsButton

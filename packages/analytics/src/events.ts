@@ -140,6 +140,7 @@ interface HistoricalEvents {
   create_new_account: undefined;
   change_network: { id: string };
   click_open_in_new_tab_menu_item: undefined;
+  click_all_balances_menu_item: undefined;
   click_change_network_menu_item: undefined;
   click_change_theme_menu_item: undefined;
   click_settings_menu_item: undefined;
