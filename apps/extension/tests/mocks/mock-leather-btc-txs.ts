@@ -77,16 +77,22 @@ export async function mockLeatherBitcoinTransactions(
   await target.route(leatherDescriptorTxsUrl, route => route.fulfill({ json: { data: txs } }));
 }
 
-const ownedTestAccountAddresses = [
-  TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
-  TEST_ACCOUNT_1_TAPROOT_ADDRESS,
-];
+const ownedTestAddressPaths: Record<string, string> = {
+  [TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS]: "m/84'/0'/0'/0/0",
+  [TEST_ACCOUNT_1_TAPROOT_ADDRESS]: "m/86'/0'/0'/0/0",
+};
 
 // RBF needs the same pending tx from two sources: the Leather API feeds the
 // activity row, esplora feeds the replacement payload (vin.sequence, prevout
 // scripts, fee). Deriving one from the other keeps them from drifting apart.
 function isOwnedTestAddress(address?: string) {
-  return address !== undefined && ownedTestAccountAddresses.includes(address);
+  return address !== undefined && address in ownedTestAddressPaths;
+}
+
+function ownedTestAddressPath(address?: string) {
+  if (address === undefined) return {};
+  const path = ownedTestAddressPaths[address];
+  return path === undefined ? {} : { path };
 }
 
 export function leatherTxFromEsplora(tx: BitcoinTx): LeatherApiBitcoinTx {
@@ -95,17 +101,19 @@ export function leatherTxFromEsplora(tx: BitcoinTx): LeatherApiBitcoinTx {
     ...(tx.status.confirmed
       ? { height: tx.status.block_height ?? undefined, time: tx.status.block_time ?? undefined }
       : {}),
-    vin: tx.vin.map((input, n) => ({
-      n,
+    vin: tx.vin.map(input => ({
+      n: input.vout,
       txid: input.txid,
       owned: isOwnedTestAddress(input.prevout?.scriptpubkey_address),
       address: input.prevout?.scriptpubkey_address,
+      ...ownedTestAddressPath(input.prevout?.scriptpubkey_address),
       value: String(input.prevout?.value ?? 0),
     })),
     vout: tx.vout.map((output, n) => ({
       n,
       owned: isOwnedTestAddress(output.scriptpubkey_address),
       address: output.scriptpubkey_address,
+      ...ownedTestAddressPath(output.scriptpubkey_address),
       value: String(output.value),
     })),
   };
