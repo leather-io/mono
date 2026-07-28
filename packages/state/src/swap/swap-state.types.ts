@@ -55,7 +55,6 @@ export interface SwapDependencies {
     network: NetworkConfiguration;
     sbtcClient: SbtcApiClient;
     signBitcoinPsbt(psbt: Uint8Array): Promise<btc.Transaction>;
-    broadcast(tx: string): Promise<string | undefined>;
   };
   services: {
     marketDataService: MarketDataService;
@@ -64,6 +63,7 @@ export interface SwapDependencies {
     stacksTransactionFeesService: StacksTransactionFeesService;
     swapService: SwapService;
   };
+  onSwapSubmitted?(result: SwapSubmissionResult): void;
 }
 
 export interface SwapExecutionDependencies extends SwapDependencies {
@@ -204,6 +204,10 @@ export interface SwapActions {
   setCustomFee(fee: number): void;
 }
 
+export interface SwapSubmissionResult {
+  txid: string;
+}
+
 export interface UseSwapStateResult {
   state: SwapState;
   actions: SwapActions;
@@ -217,5 +221,5 @@ export interface UseSwapStateResult {
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   networkFeeQuery: UseQueryResult<NetworkFee, Error>;
   canSubmit: boolean;
-  submit(): Promise<void>;
+  submit(): Promise<SwapSubmissionResult>;
 }

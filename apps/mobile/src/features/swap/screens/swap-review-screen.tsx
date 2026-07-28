@@ -25,7 +25,6 @@ import { SlippageInfoSheet } from '@/features/swap/components/slippage-info-shee
 import { SlippageSelectorSheet } from '@/features/swap/components/slippage-selector/slippage-selector-sheet';
 import { formatSwapRate, sumFeesInQuoteCurrency } from '@/features/swap/swap.utils';
 import { useAndroidBackHandler } from '@/hooks/use-android-back-handler';
-import { ensureAsyncFunctionMinimumDuration } from '@/utils/async';
 import { formatCurrency, formatPercentage } from '@/utils/currency-formatter';
 import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
@@ -40,6 +39,7 @@ import {
   useSwapContext,
 } from '@leather.io/state/swap';
 import { Box, Button, SheetInstance, Text } from '@leather.io/ui/native';
+import { ensureAsyncFunctionMinimumDuration } from '@leather.io/utils';
 
 type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'failure';
 

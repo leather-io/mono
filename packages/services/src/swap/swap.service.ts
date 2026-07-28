@@ -69,7 +69,13 @@ export class SwapService {
   }
 
   private getSwapProviderServiceById(providerId: SwapProviderId): SwapProviderService {
-    return this.getSwapProviderServices().find(service => service.providerId === providerId)!;
+    const providerService = this.getSwapProviderServices().find(
+      service => service.providerId === providerId
+    );
+    if (!providerService) {
+      throw new Error(`No swap provider service registered for provider: ${providerId}`);
+    }
+    return providerService;
   }
 
   public async getAccountBaseSwapAssets(
@@ -141,10 +147,15 @@ export class SwapService {
   }
 
   public async getBaseSwapAssets(signal?: AbortSignal): Promise<SwapAsset[]> {
-    const providerSwapAssets = await Promise.all(
+    const providerSwapAssets = await Promise.allSettled(
       this.getSwapProviderServices().map(service => service.getBaseProviderAssets(signal))
     );
-    return await this.combineProviderAssets(providerSwapAssets.flat());
+    return await this.combineProviderAssets(
+      providerSwapAssets
+        .filter(result => result.status === 'fulfilled')
+        .map(result => result.value)
+        .flat()
+    );
   }
 
   public async getTargetSwapAssets(
@@ -165,8 +176,13 @@ export class SwapService {
         signal
       )
     );
-    const targetAssets = await Promise.all(providerServiceCalls);
-    return await this.combineProviderAssets(targetAssets.flat());
+    const targetAssets = await Promise.allSettled(providerServiceCalls);
+    return await this.combineProviderAssets(
+      targetAssets
+        .filter(result => result.status === 'fulfilled')
+        .map(result => result.value)
+        .flat()
+    );
   }
 
   private async combineProviderAssets(
@@ -223,8 +239,11 @@ export class SwapService {
         );
       })
       .filter(isNonNullish);
-    const swapQuotes = await Promise.all(providerServiceCalls);
-    return swapQuotes.flat();
+    const swapQuotes = await Promise.allSettled(providerServiceCalls);
+    return swapQuotes
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value)
+      .flat();
   }
 
   public async getSwapExecutionData(

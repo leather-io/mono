@@ -21,7 +21,7 @@ import { type StacksSigner } from '@leather.io/stacks';
 import { type SwapDependencies } from '@leather.io/state/swap';
 import { assertExistence } from '@leather.io/utils';
 
-import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
+import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -38,6 +38,8 @@ import { useSignStacksTransaction } from '@app/store/transactions/transaction.ho
 
 const sbtcClientMainnet = new SbtcApiClientMainnet({});
 const sbtcClientTestnet = new SbtcApiClientTestnet({});
+
+const accountDataRefreshDelayMs = 250;
 
 interface BroadcastStacksTransactionParams {
   tx: StacksTransactionWire;
@@ -74,8 +76,8 @@ export function useSwapDependencies(): SwapDependencies {
   const signStacksTx = useSignStacksTransaction();
   const { data: nextNonce } = useNextNonce(stacksAccount?.address ?? '');
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
-  const bitcoinClient = useBitcoinClient();
   const signBitcoinTx = useSignBitcoinTx();
+  const refreshAllAccountData = useRefreshAllAccountData();
 
   const bitcoinNetworkMode = bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork);
   const stacksNetworkMode: NetworkModes = bitcoinNetworkMode === 'mainnet' ? 'mainnet' : 'testnet';
@@ -126,17 +128,6 @@ export function useSwapDependencies(): SwapDependencies {
     };
   }, [nativeSegwitSigner, bitcoinNetworkMode, currentAccountId.fingerprint]);
 
-  const broadcastBitcoinTransaction = useMemo(() => {
-    return async (tx: string) => {
-      const response = await bitcoinClient.transactionsApi.broadcastTransaction(tx);
-      if (!response.ok) {
-        const message = await response.text();
-        throw new Error(message || `Broadcast failed: ${response.status}`);
-      }
-      return response.text();
-    };
-  }, [bitcoinClient]);
-
   return {
     accountRequest: { account: accountAddresses },
     services: {
@@ -160,7 +151,9 @@ export function useSwapDependencies(): SwapDependencies {
         const result = signBitcoinTx(psbt);
         return Promise.resolve(result);
       },
-      broadcast: broadcastBitcoinTransaction,
+    },
+    onSwapSubmitted() {
+      void refreshAllAccountData(accountDataRefreshDelayMs);
     },
   };
 }

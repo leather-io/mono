@@ -8,7 +8,7 @@ import { vi } from 'vitest';
 import { MarketData, SwapQuote } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
-import { DisabledPairRule, SwapDependencies } from '../../swap-state.types';
+import { DisabledPairRule, SwapDependencies, TrackEvent } from '../../swap-state.types';
 import { UseSwapStateProps, useSwapState } from '../../use-swap-state';
 import { createAccountRequest } from './fixtures';
 import {
@@ -37,10 +37,12 @@ interface RenderUseSwapStateParams extends Omit<UseSwapStateProps, 'dependencies
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];
   swapQuotes?: SwapQuote[];
+  getSwapQuotes?(): Promise<SwapQuote[]>;
   marketData: MarketData;
   maxSpendAmount?: number;
   dependencies?: Partial<SwapDependencies>;
   disabledPairs?: DisabledPairRule[];
+  trackEvent?: TrackEvent;
 }
 
 export function renderUseSwapState({
@@ -48,21 +50,28 @@ export function renderUseSwapState({
   baseSwapAssets,
   targetSwapAssets,
   swapQuotes,
+  getSwapQuotes,
   marketData,
   maxSpendAmount,
   dependencies,
   disabledPairs,
+  trackEvent,
   ...rest
 }: Partial<RenderUseSwapStateParams> = {}) {
   const { result } = renderHookWithProviders(() =>
     useSwapState({
       quoteCurrencyPreference,
       disabledPairs,
-      trackEvent: () => Promise.resolve(),
+      trackEvent: trackEvent ?? (() => Promise.resolve()),
       dependencies: {
         accountRequest: createAccountRequest(),
         services: {
-          swapService: createStubSwapService({ baseSwapAssets, targetSwapAssets, swapQuotes }),
+          swapService: createStubSwapService({
+            baseSwapAssets,
+            targetSwapAssets,
+            swapQuotes,
+            getSwapQuotes,
+          }),
           marketDataService: createStubMarketDataService({ marketData }),
           bitcoinTransactionFeesService: createStubBitcoinTransactionFeesService(),
           bitcoinCoinSelectionService: createStubBitcoinCoinSelectionService({ maxSpendAmount }),
@@ -79,7 +88,6 @@ export function renderUseSwapState({
           network: createStubNetwork(),
           sbtcClient: {} as any,
           signBitcoinPsbt: () => ({}) as any,
-          broadcast: () => Promise.resolve('test-txid'),
         },
         ...dependencies,
       },
