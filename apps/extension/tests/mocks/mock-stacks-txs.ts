@@ -92,6 +92,10 @@ const mockedStacksTxsRequestWithPendingTx = {
 
 const emptyTxsResponse = { limit: 50, offset: 0, total: 0, results: [] };
 
+// Hiro v3 is cursor-paginated rather than limit/offset, and the paginator reads
+// `cursor.next` unconditionally, so it needs its own empty shape.
+const emptyPrincipalTxsResponse = { results: [], cursor: { current: null, next: null } };
+
 const transactionWithTransfersUrl = `**/api.hiro.so/extended/v1/address/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions_with_transfers?limit=50`;
 const mempoolUrl = `**/api.hiro.so/extended/v1/tx/mempool?address=${TEST_ACCOUNT_1_STX_ADDRESS}&limit=50`;
 
@@ -124,6 +128,12 @@ export async function mockWildcardStacksTxsRequests(page: Page | BrowserContext)
     ),
     page.route('**/api.hiro.so/extended/v1/address/*/assets**', route =>
       route.fulfill({ json: { limit: 100, offset: 0, total: 0, results: [] } })
+    ),
+    page.route('**/api.hiro.so/extended/v3/principals/*/transactions**', route =>
+      route.fulfill({ json: emptyPrincipalTxsResponse })
+    ),
+    page.route('**/api.hiro.so/extended/v3/principals/*/balance-changes**', route =>
+      route.fulfill({ json: emptyPrincipalTxsResponse })
     ),
   ]);
 }

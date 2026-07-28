@@ -3,14 +3,11 @@ import { BytesReader, addressToString, deserializeAddress } from '@stacks/transa
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { isDefined } from '@leather.io/utils';
-
 import { useConfigSbtc } from '../common/remote-config/remote-config.query';
-import { type StacksBlock, useGetStacksBlocks } from './get-stacks-block.query';
 
 export type SbtcStatus = 'pending' | 'accepted' | 'confirmed' | 'failed' | 'rbf';
 
-interface SbtcDepositInfo {
+interface SbtcDeposit {
   amount: number;
   bitcoinTxOutputIndex: number;
   bitcoinTxid: string;
@@ -23,7 +20,7 @@ interface SbtcDepositInfo {
 }
 
 interface GetSbtcDepositsResponse {
-  deposits: SbtcDepositInfo[];
+  deposits: SbtcDeposit[];
   nextToken?: string;
 }
 
@@ -51,29 +48,6 @@ function useGetSbtcDeposits(stxAddress: string, status: string) {
   });
 }
 
-export interface SbtcDeposit extends SbtcDepositInfo {
-  block?: StacksBlock;
-}
-
-function useSbtcDeposits(deposits: SbtcDepositInfo[]) {
-  const blockResults = useGetStacksBlocks(deposits.map(deposit => deposit.lastUpdateHeight));
-  const isLoadingBlocks = blockResults.some(query => query.isLoading);
-
-  return {
-    isLoadingBlocks,
-    deposits: deposits.map(deposit => {
-      const block = blockResults
-        .map(query => query.data)
-        .filter(isDefined)
-        .find(block => block.height === deposit.lastUpdateHeight);
-      return {
-        ...deposit,
-        block,
-      };
-    }),
-  };
-}
-
 export function useSbtcPendingDeposits(stxAddress: string) {
   const { data: pendingDeposits = [], isLoading: isLoadingStatusPending } = useGetSbtcDeposits(
     stxAddress,
@@ -84,34 +58,14 @@ export function useSbtcPendingDeposits(stxAddress: string) {
     'accepted'
   );
 
-  const { isLoadingBlocks, deposits } = useSbtcDeposits([...pendingDeposits, ...acceptedDeposits]);
-
   return {
-    isLoading: isLoadingStatusPending || isLoadingStatusAccepted || isLoadingBlocks,
-    pendingSbtcDeposits: deposits,
-  };
-}
-
-export function useSbtcConfirmedDeposits(stxAddress: string) {
-  const { data: confirmedSbtcDeposits = [], isLoading: isLoadingStatusConfirmed } =
-    useGetSbtcDeposits(stxAddress, 'confirmed');
-  const { isLoadingBlocks, deposits } = useSbtcDeposits(confirmedSbtcDeposits);
-
-  return {
-    isLoading: isLoadingStatusConfirmed || isLoadingBlocks,
-    confirmedSbtcDeposits: deposits,
+    isLoading: isLoadingStatusPending || isLoadingStatusAccepted,
+    pendingSbtcDeposits: [...pendingDeposits, ...acceptedDeposits],
   };
 }
 
 export function useSbtcFailedDeposits(stxAddress: string) {
-  const { data: failedSbtcDeposits = [], isLoading: isLoadingStatusFailed } = useGetSbtcDeposits(
-    stxAddress,
-    'failed'
-  );
-  const { isLoadingBlocks, deposits } = useSbtcDeposits(failedSbtcDeposits);
+  const { data: failedSbtcDeposits = [], isLoading } = useGetSbtcDeposits(stxAddress, 'failed');
 
-  return {
-    isLoading: isLoadingStatusFailed || isLoadingBlocks,
-    failedSbtcDeposits: deposits,
-  };
+  return { isLoading, failedSbtcDeposits };
 }

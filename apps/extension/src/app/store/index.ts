@@ -38,7 +38,6 @@ import { networksSlice } from './networks/networks.slice';
 import { policySlice } from './policy/policy.slice';
 import { settingsSlice } from './settings/settings.slice';
 import { keySlice } from './software-keys/software-key.slice';
-import { submittedTransactionsSlice } from './submitted-transactions/submitted-transactions.slice';
 import { uiSlice } from './ui/ui.slice';
 import { hydrateSlicesFromStorage, initCrossFrameStorageSync } from './utils/storage-sync';
 import { createTrackDirtySlicesMiddleware } from './utils/track-dirty-slices';
@@ -55,7 +54,6 @@ export interface LocalRootState {
   wallets: ReturnType<typeof walletSlice.reducer>;
   softwareKeys: ReturnType<typeof keySlice.reducer>;
   networks: ReturnType<typeof networksSlice.reducer>;
-  submittedTransactions: ReturnType<typeof submittedTransactionsSlice.reducer>;
   settings: ReturnType<typeof settingsSlice.reducer>;
   manageTokens: ReturnType<typeof manageTokensSlice.reducer>;
   ui: ReturnType<typeof uiSlice.reducer>;
@@ -75,7 +73,6 @@ const appReducer = combineReducers({
   wallets: walletSlice.reducer,
   softwareKeys: keySlice.reducer,
   networks: networksSlice.reducer,
-  submittedTransactions: submittedTransactionsSlice.reducer,
   settings: settingsSlice.reducer,
   manageTokens: manageTokensSlice.reducer,
   ui: uiSlice.reducer,

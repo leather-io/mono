@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { ActivityView } from '@leather.io/features';
+import type { BlockchainActivityItem } from '@leather.io/features';
 import type { Money } from '@leather.io/models';
 
 import { TokenDetailsLayout } from './token-details.layout';
@@ -16,7 +16,7 @@ interface Sip10TokenDetailsLayoutProps {
   priceChangeDelta?: string;
   descriptionText: string;
   contractDetails: string;
-  activity: ActivityView[];
+  activity: BlockchainActivityItem[];
 }
 
 export function Sip10TokenDetailsLayout({

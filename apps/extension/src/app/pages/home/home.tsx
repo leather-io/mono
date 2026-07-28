@@ -7,9 +7,7 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { whenPageMode } from '@app/common/utils';
 import { ActivityList } from '@app/features/activity-list/activity-list';
-import { ActivityListLegacy } from '@app/features/activity-list/activity-list-legacy';
 import { Collectibles } from '@app/features/collectibles/collectibles';
-import { useFlags } from '@app/features/feature-flags';
 import { MultiWalletIntroducer } from '@app/features/feature-introducer/implementations';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
@@ -37,7 +35,6 @@ interface HomeProps {
 }
 
 export function Home({ isBackground }: HomeProps) {
-  const { activityRevamp } = useFlags();
   const account = useCurrentAccountAddresses();
   const policy = useCurrentPolicy();
   useAccountCollectibles(account);
@@ -68,10 +65,7 @@ export function Home({ isBackground }: HomeProps) {
       <HomeTabs showCollectibles={policy?.chain !== 'bitcoin'}>
         <ModalBackgroundWrapper>
           <Route index element={<Tokens />} />
-          <Route
-            path={RouteUrls.Activity}
-            element={activityRevamp || policy ? <ActivityList /> : <ActivityListLegacy />}
-          />
+          <Route path={RouteUrls.Activity} element={<ActivityList />} />
           <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
           {homePageModalRoutes}
           <Route path="*" element={<HomeNotFound />} />

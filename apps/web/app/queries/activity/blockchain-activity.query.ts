@@ -1,7 +1,12 @@
 import type { InfiniteData } from '@tanstack/react-query';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import { type BlockchainActivityView, createBlockchainActivityView } from '@leather.io/features';
+import {
+  type BlockchainActivityItem,
+  type BlockchainActivityViewDeps,
+  createBlockchainActivityItem,
+  createBlockchainActivityViews,
+} from '@leather.io/features';
 import type { AccountAddresses, BlockchainActivity, Money } from '@leather.io/models';
 import {
   createBlockchainActivityByTxIdQueryConfig,
@@ -25,43 +30,26 @@ export function formatActivityMoney(money: Money, options?: FormatAmountOptions)
 // characters (e.g. SP3…P2H). Extension and mobile keep truncateMiddle's default.
 export const activityCounterpartyOffset = 3;
 
+const activityViewDeps: BlockchainActivityViewDeps = {
+  formatMoney: formatActivityMoney,
+  counterpartyTruncateOffset: activityCounterpartyOffset,
+};
+
 function selectBlockchainActivityViews(response: ActivityResponse) {
-  return response.items.map(item =>
-    createBlockchainActivityView(item, {
-      formatMoney: formatActivityMoney,
-      counterpartyTruncateOffset: activityCounterpartyOffset,
-    })
-  );
+  return createBlockchainActivityViews(response.items, activityViewDeps);
 }
 
 function selectBlockchainActivityFeedViews(data: InfiniteData<ActivityResponse>) {
-  return data.pages.flatMap(page =>
-    page.items.map(item =>
-      createBlockchainActivityView(item, {
-        formatMoney: formatActivityMoney,
-        counterpartyTruncateOffset: activityCounterpartyOffset,
-      })
-    )
+  return createBlockchainActivityViews(
+    data.pages.flatMap(page => page.items),
+    activityViewDeps
   );
-}
-
-interface BlockchainActivityDetail {
-  activity: BlockchainActivity;
-  view: BlockchainActivityView;
 }
 
 function selectBlockchainActivityDetail(
   activity: BlockchainActivity | null
-): BlockchainActivityDetail | null {
-  return activity === null
-    ? null
-    : {
-        activity,
-        view: createBlockchainActivityView(activity, {
-          formatMoney: formatActivityMoney,
-          counterpartyTruncateOffset: activityCounterpartyOffset,
-        }),
-      };
+): BlockchainActivityItem | null {
+  return activity === null ? null : createBlockchainActivityItem(activity, activityViewDeps);
 }
 
 export function createBlockchainActivityByTxIdDetailQuery(

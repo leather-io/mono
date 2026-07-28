@@ -9,7 +9,12 @@ import type {
   VaultAccountSigner,
   VaultMember,
 } from '@leather.io/models';
-import { BlockchainActivityAvatarIcon, ListContainer, ListItemBox } from '@leather.io/ui';
+import {
+  BlockchainActivityAvatarIcon,
+  BlockchainActivityIndicatorIcon,
+  ListContainer,
+  ListItemBox,
+} from '@leather.io/ui';
 
 import { AccountDetailsCard } from '../../../multisig/account/components/account-details-card';
 import { AvatarCircle } from '../../../multisig/components/avatar-circle';
@@ -22,7 +27,6 @@ import { MultisigErrorState } from '../../../multisig/components/multisig-error-
 import { MultisigHero } from '../../../multisig/components/multisig-hero';
 import { TextField } from '../../../multisig/components/text-field';
 import { VaultActivityList } from '../../../multisig/components/vault-activity-list';
-import { renderActivityIndicator } from '../../../multisig/components/vault-activity-row';
 import { CreateVaultTile } from '../../../multisig/dashboard/components/create-vault-tile';
 import { vaultThemeFromName } from '../../../multisig/multisig-tokens';
 import { VaultStatusCard } from '../../../multisig/vault/components/vault-status-card';
@@ -166,7 +170,7 @@ export function ComponentGalleryPage() {
                 <BlockchainActivityAvatarIcon
                   size={48}
                   avatar={mockStxAvatar}
-                  indicator={renderActivityIndicator('sent', 16)}
+                  indicator={<BlockchainActivityIndicatorIcon indicator="sent" size={16} />}
                 />
               }
               primary={<styled.span>Send STX</styled.span>}

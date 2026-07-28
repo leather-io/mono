@@ -12,7 +12,6 @@ import { store } from './store';
 import { selectActiveAccount } from './store/active/active.selectors';
 import { stxChainSlice } from './store/chains/stx-chain.slice';
 import { settingsSlice } from './store/settings/settings.slice';
-import { submittedTransactionsActions } from './store/submitted-transactions/submitted-transactions.actions';
 
 const debug = {
   printDiagnosticInfo() {
@@ -60,9 +59,6 @@ const debug = {
   },
   resetFeatureIntros() {
     store.dispatch(settingsSlice.actions.resetFeatureIntros());
-  },
-  clearSubmittedTransactions() {
-    store.dispatch(submittedTransactionsActions.clearSubmittedTransactions());
   },
   clearReactQueryCache() {
     queryClient.clear();

@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Box, styled } from 'leather-styles/jsx';
 
 import {
-  type ActivityView,
+  type BlockchainActivityItem,
   formatPriceChangeText,
   getPriceChangeColor,
 } from '@leather.io/features';
@@ -12,7 +12,7 @@ import type { Money } from '@leather.io/models';
 import { formatCurrency } from '@app/common/currency-formatter';
 import type { ReceiveView } from '@app/common/receive/receive';
 
-import { ActivityItem } from '../activity-list/components/activity-item';
+import { ActivityRow } from '../activity-list/components/activity-row';
 import { type SwapChain, TokenDetailsActionsRow } from './components/token-details-actions';
 import { TokenDetailsRow } from './components/token-details-row';
 import { TokenDetailsScreen } from './components/token-details-screen';
@@ -35,7 +35,7 @@ interface TokenDetailsLayoutProps {
   contractDetails?: string;
   descriptionText?: string;
   balancesContent?: ReactNode;
-  activity: ActivityView[];
+  activity: BlockchainActivityItem[];
   isBuyEnabled?: boolean;
   isSwapEnabled?: boolean;
 }
@@ -118,7 +118,7 @@ export function TokenDetailsLayout({
       {activity.length > 0 ? (
         <TokenDetailsSection title="Activity">
           {activity.map(item => (
-            <ActivityItem key={item.key} item={item} formatCurrency={formatCurrency} />
+            <ActivityRow key={item.view.key} item={item} />
           ))}
         </TokenDetailsSection>
       ) : null}

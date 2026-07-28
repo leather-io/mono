@@ -9,18 +9,13 @@ import {
 } from '@leather.io/features';
 import {
   BlockchainActivityAvatarIcon,
+  BlockchainActivityIndicatorIcon,
   Button,
-  FailedIcon,
-  FunctionActivityIcon,
   ListItemBox,
-  ReceivedIcon,
-  SentIcon,
-  SwapIcon,
 } from '@leather.io/ui';
-import { assertUnreachable } from '@leather.io/utils';
 
 import { formatRelativeTime } from '../tx/relative-time';
-import { PendingIndicatorIcon, type TransactionRowScale, scaleConfig } from './transaction-row';
+import { type TransactionRowScale, scaleConfig } from './transaction-row';
 
 export interface ActivityRowLocation {
   vault?: string;
@@ -66,25 +61,6 @@ function resolveValueColor(
   return 'ink.text-primary';
 }
 
-export function renderActivityIndicator(indicator: BlockchainActivityIndicator, size: number) {
-  switch (indicator) {
-    case 'pending':
-      return <PendingIndicatorIcon size={size} />;
-    case 'failed':
-      return <FailedIcon width={size} height={size} />;
-    case 'received':
-      return <ReceivedIcon width={size} height={size} />;
-    case 'swap':
-      return <SwapIcon width={size} height={size} />;
-    case 'function':
-      return <FunctionActivityIcon width={size} height={size} />;
-    case 'sent':
-      return <SentIcon width={size} height={size} />;
-    default:
-      return assertUnreachable(indicator);
-  }
-}
-
 // Plain string, not an element, so ItemLayout applies its caption styles. In
 // the account context (no location) the tier label and Review button already
 // convey signing state, so the caption falls back to a plain timestamp.
@@ -120,7 +96,7 @@ export function VaultActivityRow({
       leading={
         <BlockchainActivityAvatarIcon
           avatar={view.avatar}
-          indicator={renderActivityIndicator(view.indicator, 12)}
+          indicator={<BlockchainActivityIndicatorIcon indicator={view.indicator} size={12} />}
         />
       }
       title={
