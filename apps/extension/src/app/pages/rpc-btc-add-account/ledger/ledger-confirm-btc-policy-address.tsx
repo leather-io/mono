@@ -16,6 +16,7 @@ import {
   DeviceBusy,
   UnsupportedBrowserLayout,
 } from '@app/features/ledger/generic-steps';
+import { useDisplayLedgerDescriptorAddress } from '@app/features/ledger/hooks/use-display-ledger-descriptor-address';
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import {
   connectLedgerBitcoinApp,
@@ -23,11 +24,10 @@ import {
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import { isLedgerOnDeviceAddressConfirmed } from '@app/features/ledger/utils/ledger-descriptor-address';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useBtcAddAccount } from '../use-btc-add-account';
-import { isLedgerOnDeviceAddressConfirmed } from './ledger-descriptor-address';
-import { useDisplayLedgerDescriptorAddress } from './use-display-ledger-descriptor-address';
 
 // Drives the on-device confirmation for btc_addAccount on a Ledger wallet. It
 // reuses the generic request-keys flow (connect → version → success/error) and,
