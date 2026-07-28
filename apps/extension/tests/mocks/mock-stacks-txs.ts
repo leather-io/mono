@@ -96,6 +96,40 @@ const emptyTxsResponse = { limit: 50, offset: 0, total: 0, results: [] };
 // `cursor.next` unconditionally, so it needs its own empty shape.
 const emptyPrincipalTxsResponse = { results: [], cursor: { current: null, next: null } };
 
+const mockedPrincipalReceiveTxResultItem = {
+  transaction: {
+    tx_id: '0xae98b9512a5a196ea0f1566101d21a6e7230ff822489fc42920c9cfb5d3b0c1c',
+    type: 'token_transfer',
+    sender: { address: 'SPWECF3XYVRBRCN23CJJCX9XKSF8RFWQPAQMWXT', nonce: 15 },
+    sponsor: null,
+    fee_rate: '300',
+    block: {
+      height: 148809,
+      hash: '0x420f7e5227a366554d1c8032c0c7d8de730a45a8e662038d6eff43db6beaa0cc',
+      index_hash: '0x420f7e5227a366554d1c8032c0c7d8de730a45a8e662038d6eff43db6beaa0cc',
+      time: 1714836180,
+      tx_index: 50,
+    },
+    bitcoin_block: { height: 842073, time: 1714836115 },
+    status: 'success',
+    token_transfer: {
+      recipient: TEST_ACCOUNT_1_STX_ADDRESS,
+      amount: '5000000',
+      memo: null,
+    },
+  },
+  involvement: 'affected',
+  balance_changes: { stx: { sent: '0', received: '5000000', net: '5000000' } },
+  affected_balances: { stx: true, ft: false, nft: false },
+};
+
+const mockedPrincipalTxsResponseWithReceiveTx = {
+  total: 1,
+  limit: 50,
+  cursor: { next: null, previous: null, current: null },
+  results: [mockedPrincipalReceiveTxResultItem],
+};
+
 const transactionWithTransfersUrl = `**/api.hiro.so/extended/v1/address/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions_with_transfers?limit=50`;
 const mempoolUrl = `**/api.hiro.so/extended/v1/tx/mempool?address=${TEST_ACCOUNT_1_STX_ADDRESS}&limit=50`;
 
@@ -141,16 +175,22 @@ export async function mockWildcardStacksTxsRequests(page: Page | BrowserContext)
 export async function mockMainnetTestAccountStacksConfirmedTxsRequests(
   page: Page | BrowserContext
 ) {
-  await page.route(transactionWithTransfersUrl, route =>
-    route.fulfill({
-      json: {
-        limit: 50,
-        offset: 0,
-        total: 0,
-        results: mockedStacksConfirmedTransactions,
-      },
-    })
-  );
+  await Promise.all([
+    page.route(transactionWithTransfersUrl, route =>
+      route.fulfill({
+        json: {
+          limit: 50,
+          offset: 0,
+          total: 0,
+          results: mockedStacksConfirmedTransactions,
+        },
+      })
+    ),
+    page.route(
+      `**/api.hiro.so/extended/v3/principals/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions**`,
+      route => route.fulfill({ json: mockedPrincipalTxsResponseWithReceiveTx })
+    ),
+  ]);
 }
 
 export async function mockTestAccountStacksTxsRequestsWithPendingTx(page: Page | BrowserContext) {
