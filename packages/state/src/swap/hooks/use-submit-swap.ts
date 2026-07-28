@@ -87,9 +87,10 @@ export function useSubmitSwap({
         nonce,
       };
       const strategy = getExecutionTypeStrategy(executionData.executionType);
-      await strategy.submitSwap(executionDependencies, networkFee);
+      return strategy.submitSwap(executionDependencies, networkFee);
     },
-    onSuccess() {
+    onSuccess(result) {
+      dependencies.onSwapSubmitted?.(result);
       if (!readiness.canSubmit) return;
       const { quote } = readiness.prerequisites;
       trackEvent('swap_submission_success', {
@@ -132,11 +133,8 @@ function checkSwapReadiness(
   const selectedQuote = quoteQuery.data?.selected;
 
   if (
-    !spendableAmountQuery.isFetching &&
     spendableAmountQuery.isSuccess &&
-    !networkFeeQuery.isFetching &&
     networkFeeQuery.isSuccess &&
-    !quoteQuery.isRefetching &&
     isDefined(selectedQuote) &&
     validation.isValid &&
     isQuoteAlignedWithCurrentInput(selectedQuote.baseAmount, derivedAmounts.crypto)

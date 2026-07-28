@@ -562,12 +562,7 @@ msgstr ""
 "Configure\n"
 "wallet"
 
-#: src/features/approver/components/memo-sheet.tsx:18
-#: src/features/approver/components/nonce-sheet.tsx:18
-#: src/features/send/components/memo.tsx:88
-#: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
 #: src/features/swap/screens/swap-review-screen.tsx:203
-#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -780,7 +775,6 @@ msgstr "Enter recipient"
 msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
 
-#: src/features/swap/components/quote-preview/quote-preview-content.tsx:53
 #: src/features/swap/screens/swap-review-screen.tsx:187
 msgid "Estimated fees"
 msgstr "Estimated fees"
@@ -1362,7 +1356,6 @@ msgstr "Portfolio"
 msgid "Price"
 msgstr "Price"
 
-#: src/features/swap/components/price-impact-info-sheet.tsx:8
 #: src/features/swap/screens/swap-review-screen.tsx:178
 msgid "Price impact"
 msgstr "Price impact"
@@ -1397,7 +1390,6 @@ msgstr "Pull to refresh"
 msgid "Rarity rank"
 msgstr "Rarity rank"
 
-#: src/features/swap/components/quote-preview/quote-preview-content.tsx:39
 #: src/features/swap/screens/swap-review-screen.tsx:142
 msgid "Rate"
 msgstr "Rate"

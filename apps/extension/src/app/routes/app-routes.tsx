@@ -203,8 +203,14 @@ function useAppRoutes() {
             }
           />
 
-          {swapRevamp ? swapRoutes : bitcoinSwapLegacyRoutes}
-          {swapRevamp ? swapRoutes : stacksSwapLegacyRoutes}
+          {swapRevamp ? (
+            swapRoutes
+          ) : (
+            <>
+              {bitcoinSwapLegacyRoutes}
+              {stacksSwapLegacyRoutes}
+            </>
+          )}
 
           {/* OnBoarding Routes */}
           <Route

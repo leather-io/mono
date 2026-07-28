@@ -1,5 +1,6 @@
 import { type RefObject } from 'react';
 
+import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { useComposedRefs } from 'framer-motion';
 import { Flex, styled } from 'leather-styles/jsx';
 
@@ -47,6 +48,7 @@ export function PrimaryValue({
         {currencySign && <CurrencySymbol color={symbolColor}>{currencySign.symbol}</CurrencySymbol>}
         <styled.input
           ref={composedRef}
+          data-testid={SwapRevampSelectors.AmountInput}
           autoCapitalize="off"
           autoComplete="off"
           inputMode="decimal"

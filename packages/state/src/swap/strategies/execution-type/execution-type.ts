@@ -18,6 +18,7 @@ import {
   type EnrichedSwapQuote,
   type NetworkFee,
   type SwapExecutionDependencies,
+  type SwapSubmissionResult,
 } from '../../swap-state.types';
 import { estimateExchangeRate } from '../../utils/market-rates';
 import { buildSbtcBridgeDepositTx } from './build-transaction/build-transaction/build-sbtc-bridge-deposit-tx';
@@ -38,7 +39,10 @@ interface ExecutionStrategy {
     dependencies: SwapExecutionDependencies,
     signal?: AbortSignal
   ): Promise<TransactionFees>;
-  submitSwap(dependencies: SwapExecutionDependencies, fee: NetworkFee): Promise<void>;
+  submitSwap(
+    dependencies: SwapExecutionDependencies,
+    fee: NetworkFee
+  ): Promise<SwapSubmissionResult>;
 }
 
 const stacksContractCallStrategy: ExecutionStrategy = {
@@ -75,7 +79,8 @@ const stacksContractCallStrategy: ExecutionStrategy = {
       nonce
     );
     const signed = await stacks.stacksSigner.sign(unsignedTx);
-    await stacks.broadcast({ tx: signed, stacksNetwork: stacks.stacksNetwork });
+    const response = await stacks.broadcast({ tx: signed, stacksNetwork: stacks.stacksNetwork });
+    return { txid: response.txid };
   },
 };
 
@@ -120,7 +125,9 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
     );
 
     if (fee.calculation.type !== 'bitcoinFeeRate') {
-      return;
+      throw new Error(
+        `sbtc-bridge-deposit submission requires a bitcoinFeeRate fee calculation, received: ${fee.calculation.type}`
+      );
     }
 
     const recipients: CoinSelectionRecipient[] = [
@@ -166,11 +173,12 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
 
     const signedDepositTx = await bitcoin.signBitcoinPsbt(deposit.transaction.toPSBT());
     signedDepositTx.finalize();
-    await bitcoin.sbtcClient.broadcastTx(signedDepositTx);
+    const txid = await bitcoin.sbtcClient.broadcastTx(signedDepositTx);
     // Software wallets mutate the original transaction when signing and
     // finalizing the tx. Ledger devices return a new instance. Override tx
     // in `deposit` with the signed instance
     await bitcoin.sbtcClient.notifySbtc({ ...deposit, transaction: signedDepositTx });
+    return { txid };
   },
 };
 

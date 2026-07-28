@@ -1,8 +1,11 @@
+import { STACKS_MAINNET } from '@stacks/network';
 import { act, waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
+import { SwapQuote } from '@leather.io/models';
 import { createMoney, createMoneyFromDecimal } from '@leather.io/utils';
 
+import { SwapSubmissionResult } from '../swap-state.types';
 import {
   createAccountSwapAsset,
   createSwapQuote,
@@ -10,6 +13,7 @@ import {
   defaultStxAsset,
 } from './test-utils/fixtures';
 import { renderUseSwapState } from './test-utils/render';
+import { createStubStacksSigner } from './test-utils/services.stub';
 
 describe('useSwapState - submission', () => {
   describe('canSubmit flag', () => {
@@ -217,6 +221,152 @@ describe('useSwapState - submission', () => {
       expect(result.current.state.inputCurrencyMode).toBe('crypto');
       expect(result.current.state.baseAmount).toBe('0.01');
       expect(result.current.canSubmit).toBe(true);
+    });
+
+    it('stays submittable while the quote refetches in the background', async () => {
+      const quotes = [createSwapQuote({ baseAmount: 1 })];
+      let resolveRefetch: ((value: SwapQuote[]) => void) | undefined;
+      let quoteCallCount = 0;
+
+      const result = renderUseSwapState({
+        baseAsset: defaultBtcAsset,
+        targetAsset: defaultStxAsset,
+        getSwapQuotes() {
+          quoteCallCount += 1;
+          if (quoteCallCount === 1) return Promise.resolve(quotes);
+          return new Promise(resolve => {
+            resolveRefetch = resolve;
+          });
+        },
+      });
+
+      act(() => result.current.actions.setBaseAmount('1'));
+      await waitFor(() => {
+        expect(result.current.canSubmit).toBe(true);
+        expect(result.current.quoteQuery.isRefetching).toBe(false);
+      });
+
+      act(() => {
+        void result.current.quoteQuery.refetch();
+      });
+      await waitFor(() => {
+        expect(result.current.quoteQuery.isRefetching).toBe(true);
+      });
+      expect(result.current.canSubmit).toBe(true);
+
+      act(() => resolveRefetch?.(quotes));
+      await waitFor(() => {
+        expect(result.current.quoteQuery.isRefetching).toBe(false);
+      });
+      expect(result.current.canSubmit).toBe(true);
+    });
+  });
+
+  describe('submit', () => {
+    it('resolves with the broadcast txid and tracks submission events', async () => {
+      const trackEvent = vi.fn(() => Promise.resolve());
+      const broadcast = vi.fn().mockResolvedValue({ txid: 'test-txid' });
+
+      const result = renderUseSwapState({
+        baseAsset: defaultBtcAsset,
+        targetAsset: defaultStxAsset,
+        swapQuotes: [createSwapQuote({ baseAmount: 1 })],
+        trackEvent,
+        dependencies: {
+          stacks: {
+            stacksSigner: createStubStacksSigner(),
+            stacksNetwork: STACKS_MAINNET,
+            broadcast,
+            nextNonce: undefined,
+          },
+        },
+      });
+
+      act(() => result.current.actions.setBaseAmount('1'));
+      await waitFor(() => {
+        expect(result.current.canSubmit).toBe(true);
+      });
+
+      let submissionResult: SwapSubmissionResult | undefined;
+      await act(async () => {
+        submissionResult = await result.current.submit();
+      });
+
+      expect(submissionResult).toEqual({ txid: 'test-txid' });
+      expect(broadcast).toHaveBeenCalledOnce();
+      expect(trackEvent).toHaveBeenCalledWith('swap_submitted', expect.any(Object));
+      expect(trackEvent).toHaveBeenCalledWith('swap_submission_success', expect.any(Object));
+    });
+
+    it('rejects when called while canSubmit is false', async () => {
+      const result = renderUseSwapState({
+        baseAsset: defaultBtcAsset,
+        targetAsset: defaultStxAsset,
+        swapQuotes: [],
+      });
+
+      await act(async () => {
+        await expect(result.current.submit()).rejects.toThrowError(
+          'submit() called when canSubmit=false'
+        );
+      });
+    });
+
+    it('rejects and tracks failure when broadcast fails', async () => {
+      const trackEvent = vi.fn(() => Promise.resolve());
+      const onSwapSubmitted = vi.fn();
+      const broadcast = vi.fn().mockRejectedValue(new Error('broadcast failed'));
+
+      const result = renderUseSwapState({
+        baseAsset: defaultBtcAsset,
+        targetAsset: defaultStxAsset,
+        swapQuotes: [createSwapQuote({ baseAmount: 1 })],
+        trackEvent,
+        dependencies: {
+          stacks: {
+            stacksSigner: createStubStacksSigner(),
+            stacksNetwork: STACKS_MAINNET,
+            broadcast,
+            nextNonce: undefined,
+          },
+          onSwapSubmitted,
+        },
+      });
+
+      act(() => result.current.actions.setBaseAmount('1'));
+      await waitFor(() => {
+        expect(result.current.canSubmit).toBe(true);
+      });
+
+      await act(async () => {
+        await expect(result.current.submit()).rejects.toThrowError('broadcast failed');
+      });
+
+      expect(trackEvent).toHaveBeenCalledWith('swap_submission_failure', expect.any(Object));
+      expect(onSwapSubmitted).not.toHaveBeenCalled();
+    });
+
+    it('notifies onSwapSubmitted exactly once with the submission result', async () => {
+      const onSwapSubmitted = vi.fn();
+
+      const result = renderUseSwapState({
+        baseAsset: defaultBtcAsset,
+        targetAsset: defaultStxAsset,
+        swapQuotes: [createSwapQuote({ baseAmount: 1 })],
+        dependencies: { onSwapSubmitted },
+      });
+
+      act(() => result.current.actions.setBaseAmount('1'));
+      await waitFor(() => {
+        expect(result.current.canSubmit).toBe(true);
+      });
+
+      await act(async () => {
+        await result.current.submit();
+      });
+
+      expect(onSwapSubmitted).toHaveBeenCalledTimes(1);
+      expect(onSwapSubmitted).toHaveBeenCalledWith({ txid: 'test-txid' });
     });
   });
 });

@@ -1,4 +1,6 @@
-import { delay } from '@leather.io/utils';
+export function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export function ensureAsyncFunctionMinimumDuration<Args extends unknown[], Result>(
   fn: (...args: Args) => Promise<Result>,

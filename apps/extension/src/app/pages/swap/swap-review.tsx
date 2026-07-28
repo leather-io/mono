@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useOutletContext } from 'react-router';
+import { Outlet, useNavigate, useOutletContext } from 'react-router';
 
 import { captureMessage } from '@sentry/react';
+import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import BigNumber from 'bignumber.js';
+import { AnimatePresence } from 'framer-motion';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { isNonNullish } from 'remeda';
 
@@ -12,6 +14,7 @@ import {
   matchLiveEstimate,
   useSwapContext,
 } from '@leather.io/state/swap';
+import { Button } from '@leather.io/ui';
 
 import { formatCurrency, formatPercentage } from '@app/common/currency-formatter';
 import { Card, Content, Page } from '@app/components/layout';
@@ -34,6 +37,8 @@ import { SlippageSelectorSheet } from './components/review/slippage-selector-she
 import { SwapReviewEmptyState } from './components/review/swap-review-empty-state';
 import { SwapReviewErrorState } from './components/review/swap-review-error-state';
 import { SwapReviewInfoTooltip } from './components/review/swap-review-info-tooltip';
+import { SwapSubmissionOverlay } from './components/review/swap-submission-overlay';
+import { type SwapSubmissionQuoteSnapshot, useSwapSubmission } from './hooks/use-swap-submission';
 import { formatSwapRate, sumFeesInQuoteCurrency } from './swap-utils';
 
 const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
@@ -46,10 +51,12 @@ const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
 export function SwapReview() {
   const { liveEstimate } = useOutletContext<SwapOutletContext>();
   const navigate = useNavigate();
-  useSwapReviewStatusGuard(liveEstimate, () => navigate(-1));
+  const { submission, confirm, reset } = useSwapSubmission();
+  const isSubmissionActive = submission.status !== 'idle';
+  useSwapReviewStatusGuard(liveEstimate, isSubmissionActive, () => navigate(-1));
 
   return (
-    <Box width="100%">
+    <Box width="100%" position="relative">
       <PageHeader title="Swap" />
       <Content>
         <Page>
@@ -60,22 +67,48 @@ export function SwapReview() {
               loading: () => <LoadingSpinner />,
               error: estimate => <SwapReviewErrorState onRetry={estimate.refetch} />,
               empty: () => <SwapReviewEmptyState onBack={() => navigate(-1)} />,
-              success: liveEstimate => <SwapReviewContent liveEstimate={liveEstimate} />,
+              success: liveEstimate => (
+                <SwapReviewContent
+                  liveEstimate={liveEstimate}
+                  isSubmissionActive={isSubmissionActive}
+                  onConfirm={confirm}
+                />
+              ),
             })}
           </Card>
         </Page>
       </Content>
+      <AnimatePresence>
+        {submission.status !== 'idle' && (
+          <SwapSubmissionOverlay
+            baseAsset={submission.quote.baseAsset}
+            targetAsset={submission.quote.targetAsset}
+            baseAmount={submission.quote.baseAmount}
+            targetAmount={submission.quote.targetAmount}
+            status={submission.status}
+            onReset={reset}
+          />
+        )}
+      </AnimatePresence>
+      <Outlet />
     </Box>
   );
 }
 
 interface SwapReviewContentProps {
   liveEstimate: Extract<LiveSwapEstimate, { status: 'success' }>;
+  isSubmissionActive: boolean;
+  onConfirm(quote: SwapSubmissionQuoteSnapshot): void;
 }
 
-function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
-  const { state, actions } = useSwapContext();
+function SwapReviewContent({
+  liveEstimate,
+  isSubmissionActive,
+  onConfirm,
+}: SwapReviewContentProps) {
+  const { state, actions, canSubmit } = useSwapContext();
   const [isSlippageSheetOpen, setIsSlippageSheetOpen] = useState(false);
+
   const { selectedQuote, isRefetching, intervalState, fees } = liveEstimate;
   const {
     baseAmount,
@@ -90,8 +123,12 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
   const showPriceImpact = shouldShowPriceImpact(priceImpactPercentage);
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
 
+  function handleConfirm() {
+    onConfirm({ baseAsset, targetAsset, baseAmount, targetAmount });
+  }
+
   return (
-    <Flex direction="column" gap="space.08">
+    <Flex direction="column" gap="space.08" flex={1}>
       <SwapReviewSummary
         baseAsset={baseAsset}
         targetAsset={targetAsset}
@@ -167,6 +204,22 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         />
       </SwapReviewDetails>
 
+      <Flex direction="column" gap="space.04" mt="auto" alignItems="center">
+        <styled.span textStyle="caption.01" textAlign="center" color="ink.text-subdued">
+          Make sure everything looks correct.
+          <br />
+          Confirmed transactions cannot be undone.
+        </styled.span>
+        <Button
+          fullWidth
+          disabled={!canSubmit || isSubmissionActive}
+          onClick={handleConfirm}
+          data-testid={SwapRevampSelectors.ConfirmBtn}
+        >
+          Confirm
+        </Button>
+      </Flex>
+
       <SlippageSelectorSheet
         isShowing={isSlippageSheetOpen}
         onClose={() => setIsSlippageSheetOpen(false)}
@@ -177,8 +230,13 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
   );
 }
 
-function useSwapReviewStatusGuard(liveEstimate: LiveSwapEstimate, exitReview: () => void) {
+function useSwapReviewStatusGuard(
+  liveEstimate: LiveSwapEstimate,
+  isSubmissionActive: boolean,
+  exitReview: () => void
+) {
   useEffect(() => {
+    if (isSubmissionActive) return;
     if (!supportedLiveEstimateStatuses.includes(liveEstimate.status)) {
       captureMessage(`Swap review screen reached with ${liveEstimate.status} estimate state.`, {
         level: 'warning',
@@ -186,7 +244,7 @@ function useSwapReviewStatusGuard(liveEstimate: LiveSwapEstimate, exitReview: ()
       });
       exitReview();
     }
-  }, [liveEstimate.status, exitReview]);
+  }, [liveEstimate.status, isSubmissionActive, exitReview]);
 }
 
 function shouldShowPriceImpact(

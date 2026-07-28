@@ -22,6 +22,7 @@ export type {
   SwapQuotePolicy,
   SwapQuoteSelectionResult,
   SwapState,
+  SwapSubmissionResult,
   UseSwapStateResult,
 } from './swap-state.types';
 
