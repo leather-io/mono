@@ -20,6 +20,8 @@ import { ledgerJwtSigningRoutes } from '@app/features/ledger/flows/jwt-signing/l
 import { requestBitcoinKeysRoutes } from '@app/features/ledger/flows/request-bitcoin-keys/ledger-request-bitcoin-keys';
 import { requestStacksKeysRoutes } from '@app/features/ledger/flows/request-stacks-keys/ledger-request-stacks-keys';
 import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-tx-signing/ledger-sign-stacks-tx-container';
+import { verifyBtcAddressRoutes } from '@app/features/ledger/flows/verify-address/ledger-verify-btc-address';
+import { verifyStxAddressRoutes } from '@app/features/ledger/flows/verify-address/ledger-verify-stx-address';
 import { UnsupportedBrowserLayout } from '@app/features/ledger/generic-steps';
 import { ConnectLedgerStart } from '@app/features/ledger/generic-steps/connect-device/connect-ledger-start';
 import { TokenDetails } from '@app/features/token/token-details';
@@ -72,6 +74,8 @@ export const homePageModalRoutes = (
     {ledgerBitcoinTxSigningRoutes}
     {requestBitcoinKeysRoutes}
     {requestStacksKeysRoutes}
+    {verifyBtcAddressRoutes}
+    {verifyStxAddressRoutes}
     <Route path={RouteUrls.ConnectLedgerStart} element={<ConnectLedgerStart initialRoute="" />} />
     <Route path={RouteUrls.LedgerUnsupportedBrowser} element={<UnsupportedBrowserLayout />} />
   </>

@@ -21,6 +21,9 @@ interface ReceiveTokensProps {
   onClickQrBtc(): void;
   onClickQrBtcTaproot(): void;
   onClickQrStx(): void;
+  onClickVerifyBtc?(): void;
+  onClickVerifyBtcTaproot?(): void;
+  onClickVerifyStx?(): void;
 }
 export function ReceiveTokens({
   btcAddressNativeSegwit,
@@ -29,6 +32,9 @@ export function ReceiveTokens({
   onClickQrBtc,
   onClickQrBtcTaproot,
   onClickQrStx,
+  onClickVerifyBtc,
+  onClickVerifyBtcTaproot,
+  onClickVerifyStx,
 }: ReceiveTokensProps) {
   const toast = useToast();
   const { data: swapAssets = [] } = useAlexSwappableAssets(stxAddress);
@@ -55,6 +61,8 @@ export function ReceiveTokens({
           toast.success('Copied to clipboard!');
         }}
         onClickQrCode={onClickQrBtc}
+        onClickVerifyAddress={onClickVerifyBtc}
+        verifyDataTestId={HomePageSelectors.ReceiveBtcNativeSegwitVerifyBtn}
         title="Bitcoin (BTC)"
       />
       <ReceiveItem
@@ -66,6 +74,8 @@ export function ReceiveTokens({
           toast.success('Copied to clipboard!');
         }}
         onClickQrCode={onClickQrBtcTaproot}
+        onClickVerifyAddress={onClickVerifyBtcTaproot}
+        verifyDataTestId={HomePageSelectors.ReceiveBtcTaprootVerifyBtn}
         title="Bitcoin Taproot"
       />
       <ReceiveItem
@@ -77,6 +87,8 @@ export function ReceiveTokens({
           toast.success('Copied to clipboard!');
         }}
         onClickQrCode={onClickQrStx}
+        onClickVerifyAddress={onClickVerifyStx}
+        verifyDataTestId={HomePageSelectors.ReceiveStxVerifyBtn}
         title="Stacks (STX)"
       />
 

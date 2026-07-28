@@ -4,9 +4,16 @@ import { Box } from 'leather-styles/jsx';
 import { Sheet, SheetHeader, Tabs } from '@leather.io/ui';
 
 import type { ReceiveView } from '@app/common/receive/receive';
+import { useWalletType } from '@app/common/use-wallet-type';
+import { useVerifyAddressNavigate } from '@app/features/ledger/flows/verify-address/use-verify-address-navigate';
 import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import {
+  useHasLedgerBitcoinKeys,
+  useHasLedgerStacksKeys,
+} from '@app/store/ledger/ledger.selectors';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { ReceiveCollectibles } from './components/receive-collectibles';
 import { ReceiveTokens } from './components/receive-tokens';
@@ -43,6 +50,15 @@ function ReceiveSheet({ type = 'full', onChangeView, onClose }: ReceiveSheetProp
   const btcAddressNativeSegwit = useCurrentAccountNativeSegwitAddressIndexZero();
   const btcAddressTaproot = useZeroIndexTaprootAddress();
   const stxAddress = useCurrentStacksAccountAddress();
+  const { walletType } = useWalletType();
+  const hasLedgerBitcoinKeys = useHasLedgerBitcoinKeys();
+  const hasLedgerStacksKeys = useHasLedgerStacksKeys();
+  const policy = useCurrentPolicy();
+  const verifyAddressNavigate = useVerifyAddressNavigate();
+
+  const canVerifyOnLedger = walletType === 'ledger' && !policy;
+  const canVerifyBtc = canVerifyOnLedger && hasLedgerBitcoinKeys;
+  const canVerifyStx = canVerifyOnLedger && hasLedgerStacksKeys;
 
   const title =
     type === 'full' ? (
@@ -91,6 +107,13 @@ function ReceiveSheet({ type = 'full', onChangeView, onClose }: ReceiveSheetProp
                 onClickQrBtc={() => onChangeView('btc')}
                 onClickQrBtcTaproot={() => onChangeView('btc-taproot')}
                 onClickQrStx={() => onChangeView('stx')}
+                onClickVerifyBtc={
+                  canVerifyBtc ? () => verifyAddressNavigate('btcNativeSegwit') : undefined
+                }
+                onClickVerifyBtcTaproot={
+                  canVerifyBtc ? () => verifyAddressNavigate('btcTaproot') : undefined
+                }
+                onClickVerifyStx={canVerifyStx ? () => verifyAddressNavigate('stx') : undefined}
               />
             </Box>
           </Tabs.Content>

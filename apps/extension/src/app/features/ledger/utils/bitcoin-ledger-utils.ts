@@ -71,6 +71,56 @@ export function createTaprootDefaultWalletPolicy(policyDetails: WalletPolicyDeta
   );
 }
 
+const receiveAddressChangeIndex = 0;
+const receiveAddressIndex = 0;
+
+interface DisplayAddressOnDeviceArgs {
+  network: BitcoinNetworkModes;
+  accountIndex: number;
+}
+
+// Displays the account's receive address on the Ledger screen using the
+// device's own xpub, so a wrong device produces a mismatch rather than a
+// confirmation. Returns the address the device showed for the caller to assert
+// against the locally derived one.
+async function displayDefaultWalletPolicyAddress(
+  app: BitcoinApp,
+  { network, accountIndex }: DisplayAddressOnDeviceArgs,
+  makePath: (network: BitcoinNetworkModes, accountIndex: number) => string,
+  createPolicy: (policyDetails: WalletPolicyDetails) => DefaultWalletPolicy
+) {
+  const fingerprint = await app.getMasterFingerprint();
+  const xpub = await app.getExtendedPubkey(makePath(network, accountIndex));
+  const walletPolicy = createPolicy({ fingerprint, network, xpub, accountIndex });
+  return app.getWalletAddress(
+    walletPolicy,
+    null,
+    receiveAddressChangeIndex,
+    receiveAddressIndex,
+    true
+  );
+}
+
+export function displayNativeSegwitAddressOnDevice(app: BitcoinApp) {
+  return async (args: DisplayAddressOnDeviceArgs) =>
+    displayDefaultWalletPolicyAddress(
+      app,
+      args,
+      makeNativeSegwitAccountDerivationPath,
+      createNativeSegwitDefaultWalletPolicy
+    );
+}
+
+export function displayTaprootAddressOnDevice(app: BitcoinApp) {
+  return async (args: DisplayAddressOnDeviceArgs) =>
+    displayDefaultWalletPolicyAddress(
+      app,
+      args,
+      makeTaprootAccountDerivationPath,
+      createTaprootDefaultWalletPolicy
+    );
+}
+
 export function addNativeSegwitSignaturesToPsbt(
   psbt: Psbt,
   signatures: [number, PartialSignature][]
