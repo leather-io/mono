@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
 
 // PoX-5 pool registry. Deliberately separate from stackingPoolData: under pox-5
@@ -6,11 +7,9 @@ import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
 // contracts and argument shapes no longer exist. Only pools with a
 // signerManagerContract entry are displayed; an absent entry means we have no
 // contract id from that partner yet. The "special" pool holds the single
-// signer-manager contract we currently have — the reference deployment on the
-// local pox-5 devnet (seeded by leather-workspace/devnet), keyed under every
-// network mode so the dark-launched page can display it regardless of the
-// app's network selector (all wallet RPC is pinned to the devnet, see
-// bitcoin-staking.constants.ts).
+// signer-manager contract we currently have — the reference deployment on
+// whichever chain pox5-network-config.ts selects, keyed under that chain's
+// network mode rather than the app's network selector.
 export type BitcoinStakingProviderId =
   | 'special'
   | 'fastPool'
@@ -19,7 +18,9 @@ export type BitcoinStakingProviderId =
   | 'xversePool'
   | 'stackingDao';
 
-const specialSignerManagerContract = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.signer-manager';
+const specialSignerManagerContract: Partial<Record<NetworkMode, string>> = {
+  [pox5NetworkConfig.contractNetworkMode]: pox5NetworkConfig.specialSignerManagerContract,
+};
 
 export interface BitcoinStakingPool {
   providerId: BitcoinStakingProviderId;
@@ -38,16 +39,12 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     name: 'Special',
     url: 'https://leather.io',
     description:
-      'Staking pool on the local pox-5 devnet. Rewards accrue as sBTC each cycle and can be claimed anytime.',
-    signerManagerContract: {
-      mainnet: specialSignerManagerContract,
-      testnet: specialSignerManagerContract,
-      devnet: specialSignerManagerContract,
-    },
-    // The reference signer-manager on devnet supports the L1 payout preference
+      'Staking pool on the pox-5 test chain. Rewards accrue as sBTC each cycle and can be claimed anytime.',
+    signerManagerContract: specialSignerManagerContract,
+    // The reference signer-manager supports the L1 payout preference
     // (get-pox-addr + sbtc-withdrawal routing in claim-staker-rewards).
     supportsBtcPayout: true,
-    // No pool-imposed minimum: the devnet signer-manager's validate-stake!
+    // No pool-imposed minimum: the signer-manager's validate-stake!
     // accepts any amount, and the amount schema already rejects zero/empty.
     // The protocol still needs >= 50k STX pool-wide per cycle to earn
     // (SIGNER_SET_MIN_USTX) — that is a pool-total threshold, not per staker.

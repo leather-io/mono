@@ -10,7 +10,7 @@ export interface Pox5StakerInfo {
   numCycles: number;
   // The `signer` principal of get-staker-info. Assumed to be the pool's
   // signer-manager contract principal — the position-to-pool mapping depends on
-  // it, and this is the top item to verify on the first pox-5 devnet session.
+  // it, and this is the top item to verify on the first private-testnet session.
   signerManagerContractId: string;
 }
 

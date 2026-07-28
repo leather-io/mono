@@ -6,10 +6,7 @@ import {
   serializeCV,
 } from '@stacks/transactions';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
-import {
-  POX5_WALLET_RPC_CONTRACT_NETWORK,
-  POX5_WALLET_RPC_NETWORK,
-} from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { analytics } from '~/utils/analytics/analytics';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
@@ -74,8 +71,8 @@ export function createUnstakeMutationOptions({
 
       const options = getUnstakeOptions({
         currentSignerManagerContractId: values.currentSignerManagerContractId,
-        pox5ContractId: getPox5ContractId(POX5_WALLET_RPC_CONTRACT_NETWORK),
-        network: POX5_WALLET_RPC_NETWORK,
+        pox5ContractId: getPox5ContractId(pox5NetworkConfig.contractNetworkMode),
+        network: pox5NetworkConfig.walletRpcNetwork,
       });
 
       analytics.track('bitcoin_staking_unstaked', { provider: values.providerId });

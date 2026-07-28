@@ -13,14 +13,13 @@ import {
   getSignerManagerContract,
   getStakingPoolFromSlug,
 } from '~/data/bitcoin-staking-data';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { StackingContractDetails } from '~/features/stacking/components/stacking-contract-details';
 import { StackingFormItemTitle } from '~/features/stacking/components/stacking-form-item-title';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
 import {
   DEFAULT_STAKING_CYCLES,
-  POX5_BITCOIN_NETWORK_MODE,
-  POX5_WALLET_RPC_CONTRACT_NETWORK,
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
@@ -83,7 +82,7 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
   const pool = getStakingPoolFromSlug(poolSlug);
   const signerManagerContractId = getSignerManagerContract(
     pool.providerId,
-    POX5_WALLET_RPC_CONTRACT_NETWORK
+    pox5NetworkConfig.contractNetworkMode
   );
   const pox5ContractId = usePox5ContractId();
 
@@ -99,7 +98,7 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
   const schema = useMemo(
     () =>
       createStakingFormSchema({
-        networkMode: POX5_BITCOIN_NETWORK_MODE,
+        networkMode: pox5NetworkConfig.bitcoinNetworkMode,
         availableBalance: totalAvailableBalance,
         minimumStakeAmount: pool.minimumStakeAmount,
         supportsBtcPayout: pool.supportsBtcPayout,

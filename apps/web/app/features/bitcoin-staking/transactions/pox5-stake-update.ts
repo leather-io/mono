@@ -7,11 +7,8 @@ import {
   uintCV,
 } from '@stacks/transactions';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
-import {
-  POX5_MAX_NUM_CYCLES,
-  POX5_WALLET_RPC_CONTRACT_NETWORK,
-  POX5_WALLET_RPC_NETWORK,
-} from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
+import { POX5_MAX_NUM_CYCLES } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { analytics } from '~/utils/analytics/analytics';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
@@ -83,7 +80,7 @@ export function getStakeUpdateOptions(
     // Epoch 4.0 Staking post-condition (deny mode). With an amount increase
     // the node logs the RESULTING TOTAL (current + increase) as the staked
     // amount, so eq checks the total, not the increase. For cycles-only
-    // extends node builds disagree: the pinned devnet image logs no staking
+    // extends node builds disagree: the devnet node image logs no staking
     // amount (0) while the pox-wf-integration tip logs the unchanged total
     // (pox-locking pox_5.rs handle_stake_lockup_update_pox_v5) — lte the
     // total passes on both while still capping what may be staked.
@@ -128,8 +125,8 @@ export function createStakeUpdateMutationOptions({
         amountIncreaseMicroStx: values.amountIncreaseMicroStx,
         currentAmountMicroStx: values.currentAmountMicroStx,
         payoutPreference: values.payoutPreference,
-        pox5ContractId: getPox5ContractId(POX5_WALLET_RPC_CONTRACT_NETWORK),
-        network: POX5_WALLET_RPC_NETWORK,
+        pox5ContractId: getPox5ContractId(pox5NetworkConfig.contractNetworkMode),
+        network: pox5NetworkConfig.walletRpcNetwork,
       });
 
       analytics.track('bitcoin_staking_updated', {

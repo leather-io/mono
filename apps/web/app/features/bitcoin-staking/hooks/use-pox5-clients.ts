@@ -2,17 +2,17 @@ import { useMemo } from 'react';
 
 import { StackingClient } from '@stacks/stacking';
 import { validateStacksAddress as isValidStacksAddress } from '@stacks/transactions';
-import { POX5_DEVNET_API_URL } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { useLeatherConnect } from '~/store/addresses';
 import { fetchFn } from '~/utils/hiro-wrapped-fetch';
 
 import { StacksClient, stacksClient } from '@leather.io/query';
 
-// Clients pinned to the pox-5 devnet API. pox-5 reads must never go through
-// the app-network clients — they would report state (balances, burn heights,
-// positions) from the wrong chain.
+// Clients pinned to the configured pox-5 chain. pox-5 reads must never go
+// through the app-network clients — they would report state (balances, burn
+// heights, positions) from the wrong chain.
 export function usePox5StacksClient(): StacksClient {
-  return stacksClient(POX5_DEVNET_API_URL);
+  return stacksClient(pox5NetworkConfig.apiUrl);
 }
 
 export function usePox5StackingClient(): StackingClient | null {
@@ -22,8 +22,8 @@ export function usePox5StackingClient(): StackingClient | null {
     if (!stacksAccount || !isValidStacksAddress(stacksAccount.address)) return null;
     return new StackingClient({
       address: stacksAccount.address,
-      network: 'devnet',
-      client: { baseUrl: POX5_DEVNET_API_URL, fetch: fetchFn },
+      network: pox5NetworkConfig.stacksNetworkName,
+      client: { baseUrl: pox5NetworkConfig.apiUrl, fetch: fetchFn },
     });
   }, [stacksAccount]);
 }

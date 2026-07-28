@@ -11,7 +11,7 @@ import {
   isPoolAvailableOnNetwork,
   stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';
-import { POX5_WALLET_RPC_CONTRACT_NETWORK } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Flag } from '@leather.io/ui';
@@ -24,7 +24,7 @@ import { StartStakingButton } from './start-staking-button';
 // pools we hold a signer-manager contract id for are displayed.
 export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
   const availablePools = bitcoinStakingPoolList.filter(pool =>
-    isPoolAvailableOnNetwork(pool, POX5_WALLET_RPC_CONTRACT_NETWORK)
+    isPoolAvailableOnNetwork(pool, pox5NetworkConfig.contractNetworkMode)
   );
 
   return (

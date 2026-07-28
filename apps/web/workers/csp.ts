@@ -1,4 +1,5 @@
 import builder from 'content-security-policy-builder';
+import { pox5ChainApiUrls } from '~/data/pox5-network-config';
 
 function getUrlOrigin(url: string | undefined): string[] {
   if (!url) return [];
@@ -12,11 +13,13 @@ const customApiConnectSrc = [
   ...getUrlOrigin(import.meta.env.LEATHER_STACKS_API_URL),
 ];
 
-// The pox-5 devnet API the dark-launched staking page is pinned to
-// (POX5_DEVNET_API_URL in pages/bitcoin-staking/bitcoin-staking.constants.ts).
-// Gated like the page itself: never present on the production deploy.
-const pox5DevnetConnectSrc =
-  import.meta.env.CLOUDFLARE_ENV !== 'production' ? ['http://localhost:3999'] : [];
+// Every chain the dark-launched staking page can be pointed at
+// (data/pox5-network-config.ts), so flipping the switch there needs no CSP
+// edit. Gated like the page itself: never present on the production deploy.
+const pox5ConnectSrc =
+  import.meta.env.CLOUDFLARE_ENV !== 'production'
+    ? pox5ChainApiUrls.flatMap(url => getUrlOrigin(url))
+    : [];
 
 export const csp = builder({
   directives: {
@@ -46,7 +49,7 @@ export const csp = builder({
       'api.bnsv2.com',
       ...backendConnectSrc,
       ...customApiConnectSrc,
-      ...pox5DevnetConnectSrc,
+      ...pox5ConnectSrc,
     ],
   },
 });

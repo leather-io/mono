@@ -15,7 +15,7 @@ import { pox4GetDelegationInfo } from './hiro.so/pox4-get-delegation-info';
 import { poxGetStackerInfoHandler } from './hiro.so/pox4-get-stacker-info';
 import { pox5GetStakerInfoNoneHandler } from './hiro.so/pox5-get-staker-info';
 import { pox5MockOverrideHandlers } from './hiro.so/pox5-mock-overrides';
-import { pox5PrivateNetworkHandlers } from './hiro.so/pox5-private-network';
+import { pox5PinnedNetworkHandlers } from './hiro.so/pox5-pinned-network';
 import {
   pox5GetEarnedStakerRewardsHandler,
   pox5GetPoxAddrHandler,
@@ -62,7 +62,7 @@ const endpoints = [
 
 export const successHandlers = [
   ...pox5MockOverrideHandlers,
-  ...[...endpoints, ...pox5PrivateNetworkHandlers].map(endpoint =>
+  ...[...endpoints, ...pox5PinnedNetworkHandlers].map(endpoint =>
     http[endpoint.method](endpoint.path, async () => delayedJsonResponse(endpoint.resp))
   ),
   ...multisigHandlers,

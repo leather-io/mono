@@ -1,4 +1,5 @@
 import { HttpResponse, http } from 'msw';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
 
 import { hiroInfoHandler } from './info';
 import { pox5GetStakerInfoStakedHandler } from './pox5-get-staker-info';
@@ -14,17 +15,16 @@ function getMockFlag(key: string): string | null {
   return localStorage.getItem(key);
 }
 
-// Override paths target the private testnet host, where the pinned pox-5 read
+// Override paths target the configured pox-5 host, where the pinned pox-5 read
 // layer sends these requests.
-const pox5PrivateApiUrl = 'https://api.testnet-pox5.hiro.so';
-const stxBalancePath = `${pox5PrivateApiUrl}/extended/v2/addresses/SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST/balances/stx`;
+const stxBalancePath = `${pox5NetworkConfig.apiUrl}/extended/v2/addresses/SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST/balances/stx`;
 
 export const pox5MockOverrideHandlers = [
   http.post(pox5GetStakerInfoStakedHandler.path, () => {
     if (getMockFlag('leather-mock-pox5-staked') !== 'true') return undefined;
     return HttpResponse.json(pox5GetStakerInfoStakedHandler.resp);
   }),
-  http.get(`${pox5PrivateApiUrl}/v2/info`, () => {
+  http.get(`${pox5NetworkConfig.apiUrl}/v2/info`, () => {
     const burnHeight = getMockFlag('leather-mock-burn-height');
     if (!burnHeight) return undefined;
     return HttpResponse.json({ ...hiroInfoHandler.resp, burn_block_height: Number(burnHeight) });

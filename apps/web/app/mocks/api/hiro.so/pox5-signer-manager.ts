@@ -1,7 +1,9 @@
 import { serializeCV, tupleCV, uintCV } from '@stacks/transactions';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
+import { parseContractId } from '~/features/bitcoin-staking/utils/contract-id';
 
-const signerManagerBasePath =
-  'https://api.testnet-pox5.hiro.so/v2/contracts/call-read/ST3TB3AJ0XMZ9S6CGY2CQ6R06H1Z6DJQ1SK5QGMWP/signer-manager';
+const specialSignerManager = parseContractId(pox5NetworkConfig.specialSignerManagerContract);
+const signerManagerBasePath = `${pox5NetworkConfig.apiUrl}/v2/contracts/call-read/${specialSignerManager.contractAddress}/${specialSignerManager.contractName}`;
 
 const earnedRewardsResult = tupleCV({
   earned: uintCV(12_500n),

@@ -14,10 +14,10 @@ import {
   StakingPoolSlug,
   getStakingPoolFromSlug,
 } from '~/data/bitcoin-staking-data';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { usePox5StackingClientRequired } from '~/features/bitcoin-staking/hooks/use-pox5-clients';
 import { useIsHydrated } from '~/hooks/use-is-hydrated';
 import {
-  POX5_BITCOIN_NETWORK_MODE,
   POX5_MAX_NUM_CYCLES,
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
@@ -248,7 +248,7 @@ function UpdateStakingForm({
         availableBalance: availableBalance.amount,
         maxCyclesToExtend,
         supportsBtcPayout: pool.supportsBtcPayout,
-        networkMode: POX5_BITCOIN_NETWORK_MODE,
+        networkMode: pox5NetworkConfig.bitcoinNetworkMode,
         currentPayout,
       })
     ),

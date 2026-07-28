@@ -90,9 +90,9 @@ test.describe('Bitcoin Staking', () => {
       .expect(page.getByText('You cannot stake more than your available balance'))
       .toBeVisible();
 
-    await page.locator('#amount').fill('10');
+    await page.locator('#amount').fill('0');
     await page.locator('#amount').blur();
-    await test.expect(page.getByText('You must stack at least 40 STX')).toBeVisible();
+    await test.expect(page.getByText('You must stack an amount')).toBeVisible();
 
     await page.locator('#cycles').fill('97');
     await page.locator('#cycles').blur();

@@ -1,5 +1,5 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { POX5_WALLET_RPC_CONTRACT_NETWORK } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { usePox5StackingClient, usePox5StacksClient } from '../hooks/use-pox5-clients';
@@ -16,11 +16,11 @@ import {
 import { getPendingPox5Transaction } from './get-pending-pox5-txs';
 import { usePox5PoxInfoQuery } from './pox5-node.query';
 
-// All pox-5 interaction happens on the local devnet, so the contract id and
-// every read below are pinned there rather than following the app's network
-// selector.
+// All pox-5 interaction happens on the configured chain, so the contract id
+// and every read below are pinned there rather than following the app's
+// network selector.
 export function usePox5ContractId(): string {
-  return getPox5ContractId(POX5_WALLET_RPC_CONTRACT_NETWORK);
+  return getPox5ContractId(pox5NetworkConfig.contractNetworkMode);
 }
 
 export function usePox5StakerInfoQuery() {
@@ -45,7 +45,7 @@ export function usePox5PayoutPreferenceQuery(signerManagerContractId: string | u
     createGetPox5PayoutPreferenceQueryOptions({
       address: stacksAccount?.address,
       signerManagerContractId,
-      networkName: 'devnet',
+      networkName: pox5NetworkConfig.stacksNetworkName,
       client,
     })
   );

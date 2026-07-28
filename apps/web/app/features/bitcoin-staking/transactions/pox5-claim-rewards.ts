@@ -1,6 +1,6 @@
 import { ClarityValue, noneCV, principalCV, serializeCV, uintCV } from '@stacks/transactions';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
-import { POX5_WALLET_RPC_NETWORK } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { analytics } from '~/utils/analytics/analytics';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
@@ -61,7 +61,7 @@ export function createClaimRewardsMutationOptions({
         signerManagerContractId: values.signerManagerContractId,
         stakerAddress: values.stakerAddress,
         rewardCycle: values.rewardCycle,
-        network: POX5_WALLET_RPC_NETWORK,
+        network: pox5NetworkConfig.walletRpcNetwork,
       });
 
       analytics.track('bitcoin_staking_rewards_claimed', {
