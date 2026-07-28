@@ -105,7 +105,7 @@ export function useLedgerNavigate() {
             latestLedgerError: errorMessage,
             chain,
             backgroundLocation: { pathname: RouteUrls.Home },
-            fromLocation: location.state.fromLocation,
+            fromLocation: location.state?.fromLocation,
           },
         });
       },
