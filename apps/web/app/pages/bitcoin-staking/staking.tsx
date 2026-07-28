@@ -8,6 +8,7 @@ import { liquidStackingProvidersList } from '~/data/data';
 import { Page } from '~/layouts/page/page';
 import { LiquidStackingProviderTable } from '~/pages/stacking/components/stacking-provider-table';
 
+import { DualStackingTransition } from './components/dual-stacking-transition';
 import { StakingExplainer } from './components/staking-explainer';
 import { StakingFaq } from './components/staking-faq';
 import { StakingProviderTable } from './components/staking-provider-table';
@@ -66,13 +67,27 @@ export function Staking() {
       />
       <LiquidStackingProviderTable mt="space.05" providers={liquidProviders} />
 
+      <DualStackingTransition mt="space.07" />
+
       <Page.Divider my="space.07" />
 
       <styled.h2 textStyle="heading.05" mb="space.05">
         Frequently asked questions
       </styled.h2>
 
-      <StakingFaq mb="space.07" />
+      <StakingFaq mb="space.04" />
+
+      <styled.a
+        href={bitcoinStakingContent.learnMore.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        textStyle="label.02"
+        color="ink.text-subdued"
+        textDecoration="underline"
+        mb="space.07"
+      >
+        {bitcoinStakingContent.learnMore.label}
+      </styled.a>
     </Page>
   );
 }

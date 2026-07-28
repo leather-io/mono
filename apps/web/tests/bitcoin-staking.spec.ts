@@ -24,7 +24,7 @@ test.describe('Bitcoin Staking', () => {
     await page.goto('/staking');
     await page.getByTestId('start-staking-button-special').click();
     await page.locator('#amount').fill('500');
-    await page.getByTestId('duration-preset-12').click();
+    await page.locator('#cycles').fill('12');
     await page.getByTestId('confirmation-terms-button').click();
     await page.getByTestId('confirmation-stake-button').click();
     await setMockFlag(page, 'leather-mock-pox5-staked', 'true');

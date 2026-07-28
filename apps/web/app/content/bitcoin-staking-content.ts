@@ -11,12 +11,24 @@ interface StakingCondition {
 }
 
 export const bitcoinStakingContent = {
-  pageTitle: `Bitcoin Staking`,
+  pageTitle: `Staking`,
   pageSubtitle: `Stake STX with a pool and earn variable sBTC yield. Leather is not liable for the conduct of third parties.`,
   heroYieldLabel: `Variable yield, paid in sBTC`,
   providerDescription: `Providers are external parties that operate PoX-5 staking pools through their own signer-manager contracts. Leather is not liable for the conduct of third parties.`,
   chooseDuration: {
-    helper: `A cycle lasts about two weeks. You can unstake anytime — your STX unlocks at the end of the current cycle.`,
+    helperLead: `A cycle lasts about two weeks. This sets how long before you need to renew, not how long you are committed.`,
+    helperEmphasis: `You can unstake at any time`,
+    helperTrail: `and your STX unlocks when the current cycle ends.`,
+  },
+  learnMore: {
+    label: `Read more about Bitcoin Staking on stacks.co`,
+    url: `https://www.stacks.co/bitcoin-staking`,
+  },
+  dualStackingTransition: {
+    title: `Dual Stacking is winding down`,
+    description: `It transitions to Bitcoin Staking on August 24, 2026 and keeps paying out until then. Stake your STX with a pool above to keep earning after that date.`,
+    linkLabel: `Learn about Bitcoin Staking`,
+    url: `https://www.stacks.co/bitcoin-staking`,
   },
   payoutPreference: {
     toggleLabel: `Receive rewards as BTC on Bitcoin (optional)`,
@@ -52,20 +64,20 @@ export const bitcoinStakingExplainer: ExplainerStep[] = [
     description: `Pick a staking pool from the table below.`,
   },
   {
-    title: `Stake STX`,
-    description: `Lock your STX with the pool for the number of cycles you choose.`,
+    title: `Stake STX-only`,
+    description: `Stake your STX to the chosen pool.`,
   },
   {
     title: `Claim sBTC rewards`,
-    description: `Rewards accrue as sBTC each cycle and can be claimed anytime.`,
+    description: `Rewards accrue as sBTC each cycle and are claimed through the pool contract.`,
   },
 ];
 
 export const bitcoinStakingConditions: StakingCondition[] = [
   {
     iconKey: 'BoxedCatLockedIcon',
-    title: `Your STX locks for the cycles you choose`,
-    description: `Your exact amount locks at the next cycle. You can unstake anytime, but STX only unlocks at the end of the current cycle.`,
+    title: `You choose how long before you renew`,
+    description: `Your exact amount locks at the next cycle. You can unstake at any time, and your STX unlocks when the current cycle ends.`,
   },
   {
     iconKey: 'MagnifyingGlassIcon',
@@ -75,7 +87,7 @@ export const bitcoinStakingConditions: StakingCondition[] = [
   {
     iconKey: 'StacksIcon',
     title: `Rewards accrue as sBTC`,
-    description: `Yield is variable and paid in sBTC on Stacks. Claim it through the pool's contract whenever you like.`,
+    description: `Yield is variable and paid in sBTC on Stacks. Rewards are claimed through the pool's contract.`,
   },
 ];
 

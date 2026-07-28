@@ -16,13 +16,13 @@ export const bitcoinStakingFaqItems: FaqItem[] = [
     id: 'how-do-rewards-work',
     question: 'How do rewards work?',
     answer:
-      'Rewards accrue as sBTC on Stacks each cycle and can be claimed anytime through the pool. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall. Some pools can optionally pay out to a Bitcoin address as an sBTC withdrawal.',
+      'Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall. Some pools can optionally pay out to a Bitcoin address as an sBTC withdrawal.',
   },
   {
     id: 'how-long-are-locks',
     question: 'How long is my STX locked?',
     answer:
-      'You choose a lock duration between 1 and 96 cycles (a cycle is about two weeks). You can unstake anytime, but your STX only unlocks at the end of the current cycle. Locks do not renew automatically.',
+      'You choose between 1 and 96 cycles, and a cycle is about two weeks. That sets how often you need to renew rather than how long you are stuck: you can unstake at any time and your STX unlocks when the current cycle ends. At the maximum of 96 cycles you only renew about once every four years, or when the Proof of Transfer contract is upgraded.',
   },
   {
     id: 'what-is-the-minimum',
@@ -35,5 +35,11 @@ export const bitcoinStakingFaqItems: FaqItem[] = [
     question: 'What happened to Stacking (pox-4)?',
     answer:
       'PoX-5 replaces the previous stacking protocol entirely. When it activates, STX locked under pox-4 unlocks and every participant needs to re-stake through a PoX-5 pool to keep earning.',
+  },
+  {
+    id: 'what-happened-to-dual-stacking',
+    question: 'What happened to Dual Stacking?',
+    answer:
+      'Dual Stacking is winding down and transitions to Bitcoin Staking on August 24, 2026. It keeps paying out until then. Separately, STX locked under pox-4 unlocks at the hard fork, so you still need to re-stake through a PoX-5 pool to keep earning — staking on this page is how you do that.',
   },
 ];
