@@ -13,13 +13,10 @@ const customApiConnectSrc = [
   ...getUrlOrigin(import.meta.env.LEATHER_STACKS_API_URL),
 ];
 
-// Every chain the dark-launched staking page can be pointed at
+// Every chain the staking page can be pointed at
 // (data/pox5-network-config.ts), so flipping the switch there needs no CSP
-// edit. Gated like the page itself: never present on the production deploy.
-const pox5ConnectSrc =
-  import.meta.env.CLOUDFLARE_ENV !== 'production'
-    ? pox5ChainApiUrls.flatMap(url => getUrlOrigin(url))
-    : [];
+// edit.
+const pox5ConnectSrc = pox5ChainApiUrls.flatMap(url => getUrlOrigin(url));
 
 export const csp = builder({
   directives: {

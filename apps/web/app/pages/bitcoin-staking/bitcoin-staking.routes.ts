@@ -1,8 +1,7 @@
 import { type RouteConfigEntry, index, layout, prefix, route } from '@react-router/dev/routes';
 
 // All Bitcoin Staking (PoX-5) routes live here and are spread into routes.ts
-// with a single `...bitcoinStakingRoutes` line. The layout gates the whole
-// /staking/* area off bitcoinStakingEnabled (404 in production).
+// with a single `...bitcoinStakingRoutes` line.
 export const bitcoinStakingRoutes: RouteConfigEntry[] = prefix('staking', [
   layout('pages/bitcoin-staking/bitcoin-staking.layout.tsx', [
     index('pages/bitcoin-staking/staking.route.tsx'),

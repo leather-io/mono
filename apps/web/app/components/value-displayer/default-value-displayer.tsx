@@ -4,7 +4,7 @@ import { FlexProps } from 'leather-styles/jsx';
 
 import { ValueDisplayerBase } from './reward-value-displayer';
 
-export interface ValueDisplayerProps extends FlexProps {
+interface ValueDisplayerProps extends FlexProps {
   name: ReactNode;
   value: ReactNode;
   // textAlign is already included in FlexProps

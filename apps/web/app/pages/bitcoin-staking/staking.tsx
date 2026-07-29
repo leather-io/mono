@@ -5,9 +5,9 @@ import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { learnArticles } from '~/content/learn-content';
 import { liquidStackingProvidersList } from '~/data/data';
 import { Page } from '~/layouts/page/page';
-import { LiquidStackingProviderTable } from '~/pages/stacking/components/stacking-provider-table';
 
 import { DualStackingTransition } from './components/dual-stacking-transition';
+import { LiquidStackingProviderTable } from './components/liquid-stacking-provider-table';
 import { StakingExplainer } from './components/staking-explainer';
 import { StakingFaq } from './components/staking-faq';
 import { StakingProviderTable } from './components/staking-provider-table';
@@ -49,7 +49,7 @@ export function Staking() {
         learnMoreSlug={learnArticles.liquidStacking.slug}
         mt="space.09"
       />
-      <LiquidStackingProviderTable mt="space.05" providers={liquidProviders} linksOutToProvider />
+      <LiquidStackingProviderTable mt="space.05" providers={liquidProviders} />
 
       <DualStackingTransition mt="space.09" />
 

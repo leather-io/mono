@@ -29,14 +29,3 @@ export const validationMessages = {
   chooseStakingCycles: 'Choose between 1 and 96 cycles',
   enterMaxWithdrawalFee: 'Enter a max withdrawal fee in sats',
 } as const;
-
-export const statusMessages = {
-  waitingForTxConfirmation: 'Waiting for transaction confirmation',
-  waitingForCycleToStart: 'Waiting for the cycle to start',
-  stackingReady:
-    'Your STX are ready for stacking. Once the next cycle starts the network will determine if and how many slots are claimed.',
-  stackingSubmitted:
-    'A Stacking request was successfully submitted to the blockchain. Once confirmed, an additional amount will be stacking.',
-  errorLoadingData: 'Error while loading data, try reloading the page.',
-  youAreStacking: "You're stacking",
-} as const;

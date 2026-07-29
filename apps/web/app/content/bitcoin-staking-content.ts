@@ -155,6 +155,7 @@ export const bitcoinStakingLabels = {
   rewardsToken: `Rewards token`,
   minimumCommitment: `Minimum commitment`,
   totalStaked: `Total staked`,
+  historicalYield: `Historical yield`,
   fee: `Fee`,
   startEarning: `Start earning`,
   viewPosition: `View position`,

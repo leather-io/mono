@@ -1,10 +1,3 @@
-// Bitcoin Staking (PoX-5) is an in-development feature shipped dark: visible on
-// local dev, PR previews, and staging, but hidden on the production deploy until
-// the PoX-5 SIP finalizes and activation is scheduled. Gated off CLOUDFLARE_ENV
-// rather than whenEnvTarget for the reasons documented in
-// pages/multisig/multisig.constants.ts.
-export const bitcoinStakingEnabled = import.meta.env.CLOUDFLARE_ENV !== 'production';
-
 export const stakingPaths = {
   index: '/staking',
   status: '/staking/status',
