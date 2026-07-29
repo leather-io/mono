@@ -23,7 +23,7 @@ import { useStacksExplorerLink } from '@app/common/hooks/use-stacks-explorer-lin
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { Balance } from '@app/components/balance/balance';
 
-import type { SbtcDepositOverlay } from '../use-sbtc-deposit-overlay';
+import type { SbtcDepositOverlay } from '../use-sbtc-deposit-activity';
 import { ActivityRowActions, getActivityActionKind } from './activity-row-actions';
 
 const indicatorSize = 12;

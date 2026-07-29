@@ -41,7 +41,7 @@ function formatActivityMoney(money: Money, options?: FormatAmountOptions) {
   return formatCurrency(money, { ...options, showCurrency: false });
 }
 
-const activityViewDeps: BlockchainActivityViewDeps = { formatMoney: formatActivityMoney };
+export const activityViewDeps: BlockchainActivityViewDeps = { formatMoney: formatActivityMoney };
 
 function selectBlockchainActivityFeedItems(data: InfiniteData<ActivityResponse>) {
   return createBlockchainActivityItems(

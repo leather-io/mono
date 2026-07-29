@@ -6,25 +6,30 @@ import { groupActivityByDate } from '@leather.io/features';
 import { useBlockchainActivityFeed } from '@app/query/activity/blockchain-activity.query';
 import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 
+import { mergeSbtcDepositItems } from './activity-list.utils';
 import { ActivityGroupHeader } from './components/activity-group-header';
 import { ActivityListLayout } from './components/activity-list.layout';
 import { ActivityLoadingMore } from './components/activity-loading-more';
 import { ActivityRow } from './components/activity-row';
-import { useSbtcDepositOverlays } from './use-sbtc-deposit-overlay';
+import { useSbtcDepositActivity } from './use-sbtc-deposit-activity';
 
 export function ActivityList() {
   const accountAddresses = useCurrentAccountAddresses();
   const { items, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage, refetch } =
     useBlockchainActivityFeed(accountAddresses);
-  const sbtcOverlays = useSbtcDepositOverlays();
+
+  const feedTxids = useMemo(() => new Set(items.map(item => item.view.txid)), [items]);
+  const { overlays: sbtcOverlays, standaloneItems: sbtcItems } = useSbtcDepositActivity(feedTxids);
+
+  const activityItems = useMemo(() => mergeSbtcDepositItems(items, sbtcItems), [items, sbtcItems]);
 
   const groups = useMemo(
     () =>
-      groupActivityByDate(items, {
+      groupActivityByDate(activityItems, {
         getTimestamp: item => item.view.timestamp,
         isPending: item => item.view.status === 'pending',
       }),
-    [items]
+    [activityItems]
   );
 
   const groupCounts = useMemo(() => groups.map(group => group.items.length), [groups]);
@@ -56,7 +61,7 @@ export function ActivityList() {
     <ActivityListLayout
       isLoading={isLoading}
       isError={isError}
-      hasActivity={items.length > 0}
+      hasActivity={activityItems.length > 0}
       onRetry={refetch}
     >
       <GroupedVirtuoso

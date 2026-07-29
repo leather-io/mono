@@ -7,7 +7,7 @@ import { useConfigSbtc } from '../common/remote-config/remote-config.query';
 
 export type SbtcStatus = 'pending' | 'accepted' | 'confirmed' | 'failed' | 'rbf';
 
-interface SbtcDeposit {
+export interface SbtcDeposit {
   amount: number;
   bitcoinTxOutputIndex: number;
   bitcoinTxid: string;
