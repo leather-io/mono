@@ -66,6 +66,30 @@ export const mockLeatherMixedInputSendTx: LeatherApiBitcoinTx = {
   ],
 };
 
+export const mockLeatherUnownedTx: LeatherApiBitcoinTx = {
+  txid: 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5',
+  height: confirmedHeight,
+  time: confirmedTime - 300,
+  vin: [
+    { n: 0, owned: false, address: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4', value: '90000' },
+  ],
+  vout: [
+    { n: 0, owned: false, address: 'bc1q9d4ywgfnd8h43da5tpcxcn6ajv590cg6d3tg6a', value: '89000' },
+  ],
+};
+
+export const mockLeatherExternalDepositFundingTx: LeatherApiBitcoinTx = {
+  txid: 'e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6',
+  height: confirmedHeight,
+  time: confirmedTime - 400,
+  vin: [
+    { n: 0, owned: false, address: 'bc1q9d4ywgfnd8h43da5tpcxcn6ajv590cg6d3tg6a', value: '160000' },
+  ],
+  vout: [
+    { n: 0, owned: false, address: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4', value: '150000' },
+  ],
+};
+
 // Descriptors embed `wpkh(xpub...)`, whose parentheses a URL glob mishandles,
 // so this matcher is a regex.
 const leatherDescriptorTxsUrl = /\/v1\/transactions\/bitcoin\/descriptors\//;
@@ -75,6 +99,15 @@ export async function mockLeatherBitcoinTransactions(
   txs: LeatherApiBitcoinTx[]
 ) {
   await target.route(leatherDescriptorTxsUrl, route => route.fulfill({ json: { data: txs } }));
+}
+
+export async function mockLeatherBitcoinTransactionByTxId(
+  target: Page | BrowserContext,
+  tx: LeatherApiBitcoinTx
+) {
+  await target.route(`**/v1/transactions/bitcoin/${tx.txid}*`, route =>
+    route.fulfill({ json: tx })
+  );
 }
 
 const ownedTestAddressPaths: Record<string, string> = {

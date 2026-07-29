@@ -53,6 +53,7 @@ export function ActivityListLayout({
     <Stack
       data-testid={ActivitySelectors.ActivityList}
       minWidth="100%"
+      mx="-space.04"
       flexGrow={1}
       minHeight={0}
       height="100%"

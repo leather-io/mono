@@ -46,7 +46,9 @@ export function ActivityList() {
   const flatItems = useMemo(() => groups.flatMap(group => group.items), [groups]);
 
   const groupContent = useCallback(
-    (index: number) => <ActivityGroupHeader label={groups[index].label} />,
+    (index: number) => (
+      <ActivityGroupHeader label={groups[index].label} isFirstGroup={index === 0} />
+    ),
     [groups]
   );
 
