@@ -6,7 +6,7 @@ import { BitcoinNetworkModes, HIRO_API_BASE_URL_MAINNET } from '@leather.io/mode
 // ---------------------------------------------------------------------------
 // The one line to edit when moving Bitcoin Staking between test chains.
 // ---------------------------------------------------------------------------
-const activePox5Chain: Pox5ChainName = 'mainnet';
+const activePox5Chain: Pox5ChainName = 'private';
 
 type Pox5ChainName = 'mainnet' | 'devnet' | 'private';
 
@@ -62,7 +62,7 @@ const pox5Chains: Record<Pox5ChainName, Pox5ChainConfig> = {
     apiUrl: 'https://api.testnet-pox5.hiro.so',
     stacksNetworkName: 'testnet',
     bitcoinNetworkMode: 'testnet',
-    specialSignerManagerContract: 'STXM87M1S5QRGMJ1D4Q4865VBNYZC9YMZAX4FGAA.signer-manager',
+    specialSignerManagerContract: 'ST3FJQK31NMDM594YKP1640V5WESX38ENSSY6DMBF.signer-manager',
   },
 };
 
