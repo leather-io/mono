@@ -19,6 +19,7 @@ import { useUserSettings } from '@app/hooks/use-user-settings';
 
 const feedPageSize = 25;
 const feedRefetchInterval = 15_000;
+const feedRefetchMaxPages = 2;
 
 const activityQueryPrefixes = [
   'blockchain-activity-service--get-activity',
@@ -73,12 +74,23 @@ interface BlockchainActivityFeed {
   refetch(): void;
 }
 
-export function useBlockchainActivityFeed(account: AccountAddresses): BlockchainActivityFeed {
+interface BlockchainActivityFeedOptions {
+  poll?: boolean;
+}
+
+export function useBlockchainActivityFeed(
+  account: AccountAddresses,
+  { poll = true }: BlockchainActivityFeedOptions = {}
+): BlockchainActivityFeed {
   const settings = useUserSettings();
 
   const feedQuery = useInfiniteQuery({
     ...createBlockchainActivityInfiniteQueryConfig({ account, limit: feedPageSize }, settings),
-    refetchInterval: feedRefetchInterval,
+    refetchInterval(query) {
+      if (!poll) return false;
+      const pageCount = query.state.data?.pages.length ?? 1;
+      return pageCount <= feedRefetchMaxPages ? feedRefetchInterval : false;
+    },
     select: selectBlockchainActivityFeedItems,
   });
 

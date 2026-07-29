@@ -22,7 +22,7 @@ export function Tokens() {
   const location = useLocation();
   const { releaseTrendingTokens } = useFlags();
   const account = useCurrentAccountAddresses();
-  const activityFeed = useBlockchainActivityFeed(account);
+  const activityFeed = useBlockchainActivityFeed(account, { poll: false });
   const showFirstTokenBanner = activityFeed.isSuccess && !activityFeed.items.length;
 
   function handleSelectAsset(assetId: SerializedCryptoAssetId) {
