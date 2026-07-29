@@ -13,6 +13,7 @@ export interface ActivityGroup<TItem> {
 
 export interface GroupActivityByDateOptions<TItem> {
   getTimestamp(item: TItem): number;
+  isPending?(item: TItem): boolean;
   now?: Date;
 }
 
@@ -27,12 +28,12 @@ export function formatActivityDateLabel(date: Date, now: Date = new Date()): str
 
 export function groupActivityByDate<TItem>(
   items: TItem[],
-  { getTimestamp, now = new Date() }: GroupActivityByDateOptions<TItem>
+  { getTimestamp, isPending, now = new Date() }: GroupActivityByDateOptions<TItem>
 ): ActivityGroup<TItem>[] {
   const groups = new Map<string, ActivityGroup<TItem>>();
 
   for (const item of items) {
-    const date = new Date(getTimestamp(item) * 1000);
+    const date = isPending?.(item) ? now : new Date(getTimestamp(item) * 1000);
     const key = dayjs(date).format(groupKeyFormat);
     const group = groups.get(key);
     if (group) {

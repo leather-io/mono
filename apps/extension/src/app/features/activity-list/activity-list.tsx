@@ -19,7 +19,11 @@ export function ActivityList() {
   const sbtcOverlays = useSbtcDepositOverlays();
 
   const groups = useMemo(
-    () => groupActivityByDate(items, { getTimestamp: item => item.view.timestamp }),
+    () =>
+      groupActivityByDate(items, {
+        getTimestamp: item => item.view.timestamp,
+        isPending: item => item.view.status === 'pending',
+      }),
     [items]
   );
 

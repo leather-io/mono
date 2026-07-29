@@ -74,4 +74,33 @@ describe('groupActivityByDate', () => {
     expect(grouped[0].label).toBe('Today');
     expect(grouped[0].items.map(item => item.id)).toEqual(['pending', 'a', 'b']);
   });
+
+  function groupWithPending(input: ((typeof items)[number] & { pending?: boolean })[]) {
+    return groupActivityByDate(input, {
+      getTimestamp: item => item.timestamp,
+      isPending: item => item.pending === true,
+      now: atLocalNoon('2026-07-28'),
+    });
+  }
+
+  it('groups a stuck pending item with an old timestamp under Today instead of its own leading group', () => {
+    const stuck = { id: 'stuck', timestamp: unixSeconds(atLocalNoon('2026-07-25')), pending: true };
+    const grouped = groupWithPending([stuck, ...items]);
+    expect(grouped.map(g => g.label)).toEqual(['Today', 'Yesterday', 'Jul 25th']);
+    expect(grouped[0].items.map(item => item.id)).toEqual(['stuck', 'a', 'b']);
+  });
+
+  it('keeps confirmed items on the stuck pending date in their own later group', () => {
+    const stuck = { id: 'stuck', timestamp: unixSeconds(atLocalNoon('2026-07-25')), pending: true };
+    const grouped = groupWithPending([stuck, ...items]);
+    expect(grouped[2].label).toBe('Jul 25th');
+    expect(grouped[2].items.map(item => item.id)).toEqual(['d']);
+  });
+
+  it('groups a pending item with a zero timestamp under Today', () => {
+    const noReceiptTime = { id: 'no-receipt-time', timestamp: 0, pending: true };
+    const grouped = groupWithPending([noReceiptTime, ...items]);
+    expect(grouped.map(g => g.label)).toEqual(['Today', 'Yesterday', 'Jul 25th']);
+    expect(grouped[0].items.map(item => item.id)).toEqual(['no-receipt-time', 'a', 'b']);
+  });
 });
