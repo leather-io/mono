@@ -14,7 +14,7 @@ import {
   type SwapService,
 } from '@leather.io/services';
 import { useDebouncedValue } from '@leather.io/ui';
-import { delay } from '@leather.io/utils';
+import { delay, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { type DisabledPairRule, type SwapQuotePolicy } from './swap-state.types';
 import { createSwapAssetsSelector } from './utils/asset-selection';
@@ -100,8 +100,8 @@ export function useSwapQuotesQuery({
   return useQuery({
     queryKey: [
       'swap-quotes',
-      baseSwapAsset?.asset.symbol,
-      targetSwapAsset?.asset.symbol,
+      baseSwapAsset ? serializeAssetId(getAssetId(baseSwapAsset.asset)) : undefined,
+      targetSwapAsset ? serializeAssetId(getAssetId(targetSwapAsset.asset)) : undefined,
       debouncedBaseAmount?.amount.toString(),
     ],
     queryFn: async ({ signal }) => {
