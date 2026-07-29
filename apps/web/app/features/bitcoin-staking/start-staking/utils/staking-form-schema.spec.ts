@@ -8,7 +8,6 @@ function makeSchema(overrides?: { supportsBtcPayout?: boolean; availableMicroStx
   return createStakingFormSchema({
     networkMode: 'mainnet',
     availableBalance: createMoney(overrides?.availableMicroStx ?? hundredStxMicro, 'STX'),
-    minimumStakeAmount: 40_000_000,
     supportsBtcPayout: overrides?.supportsBtcPayout ?? false,
   });
 }
@@ -25,8 +24,8 @@ describe(createStakingFormSchema.name, () => {
     expect(result.success).toBe(true);
   });
 
-  test('rejects an amount below the pool minimum', () => {
-    expect(makeSchema().safeParse({ ...validValues, amount: '10' }).success).toBe(false);
+  test('accepts a small amount now that pools impose no minimum', () => {
+    expect(makeSchema().safeParse({ ...validValues, amount: '10' }).success).toBe(true);
   });
 
   test('rejects an amount above the available balance', () => {

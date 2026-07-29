@@ -42,7 +42,6 @@ export const bitcoinStakingContent = {
   },
   poolOverviewInfo: {
     rewardsToken: `Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool's signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall.`,
-    minimumCommitment: `Each pool sets its own minimum. Separately, a pool needs at least 50,000 STX staked in total to earn rewards for a cycle. Small or new pools below that threshold earn nothing until they grow.`,
     fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so check the pool's terms before staking.`,
     nextCycle: `Your stake starts earning when the next cycle begins. A cycle lasts about two weeks.`,
   },
@@ -113,7 +112,6 @@ export const bitcoinStakingContent = {
     title: `Re-stake your STX`,
     description: `PoX-5 replaced the previous stacking protocol and your STX has unlocked. Choose a pool to start earning sBTC rewards.`,
   },
-  preActivation: `Bitcoin Staking (PoX-5) is not active on this network yet. You can explore the flow, but transactions will fail until activation.`,
 };
 
 export const bitcoinStakingExplainer: ExplainerStep[] = [
@@ -153,7 +151,6 @@ export const bitcoinStakingConditions: StakingCondition[] = [
 export const bitcoinStakingLabels = {
   provider: `Provider`,
   rewardsToken: `Rewards token`,
-  minimumCommitment: `Minimum commitment`,
   totalStaked: `Total staked`,
   historicalYield: `Historical yield`,
   fee: `Fee`,

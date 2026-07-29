@@ -12,7 +12,6 @@ import {
   stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
-import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Flag } from '@leather.io/ui';
 
@@ -21,7 +20,7 @@ import { StartStakingButton } from './start-staking-button';
 
 // Column widths live in one colgroup so the header and body always agree,
 // regardless of what any individual cell happens to contain.
-const columnWidths = ['40%', '16%', '16%', '12%', '16%'];
+const columnWidths = ['44%', '20%', '16%', '20%'];
 
 // Static-config table: pox-5 pool stats (TVL, realized yield) have no external
 // data source yet — the stacking-tracker API only covers pox-4 pools. Only
@@ -59,13 +58,6 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
             </Table.Header>
             <Table.Header px="space.04" textAlign="right">
               <LearnHoverCard
-                article={learnArticles.stackingMinimumCommitment}
-                label={bitcoinStakingLabels.minimumCommitment}
-                textStyle="label.03"
-              />
-            </Table.Header>
-            <Table.Header px="space.04" textAlign="right">
-              <LearnHoverCard
                 article={learnArticles.stackingPoolFees}
                 label={bitcoinStakingLabels.fee}
                 textStyle="label.03"
@@ -91,9 +83,6 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
                   <Flag spacing="space.02" img={<ChainLogoIcon symbol="sBTC" />}>
                     sBTC
                   </Flag>
-                </styled.td>
-                <styled.td px="space.04" textAlign="right" color="black">
-                  {toHumanReadableMicroStx(pool.minimumStakeAmount)}
                 </styled.td>
                 <styled.td px="space.04" textAlign="right" color="black">
                   {pool.fee}

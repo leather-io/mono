@@ -13,7 +13,6 @@ interface StackingInfoGridLayoutProps extends GridProps {
     totalValueLocked: ReactNode;
     daysUntilNextCycle: ReactNode;
     rewardsToken: ReactNode;
-    minimumCommitment: ReactNode;
     poolAddress: ReactNode;
     rewardAddress: ReactNode;
   };
@@ -76,12 +75,8 @@ export function StackingInfoGridLayout({ cells, ...props }: StackingInfoGridLayo
           {cells.daysUntilNextCycle}
         </InfoGrid.Cell>
 
-        <InfoGrid.Cell gridColumn={[1, 2, 4]} gridRow={[4, 3, 1]}>
+        <InfoGrid.Cell gridColumn={['1 / span 2', '1 / span 3', 4]} gridRow={[4, 3, '1 / span 2']}>
           {cells.rewardsToken}
-        </InfoGrid.Cell>
-
-        <InfoGrid.Cell gridColumn={[2, 1, 4]} gridRow={[4, 3, 2]}>
-          {cells.minimumCommitment}
         </InfoGrid.Cell>
       </InfoGrid>
 

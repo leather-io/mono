@@ -104,10 +104,9 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
       createStakingFormSchema({
         networkMode: pox5NetworkConfig.bitcoinNetworkMode,
         availableBalance: totalAvailableBalance,
-        minimumStakeAmount: pool.minimumStakeAmount,
         supportsBtcPayout: pool.supportsBtcPayout,
       }),
-    [totalAvailableBalance, pool.minimumStakeAmount, pool.supportsBtcPayout]
+    [totalAvailableBalance, pool.supportsBtcPayout]
   );
 
   const formMethods = useForm({

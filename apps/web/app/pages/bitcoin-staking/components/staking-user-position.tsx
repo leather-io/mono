@@ -5,8 +5,8 @@ import { HStack, Stack, styled } from 'leather-styles/jsx';
 import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { getPoolBySignerManager, stakingProviderIdToSlug } from '~/data/bitcoin-staking-data';
 import { PendingStakePanel } from '~/features/bitcoin-staking/components/pending-stake-panel';
+import { usePox5NeedsRestake } from '~/features/bitcoin-staking/hooks/use-pox5-needs-restake';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
-import { usePox5TransitionState } from '~/features/bitcoin-staking/hooks/use-pox5-transition-state';
 import { CopyAddress } from '~/features/stacking/components/address';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
@@ -17,9 +17,9 @@ import { Button } from '@leather.io/ui';
 // the underlying pox-4 status queries throw without a stacking client.
 export function StakingUserPosition() {
   const { position } = usePox5Position();
-  const transitionPhase = usePox5TransitionState();
+  const needsRestake = usePox5NeedsRestake();
 
-  if (transitionPhase === 'needs-restake' && position.status === 'none') {
+  if (needsRestake && position.status === 'none') {
     return (
       <Stack
         gap="space.02"

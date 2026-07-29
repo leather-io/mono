@@ -20,7 +20,6 @@ export const validationMessages = {
   invalidAmount: 'STX amount must be a number',
   mustStackAmount: 'You must stack an amount',
   availableBalance: 'Available balance is',
-  mustStackAtLeast: 'You must stack at least',
   mustDelegateMore: "You must delegate more than you've already stacked",
   mustDelegateAtLeast: 'You must delegate at least',
   addressNotValid: 'Address is not valid',

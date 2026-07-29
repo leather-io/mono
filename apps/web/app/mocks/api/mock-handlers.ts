@@ -60,9 +60,15 @@ const endpoints = [
   tokenHandler,
 ];
 
+// When the pox-5 chain shares a host with the app-network mocks (mainnet),
+// rewriting to the pinned host reproduces endpoints already registered above.
+const pinnedNetworkEndpoints = pox5PinnedNetworkHandlers.filter(
+  pinned => !endpoints.some(({ method, path }) => method === pinned.method && path === pinned.path)
+);
+
 export const successHandlers = [
   ...pox5MockOverrideHandlers,
-  ...[...endpoints, ...pox5PinnedNetworkHandlers].map(endpoint =>
+  ...[...endpoints, ...pinnedNetworkEndpoints].map(endpoint =>
     http[endpoint.method](endpoint.path, async () => delayedJsonResponse(endpoint.resp))
   ),
   ...multisigHandlers,

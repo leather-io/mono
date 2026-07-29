@@ -33,7 +33,6 @@ const millisecondsPerCycle = 14 * 24 * 60 * 60 * 1000;
 const stakingFormSchema = createStakingFormSchema({
   networkMode: pox5NetworkConfig.bitcoinNetworkMode,
   availableBalance: createMoney(availableAmount, 'STX'),
-  minimumStakeAmount: pool.minimumStakeAmount,
   supportsBtcPayout: pool.supportsBtcPayout,
 });
 

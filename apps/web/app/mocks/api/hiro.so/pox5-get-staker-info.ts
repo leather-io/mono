@@ -3,6 +3,8 @@ import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { parseContractId } from '~/features/bitcoin-staking/utils/contract-id';
 import { getPox5ContractId } from '~/features/bitcoin-staking/utils/pox5-contracts';
 
+import { mockSignerManager } from './pox5-mock-signer-manager';
+
 // The pox-5 read layer is pinned to the chain selected in
 // data/pox5-network-config.ts, so the mocked host and boot contract follow it.
 const pox5Contract = parseContractId(getPox5ContractId(pox5NetworkConfig.contractNetworkMode));
@@ -15,8 +17,6 @@ export const pox5GetStakerInfoNoneHandler = {
   method: 'post',
 } as const;
 
-const specialSignerManager = parseContractId(pox5NetworkConfig.specialSignerManagerContract);
-
 // Cycle numbers align with the /v2/pox mock (current cycle 113); the signer
 // matches the "special" pool's signer-manager so the position resolves to a
 // known pool.
@@ -25,10 +25,7 @@ const stakedResult = someCV(
     'amount-ustx': uintCV(40_000_000n),
     'first-reward-cycle': uintCV(110n),
     'num-cycles': uintCV(12n),
-    signer: contractPrincipalCV(
-      specialSignerManager.contractAddress,
-      specialSignerManager.contractName
-    ),
+    signer: contractPrincipalCV(mockSignerManager.contractAddress, mockSignerManager.contractName),
   })
 );
 

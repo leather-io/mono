@@ -1,14 +1,14 @@
 import { StacksNetworkName } from '@stacks/network';
 import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
 
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { BitcoinNetworkModes, HIRO_API_BASE_URL_MAINNET } from '@leather.io/models';
 
 // ---------------------------------------------------------------------------
 // The one line to edit when moving Bitcoin Staking between test chains.
 // ---------------------------------------------------------------------------
-const activePox5Chain: Pox5ChainName = 'private';
+const activePox5Chain: Pox5ChainName = 'mainnet';
 
-type Pox5ChainName = 'devnet' | 'private';
+type Pox5ChainName = 'mainnet' | 'devnet' | 'private';
 
 interface Pox5ChainConfig {
   // Wallet network key every pox-5 RPC call is pinned to, so transactions land
@@ -31,7 +31,7 @@ interface Pox5ChainConfig {
   bitcoinNetworkMode: BitcoinNetworkModes;
   // Signer-manager contract backing the "Special" pool on this chain — the one
   // reference deployment we hold a contract id for.
-  specialSignerManagerContract: string;
+  specialSignerManagerContract?: string;
 }
 
 // devnet is the local pox-5 devnet from leather-workspace/devnet: its API URL
@@ -41,6 +41,13 @@ interface Pox5ChainConfig {
 // a Leather built-in — it has to be added in the wallet as a custom network
 // with id `private` pointing at its apiUrl before anything can be signed.
 const pox5Chains: Record<Pox5ChainName, Pox5ChainConfig> = {
+  mainnet: {
+    walletRpcNetwork: 'mainnet',
+    contractNetworkMode: 'mainnet',
+    apiUrl: HIRO_API_BASE_URL_MAINNET,
+    stacksNetworkName: 'mainnet',
+    bitcoinNetworkMode: 'mainnet',
+  },
   devnet: {
     walletRpcNetwork: 'devnet',
     contractNetworkMode: 'devnet',

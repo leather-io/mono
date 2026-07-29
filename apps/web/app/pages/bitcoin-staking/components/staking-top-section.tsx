@@ -2,8 +2,8 @@ import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 import { SectionHeading } from '~/components/section-heading';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
+import { usePox5NeedsRestake } from '~/features/bitcoin-staking/hooks/use-pox5-needs-restake';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
-import { usePox5TransitionState } from '~/features/bitcoin-staking/hooks/use-pox5-transition-state';
 import { Page } from '~/layouts/page/page';
 import { useStacksAccount } from '~/store/addresses';
 
@@ -56,11 +56,11 @@ function PositionIntro() {
 // progress is reported next to the wallet control instead.
 function ConnectedTopSection() {
   const { isLoading, position } = usePox5Position();
-  const transitionPhase = usePox5TransitionState();
+  const needsRestake = usePox5NeedsRestake();
 
   if (isLoading) return <DiscoveryIntro />;
 
-  const hasPositionToShow = position.status !== 'none' || transitionPhase === 'needs-restake';
+  const hasPositionToShow = position.status !== 'none' || needsRestake === true;
 
   return hasPositionToShow ? <PositionIntro /> : <DiscoveryIntro />;
 }

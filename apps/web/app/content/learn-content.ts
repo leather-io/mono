@@ -75,13 +75,6 @@ export const learnArticles: Record<string, LearnArticle> = {
     sentence: 'The total amount of STX locked in stacking across all participants.',
     body: "TVL represents the total value of assets locked in a protocol or stacking pool, indicating the protocol's adoption and trustworthiness.",
   },
-  stackingMinimumCommitment: {
-    id: 'stacking-minimum-commitment',
-    title: 'Minimum Commitment',
-    slug: 'stacking-minimum-commitment',
-    sentence: 'The minimum amount of STX required to participate in stacking.',
-    body: 'Solo stacking requires a dynamic minimum (currently around 100,000 STX), while pooled stacking allows participation with much smaller amounts.',
-  },
   historicalYield: {
     id: 'historical-yield',
     title: 'Historical Yield',

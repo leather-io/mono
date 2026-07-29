@@ -18,9 +18,10 @@ export type BitcoinStakingProviderId =
   | 'xversePool'
   | 'stackingDao';
 
-const specialSignerManagerContract: Partial<Record<NetworkMode, string>> = {
-  [pox5NetworkConfig.contractNetworkMode]: pox5NetworkConfig.specialSignerManagerContract,
-};
+const specialSignerManagerContract: Partial<Record<NetworkMode, string>> =
+  pox5NetworkConfig.specialSignerManagerContract
+    ? { [pox5NetworkConfig.contractNetworkMode]: pox5NetworkConfig.specialSignerManagerContract }
+    : {};
 
 export interface BitcoinStakingPool {
   providerId: BitcoinStakingProviderId;
@@ -29,7 +30,6 @@ export interface BitcoinStakingPool {
   description: string;
   signerManagerContract: Partial<Record<NetworkMode, string>>;
   supportsBtcPayout: boolean;
-  minimumStakeAmount: number;
   fee: string;
 }
 
@@ -44,11 +44,6 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     // The reference signer-manager supports the L1 payout preference
     // (get-pox-addr + sbtc-withdrawal routing in claim-staker-rewards).
     supportsBtcPayout: true,
-    // No pool-imposed minimum: the signer-manager's validate-stake!
-    // accepts any amount, and the amount schema already rejects zero/empty.
-    // The protocol still needs >= 50k STX pool-wide per cycle to earn
-    // (SIGNER_SET_MIN_USTX) — that is a pool-total threshold, not per staker.
-    minimumStakeAmount: 0,
     fee: '—',
   },
   fastPool: {
@@ -59,7 +54,6 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
       'Enjoy automatic pool operations. Rewards accrue as sBTC each cycle and can be claimed anytime.',
     signerManagerContract: {},
     supportsBtcPayout: false,
-    minimumStakeAmount: 40_000_000,
     fee: '5%',
   },
   planbetter: {
@@ -69,7 +63,6 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     description: 'Earn non-custodial Bitcoin yield. No wrapped tokens.',
     signerManagerContract: {},
     supportsBtcPayout: false,
-    minimumStakeAmount: 200_000_000,
     fee: '5%',
   },
   restake: {
@@ -80,7 +73,6 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
       'Earn rewards by staking your tokens with Restake, a non-custodial infrastructure operator trusted by institutions.',
     signerManagerContract: {},
     supportsBtcPayout: false,
-    minimumStakeAmount: 100_000_000,
     fee: '5.00%',
   },
   xversePool: {
@@ -89,9 +81,13 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     url: 'https://pool.xverse.app/',
     description:
       'Xverse pool is a non-custodial staking pool service from the makers of Xverse wallet.',
-    signerManagerContract: {},
-    supportsBtcPayout: false,
-    minimumStakeAmount: 500_000_000,
+    signerManagerContract: {
+      mainnet: 'SP8HK160YD5GHXP69VGA0TC7AQJ1X4CDW3XVERSE.xverse-signer-manager-1',
+    },
+    supportsBtcPayout: true,
+    // TODO: read the live rate from the contract once it is deployed — the
+    // signer-manager exposes no getter for the current fee, only the per-cycle
+    // snapshot written after claim-rewards runs.
     fee: '5%',
   },
   stackingDao: {
@@ -99,9 +95,13 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     name: 'Stacking DAO',
     url: 'https://www.stackingdao.com',
     description: 'Stake without your STX leaving your wallet.',
-    signerManagerContract: {},
-    supportsBtcPayout: false,
-    minimumStakeAmount: 500_000_000,
+    signerManagerContract: {
+      mainnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager',
+    },
+    supportsBtcPayout: true,
+    // TODO: read the live rate from the contract once it is deployed — the
+    // signer-manager exposes no getter for the current fee, only the per-cycle
+    // snapshot written after claim-rewards runs.
     fee: '5%',
   },
 };
@@ -153,13 +153,3 @@ export function isPoolAvailableOnNetwork(
 ): boolean {
   return pool.signerManagerContract[networkMode] !== undefined;
 }
-
-// Manual pox-5 activation override per network, used until the node announces
-// pox-5 through /v2/pox contract_versions. Devnet runs the pox-5 reference
-// implementation from genesis; mainnet and testnet activation heights are
-// unknown until the SIP is voted on.
-export const pox5ActivationHeightOverride: Record<NetworkMode, number | null> = {
-  mainnet: null,
-  testnet: null,
-  devnet: 0,
-};

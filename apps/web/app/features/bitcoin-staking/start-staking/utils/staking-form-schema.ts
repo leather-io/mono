@@ -1,12 +1,10 @@
 import { z } from 'zod';
 import { validationMessages } from '~/content/messages';
 import { POX5_MAX_NUM_CYCLES } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import {
   stxAmountSchema,
   validateAvailableBalance,
   validateMaxStackingAmount,
-  validateMinStackingAmount,
 } from '~/utils/validators/stx-amount-validator';
 
 import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
@@ -15,7 +13,6 @@ import { BitcoinNetworkModes, Money } from '@leather.io/models';
 interface CreateStakingFormSchemaArgs {
   networkMode: BitcoinNetworkModes;
   availableBalance: Money;
-  minimumStakeAmount: number;
   supportsBtcPayout: boolean;
 }
 
@@ -27,16 +24,12 @@ interface CreateStakingFormSchemaArgs {
 export function createStakingFormSchema({
   networkMode,
   availableBalance,
-  minimumStakeAmount,
   supportsBtcPayout,
 }: CreateStakingFormSchemaArgs) {
   return z
     .object({
       amount: stxAmountSchema()
         .refine(value => validateMaxStackingAmount(value))
-        .refine(value => validateMinStackingAmount(value, minimumStakeAmount), {
-          message: `${validationMessages.mustStackAtLeast} ${toHumanReadableMicroStx(minimumStakeAmount)}`,
-        })
         .refine(value => validateAvailableBalance(value, availableBalance.amount), {
           message: validationMessages.cannotStackMoreThanBalance,
         }),

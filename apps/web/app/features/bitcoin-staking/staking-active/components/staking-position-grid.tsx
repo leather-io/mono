@@ -99,13 +99,6 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
           />
         ),
         rewardsToken: <ValueDisplayer gap="space.04" name="Rewards token" value="sBTC" />,
-        minimumCommitment: (
-          <ValueDisplayer
-            gap="space.04"
-            name="Minimum commitment"
-            value={toHumanReadableMicroStx(pool.minimumStakeAmount)}
-          />
-        ),
         poolAddress: (
           <ValueDisplayer
             gap="space.04"

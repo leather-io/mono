@@ -16,11 +16,6 @@ export function stxAmountSchema() {
     .positive(validationMessages.mustStackAmount);
 }
 
-export function validateMinStackingAmount(value: number, minimumDelegationAmount: number) {
-  const enteredAmount = stxToMicroStx(value || 0);
-  return enteredAmount.isGreaterThanOrEqualTo(minimumDelegationAmount);
-}
-
 export function validateMaxStackingAmount(value: number) {
   if (value === undefined) return false;
   const enteredAmount = stxToMicroStx(value);

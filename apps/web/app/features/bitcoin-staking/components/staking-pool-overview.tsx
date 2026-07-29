@@ -9,7 +9,6 @@ import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-s
 import { BitcoinStakingPool } from '~/data/bitcoin-staking-data';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { InfoCircleIcon } from '@leather.io/ui';
 
@@ -169,18 +168,7 @@ export function StakingPoolOverview({
           }
         />
       </InfoGrid.Cell>
-      <InfoGrid.Cell gridColumn={['2', '2', '2']} gridRow={['2', '2', '2']}>
-        <ValueDisplayer
-          name={
-            <InfoLabel
-              label={bitcoinStakingLabels.minimumCommitment}
-              explanation={bitcoinStakingContent.poolOverviewInfo.minimumCommitment}
-            />
-          }
-          value={toHumanReadableMicroStx(pool.minimumStakeAmount)}
-        />
-      </InfoGrid.Cell>
-      <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
+      <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['2', '2', '1']}>
         <ValueDisplayer
           name={
             <InfoLabel
@@ -191,7 +179,10 @@ export function StakingPoolOverview({
           value={pool.fee}
         />
       </InfoGrid.Cell>
-      <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['3', '3', '2']}>
+      <InfoGrid.Cell
+        gridColumn={['1 / span 2', '1 / span 2', '2 / span 2']}
+        gridRow={['3', '3', '2']}
+      >
         <ValueDisplayer
           name={
             <InfoLabel
