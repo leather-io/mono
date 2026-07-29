@@ -10,13 +10,31 @@ import {
   createBlockchainActivityByAssetIdQueryConfig,
   createBlockchainActivityInfiniteQueryConfig,
 } from '@leather.io/queries';
-import type { ActivityResponse } from '@leather.io/services';
+import { type ActivityResponse, getHttpCacheService } from '@leather.io/services';
 import { type FormatAmountOptions, getAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import { queryClient } from '@app/common/persistence';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 
 const feedPageSize = 25;
+const feedRefetchInterval = 15_000;
+
+const activityQueryPrefixes = [
+  'blockchain-activity-service--get-activity',
+  'blockchain-activity-service--get-activity-infinite',
+  'blockchain-activity-service--get-activity-by-asset-id',
+];
+
+export async function invalidateActivityQueries() {
+  await Promise.all([
+    getHttpCacheService().clear('leather-api-bitcoin-descriptor-transactions'),
+    getHttpCacheService().clear('leather-api-bitcoin-address-transactions'),
+  ]);
+  await Promise.all(
+    activityQueryPrefixes.map(prefix => queryClient.invalidateQueries({ queryKey: [prefix] }))
+  );
+}
 
 function formatActivityMoney(money: Money, options?: FormatAmountOptions) {
   return formatCurrency(money, { ...options, showCurrency: false });
@@ -60,6 +78,7 @@ export function useBlockchainActivityFeed(account: AccountAddresses): Blockchain
 
   const feedQuery = useInfiniteQuery({
     ...createBlockchainActivityInfiniteQueryConfig({ account, limit: feedPageSize }, settings),
+    refetchInterval: feedRefetchInterval,
     select: selectBlockchainActivityFeedItems,
   });
 
