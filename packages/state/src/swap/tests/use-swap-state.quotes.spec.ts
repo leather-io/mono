@@ -406,6 +406,74 @@ describe('quote enrichment and selection', () => {
     }
   });
 
+  it('refetches quotes when switching to a different target token with the same symbol', async () => {
+    const stxAsset = createAccountSwapAsset({
+      asset: defaultStxAsset,
+      balance: { crypto: 1_000_000_000, quote: 10_000_00 },
+    });
+    const usdcAsset = createAccountSwapAsset({
+      asset: {
+        protocol: 'sip10',
+        symbol: 'aeUSDC',
+        assetId: 'SP1K1A1PMGW2ZJCNF46NWZWHG8TS1D23EGH1KNK60.token-aeusdc::aeusdc',
+        contractId: 'SP1K1A1PMGW2ZJCNF46NWZWHG8TS1D23EGH1KNK60.token-aeusdc',
+      },
+    });
+    const copycatUsdcAsset = createAccountSwapAsset({
+      asset: {
+        protocol: 'sip10',
+        symbol: 'aeUSDC',
+        assetId: 'SP2XD7417HGPRTREMKF748VNEQPDRR0RMANB7X1NK.copycat-aeusdc::aeusdc',
+        contractId: 'SP2XD7417HGPRTREMKF748VNEQPDRR0RMANB7X1NK.copycat-aeusdc',
+      },
+    });
+
+    let fetchCount = 0;
+    const result = renderUseSwapState({
+      baseSwapAssets: [stxAsset],
+      targetSwapAssets: [usdcAsset, copycatUsdcAsset],
+      getSwapQuotes() {
+        fetchCount += 1;
+        const targetAsset = fetchCount === 1 ? usdcAsset.asset : copycatUsdcAsset.asset;
+        return Promise.resolve([
+          createSwapQuote({
+            targetAmount: 500_000_000,
+            providerId: 'alex-sdk',
+            baseAsset: defaultStxAsset,
+            targetAsset,
+          }),
+        ]);
+      },
+    });
+
+    act(() => {
+      result.current.actions.setBaseSwapAsset(stxAsset);
+      result.current.actions.setTargetSwapAsset(usdcAsset);
+      result.current.actions.setBaseAmount('100');
+    });
+
+    await waitFor(() => {
+      expect(result.current.quoteQuery.data?.selected).toBeDefined();
+    });
+    expect(fetchCount).toBe(1);
+    expect(result.current.quoteQuery.data?.selected?.rawSwapQuote.targetAsset).toEqual(
+      usdcAsset.asset
+    );
+
+    act(() => {
+      result.current.actions.setTargetSwapAsset(copycatUsdcAsset);
+    });
+
+    await waitFor(() => {
+      expect(fetchCount).toBe(2);
+    });
+    await waitFor(() => {
+      expect(result.current.quoteQuery.data?.selected?.rawSwapQuote.targetAsset).toEqual(
+        copycatUsdcAsset.asset
+      );
+    });
+  });
+
   it('sets score equal to targetAmount for all quotes', async () => {
     const btcAsset = createAccountSwapAsset({
       asset: defaultBtcAsset,
