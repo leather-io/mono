@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 import { Outlet } from 'react-router';
 
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
-import { Stack, styled } from 'leather-styles/jsx';
+import { Stack } from 'leather-styles/jsx';
 
 import { ActivityEmpty } from './activity-empty';
 import { ActivityError } from './activity-error';
@@ -34,17 +34,6 @@ export function ActivityListLayout({
       <>
         {isRefetchError && <ActivityRefreshError onRetry={onRetry} />}
         {children}
-        <styled.div
-          position="absolute"
-          bottom="0"
-          left="0"
-          right="0"
-          height="48px"
-          bgGradient="to-t"
-          gradientFrom="ink.background-primary"
-          gradientTo="transparent"
-          pointerEvents="none"
-        />
       </>
     );
   }
