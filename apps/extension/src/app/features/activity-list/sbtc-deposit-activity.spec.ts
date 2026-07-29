@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { BitcoinTransaction } from '@leather.io/models';
-import { createMarketData, createMarketPair } from '@leather.io/models';
+import { type BitcoinTransaction, createMarketData, createMarketPair } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import type { SbtcDeposit, SbtcStatus } from '@app/query/sbtc/sbtc-deposits.query';

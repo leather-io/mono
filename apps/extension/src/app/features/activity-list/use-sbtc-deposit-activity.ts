@@ -22,7 +22,7 @@ interface SbtcDepositActivity {
 }
 
 function combineFundingTxs(results: UseQueryResult<BitcoinTransaction | null, Error>[]) {
-  return results.map(result => result.data ?? null);
+  return { fundingTxs: results.map(result => result.data ?? null) };
 }
 
 export function useSbtcDepositActivity(feedTxids: ReadonlySet<string>): SbtcDepositActivity {
@@ -42,7 +42,7 @@ export function useSbtcDepositActivity(feedTxids: ReadonlySet<string>): SbtcDepo
     [deposits, feedTxids]
   );
 
-  const fundingTxs = useQueries({
+  const { fundingTxs } = useQueries({
     queries: unmatchedDeposits.map(deposit =>
       createBitcoinTransactionByTxIdQueryConfig(deposit.bitcoinTxid, settings)
     ),
