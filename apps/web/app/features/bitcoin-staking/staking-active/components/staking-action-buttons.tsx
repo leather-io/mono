@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useMutation } from '@tanstack/react-query';
-import { Flex, FlexProps } from 'leather-styles/jsx';
+import { Flex, FlexProps, Stack } from 'leather-styles/jsx';
 import { StopPoolingIcon } from '~/components/icons/stop-pooling-icon';
 import { BitcoinStakingProviderId, StakingPoolSlug } from '~/data/bitcoin-staking-data';
 import { usePox5StackingClientRequired } from '~/features/bitcoin-staking/hooks/use-pox5-clients';
@@ -11,6 +11,9 @@ import { leather } from '~/utils/leather-sdk';
 
 import { Button } from '@leather.io/ui';
 
+import { Pox5SubmitError } from '../../components/pox5-submit-error';
+import { usePox5TxTracker } from '../../hooks/use-pox5-tx-tracker';
+import { getBroadcastTxId } from '../../transactions/pox5-tx-status';
 import { createUnstakeMutationOptions } from '../../transactions/pox5-unstake';
 
 interface StakingActionButtonsProps extends FlexProps {
@@ -28,45 +31,70 @@ export function StakingActionButtons({
   ...flexProps
 }: StakingActionButtonsProps) {
   const navigate = useNavigate();
+  const { track } = usePox5TxTracker();
   const client = usePox5StackingClientRequired();
   // Unstaking is all-or-nothing and irreversible until the cycle ends, so the
   // first click arms the button and only a second click submits.
   const [unstakeArmed, setUnstakeArmed] = useState(false);
 
-  const { mutateAsync: unstake, isPending } = useMutation(
-    createUnstakeMutationOptions({ leather, client })
-  );
+  const {
+    mutate: submitUnstake,
+    isPending,
+    error: unstakeError,
+  } = useMutation(createUnstakeMutationOptions({ leather, client }));
 
-  async function handleUnstakeClick() {
+  function handleUnstakeClick() {
     if (!unstakeArmed) {
       setUnstakeArmed(true);
       return;
     }
-    return unstake({ providerId, currentSignerManagerContractId: signerManagerContractId }).then(
-      () => navigate(stakingPaths.index)
+    submitUnstake(
+      { providerId, currentSignerManagerContractId: signerManagerContractId },
+      {
+        onSuccess(result) {
+          const txId = getBroadcastTxId(result);
+          if (!txId) {
+            void navigate(stakingPaths.index);
+            return;
+          }
+          track({
+            kind: 'unstake',
+            txId,
+            destination: stakingPaths.index,
+            startedAt: Date.now(),
+          });
+        },
+        onError() {
+          setUnstakeArmed(false);
+        },
+      }
     );
   }
 
   return (
-    <Flex gap="space.04" {...flexProps}>
-      <Button
-        size="md"
-        variant="ghost"
-        iconStart={<StopPoolingIcon width="16" height="16" />}
-        onClick={handleUnstakeClick}
-        disabled={isPending || actionsDisabled}
-        data-testid="unstake-button"
-      >
-        {unstakeArmed ? 'Confirm unstake' : 'Unstake'}
-      </Button>
-      <Button
-        size="md"
-        onClick={() => navigate(stakingPaths.update(poolSlug))}
-        disabled={actionsDisabled}
-        data-testid="update-stake-button"
-      >
-        Update stake
-      </Button>
-    </Flex>
+    <Stack gap="space.03">
+      <Flex gap="space.04" {...flexProps}>
+        <Button
+          size="md"
+          variant="ghost"
+          iconStart={<StopPoolingIcon width="16" height="16" />}
+          onClick={handleUnstakeClick}
+          disabled={isPending || actionsDisabled}
+          data-testid="unstake-button"
+        >
+          {unstakeArmed ? 'Confirm unstake' : 'Unstake'}
+        </Button>
+        <Button
+          size="md"
+          onClick={() => navigate(stakingPaths.update(poolSlug))}
+          disabled={actionsDisabled}
+          data-testid="update-stake-button"
+        >
+          Update stake
+        </Button>
+      </Flex>
+
+      <Pox5SubmitError error={unstakeError} />
+    </Stack>
   );
 }

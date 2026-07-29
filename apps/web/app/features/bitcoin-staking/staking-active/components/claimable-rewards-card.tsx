@@ -9,8 +9,11 @@ import { leather } from '~/utils/leather-sdk';
 
 import { Button } from '@leather.io/ui';
 
+import { Pox5SubmitError } from '../../components/pox5-submit-error';
+import { usePox5TxTracker } from '../../hooks/use-pox5-tx-tracker';
 import { Pox5ClaimableRewards } from '../../queries/pox5-stacking.query';
 import { createClaimRewardsMutationOptions } from '../../transactions/pox5-claim-rewards';
+import { getBroadcastTxId } from '../../transactions/pox5-tx-status';
 
 function formatSbtc(units: bigint): string {
   return `${new BigNumber(units.toString()).dividedBy(1e8).toFormat()} sBTC`;
@@ -28,23 +31,35 @@ export function ClaimableRewardsCard({
   claimable,
 }: ClaimableRewardsCardProps) {
   const { stacksAccount } = useLeatherConnect();
+  const { track } = usePox5TxTracker();
   const [showHistory, setShowHistory] = useState(false);
 
-  const { mutateAsync: claimRewards, isPending } = useMutation(
-    createClaimRewardsMutationOptions({ leather })
-  );
+  const {
+    mutate: submitClaimRewards,
+    isPending,
+    error: claimError,
+  } = useMutation(createClaimRewardsMutationOptions({ leather }));
 
   // Claims are per-cycle transactions; claim the oldest unclaimed cycle first.
   const oldestUnclaimed = claimable.byCycle[0];
 
-  async function handleClaimClick() {
+  function handleClaimClick() {
     if (!oldestUnclaimed || !stacksAccount) return;
-    return claimRewards({
-      providerId,
-      signerManagerContractId,
-      stakerAddress: stacksAccount.address,
-      rewardCycle: oldestUnclaimed.cycle,
-    });
+    submitClaimRewards(
+      {
+        providerId,
+        signerManagerContractId,
+        stakerAddress: stacksAccount.address,
+        rewardCycle: oldestUnclaimed.cycle,
+      },
+      {
+        onSuccess(result) {
+          const txId = getBroadcastTxId(result);
+          if (!txId) return;
+          track({ kind: 'claim-rewards', txId, destination: null, startedAt: Date.now() });
+        },
+      }
+    );
   }
 
   return (
@@ -74,6 +89,8 @@ export function ClaimableRewardsCard({
           Claim rewards
         </Button>
       </HStack>
+
+      <Pox5SubmitError error={claimError} />
 
       {claimable.byCycle.length > 0 && (
         <Box>

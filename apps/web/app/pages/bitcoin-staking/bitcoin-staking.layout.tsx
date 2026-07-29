@@ -1,5 +1,7 @@
 import { Outlet, data } from 'react-router';
 
+import { Pox5TxTrackerProvider } from '~/features/bitcoin-staking/components/pox5-tx-tracker-provider';
+
 import { bitcoinStakingEnabled } from './bitcoin-staking.constants';
 
 // Gate the entire /staking/* area: when the feature is disabled (production),
@@ -10,5 +12,9 @@ export function loader() {
 }
 
 export default function BitcoinStakingLayout() {
-  return <Outlet />;
+  return (
+    <Pox5TxTrackerProvider>
+      <Outlet />
+    </Pox5TxTrackerProvider>
+  );
 }

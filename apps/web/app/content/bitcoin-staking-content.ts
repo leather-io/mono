@@ -71,6 +71,44 @@ export const bitcoinStakingContent = {
     title: `Your stake is confirming`,
     description: `Your staking transaction was submitted and is waiting for confirmation. Your STX locks at the start of the next cycle.`,
   },
+  transactionStatus: {
+    headerTitle: `Your staking`,
+    pendingDescription: `Keep this page open. Confirmation usually takes a few seconds.`,
+    byKind: {
+      stake: {
+        pendingTitle: `Confirming your stake`,
+        failedTitle: `Your stake didn't go through`,
+        confirmedToast: `Stake confirmed`,
+      },
+      'stake-update': {
+        pendingTitle: `Confirming your update`,
+        failedTitle: `Your update didn't go through`,
+        confirmedToast: `Stake updated`,
+      },
+      unstake: {
+        pendingTitle: `Confirming your unstake`,
+        failedTitle: `Your unstake didn't go through`,
+        confirmedToast: `Unstake confirmed`,
+      },
+      'claim-rewards': {
+        pendingTitle: `Claiming your rewards`,
+        failedTitle: `Your claim didn't go through`,
+        confirmedToast: `Rewards claimed`,
+      },
+    },
+    failureReasons: {
+      aborted: `The contract rejected the transaction, so nothing changed and your STX was not moved.`,
+      dropped: `The transaction was dropped before it was mined, so nothing changed. You can try again.`,
+      'not-found': `We couldn't find this transaction on the network. Check the explorer before trying again.`,
+      unknown: `The transaction didn't complete. Check the explorer for details before trying again.`,
+    },
+    submitErrors: {
+      rejected: `The request was cancelled in Leather. Nothing was submitted.`,
+      unknown: `Couldn't submit the transaction. Please try again.`,
+    },
+    viewInExplorer: `View in explorer`,
+    dismiss: `Dismiss`,
+  },
   needsRestake: {
     title: `Re-stake your STX`,
     description: `PoX-5 replaced the previous stacking protocol and your STX has unlocked. Choose a pool to start earning sBTC rewards.`,

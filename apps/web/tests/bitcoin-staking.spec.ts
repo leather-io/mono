@@ -36,6 +36,66 @@ test.describe('Bitcoin Staking', () => {
     await test.expect(page.getByTestId('update-stake-button')).toBeVisible({ timeout: 15_000 });
   });
 
+  test('the confirming screen holds until the transaction confirms', async ({ page, mode }) => {
+    await mode({ mode: 'mock-connected' });
+    await setMockFlag(page, 'leather-mock-stx-balance', fundedBalanceMicroStx);
+    await setMockFlag(page, 'leather-mock-pox5-tx-status', 'pending');
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking');
+    await page.getByTestId('start-staking-button-special').click();
+    await page.locator('#amount').fill('500');
+    await page.locator('#cycles').fill('12');
+    await page.getByTestId('confirmation-terms-button').click();
+    await page.getByTestId('confirmation-stake-button').click();
+    await page.getByRole('button', { name: 'Resolve' }).click();
+
+    await test.expect(page.getByTestId('pox5-tx-status-screen')).toBeVisible({ timeout: 15_000 });
+    await test.expect(page).toHaveURL(/\/staking\/pool\/special$/);
+
+    await setMockFlag(page, 'leather-mock-pox5-staked', 'true');
+    await setMockFlag(page, 'leather-mock-pox5-tx-status', 'success');
+
+    await page.waitForURL('**/staking/pool/special/active', { timeout: 30_000 });
+    await test.expect(page.getByTestId('claimable-rewards-card')).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('a failed transaction shows the failure state', async ({ page, mode }) => {
+    await mode({ mode: 'mock-connected' });
+    await setMockFlag(page, 'leather-mock-stx-balance', fundedBalanceMicroStx);
+    await setMockFlag(page, 'leather-mock-pox5-tx-status', 'abort_by_post_condition');
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking/pool/special');
+    await page.locator('#amount').fill('500');
+    await page.locator('#cycles').fill('12');
+    await page.getByTestId('confirmation-terms-button').click();
+    await page.getByTestId('confirmation-stake-button').click();
+    await page.getByRole('button', { name: 'Resolve' }).click();
+
+    await test.expect(page.getByTestId('pox5-tx-status-failed')).toBeVisible({ timeout: 15_000 });
+    await page.getByTestId('pox5-tx-dismiss-button').click();
+    await test.expect(page.locator('#amount')).toBeVisible();
+  });
+
+  test('rejecting in the wallet surfaces an error without navigating', async ({ page, mode }) => {
+    await mode({ mode: 'mock-connected' });
+    await setMockFlag(page, 'leather-mock-stx-balance', fundedBalanceMicroStx);
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking/pool/special');
+    await page.locator('#amount').fill('500');
+    await page.locator('#cycles').fill('12');
+    await page.getByTestId('confirmation-terms-button').click();
+    await page.getByTestId('confirmation-stake-button').click();
+    await page.getByRole('button', { name: 'Reject' }).click();
+
+    await test
+      .expect(page.getByTestId('pox5-submit-error').first())
+      .toBeVisible({ timeout: 15_000 });
+    await test.expect(page).toHaveURL(/\/staking\/pool\/special$/);
+  });
+
   test('already-staked users are redirected to their active position', async ({ page, mode }) => {
     await mode({ mode: 'mock-connected' });
     await setMockFlag(page, 'leather-mock-pox5-staked', 'true');

@@ -30,11 +30,13 @@ import { stxToMicroStx } from '@leather.io/utils';
 
 import { PendingStakePanel } from '../components/pending-stake-panel';
 import { PoolHealthWarning } from '../components/pool-health-warning';
+import { Pox5SubmitError } from '../components/pox5-submit-error';
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
 import { StakingPoolOverview, cycleStatusFromClock } from '../components/staking-pool-overview';
 import { usePox5StackingClient } from '../hooks/use-pox5-clients';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
 import { usePox5Position } from '../hooks/use-pox5-position';
+import { usePox5TxTracker } from '../hooks/use-pox5-tx-tracker';
 import {
   usePox5AvailableUnlockedBalance,
   usePox5PoxInfoQuery,
@@ -43,6 +45,7 @@ import {
 import { usePox5ContractId } from '../queries/pox5-stacking.query';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 import { createStakeMutationOptions } from '../transactions/pox5-stake';
+import { getBroadcastTxId } from '../transactions/pox5-tx-status';
 import { ChoosePayoutPreference } from './components/choose-payout-preference';
 import { ChooseStakingAmount } from './components/choose-staking-amount';
 import { ChooseStakingConditions } from './components/choose-staking-conditions';
@@ -76,6 +79,7 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
   if (!stacksAccount) throw new Error('No STX address available');
 
   const navigate = useNavigate();
+  const { track } = usePox5TxTracker();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [termsConfirmed, setTermsConfirmed] = useState(false);
 
@@ -122,8 +126,9 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
 
   const {
     data: stakeResult,
-    mutateAsync: handleStakeSubmit,
+    mutate: submitStake,
     isPending: handleStakePending,
+    error: stakeError,
   } = useMutation(createStakeMutationOptions({ leather, client }));
 
   const handleStake = formMethods.handleSubmit(values => {
@@ -141,13 +146,26 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
           }
         : undefined;
 
-    return handleStakeSubmit({
-      providerId: pool.providerId,
-      signerManagerContractId,
-      amountMicroStx: BigInt(stxToMicroStx(formValues.amount).toString()),
-      numCycles: formValues.cycles,
-      payoutPreference,
-    }).then(() => navigate(stakingPaths.active(poolSlug)));
+    submitStake(
+      {
+        providerId: pool.providerId,
+        signerManagerContractId,
+        amountMicroStx: BigInt(stxToMicroStx(formValues.amount).toString()),
+        numCycles: formValues.cycles,
+        payoutPreference,
+      },
+      {
+        onSuccess(result) {
+          const txId = getBroadcastTxId(result);
+          const destination = stakingPaths.active(poolSlug);
+          if (!txId) {
+            void navigate(destination);
+            return;
+          }
+          track({ kind: 'stake', txId, destination, startedAt: Date.now() });
+        },
+      }
+    );
   });
 
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
@@ -233,6 +251,7 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
         cycles={watchedCycles}
         estimatedUnlockDate={estimatedUnlockDate}
       />
+      <Pox5SubmitError error={stakeError} mt="space.03" px="space.05" />
     </>
   );
 

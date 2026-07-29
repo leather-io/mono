@@ -49,7 +49,7 @@ export function Staking() {
         learnMoreSlug={learnArticles.liquidStacking.slug}
         mt="space.09"
       />
-      <LiquidStackingProviderTable mt="space.05" providers={liquidProviders} />
+      <LiquidStackingProviderTable mt="space.05" providers={liquidProviders} linksOutToProvider />
 
       <DualStackingTransition mt="space.09" />
 

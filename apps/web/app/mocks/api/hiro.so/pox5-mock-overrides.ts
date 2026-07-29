@@ -19,6 +19,10 @@ function getMockFlag(key: string): string | null {
 // layer sends these requests.
 const stxBalancePath = `${pox5NetworkConfig.apiUrl}/extended/v2/addresses/SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST/balances/stx`;
 
+const mempoolPathSegment = 'mempool';
+const defaultMockTxStatus = 'success';
+const notFoundMockTxStatus = 'not-found';
+
 export const pox5MockOverrideHandlers = [
   http.post(pox5GetStakerInfoStakedHandler.path, () => {
     if (getMockFlag('leather-mock-pox5-staked') !== 'true') return undefined;
@@ -28,6 +32,16 @@ export const pox5MockOverrideHandlers = [
     const burnHeight = getMockFlag('leather-mock-burn-height');
     if (!burnHeight) return undefined;
     return HttpResponse.json({ ...hiroInfoHandler.resp, burn_block_height: Number(burnHeight) });
+  }),
+  http.get(`${pox5NetworkConfig.apiUrl}/extended/v1/tx/:txId`, ({ params }) => {
+    if (params.txId === mempoolPathSegment) return undefined;
+    const status = getMockFlag('leather-mock-pox5-tx-status') ?? defaultMockTxStatus;
+    if (status === notFoundMockTxStatus) return new HttpResponse(null, { status: 404 });
+    return HttpResponse.json({
+      tx_id: params.txId,
+      tx_status: status,
+      tx_type: 'contract_call',
+    });
   }),
   http.get(stxBalancePath, () => {
     const balance = getMockFlag('leather-mock-stx-balance');

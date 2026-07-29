@@ -3,6 +3,7 @@ import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { usePox5StackingClient, usePox5StacksClient } from '../hooks/use-pox5-clients';
+import { getPox5TxRefetchInterval } from '../transactions/pox5-tx-status';
 import { getPox5ContractId } from '../utils/pox5-contracts';
 import {
   Pox5EarnedRewards,
@@ -13,6 +14,7 @@ import {
   Pox5StakerInfo,
   createGetPox5StakerInfoQueryOptions,
 } from './create-get-pox5-staker-info-query-options';
+import { createGetPox5TransactionQueryOptions } from './create-get-pox5-transaction-query-options';
 import { getPendingPox5Transaction } from './get-pending-pox5-txs';
 import { usePox5PoxInfoQuery } from './pox5-node.query';
 
@@ -72,6 +74,17 @@ export function usePox5PendingTxQuery() {
         address,
         pox5ContractId,
       });
+    },
+  });
+}
+
+export function usePox5TransactionQuery(txId: string | null) {
+  const client = usePox5StacksClient();
+
+  return useQuery({
+    ...createGetPox5TransactionQueryOptions({ txId, client }),
+    refetchInterval(query) {
+      return getPox5TxRefetchInterval(query.state.data);
     },
   });
 }

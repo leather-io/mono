@@ -29,6 +29,7 @@ import { StartEarningButton } from '~/pages/stacking/components/start-earning-bu
 import { useProtocolFee } from '~/queries/protocols/use-protocol-fee';
 import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
 import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';
+import { openExternalLink } from '~/utils/external-links';
 import { useViewportMinWidth } from '~/utils/hooks/use-media-query';
 import {
   toHumanReadableMicroStx,
@@ -36,7 +37,7 @@ import {
   toHumanReadableShortStx,
 } from '~/utils/unit-convert';
 
-import { Button, Flag, SkeletonLoader, useOnMount } from '@leather.io/ui';
+import { Button, ExternalLinkIcon, Flag, SkeletonLoader, useOnMount } from '@leather.io/ui';
 import { isNumber, isUndefined } from '@leather.io/utils';
 
 const providerSlugMap = {
@@ -326,10 +327,12 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
 
 interface LiquidStackingProviderTableProps extends HTMLStyledProps<'div'> {
   providers?: LiquidStackingPool[];
+  linksOutToProvider?: boolean;
 }
 
 export function LiquidStackingProviderTable({
   providers = liquidStackingProvidersList,
+  linksOutToProvider = false,
   ...props
 }: LiquidStackingProviderTableProps): ReactElement {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -507,16 +510,31 @@ export function LiquidStackingProviderTable({
       id: 'actions',
       accessorKey: 'actions',
       header: () => null,
-      cell: info => (
-        <Link to={`/stacking/liquid/${info.row.original.slug}`} style={{ minWidth: 'fit-content' }}>
-          <Button size="sm" whiteSpace="nowrap" minW="fit-content">
+      cell: info =>
+        linksOutToProvider ? (
+          <Button
+            size="sm"
+            whiteSpace="nowrap"
+            minW="fit-content"
+            iconEnd={ExternalLinkIcon}
+            onClick={() => openExternalLink(info.row.original.url)}
+            data-testid={`liquid-start-earning-${info.row.original.slug}`}
+          >
             Start earning
           </Button>
-        </Link>
-      ),
+        ) : (
+          <Link
+            to={`/stacking/liquid/${info.row.original.slug}`}
+            style={{ minWidth: 'fit-content' }}
+          >
+            <Button size="sm" whiteSpace="nowrap" minW="fit-content">
+              Start earning
+            </Button>
+          </Link>
+        ),
       meta: { align: 'right' },
     }),
-    []
+    [linksOutToProvider]
   );
 
   const columns = useMemo(() => {

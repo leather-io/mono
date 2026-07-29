@@ -31,15 +31,18 @@ import { BitcoinNetworkModes } from '@leather.io/models';
 import { Button, Input, LoadingSpinner } from '@leather.io/ui';
 import { isDefined, stxToMicroStx } from '@leather.io/utils';
 
+import { Pox5SubmitError } from '../components/pox5-submit-error';
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
 import { usePox5Position } from '../hooks/use-pox5-position';
+import { usePox5TxTracker } from '../hooks/use-pox5-tx-tracker';
 import { Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-options';
 import { usePox5AvailableUnlockedBalance } from '../queries/pox5-node.query';
 import { usePox5PayoutPreferenceQuery } from '../queries/pox5-stacking.query';
 import { ChoosePayoutPreference } from '../start-staking/components/choose-payout-preference';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 import { createStakeUpdateMutationOptions } from '../transactions/pox5-stake-update';
+import { getBroadcastTxId } from '../transactions/pox5-tx-status';
 
 const updateStakingMessages = {
   nothingToUpdate: 'Extend your lock, increase your amount, or change your payout preference',
@@ -214,6 +217,7 @@ function UpdateStakingForm({
   currentPayout,
 }: UpdateStakingFormProps) {
   const navigate = useNavigate();
+  const { track } = usePox5TxTracker();
   const client = usePox5StackingClientRequired();
   const { btcAddressP2wpkh } = useLeatherConnect();
 
@@ -254,9 +258,11 @@ function UpdateStakingForm({
     ),
   });
 
-  const { mutateAsync: handleStakeUpdateSubmit, isPending } = useMutation(
-    createStakeUpdateMutationOptions({ leather, client })
-  );
+  const {
+    mutate: submitStakeUpdate,
+    isPending,
+    error: stakeUpdateError,
+  } = useMutation(createStakeUpdateMutationOptions({ leather, client }));
 
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
 
@@ -276,15 +282,28 @@ function UpdateStakingForm({
           }
         : undefined;
 
-    return handleStakeUpdateSubmit({
-      providerId: pool.providerId,
-      newSignerManagerContractId: info.signerManagerContractId,
-      currentSignerManagerContractId: info.signerManagerContractId,
-      cyclesToExtend: values.cyclesToExtend,
-      amountIncreaseMicroStx: increaseMicroStx,
-      currentAmountMicroStx: info.amountMicroStx,
-      payoutPreference,
-    }).then(() => navigate(stakingPaths.active(poolSlug)));
+    submitStakeUpdate(
+      {
+        providerId: pool.providerId,
+        newSignerManagerContractId: info.signerManagerContractId,
+        currentSignerManagerContractId: info.signerManagerContractId,
+        cyclesToExtend: values.cyclesToExtend,
+        amountIncreaseMicroStx: increaseMicroStx,
+        currentAmountMicroStx: info.amountMicroStx,
+        payoutPreference,
+      },
+      {
+        onSuccess(result) {
+          const txId = getBroadcastTxId(result);
+          const destination = stakingPaths.active(poolSlug);
+          if (!txId) {
+            void navigate(destination);
+            return;
+          }
+          track({ kind: 'stake-update', txId, destination, startedAt: Date.now() });
+        },
+      }
+    );
   });
 
   return (
@@ -379,6 +398,8 @@ function UpdateStakingForm({
         >
           Confirm update
         </Button>
+
+        <Pox5SubmitError error={stakeUpdateError} />
       </Stack>
     </FormProvider>
   );
