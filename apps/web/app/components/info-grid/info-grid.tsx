@@ -7,7 +7,7 @@ export function InfoGrid(props: GridProps) {
     <Grid
       border="default"
       borderWidth="1px"
-      borderRadius="sm"
+      borderRadius="md"
       overflow="hidden"
       gap="1px"
       bg="ink.border-default"

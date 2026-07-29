@@ -3,6 +3,8 @@ import { MetaDescriptor, data } from 'react-router';
 import { stakingPoolSlugSchema } from '~/data/bitcoin-staking-data';
 import { UpdateStaking } from '~/features/bitcoin-staking/update-staking/update-staking';
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
+import { Page } from '~/layouts/page/page';
+import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
 import { Route } from './+types/pool-staking-update.route';
 
@@ -22,8 +24,11 @@ export function meta() {
 
 export default function PoolStakingUpdateRoute({ loaderData }: Route.ComponentProps) {
   return (
-    <StackingClientProvider>
-      <UpdateStaking poolSlug={loaderData.poolSlug} />
-    </StackingClientProvider>
+    <Page>
+      <Page.Header title="Update staking" backTo={stakingPaths.active(loaderData.poolSlug)} />
+      <StackingClientProvider>
+        <UpdateStaking poolSlug={loaderData.poolSlug} />
+      </StackingClientProvider>
+    </Page>
   );
 }

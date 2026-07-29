@@ -39,9 +39,9 @@ export function StackingInfoGridLayout({ cells, ...props }: StackingInfoGridLayo
 
       <InfoGrid
         width="100%"
-        borderTopRadius={['sm', 'sm', cells.actionButtons ? '0' : 'sm']}
+        borderTopRadius={['md', 'md', cells.actionButtons ? '0' : 'md']}
         borderTop={['default', 'default', cells.actionButtons ? 'none' : 'default']}
-        borderBottomRadius={['sm', 'sm', '0']}
+        borderBottomRadius={['md', 'md', '0']}
         gridTemplateColumns={[
           'repeat(2, minmax(0, 1fr))',
           'repeat(3, minmax(0, 1fr))',

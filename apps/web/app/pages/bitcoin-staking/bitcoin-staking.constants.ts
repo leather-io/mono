@@ -7,6 +7,7 @@ export const bitcoinStakingEnabled = import.meta.env.CLOUDFLARE_ENV !== 'product
 
 export const stakingPaths = {
   index: '/staking',
+  status: '/staking/status',
   pool(slug: string) {
     return `/staking/pool/${slug}`;
   },
@@ -23,8 +24,9 @@ export const stakingPaths = {
 // prepare-phase length is per-network and must always be read from pox-info.
 export const POX5_MAX_NUM_CYCLES = 96;
 export const POX5_SIGNER_SET_MIN_USTX = 50_000_000_000;
-export const DEFAULT_STAKING_CYCLES = 96;
+export const DEFAULT_STAKING_CYCLES = 48;
 export const MEAN_BURN_BLOCK_SECONDS = 600;
+export const CYCLE_STATUS_REFETCH_INTERVAL_MS = 60_000;
 
 // Which chain the whole feature is pinned to — API, contract ids, wallet RPC
 // network and address flavours — lives in data/pox5-network-config.ts.

@@ -10,7 +10,7 @@ export function PendingStakePanel() {
       p="space.05"
       borderWidth={1}
       borderColor="ink.border-default"
-      borderRadius="sm"
+      borderRadius="md"
       data-testid="pending-stake-panel"
     >
       <HStack gap="space.03">

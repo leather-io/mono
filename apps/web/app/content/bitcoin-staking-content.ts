@@ -5,7 +5,7 @@ interface ExplainerStep {
 }
 
 interface StakingCondition {
-  iconKey: 'BoxedCatLockedIcon' | 'MagnifyingGlassIcon' | 'StacksIcon';
+  iconKey: 'MagnifyingGlassIcon' | 'SbtcIcon';
   title: string;
   description: string;
 }
@@ -16,13 +16,39 @@ export const bitcoinStakingContent = {
   heroYieldLabel: `Variable yield, paid in sBTC`,
   providerDescription: `Providers are external parties that operate PoX-5 staking pools through their own signer-manager contracts. Leather is not liable for the conduct of third parties.`,
   chooseDuration: {
-    helperLead: `A cycle lasts about two weeks. This sets how long before you need to renew, not how long you are committed.`,
-    helperEmphasis: `You can unstake at any time`,
-    helperTrail: `and your STX unlocks when the current cycle ends.`,
+    inputLabel: `Cycles before renewal (1–96)`,
+    renewalPrefix: `Renews ~`,
+    exitTitle: `Exit any time`,
+    exitDescription: `This isn’t a lock. Unstake whenever you want and your STX unlocks when the current cycle ends. A cycle is about two weeks.`,
   },
   learnMore: {
     label: `Read more about Bitcoin Staking on stacks.co`,
     url: `https://www.stacks.co/bitcoin-staking`,
+  },
+  scanningPositions: `Looking for positions`,
+  yourPosition: {
+    title: `Your position`,
+    sentence: `Your staked STX and what it is earning. Rewards accrue each cycle and are claimed through the pool's signer-manager contract.`,
+  },
+  stakingStatus: {
+    connectTitle: `Connect Leather to see your staking`,
+    connectDescription: `Once connected, this page takes you straight to the pool you are staking with.`,
+  },
+  cycleStatus: {
+    openLabel: `Staking closes in`,
+    pausedLabel: `Staking paused · reopens in`,
+    explanationTitle: `Staking windows`,
+    explanation: `In the last 100 Bitcoin blocks of a cycle the network locks in the signer set. New stakes and changes to an existing stake are rejected during that window, and resume when the next cycle starts.`,
+  },
+  poolOverviewInfo: {
+    rewardsToken: `Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool's signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall.`,
+    minimumCommitment: `Each pool sets its own minimum. Separately, a pool needs at least 50,000 STX staked in total to earn rewards for a cycle. Small or new pools below that threshold earn nothing until they grow.`,
+    fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so check the pool's terms before staking.`,
+    nextCycle: `Your stake starts earning when the next cycle begins. A cycle lasts about two weeks.`,
+  },
+  unlistedPool: {
+    label: `Staked with a pool Leather does not list`,
+    description: `Your STX is staked and still earning. Managing it here needs a pool Leather knows, so use the tools of whoever operates this signer manager.`,
   },
   dualStackingTransition: {
     title: `Dual Stacking is winding down`,
@@ -75,17 +101,12 @@ export const bitcoinStakingExplainer: ExplainerStep[] = [
 
 export const bitcoinStakingConditions: StakingCondition[] = [
   {
-    iconKey: 'BoxedCatLockedIcon',
-    title: `You choose how long before you renew`,
-    description: `Your exact amount locks at the next cycle. You can unstake at any time, and your STX unlocks when the current cycle ends.`,
-  },
-  {
     iconKey: 'MagnifyingGlassIcon',
     title: `Research your pool`,
     description: `Rewards flow through the pool's signer-manager contract and depend on its policies — research before joining.`,
   },
   {
-    iconKey: 'StacksIcon',
+    iconKey: 'SbtcIcon',
     title: `Rewards accrue as sBTC`,
     description: `Yield is variable and paid in sBTC on Stacks. Rewards are claimed through the pool's contract.`,
   },

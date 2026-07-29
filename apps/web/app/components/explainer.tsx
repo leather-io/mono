@@ -26,7 +26,7 @@ interface ExplainerProps extends HTMLStyledProps<'section'> {
 }
 export function Explainer({ children, ...props }: ExplainerProps) {
   return (
-    <styled.section border="default" borderRadius="sm" {...props}>
+    <styled.section border="default" borderRadius="md" {...props}>
       <Grid
         className={gridBorders}
         gap={0}

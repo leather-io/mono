@@ -23,8 +23,10 @@ export const rowPadding = css({
   '& th:last-child': { pr: 'space.05' },
 });
 
+// Containerised by default, matching the portfolio table which already set
+// these explicitly. Callers can still override either value.
 const TableRoot = forwardRef<HTMLDivElement, HTMLStyledProps<'div'>>((props, ref) => (
-  <styled.div ref={ref} {...props} />
+  <styled.div ref={ref} border="default" borderRadius="md" overflow="hidden" {...props} />
 ));
 
 const StyledTable = forwardRef<HTMLTableElement, HTMLStyledProps<'table'>>((props, ref) => (

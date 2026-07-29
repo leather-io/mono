@@ -47,6 +47,29 @@ test.describe('Bitcoin Staking', () => {
     await test.expect(page.getByTestId('claimable-rewards-card')).toBeVisible();
   });
 
+  test('the status page resolves to the pool the user is staking with', async ({ page, mode }) => {
+    await mode({ mode: 'mock-connected' });
+    await setMockFlag(page, 'leather-mock-pox5-staked', 'true');
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking/status');
+
+    await page.waitForURL('**/staking/pool/special/active', { timeout: 15_000 });
+    await test.expect(page.getByTestId('claimable-rewards-card')).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('the status page falls back to the overview with no position', async ({ page, mode }) => {
+    await mode({ mode: 'mock-connected' });
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking/status');
+
+    await page.waitForURL(url => url.pathname === '/staking', { timeout: 15_000 });
+    await test.expect(page.getByTestId('start-staking-button-special')).toBeVisible({
+      timeout: 15_000,
+    });
+  });
+
   test('users can claim accrued sBTC rewards', async ({ page, mode }) => {
     await mode({ mode: 'mock-connected' });
     await setMockFlag(page, 'leather-mock-pox5-staked', 'true');
