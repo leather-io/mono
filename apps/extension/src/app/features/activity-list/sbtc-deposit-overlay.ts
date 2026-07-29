@@ -39,16 +39,13 @@ function getDepositStatusColor(status: SbtcStatus) {
   }
 }
 
-export function createSbtcDepositOverlay(
-  status: SbtcStatus,
-  bitcoinTxid: string
-): SbtcDepositOverlay | undefined {
+export function createSbtcDepositOverlay(status: SbtcStatus): SbtcDepositOverlay | undefined {
   const statusLabel = getDepositStatusLabel(status);
   if (!statusLabel) return undefined;
   return {
     title: sbtcDepositTitle,
     statusLabel,
     statusColor: getDepositStatusColor(status),
-    ...(status === 'failed' ? { reclaimUrl: `${SBTC_RECLAIM_URL}${bitcoinTxid}` } : {}),
+    ...(status === 'failed' ? { reclaimUrl: SBTC_RECLAIM_URL } : {}),
   };
 }

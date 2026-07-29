@@ -54,7 +54,7 @@ export function useSbtcDepositActivity(feedTxids: ReadonlySet<string>): SbtcDepo
   const overlays = useMemo(() => {
     const map = new Map<string, SbtcDepositOverlay>();
     for (const deposit of deposits) {
-      const overlay = createSbtcDepositOverlay(deposit.status, deposit.bitcoinTxid);
+      const overlay = createSbtcDepositOverlay(deposit.status);
       if (overlay) map.set(deposit.bitcoinTxid, overlay);
     }
     return map;
