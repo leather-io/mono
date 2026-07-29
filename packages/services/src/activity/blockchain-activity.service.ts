@@ -232,13 +232,12 @@ export class BlockchainActivityService {
       this.mapSourceItems(account, candidates, signal),
       this.getPendingStacksActivity(account, signal),
     ]);
-    return this.enrichWithMarketData(
-      [
-        ...pendingAll.filter(activity => activityTouchesAsset(activity, assetId)),
-        ...confirmedAll.filter(activity => activityTouchesAsset(activity, assetId)),
-      ],
-      signal
+    const scannedTxids = new Set(sourceItems.map(item => item.txid));
+    const pending = pendingAll.filter(
+      activity => !scannedTxids.has(activity.txid) && activityTouchesAsset(activity, assetId)
     );
+    const confirmed = confirmedAll.filter(activity => activityTouchesAsset(activity, assetId));
+    return this.enrichWithMarketData([...pending, ...confirmed], signal);
   }
 
   private async getRecentStacksSourceItems(

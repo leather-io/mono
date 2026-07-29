@@ -275,6 +275,52 @@ describe(BlockchainActivityService.name, () => {
       ).rejects.toThrow();
     });
 
+    it('emits a tx present in both the mempool and the confirmed scan exactly once', async () => {
+      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xdup',
+              type: 'token_transfer',
+              token_transfer: { recipient: 'SP2', amount: '1000', memo: null },
+            },
+            { balance_changes: { stx: { sent: '1000', received: '0', net: '-1000' } } }
+          ),
+        ],
+      });
+      mockStacksTx.getPendingTransactions = vi.fn().mockResolvedValue([
+        {
+          tx_id: '0xdup',
+          tx_type: 'token_transfer',
+          sender_address: 'SP1',
+          sponsored: false,
+          fee_rate: '100',
+          receipt_time: 2000,
+          token_transfer: { recipient_address: 'SP2', amount: '1000', memo: '' },
+        },
+        {
+          tx_id: '0xmempoolonly',
+          tx_type: 'token_transfer',
+          sender_address: 'SP1',
+          sponsored: false,
+          fee_rate: '100',
+          receipt_time: 2001,
+          token_transfer: { recipient_address: 'SP3', amount: '500', memo: '' },
+        },
+      ]);
+      const result = await service.getActivityByAssetId(account, {
+        protocol: 'nativeStx',
+        id: 'STX',
+      });
+      expect(result.map(a => a.txid)).toEqual(['0xmempoolonly', '0xdup']);
+      expect(result[0].status).toBe('pending');
+      expect(result[1].status).toBe('success');
+    });
+
     it('reclassifies an unmapped SIP-10 transfer contract call as receive', async () => {
       mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
         total: 1,
