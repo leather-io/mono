@@ -12,7 +12,7 @@ export function DualStackingTransition(props: HTMLStyledProps<'div'>) {
     <styled.div {...props}>
       <Flex
         border="default"
-        borderRadius="sm"
+        borderRadius="md"
         p="space.05"
         gap={['space.04', 'space.04', 'space.07']}
         justifyContent="space-between"

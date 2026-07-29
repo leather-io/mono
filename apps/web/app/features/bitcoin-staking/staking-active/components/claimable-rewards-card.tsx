@@ -53,7 +53,7 @@ export function ClaimableRewardsCard({
       p="space.05"
       borderWidth={1}
       borderColor="ink.border-default"
-      borderRadius="sm"
+      borderRadius="md"
       data-testid="claimable-rewards-card"
     >
       <HStack justifyContent="space-between" alignItems="center">

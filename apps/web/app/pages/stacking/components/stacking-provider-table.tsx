@@ -285,7 +285,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
                     width: `${header.getSize()}%`,
                   }}
                   fontWeight={activeSortKeys.includes(header.id) ? 'bold' : 'normal'}
-                  align={header.column.columnDef.meta?.align}
+                  textAlign={header.column.columnDef.meta?.align ?? 'left'}
                 >
                   {header.isPlaceholder ? null : (
                     <styled.span
@@ -311,7 +311,6 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
                   }}
                   px="space.04"
                   key={cell.id}
-                  align={cell.column.columnDef.meta?.align}
                   color="black"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -554,7 +553,7 @@ export function LiquidStackingProviderTable({
                   key={header.id}
                   colSpan={header.colSpan}
                   style={{ width: `${header.getSize()}%` }}
-                  align={(header.column.columnDef.meta as any)?.align}
+                  textAlign={(header.column.columnDef.meta as any)?.align ?? 'left'}
                 >
                   {header.isPlaceholder ? null : (
                     <styled.span
@@ -581,7 +580,6 @@ export function LiquidStackingProviderTable({
                   }}
                   px="space.04"
                   key={cell.id}
-                  align={(cell.column.columnDef.meta as any)?.align}
                   color="black"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

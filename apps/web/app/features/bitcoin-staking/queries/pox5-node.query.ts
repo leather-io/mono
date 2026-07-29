@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
+import { CYCLE_STATUS_REFETCH_INTERVAL_MS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
 import { Money } from '@leather.io/models';
 import {
@@ -17,19 +18,32 @@ import { usePox5StackingClientRequired, usePox5StacksClient } from '../hooks/use
 // hooks in features/stacking/hooks/stacking.query.ts but run against the
 // pinned pox-5 clients, so cycle clocks, burn heights, and balances reflect
 // the chain transactions are actually sent to.
+// Burn blocks land roughly every ten minutes, so a one-minute refetch keeps the
+// cycle clock honest without the user reloading. Without it the page can keep
+// claiming staking is paused long after the prepare phase ended, and gate
+// actions that the contract would now accept.
 export function usePox5PoxInfoQuery() {
   const client = usePox5StackingClientRequired();
-  return useQuery(createGetPoxInfoQueryOptions({ client }));
+  return useQuery({
+    ...createGetPoxInfoQueryOptions({ client }),
+    refetchInterval: CYCLE_STATUS_REFETCH_INTERVAL_MS,
+  });
 }
 
 export function usePox5CoreInfoQuery() {
   const client = usePox5StackingClientRequired();
-  return useQuery(createGetCoreInfoQueryOptions({ client }));
+  return useQuery({
+    ...createGetCoreInfoQueryOptions({ client }),
+    refetchInterval: CYCLE_STATUS_REFETCH_INTERVAL_MS,
+  });
 }
 
 export function usePox5SecondsUntilNextCycleQuery() {
   const client = usePox5StackingClientRequired();
-  return useQuery(createGetSecondsUntilNextCycleQueryOptions({ client }));
+  return useQuery({
+    ...createGetSecondsUntilNextCycleQueryOptions({ client }),
+    refetchInterval: CYCLE_STATUS_REFETCH_INTERVAL_MS,
+  });
 }
 
 interface UsePox5AvailableUnlockedBalanceResult {

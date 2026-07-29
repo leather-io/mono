@@ -3,6 +3,8 @@ import { MetaDescriptor, data } from 'react-router';
 import { stakingPoolSlugSchema } from '~/data/bitcoin-staking-data';
 import { StartStaking } from '~/features/bitcoin-staking/start-staking/start-staking';
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
+import { Page } from '~/layouts/page/page';
+import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
 import { Route } from './+types/pool-staking.route';
 
@@ -22,8 +24,11 @@ export function meta() {
 
 export default function PoolStakingRoute({ loaderData }: Route.ComponentProps) {
   return (
-    <StackingClientProvider>
-      <StartStaking poolSlug={loaderData.poolSlug} />
-    </StackingClientProvider>
+    <Page>
+      <Page.Header title="Stake with a pool" backTo={stakingPaths.index} />
+      <StackingClientProvider>
+        <StartStaking poolSlug={loaderData.poolSlug} />
+      </StackingClientProvider>
+    </Page>
   );
 }

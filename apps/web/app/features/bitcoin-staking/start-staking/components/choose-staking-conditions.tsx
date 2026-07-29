@@ -1,12 +1,11 @@
 import { bitcoinStakingConditions } from '~/content/bitcoin-staking-content';
 import { StackingConditions } from '~/features/stacking/components/stacking-conditions';
 
-import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
+import { MagnifyingGlassIcon, SbtcIcon } from '@leather.io/ui';
 
 const iconMap = {
-  BoxedCatLockedIcon: <BoxedCatLockedIcon />,
   MagnifyingGlassIcon: <MagnifyingGlassIcon />,
-  StacksIcon: <StacksIcon />,
+  SbtcIcon: <SbtcIcon />,
 } as const;
 
 export function ChooseStakingConditions() {

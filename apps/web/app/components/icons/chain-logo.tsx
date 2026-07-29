@@ -1,4 +1,5 @@
-import { BitcoinIcon } from './bitcoin-icon';
+import { BtcAvatarIcon, SbtcAvatarIcon } from '@leather.io/ui';
+
 import { LiStxIcon } from './listx-icon';
 import { StacksIcon } from './stacks-icon';
 import { StStxIcon } from './ststx-icon';
@@ -11,7 +12,9 @@ export function ChainLogoIcon(props: ChainLogoIconProps) {
     case 'STX':
       return <StacksIcon />;
     case 'BTC':
-      return <BitcoinIcon />;
+      return <BtcAvatarIcon size="sm" />;
+    case 'sBTC':
+      return <SbtcAvatarIcon size="sm" />;
     case 'LiSTX':
       return <LiStxIcon />;
     case 'stSTX':

@@ -52,7 +52,7 @@ export function Layout({ children }: HasChildren) {
         ))}
         <Links />
       </head>
-      <styled.body>
+      <styled.body bg="ink.background-primary">
         <GlobalLoader />
         {bareCanvas ? (
           <styled.main minHeight="100vh" bg="ink.background-primary">

@@ -1,7 +1,7 @@
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 
-import { ArrowRotateClockwiseIcon, Flag } from '@leather.io/ui';
+import { ArrowRotateClockwiseIcon, Avatar, Flag } from '@leather.io/ui';
 
 interface PreparePhaseCalloutProps {
   secondsUntilStakingReopens: number;
@@ -15,10 +15,13 @@ export function PreparePhaseCallout({ secondsUntilStakingReopens }: PreparePhase
       p="space.04"
       borderWidth={1}
       borderColor="ink.border-default"
-      borderRadius="sm"
+      borderRadius="md"
       data-testid="prepare-phase-callout"
     >
-      <Flag img={<ArrowRotateClockwiseIcon />} align="top">
+      <Flag
+        img={<Avatar size="lg" variant="square" icon={<ArrowRotateClockwiseIcon />} />}
+        align="top"
+      >
         <Stack gap="space.01">
           <styled.p textStyle="label.03">{bitcoinStakingContent.preparePhase.title}</styled.p>
           <styled.p textStyle="caption.01" color="ink.text-subdued">

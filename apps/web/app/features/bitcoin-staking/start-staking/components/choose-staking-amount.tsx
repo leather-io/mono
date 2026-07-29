@@ -2,10 +2,11 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import BigNumber from 'bignumber.js';
 import { Box, Stack, styled } from 'leather-styles/jsx';
+import { link as linkRecipe } from 'leather-styles/recipes';
 import { ErrorLabel } from '~/components/error-label';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
-import { Button, Input, Spinner } from '@leather.io/ui';
+import { Input, Spinner } from '@leather.io/ui';
 import { isDefined, microStxToStx } from '@leather.io/utils';
 
 interface ChooseStakingAmountProps {
@@ -44,14 +45,19 @@ export function ChooseStakingAmount({ isLoading, availableAmount }: ChooseStakin
         <styled.span textStyle="caption">Available balance:</styled.span>
         {isLoading && <Spinner />}
         {!isLoading && availableAmount && (
-          <Button
-            variant="ghost"
-            size="md"
+          <styled.button
             type="button"
+            className={linkRecipe({ variant: 'underlined' })}
+            bg="transparent"
+            border="none"
+            p="0"
+            ml="space.02"
+            color="ink.text-primary"
+            cursor="pointer"
             onClick={() => setValue('amount', microStxToStx(availableAmount).toNumber())}
           >
             {toHumanReadableMicroStx(availableAmount)}
-          </Button>
+          </styled.button>
         )}
         {!isLoading && !availableAmount && 'Failed to load'}
       </Box>

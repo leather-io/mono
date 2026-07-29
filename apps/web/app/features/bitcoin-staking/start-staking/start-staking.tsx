@@ -31,7 +31,7 @@ import { stxToMicroStx } from '@leather.io/utils';
 import { PendingStakePanel } from '../components/pending-stake-panel';
 import { PoolHealthWarning } from '../components/pool-health-warning';
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
-import { StakingPoolOverview } from '../components/staking-pool-overview';
+import { StakingPoolOverview, cycleStatusFromClock } from '../components/staking-pool-overview';
 import { usePox5StackingClient } from '../hooks/use-pox5-clients';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
 import { usePox5Position } from '../hooks/use-pox5-position';
@@ -163,6 +163,8 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
       ? Math.round(getSecondsUntilNextCycleQuery.data / (60 * 60 * 24))
       : null;
 
+  const cycleStatus = cycleClock ? cycleStatusFromClock(cycleClock.clock) : null;
+
   if (positionIsLoading) {
     return (
       <Flex height="100vh" width="100%">
@@ -240,6 +242,7 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
         pool={pool}
         nextCycleNumber={nextCycleNumber}
         daysUntilNextCycle={daysUntilNextCycle}
+        cycleStatus={cycleStatus}
       />
 
       <PoolHealthWarning totalStakedMicroStx={null} />
