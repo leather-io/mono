@@ -52,8 +52,13 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     url: 'https://fastpool.org',
     description:
       'Enjoy automatic pool operations. Rewards accrue as sBTC each cycle and can be claimed anytime.',
-    signerManagerContract: {},
-    supportsBtcPayout: false,
+    signerManagerContract: {
+      mainnet: 'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fastpool-1-signer-manager',
+    },
+    supportsBtcPayout: true,
+    // TODO: read the live rate from the contract once it is deployed — the
+    // signer-manager exposes no getter for the current fee, only the per-cycle
+    // snapshot written after claim-rewards runs.
     fee: '5%',
   },
   planbetter: {
