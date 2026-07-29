@@ -9,14 +9,24 @@ import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-a
 import { mergeSbtcDepositItems } from './activity-list.utils';
 import { ActivityGroupHeader } from './components/activity-group-header';
 import { ActivityListLayout } from './components/activity-list.layout';
+import { ActivityLoadMoreError } from './components/activity-load-more-error';
 import { ActivityLoadingMore } from './components/activity-loading-more';
 import { ActivityRow } from './components/activity-row';
 import { useSbtcDepositActivity } from './use-sbtc-deposit-activity';
 
 export function ActivityList() {
   const accountAddresses = useCurrentAccountAddresses();
-  const { items, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage, refetch } =
-    useBlockchainActivityFeed(accountAddresses);
+  const {
+    items,
+    isLoading,
+    isError,
+    isRefetchError,
+    isFetchNextPageError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    refetch,
+  } = useBlockchainActivityFeed(accountAddresses);
 
   const feedTxids = useMemo(() => new Set(items.map(item => item.view.txid)), [items]);
   const { overlays: sbtcOverlays, standaloneItems: sbtcItems } = useSbtcDepositActivity(feedTxids);
@@ -53,14 +63,21 @@ export function ActivityList() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const components = useMemo(
-    () => ({ Footer: () => (isFetchingNextPage ? <ActivityLoadingMore /> : null) }),
-    [isFetchingNextPage]
+    () => ({
+      Footer() {
+        if (isFetchingNextPage) return <ActivityLoadingMore />;
+        if (isFetchNextPageError) return <ActivityLoadMoreError onRetry={fetchNextPage} />;
+        return null;
+      },
+    }),
+    [isFetchingNextPage, isFetchNextPageError, fetchNextPage]
   );
 
   return (
     <ActivityListLayout
       isLoading={isLoading}
       isError={isError}
+      isRefetchError={isRefetchError}
       hasActivity={activityItems.length > 0}
       onRetry={refetch}
     >

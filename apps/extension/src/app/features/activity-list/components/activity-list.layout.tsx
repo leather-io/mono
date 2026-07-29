@@ -7,11 +7,13 @@ import { Stack, styled } from 'leather-styles/jsx';
 import { ActivityEmpty } from './activity-empty';
 import { ActivityError } from './activity-error';
 import { ActivityLoading } from './activity-loading';
+import { ActivityRefreshError } from './activity-refresh-error';
 
 interface ActivityListLayoutProps {
   children: ReactNode;
   isLoading: boolean;
   isError: boolean;
+  isRefetchError: boolean;
   hasActivity: boolean;
   onRetry(): void;
 }
@@ -20,6 +22,7 @@ export function ActivityListLayout({
   children,
   isLoading,
   isError,
+  isRefetchError,
   hasActivity,
   onRetry,
 }: ActivityListLayoutProps) {
@@ -29,6 +32,7 @@ export function ActivityListLayout({
     if (!hasActivity) return <ActivityEmpty />;
     return (
       <>
+        {isRefetchError && <ActivityRefreshError onRetry={onRetry} />}
         {children}
         <styled.div
           position="absolute"

@@ -66,6 +66,7 @@ export interface ActivityResponse {
 // Hiro v3 caps /principals/{p}/transactions at 50 results per page.
 const stacksTxPageSize = 50;
 const defaultActivityPageSize = 50;
+const maxActivityPageFetches = 5;
 // Hiro v3 caps /balance-changes at 20 tx_ids per call, so ft lookups are chunked.
 const balanceChangesBatchSize = 20;
 const activityByAssetScanPages = 10;
@@ -93,15 +94,11 @@ export class BlockchainActivityService {
       btcTxHorizonPageRequest,
       signal
     );
-    const page = await getActivitySourcePage(this.createSources(request.account, btcTxs, signal), {
-      limit: request.limit ?? defaultActivityPageSize,
-      cursor: request.cursor,
-    });
     // Pending is stitched onto the first page only and sits above the cursor keyspace, so
     // pages 2+ never re-emit it. Dedup by txid, confirmed wins: a tx that confirms between
     // refetches transitions atomically (leaves pending, appears confirmed, exactly once).
-    const [confirmed, allPending] = await Promise.all([
-      this.mapSourceItems(request.account, page.items, signal),
+    const [{ confirmed, nextCursor }, allPending] = await Promise.all([
+      this.getConfirmedActivityPage(request, btcTxs, signal),
       request.cursor === undefined
         ? this.getPendingActivity(request.account, btcTxs, signal)
         : Promise.resolve([]),
@@ -111,9 +108,27 @@ export class BlockchainActivityService {
     const items = await this.enrichWithMarketData([...pending, ...confirmed], signal);
     return {
       items,
-      nextCursor: page.nextCursor,
-      hasMore: page.nextCursor !== null,
+      nextCursor,
+      hasMore: nextCursor !== null,
     };
+  }
+
+  private async getConfirmedActivityPage(
+    request: ActivityRequest,
+    btcTxs: Promise<BitcoinTransaction[]>,
+    signal?: AbortSignal
+  ): Promise<{ confirmed: BlockchainActivity[]; nextCursor: ActivitySourceCursor | null }> {
+    const sources = this.createSources(request.account, btcTxs, signal);
+    const limit = request.limit ?? defaultActivityPageSize;
+    let page = await getActivitySourcePage(sources, { limit, cursor: request.cursor });
+    let confirmed = await this.mapSourceItems(request.account, page.items, signal);
+    for (let fetches = 1; fetches < maxActivityPageFetches; fetches++) {
+      const cursor = page.nextCursor;
+      if (confirmed.length > 0 || cursor === null) break;
+      page = await getActivitySourcePage(sources, { limit, cursor });
+      confirmed = await this.mapSourceItems(request.account, page.items, signal);
+    }
+    return { confirmed, nextCursor: page.nextCursor };
   }
 
   public async getActivityByAssetId(

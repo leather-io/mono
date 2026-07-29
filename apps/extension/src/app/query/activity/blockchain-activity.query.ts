@@ -68,6 +68,8 @@ interface BlockchainActivityFeed {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
+  isRefetchError: boolean;
+  isFetchNextPageError: boolean;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage(): void;
@@ -99,6 +101,8 @@ export function useBlockchainActivityFeed(
     isLoading: feedQuery.isLoading,
     isError: feedQuery.isError,
     isSuccess: feedQuery.isSuccess,
+    isRefetchError: feedQuery.isRefetchError,
+    isFetchNextPageError: feedQuery.isFetchNextPageError,
     hasNextPage: feedQuery.hasNextPage,
     isFetchingNextPage: feedQuery.isFetchingNextPage,
     fetchNextPage: () => void feedQuery.fetchNextPage(),

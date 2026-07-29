@@ -454,6 +454,47 @@ describe(BlockchainActivityService.name, () => {
       expect(response.nextCursor).not.toBeNull();
       expect(response.hasMore).toBe(true);
     });
+
+    function unownedBtcTx(txid: string, time: number) {
+      return btcTx({
+        txid,
+        time,
+        height: 900,
+        vin: [{ owned: false, value: '1000', address: 'ext', n: 0 }],
+        vout: [{ owned: false, value: '900', address: 'other', n: 0 }],
+      });
+    }
+
+    it('advances past a page whose items all map to null instead of dead-ending', async () => {
+      mockBtcTx.getAccountTransactions = vi
+        .fn()
+        .mockResolvedValue([
+          unownedBtcTx('btc-unowned-1', 1000),
+          unownedBtcTx('btc-unowned-2', 999),
+          btcTx({ txid: 'btc-owned-1', time: 500 }),
+          btcTx({ txid: 'btc-owned-2', time: 400 }),
+        ]);
+
+      const response = await service.getActivity({ account, limit: 2 });
+
+      expect(response.items.map(item => item.txid)).toEqual(['btc-owned-1', 'btc-owned-2']);
+      expect(response.nextCursor).toBeNull();
+      expect(response.hasMore).toBe(false);
+    });
+
+    it('stops advancing at the fetch cap when every page maps to zero activities', async () => {
+      mockBtcTx.getAccountTransactions = vi
+        .fn()
+        .mockResolvedValue(
+          Array.from({ length: 12 }, (_, i) => unownedBtcTx(`btc-unowned-${i}`, 1000 - i))
+        );
+
+      const response = await service.getActivity({ account, limit: 2 });
+
+      expect(response.items).toEqual([]);
+      expect(response.hasMore).toBe(true);
+      expect(response.nextCursor).not.toBeNull();
+    });
   });
 
   describe('STX fee handling', () => {
