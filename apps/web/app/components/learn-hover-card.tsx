@@ -69,8 +69,10 @@ export function LearnHoverCard({
   // Inline rather than a flex row, so the icon follows the label's last word and
   // the surrounding text-align still governs the whole thing.
   const trigger = showIcon ? (
-    <styled.span>
-      {renderLabel()}
+    <styled.span textStyle={textStyle}>
+      <StyledTag textStyle={textStyle} display="inline">
+        {label}
+      </StyledTag>
       <styled.button
         onClick={handleIconClick}
         display="inline-flex"
