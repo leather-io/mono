@@ -37,7 +37,7 @@ export function ConfirmationSteps<T extends ConfirmationStepId>({
       py={[null, null, 'space.03', 'space.05']}
       borderWidth={[0, null, 1]}
       borderColor="ink.border-default"
-      borderRadius="sm"
+      borderRadius="md"
       gap={[null, null, 'space.03']}
     >
       {preview}

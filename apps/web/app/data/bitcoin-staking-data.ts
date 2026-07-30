@@ -42,7 +42,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     name: 'Special',
     url: 'https://leather.io',
     description:
-      'Staking pool on the pox-5 test chain. Rewards accrue as sBTC each cycle and can be claimed anytime.',
+      'Staking pool on the pox-5 test chain. Rewards accrue as sBTC each cycle and can be claimed once the cycle concludes.',
     signerManagerContracts: specialSignerManagerContracts,
     // The reference signer-manager supports the L1 payout preference
     // (get-pox-addr + sbtc-withdrawal routing in claim-staker-rewards).
@@ -53,7 +53,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     name: 'Fast Pool',
     url: 'https://fastpool.org',
     description:
-      'Enjoy automatic pool operations. Rewards accrue as sBTC each cycle and can be claimed anytime.',
+      'Enjoy automatic pool operations. Rewards accrue as sBTC each cycle and can be claimed once the cycle concludes.',
     signerManagerContracts: {
       mainnet: [
         'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fastpool-1-signer-manager',

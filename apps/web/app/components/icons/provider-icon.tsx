@@ -8,8 +8,8 @@ interface ProviderIconConfig {
 }
 
 const stackingProviderIconConfig: Record<ProviderId, ProviderIconConfig> = {
-  fastPool: { src: '/icons/fastpool.webp', fill: 'black' },
-  fastPoolV2: { src: '/icons/fastpool.webp', fill: 'black' },
+  fastPool: { src: '/icons/fastpool.svg', fill: '#7A6FB0' },
+  fastPoolV2: { src: '/icons/fastpool.svg', fill: '#7A6FB0' },
   planbetter: { src: '/icons/planbetter.webp', fill: 'black' },
   restake: { src: '/icons/restake.webp', fill: '#124044' },
   xversePool: { src: '/icons/xverse.webp', fill: 'black' },

@@ -288,18 +288,14 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
                   <ChooseStakingDuration estimatedUnlockDate={estimatedUnlockDate} />
                 </Stack>
 
-                {pool.supportsBtcPayout && (
-                  <>
-                    <Hr />
-                    <Stack gap="space.02">
-                      <StackingFormItemTitle
-                        title="Rewards payout"
-                        article={learnArticles.stackingRewardsAddress}
-                      />
-                      <ChoosePayoutPreference />
-                    </Stack>
-                  </>
-                )}
+                <Hr />
+                <Stack gap="space.02">
+                  <StackingFormItemTitle
+                    title="Rewards payout"
+                    article={learnArticles.stackingRewardsAddress}
+                  />
+                  <ChoosePayoutPreference supportsBtcPayout={pool.supportsBtcPayout} />
+                </Stack>
 
                 <Hr />
 
@@ -329,7 +325,7 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
                   px="space.06"
                   size="md"
                   width="100%"
-                  display={['block', null, 'none']}
+                  display={['block', null, null, 'none']}
                   onClick={() => setDrawerOpen(true)}
                 >
                   Review
@@ -337,7 +333,11 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
               </Stack>
             </Form>
           }
-          preview={<StackingFormStepsPanel>{confirmationSteps}</StackingFormStepsPanel>}
+          preview={
+            <StackingFormStepsPanel display={['none', null, null, 'flex']}>
+              {confirmationSteps}
+            </StackingFormStepsPanel>
+          }
         />
       </FormProvider>
 

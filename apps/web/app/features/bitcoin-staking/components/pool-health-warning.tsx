@@ -19,7 +19,7 @@ export function PoolHealthWarning({ totalStakedMicroStx }: PoolHealthWarningProp
       p="space.04"
       borderWidth={1}
       borderColor="ink.border-default"
-      borderRadius="md"
+      borderRadius="sm"
       data-testid="pool-health-warning"
     >
       <Flag img={<ErrorCircleIcon />} align="top">

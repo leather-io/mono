@@ -36,7 +36,10 @@ export const bitcoinStakingContent = {
   },
   cycleStatus: {
     openLabel: `Staking closes in`,
+    closingSoonLabel: `Closing soon`,
+    closingWithinHourLabel: `Closing within the hour`,
     pausedLabel: `Staking paused · reopens in`,
+    pausedWithinHourLabel: `Staking paused · reopens within the hour`,
     explanationTitle: `Staking windows`,
     explanation: `In the last 100 Bitcoin blocks of a cycle the network locks in the signer set. New stakes and changes to an existing stake are rejected during that window, and resume when the next cycle starts.`,
   },
@@ -56,10 +59,14 @@ export const bitcoinStakingContent = {
     url: `https://www.stacks.co/bitcoin-staking`,
   },
   payoutPreference: {
-    toggleLabel: `Receive rewards as BTC on Bitcoin (optional)`,
-    collapsedHelper: `By default, rewards accrue as sBTC on Stacks and can be claimed anytime.`,
-    expandedHelper: `The pool pays rewards as an sBTC-to-BTC withdrawal to this address. The max fee caps what you pay per withdrawal — claims smaller than the max fee cannot be paid out until it is lowered.`,
-    updateHelper: `This is your standing payout setting, applied to every future claim. Leave it as is to keep it, edit the address or fee to change it, or untick it to switch future claims back to sBTC.`,
+    sbtcLabel: `sBTC`,
+    sbtcTag: `Recommended`,
+    btcLabel: `BTC`,
+    sbtcHelper: `Paid to your wallet once a cycle concludes — your pool usually claims for you.`,
+    btcHelper: `Withdrawn from sBTC to your Bitcoin address, which costs a network fee.`,
+    sbtcOnlyHelper: `This pool pays out in sBTC only, once a cycle concludes.`,
+    maxFeeNote: `Claims below the max fee can't be paid out until you lower it.`,
+    updateHelper: `This setting applies to every future claim.`,
   },
   preparePhase: {
     title: `Staking is briefly paused`,
@@ -110,7 +117,7 @@ export const bitcoinStakingContent = {
   },
   needsRestake: {
     title: `Re-stake your STX`,
-    description: `PoX-5 replaced the previous stacking protocol and your STX has unlocked. Choose a pool to start earning sBTC rewards.`,
+    description: `PoX-5 replaced the previous staking protocol and your STX has unlocked. Choose a pool to start earning sBTC rewards.`,
   },
 };
 
@@ -151,6 +158,7 @@ export const bitcoinStakingConditions: StakingCondition[] = [
 export const bitcoinStakingLabels = {
   provider: `Provider`,
   rewardsToken: `Rewards token`,
+  rewardsPayout: `Rewards payout`,
   totalStaked: `Total staked`,
   historicalYield: `Historical yield`,
   fee: `Fee`,

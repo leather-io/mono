@@ -36,7 +36,7 @@ export function SbtcRewardsFaq() {
                 <br />
                 <Link
                   href={getPostHref(post.legacyPost?.slug.current)}
-                  style={{ fontSize: 'inherit' }}
+                  style={{ fontSize: 'inherit', whiteSpace: 'nowrap' }}
                 >
                   Learn more
                 </Link>

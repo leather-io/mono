@@ -34,7 +34,7 @@ export const bitcoinStakingFaqItems: FaqItem[] = [
     id: 'what-happened-to-stacking',
     question: 'What happened to Stacking (pox-4)?',
     answer:
-      'PoX-5 replaces the previous stacking protocol entirely. When it activates, STX locked under pox-4 unlocks and every participant needs to re-stake through a PoX-5 pool to keep earning.',
+      'PoX-5 replaces the previous staking protocol entirely. When it activates, STX locked under pox-4 unlocks and every participant needs to re-stake through a PoX-5 pool to keep earning.',
   },
   {
     id: 'what-happened-to-dual-stacking',

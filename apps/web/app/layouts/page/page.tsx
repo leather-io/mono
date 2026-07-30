@@ -55,8 +55,8 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
   const href = isUrl ? destination : getPostHref(destination);
   return (
     <styled.span>
-      &nbsp;
-      <Link href={href} style={{ fontSize: 'inherit', display: 'inline' }}>
+      {' '}
+      <Link href={href} style={{ fontSize: 'inherit', display: 'inline', whiteSpace: 'nowrap' }}>
         Learn more
       </Link>
     </styled.span>

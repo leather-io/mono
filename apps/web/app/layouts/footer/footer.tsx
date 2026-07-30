@@ -32,7 +32,7 @@ function AppFooter() {
             Signer key signature
           </Footer.Link>
           <Footer.Link withIcon href="https://earn.leather.io/choose-stacking-method">
-            Stack independently
+            Stake independently
           </Footer.Link>
         </Footer.Column>
 

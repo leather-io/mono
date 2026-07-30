@@ -15,7 +15,7 @@ export function PreparePhaseCallout({ secondsUntilStakingReopens }: PreparePhase
       p="space.04"
       borderWidth={1}
       borderColor="ink.border-default"
-      borderRadius="md"
+      borderRadius="sm"
       data-testid="prepare-phase-callout"
     >
       <Flag
