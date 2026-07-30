@@ -113,7 +113,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     signerManagerContracts: {
       mainnet: ['SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager'],
     },
-    supportsBtcPayout: true,
+    supportsBtcPayout: false,
     // TODO: read the live rate from the contract once it is deployed — the
     // signer-manager exposes no getter for the current fee, only the per-cycle
     // snapshot written after claim-rewards runs.
