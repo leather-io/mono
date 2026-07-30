@@ -17,7 +17,6 @@ interface LearnHoverCardProps {
   tagName?: SupportedTags;
   children?: ReactNode;
   showIcon?: boolean;
-  iconColor?: 'black' | 'white';
   align?: 'start' | 'center' | 'end';
 }
 
@@ -28,11 +27,9 @@ export function LearnHoverCard({
   tagName = 'span',
   children,
   showIcon = true,
-  iconColor = 'black',
   align = 'center',
 }: LearnHoverCardProps) {
   const navigate = useNavigate();
-  const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued';
 
   const StyledTag = styled[tagName];
 
@@ -48,7 +45,11 @@ export function LearnHoverCard({
         }
       : { textStyle };
 
-    return <StyledTag {...props}>{label}</StyledTag>;
+    return (
+      <StyledTag display="inline" {...props}>
+        {label}
+      </StyledTag>
+    );
   }
 
   /**
@@ -79,7 +80,7 @@ export function LearnHoverCard({
         alignItems="center"
         height="1lh"
         verticalAlign="top"
-        ml="space.02"
+        ml="space.01"
         color="inherit"
         textDecoration="none"
         cursor="pointer"
@@ -88,7 +89,7 @@ export function LearnHoverCard({
         p="0"
         aria-label={`Learn more about ${article.title}`}
       >
-        <InfoCircleIcon variant="small" color={iconColorToken} />
+        <InfoCircleIcon variant="small" color="ink.text-subdued" />
       </styled.button>
     </styled.span>
   ) : (

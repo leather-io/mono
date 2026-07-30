@@ -387,15 +387,13 @@ function UpdateStakingForm({
           />
         </Box>
 
-        {pool.supportsBtcPayout && (
-          <Stack gap="space.02">
-            <styled.p textStyle="label.02">Rewards payout</styled.p>
-            <ChoosePayoutPreference />
-            <styled.p textStyle="caption.02" color="ink.text-subdued">
-              {bitcoinStakingContent.payoutPreference.updateHelper}
-            </styled.p>
-          </Stack>
-        )}
+        <Stack gap="space.02">
+          <styled.p textStyle="label.02">Rewards payout</styled.p>
+          <ChoosePayoutPreference supportsBtcPayout={pool.supportsBtcPayout} />
+          <styled.p textStyle="caption.01" color="ink.text-subdued">
+            {bitcoinStakingContent.payoutPreference.updateHelper}
+          </styled.p>
+        </Stack>
 
         <Button
           size="md"

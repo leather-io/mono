@@ -33,17 +33,20 @@ export function StakingScanIndicator() {
     <Flex
       alignItems="center"
       gap="space.02"
+      height="36px"
       px="space.03"
-      py="space.02"
       mr="space.03"
-      borderRadius="md"
-      bg="ink.component-background-default"
+      borderRadius="round"
+      borderWidth="1px"
+      borderStyle="solid"
+      borderColor="ink.border-default"
+      bg="transparent"
       flexShrink={0}
       animation={isScanning ? 'fadein 200ms ease-out both' : `fadeout ${fadeOutMs}ms ease-out both`}
       data-testid="staking-scan-indicator"
     >
-      <Spinner width="13px" height="13px" color="ink.text-subdued" />
-      <styled.span textStyle="label.03" color="ink.text-subdued" whiteSpace="nowrap">
+      <Spinner width="14px" height="14px" color="ink.text-subdued" />
+      <styled.span textStyle="label.02" color="ink.text-subdued" whiteSpace="nowrap">
         {bitcoinStakingContent.scanningPositions}
       </styled.span>
     </Flex>

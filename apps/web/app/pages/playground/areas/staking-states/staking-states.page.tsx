@@ -48,6 +48,11 @@ const cycleStages: { label: string; note: string; cycleStatus: StakingCycleStatu
     cycleStatus: { kind: 'open', secondsUntilChangesClose: 9 * 3600 },
   },
   {
+    label: 'Closing — inside the final hour',
+    note: 'Drops the number altogether. “1h left” is both imprecise and alarming this late, so the copy states the window instead of counting it down.',
+    cycleStatus: { kind: 'open', secondsUntilChangesClose: 40 * 60 },
+  },
+  {
     label: 'Paused — prepare phase',
     note: 'The contract rejects stakes and changes here. Until now the only signal was a callout on the active page, so someone on the form found out by being blocked.',
     cycleStatus: { kind: 'paused', secondsUntilStakingReopens: 14 * 3600 },

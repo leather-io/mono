@@ -1,5 +1,6 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useFormState } from 'react-hook-form';
 
+import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
@@ -18,18 +19,29 @@ function formatRenewalDate(date: Date | null) {
 
 export function ChooseStakingDuration({ estimatedUnlockDate }: ChooseStakingDurationProps) {
   const { control } = useFormContext();
+  const { errors } = useFormState({ control, name: 'cycles' });
   const { chooseDuration } = bitcoinStakingContent;
   const renewalDate = formatRenewalDate(estimatedUnlockDate);
+  const hasError = Boolean(errors.cycles);
 
   return (
-    <Stack gap="space.02">
+    <Stack gap="0">
       <Box>
         <Controller
           control={control}
           name="cycles"
           render={({ field: { onChange, onBlur, value, ref }, fieldState: { invalid, error } }) => (
             <>
-              <Input.Root data-shrink={isDefined(value)}>
+              <Input.Root
+                data-shrink={isDefined(value)}
+                className={css({
+                  position: 'relative',
+                  zIndex: 4,
+                  bg: 'ink.background-primary',
+                  borderRadius: 'sm',
+                  _before: { inset: '0' },
+                })}
+              >
                 <Input.Label>{chooseDuration.inputLabel}</Input.Label>
                 <Input.Field
                   id="cycles"
@@ -65,9 +77,12 @@ export function ChooseStakingDuration({ estimatedUnlockDate }: ChooseStakingDura
 
       <Flex
         gap="space.03"
-        py="space.03"
+        pt={hasError ? 'space.03' : 'space.04'}
+        pb="space.03"
         px="space.04"
-        borderRadius="md"
+        mt={hasError ? 'space.02' : '-space.01'}
+        borderTopRadius={hasError ? 'sm' : '0'}
+        borderBottomRadius="sm"
         bg="ink.component-background-default"
         alignItems="flex-start"
       >
