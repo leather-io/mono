@@ -68,7 +68,7 @@ jobs:
     environment: slack-notification
     steps:
       - name: send-slack-notification
-        uses: slackapi/slack-github-action@03ea5433c137af7c0495bc0cad1af10403fc800c # v3.0.2
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
         with:
           method: chat.postMessage
           token: ${{ secrets.LEATHER_SLACK_BOT }}
