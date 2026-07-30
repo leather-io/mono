@@ -18,17 +18,20 @@ export type BitcoinStakingProviderId =
   | 'xversePool'
   | 'stackingDao';
 
-const specialSignerManagerContract: Partial<Record<NetworkMode, string>> =
-  pox5NetworkConfig.specialSignerManagerContract
-    ? { [pox5NetworkConfig.contractNetworkMode]: pox5NetworkConfig.specialSignerManagerContract }
-    : {};
+const specialSignerManagerContracts: Partial<Record<NetworkMode, string[]>> = pox5NetworkConfig
+  .specialSignerManagerContracts?.length
+  ? { [pox5NetworkConfig.contractNetworkMode]: pox5NetworkConfig.specialSignerManagerContracts }
+  : {};
 
 export interface BitcoinStakingPool {
   providerId: BitcoinStakingProviderId;
   name: string;
   url: string;
   description: string;
-  signerManagerContract: Partial<Record<NetworkMode, string>>;
+  // Ordered per network mode; index 0 is the primary contract used for all new
+  // positions. Later entries are secondary deployments we still recognise so
+  // existing positions on them keep working.
+  signerManagerContracts: Partial<Record<NetworkMode, string[]>>;
   supportsBtcPayout: boolean;
   fee: string;
 }
@@ -40,7 +43,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     url: 'https://leather.io',
     description:
       'Staking pool on the pox-5 test chain. Rewards accrue as sBTC each cycle and can be claimed anytime.',
-    signerManagerContract: specialSignerManagerContract,
+    signerManagerContracts: specialSignerManagerContracts,
     // The reference signer-manager supports the L1 payout preference
     // (get-pox-addr + sbtc-withdrawal routing in claim-staker-rewards).
     supportsBtcPayout: true,
@@ -52,8 +55,8 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     url: 'https://fastpool.org',
     description:
       'Enjoy automatic pool operations. Rewards accrue as sBTC each cycle and can be claimed anytime.',
-    signerManagerContract: {
-      mainnet: 'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fastpool-1-signer-manager',
+    signerManagerContracts: {
+      mainnet: ['SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fastpool-1-signer-manager'],
     },
     supportsBtcPayout: true,
     // TODO: read the live rate from the contract once it is deployed — the
@@ -66,7 +69,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     name: 'PlanBetter',
     url: 'https://planbetter.com',
     description: 'Earn non-custodial Bitcoin yield. No wrapped tokens.',
-    signerManagerContract: {},
+    signerManagerContracts: {},
     supportsBtcPayout: false,
     fee: '5%',
   },
@@ -76,7 +79,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     url: 'https://restake.net/stacks-pool',
     description:
       'Earn rewards by staking your tokens with Restake, a non-custodial infrastructure operator trusted by institutions.',
-    signerManagerContract: {},
+    signerManagerContracts: {},
     supportsBtcPayout: false,
     fee: '5.00%',
   },
@@ -86,8 +89,8 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     url: 'https://pool.xverse.app/',
     description:
       'Xverse pool is a non-custodial staking pool service from the makers of Xverse wallet.',
-    signerManagerContract: {
-      mainnet: 'SP8HK160YD5GHXP69VGA0TC7AQJ1X4CDW3XVERSE.xverse-signer-manager-1',
+    signerManagerContracts: {
+      mainnet: ['SP8HK160YD5GHXP69VGA0TC7AQJ1X4CDW3XVERSE.xverse-signer-manager-1'],
     },
     supportsBtcPayout: true,
     // TODO: read the live rate from the contract once it is deployed — the
@@ -100,8 +103,8 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     name: 'Stacking DAO',
     url: 'https://www.stackingdao.com',
     description: 'Stake without your STX leaving your wallet.',
-    signerManagerContract: {
-      mainnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager',
+    signerManagerContracts: {
+      mainnet: ['SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager'],
     },
     supportsBtcPayout: true,
     // TODO: read the live rate from the contract once it is deployed — the
@@ -139,16 +142,23 @@ export function stakingProviderIdToSlug(providerId: BitcoinStakingProviderId): S
   return stakingPoolSlugSchema.parse(slug);
 }
 
-export function getSignerManagerContract(
+export function getSignerManagerContracts(
+  providerId: BitcoinStakingProviderId,
+  networkMode: NetworkMode
+): string[] {
+  return bitcoinStakingPoolData[providerId].signerManagerContracts[networkMode] ?? [];
+}
+
+export function getPrimarySignerManagerContract(
   providerId: BitcoinStakingProviderId,
   networkMode: NetworkMode
 ): string | undefined {
-  return bitcoinStakingPoolData[providerId].signerManagerContract[networkMode];
+  return getSignerManagerContracts(providerId, networkMode)[0];
 }
 
 export function getPoolBySignerManager(contractId: string): BitcoinStakingPool | undefined {
   return bitcoinStakingPoolList.find(pool =>
-    Object.values(pool.signerManagerContract).includes(contractId)
+    Object.values(pool.signerManagerContracts).flat().includes(contractId)
   );
 }
 
@@ -156,5 +166,5 @@ export function isPoolAvailableOnNetwork(
   pool: BitcoinStakingPool,
   networkMode: NetworkMode
 ): boolean {
-  return pool.signerManagerContract[networkMode] !== undefined;
+  return (pool.signerManagerContracts[networkMode]?.length ?? 0) > 0;
 }

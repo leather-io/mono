@@ -31,7 +31,7 @@ interface Pox5ChainConfig {
   bitcoinNetworkMode: BitcoinNetworkModes;
   // Signer-manager contract backing the "Special" pool on this chain — the one
   // reference deployment we hold a contract id for.
-  specialSignerManagerContract?: string;
+  specialSignerManagerContracts?: string[];
 }
 
 // devnet is the local pox-5 devnet from leather-workspace/devnet: its API URL
@@ -54,7 +54,7 @@ const pox5Chains: Record<Pox5ChainName, Pox5ChainConfig> = {
     apiUrl: 'http://localhost:3999',
     stacksNetworkName: 'devnet',
     bitcoinNetworkMode: 'regtest',
-    specialSignerManagerContract: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.signer-manager',
+    specialSignerManagerContracts: ['ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.signer-manager'],
   },
   private: {
     walletRpcNetwork: 'private',
@@ -62,7 +62,10 @@ const pox5Chains: Record<Pox5ChainName, Pox5ChainConfig> = {
     apiUrl: 'https://api.testnet-pox5.hiro.so',
     stacksNetworkName: 'testnet',
     bitcoinNetworkMode: 'testnet',
-    specialSignerManagerContract: 'ST3FJQK31NMDM594YKP1640V5WESX38ENSSY6DMBF.signer-manager',
+    specialSignerManagerContracts: [
+      'ST3FJQK31NMDM594YKP1640V5WESX38ENSSY6DMBF.signer-manager',
+      'STXM87M1S5QRGMJ1D4Q4865VBNYZC9YMZAX4FGAA.signer-manager',
+    ],
   },
 };
 

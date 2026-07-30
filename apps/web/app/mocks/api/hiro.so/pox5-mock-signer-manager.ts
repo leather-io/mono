@@ -1,4 +1,4 @@
-import { getSignerManagerContract } from '~/data/bitcoin-staking-data';
+import { getPrimarySignerManagerContract } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { parseContractId } from '~/features/bitcoin-staking/utils/contract-id';
 
@@ -7,8 +7,8 @@ import { parseContractId } from '~/features/bitcoin-staking/utils/contract-id';
 // positions resolve against a listed pool instead. Only reached in mock mode —
 // entry.client.tsx imports the mock tree dynamically.
 const mockSignerManagerContractId =
-  pox5NetworkConfig.specialSignerManagerContract ??
-  getSignerManagerContract('stackingDao', pox5NetworkConfig.contractNetworkMode);
+  pox5NetworkConfig.specialSignerManagerContracts?.[0] ??
+  getPrimarySignerManagerContract('stackingDao', pox5NetworkConfig.contractNetworkMode);
 
 if (!mockSignerManagerContractId) {
   throw new Error(

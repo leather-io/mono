@@ -10,7 +10,7 @@ import { FormPageLayout } from '~/components/forms/form-page.layout';
 import { learnArticles } from '~/content/learn-content';
 import {
   StakingPoolSlug,
-  getSignerManagerContract,
+  getPrimarySignerManagerContract,
   getStakingPoolFromSlug,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
@@ -84,7 +84,7 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
   const [termsConfirmed, setTermsConfirmed] = useState(false);
 
   const pool = getStakingPoolFromSlug(poolSlug);
-  const signerManagerContractId = getSignerManagerContract(
+  const signerManagerContractId = getPrimarySignerManagerContract(
     pool.providerId,
     pox5NetworkConfig.contractNetworkMode
   );
