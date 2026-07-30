@@ -12,6 +12,7 @@ import {
   stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
+import { PoolFeeValue } from '~/features/bitcoin-staking/components/pool-fee-value';
 
 import { Flag } from '@leather.io/ui';
 
@@ -85,7 +86,7 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
                   </Flag>
                 </styled.td>
                 <styled.td px="space.04" textAlign="right" color="black">
-                  {pool.fee}
+                  <PoolFeeValue pool={pool} />
                 </styled.td>
                 <styled.td px="space.04" textAlign="right">
                   <HStack gap="space.02" justifyContent="flex-end">

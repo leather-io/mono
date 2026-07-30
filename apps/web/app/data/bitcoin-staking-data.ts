@@ -33,7 +33,7 @@ export interface BitcoinStakingPool {
   // existing positions on them keep working.
   signerManagerContracts: Partial<Record<NetworkMode, string[]>>;
   supportsBtcPayout: boolean;
-  fee: string;
+  fixedFeeBips?: number;
 }
 
 const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPool> = {
@@ -47,7 +47,6 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     // The reference signer-manager supports the L1 payout preference
     // (get-pox-addr + sbtc-withdrawal routing in claim-staker-rewards).
     supportsBtcPayout: true,
-    fee: '—',
   },
   fastPool: {
     providerId: 'fastPool',
@@ -62,10 +61,6 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
       ],
     },
     supportsBtcPayout: true,
-    // TODO: read the live rate from the contract once it is deployed — the
-    // signer-manager exposes no getter for the current fee, only the per-cycle
-    // snapshot written after claim-rewards runs.
-    fee: '5%',
   },
   planbetter: {
     providerId: 'planbetter',
@@ -74,7 +69,6 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     description: 'Earn non-custodial Bitcoin yield. No wrapped tokens.',
     signerManagerContracts: {},
     supportsBtcPayout: false,
-    fee: '5%',
   },
   restake: {
     providerId: 'restake',
@@ -84,7 +78,6 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
       'Earn rewards by staking your tokens with Restake, a non-custodial infrastructure operator trusted by institutions.',
     signerManagerContracts: {},
     supportsBtcPayout: false,
-    fee: '5.00%',
   },
   xversePool: {
     providerId: 'xversePool',
@@ -100,10 +93,6 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
       ],
     },
     supportsBtcPayout: true,
-    // TODO: read the live rate from the contract once it is deployed — the
-    // signer-manager exposes no getter for the current fee, only the per-cycle
-    // snapshot written after claim-rewards runs.
-    fee: '5%',
   },
   stackingDao: {
     providerId: 'stackingDao',
@@ -114,10 +103,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
       mainnet: ['SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager'],
     },
     supportsBtcPayout: false,
-    // TODO: read the live rate from the contract once it is deployed — the
-    // signer-manager exposes no getter for the current fee, only the per-cycle
-    // snapshot written after claim-rewards runs.
-    fee: '5%',
+    fixedFeeBips: 0,
   },
 };
 

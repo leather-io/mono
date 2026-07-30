@@ -10,6 +10,7 @@ import {
   createGetPox5EarnedRewardsQueryOptions,
 } from './create-get-pox5-earned-rewards-query-options';
 import { createGetPox5PayoutPreferenceQueryOptions } from './create-get-pox5-payout-preference-query-options';
+import { createGetPox5PoolFeeQueryOptions } from './create-get-pox5-pool-fee-query-options';
 import {
   Pox5StakerInfo,
   createGetPox5StakerInfoQueryOptions,
@@ -49,6 +50,15 @@ export function usePox5PayoutPreferenceQuery(signerManagerContractId: string | u
       signerManagerContractId,
       networkName: pox5NetworkConfig.stacksNetworkName,
       client,
+    })
+  );
+}
+
+export function usePox5PoolFeeQuery(signerManagerContractId: string | undefined) {
+  return useQuery(
+    createGetPox5PoolFeeQueryOptions({
+      signerManagerContractId,
+      apiUrl: pox5NetworkConfig.apiUrl,
     })
   );
 }

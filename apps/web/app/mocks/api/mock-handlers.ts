@@ -17,6 +17,7 @@ import { pox5GetStakerInfoNoneHandler } from './hiro.so/pox5-get-staker-info';
 import { pox5MockOverrideHandlers } from './hiro.so/pox5-mock-overrides';
 import { pox5PinnedNetworkHandlers } from './hiro.so/pox5-pinned-network';
 import {
+  pox5FeesBipsHandler,
   pox5GetEarnedStakerRewardsHandler,
   pox5GetPoxAddrHandler,
 } from './hiro.so/pox5-signer-manager';
@@ -53,6 +54,7 @@ const endpoints = [
   pox5GetStakerInfoNoneHandler,
   pox5GetEarnedStakerRewardsHandler,
   pox5GetPoxAddrHandler,
+  pox5FeesBipsHandler,
   blockTimesHandler,
   getAllowanceContractCallersHandlers,
   accountsBalanceStxHandler,

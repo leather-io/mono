@@ -22,3 +22,11 @@ export const pox5GetPoxAddrHandler = {
   resp: { okay: true, result: '0x09' },
   method: 'post',
 } as const;
+
+const mockFeeBips = 500n;
+
+export const pox5FeesBipsHandler = {
+  path: `${pox5NetworkConfig.apiUrl}/v2/data_var/${mockSignerManager.contractAddress}/${mockSignerManager.contractName}/fees-bips`,
+  resp: { data: `0x${serializeCV(uintCV(mockFeeBips))}` },
+  method: 'get',
+} as const;

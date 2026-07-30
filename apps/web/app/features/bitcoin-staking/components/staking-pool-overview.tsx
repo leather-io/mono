@@ -13,6 +13,7 @@ import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking
 import { InfoCircleIcon } from '@leather.io/ui';
 
 import type { CycleClockInfo } from '../utils/pox5-cycle-clock';
+import { PoolFeeValue } from './pool-fee-value';
 
 const CLOSING_SOON_HOURS = 48;
 
@@ -176,7 +177,7 @@ export function StakingPoolOverview({
               explanation={bitcoinStakingContent.poolOverviewInfo.fee}
             />
           }
-          value={pool.fee}
+          value={<PoolFeeValue pool={pool} />}
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell
