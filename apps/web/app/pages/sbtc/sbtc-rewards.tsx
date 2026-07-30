@@ -19,6 +19,7 @@ import { Button, Hr } from '@leather.io/ui';
 import { GetSbtcGrid } from './components/get-sbtc-grid';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
+import { SbtcRewardsSunsetCallout } from './components/sbtc-rewards-sunset-callout';
 import { SbtcRewardContext } from './sbtc-rewards-context';
 
 export function SbtcRewards(): ReactElement {
@@ -79,11 +80,14 @@ export function SbtcRewards(): ReactElement {
           />
 
           {sbtcEnroll && (
-            <SbtcProtocolRewardGrid
-              enrollAction={<SbtcEnrollButton />}
-              mt="space.05"
-              pool={sbtcEnroll}
-            />
+            <>
+              <SbtcRewardsSunsetCallout mt="space.05" />
+              <SbtcProtocolRewardGrid
+                enrollAction={<SbtcEnrollButton />}
+                mt="space.04"
+                pool={sbtcEnroll}
+              />
+            </>
           )}
 
           {sbtcPools.map(pool => (

@@ -1,37 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
-import { createGetAllowanceContractCallersQueryOptions } from '~/queries/create-get-allowance-contract-callers-query-options';
 
 import {
   createGetAccountExtendedBalancesQueryOptions,
-  createGetCoreInfoQueryOptions,
   createGetPoxInfoQueryOptions,
-  createGetSecondsUntilNextCycleQueryOptions,
   createGetStatusQueryOptions,
 } from '@leather.io/query';
-
-export function useGetAllowanceContractCallersQuery(
-  ...params: Parameters<typeof createGetAllowanceContractCallersQueryOptions>
-) {
-  return useQuery(createGetAllowanceContractCallersQueryOptions(...params));
-}
 
 export function useGetStatusQuery() {
   const { client } = useStackingClient();
   if (!client) throw new Error('Expected client to be defined.');
   return useQuery(createGetStatusQueryOptions({ client }));
-}
-
-export function useGetCoreInfoQuery() {
-  const { client } = useStackingClient();
-  if (!client) throw new Error('Expected client to be defined.');
-  return useQuery(createGetCoreInfoQueryOptions({ client }));
-}
-
-export function useGetSecondsUntilNextCycleQuery() {
-  const { client } = useStackingClient();
-  if (!client) throw new Error('Expected client to be defined.');
-  return useQuery(createGetSecondsUntilNextCycleQueryOptions({ client }));
 }
 
 export function useGetPoxInfoQuery() {

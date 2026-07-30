@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 
 import { Flex, VStack, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
+import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
 import { Button } from '@leather.io/ui';
 
@@ -18,7 +19,7 @@ export function NotFound() {
         <VStack gap="space.06" alignItems="center" maxWidth="640px" textAlign="center">
           <styled.h1 textStyle="heading.04">Oops! It seems like you took a wrong turn</styled.h1>
           <styled.div>
-            <Link to="/stacking">
+            <Link to={stakingPaths.index}>
               <Button variant="outline">Return home</Button>
             </Link>
           </styled.div>

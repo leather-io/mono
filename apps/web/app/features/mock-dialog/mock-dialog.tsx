@@ -11,6 +11,8 @@ import { RpcRequests, createRpcErrorResponse } from '@leather.io/rpc';
 
 import { MockLeatherDialogLayout } from './mock-dialog.layout';
 
+const mockBroadcastTxId = `0x${'11'.repeat(32)}`;
+
 export function MockLeatherDialog() {
   const [payload, setPayload] = useState<null | RpcRequests>(null);
 
@@ -22,6 +24,12 @@ export function MockLeatherDialog() {
       case 'getAddresses':
       case 'stx_getAddresses':
         return createMockGetAddressesResponse(payload.id);
+      case 'stx_callContract':
+        return {
+          jsonrpc: '2.0',
+          id: payload.id,
+          result: { txid: mockBroadcastTxId, transaction: '' },
+        } as any;
       default:
         return { jsonrpc: '2.0', id: payload.id, result: {} } as any;
     }

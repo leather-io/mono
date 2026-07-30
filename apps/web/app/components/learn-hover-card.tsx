@@ -66,12 +66,20 @@ export function LearnHoverCard({
     return renderLabel();
   }
 
+  // Inline rather than a flex row, so the icon follows the label's last word and
+  // the surrounding text-align still governs the whole thing.
   const trigger = showIcon ? (
-    <Flex alignItems="center" gap="space.02">
-      {renderLabel()}
+    <styled.span textStyle={textStyle}>
+      <StyledTag textStyle={textStyle} display="inline">
+        {label}
+      </StyledTag>
       <styled.button
         onClick={handleIconClick}
         display="inline-flex"
+        alignItems="center"
+        height="1lh"
+        verticalAlign="top"
+        ml="space.02"
         color="inherit"
         textDecoration="none"
         cursor="pointer"
@@ -82,7 +90,7 @@ export function LearnHoverCard({
       >
         <InfoCircleIcon variant="small" color={iconColorToken} />
       </styled.button>
-    </Flex>
+    </styled.span>
   ) : (
     renderLabel(true)
   );
@@ -92,10 +100,12 @@ export function LearnHoverCard({
       <HoverCard.Trigger asChild={showIcon}>{trigger}</HoverCard.Trigger>
       <HoverCard.Portal>
         <HoverCard.Content side="top" align={align}>
-          <Flex direction="column" gap="space.03" p="space.04" maxW="320px">
-            <styled.h4 textStyle="label.02">{sanitizeContent(article.title)}</styled.h4>
+          <Flex direction="column" gap="space.01" textAlign="left">
+            <styled.h4 textStyle="caption.01" fontWeight={500} color="ink.text-primary">
+              {sanitizeContent(article.title)}
+            </styled.h4>
             {article.sentence && (
-              <styled.p textStyle="body.02">
+              <styled.p textStyle="caption.01" color="ink.text-subdued" textWrapStyle="pretty">
                 {sanitizeContent(article.sentence)}
                 {article.slug && <LearnMoreLink destination={article.slug} />}
               </styled.p>

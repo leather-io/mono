@@ -8,7 +8,7 @@ interface AddressProps {
   full?: boolean;
 }
 
-export function Address({ address, full }: AddressProps) {
+function Address({ address, full }: AddressProps) {
   return (
     <styled.p
       mr="space.02"

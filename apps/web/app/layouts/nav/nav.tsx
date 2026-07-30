@@ -5,7 +5,6 @@ import { css } from 'leather-styles/css';
 import { Flex, HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { Drawer } from 'vaul';
 import { LeatherLogo } from '~/components/icons/leather-logo';
-import { SbtcMonogramIcon } from '~/components/icons/sbtc-monogram-icon';
 import { StackingIcon } from '~/components/icons/stacking-icon';
 import { advancedModeEnabled } from '~/pages/advanced/advanced.route';
 import { multisigEnabled } from '~/pages/multisig/multisig.constants';
@@ -39,8 +38,8 @@ function NavContents() {
         Portfolio
       </NavItem>
 
-      <NavItem href="/stacking" icon={<SbtcMonogramIcon />}>
-        Stacking
+      <NavItem href="/staking" icon={<StackingIcon />}>
+        Staking
       </NavItem>
 
       <NavItem href="/sbtc" icon={<StackingIcon />}>

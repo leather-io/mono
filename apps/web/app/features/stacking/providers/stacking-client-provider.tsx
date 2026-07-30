@@ -39,11 +39,3 @@ export function StackingClientProvider({ children }: StackingClientProviderProps
 export function useStackingClient() {
   return useContext(StackingClientContext);
 }
-
-export function useStackingClientRequired() {
-  const { client, ...hook } = useStackingClient();
-
-  if (!client) throw new Error('Expected to have a StackingClient available in the context.');
-
-  return { ...hook, client };
-}
