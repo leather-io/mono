@@ -56,7 +56,10 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     description:
       'Enjoy automatic pool operations. Rewards accrue as sBTC each cycle and can be claimed anytime.',
     signerManagerContracts: {
-      mainnet: ['SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fastpool-1-signer-manager'],
+      mainnet: [
+        'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fastpool-1-signer-manager',
+        'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.fastpool-2-signer-manager',
+      ],
     },
     supportsBtcPayout: true,
     // TODO: read the live rate from the contract once it is deployed — the
@@ -90,7 +93,11 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     description:
       'Xverse pool is a non-custodial staking pool service from the makers of Xverse wallet.',
     signerManagerContracts: {
-      mainnet: ['SP8HK160YD5GHXP69VGA0TC7AQJ1X4CDW3XVERSE.xverse-signer-manager-1'],
+      mainnet: [
+        'SP8HK160YD5GHXP69VGA0TC7AQJ1X4CDW3XVERSE.xverse-signer-manager-1',
+        'SP8HK160YD5GHXP69VGA0TC7AQJ1X4CDW3XVERSE.xverse-signer-manager-2',
+        'SP8HK160YD5GHXP69VGA0TC7AQJ1X4CDW3XVERSE.xverse-signer-manager-3',
+      ],
     },
     supportsBtcPayout: true,
     // TODO: read the live rate from the contract once it is deployed — the
