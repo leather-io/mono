@@ -24,7 +24,10 @@ import {
 import { useLeatherConnect } from '~/store/addresses';
 import { leather } from '~/utils/leather-sdk';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
-import { validateAvailableBalance } from '~/utils/validators/stx-amount-validator';
+import {
+  validateAvailableBalance,
+  validateStxAmountPrecision,
+} from '~/utils/validators/stx-amount-validator';
 
 import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import { BitcoinNetworkModes } from '@leather.io/models';
@@ -93,6 +96,10 @@ function createUpdateStakingSchema({
         .string()
         .optional()
         .refine(value => !value || /^\d+(\.\d+)?$/.test(value), validationMessages.invalidAmount)
+        .refine(
+          value => !value || validateStxAmountPrecision(Number(value)),
+          validationMessages.amountTooPrecise
+        )
         .refine(
           value => !value || validateAvailableBalance(Number(value), availableBalance),
           validationMessages.cannotStackMoreThanBalance

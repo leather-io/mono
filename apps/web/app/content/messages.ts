@@ -18,6 +18,7 @@ export const errorMessages = {
 export const validationMessages = {
   enterAmount: 'Enter an amount of STX',
   invalidAmount: 'STX amount must be a number',
+  amountTooPrecise: 'STX amounts support at most 6 decimal places',
   mustStackAmount: 'You must stack an amount',
   availableBalance: 'Available balance is',
   mustDelegateMore: "You must delegate more than you've already stacked",

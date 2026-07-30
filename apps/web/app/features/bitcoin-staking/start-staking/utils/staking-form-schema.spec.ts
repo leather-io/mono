@@ -28,6 +28,13 @@ describe(createStakingFormSchema.name, () => {
     expect(makeSchema().safeParse({ ...validValues, amount: '10' }).success).toBe(true);
   });
 
+  test('rejects amounts with more than 6 decimal places', () => {
+    expect(makeSchema().safeParse({ ...validValues, amount: '0.0000001' }).success).toBe(false);
+    expect(makeSchema().safeParse({ ...validValues, amount: '1.1234567' }).success).toBe(false);
+    expect(makeSchema().safeParse({ ...validValues, amount: '0.000001' }).success).toBe(true);
+    expect(makeSchema().safeParse({ ...validValues, amount: '1.123456' }).success).toBe(true);
+  });
+
   test('rejects an amount above the available balance', () => {
     expect(makeSchema().safeParse({ ...validValues, amount: '150' }).success).toBe(false);
   });
