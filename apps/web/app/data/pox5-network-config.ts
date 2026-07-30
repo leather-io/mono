@@ -6,7 +6,7 @@ import { BitcoinNetworkModes, HIRO_API_BASE_URL_MAINNET } from '@leather.io/mode
 // ---------------------------------------------------------------------------
 // The one line to edit when moving Bitcoin Staking between test chains.
 // ---------------------------------------------------------------------------
-const activePox5Chain: Pox5ChainName = 'private';
+const activePox5Chain: Pox5ChainName = 'mainnet';
 
 type Pox5ChainName = 'mainnet' | 'devnet' | 'private';
 
