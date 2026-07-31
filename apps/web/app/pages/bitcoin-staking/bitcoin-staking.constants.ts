@@ -36,5 +36,7 @@ export const DEFAULT_STAKING_CYCLES = 48;
 export const MEAN_BURN_BLOCK_SECONDS = 600;
 export const CYCLE_STATUS_REFETCH_INTERVAL_MS = 60_000;
 
+export const STAKING_TX_FEE_RESERVE_USTX = 500_000;
+
 // Which chain the whole feature is pinned to — API, contract ids, wallet RPC
 // network and address flavours — lives in data/pox5-network-config.ts.
