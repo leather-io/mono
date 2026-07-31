@@ -66,6 +66,9 @@ export function getStackingDaoStakeOptions(
 export function getStackingDaoStakeUpdateOptions(
   args: StakeUpdateArgs & { pox5ContractId: string; network: string }
 ): StxCallContractParams {
+  if (args.payoutPreference) {
+    throw new Error('Payout preference is not supported when staking with Stacking DAO.');
+  }
   return {
     ...getStakeUpdateOptions(args),
     contract: requireStackingDaoWrapperContract(args.newSignerManagerContractId),

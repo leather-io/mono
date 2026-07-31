@@ -124,6 +124,16 @@ describe(getStackingDaoStakeUpdateOptions.name, () => {
     expect(stackingDao.postConditions).toEqual(direct.postConditions);
     expect(stackingDao.postConditionMode).toEqual('deny');
   });
+
+  test('throws when a payout preference is set', () => {
+    const payoutPreference = {
+      btcRewardAddress: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
+      maxFeeSats: 2500n,
+    };
+    expect(() =>
+      getStackingDaoStakeUpdateOptions({ ...stakeUpdateArgs, payoutPreference })
+    ).toThrowError();
+  });
 });
 
 describe(getStackingDaoUnstakeOptions.name, () => {
