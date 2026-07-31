@@ -20,6 +20,9 @@ const fundedBalanceMicroStx = '1000000000000';
 const customSignerManagerContractId =
   'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.byosm-custom-signer-manager';
 
+const stackingDaoSignerManagerContractId =
+  'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager';
+
 test.describe('Bitcoin Staking', () => {
   test('users can start staking with the Stacking DAO pool', async ({ page, mode }) => {
     await mode({ mode: 'mock-connected' });
@@ -231,6 +234,32 @@ test.describe('Bitcoin Staking', () => {
       .expect(page.getByText('Enter a contract principal in address.contract-name format.'))
       .toBeVisible();
     await test.expect(page).toHaveURL(/\/staking\/pool\/byosm$/);
+  });
+
+  test('the byosm entry form redirects a listed signer manager to its pool page', async ({
+    page,
+    mode,
+  }) => {
+    await mode({ mode: 'mock-connected' });
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking/pool/byosm');
+    await page.getByTestId('byosm-contract-input').fill(stackingDaoSignerManagerContractId);
+    await page.getByTestId('byosm-contract-continue').click();
+
+    await page.waitForURL('**/staking/pool/stacking-dao', { timeout: 15_000 });
+  });
+
+  test('a byosm deep link with a listed signer manager redirects to its pool page', async ({
+    page,
+    mode,
+  }) => {
+    await mode({ mode: 'mock-connected' });
+
+    await page.waitForLoadState('networkidle');
+    await page.goto(`/staking/pool/byosm?contract=${stackingDaoSignerManagerContractId}`);
+
+    await page.waitForURL('**/staking/pool/stacking-dao', { timeout: 15_000 });
   });
 
   test('form validation blocks invalid amounts and durations', async ({ page, mode }) => {

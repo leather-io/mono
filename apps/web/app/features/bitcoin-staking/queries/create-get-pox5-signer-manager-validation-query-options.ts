@@ -33,7 +33,28 @@ interface SignerManagerValidationReader {
     functionName: string;
     readOnlyFunctionArgs: { arguments: string[]; sender: string };
     signal?: AbortSignal;
-  }): Promise<{ okay: boolean; result?: string }>;
+  }): Promise<{ okay: boolean; result?: string; cause?: string }>;
+}
+
+function getHttpStatus(error: unknown): number | undefined {
+  if (typeof error !== 'object' || error === null) return undefined;
+  if ('status' in error && typeof error.status === 'number') return error.status;
+  if ('response' in error) {
+    const { response } = error;
+    if (
+      typeof response === 'object' &&
+      response !== null &&
+      'status' in response &&
+      typeof response.status === 'number'
+    ) {
+      return response.status;
+    }
+  }
+  return undefined;
+}
+
+function isNotFoundError(error: unknown): boolean {
+  return getHttpStatus(error) === 404;
 }
 
 function getMissingFunctions(abi: SignerManagerAbi): string[] {
@@ -64,7 +85,6 @@ export function createGetPox5SignerManagerValidationQueryOptions({
     queryKey: ['pox5-signer-manager-validation', pox5ContractId, contractId],
     enabled: !!contractId,
     staleTime: 5 * 60_000,
-    retry: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     async queryFn({ signal }: { signal: AbortSignal }): Promise<SignerManagerValidation | null> {
@@ -74,8 +94,9 @@ export function createGetPox5SignerManagerValidationQueryOptions({
       let abi: SignerManagerAbi;
       try {
         abi = await client.getContractInterface(contractAddress, contractName, signal);
-      } catch {
-        return { status: 'invalid', reason: 'not-found' };
+      } catch (error) {
+        if (isNotFoundError(error)) return { status: 'invalid', reason: 'not-found' };
+        throw error;
       }
 
       const missingFunctions = getMissingFunctions(abi);
@@ -84,22 +105,20 @@ export function createGetPox5SignerManagerValidationQueryOptions({
       }
 
       const pox5 = parseContractId(pox5ContractId);
-      try {
-        const res = await client.callReadOnlyFunction({
-          contractAddress: pox5.contractAddress,
-          contractName: pox5.contractName,
-          functionName: 'get-signer-info',
-          readOnlyFunctionArgs: {
-            arguments: [`0x${serializeCV(principalCV(contractId))}`],
-            sender: contractAddress,
-          },
-          signal,
-        });
-        if (!res.okay || !res.result) return { status: 'invalid', reason: 'not-registered' };
-        if (hexToCV(res.result).type !== ClarityType.OptionalSome) {
-          return { status: 'invalid', reason: 'not-registered' };
-        }
-      } catch {
+      const res = await client.callReadOnlyFunction({
+        contractAddress: pox5.contractAddress,
+        contractName: pox5.contractName,
+        functionName: 'get-signer-info',
+        readOnlyFunctionArgs: {
+          arguments: [`0x${serializeCV(principalCV(contractId))}`],
+          sender: contractAddress,
+        },
+        signal,
+      });
+      if (!res.okay || !res.result) {
+        throw new Error(res.cause ?? 'Reading get-signer-info returned no result');
+      }
+      if (hexToCV(res.result).type !== ClarityType.OptionalSome) {
         return { status: 'invalid', reason: 'not-registered' };
       }
 

@@ -1,5 +1,6 @@
 import { MetaDescriptor } from 'react-router';
 
+import { WhenClient } from '~/components/when-client';
 import { ByosmStaking } from '~/features/bitcoin-staking/byosm/byosm-staking';
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { Page } from '~/layouts/page/page';
@@ -14,7 +15,9 @@ export default function ByosmStakingRoute() {
     <Page>
       <Page.Header title="Stake with a pool" backTo={stakingPaths.index} />
       <StackingClientProvider>
-        <ByosmStaking />
+        <WhenClient>
+          <ByosmStaking />
+        </WhenClient>
       </StackingClientProvider>
     </Page>
   );

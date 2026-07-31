@@ -21,15 +21,22 @@ function makeContext() {
 interface MakeClientArgs {
   abi?: typeof conformingAbi;
   abiError?: Error;
-  signerInfoResult?: { okay: boolean; result?: string };
+  signerInfoResult?: { okay: boolean; result?: string; cause?: string };
+  signerInfoError?: Error;
 }
 
-function makeClient({ abi = conformingAbi, abiError, signerInfoResult }: MakeClientArgs = {}) {
+function makeClient({
+  abi = conformingAbi,
+  abiError,
+  signerInfoResult,
+  signerInfoError,
+}: MakeClientArgs = {}) {
   return {
     getContractInterface() {
       return abiError ? Promise.reject(abiError) : Promise.resolve(abi);
     },
     callReadOnlyFunction() {
+      if (signerInfoError) return Promise.reject(signerInfoError);
       return Promise.resolve(
         signerInfoResult ?? { okay: true, result: `0x${serializeCV(someCV(uintCV(1)))}` }
       );
@@ -59,16 +66,43 @@ describe(createGetPox5SignerManagerValidationQueryOptions.name, () => {
     expect(disabled.enabled).toBe(false);
   });
 
-  test('reports not-found when the contract interface cannot be fetched', async () => {
+  test('reports not-found when the contract interface request returns 404', async () => {
     const options = createGetPox5SignerManagerValidationQueryOptions({
       contractId,
       pox5ContractId,
-      client: makeClient({ abiError: new Error('Request failed with status code 404') }),
+      client: makeClient({
+        abiError: Object.assign(new Error('Request failed with status code 404'), { status: 404 }),
+      }),
     });
     await expect(options.queryFn(makeContext())).resolves.toEqual({
       status: 'invalid',
       reason: 'not-found',
     });
+  });
+
+  test('reports not-found when the 404 status is nested in the response', async () => {
+    const options = createGetPox5SignerManagerValidationQueryOptions({
+      contractId,
+      pox5ContractId,
+      client: makeClient({
+        abiError: Object.assign(new Error('Request failed with status code 404'), {
+          response: { status: 404 },
+        }),
+      }),
+    });
+    await expect(options.queryFn(makeContext())).resolves.toEqual({
+      status: 'invalid',
+      reason: 'not-found',
+    });
+  });
+
+  test('propagates contract interface transport failures instead of reporting a verdict', async () => {
+    const options = createGetPox5SignerManagerValidationQueryOptions({
+      contractId,
+      pox5ContractId,
+      client: makeClient({ abiError: new Error('Network Error') }),
+    });
+    await expect(options.queryFn(makeContext())).rejects.toThrowError('Network Error');
   });
 
   test('reports the missing standard interface members', async () => {
@@ -106,16 +140,22 @@ describe(createGetPox5SignerManagerValidationQueryOptions.name, () => {
     });
   });
 
-  test('reports not-registered when the read fails', async () => {
+  test('throws when the registration read fails so a failed read is never mistaken for a verdict', async () => {
     const options = createGetPox5SignerManagerValidationQueryOptions({
       contractId,
       pox5ContractId,
-      client: makeClient({ signerInfoResult: { okay: false } }),
+      client: makeClient({ signerInfoResult: { okay: false, cause: 'NoSuchContract' } }),
     });
-    await expect(options.queryFn(makeContext())).resolves.toEqual({
-      status: 'invalid',
-      reason: 'not-registered',
+    await expect(options.queryFn(makeContext())).rejects.toThrowError('NoSuchContract');
+  });
+
+  test('propagates registration read transport failures instead of reporting a verdict', async () => {
+    const options = createGetPox5SignerManagerValidationQueryOptions({
+      contractId,
+      pox5ContractId,
+      client: makeClient({ signerInfoError: new Error('Network Error') }),
     });
+    await expect(options.queryFn(makeContext())).rejects.toThrowError('Network Error');
   });
 
   test('reports valid for a conforming registered contract', async () => {

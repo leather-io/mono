@@ -64,6 +64,7 @@ export const bitcoinStakingContent = {
       notFound: `No contract found at this address. Check the address and try again.`,
       missingFunctions: `This contract does not implement the standard signer-manager interface.`,
       notRegistered: `This contract is not registered as a PoX-5 signer manager.`,
+      checkFailed: `We couldn't check this contract right now. Try again.`,
     },
   },
   dualStackingTransition: {

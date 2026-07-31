@@ -27,6 +27,7 @@ function getStateErrorMessage(state: ByosmSignerManagerState): string | null {
       ? byosmContent.errors.wrongNetwork
       : byosmContent.errors.invalidFormat;
   }
+  if (state.status === 'check-failed') return byosmContent.errors.checkFailed;
   if (state.status === 'invalid') return validationErrorMessages[state.validation.reason];
   return null;
 }
@@ -48,6 +49,10 @@ export function ByosmContractEntry({ state }: ByosmContractEntryProps) {
   const stateErrorMessage = getStateErrorMessage(state);
 
   const onSubmit = handleSubmit(values => {
+    if (state.status === 'check-failed' && values.contract === state.contractId) {
+      state.retry();
+      return;
+    }
     setSearchParams({ [byosmContractParam]: values.contract });
   });
 

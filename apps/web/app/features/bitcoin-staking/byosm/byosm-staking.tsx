@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router';
 
 import { Flex } from 'leather-styles/jsx';
-import { getPoolBySignerManager, stakingProviderIdToSlug } from '~/data/bitcoin-staking-data';
+import { stakingProviderIdToSlug } from '~/data/bitcoin-staking-data';
 import { byosmPaths, stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
 import { LoadingSpinner } from '@leather.io/ui';
@@ -15,14 +15,6 @@ export function ByosmStaking() {
   const state = useByosmSignerManager();
   const { isLoading, position } = usePox5Position();
 
-  if (isLoading) {
-    return (
-      <Flex height="100vh" width="100%">
-        <LoadingSpinner />
-      </Flex>
-    );
-  }
-
   if (position.status === 'active') {
     if (position.pool) {
       return (
@@ -35,11 +27,18 @@ export function ByosmStaking() {
     return <Navigate to={byosmPaths.active(position.info.signerManagerContractId)} replace />;
   }
 
+  if (state.status === 'listed') {
+    return (
+      <Navigate to={stakingPaths.pool(stakingProviderIdToSlug(state.pool.providerId))} replace />
+    );
+  }
+
   if (state.status === 'valid') {
-    const listedPool = getPoolBySignerManager(state.contractId);
-    if (listedPool) {
+    if (isLoading) {
       return (
-        <Navigate to={stakingPaths.pool(stakingProviderIdToSlug(listedPool.providerId))} replace />
+        <Flex height="100vh" width="100%">
+          <LoadingSpinner />
+        </Flex>
       );
     }
     return <StartStaking poolSlug="byosm" signerManagerContractId={state.contractId} />;

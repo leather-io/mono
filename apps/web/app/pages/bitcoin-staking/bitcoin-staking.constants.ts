@@ -14,14 +14,11 @@ export const stakingPaths = {
 
 export const byosmContractParam = 'contract';
 
-function byosmSearch(contractId?: string) {
-  return contractId ? `?${byosmContractParam}=${encodeURIComponent(contractId)}` : '';
+function byosmSearch(contractId: string) {
+  return `?${byosmContractParam}=${encodeURIComponent(contractId)}`;
 }
 
 export const byosmPaths = {
-  start(contractId?: string) {
-    return `${stakingPaths.pool('byosm')}${byosmSearch(contractId)}`;
-  },
   active(contractId: string) {
     return `${stakingPaths.active('byosm')}${byosmSearch(contractId)}`;
   },
