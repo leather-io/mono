@@ -50,7 +50,21 @@ export const bitcoinStakingContent = {
   },
   unlistedPool: {
     label: `Staked with a pool Leather does not list`,
-    description: `Your STX is staked and still earning. Managing it here needs a pool Leather knows, so use the tools of whoever operates this signer manager.`,
+    description: `Your STX is staked and still earning through a signer manager Leather does not list. View your position to claim rewards, update your stake, or unstake.`,
+  },
+  byosm: {
+    entryTitle: `Bring your own signer manager`,
+    entryDescription: `Stake through any signer-manager contract that implements the standard interface. Leather checks the contract exists and is registered with PoX-5, but cannot vouch for its operator — verify who runs it before staking.`,
+    inputLabel: `Signer manager contract`,
+    continueLabel: `Continue`,
+    checkingLabel: `Checking contract…`,
+    errors: {
+      invalidFormat: `Enter a contract principal in address.contract-name format.`,
+      wrongNetwork: `This address belongs to a different network.`,
+      notFound: `No contract found at this address. Check the address and try again.`,
+      missingFunctions: `This contract does not implement the standard signer-manager interface.`,
+      notRegistered: `This contract is not registered as a PoX-5 signer manager.`,
+    },
   },
   dualStackingTransition: {
     title: `Dual Stacking is winding down`,

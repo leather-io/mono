@@ -3,6 +3,7 @@ import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { parseContractId } from '~/features/bitcoin-staking/utils/contract-id';
 import { getPox5ContractId } from '~/features/bitcoin-staking/utils/pox5-contracts';
 
+import { mockCustomSignerManagerContractId } from './pox5-custom-signer-manager';
 import { mockSignerManager } from './pox5-mock-signer-manager';
 
 // The pox-5 read layer is pinned to the chain selected in
@@ -32,5 +33,26 @@ const stakedResult = someCV(
 export const pox5GetStakerInfoStakedHandler = {
   path,
   resp: { okay: true, result: `0x${serializeCV(stakedResult)}` },
+  method: 'post',
+} as const;
+
+// Same position shape, but staked through the unlisted custom signer-manager,
+// so the byosm surfaces resolve instead of a listed pool.
+const customSignerManager = parseContractId(mockCustomSignerManagerContractId);
+const customStakedResult = someCV(
+  tupleCV({
+    'amount-ustx': uintCV(40_000_000n),
+    'first-reward-cycle': uintCV(110n),
+    'num-cycles': uintCV(12n),
+    signer: contractPrincipalCV(
+      customSignerManager.contractAddress,
+      customSignerManager.contractName
+    ),
+  })
+);
+
+export const pox5GetStakerInfoCustomStakedHandler = {
+  path,
+  resp: { okay: true, result: `0x${serializeCV(customStakedResult)}` },
   method: 'post',
 } as const;

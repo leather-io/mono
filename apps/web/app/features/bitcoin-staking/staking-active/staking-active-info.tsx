@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 
 import { Flex, VStack } from 'leather-styles/jsx';
 import { StakingPoolSlug, getStakingPoolFromSlug } from '~/data/bitcoin-staking-data';
@@ -39,6 +39,7 @@ export function StakingActiveInfo({ poolSlug }: StakingActiveInfoProps) {
 
 function StakingActiveInfoLayout({ poolSlug }: StakingActiveInfoProps) {
   const { isLoading, position, details } = useActiveStakingInfo();
+  const { search } = useLocation();
   const fallbackPool = getStakingPoolFromSlug(poolSlug);
 
   if (isLoading) {
@@ -50,7 +51,7 @@ function StakingActiveInfoLayout({ poolSlug }: StakingActiveInfoProps) {
   }
 
   if (position.status === 'none') {
-    return <Navigate to={stakingPaths.pool(poolSlug)} replace />;
+    return <Navigate to={{ pathname: stakingPaths.pool(poolSlug), search }} replace />;
   }
 
   if (position.status === 'pending-stake') {

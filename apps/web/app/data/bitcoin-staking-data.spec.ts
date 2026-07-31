@@ -6,9 +6,11 @@ import {
   getPrimarySignerManagerContract,
   getSignerManagerContracts,
   getStackingDaoWrapperContract,
+  getStakingPoolFromSlug,
   isPoolAvailableOnNetwork,
   isStackingDaoSignerManager,
   isStackingDaoWrapperContract,
+  stakingProviderIdToSlug,
 } from './bitcoin-staking-data';
 
 const stackingDaoSignerManagerContractId =
@@ -47,6 +49,19 @@ describe('bitcoin staking pool registry', () => {
       expect(getPrimarySignerManagerContract(providerId, networkMode)).toEqual(contractId);
     }
   );
+});
+
+describe('byosm pool entry', () => {
+  test('round-trips between slug and providerId', () => {
+    expect(getStakingPoolFromSlug('byosm').providerId).toEqual('byosm');
+    expect(stakingProviderIdToSlug('byosm')).toEqual('byosm');
+  });
+
+  test('declares no signer-manager contracts on any network', () => {
+    expect(isPoolAvailableOnNetwork(getStakingPoolFromSlug('byosm'), 'mainnet')).toBe(false);
+    expect(isPoolAvailableOnNetwork(getStakingPoolFromSlug('byosm'), 'testnet')).toBe(false);
+    expect(isPoolAvailableOnNetwork(getStakingPoolFromSlug('byosm'), 'devnet')).toBe(false);
+  });
 });
 
 describe(getSignerManagerContracts.name, () => {

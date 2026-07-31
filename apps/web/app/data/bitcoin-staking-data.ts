@@ -16,7 +16,8 @@ export type BitcoinStakingProviderId =
   | 'planbetter'
   | 'restake'
   | 'xversePool'
-  | 'stackingDao';
+  | 'stackingDao'
+  | 'byosm';
 
 const specialSignerManagerContracts: Partial<Record<NetworkMode, string[]>> = pox5NetworkConfig
   .specialSignerManagerContracts?.length
@@ -105,6 +106,15 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     supportsBtcPayout: false,
     fixedFeeBips: 0,
   },
+  byosm: {
+    providerId: 'byosm',
+    name: 'Bring your own signer manager',
+    url: 'https://www.stacks.co/bitcoin-staking',
+    description:
+      'Stake through any signer-manager contract that implements the standard interface. Verify the operator of the contract before staking — Leather is not liable for the conduct of third parties.',
+    signerManagerContracts: {},
+    supportsBtcPayout: true,
+  },
 };
 
 export const bitcoinStakingPoolList = Object.values(bitcoinStakingPoolData);
@@ -116,6 +126,7 @@ const stakingPoolSlugMap = {
   restake: 'restake',
   'xverse-pool': 'xversePool',
   'stacking-dao': 'stackingDao',
+  byosm: 'byosm',
 } as const satisfies Record<string, BitcoinStakingProviderId>;
 
 export type StakingPoolSlug = keyof typeof stakingPoolSlugMap;

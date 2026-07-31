@@ -8,7 +8,7 @@ import { PendingStakePanel } from '~/features/bitcoin-staking/components/pending
 import { usePox5NeedsRestake } from '~/features/bitcoin-staking/hooks/use-pox5-needs-restake';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
 import { CopyAddress } from '~/features/stacking/components/address';
-import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { byosmPaths, stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Button } from '@leather.io/ui';
@@ -71,11 +71,15 @@ export function StakingUserPosition() {
             </Stack>
           )}
         </Stack>
-        {pool && (
-          <Link to={stakingPaths.active(stakingProviderIdToSlug(pool.providerId))}>
-            <Button size="sm">{bitcoinStakingLabels.viewPosition}</Button>
-          </Link>
-        )}
+        <Link
+          to={
+            pool
+              ? stakingPaths.active(stakingProviderIdToSlug(pool.providerId))
+              : byosmPaths.active(position.info.signerManagerContractId)
+          }
+        >
+          <Button size="sm">{bitcoinStakingLabels.viewPosition}</Button>
+        </Link>
       </HStack>
     );
   }

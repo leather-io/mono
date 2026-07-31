@@ -8,6 +8,7 @@ import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { learnArticles } from '~/content/learn-content';
 import {
   bitcoinStakingPoolList,
+  getStakingPoolFromSlug,
   isPoolAvailableOnNetwork,
   stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';
@@ -30,6 +31,7 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
   const availablePools = bitcoinStakingPoolList.filter(pool =>
     isPoolAvailableOnNetwork(pool, pox5NetworkConfig.contractNetworkMode)
   );
+  const tableRows = [...availablePools, getStakingPoolFromSlug('byosm')];
 
   return (
     <Table.Root width="100%" overflowX="auto" {...props}>
@@ -68,7 +70,7 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
           </Table.Row>
         </Table.Head>
         <Table.Body>
-          {availablePools.map(pool => {
+          {tableRows.map(pool => {
             const slug = stakingProviderIdToSlug(pool.providerId);
             return (
               <Table.Row key={pool.providerId} height="64px" className={rowPadding}>

@@ -11,6 +11,7 @@ import {
 } from './create-get-pox5-earned-rewards-query-options';
 import { createGetPox5PayoutPreferenceQueryOptions } from './create-get-pox5-payout-preference-query-options';
 import { createGetPox5PoolFeeQueryOptions } from './create-get-pox5-pool-fee-query-options';
+import { createGetPox5SignerManagerValidationQueryOptions } from './create-get-pox5-signer-manager-validation-query-options';
 import {
   Pox5StakerInfo,
   createGetPox5StakerInfoQueryOptions,
@@ -60,6 +61,15 @@ export function usePox5PoolFeeQuery(signerManagerContractId: string | undefined)
       signerManagerContractId,
       apiUrl: pox5NetworkConfig.apiUrl,
     })
+  );
+}
+
+export function usePox5SignerManagerValidationQuery(contractId: string | undefined) {
+  const client = usePox5StacksClient();
+  const pox5ContractId = usePox5ContractId();
+
+  return useQuery(
+    createGetPox5SignerManagerValidationQueryOptions({ contractId, pox5ContractId, client })
   );
 }
 
