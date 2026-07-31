@@ -1,6 +1,7 @@
 import { ClarityType, hexToCV, principalCV, serializeCV } from '@stacks/transactions';
 
 import { parseContractId } from '../utils/contract-id';
+import { payoutPreferenceFunctionNames } from './create-get-pox5-payout-preference-query-options';
 
 export type SignerManagerValidation =
   | { status: 'valid' }
@@ -9,9 +10,9 @@ export type SignerManagerValidation =
   | { status: 'invalid'; reason: 'not-registered' };
 
 const requiredSignerManagerFunctions = [
-  { name: 'get-earned-staker-rewards', access: 'read_only' },
-  { name: 'get-pox-addr', access: 'read_only' },
-  { name: 'claim-staker-rewards', access: 'public' },
+  { names: ['get-earned-staker-rewards'], access: 'read_only' },
+  { names: payoutPreferenceFunctionNames, access: 'read_only' },
+  { names: ['claim-staker-rewards'], access: 'public' },
 ];
 
 const requiredSignerManagerVariable = 'fees-bips';
@@ -61,9 +62,11 @@ function getMissingFunctions(abi: SignerManagerAbi): string[] {
   const missing = requiredSignerManagerFunctions
     .filter(
       required =>
-        !abi.functions.some(fn => fn.name === required.name && fn.access === required.access)
+        !required.names.some(name =>
+          abi.functions.some(fn => fn.name === name && fn.access === required.access)
+        )
     )
-    .map(required => required.name);
+    .map(required => required.names.join(' or '));
   if (!abi.variables.some(variable => variable.name === requiredSignerManagerVariable)) {
     missing.push(requiredSignerManagerVariable);
   }

@@ -15,12 +15,45 @@ function makeClient(result: { okay: boolean; result?: string; cause?: string }) 
   };
 }
 
+function undefinedFunctionResult(functionName: string) {
+  return { okay: false, cause: `RuntimeCheck(UndefinedFunction("${functionName}"))` };
+}
+
+function makeVersionedClient(
+  resultsByFunction: Record<string, { okay: boolean; result?: string; cause?: string }>
+) {
+  const calledFunctions: string[] = [];
+  return {
+    calledFunctions,
+    client: {
+      callReadOnlyFunction({ functionName }: { functionName: string }) {
+        calledFunctions.push(functionName);
+        return Promise.resolve(
+          resultsByFunction[functionName] ?? undefinedFunctionResult(functionName)
+        );
+      },
+    },
+  };
+}
+
 function serializePreference() {
   return `0x${serializeCV(
     someCV(
       tupleCV({
         'pox-addr': poxAddressToTuple(btcRewardAddress),
         'max-fee': uintCV(2500),
+      })
+    )
+  )}`;
+}
+
+function serializePayoutConfig() {
+  return `0x${serializeCV(
+    someCV(
+      tupleCV({
+        'pox-addr': poxAddressToTuple(btcRewardAddress),
+        'max-fee': uintCV(2500),
+        'min-claim': uintCV(3047),
       })
     )
   )}`;
@@ -72,6 +105,53 @@ describe(createGetPox5PayoutPreferenceQueryOptions.name, () => {
       btcRewardAddress,
       maxFeeSats: 2500n,
     });
+  });
+
+  test('reads get-pox-addr first and never calls the v2 function on a v1 contract', async () => {
+    const { client, calledFunctions } = makeVersionedClient({
+      'get-pox-addr': { okay: true, result: serializePreference() },
+    });
+    const options = createGetPox5PayoutPreferenceQueryOptions({
+      address,
+      signerManagerContractId,
+      networkName: 'mainnet',
+      client,
+    });
+    await expect(options.queryFn()).resolves.toEqual({
+      btcRewardAddress,
+      maxFeeSats: 2500n,
+    });
+    expect(calledFunctions).toEqual(['get-pox-addr']);
+  });
+
+  test('falls back to get-payout-config and decodes its min-claim tuple on a v2 contract', async () => {
+    const { client, calledFunctions } = makeVersionedClient({
+      'get-payout-config': { okay: true, result: serializePayoutConfig() },
+    });
+    const options = createGetPox5PayoutPreferenceQueryOptions({
+      address,
+      signerManagerContractId,
+      networkName: 'mainnet',
+      client,
+    });
+    await expect(options.queryFn()).resolves.toEqual({
+      btcRewardAddress,
+      maxFeeSats: 2500n,
+    });
+    expect(calledFunctions).toEqual(['get-pox-addr', 'get-payout-config']);
+  });
+
+  test('throws when the contract exposes neither payout read', async () => {
+    const { client } = makeVersionedClient({});
+    const options = createGetPox5PayoutPreferenceQueryOptions({
+      address,
+      signerManagerContractId,
+      networkName: 'mainnet',
+      client,
+    });
+    await expect(options.queryFn()).rejects.toThrowError(
+      `${signerManagerContractId} exposes none of: get-pox-addr, get-payout-config`
+    );
   });
 
   test('throws when the read fails so a failed read is never mistaken for no preference', async () => {

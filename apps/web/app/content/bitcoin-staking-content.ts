@@ -46,6 +46,7 @@ export const bitcoinStakingContent = {
   poolOverviewInfo: {
     rewardsToken: `Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool's signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall.`,
     fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so check the pool's terms before staking.`,
+    totalStaked: `The STX delegated to this pool for the current cycle, summed across all of the pool's signer-manager contracts. Pools need at least 50,000 STX staked to earn rewards for a cycle.`,
     nextCycle: `Your stake starts earning when the next cycle begins. A cycle lasts about two weeks.`,
   },
   unlistedPool: {
@@ -176,6 +177,7 @@ export const bitcoinStakingLabels = {
   rewardsToken: `Rewards token`,
   rewardsPayout: `Rewards payout`,
   totalStaked: `Total staked`,
+  tvl: `TVL`,
   historicalYield: `Historical yield`,
   fee: `Fee`,
   startEarning: `Start earning`,
