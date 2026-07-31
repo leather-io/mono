@@ -2,6 +2,7 @@ import { HttpResponse, http } from 'msw';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 
 import { hiroInfoHandler } from './info';
+import { pox5GetAmountDelegatedLowHandler } from './pox5-get-amount-delegated';
 import {
   pox5GetStakerInfoCustomStakedHandler,
   pox5GetStakerInfoStakedHandler,
@@ -27,6 +28,10 @@ const defaultMockTxStatus = 'success';
 const notFoundMockTxStatus = 'not-found';
 
 export const pox5MockOverrideHandlers = [
+  http.post(pox5GetAmountDelegatedLowHandler.path, () => {
+    if (getMockFlag('leather-mock-pox5-delegated-low') !== 'true') return undefined;
+    return HttpResponse.json(pox5GetAmountDelegatedLowHandler.resp);
+  }),
   http.post(pox5GetStakerInfoCustomStakedHandler.path, () => {
     if (getMockFlag('leather-mock-pox5-staked-custom') !== 'true') return undefined;
     return HttpResponse.json(pox5GetStakerInfoCustomStakedHandler.resp);
