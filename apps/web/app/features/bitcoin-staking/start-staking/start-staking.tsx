@@ -11,6 +11,7 @@ import { learnArticles } from '~/content/learn-content';
 import {
   StakingPoolSlug,
   getPrimarySignerManagerContract,
+  getSignerManagerContracts,
   getStakingPoolFromSlug,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
@@ -43,7 +44,7 @@ import {
   usePox5PoxInfoQuery,
   usePox5SecondsUntilNextCycleQuery,
 } from '../queries/pox5-node.query';
-import { usePox5ContractId } from '../queries/pox5-stacking.query';
+import { usePox5ContractId, usePox5PoolTotalStaked } from '../queries/pox5-stacking.query';
 import { createStakeMutationOptions } from '../transactions/pox5-mutations';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 import { getBroadcastTxId } from '../transactions/pox5-tx-status';
@@ -100,7 +101,12 @@ function StartStakingLayout({
   const signerManagerContractId =
     signerManagerContractIdOverride ??
     getPrimarySignerManagerContract(pool.providerId, pox5NetworkConfig.contractNetworkMode);
+  const signerManagerContractIds = signerManagerContractIdOverride
+    ? [signerManagerContractIdOverride]
+    : getSignerManagerContracts(pool.providerId, pox5NetworkConfig.contractNetworkMode);
   const pox5ContractId = usePox5ContractId();
+
+  const { totalStakedMicroStx } = usePox5PoolTotalStaked(signerManagerContractIds);
 
   const activeDestination =
     poolSlug === 'byosm' && signerManagerContractId
@@ -275,12 +281,13 @@ function StartStakingLayout({
       <StakingPoolOverview
         pool={pool}
         signerManagerContractId={signerManagerContractId}
+        totalStakedMicroStx={totalStakedMicroStx}
         nextCycleNumber={nextCycleNumber}
         daysUntilNextCycle={daysUntilNextCycle}
         cycleStatus={cycleStatus}
       />
 
-      <PoolHealthWarning totalStakedMicroStx={null} />
+      <PoolHealthWarning totalStakedMicroStx={totalStakedMicroStx} />
 
       <FormProvider {...formMethods}>
         <FormPageLayout

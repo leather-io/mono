@@ -12,12 +12,14 @@ import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { learnArticles } from '~/content/learn-content';
 import {
   bitcoinStakingPoolList,
+  getSignerManagerContracts,
   getStakingPoolFromSlug,
   isPoolAvailableOnNetwork,
   stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { PoolFeeValue } from '~/features/bitcoin-staking/components/pool-fee-value';
+import { PoolTvlValue } from '~/features/bitcoin-staking/components/pool-tvl-value';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
 import { ArrowLeftIcon, Flag } from '@leather.io/ui';
@@ -27,9 +29,9 @@ import { StartStakingButton } from './start-staking-button';
 
 // Column widths live in one colgroup so the header and body always agree,
 // regardless of what any individual cell happens to contain.
-const columnWidths = ['44%', '20%', '16%', '20%'];
+const columnWidths = ['32%', '17%', '15%', '16%', '20%'];
 
-// Static-config table: pox-5 pool stats (TVL, realized yield) have no external
+// TVL is read from pox-5 directly; other pool stats (realized yield) have no
 // data source yet — the stacking-tracker API only covers pox-4 pools. Only
 // pools we hold a signer-manager contract id for are displayed.
 export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
@@ -66,6 +68,13 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
             </Table.Header>
             <Table.Header px="space.04" textAlign="right">
               <LearnHoverCard
+                article={learnArticles.totalLockedValueTvl}
+                label={bitcoinStakingLabels.tvl}
+                textStyle="label.03"
+              />
+            </Table.Header>
+            <Table.Header px="space.04" textAlign="right">
+              <LearnHoverCard
                 article={learnArticles.stackingPoolFees}
                 label={bitcoinStakingLabels.fee}
                 textStyle="label.03"
@@ -91,6 +100,15 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
                   <Flag spacing="space.02" img={<ChainLogoIcon symbol="sBTC" />}>
                     sBTC
                   </Flag>
+                </styled.td>
+                <styled.td px="space.04" textAlign="right" color="black">
+                  <PoolTvlValue
+                    signerManagerContractIds={getSignerManagerContracts(
+                      pool.providerId,
+                      pox5NetworkConfig.contractNetworkMode
+                    )}
+                    testId={`pool-tvl-${slug}`}
+                  />
                 </styled.td>
                 <styled.td px="space.04" textAlign="right" color="black">
                   <PoolFeeValue pool={pool} />

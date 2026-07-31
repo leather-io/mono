@@ -101,7 +101,27 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     url: 'https://www.stackingdao.com',
     description: 'Stake without your STX leaving your wallet.',
     signerManagerContracts: {
-      mainnet: ['SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager'],
+      // Verified on-chain 2026-07-31; signer-manager-luganodes-v1 from the
+      // partner list is deliberately absent — it is not deployed on mainnet,
+      // and a nonexistent principal silently reads as zero delegated forever.
+      mainnet: [
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager',
+      ],
+      mainnetDisabledForColdStartExperiment: [
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-blockdaemon-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-foundry-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-hashkey-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-infstones-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-juicy-stake-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-restake-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-xverse-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-1-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-2-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-3-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-4-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-5-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-6-v1',
+      ],
     },
     supportsBtcPayout: false,
     fixedFeeBips: 0,

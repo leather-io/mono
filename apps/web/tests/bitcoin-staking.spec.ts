@@ -114,6 +114,10 @@ test.describe('Bitcoin Staking', () => {
 
     await page.waitForURL('**/staking/pool/stacking-dao/active', { timeout: 15_000 });
     await test.expect(page.getByTestId('claimable-rewards-card')).toBeVisible();
+    await test
+      .expect(page.getByTestId('active-pool-tvl'))
+      .toHaveText('1,050,000 STX', { timeout: 15_000 });
+    await test.expect(page.getByTestId('active-pool-tvl-usd')).toHaveText('$843,380.30');
   });
 
   test('the status page resolves to the pool the user is staking with', async ({ page, mode }) => {
@@ -260,6 +264,39 @@ test.describe('Bitcoin Staking', () => {
     await page.goto(`/staking/pool/byosm?contract=${stackingDaoSignerManagerContractId}`);
 
     await page.waitForURL('**/staking/pool/stacking-dao', { timeout: 15_000 });
+  });
+
+  test('the pool overview sums total staked across signer managers and warns when low', async ({
+    page,
+    mode,
+  }) => {
+    await mode({ mode: 'mock-connected' });
+    await setMockFlag(page, 'leather-mock-stx-balance', fundedBalanceMicroStx);
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking');
+    await test
+      .expect(page.getByTestId('pool-tvl-xverse-pool'))
+      .toHaveText('225,000 STX', { timeout: 15_000 });
+    await test.expect(page.getByTestId('pool-tvl-xverse-pool-usd')).toHaveText('$180,724.35');
+    await test.expect(page.getByTestId('pool-tvl-fast-pool')).toHaveText('150,000 STX');
+    await test.expect(page.getByTestId('pool-tvl-stacking-dao')).toHaveText('1,050,000 STX');
+    await test.expect(page.getByTestId('pool-tvl-byosm')).toHaveText('—');
+
+    // Xverse has three signer-manager contracts; the mock answers 75k STX for
+    // each, so the overview must show the 225k sum.
+    await page.goto('/staking/pool/xverse-pool');
+    await test
+      .expect(page.getByTestId('pool-total-staked'))
+      .toHaveText('225,000 STX', { timeout: 15_000 });
+    await test.expect(page.getByTestId('pool-health-warning')).toHaveCount(0);
+
+    await setMockFlag(page, 'leather-mock-pox5-delegated-low', 'true');
+    await page.goto('/staking/pool/xverse-pool');
+    await test
+      .expect(page.getByTestId('pool-total-staked'))
+      .toHaveText('30,000 STX', { timeout: 15_000 });
+    await test.expect(page.getByTestId('pool-health-warning')).toBeVisible({ timeout: 15_000 });
   });
 
   test('form validation blocks invalid amounts and durations', async ({ page, mode }) => {

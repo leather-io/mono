@@ -5,6 +5,7 @@ import { useLeatherConnect } from '~/store/addresses';
 import { usePox5StackingClient, usePox5StacksClient } from '../hooks/use-pox5-clients';
 import { getPox5TxRefetchInterval } from '../transactions/pox5-tx-status';
 import { getPox5ContractId } from '../utils/pox5-contracts';
+import { createGetPox5DelegatedAmountQueryOptions } from './create-get-pox5-delegated-amount-query-options';
 import {
   Pox5EarnedRewards,
   createGetPox5EarnedRewardsQueryOptions,
@@ -62,6 +63,50 @@ export function usePox5PoolFeeQuery(signerManagerContractId: string | undefined)
       apiUrl: pox5NetworkConfig.apiUrl,
     })
   );
+}
+
+interface Pox5PoolTotalStaked {
+  isLoading: boolean;
+  // null while loading or when any per-contract read failed, so consumers
+  // never act on a partial sum
+  totalStakedMicroStx: bigint | null;
+}
+
+// A pool's total is the sum over all of its signer-manager contracts (pools
+// like Xverse run several) of the STX delegated to each for the next cycle.
+// The next cycle is the one a new stake would join: pox-5 keys delegations by
+// the cycle they count for, so the current cycle's entry misses stakes made
+// since it started and is absent entirely for pools in their first cycle.
+export function usePox5PoolTotalStaked(signerManagerContractIds: string[]): Pox5PoolTotalStaked {
+  const client = usePox5StacksClient();
+  const pox5ContractId = usePox5ContractId();
+  const poxInfoQuery = usePox5PoxInfoQuery();
+  const cycle = poxInfoQuery.data?.next_cycle.id;
+
+  const delegatedQueries = useQueries({
+    queries: signerManagerContractIds.map(signerManagerContractId =>
+      createGetPox5DelegatedAmountQueryOptions({
+        signerManagerContractId,
+        cycle,
+        pox5ContractId,
+        client,
+      })
+    ),
+  });
+
+  const resolvedAmounts = delegatedQueries
+    .map(query => query.data)
+    .filter((amount): amount is bigint => amount !== null && amount !== undefined);
+  const hasAllAmounts =
+    signerManagerContractIds.length > 0 &&
+    resolvedAmounts.length === signerManagerContractIds.length;
+
+  return {
+    isLoading: poxInfoQuery.isLoading || delegatedQueries.some(query => query.isLoading),
+    totalStakedMicroStx: hasAllAmounts
+      ? resolvedAmounts.reduce((sum, amount) => sum + amount, 0n)
+      : null,
+  };
 }
 
 export function usePox5SignerManagerValidationQuery(contractId: string | undefined) {
