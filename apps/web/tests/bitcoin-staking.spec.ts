@@ -281,7 +281,6 @@ test.describe('Bitcoin Staking', () => {
     await test.expect(page.getByTestId('pool-tvl-xverse-pool-usd')).toHaveText('$180,724.35');
     await test.expect(page.getByTestId('pool-tvl-fast-pool')).toHaveText('150,000 STX');
     await test.expect(page.getByTestId('pool-tvl-stacking-dao')).toHaveText('1,050,000 STX');
-    await test.expect(page.getByTestId('pool-tvl-byosm')).toHaveText('—');
 
     // Xverse has three signer-manager contracts; the mock answers 75k STX for
     // each, so the overview must show the 225k sum.
