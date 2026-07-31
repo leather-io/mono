@@ -81,6 +81,7 @@ export const bitcoinStakingContent = {
     sbtcOnlyHelper: `This pool pays out in sBTC only, once a cycle concludes.`,
     maxFeeNote: `Claims below the max fee can't be paid out until you lower it.`,
     updateHelper: `This setting applies to every future claim.`,
+    loadError: `We couldn't load your current payout preference, which is needed before your stake can be updated.`,
   },
   preparePhase: {
     title: `Staking is briefly paused`,

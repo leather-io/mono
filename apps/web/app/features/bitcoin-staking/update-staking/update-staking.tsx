@@ -13,12 +13,14 @@ import {
   BitcoinStakingPool,
   StakingPoolSlug,
   getStakingPoolFromSlug,
+  stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { usePox5StackingClientRequired } from '~/features/bitcoin-staking/hooks/use-pox5-clients';
 import { useIsHydrated } from '~/hooks/use-is-hydrated';
 import {
   POX5_MAX_NUM_CYCLES,
+  byosmPaths,
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
@@ -175,17 +177,18 @@ interface UpdateStakingLayoutProps {
 }
 
 function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
-  const pool = getStakingPoolFromSlug(poolSlug);
   const { isLoading, position } = usePox5Position();
 
-  const activeInfo = position?.status === 'active' ? position.info : undefined;
+  const activeInfo = position.status === 'active' ? position.info : undefined;
+  const activePool =
+    position.status === 'active' ? (position.pool ?? getStakingPoolFromSlug('byosm')) : undefined;
   // The form's defaults must include the stored payout preference, so the form
   // only mounts once this query settles (see the wipe note on normalizePayout).
   const payoutQuery = usePox5PayoutPreferenceQuery(
-    pool.supportsBtcPayout ? activeInfo?.signerManagerContractId : undefined
+    activePool?.supportsBtcPayout ? activeInfo?.signerManagerContractId : undefined
   );
 
-  if (isLoading || (pool.supportsBtcPayout && activeInfo && payoutQuery.isLoading)) {
+  if (isLoading) {
     return (
       <Flex justifyContent="center" alignItems="center" h="100%">
         <LoadingSpinner fill="ink.text-subdued" />
@@ -193,14 +196,53 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
     );
   }
 
-  if (position.status !== 'active') {
+  if (position.status !== 'active' || !activePool) {
     return <Navigate to={stakingPaths.pool(poolSlug)} replace />;
+  }
+
+  const positionSlug = stakingProviderIdToSlug(activePool.providerId);
+  if (positionSlug !== poolSlug) {
+    return (
+      <Navigate
+        to={
+          position.pool
+            ? stakingPaths.update(positionSlug)
+            : byosmPaths.update(position.info.signerManagerContractId)
+        }
+        replace
+      />
+    );
+  }
+
+  if (activePool.supportsBtcPayout && payoutQuery.isLoading) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100%">
+        <LoadingSpinner fill="ink.text-subdued" />
+      </Flex>
+    );
+  }
+
+  if (activePool.supportsBtcPayout && payoutQuery.isError) {
+    return (
+      <Stack gap="space.04" maxWidth="500px">
+        <ErrorLabel>{bitcoinStakingContent.payoutPreference.loadError}</ErrorLabel>
+        <Button
+          size="md"
+          variant="outline"
+          alignSelf="flex-start"
+          disabled={payoutQuery.isRefetching}
+          onClick={() => void payoutQuery.refetch()}
+        >
+          Try again
+        </Button>
+      </Stack>
+    );
   }
 
   return (
     <UpdateStakingForm
       poolSlug={poolSlug}
-      pool={pool}
+      pool={activePool}
       address={address}
       info={position.info}
       currentPayout={payoutQuery.data ?? null}
