@@ -24,7 +24,6 @@ import { analytics } from '@shared/utils/analytics';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
-import { queryClient } from '@app/common/persistence';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import {
   InfoCardAssetValue,
@@ -33,6 +32,7 @@ import {
 } from '@app/components/info-card/info-card';
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
+import { invalidateActivityQueries } from '@app/query/activity/blockchain-activity.query';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
@@ -109,10 +109,7 @@ function BtcBroadcastConfirmation() {
         });
 
         // invalidate txs query after some time to ensure that the new tx will be shown in the list
-        setTimeout(
-          () => void queryClient.invalidateQueries({ queryKey: ['btc-txs-by-address'] }),
-          2000
-        );
+        setTimeout(() => void invalidateActivityQueries(), 2000);
       },
       onError(e) {
         analytics.track('broadcast_btc_error', {

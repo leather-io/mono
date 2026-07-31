@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { ActivityView } from '@leather.io/features';
+import type { BlockchainActivityItem } from '@leather.io/features';
 import type { Money } from '@leather.io/models';
 
 import { TokenDetailsLayout } from './token-details.layout';
@@ -13,7 +13,7 @@ interface StacksTokenDetailsLayoutProps {
   changePercent: number;
   priceChangeDelta?: string;
   descriptionText: string;
-  activity: ActivityView[];
+  activity: BlockchainActivityItem[];
 }
 
 export function StacksTokenDetailsLayout({

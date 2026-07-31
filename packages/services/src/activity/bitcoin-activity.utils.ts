@@ -4,7 +4,7 @@ import type {
   BlockchainActivity,
   BlockchainActivityBalanceChange,
 } from '@leather.io/models';
-import { createMoney, sumNumbers } from '@leather.io/utils';
+import { createMoney, dateToUnixTimestamp, sumNumbers } from '@leather.io/utils';
 
 function btcBalanceChange(
   direction: BlockchainActivityBalanceChange['direction'],
@@ -31,7 +31,7 @@ export function mapBitcoinActivity(tx: BitcoinTransaction): BlockchainActivity |
   if (!isSend && !isReceive) return null;
 
   const base = {
-    timestamp: tx.time ?? 0,
+    timestamp: tx.time ?? dateToUnixTimestamp(new Date()),
     txid: tx.txid,
     blockHeight: tx.height,
     status: tx.height === undefined ? ('pending' as const) : ('success' as const),

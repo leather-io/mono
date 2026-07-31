@@ -109,7 +109,7 @@ test.describe('App with Ledger', () => {
           const activityList = homePage.page.getByTestId(ActivitySelectors.ActivityList);
           const noActivityText = homePage.page.getByText('No activity yet');
 
-          await test.expect(activityList.or(noActivityText)).toBeVisible();
+          await test.expect(activityList.or(noActivityText).first()).toBeVisible();
 
           test.expect(errors).toHaveLength(0);
           test.expect(consoleErrors).toHaveLength(0);

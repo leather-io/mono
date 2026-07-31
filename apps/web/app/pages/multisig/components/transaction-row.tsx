@@ -1,10 +1,9 @@
 import type { ReactNode } from 'react';
 
-import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 
 import type { MultisigTransactionSummary } from '@leather.io/models';
-import { Button, FailedIcon, ListItemBox, SentIcon } from '@leather.io/ui';
+import { Button, FailedIcon, ListItemBox, PendingIndicatorIcon, SentIcon } from '@leather.io/ui';
 
 import { chainFromNetwork } from '../multisig.utils';
 import { formatRelativeTime } from '../tx/relative-time';
@@ -28,32 +27,6 @@ interface TransactionRowProps {
   scale?: TransactionRowScale;
   needsAttention?: boolean;
   onClick?(): void;
-}
-
-const spinnerClass = css({ animation: 'spin', transformOrigin: 'center' });
-
-// The shared PendingIcon asset is an invisible Figma conic-gradient export, so
-// collecting transactions use a spinner badge matching the sent/failed sub-icons:
-// a dark disc with a spinning ¾ ring.
-export function PendingIndicatorIcon({ size }: { size: number }) {
-  return (
-    <svg
-      className={spinnerClass}
-      width={size}
-      height={size}
-      viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect width="16" height="16" rx="8" fill="#12100F" />
-      <path
-        d="M8 3.5a4.5 4.5 0 1 1-4.5 4.5"
-        stroke="#FFFFFF"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
 }
 
 function renderIndicator(status: MultisigTransactionSummary['status'], size: number) {

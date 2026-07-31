@@ -202,7 +202,7 @@ export async function mockFundedBitcoinAddressUtxos(
   );
 }
 
-export async function mockMixedUtxoRequests(page: Page, utxos: LeatherUtxoMock[]) {
+export async function mockMixedUtxoRequests(page: Page | BrowserContext, utxos: LeatherUtxoMock[]) {
   await page.route('**/v1/utxos/**', route => {
     const url = route.request().url();
     if (url.includes('/v1/utxos/addresses/')) return route.fulfill({ json: [] });
