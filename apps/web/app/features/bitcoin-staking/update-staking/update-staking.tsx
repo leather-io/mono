@@ -1,5 +1,5 @@
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { Navigate, useNavigate } from 'react-router';
+import { Navigate, useLocation, useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -178,6 +178,7 @@ interface UpdateStakingLayoutProps {
 
 function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
   const { isLoading, position } = usePox5Position();
+  const { search } = useLocation();
 
   const activeInfo = position.status === 'active' ? position.info : undefined;
   const activePool =
@@ -197,7 +198,7 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
   }
 
   if (position.status !== 'active' || !activePool) {
-    return <Navigate to={stakingPaths.pool(poolSlug)} replace />;
+    return <Navigate to={{ pathname: stakingPaths.pool(poolSlug), search }} replace />;
   }
 
   const positionSlug = stakingProviderIdToSlug(activePool.providerId);

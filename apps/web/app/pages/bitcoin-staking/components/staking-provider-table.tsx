@@ -1,4 +1,8 @@
+import { Link as RouterLink } from 'react-router';
+
+import { css, cx } from 'leather-styles/css';
 import { HStack, styled } from 'leather-styles/jsx';
+import { link as linkRecipe } from 'leather-styles/recipes';
 import { HTMLStyledProps } from 'leather-styles/types';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { ProviderIcon } from '~/components/icons/provider-icon';
@@ -14,8 +18,9 @@ import {
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { PoolFeeValue } from '~/features/bitcoin-staking/components/pool-fee-value';
+import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
-import { Flag } from '@leather.io/ui';
+import { ArrowLeftIcon, Flag } from '@leather.io/ui';
 
 import { ClaimRewardsButton } from './claim-rewards-button';
 import { StartStakingButton } from './start-staking-button';
@@ -31,7 +36,7 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
   const availablePools = bitcoinStakingPoolList.filter(pool =>
     isPoolAvailableOnNetwork(pool, pox5NetworkConfig.contractNetworkMode)
   );
-  const tableRows = [...availablePools, getStakingPoolFromSlug('byosm')];
+  const byosmPool = getStakingPoolFromSlug('byosm');
 
   return (
     <Table.Root width="100%" overflowX="auto" {...props}>
@@ -70,7 +75,7 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
           </Table.Row>
         </Table.Head>
         <Table.Body>
-          {tableRows.map(pool => {
+          {availablePools.map(pool => {
             const slug = stakingProviderIdToSlug(pool.providerId);
             return (
               <Table.Row key={pool.providerId} height="64px" className={rowPadding}>
@@ -100,6 +105,32 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
             );
           })}
         </Table.Body>
+        <styled.tfoot>
+          <Table.Row height="48px">
+            <styled.td colSpan={columnWidths.length} textAlign="center" borderTop="default">
+              <RouterLink
+                to={stakingPaths.pool('byosm')}
+                data-testid="byosm-entry-link"
+                className={cx(
+                  linkRecipe(),
+                  css({
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 'space.01',
+                    color: 'ink.text-primary',
+                  })
+                )}
+              >
+                {byosmPool.name}
+                <ArrowLeftIcon
+                  variant="small"
+                  color="ink.text-primary"
+                  className={css({ transform: 'rotate(180deg)' })}
+                />
+              </RouterLink>
+            </styled.td>
+          </Table.Row>
+        </styled.tfoot>
       </Table.Table>
     </Table.Root>
   );

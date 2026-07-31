@@ -8,7 +8,7 @@ import {
   stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
-import { byosmPaths, stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { Button, ButtonProps, useOnMount } from '@leather.io/ui';
@@ -41,15 +41,6 @@ function StartStakingPositionCheck({ slug }: StartStakingButtonProps) {
 
   if (position.status === 'active') {
     const positionPool = getPoolBySignerManager(position.info.signerManagerContractId);
-
-    if (slug === 'byosm' && !positionPool) {
-      return (
-        <Link to={byosmPaths.active(position.info.signerManagerContractId)}>
-          <StartStakingButtonLayout>{bitcoinStakingLabels.viewPosition}</StartStakingButtonLayout>
-        </Link>
-      );
-    }
-
     const isThisPool = positionPool && stakingProviderIdToSlug(positionPool.providerId) === slug;
 
     if (isThisPool) {

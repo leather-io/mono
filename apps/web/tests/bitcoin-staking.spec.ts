@@ -175,7 +175,7 @@ test.describe('Bitcoin Staking', () => {
 
     await page.waitForLoadState('networkidle');
     await page.goto('/staking');
-    await page.getByTestId('start-staking-button-byosm').click();
+    await page.getByTestId('byosm-entry-link').click();
     await page.getByTestId('byosm-contract-input').fill(customSignerManagerContractId);
     await page.getByTestId('byosm-contract-continue').click();
 

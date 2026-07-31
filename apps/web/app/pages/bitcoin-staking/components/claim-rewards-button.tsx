@@ -24,7 +24,6 @@ function resolveClaimProviderId(
   slug: StakingPoolSlug,
   positionPool: BitcoinStakingPool | undefined
 ): BitcoinStakingProviderId | null {
-  if (slug === 'byosm') return positionPool ? null : 'byosm';
   if (positionPool && stakingProviderIdToSlug(positionPool.providerId) === slug) {
     return positionPool.providerId;
   }
