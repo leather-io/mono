@@ -20,6 +20,7 @@ import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
 import {
   DEFAULT_STAKING_CYCLES,
+  byosmPaths,
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
@@ -58,23 +59,35 @@ import { StakingFormSchema, createStakingFormSchema } from './utils/staking-form
 
 interface StartStakingProps {
   poolSlug: StakingPoolSlug;
+  signerManagerContractId?: string;
 }
 
-export function StartStaking({ poolSlug }: StartStakingProps) {
+export function StartStaking({ poolSlug, signerManagerContractId }: StartStakingProps) {
   const client = usePox5StackingClient();
   const { stacksAccount } = useLeatherConnect();
 
   if (!stacksAccount || !client) return 'You need to connect Leather';
 
-  return <StartStakingLayout client={client} poolSlug={poolSlug} />;
+  return (
+    <StartStakingLayout
+      client={client}
+      poolSlug={poolSlug}
+      signerManagerContractId={signerManagerContractId}
+    />
+  );
 }
 
 interface StartStakingLayoutProps {
   poolSlug: StakingPoolSlug;
   client: StackingClient;
+  signerManagerContractId?: string;
 }
 
-function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
+function StartStakingLayout({
+  poolSlug,
+  client,
+  signerManagerContractId: signerManagerContractIdOverride,
+}: StartStakingLayoutProps) {
   const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No STX address available');
 
@@ -84,11 +97,15 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
   const [termsConfirmed, setTermsConfirmed] = useState(false);
 
   const pool = getStakingPoolFromSlug(poolSlug);
-  const signerManagerContractId = getPrimarySignerManagerContract(
-    pool.providerId,
-    pox5NetworkConfig.contractNetworkMode
-  );
+  const signerManagerContractId =
+    signerManagerContractIdOverride ??
+    getPrimarySignerManagerContract(pool.providerId, pox5NetworkConfig.contractNetworkMode);
   const pox5ContractId = usePox5ContractId();
+
+  const activeDestination =
+    poolSlug === 'byosm' && signerManagerContractId
+      ? byosmPaths.active(signerManagerContractId)
+      : stakingPaths.active(poolSlug);
 
   const { isLoading: positionIsLoading, position } = usePox5Position();
   const { cycleClock } = usePox5CycleClock();
@@ -156,12 +173,11 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
       {
         onSuccess(result) {
           const txId = getBroadcastTxId(result);
-          const destination = stakingPaths.active(poolSlug);
           if (!txId) {
-            void navigate(destination);
+            void navigate(activeDestination);
             return;
           }
-          track({ kind: 'stake', txId, destination, startedAt: Date.now() });
+          track({ kind: 'stake', txId, destination: activeDestination, startedAt: Date.now() });
         },
       }
     );
@@ -191,7 +207,7 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
   }
 
   if (position.status === 'active') {
-    return <Navigate to={stakingPaths.active(poolSlug)} replace />;
+    return <Navigate to={activeDestination} replace />;
   }
 
   if (position.status === 'pending-stake') {
@@ -258,6 +274,7 @@ function StartStakingLayout({ poolSlug, client }: StartStakingLayoutProps) {
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
       <StakingPoolOverview
         pool={pool}
+        signerManagerContractId={signerManagerContractId}
         nextCycleNumber={nextCycleNumber}
         daysUntilNextCycle={daysUntilNextCycle}
         cycleStatus={cycleStatus}

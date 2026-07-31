@@ -12,6 +12,21 @@ export const stakingPaths = {
   },
 };
 
+export const byosmContractParam = 'contract';
+
+function byosmSearch(contractId: string) {
+  return `?${byosmContractParam}=${encodeURIComponent(contractId)}`;
+}
+
+export const byosmPaths = {
+  active(contractId: string) {
+    return `${stakingPaths.active('byosm')}${byosmSearch(contractId)}`;
+  },
+  update(contractId: string) {
+    return `${stakingPaths.update('byosm')}${byosmSearch(contractId)}`;
+  },
+};
+
 // Protocol constants from the PoX-5 reference implementation
 // (stacks-core#pox-wf-integration, pox-5.clar). Display fallbacks only — the
 // prepare-phase length is per-network and must always be read from pox-info.

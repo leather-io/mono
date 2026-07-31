@@ -1,10 +1,14 @@
-import { Navigate } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 
 import { Flex, VStack } from 'leather-styles/jsx';
-import { StakingPoolSlug, getStakingPoolFromSlug } from '~/data/bitcoin-staking-data';
+import {
+  StakingPoolSlug,
+  getStakingPoolFromSlug,
+  stakingProviderIdToSlug,
+} from '~/data/bitcoin-staking-data';
 import { usePox5StackingClient } from '~/features/bitcoin-staking/hooks/use-pox5-clients';
 import { useIsHydrated } from '~/hooks/use-is-hydrated';
-import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { byosmPaths, stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { LoadingSpinner } from '@leather.io/ui';
@@ -39,6 +43,7 @@ export function StakingActiveInfo({ poolSlug }: StakingActiveInfoProps) {
 
 function StakingActiveInfoLayout({ poolSlug }: StakingActiveInfoProps) {
   const { isLoading, position, details } = useActiveStakingInfo();
+  const { search } = useLocation();
   const fallbackPool = getStakingPoolFromSlug(poolSlug);
 
   if (isLoading) {
@@ -50,7 +55,7 @@ function StakingActiveInfoLayout({ poolSlug }: StakingActiveInfoProps) {
   }
 
   if (position.status === 'none') {
-    return <Navigate to={stakingPaths.pool(poolSlug)} replace />;
+    return <Navigate to={{ pathname: stakingPaths.pool(poolSlug), search }} replace />;
   }
 
   if (position.status === 'pending-stake') {
@@ -58,6 +63,20 @@ function StakingActiveInfoLayout({ poolSlug }: StakingActiveInfoProps) {
       <VStack alignItems="stretch" py="space.03">
         <PendingStakePanel />
       </VStack>
+    );
+  }
+
+  const positionSlug = position.pool ? stakingProviderIdToSlug(position.pool.providerId) : 'byosm';
+  if (positionSlug !== poolSlug) {
+    return (
+      <Navigate
+        to={
+          position.pool
+            ? stakingPaths.active(positionSlug)
+            : byosmPaths.active(position.info.signerManagerContractId)
+        }
+        replace
+      />
     );
   }
 

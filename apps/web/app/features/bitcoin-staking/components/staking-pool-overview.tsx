@@ -35,6 +35,7 @@ export function cycleStatusFromClock(clock: CycleClockInfo): StakingCycleStatus 
 
 interface StakingPoolOverviewProps {
   pool: BitcoinStakingPool;
+  signerManagerContractId?: string;
   nextCycleNumber: number | null;
   daysUntilNextCycle: number | null;
   cycleStatus?: StakingCycleStatus | null;
@@ -145,6 +146,7 @@ function CycleStatusLine({ cycleStatus }: { cycleStatus: StakingCycleStatus }) {
 
 export function StakingPoolOverview({
   pool,
+  signerManagerContractId,
   nextCycleNumber,
   daysUntilNextCycle,
   cycleStatus,
@@ -201,7 +203,7 @@ export function StakingPoolOverview({
               explanation={bitcoinStakingContent.poolOverviewInfo.fee}
             />
           }
-          value={<PoolFeeValue pool={pool} />}
+          value={<PoolFeeValue pool={pool} signerManagerContractId={signerManagerContractId} />}
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell

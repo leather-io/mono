@@ -1,16 +1,23 @@
 import { StacksNetworkName } from '@stacks/network';
 import { hexToCV, principalCV, serializeCV } from '@stacks/transactions';
 
-import { StacksClient } from '@leather.io/query';
-
 import { Pox5PayoutPreference, decodePayoutPreference } from '../transactions/pox5-signer-calldata';
 import { parseContractId } from '../utils/contract-id';
+
+interface PayoutPreferenceReader {
+  callReadOnlyFunction(args: {
+    contractAddress: string;
+    contractName: string;
+    functionName: string;
+    readOnlyFunctionArgs: { arguments: string[]; sender: string };
+  }): Promise<{ okay: boolean; result?: string; cause?: string }>;
+}
 
 interface CreateGetPox5PayoutPreferenceQueryOptionsArgs {
   address: string | undefined;
   signerManagerContractId: string | undefined;
   networkName: StacksNetworkName;
-  client: StacksClient;
+  client: PayoutPreferenceReader;
 }
 
 export function createGetPox5PayoutPreferenceQueryOptions({
@@ -38,7 +45,9 @@ export function createGetPox5PayoutPreferenceQueryOptions({
         },
       });
 
-      if (!res.okay || !res.result) return null;
+      if (!res.okay || !res.result) {
+        throw new Error(res.cause ?? 'Reading get-pox-addr returned no result');
+      }
       return decodePayoutPreference(hexToCV(res.result), networkName);
     },
   };

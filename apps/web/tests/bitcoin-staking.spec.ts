@@ -14,6 +14,15 @@ async function setMockFlag(page: Page, key: string, value: string) {
 
 const fundedBalanceMicroStx = '1000000000000';
 
+// Must match mockCustomSignerManagerContractId in
+// app/mocks/api/hiro.so/pox5-custom-signer-manager.ts (kept as a literal here
+// so the spec does not import app modules).
+const customSignerManagerContractId =
+  'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.byosm-custom-signer-manager';
+
+const stackingDaoSignerManagerContractId =
+  'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager';
+
 test.describe('Bitcoin Staking', () => {
   test('users can start staking with the Stacking DAO pool', async ({ page, mode }) => {
     await mode({ mode: 'mock-connected' });
@@ -158,6 +167,99 @@ test.describe('Bitcoin Staking', () => {
 
     await test.expect(page.getByTestId('prepare-phase-callout')).toBeVisible();
     await test.expect(page.getByTestId('confirmation-stake-button')).toBeDisabled();
+  });
+
+  test('users can stake with a custom signer manager', async ({ page, mode }) => {
+    await mode({ mode: 'mock-connected' });
+    await setMockFlag(page, 'leather-mock-stx-balance', fundedBalanceMicroStx);
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking');
+    await page.getByTestId('byosm-entry-link').click();
+    await page.getByTestId('byosm-contract-input').fill(customSignerManagerContractId);
+    await page.getByTestId('byosm-contract-continue').click();
+
+    await test.expect(page).toHaveURL(/\/staking\/pool\/byosm\?contract=/, { timeout: 15_000 });
+    await test.expect(page.locator('#amount')).toBeVisible({ timeout: 15_000 });
+
+    await page.locator('#amount').fill('500');
+    await page.locator('#cycles').fill('12');
+    await page.getByTestId('confirmation-terms-button').click();
+    await page.getByTestId('confirmation-stake-button').click();
+    await setMockFlag(page, 'leather-mock-pox5-staked-custom', 'true');
+    await page.getByRole('button', { name: 'Resolve' }).click();
+
+    await page.waitForURL('**/staking/pool/byosm/active**', { timeout: 15_000 });
+    await test.expect(page.getByTestId('claimable-rewards-card')).toBeVisible({ timeout: 15_000 });
+    await test.expect(page.getByTestId('unstake-button')).toBeVisible({ timeout: 15_000 });
+    await test.expect(page.getByTestId('update-stake-button')).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('an unlisted position links to the byosm active page', async ({ page, mode }) => {
+    await mode({ mode: 'mock-connected' });
+    await setMockFlag(page, 'leather-mock-pox5-staked-custom', 'true');
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking');
+    await page.getByTestId('staking-user-position').getByText('View position').click();
+
+    await page.waitForURL('**/staking/pool/byosm/active**', { timeout: 15_000 });
+    await test.expect(page.getByTestId('claimable-rewards-card')).toBeVisible({ timeout: 15_000 });
+    await test.expect(page.getByTestId('unstake-button')).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('the status page resolves an unlisted position to the byosm active page', async ({
+    page,
+    mode,
+  }) => {
+    await mode({ mode: 'mock-connected' });
+    await setMockFlag(page, 'leather-mock-pox5-staked-custom', 'true');
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking/status');
+
+    await page.waitForURL('**/staking/pool/byosm/active**', { timeout: 15_000 });
+    await test.expect(page.getByTestId('claimable-rewards-card')).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('the byosm entry form rejects malformed contract principals', async ({ page, mode }) => {
+    await mode({ mode: 'mock-connected' });
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking/pool/byosm');
+    await page.getByTestId('byosm-contract-input').fill('not-a-contract');
+    await page.getByTestId('byosm-contract-continue').click();
+
+    await test
+      .expect(page.getByText('Enter a contract principal in address.contract-name format.'))
+      .toBeVisible();
+    await test.expect(page).toHaveURL(/\/staking\/pool\/byosm$/);
+  });
+
+  test('the byosm entry form redirects a listed signer manager to its pool page', async ({
+    page,
+    mode,
+  }) => {
+    await mode({ mode: 'mock-connected' });
+
+    await page.waitForLoadState('networkidle');
+    await page.goto('/staking/pool/byosm');
+    await page.getByTestId('byosm-contract-input').fill(stackingDaoSignerManagerContractId);
+    await page.getByTestId('byosm-contract-continue').click();
+
+    await page.waitForURL('**/staking/pool/stacking-dao', { timeout: 15_000 });
+  });
+
+  test('a byosm deep link with a listed signer manager redirects to its pool page', async ({
+    page,
+    mode,
+  }) => {
+    await mode({ mode: 'mock-connected' });
+
+    await page.waitForLoadState('networkidle');
+    await page.goto(`/staking/pool/byosm?contract=${stackingDaoSignerManagerContractId}`);
+
+    await page.waitForURL('**/staking/pool/stacking-dao', { timeout: 15_000 });
   });
 
   test('form validation blocks invalid amounts and durations', async ({ page, mode }) => {
