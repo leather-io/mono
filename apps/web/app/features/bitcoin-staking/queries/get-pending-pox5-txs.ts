@@ -5,6 +5,8 @@ import {
   getHasPendingTransaction,
 } from '~/features/stacking/direct-stacking-info/utils-pending-txs';
 
+import { isStackingDaoWrapperContract } from '../transactions/pox5-stacking-dao';
+
 export type PendingPox5Tx =
   | {
       kind: 'stake';
@@ -38,14 +40,17 @@ interface Pox5ContractCallFields extends Pox5ContractCallMetadata {
 }
 
 const pox5MutationFunctionNames: string[] = ['stake', 'stake-update', 'unstake'];
+const stackingDaoWrapperFunctionNames: string[] = ['delegate', 'delegate-update', 'undelegate'];
 
 // getHasPendingTransaction internally resolves the pox-4 contract id (via
 // StackingClient.getStackingContract) and passes it to the predicate; the pox-5
 // predicate must close over the pox-5 contract id and ignore that argument.
 export function isPox5MutationCall(pox5ContractId: string) {
   return (t: Pox5ContractCallMetadata) =>
-    t.contract_call.contract_id === pox5ContractId &&
-    pox5MutationFunctionNames.includes(t.contract_call.function_name);
+    (t.contract_call.contract_id === pox5ContractId &&
+      pox5MutationFunctionNames.includes(t.contract_call.function_name)) ||
+    (isStackingDaoWrapperContract(t.contract_call.contract_id) &&
+      stackingDaoWrapperFunctionNames.includes(t.contract_call.function_name));
 }
 
 function expectPrincipalValue(value: ClarityValue | undefined, argName: string): string {
@@ -63,7 +68,8 @@ export function convertPox5Transaction(transaction: Pox5ContractCallFields): Pen
   const args = (transaction.contract_call.function_args ?? []).map(arg => hexToCV(arg.hex));
 
   switch (functionName) {
-    case 'stake': {
+    case 'stake':
+    case 'delegate': {
       const [signerManager, amount, numCycles] = args;
       return {
         kind: 'stake',
@@ -73,7 +79,8 @@ export function convertPox5Transaction(transaction: Pox5ContractCallFields): Pen
         signerManagerContractId: expectPrincipalValue(signerManager, 'signer-manager'),
       };
     }
-    case 'stake-update': {
+    case 'stake-update':
+    case 'delegate-update': {
       const [newSignerManager, , cyclesToExtend, amountIncrease] = args;
       return {
         kind: 'stake-update',
@@ -84,6 +91,7 @@ export function convertPox5Transaction(transaction: Pox5ContractCallFields): Pen
       };
     }
     case 'unstake':
+    case 'undelegate':
       return { kind: 'unstake', txId: transaction.tx_id };
     default:
       throw new Error(`Unexpected pox-5 function name: ${functionName}`);

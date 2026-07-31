@@ -43,8 +43,8 @@ import { Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-opt
 import { usePox5AvailableUnlockedBalance } from '../queries/pox5-node.query';
 import { usePox5PayoutPreferenceQuery } from '../queries/pox5-stacking.query';
 import { ChoosePayoutPreference } from '../start-staking/components/choose-payout-preference';
+import { createStakeUpdateMutationOptions } from '../transactions/pox5-mutations';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
-import { createStakeUpdateMutationOptions } from '../transactions/pox5-stake-update';
 import { getBroadcastTxId } from '../transactions/pox5-tx-status';
 
 const updateStakingMessages = {
