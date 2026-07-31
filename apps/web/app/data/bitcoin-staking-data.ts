@@ -106,8 +106,6 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
       // and a nonexistent principal silently reads as zero delegated forever.
       mainnet: [
         'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager',
-      ],
-      mainnetDisabledForColdStartExperiment: [
         'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-blockdaemon-v1',
         'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-foundry-v1',
         'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-hashkey-v1',
