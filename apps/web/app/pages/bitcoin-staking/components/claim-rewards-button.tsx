@@ -9,7 +9,7 @@ import {
 } from '~/data/bitcoin-staking-data';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
 import { usePox5ClaimableRewards } from '~/features/bitcoin-staking/queries/pox5-stacking.query';
-import { createClaimRewardsMutationOptions } from '~/features/bitcoin-staking/transactions/pox5-claim-rewards';
+import { createClaimRewardsMutationOptions } from '~/features/bitcoin-staking/transactions/pox5-mutations';
 import { useLeatherConnect } from '~/store/addresses';
 import { leather } from '~/utils/leather-sdk';
 

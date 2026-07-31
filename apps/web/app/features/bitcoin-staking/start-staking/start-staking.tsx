@@ -43,8 +43,8 @@ import {
   usePox5SecondsUntilNextCycleQuery,
 } from '../queries/pox5-node.query';
 import { usePox5ContractId } from '../queries/pox5-stacking.query';
+import { createStakeMutationOptions } from '../transactions/pox5-mutations';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
-import { createStakeMutationOptions } from '../transactions/pox5-stake';
 import { getBroadcastTxId } from '../transactions/pox5-tx-status';
 import { ChoosePayoutPreference } from './components/choose-payout-preference';
 import { ChooseStakingAmount } from './components/choose-staking-amount';

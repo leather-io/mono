@@ -5,8 +5,15 @@ import {
   getPoolBySignerManager,
   getPrimarySignerManagerContract,
   getSignerManagerContracts,
+  getStackingDaoWrapperContract,
   isPoolAvailableOnNetwork,
+  isStackingDaoSignerManager,
+  isStackingDaoWrapperContract,
 } from './bitcoin-staking-data';
+
+const stackingDaoSignerManagerContractId =
+  'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager';
+const stackingDaoWrapperContractId = 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-v1';
 
 const declaredContracts = bitcoinStakingPoolList.flatMap(pool =>
   Object.entries(pool.signerManagerContracts).flatMap(([networkMode, contractIds]) =>
@@ -93,5 +100,35 @@ describe(isPoolAvailableOnNetwork.name, () => {
         'mainnet'
       )
     ).toBe(true);
+  });
+});
+
+describe(getStackingDaoWrapperContract.name, () => {
+  test('maps the Stacking DAO signer-manager to their native-pool wrapper', () => {
+    expect(getStackingDaoWrapperContract(stackingDaoSignerManagerContractId)).toEqual(
+      stackingDaoWrapperContractId
+    );
+  });
+
+  test('is undefined for any other signer-manager', () => {
+    expect(
+      getStackingDaoWrapperContract(
+        'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fastpool-1-signer-manager'
+      )
+    ).toBeUndefined();
+  });
+});
+
+describe(isStackingDaoSignerManager.name, () => {
+  test('recognises only the Stacking DAO signer-manager', () => {
+    expect(isStackingDaoSignerManager(stackingDaoSignerManagerContractId)).toBe(true);
+    expect(isStackingDaoSignerManager(stackingDaoWrapperContractId)).toBe(false);
+  });
+});
+
+describe(isStackingDaoWrapperContract.name, () => {
+  test('recognises only the Stacking DAO wrapper contract', () => {
+    expect(isStackingDaoWrapperContract(stackingDaoWrapperContractId)).toBe(true);
+    expect(isStackingDaoWrapperContract(stackingDaoSignerManagerContractId)).toBe(false);
   });
 });
