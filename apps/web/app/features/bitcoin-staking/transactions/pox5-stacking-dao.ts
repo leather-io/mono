@@ -1,4 +1,5 @@
 import { contractPrincipalCV, noneCV, serializeCV, uintCV } from '@stacks/transactions';
+import { getStackingDaoWrapperContract } from '~/data/bitcoin-staking-data';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
 import { parseContractId } from '../utils/contract-id';
@@ -6,32 +7,6 @@ import { ClaimStakerRewardsArgs, getClaimStakerRewardsOptions } from './pox5-cla
 import { StakeArgs, getStakeOptions } from './pox5-stake';
 import { StakeUpdateArgs, getStakeUpdateOptions } from './pox5-stake-update';
 import { UnstakeArgs, getUnstakeOptions } from './pox5-unstake';
-
-// Stacking DAO is the one pool that cannot be staked against pox-5 directly:
-// its signer-manager's validate-stake! only passes while their native-pool
-// wrapper holds a transient is-delegating flag, so stake/stake-update/unstake
-// must be sent to the wrapper as delegate/delegate-update/undelegate (same
-// trailing args; delegate drops start-burn-ht and signer-calldata, which the
-// wrapper supplies itself). Their claim-staker-rewards is also non-standard:
-// it takes no staker principal and always claims for tx-sender. Everything
-// about this bespoke flow is keyed off the map below; no other pool should
-// ever be added here.
-const stackingDaoWrapperBySignerManager: Record<string, string> = {
-  'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager':
-    'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-v1',
-};
-
-export function getStackingDaoWrapperContract(signerManagerContractId: string): string | undefined {
-  return stackingDaoWrapperBySignerManager[signerManagerContractId];
-}
-
-export function isStackingDaoSignerManager(signerManagerContractId: string): boolean {
-  return signerManagerContractId in stackingDaoWrapperBySignerManager;
-}
-
-export function isStackingDaoWrapperContract(contractId: string): boolean {
-  return Object.values(stackingDaoWrapperBySignerManager).includes(contractId);
-}
 
 function requireStackingDaoWrapperContract(signerManagerContractId: string): string {
   const wrapperContractId = getStackingDaoWrapperContract(signerManagerContractId);

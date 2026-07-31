@@ -1,11 +1,10 @@
 import { ClarityType, ClarityValue, hexToCV } from '@stacks/transactions';
+import { isStackingDaoWrapperContract } from '~/data/bitcoin-staking-data';
 import {
   PendingTransactionArgs,
   expectUintCV,
   getHasPendingTransaction,
 } from '~/features/stacking/direct-stacking-info/utils-pending-txs';
-
-import { isStackingDaoWrapperContract } from '../transactions/pox5-stacking-dao';
 
 export type PendingPox5Tx =
   | {

@@ -6,9 +6,6 @@ import {
   getStackingDaoStakeOptions,
   getStackingDaoStakeUpdateOptions,
   getStackingDaoUnstakeOptions,
-  getStackingDaoWrapperContract,
-  isStackingDaoSignerManager,
-  isStackingDaoWrapperContract,
 } from './pox5-stacking-dao';
 import { getStakeOptions } from './pox5-stake';
 import { getStakeUpdateOptions } from './pox5-stake-update';
@@ -37,36 +34,6 @@ const stakeUpdateArgs = {
   pox5ContractId,
   network: 'mainnet',
 } as const;
-
-describe(getStackingDaoWrapperContract.name, () => {
-  test('maps the Stacking DAO signer-manager to their native-pool wrapper', () => {
-    expect(getStackingDaoWrapperContract(stackingDaoSignerManagerContractId)).toEqual(
-      stackingDaoWrapperContractId
-    );
-  });
-
-  test('is undefined for any other signer-manager', () => {
-    expect(
-      getStackingDaoWrapperContract(
-        'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fastpool-1-signer-manager'
-      )
-    ).toBeUndefined();
-  });
-});
-
-describe(isStackingDaoSignerManager.name, () => {
-  test('recognises only the Stacking DAO signer-manager', () => {
-    expect(isStackingDaoSignerManager(stackingDaoSignerManagerContractId)).toBe(true);
-    expect(isStackingDaoSignerManager(stackingDaoWrapperContractId)).toBe(false);
-  });
-});
-
-describe(isStackingDaoWrapperContract.name, () => {
-  test('recognises only the Stacking DAO wrapper contract', () => {
-    expect(isStackingDaoWrapperContract(stackingDaoWrapperContractId)).toBe(true);
-    expect(isStackingDaoWrapperContract(stackingDaoSignerManagerContractId)).toBe(false);
-  });
-});
 
 describe(getStackingDaoStakeOptions.name, () => {
   test('builds a delegate call against the wrapper contract', () => {

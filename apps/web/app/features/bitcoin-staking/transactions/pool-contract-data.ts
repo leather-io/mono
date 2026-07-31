@@ -1,3 +1,4 @@
+import { isStackingDaoSignerManager } from '~/data/bitcoin-staking-data';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
 import { ClaimStakerRewardsArgs, getClaimStakerRewardsOptions } from './pox5-claim-rewards';
@@ -6,7 +7,6 @@ import {
   getStackingDaoStakeOptions,
   getStackingDaoStakeUpdateOptions,
   getStackingDaoUnstakeOptions,
-  isStackingDaoSignerManager,
 } from './pox5-stacking-dao';
 import { StakeArgs, getStakeOptions } from './pox5-stake';
 import { StakeUpdateArgs, getStakeUpdateOptions } from './pox5-stake-update';
