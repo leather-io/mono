@@ -98,7 +98,7 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
                 </styled.td>
                 <styled.td px="space.04" textAlign="left" color="black">
                   <Flag spacing="space.02" img={<ChainLogoIcon symbol="sBTC" />}>
-                    sBTC
+                    {pool.supportsBtcPayout ? 'sBTC / BTC' : 'sBTC'}
                   </Flag>
                 </styled.td>
                 <styled.td px="space.04" textAlign="right" color="black">
