@@ -36,6 +36,7 @@ import { BitcoinNetworkModes } from '@leather.io/models';
 import { Button, Input, LoadingSpinner } from '@leather.io/ui';
 import { isDefined, stxToMicroStx } from '@leather.io/utils';
 
+import { AvailableBalanceRow } from '../components/available-balance-row';
 import { Pox5SubmitError } from '../components/pox5-submit-error';
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
@@ -272,7 +273,8 @@ function UpdateStakingForm({
   const { btcAddressP2wpkh } = useLeatherConnect();
 
   const { cycleClock } = usePox5CycleClock();
-  const { availableBalance } = usePox5AvailableUnlockedBalance(address);
+  const { isLoading: availableBalanceIsLoading, availableBalance } =
+    usePox5AvailableUnlockedBalance(address);
 
   // pox-5 stake-update recomputes the TOTAL remaining lock — (unlock-cycle −
   // current-cycle − 1) + cycles-to-extend — and aborts with
@@ -405,30 +407,38 @@ function UpdateStakingForm({
           />
         </Box>
 
-        <Box>
-          <Controller
-            control={formMethods.control}
-            name="amountIncrease"
-            render={({
-              field: { onChange, onBlur, value, ref },
-              fieldState: { invalid, error },
-            }) => (
-              <>
-                <Input.Root data-shrink={isDefined(value)}>
-                  <Input.Label>Additional STX to lock (optional)</Input.Label>
-                  <Input.Field
-                    id="amountIncrease"
-                    value={toInputValue(value)}
-                    onChange={input => onChange(input.target.value)}
-                    onBlur={onBlur}
-                    ref={ref}
-                  />
-                </Input.Root>
-                {invalid && error && <ErrorLabel mt="space.02">{error.message}</ErrorLabel>}
-              </>
-            )}
+        <Stack>
+          <Box>
+            <Controller
+              control={formMethods.control}
+              name="amountIncrease"
+              render={({
+                field: { onChange, onBlur, value, ref },
+                fieldState: { invalid, error },
+              }) => (
+                <>
+                  <Input.Root data-shrink={isDefined(value)}>
+                    <Input.Label>Additional STX to lock (optional)</Input.Label>
+                    <Input.Field
+                      id="amountIncrease"
+                      value={toInputValue(value)}
+                      onChange={input => onChange(input.target.value)}
+                      onBlur={onBlur}
+                      ref={ref}
+                    />
+                  </Input.Root>
+                  {invalid && error && <ErrorLabel mt="space.02">{error.message}</ErrorLabel>}
+                </>
+              )}
+            />
+          </Box>
+
+          <AvailableBalanceRow
+            isLoading={availableBalanceIsLoading}
+            availableAmount={availableBalance.amount}
+            onSelectMax={amount => formMethods.setValue('amountIncrease', String(amount))}
           />
-        </Box>
+        </Stack>
 
         <Stack gap="space.02">
           <styled.p textStyle="label.02">Rewards payout</styled.p>
