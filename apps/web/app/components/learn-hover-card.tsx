@@ -17,7 +17,6 @@ interface LearnHoverCardProps {
   tagName?: SupportedTags;
   children?: ReactNode;
   showIcon?: boolean;
-  iconColor?: 'black' | 'white';
   align?: 'start' | 'center' | 'end';
 }
 
@@ -28,11 +27,9 @@ export function LearnHoverCard({
   tagName = 'span',
   children,
   showIcon = true,
-  iconColor = 'black',
   align = 'center',
 }: LearnHoverCardProps) {
   const navigate = useNavigate();
-  const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued';
 
   const StyledTag = styled[tagName];
 
@@ -48,7 +45,11 @@ export function LearnHoverCard({
         }
       : { textStyle };
 
-    return <StyledTag {...props}>{label}</StyledTag>;
+    return (
+      <StyledTag display="inline" {...props}>
+        {label}
+      </StyledTag>
+    );
   }
 
   /**
@@ -66,12 +67,20 @@ export function LearnHoverCard({
     return renderLabel();
   }
 
+  // Inline rather than a flex row, so the icon follows the label's last word and
+  // the surrounding text-align still governs the whole thing.
   const trigger = showIcon ? (
-    <Flex alignItems="center" gap="space.02">
-      {renderLabel()}
+    <styled.span textStyle={textStyle}>
+      <StyledTag textStyle={textStyle} display="inline">
+        {label}
+      </StyledTag>
       <styled.button
         onClick={handleIconClick}
         display="inline-flex"
+        alignItems="center"
+        height="1lh"
+        verticalAlign="top"
+        ml="space.01"
         color="inherit"
         textDecoration="none"
         cursor="pointer"
@@ -80,9 +89,9 @@ export function LearnHoverCard({
         p="0"
         aria-label={`Learn more about ${article.title}`}
       >
-        <InfoCircleIcon variant="small" color={iconColorToken} />
+        <InfoCircleIcon variant="small" color="ink.text-subdued" />
       </styled.button>
-    </Flex>
+    </styled.span>
   ) : (
     renderLabel(true)
   );
@@ -92,10 +101,12 @@ export function LearnHoverCard({
       <HoverCard.Trigger asChild={showIcon}>{trigger}</HoverCard.Trigger>
       <HoverCard.Portal>
         <HoverCard.Content side="top" align={align}>
-          <Flex direction="column" gap="space.03" p="space.04" maxW="320px">
-            <styled.h4 textStyle="label.02">{sanitizeContent(article.title)}</styled.h4>
+          <Flex direction="column" gap="space.01" textAlign="left">
+            <styled.h4 textStyle="caption.01" fontWeight={500} color="ink.text-primary">
+              {sanitizeContent(article.title)}
+            </styled.h4>
             {article.sentence && (
-              <styled.p textStyle="body.02">
+              <styled.p textStyle="caption.01" color="ink.text-subdued" textWrapStyle="pretty">
                 {sanitizeContent(article.sentence)}
                 {article.slug && <LearnMoreLink destination={article.slug} />}
               </styled.p>

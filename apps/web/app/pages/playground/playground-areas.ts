@@ -55,4 +55,14 @@ export const playgroundAreas: PlaygroundArea[] = [
     section: 'multisig',
     appShell: true,
   },
+  {
+    slug: 'staking-states',
+    title: 'Staking states',
+    description:
+      'Every pox-5 staking surface with mock data: each cycle stage, the start-staking form, and an active position.',
+    status: 'exploration',
+    section: 'web-app',
+    issue: 2550,
+    appShell: true,
+  },
 ];

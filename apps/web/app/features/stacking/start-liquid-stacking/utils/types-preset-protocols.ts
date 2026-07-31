@@ -1,6 +1,3 @@
-import { ReactElement } from 'react';
-
-import { z } from 'zod';
 import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
 
 export const ProtocolSlugToIdMap = {
@@ -8,19 +5,7 @@ export const ProtocolSlugToIdMap = {
   lisa: 'lisa',
 } as const;
 
-export const ProtocolIdToDisplayNameMap = {
-  stackingDao: 'Stacking DAO',
-  lisa: 'LISA',
-} as const;
-
 export type ProtocolSlug = keyof typeof ProtocolSlugToIdMap;
-
-export const protocolSlugSchema = z.enum(
-  Object.keys(ProtocolSlugToIdMap) as [ProtocolSlug, ...ProtocolSlug[]]
-);
-
-type ProtocolId = (typeof ProtocolSlugToIdMap)[ProtocolSlug];
-export type ProtocolName = (typeof ProtocolIdToDisplayNameMap)[ProtocolId];
 
 export type LiquidContractName = 'WrapperStackingDAO' | 'lisa';
 
@@ -39,26 +24,6 @@ export const NetworkInstanceToLiquidContractMap = {
   },
 } as const;
 
-export const LiquidTokenMap = {
-  ST_STX: 'stSTX',
-  LI_STX: 'LiSTX',
-  OTHER: 'OTHER',
-} as const;
-
-type LiquidToken = keyof typeof LiquidTokenMap;
-
 type ContractMapType = typeof NetworkInstanceToLiquidContractMap;
 type LiquidContractType = ContractMapType[NetworkMode];
 export type LiquidContractPrincipal = LiquidContractType[keyof LiquidContractType];
-
-export interface Protocol {
-  name: ProtocolName;
-  protocolAddress: Record<NetworkMode, string> | undefined;
-  description: string;
-  website: string;
-  duration: number;
-  icon: ReactElement;
-  liquidContract: LiquidContractName;
-  liquidToken: LiquidToken;
-  minimumDelegationAmount: number;
-}

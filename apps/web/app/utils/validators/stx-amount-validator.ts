@@ -13,12 +13,12 @@ export function stxAmountSchema() {
           ? validationMessages.enterAmount
           : validationMessages.invalidAmount,
     })
-    .positive(validationMessages.mustStackAmount);
+    .positive(validationMessages.mustStackAmount)
+    .refine(value => validateStxAmountPrecision(value), validationMessages.amountTooPrecise);
 }
 
-export function validateMinStackingAmount(value: number, minimumDelegationAmount: number) {
-  const enteredAmount = stxToMicroStx(value || 0);
-  return enteredAmount.isGreaterThanOrEqualTo(minimumDelegationAmount);
+export function validateStxAmountPrecision(value: number) {
+  return stxToMicroStx(value).isInteger();
 }
 
 export function validateMaxStackingAmount(value: number) {

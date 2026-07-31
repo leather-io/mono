@@ -19,7 +19,9 @@ export function StackingConditions({ conditions }: StackingConditionsProps) {
         <HStack py="space.03" gap="space.03" key={condition.title} alignItems="flex-start">
           <Box flexShrink={0}>{condition.icon}</Box>
           <Stack gap="0">
-            <styled.span textStyle="label.03">{condition.title}</styled.span>
+            <styled.span textStyle="caption.01" fontWeight={500}>
+              {condition.title}
+            </styled.span>
             <styled.span textStyle="caption.01" color="ink.text-subdued">
               {condition.description}
             </styled.span>

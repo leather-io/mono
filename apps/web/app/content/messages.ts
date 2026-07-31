@@ -18,22 +18,14 @@ export const errorMessages = {
 export const validationMessages = {
   enterAmount: 'Enter an amount of STX',
   invalidAmount: 'STX amount must be a number',
+  amountTooPrecise: 'STX amounts support at most 6 decimal places',
   mustStackAmount: 'You must stack an amount',
   availableBalance: 'Available balance is',
-  mustStackAtLeast: 'You must stack at least',
   mustDelegateMore: "You must delegate more than you've already stacked",
   mustDelegateAtLeast: 'You must delegate at least',
   addressNotValid: 'Address is not valid',
   addressIncorrectNetwork: 'Address is for incorrect network',
-} as const;
-
-export const statusMessages = {
-  waitingForTxConfirmation: 'Waiting for transaction confirmation',
-  waitingForCycleToStart: 'Waiting for the cycle to start',
-  stackingReady:
-    'Your STX are ready for stacking. Once the next cycle starts the network will determine if and how many slots are claimed.',
-  stackingSubmitted:
-    'A Stacking request was successfully submitted to the blockchain. Once confirmed, an additional amount will be stacking.',
-  errorLoadingData: 'Error while loading data, try reloading the page.',
-  youAreStacking: "You're stacking",
+  cannotStackMoreThanBalance: 'You cannot stake more than your available balance',
+  chooseStakingCycles: 'Choose between 1 and 96 cycles',
+  enterMaxWithdrawalFee: 'Enter a max withdrawal fee in sats',
 } as const;

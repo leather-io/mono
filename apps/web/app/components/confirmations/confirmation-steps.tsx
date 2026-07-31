@@ -4,11 +4,7 @@ import { Box, HStack, VStack, styled } from 'leather-styles/jsx';
 
 import { Button, CheckmarkCircleIcon, CircleIcon } from '@leather.io/ui';
 
-export type PooledStackingConfirmationStepId = 'terms' | 'allowContractCaller' | 'delegateStx';
-
-export type LiquidStackingConfirmationStepId = 'terms' | 'depositStx';
-
-type ConfirmationStepId = PooledStackingConfirmationStepId | LiquidStackingConfirmationStepId;
+type ConfirmationStepId = 'terms' | 'stake' | 'stakeUpdate' | 'unstake';
 
 export interface ConfirmationStep<T extends ConfirmationStepId> {
   id: T;
@@ -41,7 +37,7 @@ export function ConfirmationSteps<T extends ConfirmationStepId>({
       py={[null, null, 'space.03', 'space.05']}
       borderWidth={[0, null, 1]}
       borderColor="ink.border-default"
-      borderRadius="sm"
+      borderRadius="md"
       gap={[null, null, 'space.03']}
     >
       {preview}
@@ -86,6 +82,7 @@ export function ConfirmationSteps<T extends ConfirmationStepId>({
                     }}
                     px="space.06"
                     size="sm"
+                    data-testid={`confirmation-${confirmation.id}-button`}
                   >
                     {confirmation.actionText}
                   </Button>

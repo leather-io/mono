@@ -41,7 +41,7 @@ const input = sva({
       color: 'ink.text-subdued',
       _before: {
         content: '""',
-        rounded: 'xs',
+        rounded: 'sm',
         pos: 'absolute',
         top: '-1px',
         left: '-1px',
@@ -69,7 +69,7 @@ const input = sva({
     input: {
       background: 'transparent',
       appearance: 'none',
-      rounded: 'xs',
+      rounded: 'sm',
       pos: 'absolute',
       px: 'space.04',
       top: 0,

@@ -33,7 +33,7 @@ export default function App() {
 
   useOnRouteChange(() => analytics.page());
   useOnRouteChange(
-    location => location.pathname === '/' && navigate('/stacking', { replace: true })
+    location => location.pathname === '/' && navigate('/staking', { replace: true })
   );
 
   return (

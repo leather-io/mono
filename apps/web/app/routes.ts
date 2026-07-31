@@ -1,22 +1,11 @@
 import { type RouteConfig, index, prefix, route } from '@react-router/dev/routes';
 
+import { bitcoinStakingRoutes } from './pages/bitcoin-staking/bitcoin-staking.routes';
 import { multisigRoutes } from './pages/multisig/multisig.routes';
 import { playgroundRoutes } from './pages/playground/playground.routes';
 
 export default [
   index('pages/index.route.tsx'),
-  // Stacking routes
-  route('stacking', 'pages/stacking/stacking.route.tsx'),
-  ...prefix('stacking/pool/:slug', [
-    index('pages/stacking/pooled/pooled-stacking.route.tsx'),
-    route('active', 'pages/stacking/pooled/pooled-stacking-active.route.tsx'),
-  ]),
-  // Liquid Stacking routes
-  ...prefix('stacking/liquid/:slug', [
-    index('pages/stacking/liquid/liquid-stacking.route.tsx'),
-    route('active', 'pages/stacking/liquid/liquid-stacking-active.route.tsx'),
-    route('increase', 'pages/stacking/liquid/liquid-stacking-increase.route.tsx'),
-  ]),
   // sBTC
   route('sbtc', 'pages/sbtc/sbtc.route.tsx'),
   // Changelog
@@ -38,8 +27,12 @@ export default [
   // Redirects from old help-center URLs
   route('help-center', 'pages/redirects/help-center-redirect.route.tsx'),
   route('help-center/*', 'pages/redirects/help-center-wildcard.route.tsx'),
+  // Redirects from the retired stacking URLs, now served under /staking
+  route('stacking', 'pages/redirects/stacking-redirect.route.tsx'),
+  route('stacking/*', 'pages/redirects/stacking-wildcard.route.tsx'),
   ...multisigRoutes,
   ...playgroundRoutes,
+  ...bitcoinStakingRoutes,
   // Fallback route
   route('*', 'pages/error/error-not-found.route.tsx'),
 ] satisfies RouteConfig;

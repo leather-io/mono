@@ -13,6 +13,14 @@ import { mempoolHandler } from './hiro.so/mempool';
 import { poxMainnetHandler } from './hiro.so/pox';
 import { pox4GetDelegationInfo } from './hiro.so/pox4-get-delegation-info';
 import { poxGetStackerInfoHandler } from './hiro.so/pox4-get-stacker-info';
+import { pox5GetStakerInfoNoneHandler } from './hiro.so/pox5-get-staker-info';
+import { pox5MockOverrideHandlers } from './hiro.so/pox5-mock-overrides';
+import { pox5PinnedNetworkHandlers } from './hiro.so/pox5-pinned-network';
+import {
+  pox5FeesBipsHandler,
+  pox5GetEarnedStakerRewardsHandler,
+  pox5GetPoxAddrHandler,
+} from './hiro.so/pox5-signer-manager';
 import { stackingDaoContractCallHandler } from './hiro.so/stacking-dao-core-v4';
 import { ststxTokenBalanceContractCallHandler } from './hiro.so/ststx-token-get-balance';
 import { nftHoldingsHandler } from './hiro.so/tokens-nft-holdings';
@@ -43,6 +51,10 @@ const endpoints = [
   ststxTokenBalanceContractCallHandler,
   stackingDaoContractCallHandler,
   pox4GetDelegationInfo,
+  pox5GetStakerInfoNoneHandler,
+  pox5GetEarnedStakerRewardsHandler,
+  pox5GetPoxAddrHandler,
+  pox5FeesBipsHandler,
   blockTimesHandler,
   getAllowanceContractCallersHandlers,
   accountsBalanceStxHandler,
@@ -50,8 +62,15 @@ const endpoints = [
   tokenHandler,
 ];
 
+// When the pox-5 chain shares a host with the app-network mocks (mainnet),
+// rewriting to the pinned host reproduces endpoints already registered above.
+const pinnedNetworkEndpoints = pox5PinnedNetworkHandlers.filter(
+  pinned => !endpoints.some(({ method, path }) => method === pinned.method && path === pinned.path)
+);
+
 export const successHandlers = [
-  ...endpoints.map(endpoint =>
+  ...pox5MockOverrideHandlers,
+  ...[...endpoints, ...pinnedNetworkEndpoints].map(endpoint =>
     http[endpoint.method](endpoint.path, async () => delayedJsonResponse(endpoint.resp))
   ),
   ...multisigHandlers,

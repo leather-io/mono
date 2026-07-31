@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { Flex, styled } from 'leather-styles/jsx';
+import { styled } from 'leather-styles/jsx';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
@@ -11,19 +11,11 @@ import { BasicHoverCard } from '../basic-hover-card';
 
 interface BasicPageHoverIconProps {
   children: ReactNode;
-  iconColor?: 'black' | 'white';
   slug: string;
   description: string;
 }
 
-export function BasicPageHoverIcon({
-  children,
-  slug,
-  description,
-  iconColor = 'black',
-}: BasicPageHoverIconProps) {
-  const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued';
-
+export function BasicPageHoverIcon({ children, slug, description }: BasicPageHoverIconProps) {
   /**
    * Handle click on the info icon button
    * Navigates to the same URL as the "Learn more" link in the tooltip
@@ -48,11 +40,15 @@ export function BasicPageHoverIcon({
         </styled.span>
       }
     >
-      <Flex alignItems="center" gap="space.02">
+      <styled.span>
         {children}
         <styled.button
           onClick={handleIconClick}
           display="inline-flex"
+          alignItems="center"
+          height="1lh"
+          verticalAlign="top"
+          ml="space.01"
           color="inherit"
           textDecoration="none"
           cursor="pointer"
@@ -60,9 +56,9 @@ export function BasicPageHoverIcon({
           border="none"
           p="0"
         >
-          <InfoCircleIcon variant="small" color={iconColorToken} />
+          <InfoCircleIcon variant="small" color="ink.text-subdued" />
         </styled.button>
-      </Flex>
+      </styled.span>
     </BasicHoverCard>
   );
 }

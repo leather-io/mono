@@ -1,4 +1,5 @@
 import builder from 'content-security-policy-builder';
+import { pox5ChainApiUrls } from '~/data/pox5-network-config';
 
 function getUrlOrigin(url: string | undefined): string[] {
   if (!url) return [];
@@ -11,6 +12,11 @@ const customApiConnectSrc = [
   ...getUrlOrigin(import.meta.env.LEATHER_BITCOIN_API_URL),
   ...getUrlOrigin(import.meta.env.LEATHER_STACKS_API_URL),
 ];
+
+// Every chain the staking page can be pointed at
+// (data/pox5-network-config.ts), so flipping the switch there needs no CSP
+// edit.
+const pox5ConnectSrc = pox5ChainApiUrls.flatMap(url => getUrlOrigin(url));
 
 export const csp = builder({
   directives: {
@@ -40,6 +46,7 @@ export const csp = builder({
       'api.bnsv2.com',
       ...backendConnectSrc,
       ...customApiConnectSrc,
+      ...pox5ConnectSrc,
     ],
   },
 });
