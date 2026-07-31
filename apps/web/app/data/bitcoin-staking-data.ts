@@ -57,6 +57,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
       'Enjoy automatic pool operations. Rewards accrue as sBTC each cycle and can be claimed once the cycle concludes.',
     signerManagerContracts: {
       mainnet: [
+        'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.fastpool-max500-signer-manager',
         'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fastpool-1-signer-manager',
         'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.fastpool-2-signer-manager',
       ],
