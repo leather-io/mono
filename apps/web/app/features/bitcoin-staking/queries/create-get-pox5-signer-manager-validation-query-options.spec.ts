@@ -122,8 +122,26 @@ describe(createGetPox5SignerManagerValidationQueryOptions.name, () => {
     await expect(options.queryFn(makeContext())).resolves.toEqual({
       status: 'invalid',
       reason: 'missing-functions',
-      missingFunctions: ['get-pox-addr', 'claim-staker-rewards', 'fees-bips'],
+      missingFunctions: ['get-pox-addr or get-payout-config', 'claim-staker-rewards', 'fees-bips'],
     });
+  });
+
+  test('accepts the v2 payout read get-payout-config in place of get-pox-addr', async () => {
+    const options = createGetPox5SignerManagerValidationQueryOptions({
+      contractId,
+      pox5ContractId,
+      client: makeClient({
+        abi: {
+          functions: [
+            { name: 'get-earned-staker-rewards', access: 'read_only' },
+            { name: 'get-payout-config', access: 'read_only' },
+            { name: 'claim-staker-rewards', access: 'public' },
+          ],
+          variables: [{ name: 'fees-bips' }],
+        },
+      }),
+    });
+    await expect(options.queryFn(makeContext())).resolves.toEqual({ status: 'valid' });
   });
 
   test('reports not-registered when get-signer-info returns none', async () => {

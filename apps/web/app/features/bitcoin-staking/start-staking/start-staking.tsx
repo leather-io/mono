@@ -253,7 +253,7 @@ function StartStakingLayout({
     },
     stake: {
       accepted: Boolean(stakeResult),
-      loading: handleStakePending || isInPreparePhase,
+      loading: handleStakePending || isInPreparePhase || totalAvailableBalanceIsLoading,
       visible: true,
     },
   };

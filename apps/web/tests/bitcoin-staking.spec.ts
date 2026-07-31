@@ -279,7 +279,7 @@ test.describe('Bitcoin Staking', () => {
       .expect(page.getByTestId('pool-tvl-xverse-pool'))
       .toHaveText('225,000 STX', { timeout: 15_000 });
     await test.expect(page.getByTestId('pool-tvl-xverse-pool-usd')).toHaveText('$180,724.35');
-    await test.expect(page.getByTestId('pool-tvl-fast-pool')).toHaveText('150,000 STX');
+    await test.expect(page.getByTestId('pool-tvl-fast-pool')).toHaveText('225,000 STX');
     await test.expect(page.getByTestId('pool-tvl-stacking-dao')).toHaveText('1,050,000 STX');
 
     // Xverse has three signer-manager contracts; the mock answers 75k STX for
