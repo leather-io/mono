@@ -24,6 +24,7 @@ interface StubSwapServiceConfig {
   targetSwapAssets?: AccountSwapAsset[];
   swapQuotes?: SwapQuote[];
   getSwapQuotes?(): Promise<SwapQuote[]>;
+  getBaseSwapAssets?(): Promise<AccountSwapAsset[]>;
 }
 
 export function createStubSwapService({
@@ -31,9 +32,11 @@ export function createStubSwapService({
   targetSwapAssets,
   swapQuotes,
   getSwapQuotes,
+  getBaseSwapAssets,
 }: StubSwapServiceConfig = {}) {
   return {
     async getAccountBaseSwapAssets(): Promise<AccountSwapAsset[]> {
+      if (getBaseSwapAssets) return getBaseSwapAssets();
       return Promise.resolve(baseSwapAssets ?? defaultBaseSwapAssets);
     },
 

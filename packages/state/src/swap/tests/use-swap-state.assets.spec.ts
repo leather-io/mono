@@ -379,6 +379,65 @@ describe('initial placholder base asset reconciliation', () => {
   });
 });
 
+describe('base asset reconciliation on data refresh', () => {
+  it('updates the base asset balance when provider data refreshes after reconciliation', async () => {
+    const staleAsset = createAccountSwapAsset({
+      asset: defaultBtcAsset,
+      balance: { quote: 1000, crypto: 0.5 },
+    });
+
+    const freshAsset = createAccountSwapAsset({
+      asset: defaultBtcAsset,
+      balance: { quote: 400, crypto: 0.2 },
+    });
+
+    let providerAssets = [staleAsset];
+    const result = renderUseSwapState({
+      baseAsset: defaultBtcAsset,
+      getBaseSwapAssets: () => Promise.resolve(providerAssets),
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.pairReconciliation.base).toBe('complete');
+    });
+    expect(result.current.state.baseSwapAsset).toEqual(staleAsset);
+
+    providerAssets = [freshAsset];
+    await act(async () => {
+      await result.current.baseAssetsQuery.refetch();
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.baseSwapAsset).toEqual(freshAsset);
+    });
+  });
+
+  it('keeps the selected pair when the base asset disappears from refreshed data', async () => {
+    const btcAsset = createAccountSwapAsset({
+      asset: defaultBtcAsset,
+      balance: { quote: 1000, crypto: 0.5 },
+    });
+
+    let providerAssets = [btcAsset];
+    const result = renderUseSwapState({
+      baseAsset: defaultBtcAsset,
+      getBaseSwapAssets: () => Promise.resolve(providerAssets),
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.pairReconciliation.base).toBe('complete');
+    });
+
+    providerAssets = [];
+    await act(async () => {
+      await result.current.baseAssetsQuery.refetch();
+    });
+
+    expect(result.current.state.baseSwapAsset).toEqual(btcAsset);
+    expect(result.current.state.pairReconciliation.base).toBe('complete');
+  });
+});
+
 describe('initial placholder target asset reconciliation', () => {
   it('replaces the initial asset with a real asset when data arrives', async () => {
     const realBaseAsset = createAccountSwapAsset({
