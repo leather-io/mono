@@ -32,6 +32,11 @@ const providers = {
     name: 'Stacking DAO',
     url: 'https://www.stackingdao.com',
   },
+  senseiNode: {
+    providerId: 'senseiNode',
+    name: 'SenseiNode',
+    url: 'https://senseinode.com',
+  },
   lisa: {
     providerId: 'lisa',
     name: 'LISA',
