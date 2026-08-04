@@ -14,10 +14,12 @@ import {
   extractFingerprintFromKeyOriginPath,
   extractKeyFromDescriptor,
   extractKeyOriginPathFromDescriptor,
+  keyOriginToDerivationPath,
+  makeAccountIdentifer,
   softwareAccountCountFromHighestIndex,
 } from '@leather.io/crypto';
 import type { AccountId, NetworkModes } from '@leather.io/models';
-import { extractStacksDerivationPathAccountIndex, makeStxKeyOrigin } from '@leather.io/stacks';
+import { extractStacksDerivationPathAccountIndex } from '@leather.io/stacks';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/stacks-address-gen';
@@ -74,7 +76,11 @@ function initalizeSoftwareStacksAccount(
 }
 
 function initalizeHardwareStacksAccount(
-  ledgerKeychain: StacksAppKeysResponseItem & { id: string; fingerprint: string },
+  ledgerKeychain: StacksAppKeysResponseItem & {
+    id: string;
+    fingerprint: string;
+    derivationPath: string;
+  },
   accountId: AccountId,
   network: NetworkModes
 ): HardwareStacksAccount {
@@ -130,9 +136,14 @@ const selectLedgerAccounts = createSelector(
 
       // Stacks ledger accounts also store dataPublicKey, but we don't have it in the keychain
       // For now, we'll use the stxPublicKey as a fallback
-      const ledgerKeychain: StacksAppKeysResponseItem & { id: string; fingerprint: string } = {
+      const ledgerKeychain: StacksAppKeysResponseItem & {
+        id: string;
+        fingerprint: string;
+        derivationPath: string;
+      } = {
         id: keyOrigin,
         path: keyOrigin,
+        derivationPath: keyOriginToDerivationPath(keyOrigin),
         stxPublicKey,
         dataPublicKey: stxPublicKey,
         fingerprint,
@@ -191,12 +202,15 @@ const selectSoftwareStacksAccountGenerators = registerKeychainSelectorCache(
 );
 
 function generateLedgerStacksAccount(
-  ledgerKeys: Record<string, StacksAppKeysResponseItem & { id: string; fingerprint: string }>,
+  ledgerKeys: Record<
+    string,
+    StacksAppKeysResponseItem & { id: string; fingerprint: string; derivationPath: string }
+  >,
   accountId: AccountId,
   network: NetworkModes
 ): HardwareStacksAccount | undefined {
-  const keyOrigin = makeStxKeyOrigin(accountId.fingerprint, accountId.accountIndex);
-  const ledgerKeychain = ledgerKeys[keyOrigin];
+  const ledgerKeychain =
+    ledgerKeys[makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex)];
   if (!ledgerKeychain) return undefined;
   return initalizeHardwareStacksAccount(ledgerKeychain, accountId, network);
 }
@@ -205,17 +219,19 @@ const selectLedgerStacksAccountLookup = createSelector(selectStacksKeychains, st
   // Convert keychains to a Record format for lookup
   const ledgerKeys: Record<
     string,
-    StacksAppKeysResponseItem & { id: string; fingerprint: string }
+    StacksAppKeysResponseItem & { id: string; fingerprint: string; derivationPath: string }
   > = {};
 
   stacksKeychains.forEach(keychain => {
     const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
     const fingerprint = extractFingerprintFromKeyOriginPath(keyOrigin) || assumedZeroFingerprint;
     const stxPublicKey = extractKeyFromDescriptor(keychain.descriptor);
+    const accountIndex = extractStacksDerivationPathAccountIndex(keyOrigin);
 
-    ledgerKeys[keyOrigin] = {
+    ledgerKeys[makeAccountIdentifer(fingerprint, accountIndex)] = {
       id: keyOrigin,
       path: keyOrigin,
+      derivationPath: keyOriginToDerivationPath(keyOrigin),
       stxPublicKey,
       dataPublicKey: stxPublicKey,
       fingerprint,

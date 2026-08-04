@@ -23,6 +23,7 @@ import {
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { getStacksAccountDerivationPath } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { verifyAddressPaths } from './verify-address-paths';
@@ -55,7 +56,7 @@ function LedgerVerifyStxAddress() {
           expectedAddress
         );
         const response = await showStxAddressOnDevice(app)(
-          stacksAccount.index,
+          getStacksAccountDerivationPath(stacksAccount),
           stacksChainIdToSingleSigAddressVersion(network.chain.stacks.chainId)
         );
         if (isStxAddressResponseRejected(response)) {

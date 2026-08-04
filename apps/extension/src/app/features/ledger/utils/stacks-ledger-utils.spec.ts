@@ -129,10 +129,24 @@ describe(showStxAddressOnDevice.name, () => {
       Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
     );
 
-    await showStxAddressOnDevice(app)(3, AddressVersion.MainnetSingleSig);
+    await showStxAddressOnDevice(app)("m/44'/5757'/0'/0/3", AddressVersion.MainnetSingleSig);
 
     expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
       "m/44'/5757'/0'/0/3",
+      AddressVersion.MainnetSingleSig
+    );
+  });
+
+  test('shows a ledger live derivation path unchanged', async () => {
+    const app: StacksApp = Object.create(StacksApp.prototype);
+    app.showAddressAndPubKey = vi.fn(() =>
+      Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
+    );
+
+    await showStxAddressOnDevice(app)("m/44'/5757'/3'/0/0", AddressVersion.MainnetSingleSig);
+
+    expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
+      "m/44'/5757'/3'/0/0",
       AddressVersion.MainnetSingleSig
     );
   });

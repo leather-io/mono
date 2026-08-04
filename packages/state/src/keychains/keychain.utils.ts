@@ -3,10 +3,10 @@ import { EntityState, EntityStateAdapter } from '@reduxjs/toolkit';
 import {
   extractAccountIndexFromDescriptor,
   extractAccountIndexFromPath,
-  extractAddressIndexFromPath,
   extractFingerprintFromDescriptor,
   extractKeyOriginPathFromDescriptor,
 } from '@leather.io/crypto';
+import { extractStacksDerivationPathAccountIndex } from '@leather.io/stacks';
 import { isDefined } from '@leather.io/utils';
 
 interface RemoveAccount {
@@ -46,14 +46,13 @@ export function filterKeychainsByAccountIndex(accountIndex: number) {
     extractAccountIndexFromDescriptor(account.descriptor) === accountIndex;
 }
 
-function filterKeychainsByAddressIndex(addressIndex: number) {
-  return (account: WithDescriptor) =>
-    extractAddressIndexFromPath(extractKeyOriginPathFromDescriptor(account.descriptor)) ===
-    addressIndex;
-}
-
 // Stacks uses the addressIndex field for the account index
-export const filterKeychainsByStacksAccount = filterKeychainsByAddressIndex;
+export function filterKeychainsByStacksAccount(accountIndex: number) {
+  return (account: WithDescriptor) =>
+    extractStacksDerivationPathAccountIndex(
+      extractKeyOriginPathFromDescriptor(account.descriptor)
+    ) === accountIndex;
+}
 
 export function findHighestAccountIndexOfFingerprint<T extends WithDescriptor>(
   accounts: T[],

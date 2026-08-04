@@ -24,6 +24,7 @@ import {
   validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { getStacksAccountDerivationPath } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
 import { ledgerSignTxRoutes } from '../../generic-flows/tx-signing/ledger-sign-tx-route-generator';
 import { TxSigningFlow } from '../../generic-flows/tx-signing/tx-signing-flow';
@@ -97,7 +98,7 @@ function LedgerSignStacksTxContainer() {
 
         const resp = await signLedgerStacksTransaction(stacksApp)(
           Buffer.from(unsignedTx, 'hex'),
-          account.accountIndex
+          getStacksAccountDerivationPath(account)
         );
 
         if (resp.returnCode === LedgerError.DataIsInvalid) {

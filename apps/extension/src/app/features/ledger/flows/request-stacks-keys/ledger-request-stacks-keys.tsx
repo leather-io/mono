@@ -1,12 +1,20 @@
-import { useNavigate } from 'react-router';
+import { Route, useNavigate } from 'react-router';
 
 import { bytesToHex } from '@noble/hashes/utils';
 import StacksApp from '@zondax/ledger-stacks';
-import { pullStacksKeysFromLedgerDevice } from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
+import {
+  pullStacksKeysFromLedgerDevice,
+  resolveLedgerStacksDerivationPathType,
+} from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
 
 import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
 import { delay } from '@leather.io/utils';
 
+import { RouteUrls } from '@shared/route-urls';
+import { assumedZeroFingerprint } from '@shared/utils';
+
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
+import { ChooseAddressStandard } from '@app/features/ledger/flows/request-stacks-keys/steps/choose-address-standard';
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
@@ -38,6 +46,7 @@ function LedgerRequestStacksKeys() {
   const stxKeychainsDescriptors = useStacksKeychainDescriptors();
   const wallets = useWalletEntities();
   const dispatch = useAppDispatch();
+  const chosenDerivationPathType = useLocationStateWithCache('stacksDerivationPathType');
 
   const chain = 'stacks';
 
@@ -78,7 +87,16 @@ function LedgerRequestStacksKeys() {
           return { status: 'failure' };
         }
 
+        const derivationPathType = resolveLedgerStacksDerivationPathType({
+          stxKeychainDescriptors: stxKeychainsDescriptors,
+          fingerprint,
+          hasWalletForFingerprint: Boolean(wallets[fingerprint]),
+          hasLegacyLedgerWallet: wallets[assumedZeroFingerprint]?.type === 'ledger',
+          chosenDerivationPathType,
+        });
+
         const resp = await pullStacksKeysFromLedgerDevice(app)({
+          derivationPathType,
           onRequestKey(accountIndex) {
             void ledgerNavigate.toDeviceBusyStep(
               `Requesting STX addresses (${accountIndex + 1}…${defaultNumberOfKeysToPullFromLedgerDevice})`
@@ -131,4 +149,7 @@ function LedgerRequestStacksKeys() {
 export const requestStacksKeysRoutes = ledgerRequestKeysRoutes({
   path: 'stacks',
   component: <LedgerRequestStacksKeys />,
+  customRoutes: (
+    <Route path={RouteUrls.LedgerStacksAddressStandard} element={<ChooseAddressStandard />} />
+  ),
 });

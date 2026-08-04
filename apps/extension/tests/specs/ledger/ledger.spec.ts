@@ -1,7 +1,10 @@
 import { TEST_ACCOUNT_1_STX_ADDRESS, TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { mockMainnetTestAccountStacksConfirmedTxsRequests } from '@tests/mocks/mock-stacks-txs';
 import type { HomePage } from '@tests/page-object-models/home.page';
-import { makeLedgerTestAccountWalletState } from '@tests/page-object-models/onboarding.page';
+import {
+  makeLedgerLiveLedgerWalletState,
+  makeLedgerTestAccountWalletState,
+} from '@tests/page-object-models/onboarding.page';
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { CoreAssetSelectors } from '@tests/selectors/mocked-tokens.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
@@ -12,6 +15,7 @@ const specs = {
   withBitcoinAndStacksKey: makeLedgerTestAccountWalletState(['bitcoin', 'stacks']),
   withStacksKeysOnly: makeLedgerTestAccountWalletState(['stacks']),
   withBitcoinKeysOnly: makeLedgerTestAccountWalletState(['bitcoin']),
+  withLedgerLiveStacksKeys: makeLedgerLiveLedgerWalletState(),
 };
 
 async function interceptBitcoinRequests(homePage: HomePage) {
@@ -113,6 +117,21 @@ test.describe('App with Ledger', () => {
 
           test.expect(errors).toHaveLength(0);
           test.expect(consoleErrors).toHaveLength(0);
+        });
+      }
+
+      if (testName === 'withLedgerLiveStacksKeys') {
+        test('stacks address resolves from ledger live derivation paths', async ({ homePage }) => {
+          const stacksAddress = await homePage.getReceiveStxAddress();
+          test.expect(stacksAddress).toEqual(TEST_ACCOUNT_1_STX_ADDRESS);
+        });
+
+        test('that you can switch accounts with ledger live derivation paths', async ({
+          homePage,
+        }) => {
+          await homePage.switchAccount(1);
+          const stacksAddress = await homePage.getReceiveStxAddress();
+          test.expect(stacksAddress).toEqual(TEST_ACCOUNT_2_STX_ADDRESS);
         });
       }
 
