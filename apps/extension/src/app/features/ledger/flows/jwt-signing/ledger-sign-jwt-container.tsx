@@ -188,7 +188,11 @@ export function LedgerSignJwtContainer() {
     } catch {
       void ledgerNavigate.toDeviceDisconnectStep();
     } finally {
-      await stacks.transport.close();
+      try {
+        await stacks.transport.close();
+      } catch (e) {
+        logger.error('Error closing transport after JWT signing', e);
+      }
     }
   }
 
