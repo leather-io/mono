@@ -3,6 +3,7 @@ import { RouterProvider } from 'react-router/dom';
 
 import * as Sentry from '@sentry/react';
 
+import { IS_DEV_ENV, IS_TEST_ENV } from '@shared/environment';
 import { RouteUrls } from '@shared/route-urls';
 
 import { Content } from '@app/components/layout/layouts/content.layout';
@@ -301,6 +302,17 @@ function useAppRoutes() {
 
           {/* Popup Routes */}
           {rpcRequestRoutes}
+          {(IS_DEV_ENV || IS_TEST_ENV) && (
+            <Route
+              path={RouteUrls.ApprovalScreensPreview}
+              lazy={async () => {
+                const { ApprovalScreensPreviewPage } = await import(
+                  '@app/pages/approval-screens-preview/approval-screens-preview'
+                );
+                return { Component: ApprovalScreensPreviewPage };
+              }}
+            />
+          )}
         </Route>
 
         <Route

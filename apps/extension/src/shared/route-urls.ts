@@ -104,4 +104,7 @@ export enum RouteUrls {
   FeeEditor = 'edit-fee',
   NonceEditor = 'edit-nonce',
   BroadcastError = 'broadcast-error',
+
+  // Dev-only preview surfaces, not registered outside development and testing builds
+  ApprovalScreensPreview = '/approval-screens-preview',
 }
