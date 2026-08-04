@@ -83,8 +83,8 @@ and is documented, not silent.)
   coral mark, not the purple `stacks` token.)
 - The four **vault theme** textures (`themes/{blue,bronze,green,orange}.jpg`) — decorative
   hero backgrounds, not design tokens.
-- `avatarSquircleRatio` (`0.35`) — squircle avatar corner radius as a fraction of tile
-  size, so rounding stays proportional across sizes; no token radius matches.
+- Squircle avatar corner radius comes from `squareAvatarRadius` in `@leather.io/ui`, so
+  the tile matches the design system's square `Avatar` at every size.
 
 ## Fonts
 

@@ -17,11 +17,13 @@ export default function ByosmStakingRoute() {
   return (
     <Page>
       <Page.Header title="Stake with a pool" backTo={stakingPaths.index} />
-      <WhenClient>
-        <StackingClientProvider>
-          <ByosmStaking />
-        </StackingClientProvider>
-      </WhenClient>
+      <Page.Content>
+        <WhenClient>
+          <StackingClientProvider>
+            <ByosmStaking />
+          </StackingClientProvider>
+        </WhenClient>
+      </Page.Content>
     </Page>
   );
 }

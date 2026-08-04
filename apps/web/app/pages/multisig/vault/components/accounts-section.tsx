@@ -1,5 +1,6 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
+import { CopyAddress } from '~/components/copy-address';
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
 import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
@@ -7,7 +8,6 @@ import type { Vault, VaultAccountSummary } from '@leather.io/models';
 import { Button, ListItemBox } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
-import { CopyAddress } from '../../components/copy-address';
 import { vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 

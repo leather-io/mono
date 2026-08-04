@@ -24,7 +24,7 @@ function StakingStatusResolver() {
 
   if (!stacksAccount) {
     return (
-      <Stack gap="space.02" maxWidth="60ch" mt="space.05">
+      <Stack gap="space.02" maxWidth="60ch">
         <styled.h2 textStyle="heading.05">
           {bitcoinStakingContent.stakingStatus.connectTitle}
         </styled.h2>
@@ -59,9 +59,11 @@ export default function StakingStatusRoute() {
   return (
     <Page>
       <Page.Header title="Your staking" backTo={stakingPaths.index} />
-      <WhenClient>
-        <StakingStatusResolver />
-      </WhenClient>
+      <Page.Content>
+        <WhenClient>
+          <StakingStatusResolver />
+        </WhenClient>
+      </Page.Content>
     </Page>
   );
 }

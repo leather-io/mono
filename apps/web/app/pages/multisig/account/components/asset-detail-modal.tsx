@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 import {
   type VaultAssetActivity,
   useVaultAssetActivity,
@@ -20,7 +21,6 @@ import {
 import { AssetAvatarIcon, Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 
 import { ActivityEmptyState } from '../../components/activity-empty-state';
-import { CopyAddress } from '../../components/copy-address';
 import { VaultActivityList } from '../../components/vault-activity-list';
 
 const recentActivityLimit = 10;

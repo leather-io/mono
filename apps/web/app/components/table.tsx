@@ -23,6 +23,12 @@ export const rowPadding = css({
   '& th:last-child': { pr: 'space.05' },
 });
 
+export const hoverableRow = css({
+  cursor: 'pointer',
+  '& td': { transition: 'background 0.1s ease' },
+  '&:hover td': { bg: 'ink.component-background-hover' },
+});
+
 // Containerised by default, matching the portfolio table which already set
 // these explicitly. Callers can still override either value.
 const TableRoot = forwardRef<HTMLDivElement, HTMLStyledProps<'div'>>((props, ref) => (

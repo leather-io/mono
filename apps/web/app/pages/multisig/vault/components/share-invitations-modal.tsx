@@ -1,4 +1,5 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 import { useToast } from '~/features/toasts/use-toast';
 
 import type { Vault, VaultMember } from '@leather.io/models';
@@ -15,7 +16,6 @@ import {
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
-import { CopyAddress } from '../../components/copy-address';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface ShareInvitationsModalProps {

@@ -59,7 +59,7 @@ export const playgroundAreas: PlaygroundArea[] = [
     slug: 'staking-states',
     title: 'Staking states',
     description:
-      'Every pox-5 staking surface with mock data: each cycle stage, the start-staking form, and an active position.',
+      'Every pox-5 staking screen stacked in journey order — discovery, the form, bring-your-own signer manager, an active position, updates — each in the states that change the design.',
     status: 'exploration',
     section: 'web-app',
     issue: 2550,

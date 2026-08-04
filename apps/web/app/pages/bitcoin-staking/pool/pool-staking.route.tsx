@@ -26,9 +26,11 @@ export default function PoolStakingRoute({ loaderData }: Route.ComponentProps) {
   return (
     <Page>
       <Page.Header title="Stake with a pool" backTo={stakingPaths.index} />
-      <StackingClientProvider>
-        <StartStaking poolSlug={loaderData.poolSlug} />
-      </StackingClientProvider>
+      <Page.Content>
+        <StackingClientProvider>
+          <StartStaking poolSlug={loaderData.poolSlug} />
+        </StackingClientProvider>
+      </Page.Content>
     </Page>
   );
 }
