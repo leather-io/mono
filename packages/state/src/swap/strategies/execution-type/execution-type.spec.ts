@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from 'vitest';
 
 import { SwapExecutionData, TransactionFeeQuote } from '@leather.io/models';
 import { BitcoinCoinSelectionService } from '@leather.io/services';
-import { createMoney } from '@leather.io/utils';
+import { assertExistence, createMoney } from '@leather.io/utils';
 
 import { NetworkFee, SwapExecutionDependencies } from '../../swap-state.types';
 import { createAccountRequest } from '../../tests/test-utils/fixtures';
@@ -165,16 +165,18 @@ describe('sbtcBridgeDepositStrategy', () => {
       const dependencies = createExecutionDependencies({
         executionData: sbtcBridgeDepositExecutionData,
       });
-      dependencies.bitcoin.signBitcoinPsbt = vi.fn().mockResolvedValue(signedDepositTx);
+      assertExistence(dependencies.bitcoin, 'Expected bitcoin dependencies in fixture');
+      const bitcoin = dependencies.bitcoin;
+      bitcoin.signBitcoinPsbt = vi.fn().mockResolvedValue(signedDepositTx);
       dependencies.services.bitcoinCoinSelectionService = {
         performCoinSelection,
       } as unknown as BitcoinCoinSelectionService;
 
-      return { dependencies, depositTransaction, signedDepositTx, performCoinSelection };
+      return { dependencies, bitcoin, depositTransaction, signedDepositTx, performCoinSelection };
     }
 
     test('builds, signs and broadcasts the deposit, then notifies sbtc with the signed tx', async () => {
-      const { dependencies, depositTransaction, signedDepositTx, performCoinSelection } =
+      const { dependencies, bitcoin, depositTransaction, signedDepositTx, performCoinSelection } =
         createSbtcSubmissionFixtures();
 
       const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
@@ -188,22 +190,22 @@ describe('sbtcBridgeDepositStrategy', () => {
       expect(depositTransaction.addInput).toHaveBeenCalledOnce();
       expect(depositTransaction.addOutputAddress).toHaveBeenCalledOnce();
       expect(signedDepositTx.finalize).toHaveBeenCalledOnce();
-      expect(dependencies.bitcoin.sbtcClient.broadcastTx).toHaveBeenCalledWith(signedDepositTx);
-      expect(dependencies.bitcoin.sbtcClient.notifySbtc).toHaveBeenCalledWith(
+      expect(bitcoin.sbtcClient.broadcastTx).toHaveBeenCalledWith(signedDepositTx);
+      expect(bitcoin.sbtcClient.notifySbtc).toHaveBeenCalledWith(
         expect.objectContaining({ transaction: signedDepositTx })
       );
       expect(result).toEqual({ txid: 'btc-txid' });
     });
 
     test('rejects without broadcasting when the fee calculation is not a bitcoin fee rate', async () => {
-      const { dependencies } = createSbtcSubmissionFixtures();
+      const { dependencies, bitcoin } = createSbtcSubmissionFixtures();
 
       await expect(
         getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(dependencies, stacksNetworkFee)
       ).rejects.toThrowError(
         'sbtc-bridge-deposit submission requires a bitcoinFeeRate fee calculation'
       );
-      expect(dependencies.bitcoin.sbtcClient.broadcastTx).not.toHaveBeenCalled();
+      expect(bitcoin.sbtcClient.broadcastTx).not.toHaveBeenCalled();
     });
   });
 });

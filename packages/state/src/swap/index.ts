@@ -27,6 +27,7 @@ export type {
 } from './swap-state.types';
 
 export {
+  BITCOIN_EXCLUSION_PAIR_RULES,
   DEFAULT_SLIPPAGE_PERCENTAGE,
   MAX_SLIPPAGE_PERCENTAGE,
   MIN_SLIPPAGE_PERCENTAGE,
@@ -36,6 +37,8 @@ export {
   PRICE_IMPACT_WARNING_THRESHOLD,
   PRICE_IMPACT_DANGER_THRESHOLD,
 } from './swap.constants';
+
+export { isBaseEntirelyDisabled, isPairDisabled } from './utils/disabled-pairs';
 
 export {
   useAccountBaseSwapAssetsQuery,

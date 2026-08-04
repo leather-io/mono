@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Outlet } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 
 import {
   type LiveSwapEstimate,
@@ -8,8 +8,10 @@ import {
   useSwapContext,
 } from '@leather.io/state/swap';
 
+import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { useSwapAvailability } from '@app/common/hooks/use-swap-availability';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 
@@ -22,6 +24,15 @@ export interface SwapOutletContext {
 }
 
 export function SwapContainer() {
+  const swapAvailability = useSwapAvailability();
+  if (!swapAvailability.isEnabled) {
+    if (swapAvailability.reason === 'loadingConfig') return <LoadingSpinner />;
+    return <Navigate to={RouteUrls.Home} replace />;
+  }
+  return <SwapContainerContent />;
+}
+
+function SwapContainerContent() {
   const dependencies = useSwapDependencies();
   const disabledPairs = useSwapDisabledPairs();
   const { quoteCurrency } = useUserSettings();

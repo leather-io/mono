@@ -7,10 +7,10 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { RouteUrls } from '@shared/route-urls';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
-import { useConfigSwapsEnabled } from '@app/query/common/remote-config/remote-config.query';
-import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
-import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
+import {
+  type SwapAvailability,
+  useSwapAvailability,
+} from '@app/common/hooks/use-swap-availability';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { SwapsDisabledTooltipLabel } from '../swaps-disabled-tooltip-label';
@@ -18,26 +18,17 @@ import { ActionButton } from './action-button';
 import { FundButtons } from './fund-buttons';
 import { TransferButtons } from './transfer-buttons';
 
-interface SwapDisabledTooltipArgs {
-  swapsEnabled: boolean;
-  isTestnet: boolean;
-  hasStacksAccount: boolean;
-}
-
-function getSwapDisabledTooltipLabel({
-  swapsEnabled,
-  isTestnet,
-  hasStacksAccount,
-}: SwapDisabledTooltipArgs): ReactNode {
-  if (!swapsEnabled) return <SwapsDisabledTooltipLabel />;
-  if (isTestnet) {
+function getSwapDisabledTooltipLabel(swapAvailability: SwapAvailability): ReactNode {
+  if (swapAvailability.isEnabled) return null;
+  if (swapAvailability.reason === 'disabledByConfig') return <SwapsDisabledTooltipLabel />;
+  if (swapAvailability.reason === 'testnet') {
     return (
       <styled.span textStyle="caption.01">
         Swaps are only available on mainnet. Switch networks to swap.
       </styled.span>
     );
   }
-  if (!hasStacksAccount) {
+  if (swapAvailability.reason === 'missingStacksAccount') {
     return <styled.span textStyle="caption.01">Swaps require a Stacks account.</styled.span>;
   }
   return null;
@@ -45,17 +36,10 @@ function getSwapDisabledTooltipLabel({
 
 export function AccountActions() {
   const navigate = useNavigate();
-  const stacksAccount = useCurrentStacksAccount();
-  const { isTestnet } = useCurrentNetworkState();
-  const policy = useCurrentPolicy();
+  const swapAvailability = useSwapAvailability();
 
-  const swapsEnabled = useConfigSwapsEnabled();
-  const swapsBtnDisabled = !swapsEnabled || !stacksAccount || isTestnet || Boolean(policy);
-  const swapDisabledTooltipLabel = getSwapDisabledTooltipLabel({
-    swapsEnabled,
-    isTestnet,
-    hasStacksAccount: !!stacksAccount,
-  });
+  const swapsBtnDisabled = !swapAvailability.isEnabled;
+  const swapDisabledTooltipLabel = getSwapDisabledTooltipLabel(swapAvailability);
   function navigateToDefaultSwapRoute() {
     return navigate(
       replaceRouteParams(RouteUrls.Swap, {

@@ -12,7 +12,7 @@ import {
   type SwapQuote,
   type TransactionFees,
 } from '@leather.io/models';
-import { createMoney } from '@leather.io/utils';
+import { assertExistence, createMoney } from '@leather.io/utils';
 
 import {
   type EnrichedSwapQuote,
@@ -94,6 +94,7 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
   },
   async getNetworkFee(dependencies, signal?: AbortSignal) {
     const { accountRequest, derivedAmounts, isSendingMax, services, bitcoin } = dependencies;
+    assertExistence(bitcoin, 'Bitcoin dependencies missing for sbtc-bridge-deposit fee estimation');
     const deposit = await buildSbtcBridgeDepositTx(
       derivedAmounts.crypto?.amount.toNumber() ?? 0,
       bitcoin.network,
@@ -116,6 +117,7 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
   },
   async submitSwap(dependencies, fee) {
     const { accountRequest, derivedAmounts, isSendingMax, bitcoin, services } = dependencies;
+    assertExistence(bitcoin, 'Bitcoin dependencies missing for sbtc-bridge-deposit submission');
     const deposit = await buildSbtcBridgeDepositTx(
       derivedAmounts.crypto?.amount.toNumber() ?? 0,
       bitcoin.network,

@@ -1,4 +1,12 @@
-import { createMoney } from '@leather.io/utils';
+import { btcAsset } from '@leather.io/constants';
+import { createMoney, getAssetId } from '@leather.io/utils';
+
+import { type DisabledPairRule } from './swap-state.types';
+
+export const BITCOIN_EXCLUSION_PAIR_RULES: DisabledPairRule[] = [
+  { base: getAssetId(btcAsset), target: '*' },
+  { base: '*', target: getAssetId(btcAsset) },
+];
 
 export const DEFAULT_SLIPPAGE_PERCENTAGE = 0.03;
 export const MIN_SLIPPAGE_PERCENTAGE = 0.005;
