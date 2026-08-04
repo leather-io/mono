@@ -9,7 +9,6 @@ test.describe('Swap revamp', () => {
     test.setTimeout(120_000);
 
     await globalPage.setupAndUseApiCalls(extensionId);
-    await overrideLaunchDarklyFlags(globalPage.page, { swapRevamp: true });
     await mockStacksBroadcastTransaction(globalPage.page);
     await onboardingPage.signInWithTestAccount(extensionId);
     await homePage.swapButton.click();
@@ -63,7 +62,6 @@ test.describe('Swap revamp with sBTC bridging', () => {
 
     await globalPage.setupAndUseApiCalls(extensionId);
     await overrideLaunchDarklyFlags(globalPage.page, {
-      swapRevamp: true,
       swapSbtcBridging: true,
     });
     await onboardingPage.signInWithTestAccount(extensionId);

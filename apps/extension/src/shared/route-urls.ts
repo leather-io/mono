@@ -74,10 +74,7 @@ export enum RouteUrls {
 
   // Swap routes
   Swap = '/swap/{chain}/:base/:quote?',
-  SwapAssetSelectBase = 'select-base',
-  SwapAssetSelectQuote = 'select-quote',
   SwapReview = '/swap/{chain}/:base/:quote/review',
-  SwapError = '/swap/error',
 
   // Request routes bitcoin
   RpcGetAddresses = '/get-addresses',

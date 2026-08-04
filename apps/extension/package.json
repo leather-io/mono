@@ -42,7 +42,6 @@
   "dependencies": {
     "@bitcoinerlab/descriptors": "3.1.7",
     "@bitcoinerlab/secp256k1": "1.0.2",
-    "@bitflowlabs/core-sdk": "2.4.0",
     "@hirosystems/token-metadata-api-client": "1.2.0",
     "@hookform/resolvers": "5.2.1",
     "@leather.io/analytics": "workspace:*",

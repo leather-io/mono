@@ -42,10 +42,6 @@ import { SellPage } from '@app/pages/sell/sell';
 import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error';
 import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-form/send-crypto-asset-form.routes';
 import { SettingsPage } from '@app/pages/settings/settings';
-import {
-  bitcoinSwapLegacyRoutes,
-  stacksSwapLegacyRoutes,
-} from '@app/pages/swap-legacy/swap.routes';
 import { swapRoutes } from '@app/pages/swap/swap.routes';
 import { SelectTheme } from '@app/pages/theme/select-theme';
 import { Unlock } from '@app/pages/unlock';
@@ -80,7 +76,7 @@ export const homePageModalRoutes = (
 );
 
 function useAppRoutes() {
-  const { releaseOnramperBuy, releaseOnramperSell, swapRevamp } = useFlags();
+  const { releaseOnramperBuy, releaseOnramperSell } = useFlags();
 
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
@@ -202,14 +198,7 @@ function useAppRoutes() {
             }
           />
 
-          {swapRevamp ? (
-            swapRoutes
-          ) : (
-            <>
-              {bitcoinSwapLegacyRoutes}
-              {stacksSwapLegacyRoutes}
-            </>
-          )}
+          {swapRoutes}
 
           {/* OnBoarding Routes */}
           <Route

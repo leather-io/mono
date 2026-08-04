@@ -38,7 +38,7 @@ export interface SwapAsset {
   principal: string;
 }
 
-export function useAlexCurrencyPriceAsMarketData() {
+function useAlexCurrencyPriceAsMarketData() {
   const { data: supportedCurrencies = [] } = useGetAlexSwappableCurrenciesQuery();
   const { data: prices } = useAlexSdkLatestPricesQuery();
 
