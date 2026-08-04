@@ -1,5 +1,6 @@
 import * as btc from '@scure/btc-signer';
 import BigNumber from 'bignumber.js';
+import { isError } from 'remeda';
 
 import {
   type CoinSelectionRecipient,
@@ -12,11 +13,12 @@ import {
   type SwapQuote,
   type TransactionFees,
 } from '@leather.io/models';
-import { assertExistence, createMoney } from '@leather.io/utils';
+import { assertExistence, createMoney, delay } from '@leather.io/utils';
 
 import {
   type EnrichedSwapQuote,
   type NetworkFee,
+  type SbtcNotificationFailure,
   type SwapExecutionDependencies,
   type SwapSubmissionResult,
 } from '../../swap-state.types';
@@ -179,10 +181,31 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
     // Software wallets mutate the original transaction when signing and
     // finalizing the tx. Ledger devices return a new instance. Override tx
     // in `deposit` with the signed instance
-    await bitcoin.sbtcClient.notifySbtc({ ...deposit, transaction: signedDepositTx });
+    const sbtcNotificationFailure = await notifySbtcWithRetry(() =>
+      bitcoin.sbtcClient.notifySbtc({ ...deposit, transaction: signedDepositTx })
+    );
+    if (sbtcNotificationFailure) return { txid, sbtcNotificationFailure };
     return { txid };
   },
 };
+
+const sbtcNotifyMaxAttempts = 3;
+const sbtcNotifyRetryDelayMs = 1000;
+
+async function notifySbtcWithRetry(
+  notify: () => Promise<unknown>,
+  attemptsRemaining = sbtcNotifyMaxAttempts
+): Promise<SbtcNotificationFailure | undefined> {
+  try {
+    await notify();
+    return undefined;
+  } catch (error) {
+    if (attemptsRemaining <= 1)
+      return { errorMessage: isError(error) ? error.message : String(error) };
+    await delay(sbtcNotifyRetryDelayMs);
+    return notifySbtcWithRetry(notify, attemptsRemaining - 1);
+  }
+}
 
 const strategyByExecutionType: Record<SwapExecutionType, ExecutionStrategy> = {
   'stacks-contract-call': stacksContractCallStrategy,
