@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
+import { captureException } from '@sentry/react';
+
 import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { useSwapContext } from '@leather.io/state/swap';
 import { ensureAsyncFunctionMinimumDuration } from '@leather.io/utils';
@@ -22,7 +24,10 @@ export interface SwapSubmissionQuoteSnapshot {
 
 type SwapSubmissionState =
   | { status: 'idle' }
-  | { status: 'submitting' | 'success' | 'failure'; quote: SwapSubmissionQuoteSnapshot };
+  | {
+      status: 'submitting' | 'success' | 'sbtc-notify-failure' | 'failure';
+      quote: SwapSubmissionQuoteSnapshot;
+    };
 
 export function useSwapSubmission() {
   const { submit } = useSwapContext();
@@ -61,7 +66,19 @@ export function useSwapSubmission() {
       submissionDisplayDuration
     );
     submitWithMinimumDuration()
-      .then(() => {
+      .then(result => {
+        if (result.sbtcNotificationFailure) {
+          captureException(new Error('sBTC bridge deposit notification failed'), {
+            level: 'error',
+            tags: { swap: 'sbtc-bridge-deposit' },
+            extra: {
+              txid: result.txid,
+              errorMessage: result.sbtcNotificationFailure.errorMessage,
+            },
+          });
+          setSubmission({ status: 'sbtc-notify-failure', quote });
+          return;
+        }
         setSubmission({ status: 'success', quote });
         exitTimerRef.current = setTimeout(() => {
           void navigate(RouteUrls.Activity);
@@ -81,5 +98,9 @@ export function useSwapSubmission() {
     setSubmission({ status: 'idle' });
   }
 
-  return { submission, confirm, reset };
+  function goToActivity() {
+    void navigate(RouteUrls.Activity);
+  }
+
+  return { submission, confirm, reset, goToActivity };
 }
