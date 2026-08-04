@@ -5,6 +5,8 @@ import { SwappableFungibleCryptoAsset } from '@leather.io/models';
 import {
   DisabledPairRule,
   SwapDependencies,
+  isBaseEntirelyDisabled,
+  isPairDisabled,
   useAccountBaseSwapAssetsQuery,
   useAccountTargetSwapAssetsQuery,
 } from '@leather.io/state/swap';
@@ -55,7 +57,12 @@ export function useSwapRouteAssets({
   const baseResolution: AssetResolution = (() => {
     if (!baseParam) return { done: true, asset: stxAsset };
     const nativeAsset = matchNativeAssetBySymbol(baseParam);
-    if (nativeAsset) return { done: true, asset: nativeAsset };
+    if (nativeAsset) {
+      if (isBaseEntirelyDisabled(getAssetId(nativeAsset), disabledPairs)) {
+        return { done: true, asset: stxAsset };
+      }
+      return { done: true, asset: nativeAsset };
+    }
     if (baseAssetsQuery.isPending) return { done: false };
     const match = findSwapAssetBySymbol(baseAssetsQuery.data ?? [], baseParam);
     return { done: true, asset: match?.asset ?? stxAsset };
@@ -75,7 +82,16 @@ export function useSwapRouteAssets({
   const targetResolution: AssetResolution = (() => {
     if (!quoteParam) return { done: true };
     const nativeAsset = matchNativeAssetBySymbol(quoteParam);
-    if (nativeAsset) return { done: true, asset: nativeAsset };
+    if (nativeAsset) {
+      if (!baseResolution.done) return { done: false };
+      if (
+        baseResolution.asset &&
+        isPairDisabled(getAssetId(baseResolution.asset), getAssetId(nativeAsset), disabledPairs)
+      ) {
+        return { done: true };
+      }
+      return { done: true, asset: nativeAsset };
+    }
     if (!baseResolution.done) return { done: false };
     if (targetAssetsQuery.isPending) return { done: false };
     const match = findSwapAssetBySymbol(targetAssetsQuery.data ?? [], quoteParam);

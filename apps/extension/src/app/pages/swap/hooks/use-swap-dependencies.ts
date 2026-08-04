@@ -90,7 +90,6 @@ export function useSwapDependencies(): SwapDependencies {
     currentAccountId.fingerprint,
     'Wallet fingerprint missing during swap initialization'
   );
-  assertExistence(nativeSegwitSigner, 'Bitcoin signer missing during swap initialization');
 
   const stacksSigner: StacksSigner = useMemo(() => {
     return {
@@ -116,7 +115,8 @@ export function useSwapDependencies(): SwapDependencies {
     };
   }, [stacksAccount, currentAccountId, stacksNetworkMode, signStacksTx]);
 
-  const bitcoinPayer: BitcoinNativeSegwitPayer = useMemo(() => {
+  const bitcoinPayer: BitcoinNativeSegwitPayer | undefined = useMemo(() => {
+    if (!nativeSegwitSigner) return undefined;
     return {
       paymentType: 'p2wpkh',
       network: bitcoinNetworkMode,
@@ -143,15 +143,17 @@ export function useSwapDependencies(): SwapDependencies {
       broadcast: broadcastStacksTx,
       nextNonce,
     },
-    bitcoin: {
-      network,
-      bitcoinPayer,
-      sbtcClient,
-      signBitcoinPsbt: async (psbt: Uint8Array) => {
-        const result = signBitcoinTx(psbt);
-        return Promise.resolve(result);
-      },
-    },
+    bitcoin: bitcoinPayer
+      ? {
+          network,
+          bitcoinPayer,
+          sbtcClient,
+          signBitcoinPsbt: async (psbt: Uint8Array) => {
+            const result = signBitcoinTx(psbt);
+            return Promise.resolve(result);
+          },
+        }
+      : undefined,
     onSwapSubmitted() {
       void refreshAllAccountData(accountDataRefreshDelayMs);
     },

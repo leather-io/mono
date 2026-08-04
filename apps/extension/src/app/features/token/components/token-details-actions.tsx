@@ -4,6 +4,7 @@ import { Flex, styled } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { useSwapAvailability } from '@app/common/hooks/use-swap-availability';
 import type { ReceiveView } from '@app/common/receive/receive';
 import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { whenPageMode } from '@app/common/utils';
@@ -64,6 +65,7 @@ export function TokenDetailsActionsRow({
   const location = useLocation();
   const { showReceive } = useReceiveDialog();
   const { releaseOnramperBuy } = useFlags();
+  const swapAvailability = useSwapAvailability();
 
   function pageModeRoutingAction(url: string) {
     return whenPageMode({
@@ -110,7 +112,7 @@ export function TokenDetailsActionsRow({
       )}
       <TokenDetailsPillButton
         label="Swap"
-        disabled={!isSwapEnabled}
+        disabled={!isSwapEnabled || !swapAvailability.isEnabled}
         onClick={() =>
           void navigate(
             RouteUrls.Swap.replace('{chain}', swapChain)

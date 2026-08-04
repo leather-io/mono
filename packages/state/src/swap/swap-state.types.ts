@@ -50,7 +50,7 @@ export interface SwapDependencies {
     }): Promise<TxBroadcastResultOk>;
     nextNonce: NextNonce | undefined;
   };
-  bitcoin: {
+  bitcoin?: {
     bitcoinPayer: BitcoinNativeSegwitPayer;
     network: NetworkConfiguration;
     sbtcClient: SbtcApiClient;
