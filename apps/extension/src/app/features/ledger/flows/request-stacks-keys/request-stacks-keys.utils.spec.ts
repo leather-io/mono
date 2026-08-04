@@ -1,4 +1,7 @@
-import { resolveLedgerStacksDerivationPathType } from './request-stacks-keys.utils';
+import {
+  deviceMatchesLegacyLedgerWallet,
+  resolveLedgerStacksDerivationPathType,
+} from './request-stacks-keys.utils';
 
 const fingerprint = 'e87a850b';
 
@@ -24,7 +27,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         stxKeychainDescriptors: [],
         fingerprint,
         hasWalletForFingerprint: false,
-        hasLegacyLedgerWallet: false,
+        legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'ledgerLive',
       })
     ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: null });
@@ -36,7 +39,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         stxKeychainDescriptors: [],
         fingerprint,
         hasWalletForFingerprint: false,
-        hasLegacyLedgerWallet: false,
+        legacyWalletMatchesDevice: false,
         chosenDerivationPathType: undefined,
       })
     ).toEqual({ derivationPathType: 'stacks', overriddenChosenType: null });
@@ -46,7 +49,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         stxKeychainDescriptors: [],
         fingerprint,
         hasWalletForFingerprint: false,
-        hasLegacyLedgerWallet: false,
+        legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'not-a-scheme',
       })
     ).toEqual({ derivationPathType: 'stacks', overriddenChosenType: null });
@@ -58,7 +61,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         stxKeychainDescriptors: stacksStandardDescriptors,
         fingerprint,
         hasWalletForFingerprint: true,
-        hasLegacyLedgerWallet: false,
+        legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'ledgerLive',
       })
     ).toEqual({ derivationPathType: 'stacks', overriddenChosenType: 'ledgerLive' });
@@ -68,7 +71,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         stxKeychainDescriptors: ledgerLiveDescriptors,
         fingerprint,
         hasWalletForFingerprint: true,
-        hasLegacyLedgerWallet: false,
+        legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'stacks',
       })
     ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: 'stacks' });
@@ -80,7 +83,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         stxKeychainDescriptors: ledgerLiveDescriptors,
         fingerprint,
         hasWalletForFingerprint: true,
-        hasLegacyLedgerWallet: false,
+        legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'ledgerLive',
       })
     ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: null });
@@ -92,7 +95,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         stxKeychainDescriptors: ledgerLiveDescriptors,
         fingerprint,
         hasWalletForFingerprint: true,
-        hasLegacyLedgerWallet: false,
+        legacyWalletMatchesDevice: false,
         chosenDerivationPathType: undefined,
       })
     ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: null });
@@ -104,19 +107,19 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         stxKeychainDescriptors: [`[a1b2c3d4/44'/5757'/0'/0/1]03d4e5f6`],
         fingerprint,
         hasWalletForFingerprint: false,
-        hasLegacyLedgerWallet: false,
+        legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'ledgerLive',
       })
     ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: null });
   });
 
-  test('that an unmigrated legacy wallet pins an unknown device to the stacks standard', () => {
+  test('that a legacy wallet matching the device pins it to the stacks standard', () => {
     expect(
       resolveLedgerStacksDerivationPathType({
         stxKeychainDescriptors: legacyDescriptors,
         fingerprint,
         hasWalletForFingerprint: false,
-        hasLegacyLedgerWallet: true,
+        legacyWalletMatchesDevice: true,
         chosenDerivationPathType: 'ledgerLive',
       })
     ).toEqual({ derivationPathType: 'stacks', overriddenChosenType: 'ledgerLive' });
@@ -128,9 +131,46 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         stxKeychainDescriptors: [...legacyDescriptors, ...ledgerLiveDescriptors],
         fingerprint,
         hasWalletForFingerprint: true,
-        hasLegacyLedgerWallet: true,
+        legacyWalletMatchesDevice: true,
         chosenDerivationPathType: 'stacks',
       })
     ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: 'stacks' });
+  });
+});
+
+describe(deviceMatchesLegacyLedgerWallet.name, () => {
+  function stubRequestPublicKey(publicKeyHex: string) {
+    return () => Promise.resolve({ publicKey: Buffer.from(publicKeyHex, 'hex') });
+  }
+
+  function rejectingRequestPublicKey(): Promise<{ publicKey?: Buffer }> {
+    return Promise.reject(new Error('Expected no key request for this case'));
+  }
+
+  test('that it matches when the device returns the legacy account zero key', async () => {
+    await expect(
+      deviceMatchesLegacyLedgerWallet(stubRequestPublicKey('025b2c58'), legacyDescriptors)
+    ).resolves.toBe(true);
+  });
+
+  test('that it does not match when the device returns a different key', async () => {
+    await expect(
+      deviceMatchesLegacyLedgerWallet(stubRequestPublicKey('03d4e5f6'), legacyDescriptors)
+    ).resolves.toBe(false);
+  });
+
+  test('that it conservatively matches without a legacy account zero descriptor', async () => {
+    await expect(
+      deviceMatchesLegacyLedgerWallet(rejectingRequestPublicKey, [
+        `[00000000/44'/5757'/0'/0/1]03a1b2c3`,
+        ...stacksStandardDescriptors,
+      ])
+    ).resolves.toBe(true);
+  });
+
+  test('that it conservatively matches when the device returns no key', async () => {
+    await expect(
+      deviceMatchesLegacyLedgerWallet(() => Promise.resolve({}), legacyDescriptors)
+    ).resolves.toBe(true);
   });
 });

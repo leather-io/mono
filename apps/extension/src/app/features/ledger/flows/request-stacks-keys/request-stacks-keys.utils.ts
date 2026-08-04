@@ -2,11 +2,16 @@ import { bytesToHex } from '@noble/hashes/utils';
 import * as secp from '@noble/secp256k1';
 import StacksApp from '@zondax/ledger-stacks';
 
-import { extractFingerprintFromDescriptor } from '@leather.io/crypto';
+import {
+  extractDerivationPathFromDescriptor,
+  extractFingerprintFromDescriptor,
+  extractKeyFromDescriptor,
+} from '@leather.io/crypto';
 import {
   StacksDerivationPathType,
   inferStacksDerivationPathType,
   isStacksDerivationPathType,
+  makeStxDerivationPath,
   makeStxDerivationPathForType,
 } from '@leather.io/stacks';
 import { delay } from '@leather.io/utils';
@@ -48,7 +53,7 @@ interface ResolveLedgerStacksDerivationPathTypeArgs {
   stxKeychainDescriptors: string[];
   fingerprint: string;
   hasWalletForFingerprint: boolean;
-  hasLegacyLedgerWallet: boolean;
+  legacyWalletMatchesDevice: boolean;
   chosenDerivationPathType: unknown;
 }
 interface ResolvedLedgerStacksDerivationPathType {
@@ -59,7 +64,7 @@ export function resolveLedgerStacksDerivationPathType({
   stxKeychainDescriptors,
   fingerprint,
   hasWalletForFingerprint,
-  hasLegacyLedgerWallet,
+  legacyWalletMatchesDevice,
   chosenDerivationPathType,
 }: ResolveLedgerStacksDerivationPathTypeArgs): ResolvedLedgerStacksDerivationPathType {
   const inferenceDescriptors = stxKeychainDescriptors.filter(descriptor => {
@@ -67,7 +72,7 @@ export function resolveLedgerStacksDerivationPathType({
     if (descriptorFingerprint === fingerprint) return true;
     return (
       !hasWalletForFingerprint &&
-      hasLegacyLedgerWallet &&
+      legacyWalletMatchesDevice &&
       descriptorFingerprint === assumedZeroFingerprint
     );
   });
@@ -84,6 +89,25 @@ export function resolveLedgerStacksDerivationPathType({
     };
 
   return { derivationPathType: chosenType ?? 'stacks', overriddenChosenType: null };
+}
+
+const accountZeroStxPath = makeStxDerivationPath(0);
+
+export async function deviceMatchesLegacyLedgerWallet(
+  requestPublicKeyForPath: (path: string) => Promise<{ publicKey?: Buffer }>,
+  stxKeychainDescriptors: string[]
+): Promise<boolean> {
+  const legacyAccountZeroKeys = stxKeychainDescriptors
+    .filter(descriptor => extractFingerprintFromDescriptor(descriptor) === assumedZeroFingerprint)
+    .filter(descriptor => extractDerivationPathFromDescriptor(descriptor) === accountZeroStxPath)
+    .map(descriptor => extractKeyFromDescriptor(descriptor));
+
+  if (legacyAccountZeroKeys.length === 0) return true;
+
+  const resp = await requestPublicKeyForPath(accountZeroStxPath);
+  if (!resp.publicKey) return true;
+
+  return legacyAccountZeroKeys.includes(resp.publicKey.toString('hex'));
 }
 
 interface PullStacksKeysFromLedgerDeviceArgs {

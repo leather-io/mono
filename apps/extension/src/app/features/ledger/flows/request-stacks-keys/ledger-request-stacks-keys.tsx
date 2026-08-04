@@ -3,6 +3,7 @@ import { Route, useNavigate } from 'react-router';
 import { bytesToHex } from '@noble/hashes/utils';
 import StacksApp from '@zondax/ledger-stacks';
 import {
+  deviceMatchesLegacyLedgerWallet,
   pullStacksKeysFromLedgerDevice,
   resolveLedgerStacksDerivationPathType,
 } from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
@@ -30,6 +31,7 @@ import {
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
+  requestPublicKeyForStxAccount,
   validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
@@ -93,11 +95,20 @@ function LedgerRequestStacksKeys() {
           return { status: 'failure' };
         }
 
+        const shouldProbeLegacyWallet =
+          wallets[assumedZeroFingerprint]?.type === 'ledger' && !wallets[fingerprint];
+        const legacyWalletMatchesDevice = shouldProbeLegacyWallet
+          ? await deviceMatchesLegacyLedgerWallet(
+              requestPublicKeyForStxAccount(app),
+              stxKeychainsDescriptors
+            )
+          : false;
+
         const { derivationPathType, overriddenChosenType } = resolveLedgerStacksDerivationPathType({
           stxKeychainDescriptors: stxKeychainsDescriptors,
           fingerprint,
           hasWalletForFingerprint: Boolean(wallets[fingerprint]),
-          hasLegacyLedgerWallet: wallets[assumedZeroFingerprint]?.type === 'ledger',
+          legacyWalletMatchesDevice,
           chosenDerivationPathType,
         });
 
