@@ -1,8 +1,8 @@
 import { STANDARD_BIP_FAKE_MNEMONIC } from '@tests/mocks/constants';
 
-import { createDescriptor } from '@leather.io/crypto';
+import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
 import { defaultCurrentNetwork } from '@leather.io/models';
-import { makeStxKeyOrigin } from '@leather.io/stacks';
+import { makeStxDerivationPathForType, makeStxKeyOrigin } from '@leather.io/stacks';
 import { resetWallet } from '@leather.io/state';
 import type { StacksKeychain } from '@leather.io/state/keychains';
 
@@ -21,7 +21,20 @@ function makeStacksLedgerKeychain(fingerprint: string, accountIndex: number): St
   return { chain: 'stacks', descriptor: createDescriptor(keyOrigin, stxPublicKey) };
 }
 
+function makeStacksLedgerKeychainForPath(fingerprint: string, path: string): StacksKeychain {
+  const keyOrigin = createKeyOriginPath(fingerprint, path);
+  return { chain: 'stacks', descriptor: createDescriptor(keyOrigin, stxPublicKey) };
+}
+
 const selectLedgerAccounts = selectStacksAccountState.dependencies[0];
+const selectDedupedLedgerStacksKeychains = selectLedgerAccounts.dependencies[1];
+
+function getLedgerAccounts(keychains: StacksKeychain[]) {
+  return selectLedgerAccounts.resultFunc(
+    defaultCurrentNetwork,
+    selectDedupedLedgerStacksKeychains.resultFunc(keychains)
+  );
+}
 
 describe('selectLedgerAccounts', () => {
   test('derives accountIndex from the key-origin path across multiple Ledger devices', () => {
@@ -36,7 +49,7 @@ describe('selectLedgerAccounts', () => {
       makeStacksLedgerKeychain(deviceB, 2),
     ];
 
-    const accounts = selectLedgerAccounts.resultFunc(defaultCurrentNetwork, keychains);
+    const accounts = getLedgerAccounts(keychains);
 
     expect(
       accounts.map(account => ({
@@ -62,9 +75,25 @@ describe('selectLedgerAccounts', () => {
       makeStacksLedgerKeychain(fingerprint, 2),
     ];
 
-    const accounts = selectLedgerAccounts.resultFunc(defaultCurrentNetwork, keychains);
+    const accounts = getLedgerAccounts(keychains);
 
     expect(accounts.map(account => account.index)).toEqual([0, 1, 2]);
+  });
+
+  test('excludes a keychain whose fingerprint/accountIndex collides with an earlier keychain', () => {
+    const fingerprint = 'deadbeef';
+    const ledgerLivePath = makeStxDerivationPathForType('ledgerLive', 1);
+    const standardPath = makeStxDerivationPathForType('stacks', 1);
+    const keychains = [
+      makeStacksLedgerKeychainForPath(fingerprint, ledgerLivePath),
+      makeStacksLedgerKeychainForPath(fingerprint, standardPath),
+    ];
+
+    const accounts = getLedgerAccounts(keychains);
+
+    expect(accounts).toHaveLength(1);
+    expect(accounts[0]?.derivationPath).toBe(ledgerLivePath);
+    expect(accounts[0]?.accountIndex).toBe(1);
   });
 });
 
