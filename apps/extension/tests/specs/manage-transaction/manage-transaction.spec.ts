@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+import { mockLeatherBitcoinTransactions } from '@tests/mocks/mock-leather-btc-txs';
 import {
   mockStacksBroadcastTransaction,
   mockStacksPendingTransaction,
@@ -9,9 +10,12 @@ import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 
 import { test } from '../../fixtures/fixtures';
 
+// The same increase-fee / cancel affordances the legacy list offered, driven off
+// the raw BlockchainActivity (pending + initiatedByUser) rather than the view.
 test.describe('Manage transaction', () => {
-  test.beforeEach(async ({ homePage, extensionId, globalPage, onboardingPage }) => {
+  test.beforeEach(async ({ context, homePage, extensionId, globalPage, onboardingPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
+    await mockLeatherBitcoinTransactions(context, []);
     await mockTestAccountStacksTxsRequestsWithPendingTx(globalPage.page);
     await mockStacksRawTx(globalPage.page);
     await mockStacksPendingTransaction(globalPage.page);
@@ -21,51 +25,35 @@ test.describe('Manage transaction', () => {
     await homePage.clickActivityTab();
   });
 
-  test('that user can cancel fee', async ({ page }) => {
+  test('that user can cancel a pending transaction', async ({ page }) => {
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
-    const manageTransactionBtn = activityList.getByTestId(ActivitySelectors.ActivityItemMenuBtn);
-    await manageTransactionBtn.click();
-
-    const cancelTxBtn = page.getByTestId(ActivitySelectors.ActivityItemMenuCancelTransaction);
-    await cancelTxBtn.click();
+    await activityList.getByTestId(ActivitySelectors.ActivityItemMenuBtn).click();
+    await page.getByTestId(ActivitySelectors.ActivityItemMenuCancelTransaction).click();
 
     const cancelActionSheet = page.getByTestId(
       `${ActivitySelectors.TransactionActionSheet}-cancel`
     );
+    await cancelActionSheet.getByTestId(ActivitySelectors.TransactionActionFeeInput).fill('0.004');
+    await page.getByTestId(ActivitySelectors.TransactionSubmitAction).click();
 
-    const feeInput = cancelActionSheet.getByTestId(ActivitySelectors.TransactionActionFeeInput);
-    await feeInput.fill('0.004');
-
-    const submitBtn = page.getByTestId(ActivitySelectors.TransactionSubmitAction);
-    await submitBtn.click();
-
-    const toastMessage = 'Transaction cancelled successfully';
-    const toast = page.getByText(toastMessage, { exact: true });
-    await expect(toast).toBeVisible();
+    await expect(
+      page.getByText('Transaction cancelled successfully', { exact: true })
+    ).toBeVisible();
   });
 
-  test('that user can increase fee', async ({ page }) => {
+  test('that user can increase the fee of a pending transaction', async ({ page }) => {
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
-    const manageTransactionBtn = activityList.getByTestId(ActivitySelectors.ActivityItemMenuBtn);
-    await manageTransactionBtn.click();
-
-    const increaseFeeBtn = page.getByTestId(ActivitySelectors.ActivityItemMenuIncreaseFee);
-    await increaseFeeBtn.click();
+    await activityList.getByTestId(ActivitySelectors.ActivityItemMenuBtn).click();
+    await page.getByTestId(ActivitySelectors.ActivityItemMenuIncreaseFee).click();
 
     const increaseFeeActionSheet = page.getByTestId(
       `${ActivitySelectors.TransactionActionSheet}-increase-fee`
     );
+    await increaseFeeActionSheet
+      .getByTestId(ActivitySelectors.TransactionActionFeeInput)
+      .fill('0.004');
+    await page.getByTestId(ActivitySelectors.TransactionSubmitAction).click();
 
-    const feeInput = increaseFeeActionSheet.getByTestId(
-      ActivitySelectors.TransactionActionFeeInput
-    );
-    await feeInput.fill('0.004');
-
-    const submitBtn = page.getByTestId(ActivitySelectors.TransactionSubmitAction);
-    await submitBtn.click();
-
-    const toastMessage = 'Fee increased successfully';
-    const toast = page.getByText(toastMessage, { exact: true });
-    await expect(toast).toBeVisible();
+    await expect(page.getByText('Fee increased successfully', { exact: true })).toBeVisible();
   });
 });

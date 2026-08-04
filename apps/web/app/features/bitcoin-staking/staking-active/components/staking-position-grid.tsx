@@ -2,11 +2,18 @@ import BigNumber from 'bignumber.js';
 import { Box } from 'leather-styles/jsx';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { EM_DASH } from '~/constants/constants';
-import { BitcoinStakingPool, StakingPoolSlug } from '~/data/bitcoin-staking-data';
+import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
+import {
+  BitcoinStakingPool,
+  StakingPoolSlug,
+  getSignerManagerContracts,
+} from '~/data/bitcoin-staking-data';
+import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { CopyAddress } from '~/features/stacking/components/address';
 import { StackingInfoGridLayout } from '~/features/stacking/components/stacking-info-grid.layout';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
+import { PoolTvlValue } from '../../components/pool-tvl-value';
 import { Pox5StakerInfo } from '../../queries/create-get-pox5-staker-info-query-options';
 import { ActiveStakingDetails } from '../hooks/use-active-staking-info';
 import { StakingActionButtons } from './staking-action-buttons';
@@ -19,6 +26,16 @@ interface StakingPositionGridProps {
 }
 
 export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPositionGridProps) {
+  // Unlisted (byosm) pools have no registry contracts, so the TVL falls back
+  // to the signer-manager the position is actually staked through.
+  const poolSignerManagerContractIds = getSignerManagerContracts(
+    pool.providerId,
+    pox5NetworkConfig.contractNetworkMode
+  );
+  const tvlSignerManagerContractIds = poolSignerManagerContractIds.length
+    ? poolSignerManagerContractIds
+    : [info.signerManagerContractId];
+
   return (
     <StackingInfoGridLayout
       cells={{
@@ -116,6 +133,18 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
               ) : (
                 'sBTC on Stacks'
               )
+            }
+          />
+        ),
+        tvl: (
+          <ValueDisplayer
+            gap="space.04"
+            name={bitcoinStakingLabels.tvl}
+            value={
+              <PoolTvlValue
+                signerManagerContractIds={tvlSignerManagerContractIds}
+                testId="active-pool-tvl"
+              />
             }
           />
         ),

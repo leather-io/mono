@@ -18,6 +18,10 @@ export {
 } from './components/address-displayer/address-displayer.web';
 export { Avatar, type AvatarProps } from './components/avatar/avatar.web';
 export { Badge, type BadgeProps } from './components/badge/badge.web';
+export {
+  BlockchainActivityIndicatorIcon,
+  PendingIndicatorIcon,
+} from './components/activity/blockchain-activity-indicator-icon.web';
 export { BulletSeparator } from './components/bullet-separator/bullet-separator.web';
 export { Button, type ButtonProps } from './components/button/button.web';
 export { Callout, type CalloutProps } from './components/callout/callout.web';

@@ -7,13 +7,18 @@ import { formatFeeBips } from '../utils/pool-fee';
 
 interface PoolFeeValueProps {
   pool: BitcoinStakingPool;
+  signerManagerContractId?: string;
 }
 
-export function PoolFeeValue({ pool }: PoolFeeValueProps) {
+export function PoolFeeValue({
+  pool,
+  signerManagerContractId: signerManagerContractIdOverride,
+}: PoolFeeValueProps) {
   const hasFixedFee = typeof pool.fixedFeeBips === 'number';
   const signerManagerContractId = hasFixedFee
     ? undefined
-    : getPrimarySignerManagerContract(pool.providerId, pox5NetworkConfig.contractNetworkMode);
+    : (signerManagerContractIdOverride ??
+      getPrimarySignerManagerContract(pool.providerId, pox5NetworkConfig.contractNetworkMode));
   const { data: fetchedFeeBips } = usePox5PoolFeeQuery(signerManagerContractId);
 
   const feeBips = pool.fixedFeeBips ?? fetchedFeeBips;

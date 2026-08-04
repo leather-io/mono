@@ -13,6 +13,14 @@ import { mempoolHandler } from './hiro.so/mempool';
 import { poxMainnetHandler } from './hiro.so/pox';
 import { pox4GetDelegationInfo } from './hiro.so/pox4-get-delegation-info';
 import { poxGetStackerInfoHandler } from './hiro.so/pox4-get-stacker-info';
+import {
+  pox5CustomContractInterfaceHandler,
+  pox5CustomFeesBipsHandler,
+  pox5CustomGetEarnedStakerRewardsHandler,
+  pox5CustomGetPoxAddrHandler,
+  pox5GetSignerInfoHandler,
+} from './hiro.so/pox5-custom-signer-manager';
+import { pox5GetAmountDelegatedHandler } from './hiro.so/pox5-get-amount-delegated';
 import { pox5GetStakerInfoNoneHandler } from './hiro.so/pox5-get-staker-info';
 import { pox5MockOverrideHandlers } from './hiro.so/pox5-mock-overrides';
 import { pox5PinnedNetworkHandlers } from './hiro.so/pox5-pinned-network';
@@ -55,6 +63,12 @@ const endpoints = [
   pox5GetEarnedStakerRewardsHandler,
   pox5GetPoxAddrHandler,
   pox5FeesBipsHandler,
+  pox5CustomContractInterfaceHandler,
+  pox5GetSignerInfoHandler,
+  pox5CustomGetEarnedStakerRewardsHandler,
+  pox5CustomGetPoxAddrHandler,
+  pox5CustomFeesBipsHandler,
+  pox5GetAmountDelegatedHandler,
   blockTimesHandler,
   getAllowanceContractCallersHandlers,
   accountsBalanceStxHandler,

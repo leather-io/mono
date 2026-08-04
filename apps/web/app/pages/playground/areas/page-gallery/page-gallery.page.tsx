@@ -14,7 +14,12 @@ import type {
   VaultMember,
   VaultSummary,
 } from '@leather.io/models';
-import { BlockchainActivityAvatarIcon, Button, ListItemBox } from '@leather.io/ui';
+import {
+  BlockchainActivityAvatarIcon,
+  BlockchainActivityIndicatorIcon,
+  Button,
+  ListItemBox,
+} from '@leather.io/ui';
 
 import { AccountDetailsCard } from '../../../multisig/account/components/account-details-card';
 import { AvatarCircle } from '../../../multisig/components/avatar-circle';
@@ -24,7 +29,6 @@ import { InvitationModal } from '../../../multisig/components/invitation-modal';
 import { MultisigHero } from '../../../multisig/components/multisig-hero';
 import { SectionLabel } from '../../../multisig/components/section-label';
 import { VaultActivityList } from '../../../multisig/components/vault-activity-list';
-import { renderActivityIndicator } from '../../../multisig/components/vault-activity-row';
 import { ChainPicker } from '../../../multisig/create-vault/components/chain-picker';
 import {
   type MemberDraft,
@@ -528,7 +532,7 @@ export function PageGalleryPage() {
                   <BlockchainActivityAvatarIcon
                     size={48}
                     avatar={mockStxAvatar}
-                    indicator={renderActivityIndicator('sent', 16)}
+                    indicator={<BlockchainActivityIndicatorIcon indicator="sent" size={16} />}
                   />
                 }
                 primary="Send STX"

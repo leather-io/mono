@@ -148,6 +148,57 @@ describe('createBlockchainActivityView', () => {
     expect(view.amount).toBeUndefined();
   });
 
+  it('renders a bridge whose counter-leg settles off-chain as a single-asset swap row', () => {
+    const receivedSbtc = {
+      direction: 'received' as const,
+      asset: sbtcAsset,
+      amount: { crypto: createMoney(1, 'sBTC', 8), quote: createMoney(50, 'USD') },
+    };
+    const view = createBlockchainActivityView(
+      makeActivity({
+        action: 'bridge',
+        protocolName: 'sBTC',
+        contract: {
+          type: 'call',
+          contractId: 'SP000.sbtc-deposit',
+          functionName: 'complete-deposit-wrapper',
+        },
+        balanceChanges: [receivedSbtc],
+      }),
+      deps
+    );
+    expect(view.avatar).toEqual({ kind: 'single', asset: sbtcAsset });
+    expect(view.indicator).toBe('swap');
+    expect(view.title).toBe('Bridge');
+    expect(view.subtitle).toBe('via sBTC');
+    expect(view.amount).toMatchObject({ direction: 'received' });
+    expect(view.amount?.crypto).toBeDefined();
+  });
+
+  it('renders a one-legged swap from the sent leg alone', () => {
+    const view = createBlockchainActivityView(
+      makeActivity({ action: 'swap', protocolName: 'Bitflow', balanceChanges: [sentBtc] }),
+      deps
+    );
+    expect(view.avatar).toEqual({ kind: 'single', asset: btcAsset });
+    expect(view.indicator).toBe('swap');
+    expect(view.title).toBe('Swap');
+    expect(view.amount).toMatchObject({ direction: 'sent' });
+  });
+
+  it('keeps the two-leg shape when both legs are present', () => {
+    const view = createBlockchainActivityView(
+      makeActivity({
+        action: 'bridge',
+        protocolName: 'sBTC',
+        balanceChanges: [sentBtc, receivedStx],
+      }),
+      deps
+    );
+    expect(view.avatar).toMatchObject({ kind: 'pair' });
+    expect(view.title).toBe('5 BTC → 9 STX');
+  });
+
   it('renders 2-token add-liquidity: undimmed pair, symbol-pair title, combined quote', () => {
     const secondSent = {
       direction: 'sent' as const,

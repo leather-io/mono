@@ -5,7 +5,7 @@ import { BtcAvatarIcon } from '@leather.io/ui';
 import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { useToast } from '@app/features/toasts/use-toast';
-import { useActivityByAsset } from '@app/query/activity/activity.query';
+import { useBlockchainActivityByAssetId } from '@app/query/activity/blockchain-activity.query';
 import { useBtcAccountBalanceByAddresses } from '@app/query/bitcoin/balance/btc-balance.hooks';
 
 import { BitcoinTokenDetailsLayout } from './bitcoin-token-details.layout';
@@ -23,7 +23,7 @@ export function PolicyBitcoinTokenDetails({ account }: PolicyBitcoinTokenDetails
 
   const balance = useBtcAccountBalanceByAddresses(account);
   const marketInfo = useTokenMarketInfo(btcAsset);
-  const activityQuery = useActivityByAsset(account, btcAsset);
+  const activityQuery = useBlockchainActivityByAssetId(account, btcAsset);
 
   const address = account.bitcoin?.type === 'fixedAddress' ? account.bitcoin.address : undefined;
 

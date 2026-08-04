@@ -221,6 +221,7 @@ export function StakingStatesPage() {
             <State key={stage.label} label={stage.label} note={stage.note}>
               <StakingPoolOverview
                 pool={pool}
+                totalStakedMicroStx={75_000_000_000n}
                 nextCycleNumber={142}
                 daysUntilNextCycle={9}
                 cycleStatus={stage.cycleStatus}
@@ -237,6 +238,7 @@ export function StakingStatesPage() {
         <Stack gap="space.05">
           <StakingPoolOverview
             pool={pool}
+            totalStakedMicroStx={75_000_000_000n}
             nextCycleNumber={142}
             daysUntilNextCycle={9}
             cycleStatus={{ kind: 'open', secondsUntilChangesClose: 11 * 24 * 3600 }}

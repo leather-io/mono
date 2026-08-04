@@ -5,8 +5,8 @@ import { POX5_SIGNER_SET_MIN_USTX } from '~/pages/bitcoin-staking/bitcoin-stakin
 import { ErrorCircleIcon, Flag } from '@leather.io/ui';
 
 interface PoolHealthWarningProps {
-  // No signer-manager read-only for pool totals has been confirmed yet, so
-  // callers pass null until a data source exists and the banner stays hidden.
+  // null means the total is still loading or could not be read; the banner
+  // only shows on a confirmed low total, never on missing data.
   totalStakedMicroStx: bigint | null;
 }
 

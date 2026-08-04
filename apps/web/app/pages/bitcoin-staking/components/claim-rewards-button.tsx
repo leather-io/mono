@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { useMutation } from '@tanstack/react-query';
 import {
+  BitcoinStakingPool,
   BitcoinStakingProviderId,
   StakingPoolSlug,
   getPoolBySignerManager,
@@ -9,7 +10,7 @@ import {
 } from '~/data/bitcoin-staking-data';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
 import { usePox5ClaimableRewards } from '~/features/bitcoin-staking/queries/pox5-stacking.query';
-import { createClaimRewardsMutationOptions } from '~/features/bitcoin-staking/transactions/pox5-claim-rewards';
+import { createClaimRewardsMutationOptions } from '~/features/bitcoin-staking/transactions/pox5-mutations';
 import { useLeatherConnect } from '~/store/addresses';
 import { leather } from '~/utils/leather-sdk';
 
@@ -17,6 +18,16 @@ import { Button, useOnMount } from '@leather.io/ui';
 
 interface ClaimRewardsButtonProps {
   slug: StakingPoolSlug;
+}
+
+function resolveClaimProviderId(
+  slug: StakingPoolSlug,
+  positionPool: BitcoinStakingPool | undefined
+): BitcoinStakingProviderId | null {
+  if (positionPool && stakingProviderIdToSlug(positionPool.providerId) === slug) {
+    return positionPool.providerId;
+  }
+  return null;
 }
 
 // Table-row companion to the active-position ClaimableRewardsCard: rendered
@@ -36,12 +47,13 @@ export function ClaimRewardsButton({ slug }: ClaimRewardsButtonProps) {
   if (!isClient || !stacksAccount || position?.status !== 'active') return null;
 
   const positionPool = getPoolBySignerManager(position.info.signerManagerContractId);
-  if (!positionPool || stakingProviderIdToSlug(positionPool.providerId) !== slug) return null;
+  const providerId = resolveClaimProviderId(slug, positionPool);
+  if (!providerId) return null;
 
   return (
     <ClaimRewardsButtonInner
       slug={slug}
-      providerId={positionPool.providerId}
+      providerId={providerId}
       signerManagerContractId={position.info.signerManagerContractId}
       stakerAddress={stacksAccount.address}
     />

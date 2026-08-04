@@ -2,7 +2,7 @@ import { stxAsset } from '@leather.io/constants';
 import type { AccountAddresses } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui';
 
-import { useActivityByAsset } from '@app/query/activity/activity.query';
+import { useBlockchainActivityByAssetId } from '@app/query/activity/blockchain-activity.query';
 import { useStxAccountBalanceByAddresses } from '@app/query/stacks/balance/stx-balance.hooks';
 
 import { useTokenMarketInfo } from './hooks/use-token-market-info';
@@ -17,7 +17,7 @@ interface StacksTokenDetailsProps {
 export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
   const balance = useStxAccountBalanceByAddresses(account);
   const marketInfo = useTokenMarketInfo(stxAsset);
-  const activityQuery = useActivityByAsset(account, stxAsset);
+  const activityQuery = useBlockchainActivityByAssetId(account, stxAsset);
 
   const isLoading = balance.state === 'loading' || marketInfo.isLoading;
   const hasError = balance.state === 'error' || marketInfo.hasError;

@@ -74,9 +74,8 @@ function getActivityLink(
   asset: ReturnType<typeof getActivityAsset>,
   networkPreference: NetworkConfiguration
 ) {
-  const showSbtcReclaimUrl = hasSbtcBridgeFailed(activity) && 'txid' in activity && activity.txid;
-  if (showSbtcReclaimUrl) {
-    return `${SBTC_RECLAIM_URL}${activity.txid}`;
+  if (hasSbtcBridgeFailed(activity)) {
+    return SBTC_RECLAIM_URL;
   }
   if (hasTxDetails(activity) && asset) {
     return makeActivityLink({ txid: activity.txid, networkPreference, asset });

@@ -2,7 +2,11 @@ import { HttpResponse, http } from 'msw';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 
 import { hiroInfoHandler } from './info';
-import { pox5GetStakerInfoStakedHandler } from './pox5-get-staker-info';
+import { pox5GetAmountDelegatedLowHandler } from './pox5-get-amount-delegated';
+import {
+  pox5GetStakerInfoCustomStakedHandler,
+  pox5GetStakerInfoStakedHandler,
+} from './pox5-get-staker-info';
 
 // In mock mode the app boots its own MSW worker with the statically built
 // successHandlers, so Playwright-level per-test overrides never see these
@@ -24,6 +28,14 @@ const defaultMockTxStatus = 'success';
 const notFoundMockTxStatus = 'not-found';
 
 export const pox5MockOverrideHandlers = [
+  http.post(pox5GetAmountDelegatedLowHandler.path, () => {
+    if (getMockFlag('leather-mock-pox5-delegated-low') !== 'true') return undefined;
+    return HttpResponse.json(pox5GetAmountDelegatedLowHandler.resp);
+  }),
+  http.post(pox5GetStakerInfoCustomStakedHandler.path, () => {
+    if (getMockFlag('leather-mock-pox5-staked-custom') !== 'true') return undefined;
+    return HttpResponse.json(pox5GetStakerInfoCustomStakedHandler.resp);
+  }),
   http.post(pox5GetStakerInfoStakedHandler.path, () => {
     if (getMockFlag('leather-mock-pox5-staked') !== 'true') return undefined;
     return HttpResponse.json(pox5GetStakerInfoStakedHandler.resp);

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { ActivityView } from '@leather.io/features';
+import type { BlockchainActivityItem } from '@leather.io/features';
 import type { Money } from '@leather.io/models';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -26,7 +26,7 @@ interface BitcoinTokenDetailsLayoutProps {
   priceChangeDelta?: string;
   descriptionText: string;
   balances: BalanceEntry[];
-  activity: ActivityView[];
+  activity: BlockchainActivityItem[];
 }
 
 export function BitcoinTokenDetailsLayout({

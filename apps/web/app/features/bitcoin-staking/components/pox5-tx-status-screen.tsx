@@ -20,6 +20,7 @@ const pox5RefreshQueryKeyPrefixes = [
   'pox5-pending-tx',
   'pox5-earned-rewards',
   'pox5-payout-preference',
+  'pox5-delegated-amount',
   'get-stx-address-balance',
 ];
 

@@ -46,11 +46,27 @@ export const bitcoinStakingContent = {
   poolOverviewInfo: {
     rewardsToken: `Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool's signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall.`,
     fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so check the pool's terms before staking.`,
+    totalStaked: `The STX delegated to this pool for the current cycle, summed across all of the pool's signer-manager contracts. Pools need at least 50,000 STX staked to earn rewards for a cycle.`,
     nextCycle: `Your stake starts earning when the next cycle begins. A cycle lasts about two weeks.`,
   },
   unlistedPool: {
     label: `Staked with a pool Leather does not list`,
-    description: `Your STX is staked and still earning. Managing it here needs a pool Leather knows, so use the tools of whoever operates this signer manager.`,
+    description: `Your STX is staked and still earning through a signer manager Leather does not list. View your position to claim rewards, update your stake, or unstake.`,
+  },
+  byosm: {
+    entryTitle: `Bring your own signer manager`,
+    entryDescription: `Stake through any signer-manager contract that implements the standard interface. Leather checks the contract exists and is registered with PoX-5, but cannot vouch for its operator — verify who runs it before staking.`,
+    inputLabel: `Signer manager contract`,
+    continueLabel: `Continue`,
+    checkingLabel: `Checking contract…`,
+    errors: {
+      invalidFormat: `Enter a contract principal in address.contract-name format.`,
+      wrongNetwork: `This address belongs to a different network.`,
+      notFound: `No contract found at this address. Check the address and try again.`,
+      missingFunctions: `This contract does not implement the standard signer-manager interface.`,
+      notRegistered: `This contract is not registered as a PoX-5 signer manager.`,
+      checkFailed: `We couldn't check this contract right now. Try again.`,
+    },
   },
   dualStackingTransition: {
     title: `Dual Stacking is winding down`,
@@ -67,6 +83,7 @@ export const bitcoinStakingContent = {
     sbtcOnlyHelper: `This pool pays out in sBTC only, once a cycle concludes.`,
     maxFeeNote: `Claims below the max fee can't be paid out until you lower it.`,
     updateHelper: `This setting applies to every future claim.`,
+    loadError: `We couldn't load your current payout preference, which is needed before your stake can be updated.`,
   },
   preparePhase: {
     title: `Staking is briefly paused`,
@@ -160,6 +177,7 @@ export const bitcoinStakingLabels = {
   rewardsToken: `Rewards token`,
   rewardsPayout: `Rewards payout`,
   totalStaked: `Total staked`,
+  tvl: `TVL`,
   historicalYield: `Historical yield`,
   fee: `Fee`,
   startEarning: `Start earning`,

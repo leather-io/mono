@@ -1,16 +1,29 @@
 import { StacksNetworkName } from '@stacks/network';
 import { hexToCV, principalCV, serializeCV } from '@stacks/transactions';
 
-import { StacksClient } from '@leather.io/query';
-
 import { Pox5PayoutPreference, decodePayoutPreference } from '../transactions/pox5-signer-calldata';
 import { parseContractId } from '../utils/contract-id';
+
+export const payoutPreferenceFunctionNames = ['get-pox-addr', 'get-payout-config'];
+
+function isUndefinedFunctionCause(cause: string | undefined): boolean {
+  return cause?.includes('UndefinedFunction') ?? false;
+}
+
+interface PayoutPreferenceReader {
+  callReadOnlyFunction(args: {
+    contractAddress: string;
+    contractName: string;
+    functionName: string;
+    readOnlyFunctionArgs: { arguments: string[]; sender: string };
+  }): Promise<{ okay: boolean; result?: string; cause?: string }>;
+}
 
 interface CreateGetPox5PayoutPreferenceQueryOptionsArgs {
   address: string | undefined;
   signerManagerContractId: string | undefined;
   networkName: StacksNetworkName;
-  client: StacksClient;
+  client: PayoutPreferenceReader;
 }
 
 export function createGetPox5PayoutPreferenceQueryOptions({
@@ -28,18 +41,27 @@ export function createGetPox5PayoutPreferenceQueryOptions({
       if (!address || !signerManagerContractId) return null;
       const { contractAddress, contractName } = parseContractId(signerManagerContractId);
 
-      const res = await client.callReadOnlyFunction({
-        contractAddress,
-        contractName,
-        functionName: 'get-pox-addr',
-        readOnlyFunctionArgs: {
-          arguments: [`0x${serializeCV(principalCV(address))}`],
-          sender: address,
-        },
-      });
+      for (const functionName of payoutPreferenceFunctionNames) {
+        const res = await client.callReadOnlyFunction({
+          contractAddress,
+          contractName,
+          functionName,
+          readOnlyFunctionArgs: {
+            arguments: [`0x${serializeCV(principalCV(address))}`],
+            sender: address,
+          },
+        });
 
-      if (!res.okay || !res.result) return null;
-      return decodePayoutPreference(hexToCV(res.result), networkName);
+        if (!res.okay && isUndefinedFunctionCause(res.cause)) continue;
+        if (!res.okay || !res.result) {
+          throw new Error(res.cause ?? `Reading ${functionName} returned no result`);
+        }
+        return decodePayoutPreference(hexToCV(res.result), networkName);
+      }
+
+      throw new Error(
+        `${signerManagerContractId} exposes none of: ${payoutPreferenceFunctionNames.join(', ')}`
+      );
     },
   };
 }

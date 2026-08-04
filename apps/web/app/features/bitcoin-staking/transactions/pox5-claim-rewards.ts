@@ -1,17 +1,12 @@
 import { ClarityValue, noneCV, principalCV, serializeCV, uintCV } from '@stacks/transactions';
-import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
-import { pox5NetworkConfig } from '~/data/pox5-network-config';
-import { analytics } from '~/utils/analytics/analytics';
 import { StxCallContractParams } from '~/utils/leather-sdk';
-
-import { LeatherSdk } from '@leather.io/sdk';
 
 // Claims target the pool's signer-manager contract, not pox-5, and are
 // per-cycle: claiming several cycles means one transaction each. The staker
 // principal is explicit because the contract allows anyone to trigger a claim
 // on a staker's behalf. bond-index is always none — BTC protocol bonds are out
 // of scope for v1.
-interface ClaimStakerRewardsArgs {
+export interface ClaimStakerRewardsArgs {
   signerManagerContractId: string;
   stakerAddress: string;
   rewardCycle: number;
@@ -41,35 +36,4 @@ export function getClaimStakerRewardsOptions(
     // pool fees is only known at execution.
     postConditionMode: 'originator',
   } satisfies StxCallContractParams;
-}
-
-interface ClaimRewardsMutationValues extends ClaimStakerRewardsArgs {
-  providerId: BitcoinStakingProviderId;
-}
-
-interface CreateClaimRewardsMutationOptionsArgs {
-  leather: LeatherSdk;
-}
-
-export function createClaimRewardsMutationOptions({
-  leather,
-}: CreateClaimRewardsMutationOptionsArgs) {
-  return {
-    mutationKey: ['pox5-claim-rewards', leather],
-    mutationFn: async (values: ClaimRewardsMutationValues) => {
-      const options = getClaimStakerRewardsOptions({
-        signerManagerContractId: values.signerManagerContractId,
-        stakerAddress: values.stakerAddress,
-        rewardCycle: values.rewardCycle,
-        network: pox5NetworkConfig.walletRpcNetwork,
-      });
-
-      analytics.track('bitcoin_staking_rewards_claimed', {
-        provider: values.providerId,
-        rewardCycle: values.rewardCycle,
-      });
-
-      return leather.stxCallContract(options);
-    },
-  } as const;
 }

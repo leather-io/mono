@@ -10,6 +10,7 @@ import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-s
 import { BitcoinStakingPool } from '~/data/bitcoin-staking-data';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { InfoCircleIcon } from '@leather.io/ui';
 
@@ -35,6 +36,8 @@ export function cycleStatusFromClock(clock: CycleClockInfo): StakingCycleStatus 
 
 interface StakingPoolOverviewProps {
   pool: BitcoinStakingPool;
+  signerManagerContractId?: string;
+  totalStakedMicroStx: bigint | null;
   nextCycleNumber: number | null;
   daysUntilNextCycle: number | null;
   cycleStatus?: StakingCycleStatus | null;
@@ -145,6 +148,8 @@ function CycleStatusLine({ cycleStatus }: { cycleStatus: StakingCycleStatus }) {
 
 export function StakingPoolOverview({
   pool,
+  signerManagerContractId,
+  totalStakedMicroStx,
   nextCycleNumber,
   daysUntilNextCycle,
   cycleStatus,
@@ -201,13 +206,29 @@ export function StakingPoolOverview({
               explanation={bitcoinStakingContent.poolOverviewInfo.fee}
             />
           }
-          value={<PoolFeeValue pool={pool} />}
+          value={<PoolFeeValue pool={pool} signerManagerContractId={signerManagerContractId} />}
         />
       </InfoGrid.Cell>
-      <InfoGrid.Cell
-        gridColumn={['1 / span 2', '1 / span 2', '2 / span 2']}
-        gridRow={['3', '3', '2']}
-      >
+      <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['3', '3', '2']}>
+        <ValueDisplayer
+          name={
+            <InfoLabel
+              label={bitcoinStakingLabels.totalStaked}
+              explanation={bitcoinStakingContent.poolOverviewInfo.totalStaked}
+            />
+          }
+          value={
+            totalStakedMicroStx === null ? (
+              EM_DASH
+            ) : (
+              <span data-testid="pool-total-staked">
+                {toHumanReadableMicroStx(totalStakedMicroStx, 0)}
+              </span>
+            )
+          }
+        />
+      </InfoGrid.Cell>
+      <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['3', '3', '2']}>
         <ValueDisplayer
           name={
             <InfoLabel
