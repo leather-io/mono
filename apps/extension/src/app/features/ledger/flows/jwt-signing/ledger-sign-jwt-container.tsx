@@ -21,8 +21,10 @@ import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { makeLedgerCompatibleUnsignedAuthResponsePayload } from '@app/common/unsafe-auth-response';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
+  MINIMUM_STACKS_APP_VERSION,
   getStacksAppVersion,
   prepareLedgerDeviceStacksAppConnection,
+  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { appPermissionsSlice } from '@app/store/app-permissions/app-permissions.slice';
@@ -113,6 +115,16 @@ export function LedgerSignJwtContainer() {
 
     if (versionInfo.returnCode !== LedgerError.NoErrors) {
       logger.error('Return code from device has error', versionInfo);
+      return;
+    }
+
+    const { meetsMinimum, currentVersion } = validateStacksAppVersion(versionInfo);
+    if (!meetsMinimum) {
+      void ledgerNavigate.toStacksAppOutdatedWarning({
+        currentVersion,
+        requiredVersion: MINIMUM_STACKS_APP_VERSION,
+      });
+      setAwaitingDeviceConnection(false);
       return;
     }
 

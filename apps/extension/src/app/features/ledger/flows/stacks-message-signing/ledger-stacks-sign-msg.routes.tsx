@@ -15,12 +15,17 @@ import {
 } from '../../generic-steps';
 import { LedgerSignMsgContainer } from './ledger-stacks-sign-msg-container';
 import { ConnectLedgerSignMsg } from './steps/connect-ledger-sign-msg';
+import { OutdatedStacksAppWarningMsgSigning } from './steps/outdated-stacks-app-warning-msg-signing';
 import { SignLedgerMessage } from './steps/sign-stacks-ledger-message';
 
 export const ledgerStacksMessageSigningRoutes = (
   <Route element={<LedgerSignMsgContainer />}>
     <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerSignMsg />} />
     <Route path={RouteUrls.LedgerCheckingAppVersion} element={<CheckingAppVersion />} />
+    <Route
+      path={RouteUrls.LedgerOutdatedAppWarning}
+      element={<OutdatedStacksAppWarningMsgSigning />}
+    />
     <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />
     <Route path={RouteUrls.ConnectLedgerError} element={<ConnectLedgerError />} />
     <Route path={RouteUrls.ConnectLedgerSuccess} element={<ConnectLedgerSuccess />} />

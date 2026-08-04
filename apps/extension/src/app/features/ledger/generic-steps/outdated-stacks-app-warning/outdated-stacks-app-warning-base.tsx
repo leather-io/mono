@@ -43,27 +43,13 @@ export function OutdatedStacksAppWarningBase({ onTryAgain }: OutdatedStacksAppWa
         <img src="assets/images/ledger/outdated-stacks-app.svg" width="292px" alt="Ledger" />
       </Box>
       <Flex alignItems="center" gap="space.02" justifyContent="center" mt="space.06">
-        <LedgerTitle>Update your Ledger Stacks app</LedgerTitle>
+        <LedgerTitle>Ledger Stacks app update required</LedgerTitle>
       </Flex>
       <styled.p mt="space.04" textStyle="body.01" maxW="320px">
-        Leather needs a more recent version of the Ledger Stacks app
+        {versionInfo
+          ? `Your current Stacks app version (${versionInfo.currentVersion}) isn't supported. Update to the latest version (${versionInfo.requiredVersion}) to continue.`
+          : 'Leather needs a more recent version of the Ledger Stacks app to continue.'}
       </styled.p>
-
-      {versionInfo && (
-        <Stack gap="space.03" mt="space.04" textStyle="caption.01" color="ink.text-subdued">
-          <Flex alignItems="center" justifyContent="space-between">
-            <styled.span>
-              Current version{' '}
-              <styled.span textStyle="code">{versionInfo.currentVersion}</styled.span>
-            </styled.span>
-            <styled.span mx="space.01">∙</styled.span>
-            <styled.span>
-              Required version{' '}
-              <styled.span textStyle="code">{versionInfo.requiredVersion}</styled.span>
-            </styled.span>
-          </Flex>
-        </Stack>
-      )}
 
       <Stack gap="space.04" mt="space.06" width="100%" maxW="360px" textAlign="left">
         <Flag
@@ -153,7 +139,7 @@ export function OutdatedStacksAppWarningBase({ onTryAgain }: OutdatedStacksAppWa
             style={{ imageRendering: 'pixelated', ...ledgerIconStyle }}
             width="20"
           />
-          Open Ledger Wallet <ExternalLinkIcon color="ink.background-primary" />
+          Open Ledger Live <ExternalLinkIcon color="ink.background-primary" />
         </styled.a>
         <HStack gap="space.03" width="100%">
           <Button flex={1} onClick={onTryAgain} variant="outline">

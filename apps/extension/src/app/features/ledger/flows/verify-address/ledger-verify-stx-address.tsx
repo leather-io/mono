@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router';
 
 import StacksApp from '@zondax/ledger-stacks';
 
+import { delay } from '@leather.io/utils';
+
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
@@ -13,6 +15,7 @@ import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigat
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import { isLedgerOnDeviceAddressConfirmed } from '@app/features/ledger/utils/ledger-descriptor-address';
 import {
+  MINIMUM_STACKS_APP_VERSION,
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
@@ -20,6 +23,7 @@ import {
   isStxAddressResponseSuccess,
   showStxAddressOnDevice,
   stacksChainIdToSingleSigAddressVersion,
+  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
@@ -40,6 +44,23 @@ function LedgerVerifyStxAddress() {
       connectApp: connectLedgerStacksApp,
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
+      async passesAdditionalVersionCheck(appVersion) {
+        if (appVersion.chain !== 'stacks') {
+          return true;
+        }
+
+        const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
+        if (!meetsMinimum) {
+          await delay(40);
+          void ledgerNavigate.toStacksAppOutdatedWarning({
+            currentVersion,
+            requiredVersion: MINIMUM_STACKS_APP_VERSION,
+          });
+          return false;
+        }
+
+        return true;
+      },
       onSuccess() {
         toast.success('Address verified on your Ledger');
         void navigate(RouteUrls.Home, { replace: true });
