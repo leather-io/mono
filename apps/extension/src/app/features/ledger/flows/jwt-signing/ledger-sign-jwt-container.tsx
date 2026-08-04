@@ -105,38 +105,38 @@ export function LedgerSignJwtContainer() {
       },
     });
 
-    const versionInfo = await getStacksAppVersion(stacks);
-    setLatestDeviceResponse(versionInfo);
-
-    if (versionInfo.deviceLocked) {
-      setAwaitingDeviceConnection(false);
-      return;
-    }
-
-    if (versionInfo.returnCode !== LedgerError.NoErrors) {
-      logger.error('Return code from device has error', versionInfo);
-      return;
-    }
-
-    const { meetsMinimum, currentVersion } = validateStacksAppVersion(versionInfo);
-    if (!meetsMinimum) {
-      void ledgerNavigate.toStacksAppOutdatedWarning({
-        currentVersion,
-        requiredVersion: MINIMUM_STACKS_APP_VERSION,
-      });
-      setAwaitingDeviceConnection(false);
-      return;
-    }
-
-    // TODO: #4566 Low-grade code. This is to be removed when deprecating legacy APIs
-    let legacyAddressObj = {};
     try {
-      legacyAddressObj = getBitcoinAddressesLegacyFormat(accountIndex);
-    } catch (e) {
-      logger.error('Error while generating bitcoin addresses to return', e);
-    }
+      const versionInfo = await getStacksAppVersion(stacks);
+      setLatestDeviceResponse(versionInfo);
 
-    try {
+      if (versionInfo.deviceLocked) {
+        setAwaitingDeviceConnection(false);
+        return;
+      }
+
+      if (versionInfo.returnCode !== LedgerError.NoErrors) {
+        logger.error('Return code from device has error', versionInfo);
+        return;
+      }
+
+      const { meetsMinimum, currentVersion } = validateStacksAppVersion(versionInfo);
+      if (!meetsMinimum) {
+        void ledgerNavigate.toStacksAppOutdatedWarning({
+          currentVersion,
+          requiredVersion: MINIMUM_STACKS_APP_VERSION,
+        });
+        setAwaitingDeviceConnection(false);
+        return;
+      }
+
+      // TODO: #4566 Low-grade code. This is to be removed when deprecating legacy APIs
+      let legacyAddressObj = {};
+      try {
+        legacyAddressObj = getBitcoinAddressesLegacyFormat(accountIndex);
+      } catch (e) {
+        logger.error('Error while generating bitcoin addresses to return', e);
+      }
+
       void ledgerNavigate.toConnectionSuccessStep('stacks');
       await delay(1000);
 

@@ -151,6 +151,7 @@ function LedgerSignStacksTxContainer() {
     chain,
     transaction: unsignedTx ? deserializeTransaction(unsignedTx) : null,
     signTransaction,
+    onCancelTxSigning: closeAction,
     latestDeviceResponse,
     awaitingDeviceConnection,
   };

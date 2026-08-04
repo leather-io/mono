@@ -22,9 +22,13 @@ const locationStateSchema = z.object({
 
 interface OutdatedStacksAppWarningBaseProps {
   onTryAgain(): void | Promise<void>;
+  onCancel?(): void;
 }
 
-export function OutdatedStacksAppWarningBase({ onTryAgain }: OutdatedStacksAppWarningBaseProps) {
+export function OutdatedStacksAppWarningBase({
+  onTryAgain,
+  onCancel,
+}: OutdatedStacksAppWarningBaseProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme } = useThemeSwitcher();
@@ -145,7 +149,7 @@ export function OutdatedStacksAppWarningBase({ onTryAgain }: OutdatedStacksAppWa
           <Button flex={1} onClick={onTryAgain} variant="outline">
             Try again
           </Button>
-          <Button flex="1" onClick={() => navigate('../../')} variant="outline">
+          <Button flex="1" onClick={onCancel ?? (() => navigate('../../'))} variant="outline">
             Cancel
           </Button>
         </HStack>
