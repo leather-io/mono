@@ -10,7 +10,6 @@ import {
 
 import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
 import type { StacksDerivationPathType } from '@leather.io/stacks';
-import { delay } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 import { assumedZeroFingerprint } from '@shared/utils';
@@ -59,28 +58,27 @@ function LedgerRequestStacksKeys() {
 
   const chain = 'stacks';
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, outdatedAppVersionWarning } =
+  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
     useRequestLedgerKeys<StacksApp>({
       chain,
       connectApp: connectLedgerStacksApp,
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
-      async passesAdditionalVersionCheck(appVersion) {
+      passesAdditionalVersionCheck(appVersion) {
         if (appVersion.chain !== 'stacks') {
-          return true;
+          return Promise.resolve(true);
         }
 
         const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
         if (!meetsMinimum) {
-          await delay(40);
           void ledgerNavigate.toStacksAppOutdatedWarning({
             currentVersion,
             requiredVersion: MINIMUM_STACKS_APP_VERSION,
           });
-          return false;
+          return Promise.resolve(false);
         }
 
-        return true;
+        return Promise.resolve(true);
       },
       onSuccess() {
         void navigate('/', { replace: true });
@@ -176,7 +174,6 @@ function LedgerRequestStacksKeys() {
     pullPublicKeysFromDevice: requestKeys,
     latestDeviceResponse,
     awaitingDeviceConnection,
-    outdatedAppVersionWarning,
   };
 
   const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);

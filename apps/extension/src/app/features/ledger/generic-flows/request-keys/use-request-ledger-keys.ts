@@ -14,7 +14,7 @@ import {
   checkLockedDeviceError,
   useLedgerResponseState,
 } from '../../utils/generic-ledger-utils';
-import { MINIMUM_STACKS_APP_VERSION, StacksAppVersion } from '../../utils/stacks-ledger-utils';
+import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
 export const defaultNumberOfKeysToPullFromLedgerDevice = 10;
 
@@ -38,7 +38,6 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
   passesAdditionalVersionCheck,
   onSuccess,
 }: UseRequestLedgerKeysArgs<App>) {
-  const [outdatedAppVersionWarning, setAppVersionOutdatedWarning] = useState(false);
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
   const ledgerNavigate = useLedgerNavigate();
@@ -93,18 +92,6 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
         return;
       }
 
-      if (isError(e) && e.message === LedgerConnectionErrors.MasterkeyFingerprintNotSupported) {
-        const currentVersion = (e as any).currentVersion;
-        const versionInfo = currentVersion
-          ? {
-              currentVersion: `${currentVersion.major}.${currentVersion.minor}.${currentVersion.patch}`,
-              requiredVersion: MINIMUM_STACKS_APP_VERSION,
-            }
-          : undefined;
-        void ledgerNavigate.toStacksAppOutdatedWarning(versionInfo);
-        return;
-      }
-
       void ledgerNavigate.toErrorStep(chain);
     } finally {
       await app?.transport.close();
@@ -113,8 +100,6 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
 
   return {
     requestKeys,
-    outdatedAppVersionWarning,
-    setAppVersionOutdatedWarning,
     latestDeviceResponse,
     setLatestDeviceResponse,
     awaitingDeviceConnection,

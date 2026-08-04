@@ -51,7 +51,7 @@ export function OutdatedStacksAppWarningBase({
       </Flex>
       <styled.p mt="space.04" textStyle="body.01" maxW="320px">
         {versionInfo
-          ? `Your current Stacks app version (${versionInfo.currentVersion}) isn't supported. Update to the latest version (${versionInfo.requiredVersion}) to continue.`
+          ? `Your current Stacks app version (${versionInfo.currentVersion}) isn't supported. Update to version ${versionInfo.requiredVersion} or later to continue.`
           : 'Leather needs a more recent version of the Ledger Stacks app to continue.'}
       </styled.p>
 
@@ -143,7 +143,7 @@ export function OutdatedStacksAppWarningBase({
             style={{ imageRendering: 'pixelated', ...ledgerIconStyle }}
             width="20"
           />
-          Open Ledger Live <ExternalLinkIcon color="ink.background-primary" />
+          Open Ledger Wallet <ExternalLinkIcon color="ink.background-primary" />
         </styled.a>
         <HStack gap="space.03" width="100%">
           <Button flex={1} onClick={onTryAgain} variant="outline">

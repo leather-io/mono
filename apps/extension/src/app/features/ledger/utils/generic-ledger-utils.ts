@@ -14,7 +14,6 @@ import { getStacksAppVersion } from './stacks-ledger-utils';
 
 export enum LedgerConnectionErrors {
   AppNotOpen = 'AppNotOpen',
-  MasterkeyFingerprintNotSupported = 'MasterkeyFingerprintNotSupported',
   DeviceLocked = 'DeviceLocked',
 }
 

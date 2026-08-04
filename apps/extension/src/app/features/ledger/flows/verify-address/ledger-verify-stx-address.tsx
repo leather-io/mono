@@ -2,8 +2,6 @@ import { useNavigate } from 'react-router';
 
 import StacksApp from '@zondax/ledger-stacks';
 
-import { delay } from '@leather.io/utils';
-
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
@@ -44,22 +42,21 @@ function LedgerVerifyStxAddress() {
       connectApp: connectLedgerStacksApp,
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
-      async passesAdditionalVersionCheck(appVersion) {
+      passesAdditionalVersionCheck(appVersion) {
         if (appVersion.chain !== 'stacks') {
-          return true;
+          return Promise.resolve(true);
         }
 
         const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
         if (!meetsMinimum) {
-          await delay(40);
           void ledgerNavigate.toStacksAppOutdatedWarning({
             currentVersion,
             requiredVersion: MINIMUM_STACKS_APP_VERSION,
           });
-          return false;
+          return Promise.resolve(false);
         }
 
-        return true;
+        return Promise.resolve(true);
       },
       onSuccess() {
         toast.success('Address verified on your Ledger');
@@ -119,7 +116,6 @@ function LedgerVerifyStxAddress() {
     pullPublicKeysFromDevice: requestKeys,
     latestDeviceResponse,
     awaitingDeviceConnection,
-    outdatedAppVersionWarning: false,
   };
 
   const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
