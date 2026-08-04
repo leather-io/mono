@@ -204,8 +204,13 @@ export interface SwapActions {
   setCustomFee(fee: number): void;
 }
 
+export interface SbtcNotificationFailure {
+  errorMessage: string;
+}
+
 export interface SwapSubmissionResult {
   txid: string;
+  sbtcNotificationFailure?: SbtcNotificationFailure;
 }
 
 export interface UseSwapStateResult {

@@ -91,6 +91,12 @@ export function useSubmitSwap({
     },
     onSuccess(result) {
       dependencies.onSwapSubmitted?.(result);
+      if (result.sbtcNotificationFailure) {
+        trackEvent('swap_sbtc_notify_failed', {
+          txid: result.txid,
+          errorMessage: result.sbtcNotificationFailure.errorMessage,
+        });
+      }
       if (!readiness.canSubmit) return;
       const { quote } = readiness.prerequisites;
       trackEvent('swap_submission_success', {

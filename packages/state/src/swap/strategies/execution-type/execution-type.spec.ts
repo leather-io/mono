@@ -25,6 +25,13 @@ vi.mock('./build-transaction/build-transaction/build-sbtc-bridge-deposit-tx', ()
   buildSbtcBridgeDepositTx: vi.fn(),
 }));
 
+vi.mock('@leather.io/utils', async () => {
+  return {
+    ...(await vi.importActual('@leather.io/utils')),
+    delay: () => Promise.resolve(),
+  };
+});
+
 const secp256k1GeneratorPublicKey =
   '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798';
 
@@ -206,6 +213,37 @@ describe('sbtcBridgeDepositStrategy', () => {
         'sbtc-bridge-deposit submission requires a bitcoinFeeRate fee calculation'
       );
       expect(bitcoin.sbtcClient.broadcastTx).not.toHaveBeenCalled();
+    });
+
+    test('retries the sbtc notification when it fails after the deposit is broadcast', async () => {
+      const { dependencies, bitcoin } = createSbtcSubmissionFixtures();
+      vi.mocked(bitcoin.sbtcClient.notifySbtc).mockRejectedValueOnce(
+        new Error('emily unavailable')
+      );
+
+      const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
+        dependencies,
+        bitcoinNetworkFee
+      );
+
+      expect(bitcoin.sbtcClient.notifySbtc).toHaveBeenCalledTimes(2);
+      expect(result).toEqual({ txid: 'btc-txid' });
+    });
+
+    test('resolves with a notification failure instead of rejecting when the sbtc notification keeps failing', async () => {
+      const { dependencies, bitcoin } = createSbtcSubmissionFixtures();
+      vi.mocked(bitcoin.sbtcClient.notifySbtc).mockRejectedValue(new Error('emily unavailable'));
+
+      const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
+        dependencies,
+        bitcoinNetworkFee
+      );
+
+      expect(bitcoin.sbtcClient.notifySbtc).toHaveBeenCalledTimes(3);
+      expect(result).toEqual({
+        txid: 'btc-txid',
+        sbtcNotificationFailure: { errorMessage: 'emily unavailable' },
+      });
     });
   });
 });
