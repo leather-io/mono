@@ -39,6 +39,7 @@ interface RenderUseSwapStateParams extends Omit<UseSwapStateProps, 'dependencies
   swapQuotes?: SwapQuote[];
   getSwapQuotes?(): Promise<SwapQuote[]>;
   getBaseSwapAssets?(): Promise<AccountSwapAsset[]>;
+  getTargetSwapAssets?(): Promise<AccountSwapAsset[]>;
   marketData: MarketData;
   maxSpendAmount?: number;
   dependencies?: Partial<SwapDependencies>;
@@ -53,6 +54,7 @@ export function renderUseSwapState({
   swapQuotes,
   getSwapQuotes,
   getBaseSwapAssets,
+  getTargetSwapAssets,
   marketData,
   maxSpendAmount,
   dependencies,
@@ -74,6 +76,7 @@ export function renderUseSwapState({
             swapQuotes,
             getSwapQuotes,
             getBaseSwapAssets,
+            getTargetSwapAssets,
           }),
           marketDataService: createStubMarketDataService({ marketData }),
           bitcoinTransactionFeesService: createStubBitcoinTransactionFeesService(),
