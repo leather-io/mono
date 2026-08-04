@@ -51,13 +51,17 @@ interface ResolveLedgerStacksDerivationPathTypeArgs {
   hasLegacyLedgerWallet: boolean;
   chosenDerivationPathType: unknown;
 }
+interface ResolvedLedgerStacksDerivationPathType {
+  derivationPathType: StacksDerivationPathType;
+  overriddenChosenType: StacksDerivationPathType | null;
+}
 export function resolveLedgerStacksDerivationPathType({
   stxKeychainDescriptors,
   fingerprint,
   hasWalletForFingerprint,
   hasLegacyLedgerWallet,
   chosenDerivationPathType,
-}: ResolveLedgerStacksDerivationPathTypeArgs): StacksDerivationPathType {
+}: ResolveLedgerStacksDerivationPathTypeArgs): ResolvedLedgerStacksDerivationPathType {
   const inferenceDescriptors = stxKeychainDescriptors.filter(descriptor => {
     const descriptorFingerprint = extractFingerprintFromDescriptor(descriptor);
     if (descriptorFingerprint === fingerprint) return true;
@@ -68,10 +72,18 @@ export function resolveLedgerStacksDerivationPathType({
     );
   });
 
-  const inferredType = inferStacksDerivationPathType(inferenceDescriptors);
-  if (inferredType) return inferredType;
+  const chosenType = isStacksDerivationPathType(chosenDerivationPathType)
+    ? chosenDerivationPathType
+    : null;
 
-  return isStacksDerivationPathType(chosenDerivationPathType) ? chosenDerivationPathType : 'stacks';
+  const inferredType = inferStacksDerivationPathType(inferenceDescriptors);
+  if (inferredType)
+    return {
+      derivationPathType: inferredType,
+      overriddenChosenType: chosenType && chosenType !== inferredType ? chosenType : null,
+    };
+
+  return { derivationPathType: chosenType ?? 'stacks', overriddenChosenType: null };
 }
 
 interface PullStacksKeysFromLedgerDeviceArgs {

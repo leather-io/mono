@@ -8,6 +8,7 @@ import {
 } from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
 
 import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
+import type { StacksDerivationPathType } from '@leather.io/stacks';
 import { delay } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -37,6 +38,11 @@ import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
 import { useStacksKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
 import { addOrMigrateLedgerKeychains } from '@app/store/wallets/wallet.actions';
 import { getAddWalletError, useWalletEntities } from '@app/store/wallets/wallet.selectors';
+
+const derivationPathTypeLabels: Record<StacksDerivationPathType, string> = {
+  stacks: 'Stacks',
+  ledgerLive: 'Ledger Live',
+};
 
 function LedgerRequestStacksKeys() {
   const toast = useToast();
@@ -87,13 +93,19 @@ function LedgerRequestStacksKeys() {
           return { status: 'failure' };
         }
 
-        const derivationPathType = resolveLedgerStacksDerivationPathType({
+        const { derivationPathType, overriddenChosenType } = resolveLedgerStacksDerivationPathType({
           stxKeychainDescriptors: stxKeychainsDescriptors,
           fingerprint,
           hasWalletForFingerprint: Boolean(wallets[fingerprint]),
           hasLegacyLedgerWallet: wallets[assumedZeroFingerprint]?.type === 'ledger',
           chosenDerivationPathType,
         });
+
+        if (overriddenChosenType) {
+          toast.info(
+            `This device's existing accounts use the ${derivationPathTypeLabels[derivationPathType]} address standard, so your ${derivationPathTypeLabels[overriddenChosenType]} selection couldn't be applied`
+          );
+        }
 
         const resp = await pullStacksKeysFromLedgerDevice(app)({
           derivationPathType,
@@ -122,6 +134,10 @@ function LedgerRequestStacksKeys() {
           .filter(keychain => {
             return !stxKeychainsDescriptors.includes(keychain.descriptor);
           });
+
+        if (keychains.length === 0) {
+          toast.info(`No new accounts found — this device's accounts are already in your wallet`);
+        }
 
         await dispatch(addOrMigrateLedgerKeychains({ fingerprint, accountKeychains: keychains }));
         void dispatch(activateFirstVisibleAccount(fingerprint));
