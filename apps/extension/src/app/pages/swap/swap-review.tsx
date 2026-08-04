@@ -33,6 +33,7 @@ import { SwapReviewSummary } from '@app/pages/swap/components/review/swap-review
 import type { SwapOutletContext } from '@app/pages/swap/swap-container';
 
 import { FeesTooltipContent } from './components/review/fees-tooltip-content';
+import { SbtcLedgerRecoveryWarning } from './components/review/sbtc-ledger-recovery-warning';
 import { SlippageSelectorSheet } from './components/review/slippage-selector-sheet';
 import { SwapReviewEmptyState } from './components/review/swap-review-empty-state';
 import { SwapReviewErrorState } from './components/review/swap-review-error-state';
@@ -203,6 +204,10 @@ function SwapReviewContent({
           }
         />
       </SwapReviewDetails>
+
+      {selectedQuote.rawSwapQuote.executionType === 'sbtc-bridge-deposit' && (
+        <SbtcLedgerRecoveryWarning />
+      )}
 
       <Flex direction="column" gap="space.04" mt="auto" alignItems="center">
         <styled.span textStyle="caption.01" textAlign="center" color="ink.text-subdued">
