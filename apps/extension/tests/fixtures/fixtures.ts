@@ -6,7 +6,6 @@ import { OnboardingPage } from '@tests/page-object-models/onboarding.page';
 import { SendPage } from '@tests/page-object-models/send.page';
 import { SettingsPage } from '@tests/page-object-models/settings.page';
 import { SwapRevampPage } from '@tests/page-object-models/swap-revamp.page';
-import { SwapPage } from '@tests/page-object-models/swap.page';
 import { SwitchAccountPage } from '@tests/page-object-models/switch-account.page';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,7 +18,6 @@ interface TestFixtures {
   homePage: HomePage;
   onboardingPage: OnboardingPage;
   sendPage: SendPage;
-  swapPage: SwapPage;
   swapRevampPage: SwapRevampPage;
   networkPage: NetworkPage;
   settingsPage: SettingsPage;
@@ -84,9 +82,6 @@ export const test = base.extend<TestFixtures>({
   },
   sendPage: async ({ page }, use) => {
     await use(new SendPage(page));
-  },
-  swapPage: async ({ page }, use) => {
-    await use(new SwapPage(page));
   },
   swapRevampPage: async ({ page }, use) => {
     await use(new SwapRevampPage(page));
