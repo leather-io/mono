@@ -275,6 +275,52 @@ describe(BlockchainActivityService.name, () => {
       ).rejects.toThrow();
     });
 
+    it('emits a tx present in both the mempool and the confirmed scan exactly once', async () => {
+      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xdup',
+              type: 'token_transfer',
+              token_transfer: { recipient: 'SP2', amount: '1000', memo: null },
+            },
+            { balance_changes: { stx: { sent: '1000', received: '0', net: '-1000' } } }
+          ),
+        ],
+      });
+      mockStacksTx.getPendingTransactions = vi.fn().mockResolvedValue([
+        {
+          tx_id: '0xdup',
+          tx_type: 'token_transfer',
+          sender_address: 'SP1',
+          sponsored: false,
+          fee_rate: '100',
+          receipt_time: 2000,
+          token_transfer: { recipient_address: 'SP2', amount: '1000', memo: '' },
+        },
+        {
+          tx_id: '0xmempoolonly',
+          tx_type: 'token_transfer',
+          sender_address: 'SP1',
+          sponsored: false,
+          fee_rate: '100',
+          receipt_time: 2001,
+          token_transfer: { recipient_address: 'SP3', amount: '500', memo: '' },
+        },
+      ]);
+      const result = await service.getActivityByAssetId(account, {
+        protocol: 'nativeStx',
+        id: 'STX',
+      });
+      expect(result.map(a => a.txid)).toEqual(['0xmempoolonly', '0xdup']);
+      expect(result[0].status).toBe('pending');
+      expect(result[1].status).toBe('success');
+    });
+
     it('reclassifies an unmapped SIP-10 transfer contract call as receive', async () => {
       mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
         total: 1,
@@ -407,6 +453,47 @@ describe(BlockchainActivityService.name, () => {
       expect(response.items.every(item => item.action === 'send')).toBe(true);
       expect(response.nextCursor).not.toBeNull();
       expect(response.hasMore).toBe(true);
+    });
+
+    function unownedBtcTx(txid: string, time: number) {
+      return btcTx({
+        txid,
+        time,
+        height: 900,
+        vin: [{ owned: false, value: '1000', address: 'ext', n: 0 }],
+        vout: [{ owned: false, value: '900', address: 'other', n: 0 }],
+      });
+    }
+
+    it('advances past a page whose items all map to null instead of dead-ending', async () => {
+      mockBtcTx.getAccountTransactions = vi
+        .fn()
+        .mockResolvedValue([
+          unownedBtcTx('btc-unowned-1', 1000),
+          unownedBtcTx('btc-unowned-2', 999),
+          btcTx({ txid: 'btc-owned-1', time: 500 }),
+          btcTx({ txid: 'btc-owned-2', time: 400 }),
+        ]);
+
+      const response = await service.getActivity({ account, limit: 2 });
+
+      expect(response.items.map(item => item.txid)).toEqual(['btc-owned-1', 'btc-owned-2']);
+      expect(response.nextCursor).toBeNull();
+      expect(response.hasMore).toBe(false);
+    });
+
+    it('stops advancing at the fetch cap when every page maps to zero activities', async () => {
+      mockBtcTx.getAccountTransactions = vi
+        .fn()
+        .mockResolvedValue(
+          Array.from({ length: 12 }, (_, i) => unownedBtcTx(`btc-unowned-${i}`, 1000 - i))
+        );
+
+      const response = await service.getActivity({ account, limit: 2 });
+
+      expect(response.items).toEqual([]);
+      expect(response.hasMore).toBe(true);
+      expect(response.nextCursor).not.toBeNull();
     });
   });
 

@@ -1,5 +1,5 @@
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { Navigate, useNavigate } from 'react-router';
+import { Navigate, useLocation, useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -13,12 +13,14 @@ import {
   BitcoinStakingPool,
   StakingPoolSlug,
   getStakingPoolFromSlug,
+  stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { usePox5StackingClientRequired } from '~/features/bitcoin-staking/hooks/use-pox5-clients';
 import { useIsHydrated } from '~/hooks/use-is-hydrated';
 import {
   POX5_MAX_NUM_CYCLES,
+  byosmPaths,
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
@@ -34,6 +36,7 @@ import { BitcoinNetworkModes } from '@leather.io/models';
 import { Button, Input, LoadingSpinner } from '@leather.io/ui';
 import { isDefined, stxToMicroStx } from '@leather.io/utils';
 
+import { AvailableBalanceRow } from '../components/available-balance-row';
 import { Pox5SubmitError } from '../components/pox5-submit-error';
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
@@ -43,8 +46,8 @@ import { Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-opt
 import { usePox5AvailableUnlockedBalance } from '../queries/pox5-node.query';
 import { usePox5PayoutPreferenceQuery } from '../queries/pox5-stacking.query';
 import { ChoosePayoutPreference } from '../start-staking/components/choose-payout-preference';
+import { createStakeUpdateMutationOptions } from '../transactions/pox5-mutations';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
-import { createStakeUpdateMutationOptions } from '../transactions/pox5-stake-update';
 import { getBroadcastTxId } from '../transactions/pox5-tx-status';
 
 const updateStakingMessages = {
@@ -175,17 +178,19 @@ interface UpdateStakingLayoutProps {
 }
 
 function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
-  const pool = getStakingPoolFromSlug(poolSlug);
   const { isLoading, position } = usePox5Position();
+  const { search } = useLocation();
 
-  const activeInfo = position?.status === 'active' ? position.info : undefined;
+  const activeInfo = position.status === 'active' ? position.info : undefined;
+  const activePool =
+    position.status === 'active' ? (position.pool ?? getStakingPoolFromSlug('byosm')) : undefined;
   // The form's defaults must include the stored payout preference, so the form
   // only mounts once this query settles (see the wipe note on normalizePayout).
   const payoutQuery = usePox5PayoutPreferenceQuery(
-    pool.supportsBtcPayout ? activeInfo?.signerManagerContractId : undefined
+    activePool?.supportsBtcPayout ? activeInfo?.signerManagerContractId : undefined
   );
 
-  if (isLoading || (pool.supportsBtcPayout && activeInfo && payoutQuery.isLoading)) {
+  if (isLoading) {
     return (
       <Flex justifyContent="center" alignItems="center" h="100%">
         <LoadingSpinner fill="ink.text-subdued" />
@@ -193,14 +198,53 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
     );
   }
 
-  if (position.status !== 'active') {
-    return <Navigate to={stakingPaths.pool(poolSlug)} replace />;
+  if (position.status !== 'active' || !activePool) {
+    return <Navigate to={{ pathname: stakingPaths.pool(poolSlug), search }} replace />;
+  }
+
+  const positionSlug = stakingProviderIdToSlug(activePool.providerId);
+  if (positionSlug !== poolSlug) {
+    return (
+      <Navigate
+        to={
+          position.pool
+            ? stakingPaths.update(positionSlug)
+            : byosmPaths.update(position.info.signerManagerContractId)
+        }
+        replace
+      />
+    );
+  }
+
+  if (activePool.supportsBtcPayout && payoutQuery.isLoading) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100%">
+        <LoadingSpinner fill="ink.text-subdued" />
+      </Flex>
+    );
+  }
+
+  if (activePool.supportsBtcPayout && payoutQuery.isError) {
+    return (
+      <Stack gap="space.04" maxWidth="500px">
+        <ErrorLabel>{bitcoinStakingContent.payoutPreference.loadError}</ErrorLabel>
+        <Button
+          size="md"
+          variant="outline"
+          alignSelf="flex-start"
+          disabled={payoutQuery.isRefetching}
+          onClick={() => void payoutQuery.refetch()}
+        >
+          Try again
+        </Button>
+      </Stack>
+    );
   }
 
   return (
     <UpdateStakingForm
       poolSlug={poolSlug}
-      pool={pool}
+      pool={activePool}
       address={address}
       info={position.info}
       currentPayout={payoutQuery.data ?? null}
@@ -229,7 +273,8 @@ function UpdateStakingForm({
   const { btcAddressP2wpkh } = useLeatherConnect();
 
   const { cycleClock } = usePox5CycleClock();
-  const { availableBalance } = usePox5AvailableUnlockedBalance(address);
+  const { isLoading: availableBalanceIsLoading, availableBalance } =
+    usePox5AvailableUnlockedBalance(address);
 
   // pox-5 stake-update recomputes the TOTAL remaining lock — (unlock-cycle −
   // current-cycle − 1) + cycles-to-extend — and aborts with
@@ -362,30 +407,38 @@ function UpdateStakingForm({
           />
         </Box>
 
-        <Box>
-          <Controller
-            control={formMethods.control}
-            name="amountIncrease"
-            render={({
-              field: { onChange, onBlur, value, ref },
-              fieldState: { invalid, error },
-            }) => (
-              <>
-                <Input.Root data-shrink={isDefined(value)}>
-                  <Input.Label>Additional STX to lock (optional)</Input.Label>
-                  <Input.Field
-                    id="amountIncrease"
-                    value={toInputValue(value)}
-                    onChange={input => onChange(input.target.value)}
-                    onBlur={onBlur}
-                    ref={ref}
-                  />
-                </Input.Root>
-                {invalid && error && <ErrorLabel mt="space.02">{error.message}</ErrorLabel>}
-              </>
-            )}
+        <Stack>
+          <Box>
+            <Controller
+              control={formMethods.control}
+              name="amountIncrease"
+              render={({
+                field: { onChange, onBlur, value, ref },
+                fieldState: { invalid, error },
+              }) => (
+                <>
+                  <Input.Root data-shrink={isDefined(value)}>
+                    <Input.Label>Additional STX to lock (optional)</Input.Label>
+                    <Input.Field
+                      id="amountIncrease"
+                      value={toInputValue(value)}
+                      onChange={input => onChange(input.target.value)}
+                      onBlur={onBlur}
+                      ref={ref}
+                    />
+                  </Input.Root>
+                  {invalid && error && <ErrorLabel mt="space.02">{error.message}</ErrorLabel>}
+                </>
+              )}
+            />
+          </Box>
+
+          <AvailableBalanceRow
+            isLoading={availableBalanceIsLoading}
+            availableAmount={availableBalance.amount}
+            onSelectMax={amount => formMethods.setValue('amountIncrease', String(amount))}
           />
-        </Box>
+        </Stack>
 
         <Stack gap="space.02">
           <styled.p textStyle="label.02">Rewards payout</styled.p>

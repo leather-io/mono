@@ -9,7 +9,7 @@ import type { SerializedCryptoAssetId } from '@leather.io/utils';
 import { TokenList } from '@app/features/asset-list/token-list';
 import { useFlags } from '@app/features/feature-flags';
 import { TrendingTokens } from '@app/features/trending-tokens/trending-tokens';
-import { useActivity } from '@app/query/activity/activity.query';
+import { useBlockchainActivityFeed } from '@app/query/activity/blockchain-activity.query';
 import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 
 import { AeusdcRetirementCallout } from './aeusdc-retirement-callout';
@@ -22,8 +22,8 @@ export function Tokens() {
   const location = useLocation();
   const { releaseTrendingTokens } = useFlags();
   const account = useCurrentAccountAddresses();
-  const activityQuery = useActivity(account);
-  const showFirstTokenBanner = activityQuery.isSuccess && !activityQuery.data?.length;
+  const activityFeed = useBlockchainActivityFeed(account, { poll: false });
+  const showFirstTokenBanner = activityFeed.isSuccess && !activityFeed.items.length;
 
   function handleSelectAsset(assetId: SerializedCryptoAssetId) {
     void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });

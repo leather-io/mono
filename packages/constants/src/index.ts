@@ -21,7 +21,7 @@ export const GAMMA_URL = 'https://gamma.io';
 export const GAMMA_API_URL: string = `${GAMMA_URL}/api`;
 export const BNS_REGISTRATION_URL = 'https://bns.one/';
 export const LEATHER_IPFS_GATEWAY_URL = 'https://leather.quicknode-ipfs.com/ipfs/';
-export const SBTC_RECLAIM_URL = 'https://app.stacks.co/reclaim?depositTxId=';
+export const SBTC_RECLAIM_URL = 'https://sbtc.stacks.co/activity';
 
 export const HIGH_FEE_AMOUNT_STX = 5;
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_BTC = 'https://bitcoinfees.earn.com/';

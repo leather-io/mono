@@ -1,4 +1,3 @@
-import { StackingClient } from '@stacks/stacking';
 import {
   ClarityValue,
   contractPrincipalCV,
@@ -6,23 +5,16 @@ import {
   serializeCV,
   uintCV,
 } from '@stacks/transactions';
-import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
-import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { POX5_MAX_NUM_CYCLES } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-import { analytics } from '~/utils/analytics/analytics';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
-import { LeatherSdk } from '@leather.io/sdk';
-
 import { parseContractId } from '../utils/contract-id';
-import { getPox5ContractId } from '../utils/pox5-contracts';
-import { getCycleContextFromPoxInfo } from '../utils/pox5-cycle-clock';
 import { Pox5PayoutPreference, encodeSignerCalldata } from './pox5-signer-calldata';
 
 // One builder covers all three position changes: extending (cyclesToExtend > 0),
 // increasing (amountIncreaseMicroStx > 0), and switching pools (a different
 // newSignerManagerContractId). Zero values are valid for the unchanged parts.
-interface StakeUpdateArgs {
+export interface StakeUpdateArgs {
   newSignerManagerContractId: string;
   currentSignerManagerContractId: string;
   cyclesToExtend: number;
@@ -94,48 +86,4 @@ export function getStakeUpdateOptions(
     ],
     postConditionMode: 'deny',
   } satisfies StxCallContractParams;
-}
-
-interface StakeUpdateMutationValues extends StakeUpdateArgs {
-  providerId: BitcoinStakingProviderId;
-}
-
-interface CreateStakeUpdateMutationOptionsArgs {
-  leather: LeatherSdk;
-  client: StackingClient;
-}
-
-export function createStakeUpdateMutationOptions({
-  leather,
-  client,
-}: CreateStakeUpdateMutationOptionsArgs) {
-  return {
-    mutationKey: ['pox5-stake-update', leather, client],
-    mutationFn: async (values: StakeUpdateMutationValues) => {
-      const poxInfo = await client.getPoxInfo();
-      const { clock } = getCycleContextFromPoxInfo(poxInfo);
-      if (clock.isInPreparePhase) {
-        throw new Error('Staking updates are unavailable during the prepare phase.');
-      }
-
-      const options = getStakeUpdateOptions({
-        newSignerManagerContractId: values.newSignerManagerContractId,
-        currentSignerManagerContractId: values.currentSignerManagerContractId,
-        cyclesToExtend: values.cyclesToExtend,
-        amountIncreaseMicroStx: values.amountIncreaseMicroStx,
-        currentAmountMicroStx: values.currentAmountMicroStx,
-        payoutPreference: values.payoutPreference,
-        pox5ContractId: getPox5ContractId(pox5NetworkConfig.contractNetworkMode),
-        network: pox5NetworkConfig.walletRpcNetwork,
-      });
-
-      analytics.track('bitcoin_staking_updated', {
-        provider: values.providerId,
-        amountIncreaseMicroStx: values.amountIncreaseMicroStx.toString(),
-        cyclesToExtend: values.cyclesToExtend,
-      });
-
-      return leather.stxCallContract(options);
-    },
-  } as const;
 }

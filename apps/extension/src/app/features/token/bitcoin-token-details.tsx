@@ -6,7 +6,7 @@ import { createMoney } from '@leather.io/utils';
 import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { useToast } from '@app/features/toasts/use-toast';
-import { useActivityByAsset } from '@app/query/activity/activity.query';
+import { useBlockchainActivityByAssetId } from '@app/query/activity/blockchain-activity.query';
 import {
   useNativeSegwitBtcAccountBalance,
   useTaprootBtcAccountBalance,
@@ -28,7 +28,7 @@ export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsP
   const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountId);
   const taprootBalance = useTaprootBtcAccountBalance(accountId);
   const marketInfo = useTokenMarketInfo(btcAsset);
-  const activityQuery = useActivityByAsset(account, btcAsset);
+  const activityQuery = useBlockchainActivityByAssetId(account, btcAsset);
 
   function handleCopyAddress(address: string) {
     void copyToClipboard(address);

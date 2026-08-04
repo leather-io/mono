@@ -3,6 +3,7 @@ import {
   TEST_ACCOUNT_1_STX_ADDRESS,
   TEST_PASSWORD,
 } from '@tests/mocks/constants';
+import { mockLeatherBitcoinTransactions } from '@tests/mocks/mock-leather-btc-txs';
 import {
   getTestSoftwareAccountDefaultWalletState,
   testFingerprint,
@@ -124,6 +125,7 @@ test.describe('Onboarding an existing user', () => {
     await page.route('**hiro.so/extended/v2/addresses/**/balances/ft', route =>
       route.fulfill({ json: { limit: 100, offset: 0, total: 0, results: [] } })
     );
+    await mockLeatherBitcoinTransactions(page, []);
     await globalPage.page.evaluate(async () => {
       await chrome.storage.local.clear();
     });

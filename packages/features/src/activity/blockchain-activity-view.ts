@@ -181,7 +181,25 @@ const twoTokenRemoveLiquidity: RowShape = {
   amount: { kind: 'combined-quote', from: 'received' },
 };
 
+const oneLeggedSwapSent: RowShape = {
+  avatar: { kind: 'single', from: 'sent' },
+  indicator: 'swap',
+  title: { kind: 'action-label' },
+  amount: { kind: 'single', from: 'sent' },
+};
+
+const oneLeggedSwapReceived: RowShape = {
+  avatar: { kind: 'single', from: 'received' },
+  indicator: 'swap',
+  title: { kind: 'action-label' },
+  amount: { kind: 'single', from: 'received' },
+};
+
 const degradedAvatar: BlockchainActivityAvatar = { kind: 'icon', icon: 'contract-call' };
+
+function isTwoLeggedAction(action: StacksProtocolAction) {
+  return action === 'swap' || action === 'bridge';
+}
 
 function getRowShape(
   action: StacksProtocolAction,
@@ -190,6 +208,11 @@ function getRowShape(
 ): RowShape {
   if (action === 'add-liquidity' && sent.length >= 2) return twoTokenAddLiquidity;
   if (action === 'remove-liquidity' && received.length >= 2) return twoTokenRemoveLiquidity;
+  if (isTwoLeggedAction(action)) {
+    const hasSent = sent.length > 0;
+    const hasReceived = received.length > 0;
+    if (hasSent !== hasReceived) return hasReceived ? oneLeggedSwapReceived : oneLeggedSwapSent;
+  }
   return baseRowShapes[action];
 }
 

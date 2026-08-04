@@ -42,6 +42,44 @@ export async function mockPolicyStacksReceiveActivity(
   page: Page | BrowserContext,
   address: string
 ) {
+  await page.route(`**/api.hiro.so/extended/v3/principals/${address}/transactions**`, route =>
+    route.fulfill({
+      json: {
+        total: 1,
+        limit: 50,
+        cursor: { next: null, previous: null, current: null },
+        results: [
+          {
+            transaction: {
+              tx_id: '0x9b709768122e6c62a37b087106cc9c23280ed6242b565484b6cc4e6a43ae1155',
+              type: 'token_transfer',
+              sender: { address: 'SPWECF3XYVRBRCN23CJJCX9XKSF8RFWQPAQMWXT', nonce: 5 },
+              sponsor: null,
+              fee_rate: '300',
+              block: {
+                height: 150000,
+                hash: '0x420f7e5227a366554d1c8032c0c7d8de730a45a8e662038d6eff43db6beaa0cc',
+                index_hash: '0x420f7e5227a366554d1c8032c0c7d8de730a45a8e662038d6eff43db6beaa0cc',
+                time: 1714836180,
+                tx_index: 1,
+              },
+              bitcoin_block: { height: 842073, time: 1714836115 },
+              status: 'success',
+              token_transfer: {
+                recipient: address,
+                amount: '5000000',
+                memo: null,
+              },
+            },
+            involvement: 'affected',
+            balance_changes: { stx: { sent: '0', received: '5000000', net: '5000000' } },
+            affected_balances: { stx: true, ft: false, nft: false },
+          },
+        ],
+      },
+    })
+  );
+
   await page.route(`**/api.hiro.so/extended/v2/addresses/${address}/transactions*`, route =>
     route.fulfill({
       json: {

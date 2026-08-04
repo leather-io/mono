@@ -6,6 +6,7 @@ export const bitcoinStakingRoutes: RouteConfigEntry[] = prefix('staking', [
   layout('pages/bitcoin-staking/bitcoin-staking.layout.tsx', [
     index('pages/bitcoin-staking/staking.route.tsx'),
     route('status', 'pages/bitcoin-staking/staking-status.route.tsx'),
+    route('pool/byosm', 'pages/bitcoin-staking/pool/byosm-staking.route.tsx'),
     ...prefix('pool/:slug', [
       index('pages/bitcoin-staking/pool/pool-staking.route.tsx'),
       route('active', 'pages/bitcoin-staking/pool/pool-staking-active.route.tsx'),

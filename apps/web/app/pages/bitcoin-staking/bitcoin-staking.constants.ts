@@ -12,6 +12,21 @@ export const stakingPaths = {
   },
 };
 
+export const byosmContractParam = 'contract';
+
+function byosmSearch(contractId: string) {
+  return `?${byosmContractParam}=${encodeURIComponent(contractId)}`;
+}
+
+export const byosmPaths = {
+  active(contractId: string) {
+    return `${stakingPaths.active('byosm')}${byosmSearch(contractId)}`;
+  },
+  update(contractId: string) {
+    return `${stakingPaths.update('byosm')}${byosmSearch(contractId)}`;
+  },
+};
+
 // Protocol constants from the PoX-5 reference implementation
 // (stacks-core#pox-wf-integration, pox-5.clar). Display fallbacks only — the
 // prepare-phase length is per-network and must always be read from pox-info.
@@ -20,6 +35,8 @@ export const POX5_SIGNER_SET_MIN_USTX = 50_000_000_000;
 export const DEFAULT_STAKING_CYCLES = 48;
 export const MEAN_BURN_BLOCK_SECONDS = 600;
 export const CYCLE_STATUS_REFETCH_INTERVAL_MS = 60_000;
+
+export const STAKING_TX_FEE_RESERVE_USTX = 500_000;
 
 // Which chain the whole feature is pinned to — API, contract ids, wallet RPC
 // network and address flavours — lives in data/pox5-network-config.ts.

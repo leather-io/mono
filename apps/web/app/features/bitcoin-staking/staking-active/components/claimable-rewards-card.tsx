@@ -12,7 +12,7 @@ import { Button } from '@leather.io/ui';
 import { Pox5SubmitError } from '../../components/pox5-submit-error';
 import { usePox5TxTracker } from '../../hooks/use-pox5-tx-tracker';
 import { Pox5ClaimableRewards } from '../../queries/pox5-stacking.query';
-import { createClaimRewardsMutationOptions } from '../../transactions/pox5-claim-rewards';
+import { createClaimRewardsMutationOptions } from '../../transactions/pox5-mutations';
 import { getBroadcastTxId } from '../../transactions/pox5-tx-status';
 
 function formatSbtc(units: bigint): string {
