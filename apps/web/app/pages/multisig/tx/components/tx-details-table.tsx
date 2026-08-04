@@ -1,3 +1,4 @@
+import { CopyAddress } from '~/components/copy-address';
 import { ExternalLink } from '~/components/external-link';
 
 import { getStacksExplorerLink } from '@leather.io/features';
@@ -9,7 +10,6 @@ import type {
 } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
 
-import { CopyAddress } from '../../components/copy-address';
 import {
   DetailLocationRow,
   DetailRow,

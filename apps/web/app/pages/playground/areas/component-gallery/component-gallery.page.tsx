@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 
 import type {
   AuthNetworkId,
@@ -22,7 +23,6 @@ import { AvatarSq } from '../../../multisig/components/avatar-sq';
 import { Badge, type BadgeVariant } from '../../../multisig/components/badge';
 import { ChainAvatar } from '../../../multisig/components/chain-avatar';
 import { ChainPill } from '../../../multisig/components/chain-pill';
-import { CopyAddress } from '../../../multisig/components/copy-address';
 import { MultisigErrorState } from '../../../multisig/components/multisig-error-state';
 import { MultisigHero } from '../../../multisig/components/multisig-hero';
 import { TextField } from '../../../multisig/components/text-field';

@@ -17,6 +17,7 @@ import {
   GridIcon,
   IconButton,
   KeyIcon,
+  StacksIcon,
   SuitcaseIcon,
   SupportIcon,
 } from '@leather.io/ui';
@@ -38,7 +39,7 @@ function NavContents() {
         Portfolio
       </NavItem>
 
-      <NavItem href="/staking" icon={<StackingIcon />}>
+      <NavItem href="/staking" icon={<StacksIcon variant="small" />}>
         Staking
       </NavItem>
 

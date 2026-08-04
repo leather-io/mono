@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Link as RouterLink } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { MockModeToggle } from '~/components/mock-mode-toggle';
@@ -71,23 +71,23 @@ interface PageHeaderProps {
 }
 function PageHeader({ title, backTo, onBack, children }: PageHeaderProps) {
   const signInSlot = useSignInSlot();
-  const backButton = (
-    <Button variant="ghost" size="sm" iconStart={ArrowLeftIcon} width="32px" px="0" gap="0" />
-  );
+  const navigate = useNavigate();
+  const handleBack = onBack ?? (backTo ? () => void navigate(backTo) : undefined);
   return (
     <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
         <Flex alignItems="center" gap="space.02" minWidth={0}>
-          {onBack ? (
-            <styled.button type="button" onClick={onBack} aria-label="Back" bg="transparent">
-              {backButton}
-            </styled.button>
-          ) : (
-            backTo && (
-              <RouterLink to={backTo} aria-label="Back">
-                {backButton}
-              </RouterLink>
-            )
+          {handleBack && (
+            <Button
+              variant="ghost"
+              size="sm"
+              iconStart={ArrowLeftIcon}
+              width="32px"
+              px="0"
+              gap="0"
+              onClick={handleBack}
+              aria-label="Back"
+            />
           )}
           {title && <styled.h1 textStyle="heading.05">{title}</styled.h1>}
         </Flex>
@@ -103,6 +103,10 @@ function PageHeader({ title, backTo, onBack, children }: PageHeaderProps) {
   );
 }
 
+function PageContent(props: HTMLStyledProps<'div'>) {
+  return <styled.div mt="space.07" {...props} />;
+}
+
 function PageDivider(props: HTMLStyledProps<'hr'>) {
   return <styled.hr color="ink.background-primary" borderBottom="default" {...props} />;
 }
@@ -115,6 +119,7 @@ function PageSubtitle({ ...props }: HTMLStyledProps<'h3'>) {
   return <styled.h3 textStyle="label.01" {...props} />;
 }
 
+Page.Content = PageContent;
 Page.Divider = PageDivider;
 Page.Header = PageHeader;
 Page.Heading = PageHeading;

@@ -49,10 +49,6 @@ export const bitcoinStakingContent = {
     totalStaked: `The STX delegated to this pool for the current cycle, summed across all of the pool's signer-manager contracts. Pools need at least 50,000 STX staked to earn rewards for a cycle.`,
     nextCycle: `Your stake starts earning when the next cycle begins. A cycle lasts about two weeks.`,
   },
-  unlistedPool: {
-    label: `Staked with a pool Leather does not list`,
-    description: `Your STX is staked and still earning through a signer manager Leather does not list. View your position to claim rewards, update your stake, or unstake.`,
-  },
   byosm: {
     entryTitle: `Bring your own signer manager`,
     entryDescription: `Stake through any signer-manager contract that implements the standard interface. Leather checks the contract exists and is registered with PoX-5, but cannot vouch for its operator — verify who runs it before staking.`,
