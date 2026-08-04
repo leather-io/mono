@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 
 import type { Vault, VaultAccount } from '@leather.io/models';
 import {
@@ -15,7 +16,6 @@ import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
 import { AvatarSq } from '../../components/avatar-sq';
-import { CopyAddress } from '../../components/copy-address';
 import { vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 

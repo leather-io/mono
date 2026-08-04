@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { useQuery } from '@tanstack/react-query';
 import { Box, Flex } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 import { ExternalLink } from '~/components/external-link';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
@@ -30,7 +31,6 @@ import type {
 import { baseCurrencyAmountInQuote } from '@leather.io/utils';
 
 import { type BadgeVariant } from '../components/badge';
-import { CopyAddress } from '../components/copy-address';
 import {
   DetailLocationRow,
   DetailRow,

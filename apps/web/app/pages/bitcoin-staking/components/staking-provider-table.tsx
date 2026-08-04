@@ -1,16 +1,22 @@
-import { Link as RouterLink } from 'react-router';
+import { Link as RouterLink, useNavigate } from 'react-router';
 
 import { css, cx } from 'leather-styles/css';
-import { HStack, styled } from 'leather-styles/jsx';
+import { styled } from 'leather-styles/jsx';
 import { link as linkRecipe } from 'leather-styles/recipes';
 import { HTMLStyledProps } from 'leather-styles/types';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
-import { ProviderIcon } from '~/components/icons/provider-icon';
 import { LearnHoverCard } from '~/components/learn-hover-card';
-import { ForceRowHeight, Table, rowPadding, theadBorderBottom } from '~/components/table';
+import {
+  ForceRowHeight,
+  Table,
+  hoverableRow,
+  rowPadding,
+  theadBorderBottom,
+} from '~/components/table';
 import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { learnArticles } from '~/content/learn-content';
 import {
+  BitcoinStakingPool,
   bitcoinStakingPoolList,
   getSignerManagerContracts,
   getStakingPoolFromSlug,
@@ -24,12 +30,60 @@ import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants'
 
 import { ArrowLeftIcon, Flag } from '@leather.io/ui';
 
-import { ClaimRewardsButton } from './claim-rewards-button';
+import { StakingPoolAvatar } from './staking-pool-avatar';
 import { StartStakingButton } from './start-staking-button';
+import { useStakingPoolLink } from './use-staking-pool-link';
 
 // Column widths live in one colgroup so the header and body always agree,
 // regardless of what any individual cell happens to contain.
 const columnWidths = ['32%', '17%', '15%', '16%', '20%'];
+
+interface StakingProviderRowProps {
+  pool: BitcoinStakingPool;
+}
+
+function StakingProviderRow({ pool }: StakingProviderRowProps) {
+  const navigate = useNavigate();
+  const slug = stakingProviderIdToSlug(pool.providerId);
+  const { to } = useStakingPoolLink(slug);
+
+  return (
+    <Table.Row
+      height="64px"
+      className={to ? cx(rowPadding, hoverableRow) : rowPadding}
+      onClick={to ? () => void navigate(to) : undefined}
+    >
+      <styled.td px="space.04" textAlign="left" color="black">
+        <Flag
+          img={<StakingPoolAvatar providerId={pool.providerId} size="sm" />}
+          color="ink.text-primary"
+        >
+          {pool.name}
+        </Flag>
+      </styled.td>
+      <styled.td px="space.04" textAlign="left" color="black">
+        <Flag spacing="space.02" img={<ChainLogoIcon symbol="sBTC" />}>
+          {pool.supportsBtcPayout ? 'sBTC / BTC' : 'sBTC'}
+        </Flag>
+      </styled.td>
+      <styled.td px="space.04" textAlign="right" color="black">
+        <PoolTvlValue
+          signerManagerContractIds={getSignerManagerContracts(
+            pool.providerId,
+            pox5NetworkConfig.contractNetworkMode
+          )}
+          testId={`pool-tvl-${slug}`}
+        />
+      </styled.td>
+      <styled.td px="space.04" textAlign="right" color="black">
+        <PoolFeeValue pool={pool} />
+      </styled.td>
+      <styled.td px="space.04" textAlign="right" onClick={event => event.stopPropagation()}>
+        <StartStakingButton slug={slug} />
+      </styled.td>
+    </Table.Row>
+  );
+}
 
 // TVL is read from pox-5 directly; other pool stats (realized yield) have no
 // data source yet — the stacking-tracker API only covers pox-4 pools. Only
@@ -84,53 +138,18 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
           </Table.Row>
         </Table.Head>
         <Table.Body>
-          {availablePools.map(pool => {
-            const slug = stakingProviderIdToSlug(pool.providerId);
-            return (
-              <Table.Row key={pool.providerId} height="64px" className={rowPadding}>
-                <styled.td px="space.04" textAlign="left" color="black">
-                  <Flag
-                    img={<ProviderIcon providerId={pool.providerId} />}
-                    color="ink.text-primary"
-                  >
-                    {pool.name}
-                  </Flag>
-                </styled.td>
-                <styled.td px="space.04" textAlign="left" color="black">
-                  <Flag spacing="space.02" img={<ChainLogoIcon symbol="sBTC" />}>
-                    {pool.supportsBtcPayout ? 'sBTC / BTC' : 'sBTC'}
-                  </Flag>
-                </styled.td>
-                <styled.td px="space.04" textAlign="right" color="black">
-                  <PoolTvlValue
-                    signerManagerContractIds={getSignerManagerContracts(
-                      pool.providerId,
-                      pox5NetworkConfig.contractNetworkMode
-                    )}
-                    testId={`pool-tvl-${slug}`}
-                  />
-                </styled.td>
-                <styled.td px="space.04" textAlign="right" color="black">
-                  <PoolFeeValue pool={pool} />
-                </styled.td>
-                <styled.td px="space.04" textAlign="right">
-                  <HStack gap="space.02" justifyContent="flex-end">
-                    <ClaimRewardsButton slug={slug} />
-                    <StartStakingButton slug={slug} />
-                  </HStack>
-                </styled.td>
-              </Table.Row>
-            );
-          })}
+          {availablePools.map(pool => (
+            <StakingProviderRow key={pool.providerId} pool={pool} />
+          ))}
         </Table.Body>
         <styled.tfoot>
-          <Table.Row height="48px">
+          <Table.Row height="40px">
             <styled.td colSpan={columnWidths.length} textAlign="center" borderTop="default">
               <RouterLink
                 to={stakingPaths.pool('byosm')}
                 data-testid="byosm-entry-link"
                 className={cx(
-                  linkRecipe(),
+                  linkRecipe({ size: 'sm' }),
                   css({
                     display: 'inline-flex',
                     alignItems: 'center',

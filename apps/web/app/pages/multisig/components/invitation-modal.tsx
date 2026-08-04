@@ -1,4 +1,5 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useDeclineVault, useJoinVault } from '~/features/multisig/vaults/use-vault-mutations';
 import { useVault } from '~/features/multisig/vaults/use-vaults';
@@ -11,7 +12,6 @@ import { vaultThemeFromName } from '../multisig-tokens';
 import { chainFromNetwork } from '../multisig.utils';
 import { AvatarCircle } from './avatar-circle';
 import { AvatarSq } from './avatar-sq';
-import { CopyAddress } from './copy-address';
 
 interface InvitationModalProps {
   vault: VaultSummary;

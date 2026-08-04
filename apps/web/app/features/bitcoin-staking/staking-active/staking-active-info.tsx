@@ -60,7 +60,7 @@ function StakingActiveInfoLayout({ poolSlug }: StakingActiveInfoProps) {
 
   if (position.status === 'pending-stake') {
     return (
-      <VStack alignItems="stretch" py="space.03">
+      <VStack alignItems="stretch" pb="space.03">
         <PendingStakePanel />
       </VStack>
     );
@@ -91,7 +91,7 @@ function StakingActiveInfoLayout({ poolSlug }: StakingActiveInfoProps) {
   const pool = position.pool ?? fallbackPool;
 
   return (
-    <VStack alignItems="stretch" py="space.03" gap="space.04">
+    <VStack alignItems="stretch" pb="space.03" gap="space.04">
       {details.isInPreparePhase && (
         <PreparePhaseCallout secondsUntilStakingReopens={details.secondsUntilStakingReopens} />
       )}

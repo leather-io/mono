@@ -1,4 +1,5 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 import { useBnsPrimaryNames } from '~/queries/bns/bns.query';
 
 import { MEMBER_MAX_NAME_LENGTH } from '@leather.io/constants';
@@ -8,7 +9,6 @@ import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
 import { Badge } from '../../components/badge';
-import { CopyAddress } from '../../components/copy-address';
 import { EditableName } from '../../components/editable-name';
 
 interface MembersSectionProps {

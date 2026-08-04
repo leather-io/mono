@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { Box } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { EM_DASH } from '~/constants/constants';
 import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
@@ -9,7 +10,6 @@ import {
   getSignerManagerContracts,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
-import { CopyAddress } from '~/features/stacking/components/address';
 import { StackingInfoGridLayout } from '~/features/stacking/components/stacking-info-grid.layout';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
@@ -120,7 +120,7 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
           <ValueDisplayer
             gap="space.04"
             name="Signer manager"
-            value={<CopyAddress address={info.signerManagerContractId} full />}
+            value={<CopyAddress addr={info.signerManagerContractId} emphasis underlined wide />}
           />
         ),
         rewardAddress: (
@@ -129,7 +129,12 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
             name="Rewards payout"
             value={
               details.payoutPreference ? (
-                <CopyAddress address={details.payoutPreference.btcRewardAddress} full />
+                <CopyAddress
+                  addr={details.payoutPreference.btcRewardAddress}
+                  emphasis
+                  underlined
+                  wide
+                />
               ) : (
                 'sBTC on Stacks'
               )

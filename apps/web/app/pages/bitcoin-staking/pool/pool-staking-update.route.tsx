@@ -26,9 +26,11 @@ export default function PoolStakingUpdateRoute({ loaderData }: Route.ComponentPr
   return (
     <Page>
       <Page.Header title="Update staking" backTo={stakingPaths.active(loaderData.poolSlug)} />
-      <StackingClientProvider>
-        <UpdateStaking poolSlug={loaderData.poolSlug} />
-      </StackingClientProvider>
+      <Page.Content>
+        <StackingClientProvider>
+          <UpdateStaking poolSlug={loaderData.poolSlug} />
+        </StackingClientProvider>
+      </Page.Content>
     </Page>
   );
 }

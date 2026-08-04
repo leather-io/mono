@@ -1,17 +1,15 @@
 import { ReactNode, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
-import {
-  StakingPoolSlug,
-  getPoolBySignerManager,
-  stakingProviderIdToSlug,
-} from '~/data/bitcoin-staking-data';
+import { StakingPoolSlug } from '~/data/bitcoin-staking-data';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { Button, ButtonProps, useOnMount } from '@leather.io/ui';
+
+import { useStakingPoolLink } from './use-staking-pool-link';
 
 interface StartStakingButtonLayoutProps extends ButtonProps {
   children?: ReactNode;
@@ -29,34 +27,25 @@ interface StartStakingButtonProps {
 }
 
 function StartStakingPositionCheck({ slug }: StartStakingButtonProps) {
-  const { isLoading, position } = usePox5Position();
+  const navigate = useNavigate();
+  const { position } = usePox5Position();
+  const { isLoading, to } = useStakingPoolLink(slug);
 
-  if (isLoading) {
+  if (!to) return <StartStakingButtonLayout disabled aria-busy={isLoading || undefined} />;
+
+  if (position.status === 'active') {
     return (
-      <Link to={stakingPaths.pool(slug)}>
-        <StartStakingButtonLayout aria-busy />
-      </Link>
+      <StartStakingButtonLayout onClick={() => void navigate(to)}>
+        {bitcoinStakingLabels.viewPosition}
+      </StartStakingButtonLayout>
     );
   }
 
-  if (position.status === 'active') {
-    const positionPool = getPoolBySignerManager(position.info.signerManagerContractId);
-    const isThisPool = positionPool && stakingProviderIdToSlug(positionPool.providerId) === slug;
-
-    if (isThisPool) {
-      return (
-        <Link to={stakingPaths.active(slug)}>
-          <StartStakingButtonLayout>{bitcoinStakingLabels.viewPosition}</StartStakingButtonLayout>
-        </Link>
-      );
-    }
-    return <StartStakingButtonLayout disabled />;
-  }
-
   return (
-    <Link to={stakingPaths.pool(slug)}>
-      <StartStakingButtonLayout data-testid={`start-staking-button-${slug}`} />
-    </Link>
+    <StartStakingButtonLayout
+      onClick={() => void navigate(to)}
+      data-testid={`start-staking-button-${slug}`}
+    />
   );
 }
 

@@ -2,7 +2,6 @@ import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import type { ColorToken } from 'leather-styles/tokens';
 import { BasicHoverCard } from '~/components/basic-hover-card';
-import { ProviderIcon } from '~/components/icons/provider-icon';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { EM_DASH } from '~/constants/constants';
@@ -10,6 +9,7 @@ import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-s
 import { BitcoinStakingPool } from '~/data/bitcoin-staking-data';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { StakingPoolAvatar } from '~/pages/bitcoin-staking/components/staking-pool-avatar';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { InfoCircleIcon } from '@leather.io/ui';
@@ -20,7 +20,7 @@ import { PoolFeeValue } from './pool-fee-value';
 const CLOSING_SOON_HOURS = 48;
 const SECONDS_PER_HOUR = 3600;
 
-export type StakingCycleStatus =
+type StakingCycleStatus =
   | { kind: 'open'; secondsUntilChangesClose: number }
   | { kind: 'paused'; secondsUntilStakingReopens: number };
 
@@ -172,7 +172,7 @@ export function StakingPoolOverview({
         >
           <Flex alignItems="center" gap="space.02">
             <Box flexShrink={0}>
-              <ProviderIcon providerId={pool.providerId} size="32" />
+              <StakingPoolAvatar providerId={pool.providerId} size="md" />
             </Box>
             <styled.h4 textStyle="label.01">{pool.name}</styled.h4>
           </Flex>

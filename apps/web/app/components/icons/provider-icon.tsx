@@ -17,6 +17,12 @@ const stackingProviderIconConfig: Record<ProviderId, ProviderIconConfig> = {
   lisa: { src: '/icons/lisa.webp', fill: '#FB9DF1' },
 };
 
+export function getProviderIconSrc(providerId: string): string | undefined {
+  const provider = providerIdSchema.safeParse(providerId);
+  if (!provider.success) return undefined;
+  return stackingProviderIconConfig[provider.data].src;
+}
+
 interface ProviderIconProps {
   providerId: string;
   size?: string;
