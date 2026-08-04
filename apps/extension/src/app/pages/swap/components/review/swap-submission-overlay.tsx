@@ -9,18 +9,22 @@ import {
   Button,
   CheckmarkCircleIcon,
   ErrorCircleIcon,
+  ErrorTriangleIcon,
   Spinner,
 } from '@leather.io/ui';
 
 import { SwapReviewSummary } from './swap-review-summary';
+
+type SwapSubmissionOverlayStatus = 'submitting' | 'success' | 'sbtc-notify-failure' | 'failure';
 
 interface SwapSubmissionOverlayProps {
   baseAsset: SwappableFungibleCryptoAsset;
   targetAsset: SwappableFungibleCryptoAsset;
   baseAmount: Money;
   targetAmount: Money;
-  status: 'submitting' | 'success' | 'failure';
+  status: SwapSubmissionOverlayStatus;
   onReset(): void;
+  onViewActivity(): void;
 }
 
 export function SwapSubmissionOverlay({
@@ -30,6 +34,7 @@ export function SwapSubmissionOverlay({
   targetAmount,
   status,
   onReset,
+  onViewActivity,
 }: SwapSubmissionOverlayProps) {
   return (
     <motion.div
@@ -71,6 +76,9 @@ export function SwapSubmissionOverlay({
             <Stack gap="space.03" alignItems="center">
               <SubmissionStatusMessage status={status} />
               {status === 'failure' && <SubmissionFailureMessage onReset={onReset} />}
+              {status === 'sbtc-notify-failure' && (
+                <SbtcNotifyFailureMessage onViewActivity={onViewActivity} />
+              )}
             </Stack>
           </motion.div>
         </Stack>
@@ -80,13 +88,16 @@ export function SwapSubmissionOverlay({
 }
 
 interface SubmissionStatusDisplayProps {
-  status: 'submitting' | 'success' | 'failure';
+  status: SwapSubmissionOverlayStatus;
 }
 
 function SubmissionStatusDisplay({ status }: SubmissionStatusDisplayProps) {
   const render = {
     submitting: <Spinner size="24px" />,
     success: <CheckmarkCircleIcon variant="medium" color="green.action-primary-default" />,
+    'sbtc-notify-failure': (
+      <ErrorTriangleIcon variant="medium" color="yellow.action-primary-default" />
+    ),
     failure: <ErrorCircleIcon variant="medium" color="red.action-primary-default" />,
   };
 
@@ -94,13 +105,14 @@ function SubmissionStatusDisplay({ status }: SubmissionStatusDisplayProps) {
 }
 
 interface SubmissionStatusMessageProps {
-  status: 'submitting' | 'success' | 'failure';
+  status: SwapSubmissionOverlayStatus;
 }
 
 function SubmissionStatusMessage({ status }: SubmissionStatusMessageProps) {
   const message = {
     submitting: 'Initiating the swap...',
     success: 'Swap initiated',
+    'sbtc-notify-failure': 'Swap needs attention',
     failure: 'Failed to start a swap',
   };
 
@@ -139,6 +151,39 @@ function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {
       </styled.span>
       <Button size="sm" variant="outline" iconStart={ArrowLeftIcon} onClick={onReset}>
         Back to review
+      </Button>
+    </Stack>
+  );
+}
+
+interface SbtcNotifyFailureMessageProps {
+  onViewActivity(): void;
+}
+
+function SbtcNotifyFailureMessage({ onViewActivity }: SbtcNotifyFailureMessageProps) {
+  return (
+    <Stack gap="space.05" alignItems="center" px="space.05">
+      <styled.span
+        textStyle="body.02"
+        color="ink.text-subdued"
+        textAlign="center"
+        lineHeight="24px"
+      >
+        Your Bitcoin was sent, but we couldn't notify the sBTC network to complete the swap. Please{' '}
+        <styled.a
+          href={LEATHER_SUPPORT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          textStyle="body.02"
+          color="ink.text-subdued"
+          textDecoration="underline"
+        >
+          contact support
+        </styled.a>{' '}
+        for help completing it.
+      </styled.span>
+      <Button size="sm" variant="outline" onClick={onViewActivity}>
+        View activity
       </Button>
     </Stack>
   );

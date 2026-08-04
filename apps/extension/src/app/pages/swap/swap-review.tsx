@@ -52,7 +52,7 @@ const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
 export function SwapReview() {
   const { liveEstimate } = useOutletContext<SwapOutletContext>();
   const navigate = useNavigate();
-  const { submission, confirm, reset } = useSwapSubmission();
+  const { submission, confirm, reset, goToActivity } = useSwapSubmission();
   const isSubmissionActive = submission.status !== 'idle';
   useSwapReviewStatusGuard(liveEstimate, isSubmissionActive, () => navigate(-1));
 
@@ -88,6 +88,7 @@ export function SwapReview() {
             targetAmount={submission.quote.targetAmount}
             status={submission.status}
             onReset={reset}
+            onViewActivity={goToActivity}
           />
         )}
       </AnimatePresence>
