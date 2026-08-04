@@ -113,6 +113,8 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
         };
       }
 
+      if (pairReconciliation.target === 'complete') return state;
+
       return {
         ...state,
         targetSwapAsset: null,

@@ -438,6 +438,68 @@ describe('base asset reconciliation on data refresh', () => {
   });
 });
 
+describe('target asset reconciliation on data refresh', () => {
+  it('updates the target asset balance when provider data refreshes after reconciliation', async () => {
+    const staleAsset = createAccountSwapAsset({
+      asset: defaultStxAsset,
+      balance: { quote: 500, crypto: 100 },
+    });
+
+    const freshAsset = createAccountSwapAsset({
+      asset: defaultStxAsset,
+      balance: { quote: 250, crypto: 50 },
+    });
+
+    let providerAssets = [staleAsset];
+    const result = renderUseSwapState({
+      baseAsset: defaultBtcAsset,
+      targetAsset: defaultStxAsset,
+      getTargetSwapAssets: () => Promise.resolve(providerAssets),
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.pairReconciliation.target).toBe('complete');
+    });
+    expect(result.current.state.targetSwapAsset).toEqual(staleAsset);
+
+    providerAssets = [freshAsset];
+    await act(async () => {
+      await result.current.targetAssetsQuery.refetch();
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.targetSwapAsset).toEqual(freshAsset);
+    });
+  });
+
+  it('keeps the selected target when the target asset disappears from refreshed data', async () => {
+    const stxAsset = createAccountSwapAsset({
+      asset: defaultStxAsset,
+      balance: { quote: 500, crypto: 100 },
+    });
+
+    let providerAssets = [stxAsset];
+    const result = renderUseSwapState({
+      baseAsset: defaultBtcAsset,
+      targetAsset: defaultStxAsset,
+      getTargetSwapAssets: () => Promise.resolve(providerAssets),
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.pairReconciliation.target).toBe('complete');
+    });
+    expect(result.current.state.targetSwapAsset).toEqual(stxAsset);
+
+    providerAssets = [];
+    await act(async () => {
+      await result.current.targetAssetsQuery.refetch();
+    });
+
+    expect(result.current.state.targetSwapAsset).toEqual(stxAsset);
+    expect(result.current.state.pairReconciliation.target).toBe('complete');
+  });
+});
+
 describe('initial placholder target asset reconciliation', () => {
   it('replaces the initial asset with a real asset when data arrives', async () => {
     const realBaseAsset = createAccountSwapAsset({
