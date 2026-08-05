@@ -55,7 +55,7 @@ function LedgerVerifyStxAddress() {
           expectedAddress
         );
         const response = await showStxAddressOnDevice(app)(
-          stacksAccount.index,
+          stacksAccount.derivationPath,
           stacksChainIdToSingleSigAddressVersion(network.chain.stacks.chainId)
         );
         if (isStxAddressResponseRejected(response)) {

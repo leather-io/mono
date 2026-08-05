@@ -22,6 +22,7 @@ export enum RouteUrls {
   LedgerSignStacksProposal = 'sign-stacks-proposal',
   ConnectLedgerStart = 'connect-ledger',
   OutdatedStacksAppWarning = 'outdated-stacks-app-warning',
+  LedgerStacksAddressStandard = 'choose-address-standard',
 
   // Active wallet routes
   Home = '/',

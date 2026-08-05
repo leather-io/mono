@@ -37,8 +37,10 @@ export function ConnectLedgerStart({
   }
 
   function connectChain(chain: string) {
+    const firstStepRoute =
+      chain === 'stacks' ? RouteUrls.LedgerStacksAddressStandard : RouteUrls.ConnectLedger;
     const supportsWebUsbAction = pageModeRoutingAction(
-      initialRoute + `/${chain}/` + RouteUrls.ConnectLedger
+      initialRoute + `/${chain}/` + firstStepRoute
     );
     const doesNotSupportWebUsbAction = pageModeRoutingAction(
       initialRoute + '/' + RouteUrls.LedgerUnsupportedBrowser

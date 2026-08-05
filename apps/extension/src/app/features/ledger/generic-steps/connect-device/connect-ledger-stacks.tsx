@@ -18,7 +18,7 @@ export function ConnectLedgerStacks() {
   function onConnectStacks() {
     return whenPageMode({
       full() {
-        void navigate('stacks/connect-your-ledger', {
+        void navigate(`stacks/${RouteUrls.LedgerStacksAddressStandard}`, {
           replace: true,
           state: {
             [immediatelyAttemptLedgerConnection]: true,
