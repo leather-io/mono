@@ -40,6 +40,39 @@
 
 ---
 
+## [6.108.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.107.0...@leather.io/extension-v6.108.0) (2026-08-05)
+
+
+### Features
+
+* add new activity list ([#2555](https://github.com/leather-io/mono/issues/2555)) ([7d5f88a](https://github.com/leather-io/mono/commit/7d5f88a8f5af565d381c231a401842462263c322))
+* address verification ([#2549](https://github.com/leather-io/mono/issues/2549)) ([4965f2d](https://github.com/leather-io/mono/commit/4965f2d8e71b93a286f7cd1ab6f04493dbe7cfa8))
+
+
+### Bug Fixes
+
+* add ledger derivation paths ([#2592](https://github.com/leather-io/mono/issues/2592)) ([94806ea](https://github.com/leather-io/mono/commit/94806eaffddabc4a2e1d6c29fa405979e8170c95))
+* dep audit ([#2551](https://github.com/leather-io/mono/issues/2551)) ([3486f42](https://github.com/leather-io/mono/commit/3486f42a6a671dd60888a24305446fb92eaa3fdf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.22.0
+    * @leather.io/bitcoin bumped to 0.39.4
+    * @leather.io/constants bumped to 0.38.0
+    * @leather.io/crypto bumped to 1.13.4
+    * @leather.io/features bumped to 1.7.0
+    * @leather.io/provider bumped to 1.6.33
+    * @leather.io/queries bumped to 0.15.1
+    * @leather.io/query bumped to 2.51.4
+    * @leather.io/rpc bumped to 2.24.3
+    * @leather.io/services bumped to 1.63.0
+    * @leather.io/stacks bumped to 1.22.2
+    * @leather.io/ui bumped to 1.116.0
+    * @leather.io/utils bumped to 0.52.4
+
 ## [6.107.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.106.2...@leather.io/extension-v6.107.0) (2026-07-23)
 
 
