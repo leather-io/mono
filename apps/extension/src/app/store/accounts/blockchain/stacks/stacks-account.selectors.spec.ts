@@ -6,12 +6,15 @@ import { makeStxDerivationPathForType } from '@leather.io/stacks';
 import { resetWallet } from '@leather.io/state';
 import type { StacksKeychain } from '@leather.io/state/keychains';
 
+import { assumedZeroFingerprint } from '@shared/utils';
+
 import { store } from '@app/store';
 import { stxChainSlice } from '@app/store/chains/stx-chain.slice';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
 import { keySlice } from '@app/store/software-keys/software-key.slice';
 
+import { getStacksAccountDerivationPath } from './stacks-account.models';
 import { selectStacksAccountById, selectStacksAccountState } from './stacks-account.selectors';
 
 const stxPublicKey = '02b6b0afe5f620bc8e532b640b148dd9dea0ed19d11f8ab420fcce488fe3974893';
@@ -96,6 +99,68 @@ describe('selectLedgerAccounts', () => {
     expect(accounts).toHaveLength(1);
     expect(accounts[0]?.derivationPath).toBe(ledgerLivePath);
     expect(accounts[0]?.accountIndex).toBe(1);
+  });
+});
+
+const selectStacksAccountLookup = selectStacksAccountById.dependencies[0];
+const selectLedgerStacksAccountLookup = selectStacksAccountLookup.dependencies[1];
+
+function getLedgerAccountLookup(keychains: StacksKeychain[]) {
+  return selectLedgerStacksAccountLookup.resultFunc(
+    selectDedupedLedgerStacksKeychains.resultFunc(keychains)
+  );
+}
+
+describe('selectLedgerStacksAccountLookup', () => {
+  test('keys legacy descriptors under the assumed-zero fingerprint', () => {
+    const lookup = getLedgerAccountLookup([
+      makeStacksLedgerKeychain(assumedZeroFingerprint, 0),
+      makeStacksLedgerKeychain(assumedZeroFingerprint, 1),
+    ]);
+
+    const account = lookup({ fingerprint: assumedZeroFingerprint, accountIndex: 1 }, 'mainnet');
+
+    expect(account?.fingerprint).toBe(assumedZeroFingerprint);
+    expect(account?.derivationPath).toBe(makeStxDerivationPathForType('stacks', 1));
+    expect(lookup({ fingerprint: 'e87a850b', accountIndex: 1 }, 'mainnet')).toBeUndefined();
+  });
+
+  test('keys ledgerLive descriptors by their hardened account-level index', () => {
+    const fingerprint = 'deadbeef';
+    const lookup = getLedgerAccountLookup([
+      makeStacksLedgerKeychainForPath(fingerprint, makeStxDerivationPathForType('ledgerLive', 0)),
+      makeStacksLedgerKeychainForPath(fingerprint, makeStxDerivationPathForType('ledgerLive', 1)),
+    ]);
+
+    const account = lookup({ fingerprint, accountIndex: 1 }, 'mainnet');
+
+    expect(account).toBeDefined();
+    expect(account?.accountIndex).toBe(1);
+    expect(account?.derivationPath).toBe(`m/44'/5757'/1'/0/0`);
+  });
+
+  test('resolved ledgerLive account yields its stored path for device signing', () => {
+    const fingerprint = 'deadbeef';
+    const ledgerLivePath = makeStxDerivationPathForType('ledgerLive', 2);
+    const lookup = getLedgerAccountLookup([
+      makeStacksLedgerKeychainForPath(fingerprint, ledgerLivePath),
+    ]);
+
+    const account = lookup({ fingerprint, accountIndex: 2 }, 'mainnet');
+
+    expect(account).toBeDefined();
+    if (!account) return;
+    expect(getStacksAccountDerivationPath(account)).toBe(ledgerLivePath);
+    expect(getStacksAccountDerivationPath(account)).not.toBe(
+      makeStxDerivationPathForType('stacks', 2)
+    );
+  });
+
+  test('returns undefined for an account index with no stored keychain', () => {
+    const fingerprint = 'deadbeef';
+    const lookup = getLedgerAccountLookup([makeStacksLedgerKeychain(fingerprint, 0)]);
+
+    expect(lookup({ fingerprint, accountIndex: 1 }, 'mainnet')).toBeUndefined();
   });
 });
 
