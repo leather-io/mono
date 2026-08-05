@@ -34,8 +34,8 @@ export function makeAccountIndexDerivationPathFactory(derivationPath: string) {
 
 export function extractStacksDerivationPathAccountIndex(path: string) {
   if (!path.includes('5757')) throw new Error('Not a valid Stacks derivation path: ' + path);
-  const accountIndex = extractAccountIndexFromPath(path);
-  if (accountIndex > 0) return accountIndex;
+  if (stacksDerivationPathTypeFromPath(path) === 'ledgerLive')
+    return extractAccountIndexFromPath(path);
   return extractAddressIndexFromPath(path);
 }
 

@@ -109,6 +109,11 @@ describe(extractStacksDerivationPathAccountIndex.name, () => {
   test('that account zero resolves to zero under both schemes', () => {
     expect(extractStacksDerivationPathAccountIndex(`m/44'/5757'/0'/0/0`)).toEqual(0);
   });
+
+  test('that both-slots-nonzero paths resolve to the index implied by the classified type', () => {
+    expect(stacksDerivationPathTypeFromPath(`m/44'/5757'/2'/0/5`)).toEqual('stacks');
+    expect(extractStacksDerivationPathAccountIndex(`m/44'/5757'/2'/0/5`)).toEqual(5);
+  });
 });
 
 describe(stacksDerivationPathTypeFromPath.name, () => {
