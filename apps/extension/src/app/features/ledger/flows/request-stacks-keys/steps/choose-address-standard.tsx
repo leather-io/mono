@@ -68,7 +68,7 @@ function TitleWithTooltip({ title, tooltipLabel, badge }: TitleWithTooltipProps)
     <HStack gap="space.01" alignItems="center">
       <styled.span textStyle="label.02">{title}</styled.span>
       <BasicTooltip label={tooltipLabel} side="bottom" asChild>
-        <styled.span display="inline-flex" alignItems="center">
+        <styled.span display="inline-flex" alignItems="center" position="relative">
           <InfoCircleIcon color="ink.text-subdued" variant="small" />
         </styled.span>
       </BasicTooltip>
