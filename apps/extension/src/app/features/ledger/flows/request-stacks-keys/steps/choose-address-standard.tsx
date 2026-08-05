@@ -23,10 +23,10 @@ import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 const accountDiscoveryUrl = 'https://app.leather.io/posts/wallet-derivation-paths';
 
 const stacksDerivationTooltip =
-  'Stacks derives new accounts by incrementing the account index in the derivation path, as defined by the Stacks specification';
+  'Stacks derives new accounts by incrementing the address index in the derivation path, as defined by the Stacks specification';
 
 const ledgerCompatibilityTooltip =
-  "Ledger derives additional accounts using the address index for legacy compatibility. Use this only if you've already created accounts in Ledger Live";
+  "Ledger derives additional accounts by incrementing the hardened account index for legacy compatibility. Use this only if you've already created accounts in Ledger Live";
 
 function OptionIcon({ children }: { children: React.ReactNode }) {
   return (
