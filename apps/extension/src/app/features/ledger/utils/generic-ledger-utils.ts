@@ -121,7 +121,8 @@ function useIsLedgerActionCancellable(): boolean {
   return (
     pathname.includes(RouteUrls.ConnectLedger) ||
     pathname.includes(RouteUrls.ConnectLedgerError) ||
-    pathname.includes(RouteUrls.AwaitingDeviceUserAction)
+    pathname.includes(RouteUrls.AwaitingDeviceUserAction) ||
+    pathname.includes(RouteUrls.LedgerStacksAddressStandard)
   );
 }
 
