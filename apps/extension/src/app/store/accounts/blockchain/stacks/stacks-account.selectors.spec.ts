@@ -14,7 +14,6 @@ import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
 import { keySlice } from '@app/store/software-keys/software-key.slice';
 
-import { getStacksAccountDerivationPath } from './stacks-account.models';
 import { selectStacksAccountById, selectStacksAccountState } from './stacks-account.selectors';
 
 const stxPublicKey = '02b6b0afe5f620bc8e532b640b148dd9dea0ed19d11f8ab420fcce488fe3974893';
@@ -149,11 +148,8 @@ describe('selectLedgerStacksAccountLookup', () => {
     const account = lookup({ fingerprint, accountIndex: 2 }, 'mainnet');
 
     expect(account).toBeDefined();
-    if (!account) return;
-    expect(getStacksAccountDerivationPath(account)).toBe(ledgerLivePath);
-    expect(getStacksAccountDerivationPath(account)).not.toBe(
-      makeStxDerivationPathForType('stacks', 2)
-    );
+    expect(account?.derivationPath).toBe(ledgerLivePath);
+    expect(account?.derivationPath).not.toBe(makeStxDerivationPathForType('stacks', 2));
   });
 
   test('returns undefined for an account index with no stored keychain', () => {
@@ -223,6 +219,7 @@ describe('software account index resolution', () => {
     expect(account).toBeDefined();
     expect(account?.type).toBe('software');
     expect(account?.index).toBe(5);
+    expect(account?.derivationPath).toBe(makeStxDerivationPathForType('stacks', 5));
   });
 
   test('selectStacksAccountById resolves index 0 to the same account as the enumerated state', () => {

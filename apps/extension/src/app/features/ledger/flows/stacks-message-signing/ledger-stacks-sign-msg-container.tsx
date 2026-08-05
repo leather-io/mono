@@ -23,10 +23,7 @@ import {
   validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import {
-  StacksAccount,
-  getStacksAccountDerivationPath,
-} from '@app/store/accounts/blockchain/stacks/stacks-account.models';
+import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerFingerprintMigration } from '../../hooks/use-ledger-fingerprint-migration';
@@ -109,16 +106,13 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
 
       const resp = await whenSignableMessageOfType(unsignedMessage)({
         async utf8(msg) {
-          return signLedgerStacksUtf8Message(stacksApp)(
-            msg,
-            getStacksAccountDerivationPath(account)
-          );
+          return signLedgerStacksUtf8Message(stacksApp)(msg, account.derivationPath);
         },
         async structured(domain, msg) {
           return signLedgerStacksStructuredMessage(stacksApp)(
             serializeCV(domain),
             serializeCV(msg),
-            getStacksAccountDerivationPath(account)
+            account.derivationPath
           );
         },
       });

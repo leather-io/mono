@@ -1,5 +1,4 @@
 import type { AccountId } from '@leather.io/models';
-import { makeStxDerivationPath } from '@leather.io/stacks';
 
 export interface SoftwareStacksAccount extends AccountId {
   type: 'software';
@@ -11,6 +10,7 @@ export interface SoftwareStacksAccount extends AccountId {
   dataPrivateKey: string;
   appsKey: string;
   salt: string;
+  derivationPath: string;
 }
 
 export interface HardwareStacksAccount extends AccountId {
@@ -23,9 +23,3 @@ export interface HardwareStacksAccount extends AccountId {
 }
 
 export type StacksAccount = SoftwareStacksAccount | HardwareStacksAccount;
-
-export function getStacksAccountDerivationPath(account: StacksAccount) {
-  return account.type === 'ledger'
-    ? account.derivationPath
-    : makeStxDerivationPath(account.accountIndex);
-}

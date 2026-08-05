@@ -19,7 +19,7 @@ import {
   softwareAccountCountFromHighestIndex,
 } from '@leather.io/crypto';
 import type { AccountId, NetworkModes } from '@leather.io/models';
-import { extractStacksDerivationPathAccountIndex } from '@leather.io/stacks';
+import { extractStacksDerivationPathAccountIndex, makeStxDerivationPath } from '@leather.io/stacks';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/stacks-address-gen';
@@ -73,6 +73,7 @@ function initalizeSoftwareStacksAccount(
     dataPrivateKey,
     stxPrivateKey,
     salt,
+    derivationPath: makeStxDerivationPath(accountId.accountIndex),
   };
 }
 
