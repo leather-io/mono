@@ -46,7 +46,8 @@ export function filterKeychainsByAccountIndex(accountIndex: number) {
     extractAccountIndexFromDescriptor(account.descriptor) === accountIndex;
 }
 
-// Stacks uses the addressIndex field for the account index
+// The account index lives in the addressIndex field for standard Stacks
+// paths, or in the hardened account field for Ledger Live paths
 export function filterKeychainsByStacksAccount(accountIndex: number) {
   return (account: WithDescriptor) =>
     extractStacksDerivationPathAccountIndex(

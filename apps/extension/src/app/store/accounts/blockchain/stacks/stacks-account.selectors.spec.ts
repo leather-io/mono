@@ -2,7 +2,7 @@ import { STANDARD_BIP_FAKE_MNEMONIC } from '@tests/mocks/constants';
 
 import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
 import { defaultCurrentNetwork } from '@leather.io/models';
-import { makeStxDerivationPathForType, makeStxKeyOrigin } from '@leather.io/stacks';
+import { makeStxDerivationPathForType } from '@leather.io/stacks';
 import { resetWallet } from '@leather.io/state';
 import type { StacksKeychain } from '@leather.io/state/keychains';
 
@@ -17,8 +17,10 @@ import { selectStacksAccountById, selectStacksAccountState } from './stacks-acco
 const stxPublicKey = '02b6b0afe5f620bc8e532b640b148dd9dea0ed19d11f8ab420fcce488fe3974893';
 
 function makeStacksLedgerKeychain(fingerprint: string, accountIndex: number): StacksKeychain {
-  const keyOrigin = makeStxKeyOrigin(fingerprint, accountIndex);
-  return { chain: 'stacks', descriptor: createDescriptor(keyOrigin, stxPublicKey) };
+  return makeStacksLedgerKeychainForPath(
+    fingerprint,
+    makeStxDerivationPathForType('stacks', accountIndex)
+  );
 }
 
 function makeStacksLedgerKeychainForPath(fingerprint: string, path: string): StacksKeychain {

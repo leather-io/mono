@@ -71,10 +71,6 @@ export function makeStxDerivationPathForType(type: StacksDerivationPathType, acc
     : makeStxDerivationPath(accountIndex);
 }
 
-export function makeStxKeyOrigin(fingerprint: string, accountIndex: number) {
-  return createKeyOriginPath(fingerprint, makeStxDerivationPath(accountIndex));
-}
-
 export function stacksChainIdToCoreNetworkMode(chainId: number): NetworkModes {
   return whenStacksChainId(chainId)({
     [ChainId.Mainnet]: 'mainnet',
