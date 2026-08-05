@@ -119,12 +119,12 @@ export function ChooseAddressStandard() {
             }
             titleLeft={
               <TitleWithTooltip
-                title="Stacks derivation"
+                title="Legacy Stacks derivation paths"
                 tooltipLabel={stacksDerivationTooltip}
-                badge={<Badge label="Recommended" />}
+                badge={<Badge label="Default" />}
               />
             }
-            captionLeft="Same as Xverse or other Stacks wallets."
+            captionLeft={`E.g. m/44'/5757'/0'/0/1`}
             showChevron
             chevronDirection="right"
           />
@@ -138,11 +138,11 @@ export function ChooseAddressStandard() {
             }
             titleLeft={
               <TitleWithTooltip
-                title="Ledger Wallet compatibility"
+                title="Standard derivation paths (Ledger)"
                 tooltipLabel={ledgerCompatibilityTooltip}
               />
             }
-            captionLeft={null}
+            captionLeft={`E.g. m/44'/5757'/1'/0/0`}
             showChevron
             chevronDirection="right"
           />
