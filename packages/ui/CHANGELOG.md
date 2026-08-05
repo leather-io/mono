@@ -489,6 +489,29 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.116.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.115.0...@leather.io/ui-v1.116.0) (2026-08-05)
+
+
+### Features
+
+* add new activity list ([#2555](https://github.com/leather-io/mono/issues/2555)) ([7d5f88a](https://github.com/leather-io/mono/commit/7d5f88a8f5af565d381c231a401842462263c322))
+* address verification ([#2549](https://github.com/leather-io/mono/issues/2549)) ([4965f2d](https://github.com/leather-io/mono/commit/4965f2d8e71b93a286f7cd1ab6f04493dbe7cfa8))
+* **web:** staking UI pass — position rows, provider table, shared address chips ([#2568](https://github.com/leather-io/mono/issues/2568)) ([d98bd9a](https://github.com/leather-io/mono/commit/d98bd9a61b2f066041082b85256da9a96519d7b6))
+
+
+### Bug Fixes
+
+* **web:** rework staking payout selection, hover cards and form radii ([#2558](https://github.com/leather-io/mono/issues/2558)) ([612c860](https://github.com/leather-io/mono/commit/612c860fa18934819ddac0c14f25c01d31fee58d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.52.4
+  * devDependencies
+    * @leather.io/features bumped to 1.7.0
+
 ## [1.115.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.114.3...@leather.io/ui-v1.115.0) (2026-07-23)
 
 
