@@ -22,11 +22,9 @@ import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 const accountDiscoveryUrl = 'https://app.leather.io/posts/wallet-derivation-paths';
 
-const stacksDerivationTooltip =
-  'Stacks derives new accounts by incrementing the address index in the derivation path, as defined by the Stacks specification';
+const stacksDerivationTooltip = `m/44'/5757'/0'/0/2`;
 
-const ledgerCompatibilityTooltip =
-  "Ledger derives additional accounts by incrementing the hardened account index for legacy compatibility. Use this only if you've already created accounts in Ledger Live";
+const ledgerCompatibilityTooltip = `m/44'/5757'/2'/0/0`;
 
 function OptionIcon({ children }: { children: React.ReactNode }) {
   return (
@@ -104,10 +102,6 @@ export function ChooseAddressStandard() {
       </Flex>
       <Stack gap="space.03" mb="space.06">
         <styled.h3 textStyle="heading.05">Preferred address standard</styled.h3>
-        <styled.p textStyle="body.02" color="ink.text-subdued">
-          Leather uses the Stacks protocol standard by default. Choose Ledger to access additional
-          accounts created in Ledger Live.
-        </styled.p>
       </Stack>
       <Stack gap="space.05" mb="space.06">
         <Pressable onClick={() => onSelectStandard('stacks')}>
@@ -124,7 +118,7 @@ export function ChooseAddressStandard() {
                 badge={<Badge label="Default" />}
               />
             }
-            captionLeft={`E.g. m/44'/5757'/0'/0/1`}
+            captionLeft="Used by most Stacks wallets"
             showChevron
             chevronDirection="right"
           />
@@ -138,11 +132,11 @@ export function ChooseAddressStandard() {
             }
             titleLeft={
               <TitleWithTooltip
-                title="Standard derivation paths (Ledger)"
+                title="Standard derivation paths"
                 tooltipLabel={ledgerCompatibilityTooltip}
               />
             }
-            captionLeft={`E.g. m/44'/5757'/1'/0/0`}
+            captionLeft="Only if you have accounts in Ledger Live"
             showChevron
             chevronDirection="right"
           />
