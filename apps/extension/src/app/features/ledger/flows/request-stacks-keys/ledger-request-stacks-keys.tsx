@@ -43,8 +43,8 @@ import { addOrMigrateLedgerKeychains } from '@app/store/wallets/wallet.actions';
 import { getAddWalletError, useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 const derivationPathTypeLabels: Record<StacksDerivationPathType, string> = {
-  stacks: 'Stacks',
-  ledgerLive: 'Ledger Live',
+  stacks: 'legacy Stacks',
+  ledgerLive: 'standard (Ledger)',
 };
 
 function LedgerRequestStacksKeys() {
