@@ -128,6 +128,12 @@ describe(stacksDerivationPathTypeFromPath.name, () => {
   test('that account zero is ambiguous', () => {
     expect(stacksDerivationPathTypeFromPath(`m/44'/5757'/0'/0/0`)).toBeNull();
   });
+
+  test('that truncated paths throw the parse error rather than a TypeError', () => {
+    expect(() => stacksDerivationPathTypeFromPath(`e87a850b/44'/5757'/0'`)).toThrowError(
+      'Cannot parse AddressIndex from path'
+    );
+  });
 });
 
 describe(inferStacksDerivationPathType.name, () => {
