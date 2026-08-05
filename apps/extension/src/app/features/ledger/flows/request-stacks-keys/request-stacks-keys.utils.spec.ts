@@ -30,10 +30,10 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'ledgerLive',
       })
-    ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: null });
+    ).toEqual({ status: 'resolved', derivationPathType: 'ledgerLive', overriddenChosenType: null });
   });
 
-  test('that it defaults to the stacks standard without a valid choice', () => {
+  test('that it requires a choice for a fresh device without a valid choice', () => {
     expect(
       resolveLedgerStacksDerivationPathType({
         stxKeychainDescriptors: [],
@@ -42,7 +42,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         legacyWalletMatchesDevice: false,
         chosenDerivationPathType: undefined,
       })
-    ).toEqual({ derivationPathType: 'stacks', overriddenChosenType: null });
+    ).toEqual({ status: 'needs-choice' });
 
     expect(
       resolveLedgerStacksDerivationPathType({
@@ -52,7 +52,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'not-a-scheme',
       })
-    ).toEqual({ derivationPathType: 'stacks', overriddenChosenType: null });
+    ).toEqual({ status: 'needs-choice' });
   });
 
   test('that existing keys for the device override the chosen type', () => {
@@ -64,7 +64,11 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'ledgerLive',
       })
-    ).toEqual({ derivationPathType: 'stacks', overriddenChosenType: 'ledgerLive' });
+    ).toEqual({
+      status: 'resolved',
+      derivationPathType: 'stacks',
+      overriddenChosenType: 'ledgerLive',
+    });
 
     expect(
       resolveLedgerStacksDerivationPathType({
@@ -74,7 +78,11 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'stacks',
       })
-    ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: 'stacks' });
+    ).toEqual({
+      status: 'resolved',
+      derivationPathType: 'ledgerLive',
+      overriddenChosenType: 'stacks',
+    });
   });
 
   test('that a chosen type matching the inferred type is not reported as overridden', () => {
@@ -86,7 +94,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'ledgerLive',
       })
-    ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: null });
+    ).toEqual({ status: 'resolved', derivationPathType: 'ledgerLive', overriddenChosenType: null });
   });
 
   test('that inference without a valid choice is not reported as overridden', () => {
@@ -98,7 +106,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         legacyWalletMatchesDevice: false,
         chosenDerivationPathType: undefined,
       })
-    ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: null });
+    ).toEqual({ status: 'resolved', derivationPathType: 'ledgerLive', overriddenChosenType: null });
   });
 
   test('that keys of other wallets do not affect the choice', () => {
@@ -110,7 +118,7 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         legacyWalletMatchesDevice: false,
         chosenDerivationPathType: 'ledgerLive',
       })
-    ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: null });
+    ).toEqual({ status: 'resolved', derivationPathType: 'ledgerLive', overriddenChosenType: null });
   });
 
   test('that a legacy wallet matching the device pins it to the stacks standard', () => {
@@ -122,7 +130,11 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         legacyWalletMatchesDevice: true,
         chosenDerivationPathType: 'ledgerLive',
       })
-    ).toEqual({ derivationPathType: 'stacks', overriddenChosenType: 'ledgerLive' });
+    ).toEqual({
+      status: 'resolved',
+      derivationPathType: 'stacks',
+      overriddenChosenType: 'ledgerLive',
+    });
   });
 
   test('that legacy keys are ignored once the device has its own wallet', () => {
@@ -134,7 +146,11 @@ describe(resolveLedgerStacksDerivationPathType.name, () => {
         legacyWalletMatchesDevice: true,
         chosenDerivationPathType: 'stacks',
       })
-    ).toEqual({ derivationPathType: 'ledgerLive', overriddenChosenType: 'stacks' });
+    ).toEqual({
+      status: 'resolved',
+      derivationPathType: 'ledgerLive',
+      overriddenChosenType: 'stacks',
+    });
   });
 });
 

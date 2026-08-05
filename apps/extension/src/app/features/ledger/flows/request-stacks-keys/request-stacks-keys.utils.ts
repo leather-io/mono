@@ -56,17 +56,24 @@ interface ResolveLedgerStacksDerivationPathTypeArgs {
   legacyWalletMatchesDevice: boolean;
   chosenDerivationPathType: unknown;
 }
-interface ResolvedLedgerStacksDerivationPathType {
+interface LedgerStacksDerivationPathTypeResolved {
+  status: 'resolved';
   derivationPathType: StacksDerivationPathType;
   overriddenChosenType: StacksDerivationPathType | null;
 }
+interface LedgerStacksDerivationPathTypeNeedsChoice {
+  status: 'needs-choice';
+}
+type LedgerStacksDerivationPathTypeResolution =
+  | LedgerStacksDerivationPathTypeResolved
+  | LedgerStacksDerivationPathTypeNeedsChoice;
 export function resolveLedgerStacksDerivationPathType({
   stxKeychainDescriptors,
   fingerprint,
   hasWalletForFingerprint,
   legacyWalletMatchesDevice,
   chosenDerivationPathType,
-}: ResolveLedgerStacksDerivationPathTypeArgs): ResolvedLedgerStacksDerivationPathType {
+}: ResolveLedgerStacksDerivationPathTypeArgs): LedgerStacksDerivationPathTypeResolution {
   const inferenceDescriptors = stxKeychainDescriptors.filter(descriptor => {
     const descriptorFingerprint = extractFingerprintFromDescriptor(descriptor);
     if (descriptorFingerprint === fingerprint) return true;
@@ -84,11 +91,14 @@ export function resolveLedgerStacksDerivationPathType({
   const inferredType = inferStacksDerivationPathType(inferenceDescriptors);
   if (inferredType)
     return {
+      status: 'resolved',
       derivationPathType: inferredType,
       overriddenChosenType: chosenType && chosenType !== inferredType ? chosenType : null,
     };
 
-  return { derivationPathType: chosenType ?? 'stacks', overriddenChosenType: null };
+  if (!chosenType) return { status: 'needs-choice' };
+
+  return { status: 'resolved', derivationPathType: chosenType, overriddenChosenType: null };
 }
 
 const accountZeroStxPath = makeStxDerivationPath(0);

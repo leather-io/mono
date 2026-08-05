@@ -25,6 +25,7 @@ import {
   useRequestLedgerKeys,
 } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import { immediatelyAttemptLedgerConnection } from '@app/features/ledger/hooks/use-when-reattempt-ledger-connection';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   MINIMUM_STACKS_APP_VERSION,
@@ -104,13 +105,27 @@ function LedgerRequestStacksKeys() {
             )
           : false;
 
-        const { derivationPathType, overriddenChosenType } = resolveLedgerStacksDerivationPathType({
+        const resolution = resolveLedgerStacksDerivationPathType({
           stxKeychainDescriptors: stxKeychainsDescriptors,
           fingerprint,
           hasWalletForFingerprint: Boolean(wallets[fingerprint]),
           legacyWalletMatchesDevice,
           chosenDerivationPathType,
         });
+
+        if (resolution.status === 'needs-choice') {
+          toast.info('Confirm your preferred address standard to continue');
+          void navigate(RouteUrls.LedgerStacksAddressStandard, {
+            replace: true,
+            state: {
+              [immediatelyAttemptLedgerConnection]: true,
+              backgroundLocation: { pathname: RouteUrls.Home },
+            },
+          });
+          return { status: 'failure' };
+        }
+
+        const { derivationPathType, overriddenChosenType } = resolution;
 
         if (overriddenChosenType) {
           toast.info(
