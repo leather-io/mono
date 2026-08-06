@@ -17,6 +17,7 @@ export type BitcoinStakingProviderId =
   | 'restake'
   | 'xversePool'
   | 'stackingDao'
+  | 'senseiNode'
   | 'byosm';
 
 const specialSignerManagerContracts: Partial<Record<NetworkMode, string[]>> = pox5NetworkConfig
@@ -125,6 +126,16 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     supportsBtcPayout: false,
     fixedFeeBips: 0,
   },
+  senseiNode: {
+    providerId: 'senseiNode',
+    name: 'SenseiNode',
+    url: 'https://senseinode.com',
+    description: '',
+    signerManagerContracts: {
+      mainnet: ['SP20XZGWBWSMRE94WDJ6YJ1EKPJ55RGRGK4JDJHNK.signer-manager-pox5'],
+    },
+    supportsBtcPayout: true,
+  },
   byosm: {
     providerId: 'byosm',
     name: 'Bring your own signer manager',
@@ -145,6 +156,7 @@ const stakingPoolSlugMap = {
   restake: 'restake',
   'xverse-pool': 'xversePool',
   'stacking-dao': 'stackingDao',
+  'sensei-node': 'senseiNode',
   byosm: 'byosm',
 } as const satisfies Record<string, BitcoinStakingProviderId>;
 
