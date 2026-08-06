@@ -191,5 +191,16 @@ describe(ComplianceService.name, () => {
 
       expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_unknown_error' });
     });
+
+    it('rethrows instead of returning unavailable when the caller aborted the request', async () => {
+      const abortError = new DOMException('The operation was aborted', 'AbortError');
+      const service = makeService(() => Promise.reject(abortError));
+      const abortController = new AbortController();
+      abortController.abort();
+
+      await expect(
+        service.checkAddressCompliance(testAddress, abortController.signal)
+      ).rejects.toBe(abortError);
+    });
   });
 });

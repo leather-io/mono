@@ -43,6 +43,7 @@ export class ComplianceService {
       }
       return { status: complianceCheck.status };
     } catch (error) {
+      if (signal?.aborted) throw error;
       return { status: 'unavailable', reason: this.getLeatherApiUnavailableReason(error) };
     }
   }
