@@ -181,7 +181,7 @@ interface HistoricalEvents {
   request_signature_cannot_sign_message_no_account: undefined;
   request_signature_sign: { type: 'software' | 'ledger' };
   switch_account: { index: number; hasStxBalance: boolean };
-  non_compliant_entity_detected: { address: string | string[] };
+  non_compliant_entity_detected: { address: string | string[]; reason: string };
   compliance_check_unavailable: { address: string; reason: string };
   ledger_transaction_publish_error: { error: { message: string; error: any } };
   native_segwit_tx_hex_to_ledger_tx: { success: boolean };

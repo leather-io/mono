@@ -109,7 +109,7 @@ async function rawAddressComplianceValidator({
 
   const result = await getComplianceService().checkAddressCompliance(address);
   if (result.status === 'non_compliant') {
-    analytics.track('non_compliant_entity_detected', { address });
+    analytics.track('non_compliant_entity_detected', { address, reason: result.reason });
     return false;
   }
   if (result.status === 'unavailable') {

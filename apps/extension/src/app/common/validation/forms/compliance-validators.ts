@@ -16,7 +16,7 @@ export function complianceValidator(
 
       const result = await getComplianceService().checkAddressCompliance(value);
       if (result.status === 'non_compliant') {
-        analytics.track('non_compliant_entity_detected', { address: value });
+        analytics.track('non_compliant_entity_detected', { address: value, reason: result.reason });
         return false;
       }
       if (result.status === 'unavailable') {

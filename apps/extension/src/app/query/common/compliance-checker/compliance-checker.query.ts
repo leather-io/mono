@@ -48,8 +48,14 @@ export function useBreakOnNonCompliantEntity(address: string | string[] = '') {
     }
   });
 
-  if (complianceChecks.some(({ check }) => check?.status === 'non_compliant')) {
-    analytics.track('non_compliant_entity_detected', { address });
+  const nonCompliantCheck = complianceChecks.find(
+    ({ check }) => check?.status === 'non_compliant'
+  )?.check;
+  if (nonCompliantCheck?.status === 'non_compliant') {
+    analytics.track('non_compliant_entity_detected', {
+      address,
+      reason: nonCompliantCheck.reason,
+    });
     throw new Error(compliantErrorBody);
   }
 }
