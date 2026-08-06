@@ -123,6 +123,7 @@ function makeSoftwareAccount(accountIndex: number): SoftwareStacksAccount {
     dataPrivateKey: 'data-private-key',
     appsKey: 'apps-key',
     salt: 'salt',
+    derivationPath: `m/44'/5757'/0'/0/${accountIndex}`,
   };
 }
 

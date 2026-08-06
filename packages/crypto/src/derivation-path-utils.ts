@@ -13,7 +13,9 @@ export enum DerivationPathDepth {
 function extractSectionFromDerivationPath(depth: DerivationPathDepth) {
   return (path: string) => {
     const segments = path.split('/');
-    const accountNum = parseInt(segments[depth].replaceAll("'", ''), 10);
+    const segment = segments[depth];
+    if (!segment) throw new Error(`Cannot parse ${DerivationPathDepth[depth]} from path`);
+    const accountNum = parseInt(segment.replaceAll("'", ''), 10);
     if (isNaN(accountNum)) throw new Error(`Cannot parse ${DerivationPathDepth[depth]} from path`);
     return accountNum;
   };

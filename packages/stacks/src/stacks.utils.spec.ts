@@ -7,11 +7,17 @@ import { testMnemonic, testMnemonicWithLeadingZeros } from '@leather.io/test-con
 import {
   cleanHex,
   deriveStxPrivateKey,
+  extractStacksDerivationPathAccountIndex,
   getStacksAssetStringParts,
   getStacksBurnAddress,
   getStacksContractAssetName,
   getStacksContractName,
+  inferStacksDerivationPathType,
+  makeLedgerLiveStxDerivationPath,
+  makeStxDerivationPath,
+  makeStxDerivationPathForType,
   stacksChainIdToCoreNetworkMode,
+  stacksDerivationPathTypeFromPath,
   stacksRootKeychainToAccountDescriptor,
   stacksRootKeychainToAccountDescriptorV2,
   whenStacksChainId,
@@ -60,6 +66,106 @@ describe(stacksChainIdToCoreNetworkMode.name, () => {
   });
   test('that it returns testnet for an unknown custom chain id', () => {
     expect(stacksChainIdToCoreNetworkMode(256)).toEqual('testnet');
+  });
+});
+
+describe(makeLedgerLiveStxDerivationPath.name, () => {
+  test('that it increments the hardened account level', () => {
+    expect(makeLedgerLiveStxDerivationPath(0)).toEqual(`m/44'/5757'/0'/0/0`);
+    expect(makeLedgerLiveStxDerivationPath(3)).toEqual(`m/44'/5757'/3'/0/0`);
+  });
+});
+
+describe(makeStxDerivationPathForType.name, () => {
+  test('that it delegates to the matching path factory', () => {
+    expect(makeStxDerivationPathForType('stacks', 4)).toEqual(makeStxDerivationPath(4));
+    expect(makeStxDerivationPathForType('ledgerLive', 4)).toEqual(
+      makeLedgerLiveStxDerivationPath(4)
+    );
+  });
+});
+
+describe(extractStacksDerivationPathAccountIndex.name, () => {
+  test('that it throws for non-stacks paths', () => {
+    expect(() => extractStacksDerivationPathAccountIndex(`m/84'/0'/0'/0/0`)).toThrowError();
+  });
+
+  test('that it extracts the address index for stacks standard inputs', () => {
+    expect(extractStacksDerivationPathAccountIndex(`m/44'/5757'/0'/0/7`)).toEqual(7);
+    expect(extractStacksDerivationPathAccountIndex(`24682ead/44'/5757'/0'/0/7`)).toEqual(7);
+    expect(
+      extractStacksDerivationPathAccountIndex(`[24682ead/44'/5757'/0'/0/7]025b2c58cbf22ad02e`)
+    ).toEqual(7);
+  });
+
+  test('that it extracts the account level for ledger live inputs', () => {
+    expect(extractStacksDerivationPathAccountIndex(`m/44'/5757'/7'/0/0`)).toEqual(7);
+    expect(extractStacksDerivationPathAccountIndex(`24682ead/44'/5757'/7'/0/0`)).toEqual(7);
+    expect(
+      extractStacksDerivationPathAccountIndex(`[24682ead/44'/5757'/7'/0/0]025b2c58cbf22ad02e`)
+    ).toEqual(7);
+  });
+
+  test('that account zero resolves to zero under both schemes', () => {
+    expect(extractStacksDerivationPathAccountIndex(`m/44'/5757'/0'/0/0`)).toEqual(0);
+  });
+
+  test('that both-slots-nonzero paths resolve to the index implied by the classified type', () => {
+    expect(stacksDerivationPathTypeFromPath(`m/44'/5757'/2'/0/5`)).toEqual('stacks');
+    expect(extractStacksDerivationPathAccountIndex(`m/44'/5757'/2'/0/5`)).toEqual(5);
+  });
+});
+
+describe(stacksDerivationPathTypeFromPath.name, () => {
+  test('that it classifies stacks standard paths', () => {
+    expect(stacksDerivationPathTypeFromPath(`m/44'/5757'/0'/0/2`)).toEqual('stacks');
+  });
+
+  test('that it classifies ledger live paths', () => {
+    expect(stacksDerivationPathTypeFromPath(`m/44'/5757'/2'/0/0`)).toEqual('ledgerLive');
+  });
+
+  test('that account zero is ambiguous', () => {
+    expect(stacksDerivationPathTypeFromPath(`m/44'/5757'/0'/0/0`)).toBeNull();
+  });
+
+  test('that truncated paths throw the parse error rather than a TypeError', () => {
+    expect(() => stacksDerivationPathTypeFromPath(`e87a850b/44'/5757'/0'`)).toThrowError(
+      'Cannot parse AddressIndex from path'
+    );
+  });
+});
+
+describe(inferStacksDerivationPathType.name, () => {
+  const stacksDescriptors = [
+    `[24682ead/44'/5757'/0'/0/0]025b2c58`,
+    `[24682ead/44'/5757'/0'/0/1]03a1b2c3`,
+  ];
+  const ledgerLiveDescriptors = [
+    `[24682ead/44'/5757'/0'/0/0]025b2c58`,
+    `[24682ead/44'/5757'/1'/0/0]03d4e5f6`,
+  ];
+
+  test('that it infers the stacks standard', () => {
+    expect(inferStacksDerivationPathType(stacksDescriptors)).toEqual('stacks');
+  });
+
+  test('that it infers the ledger live scheme', () => {
+    expect(inferStacksDerivationPathType(ledgerLiveDescriptors)).toEqual('ledgerLive');
+  });
+
+  test('that account zero alone is ambiguous', () => {
+    expect(inferStacksDerivationPathType([`[24682ead/44'/5757'/0'/0/0]025b2c58`])).toBeNull();
+  });
+
+  test('that it returns null for no descriptors', () => {
+    expect(inferStacksDerivationPathType([])).toBeNull();
+  });
+
+  test('that mixed descriptors resolve to the stacks standard', () => {
+    expect(inferStacksDerivationPathType([...ledgerLiveDescriptors, ...stacksDescriptors])).toEqual(
+      'stacks'
+    );
   });
 });
 

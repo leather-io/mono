@@ -413,6 +413,26 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.63.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.62.0...@leather.io/services-v1.63.0) (2026-08-05)
+
+
+### Features
+
+* add new activity list ([#2555](https://github.com/leather-io/mono/issues/2555)) ([7d5f88a](https://github.com/leather-io/mono/commit/7d5f88a8f5af565d381c231a401842462263c322))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.39.4
+    * @leather.io/constants bumped to 0.38.0
+    * @leather.io/crypto bumped to 1.13.4
+    * @leather.io/stacks bumped to 1.22.2
+    * @leather.io/utils bumped to 0.52.4
+  * devDependencies
+    * @leather.io/rpc bumped to 2.24.3
+
 ## [1.62.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.61.0...@leather.io/services-v1.62.0) (2026-07-23)
 
 

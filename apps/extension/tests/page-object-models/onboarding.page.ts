@@ -279,6 +279,33 @@ function buildKeychains(keysToInclude: SupportedBlockchains[]) {
   return { entities, ids };
 }
 
+// Same public keys as `ledgerStacksKeysState`, stored at Ledger Live scheme
+// key origins where the hardened account level increments instead of the
+// address index
+function buildLedgerLiveStacksKeychains() {
+  const entities: Record<string, { descriptor: string; chain: 'bitcoin' | 'stacks' }> = {};
+  const ids: string[] = [];
+
+  Object.values(ledgerStacksKeysState.entities).forEach(key => {
+    const accountIndex = key.id.split('/').at(-1);
+    const keyOrigin = `e87a850b/44'/5757'/${accountIndex}'/0/0`;
+    entities[keyOrigin] = {
+      descriptor: `[${keyOrigin}]${key.stxPublicKey}`,
+      chain: 'stacks',
+    };
+    ids.push(keyOrigin);
+  });
+
+  return { entities, ids };
+}
+
+export function makeLedgerLiveLedgerWalletState() {
+  return {
+    ...makeLedgerTestAccountWalletState(['stacks']),
+    keychains: buildLedgerLiveStacksKeychains(),
+  };
+}
+
 export function makeLedgerTestAccountWalletState(keysToInclude: SupportedBlockchains[]) {
   const fingerprint = 'e87a850b';
   const keychains = buildKeychains(keysToInclude);
