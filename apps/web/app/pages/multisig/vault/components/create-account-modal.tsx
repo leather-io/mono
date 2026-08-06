@@ -9,6 +9,7 @@ import {
 import { useToast } from '~/features/toasts/use-toast';
 
 import type { Vault, VaultAccountSummary } from '@leather.io/models';
+import { getErrorDetail } from '@leather.io/services';
 import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 
 import { AccountIconNameField } from '../../components/account-icon-name-field';
@@ -216,7 +217,7 @@ export function CreateAccountModal({
             bg="red.background-primary"
           >
             <styled.p textStyle="caption.01" color="ink.text-subdued">
-              Couldn't create this account. Try again.
+              {getErrorDetail(createAccount.error) ?? "Couldn't create this account. Try again."}
             </styled.p>
           </Box>
         )}
