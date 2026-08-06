@@ -36,7 +36,11 @@ export function BackUpSecretKeyPage() {
   const [showPasswordPage, setShowPasswordPage] = useState(false);
 
   return showPasswordPage ? (
-    <SetPasswordPage mnemonicData={mnemonicData} onBack={() => setShowPasswordPage(false)} />
+    <SetPasswordPage
+      mnemonicData={mnemonicData}
+      onBack={() => setShowPasswordPage(false)}
+      startWithBiometrics
+    />
   ) : (
     <>
       <Header px="space.04">

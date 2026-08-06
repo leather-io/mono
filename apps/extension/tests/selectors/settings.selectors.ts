@@ -34,4 +34,11 @@ export enum SettingsSelectors {
   ToggleNotifications = 'toggle-notifications',
   ToggleNetworkBadge = 'toggle-network-badge',
   SettingsPage = 'settings-page',
+  BiometricUnlockListItem = 'settings-biometric-unlock',
+  BiometricUnlockPage = 'biometric-unlock-page',
+  BiometricUnlockPasswordInput = 'biometric-unlock-password-input',
+  BiometricUnlockSubmit = 'biometric-unlock-submit',
+  BiometricUnlockReplace = 'biometric-unlock-replace',
+  BiometricUnlockDisable = 'biometric-unlock-disable',
+  BiometricUnlockSetPassword = 'biometric-unlock-set-password',
 }

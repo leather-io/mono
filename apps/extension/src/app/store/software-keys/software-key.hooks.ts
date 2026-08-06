@@ -1,18 +1,18 @@
-import { useSelector } from 'react-redux';
+import { useAppDispatch } from '@app/store';
 
-import { getWalletSessionKey } from '../session-restore';
-import { selectWalletSalt } from './software-key.selectors';
-import { checkPassword } from './utils';
+import { keyActions } from './software-key.actions';
 
 export function useCheckPassword() {
-  const salt = useSelector(selectWalletSalt);
+  const dispatch = useAppDispatch();
 
   return async ({ password }: { password: string }) => {
-    const encryptionKey = (await getWalletSessionKey()).data;
+    const authentication = await Promise.resolve(dispatch(keyActions.unlockWalletAction(password)))
+      .then(() => true)
+      .catch(() => false);
 
     // TODO: double check that it is OK to return false if the data is not available
-    if (!salt || !encryptionKey) return false;
+    if (!authentication) return false;
 
-    return checkPassword({ password, salt, encryptionKey });
+    return true;
   };
 }

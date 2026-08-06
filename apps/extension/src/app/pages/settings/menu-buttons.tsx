@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
@@ -10,22 +11,33 @@ import {
   CodeIcon,
   GlobeTiltedIcon,
   KeyIcon,
+  LockIcon,
   MegaphoneIcon,
   SunInCloudIcon,
   SupportIcon,
 } from '@leather.io/ui';
 
+import { TARGET_BROWSER } from '@shared/environment';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics, openFeedbackSheet } from '@shared/utils/analytics';
 
 import { useHasKeys } from '@app/common/hooks/auth/use-has-keys';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
+import { canUsePlatformAuthenticator } from '@app/common/wallet-authentication/platform-authenticator';
 import { AppVersion } from '@app/components/app-version';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useToggleNotificationsEnabled } from '@app/store/settings/settings.actions';
 import { useIsNotificationsEnabled } from '@app/store/settings/settings.selectors';
+import {
+  selectSoftwareKeys,
+  selectWalletAuthenticationCapabilities,
+} from '@app/store/software-keys/software-key.selectors';
 
+import {
+  getBiometricUnlockSettingsLabel,
+  getBiometricUnlockSettingsState,
+} from './biometric-unlock/biometric-unlock-settings-state';
 import { SettingsButton } from './components/settings-button';
 
 export function MenuButtons() {
@@ -35,6 +47,20 @@ export function MenuButtons() {
   const isNotificationsEnabled = useIsNotificationsEnabled();
   const toggleNotificationsEnabled = useToggleNotificationsEnabled();
   const toast = useToast();
+  const softwareKeys = useSelector(selectSoftwareKeys);
+  const authenticationCapabilities = useSelector(selectWalletAuthenticationCapabilities);
+  const biometricUnlockState = getBiometricUnlockSettingsState({
+    biometrics: authenticationCapabilities.biometrics,
+    hasSoftwareKeys: softwareKeys.length > 0,
+    platformAuthenticatorAvailable: canUsePlatformAuthenticator(),
+    targetBrowser: TARGET_BROWSER,
+    valid: authenticationCapabilities.valid,
+  });
+  const showBiometricUnlock = biometricUnlockState !== 'hidden';
+  const biometricUnlockAvailable = biometricUnlockState !== 'unavailable';
+  const biometricUnlockUnavailableMessage = authenticationCapabilities.valid
+    ? "Biometric unlock isn't available in this browser context."
+    : 'Biometric unlock settings are unavailable for this wallet state.';
 
   return (
     <Flex direction="column" gap="space.01" data-testid={SettingsSelectors.SettingsPage}>
@@ -43,8 +69,23 @@ export function MenuButtons() {
           variant="chevron"
           title="Secret Key"
           data-testid={SettingsSelectors.ViewSecretKeyListItem}
-          onClick={() => navigate(RouteUrls.ViewSecretKey)}
+          onClick={() =>
+            navigate(RouteUrls.ViewSecretKey, { state: { startWalletAuthentication: true } })
+          }
           icon={<KeyIcon />}
+        />
+      )}
+
+      {showBiometricUnlock && (
+        <SettingsButton
+          variant="chevron"
+          title="Biometric unlock"
+          data-testid={SettingsSelectors.BiometricUnlockListItem}
+          onClick={() => navigate(RouteUrls.BiometricUnlockSettings)}
+          icon={<LockIcon />}
+          status={getBiometricUnlockSettingsLabel(biometricUnlockState)}
+          isDisabled={!biometricUnlockAvailable}
+          disabledTooltipText={biometricUnlockUnavailableMessage}
         />
       )}
 

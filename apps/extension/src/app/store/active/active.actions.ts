@@ -4,12 +4,14 @@ import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { broadcastWalletListChanged } from '@shared/messages';
 
+import { clearBiometricAutoPromptSuppression } from '@app/common/wallet-authentication/biometric-auto-prompt';
+
 import { AppThunk, RootState, persistor } from '..';
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '../in-memory-key/keychain-selector-cache';
-import { selectCurrentAccount } from '../software-keys/software-key.selectors';
+import { selectCurrentAccount, selectSoftwareKeys } from '../software-keys/software-key.selectors';
 import { selectAllWallets } from '../wallets/wallet.selectors';
 import { userSwitchesAccount } from './active.slice';
 
@@ -57,6 +59,8 @@ export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
   return async (dispatch, getState) => {
     const state = getState();
     const currentAccount = selectCurrentAccount(state);
+    const removesFinalSoftwareWallet =
+      selectSoftwareKeys(state).length === 1 && selectSoftwareKeys(state)[0]?.id === fingerprint;
 
     dispatch(userRemovesWallet({ fingerprint }));
     removeKey(fingerprint);
@@ -69,6 +73,7 @@ export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
     }
 
     await persistor.flush();
+    if (removesFinalSoftwareWallet) await clearBiometricAutoPromptSuppression();
     void broadcastWalletListChanged({ removedFingerprint: fingerprint });
   };
 }

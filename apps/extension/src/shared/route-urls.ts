@@ -40,6 +40,7 @@ export enum RouteUrls {
   Send = '/send-transaction',
   ViewSecretKey = '/view-secret-key',
   Settings = '/settings',
+  BiometricUnlockSettings = '/settings/biometric-unlock',
   AddWallet = '/add-wallet',
   CreateWallet = '/create-wallet',
   AddLedgerWallet = '/add-ledger-wallet',

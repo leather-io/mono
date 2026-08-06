@@ -8,9 +8,10 @@ import { Stack } from 'leather-styles/jsx';
 import { debounce } from 'ts-debounce';
 import * as yup from 'yup';
 
-import { Button } from '@leather.io/ui';
+import { BasicTooltip, Button, Callout } from '@leather.io/ui';
 import { isUndefined } from '@leather.io/utils';
 
+import { TARGET_BROWSER } from '@shared/environment';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
@@ -19,6 +20,8 @@ import {
   blankPasswordValidation,
   validatePassword,
 } from '@app/common/validation/validate-password';
+import { canUsePlatformAuthenticator } from '@app/common/wallet-authentication/platform-authenticator';
+import type { WalletAuthenticationResult } from '@app/common/wallet-authentication/use-wallet-authentication';
 import { Content } from '@app/components/layout';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
@@ -27,6 +30,7 @@ import {
   DescriptionColumn,
   TwoColumnLayout,
 } from '@app/components/layout/layouts/two-column.layout';
+import { RequestWalletAuthentication } from '@app/components/request-wallet-authentication';
 import { useCheckPassword } from '@app/store/software-keys/software-key.hooks';
 import { selectSoftwareKeys } from '@app/store/software-keys/software-key.selectors';
 
@@ -41,11 +45,17 @@ const setPasswordFormValues: SetPasswordFormValues = { password: '', confirmPass
 interface SetPasswordPageProps {
   mnemonicData: { mnemonic: string; fingerprint: string };
   onBack?(): void;
+  startWithBiometrics?: boolean;
 }
-export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) {
+export function SetPasswordPage({
+  mnemonicData,
+  onBack,
+  startWithBiometrics = false,
+}: SetPasswordPageProps) {
   const [loading, setLoading] = useState(false);
   const [strengthResult, setStrengthResult] = useState(blankPasswordValidation);
-  const { setPassword } = useKeyActions();
+  const [biometricFailure, setBiometricFailure] = useState<string>();
+  const keyActions = useKeyActions();
   const softwareKeys = useSelector(selectSoftwareKeys);
   const hasSoftwareKeys = !!softwareKeys.length;
   const checkPassword = useCheckPassword();
@@ -54,14 +64,14 @@ export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) 
 
   const submit = useCallback(
     async (password: string) => {
-      await setPassword({
+      await keyActions.setPassword({
         password,
         mnemonic: mnemonicData.mnemonic,
         fingerprint: mnemonicData.fingerprint,
       });
       void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
     },
-    [setPassword, navigate, mnemonicData.fingerprint, mnemonicData.mnemonic]
+    [keyActions, navigate, mnemonicData.fingerprint, mnemonicData.mnemonic]
   );
 
   const onSubmit = useCallback(
@@ -72,15 +82,6 @@ export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) 
       if (!password) return;
       setLoading(true);
       try {
-        if (hasSoftwareKeys) {
-          if (await checkPassword({ password })) {
-            await submit(password);
-            return;
-          }
-          setFieldError('password', "The password you entered doesn't match");
-          return;
-        }
-
         if (strengthResult.meetsAllStrengthRequirements) {
           analytics.track('submit_valid_password');
           await submit(password);
@@ -91,8 +92,84 @@ export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) 
         setLoading(false);
       }
     },
-    [hasSoftwareKeys, checkPassword, strengthResult, submit]
+    [strengthResult, submit]
   );
+
+  const onExistingWalletPasswordSubmit = useCallback(
+    async (password: string): Promise<WalletAuthenticationResult<void>> => {
+      try {
+        if (!(await checkPassword({ password }))) {
+          return { status: 'failure', code: 'invalid-password' };
+        }
+        await submit(password);
+        return { status: 'success', value: undefined };
+      } catch {
+        return { status: 'failure', code: 'invalid-password' };
+      }
+    },
+    [checkPassword, submit]
+  );
+
+  const onExistingWalletBiometricSubmit = useCallback(async (): Promise<
+    WalletAuthenticationResult<void>
+  > => {
+    try {
+      const result = await keyActions.addWalletWithBiometrics({
+        fingerprint: mnemonicData.fingerprint,
+        mnemonic: mnemonicData.mnemonic,
+      });
+      if (result.status === 'failure') return result;
+      void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
+      return { status: 'success', value: undefined };
+    } catch {
+      return { status: 'failure', code: 'wallet-validation-failed' };
+    }
+  }, [keyActions, mnemonicData.fingerprint, mnemonicData.mnemonic, navigate]);
+
+  const createBiometricWallet = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+    setBiometricFailure(undefined);
+    analytics.track('biometric_unlock_enrollment_started', { source: 'first_software_wallet' });
+    try {
+      const result = await keyActions.createBiometricSoftwareWallet(mnemonicData);
+      if (result.status === 'success') {
+        analytics.track('biometric_unlock_enrollment_completed');
+        void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
+        return;
+      }
+      if (result.code !== 'cancelled-or-timeout') {
+        setBiometricFailure(
+          result.code === 'prf-unavailable'
+            ? "The option you chose can't be used for biometric unlock. Try again and choose a different option when Chrome asks where to save your passkey."
+            : 'Biometric unlock could not be set up. Try again or continue with a password.'
+        );
+        analytics.track('biometric_unlock_enrollment_failed', { category: result.code });
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [keyActions, loading, mnemonicData, navigate]);
+
+  if (hasSoftwareKeys) {
+    return (
+      <>
+        <Header px="space.04">
+          <HeaderGrid leftCol={<HeaderBackButton onBack={onBack} />} rightCol={null} />
+        </Header>
+        <Content>
+          <RequestWalletAuthentication
+            title="Confirm it's you"
+            caption="Confirm it's you to add this wallet. It joins your existing wallets and uses the same unlock settings."
+            startWithBiometrics={startWithBiometrics}
+            onPasswordSubmit={onExistingWalletPasswordSubmit}
+            onBiometricSubmit={onExistingWalletBiometricSubmit}
+            onSuccess={() => undefined}
+          />
+        </Content>
+      </>
+    );
+  }
 
   const validationSchema = yup.object({
     password: hasSoftwareKeys
@@ -165,6 +242,33 @@ export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) 
                     >
                       Continue
                     </Button>
+                    {TARGET_BROWSER === 'chromium' && (
+                      <>
+                        <BasicTooltip
+                          asChild
+                          label={
+                            canUsePlatformAuthenticator()
+                              ? undefined
+                              : "Biometric unlock isn't available in this browser context."
+                          }
+                          side="top"
+                        >
+                          <Button
+                            data-testid={OnboardingSelectors.BiometricSetupBtn}
+                            aria-disabled={!canUsePlatformAuthenticator()}
+                            disabled={loading}
+                            aria-busy={loading}
+                            variant="outline"
+                            onClick={() => {
+                              if (canUsePlatformAuthenticator()) void createBiometricWallet();
+                            }}
+                          >
+                            Use biometrics
+                          </Button>
+                        </BasicTooltip>
+                      </>
+                    )}
+                    {biometricFailure && <Callout variant="warning">{biometricFailure}</Callout>}
                   </Stack>
                 }
               />

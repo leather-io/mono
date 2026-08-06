@@ -1,5 +1,6 @@
 export enum OnboardingSelectors {
   BackUpSecretKeyBtn = 'back-up-secret-key-btn',
+  BiometricSetupBtn = 'biometric-setup-btn',
   LogoRouteToHome = 'logo-route-to-home',
   NewPasswordInput = 'set-or-enter-password-input',
   NoAssetsFundAccountLink = 'no-assets-fund-account-link',

@@ -4,8 +4,14 @@ const context = self as unknown as Worker;
 
 interface GenerateEncryptionKeyArgs {
   password: string;
+  requestId: string;
   salt: string;
 }
+
+type GenerateEncryptionKeyResponse =
+  | { requestId: string; status: 'failure' }
+  | { encryptionKey: string; requestId: string; status: 'success' };
+
 async function generateEncryptionKey({ password, salt }: GenerateEncryptionKeyArgs) {
   const x = performance.now();
   const argonHash = await argon2.hash({
@@ -23,8 +29,14 @@ async function generateEncryptionKey({ password, salt }: GenerateEncryptionKeyAr
 }
 
 async function stretchKeyPostMessageHandler(e: MessageEvent<GenerateEncryptionKeyArgs>) {
-  const hex = await generateEncryptionKey(e.data);
-  context.postMessage(hex);
+  let response: GenerateEncryptionKeyResponse;
+  try {
+    const encryptionKey = await generateEncryptionKey(e.data);
+    response = { encryptionKey, requestId: e.data.requestId, status: 'success' };
+  } catch {
+    response = { requestId: e.data.requestId, status: 'failure' };
+  }
+  context.postMessage(response);
 }
 
 context.addEventListener('message', stretchKeyPostMessageHandler);

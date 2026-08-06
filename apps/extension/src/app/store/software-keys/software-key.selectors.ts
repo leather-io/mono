@@ -4,6 +4,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { initBigNumber } from '@leather.io/utils';
 
+import { isPlatformUnlockConfig } from '@shared/crypto/platform-unlock';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
@@ -12,11 +13,89 @@ import { RootState } from '@app/store';
 import { selectActiveAccount } from '../active/active.selectors';
 import { selectHasSwitched } from '../ui/ui.selectors';
 import { selectWalletEntities } from '../wallets/wallet.selectors';
-import { keyAdapter } from './software-key.slice';
+import { type WalletAuthenticationMode, keyAdapter } from './software-key.slice';
+
+interface PersistedWalletAuthenticationState {
+  authenticationMode?: unknown;
+  ids: readonly string[];
+  platformUnlock?: unknown;
+  salt?: unknown;
+}
+
+interface WalletAuthenticationCapabilities {
+  authenticationMode: WalletAuthenticationMode | null;
+  biometrics: boolean;
+  password: boolean;
+  valid: boolean;
+}
 
 function selectKeysSlice(state: RootState) {
   return state.softwareKeys;
 }
+
+function selectPersistedWalletAuthenticationState(
+  state: RootState
+): PersistedWalletAuthenticationState {
+  return state.softwareKeys;
+}
+
+function getWalletAuthenticationCapabilities({
+  authenticationMode,
+  ids,
+  platformUnlock,
+  salt,
+}: PersistedWalletAuthenticationState): WalletAuthenticationCapabilities {
+  const hasSoftwareKeys = ids.length > 0;
+  const hasSalt = typeof salt === 'string' && salt.length > 0;
+  const hasPlatformUnlock = platformUnlock !== undefined;
+  const validPlatformUnlock = isPlatformUnlockConfig(platformUnlock);
+
+  if (!hasSoftwareKeys) {
+    const valid = authenticationMode === undefined && !hasPlatformUnlock && salt === undefined;
+    return {
+      authenticationMode: valid ? 'password' : null,
+      biometrics: false,
+      password: false,
+      valid,
+    };
+  }
+
+  if (authenticationMode === undefined) {
+    return {
+      authenticationMode: 'password',
+      biometrics: false,
+      password: true,
+      valid: true,
+    };
+  }
+
+  if (authenticationMode === 'password') {
+    const valid = hasSalt;
+    return {
+      authenticationMode: valid ? 'password' : null,
+      biometrics: valid && validPlatformUnlock,
+      password: valid,
+      valid,
+    };
+  }
+
+  if (authenticationMode === 'biometric-only') {
+    const valid = !hasSalt && validPlatformUnlock;
+    return {
+      authenticationMode: valid ? 'biometric-only' : null,
+      biometrics: valid,
+      password: false,
+      valid,
+    };
+  }
+
+  return { authenticationMode: null, biometrics: false, password: false, valid: false };
+}
+
+export const selectWalletAuthenticationCapabilities = createSelector(
+  selectPersistedWalletAuthenticationState,
+  getWalletAuthenticationCapabilities
+);
 
 export const selectCurrentAccount = createSelector(
   selectActiveAccount,
@@ -49,7 +128,9 @@ const selectActiveSoftwareKey = createSelector(
   (keysState, currentAccount) => keysState.entities[currentAccount.fingerprint]
 );
 
-export const selectWalletSalt = createSelector(selectKeysSlice, state => state.salt);
+export const selectPlatformUnlockConfig = createSelector(selectKeysSlice, state =>
+  isPlatformUnlockConfig(state.platformUnlock) ? state.platformUnlock : undefined
+);
 
 export function useActiveSoftwareKey() {
   return useSelector(selectActiveSoftwareKey);

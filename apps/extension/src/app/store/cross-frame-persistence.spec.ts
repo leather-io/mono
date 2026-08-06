@@ -6,6 +6,7 @@ import {
   configureStore,
   isAction,
 } from '@reduxjs/toolkit';
+import { base64urlnopad } from '@scure/base';
 import { ChainId } from '@stacks/network';
 import {
   FLUSH,
@@ -22,23 +23,42 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { isPlainObject } from 'remeda';
 import { describe, expect, test } from 'vitest';
 
+import { keychainSlice } from '@leather.io/state/keychains';
+import { userAddsWallet, walletSlice } from '@leather.io/state/wallet';
+
+import type { PlatformUnlockConfig } from '@shared/crypto/platform-unlock';
 import { createDirtySliceTracker } from '@shared/storage/dirty-slice-tracker';
 import { createMergePersistStorage } from '@shared/storage/merge-persist-storage';
 import { persistWhitelist } from '@shared/storage/persist-whitelist';
 import { clearChromeStorage } from '@shared/storage/redux-persist';
 
+import { accountsSlice } from './accounts/accounts.slice';
+import { activeSlice, walletKeyGenerated } from './active/active.slice';
+import { stxChainSlice } from './chains/stx-chain.slice';
 import { manageTokensSlice } from './manage-tokens/manage-tokens.slice';
 import { type PersistedNetworkConfiguration, networksSlice } from './networks/networks.slice';
 import { settingsSlice } from './settings/settings.slice';
+import { readAuthoritativeWalletTransactionState } from './software-keys/software-key-state';
+import {
+  type SoftwareKeyConfig,
+  type WalletAuthenticationMode,
+  keySlice,
+} from './software-keys/software-key.slice';
 import { hydrateSlicesFromStorage, initCrossFrameStorageSync } from './utils/storage-sync';
 import { createTrackDirtySlicesMiddleware } from './utils/track-dirty-slices';
 
 const persistRootKey = 'persist:root';
 
 const frameReducer = combineReducers({
+  accounts: accountsSlice.reducer,
+  active: activeSlice.reducer,
+  chains: combineReducers({ stx: stxChainSlice.reducer }),
+  keychains: keychainSlice.reducer,
   networks: networksSlice.reducer,
   settings: settingsSlice.reducer,
   manageTokens: manageTokensSlice.reducer,
+  softwareKeys: keySlice.reducer,
+  wallets: walletSlice.reducer,
 });
 
 type FrameState = ReturnType<typeof frameReducer>;
@@ -137,6 +157,46 @@ async function readStoredRoot() {
   return root;
 }
 
+interface PersistWalletArgs {
+  authenticationMode: WalletAuthenticationMode;
+  encryptedSecretKey: string;
+  fingerprint: string;
+  platformUnlock?: PlatformUnlockConfig;
+  salt?: string;
+}
+
+function createSoftwareKeyAction(
+  authoritative: Awaited<ReturnType<typeof readAuthoritativeWalletTransactionState>>,
+  { authenticationMode, encryptedSecretKey, fingerprint, platformUnlock, salt }: PersistWalletArgs
+) {
+  const key: SoftwareKeyConfig = { type: 'software', id: fingerprint, encryptedSecretKey };
+  if (authoritative.softwareKeys.keys.length > 0) return keySlice.actions.addNewWallet(key);
+  if (authenticationMode === 'biometric-only') {
+    if (!platformUnlock) throw new Error('Biometric test setup requires platform unlock state');
+    return keySlice.actions.createBiometricSoftwareWalletComplete({ key, platformUnlock });
+  }
+  if (!salt) throw new Error('Password test setup requires a salt');
+  return keySlice.actions.createSoftwareWalletComplete({ key, salt });
+}
+
+async function persistWalletFromAuthoritativeState(frame: Frame, args: PersistWalletArgs) {
+  const authoritative = await readAuthoritativeWalletTransactionState();
+  frame.store.dispatch(hydrateSlicesFromStorage(authoritative.state));
+  frame.store.dispatch(
+    userAddsWallet({
+      wallet: {
+        createdOn: '2026-08-06T00:00:00.000Z',
+        fingerprint: args.fingerprint,
+        type: 'software',
+      },
+      accountKeychains: [],
+    })
+  );
+  frame.store.dispatch(createSoftwareKeyAction(authoritative, args));
+  frame.store.dispatch(walletKeyGenerated(args.fingerprint));
+  await frame.settle();
+}
+
 describe('cross-frame persistence', () => {
   test('a stale frame writing another slice does not clobber a newly added network', async () => {
     const frameA = await bootFrame();
@@ -162,6 +222,115 @@ describe('cross-frame persistence', () => {
     await frameB.settle();
 
     expect(frameB.store.getState().networks.entities.devnet).toEqual(devnetNetwork);
+  });
+
+  test('two live frames converge on a biometric-only to password transition', async () => {
+    const frameA = await bootFrame();
+    const frameB = await bootFrame();
+    const key: SoftwareKeyConfig = {
+      type: 'software',
+      id: 'wallet',
+      encryptedSecretKey: 'biometric-key',
+    };
+    const platformUnlock: PlatformUnlockConfig = {
+      credentialId: base64urlnopad.encode(new Uint8Array([1, 2, 3])),
+      iv: base64urlnopad.encode(new Uint8Array(12).fill(4)),
+      prfInput: base64urlnopad.encode(new Uint8Array(32).fill(5)),
+      registrationTag: 'ABC234',
+      version: 1,
+      wrappedEncryptionKey: base64urlnopad.encode(new Uint8Array(112).fill(6)),
+    };
+
+    frameA.store.dispatch(
+      keySlice.actions.createBiometricSoftwareWalletComplete({ key, platformUnlock })
+    );
+    await frameA.settle();
+    await frameB.settle();
+
+    expect(frameB.store.getState().softwareKeys.authenticationMode).toBe('biometric-only');
+
+    frameA.store.dispatch(
+      keySlice.actions.biometricOnlyToPasswordTransitionComplete({
+        keys: [{ ...key, encryptedSecretKey: 'password-key' }],
+        platformUnlock: {
+          ...platformUnlock,
+          iv: base64urlnopad.encode(new Uint8Array(12).fill(9)),
+        },
+        salt: 'password-salt',
+      })
+    );
+    await frameA.settle();
+    await frameB.settle();
+
+    expect(frameB.store.getState().softwareKeys).toMatchObject({
+      authenticationMode: 'password',
+      entities: { wallet: { encryptedSecretKey: 'password-key' } },
+      salt: 'password-salt',
+    });
+  });
+
+  test('a delayed password frame preserves every coupled slice from the first wallet write', async () => {
+    const frameA = await bootFrame();
+    const delayedFrame = await bootFrame({ withSync: false });
+
+    await persistWalletFromAuthoritativeState(frameA, {
+      authenticationMode: 'password',
+      encryptedSecretKey: 'wallet-a-ciphertext',
+      fingerprint: 'wallet-a',
+      salt: 'password-salt',
+    });
+    await persistWalletFromAuthoritativeState(delayedFrame, {
+      authenticationMode: 'password',
+      encryptedSecretKey: 'wallet-b-ciphertext',
+      fingerprint: 'wallet-b',
+      salt: 'password-salt',
+    });
+
+    const root = await readStoredRoot();
+    expect(root).toMatchObject({
+      accounts: { ids: ['wallet-a/0', 'wallet-b/0'] },
+      active: { account: { accountIndex: 0, fingerprint: 'wallet-b' } },
+      chains: { stx: { 'wallet-a': {}, 'wallet-b': {} } },
+      keychains: { ids: [] },
+      softwareKeys: { ids: ['wallet-a', 'wallet-b'], authenticationMode: 'password' },
+      wallets: { ids: ['wallet-a', 'wallet-b'] },
+    });
+  });
+
+  test('a delayed biometric frame preserves every coupled slice from the first wallet write', async () => {
+    const frameA = await bootFrame();
+    const delayedFrame = await bootFrame({ withSync: false });
+    const platformUnlock: PlatformUnlockConfig = {
+      credentialId: base64urlnopad.encode(new Uint8Array([7, 8, 9])),
+      iv: base64urlnopad.encode(new Uint8Array(12).fill(10)),
+      prfInput: base64urlnopad.encode(new Uint8Array(32).fill(11)),
+      registrationTag: 'DEF567',
+      version: 1,
+      wrappedEncryptionKey: base64urlnopad.encode(new Uint8Array(112).fill(12)),
+    };
+
+    await persistWalletFromAuthoritativeState(frameA, {
+      authenticationMode: 'biometric-only',
+      encryptedSecretKey: 'wallet-a-ciphertext',
+      fingerprint: 'wallet-a',
+      platformUnlock,
+    });
+    await persistWalletFromAuthoritativeState(delayedFrame, {
+      authenticationMode: 'biometric-only',
+      encryptedSecretKey: 'wallet-b-ciphertext',
+      fingerprint: 'wallet-b',
+      platformUnlock,
+    });
+
+    const root = await readStoredRoot();
+    expect(root).toMatchObject({
+      accounts: { ids: ['wallet-a/0', 'wallet-b/0'] },
+      active: { account: { accountIndex: 0, fingerprint: 'wallet-b' } },
+      chains: { stx: { 'wallet-a': {}, 'wallet-b': {} } },
+      keychains: { ids: [] },
+      softwareKeys: { ids: ['wallet-a', 'wallet-b'], authenticationMode: 'biometric-only' },
+      wallets: { ids: ['wallet-a', 'wallet-b'] },
+    });
   });
 
   test('a frame never hydrates from its own writes', async () => {

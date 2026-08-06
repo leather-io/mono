@@ -5,13 +5,14 @@ import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { broadcastWalletListChanged } from '@shared/messages';
 
+import { clearBiometricAutoPromptSuppression } from '@app/common/wallet-authentication/biometric-auto-prompt';
 import { persistor } from '@app/store';
 
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '../in-memory-key/keychain-selector-cache';
-import { selectCurrentAccount } from '../software-keys/software-key.selectors';
+import { selectCurrentAccount, selectSoftwareKeys } from '../software-keys/software-key.selectors';
 import { selectAllWallets } from '../wallets/wallet.selectors';
 import {
   activateFirstVisibleAccount,
@@ -39,6 +40,11 @@ vi.mock('../wallets/wallet.selectors', () => ({
 
 vi.mock('../software-keys/software-key.selectors', () => ({
   selectCurrentAccount: vi.fn(),
+  selectSoftwareKeys: vi.fn(),
+}));
+
+vi.mock('@app/common/wallet-authentication/biometric-auto-prompt', () => ({
+  clearBiometricAutoPromptSuppression: vi.fn(() => Promise.resolve()),
 }));
 
 vi.mock('../in-memory-key/in-memory-storage', () => ({
@@ -81,6 +87,10 @@ describe(activateFirstVisibleAccount.name, () => {
     vi.clearAllMocks();
     vi.mocked(selectWalletAccountRefTree).mockReturnValue(makeRefTree([0, 1, 2]));
     vi.mocked(selectHiddenAccountIds).mockReturnValue([]);
+    vi.mocked(selectSoftwareKeys).mockReturnValue([
+      { id: fingerprint, type: 'software', encryptedSecretKey: 'first' },
+      { id: otherFingerprint, type: 'software', encryptedSecretKey: 'second' },
+    ]);
   });
 
   test('activates account 0 when no accounts are hidden', () => {
@@ -162,6 +172,10 @@ describe(removeWalletAndUpdateActive.name, () => {
     ]);
     vi.mocked(selectWalletAccountRefTree).mockReturnValue(makeWalletRefTree(otherFingerprint, [0]));
     vi.mocked(selectHiddenAccountIds).mockReturnValue([]);
+    vi.mocked(selectSoftwareKeys).mockReturnValue([
+      { id: fingerprint, type: 'software', encryptedSecretKey: 'first' },
+      { id: otherFingerprint, type: 'software', encryptedSecretKey: 'second' },
+    ]);
   });
 
   test('re-points to a remaining wallet when the removed wallet is the resolved current account', () => {
@@ -204,6 +218,17 @@ describe(removeWalletAndUpdateActive.name, () => {
     await promise;
     expect(removeKey).toHaveBeenCalledWith(fingerprint);
     expect(clearKeychainSelectorCaches).toHaveBeenCalledTimes(1);
+  });
+
+  test('clears automatic biometric prompt suppression after removing the final software wallet', async () => {
+    vi.mocked(selectSoftwareKeys).mockReturnValue([
+      { id: fingerprint, type: 'software', encryptedSecretKey: 'first' },
+    ]);
+    const { promise } = runRemoveThunk();
+
+    await promise;
+
+    expect(clearBiometricAutoPromptSuppression).toHaveBeenCalledTimes(1);
   });
 
   test('skips leading hidden accounts when re-pointing to the remaining wallet', () => {

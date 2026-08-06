@@ -14,6 +14,7 @@
     "build:dev": "cross-env WALLET_ENVIRONMENT=development webpack --config webpack/webpack.config.dev.js",
     "build:ext:test": "cross-env WALLET_ENVIRONMENT=testing webpack --config webpack/webpack.config.prod.js",
     "build:ext:test:watch": "cross-env WALLET_ENVIRONMENT=testing webpack --config webpack/webpack.config.prod.js --watch",
+    "build:u0:biometric": "cross-env BIOMETRIC_UNLOCK_U0=true WALLET_ENVIRONMENT=testing webpack --config webpack/webpack.config.prod.js",
     "build:test": "concurrently 'pnpm build:ext:test' 'pnpm build:test-app'",
     "build:test-api": "concurrently 'pnpm build:ext:test' 'pnpm build:test-app'",
     "build:test-app": "cross-env WALLET_ENVIRONMENT=production webpack --config ./test-app/webpack/webpack.config.prod.cjs",
@@ -36,6 +37,8 @@
     "prod:ext": "pnpm build",
     "test:coverage": "vitest run --coverage",
     "test:integration": "playwright test",
+    "test:u0:biometric": "pnpm build:u0:biometric && cross-env BIOMETRIC_UNLOCK_U0=true playwright test tests/u0/biometric-unlock-harness.spec.ts",
+    "test:biometric": "pnpm build:ext:test && cross-env BIOMETRIC_UNLOCK_E2E=true playwright test tests/specs/settings/biometric-unlock.spec.ts",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
   },

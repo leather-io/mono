@@ -1,0 +1,3163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Biometric unlock — UI mockups</title>
+    <style>
+      /* ============ Leather design tokens (packages/tokens/src) ============ */
+      :root {
+        --ink-text-primary: #12100f;
+        --ink-text-subdued: #7b7572;
+        --ink-text-non: #9e9996;
+        --ink-action: #12100f;
+        --ink-action-hover: #3a3634;
+        --ink-border-transparent: #463f3c1a;
+        --ink-border: #e5e3e1;
+        --ink-comp-bg: #f1efed;
+        --ink-comp-hover: #beb0a71a;
+        --ink-comp-pressed: #beb0a733;
+        --ink-bg-overlay: #12100f66;
+        --ink-bg-secondary: #f9f9f8;
+        --ink-bg-primary: #ffffff;
+        --red-action: #f0231b;
+        --red-text: #490a08;
+        --red-bg: #ffe9e8;
+        --green-action: #1cba7d;
+        --green-text2: #00753a;
+        --green-border: #a8edd0;
+        --green-bg: #e7f8f1;
+        --yellow-bg: #fef9e6;
+        --yellow-bg-secondary: #ffefb4;
+        --yellow-border: #ffefb4;
+        --yellow-text: #4a3500;
+        --blue-bg-secondary: #8fa7ff;
+        --blue-border: #c8d3ff;
+        --invert: #34312a;
+        --on-invert: #ffffff;
+        /* review-page chrome (derived from ink neutrals, not part of app UI) */
+        --page-bg: #f9f9f8;
+        --page-fg: #12100f;
+        --page-mut: #7b7572;
+        --page-line: #e5e3e1;
+        --frame-shadow: 0 1px 2px #12100f14, 0 8px 24px #12100f0f;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ink-text-primary: #f9f9f8;
+          --ink-text-subdued: #d9d6d4;
+          --ink-text-non: #9e9996;
+          --ink-action: #f9f9f8;
+          --ink-action-hover: #edebe9;
+          --ink-border-transparent: #f5f1ed33;
+          --ink-border: #46413e;
+          --ink-comp-bg: #292623;
+          --ink-comp-hover: #716a604d;
+          --ink-comp-pressed: #716a6073;
+          --ink-bg-overlay: #12100fa6;
+          --ink-bg-secondary: #1f1c1a;
+          --ink-bg-primary: #12100f;
+          --red-action: #f0231b;
+          --red-text: #ffe9e8;
+          --red-bg: #490a08;
+          --green-action: #1cba7d;
+          --green-text2: #00753a;
+          --green-border: #169e6a;
+          --green-bg: #083826;
+          --yellow-bg: #4a3500;
+          --yellow-bg-secondary: #805b00;
+          --yellow-border: #b78100;
+          --yellow-text: #fef9e6;
+          --blue-bg-secondary: #243485;
+          --blue-border: #4663e6;
+          --invert: #ffffff;
+          --on-invert: #12100f;
+          --page-bg: #1f1c1a;
+          --page-fg: #f9f9f8;
+          --page-mut: #9e9996;
+          --page-line: #46413e;
+          --frame-shadow: 0 1px 2px #00000066, 0 8px 24px #00000059;
+        }
+      }
+      :root[data-theme='dark'] {
+        --ink-text-primary: #f9f9f8;
+        --ink-text-subdued: #d9d6d4;
+        --ink-text-non: #9e9996;
+        --ink-action: #f9f9f8;
+        --ink-action-hover: #edebe9;
+        --ink-border-transparent: #f5f1ed33;
+        --ink-border: #46413e;
+        --ink-comp-bg: #292623;
+        --ink-comp-hover: #716a604d;
+        --ink-comp-pressed: #716a6073;
+        --ink-bg-overlay: #12100fa6;
+        --ink-bg-secondary: #1f1c1a;
+        --ink-bg-primary: #12100f;
+        --red-action: #f0231b;
+        --red-text: #ffe9e8;
+        --red-bg: #490a08;
+        --green-action: #1cba7d;
+        --green-text2: #00753a;
+        --green-border: #169e6a;
+        --green-bg: #083826;
+        --yellow-bg: #4a3500;
+        --yellow-bg-secondary: #805b00;
+        --yellow-border: #b78100;
+        --yellow-text: #fef9e6;
+        --blue-bg-secondary: #243485;
+        --blue-border: #4663e6;
+        --invert: #ffffff;
+        --on-invert: #12100f;
+        --page-bg: #1f1c1a;
+        --page-fg: #f9f9f8;
+        --page-mut: #9e9996;
+        --page-line: #46413e;
+        --frame-shadow: 0 1px 2px #00000066, 0 8px 24px #00000059;
+      }
+      :root[data-theme='light'] {
+        --ink-text-primary: #12100f;
+        --ink-text-subdued: #7b7572;
+        --ink-text-non: #9e9996;
+        --ink-action: #12100f;
+        --ink-action-hover: #3a3634;
+        --ink-border-transparent: #463f3c1a;
+        --ink-border: #e5e3e1;
+        --ink-comp-bg: #f1efed;
+        --ink-comp-hover: #beb0a71a;
+        --ink-comp-pressed: #beb0a733;
+        --ink-bg-overlay: #12100f66;
+        --ink-bg-secondary: #f9f9f8;
+        --ink-bg-primary: #ffffff;
+        --red-action: #f0231b;
+        --red-text: #490a08;
+        --red-bg: #ffe9e8;
+        --green-action: #1cba7d;
+        --green-text2: #00753a;
+        --green-border: #a8edd0;
+        --green-bg: #e7f8f1;
+        --yellow-bg: #fef9e6;
+        --yellow-bg-secondary: #ffefb4;
+        --yellow-border: #ffefb4;
+        --yellow-text: #4a3500;
+        --blue-bg-secondary: #8fa7ff;
+        --blue-border: #c8d3ff;
+        --invert: #34312a;
+        --on-invert: #ffffff;
+        --page-bg: #f9f9f8;
+        --page-fg: #12100f;
+        --page-mut: #7b7572;
+        --page-line: #e5e3e1;
+        --frame-shadow: 0 1px 2px #12100f14, 0 8px 24px #12100f0f;
+      }
+
+      /* ============ review page chrome ============ */
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--page-bg);
+        color: var(--page-fg);
+        font:
+          400 15px/1.5 'Helvetica Neue',
+          Helvetica,
+          Arial,
+          sans-serif;
+        margin: 0;
+      }
+      .wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 48px 32px 96px;
+      }
+      .masthead {
+        border-bottom: 1px solid var(--page-line);
+        padding-bottom: 28px;
+        margin-bottom: 12px;
+      }
+      .masthead h1 {
+        font:
+          900 34px/1.05 'Arial Black',
+          'Helvetica Neue',
+          sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin: 0 0 10px;
+        text-wrap: balance;
+      }
+      .masthead p.lede {
+        max-width: 68ch;
+        color: var(--page-mut);
+        margin: 0 0 16px;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .meta span {
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        border: 1px solid var(--page-line);
+        border-radius: 999px;
+        padding: 4px 12px;
+        color: var(--page-mut);
+      }
+      .fontnote {
+        font-size: 13px;
+        color: var(--page-mut);
+        background: var(--ink-comp-bg);
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin: 20px 0 0;
+        max-width: 900px;
+      }
+      .fontnote b {
+        color: var(--page-fg);
+        font-weight: 600;
+      }
+
+      section.flow {
+        margin-top: 56px;
+      }
+      .flowhead {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        border-bottom: 1px solid var(--page-line);
+        padding-bottom: 10px;
+        margin-bottom: 6px;
+      }
+      .flowhead .tag {
+        font:
+          900 13px/1 'Arial Black',
+          'Helvetica Neue',
+          sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        background: var(--page-fg);
+        color: var(--page-bg);
+        padding: 6px 10px;
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .flowhead h2 {
+        font-size: 21px;
+        font-weight: 600;
+        margin: 0;
+      }
+      .flowsub {
+        color: var(--page-mut);
+        max-width: 75ch;
+        margin: 6px 0 24px;
+      }
+
+      .frames {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 36px;
+        align-items: flex-start;
+      }
+      .fig {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .figcap {
+        display: flex;
+        gap: 10px;
+        align-items: baseline;
+        margin: 0 0 10px;
+        max-width: 390px;
+      }
+      .figcap .n {
+        font:
+          700 12px/1 'Helvetica Neue',
+          sans-serif;
+        color: var(--page-bg);
+        background: var(--page-mut);
+        border-radius: 4px;
+        padding: 4px 7px;
+        flex-shrink: 0;
+      }
+      .figcap h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+      }
+      .fignote {
+        font-size: 13px;
+        color: var(--page-mut);
+        max-width: 390px;
+        margin: 10px 0 0;
+      }
+      .fignote b {
+        color: var(--page-fg);
+        font-weight: 600;
+      }
+      .fig.wide .figcap,
+      .fig.wide .fignote {
+        max-width: 882px;
+      }
+
+      /* device frame = extension popup, 390px (tokens sizes.popupWidth) */
+      .device {
+        width: 390px;
+        background: var(--ink-bg-primary);
+        border: 1px solid var(--ink-border);
+        border-radius: 16px;
+        box-shadow: var(--frame-shadow);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        color: var(--ink-text-primary);
+      }
+      .device.wide {
+        width: 882px;
+      }
+      .device.win {
+        width: 440px;
+      }
+
+      /* ============ Leather primitives (from @leather.io/ui + extension layout) ============ */
+      .lh-header {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        flex-shrink: 0;
+      }
+      .lh-header .logo svg {
+        display: block;
+        height: 19px;
+        width: 86px;
+        color: var(--ink-action);
+      }
+      .brand-wordmark {
+        font:
+          900 18px/1 'Arial Black',
+          'Helvetica Neue',
+          sans-serif;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        color: var(--ink-action);
+      }
+      .iconbtn {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ink-text-primary);
+      }
+      .iconbtn svg {
+        width: 24px;
+        height: 24px;
+      }
+      .netchip {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--ink-text-subdued);
+        border: 1px solid var(--ink-border);
+        border-radius: 999px;
+        padding: 5px 12px;
+      }
+
+      .lh-h1 {
+        font:
+          900 32px/35px 'Arial Black',
+          'Helvetica Neue',
+          sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.64px;
+        color: var(--ink-text-primary);
+        margin: 0;
+      }
+      .lh-h3 {
+        font:
+          900 32px/35px 'Arial Black',
+          'Helvetica Neue',
+          sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.64px;
+        color: var(--ink-text-primary);
+        margin: 0;
+      }
+      .lh-label2 {
+        font-size: 15px;
+        line-height: 20px;
+        font-weight: 500;
+        color: var(--ink-text-primary);
+      }
+      .lh-body2 {
+        font-size: 15px;
+        line-height: 20px;
+        font-weight: 400;
+        color: var(--ink-text-primary);
+      }
+      .lh-cap {
+        font-size: 13px;
+        line-height: 20px;
+        font-weight: 400;
+        color: var(--ink-text-subdued);
+      }
+      .subdue {
+        color: var(--ink-text-subdued);
+      }
+
+      .btn {
+        position: relative;
+        height: 48px;
+        padding: 0 16px;
+        border-radius: 999px;
+        border: 0;
+        font:
+          500 15px/20px 'Helvetica Neue',
+          Helvetica,
+          Arial,
+          sans-serif;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        white-space: nowrap;
+        width: 100%;
+        cursor: default;
+      }
+      .btn svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+      }
+      .btn-solid {
+        background: var(--ink-action);
+        color: var(--ink-bg-primary);
+      }
+      .btn-outline {
+        background: transparent;
+        color: var(--ink-action);
+        border: 1px solid var(--ink-border);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--ink-action);
+      }
+      .btn-disabled {
+        background: var(--ink-bg-secondary);
+        color: var(--ink-text-non);
+      }
+      .btn-busy span {
+        opacity: 0;
+      }
+      .btn-busy::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        left: calc(50% - 10px);
+        top: calc(50% - 10px);
+        border: 2px solid currentColor;
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .btn-busy::after {
+          animation: none;
+        }
+      }
+
+      /* input (ui Input: 64px root, floating label, rounded 4px) */
+      .inp {
+        position: relative;
+        min-height: 64px;
+        border: 1px solid var(--ink-border-transparent);
+        border-radius: 4px;
+        background: transparent;
+        padding: 0 16px;
+        display: flex;
+        align-items: flex-end;
+      }
+      .inp .val {
+        font-size: 15px;
+        line-height: 20px;
+        color: var(--ink-text-primary);
+        padding: 30px 0 12px;
+        letter-spacing: 2px;
+      }
+      .inp .lbl {
+        position: absolute;
+        left: 16px;
+        top: 38%;
+        font-size: 15px;
+        color: var(--ink-text-subdued);
+        pointer-events: none;
+      }
+      .inp.filled .lbl,
+      .inp.err .lbl {
+        top: 10px;
+        font-size: 13px;
+        line-height: 16px;
+        font-weight: 500;
+      }
+      .inp.focus {
+        outline: 2px solid var(--ink-action);
+        outline-offset: -1px;
+      }
+      .inp.err {
+        outline: 2px solid var(--red-action);
+        outline-offset: -1px;
+      }
+      .inp.err .lbl {
+        color: var(--red-action);
+      }
+      .errlabel {
+        display: flex;
+        gap: 6px;
+        align-items: flex-start;
+        color: var(--red-action);
+        font-size: 13px;
+        line-height: 20px;
+      }
+      .errlabel svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      /* settings row (extension SettingsButton + ItemLayout, avatar lg 40px) */
+      .srow {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 24px;
+        margin: 0;
+        width: 100%;
+      }
+      .srow:hover {
+        background: var(--ink-comp-hover);
+      }
+      .srow .av {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--ink-comp-hover);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: var(--ink-text-primary);
+      }
+      .srow .av svg {
+        width: 24px;
+        height: 24px;
+      }
+      .srow .t {
+        flex: 1;
+        text-align: left;
+      }
+      .srow .right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--ink-text-subdued);
+      }
+      .srow .right svg {
+        width: 16px;
+        height: 16px;
+      }
+      .srow.hilite {
+        outline: 2px solid var(--blue-border);
+        outline-offset: -2px;
+        border-radius: 4px;
+      }
+      .srow.unavailable {
+        color: var(--ink-text-non);
+      }
+      .srow.unavailable:hover {
+        background: transparent;
+      }
+      .srow.unavailable .av,
+      .srow.unavailable .right,
+      .srow.unavailable .t {
+        opacity: 0.55;
+      }
+      .mock-tooltip {
+        position: absolute;
+        right: 16px;
+        top: 236px;
+        z-index: 2;
+        width: 250px;
+        padding: 10px 12px;
+        border-radius: 4px;
+        background: var(--ink-text-primary);
+        color: var(--ink-bg-primary);
+        font-size: 13px;
+        line-height: 18px;
+        box-shadow: var(--frame-shadow);
+      }
+      .mock-tooltip::before {
+        content: '';
+        position: absolute;
+        right: 28px;
+        top: -6px;
+        width: 12px;
+        height: 12px;
+        background: var(--ink-text-primary);
+        transform: rotate(45deg);
+      }
+      .switch {
+        width: 36px;
+        height: 20px;
+        border-radius: 999px;
+        background: var(--ink-action);
+        position: relative;
+        flex-shrink: 0;
+      }
+      .switch::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--ink-bg-primary);
+        top: 2px;
+        right: 2px;
+      }
+
+      /* status pills / callouts */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 13px;
+        line-height: 16px;
+        font-weight: 500;
+        border-radius: 999px;
+        padding: 2px 8px;
+      }
+      .pill-on {
+        background: var(--green-bg);
+        border: 1px solid var(--green-border);
+        color: var(--green-action);
+      }
+      .pill-off {
+        background: var(--ink-comp-bg);
+        color: var(--ink-text-subdued);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .callout {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 16px 24px;
+        font-size: 13px;
+        line-height: 20px;
+        color: var(--ink-text-primary);
+      }
+      .callout .ctext {
+        flex: 1;
+      }
+      .callout svg {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+      }
+      .callout-warn {
+        background: var(--yellow-bg-secondary);
+      }
+      .callout-info {
+        background: var(--blue-bg-secondary);
+      }
+      .platform-message {
+        color: var(--ink-text-primary);
+      }
+
+      .bullets {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .bullets li {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-size: 13px;
+        line-height: 20px;
+        color: var(--ink-text-primary);
+      }
+      .bullets li svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+        color: var(--ink-text-primary);
+      }
+
+      .choice-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: var(--ink-bg-primary);
+        border: 1px solid var(--ink-border);
+        border-radius: 12px;
+        padding: 24px;
+        min-width: 400px;
+      }
+      .choice-detail {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 0 4px;
+      }
+      .choice-detail svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .choice-detail p {
+        margin: 0;
+      }
+      .strength {
+        height: 4px;
+        border-radius: 999px;
+        background: var(--ink-comp-bg);
+        overflow: hidden;
+      }
+      .strength span {
+        display: block;
+        width: 72%;
+        height: 100%;
+        background: var(--green-action);
+      }
+
+      /* card footer zone (Card component: footer 95px, p 24) */
+      .cardfoot {
+        margin-top: auto;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: var(--ink-bg-primary);
+      }
+      .content {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        flex: 1;
+      }
+
+      /* toast */
+      .toast {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 24px;
+        background: var(--ink-text-primary);
+        color: var(--ink-bg-primary);
+        border-radius: 2px;
+        padding: 12px 16px 12px 12px;
+        font-size: 15px;
+        line-height: 20px;
+        font-weight: 500;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        box-shadow:
+          0 12px 24px #12100f14,
+          0 4px 8px #12100f14,
+          0 0 2px #12100f14;
+        white-space: nowrap;
+        z-index: 5;
+      }
+      .toast svg {
+        width: 16px;
+        height: 16px;
+        color: var(--green-action);
+      }
+
+      /* dialog */
+      /* schematic OS / Chrome prompt (explicitly not Leather UI) */
+      .os {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 96px;
+        width: 300px;
+        background: var(--ink-bg-secondary);
+        border: 1.5px dashed var(--ink-text-non);
+        border-radius: 12px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        z-index: 3;
+        box-shadow: var(--frame-shadow);
+      }
+      .os .osbadge {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink-text-non);
+      }
+      .os .oscircle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 2px solid var(--ink-text-subdued);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ink-text-subdued);
+      }
+      .os .oscircle svg {
+        width: 26px;
+        height: 26px;
+      }
+      .os .ostitle {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink-text-primary);
+        text-align: center;
+      }
+      .os .osbody {
+        font-size: 12px;
+        color: var(--ink-text-subdued);
+        text-align: center;
+      }
+      .os .oscancel {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--ink-text-subdued);
+        border: 1px solid var(--ink-border);
+        border-radius: 6px;
+        padding: 5px 14px;
+      }
+      .dim {
+        position: absolute;
+        inset: 0;
+        background: var(--ink-bg-overlay);
+        z-index: 2;
+      }
+
+      /* window chrome for the dedicated fallback window frame */
+      .winbar {
+        height: 32px;
+        background: var(--ink-bg-secondary);
+        border-bottom: 1px solid var(--ink-border);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 12px;
+      }
+      .winbar i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--ink-border);
+      }
+      .winbar .wtitle {
+        margin-left: 8px;
+        font-size: 11px;
+        color: var(--ink-text-subdued);
+      }
+
+      .divider {
+        height: 1px;
+        background: var(--ink-border);
+        margin: 4px 0;
+      }
+      a {
+        color: inherit;
+      }
+
+      /* header right-side controls (UnlockHeader: full-screen + settings dropdown) */
+      .hdricons {
+        display: flex;
+        gap: 2px;
+        margin-left: auto;
+      }
+      .hdricons .iconbtn {
+        color: var(--ink-text-primary);
+      }
+      .hdricons .iconbtn svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      /* gear dropdown menu (features/settings/settings.tsx) */
+      .menu {
+        position: absolute;
+        top: 58px;
+        right: 12px;
+        background: var(--ink-bg-primary);
+        border-radius: 4px;
+        box-shadow: var(--frame-shadow);
+        padding: 8px;
+        width: 240px;
+        z-index: 4;
+        display: flex;
+        flex-direction: column;
+      }
+      .menu .mi {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--ink-text-primary);
+      }
+      .menu .mi svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+      .menu .mi.danger {
+        color: var(--red-action);
+      }
+      .menu .mi.hover {
+        background: var(--ink-comp-hover);
+      }
+
+      /* bottom sheet (ui Sheet) */
+      .sheet {
+        position: absolute;
+        inset: 0;
+        background: var(--ink-bg-primary);
+        z-index: 4;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .sheet .grab {
+        display: none;
+      }
+      .sheet .shead {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        min-height: 80px;
+        padding: 16px;
+      }
+      .sheet .shead .iconbtn {
+        position: absolute;
+        right: 16px;
+        top: 20px;
+      }
+      .sheet .sheetbody {
+        padding: 24px;
+      }
+      .sheet .sheetfoot {
+        display: flex;
+        gap: 24px;
+        margin-top: auto;
+        min-height: 95px;
+        padding: 24px;
+        background: var(--ink-bg-primary);
+        box-shadow: 0 -8px 24px #12100f0a;
+      }
+      .sheet > .check {
+        margin: 24px 24px 0;
+      }
+      .check {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--ink-text-primary);
+      }
+      .check .box {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        margin-top: 1px;
+        border: 1.5px solid var(--ink-text-subdued);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .check .box.on {
+        background: var(--ink-action);
+        border-color: var(--ink-action);
+        color: var(--ink-bg-primary);
+      }
+      .check .box svg {
+        width: 12px;
+        height: 12px;
+      }
+      .check .box:not(.on) svg {
+        display: none;
+      }
+      .linkline {
+        font-size: 13px;
+        color: var(--ink-text-subdued);
+        text-align: center;
+      }
+      .linkline b {
+        color: var(--ink-text-primary);
+        font-weight: 500;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <h1>Biometric unlock — UI mockups</h1>
+        <p class="lede">
+          Every user-facing surface from the approved plan
+          (<code>.plans/2026-08-04-001-feat-platform-unlock-plan.md</code>), hand-built from the
+          real design system: <code>@leather.io/tokens</code> colors, type scale, spacing, and the
+          existing <code>Button</code>, <code>Input</code>,
+          <code>SettingsButton</code>/<code>ItemLayout</code>, <code>Card</code>,
+          <code>Sheet</code>, and header primitives. The frames cover both password-backed and
+          biometric-only setups: password-first setup with a secondary biometric alternative,
+          mode-aware Settings, automatic high-intent prompting, explicit low-intent authentication,
+          and guarded recovery. They follow your system theme and use Leather's light and dark
+          palettes.
+        </p>
+        <div class="meta">
+          <span>Popup frames: 390px (tokens sizes.popupWidth)</span>
+          <span>Type: heading.03 / label.02 / body.02 / caption.01</span>
+          <span>Chrome extension only</span>
+        </div>
+        <p class="fontnote">
+          <b>Font substitution:</b> Leather ships the licensed faces <b>Marche Super</b> (uppercase
+          headings) and <b>ABC Diatype</b> (labels/body), which can't be embedded here. Headings use
+          Arial Black and text uses Helvetica Neue as stand-ins — expect real builds to look
+          slightly better. The dashed panels are <b>Chrome/OS system UI</b>, drawn schematically:
+          Leather never renders or restyles them.
+        </p>
+      </header>
+
+      <section class="flow">
+        <div class="flowhead">
+          <span class="tag">Flow A</span>
+          <h2>Protect the first software wallet</h2>
+        </div>
+        <p class="flowsub">
+          Shown whenever the profile has no software wallet: first install, after reset, or when a
+          Ledger-only profile adds its first software wallet. It preserves today's Set a password
+          screen as the primary path and adds Use biometrics as a secondary alternative. A
+          definitive Chromium capability failure disables that secondary action with an explanatory
+          tooltip; Firefox keeps the existing password-only screen.
+        </p>
+
+        <div class="frames">
+          <div class="fig wide">
+            <div class="figcap">
+              <span class="n">A1</span>
+              <h3>First software wallet — password primary</h3>
+            </div>
+            <div class="device wide" style="height: 500px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 24px;
+                  padding: 32px 24px 24px;
+                  flex: 1;
+                  justify-content: space-between;
+                "
+              >
+                <div style="width: 33.333%; display: flex; flex-direction: column; gap: 16px">
+                  <p class="lh-h3">Set a password</p>
+                  <p class="lh-body2 subdue">
+                    Your password protects your Secret Key on this device only. To access your
+                    wallet on another device, you'll need just your Secret Key.
+                  </p>
+                </div>
+                <div class="choice-card" style="flex: 1; justify-content: center">
+                  <div class="inp focus"><span class="lbl">Password</span></div>
+                  <div class="strength"><span style="width: 0"></span></div>
+                  <p class="lh-cap" style="margin: 0">Password strength: —</p>
+                  <button class="btn btn-disabled"><span>Continue</span></button>
+                  <div class="divider"></div>
+                  <p class="lh-cap" style="margin: 0">
+                    Prefer biometrics? Use your device's fingerprint, face, PIN, or password.
+                  </p>
+                  <button class="btn btn-outline"><span>Use biometrics</span></button>
+                </div>
+              </div>
+            </div>
+            <p class="fignote">
+              This is today's <b>Set a password</b> experience, not a new choice screen. Password
+              entry, strength feedback, and the solid Continue action remain primary; qualified
+              Chromium builds add one outlined <b>Use biometrics</b> alternative. The description is
+              Leather's existing password-flow copy. There is no biometric-specific loss warning,
+              future-facing checkbox, or later onboarding upsell.
+            </p>
+          </div>
+
+          <div class="fig wide">
+            <div class="figcap">
+              <span class="n">A2</span>
+              <h3>Use biometrics — system ceremony starts from the secondary action</h3>
+            </div>
+            <div class="device wide" style="height: 500px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 24px;
+                  padding: 32px 24px 24px;
+                  flex: 1;
+                  justify-content: space-between;
+                "
+              >
+                <div style="width: 33.333%; display: flex; flex-direction: column; gap: 16px">
+                  <p class="lh-h3">Set a password</p>
+                  <p class="lh-body2 subdue">
+                    Your password protects your Secret Key on this device only. To access your
+                    wallet on another device, you'll need just your Secret Key.
+                  </p>
+                </div>
+                <div class="choice-card" style="flex: 1; justify-content: center">
+                  <div class="inp"><span class="lbl">Password</span></div>
+                  <div class="strength"><span style="width: 0"></span></div>
+                  <p class="lh-cap" style="margin: 0">Password strength: —</p>
+                  <button class="btn btn-disabled"><span>Continue</span></button>
+                  <div class="divider"></div>
+                  <p class="lh-cap" style="margin: 0">
+                    Prefer biometrics? Use your device's fingerprint, face, PIN, or password.
+                  </p>
+                  <button class="btn btn-outline btn-busy"><span>Use biometrics</span></button>
+                </div>
+              </div>
+              <div class="dim"></div>
+              <div class="os" style="top: 100px">
+                <span class="osbadge">Chrome / OS — system UI</span>
+                <span class="oscircle"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 4a7 7 0 0 1 7 7c0 2.5-.5 5-1.5 7M12 4a7 7 0 0 0-7 7c0 2.5.5 5 1.5 7M12 8a3.5 3.5 0 0 1 3.5 3.5c0 2-.3 4-1 5.5M12 8a3.5 3.5 0 0 0-3.5 3.5c0 2 .3 4 1 5.5M12 11.5v3"
+                    /></svg
+                ></span>
+                <span class="ostitle">Verify it's you</span>
+                <span class="osbody">Chrome wants to create a passkey for "Leather"</span>
+                <span class="oscancel">Cancel</span>
+              </div>
+            </div>
+            <p class="fignote">
+              The secondary Use biometrics click is already high intent, so it opens the Chrome/OS
+              ceremony immediately. There is no second Leather confirmation. Cancel returns
+              neutrally to the same password-first screen with the in-progress mnemonic still only
+              in component memory; failure returns with provider-aware retry guidance. No wallet,
+              mode, wrapper, or session key is persisted until the complete biometric-only setup
+              succeeds.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= FLOW B: DISCOVER + ENABLE ================= -->
+      <section class="flow">
+        <div class="flowhead">
+          <span class="tag">Flow B</span>
+          <h2>Discover and enable biometric unlock</h2>
+        </div>
+        <p class="flowsub">
+          Settings is the permanent management and post-setup discovery path. The row appears
+          whenever a software wallet exists and stays hidden in Ledger-only profiles.
+          Password-backed setups confirm the current Leather password before enrollment or
+          replacement. Biometric-only setups are already On and confirm with the currently
+          configured biometric credential before replacement or setting a password.
+        </p>
+
+        <div class="frames">
+          <!-- B1: settings menu -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">B1</span>
+              <h3>Settings — new row, Off state</h3>
+            </div>
+            <div class="device" style="height: 632px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+                <span class="netchip">mainnet</span>
+              </div>
+              <div style="padding: 0 24px 8px"><p class="lh-h1">Settings</p></div>
+              <div style="display: flex; flex-direction: column; padding: 16px 0 0">
+                <div class="srow">
+                  <span class="av"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="8" cy="15" r="4" />
+                      <path d="M11 12L20 3M17 6l3 3M14.5 8.5l2 2" /></svg
+                  ></span>
+                  <span class="t lh-label2">Secret Key</span>
+                  <span class="right"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M9 6l6 6-6 6" /></svg
+                  ></span>
+                </div>
+                <div class="srow hilite">
+                  <span class="av"
+                    ><svg
+                      viewBox="0 0 24 25"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M12 14.595v3m-4-7v-3a4 4 0 0 1 7.874-1M6 21.595h12a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1Z"
+                      /></svg
+                  ></span>
+                  <span class="t lh-label2">Biometric unlock</span>
+                  <span class="right"
+                    ><span class="lh-cap">Off</span
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M9 6l6 6-6 6" /></svg
+                  ></span>
+                </div>
+                <div class="srow">
+                  <span class="av"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="10" r="3.5" />
+                      <path d="M12 3.5v1.5M18 10h1.5M4.5 10H6M7 17c1.5 2 8.5 2 10 0" /></svg
+                  ></span>
+                  <span class="t lh-label2">Theme</span>
+                  <span class="right"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M9 6l6 6-6 6" /></svg
+                  ></span>
+                </div>
+                <div class="srow">
+                  <span class="av"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="8.5" />
+                      <path d="M3.5 12h17M12 3.5c-5 5-5 12 0 17M12 3.5c5 5 5 12 0 17" /></svg
+                  ></span>
+                  <span class="t lh-label2">Network</span>
+                  <span class="right"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M9 6l6 6-6 6" /></svg
+                  ></span>
+                </div>
+                <div class="srow">
+                  <span class="av"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M6 10a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5h-15S6 14 6 10ZM10 19a2.2 2.2 0 0 0 4 0"
+                      /></svg
+                  ></span>
+                  <span class="t lh-label2">Notification</span>
+                  <span class="right"><span class="switch"></span></span>
+                </div>
+                <div class="srow">
+                  <span class="av"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="8.5" />
+                      <path d="M9.5 9.5a2.5 2.5 0 0 1 5 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01" /></svg
+                  ></span>
+                  <span class="t lh-label2">Help</span>
+                  <span class="right"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M8 16L16 8M10 8h6v6" /></svg
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <p class="fignote">
+              New <b>SettingsButton</b> chevron row with an <b>Off/On caption</b> — the only
+              extension to the existing component (U3). Placed directly under Secret Key. Hidden
+              when no software wallet exists; gated on <code>hasSoftwareKeys</code>, so it stays
+              visible in mixed Ledger + software-wallet profiles. The unavailable variant is B7.
+              Blue outline marks the new element only.
+            </p>
+          </div>
+
+          <!-- B2: enable page -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">B2</span>
+              <h3>Biometric unlock page — Off, enable form</h3>
+            </div>
+            <div class="device" style="height: 700px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="content" style="gap: 20px">
+                <p class="lh-h1">Biometric unlock</p>
+                <ul class="bullets">
+                  <li>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="4" y="3.5" width="16" height="17" rx="3" />
+                      <path d="M9 12.5l2 2 4-4.5" /></svg
+                    >Use your device's fingerprint, face, PIN, or password
+                  </li>
+                  <li>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="8" cy="15" r="4" />
+                      <path d="M11 12L20 3M17 6l3 3" /></svg
+                    >Applies to all software wallets in this Leather profile
+                  </li>
+                  <li>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="5" y="10" width="14" height="10" rx="2" />
+                      <path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg
+                    >Your password remains a fallback in this Leather profile
+                  </li>
+                  <li>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="8" cy="15" r="4" />
+                      <path d="M11 12L20 3M17 6l3 3" /></svg
+                    >You'll still need your Secret Key to restore on another device
+                  </li>
+                  <li>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M7 16.5a4.5 4.5 0 0 1 .5-9 5.5 5.5 0 0 1 10.6 1.5A4 4 0 0 1 17 16.5H7Z"
+                      /></svg
+                    >Chrome may sync the credential, but your wallet stays on this device
+                  </li>
+                  <li>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="8.5" />
+                      <path d="M12 7.5V12l3 2" /></svg
+                    >Anyone who can unlock your user account will be able to unlock this wallet
+                  </li>
+                </ul>
+                <div class="inp"><span class="lbl">Enter your password</span></div>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-disabled"><span>Set up biometric unlock</span></button>
+              </div>
+            </div>
+            <p class="fignote">
+              One page, no wizard. All six bullets are the plan's required disclosures, including
+              the local password fallback, separate Secret Key recovery, synced-credential
+              distinction, and user-account access implication. Button disabled until a password is
+              entered; the password is verified <b>before</b> any system prompt opens.
+            </p>
+          </div>
+
+          <!-- B3: wrong password -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">B3</span>
+              <h3>Wrong password — no prompt fired</h3>
+            </div>
+            <div class="device" style="height: 632px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="content" style="gap: 20px">
+                <p class="lh-h1">Biometric unlock</p>
+                <ul class="bullets">
+                  <li>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="4" y="3.5" width="16" height="17" rx="3" />
+                      <path d="M9 12.5l2 2 4-4.5" /></svg
+                    >Use your device's fingerprint, face, PIN, or password
+                  </li>
+                  <li>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="8" cy="15" r="4" />
+                      <path d="M11 12L20 3M17 6l3 3" /></svg
+                    >Applies to all software wallets in this Leather profile
+                  </li>
+                  <li>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="5" y="10" width="14" height="10" rx="2" />
+                      <path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg
+                    >Your password remains a fallback in this Leather profile
+                  </li>
+                </ul>
+                <div class="inp err filled">
+                  <span class="lbl">Enter your password</span><span class="val">••••••••</span>
+                </div>
+                <div class="errlabel">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 3.5 21 19H3L12 3.5Z" />
+                    <path d="M12 10v4M12 16.5h.01" /></svg
+                  >The password you entered doesn't match
+                </div>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Set up biometric unlock</span></button>
+              </div>
+            </div>
+            <p class="fignote">
+              Inline error using the existing <b>Input</b> error state and <b>ErrorLabel</b>, same
+              copy as the add-wallet password check. <b>No WebAuthn prompt is opened</b> on a wrong
+              password (Flow B failure behavior).
+            </p>
+          </div>
+
+          <!-- B4: OS ceremony -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">B4</span>
+              <h3>Enrollment ceremony — system prompt</h3>
+            </div>
+            <div class="device" style="height: 632px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="content" style="gap: 20px">
+                <p class="lh-h1">Biometric unlock</p>
+                <p class="lh-cap">Follow the prompt from Chrome to finish setting up.</p>
+                <div class="inp filled">
+                  <span class="lbl">Enter your password</span><span class="val">••••••••••</span>
+                </div>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid btn-busy"><span>Set up biometric unlock</span></button>
+              </div>
+              <div class="dim"></div>
+              <div class="os">
+                <span class="osbadge">Chrome / OS — system UI</span>
+                <span class="oscircle"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 4a7 7 0 0 1 7 7c0 2.5-.5 5-1.5 7M12 4a7 7 0 0 0-7 7c0 2.5.5 5 1.5 7M12 8a3.5 3.5 0 0 1 3.5 3.5c0 2-.3 4-1 5.5M12 8a3.5 3.5 0 0 0-3.5 3.5c0 2 .3 4 1 5.5M12 11.5v3"
+                    /></svg
+                ></span>
+                <span class="ostitle">Verify it's you</span>
+                <span class="osbody">Chrome wants to create a passkey for "Leather"</span>
+                <span class="oscancel">Cancel</span>
+              </div>
+            </div>
+            <p class="fignote">
+              The Enable button shows the existing <b>aria-busy spinner</b>; the verification dialog
+              itself is Chrome/OS-owned. Canceling here is <b>neutral</b>: back to B2, still Off, no
+              error banner. Each enrollment uses a fresh credential identity (KTD-13), so a failed
+              attempt can never break an older working setup.
+            </p>
+          </div>
+
+          <!-- B5: provider PRF unavailable -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">B5</span>
+              <h3>Provider can't do it — retry guidance</h3>
+            </div>
+            <div class="device" style="height: 632px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="content" style="gap: 20px">
+                <p class="lh-h1">Biometric unlock</p>
+                <div class="callout callout-warn">
+                  <span class="ctext"
+                    >The option you chose can't be used for biometric unlock. Try again and choose a
+                    different option when Chrome asks where to save your passkey.</span
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 3.5 21 19H3L12 3.5Z" />
+                    <path d="M12 10v4M12 16.5h.01" />
+                  </svg>
+                </div>
+                <div class="inp filled">
+                  <span class="lbl">Enter your password</span><span class="val">••••••••••</span>
+                </div>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Try biometric unlock again</span></button>
+              </div>
+            </div>
+            <p class="fignote">
+              <b>Provider-aware copy</b> (amended Flow B): the selected save location failed, not
+              the whole Chrome/device configuration. State stays Off and the user can retry because
+              this condition was learned only from the real ceremony. B7 is reserved for a separate
+              U0-proven definitive preflight failure.
+            </p>
+          </div>
+
+          <!-- B6: on + toast -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">B6</span>
+              <h3>On — with success toast</h3>
+            </div>
+            <div class="device" style="height: 632px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="content" style="gap: 20px">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                  "
+                >
+                  <p class="lh-h1">Biometric unlock</p>
+                  <span class="pill pill-on">On</span>
+                </div>
+                <p class="lh-body2">
+                  Unlock Leather, reveal your Secret Key, and add wallets using your device's
+                  fingerprint, face, PIN, or password.
+                </p>
+                <p class="lh-cap">
+                  Your Leather password remains a fallback in this profile. You'll need your Secret
+                  Key to restore your wallet on another device.
+                </p>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-outline"><span>Set up again</span></button>
+                <button class="btn btn-ghost"><span>Disable</span></button>
+              </div>
+              <div class="toast">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="8.5" />
+                  <path d="M7.5 12.5l3 3 6-6" /></svg
+                >Biometric unlock enabled
+              </div>
+            </div>
+            <p class="fignote">
+              The password-backed On state has two actions: <b>Set up again</b> reuses B2–B5 with
+              password confirmation and an atomic replacement ceremony; <b>Disable</b> opens B8. The
+              old config stays authoritative until replacement succeeds. No credential list, device
+              names, or timestamps. Toast uses the existing toast primitive.
+            </p>
+          </div>
+
+          <!-- B7: unavailable -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">B7</span>
+              <h3>Settings — unavailable, no dead-end page</h3>
+            </div>
+            <div class="device" style="height: 420px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+                <span class="netchip">mainnet</span>
+              </div>
+              <div style="padding: 0 24px 8px"><p class="lh-h1">Settings</p></div>
+              <div style="display: flex; flex-direction: column; padding: 16px 0 0">
+                <div class="srow">
+                  <span class="av"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="8" cy="15" r="4" />
+                      <path d="M11 12L20 3M17 6l3 3M14.5 8.5l2 2" /></svg
+                  ></span>
+                  <span class="t lh-label2">Secret Key</span>
+                  <span class="right"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M9 6l6 6-6 6" /></svg
+                  ></span>
+                </div>
+                <div class="srow unavailable hilite" aria-disabled="true">
+                  <span class="av"
+                    ><svg
+                      viewBox="0 0 24 25"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M12 14.595v3m-4-7v-3a4 4 0 0 1 7.874-1M6 21.595h12a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1Z"
+                      /></svg
+                  ></span>
+                  <span class="t lh-label2">Biometric unlock</span>
+                  <span class="right"><span class="lh-cap">Unavailable</span></span>
+                </div>
+                <div class="srow">
+                  <span class="av"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="10" r="3.5" />
+                      <path d="M12 3.5v1.5M18 10h1.5M4.5 10H6M7 17c1.5 2 8.5 2 10 0" /></svg
+                  ></span>
+                  <span class="t lh-label2">Theme</span>
+                  <span class="right"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M9 6l6 6-6 6" /></svg
+                  ></span>
+                </div>
+              </div>
+              <div class="mock-tooltip">
+                Set up a screen lock that Chrome can use to enable biometric unlock.
+              </div>
+            </div>
+            <p class="fignote">
+              When U0-proven preflight detection is definitively negative, the Settings row is
+              noninteractive, has no chevron, and explains why through the existing
+              <b>BasicTooltip</b> convention on hover and keyboard focus. It never navigates to a
+              standalone unavailable page. Advisory or uncertain checks leave the row enabled so a
+              real provider ceremony can qualify support. The first-wallet
+              <b>Use biometrics</b> action follows the same disabled-with-tooltip behavior in this
+              state; Firefox continues to compile the feature out.
+            </p>
+          </div>
+
+          <!-- B8: disable dialog -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">B8</span>
+              <h3>Disable — lightweight confirmation</h3>
+            </div>
+            <div class="device" style="height: 420px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="content" style="gap: 20px">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                  "
+                >
+                  <p class="lh-h1">Biometric unlock</p>
+                  <span class="pill pill-on">On</span>
+                </div>
+              </div>
+              <div class="dim"></div>
+              <div class="sheet">
+                <span class="grab"></span>
+                <div class="shead">
+                  <p class="lh-label2" style="font-size: 21px; line-height: 28px; margin: 0">
+                    Disable biometric unlock?
+                  </p>
+                  <span class="iconbtn" style="width: 40px; height: 40px"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M6 6l12 12M18 6L6 18" /></svg
+                  ></span>
+                </div>
+                <div class="sheetbody">
+                  <p class="lh-body2 subdue">
+                    You'll enter your wallet password the next time you unlock Leather. Your wallets
+                    and password aren't affected.
+                  </p>
+                </div>
+                <div class="sheetfoot">
+                  <button class="btn btn-outline"><span>Cancel</span></button>
+                  <button class="btn btn-solid"><span>Disable</span></button>
+                </div>
+              </div>
+            </div>
+            <p class="fignote">
+              Password-backed setups only. One confirmation using Leather's existing
+              <b>Sheet</b> convention, with <b>no authentication ceremony</b> (Flow F): disabling
+              can't expose secrets, and the configured Leather password remains the next-unlock
+              method. Biometric-only setups never render Disable while biometrics are their sole
+              authenticator. The provider-side passkey may remain — cleanup is best-effort.
+            </p>
+          </div>
+
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">B9</span>
+              <h3>On — biometric-only setup</h3>
+            </div>
+            <div class="device" style="height: 632px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="content" style="gap: 20px">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                  "
+                >
+                  <p class="lh-h1">Biometric unlock</p>
+                  <span class="pill pill-on">On</span>
+                </div>
+                <p class="lh-body2">
+                  Unlock Leather, reveal your Secret Key, and add wallets using your device's
+                  fingerprint, face, PIN, or password.
+                </p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Biometric unlock protects your Secret Key on this device only. To access your
+                  wallet on another device, you'll need just your Secret Key.
+                </p>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-outline"><span>Set up again</span></button>
+                <button class="btn btn-solid"><span>Set a password</span></button>
+              </div>
+            </div>
+            <p class="fignote">
+              Biometric-only management has <b>no Disable action</b>. Set up again and Set a
+              password both start by confirming with the currently configured credential; an
+              unlocked session alone is insufficient. Replacement leaves the old credential
+              authoritative until success. Setting a password keeps biometric unlock On and makes
+              the new password an additional fallback.
+            </p>
+          </div>
+
+          <div class="fig wide">
+            <div class="figcap">
+              <span class="n">B10</span>
+              <h3>Set a password — after biometric confirmation</h3>
+            </div>
+            <div class="device wide" style="height: 480px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 24px;
+                  padding: 32px 24px 24px;
+                  flex: 1;
+                  justify-content: space-between;
+                "
+              >
+                <div style="width: 33.333%; display: flex; flex-direction: column; gap: 16px">
+                  <p class="lh-h3">Set a password</p>
+                  <p class="lh-body2 subdue">
+                    Your password protects your Secret Key on this device only. To access your
+                    wallet on another device, you'll need your Secret Key.
+                  </p>
+                  <p class="lh-cap">Biometric unlock will stay on.</p>
+                </div>
+                <div class="choice-card" style="flex: 1; justify-content: center">
+                  <div class="inp filled focus">
+                    <span class="lbl">Password</span><span class="val">••••••••••••</span>
+                  </div>
+                  <div class="strength"><span></span></div>
+                  <p class="lh-cap" style="margin: 0">Password strength: Strong</p>
+                  <button class="btn btn-solid"><span>Continue</span></button>
+                </div>
+              </div>
+            </div>
+            <p class="fignote">
+              Reached only after a successful current-biometric ceremony from B9. The form reuses
+              today's <b>SetPasswordPage</b> field, strength feedback, two-column card, and Continue
+              action. Continue prepares every replacement ciphertext and the updated biometric
+              wrapper, then commits the password-backed mode atomically. Loading prevents navigation
+              or duplicate submission; any failure leaves the prior biometric-only setup usable.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= FLOW C: MAIN UNLOCK ================= -->
+      <section class="flow">
+        <div class="flowhead">
+          <span class="tag">Flow C</span>
+          <h2>Main unlock</h2>
+        </div>
+        <p class="flowsub">
+          Opening locked Leather from the
+          <b>toolbar icon or Chrome keyboard shortcut is high-intent</b>: with biometric unlock
+          configured, that opening action starts exactly one ceremony immediately—no intermediate
+          Leather button. Cancellation and failure settle on the configured methods: password-backed
+          setups show the focused password form, biometric retry, and Forgot password?;
+          biometric-only setups show biometric retry and Can't use biometrics? with no password
+          field. Dapp-created request windows, restored pages, and direct URLs are
+          <b>low-intent</b>: they never auto-prompt and show only configured explicit methods.
+        </p>
+
+        <div class="frames">
+          <!-- C0: current -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">C0</span>
+              <h3>Today / not enrolled — unchanged</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="lh-header" style="padding-left: 24px">
+                <span class="logo"
+                  ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86 19" fill="none">
+                    <path
+                      fill="currentColor"
+                      d="M83.004 13.53c-.796 1.504-1.965 2.427-2.868 2.427-.691 0-1.222-.58-1.222-1.952 0-2.136 1.062-5.46 1.567-7.2h-7.916l-.77 2.664c-1.169 4.088-3.002 6.488-5.897 6.488-.425 0-.93-.08-1.195-.237 2.178-1.556 4.383-4.036 4.383-6.489 0-2.03-1.488-2.822-2.843-2.822-4.25 0-7.278 5.539-6.136 9.02-.69.238-1.328.528-2.098.528-.77 0-1.195-.527-1.036-1.24.186-.844 1.248-3.666 1.248-5.196 0-1.872-1.46-3.138-3.665-3.138-.505 0-1.063.132-1.62.343l1.407-4.932h-2.762l-3.294 11.5c-.505 1.793-2.019 2.663-3.267 2.663-1.567 0-2.152-1.24-1.78-2.48l1.169-4.035h3.002l.77-2.637h-3.028l1.434-5.011h-2.763L40.24 14.295c-.346 1.187-1.17 1.662-1.886 1.662-1.143 0-1.488-.923-1.249-1.767l2.125-7.385c-.744-.238-1.806-.422-2.63-.422-4.754 0-9.243 4.193-9.243 8.334v.012c-1.272.81-2.748 1.228-4.038 1.228-.903 0-1.408-.08-1.806-.29 2.231-1.45 4.542-3.877 4.542-6.436 0-2.03-1.487-2.822-2.842-2.822-4.224 0-7.172 5.407-6.19 8.862-.929.475-1.779.712-2.709.712-1.46 0-2.842-.606-3.904-1.82l1.354-4.72c3.294-.264 7.65-2.955 7.65-6.252C19.413 1.134 18.033 0 16.28 0c-3.108 0-5.445 2.98-6.534 6.805-2.02-.238-3.108-2.4-1.514-5.011H5.36C3.581 5.724 5.387 8.466 9 9.442l-.877 3.034c-1.328-.818-2.364-1.135-3.586-1.135-5.87 0-6.11 7.254-.345 7.254 1.673 0 3.692-.87 4.755-2.031 1.514 1.319 3.001 2.03 4.914 2.03 1.46 0 2.948-.421 4.489-1.318 1.036.844 2.39 1.319 4.33 1.319 1.722 0 3.444-.355 5.218-1.593.525.918 1.484 1.593 3.096 1.593 1.354 0 2.842-.58 3.958-1.82.823 1.187 2.072 1.82 3.346 1.82 1.063 0 2.152-.422 3.082-1.266.743.79 2.098 1.266 3.586 1.266 2.31 0 4.887-1.214 5.79-4.352l1.036-3.64c.32-1.082 1.17-1.583 2.152-1.583.85 0 1.301.422 1.301 1.16 0 1.372-1.221 4.643-1.221 5.803 0 1.952 1.328 2.612 3.107 2.612 1.116 0 1.993-.027 4.49-1.134 1.009.738 2.576 1.134 4.356 1.134 3.958 0 6.72-2.69 8.606-9.153h2.39c-.45 1.504-.77 3.165-.77 4.642 0 2.48.904 4.51 3.693 4.51 2.178 0 5.206-2.189 5.976-5.064h-2.869ZM15.881 2.639c.504 0 .85.29.85.712 0 1.398-2.497 3.191-4.224 3.455.797-2.743 2.417-4.167 3.374-4.167ZM4.326 15.958c-2.258 0-2.072-2.216.186-2.216.983 0 1.753.316 2.683 1.107-.638.712-1.86 1.108-2.87 1.108ZM22.415 9.02c.558 0 .903.343.903.897 0 1.477-1.939 3.297-3.586 4.22-.584-1.688 1.09-5.117 2.683-5.117Zm9.058 6.937c-.824 0-1.222-.58-1.222-1.424 0-2.031 2.205-5.46 5.578-5.513-1.222 4.247-2.045 6.937-4.356 6.937ZM65.447 9.02c.557 0 .903.343.903.897 0 1.477-2.02 3.376-3.56 4.326-.664-1.583 1.036-5.223 2.657-5.223Z"
+                    /></svg
+                ></span>
+                <span class="hdricons">
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" /></svg
+                  ></span>
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"
+                      /></svg
+                  ></span>
+                </span>
+              </div>
+              <div class="content" style="gap: 16px">
+                <p class="lh-h3">Enter your password</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Your password is used to secure your Secret Key and is only used locally on your
+                  device.
+                </p>
+                <div class="inp"><span class="lbl">Enter your password</span></div>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Continue</span></button>
+              </div>
+            </div>
+            <p class="fignote">
+              The existing <code>RequestPassword</code> screen, shown for comparison. Users without
+              an enrolled config keep exactly this (R5) — including waiting messages and
+              Enter-to-submit.
+            </p>
+          </div>
+
+          <!-- C1: enrolled -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">C1</span>
+              <h3>Toolbar open — ceremony starts immediately</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="lh-header" style="padding-left: 24px">
+                <span class="logo"
+                  ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86 19" fill="none">
+                    <path
+                      fill="currentColor"
+                      d="M83.004 13.53c-.796 1.504-1.965 2.427-2.868 2.427-.691 0-1.222-.58-1.222-1.952 0-2.136 1.062-5.46 1.567-7.2h-7.916l-.77 2.664c-1.169 4.088-3.002 6.488-5.897 6.488-.425 0-.93-.08-1.195-.237 2.178-1.556 4.383-4.036 4.383-6.489 0-2.03-1.488-2.822-2.843-2.822-4.25 0-7.278 5.539-6.136 9.02-.69.238-1.328.528-2.098.528-.77 0-1.195-.527-1.036-1.24.186-.844 1.248-3.666 1.248-5.196 0-1.872-1.46-3.138-3.665-3.138-.505 0-1.063.132-1.62.343l1.407-4.932h-2.762l-3.294 11.5c-.505 1.793-2.019 2.663-3.267 2.663-1.567 0-2.152-1.24-1.78-2.48l1.169-4.035h3.002l.77-2.637h-3.028l1.434-5.011h-2.763L40.24 14.295c-.346 1.187-1.17 1.662-1.886 1.662-1.143 0-1.488-.923-1.249-1.767l2.125-7.385c-.744-.238-1.806-.422-2.63-.422-4.754 0-9.243 4.193-9.243 8.334v.012c-1.272.81-2.748 1.228-4.038 1.228-.903 0-1.408-.08-1.806-.29 2.231-1.45 4.542-3.877 4.542-6.436 0-2.03-1.487-2.822-2.842-2.822-4.224 0-7.172 5.407-6.19 8.862-.929.475-1.779.712-2.709.712-1.46 0-2.842-.606-3.904-1.82l1.354-4.72c3.294-.264 7.65-2.955 7.65-6.252C19.413 1.134 18.033 0 16.28 0c-3.108 0-5.445 2.98-6.534 6.805-2.02-.238-3.108-2.4-1.514-5.011H5.36C3.581 5.724 5.387 8.466 9 9.442l-.877 3.034c-1.328-.818-2.364-1.135-3.586-1.135-5.87 0-6.11 7.254-.345 7.254 1.673 0 3.692-.87 4.755-2.031 1.514 1.319 3.001 2.03 4.914 2.03 1.46 0 2.948-.421 4.489-1.318 1.036.844 2.39 1.319 4.33 1.319 1.722 0 3.444-.355 5.218-1.593.525.918 1.484 1.593 3.096 1.593 1.354 0 2.842-.58 3.958-1.82.823 1.187 2.072 1.82 3.346 1.82 1.063 0 2.152-.422 3.082-1.266.743.79 2.098 1.266 3.586 1.266 2.31 0 4.887-1.214 5.79-4.352l1.036-3.64c.32-1.082 1.17-1.583 2.152-1.583.85 0 1.301.422 1.301 1.16 0 1.372-1.221 4.643-1.221 5.803 0 1.952 1.328 2.612 3.107 2.612 1.116 0 1.993-.027 4.49-1.134 1.009.738 2.576 1.134 4.356 1.134 3.958 0 6.72-2.69 8.606-9.153h2.39c-.45 1.504-.77 3.165-.77 4.642 0 2.48.904 4.51 3.693 4.51 2.178 0 5.206-2.189 5.976-5.064h-2.869ZM15.881 2.639c.504 0 .85.29.85.712 0 1.398-2.497 3.191-4.224 3.455.797-2.743 2.417-4.167 3.374-4.167ZM4.326 15.958c-2.258 0-2.072-2.216.186-2.216.983 0 1.753.316 2.683 1.107-.638.712-1.86 1.108-2.87 1.108ZM22.415 9.02c.558 0 .903.343.903.897 0 1.477-1.939 3.297-3.586 4.22-.584-1.688 1.09-5.117 2.683-5.117Zm9.058 6.937c-.824 0-1.222-.58-1.222-1.424 0-2.031 2.205-5.46 5.578-5.513-1.222 4.247-2.045 6.937-4.356 6.937ZM65.447 9.02c.557 0 .903.343.903.897 0 1.477-2.02 3.376-3.56 4.326-.664-1.583 1.036-5.223 2.657-5.223Z"
+                    /></svg
+                ></span>
+                <span class="hdricons">
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" /></svg
+                  ></span>
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"
+                      /></svg
+                  ></span>
+                </span>
+              </div>
+              <div class="content" style="gap: 16px">
+                <p class="lh-h3">Unlock Leather</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Use your device's fingerprint, face, PIN, or password.
+                </p>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid btn-busy"><span>Unlock with biometrics</span></button>
+              </div>
+              <div class="dim"></div>
+              <div class="os">
+                <span class="osbadge">Chrome / OS — system UI</span>
+                <span class="oscircle"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 4a7 7 0 0 1 7 7c0 2.5-.5 5-1.5 7M12 4a7 7 0 0 0-7 7c0 2.5.5 5 1.5 7M12 8a3.5 3.5 0 0 1 3.5 3.5c0 2-.3 4-1 5.5M12 8a3.5 3.5 0 0 0-3.5 3.5c0 2 .3 4 1 5.5M12 11.5v3"
+                    /></svg
+                ></span>
+                <span class="ostitle">Verify it's you</span>
+                <span class="osbody">Use "Leather" passkey on this device</span>
+                <span class="oscancel">Cancel</span>
+              </div>
+            </div>
+            <p class="fignote">
+              Selecting the toolbar icon or keyboard shortcut <b>is</b> the unlock action: exactly
+              one ceremony starts on open, with no intermediate button (Flow C step 2). The
+              auto-start requires both the <code>action-popup.html</code> entrypoint and Chrome's
+              real extension-popup view context (KTD-9) — the same URL in a normal tab is
+              low-intent. One attempt per open; remounts can't replay it, a deliberate close/reopen
+              starts one more.
+            </p>
+          </div>
+
+          <!-- C2: use password -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">C2</span>
+              <h3>Cancelled — password-backed fallback</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="lh-header" style="padding-left: 24px">
+                <span class="logo"
+                  ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86 19" fill="none">
+                    <path
+                      fill="currentColor"
+                      d="M83.004 13.53c-.796 1.504-1.965 2.427-2.868 2.427-.691 0-1.222-.58-1.222-1.952 0-2.136 1.062-5.46 1.567-7.2h-7.916l-.77 2.664c-1.169 4.088-3.002 6.488-5.897 6.488-.425 0-.93-.08-1.195-.237 2.178-1.556 4.383-4.036 4.383-6.489 0-2.03-1.488-2.822-2.843-2.822-4.25 0-7.278 5.539-6.136 9.02-.69.238-1.328.528-2.098.528-.77 0-1.195-.527-1.036-1.24.186-.844 1.248-3.666 1.248-5.196 0-1.872-1.46-3.138-3.665-3.138-.505 0-1.063.132-1.62.343l1.407-4.932h-2.762l-3.294 11.5c-.505 1.793-2.019 2.663-3.267 2.663-1.567 0-2.152-1.24-1.78-2.48l1.169-4.035h3.002l.77-2.637h-3.028l1.434-5.011h-2.763L40.24 14.295c-.346 1.187-1.17 1.662-1.886 1.662-1.143 0-1.488-.923-1.249-1.767l2.125-7.385c-.744-.238-1.806-.422-2.63-.422-4.754 0-9.243 4.193-9.243 8.334v.012c-1.272.81-2.748 1.228-4.038 1.228-.903 0-1.408-.08-1.806-.29 2.231-1.45 4.542-3.877 4.542-6.436 0-2.03-1.487-2.822-2.842-2.822-4.224 0-7.172 5.407-6.19 8.862-.929.475-1.779.712-2.709.712-1.46 0-2.842-.606-3.904-1.82l1.354-4.72c3.294-.264 7.65-2.955 7.65-6.252C19.413 1.134 18.033 0 16.28 0c-3.108 0-5.445 2.98-6.534 6.805-2.02-.238-3.108-2.4-1.514-5.011H5.36C3.581 5.724 5.387 8.466 9 9.442l-.877 3.034c-1.328-.818-2.364-1.135-3.586-1.135-5.87 0-6.11 7.254-.345 7.254 1.673 0 3.692-.87 4.755-2.031 1.514 1.319 3.001 2.03 4.914 2.03 1.46 0 2.948-.421 4.489-1.318 1.036.844 2.39 1.319 4.33 1.319 1.722 0 3.444-.355 5.218-1.593.525.918 1.484 1.593 3.096 1.593 1.354 0 2.842-.58 3.958-1.82.823 1.187 2.072 1.82 3.346 1.82 1.063 0 2.152-.422 3.082-1.266.743.79 2.098 1.266 3.586 1.266 2.31 0 4.887-1.214 5.79-4.352l1.036-3.64c.32-1.082 1.17-1.583 2.152-1.583.85 0 1.301.422 1.301 1.16 0 1.372-1.221 4.643-1.221 5.803 0 1.952 1.328 2.612 3.107 2.612 1.116 0 1.993-.027 4.49-1.134 1.009.738 2.576 1.134 4.356 1.134 3.958 0 6.72-2.69 8.606-9.153h2.39c-.45 1.504-.77 3.165-.77 4.642 0 2.48.904 4.51 3.693 4.51 2.178 0 5.206-2.189 5.976-5.064h-2.869ZM15.881 2.639c.504 0 .85.29.85.712 0 1.398-2.497 3.191-4.224 3.455.797-2.743 2.417-4.167 3.374-4.167ZM4.326 15.958c-2.258 0-2.072-2.216.186-2.216.983 0 1.753.316 2.683 1.107-.638.712-1.86 1.108-2.87 1.108ZM22.415 9.02c.558 0 .903.343.903.897 0 1.477-1.939 3.297-3.586 4.22-.584-1.688 1.09-5.117 2.683-5.117Zm9.058 6.937c-.824 0-1.222-.58-1.222-1.424 0-2.031 2.205-5.46 5.578-5.513-1.222 4.247-2.045 6.937-4.356 6.937ZM65.447 9.02c.557 0 .903.343.903.897 0 1.477-2.02 3.376-3.56 4.326-.664-1.583 1.036-5.223 2.657-5.223Z"
+                    /></svg
+                ></span>
+                <span class="hdricons">
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" /></svg
+                  ></span>
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"
+                      /></svg
+                  ></span>
+                </span>
+              </div>
+              <div class="content" style="gap: 16px">
+                <p class="lh-h3">Unlock Leather</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Your password is used to secure your Secret Key and is only used locally on your
+                  device.
+                </p>
+                <div class="inp focus"><span class="lbl">Enter your password</span></div>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Continue</span></button>
+                <button class="btn btn-ghost"><span>Try biometric unlock again</span></button>
+                <p class="linkline"><b>Forgot password?</b></p>
+              </div>
+            </div>
+            <p class="fignote">
+              Cancellation is neutral:
+              <b>no error, and the password field is already visible and focused</b> — no separate
+              "Use password" click exists anymore (UX principle 6). Enter submits as today. "Try
+              biometric unlock again" is itself high-intent and starts one new attempt. "Forgot
+              password?" opens the guarded sign-out/reset (C6), per R13. A later toolbar open after
+              session suppression uses this same password-first layout without a failure message
+              because no new biometric attempt occurred.
+            </p>
+          </div>
+
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">C2b</span>
+              <h3>Cancelled — biometric-only fallback</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="lh-header" style="padding-left: 24px">
+                <span class="brand-wordmark">Leather</span>
+                <span class="hdricons">
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" /></svg
+                  ></span>
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"
+                      /></svg
+                  ></span>
+                </span>
+              </div>
+              <div class="content" style="gap: 16px">
+                <p class="lh-h3">Unlock Leather</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Use your device's fingerprint, face, PIN, or password.
+                </p>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Try biometric unlock again</span></button>
+                <p class="linkline"><b>Can't use biometrics?</b></p>
+              </div>
+            </div>
+            <p class="fignote">
+              Cancellation is neutral and never invents a Leather password. A non-cancellation
+              failure adds the plan's neutral “Biometric unlock didn't work. Try again or use the
+              configured fallback.” message. Can't use biometrics? opens the guarded sign-out/reset
+              sheet in C7. A session-suppressed toolbar open uses this layout without a failure
+              message.
+            </p>
+          </div>
+
+          <!-- C3: device failure -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">C3</span>
+              <h3>Failure — same screen, plain message</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="lh-header" style="padding-left: 24px">
+                <span class="logo"
+                  ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86 19" fill="none">
+                    <path
+                      fill="currentColor"
+                      d="M83.004 13.53c-.796 1.504-1.965 2.427-2.868 2.427-.691 0-1.222-.58-1.222-1.952 0-2.136 1.062-5.46 1.567-7.2h-7.916l-.77 2.664c-1.169 4.088-3.002 6.488-5.897 6.488-.425 0-.93-.08-1.195-.237 2.178-1.556 4.383-4.036 4.383-6.489 0-2.03-1.488-2.822-2.843-2.822-4.25 0-7.278 5.539-6.136 9.02-.69.238-1.328.528-2.098.528-.77 0-1.195-.527-1.036-1.24.186-.844 1.248-3.666 1.248-5.196 0-1.872-1.46-3.138-3.665-3.138-.505 0-1.063.132-1.62.343l1.407-4.932h-2.762l-3.294 11.5c-.505 1.793-2.019 2.663-3.267 2.663-1.567 0-2.152-1.24-1.78-2.48l1.169-4.035h3.002l.77-2.637h-3.028l1.434-5.011h-2.763L40.24 14.295c-.346 1.187-1.17 1.662-1.886 1.662-1.143 0-1.488-.923-1.249-1.767l2.125-7.385c-.744-.238-1.806-.422-2.63-.422-4.754 0-9.243 4.193-9.243 8.334v.012c-1.272.81-2.748 1.228-4.038 1.228-.903 0-1.408-.08-1.806-.29 2.231-1.45 4.542-3.877 4.542-6.436 0-2.03-1.487-2.822-2.842-2.822-4.224 0-7.172 5.407-6.19 8.862-.929.475-1.779.712-2.709.712-1.46 0-2.842-.606-3.904-1.82l1.354-4.72c3.294-.264 7.65-2.955 7.65-6.252C19.413 1.134 18.033 0 16.28 0c-3.108 0-5.445 2.98-6.534 6.805-2.02-.238-3.108-2.4-1.514-5.011H5.36C3.581 5.724 5.387 8.466 9 9.442l-.877 3.034c-1.328-.818-2.364-1.135-3.586-1.135-5.87 0-6.11 7.254-.345 7.254 1.673 0 3.692-.87 4.755-2.031 1.514 1.319 3.001 2.03 4.914 2.03 1.46 0 2.948-.421 4.489-1.318 1.036.844 2.39 1.319 4.33 1.319 1.722 0 3.444-.355 5.218-1.593.525.918 1.484 1.593 3.096 1.593 1.354 0 2.842-.58 3.958-1.82.823 1.187 2.072 1.82 3.346 1.82 1.063 0 2.152-.422 3.082-1.266.743.79 2.098 1.266 3.586 1.266 2.31 0 4.887-1.214 5.79-4.352l1.036-3.64c.32-1.082 1.17-1.583 2.152-1.583.85 0 1.301.422 1.301 1.16 0 1.372-1.221 4.643-1.221 5.803 0 1.952 1.328 2.612 3.107 2.612 1.116 0 1.993-.027 4.49-1.134 1.009.738 2.576 1.134 4.356 1.134 3.958 0 6.72-2.69 8.606-9.153h2.39c-.45 1.504-.77 3.165-.77 4.642 0 2.48.904 4.51 3.693 4.51 2.178 0 5.206-2.189 5.976-5.064h-2.869ZM15.881 2.639c.504 0 .85.29.85.712 0 1.398-2.497 3.191-4.224 3.455.797-2.743 2.417-4.167 3.374-4.167ZM4.326 15.958c-2.258 0-2.072-2.216.186-2.216.983 0 1.753.316 2.683 1.107-.638.712-1.86 1.108-2.87 1.108ZM22.415 9.02c.558 0 .903.343.903.897 0 1.477-1.939 3.297-3.586 4.22-.584-1.688 1.09-5.117 2.683-5.117Zm9.058 6.937c-.824 0-1.222-.58-1.222-1.424 0-2.031 2.205-5.46 5.578-5.513-1.222 4.247-2.045 6.937-4.356 6.937ZM65.447 9.02c.557 0 .903.343.903.897 0 1.477-2.02 3.376-3.56 4.326-.664-1.583 1.036-5.223 2.657-5.223Z"
+                    /></svg
+                ></span>
+                <span class="hdricons">
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" /></svg
+                  ></span>
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"
+                      /></svg
+                  ></span>
+                </span>
+              </div>
+              <div class="content" style="gap: 16px">
+                <p class="lh-h3">Unlock Leather</p>
+                <p class="lh-cap platform-message">
+                  Biometric unlock didn't work. Try again or enter your password.
+                </p>
+                <div class="inp focus"><span class="lbl">Enter your password</span></div>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Continue</span></button>
+                <button class="btn btn-ghost"><span>Try biometric unlock again</span></button>
+                <p class="linkline"><b>Forgot password?</b></p>
+              </div>
+            </div>
+            <p class="fignote">
+              Real failures only — missing credential, no PRF result, or wrapper decryption failure
+              — get this <b>exact plan copy in neutral body text</b> on the same password-first
+              layout as C2; it is not attached to the password field and Leather never identifies
+              which stored field failed. A later password unlock never auto-deletes the config;
+              fixing it lives in Settings (B6). "Forgot password?" covers the worst case: biometrics
+              broken <em>and</em> password forgotten.
+            </p>
+          </div>
+
+          <!-- C4: low-intent entry -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">C4</span>
+              <h3>Low-intent entry — never auto-prompts</h3>
+            </div>
+            <div class="device win" style="height: 560px">
+              <div class="winbar">
+                <i></i><i></i><i></i
+                ><span class="wtitle">Leather — popup.html (dapp-created request window)</span>
+              </div>
+              <div class="content" style="gap: 16px; padding-top: 28px">
+                <p class="lh-h3">Unlock Leather</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Your password is used to secure your Secret Key and is only used locally on your
+                  device.
+                </p>
+                <div class="inp"><span class="lbl">Enter your password</span></div>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Continue</span></button>
+                <button class="btn btn-ghost"><span>Unlock with biometrics</span></button>
+              </div>
+            </div>
+            <p class="fignote">
+              Password-backed low-intent state. Dapp-created request windows, restored pages, direct
+              URLs, unmarked routes, and remounts show the password form with
+              <b>Unlock with biometrics</b> as an explicit secondary action and never start a
+              ceremony automatically. This also applies to <code>action-popup.html</code> opened
+              directly in a normal tab—the classifier requires Chrome's real popup view context, not
+              just the filename.
+            </p>
+          </div>
+
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">C4b</span>
+              <h3>Low-intent entry — biometric-only setup</h3>
+            </div>
+            <div class="device win" style="height: 560px">
+              <div class="winbar">
+                <i></i><i></i><i></i
+                ><span class="wtitle">Leather — popup.html (dapp-created request window)</span>
+              </div>
+              <div class="content" style="gap: 16px; padding-top: 28px">
+                <p class="lh-h3">Unlock Leather</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Use your device's fingerprint, face, PIN, or password.
+                </p>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Unlock with biometrics</span></button>
+                <p class="linkline"><b>Can't use biometrics?</b></p>
+              </div>
+            </div>
+            <p class="fignote">
+              The same low-intent classification, but only methods configured for the profile are
+              rendered. There is no empty password area, disabled password control, or suggestion
+              that a Leather password exists. The explicit button starts one ceremony; opening or
+              restoring the window does not.
+            </p>
+          </div>
+
+          <!-- C5: gear menu (existing recovery entry) -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">C5</span>
+              <h3>Recovery entry — gear menu (existing, unchanged)</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="lh-header" style="padding-left: 24px">
+                <span class="logo"
+                  ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86 19" fill="none">
+                    <path
+                      fill="currentColor"
+                      d="M83.004 13.53c-.796 1.504-1.965 2.427-2.868 2.427-.691 0-1.222-.58-1.222-1.952 0-2.136 1.062-5.46 1.567-7.2h-7.916l-.77 2.664c-1.169 4.088-3.002 6.488-5.897 6.488-.425 0-.93-.08-1.195-.237 2.178-1.556 4.383-4.036 4.383-6.489 0-2.03-1.488-2.822-2.843-2.822-4.25 0-7.278 5.539-6.136 9.02-.69.238-1.328.528-2.098.528-.77 0-1.195-.527-1.036-1.24.186-.844 1.248-3.666 1.248-5.196 0-1.872-1.46-3.138-3.665-3.138-.505 0-1.063.132-1.62.343l1.407-4.932h-2.762l-3.294 11.5c-.505 1.793-2.019 2.663-3.267 2.663-1.567 0-2.152-1.24-1.78-2.48l1.169-4.035h3.002l.77-2.637h-3.028l1.434-5.011h-2.763L40.24 14.295c-.346 1.187-1.17 1.662-1.886 1.662-1.143 0-1.488-.923-1.249-1.767l2.125-7.385c-.744-.238-1.806-.422-2.63-.422-4.754 0-9.243 4.193-9.243 8.334v.012c-1.272.81-2.748 1.228-4.038 1.228-.903 0-1.408-.08-1.806-.29 2.231-1.45 4.542-3.877 4.542-6.436 0-2.03-1.487-2.822-2.842-2.822-4.224 0-7.172 5.407-6.19 8.862-.929.475-1.779.712-2.709.712-1.46 0-2.842-.606-3.904-1.82l1.354-4.72c3.294-.264 7.65-2.955 7.65-6.252C19.413 1.134 18.033 0 16.28 0c-3.108 0-5.445 2.98-6.534 6.805-2.02-.238-3.108-2.4-1.514-5.011H5.36C3.581 5.724 5.387 8.466 9 9.442l-.877 3.034c-1.328-.818-2.364-1.135-3.586-1.135-5.87 0-6.11 7.254-.345 7.254 1.673 0 3.692-.87 4.755-2.031 1.514 1.319 3.001 2.03 4.914 2.03 1.46 0 2.948-.421 4.489-1.318 1.036.844 2.39 1.319 4.33 1.319 1.722 0 3.444-.355 5.218-1.593.525.918 1.484 1.593 3.096 1.593 1.354 0 2.842-.58 3.958-1.82.823 1.187 2.072 1.82 3.346 1.82 1.063 0 2.152-.422 3.082-1.266.743.79 2.098 1.266 3.586 1.266 2.31 0 4.887-1.214 5.79-4.352l1.036-3.64c.32-1.082 1.17-1.583 2.152-1.583.85 0 1.301.422 1.301 1.16 0 1.372-1.221 4.643-1.221 5.803 0 1.952 1.328 2.612 3.107 2.612 1.116 0 1.993-.027 4.49-1.134 1.009.738 2.576 1.134 4.356 1.134 3.958 0 6.72-2.69 8.606-9.153h2.39c-.45 1.504-.77 3.165-.77 4.642 0 2.48.904 4.51 3.693 4.51 2.178 0 5.206-2.189 5.976-5.064h-2.869ZM15.881 2.639c.504 0 .85.29.85.712 0 1.398-2.497 3.191-4.224 3.455.797-2.743 2.417-4.167 3.374-4.167ZM4.326 15.958c-2.258 0-2.072-2.216.186-2.216.983 0 1.753.316 2.683 1.107-.638.712-1.86 1.108-2.87 1.108ZM22.415 9.02c.558 0 .903.343.903.897 0 1.477-1.939 3.297-3.586 4.22-.584-1.688 1.09-5.117 2.683-5.117Zm9.058 6.937c-.824 0-1.222-.58-1.222-1.424 0-2.031 2.205-5.46 5.578-5.513-1.222 4.247-2.045 6.937-4.356 6.937ZM65.447 9.02c.557 0 .903.343.903.897 0 1.477-2.02 3.376-3.56 4.326-.664-1.583 1.036-5.223 2.657-5.223Z"
+                    /></svg
+                ></span>
+                <span class="hdricons">
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" /></svg
+                  ></span>
+                  <span
+                    class="iconbtn"
+                    style="background: var(--ink-comp-pressed); border-radius: 8px"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"
+                      /></svg
+                  ></span>
+                </span>
+              </div>
+              <div class="content" style="gap: 16px">
+                <p class="lh-h3">Unlock Leather</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Your password is used to secure your Secret Key and is only used locally on your
+                  device.
+                </p>
+                <div class="inp focus"><span class="lbl">Enter your password</span></div>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Continue</span></button>
+                <button class="btn btn-ghost"><span>Try biometric unlock again</span></button>
+                <p class="linkline"><b>Forgot password?</b></p>
+              </div>
+              <div class="menu">
+                <span class="mi danger hover"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M14 4H6.5A1.5 1.5 0 0 0 5 5.5v13A1.5 1.5 0 0 0 6.5 20H14M10 12h10M17 8.5l3.5 3.5-3.5 3.5"
+                    /></svg
+                  >Sign out</span
+                >
+              </div>
+            </div>
+            <p class="fignote">
+              Today's escape hatch, untouched: the
+              <b>UnlockHeader gear menu is available while locked</b>. Settings, Manage wallets, and
+              Lock are hidden; Sign out remains available. This works even when both biometric
+              unlock and the password are unusable — no OS prompt or password is required to reach
+              it.
+            </p>
+          </div>
+
+          <!-- C5: sign-out sheet -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">C6</span>
+              <h3>Forgot password? — existing Sign out confirmation</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="lh-header" style="padding-left: 24px">
+                <span class="logo"
+                  ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86 19" fill="none">
+                    <path
+                      fill="currentColor"
+                      d="M83.004 13.53c-.796 1.504-1.965 2.427-2.868 2.427-.691 0-1.222-.58-1.222-1.952 0-2.136 1.062-5.46 1.567-7.2h-7.916l-.77 2.664c-1.169 4.088-3.002 6.488-5.897 6.488-.425 0-.93-.08-1.195-.237 2.178-1.556 4.383-4.036 4.383-6.489 0-2.03-1.488-2.822-2.843-2.822-4.25 0-7.278 5.539-6.136 9.02-.69.238-1.328.528-2.098.528-.77 0-1.195-.527-1.036-1.24.186-.844 1.248-3.666 1.248-5.196 0-1.872-1.46-3.138-3.665-3.138-.505 0-1.063.132-1.62.343l1.407-4.932h-2.762l-3.294 11.5c-.505 1.793-2.019 2.663-3.267 2.663-1.567 0-2.152-1.24-1.78-2.48l1.169-4.035h3.002l.77-2.637h-3.028l1.434-5.011h-2.763L40.24 14.295c-.346 1.187-1.17 1.662-1.886 1.662-1.143 0-1.488-.923-1.249-1.767l2.125-7.385c-.744-.238-1.806-.422-2.63-.422-4.754 0-9.243 4.193-9.243 8.334v.012c-1.272.81-2.748 1.228-4.038 1.228-.903 0-1.408-.08-1.806-.29 2.231-1.45 4.542-3.877 4.542-6.436 0-2.03-1.487-2.822-2.842-2.822-4.224 0-7.172 5.407-6.19 8.862-.929.475-1.779.712-2.709.712-1.46 0-2.842-.606-3.904-1.82l1.354-4.72c3.294-.264 7.65-2.955 7.65-6.252C19.413 1.134 18.033 0 16.28 0c-3.108 0-5.445 2.98-6.534 6.805-2.02-.238-3.108-2.4-1.514-5.011H5.36C3.581 5.724 5.387 8.466 9 9.442l-.877 3.034c-1.328-.818-2.364-1.135-3.586-1.135-5.87 0-6.11 7.254-.345 7.254 1.673 0 3.692-.87 4.755-2.031 1.514 1.319 3.001 2.03 4.914 2.03 1.46 0 2.948-.421 4.489-1.318 1.036.844 2.39 1.319 4.33 1.319 1.722 0 3.444-.355 5.218-1.593.525.918 1.484 1.593 3.096 1.593 1.354 0 2.842-.58 3.958-1.82.823 1.187 2.072 1.82 3.346 1.82 1.063 0 2.152-.422 3.082-1.266.743.79 2.098 1.266 3.586 1.266 2.31 0 4.887-1.214 5.79-4.352l1.036-3.64c.32-1.082 1.17-1.583 2.152-1.583.85 0 1.301.422 1.301 1.16 0 1.372-1.221 4.643-1.221 5.803 0 1.952 1.328 2.612 3.107 2.612 1.116 0 1.993-.027 4.49-1.134 1.009.738 2.576 1.134 4.356 1.134 3.958 0 6.72-2.69 8.606-9.153h2.39c-.45 1.504-.77 3.165-.77 4.642 0 2.48.904 4.51 3.693 4.51 2.178 0 5.206-2.189 5.976-5.064h-2.869ZM15.881 2.639c.504 0 .85.29.85.712 0 1.398-2.497 3.191-4.224 3.455.797-2.743 2.417-4.167 3.374-4.167ZM4.326 15.958c-2.258 0-2.072-2.216.186-2.216.983 0 1.753.316 2.683 1.107-.638.712-1.86 1.108-2.87 1.108ZM22.415 9.02c.558 0 .903.343.903.897 0 1.477-1.939 3.297-3.586 4.22-.584-1.688 1.09-5.117 2.683-5.117Zm9.058 6.937c-.824 0-1.222-.58-1.222-1.424 0-2.031 2.205-5.46 5.578-5.513-1.222 4.247-2.045 6.937-4.356 6.937ZM65.447 9.02c.557 0 .903.343.903.897 0 1.477-2.02 3.376-3.56 4.326-.664-1.583 1.036-5.223 2.657-5.223Z"
+                    /></svg
+                ></span>
+              </div>
+              <div class="content" style="gap: 16px">
+                <p class="lh-h3">Unlock Leather</p>
+              </div>
+              <div class="dim"></div>
+              <div class="sheet">
+                <span class="grab"></span>
+                <div class="shead">
+                  <p class="lh-label2" style="font-size: 21px; line-height: 28px; margin: 0">
+                    Sign out
+                  </p>
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M6 6l12 12M18 6L6 18" /></svg
+                  ></span>
+                </div>
+                <div class="callout callout-warn">
+                  <span class="ctext"
+                    ><b>You'll need your Secret Key to sign in again</b><br />Back up your Secret
+                    Key before signing out. You'll be asked for your Secret Key on your next
+                    login.</span
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 3.5 21 19H3L12 3.5Z" />
+                    <path d="M12 10v4M12 16.5h.01" />
+                  </svg>
+                </div>
+                <label class="check"
+                  ><span class="box"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="3.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span
+                  >I have backed up my Secret Key.</label
+                >
+                <label class="check"
+                  ><span class="box"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="3.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span
+                  >I understand that my password will not give me access to my wallet after I sign
+                  out.</label
+                >
+                <div class="sheetfoot">
+                  <button class="btn btn-outline"><span>Cancel</span></button>
+                  <button class="btn btn-disabled"><span>Sign out</span></button>
+                </div>
+              </div>
+            </div>
+            <p class="fignote">
+              The existing password-backed <b>SignOutSheet initial state</b>—full-height at popup
+              width, with real copy, unchecked acknowledgements, and Sign out disabled—reached from
+              Forgot password? or the gear menu. This frame shows one software wallet; a
+              multi-wallet profile renders one named Secret Key acknowledgement per software wallet.
+              Signing out clears wallet state, authentication mode, and biometric wrapper. A
+              provider-side passkey may linger cosmetically.
+            </p>
+          </div>
+
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">C7</span>
+              <h3>Can't use biometrics? — guarded reset</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="content" style="gap: 16px"><p class="lh-h3">Unlock Leather</p></div>
+              <div class="dim"></div>
+              <div class="sheet">
+                <span class="grab"></span>
+                <div class="shead">
+                  <p class="lh-label2" style="font-size: 21px; line-height: 28px; margin: 0">
+                    Sign out
+                  </p>
+                  <span class="iconbtn"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M6 6l12 12M18 6L6 18" /></svg
+                  ></span>
+                </div>
+                <div class="callout callout-warn">
+                  <span class="ctext"
+                    ><b>You'll need your Secret Key to sign in again</b><br />Back up your Secret
+                    Key before signing out. You'll be asked for your Secret Key on your next
+                    login.</span
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 3.5 21 19H3L12 3.5Z" />
+                    <path d="M12 10v4M12 16.5h.01" />
+                  </svg>
+                </div>
+                <label class="check"
+                  ><span class="box"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="3.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span
+                  >I have backed up my Secret Key.</label
+                >
+                <label class="check"
+                  ><span class="box"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="3.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span
+                  >I understand that biometrics will not give me access to my wallet after I sign
+                  out.</label
+                >
+                <div class="sheetfoot">
+                  <button class="btn btn-outline"><span>Cancel</span></button>
+                  <button class="btn btn-disabled"><span>Sign out</span></button>
+                </div>
+              </div>
+            </div>
+            <p class="fignote">
+              The biometric-only variant reuses the same guarded reset behavior and backup
+              acknowledgements; only the mode-specific acknowledgement changes. It never implies
+              that a password, synced passkey, or provider account can restore the wallet. Sign out
+              remains disabled until every required acknowledgement is checked.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= FLOW D: SECRET KEY ================= -->
+      <section class="flow">
+        <div class="flowhead">
+          <span class="tag">Flow D</span>
+          <h2>Secret Key reveal</h2>
+        </div>
+        <p class="flowsub">
+          Selecting View Secret Key is the high-intent action: it navigates with a one-shot start
+          intent and the ceremony begins immediately—no second confirmation click. The intent is
+          consumed before the ceremony while preserving the selected wallet's
+          <code>fingerprint</code>. Cancellation, back/forward, restore, or direct URLs settle on
+          the methods configured for the profile and never replay the prompt.
+        </p>
+
+        <div class="frames">
+          <!-- D1 -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">D1</span>
+              <h3>Arrived from "View Secret Key" — ceremony auto-starts</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="content" style="gap: 16px">
+                <p class="lh-h3">Confirm it's you</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Confirm it's you to view the Secret Key for
+                  <b style="color: var(--ink-text-primary)">Wallet 2</b>.
+                </p>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid btn-busy"><span>Unlock with biometrics</span></button>
+              </div>
+              <div class="dim"></div>
+              <div class="os">
+                <span class="osbadge">Chrome / OS — system UI</span>
+                <span class="oscircle"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 4a7 7 0 0 1 7 7c0 2.5-.5 5-1.5 7M12 4a7 7 0 0 0-7 7c0 2.5.5 5 1.5 7M12 8a3.5 3.5 0 0 1 3.5 3.5c0 2-.3 4-1 5.5M12 8a3.5 3.5 0 0 0-3.5 3.5c0 2 .3 4 1 5.5M12 11.5v3"
+                    /></svg
+                ></span>
+                <span class="ostitle">Verify it's you</span>
+                <span class="osbody">Use "Leather" passkey on this device</span>
+                <span class="oscancel">Cancel</span>
+              </div>
+            </div>
+            <p class="fignote">
+              The click the user already made carries the intent (R9) — the screen renders in busy
+              state with the system prompt up. The intent
+              <b>never substitutes for the PRF-derived key</b>: only a real unwrap reveals anything.
+              Multi-wallet targeting via route <code>fingerprint</code> is preserved.
+            </p>
+          </div>
+
+          <!-- D2 -->
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">D2</span>
+              <h3>Cancelled / direct open — password-backed</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="content" style="gap: 16px">
+                <p class="lh-h3">Confirm it's you</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Confirm it's you to view the Secret Key for
+                  <b style="color: var(--ink-text-primary)">Wallet 2</b>. Your Secret Key stays
+                  hidden until you confirm.
+                </p>
+                <div class="inp focus"><span class="lbl">Enter your password</span></div>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Continue</span></button>
+                <button class="btn btn-ghost"><span>Try biometric unlock again</span></button>
+              </div>
+            </div>
+            <p class="fignote">
+              Cancellation and failure settle with the <b>password form already visible</b> (Flow D
+              step 5) — cancellation shows no red banner; failure adds the C3 message line. Direct,
+              restored, or unmarked opens render this same password-first screen with
+              <b>Unlock with biometrics</b> as the secondary label instead of the retry wording, and
+              never prompt on mount (Flow D step 7). No "Forgot password?" here — that's
+              main-unlock-only (R13). Every new reveal re-confirms — no grace window.
+            </p>
+          </div>
+
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">D3</span>
+              <h3>Cancelled / direct open — biometric-only</h3>
+            </div>
+            <div class="device" style="height: 560px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="content" style="gap: 16px">
+                <p class="lh-h3">Confirm it's you</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Confirm it's you to view the Secret Key for
+                  <b style="color: var(--ink-text-primary)">Wallet 2</b>. Your Secret Key stays
+                  hidden until you confirm.
+                </p>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid"><span>Try biometric unlock again</span></button>
+              </div>
+            </div>
+            <p class="fignote">
+              Biometric-only reveal has no password field and no recovery link. Cancellation uses
+              Try biometric unlock again; a direct, restored, or unmarked route uses Unlock with
+              biometrics. Both require a fresh ceremony, and an operational failure adds neutral
+              body copy without exposing credential or wrapper details.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= FLOW E: ADD WALLET ================= -->
+      <section class="flow">
+        <div class="flowhead">
+          <span class="tag">Flow E</span>
+          <h2>Add or restore another wallet</h2>
+        </div>
+        <p class="flowsub">
+          These flows run in the full-page tab using today's two-column layout. For an existing
+          software-wallet state, the final Done or mnemonic-submit click renders confirmation in
+          place and starts the configured biometric ceremony without a redundant click.
+          First-software-wallet create and restore flows instead use Flow A; choosing a password
+          continues to today's password-creation form.
+        </p>
+
+        <div class="frames">
+          <div class="fig wide">
+            <div class="figcap">
+              <span class="n">E1</span>
+              <h3>Existing-wallet confirmation — replaces "Enter your Password"</h3>
+            </div>
+            <div class="device wide" style="height: 480px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 24px;
+                  padding: 32px 24px 24px;
+                  flex: 1;
+                  justify-content: space-between;
+                "
+              >
+                <div style="width: 33.333%; display: flex; flex-direction: column; gap: 24px">
+                  <p class="lh-h3">Confirm it's you</p>
+                  <p class="lh-body2 subdue">
+                    Confirm it's you to add this wallet. It joins your existing wallets and uses the
+                    same password and unlock settings.
+                  </p>
+                </div>
+                <div
+                  style="
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                    background: var(--ink-bg-primary);
+                    border: 1px solid var(--ink-border);
+                    border-radius: 12px;
+                    padding: 24px;
+                    min-width: 400px;
+                    justify-content: center;
+                  "
+                >
+                  <div class="inp focus"><span class="lbl">Enter your password</span></div>
+                  <button class="btn btn-solid"><span>Continue</span></button>
+                  <button class="btn btn-ghost"><span>Try biometric unlock again</span></button>
+                </div>
+              </div>
+            </div>
+            <p class="fignote">
+              The final action—<b>Done</b> after backing up a generated key, or submitting a
+              restored mnemonic—starts the ceremony directly via component-state intent, no extra
+              click and no navigation (AE5, Flow E step 3). Shown here
+              <b>settled after cancel/failure</b>: password form visible with the biometric retry
+              secondary. Rendered without the originating intent, the secondary label is
+              <b>Unlock with biometrics</b> and nothing prompts on mount. The in-progress mnemonic
+              stays in React component memory only—never router state, history, Redux, or storage.
+              Success under either path encrypts the new wallet with the shared wallet encryption
+              key, so it stays unlockable by password too.
+            </p>
+          </div>
+
+          <div class="fig wide">
+            <div class="figcap">
+              <span class="n">E2</span>
+              <h3>Existing biometric-only setup — settled confirmation</h3>
+            </div>
+            <div class="device wide" style="height: 480px">
+              <div class="lh-header">
+                <div class="iconbtn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 24px;
+                  padding: 32px 24px 24px;
+                  flex: 1;
+                  justify-content: space-between;
+                "
+              >
+                <div style="width: 33.333%; display: flex; flex-direction: column; gap: 24px">
+                  <p class="lh-h3">Confirm it's you</p>
+                  <p class="lh-body2 subdue">
+                    Confirm it's you to add this wallet. It joins your existing wallets and uses the
+                    same biometric unlock settings.
+                  </p>
+                </div>
+                <div class="choice-card" style="flex: 1; justify-content: center">
+                  <p class="lh-cap" style="font-size: 15px; margin: 0">
+                    Use your device's fingerprint, face, PIN, or password.
+                  </p>
+                  <button class="btn btn-solid"><span>Try biometric unlock again</span></button>
+                </div>
+              </div>
+            </div>
+            <p class="fignote">
+              Shown after cancellation. The original Done or mnemonic-submit action starts the first
+              ceremony directly; there is no separate confirmation click before it. A
+              restored/remounted confirmation uses Unlock with biometrics instead of retry language
+              and never prompts automatically. No password option is shown, and the mnemonic remains
+              only in the originating component until authentication succeeds.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= U0 CONTINGENCY ================= -->
+      <section class="flow">
+        <div class="flowhead">
+          <span class="tag">U0</span>
+          <h2>Contingency — dedicated unlock window</h2>
+        </div>
+        <p class="flowsub">
+          Built only if the hardware spike shows the toolbar action popup can't survive an OS
+          ceremony (e.g. the Windows Hello dialog stealing focus). Not part of the default design.
+        </p>
+
+        <div class="frames">
+          <div class="fig">
+            <div class="figcap">
+              <span class="n">U0a</span>
+              <h3>Zero-extra-click handoff window</h3>
+            </div>
+            <div class="device win" style="height: 520px">
+              <div class="winbar">
+                <i></i><i></i><i></i><span class="wtitle">Leather — index.html#/unlock</span>
+              </div>
+              <div class="content" style="gap: 16px; padding-top: 32px">
+                <p class="lh-h3">Unlock Leather</p>
+                <p class="lh-cap" style="font-size: 15px">
+                  Use your device's fingerprint, face, PIN, or password.
+                </p>
+              </div>
+              <div class="cardfoot">
+                <button class="btn btn-solid btn-busy"><span>Unlock with biometrics</span></button>
+              </div>
+              <div class="dim"></div>
+              <div class="os" style="top: 120px">
+                <span class="osbadge">Chrome / OS — system UI</span>
+                <span class="oscircle"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 4a7 7 0 0 1 7 7c0 2.5-.5 5-1.5 7M12 4a7 7 0 0 0-7 7c0 2.5.5 5 1.5 7M12 8a3.5 3.5 0 0 1 3.5 3.5c0 2-.3 4-1 5.5M12 8a3.5 3.5 0 0 0-3.5 3.5c0 2 .3 4 1 5.5M12 11.5v3"
+                    /></svg
+                ></span>
+                <span class="ostitle">Verify it's you</span>
+                <span class="osbody">Use "Leather" passkey on this device</span>
+                <span class="oscancel">Cancel</span>
+              </div>
+            </div>
+            <p class="fignote">
+              The <b>toolbar opening action itself</b> hands off: the transient action popup creates
+              this real extension window (full-page <code>index.html#/unlock</code>), closes or
+              relinquishes itself, and the ceremony starts here from the same consumed one-shot
+              intent—zero additional Leather clicks. After success the window continues into the
+              wallet with full-page navigation semantics. Opened any other way, it is low-intent and
+              shows the mode-appropriate C4/C4b state without prompting.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer style="margin-top: 64px; border-top: 1px solid var(--page-line); padding-top: 20px">
+        <p style="color: var(--page-mut); font-size: 13px; max-width: 80ch">
+          Copy shown is working copy from the plan and should receive content review. Not mocked
+          because this feature does not change them: Secret Key display/entry before Flow A, the
+          existing password-strength behavior, lock, dapp approval content after unlock, and Ledger
+          connection flows. C6/C7 show the existing guarded sign-out behavior with mode-appropriate
+          recovery language. Waiting strings such as “Verifying password…” remain unchanged on
+          password-backed paths.
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
