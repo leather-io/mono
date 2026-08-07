@@ -1,0 +1,53 @@
+{
+  "name": "@leather.io/mcp",
+  "author": "Leather.io contact@leather.io",
+  "description": "Leather MCP server - connect your Leather wallet to AI agents",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/leather.io/mono/tree/dev/packages/mcp",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather.io/mono.git",
+    "directory": "packages/mcp"
+  },
+  "private": true,
+  "type": "module",
+  "bin": {
+    "leather-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "build:watch": "tsdown --no-clean --watch",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
+    "lint": "eslint --cache --max-warnings 0",
+    "lint:fix": "pnpm lint --fix",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "bugs": "https://github.com/leather-io/mono/issues",
+  "dependencies": {
+    "@leather.io/constants": "workspace:*",
+    "@leather.io/models": "workspace:*",
+    "@leather.io/rpc": "workspace:*",
+    "@leather.io/services": "workspace:*",
+    "@leather.io/utils": "workspace:*",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@stacks/transactions": "7.5.0",
+    "bignumber.js": "9.1.2",
+    "reflect-metadata": "0.2.2",
+    "zod": "4.0.17"
+  },
+  "devDependencies": {
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/tsconfig-config": "workspace:*",
+    "@types/node": "24.0.8",
+    "prettier": "3.5.1",
+    "tsdown": "0.16.5",
+    "typescript": "5.9.3"
+  },
+  "prettier": "@leather.io/prettier-config",
+  "types": "./dist/index.d.ts"
+}
