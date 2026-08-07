@@ -213,6 +213,35 @@ test.describe('Side panel demo', () => {
     test.expect(Array.isArray(dappResult?.result?.addresses)).toBe(true);
   });
 
+  test('request arriving while panel doc sits at home hands off to the approval', async ({
+    context,
+    page,
+    extensionId,
+  }) => {
+    const panelSim = await context.newPage();
+    await panelSim.setViewportSize({ width: 400, height: 820 });
+    await panelSim.goto(`chrome-extension://${extensionId}/side-panel.html`);
+    await panelSim.waitForTimeout(3000);
+
+    await page.goto(demoDappUrl, { waitUntil: 'networkidle' });
+    await page.evaluate(() => {
+      const btn = document.createElement('button');
+      btn.id = 'demo-connect-handoff';
+      btn.textContent = 'demo connect';
+      btn.style.cssText = 'position:fixed;top:8px;left:320px;z-index:999999;padding:16px;';
+      btn.addEventListener('click', () => {
+        void (window as any).LeatherProvider.request('getAddresses').catch((e: unknown) => e);
+      });
+      document.body.appendChild(btn);
+    });
+    await page.click('#demo-connect-handoff');
+    await page.waitForTimeout(4000);
+
+    test.expect(panelSim.url()).toContain('get-addresses');
+    test.expect(panelSim.url()).toContain('rpcRequest=');
+    await test.expect(panelSim.getByTestId('get-addresses-approve-button')).toBeVisible();
+  });
+
   test('request without user gesture falls back to popup window', async ({
     context,
     page,

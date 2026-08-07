@@ -140,7 +140,11 @@ async function consumePendingSidePanelRequest() {
   const target = chrome.runtime.getURL(pending.url);
   await clearPendingSidePanelRequest();
   if (window.location.href === target) return;
-  requestLifecyclePort?.postMessage({ handoff: true });
+  try {
+    requestLifecyclePort?.postMessage({ handoff: true });
+  } catch (error) {
+    logger.debug('Unable to flag side panel request handoff', error);
+  }
   window.location.replace(target);
   window.location.reload();
 }
@@ -194,7 +198,15 @@ export function connectSidePanelRequestLifecyclePort() {
   if (!isSidePanelPage()) return;
   const tabId = getRequestingTabIdFromLocation();
   if (!tabId) return;
-  requestLifecyclePort = chrome.runtime.connect({ name: `${sidePanelRequestPortPrefix}${tabId}` });
+  try {
+    const port = chrome.runtime.connect({ name: `${sidePanelRequestPortPrefix}${tabId}` });
+    port.onDisconnect.addListener(() => {
+      if (requestLifecyclePort === port) requestLifecyclePort = null;
+    });
+    requestLifecyclePort = port;
+  } catch (error) {
+    logger.debug('Unable to connect side panel request lifecycle port', error);
+  }
 }
 
 interface SidePanelDismissResponse {
