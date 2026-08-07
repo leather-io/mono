@@ -15,13 +15,12 @@ import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
-  MINIMUM_STACKS_APP_VERSION,
   getStacksAppVersion,
   prepareLedgerDeviceStacksAppConnection,
   signLedgerStacksStructuredMessage,
   signLedgerStacksUtf8Message,
-  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
@@ -74,32 +73,28 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       },
     });
 
-    // Show checking version page immediately
-    void ledgerNavigate.toCheckingAppVersion();
-    await delay(1000);
-
-    const versionInfo = await getStacksAppVersion(stacksApp);
-    ledgerAnalytics.trackDeviceVersionInfo(versionInfo);
-    setLatestDeviceResponse(versionInfo);
-    if (versionInfo.deviceLocked) {
-      setAwaitingDeviceConnection(false);
-      return;
-    }
-
-    const { meetsMinimum, currentVersion } = validateStacksAppVersion(versionInfo);
-    if (!meetsMinimum) {
-      void ledgerNavigate.toStacksAppOutdatedWarning({
-        currentVersion,
-        requiredVersion: MINIMUM_STACKS_APP_VERSION,
-      });
-      setAwaitingDeviceConnection(false);
-      return;
-    }
-
-    // Migrate fingerprint if needed (one-time)
-    await migrateFingerprintIfNeeded(stacksApp);
-
     try {
+      // Show checking version page immediately
+      void ledgerNavigate.toCheckingAppVersion();
+      await delay(1000);
+
+      const versionInfo = await getStacksAppVersion(stacksApp);
+      ledgerAnalytics.trackDeviceVersionInfo(versionInfo);
+      setLatestDeviceResponse(versionInfo);
+      if (versionInfo.deviceLocked) {
+        setAwaitingDeviceConnection(false);
+        return;
+      }
+
+      const passesVersionCheck = await stacksVersionGate(ledgerNavigate)(versionInfo);
+      if (!passesVersionCheck) {
+        setAwaitingDeviceConnection(false);
+        return;
+      }
+
+      // Migrate fingerprint if needed (one-time)
+      await migrateFingerprintIfNeeded(stacksApp);
+
       void ledgerNavigate.toConnectionSuccessStep('stacks');
       await delay(1000);
       void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
@@ -147,14 +142,14 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
         },
         unsignedMessage,
       });
-
+    } catch {
+      void ledgerNavigate.toDeviceDisconnectStep();
+    } finally {
       try {
         await stacksApp.transport.close();
       } catch (e) {
         logger.error('Error closing transport after message signing', e);
       }
-    } catch {
-      void ledgerNavigate.toDeviceDisconnectStep();
     }
   }
 
@@ -166,6 +161,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
   const ledgerContextValue: LedgerMessageSigningContext = {
     message: unsignedMessage,
     signMessage,
+    onCancelMessageSigning: closeAction,
     latestDeviceResponse,
     awaitingDeviceConnection,
   };

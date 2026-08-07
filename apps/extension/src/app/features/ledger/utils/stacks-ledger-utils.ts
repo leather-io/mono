@@ -125,7 +125,7 @@ export function isStacksLedgerAppClosed(response: ResponseVersion) {
 
 // Minimum version required to read master key fingerprint
 // This enables proper multi-wallet support for Ledger Stacks accounts
-export const MINIMUM_STACKS_APP_VERSION = '0.26.4';
+export const MINIMUM_STACKS_APP_VERSION = '0.26.17';
 
 interface StacksVersionCheckResult {
   meetsMinimum: boolean;
