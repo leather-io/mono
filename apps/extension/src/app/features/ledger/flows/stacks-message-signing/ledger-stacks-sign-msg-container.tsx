@@ -15,13 +15,12 @@ import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
-  MINIMUM_STACKS_APP_VERSION,
   getStacksAppVersion,
   prepareLedgerDeviceStacksAppConnection,
   signLedgerStacksStructuredMessage,
   signLedgerStacksUtf8Message,
-  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
@@ -87,12 +86,8 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
         return;
       }
 
-      const { meetsMinimum, currentVersion } = validateStacksAppVersion(versionInfo);
-      if (!meetsMinimum) {
-        void ledgerNavigate.toStacksAppOutdatedWarning({
-          currentVersion,
-          requiredVersion: MINIMUM_STACKS_APP_VERSION,
-        });
+      const passesVersionCheck = await stacksVersionGate(ledgerNavigate)(versionInfo);
+      if (!passesVersionCheck) {
         setAwaitingDeviceConnection(false);
         return;
       }

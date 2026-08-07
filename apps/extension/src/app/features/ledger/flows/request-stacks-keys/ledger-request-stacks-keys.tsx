@@ -27,13 +27,12 @@ import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigat
 import { immediatelyAttemptLedgerConnection } from '@app/features/ledger/hooks/use-when-reattempt-ledger-connection';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
-  MINIMUM_STACKS_APP_VERSION,
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
   requestPublicKeyForStxAccount,
-  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useAppDispatch } from '@app/store';
 import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
@@ -64,22 +63,7 @@ function LedgerRequestStacksKeys() {
       connectApp: connectLedgerStacksApp,
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
-      passesAdditionalVersionCheck(appVersion) {
-        if (appVersion.chain !== 'stacks') {
-          return Promise.resolve(true);
-        }
-
-        const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
-        if (!meetsMinimum) {
-          void ledgerNavigate.toStacksAppOutdatedWarning({
-            currentVersion,
-            requiredVersion: MINIMUM_STACKS_APP_VERSION,
-          });
-          return Promise.resolve(false);
-        }
-
-        return Promise.resolve(true);
-      },
+      passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       onSuccess() {
         void navigate('/', { replace: true });
       },

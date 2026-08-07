@@ -13,7 +13,6 @@ import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigat
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import { isLedgerOnDeviceAddressConfirmed } from '@app/features/ledger/utils/ledger-descriptor-address';
 import {
-  MINIMUM_STACKS_APP_VERSION,
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
@@ -21,8 +20,8 @@ import {
   isStxAddressResponseSuccess,
   showStxAddressOnDevice,
   stacksChainIdToSingleSigAddressVersion,
-  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -42,22 +41,7 @@ function LedgerVerifyStxAddress() {
       connectApp: connectLedgerStacksApp,
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
-      passesAdditionalVersionCheck(appVersion) {
-        if (appVersion.chain !== 'stacks') {
-          return Promise.resolve(true);
-        }
-
-        const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
-        if (!meetsMinimum) {
-          void ledgerNavigate.toStacksAppOutdatedWarning({
-            currentVersion,
-            requiredVersion: MINIMUM_STACKS_APP_VERSION,
-          });
-          return Promise.resolve(false);
-        }
-
-        return Promise.resolve(true);
-      },
+      passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       onSuccess() {
         toast.success('Address verified on your Ledger');
         void navigate(RouteUrls.Home, { replace: true });
