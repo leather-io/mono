@@ -3,23 +3,23 @@ const deprecationError =
 
 export function deprecatedProviderMethods() {
   return {
-    getURL(): never {
-      throw new Error(deprecationError);
+    getURL(): Promise<never> {
+      return Promise.reject(new Error(deprecationError));
     },
-    authenticationRequest(): never {
-      throw new Error(deprecationError);
+    authenticationRequest(): Promise<never> {
+      return Promise.reject(new Error(deprecationError));
     },
-    signatureRequest(): never {
-      throw new Error(deprecationError);
+    signatureRequest(): Promise<never> {
+      return Promise.reject(new Error(deprecationError));
     },
-    structuredDataSignatureRequest(): never {
-      throw new Error(deprecationError);
+    structuredDataSignatureRequest(): Promise<never> {
+      return Promise.reject(new Error(deprecationError));
     },
-    transactionRequest(): never {
-      throw new Error(deprecationError);
+    transactionRequest(): Promise<never> {
+      return Promise.reject(new Error(deprecationError));
     },
-    psbtRequest(): never {
-      throw new Error(deprecationError);
+    psbtRequest(): Promise<never> {
+      return Promise.reject(new Error(deprecationError));
     },
   };
 }
