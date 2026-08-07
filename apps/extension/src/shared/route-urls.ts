@@ -88,7 +88,7 @@ export enum RouteUrls {
   RpcSignBip322Message = '/sign-bip322-message',
   RpcStacksSignature = '/sign-stacks-message',
 
-  // Shared legacy and rpc request routes
+  // Shared rpc request routes
   RequestError = '/request-error',
 
   // Request routes stacks
