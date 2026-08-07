@@ -29,7 +29,10 @@ export function PsbtInputsOutputsTotals() {
       {isTransferring ? (
         <Box p="space.05">
           <PsbtRequestDetailsSectionHeader title="You'll transfer" />
-          <PsbtAddressTransferTotals showNativeSegwitTotal={isNativeSegwitTotalGreaterThanZero} />
+          <PsbtAddressTransferTotals
+            showNativeSegwitTotal={isNativeSegwitTotalGreaterThanZero}
+            showTaprootTotal={isTaprootTotalGreaterThanZero}
+          />
         </Box>
       ) : null}
       {showDivider ? <styled.hr border="default" /> : null}
