@@ -5,7 +5,6 @@ import {
 } from '@stacks/stacks-blockchain-api-types';
 import {
   AddressHashMode,
-  AuthType,
   ClarityType,
   type ContractCallPayload,
   type IntCV,
@@ -97,10 +96,6 @@ export function getTxTitle(tx: StacksTx) {
     default:
       return '';
   }
-}
-
-export function isTxSponsored(tx: StacksTransactionWire) {
-  return tx.auth.authType === AuthType.Sponsored;
 }
 
 function getAddressFromPublicKeyHash(

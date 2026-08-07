@@ -1,12 +1,3 @@
-import {
-  FinishedTxPayload,
-  PsbtData,
-  SignatureData,
-  SponsoredFinishedTxPayload,
-} from '@stacks/connect-jwt';
-
-export const MESSAGE_SOURCE = 'stacks-wallet';
-
 export const CONTENT_SCRIPT_PORT = 'content-script';
 
 export const WALLET_LOCK_MESSAGE = 'wallet/lock';
@@ -15,96 +6,15 @@ export const SIGN_OUT_MESSAGE = 'wallet/sign-out';
 
 export const WALLET_LIST_CHANGED_MESSAGE = 'wallet/list-changed';
 
-export enum ExternalMethods {
-  transactionRequest = 'hiroWalletTransactionRequest',
-  transactionResponse = 'hiroWalletTransactionResponse',
-  authenticationRequest = 'hiroWalletAuthenticationRequest',
-  authenticationResponse = 'hiroWalletAuthenticationResponse',
-  signatureRequest = 'hiroWalletSignatureRequest',
-  signatureResponse = 'hiroWalletSignatureResponse',
-  structuredDataSignatureRequest = 'hiroWalletStructuredDataSignatureRequest',
-  structuredDataSignatureResponse = 'hiroWalletStructuredDataSignatureResponse',
-  psbtRequest = 'hiroWalletPsbtRequest',
-  psbtResponse = 'hiroWalletPsbtResponse',
-}
-
 export enum InternalMethods {
   OriginatingTabClosed = 'OriginatingTabClosed',
   AddressMonitorUpdated = 'AddressMonitorUpdated',
 }
 
-export type ExtensionMethods = ExternalMethods | InternalMethods;
-
-interface BaseMessage {
-  source: typeof MESSAGE_SOURCE;
-  method: ExtensionMethods;
-}
-
 /**
  * Content Script <-> Background Script
  */
-export interface Message<Methods extends ExtensionMethods, Payload = undefined>
-  extends BaseMessage {
+export interface Message<Methods extends InternalMethods, Payload = undefined> {
   method: Methods;
   payload: Payload;
 }
-
-type AuthenticationRequestMessage = Message<ExternalMethods.authenticationRequest, string>;
-
-export type AuthenticationResponseMessage = Message<
-  ExternalMethods.authenticationResponse,
-  {
-    authenticationRequest: string;
-    authenticationResponse: string;
-  }
->;
-
-type SignatureRequestMessage = Message<ExternalMethods.signatureRequest, string>;
-
-export type SignatureResponseMessage = Message<
-  ExternalMethods.signatureResponse,
-  {
-    signatureRequest: string;
-    signatureResponse: SignatureData | string;
-  }
->;
-
-type StructuredDataSignatureRequestMessage = Message<
-  ExternalMethods.structuredDataSignatureRequest,
-  string
->;
-
-type PsbtRequestMessage = Message<ExternalMethods.psbtRequest, string>;
-
-export type PsbtResponseMessage = Message<
-  ExternalMethods.psbtResponse,
-  {
-    psbtRequest: string;
-    psbtResponse: PsbtData | string;
-  }
->;
-
-type TransactionRequestMessage = Message<ExternalMethods.transactionRequest, string>;
-
-export type TxResult = SponsoredFinishedTxPayload | FinishedTxPayload;
-
-export type TransactionResponseMessage = Message<
-  ExternalMethods.transactionResponse,
-  {
-    transactionRequest: string;
-    transactionResponse: TxResult | string;
-  }
->;
-
-export type LegacyMessageFromContentScript =
-  | AuthenticationRequestMessage
-  | TransactionRequestMessage
-  | SignatureRequestMessage
-  | StructuredDataSignatureRequestMessage
-  | PsbtRequestMessage;
-
-export type LegacyMessageToContentScript =
-  | AuthenticationResponseMessage
-  | TransactionResponseMessage
-  | SignatureResponseMessage
-  | PsbtResponseMessage;

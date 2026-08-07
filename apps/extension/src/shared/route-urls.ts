@@ -77,11 +77,6 @@ export enum RouteUrls {
   SwapReview = '/swap/{chain}/:base/:quote/review',
   SwapError = '/swap/error',
 
-  // Legacy request routes
-  PsbtRequest = '/psbt',
-  SignatureRequest = '/signature',
-  TransactionRequest = '/transaction',
-
   // Request routes bitcoin
   RpcGetAddresses = '/get-addresses',
   RpcBtcAddAccount = '/btc-add-account',
@@ -93,12 +88,8 @@ export enum RouteUrls {
   RpcSignBip322Message = '/sign-bip322-message',
   RpcStacksSignature = '/sign-stacks-message',
 
-  // Popup routes
-  ChooseAccount = '/choose-account',
-
   // Shared legacy and rpc request routes
   RequestError = '/request-error',
-  UnauthorizedRequest = '/unauthorized-request',
 
   // Request routes stacks
   RpcStxAddAccount = '/stx-add-account',

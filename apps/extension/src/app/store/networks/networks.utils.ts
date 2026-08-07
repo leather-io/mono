@@ -11,38 +11,6 @@ import {
 
 import { PersistedNetworkConfiguration } from './networks.slice';
 
-interface FindMatchingNetworkKeyArgs {
-  coreApiUrl: string | null;
-  networkChainId: string | null;
-  networks: Record<string, NetworkConfiguration>;
-}
-export function findMatchingNetworkKey({
-  coreApiUrl,
-  networkChainId,
-  networks,
-}: FindMatchingNetworkKeyArgs) {
-  if (!networks || (!coreApiUrl && !networkChainId)) return;
-
-  const keys = Object.keys(networks);
-
-  const exactUrlMatch = keys.find((key: string) => {
-    const network = networks[key];
-    return network.chain.stacks.url === coreApiUrl;
-  });
-  if (exactUrlMatch) return exactUrlMatch;
-
-  const chainIdMatch = keys.find((key: string) => {
-    const network = networks[key];
-    return (
-      network.chain.stacks.url === coreApiUrl ||
-      network.chain.stacks.chainId === (Number(networkChainId) as ChainId)
-    );
-  });
-  if (chainIdMatch) return chainIdMatch;
-
-  return null;
-}
-
 function checkBitcoinNetworkProperties(
   network: PersistedNetworkConfiguration
 ): PersistedNetworkConfiguration {

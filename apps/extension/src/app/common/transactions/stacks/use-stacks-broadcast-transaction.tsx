@@ -6,18 +6,15 @@ import { AuthType, StacksTransactionWire } from '@stacks/transactions';
 import type { CryptoCurrency } from '@leather.io/models';
 import { delay, isError, isString } from '@leather.io/utils';
 
-import { finalizeTxSignature } from '@shared/actions/finalize-tx-signature';
 import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 
-import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
 import { useSubmitTransactionCallback } from '@app/common/hooks/use-submit-stx-transaction';
 import {
   StacksTransactionActionType,
   stacksTransactionToHex,
 } from '@app/common/transactions/stacks/transaction.utils';
 import { useToast } from '@app/features/toasts/use-toast';
-import { useTransactionRequest } from '@app/store/transactions/requests.hooks';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 import { LoadingKeys } from '@app/store/ui/ui.hooks';
 
@@ -40,8 +37,6 @@ export function useStacksBroadcastTransaction({
 }: UseStacksBroadcastTransactionArgs) {
   const signStacksTransaction = useSignStacksTransaction();
   const [isBroadcasting, setIsBroadcasting] = useState(false);
-  const { frameId, tabId } = useDefaultRequestParams();
-  const requestToken = useTransactionRequest();
 
   const navigate = useNavigate();
   const toast = useToast();
@@ -58,17 +53,6 @@ export function useStacksBroadcastTransaction({
 
   return useMemo(() => {
     function handlePreviewSuccess(signedTx: StacksTransactionWire, txid?: string) {
-      if (requestToken && tabId) {
-        finalizeTxSignature({
-          frameId,
-          requestPayload: requestToken,
-          tabId,
-          data: {
-            txRaw: stacksTransactionToHex(signedTx),
-            txId: txid,
-          },
-        });
-      }
       if (txid && redirectToSuccessPage) {
         void navigate(
           RouteUrls.SentStxTxSummary.replace(':symbol', token.toLowerCase()).replace(
@@ -135,9 +119,6 @@ export function useStacksBroadcastTransaction({
     };
   }, [
     isBroadcasting,
-    requestToken,
-    frameId,
-    tabId,
     redirectToSuccessPage,
     navigate,
     token,
