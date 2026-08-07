@@ -36,6 +36,7 @@
     "prod:ext": "pnpm build",
     "test:coverage": "vitest run --coverage",
     "test:integration": "playwright test",
+    "test:side-panel-demo": "cross-env SIDE_PANEL_DEMO=true playwright test --config tests/playwright.sidepanel.config.ts tests/specs/side-panel-demo",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
   },

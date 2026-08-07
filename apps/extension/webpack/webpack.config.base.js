@@ -260,6 +260,11 @@ export const config = {
       ...HTML_PROD_OPTIONS,
     }),
     new HtmlWebpackPlugin({
+      template: path.join(SRC_ROOT_PATH, '../', 'public', 'html', 'side-panel.html'),
+      filename: 'side-panel.html',
+      ...HTML_PROD_OPTIONS,
+    }),
+    new HtmlWebpackPlugin({
       template: path.join(SRC_ROOT_PATH, '../', 'public', 'html', 'debug.html'),
       filename: 'debug.html',
       title: 'Leather—Debugger',

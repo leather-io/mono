@@ -52,13 +52,14 @@ import { UnauthorizedRequest } from '@app/pages/unauthorized-request/unauthorize
 import { Unlock } from '@app/pages/unlock';
 import { ViewSecretKey } from '@app/pages/view-secret-key/view-secret-key';
 import { AccountGate } from '@app/routes/account-gate';
+import { SidePanelRequestLayout } from '@app/routes/components/side-panel-request-layout';
 import { legacyRequestRoutes } from '@app/routes/request-routes';
 import { rpcRequestRoutes } from '@app/routes/rpc-routes';
 
 import { OnboardingGate } from './onboarding-gate';
 
 export function SuspenseLoadingSpinner() {
-  return <LoadingSpinner height="600px" />;
+  return <LoadingSpinner height="100vh" />;
 }
 
 export function AppRoutes() {
@@ -306,18 +307,20 @@ function useAppRoutes() {
 
           {/* Popup Routes */}
           {/* ChooseAccount is a popup as shown only in popup when decodedAuthRequest in set-password  */}
-          <Route
-            path={RouteUrls.ChooseAccount}
-            element={
-              <AccountGate>
-                <LegacyAccountAuth />
-              </AccountGate>
-            }
-          >
-            {ledgerJwtSigningRoutes}
+          <Route element={<SidePanelRequestLayout />}>
+            <Route
+              path={RouteUrls.ChooseAccount}
+              element={
+                <AccountGate>
+                  <LegacyAccountAuth />
+                </AccountGate>
+              }
+            >
+              {ledgerJwtSigningRoutes}
+            </Route>
+            {legacyRequestRoutes}
+            {rpcRequestRoutes}
           </Route>
-          {legacyRequestRoutes}
-          {rpcRequestRoutes}
         </Route>
 
         <Route

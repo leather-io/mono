@@ -10,7 +10,7 @@ export function PsbtRequest() {
     usePsbtRequest();
   const flow = initialSearchParams.get('flow');
 
-  if (isLoading) return <LoadingSpinner height="600px" />;
+  if (isLoading) return <LoadingSpinner height="100vh" />;
 
   return (
     <PsbtSigner
