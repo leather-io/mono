@@ -4,7 +4,7 @@ import { useLocation } from 'react-router';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import BitcoinApp from 'ledger-bitcoin';
 
-import { delay } from '@leather.io/utils';
+import { delay, isError } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
@@ -67,6 +67,10 @@ export function prepareLedgerDeviceForAppFn<T extends () => Promise<unknown>>(co
 
 type TransportInstance = Awaited<ReturnType<typeof TransportWebUSB.create>>;
 
+const deviceReenumerationPollIntervalMs = 100;
+const deviceReenumerationTimeoutMs = 5_000;
+const appRelaunchSettleDelayMs = 500;
+
 // Reference: https://github.com/LedgerHQ/ledger-live/blob/v22.0.1/src/hw/quitApp.ts
 async function quitApp(transport: TransportInstance): Promise<void> {
   await transport.send(0xb0, 0xa7, 0x00, 0x00);
@@ -96,16 +100,43 @@ async function getAppAndVersion() {
   }
 }
 
-async function quitAppOnDevice() {
-  const tmpTransport = await TransportWebUSB.create();
-  try {
-    await quitApp(tmpTransport);
-  } finally {
-    await closeTransport(tmpTransport);
+function isDeviceDisconnectedError(error: unknown): boolean {
+  if (!isError(error)) return false;
+  return (
+    error.name === 'DisconnectedDevice' ||
+    error.name === 'DisconnectedDeviceDuringOperation' ||
+    error.message.toLowerCase().includes('disconnect')
+  );
+}
+
+async function waitForDeviceReenumeration(staleDevice: unknown) {
+  const maxPollAttempts = deviceReenumerationTimeoutMs / deviceReenumerationPollIntervalMs;
+  for (let attempt = 0; attempt < maxPollAttempts; attempt++) {
+    const devices = await TransportWebUSB.list();
+    if (devices.some(device => device !== staleDevice)) return;
+    await delay(deviceReenumerationPollIntervalMs);
   }
-  // for some reason sending quit app buffer to ledger will close the connection afterwards.
-  // we need to add a delay for this transport to properly finish for another one to open.
-  await delay(500);
+}
+
+async function switchAppOnDevice(sendSwitchApdu: (transport: TransportInstance) => Promise<void>) {
+  const [staleDevice] = await TransportWebUSB.list();
+  const tmpTransport = await TransportWebUSB.create();
+
+  try {
+    await sendSwitchApdu(tmpTransport);
+  } catch (error) {
+    if (!isDeviceDisconnectedError(error)) {
+      await closeTransport(tmpTransport);
+      throw error;
+    }
+  }
+
+  await waitForDeviceReenumeration(staleDevice);
+  await delay(appRelaunchSettleDelayMs);
+}
+
+async function quitAppOnDevice() {
+  await switchAppOnDevice(transport => quitApp(transport));
 }
 
 export async function promptOpenAppOnDevice(appName: string) {
@@ -119,16 +150,7 @@ export async function promptOpenAppOnDevice(appName: string) {
     await quitAppOnDevice();
   }
 
-  const tmpTransport = await TransportWebUSB.create();
-
-  try {
-    await openApp(tmpTransport, appName);
-  } finally {
-    await closeTransport(tmpTransport);
-  }
-  // for some reason sending open app buffer to ledger will close the connection afterwards.
-  // we need to add a delay for this transport to properly finish for another one to open.
-  await delay(500);
+  await switchAppOnDevice(transport => openApp(transport, appName));
 }
 
 export function checkLockedDeviceError(e: Error) {
