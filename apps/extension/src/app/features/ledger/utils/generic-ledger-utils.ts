@@ -110,7 +110,10 @@ async function quitAppOnDevice() {
 
 export async function promptOpenAppOnDevice(appName: string) {
   const appAndVersion = await getAppAndVersion();
-  if (appAndVersion.name === appName) return;
+  if (appAndVersion.name === appName) {
+    await delay(500);
+    return;
+  }
 
   if (appAndVersion.name !== LEDGER_APPS_MAP.MAIN_MENU) {
     await quitAppOnDevice();
