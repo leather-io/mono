@@ -1,11 +1,8 @@
 import { AEUSDC_ASSET_PRINCIPAL } from '@leather.io/constants';
+import { Callout } from '@leather.io/ui';
 
 import { useSip10AccountBalance } from '@app/query/stacks/sip10/sip10-balance.hooks';
 import { useCurrentAccountId } from '@app/store/accounts/account';
-
-import { DismissibleCallout } from './dismissible-callout';
-
-const aeusdcRetirementMessageId = 'aeusdc-retirement';
 
 export function AeusdcRetirementCallout() {
   const accountId = useCurrentAccountId();
@@ -22,12 +19,8 @@ export function AeusdcRetirementCallout() {
   if (!hasAeusdc) return null;
 
   return (
-    <DismissibleCallout
-      messageId={aeusdcRetirementMessageId}
-      variant="warning"
-      title="aeUSDC is being retired"
-    >
+    <Callout variant="warning" title="aeUSDC is being retired">
       Swap to USDCx before September 2026. After that, balances can't be exited.
-    </DismissibleCallout>
+    </Callout>
   );
 }
