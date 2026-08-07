@@ -6,6 +6,7 @@ import BitcoinApp from 'ledger-bitcoin';
 
 import { delay } from '@leather.io/utils';
 
+import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 
 import { safeAwait } from '@app/common/utils/safe-await';
@@ -76,16 +77,32 @@ async function openApp(transport: TransportInstance, name: string): Promise<void
   await transport.send(0xe0, 0xd8, 0x00, 0x00, Buffer.from(name, 'ascii'));
 }
 
+async function closeTransport(transport: TransportInstance): Promise<void> {
+  try {
+    await transport.close();
+  } catch {
+    logger.warn('Failed to close transport connection to Ledger device');
+  }
+}
+
 async function getAppAndVersion() {
   const tmpTransport = await TransportWebUSB.create();
-  const tmpBitcoinApp = new BitcoinApp(tmpTransport);
-  const appAndVersion = await tmpBitcoinApp.getAppAndVersion();
-  return appAndVersion;
+  try {
+    const tmpBitcoinApp = new BitcoinApp(tmpTransport);
+    const appAndVersion = await tmpBitcoinApp.getAppAndVersion();
+    return appAndVersion;
+  } finally {
+    await closeTransport(tmpTransport);
+  }
 }
 
 async function quitAppOnDevice() {
   const tmpTransport = await TransportWebUSB.create();
-  await quitApp(tmpTransport);
+  try {
+    await quitApp(tmpTransport);
+  } finally {
+    await closeTransport(tmpTransport);
+  }
   // for some reason sending quit app buffer to ledger will close the connection afterwards.
   // we need to add a delay for this transport to properly finish for another one to open.
   await delay(500);
@@ -93,14 +110,18 @@ async function quitAppOnDevice() {
 
 export async function promptOpenAppOnDevice(appName: string) {
   const appAndVersion = await getAppAndVersion();
-  if (appAndVersion.name !== appName && appAndVersion.name !== LEDGER_APPS_MAP.MAIN_MENU) {
+  if (appAndVersion.name === appName) return;
+
+  if (appAndVersion.name !== LEDGER_APPS_MAP.MAIN_MENU) {
     await quitAppOnDevice();
   }
 
   const tmpTransport = await TransportWebUSB.create();
 
-  if (appAndVersion.name !== appName) {
+  try {
     await openApp(tmpTransport, appName);
+  } finally {
+    await closeTransport(tmpTransport);
   }
   // for some reason sending open app buffer to ledger will close the connection afterwards.
   // we need to add a delay for this transport to properly finish for another one to open.

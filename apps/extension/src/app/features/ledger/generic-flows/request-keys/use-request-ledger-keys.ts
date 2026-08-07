@@ -6,6 +6,8 @@ import BitcoinApp from 'ledger-bitcoin';
 import type { SupportedBlockchains } from '@leather.io/models';
 import { delay, isError } from '@leather.io/utils';
 
+import { logger } from '@shared/logger';
+
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
@@ -94,7 +96,11 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
 
       void ledgerNavigate.toErrorStep(chain);
     } finally {
-      await app?.transport.close();
+      try {
+        await app?.transport.close();
+      } catch {
+        logger.warn('Failed to close transport connection to Ledger device');
+      }
     }
   }
 
