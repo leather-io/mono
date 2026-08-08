@@ -1,3 +1,5 @@
+import { colorThemes, tokens } from '@leather.io/tokens';
+
 import type { RouteUrls } from '@shared/route-urls';
 import {
   type SidePanelOverlayActionMessage,
@@ -7,6 +9,25 @@ import {
 } from '@shared/utils/side-panel-request-overlay';
 
 const sidePanelRequestOverlayId = 'leather-side-panel-request-overlay';
+const sidePanelRequestOverlayFontsId = 'leather-side-panel-request-overlay-fonts';
+
+// Namespaced so we never collide with a font the host page already defines.
+const displayFont = 'LeatherOverlayMarche';
+const bodyFont = 'LeatherOverlayDiatype';
+
+const fallbackStack = 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+const light = colorThemes.base;
+const dark = colorThemes.dark;
+
+// The design system's type scale is defined in rem, but rem inside the overlay
+// would resolve against the host page's root font size. Pinned to the px
+// equivalents so a dapp's typography cannot resize Leather's card.
+const type = {
+  heading05: { size: '21px', lineHeight: '28px', weight: 500 },
+  label02: { size: '15px', lineHeight: '20px', weight: 500 },
+  body02: { size: '15px', lineHeight: '20px', weight: 400 },
+};
 
 function sendOverlayAction(action: SidePanelOverlayActionMessage['action']) {
   try {
@@ -18,8 +39,38 @@ function sendOverlayAction(action: SidePanelOverlayActionMessage['action']) {
   }
 }
 
+// Chromium ignores `@font-face` declared inside a shadow root, so the faces have
+// to live in the host document. Namespaced families keep the page unaffected.
+function injectOverlayFontFaces() {
+  if (document.getElementById(sidePanelRequestOverlayFontsId)) return;
+  const style = document.createElement('style');
+  style.id = sidePanelRequestOverlayFontsId;
+  style.textContent = `
+    @font-face {
+      font-family: '${bodyFont}';
+      src: url('${chrome.runtime.getURL('assets/fonts/diatype/diatype-regular.woff2')}') format('woff2');
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: '${bodyFont}';
+      src: url('${chrome.runtime.getURL('assets/fonts/diatype/diatype-medium.woff2')}') format('woff2');
+      font-weight: 500;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: '${displayFont}';
+      src: url('${chrome.runtime.getURL('assets/fonts/marche/marche-super-pro.woff2')}') format('woff2');
+      font-weight: 800;
+      font-display: swap;
+    }
+  `;
+  document.head.append(style);
+}
+
 export function hideSidePanelRequestOverlay() {
   document.getElementById(sidePanelRequestOverlayId)?.remove();
+  document.getElementById(sidePanelRequestOverlayFontsId)?.remove();
 }
 
 export function showSidePanelRequestOverlay(
@@ -27,6 +78,7 @@ export function showSidePanelRequestOverlay(
   variant: SidePanelRequestOverlayVariant = 'pending'
 ) {
   hideSidePanelRequestOverlay();
+  injectOverlayFontFaces();
 
   const host = document.createElement('div');
   host.id = sidePanelRequestOverlayId;
@@ -38,16 +90,38 @@ export function showSidePanelRequestOverlay(
   style.textContent = `
     :host {
       all: initial;
+      --leather-scrim: ${light['ink.background-overlay']};
+      --leather-surface: ${light['ink.background-primary']};
+      --leather-text: ${light['ink.text-primary']};
+      --leather-text-subdued: ${light['ink.text-subdued']};
+      --leather-action: ${light['ink.action-primary-default']};
+      --leather-action-hover: ${light['ink.action-primary-hover']};
+      --leather-action-label: ${light['ink.background-primary']};
+      --leather-hover: ${light['ink.component-background-hover']};
+
       position: fixed;
       inset: 0;
       z-index: 2147483647;
       display: grid;
       place-items: center;
       box-sizing: border-box;
-      padding: 24px;
-      background: rgba(18, 18, 18, 0.48);
-      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: #121212;
+      padding: ${tokens.spacing['space.05'].value};
+      background: var(--leather-scrim);
+      font-family: '${bodyFont}', ${fallbackStack};
+      color: var(--leather-text);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :host {
+        --leather-scrim: ${dark['ink.background-overlay']};
+        --leather-surface: ${dark['ink.background-primary']};
+        --leather-text: ${dark['ink.text-primary']};
+        --leather-text-subdued: ${dark['ink.text-subdued']};
+        --leather-action: ${dark['ink.action-primary-default']};
+        --leather-action-hover: ${dark['ink.action-primary-hover']};
+        --leather-action-label: ${dark['ink.background-primary']};
+        --leather-hover: ${dark['ink.component-background-hover']};
+      }
     }
 
     * {
@@ -56,96 +130,96 @@ export function showSidePanelRequestOverlay(
 
     .card {
       position: relative;
-      width: min(100%, 392px);
-      padding: 48px 40px 40px;
-      border: 1px solid rgba(18, 18, 18, 0.08);
-      border-radius: 20px;
-      background: #ffffff;
-      box-shadow: 0 24px 80px rgba(18, 18, 18, 0.22);
+      width: min(100%, ${tokens.sizes.popupWidth.value});
+      padding: ${tokens.spacing['space.07'].value} ${tokens.spacing['space.05'].value} ${tokens.spacing['space.05'].value};
+      border-radius: ${tokens.radii.md.value};
+      background: var(--leather-surface);
+      box-shadow: hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px;
       text-align: center;
-      animation: leather-overlay-enter 180ms ease-out;
+      animation: leather-overlay-enter 150ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .logo {
       display: block;
-      width: 56px;
-      height: 56px;
-      margin: 0 auto 24px;
-      border-radius: 50%;
+      width: ${tokens.sizes.xxl.value};
+      height: ${tokens.sizes.xxl.value};
+      margin: 0 auto ${tokens.spacing['space.04'].value};
+      border-radius: ${tokens.radii.round.value};
     }
 
     .title {
       margin: 0;
-      font-size: 20px;
-      font-weight: 600;
-      line-height: 1.3;
-      letter-spacing: -0.01em;
+      font-family: '${displayFont}', ${fallbackStack};
+      font-size: ${type.heading05.size};
+      font-weight: 800;
+      line-height: ${type.heading05.lineHeight};
+      text-transform: uppercase;
     }
 
     .description {
-      max-width: 300px;
-      margin: 10px auto 0;
-      color: #6b6b6b;
-      font-size: 15px;
-      font-weight: 400;
-      line-height: 1.5;
+      max-width: 34ch;
+      margin: ${tokens.spacing['space.02'].value} auto 0;
+      color: var(--leather-text-subdued);
+      font-size: ${type.body02.size};
+      font-weight: ${type.body02.weight};
+      line-height: ${type.body02.lineHeight};
     }
 
     .cta {
       display: block;
       width: 100%;
-      margin: 28px 0 0;
-      padding: 14px 20px;
+      margin: ${tokens.spacing['space.05'].value} 0 0;
+      padding: ${tokens.spacing['space.03'].value} ${tokens.spacing['space.04'].value};
       border: 0;
-      border-radius: 999px;
-      background: #121212;
-      color: #ffffff;
+      border-radius: ${tokens.radii.round.value};
+      background: var(--leather-action);
+      color: var(--leather-action-label);
       font-family: inherit;
-      font-size: 15px;
-      font-weight: 500;
-      line-height: 1.2;
+      font-size: ${type.label02.size};
+      font-weight: ${type.label02.weight};
+      line-height: ${type.label02.lineHeight};
       cursor: pointer;
-      transition: opacity 120ms ease-out;
+      transition: background 120ms ease-out;
     }
 
     .cta:hover {
-      opacity: 0.88;
+      background: var(--leather-action-hover);
     }
 
     .cta:focus-visible {
-      outline: 2px solid #121212;
+      outline: 2px solid var(--leather-action);
       outline-offset: 2px;
     }
 
     .dismiss {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: ${tokens.spacing['space.03'].value};
+      right: ${tokens.spacing['space.03'].value};
       display: grid;
-      width: 32px;
-      height: 32px;
+      width: ${tokens.sizes.md.value};
+      height: ${tokens.sizes.md.value};
       padding: 0;
       place-items: center;
       border: 0;
-      border-radius: 50%;
+      border-radius: ${tokens.radii.round.value};
       background: transparent;
-      color: #6b6b6b;
+      color: var(--leather-text-subdued);
       cursor: pointer;
     }
 
     .dismiss:hover {
-      background: #f2f2f2;
-      color: #121212;
+      background: var(--leather-hover);
+      color: var(--leather-text);
     }
 
     .dismiss:focus-visible {
-      outline: 2px solid #121212;
+      outline: 2px solid var(--leather-action);
       outline-offset: 2px;
     }
 
     .dismiss svg {
-      width: 18px;
-      height: 18px;
+      width: ${tokens.sizes.sm.value};
+      height: ${tokens.sizes.sm.value};
     }
 
     @keyframes leather-overlay-enter {

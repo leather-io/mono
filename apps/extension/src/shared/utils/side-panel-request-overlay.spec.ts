@@ -16,7 +16,7 @@ describe(getSidePanelRequestOverlayCopy.name, () => {
     RouteUrls.RpcStxAddAccount,
   ])('returns connection copy for %s', path => {
     expect(getSidePanelRequestOverlayCopy(path)).toEqual({
-      title: 'Connect with Leather',
+      title: 'Connect app',
       description: 'Complete the connection in the Leather sidebar.',
     });
   });
@@ -27,7 +27,7 @@ describe(getSidePanelRequestOverlayCopy.name, () => {
     RouteUrls.RpcStacksSignature,
   ])('returns signature copy for %s', path => {
     expect(getSidePanelRequestOverlayCopy(path)).toEqual({
-      title: 'Review signature in Leather',
+      title: 'Signature request',
       description: 'Review and approve or reject the signature in the Leather sidebar.',
     });
   });
@@ -45,14 +45,14 @@ describe(getSidePanelRequestOverlayCopy.name, () => {
     RouteUrls.TransactionRequest,
   ])('returns transaction copy for %s', path => {
     expect(getSidePanelRequestOverlayCopy(path)).toEqual({
-      title: 'Review transaction in Leather',
+      title: 'Transaction request',
       description: 'Review and approve or reject the transaction in the Leather sidebar.',
     });
   });
 
   test('returns generic request copy for other routes', () => {
     expect(getSidePanelRequestOverlayCopy(RouteUrls.Home)).toEqual({
-      title: 'Continue in Leather',
+      title: 'Leather request',
       description: 'Complete this request in the Leather sidebar.',
     });
   });

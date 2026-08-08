@@ -73,54 +73,40 @@ function getSidePanelRequestCategory(path: RouteUrls): SidePanelRequestCategory 
   }
 }
 
-const pendingCopy: Record<SidePanelRequestCategory, SidePanelRequestOverlayCopy> = {
-  connection: {
-    title: 'Connect with Leather',
-    description: 'Complete the connection in the Leather sidebar.',
-  },
-  signature: {
-    title: 'Review signature in Leather',
-    description: 'Review and approve or reject the signature in the Leather sidebar.',
-  },
-  transaction: {
-    title: 'Review transaction in Leather',
-    description: 'Review and approve or reject the transaction in the Leather sidebar.',
-  },
-  generic: {
-    title: 'Continue in Leather',
-    description: 'Complete this request in the Leather sidebar.',
-  },
+// Written in sentence case and uppercased by the display font's styling, the
+// same way headings work inside the wallet.
+const titles: Record<SidePanelRequestCategory, string> = {
+  connection: 'Connect app',
+  signature: 'Signature request',
+  transaction: 'Transaction request',
+  generic: 'Leather request',
 };
 
-const actionRequiredCopy: Record<SidePanelRequestCategory, SidePanelRequestOverlayCopy> = {
-  connection: {
-    title: 'Connect with Leather',
-    description: 'Open the Leather sidebar to review this connection request.',
-    cta: 'Open sidebar',
-  },
-  signature: {
-    title: 'Signature request from this app',
-    description: 'Open the Leather sidebar to review this signature request.',
-    cta: 'Open sidebar',
-  },
-  transaction: {
-    title: 'Transaction request from this app',
-    description: 'Open the Leather sidebar to review this transaction request.',
-    cta: 'Open sidebar',
-  },
-  generic: {
-    title: 'Request from this app',
-    description: 'Open the Leather sidebar to complete this request.',
-    cta: 'Open sidebar',
-  },
+const pendingDescriptions: Record<SidePanelRequestCategory, string> = {
+  connection: 'Complete the connection in the Leather sidebar.',
+  signature: 'Review and approve or reject the signature in the Leather sidebar.',
+  transaction: 'Review and approve or reject the transaction in the Leather sidebar.',
+  generic: 'Complete this request in the Leather sidebar.',
 };
+
+const actionRequiredDescriptions: Record<SidePanelRequestCategory, string> = {
+  connection: 'Open the Leather sidebar to review this connection request.',
+  signature: 'Open the Leather sidebar to review this signature request.',
+  transaction: 'Open the Leather sidebar to review this transaction request.',
+  generic: 'Open the Leather sidebar to complete this request.',
+};
+
+const ctaLabel = 'Open sidebar';
 
 export function getSidePanelRequestOverlayCopy(
   path: RouteUrls,
   variant: SidePanelRequestOverlayVariant = 'pending'
 ): SidePanelRequestOverlayCopy {
   const category = getSidePanelRequestCategory(path);
-  return variant === 'action-required' ? actionRequiredCopy[category] : pendingCopy[category];
+  const title = titles[category];
+  if (variant === 'action-required')
+    return { title, description: actionRequiredDescriptions[category], cta: ctaLabel };
+  return { title, description: pendingDescriptions[category] };
 }
 
 export function isSidePanelRequestOverlayMessage(
