@@ -306,8 +306,18 @@ test.describe('Side panel demo', () => {
       .toPass({ timeout: 15000 });
     logDemo('panel contexts after cta click:', String(await countPanelContexts()));
 
-    // Overlay drops back to the passive variant once the panel is showing.
-    await test.expect.poll(async () => await getCtaCentre(), { timeout: 10000 }).toBeNull();
+    // Overlay switches to the passive copy once the panel is showing. The
+    // button stays put — it is the only way back to a collapsed sidebar.
+    function getOverlayDescription() {
+      return page.evaluate(() => {
+        const host = document.getElementById('leather-side-panel-request-overlay');
+        return host?.shadowRoot?.getElementById('leather-overlay-description')?.textContent ?? null;
+      });
+    }
+    await test.expect
+      .poll(getOverlayDescription, { timeout: 10000 })
+      .toContain('Review and approve or reject the transaction');
+    test.expect(await getCtaCentre()).not.toBeNull();
   });
 });
 

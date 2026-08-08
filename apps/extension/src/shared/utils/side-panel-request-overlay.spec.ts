@@ -15,7 +15,7 @@ describe(getSidePanelRequestOverlayCopy.name, () => {
     RouteUrls.RpcBtcAddAccount,
     RouteUrls.RpcStxAddAccount,
   ])('returns connection copy for %s', path => {
-    expect(getSidePanelRequestOverlayCopy(path)).toEqual({
+    expect(getSidePanelRequestOverlayCopy(path)).toMatchObject({
       title: 'Connect app',
       description: 'Complete the connection in the Leather sidebar.',
     });
@@ -26,7 +26,7 @@ describe(getSidePanelRequestOverlayCopy.name, () => {
     RouteUrls.RpcSignBip322Message,
     RouteUrls.RpcStacksSignature,
   ])('returns signature copy for %s', path => {
-    expect(getSidePanelRequestOverlayCopy(path)).toEqual({
+    expect(getSidePanelRequestOverlayCopy(path)).toMatchObject({
       title: 'Signature request',
       description: 'Review and approve or reject the signature in the Leather sidebar.',
     });
@@ -44,14 +44,14 @@ describe(getSidePanelRequestOverlayCopy.name, () => {
     RouteUrls.RpcStxTransferStx,
     RouteUrls.TransactionRequest,
   ])('returns transaction copy for %s', path => {
-    expect(getSidePanelRequestOverlayCopy(path)).toEqual({
+    expect(getSidePanelRequestOverlayCopy(path)).toMatchObject({
       title: 'Transaction request',
       description: 'Review and approve or reject the transaction in the Leather sidebar.',
     });
   });
 
   test('returns generic request copy for other routes', () => {
-    expect(getSidePanelRequestOverlayCopy(RouteUrls.Home)).toEqual({
+    expect(getSidePanelRequestOverlayCopy(RouteUrls.Home)).toMatchObject({
       title: 'Leather request',
       description: 'Complete this request in the Leather sidebar.',
     });
@@ -97,8 +97,11 @@ describe('action-required copy', () => {
     expect(copy.cta).toEqual('Open sidebar');
   });
 
-  test('pending variant carries no call to action', () => {
-    expect(getSidePanelRequestOverlayCopy(RouteUrls.RpcGetAddresses).cta).toBeUndefined();
+  test('both variants carry the call to action', () => {
+    expect(getSidePanelRequestOverlayCopy(RouteUrls.RpcGetAddresses).cta).toEqual('Open sidebar');
+    expect(
+      getSidePanelRequestOverlayCopy(RouteUrls.RpcGetAddresses, 'action-required').cta
+    ).toEqual('Open sidebar');
   });
 });
 

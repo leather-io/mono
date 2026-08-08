@@ -104,9 +104,14 @@ export function getSidePanelRequestOverlayCopy(
 ): SidePanelRequestOverlayCopy {
   const category = getSidePanelRequestCategory(path);
   const title = titles[category];
-  if (variant === 'action-required')
-    return { title, description: actionRequiredDescriptions[category], cta: ctaLabel };
-  return { title, description: pendingDescriptions[category] };
+  const description =
+    variant === 'action-required'
+      ? actionRequiredDescriptions[category]
+      : pendingDescriptions[category];
+  // Both variants carry the button: when the request is already showing it
+  // brings the sidebar back into view, which is otherwise unreachable from
+  // the page.
+  return { title, description, cta: ctaLabel };
 }
 
 export function isSidePanelRequestOverlayMessage(

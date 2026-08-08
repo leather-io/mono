@@ -277,7 +277,7 @@ export function showSidePanelRequestOverlay(
 
   card.append(dismissButton, logo, titleElement, descriptionElement);
 
-  if (variant === 'action-required' && cta) {
+  if (cta) {
     const ctaButton = document.createElement('button');
     ctaButton.className = 'cta';
     ctaButton.id = 'leather-overlay-cta';
