@@ -12,7 +12,8 @@ const sidePanelRequestOverlayId = 'leather-side-panel-request-overlay';
 const sidePanelRequestOverlayFontsId = 'leather-side-panel-request-overlay-fonts';
 
 // Namespaced so we never collide with a font the host page already defines.
-const displayFont = 'LeatherOverlayMarche';
+// Only the body face is needed: the card's heading is `heading.05`, which is
+// Diatype — the display face is reserved for heading.02/03.
 const bodyFont = 'LeatherOverlayDiatype';
 
 const fallbackStack = 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
@@ -56,12 +57,6 @@ function injectOverlayFontFaces() {
       font-family: '${bodyFont}';
       src: url('${chrome.runtime.getURL('assets/fonts/diatype/diatype-medium.woff2')}') format('woff2');
       font-weight: 500;
-      font-display: swap;
-    }
-    @font-face {
-      font-family: '${displayFont}';
-      src: url('${chrome.runtime.getURL('assets/fonts/marche/marche-super-pro.woff2')}') format('woff2');
-      font-weight: 800;
       font-display: swap;
     }
   `;
@@ -149,11 +144,10 @@ export function showSidePanelRequestOverlay(
 
     .title {
       margin: 0;
-      font-family: '${displayFont}', ${fallbackStack};
+      font-family: '${bodyFont}', ${fallbackStack};
       font-size: ${type.heading05.size};
-      font-weight: 800;
+      font-weight: ${type.heading05.weight};
       line-height: ${type.heading05.lineHeight};
-      text-transform: uppercase;
     }
 
     .description {

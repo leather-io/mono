@@ -89,12 +89,7 @@ const manifest = {
   },
   web_accessible_resources: [
     {
-      resources: [
-        'inpage.js',
-        'assets/icons/leather-icon-128.png',
-        'assets/fonts/diatype/*.woff2',
-        'assets/fonts/marche/*.woff2',
-      ],
+      resources: ['inpage.js', 'assets/icons/leather-icon-128.png', 'assets/fonts/diatype/*.woff2'],
       matches: ['*://*/*'],
     },
   ],
