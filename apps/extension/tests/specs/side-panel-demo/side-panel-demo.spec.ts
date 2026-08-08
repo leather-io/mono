@@ -242,6 +242,38 @@ test.describe('Side panel demo', () => {
     await test.expect(panelSim.getByTestId('get-addresses-approve-button')).toBeVisible();
   });
 
+  test('open panel closes by window, not by tab', async ({ context, page }) => {
+    await page.goto(demoDappUrl, { waitUntil: 'networkidle' });
+    await addTransferButtonToDapp(page);
+    await page.click('#demo-transfer');
+    await page.waitForTimeout(3500);
+
+    const [background] = context.serviceWorkers();
+    function countPanels() {
+      return background.evaluate(async () => {
+        const contexts = await chrome.runtime.getContexts({});
+        return contexts.filter(c => (c.documentUrl ?? '').includes('side-panel.html')).length;
+      });
+    }
+    test.expect(await countPanels()).toBe(1);
+
+    // Addressing the request's tab resolves but leaves the panel open, which is
+    // why closeSidePanel() goes by window.
+    await background.evaluate(async () => {
+      const tabs = await chrome.tabs.query({});
+      const dappTab = tabs.find(t => (t.url ?? '').includes('localhost:3999'));
+      if (dappTab?.id) await chrome.sidePanel.close({ tabId: dappTab.id });
+    });
+    await page.waitForTimeout(2000);
+    test.expect(await countPanels()).toBe(1);
+
+    await background.evaluate(async () => {
+      const currentWindow = await chrome.windows.getLastFocused();
+      if (currentWindow.id) await chrome.sidePanel.close({ windowId: currentWindow.id });
+    });
+    await test.expect.poll(countPanels, { timeout: 10000 }).toBe(0);
+  });
+
   test('request without user gesture offers an in-page action that opens the panel', async ({
     context,
     page,

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router';
 import { ExpandIcon, IconButton, Tooltip } from '@leather.io/ui';
 
 import { analytics } from '@shared/utils/analytics';
+import { closeSidePanel } from '@shared/utils/side-panel';
 
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
@@ -26,12 +27,15 @@ export function FullScreenButton() {
             _focusVisible={{ outline: 'none' }}
             height="40px"
             p="space.02"
-            onClick={() => {
+            onClick={async () => {
               analytics.untypedTrack('click_open_in_new_tab', {
                 location: 'header',
               });
               void analytics.identify(undefined, { hasVisitedFullPageMode: true });
-              void openIndexPageInNewTab(location.pathname);
+              await openIndexPageInNewTab(location.pathname);
+              // Leaves one wallet on screen rather than the full page and the
+              // sidebar side by side. No-ops outside the side panel.
+              void closeSidePanel();
             }}
           >
             <ExpandIcon />

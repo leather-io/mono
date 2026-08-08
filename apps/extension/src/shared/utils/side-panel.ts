@@ -208,6 +208,22 @@ export async function openRequestInSidePanel({
   return 'opened';
 }
 
+/**
+ * Chrome only honours `close` when addressed by window — passing `tabId`
+ * resolves without closing anything.
+ */
+export async function closeSidePanel() {
+  if (!isSidePanelSupported() || !isSidePanelPage()) return;
+  if (typeof chrome.sidePanel.close !== 'function') return;
+  try {
+    const currentWindow = await chrome.windows.getCurrent();
+    if (!currentWindow.id) return;
+    await chrome.sidePanel.close({ windowId: currentWindow.id });
+  } catch (error) {
+    logger.debug('Unable to close side panel', error);
+  }
+}
+
 export async function cancelArmedSidePanelRequest(tabId: number) {
   await clearPendingSidePanelRequest();
   await resetSidePanelToDefault(tabId);
