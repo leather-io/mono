@@ -104,14 +104,11 @@ export function getSidePanelRequestOverlayCopy(
 ): SidePanelRequestOverlayCopy {
   const category = getSidePanelRequestCategory(path);
   const title = titles[category];
-  const description =
-    variant === 'action-required'
-      ? actionRequiredDescriptions[category]
-      : pendingDescriptions[category];
-  // Both variants carry the button: when the request is already showing it
-  // brings the sidebar back into view, which is otherwise unreachable from
-  // the page.
-  return { title, description, cta: ctaLabel };
+  // Only the actionable variant gets a button. On the pending card the sidebar
+  // is already open beside it, so an "open sidebar" action would be a no-op.
+  if (variant === 'action-required')
+    return { title, description: actionRequiredDescriptions[category], cta: ctaLabel };
+  return { title, description: pendingDescriptions[category] };
 }
 
 export function isSidePanelRequestOverlayMessage(
