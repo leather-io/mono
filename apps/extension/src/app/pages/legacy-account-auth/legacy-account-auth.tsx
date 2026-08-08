@@ -1,5 +1,6 @@
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 
+import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 
@@ -57,7 +58,19 @@ export function LegacyAccountAuth() {
     })();
   }
 
-  if (!url) throw new Error('No app details found');
+  if (!url) {
+    logger.error('Legacy account auth request is missing app details from the popup url');
+    return (
+      <Navigate
+        to={RouteUrls.RequestError}
+        state={{
+          title: 'Connection request failed',
+          message:
+            'This connection request is missing information from the requesting app. Please close this window and try connecting again.',
+        }}
+      />
+    );
+  }
 
   return (
     <>
