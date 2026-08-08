@@ -166,7 +166,10 @@ export function showSidePanelRequestOverlay(
     }
 
     .cta {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: ${tokens.spacing['space.02'].value};
       width: 100%;
       margin: ${tokens.spacing['space.05'].value} 0 0;
       padding: ${tokens.spacing['space.03'].value} ${tokens.spacing['space.04'].value};
@@ -184,6 +187,20 @@ export function showSidePanelRequestOverlay(
 
     .cta:hover {
       background: var(--leather-action-hover);
+    }
+
+    .cta-arrow {
+      transition: transform 120ms ease-out;
+    }
+
+    .cta:hover .cta-arrow {
+      transform: translateX(2px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cta-arrow {
+        transition: none;
+      }
     }
 
     .cta:focus-visible {
@@ -282,7 +299,18 @@ export function showSidePanelRequestOverlay(
     ctaButton.className = 'cta';
     ctaButton.id = 'leather-overlay-cta';
     ctaButton.type = 'button';
-    ctaButton.textContent = cta;
+
+    const ctaLabel = document.createElement('span');
+    ctaLabel.textContent = cta;
+
+    // Decorative, so it stays out of the accessible name — a screen reader
+    // should hear "Open sidebar", not "Open sidebar right arrow".
+    const ctaArrow = document.createElement('span');
+    ctaArrow.className = 'cta-arrow';
+    ctaArrow.setAttribute('aria-hidden', 'true');
+    ctaArrow.textContent = '→';
+
+    ctaButton.append(ctaLabel, ctaArrow);
     // The click's user activation is what lets the background open the side
     // panel — Chrome refuses `sidePanel.open` without it.
     ctaButton.addEventListener('click', () => sendOverlayAction('open-panel'));
