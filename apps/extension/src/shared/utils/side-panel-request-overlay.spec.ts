@@ -2,7 +2,9 @@ import { RouteUrls } from '@shared/route-urls';
 
 import {
   getSidePanelRequestOverlayCopy,
+  isSidePanelOverlayActionMessage,
   isSidePanelRequestOverlayMessage,
+  sidePanelOverlayActionMessageType,
   sidePanelRequestOverlayMessageType,
 } from './side-panel-request-overlay';
 
@@ -81,5 +83,51 @@ describe(isSidePanelRequestOverlayMessage.name, () => {
       })
     ).toBe(false);
     expect(isSidePanelRequestOverlayMessage({ type: 'other', action: 'hide' })).toBe(false);
+  });
+});
+
+describe('action-required copy', () => {
+  test.each([
+    [RouteUrls.RpcGetAddresses, 'Open the Leather sidebar to review this connection request.'],
+    [RouteUrls.RpcSignPsbt, 'Open the Leather sidebar to review this transaction request.'],
+    [RouteUrls.RpcStacksSignature, 'Open the Leather sidebar to review this signature request.'],
+  ])('asks the user to open the sidebar for %s', (path, description) => {
+    const copy = getSidePanelRequestOverlayCopy(path, 'action-required');
+    expect(copy.description).toEqual(description);
+    expect(copy.cta).toEqual('Open sidebar');
+  });
+
+  test('pending variant carries no call to action', () => {
+    expect(getSidePanelRequestOverlayCopy(RouteUrls.RpcGetAddresses).cta).toBeUndefined();
+  });
+});
+
+describe(isSidePanelOverlayActionMessage.name, () => {
+  test('recognizes open-panel and dismiss actions', () => {
+    expect(
+      isSidePanelOverlayActionMessage({
+        type: sidePanelOverlayActionMessageType,
+        action: 'open-panel',
+      })
+    ).toBe(true);
+    expect(
+      isSidePanelOverlayActionMessage({
+        type: sidePanelOverlayActionMessageType,
+        action: 'dismiss',
+      })
+    ).toBe(true);
+  });
+
+  test('rejects unknown actions and foreign message types', () => {
+    expect(
+      isSidePanelOverlayActionMessage({ type: sidePanelOverlayActionMessageType, action: 'nope' })
+    ).toBe(false);
+    expect(isSidePanelOverlayActionMessage({ type: 'other', action: 'dismiss' })).toBe(false);
+    expect(
+      isSidePanelOverlayActionMessage({
+        type: sidePanelRequestOverlayMessageType,
+        action: 'dismiss',
+      })
+    ).toBe(false);
   });
 });

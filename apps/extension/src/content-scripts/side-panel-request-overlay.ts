@@ -1,19 +1,37 @@
 import type { RouteUrls } from '@shared/route-urls';
-import { getSidePanelRequestOverlayCopy } from '@shared/utils/side-panel-request-overlay';
+import {
+  type SidePanelOverlayActionMessage,
+  type SidePanelRequestOverlayVariant,
+  getSidePanelRequestOverlayCopy,
+  sidePanelOverlayActionMessageType,
+} from '@shared/utils/side-panel-request-overlay';
 
 const sidePanelRequestOverlayId = 'leather-side-panel-request-overlay';
+
+function sendOverlayAction(action: SidePanelOverlayActionMessage['action']) {
+  try {
+    void chrome.runtime
+      .sendMessage({ type: sidePanelOverlayActionMessageType, action })
+      .catch(() => null);
+  } catch {
+    // Extension context invalidated, nothing to do from the page
+  }
+}
 
 export function hideSidePanelRequestOverlay() {
   document.getElementById(sidePanelRequestOverlayId)?.remove();
 }
 
-export function showSidePanelRequestOverlay(path: RouteUrls) {
+export function showSidePanelRequestOverlay(
+  path: RouteUrls,
+  variant: SidePanelRequestOverlayVariant = 'pending'
+) {
   hideSidePanelRequestOverlay();
 
   const host = document.createElement('div');
   host.id = sidePanelRequestOverlayId;
-  const root = host.attachShadow({ mode: 'closed' });
-  const { description, title } = getSidePanelRequestOverlayCopy(path);
+  const root = host.attachShadow({ mode: 'open' });
+  const { cta, description, title } = getSidePanelRequestOverlayCopy(path, variant);
   const logoUrl = chrome.runtime.getURL('assets/icons/leather-icon-128.png');
 
   const style = document.createElement('style');
@@ -71,6 +89,32 @@ export function showSidePanelRequestOverlay(path: RouteUrls) {
       font-size: 15px;
       font-weight: 400;
       line-height: 1.5;
+    }
+
+    .cta {
+      display: block;
+      width: 100%;
+      margin: 28px 0 0;
+      padding: 14px 20px;
+      border: 0;
+      border-radius: 999px;
+      background: #121212;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.2;
+      cursor: pointer;
+      transition: opacity 120ms ease-out;
+    }
+
+    .cta:hover {
+      opacity: 0.88;
+    }
+
+    .cta:focus-visible {
+      outline: 2px solid #121212;
+      outline-offset: 2px;
     }
 
     .dismiss {
@@ -135,7 +179,12 @@ export function showSidePanelRequestOverlay(path: RouteUrls) {
   dismissButton.setAttribute('aria-label', 'Dismiss');
   dismissButton.innerHTML =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/></svg>';
-  dismissButton.addEventListener('click', hideSidePanelRequestOverlay);
+  dismissButton.addEventListener('click', () => {
+    // Only the actionable variant owns the request's fate: the pending variant
+    // is a hint alongside an approval the user can still act on in the panel.
+    if (variant === 'action-required') sendOverlayAction('dismiss');
+    hideSidePanelRequestOverlay();
+  });
 
   const logo = document.createElement('img');
   logo.alt = '';
@@ -153,6 +202,19 @@ export function showSidePanelRequestOverlay(path: RouteUrls) {
   descriptionElement.textContent = description;
 
   card.append(dismissButton, logo, titleElement, descriptionElement);
+
+  if (variant === 'action-required' && cta) {
+    const ctaButton = document.createElement('button');
+    ctaButton.className = 'cta';
+    ctaButton.id = 'leather-overlay-cta';
+    ctaButton.type = 'button';
+    ctaButton.textContent = cta;
+    // The click's user activation is what lets the background open the side
+    // panel — Chrome refuses `sidePanel.open` without it.
+    ctaButton.addEventListener('click', () => sendOverlayAction('open-panel'));
+    card.append(ctaButton);
+  }
+
   root.append(style, card);
   document.documentElement.appendChild(host);
 }

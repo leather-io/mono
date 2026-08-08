@@ -28,6 +28,7 @@ import {
 } from '@shared/rpc/methods/validation.utils';
 import { getRootState, sendMissingStateErrorToTab } from '@shared/storage/get-root-state';
 import {
+  cancelArmedSidePanelRequest,
   openRequestInSidePanel,
   registerSidePanelDismissResponse,
   showSidePanelRequestOverlay,
@@ -37,6 +38,10 @@ import { getHostnameFromUrl } from '@shared/utils/urls';
 
 import type { RootState } from '@app/store';
 import { popup } from '@background/popup';
+import {
+  clearDeferredSidePanelRequest,
+  registerDeferredSidePanelRequest,
+} from '@background/side-panel-request-actions';
 
 import { trackRpcRequestError } from './rpc-helpers';
 
@@ -173,24 +178,38 @@ const IS_TEST_ENV = process.env.TEST_ENV === 'true';
 export async function triggerRequestPopupWindowOpen(path: RouteUrls, urlParams: URLSearchParams) {
   if (IS_TEST_ENV) return openRequestInFullPage(path, urlParams);
   const tabId = Number(urlParams.get('tabId') ?? '0');
-  const openedInSidePanel = await openRequestInSidePanel({
+  const popupUrl = `/popup.html#${path}?${urlParams.toString()}`;
+  const result = await openRequestInSidePanel({
     tabId,
     url: `${sidePanelPage}#${path}?${urlParams.toString()}`,
   });
-  if (openedInSidePanel) {
+
+  if (result === 'opened') {
     if (path !== RouteUrls.Home) await showSidePanelRequestOverlay(tabId, path);
     return {};
   }
-  return popup({ url: `/popup.html#${path}?${urlParams.toString()}` });
+
+  // Chrome refuses to open the panel without user activation, so ask for a
+  // click in the page instead of stealing focus with a popup window.
+  if (result === 'needs-user-action' && path !== RouteUrls.Home) {
+    registerDeferredSidePanelRequest(tabId, { path, popupUrl });
+    if (await showSidePanelRequestOverlay(tabId, path, 'action-required')) return {};
+    clearDeferredSidePanelRequest(tabId);
+  }
+
+  if (result !== 'unavailable') await cancelArmedSidePanelRequest(tabId);
+  return popup({ url: popupUrl });
 }
 
 export async function triggerSwapWindowOpen(path: To, urlParams: URLSearchParams) {
   if (IS_TEST_ENV) return openRequestInFullPage(path, urlParams);
-  const openedInSidePanel = await openRequestInSidePanel({
-    tabId: Number(urlParams.get('tabId') ?? '0'),
+  const tabId = Number(urlParams.get('tabId') ?? '0');
+  const result = await openRequestInSidePanel({
+    tabId,
     url: `${sidePanelPage}#${path}?${urlParams.toString()}`,
   });
-  if (openedInSidePanel) return {};
+  if (result === 'opened') return {};
+  if (result !== 'unavailable') await cancelArmedSidePanelRequest(tabId);
   return popup({ url: `/popup.html#${path}?${urlParams.toString()}` });
 }
 

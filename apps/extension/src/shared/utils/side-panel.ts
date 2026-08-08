@@ -6,6 +6,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { getRootState } from '@shared/storage/get-root-state';
 import {
   type SidePanelRequestOverlayMessage,
+  type SidePanelRequestOverlayVariant,
   sidePanelRequestOverlayMessageType,
 } from '@shared/utils/side-panel-request-overlay';
 
@@ -85,20 +86,27 @@ async function sendSidePanelRequestOverlayMessage(
 ) {
   try {
     await chrome.tabs.sendMessage(tabId, message, { frameId: 0 });
+    return true;
   } catch (error) {
     logger.debug('Unable to update side panel request overlay', error);
+    return false;
   }
 }
 
-export function showSidePanelRequestOverlay(tabId: number, path: RouteUrls) {
+export function showSidePanelRequestOverlay(
+  tabId: number,
+  path: RouteUrls,
+  variant: SidePanelRequestOverlayVariant = 'pending'
+) {
   return sendSidePanelRequestOverlayMessage(tabId, {
     type: sidePanelRequestOverlayMessageType,
     action: 'show',
     path,
+    variant,
   });
 }
 
-function hideSidePanelRequestOverlay(tabId: number) {
+export function hideSidePanelRequestOverlay(tabId: number) {
   return sendSidePanelRequestOverlayMessage(tabId, {
     type: sidePanelRequestOverlayMessageType,
     action: 'hide',
@@ -161,30 +169,48 @@ interface OpenRequestInSidePanelArgs {
   tabId: number;
   url: string;
 }
-export async function openRequestInSidePanel({ tabId, url }: OpenRequestInSidePanelArgs) {
-  if (!isSidePanelSupported() || !tabId) return false;
-  if (!(await hasWalletSetUp())) return false;
+/**
+ * `opened` — the request is showing in the panel.
+ * `needs-user-action` — the panel is armed with the request, but Chrome refused
+ * to open it without user activation. A click in the page can still open it.
+ * `unavailable` — no side panel to route to; use the popup window.
+ */
+type OpenRequestInSidePanelResult = 'opened' | 'needs-user-action' | 'unavailable';
+
+export async function openRequestInSidePanel({
+  tabId,
+  url,
+}: OpenRequestInSidePanelArgs): Promise<OpenRequestInSidePanelResult> {
+  if (!isSidePanelSupported() || !tabId) return 'unavailable';
+  if (!(await hasWalletSetUp())) return 'unavailable';
 
   try {
     await chrome.sidePanel.setOptions({ tabId, path: url, enabled: true });
   } catch (error) {
     logger.warn('Unable to set side panel request path', error);
-    return false;
+    return 'unavailable';
   }
+
+  // Arming the path before opening means any later open — the overlay's button,
+  // or the toolbar icon — lands directly on the request.
+  await setPendingSidePanelRequest(url);
 
   try {
     await chrome.sidePanel.open({ tabId });
   } catch (error) {
     await delay(200);
     if (!(await isSidePanelShowing())) {
-      logger.warn('Unable to open request in side panel, falling back to popup window', error);
-      await resetSidePanelToDefault(tabId);
-      return false;
+      logger.warn('Side panel needs a user gesture to open this request', error);
+      return 'needs-user-action';
     }
   }
 
-  await setPendingSidePanelRequest(url);
-  return true;
+  return 'opened';
+}
+
+export async function cancelArmedSidePanelRequest(tabId: number) {
+  await clearPendingSidePanelRequest();
+  await resetSidePanelToDefault(tabId);
 }
 
 function getRequestingTabIdFromLocation() {
@@ -221,6 +247,16 @@ export function registerSidePanelDismissResponse(entry: SidePanelDismissResponse
   sidePanelDismissResponses.set(entry.tabId, entry);
 }
 
+export function resolveSidePanelDismissResponse(tabId: number) {
+  const entry = sidePanelDismissResponses.get(tabId);
+  if (!entry) return;
+  sidePanelDismissResponses.delete(tabId);
+  void sendMessageToOriginatingFrame(
+    { frameId: entry.frameId, tabId: entry.tabId },
+    entry.response
+  );
+}
+
 export function initSidePanelRequestLifecycleListener() {
   if (!isSidePanelSupported()) return;
   chrome.runtime.onConnect.addListener(port => {
@@ -233,13 +269,7 @@ export function initSidePanelRequestLifecycleListener() {
     port.onDisconnect.addListener(() => {
       if (handedOff) return;
       void hideSidePanelRequestOverlay(tabId);
-      const entry = sidePanelDismissResponses.get(tabId);
-      if (!entry) return;
-      sidePanelDismissResponses.delete(tabId);
-      void sendMessageToOriginatingFrame(
-        { frameId: entry.frameId, tabId: entry.tabId },
-        entry.response
-      );
+      resolveSidePanelDismissResponse(tabId);
     });
   });
 }

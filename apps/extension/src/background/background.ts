@@ -17,6 +17,7 @@ import {
   initSidePanelRequestLifecycleListener,
   openSidePanelForDappRequest,
 } from '@shared/utils/side-panel';
+import { isSidePanelOverlayActionMessage } from '@shared/utils/side-panel-request-overlay';
 
 import { queueAnalyticsRequest } from './background-analytics';
 import { initContextMenuActions } from './init-context-menus';
@@ -27,11 +28,13 @@ import {
 } from './messaging/legacy/legacy-external-message-handler';
 import { rpcMessageHandler } from './messaging/rpc-message-handler';
 import { initAddressMonitor } from './monitors/address-monitor';
+import { initSidePanelOverlayActionListener } from './side-panel-request-actions';
 
 initContextMenuActions();
 warnUsersAboutDevToolsDangers();
 initSidePanelAvailabilitySync();
 initSidePanelRequestLifecycleListener();
+initSidePanelOverlayActionListener();
 
 chrome.runtime.onInstalled.addListener(async details => {
   if (details.reason === 'install' && process.env.WALLET_ENVIRONMENT !== 'testing') {
@@ -77,6 +80,9 @@ function isDappOriginatedMessage(
 //
 // Events from the extension frames script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  // Handled by its own listener in side-panel-request-actions
+  if (isSidePanelOverlayActionMessage(message)) return false;
+
   if (isDappOriginatedMessage(message)) {
     if (!sender.tab?.id) {
       logger.error('Message reached background script without a corresponding tab');

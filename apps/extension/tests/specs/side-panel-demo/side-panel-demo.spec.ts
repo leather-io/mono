@@ -242,14 +242,26 @@ test.describe('Side panel demo', () => {
     await test.expect(panelSim.getByTestId('get-addresses-approve-button')).toBeVisible();
   });
 
-  test('request without user gesture falls back to popup window', async ({
+  test('request without user gesture offers an in-page action that opens the panel', async ({
     context,
     page,
-    extensionId,
   }) => {
     await page.goto(demoDappUrl, { waitUntil: 'networkidle' });
 
-    const popupPromise = context.waitForEvent('page', { timeout: 25000 });
+    let [background] = context.serviceWorkers();
+    if (!background) background = await context.waitForEvent('serviceworker');
+
+    function countPanelContexts() {
+      return background.evaluate(async () => {
+        const contexts = await chrome.runtime.getContexts({});
+        return contexts.filter(c => (c.documentUrl ?? '').includes('side-panel.html')).length;
+      });
+    }
+
+    test.expect(await countPanelContexts()).toBe(0);
+
+    // Fired well after the click that loaded the page, so Chrome sees no user
+    // activation and refuses to open the panel on its own.
     await page.evaluate(recipient => {
       setTimeout(() => {
         void (window as any).LeatherProvider.request('stx_transferStx', {
@@ -259,12 +271,43 @@ test.describe('Side panel demo', () => {
       }, 6000);
     }, TEST_ACCOUNT_2_STX_ADDRESS);
 
-    const popup = await popupPromise;
-    await popup.waitForTimeout(1500);
-    logDemo('fallback target url:', popup.url());
-    test.expect(popup.url()).toContain('popup.html');
-    await test.expect(popup.locator('text="Cancel"')).toBeVisible();
-    logDemo('extension id for reference:', extensionId);
+    // Queried through the shadow root rather than a Playwright locator, which
+    // does not reliably pierce this content-script shadow DOM.
+    function getCtaCentre() {
+      return page.evaluate(() => {
+        const host = document.getElementById('leather-side-panel-request-overlay');
+        const cta = host?.shadowRoot?.getElementById('leather-overlay-cta');
+        const rect = cta?.getBoundingClientRect();
+        return rect ? { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 } : null;
+      });
+    }
+
+    // Nothing may touch the page while the timer runs: Playwright's
+    // `page.evaluate` grants user activation, which would let Chrome open the
+    // panel on its own and defeat the very scenario under test.
+    await page.waitForTimeout(9000);
+
+    await test.expect
+      .poll(async () => Boolean(await getCtaCentre()), { timeout: 15000 })
+      .toBe(true);
+    await page.screenshot({ path: path.join(outDir, '06-overlay-action-required.png') });
+
+    // No popup window stole focus while the request waited in the page.
+    test.expect(context.pages().every(p => !p.url().includes('popup.html'))).toBe(true);
+
+    // Clicked with the mouse so the event is trusted — a scripted click carries
+    // no user activation and Chrome would refuse to open the panel.
+    const centre = await getCtaCentre();
+    if (!centre) throw new Error('Overlay call to action never rendered');
+    await page.mouse.click(centre.x, centre.y);
+
+    await test
+      .expect(async () => test.expect(await countPanelContexts()).toBeGreaterThan(0))
+      .toPass({ timeout: 15000 });
+    logDemo('panel contexts after cta click:', String(await countPanelContexts()));
+
+    // Overlay drops back to the passive variant once the panel is showing.
+    await test.expect.poll(async () => await getCtaCentre(), { timeout: 10000 }).toBeNull();
   });
 });
 

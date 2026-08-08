@@ -49,7 +49,7 @@ function sendMessageToBackground(message: LegacyMessageFromContentScript) {
 chrome.runtime.onMessage.addListener(
   (message: LegacyMessageToContentScript | SidePanelRequestOverlayMessage) => {
     if (isSidePanelRequestOverlayMessage(message)) {
-      if (message.action === 'show') showSidePanelRequestOverlay(message.path);
+      if (message.action === 'show') showSidePanelRequestOverlay(message.path, message.variant);
       else hideSidePanelRequestOverlay();
       return;
     }
