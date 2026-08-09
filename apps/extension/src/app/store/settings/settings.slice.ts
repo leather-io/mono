@@ -9,6 +9,7 @@ interface InitialState {
   seenFeatureIntros: string[];
   isPrivateMode?: boolean;
   isNotificationsEnabled?: boolean;
+  isSidePanelModeEnabled?: boolean;
   bypassInscriptionChecks?: boolean;
   discardedInscriptions: string[];
   networkBadgeAlwaysOn?: boolean;
@@ -43,6 +44,9 @@ export const settingsSlice = createSlice({
     },
     resetPromoBanner(state) {
       state.dismissedPromoIndexes = [];
+    },
+    toggleSidePanelMode(state) {
+      state.isSidePanelModeEnabled = !(state.isSidePanelModeEnabled ?? true);
     },
     featureIntroSeen(state, action: PayloadAction<string>) {
       if (!Array.isArray(state.seenFeatureIntros)) state.seenFeatureIntros = [];

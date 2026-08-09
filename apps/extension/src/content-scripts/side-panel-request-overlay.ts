@@ -11,9 +11,6 @@ import {
 const sidePanelRequestOverlayId = 'leather-side-panel-request-overlay';
 const sidePanelRequestOverlayFontsId = 'leather-side-panel-request-overlay-fonts';
 
-// Namespaced so we never collide with a font the host page already defines.
-// Only the body face is needed: the card's heading is `heading.05`, which is
-// Diatype — the display face is reserved for heading.02/03.
 const bodyFont = 'LeatherOverlayDiatype';
 
 const fallbackStack = 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
@@ -21,9 +18,6 @@ const fallbackStack = 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe 
 const light = colorThemes.base;
 const dark = colorThemes.dark;
 
-// The design system's type scale is defined in rem, but rem inside the overlay
-// would resolve against the host page's root font size. Pinned to the px
-// equivalents so a dapp's typography cannot resize Leather's card.
 const type = {
   heading05: { size: '21px', lineHeight: '28px', weight: 500 },
   label02: { size: '15px', lineHeight: '20px', weight: 500 },
@@ -40,8 +34,6 @@ function sendOverlayAction(action: SidePanelOverlayActionMessage['action']) {
   }
 }
 
-// Chromium ignores `@font-face` declared inside a shadow root, so the faces have
-// to live in the host document. Namespaced families keep the page unaffected.
 function injectOverlayFontFaces() {
   if (document.getElementById(sidePanelRequestOverlayFontsId)) return;
   const style = document.createElement('style');
@@ -265,8 +257,6 @@ export function showSidePanelRequestOverlay(
   dismissButton.innerHTML =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/></svg>';
   dismissButton.addEventListener('click', () => {
-    // Only the actionable variant owns the request's fate: the pending variant
-    // is a hint alongside an approval the user can still act on in the panel.
     if (variant === 'action-required') sendOverlayAction('dismiss');
     hideSidePanelRequestOverlay();
   });
@@ -297,16 +287,12 @@ export function showSidePanelRequestOverlay(
     const ctaLabel = document.createElement('span');
     ctaLabel.textContent = cta;
 
-    // Decorative, so it stays out of the accessible name — a screen reader
-    // should hear "Open sidebar", not "Open sidebar right arrow".
     const ctaArrow = document.createElement('span');
     ctaArrow.className = 'cta-arrow';
     ctaArrow.setAttribute('aria-hidden', 'true');
     ctaArrow.textContent = '→';
 
     ctaButton.append(ctaLabel, ctaArrow);
-    // The click's user activation is what lets the background open the side
-    // panel — Chrome refuses `sidePanel.open` without it.
     ctaButton.addEventListener('click', () => sendOverlayAction('open-panel'));
     card.append(ctaButton);
   }

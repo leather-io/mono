@@ -32,6 +32,7 @@ export enum SettingsSelectors {
   ResetProtectionBtn = 'reset-protection-btn',
   AllowSpendingBtn = 'allow-spending-btn',
   ToggleNotifications = 'toggle-notifications',
+  ToggleSidePanelMode = 'toggle-side-panel-mode',
   ToggleNetworkBadge = 'toggle-network-badge',
   SettingsPage = 'settings-page',
 }

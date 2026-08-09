@@ -19,6 +19,11 @@ export function useToggleNotificationsEnabled() {
   return () => dispatch(settingsActions.toggleNotificationsEnabled());
 }
 
+export function useToggleSidePanelMode() {
+  const dispatch = useDispatch();
+  return () => dispatch(settingsActions.toggleSidePanelMode());
+}
+
 export function useToggleNetworkBadgeAlwaysOn() {
   const dispatch = useDispatch();
   return () => dispatch(settingsActions.toggleNetworkBadgeAlwaysOn());

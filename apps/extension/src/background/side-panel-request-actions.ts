@@ -42,8 +42,7 @@ export function initSidePanelOverlayActionListener() {
       return false;
     }
 
-    // Called synchronously. Awaiting anything first spends the click's user
-    // activation, which is the only reason Chrome lets us open the panel here.
+    // Must stay synchronous to keep the click's user activation
     chrome.sidePanel.open({ tabId }).then(
       () => {
         if (request) void showSidePanelRequestOverlay(tabId, request.path, 'pending');

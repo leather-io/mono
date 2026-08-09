@@ -1,5 +1,4 @@
-// `chrome.sidePanel.close` landed in Chrome 141 but is not yet in
-// @types/chrome. Declared here so callers stay type-safe without casts.
+// Chrome 141+, not yet in @types/chrome
 declare namespace chrome.sidePanel {
   interface CloseOptions {
     tabId?: number;

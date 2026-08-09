@@ -9,6 +9,7 @@ import {
   BellIcon,
   CodeIcon,
   GlobeTiltedIcon,
+  GridIcon,
   KeyIcon,
   MegaphoneIcon,
   SunInCloudIcon,
@@ -17,14 +18,21 @@ import {
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics, openFeedbackSheet } from '@shared/utils/analytics';
+import { isSidePanelSupported } from '@shared/utils/side-panel';
 
 import { useHasKeys } from '@app/common/hooks/auth/use-has-keys';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { AppVersion } from '@app/components/app-version';
 import { useToast } from '@app/features/toasts/use-toast';
-import { useToggleNotificationsEnabled } from '@app/store/settings/settings.actions';
-import { useIsNotificationsEnabled } from '@app/store/settings/settings.selectors';
+import {
+  useToggleNotificationsEnabled,
+  useToggleSidePanelMode,
+} from '@app/store/settings/settings.actions';
+import {
+  useIsNotificationsEnabled,
+  useIsSidePanelModeEnabled,
+} from '@app/store/settings/settings.selectors';
 
 import { SettingsButton } from './components/settings-button';
 
@@ -34,6 +42,8 @@ export function MenuButtons() {
   const { walletType } = useWalletType();
   const isNotificationsEnabled = useIsNotificationsEnabled();
   const toggleNotificationsEnabled = useToggleNotificationsEnabled();
+  const isSidePanelModeEnabled = useIsSidePanelModeEnabled();
+  const toggleSidePanelMode = useToggleSidePanelMode();
   const toast = useToast();
 
   return (
@@ -58,6 +68,23 @@ export function MenuButtons() {
         }}
         icon={<SunInCloudIcon />}
       />
+
+      {isSidePanelSupported() && (
+        <SettingsButton
+          data-testid={SettingsSelectors.ToggleSidePanelMode}
+          variant="switch"
+          title="Sidebar mode"
+          tooltipText="Opens Leather beside the page instead of as a pop-up"
+          isEnabled={isSidePanelModeEnabled}
+          onClick={() => {
+            analytics.untypedTrack('click_toggle_side_panel_mode', {
+              isEnabled: !isSidePanelModeEnabled,
+            });
+            toggleSidePanelMode();
+          }}
+          icon={<GridIcon />}
+        />
+      )}
 
       <SettingsButton
         data-testid={SettingsSelectors.ChangeNetworkAction}

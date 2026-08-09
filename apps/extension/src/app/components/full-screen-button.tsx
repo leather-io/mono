@@ -33,8 +33,6 @@ export function FullScreenButton() {
               });
               void analytics.identify(undefined, { hasVisitedFullPageMode: true });
               await openIndexPageInNewTab(location.pathname);
-              // Leaves one wallet on screen rather than the full page and the
-              // sidebar side by side. No-ops outside the side panel.
               void closeSidePanel();
             }}
           >

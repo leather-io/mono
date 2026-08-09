@@ -24,20 +24,36 @@ type MaybePreMultiWalletRootState = Omit<RootState, 'wallets'> & {
   wallets?: RootState['wallets'];
 };
 
-async function hasWalletSetUp() {
+async function isSidePanelPreferred() {
   try {
     const state: MaybePreMultiWalletRootState | null = await getRootState();
     if (!state) return false;
     const walletEntities = state.wallets?.entities;
-    if (!walletEntities) return false;
-    return Object.keys(walletEntities).length > 0;
+    if (!walletEntities || Object.keys(walletEntities).length === 0) return false;
+    return state.settings?.isSidePanelModeEnabled ?? true;
   } catch (error) {
-    logger.debug('Unable to read wallet state', error);
+    logger.debug('Unable to read side panel preference', error);
     return false;
   }
 }
 
-function isSidePanelSupported() {
+let isSidePanelModeActive: boolean | null = null;
+
+async function closeSidePanelInEveryWindow() {
+  if (typeof chrome.sidePanel.close !== 'function') return;
+  try {
+    const windows = await chrome.windows.getAll();
+    await Promise.all(
+      windows.map(async browserWindow => {
+        if (browserWindow.id) await chrome.sidePanel.close({ windowId: browserWindow.id });
+      })
+    );
+  } catch (error) {
+    logger.debug('Unable to close side panel after mode change', error);
+  }
+}
+
+export function isSidePanelSupported() {
   return typeof chrome !== 'undefined' && typeof chrome.sidePanel !== 'undefined';
 }
 
@@ -50,7 +66,11 @@ export function isSidePanelPage() {
 async function syncSidePanelAvailability() {
   if (!isSidePanelSupported()) return;
   try {
-    if (await hasWalletSetUp()) {
+    const isPreferred = await isSidePanelPreferred();
+    const wasActive = isSidePanelModeActive;
+    isSidePanelModeActive = isPreferred;
+
+    if (isPreferred) {
       await chrome.action.setPopup({ popup: '' });
       await chrome.sidePanel.setOptions({ enabled: true, path: sidePanelPage });
       await chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
@@ -59,6 +79,7 @@ async function syncSidePanelAvailability() {
     await chrome.action.setPopup({ popup: actionPopupPage });
     await chrome.sidePanel.setOptions({ enabled: false });
     await chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
+    if (wasActive) await closeSidePanelInEveryWindow();
   } catch (error) {
     logger.warn('Unable to sync side panel availability', error);
   }
@@ -169,12 +190,6 @@ interface OpenRequestInSidePanelArgs {
   tabId: number;
   url: string;
 }
-/**
- * `opened` — the request is showing in the panel.
- * `needs-user-action` — the panel is armed with the request, but Chrome refused
- * to open it without user activation. A click in the page can still open it.
- * `unavailable` — no side panel to route to; use the popup window.
- */
 type OpenRequestInSidePanelResult = 'opened' | 'needs-user-action' | 'unavailable';
 
 export async function openRequestInSidePanel({
@@ -182,7 +197,7 @@ export async function openRequestInSidePanel({
   url,
 }: OpenRequestInSidePanelArgs): Promise<OpenRequestInSidePanelResult> {
   if (!isSidePanelSupported() || !tabId) return 'unavailable';
-  if (!(await hasWalletSetUp())) return 'unavailable';
+  if (!(await isSidePanelPreferred())) return 'unavailable';
 
   try {
     await chrome.sidePanel.setOptions({ tabId, path: url, enabled: true });
@@ -191,8 +206,6 @@ export async function openRequestInSidePanel({
     return 'unavailable';
   }
 
-  // Arming the path before opening means any later open — the overlay's button,
-  // or the toolbar icon — lands directly on the request.
   await setPendingSidePanelRequest(url);
 
   try {
@@ -208,10 +221,6 @@ export async function openRequestInSidePanel({
   return 'opened';
 }
 
-/**
- * Chrome only honours `close` when addressed by window — passing `tabId`
- * resolves without closing anything.
- */
 export async function closeSidePanel() {
   if (!isSidePanelSupported() || !isSidePanelPage()) return;
   if (typeof chrome.sidePanel.close !== 'function') return;

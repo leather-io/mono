@@ -2,8 +2,11 @@ import type { Page } from '@playwright/test';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { testFingerprint } from '@tests/page-object-models/onboarding.page';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
+import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { RouteUrls } from '@shared/route-urls';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -242,6 +245,38 @@ test.describe('Side panel demo', () => {
     await test.expect(panelSim.getByTestId('get-addresses-approve-button')).toBeVisible();
   });
 
+  test('turning sidebar mode off restores the action popup', async ({ context, extensionId }) => {
+    const [background] = context.serviceWorkers();
+
+    function readMode() {
+      return background.evaluate(async () => ({
+        popup: await chrome.action.getPopup({}),
+        enabled: (await chrome.sidePanel.getOptions({})).enabled,
+      }));
+    }
+
+    await test
+      .expect(async () => test.expect(await readMode()).toEqual({ popup: '', enabled: true }))
+      .toPass({ timeout: 10000 });
+
+    const settings = await context.newPage();
+    await settings.goto(`chrome-extension://${extensionId}/index.html#${RouteUrls.Settings}`);
+    await settings.getByTestId(SettingsSelectors.ToggleSidePanelMode).click();
+
+    await test
+      .expect(async () => {
+        const mode = await readMode();
+        test.expect(mode.popup).toContain('action-popup.html');
+        test.expect(mode.enabled).toBe(false);
+      })
+      .toPass({ timeout: 10000 });
+
+    await settings.getByTestId(SettingsSelectors.ToggleSidePanelMode).click();
+    await test
+      .expect(async () => test.expect(await readMode()).toEqual({ popup: '', enabled: true }))
+      .toPass({ timeout: 10000 });
+  });
+
   test('open panel closes by window, not by tab', async ({ context, page }) => {
     await page.goto(demoDappUrl, { waitUntil: 'networkidle' });
     await addTransferButtonToDapp(page);
@@ -257,8 +292,7 @@ test.describe('Side panel demo', () => {
     }
     test.expect(await countPanels()).toBe(1);
 
-    // Addressing the request's tab resolves but leaves the panel open, which is
-    // why closeSidePanel() goes by window.
+    // Closing by tab resolves but leaves the panel open
     await background.evaluate(async () => {
       const tabs = await chrome.tabs.query({});
       const dappTab = tabs.find(t => (t.url ?? '').includes('localhost:3999'));
@@ -292,8 +326,6 @@ test.describe('Side panel demo', () => {
 
     test.expect(await countPanelContexts()).toBe(0);
 
-    // Fired well after the click that loaded the page, so Chrome sees no user
-    // activation and refuses to open the panel on its own.
     await page.evaluate(recipient => {
       setTimeout(() => {
         void (window as any).LeatherProvider.request('stx_transferStx', {
@@ -303,8 +335,6 @@ test.describe('Side panel demo', () => {
       }, 6000);
     }, TEST_ACCOUNT_2_STX_ADDRESS);
 
-    // Queried through the shadow root rather than a Playwright locator, which
-    // does not reliably pierce this content-script shadow DOM.
     function getCtaCentre() {
       return page.evaluate(() => {
         const host = document.getElementById('leather-side-panel-request-overlay');
@@ -314,9 +344,7 @@ test.describe('Side panel demo', () => {
       });
     }
 
-    // Nothing may touch the page while the timer runs: Playwright's
-    // `page.evaluate` grants user activation, which would let Chrome open the
-    // panel on its own and defeat the very scenario under test.
+    // Leave the page untouched: page.evaluate would grant user activation
     await page.waitForTimeout(9000);
 
     await test.expect
@@ -324,11 +352,9 @@ test.describe('Side panel demo', () => {
       .toBe(true);
     await page.screenshot({ path: path.join(outDir, '06-overlay-action-required.png') });
 
-    // No popup window stole focus while the request waited in the page.
     test.expect(context.pages().every(p => !p.url().includes('popup.html'))).toBe(true);
 
-    // Clicked with the mouse so the event is trusted — a scripted click carries
-    // no user activation and Chrome would refuse to open the panel.
+    // Real mouse click so the event is trusted
     const centre = await getCtaCentre();
     if (!centre) throw new Error('Overlay call to action never rendered');
     await page.mouse.click(centre.x, centre.y);
@@ -338,8 +364,6 @@ test.describe('Side panel demo', () => {
       .toPass({ timeout: 15000 });
     logDemo('panel contexts after cta click:', String(await countPanelContexts()));
 
-    // Overlay drops back to the passive variant once the panel is showing: the
-    // copy switches and the button goes away, since the sidebar is now open.
     function getOverlayDescription() {
       return page.evaluate(() => {
         const host = document.getElementById('leather-side-panel-request-overlay');

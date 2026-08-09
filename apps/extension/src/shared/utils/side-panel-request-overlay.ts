@@ -73,8 +73,6 @@ function getSidePanelRequestCategory(path: RouteUrls): SidePanelRequestCategory 
   }
 }
 
-// Written in sentence case and uppercased by the display font's styling, the
-// same way headings work inside the wallet.
 const titles: Record<SidePanelRequestCategory, string> = {
   connection: 'Connect app',
   signature: 'Signature request',
@@ -104,8 +102,6 @@ export function getSidePanelRequestOverlayCopy(
 ): SidePanelRequestOverlayCopy {
   const category = getSidePanelRequestCategory(path);
   const title = titles[category];
-  // Only the actionable variant gets a button. On the pending card the sidebar
-  // is already open beside it, so an "open sidebar" action would be a no-op.
   if (variant === 'action-required')
     return { title, description: actionRequiredDescriptions[category], cta: ctaLabel };
   return { title, description: pendingDescriptions[category] };

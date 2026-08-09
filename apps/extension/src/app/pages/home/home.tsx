@@ -8,7 +8,10 @@ import { RouteUrls } from '@shared/route-urls';
 import { whenPageMode } from '@app/common/utils';
 import { ActivityList } from '@app/features/activity-list/activity-list';
 import { Collectibles } from '@app/features/collectibles/collectibles';
-import { MultiWalletIntroducer } from '@app/features/feature-introducer/implementations';
+import {
+  MultiWalletIntroducer,
+  SidePanelIntroducer,
+} from '@app/features/feature-introducer/implementations';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { NotFoundContent } from '@app/pages/not-found/not-found';
@@ -60,6 +63,7 @@ export function Home({ isBackground }: HomeProps) {
         <AccountActions />
         <PromoBanner />
         <MultiWalletIntroducer />
+        <SidePanelIntroducer />
       </Flex>
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
       <HomeTabs showCollectibles={policy?.chain !== 'bitcoin'}>
