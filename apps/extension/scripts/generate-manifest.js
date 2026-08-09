@@ -59,6 +59,10 @@ const browserSpecificConfig = {
       service_worker: 'background.js',
       type: 'module',
     },
+    permissions: ['sidePanel'],
+    side_panel: {
+      default_path: 'side-panel.html',
+    },
   },
 };
 
@@ -83,7 +87,12 @@ const manifest = {
   content_security_policy: {
     extension_pages: contentSecurityPolicyEnvironment[WALLET_ENVIRONMENT],
   },
-  web_accessible_resources: [{ resources: ['inpage.js'], matches: ['*://*/*'] }],
+  web_accessible_resources: [
+    {
+      resources: ['inpage.js', 'assets/icons/leather-icon-128.png', 'assets/fonts/diatype/*.woff2'],
+      matches: ['*://*/*'],
+    },
+  ],
   action: {
     default_title: 'Leather',
     default_popup: 'action-popup.html',

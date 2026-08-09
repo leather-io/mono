@@ -19,6 +19,15 @@ import {
   MESSAGE_SOURCE,
 } from '@shared/message-types';
 import { RouteUrls } from '@shared/route-urls';
+import {
+  type SidePanelRequestOverlayMessage,
+  isSidePanelRequestOverlayMessage,
+} from '@shared/utils/side-panel-request-overlay';
+
+import {
+  hideSidePanelRequestOverlay,
+  showSidePanelRequestOverlay,
+} from './side-panel-request-overlay';
 
 let backgroundPort: any;
 
@@ -33,15 +42,22 @@ connect();
 
 // Sends message to background script that an event has fired
 function sendMessageToBackground(message: LegacyMessageFromContentScript) {
-  backgroundPort.postMessage(message);
+  void chrome.runtime.sendMessage(message);
 }
 
 // Receives message from background script to execute in browser
-chrome.runtime.onMessage.addListener((message: LegacyMessageToContentScript) => {
-  if (message.source === MESSAGE_SOURCE || (message as any).jsonrpc === '2.0') {
-    window.postMessage(message, window.location.origin);
+chrome.runtime.onMessage.addListener(
+  (message: LegacyMessageToContentScript | SidePanelRequestOverlayMessage) => {
+    if (isSidePanelRequestOverlayMessage(message)) {
+      if (message.action === 'show') showSidePanelRequestOverlay(message.path, message.variant);
+      else hideSidePanelRequestOverlay();
+      return;
+    }
+    if (message.source === MESSAGE_SOURCE || (message as any).jsonrpc === '2.0') {
+      window.postMessage(message, window.location.origin);
+    }
   }
-});
+);
 
 interface ForwardDomEventToBackgroundArgs {
   payload: string;

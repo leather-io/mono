@@ -47,6 +47,15 @@ export function useIsNotificationsEnabled() {
   return useSelector(selectIsNotificationsEnabled);
 }
 
+const selectIsSidePanelModeEnabled = createSelector(
+  selectSettings,
+  state => state.isSidePanelModeEnabled ?? true
+);
+
+export function useIsSidePanelModeEnabled() {
+  return useSelector(selectIsSidePanelModeEnabled);
+}
+
 const selectNetworkBadgeAlwaysOn = createSelector(
   selectSettings,
   state => state.networkBadgeAlwaysOn ?? false

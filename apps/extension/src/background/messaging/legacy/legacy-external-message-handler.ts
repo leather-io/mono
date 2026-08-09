@@ -11,6 +11,7 @@ import { getLegacyTransactionPayloadFromToken } from '@shared/utils/legacy-reque
 
 import { queueAnalyticsRequest } from '@background/background-analytics';
 import {
+  type RequestSender,
   checkConnectedWalletExists,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginFromPort,
@@ -91,7 +92,7 @@ function createLegacyWalletUnavailableResponse(message: LegacyMessageFromContent
 
 export async function handleLegacyExternalMethodFormat(
   message: LegacyMessageFromContentScript,
-  port: chrome.runtime.Port
+  port: RequestSender
 ) {
   const { payload } = message;
   const origin = getOriginFromPort(port);

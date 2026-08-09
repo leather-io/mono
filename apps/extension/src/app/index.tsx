@@ -6,6 +6,10 @@ import * as bitcoin from 'bitcoinjs-lib';
 import { initiateLeatherSessionTrackingPort } from '@shared/analytics/session-duration-tracking';
 import { initSentry } from '@shared/utils/analytics';
 import { warnUsersAboutDevToolsDangers } from '@shared/utils/dev-tools-warning-log';
+import {
+  connectSidePanelRequestLifecyclePort,
+  initSidePanelPendingRequestWatcher,
+} from '@shared/utils/side-panel';
 
 import { persistAndRenderApp } from '@app/common/persistence';
 import { persistor } from '@app/store';
@@ -24,6 +28,8 @@ initSentry();
 warnUsersAboutDevToolsDangers();
 setDebugOnGlobal();
 initiateLeatherSessionTrackingPort();
+initSidePanelPendingRequestWatcher();
+connectSidePanelRequestLifecyclePort();
 
 declare global {
   interface Window {

@@ -29,12 +29,13 @@ import { stxTransferSip10FtHandler } from './rpc-methods/stx-transfer-sip10-ft';
 import { stxTransferStxHandler } from './rpc-methods/stx-transfer-stx';
 import { supportedMethodsHandler } from './rpc-methods/supported-methods';
 import {
+  type RequestSender,
   getOriginatingFrameFromPort,
   listenForOriginTabClose,
   validateConnectedWalletExists,
 } from './rpc-request-utils';
 
-type RpcHandler<T> = (request: T, port: chrome.runtime.Port) => Promise<void> | void;
+type RpcHandler<T> = (request: T, port: RequestSender) => Promise<void> | void;
 
 type RpcHandlers = {
   [Method in keyof RpcEndpointMap]: RpcHandler<RpcEndpointMap[Method]['request']>;
@@ -56,7 +57,7 @@ export function defineRpcRequestHandler<M extends RpcRequests['method']>(
   return [method, handler] as const;
 }
 
-export async function rpcMessageHandler(request: RpcRequests, port: chrome.runtime.Port) {
+export async function rpcMessageHandler(request: RpcRequests, port: RequestSender) {
   listenForOriginTabClose({ tabId: port.sender?.tab?.id });
 
   logger.info(`Received RPC request ${request.method}`, request);

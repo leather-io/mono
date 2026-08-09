@@ -21,6 +21,7 @@ import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   RequestParams,
+  type RequestSender,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
@@ -30,7 +31,7 @@ import {
 async function handleRpcSignStacksMessage(
   method: 'stx_signMessage' | 'stx_signStructuredMessage',
   request: RpcRequest<typeof stxSignMessage> | RpcRequest<typeof stxSignStructuredMessage>,
-  port: chrome.runtime.Port,
+  port: RequestSender,
   requestParams: RequestParams
 ) {
   if (isUndefined(request.params)) {

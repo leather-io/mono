@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 import { Flex, FlexProps } from 'leather-styles/jsx';
 import { token } from 'leather-styles/tokens';
 
+import { isSidePanelPage } from '@shared/utils/side-panel';
+
 interface CardProps {
   children: ReactNode;
   dataTestId?: string;
@@ -25,8 +27,8 @@ export function Card({
     <Flex
       data-testid={dataTestId}
       direction="column"
-      position={{ base: 'unset', sm: 'relative' }}
-      border={{ base: 'unset', sm: 'default' }}
+      position={isSidePanelPage() ? 'unset' : { base: 'unset', sm: 'relative' }}
+      border={isSidePanelPage() ? 'unset' : { base: 'unset', sm: 'default' }}
       rounded="lg"
       overflow="hidden"
       {...props}

@@ -18,6 +18,7 @@ import {
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
+  type RequestSender,
   createConnectingAppMetadataSearchParams,
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
@@ -33,7 +34,7 @@ function createInvalidParamsResponse(request: GetAddressesRequest, message: stri
   return createRpcErrorResponse('getAddresses', { id: request.id, error });
 }
 
-async function sharedGetAddressesHandler(request: GetAddressesRequest, port: chrome.runtime.Port) {
+async function sharedGetAddressesHandler(request: GetAddressesRequest, port: RequestSender) {
   const paramsSchema =
     request.method === 'stx_getAddresses' ? stxGetAddresses.params : getAddresses.params;
 
