@@ -55,7 +55,7 @@ export function proposalToolResult(context: ToolContext, request: PendingRequest
     expiresAt: new Date(request.expiresAt).toISOString(),
     summary: request.summary,
     instructions:
-      'Show the user the summary and have them open approvalUrl in their browser to review and approve in Leather. Poll check_request for the outcome. If the link is never opened the request expires.',
+      'Show the user the summary and have them open approvalUrl in their browser to review and approve in Leather. Then call check_request with waitSeconds: 50 and repeat while still pending — it returns the moment they act. Do not ask the user to report back; the request expires if the link is never opened. When it reports approved, take the txid from the result and call get_transaction_status with waitSeconds: 50 to wait for the on-chain outcome before declaring success.',
   });
 }
 

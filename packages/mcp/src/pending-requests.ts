@@ -29,6 +29,7 @@ export interface PendingRequest {
   rpcMethod: string;
   rpcParams?: unknown;
   pairingCode?: string;
+  affectedAssets?: string[];
   result?: unknown;
   error?: RequestOutcomeError;
 }
@@ -39,6 +40,7 @@ interface CreateRequestInput {
   rpcMethod: string;
   rpcParams?: unknown;
   pairingCode?: string;
+  affectedAssets?: string[];
 }
 
 const terminalStates: RequestState[] = ['approved', 'rejected', 'failed', 'expired', 'cancelled'];
@@ -50,6 +52,7 @@ export function isTerminalState(state: RequestState): boolean {
 export class PendingRequestStore {
   private readonly ttlMs: number;
   private readonly requests = new Map<string, PendingRequest>();
+  private readonly waiters = new Map<string, Set<() => void>>();
 
   constructor(ttlMs: number) {
     this.ttlMs = ttlMs;
@@ -74,6 +77,7 @@ export class PendingRequestStore {
       rpcMethod: input.rpcMethod,
       rpcParams: input.rpcParams,
       pairingCode: input.pairingCode,
+      affectedAssets: input.affectedAssets,
     };
     this.requests.set(request.id, request);
     return request;
@@ -98,6 +102,25 @@ export class PendingRequestStore {
     return request;
   }
 
+  async waitForTerminal(id: string, timeoutMs: number): Promise<PendingRequest> {
+    const request = this.getOrThrow(id);
+    if (isTerminalState(request.state)) return request;
+
+    const waitMs = Math.min(timeoutMs, Math.max(request.expiresAt - Date.now(), 0));
+    await new Promise<void>(resolve => {
+      const waitersForId = this.waiters.get(id) ?? new Set<() => void>();
+      this.waiters.set(id, waitersForId);
+      function settle() {
+        clearTimeout(timer);
+        waitersForId.delete(settle);
+        resolve();
+      }
+      const timer = setTimeout(settle, waitMs);
+      waitersForId.add(settle);
+    });
+    return this.getOrThrow(id);
+  }
+
   markOpened(id: string) {
     const request = this.get(id);
     if (!request || isTerminalState(request.state)) return;
@@ -114,6 +137,7 @@ export class PendingRequestStore {
     request.state = outcome;
     request.result = payload.result;
     request.error = payload.error;
+    this.notifyWaiters(id);
   }
 
   cancel(id: string): PendingRequest {
@@ -124,7 +148,15 @@ export class PendingRequestStore {
         `Request ${id} is already ${request.state} and cannot be cancelled.`
       );
     request.state = 'cancelled';
+    this.notifyWaiters(id);
     return request;
+  }
+
+  private notifyWaiters(id: string) {
+    const waitersForId = this.waiters.get(id);
+    if (!waitersForId) return;
+    this.waiters.delete(id);
+    for (const settle of waitersForId) settle();
   }
 
   private findNonTerminalByClass(kind: RequestKind): PendingRequest | undefined {

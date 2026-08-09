@@ -16,6 +16,8 @@ function pairedAccountSummary(context: ToolContext) {
   const pairing = context.pairing.load();
   if (!pairing) return undefined;
   return {
+    fingerprint: pairing.account.id.fingerprint,
+    accountIndex: pairing.account.id.accountIndex,
     stxAddress: pairing.account.stacks?.stxAddress,
     btcNativeSegwitAddress: pairing.account.bitcoin?.zeroIndexNativeSegwitPayerAddress,
     btcTaprootAddress: pairing.account.bitcoin?.zeroIndexTaprootPayerAddress,
@@ -80,7 +82,7 @@ export function registerConnectionTools(server: McpServer, context: ToolContext)
           pairingCode,
           expiresAt: new Date(request.expiresAt).toISOString(),
           instructions:
-            'Show the user the pairing code and have them open connectUrl in the browser where Leather is installed. They should check the code matches before approving. Poll check_request for the outcome.',
+            'Show the user the pairing code and have them open connectUrl in the browser where Leather is installed. They should check the code matches before approving. Then call check_request with waitSeconds: 50 and repeat while still pending — it returns the moment they approve. Do not ask the user to report back.',
         });
       } catch (error) {
         return errorToolResult(error);

@@ -3,7 +3,7 @@ import { postConditionToHex, serializeCV } from '@stacks/transactions';
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
 
-import type { AccountAddresses, Money } from '@leather.io/models';
+import type { AccountAddresses, Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { clarityValueSchema } from '@leather.io/rpc';
 import { getBnsService, getSwapService } from '@leather.io/services';
 
@@ -110,6 +110,10 @@ function formatMoney(money: Money): string {
   return `${formatMoneyAmount(money.amount, money.decimals)} ${money.symbol}`;
 }
 
+function swapAssetRef(asset: SwappableFungibleCryptoAsset): string {
+  return asset.protocol === 'sip10' ? asset.assetId : asset.symbol;
+}
+
 export function registerProposeTools(server: McpServer, context: ToolContext) {
   server.registerTool(
     'send_asset',
@@ -149,6 +153,7 @@ export function registerProposeTools(server: McpServer, context: ToolContext) {
               recipients: [{ address: args.recipient.trim(), amount: sats.toFixed() }],
               network: 'mainnet',
             },
+            affectedAssets: ['BTC'],
           });
           return proposalToolResult(context, request);
         }
@@ -169,6 +174,7 @@ export function registerProposeTools(server: McpServer, context: ToolContext) {
               memo: args.memo,
               network: 'mainnet',
             },
+            affectedAssets: ['STX'],
           });
           return proposalToolResult(context, request);
         }
@@ -187,6 +193,7 @@ export function registerProposeTools(server: McpServer, context: ToolContext) {
             amount: toIntegerAmount(baseUnits, asset.symbol),
             network: 'mainnet',
           },
+          affectedAssets: [asset.assetId],
         });
         return proposalToolResult(context, request);
       } catch (error) {
@@ -308,6 +315,7 @@ export function registerProposeTools(server: McpServer, context: ToolContext) {
             postConditionMode,
             network: 'mainnet',
           },
+          affectedAssets: [swapAssetRef(quote.baseAsset), swapAssetRef(quote.targetAsset)],
         });
         return proposalToolResult(context, request);
       } catch (error) {

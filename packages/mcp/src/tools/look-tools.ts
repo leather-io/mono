@@ -2,25 +2,38 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
 
+import type { AccountAddresses } from '@leather.io/models';
 import {
   type ActivityRequest,
   type AssetListSortField,
   getAssetListService,
+  getBitcoinTransactionsService,
   getBlockchainActivityService,
   getBnsService,
   getBtcBalancesService,
   getMarketDataService,
   getMarketStatsService,
   getSip10BalancesService,
+  getStacksTransactionsService,
   getStxBalancesService,
   getSwapService,
   getYieldService,
 } from '@leather.io/services';
-import { createMoneyFromDecimal, isDefined, sumMoney } from '@leather.io/utils';
+import { createMoneyFromDecimal } from '@leather.io/utils';
 
 import { resolveFungibleAsset, resolveSwapPair } from '../asset-resolver';
 import { McpToolError } from '../errors';
 import { decodeCursor, encodeCursor } from '../serialize';
+import {
+  buildBalancesView,
+  buildBtcBalanceView,
+  buildSip10TokenView,
+  buildStxBalanceView,
+} from '../views/balances.view';
+import {
+  buildBitcoinTxStatusView,
+  buildStacksTxStatusView,
+} from '../views/transaction-status.view';
 import { type ToolContext, errorToolResult, jsonToolResult, requireAccount } from './tool-helpers';
 
 const assetListSortFields: [AssetListSortField, ...AssetListSortField[]] = [
@@ -43,43 +56,103 @@ function launderCursor(value: unknown): unknown {
   return value;
 }
 
+const txStatusPollIntervalMs = 5_000;
+const txidPattern = /^(0x)?[0-9a-fA-F]{64}$/;
+
+interface AccountBalanceRequest {
+  account: AccountAddresses;
+}
+
+async function fetchAssetBalanceEntry(
+  request: AccountBalanceRequest,
+  requested: string,
+  signal: AbortSignal
+) {
+  try {
+    const upper = requested.trim().toUpperCase();
+    if (upper === 'BTC')
+      return {
+        symbol: 'BTC',
+        ...buildBtcBalanceView(await getBtcBalancesService().getBtcAccountBalance(request, signal)),
+      };
+    if (upper === 'STX')
+      return {
+        symbol: 'STX',
+        ...buildStxBalanceView(await getStxBalancesService().getStxAccountBalance(request, signal)),
+      };
+    if (requested.includes('::'))
+      return buildSip10TokenView(
+        await getSip10BalancesService().getSip10BalanceByAssetId(request, requested, signal)
+      );
+    if (requested.includes('.')) {
+      const balance = await getSip10BalancesService().getSip10BalanceByContractId(
+        request,
+        requested,
+        signal
+      );
+      return balance ? buildSip10TokenView(balance) : { requested, status: 'not_found' };
+    }
+    const aggregate = await getSip10BalancesService().getSip10AccountBalance(request, signal);
+    const match = aggregate.sip10s.find(balance => balance.asset.symbol.toUpperCase() === upper);
+    return match ? buildSip10TokenView(match) : { requested, status: 'not_found' };
+  } catch {
+    return { requested, status: 'not_found' };
+  }
+}
+
+function delay(ms: number) {
+  return new Promise<void>(resolve => setTimeout(resolve, ms));
+}
+
+async function fetchTransactionStatusView(
+  chain: 'stacks' | 'bitcoin',
+  txid: string,
+  signal: AbortSignal
+) {
+  if (chain === 'stacks')
+    return buildStacksTxStatusView(
+      txid,
+      await getStacksTransactionsService().getTransactionById(txid, signal)
+    );
+  return buildBitcoinTxStatusView(
+    txid,
+    await getBitcoinTransactionsService().getTransactionByTxId(txid, signal)
+  );
+}
+
 export function registerLookTools(server: McpServer, context: ToolContext) {
   server.registerTool(
     'get_balances',
     {
       title: 'Get balances',
       description:
-        'Total and available balances for the paired account: fiat summary plus per-chain BTC, STX (including locked), and aggregated SIP-10 token value. Read-only.',
-      inputSchema: {},
+        'Balances for the paired account: fiat totals plus per-chain BTC, STX, and per-token SIP-10 holdings sorted by fiat value. Pass assets to get only specific assets — use this after a transaction to report just what changed. Amounts are decimal strings in human units; optional fields (locked, unconfirmedInbound, unconfirmedOutbound, dust) appear only when nonzero. For per-asset metadata and analytics use list_assets. Read-only.',
+      inputSchema: {
+        assets: z
+          .array(z.string())
+          .min(1)
+          .optional()
+          .describe(
+            'Only these assets: "BTC", "STX", a SIP-10 symbol, contract id, or assetId. Omit for the full wallet view.'
+          ),
+      },
     },
-    async (_args, extra) => {
+    async (args, extra) => {
       try {
         const account = requireAccount(context);
         const request = { account };
+        if (args.assets) {
+          const entries = await Promise.all(
+            args.assets.map(asset => fetchAssetBalanceEntry(request, asset, extra.signal))
+          );
+          return jsonToolResult({ assets: entries });
+        }
         const [btc, stx, sip10] = await Promise.all([
           getBtcBalancesService().getBtcAccountBalance(request, extra.signal),
           getStxBalancesService().getStxAccountBalance(request, extra.signal),
           getSip10BalancesService().getSip10AccountBalance(request, extra.signal),
         ]);
-        const total = sumMoney(
-          [btc.quote.totalBalance, stx.quote.totalBalance, sip10.quote.totalBalance].filter(
-            isDefined
-          )
-        );
-        const available = sumMoney(
-          [
-            btc.quote.availableBalance,
-            stx.quote.availableBalance,
-            sip10.quote.availableBalance,
-          ].filter(isDefined)
-        );
-        return jsonToolResult({
-          total,
-          available,
-          bitcoin: btc,
-          stacks: stx,
-          sip10Tokens: sip10,
-        });
+        return jsonToolResult(buildBalancesView({ btc, stx, sip10 }));
       } catch (error) {
         return errorToolResult(error);
       }
@@ -162,6 +235,50 @@ export function registerLookTools(server: McpServer, context: ToolContext) {
           hasMore: response.hasMore,
           nextCursor: response.nextCursor ? encodeCursor(response.nextCursor) : null,
         });
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    }
+  );
+
+  server.registerTool(
+    'get_transaction_status',
+    {
+      title: 'Get transaction status',
+      description:
+        'Looks up the on-chain status of a transaction by txid: confirmed, pending, failed (with reason), or not_found. Pass waitSeconds to block until the transaction leaves pending — use this after a proposal is approved to report the final on-chain result, since an approved transaction can still fail on-chain. Stacks txids are 0x-prefixed; chain is inferred from the txid unless given. Read-only, works without a paired wallet.',
+      inputSchema: {
+        txid: z.string(),
+        chain: z.enum(['stacks', 'bitcoin']).optional(),
+        waitSeconds: z
+          .number()
+          .int()
+          .min(1)
+          .max(50)
+          .optional()
+          .describe(
+            'Block up to this many seconds while the transaction is pending or not yet indexed'
+          ),
+      },
+    },
+    async (args, extra) => {
+      try {
+        if (!txidPattern.test(args.txid))
+          throw new McpToolError('INVALID_PARAMS', `"${args.txid}" is not a valid transaction id.`);
+        const chain = args.chain ?? (args.txid.startsWith('0x') ? 'stacks' : 'bitcoin');
+        const txid =
+          chain === 'stacks' && !args.txid.startsWith('0x') ? `0x${args.txid}` : args.txid;
+        const deadline = Date.now() + (args.waitSeconds ?? 0) * 1000;
+        let view = await fetchTransactionStatusView(chain, txid, extra.signal);
+        while (
+          (view.status === 'pending' || view.status === 'not_found') &&
+          Date.now() < deadline &&
+          !extra.signal.aborted
+        ) {
+          await delay(Math.min(txStatusPollIntervalMs, deadline - Date.now()));
+          view = await fetchTransactionStatusView(chain, txid, extra.signal);
+        }
+        return jsonToolResult(view);
       } catch (error) {
         return errorToolResult(error);
       }
