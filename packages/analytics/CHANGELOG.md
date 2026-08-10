@@ -114,6 +114,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.23.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.22.0...@leather.io/analytics-v3.23.0) (2026-08-10)
+
+
+### Features
+
+* delete legacy requests ([#2612](https://github.com/leather-io/mono/issues/2612)) ([c17d65f](https://github.com/leather-io/mono/commit/c17d65fc12fd799ff045d6fb725b57b50462fd84))
+
 ## [3.22.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.21.1...@leather.io/analytics-v3.22.0) (2026-08-05)
 
 
