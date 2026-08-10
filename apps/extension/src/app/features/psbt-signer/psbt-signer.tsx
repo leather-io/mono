@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
 import { PsbtSelectors } from '@tests/selectors/requests.selectors';
@@ -25,7 +25,6 @@ import { usePsbtSigner } from './hooks/use-psbt-signer';
 import { PsbtSignerContext, PsbtSignerProvider } from './psbt-signer.context';
 
 interface PsbtSignerProps {
-  banner?: ReactNode;
   descriptor?: string;
   indexesToSign?: number[];
   isBroadcasting?: boolean;
@@ -38,7 +37,6 @@ interface PsbtSignerProps {
 }
 export function PsbtSigner(props: PsbtSignerProps) {
   const {
-    banner,
     descriptor,
     indexesToSign,
     isBroadcasting,
@@ -106,7 +104,6 @@ export function PsbtSigner(props: PsbtSignerProps) {
   return (
     <PsbtSignerProvider value={psbtSignerContext}>
       <PopupHeader showSwitchAccount balance="all" />
-      {banner}
       <Card
         dataTestId={PsbtSelectors.PsbtSignerCard}
         contentStyle={{
