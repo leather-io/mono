@@ -9,6 +9,7 @@ import { BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
 export interface LedgerMessageSigningContext extends BaseLedgerOperationContext {
   message: UnsignedMessage | undefined;
   signMessage(): Promise<void> | void;
+  onCancelMessageSigning(): void;
 }
 
 export const ledgerMsgSigningContext = createContext<LedgerMessageSigningContext>({
@@ -16,6 +17,7 @@ export const ledgerMsgSigningContext = createContext<LedgerMessageSigningContext
   latestDeviceResponse: null,
   awaitingDeviceConnection: false,
   signMessage: noop,
+  onCancelMessageSigning: noop,
 });
 
 export const LedgerMsgSigningProvider = ledgerMsgSigningContext.Provider;

@@ -11,6 +11,7 @@ import {
 } from '../../generic-steps';
 import { LedgerSignJwtContainer } from './ledger-sign-jwt-container';
 import { ConnectLedgerSignJwt } from './steps/connect-ledger-sign-jwt';
+import { OutdatedStacksAppWarningJwtSigning } from './steps/outdated-stacks-app-warning-jwt-signing';
 import { SignJwtHash } from './steps/sign-jwt-hash';
 
 export const ledgerJwtSigningRoutes = (
@@ -22,5 +23,9 @@ export const ledgerJwtSigningRoutes = (
     <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />
     <Route path={RouteUrls.AwaitingDeviceUserAction} element={<SignJwtHash />} />
     <Route path={RouteUrls.LedgerDisconnected} element={<LedgerDisconnected />} />
+    <Route
+      path={RouteUrls.LedgerOutdatedAppWarning}
+      element={<OutdatedStacksAppWarningJwtSigning />}
+    />
   </Route>
 );

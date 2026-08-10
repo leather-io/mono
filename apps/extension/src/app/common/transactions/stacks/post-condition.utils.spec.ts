@@ -1,8 +1,10 @@
 import {
   FungibleConditionCode,
   type NonFungiblePostCondition,
+  PostConditionPrincipalId,
   PostConditionType,
   PoxConditionCode,
+  deserializePostConditionWire,
   hexToCV,
   parsePrincipalString,
   postConditionToWire,
@@ -18,6 +20,8 @@ import {
   getPoxConditionTitle,
   handlePostConditions,
 } from '@app/common/transactions/stacks/post-condition.utils';
+import { formatPostConditionMessage } from '@app/features/rpc-stacks-transaction-request/stacks/post-conditions/post-conditions.utils';
+import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
 const SENDER_ADDRESS = 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW';
 
@@ -137,6 +141,72 @@ describe('pox condition messaging', () => {
     );
     expect(getPoxConditionTitle(PoxConditionCode.MayPerform)).toBe('may perform PoX actions');
     expect(getPoxConditionTitle(PoxConditionCode.WillPerform)).toBe('must perform a PoX action');
+  });
+});
+
+describe('origin principal post conditions', () => {
+  const serializedOriginStxPostCondition = '0x0001010000000005f5e100';
+
+  it('attributes an origin principal post condition to the signing user', () => {
+    const wire = deserializePostConditionWire(serializedOriginStxPostCondition);
+    expect(wire.principal.prefix).toBe(PostConditionPrincipalId.Origin);
+    expect(wire.conditionType).toBe(PostConditionType.STX);
+    if (wire.conditionType === PostConditionType.STX) {
+      const formatted = formatPostConditionMessage({
+        isContractPrincipal: false,
+        postCondition: wire,
+      });
+      expect(formatted.title).toBe('You  will transfer exactly');
+      expect(formatted.message).toBe(
+        'You will transfer exactly 100 STX or the transaction will abort.'
+      );
+    }
+  });
+
+  it('attributes a standard principal post condition to the signing user only when it matches the account address', () => {
+    const mockAccount: StacksAccount = {
+      type: 'ledger',
+      address: SENDER_ADDRESS,
+      stxPublicKey: '',
+      dataPublicKey: '',
+      index: 0,
+      accountIndex: 0,
+      fingerprint: '',
+      derivationPath: '',
+    };
+    const wire = postConditionToWire({
+      type: 'stx-postcondition',
+      address: SENDER_ADDRESS,
+      condition: 'eq',
+      amount: 100000000,
+    });
+    expect(wire.principal.prefix).toBe(PostConditionPrincipalId.Standard);
+    if (wire.conditionType === PostConditionType.STX) {
+      const matched = formatPostConditionMessage({
+        account: mockAccount,
+        isContractPrincipal: false,
+        postCondition: wire,
+      });
+      expect(matched.title).toBe('You  will transfer exactly');
+      expect(matched.message).toBe(
+        'You will transfer exactly 100 STX or the transaction will abort.'
+      );
+      const unmatched = formatPostConditionMessage({
+        isContractPrincipal: false,
+        postCondition: wire,
+      });
+      expect(unmatched.title).toBe('Another address  will transfer exactly');
+      expect(unmatched.message).toBe(
+        'The contract will transfer exactly 100 STX or the transaction will abort.'
+      );
+    }
+  });
+
+  it('does not rewrite an origin principal post condition on account switch', () => {
+    const CURRENT_ADDRESS = 'ST248HH800501WYSG7Z2SS1ZWHQW1GGH85Q6YJBCC';
+    const wire = deserializePostConditionWire(serializedOriginStxPostCondition);
+    const transformedPostCondition = handlePostConditions([wire], SENDER_ADDRESS, CURRENT_ADDRESS);
+    expect(transformedPostCondition[0]).toEqual(wire);
   });
 });
 
