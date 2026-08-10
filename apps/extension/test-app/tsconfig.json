@@ -25,13 +25,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
     "paths": {
-      "@store/*": ["./store/*"],
-      "@store": ["./store/index"],
-      "@dev/*": ["./dev/*"],
       "@components/*": ["./components/*"],
-      "@containers/*": ["./containers/*"],
-      "@common/*": ["./common/*"],
-      "@cards/*": ["./components/cards/*"],
       "@tests/*": ["../../tests/*"],
       "leather-styles/*": ["../../leather-styles/*"]
     },
@@ -39,5 +33,5 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
-  "include": ["./src/**/*", "./tests/**/*", "./components/**/*", "./common/**/*"]
+  "include": ["./src/**/*"]
 }

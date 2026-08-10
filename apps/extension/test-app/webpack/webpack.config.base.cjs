@@ -6,7 +6,6 @@ const { execSync } = require('child_process');
 
 // plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -158,14 +157,6 @@ const config = {
       template: path.join(SRC_ROOT_PATH, '../', 'public', 'html', 'index.html'),
       filename: 'index.html',
       ...HTML_PROD_OPTIONS,
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.join(SRC_ROOT_PATH, '../', 'public', 'assets'),
-          to: path.join(DIST_ROOT_PATH, 'assets'),
-        },
-      ],
     }),
     new webpack.DefinePlugin({
       WALLET_ENVIRONMENT: JSON.stringify(WALLET_ENVIRONMENT),

@@ -10,8 +10,6 @@ import type {
   StxAsset,
 } from '@leather.io/models';
 
-export const gaiaUrl = 'https://hub.blockstack.org';
-
 export const ZERO_INDEX = 0;
 
 export const HIRO_EXPLORER_URL = 'https://explorer.hiro.so';

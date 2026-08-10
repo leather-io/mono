@@ -158,7 +158,7 @@ await page.evaluate(() => window.debug.setHighestAccountIndex(2));
 
 Only create these if existing infrastructure doesn't cover the changes:
 - New selector enum: `apps/extension/tests/selectors/{feature}.selectors.ts`
-- New mock functions: `apps/extension/tests/mocks/mock-{feature}.ts` (re-export from `apps/extension/tests/mocks/index.ts`)
+- New mock functions: `apps/extension/tests/mocks/mock-{feature}.ts` (specs import directly from `@tests/mocks/mock-{feature}`)
 - New POM methods or class: `apps/extension/tests/page-object-models/{feature}.page.ts`
 
 ## Step 5: Verify
@@ -191,11 +191,21 @@ If you added new `data-testid` selectors, confirm they exist in the source compo
 
 ## Appendix: RPC popup handling
 
-RPC tests use the test app (auto-started on localhost:3000 by Playwright's webServer config):
+RPC tests use the test app (auto-started on localhost:3000 by Playwright's webServer config). Navigate to it in `beforeEach`, then initiate requests with `page.evaluate` against the injected provider:
 
 ```typescript
-const testApp = await TestAppPage.openDemoPage(context);
-await testApp.clickContractCallButton();
+await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+
+function initiateRpcRequest(page: Page) {
+  return async (params: RpcParams<typeof stxCallContract>) =>
+    page.evaluate(
+      params =>
+        (window as any).LeatherProvider.request('stx_callContract', { ...params }).catch(
+          (e: unknown) => e
+        ),
+      { ...params }
+    );
+}
 ```
 
 Handle RPC approval popups with `Promise.all`. Prefer `waitForSelector` or `waitForLoadState` to wait for the popup to render. Fall back to `waitForTimeout` only if those don't work:

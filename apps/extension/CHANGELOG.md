@@ -40,6 +40,40 @@
 
 ---
 
+## [6.109.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.108.0...@leather.io/extension-v6.109.0) (2026-08-10)
+
+
+### Features
+
+* bump stacks minimum app version and update designs ([#2591](https://github.com/leather-io/mono/issues/2591)) ([e491bd8](https://github.com/leather-io/mono/commit/e491bd86310f656f11e29fb16ead56c26d6cceb0))
+* delete legacy requests ([#2612](https://github.com/leather-io/mono/issues/2612)) ([c17d65f](https://github.com/leather-io/mono/commit/c17d65fc12fd799ff045d6fb725b57b50462fd84))
+
+
+### Bug Fixes
+
+* origin-principal-post-condition ([#2617](https://github.com/leather-io/mono/issues/2617)) ([c339004](https://github.com/leather-io/mono/commit/c339004db150a797ae4411ac3d4c85d17c303e95))
+* psbt-taproot-transfer-total ([#2613](https://github.com/leather-io/mono/issues/2613)) ([1902614](https://github.com/leather-io/mono/commit/1902614ae8315939cbf5fff68af28e781867df36))
+* rpc-method-type-confusion ([#2618](https://github.com/leather-io/mono/issues/2618)) ([b885858](https://github.com/leather-io/mono/commit/b8858585a25b2e86509c5cf95d4178188f7b0b8a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.23.0
+    * @leather.io/bitcoin bumped to 0.39.5
+    * @leather.io/constants bumped to 0.39.0
+    * @leather.io/crypto bumped to 1.13.5
+    * @leather.io/features bumped to 1.7.1
+    * @leather.io/provider bumped to 1.7.0
+    * @leather.io/queries bumped to 0.15.2
+    * @leather.io/query bumped to 2.51.5
+    * @leather.io/rpc bumped to 2.24.4
+    * @leather.io/services bumped to 1.63.1
+    * @leather.io/stacks bumped to 1.22.3
+    * @leather.io/ui bumped to 1.116.1
+    * @leather.io/utils bumped to 0.52.5
+
 ## [6.108.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.107.0...@leather.io/extension-v6.108.0) (2026-08-05)
 
 

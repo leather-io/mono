@@ -17,7 +17,6 @@ export interface Events extends HistoricalEvents {
   app_unlocked: undefined;
   app_locked: undefined;
   submit_feature_waitlist: SubmitWaitlist;
-  legacy_request_initiated: { method: string; origin?: string };
   application_first_opened: { timestamp: string };
   pooled_stacking_started: {
     amount: number;
@@ -144,10 +143,7 @@ interface HistoricalEvents {
   click_change_theme_menu_item: undefined;
   click_settings_menu_item: undefined;
   click_toggle_privacy: undefined;
-  request_psbt_cancel: undefined;
   request_sign_psbt_submit: undefined;
-  request_update_profile_submit: undefined;
-  request_update_profile_cancel: undefined;
   request_signature_cancel: undefined;
   requesting_origin_tab_closed_with_pending_action: undefined;
   select_add_new_collectible: undefined;
