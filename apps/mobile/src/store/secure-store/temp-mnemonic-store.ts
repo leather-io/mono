@@ -7,6 +7,18 @@ const TEMPORARY_MNEMONIC_KEY_PASSPHRASE = 'TEMPORARY_MNEMONIC_KEY_PASSPHRASE';
 
 export const tempMnemonicStore = {
   async setTemporaryMnemonic(tempMnemonic: string, passphrase?: string) {
+    await SecureStore.deleteItemAsync(TEMPORARY_MNEMONIC_KEY, getBasicSecureStoreConfig());
+    await SecureStore.deleteItemAsync(
+      TEMPORARY_MNEMONIC_KEY_PASSPHRASE,
+      getBasicSecureStoreConfig()
+    );
+
+    await SecureStore.setItemAsync(
+      TEMPORARY_MNEMONIC_KEY,
+      tempMnemonic,
+      getBasicSecureStoreConfig()
+    );
+
     if (passphrase) {
       await SecureStore.setItemAsync(
         TEMPORARY_MNEMONIC_KEY_PASSPHRASE,
@@ -14,12 +26,6 @@ export const tempMnemonicStore = {
         getBasicSecureStoreConfig()
       );
     }
-
-    return SecureStore.setItemAsync(
-      TEMPORARY_MNEMONIC_KEY,
-      tempMnemonic,
-      getBasicSecureStoreConfig()
-    );
   },
   async getTemporaryMnemonic() {
     // Whenever you get a value from the store, delete that value from the store
