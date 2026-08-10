@@ -203,10 +203,12 @@ describe(RequestWalletAuthentication.name, () => {
     vi.unstubAllGlobals();
   });
 
-  test('password-only success does not emit biometric fallback telemetry', async () => {
+  test('renders only password controls for a password-only profile', async () => {
     const onSuccess = vi.fn();
     mocks.authenticateWithPassword.mockResolvedValue({ status: 'success', value: undefined });
     const container = renderRequest({ onSuccess });
+
+    expect(container.textContent).not.toContain('Unlock with biometrics');
 
     enterPassword(container, 'password');
     await act(async () => {
@@ -215,44 +217,93 @@ describe(RequestWalletAuthentication.name, () => {
     });
 
     expect(onSuccess).toHaveBeenCalledOnce();
-    expect(mocks.analyticsTrack).not.toHaveBeenCalledWith(
-      'biometric_unlock_password_fallback_used'
-    );
   });
 
-  test('tracks password fallback only after a biometric attempt fails', async () => {
+  test('shows a typed state-change failure instead of calling it an invalid password', async () => {
+    mocks.authenticateWithPassword.mockResolvedValue({
+      status: 'failure',
+      code: 'state-changed',
+    });
+    const container = renderRequest();
+
+    enterPassword(container, 'password');
+    await act(async () => {
+      findButton(container, 'Continue').click();
+      await Promise.resolve();
+    });
+
+    expect(container.textContent).toContain('Wallet data changed. Try again.');
+    expect(container.textContent).not.toContain('The password you entered is invalid');
+  });
+
+  test('renders only biometric controls for a biometric-only profile', async () => {
     capabilities.value = {
-      authenticationMode: 'password',
+      authenticationMode: 'biometric-only',
       biometrics: true,
-      password: true,
+      password: false,
       valid: true,
     };
     const onSuccess = vi.fn();
-    const onBiometricSubmit = vi
-      .fn()
-      .mockResolvedValue({ status: 'failure', code: 'credential-mismatch' });
-    const onPasswordSubmit = vi.fn().mockResolvedValue({ status: 'success', value: undefined });
-    const container = renderRequest({ onBiometricSubmit, onPasswordSubmit, onSuccess });
+    const onBiometricSubmit = vi.fn().mockResolvedValue({ status: 'success', value: undefined });
+    const container = renderRequest({ onBiometricSubmit, onSuccess });
+
+    expect(container.querySelector('input')).toBeNull();
+    expect(container.textContent).not.toContain('Continue');
 
     await act(async () => {
       findButton(container, 'Unlock with biometrics').click();
       await Promise.resolve();
     });
-    enterPassword(container, 'password');
+
+    expect(onSuccess).toHaveBeenCalledOnce();
+  });
+
+  test('keeps biometric failure recovery and retry available without showing a password', async () => {
+    capabilities.value = {
+      authenticationMode: 'biometric-only',
+      biometrics: true,
+      password: false,
+      valid: true,
+    };
+    const onBiometricSubmit = vi
+      .fn()
+      .mockResolvedValueOnce({ status: 'failure', code: 'credential-mismatch' })
+      .mockResolvedValueOnce({ status: 'success', value: undefined });
+    const onRecovery = vi.fn();
+    const onSuccess = vi.fn();
+    const container = renderRequest({
+      onBiometricSubmit,
+      onRecovery,
+      onSuccess,
+      recoveryLabel: "Can't use biometrics?",
+    });
+
     await act(async () => {
-      findButton(container, 'Continue').click();
+      findButton(container, 'Unlock with biometrics').click();
       await Promise.resolve();
     });
 
+    expect(container.querySelector('input')).toBeNull();
+    expect(container.textContent).toContain('Biometric unlock could not be completed. Try again.');
+    expect(findButton(container, 'Try biometric unlock again')).toBeTruthy();
+
+    act(() => findButton(container, "Can't use biometrics?").click());
+    expect(onRecovery).toHaveBeenCalledOnce();
+
+    await act(async () => {
+      findButton(container, 'Try biometric unlock again').click();
+      await Promise.resolve();
+    });
+
+    expect(onBiometricSubmit).toHaveBeenCalledTimes(2);
     expect(onSuccess).toHaveBeenCalledOnce();
-    expect(mocks.analyticsTrack).toHaveBeenCalledWith('biometric_unlock_password_fallback_used');
   });
 
   test('does not suppress future automatic prompts after an ambiguous exception', async () => {
     capabilities.value = {
-      authenticationMode: 'password',
+      authenticationMode: 'biometric-only',
       biometrics: true,
-      password: true,
+      password: false,
       valid: true,
     };
     mocks.consumeActionPopupPromptIntent.mockReturnValue(true);
@@ -266,6 +317,20 @@ describe(RequestWalletAuthentication.name, () => {
 
     expect(onBiometricSubmit).toHaveBeenCalledOnce();
     expect(mocks.suppressBiometricAutoPrompt).not.toHaveBeenCalled();
+  });
+
+  test('does not render either factor for an invalid dual-capability state', () => {
+    capabilities.value = {
+      authenticationMode: 'password',
+      biometrics: true,
+      password: true,
+      valid: true,
+    };
+
+    const container = renderRequest();
+
+    expect(container.querySelector('input')).toBeNull();
+    expect(container.querySelectorAll('button')).toHaveLength(0);
   });
 
   test('renders no authentication controls for inconsistent state', () => {

@@ -33,6 +33,7 @@ describe('platform authenticator', () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.unstubAllGlobals();
   });
 
@@ -73,11 +74,12 @@ describe('platform authenticator', () => {
   });
 
   test('pins exactly one internal credential and requires user verification', async () => {
+    const config = createCredentialConfig();
     const get = vi.fn().mockResolvedValue(createSuccessfulCredential());
     vi.stubGlobal('navigator', { credentials: { get } });
     const { evaluatePlatformCredential } = await import('./platform-authenticator');
 
-    await evaluatePlatformCredential(createCredentialConfig());
+    await evaluatePlatformCredential(config);
 
     const request = get.mock.calls[0]?.[0]?.publicKey;
     expect(request?.userVerification).toBe('required');
@@ -85,6 +87,9 @@ describe('platform authenticator', () => {
     expect(request?.allowCredentials?.[0]?.transports).toEqual(['internal']);
     expect(request?.allowCredentials?.[0]?.type).toBe('public-key');
     expect(bytes(request?.allowCredentials?.[0]?.id)).toEqual(new Uint8Array([1, 2, 3]));
+    expect(bytes(request?.extensions?.prf?.eval?.first ?? new Uint8Array())).toEqual(
+      new Uint8Array(32).fill(4)
+    );
   });
 
   test('rejects invalid config before issuing a discovery request', async () => {
@@ -134,6 +139,33 @@ describe('platform authenticator', () => {
     if (result.status === 'failure') return;
     expect(result.value.prfOutput).toEqual(new Uint8Array(32).fill(7));
     expect(credential.toJSON).not.toHaveBeenCalled();
+  });
+
+  test('zeroes a copied PRF output before rejecting its length', async () => {
+    const invalidPrfOutput = new Uint8Array(31).fill(7);
+    const unchangedInvalidPrfOutput = new Uint8Array(invalidPrfOutput);
+    const credential = {
+      ...createSuccessfulCredential(),
+      getClientExtensionResults: vi.fn().mockReturnValue({
+        prf: { results: { first: invalidPrfOutput } },
+      }),
+    };
+    const get = vi.fn().mockResolvedValue(credential);
+    vi.stubGlobal('navigator', { credentials: { get } });
+    const fill = vi.spyOn(Uint8Array.prototype, 'fill');
+    const { evaluatePlatformCredential } = await import('./platform-authenticator');
+
+    await expect(evaluatePlatformCredential(createCredentialConfig())).resolves.toEqual({
+      status: 'failure',
+      code: 'prf-unavailable',
+    });
+    expect(fill).toHaveBeenCalledWith(0);
+    const discardedPrfOutput = fill.mock.contexts.find(
+      context => context instanceof Uint8Array && context.byteLength === 31
+    );
+    expect(discardedPrfOutput).not.toBe(invalidPrfOutput);
+    expect(discardedPrfOutput).toEqual(new Uint8Array(31));
+    expect(invalidPrfOutput).toEqual(unchangedInvalidPrfOutput);
   });
 
   test('uses one pinned follow-up assertion when creation omits PRF output', async () => {

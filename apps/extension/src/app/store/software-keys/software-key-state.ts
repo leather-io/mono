@@ -63,18 +63,51 @@ function createEmptyWalletTransactionState(): WalletTransactionState {
 }
 
 function hasEntityStateShape(value: unknown) {
-  return isPlainObject(value) && Array.isArray(value.ids) && isPlainObject(value.entities);
+  if (!isPlainObject(value) || !Array.isArray(value.ids) || !isPlainObject(value.entities)) {
+    return false;
+  }
+  const uniqueIds = new Set<string>();
+  for (const id of value.ids) {
+    if (typeof id !== 'string' && typeof id !== 'number') return false;
+    const normalizedId = String(id);
+    if (uniqueIds.has(normalizedId) || !(normalizedId in value.entities)) return false;
+    if (!isPlainObject(value.entities[normalizedId])) return false;
+    uniqueIds.add(normalizedId);
+  }
+  const entityIds = getKeys(value.entities);
+  return entityIds.length === uniqueIds.size && entityIds.every(id => uniqueIds.has(id));
 }
 
 function isWalletTransactionState(value: unknown): value is WalletTransactionState {
   if (!isPlainObject(value)) return false;
   if (!hasEntityStateShape(value.accounts)) return false;
   if (!isPlainObject(value.active)) return false;
-  if (value.active.account !== null && !isPlainObject(value.active.account)) return false;
+  if (value.active.account !== null) {
+    if (!isPlainObject(value.active.account)) return false;
+    if (typeof value.active.account.fingerprint !== 'string') return false;
+    if (
+      typeof value.active.account.accountIndex !== 'number' ||
+      !Number.isInteger(value.active.account.accountIndex) ||
+      value.active.account.accountIndex < 0
+    ) {
+      return false;
+    }
+  }
   if (value.active.activePolicyId !== null && typeof value.active.activePolicyId !== 'string') {
     return false;
   }
   if (!isPlainObject(value.chains) || !isPlainObject(value.chains.stx)) return false;
+  for (const chainState of Object.values(value.chains.stx)) {
+    if (!isPlainObject(chainState)) return false;
+    if (
+      typeof chainState.highestAccountIndex !== 'number' ||
+      !Number.isInteger(chainState.highestAccountIndex) ||
+      chainState.highestAccountIndex < 0 ||
+      typeof chainState.currentAccountStacksDescriptor !== 'string'
+    ) {
+      return false;
+    }
+  }
   if (!hasEntityStateShape(value.keychains)) return false;
   if (!hasEntityStateShape(value.softwareKeys)) return false;
   return hasEntityStateShape(value.wallets);
@@ -96,6 +129,30 @@ function readAuthenticationMode(value: unknown): WalletAuthenticationMode | unde
   if (value === undefined) return;
   if (value === 'biometric-only' || value === 'password') return value;
   return null;
+}
+
+function isValidAuthenticationState(snapshot: SoftwareKeyStateSnapshot) {
+  if (snapshot.keys.length === 0) {
+    return (
+      snapshot.authenticationMode === undefined &&
+      snapshot.platformUnlock === undefined &&
+      snapshot.salt === undefined
+    );
+  }
+  if (snapshot.authenticationMode === undefined) {
+    return (
+      snapshot.platformUnlock === undefined &&
+      (snapshot.salt === undefined || snapshot.salt.length > 0)
+    );
+  }
+  if (snapshot.authenticationMode === 'password') {
+    return (
+      snapshot.platformUnlock === undefined &&
+      typeof snapshot.salt === 'string' &&
+      snapshot.salt.length > 0
+    );
+  }
+  return snapshot.salt === undefined && isPlatformUnlockConfig(snapshot.platformUnlock);
 }
 
 function parsePersistedSoftwareKeyState(root: unknown): PersistedSoftwareKeyStateResult {
@@ -131,15 +188,14 @@ function parsePersistedSoftwareKeyState(root: unknown): PersistedSoftwareKeyStat
   if (entityIds.length !== uniqueIds.size || entityIds.some(id => !uniqueIds.has(id))) {
     return { status: 'invalid' };
   }
-  return {
-    status: 'valid',
-    value: {
-      authenticationMode,
-      keys,
-      platformUnlock: softwareKeyState.platformUnlock,
-      salt: softwareKeyState.salt,
-    },
+  const value = {
+    authenticationMode,
+    keys,
+    platformUnlock: softwareKeyState.platformUnlock,
+    salt: softwareKeyState.salt,
   };
+  if (!isValidAuthenticationState(value)) return { status: 'invalid' };
+  return { status: 'valid', value };
 }
 
 export async function readPersistedSoftwareKeyState(): Promise<PersistedSoftwareKeyStateResult> {
@@ -175,6 +231,16 @@ export async function readPersistedWalletTransactionState(): Promise<PersistedWa
     wallets: root.wallets,
   };
   if (!isWalletTransactionState(state)) return { status: 'invalid' };
+  const softwareKeyIds = new Set(softwareKeys.keys.map(key => key.id));
+  const softwareWalletIds = state.wallets.ids.filter(
+    id => state.wallets.entities[id]?.type === 'software'
+  );
+  if (
+    softwareWalletIds.length !== softwareKeyIds.size ||
+    softwareWalletIds.some(id => !softwareKeyIds.has(id))
+  ) {
+    return { status: 'invalid' };
+  }
   return { status: 'valid', value: { softwareKeys, state } };
 }
 
@@ -200,5 +266,16 @@ export function createSoftwareKeyState(snapshot: SoftwareKeyStateSnapshot) {
       : { authenticationMode: snapshot.authenticationMode }),
     ...(snapshot.platformUnlock === undefined ? {} : { platformUnlock: snapshot.platformUnlock }),
     ...(snapshot.salt === undefined ? {} : { salt: snapshot.salt }),
+  };
+}
+
+export function createSoftwareKeyStateSnapshot(
+  state: ReturnType<typeof createSoftwareKeyState>
+): SoftwareKeyStateSnapshot {
+  return {
+    authenticationMode: state.authenticationMode,
+    keys: keyAdapter.getSelectors().selectAll(state),
+    platformUnlock: state.platformUnlock,
+    salt: state.salt,
   };
 }

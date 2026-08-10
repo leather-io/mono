@@ -2,8 +2,11 @@ import z from 'zod';
 
 import { logger } from '@shared/logger';
 
-import { store } from '@app/store';
-import { selectSoftwareKeys } from '@app/store/software-keys/software-key.selectors';
+import { persistor, store } from '@app/store';
+import {
+  selectSoftwareKeys,
+  selectWalletAuthenticationCapabilities,
+} from '@app/store/software-keys/software-key.selectors';
 import { type DecryptedSoftwareKey, decryptAllSoftwareKeys } from '@app/store/software-keys/utils';
 
 import * as inMemoryStore from './in-memory-key/in-memory-storage';
@@ -27,6 +30,18 @@ function setDecryptedSoftwareKeys(decryptedKeys: DecryptedSoftwareKey[]) {
   }
 }
 
+async function waitForStoreRehydration() {
+  if (persistor.getState().bootstrapped) return;
+
+  await new Promise<void>(resolve => {
+    const unsubscribe = persistor.subscribe(() => {
+      if (!persistor.getState().bootstrapped) return;
+      unsubscribe();
+      resolve();
+    });
+  });
+}
+
 export async function initializeWalletSessionWithSoftwareKeys(
   encryptionKey: string,
   decryptedKeys: DecryptedSoftwareKey[]
@@ -41,7 +56,13 @@ export async function restoreWalletSession() {
   if (!keyResult.success) return;
 
   try {
-    const encryptedKeys = selectSoftwareKeys(store.getState());
+    await waitForStoreRehydration();
+    const state = store.getState();
+    const capabilities = selectWalletAuthenticationCapabilities(state);
+    const encryptedKeys = selectSoftwareKeys(state);
+    if (!capabilities.valid || encryptedKeys.length === 0) {
+      throw new Error('Wallet authentication state is invalid');
+    }
     const decryptedKeys = await decryptAllSoftwareKeys(encryptedKeys, keyResult.data);
     setDecryptedSoftwareKeys(decryptedKeys);
   } catch {

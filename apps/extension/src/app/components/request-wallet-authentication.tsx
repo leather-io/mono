@@ -19,7 +19,10 @@ import {
   suppressBiometricAutoPrompt,
 } from '@app/common/wallet-authentication/biometric-auto-prompt';
 import { canUsePlatformAuthenticator } from '@app/common/wallet-authentication/platform-authenticator';
-import type { WalletAuthenticationResult } from '@app/common/wallet-authentication/use-wallet-authentication';
+import type {
+  WalletAuthenticationFailureCode,
+  WalletAuthenticationResult,
+} from '@app/common/wallet-authentication/wallet-authentication';
 import { Card, Page } from '@app/components/layout';
 import { selectWalletAuthenticationCapabilities } from '@app/store/software-keys/software-key.selectors';
 
@@ -44,6 +47,15 @@ interface RequestWalletAuthenticationProps {
   title: string;
 }
 
+function getPasswordFailureMessage(code: WalletAuthenticationFailureCode) {
+  if (code === 'invalid-password') return 'The password you entered is invalid';
+  if (code === 'wallet-already-exists') return 'This wallet has already been added';
+  if (code === 'state-changed') return 'Wallet data changed. Try again.';
+  if (code === 'persistence-failed') return "Leather couldn't save the wallet. Try again.";
+  if (code === 'invalid-config') return "This wallet's unlock method is unavailable.";
+  return 'Wallet authentication could not be completed. Try again.';
+}
+
 export function RequestWalletAuthentication({
   automaticPromptOnActionPopup = false,
   caption,
@@ -57,8 +69,14 @@ export function RequestWalletAuthentication({
   title,
 }: RequestWalletAuthenticationProps) {
   const capabilities = useSelector(selectWalletAuthenticationCapabilities);
+  const canAuthenticateWithPassword =
+    capabilities.valid && capabilities.password && !capabilities.biometrics;
   const canAuthenticateWithBiometrics =
-    capabilities.biometrics && TARGET_BROWSER === 'chromium' && canUsePlatformAuthenticator();
+    capabilities.valid &&
+    capabilities.biometrics &&
+    !capabilities.password &&
+    TARGET_BROWSER === 'chromium' &&
+    canUsePlatformAuthenticator();
   const keyActions = useKeyActions();
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -157,31 +175,21 @@ export function RequestWalletAuthentication({
       const result = await authenticateWithPassword(password);
       setPassword('');
       if (result.status === 'success') {
-        if (hasAttemptedBiometrics) analytics.track('biometric_unlock_password_fallback_used');
         onSuccess();
       } else {
-        setPasswordError('The password you entered is invalid');
+        setPasswordError(getPasswordFailureMessage(result.code));
       }
     } finally {
       running.current = false;
       stopWaitingMessage();
       analytics.track('complete_unlock', { durationMs: performance.now() - startUnlockTimeMs });
     }
-  }, [
-    authenticateWithPassword,
-    hasAttemptedBiometrics,
-    onSuccess,
-    password,
-    startWaitingMessage,
-    stopWaitingMessage,
-  ]);
+  }, [authenticateWithPassword, onSuccess, password, startWaitingMessage, stopWaitingMessage]);
 
   const biometricButtonLabel = hasAttemptedBiometrics
     ? 'Try biometric unlock again'
     : 'Unlock with biometrics';
-  const shouldAutoFocusPassword =
-    capabilities.password &&
-    (!canAuthenticateWithBiometrics || (!startWithBiometrics && !automaticPromptOnActionPopup));
+  const shouldAutoFocusPassword = canAuthenticateWithPassword;
 
   return (
     <Page>
@@ -196,7 +204,7 @@ export function RequestWalletAuthentication({
         }
         footer={
           <Stack gap="space.03" width="100%">
-            {capabilities.password && (
+            {canAuthenticateWithPassword && (
               <Button
                 data-testid={SettingsSelectors.UnlockWalletBtn}
                 disabled={isRunning || !password}
@@ -213,7 +221,7 @@ export function RequestWalletAuthentication({
                 disabled={isRunning}
                 aria-busy={isRunning}
                 onClick={() => void submitBiometrics(false)}
-                variant={capabilities.password ? 'outline' : 'solid'}
+                variant="solid"
                 fullWidth
               >
                 {biometricButtonLabel}
@@ -231,7 +239,7 @@ export function RequestWalletAuthentication({
           <styled.h3 textStyle="heading.03">{title}</styled.h3>
           <styled.p textStyle="label.02">{(isRunning && waitingMessage) || caption}</styled.p>
           {platformMessage && <styled.p textStyle="label.02">{platformMessage}</styled.p>}
-          {capabilities.password && (
+          {canAuthenticateWithPassword && (
             <Input.Root>
               <Input.Label>Enter your password</Input.Label>
               <Input.Field

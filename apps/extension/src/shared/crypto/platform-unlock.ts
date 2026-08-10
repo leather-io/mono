@@ -23,7 +23,7 @@ export interface PlatformUnlockConfig extends PlatformUnlockCredentialConfig {
   wrappedEncryptionKey: string;
 }
 
-type PlatformUnlockFailureCode = 'authentication-failed' | 'invalid-config';
+type PlatformUnlockFailureCode = 'authentication-failed' | 'invalid-config' | 'unavailable';
 
 interface PlatformUnlockFailure {
   status: 'failure';
@@ -143,7 +143,7 @@ export async function wrapWalletEncryptionKey({
       },
     };
   } catch {
-    return { status: 'failure', code: 'authentication-failed' };
+    return { status: 'failure', code: 'unavailable' };
   }
 }
 

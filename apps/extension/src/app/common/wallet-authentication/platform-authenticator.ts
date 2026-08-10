@@ -14,8 +14,8 @@ const registrationTagLength = 6;
 const registrationTagAlphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const ceremonyTimeoutMs = 120_000;
 const chromiumTargetBrowser = 'chromium';
-const rpName = 'Leather';
-const userLabelPrefix = 'Leather biometric unlock';
+const productionRpName = 'Leather';
+const productionUserLabelPrefix = 'Leather biometric unlock';
 
 type PlatformAuthenticatorFailureCode =
   | 'cancelled-or-timeout'
@@ -35,7 +35,7 @@ interface PlatformAuthenticatorSuccess<T> {
   value: T;
 }
 
-type PlatformAuthenticatorResult<T> =
+export type PlatformAuthenticatorResult<T> =
   | PlatformAuthenticatorFailure
   | PlatformAuthenticatorSuccess<T>;
 
@@ -45,8 +45,23 @@ interface PlatformAuthenticatorEnrollment {
   prfOutput: Uint8Array<ArrayBuffer>;
 }
 
-interface PlatformAuthenticatorEvaluation {
+export interface PlatformAuthenticatorEvaluation {
   prfOutput: Uint8Array<ArrayBuffer>;
+}
+
+export type PlatformAuthenticatorTransportHint = 'internal' | 'omitted';
+
+interface PlatformAuthenticatorConfiguration {
+  rpName: string;
+  transportHint: PlatformAuthenticatorTransportHint;
+  userLabelPrefix: string;
+}
+
+interface PlatformAuthenticator {
+  createCredential(): Promise<PlatformAuthenticatorResult<PlatformAuthenticatorEnrollment>>;
+  evaluateCredential(
+    credentialConfig: PlatformUnlockCredentialConfig
+  ): Promise<PlatformAuthenticatorResult<PlatformAuthenticatorEvaluation>>;
 }
 
 interface CreationRequest {
@@ -63,10 +78,6 @@ function generateRegistrationTag() {
   return Array.from(generateRandomBytes(registrationTagLength), value =>
     registrationTagAlphabet.charAt(value % registrationTagAlphabet.length)
   ).join('');
-}
-
-export function getPlatformCredentialUserLabel(registrationTag: string) {
-  return `${userLabelPrefix} · ${registrationTag}`;
 }
 
 function copyBufferSource(source: BufferSource): Uint8Array<ArrayBuffer> {
@@ -88,7 +99,9 @@ function extractPrfOutput(credential: PublicKeyCredential) {
   const output = credential.getClientExtensionResults().prf?.results?.first;
   if (!output) return;
   const bytes = copyBufferSource(output);
-  return bytes.byteLength === prfOutputByteLength ? bytes : undefined;
+  if (bytes.byteLength === prfOutputByteLength) return bytes;
+  bytes.fill(0);
+  return;
 }
 
 function mapCeremonyError(error: unknown): PlatformAuthenticatorFailure {
@@ -107,10 +120,13 @@ export function canUsePlatformAuthenticator() {
   );
 }
 
-function buildCredentialCreationRequest(): CreationRequest {
+function buildCredentialCreationRequest({
+  rpName,
+  userLabelPrefix,
+}: PlatformAuthenticatorConfiguration): CreationRequest {
   const prfInput = generateRandomBytes(prfInputByteLength);
   const registrationTag = generateRegistrationTag();
-  const userLabel = getPlatformCredentialUserLabel(registrationTag);
+  const userLabel = `${userLabelPrefix} · ${registrationTag}`;
   return {
     prfInput,
     publicKey: {
@@ -136,21 +152,21 @@ function buildCredentialCreationRequest(): CreationRequest {
 }
 
 function buildCredentialRequestOptions(
-  credential: PlatformUnlockCredentialConfig
+  credential: PlatformUnlockCredentialConfig,
+  transportHint: PlatformAuthenticatorTransportHint
 ): PlatformAuthenticatorResult<PublicKeyCredentialRequestOptions> {
   if (!isPlatformUnlockCredentialConfig(credential)) {
     return { status: 'failure', code: 'invalid-config' };
   }
+  const descriptor: PublicKeyCredentialDescriptor = {
+    id: new Uint8Array(base64urlnopad.decode(credential.credentialId)),
+    type: 'public-key',
+  };
+  if (transportHint === 'internal') descriptor.transports = ['internal'];
   return {
     status: 'success',
     value: {
-      allowCredentials: [
-        {
-          id: new Uint8Array(base64urlnopad.decode(credential.credentialId)),
-          transports: ['internal'],
-          type: 'public-key',
-        },
-      ],
+      allowCredentials: [descriptor],
       challenge: generateRandomBytes(challengeByteLength),
       extensions: {
         prf: {
@@ -165,13 +181,14 @@ function buildCredentialRequestOptions(
   };
 }
 
-export async function evaluatePlatformCredential(
-  credentialConfig: PlatformUnlockCredentialConfig
+async function evaluateCredential(
+  credentialConfig: PlatformUnlockCredentialConfig,
+  transportHint: PlatformAuthenticatorTransportHint
 ): Promise<PlatformAuthenticatorResult<PlatformAuthenticatorEvaluation>> {
   if (!canUsePlatformAuthenticator()) {
     return { status: 'failure', code: 'unsupported-browser' };
   }
-  const request = buildCredentialRequestOptions(credentialConfig);
+  const request = buildCredentialRequestOptions(credentialConfig, transportHint);
   if (request.status === 'failure') return request;
   try {
     const credential = await navigator.credentials.get({ publicKey: request.value });
@@ -190,13 +207,13 @@ export async function evaluatePlatformCredential(
   }
 }
 
-export async function createPlatformCredential(): Promise<
-  PlatformAuthenticatorResult<PlatformAuthenticatorEnrollment>
-> {
+async function createCredential(
+  configuration: PlatformAuthenticatorConfiguration
+): Promise<PlatformAuthenticatorResult<PlatformAuthenticatorEnrollment>> {
   if (!canUsePlatformAuthenticator()) {
     return { status: 'failure', code: 'unsupported-browser' };
   }
-  const request = buildCredentialCreationRequest();
+  const request = buildCredentialCreationRequest(configuration);
   try {
     const credential = await navigator.credentials.create({ publicKey: request.publicKey });
     if (!isPublicKeyCredential(credential)) {
@@ -221,7 +238,7 @@ export async function createPlatformCredential(): Promise<
         },
       };
     }
-    const evaluation = await evaluatePlatformCredential(credentialConfig);
+    const evaluation = await evaluateCredential(credentialConfig, configuration.transportHint);
     if (evaluation.status === 'failure') return evaluation;
     return {
       status: 'success',
@@ -234,4 +251,35 @@ export async function createPlatformCredential(): Promise<
   } catch (error) {
     return mapCeremonyError(error);
   }
+}
+
+export function createPlatformAuthenticator(
+  configuration: PlatformAuthenticatorConfiguration
+): PlatformAuthenticator {
+  return {
+    createCredential() {
+      return createCredential(configuration);
+    },
+    evaluateCredential(credentialConfig) {
+      return evaluateCredential(credentialConfig, configuration.transportHint);
+    },
+  };
+}
+
+const productionPlatformAuthenticator = createPlatformAuthenticator({
+  rpName: productionRpName,
+  transportHint: 'internal',
+  userLabelPrefix: productionUserLabelPrefix,
+});
+
+export function evaluatePlatformCredential(
+  credentialConfig: PlatformUnlockCredentialConfig
+): Promise<PlatformAuthenticatorResult<PlatformAuthenticatorEvaluation>> {
+  return productionPlatformAuthenticator.evaluateCredential(credentialConfig);
+}
+
+export function createPlatformCredential(): Promise<
+  PlatformAuthenticatorResult<PlatformAuthenticatorEnrollment>
+> {
+  return productionPlatformAuthenticator.createCredential();
 }

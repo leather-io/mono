@@ -41,7 +41,6 @@ import { RequestError } from '@app/pages/request-error/request-error';
 import { SellPage } from '@app/pages/sell/sell';
 import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error';
 import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-form/send-crypto-asset-form.routes';
-import { BiometricUnlockPage } from '@app/pages/settings/biometric-unlock/biometric-unlock';
 import { SettingsPage } from '@app/pages/settings/settings';
 import {
   bitcoinSwapLegacyRoutes,
@@ -275,15 +274,6 @@ function useAppRoutes() {
             element={
               <AccountGate>
                 <SettingsPage />
-              </AccountGate>
-            }
-          />
-
-          <Route
-            path={RouteUrls.BiometricUnlockSettings}
-            element={
-              <AccountGate>
-                <BiometricUnlockPage />
               </AccountGate>
             }
           />

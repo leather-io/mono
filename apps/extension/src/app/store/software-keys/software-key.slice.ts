@@ -22,22 +22,6 @@ interface SoftwareKeyAuthenticationState {
   salt?: string;
 }
 
-interface CompleteBiometricOnlyToPasswordTransitionPayload {
-  keys: SoftwareKeyConfig[];
-  platformUnlock: PlatformUnlockConfig;
-  salt: string;
-}
-
-interface RollBackBiometricOnlyToPasswordTransitionPayload {
-  keys: SoftwareKeyConfig[];
-  platformUnlock: PlatformUnlockConfig;
-}
-
-interface RollBackPlatformUnlockChangePayload {
-  authenticationMode?: WalletAuthenticationMode;
-  platformUnlock?: PlatformUnlockConfig;
-}
-
 export const keyAdapter = createEntityAdapter<SoftwareKeyConfig>();
 
 export const initialKeysState = keyAdapter.getInitialState<SoftwareKeyAuthenticationState>({});
@@ -54,6 +38,7 @@ export const keySlice = createSlice({
       keyAdapter.upsertOne(state, action.payload.key);
       state.salt = action.payload.salt;
       state.authenticationMode = 'password';
+      delete state.platformUnlock;
     },
 
     createBiometricSoftwareWalletComplete(
@@ -79,73 +64,6 @@ export const keySlice = createSlice({
       keyAdapter.addOne(state, action.payload);
     },
 
-    platformUnlockConfigSaved(state, action: PayloadAction<PlatformUnlockConfig>) {
-      if (state.ids.length === 0 || !isPlatformUnlockConfig(action.payload)) return;
-      if (state.authenticationMode !== 'biometric-only' && !state.salt) return;
-      state.authenticationMode = state.authenticationMode ?? 'password';
-      state.platformUnlock = action.payload;
-    },
-
-    platformUnlockConfigRemoved(state) {
-      const hasPasswordAuthenticator =
-        state.authenticationMode === undefined ||
-        (state.authenticationMode === 'password' && !!state.salt);
-      if (!hasPasswordAuthenticator) return;
-      delete state.platformUnlock;
-    },
-
-    biometricOnlyToPasswordTransitionComplete(
-      state,
-      action: PayloadAction<CompleteBiometricOnlyToPasswordTransitionPayload>
-    ) {
-      const { keys, platformUnlock, salt } = action.payload;
-      const replacementIds = new Set(keys.map(key => key.id));
-      const replacesEveryKey =
-        keys.length === state.ids.length &&
-        replacementIds.size === state.ids.length &&
-        state.ids.every(id => replacementIds.has(id));
-      if (
-        state.authenticationMode !== 'biometric-only' ||
-        !salt ||
-        !replacesEveryKey ||
-        !isPlatformUnlockConfig(platformUnlock)
-      ) {
-        return;
-      }
-      keyAdapter.setAll(state, keys);
-      state.authenticationMode = 'password';
-      state.platformUnlock = platformUnlock;
-      state.salt = salt;
-    },
-
-    biometricOnlyToPasswordTransitionRolledBack(
-      state,
-      action: PayloadAction<RollBackBiometricOnlyToPasswordTransitionPayload>
-    ) {
-      const { keys, platformUnlock } = action.payload;
-      if (!isPlatformUnlockConfig(platformUnlock) || keys.length === 0) return;
-      keyAdapter.setAll(state, keys);
-      state.authenticationMode = 'biometric-only';
-      state.platformUnlock = platformUnlock;
-      delete state.salt;
-    },
-
-    platformUnlockChangeRolledBack(
-      state,
-      action: PayloadAction<RollBackPlatformUnlockChangePayload>
-    ) {
-      if (action.payload.authenticationMode) {
-        state.authenticationMode = action.payload.authenticationMode;
-      } else {
-        delete state.authenticationMode;
-      }
-      if (action.payload.platformUnlock) {
-        state.platformUnlock = action.payload.platformUnlock;
-      } else {
-        delete state.platformUnlock;
-      }
-    },
-
     // Persists the result of re-encrypting a legacy (pre-Argon2 / vault-migrated)
     // key at unlock. upsertOne overwrites the existing entity's encryptedSecretKey
     // in place rather than adding a new one — the key already exists, only its
@@ -155,6 +73,7 @@ export const keySlice = createSlice({
       keyAdapter.upsertOne(state, action.payload.key);
       state.salt = action.payload.salt;
       state.authenticationMode = 'password';
+      delete state.platformUnlock;
     },
   },
   extraReducers: builder =>

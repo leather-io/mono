@@ -41,58 +41,17 @@ describe('software key authentication state', () => {
     expect(state.salt).toBeUndefined();
   });
 
-  test('normalizes password wallet creation and preserves a replaceable biometric config', () => {
-    const passwordState = keySlice.reducer(
-      undefined,
-      keySlice.actions.createSoftwareWalletComplete({ key: firstKey, salt: 'salt' })
-    );
-    const withBiometrics = keySlice.reducer(
-      passwordState,
-      keySlice.actions.platformUnlockConfigSaved(platformUnlock)
-    );
-    const replacement = { ...platformUnlock, registrationTag: 'XYZ789' };
-    const replaced = keySlice.reducer(
-      withBiometrics,
-      keySlice.actions.platformUnlockConfigSaved(replacement)
-    );
-
-    expect(replaced.authenticationMode).toBe('password');
-    expect(replaced.salt).toBe('salt');
-    expect(replaced.platformUnlock).toEqual(replacement);
-    const removed = keySlice.reducer(replaced, keySlice.actions.platformUnlockConfigRemoved());
-    expect(removed.platformUnlock).toBeUndefined();
-  });
-
-  test('does not remove the only authenticator from biometric-only state', () => {
-    const state = keySlice.reducer(
-      undefined,
-      keySlice.actions.createBiometricSoftwareWalletComplete({ key: firstKey, platformUnlock })
-    );
-
-    const result = keySlice.reducer(state, keySlice.actions.platformUnlockConfigRemoved());
-
-    expect(result).toEqual(state);
-  });
-
-  test('restores an absent legacy mode when platform enrollment rolls back', () => {
-    const legacyState = keySlice.reducer(
-      undefined,
-      keySlice.actions.createSoftwareWalletComplete({ key: firstKey, salt: 'salt' })
-    );
-    const state = { ...legacyState, authenticationMode: undefined };
-    const withBiometrics = keySlice.reducer(
-      state,
-      keySlice.actions.platformUnlockConfigSaved(platformUnlock)
-    );
+  test('creates password-only state even when stale platform metadata is present', () => {
+    const state = { ...keySlice.getInitialState(), platformUnlock };
 
     const result = keySlice.reducer(
-      withBiometrics,
-      keySlice.actions.platformUnlockChangeRolledBack({ authenticationMode: undefined })
+      state,
+      keySlice.actions.createSoftwareWalletComplete({ key: firstKey, salt: 'salt' })
     );
 
-    expect(result.authenticationMode).toBeUndefined();
-    expect(result.platformUnlock).toBeUndefined();
+    expect(result.authenticationMode).toBe('password');
     expect(result.salt).toBe('salt');
+    expect(result.platformUnlock).toBeUndefined();
   });
 
   test('does not create biometric-only state over stale authentication metadata', () => {
@@ -106,67 +65,17 @@ describe('software key authentication state', () => {
     expect(result).toEqual(state);
   });
 
-  test('completes biometric-only to password-backed replacement in one reducer action', () => {
-    const state = keySlice.reducer(
-      undefined,
-      keySlice.actions.createBiometricSoftwareWalletComplete({ key: firstKey, platformUnlock })
-    );
-    const replacementKey = { ...firstKey, encryptedSecretKey: 'replacement-ciphertext' };
-
-    const result = keySlice.reducer(
-      state,
-      keySlice.actions.biometricOnlyToPasswordTransitionComplete({
-        keys: [replacementKey],
-        platformUnlock,
-        salt: 'password-salt',
-      })
-    );
-
-    expect(result.authenticationMode).toBe('password');
-    expect(result.salt).toBe('password-salt');
-    expect(result.platformUnlock).toEqual(platformUnlock);
-    expect(result.entities.first).toEqual(replacementKey);
-  });
-
-  test('rejects a transition that does not replace every wallet exactly once', () => {
-    const firstState = keySlice.reducer(
-      undefined,
-      keySlice.actions.createBiometricSoftwareWalletComplete({ key: firstKey, platformUnlock })
-    );
-    const state = keySlice.reducer(firstState, keySlice.actions.addNewWallet(secondKey));
-
-    const result = keySlice.reducer(
-      state,
-      keySlice.actions.biometricOnlyToPasswordTransitionComplete({
-        keys: [firstKey, firstKey],
-        platformUnlock,
-        salt: 'password-salt',
-      })
-    );
-
-    expect(result).toEqual(state);
-  });
-
   test('preserves authentication state until the last software wallet is removed', () => {
     const firstState = keySlice.reducer(
       undefined,
       keySlice.actions.createSoftwareWalletComplete({ key: firstKey, salt: 'salt' })
     );
     const withSecond = keySlice.reducer(firstState, keySlice.actions.addNewWallet(secondKey));
-    const withBiometrics = keySlice.reducer(
-      withSecond,
-      keySlice.actions.platformUnlockConfigSaved(platformUnlock)
-    );
-
-    const oneRemaining = keySlice.reducer(
-      withBiometrics,
-      userRemovesWallet({ fingerprint: 'first' })
-    );
+    const oneRemaining = keySlice.reducer(withSecond, userRemovesWallet({ fingerprint: 'first' }));
 
     expect(oneRemaining).toMatchObject({
       authenticationMode: 'password',
       ids: ['second'],
-      platformUnlock,
       salt: 'salt',
     });
 

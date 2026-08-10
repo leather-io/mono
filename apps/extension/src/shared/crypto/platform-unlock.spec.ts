@@ -15,6 +15,10 @@ const credential = {
 const encryptionKey = 'ab'.repeat(48);
 const prfOutput = new Uint8Array(32).fill(7);
 
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 async function createConfig() {
   const wrapped = await wrapWalletEncryptionKey({ credential, encryptionKey, prfOutput });
   if (wrapped.status === 'failure') throw new Error('Expected wrapped key');
@@ -65,6 +69,14 @@ describe(wrapWalletEncryptionKey.name, () => {
     await expect(
       wrapWalletEncryptionKey({ credential, encryptionKey: 'short', prfOutput })
     ).resolves.toEqual({ status: 'failure', code: 'invalid-config' });
+  });
+
+  test('reports encryption failures as unavailable rather than authentication failures', async () => {
+    vi.spyOn(crypto.subtle, 'encrypt').mockRejectedValue(new Error('Encryption unavailable'));
+
+    await expect(
+      wrapWalletEncryptionKey({ credential, encryptionKey, prfOutput })
+    ).resolves.toEqual({ status: 'failure', code: 'unavailable' });
   });
 });
 

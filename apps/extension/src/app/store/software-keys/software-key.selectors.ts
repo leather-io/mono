@@ -61,19 +61,20 @@ function getWalletAuthenticationCapabilities({
   }
 
   if (authenticationMode === undefined) {
+    const valid = !hasPlatformUnlock && (salt === undefined || hasSalt);
     return {
-      authenticationMode: 'password',
+      authenticationMode: valid ? 'password' : null,
       biometrics: false,
-      password: true,
-      valid: true,
+      password: valid,
+      valid,
     };
   }
 
   if (authenticationMode === 'password') {
-    const valid = hasSalt;
+    const valid = hasSalt && !hasPlatformUnlock;
     return {
       authenticationMode: valid ? 'password' : null,
-      biometrics: valid && validPlatformUnlock,
+      biometrics: false,
       password: valid,
       valid,
     };
@@ -126,10 +127,6 @@ const selectActiveSoftwareKey = createSelector(
   selectKeysSlice,
   selectCurrentAccount,
   (keysState, currentAccount) => keysState.entities[currentAccount.fingerprint]
-);
-
-export const selectPlatformUnlockConfig = createSelector(selectKeysSlice, state =>
-  isPlatformUnlockConfig(state.platformUnlock) ? state.platformUnlock : undefined
 );
 
 export function useActiveSoftwareKey() {

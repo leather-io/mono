@@ -25,7 +25,10 @@ import type { PlatformUnlockConfig } from '@shared/crypto/platform-unlock';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
-import { authenticateWithPassword } from '@app/common/wallet-authentication/use-wallet-authentication';
+import {
+  authenticateWithPassword,
+  prepareBiometricSoftwareWallet,
+} from '@app/common/wallet-authentication/wallet-authentication';
 import { persistor } from '@app/store';
 import { initializeWalletSessionWithSoftwareKeys } from '@app/store/session-restore';
 import { hydrateSlicesFromStorage } from '@app/store/utils/storage-sync';
@@ -51,8 +54,12 @@ vi.mock('@app/store/session-restore', () => ({
   initalizeWalletSession: vi.fn(() => Promise.resolve()),
 }));
 
-vi.mock('@app/common/wallet-authentication/use-wallet-authentication', () => ({
+vi.mock('@app/common/wallet-authentication/wallet-authentication', async importOriginal => ({
+  ...(await importOriginal<
+    typeof import('@app/common/wallet-authentication/wallet-authentication')
+  >()),
   authenticateWithPassword: vi.fn(),
+  prepareBiometricSoftwareWallet: vi.fn(),
 }));
 
 vi.mock('@app/common/account-restoration/account-restore', () => ({
@@ -346,7 +353,7 @@ describe('password wallet creation transaction', () => {
         hiroClient: getHiroStacksApiClient(),
         bnsClient: getBnsV2ApiClient(),
       })(vi.fn(), vi.fn(), undefined)
-    ).rejects.toThrow("Can't authenticate this wallet with a password");
+    ).rejects.toThrow('invalid-config');
 
     expect(encryptMnemonic).not.toHaveBeenCalled();
     expect(initializeWalletSessionWithSoftwareKeys).not.toHaveBeenCalled();
@@ -369,7 +376,7 @@ describe('password wallet creation transaction', () => {
         hiroClient: getHiroStacksApiClient(),
         bnsClient: getBnsV2ApiClient(),
       })(vi.fn(), vi.fn(), undefined)
-    ).rejects.toThrow('Software wallet did not persist under the authenticated key');
+    ).rejects.toThrow('persistence-failed');
 
     expect(decryptAllSoftwareKeys).not.toHaveBeenCalled();
     expect(initializeWalletSessionWithSoftwareKeys).not.toHaveBeenCalled();
@@ -400,9 +407,87 @@ describe('password wallet creation transaction', () => {
         hiroClient: getHiroStacksApiClient(),
         bnsClient: getBnsV2ApiClient(),
       })(vi.fn(), vi.fn(), undefined)
-    ).rejects.toThrow('Software wallet did not persist under the authenticated key');
+    ).rejects.toThrow('persistence-failed');
 
     expect(initializeWalletSessionWithSoftwareKeys).not.toHaveBeenCalled();
+  });
+
+  test('accepts its durable postcondition when an unrelated wallet changes concurrently', async () => {
+    const newKey: SoftwareKey = {
+      type: 'software',
+      id: realFingerprint,
+      encryptedSecretKey: 'ciphertext',
+    };
+    const newWallet: WalletStore = {
+      createdOn: walletCreatedOn,
+      fingerprint: realFingerprint,
+      name: 'Wallet 1',
+      type: 'software',
+    };
+    const concurrentWallet: WalletStore = {
+      createdOn: walletCreatedOn,
+      fingerprint: 'concurrent-ledger',
+      name: 'Concurrent Ledger',
+      type: 'ledger',
+    };
+    const persistedState = buildState({
+      authenticationMode: 'password',
+      keys: [newKey],
+      salt: 'salt',
+      wallets: [newWallet, concurrentWallet],
+    });
+    persistStateOnNextFlush({
+      ...persistedState,
+      active: {
+        account: { fingerprint: realFingerprint, accountIndex: 0 },
+        activePolicyId: null,
+      },
+    });
+    vi.mocked(encryptMnemonic).mockResolvedValue({
+      encryptedSecretKey: 'ciphertext',
+      encryptionKey: 'ab'.repeat(48),
+      salt: 'salt',
+    });
+    vi.mocked(decryptAllSoftwareKeys).mockResolvedValue([
+      { fingerprint: realFingerprint, secretKey: 'mnemonic' },
+    ]);
+
+    await keyActions.setWalletEncryptionPassword({
+      password,
+      fingerprint: realFingerprint,
+      mnemonic: 'mnemonic',
+      leatherApiClient: getLeatherApiClient(),
+      hiroClient: getHiroStacksApiClient(),
+      bnsClient: getBnsV2ApiClient(),
+    })(vi.fn(), vi.fn(), undefined);
+
+    expect(initializeWalletSessionWithSoftwareKeys).toHaveBeenCalledWith('ab'.repeat(48), [
+      { fingerprint: realFingerprint, secretKey: 'mnemonic' },
+    ]);
+  });
+
+  test('rejects a password wallet whose fingerprint already belongs to a Ledger', async () => {
+    const ledgerWallet: WalletStore = {
+      createdOn: walletCreatedOn,
+      fingerprint: realFingerprint,
+      name: 'Ledger',
+      type: 'ledger',
+    };
+    await persistState(buildState({ keys: [], salt: undefined, wallets: [ledgerWallet] }));
+
+    await expect(
+      keyActions.setWalletEncryptionPassword({
+        password,
+        fingerprint: realFingerprint,
+        mnemonic: 'mnemonic',
+        leatherApiClient: getLeatherApiClient(),
+        hiroClient: getHiroStacksApiClient(),
+        bnsClient: getBnsV2ApiClient(),
+      })(vi.fn(), vi.fn(), undefined)
+    ).rejects.toThrow('wallet-already-exists');
+
+    expect(encryptMnemonic).not.toHaveBeenCalled();
+    expect(persistor.flush).not.toHaveBeenCalled();
   });
 });
 
@@ -571,7 +656,7 @@ describe('unlockWalletAction', () => {
 
     await expect(
       keyActions.unlockWalletAction(password)(vi.fn(), vi.fn().mockReturnValue(state), undefined)
-    ).rejects.toThrow('authentication failed');
+    ).rejects.toThrow('invalid-password');
 
     expect(initializeWalletSessionWithSoftwareKeys).not.toHaveBeenCalled();
   });
@@ -599,7 +684,7 @@ describe('unlockWalletAction', () => {
 
     await expect(
       keyActions.unlockWalletAction(password)(vi.fn(), getState, undefined)
-    ).rejects.toThrow('Software wallet state changed during authentication');
+    ).rejects.toThrow('state-changed');
 
     expect(initializeWalletSessionWithSoftwareKeys).not.toHaveBeenCalled();
   });
@@ -615,7 +700,6 @@ describe('unlockWalletAction', () => {
       authenticationMode: 'password',
       salt: 'new-salt',
       keys: [{ type: 'software', id: realFingerprint, encryptedSecretKey: 'new-ciphertext' }],
-      platformUnlock,
     });
     const decrypted = [{ fingerprint: realFingerprint, secretKey: 'decrypted-mnemonic' }];
     await chrome.storage.local.set({ 'persist:root': persistedState });
@@ -645,6 +729,18 @@ describe('authenticated encryption-key actions', () => {
     vi.clearAllMocks();
     vi.spyOn(Date.prototype, 'toISOString').mockReturnValue(walletCreatedOn);
     vi.mocked(persistor.flush).mockResolvedValue(undefined);
+    vi.mocked(prepareBiometricSoftwareWallet).mockResolvedValue({
+      status: 'success',
+      value: {
+        encryptionKey: 'ab'.repeat(48),
+        key: {
+          type: 'software',
+          id: realFingerprint,
+          encryptedSecretKey: 'biometric-ciphertext',
+        },
+        platformUnlock,
+      },
+    });
     await chrome.storage.local.clear();
   });
 
@@ -659,11 +755,10 @@ describe('authenticated encryption-key actions', () => {
     const decrypted = [{ fingerprint: realFingerprint, secretKey: 'decrypted-mnemonic' }];
     vi.mocked(decryptAllSoftwareKeys).mockResolvedValue(decrypted);
 
-    await keyActions.unlockWalletWithEncryptionKey({ encryptionKey: 'ab'.repeat(48) })(
-      vi.fn(),
-      vi.fn().mockReturnValue(state),
-      undefined
-    );
+    await keyActions.unlockWalletWithEncryptionKey({
+      encryptionKey: 'ab'.repeat(48),
+      expectedPlatformUnlock: platformUnlock,
+    })(vi.fn(), vi.fn().mockReturnValue(state), undefined);
 
     expect(initializeWalletSessionWithSoftwareKeys).toHaveBeenCalledWith(
       'ab'.repeat(48),
@@ -678,14 +773,9 @@ describe('authenticated encryption-key actions', () => {
       platformUnlock,
       salt: undefined,
     });
-    const replacementPlatformUnlock: PlatformUnlockConfig = {
-      ...platformUnlock,
-      iv: base64urlnopad.encode(new Uint8Array(12).fill(9)),
-    };
     const persistedState = buildState({
       authenticationMode: 'password',
       keys: [{ type: 'software', id: realFingerprint, encryptedSecretKey: 'new-ciphertext' }],
-      platformUnlock: replacementPlatformUnlock,
       salt: 'new-salt',
     });
     await chrome.storage.local.set({ 'persist:root': persistedState });
@@ -695,49 +785,9 @@ describe('authenticated encryption-key actions', () => {
         encryptionKey: 'ab'.repeat(48),
         expectedPlatformUnlock: platformUnlock,
       })(vi.fn(), vi.fn().mockReturnValue(localState), undefined)
-    ).rejects.toThrow('Platform authentication state changed during authentication');
+    ).rejects.toThrow('invalid-config');
 
     expect(decryptAllSoftwareKeys).not.toHaveBeenCalled();
-    expect(initializeWalletSessionWithSoftwareKeys).not.toHaveBeenCalled();
-  });
-
-  test('validates stale-frame password proof against authoritative persisted wallets', async () => {
-    const localState = buildState({
-      authenticationMode: 'password',
-      keys: [{ type: 'software', id: realFingerprint, encryptedSecretKey: 'old-ciphertext' }],
-      platformUnlock,
-      salt: 'old-salt',
-    });
-    const persistedState = buildState({
-      authenticationMode: 'password',
-      keys: [{ type: 'software', id: realFingerprint, encryptedSecretKey: 'new-ciphertext' }],
-      platformUnlock,
-      salt: 'new-salt',
-    });
-    await chrome.storage.local.set({ 'persist:root': persistedState });
-    vi.mocked(authenticateWithPassword).mockResolvedValue({
-      status: 'failure',
-      code: 'invalid-password',
-    });
-
-    await expect(
-      keyActions.addSoftwareWalletWithPassword({
-        password: 'old password',
-        fingerprint: 'new-wallet',
-        mnemonic: 'new mnemonic',
-        leatherApiClient: getLeatherApiClient(),
-        hiroClient: getHiroStacksApiClient(),
-        bnsClient: getBnsV2ApiClient(),
-      })(vi.fn(), vi.fn().mockReturnValue(localState), undefined)
-    ).rejects.toThrow("The password doesn't match");
-
-    expect(authenticateWithPassword).toHaveBeenCalledWith({
-      password: 'old password',
-      salt: 'new-salt',
-      softwareKeys: [
-        { type: 'software', id: realFingerprint, encryptedSecretKey: 'new-ciphertext' },
-      ],
-    });
     expect(initializeWalletSessionWithSoftwareKeys).not.toHaveBeenCalled();
   });
 
@@ -777,6 +827,7 @@ describe('authenticated encryption-key actions', () => {
 
     await keyActions.addSoftwareWalletWithEncryptionKey({
       encryptionKey: 'ab'.repeat(48),
+      expectedPlatformUnlock: platformUnlock,
       fingerprint: 'new-wallet',
       mnemonic: 'new mnemonic',
       leatherApiClient: getLeatherApiClient(),
@@ -829,7 +880,7 @@ describe('authenticated encryption-key actions', () => {
         hiroClient: getHiroStacksApiClient(),
         bnsClient: getBnsV2ApiClient(),
       })(dispatch, vi.fn().mockReturnValue(state), undefined)
-    ).rejects.toThrow('forced persistence failure');
+    ).rejects.toThrow('persistence-failed');
 
     expect(dispatch).not.toHaveBeenCalledWith(userRemovesWallet({ fingerprint: 'new-wallet' }));
     expect(dispatch).toHaveBeenCalledWith(
@@ -844,114 +895,11 @@ describe('authenticated encryption-key actions', () => {
         }),
       })
     );
-    expect(persistor.flush).toHaveBeenCalledTimes(2);
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
     expect(initializeWalletSessionWithSoftwareKeys).not.toHaveBeenCalled();
   });
 
-  test('commits a complete biometric-only to password transition before replacing session state', async () => {
-    const sourceKey: SoftwareKey = {
-      type: 'software',
-      id: realFingerprint,
-      encryptedSecretKey: 'old-ciphertext',
-    };
-    const replacementKey = { ...sourceKey, encryptedSecretKey: 'new-ciphertext' };
-    const replacementPlatformUnlock: PlatformUnlockConfig = {
-      ...platformUnlock,
-      iv: base64urlnopad.encode(new Uint8Array(12).fill(9)),
-    };
-    const currentState = buildState({
-      authenticationMode: 'biometric-only',
-      keys: [sourceKey],
-      platformUnlock,
-      salt: undefined,
-    });
-    const persistedState = buildState({
-      authenticationMode: 'password',
-      keys: [replacementKey],
-      platformUnlock: replacementPlatformUnlock,
-      salt: 'new-salt',
-    });
-    await persistState(currentState);
-    persistStateOnNextFlush(persistedState);
-    const getState = vi.fn().mockReturnValueOnce(currentState).mockReturnValue(persistedState);
-    const decrypted = [{ fingerprint: realFingerprint, secretKey: 'mnemonic' }];
-    vi.mocked(decryptAllSoftwareKeys).mockResolvedValue(decrypted);
-    const dispatch = vi.fn();
-
-    await keyActions.commitBiometricOnlyToPasswordTransition({
-      encryptionKey: 'cd'.repeat(48),
-      keys: [replacementKey],
-      platformUnlock: replacementPlatformUnlock,
-      salt: 'new-salt',
-      sourceKeys: [sourceKey],
-      sourcePlatformUnlock: platformUnlock,
-    })(dispatch, getState, undefined);
-
-    expect(dispatch).toHaveBeenCalledWith(
-      keySlice.actions.biometricOnlyToPasswordTransitionComplete({
-        keys: [replacementKey],
-        platformUnlock: replacementPlatformUnlock,
-        salt: 'new-salt',
-      })
-    );
-    expect(persistor.flush).toHaveBeenCalledTimes(1);
-    expect(initializeWalletSessionWithSoftwareKeys).toHaveBeenCalledWith(
-      'cd'.repeat(48),
-      decrypted
-    );
-    expect(vi.mocked(persistor.flush).mock.invocationCallOrder[0]).toBeLessThan(
-      vi.mocked(initializeWalletSessionWithSoftwareKeys).mock.invocationCallOrder[0]
-    );
-  });
-
-  test('does not replace session state when the password transition flush fails', async () => {
-    const sourceKey: SoftwareKey = {
-      type: 'software',
-      id: realFingerprint,
-      encryptedSecretKey: 'old-ciphertext',
-    };
-    const replacementKey = { ...sourceKey, encryptedSecretKey: 'new-ciphertext' };
-    const replacementPlatformUnlock: PlatformUnlockConfig = {
-      ...platformUnlock,
-      iv: base64urlnopad.encode(new Uint8Array(12).fill(9)),
-    };
-    const currentState = buildState({
-      authenticationMode: 'biometric-only',
-      keys: [sourceKey],
-      platformUnlock,
-      salt: undefined,
-    });
-    await persistState(currentState);
-    vi.mocked(persistor.flush).mockRejectedValue(new Error('forced persistence failure'));
-    const dispatch = vi.fn();
-
-    await expect(
-      keyActions.commitBiometricOnlyToPasswordTransition({
-        encryptionKey: 'cd'.repeat(48),
-        keys: [replacementKey],
-        platformUnlock: replacementPlatformUnlock,
-        salt: 'new-salt',
-        sourceKeys: [sourceKey],
-        sourcePlatformUnlock: platformUnlock,
-      })(dispatch, vi.fn().mockReturnValue(currentState), undefined)
-    ).rejects.toThrow('forced persistence failure');
-
-    expect(vi.mocked(persistor.flush)).toHaveBeenCalledTimes(2);
-    expect(dispatch).toHaveBeenCalledWith(
-      keySlice.actions.biometricOnlyToPasswordTransitionRolledBack({
-        keys: [sourceKey],
-        platformUnlock,
-      })
-    );
-    expect(vi.mocked(initializeWalletSessionWithSoftwareKeys)).not.toHaveBeenCalled();
-  });
-
   test('restores empty authoritative state when biometric persistence fails', async () => {
-    const preparedKey: SoftwareKey = {
-      type: 'software',
-      id: realFingerprint,
-      encryptedSecretKey: 'biometric-ciphertext',
-    };
     const state = buildState({ keys: [], salt: undefined });
     vi.mocked(decryptAllSoftwareKeys).mockResolvedValue([
       { fingerprint: realFingerprint, secretKey: 'mnemonic' },
@@ -965,16 +913,11 @@ describe('authenticated encryption-key actions', () => {
       keyActions.createBiometricSoftwareWallet({
         fingerprint: realFingerprint,
         mnemonic: 'mnemonic',
-        preparation: {
-          encryptionKey: 'ab'.repeat(48),
-          key: preparedKey,
-          platformUnlock,
-        },
         leatherApiClient: getLeatherApiClient(),
         hiroClient: getHiroStacksApiClient(),
         bnsClient: getBnsV2ApiClient(),
       })(dispatch, vi.fn().mockReturnValue(state), undefined)
-    ).rejects.toThrow('forced persistence failure');
+    ).rejects.toThrow('persistence-failed');
 
     expect(dispatch).not.toHaveBeenCalledWith(userRemovesWallet({ fingerprint: realFingerprint }));
     expect(dispatch).toHaveBeenCalledWith(
@@ -990,177 +933,6 @@ describe('authenticated encryption-key actions', () => {
       })
     );
     expect(initializeWalletSessionWithSoftwareKeys).not.toHaveBeenCalled();
-  });
-
-  test('persists a complete biometric unlock replacement after current state validation', async () => {
-    const sourceKey: SoftwareKey = {
-      type: 'software',
-      id: realFingerprint,
-      encryptedSecretKey: 'ciphertext',
-    };
-    const currentState = buildState({
-      authenticationMode: 'password',
-      keys: [sourceKey],
-      salt: 'argon2-salt',
-    });
-    const replacementPlatformUnlock: PlatformUnlockConfig = {
-      ...platformUnlock,
-      iv: base64urlnopad.encode(new Uint8Array(12).fill(9)),
-    };
-    const persistedState = buildState({
-      authenticationMode: 'password',
-      keys: [sourceKey],
-      platformUnlock: replacementPlatformUnlock,
-      salt: 'argon2-salt',
-    });
-    await persistState(currentState);
-    persistStateOnNextFlush(persistedState);
-    const getState = vi.fn().mockReturnValueOnce(currentState).mockReturnValue(persistedState);
-    const dispatch = vi.fn();
-
-    await keyActions.commitPlatformUnlockChange({
-      platformUnlock: replacementPlatformUnlock,
-      sourceAuthenticationMode: 'password',
-      sourceKeys: [sourceKey],
-      sourceSalt: 'argon2-salt',
-    })(dispatch, getState, undefined);
-
-    expect(dispatch).toHaveBeenCalledWith(
-      keySlice.actions.platformUnlockConfigSaved(replacementPlatformUnlock)
-    );
-    expect(persistor.flush).toHaveBeenCalledTimes(1);
-  });
-
-  test('restores the prior config when biometric unlock replacement persistence fails', async () => {
-    const sourceKey: SoftwareKey = {
-      type: 'software',
-      id: realFingerprint,
-      encryptedSecretKey: 'ciphertext',
-    };
-    const currentState = buildState({
-      authenticationMode: 'password',
-      keys: [sourceKey],
-      platformUnlock,
-      salt: 'argon2-salt',
-    });
-    const replacementPlatformUnlock: PlatformUnlockConfig = {
-      ...platformUnlock,
-      iv: base64urlnopad.encode(new Uint8Array(12).fill(9)),
-    };
-    await persistState(currentState);
-    vi.mocked(persistor.flush)
-      .mockRejectedValueOnce(new Error('forced persistence failure'))
-      .mockResolvedValueOnce(undefined);
-    const dispatch = vi.fn();
-
-    await expect(
-      keyActions.commitPlatformUnlockChange({
-        platformUnlock: replacementPlatformUnlock,
-        sourceAuthenticationMode: 'password',
-        sourceKeys: [sourceKey],
-        sourcePlatformUnlock: platformUnlock,
-        sourceSalt: 'argon2-salt',
-      })(dispatch, vi.fn().mockReturnValue(currentState), undefined)
-    ).rejects.toThrow('forced persistence failure');
-
-    expect(dispatch).toHaveBeenCalledWith(
-      keySlice.actions.platformUnlockConfigSaved(replacementPlatformUnlock)
-    );
-    expect(dispatch).toHaveBeenCalledWith(
-      keySlice.actions.platformUnlockChangeRolledBack({
-        authenticationMode: 'password',
-        platformUnlock,
-      })
-    );
-    expect(persistor.flush).toHaveBeenCalledTimes(2);
-  });
-
-  test('rejects biometric unlock replacement after another frame changes the config', async () => {
-    const sourceKey: SoftwareKey = {
-      type: 'software',
-      id: realFingerprint,
-      encryptedSecretKey: 'ciphertext',
-    };
-    const currentState = buildState({
-      authenticationMode: 'password',
-      keys: [sourceKey],
-      platformUnlock,
-      salt: 'argon2-salt',
-    });
-    const otherPlatformUnlock: PlatformUnlockConfig = {
-      ...platformUnlock,
-      iv: base64urlnopad.encode(new Uint8Array(12).fill(8)),
-    };
-    await chrome.storage.local.set({
-      'persist:root': buildState({
-        authenticationMode: 'password',
-        keys: [sourceKey],
-        platformUnlock: otherPlatformUnlock,
-        salt: 'argon2-salt',
-      }),
-    });
-
-    await expect(
-      keyActions.commitPlatformUnlockChange({
-        platformUnlock: {
-          ...platformUnlock,
-          iv: base64urlnopad.encode(new Uint8Array(12).fill(9)),
-        },
-        sourceAuthenticationMode: 'password',
-        sourceKeys: [sourceKey],
-        sourcePlatformUnlock: platformUnlock,
-        sourceSalt: 'argon2-salt',
-      })(vi.fn(), vi.fn().mockReturnValue(currentState), undefined)
-    ).rejects.toThrow('Software wallet state changed during authentication');
-
-    expect(persistor.flush).not.toHaveBeenCalled();
-  });
-
-  test('disables biometric unlock only when a password authenticator remains', async () => {
-    const sourceKey: SoftwareKey = {
-      type: 'software',
-      id: realFingerprint,
-      encryptedSecretKey: 'ciphertext',
-    };
-    const currentState = buildState({
-      authenticationMode: 'password',
-      keys: [sourceKey],
-      platformUnlock,
-      salt: 'argon2-salt',
-    });
-    const persistedState = buildState({
-      authenticationMode: 'password',
-      keys: [sourceKey],
-      salt: 'argon2-salt',
-    });
-    await persistState(currentState);
-    persistStateOnNextFlush(persistedState);
-    const dispatch = vi.fn();
-
-    await keyActions.disablePlatformUnlock()(
-      dispatch,
-      vi.fn().mockReturnValueOnce(currentState).mockReturnValue(persistedState),
-      undefined
-    );
-
-    expect(dispatch).toHaveBeenCalledWith(keySlice.actions.platformUnlockConfigRemoved());
-    expect(persistor.flush).toHaveBeenCalledTimes(1);
-  });
-
-  test('cannot disable a biometric-only wallet authenticator', async () => {
-    const state = buildState({
-      authenticationMode: 'biometric-only',
-      keys: [{ type: 'software', id: realFingerprint, encryptedSecretKey: 'ciphertext' }],
-      platformUnlock,
-      salt: undefined,
-    });
-    await persistState(state);
-
-    await expect(
-      keyActions.disablePlatformUnlock()(vi.fn(), vi.fn().mockReturnValue(state), undefined)
-    ).rejects.toThrow("Can't disable the only wallet authenticator");
-
-    expect(persistor.flush).not.toHaveBeenCalled();
   });
 
   test('persists a prepared first biometric wallet before installing its session', async () => {
@@ -1184,11 +956,6 @@ describe('authenticated encryption-key actions', () => {
     await keyActions.createBiometricSoftwareWallet({
       fingerprint: realFingerprint,
       mnemonic: 'mnemonic',
-      preparation: {
-        encryptionKey: 'ab'.repeat(48),
-        key: preparedKey,
-        platformUnlock,
-      },
       leatherApiClient: getLeatherApiClient(),
       hiroClient: getHiroStacksApiClient(),
       bnsClient: getBnsV2ApiClient(),
@@ -1226,17 +993,38 @@ describe('authenticated encryption-key actions', () => {
       keyActions.createBiometricSoftwareWallet({
         fingerprint: 'new-wallet',
         mnemonic: 'mnemonic',
-        preparation: {
-          encryptionKey: 'ab'.repeat(48),
-          key: { type: 'software', id: 'new-wallet', encryptedSecretKey: 'new-ciphertext' },
-          platformUnlock,
-        },
         leatherApiClient: getLeatherApiClient(),
         hiroClient: getHiroStacksApiClient(),
         bnsClient: getBnsV2ApiClient(),
       })(vi.fn(), vi.fn().mockReturnValue(state), undefined)
-    ).rejects.toThrow('Software wallet state changed during biometric setup');
+    ).rejects.toThrow('state-changed');
 
+    expect(persistor.flush).not.toHaveBeenCalled();
+    expect(prepareBiometricSoftwareWallet).not.toHaveBeenCalled();
+  });
+
+  test('rejects a biometric wallet whose fingerprint already belongs to a Ledger', async () => {
+    const ledgerWallet: WalletStore = {
+      createdOn: walletCreatedOn,
+      fingerprint: realFingerprint,
+      name: 'Ledger',
+      type: 'ledger',
+    };
+    const state = buildState({ keys: [], salt: undefined, wallets: [ledgerWallet] });
+    await persistState(state);
+
+    await expect(
+      keyActions.createBiometricSoftwareWallet({
+        fingerprint: realFingerprint,
+        mnemonic: 'mnemonic',
+        leatherApiClient: getLeatherApiClient(),
+        hiroClient: getHiroStacksApiClient(),
+        bnsClient: getBnsV2ApiClient(),
+      })(vi.fn(), vi.fn(), undefined)
+    ).rejects.toThrow('wallet-already-exists');
+
+    expect(decryptAllSoftwareKeys).not.toHaveBeenCalled();
+    expect(prepareBiometricSoftwareWallet).not.toHaveBeenCalled();
     expect(persistor.flush).not.toHaveBeenCalled();
   });
 });
@@ -1245,9 +1033,9 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(inMemoryStore.getKey).mockReturnValue('decrypted-mnemonic');
-    vi.mocked(recurseAccountsForActivity).mockImplementation(({ onActivityFound }) => {
-      onActivityFound?.(4);
-      return Promise.resolve(4);
+    vi.mocked(recurseAccountsForActivity).mockImplementation(async ({ onActivityFound }) => {
+      await onActivityFound?.(4);
+      return 4;
     });
     vi.mocked(getStacksAddressByIndex).mockImplementation(
       () => (accountIndex: number) => `stx-${accountIndex}`
@@ -1262,8 +1050,9 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
 
   test('checks the next account index and starts recursive discovery when btc history is found', async () => {
     const state = buildState({
+      authenticationMode: 'password',
+      keys: [{ type: 'software', id: realFingerprint, encryptedSecretKey: 'ciphertext' }],
       salt: 'argon2-salt',
-      keys: [],
       wallets: [
         { fingerprint: realFingerprint, createdOn: null, name: 'Wallet', type: 'software' },
       ],
@@ -1291,6 +1080,7 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
     };
     const dispatch = vi.fn();
     const getState = vi.fn().mockReturnValue(state);
+    await persistState(state);
 
     await keyActions.probeNextAccountAndDiscoverAccounts({
       leatherApiClient: leatherApiClient as never,
@@ -1333,8 +1123,9 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
 
   test('does not start recursive discovery when the next account has no activity', async () => {
     const state = buildState({
+      authenticationMode: 'password',
+      keys: [{ type: 'software', id: realFingerprint, encryptedSecretKey: 'ciphertext' }],
       salt: 'argon2-salt',
-      keys: [],
       wallets: [
         { fingerprint: realFingerprint, createdOn: null, name: 'Wallet', type: 'software' },
       ],

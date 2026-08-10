@@ -100,20 +100,9 @@ describe(selectWalletAuthenticationCapabilities.name, () => {
       password: true,
       valid: true,
     });
-    expect(
-      selectWalletAuthenticationCapabilities.resultFunc({
-        ids: ['wallet'],
-        platformUnlock: { invalid: true },
-      })
-    ).toEqual({
-      authenticationMode: 'password',
-      biometrics: false,
-      password: true,
-      valid: true,
-    });
   });
 
-  test('reports current password-only and password-plus-biometric state', () => {
+  test('reports complete password-only state', () => {
     expect(
       selectWalletAuthenticationCapabilities.resultFunc({
         authenticationMode: 'password',
@@ -123,32 +112,6 @@ describe(selectWalletAuthenticationCapabilities.name, () => {
     ).toEqual({
       authenticationMode: 'password',
       biometrics: false,
-      password: true,
-      valid: true,
-    });
-    expect(
-      selectWalletAuthenticationCapabilities.resultFunc({
-        authenticationMode: 'password',
-        ids: ['wallet'],
-        platformUnlock: { invalid: true },
-        salt: 'salt',
-      })
-    ).toEqual({
-      authenticationMode: 'password',
-      biometrics: false,
-      password: true,
-      valid: true,
-    });
-    expect(
-      selectWalletAuthenticationCapabilities.resultFunc({
-        authenticationMode: 'password',
-        ids: ['wallet'],
-        platformUnlock,
-        salt: 'salt',
-      })
-    ).toEqual({
-      authenticationMode: 'password',
-      biometrics: true,
       password: true,
       valid: true,
     });
@@ -173,6 +136,15 @@ describe(selectWalletAuthenticationCapabilities.name, () => {
     { authenticationMode: 'future-mode', ids: ['wallet'] },
     { authenticationMode: 'password', ids: ['wallet'] },
     { authenticationMode: 'biometric-only', ids: ['wallet'] },
+    { ids: ['wallet'], platformUnlock: { invalid: true } },
+    { ids: ['wallet'], salt: '' },
+    { ids: ['wallet'], salt: 123 },
+    {
+      authenticationMode: 'password',
+      ids: ['wallet'],
+      platformUnlock,
+      salt: 'salt',
+    },
     {
       authenticationMode: 'biometric-only',
       ids: ['wallet'],

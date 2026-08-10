@@ -21,7 +21,7 @@ import {
   validatePassword,
 } from '@app/common/validation/validate-password';
 import { canUsePlatformAuthenticator } from '@app/common/wallet-authentication/platform-authenticator';
-import type { WalletAuthenticationResult } from '@app/common/wallet-authentication/use-wallet-authentication';
+import type { WalletAuthenticationResult } from '@app/common/wallet-authentication/wallet-authentication';
 import { Content } from '@app/components/layout';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
@@ -31,7 +31,6 @@ import {
   TwoColumnLayout,
 } from '@app/components/layout/layouts/two-column.layout';
 import { RequestWalletAuthentication } from '@app/components/request-wallet-authentication';
-import { useCheckPassword } from '@app/store/software-keys/software-key.hooks';
 import { selectSoftwareKeys } from '@app/store/software-keys/software-key.selectors';
 
 import { PasswordField } from './components/password-field';
@@ -58,18 +57,27 @@ export function SetPasswordPage({
   const keyActions = useKeyActions();
   const softwareKeys = useSelector(selectSoftwareKeys);
   const hasSoftwareKeys = !!softwareKeys.length;
-  const checkPassword = useCheckPassword();
+  const supportsBiometricSetup = TARGET_BROWSER === 'chromium';
+  const unlockMethodTitle = supportsBiometricSetup
+    ? 'Choose how to unlock Leather'
+    : 'Set a password';
+  const unlockMethodDescription = supportsBiometricSetup
+    ? 'Choose a password or biometrics. Your choice applies to every software wallet in this browser profile.'
+    : 'Your password applies to every software wallet in this browser profile.';
 
   const navigate = useNavigate();
 
   const submit = useCallback(
-    async (password: string) => {
-      await keyActions.setPassword({
+    async (password: string): Promise<WalletAuthenticationResult<void>> => {
+      const result = await keyActions.setPassword({
         password,
         mnemonic: mnemonicData.mnemonic,
         fingerprint: mnemonicData.fingerprint,
       });
-      void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
+      if (result.status === 'success') {
+        void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
+      }
+      return result;
     },
     [keyActions, navigate, mnemonicData.fingerprint, mnemonicData.mnemonic]
   );
@@ -84,7 +92,10 @@ export function SetPasswordPage({
       try {
         if (strengthResult.meetsAllStrengthRequirements) {
           analytics.track('submit_valid_password');
-          await submit(password);
+          const result = await submit(password);
+          if (result.status === 'failure') {
+            setFieldError('password', 'Something went wrong setting your password');
+          }
         }
       } catch {
         setFieldError('password', 'Something went wrong setting your password');
@@ -97,33 +108,21 @@ export function SetPasswordPage({
 
   const onExistingWalletPasswordSubmit = useCallback(
     async (password: string): Promise<WalletAuthenticationResult<void>> => {
-      try {
-        if (!(await checkPassword({ password }))) {
-          return { status: 'failure', code: 'invalid-password' };
-        }
-        await submit(password);
-        return { status: 'success', value: undefined };
-      } catch {
-        return { status: 'failure', code: 'invalid-password' };
-      }
+      return submit(password);
     },
-    [checkPassword, submit]
+    [submit]
   );
 
   const onExistingWalletBiometricSubmit = useCallback(async (): Promise<
     WalletAuthenticationResult<void>
   > => {
-    try {
-      const result = await keyActions.addWalletWithBiometrics({
-        fingerprint: mnemonicData.fingerprint,
-        mnemonic: mnemonicData.mnemonic,
-      });
-      if (result.status === 'failure') return result;
-      void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
-      return { status: 'success', value: undefined };
-    } catch {
-      return { status: 'failure', code: 'wallet-validation-failed' };
-    }
+    const result = await keyActions.addWalletWithBiometrics({
+      fingerprint: mnemonicData.fingerprint,
+      mnemonic: mnemonicData.mnemonic,
+    });
+    if (result.status === 'failure') return result;
+    void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
+    return { status: 'success', value: undefined };
   }, [keyActions, mnemonicData.fingerprint, mnemonicData.mnemonic, navigate]);
 
   const createBiometricWallet = useCallback(async () => {
@@ -160,7 +159,7 @@ export function SetPasswordPage({
         <Content>
           <RequestWalletAuthentication
             title="Confirm it's you"
-            caption="Confirm it's you to add this wallet. It joins your existing wallets and uses the same unlock settings."
+            caption="Confirm it's you to add this wallet. It joins your existing wallets and uses the same unlock method."
             startWithBiometrics={startWithBiometrics}
             onPasswordSubmit={onExistingWalletPasswordSubmit}
             onBiometricSubmit={onExistingWalletBiometricSubmit}
@@ -172,32 +171,26 @@ export function SetPasswordPage({
   }
 
   const validationSchema = yup.object({
-    password: hasSoftwareKeys
-      ? yup.string().required('Enter your password')
-      : yup
-          .string()
-          .required()
-          .test({
-            message: 'Weak',
-            test: debounce((value: unknown) => {
-              if (isUndefined(value)) {
-                setStrengthResult(blankPasswordValidation);
-                return false;
-              }
-              if (typeof value !== 'string') return false;
-              const result = validatePassword(value);
-              setStrengthResult(result);
-              if (!result.meetsAllStrengthRequirements) {
-                analytics.track('submit_invalid_password');
-              }
-              return result.meetsAllStrengthRequirements;
-            }, 60) as unknown as yup.TestFunction<any, any>,
-          }),
+    password: yup
+      .string()
+      .required()
+      .test({
+        message: 'Weak',
+        test: debounce((value: unknown) => {
+          if (isUndefined(value)) {
+            setStrengthResult(blankPasswordValidation);
+            return false;
+          }
+          if (typeof value !== 'string') return false;
+          const result = validatePassword(value);
+          setStrengthResult(result);
+          if (!result.meetsAllStrengthRequirements) {
+            analytics.track('submit_invalid_password');
+          }
+          return result.meetsAllStrengthRequirements;
+        }, 60) as unknown as yup.TestFunction<any, any>,
+      }),
   });
-  const title = hasSoftwareKeys ? 'Enter your Password' : 'Set a password';
-  const description = hasSoftwareKeys
-    ? 'Enter the password you set on this device.'
-    : "Your password protects your Secret Key on this device only. To access your wallet on another device, you'll need just your Secret Key.";
 
   return (
     <>
@@ -216,7 +209,12 @@ export function SetPasswordPage({
           {({ dirty, isSubmitting, isValid }) => (
             <Form>
               <TwoColumnLayout
-                leftColumn={<DescriptionColumn title={title} description={description} />}
+                leftColumn={
+                  <DescriptionColumn
+                    title={unlockMethodTitle}
+                    description={unlockMethodDescription}
+                  />
+                }
                 rightColumn={
                   <Stack
                     p="space.05"
@@ -231,7 +229,7 @@ export function SetPasswordPage({
                     <PasswordField
                       strengthResult={strengthResult}
                       isDisabled={loading}
-                      showStrength={!hasSoftwareKeys}
+                      showStrength
                     />
                     <Button
                       data-testid={OnboardingSelectors.SetPasswordBtn}
@@ -242,7 +240,7 @@ export function SetPasswordPage({
                     >
                       Continue
                     </Button>
-                    {TARGET_BROWSER === 'chromium' && (
+                    {supportsBiometricSetup && (
                       <>
                         <BasicTooltip
                           asChild
@@ -266,6 +264,10 @@ export function SetPasswordPage({
                             Use biometrics
                           </Button>
                         </BasicTooltip>
+                        <Callout variant="info">
+                          Biometrics will be your only local unlock method. If biometrics become
+                          unavailable, you'll need your Secret Key to restore your wallet.
+                        </Callout>
                       </>
                     )}
                     {biometricFailure && <Callout variant="warning">{biometricFailure}</Callout>}

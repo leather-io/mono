@@ -31,3 +31,18 @@ export async function detachVirtualAuthenticator({
   await client.send('WebAuthn.disable');
   await client.detach();
 }
+
+export async function removeVirtualAuthenticatorCredentials({
+  authenticatorId,
+  client,
+}: VirtualAuthenticator) {
+  const { credentials } = await client.send('WebAuthn.getCredentials', { authenticatorId });
+  await Promise.all(
+    credentials.map(credential =>
+      client.send('WebAuthn.removeCredential', {
+        authenticatorId,
+        credentialId: credential.credentialId,
+      })
+    )
+  );
+}

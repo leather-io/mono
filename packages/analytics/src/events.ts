@@ -119,7 +119,7 @@ export interface Events extends HistoricalEvents {
   network_edited: undefined;
   taproot_utxo_warning_dialog_displayed: undefined;
   biometric_unlock_enrollment_started: {
-    source: 'first_software_wallet' | 'settings';
+    source: 'first_software_wallet';
   };
   biometric_unlock_enrollment_completed: undefined;
   biometric_unlock_enrollment_failed: { category: BiometricUnlockFailureCategory };
@@ -127,9 +127,6 @@ export interface Events extends HistoricalEvents {
   biometric_unlock_attempt_completed: undefined;
   biometric_unlock_attempt_canceled: undefined;
   biometric_unlock_attempt_failed: { category: BiometricUnlockFailureCategory };
-  biometric_unlock_password_fallback_used: undefined;
-  biometric_unlock_disabled: undefined;
-  biometric_unlock_replaced: undefined;
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
@@ -256,9 +253,12 @@ type BiometricUnlockFailureCategory =
   | 'credential-mismatch'
   | 'invalid-config'
   | 'invalid-password'
+  | 'persistence-failed'
   | 'prf-unavailable'
+  | 'state-changed'
   | 'unavailable'
   | 'unsupported-browser'
+  | 'wallet-already-exists'
   | 'wallet-validation-failed';
 
 interface SubmitWaitlist {

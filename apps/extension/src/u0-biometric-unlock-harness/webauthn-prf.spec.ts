@@ -32,7 +32,12 @@ function createSuccessfulCredential(credentialId = new Uint8Array([1, 2, 3])) {
   };
 }
 
+beforeEach(() => {
+  vi.stubGlobal('PublicKeyCredential', class {});
+});
+
 afterEach(() => {
+  vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
 
@@ -113,6 +118,28 @@ describe(createPrfEnrollment.name, () => {
 });
 
 describe(evaluatePrfCredential.name, () => {
+  test('evaluates an alternate PRF input through the shared production authenticator', async () => {
+    const alternatePrfInput = new Uint8Array(32).fill(9);
+    const get = vi.fn().mockResolvedValue(createSuccessfulCredential());
+    vi.stubGlobal('navigator', { credentials: { get } });
+
+    const result = await evaluatePrfCredential(createConfig(), 'internal', alternatePrfInput);
+
+    expect(result.status).toBe('success');
+    const requestedPrfInput = get.mock.calls[0]?.[0]?.publicKey?.extensions?.prf?.eval?.first;
+    expect(requestedPrfInput ? bytes(requestedPrfInput) : undefined).toEqual(alternatePrfInput);
+  });
+
+  test('rejects an invalid alternate PRF input before starting a ceremony', async () => {
+    const get = vi.fn();
+    vi.stubGlobal('navigator', { credentials: { get } });
+
+    const result = await evaluatePrfCredential(createConfig(), 'internal', new Uint8Array(31));
+
+    expect(result).toEqual({ status: 'failure', code: 'invalid-config' });
+    expect(get).not.toHaveBeenCalled();
+  });
+
   test('rejects a returned credential mismatch before reading extension results', async () => {
     const getClientExtensionResults = vi.fn();
     const toJSON = vi.fn();

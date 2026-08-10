@@ -31,11 +31,10 @@ import { identifyUser } from '@shared/utils/analytics';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
 import {
-  type BiometricSoftwareWalletPreparation,
-  type PasswordAuthenticationTransition,
-  type PlatformUnlockChange,
+  WalletAuthenticationError,
   authenticateWithPassword,
-} from '@app/common/wallet-authentication/use-wallet-authentication';
+  prepareBiometricSoftwareWallet,
+} from '@app/common/wallet-authentication/wallet-authentication';
 import { AppThunk, persistor } from '@app/store';
 import { initializeWalletSessionWithSoftwareKeys } from '@app/store/session-restore';
 import { hydrateSlicesFromStorage } from '@app/store/utils/storage-sync';
@@ -48,15 +47,16 @@ import { activeSlice, walletKeyGenerated } from '../active/active.slice';
 import { selectStacksChain } from '../chains/stx-chain.selectors';
 import { stxChainSlice } from '../chains/stx-chain.slice';
 import * as inMemoryStore from '../in-memory-key/in-memory-storage';
+import { withWalletWriteLock } from '../wallets/wallet-write-lock';
 import { selectAllWallets } from '../wallets/wallet.selectors';
 import {
   type AuthoritativeWalletTransactionState,
   type SoftwareKeyStateSnapshot,
   type WalletTransactionState,
   createSoftwareKeyState,
+  createSoftwareKeyStateSnapshot,
   readAuthoritativeSoftwareKeyState,
   readAuthoritativeWalletTransactionState,
-  readPersistedSoftwareKeyState,
   readPersistedWalletTransactionState,
 } from './software-key-state';
 import { selectWalletAuthenticationCapabilities } from './software-key.selectors';
@@ -78,17 +78,24 @@ interface UnlockWalletWithEncryptionKeyArgs {
   expectedPlatformUnlock?: PlatformUnlockConfig;
 }
 
-const walletAuthenticationWriteLockName = 'leather:wallet-authentication-write';
-
 const nextAccountProbeInFlight = new Set<string>();
 const recursiveDiscoveryInFlight = new Set<string>();
 const accountActivityRequestTimeoutMs = secondsInMs(5);
 
-async function withWalletAuthenticationWriteLock<T>(operation: () => Promise<T>): Promise<T> {
-  if (typeof navigator !== 'undefined' && 'locks' in navigator) {
-    return navigator.locks.request(walletAuthenticationWriteLockName, operation);
+async function getAuthoritativeSoftwareKeyState() {
+  try {
+    return await readAuthoritativeSoftwareKeyState();
+  } catch {
+    throw new WalletAuthenticationError('invalid-config');
   }
-  return operation();
+}
+
+async function getAuthoritativeWalletTransactionState() {
+  try {
+    return await readAuthoritativeWalletTransactionState();
+  } catch {
+    throw new WalletAuthenticationError('invalid-config');
+  }
 }
 
 function getSnapshotCapabilities(snapshot: SoftwareKeyStateSnapshot) {
@@ -135,14 +142,6 @@ function dispatchWalletTransaction(dispatch: Parameters<AppThunk>[0], actions: U
   for (const action of actions) dispatch(action);
 }
 
-async function readPersistedSoftwareKeyStateAfterWrite() {
-  const persisted = await readPersistedSoftwareKeyState();
-  if (persisted.status !== 'valid') {
-    throw new Error('Persisted software wallet authentication state is unavailable');
-  }
-  return persisted.value;
-}
-
 async function readPersistedWalletTransactionStateAfterWrite() {
   const persisted = await readPersistedWalletTransactionState();
   if (persisted.status !== 'valid') {
@@ -151,11 +150,93 @@ async function readPersistedWalletTransactionStateAfterWrite() {
   return persisted.value;
 }
 
-function walletTransactionStatesMatch(
-  before: WalletTransactionState,
-  after: WalletTransactionState
+function selectAccountsForFingerprint(state: WalletTransactionState, fingerprint: string) {
+  const prefix = `${fingerprint}/`;
+  return state.accounts.ids
+    .filter(id => String(id).startsWith(prefix))
+    .map(id => state.accounts.entities[id]);
+}
+
+function walletTransactionPostconditionMatches({
+  affectedFingerprints,
+  expected,
+  persisted,
+}: {
+  affectedFingerprints: string[];
+  expected: WalletTransactionState;
+  persisted: AuthoritativeWalletTransactionState;
+}) {
+  if (
+    !softwareKeyStateSnapshotsMatch(
+      createSoftwareKeyStateSnapshot(expected.softwareKeys),
+      persisted.softwareKeys
+    ) ||
+    !isDeepEqual(expected.active, persisted.state.active) ||
+    !isDeepEqual(expected.keychains, persisted.state.keychains)
+  ) {
+    return false;
+  }
+  return affectedFingerprints.every(
+    fingerprint =>
+      expected.wallets.ids.includes(fingerprint) ===
+        persisted.state.wallets.ids.includes(fingerprint) &&
+      isDeepEqual(
+        expected.wallets.entities[fingerprint],
+        persisted.state.wallets.entities[fingerprint]
+      ) &&
+      isDeepEqual(expected.chains.stx[fingerprint], persisted.state.chains.stx[fingerprint]) &&
+      isDeepEqual(
+        selectAccountsForFingerprint(expected, fingerprint),
+        selectAccountsForFingerprint(persisted.state, fingerprint)
+      )
+  );
+}
+
+async function resynchronizeWalletTransactionState(
+  dispatch: Parameters<AppThunk>[0],
+  fallback: AuthoritativeWalletTransactionState
 ) {
-  return isDeepEqual(before, after);
+  try {
+    adoptAuthoritativeWalletTransactionState(
+      dispatch,
+      await readAuthoritativeWalletTransactionState()
+    );
+  } catch {
+    adoptAuthoritativeWalletTransactionState(dispatch, fallback);
+  }
+}
+
+async function persistWalletTransaction({
+  actions,
+  affectedFingerprints,
+  dispatch,
+  source,
+}: {
+  actions: UnknownAction[];
+  affectedFingerprints: string[];
+  dispatch: Parameters<AppThunk>[0];
+  source: AuthoritativeWalletTransactionState;
+}) {
+  const expected = reduceWalletTransactionState(source.state, actions);
+  dispatchWalletTransaction(dispatch, actions);
+  try {
+    await persistor.flush();
+  } catch {
+    await resynchronizeWalletTransactionState(dispatch, source);
+    throw new WalletAuthenticationError('persistence-failed');
+  }
+  try {
+    const persisted = await readPersistedWalletTransactionStateAfterWrite();
+    if (!walletTransactionPostconditionMatches({ affectedFingerprints, expected, persisted })) {
+      adoptAuthoritativeWalletTransactionState(dispatch, persisted);
+      throw new WalletAuthenticationError('persistence-failed');
+    }
+    return persisted;
+  } catch (error) {
+    if (error instanceof WalletAuthenticationError) throw error;
+    await resynchronizeWalletTransactionState(dispatch, source);
+    throw new WalletAuthenticationError('persistence-failed');
+  }
 }
 
 function validHighestAccountIndex(index: number | undefined) {
@@ -244,7 +325,7 @@ function startRecursiveAccountDiscovery({
   fingerprint,
   fromAccountIndex,
 }: {
-  dispatch(action: ReturnType<typeof stxChainSlice.actions.restoreAccountIndex>): void;
+  dispatch: Parameters<AppThunk>[0];
   doesAddressHaveActivityFn: ReturnType<typeof createAccountActivityChecker>;
   fingerprint: string;
   fromAccountIndex: number;
@@ -255,9 +336,25 @@ function startRecursiveAccountDiscovery({
   logger.info('Initiating recursive account activity lookup');
   const start = performance.now();
 
-  function persistDiscoveredAccountIndex(accountIndex: number) {
-    dispatch(stxChainSlice.actions.restoreAccountIndex({ fingerprint, accountIndex }));
-    void persistor.flush();
+  async function persistDiscoveredAccountIndex(accountIndex: number) {
+    await withWalletWriteLock(async () => {
+      const authoritative = await getAuthoritativeWalletTransactionState();
+      if (!authoritative.state.wallets.entities[fingerprint]) return;
+      const currentIndex = validHighestAccountIndex(
+        authoritative.state.chains.stx[fingerprint]?.highestAccountIndex
+      );
+      if (accountIndex <= currentIndex) return;
+      adoptAuthoritativeWalletTransactionState(dispatch, authoritative);
+      dispatch(stxChainSlice.actions.restoreAccountIndex({ fingerprint, accountIndex }));
+      await persistor.flush();
+      const persisted = await getAuthoritativeWalletTransactionState();
+      const persistedIndex = validHighestAccountIndex(
+        persisted.state.chains.stx[fingerprint]?.highestAccountIndex
+      );
+      if (persistedIndex >= accountIndex) return;
+      adoptAuthoritativeWalletTransactionState(dispatch, persisted);
+      throw new WalletAuthenticationError('persistence-failed');
+    });
   }
 
   void recurseAccountsForActivity({
@@ -332,18 +429,20 @@ function setWalletEncryptionPassword(
   const { password, mnemonic, fingerprint, leatherApiClient, hiroClient, bnsClient } = args;
 
   return async dispatch => {
-    await withWalletAuthenticationWriteLock(async () => {
-      const authoritativeWallet = await readAuthoritativeWalletTransactionState();
+    await withWalletWriteLock(async () => {
+      const authoritativeWallet = await getAuthoritativeWalletTransactionState();
       const authoritative = authoritativeWallet.softwareKeys;
       const capabilities = getSnapshotCapabilities(authoritative);
       const hasSoftwareKeys = authoritative.keys.length > 0;
       const existingSalt = authoritative.salt;
+      if (!capabilities.valid || (hasSoftwareKeys && (!capabilities.password || !existingSalt))) {
+        throw new WalletAuthenticationError('invalid-config');
+      }
       if (
-        !capabilities.valid ||
         authoritative.keys.some(key => key.id === fingerprint) ||
-        (hasSoftwareKeys && (!capabilities.password || !existingSalt))
+        authoritativeWallet.state.wallets.entities[fingerprint]
       ) {
-        throw new Error("Can't authenticate this wallet with a password");
+        throw new WalletAuthenticationError('wallet-already-exists');
       }
       const existingAuthentication =
         hasSoftwareKeys && existingSalt
@@ -354,7 +453,7 @@ function setWalletEncryptionPassword(
             })
           : undefined;
       if (existingAuthentication?.status === 'failure') {
-        throw new Error("The password doesn't match");
+        throw new WalletAuthenticationError(existingAuthentication.code);
       }
       const existingEncryptionKey =
         existingAuthentication?.status === 'success' ? existingAuthentication.value : undefined;
@@ -365,21 +464,32 @@ function setWalletEncryptionPassword(
         existingEncryptionKey,
         existingSalt,
       });
-      const latestWallet = await readAuthoritativeWalletTransactionState();
+      const latestWallet = await getAuthoritativeWalletTransactionState();
       const latest = latestWallet.softwareKeys;
       if (!softwareKeyStateSnapshotsMatch(authoritative, latest)) {
-        throw new Error('Software wallet state changed during authentication');
+        throw new WalletAuthenticationError('state-changed');
       }
-      if (hasSoftwareKeys) await decryptAllSoftwareKeys(latest.keys, encryptionKey);
+      if (latestWallet.state.wallets.entities[fingerprint]) {
+        throw new WalletAuthenticationError('wallet-already-exists');
+      }
+      if (hasSoftwareKeys) {
+        try {
+          await decryptAllSoftwareKeys(latest.keys, encryptionKey);
+        } catch {
+          throw new WalletAuthenticationError('wallet-validation-failed');
+        }
+      }
       adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
       const newKey: SoftwareKeyConfig = {
         type: 'software',
         id: fingerprint,
         encryptedSecretKey,
       };
+      // Single wallet key slice structure
       const softwareKeyAction = hasSoftwareKeys
         ? keySlice.actions.addNewWallet(newKey)
         : keySlice.actions.createSoftwareWalletComplete({ salt, key: newKey });
+      // Multi-wallet structure
       const addWalletAction = userAddsWallet({
         wallet: {
           createdOn: new Date().toISOString(),
@@ -394,34 +504,12 @@ function setWalletEncryptionPassword(
         softwareKeyAction,
         keyGeneratedAction,
       ];
-      const expectedTransaction = reduceWalletTransactionState(
-        latestWallet.state,
-        transactionActions
-      );
-
-      // Multi-wallet structure
-      dispatch(addWalletAction);
-
-      // Single wallet key slice structure
-      dispatch(softwareKeyAction);
-      dispatch(keyGeneratedAction);
-
-      try {
-        await persistor.flush();
-      } catch (error) {
-        adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
-        try {
-          await persistor.flush();
-        } catch (rollbackError) {
-          void rollbackError;
-        }
-        throw error;
-      }
-      const persisted = await readPersistedWalletTransactionStateAfterWrite();
-      if (!walletTransactionStatesMatch(expectedTransaction, persisted.state)) {
-        adoptAuthoritativeWalletTransactionState(dispatch, persisted);
-        throw new Error('Software wallet did not persist under the authenticated key');
-      }
+      const persisted = await persistWalletTransaction({
+        actions: transactionActions,
+        affectedFingerprints: [fingerprint],
+        dispatch,
+        source: latestWallet,
+      });
       const decryptedSoftwareKeys = await decryptAllSoftwareKeys(
         persisted.softwareKeys.keys,
         encryptionKey
@@ -453,31 +541,46 @@ function createBiometricSoftwareWallet(
   args: {
     fingerprint: string;
     mnemonic: string;
-    preparation: BiometricSoftwareWalletPreparation;
   } & AccountDiscoveryClients
 ): AppThunk {
-  const { fingerprint, mnemonic, preparation, leatherApiClient, hiroClient, bnsClient } = args;
+  const { fingerprint, mnemonic, leatherApiClient, hiroClient, bnsClient } = args;
   return async dispatch => {
-    await withWalletAuthenticationWriteLock(async () => {
-      const authoritativeWallet = await readAuthoritativeWalletTransactionState();
+    await withWalletWriteLock(async () => {
+      const authoritativeWallet = await getAuthoritativeWalletTransactionState();
       const authoritative = authoritativeWallet.softwareKeys;
       const capabilities = getSnapshotCapabilities(authoritative);
-      if (
-        authoritative.keys.length > 0 ||
-        !capabilities.valid ||
-        capabilities.biometrics ||
-        capabilities.password ||
-        preparation.key.id !== fingerprint
-      ) {
-        throw new Error('Software wallet state changed during biometric setup');
+      if (!capabilities.valid) {
+        throw new WalletAuthenticationError('invalid-config');
       }
-      adoptAuthoritativeWalletTransactionState(dispatch, authoritativeWallet);
+      if (authoritative.keys.length > 0 || capabilities.biometrics || capabilities.password) {
+        throw new WalletAuthenticationError('state-changed');
+      }
       if (authoritativeWallet.state.wallets.entities[fingerprint]) {
-        throw new Error('A wallet with this fingerprint already exists');
+        throw new WalletAuthenticationError('wallet-already-exists');
       }
-      const decrypted = await decryptAllSoftwareKeys([preparation.key], preparation.encryptionKey);
+      const preparation = await prepareBiometricSoftwareWallet({ fingerprint, mnemonic });
+      if (preparation.status === 'failure') {
+        throw new WalletAuthenticationError(preparation.code);
+      }
+      if (preparation.value.key.id !== fingerprint) {
+        throw new WalletAuthenticationError('wallet-validation-failed');
+      }
+      const latestWallet = await getAuthoritativeWalletTransactionState();
+      if (!softwareKeyStateSnapshotsMatch(authoritative, latestWallet.softwareKeys)) {
+        throw new WalletAuthenticationError('state-changed');
+      }
+      if (latestWallet.state.wallets.entities[fingerprint]) {
+        throw new WalletAuthenticationError('wallet-already-exists');
+      }
+      adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
+      const decrypted = await decryptAllSoftwareKeys(
+        [preparation.value.key],
+        preparation.value.encryptionKey
+      ).catch(() => {
+        throw new WalletAuthenticationError('wallet-validation-failed');
+      });
       if (decrypted[0]?.fingerprint !== fingerprint || decrypted[0].secretKey !== mnemonic) {
-        throw new Error('Biometric wallet preparation is invalid');
+        throw new WalletAuthenticationError('wallet-validation-failed');
       }
 
       const transactionActions: UnknownAction[] = [
@@ -490,51 +593,26 @@ function createBiometricSoftwareWallet(
           accountKeychains: [],
         }),
         keySlice.actions.createBiometricSoftwareWalletComplete({
-          key: preparation.key,
-          platformUnlock: preparation.platformUnlock,
+          key: preparation.value.key,
+          platformUnlock: preparation.value.platformUnlock,
         }),
         walletKeyGenerated(fingerprint),
       ];
-      const expectedTransaction = reduceWalletTransactionState(
-        authoritativeWallet.state,
-        transactionActions
-      );
-      dispatchWalletTransaction(dispatch, transactionActions);
-
-      try {
-        await persistor.flush();
-      } catch (error) {
-        adoptAuthoritativeWalletTransactionState(dispatch, authoritativeWallet);
-        try {
-          await persistor.flush();
-        } catch (rollbackError) {
-          void rollbackError;
-        }
-        throw error;
-      }
-      const persisted = await readPersistedWalletTransactionStateAfterWrite();
-      if (!walletTransactionStatesMatch(expectedTransaction, persisted.state)) {
-        adoptAuthoritativeWalletTransactionState(dispatch, persisted);
-        throw new Error('Biometric wallet setup did not persist');
-      }
+      const persisted = await persistWalletTransaction({
+        actions: transactionActions,
+        affectedFingerprints: [fingerprint],
+        dispatch,
+        source: latestWallet,
+      });
       const persistedSoftwareKeys = persisted.softwareKeys;
-      const persistedCapabilities = getSnapshotCapabilities(persistedSoftwareKeys);
-      if (
-        persistedCapabilities.authenticationMode !== 'biometric-only' ||
-        !softwareKeySnapshotsMatch([preparation.key], persistedSoftwareKeys.keys) ||
-        !platformUnlockConfigsEqual(
-          preparation.platformUnlock,
-          persistedSoftwareKeys.platformUnlock
-        )
-      ) {
-        adoptAuthoritativeWalletTransactionState(dispatch, persisted);
-        throw new Error('Biometric wallet setup did not persist');
-      }
       const persistedDecrypted = await decryptAllSoftwareKeys(
         persistedSoftwareKeys.keys,
-        preparation.encryptionKey
+        preparation.value.encryptionKey
       );
-      await initializeWalletSessionWithSoftwareKeys(preparation.encryptionKey, persistedDecrypted);
+      await initializeWalletSessionWithSoftwareKeys(
+        preparation.value.encryptionKey,
+        persistedDecrypted
+      );
       void broadcastWalletListChanged({});
       startRecursiveAccountDiscovery({
         dispatch,
@@ -557,28 +635,19 @@ function softwareKeySnapshotsMatch(before: SoftwareKeyConfig[], after: SoftwareK
   return before.every(key => afterById.get(key.id) === key.encryptedSecretKey);
 }
 
-function platformUnlockConfigsMatch(
-  expected: PlatformUnlockConfig | undefined,
-  actual: PlatformUnlockConfig | undefined
-) {
-  if (!expected) return true;
-  if (!actual) return false;
-  return (
-    expected.credentialId === actual.credentialId &&
-    expected.iv === actual.iv &&
-    expected.prfInput === actual.prfInput &&
-    expected.registrationTag === actual.registrationTag &&
-    expected.version === actual.version &&
-    expected.wrappedEncryptionKey === actual.wrappedEncryptionKey
-  );
-}
-
 function platformUnlockConfigsEqual(
   left: PlatformUnlockConfig | undefined,
   right: PlatformUnlockConfig | undefined
 ) {
   if (!left || !right) return left === right;
-  return platformUnlockConfigsMatch(left, right);
+  return (
+    left.credentialId === right.credentialId &&
+    left.iv === right.iv &&
+    left.prfInput === right.prfInput &&
+    left.registrationTag === right.registrationTag &&
+    left.version === right.version &&
+    left.wrappedEncryptionKey === right.wrappedEncryptionKey
+  );
 }
 
 function softwareKeyStateSnapshotsMatch(
@@ -608,25 +677,31 @@ function unlockWalletWithEncryptionKey({
   expectedPlatformUnlock,
 }: UnlockWalletWithEncryptionKeyArgs): AppThunk {
   return async dispatch => {
-    await withWalletAuthenticationWriteLock(async () => {
-      const authoritative = await readAuthoritativeSoftwareKeyState();
+    await withWalletWriteLock(async () => {
+      const authoritative = await getAuthoritativeSoftwareKeyState();
       const capabilities = getSnapshotCapabilities(authoritative);
       if (
         !capabilities.valid ||
         authoritative.keys.length === 0 ||
-        !platformUnlockConfigsMatch(expectedPlatformUnlock, authoritative.platformUnlock)
+        !platformUnlockConfigsEqual(expectedPlatformUnlock, authoritative.platformUnlock)
       ) {
-        throw new Error('Platform authentication state changed during authentication');
+        throw new WalletAuthenticationError('invalid-config');
       }
       adoptAuthoritativeSoftwareKeyState(dispatch, authoritative);
-      const decryptedSoftwareKeys = await decryptAllSoftwareKeys(authoritative.keys, encryptionKey);
-      const latest = await readAuthoritativeSoftwareKeyState();
+      const decryptedSoftwareKeys = await decryptAllSoftwareKeys(
+        authoritative.keys,
+        encryptionKey
+      ).catch(() => {
+        const code = capabilities.password ? 'invalid-password' : 'wallet-validation-failed';
+        throw new WalletAuthenticationError(code);
+      });
+      const latest = await getAuthoritativeSoftwareKeyState();
       if (
         !softwareKeyStateSnapshotsMatch(authoritative, latest) ||
-        !platformUnlockConfigsMatch(expectedPlatformUnlock, latest.platformUnlock)
+        !platformUnlockConfigsEqual(expectedPlatformUnlock, latest.platformUnlock)
       ) {
         adoptAuthoritativeSoftwareKeyState(dispatch, latest);
-        throw new Error('Software wallet state changed during authentication');
+        throw new WalletAuthenticationError('state-changed');
       }
       await initializeWalletSessionWithSoftwareKeys(encryptionKey, decryptedSoftwareKeys);
       identifyAuthenticatedWallet(decryptedSoftwareKeys);
@@ -636,10 +711,10 @@ function unlockWalletWithEncryptionKey({
 
 function unlockWalletAction(password: string): AppThunk {
   return async (dispatch, getState) => {
-    const authoritative = await readAuthoritativeSoftwareKeyState();
+    const authoritative = await getAuthoritativeSoftwareKeyState();
     const capabilities = getSnapshotCapabilities(authoritative);
     if (!capabilities.valid || !capabilities.password || authoritative.keys.length === 0) {
-      throw new Error("Can't authenticate this wallet with a password");
+      throw new WalletAuthenticationError('invalid-config');
     }
     adoptAuthoritativeSoftwareKeyState(dispatch, authoritative);
     const salt = authoritative.salt;
@@ -649,12 +724,12 @@ function unlockWalletAction(password: string): AppThunk {
       return;
     }
 
-    await withWalletAuthenticationWriteLock(async () => {
-      const latestWallet = await readAuthoritativeWalletTransactionState();
+    await withWalletWriteLock(async () => {
+      const latestWallet = await getAuthoritativeWalletTransactionState();
       const latest = latestWallet.softwareKeys;
       if (!softwareKeyStateSnapshotsMatch(authoritative, latest)) {
         adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
-        throw new Error('Software wallet state changed during authentication');
+        throw new WalletAuthenticationError('state-changed');
       }
       adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
       const softwareKeys = latest.keys;
@@ -666,9 +741,11 @@ function unlockWalletAction(password: string): AppThunk {
             salt,
           })
         )
-      );
+      ).catch(() => {
+        throw new WalletAuthenticationError('invalid-password');
+      });
       const firstDecryptedResult = decryptedResults[0];
-      if (!firstDecryptedResult) throw new Error('Software wallet state is empty');
+      if (!firstDecryptedResult) throw new WalletAuthenticationError('invalid-config');
 
       function requiresFingerprintMigration() {
         return softwareKeys.length === 1 && softwareKeys[0].id === assumedZeroFingerprint;
@@ -695,9 +772,8 @@ function unlockWalletAction(password: string): AppThunk {
 
       // Pre-Argon2 / vault-migrated wallets have no top-level salt, so decryptMnemonic
       // took its legacy path and re-encrypted the key with a freshly generated Argon2
-      // salt. Persist that salt and re-encrypted key here, otherwise selectWalletSalt
-      // stays undefined and the add-wallet password check (useCheckPassword) can never
-      // pass for these users.
+      // salt. Persist that salt and re-encrypted key here so future password
+      // authentication uses the durable Argon2 parameters.
       const reEncrypted = firstDecryptedResult;
       transactionActions.push(
         keySlice.actions.softwareKeyReEncrypted({
@@ -709,132 +785,14 @@ function unlockWalletAction(password: string): AppThunk {
           },
         })
       );
-      const expectedTransaction = reduceWalletTransactionState(
-        latestWallet.state,
-        transactionActions
-      );
-      dispatchWalletTransaction(dispatch, transactionActions);
-      try {
-        await persistor.flush();
-      } catch (error) {
-        adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
-        try {
-          await persistor.flush();
-        } catch (rollbackError) {
-          void rollbackError;
-        }
-        throw error;
-      }
-      const persisted = await readPersistedWalletTransactionStateAfterWrite();
-      if (!isDeepEqual(expectedTransaction, persisted.state)) {
-        adoptAuthoritativeWalletTransactionState(dispatch, persisted);
-        throw new Error('Software wallet migration did not persist');
-      }
+      await persistWalletTransaction({
+        actions: transactionActions,
+        affectedFingerprints: [assumedZeroFingerprint, reEncrypted.fingerprint],
+        dispatch,
+        source: latestWallet,
+      });
       await initializeWalletSessionWithSoftwareKeys(reEncrypted.encryptionKey, decryptedResults);
       identifyAuthenticatedWallet(decryptedResults);
-    });
-  };
-}
-
-function addSoftwareWalletWithPassword(
-  args: {
-    fingerprint: string;
-    mnemonic: string;
-    password: string;
-  } & AccountDiscoveryClients
-): AppThunk {
-  const { fingerprint, mnemonic, password, leatherApiClient, hiroClient, bnsClient } = args;
-
-  return async dispatch => {
-    await withWalletAuthenticationWriteLock(async () => {
-      const authoritativeWallet = await readAuthoritativeWalletTransactionState();
-      const authoritative = authoritativeWallet.softwareKeys;
-      const capabilities = getSnapshotCapabilities(authoritative);
-      adoptAuthoritativeWalletTransactionState(dispatch, authoritativeWallet);
-      if (
-        !capabilities.password ||
-        typeof authoritative.salt !== 'string' ||
-        authoritative.keys.some(key => key.id === fingerprint) ||
-        !!authoritativeWallet.state.wallets.entities[fingerprint]
-      ) {
-        throw new Error("Can't authenticate this wallet with a password");
-      }
-      const authentication = await authenticateWithPassword({
-        password,
-        salt: authoritative.salt,
-        softwareKeys: authoritative.keys,
-      });
-      if (authentication.status === 'failure') {
-        throw new Error("The password doesn't match");
-      }
-      const { encryptedSecretKey } = await encryptMnemonicWithEncryptionKey({
-        encryptionKey: authentication.value,
-        secretKey: mnemonic,
-      });
-      const newKey: SoftwareKeyConfig = {
-        type: 'software',
-        id: fingerprint,
-        encryptedSecretKey,
-      };
-      const latestWallet = await readAuthoritativeWalletTransactionState();
-      const latest = latestWallet.softwareKeys;
-      if (!softwareKeyStateSnapshotsMatch(authoritative, latest)) {
-        adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
-        throw new Error('Software wallet state changed during authentication');
-      }
-      adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
-
-      const transactionActions: UnknownAction[] = [
-        userAddsWallet({
-          wallet: {
-            createdOn: new Date().toISOString(),
-            fingerprint,
-            type: 'software',
-          },
-          accountKeychains: [],
-        }),
-        keySlice.actions.addNewWallet(newKey),
-        walletKeyGenerated(fingerprint),
-      ];
-      const expectedTransaction = reduceWalletTransactionState(
-        latestWallet.state,
-        transactionActions
-      );
-      dispatchWalletTransaction(dispatch, transactionActions);
-
-      try {
-        await persistor.flush();
-      } catch (error) {
-        adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
-        try {
-          await persistor.flush();
-        } catch (rollbackError) {
-          void rollbackError;
-        }
-        throw error;
-      }
-      const persisted = await readPersistedWalletTransactionStateAfterWrite();
-      if (!walletTransactionStatesMatch(expectedTransaction, persisted.state)) {
-        adoptAuthoritativeWalletTransactionState(dispatch, persisted);
-        throw new Error('Software wallet did not persist under the authenticated key');
-      }
-      const decryptedSoftwareKeys = await decryptAllSoftwareKeys(
-        persisted.softwareKeys.keys,
-        authentication.value
-      );
-      await initializeWalletSessionWithSoftwareKeys(authentication.value, decryptedSoftwareKeys);
-      void broadcastWalletListChanged({});
-      startRecursiveAccountDiscovery({
-        dispatch,
-        doesAddressHaveActivityFn: createAccountActivityChecker({
-          bnsClient,
-          hiroClient,
-          leatherApiClient,
-          mnemonic,
-        }),
-        fingerprint,
-        fromAccountIndex: 0,
-      });
     });
   };
 }
@@ -842,7 +800,7 @@ function addSoftwareWalletWithPassword(
 function addSoftwareWalletWithEncryptionKey(
   args: {
     encryptionKey: string;
-    expectedPlatformUnlock?: PlatformUnlockConfig;
+    expectedPlatformUnlock: PlatformUnlockConfig;
     fingerprint: string;
     mnemonic: string;
   } & AccountDiscoveryClients
@@ -858,21 +816,28 @@ function addSoftwareWalletWithEncryptionKey(
   } = args;
 
   return async dispatch => {
-    await withWalletAuthenticationWriteLock(async () => {
-      const authoritativeWallet = await readAuthoritativeWalletTransactionState();
+    await withWalletWriteLock(async () => {
+      const authoritativeWallet = await getAuthoritativeWalletTransactionState();
       const authoritative = authoritativeWallet.softwareKeys;
       const capabilities = getSnapshotCapabilities(authoritative);
       adoptAuthoritativeWalletTransactionState(dispatch, authoritativeWallet);
       if (
         !capabilities.valid ||
+        capabilities.authenticationMode !== 'biometric-only' ||
         authoritative.keys.length === 0 ||
-        authoritative.keys.some(key => key.id === fingerprint) ||
-        !!authoritativeWallet.state.wallets.entities[fingerprint] ||
-        !platformUnlockConfigsMatch(expectedPlatformUnlock, authoritative.platformUnlock)
+        !platformUnlockConfigsEqual(expectedPlatformUnlock, authoritative.platformUnlock)
       ) {
-        throw new Error('Invalid wallet authentication state');
+        throw new WalletAuthenticationError('invalid-config');
       }
-      await decryptAllSoftwareKeys(authoritative.keys, encryptionKey);
+      if (
+        authoritative.keys.some(key => key.id === fingerprint) ||
+        authoritativeWallet.state.wallets.entities[fingerprint]
+      ) {
+        throw new WalletAuthenticationError('wallet-already-exists');
+      }
+      await decryptAllSoftwareKeys(authoritative.keys, encryptionKey).catch(() => {
+        throw new WalletAuthenticationError('wallet-validation-failed');
+      });
       const { encryptedSecretKey } = await encryptMnemonicWithEncryptionKey({
         encryptionKey,
         secretKey: mnemonic,
@@ -882,11 +847,14 @@ function addSoftwareWalletWithEncryptionKey(
         id: fingerprint,
         encryptedSecretKey,
       };
-      const latestWallet = await readAuthoritativeWalletTransactionState();
+      const latestWallet = await getAuthoritativeWalletTransactionState();
       const latest = latestWallet.softwareKeys;
       if (!softwareKeyStateSnapshotsMatch(authoritative, latest)) {
         adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
-        throw new Error('Software wallet state changed during authentication');
+        throw new WalletAuthenticationError('state-changed');
+      }
+      if (latestWallet.state.wallets.entities[fingerprint]) {
+        throw new WalletAuthenticationError('wallet-already-exists');
       }
       adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
 
@@ -902,28 +870,12 @@ function addSoftwareWalletWithEncryptionKey(
         keySlice.actions.addNewWallet(newKey),
         walletKeyGenerated(fingerprint),
       ];
-      const expectedTransaction = reduceWalletTransactionState(
-        latestWallet.state,
-        transactionActions
-      );
-      dispatchWalletTransaction(dispatch, transactionActions);
-
-      try {
-        await persistor.flush();
-      } catch (error) {
-        adoptAuthoritativeWalletTransactionState(dispatch, latestWallet);
-        try {
-          await persistor.flush();
-        } catch (rollbackError) {
-          void rollbackError;
-        }
-        throw error;
-      }
-      const persisted = await readPersistedWalletTransactionStateAfterWrite();
-      if (!walletTransactionStatesMatch(expectedTransaction, persisted.state)) {
-        adoptAuthoritativeWalletTransactionState(dispatch, persisted);
-        throw new Error('Software wallet did not persist under the authenticated key');
-      }
+      const persisted = await persistWalletTransaction({
+        actions: transactionActions,
+        affectedFingerprints: [fingerprint],
+        dispatch,
+        source: latestWallet,
+      });
       const decryptedSoftwareKeys = await decryptAllSoftwareKeys(
         persisted.softwareKeys.keys,
         encryptionKey
@@ -945,165 +897,10 @@ function addSoftwareWalletWithEncryptionKey(
   };
 }
 
-function commitBiometricOnlyToPasswordTransition(
-  transition: PasswordAuthenticationTransition
-): AppThunk {
-  return async dispatch => {
-    await withWalletAuthenticationWriteLock(async () => {
-      const authoritative = await readAuthoritativeSoftwareKeyState();
-      const capabilities = getSnapshotCapabilities(authoritative);
-      if (
-        capabilities.authenticationMode !== 'biometric-only' ||
-        !platformUnlockConfigsMatch(
-          transition.sourcePlatformUnlock,
-          authoritative.platformUnlock
-        ) ||
-        !softwareKeySnapshotsMatch(transition.sourceKeys, authoritative.keys)
-      ) {
-        throw new Error('Software wallet state changed during authentication');
-      }
-      adoptAuthoritativeSoftwareKeyState(dispatch, authoritative);
-
-      dispatch(
-        keySlice.actions.biometricOnlyToPasswordTransitionComplete({
-          keys: transition.keys,
-          platformUnlock: transition.platformUnlock,
-          salt: transition.salt,
-        })
-      );
-      try {
-        await persistor.flush();
-      } catch (error) {
-        dispatch(
-          keySlice.actions.biometricOnlyToPasswordTransitionRolledBack({
-            keys: transition.sourceKeys,
-            platformUnlock: transition.sourcePlatformUnlock,
-          })
-        );
-        try {
-          await persistor.flush();
-        } catch (rollbackError) {
-          void rollbackError;
-        }
-        throw error;
-      }
-
-      const persisted = await readPersistedSoftwareKeyStateAfterWrite();
-      const persistedCapabilities = getSnapshotCapabilities(persisted);
-      if (
-        persistedCapabilities.authenticationMode !== 'password' ||
-        persisted.salt !== transition.salt ||
-        !softwareKeySnapshotsMatch(transition.keys, persisted.keys) ||
-        !platformUnlockConfigsMatch(transition.platformUnlock, persisted.platformUnlock)
-      ) {
-        adoptAuthoritativeSoftwareKeyState(dispatch, persisted);
-        throw new Error('Password authentication transition did not persist');
-      }
-      const decryptedSoftwareKeys = await decryptAllSoftwareKeys(
-        persisted.keys,
-        transition.encryptionKey
-      );
-      await initializeWalletSessionWithSoftwareKeys(
-        transition.encryptionKey,
-        decryptedSoftwareKeys
-      );
-    });
-  };
-}
-
-function commitPlatformUnlockChange(change: PlatformUnlockChange): AppThunk {
-  return async dispatch => {
-    await withWalletAuthenticationWriteLock(async () => {
-      const authoritative = await readAuthoritativeSoftwareKeyState();
-      const source: SoftwareKeyStateSnapshot = {
-        authenticationMode: change.sourceAuthenticationMode,
-        keys: change.sourceKeys,
-        platformUnlock: change.sourcePlatformUnlock,
-        salt: change.sourceSalt,
-      };
-      if (!softwareKeyStateSnapshotsMatch(source, authoritative)) {
-        throw new Error('Software wallet state changed during authentication');
-      }
-      adoptAuthoritativeSoftwareKeyState(dispatch, authoritative);
-
-      dispatch(keySlice.actions.platformUnlockConfigSaved(change.platformUnlock));
-      try {
-        await persistor.flush();
-      } catch (error) {
-        const sourceAuthenticationMode =
-          change.sourceAuthenticationMode === 'password' ||
-          change.sourceAuthenticationMode === 'biometric-only'
-            ? change.sourceAuthenticationMode
-            : undefined;
-        dispatch(
-          keySlice.actions.platformUnlockChangeRolledBack({
-            authenticationMode: sourceAuthenticationMode,
-            platformUnlock: change.sourcePlatformUnlock,
-          })
-        );
-        try {
-          await persistor.flush();
-        } catch (rollbackError) {
-          void rollbackError;
-        }
-        throw error;
-      }
-
-      const persisted = await readPersistedSoftwareKeyStateAfterWrite();
-      const expected = { ...authoritative, platformUnlock: change.platformUnlock };
-      if (!softwareKeyStateSnapshotsMatch(expected, persisted)) {
-        adoptAuthoritativeSoftwareKeyState(dispatch, persisted);
-        throw new Error('Biometric unlock configuration did not persist');
-      }
-    });
-  };
-}
-
-function disablePlatformUnlock(): AppThunk {
-  return async dispatch => {
-    await withWalletAuthenticationWriteLock(async () => {
-      const authoritative = await readAuthoritativeSoftwareKeyState();
-      const capabilities = getSnapshotCapabilities(authoritative);
-      if (
-        capabilities.authenticationMode !== 'password' ||
-        !capabilities.biometrics ||
-        typeof authoritative.salt !== 'string'
-      ) {
-        throw new Error("Can't disable the only wallet authenticator");
-      }
-      adoptAuthoritativeSoftwareKeyState(dispatch, authoritative);
-      dispatch(keySlice.actions.platformUnlockConfigRemoved());
-      try {
-        await persistor.flush();
-      } catch (error) {
-        if (authoritative.platformUnlock) {
-          dispatch(keySlice.actions.platformUnlockConfigSaved(authoritative.platformUnlock));
-        }
-        try {
-          await persistor.flush();
-        } catch (rollbackError) {
-          void rollbackError;
-        }
-        throw error;
-      }
-      const persisted = await readPersistedSoftwareKeyStateAfterWrite();
-      const expected = { ...authoritative, platformUnlock: undefined };
-      if (!softwareKeyStateSnapshotsMatch(expected, persisted)) {
-        adoptAuthoritativeSoftwareKeyState(dispatch, persisted);
-        throw new Error('Biometric unlock configuration was not removed');
-      }
-    });
-  };
-}
-
 export const keyActions = {
   ...keySlice.actions,
   addSoftwareWalletWithEncryptionKey,
-  addSoftwareWalletWithPassword,
-  commitBiometricOnlyToPasswordTransition,
-  commitPlatformUnlockChange,
   createBiometricSoftwareWallet,
-  disablePlatformUnlock,
   probeNextAccountAndDiscoverAccounts,
   setWalletEncryptionPassword,
   unlockWalletAction,

@@ -27,7 +27,6 @@ import {
   createPrfEnrollment,
   equalBytes,
   evaluatePrfCredential,
-  generateRandomBytes,
 } from './webauthn-prf';
 
 const alternatePrfInputByteLength = 32;
@@ -226,7 +225,7 @@ async function compareAlternateInput() {
     setStatus(baseline.code, 'The baseline PRF evaluation failed.');
     return;
   }
-  const alternateInput = generateRandomBytes(alternatePrfInputByteLength);
+  const alternateInput = crypto.getRandomValues(new Uint8Array(alternatePrfInputByteLength));
   const alternate = await evaluateConfig(state.active, alternateInput);
   if (alternate.status === 'failure') {
     baseline.value.prfOutput.fill(0);

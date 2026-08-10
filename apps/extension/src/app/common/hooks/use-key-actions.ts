@@ -16,10 +16,11 @@ import { analytics } from '@shared/utils/analytics';
 import { queryClient } from '@app/common/persistence';
 import { partiallyClearLocalStorage } from '@app/common/store-utils';
 import { clearBiometricAutoPromptSuppression } from '@app/common/wallet-authentication/biometric-auto-prompt';
+import { useWalletAuthentication } from '@app/common/wallet-authentication/use-wallet-authentication';
 import {
   type WalletAuthenticationResult,
-  useWalletAuthentication,
-} from '@app/common/wallet-authentication/use-wallet-authentication';
+  walletAuthenticationFailureFromError,
+} from '@app/common/wallet-authentication/wallet-authentication';
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { userSwitchesAccount, userSwitchesToPolicy } from '@app/store/active/active.slice';
@@ -29,10 +30,7 @@ import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-s
 import { parsePolicyParent } from '@app/store/policy/policy-store.utils';
 import { clearWalletSession } from '@app/store/session-restore';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
-
-function unavailableWalletAuthenticationResult(): WalletAuthenticationResult<void> {
-  return { status: 'failure', code: 'unavailable' };
-}
+import { withWalletWriteLock } from '@app/store/wallets/wallet-write-lock';
 
 export function useKeyActions() {
   const dispatch = useAppDispatch();
@@ -41,7 +39,7 @@ export function useKeyActions() {
 
   return useMemo(
     () => ({
-      setPassword({
+      async setPassword({
         mnemonic,
         password,
         fingerprint,
@@ -49,17 +47,22 @@ export function useKeyActions() {
         mnemonic: string;
         password: string;
         fingerprint: string;
-      }) {
-        return dispatch(
-          keyActions.setWalletEncryptionPassword({
-            mnemonic,
-            fingerprint,
-            password,
-            leatherApiClient: getLeatherApiClient(),
-            hiroClient: getHiroStacksApiClient(),
-            bnsClient: getBnsV2ApiClient(),
-          })
-        );
+      }): Promise<WalletAuthenticationResult<void>> {
+        try {
+          await dispatch(
+            keyActions.setWalletEncryptionPassword({
+              mnemonic,
+              fingerprint,
+              password,
+              leatherApiClient: getLeatherApiClient(),
+              hiroClient: getHiroStacksApiClient(),
+              bnsClient: getBnsV2ApiClient(),
+            })
+          );
+          return { status: 'success', value: undefined };
+        } catch (error) {
+          return walletAuthenticationFailureFromError(error);
+        }
       },
 
       generateWalletKey() {
@@ -68,18 +71,14 @@ export function useKeyActions() {
         return { mnemonic, fingerprint };
       },
 
-      unlockWallet(password: string) {
-        return dispatch(keyActions.unlockWalletAction(password));
-      },
-
       async authenticateWalletWithPassword(
         password: string
       ): Promise<WalletAuthenticationResult<void>> {
         try {
           await dispatch(keyActions.unlockWalletAction(password));
           return { status: 'success', value: undefined };
-        } catch {
-          return { status: 'failure', code: 'invalid-password' };
+        } catch (error) {
+          return walletAuthenticationFailureFromError(error);
         }
       },
 
@@ -95,8 +94,8 @@ export function useKeyActions() {
           );
           await clearBiometricAutoPromptSuppression();
           return { status: 'success', value: undefined };
-        } catch {
-          return unavailableWalletAuthenticationResult();
+        } catch (error) {
+          return walletAuthenticationFailureFromError(error);
         }
       },
 
@@ -107,17 +106,11 @@ export function useKeyActions() {
         fingerprint: string;
         mnemonic: string;
       }): Promise<WalletAuthenticationResult<void>> {
-        const preparation = await walletAuthentication.prepareBiometricSoftwareWallet({
-          fingerprint,
-          mnemonic,
-        });
-        if (preparation.status === 'failure') return preparation;
         try {
           await dispatch(
             keyActions.createBiometricSoftwareWallet({
               fingerprint,
               mnemonic,
-              preparation: preparation.value,
               leatherApiClient: getLeatherApiClient(),
               hiroClient: getHiroStacksApiClient(),
               bnsClient: getBnsV2ApiClient(),
@@ -125,54 +118,8 @@ export function useKeyActions() {
           );
           await clearBiometricAutoPromptSuppression();
           return { status: 'success', value: undefined };
-        } catch {
-          return unavailableWalletAuthenticationResult();
-        }
-      },
-
-      async savePlatformUnlockWithPassword(
-        password: string
-      ): Promise<WalletAuthenticationResult<void>> {
-        const change = await walletAuthentication.preparePlatformUnlockWithPassword(password);
-        if (change.status === 'failure') return change;
-        try {
-          await dispatch(keyActions.commitPlatformUnlockChange(change.value));
-          await clearBiometricAutoPromptSuppression();
-          return { status: 'success', value: undefined };
-        } catch {
-          return unavailableWalletAuthenticationResult();
-        }
-      },
-
-      async replacePlatformUnlockWithBiometrics(): Promise<WalletAuthenticationResult<void>> {
-        const change = await walletAuthentication.preparePlatformUnlockWithBiometrics();
-        if (change.status === 'failure') return change;
-        try {
-          await dispatch(keyActions.commitPlatformUnlockChange(change.value));
-          await clearBiometricAutoPromptSuppression();
-          return { status: 'success', value: undefined };
-        } catch {
-          return unavailableWalletAuthenticationResult();
-        }
-      },
-
-      async disablePlatformUnlock() {
-        await dispatch(keyActions.disablePlatformUnlock());
-        await clearBiometricAutoPromptSuppression();
-      },
-
-      async setBiometricOnlyPasswordTransition(
-        password: string
-      ): Promise<WalletAuthenticationResult<void>> {
-        const transition =
-          await walletAuthentication.prepareBiometricOnlyToPasswordTransition(password);
-        if (transition.status === 'failure') return transition;
-        try {
-          await dispatch(keyActions.commitBiometricOnlyToPasswordTransition(transition.value));
-          await clearBiometricAutoPromptSuppression();
-          return { status: 'success', value: undefined };
-        } catch {
-          return unavailableWalletAuthenticationResult();
+        } catch (error) {
+          return walletAuthenticationFailureFromError(error);
         }
       },
 
@@ -199,8 +146,8 @@ export function useKeyActions() {
           );
           await clearBiometricAutoPromptSuppression();
           return { status: 'success', value: undefined };
-        } catch {
-          return unavailableWalletAuthenticationResult();
+        } catch (error) {
+          return walletAuthenticationFailureFromError(error);
         }
       },
 
@@ -218,13 +165,15 @@ export function useKeyActions() {
       },
 
       async signOut() {
-        await clearWalletSession();
-        await clearBiometricAutoPromptSuppression();
-        inMemoryStore.clearAll();
-        clearKeychainSelectorCaches();
-        void broadcastSignOut();
-        dispatch(resetWallet());
-        await clearChromeStorage();
+        await withWalletWriteLock(async () => {
+          await clearWalletSession();
+          await clearBiometricAutoPromptSuppression();
+          inMemoryStore.clearAll();
+          clearKeychainSelectorCaches();
+          void broadcastSignOut();
+          dispatch(resetWallet());
+          await clearChromeStorage();
+        });
         partiallyClearLocalStorage();
         analytics.track('sign_out');
         queryClient.clear();
