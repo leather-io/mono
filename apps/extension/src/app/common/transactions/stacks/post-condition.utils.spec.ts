@@ -115,7 +115,6 @@ describe('origin principal post conditions', () => {
       );
     }
   });
-
 });
 
 describe('staking display helpers', () => {
