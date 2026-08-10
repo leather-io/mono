@@ -7,7 +7,6 @@ import { BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
 export interface LedgerRequestKeysContext extends BaseLedgerOperationContext {
   chain: SupportedBlockchains;
   pullPublicKeysFromDevice(): Promise<void>;
-  outdatedAppVersionWarning: boolean;
 }
 
 const ledgerRequestKeysContext = createContext<LedgerRequestKeysContext | null>(null);

@@ -36,7 +36,6 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
   signTransactionWithDevice,
   passesAdditionalVersionCheck,
 }: UseLedgerSignTxArgs<App>) {
-  const [outdatedAppVersionWarning, setAppVersionOutdatedWarning] = useState(false);
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
   const ledgerNavigate = useLedgerNavigate();
@@ -98,8 +97,6 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
 
   return {
     signTransaction: signTransactionImpl,
-    outdatedAppVersionWarning,
-    setAppVersionOutdatedWarning,
     latestDeviceResponse,
     setLatestDeviceResponse,
     awaitingDeviceConnection,

@@ -10,6 +10,7 @@ import { BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
 interface BaseLedgerTxSigningContext extends BaseLedgerOperationContext {
   chain: SupportedBlockchains;
   signTransaction(): Promise<void> | void;
+  onCancelTxSigning?(): void;
 }
 
 interface BitcoinLedgerSigningContext extends BaseLedgerTxSigningContext {

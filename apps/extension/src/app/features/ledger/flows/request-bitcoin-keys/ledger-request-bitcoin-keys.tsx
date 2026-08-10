@@ -96,7 +96,6 @@ function LedgerRequestBitcoinKeys() {
     pullPublicKeysFromDevice: requestKeys,
     latestDeviceResponse,
     awaitingDeviceConnection,
-    outdatedAppVersionWarning: false,
   };
 
   const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
