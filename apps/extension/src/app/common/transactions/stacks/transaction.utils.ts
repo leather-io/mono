@@ -136,7 +136,6 @@ export function isPendingTx(tx: StacksTx) {
 export enum StacksTransactionActionType {
   Cancel = 'cancel',
   IncreaseFee = 'increase-fee',
-  RpcRequest = 'rpc-request',
 }
 
 export function getRecipientFromStacksTransaction(transaction: StacksTransactionWire) {

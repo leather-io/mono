@@ -32,8 +32,23 @@ chrome.runtime.onMessage.addListener((message: RpcResponses) => {
   }
 });
 
+function isRpcRequestEnvelope(value: unknown): value is RpcRequests {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'jsonrpc' in value &&
+    value.jsonrpc === '2.0' &&
+    'id' in value &&
+    typeof value.id === 'string' &&
+    'method' in value &&
+    typeof value.method === 'string'
+  );
+}
+
 document.addEventListener(DomEventName.request, (event: any) => {
-  sendMessageToBackground(event.detail);
+  const request: unknown = event.detail;
+  if (!isRpcRequestEnvelope(request)) return;
+  sendMessageToBackground(request);
 });
 
 function addLeatherToPage() {

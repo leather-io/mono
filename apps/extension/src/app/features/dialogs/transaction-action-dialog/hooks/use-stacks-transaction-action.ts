@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { AuthType } from '@stacks/transactions';
 import * as yup from 'yup';
 
 import { TransactionTypes, getStacksBurnAddress } from '@leather.io/stacks';
@@ -13,6 +14,7 @@ import {
 import { StacksTransactionActionType } from '@app/common/transactions/stacks/transaction.utils';
 import { useStacksBroadcastTransaction } from '@app/common/transactions/stacks/use-stacks-broadcast-transaction';
 import { stxFeeValidator } from '@app/common/validation/forms/fee-validators';
+import { useToast } from '@app/features/toasts/use-toast';
 import { useStxAddressAvailableUnlockedBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useStacksRawTransaction } from '@app/query/stacks/transactions/raw-transaction-by-id.hooks';
 import { useGetTransactionByIdQuery } from '@app/query/stacks/transactions/transactions-by-id.query';
@@ -29,6 +31,7 @@ interface UseStacksTransactionActionArgs {
 
 export function useStacksTransactionAction({ actionType, txid }: UseStacksTransactionActionArgs) {
   const refreshAccountData = useRefreshAllAccountData();
+  const toast = useToast();
   const { stacksBroadcastTransaction, isBroadcasting } = useStacksBroadcastTransaction({
     token: 'STX',
     actionType,
@@ -70,11 +73,17 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
   const onSubmitIncreaseFeeTx = useCallback(
     async (fee: number) => {
       if (!tx || !rawTx) return;
+      if (rawTx.auth.authType === AuthType.Sponsored) {
+        toast.error(
+          'The fee of a sponsored transaction is paid by its sponsor and cannot be increased'
+        );
+        return;
+      }
       rawTx.setFee(stxToMicroStx(fee).toString());
       await refreshAccountData();
       await stacksBroadcastTransaction(rawTx);
     },
-    [tx, refreshAccountData, stacksBroadcastTransaction, rawTx]
+    [tx, toast, refreshAccountData, stacksBroadcastTransaction, rawTx]
   );
 
   function onSubmit(values: { fee?: number | undefined }) {
