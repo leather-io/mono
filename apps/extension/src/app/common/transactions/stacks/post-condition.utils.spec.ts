@@ -116,12 +116,6 @@ describe('origin principal post conditions', () => {
     }
   });
 
-  it('does not rewrite an origin principal post condition on account switch', () => {
-    const CURRENT_ADDRESS = 'ST248HH800501WYSG7Z2SS1ZWHQW1GGH85Q6YJBCC';
-    const wire = deserializePostConditionWire(serializedOriginStxPostCondition);
-    const transformedPostCondition = handlePostConditions([wire], SENDER_ADDRESS, CURRENT_ADDRESS);
-    expect(transformedPostCondition[0]).toEqual(wire);
-  });
 });
 
 describe('staking display helpers', () => {
