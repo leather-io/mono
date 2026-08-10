@@ -54,15 +54,15 @@ msgstr "{providerName} fee"
 msgid "{rarityRank} of {totalItems}"
 msgstr "{rarityRank} of {totalItems}"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:69
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:70
 msgid "{sender} may perform PoX actions"
 msgstr "{sender} may perform PoX actions"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:68
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:69
 msgid "{sender} must not perform any PoX actions"
 msgstr "{sender} must not perform any PoX actions"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:70
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:71
 msgid "{sender} must perform a PoX action"
 msgstr "{sender} must perform a PoX action"
 
@@ -305,39 +305,39 @@ msgstr "Analytics updated"
 msgid "Announcement received"
 msgstr "Announcement received"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:83
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:84
 msgid "Another address {shortenedPcAddress}"
 msgstr "Another address {shortenedPcAddress}"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:62
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:63
 msgid "Another address {shortenedPcAddress} may transfer"
 msgstr "Another address {shortenedPcAddress} may transfer"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:57
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:58
 msgid "Another address {shortenedPcAddress} will {verb} equal to or greater than"
 msgstr "Another address {shortenedPcAddress} will {verb} equal to or greater than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:55
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:56
 msgid "Another address {shortenedPcAddress} will {verb} exactly"
 msgstr "Another address {shortenedPcAddress} will {verb} exactly"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:58
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:59
 msgid "Another address {shortenedPcAddress} will {verb} less than"
 msgstr "Another address {shortenedPcAddress} will {verb} less than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:59
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:60
 msgid "Another address {shortenedPcAddress} will {verb} less than or equal to"
 msgstr "Another address {shortenedPcAddress} will {verb} less than or equal to"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:56
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:57
 msgid "Another address {shortenedPcAddress} will {verb} more than"
 msgstr "Another address {shortenedPcAddress} will {verb} more than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:61
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:62
 msgid "Another address {shortenedPcAddress} will keep"
 msgstr "Another address {shortenedPcAddress} will keep"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:60
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:61
 msgid "Another address {shortenedPcAddress} will transfer"
 msgstr "Another address {shortenedPcAddress} will transfer"
 
@@ -1748,39 +1748,39 @@ msgstr "Taproot address"
 msgid "The address you entered isn’t valid. Verify and try again"
 msgstr "The address you entered isn’t valid. Verify and try again"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:79
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:80
 msgid "The contract"
 msgstr "The contract"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:44
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:45
 msgid "The contract may transfer"
 msgstr "The contract may transfer"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:39
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:40
 msgid "The contract will {verb} equal to or greater than"
 msgstr "The contract will {verb} equal to or greater than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:37
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:38
 msgid "The contract will {verb} exactly"
 msgstr "The contract will {verb} exactly"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:40
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:41
 msgid "The contract will {verb} less than"
 msgstr "The contract will {verb} less than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:41
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:42
 msgid "The contract will {verb} less than or equal to"
 msgstr "The contract will {verb} less than or equal to"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:38
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:39
 msgid "The contract will {verb} more than"
 msgstr "The contract will {verb} more than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:43
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:44
 msgid "The contract will keep"
 msgstr "The contract will keep"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:42
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:43
 msgid "The contract will transfer"
 msgstr "The contract will transfer"
 
@@ -2078,7 +2078,7 @@ msgstr "Wrong URL"
 msgid "Xverse"
 msgstr "Xverse"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:80
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:81
 msgid "You"
 msgstr "You"
 
@@ -2086,27 +2086,27 @@ msgstr "You"
 msgid "You haven’t sent to this address before. Double-check that it’s correct before proceeding."
 msgstr "You haven’t sent to this address before. Double-check that it’s correct before proceeding."
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:29
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:30
 msgid "You may transfer"
 msgstr "You may transfer"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:24
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:25
 msgid "You will {verb} equal to or greater than"
 msgstr "You will {verb} equal to or greater than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:22
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:23
 msgid "You will {verb} exactly"
 msgstr "You will {verb} exactly"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:25
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:26
 msgid "You will {verb} less than"
 msgstr "You will {verb} less than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:26
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:27
 msgid "You will {verb} less than or equal to"
 msgstr "You will {verb} less than or equal to"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:23
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:24
 msgid "You will {verb} more than"
 msgstr "You will {verb} more than"
 
@@ -2118,11 +2118,11 @@ msgstr "You will find the apps you are connected to here"
 msgid "You will find the apps you recently viewed here"
 msgstr "You will find the apps you recently viewed here"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:28
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:29
 msgid "You will keep"
 msgstr "You will keep"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:27
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:28
 msgid "You will transfer"
 msgstr "You will transfer"
 

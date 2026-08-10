@@ -1,5 +1,5 @@
 import type { FtMetadataResponse } from '@hirosystems/token-metadata-api-client';
-import { addressToString } from '@stacks/transactions';
+import { PostConditionPrincipalId, addressToString } from '@stacks/transactions';
 
 import { formatContractId } from '@leather.io/stacks';
 import { truncateMiddle } from '@leather.io/utils';
@@ -39,7 +39,8 @@ export function formatPostConditionMessage({
 
   const contractName = 'contractName' in pc.principal && pc.principal.contractName.content;
   const address = 'address' in pc.principal ? addressToString(pc.principal.address) : '';
-  const isSending = address === account?.address;
+  const isOriginPrincipal = pc.principal.prefix === PostConditionPrincipalId.Origin;
+  const isSending = isOriginPrincipal || address === account?.address;
 
   const contractId = 'asset' in pc ? formatContractId(address, pc.asset.contractName.content) : '';
   const amount = asset?.decimals ? ftDecimals(pcAmount, asset.decimals) : pcAmount;

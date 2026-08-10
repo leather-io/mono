@@ -24,6 +24,7 @@ import {
   getStacksAppVersion,
   prepareLedgerDeviceStacksAppConnection,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { appPermissionsSlice } from '@app/store/app-permissions/app-permissions.slice';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
@@ -103,28 +104,34 @@ export function LedgerSignJwtContainer() {
       },
     });
 
-    const versionInfo = await getStacksAppVersion(stacks);
-    setLatestDeviceResponse(versionInfo);
-
-    if (versionInfo.deviceLocked) {
-      setAwaitingDeviceConnection(false);
-      return;
-    }
-
-    if (versionInfo.returnCode !== LedgerError.NoErrors) {
-      logger.error('Return code from device has error', versionInfo);
-      return;
-    }
-
-    // TODO: #4566 Low-grade code. This is to be removed when deprecating legacy APIs
-    let legacyAddressObj = {};
     try {
-      legacyAddressObj = getBitcoinAddressesLegacyFormat(accountIndex);
-    } catch (e) {
-      logger.error('Error while generating bitcoin addresses to return', e);
-    }
+      const versionInfo = await getStacksAppVersion(stacks);
+      setLatestDeviceResponse(versionInfo);
 
-    try {
+      if (versionInfo.deviceLocked) {
+        setAwaitingDeviceConnection(false);
+        return;
+      }
+
+      if (versionInfo.returnCode !== LedgerError.NoErrors) {
+        logger.error('Return code from device has error', versionInfo);
+        return;
+      }
+
+      const passesVersionCheck = await stacksVersionGate(ledgerNavigate)(versionInfo);
+      if (!passesVersionCheck) {
+        setAwaitingDeviceConnection(false);
+        return;
+      }
+
+      // TODO: #4566 Low-grade code. This is to be removed when deprecating legacy APIs
+      let legacyAddressObj = {};
+      try {
+        legacyAddressObj = getBitcoinAddressesLegacyFormat(accountIndex);
+      } catch (e) {
+        logger.error('Error while generating bitcoin addresses to return', e);
+      }
+
       void ledgerNavigate.toConnectionSuccessStep('stacks');
       await delay(1000);
 
@@ -176,7 +183,11 @@ export function LedgerSignJwtContainer() {
     } catch {
       void ledgerNavigate.toDeviceDisconnectStep();
     } finally {
-      await stacks.transport.close();
+      try {
+        await stacks.transport.close();
+      } catch (e) {
+        logger.error('Error closing transport after JWT signing', e);
+      }
     }
   }
 
