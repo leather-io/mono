@@ -117,7 +117,6 @@ function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
     pullPublicKeysFromDevice: requestKeys,
     latestDeviceResponse,
     awaitingDeviceConnection,
-    outdatedAppVersionWarning: false,
   };
 
   const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
