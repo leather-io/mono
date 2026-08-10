@@ -184,6 +184,12 @@
         "app/layouts/nav/global-loader.styles.ts"
       ]
     },
+    "packages/mcp": {
+      "entry": [
+        "src/index.ts",
+        "src/pages/bridge-client.ts"
+      ]
+    },
     "packages/provider": {
       "entry": [
         "src/index.ts",

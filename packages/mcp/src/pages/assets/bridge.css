@@ -1,0 +1,290 @@
+@font-face {
+  font-family: 'Diatype';
+  src: url('/assets/fonts/diatype-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Diatype';
+  src: url('/assets/fonts/diatype-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Marche';
+  src: url('/assets/fonts/marche-super-pro.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  font-family: 'Diatype', system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: var(--ink-background-secondary);
+  color: var(--ink-text-primary);
+}
+
+.card {
+  width: 100%;
+  max-width: 26rem;
+  background: var(--ink-background-primary);
+  border: 1px solid var(--ink-border-default);
+  border-radius: 1.5rem;
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  animation: card-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.wordmark {
+  color: var(--ink-text-primary);
+  display: flex;
+  justify-content: center;
+}
+
+.wordmark svg {
+  width: 6.5rem;
+  height: auto;
+}
+
+h1 {
+  font-family: 'Marche', 'Diatype', system-ui, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.lede {
+  color: var(--ink-text-subdued);
+  font-size: 0.95rem;
+  max-width: 22rem;
+}
+
+.code-panel {
+  width: 100%;
+  background: var(--ink-component-background-default);
+  border: 1px solid var(--ink-border-default);
+  border-radius: 1rem;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.code-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-text-subdued);
+}
+
+.code {
+  font-family: 'Marche', monospace;
+  font-size: 2.75rem;
+  line-height: 1.1;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  color: var(--ink-text-primary);
+}
+
+.code-hint {
+  font-size: 0.85rem;
+  color: var(--ink-text-subdued);
+}
+
+.button {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.75rem;
+  border: none;
+  background: var(--ink-action-primary-default);
+  color: var(--ink-background-primary);
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    transform 120ms ease;
+}
+
+.button:hover:enabled {
+  background: var(--ink-action-primary-hover);
+}
+
+.button:active:enabled {
+  transform: scale(0.98);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.button-secondary {
+  background: var(--ink-component-background-default);
+  color: var(--ink-text-primary);
+  border: 1px solid var(--ink-border-default);
+}
+
+.button-secondary:hover:enabled {
+  background: var(--ink-component-background-hover);
+}
+
+.explorer-link {
+  display: inline-block;
+  color: var(--ink-text-primary);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body[data-page='connect'][data-state='approved'] .lede,
+body[data-page='connect'][data-state='rejected'] .lede,
+body[data-page='connect'][data-state='failed'] .lede,
+body[data-page='connect'][data-state='invalid'] .lede,
+body[data-state='approved'] .trust-note,
+body[data-state='rejected'] .trust-note,
+body[data-state='failed'] .trust-note,
+body[data-state='invalid'] .trust-note {
+  display: none;
+}
+
+.status {
+  font-size: 0.95rem;
+  color: var(--ink-text-subdued);
+  min-height: 1.5rem;
+}
+
+.trust-note {
+  font-size: 0.8rem;
+  color: var(--ink-text-non-interactive);
+  max-width: 20rem;
+}
+
+.footer {
+  font-size: 0.75rem;
+  color: var(--ink-text-non-interactive);
+}
+
+.state-visual {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+body[data-state='waiting'] .state-visual {
+  display: flex;
+  border: 2px solid var(--ink-border-default);
+  border-top-color: var(--ink-text-primary);
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+body[data-state='approved'] .state-visual {
+  display: flex;
+  background: var(--green-background-primary);
+  color: var(--green-text-secondary);
+}
+
+body[data-state='approved'] .state-visual::before {
+  content: '✓';
+}
+
+body[data-state='rejected'] .state-visual {
+  display: flex;
+  background: var(--red-background-primary);
+  color: var(--red-action-primary-default);
+}
+
+body[data-state='rejected'] .state-visual::before {
+  content: '✕';
+}
+
+body[data-state='failed'] .state-visual,
+body[data-state='invalid'] .state-visual {
+  display: flex;
+  background: var(--yellow-background-primary);
+  color: var(--yellow-text-primary);
+}
+
+body[data-state='failed'] .state-visual::before,
+body[data-state='invalid'] .state-visual::before {
+  content: '!';
+  font-weight: 500;
+}
+
+body[data-state='loading'] .code-panel,
+body[data-state='invalid'] .code-panel,
+body[data-state='failed'] .code-panel {
+  opacity: 0.5;
+}
+
+body[data-page='connect'][data-state='approved'] .code-panel,
+body[data-page='connect'][data-state='approved'] #action,
+body[data-page='connect'][data-state='rejected'] .code-panel,
+body[data-page='connect'][data-state='rejected'] #action,
+body[data-page='connect'][data-state='invalid'] #action,
+body[data-page='connect'][data-state='waiting'] #action {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
+  body[data-state='waiting'] .state-visual {
+    animation: none;
+    border-top-color: var(--ink-border-default);
+  }
+}

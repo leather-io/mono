@@ -399,7 +399,7 @@ export class HiroStacksApiClient {
       } catch (error) {
         if (
           error instanceof AxiosError &&
-          (error.request?.status === 404 || error.request?.status === 422)
+          (error.response?.status === 404 || error.response?.status === 422)
         ) {
           return null;
         }
@@ -442,7 +442,7 @@ export class HiroStacksApiClient {
       } catch (error) {
         if (
           error instanceof AxiosError &&
-          (error.request?.status === 404 || error.request?.status === 422)
+          (error.response?.status === 404 || error.response?.status === 422)
         ) {
           return null;
         }
