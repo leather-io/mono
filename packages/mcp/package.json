@@ -10,11 +10,7 @@
     "url": "git@github.com:leather.io/mono.git",
     "directory": "packages/mcp"
   },
-  "private": true,
   "type": "module",
-  "bin": {
-    "leather-mcp": "./dist/index.js"
-  },
   "scripts": {
     "build": "tsdown",
     "build:watch": "tsdown --no-clean --watch",
@@ -27,12 +23,16 @@
   "exports": {
     ".": "./dist/index.js"
   },
+  "bin": {
+    "leather-mcp": "./dist/index.js"
+  },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/services": "workspace:*",
+    "@leather.io/tokens": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@modelcontextprotocol/sdk": "1.30.0",
     "@stacks/transactions": "7.5.0",
@@ -49,5 +49,6 @@
     "typescript": "5.9.3"
   },
   "prettier": "@leather.io/prettier-config",
+  "private": true,
   "types": "./dist/index.d.ts"
 }

@@ -1,8 +1,24 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 
+import { bitcoinExplorerTxUrl, stacksExplorerTxUrl } from '../explorer';
 import type { PendingRequest } from '../pending-requests';
 import { type ToolContext, errorToolResult, jsonToolResult } from './tool-helpers';
+
+function approvedTxid(request: PendingRequest): string | undefined {
+  const result = request.result;
+  if (typeof result !== 'object' || result === null || !('txid' in result)) return undefined;
+  return typeof result.txid === 'string' ? result.txid : undefined;
+}
+
+function explorerUrlFor(request: PendingRequest): string | undefined {
+  if (request.state !== 'approved' || request.kind === 'connect') return undefined;
+  const txid = approvedTxid(request);
+  if (!txid) return undefined;
+  return request.rpcMethod === 'sendTransfer'
+    ? bitcoinExplorerTxUrl(txid)
+    : stacksExplorerTxUrl(txid);
+}
 
 function connectInstructions(request: PendingRequest): string | undefined {
   if (request.state === 'approved')
@@ -18,7 +34,7 @@ function proposeInstructions(request: PendingRequest): string | undefined {
       const balanceStep = request.affectedAssets?.length
         ? ` once confirmed, call get_balances with assets: ${JSON.stringify(request.affectedAssets)} and report those updated balances — do not estimate them, and do not list unrelated assets.`
         : ' report the confirmation to the user.';
-      return `The user approved and the wallet has signed and broadcast the transaction. Tell them now, including the txid from result. Then call get_transaction_status with waitSeconds: 50 until it leaves pending;${balanceStep}`;
+      return `The user approved and the wallet has signed and broadcast the transaction. Tell them now, including the txid from result and the explorerUrl link. Then call get_transaction_status with waitSeconds: 50 until it leaves pending;${balanceStep}`;
     }
     case 'rejected':
       return 'The user rejected the transaction in the wallet. Tell them; do not create a new request unless they ask.';
@@ -42,6 +58,7 @@ function requestView(context: ToolContext, requestId: string) {
     summary: request.summary,
     result: request.result,
     error: request.error,
+    explorerUrl: explorerUrlFor(request),
     expiresAt: new Date(request.expiresAt).toISOString(),
     instructions,
   };

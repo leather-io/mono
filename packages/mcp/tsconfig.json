@@ -2,6 +2,7 @@
   "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
   "compilerOptions": {
     "types": ["node"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "outDir": "./dist",
     "rootDir": "./src"
   },

@@ -140,6 +140,18 @@ export class PendingRequestStore {
     this.notifyWaiters(id);
   }
 
+  cancelNonTerminal(): PendingRequest[] {
+    const cancelled: PendingRequest[] = [];
+    for (const id of this.requests.keys()) {
+      const request = this.get(id);
+      if (!request || isTerminalState(request.state)) continue;
+      request.state = 'cancelled';
+      this.notifyWaiters(id);
+      cancelled.push(request);
+    }
+    return cancelled;
+  }
+
   cancel(id: string): PendingRequest {
     const request = this.getOrThrow(id);
     if (isTerminalState(request.state))

@@ -2,7 +2,7 @@ import { type IncomingMessage, type Server, type ServerResponse, createServer } 
 import { z } from 'zod';
 
 import { type McpConfig, serverVersion } from './config';
-import { bridgePageHtml } from './pages';
+import { getStaticAsset, renderBridgePage } from './pages/render';
 import { type PendingRequestStore, isTerminalState } from './pending-requests';
 
 const maxBodyBytes = 1024 * 1024;
@@ -30,7 +30,11 @@ function sendJson(res: ServerResponse, status: number, value: unknown) {
 }
 
 function sendHtml(res: ServerResponse, html: string) {
-  res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+  res.writeHead(200, {
+    'content-type': 'text/html; charset=utf-8',
+    'content-security-policy':
+      "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'",
+  });
   res.end(html);
 }
 
@@ -58,12 +62,21 @@ async function handleRequest(deps: HttpListenerDeps, req: IncomingMessage, res: 
     return sendJson(res, 200, { service: 'leather-mcp', version: serverVersion });
   }
 
+  if (req.method === 'GET') {
+    const asset = getStaticAsset(url.pathname);
+    if (asset) {
+      res.writeHead(200, { 'content-type': asset.contentType, 'cache-control': 'no-cache' });
+      return res.end(asset.body);
+    }
+  }
+
   if (
     req.method === 'GET' &&
     segments.length === 2 &&
     (segments[0] === 'connect' || segments[0] === 'approve')
   ) {
-    return sendHtml(res, bridgePageHtml(segments[1]));
+    const page = segments[0] === 'connect' ? 'connect' : 'approve';
+    return sendHtml(res, renderBridgePage(page, segments[1]));
   }
 
   if (segments.length >= 2 && segments[0] === 'api' && segments[1] === 'requests') {
