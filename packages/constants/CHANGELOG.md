@@ -215,6 +215,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.39.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.38.0...@leather.io/constants-v0.39.0) (2026-08-10)
+
+
+### Features
+
+* delete legacy requests ([#2612](https://github.com/leather-io/mono/issues/2612)) ([c17d65f](https://github.com/leather-io/mono/commit/c17d65fc12fd799ff045d6fb725b57b50462fd84))
+
 ## [0.38.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.37.2...@leather.io/constants-v0.38.0) (2026-08-05)
 
 
