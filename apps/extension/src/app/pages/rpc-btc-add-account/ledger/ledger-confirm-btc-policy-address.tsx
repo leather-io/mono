@@ -74,7 +74,6 @@ function LedgerConfirmBtcPolicyAddress() {
     pullPublicKeysFromDevice: requestKeys,
     latestDeviceResponse,
     awaitingDeviceConnection,
-    outdatedAppVersionWarning: false,
   };
 
   const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
