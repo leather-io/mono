@@ -9,6 +9,9 @@ import {
 } from '../../fixtures/biometric-authenticator';
 import { test } from '../../fixtures/fixtures';
 
+const firstWalletMnemonic =
+  'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+
 async function auditLocalStorage(page: Page) {
   return page.evaluate(async () => {
     const stored = await chrome.storage.local.get();
@@ -67,6 +70,11 @@ test.describe('Exclusive wallet authentication', () => {
     await page.getByTestId(OnboardingSelectors.SignUpBtn).click();
     await page.getByTestId(OnboardingSelectors.BackUpSecretKeyBtn).click();
     await expect(page.getByTestId(OnboardingSelectors.NewPasswordInput)).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Continue with password' })).toBeDisabled();
+    await expect(page.getByText('or', { exact: true })).toBeVisible();
+    const biometricSetupButton = page.getByRole('button', { name: 'Use biometrics instead' });
+    await expect(biometricSetupButton).toBeVisible();
+    await expect(biometricSetupButton).toHaveCSS('border-top-color', 'rgb(18, 16, 15)');
     await expect(
       page.getByText(
         "Biometrics will be your only local unlock method. If biometrics become unavailable, you'll need your Secret Key to restore your wallet."
@@ -102,6 +110,30 @@ test.describe('Exclusive wallet authentication', () => {
     await expect(page.getByText("You'll need your Secret Key to sign in again")).toBeVisible();
 
     await detachVirtualAuthenticator(authenticator);
+  });
+
+  test('shows the same unlock-method choice when restoring a first wallet', async ({
+    extensionId,
+    globalPage,
+    onboardingPage,
+    page,
+  }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await page.evaluate(async () => {
+      await chrome.storage.local.clear();
+      await chrome.storage.session.clear();
+    });
+    await page.goto(`chrome-extension://${extensionId}/index.html#/get-started`);
+
+    await page.getByTestId(OnboardingSelectors.SignInLink).click();
+    await page.getByText('Have a 12-word Secret Key?').click();
+    await onboardingPage.enterMnemonicKey(firstWalletMnemonic);
+    await page.getByTestId(OnboardingSelectors.SignInBtn).click();
+
+    await expect(page.getByTestId(OnboardingSelectors.NewPasswordInput)).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Continue with password' })).toBeDisabled();
+    await expect(page.getByText('or', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Use biometrics instead' })).toBeVisible();
   });
 
   test('uses biometrics to add another wallet to a biometric-only profile', async ({

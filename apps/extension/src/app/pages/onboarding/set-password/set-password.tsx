@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { Form, Formik, type FormikHelpers } from 'formik';
-import { Stack } from 'leather-styles/jsx';
+import { Box, HStack, Stack, styled } from 'leather-styles/jsx';
 import { debounce } from 'ts-debounce';
 import * as yup from 'yup';
 
@@ -58,6 +58,7 @@ export function SetPasswordPage({
   const softwareKeys = useSelector(selectSoftwareKeys);
   const hasSoftwareKeys = !!softwareKeys.length;
   const supportsBiometricSetup = TARGET_BROWSER === 'chromium';
+  const canSetupBiometrics = supportsBiometricSetup && canUsePlatformAuthenticator();
   const unlockMethodTitle = supportsBiometricSetup
     ? 'Choose how to unlock Leather'
     : 'Set a password';
@@ -238,14 +239,21 @@ export function SetPasswordPage({
                       mt="space.05"
                       type="submit"
                     >
-                      Continue
+                      Continue with password
                     </Button>
                     {supportsBiometricSetup && (
                       <>
+                        <HStack aria-hidden="true" gap="space.03" width="100%">
+                          <Box bg="ink.border-default" flex="1" height="1px" />
+                          <styled.span color="ink.text-subdued" textStyle="caption.01">
+                            or
+                          </styled.span>
+                          <Box bg="ink.border-default" flex="1" height="1px" />
+                        </HStack>
                         <BasicTooltip
                           asChild
                           label={
-                            canUsePlatformAuthenticator()
+                            canSetupBiometrics
                               ? undefined
                               : "Biometric unlock isn't available in this browser context."
                           }
@@ -253,15 +261,21 @@ export function SetPasswordPage({
                         >
                           <Button
                             data-testid={OnboardingSelectors.BiometricSetupBtn}
-                            aria-disabled={!canUsePlatformAuthenticator()}
+                            aria-disabled={!canSetupBiometrics}
                             disabled={loading}
                             aria-busy={loading}
+                            border={canSetupBiometrics ? 'action' : 'default'}
+                            color={
+                              canSetupBiometrics
+                                ? 'ink.action-primary-default'
+                                : 'ink.text-non-interactive'
+                            }
                             variant="outline"
                             onClick={() => {
-                              if (canUsePlatformAuthenticator()) void createBiometricWallet();
+                              if (canSetupBiometrics) void createBiometricWallet();
                             }}
                           >
-                            Use biometrics
+                            Use biometrics instead
                           </Button>
                         </BasicTooltip>
                         <Callout variant="info">
