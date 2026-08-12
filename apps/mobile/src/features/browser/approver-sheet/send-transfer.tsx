@@ -97,21 +97,20 @@ function BaseSendTransferApprover(
       feeEditorEnabled
       accountIndex={extractAccountIndexFromDescriptor(descriptor)}
       fingerprint={fingerprint}
-      broadcast
+      broadcast={props.request.params.broadcast ?? true}
       psbtHex={psbtHex}
       network={networkMode}
       onBack={props.closeApprover}
       onClose={props.closeApprover}
       onResult={result => {
-        if (result.txid) {
-          const rpcSuccessResponse = createRpcSuccessResponse('sendTransfer', {
-            id: props.request.id,
-            result: {
-              txid: result.txid,
-            },
-          });
-          props.sendResult(rpcSuccessResponse);
-        }
+        const rpcSuccessResponse = createRpcSuccessResponse('sendTransfer', {
+          id: props.request.id,
+          result: {
+            txid: result.txid,
+            txHex: result.hex,
+          },
+        });
+        props.sendResult(rpcSuccessResponse);
       }}
     />
   );

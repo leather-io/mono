@@ -45,6 +45,44 @@ describe('`sendTransfer` method', () => {
       expect(() => rpcSendTransferParamsSchema.parse(params)).toThrow();
     });
 
+    test('that it accepts a boolean broadcast param', () => {
+      const params = {
+        network: 'mainnet',
+        broadcast: false,
+        recipients: [
+          {
+            address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
+            amount: '10000',
+          },
+        ],
+      };
+
+      expect(rpcSendTransferParamsSchema.safeParse(params).success).toEqual(true);
+    });
+
+    test('that it rejects a string broadcast param', () => {
+      const params = {
+        network: 'mainnet',
+        broadcast: 'false',
+        recipients: [
+          {
+            address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
+            amount: '10000',
+          },
+        ],
+      };
+
+      expect(rpcSendTransferParamsSchema.safeParse(params).success).toEqual(false);
+      expect(
+        rpcSendTransferParamsSchemaLegacy.safeParse({
+          network: 'mainnet',
+          broadcast: 'false',
+          address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
+          amount: '10000',
+        }).success
+      ).toEqual(false);
+    });
+
     test('that it converts legacy params to new params', () => {
       const legacyParams = {
         network: 'mainnet',
@@ -65,6 +103,18 @@ describe('`sendTransfer` method', () => {
       };
 
       expect(convertRpcSendTransferLegacyParamsToNew(legacyParams)).toEqual(newParams);
+    });
+
+    test('that it carries the broadcast param through legacy conversion', () => {
+      const legacyParams = {
+        network: 'mainnet',
+        account: 0,
+        address: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
+        amount: '10000',
+        broadcast: false,
+      };
+
+      expect(convertRpcSendTransferLegacyParamsToNew(legacyParams).broadcast).toEqual(false);
     });
   });
 

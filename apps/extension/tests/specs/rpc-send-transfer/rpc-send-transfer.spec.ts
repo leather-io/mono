@@ -13,6 +13,7 @@ import {
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
 
+import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 import { type RpcParams, type sendTransfer } from '@leather.io/rpc';
 import { truncateMiddle } from '@leather.io/utils';
 
@@ -55,6 +56,18 @@ async function mockPopupRequests(context: BrowserContext) {
   await mockTestAccountBtcBroadcastTransaction(popup);
 }
 
+async function mockPopupRequestsRecordingBroadcast(
+  context: BrowserContext,
+  broadcastCalls: string[]
+) {
+  const popup = await context.waitForEvent('page');
+  await mockLeatherApiRequests(popup);
+  await popup.route(`${BITCOIN_API_BASE_URL_TESTNET4}/tx`, route => {
+    broadcastCalls.push(route.request().url());
+    return route.fulfill({ body: 'mock-txid' });
+  });
+}
+
 function openSendTransfer(page: Page) {
   return async (params: RpcParams<typeof sendTransfer>) =>
     page.evaluate(
@@ -85,8 +98,32 @@ test.describe('RPC: sendTransfer', () => {
 
     test.expect(result).toEqual({
       jsonrpc: '2.0',
-      result: { txid: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce' },
+      result: {
+        txid: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce',
+        txHex: test.expect.stringMatching(/^[0-9a-f]+$/),
+      },
     });
+  });
+
+  test('that the signed transaction is returned without broadcasting when broadcast is false', async ({
+    page,
+    context,
+  }) => {
+    const broadcastCalls: string[] = [];
+    void mockPopupRequestsRecordingBroadcast(context, broadcastCalls);
+
+    const [result] = await Promise.all([
+      openSendTransfer(page)({ ...baseParams, broadcast: false }),
+      clickActionButton(context)('Approve'),
+    ]);
+
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      result: { txHex: test.expect.stringMatching(/^[0-9a-f]+$/) },
+    });
+    test.expect(broadcastCalls).toHaveLength(0);
   });
 
   test('that the request can be cancelled', async ({ page, context }) => {

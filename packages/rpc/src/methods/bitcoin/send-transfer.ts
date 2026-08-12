@@ -7,6 +7,7 @@ export const rpcSendTransferLegacyParamSchema = z.object({
   address: z.string(),
   amount: z.coerce.string(),
   network: z.string(),
+  broadcast: z.boolean().optional(),
 });
 export type RpcSendTransferLegacyParams = z.infer<typeof rpcSendTransferLegacyParamSchema>;
 
@@ -19,6 +20,7 @@ export const rpcSendTransferNewParamsSchema = z.object({
   account: z.number().optional(),
   recipients: z.array(transferRecipientParamSchema),
   network: z.string(),
+  broadcast: z.boolean().optional(),
 });
 export type RpcSendTransferParams = z.infer<typeof rpcSendTransferNewParamsSchema>;
 
@@ -32,6 +34,7 @@ export const sendTransfer = defineRpcEndpoint({
   params: rpcSendTransferParamsSchema,
   result: z.object({
     txid: z.string().optional(),
+    txHex: z.string().optional(),
     // Present (and `status: 'proposed'`) when the active account is a multisig
     // policy: the transaction was proposed to the coordinator, not broadcast, so
     // `txid` is empty until co-signers complete and broadcast it.

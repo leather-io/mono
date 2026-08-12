@@ -28,7 +28,7 @@ import { useRpcSendTransferContext } from './rpc-send-transfer.context';
 
 export function useRpcSendTransferActions() {
   const { availableBalance, selectedFee } = useFeeEditorContext();
-  const { amount, frameId, isLoadingBalance, recipients, requestId, tabId, utxos } =
+  const { amount, broadcast, frameId, isLoadingBalance, recipients, requestId, tabId, utxos } =
     useRpcSendTransferContext();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
@@ -115,6 +115,23 @@ export function useRpcSendTransferActions() {
 
         tx.finalize();
 
+        if (!broadcast) {
+          setIsBroadcasting(false);
+
+          void sendMessageToOriginatingFrame(
+            { frameId, tabId },
+            createRpcSuccessResponse('sendTransfer', {
+              id: requestId,
+              result: { txHex: tx.hex },
+            })
+          );
+
+          setIsSubmitted(true);
+          await delay(500);
+          closeWindow();
+          return;
+        }
+
         await broadcastTx({
           tx: tx.hex,
           async onSuccess(txid) {
@@ -129,7 +146,7 @@ export function useRpcSendTransferActions() {
               { frameId, tabId },
               createRpcSuccessResponse('sendTransfer', {
                 id: requestId,
-                result: { txid },
+                result: { txid, txHex: tx.hex },
               })
             );
 
@@ -165,6 +182,7 @@ export function useRpcSendTransferActions() {
     selectedFee?.feeRate,
     generateTx,
     amount,
+    broadcast,
     frameId,
     recipients,
     utxos,
