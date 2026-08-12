@@ -161,17 +161,14 @@ export function TxDetailPage() {
     enabled: Boolean(verifiedTokenAsset),
   });
 
+  const isContractProposal = decoded?.kind === 'contractCall' || decoded?.kind === 'contractDeploy';
   const onchainActivity = useQuery({
     ...createBlockchainActivityByTxIdDetailQuery(
       getMultisigAccountAddresses(account.data),
       transaction.data?.txId ?? '',
       settings
     ),
-    enabled: Boolean(
-      account.data &&
-        transaction.data?.txId &&
-        (decoded?.kind === 'contractCall' || decoded?.kind === 'contractDeploy')
-    ),
+    enabled: Boolean(account.data && transaction.data?.txId),
   });
 
   const signTransaction = useSignTransaction(network);
@@ -269,13 +266,14 @@ export function TxDetailPage() {
   const amountFiat = toFiat(amount, marketData.data) ?? toFiat(amount, tokenMarketData.data);
   const feeFiat = toFiat(fee, marketData.data);
   const onchainDetail = onchainActivity.data ?? undefined;
+  const contractDetail = isContractProposal ? onchainDetail : undefined;
   const heroTitle = proposalHeroTitle(
     decoded?.kind,
     decoded?.functionName,
-    onchainDetail?.activity.action,
+    contractDetail?.activity.action,
     verifiedTokenAsset?.symbol
   );
-  const heroSubtitle = onchainDetail?.view.subtitle;
+  const heroSubtitle = contractDetail?.view.subtitle;
   const heroTimeline = tx.broadcastAt
     ? { verb: 'Broadcast', when: formatRelativeTime(new Date(tx.broadcastAt)) }
     : { verb: 'Proposed', when: initiationDate };
@@ -323,13 +321,13 @@ export function TxDetailPage() {
             variant="balance"
             themeId={vaultThemeFromName(vault.data.theme).id}
             media={
-              onchainDetail ? (
+              contractDetail ? (
                 <BlockchainActivityAvatarIcon
                   size={48}
-                  avatar={onchainDetail.view.avatar}
+                  avatar={contractDetail.view.avatar}
                   indicator={
                     <BlockchainActivityIndicatorIcon
-                      indicator={onchainDetail.view.indicator}
+                      indicator={contractDetail.view.indicator}
                       size={16}
                     />
                   }
@@ -372,7 +370,8 @@ export function TxDetailPage() {
             }
             functionName={decoded?.functionName}
             protocolName={protocolName}
-            balanceChanges={onchainDetail?.activity.balanceChanges}
+            balanceChanges={contractDetail?.activity.balanceChanges}
+            nonce={onchainDetail?.activity.nonce ?? tx.nonce}
             memo={decoded?.memo}
           />
         </Box>

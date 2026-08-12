@@ -39,6 +39,7 @@ interface TxDetailsTableProps {
   functionName?: string;
   protocolName?: string;
   balanceChanges?: BlockchainActivityBalanceChange[];
+  nonce?: number | null;
   memo?: string;
 }
 
@@ -58,6 +59,7 @@ export function TxDetailsTable({
   functionName,
   protocolName,
   balanceChanges,
+  nonce,
   memo,
 }: TxDetailsTableProps) {
   const isBtc = chainFromNetwork(transaction.network) === 'btc';
@@ -107,6 +109,7 @@ export function TxDetailsTable({
         </>
       )}
       <DetailRow label="Fee">{fee ? moneyWithFiat(fee, feeFiat) : pendingValue}</DetailRow>
+      {!isBtc ? <DetailRow label="Nonce">{nonce ?? pendingValue}</DetailRow> : null}
       {transaction.broadcastAt ? (
         <DetailRow label="Broadcast date">
           {formatRelativeTime(new Date(transaction.broadcastAt))}

@@ -550,6 +550,7 @@ export function PageGalleryPage() {
                 proposerLabel="Amber"
                 initiationDate="2h ago"
                 recipient={ADDR_2}
+                nonce={mockTx.nonce}
               />
             </>
           }
