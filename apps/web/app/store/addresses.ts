@@ -18,7 +18,7 @@ import {
 } from '~/utils/wallet';
 import { WalletAddressEntry } from '~/utils/wallet-addresses';
 
-import { ChainId } from '@leather.io/models';
+import { AccountAddresses, ChainId } from '@leather.io/models';
 import { createAccountAddresses, delay } from '@leather.io/utils';
 
 import { useStacksNetwork } from './stacks-network';
@@ -106,15 +106,6 @@ export function useLeatherConnect() {
 
   const stacksAccount = useStacksAccount();
 
-  const btcAccount = useMemo(() => {
-    const btcAddresses = addresses.filter(addr => addr.symbol === 'BTC');
-    const descriptors = btcAddresses
-      .filter(addr => 'descriptor' in addr)
-      .map(addr => addr.descriptor);
-
-    return createAccountAddresses({ fingerprint: 'web-sdk', accountIndex: 0 }, descriptors);
-  }, [addresses]);
-
   const btcPaymentAddress = useMemo(() => {
     for (const type of btcPaymentAddressPreference) {
       const match = addresses.find(address => 'type' in address && address.type === type);
@@ -122,6 +113,30 @@ export function useLeatherConnect() {
     }
     return undefined;
   }, [addresses]);
+
+  const btcAccount = useMemo(() => {
+    const btcAddresses = addresses.filter(addr => addr.symbol === 'BTC');
+    const descriptors = btcAddresses
+      .filter(addr => 'descriptor' in addr)
+      .map(addr => addr.descriptor);
+
+    const account = createAccountAddresses(
+      { fingerprint: 'web-sdk', accountIndex: 0 },
+      descriptors
+    );
+    if (account.bitcoin || !btcPaymentAddress) return account;
+    if (!('type' in btcPaymentAddress) || !btcPaymentAddress.type) return account;
+
+    const fixedAddressAccount: AccountAddresses = {
+      ...account,
+      bitcoin: {
+        type: 'fixedAddress',
+        address: btcPaymentAddress.address,
+        paymentType: btcPaymentAddress.type,
+      },
+    };
+    return fixedAddressAccount;
+  }, [addresses, btcPaymentAddress]);
 
   const accounts = { stacksAccount, btcAccount, btcPaymentAddress };
 

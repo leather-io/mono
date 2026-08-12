@@ -2,6 +2,8 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { WalletAddressEntry } from '~/utils/wallet-addresses';
+
 import { ChainId } from '@leather.io/models';
 
 import { useDetectLeatherProvider, useLeatherConnect } from './addresses';
@@ -64,6 +66,14 @@ function ConnectProbe() {
   return null;
 }
 
+let setAddressesFn: ((entries: WalletAddressEntry[]) => void) | undefined;
+
+function BtcAccountProbe() {
+  const { btcAccount, setAddresses } = useLeatherConnect();
+  setAddressesFn = setAddresses;
+  return <span>{JSON.stringify(btcAccount.bitcoin ?? null)}</span>;
+}
+
 beforeAll(() => {
   Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true);
 });
@@ -87,6 +97,36 @@ describe('useLeatherConnect isLeatherWallet reactivity', () => {
 
     expect(walletMock.markLeatherAsSelectedWallet).toHaveBeenCalled();
     expect(container.textContent).toBe('leather');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+});
+
+describe('btcAccount for wallets without descriptors', () => {
+  test('falls back to a fixedAddress account from the payment address', () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    const root = createRoot(container);
+    act(() => {
+      root.render(<BtcAccountProbe />);
+    });
+    act(() => {
+      setAddressesFn?.([
+        { symbol: 'STX', address: 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7' },
+        { symbol: 'BTC', address: '3P14159f73E4gFr7JterCCQh9QjiTjiZrG', type: 'p2sh' },
+      ]);
+    });
+
+    expect(container.textContent).toBe(
+      JSON.stringify({
+        type: 'fixedAddress',
+        address: '3P14159f73E4gFr7JterCCQh9QjiTjiZrG',
+        paymentType: 'p2sh',
+      })
+    );
 
     act(() => {
       root.unmount();
