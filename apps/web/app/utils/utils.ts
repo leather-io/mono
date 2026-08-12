@@ -5,7 +5,6 @@ declare global {
   interface Window {
     XverseProviders?: object;
     btc_providers?: object[];
-    wbip_providers?: object[];
   }
 }
 

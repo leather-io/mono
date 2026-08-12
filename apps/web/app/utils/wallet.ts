@@ -1,4 +1,5 @@
 import {
+  JsonRpcErrorCode,
   MethodParams,
   StacksProvider,
   disconnect,
@@ -77,18 +78,18 @@ function getRpcErrorCode(error: unknown): number | null {
   return null;
 }
 
-const wbipUserRejectionErrorCode = -32000;
-const connectUserCanceledErrorCode = -31001;
-
 const userRejectionErrorCodes: number[] = [
   RpcErrorCode.USER_REJECTION,
-  wbipUserRejectionErrorCode,
-  connectUserCanceledErrorCode,
+  JsonRpcErrorCode.UserCanceled,
 ];
 
 export function isUserRejectionError(error: unknown): boolean {
   const code = getRpcErrorCode(error);
-  return code !== null && userRejectionErrorCodes.includes(code);
+  if (code === null) return false;
+  if (code === JsonRpcErrorCode.UserRejection) {
+    return getConnectedWalletId() !== leatherProviderId;
+  }
+  return userRejectionErrorCodes.includes(code);
 }
 
 export async function connectWallet(): Promise<ConnectWalletResult> {

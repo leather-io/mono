@@ -16,6 +16,7 @@ const { getLeatherMockModeMock, getSelectedProviderIdMock, getSelectedProviderMo
   }));
 
 vi.mock('@stacks/connect', () => ({
+  JsonRpcErrorCode: { UserRejection: -32000, UserCanceled: -31001 },
   disconnect: vi.fn(),
   getSelectedProvider: getSelectedProviderMock,
   getSelectedProviderId: getSelectedProviderIdMock,
@@ -76,13 +77,28 @@ describe(connectWallet.name, () => {
 });
 
 describe(isUserRejectionError.name, () => {
+  beforeEach(() => {
+    getLeatherMockModeMock.mockReturnValue(false);
+    getSelectedProviderIdMock.mockReturnValue(null);
+  });
+
   test('detects a rejection on both error shapes', () => {
     expect(isUserRejectionError({ code: 4001 })).toBe(true);
     expect(isUserRejectionError({ jsonrpc: '2.0', id: '1', error: { code: 4001 } })).toBe(true);
   });
 
   test('detects rejection codes from other wallets and the connect modal', () => {
+    getSelectedProviderIdMock.mockReturnValue('XverseProviders.BitcoinProvider');
+
     expect(isUserRejectionError({ code: -32000 })).toBe(true);
+    expect(isUserRejectionError({ code: -31001 })).toBe(true);
+  });
+
+  test('does not treat -32000 as a rejection when leather is the selected wallet', () => {
+    getSelectedProviderIdMock.mockReturnValue('LeatherProvider');
+
+    expect(isUserRejectionError({ code: -32000 })).toBe(false);
+    expect(isUserRejectionError({ code: 4001 })).toBe(true);
     expect(isUserRejectionError({ code: -31001 })).toBe(true);
   });
 
