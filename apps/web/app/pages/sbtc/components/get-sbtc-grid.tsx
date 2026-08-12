@@ -4,13 +4,21 @@ import { StacksIcon } from '~/components/icons/stacks-icon';
 import { WhenClient } from '~/components/when-client';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { GetSbtcGridLayout } from '~/pages/sbtc/components/get-sbtc-grid.layout';
+import { openExternalLink } from '~/utils/external-links';
+import { isLeatherInstalled } from '~/utils/utils';
 
+import { LEATHER_EXTENSION_CHROME_STORE_URL } from '@leather.io/constants';
 import { Button } from '@leather.io/ui';
 
 import { useSbtcRewardContext } from '../sbtc-rewards-context';
 
+function openInstallLeather() {
+  openExternalLink(LEATHER_EXTENSION_CHROME_STORE_URL);
+}
+
 function BridgeToSbtcCell() {
-  const { onBridgeSbtc, whenExtensionState, isLeatherWallet } = useSbtcRewardContext();
+  const { onBridgeSbtc, whenExtensionState } = useSbtcRewardContext();
+  const leatherInstalled = isLeatherInstalled();
 
   return (
     <Flex flexDir={['column', 'row', 'column', 'row']} justifyContent="space-between" p="space.05">
@@ -31,17 +39,17 @@ function BridgeToSbtcCell() {
       <Flex alignItems="flex-end">
         <WhenClient>
           <Button
-            onClick={onBridgeSbtc}
+            onClick={leatherInstalled ? onBridgeSbtc : openInstallLeather}
             disabled={whenExtensionState({
-              connected: !isLeatherWallet,
+              connected: false,
               detected: true,
-              missing: true,
+              missing: false,
             })}
             mt="space.04"
             size="sm"
           >
             {whenExtensionState({
-              connected: isLeatherWallet ? 'Bridge' : 'Requires Leather',
+              connected: leatherInstalled ? 'Bridge' : 'Install Leather to bridge',
               detected: 'Sign in to bridge',
               missing: 'Install Leather to bridge',
             })}
@@ -53,7 +61,8 @@ function BridgeToSbtcCell() {
 }
 
 function SwapStxToSbtcCell() {
-  const { onSwapStxSbtc, whenExtensionState, isLeatherWallet } = useSbtcRewardContext();
+  const { onSwapStxSbtc, whenExtensionState } = useSbtcRewardContext();
+  const leatherInstalled = isLeatherInstalled();
 
   return (
     <Flex
@@ -78,16 +87,16 @@ function SwapStxToSbtcCell() {
         <WhenClient fallback={<Button width="52px" size="sm" aria-busy />}>
           <Button
             disabled={whenExtensionState({
-              connected: !isLeatherWallet,
+              connected: false,
               detected: true,
-              missing: true,
+              missing: false,
             })}
-            onClick={onSwapStxSbtc}
+            onClick={leatherInstalled ? onSwapStxSbtc : openInstallLeather}
             mt="space.04"
             size="sm"
           >
             {whenExtensionState({
-              connected: isLeatherWallet ? 'Swap' : 'Requires Leather',
+              connected: leatherInstalled ? 'Swap' : 'Install Leather to swap',
               detected: 'Sign in to swap',
               missing: 'Install Leather to swap',
             })}

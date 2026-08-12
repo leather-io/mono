@@ -24,7 +24,7 @@ import { SbtcRewardContext } from './sbtc-rewards-context';
 
 export function SbtcRewards(): ReactElement {
   const { sbtcPools, sbtcEnroll } = useLoaderData<typeof loader>();
-  const { status, whenExtensionState, isLeatherWallet } = useLeatherConnect();
+  const { status, whenExtensionState } = useLeatherConnect();
 
   async function bridgeSbtc() {
     analytics.untypedTrack('bridge_btc_sbtc_opened');
@@ -41,7 +41,6 @@ export function SbtcRewards(): ReactElement {
       value={{
         whenExtensionState,
         extensionStatus: status,
-        isLeatherWallet,
         onBridgeSbtc: bridgeSbtc,
         onSwapStxSbtc: swapStxSbtc,
       }}
