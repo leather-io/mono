@@ -234,6 +234,7 @@ export function useLeatherConnect() {
 }
 
 function completeZealyConnectTask(network: StacksNetwork, address?: string) {
+  if (getConnectedWalletId() !== leatherProviderId) return;
   if (network.chainId === ChainId.Mainnet && address) {
     fetch('https://api.leather.io/v1/quests/connect-earn/complete', {
       method: 'POST',

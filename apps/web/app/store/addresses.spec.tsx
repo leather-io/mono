@@ -2,6 +2,8 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { ChainId } from '@leather.io/models';
+
 import { useDetectLeatherProvider, useLeatherConnect } from './addresses';
 
 const { walletMock } = vi.hoisted(() => {
@@ -40,14 +42,26 @@ vi.mock('~/features/toasts/use-toast', () => ({
   useToast: () => ({ success: vi.fn(), error: vi.fn(), info: vi.fn() }),
 }));
 
+const { stacksNetworkState } = vi.hoisted(() => ({
+  stacksNetworkState: { chainId: 0 },
+}));
+
 vi.mock('./stacks-network', () => ({
-  useStacksNetwork: () => ({ network: { chainId: 0 } }),
+  useStacksNetwork: () => ({ network: stacksNetworkState }),
 }));
 
 function Probe() {
   useDetectLeatherProvider();
   const { isLeatherWallet } = useLeatherConnect();
   return <span>{isLeatherWallet ? 'leather' : 'not-leather'}</span>;
+}
+
+let connectFn: (() => Promise<unknown>) | undefined;
+
+function ConnectProbe() {
+  const { connect } = useLeatherConnect();
+  connectFn = connect;
+  return null;
 }
 
 beforeAll(() => {
@@ -78,5 +92,59 @@ describe('useLeatherConnect isLeatherWallet reactivity', () => {
       root.unmount();
     });
     container.remove();
+  });
+});
+
+describe('completeZealyConnectTask gating', () => {
+  const stxAddress = 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7';
+  const fetchMock = vi.fn();
+
+  async function connectWith(walletId: string) {
+    walletMock.state.selectedWalletId = walletId;
+    walletMock.connectWallet.mockResolvedValue({
+      status: 'connected',
+      addresses: [{ symbol: 'STX', address: stxAddress, kind: 'single-sig' }],
+    });
+
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    const root = createRoot(container);
+    act(() => {
+      root.render(<ConnectProbe />);
+    });
+    await act(async () => {
+      await connectFn?.();
+    });
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  }
+
+  beforeEach(() => {
+    fetchMock.mockReset();
+    fetchMock.mockResolvedValue({});
+    vi.stubGlobal('fetch', fetchMock);
+    stacksNetworkState.chainId = ChainId.Mainnet;
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  test('does not post to the quests api for non-leather wallets', async () => {
+    await connectWith('XverseProviders.BitcoinProvider');
+
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  test('posts the connected address for leather', async () => {
+    await connectWith('LeatherProvider');
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://api.leather.io/v1/quests/connect-earn/complete',
+      expect.objectContaining({ body: JSON.stringify({ address: stxAddress }) })
+    );
   });
 });
