@@ -13,6 +13,7 @@ import {
   getConnectedWalletId,
   leatherProviderId,
   markLeatherAsSelectedWallet,
+  revokeWalletPermissions,
 } from '~/utils/wallet';
 import { WalletAddressEntry } from '~/utils/wallet-addresses';
 
@@ -70,7 +71,7 @@ const stacksAccountAtom = atom(get => {
   return addresses.find(address => address.symbol === 'STX');
 });
 
-const showMissingStacksKeysDialogAtom = atom(false);
+const showMissingStacksKeysDialogAtom = atom<false | 'leather' | 'generic'>(false);
 const showInstallLeatherDialogAtom = atom(false);
 
 export function useStacksAccount() {
@@ -136,6 +137,7 @@ export function useLeatherConnect() {
     },
     async connect() {
       const startTime = performance.now();
+      const previousWalletId = getConnectedWalletId();
       analytics.untypedTrack('sign_in_clicked', { status: 'initiated' });
       try {
         const result = await connectWallet();
@@ -153,8 +155,18 @@ export function useLeatherConnect() {
         const walletAddresses = result.addresses;
 
         if (!walletAddresses.some(address => address.symbol === 'STX')) {
+          const attemptedWalletId = getConnectedWalletId();
+          if (previousWalletId === leatherProviderId) {
+            await revokeWalletPermissions();
+            markLeatherAsSelectedWallet();
+          } else {
+            setAddresses([]);
+            disconnectWallet();
+          }
           await waitForExtensionConnectAnimationToFinish();
-          setShowMissingStacksKeysDialog(true);
+          setShowMissingStacksKeysDialog(
+            attemptedWalletId === leatherProviderId ? 'leather' : 'generic'
+          );
 
           analytics.untypedTrack('sign_in_clicked', {
             status: 'error',

@@ -3,7 +3,6 @@ import { RotatedArrow } from '~/components/icons/rotated-icon';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
 import { leather } from '~/utils/leather-sdk';
-import { getConnectedWalletId, leatherProviderId } from '~/utils/wallet';
 
 import { LEATHER_EXTENSION_CHROME_STORE_URL } from '@leather.io/constants';
 import { Link, Sheet } from '@leather.io/ui';
@@ -12,10 +11,10 @@ import { ActiveAccountButtonLayout, SignInButtonLayout } from './sign-in-button.
 
 function NoStacksAccountsWarningDialog() {
   const { showMissingStacksKeysDialog, setShowMissingStacksKeysDialog } = useLeatherConnect();
-  const isLeatherSelected = getConnectedWalletId() === leatherProviderId;
+  const isLeatherSelected = showMissingStacksKeysDialog === 'leather';
   return (
     <Sheet
-      isShowing={showMissingStacksKeysDialog}
+      isShowing={Boolean(showMissingStacksKeysDialog)}
       onClose={() => setShowMissingStacksKeysDialog(false)}
     >
       <styled.div p="space.05">
@@ -55,12 +54,7 @@ function InstallLeatherButton() {
 
 function ConnectLeatherButton() {
   const { connect } = useLeatherConnect();
-  return (
-    <>
-      <SignInButtonLayout onClick={connect}>Connect</SignInButtonLayout>
-      <NoStacksAccountsWarningDialog />
-    </>
-  );
+  return <SignInButtonLayout onClick={connect}>Connect</SignInButtonLayout>;
 }
 
 function ActiveAccountButton() {
@@ -79,14 +73,12 @@ function ActiveAccountButton() {
 export function SignInButton() {
   const { status } = useLeatherConnect();
 
-  switch (status) {
-    case 'missing':
-      return <InstallLeatherButton />;
-    case 'detected':
-      return <ConnectLeatherButton />;
-    case 'connected':
-      return <ActiveAccountButton />;
-    default:
-      return null;
-  }
+  return (
+    <>
+      {status === 'missing' && <InstallLeatherButton />}
+      {status === 'detected' && <ConnectLeatherButton />}
+      {status === 'connected' && <ActiveAccountButton />}
+      <NoStacksAccountsWarningDialog />
+    </>
+  );
 }

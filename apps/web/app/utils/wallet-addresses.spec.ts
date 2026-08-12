@@ -89,6 +89,26 @@ describe(normalizeWalletAddresses.name, () => {
     expect(result).toEqual([expect.objectContaining({ symbol: 'BTC', type: undefined })]);
   });
 
+  test('keeps entries whose publicKey is null', () => {
+    const result = normalizeWalletAddresses([
+      { address: 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7', publicKey: null },
+      { address: 'bc1qs0kkdpsrzh3ngqgth7mkavlwlzr7lms2zv3wxe', publicKey: null },
+    ]);
+    expect(result).toEqual([
+      {
+        symbol: 'STX',
+        address: 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7',
+        publicKey: undefined,
+      },
+      {
+        symbol: 'BTC',
+        address: 'bc1qs0kkdpsrzh3ngqgth7mkavlwlzr7lms2zv3wxe',
+        publicKey: undefined,
+        type: 'p2wpkh',
+      },
+    ]);
+  });
+
   test('drops entries without a usable address', () => {
     expect(normalizeWalletAddresses([{ address: '' }, {}, null, 'nope'])).toEqual([]);
   });

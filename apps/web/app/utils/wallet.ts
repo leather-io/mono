@@ -23,7 +23,7 @@ interface RawWalletProvider {
 
 const revokePermissionsTimeoutMs = 2000;
 
-async function revokeWalletPermissions(): Promise<boolean> {
+export async function revokeWalletPermissions(): Promise<boolean> {
   const providerId = getSelectedProviderId();
   if (!providerId || providerId === leatherProviderId) return false;
   const provider: RawWalletProvider | undefined = getSelectedProvider();

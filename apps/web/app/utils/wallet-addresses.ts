@@ -13,7 +13,7 @@ export type WalletAddressEntry = Address | GenericWalletAddress;
 
 const genericAddressSourceSchema = z.object({
   address: z.string().min(1),
-  publicKey: z.string().optional(),
+  publicKey: z.string().nullish(),
   type: z.string().optional(),
   addressType: z.string().optional(),
 });
@@ -43,13 +43,13 @@ export function normalizeWalletAddresses(entries: unknown[]): WalletAddressEntry
 
     const source = genericEntry.data;
     if (stacksAddressPattern.test(source.address)) {
-      return [{ symbol: 'STX', address: source.address, publicKey: source.publicKey }];
+      return [{ symbol: 'STX', address: source.address, publicKey: source.publicKey ?? undefined }];
     }
     return [
       {
         symbol: 'BTC',
         address: source.address,
-        publicKey: source.publicKey,
+        publicKey: source.publicKey ?? undefined,
         type: deriveBitcoinAddressType(source),
       },
     ];
