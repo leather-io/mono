@@ -333,6 +333,7 @@ export function buildOnchainStacksActivity(
     txid: tx.tx_id,
     status,
     initiatedByUser,
+    nonce: tx.nonce,
     ...(blockHeight !== undefined ? { blockHeight } : {}),
     ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
   };
