@@ -104,6 +104,17 @@ describe(normalizeWalletAddresses.name, () => {
     expect(result).toEqual([]);
   });
 
+  test('keeps entries whose type is null', () => {
+    const result = normalizeWalletAddresses([
+      { address: 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7', type: null, addressType: null },
+      { address: 'bc1qs0kkdpsrzh3ngqgth7mkavlwlzr7lms2zv3wxe', type: null, addressType: null },
+    ]);
+    expect(result).toEqual([
+      expect.objectContaining({ symbol: 'STX' }),
+      expect.objectContaining({ symbol: 'BTC', type: 'p2wpkh' }),
+    ]);
+  });
+
   test('keeps entries whose publicKey is null', () => {
     const result = normalizeWalletAddresses([
       { address: 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7', publicKey: null },

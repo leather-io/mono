@@ -20,13 +20,13 @@ export type WalletAddressEntry = Address | GenericWalletAddress;
 const genericAddressSourceSchema = z.object({
   address: z.string().min(1),
   publicKey: z.string().nullish(),
-  type: z.string().optional(),
-  addressType: z.string().optional(),
+  type: z.string().nullish(),
+  addressType: z.string().nullish(),
 });
 
 type GenericAddressSource = z.infer<typeof genericAddressSourceSchema>;
 
-function toBitcoinAddressType(value: string | undefined): BitcoinAddressType | undefined {
+function toBitcoinAddressType(value: string | null | undefined): BitcoinAddressType | undefined {
   return bitcoinAddressTypes.find(type => type === value);
 }
 
