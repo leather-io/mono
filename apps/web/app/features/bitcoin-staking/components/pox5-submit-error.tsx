@@ -1,10 +1,8 @@
 import { ErrorLabel } from '~/components/error-label';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
-import { WalletProviderUnavailableError } from '~/utils/wallet';
+import { WalletProviderUnavailableError, isUserRejectionError } from '~/utils/wallet';
 
 import type { FlagProps } from '@leather.io/ui';
-
-import { isUserRejectionError } from '../transactions/pox5-tx-status';
 
 interface Pox5SubmitErrorProps extends Omit<FlagProps, 'children'> {
   error: unknown;

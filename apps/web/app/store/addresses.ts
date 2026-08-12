@@ -4,6 +4,7 @@ import { StacksNetwork } from '@stacks/network';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { v4 as uuidv4 } from 'uuid';
+import { useToast } from '~/features/toasts/use-toast';
 import { analytics } from '~/utils/analytics/analytics';
 import { leather } from '~/utils/leather-sdk';
 import { type ExtensionState, isAnyWalletInstalled, whenExtensionState } from '~/utils/utils';
@@ -26,6 +27,8 @@ const addressesAtom = atomWithStorage<WalletAddressEntry[]>('addresses', []);
 
 const providerDetectedAtom = atom(isAnyWalletInstalled());
 
+const connectedWalletIdAtom = atom<string | null>(getConnectedWalletId());
+
 const extensionStateAtom = atom<ExtensionState>(get => {
   const addresses = get(addressesAtom);
   if (addresses.length !== 0) return 'connected';
@@ -38,15 +41,20 @@ const providerPollMaxMs = 2000;
 
 const btcPaymentAddressPreference = ['p2wpkh', 'p2sh', 'p2pkh'] as const;
 
+const connectErrorMessage = `Couldn't connect wallet. Please try again.`;
+
 export function useDetectLeatherProvider() {
   const setProviderDetected = useSetAtom(providerDetectedAtom);
+  const setConnectedWalletId = useSetAtom(connectedWalletIdAtom);
   const addresses = useAtomValue(addressesAtom);
 
   useEffect(() => {
+    setConnectedWalletId(getConnectedWalletId());
     if (addresses.length === 0) return;
     if (getConnectedWalletId() !== null) return;
     markLeatherAsSelectedWallet();
-  }, [addresses]);
+    setConnectedWalletId(getConnectedWalletId());
+  }, [addresses, setConnectedWalletId]);
 
   useEffect(() => {
     if (isAnyWalletInstalled()) {
@@ -87,6 +95,7 @@ async function waitForExtensionConnectAnimationToFinish() {
 export function useLeatherConnect() {
   const [addresses, setAddresses] = useAtom(addressesAtom);
   const stacksNetwork = useStacksNetwork();
+  const toast = useToast();
   const extensionState = useAtomValue(extensionStateAtom);
   const [showMissingStacksKeysDialog, setShowMissingStacksKeysDialog] = useAtom(
     showMissingStacksKeysDialogAtom
@@ -116,7 +125,13 @@ export function useLeatherConnect() {
 
   const accounts = { stacksAccount, btcAccount, btcPaymentAddress };
 
-  const connectedWalletId = extensionState === 'connected' ? getConnectedWalletId() : null;
+  const [storedWalletId, setConnectedWalletId] = useAtom(connectedWalletIdAtom);
+
+  function syncConnectedWalletId() {
+    setConnectedWalletId(getConnectedWalletId());
+  }
+
+  const connectedWalletId = extensionState === 'connected' ? storedWalletId : null;
   const isLeatherWallet = connectedWalletId === leatherProviderId;
 
   return {
@@ -143,10 +158,23 @@ export function useLeatherConnect() {
         const result = await connectWallet();
 
         if (result.status === 'canceled') {
+          syncConnectedWalletId();
           if (result.sessionRevoked) setAddresses([]);
           analytics.untypedTrack('sign_in_clicked', {
             status: 'error',
             reason: 'user_rejected',
+            duration: performance.now() - startTime,
+          });
+          return;
+        }
+
+        if (result.status === 'error') {
+          syncConnectedWalletId();
+          if (result.sessionRevoked) setAddresses([]);
+          toast.error(connectErrorMessage);
+          analytics.untypedTrack('sign_in_clicked', {
+            status: 'error',
+            reason: 'connect_failed',
             duration: performance.now() - startTime,
           });
           return;
@@ -163,6 +191,7 @@ export function useLeatherConnect() {
             setAddresses([]);
             disconnectWallet();
           }
+          syncConnectedWalletId();
           await waitForExtensionConnectAnimationToFinish();
           setShowMissingStacksKeysDialog(
             attemptedWalletId === leatherProviderId ? 'leather' : 'generic'
@@ -181,6 +210,7 @@ export function useLeatherConnect() {
           duration: performance.now() - startTime,
         });
         setAddresses(walletAddresses);
+        syncConnectedWalletId();
         completeZealyConnectTask(
           stacksNetwork.network,
           walletAddresses.find(address => address.symbol === 'STX')?.address
@@ -189,7 +219,7 @@ export function useLeatherConnect() {
       } catch {
         analytics.untypedTrack('sign_in_clicked', {
           status: 'error',
-          reason: 'user_rejected',
+          reason: 'connect_failed',
           duration: performance.now() - startTime,
         });
       }
@@ -198,6 +228,7 @@ export function useLeatherConnect() {
       analytics.untypedTrack('sign_out_clicked');
       setAddresses([]);
       disconnectWallet();
+      syncConnectedWalletId();
     },
   };
 }

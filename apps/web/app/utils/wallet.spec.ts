@@ -1,6 +1,11 @@
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
-import { WalletProviderUnavailableError, connectWallet, walletStxCallContract } from './wallet';
+import {
+  WalletProviderUnavailableError,
+  connectWallet,
+  isUserRejectionError,
+  walletStxCallContract,
+} from './wallet';
 
 const { getLeatherMockModeMock, getSelectedProviderIdMock, getSelectedProviderMock, requestMock } =
   vi.hoisted(() => ({
@@ -50,6 +55,43 @@ describe(connectWallet.name, () => {
       { addresses: ['payment', 'ordinals', 'stacks'] }
     );
     expect(result).toEqual({ status: 'connected', addresses: [] });
+  });
+
+  test('classifies rejection-coded failures as canceled', async () => {
+    requestMock.mockRejectedValue({ code: -31001 });
+
+    const result = await connectWallet();
+
+    expect(result).toEqual({ status: 'canceled', sessionRevoked: false });
+  });
+
+  test('classifies non-rejection failures as errors', async () => {
+    const failure = new Error('provider exploded');
+    requestMock.mockRejectedValue(failure);
+
+    const result = await connectWallet();
+
+    expect(result).toEqual({ status: 'error', error: failure, sessionRevoked: false });
+  });
+});
+
+describe(isUserRejectionError.name, () => {
+  test('detects a rejection on both error shapes', () => {
+    expect(isUserRejectionError({ code: 4001 })).toBe(true);
+    expect(isUserRejectionError({ jsonrpc: '2.0', id: '1', error: { code: 4001 } })).toBe(true);
+  });
+
+  test('detects rejection codes from other wallets and the connect modal', () => {
+    expect(isUserRejectionError({ code: -32000 })).toBe(true);
+    expect(isUserRejectionError({ code: -31001 })).toBe(true);
+  });
+
+  test('ignores anything else', () => {
+    expect(isUserRejectionError({ code: -32603 })).toBe(false);
+    expect(isUserRejectionError({ error: { code: -32603 } })).toBe(false);
+    expect(isUserRejectionError(new Error('Mock Leather error'))).toBe(false);
+    expect(isUserRejectionError(null)).toBe(false);
+    expect(isUserRejectionError(undefined)).toBe(false);
   });
 });
 

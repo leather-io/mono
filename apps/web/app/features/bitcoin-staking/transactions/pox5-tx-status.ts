@@ -1,5 +1,3 @@
-import { RpcErrorCode } from '@leather.io/rpc';
-
 export type Pox5TxKind = 'stake' | 'stake-update' | 'unstake' | 'claim-rewards';
 
 type Pox5TxFailureReason = 'aborted' | 'dropped' | 'not-found' | 'unknown';
@@ -54,30 +52,4 @@ export function getPox5TxScreenState({
   if (outcome) return outcome;
   if (now - startedAt > pox5TxNotFoundTimeoutMs) return { status: 'failed', reason: 'not-found' };
   return { status: 'pending' };
-}
-
-function getRpcErrorCode(error: unknown): number | null {
-  if (!error || typeof error !== 'object') return null;
-  if ('code' in error && typeof error.code === 'number') return error.code;
-  if ('error' in error) {
-    const inner = error.error;
-    if (inner && typeof inner === 'object' && 'code' in inner && typeof inner.code === 'number') {
-      return inner.code;
-    }
-  }
-  return null;
-}
-
-const wbipUserRejectionErrorCode = -32000;
-const connectUserCanceledErrorCode = -31001;
-
-const userRejectionErrorCodes: number[] = [
-  RpcErrorCode.USER_REJECTION,
-  wbipUserRejectionErrorCode,
-  connectUserCanceledErrorCode,
-];
-
-export function isUserRejectionError(error: unknown): boolean {
-  const code = getRpcErrorCode(error);
-  return code !== null && userRejectionErrorCodes.includes(code);
 }

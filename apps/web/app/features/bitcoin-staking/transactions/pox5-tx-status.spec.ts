@@ -3,7 +3,6 @@ import {
   getPox5TxOutcome,
   getPox5TxRefetchInterval,
   getPox5TxScreenState,
-  isUserRejectionError,
   pox5TxNotFoundTimeoutMs,
   pox5TxPollIntervalMs,
 } from './pox5-tx-status';
@@ -115,25 +114,5 @@ describe(getPox5TxScreenState.name, () => {
         now: startedAt + pox5TxNotFoundTimeoutMs * 10,
       })
     ).toEqual({ status: 'confirmed' });
-  });
-});
-
-describe(isUserRejectionError.name, () => {
-  test('detects a rejection on both error shapes', () => {
-    expect(isUserRejectionError({ code: 4001 })).toBe(true);
-    expect(isUserRejectionError({ jsonrpc: '2.0', id: '1', error: { code: 4001 } })).toBe(true);
-  });
-
-  test('detects rejection codes from other wallets and the connect modal', () => {
-    expect(isUserRejectionError({ code: -32000 })).toBe(true);
-    expect(isUserRejectionError({ code: -31001 })).toBe(true);
-  });
-
-  test('ignores anything else', () => {
-    expect(isUserRejectionError({ code: -32603 })).toBe(false);
-    expect(isUserRejectionError({ error: { code: -32603 } })).toBe(false);
-    expect(isUserRejectionError(new Error('Mock Leather error'))).toBe(false);
-    expect(isUserRejectionError(null)).toBe(false);
-    expect(isUserRejectionError(undefined)).toBe(false);
   });
 });

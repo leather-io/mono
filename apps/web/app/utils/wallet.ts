@@ -12,6 +12,7 @@ import { getLeatherMockMode } from '~/constants/environment';
 import { StxCallContractParams, leather } from '~/utils/leather-sdk';
 import { WalletAddressEntry, normalizeWalletAddresses } from '~/utils/wallet-addresses';
 
+import { RpcErrorCode } from '@leather.io/rpc';
 import { delay } from '@leather.io/utils';
 
 export const leatherProviderId = 'LeatherProvider';
@@ -49,7 +50,8 @@ export async function revokeWalletPermissions(): Promise<boolean> {
 
 type ConnectWalletResult =
   | { status: 'connected'; addresses: WalletAddressEntry[] }
-  | { status: 'canceled'; sessionRevoked: boolean };
+  | { status: 'canceled'; sessionRevoked: boolean }
+  | { status: 'error'; error: unknown; sessionRevoked: boolean };
 
 export interface WalletTransactionResult {
   txid?: string;
@@ -61,6 +63,32 @@ export class WalletProviderUnavailableError extends Error {
     super('No wallet provider is selected');
     this.name = 'WalletProviderUnavailableError';
   }
+}
+
+function getRpcErrorCode(error: unknown): number | null {
+  if (!error || typeof error !== 'object') return null;
+  if ('code' in error && typeof error.code === 'number') return error.code;
+  if ('error' in error) {
+    const inner = error.error;
+    if (inner && typeof inner === 'object' && 'code' in inner && typeof inner.code === 'number') {
+      return inner.code;
+    }
+  }
+  return null;
+}
+
+const wbipUserRejectionErrorCode = -32000;
+const connectUserCanceledErrorCode = -31001;
+
+const userRejectionErrorCodes: number[] = [
+  RpcErrorCode.USER_REJECTION,
+  wbipUserRejectionErrorCode,
+  connectUserCanceledErrorCode,
+];
+
+export function isUserRejectionError(error: unknown): boolean {
+  const code = getRpcErrorCode(error);
+  return code !== null && userRejectionErrorCodes.includes(code);
 }
 
 export async function connectWallet(): Promise<ConnectWalletResult> {
@@ -76,9 +104,10 @@ export async function connectWallet(): Promise<ConnectWalletResult> {
       connectAddressesParams
     );
     return { status: 'connected', addresses: normalizeWalletAddresses(result.addresses) };
-  } catch {
+  } catch (error) {
     if (sessionRevoked) disconnect();
-    return { status: 'canceled', sessionRevoked };
+    if (isUserRejectionError(error)) return { status: 'canceled', sessionRevoked };
+    return { status: 'error', error, sessionRevoked };
   }
 }
 
