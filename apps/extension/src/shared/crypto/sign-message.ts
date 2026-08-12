@@ -1,5 +1,4 @@
 import { type PrivateKey, bytesToHex } from '@stacks/common';
-import { SignatureData } from '@stacks/connect-jwt';
 import { hashMessage } from '@stacks/encryption';
 import {
   ClarityValue,
@@ -7,6 +6,8 @@ import {
   signMessageHashRsv,
   signStructuredData,
 } from '@stacks/transactions';
+
+import { SignatureData } from '@shared/signature/signature-types';
 
 export function signMessage(message: string, privateKey: PrivateKey): SignatureData {
   const hash = hashMessage(message);

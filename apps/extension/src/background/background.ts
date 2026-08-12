@@ -5,16 +5,12 @@ import type { RpcRequests } from '@leather.io/rpc';
 
 import { listenForSessionDurationPort } from '@shared/analytics/session-duration-tracking';
 import { logger } from '@shared/logger';
-import { CONTENT_SCRIPT_PORT, type LegacyMessageFromContentScript } from '@shared/message-types';
+import { CONTENT_SCRIPT_PORT } from '@shared/message-types';
 import { warnUsersAboutDevToolsDangers } from '@shared/utils/dev-tools-warning-log';
 
 import { queueAnalyticsRequest } from './background-analytics';
 import { initContextMenuActions } from './init-context-menus';
 import { internalBackgroundMessageHandler } from './messaging/internal-methods/message-handler';
-import {
-  handleLegacyExternalMethodFormat,
-  isLegacyMessage,
-} from './messaging/legacy/legacy-external-message-handler';
 import { rpcMessageHandler } from './messaging/rpc-message-handler';
 import { initAddressMonitor } from './monitors/address-monitor';
 
@@ -33,7 +29,7 @@ chrome.runtime.onInstalled.addListener(async details => {
 chrome.runtime.onConnect.addListener(port => {
   if (port.name !== CONTENT_SCRIPT_PORT) return;
 
-  port.onMessage.addListener((message: LegacyMessageFromContentScript | RpcRequests, port) => {
+  port.onMessage.addListener((message: RpcRequests, port) => {
     if (!port.sender?.tab?.id)
       return logger.error('Message reached background script without a corresponding tab');
 
@@ -43,15 +39,6 @@ chrome.runtime.onConnect.addListener(port => {
     if (!originUrl)
       return logger.error('Message reached background script without a corresponding origin');
 
-    // Legacy JWT format messages
-    if (isLegacyMessage(message)) {
-      void handleLegacyExternalMethodFormat(message, port);
-      return;
-    }
-
-    // TODO:
-    // Here we'll handle all messages using the rpc style comm method
-    // For now all messages are handled as legacy format
     void rpcMessageHandler(message, port);
   });
 });

@@ -4,21 +4,10 @@
  the browser. Content scripts read and modify the DOM of web pages the browser visits.
  https://developer.chrome.com/docs/extensions/mv3/architecture-overview/#contentScripts
  */
-import {
-  AuthenticationRequestEvent,
-  DomEventName,
-  PsbtRequestEvent,
-  SignatureRequestEvent,
-  TransactionRequestEvent,
-} from '@shared/inpage-types';
-import {
-  CONTENT_SCRIPT_PORT,
-  ExternalMethods,
-  LegacyMessageFromContentScript,
-  LegacyMessageToContentScript,
-  MESSAGE_SOURCE,
-} from '@shared/message-types';
-import { RouteUrls } from '@shared/route-urls';
+import type { RpcRequests, RpcResponses } from '@leather.io/rpc';
+
+import { DomEventName } from '@shared/inpage-types';
+import { CONTENT_SCRIPT_PORT } from '@shared/message-types';
 
 let backgroundPort: any;
 
@@ -32,88 +21,35 @@ function connect() {
 connect();
 
 // Sends message to background script that an event has fired
-function sendMessageToBackground(message: LegacyMessageFromContentScript) {
+function sendMessageToBackground(message: RpcRequests) {
   backgroundPort.postMessage(message);
 }
 
 // Receives message from background script to execute in browser
-chrome.runtime.onMessage.addListener((message: LegacyMessageToContentScript) => {
-  if (message.source === MESSAGE_SOURCE || (message as any).jsonrpc === '2.0') {
+chrome.runtime.onMessage.addListener((message: RpcResponses) => {
+  if (message.jsonrpc === '2.0') {
     window.postMessage(message, window.location.origin);
   }
 });
 
-interface ForwardDomEventToBackgroundArgs {
-  payload: string;
-  method: LegacyMessageFromContentScript['method'];
-  urlParam: string;
-  path: RouteUrls;
-}
-function forwardDomEventToBackground({ payload, method }: ForwardDomEventToBackgroundArgs) {
-  sendMessageToBackground({
-    method,
-    payload,
-    source: MESSAGE_SOURCE,
-  });
+function isRpcRequestEnvelope(value: unknown): value is RpcRequests {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'jsonrpc' in value &&
+    value.jsonrpc === '2.0' &&
+    'id' in value &&
+    typeof value.id === 'string' &&
+    'method' in value &&
+    typeof value.method === 'string'
+  );
 }
 
 document.addEventListener(DomEventName.request, (event: any) => {
-  sendMessageToBackground({ source: MESSAGE_SOURCE, ...event.detail });
+  const request: unknown = event.detail;
+  if (!isRpcRequestEnvelope(request)) return;
+  sendMessageToBackground(request);
 });
-
-// Listen for a CustomEvent (auth request) coming from the web app
-document.addEventListener(DomEventName.authenticationRequest, ((
-  event: AuthenticationRequestEvent
-) => {
-  forwardDomEventToBackground({
-    path: RouteUrls.Onboarding,
-    payload: event.detail.authenticationRequest,
-    urlParam: 'authRequest',
-    method: ExternalMethods.authenticationRequest,
-  });
-}) as EventListener);
-
-// Listen for a CustomEvent (transaction request) coming from the web app
-document.addEventListener(DomEventName.transactionRequest, ((event: TransactionRequestEvent) => {
-  forwardDomEventToBackground({
-    path: RouteUrls.TransactionRequest,
-    payload: event.detail.transactionRequest,
-    urlParam: 'request',
-    method: ExternalMethods.transactionRequest,
-  });
-}) as EventListener);
-
-// Listen for a CustomEvent (signature request) coming from the web app
-document.addEventListener(DomEventName.signatureRequest, ((event: SignatureRequestEvent) => {
-  forwardDomEventToBackground({
-    path: RouteUrls.SignatureRequest,
-    payload: event.detail.signatureRequest,
-    urlParam: 'request',
-    method: ExternalMethods.signatureRequest,
-  });
-}) as EventListener);
-
-// Listen for a CustomEvent (structured data signature request) coming from the web app
-document.addEventListener(DomEventName.structuredDataSignatureRequest, ((
-  event: SignatureRequestEvent
-) => {
-  forwardDomEventToBackground({
-    path: RouteUrls.SignatureRequest,
-    payload: event.detail.signatureRequest,
-    urlParam: 'request',
-    method: ExternalMethods.structuredDataSignatureRequest,
-  });
-}) as EventListener);
-
-// Listen for a CustomEvent (psbt request) coming from the web app
-document.addEventListener(DomEventName.psbtRequest, ((event: PsbtRequestEvent) => {
-  forwardDomEventToBackground({
-    path: RouteUrls.PsbtRequest,
-    payload: event.detail.psbtRequest,
-    urlParam: 'request',
-    method: ExternalMethods.psbtRequest,
-  });
-}) as EventListener);
 
 function addLeatherToPage() {
   const inpage = document.createElement('script');

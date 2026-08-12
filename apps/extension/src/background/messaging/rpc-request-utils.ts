@@ -46,7 +46,7 @@ export function getOriginatingFrameFromPort(port: chrome.runtime.Port): Originat
   return { frameId: getFrameIdFromPort(port), tabId: getTabIdFromPort(port) };
 }
 
-export function getOriginFromPort(port: chrome.runtime.Port) {
+function getOriginFromPort(port: chrome.runtime.Port) {
   if (port.sender?.url) return new URL(port.sender.url).origin;
   return port.sender?.origin;
 }
@@ -217,7 +217,7 @@ export function validateRequestParams({
   return { status: 'success' };
 }
 
-export const walletNoLongerAvailableMessage =
+const walletNoLongerAvailableMessage =
   'Wallet no longer available. Reconnect the app to an available wallet.';
 
 type MaybePreMultiWalletRootState = Omit<RootState, 'wallets'> & {
@@ -230,7 +230,7 @@ type ConnectedWalletCheckResult =
   | { status: 'success'; frameId: number; tabId: number }
   | { status: 'failure'; reason: ConnectedWalletFailureReason; frameId: number; tabId: number };
 
-export async function checkConnectedWalletExists(
+async function checkConnectedWalletExists(
   port: chrome.runtime.Port
 ): Promise<ConnectedWalletCheckResult> {
   const tabId = getTabIdFromPort(port);

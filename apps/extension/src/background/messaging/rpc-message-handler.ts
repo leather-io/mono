@@ -61,10 +61,13 @@ export async function rpcMessageHandler(request: RpcRequests, port: chrome.runti
 
   logger.info(`Received RPC request ${request.method}`, request);
 
+  const isRegisteredMethod =
+    typeof request.method === 'string' && Object.hasOwn(rpcHandlers, request.method);
+
   // This typecast safely bypasses the compiler since it cannot infer or narrow
   // the type to know the `request` being passed to `handler` is the correct
   // one. Type safety is guaranteed by `registerRpcRequestHandler`
-  const handler = rpcHandlers[request.method] as RpcHandler<any>;
+  const handler = isRegisteredMethod ? (rpcHandlers[request.method] as RpcHandler<any>) : undefined;
 
   if (handler) {
     if (methodsRequiringConnectedWallet.has(request.method)) {

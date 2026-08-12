@@ -9,11 +9,9 @@ export function useDefaultRequestParams() {
     const origin = initialSearchParams.get('origin');
     const tabId = initialSearchParams.get('tabId');
     const frameId = initialSearchParams.get('frameId');
-    const flow = initialSearchParams.get('flow');
 
     return {
       origin,
-      flow,
       frameId: isString(frameId) ? parseInt(frameId, 10) : (frameId ?? 0),
       tabId: isString(tabId) ? parseInt(tabId, 10) : (tabId ?? 0),
     };

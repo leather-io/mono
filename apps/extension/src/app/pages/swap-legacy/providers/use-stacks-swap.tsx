@@ -10,12 +10,12 @@ import { isError, isUndefined } from '@leather.io/utils';
 import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 import { bitflow } from '@shared/utils/bitflow-sdk';
-import { type ContractCallPayload } from '@shared/utils/legacy-requests';
 
 import {
   type GenerateUnsignedTransactionOptions,
   generateUnsignedTransaction,
 } from '@app/common/transactions/stacks/generate-unsigned-txs';
+import { type ContractCallPayload } from '@app/common/transactions/stacks/stacks-transaction-payloads';
 import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
