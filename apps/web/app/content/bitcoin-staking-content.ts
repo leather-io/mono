@@ -155,6 +155,7 @@ export const bitcoinStakingContent = {
     },
     submitErrors: {
       rejected: `The request was cancelled in Leather. Nothing was submitted.`,
+      walletUnavailable: `No wallet connected. Reconnect your wallet and try again.`,
       unknown: `Couldn't submit the transaction. Please try again.`,
     },
     viewInExplorer: `View in explorer`,

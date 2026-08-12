@@ -1,4 +1,5 @@
 import {
+  StacksProvider,
   connect,
   disconnect,
   getSelectedProvider,
@@ -45,6 +46,13 @@ export interface WalletTransactionResult {
   transaction?: string;
 }
 
+export class WalletProviderUnavailableError extends Error {
+  constructor() {
+    super('No wallet provider is selected');
+    this.name = 'WalletProviderUnavailableError';
+  }
+}
+
 export async function connectWallet(): Promise<ConnectWalletResult> {
   if (getLeatherMockMode()) {
     const result = await leather.getAddresses();
@@ -87,7 +95,12 @@ export async function walletStxCallContract(
   if (!isContractIdString(contract)) {
     throw new Error(`Invalid contract identifier: ${contract}`);
   }
-  return request(connectRequestOptions, 'stx_callContract', { ...params, contract });
+  const provider: StacksProvider | undefined = getSelectedProvider();
+  if (!provider) throw new WalletProviderUnavailableError();
+  return request({ ...connectRequestOptions, provider }, 'stx_callContract', {
+    ...params,
+    contract,
+  });
 }
 
 export const wallet = { stxCallContract: walletStxCallContract };
