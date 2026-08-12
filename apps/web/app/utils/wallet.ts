@@ -1,6 +1,6 @@
 import {
+  MethodParams,
   StacksProvider,
-  connect,
   disconnect,
   getSelectedProvider,
   getSelectedProviderId,
@@ -17,6 +17,16 @@ import { delay } from '@leather.io/utils';
 export const leatherProviderId = 'LeatherProvider';
 
 const connectRequestOptions = { enableLocalStorage: false };
+
+type WalletAddressPurpose = 'payment' | 'ordinals' | 'stacks';
+
+interface ConnectAddressesParams extends MethodParams<'getAddresses'> {
+  addresses: WalletAddressPurpose[];
+}
+
+const connectAddressesParams: ConnectAddressesParams = {
+  addresses: ['payment', 'ordinals', 'stacks'],
+};
 
 interface RawWalletProvider {
   request(method: string): Promise<unknown>;
@@ -60,7 +70,11 @@ export async function connectWallet(): Promise<ConnectWalletResult> {
   }
   const sessionRevoked = await revokeWalletPermissions();
   try {
-    const result = await connect(connectRequestOptions);
+    const result = await request(
+      { ...connectRequestOptions, forceWalletSelect: true },
+      'getAddresses',
+      connectAddressesParams
+    );
     return { status: 'connected', addresses: normalizeWalletAddresses(result.addresses) };
   } catch {
     if (sessionRevoked) disconnect();

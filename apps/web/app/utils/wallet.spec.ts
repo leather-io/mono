@@ -1,18 +1,19 @@
 import { StxCallContractParams } from '~/utils/leather-sdk';
 
-import { WalletProviderUnavailableError, walletStxCallContract } from './wallet';
+import { WalletProviderUnavailableError, connectWallet, walletStxCallContract } from './wallet';
 
-const { getLeatherMockModeMock, getSelectedProviderMock, requestMock } = vi.hoisted(() => ({
-  getLeatherMockModeMock: vi.fn(),
-  getSelectedProviderMock: vi.fn(),
-  requestMock: vi.fn(),
-}));
+const { getLeatherMockModeMock, getSelectedProviderIdMock, getSelectedProviderMock, requestMock } =
+  vi.hoisted(() => ({
+    getLeatherMockModeMock: vi.fn(),
+    getSelectedProviderIdMock: vi.fn(),
+    getSelectedProviderMock: vi.fn(),
+    requestMock: vi.fn(),
+  }));
 
 vi.mock('@stacks/connect', () => ({
-  connect: vi.fn(),
   disconnect: vi.fn(),
   getSelectedProvider: getSelectedProviderMock,
-  getSelectedProviderId: vi.fn(),
+  getSelectedProviderId: getSelectedProviderIdMock,
   request: requestMock,
   setSelectedProviderId: vi.fn(),
 }));
@@ -30,6 +31,27 @@ const params: StxCallContractParams = {
   functionName: 'stake',
   functionArgs: [],
 };
+
+describe(connectWallet.name, () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    getLeatherMockModeMock.mockReturnValue(false);
+    getSelectedProviderIdMock.mockReturnValue(null);
+  });
+
+  test('requests addresses with explicit purposes so multi-vault wallets prompt for every chain', async () => {
+    requestMock.mockResolvedValue({ addresses: [] });
+
+    const result = await connectWallet();
+
+    expect(requestMock).toHaveBeenCalledWith(
+      { enableLocalStorage: false, forceWalletSelect: true },
+      'getAddresses',
+      { addresses: ['payment', 'ordinals', 'stacks'] }
+    );
+    expect(result).toEqual({ status: 'connected', addresses: [] });
+  });
+});
 
 describe(walletStxCallContract.name, () => {
   beforeEach(() => {
