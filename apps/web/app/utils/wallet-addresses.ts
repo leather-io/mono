@@ -1,12 +1,18 @@
 import { z } from 'zod';
 
+import {
+  type BitcoinAddressType,
+  bitcoinAddressTypes,
+  getBitcoinAddressType,
+} from '@leather.io/bitcoin';
 import { type Address, addressSchema } from '@leather.io/rpc';
+import { isValidStacksAddress } from '@leather.io/stacks';
 
 interface GenericWalletAddress {
   symbol: 'BTC' | 'STX';
   address: string;
   publicKey?: string;
-  type?: 'p2wpkh' | 'p2tr';
+  type?: BitcoinAddressType;
 }
 
 export type WalletAddressEntry = Address | GenericWalletAddress;
@@ -20,17 +26,15 @@ const genericAddressSourceSchema = z.object({
 
 type GenericAddressSource = z.infer<typeof genericAddressSourceSchema>;
 
-const stacksAddressPattern = /^S[PMTN]/;
-const taprootAddressPattern = /^(bc1p|tb1p|bcrt1p)/;
-const nativeSegwitAddressPattern = /^(bc1q|tb1q|bcrt1q)/;
+function toBitcoinAddressType(value: string | undefined): BitcoinAddressType | undefined {
+  return bitcoinAddressTypes.find(type => type === value);
+}
 
-function deriveBitcoinAddressType(source: GenericAddressSource): 'p2wpkh' | 'p2tr' | undefined {
-  if (source.type === 'p2tr' || source.addressType === 'p2tr') return 'p2tr';
-  if (source.type === 'p2wpkh' || source.addressType === 'p2wpkh') return 'p2wpkh';
-  const address = source.address.toLowerCase();
-  if (taprootAddressPattern.test(address)) return 'p2tr';
-  if (nativeSegwitAddressPattern.test(address)) return 'p2wpkh';
-  return undefined;
+function deriveBitcoinAddressType(source: GenericAddressSource): BitcoinAddressType | undefined {
+  const explicitType =
+    toBitcoinAddressType(source.type) ?? toBitcoinAddressType(source.addressType);
+  if (explicitType) return explicitType;
+  return getBitcoinAddressType(source.address);
 }
 
 export function normalizeWalletAddresses(entries: unknown[]): WalletAddressEntry[] {
@@ -42,15 +46,18 @@ export function normalizeWalletAddresses(entries: unknown[]): WalletAddressEntry
     if (!genericEntry.success) return [];
 
     const source = genericEntry.data;
-    if (stacksAddressPattern.test(source.address)) {
+    if (isValidStacksAddress(source.address)) {
       return [{ symbol: 'STX', address: source.address, publicKey: source.publicKey ?? undefined }];
     }
+
+    const type = deriveBitcoinAddressType(source);
+    if (!type) return [];
     return [
       {
         symbol: 'BTC',
         address: source.address,
         publicKey: source.publicKey ?? undefined,
-        type: deriveBitcoinAddressType(source),
+        type,
       },
     ];
   });

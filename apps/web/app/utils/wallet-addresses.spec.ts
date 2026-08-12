@@ -73,10 +73,10 @@ describe(normalizeWalletAddresses.name, () => {
     expect(result).toEqual([expect.objectContaining({ symbol: 'BTC', type: 'p2wpkh' })]);
   });
 
-  test('recognizes testnet address prefixes', () => {
+  test('recognizes testnet addresses', () => {
     const result = normalizeWalletAddresses([
       { address: 'tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx' },
-      { address: 'ST2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7' },
+      { address: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG' },
     ]);
     expect(result).toEqual([
       expect.objectContaining({ symbol: 'BTC', type: 'p2wpkh' }),
@@ -84,9 +84,24 @@ describe(normalizeWalletAddresses.name, () => {
     ]);
   });
 
-  test('leaves the bitcoin type undefined when it cannot be derived', () => {
-    const result = normalizeWalletAddresses([{ address: '3P14159f73E4gFr7JterCCQh9QjiTjiZrG' }]);
-    expect(result).toEqual([expect.objectContaining({ symbol: 'BTC', type: undefined })]);
+  test('classifies p2sh payment addresses', () => {
+    const result = normalizeWalletAddresses([
+      { address: '3P14159f73E4gFr7JterCCQh9QjiTjiZrG' },
+      { address: '2N3wh1eYqMeqoLxuKFv8PBsYR4f8gYn8dHm' },
+    ]);
+    expect(result).toEqual([
+      expect.objectContaining({ symbol: 'BTC', type: 'p2sh' }),
+      expect.objectContaining({ symbol: 'BTC', type: 'p2sh' }),
+    ]);
+  });
+
+  test('drops entries that are neither valid stacks nor bitcoin addresses', () => {
+    const result = normalizeWalletAddresses([
+      { address: 'SPAMJUNKNOTANADDRESS' },
+      { address: 'ST2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7' },
+      { address: 'nope' },
+    ]);
+    expect(result).toEqual([]);
   });
 
   test('keeps entries whose publicKey is null', () => {

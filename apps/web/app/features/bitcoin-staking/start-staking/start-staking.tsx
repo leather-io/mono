@@ -89,7 +89,7 @@ function StartStakingLayout({
   client,
   signerManagerContractId: signerManagerContractIdOverride,
 }: StartStakingLayoutProps) {
-  const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
+  const { stacksAccount, btcPaymentAddress } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No STX address available');
 
   const navigate = useNavigate();
@@ -137,7 +137,7 @@ function StartStakingLayout({
     defaultValues: {
       cycles: DEFAULT_STAKING_CYCLES,
       payoutEnabled: false,
-      rewardAddress: btcAddressP2wpkh?.address,
+      rewardAddress: btcPaymentAddress?.address,
       maxFeeSats: '',
     },
     resolver: zodResolver(schema),

@@ -36,6 +36,8 @@ const extensionStateAtom = atom<ExtensionState>(get => {
 const providerPollIntervalMs = 50;
 const providerPollMaxMs = 2000;
 
+const btcPaymentAddressPreference = ['p2wpkh', 'p2sh', 'p2pkh'] as const;
+
 export function useDetectLeatherProvider() {
   const setProviderDetected = useSetAtom(providerDetectedAtom);
   const addresses = useAtomValue(addressesAtom);
@@ -104,17 +106,15 @@ export function useLeatherConnect() {
     return createAccountAddresses({ fingerprint: 'web-sdk', accountIndex: 0 }, descriptors);
   }, [addresses]);
 
-  const btcAddressP2tr = useMemo(
-    () => addresses.find(address => 'type' in address && address.type === 'p2tr'),
-    [addresses]
-  );
+  const btcPaymentAddress = useMemo(() => {
+    for (const type of btcPaymentAddressPreference) {
+      const match = addresses.find(address => 'type' in address && address.type === type);
+      if (match) return match;
+    }
+    return undefined;
+  }, [addresses]);
 
-  const btcAddressP2wpkh = useMemo(
-    () => addresses.find(address => 'type' in address && address.type === 'p2wpkh'),
-    [addresses]
-  );
-
-  const accounts = { stacksAccount, btcAccount, btcAddressP2tr, btcAddressP2wpkh };
+  const accounts = { stacksAccount, btcAccount, btcPaymentAddress };
 
   const connectedWalletId = extensionState === 'connected' ? getConnectedWalletId() : null;
   const isLeatherWallet = connectedWalletId === leatherProviderId;
