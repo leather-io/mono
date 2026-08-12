@@ -5,6 +5,7 @@ import { ExtensionState, whenExtensionState } from '~/utils/utils';
 interface SbtcRewardContextValue {
   whenExtensionState: ReturnType<typeof whenExtensionState>;
   extensionStatus: ExtensionState;
+  isLeatherWallet: boolean;
   onBridgeSbtc(): void;
   onSwapStxSbtc(): void;
 }

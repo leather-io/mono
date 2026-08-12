@@ -6,18 +6,24 @@ import { atomWithStorage } from 'jotai/utils';
 import { v4 as uuidv4 } from 'uuid';
 import { analytics } from '~/utils/analytics/analytics';
 import { leather } from '~/utils/leather-sdk';
-import { type ExtensionState, isLeatherInstalled, whenExtensionState } from '~/utils/utils';
+import { type ExtensionState, isAnyWalletInstalled, whenExtensionState } from '~/utils/utils';
+import {
+  connectWallet,
+  disconnectWallet,
+  getConnectedWalletId,
+  leatherProviderId,
+  markLeatherAsSelectedWallet,
+} from '~/utils/wallet';
+import { WalletAddressEntry } from '~/utils/wallet-addresses';
 
 import { ChainId } from '@leather.io/models';
 import { createAccountAddresses, delay } from '@leather.io/utils';
 
 import { useStacksNetwork } from './stacks-network';
 
-type GetAddressesResult = Awaited<ReturnType<typeof leather.getAddresses>>['addresses'];
+const addressesAtom = atomWithStorage<WalletAddressEntry[]>('addresses', []);
 
-const addressesAtom = atomWithStorage<GetAddressesResult>('addresses', []);
-
-const providerDetectedAtom = atom(isLeatherInstalled());
+const providerDetectedAtom = atom(isAnyWalletInstalled());
 
 const extensionStateAtom = atom<ExtensionState>(get => {
   const addresses = get(addressesAtom);
@@ -31,16 +37,23 @@ const providerPollMaxMs = 2000;
 
 export function useDetectLeatherProvider() {
   const setProviderDetected = useSetAtom(providerDetectedAtom);
+  const addresses = useAtomValue(addressesAtom);
 
   useEffect(() => {
-    if (isLeatherInstalled()) {
+    if (addresses.length === 0) return;
+    if (getConnectedWalletId() !== null) return;
+    markLeatherAsSelectedWallet();
+  }, [addresses]);
+
+  useEffect(() => {
+    if (isAnyWalletInstalled()) {
       setProviderDetected(true);
       return;
     }
 
     const start = Date.now();
     const interval = setInterval(() => {
-      if (isLeatherInstalled()) {
+      if (isAnyWalletInstalled()) {
         setProviderDetected(true);
         clearInterval(interval);
       } else if (Date.now() - start > providerPollMaxMs) {
@@ -102,9 +115,14 @@ export function useLeatherConnect() {
 
   const accounts = { stacksAccount, btcAccount, btcAddressP2tr, btcAddressP2wpkh };
 
+  const connectedWalletId = extensionState === 'connected' ? getConnectedWalletId() : null;
+  const isLeatherWallet = connectedWalletId === leatherProviderId;
+
   return {
     addresses,
     setAddresses,
+    connectedWalletId,
+    isLeatherWallet,
     showMissingStacksKeysDialog,
     setShowMissingStacksKeysDialog,
     showInstallLeatherDialog,
@@ -120,9 +138,21 @@ export function useLeatherConnect() {
       const startTime = performance.now();
       analytics.untypedTrack('sign_in_clicked', { status: 'initiated' });
       try {
-        const result = await leather.getAddresses();
+        const result = await connectWallet();
 
-        if (!result.addresses.some(address => address.symbol === 'STX')) {
+        if (result.status === 'canceled') {
+          if (result.sessionRevoked) setAddresses([]);
+          analytics.untypedTrack('sign_in_clicked', {
+            status: 'error',
+            reason: 'user_rejected',
+            duration: performance.now() - startTime,
+          });
+          return;
+        }
+
+        const walletAddresses = result.addresses;
+
+        if (!walletAddresses.some(address => address.symbol === 'STX')) {
           await waitForExtensionConnectAnimationToFinish();
           setShowMissingStacksKeysDialog(true);
 
@@ -138,12 +168,12 @@ export function useLeatherConnect() {
           status: 'success',
           duration: performance.now() - startTime,
         });
-        setAddresses(result.addresses);
+        setAddresses(walletAddresses);
         completeZealyConnectTask(
           stacksNetwork.network,
-          result.addresses.find(address => address.symbol === 'STX')?.address
+          walletAddresses.find(address => address.symbol === 'STX')?.address
         );
-        return result.addresses;
+        return walletAddresses;
       } catch {
         analytics.untypedTrack('sign_in_clicked', {
           status: 'error',
@@ -155,6 +185,7 @@ export function useLeatherConnect() {
     disconnect() {
       analytics.untypedTrack('sign_out_clicked');
       setAddresses([]);
+      disconnectWallet();
     },
   };
 }

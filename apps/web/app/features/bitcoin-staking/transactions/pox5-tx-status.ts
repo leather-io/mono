@@ -68,6 +68,16 @@ function getRpcErrorCode(error: unknown): number | null {
   return null;
 }
 
+const wbipUserRejectionErrorCode = -32000;
+const connectUserCanceledErrorCode = -31001;
+
+const userRejectionErrorCodes: number[] = [
+  RpcErrorCode.USER_REJECTION,
+  wbipUserRejectionErrorCode,
+  connectUserCanceledErrorCode,
+];
+
 export function isUserRejectionError(error: unknown): boolean {
-  return getRpcErrorCode(error) === RpcErrorCode.USER_REJECTION;
+  const code = getRpcErrorCode(error);
+  return code !== null && userRejectionErrorCodes.includes(code);
 }

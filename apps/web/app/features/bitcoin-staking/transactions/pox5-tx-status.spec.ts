@@ -124,6 +124,11 @@ describe(isUserRejectionError.name, () => {
     expect(isUserRejectionError({ jsonrpc: '2.0', id: '1', error: { code: 4001 } })).toBe(true);
   });
 
+  test('detects rejection codes from other wallets and the connect modal', () => {
+    expect(isUserRejectionError({ code: -32000 })).toBe(true);
+    expect(isUserRejectionError({ code: -31001 })).toBe(true);
+  });
+
   test('ignores anything else', () => {
     expect(isUserRejectionError({ code: -32603 })).toBe(false);
     expect(isUserRejectionError({ error: { code: -32603 } })).toBe(false);

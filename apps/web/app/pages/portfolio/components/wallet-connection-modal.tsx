@@ -26,8 +26,8 @@ export function WalletConnectionModal({ isOpen }: WalletConnectionModalProps) {
       <ConnectCard
         mt="-60px"
         position="relative"
-        title="Get started with Leather"
-        description="Connect Leather to access your portfolio"
+        title="Get started"
+        description="Connect a wallet to access your portfolio"
       >
         <ConnectActionRow
           hideBodyBelowSm
@@ -37,7 +37,7 @@ export function WalletConnectionModal({ isOpen }: WalletConnectionModalProps) {
             </Circle>
           }
           title="Connect"
-          description="Connect Leather to reveal your portfolio"
+          description="Connect a wallet to reveal your portfolio"
           trailing={
             <Button width="100px" height="48px" onClick={() => connect()}>
               Connect

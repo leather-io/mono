@@ -25,7 +25,7 @@ import {
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
-import { leather } from '~/utils/leather-sdk';
+import { wallet } from '~/utils/wallet';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 import { stxToMicroStx } from '@leather.io/utils';
@@ -151,7 +151,7 @@ function StartStakingLayout({
     mutate: submitStake,
     isPending: handleStakePending,
     error: stakeError,
-  } = useMutation(createStakeMutationOptions({ leather, client }));
+  } = useMutation(createStakeMutationOptions({ wallet, client }));
 
   const handleStake = formMethods.handleSubmit(values => {
     if (!signerManagerContractId) return;

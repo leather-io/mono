@@ -25,8 +25,8 @@ import {
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
-import { leather } from '~/utils/leather-sdk';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
+import { wallet } from '~/utils/wallet';
 
 import { Button, Input, LoadingSpinner } from '@leather.io/ui';
 import { isDefined, stxToMicroStx, truncateMiddle } from '@leather.io/utils';
@@ -292,7 +292,7 @@ function UpdateStakingForm({
     mutate: submitStakeUpdate,
     isPending,
     error: stakeUpdateError,
-  } = useMutation(createStakeUpdateMutationOptions({ leather, client }));
+  } = useMutation(createStakeUpdateMutationOptions({ wallet, client }));
 
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
 
