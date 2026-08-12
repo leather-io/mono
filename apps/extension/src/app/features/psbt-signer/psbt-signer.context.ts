@@ -11,6 +11,7 @@ export interface PsbtSignerContext {
   addressNativeSegwitTotal: Money;
   addressTaprootTotal: Money;
   fee: Money;
+  hasDisallowedSighash: boolean;
   isPsbtMutable: boolean;
   psbtInputs: PsbtInput[];
   psbtOutputs: PsbtOutput[];

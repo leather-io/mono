@@ -95,6 +95,7 @@ export function PsbtSigner(props: PsbtSignerProps) {
     addressNativeSegwitTotal,
     addressTaprootTotal,
     fee,
+    hasDisallowedSighash: descriptorDetails?.hasDisallowedSighash ?? false,
     isPsbtMutable,
     psbtInputs,
     psbtOutputs,
@@ -139,7 +140,10 @@ export function PsbtSigner(props: PsbtSignerProps) {
         <Psbt.PsbtRequestHeader name={name} origin={origin} />
         <Psbt.PsbtRequestDetailsLayout>
           {isPsbtMutable || descriptorDetails?.hasDisallowedSighash ? (
-            <Psbt.PsbtRequestSighashWarningLabel origin={origin} />
+            <Psbt.PsbtRequestSighashWarningLabel
+              origin={origin}
+              outputsNotGuaranteed={descriptorDetails?.hasDisallowedSighash ?? false}
+            />
           ) : null}
           <Psbt.PsbtRequestDetailsHeader />
           {descriptor ? (
