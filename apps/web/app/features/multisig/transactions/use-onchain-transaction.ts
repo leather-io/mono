@@ -1,12 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { useUserSettings } from '~/hooks/use-user-settings';
+import { useBlockchainActivityByTxIdDetailQuery } from '~/queries/activity/blockchain-activity.query';
 
-import type { AuthNetworkId, BitcoinTransaction, Money, StacksTx } from '@leather.io/models';
-import {
-  createBitcoinTransactionByTxIdQueryConfig,
-  createStacksTransactionByIdQueryConfig,
-} from '@leather.io/queries';
+import type { BlockchainActivityItem } from '@leather.io/features';
+import type {
+  AuthNetworkId,
+  BitcoinTransaction,
+  BlockchainActivity,
+  Money,
+  VaultAccount,
+} from '@leather.io/models';
+import { createBitcoinTransactionByTxIdQueryConfig } from '@leather.io/queries';
 import { createMoney } from '@leather.io/utils';
+
+import { getMultisigAccountAddresses } from '../vaults/multisig-account-addresses';
 
 type OnChainStatus = 'confirmed' | 'pending' | 'failed';
 
@@ -14,24 +21,35 @@ interface OnChainTransaction {
   recipient?: string;
   amount?: Money;
   fee?: Money;
+  nonce?: number;
   status?: OnChainStatus;
 }
 
-function stacksStatus(txStatus: string): OnChainStatus {
-  if (txStatus === 'success') return 'confirmed';
-  if (txStatus === 'pending') return 'pending';
+interface OnChainTransactionResult extends OnChainTransaction {
+  detail?: BlockchainActivityItem;
+  isLoading: boolean;
+}
+
+function activityStatus(status: BlockchainActivity['status']): OnChainStatus {
+  if (status === 'success') return 'confirmed';
+  if (status === 'pending') return 'pending';
   return 'failed';
 }
 
-function normalizeStacksTransaction(tx: StacksTx): OnChainTransaction {
-  const status = stacksStatus(tx.tx_status);
-  const fee = createMoney(Number(tx.fee_rate), 'STX');
-  if (tx.tx_type !== 'token_transfer') return { fee, status };
+function normalizeStacksActivity(activity: BlockchainActivity): OnChainTransaction {
+  const base = {
+    fee: activity.fee,
+    nonce: activity.nonce,
+    status: activityStatus(activity.status),
+  };
+  if (activity.contract !== undefined) return base;
+  const stxSent = activity.balanceChanges.find(
+    change => change.direction === 'sent' && change.asset.protocol === 'nativeStx'
+  );
   return {
-    recipient: tx.token_transfer.recipient_address,
-    amount: createMoney(Number(tx.token_transfer.amount), 'STX'),
-    fee,
-    status,
+    ...base,
+    recipient: activity.counterparty,
+    amount: stxSent?.amount.crypto,
   };
 }
 
@@ -59,22 +77,34 @@ function normalizeBitcoinTransaction(
 export function useOnChainTransaction(
   network: AuthNetworkId,
   txId: string | null,
-  multisigAddress: string
-): OnChainTransaction {
+  account: VaultAccount | undefined
+): OnChainTransactionResult {
   const settings = useUserSettings();
   const isBitcoin = network.startsWith('btc');
 
-  const stxQuery = useQuery({
-    ...createStacksTransactionByIdQueryConfig(txId ?? '', settings),
-    enabled: Boolean(txId) && !isBitcoin,
-  });
+  const stxActivity = useBlockchainActivityByTxIdDetailQuery(
+    getMultisigAccountAddresses(account),
+    txId ?? '',
+    settings,
+    Boolean(txId && account) && !isBitcoin
+  );
   const btcQuery = useQuery({
     ...createBitcoinTransactionByTxIdQueryConfig(txId ?? '', settings),
     enabled: Boolean(txId) && isBitcoin,
   });
 
   if (isBitcoin) {
-    return btcQuery.data ? normalizeBitcoinTransaction(btcQuery.data, multisigAddress) : {};
+    return {
+      ...(btcQuery.data
+        ? normalizeBitcoinTransaction(btcQuery.data, account?.multisigAddress ?? '')
+        : {}),
+      isLoading: btcQuery.isLoading,
+    };
   }
-  return stxQuery.data ? normalizeStacksTransaction(stxQuery.data) : {};
+  const detail = stxActivity.data ?? undefined;
+  return {
+    ...(detail ? normalizeStacksActivity(detail.activity) : {}),
+    detail,
+    isLoading: stxActivity.isLoading,
+  };
 }

@@ -10,21 +10,19 @@ import {
   decodeProposalSummary,
   matchesProposalTokenAsset,
 } from '~/features/multisig/transactions/decode-proposal-summary';
-import { useContractProtocolName } from '~/features/multisig/transactions/use-contract-protocol';
+import { useContractProtocol } from '~/features/multisig/transactions/use-contract-protocol';
 import { useOnChainTransaction } from '~/features/multisig/transactions/use-onchain-transaction';
 import {
   useBroadcastTransaction,
   useCancelTransaction,
   useSignTransaction,
 } from '~/features/multisig/transactions/use-transaction-mutations';
-import { getMultisigAccountAddresses } from '~/features/multisig/vaults/multisig-account-addresses';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useMultisigTransaction } from '~/features/multisig/vaults/use-vault-transactions';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
 import { useUserSettings } from '~/hooks/use-user-settings';
-import { createBlockchainActivityByTxIdDetailQuery } from '~/queries/activity/blockchain-activity.query';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
@@ -132,11 +130,7 @@ export function TxDetailPage() {
   const transaction = useMultisigTransaction(network, vaultNetworkKnown ? txId : undefined);
   const account = useVaultAccount(network, transaction.data?.vaultAccountId);
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
-  const onChain = useOnChainTransaction(
-    network,
-    transaction.data?.txId ?? null,
-    account.data?.multisigAddress ?? ''
-  );
+  const onChain = useOnChainTransaction(network, transaction.data?.txId ?? null, account.data);
   const marketData = useMarketDataQuery(network.startsWith('btc') ? btcAsset : stxAsset);
 
   // On-chain values are authoritative once broadcast; before that, decode the
@@ -145,7 +139,7 @@ export function TxDetailPage() {
     transaction.data && account.data
       ? decodeProposalSummary(account.data, transaction.data)
       : undefined;
-  const protocolName = useContractProtocolName(decoded?.contractId);
+  const protocol = useContractProtocol(decoded?.contractId);
   const tokenAsset = useQuery({
     ...createSip10AssetByPrincipalQueryConfig(decoded?.token?.contractId ?? '', settings),
     enabled: Boolean(decoded?.token),
@@ -162,14 +156,6 @@ export function TxDetailPage() {
   });
 
   const isContractProposal = decoded?.kind === 'contractCall' || decoded?.kind === 'contractDeploy';
-  const onchainActivity = useQuery({
-    ...createBlockchainActivityByTxIdDetailQuery(
-      getMultisigAccountAddresses(account.data),
-      transaction.data?.txId ?? '',
-      settings
-    ),
-    enabled: Boolean(account.data && transaction.data?.txId),
-  });
 
   const signTransaction = useSignTransaction(network);
   const cancelTransaction = useCancelTransaction(network);
@@ -214,9 +200,13 @@ export function TxDetailPage() {
   const listsSettled = (!btcSession || btcVaults.isSuccess) && (!stxSession || stxVaults.isSuccess);
   const detailResolving =
     vaultNetworkKnown && !(vault.isSuccess && transaction.isSuccess && account.isSuccess);
-  const isResolving = !hydrated || sessionsRestoring || !listsSettled || detailResolving;
+  const enrichmentLoading = [onChain, marketData, tokenAsset, tokenMarketData, protocol, me].some(
+    query => query.isLoading
+  );
+  const isResolving =
+    !hydrated || sessionsRestoring || !listsSettled || detailResolving || enrichmentLoading;
 
-  if (!vault.data || !transaction.data || !account.data) {
+  if (isResolving || !vault.data || !transaction.data || !account.data) {
     return (
       <MultisigPage
         title="Transaction details"
@@ -265,8 +255,7 @@ export function TxDetailPage() {
   const fee = onChain.fee ?? decoded?.fee;
   const amountFiat = toFiat(amount, marketData.data) ?? toFiat(amount, tokenMarketData.data);
   const feeFiat = toFiat(fee, marketData.data);
-  const onchainDetail = onchainActivity.data ?? undefined;
-  const contractDetail = isContractProposal ? onchainDetail : undefined;
+  const contractDetail = isContractProposal ? onChain.detail : undefined;
   const heroTitle = proposalHeroTitle(
     decoded?.kind,
     decoded?.functionName,
@@ -369,9 +358,9 @@ export function TxDetailPage() {
                 : decoded?.contractId
             }
             functionName={decoded?.functionName}
-            protocolName={protocolName}
+            protocolName={protocol.name}
             balanceChanges={contractDetail?.activity.balanceChanges}
-            nonce={onchainDetail?.activity.nonce ?? tx.nonce}
+            nonce={onChain.nonce ?? tx.nonce}
             memo={decoded?.memo}
           />
         </Box>
