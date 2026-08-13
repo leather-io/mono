@@ -1,13 +1,20 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { PlusIcon } from '@leather.io/ui';
+import { PaperPlaneIcon } from '@leather.io/ui';
 
-interface CreateTransactionButtonProps {
-  chainLabel: string;
+import type { Chain } from '../../data/multisig-types';
+
+const captions: Record<Chain, string> = {
+  btc: 'Transfer BTC from this account',
+  stx: 'Transfer STX or a token from this account',
+};
+
+interface SendTransactionButtonProps {
+  chain: Chain;
   onClick(): void;
 }
 
-export function CreateTransactionButton({ chainLabel, onClick }: CreateTransactionButtonProps) {
+export function SendTransactionButton({ chain, onClick }: SendTransactionButtonProps) {
   return (
     <styled.button
       type="button"
@@ -36,12 +43,12 @@ export function CreateTransactionButton({ chainLabel, onClick }: CreateTransacti
         bg="ink.text-primary"
         flexShrink={0}
       >
-        <PlusIcon variant="small" color="ink.background-primary" />
+        <PaperPlaneIcon variant="small" color="ink.background-primary" />
       </Flex>
       <Box>
-        <styled.div textStyle="label.02">Create transaction</styled.div>
+        <styled.div textStyle="label.02">Send</styled.div>
         <styled.div textStyle="caption.01" color="ink.text-subdued">
-          Propose a new {chainLabel} transfer for this account
+          {captions[chain]}
         </styled.div>
       </Box>
     </styled.button>
