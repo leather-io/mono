@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
-import { useQuery } from '@tanstack/react-query';
 import { Box, Flex } from 'leather-styles/jsx';
 import { CopyAddress } from '~/components/copy-address';
 import { ExternalLink } from '~/components/external-link';
@@ -12,7 +11,7 @@ import { getMultisigAccountAddresses } from '~/features/multisig/vaults/multisig
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useUserSettings } from '~/hooks/use-user-settings';
-import { createBlockchainActivityByTxIdDetailQuery } from '~/queries/activity/blockchain-activity.query';
+import { useBlockchainActivityByTxIdDetailQuery } from '~/queries/activity/blockchain-activity.query';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
@@ -103,11 +102,12 @@ export function ActivityDetailPage() {
   const accountAddresses = getMultisigAccountAddresses(account.data);
   const marketData = useMarketDataQuery(network.startsWith('btc') ? btcAsset : stxAsset);
 
-  const activityEnabled = Boolean(account.data && txid);
-  const activity = useQuery({
-    ...createBlockchainActivityByTxIdDetailQuery(accountAddresses, txid ?? '', settings),
-    enabled: activityEnabled,
-  });
+  const activity = useBlockchainActivityByTxIdDetailQuery(
+    accountAddresses,
+    txid ?? '',
+    settings,
+    Boolean(account.data && txid)
+  );
 
   const backTo =
     vaultId && accountId ? multisigPaths.account(vaultId, accountId) : multisigPaths.index;
