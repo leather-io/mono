@@ -54,6 +54,7 @@ interface StacksActivityCommon {
   readonly timestamp: number;
   readonly status: OnChainActivityStatus;
   readonly initiatedByUser: boolean;
+  readonly nonce?: number;
   readonly fee?: Money;
   readonly blockHeight?: number;
 }
@@ -194,6 +195,7 @@ export function buildPendingStacksActivity(
     txid: tx.tx_id,
     status: 'pending' as const,
     initiatedByUser,
+    nonce: tx.nonce,
     ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
   };
 
@@ -264,6 +266,7 @@ export function buildConfirmedStacksActivity(
     blockHeight: tx.block.height,
     status: mapStacksActivityStatus(tx.status),
     initiatedByUser,
+    nonce: tx.sender.nonce,
     ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
   };
 
@@ -333,6 +336,7 @@ export function buildOnchainStacksActivity(
     txid: tx.tx_id,
     status,
     initiatedByUser,
+    nonce: tx.nonce,
     ...(blockHeight !== undefined ? { blockHeight } : {}),
     ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
   };
