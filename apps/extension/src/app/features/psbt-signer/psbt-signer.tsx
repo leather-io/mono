@@ -85,7 +85,10 @@ export function PsbtSigner(props: PsbtSignerProps) {
 
   const descriptorDetails = useDescriptorPsbtDetails(psbtHex, descriptor ?? '');
 
-  useBreakOnNonCompliantEntity(psbtOutputs.map(output => output.address ?? ''));
+  useBreakOnNonCompliantEntity(
+    'psbt_signer',
+    psbtOutputs.map(output => output.address ?? '')
+  );
 
   const psbtSignerContext: PsbtSignerContext = {
     addressNativeSegwit,

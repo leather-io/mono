@@ -2,6 +2,7 @@ import { useRef } from 'react';
 
 import { useQueries } from '@tanstack/react-query';
 
+import type { ComplianceScreeningPoint } from '@leather.io/analytics';
 import { createAddressComplianceCheckQueryConfig } from '@leather.io/queries';
 import { ensureArray, isEmptyString, uniqueArray } from '@leather.io/utils';
 
@@ -26,7 +27,10 @@ function useCheckAddressComplianceQueries(addresses: string[]) {
 
 export const compliantErrorBody = 'Unable to handle request, errorCode: 1398';
 
-export function useBreakOnNonCompliantEntity(address: string | string[] = '') {
+export function useBreakOnNonCompliantEntity(
+  screeningPoint: ComplianceScreeningPoint,
+  address: string | string[] = ''
+) {
   const trackedUnavailableAddresses = useRef(new Set<string>());
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
 
@@ -44,6 +48,7 @@ export function useBreakOnNonCompliantEntity(address: string | string[] = '') {
       analytics.track('compliance_check_unavailable', {
         address: checkedAddress,
         reason: check.reason,
+        screeningPoint,
       });
     }
   });
@@ -55,6 +60,7 @@ export function useBreakOnNonCompliantEntity(address: string | string[] = '') {
     analytics.track('non_compliant_entity_detected', {
       address: nonCompliantEntity.address,
       reason: nonCompliantEntity.check.reason,
+      screeningPoint,
     });
     throw new Error(compliantErrorBody);
   }
