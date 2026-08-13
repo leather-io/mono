@@ -36,10 +36,10 @@ import { AccountAssets } from './components/account-assets';
 import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
 import { AssetDetailModal } from './components/asset-detail-modal';
-import { CreateTransactionButton } from './components/create-transaction-button';
 import { EditAccountModal } from './components/edit-account-modal';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
 import { ReceiveModal } from './components/receive-modal';
+import { SendTransactionButton } from './components/send-transaction-button';
 
 export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
@@ -111,7 +111,7 @@ export function AccountDetailPage() {
   }
 
   const theme = vaultThemeFromName(vault.data.theme);
-  const chainLabel = account.data.network.startsWith('btc') ? 'BTC' : 'STX';
+  const chain = chainFromNetwork(account.data.network);
 
   async function onAddToWallet() {
     if (!vault.data || !account.data) return;
@@ -171,8 +171,8 @@ export function AccountDetailPage() {
               </InlineTabs.List>
               <InlineTabs.Content value="transactions">
                 <Box mt="space.04">
-                  <CreateTransactionButton
-                    chainLabel={chainLabel}
+                  <SendTransactionButton
+                    chain={chain}
                     onClick={() => {
                       setProposeAssetId(undefined);
                       setIsProposing(true);
