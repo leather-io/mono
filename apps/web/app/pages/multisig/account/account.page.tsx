@@ -22,6 +22,7 @@ import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
+import { getErrorDetail } from '@leather.io/services';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { InlineTabs } from '../components/inline-tabs';
@@ -238,7 +239,10 @@ export function AccountDetailPage() {
         onSave={({ name, icon }) =>
           updateAccount.mutate(
             { accountId: account.data.id, update: { name, icon } },
-            { onSuccess: () => setIsEditingAccount(false) }
+            {
+              onSuccess: () => setIsEditingAccount(false),
+              onError: err => error(getErrorDetail(err) ?? 'Unknown error'),
+            }
           )
         }
       />

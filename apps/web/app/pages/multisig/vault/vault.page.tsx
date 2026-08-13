@@ -25,6 +25,7 @@ import { useToast } from '~/features/toasts/use-toast';
 
 import { VAULT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { AuthNetworkId, Vault } from '@leather.io/models';
+import { getErrorDetail } from '@leather.io/services';
 import { Button, Callout } from '@leather.io/ui';
 
 import { Badge } from '../components/badge';
@@ -54,7 +55,7 @@ function accountCreationBlockedReason(vault: Vault, atAccountLimit: boolean): st
 export function VaultDetailPage() {
   const { vaultId } = useParams();
   const navigate = useNavigate();
-  const { success: showToast } = useToast();
+  const { success: showToast, error: showErrorToast } = useToast();
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [isSharingInvites, setIsSharingInvites] = useState(false);
   const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
@@ -137,6 +138,9 @@ export function VaultDetailPage() {
         showToast(`“${vault.name}” cancelled`);
         void navigate(multisigPaths.index);
       },
+      onError(err) {
+        showErrorToast(getErrorDetail(err) ?? 'Unknown error');
+      },
     });
   }
 
@@ -145,7 +149,12 @@ export function VaultDetailPage() {
       title={
         <EditableName
           value={vault.name}
-          onSave={name => updateVault.mutate({ vaultId: vault.id, update: { name } })}
+          onSave={name =>
+            updateVault.mutate(
+              { vaultId: vault.id, update: { name } },
+              { onError: err => showErrorToast(getErrorDetail(err) ?? 'Unknown error') }
+            )
+          }
           title="Rename vault"
           label="vault name"
           canEdit={isCreator && vault.status !== 'cancelled'}
@@ -220,7 +229,10 @@ export function VaultDetailPage() {
             currentUserIsCreator={isCreator}
             onShareInvite={() => setIsSharingInvites(true)}
             onRenameMember={(membershipId, name) =>
-              updateMember.mutate({ membershipId, update: { name } })
+              updateMember.mutate(
+                { membershipId, update: { name } },
+                { onError: err => showErrorToast(getErrorDetail(err) ?? 'Unknown error') }
+              )
             }
           />
         </Box>
