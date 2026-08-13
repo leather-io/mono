@@ -5,12 +5,21 @@ import { useCreateVaultAccount } from '~/features/multisig/vaults/use-vault-acco
 import {
   accountLimitForThreshold,
   isThresholdAtAccountLimit,
+  maxAccountsPerThreshold,
 } from '~/features/multisig/vaults/vault-account-index';
 import { useToast } from '~/features/toasts/use-toast';
 
 import type { Vault, VaultAccountSummary } from '@leather.io/models';
 import { getErrorDetail } from '@leather.io/services';
-import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
+import {
+  BasicTooltip,
+  Button,
+  Callout,
+  CloseIcon,
+  IconButton,
+  InfoCircleIcon,
+  Sheet,
+} from '@leather.io/ui';
 
 import { AccountIconNameField } from '../../components/account-icon-name-field';
 import { defaultAccountIcon, vaultThemeFromName } from '../../multisig-tokens';
@@ -21,6 +30,14 @@ interface CreateAccountModalProps {
   accounts: VaultAccountSummary[] | undefined;
   isShowing: boolean;
   onClose(): void;
+}
+
+function accountLimitExplanation(memberCount: number, limit: number) {
+  return `${memberCount} members allow ${limit} accounts per threshold, because a Stacks address is derived from its members and threshold. Members can’t change later, so more accounts means a new vault.`;
+}
+
+function fullThresholdExplanation(threshold: number, limit: number) {
+  return `Threshold ${threshold} already has its ${limit} ${limit === 1 ? 'account' : 'accounts'}, so you can’t pick it again.`;
 }
 
 function CreateAccountHeader({ onClose }: { onClose?(): void }) {
@@ -57,10 +74,7 @@ export function CreateAccountModal({
   const memberCount = vault.members.filter(member => member.membershipStatus === 'joined').length;
   const accountList = accounts ?? [];
   const accountLimit = accountLimitForThreshold(vault.network, memberCount);
-  const anyThresholdAtLimit = Array.from(
-    { length: memberCount },
-    (_unused, index) => index + 1
-  ).some(value => isThresholdAtAccountLimit(accountList, value, accountLimit));
+  const isLimitFromDerivation = chain === 'stx' && accountLimit < maxAccountsPerThreshold;
   const canSubmit =
     name.trim() !== '' &&
     threshold !== null &&
@@ -143,6 +157,18 @@ export function CreateAccountModal({
           <styled.p textStyle="caption.01" color="ink.text-subdued" mb="space.03">
             How many of {memberCount} members need to approve before a transaction can be broadcast?
           </styled.p>
+          {isLimitFromDerivation && (
+            <Box mb="space.03">
+              <Callout
+                variant="default"
+                bg="ink.component-background-default"
+                borderRadius="md"
+                icon={<InfoCircleIcon variant="small" color="ink.text-subdued" />}
+              >
+                {accountLimitExplanation(memberCount, accountLimit)}
+              </Callout>
+            </Box>
+          )}
           <Box
             display="grid"
             gap="space.02"
@@ -151,13 +177,16 @@ export function CreateAccountModal({
             {Array.from({ length: memberCount }, (_unused, index) => index + 1).map(value => {
               const selected = threshold === value;
               const atLimit = isThresholdAtAccountLimit(accountList, value, accountLimit);
-              return (
+              const button = (
                 <styled.button
-                  key={value}
                   type="button"
-                  disabled={atLimit}
-                  onClick={() => setThreshold(value)}
+                  aria-disabled={atLimit || undefined}
+                  data-disabled={atLimit || undefined}
+                  onClick={() => {
+                    if (!atLimit) setThreshold(value);
+                  }}
                   aria-pressed={selected}
+                  width="100%"
                   py="space.04"
                   borderRadius="sm"
                   borderWidth="1px"
@@ -177,18 +206,21 @@ export function CreateAccountModal({
                   {value}
                 </styled.button>
               );
+
+              if (!atLimit) return <Box key={value}>{button}</Box>;
+
+              return (
+                <BasicTooltip
+                  key={value}
+                  asChild
+                  label={fullThresholdExplanation(value, accountLimit)}
+                >
+                  {button}
+                </BasicTooltip>
+              );
             })}
           </Box>
-          {anyThresholdAtLimit && (
-            <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.02">
-              Thresholds at their account limit are disabled.
-            </styled.p>
-          )}
-          {threshold === null ? (
-            <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.03">
-              Pick a threshold to continue. Leather doesn't choose this for you.
-            </styled.p>
-          ) : (
+          {threshold !== null && (
             <Box
               mt="space.03"
               p="space.04"
