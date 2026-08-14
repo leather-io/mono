@@ -42,6 +42,7 @@ export interface BlockchainActivityView {
   indicator: BlockchainActivityIndicator;
   title: string;
   subtitle: string;
+  protocolName?: string;
   amount?: BlockchainActivityAmount;
 }
 
