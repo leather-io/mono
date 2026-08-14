@@ -70,6 +70,7 @@ function btcComplianceValidator() {
     addressComplianceValidator({
       address,
       shouldCheckCompliance: isValidBitcoinAddress(address),
+      screeningPoint: 'send_form_btc',
     });
 }
 

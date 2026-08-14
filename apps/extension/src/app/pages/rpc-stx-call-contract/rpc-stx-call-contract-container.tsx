@@ -52,7 +52,7 @@ export function RpcStxCallContractContainer({ account }: RpcStxCallContractConta
     ? getTxSenderAddress(unsignedTxForFeeEstimation)
     : account.address;
 
-  useBreakOnNonCompliantEntity([txSenderAddress].filter(isDefined));
+  useBreakOnNonCompliantEntity('rpc_stx_call_contract', [txSenderAddress].filter(isDefined));
 
   if (!unsignedTxForFeeEstimation) return null;
 
