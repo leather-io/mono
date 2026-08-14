@@ -41,7 +41,7 @@ test.describe('sBTC deposit activity', () => {
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
     await expect(activityList.getByText(sbtcDepositTitle)).toBeVisible();
     await expect(activityList.getByText('Pending deposit')).toBeVisible();
-    await expect(activityList.getByText('Send BTC')).toBeHidden();
+    await expect(activityList.getByText('BTC', { exact: true })).toBeHidden();
     await expect(activityList.getByText(sbtcDepositTitle)).toHaveCount(1);
     await expect(activityList.getByText(`${minusSign} 0.00198`, { exact: true })).toBeVisible();
   });
@@ -94,6 +94,6 @@ test.describe('sBTC deposit activity', () => {
     await expect(activityList.getByText('Failed')).toBeVisible();
     await expect(activityList.getByText('Reclaim')).toBeVisible();
     await expect(activityList.getByText(`${minusSign} 0.0015`, { exact: true })).toBeVisible();
-    await expect(activityList.getByText('Send BTC')).toBeVisible();
+    await expect(activityList.getByText('BTC', { exact: true })).toBeVisible();
   });
 });

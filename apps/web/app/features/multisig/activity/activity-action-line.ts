@@ -4,7 +4,7 @@ import {
   interpolateActivityTemplate,
 } from '@leather.io/features';
 
-export interface ActivityActionLine {
+interface ActivityActionLine {
   actionTitle: string;
   viaProtocol?: string;
 }

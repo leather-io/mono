@@ -3,10 +3,10 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { useQuery } from '@tanstack/react-query';
 import { Box, Flex } from 'leather-styles/jsx';
+import { getActivityActionLine } from '~/features/multisig/activity/activity-action-line';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
-import { getActivityActionLine } from '~/features/multisig/activity/activity-action-line';
 import {
   decodeProposalSummary,
   matchesProposalTokenAsset,
@@ -263,7 +263,9 @@ export function TxDetailPage() {
     contractDetail?.activity.action,
     verifiedTokenAsset?.symbol
   );
-  const contractActionLine = contractDetail ? getActivityActionLine(contractDetail.view) : undefined;
+  const contractActionLine = contractDetail
+    ? getActivityActionLine(contractDetail.view)
+    : undefined;
   const heroSubtitle = contractActionLine
     ? contractActionLine.viaProtocol
     : contractDetail?.view.subtitle;
