@@ -50,4 +50,5 @@ export const leatherApiPriorities = {
   protocols: leatherPriorityLevels.MEDIUM,
   protocolContracts: leatherPriorityLevels.LOW,
   proposeMultisigTransaction: leatherPriorityLevels.HIGH,
+  compliance: leatherPriorityLevels.HIGH,
 };

@@ -54,7 +54,10 @@ export function RpcStxTransferSip9NftContainer({ account }: RpcStxTransferSip9Nf
     ? getTxSenderAddress(unsignedTxForFeeEstimation)
     : account.address;
 
-  useBreakOnNonCompliantEntity([txSenderAddress, rpcRequest.params.recipient].filter(isDefined));
+  useBreakOnNonCompliantEntity(
+    'rpc_stx_transfer_sip9_nft',
+    [txSenderAddress, rpcRequest.params.recipient].filter(isDefined)
+  );
 
   if (!unsignedTxForFeeEstimation) return null;
 
