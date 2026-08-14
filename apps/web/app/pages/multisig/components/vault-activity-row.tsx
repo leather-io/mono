@@ -1,4 +1,8 @@
 import { styled } from 'leather-styles/jsx';
+import {
+  formatActivityActionLine,
+  getActivityActionLine,
+} from '~/features/multisig/activity/activity-action-line';
 import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
 import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
@@ -86,6 +90,7 @@ export function VaultActivityRow({
   const cfg = scaleConfig[scale];
   const amount = view.amount;
   const valueColor = amount ? resolveValueColor(view.indicator, amount.direction) : undefined;
+  const actionLine = getActivityActionLine(view);
 
   return (
     <ListItemBox
@@ -109,7 +114,7 @@ export function VaultActivityRow({
           textOverflow="ellipsis"
           whiteSpace="nowrap"
         >
-          {view.subtitle || view.title || '—'}
+          {actionLine ? formatActivityActionLine(actionLine) : view.subtitle || view.title || '—'}
         </styled.span>
       }
       caption={captionText(item, location)}

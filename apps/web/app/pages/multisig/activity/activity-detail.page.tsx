@@ -7,6 +7,7 @@ import { ExternalLink } from '~/components/external-link';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
+import { getActivityActionLine } from '~/features/multisig/activity/activity-action-line';
 import { getMultisigAccountAddresses } from '~/features/multisig/vaults/multisig-account-addresses';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
@@ -144,6 +145,8 @@ export function ActivityDetailPage() {
   }
 
   const { view, activity: onchain } = detail;
+  const actionLine = getActivityActionLine(view);
+  const heroSecondary = actionLine ? actionLine.viaProtocol : view.subtitle;
   const status = onChainStatusDisplay[view.status];
   const link = explorerLink(view, settings.network);
   const counterpartyLabel = onchain.initiatedByUser ? 'To' : 'From';
@@ -161,8 +164,8 @@ export function ActivityDetailPage() {
       <MultisigHero
         variant="balance"
         themeId={vaultThemeFromName(vault.data?.theme).id}
-        primary={view.title || '—'}
-        secondary={view.subtitle || formatRelativeTime(new Date(view.timestamp * 1000))}
+        primary={actionLine?.actionTitle || view.title || '—'}
+        secondary={heroSecondary || formatRelativeTime(new Date(view.timestamp * 1000))}
       />
 
       <SectionLabel>Transaction details</SectionLabel>
