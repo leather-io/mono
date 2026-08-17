@@ -17,14 +17,22 @@ import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-check
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import type { PolicyStore } from '@app/store/policy/policy-store.utils';
 
 import * as Psbt from './components';
+import { PsbtBondAccounts } from './components/psbt-bond-accounts';
 import { useDescriptorPsbtDetails } from './hooks/use-descriptor-psbt-details';
 import { usePsbtDetails } from './hooks/use-psbt-details';
 import { usePsbtSigner } from './hooks/use-psbt-signer';
 import { PsbtSignerContext, PsbtSignerProvider } from './psbt-signer.context';
 
+interface PsbtSignerBondProposal {
+  policy: PolicyStore;
+  unlockHeight: number;
+}
+
 interface PsbtSignerProps {
+  bondProposal?: PsbtSignerBondProposal;
   descriptor?: string;
   indexesToSign?: number[];
   isBroadcasting?: boolean;
@@ -37,6 +45,7 @@ interface PsbtSignerProps {
 }
 export function PsbtSigner(props: PsbtSignerProps) {
   const {
+    bondProposal,
     descriptor,
     indexesToSign,
     isBroadcasting,
@@ -106,7 +115,7 @@ export function PsbtSigner(props: PsbtSignerProps) {
 
   return (
     <PsbtSignerProvider value={psbtSignerContext}>
-      <PopupHeader showSwitchAccount balance="all" />
+      {bondProposal ? <PopupHeader /> : <PopupHeader showSwitchAccount balance="all" />}
       <Card
         dataTestId={PsbtSelectors.PsbtSignerCard}
         contentStyle={{
@@ -131,19 +140,23 @@ export function PsbtSigner(props: PsbtSignerProps) {
                 })
               }
             >
-              Confirm
+              {bondProposal ? 'Propose transaction' : 'Confirm'}
             </Button>
           </ButtonRow>
         }
       >
         <Psbt.PsbtRequestHeader name={name} origin={origin} />
         <Psbt.PsbtRequestDetailsLayout>
+          {bondProposal ? (
+            <PsbtBondAccounts policy={bondProposal.policy} signerAddress={addressNativeSegwit} />
+          ) : null}
           {isPsbtMutable || descriptorDetails?.hasDisallowedSighash ? (
             <Psbt.PsbtRequestSighashWarningLabel origin={origin} />
           ) : null}
           <Psbt.PsbtRequestDetailsHeader />
           {descriptor ? (
             <Psbt.PsbtDescriptorPolicy
+              bondUnlockHeight={bondProposal?.unlockHeight}
               descriptor={descriptor}
               details={descriptorDetails}
               willBroadcast={willBroadcast}

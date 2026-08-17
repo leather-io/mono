@@ -248,7 +248,7 @@ export function findAccountDescriptorKey(
   return undefined;
 }
 
-function stripDescriptorChecksum(descriptor: string): string {
+export function stripDescriptorChecksum(descriptor: string): string {
   const separatorIndex = descriptor.indexOf('#');
   return separatorIndex === -1 ? descriptor : descriptor.slice(0, separatorIndex);
 }

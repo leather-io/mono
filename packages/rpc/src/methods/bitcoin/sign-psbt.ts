@@ -29,6 +29,7 @@ const signPsbtRequestParamsSchema = z.object({
   descriptor: z.string().optional(),
   hex: z.string(),
   network: z.string().optional(),
+  propose: z.boolean().optional(),
   signAtIndex: z
     .union([z.number(), z.array(z.number())])
     .optional()
@@ -38,6 +39,8 @@ const signPsbtRequestParamsSchema = z.object({
 const signPsbtResponseBodySchema = z.object({
   hex: z.string(),
   txid: z.string().optional(),
+  proposalId: z.string().optional(),
+  status: z.enum(['broadcast', 'proposed']).optional(),
 });
 
 export const signPsbt = defineRpcEndpoint({

@@ -2,7 +2,7 @@ import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
-import { compileWshDescriptor } from '@leather.io/bitcoin';
+import { compileWshDescriptor, psbtHexToBase64 } from '@leather.io/bitcoin';
 import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
 import { createMoney } from '@leather.io/utils';
 
@@ -26,11 +26,40 @@ const mocks = vi.hoisted(() => ({
   getPsbtAsTransaction: vi.fn(),
   broadcastTx: vi.fn(),
   refetchUtxos: vi.fn(),
+  useBondProposalRoute: vi.fn(),
+  proposeMultisigTransaction: vi.fn(),
+  useCurrentNetwork: vi.fn(),
 }));
+
+vi.mock('react', async importOriginal => {
+  const actual = await importOriginal<typeof import('react')>();
+  return {
+    ...actual,
+    useEffect(effect: () => void) {
+      effect();
+    },
+  };
+});
 
 vi.mock('react-router', async importOriginal => {
   const actual = await importOriginal<typeof import('react-router')>();
   return { ...actual, useNavigate: () => mocks.navigate };
+});
+
+vi.mock('./use-bond-proposal-route', () => ({
+  useBondProposalRoute: mocks.useBondProposalRoute,
+}));
+
+vi.mock('@app/features/multisig/use-propose-multisig-transaction', () => ({
+  useProposeMultisigTransaction: () => ({
+    proposeMultisigTransaction: mocks.proposeMultisigTransaction,
+    isProposing: false,
+  }),
+}));
+
+vi.mock('@app/store/networks/networks.selectors', async importOriginal => {
+  const actual = await importOriginal<typeof import('@app/store/networks/networks.selectors')>();
+  return { ...actual, useCurrentNetwork: mocks.useCurrentNetwork };
 });
 
 vi.mock('@shared/utils', async importOriginal => {
@@ -155,10 +184,12 @@ function buildTransferTx({ signed }: { signed: boolean }) {
 function setRpcSignPsbtParams({
   broadcast,
   descriptor,
+  propose = false,
   psbtHex,
 }: {
   broadcast: boolean;
   descriptor?: string;
+  propose?: boolean;
   psbtHex: string;
 }) {
   mocks.useRpcSignPsbtParams.mockReturnValue({
@@ -166,6 +197,7 @@ function setRpcSignPsbtParams({
     descriptor,
     frameId,
     origin,
+    propose,
     psbtHex,
     requestId,
     signAtIndex: undefined,
@@ -200,6 +232,11 @@ describe(useRpcSignPsbt.name, () => {
     });
     mocks.calculateBitcoinFiatValue.mockReturnValue(createMoney(0, 'USD'));
     mocks.getDefaultSigningConfig.mockReturnValue([]);
+    mocks.useBondProposalRoute.mockReturnValue(null);
+    mocks.useCurrentNetwork.mockReturnValue({
+      id: 'mainnet',
+      chain: { bitcoin: { mode: 'mainnet' } },
+    });
   });
 
   test('throws when required request params are missing', () => {
@@ -427,5 +464,102 @@ describe(useRpcSignPsbt.name, () => {
       { frameId }
     );
     expect(mocks.closeWindow).toHaveBeenCalled();
+  });
+
+  function makeMatchedBondRoute() {
+    return {
+      status: 'matched' as const,
+      policy: {
+        id: 'policy-1',
+        parentAccountId: 'f1f1f1f1/0',
+        networkId: 'mainnet',
+        address: 'bcrt1qwdyntrgqktm5h3a7l4aryndha8p09yuuc377cj9xs869gkg43lqq5x3h76',
+        role: 'signer' as const,
+        chain: 'bitcoin' as const,
+        descriptor: multiSigDescriptor,
+      },
+      bondDescriptor: multiSigDescriptor,
+      unlockHeight: 1000,
+    };
+  }
+
+  test('converts the request into a proposal when a bond route matches, ignoring broadcast', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
+    const bondRoute = makeMatchedBondRoute();
+    setRpcSignPsbtParams({ broadcast: true, propose: true, descriptor: 'bond', psbtHex });
+    mocks.useBondProposalRoute.mockReturnValue(bondRoute);
+    mocks.proposeMultisigTransaction.mockResolvedValue({ id: 'proposal-1' });
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.proposeMultisigTransaction).toHaveBeenCalledWith({
+      network: 'btc:mainnet',
+      multisigAddress: bondRoute.policy.address,
+      rawPayload: psbtHexToBase64(psbtHex),
+    });
+    expect(mocks.track).toHaveBeenCalledWith('propose_multisig_transaction', { symbol: 'btc' });
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      createRpcSuccessResponse('signPsbt', {
+        id: requestId,
+        result: { hex: psbtHex, proposalId: 'proposal-1', status: 'proposed' },
+      }),
+      { frameId }
+    );
+    expect(mocks.signDescriptorPsbt).not.toHaveBeenCalled();
+    expect(mocks.signPsbt).not.toHaveBeenCalled();
+    expect(mocks.broadcastTx).not.toHaveBeenCalled();
+    expect(mocks.closeWindow).toHaveBeenCalled();
+  });
+
+  test('navigates to an error when proposing the bond transaction fails', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
+    setRpcSignPsbtParams({ broadcast: false, propose: true, descriptor: 'bond', psbtHex });
+    mocks.useBondProposalRoute.mockReturnValue(makeMatchedBondRoute());
+    mocks.proposeMultisigTransaction.mockRejectedValue(new Error('coordinator rejected'));
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+    expect(mocks.navigate).toHaveBeenCalledWith(RouteUrls.RequestError, {
+      state: { message: 'coordinator rejected', title: 'Unable to propose transaction' },
+    });
+    expect(mocks.closeWindow).not.toHaveBeenCalled();
+  });
+
+  test('rejects the request and blocks signing when the bond route errors', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
+    setRpcSignPsbtParams({ broadcast: false, propose: true, descriptor: 'bond', psbtHex });
+    mocks.useBondProposalRoute.mockReturnValue({
+      status: 'error',
+      code: RpcErrorCode.INVALID_PARAMS,
+      message: 'Descriptor is not a supported bond template',
+    });
+
+    const { onSignPsbt } = useRpcSignPsbt();
+
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      createRpcErrorResponse('signPsbt', {
+        id: requestId,
+        error: {
+          code: RpcErrorCode.INVALID_PARAMS,
+          message: 'Descriptor is not a supported bond template',
+        },
+      }),
+      { frameId }
+    );
+    expect(mocks.navigate).toHaveBeenCalledWith(RouteUrls.RequestError, {
+      state: {
+        message: 'Descriptor is not a supported bond template',
+        title: 'Unable to propose transaction',
+      },
+    });
+
+    await onSignPsbt({ inputs: [] });
+
+    expect(mocks.signDescriptorPsbt).not.toHaveBeenCalled();
+    expect(mocks.signPsbt).not.toHaveBeenCalled();
+    expect(mocks.proposeMultisigTransaction).not.toHaveBeenCalled();
   });
 });

@@ -96,6 +96,22 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
     return;
   }
 
+  if (request.params.propose === true && isUndefined(request.params.descriptor)) {
+    void trackRpcRequestError({ endpoint: request.method, error: 'Propose without descriptor' });
+
+    void sendMessageToOriginatingFrame(
+      getOriginatingFrameFromPort(port),
+      createRpcErrorResponse('signPsbt', {
+        id: request.id,
+        error: {
+          code: RpcErrorCode.INVALID_PARAMS,
+          message: 'Proposing a transaction requires a descriptor',
+        },
+      })
+    );
+    return;
+  }
+
   const requestParams: RequestParams = [
     ['hex', request.params.hex],
     ['requestId', request.id],
@@ -115,6 +131,10 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
 
   if (isDefined(request.params.descriptor)) {
     requestParams.push(['descriptor', request.params.descriptor]);
+  }
+
+  if (isDefined(request.params.propose)) {
+    requestParams.push(['propose', request.params.propose.toString()]);
   }
 
   if (isDefined(request.params.signAtIndex))

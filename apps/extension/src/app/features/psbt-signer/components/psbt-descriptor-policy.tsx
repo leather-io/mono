@@ -38,28 +38,46 @@ const broadcastWarning =
   'If your signature completes the policy, Leather will broadcast this transaction immediately and it cannot be undone.';
 const trustNote = 'Only approve if you understand and trust this contract.';
 
+const bondProposalTitle = 'You are proposing a vault transaction';
+function makeBondProposalBody(unlockHeight: number) {
+  return `This proposes a spend from a timelocked policy owned by your vault, spendable by its co-signers from block ${unlockHeight}. Nothing is signed or broadcast now — co-signers must approve the proposal first. ${trustNote}`;
+}
+
 interface PsbtDescriptorPolicyProps {
+  bondUnlockHeight?: number;
   descriptor: string;
   details: DescriptorPsbtDetails | null;
   willBroadcast?: boolean;
 }
 export function PsbtDescriptorPolicy({
+  bondUnlockHeight,
   descriptor,
   details,
   willBroadcast,
 }: PsbtDescriptorPolicyProps) {
-  const calloutTitle = willBroadcast
+  const isBondProposal = bondUnlockHeight !== undefined;
+  const warningTitle = willBroadcast
     ? 'Signing may broadcast this transaction'
     : 'You are co-signing a contract transaction';
-  const calloutBody = willBroadcast
+  const warningBody = willBroadcast
     ? `${policyWarningIntro} ${broadcastWarning} ${trustNote}`
     : `${policyWarningIntro} ${trustNote}`;
+  const calloutTitle = isBondProposal ? bondProposalTitle : warningTitle;
+  const calloutBody = isBondProposal ? makeBondProposalBody(bondUnlockHeight) : warningBody;
 
   return (
     <>
       <Callout variant="warning" title={calloutTitle}>
         {calloutBody}
       </Callout>
+
+      {isBondProposal ? (
+        <Section title="Timelock">
+          <styled.span textStyle="label.02">
+            Spendable by co-signers from block {bondUnlockHeight}
+          </styled.span>
+        </Section>
+      ) : null}
 
       {details ? (
         <>
