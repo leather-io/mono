@@ -35,6 +35,7 @@ export enum WalletDefaultNetworkConfigurationIds {
   sbtcTestnet = 'sbtcTestnet',
   sbtcDevenv = 'sbtcDevenv',
   devnet = 'devnet',
+  'private-1' = 'private-1',
 }
 
 export const defaultNetworkConfigurationsSchema = z.enum([
@@ -45,6 +46,7 @@ export const defaultNetworkConfigurationsSchema = z.enum([
   'sbtcTestnet',
   'sbtcDevenv',
   'devnet',
+  'private-1',
 ]);
 export type DefaultNetworkConfigurations = z.infer<typeof defaultNetworkConfigurationsSchema>;
 
@@ -230,6 +232,26 @@ const networkDevnet: NetworkConfiguration = {
   },
 };
 
+const privateNetworkStacksChainId = 256;
+
+const networkPrivate1: NetworkConfiguration = {
+  id: WalletDefaultNetworkConfigurationIds['private-1'],
+  name: 'Private',
+  chain: {
+    stacks: {
+      blockchain: 'stacks',
+      chainId: privateNetworkStacksChainId,
+      url: 'https://api.private-1.hiro.so',
+    },
+    bitcoin: {
+      blockchain: 'bitcoin',
+      bitcoinNetwork: 'regtest',
+      mode: 'regtest',
+      bitcoinUrl: 'https://mempool.bitcoin.private-1.hiro.so/api',
+    },
+  },
+};
+
 export const defaultCurrentNetwork: NetworkConfiguration = networkMainnet;
 
 export const defaultNetworksKeyedById: Record<
@@ -243,4 +265,5 @@ export const defaultNetworksKeyedById: Record<
   [WalletDefaultNetworkConfigurationIds.sbtcTestnet]: networkSbtcTestnet,
   [WalletDefaultNetworkConfigurationIds.sbtcDevenv]: networkSbtcDevenv,
   [WalletDefaultNetworkConfigurationIds.devnet]: networkDevnet,
+  [WalletDefaultNetworkConfigurationIds['private-1']]: networkPrivate1,
 };
