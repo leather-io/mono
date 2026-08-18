@@ -40,6 +40,40 @@
 
 ---
 
+## [6.110.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.109.0...@leather.io/extension-v6.110.0) (2026-08-18)
+
+
+### Features
+
+* **services:** replace chainalysis with leather api compliance endpoint ([#2606](https://github.com/leather-io/mono/issues/2606)) ([ac3a931](https://github.com/leather-io/mono/commit/ac3a931ed2dec18d52dd3832450fb59f4dc5282d))
+
+
+### Bug Fixes
+
+* **extension:** ledger testnet address verification ([#2649](https://github.com/leather-io/mono/issues/2649)) ([f16cc57](https://github.com/leather-io/mono/commit/f16cc5757b7300c58f6ee2c05e56644e5d737a00))
+* localhost tx proposal ([#2644](https://github.com/leather-io/mono/issues/2644)) ([1340cdc](https://github.com/leather-io/mono/commit/1340cdcd3c7eff4ba00746b41a9322a15b1d5461))
+* propogate BE error details to multisig app ([#2609](https://github.com/leather-io/mono/issues/2609)) ([e902bdb](https://github.com/leather-io/mono/commit/e902bdb0c9b692d570c696f67a1e3d78dc63e077))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.24.0
+    * @leather.io/bitcoin bumped to 0.39.6
+    * @leather.io/constants bumped to 0.39.1
+    * @leather.io/crypto bumped to 1.13.6
+    * @leather.io/features bumped to 1.7.2
+    * @leather.io/models bumped to 0.61.0
+    * @leather.io/provider bumped to 1.7.1
+    * @leather.io/queries bumped to 0.15.3
+    * @leather.io/query bumped to 2.51.6
+    * @leather.io/rpc bumped to 2.24.5
+    * @leather.io/services bumped to 1.64.0
+    * @leather.io/stacks bumped to 1.22.4
+    * @leather.io/ui bumped to 1.116.2
+    * @leather.io/utils bumped to 0.52.6
+
 ## [6.109.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.108.0...@leather.io/extension-v6.109.0) (2026-08-10)
 
 
