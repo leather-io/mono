@@ -413,6 +413,35 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.64.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.63.1...@leather.io/services-v1.64.0) (2026-08-18)
+
+
+### Features
+
+* **services:** replace chainalysis with leather api compliance endpoint ([#2606](https://github.com/leather-io/mono/issues/2606)) ([ac3a931](https://github.com/leather-io/mono/commit/ac3a931ed2dec18d52dd3832450fb59f4dc5282d))
+* **web:** show nonce on multisig transaction details ([#2635](https://github.com/leather-io/mono/issues/2635)) ([b482b2d](https://github.com/leather-io/mono/commit/b482b2db89de8218130ef26a3d5893e91f6a6dd9))
+
+
+### Bug Fixes
+
+* add private-1 network ([#2650](https://github.com/leather-io/mono/issues/2650)) ([32c5518](https://github.com/leather-io/mono/commit/32c5518aa8410cf03f55365c53c617171980b166))
+* multisig transaction page repaint ([#2639](https://github.com/leather-io/mono/issues/2639)) ([75bc675](https://github.com/leather-io/mono/commit/75bc675b79d2b414bc04171adaa9109f6d41d07f))
+* propogate BE error details to multisig app ([#2609](https://github.com/leather-io/mono/issues/2609)) ([e902bdb](https://github.com/leather-io/mono/commit/e902bdb0c9b692d570c696f67a1e3d78dc63e077))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.39.6
+    * @leather.io/constants bumped to 0.39.1
+    * @leather.io/crypto bumped to 1.13.6
+    * @leather.io/models bumped to 0.61.0
+    * @leather.io/stacks bumped to 1.22.4
+    * @leather.io/utils bumped to 0.52.6
+  * devDependencies
+    * @leather.io/rpc bumped to 2.24.5
+
 ## [1.63.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.63.0...@leather.io/services-v1.63.1) (2026-08-10)
 
 

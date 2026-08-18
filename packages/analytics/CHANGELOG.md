@@ -114,6 +114,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.24.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.23.0...@leather.io/analytics-v3.24.0) (2026-08-18)
+
+
+### Features
+
+* **services:** replace chainalysis with leather api compliance endpoint ([#2606](https://github.com/leather-io/mono/issues/2606)) ([ac3a931](https://github.com/leather-io/mono/commit/ac3a931ed2dec18d52dd3832450fb59f4dc5282d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.61.0
+
 ## [3.23.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.22.0...@leather.io/analytics-v3.23.0) (2026-08-10)
 
 
