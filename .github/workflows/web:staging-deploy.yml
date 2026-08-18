@@ -10,6 +10,7 @@ on:
     paths:
       - 'apps/web/**'
       - 'packages/**'
+  workflow_dispatch:
 
 env:
   DO_NOT_TRACK: 1
