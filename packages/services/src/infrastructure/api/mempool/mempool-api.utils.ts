@@ -15,7 +15,8 @@ export function getMempoolUrlFromUserSettings(settings: UserSettings): string | 
     !defaultNetworkConfigurationsSchema.safeParse(networkConfigurationId).success;
   return isCustomNetwork ||
     networkConfigurationId === WalletDefaultNetworkConfigurationIds.sbtcTestnet ||
-    networkConfigurationId === WalletDefaultNetworkConfigurationIds.sbtcDevenv
+    networkConfigurationId === WalletDefaultNetworkConfigurationIds.sbtcDevenv ||
+    networkConfigurationId === WalletDefaultNetworkConfigurationIds['private-1']
     ? selectBitcoinApiUrl(settings)
     : null;
 }
