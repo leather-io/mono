@@ -1,26 +1,9 @@
 import { getPsbtDetails, psbtBase64ToHex } from '@leather.io/bitcoin';
-import type {
-  AuthNetworkId,
-  Money,
-  MultisigTransaction,
-  Sip10Asset,
-  VaultAccount,
-} from '@leather.io/models';
+import type { AuthNetworkId, Money, Sip10Asset } from '@leather.io/models';
 import { decodeStxTransactionPayload } from '@leather.io/stacks';
 import { assertUnreachable, createMoney } from '@leather.io/utils';
 
 import { resolveBtcNetworkMode } from '../network/resolve-btc-network-mode';
-
-interface ProposalSummary {
-  kind?: 'transfer' | 'contractCall' | 'contractDeploy';
-  recipient?: string;
-  amount?: Money;
-  fee?: Money;
-  memo?: string;
-  contractId?: string;
-  functionName?: string;
-  token?: ProposalTokenTransfer;
-}
 
 interface ProposalTokenTransfer {
   contractId: string;
@@ -124,50 +107,5 @@ export function decodeProposalPayload(
     }
   } catch {
     return null;
-  }
-}
-
-// Decodes the recipient / amount / fee out of a proposed transaction's raw
-// payload (BTC PSBT or serialized STX transfer). This is the only source of
-// these values before broadcast, while the transaction is collecting
-// signatures. Returns an empty summary if the payload can't be decoded.
-export function decodeProposalSummary(
-  account: VaultAccount,
-  transaction: MultisigTransaction
-): ProposalSummary {
-  const payload = decodeProposalPayload(
-    { network: account.network, multisigAddress: account.multisigAddress },
-    transaction.proposalRawPayload
-  );
-  if (!payload) return {};
-  switch (payload.type) {
-    case 'btcTransfer':
-    case 'stxTransfer':
-      return {
-        kind: 'transfer',
-        recipient: payload.recipient,
-        amount: payload.amount,
-        fee: payload.fee,
-        memo: 'memo' in payload ? payload.memo : undefined,
-      };
-    case 'sip10Transfer':
-      return {
-        kind: 'transfer',
-        recipient: payload.recipient,
-        fee: payload.fee,
-        memo: payload.memo,
-        token: payload.token,
-      };
-    case 'contractCall':
-      return {
-        kind: 'contractCall',
-        contractId: payload.contractId,
-        functionName: payload.functionName,
-        fee: payload.fee,
-      };
-    case 'contractDeploy':
-      return { kind: 'contractDeploy', contractId: payload.contractId, fee: payload.fee };
-    default:
-      return assertUnreachable(payload);
   }
 }

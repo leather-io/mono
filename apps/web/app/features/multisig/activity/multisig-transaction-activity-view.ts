@@ -4,7 +4,11 @@ import {
 } from '~/queries/activity/blockchain-activity.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import { type BlockchainActivityView, createBlockchainActivityView } from '@leather.io/features';
+import {
+  type BlockchainActivityItem,
+  type BlockchainActivityView,
+  createBlockchainActivityItem,
+} from '@leather.io/features';
 import type {
   BlockchainActivity,
   BlockchainActivityBalanceChange,
@@ -26,7 +30,7 @@ import {
   type ProposalPayloadContext,
   decodeProposalPayload,
   matchesProposalTokenAsset,
-} from '../transactions/decode-proposal-summary';
+} from '../transactions/decode-proposal-payload';
 
 export interface ProposalTokenInfo {
   asset: Sip10Asset;
@@ -58,14 +62,12 @@ function buildSendBalanceChanges(
   amount: Money | undefined,
   marketData: MarketData | undefined
 ): BlockchainActivityBalanceChange[] {
-  if (!amount || !marketData || marketData.pair.base !== amount.symbol) return [];
-  return [
-    {
-      direction: 'sent',
-      asset,
-      amount: { crypto: amount, quote: baseCurrencyAmountInQuote(amount, marketData) },
-    },
-  ];
+  if (!amount) return [];
+  const quote =
+    marketData && marketData.pair.base === amount.symbol
+      ? baseCurrencyAmountInQuote(amount, marketData)
+      : createMoney(0, 'USD');
+  return [{ direction: 'sent', asset, amount: { crypto: amount, quote } }];
 }
 
 export interface MultisigActivityClassification {
@@ -87,6 +89,7 @@ interface CreateMultisigTransactionActivityViewOptions {
 interface ActivityCommonFields {
   timestamp: number;
   txid: string;
+  nonce?: number;
   status: OnChainActivityStatus;
   chain: CryptoAssetChain;
   initiatedByUser: boolean;
@@ -178,24 +181,38 @@ function buildProposalActivity(
   }
 }
 
-export function createMultisigTransactionActivityView(
+type MultisigTransactionActivitySource = Pick<
+  MultisigTransactionSummary,
+  'id' | 'proposalTimestamp' | 'nonce' | 'txId' | 'status'
+>;
+
+export function createMultisigTransactionActivityItem(
   context: ProposalPayloadContext,
-  transaction: MultisigTransactionSummary,
+  transaction: MultisigTransactionActivitySource,
   options: CreateMultisigTransactionActivityViewOptions = {}
-): BlockchainActivityView {
+): BlockchainActivityItem {
   const chain: CryptoAssetChain = context.network.startsWith('btc') ? 'bitcoin' : 'stacks';
   const payload = options.rawPayload ? decodeProposalPayload(context, options.rawPayload) : null;
 
   const common: ActivityCommonFields = {
     timestamp: transaction.proposalTimestamp,
     txid: transaction.txId ?? transaction.id,
+    ...(transaction.nonce === null ? {} : { nonce: transaction.nonce }),
     status: mapMultisigTransactionStatus(transaction.status),
     chain,
     initiatedByUser: true,
   };
 
-  return createBlockchainActivityView(buildProposalActivity(common, payload, options), {
+  return createBlockchainActivityItem(buildProposalActivity(common, payload, options), {
     formatMoney: formatActivityMoney,
     counterpartyTruncateOffset: activityCounterpartyOffset,
   });
+}
+
+export function createMultisigTransactionActivityView(
+  context: ProposalPayloadContext,
+  transaction: MultisigTransactionActivitySource,
+  options: CreateMultisigTransactionActivityViewOptions = {}
+): BlockchainActivityView {
+  return createMultisigTransactionActivityItem(context, transaction, options).view;
 }

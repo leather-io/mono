@@ -12,11 +12,11 @@ import {
   uintCV,
 } from '@stacks/transactions';
 
-import type { MultisigTransaction, VaultAccount, VaultAccountSigner } from '@leather.io/models';
+import type { VaultAccount, VaultAccountSigner } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { buildUnsignedMultisigSip10Transfer } from './build-sip10-transfer';
-import { decodeProposalPayload, decodeProposalSummary } from './decode-proposal-summary';
+import { decodeProposalPayload } from './decode-proposal-payload';
 
 const publicKeys = [
   '0250863ad64a87ae8a2fe83c1af1a8403cb53f53e486d8511dad8a04887e5b2352',
@@ -68,26 +68,6 @@ function makeAccount(): VaultAccount {
     signers: publicKeys.map((key, index) => makeSigner(index, key)),
     pendingTransactionCount: 0,
     queuedTransactionCount: 0,
-  };
-}
-
-function makeTransaction(proposalRawPayload: string): MultisigTransaction {
-  return {
-    id: 'mtx-1',
-    vaultAccountId: 'va-1',
-    network: 'stx:testnet',
-    proposerUserId: 'user-0',
-    proposalRawPayload,
-    proposalSignature: '00'.repeat(65),
-    proposalTimestamp: 1_750_000_000,
-    proposalHash: '11'.repeat(32),
-    nonce: null,
-    txId: null,
-    status: 'pending',
-    signatures: [],
-    broadcastAt: null,
-    createdAt: '2026-01-02T00:00:00.000Z',
-    updatedAt: '2026-01-02T00:00:00.000Z',
   };
 }
 
@@ -150,24 +130,6 @@ describe(decodeProposalPayload.name, () => {
       recipient,
       memo: undefined,
       fee: createMoney(3000, 'STX'),
-    });
-  });
-});
-
-describe(decodeProposalSummary.name, () => {
-  test('summarizes a sip10 transfer proposal as a token transfer', async () => {
-    const { account, rawPayload } = await buildProposalPayload();
-
-    const summary = decodeProposalSummary(account, makeTransaction(rawPayload));
-
-    expect(summary.kind).toEqual('transfer');
-    expect(summary.recipient).toEqual(recipient);
-    expect(summary.amount).toBeUndefined();
-    expect(summary.fee).toEqual(createMoney(3000, 'STX'));
-    expect(summary.token).toEqual({
-      contractId,
-      assetName: 'sbtc-token',
-      baseUnitAmount: 2_500_000n,
     });
   });
 });

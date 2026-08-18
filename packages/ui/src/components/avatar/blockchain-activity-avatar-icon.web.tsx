@@ -32,6 +32,7 @@ export function BlockchainActivityAvatarIcon({
   // Grow the indicator badge with the box: the size presets carry the badge
   // dimensions (md = 16px, xl = 20px), so a hero-scale avatar uses xl.
   const avatarPreset = size >= 44 ? 'xl' : 'md';
+  const iconVariant = size >= 44 ? 'medium' : 'small';
   const pairGeometry = {
     sub: `${Math.round(24 * scale)}px`,
     indicatorSize: `${Math.round(16 * scale)}px`,
@@ -56,9 +57,9 @@ export function BlockchainActivityAvatarIcon({
           outlineColor="ink.border-default"
           icon={
             avatar.icon === 'contract-deploy' ? (
-              <CodeIcon variant="small" />
+              <CodeIcon variant={iconVariant} />
             ) : (
-              <NoteTextIcon variant="small" />
+              <NoteTextIcon variant={iconVariant} />
             )
           }
           indicator={indicator}
