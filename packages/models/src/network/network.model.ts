@@ -236,7 +236,7 @@ const privateNetworkStacksChainId = 256;
 
 const networkPrivate1: NetworkConfiguration = {
   id: WalletDefaultNetworkConfigurationIds['private-1'],
-  name: 'Private',
+  name: 'BTC Staking Testnet',
   chain: {
     stacks: {
       blockchain: 'stacks',
