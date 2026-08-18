@@ -2,7 +2,7 @@ import { ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
-import { StakingPoolSlug } from '~/data/bitcoin-staking-data';
+import { StakingPoolSlug, stakingProviderIdToSlug } from '~/data/bitcoin-staking-data';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
@@ -24,14 +24,33 @@ function StartStakingButtonLayout({ children, ...buttonProps }: StartStakingButt
 
 interface StartStakingButtonProps {
   slug: StakingPoolSlug;
+  showProposedSwitchAction?: boolean;
 }
 
-function StartStakingPositionCheck({ slug }: StartStakingButtonProps) {
+function StartStakingPositionCheck({
+  slug,
+  showProposedSwitchAction = false,
+}: StartStakingButtonProps) {
   const navigate = useNavigate();
   const { position } = usePox5Position();
   const { isLoading, to } = useStakingPoolLink(slug);
 
-  if (!to) return <StartStakingButtonLayout disabled aria-busy={isLoading || undefined} />;
+  if (!to) {
+    if (showProposedSwitchAction && position.status === 'active' && position.pool) {
+      const currentSlug = stakingProviderIdToSlug(position.pool.providerId);
+      const switchTo = `${stakingPaths.update(currentSlug)}?to=${slug}`;
+      return (
+        <StartStakingButtonLayout
+          variant="outline"
+          onClick={() => void navigate(switchTo)}
+          data-testid={`switch-pool-button-${slug}`}
+        >
+          {bitcoinStakingLabels.switchPool}
+        </StartStakingButtonLayout>
+      );
+    }
+    return <StartStakingButtonLayout disabled aria-busy={isLoading || undefined} />;
+  }
 
   if (position.status === 'active') {
     return (
@@ -49,7 +68,7 @@ function StartStakingPositionCheck({ slug }: StartStakingButtonProps) {
   );
 }
 
-export function StartStakingButton({ slug }: StartStakingButtonProps) {
+export function StartStakingButton({ slug, showProposedSwitchAction }: StartStakingButtonProps) {
   const { whenExtensionState, setShowInstallLeatherDialog, connect } = useLeatherConnect();
   const navigate = useNavigate();
 
@@ -61,7 +80,9 @@ export function StartStakingButton({ slug }: StartStakingButtonProps) {
   }
 
   return whenExtensionState({
-    connected: <StartStakingPositionCheck slug={slug} />,
+    connected: (
+      <StartStakingPositionCheck slug={slug} showProposedSwitchAction={showProposedSwitchAction} />
+    ),
     detected: (
       <StartStakingButtonLayout
         onClick={async () => {

@@ -178,4 +178,5 @@ export const bitcoinStakingLabels = {
   fee: `Fee`,
   startEarning: `Start earning`,
   viewPosition: `View position`,
+  switchPool: `Switch`,
 };
