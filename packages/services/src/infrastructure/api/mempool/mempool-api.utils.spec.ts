@@ -51,6 +51,12 @@ describe(getMempoolUrlFromUserSettings.name, () => {
     ).toEqual(defaultNetworksKeyedById.sbtcDevenv.chain.bitcoin.bitcoinUrl);
   });
 
+  it('returns the configured bitcoin url for the private-1 network', () => {
+    expect(
+      getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById['private-1']))
+    ).toEqual(defaultNetworksKeyedById['private-1'].chain.bitcoin.bitcoinUrl);
+  });
+
   it('returns the configured bitcoin url for user-added custom networks', () => {
     expect(getMempoolUrlFromUserSettings(makeUserSettings(customNetwork))).toEqual(
       'https://mempool.bitcoin.private-1.hiro.so/api'

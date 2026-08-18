@@ -24,7 +24,10 @@ import {
   checkLockedDeviceError,
   useCancelLedgerAction,
 } from '@app/features/ledger/utils/generic-ledger-utils';
-import { isLedgerOnDeviceAddressConfirmed } from '@app/features/ledger/utils/ledger-descriptor-address';
+import {
+  isLedgerOnDeviceAddressConfirmed,
+  toLedgerDisplayedAddress,
+} from '@app/features/ledger/utils/ledger-descriptor-address';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
@@ -80,7 +83,7 @@ function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
         const expectedAddress = getExpectedAddress();
         void ledgerNavigate.toDeviceBusyStep(
           'Confirm the address on your Ledger…',
-          expectedAddress ?? undefined
+          expectedAddress ? toLedgerDisplayedAddress(expectedAddress) : undefined
         );
         try {
           const onDeviceAddress = await displayAddressOnDevice(app);
