@@ -7,7 +7,7 @@ import { bytesToHex } from '@stacks/common';
 import { finalizeWshDescriptorPsbt, psbtHexToBase64 } from '@leather.io/bitcoin';
 import type { Money } from '@leather.io/models';
 import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
-import { createMoney, delay, isError, sumMoney } from '@leather.io/utils';
+import { createMoney, isError, sumMoney } from '@leather.io/utils';
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
@@ -171,14 +171,13 @@ export function useRpcSignPsbt() {
 
           analytics.track('propose_multisig_transaction', { symbol: 'btc' });
 
-          void sendMessageToOriginatingFrame(
+          await sendMessageToOriginatingFrame(
             { frameId, tabId },
             createRpcSuccessResponse('signPsbt', {
               id: requestId,
               result: { hex: psbtHex, proposalId: proposal.id, status: 'proposed' },
             })
-          );
-          await delay(250);
+          ).catch(() => null);
           closeWindow();
           return;
         } catch (e) {

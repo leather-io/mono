@@ -225,6 +225,7 @@ describe(useRpcSignPsbt.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubGlobal('chrome', { tabs: { sendMessage: mocks.sendMessage } });
+    mocks.sendMessage.mockResolvedValue(undefined);
     mocks.useDescriptorPsbtDetails.mockReturnValue(null);
     mocks.refetchUtxos.mockResolvedValue(undefined);
     mocks.useCryptoCurrencyMarketDataMeanAverage.mockReturnValue({
@@ -510,6 +511,19 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.signPsbt).not.toHaveBeenCalled();
     expect(mocks.broadcastTx).not.toHaveBeenCalled();
     expect(mocks.closeWindow).toHaveBeenCalled();
+  });
+
+  test('closes the window without reporting a failure when the proposal response cannot be delivered', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
+    setRpcSignPsbtParams({ broadcast: false, propose: true, descriptor: 'bond', psbtHex });
+    mocks.useBondProposalRoute.mockReturnValue(makeMatchedBondRoute());
+    mocks.proposeMultisigTransaction.mockResolvedValue({ id: 'proposal-1' });
+    mocks.sendMessage.mockRejectedValue(new Error('Could not establish connection'));
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.closeWindow).toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
   });
 
   test('rejects the request and navigates to an error when proposing the bond transaction fails', async () => {
