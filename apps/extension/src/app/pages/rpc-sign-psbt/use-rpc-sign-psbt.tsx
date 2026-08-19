@@ -9,7 +9,6 @@ import type { Money } from '@leather.io/models';
 import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
 import { createMoney, delay, isError, sumMoney } from '@leather.io/utils';
 
-import { MOCK_BOND_PROPOSE } from '@shared/environment';
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
@@ -33,7 +32,6 @@ import { useGetAssumedZeroIndexSigningConfig } from '@app/store/accounts/blockch
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useSignDescriptorPsbt } from './descriptor-psbt.hooks';
-import { makeMockBondProposal } from './mock-bond-propose';
 import { useBondProposalRoute } from './use-bond-proposal-route';
 
 interface BroadcastSignedPsbtTxArgs {
@@ -165,13 +163,11 @@ export function useRpcSignPsbt() {
         try {
           const network = getPolicyAuthNetworkId('bitcoin', currentNetwork);
           const rawPayload = psbtHexToBase64(psbtHex);
-          const proposal = MOCK_BOND_PROPOSE
-            ? makeMockBondProposal(network, rawPayload)
-            : await proposeMultisigTransaction({
-                network,
-                multisigAddress: bondRoute.policy.address,
-                rawPayload,
-              });
+          const proposal = await proposeMultisigTransaction({
+            network,
+            multisigAddress: bondRoute.policy.address,
+            rawPayload,
+          });
 
           analytics.track('propose_multisig_transaction', { symbol: 'btc' });
 
