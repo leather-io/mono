@@ -14,7 +14,7 @@ export const bondTemplateV1 = {
 const maxBlockHeightLocktime = 500_000_000;
 
 const bondDescriptorPattern =
-  /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\((0[23][0-9a-fA-F]{64})\)\)\),((?:sorted)?multi\([^()]+\))\)\)$/;
+  /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\((0[23][0-9a-fA-F]{64})\)\)\),(sortedmulti\([^()]+\))\)\)$/;
 
 export interface BondDescriptorParams {
   unlockHeight: number;

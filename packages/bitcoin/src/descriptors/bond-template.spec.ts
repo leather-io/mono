@@ -55,11 +55,9 @@ describe('matchBondDescriptor', () => {
     expect(matchBondDescriptor(withChecksum)?.unlockHeight).toBe(unlockHeight);
   });
 
-  it('matches a multi tail as well as sortedmulti', () => {
+  it('rejects an unsorted multi tail', () => {
     const multiForm = makeBondDescriptor(`multi(2,${xpubA}/0/7,${xpubB}/0/7,${xpubC}/0/7)`);
-    expect(matchBondDescriptor(multiForm)?.multiExpression).toBe(
-      `multi(2,${xpubA}/0/7,${xpubB}/0/7,${xpubC}/0/7)`
-    );
+    expect(matchBondDescriptor(multiForm)).toBeNull();
   });
 
   it('lowercases captured hex params', () => {
