@@ -209,7 +209,7 @@ describe(createMultisigTransactionActivityView.name, () => {
     expect(view.status).toBe('pending');
     expect(view.chain).toBe('stacks');
     expect(view.timestamp).toBe(1751000000);
-    expect(view.title).toBe('Send STX');
+    expect(view.title).toBe('STX');
     expect(view.subtitle).toBe(
       `Sending to ${truncateMiddle(recipient, activityCounterpartyOffset)}`
     );
@@ -256,8 +256,9 @@ describe(createMultisigTransactionActivityView.name, () => {
     });
 
     expect(view.action).toBe('stack');
-    expect(view.title).toBe('Stack');
-    expect(view.subtitle).toBe('via Fast Pool');
+    expect(view.title).toBe('STX');
+    expect(view.subtitle).toBe('Stacking via Fast Pool');
+    expect(view.protocolName).toBe('Fast Pool');
   });
 
   test('renders a contract deploy from its payload', async () => {

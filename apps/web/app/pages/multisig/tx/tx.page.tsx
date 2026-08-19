@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { useQuery } from '@tanstack/react-query';
 import { Box, Flex } from 'leather-styles/jsx';
+import { getActivityActionLine } from '~/features/multisig/activity/activity-action-line';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
@@ -262,7 +263,12 @@ export function TxDetailPage() {
     contractDetail?.activity.action,
     verifiedTokenAsset?.symbol
   );
-  const heroSubtitle = contractDetail?.view.subtitle;
+  const contractActionLine = contractDetail
+    ? getActivityActionLine(contractDetail.view)
+    : undefined;
+  const heroSubtitle = contractActionLine
+    ? contractActionLine.viaProtocol
+    : contractDetail?.view.subtitle;
   const heroTimeline = tx.broadcastAt
     ? { verb: 'Broadcast', when: formatRelativeTime(new Date(tx.broadcastAt)) }
     : { verb: 'Proposed', when: initiationDate };
