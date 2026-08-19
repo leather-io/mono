@@ -1,6 +1,7 @@
 import {
   compileWshDescriptor,
   getWshDescriptorThreshold,
+  isExtendedPublicKeyExpression,
   stripDescriptorChecksum,
 } from './wsh-descriptor';
 
@@ -15,6 +16,14 @@ const maxBlockHeightLocktime = 500_000_000;
 
 const bondDescriptorPattern =
   /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\((0[23][0-9a-fA-F]{64})\)\)\),(sortedmulti\([^()]+\))\)\)$/;
+
+function isValidVaultMultiExpression(multiExpression: string): boolean {
+  const args = multiExpression.slice('sortedmulti('.length, -1).split(',');
+  const [threshold, ...keyExpressions] = args;
+  if (!threshold || !/^\d+$/.test(threshold)) return false;
+  if (!keyExpressions.length) return false;
+  return keyExpressions.every(isExtendedPublicKeyExpression);
+}
 
 export interface BondDescriptorParams {
   unlockHeight: number;
@@ -36,6 +45,7 @@ export function matchBondDescriptor(descriptor: string): BondDescriptorMatch | n
   const counterpartyKey = match[3];
   const multiExpression = match[4];
   if (!rawUnlockHeight || !hash || !counterpartyKey || !multiExpression) return null;
+  if (!isValidVaultMultiExpression(multiExpression)) return null;
 
   const unlockHeight = Number(rawUnlockHeight);
   if (!isValidUnlockHeight(unlockHeight)) return null;
@@ -81,6 +91,8 @@ export function instantiateBondDescriptor({
   assertValidBondParams({ unlockHeight, hash, counterpartyKey });
   if (!keyExpressions.length)
     throw new Error('Bond descriptor requires at least one vault key expression');
+  if (!keyExpressions.every(isExtendedPublicKeyExpression))
+    throw new Error('Bond vault keys must be xpub or tpub key expressions');
 
   const multiExpression = `sortedmulti(${threshold},${keyExpressions.join(',')})`;
   return bondTemplateV1.script

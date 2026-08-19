@@ -17,6 +17,7 @@ import {
   getWshDescriptorAddress,
   getWshDescriptorNetwork,
   getWshDescriptorThreshold,
+  isExtendedPublicKeyExpression,
   isWshDescriptor,
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
@@ -948,6 +949,29 @@ describe('extractWshDescriptorPreimages', () => {
 
   it('reads the threshold from a multi descriptor', () => {
     expect(getWshDescriptorThreshold(`wsh(multi(1,${xpubA}/0/0,${xpubB}/0/0))`)).toBe(1);
+  });
+});
+
+describe('isExtendedPublicKeyExpression', () => {
+  it('accepts xpub and tpub key expressions with paths, origins, and wildcards', () => {
+    const xpub = makeNativeSegwitAccountXpub(1);
+    const tpub = makeNativeSegwitAccountTpub(1);
+    expect(isExtendedPublicKeyExpression(xpub)).toBe(true);
+    expect(isExtendedPublicKeyExpression(`${xpub}/0/7`)).toBe(true);
+    expect(isExtendedPublicKeyExpression(`${xpub}/0/*`)).toBe(true);
+    expect(isExtendedPublicKeyExpression(`[aabbccdd/48'/0'/0'/2']${xpub}/0/7`)).toBe(true);
+    expect(isExtendedPublicKeyExpression(`${tpub}/0/7`)).toBe(true);
+  });
+
+  it('rejects raw pubkeys, private keys, and malformed expressions', () => {
+    const rawPubkeyHex = bytesToHex(makeNativeSegwitAddressPubkey(1));
+    const xprv = HDKey.fromMasterSeed(new Uint8Array(32).fill(1)).derive(
+      "m/84'/0'/0'"
+    ).privateExtendedKey;
+    expect(isExtendedPublicKeyExpression(rawPubkeyHex)).toBe(false);
+    expect(isExtendedPublicKeyExpression(`${xprv}/0/7`)).toBe(false);
+    expect(isExtendedPublicKeyExpression('not-a-key')).toBe(false);
+    expect(isExtendedPublicKeyExpression('')).toBe(false);
   });
 });
 

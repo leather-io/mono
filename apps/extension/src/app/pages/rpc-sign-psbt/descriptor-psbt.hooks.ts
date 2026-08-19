@@ -7,6 +7,7 @@ import {
   compileWshDescriptor,
   findAccountDescriptorKey,
   getDescriptorMatchingInputIndexes,
+  isExtendedPublicKeyExpression,
   makeNativeSegwitAddressIndexDerivationPath,
 } from '@leather.io/bitcoin';
 
@@ -83,7 +84,9 @@ export function useSignDescriptorPsbt() {
         // supplied as a raw public key has no xpub/origin and cannot be expressed
         // in a Ledger policy — fail fast with a clear message instead of a masked
         // on-device rejection.
-        if (keys.some(key => key !== accountKey && !key.bip32))
+        if (
+          keys.some(key => key !== accountKey && !isExtendedPublicKeyExpression(key.keyExpression))
+        )
           throw new Error(
             'Ledger cannot sign this descriptor: another signer is a raw public key. Ledger requires every key to be an extended public key (xpub). Sign this contract with a software wallet instead.'
           );

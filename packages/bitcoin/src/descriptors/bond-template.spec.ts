@@ -60,6 +60,31 @@ describe('matchBondDescriptor', () => {
     expect(matchBondDescriptor(multiForm)).toBeNull();
   });
 
+  it('rejects raw pubkeys and private keys in the vault multi', () => {
+    const rawKeyA = makeAddressPubkeyHex(1);
+    const rawKeyB = makeAddressPubkeyHex(2);
+    expect(
+      matchBondDescriptor(makeBondDescriptor(`sortedmulti(2,${rawKeyA},${rawKeyB})`))
+    ).toBeNull();
+    expect(
+      matchBondDescriptor(makeBondDescriptor(`sortedmulti(2,${xpubA}/0/7,${rawKeyB})`))
+    ).toBeNull();
+
+    const xprvA = HDKey.fromMasterSeed(new Uint8Array(32).fill(1)).derive(
+      "m/84'/0'/0'"
+    ).privateExtendedKey;
+    expect(
+      matchBondDescriptor(makeBondDescriptor(`sortedmulti(2,${xprvA}/0/7,${xpubB}/0/7)`))
+    ).toBeNull();
+  });
+
+  it('accepts origin-prefixed vault xpubs', () => {
+    const withOrigin = makeBondDescriptor(
+      `sortedmulti(2,[aabbccdd/48'/0'/0'/2']${xpubA}/0/7,${xpubB}/0/7)`
+    );
+    expect(matchBondDescriptor(withOrigin)?.unlockHeight).toBe(unlockHeight);
+  });
+
   it('lowercases captured hex params', () => {
     const uppercased = `wsh(and_v(v:or_i(after(${unlockHeight}),and_v(v:sha256(${hash.toUpperCase()}),pk(${counterpartyKey.toUpperCase()}))),sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7)))`;
     const match = matchBondDescriptor(uppercased);
@@ -149,6 +174,12 @@ describe('instantiateBondDescriptor', () => {
       instantiateBondDescriptor({ ...validArgs, counterpartyKey: `04${counterpartyKey.slice(2)}` })
     ).toThrow();
     expect(() => instantiateBondDescriptor({ ...validArgs, keyExpressions: [] })).toThrow();
+    expect(() =>
+      instantiateBondDescriptor({
+        ...validArgs,
+        keyExpressions: [makeAddressPubkeyHex(1), makeAddressPubkeyHex(2)],
+      })
+    ).toThrow();
   });
 });
 
