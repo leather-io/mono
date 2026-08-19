@@ -163,6 +163,10 @@ describe(useBondProposalRoute.name, () => {
       policy: bitcoinPolicy,
       bondDescriptor,
       unlockHeight,
+      hash,
+      counterpartyKey,
+      vaultThreshold: 2,
+      vaultKeyCount: 3,
     });
   });
 

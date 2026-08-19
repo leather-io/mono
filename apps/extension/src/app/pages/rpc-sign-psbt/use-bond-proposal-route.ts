@@ -37,6 +37,10 @@ interface BondProposalMatch {
   policy: BitcoinPolicyStore;
   bondDescriptor: string;
   unlockHeight: number;
+  hash: string;
+  counterpartyKey: string;
+  vaultThreshold: number;
+  vaultKeyCount: number;
 }
 
 type BondProposalRoute = BondProposalError | BondProposalMatch | null;
@@ -55,19 +59,26 @@ function tryCompileScriptPubKey(descriptor: string): Uint8Array | null {
   }
 }
 
+interface InstantiatedBondDescriptor {
+  bondDescriptor: string;
+  vaultThreshold: number;
+  vaultKeyCount: number;
+}
+
 function tryInstantiateBondDescriptor(
   bondMatch: BondDescriptorMatch,
   policyDescriptor: string
-): string | null {
+): InstantiatedBondDescriptor | null {
   try {
     const { threshold, keyExpressions } = getBondVaultKeys(policyDescriptor);
-    return instantiateBondDescriptor({
+    const bondDescriptor = instantiateBondDescriptor({
       unlockHeight: bondMatch.unlockHeight,
       hash: bondMatch.hash,
       counterpartyKey: bondMatch.counterpartyKey,
       threshold,
       keyExpressions,
     });
+    return { bondDescriptor, vaultThreshold: threshold, vaultKeyCount: keyExpressions.length };
   } catch {
     return null;
   }
@@ -128,9 +139,10 @@ export function useBondProposalRoute({
     ).filter((policy): policy is BitcoinPolicyStore => policy.chain === 'bitcoin');
 
     for (const policy of candidatePolicies) {
-      const bondDescriptor = tryInstantiateBondDescriptor(bondMatch, policy.descriptor);
-      if (!bondDescriptor) continue;
+      const instantiated = tryInstantiateBondDescriptor(bondMatch, policy.descriptor);
+      if (!instantiated) continue;
 
+      const { bondDescriptor, vaultThreshold, vaultKeyCount } = instantiated;
       const bondScriptPubKey = tryCompileScriptPubKey(bondDescriptor);
       if (!bondScriptPubKey) continue;
       if (bytesToHex(bondScriptPubKey) !== bytesToHex(requestScriptPubKey)) continue;
@@ -153,6 +165,10 @@ export function useBondProposalRoute({
         policy,
         bondDescriptor,
         unlockHeight: bondMatch.unlockHeight,
+        hash: bondMatch.hash,
+        counterpartyKey: bondMatch.counterpartyKey,
+        vaultThreshold,
+        vaultKeyCount,
       };
     }
 

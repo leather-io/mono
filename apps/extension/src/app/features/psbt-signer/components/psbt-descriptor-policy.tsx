@@ -39,31 +39,42 @@ const broadcastWarning =
 const trustNote = 'Only approve if you understand and trust this contract.';
 
 const bondProposalTitle = 'You are proposing a vault transaction';
-function makeBondProposalBody(unlockHeight: number) {
-  return `This proposes a spend from a timelocked policy owned by your vault, spendable by its co-signers from block ${unlockHeight}. Nothing is signed or broadcast now — co-signers must approve the proposal first. ${trustNote}`;
+function makeBondProposalBody({ unlockHeight, vaultThreshold, vaultKeyCount }: PsbtBondDetails) {
+  return `This proposes a spend from a policy owned by your vault. It becomes spendable by ${formatVaultCosigners(vaultThreshold, vaultKeyCount)} from block ${unlockHeight}, or earlier if the counterparty shown below also signs and reveals the hash secret. Nothing is signed or broadcast now — co-signers must approve the proposal first. ${trustNote}`;
+}
+
+function formatVaultCosigners(vaultThreshold: number, vaultKeyCount: number) {
+  return `${vaultThreshold} of ${vaultKeyCount} vault co-signers`;
+}
+
+export interface PsbtBondDetails {
+  unlockHeight: number;
+  hash: string;
+  counterpartyKey: string;
+  vaultThreshold: number;
+  vaultKeyCount: number;
 }
 
 interface PsbtDescriptorPolicyProps {
-  bondUnlockHeight?: number;
+  bondDetails?: PsbtBondDetails;
   descriptor: string;
   details: DescriptorPsbtDetails | null;
   willBroadcast?: boolean;
 }
 export function PsbtDescriptorPolicy({
-  bondUnlockHeight,
+  bondDetails,
   descriptor,
   details,
   willBroadcast,
 }: PsbtDescriptorPolicyProps) {
-  const isBondProposal = bondUnlockHeight !== undefined;
   const warningTitle = willBroadcast
     ? 'Signing may broadcast this transaction'
     : 'You are co-signing a contract transaction';
   const warningBody = willBroadcast
     ? `${policyWarningIntro} ${broadcastWarning} ${trustNote}`
     : `${policyWarningIntro} ${trustNote}`;
-  const calloutTitle = isBondProposal ? bondProposalTitle : warningTitle;
-  const calloutBody = isBondProposal ? makeBondProposalBody(bondUnlockHeight) : warningBody;
+  const calloutTitle = bondDetails ? bondProposalTitle : warningTitle;
+  const calloutBody = bondDetails ? makeBondProposalBody(bondDetails) : warningBody;
 
   return (
     <>
@@ -71,11 +82,39 @@ export function PsbtDescriptorPolicy({
         {calloutBody}
       </Callout>
 
-      {isBondProposal ? (
-        <Section title="Timelock">
-          <styled.span textStyle="label.02">
-            Spendable by co-signers from block {bondUnlockHeight}
-          </styled.span>
+      {bondDetails ? (
+        <Section title="Spending conditions">
+          <Stack gap="space.04">
+            <Stack gap="space.01">
+              <styled.span textStyle="label.02">From block {bondDetails.unlockHeight}</styled.span>
+              <styled.span textStyle="caption.01" color="ink.text-subdued">
+                Requires{' '}
+                {formatVaultCosigners(bondDetails.vaultThreshold, bondDetails.vaultKeyCount)}
+              </styled.span>
+            </Stack>
+            <Stack gap="space.01">
+              <styled.span textStyle="label.02">
+                Before block {bondDetails.unlockHeight}
+              </styled.span>
+              <styled.span textStyle="caption.01" color="ink.text-subdued">
+                Requires{' '}
+                {formatVaultCosigners(bondDetails.vaultThreshold, bondDetails.vaultKeyCount)}, plus
+                a signature from the counterparty key and the secret matching the SHA-256 hash
+              </styled.span>
+              <styled.span textStyle="caption.01" color="ink.text-subdued">
+                Counterparty key
+              </styled.span>
+              <styled.code textStyle="caption.01" wordBreak="break-all">
+                {bondDetails.counterpartyKey}
+              </styled.code>
+              <styled.span textStyle="caption.01" color="ink.text-subdued">
+                SHA-256 hash
+              </styled.span>
+              <styled.code textStyle="caption.01" wordBreak="break-all">
+                {bondDetails.hash}
+              </styled.code>
+            </Stack>
+          </Stack>
         </Section>
       ) : null}
 

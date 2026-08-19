@@ -21,14 +21,14 @@ import type { PolicyStore } from '@app/store/policy/policy-store.utils';
 
 import * as Psbt from './components';
 import { PsbtBondAccounts } from './components/psbt-bond-accounts';
+import type { PsbtBondDetails } from './components/psbt-descriptor-policy';
 import { useDescriptorPsbtDetails } from './hooks/use-descriptor-psbt-details';
 import { usePsbtDetails } from './hooks/use-psbt-details';
 import { usePsbtSigner } from './hooks/use-psbt-signer';
 import { PsbtSignerContext, PsbtSignerProvider } from './psbt-signer.context';
 
-interface PsbtSignerBondProposal {
+interface PsbtSignerBondProposal extends PsbtBondDetails {
   policy: PolicyStore;
-  unlockHeight: number;
 }
 
 interface PsbtSignerProps {
@@ -156,7 +156,7 @@ export function PsbtSigner(props: PsbtSignerProps) {
           <Psbt.PsbtRequestDetailsHeader />
           {descriptor ? (
             <Psbt.PsbtDescriptorPolicy
-              bondUnlockHeight={bondProposal?.unlockHeight}
+              bondDetails={bondProposal}
               descriptor={descriptor}
               details={descriptorDetails}
               willBroadcast={willBroadcast}
