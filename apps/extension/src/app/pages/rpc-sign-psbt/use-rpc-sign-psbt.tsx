@@ -186,9 +186,19 @@ export function useRpcSignPsbt() {
           closeWindow();
           return;
         } catch (e) {
+          void sendMessageToOriginatingFrame(
+            { frameId, tabId },
+            createRpcErrorResponse('signPsbt', {
+              id: requestId,
+              error: {
+                code: RpcErrorCode.INTERNAL_ERROR,
+                message: 'Failed to propose transaction',
+              },
+            })
+          );
           return navigate(RouteUrls.RequestError, {
             state: {
-              message: isError(e) ? e.message : '',
+              message: isError(e) ? e.message : 'Failed to propose transaction',
               title: 'Unable to propose transaction',
             },
           });

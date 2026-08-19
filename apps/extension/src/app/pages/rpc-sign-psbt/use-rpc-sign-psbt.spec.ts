@@ -512,7 +512,7 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.closeWindow).toHaveBeenCalled();
   });
 
-  test('navigates to an error when proposing the bond transaction fails', async () => {
+  test('rejects the request and navigates to an error when proposing the bond transaction fails', async () => {
     const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
     setRpcSignPsbtParams({ broadcast: false, propose: true, descriptor: 'bond', psbtHex });
     mocks.useBondProposalRoute.mockReturnValue(makeMatchedBondRoute());
@@ -520,11 +520,34 @@ describe(useRpcSignPsbt.name, () => {
 
     await useRpcSignPsbt().onSignPsbt({ inputs: [] });
 
-    expect(mocks.sendMessage).not.toHaveBeenCalled();
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      createRpcErrorResponse('signPsbt', {
+        id: requestId,
+        error: {
+          code: RpcErrorCode.INTERNAL_ERROR,
+          message: 'Failed to propose transaction',
+        },
+      }),
+      { frameId }
+    );
     expect(mocks.navigate).toHaveBeenCalledWith(RouteUrls.RequestError, {
       state: { message: 'coordinator rejected', title: 'Unable to propose transaction' },
     });
     expect(mocks.closeWindow).not.toHaveBeenCalled();
+  });
+
+  test('falls back to a generic error message when the propose rejection is not an Error', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
+    setRpcSignPsbtParams({ broadcast: false, propose: true, descriptor: 'bond', psbtHex });
+    mocks.useBondProposalRoute.mockReturnValue(makeMatchedBondRoute());
+    mocks.proposeMultisigTransaction.mockRejectedValue('coordinator rejected');
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.navigate).toHaveBeenCalledWith(RouteUrls.RequestError, {
+      state: { message: 'Failed to propose transaction', title: 'Unable to propose transaction' },
+    });
   });
 
   test('rejects the request and blocks signing when the bond route errors', async () => {
