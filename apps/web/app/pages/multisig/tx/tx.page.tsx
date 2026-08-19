@@ -41,7 +41,7 @@ import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { SignerRollcall } from './components/signer-rollcall';
 import { formatTransactionActionError } from './format-transaction-error';
-import { formatRelativeTime } from './relative-time';
+import { formatRelativeDateTime, formatRelativeTime } from './relative-time';
 
 // The chain is the source of truth once a tx is on it: a confirmed/failed
 // on-chain result supersedes the backend's "broadcast" status.
@@ -198,8 +198,8 @@ export function TxDetailPage() {
   const effectiveStatus = reconcileStatus(tx.status, onchainDetail.data?.activity.status);
   const feeFiat = toFiat(item.activity?.fee, marketData.data);
   const heroTimeline = tx.broadcastAt
-    ? { verb: 'Broadcast', when: formatRelativeTime(new Date(tx.broadcastAt)) }
-    : { verb: 'Proposed', when: initiationDate };
+    ? { verb: 'Broadcast', when: formatRelativeDateTime(new Date(tx.broadcastAt)) }
+    : { verb: 'Proposed', when: formatRelativeDateTime(new Date(tx.proposalTimestamp * 1000)) };
 
   function showActionError(err: Error) {
     const message = formatTransactionActionError(err);
@@ -238,7 +238,7 @@ export function TxDetailPage() {
         gap={['space.06', 'space.06', 'space.08', 'space.10']}
         alignItems="flex-start"
       >
-        <Box flex={['1', '1', '1.6']} width="100%">
+        <Box flex={['1', '1', '1.6']} width="100%" minWidth={0}>
           <VaultActivityDetail
             item={item}
             themeId={vaultThemeFromName(vault.data.theme).id}
@@ -252,9 +252,10 @@ export function TxDetailPage() {
             caption={
               <Flex alignItems="center" gap="space.02">
                 <span>
-                  {heroTimeline.verb} {heroTimeline.when} by {proposerName}
+                  {heroTimeline.verb} {heroTimeline.when} by
                 </span>
                 <AvatarCircle name={proposerName} size="xs" />
+                <span>{proposerName}</span>
               </Flex>
             }
             proposal={{
@@ -269,7 +270,7 @@ export function TxDetailPage() {
             }}
           />
         </Box>
-        <Box flex={['1', '1', '1']} width="100%">
+        <Box flex={['1', '1', '1']} width="100%" minWidth={0}>
           <SectionLabel>Signatures</SectionLabel>
           <SignerRollcall
             vault={vault.data}

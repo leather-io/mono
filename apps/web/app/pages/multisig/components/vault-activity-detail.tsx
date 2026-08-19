@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { Flex } from 'leather-styles/jsx';
+import { styled } from 'leather-styles/jsx';
 import { CopyAddress } from '~/components/copy-address';
 import { ExternalLink } from '~/components/external-link';
 import { getActivityActionLine } from '~/features/multisig/activity/activity-action-line';
@@ -17,11 +17,12 @@ import type {
   MultisigTransactionStatus,
   NetworkConfiguration,
   OnChainActivityStatus,
+  StacksProtocolAction,
 } from '@leather.io/models';
 import { BlockchainActivityAvatarIcon, BlockchainActivityIndicatorIcon } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
-import { formatRelativeTime } from '../tx/relative-time';
+import { formatRelativeDateTime, formatRelativeTime } from '../tx/relative-time';
 import { type BadgeVariant } from './badge';
 import {
   DetailLocationRow,
@@ -64,6 +65,19 @@ function explorerLink(
   });
 }
 
+const transferHeroVerbs: Partial<Record<StacksProtocolAction, string>> = {
+  send: 'Send',
+  receive: 'Receive',
+};
+
+function heroLines(view: BlockchainActivityView): { title: string; subtitle?: string } {
+  const actionLine = getActivityActionLine(view);
+  if (actionLine) return { title: actionLine.actionTitle, subtitle: actionLine.viaProtocol };
+  const transferVerb = transferHeroVerbs[view.action];
+  if (transferVerb && view.title) return { title: `${transferVerb} ${view.title}` };
+  return { title: view.title || '—', subtitle: view.subtitle };
+}
+
 interface VaultActivityDetailItem {
   view: BlockchainActivityView;
   activity?: BlockchainActivity;
@@ -100,8 +114,7 @@ export function VaultActivityDetail({
   proposal,
 }: VaultActivityDetailProps) {
   const { view, activity } = item;
-  const actionLine = getActivityActionLine(view);
-  const subtitle = actionLine ? actionLine.viaProtocol : view.subtitle;
+  const hero = heroLines(view);
   const status = proposal
     ? transactionStatusBadge(proposal.status)
     : onChainStatusDisplay[view.status];
@@ -113,7 +126,9 @@ export function VaultActivityDetail({
   const mode = network.chain.bitcoin.mode;
   const balanceChanges = activity?.balanceChanges ?? [];
   const counterpartyLabel = activity?.initiatedByUser ? 'To' : 'From';
-  const relativeTime = formatRelativeTime(new Date(view.timestamp * 1000));
+  const timestampDate = new Date(view.timestamp * 1000);
+  const relativeTime = formatRelativeTime(timestampDate);
+  const heroTime = formatRelativeDateTime(timestampDate);
 
   return (
     <>
@@ -127,14 +142,13 @@ export function VaultActivityDetail({
             indicator={<BlockchainActivityIndicatorIcon indicator={view.indicator} size={16} />}
           />
         }
-        primary={actionLine?.actionTitle || view.title || '—'}
-        secondary={
-          <Flex direction="column" gap="space.01">
-            {subtitle ? <span>{subtitle}</span> : null}
-            {caption ?? <span>{relativeTime}</span>}
-          </Flex>
-        }
-      />
+        primary={hero.title}
+        secondary={hero.subtitle}
+      >
+        <styled.div mt="space.02" textStyle="label.02">
+          {caption ?? heroTime}
+        </styled.div>
+      </MultisigHero>
 
       <SectionLabel>Transaction details</SectionLabel>
       <DetailTable>
@@ -189,7 +203,7 @@ export function VaultActivityDetail({
           <DetailRow label="Memo">{proposal.memo}</DetailRow>
         ) : null}
         {activity?.fee ? (
-          <DetailRow label="Network fee">{moneyWithFiat(activity.fee, feeFiat)}</DetailRow>
+          <DetailRow label="Fee">{moneyWithFiat(activity.fee, feeFiat)}</DetailRow>
         ) : null}
         {activity && view.chain === 'stacks' ? (
           <DetailRow label="Nonce">{activity.nonce ?? pendingValue}</DetailRow>
