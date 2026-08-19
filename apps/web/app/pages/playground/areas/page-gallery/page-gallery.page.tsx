@@ -547,8 +547,9 @@ export function PageGalleryPage() {
               network={settings.network}
               caption={
                 <Flex alignItems="center" gap="space.02">
-                  <styled.span>Proposed 2h ago by Amber</styled.span>
-                  <AvatarCircle name="Amber" size="xs" />
+                  <styled.span>Proposed 2h ago by</styled.span>
+                  <AvatarCircle name="Amber" size="sm" />
+                  <styled.span>Amber</styled.span>
                 </Flex>
               }
               proposal={{

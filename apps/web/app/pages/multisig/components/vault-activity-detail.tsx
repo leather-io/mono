@@ -19,7 +19,6 @@ import type {
   OnChainActivityStatus,
   StacksProtocolAction,
 } from '@leather.io/models';
-import { BlockchainActivityAvatarIcon, BlockchainActivityIndicatorIcon } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { formatRelativeDateTime, formatRelativeTime } from '../tx/relative-time';
@@ -135,13 +134,6 @@ export function VaultActivityDetail({
       <MultisigHero
         variant="balance"
         themeId={themeId}
-        media={
-          <BlockchainActivityAvatarIcon
-            size={48}
-            avatar={view.avatar}
-            indicator={<BlockchainActivityIndicatorIcon indicator={view.indicator} size={16} />}
-          />
-        }
         primary={hero.title}
         secondary={hero.subtitle}
       >

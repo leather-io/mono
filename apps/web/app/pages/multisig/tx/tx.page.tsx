@@ -254,7 +254,7 @@ export function TxDetailPage() {
                 <span>
                   {heroTimeline.verb} {heroTimeline.when} by
                 </span>
-                <AvatarCircle name={proposerName} size="xs" />
+                <AvatarCircle name={proposerName} size="sm" />
                 <span>{proposerName}</span>
               </Flex>
             }
