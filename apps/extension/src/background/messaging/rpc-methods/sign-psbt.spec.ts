@@ -73,6 +73,14 @@ function invokeHandler(request: SignPsbtRequest) {
   return handler(request, buildPort());
 }
 
+function mockPolicyBoundConnection() {
+  mocks.createConnectingAppSearchParamsWithLastKnownAccount.mockResolvedValue({
+    frameId,
+    urlParams: new URLSearchParams({ policyId: 'f1f1f1f1/0/bc1qpolicy/mainnet' }),
+    tabId,
+  });
+}
+
 describe('signPsbtHandler', () => {
   beforeEach(() => {
     vi.stubGlobal('chrome', { tabs: { sendMessage: mocks.sendMessage } });
@@ -89,8 +97,10 @@ describe('signPsbtHandler', () => {
     vi.clearAllMocks();
   });
 
-  test('rejects propose without a descriptor before opening the popup', async () => {
-    await invokeHandler(makeRequest({ hex: makePsbtHex(), propose: true }));
+  test('rejects a policy bound connection without a descriptor before opening the popup', async () => {
+    mockPolicyBoundConnection();
+
+    await invokeHandler(makeRequest({ hex: makePsbtHex() }));
 
     expect(mocks.sendMessage).toHaveBeenCalledWith(
       tabId,
@@ -105,29 +115,24 @@ describe('signPsbtHandler', () => {
     expect(mocks.triggerRequestPopupWindowOpen).not.toHaveBeenCalled();
   });
 
-  test('forwards the propose flag and descriptor into the popup params', async () => {
-    await invokeHandler(
-      makeRequest({ hex: makePsbtHex(), propose: true, descriptor: bondDescriptor })
-    );
+  test('opens the popup for a policy bound connection that passes a descriptor', async () => {
+    mockPolicyBoundConnection();
+
+    await invokeHandler(makeRequest({ hex: makePsbtHex(), descriptor: bondDescriptor }));
 
     const requestParams: [string, string][] =
       mocks.createConnectingAppSearchParamsWithLastKnownAccount.mock.calls[0][1];
-    expect(requestParams).toEqual(
-      expect.arrayContaining([
-        ['propose', 'true'],
-        ['descriptor', bondDescriptor],
-      ])
-    );
+    expect(requestParams).toEqual(expect.arrayContaining([['descriptor', bondDescriptor]]));
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
     expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalled();
     expect(mocks.sendErrorResponseOnUserPopupClose).toHaveBeenCalled();
   });
 
-  test('opens the popup without a propose param when not proposing', async () => {
+  test('opens the popup without a descriptor when the connection is not policy bound', async () => {
     await invokeHandler(makeRequest({ hex: makePsbtHex() }));
 
-    const requestParams: [string, string][] =
-      mocks.createConnectingAppSearchParamsWithLastKnownAccount.mock.calls[0][1];
-    expect(requestParams.map(([key]) => key)).not.toContain('propose');
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
     expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalled();
+    expect(mocks.sendErrorResponseOnUserPopupClose).toHaveBeenCalled();
   });
 });

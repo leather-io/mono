@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
@@ -13,16 +12,10 @@ import {
   instantiateBondDescriptor,
   matchBondDescriptor,
 } from '@leather.io/bitcoin';
-import { makeAccountIdentifer } from '@leather.io/crypto';
 import { RpcErrorCode } from '@leather.io/rpc';
 
-import { useCurrentAccountId } from '@app/store/accounts/account';
-import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import type { PolicyStore } from '@app/store/policy/policy-store.utils';
-import {
-  filterPoliciesByParentAndNetwork,
-  selectAllPolicies,
-} from '@app/store/policy/policy.selectors';
+import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 type BitcoinPolicyStore = Extract<PolicyStore, { chain: 'bitcoin' }>;
 
@@ -46,7 +39,6 @@ interface BondProposalMatch {
 type BondProposalRoute = BondProposalError | BondProposalMatch | null;
 
 interface UseBondProposalRouteArgs {
-  propose: boolean;
   descriptor?: string;
   psbtHex: string;
 }
@@ -96,17 +88,21 @@ function makeBondProposalError(code: RpcErrorCode, message: string): BondProposa
   return { status: 'error', code, message };
 }
 
+function makeBondDescriptorMismatchError(): BondProposalError {
+  return makeBondProposalError(
+    RpcErrorCode.INVALID_REQUEST,
+    'Connected multisig account does not match this bond descriptor'
+  );
+}
+
 export function useBondProposalRoute({
-  propose,
   descriptor,
   psbtHex,
 }: UseBondProposalRouteArgs): BondProposalRoute {
-  const policies = useSelector(selectAllPolicies);
-  const currentAccount = useCurrentAccountId();
-  const currentNetwork = useCurrentNetwork();
+  const policy = useCurrentPolicy();
 
   return useMemo(() => {
-    if (!propose) return null;
+    if (policy?.chain !== 'bitcoin') return null;
 
     if (!descriptor || !psbtHex)
       return makeBondProposalError(
@@ -132,49 +128,37 @@ export function useBondProposalRoute({
     if (!tx || tx.inputsLength === 0)
       return makeBondProposalError(RpcErrorCode.INVALID_PARAMS, 'Invalid PSBT hex');
 
-    const candidatePolicies = filterPoliciesByParentAndNetwork(
-      policies,
-      makeAccountIdentifer(currentAccount.fingerprint, currentAccount.accountIndex),
-      currentNetwork.id
-    ).filter((policy): policy is BitcoinPolicyStore => policy.chain === 'bitcoin');
+    const instantiated = tryInstantiateBondDescriptor(bondMatch, policy.descriptor);
+    if (!instantiated) return makeBondDescriptorMismatchError();
 
-    for (const policy of candidatePolicies) {
-      const instantiated = tryInstantiateBondDescriptor(bondMatch, policy.descriptor);
-      if (!instantiated) continue;
+    const { bondDescriptor, vaultThreshold, vaultKeyCount } = instantiated;
+    const bondScriptPubKey = tryCompileScriptPubKey(bondDescriptor);
+    if (!bondScriptPubKey) return makeBondDescriptorMismatchError();
+    if (bytesToHex(bondScriptPubKey) !== bytesToHex(requestScriptPubKey))
+      return makeBondDescriptorMismatchError();
 
-      const { bondDescriptor, vaultThreshold, vaultKeyCount } = instantiated;
-      const bondScriptPubKey = tryCompileScriptPubKey(bondDescriptor);
-      if (!bondScriptPubKey) continue;
-      if (bytesToHex(bondScriptPubKey) !== bytesToHex(requestScriptPubKey)) continue;
+    const matchedInputIndexes = getDescriptorMatchingInputIndexes(tx, bondScriptPubKey);
+    if (matchedInputIndexes.length !== tx.inputsLength)
+      return makeBondProposalError(
+        RpcErrorCode.INVALID_REQUEST,
+        'All PSBT inputs must be locked by the bond descriptor'
+      );
 
-      const matchedInputIndexes = getDescriptorMatchingInputIndexes(tx, bondScriptPubKey);
-      if (matchedInputIndexes.length !== tx.inputsLength)
-        return makeBondProposalError(
-          RpcErrorCode.INVALID_REQUEST,
-          'All PSBT inputs must be locked by the bond descriptor'
-        );
+    if (getDescriptorInputsWithDisallowedSighash(tx, matchedInputIndexes).length > 0)
+      return makeBondProposalError(
+        RpcErrorCode.INVALID_REQUEST,
+        'Bond proposals only support SIGHASH_DEFAULT or SIGHASH_ALL inputs'
+      );
 
-      if (getDescriptorInputsWithDisallowedSighash(tx, matchedInputIndexes).length > 0)
-        return makeBondProposalError(
-          RpcErrorCode.INVALID_REQUEST,
-          'Bond proposals only support SIGHASH_DEFAULT or SIGHASH_ALL inputs'
-        );
-
-      return {
-        status: 'matched',
-        policy,
-        bondDescriptor,
-        unlockHeight: bondMatch.unlockHeight,
-        hash: bondMatch.hash,
-        counterpartyKey: bondMatch.counterpartyKey,
-        vaultThreshold,
-        vaultKeyCount,
-      };
-    }
-
-    return makeBondProposalError(
-      RpcErrorCode.INVALID_REQUEST,
-      'No multisig account matches this bond descriptor'
-    );
-  }, [propose, descriptor, psbtHex, policies, currentAccount, currentNetwork.id]);
+    return {
+      status: 'matched',
+      policy,
+      bondDescriptor,
+      unlockHeight: bondMatch.unlockHeight,
+      hash: bondMatch.hash,
+      counterpartyKey: bondMatch.counterpartyKey,
+      vaultThreshold,
+      vaultKeyCount,
+    };
+  }, [policy, descriptor, psbtHex]);
 }

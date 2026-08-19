@@ -184,12 +184,10 @@ function buildTransferTx({ signed }: { signed: boolean }) {
 function setRpcSignPsbtParams({
   broadcast,
   descriptor,
-  propose = false,
   psbtHex,
 }: {
   broadcast: boolean;
   descriptor?: string;
-  propose?: boolean;
   psbtHex: string;
 }) {
   mocks.useRpcSignPsbtParams.mockReturnValue({
@@ -197,7 +195,6 @@ function setRpcSignPsbtParams({
     descriptor,
     frameId,
     origin,
-    propose,
     psbtHex,
     requestId,
     signAtIndex: undefined,
@@ -487,7 +484,7 @@ describe(useRpcSignPsbt.name, () => {
   test('converts the request into a proposal when a bond route matches, ignoring broadcast', async () => {
     const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
     const bondRoute = makeMatchedBondRoute();
-    setRpcSignPsbtParams({ broadcast: true, propose: true, descriptor: 'bond', psbtHex });
+    setRpcSignPsbtParams({ broadcast: true, descriptor: 'bond', psbtHex });
     mocks.useBondProposalRoute.mockReturnValue(bondRoute);
     mocks.proposeMultisigTransaction.mockResolvedValue({ id: 'proposal-1' });
 
@@ -515,7 +512,7 @@ describe(useRpcSignPsbt.name, () => {
 
   test('closes the window without reporting a failure when the proposal response cannot be delivered', async () => {
     const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
-    setRpcSignPsbtParams({ broadcast: false, propose: true, descriptor: 'bond', psbtHex });
+    setRpcSignPsbtParams({ broadcast: false, descriptor: 'bond', psbtHex });
     mocks.useBondProposalRoute.mockReturnValue(makeMatchedBondRoute());
     mocks.proposeMultisigTransaction.mockResolvedValue({ id: 'proposal-1' });
     mocks.sendMessage.mockRejectedValue(new Error('Could not establish connection'));
@@ -528,7 +525,7 @@ describe(useRpcSignPsbt.name, () => {
 
   test('rejects the request and navigates to an error when proposing the bond transaction fails', async () => {
     const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
-    setRpcSignPsbtParams({ broadcast: false, propose: true, descriptor: 'bond', psbtHex });
+    setRpcSignPsbtParams({ broadcast: false, descriptor: 'bond', psbtHex });
     mocks.useBondProposalRoute.mockReturnValue(makeMatchedBondRoute());
     mocks.proposeMultisigTransaction.mockRejectedValue(new Error('coordinator rejected'));
 
@@ -553,7 +550,7 @@ describe(useRpcSignPsbt.name, () => {
 
   test('falls back to a generic error message when the propose rejection is not an Error', async () => {
     const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
-    setRpcSignPsbtParams({ broadcast: false, propose: true, descriptor: 'bond', psbtHex });
+    setRpcSignPsbtParams({ broadcast: false, descriptor: 'bond', psbtHex });
     mocks.useBondProposalRoute.mockReturnValue(makeMatchedBondRoute());
     mocks.proposeMultisigTransaction.mockRejectedValue('coordinator rejected');
 
@@ -566,7 +563,7 @@ describe(useRpcSignPsbt.name, () => {
 
   test('rejects the request and blocks signing when the bond route errors', async () => {
     const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
-    setRpcSignPsbtParams({ broadcast: false, propose: true, descriptor: 'bond', psbtHex });
+    setRpcSignPsbtParams({ broadcast: false, descriptor: 'bond', psbtHex });
     mocks.useBondProposalRoute.mockReturnValue({
       status: 'error',
       code: RpcErrorCode.INVALID_PARAMS,

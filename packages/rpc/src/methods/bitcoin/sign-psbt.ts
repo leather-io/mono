@@ -29,7 +29,6 @@ const signPsbtRequestParamsSchema = z.object({
   descriptor: z.string().optional(),
   hex: z.string(),
   network: z.string().optional(),
-  propose: z.boolean().optional(),
   signAtIndex: z
     .union([z.number(), z.array(z.number())])
     .optional()

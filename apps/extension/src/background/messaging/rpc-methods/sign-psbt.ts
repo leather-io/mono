@@ -96,22 +96,6 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
     return;
   }
 
-  if (request.params.propose === true && isUndefined(request.params.descriptor)) {
-    void trackRpcRequestError({ endpoint: request.method, error: 'Propose without descriptor' });
-
-    void sendMessageToOriginatingFrame(
-      getOriginatingFrameFromPort(port),
-      createRpcErrorResponse('signPsbt', {
-        id: request.id,
-        error: {
-          code: RpcErrorCode.INVALID_PARAMS,
-          message: 'Proposing a transaction requires a descriptor',
-        },
-      })
-    );
-    return;
-  }
-
   const requestParams: RequestParams = [
     ['hex', request.params.hex],
     ['requestId', request.id],
@@ -133,21 +117,33 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
     requestParams.push(['descriptor', request.params.descriptor]);
   }
 
-  if (isDefined(request.params.propose)) {
-    requestParams.push(['propose', request.params.propose.toString()]);
-  }
-
   if (isDefined(request.params.signAtIndex))
     ensureArray(request.params.signAtIndex).forEach(index =>
       requestParams.push(['signAtIndex', index.toString()])
     );
 
-  void trackRpcRequestSuccess({ endpoint: request.method });
-
   const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
     port,
     requestParams
   );
+
+  if (urlParams.has('policyId') && isUndefined(request.params.descriptor)) {
+    void trackRpcRequestError({ endpoint: request.method, error: 'Propose without descriptor' });
+
+    void sendMessageToOriginatingFrame(
+      getOriginatingFrameFromPort(port),
+      createRpcErrorResponse('signPsbt', {
+        id: request.id,
+        error: {
+          code: RpcErrorCode.INVALID_PARAMS,
+          message: 'Proposing a transaction requires a descriptor',
+        },
+      })
+    );
+    return;
+  }
+
+  void trackRpcRequestSuccess({ endpoint: request.method });
 
   const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcSignPsbt, urlParams);
 

@@ -15,9 +15,7 @@ import { RpcErrorCode } from '@leather.io/rpc';
 import { useBondProposalRoute } from './use-bond-proposal-route';
 
 const mocks = vi.hoisted(() => ({
-  useSelector: vi.fn(),
-  useCurrentAccountId: vi.fn(),
-  useCurrentNetwork: vi.fn(),
+  useCurrentPolicy: vi.fn(),
 }));
 
 vi.mock('react', async importOriginal => {
@@ -30,19 +28,9 @@ vi.mock('react', async importOriginal => {
   };
 });
 
-vi.mock('react-redux', async importOriginal => {
-  const actual = await importOriginal<typeof import('react-redux')>();
-  return { ...actual, useSelector: mocks.useSelector };
-});
-
-vi.mock('@app/store/accounts/account', () => ({
-  useCurrentAccountId: mocks.useCurrentAccountId,
+vi.mock('@app/store/policy/policy.selectors', () => ({
+  useCurrentPolicy: mocks.useCurrentPolicy,
 }));
-
-vi.mock('@app/store/networks/networks.selectors', async importOriginal => {
-  const actual = await importOriginal<typeof import('@app/store/networks/networks.selectors')>();
-  return { ...actual, useCurrentNetwork: mocks.useCurrentNetwork };
-});
 
 function requireBytes(bytes: Uint8Array | null) {
   if (!bytes) throw new Error('Expected key bytes to be defined');
@@ -138,23 +126,40 @@ function buildBondPsbtHex({ foreignInput, sighashType }: BuildBondPsbtOptions = 
 describe(useBondProposalRoute.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.useSelector.mockReturnValue([bitcoinPolicy]);
-    mocks.useCurrentAccountId.mockReturnValue({ fingerprint, accountIndex });
-    mocks.useCurrentNetwork.mockReturnValue({ id: networkId });
+    mocks.useCurrentPolicy.mockReturnValue(bitcoinPolicy);
   });
 
-  test('returns null when propose is not requested', () => {
+  test('returns null when the connection is not bound to a policy', () => {
+    mocks.useCurrentPolicy.mockReturnValue(null);
+
     const route = useBondProposalRoute({
-      propose: false,
       descriptor: bondDescriptor,
       psbtHex: buildBondPsbtHex(),
     });
     expect(route).toBeNull();
   });
 
-  test('matches a bond descriptor to the registered policy', () => {
+  test('returns null when the bound policy is not a bitcoin policy', () => {
+    mocks.useCurrentPolicy.mockReturnValue({
+      id: 'policy-stx',
+      parentAccountId: makeAccountIdentifer(fingerprint, accountIndex),
+      networkId,
+      address: 'SM3CFXKD81GREH6MYFW4P9VKSSR2N525W3KDRH3P1',
+      role: 'signer',
+      chain: 'stacks',
+      publicKeys: [],
+      threshold: 2,
+    });
+
     const route = useBondProposalRoute({
-      propose: true,
+      descriptor: bondDescriptor,
+      psbtHex: buildBondPsbtHex(),
+    });
+    expect(route).toBeNull();
+  });
+
+  test('matches a bond descriptor to the bound policy', () => {
+    const route = useBondProposalRoute({
       descriptor: bondDescriptor,
       psbtHex: buildBondPsbtHex(),
     });
@@ -173,7 +178,6 @@ describe(useBondProposalRoute.name, () => {
   test('matches a cosmetically different dApp descriptor with reordered keys', () => {
     const reordered = `wsh(and_v(v:or_i(after(${unlockHeight}),and_v(v:sha256(${hash}),pk(${counterpartyKey}))),sortedmulti(2,${xpubC}/0/0,${xpubA}/0/0,${xpubB}/0/0)))`;
     const route = useBondProposalRoute({
-      propose: true,
       descriptor: reordered,
       psbtHex: buildBondPsbtHex(),
     });
@@ -182,7 +186,6 @@ describe(useBondProposalRoute.name, () => {
 
   test('errors when the descriptor is missing', () => {
     const route = useBondProposalRoute({
-      propose: true,
       descriptor: undefined,
       psbtHex: buildBondPsbtHex(),
     });
@@ -193,7 +196,6 @@ describe(useBondProposalRoute.name, () => {
 
   test('errors when the descriptor is not a bond template', () => {
     const route = useBondProposalRoute({
-      propose: true,
       descriptor: policyDescriptor,
       psbtHex: buildBondPsbtHex(),
     });
@@ -206,12 +208,14 @@ describe(useBondProposalRoute.name, () => {
     );
   });
 
-  test('errors when no registered policy matches the bond keys', () => {
+  test('errors when the bound policy does not match the bond keys', () => {
     const otherPolicyDescriptor = `wsh(sortedmulti(2,${xpubA}/0/1,${xpubB}/0/1,${xpubC}/0/1))`;
-    mocks.useSelector.mockReturnValue([{ ...bitcoinPolicy, descriptor: otherPolicyDescriptor }]);
+    mocks.useCurrentPolicy.mockReturnValue({
+      ...bitcoinPolicy,
+      descriptor: otherPolicyDescriptor,
+    });
 
     const route = useBondProposalRoute({
-      propose: true,
       descriptor: bondDescriptor,
       psbtHex: buildBondPsbtHex(),
     });
@@ -219,40 +223,13 @@ describe(useBondProposalRoute.name, () => {
       expect.objectContaining({
         status: 'error',
         code: RpcErrorCode.INVALID_REQUEST,
-        message: 'No multisig account matches this bond descriptor',
+        message: 'Connected multisig account does not match this bond descriptor',
       })
-    );
-  });
-
-  test('errors when the policy is registered on a different network', () => {
-    mocks.useSelector.mockReturnValue([{ ...bitcoinPolicy, networkId: 'testnet' }]);
-
-    const route = useBondProposalRoute({
-      propose: true,
-      descriptor: bondDescriptor,
-      psbtHex: buildBondPsbtHex(),
-    });
-    expect(route).toEqual(
-      expect.objectContaining({ status: 'error', code: RpcErrorCode.INVALID_REQUEST })
-    );
-  });
-
-  test('errors when the policy belongs to another account', () => {
-    mocks.useCurrentAccountId.mockReturnValue({ fingerprint, accountIndex: 5 });
-
-    const route = useBondProposalRoute({
-      propose: true,
-      descriptor: bondDescriptor,
-      psbtHex: buildBondPsbtHex(),
-    });
-    expect(route).toEqual(
-      expect.objectContaining({ status: 'error', code: RpcErrorCode.INVALID_REQUEST })
     );
   });
 
   test('errors when the psbt carries inputs not locked by the bond descriptor', () => {
     const route = useBondProposalRoute({
-      propose: true,
       descriptor: bondDescriptor,
       psbtHex: buildBondPsbtHex({ foreignInput: true }),
     });
@@ -267,7 +244,6 @@ describe(useBondProposalRoute.name, () => {
 
   test('errors when a bond input requests a disallowed sighash', () => {
     const route = useBondProposalRoute({
-      propose: true,
       descriptor: bondDescriptor,
       psbtHex: buildBondPsbtHex({ sighashType: btc.SigHash.NONE }),
     });
@@ -282,7 +258,6 @@ describe(useBondProposalRoute.name, () => {
 
   test('errors when the psbt hex is invalid', () => {
     const route = useBondProposalRoute({
-      propose: true,
       descriptor: bondDescriptor,
       psbtHex: 'not-a-psbt',
     });

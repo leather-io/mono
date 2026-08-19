@@ -43,17 +43,8 @@ interface BroadcastSignedPsbtTxArgs {
 }
 export function useRpcSignPsbt() {
   const navigate = useNavigate();
-  const {
-    broadcast,
-    descriptor,
-    frameId,
-    origin,
-    propose,
-    psbtHex,
-    requestId,
-    signAtIndex,
-    tabId,
-  } = useRpcSignPsbtParams();
+  const { broadcast, descriptor, frameId, origin, psbtHex, requestId, signAtIndex, tabId } =
+    useRpcSignPsbtParams();
   const { signPsbt, getPsbtAsTransaction } = usePsbtSigner();
   const signDescriptorPsbt = useSignDescriptorPsbt();
   const descriptorDetails = useDescriptorPsbtDetails(psbtHex ?? '', descriptor ?? '');
@@ -64,7 +55,7 @@ export function useRpcSignPsbt() {
   const getDefaultSigningConfig = useGetAssumedZeroIndexSigningConfig();
   const currentNetwork = useCurrentNetwork();
   const { proposeMultisigTransaction, isProposing } = useProposeMultisigTransaction();
-  const bondRoute = useBondProposalRoute({ propose, descriptor, psbtHex: psbtHex ?? '' });
+  const bondRoute = useBondProposalRoute({ descriptor, psbtHex: psbtHex ?? '' });
 
   useEffect(() => {
     if (bondRoute?.status !== 'error' || !requestId) return;

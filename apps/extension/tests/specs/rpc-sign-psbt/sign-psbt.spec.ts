@@ -862,7 +862,7 @@ test.describe('Sign PSBT: bond proposal', () => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, {
       ...policyStateOverrides({ policies: [bitcoinPolicy] }),
-      ...getConnectedTestAppPermissionsState(),
+      ...getConnectedTestAppPermissionsState({ policyId: bitcoinPolicy.id }),
     });
     await page.goto('localhost:3000');
   });
@@ -878,7 +878,7 @@ test.describe('Sign PSBT: bond proposal', () => {
       );
   }
 
-  test('that a bond spend with propose uploads a proposal for the matched policy', async ({
+  test('that a bond spend from a policy bound connection uploads a proposal for the matched policy', async ({
     page,
     context,
   }) => {
@@ -895,7 +895,6 @@ test.describe('Sign PSBT: bond proposal', () => {
         network: 'mainnet',
         hex: psbtHex,
         descriptor: bondDescriptor,
-        propose: true,
       }),
       (async () => {
         const popup = await context.waitForEvent('page');
@@ -922,12 +921,11 @@ test.describe('Sign PSBT: bond proposal', () => {
     test.expect(typeof proposeBody?.proposalTimestamp).toEqual('number');
   });
 
-  test('that a propose request with a non-bond descriptor is rejected', async ({ page }) => {
+  test('that a request with a non-bond descriptor is rejected', async ({ page }) => {
     const result = await initiateBondPsbtRequest(page)({
       network: 'mainnet',
       hex: createBondPsbtHex(),
       descriptor: bitcoinPolicy.descriptor,
-      propose: true,
     });
 
     delete result.id;
