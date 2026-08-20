@@ -8,6 +8,7 @@ import { multisigVaultKeys } from './vault-query-keys';
 
 export const multisigProposalsRefetchInterval = 5_000;
 export const onchainActivityRefetchInterval = 20_000;
+export const accountAssetsRefetchInterval = 10_000;
 
 export function retryMultisigQuery(failureCount: number, error: Error) {
   if (
