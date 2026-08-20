@@ -4,11 +4,20 @@ import { Link } from 'react-router';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { formatCryptoPrecise, formatCurrency } from '~/utils/currency-formatter';
 
-import type { BlockchainActivityBalanceChange, Money } from '@leather.io/models';
+import type { BlockchainActivityBalanceChange, MarketData, Money } from '@leather.io/models';
+import { baseCurrencyAmountInQuote } from '@leather.io/utils';
 
 import { Badge, type BadgeVariant } from './badge';
 
 export const pendingValue = '—';
+
+export function toFiat(
+  money: Money | undefined,
+  marketData: MarketData | undefined
+): Money | undefined {
+  if (!money || !marketData || money.symbol !== marketData.pair.base) return undefined;
+  return baseCurrencyAmountInQuote(money, marketData);
+}
 
 export function moneyWithFiat(money: Money, fiat: Money | undefined): string {
   return fiat
