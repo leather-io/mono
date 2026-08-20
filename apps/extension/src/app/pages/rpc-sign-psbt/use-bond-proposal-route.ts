@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
-import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
-import * as btc from '@scure/btc-signer';
+import type * as btc from '@scure/btc-signer';
+import { equalBytes } from '@scure/btc-signer/utils';
 
 import {
   type BondDescriptorMatch,
@@ -9,6 +9,7 @@ import {
   getBondVaultKeys,
   getDescriptorInputsWithDisallowedSighash,
   getDescriptorMatchingInputIndexes,
+  getPsbtAsTransaction,
   instantiateBondDescriptor,
   matchBondDescriptor,
 } from '@leather.io/bitcoin';
@@ -78,7 +79,7 @@ function tryInstantiateBondDescriptor(
 
 function tryParsePsbtTransaction(psbtHex: string): btc.Transaction | null {
   try {
-    return btc.Transaction.fromPSBT(hexToBytes(psbtHex));
+    return getPsbtAsTransaction(psbtHex);
   } catch {
     return null;
   }
@@ -134,7 +135,7 @@ export function useBondProposalRoute({
     const { bondDescriptor, vaultThreshold, vaultKeyCount } = instantiated;
     const bondScriptPubKey = tryCompileScriptPubKey(bondDescriptor);
     if (!bondScriptPubKey) return makeBondDescriptorMismatchError();
-    if (bytesToHex(bondScriptPubKey) !== bytesToHex(requestScriptPubKey))
+    if (!equalBytes(bondScriptPubKey, requestScriptPubKey))
       return makeBondDescriptorMismatchError();
 
     const matchedInputIndexes = getDescriptorMatchingInputIndexes(tx, bondScriptPubKey);

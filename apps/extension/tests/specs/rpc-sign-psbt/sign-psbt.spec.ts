@@ -52,6 +52,17 @@ function createTaprootKeychainFromTestMnemonic() {
   );
 }
 
+function initiatePsbtSigning(page: Page) {
+  return async (params: RpcParams<typeof signPsbt> & { broadcast?: boolean }) =>
+    page.evaluate(
+      params =>
+        (window as any).LeatherProvider.request('signPsbt', {
+          ...params,
+        }).catch((e: unknown) => e),
+      { ...params }
+    );
+}
+
 test.describe('Sign PSBT', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
@@ -119,17 +130,6 @@ test.describe('Sign PSBT', () => {
     const requestPromise = popup.waitForRequest('**/api/tx');
     await popup.route('**/api/tx', async route => await callback(route));
     return requestPromise;
-  }
-
-  function initiatePsbtSigning(page: Page) {
-    return async (params: RpcParams<typeof signPsbt> & { broadcast?: boolean }) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('signPsbt', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
   }
 
   function createExpectedResult(hex: string, txid?: string) {
@@ -867,17 +867,6 @@ test.describe('Sign PSBT: bond proposal', () => {
     await page.goto('localhost:3000');
   });
 
-  function initiateBondPsbtRequest(page: Page) {
-    return async (params: Record<string, unknown>) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('signPsbt', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
-  }
-
   test('that a bond spend from a policy bound connection uploads a proposal for the matched policy', async ({
     page,
     context,
@@ -891,7 +880,7 @@ test.describe('Sign PSBT: bond proposal', () => {
     });
 
     const [result] = await Promise.all([
-      initiateBondPsbtRequest(page)({
+      initiatePsbtSigning(page)({
         network: 'mainnet',
         hex: psbtHex,
         descriptor: bondDescriptor,
@@ -922,7 +911,7 @@ test.describe('Sign PSBT: bond proposal', () => {
   });
 
   test('that a request with a non-bond descriptor is rejected', async ({ page }) => {
-    const result = await initiateBondPsbtRequest(page)({
+    const result = await initiatePsbtSigning(page)({
       network: 'mainnet',
       hex: createBondPsbtHex(),
       descriptor: bitcoinPolicy.descriptor,

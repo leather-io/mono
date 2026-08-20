@@ -1,3 +1,4 @@
+import { minTimestampLockTime } from './bond-lock-script';
 import {
   compileWshDescriptor,
   getWshDescriptorThreshold,
@@ -11,8 +12,6 @@ export const bondTemplateV1 = {
   script:
     'wsh(and_v(v:or_i(after(<<param:unlock_height>>),and_v(v:sha256(<<param:hash>>),pk(<<param:counterparty_key>>))),<<vault:multi>>))',
 } as const;
-
-const maxBlockHeightLocktime = 500_000_000;
 
 const bondDescriptorPattern =
   /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\((0[23][0-9a-fA-F]{64})\)\)\),(sortedmulti\([^()]+\))\)\)$/;
@@ -59,9 +58,7 @@ export function matchBondDescriptor(descriptor: string): BondDescriptorMatch | n
 }
 
 function isValidUnlockHeight(unlockHeight: number): boolean {
-  return (
-    Number.isInteger(unlockHeight) && unlockHeight >= 1 && unlockHeight < maxBlockHeightLocktime
-  );
+  return Number.isInteger(unlockHeight) && unlockHeight >= 1 && unlockHeight < minTimestampLockTime;
 }
 
 function assertValidBondParams({

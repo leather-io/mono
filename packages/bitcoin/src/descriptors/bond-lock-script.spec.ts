@@ -1,10 +1,10 @@
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
 import { hex } from '@scure/base';
-import { HDKey } from '@scure/bip32';
 import { Script } from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
+import { makeNativeSegwitAccountXpub, makeNativeSegwitAddressPubkeyHex } from '../mocks/key-mocks';
 import { parseBondLockScript } from './bond-lock-script';
 import { getBondVaultKeys, instantiateBondDescriptor } from './bond-template';
 import { compileWshDescriptor } from './wsh-descriptor';
@@ -28,10 +28,6 @@ function mutateLockScript(mutate: (ops: ReturnType<typeof Script.decode>) => voi
   return Script.encode(ops);
 }
 
-function makeNativeSegwitAccountKeychain(seedByte: number) {
-  return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'");
-}
-
 describe(parseBondLockScript.name, () => {
   it('parses the SDK-built 2-of-2 lock script exactly', () => {
     const parsed = parseBondLockScript(hex.decode(lock2of2Height1000));
@@ -52,14 +48,12 @@ describe(parseBondLockScript.name, () => {
   });
 
   it('round-trips the witness script compiled from an instantiated bond descriptor', () => {
-    const keychains = [1, 2, 3].map(makeNativeSegwitAccountKeychain);
-    const policyDescriptor = `wsh(sortedmulti(2,${keychains
-      .map(keychain => `${keychain.publicExtendedKey}/0/0`)
+    const stakerSeedBytes = [1, 2, 3];
+    const policyDescriptor = `wsh(sortedmulti(2,${stakerSeedBytes
+      .map(seedByte => `${makeNativeSegwitAccountXpub(seedByte)}/0/0`)
       .join(',')}))`;
     const hash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
-    const counterpartyKey = bytesToHex(
-      makeNativeSegwitAccountKeychain(9).deriveChild(0).deriveChild(0).publicKey!
-    );
+    const counterpartyKey = makeNativeSegwitAddressPubkeyHex(9);
     const bondDescriptor = instantiateBondDescriptor({
       unlockHeight: 1000,
       hash,
@@ -75,9 +69,7 @@ describe(parseBondLockScript.name, () => {
     expect(parsed!.covenantPubkey).toBe(counterpartyKey);
     expect(parsed!.threshold).toBe(2);
     expect([...parsed!.stakerPubkeys].sort()).toEqual(
-      keychains
-        .map(keychain => bytesToHex(keychain.deriveChild(0).deriveChild(0).publicKey!))
-        .sort()
+      stakerSeedBytes.map(makeNativeSegwitAddressPubkeyHex).sort()
     );
   });
 

@@ -7,6 +7,11 @@ import * as btc from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
 import {
+  makeNativeSegwitAccountKeychain,
+  makeNativeSegwitAccountXpub,
+  makeNativeSegwitAddressPubkey,
+} from '../mocks/key-mocks';
+import {
   compileWshDescriptor,
   extractWshDescriptorPreimages,
   finalizeWshDescriptorPsbt,
@@ -22,22 +27,6 @@ import {
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
 } from './wsh-descriptor';
-
-function makeNativeSegwitAccountKeychain(seedByte: number) {
-  return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'");
-}
-
-function makeNativeSegwitAccountXpub(seedByte: number) {
-  return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'")
-    .publicExtendedKey;
-}
-
-function makeNativeSegwitAddressPubkey(seedByte: number) {
-  return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte))
-    .derive("m/84'/0'/0'")
-    .deriveChild(0)
-    .deriveChild(0).publicKey!;
-}
 
 // Testnet extended-key version bytes (tprv / tpub) — Ledger uses these on testnet.
 const testnetExtendedKeyVersions = { private: 0x04358394, public: 0x043587cf };

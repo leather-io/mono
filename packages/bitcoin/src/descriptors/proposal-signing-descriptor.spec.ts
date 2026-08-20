@@ -1,31 +1,21 @@
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
-import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
+import {
+  makeNativeSegwitAccountXpub,
+  makeNativeSegwitAddressPubkey,
+  makeNativeSegwitAddressPubkeyHex,
+} from '../mocks/key-mocks';
 import { getBondVaultKeys, instantiateBondDescriptor, matchBondDescriptor } from './bond-template';
 import { resolveProposalSigningDescriptor } from './proposal-signing-descriptor';
 import { compileWshDescriptor } from './wsh-descriptor';
 
-function makeNativeSegwitAccountXpub(seedByte: number) {
-  return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'")
-    .publicExtendedKey;
-}
-
-function makeAddressPubkey(seedByte: number) {
-  const { publicKey } = HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte))
-    .derive("m/84'/0'/0'")
-    .deriveChild(0)
-    .deriveChild(0);
-  if (!publicKey) throw new Error('Expected key bytes to be defined');
-  return publicKey;
-}
-
 const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
 const xpubC = makeNativeSegwitAccountXpub(3);
-const counterpartyKey = bytesToHex(makeAddressPubkey(9));
+const counterpartyKey = makeNativeSegwitAddressPubkeyHex(9);
 const hash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
 const unlockHeight = 1000;
 
@@ -50,7 +40,7 @@ interface PsbtInputFixture {
   witnessScript?: Uint8Array;
 }
 
-const recipientScript = btc.p2wpkh(makeAddressPubkey(8)).script;
+const recipientScript = btc.p2wpkh(makeNativeSegwitAddressPubkey(8)).script;
 
 function buildPsbtHex(inputs: PsbtInputFixture[]) {
   const tx = new btc.Transaction({ allowUnknownInputs: true });
@@ -121,7 +111,7 @@ describe(resolveProposalSigningDescriptor.name, () => {
   it('rejects a proposal mixing bond inputs with foreign inputs', () => {
     const psbtHex = buildPsbtHex([
       descriptorInputFixture(bondDescriptor),
-      { script: btc.p2wpkh(makeAddressPubkey(7)).script },
+      { script: btc.p2wpkh(makeNativeSegwitAddressPubkey(7)).script },
     ]);
     expect(() => resolveProposalSigningDescriptor(policyDescriptor, psbtHex)).toThrow(/mixes/);
   });

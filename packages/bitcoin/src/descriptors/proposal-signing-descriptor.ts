@@ -1,6 +1,6 @@
-import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
-import * as btc from '@scure/btc-signer';
+import { bytesToHex } from '@noble/hashes/utils';
 
+import { getPsbtAsTransaction } from '../psbt/utils';
 import { parseBondLockScript } from './bond-lock-script';
 import { getBondVaultKeys, instantiateBondDescriptor } from './bond-template';
 import { compileWshDescriptor } from './wsh-descriptor';
@@ -18,7 +18,7 @@ export function resolveProposalSigningDescriptor(
   policyDescriptor: string,
   psbtHex: string
 ): string {
-  const tx = btc.Transaction.fromPSBT(hexToBytes(psbtHex));
+  const tx = getPsbtAsTransaction(psbtHex);
   if (!tx.inputsLength) throw new Error('Proposal PSBT has no inputs');
 
   const inputScripts: string[] = [];

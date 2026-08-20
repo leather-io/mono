@@ -4,27 +4,14 @@ import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import { describe, expect, it } from 'vitest';
 
+import { makeNativeSegwitAccountXpub, makeNativeSegwitAddressPubkeyHex } from '../mocks/key-mocks';
 import { getBondVaultKeys, instantiateBondDescriptor, matchBondDescriptor } from './bond-template';
 import { compileWshDescriptor, getWshDescriptorAddress } from './wsh-descriptor';
-
-function makeNativeSegwitAccountXpub(seedByte: number) {
-  return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'")
-    .publicExtendedKey;
-}
-
-function makeAddressPubkeyHex(seedByte: number) {
-  return bytesToHex(
-    HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte))
-      .derive("m/84'/0'/0'")
-      .deriveChild(0)
-      .deriveChild(0).publicKey!
-  );
-}
 
 const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
 const xpubC = makeNativeSegwitAccountXpub(3);
-const counterpartyKey = makeAddressPubkeyHex(9);
+const counterpartyKey = makeNativeSegwitAddressPubkeyHex(9);
 const hash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
 const unlockHeight = 1000;
 
@@ -61,8 +48,8 @@ describe('matchBondDescriptor', () => {
   });
 
   it('rejects raw pubkeys and private keys in the vault multi', () => {
-    const rawKeyA = makeAddressPubkeyHex(1);
-    const rawKeyB = makeAddressPubkeyHex(2);
+    const rawKeyA = makeNativeSegwitAddressPubkeyHex(1);
+    const rawKeyB = makeNativeSegwitAddressPubkeyHex(2);
     expect(
       matchBondDescriptor(makeBondDescriptor(`sortedmulti(2,${rawKeyA},${rawKeyB})`))
     ).toBeNull();
@@ -177,7 +164,7 @@ describe('instantiateBondDescriptor', () => {
     expect(() =>
       instantiateBondDescriptor({
         ...validArgs,
-        keyExpressions: [makeAddressPubkeyHex(1), makeAddressPubkeyHex(2)],
+        keyExpressions: [makeNativeSegwitAddressPubkeyHex(1), makeNativeSegwitAddressPubkeyHex(2)],
       })
     ).toThrow();
   });

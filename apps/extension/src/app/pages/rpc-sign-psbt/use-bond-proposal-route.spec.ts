@@ -1,6 +1,5 @@
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
-import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
 import {
@@ -8,6 +7,9 @@ import {
   getBondVaultKeys,
   getWshDescriptorAddress,
   instantiateBondDescriptor,
+  makeNativeSegwitAccountXpub,
+  makeNativeSegwitAddressPubkey,
+  makeNativeSegwitAddressPubkeyHex,
 } from '@leather.io/bitcoin';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { RpcErrorCode } from '@leather.io/rpc';
@@ -32,31 +34,10 @@ vi.mock('@app/store/policy/policy.selectors', () => ({
   useCurrentPolicy: mocks.useCurrentPolicy,
 }));
 
-function requireBytes(bytes: Uint8Array | null) {
-  if (!bytes) throw new Error('Expected key bytes to be defined');
-  return bytes;
-}
-
-function makeNativeSegwitAccountXpub(seedByte: number) {
-  return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'")
-    .publicExtendedKey;
-}
-
-function makeAddressPubkeyHex(seedByte: number) {
-  return bytesToHex(
-    requireBytes(
-      HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte))
-        .derive("m/84'/0'/0'")
-        .deriveChild(0)
-        .deriveChild(0).publicKey
-    )
-  );
-}
-
 const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
 const xpubC = makeNativeSegwitAccountXpub(3);
-const counterpartyKey = makeAddressPubkeyHex(9);
+const counterpartyKey = makeNativeSegwitAddressPubkeyHex(9);
 const hash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
 const unlockHeight = 1000;
 
@@ -99,25 +80,17 @@ function buildBondPsbtHex({ foreignInput, sighashType }: BuildBondPsbtOptions = 
     ...(sighashType === undefined ? {} : { sighashType }),
   });
   if (foreignInput) {
-    const foreignKey = HDKey.fromMasterSeed(new Uint8Array(32).fill(7))
-      .derive("m/84'/0'/0'")
-      .deriveChild(0)
-      .deriveChild(0);
     tx.addInput({
       txid: hexToBytes('22'.repeat(32)),
       index: 0,
       witnessUtxo: {
-        script: btc.p2wpkh(requireBytes(foreignKey.publicKey)).script,
+        script: btc.p2wpkh(makeNativeSegwitAddressPubkey(7)).script,
         amount: 10_000n,
       },
     });
   }
-  const recipientKey = HDKey.fromMasterSeed(new Uint8Array(32).fill(8))
-    .derive("m/84'/0'/0'")
-    .deriveChild(0)
-    .deriveChild(0);
   tx.addOutput({
-    script: btc.p2wpkh(requireBytes(recipientKey.publicKey)).script,
+    script: btc.p2wpkh(makeNativeSegwitAddressPubkey(8)).script,
     amount: 45_000n,
   });
   return bytesToHex(tx.toPSBT());
