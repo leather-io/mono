@@ -60,7 +60,8 @@ function resolveValueColor(
   indicator: BlockchainActivityIndicator,
   direction: BlockchainActivityDirection
 ) {
-  if (indicator === 'pending' || indicator === 'failed') return 'ink.text-subdued';
+  if (indicator === 'pending' || indicator === 'failed' || indicator === 'cancelled')
+    return 'ink.text-subdued';
   if (direction === 'received') return 'green.action-primary-default';
   return 'ink.text-primary';
 }
