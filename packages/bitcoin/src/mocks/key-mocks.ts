@@ -9,12 +9,14 @@ export function makeNativeSegwitAccountXpub(seedByte: number) {
   return makeNativeSegwitAccountKeychain(seedByte).publicExtendedKey;
 }
 
-export function makeNativeSegwitAddressPubkey(seedByte: number): Uint8Array {
-  const { publicKey } = makeNativeSegwitAccountKeychain(seedByte).deriveChild(0).deriveChild(0);
+export function makeNativeSegwitAddressPubkey(seedByte: number, addressIndex = 0): Uint8Array {
+  const { publicKey } = makeNativeSegwitAccountKeychain(seedByte)
+    .deriveChild(0)
+    .deriveChild(addressIndex);
   if (!publicKey) throw new Error('Expected public key bytes to be defined');
   return publicKey;
 }
 
-export function makeNativeSegwitAddressPubkeyHex(seedByte: number): string {
-  return bytesToHex(makeNativeSegwitAddressPubkey(seedByte));
+export function makeNativeSegwitAddressPubkeyHex(seedByte: number, addressIndex = 0): string {
+  return bytesToHex(makeNativeSegwitAddressPubkey(seedByte, addressIndex));
 }

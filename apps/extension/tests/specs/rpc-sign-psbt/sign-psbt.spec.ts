@@ -18,6 +18,7 @@ import {
   ecdsaPublicKeyToSchnorr,
   getBondVaultKeys,
   instantiateBondDescriptor,
+  makeNativeSegwitAccountXpub,
   makeNativeSegwitAddressIndexDerivationPath,
   makeTaprootAddressIndexDerivationPath,
   psbtHexToBase64,
@@ -836,7 +837,7 @@ test.describe('Sign PSBT: bond proposal', () => {
   const bondParams = {
     unlockHeight: 1000,
     hash: bytesToHex(sha256(new Uint8Array([1, 2, 3]))),
-    counterpartyKey: '02e50bdeee4839821db5258002f5035f29d9ae908dc363052ddd1bb1399fd65a18',
+    counterpartyKey: `${makeNativeSegwitAccountXpub(9)}/0/0`,
   };
   const bondDescriptor = instantiateBondDescriptor({
     ...bondParams,

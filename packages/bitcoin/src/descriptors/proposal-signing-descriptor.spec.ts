@@ -8,14 +8,19 @@ import {
   makeNativeSegwitAddressPubkey,
   makeNativeSegwitAddressPubkeyHex,
 } from '../mocks/key-mocks';
-import { getBondVaultKeys, instantiateBondDescriptor, matchBondDescriptor } from './bond-template';
+import {
+  getBondVaultKeys,
+  instantiateBondDescriptor,
+  reconstructBondDescriptor,
+} from './bond-template';
 import { resolveProposalSigningDescriptor } from './proposal-signing-descriptor';
 import { compileWshDescriptor } from './wsh-descriptor';
 
 const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
 const xpubC = makeNativeSegwitAccountXpub(3);
-const counterpartyKey = makeNativeSegwitAddressPubkeyHex(9);
+const counterpartyKey = `${makeNativeSegwitAccountXpub(9)}/0/0`;
+const covenantPubkey = makeNativeSegwitAddressPubkeyHex(9);
 const hash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
 const unlockHeight = 1000;
 
@@ -81,7 +86,14 @@ describe(resolveProposalSigningDescriptor.name, () => {
     const input = descriptorInputFixture(bondDescriptor);
     const psbtHex = buildPsbtHex([input, input]);
     const resolved = resolveProposalSigningDescriptor(policyDescriptor, psbtHex);
-    expect(resolved).toBe(bondDescriptor);
+    expect(resolved).toBe(
+      reconstructBondDescriptor({
+        unlockHeight,
+        hash,
+        covenantPubkey,
+        ...getBondVaultKeys(policyDescriptor),
+      })
+    );
     expect(bytesToHex(compileWshDescriptor(resolved).scriptPubKey)).toBe(bytesToHex(input.script));
   });
 
@@ -93,11 +105,14 @@ describe(resolveProposalSigningDescriptor.name, () => {
       },
     ]);
     const resolved = resolveProposalSigningDescriptor(stagingPolicyDescriptor, psbtHex);
-    expect(matchBondDescriptor(resolved)).toMatchObject({
-      unlockHeight: 499999999,
-      hash: 'dbc1454203791389c7a6c24cbfcb4db42e1434fd0b6c0b682c90334507f47b99',
-      counterpartyKey: '02b31fba61bbe4ee3753a72f4681c0d1ada9ecf23cff309a20a90af3201a37f5a0',
-    });
+    expect(resolved).toBe(
+      reconstructBondDescriptor({
+        unlockHeight: 499999999,
+        hash: 'dbc1454203791389c7a6c24cbfcb4db42e1434fd0b6c0b682c90334507f47b99',
+        covenantPubkey: '02b31fba61bbe4ee3753a72f4681c0d1ada9ecf23cff309a20a90af3201a37f5a0',
+        ...getBondVaultKeys(stagingPolicyDescriptor),
+      })
+    );
     expect(bytesToHex(compileWshDescriptor(resolved).scriptPubKey)).toBe(stagingBondScriptPubKey);
     expect(bytesToHex(compileWshDescriptor(resolved).witnessScript)).toBe(stagingBondWitnessScript);
   });

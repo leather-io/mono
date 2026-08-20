@@ -9,7 +9,6 @@ import {
   instantiateBondDescriptor,
   makeNativeSegwitAccountXpub,
   makeNativeSegwitAddressPubkey,
-  makeNativeSegwitAddressPubkeyHex,
 } from '@leather.io/bitcoin';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { RpcErrorCode } from '@leather.io/rpc';
@@ -37,7 +36,7 @@ vi.mock('@app/store/policy/policy.selectors', () => ({
 const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
 const xpubC = makeNativeSegwitAccountXpub(3);
-const counterpartyKey = makeNativeSegwitAddressPubkeyHex(9);
+const counterpartyKey = `${makeNativeSegwitAccountXpub(9)}/0/0`;
 const hash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
 const unlockHeight = 1000;
 

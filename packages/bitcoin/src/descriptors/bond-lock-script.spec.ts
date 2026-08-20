@@ -53,7 +53,7 @@ describe(parseBondLockScript.name, () => {
       .map(seedByte => `${makeNativeSegwitAccountXpub(seedByte)}/0/0`)
       .join(',')}))`;
     const hash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
-    const counterpartyKey = makeNativeSegwitAddressPubkeyHex(9);
+    const counterpartyKey = `${makeNativeSegwitAccountXpub(9)}/0/0`;
     const bondDescriptor = instantiateBondDescriptor({
       unlockHeight: 1000,
       hash,
@@ -66,10 +66,10 @@ describe(parseBondLockScript.name, () => {
     expect(parsed).not.toBeNull();
     expect(parsed!.unlockHeight).toBe(1000);
     expect(parsed!.hashHex).toBe(hash);
-    expect(parsed!.covenantPubkey).toBe(counterpartyKey);
+    expect(parsed!.covenantPubkey).toBe(makeNativeSegwitAddressPubkeyHex(9));
     expect(parsed!.threshold).toBe(2);
     expect([...parsed!.stakerPubkeys].sort()).toEqual(
-      stakerSeedBytes.map(makeNativeSegwitAddressPubkeyHex).sort()
+      stakerSeedBytes.map(seedByte => makeNativeSegwitAddressPubkeyHex(seedByte)).sort()
     );
   });
 

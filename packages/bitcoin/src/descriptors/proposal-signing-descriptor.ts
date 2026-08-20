@@ -2,7 +2,7 @@ import { bytesToHex } from '@noble/hashes/utils';
 
 import { getPsbtAsTransaction } from '../psbt/utils';
 import { parseBondLockScript } from './bond-lock-script';
-import { getBondVaultKeys, instantiateBondDescriptor } from './bond-template';
+import { getBondVaultKeys, reconstructBondDescriptor } from './bond-template';
 import { compileWshDescriptor } from './wsh-descriptor';
 
 // Resolves the descriptor a co-signer must hand the wallet to sign a proposal
@@ -41,10 +41,10 @@ export function resolveProposalSigningDescriptor(
       'Proposal inputs are locked by neither the vault policy nor a recognized bond script'
     );
 
-  const bondDescriptor = instantiateBondDescriptor({
+  const bondDescriptor = reconstructBondDescriptor({
     unlockHeight: bondLock.unlockHeight,
     hash: bondLock.hashHex,
-    counterpartyKey: bondLock.covenantPubkey,
+    covenantPubkey: bondLock.covenantPubkey,
     ...getBondVaultKeys(policyDescriptor),
   });
 

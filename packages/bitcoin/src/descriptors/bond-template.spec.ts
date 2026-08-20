@@ -5,13 +5,18 @@ import { HDKey } from '@scure/bip32';
 import { describe, expect, it } from 'vitest';
 
 import { makeNativeSegwitAccountXpub, makeNativeSegwitAddressPubkeyHex } from '../mocks/key-mocks';
-import { getBondVaultKeys, instantiateBondDescriptor, matchBondDescriptor } from './bond-template';
+import {
+  getBondVaultKeys,
+  instantiateBondDescriptor,
+  matchBondDescriptor,
+  reconstructBondDescriptor,
+} from './bond-template';
 import { compileWshDescriptor, getWshDescriptorAddress } from './wsh-descriptor';
 
 const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
 const xpubC = makeNativeSegwitAccountXpub(3);
-const counterpartyKey = makeNativeSegwitAddressPubkeyHex(9);
+const counterpartyKey = `${makeNativeSegwitAccountXpub(9)}/0/7`;
 const hash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
 const unlockHeight = 1000;
 
@@ -72,11 +77,21 @@ describe('matchBondDescriptor', () => {
     expect(matchBondDescriptor(withOrigin)?.unlockHeight).toBe(unlockHeight);
   });
 
-  it('lowercases captured hex params', () => {
-    const uppercased = `wsh(and_v(v:or_i(after(${unlockHeight}),and_v(v:sha256(${hash.toUpperCase()}),pk(${counterpartyKey.toUpperCase()}))),sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7)))`;
-    const match = matchBondDescriptor(uppercased);
+  it('lowercases the captured hash and preserves the counterparty key expression', () => {
+    const uppercasedHash = `wsh(and_v(v:or_i(after(${unlockHeight}),and_v(v:sha256(${hash.toUpperCase()}),pk(${counterpartyKey}))),sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7)))`;
+    const match = matchBondDescriptor(uppercasedHash);
     expect(match?.hash).toBe(hash);
     expect(match?.counterpartyKey).toBe(counterpartyKey);
+  });
+
+  it('rejects a raw pubkey or private key counterparty', () => {
+    const rawCounterparty = makeNativeSegwitAddressPubkeyHex(9);
+    expect(matchBondDescriptor(bondDescriptor.replace(counterpartyKey, rawCounterparty))).toBeNull();
+
+    const xprv = HDKey.fromMasterSeed(new Uint8Array(32).fill(9)).derive(
+      "m/84'/0'/0'"
+    ).privateExtendedKey;
+    expect(matchBondDescriptor(bondDescriptor.replace(counterpartyKey, `${xprv}/0/0`))).toBeNull();
   });
 
   it('rejects descriptors that are not the bond template shape', () => {
@@ -102,7 +117,7 @@ describe('matchBondDescriptor', () => {
     ).toBeNull();
     expect(matchBondDescriptor(bondDescriptor.replace(hash, hash.slice(0, 62)))).toBeNull();
     expect(
-      matchBondDescriptor(bondDescriptor.replace(counterpartyKey, `04${counterpartyKey.slice(2)}`))
+      matchBondDescriptor(bondDescriptor.replace(counterpartyKey, 'not-a-key/0/0'))
     ).toBeNull();
   });
 });
@@ -142,7 +157,7 @@ describe('instantiateBondDescriptor', () => {
     );
   });
 
-  it('derives a p2wsh address alongside the vault xpubs and a raw counterparty key', () => {
+  it('derives a p2wsh address alongside the vault xpubs and a counterparty key expression', () => {
     const instantiated = instantiateBondDescriptor({
       unlockHeight,
       hash,
@@ -158,7 +173,10 @@ describe('instantiateBondDescriptor', () => {
     expect(() => instantiateBondDescriptor({ ...validArgs, unlockHeight: 0 })).toThrow();
     expect(() => instantiateBondDescriptor({ ...validArgs, hash: hash.slice(0, 10) })).toThrow();
     expect(() =>
-      instantiateBondDescriptor({ ...validArgs, counterpartyKey: `04${counterpartyKey.slice(2)}` })
+      instantiateBondDescriptor({
+        ...validArgs,
+        counterpartyKey: makeNativeSegwitAddressPubkeyHex(9),
+      })
     ).toThrow();
     expect(() => instantiateBondDescriptor({ ...validArgs, keyExpressions: [] })).toThrow();
     expect(() =>
@@ -166,6 +184,45 @@ describe('instantiateBondDescriptor', () => {
         ...validArgs,
         keyExpressions: [makeNativeSegwitAddressPubkeyHex(1), makeNativeSegwitAddressPubkeyHex(2)],
       })
+    ).toThrow();
+  });
+});
+
+describe('reconstructBondDescriptor', () => {
+  const vaultKeys = getBondVaultKeys(policyDescriptor);
+  const covenantPubkey = makeNativeSegwitAddressPubkeyHex(9, 7);
+
+  it('compiles to the same script as the xpub-instantiated descriptor', () => {
+    const instantiated = instantiateBondDescriptor({
+      unlockHeight,
+      hash,
+      counterpartyKey,
+      ...vaultKeys,
+    });
+    const reconstructed = reconstructBondDescriptor({
+      unlockHeight,
+      hash,
+      covenantPubkey,
+      ...vaultKeys,
+    });
+    expect(bytesToHex(compileWshDescriptor(reconstructed).witnessScript)).toBe(
+      bytesToHex(compileWshDescriptor(instantiated).witnessScript)
+    );
+    expect(bytesToHex(compileWshDescriptor(reconstructed).scriptPubKey)).toBe(
+      bytesToHex(compileWshDescriptor(instantiated).scriptPubKey)
+    );
+  });
+
+  it('throws when the covenant key is not raw compressed lowercase hex', () => {
+    const validArgs = { unlockHeight, hash, covenantPubkey, ...vaultKeys };
+    expect(() =>
+      reconstructBondDescriptor({ ...validArgs, covenantPubkey: counterpartyKey })
+    ).toThrow();
+    expect(() =>
+      reconstructBondDescriptor({ ...validArgs, covenantPubkey: `04${covenantPubkey.slice(2)}` })
+    ).toThrow();
+    expect(() =>
+      reconstructBondDescriptor({ ...validArgs, covenantPubkey: covenantPubkey.toUpperCase() })
     ).toThrow();
   });
 });

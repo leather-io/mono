@@ -14,7 +14,9 @@ export const bondTemplateV1 = {
 } as const;
 
 const bondDescriptorPattern =
-  /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\((0[23][0-9a-fA-F]{64})\)\)\),(sortedmulti\([^()]+\))\)\)$/;
+  /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\(([^()]+)\)\)\),(sortedmulti\([^()]+\))\)\)$/;
+
+const compressedPubkeyHexPattern = /^0[23][0-9a-f]{64}$/;
 
 function isValidVaultMultiExpression(multiExpression: string): boolean {
   const args = multiExpression.slice('sortedmulti('.length, -1).split(',');
@@ -44,6 +46,7 @@ export function matchBondDescriptor(descriptor: string): BondDescriptorMatch | n
   const counterpartyKey = match[3];
   const multiExpression = match[4];
   if (!rawUnlockHeight || !hash || !counterpartyKey || !multiExpression) return null;
+  if (!isExtendedPublicKeyExpression(counterpartyKey)) return null;
   if (!isValidVaultMultiExpression(multiExpression)) return null;
 
   const unlockHeight = Number(rawUnlockHeight);
@@ -52,7 +55,7 @@ export function matchBondDescriptor(descriptor: string): BondDescriptorMatch | n
   return {
     unlockHeight,
     hash: hash.toLowerCase(),
-    counterpartyKey: counterpartyKey.toLowerCase(),
+    counterpartyKey,
     multiExpression,
   };
 }
@@ -61,16 +64,40 @@ function isValidUnlockHeight(unlockHeight: number): boolean {
   return Number.isInteger(unlockHeight) && unlockHeight >= 1 && unlockHeight < minTimestampLockTime;
 }
 
-function assertValidBondParams({
-  unlockHeight,
-  hash,
-  counterpartyKey,
-}: BondDescriptorParams): void {
+function assertValidBondLockParams({ unlockHeight, hash }: Omit<BondDescriptorParams, 'counterpartyKey'>): void {
   if (!isValidUnlockHeight(unlockHeight))
     throw new Error('Bond unlock height must be a block height below 500000000');
   if (!/^[0-9a-f]{64}$/.test(hash)) throw new Error('Bond hash must be a 32-byte hex digest');
-  if (!/^0[23][0-9a-f]{64}$/.test(counterpartyKey))
-    throw new Error('Bond counterparty key must be a compressed public key in lowercase hex');
+}
+
+function assertValidVaultKeyExpressions(keyExpressions: string[]): void {
+  if (!keyExpressions.length)
+    throw new Error('Bond descriptor requires at least one vault key expression');
+  if (!keyExpressions.every(isExtendedPublicKeyExpression))
+    throw new Error('Bond vault keys must be xpub or tpub key expressions');
+}
+
+interface FillBondTemplateArgs {
+  unlockHeight: number;
+  hash: string;
+  counterpartyKeyExpression: string;
+  threshold: number;
+  keyExpressions: string[];
+}
+
+function fillBondTemplate({
+  unlockHeight,
+  hash,
+  counterpartyKeyExpression,
+  threshold,
+  keyExpressions,
+}: FillBondTemplateArgs): string {
+  const multiExpression = `sortedmulti(${threshold},${keyExpressions.join(',')})`;
+  return bondTemplateV1.script
+    .replace('<<param:unlock_height>>', String(unlockHeight))
+    .replace('<<param:hash>>', hash)
+    .replace('<<param:counterparty_key>>', counterpartyKeyExpression)
+    .replace('<<vault:multi>>', multiExpression);
 }
 
 export interface InstantiateBondDescriptorArgs extends BondDescriptorParams {
@@ -85,18 +112,47 @@ export function instantiateBondDescriptor({
   threshold,
   keyExpressions,
 }: InstantiateBondDescriptorArgs): string {
-  assertValidBondParams({ unlockHeight, hash, counterpartyKey });
-  if (!keyExpressions.length)
-    throw new Error('Bond descriptor requires at least one vault key expression');
-  if (!keyExpressions.every(isExtendedPublicKeyExpression))
-    throw new Error('Bond vault keys must be xpub or tpub key expressions');
+  assertValidBondLockParams({ unlockHeight, hash });
+  if (!isExtendedPublicKeyExpression(counterpartyKey))
+    throw new Error('Bond counterparty key must be an xpub or tpub key expression');
+  assertValidVaultKeyExpressions(keyExpressions);
 
-  const multiExpression = `sortedmulti(${threshold},${keyExpressions.join(',')})`;
-  return bondTemplateV1.script
-    .replace('<<param:unlock_height>>', String(unlockHeight))
-    .replace('<<param:hash>>', hash)
-    .replace('<<param:counterparty_key>>', counterpartyKey)
-    .replace('<<vault:multi>>', multiExpression);
+  return fillBondTemplate({
+    unlockHeight,
+    hash,
+    counterpartyKeyExpression: counterpartyKey,
+    threshold,
+    keyExpressions,
+  });
+}
+
+export interface ReconstructBondDescriptorArgs {
+  unlockHeight: number;
+  hash: string;
+  covenantPubkey: string;
+  threshold: number;
+  keyExpressions: string[];
+}
+
+export function reconstructBondDescriptor({
+  unlockHeight,
+  hash,
+  covenantPubkey,
+  threshold,
+  keyExpressions,
+}: ReconstructBondDescriptorArgs): string {
+  assertValidBondLockParams({ unlockHeight, hash });
+  if (!compressedPubkeyHexPattern.test(covenantPubkey))
+    throw new Error('Bond covenant key must be a compressed public key in lowercase hex');
+  assertValidVaultKeyExpressions(keyExpressions);
+
+  return fillBondTemplate({
+    unlockHeight,
+    hash,
+    counterpartyKeyExpression: covenantPubkey,
+    threshold,
+    keyExpressions,
+  });
 }
 
 export interface BondVaultKeys {

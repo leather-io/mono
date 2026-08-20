@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
   getBondVaultKeys,
   getP2wpkhAddressFromPublicKey,
-  instantiateBondDescriptor,
+  reconstructBondDescriptor,
   psbtBase64ToHex,
 } from '@leather.io/bitcoin';
 import type { MultisigTransaction, VaultAccount } from '@leather.io/models';
@@ -31,7 +31,7 @@ const proposalTimestamp = 1782000000;
 
 const bondUnlockHeight = 900_000;
 const bondHash = '039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81';
-const bondCounterpartyKey = '0299b4e3e58af8bc44c1a10d3c842abf9c4739ae7462ed346f95d6807c6ea4de97';
+const bondCovenantPubkey = '0299b4e3e58af8bc44c1a10d3c842abf9c4739ae7462ed346f95d6807c6ea4de97';
 
 const plainPayload =
   'cHNidP8BAFICAAAAARERERERERERERERERERERERERERERERERERERERERERAAAAAAD/////AcivAAAAAAAAFgAUM7ateIY6Qvzg9YR3ZFYMuye69CkAAAAAAAEBK1DDAAAAAAAAIgAgvYeU1HXUuk+3kaJlcNX13RCd0jA+jRliBOdRX6wIk1UBBUdSIQJhQSTIiAT7pQMC+openpcuOXz6UZOzGaajTtsBPxl+LiEDaVEp17vQb8k/sUhIOKFTV5zlLhG/qIix5tHEsQ+GFn1SrgAA';
@@ -121,10 +121,10 @@ describe(signBtcTransaction.name, () => {
 
   test('passes the reconstructed bond descriptor for a bond early-exit proposal', async () => {
     await signBtcTransaction(bondTransaction, account, publicKeyA);
-    const expectedBondDescriptor = instantiateBondDescriptor({
+    const expectedBondDescriptor = reconstructBondDescriptor({
       unlockHeight: bondUnlockHeight,
       hash: bondHash,
-      counterpartyKey: bondCounterpartyKey,
+      covenantPubkey: bondCovenantPubkey,
       ...getBondVaultKeys(getMultisigDescriptor(account)),
     });
     expect(mocks.signPsbt).toHaveBeenCalledTimes(1);
