@@ -1,20 +1,19 @@
 import {
-  type DescriptorInstance,
-  DescriptorsFactory,
   type KeyInfo,
+  Output,
+  type OutputInstance,
+  parseKeyExpression,
 } from '@bitcoinerlab/descriptors';
-import secp256k1 from '@bitcoinerlab/secp256k1';
 import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
-import { type Network, Psbt, networks } from 'bitcoinjs-lib';
+import { type Network, Psbt, networks, payments } from 'bitcoinjs-lib';
+import { encode as encodeVaruint } from 'varuint-bitcoin';
 
 import { type BitcoinNetworkModes, type NetworkModes } from '@leather.io/models';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
-
-const { Descriptor, parseKeyExpression } = DescriptorsFactory(secp256k1);
 
 const wshDescriptorPrefix = 'wsh(';
 
@@ -119,7 +118,7 @@ export interface CompiledWshDescriptor {
   keyPathIndexes: DescriptorKeyPathIndexes;
 }
 
-// Builds the @bitcoinerlab Descriptor instance for a `wsh(...)` descriptor. The
+// Builds the @bitcoinerlab Output instance for a `wsh(...)` descriptor. The
 // library requires an `index` only for ranged descriptors (those with a `*`
 // wildcard) and rejects it for fixed-path ones. The network is derived from the
 // descriptor's own key prefix (see getNetworkForDescriptor).
@@ -130,14 +129,14 @@ export interface WshDescriptorPreimage {
 
 interface MakeWshDescriptorInstanceOptions {
   preimages?: WshDescriptorPreimage[];
-  signersPubKeys?: Buffer[];
+  signersPubKeys?: Uint8Array[];
 }
 
 export function makeWshDescriptorInstance(
   descriptor: string,
   index = 0,
   options: MakeWshDescriptorInstanceOptions = {}
-): DescriptorInstance {
+): OutputInstance {
   if (!isWshDescriptor(descriptor))
     throw new Error('Only wsh() descriptors are supported for descriptor signing');
 
@@ -145,13 +144,24 @@ export function makeWshDescriptorInstance(
   const network = getNetworkForDescriptor(compilableDescriptor);
   const isRanged = compilableDescriptor.includes('*');
   const { preimages, signersPubKeys } = options;
-  return new Descriptor({
-    expression: compilableDescriptor,
+  return new Output({
+    descriptor: compilableDescriptor,
     network,
     ...(isRanged ? { index } : {}),
     ...(preimages ? { preimages } : {}),
     ...(signersPubKeys ? { signersPubKeys } : {}),
   });
+}
+
+// The exact descriptor string makeWshDescriptorInstance compiles — checksum
+// handling and sortedmulti-as-multi rewriting included — for APIs that take a
+// descriptor string rather than an Output instance (Ledger policy
+// registration).
+export function toCompilableWshDescriptor(descriptor: string, index = 0): string {
+  if (!isWshDescriptor(descriptor))
+    throw new Error('Only wsh() descriptors are supported for descriptor signing');
+
+  return rewriteSortedmultiAsMulti(descriptor, index);
 }
 
 // Compiles a `wsh(...)` BIP-380 descriptor into its scriptPubKey and witness
@@ -215,13 +225,13 @@ export function getWshDescriptorAddress(
 export function findAccountKeyByPubkey(keys: KeyInfo[], pubkey: Uint8Array) {
   const pubkeyHex = bytesToHex(pubkey);
   return keys.find(
-    (key): key is KeyInfo & { pubkey: Buffer } =>
+    (key): key is KeyInfo & { pubkey: Uint8Array } =>
       !!key.pubkey && bytesToHex(key.pubkey) === pubkeyHex
   );
 }
 
 export interface AccountDescriptorKey extends DescriptorKeyPathIndexes {
-  key: KeyInfo & { pubkey: Buffer };
+  key: KeyInfo & { pubkey: Uint8Array };
 }
 
 export function findAccountDescriptorKey(
@@ -238,7 +248,7 @@ export function findAccountDescriptorKey(
       ? bytesToHex(addressIndexKeychain.publicKey)
       : undefined;
     const extendedKey = keys.find(
-      (key): key is KeyInfo & { pubkey: Buffer } =>
+      (key): key is KeyInfo & { pubkey: Uint8Array } =>
         !!key.pubkey &&
         !!key.bip32 &&
         bytesToHex(key.bip32.publicKey) === accountPubkeyHex &&
@@ -358,6 +368,14 @@ export function extractWshDescriptorPreimages(
   return preimages;
 }
 
+function witnessStackToScriptWitness(stack: Buffer[]): Buffer {
+  const parts = [encodeVaruint(stack.length)];
+  for (const item of stack) {
+    parts.push(encodeVaruint(item.length), item);
+  }
+  return Buffer.concat(parts);
+}
+
 export interface FinalizeWshDescriptorPsbtArgs {
   signedPsbt: Uint8Array;
   preimagePsbt: Uint8Array;
@@ -401,14 +419,28 @@ export function finalizeWshDescriptorPsbt({
         signersPubKeys: signersPubKeys?.length ? signersPubKeys : undefined,
       });
 
-      // bitcoinerlab finalization compares the input's witness script to the
-      // descriptor's by reference, not content. Our witness script survived a
-      // PSBT round-trip, so it is a different Buffer instance with identical
-      // bytes (the input was matched by its scriptPubKey, which commits to it).
-      // Re-attach the instance's own witness script so the reference check
-      // passes.
-      input.witnessScript = instance.getWitnessScript();
-      instance.finalizePsbtInput({ index, psbt });
+      const witnessScript = instance.getWitnessScript();
+      if (!witnessScript) return null;
+
+      // bitcoinerlab v3 removed Output.finalizePsbtInput, so finalize here: the
+      // satisfier plans the miniscript solution from the signatures present on
+      // the input plus the relayed preimages, and the final witness is that
+      // satisfaction stack followed by the witness script (BIP-141 P2WSH form).
+      const { scriptSatisfaction } = instance.getScriptSatisfaction(input.partialSig ?? []);
+      const { witness } = payments.p2wsh({
+        redeem: {
+          input: Buffer.from(scriptSatisfaction),
+          output: Buffer.from(witnessScript),
+          network: getNetworkForDescriptor(descriptor),
+        },
+      });
+      if (!witness) return null;
+
+      input.witnessScript = Buffer.from(witnessScript);
+      psbt.finalizeInput(index, () => ({
+        finalScriptSig: undefined,
+        finalScriptWitness: witnessStackToScriptWitness(witness),
+      }));
     }
 
     return psbt.extractTransaction(true).toHex();

@@ -1,6 +1,6 @@
 import { Route } from 'react-router';
 
-import BitcoinApp from 'ledger-bitcoin';
+import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';

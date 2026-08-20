@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
+import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 import StacksApp from '@zondax/ledger-stacks';
-import BitcoinApp from 'ledger-bitcoin';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 import { delay, isError } from '@leather.io/utils';

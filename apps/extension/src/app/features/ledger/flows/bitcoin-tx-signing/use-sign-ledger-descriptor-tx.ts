@@ -1,13 +1,20 @@
-import { type LedgerState, ledger, signers } from '@bitcoinerlab/descriptors';
+import { Psbt as DescriptorsPsbt, Output } from '@bitcoinerlab/descriptors';
+import {
+  type LedgerManager,
+  type LedgerState,
+  registerLedgerWallet,
+  signers,
+} from '@bitcoinerlab/descriptors/ledger';
+import AppClient from '@ledgerhq/ledger-bitcoin';
 import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
-import AppClient from 'ledger-bitcoin';
 
 import {
   compileWshDescriptor,
   findAccountDescriptorKey,
   getBitcoinJsLibNetworkConfigByMode,
   makeWshDescriptorInstance,
+  toCompilableWshDescriptor,
   toLedgerSignableDescriptor,
 } from '@leather.io/bitcoin';
 
@@ -90,19 +97,20 @@ export function useSignLedgerDescriptorTx() {
     });
 
     const ledgerState: LedgerState = {};
-    await ledger.registerLedgerWallet({
-      descriptor: descriptorInstance,
+    const ledgerManager: LedgerManager = {
       ledgerClient: app,
       ledgerState,
+      Output,
+      network: descriptorInstance.getNetwork(),
+    };
+    await registerLedgerWallet({
+      descriptor: toCompilableWshDescriptor(ledgerDescriptor),
+      ledgerManager,
       policyName: 'Leather',
     });
-    await signers.signLedger({
-      psbt,
-      descriptors: [descriptorInstance],
-      ledgerClient: app,
-      ledgerState,
-    });
+    const ledgerPsbt = DescriptorsPsbt.fromBase64(psbt.toBase64());
+    await signers.signLedger({ psbt: ledgerPsbt, ledgerManager });
 
-    return btc.Transaction.fromPSBT(psbt.toBuffer());
+    return btc.Transaction.fromPSBT(ledgerPsbt.toBuffer());
   };
 }
