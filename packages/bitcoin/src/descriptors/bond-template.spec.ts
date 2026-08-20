@@ -86,7 +86,9 @@ describe('matchBondDescriptor', () => {
 
   it('rejects a raw pubkey or private key counterparty', () => {
     const rawCounterparty = makeNativeSegwitAddressPubkeyHex(9);
-    expect(matchBondDescriptor(bondDescriptor.replace(counterpartyKey, rawCounterparty))).toBeNull();
+    expect(
+      matchBondDescriptor(bondDescriptor.replace(counterpartyKey, rawCounterparty))
+    ).toBeNull();
 
     const xprv = HDKey.fromMasterSeed(new Uint8Array(32).fill(9)).derive(
       "m/84'/0'/0'"

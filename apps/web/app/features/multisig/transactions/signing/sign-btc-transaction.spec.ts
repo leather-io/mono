@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
   getBondVaultKeys,
   getP2wpkhAddressFromPublicKey,
-  reconstructBondDescriptor,
   psbtBase64ToHex,
+  reconstructBondDescriptor,
 } from '@leather.io/bitcoin';
 import type { MultisigTransaction, VaultAccount } from '@leather.io/models';
 

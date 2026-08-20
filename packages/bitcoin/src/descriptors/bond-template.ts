@@ -64,7 +64,10 @@ function isValidUnlockHeight(unlockHeight: number): boolean {
   return Number.isInteger(unlockHeight) && unlockHeight >= 1 && unlockHeight < minTimestampLockTime;
 }
 
-function assertValidBondLockParams({ unlockHeight, hash }: Omit<BondDescriptorParams, 'counterpartyKey'>): void {
+function assertValidBondLockParams({
+  unlockHeight,
+  hash,
+}: Omit<BondDescriptorParams, 'counterpartyKey'>): void {
   if (!isValidUnlockHeight(unlockHeight))
     throw new Error('Bond unlock height must be a block height below 500000000');
   if (!/^[0-9a-f]{64}$/.test(hash)) throw new Error('Bond hash must be a 32-byte hex digest');
