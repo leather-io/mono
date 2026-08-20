@@ -100,7 +100,7 @@ test.describe('RPC: sendTransfer', () => {
       jsonrpc: '2.0',
       result: {
         txid: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce',
-        txHex: test.expect.stringMatching(/^[0-9a-f]+$/),
+        transaction: test.expect.stringMatching(/^[0-9a-f]+$/),
       },
     });
   });
@@ -121,7 +121,7 @@ test.describe('RPC: sendTransfer', () => {
 
     test.expect(result).toEqual({
       jsonrpc: '2.0',
-      result: { txHex: test.expect.stringMatching(/^[0-9a-f]+$/) },
+      result: { transaction: test.expect.stringMatching(/^[0-9a-f]+$/) },
     });
     test.expect(broadcastCalls).toHaveLength(0);
   });

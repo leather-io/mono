@@ -34,7 +34,7 @@ export const sendTransfer = defineRpcEndpoint({
   params: rpcSendTransferParamsSchema,
   result: z.object({
     txid: z.string().optional(),
-    txHex: z.string().optional(),
+    transaction: z.string().optional(),
     // Present (and `status: 'proposed'`) when the active account is a multisig
     // policy: the transaction was proposed to the coordinator, not broadcast, so
     // `txid` is empty until co-signers complete and broadcast it.

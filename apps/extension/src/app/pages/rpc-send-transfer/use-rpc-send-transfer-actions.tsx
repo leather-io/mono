@@ -1,7 +1,14 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
+import { bytesToHex } from '@noble/hashes/utils';
+import { base64 } from '@scure/base';
+
+import {
+  compileWshDescriptor,
+  findAccountDescriptorKey,
+  getPsbtAsTransaction,
+} from '@leather.io/bitcoin';
 import { createRpcSuccessResponse } from '@leather.io/rpc';
 import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
 import { delay } from '@leather.io/utils';
@@ -98,7 +105,11 @@ export function useRpcSendTransferActions() {
             { frameId, tabId },
             createRpcSuccessResponse('sendTransfer', {
               id: requestId,
-              result: { proposalId: proposal.id, status: 'proposed' },
+              result: {
+                proposalId: proposal.id,
+                status: 'proposed',
+                transaction: bytesToHex(getPsbtAsTransaction(base64.decode(rawPayload)).unsignedTx),
+              },
             })
           );
 
@@ -122,7 +133,7 @@ export function useRpcSendTransferActions() {
             { frameId, tabId },
             createRpcSuccessResponse('sendTransfer', {
               id: requestId,
-              result: { txHex: tx.hex },
+              result: { transaction: tx.hex },
             })
           );
 
@@ -146,7 +157,7 @@ export function useRpcSendTransferActions() {
               { frameId, tabId },
               createRpcSuccessResponse('sendTransfer', {
                 id: requestId,
-                result: { txid, txHex: tx.hex },
+                result: { txid, transaction: tx.hex },
               })
             );
 

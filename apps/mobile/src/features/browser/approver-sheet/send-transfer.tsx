@@ -107,7 +107,7 @@ function BaseSendTransferApprover(
           id: props.request.id,
           result: {
             txid: result.txid,
-            txHex: result.hex,
+            transaction: result.hex,
           },
         });
         props.sendResult(rpcSuccessResponse);

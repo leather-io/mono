@@ -54,17 +54,27 @@ describe('sendTransfer', () => {
     ).toEqual(false);
   });
 
-  test('result schema accepts a txid without txHex', () => {
+  test('result schema accepts a txid without transaction', () => {
     expect(sendTransfer.result.safeParse({ txid: 'abc123' }).success).toEqual(true);
   });
 
-  test('result schema accepts a txHex without txid', () => {
-    expect(sendTransfer.result.safeParse({ txHex: '0200000001' }).success).toEqual(true);
+  test('result schema accepts a transaction without txid', () => {
+    expect(sendTransfer.result.safeParse({ transaction: '0200000001' }).success).toEqual(true);
   });
 
-  test('result schema accepts a txid with txHex', () => {
-    expect(sendTransfer.result.safeParse({ txid: 'abc123', txHex: '0200000001' }).success).toEqual(
-      true
-    );
+  test('result schema accepts a txid with transaction', () => {
+    expect(
+      sendTransfer.result.safeParse({ txid: 'abc123', transaction: '0200000001' }).success
+    ).toEqual(true);
+  });
+
+  test('result schema accepts a multisig proposal with transaction', () => {
+    expect(
+      sendTransfer.result.safeParse({
+        proposalId: 'prop-1',
+        status: 'proposed',
+        transaction: '0200000001',
+      }).success
+    ).toEqual(true);
   });
 });
