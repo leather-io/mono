@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 import {
-  formatActivityActionLine,
+  formatActivityActionStatusLine,
   getActivityActionLine,
 } from '~/features/multisig/activity/activity-action-line';
 import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
@@ -60,7 +60,8 @@ function resolveValueColor(
   indicator: BlockchainActivityIndicator,
   direction: BlockchainActivityDirection
 ) {
-  if (indicator === 'pending' || indicator === 'failed') return 'ink.text-subdued';
+  if (indicator === 'pending' || indicator === 'failed' || indicator === 'cancelled')
+    return 'ink.text-subdued';
   if (direction === 'received') return 'green.action-primary-default';
   return 'ink.text-primary';
 }
@@ -114,7 +115,9 @@ export function VaultActivityRow({
           textOverflow="ellipsis"
           whiteSpace="nowrap"
         >
-          {actionLine ? formatActivityActionLine(actionLine) : view.subtitle || view.title || '—'}
+          {actionLine
+            ? formatActivityActionStatusLine(view, actionLine)
+            : view.subtitle || view.title || '—'}
         </styled.span>
       }
       caption={captionText(item, location)}

@@ -158,6 +158,21 @@ describe(createMultisigTransactionActivityView.name, () => {
     expect(view.amount?.crypto?.symbol).toBe('sBTC');
   });
 
+  test('overrides the failed-tense subtitle for cancelled send proposals', async () => {
+    const rawPayload = await generateSip10TransferPayload();
+    const view = createMultisigTransactionActivityView(
+      stxContext,
+      makeTransaction({ status: 'cancelled' }),
+      { rawPayload, getTokenInfo: () => ({ asset: sbtcAsset }) }
+    );
+
+    expect(view.status).toBe('failed');
+    expect(view.indicator).toBe('cancelled');
+    expect(view.subtitle).toBe(
+      `Send cancelled to ${truncateMiddle(recipient, activityCounterpartyOffset)}`
+    );
+  });
+
   test('quotes the token send in fiat when market data is available', async () => {
     const rawPayload = await generateSip10TransferPayload();
     const view = createMultisigTransactionActivityView(stxContext, makeTransaction(), {
