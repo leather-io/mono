@@ -6,7 +6,9 @@ import { LeatherApiError, type ListVaultsFilters, getMultisigService } from '@le
 import { useSession } from '../auth/use-session';
 import { multisigVaultKeys } from './vault-query-keys';
 
-export const multisigLiveRefetchInterval = 20_000;
+export const multisigProposalsRefetchInterval = 5_000;
+export const onchainActivityRefetchInterval = 20_000;
+export const accountAssetsRefetchInterval = 10_000;
 
 export function retryMultisigQuery(failureCount: number, error: Error) {
   if (
