@@ -23,7 +23,12 @@ import type {
   StacksProtocolAction,
   StacksProtocolId,
 } from '@leather.io/models';
-import { assertUnreachable, baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
+import {
+  assertUnreachable,
+  baseCurrencyAmountInQuote,
+  createMoney,
+  truncateMiddle,
+} from '@leather.io/utils';
 
 import {
   type DecodedProposalPayload,
@@ -203,10 +208,26 @@ export function createMultisigTransactionActivityItem(
     initiatedByUser: true,
   };
 
-  return createBlockchainActivityItem(buildProposalActivity(common, payload, options), {
+  const item = createBlockchainActivityItem(buildProposalActivity(common, payload, options), {
     formatMoney: formatActivityMoney,
     counterpartyTruncateOffset: activityCounterpartyOffset,
   });
+  if (transaction.status !== 'cancelled') return item;
+  return {
+    ...item,
+    view: {
+      ...item.view,
+      indicator: 'cancelled',
+      ...(item.activity.action === 'send'
+        ? { subtitle: cancelledSendSubtitle(item.activity) }
+        : {}),
+    },
+  };
+}
+
+function cancelledSendSubtitle(activity: BlockchainActivity): string {
+  if (!activity.counterparty) return 'Send cancelled';
+  return `Send cancelled to ${truncateMiddle(activity.counterparty, activityCounterpartyOffset)}`;
 }
 
 export function createMultisigTransactionActivityView(

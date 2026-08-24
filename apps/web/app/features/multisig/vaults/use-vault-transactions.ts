@@ -4,7 +4,7 @@ import type { AuthNetworkId } from '@leather.io/models';
 import { getMultisigService } from '@leather.io/services';
 
 import { useSession } from '../auth/use-session';
-import { multisigLiveRefetchInterval, retryMultisigQuery } from './use-vaults';
+import { multisigProposalsRefetchInterval, retryMultisigQuery } from './use-vaults';
 import { multisigVaultKeys } from './vault-query-keys';
 
 export function useMultisigTransaction(network: AuthNetworkId, txId: string | undefined) {
@@ -17,6 +17,6 @@ export function useMultisigTransaction(network: AuthNetworkId, txId: string | un
     },
     enabled: Boolean(session) && Boolean(txId),
     retry: retryMultisigQuery,
-    refetchInterval: multisigLiveRefetchInterval,
+    refetchInterval: multisigProposalsRefetchInterval,
   });
 }
