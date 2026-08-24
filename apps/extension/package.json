@@ -93,7 +93,7 @@
     "axios": "1.18.1",
     "bignumber.js": "9.1.2",
     "bitcoin-address-validation": "2.2.3",
-    "bitcoinjs-lib": "6.1.5",
+    "bitcoinjs-lib": "7.0.1",
     "bn.js": "5.2.1",
     "browserify-fs": "1.0.0",
     "compare-versions": "6.1.0",

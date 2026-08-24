@@ -88,7 +88,7 @@ export function ecdsaPublicKeyToSchnorr(pubKey: Uint8Array) {
 }
 
 // Basically same as above, to remove
-export function toXOnly(pubKey: Buffer) {
+export function toXOnly(pubKey: Uint8Array) {
   return pubKey.length === 32 ? pubKey : pubKey.subarray(1, 33);
 }
 

@@ -145,7 +145,7 @@ export function useUpdateLedgerSpecificNativeSegwitUtxoHexForAdddressIndexZero()
       tx.txInputs.map(input =>
         bitcoinClient.transactionsApi.getBitcoinTransactionHex(
           // txids are encoded onchain in reverse byte order
-          reverseBytes(input.hash).toString('hex')
+          Buffer.from(reverseBytes(input.hash)).toString('hex')
         )
       )
     );
@@ -184,7 +184,7 @@ export function useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressInd
       // "Can not add duplicate data to array", so skip when it is already present.
       const pubkey = Buffer.from(nativeSegwitPayer.publicKey);
       const hasDerivationForPubkey = tx.data.inputs[index].bip32Derivation?.some(entry =>
-        entry.pubkey.equals(pubkey)
+        pubkey.equals(entry.pubkey)
       );
       if (hasDerivationForPubkey) return;
 

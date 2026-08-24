@@ -90,7 +90,7 @@ export function useSignLedgerDescriptorTx() {
     signingConfig.forEach(({ index }) => {
       const input = psbt.data.inputs[index];
       if (!input?.partialSig?.length) return;
-      const remaining = input.partialSig.filter(sig => !sig.pubkey.equals(accountPubkey));
+      const remaining = input.partialSig.filter(sig => !accountPubkey.equals(sig.pubkey));
       if (remaining.length === input.partialSig.length) return;
       if (remaining.length) input.partialSig = remaining;
       else delete input.partialSig;

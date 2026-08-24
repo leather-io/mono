@@ -368,10 +368,10 @@ export function extractWshDescriptorPreimages(
   return preimages;
 }
 
-function witnessStackToScriptWitness(stack: Buffer[]): Buffer {
-  const parts = [encodeVaruint(stack.length)];
+function witnessStackToScriptWitness(stack: Uint8Array[]): Uint8Array {
+  const parts = [encodeVaruint(stack.length).buffer];
   for (const item of stack) {
-    parts.push(encodeVaruint(item.length), item);
+    parts.push(encodeVaruint(item.length).buffer, item);
   }
   return Buffer.concat(parts);
 }
@@ -429,14 +429,14 @@ export function finalizeWshDescriptorPsbt({
       const { scriptSatisfaction } = instance.getScriptSatisfaction(input.partialSig ?? []);
       const { witness } = payments.p2wsh({
         redeem: {
-          input: Buffer.from(scriptSatisfaction),
-          output: Buffer.from(witnessScript),
+          input: scriptSatisfaction,
+          output: witnessScript,
           network: getNetworkForDescriptor(descriptor),
         },
       });
       if (!witness) return null;
 
-      input.witnessScript = Buffer.from(witnessScript);
+      input.witnessScript = witnessScript;
       psbt.finalizeInput(index, () => ({
         finalScriptSig: undefined,
         finalScriptWitness: witnessStackToScriptWitness(witness),
