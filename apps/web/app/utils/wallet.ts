@@ -92,7 +92,7 @@ export function isUserRejectionError(error: unknown): boolean {
   return userRejectionErrorCodes.includes(code);
 }
 
-export interface ConnectWalletOptions {
+interface ConnectWalletOptions {
   allowWalletSelect: boolean;
 }
 
