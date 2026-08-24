@@ -5,6 +5,7 @@ import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '~/features/toasts/use-toast';
+import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { analytics } from '~/utils/analytics/analytics';
 import { leather } from '~/utils/leather-sdk';
 import { type ExtensionState, isAnyWalletInstalled, whenExtensionState } from '~/utils/utils';
@@ -28,6 +29,13 @@ const addressesAtom = atomWithStorage<WalletAddressEntry[]>('addresses', []);
 const providerDetectedAtom = atom(isAnyWalletInstalled());
 
 const connectedWalletIdAtom = atom<string | null>(getConnectedWalletId());
+
+// Read at click time rather than render, so it needs no router context and
+// stays correct across client-side navigation.
+function isOnStakingRoute(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.location.pathname.startsWith(stakingPaths.index);
+}
 
 const extensionStateAtom = atom<ExtensionState>(get => {
   const addresses = get(addressesAtom);
@@ -170,7 +178,7 @@ export function useLeatherConnect() {
       const previousWalletId = getConnectedWalletId();
       analytics.untypedTrack('sign_in_clicked', { status: 'initiated' });
       try {
-        const result = await connectWallet();
+        const result = await connectWallet({ allowWalletSelect: isOnStakingRoute() });
 
         if (result.status === 'canceled') {
           syncConnectedWalletId();

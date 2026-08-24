@@ -92,15 +92,22 @@ export function isUserRejectionError(error: unknown): boolean {
   return userRejectionErrorCodes.includes(code);
 }
 
-export async function connectWallet(): Promise<ConnectWalletResult> {
+export interface ConnectWalletOptions {
+  allowWalletSelect: boolean;
+}
+
+export async function connectWallet({
+  allowWalletSelect,
+}: ConnectWalletOptions): Promise<ConnectWalletResult> {
   if (getLeatherMockMode()) {
     const result = await leather.getAddresses();
     return { status: 'connected', addresses: normalizeWalletAddresses(result.addresses) };
   }
   const sessionRevoked = await revokeWalletPermissions();
+  if (!allowWalletSelect) markLeatherAsSelectedWallet();
   try {
     const result = await request(
-      { ...connectRequestOptions, forceWalletSelect: true },
+      { ...connectRequestOptions, forceWalletSelect: allowWalletSelect },
       'getAddresses',
       connectAddressesParams
     );

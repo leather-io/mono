@@ -7,13 +7,19 @@ import {
   walletStxCallContract,
 } from './wallet';
 
-const { getLeatherMockModeMock, getSelectedProviderIdMock, getSelectedProviderMock, requestMock } =
-  vi.hoisted(() => ({
-    getLeatherMockModeMock: vi.fn(),
-    getSelectedProviderIdMock: vi.fn(),
-    getSelectedProviderMock: vi.fn(),
-    requestMock: vi.fn(),
-  }));
+const {
+  getLeatherMockModeMock,
+  getSelectedProviderIdMock,
+  getSelectedProviderMock,
+  requestMock,
+  setSelectedProviderIdMock,
+} = vi.hoisted(() => ({
+  getLeatherMockModeMock: vi.fn(),
+  getSelectedProviderIdMock: vi.fn(),
+  getSelectedProviderMock: vi.fn(),
+  requestMock: vi.fn(),
+  setSelectedProviderIdMock: vi.fn(),
+}));
 
 vi.mock('@stacks/connect', () => ({
   JsonRpcErrorCode: { UserRejection: -32000, UserCanceled: -31001 },
@@ -21,7 +27,7 @@ vi.mock('@stacks/connect', () => ({
   getSelectedProvider: getSelectedProviderMock,
   getSelectedProviderId: getSelectedProviderIdMock,
   request: requestMock,
-  setSelectedProviderId: vi.fn(),
+  setSelectedProviderId: setSelectedProviderIdMock,
 }));
 
 vi.mock('~/constants/environment', () => ({
@@ -48,7 +54,7 @@ describe(connectWallet.name, () => {
   test('requests addresses with explicit purposes so multi-vault wallets prompt for every chain', async () => {
     requestMock.mockResolvedValue({ addresses: [] });
 
-    const result = await connectWallet();
+    const result = await connectWallet({ allowWalletSelect: true });
 
     expect(requestMock).toHaveBeenCalledWith(
       { enableLocalStorage: false, forceWalletSelect: true },
@@ -58,10 +64,31 @@ describe(connectWallet.name, () => {
     expect(result).toEqual({ status: 'connected', addresses: [] });
   });
 
+  test('pins leather and shows no picker when wallet select is not allowed', async () => {
+    requestMock.mockResolvedValue({ addresses: [] });
+
+    await connectWallet({ allowWalletSelect: false });
+
+    expect(setSelectedProviderIdMock).toHaveBeenCalledWith('LeatherProvider');
+    expect(requestMock).toHaveBeenCalledWith(
+      { enableLocalStorage: false, forceWalletSelect: false },
+      'getAddresses',
+      { addresses: ['payment', 'ordinals', 'stacks'] }
+    );
+  });
+
+  test('does not pin leather when wallet select is allowed', async () => {
+    requestMock.mockResolvedValue({ addresses: [] });
+
+    await connectWallet({ allowWalletSelect: true });
+
+    expect(setSelectedProviderIdMock).not.toHaveBeenCalled();
+  });
+
   test('classifies rejection-coded failures as canceled', async () => {
     requestMock.mockRejectedValue({ code: -31001 });
 
-    const result = await connectWallet();
+    const result = await connectWallet({ allowWalletSelect: true });
 
     expect(result).toEqual({ status: 'canceled', sessionRevoked: false });
   });
@@ -70,7 +97,7 @@ describe(connectWallet.name, () => {
     const failure = new Error('provider exploded');
     requestMock.mockRejectedValue(failure);
 
-    const result = await connectWallet();
+    const result = await connectWallet({ allowWalletSelect: true });
 
     expect(result).toEqual({ status: 'error', error: failure, sessionRevoked: false });
   });
