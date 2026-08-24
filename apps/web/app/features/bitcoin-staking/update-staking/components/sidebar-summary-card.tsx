@@ -30,6 +30,7 @@ interface SidebarSummaryCardProps {
   terms?: SidebarSummaryTerms;
   confirmLabel: string;
   confirmDisabled?: boolean;
+  confirmTestId?: string;
   isBusy?: boolean;
   onConfirm(): void;
 }
@@ -73,6 +74,7 @@ export function SidebarSummaryCard({
   terms,
   confirmLabel,
   confirmDisabled = false,
+  confirmTestId,
   isBusy = false,
   onConfirm,
 }: SidebarSummaryCardProps) {
@@ -129,6 +131,7 @@ export function SidebarSummaryCard({
             disabled={confirmDisabled || isBusy}
             aria-busy={isBusy || undefined}
             onClick={onConfirm}
+            data-testid={confirmTestId}
           >
             {confirmLabel}
           </Button>

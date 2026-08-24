@@ -40,10 +40,9 @@ const columnWidths = ['32%', '17%', '15%', '16%', '20%'];
 
 interface StakingProviderRowProps {
   pool: BitcoinStakingPool;
-  showProposedSwitchAction?: boolean;
 }
 
-function StakingProviderRow({ pool, showProposedSwitchAction }: StakingProviderRowProps) {
+function StakingProviderRow({ pool }: StakingProviderRowProps) {
   const navigate = useNavigate();
   const slug = stakingProviderIdToSlug(pool.providerId);
   const { to } = useStakingPoolLink(slug);
@@ -80,7 +79,7 @@ function StakingProviderRow({ pool, showProposedSwitchAction }: StakingProviderR
         <PoolFeeValue pool={pool} />
       </styled.td>
       <styled.td px="space.04" textAlign="right" onClick={event => event.stopPropagation()}>
-        <StartStakingButton slug={slug} showProposedSwitchAction={showProposedSwitchAction} />
+        <StartStakingButton slug={slug} />
       </styled.td>
     </Table.Row>
   );
@@ -89,14 +88,7 @@ function StakingProviderRow({ pool, showProposedSwitchAction }: StakingProviderR
 // TVL is read from pox-5 directly; other pool stats (realized yield) have no
 // data source yet — the stacking-tracker API only covers pox-4 pools. Only
 // pools we hold a signer-manager contract id for are displayed.
-interface StakingProviderTableProps extends HTMLStyledProps<'div'> {
-  showProposedSwitchAction?: boolean;
-}
-
-export function StakingProviderTable({
-  showProposedSwitchAction,
-  ...props
-}: StakingProviderTableProps) {
+export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
   const availablePools = bitcoinStakingPoolList.filter(pool =>
     isPoolAvailableOnNetwork(pool, pox5NetworkConfig.contractNetworkMode)
   );
@@ -147,11 +139,7 @@ export function StakingProviderTable({
         </Table.Head>
         <Table.Body>
           {availablePools.map(pool => (
-            <StakingProviderRow
-              key={pool.providerId}
-              pool={pool}
-              showProposedSwitchAction={showProposedSwitchAction}
-            />
+            <StakingProviderRow key={pool.providerId} pool={pool} />
           ))}
         </Table.Body>
         <styled.tfoot>

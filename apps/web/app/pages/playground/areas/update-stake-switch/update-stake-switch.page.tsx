@@ -27,7 +27,7 @@ export function UpdateStakeSwitchPage() {
   return (
     <StakingPlaygroundShell
       title="Update stake: switch signer manager"
-      description="Design proposal for update-stake also letting users change signer managers (issue #2643). A Switch action on the pool table deep-links into the update form, the form gains a signer-manager picker, and the summary card narrates every change before it is signed. The picker and card are the proposed real components; only the position data is static, and nothing here is wired into the live update flow yet."
+      description="Design record for update-stake also letting users change signer managers (issue #2643). A Switch action on the pool table deep-links into the update form, the form gains a signer-manager picker, and the summary card narrates every change before it is signed. The picker and card are the real components and now ship in the live update flow; these boards keep the interactive states with static position data."
     >
       <Section
         title="Entry point"
@@ -35,7 +35,7 @@ export function UpdateStakeSwitchPage() {
       >
         <Board
           label="Pool table grows a Switch action"
-          note="Rows for pools you are not in are inert today; the proposal gives them a quiet Switch action that deep-links into the update form with that pool preselected. Your own row keeps View position. The buttons navigate to the real update route, which is not wired to read the target yet."
+          note="Rows for pools you are not in carry a quiet Switch action that deep-links into the update form with that pool preselected. Your own row keeps View position. The buttons navigate to the real update route, which preselects the target from the link."
           route={routes.index}
         >
           <StakingSurface
@@ -44,7 +44,7 @@ export function UpdateStakeSwitchPage() {
               lockedMicroStx: stackingDaoPosition.amountMicroStx,
             }}
           >
-            <StakingProviderTable showProposedSwitchAction />
+            <StakingProviderTable />
           </StakingSurface>
         </Board>
       </Section>
