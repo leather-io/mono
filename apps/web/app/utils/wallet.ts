@@ -42,11 +42,15 @@ export async function revokeWalletPermissions(): Promise<boolean> {
   const provider: RawWalletProvider | undefined = getSelectedProvider();
   if (!provider) return false;
   try {
-    await Promise.race([provider.request('wallet_disconnect'), delay(revokePermissionsTimeoutMs)]);
+    // Only a completed wallet_disconnect revokes the session. A timeout or a
+    // throw leaves it intact, and callers clear stored addresses off this.
+    return await Promise.race([
+      provider.request('wallet_disconnect').then(() => true),
+      delay(revokePermissionsTimeoutMs).then(() => false),
+    ]);
   } catch {
-    return true;
+    return false;
   }
-  return true;
 }
 
 type ConnectWalletResult =

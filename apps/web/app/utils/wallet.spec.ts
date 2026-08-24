@@ -4,6 +4,7 @@ import {
   WalletProviderUnavailableError,
   connectWallet,
   isUserRejectionError,
+  revokeWalletPermissions,
   walletStxCallContract,
 } from './wallet';
 
@@ -100,6 +101,56 @@ describe(connectWallet.name, () => {
     const result = await connectWallet({ allowWalletSelect: true });
 
     expect(result).toEqual({ status: 'error', error: failure, sessionRevoked: false });
+  });
+});
+
+describe(revokeWalletPermissions.name, () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    getLeatherMockModeMock.mockReturnValue(false);
+  });
+
+  test('reports revoked only when wallet_disconnect completes', async () => {
+    getSelectedProviderIdMock.mockReturnValue('XverseProviders.BitcoinProvider');
+    getSelectedProviderMock.mockReturnValue({ request: vi.fn().mockResolvedValue(undefined) });
+
+    await expect(revokeWalletPermissions()).resolves.toBe(true);
+  });
+
+  test('reports not revoked when wallet_disconnect throws, so the session is left intact', async () => {
+    getSelectedProviderIdMock.mockReturnValue('XverseProviders.BitcoinProvider');
+    getSelectedProviderMock.mockReturnValue({
+      request: vi.fn().mockRejectedValue(new Error('unsupported method')),
+    });
+
+    await expect(revokeWalletPermissions()).resolves.toBe(false);
+  });
+
+  test('reports not revoked when wallet_disconnect never settles', async () => {
+    vi.useFakeTimers();
+    getSelectedProviderIdMock.mockReturnValue('XverseProviders.BitcoinProvider');
+    getSelectedProviderMock.mockReturnValue({
+      request: vi.fn(() => new Promise<never>(() => undefined)),
+    });
+
+    const revoked = revokeWalletPermissions();
+    await vi.advanceTimersByTimeAsync(2000);
+
+    await expect(revoked).resolves.toBe(false);
+    vi.useRealTimers();
+  });
+
+  test('does not attempt revocation for leather or with no provider', async () => {
+    const request = vi.fn();
+    getSelectedProviderIdMock.mockReturnValue('LeatherProvider');
+    getSelectedProviderMock.mockReturnValue({ request });
+    await expect(revokeWalletPermissions()).resolves.toBe(false);
+
+    getSelectedProviderIdMock.mockReturnValue('XverseProviders.BitcoinProvider');
+    getSelectedProviderMock.mockReturnValue(undefined);
+    await expect(revokeWalletPermissions()).resolves.toBe(false);
+
+    expect(request).not.toHaveBeenCalled();
   });
 });
 
