@@ -14,7 +14,7 @@ import { createMoney, truncateMiddle } from '@leather.io/utils';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { Badge } from '../../components/badge';
-import { vaultThemeFromName } from '../../multisig-tokens';
+import { defaultVaultIcon, vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface VaultCardProps {
@@ -118,7 +118,14 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
     >
       <ListItemBox
         variant="plain"
-        leading={<AvatarSq chain={chain} icon="vault" themeId={theme.id} size="md" />}
+        leading={
+          <AvatarSq
+            chain={chain}
+            icon={vault.icon ?? defaultVaultIcon}
+            themeId={theme.id}
+            size="md"
+          />
+        }
         title={<styled.span textStyle="heading.05">{vault.name}</styled.span>}
         caption={renderCaption()}
         trailing={trailing.title}
