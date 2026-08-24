@@ -54,11 +54,7 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
     if (isInvite) {
       return {
         title: <Badge variant="pending" label="Invitation" />,
-        subtitle: inviterName ? (
-          <styled.span textStyle="caption.01" color="ink.text-subdued">
-            Invited by {inviterName}
-          </styled.span>
-        ) : undefined,
+        subtitle: undefined,
       };
     }
     if (isPendingMember) {
@@ -68,11 +64,7 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
           : 'Pending';
       return {
         title: <Badge variant="pending" label={label} />,
-        subtitle: (
-          <styled.span textStyle="caption.01" color="ink.text-subdued">
-            Awaiting members
-          </styled.span>
-        ),
+        subtitle: undefined,
       };
     }
     const hasNoAccounts = vault.accountCount === 0;
@@ -94,6 +86,12 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
   }
 
   const trailing = renderTrailing();
+
+  function renderCaption(): string {
+    if (accountRecovery.isRecovering) return `${chainLabel} vault · Scanning for accounts…`;
+    if (isInvite && inviterName) return `${chainLabel} vault · Invited by ${inviterName}`;
+    return `${chainLabel} vault · ${vault.accountCount} ${accountLabel}`;
+  }
 
   return (
     <styled.button
@@ -122,11 +120,7 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
         variant="plain"
         leading={<AvatarSq chain={chain} icon="vault" themeId={theme.id} size="md" />}
         title={<styled.span textStyle="heading.05">{vault.name}</styled.span>}
-        caption={
-          accountRecovery.isRecovering
-            ? `${chainLabel} vault · Scanning for accounts…`
-            : `${chainLabel} vault · ${vault.accountCount} ${accountLabel}`
-        }
+        caption={renderCaption()}
         trailing={trailing.title}
         trailingCaption={trailing.subtitle}
       />

@@ -85,6 +85,7 @@ function PageHeader({ title, backTo, onBack, children }: PageHeaderProps) {
               width="32px"
               px="0"
               gap="0"
+              borderRadius="sm"
               onClick={handleBack}
               aria-label="Back"
             />

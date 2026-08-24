@@ -51,7 +51,7 @@ export function VaultStatusCard({
       borderRadius="md"
       borderWidth="1px"
       borderStyle="solid"
-      borderColor={vault.status === 'pending' ? 'yellow.border' : 'ink.border-default'}
+      borderColor="ink.border-default"
       overflow="hidden"
     >
       <Box p="space.04">
