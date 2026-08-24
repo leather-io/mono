@@ -47,9 +47,11 @@ describe('matchBondDescriptor', () => {
     expect(matchBondDescriptor(withChecksum)?.unlockHeight).toBe(unlockHeight);
   });
 
-  it('rejects an unsorted multi tail', () => {
+  it('accepts a multi vault leaf', () => {
     const multiForm = makeBondDescriptor(`multi(2,${xpubA}/0/7,${xpubB}/0/7,${xpubC}/0/7)`);
-    expect(matchBondDescriptor(multiForm)).toBeNull();
+    const match = matchBondDescriptor(multiForm);
+    expect(match?.unlockHeight).toBe(unlockHeight);
+    expect(match?.multiExpression).toBe(`multi(2,${xpubA}/0/7,${xpubB}/0/7,${xpubC}/0/7)`);
   });
 
   it('rejects raw pubkeys and private keys in the vault multi', () => {
@@ -156,6 +158,32 @@ describe('instantiateBondDescriptor', () => {
     );
     expect(bytesToHex(compiledInstantiated.witnessScript)).toBe(
       bytesToHex(compiledReordered.witnessScript)
+    );
+  });
+
+  it('compiles a pre-sorted multi leaf to the same script as the sortedmulti instantiation', () => {
+    const instantiated = instantiateBondDescriptor({
+      unlockHeight,
+      hash,
+      counterpartyKey,
+      ...vaultKeys,
+    });
+    const sortedKeyExpressions = [1, 2, 3]
+      .map(seedByte => ({
+        keyExpression: `${makeNativeSegwitAccountXpub(seedByte)}/0/7`,
+        pubkeyHex: makeNativeSegwitAddressPubkeyHex(seedByte, 7),
+      }))
+      .sort((a, b) => (a.pubkeyHex < b.pubkeyHex ? -1 : 1))
+      .map(({ keyExpression }) => keyExpression);
+    const multiForm = makeBondDescriptor(`multi(2,${sortedKeyExpressions.join(',')})`);
+
+    const compiledInstantiated = compileWshDescriptor(instantiated);
+    const compiledMultiForm = compileWshDescriptor(multiForm);
+    expect(bytesToHex(compiledMultiForm.scriptPubKey)).toBe(
+      bytesToHex(compiledInstantiated.scriptPubKey)
+    );
+    expect(bytesToHex(compiledMultiForm.witnessScript)).toBe(
+      bytesToHex(compiledInstantiated.witnessScript)
     );
   });
 
