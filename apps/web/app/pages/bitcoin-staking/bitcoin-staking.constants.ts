@@ -1,3 +1,5 @@
+export const switchTargetParam = 'to';
+
 export const stakingPaths = {
   index: '/staking',
   status: '/staking/status',
@@ -9,6 +11,9 @@ export const stakingPaths = {
   },
   update(slug: string) {
     return `/staking/pool/${slug}/update`;
+  },
+  updateWithTarget(slug: string, targetSlug: string) {
+    return `/staking/pool/${slug}/update?${switchTargetParam}=${targetSlug}`;
   },
 };
 
@@ -24,6 +29,9 @@ export const byosmPaths = {
   },
   update(contractId: string) {
     return `${stakingPaths.update('byosm')}${byosmSearch(contractId)}`;
+  },
+  updateWithTarget(contractId: string, targetSlug: string) {
+    return `${stakingPaths.update('byosm')}${byosmSearch(contractId)}&${switchTargetParam}=${targetSlug}`;
   },
 };
 
