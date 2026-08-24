@@ -39,6 +39,17 @@ export function getWshDescriptorNetwork(descriptor: string): NetworkModes | unde
   return undefined;
 }
 
+export function isExtendedPublicKeyExpression(keyExpression: string): boolean {
+  return [networks.bitcoin, networks.testnet].some(network => {
+    try {
+      const { bip32 } = parseKeyExpression({ keyExpression, network, isSegwit: true });
+      return !!bip32 && !bip32.privateKey;
+    } catch {
+      return false;
+    }
+  });
+}
+
 // A P2WSH witness script and its scriptPubKey are network-independent — the same
 // keys and policy compile to identical bytes on mainnet and testnet. This
 // parsing network only governs extended-key version-byte validation. Callers
@@ -248,7 +259,7 @@ export function findAccountDescriptorKey(
   return undefined;
 }
 
-function stripDescriptorChecksum(descriptor: string): string {
+export function stripDescriptorChecksum(descriptor: string): string {
   const separatorIndex = descriptor.indexOf('#');
   return separatorIndex === -1 ? descriptor : descriptor.slice(0, separatorIndex);
 }

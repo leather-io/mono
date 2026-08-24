@@ -8,6 +8,7 @@ export function RpcSignPsbt() {
   const {
     broadcast,
     descriptor,
+    bondProposal,
     indexesToSign,
     isBroadcasting,
     onSignPsbt,
@@ -19,14 +20,15 @@ export function RpcSignPsbt() {
   return (
     <>
       <PsbtSigner
-        descriptor={descriptor}
+        descriptor={bondProposal ? bondProposal.bondDescriptor : descriptor}
+        bondProposal={bondProposal ?? undefined}
         indexesToSign={indexesToSign}
         isBroadcasting={isBroadcasting}
         origin={origin}
         onSignPsbt={onSignPsbt}
         onCancel={onCancel}
         psbtHex={psbtHex}
-        willBroadcast={broadcast}
+        willBroadcast={bondProposal ? false : broadcast}
       />
       <Outlet />
     </>

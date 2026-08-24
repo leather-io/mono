@@ -50,6 +50,13 @@ export function createBitcoinTransactionFromLeather(
 export function createBitcoinTransactionFromMempool(
   tx: MempoolTransaction & Partial<MempoolDescriptorFields>
 ): BitcoinTransaction {
+  const ownedAddress = tx.address;
+
+  function ownership(address: string | undefined) {
+    if (ownedAddress === undefined || address !== ownedAddress) return {};
+    return { owned: true, ...(tx.path !== undefined ? { path: tx.path } : {}) };
+  }
+
   return {
     txid: tx.txid,
     ...(tx.status.block_height !== undefined ? { height: tx.status.block_height } : {}),
@@ -58,13 +65,13 @@ export function createBitcoinTransactionFromMempool(
       txid: vin.txid,
       n: vin.vout,
       address: vin.prevout?.scriptpubkey_address ?? '',
-      ...(vin.prevout?.scriptpubkey_address === tx.address ? { owned: true, path: tx.path } : {}),
+      ...ownership(vin.prevout?.scriptpubkey_address),
       value: vin.prevout?.value?.toString() ?? '0',
     })),
     vout: tx.vout.map((vout, i) => ({
       n: i,
       address: vout.scriptpubkey_address,
-      ...(vout.scriptpubkey_address === tx.address ? { owned: true, path: tx.path } : {}),
+      ...ownership(vout.scriptpubkey_address),
       value: vout.value?.toString() ?? '0',
     })),
   };
