@@ -5,7 +5,12 @@ import {
   createStakerInfo,
   stackingDaoSignerManagerContractId,
 } from '../staking-states/staking-mock-data';
-import { Board, Section, StakingPlaygroundShell, StakingSurface } from '../staking-states/staking-surface';
+import {
+  Board,
+  Section,
+  StakingPlaygroundShell,
+  StakingSurface,
+} from '../staking-states/staking-surface';
 import { SwitchSignerManagerPreview } from './switch-signer-manager-preview';
 
 const stackingDaoPosition = createStakerInfo({

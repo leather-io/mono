@@ -402,8 +402,8 @@ export function SwitchSignerManagerPreview({
           />
           {hasConfirmed && (
             <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.02">
-              Nothing is submitted from the playground; in the real form this signs one
-              stake-update transaction.
+              Nothing is submitted from the playground; in the real form this signs one stake-update
+              transaction.
             </styled.p>
           )}
         </Box>

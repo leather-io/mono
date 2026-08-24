@@ -68,11 +68,7 @@ function SignerManagerOptionRow({
           {option.name}
         </styled.span>
         {option.isCurrent && (
-          <Badge
-            label="Current"
-            color="ink.text-subdued"
-            ml={option.meta ? undefined : 'auto'}
-          />
+          <Badge label="Current" color="ink.text-subdued" ml={option.meta ? undefined : 'auto'} />
         )}
         {option.meta && !expandedContent && (
           <styled.span
