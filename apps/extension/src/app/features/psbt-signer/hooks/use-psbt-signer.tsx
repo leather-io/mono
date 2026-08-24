@@ -17,6 +17,7 @@ import {
 export type RawPsbt = ReturnType<typeof RawPSBTV0.decode>;
 
 interface SignPsbtArgs {
+  allowedSighash?: number[];
   signingConfig: BitcoinInputSigningConfig[];
   tx: btc.Transaction;
 }
@@ -26,9 +27,9 @@ export function usePsbtSigner() {
 
   return useMemo(
     () => ({
-      async signPsbt({ signingConfig, tx }: SignPsbtArgs) {
+      async signPsbt({ allowedSighash, signingConfig, tx }: SignPsbtArgs) {
         addMissingTapInteralKeys(tx, signingConfig);
-        return signBitcoinTx(tx.toPSBT(), signingConfig);
+        return signBitcoinTx(tx.toPSBT(), signingConfig, allowedSighash);
       },
       getPsbtAsTransaction(psbt: string | Uint8Array) {
         const bytes = isString(psbt) ? hexToBytes(psbt) : psbt;
