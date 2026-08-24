@@ -24,7 +24,7 @@ interface AccountApproverSectionProps {
   titleRight?: React.ReactNode;
   captionRight?: React.ReactNode;
 }
-function AccountApproverSection({
+export function AccountApproverSection({
   subheader,
   avatar,
   name,
