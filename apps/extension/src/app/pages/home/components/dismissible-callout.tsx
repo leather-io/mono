@@ -17,7 +17,7 @@ export function DismissibleCallout({ messageId, children, ...props }: Dismissibl
 
   return (
     <Box position="relative">
-      <Callout icon={null} {...props}>
+      <Callout icon={null} pr="space.04" {...props}>
         {children}
       </Callout>
       <IconButton
