@@ -72,7 +72,7 @@ export function useActiveStakingInfo(): UseActiveStakingInfoResult {
           ? Math.round(secondsUntilNextCycleQuery.data / (60 * 60 * 24))
           : null,
       claimable,
-      payoutPreference: payoutPreferenceQuery.data ?? null,
+      payoutPreference: payoutPreferenceQuery.data?.preference ?? null,
     },
   };
 }
