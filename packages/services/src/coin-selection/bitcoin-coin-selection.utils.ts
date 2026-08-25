@@ -4,6 +4,7 @@ import { AccountAddresses } from '@leather.io/models';
 export function getInputSizing(account: AccountAddresses): InputSizing | undefined {
   const { bitcoin } = account;
   if (bitcoin?.type !== 'fixedAddress') return undefined;
+  if (bitcoin.paymentType !== 'p2wsh' || !bitcoin.multisig) return undefined;
   return {
     paymentType: bitcoin.paymentType,
     threshold: bitcoin.multisig.threshold,

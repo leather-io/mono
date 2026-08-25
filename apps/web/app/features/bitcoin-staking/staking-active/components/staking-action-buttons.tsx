@@ -7,7 +7,7 @@ import { StopPoolingIcon } from '~/components/icons/stop-pooling-icon';
 import { BitcoinStakingProviderId, StakingPoolSlug } from '~/data/bitcoin-staking-data';
 import { usePox5StackingClientRequired } from '~/features/bitcoin-staking/hooks/use-pox5-clients';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-import { leather } from '~/utils/leather-sdk';
+import { wallet } from '~/utils/wallet';
 
 import { Button } from '@leather.io/ui';
 
@@ -41,7 +41,7 @@ export function StakingActionButtons({
     mutate: submitUnstake,
     isPending,
     error: unstakeError,
-  } = useMutation(createUnstakeMutationOptions({ leather, client }));
+  } = useMutation(createUnstakeMutationOptions({ wallet, client }));
 
   function handleUnstakeClick() {
     if (!unstakeArmed) {
