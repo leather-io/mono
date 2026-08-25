@@ -1,4 +1,9 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
+import {
+  BitcoinStakingPool,
+  BitcoinStakingProviderId,
+  getPrimarySignerManagerContract,
+} from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { useLeatherConnect } from '~/store/addresses';
 
@@ -63,6 +68,35 @@ export function usePox5PoolFeeQuery(signerManagerContractId: string | undefined)
       apiUrl: pox5NetworkConfig.apiUrl,
     })
   );
+}
+
+export function usePox5PoolFeesByProvider(
+  pools: BitcoinStakingPool[]
+): Partial<Record<BitcoinStakingProviderId, number | null>> {
+  const fetchedPools = pools.filter(pool => typeof pool.fixedFeeBips !== 'number');
+
+  const feeQueries = useQueries({
+    queries: fetchedPools.map(pool =>
+      createGetPox5PoolFeeQueryOptions({
+        signerManagerContractId: getPrimarySignerManagerContract(
+          pool.providerId,
+          pox5NetworkConfig.contractNetworkMode
+        ),
+        apiUrl: pox5NetworkConfig.apiUrl,
+      })
+    ),
+  });
+
+  const feeBipsByProvider: Partial<Record<BitcoinStakingProviderId, number | null>> = {};
+  pools.forEach(pool => {
+    if (typeof pool.fixedFeeBips === 'number') {
+      feeBipsByProvider[pool.providerId] = pool.fixedFeeBips;
+    }
+  });
+  fetchedPools.forEach((pool, index) => {
+    feeBipsByProvider[pool.providerId] = feeQueries[index]?.data ?? null;
+  });
+  return feeBipsByProvider;
 }
 
 interface Pox5PoolTotalStaked {
