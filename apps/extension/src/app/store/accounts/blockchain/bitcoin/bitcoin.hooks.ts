@@ -6,7 +6,6 @@ import { Psbt } from 'bitcoinjs-lib';
 import AppClient from 'ledger-bitcoin';
 
 import {
-  type SupportedPaymentType,
   getBitcoinJsLibNetworkConfigByMode,
   getInputPaymentType,
   getTaprootAddress,
@@ -15,6 +14,7 @@ import {
 } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { type AccountId, bitcoinNetworkToNetworkMode } from '@leather.io/models';
+import type { BitcoinPaymentTypes } from '@leather.io/rpc';
 import { isNumber, isString, isUndefined } from '@leather.io/utils';
 
 import {
@@ -151,14 +151,13 @@ export function useSignLedgerBitcoinTx() {
 
     const btcSignerPsbtClone = btc.Transaction.fromPSBT(psbt.toBuffer());
 
-    const inputByPaymentType = signingConfig.map(config => {
-      const inputIndex = btcSignerPsbtClone.getInput(config.index).index;
-      if (isUndefined(inputIndex)) throw new Error('Input must have an index for payment type');
-      return [
-        config,
-        getInputPaymentType(btcSignerPsbtClone.getInput(config.index), bitcoinNetworkMode),
-      ];
-    }) as readonly [BitcoinInputSigningConfig, SupportedPaymentType][];
+    const inputByPaymentType = signingConfig.map(
+      (config): [BitcoinInputSigningConfig, BitcoinPaymentTypes] => {
+        const inputIndex = btcSignerPsbtClone.getInput(config.index).index;
+        if (isUndefined(inputIndex)) throw new Error('Input must have an index for payment type');
+        return [config, getInputPaymentType(btcSignerPsbtClone.getInput(config.index))];
+      }
+    );
 
     //
     // Taproot

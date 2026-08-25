@@ -1,4 +1,6 @@
+import { sha256 } from '@noble/hashes/sha256';
 import { HDKey } from '@scure/bip32';
+import * as btc from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
 import { HD_KEY_VERSIONS_BY_NETWORK } from '@leather.io/constants';
@@ -10,7 +12,9 @@ import { deriveNativeSegwitAccountFromRootKeychain } from '../payments/p2wpkh-ad
 import { createBitcoinAddress } from '../validation/bitcoin-address';
 import {
   deriveAddressIndexZeroFromAccount,
+  ecdsaPublicKeyToSchnorr,
   encodeExtendedPublicKeyForNetwork,
+  getInputPaymentType,
   getNativeSegwitAddress,
   getTaprootAddress,
   inferNetworkFromAddress,
@@ -285,5 +289,40 @@ describe(reencodeTestnetFamilyAddress.name, () => {
     expect(
       reencodeTestnetFamilyAddress('tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsy', 'regtest')
     ).toBeNull();
+  });
+});
+
+describe(getInputPaymentType.name, async () => {
+  const rootKeychain = await deriveRootKeychainFromMnemonic(testMnemonic);
+  const nativeSegwitPublicKey = deriveAddressIndexZeroFromAccount(
+    deriveNativeSegwitAccountFromRootKeychain(rootKeychain, 'mainnet')(0).keychain
+  ).publicKey;
+  const taprootPublicKey = deriveAddressIndexZeroFromAccount(
+    deriveTaprootAccount(rootKeychain, 'mainnet')(0).keychain
+  ).publicKey;
+  if (!nativeSegwitPublicKey || !taprootPublicKey) throw new Error('Expected public keys');
+
+  function makeInput(script: Uint8Array, witnessScript?: Uint8Array) {
+    return { index: 0, witnessUtxo: { amount: 1000n, script }, witnessScript };
+  }
+
+  it('returns p2wpkh for a native segwit input', () => {
+    const input = makeInput(btc.p2wpkh(nativeSegwitPublicKey).script);
+    expect(getInputPaymentType(input)).toBe('p2wpkh');
+  });
+
+  it('returns p2tr for a taproot input', () => {
+    const input = makeInput(btc.p2tr(ecdsaPublicKeyToSchnorr(taprootPublicKey)).script);
+    expect(getInputPaymentType(input)).toBe('p2tr');
+  });
+
+  it('returns p2wsh for a witness script input forging the p2wpkh scriptCode', () => {
+    const witnessScript = btc.p2pkh(nativeSegwitPublicKey).script;
+    const script = btc.OutScript.encode({ type: 'wsh', hash: sha256(witnessScript) });
+    expect(getInputPaymentType(makeInput(script, witnessScript))).toBe('p2wsh');
+  });
+
+  it('throws for an input without a script', () => {
+    expect(() => getInputPaymentType({ index: 0 })).toThrow('Input script cannot be empty');
   });
 });
