@@ -8,9 +8,7 @@ import type { VaultAssetItem } from '~/features/multisig/assets/vault-asset-item
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
-import { resolveWalletRpcNetwork } from '~/features/multisig/network/resolve-wallet-rpc-network';
-import { getMultisigDescriptor } from '~/features/multisig/transactions/btc-multisig-descriptor';
-import { getOrderedSigningPubkeys } from '~/features/multisig/transactions/derive-multisig-address';
+import { useAddAccountToWallet } from '~/features/multisig/vaults/use-add-account-to-wallet';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
 import { useUpdateVaultAccount } from '~/features/multisig/vaults/use-vault-account-mutations';
@@ -18,10 +16,9 @@ import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
 import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
-import { leather } from '~/utils/leather-sdk';
-import { isLeatherInstalled } from '~/utils/utils';
 
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
+import { getErrorDetail } from '@leather.io/services';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { InlineTabs } from '../components/inline-tabs';
@@ -36,10 +33,10 @@ import { AccountAssets } from './components/account-assets';
 import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
 import { AssetDetailModal } from './components/asset-detail-modal';
-import { CreateTransactionButton } from './components/create-transaction-button';
 import { EditAccountModal } from './components/edit-account-modal';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
 import { ReceiveModal } from './components/receive-modal';
+import { SendTransactionButton } from './components/send-transaction-button';
 
 export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
@@ -49,9 +46,8 @@ export function AccountDetailPage() {
   const [isReceiving, setIsReceiving] = useState(false);
   const [isEditingAccount, setIsEditingAccount] = useState(false);
   const [proposeAssetId, setProposeAssetId] = useState<SerializedCryptoAssetId>();
-  const [isAddingToWallet, setIsAddingToWallet] = useState(false);
   const [assetDetail, setAssetDetail] = useState<VaultAssetItem | null>(null);
-  const { success, error } = useToast();
+  const { error } = useToast();
   useEffect(() => setHydrated(true), []);
 
   function onProposed(transaction: MultisigTransaction) {
@@ -75,6 +71,10 @@ export function AccountDetailPage() {
   const accountBalance = useVaultAccountBalance(account.data);
   const accountAssets = useVaultAccountAssets(account.data);
   const updateAccount = useUpdateVaultAccount(network, vaultId ?? '');
+  const { addAccountToWallet, isAddingToWallet, isAddedToWallet } = useAddAccountToWallet(
+    vault.data,
+    account.data
+  );
 
   const btcSession = useSession(btcNetwork);
   const stxSession = useSession(stxNetwork);
@@ -111,41 +111,7 @@ export function AccountDetailPage() {
   }
 
   const theme = vaultThemeFromName(vault.data.theme);
-  const chainLabel = account.data.network.startsWith('btc') ? 'BTC' : 'STX';
-
-  async function onAddToWallet() {
-    if (!vault.data || !account.data) return;
-    if (!isLeatherInstalled()) {
-      error('Leather wallet not detected. Install the Leather extension to add this account.');
-      return;
-    }
-
-    const accountData = account.data;
-    const network = resolveWalletRpcNetwork(vault.data.network);
-
-    setIsAddingToWallet(true);
-    try {
-      if (chainFromNetwork(accountData.network) === 'btc') {
-        await leather.btcAddAccount({
-          descriptor: getMultisigDescriptor(accountData),
-          name: accountData.name,
-          network,
-        });
-      } else {
-        await leather.stxAddAccount({
-          publicKeys: getOrderedSigningPubkeys(accountData),
-          threshold: accountData.threshold,
-          name: accountData.name,
-          network,
-        });
-      }
-      success(`Added "${accountData.name}" to your wallet`);
-    } catch (err) {
-      error(err instanceof Error ? err.message : 'Failed to add account to wallet');
-    } finally {
-      setIsAddingToWallet(false);
-    }
-  }
+  const chain = chainFromNetwork(account.data.network);
 
   return (
     <MultisigPage title={account.data.name} backTo={multisigPaths.vault(vault.data.id)}>
@@ -171,8 +137,8 @@ export function AccountDetailPage() {
               </InlineTabs.List>
               <InlineTabs.Content value="transactions">
                 <Box mt="space.04">
-                  <CreateTransactionButton
-                    chainLabel={chainLabel}
+                  <SendTransactionButton
+                    chain={chain}
                     onClick={() => {
                       setProposeAssetId(undefined);
                       setIsProposing(true);
@@ -195,8 +161,9 @@ export function AccountDetailPage() {
             vault={vault.data}
             account={account.data}
             currentUserAddress={me.data?.address}
-            onAddToWallet={onAddToWallet}
+            onAddToWallet={() => void addAccountToWallet()}
             isAddingToWallet={isAddingToWallet}
+            isAddedToWallet={isAddedToWallet}
             onEdit={() => setIsEditingAccount(true)}
           />
         </Box>
@@ -238,7 +205,10 @@ export function AccountDetailPage() {
         onSave={({ name, icon }) =>
           updateAccount.mutate(
             { accountId: account.data.id, update: { name, icon } },
-            { onSuccess: () => setIsEditingAccount(false) }
+            {
+              onSuccess: () => setIsEditingAccount(false),
+              onError: err => error(getErrorDetail(err) ?? 'Unknown error'),
+            }
           )
         }
       />

@@ -1,6 +1,19 @@
 // All new events should use the object-action framework.
 import { CryptoAssetProtocol, DefaultNetworkConfigurations, StxBalance } from '@leather.io/models';
 
+export type ComplianceScreeningPoint =
+  | 'psbt_signer'
+  | 'rpc_send_transfer'
+  | 'rpc_stx_call_contract'
+  | 'rpc_stx_deploy_contract'
+  | 'rpc_stx_sign_transaction'
+  | 'rpc_stx_transfer_sip9_nft'
+  | 'rpc_stx_transfer_sip10_ft'
+  | 'rpc_stx_transfer_stx'
+  | 'sbtc_deposit'
+  | 'send_form_btc'
+  | 'send_form_stx';
+
 // https://segment.com/academy/collecting-data/naming-conventions-for-clean-data/
 export interface Events extends HistoricalEvents {
   balance_updated: {
@@ -17,7 +30,6 @@ export interface Events extends HistoricalEvents {
   app_unlocked: undefined;
   app_locked: undefined;
   submit_feature_waitlist: SubmitWaitlist;
-  legacy_request_initiated: { method: string; origin?: string };
   application_first_opened: { timestamp: string };
   pooled_stacking_started: {
     amount: number;
@@ -39,6 +51,8 @@ export interface Events extends HistoricalEvents {
     provider: string;
     amountIncreaseMicroStx: string;
     cyclesToExtend: number;
+    switchedFromProvider?: string;
+    switchedToProvider?: string;
   };
   bitcoin_staking_unstaked: {
     provider: string;
@@ -144,10 +158,7 @@ interface HistoricalEvents {
   click_change_theme_menu_item: undefined;
   click_settings_menu_item: undefined;
   click_toggle_privacy: undefined;
-  request_psbt_cancel: undefined;
   request_sign_psbt_submit: undefined;
-  request_update_profile_submit: undefined;
-  request_update_profile_cancel: undefined;
   request_signature_cancel: undefined;
   requesting_origin_tab_closed_with_pending_action: undefined;
   select_add_new_collectible: undefined;
@@ -185,8 +196,16 @@ interface HistoricalEvents {
   request_signature_cannot_sign_message_no_account: undefined;
   request_signature_sign: { type: 'software' | 'ledger' };
   switch_account: { index: number; hasStxBalance: boolean };
-  non_compliant_entity_detected: { address: string | string[] };
-  compliance_check_unavailable: { address: string; reason: string };
+  non_compliant_entity_detected: {
+    address: string;
+    reason: string;
+    screeningPoint: ComplianceScreeningPoint;
+  };
+  compliance_check_unavailable: {
+    address: string;
+    reason: string;
+    screeningPoint: ComplianceScreeningPoint;
+  };
   ledger_transaction_publish_error: { error: { message: string; error: any } };
   native_segwit_tx_hex_to_ledger_tx: { success: boolean };
   psbt_sign_request_p2tr_missing_taproot_internal_key: undefined;

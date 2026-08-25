@@ -8,7 +8,7 @@ import type {
 } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import type { DecodedProposalPayload } from '../transactions/decode-proposal-summary';
+import type { DecodedProposalPayload } from '../transactions/decode-proposal-payload';
 import {
   type ContractActionTarget,
   buildClassifications,

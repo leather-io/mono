@@ -29,6 +29,7 @@ export interface BlockchainActivity {
   readonly timestamp: number;
   readonly txid: string;
   readonly blockHeight?: number;
+  readonly nonce?: number;
   readonly fee?: Money;
   readonly status: OnChainActivityStatus;
   readonly chain: CryptoAssetChain;

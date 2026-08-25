@@ -62,6 +62,7 @@ export function createStakeMutationOptions({ leather, client }: CreateStakeMutat
 
 interface StakeUpdateMutationValues extends StakeUpdateArgs {
   providerId: BitcoinStakingProviderId;
+  targetProviderId: BitcoinStakingProviderId;
 }
 
 interface CreateStakeUpdateMutationOptionsArgs {
@@ -93,10 +94,19 @@ export function createStakeUpdateMutationOptions({
         network: pox5NetworkConfig.walletRpcNetwork,
       });
 
+      const isSwitching =
+        values.newSignerManagerContractId !== values.currentSignerManagerContractId;
+
       analytics.track('bitcoin_staking_updated', {
         provider: values.providerId,
         amountIncreaseMicroStx: values.amountIncreaseMicroStx.toString(),
         cyclesToExtend: values.cyclesToExtend,
+        ...(isSwitching
+          ? {
+              switchedFromProvider: values.providerId,
+              switchedToProvider: values.targetProviderId,
+            }
+          : {}),
       });
 
       return leather.stxCallContract(options);

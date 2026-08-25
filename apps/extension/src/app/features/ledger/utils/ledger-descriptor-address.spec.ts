@@ -7,6 +7,7 @@ import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitc
 import {
   descriptorHasNonAccountRawKey,
   isLedgerOnDeviceAddressConfirmed,
+  toLedgerDisplayedAddress,
 } from './ledger-descriptor-address';
 
 function makeNativeSegwitAccountKeychain(seedByte: number) {
@@ -24,8 +25,14 @@ function makeNativeSegwitAddressPubkey(seedByte: number) {
 const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
 
+const mainnetWshAddress = 'bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3';
+const testnetWshAddress = 'tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7';
+const regtestWshAddress = 'bcrt1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qzf4jry';
+const testnetTaprootAddress = 'tb1pmfr3p9j00pfxjh0zmgp99y8zftmd3s5pmedqhyptwy6lm87hf5ssk79hv2';
+const regtestTaprootAddress = 'bcrt1pmfr3p9j00pfxjh0zmgp99y8zftmd3s5pmedqhyptwy6lm87hf5ssm803es';
+
 describe('isLedgerOnDeviceAddressConfirmed', () => {
-  const address = 'bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3';
+  const address = mainnetWshAddress;
 
   it('confirms when the on-device address equals the expected address', () => {
     expect(isLedgerOnDeviceAddressConfirmed(address, address)).toBe(true);
@@ -51,6 +58,40 @@ describe('isLedgerOnDeviceAddressConfirmed', () => {
 
   it('does not confirm two empty addresses', () => {
     expect(isLedgerOnDeviceAddressConfirmed('', '')).toBe(false);
+  });
+
+  it('confirms a testnet on-device address against the same script encoded for regtest', () => {
+    expect(isLedgerOnDeviceAddressConfirmed(testnetWshAddress, regtestWshAddress)).toBe(true);
+    expect(isLedgerOnDeviceAddressConfirmed(testnetTaprootAddress, regtestTaprootAddress)).toBe(
+      true
+    );
+  });
+
+  it('rejects a testnet on-device address against a different regtest script', () => {
+    expect(isLedgerOnDeviceAddressConfirmed(testnetTaprootAddress, regtestWshAddress)).toBe(false);
+  });
+
+  it('rejects a mainnet on-device address against the same script encoded for regtest', () => {
+    expect(isLedgerOnDeviceAddressConfirmed(mainnetWshAddress, regtestWshAddress)).toBe(false);
+  });
+
+  it('rejects a testnet on-device address against the same script encoded for mainnet', () => {
+    expect(isLedgerOnDeviceAddressConfirmed(testnetWshAddress, mainnetWshAddress)).toBe(false);
+  });
+});
+
+describe('toLedgerDisplayedAddress', () => {
+  it('re-encodes a regtest address with the testnet prefix', () => {
+    expect(toLedgerDisplayedAddress(regtestWshAddress)).toBe(testnetWshAddress);
+    expect(toLedgerDisplayedAddress(regtestTaprootAddress)).toBe(testnetTaprootAddress);
+  });
+
+  it('returns testnet addresses unchanged', () => {
+    expect(toLedgerDisplayedAddress(testnetWshAddress)).toBe(testnetWshAddress);
+  });
+
+  it('returns mainnet addresses unchanged', () => {
+    expect(toLedgerDisplayedAddress(mainnetWshAddress)).toBe(mainnetWshAddress);
   });
 });
 

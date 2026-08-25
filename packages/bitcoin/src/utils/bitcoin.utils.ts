@@ -353,6 +353,23 @@ export function inferNetworkFromAddress(address: BitcoinAddress): BitcoinNetwork
   throw new Error('Invalid or unsupported Bitcoin address format');
 }
 
+const testnetFamilyBech32Prefixes = ['tb1', 'bcrt1'];
+
+export function reencodeTestnetFamilyAddress(
+  address: string,
+  networkMode: BitcoinNetworkModes
+): string | null {
+  if (bitcoinNetworkModeToCoreNetworkMode(networkMode) !== 'testnet') return null;
+  if (!testnetFamilyBech32Prefixes.some(prefix => address.startsWith(prefix))) return null;
+  const sourceMode = address.startsWith('bcrt1') ? 'regtest' : 'testnet';
+  try {
+    const decoded = btc.Address(getBtcSignerLibNetworkConfigByMode(sourceMode)).decode(address);
+    return btc.Address(getBtcSignerLibNetworkConfigByMode(networkMode)).encode(decoded);
+  } catch {
+    return null;
+  }
+}
+
 export function inferPaymentTypeFromAddress(address: BitcoinAddress): SupportedPaymentType {
   if (address.startsWith('bc1q') || address.startsWith('tb1q') || address.startsWith('bcrt1q'))
     return 'p2wpkh';

@@ -83,6 +83,44 @@ describe(BitcoinTransactionsService.name, () => {
       expect(result[0].txid).toEqual(tx.txid);
     });
 
+    it('marks the queried address as owned for a fixed-address account on regtest', async () => {
+      const vaultAddress = 'bcrt1qvault';
+      const mempoolTx = {
+        txid: 'claim-tx',
+        status: { confirmed: true, block_height: 4471, block_time: 1_700_000_000 },
+        fees: 153,
+        vin: [
+          { txid: 'lock-tx', vout: 0, prevout: { scriptpubkey_address: 'bcrt1qlock', value: 1e7 } },
+        ],
+        vout: [{ scriptpubkey_address: vaultAddress, value: 9_999_847 }],
+      };
+      const mockMempoolApiClient = {
+        fetchAddressTransactions: () => Promise.resolve([mempoolTx]),
+      } as unknown as MempoolApiClient;
+      const service = new BitcoinTransactionsService(
+        {} as unknown as LeatherApiClient,
+        mockMempoolApiClient,
+        {
+          getSettings: () => ({
+            network: { chain: { bitcoin: { bitcoinNetwork: 'regtest', mode: 'regtest' } } },
+          }),
+        } as unknown as SettingsService
+      );
+      const mockAccount: AccountAddresses = {
+        id: { fingerprint: 'multisig-fp', accountIndex: 0 },
+        bitcoin: {
+          type: 'fixedAddress',
+          address: vaultAddress,
+          paymentType: 'p2wsh',
+          multisig: { threshold: 1, signerCount: 2 },
+        },
+      };
+      const result = await service.getAccountTransactions(mockAccount, { page: 1, pageSize: 150 });
+      expect(result).toHaveLength(1);
+      expect(result[0].vout[0].owned).toBe(true);
+      expect(result[0].vin[0].owned).toBeUndefined();
+    });
+
     it('should return empty array for accounts without bitcoin address info', async () => {
       const mockAccount: AccountAddresses = {
         id: {

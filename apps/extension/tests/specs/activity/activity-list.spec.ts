@@ -47,7 +47,7 @@ test.describe('Activity list', () => {
     await homePage.clickActivityTab();
 
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
-    await expect(activityList.getByText('Send BTC')).toBeVisible();
+    await expect(activityList.getByText('BTC', { exact: true })).toBeVisible();
     await expect(activityList.getByText(`${minusSign} 0.00198`, { exact: true })).toBeVisible();
   });
 
@@ -63,7 +63,7 @@ test.describe('Activity list', () => {
     await homePage.clickActivityTab();
 
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
-    await expect(activityList.getByText('Receive BTC')).toBeVisible();
+    await expect(activityList.getByText('BTC', { exact: true })).toBeVisible();
     await expect(activityList.getByText('+ 0.0015', { exact: true })).toBeVisible();
   });
 
@@ -79,7 +79,7 @@ test.describe('Activity list', () => {
     await homePage.clickActivityTab();
 
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
-    await expect(activityList.getByText('Send BTC')).toBeVisible();
+    await expect(activityList.getByText('BTC', { exact: true })).toBeVisible();
     // Change returning to the wallet is excluded: 300,000 sats left, not 402,000.
     await expect(activityList.getByText(`${minusSign} 0.003`, { exact: true })).toBeVisible();
   });

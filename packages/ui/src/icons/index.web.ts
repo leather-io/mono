@@ -1,3 +1,4 @@
+export * from './activity/cancelled-icon.web';
 export * from './activity/failed-icon.web';
 export * from './activity/pending-icon.web';
 export * from './app-icon.web';

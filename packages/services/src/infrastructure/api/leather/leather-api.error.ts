@@ -5,7 +5,8 @@ export class LeatherApiError extends Error {
     public readonly statusText: string,
     public readonly data?: { error: string }
   ) {
-    super(`Leather API (${url}): ${status} ${statusText}`);
+    const baseMessage = `Leather API (${url}): ${status} ${statusText}`;
+    super(data?.error ? `${baseMessage} — ${data.error}` : baseMessage);
     this.name = 'LeatherApiError';
   }
 
@@ -20,6 +21,14 @@ export class LeatherApiError extends Error {
   isUnprocessableEntity(): boolean {
     return this.status === 422;
   }
+}
+
+export function getErrorDetail(error: unknown): string | undefined {
+  if (LeatherApiError.isLeatherApiError(error) && error.data?.error.trim()) {
+    return error.data.error.trim();
+  }
+  if (error instanceof Error && error.message.trim()) return error.message.trim();
+  return undefined;
 }
 
 export async function readLeatherApiErrorData(

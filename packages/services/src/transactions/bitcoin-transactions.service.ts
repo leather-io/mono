@@ -97,7 +97,7 @@ export class BitcoinTransactionsService {
       const mempoolTxs = await this.mempoolApiClient.fetchAddressTransactions(address, undefined, {
         signal,
       });
-      return mempoolTxs.map(createBitcoinTransactionFromMempool);
+      return mempoolTxs.map(tx => createBitcoinTransactionFromMempool({ ...tx, address }));
     }
     const page = await this.leatherApiClient.fetchBitcoinTransactionsByAddress(
       address,

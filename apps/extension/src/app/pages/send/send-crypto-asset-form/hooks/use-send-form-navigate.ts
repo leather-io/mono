@@ -100,14 +100,14 @@ export function useSendFormNavigate() {
           } as ConfirmationRouteState,
         });
       },
-      toErrorPage(error: unknown) {
+      toErrorPage(error: unknown, options?: { proposeMode?: boolean }) {
         // without this processing, navigate does not work
         const processedError = error instanceof AxiosError ? new Error(error.message) : error;
 
         return navigate('../error', {
           relative: 'path',
           replace: true,
-          state: { error: processedError },
+          state: { error: processedError, proposeMode: options?.proposeMode },
         });
       },
     }),

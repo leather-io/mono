@@ -1,5 +1,6 @@
 import { Box, styled } from 'leather-styles/jsx';
 
+import { getErrorDetail } from '@leather.io/services';
 import { DropdownMenu, Flag } from '@leather.io/ui';
 
 import { ChainAvatar } from '../chain-avatar';
@@ -36,9 +37,9 @@ export function SignInItem({ connection, detailed = false }: SignInItemProps) {
               {description}
             </styled.span>
           )}
-          {signIn.error?.message?.trim() && (
+          {signIn.error && getErrorDetail(signIn.error) && (
             <styled.span display="block" textStyle="caption.01" color="red.action-primary-default">
-              {signIn.error.message}
+              {getErrorDetail(signIn.error)}
             </styled.span>
           )}
         </Box>
