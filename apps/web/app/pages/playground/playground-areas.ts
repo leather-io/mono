@@ -65,4 +65,14 @@ export const playgroundAreas: PlaygroundArea[] = [
     issue: 2550,
     appShell: true,
   },
+  {
+    slug: 'update-stake-switch',
+    title: 'Update stake: switch signer manager',
+    description:
+      'Proposal for switching signer managers through the update-stake form: a Switch action on the pool table, a signer-manager picker in the form, and a summary card that narrates the change.',
+    status: 'exploration',
+    section: 'web-app',
+    issue: 2643,
+    appShell: true,
+  },
 ];

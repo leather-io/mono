@@ -20,12 +20,14 @@ import { StackingFormItemTitle } from '~/features/stacking/components/stacking-f
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
 import {
+  DEFAULT_MIN_CLAIM_SATS,
   DEFAULT_STAKING_CYCLES,
+  MIN_MAX_WITHDRAWAL_FEE_SATS,
   byosmPaths,
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
-import { leather } from '~/utils/leather-sdk';
+import { wallet } from '~/utils/wallet';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 import { stxToMicroStx } from '@leather.io/utils';
@@ -44,7 +46,11 @@ import {
   usePox5PoxInfoQuery,
   usePox5SecondsUntilNextCycleQuery,
 } from '../queries/pox5-node.query';
-import { usePox5ContractId, usePox5PoolTotalStaked } from '../queries/pox5-stacking.query';
+import {
+  usePox5ContractId,
+  usePox5PayoutPreferenceQuery,
+  usePox5PoolTotalStaked,
+} from '../queries/pox5-stacking.query';
 import { createStakeMutationOptions } from '../transactions/pox5-mutations';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 import { getBroadcastTxId } from '../transactions/pox5-tx-status';
@@ -89,7 +95,7 @@ function StartStakingLayout({
   client,
   signerManagerContractId: signerManagerContractIdOverride,
 }: StartStakingLayoutProps) {
-  const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
+  const { stacksAccount, btcPaymentAddress } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No STX address available');
 
   const navigate = useNavigate();
@@ -122,14 +128,20 @@ function StartStakingLayout({
   const { isLoading: totalAvailableBalanceIsLoading, availableBalance: totalAvailableBalance } =
     usePox5AvailableUnlockedBalance(stacksAccount.address);
 
+  const payoutPreferenceQuery = usePox5PayoutPreferenceQuery(
+    pool.supportsBtcPayout ? signerManagerContractId : undefined
+  );
+  const supportsMinClaim = payoutPreferenceQuery.data?.supportsMinClaim ?? false;
+
   const schema = useMemo(
     () =>
       createStakingFormSchema({
         networkMode: pox5NetworkConfig.bitcoinNetworkMode,
         availableBalance: totalAvailableBalance,
         supportsBtcPayout: pool.supportsBtcPayout,
+        supportsMinClaim,
       }),
-    [totalAvailableBalance, pool.supportsBtcPayout]
+    [totalAvailableBalance, pool.supportsBtcPayout, supportsMinClaim]
   );
 
   const formMethods = useForm({
@@ -137,8 +149,9 @@ function StartStakingLayout({
     defaultValues: {
       cycles: DEFAULT_STAKING_CYCLES,
       payoutEnabled: false,
-      rewardAddress: btcAddressP2wpkh?.address,
-      maxFeeSats: '',
+      rewardAddress: btcPaymentAddress?.address,
+      maxFeeSats: String(MIN_MAX_WITHDRAWAL_FEE_SATS),
+      minClaimSats: String(DEFAULT_MIN_CLAIM_SATS),
     },
     resolver: zodResolver(schema),
   });
@@ -151,7 +164,7 @@ function StartStakingLayout({
     mutate: submitStake,
     isPending: handleStakePending,
     error: stakeError,
-  } = useMutation(createStakeMutationOptions({ leather, client }));
+  } = useMutation(createStakeMutationOptions({ wallet, client }));
 
   const handleStake = formMethods.handleSubmit(values => {
     if (!signerManagerContractId) return;
@@ -165,6 +178,9 @@ function StartStakingLayout({
         ? {
             btcRewardAddress: formValues.rewardAddress,
             maxFeeSats: BigInt(formValues.maxFeeSats),
+            ...(supportsMinClaim && formValues.minClaimSats
+              ? { minClaimSats: BigInt(formValues.minClaimSats) }
+              : {}),
           }
         : undefined;
 
@@ -172,7 +188,7 @@ function StartStakingLayout({
       {
         providerId: pool.providerId,
         signerManagerContractId,
-        amountMicroStx: BigInt(stxToMicroStx(formValues.amount).toString()),
+        amountMicroStx: BigInt(stxToMicroStx(Number(formValues.amount)).toString()),
         numCycles: formValues.cycles,
         payoutPreference,
       },
@@ -318,7 +334,10 @@ function StartStakingLayout({
                     title="Rewards payout"
                     article={learnArticles.stackingRewardsAddress}
                   />
-                  <ChoosePayoutPreference supportsBtcPayout={pool.supportsBtcPayout} />
+                  <ChoosePayoutPreference
+                    supportsBtcPayout={pool.supportsBtcPayout}
+                    supportsMinClaim={supportsMinClaim}
+                  />
                 </Stack>
 
                 <Hr />

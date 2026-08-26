@@ -122,7 +122,7 @@ describe(createGetPox5SignerManagerValidationQueryOptions.name, () => {
     await expect(options.queryFn(makeContext())).resolves.toEqual({
       status: 'invalid',
       reason: 'missing-functions',
-      missingFunctions: ['get-pox-addr or get-payout-config', 'claim-staker-rewards', 'fees-bips'],
+      missingFunctions: ['get-payout-config or get-pox-addr', 'claim-staker-rewards', 'fees-bips'],
     });
   });
 

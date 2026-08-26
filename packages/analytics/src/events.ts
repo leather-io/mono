@@ -51,6 +51,8 @@ export interface Events extends HistoricalEvents {
     provider: string;
     amountIncreaseMicroStx: string;
     cyclesToExtend: number;
+    switchedFromProvider?: string;
+    switchedToProvider?: string;
   };
   bitcoin_staking_unstaked: {
     provider: string;

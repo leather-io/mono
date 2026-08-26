@@ -8,6 +8,7 @@ import {
   makeNativeSegwitAddressPubkey,
   makeNativeSegwitAddressPubkeyHex,
 } from '../mocks/key-mocks';
+import { bondCovenantAccountKeys, bondCovenantLeaf } from './bond-covenant-keys';
 import {
   getBondVaultKeys,
   instantiateBondDescriptor,
@@ -165,5 +166,44 @@ describe(resolveProposalSigningDescriptor.name, () => {
     tx.addOutput({ script: recipientScript, amount: 45_000n });
     const psbtHex = bytesToHex(tx.toPSBT());
     expect(() => resolveProposalSigningDescriptor(policyDescriptor, psbtHex)).toThrow(/no inputs/);
+  });
+});
+
+describe('bond proposals with a known covenant account key', () => {
+  // a descriptor cannot mix mainnet and testnet keys, and the co-signer is a tpub
+  const covenantAccountKey = bondCovenantAccountKeys[0];
+  const knownCovenantDescriptor = instantiateBondDescriptor({
+    unlockHeight,
+    hash,
+    counterpartyKey: `${covenantAccountKey}/${bondCovenantLeaf}`,
+    ...getBondVaultKeys(stagingPolicyDescriptor),
+  });
+
+  it('resolves the co-signer as an extended key so a Ledger can register the policy', () => {
+    const input = descriptorInputFixture(knownCovenantDescriptor);
+    const psbtHex = buildPsbtHex([input, input]);
+    const resolved = resolveProposalSigningDescriptor(stagingPolicyDescriptor, psbtHex);
+    expect(resolved).toBe(knownCovenantDescriptor);
+    expect(resolved).toContain(covenantAccountKey);
+  });
+
+  it('compiles to the very script the proposal spends', () => {
+    const input = descriptorInputFixture(knownCovenantDescriptor);
+    const psbtHex = buildPsbtHex([input]);
+    const resolved = resolveProposalSigningDescriptor(stagingPolicyDescriptor, psbtHex);
+    expect(bytesToHex(compileWshDescriptor(resolved).scriptPubKey)).toBe(bytesToHex(input.script));
+  });
+
+  it('still falls back to the raw pubkey for an unknown co-signer', () => {
+    const input = descriptorInputFixture(bondDescriptor);
+    const psbtHex = buildPsbtHex([input]);
+    expect(resolveProposalSigningDescriptor(policyDescriptor, psbtHex)).toBe(
+      reconstructBondDescriptor({
+        unlockHeight,
+        hash,
+        covenantPubkey,
+        ...getBondVaultKeys(policyDescriptor),
+      })
+    );
   });
 });

@@ -23,6 +23,7 @@ import type { PendingPox5Tx } from '~/features/bitcoin-staking/queries/get-pendi
 import type { Pox5PayoutPreference } from '~/features/bitcoin-staking/transactions/pox5-signer-calldata';
 import type { Pox5TxOutcome } from '~/features/bitcoin-staking/transactions/pox5-tx-status';
 import { parseContractId } from '~/features/bitcoin-staking/utils/contract-id';
+import type { Pox5PoolFee } from '~/features/bitcoin-staking/utils/pool-fee';
 import { getPox5ContractId } from '~/features/bitcoin-staking/utils/pox5-contracts';
 import { createMockGetAddressesResponse } from '~/mocks/extension/get-addresses/get-addresses.mock';
 import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
@@ -178,6 +179,7 @@ export const claimableCycles = [currentCycleId - 3, currentCycleId - 2, currentC
 export const mockBtcPayoutPreference: Pox5PayoutPreference = {
   btcRewardAddress: 'bc1qyf4a3taahvv2sfs0zz0mtq2lxdsthmf3wcjjxq',
   maxFeeSats: 2_500n,
+  minClaimSats: 5_000n,
 };
 
 const mockTxId = '0x9f3b1d2c4e5a6b7c8d9e0f1a2b3c4d5e6f70819a2b3c4d5e6f708192a3b4c5d6';
@@ -191,10 +193,10 @@ export const mockTrackedTx: Pox5TrackedTx = {
   startedAt: Date.now(),
 };
 
-const mockFeeBipsByProvider: Record<string, number> = {
-  fastPool: 500,
-  xversePool: 700,
-  special: 300,
+const mockFeeByProvider: Record<string, Pox5PoolFee> = {
+  fastPool: { activeFeeBips: 0, pendingFeeBips: 450, pendingActivationCycle: 142 },
+  xversePool: { activeFeeBips: 700, pendingFeeBips: null, pendingActivationCycle: null },
+  special: { activeFeeBips: 300, pendingFeeBips: null, pendingActivationCycle: null },
 };
 
 const mockTotalStakedByProvider: Record<string, bigint> = {
@@ -223,14 +225,14 @@ function seedPoolFees(queryClient: QueryClient) {
       pool.providerId,
       pox5NetworkConfig.contractNetworkMode
     );
-    const bips = mockFeeBipsByProvider[pool.providerId];
-    if (!contractId || bips === undefined) return;
+    const fee = mockFeeByProvider[pool.providerId];
+    if (!contractId || fee === undefined) return;
     queryClient.setQueryData(
       createGetPox5PoolFeeQueryOptions({
         signerManagerContractId: contractId,
         apiUrl: pox5NetworkConfig.apiUrl,
       }).queryKey,
-      bips
+      fee
     );
   });
 
@@ -240,7 +242,7 @@ function seedPoolFees(queryClient: QueryClient) {
         signerManagerContractId: contractId,
         apiUrl: pox5NetworkConfig.apiUrl,
       }).queryKey,
-      450
+      { activeFeeBips: 450, pendingFeeBips: null, pendingActivationCycle: null }
     );
   });
 }
@@ -330,6 +332,16 @@ export function createSeededQueryClient(seed: StakingSurfaceSeed = {}) {
     pendingTx
   );
 
+  queryClient.setQueryData(
+    createGetPox5PayoutPreferenceQueryOptions({
+      address: mockStacksAddress,
+      signerManagerContractId: listedSignerManagerContractId,
+      networkName: pox5NetworkConfig.stacksNetworkName,
+      client: mockStacksClient,
+    }).queryKey,
+    { preference: null, supportsMinClaim: true }
+  );
+
   if (stakerInfo) {
     queryClient.setQueryData(
       createGetPox5PayoutPreferenceQueryOptions({
@@ -338,7 +350,7 @@ export function createSeededQueryClient(seed: StakingSurfaceSeed = {}) {
         networkName: pox5NetworkConfig.stacksNetworkName,
         client: mockStacksClient,
       }).queryKey,
-      payoutPreference
+      { preference: payoutPreference, supportsMinClaim: true }
     );
 
     earnedRewards.forEach(rewards => {
