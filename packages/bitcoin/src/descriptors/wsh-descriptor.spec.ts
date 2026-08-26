@@ -4,6 +4,7 @@ import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
+import { Psbt } from 'bitcoinjs-lib';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -685,6 +686,16 @@ function buildPolicyTx(descriptor: string, options: BuildPolicyTxOptions) {
   return tx;
 }
 
+function rewriteFirstPartialSig(
+  psbtBytes: Uint8Array,
+  rewrite: (signature: Uint8Array) => Uint8Array
+) {
+  const psbt = Psbt.fromBuffer(Buffer.from(psbtBytes));
+  const partialSig = psbt.data.inputs[0].partialSig![0];
+  partialSig.signature = rewrite(partialSig.signature);
+  return psbt.toBuffer();
+}
+
 describe('finalizeWshDescriptorPsbt', () => {
   const singleSig = `wsh(pk(${xpubA}/0/0))`;
   const multiSig = `wsh(multi(2,${xpubB}/0/0,${xpubA}/0/0))`;
@@ -730,6 +741,42 @@ describe('finalizeWshDescriptorPsbt', () => {
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
     ).not.toBeNull();
+  });
+
+  it('returns null when a merged co-signer signature is corrupted', () => {
+    const psbt = rewriteFirstPartialSig(
+      buildPolicyTx(multiSig, { signWith: [1, 2] }).toPSBT(),
+      signature => {
+        const corrupted = Uint8Array.from(signature);
+        const sValueLastByte = corrupted.length - 2;
+        corrupted[sValueLastByte] = corrupted[sValueLastByte] ^ 0xff;
+        return corrupted;
+      }
+    );
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
+    ).toBeNull();
+  });
+
+  it('returns null when a merged co-signer signature declares a sighash it was not made for', () => {
+    const psbt = rewriteFirstPartialSig(
+      buildPolicyTx(multiSig, { signWith: [1, 2] }).toPSBT(),
+      signature => {
+        const relabelled = Uint8Array.from(signature);
+        relabelled[relabelled.length - 1] = btc.SigHash.NONE;
+        return relabelled;
+      }
+    );
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
+    ).toBeNull();
+  });
+
+  it('returns null when the timelock branch is planned but the tx locktime does not meet it', () => {
+    const psbt = buildPolicyTx(timelock, { signWith: [1] }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
+    ).toBeNull();
   });
 
   it('finalizes a 2-of-3 sortedmulti once any two signatures are present', () => {
@@ -852,6 +899,27 @@ describe('finalizeWshDescriptorPsbt', () => {
       finalizeWshDescriptorPsbt({
         signedPsbt,
         preimagePsbt: preimageTx.toPSBT(),
+        descriptor: singleSig,
+      })
+    ).toBeNull();
+  });
+
+  it('returns null when the signed psbt input at the matched index is not locked by the descriptor', () => {
+    const accountKey = deriveAddressIndexKey(1);
+    const signedTx = new btc.Transaction();
+    signedTx.addInput({
+      txid: hexToBytes('00'.repeat(32)),
+      index: 0,
+      witnessUtxo: { script: btc.p2wpkh(accountKey.publicKey!).script, amount: 20_000n },
+    });
+    signedTx.addOutput({ script: btc.p2wpkh(pubkeyA).script, amount: 18_000n });
+    signedTx.signIdx(accountKey.privateKey!, 0);
+
+    const preimagePsbt = buildPolicyTx(singleSig, { signWith: [] }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({
+        signedPsbt: signedTx.toPSBT(),
+        preimagePsbt,
         descriptor: singleSig,
       })
     ).toBeNull();

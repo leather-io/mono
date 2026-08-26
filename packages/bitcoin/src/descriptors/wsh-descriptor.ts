@@ -4,6 +4,7 @@ import {
   type OutputInstance,
   parseKeyExpression,
 } from '@bitcoinerlab/descriptors';
+import ecc from '@bitcoinerlab/secp256k1';
 import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
@@ -376,6 +377,14 @@ function witnessStackToScriptWitness(stack: Uint8Array[]): Uint8Array {
   return Buffer.concat(parts);
 }
 
+function validateDescriptorSignature(
+  pubkey: Uint8Array,
+  msghash: Uint8Array,
+  signature: Uint8Array
+) {
+  return ecc.verify(msghash, pubkey, signature);
+}
+
 export interface FinalizeWshDescriptorPsbtArgs {
   signedPsbt: Uint8Array;
   preimagePsbt: Uint8Array;
@@ -413,6 +422,9 @@ export function finalizeWshDescriptorPsbt({
       const input = psbt.data.inputs[index];
       if (!input) return null;
 
+      const utxoScript = input.witnessUtxo?.script;
+      if (!utxoScript || bytesToHex(utxoScript) !== bytesToHex(scriptPubKey)) return null;
+
       const signersPubKeys = input.partialSig?.map(sig => sig.pubkey);
       const instance = makeWshDescriptorInstance(descriptor, 0, {
         preimages,
@@ -421,6 +433,16 @@ export function finalizeWshDescriptorPsbt({
 
       const witnessScript = instance.getWitnessScript();
       if (!witnessScript) return null;
+
+      input.witnessScript = witnessScript;
+      if (!psbt.validateSignaturesOfInput(index, validateDescriptorSignature)) return null;
+
+      const requiredLockTime = instance.getLockTime();
+      if (requiredLockTime !== undefined && psbt.locktime !== requiredLockTime) return null;
+
+      const requiredSequence = instance.getSequence();
+      if (requiredSequence !== undefined && psbt.txInputs[index]?.sequence !== requiredSequence)
+        return null;
 
       // bitcoinerlab v3 removed Output.finalizePsbtInput, so finalize here: the
       // satisfier plans the miniscript solution from the signatures present on
@@ -436,7 +458,6 @@ export function finalizeWshDescriptorPsbt({
       });
       if (!witness) return null;
 
-      input.witnessScript = witnessScript;
       psbt.finalizeInput(index, () => ({
         finalScriptSig: undefined,
         finalScriptWitness: witnessStackToScriptWitness(witness),
