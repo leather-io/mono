@@ -6,6 +6,7 @@ import { base64 } from '@scure/base';
 
 import {
   compileWshDescriptor,
+  decodeBitcoinTx,
   findAccountDescriptorKey,
   getPsbtAsTransaction,
 } from '@leather.io/bitcoin';
@@ -25,6 +26,7 @@ import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
 import { useProposeMultisigTransaction } from '@app/features/multisig/use-propose-multisig-transaction';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
+import { useCheckTaprootUtxos } from '@app/query/bitcoin/transaction/use-check-taproot-utxos';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -60,6 +62,7 @@ export function useRpcSendTransferActions() {
   const generateTx = useGenerateUnsignedBitcoinTx({ throwError: true });
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx } = useBitcoinBroadcastTransaction();
+  const { checkIfInputsIncludeTaproot } = useCheckTaprootUtxos();
   const navigate = useNavigate();
   const policy = useCurrentPolicy();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
@@ -140,6 +143,9 @@ export function useRpcSendTransferActions() {
         const resp = generateTx({ amount, recipients }, feeRate, utxos);
         if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
 
+        const shouldHalt = await checkIfInputsIncludeTaproot(decodeBitcoinTx(resp.hex).inputs);
+        if (shouldHalt) return;
+
         const tx = await signTransaction(resp.psbt, resp.signingConfig);
 
         tx.finalize();
@@ -163,6 +169,7 @@ export function useRpcSendTransferActions() {
 
         await broadcastTx({
           tx: tx.hex,
+          skipTaprootWarning: true,
           async onSuccess(txid) {
             setIsBroadcasting(false);
 
@@ -216,6 +223,7 @@ export function useRpcSendTransferActions() {
     utxos,
     signTransaction,
     broadcastTx,
+    checkIfInputsIncludeTaproot,
     tabId,
     requestId,
     policy,

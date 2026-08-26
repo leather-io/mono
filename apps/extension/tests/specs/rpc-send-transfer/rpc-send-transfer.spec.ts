@@ -12,6 +12,7 @@ import {
   getConnectedTestAppPermissionsState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
+import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 
 import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 import { type RpcParams, type sendTransfer } from '@leather.io/rpc';
@@ -42,12 +43,14 @@ function clickActionButton(context: BrowserContext) {
   };
 }
 
-async function approveAndAcceptTaprootWarning(context: BrowserContext) {
-  const popup = await context.waitForEvent('page');
-  await popup.waitForTimeout(1000);
-  await popup.locator('text="Approve"').click();
-  const continueBtn = popup.locator('text="I understand, continue"');
-  await continueBtn.click({ timeout: 10000 });
+function approveAndAcceptTaprootWarning(context: BrowserContext) {
+  return async (buttonToPress: 'Approve' | 'Sign transaction') => {
+    const popup = await context.waitForEvent('page');
+    await popup.waitForTimeout(1000);
+    await popup.locator(`text="${buttonToPress}"`).click();
+    const continueBtn = popup.locator('text="I understand, continue"');
+    await continueBtn.click({ timeout: 10000 });
+  };
 }
 
 async function mockPopupRequests(context: BrowserContext) {
@@ -91,7 +94,7 @@ test.describe('RPC: sendTransfer', () => {
 
     const [result] = await Promise.all([
       openSendTransfer(page)(baseParams),
-      approveAndAcceptTaprootWarning(context),
+      approveAndAcceptTaprootWarning(context)('Approve'),
     ]);
 
     delete result.id;
@@ -114,7 +117,7 @@ test.describe('RPC: sendTransfer', () => {
 
     const [result] = await Promise.all([
       openSendTransfer(page)({ ...baseParams, broadcast: false }),
-      clickActionButton(context)('Sign transaction'),
+      approveAndAcceptTaprootWarning(context)('Sign transaction'),
     ]);
 
     delete result.id;
@@ -122,6 +125,38 @@ test.describe('RPC: sendTransfer', () => {
     test.expect(result).toEqual({
       jsonrpc: '2.0',
       result: { transaction: test.expect.stringMatching(/^[0-9a-f]+$/) },
+    });
+    test.expect(broadcastCalls).toHaveLength(0);
+  });
+
+  test('that the taproot warning gates signing when broadcast is false', async ({
+    page,
+    context,
+  }) => {
+    const broadcastCalls: string[] = [];
+    void mockPopupRequestsRecordingBroadcast(context, broadcastCalls);
+
+    const resultPromise = openSendTransfer(page)({ ...baseParams, broadcast: false });
+    const popup = await context.waitForEvent('page');
+    await popup.waitForTimeout(1000);
+    await popup.locator('text="Sign transaction"').click();
+
+    const warningDialog = popup.getByTestId(SendCryptoAssetSelectors.TaprootUtxoWarningDialog);
+    await test.expect(warningDialog).toBeVisible({ timeout: 10000 });
+    await popup.getByRole('dialog').getByRole('button', { name: 'Cancel' }).click();
+    await test.expect(warningDialog).toHaveCount(0);
+
+    await popup.close();
+    const result = await resultPromise;
+
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      error: {
+        code: 4001,
+        message: 'User rejected request',
+      },
     });
     test.expect(broadcastCalls).toHaveLength(0);
   });
