@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { type StacksTransactionWire } from '@stacks/transactions';
 
 import { type RpcMethodNames, createRpcSuccessResponse } from '@leather.io/rpc';
+import { getErrorDetail } from '@leather.io/services';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 import { delay, isString } from '@leather.io/utils';
 
@@ -92,7 +93,7 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
         // signing route when this rejects, so a relative navigation would
         // resolve against the wrong parent.
         return navigate(`${pathname}/${RouteUrls.BroadcastError}`, {
-          state: { message: getErrorMessage(error) },
+          state: { message: getErrorDetail(error) ?? getErrorMessage(error), proposeMode: true },
         });
       }
     },

@@ -492,6 +492,41 @@
   * dependencies
     * @leather.io/utils bumped to 0.46.4
 
+## [1.13.6](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.5...@leather.io/crypto-v1.13.6) (2026-08-18)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.1
+    * @leather.io/utils bumped to 0.52.6
+
+## [1.13.5](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.4...@leather.io/crypto-v1.13.5) (2026-08-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.0
+    * @leather.io/utils bumped to 0.52.5
+
+## [1.13.4](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.3...@leather.io/crypto-v1.13.4) (2026-08-05)
+
+
+### Bug Fixes
+
+* add ledger derivation paths ([#2592](https://github.com/leather-io/mono/issues/2592)) ([94806ea](https://github.com/leather-io/mono/commit/94806eaffddabc4a2e1d6c29fa405979e8170c95))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.38.0
+    * @leather.io/utils bumped to 0.52.4
+
 ## [1.13.3](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.2...@leather.io/crypto-v1.13.3) (2026-07-23)
 
 

@@ -21,12 +21,8 @@ export type ByosmSignerManagerState =
     }
   | { status: 'valid'; contractId: string };
 
-export function useByosmSignerManager(): ByosmSignerManagerState {
-  const [searchParams] = useSearchParams();
-  const parsed = parseByosmContractInput(
-    searchParams.get(byosmContractParam),
-    pox5NetworkConfig.contractNetworkMode
-  );
+export function useSignerManagerContractInput(rawInput: string | null): ByosmSignerManagerState {
+  const parsed = parseByosmContractInput(rawInput, pox5NetworkConfig.contractNetworkMode);
 
   const listedPool = parsed.ok ? getPoolBySignerManager(parsed.contractId) : undefined;
   const validationQuery = usePox5SignerManagerValidationQuery(
@@ -56,4 +52,9 @@ export function useByosmSignerManager(): ByosmSignerManagerState {
     return { status: 'invalid', contractId: parsed.contractId, validation };
   }
   return { status: 'valid', contractId: parsed.contractId };
+}
+
+export function useByosmSignerManager(): ByosmSignerManagerState {
+  const [searchParams] = useSearchParams();
+  return useSignerManagerContractInput(searchParams.get(byosmContractParam));
 }

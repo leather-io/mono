@@ -8,11 +8,13 @@ import {
 import StacksApp, { LedgerError } from '@zondax/ledger-stacks';
 
 import {
+  MINIMUM_STACKS_APP_VERSION,
   isStxAddressResponseRejected,
   isStxAddressResponseSuccess,
   showStxAddressOnDevice,
   signStacksTransactionWithSignature,
   stacksChainIdToSingleSigAddressVersion,
+  validateStacksAppVersion,
 } from './stacks-ledger-utils';
 
 const recipient = 'SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB';
@@ -129,11 +131,48 @@ describe(showStxAddressOnDevice.name, () => {
       Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
     );
 
-    await showStxAddressOnDevice(app)(3, AddressVersion.MainnetSingleSig);
+    await showStxAddressOnDevice(app)("m/44'/5757'/0'/0/3", AddressVersion.MainnetSingleSig);
 
     expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
       "m/44'/5757'/0'/0/3",
       AddressVersion.MainnetSingleSig
     );
+  });
+
+  test('shows a ledger live derivation path unchanged', async () => {
+    const app: StacksApp = Object.create(StacksApp.prototype);
+    app.showAddressAndPubKey = vi.fn(() =>
+      Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
+    );
+
+    await showStxAddressOnDevice(app)("m/44'/5757'/3'/0/0", AddressVersion.MainnetSingleSig);
+
+    expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
+      "m/44'/5757'/3'/0/0",
+      AddressVersion.MainnetSingleSig
+    );
+  });
+});
+
+describe(validateStacksAppVersion.name, () => {
+  test('rejects versions below the minimum', () => {
+    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 16 })).toEqual({
+      meetsMinimum: false,
+      currentVersion: '0.26.16',
+    });
+    expect(validateStacksAppVersion({ major: 0, minor: 25, patch: 99 }).meetsMinimum).toBe(false);
+  });
+
+  test('accepts the exact minimum version', () => {
+    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 17 })).toEqual({
+      meetsMinimum: true,
+      currentVersion: MINIMUM_STACKS_APP_VERSION,
+    });
+  });
+
+  test('accepts versions above the minimum', () => {
+    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 18 }).meetsMinimum).toBe(true);
+    expect(validateStacksAppVersion({ major: 0, minor: 27, patch: 0 }).meetsMinimum).toBe(true);
+    expect(validateStacksAppVersion({ major: 1, minor: 0, patch: 0 }).meetsMinimum).toBe(true);
   });
 });

@@ -19,6 +19,7 @@ import {
 export interface Pox5PayoutPreference {
   btcRewardAddress: string;
   maxFeeSats: bigint;
+  minClaimSats?: bigint;
 }
 
 const maxSignerCalldataBytes = 500;
@@ -28,6 +29,9 @@ export function encodeSignerCalldata(preference: Pox5PayoutPreference | undefine
   const calldataTuple = tupleCV({
     'pox-addr': poxAddressToTuple(preference.btcRewardAddress),
     'max-fee': uintCV(preference.maxFeeSats),
+    ...(preference.minClaimSats !== undefined
+      ? { 'min-claim': uintCV(preference.minClaimSats) }
+      : {}),
   });
   const bytes = serializeCVBytes(calldataTuple);
   if (bytes.byteLength > maxSignerCalldataBytes) {
@@ -52,10 +56,14 @@ export function decodePayoutPreference(
 
   const poxAddr = calldata.value['pox-addr'];
   const maxFee = calldata.value['max-fee'];
+  const minClaim = calldata.value['min-claim'];
   if (!poxAddr || !maxFee || maxFee.type !== ClarityType.UInt) return null;
 
   return {
     btcRewardAddress: poxAddressToBtcAddress(poxAddr, network),
     maxFeeSats: BigInt(maxFee.value),
+    ...(minClaim && minClaim.type === ClarityType.UInt
+      ? { minClaimSats: BigInt(minClaim.value) }
+      : {}),
   };
 }

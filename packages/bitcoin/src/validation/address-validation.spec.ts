@@ -10,6 +10,7 @@ import {
 } from '../mocks/mocks';
 import {
   getBitcoinAddressNetworkType,
+  getBitcoinAddressType,
   isValidBitcoinAddress,
   isValidBitcoinNetworkAddress,
 } from './address-validation';
@@ -392,5 +393,25 @@ describe('bitcoin-address-validation address tests', () => {
 
       expect(isValidBitcoinNetworkAddress(address, Network.mainnet)).toBe(false);
     });
+  });
+});
+
+describe('getBitcoinAddressType', () => {
+  it('classifies addresses of every supported type', () => {
+    expect(getBitcoinAddressType('1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2')).toBe('p2pkh');
+    expect(getBitcoinAddressType('3P14159f73E4gFr7JterCCQh9QjiTjiZrG')).toBe('p2sh');
+    expect(getBitcoinAddressType('2N3wh1eYqMeqoLxuKFv8PBsYR4f8gYn8dHm')).toBe('p2sh');
+    expect(getBitcoinAddressType(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS)).toBe('p2wpkh');
+    expect(getBitcoinAddressType(TEST_ACCOUNT_1_TAPROOT_ADDRESS)).toBe('p2tr');
+    expect(
+      getBitcoinAddressType('bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3')
+    ).toBe('p2wsh');
+  });
+
+  it('returns undefined for invalid input', () => {
+    expect(getBitcoinAddressType('')).toBeUndefined();
+    expect(getBitcoinAddressType('nope')).toBeUndefined();
+    expect(getBitcoinAddressType(inValidCharactersAddress)).toBeUndefined();
+    expect(getBitcoinAddressType(inValidLengthAddress)).toBeUndefined();
   });
 });

@@ -10,6 +10,7 @@ on:
     paths:
       - 'apps/web/**'
       - 'packages/**'
+  workflow_dispatch:
 
 env:
   DO_NOT_TRACK: 1
@@ -37,6 +38,12 @@ jobs:
         env:
           LEATHER_FRONT_WEB_APP_API_TOKEN: ${{ secrets.FRONT_WEB_APP_API_TOKEN }}
           LEATHER_TARGET: staging
+          PRIVATE_NETWORK_FLAVOR: regtest
+          PRIVATE_NETWORK_NAME: BTC Staking Testnet
+          PRIVATE_NETWORK_KEY: private-1
+          BITCOIN_API_URL: https://mempool.bitcoin.private-1.hiro.so/api
+          STACKS_API_URL: https://api.private-1.hiro.so
+          STACKS_CHAIN_ID: '256'
         run: pnpm run build
 
       - name: upload-staging-version

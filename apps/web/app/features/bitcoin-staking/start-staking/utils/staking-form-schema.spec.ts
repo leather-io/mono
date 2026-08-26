@@ -4,11 +4,16 @@ import { createStakingFormSchema } from './staking-form-schema';
 
 const hundredStxMicro = 100_000_000;
 
-function makeSchema(overrides?: { supportsBtcPayout?: boolean; availableMicroStx?: number }) {
+function makeSchema(overrides?: {
+  supportsBtcPayout?: boolean;
+  supportsMinClaim?: boolean;
+  availableMicroStx?: number;
+}) {
   return createStakingFormSchema({
     networkMode: 'mainnet',
     availableBalance: createMoney(overrides?.availableMicroStx ?? hundredStxMicro, 'STX'),
     supportsBtcPayout: overrides?.supportsBtcPayout ?? false,
+    supportsMinClaim: overrides?.supportsMinClaim ?? false,
   });
 }
 
@@ -105,6 +110,60 @@ describe(createStakingFormSchema.name, () => {
       maxFeeSats: '2500',
     });
     expect(valid.success).toBe(true);
+  });
+
+  test('rejects a max fee below 1,000 sats', () => {
+    const schema = makeSchema({ supportsBtcPayout: true });
+    const belowFloor = schema.safeParse({
+      ...validValues,
+      payoutEnabled: true,
+      rewardAddress: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
+      maxFeeSats: '999',
+    });
+    expect(belowFloor.success).toBe(false);
+
+    const atFloor = schema.safeParse({
+      ...validValues,
+      payoutEnabled: true,
+      rewardAddress: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
+      maxFeeSats: '1000',
+    });
+    expect(atFloor.success).toBe(true);
+  });
+
+  test('validates the min claim only when the pool supports it', () => {
+    const withMinClaim = makeSchema({ supportsBtcPayout: true, supportsMinClaim: true });
+    const withoutMinClaim = makeSchema({ supportsBtcPayout: true, supportsMinClaim: false });
+    const payoutValues = {
+      ...validValues,
+      payoutEnabled: true,
+      rewardAddress: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
+      maxFeeSats: '2500',
+    };
+
+    expect(withMinClaim.safeParse(payoutValues).success).toBe(true);
+    expect(withMinClaim.safeParse({ ...payoutValues, minClaimSats: 'abc' }).success).toBe(false);
+    expect(withMinClaim.safeParse({ ...payoutValues, minClaimSats: '3046' }).success).toBe(false);
+    expect(withMinClaim.safeParse({ ...payoutValues, minClaimSats: '3047' }).success).toBe(true);
+    expect(withoutMinClaim.safeParse({ ...payoutValues, minClaimSats: 'abc' }).success).toBe(true);
+  });
+
+  test('reports payout issues even while the amount is still missing', () => {
+    const schema = makeSchema({ supportsBtcPayout: true, supportsMinClaim: true });
+    const result = schema.safeParse({
+      cycles: '12',
+      payoutEnabled: true,
+      rewardAddress: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
+      maxFeeSats: '999',
+      minClaimSats: '100',
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const paths = result.error.issues.map(issue => issue.path[0]);
+      expect(paths).toContain('amount');
+      expect(paths).toContain('maxFeeSats');
+      expect(paths).toContain('minClaimSats');
+    }
   });
 
   test('rejects a testnet address on mainnet', () => {

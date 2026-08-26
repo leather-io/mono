@@ -1464,6 +1464,82 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/compliance/addresses/{address}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Screen an address against the OFAC sanctions list and a risk screening provider */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          address: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              address: string;
+              /** @enum {string} */
+              status: 'compliant' | 'non_compliant' | 'unavailable';
+              checks: {
+                /** @enum {string} */
+                type: 'ofac' | 'risk_screening';
+                /** @enum {string} */
+                result: 'pass' | 'fail' | 'error';
+                provider?: string;
+                /** @enum {string} */
+                errorReason?: 'rate_limited' | 'upstream_error' | 'unexpected_response_shape';
+                providerContext?: {
+                  [key: string]: unknown;
+                };
+              }[];
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/utxos/{descriptor}': {
     parameters: {
       query?: never;

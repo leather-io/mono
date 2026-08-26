@@ -15,10 +15,16 @@ import { ConnectLedgerRequestKeys } from './steps/connect-ledger-request-keys';
 interface LedgerRequestKeysRoutesProps {
   path: string;
   component: React.ReactNode;
+  customRoutes?: React.ReactNode;
 }
-export function ledgerRequestKeysRoutes({ path, component }: LedgerRequestKeysRoutesProps) {
+export function ledgerRequestKeysRoutes({
+  path,
+  component,
+  customRoutes,
+}: LedgerRequestKeysRoutesProps) {
   return (
     <Route path={path} element={component}>
+      {customRoutes}
       <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerRequestKeys />} />
       <Route path={RouteUrls.LedgerCheckingAppVersion} element={<CheckingAppVersion />} />
       <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />

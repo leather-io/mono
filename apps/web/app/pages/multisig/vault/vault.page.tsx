@@ -25,6 +25,7 @@ import { useToast } from '~/features/toasts/use-toast';
 
 import { VAULT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { AuthNetworkId, Vault } from '@leather.io/models';
+import { getErrorDetail } from '@leather.io/services';
 import { Button, Callout } from '@leather.io/ui';
 
 import { Badge } from '../components/badge';
@@ -42,19 +43,19 @@ import { VaultBalanceHero } from './components/vault-balance-hero';
 import { VaultStatusCard } from './components/vault-status-card';
 import { VaultTransactions } from './components/vault-transactions';
 
-function accountCreationBlockedReason(vault: Vault, atAccountLimit: boolean): string {
+function accountCreationBlockedReason(vault: Vault, atAccountLimit: boolean): string | undefined {
   if (vault.status === 'cancelled') return 'This vault has been cancelled.';
   if (vault.members.some(member => member.membershipStatus === 'declined')) {
     return "A member declined, so this vault can't add accounts. The creator can cancel and start over.";
   }
-  if (atAccountLimit) return 'This vault has reached its account limit.';
+  if (atAccountLimit) return undefined;
   return 'All members must accept their invitation before accounts can be created.';
 }
 
 export function VaultDetailPage() {
   const { vaultId } = useParams();
   const navigate = useNavigate();
-  const { success: showToast } = useToast();
+  const { success: showToast, error: showErrorToast } = useToast();
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [isSharingInvites, setIsSharingInvites] = useState(false);
   const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
@@ -121,11 +122,14 @@ export function VaultDetailPage() {
   const allMembersJoined = vault.members.every(member => member.membershipStatus === 'joined');
   const pendingCount = vault.members.filter(member => member.membershipStatus === 'invited').length;
   const accountList = accounts.data;
-  const accountLimit = accountLimitForThreshold(vault.network, vault.members.length);
+  const joinedMemberCount = vault.members.filter(
+    member => member.membershipStatus === 'joined'
+  ).length;
+  const accountLimit = accountLimitForThreshold(vault.network, joinedMemberCount);
   const atAccountLimit =
     allMembersJoined &&
     accountList !== undefined &&
-    Array.from({ length: vault.members.length }, (_unused, index) => index + 1).every(value =>
+    Array.from({ length: joinedMemberCount }, (_unused, index) => index + 1).every(value =>
       isThresholdAtAccountLimit(accountList, value, accountLimit)
     );
   const canCreateAccount = vault.status !== 'cancelled' && allMembersJoined && !atAccountLimit;
@@ -137,6 +141,9 @@ export function VaultDetailPage() {
         showToast(`“${vault.name}” cancelled`);
         void navigate(multisigPaths.index);
       },
+      onError(err) {
+        showErrorToast(getErrorDetail(err) ?? 'Unknown error');
+      },
     });
   }
 
@@ -145,7 +152,12 @@ export function VaultDetailPage() {
       title={
         <EditableName
           value={vault.name}
-          onSave={name => updateVault.mutate({ vaultId: vault.id, update: { name } })}
+          onSave={name =>
+            updateVault.mutate(
+              { vaultId: vault.id, update: { name } },
+              { onError: err => showErrorToast(getErrorDetail(err) ?? 'Unknown error') }
+            )
+          }
           title="Rename vault"
           label="vault name"
           canEdit={isCreator && vault.status !== 'cancelled'}
@@ -192,7 +204,19 @@ export function VaultDetailPage() {
             crypto={accountsBalance.crypto}
             fiat={accountsBalance.fiat}
           />
-          <SectionLabel>Vault accounts</SectionLabel>
+          <SectionLabel
+            accessory={
+              allMembersJoined && accountList !== undefined ? (
+                <Badge
+                  size="sm"
+                  variant={atAccountLimit ? 'warning' : 'default'}
+                  label={`${accountList.length} of ${accountLimit * joinedMemberCount} accounts`}
+                />
+              ) : undefined
+            }
+          >
+            Vault accounts
+          </SectionLabel>
           <AccountsSection
             vault={vault}
             accounts={accounts.data}
@@ -220,7 +244,10 @@ export function VaultDetailPage() {
             currentUserIsCreator={isCreator}
             onShareInvite={() => setIsSharingInvites(true)}
             onRenameMember={(membershipId, name) =>
-              updateMember.mutate({ membershipId, update: { name } })
+              updateMember.mutate(
+                { membershipId, update: { name } },
+                { onError: err => showErrorToast(getErrorDetail(err) ?? 'Unknown error') }
+              )
             }
           />
         </Box>

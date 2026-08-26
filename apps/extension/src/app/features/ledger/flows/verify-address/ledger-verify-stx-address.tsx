@@ -21,6 +21,7 @@ import {
   showStxAddressOnDevice,
   stacksChainIdToSingleSigAddressVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -40,6 +41,7 @@ function LedgerVerifyStxAddress() {
       connectApp: connectLedgerStacksApp,
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
+      passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       onSuccess() {
         toast.success('Address verified on your Ledger');
         void navigate(RouteUrls.Home, { replace: true });
@@ -55,7 +57,7 @@ function LedgerVerifyStxAddress() {
           expectedAddress
         );
         const response = await showStxAddressOnDevice(app)(
-          stacksAccount.index,
+          stacksAccount.derivationPath,
           stacksChainIdToSingleSigAddressVersion(network.chain.stacks.chainId)
         );
         if (isStxAddressResponseRejected(response)) {
@@ -98,7 +100,6 @@ function LedgerVerifyStxAddress() {
     pullPublicKeysFromDevice: requestKeys,
     latestDeviceResponse,
     awaitingDeviceConnection,
-    outdatedAppVersionWarning: false,
   };
 
   const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);

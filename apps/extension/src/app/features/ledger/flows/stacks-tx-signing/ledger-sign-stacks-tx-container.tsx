@@ -15,14 +15,13 @@ import { appEvents } from '@app/common/publish-subscribe';
 import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
-  MINIMUM_STACKS_APP_VERSION,
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
   signLedgerStacksTransaction,
   signStacksTransactionWithSignature,
-  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 import { ledgerSignTxRoutes } from '../../generic-flows/tx-signing/ledger-sign-tx-route-generator';
@@ -64,21 +63,7 @@ function LedgerSignStacksTxContainer() {
       isAppOpen: isStacksAppOpen,
       getAppVersion: getStacksAppVersion,
       connectApp: connectLedgerStacksApp,
-      async passesAdditionalVersionCheck(appVersion) {
-        if (appVersion.chain !== 'stacks') return true;
-
-        const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
-        if (!meetsMinimum) {
-          void ledgerNavigate.toStacksAppOutdatedWarning({
-            currentVersion,
-            requiredVersion: MINIMUM_STACKS_APP_VERSION,
-          });
-          await delay(400);
-          return false;
-        }
-
-        return true;
-      },
+      passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       async signTransactionWithDevice(stacksApp) {
         if (!account) {
           const errorMessage = 'No active account found for transaction signing';
@@ -97,7 +82,7 @@ function LedgerSignStacksTxContainer() {
 
         const resp = await signLedgerStacksTransaction(stacksApp)(
           Buffer.from(unsignedTx, 'hex'),
-          account.accountIndex
+          account.derivationPath
         );
 
         if (resp.returnCode === LedgerError.DataIsInvalid) {
@@ -151,6 +136,7 @@ function LedgerSignStacksTxContainer() {
     chain,
     transaction: unsignedTx ? deserializeTransaction(unsignedTx) : null,
     signTransaction,
+    onCancelTxSigning: closeAction,
     latestDeviceResponse,
     awaitingDeviceConnection,
   };

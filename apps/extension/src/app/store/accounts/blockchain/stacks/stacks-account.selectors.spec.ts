@@ -1,10 +1,12 @@
 import { STANDARD_BIP_FAKE_MNEMONIC } from '@tests/mocks/constants';
 
-import { createDescriptor } from '@leather.io/crypto';
+import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
 import { defaultCurrentNetwork } from '@leather.io/models';
-import { makeStxKeyOrigin } from '@leather.io/stacks';
+import { makeStxDerivationPathForType } from '@leather.io/stacks';
 import { resetWallet } from '@leather.io/state';
 import type { StacksKeychain } from '@leather.io/state/keychains';
+
+import { assumedZeroFingerprint } from '@shared/utils';
 
 import { store } from '@app/store';
 import { stxChainSlice } from '@app/store/chains/stx-chain.slice';
@@ -17,11 +19,26 @@ import { selectStacksAccountById, selectStacksAccountState } from './stacks-acco
 const stxPublicKey = '02b6b0afe5f620bc8e532b640b148dd9dea0ed19d11f8ab420fcce488fe3974893';
 
 function makeStacksLedgerKeychain(fingerprint: string, accountIndex: number): StacksKeychain {
-  const keyOrigin = makeStxKeyOrigin(fingerprint, accountIndex);
+  return makeStacksLedgerKeychainForPath(
+    fingerprint,
+    makeStxDerivationPathForType('stacks', accountIndex)
+  );
+}
+
+function makeStacksLedgerKeychainForPath(fingerprint: string, path: string): StacksKeychain {
+  const keyOrigin = createKeyOriginPath(fingerprint, path);
   return { chain: 'stacks', descriptor: createDescriptor(keyOrigin, stxPublicKey) };
 }
 
 const selectLedgerAccounts = selectStacksAccountState.dependencies[0];
+const selectDedupedLedgerStacksKeychains = selectLedgerAccounts.dependencies[1];
+
+function getLedgerAccounts(keychains: StacksKeychain[]) {
+  return selectLedgerAccounts.resultFunc(
+    defaultCurrentNetwork,
+    selectDedupedLedgerStacksKeychains.resultFunc(keychains)
+  );
+}
 
 describe('selectLedgerAccounts', () => {
   test('derives accountIndex from the key-origin path across multiple Ledger devices', () => {
@@ -36,7 +53,7 @@ describe('selectLedgerAccounts', () => {
       makeStacksLedgerKeychain(deviceB, 2),
     ];
 
-    const accounts = selectLedgerAccounts.resultFunc(defaultCurrentNetwork, keychains);
+    const accounts = getLedgerAccounts(keychains);
 
     expect(
       accounts.map(account => ({
@@ -62,9 +79,84 @@ describe('selectLedgerAccounts', () => {
       makeStacksLedgerKeychain(fingerprint, 2),
     ];
 
-    const accounts = selectLedgerAccounts.resultFunc(defaultCurrentNetwork, keychains);
+    const accounts = getLedgerAccounts(keychains);
 
     expect(accounts.map(account => account.index)).toEqual([0, 1, 2]);
+  });
+
+  test('excludes a keychain whose fingerprint/accountIndex collides with an earlier keychain', () => {
+    const fingerprint = 'deadbeef';
+    const ledgerLivePath = makeStxDerivationPathForType('ledgerLive', 1);
+    const standardPath = makeStxDerivationPathForType('stacks', 1);
+    const keychains = [
+      makeStacksLedgerKeychainForPath(fingerprint, ledgerLivePath),
+      makeStacksLedgerKeychainForPath(fingerprint, standardPath),
+    ];
+
+    const accounts = getLedgerAccounts(keychains);
+
+    expect(accounts).toHaveLength(1);
+    expect(accounts[0]?.derivationPath).toBe(ledgerLivePath);
+    expect(accounts[0]?.accountIndex).toBe(1);
+  });
+});
+
+const selectStacksAccountLookup = selectStacksAccountById.dependencies[0];
+const selectLedgerStacksAccountLookup = selectStacksAccountLookup.dependencies[1];
+
+function getLedgerAccountLookup(keychains: StacksKeychain[]) {
+  return selectLedgerStacksAccountLookup.resultFunc(
+    selectDedupedLedgerStacksKeychains.resultFunc(keychains)
+  );
+}
+
+describe('selectLedgerStacksAccountLookup', () => {
+  test('keys legacy descriptors under the assumed-zero fingerprint', () => {
+    const lookup = getLedgerAccountLookup([
+      makeStacksLedgerKeychain(assumedZeroFingerprint, 0),
+      makeStacksLedgerKeychain(assumedZeroFingerprint, 1),
+    ]);
+
+    const account = lookup({ fingerprint: assumedZeroFingerprint, accountIndex: 1 }, 'mainnet');
+
+    expect(account?.fingerprint).toBe(assumedZeroFingerprint);
+    expect(account?.derivationPath).toBe(makeStxDerivationPathForType('stacks', 1));
+    expect(lookup({ fingerprint: 'e87a850b', accountIndex: 1 }, 'mainnet')).toBeUndefined();
+  });
+
+  test('keys ledgerLive descriptors by their hardened account-level index', () => {
+    const fingerprint = 'deadbeef';
+    const lookup = getLedgerAccountLookup([
+      makeStacksLedgerKeychainForPath(fingerprint, makeStxDerivationPathForType('ledgerLive', 0)),
+      makeStacksLedgerKeychainForPath(fingerprint, makeStxDerivationPathForType('ledgerLive', 1)),
+    ]);
+
+    const account = lookup({ fingerprint, accountIndex: 1 }, 'mainnet');
+
+    expect(account).toBeDefined();
+    expect(account?.accountIndex).toBe(1);
+    expect(account?.derivationPath).toBe(`m/44'/5757'/1'/0/0`);
+  });
+
+  test('resolved ledgerLive account yields its stored path for device signing', () => {
+    const fingerprint = 'deadbeef';
+    const ledgerLivePath = makeStxDerivationPathForType('ledgerLive', 2);
+    const lookup = getLedgerAccountLookup([
+      makeStacksLedgerKeychainForPath(fingerprint, ledgerLivePath),
+    ]);
+
+    const account = lookup({ fingerprint, accountIndex: 2 }, 'mainnet');
+
+    expect(account).toBeDefined();
+    expect(account?.derivationPath).toBe(ledgerLivePath);
+    expect(account?.derivationPath).not.toBe(makeStxDerivationPathForType('stacks', 2));
+  });
+
+  test('returns undefined for an account index with no stored keychain', () => {
+    const fingerprint = 'deadbeef';
+    const lookup = getLedgerAccountLookup([makeStacksLedgerKeychain(fingerprint, 0)]);
+
+    expect(lookup({ fingerprint, accountIndex: 1 }, 'mainnet')).toBeUndefined();
   });
 });
 
@@ -127,6 +219,7 @@ describe('software account index resolution', () => {
     expect(account).toBeDefined();
     expect(account?.type).toBe('software');
     expect(account?.index).toBe(5);
+    expect(account?.derivationPath).toBe(makeStxDerivationPathForType('stacks', 5));
   });
 
   test('selectStacksAccountById resolves index 0 to the same account as the enumerated state', () => {

@@ -939,6 +939,51 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.39.6](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.39.5...@leather.io/bitcoin-v0.39.6) (2026-08-18)
+
+
+### Bug Fixes
+
+* **extension:** ledger testnet address verification ([#2649](https://github.com/leather-io/mono/issues/2649)) ([f16cc57](https://github.com/leather-io/mono/commit/f16cc5757b7300c58f6ee2c05e56644e5d737a00))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.1
+    * @leather.io/crypto bumped to 1.13.6
+    * @leather.io/models bumped to 0.61.0
+    * @leather.io/utils bumped to 0.52.6
+  * devDependencies
+    * @leather.io/rpc bumped to 2.24.5
+
+## [0.39.5](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.39.4...@leather.io/bitcoin-v0.39.5) (2026-08-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.0
+    * @leather.io/crypto bumped to 1.13.5
+    * @leather.io/utils bumped to 0.52.5
+  * devDependencies
+    * @leather.io/rpc bumped to 2.24.4
+
+## [0.39.4](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.39.3...@leather.io/bitcoin-v0.39.4) (2026-08-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.38.0
+    * @leather.io/crypto bumped to 1.13.4
+    * @leather.io/utils bumped to 0.52.4
+  * devDependencies
+    * @leather.io/rpc bumped to 2.24.3
+
 ## [0.39.3](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.39.2...@leather.io/bitcoin-v0.39.3) (2026-07-23)
 
 

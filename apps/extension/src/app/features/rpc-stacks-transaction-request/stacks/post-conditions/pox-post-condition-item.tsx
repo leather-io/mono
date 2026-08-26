@@ -1,4 +1,8 @@
-import { type PoxPostConditionWire, addressToString } from '@stacks/transactions';
+import {
+  PostConditionPrincipalId,
+  type PoxPostConditionWire,
+  addressToString,
+} from '@stacks/transactions';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { ItemLayout, StxAvatarIcon } from '@leather.io/ui';
@@ -24,7 +28,8 @@ export function PoxPostConditionItem({
 
   const address = 'address' in pc.principal ? addressToString(pc.principal.address) : '';
   const contractName = 'contractName' in pc.principal ? pc.principal.contractName.content : '';
-  const isSending = address === currentAccount?.address;
+  const isOriginPrincipal = pc.principal.prefix === PostConditionPrincipalId.Origin;
+  const isSending = isOriginPrincipal || address === currentAccount?.address;
 
   function getPrincipalPrefix() {
     if (isContractPrincipal) return 'The contract ';

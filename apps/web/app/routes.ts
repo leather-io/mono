@@ -1,4 +1,4 @@
-import { type RouteConfig, index, prefix, route } from '@react-router/dev/routes';
+import { type RouteConfig, index, route } from '@react-router/dev/routes';
 
 import { bitcoinStakingRoutes } from './pages/bitcoin-staking/bitcoin-staking.routes';
 import { multisigRoutes } from './pages/multisig/multisig.routes';
@@ -13,11 +13,6 @@ export default [
   route('changelog/:slug', 'pages/changelog/changelog-entry.route.tsx'),
   route('changelog.xml', 'pages/changelog/changelog-rss.route.tsx'),
   route('portfolio', 'pages/portfolio/portfolio.route.tsx'),
-  // Advanced Leather tools
-  ...prefix('advanced', [
-    index('pages/advanced/advanced.route.tsx'),
-    route('signer-key-generation', 'pages/advanced/tools/signer-key-generation.route.tsx'),
-  ]),
   // A fallback to legacy post routes
   route('posts/:postSlug', 'pages/posts/post.route.tsx'),
   route('support', 'pages/support/help-center.route.tsx'),

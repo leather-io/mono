@@ -16,7 +16,6 @@ import { IncreaseStacksTransactionFeeSheet } from '@app/features/dialogs/transac
 import { RouterErrorBoundary } from '@app/features/errors/app-error-boundary';
 import { useFlags } from '@app/features/feature-flags';
 import { ledgerBitcoinTxSigningRoutes } from '@app/features/ledger/flows/bitcoin-tx-signing/ledger-bitcoin-sign-tx-container';
-import { ledgerJwtSigningRoutes } from '@app/features/ledger/flows/jwt-signing/ledger-sign-jwt.routes';
 import { requestBitcoinKeysRoutes } from '@app/features/ledger/flows/request-bitcoin-keys/ledger-request-bitcoin-keys';
 import { requestStacksKeysRoutes } from '@app/features/ledger/flows/request-stacks-keys/ledger-request-stacks-keys';
 import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-tx-signing/ledger-sign-stacks-tx-container';
@@ -30,7 +29,6 @@ import { AllBalancesPage } from '@app/pages/all-balances/all-balances';
 import { AllBalancesDetail } from '@app/pages/all-balances/all-balances-detail';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
-import { LegacyAccountAuth } from '@app/pages/legacy-account-auth/legacy-account-auth';
 import { ManageTokensPage } from '@app/pages/manage-tokens/manage-tokens';
 import { AddNetwork as CurrentAddNetwork } from '@app/pages/network/add-network';
 import { EditNetwork as CurrentEditNetwork } from '@app/pages/network/edit-network';
@@ -50,11 +48,9 @@ import {
 } from '@app/pages/swap-legacy/swap.routes';
 import { swapRoutes } from '@app/pages/swap/swap.routes';
 import { SelectTheme } from '@app/pages/theme/select-theme';
-import { UnauthorizedRequest } from '@app/pages/unauthorized-request/unauthorized-request';
 import { Unlock } from '@app/pages/unlock';
 import { ViewSecretKey } from '@app/pages/view-secret-key/view-secret-key';
 import { AccountGate } from '@app/routes/account-gate';
-import { legacyRequestRoutes } from '@app/routes/request-routes';
 import { rpcRequestRoutes } from '@app/routes/rpc-routes';
 
 import { OnboardingGate } from './onboarding-gate';
@@ -197,7 +193,6 @@ function useAppRoutes() {
           />
 
           <Route path={RouteUrls.Unlock} element={<Unlock />} />
-          <Route path={RouteUrls.UnauthorizedRequest} element={<UnauthorizedRequest />} />
           <Route
             path={RouteUrls.RequestError}
             element={
@@ -324,18 +319,6 @@ function useAppRoutes() {
           />
 
           {/* Popup Routes */}
-          {/* ChooseAccount is a popup as shown only in popup when decodedAuthRequest in set-password  */}
-          <Route
-            path={RouteUrls.ChooseAccount}
-            element={
-              <AccountGate>
-                <LegacyAccountAuth />
-              </AccountGate>
-            }
-          >
-            {ledgerJwtSigningRoutes}
-          </Route>
-          {legacyRequestRoutes}
           {rpcRequestRoutes}
         </Route>
 

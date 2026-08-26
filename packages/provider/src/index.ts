@@ -1,5 +1,3 @@
-import type { StacksProvider } from '@stacks/connect';
-
 import {
   type LeatherRpcMethodMap,
   type RpcMethodNames,
@@ -12,25 +10,20 @@ import { addLeatherToProviders } from './add-leather-to-providers';
 
 import './crypto-random-uuid-polyfill';
 
-import { getLegacyRequests } from './legacy-requests';
-import { Platform } from './types';
+import { deprecatedProviderMethods } from './deprecated-provider-methods';
 
 interface initInpageProviderArgs {
   onDispatch(rpcRequest: RpcRequests): void;
-  env: { branch: string; commitSha: string; version: string; platform: Platform };
+  env: { branch: string; commitSha: string; version: string };
 }
 
 export function initInpageProvider({ onDispatch, env }: initInpageProviderArgs) {
   addLeatherToProviders();
 
-  interface LeatherProviderOverrides extends Omit<StacksProvider, 'profileUpdateRequest'> {
-    isLeather: true;
-  }
-
-  const provider: LeatherProviderOverrides = {
+  const provider = {
     isLeather: true,
 
-    ...getLegacyRequests(env.platform),
+    ...deprecatedProviderMethods(),
 
     getProductInfo() {
       return {
@@ -72,50 +65,6 @@ export function initInpageProvider({ onDispatch, env }: initInpageProviderArgs) 
     },
   };
 
-  function consoleDeprecationNotice(text: string) {
-    // eslint-disable-next-line no-console
-    console.warn(`Deprecation warning: ${text}`);
-  }
-
-  function warnAboutDeprecatedProvider(legacyProvider: object) {
-    return Object.fromEntries(
-      Object.entries(legacyProvider).map(([key, value]) => {
-        if (typeof value === 'function') {
-          return [
-            key,
-            (...args: any[]) => {
-              switch (key) {
-                case 'authenticationRequest':
-                  consoleDeprecationNotice(
-                    `Use LeatherProvider.request('getAddresses') instead, see docs https://leather.gitbook.io/developers/bitcoin/connect-users/get-addresses`
-                  );
-                  break;
-                case 'psbtRequest':
-                  consoleDeprecationNotice(
-                    `Use LeatherProvider.request('signPsbt') instead, see docs https://leather.gitbook.io/developers/bitcoin/sign-transactions/partially-signed-bitcoin-transactions-psbts`
-                  );
-                  break;
-                case 'structuredDataSignatureRequest':
-                case 'signatureRequest':
-                  consoleDeprecationNotice(
-                    `Use LeatherProvider.request('stx_signMessage') instead`
-                  );
-                  break;
-                default:
-                  consoleDeprecationNotice(
-                    'The provider object is deprecated. Use `LeatherProvider` instead'
-                  );
-              }
-
-              return value(...args);
-            },
-          ];
-        }
-        return [key, value];
-      })
-    );
-  }
-
   try {
     // Makes properties immutable to contend with other wallets that use agressive
     // "prioritisation" default settings. As other wallet's use this approach,
@@ -124,7 +73,7 @@ export function initInpageProvider({ onDispatch, env }: initInpageProviderArgs) 
     // contend over shared provider space. `StacksProvider` should be considered
     // deprecated and each wallet use their own provider namespace.
     Object.defineProperty(window, 'StacksProvider', {
-      get: () => warnAboutDeprecatedProvider(provider),
+      get: () => provider,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       set: () => {},
     });
@@ -135,7 +84,7 @@ export function initInpageProvider({ onDispatch, env }: initInpageProviderArgs) 
 
   try {
     Object.defineProperty(window, 'HiroWalletProvider', {
-      get: () => warnAboutDeprecatedProvider(provider),
+      get: () => provider,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       set: () => {},
     });
@@ -157,6 +106,6 @@ export function initInpageProvider({ onDispatch, env }: initInpageProviderArgs) 
 
   // Legacy product provider objects
   if (typeof (window as any).btc === 'undefined') {
-    (window as any).btc = warnAboutDeprecatedProvider(provider);
+    (window as any).btc = provider;
   }
 }

@@ -28,6 +28,22 @@ describe(encodeSignerCalldata.name, () => {
     const preference = { btcRewardAddress: p2pkhAddress, maxFeeSats: 2n ** 64n };
     expect(decodePayoutPreference(encodeSignerCalldata(preference), 'mainnet')).toEqual(preference);
   });
+
+  test('round-trips a payout preference with a min claim', () => {
+    const preference = {
+      btcRewardAddress: p2wpkhAddress,
+      maxFeeSats: 5000n,
+      minClaimSats: 25_000n,
+    };
+    expect(decodePayoutPreference(encodeSignerCalldata(preference), 'mainnet')).toEqual(preference);
+  });
+
+  test('omits min-claim from the tuple when it is not set', () => {
+    const preference = { btcRewardAddress: p2wpkhAddress, maxFeeSats: 5000n };
+    const decoded = decodePayoutPreference(encodeSignerCalldata(preference), 'mainnet');
+    expect(decoded).not.toBeNull();
+    expect(decoded && 'minClaimSats' in decoded).toBe(false);
+  });
 });
 
 describe(decodePayoutPreference.name, () => {
@@ -45,6 +61,21 @@ describe(decodePayoutPreference.name, () => {
     expect(decodePayoutPreference(onChainValue, 'mainnet')).toEqual({
       btcRewardAddress: p2wpkhAddress,
       maxFeeSats: 1234n,
+    });
+  });
+
+  test('decodes the deserialized get-payout-config tuple shape with min-claim', () => {
+    const onChainValue = someCV(
+      tupleCV({
+        'pox-addr': poxAddressToTuple(p2wpkhAddress),
+        'max-fee': uintCV(1234n),
+        'min-claim': uintCV(1781n),
+      })
+    );
+    expect(decodePayoutPreference(onChainValue, 'mainnet')).toEqual({
+      btcRewardAddress: p2wpkhAddress,
+      maxFeeSats: 1234n,
+      minClaimSats: 1781n,
     });
   });
 

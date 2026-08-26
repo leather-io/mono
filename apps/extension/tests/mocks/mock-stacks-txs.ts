@@ -259,6 +259,8 @@ export async function mockStacksBroadcastTransaction(page: Page | BrowserContext
       },
     })
   );
+
+  return txid;
 }
 
 export async function mockSip10LeatherTestTokenBalance(page: Page | BrowserContext) {

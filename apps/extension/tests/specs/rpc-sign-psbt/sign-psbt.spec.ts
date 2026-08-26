@@ -1,9 +1,12 @@
+import { sha256 } from '@noble/hashes/sha256';
 import { hexToBytes } from '@noble/hashes/utils';
 import { BrowserContext, Page, type Route } from '@playwright/test';
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
 import { bytesToHex } from '@stacks/common';
+import { exampleMultisigTransactionId, makeMultisigTransaction } from '@tests/mocks/mock-multisig';
+import { makeBitcoinPolicy, policyStateOverrides } from '@tests/mocks/mock-policies';
 import {
   TEST_ACCOUNT_SECRET_KEY,
   getConnectedTestAppPermissionsState,
@@ -13,8 +16,12 @@ import {
   type BtcSignerNetwork,
   compileWshDescriptor,
   ecdsaPublicKeyToSchnorr,
+  getBondVaultKeys,
+  instantiateBondDescriptor,
+  makeNativeSegwitAccountXpub,
   makeNativeSegwitAddressIndexDerivationPath,
   makeTaprootAddressIndexDerivationPath,
+  psbtHexToBase64,
 } from '@leather.io/bitcoin';
 import { RpcErrorCode, type RpcParams, type signPsbt } from '@leather.io/rpc';
 
@@ -44,6 +51,17 @@ function createTaprootKeychainFromTestMnemonic() {
       addressIndex: 0,
     })
   );
+}
+
+function initiatePsbtSigning(page: Page) {
+  return async (params: RpcParams<typeof signPsbt> & { broadcast?: boolean }) =>
+    page.evaluate(
+      params =>
+        (window as any).LeatherProvider.request('signPsbt', {
+          ...params,
+        }).catch((e: unknown) => e),
+      { ...params }
+    );
 }
 
 test.describe('Sign PSBT', () => {
@@ -113,17 +131,6 @@ test.describe('Sign PSBT', () => {
     const requestPromise = popup.waitForRequest('**/api/tx');
     await popup.route('**/api/tx', async route => await callback(route));
     return requestPromise;
-  }
-
-  function initiatePsbtSigning(page: Page) {
-    return async (params: RpcParams<typeof signPsbt> & { broadcast?: boolean }) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('signPsbt', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
   }
 
   function createExpectedResult(hex: string, txid?: string) {
@@ -821,6 +828,104 @@ test.describe('Sign PSBT', () => {
         .toEqual(
           createExpectedError(RpcErrorCode.INVALID_PARAMS, 'Only wsh() descriptors are supported')
         );
+    });
+  });
+});
+
+test.describe('Sign PSBT: bond proposal', () => {
+  const bitcoinPolicy = makeBitcoinPolicy();
+  const bondParams = {
+    unlockHeight: 1000,
+    hash: bytesToHex(sha256(new Uint8Array([1, 2, 3]))),
+    counterpartyKey: `${makeNativeSegwitAccountXpub(9)}/0/0`,
+  };
+  const bondDescriptor = instantiateBondDescriptor({
+    ...bondParams,
+    ...getBondVaultKeys(bitcoinPolicy.descriptor),
+  });
+  const { scriptPubKey: bondScriptPubKey, witnessScript: bondWitnessScript } =
+    compileWshDescriptor(bondDescriptor);
+
+  function createBondPsbtHex() {
+    const psbt = new btc.Transaction({ lockTime: bondParams.unlockHeight });
+    psbt.addInput({
+      txid: '2965dc62a012028b529c902da59606d65d35353c966aeaf9287f534547609f5f',
+      index: 0,
+      witnessUtxo: { amount: 50_000n, script: bondScriptPubKey },
+      witnessScript: bondWitnessScript,
+      sequence: 0xfffffffd,
+    });
+    psbt.addOutputAddress('bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', 45_000n);
+    return bytesToHex(psbt.toPSBT());
+  }
+
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      ...policyStateOverrides({ policies: [bitcoinPolicy] }),
+      ...getConnectedTestAppPermissionsState({ policyId: bitcoinPolicy.id }),
+    });
+    await page.goto('localhost:3000');
+  });
+
+  test('that a bond spend from a policy bound connection uploads a proposal for the matched policy', async ({
+    page,
+    context,
+  }) => {
+    const psbtHex = createBondPsbtHex();
+
+    let proposeBody: Record<string, unknown> | undefined;
+    await context.route('**/v1/multisig-ext/propose', route => {
+      proposeBody = route.request().postDataJSON();
+      return route.fulfill({ json: makeMultisigTransaction() });
+    });
+
+    const [result] = await Promise.all([
+      initiatePsbtSigning(page)({
+        network: 'mainnet',
+        hex: psbtHex,
+        descriptor: bondDescriptor,
+      }),
+      (async () => {
+        const popup = await context.waitForEvent('page');
+        await popup.waitForTimeout(1000);
+        await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
+      })(),
+    ]);
+
+    delete result.id;
+
+    test.expect(result.jsonrpc).toEqual('2.0');
+    test.expect(result.result).toEqual({
+      hex: psbtHex,
+      proposalId: exampleMultisigTransactionId,
+      status: 'proposed',
+    });
+
+    test.expect(proposeBody).toMatchObject({
+      multisigAddress: bitcoinPolicy.address,
+      rawPayload: psbtHexToBase64(psbtHex),
+    });
+    test.expect(typeof proposeBody?.proposalSignature).toEqual('string');
+    test.expect(proposeBody?.proposalSignature).not.toHaveLength(0);
+    test.expect(typeof proposeBody?.proposalTimestamp).toEqual('number');
+  });
+
+  test('that a request with a non-bond descriptor is rejected', async ({ page }) => {
+    const result = await initiatePsbtSigning(page)({
+      network: 'mainnet',
+      hex: createBondPsbtHex(),
+      descriptor: bitcoinPolicy.descriptor,
+    });
+
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      error: {
+        code: RpcErrorCode.INVALID_PARAMS,
+        message: 'Descriptor is not a supported bond template',
+      },
     });
   });
 });

@@ -1,6 +1,10 @@
 import { leather } from '~/utils/leather-sdk';
 
-import { extractWshMultisigSignatures, psbtBase64ToHex } from '@leather.io/bitcoin';
+import {
+  extractWshMultisigSignatures,
+  psbtBase64ToHex,
+  resolveProposalSigningDescriptor,
+} from '@leather.io/bitcoin';
 import type { MultisigTransaction, VaultAccount } from '@leather.io/models';
 
 import { resolveWalletRpcNetwork } from '../../network/resolve-wallet-rpc-network';
@@ -24,8 +28,8 @@ export async function signBtcTransaction(
   signerPubkey: string
 ): Promise<{ signature: string; inputIndex?: number }[]> {
   preSignVerification({ transaction, account });
-  const descriptor = getMultisigDescriptor(account);
   const psbtHex = psbtBase64ToHex(transaction.proposalRawPayload);
+  const descriptor = resolveProposalSigningDescriptor(getMultisigDescriptor(account), psbtHex);
   const mySigner = account.signers.find(signer => signer.signingPubkey === signerPubkey);
   const walletAccount = walletAccountIndexFromPath(mySigner?.xpubOriginPath ?? null);
   const { hex } = await leather.signPsbt({

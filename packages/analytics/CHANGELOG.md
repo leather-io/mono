@@ -114,6 +114,40 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.24.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.23.0...@leather.io/analytics-v3.24.0) (2026-08-18)
+
+
+### Features
+
+* **services:** replace chainalysis with leather api compliance endpoint ([#2606](https://github.com/leather-io/mono/issues/2606)) ([ac3a931](https://github.com/leather-io/mono/commit/ac3a931ed2dec18d52dd3832450fb59f4dc5282d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.61.0
+
+## [3.23.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.22.0...@leather.io/analytics-v3.23.0) (2026-08-10)
+
+
+### Features
+
+* delete legacy requests ([#2612](https://github.com/leather-io/mono/issues/2612)) ([c17d65f](https://github.com/leather-io/mono/commit/c17d65fc12fd799ff045d6fb725b57b50462fd84))
+
+## [3.22.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.21.1...@leather.io/analytics-v3.22.0) (2026-08-05)
+
+
+### Features
+
+* add pox-5 staking ([#2539](https://github.com/leather-io/mono/issues/2539)) ([f348a4d](https://github.com/leather-io/mono/commit/f348a4d7123f6445c64a617438f944f8cdcf9cb4))
+* address verification ([#2549](https://github.com/leather-io/mono/issues/2549)) ([4965f2d](https://github.com/leather-io/mono/commit/4965f2d8e71b93a286f7cd1ab6f04493dbe7cfa8))
+
+
+### Bug Fixes
+
+* add ledger derivation paths ([#2592](https://github.com/leather-io/mono/issues/2592)) ([94806ea](https://github.com/leather-io/mono/commit/94806eaffddabc4a2e1d6c29fa405979e8170c95))
+
 ## [3.21.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.21.0...@leather.io/analytics-v3.21.1) (2026-07-15)
 
 

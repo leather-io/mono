@@ -72,9 +72,10 @@ function renderHookValue<T>(useHook: () => T) {
 
 interface SetupOptions {
   pullKeysResult: { status: 'success' } | { status: 'failure' };
+  passesAdditionalVersionCheck?(appVersion: unknown): Promise<boolean>;
 }
 
-function setupRequestKeys({ pullKeysResult }: SetupOptions) {
+function setupRequestKeys({ pullKeysResult, passesAdditionalVersionCheck }: SetupOptions) {
   const onSuccess = vi.fn();
   const transportClose = vi.fn().mockResolvedValue(undefined);
   const pullKeysFromDevice = vi.fn().mockResolvedValue(pullKeysResult);
@@ -87,6 +88,7 @@ function setupRequestKeys({ pullKeysResult }: SetupOptions) {
       getAppVersion: () => Promise.resolve(bitcoinAppVersion),
       isAppOpen: () => true,
       pullKeysFromDevice,
+      passesAdditionalVersionCheck,
       onSuccess,
     })
   );
@@ -126,6 +128,41 @@ describe(useRequestLedgerKeys.name, () => {
     expect(pullKeysFromDevice).toHaveBeenCalledOnce();
     expect(mocks.publicKeysPulledFromLedgerSuccessfully).not.toHaveBeenCalled();
     expect(onSuccess).not.toHaveBeenCalled();
+    expect(transportClose).toHaveBeenCalledOnce();
+  });
+
+  test('stops before pulling keys when the additional version check fails', async () => {
+    const passesAdditionalVersionCheck = vi.fn().mockResolvedValue(false);
+    const { getValue, onSuccess, transportClose, pullKeysFromDevice } = setupRequestKeys({
+      pullKeysResult: { status: 'success' },
+      passesAdditionalVersionCheck,
+    });
+
+    await act(async () => {
+      await getValue().requestKeys();
+    });
+
+    expect(passesAdditionalVersionCheck).toHaveBeenCalledWith(bitcoinAppVersion);
+    expect(pullKeysFromDevice).not.toHaveBeenCalled();
+    expect(mocks.toConnectionSuccessStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(transportClose).toHaveBeenCalledOnce();
+  });
+
+  test('continues to pull keys when the additional version check passes', async () => {
+    const passesAdditionalVersionCheck = vi.fn().mockResolvedValue(true);
+    const { getValue, onSuccess, transportClose, pullKeysFromDevice } = setupRequestKeys({
+      pullKeysResult: { status: 'success' },
+      passesAdditionalVersionCheck,
+    });
+
+    await act(async () => {
+      await getValue().requestKeys();
+    });
+
+    expect(passesAdditionalVersionCheck).toHaveBeenCalledWith(bitcoinAppVersion);
+    expect(pullKeysFromDevice).toHaveBeenCalledOnce();
+    expect(onSuccess).toHaveBeenCalledOnce();
     expect(transportClose).toHaveBeenCalledOnce();
   });
 });

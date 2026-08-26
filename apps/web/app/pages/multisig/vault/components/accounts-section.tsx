@@ -120,7 +120,7 @@ function CreateAccountTile({ onClick }: { onClick(): void }) {
   );
 }
 
-function CreateAccountDisabled({ reason }: { reason?: string }) {
+function CreateAccountDisabled({ reason }: { reason: string }) {
   return (
     <Box
       width="100%"
@@ -132,7 +132,7 @@ function CreateAccountDisabled({ reason }: { reason?: string }) {
       textAlign="center"
     >
       <styled.span textStyle="caption.01" color="ink.text-subdued">
-        {reason ?? "New accounts can't be created for this vault."}
+        {reason}
       </styled.span>
     </Box>
   );
@@ -203,9 +203,8 @@ export function AccountsSection({
           </Button>
         </Flex>
       )}
-      {canCreate ? (
-        <CreateAccountTile onClick={onCreateAccount} />
-      ) : (
+      {canCreate && <CreateAccountTile onClick={onCreateAccount} />}
+      {!canCreate && disabledReason !== undefined && (
         <CreateAccountDisabled reason={disabledReason} />
       )}
     </Flex>

@@ -198,12 +198,24 @@ export class Sip10BalancesService {
     if (isNullish(asset)) {
       return null;
     }
-    const marketData = await this.marketDataService.getMarketData(asset, signal);
     const totalBalance = createMoney(balanceAmount, asset.symbol, asset.decimals);
-    return {
-      asset,
-      quote: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, marketData)),
-      crypto: createBaseCryptoAssetBalance(totalBalance),
-    };
+    const emptyQuote = createBaseCryptoAssetBalance(
+      createMoney(0, this.settingsService.getSettings().quoteCurrency)
+    );
+
+    try {
+      const marketData = await this.marketDataService.getMarketData(asset, signal);
+      return {
+        asset,
+        quote: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, marketData)),
+        crypto: createBaseCryptoAssetBalance(totalBalance),
+      };
+    } catch {
+      return {
+        asset,
+        quote: emptyQuote,
+        crypto: createBaseCryptoAssetBalance(totalBalance),
+      };
+    }
   }
 }

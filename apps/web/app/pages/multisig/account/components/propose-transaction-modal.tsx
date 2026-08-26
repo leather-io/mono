@@ -29,6 +29,7 @@ import {
   type VaultAccount,
   transactionFeeTiers,
 } from '@leather.io/models';
+import { getErrorDetail } from '@leather.io/services';
 import { isValidStacksAddress, stacksAddressNetwork } from '@leather.io/stacks';
 import { BasicTooltip, Button, CloseIcon, IconButton, InfoCircleIcon, Sheet } from '@leather.io/ui';
 import {
@@ -424,7 +425,7 @@ function BtcProposeForm({
           onSuccess(transaction) {
             onProposed(transaction);
           },
-          onError: err => error(err.message),
+          onError: err => error(getErrorDetail(err) ?? 'Unknown error'),
         }
       );
     } catch (err) {
@@ -539,7 +540,7 @@ function StxProposeForm({
           onSuccess(transaction) {
             onProposed(transaction);
           },
-          onError: err => error(err.message),
+          onError: err => error(getErrorDetail(err) ?? 'Unknown error'),
         }
       );
     } catch (err) {

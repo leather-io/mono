@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router';
 
+import { getErrorDetail } from '@leather.io/services';
+
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
@@ -35,7 +37,8 @@ export function useProposeBtcSendTransaction() {
         state: { ...summary, proposalId: proposal.id },
       });
     } catch (error) {
-      void nav.toErrorPage(error);
+      const detail = getErrorDetail(error);
+      void nav.toErrorPage(detail ? new Error(detail) : error, { proposeMode: true });
     }
   }
 
