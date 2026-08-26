@@ -6,6 +6,8 @@ import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
 import { describe, expect, test } from 'vitest';
 
+import { fingerprintAsNumberToHex } from '@leather.io/crypto';
+
 import { resolveLedgerSignableDescriptor } from './ledger-descriptor-resolver';
 import { compileWshDescriptor, findAccountDescriptorKey } from './wsh-descriptor';
 
@@ -22,17 +24,15 @@ function makeRootKeychain(seedByte: number): HDKey {
   return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte));
 }
 
-function fingerprintToBuffer(fingerprint: number): Buffer {
-  const value = Buffer.alloc(4);
-  value.writeUInt32BE(fingerprint);
-  return value;
+function fingerprintToBytes(fingerprint: number): Uint8Array {
+  return hexToBytes(fingerprintAsNumberToHex(fingerprint));
 }
 
 const accountRootKeychain = makeRootKeychain(1);
 const accountKeychain = accountRootKeychain.derive(accountPath);
 const cosignerRootKeychain = makeRootKeychain(2);
 const cosignerKeychain = cosignerRootKeychain.derive(accountPath);
-const cosignerFingerprint = fingerprintToBuffer(cosignerRootKeychain.fingerprint);
+const cosignerFingerprint = fingerprintToBytes(cosignerRootKeychain.fingerprint);
 const cosignerPublicKey = requireBytes(cosignerKeychain.derive('m/0/7').publicKey);
 const descriptor = `wsh(multi(2,${bytesToHex(cosignerPublicKey)},${accountKeychain.publicExtendedKey}/0/7))`;
 
@@ -51,7 +51,7 @@ function buildPsbt(inputCount = 1): Psbt {
     script: btc.p2wpkh(requireBytes(makeRootKeychain(3).derive(addressPath).publicKey)).script,
     amount: 18_000n,
   });
-  return Psbt.fromBuffer(Buffer.from(tx.toPSBT()));
+  return Psbt.fromBuffer(tx.toPSBT());
 }
 
 function addGlobalXpub(
@@ -62,7 +62,7 @@ function addGlobalXpub(
   psbt.updateGlobal({
     globalXpub: [
       {
-        extendedPubkey: Buffer.from(base58check.decode(keychain.publicExtendedKey)),
+        extendedPubkey: base58check.decode(keychain.publicExtendedKey),
         masterFingerprint: fingerprint,
         path: accountPath,
       },
@@ -75,7 +75,7 @@ function addInputDerivation(psbt: Psbt, inputIndex: number, path = addressPath):
     bip32Derivation: [
       {
         masterFingerprint: cosignerFingerprint,
-        pubkey: Buffer.from(cosignerPublicKey),
+        pubkey: cosignerPublicKey,
         path,
       },
     ],

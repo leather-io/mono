@@ -6,6 +6,7 @@ import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
 
 import { compileWshDescriptor } from '@leather.io/bitcoin';
+import { fingerprintAsNumberToHex } from '@leather.io/crypto';
 
 import { useSignDescriptorPsbt } from './descriptor-psbt.hooks';
 
@@ -69,9 +70,7 @@ function makeNativeSegwitAccountKeychain(seedByte: number) {
 }
 
 function makeFingerprint(fingerprint: number) {
-  const value = Buffer.alloc(4);
-  value.writeUInt32BE(fingerprint);
-  return value;
+  return hexToBytes(fingerprintAsNumberToHex(fingerprint));
 }
 
 function deriveAddressIndexKey(seedByte: number) {
@@ -115,13 +114,11 @@ function buildDescriptorPsbtHex(descriptor: string, signWith: HDKey[]) {
 }
 
 function addCosignerXpubMetadata(psbtHex: string) {
-  const psbt = Psbt.fromBuffer(Buffer.from(hexToBytes(psbtHex)));
+  const psbt = Psbt.fromBuffer(hexToBytes(psbtHex));
   psbt.updateGlobal({
     globalXpub: [
       {
-        extendedPubkey: Buffer.from(
-          base58check.decode(makeNativeSegwitAccountKeychain(2).publicExtendedKey)
-        ),
+        extendedPubkey: base58check.decode(makeNativeSegwitAccountKeychain(2).publicExtendedKey),
         masterFingerprint: cosignerFingerprint,
         path: "m/84'/0'/0'",
       },
@@ -131,7 +128,7 @@ function addCosignerXpubMetadata(psbtHex: string) {
     bip32Derivation: [
       {
         masterFingerprint: cosignerFingerprint,
-        pubkey: Buffer.from(requireBytes(cosignerAddressIndexKey.publicKey)),
+        pubkey: requireBytes(cosignerAddressIndexKey.publicKey),
         path: "m/84'/0'/0'/0/0",
       },
     ],

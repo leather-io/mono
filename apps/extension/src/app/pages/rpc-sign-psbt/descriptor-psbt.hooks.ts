@@ -44,7 +44,7 @@ function useGetDescriptorSigningPlan() {
     if (!nativeSegwitAccount) throw new Error('No native segwit account available');
 
     const compiled = compileWshDescriptor(descriptor);
-    const { scriptPubKey, witnessScript, keys } = compiled;
+    const { scriptPubKey, witnessScript } = compiled;
 
     const accountDescriptorKey = findAccountDescriptorKey(compiled, nativeSegwitAccount.keychain);
     if (!accountDescriptorKey) throw new Error('Current account is not part of this descriptor');
@@ -63,13 +63,7 @@ function useGetDescriptorSigningPlan() {
     inputIndexes.forEach(index => tx.updateInput(index, { witnessScript }));
     const signingConfig = inputIndexes.map(index => ({ index, derivationPath }));
 
-    return {
-      tx,
-      signingConfig,
-      inputIndexes,
-      keys,
-      accountKey: accountDescriptorKey.key,
-    };
+    return { tx, signingConfig, inputIndexes, accountKey: accountDescriptorKey.key };
   };
 }
 
