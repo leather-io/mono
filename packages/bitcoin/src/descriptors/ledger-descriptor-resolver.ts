@@ -5,7 +5,7 @@ import { createBase58check } from '@scure/base';
 import { HARDENED_OFFSET, type HDKey } from '@scure/bip32';
 import { Psbt } from 'bitcoinjs-lib';
 
-import { createKeyOriginPath, deriveKeychainFromXpub } from '@leather.io/crypto';
+import { deriveKeychainFromXpub } from '@leather.io/crypto';
 
 import {
   type AccountDescriptorKey,
@@ -132,13 +132,6 @@ function globalXpubMatchesDerivation(globalXpub: GlobalXpub, derivation: Bip32De
   );
 }
 
-function getKeyOrigin(globalXpub: GlobalXpub): string {
-  const fingerprint = bytesToHex(globalXpub.masterFingerprint);
-  return globalXpub.path === masterPath
-    ? fingerprint
-    : createKeyOriginPath(fingerprint, globalXpub.path);
-}
-
 function resolveGlobalXpubKeyExpression(
   globalXpub: GlobalXpub,
   derivation: Bip32Derivation,
@@ -154,7 +147,7 @@ function resolveGlobalXpubKeyExpression(
     if (!derivedKeychain.publicKey || bytesToHex(derivedKeychain.publicKey) !== publicKey)
       return null;
 
-    return `[${getKeyOrigin(globalXpub)}]${xpub}${keyPath}`;
+    return xpub + keyPath;
   } catch {
     return null;
   }

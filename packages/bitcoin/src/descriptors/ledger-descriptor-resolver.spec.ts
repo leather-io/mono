@@ -104,10 +104,9 @@ describe(resolveLedgerSignableDescriptor.name, () => {
 
     expect(result.status).toBe('success');
     if (result.status !== 'success') return;
-    expect(result.descriptor).toContain(
-      `[${bytesToHex(cosignerFingerprint)}/84'/0'/0']${cosignerKeychain.publicExtendedKey}/0/7`
-    );
+    expect(result.descriptor).toContain(`${cosignerKeychain.publicExtendedKey}/0/7`);
     expect(result.descriptor).not.toContain(bytesToHex(cosignerPublicKey));
+    expect(result.descriptor).not.toContain(bytesToHex(cosignerFingerprint));
     expect(bytesToHex(compileWshDescriptor(result.descriptor).scriptPubKey)).toBe(
       bytesToHex(compileWshDescriptor(descriptor).scriptPubKey)
     );

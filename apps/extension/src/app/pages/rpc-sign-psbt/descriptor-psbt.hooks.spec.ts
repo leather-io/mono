@@ -277,8 +277,9 @@ describe(useSignDescriptorPsbt.name, () => {
       const ledgerDescriptor = navigationCall[3];
       if (typeof ledgerDescriptor !== 'string') throw new Error('Expected Ledger descriptor');
       expect(ledgerDescriptor).toContain(
-        `[${bytesToHex(cosignerFingerprint)}/84'/0'/0']${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0`
+        `${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0`
       );
+      expect(ledgerDescriptor).not.toContain(bytesToHex(cosignerFingerprint));
       expect(bytesToHex(compileWshDescriptor(ledgerDescriptor).scriptPubKey)).toBe(
         bytesToHex(compileWshDescriptor(rawPubkeyCosignerDescriptor).scriptPubKey)
       );
