@@ -23,7 +23,8 @@ export function SwapAssetSelected({
       htmlFor={name}
       mb="space.02"
       minHeight="64px"
-      px="space.04"
+      pl="space.03"
+      pr="space.04"
       width="100%"
     >
       <Box width="100%">

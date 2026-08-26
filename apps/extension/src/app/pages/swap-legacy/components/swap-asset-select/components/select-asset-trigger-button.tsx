@@ -24,18 +24,24 @@ export function SelectAssetTriggerButton({
 
   return (
     <Button
+      borderRadius="sm"
       data-testid={SwapSelectors.SelectAssetTriggerBtn}
+      height="52px"
       onClick={onSelectAsset}
-      p="space.02"
+      pl="6px"
+      pr="space.03"
+      transition="background 100ms ease-in-out"
       variant="ghost"
       {...field}
     >
-      <HStack>
-        {icon && isString(icon) ? <Avatar fallback={fallback} image={icon} /> : icon}
-        <styled.span data-testid={SwapSelectors.SelectedAssetSymbol} textStyle="label.01">
-          {symbol}
-        </styled.span>
-        <ChevronDownIcon variant="small" />
+      <HStack alignItems="center" gap="space.02">
+        {icon && isString(icon) ? <Avatar fallback={fallback} image={icon} size="lg" /> : icon}
+        <HStack alignItems="center" gap="space.01">
+          <styled.span data-testid={SwapSelectors.SelectedAssetSymbol} textStyle="label.01">
+            {symbol}
+          </styled.span>
+          <ChevronDownIcon variant="small" />
+        </HStack>
       </HStack>
     </Button>
   );
