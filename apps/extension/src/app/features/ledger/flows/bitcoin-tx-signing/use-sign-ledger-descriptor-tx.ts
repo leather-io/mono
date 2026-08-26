@@ -1,11 +1,10 @@
-import { Psbt as DescriptorsPsbt, Output } from '@bitcoinerlab/descriptors';
+import { Output } from '@bitcoinerlab/descriptors';
 import {
   type LedgerManager,
   type LedgerState,
   registerLedgerWallet,
-  signers,
 } from '@bitcoinerlab/descriptors/ledger';
-import AppClient from '@ledgerhq/ledger-bitcoin';
+import AppClient, { WalletPolicy } from '@ledgerhq/ledger-bitcoin';
 import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
 
@@ -21,6 +20,7 @@ import {
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { logger } from '@shared/logger';
 
+import { addNativeSegwitSignaturesToPsbt } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import {
   useCurrentNativeSegwitAccount,
   useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero,
@@ -108,9 +108,22 @@ export function useSignLedgerDescriptorTx() {
       ledgerManager,
       policyName: 'Leather',
     });
-    const ledgerPsbt = DescriptorsPsbt.fromBase64(psbt.toBase64());
-    await signers.signLedger({ psbt: ledgerPsbt, ledgerManager });
+    const registeredPolicy = ledgerState.policies?.[0];
+    if (!registeredPolicy?.policyName || !registeredPolicy.policyHmac)
+      throw new Error('Ledger wallet policy registration did not persist a policy');
 
-    return btc.Transaction.fromPSBT(ledgerPsbt.toBuffer());
+    const walletPolicy = new WalletPolicy(
+      registeredPolicy.policyName,
+      registeredPolicy.ledgerTemplate,
+      registeredPolicy.keyRoots
+    );
+    const signatures = await app.signPsbt(
+      psbt.toBase64(),
+      walletPolicy,
+      Buffer.from(registeredPolicy.policyHmac)
+    );
+    addNativeSegwitSignaturesToPsbt(psbt, signatures);
+
+    return btc.Transaction.fromPSBT(psbt.toBuffer());
   };
 }
