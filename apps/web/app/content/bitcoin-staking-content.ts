@@ -48,6 +48,9 @@ export const bitcoinStakingContent = {
       return `From cycle ${cycle}`;
     },
   },
+  selfClaim: {
+    explanation: `This pool takes no cut from your rewards. In exchange it never claims for you: rewards accrue each cycle and only you can claim them, through the pool's signer-manager contract.`,
+  },
   poolOverviewInfo: {
     rewardsToken: `Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool's signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall.`,
     fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so check the pool's terms before staking.`,
@@ -219,6 +222,7 @@ export const bitcoinStakingLabels = {
   tvl: `TVL`,
   historicalYield: `Historical yield`,
   fee: `Fee`,
+  selfClaimOnly: `Self-claim only`,
   startEarning: `Start earning`,
   viewPosition: `View position`,
   switchPool: `Switch`,
