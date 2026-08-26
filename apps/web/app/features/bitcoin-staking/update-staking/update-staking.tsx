@@ -25,8 +25,8 @@ import {
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
-import { leather } from '~/utils/leather-sdk';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
+import { wallet } from '~/utils/wallet';
 
 import { Button, Input, LoadingSpinner } from '@leather.io/ui';
 import { isDefined, stxToMicroStx, truncateMiddle } from '@leather.io/utils';
@@ -197,7 +197,7 @@ function UpdateStakingForm({
   const navigate = useNavigate();
   const { track } = usePox5TxTracker();
   const client = usePox5StackingClientRequired();
-  const { btcAddressP2wpkh } = useLeatherConnect();
+  const { btcPaymentAddress } = useLeatherConnect();
 
   const { cycleClock } = usePox5CycleClock();
   const { isLoading: availableBalanceIsLoading, availableBalance } =
@@ -273,7 +273,7 @@ function UpdateStakingForm({
       cyclesToExtend: 0,
       amountIncrease: '',
       payoutEnabled: currentPayout !== null,
-      rewardAddress: currentPayout?.btcRewardAddress ?? btcAddressP2wpkh?.address,
+      rewardAddress: currentPayout?.btcRewardAddress ?? btcPaymentAddress?.address,
       maxFeeSats: currentPayout ? String(currentPayout.maxFeeSats) : '',
     },
     resolver: zodResolver(
@@ -292,7 +292,7 @@ function UpdateStakingForm({
     mutate: submitStakeUpdate,
     isPending,
     error: stakeUpdateError,
-  } = useMutation(createStakeUpdateMutationOptions({ leather, client }));
+  } = useMutation(createStakeUpdateMutationOptions({ wallet, client }));
 
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
 
