@@ -9,6 +9,7 @@ import { useLeatherConnect } from '~/store/addresses';
 
 import { usePox5StackingClient, usePox5StacksClient } from '../hooks/use-pox5-clients';
 import { getPox5TxRefetchInterval } from '../transactions/pox5-tx-status';
+import { getExpectedFeeBips } from '../utils/pool-fee';
 import { getPox5ContractId } from '../utils/pox5-contracts';
 import { createGetPox5DelegatedAmountQueryOptions } from './create-get-pox5-delegated-amount-query-options';
 import {
@@ -94,7 +95,8 @@ export function usePox5PoolFeesByProvider(
     }
   });
   fetchedPools.forEach((pool, index) => {
-    feeBipsByProvider[pool.providerId] = feeQueries[index]?.data ?? null;
+    const fee = feeQueries[index]?.data;
+    feeBipsByProvider[pool.providerId] = fee ? getExpectedFeeBips(fee) : null;
   });
   return feeBipsByProvider;
 }
