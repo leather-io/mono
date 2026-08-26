@@ -4,11 +4,13 @@ import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 
 import {
+  type LedgerDescriptorResolutionError,
   compileWshDescriptor,
   findAccountDescriptorKey,
   getDescriptorMatchingInputIndexes,
   isExtendedPublicKeyExpression,
   makeNativeSegwitAddressIndexDerivationPath,
+  resolveLedgerSignableDescriptor,
 } from '@leather.io/bitcoin';
 
 import { useWalletType } from '@app/common/use-wallet-type';
@@ -19,6 +21,13 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useCurrentAccountId } from '../../store/accounts/account';
 import { useCurrentNativeSegwitAccount } from '../../store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+
+function getLedgerDescriptorResolutionErrorMessage({
+  publicKey,
+  reason,
+}: LedgerDescriptorResolutionError) {
+  return `Ledger cannot sign this descriptor: raw public key ${publicKey} could not be verified from PSBT_GLOBAL_XPUB and PSBT_IN_BIP32_DERIVATION (${reason.replaceAll('-', ' ')}).`;
+}
 
 // Prepares a PSBT for signing against a `wsh(...)` miniscript descriptor. The
 // descriptor is the source of truth: we compile it to a witness script and
@@ -54,7 +63,13 @@ function useGetDescriptorSigningPlan() {
     inputIndexes.forEach(index => tx.updateInput(index, { witnessScript }));
     const signingConfig = inputIndexes.map(index => ({ index, derivationPath }));
 
-    return { tx, signingConfig, inputIndexes, keys, accountKey: accountDescriptorKey.key };
+    return {
+      tx,
+      signingConfig,
+      inputIndexes,
+      keys,
+      accountKey: accountDescriptorKey.key,
+    };
   };
 }
 
@@ -71,7 +86,7 @@ export function useSignDescriptorPsbt() {
   const location = useLocation();
 
   return async (psbtHex: string, descriptor: string) => {
-    const { tx, signingConfig, inputIndexes, keys, accountKey } = getDescriptorSigningPlan(
+    const { tx, signingConfig, inputIndexes, accountKey } = getDescriptorSigningPlan(
       psbtHex,
       descriptor
     );
@@ -79,13 +94,29 @@ export function useSignDescriptorPsbt() {
     const signedTx = await whenWallet({
       software: () => signPsbt({ tx, signingConfig }),
       ledger() {
+        const resolution = resolveLedgerSignableDescriptor({
+          descriptor,
+          psbt: tx.toPSBT(),
+          inputIndexes,
+          accountKey,
+        });
+        if (resolution.status === 'error')
+          throw new Error(getLedgerDescriptorResolutionErrorMessage(resolution));
+
+        const ledgerDescriptor = resolution.descriptor;
+        const { keys } = compileWshDescriptor(ledgerDescriptor);
+
         // Ledger can only register a wallet policy whose keys are extended keys
         // (`[fingerprint/path]xpub`). We convert the account's key, but a co-signer
         // supplied as a raw public key has no xpub/origin and cannot be expressed
         // in a Ledger policy — fail fast with a clear message instead of a masked
         // on-device rejection.
         if (
-          keys.some(key => key !== accountKey && !isExtendedPublicKeyExpression(key.keyExpression))
+          keys.some(
+            key =>
+              key.keyExpression !== accountKey.keyExpression &&
+              !isExtendedPublicKeyExpression(key.keyExpression)
+          )
         )
           throw new Error(
             'Ledger cannot sign this descriptor: another signer is a raw public key. Ledger requires every key to be an extended public key (xpub). Sign this contract with a software wallet instead.'
@@ -95,7 +126,7 @@ export function useSignDescriptorPsbt() {
           tx.toPSBT(),
           signingConfig,
           location,
-          descriptor
+          ledgerDescriptor
         );
         return listenForBitcoinTxLedgerSigning(bytesToHex(tx.toPSBT()));
       },

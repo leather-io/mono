@@ -1,6 +1,9 @@
+import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
+import { createBase58check } from '@scure/base';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
+import { Psbt } from 'bitcoinjs-lib';
 
 import { compileWshDescriptor } from '@leather.io/bitcoin';
 
@@ -65,12 +68,20 @@ function makeNativeSegwitAccountKeychain(seedByte: number) {
   return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'");
 }
 
+function makeFingerprint(fingerprint: number) {
+  const value = Buffer.alloc(4);
+  value.writeUInt32BE(fingerprint);
+  return value;
+}
+
 function deriveAddressIndexKey(seedByte: number) {
   return makeNativeSegwitAccountKeychain(seedByte).deriveChild(0).deriveChild(0);
 }
 
 const accountKeychain = makeNativeSegwitAccountKeychain(1);
 const accountAddressIndexKey = deriveAddressIndexKey(1);
+const cosignerRootKeychain = HDKey.fromMasterSeed(new Uint8Array(32).fill(2));
+const cosignerFingerprint = makeFingerprint(cosignerRootKeychain.fingerprint);
 const cosignerAddressIndexKey = deriveAddressIndexKey(2);
 const accountDerivationPath = "m/84'/0'/0'/0/0";
 const multiSigDescriptor = `wsh(multi(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0,${accountKeychain.publicExtendedKey}/0/0))`;
@@ -80,6 +91,7 @@ const vaultIndexDescriptor = `wsh(sortedmulti(2,${makeNativeSegwitAccountKeychai
 const mixedKeyPathDescriptor = `wsh(multi(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0,${accountKeychain.publicExtendedKey}/0/7))`;
 const accountVaultIndexKey = makeNativeSegwitAccountKeychain(1).deriveChild(0).deriveChild(7);
 const cosignerVaultIndexKey = makeNativeSegwitAccountKeychain(2).deriveChild(0).deriveChild(7);
+const base58check = createBase58check(sha256);
 
 function buildDescriptorTx(descriptor: string, signWith: HDKey[]) {
   const { scriptPubKey, witnessScript } = compileWshDescriptor(descriptor);
@@ -100,6 +112,31 @@ function buildDescriptorTx(descriptor: string, signWith: HDKey[]) {
 
 function buildDescriptorPsbtHex(descriptor: string, signWith: HDKey[]) {
   return bytesToHex(buildDescriptorTx(descriptor, signWith).toPSBT());
+}
+
+function addCosignerXpubMetadata(psbtHex: string) {
+  const psbt = Psbt.fromBuffer(Buffer.from(hexToBytes(psbtHex)));
+  psbt.updateGlobal({
+    globalXpub: [
+      {
+        extendedPubkey: Buffer.from(
+          base58check.decode(makeNativeSegwitAccountKeychain(2).publicExtendedKey)
+        ),
+        masterFingerprint: cosignerFingerprint,
+        path: "m/84'/0'/0'",
+      },
+    ],
+  });
+  psbt.updateInput(0, {
+    bip32Derivation: [
+      {
+        masterFingerprint: cosignerFingerprint,
+        pubkey: Buffer.from(requireBytes(cosignerAddressIndexKey.publicKey)),
+        path: "m/84'/0'/0'/0/0",
+      },
+    ],
+  });
+  return bytesToHex(psbt.toBuffer());
 }
 
 function buildNonDescriptorPsbtHex() {
@@ -224,6 +261,30 @@ describe(useSignDescriptorPsbt.name, () => {
       );
       expect(mocks.toConnectAndSignBitcoinTransactionStep).not.toHaveBeenCalled();
       expect(mocks.listenForBitcoinTxLedgerSigning).not.toHaveBeenCalled();
+    });
+
+    test('hydrates a raw co-signer key from psbt xpub metadata', async () => {
+      const psbtHex = addCosignerXpubMetadata(
+        buildDescriptorPsbtHex(rawPubkeyCosignerDescriptor, [])
+      );
+      const deviceSignedTx = buildDescriptorTx(rawPubkeyCosignerDescriptor, [
+        accountAddressIndexKey,
+      ]);
+      mocks.listenForBitcoinTxLedgerSigning.mockResolvedValue(deviceSignedTx);
+
+      const signedTx = await useSignDescriptorPsbt()(psbtHex, rawPubkeyCosignerDescriptor);
+
+      expect(signedTx).toBe(deviceSignedTx);
+      const navigationCall = mocks.toConnectAndSignBitcoinTransactionStep.mock.calls[0];
+      if (!navigationCall) throw new Error('Expected Ledger navigation');
+      const ledgerDescriptor = navigationCall[3];
+      if (typeof ledgerDescriptor !== 'string') throw new Error('Expected Ledger descriptor');
+      expect(ledgerDescriptor).toContain(
+        `[${bytesToHex(cosignerFingerprint)}/84'/0'/0']${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0`
+      );
+      expect(bytesToHex(compileWshDescriptor(ledgerDescriptor).scriptPubKey)).toBe(
+        bytesToHex(compileWshDescriptor(rawPubkeyCosignerDescriptor).scriptPubKey)
+      );
     });
 
     test('threads the prepared psbt, signing config, location and descriptor through the ledger flow', async () => {
