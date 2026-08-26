@@ -33,6 +33,24 @@ import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useRpcSendTransferContext } from './rpc-send-transfer.context';
 
+interface SendTransferActionLabels {
+  approveLabel?: string;
+  busyLabel?: string;
+  submittedLabel?: string;
+}
+function getSendTransferActionLabels({
+  broadcast,
+  isBitcoinPolicy,
+}: {
+  broadcast: boolean;
+  isBitcoinPolicy: boolean;
+}): SendTransferActionLabels {
+  if (isBitcoinPolicy) return { approveLabel: 'Propose transaction', busyLabel: 'Proposing...' };
+  if (!broadcast)
+    return { approveLabel: 'Sign transaction', busyLabel: 'Signing...', submittedLabel: 'Signed' };
+  return {};
+}
+
 export function useRpcSendTransferActions() {
   const { availableBalance, selectedFee } = useFeeEditorContext();
   const { amount, broadcast, frameId, isLoadingBalance, recipients, requestId, tabId, utxos } =
@@ -181,8 +199,7 @@ export function useRpcSendTransferActions() {
       isSubmitted,
       onCancel,
       onApprove,
-      approveLabel: isBitcoinPolicy ? 'Propose transaction' : undefined,
-      busyLabel: isBitcoinPolicy ? 'Proposing...' : undefined,
+      ...getSendTransferActionLabels({ broadcast, isBitcoinPolicy }),
     });
   }, [
     isLoadingBalance,

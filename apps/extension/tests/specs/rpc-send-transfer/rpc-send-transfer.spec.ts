@@ -34,7 +34,7 @@ const baseParams = {
 };
 
 function clickActionButton(context: BrowserContext) {
-  return async (buttonToPress: 'Cancel' | 'Approve') => {
+  return async (buttonToPress: 'Cancel' | 'Approve' | 'Sign transaction') => {
     const popup = await context.waitForEvent('page');
     await popup.waitForTimeout(1000);
     const btn = popup.locator(`text="${buttonToPress}"`);
@@ -114,7 +114,7 @@ test.describe('RPC: sendTransfer', () => {
 
     const [result] = await Promise.all([
       openSendTransfer(page)({ ...baseParams, broadcast: false }),
-      clickActionButton(context)('Approve'),
+      clickActionButton(context)('Sign transaction'),
     ]);
 
     delete result.id;
