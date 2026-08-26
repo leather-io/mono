@@ -4,8 +4,9 @@ import { useLocation } from 'react-router';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import BitcoinApp from 'ledger-bitcoin';
 
-import { delay } from '@leather.io/utils';
+import { delay, isError } from '@leather.io/utils';
 
+import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 
 import { safeAwait } from '@app/common/utils/safe-await';
@@ -14,7 +15,6 @@ import { getStacksAppVersion } from './stacks-ledger-utils';
 
 export enum LedgerConnectionErrors {
   AppNotOpen = 'AppNotOpen',
-  MasterkeyFingerprintNotSupported = 'MasterkeyFingerprintNotSupported',
   DeviceLocked = 'DeviceLocked',
 }
 
@@ -67,6 +67,10 @@ export function prepareLedgerDeviceForAppFn<T extends () => Promise<unknown>>(co
 
 type TransportInstance = Awaited<ReturnType<typeof TransportWebUSB.create>>;
 
+const deviceReenumerationPollIntervalMs = 100;
+const deviceReenumerationTimeoutMs = 5_000;
+const appRelaunchSettleDelayMs = 500;
+
 // Reference: https://github.com/LedgerHQ/ledger-live/blob/v22.0.1/src/hw/quitApp.ts
 async function quitApp(transport: TransportInstance): Promise<void> {
   await transport.send(0xb0, 0xa7, 0x00, 0x00);
@@ -77,35 +81,76 @@ async function openApp(transport: TransportInstance, name: string): Promise<void
   await transport.send(0xe0, 0xd8, 0x00, 0x00, Buffer.from(name, 'ascii'));
 }
 
+async function closeTransport(transport: TransportInstance): Promise<void> {
+  try {
+    await transport.close();
+  } catch {
+    logger.warn('Failed to close transport connection to Ledger device');
+  }
+}
+
 async function getAppAndVersion() {
   const tmpTransport = await TransportWebUSB.create();
-  const tmpBitcoinApp = new BitcoinApp(tmpTransport);
-  const appAndVersion = await tmpBitcoinApp.getAppAndVersion();
-  return appAndVersion;
+  try {
+    const tmpBitcoinApp = new BitcoinApp(tmpTransport);
+    const appAndVersion = await tmpBitcoinApp.getAppAndVersion();
+    return appAndVersion;
+  } finally {
+    await closeTransport(tmpTransport);
+  }
+}
+
+function isDeviceDisconnectedError(error: unknown): boolean {
+  if (!isError(error)) return false;
+  return (
+    error.name === 'DisconnectedDevice' ||
+    error.name === 'DisconnectedDeviceDuringOperation' ||
+    error.message.toLowerCase().includes('disconnect')
+  );
+}
+
+async function waitForDeviceReenumeration(staleDevice: unknown) {
+  const maxPollAttempts = deviceReenumerationTimeoutMs / deviceReenumerationPollIntervalMs;
+  for (let attempt = 0; attempt < maxPollAttempts; attempt++) {
+    const devices = await TransportWebUSB.list();
+    if (devices.some(device => device !== staleDevice)) return;
+    await delay(deviceReenumerationPollIntervalMs);
+  }
+}
+
+async function switchAppOnDevice(sendSwitchApdu: (transport: TransportInstance) => Promise<void>) {
+  const [staleDevice] = await TransportWebUSB.list();
+  const tmpTransport = await TransportWebUSB.create();
+
+  try {
+    await sendSwitchApdu(tmpTransport);
+  } catch (error) {
+    if (!isDeviceDisconnectedError(error)) {
+      await closeTransport(tmpTransport);
+      throw error;
+    }
+  }
+
+  await waitForDeviceReenumeration(staleDevice);
+  await delay(appRelaunchSettleDelayMs);
 }
 
 async function quitAppOnDevice() {
-  const tmpTransport = await TransportWebUSB.create();
-  await quitApp(tmpTransport);
-  // for some reason sending quit app buffer to ledger will close the connection afterwards.
-  // we need to add a delay for this transport to properly finish for another one to open.
-  await delay(500);
+  await switchAppOnDevice(transport => quitApp(transport));
 }
 
 export async function promptOpenAppOnDevice(appName: string) {
   const appAndVersion = await getAppAndVersion();
-  if (appAndVersion.name !== appName && appAndVersion.name !== LEDGER_APPS_MAP.MAIN_MENU) {
+  if (appAndVersion.name === appName) {
+    await delay(500);
+    return;
+  }
+
+  if (appAndVersion.name !== LEDGER_APPS_MAP.MAIN_MENU) {
     await quitAppOnDevice();
   }
 
-  const tmpTransport = await TransportWebUSB.create();
-
-  if (appAndVersion.name !== appName) {
-    await openApp(tmpTransport, appName);
-  }
-  // for some reason sending open app buffer to ledger will close the connection afterwards.
-  // we need to add a delay for this transport to properly finish for another one to open.
-  await delay(500);
+  await switchAppOnDevice(transport => openApp(transport, appName));
 }
 
 export function checkLockedDeviceError(e: Error) {

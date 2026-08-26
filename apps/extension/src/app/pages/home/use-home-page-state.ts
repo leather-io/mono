@@ -1,11 +1,5 @@
-import { useNavigate } from 'react-router';
-
-import { RouteUrls } from '@shared/route-urls';
-
 import { useAccountScaledBalanceAnalytics } from '@app/common/app-analytics';
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
-import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state';
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import {
   useCurrentAccountAvailableBalance,
@@ -24,9 +18,7 @@ import { useTogglePrivateMode } from '@app/store/settings/settings.actions';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 export function useHomePageState() {
-  const { decodedAuthRequest } = useOnboardingState();
   const { toggleSwitchAccount } = useSwitchAccountSheet();
-  const navigate = useNavigate();
   const account = useCurrentStacksAccount();
   const currentAccount = useCurrentAccountId();
   const currentAccountAddresses = useCurrentAccountAddresses();
@@ -50,10 +42,6 @@ export function useHomePageState() {
   const totalBalance = useCurrentAccountTotalBalance();
   const availableBalance = useCurrentAccountAvailableBalance();
   const stxAccountBalance = useStxAccountBalanceByAddresses(currentAccountAddresses);
-
-  useOnMount(() => {
-    if (decodedAuthRequest) return navigate(RouteUrls.ChooseAccount);
-  });
 
   return {
     totalBalance,

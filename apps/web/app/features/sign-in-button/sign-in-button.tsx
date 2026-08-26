@@ -11,9 +11,10 @@ import { ActiveAccountButtonLayout, SignInButtonLayout } from './sign-in-button.
 
 function NoStacksAccountsWarningDialog() {
   const { showMissingStacksKeysDialog, setShowMissingStacksKeysDialog } = useLeatherConnect();
+  const isLeatherSelected = showMissingStacksKeysDialog === 'leather';
   return (
     <Sheet
-      isShowing={showMissingStacksKeysDialog}
+      isShowing={Boolean(showMissingStacksKeysDialog)}
       onClose={() => setShowMissingStacksKeysDialog(false)}
     >
       <styled.div p="space.05">
@@ -21,17 +22,23 @@ function NoStacksAccountsWarningDialog() {
         <styled.p textStyle="heading.05" mt="space.03">
           Your wallet does not have a Stacks account available.
         </styled.p>
-        <styled.p textStyle="body.02" mt="space.02">
-          <Link
-            display="inline-block"
-            color="inherit"
-            fontSize="inherit"
-            onClick={() => leather.open({ mode: 'fullpage' })}
-          >
-            Open Leather <RotatedArrow />
-          </Link>{' '}
-          with your Ledger device ready, and select Connect Stacks from the home screen
-        </styled.p>
+        {isLeatherSelected ? (
+          <styled.p textStyle="body.02" mt="space.02">
+            <Link
+              display="inline-block"
+              color="inherit"
+              fontSize="inherit"
+              onClick={() => leather.open({ mode: 'fullpage' })}
+            >
+              Open Leather <RotatedArrow />
+            </Link>{' '}
+            with your Ledger device ready, and select Connect Stacks from the home screen
+          </styled.p>
+        ) : (
+          <styled.p textStyle="body.02" mt="space.02">
+            Open your wallet and enable a Stacks account, then try connecting again
+          </styled.p>
+        )}
       </styled.div>
     </Sheet>
   );
@@ -47,21 +54,17 @@ function InstallLeatherButton() {
 
 function ConnectLeatherButton() {
   const { connect } = useLeatherConnect();
-  return (
-    <>
-      <SignInButtonLayout onClick={connect}>Connect</SignInButtonLayout>
-      <NoStacksAccountsWarningDialog />
-    </>
-  );
+  return <SignInButtonLayout onClick={connect}>Connect</SignInButtonLayout>;
 }
 
 function ActiveAccountButton() {
-  const { stacksAccount, connect, openExtension, disconnect } = useLeatherConnect();
+  const { stacksAccount, connect, openExtension, disconnect, isLeatherWallet } =
+    useLeatherConnect();
   return (
     <ActiveAccountButtonLayout
       address={stacksAccount?.address ?? ''}
       onSwitchAccount={connect}
-      onOpenExtension={openExtension}
+      onOpenExtension={isLeatherWallet ? openExtension : undefined}
       onSignout={disconnect}
     />
   );
@@ -70,14 +73,12 @@ function ActiveAccountButton() {
 export function SignInButton() {
   const { status } = useLeatherConnect();
 
-  switch (status) {
-    case 'missing':
-      return <InstallLeatherButton />;
-    case 'detected':
-      return <ConnectLeatherButton />;
-    case 'connected':
-      return <ActiveAccountButton />;
-    default:
-      return null;
-  }
+  return (
+    <>
+      {status === 'missing' && <InstallLeatherButton />}
+      {status === 'detected' && <ConnectLeatherButton />}
+      {status === 'connected' && <ActiveAccountButton />}
+      <NoStacksAccountsWarningDialog />
+    </>
+  );
 }

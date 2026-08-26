@@ -13,10 +13,7 @@ import { RootState } from '@app/store';
 
 import { useAppRequestedNetworkId } from './networks.hooks';
 import { networksAdapter } from './networks.slice';
-import {
-  findMatchingNetworkKey,
-  transformNetworkStateToMultichainStucture,
-} from './networks.utils';
+import { transformNetworkStateToMultichainStucture } from './networks.utils';
 
 function selectNetworksSlice(state: RootState) {
   return state.networks;
@@ -36,15 +33,10 @@ const selectNetworks = createSelector(
 const selectCurrentNetworkId = createSelector(selectNetworksSlice, state => state.currentNetworkId);
 
 export const selectAppRequestedNetworkId = createSelector(selectNetworks, networks => {
-  // CoreAPI URL and networkChainId are from legacy Stacks transactions
-  const coreApiUrl = initialSearchParams.get('coreApiUrl');
-  const networkChainId = initialSearchParams.get('networkChainId');
   // `network` param is a more generic network selector that doesn't deal with
   // custom networks
   const network = initialSearchParams.get('network');
-  if (network && networks[network]?.id) return networks[network]?.id;
-
-  return findMatchingNetworkKey({ coreApiUrl, networkChainId, networks });
+  return network ? networks[network]?.id : undefined;
 });
 
 export const selectCurrentNetwork = createSelector(

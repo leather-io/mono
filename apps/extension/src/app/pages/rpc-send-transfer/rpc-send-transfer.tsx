@@ -37,7 +37,7 @@ export function RpcSendTransfer() {
 
   const convertToFiatAmount = useConvertCryptoCurrencyToFiatAmount('BTC');
 
-  useBreakOnNonCompliantEntity(recipientAddresses);
+  useBreakOnNonCompliantEntity('rpc_send_transfer', recipientAddresses);
 
   const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
   const { approverActions, isBroadcasting, isSubmitted } = useRpcSendTransferActions();

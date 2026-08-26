@@ -2,6 +2,6 @@ import { useLedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx
 import { OutdatedStacksAppWarningBase } from '@app/features/ledger/generic-steps';
 
 export function OutdatedStacksAppWarningTxSigning() {
-  const { signTransaction } = useLedgerTxSigningContext();
-  return <OutdatedStacksAppWarningBase onTryAgain={signTransaction} />;
+  const { signTransaction, onCancelTxSigning } = useLedgerTxSigningContext();
+  return <OutdatedStacksAppWarningBase onTryAgain={signTransaction} onCancel={onCancelTxSigning} />;
 }

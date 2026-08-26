@@ -158,6 +158,21 @@ describe(createMultisigTransactionActivityView.name, () => {
     expect(view.amount?.crypto?.symbol).toBe('sBTC');
   });
 
+  test('overrides the failed-tense subtitle for cancelled send proposals', async () => {
+    const rawPayload = await generateSip10TransferPayload();
+    const view = createMultisigTransactionActivityView(
+      stxContext,
+      makeTransaction({ status: 'cancelled' }),
+      { rawPayload, getTokenInfo: () => ({ asset: sbtcAsset }) }
+    );
+
+    expect(view.status).toBe('failed');
+    expect(view.indicator).toBe('cancelled');
+    expect(view.subtitle).toBe(
+      `Send cancelled to ${truncateMiddle(recipient, activityCounterpartyOffset)}`
+    );
+  });
+
   test('quotes the token send in fiat when market data is available', async () => {
     const rawPayload = await generateSip10TransferPayload();
     const view = createMultisigTransactionActivityView(stxContext, makeTransaction(), {
@@ -209,7 +224,7 @@ describe(createMultisigTransactionActivityView.name, () => {
     expect(view.status).toBe('pending');
     expect(view.chain).toBe('stacks');
     expect(view.timestamp).toBe(1751000000);
-    expect(view.title).toBe('Send STX');
+    expect(view.title).toBe('STX');
     expect(view.subtitle).toBe(
       `Sending to ${truncateMiddle(recipient, activityCounterpartyOffset)}`
     );
@@ -256,8 +271,9 @@ describe(createMultisigTransactionActivityView.name, () => {
     });
 
     expect(view.action).toBe('stack');
-    expect(view.title).toBe('Stack');
-    expect(view.subtitle).toBe('via Fast Pool');
+    expect(view.title).toBe('STX');
+    expect(view.subtitle).toBe('Stacking via Fast Pool');
+    expect(view.protocolName).toBe('Fast Pool');
   });
 
   test('renders a contract deploy from its payload', async () => {
@@ -271,7 +287,7 @@ describe(createMultisigTransactionActivityView.name, () => {
     expect(view.subtitle).toBe('my-contract');
   });
 
-  test('keeps the decoded counterparty without market data', async () => {
+  test('keeps the decoded counterparty and amount without market data', async () => {
     const rawPayload = await generateStxTransferPayload();
     const view = createMultisigTransactionActivityView(stxContext, makeTransaction(), {
       rawPayload,
@@ -280,7 +296,8 @@ describe(createMultisigTransactionActivityView.name, () => {
     expect(view.subtitle).toBe(
       `Sending to ${truncateMiddle(recipient, activityCounterpartyOffset)}`
     );
-    expect(view.amount).toBeUndefined();
+    expect(view.amount?.crypto?.symbol).toBe('STX');
+    expect(view.amount?.quote.amount.toNumber()).toBe(0);
   });
 
   test.each<[MultisigTransactionStatus, OnChainActivityStatus]>([

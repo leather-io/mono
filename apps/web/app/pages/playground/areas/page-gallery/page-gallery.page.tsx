@@ -3,6 +3,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { multisigVaultKeys } from '~/features/multisig/vaults/vault-query-keys';
+import { useUserSettings } from '~/hooks/use-user-settings';
 
 import type {
   AuthNetworkId,
@@ -14,12 +15,7 @@ import type {
   VaultMember,
   VaultSummary,
 } from '@leather.io/models';
-import {
-  BlockchainActivityAvatarIcon,
-  BlockchainActivityIndicatorIcon,
-  Button,
-  ListItemBox,
-} from '@leather.io/ui';
+import { Button, ListItemBox } from '@leather.io/ui';
 
 import { AccountDetailsCard } from '../../../multisig/account/components/account-details-card';
 import { AvatarCircle } from '../../../multisig/components/avatar-circle';
@@ -28,6 +24,7 @@ import { Badge } from '../../../multisig/components/badge';
 import { InvitationModal } from '../../../multisig/components/invitation-modal';
 import { MultisigHero } from '../../../multisig/components/multisig-hero';
 import { SectionLabel } from '../../../multisig/components/section-label';
+import { VaultActivityDetail } from '../../../multisig/components/vault-activity-detail';
 import { VaultActivityList } from '../../../multisig/components/vault-activity-list';
 import { ChainPicker } from '../../../multisig/create-vault/components/chain-picker';
 import {
@@ -39,10 +36,12 @@ import { VaultPreviewCard } from '../../../multisig/create-vault/components/vaul
 import { CreateVaultTile } from '../../../multisig/dashboard/components/create-vault-tile';
 import { vaultThemeFromName } from '../../../multisig/multisig-tokens';
 import { SignerRollcall } from '../../../multisig/tx/components/signer-rollcall';
-import { TxDetailsTable } from '../../../multisig/tx/components/tx-details-table';
 import { AccountsSection } from '../../../multisig/vault/components/accounts-section';
 import { CancelVaultModal } from '../../../multisig/vault/components/cancel-vault-modal';
-import { CreateAccountModal } from '../../../multisig/vault/components/create-account-modal';
+import {
+  AccountCreatedStep,
+  CreateAccountModal,
+} from '../../../multisig/vault/components/create-account-modal';
 import { MembersSection } from '../../../multisig/vault/components/members-section';
 import { ShareInvitationsModal } from '../../../multisig/vault/components/share-invitations-modal';
 import { VaultStatusCard } from '../../../multisig/vault/components/vault-status-card';
@@ -50,7 +49,6 @@ import {
   mockAccountNames,
   mockAccountThresholds,
   mockActivityItems,
-  mockStxAvatar,
   mockVaultNames,
 } from '../../data/activity-mock-data';
 
@@ -377,6 +375,7 @@ function ModalsPreview() {
 export function PageGalleryPage() {
   const [showInvite, setShowInvite] = useState(false);
   const queryClient = useQueryClient();
+  const settings = useUserSettings();
   useEffect(() => {
     queryClient.setQueryData(
       multisigVaultKeys.detail(invitedSummary.network, undefined, invitedSummary.id),
@@ -456,6 +455,24 @@ export function PageGalleryPage() {
                 currentUserAddress={ME}
                 onAddToWallet={() => undefined}
               />
+              <SectionLabel noGutter>Account details, added to wallet</SectionLabel>
+              <AccountDetailsCard
+                vault={vault}
+                account={account}
+                currentUserAddress={ME}
+                onAddToWallet={() => undefined}
+                isAddedToWallet
+              />
+              <SectionLabel noGutter>Account created step</SectionLabel>
+              <Box
+                borderWidth="1px"
+                borderStyle="solid"
+                borderColor="ink.border-default"
+                borderRadius="md"
+                pt="space.05"
+              >
+                <AccountCreatedStep vault={vault} account={account} />
+              </Box>
             </>
           }
         />
@@ -524,34 +541,24 @@ export function PageGalleryPage() {
       <PageFrame label="Transaction detail">
         <TwoCol
           main={
-            <>
-              <MultisigHero
-                variant="balance"
-                themeId={orangeTheme}
-                media={
-                  <BlockchainActivityAvatarIcon
-                    size={48}
-                    avatar={mockStxAvatar}
-                    indicator={<BlockchainActivityIndicatorIcon indicator="sent" size={16} />}
-                  />
-                }
-                primary="Send STX"
-                secondary={
-                  <Flex alignItems="center" gap="space.02">
-                    <styled.span>Proposed 2h ago by Amber</styled.span>
-                    <AvatarCircle name="Amber" size="xs" />
-                  </Flex>
-                }
-              />
-              <SectionLabel>Transaction details</SectionLabel>
-              <TxDetailsTable
-                transaction={mockTx}
-                status="pending"
-                proposerLabel="Amber"
-                initiationDate="2h ago"
-                recipient={ADDR_2}
-              />
-            </>
+            <VaultActivityDetail
+              item={{ view: mockActivityItems[0].view }}
+              themeId={orangeTheme}
+              network={settings.network}
+              caption={
+                <Flex alignItems="center" gap="space.02">
+                  <styled.span>Proposed 2h ago by</styled.span>
+                  <AvatarCircle name="Amber" size="sm" />
+                  <styled.span>Amber</styled.span>
+                </Flex>
+              }
+              proposal={{
+                status: 'pending',
+                txId: mockTx.txId,
+                proposerLabel: 'Amber',
+                initiationDate: '2h ago',
+              }}
+            />
           }
           side={
             <>

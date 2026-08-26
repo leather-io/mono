@@ -22,8 +22,8 @@ export function useLoading(key: string) {
   };
 }
 
-// This is only used when there is a pending transaction request and
-// the user switches accounts during the signing process
+// Tracks that the user switched accounts within an open popup. When set, the
+// policy and software-key selectors ignore the account pinned by URL search params
 export function useHasSwitchedAccounts() {
   const hasSwitched = useSelector(selectHasSwitched);
   const dispatch = useDispatch();

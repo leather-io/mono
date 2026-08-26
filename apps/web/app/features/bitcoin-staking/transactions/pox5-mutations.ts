@@ -2,8 +2,8 @@ import { StackingClient } from '@stacks/stacking';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { analytics } from '~/utils/analytics/analytics';
-
-import { LeatherSdk } from '@leather.io/sdk';
+import { StxCallContractParams } from '~/utils/leather-sdk';
+import { WalletTransactionResult } from '~/utils/wallet';
 
 import { getPox5ContractId } from '../utils/pox5-contracts';
 import { getCycleContextFromPoxInfo, getStakeStartBurnHeight } from '../utils/pox5-cycle-clock';
@@ -12,6 +12,10 @@ import { ClaimStakerRewardsArgs } from './pox5-claim-rewards';
 import { Pox5PayoutPreference } from './pox5-signer-calldata';
 import { StakeUpdateArgs } from './pox5-stake-update';
 import { UnstakeArgs } from './pox5-unstake';
+
+interface StakingWallet {
+  stxCallContract(params: StxCallContractParams): Promise<WalletTransactionResult>;
+}
 
 interface StakeMutationValues {
   providerId: BitcoinStakingProviderId;
@@ -22,13 +26,13 @@ interface StakeMutationValues {
 }
 
 interface CreateStakeMutationOptionsArgs {
-  leather: LeatherSdk;
+  wallet: StakingWallet;
   client: StackingClient;
 }
 
-export function createStakeMutationOptions({ leather, client }: CreateStakeMutationOptionsArgs) {
+export function createStakeMutationOptions({ wallet, client }: CreateStakeMutationOptionsArgs) {
   return {
-    mutationKey: ['pox5-stake', leather, client],
+    mutationKey: ['pox5-stake', wallet, client],
     mutationFn: async (values: StakeMutationValues) => {
       // Fetched at submit time: the contract rejects a start-burn-ht that does
       // not resolve to the next reward cycle, so a cached height near a cycle
@@ -55,26 +59,27 @@ export function createStakeMutationOptions({ leather, client }: CreateStakeMutat
         numCycles: values.numCycles,
       });
 
-      return leather.stxCallContract(options);
+      return wallet.stxCallContract(options);
     },
   } as const;
 }
 
 interface StakeUpdateMutationValues extends StakeUpdateArgs {
   providerId: BitcoinStakingProviderId;
+  targetProviderId: BitcoinStakingProviderId;
 }
 
 interface CreateStakeUpdateMutationOptionsArgs {
-  leather: LeatherSdk;
+  wallet: StakingWallet;
   client: StackingClient;
 }
 
 export function createStakeUpdateMutationOptions({
-  leather,
+  wallet,
   client,
 }: CreateStakeUpdateMutationOptionsArgs) {
   return {
-    mutationKey: ['pox5-stake-update', leather, client],
+    mutationKey: ['pox5-stake-update', wallet, client],
     mutationFn: async (values: StakeUpdateMutationValues) => {
       const poxInfo = await client.getPoxInfo();
       const { clock } = getCycleContextFromPoxInfo(poxInfo);
@@ -93,13 +98,22 @@ export function createStakeUpdateMutationOptions({
         network: pox5NetworkConfig.walletRpcNetwork,
       });
 
+      const isSwitching =
+        values.newSignerManagerContractId !== values.currentSignerManagerContractId;
+
       analytics.track('bitcoin_staking_updated', {
         provider: values.providerId,
         amountIncreaseMicroStx: values.amountIncreaseMicroStx.toString(),
         cyclesToExtend: values.cyclesToExtend,
+        ...(isSwitching
+          ? {
+              switchedFromProvider: values.providerId,
+              switchedToProvider: values.targetProviderId,
+            }
+          : {}),
       });
 
-      return leather.stxCallContract(options);
+      return wallet.stxCallContract(options);
     },
   } as const;
 }
@@ -109,16 +123,13 @@ interface UnstakeMutationValues extends UnstakeArgs {
 }
 
 interface CreateUnstakeMutationOptionsArgs {
-  leather: LeatherSdk;
+  wallet: StakingWallet;
   client: StackingClient;
 }
 
-export function createUnstakeMutationOptions({
-  leather,
-  client,
-}: CreateUnstakeMutationOptionsArgs) {
+export function createUnstakeMutationOptions({ wallet, client }: CreateUnstakeMutationOptionsArgs) {
   return {
-    mutationKey: ['pox5-unstake', leather, client],
+    mutationKey: ['pox5-unstake', wallet, client],
     mutationFn: async (values: UnstakeMutationValues) => {
       const poxInfo = await client.getPoxInfo();
       const { clock } = getCycleContextFromPoxInfo(poxInfo);
@@ -134,7 +145,7 @@ export function createUnstakeMutationOptions({
 
       analytics.track('bitcoin_staking_unstaked', { provider: values.providerId });
 
-      return leather.stxCallContract(options);
+      return wallet.stxCallContract(options);
     },
   } as const;
 }
@@ -144,14 +155,14 @@ interface ClaimRewardsMutationValues extends ClaimStakerRewardsArgs {
 }
 
 interface CreateClaimRewardsMutationOptionsArgs {
-  leather: LeatherSdk;
+  wallet: StakingWallet;
 }
 
 export function createClaimRewardsMutationOptions({
-  leather,
+  wallet,
 }: CreateClaimRewardsMutationOptionsArgs) {
   return {
-    mutationKey: ['pox5-claim-rewards', leather],
+    mutationKey: ['pox5-claim-rewards', wallet],
     mutationFn: async (values: ClaimRewardsMutationValues) => {
       const options = getPoolContractData(values.signerManagerContractId).claimStakerRewards({
         signerManagerContractId: values.signerManagerContractId,
@@ -165,7 +176,7 @@ export function createClaimRewardsMutationOptions({
         rewardCycle: values.rewardCycle,
       });
 
-      return leather.stxCallContract(options);
+      return wallet.stxCallContract(options);
     },
   } as const;
 }

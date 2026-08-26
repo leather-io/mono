@@ -24,7 +24,10 @@ import {
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
-import { isLedgerOnDeviceAddressConfirmed } from '@app/features/ledger/utils/ledger-descriptor-address';
+import {
+  isLedgerOnDeviceAddressConfirmed,
+  toLedgerDisplayedAddress,
+} from '@app/features/ledger/utils/ledger-descriptor-address';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useBtcAddAccount } from '../use-btc-add-account';
@@ -55,7 +58,7 @@ function LedgerConfirmBtcPolicyAddress() {
       async pullKeysFromDevice(app) {
         void ledgerNavigate.toDeviceBusyStep(
           'Confirm the address on your Ledger…',
-          address ?? undefined
+          address ? toLedgerDisplayedAddress(address) : undefined
         );
         const onDeviceAddress = await displayLedgerDescriptorAddress(app, descriptor);
         if (!isLedgerOnDeviceAddressConfirmed(onDeviceAddress, address)) {
@@ -74,7 +77,6 @@ function LedgerConfirmBtcPolicyAddress() {
     pullPublicKeysFromDevice: requestKeys,
     latestDeviceResponse,
     awaitingDeviceConnection,
-    outdatedAppVersionWarning: false,
   };
 
   const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
