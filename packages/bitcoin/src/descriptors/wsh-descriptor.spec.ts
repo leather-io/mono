@@ -13,6 +13,7 @@ import {
   makeNativeSegwitAddressPubkey,
 } from '../mocks/key-mocks';
 import {
+  type FinalizeWshDescriptorPsbtResult,
   compileWshDescriptor,
   extractWshDescriptorPreimages,
   finalizeWshDescriptorPsbt,
@@ -657,12 +658,17 @@ interface BuildPolicyTxOptions {
   sha256?: [Uint8Array, Uint8Array][];
   lockTime?: number;
   sequence?: number;
+  version?: number;
   foreignInput?: boolean;
 }
 
 function buildPolicyTx(descriptor: string, options: BuildPolicyTxOptions) {
   const { scriptPubKey, witnessScript } = compileWshDescriptor(descriptor);
-  const tx = new btc.Transaction({ allowUnknownInputs: true, lockTime: options.lockTime ?? 0 });
+  const tx = new btc.Transaction({
+    allowUnknownInputs: true,
+    lockTime: options.lockTime ?? 0,
+    ...(options.version !== undefined ? { version: options.version } : {}),
+  });
   tx.addInput({
     txid: hexToBytes('00'.repeat(32)),
     index: 0,
@@ -696,6 +702,16 @@ function rewriteFirstPartialSig(
   return psbt.toBuffer();
 }
 
+function getFinalizedRawTx(result: FinalizeWshDescriptorPsbtResult) {
+  if (result.status !== 'finalized')
+    throw new Error(`Expected a finalized psbt, got ${result.status}`);
+  return result.rawTx;
+}
+
+const finalized = { status: 'finalized' };
+const unsatisfied = { status: 'unsatisfied' };
+const invalidTimelock = { status: 'invalid-timelock' };
+
 describe('finalizeWshDescriptorPsbt', () => {
   const singleSig = `wsh(pk(${xpubA}/0/0))`;
   const multiSig = `wsh(multi(2,${xpubB}/0/0,${xpubA}/0/0))`;
@@ -706,13 +722,10 @@ describe('finalizeWshDescriptorPsbt', () => {
 
   it('finalizes a single-key policy and returns a broadcastable raw tx', () => {
     const psbt = buildPolicyTx(singleSig, { signWith: [1] }).toPSBT();
-    const rawTx = finalizeWshDescriptorPsbt({
-      signedPsbt: psbt,
-      preimagePsbt: psbt,
-      descriptor: singleSig,
-    });
-    expect(rawTx).not.toBeNull();
-    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx!), { allowUnknownInputs: true });
+    const rawTx = getFinalizedRawTx(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: singleSig })
+    );
+    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx), { allowUnknownInputs: true });
     expect(decoded.inputsLength).toBe(1);
     expect(decoded.getInput(0).finalScriptWitness?.length).toBeGreaterThan(0);
   });
@@ -726,24 +739,24 @@ describe('finalizeWshDescriptorPsbt', () => {
     const psbt = buildPolicyTx(timelock, { signWith: [1], lockTime, sequence }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
   });
 
-  it('returns null when a required co-signer signature is missing', () => {
+  it('returns unsatisfied when a required co-signer signature is missing', () => {
     const psbt = buildPolicyTx(multiSig, { signWith: [1] }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
   it('finalizes when every required signature is present', () => {
     const psbt = buildPolicyTx(multiSig, { signWith: [1, 2] }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
   });
 
-  it('returns null when a merged co-signer signature is corrupted', () => {
+  it('returns unsatisfied when a merged co-signer signature is corrupted', () => {
     const psbt = rewriteFirstPartialSig(
       buildPolicyTx(multiSig, { signWith: [1, 2] }).toPSBT(),
       signature => {
@@ -755,10 +768,10 @@ describe('finalizeWshDescriptorPsbt', () => {
     );
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
-  it('returns null when a merged co-signer signature declares a sighash it was not made for', () => {
+  it('returns unsatisfied when a merged co-signer signature declares a sighash it was not made for', () => {
     const psbt = rewriteFirstPartialSig(
       buildPolicyTx(multiSig, { signWith: [1, 2] }).toPSBT(),
       signature => {
@@ -769,17 +782,17 @@ describe('finalizeWshDescriptorPsbt', () => {
     );
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
-  it('returns null when the timelock branch is planned but the tx locktime does not meet it', () => {
+  it('returns invalid-timelock when the timelock branch is planned but the tx locktime does not meet it', () => {
     const psbt = buildPolicyTx(timelock, { signWith: [1] }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
-    ).toBeNull();
+    ).toEqual(invalidTimelock);
   });
 
-  it('returns null when the timelock is met but the input sequence is final', () => {
+  it('returns invalid-timelock when the timelock is met but the input sequence is final', () => {
     const probe = makeWshDescriptorInstance(timelock, 0, {
       signersPubKeys: [Buffer.from(pubkeyA)],
     });
@@ -791,7 +804,7 @@ describe('finalizeWshDescriptorPsbt', () => {
     }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
-    ).toBeNull();
+    ).toEqual(invalidTimelock);
   });
 
   it('finalizes the timelock branch with an RBF-signalling sequence', () => {
@@ -806,28 +819,86 @@ describe('finalizeWshDescriptorPsbt', () => {
     }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
+  });
+
+  it('finalizes the timelock branch when the tx locktime exceeds the required height', () => {
+    const psbt = buildPolicyTx(timelock, {
+      signWith: [1],
+      lockTime: 1500,
+      sequence: 0xfffffffe,
+    }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
+    ).toMatchObject(finalized);
+  });
+
+  it('returns invalid-timelock when a time-based locktime is set for a height-based lock', () => {
+    const psbt = buildPolicyTx(timelock, {
+      signWith: [1],
+      lockTime: 600_000_000,
+      sequence: 0xfffffffe,
+    }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
+    ).toEqual(invalidTimelock);
+  });
+
+  describe('relative timelock', () => {
+    const relativeTimelock = `wsh(and_v(v:older(144),pk(${xpubA}/0/0)))`;
+    const timeTypedSequence = 0x00400000 | 144;
+    const disabledSequence = 0x80000000 + 144;
+
+    function finalizeWithSequence(sequence: number, version?: number) {
+      const psbt = buildPolicyTx(relativeTimelock, { signWith: [1], sequence, version }).toPSBT();
+      return finalizeWshDescriptorPsbt({
+        signedPsbt: psbt,
+        preimagePsbt: psbt,
+        descriptor: relativeTimelock,
+      });
+    }
+
+    it('finalizes with the exact required sequence', () => {
+      expect(finalizeWithSequence(144)).toMatchObject(finalized);
+    });
+
+    it('finalizes when the input sequence exceeds the required blocks', () => {
+      expect(finalizeWithSequence(200)).toMatchObject(finalized);
+    });
+
+    it('returns invalid-timelock when the input sequence is below the required blocks', () => {
+      expect(finalizeWithSequence(100)).toEqual(invalidTimelock);
+    });
+
+    it('returns invalid-timelock when the input sequence is time-based for a block-based lock', () => {
+      expect(finalizeWithSequence(timeTypedSequence)).toEqual(invalidTimelock);
+    });
+
+    it('returns invalid-timelock when the input sequence has the disable flag set', () => {
+      expect(finalizeWithSequence(disabledSequence)).toEqual(invalidTimelock);
+    });
+
+    it('returns invalid-timelock when the tx version predates BIP-68', () => {
+      expect(finalizeWithSequence(144, 1)).toEqual(invalidTimelock);
+    });
   });
 
   it('finalizes a 2-of-3 sortedmulti once any two signatures are present', () => {
     const twoOfThree = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0,${makeNativeSegwitAccountXpub(3)}/0/0))`;
     const psbt = buildPolicyTx(twoOfThree, { signWith: [2, 3] }).toPSBT();
-    const rawTx = finalizeWshDescriptorPsbt({
-      signedPsbt: psbt,
-      preimagePsbt: psbt,
-      descriptor: twoOfThree,
-    });
-    expect(rawTx).not.toBeNull();
-    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx!), { allowUnknownInputs: true });
+    const rawTx = getFinalizedRawTx(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: twoOfThree })
+    );
+    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx), { allowUnknownInputs: true });
     expect(decoded.getInput(0).finalScriptWitness?.length).toBeGreaterThan(0);
   });
 
-  it('returns null for a 2-of-3 sortedmulti with only one signature', () => {
+  it('returns unsatisfied for a 2-of-3 sortedmulti with only one signature', () => {
     const twoOfThree = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0,${makeNativeSegwitAccountXpub(3)}/0/0))`;
     const psbt = buildPolicyTx(twoOfThree, { signWith: [1] }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: twoOfThree })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
   it('finalizes a coordinator-style origin-prefixed sortedmulti psbt', () => {
@@ -839,19 +910,20 @@ describe('finalizeWshDescriptorPsbt', () => {
         preimagePsbt: psbt,
         descriptor: coordinatorDescriptor,
       })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
   });
 
   it('finalizes a sortedmulti policy when every required signature is present', () => {
     const sortedMultiSig = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`;
     const psbt = buildPolicyTx(sortedMultiSig, { signWith: [1, 2] }).toPSBT();
-    const rawTx = finalizeWshDescriptorPsbt({
-      signedPsbt: psbt,
-      preimagePsbt: psbt,
-      descriptor: sortedMultiSig,
-    });
-    expect(rawTx).not.toBeNull();
-    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx!), { allowUnknownInputs: true });
+    const rawTx = getFinalizedRawTx(
+      finalizeWshDescriptorPsbt({
+        signedPsbt: psbt,
+        preimagePsbt: psbt,
+        descriptor: sortedMultiSig,
+      })
+    );
+    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx), { allowUnknownInputs: true });
     expect(decoded.getInput(0).finalScriptWitness?.length).toBeGreaterThan(0);
   });
 
@@ -862,14 +934,14 @@ describe('finalizeWshDescriptorPsbt', () => {
     }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: hashlock })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
   });
 
-  it('returns null when a required preimage is missing', () => {
+  it('returns unsatisfied when a required preimage is missing', () => {
     const psbt = buildPolicyTx(hashlock, { signWith: [1] }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: hashlock })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
   it('relays a preimage from the original psbt when the signed psbt dropped it', () => {
@@ -880,17 +952,17 @@ describe('finalizeWshDescriptorPsbt', () => {
     }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt, preimagePsbt, descriptor: hashlock })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
   });
 
-  it('returns null when a non-descriptor input cannot be finalized', () => {
+  it('returns unsatisfied when a non-descriptor input cannot be finalized', () => {
     const psbt = buildPolicyTx(singleSig, { signWith: [1], foreignInput: true }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: singleSig })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
-  it('returns null when no psbt input is locked by the descriptor', () => {
+  it('returns unsatisfied when no psbt input is locked by the descriptor', () => {
     const tx = new btc.Transaction();
     tx.addInput({
       txid: hexToBytes('22'.repeat(32)),
@@ -901,10 +973,10 @@ describe('finalizeWshDescriptorPsbt', () => {
     const psbt = tx.toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: singleSig })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
-  it('returns null when the signed psbt is missing the input index the preimage psbt matched', () => {
+  it('returns unsatisfied when the signed psbt is missing the input index the preimage psbt matched', () => {
     const { scriptPubKey, witnessScript } = compileWshDescriptor(singleSig);
     const preimageTx = new btc.Transaction({ allowUnknownInputs: true });
     preimageTx.addInput({
@@ -931,10 +1003,10 @@ describe('finalizeWshDescriptorPsbt', () => {
         preimagePsbt: preimageTx.toPSBT(),
         descriptor: singleSig,
       })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
-  it('returns null when the signed psbt input at the matched index is not locked by the descriptor', () => {
+  it('returns unsatisfied when the signed psbt input at the matched index is not locked by the descriptor', () => {
     const accountKey = deriveAddressIndexKey(1);
     const signedTx = new btc.Transaction();
     signedTx.addInput({
@@ -952,10 +1024,10 @@ describe('finalizeWshDescriptorPsbt', () => {
         preimagePsbt,
         descriptor: singleSig,
       })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
-  it('returns null for malformed psbt bytes', () => {
+  it('returns unsatisfied for malformed psbt bytes', () => {
     const malformed = new Uint8Array([1, 2, 3]);
     expect(
       finalizeWshDescriptorPsbt({
@@ -963,7 +1035,7 @@ describe('finalizeWshDescriptorPsbt', () => {
         preimagePsbt: malformed,
         descriptor: singleSig,
       })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 });
 

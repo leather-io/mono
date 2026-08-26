@@ -203,12 +203,27 @@ export function useRpcSignPsbt() {
           const signedPsbtHex = bytesToHex(signedTx.toPSBT());
 
           if (broadcast) {
-            const rawTx = finalizeWshDescriptorPsbt({
+            const finalized = finalizeWshDescriptorPsbt({
               signedPsbt: signedTx.toPSBT(),
               preimagePsbt: hexToBytes(psbtHex),
               descriptor,
             });
-            if (rawTx) {
+            if (finalized.status === 'invalid-timelock') {
+              void sendMessageToOriginatingFrame(
+                { frameId, tabId },
+                createRpcErrorResponse('signPsbt', {
+                  id: requestId,
+                  error: {
+                    code: RpcErrorCode.INVALID_REQUEST,
+                    message: RpcErrorMessage.InvalidTimelock,
+                  },
+                })
+              );
+              return navigate(RouteUrls.RequestError, {
+                state: { message: RpcErrorMessage.InvalidTimelock, title: 'Invalid timelock' },
+              });
+            }
+            if (finalized.status === 'finalized') {
               const destinations = descriptorDetails?.destinations ?? [];
               const amountSentFromPolicy = destinations.length
                 ? sumMoney(destinations.map(destination => destination.value))
@@ -218,7 +233,7 @@ export function useRpcSignPsbt() {
                 addressNativeSegwitTotal: amountSentFromPolicy,
                 addressTaprootTotal: createMoney(0, 'BTC'),
                 fee: descriptorDetails?.fee ?? createMoney(0, 'BTC'),
-                tx: rawTx,
+                tx: finalized.rawTx,
                 psbt: signedPsbtHex,
               });
               return;

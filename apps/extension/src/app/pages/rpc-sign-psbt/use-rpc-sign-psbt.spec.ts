@@ -142,6 +142,7 @@ const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
 const singleSigDescriptor = `wsh(pk(${xpubA}/0/0))`;
 const multiSigDescriptor = `wsh(multi(2,${xpubB}/0/0,${xpubA}/0/0))`;
+const timelockDescriptor = `wsh(and_v(v:after(1000),pk(${xpubA}/0/0)))`;
 const requestId = 'request-id';
 const origin = 'https://example.com';
 const frameId = 42;
@@ -304,6 +305,32 @@ describe(useRpcSignPsbt.name, () => {
     );
     expect(mocks.closeWindow).toHaveBeenCalled();
     expect(mocks.navigate).not.toHaveBeenCalled();
+  });
+
+  test('responds with an error when the tx cannot satisfy the descriptor timelock', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(timelockDescriptor, []).toPSBT());
+    const signedTx = buildPolicyTx(timelockDescriptor, [1]);
+    setRpcSignPsbtParams({ broadcast: true, descriptor: timelockDescriptor, psbtHex });
+    mocks.signDescriptorPsbt.mockResolvedValue(signedTx);
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.broadcastTx).not.toHaveBeenCalled();
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      createRpcErrorResponse('signPsbt', {
+        id: requestId,
+        error: {
+          code: RpcErrorCode.INVALID_REQUEST,
+          message: RpcErrorMessage.InvalidTimelock,
+        },
+      }),
+      { frameId }
+    );
+    expect(mocks.navigate).toHaveBeenCalledWith(RouteUrls.RequestError, {
+      state: { message: RpcErrorMessage.InvalidTimelock, title: 'Invalid timelock' },
+    });
+    expect(mocks.closeWindow).not.toHaveBeenCalled();
   });
 
   test('returns the signed descriptor psbt without broadcasting when broadcast is not requested', async () => {

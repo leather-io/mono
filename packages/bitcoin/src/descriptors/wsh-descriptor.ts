@@ -18,6 +18,11 @@ import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
 
 const wshDescriptorPrefix = 'wsh(';
 const sequenceFinal = 0xffffffff;
+const lockTimeThreshold = 500_000_000;
+const csvMinTxVersion = 2;
+const sequenceDisableFlag = 0x80000000;
+const sequenceTypeFlag = 0x00400000;
+const sequenceLockTimeMask = 0xffff;
 
 export function isWshDescriptor(descriptor: string) {
   return descriptor.trimStart().startsWith(wshDescriptorPrefix);
@@ -386,11 +391,32 @@ function validateDescriptorSignature(
   return ecc.verify(msghash, pubkey, signature);
 }
 
+function isLockTimeSatisfied(txLockTime: number, requiredLockTime: number) {
+  const sameType = txLockTime < lockTimeThreshold === requiredLockTime < lockTimeThreshold;
+  return sameType && txLockTime >= requiredLockTime;
+}
+
+function isSequenceSatisfied(inputSequence: number, requiredSequence: number) {
+  if (inputSequence >= sequenceDisableFlag) return false;
+  const sameType = (inputSequence & sequenceTypeFlag) === (requiredSequence & sequenceTypeFlag);
+  return (
+    sameType && (inputSequence & sequenceLockTimeMask) >= (requiredSequence & sequenceLockTimeMask)
+  );
+}
+
 export interface FinalizeWshDescriptorPsbtArgs {
   signedPsbt: Uint8Array;
   preimagePsbt: Uint8Array;
   descriptor: string;
 }
+
+export type FinalizeWshDescriptorPsbtResult =
+  | { status: 'finalized'; rawTx: string }
+  | { status: 'unsatisfied' }
+  | { status: 'invalid-timelock' };
+
+const unsatisfiedResult: FinalizeWshDescriptorPsbtResult = { status: 'unsatisfied' };
+const invalidTimelockResult: FinalizeWshDescriptorPsbtResult = { status: 'invalid-timelock' };
 
 // Attempts to finalize the descriptor-locked inputs of an already-signed PSBT
 // and return the raw transaction hex, ready to broadcast. Finalization satisfies
@@ -406,13 +432,13 @@ export function finalizeWshDescriptorPsbt({
   signedPsbt,
   preimagePsbt,
   descriptor,
-}: FinalizeWshDescriptorPsbtArgs): string | null {
+}: FinalizeWshDescriptorPsbtArgs): FinalizeWshDescriptorPsbtResult {
   try {
     const { scriptPubKey } = compileWshDescriptor(descriptor);
 
     const preimageTx = btc.Transaction.fromPSBT(preimagePsbt);
     const inputIndexes = getDescriptorMatchingInputIndexes(preimageTx, scriptPubKey);
-    if (!inputIndexes.length) return null;
+    if (!inputIndexes.length) return unsatisfiedResult;
 
     const preimages = extractWshDescriptorPreimages(preimageTx, inputIndexes);
     const psbt = Psbt.fromBuffer(Buffer.from(signedPsbt), {
@@ -421,10 +447,11 @@ export function finalizeWshDescriptorPsbt({
 
     for (const index of inputIndexes) {
       const input = psbt.data.inputs[index];
-      if (!input) return null;
+      if (!input) return unsatisfiedResult;
 
       const utxoScript = input.witnessUtxo?.script;
-      if (!utxoScript || bytesToHex(utxoScript) !== bytesToHex(scriptPubKey)) return null;
+      if (!utxoScript || bytesToHex(utxoScript) !== bytesToHex(scriptPubKey))
+        return unsatisfiedResult;
 
       const signersPubKeys = input.partialSig?.map(sig => sig.pubkey);
       const instance = makeWshDescriptorInstance(descriptor, 0, {
@@ -433,21 +460,26 @@ export function finalizeWshDescriptorPsbt({
       });
 
       const witnessScript = instance.getWitnessScript();
-      if (!witnessScript) return null;
+      if (!witnessScript) return unsatisfiedResult;
 
       input.witnessScript = witnessScript;
-      if (!psbt.validateSignaturesOfInput(index, validateDescriptorSignature)) return null;
+      if (!psbt.validateSignaturesOfInput(index, validateDescriptorSignature))
+        return unsatisfiedResult;
 
       const inputSequence = psbt.txInputs[index]?.sequence;
+      if (inputSequence === undefined) return unsatisfiedResult;
 
       const requiredLockTime = instance.getLockTime();
       if (requiredLockTime !== undefined) {
-        if (psbt.locktime !== requiredLockTime) return null;
-        if (inputSequence === undefined || inputSequence === sequenceFinal) return null;
+        if (!isLockTimeSatisfied(psbt.locktime, requiredLockTime)) return invalidTimelockResult;
+        if (inputSequence === sequenceFinal) return invalidTimelockResult;
       }
 
       const requiredSequence = instance.getSequence();
-      if (requiredSequence !== undefined && inputSequence !== requiredSequence) return null;
+      if (requiredSequence !== undefined) {
+        if (psbt.version < csvMinTxVersion) return invalidTimelockResult;
+        if (!isSequenceSatisfied(inputSequence, requiredSequence)) return invalidTimelockResult;
+      }
 
       // bitcoinerlab v3 removed Output.finalizePsbtInput, so finalize here: the
       // satisfier plans the miniscript solution from the signatures present on
@@ -461,7 +493,7 @@ export function finalizeWshDescriptorPsbt({
           network: getNetworkForDescriptor(descriptor),
         },
       });
-      if (!witness) return null;
+      if (!witness) return unsatisfiedResult;
 
       psbt.finalizeInput(index, () => ({
         finalScriptSig: undefined,
@@ -469,8 +501,8 @@ export function finalizeWshDescriptorPsbt({
       }));
     }
 
-    return psbt.extractTransaction(true).toHex();
+    return { status: 'finalized', rawTx: psbt.extractTransaction(true).toHex() };
   } catch {
-    return null;
+    return unsatisfiedResult;
   }
 }
