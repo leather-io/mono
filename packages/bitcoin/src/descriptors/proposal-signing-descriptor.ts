@@ -1,8 +1,13 @@
 import { bytesToHex } from '@noble/hashes/utils';
 
 import { getPsbtAsTransaction } from '../psbt/utils';
+import { bondCovenantAccountKeys, bondCovenantLeaf } from './bond-covenant-keys';
 import { parseBondLockScript } from './bond-lock-script';
-import { getBondVaultKeys, reconstructBondDescriptor } from './bond-template';
+import {
+  getBondVaultKeys,
+  instantiateBondDescriptor,
+  reconstructBondDescriptor,
+} from './bond-template';
 import { compileWshDescriptor } from './wsh-descriptor';
 
 // Resolves the descriptor a co-signer must hand the wallet to sign a proposal
@@ -41,18 +46,42 @@ export function resolveProposalSigningDescriptor(
       'Proposal inputs are locked by neither the vault policy nor a recognized bond script'
     );
 
+  const vaultKeys = getBondVaultKeys(policyDescriptor);
+
+  // Safe to try candidates: only one deriving the locked script passes the check below.
+  for (const accountKey of bondCovenantAccountKeys) {
+    try {
+      const candidate = instantiateBondDescriptor({
+        unlockHeight: bondLock.unlockHeight,
+        hash: bondLock.hashHex,
+        counterpartyKey: `${accountKey}/${bondCovenantLeaf}`,
+        ...vaultKeys,
+      });
+      if (bytesToHex(compileWshDescriptor(candidate).scriptPubKey) === inputScripts[0]) {
+        assertEveryInputMatches(inputScripts, inputScripts[0]);
+        return candidate;
+      }
+    } catch {
+      // not this bond's co-signer
+    }
+  }
+
   const bondDescriptor = reconstructBondDescriptor({
     unlockHeight: bondLock.unlockHeight,
     hash: bondLock.hashHex,
     covenantPubkey: bondLock.covenantPubkey,
-    ...getBondVaultKeys(policyDescriptor),
+    ...vaultKeys,
   });
 
   const bondScriptPubKey = bytesToHex(compileWshDescriptor(bondDescriptor).scriptPubKey);
   if (inputScripts[0] !== bondScriptPubKey)
     throw new Error("Bond script does not embed this vault's key set");
-  if (!inputScripts.every(script => script === bondScriptPubKey))
-    throw new Error('Proposal mixes bond inputs with inputs locked by other scripts');
+  assertEveryInputMatches(inputScripts, bondScriptPubKey);
 
   return bondDescriptor;
+}
+
+function assertEveryInputMatches(inputScripts: string[], expected: string): void {
+  if (!inputScripts.every(script => script === expected))
+    throw new Error('Proposal mixes bond inputs with inputs locked by other scripts');
 }
