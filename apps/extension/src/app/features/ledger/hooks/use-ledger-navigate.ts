@@ -30,7 +30,10 @@ export function useLedgerNavigate() {
       toConnectStep() {
         return navigate(RouteUrls.ConnectLedger, {
           replace: true,
-          state: { backgroundLocation: { pathname: RouteUrls.Home } },
+          state: {
+            backgroundLocation: { pathname: RouteUrls.Home },
+            fromLocation: location.state?.fromLocation,
+          },
         });
       },
 
