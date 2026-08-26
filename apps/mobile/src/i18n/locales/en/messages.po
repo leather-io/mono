@@ -866,6 +866,7 @@ msgstr "Feature waitlist notification"
 msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
+#: src/features/approver/stx/hooks.ts:27
 #: src/features/psbt-signer/psbt-signer.tsx:210
 msgid "Fee updated"
 msgstr "Fee updated"
@@ -971,6 +972,7 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
 #: src/features/psbt-signer/psbt-signer.tsx:322
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
@@ -1616,6 +1618,7 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:170
 #: src/features/psbt-signer/psbt-signer.tsx:321
 msgid "Show advanced options"
 msgstr "Show advanced options"
@@ -1638,6 +1641,7 @@ msgstr "Sign transaction"
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
+#: src/features/activity/translate-activity-status.ts:46
 #: src/features/psbt-signer/psbt-signer.tsx:256
 msgid "Signed"
 msgstr "Signed"
@@ -1889,6 +1893,8 @@ msgstr "This transaction sends funds to an output Leather can’t display as an 
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
+#: src/features/approver/components/sip10-recipient.tsx:43
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:145
 #: src/features/psbt-signer/psbt-signer.tsx:300
 msgid "To address"
 msgstr "To address"
@@ -2142,6 +2148,7 @@ msgstr "You will keep"
 msgid "You will transfer"
 msgstr "You will transfer"
 
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:136
 #: src/features/psbt-signer/psbt-signer.tsx:294
 msgid "You’ll send"
 msgstr "You’ll send"
