@@ -36,6 +36,7 @@ export interface BitcoinStakingPool {
   signerManagerContracts: Partial<Record<NetworkMode, string[]>>;
   supportsBtcPayout: boolean;
   fixedFeeBips?: number;
+  requiresSelfClaim?: boolean;
 }
 
 const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPool> = {
@@ -101,7 +102,8 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     providerId: 'stackingDao',
     name: 'Stacking DAO',
     url: 'https://www.stackingdao.com',
-    description: 'Stake without your STX leaving your wallet.',
+    description:
+      'Stake without your STX leaving your wallet. You claim rewards yourself; the pool never claims on your behalf, which is why it charges no fee.',
     signerManagerContracts: {
       // Verified on-chain 2026-07-31; signer-manager-luganodes-v1 from the
       // partner list is deliberately absent — it is not deployed on mainnet,
@@ -125,6 +127,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     },
     supportsBtcPayout: false,
     fixedFeeBips: 0,
+    requiresSelfClaim: true,
   },
   senseiNode: {
     providerId: 'senseiNode',

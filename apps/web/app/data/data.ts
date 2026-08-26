@@ -61,7 +61,7 @@ const liquidStackingPoolData = {
     ...providers.stackingDao,
     slug: 'stacking-dao',
     estApr: '5%',
-    fee: '5%',
+    fee: '10%',
     payout: 'stSTX',
   },
   lisa: {

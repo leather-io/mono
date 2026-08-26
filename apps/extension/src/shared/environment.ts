@@ -11,8 +11,6 @@ export const WALLET_ENVIRONMENT = process.env.WALLET_ENVIRONMENT ?? 'unknown';
 
 export const BITFLOW_API_HOST = process.env.BITFLOW_API_HOST ?? '';
 export const BITFLOW_API_KEY = process.env.BITFLOW_API_KEY ?? '';
-export const BITFLOW_READONLY_CALL_API_HOST = process.env.BITFLOW_READONLY_CALL_API_HOST ?? '';
-export const BITFLOW_READONLY_CALL_API_KEY = process.env.BITFLOW_READONLY_CALL_API_KEY ?? '';
 export const BITFLOW_KEEPER_API_KEY = process.env.BITFLOW_KEEPER_API_KEY ?? '';
 export const BITFLOW_KEEPER_API_HOST = process.env.BITFLOW_KEEPER_API_HOST ?? '';
 export const BITFLOW_PROVIDER_ADDRESS = process.env.BITFLOW_PROVIDER_ADDRESS ?? '';

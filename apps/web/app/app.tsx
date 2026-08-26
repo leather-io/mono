@@ -3,7 +3,6 @@ import { Outlet, useNavigate } from 'react-router';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '~/constants/query-client';
-import { ToastsProvider } from '~/features/toasts/toasts-provider';
 import { useDetectLeatherProvider } from '~/store/addresses';
 
 import type { LeatherProvider } from '@leather.io/rpc';
@@ -38,11 +37,9 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastsProvider>
-        <Tooltip.Provider delayDuration={320}>
-          <Outlet />
-        </Tooltip.Provider>
-      </ToastsProvider>
+      <Tooltip.Provider delayDuration={320}>
+        <Outlet />
+      </Tooltip.Provider>
     </QueryClientProvider>
   );
 }
