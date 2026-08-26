@@ -473,8 +473,11 @@ msgstr "By signing, this app can move your assets anytime."
 msgid "Can’t send to the same address"
 msgstr "Can’t send to the same address"
 
+#: src/components/sheets/warning-sheet.layout.tsx:51
 #: src/features/approver/components/approver-buttons/index.tsx:49
 #: src/features/approver/components/approver-buttons/index.tsx:61
+#: src/features/qr-scanner/use-camera-permission.ts:39
+#: src/features/send/components/recipient/recipient-guard-sheet.tsx:31
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -819,7 +822,7 @@ msgstr "Failed"
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:243
+#: src/features/psbt-signer/psbt-signer.tsx:245
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
 
@@ -863,7 +866,7 @@ msgstr "Feature waitlist notification"
 msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
-#: src/features/psbt-signer/psbt-signer.tsx:208
+#: src/features/psbt-signer/psbt-signer.tsx:210
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -968,7 +971,7 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
-#: src/features/psbt-signer/psbt-signer.tsx:320
+#: src/features/psbt-signer/psbt-signer.tsx:322
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -1490,6 +1493,9 @@ msgid "Restore wallet"
 msgstr "Restore wallet"
 
 #: src/features/approver/components/approver-buttons/index.tsx:64
+#: src/features/swap/components/asset-selector/asset-selector-error.tsx:26
+#: src/features/swap/components/quote-preview/quote-preview-error.tsx:18
+#: src/features/swap/components/review/swap-review-error-state.tsx:25
 msgid "Retry"
 msgstr "Retry"
 
@@ -1576,7 +1582,7 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:281
+#: src/features/psbt-signer/psbt-signer.tsx:283
 msgid "Send token"
 msgstr "Send token"
 
@@ -1610,7 +1616,7 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
-#: src/features/psbt-signer/psbt-signer.tsx:319
+#: src/features/psbt-signer/psbt-signer.tsx:321
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1623,8 +1629,8 @@ msgstr "Show balances"
 msgid "Sign Message"
 msgstr "Sign Message"
 
-#: src/features/psbt-signer/psbt-signer.tsx:253
-#: src/features/psbt-signer/psbt-signer.tsx:281
+#: src/features/psbt-signer/psbt-signer.tsx:254
+#: src/features/psbt-signer/psbt-signer.tsx:283
 msgid "Sign transaction"
 msgstr "Sign transaction"
 
@@ -1632,7 +1638,7 @@ msgstr "Sign transaction"
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
-#: src/features/psbt-signer/psbt-signer.tsx:255
+#: src/features/psbt-signer/psbt-signer.tsx:256
 msgid "Signed"
 msgstr "Signed"
 
@@ -1644,7 +1650,7 @@ msgstr "Signing"
 msgid "Signing failed"
 msgstr "Signing failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:254
+#: src/features/psbt-signer/psbt-signer.tsx:255
 msgid "Signing..."
 msgstr "Signing..."
 
@@ -1883,7 +1889,7 @@ msgstr "This transaction sends funds to an output Leather can’t display as an 
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
-#: src/features/psbt-signer/psbt-signer.tsx:298
+#: src/features/psbt-signer/psbt-signer.tsx:300
 msgid "To address"
 msgstr "To address"
 
@@ -1916,7 +1922,7 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:332
+#: src/features/psbt-signer/psbt-signer.tsx:334
 msgid "Total spend"
 msgstr "Total spend"
 
@@ -2136,7 +2142,7 @@ msgstr "You will keep"
 msgid "You will transfer"
 msgstr "You will transfer"
 
-#: src/features/psbt-signer/psbt-signer.tsx:292
+#: src/features/psbt-signer/psbt-signer.tsx:294
 msgid "You’ll send"
 msgstr "You’ll send"
 

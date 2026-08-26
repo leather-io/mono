@@ -86,6 +86,7 @@ function BaseSendTransferApprover(
   );
   // if all wallets deleted, tx will be undefined
   const psbtHex = tx ? bytesToHex(tx.psbt) : undefined;
+  const broadcast = props.request.params.broadcast ?? true;
 
   const fingerprint = bitcoinAccount?.nativeSegwit?.masterKeyFingerprint;
   const descriptor = bitcoinAccount?.nativeSegwit?.descriptor;
@@ -97,7 +98,8 @@ function BaseSendTransferApprover(
       feeEditorEnabled
       accountIndex={extractAccountIndexFromDescriptor(descriptor)}
       fingerprint={fingerprint}
-      broadcast={props.request.params.broadcast ?? true}
+      broadcast={broadcast}
+      signOnly={!broadcast}
       psbtHex={psbtHex}
       network={networkMode}
       onBack={props.closeApprover}
