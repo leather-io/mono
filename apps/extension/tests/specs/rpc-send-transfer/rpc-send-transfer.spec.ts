@@ -38,16 +38,22 @@ function clickActionButton(context: BrowserContext) {
   return async (buttonToPress: 'Cancel' | 'Approve' | 'Sign transaction') => {
     const popup = await context.waitForEvent('page');
     await popup.waitForTimeout(1000);
-    const btn = popup.locator(`text="${buttonToPress}"`);
+    const btn = popup.getByRole('button', { name: buttonToPress });
     await btn.click();
   };
 }
 
+const noBroadcastWarningTitle = "Leather won't broadcast this transaction";
+
 function approveAndAcceptTaprootWarning(context: BrowserContext) {
-  return async (buttonToPress: 'Approve' | 'Sign transaction') => {
+  return async (
+    buttonToPress: 'Approve' | 'Sign transaction',
+    beforeApprove?: (popup: Page) => Promise<void>
+  ) => {
     const popup = await context.waitForEvent('page');
     await popup.waitForTimeout(1000);
-    await popup.locator(`text="${buttonToPress}"`).click();
+    await beforeApprove?.(popup);
+    await popup.getByRole('button', { name: buttonToPress }).click();
     const continueBtn = popup.locator('text="I understand, continue"');
     await continueBtn.click({ timeout: 10000 });
   };
@@ -94,7 +100,9 @@ test.describe('RPC: sendTransfer', () => {
 
     const [result] = await Promise.all([
       openSendTransfer(page)(baseParams),
-      approveAndAcceptTaprootWarning(context)('Approve'),
+      approveAndAcceptTaprootWarning(context)('Approve', async popup => {
+        await test.expect(popup.getByText(noBroadcastWarningTitle)).toHaveCount(0);
+      }),
     ]);
 
     delete result.id;
@@ -117,7 +125,9 @@ test.describe('RPC: sendTransfer', () => {
 
     const [result] = await Promise.all([
       openSendTransfer(page)({ ...baseParams, broadcast: false }),
-      approveAndAcceptTaprootWarning(context)('Sign transaction'),
+      approveAndAcceptTaprootWarning(context)('Sign transaction', async popup => {
+        await test.expect(popup.getByText(noBroadcastWarningTitle)).toBeVisible();
+      }),
     ]);
 
     delete result.id;
@@ -139,7 +149,7 @@ test.describe('RPC: sendTransfer', () => {
     const resultPromise = openSendTransfer(page)({ ...baseParams, broadcast: false });
     const popup = await context.waitForEvent('page');
     await popup.waitForTimeout(1000);
-    await popup.locator('text="Sign transaction"').click();
+    await popup.getByRole('button', { name: 'Sign transaction' }).click();
 
     const warningDialog = popup.getByTestId(SendCryptoAssetSelectors.TaprootUtxoWarningDialog);
     await test.expect(warningDialog).toBeVisible({ timeout: 10000 });

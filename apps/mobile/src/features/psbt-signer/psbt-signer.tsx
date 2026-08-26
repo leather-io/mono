@@ -48,6 +48,7 @@ import { ApproverButtons } from '../approver/components/approver-buttons';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { BtcStatusRow } from '../approver/components/status-row/btc-status-row';
 import { useOpenUrl } from '../browser/browser/use-open-url';
+import { PsbtRequestNoBroadcastWarningLabel } from './components/psbt-request-no-broadcast-warning-label';
 import { PsbtRequestSighashWarningLabel } from './components/psbt-request-sighash-warning-label';
 import { PsbtRequestUnknownOutputWarningLabel } from './components/psbt-request-unknown-output-warning-label';
 import { UnrecognizedOutputsCard } from './components/unrecognized-outputs-card';
@@ -246,6 +247,14 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
     }
   }
 
+  const signOnlyButtonLabels = broadcast
+    ? {}
+    : {
+        approveLabel: t`Sign transaction`,
+        submittingLabel: t`Signing...`,
+        submittedLabel: t`Signed`,
+      };
+
   function onViewDetails() {
     if (!broadcastedTxid) return;
 
@@ -269,7 +278,8 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
     <>
       <Approver requester={origin}>
         <Approver.Container>
-          <Approver.Header title={t`Send token`} />
+          <Approver.Header title={broadcast ? t`Send token` : t`Sign transaction`} />
+          {!broadcast && <PsbtRequestNoBroadcastWarningLabel origin={origin} />}
           {psbtDetails.isPsbtMutable && <PsbtRequestSighashWarningLabel origin={origin} />}
           {unrecognizedOutputs.length > 0 && (
             <PsbtRequestUnknownOutputWarningLabel origin={origin} />
@@ -328,6 +338,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
             onCopy={broadcast ? onCopy : undefined}
             onViewDetails={broadcast ? onViewDetails : undefined}
             onClose={onClose}
+            {...signOnlyButtonLabels}
           />
         </Approver.Footer>
       </Approver>
