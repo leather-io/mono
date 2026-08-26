@@ -25,7 +25,7 @@ import {
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
-import { leather } from '~/utils/leather-sdk';
+import { wallet } from '~/utils/wallet';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 import { stxToMicroStx } from '@leather.io/utils';
@@ -89,7 +89,7 @@ function StartStakingLayout({
   client,
   signerManagerContractId: signerManagerContractIdOverride,
 }: StartStakingLayoutProps) {
-  const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
+  const { stacksAccount, btcPaymentAddress } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No STX address available');
 
   const navigate = useNavigate();
@@ -137,7 +137,7 @@ function StartStakingLayout({
     defaultValues: {
       cycles: DEFAULT_STAKING_CYCLES,
       payoutEnabled: false,
-      rewardAddress: btcAddressP2wpkh?.address,
+      rewardAddress: btcPaymentAddress?.address,
       maxFeeSats: '',
     },
     resolver: zodResolver(schema),
@@ -151,7 +151,7 @@ function StartStakingLayout({
     mutate: submitStake,
     isPending: handleStakePending,
     error: stakeError,
-  } = useMutation(createStakeMutationOptions({ leather, client }));
+  } = useMutation(createStakeMutationOptions({ wallet, client }));
 
   const handleStake = formMethods.handleSubmit(values => {
     if (!signerManagerContractId) return;

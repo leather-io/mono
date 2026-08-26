@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
 import { usePox5ClaimableRewards } from '~/features/bitcoin-staking/queries/pox5-stacking.query';
 import { createClaimRewardsMutationOptions } from '~/features/bitcoin-staking/transactions/pox5-mutations';
-import { leather } from '~/utils/leather-sdk';
+import { wallet } from '~/utils/wallet';
 
 import { Button } from '@leather.io/ui';
 
@@ -20,7 +20,7 @@ export function ClaimRewardsButton({
   const claimable = usePox5ClaimableRewards();
 
   const { mutateAsync: claimRewards, isPending } = useMutation(
-    createClaimRewardsMutationOptions({ leather })
+    createClaimRewardsMutationOptions({ wallet })
   );
 
   // Claims are per-cycle transactions; claim the oldest unclaimed cycle first.

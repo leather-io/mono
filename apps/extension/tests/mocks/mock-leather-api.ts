@@ -292,6 +292,20 @@ export async function mockLeatherApiRequests(page: Page | BrowserContext) {
     });
   });
 
+  await page.route('**/v1/compliance/addresses/**', route => {
+    const address = route.request().url().split('/').at(-1) ?? '';
+    return route.fulfill({
+      json: {
+        address,
+        status: 'compliant',
+        checks: [
+          { type: 'ofac', result: 'pass' },
+          { type: 'risk_screening', result: 'pass' },
+        ],
+      },
+    });
+  });
+
   await page.route('**/v1/defi/bitflow/pools**', route =>
     route.fulfill({
       json: {

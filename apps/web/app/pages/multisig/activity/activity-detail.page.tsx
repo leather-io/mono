@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { Box, Flex } from 'leather-styles/jsx';
-import { CopyAddress } from '~/components/copy-address';
-import { ExternalLink } from '~/components/external-link';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
@@ -15,66 +13,14 @@ import { useBlockchainActivityByTxIdDetailQuery } from '~/queries/activity/block
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import {
-  type BlockchainActivityView,
-  getBitcoinExplorerLink,
-  getStacksExplorerLink,
-} from '@leather.io/features';
-import type {
-  AuthNetworkId,
-  MarketData,
-  Money,
-  NetworkConfiguration,
-  OnChainActivityStatus,
-} from '@leather.io/models';
-import { baseCurrencyAmountInQuote } from '@leather.io/utils';
+import type { AuthNetworkId } from '@leather.io/models';
 
-import { type BadgeVariant } from '../components/badge';
-import {
-  DetailLocationRow,
-  DetailRow,
-  DetailStatusRow,
-  DetailTable,
-  balanceChangeValue,
-  moneyWithFiat,
-  pendingValue,
-} from '../components/detail-table';
+import { toFiat } from '../components/detail-table';
 import { MultisigErrorState } from '../components/multisig-error-state';
-import { MultisigHero } from '../components/multisig-hero';
 import { MultisigPage } from '../components/multisig-page';
-import { SectionLabel } from '../components/section-label';
+import { VaultActivityDetail } from '../components/vault-activity-detail';
 import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
-import { formatRelativeTime } from '../tx/relative-time';
-
-const onChainStatusDisplay: Record<
-  OnChainActivityStatus,
-  { label: string; variant: BadgeVariant }
-> = {
-  success: { label: 'Confirmed', variant: 'success' },
-  pending: { label: 'Pending', variant: 'pending' },
-  failed: { label: 'Failed', variant: 'error' },
-};
-
-function explorerLink(view: BlockchainActivityView, network: NetworkConfiguration): string | null {
-  if (view.chain === 'bitcoin') {
-    return getBitcoinExplorerLink({
-      networkPreference: network.chain.bitcoin.bitcoinNetwork,
-      id: view.txid,
-      type: 'tx',
-    });
-  }
-  return getStacksExplorerLink({
-    mode: network.chain.bitcoin.mode,
-    type: 'txid',
-    value: view.txid,
-  });
-}
-
-function toFiat(money: Money | undefined, marketData: MarketData | undefined): Money | undefined {
-  if (!money || !marketData || money.symbol !== marketData.pair.base) return undefined;
-  return baseCurrencyAmountInQuote(money, marketData);
-}
 
 export function ActivityDetailPage() {
   const { vaultId, accountId, txid } = useParams();
@@ -143,12 +89,7 @@ export function ActivityDetailPage() {
     );
   }
 
-  const { view, activity: onchain } = detail;
-  const status = onChainStatusDisplay[view.status];
-  const link = explorerLink(view, settings.network);
-  const counterpartyLabel = onchain.initiatedByUser ? 'To' : 'From';
-  const feeFiat = toFiat(onchain.fee, marketData.data);
-  const { balanceChanges } = onchain;
+  const feeFiat = toFiat(detail.activity.fee, marketData.data);
   const vaultLink =
     vaultId && vault.data ? { name: vault.data.name, to: multisigPaths.vault(vaultId) } : undefined;
   const accountLink =
@@ -158,55 +99,14 @@ export function ActivityDetailPage() {
 
   return (
     <MultisigPage title="Activity" backTo={backTo} onBack={onBack} maxWidth="685px">
-      <MultisigHero
-        variant="balance"
+      <VaultActivityDetail
+        item={detail}
         themeId={vaultThemeFromName(vault.data?.theme).id}
-        primary={view.title || '—'}
-        secondary={view.subtitle || formatRelativeTime(new Date(view.timestamp * 1000))}
+        network={settings.network}
+        vaultLink={vaultLink}
+        accountLink={accountLink}
+        feeFiat={feeFiat}
       />
-
-      <SectionLabel>Transaction details</SectionLabel>
-      <DetailTable>
-        <DetailStatusRow
-          label={status.label}
-          variant={status.variant}
-          highlight={view.status === 'pending'}
-        />
-        <DetailLocationRow vault={vaultLink} account={accountLink} />
-        {balanceChanges.length === 1 ? (
-          <DetailRow label="Amount">{balanceChangeValue(balanceChanges[0])}</DetailRow>
-        ) : (
-          balanceChanges.map(change => (
-            <DetailRow
-              key={`${change.direction}-${change.amount.crypto.symbol}`}
-              label={change.direction === 'sent' ? 'Sent' : 'Received'}
-            >
-              {balanceChangeValue(change)}
-            </DetailRow>
-          ))
-        )}
-        {onchain.counterparty ? (
-          <DetailRow label={counterpartyLabel}>
-            <CopyAddress addr={onchain.counterparty} emphasis />
-          </DetailRow>
-        ) : null}
-        {onchain.fee ? (
-          <DetailRow label="Network fee">{moneyWithFiat(onchain.fee, feeFiat)}</DetailRow>
-        ) : null}
-        <DetailRow label="Date">{formatRelativeTime(new Date(view.timestamp * 1000))}</DetailRow>
-        <DetailRow label="Transaction ID">
-          <CopyAddress addr={view.txid} emphasis />
-        </DetailRow>
-        <DetailRow label="Inputs and Outputs">
-          {link ? (
-            <ExternalLink href={link} withIcon>
-              Explorer
-            </ExternalLink>
-          ) : (
-            pendingValue
-          )}
-        </DetailRow>
-      </DetailTable>
     </MultisigPage>
   );
 }

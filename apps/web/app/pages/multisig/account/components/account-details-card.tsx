@@ -7,6 +7,7 @@ import type { Vault, VaultAccount } from '@leather.io/models';
 import {
   BasicTooltip,
   Button,
+  CheckmarkIcon,
   IconButton,
   ListItemBox,
   PencilIcon,
@@ -25,16 +26,18 @@ interface AccountDetailsCardProps {
   currentUserAddress?: string;
   onAddToWallet(): void;
   isAddingToWallet?: boolean;
+  isAddedToWallet?: boolean;
   onEdit?(): void;
 }
 
-function CardRow({ children }: { children: ReactNode }) {
+function CardRow({ children, highlight }: { children: ReactNode; highlight?: boolean }) {
   return (
     <Box
       p="space.04"
       borderTopWidth="1px"
       borderTopStyle="solid"
       borderTopColor="ink.border-transparent"
+      bgImage={highlight ? 'var(--multisig-collecting-wash)' : undefined}
     >
       {children}
     </Box>
@@ -47,6 +50,7 @@ export function AccountDetailsCard({
   currentUserAddress,
   onAddToWallet,
   isAddingToWallet,
+  isAddedToWallet,
   onEdit,
 }: AccountDetailsCardProps) {
   const theme = vaultThemeFromName(vault.theme);
@@ -91,10 +95,43 @@ export function AccountDetailsCard({
         />
       </Box>
 
+      <CardRow highlight={!isAddedToWallet}>
+        {isAddedToWallet ? (
+          <>
+            <Button variant="outline" size="sm" fullWidth disabled>
+              <Flex alignItems="center" gap="space.02">
+                <CheckmarkIcon variant="small" color="ink.text-subdued" />
+                Added to your Leather extension
+              </Flex>
+            </Button>
+            <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.03">
+              On this browser. Using another device? Add it again there.
+            </styled.p>
+          </>
+        ) : (
+          <>
+            <Button
+              variant="solid"
+              size="sm"
+              fullWidth
+              onClick={onAddToWallet}
+              aria-busy={isAddingToWallet}
+              disabled={isAddingToWallet}
+            >
+              <Flex alignItems="center" gap="space.02">
+                <PlusIcon variant="small" color="ink.background-primary" />
+                Add account to wallet
+              </Flex>
+            </Button>
+            <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.03">
+              Apps talk to your Leather extension, not this site. Until this account is in your
+              extension, dApps, contract calls and staking can&rsquo;t see it.
+            </styled.p>
+          </>
+        )}
+      </CardRow>
+
       <CardRow>
-        <styled.div textStyle="label.03" color="ink.text-subdued" mb="space.02">
-          Address
-        </styled.div>
         <CopyAddress addr={account.multisigAddress} grouped />
       </CardRow>
 
@@ -128,22 +165,6 @@ export function AccountDetailsCard({
             );
           })}
         </Flex>
-      </CardRow>
-
-      <CardRow>
-        <Button
-          variant="solid"
-          size="sm"
-          fullWidth
-          onClick={onAddToWallet}
-          aria-busy={isAddingToWallet}
-          disabled={isAddingToWallet}
-        >
-          <Flex alignItems="center" gap="space.02">
-            <PlusIcon variant="small" color="ink.background-primary" />
-            Add to wallet
-          </Flex>
-        </Button>
       </CardRow>
     </Box>
   );

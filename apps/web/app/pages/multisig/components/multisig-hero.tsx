@@ -29,7 +29,8 @@ export function MultisigHero({
   return (
     <Box
       borderRadius={bold ? 'md' : 'lg'}
-      p={bold ? 'space.05' : 'space.06'}
+      px={bold ? '28px' : 'space.06'}
+      py={bold ? 'space.05' : 'space.06'}
       mb="space.05"
       minHeight={bold ? '220px' : undefined}
       display={bold ? 'flex' : undefined}

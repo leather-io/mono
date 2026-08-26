@@ -8,6 +8,7 @@ import { StacksNetwork } from '@stacks/network';
 import BigNumber from 'bignumber.js';
 import memoize from 'p-memoize';
 
+import type { ComplianceScreeningPoint } from '@leather.io/analytics';
 import {
   createBitcoinAddress,
   generateBitcoinUnsignedTransaction,
@@ -99,21 +100,31 @@ export async function stxFormValuesToSerializedTransaction(
 interface addressComplianceValidatorParams {
   address: string;
   shouldCheckCompliance: boolean;
+  screeningPoint: ComplianceScreeningPoint;
 }
 
 async function rawAddressComplianceValidator({
   address,
   shouldCheckCompliance,
+  screeningPoint,
 }: addressComplianceValidatorParams) {
   if (!shouldCheckCompliance) return true;
 
   const result = await getComplianceService().checkAddressCompliance(address);
   if (result.status === 'non_compliant') {
-    analytics.track('non_compliant_entity_detected', { address });
+    analytics.track('non_compliant_entity_detected', {
+      address,
+      reason: result.reason,
+      screeningPoint,
+    });
     return false;
   }
   if (result.status === 'unavailable') {
-    analytics.track('compliance_check_unavailable', { address, reason: result.reason });
+    analytics.track('compliance_check_unavailable', {
+      address,
+      reason: result.reason,
+      screeningPoint,
+    });
   }
   return true;
 }

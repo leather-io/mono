@@ -109,7 +109,7 @@ export function useSbtcDepositTransaction(payer: BitcoinNativeSegwitPayer, utxos
   );
 
   // Check if the signer is compliant
-  useBreakOnNonCompliantEntity();
+  useBreakOnNonCompliantEntity('sbtc_deposit');
 
   return {
     async onReviewDepositSbtc({

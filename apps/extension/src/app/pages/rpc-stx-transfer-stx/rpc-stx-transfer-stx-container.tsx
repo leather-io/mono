@@ -54,7 +54,10 @@ export function RpcStxTransferStxContainer({ account }: RpcStxTransferStxContain
     ? getTxSenderAddress(unsignedTxForFeeEstimation)
     : account.address;
 
-  useBreakOnNonCompliantEntity([txSenderAddress, rpcRequest.params.recipient].filter(isDefined));
+  useBreakOnNonCompliantEntity(
+    'rpc_stx_transfer_stx',
+    [txSenderAddress, rpcRequest.params.recipient].filter(isDefined)
+  );
 
   if (!unsignedTxForFeeEstimation) return null;
 

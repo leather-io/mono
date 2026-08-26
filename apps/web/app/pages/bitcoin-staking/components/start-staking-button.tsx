@@ -2,9 +2,9 @@ import { ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
-import { StakingPoolSlug } from '~/data/bitcoin-staking-data';
+import { StakingPoolSlug, stakingProviderIdToSlug } from '~/data/bitcoin-staking-data';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
-import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { byosmPaths, stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { Button, ButtonProps, useOnMount } from '@leather.io/ui';
@@ -31,7 +31,23 @@ function StartStakingPositionCheck({ slug }: StartStakingButtonProps) {
   const { position } = usePox5Position();
   const { isLoading, to } = useStakingPoolLink(slug);
 
-  if (!to) return <StartStakingButtonLayout disabled aria-busy={isLoading || undefined} />;
+  if (!to) {
+    if (position.status === 'active') {
+      const switchTo = position.pool
+        ? stakingPaths.updateWithTarget(stakingProviderIdToSlug(position.pool.providerId), slug)
+        : byosmPaths.updateWithTarget(position.info.signerManagerContractId, slug);
+      return (
+        <StartStakingButtonLayout
+          variant="outline"
+          onClick={() => void navigate(switchTo)}
+          data-testid={`switch-pool-button-${slug}`}
+        >
+          {bitcoinStakingLabels.switchPool}
+        </StartStakingButtonLayout>
+      );
+    }
+    return <StartStakingButtonLayout disabled aria-busy={isLoading || undefined} />;
+  }
 
   if (position.status === 'active') {
     return (

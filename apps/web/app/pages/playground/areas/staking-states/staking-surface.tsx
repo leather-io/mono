@@ -120,21 +120,25 @@ export function Board({ label, note, route, children }: BoardProps) {
 }
 
 interface StakingPlaygroundShellProps {
+  title?: string;
+  description?: string;
   children: ReactNode;
 }
 
-export function StakingPlaygroundShell({ children }: StakingPlaygroundShellProps) {
+export function StakingPlaygroundShell({
+  title = 'Bitcoin staking surfaces',
+  description = 'Every pox-5 screen a staker can land on, stacked in the order they meet them, each in the states that change the design. The components are the ones that ship — only the data is mocked — so anything changed here is changed in the feature.',
+  children,
+}: StakingPlaygroundShellProps) {
   usePauseNetworkReads();
   const { address, disconnect } = useMockWallet();
 
   return (
     <Stack gap="space.11" pb="space.11">
       <Stack gap="space.03" maxWidth="70ch">
-        <styled.h1 textStyle="heading.03">Bitcoin staking surfaces</styled.h1>
+        <styled.h1 textStyle="heading.03">{title}</styled.h1>
         <styled.p textStyle="body.02" color="ink.text-subdued">
-          Every pox-5 screen a staker can land on, stacked in the order they meet them, each in the
-          states that change the design. The components are the ones that ship — only the data is
-          mocked — so anything changed here is changed in the feature.
+          {description}
         </styled.p>
         <Flex alignItems="center" gap="space.03" flexWrap="wrap">
           <styled.p textStyle="caption.01" color="ink.text-subdued">

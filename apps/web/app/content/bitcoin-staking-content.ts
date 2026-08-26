@@ -81,6 +81,38 @@ export const bitcoinStakingContent = {
     updateHelper: `This setting applies to every future claim.`,
     loadError: `We couldn't load your current payout preference, which is needed before your stake can be updated.`,
   },
+  switchSignerManager: {
+    sectionLabel: `Signer manager`,
+    helper: `Picking a different pool moves your whole position at the start of the next cycle. You'll accept the new pool's terms before confirming.`,
+    customOptionName: `Custom signer manager`,
+    customOptionNameWhenCurrentCustom: `Different custom contract`,
+    customOptionMeta: `Enter a contract address`,
+    inputPlaceholder: `Enter a contract address`,
+    validateLabel: `Validate contract`,
+    validatingLabel: `Validating…`,
+    contractValidLabel: `Contract valid`,
+    poolTerms(poolName: string) {
+      return `I have read and accepted ${poolName}'s terms and conditions`;
+    },
+    customAcknowledgment: `I understand this is a custom signer-manager contract and rewards depend on its policies`,
+    confirmSwitch: `Confirm switch`,
+    confirmUpdate: `Confirm update`,
+    validateFirst: `Validate contract first`,
+    summary: {
+      signerManager: `Signer manager`,
+      enterContractHint: `Enter a contract address to validate`,
+      pool: `Pool`,
+      fee: `Fee`,
+      rewardsToken: `Rewards token`,
+      amountStaked: `Amount staked`,
+      movesInFullSuffix: `, moves in full`,
+      lockedUntil: `Locked until`,
+      effective: `Effective`,
+      effectiveCaption: `One transaction, no unstaking needed`,
+      customRewardsValue: `Set by the custom contract`,
+      setByContract: `Set by the contract`,
+    },
+  },
   preparePhase: {
     title: `Staking is briefly paused`,
     description: `The network is preparing the next cycle. Staking actions reopen in about`,
@@ -123,6 +155,7 @@ export const bitcoinStakingContent = {
     },
     submitErrors: {
       rejected: `The request was cancelled in Leather. Nothing was submitted.`,
+      walletUnavailable: `No wallet connected. Reconnect your wallet and try again.`,
       unknown: `Couldn't submit the transaction. Please try again.`,
     },
     viewInExplorer: `View in explorer`,
@@ -178,4 +211,5 @@ export const bitcoinStakingLabels = {
   fee: `Fee`,
   startEarning: `Start earning`,
   viewPosition: `View position`,
+  switchPool: `Switch`,
 };
