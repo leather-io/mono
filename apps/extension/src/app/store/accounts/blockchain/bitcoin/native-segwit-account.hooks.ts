@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
+import { bytesToHex } from '@noble/hashes/utils';
 import { createSelector } from '@reduxjs/toolkit';
 import { HDKey } from '@scure/bip32';
 import { Psbt } from 'bitcoinjs-lib';
@@ -183,8 +184,9 @@ export function useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressInd
       // key. Re-adding our key would hit bip174's by-pubkey dedupe and throw
       // "Can not add duplicate data to array", so skip when it is already present.
       const pubkey = Buffer.from(nativeSegwitPayer.publicKey);
-      const hasDerivationForPubkey = tx.data.inputs[index].bip32Derivation?.some(entry =>
-        pubkey.equals(entry.pubkey)
+      const pubkeyHex = bytesToHex(pubkey);
+      const hasDerivationForPubkey = tx.data.inputs[index].bip32Derivation?.some(
+        entry => bytesToHex(entry.pubkey) === pubkeyHex
       );
       if (hasDerivationForPubkey) return;
 

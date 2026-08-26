@@ -5,6 +5,7 @@ import {
   registerLedgerWallet,
 } from '@bitcoinerlab/descriptors/ledger';
 import AppClient, { WalletPolicy } from '@ledgerhq/ledger-bitcoin';
+import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
 
@@ -86,11 +87,11 @@ export function useSignLedgerDescriptorTx() {
     // A coordinator PSBT may already carry a partialSig for the account key; the
     // device adding its own would collide on bip174's by-pubkey dedupe. Strip ours
     // (co-signer signatures stay) so signLedger can merge the fresh signature.
-    const accountPubkey = Buffer.from(accountKey.pubkey);
+    const accountPubkeyHex = bytesToHex(accountKey.pubkey);
     signingConfig.forEach(({ index }) => {
       const input = psbt.data.inputs[index];
       if (!input?.partialSig?.length) return;
-      const remaining = input.partialSig.filter(sig => !accountPubkey.equals(sig.pubkey));
+      const remaining = input.partialSig.filter(sig => bytesToHex(sig.pubkey) !== accountPubkeyHex);
       if (remaining.length === input.partialSig.length) return;
       if (remaining.length) input.partialSig = remaining;
       else delete input.partialSig;
