@@ -10,7 +10,6 @@ import {
 
 import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
 import type { StacksDerivationPathType } from '@leather.io/stacks';
-import { delay } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 import { assumedZeroFingerprint } from '@shared/utils';
@@ -28,13 +27,12 @@ import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigat
 import { immediatelyAttemptLedgerConnection } from '@app/features/ledger/hooks/use-when-reattempt-ledger-connection';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
-  MINIMUM_STACKS_APP_VERSION,
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
   requestPublicKeyForStxAccount,
-  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useAppDispatch } from '@app/store';
 import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
@@ -59,29 +57,13 @@ function LedgerRequestStacksKeys() {
 
   const chain = 'stacks';
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, outdatedAppVersionWarning } =
+  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
     useRequestLedgerKeys<StacksApp>({
       chain,
       connectApp: connectLedgerStacksApp,
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
-      async passesAdditionalVersionCheck(appVersion) {
-        if (appVersion.chain !== 'stacks') {
-          return true;
-        }
-
-        const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
-        if (!meetsMinimum) {
-          await delay(40);
-          void ledgerNavigate.toStacksAppOutdatedWarning({
-            currentVersion,
-            requiredVersion: MINIMUM_STACKS_APP_VERSION,
-          });
-          return false;
-        }
-
-        return true;
-      },
+      passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       onSuccess() {
         void navigate('/', { replace: true });
       },
@@ -176,7 +158,6 @@ function LedgerRequestStacksKeys() {
     pullPublicKeysFromDevice: requestKeys,
     latestDeviceResponse,
     awaitingDeviceConnection,
-    outdatedAppVersionWarning,
   };
 
   const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);

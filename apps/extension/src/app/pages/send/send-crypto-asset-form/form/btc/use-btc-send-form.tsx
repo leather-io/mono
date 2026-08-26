@@ -73,7 +73,7 @@ export function useBtcSendForm() {
       recipient: nonEmptyStringValidator()
         .concat(btcAddressValidator())
         .concat(btcAddressNetworkValidator(currentNetwork.chain.bitcoin.mode))
-        .concat(complianceValidator(btcAddressValidator())),
+        .concat(complianceValidator(btcAddressValidator(), 'send_form_btc')),
     }),
 
     async chooseTransactionFee(

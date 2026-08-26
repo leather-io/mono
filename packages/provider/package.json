@@ -2,7 +2,7 @@
   "name": "@leather.io/provider",
   "author": "leather-wallet",
   "description": "LeatherProvider package for Leather",
-  "version": "1.6.33",
+  "version": "1.7.1",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -23,9 +23,7 @@
     "./mobile": "./dist/injected-provider.js"
   },
   "dependencies": {
-    "@leather.io/rpc": "workspace:*",
-    "@stacks/connect": "7.4.0",
-    "@stacks/connect-jwt": "npm:@stacks/connect@7.4.0"
+    "@leather.io/rpc": "workspace:*"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

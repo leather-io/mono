@@ -8,19 +8,34 @@ import { PsbtAddressTotalItem } from './psbt-address-total-item';
 
 interface PsbtAddressTotalsProps {
   showNativeSegwitTotal: boolean;
+  showTaprootTotal: boolean;
 }
-export function PsbtAddressTransferTotals({ showNativeSegwitTotal }: PsbtAddressTotalsProps) {
-  const { addressNativeSegwit, addressNativeSegwitTotal } = usePsbtSignerContext();
+export function PsbtAddressTransferTotals({
+  showNativeSegwitTotal,
+  showTaprootTotal,
+}: PsbtAddressTotalsProps) {
+  const { addressNativeSegwit, addressNativeSegwitTotal, addressTaproot, addressTaprootTotal } =
+    usePsbtSignerContext();
   const calculateBitcoinFiatValue = useCalculateBitcoinFiatValue();
 
-  if (!showNativeSegwitTotal) return null;
-
   return (
-    <PsbtAddressTotalItem
-      hoverLabel={addressNativeSegwit}
-      subtitle={truncateMiddle(addressNativeSegwit)}
-      subValue={formatCurrency(calculateBitcoinFiatValue(addressNativeSegwitTotal))}
-      value={formatCurrency(addressNativeSegwitTotal)}
-    />
+    <>
+      {showNativeSegwitTotal ? (
+        <PsbtAddressTotalItem
+          hoverLabel={addressNativeSegwit}
+          subtitle={truncateMiddle(addressNativeSegwit)}
+          subValue={formatCurrency(calculateBitcoinFiatValue(addressNativeSegwitTotal))}
+          value={formatCurrency(addressNativeSegwitTotal)}
+        />
+      ) : null}
+      {showTaprootTotal ? (
+        <PsbtAddressTotalItem
+          hoverLabel={addressTaproot}
+          subtitle={truncateMiddle(addressTaproot)}
+          subValue={formatCurrency(calculateBitcoinFiatValue(addressTaprootTotal))}
+          value={formatCurrency(addressTaprootTotal)}
+        />
+      ) : null}
+    </>
   );
 }

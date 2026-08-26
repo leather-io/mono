@@ -5,12 +5,16 @@ export * from './bip322/verify-message-bip322';
 
 export * from './coin-selection/calculate-max-spend';
 export * from './coin-selection/coin-selection';
+export * from './descriptors/bond-lock-script';
+export * from './descriptors/bond-template';
+export * from './descriptors/proposal-signing-descriptor';
 export * from './descriptors/wsh-descriptor';
 export * from './coin-selection/coin-selection.utils';
 
 export * from './fees/bitcoin-fees';
 export * from './fees/btc-size-fee-estimator';
 
+export * from './mocks/key-mocks';
 export * from './mocks/mocks';
 
 export * from './schemas/address-schema';

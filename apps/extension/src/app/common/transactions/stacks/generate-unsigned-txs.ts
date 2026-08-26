@@ -18,7 +18,7 @@ import {
   type ContractCallPayload,
   type ContractDeployPayload,
   type STXTransferPayload,
-} from '@shared/utils/legacy-requests';
+} from './stacks-transaction-payloads';
 
 function initNonce(nonce?: number) {
   return nonce !== undefined ? new BN(nonce, 10) : undefined;

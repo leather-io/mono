@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
 import { useLeatherConnect } from '~/store/addresses';
-import { leather } from '~/utils/leather-sdk';
+import { wallet } from '~/utils/wallet';
 
 import { Button, ChevronDownIcon, ChevronUpIcon } from '@leather.io/ui';
 
@@ -38,7 +38,7 @@ export function ClaimableRewardsCard({
     mutate: submitClaimRewards,
     isPending,
     error: claimError,
-  } = useMutation(createClaimRewardsMutationOptions({ leather }));
+  } = useMutation(createClaimRewardsMutationOptions({ wallet }));
 
   // Claims are per-cycle transactions; claim the oldest unclaimed cycle first.
   const oldestUnclaimed = claimable.byCycle[0];

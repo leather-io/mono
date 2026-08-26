@@ -96,7 +96,7 @@ test.describe('RPC: stx_callContract propose from a Ledger policy account', () =
     // Closing the sheet settles the pending signing promise as a cancellation
     await popup.keyboard.press('Escape');
     await test
-      .expect(popup.getByText('Unable to broadcast transaction'))
+      .expect(popup.getByText('Unable to propose transaction'))
       .toBeVisible({ timeout: 20_000 });
     await test.expect(popup.getByText('user cancelled the signing operation')).toBeVisible();
 

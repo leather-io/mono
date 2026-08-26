@@ -8,7 +8,6 @@ initInpageProvider({
     document.dispatchEvent(new CustomEvent(DomEventName.request, { detail: rpcRequest }));
   },
   env: {
-    platform: 'extension',
     branch: BRANCH ?? '',
     commitSha: COMMIT_SHA ?? '',
     version: VERSION,

@@ -4,20 +4,38 @@ import { StacksNetwork } from '@stacks/network';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { v4 as uuidv4 } from 'uuid';
+import { useToast } from '~/features/toasts/use-toast';
+import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { analytics } from '~/utils/analytics/analytics';
 import { leather } from '~/utils/leather-sdk';
-import { type ExtensionState, isLeatherInstalled, whenExtensionState } from '~/utils/utils';
+import { type ExtensionState, isAnyWalletInstalled, whenExtensionState } from '~/utils/utils';
+import {
+  connectWallet,
+  disconnectWallet,
+  getConnectedWalletId,
+  leatherProviderId,
+  markLeatherAsSelectedWallet,
+  revokeWalletPermissions,
+} from '~/utils/wallet';
+import { WalletAddressEntry } from '~/utils/wallet-addresses';
 
-import { ChainId } from '@leather.io/models';
+import { AccountAddresses, ChainId } from '@leather.io/models';
 import { createAccountAddresses, delay } from '@leather.io/utils';
 
 import { useStacksNetwork } from './stacks-network';
 
-type GetAddressesResult = Awaited<ReturnType<typeof leather.getAddresses>>['addresses'];
+const addressesAtom = atomWithStorage<WalletAddressEntry[]>('addresses', []);
 
-const addressesAtom = atomWithStorage<GetAddressesResult>('addresses', []);
+const providerDetectedAtom = atom(isAnyWalletInstalled());
 
-const providerDetectedAtom = atom(isLeatherInstalled());
+const connectedWalletIdAtom = atom<string | null>(getConnectedWalletId());
+
+// Read at click time rather than render, so it needs no router context and
+// stays correct across client-side navigation.
+function isOnStakingRoute(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.location.pathname.startsWith(stakingPaths.index);
+}
 
 const extensionStateAtom = atom<ExtensionState>(get => {
   const addresses = get(addressesAtom);
@@ -29,18 +47,32 @@ const extensionStateAtom = atom<ExtensionState>(get => {
 const providerPollIntervalMs = 50;
 const providerPollMaxMs = 2000;
 
+const btcPaymentAddressPreference = ['p2wpkh', 'p2sh', 'p2pkh'] as const;
+
+const connectErrorMessage = `Couldn't connect wallet. Please try again.`;
+
 export function useDetectLeatherProvider() {
   const setProviderDetected = useSetAtom(providerDetectedAtom);
+  const setConnectedWalletId = useSetAtom(connectedWalletIdAtom);
+  const addresses = useAtomValue(addressesAtom);
 
   useEffect(() => {
-    if (isLeatherInstalled()) {
+    setConnectedWalletId(getConnectedWalletId());
+    if (addresses.length === 0) return;
+    if (getConnectedWalletId() !== null) return;
+    markLeatherAsSelectedWallet();
+    setConnectedWalletId(getConnectedWalletId());
+  }, [addresses, setConnectedWalletId]);
+
+  useEffect(() => {
+    if (isAnyWalletInstalled()) {
       setProviderDetected(true);
       return;
     }
 
     const start = Date.now();
     const interval = setInterval(() => {
-      if (isLeatherInstalled()) {
+      if (isAnyWalletInstalled()) {
         setProviderDetected(true);
         clearInterval(interval);
       } else if (Date.now() - start > providerPollMaxMs) {
@@ -57,7 +89,7 @@ const stacksAccountAtom = atom(get => {
   return addresses.find(address => address.symbol === 'STX');
 });
 
-const showMissingStacksKeysDialogAtom = atom(false);
+const showMissingStacksKeysDialogAtom = atom<false | 'leather' | 'generic'>(false);
 const showInstallLeatherDialogAtom = atom(false);
 
 export function useStacksAccount() {
@@ -71,6 +103,7 @@ async function waitForExtensionConnectAnimationToFinish() {
 export function useLeatherConnect() {
   const [addresses, setAddresses] = useAtom(addressesAtom);
   const stacksNetwork = useStacksNetwork();
+  const toast = useToast();
   const extensionState = useAtomValue(extensionStateAtom);
   const [showMissingStacksKeysDialog, setShowMissingStacksKeysDialog] = useAtom(
     showMissingStacksKeysDialogAtom
@@ -81,30 +114,54 @@ export function useLeatherConnect() {
 
   const stacksAccount = useStacksAccount();
 
+  const btcPaymentAddress = useMemo(() => {
+    for (const type of btcPaymentAddressPreference) {
+      const match = addresses.find(address => 'type' in address && address.type === type);
+      if (match) return match;
+    }
+    return undefined;
+  }, [addresses]);
+
   const btcAccount = useMemo(() => {
     const btcAddresses = addresses.filter(addr => addr.symbol === 'BTC');
     const descriptors = btcAddresses
       .filter(addr => 'descriptor' in addr)
       .map(addr => addr.descriptor);
 
-    return createAccountAddresses({ fingerprint: 'web-sdk', accountIndex: 0 }, descriptors);
-  }, [addresses]);
+    const account = createAccountAddresses(
+      { fingerprint: 'web-sdk', accountIndex: 0 },
+      descriptors
+    );
+    if (account.bitcoin || !btcPaymentAddress) return account;
+    if (!('type' in btcPaymentAddress) || !btcPaymentAddress.type) return account;
 
-  const btcAddressP2tr = useMemo(
-    () => addresses.find(address => 'type' in address && address.type === 'p2tr'),
-    [addresses]
-  );
+    const fixedAddressAccount: AccountAddresses = {
+      ...account,
+      bitcoin: {
+        type: 'fixedAddress',
+        address: btcPaymentAddress.address,
+        paymentType: btcPaymentAddress.type,
+      },
+    };
+    return fixedAddressAccount;
+  }, [addresses, btcPaymentAddress]);
 
-  const btcAddressP2wpkh = useMemo(
-    () => addresses.find(address => 'type' in address && address.type === 'p2wpkh'),
-    [addresses]
-  );
+  const accounts = { stacksAccount, btcAccount, btcPaymentAddress };
 
-  const accounts = { stacksAccount, btcAccount, btcAddressP2tr, btcAddressP2wpkh };
+  const [storedWalletId, setConnectedWalletId] = useAtom(connectedWalletIdAtom);
+
+  function syncConnectedWalletId() {
+    setConnectedWalletId(getConnectedWalletId());
+  }
+
+  const connectedWalletId = extensionState === 'connected' ? storedWalletId : null;
+  const isLeatherWallet = connectedWalletId === leatherProviderId;
 
   return {
     addresses,
     setAddresses,
+    connectedWalletId,
+    isLeatherWallet,
     showMissingStacksKeysDialog,
     setShowMissingStacksKeysDialog,
     showInstallLeatherDialog,
@@ -118,13 +175,50 @@ export function useLeatherConnect() {
     },
     async connect() {
       const startTime = performance.now();
+      const previousWalletId = getConnectedWalletId();
       analytics.untypedTrack('sign_in_clicked', { status: 'initiated' });
       try {
-        const result = await leather.getAddresses();
+        const result = await connectWallet({ allowWalletSelect: isOnStakingRoute() });
 
-        if (!result.addresses.some(address => address.symbol === 'STX')) {
+        if (result.status === 'canceled') {
+          syncConnectedWalletId();
+          if (result.sessionRevoked) setAddresses([]);
+          analytics.untypedTrack('sign_in_clicked', {
+            status: 'error',
+            reason: 'user_rejected',
+            duration: performance.now() - startTime,
+          });
+          return;
+        }
+
+        if (result.status === 'error') {
+          syncConnectedWalletId();
+          if (result.sessionRevoked) setAddresses([]);
+          toast.error(connectErrorMessage);
+          analytics.untypedTrack('sign_in_clicked', {
+            status: 'error',
+            reason: 'connect_failed',
+            duration: performance.now() - startTime,
+          });
+          return;
+        }
+
+        const walletAddresses = result.addresses;
+
+        if (!walletAddresses.some(address => address.symbol === 'STX')) {
+          const attemptedWalletId = getConnectedWalletId();
+          if (previousWalletId === leatherProviderId) {
+            await revokeWalletPermissions();
+            markLeatherAsSelectedWallet();
+          } else {
+            setAddresses([]);
+            disconnectWallet();
+          }
+          syncConnectedWalletId();
           await waitForExtensionConnectAnimationToFinish();
-          setShowMissingStacksKeysDialog(true);
+          setShowMissingStacksKeysDialog(
+            attemptedWalletId === leatherProviderId ? 'leather' : 'generic'
+          );
 
           analytics.untypedTrack('sign_in_clicked', {
             status: 'error',
@@ -138,16 +232,17 @@ export function useLeatherConnect() {
           status: 'success',
           duration: performance.now() - startTime,
         });
-        setAddresses(result.addresses);
+        setAddresses(walletAddresses);
+        syncConnectedWalletId();
         completeZealyConnectTask(
           stacksNetwork.network,
-          result.addresses.find(address => address.symbol === 'STX')?.address
+          walletAddresses.find(address => address.symbol === 'STX')?.address
         );
-        return result.addresses;
+        return walletAddresses;
       } catch {
         analytics.untypedTrack('sign_in_clicked', {
           status: 'error',
-          reason: 'user_rejected',
+          reason: 'connect_failed',
           duration: performance.now() - startTime,
         });
       }
@@ -155,11 +250,14 @@ export function useLeatherConnect() {
     disconnect() {
       analytics.untypedTrack('sign_out_clicked');
       setAddresses([]);
+      disconnectWallet();
+      syncConnectedWalletId();
     },
   };
 }
 
 function completeZealyConnectTask(network: StacksNetwork, address?: string) {
+  if (getConnectedWalletId() !== leatherProviderId) return;
   if (network.chainId === ChainId.Mainnet && address) {
     fetch('https://api.leather.io/v1/quests/connect-earn/complete', {
       method: 'POST',

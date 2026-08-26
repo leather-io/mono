@@ -1,12 +1,17 @@
-import type { CompiledWshDescriptor } from '@leather.io/bitcoin';
+import { type CompiledWshDescriptor, reencodeTestnetFamilyAddress } from '@leather.io/bitcoin';
 
 type WshDescriptorKey = CompiledWshDescriptor['keys'][number];
+
+export function toLedgerDisplayedAddress(address: string): string {
+  return reencodeTestnetFamilyAddress(address, 'testnet') ?? address;
+}
 
 export function isLedgerOnDeviceAddressConfirmed(
   onDeviceAddress: string,
   expectedAddress: string | null | undefined
 ): boolean {
-  return !!expectedAddress && onDeviceAddress === expectedAddress;
+  if (!expectedAddress) return false;
+  return toLedgerDisplayedAddress(onDeviceAddress) === toLedgerDisplayedAddress(expectedAddress);
 }
 
 export function descriptorHasNonAccountRawKey(

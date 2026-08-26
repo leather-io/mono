@@ -5,6 +5,16 @@ auditConfig:
     # @sentry/react-router peer-requires react-router 7.x. Remove this entry once
     # we update react-router to 8.3.0+ with a compatible Sentry release.
     - GHSA-qwww-vcr4-c8h2
+    # image-size ICNS parser infinite-loop DoS. Build-time only: image-size
+    # runs inside metro's asset pipeline on our own image assets and ships in
+    # no app artifact. The advisory's patched version (2.0.3) is not published
+    # on npm, and metro pins image-size ^1.0.2 and passes file paths, which the
+    # buffer-only 2.x API throws on. Remove this entry once image-size 2.0.3+
+    # is published and metro depends on ^2.
+    - GHSA-w3rx-r6r6-pgpr
+    # image-size JXL and HEIF parsers infinite-loop DoS. Same package, same
+    # exposure, and same fix constraints as the ICNS advisory above.
+    - GHSA-5p2g-fcmc-qvqq
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - axios

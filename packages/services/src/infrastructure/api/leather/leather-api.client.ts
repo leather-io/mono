@@ -52,6 +52,8 @@ export type LeatherApiTokenAnalyticsMapEntry = Extract<
   paths['/v1/analytics/native']['get']['responses'][200]['content']['application/json'],
   { format: 'map' }
 >['data'][string];
+export type LeatherApiAddressComplianceCheck =
+  paths['/v1/compliance/addresses/{address}']['get']['responses'][200]['content']['application/json'];
 
 interface ProposeMultisigTransactionOptions extends ApiRequestOptions {
   baseUrl?: string;
@@ -979,6 +981,25 @@ export class LeatherApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(['leather-api-protocol-contracts', id], fetchFn);
+  }
+
+  async fetchAddressComplianceCheck(
+    address: string,
+    { signal }: ApiRequestOptions = {}
+  ): Promise<LeatherApiAddressComplianceCheck> {
+    const { data } = await this.rateLimiter.add(
+      RateLimiterType.Leather,
+      () =>
+        this.client.GET('/v1/compliance/addresses/{address}', {
+          signal,
+          params: { path: { address } },
+        }),
+      {
+        priority: leatherApiPriorities.compliance,
+        signal,
+      }
+    );
+    return data!;
   }
 
   async proposeMultisigTransaction(
