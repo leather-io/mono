@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "pnpm run prepare:build && NODE_OPTIONS='--import ./instrument.server.mjs' react-router build",
+    "build": "pnpm run prepare:build && NODE_OPTIONS=\"$NODE_OPTIONS --import ./instrument.server.mjs --max-old-space-size=8192\" react-router build",
     "build:watch": "pnpm dev",
     "cf-typegen": "wrangler types",
     "deploy": "pnpm build && wrangler deploy",
