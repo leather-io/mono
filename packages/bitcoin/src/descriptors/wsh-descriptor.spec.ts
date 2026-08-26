@@ -779,6 +779,36 @@ describe('finalizeWshDescriptorPsbt', () => {
     ).toBeNull();
   });
 
+  it('returns null when the timelock is met but the input sequence is final', () => {
+    const probe = makeWshDescriptorInstance(timelock, 0, {
+      signersPubKeys: [Buffer.from(pubkeyA)],
+    });
+    const lockTime = probe.getLockTime() || 0;
+    const psbt = buildPolicyTx(timelock, {
+      signWith: [1],
+      lockTime,
+      sequence: 0xffffffff,
+    }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
+    ).toBeNull();
+  });
+
+  it('finalizes the timelock branch with an RBF-signalling sequence', () => {
+    const probe = makeWshDescriptorInstance(timelock, 0, {
+      signersPubKeys: [Buffer.from(pubkeyA)],
+    });
+    const lockTime = probe.getLockTime() || 0;
+    const psbt = buildPolicyTx(timelock, {
+      signWith: [1],
+      lockTime,
+      sequence: 0xfffffffd,
+    }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
+    ).not.toBeNull();
+  });
+
   it('finalizes a 2-of-3 sortedmulti once any two signatures are present', () => {
     const twoOfThree = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0,${makeNativeSegwitAccountXpub(3)}/0/0))`;
     const psbt = buildPolicyTx(twoOfThree, { signWith: [2, 3] }).toPSBT();

@@ -17,6 +17,7 @@ import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
 
 const wshDescriptorPrefix = 'wsh(';
+const sequenceFinal = 0xffffffff;
 
 export function isWshDescriptor(descriptor: string) {
   return descriptor.trimStart().startsWith(wshDescriptorPrefix);
@@ -437,12 +438,16 @@ export function finalizeWshDescriptorPsbt({
       input.witnessScript = witnessScript;
       if (!psbt.validateSignaturesOfInput(index, validateDescriptorSignature)) return null;
 
+      const inputSequence = psbt.txInputs[index]?.sequence;
+
       const requiredLockTime = instance.getLockTime();
-      if (requiredLockTime !== undefined && psbt.locktime !== requiredLockTime) return null;
+      if (requiredLockTime !== undefined) {
+        if (psbt.locktime !== requiredLockTime) return null;
+        if (inputSequence === undefined || inputSequence === sequenceFinal) return null;
+      }
 
       const requiredSequence = instance.getSequence();
-      if (requiredSequence !== undefined && psbt.txInputs[index]?.sequence !== requiredSequence)
-        return null;
+      if (requiredSequence !== undefined && inputSequence !== requiredSequence) return null;
 
       // bitcoinerlab v3 removed Output.finalizePsbtInput, so finalize here: the
       // satisfier plans the miniscript solution from the signatures present on
