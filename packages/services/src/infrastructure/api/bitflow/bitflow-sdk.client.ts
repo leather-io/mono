@@ -8,6 +8,8 @@ import {
 } from '@bitflowlabs/core-sdk';
 import { inject, injectable } from 'inversify';
 
+import { HIRO_API_BASE_URL_MAINNET } from '@leather.io/models';
+
 import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
 import type { Environment } from '../../environment';
@@ -29,8 +31,7 @@ export class BitflowSdkClient {
       this.bitflow = new BitflowSDK({
         BITFLOW_API_HOST: env.bitflow?.bitflowApiHost,
         BITFLOW_API_KEY: env.bitflow?.bitflowApiKey,
-        READONLY_CALL_API_HOST: env.bitflow?.readonlyCallApiHost,
-        READONLY_CALL_API_KEY: env.bitflow?.readonlyCallApiKey,
+        READONLY_CALL_API_HOST: HIRO_API_BASE_URL_MAINNET,
         KEEPER_API_KEY: env.bitflow?.keeperApiKey,
         KEEPER_API_HOST: env.bitflow?.keeperApiHost,
         BITFLOW_PROVIDER_ADDRESS: env.bitflow?.bitflowProviderAddress,
