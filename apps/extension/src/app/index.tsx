@@ -6,6 +6,7 @@ import * as bitcoin from 'bitcoinjs-lib';
 import { initiateLeatherSessionTrackingPort } from '@shared/analytics/session-duration-tracking';
 import { initSentry } from '@shared/utils/analytics';
 import { warnUsersAboutDevToolsDangers } from '@shared/utils/dev-tools-warning-log';
+import { installHiroPartnerFetch } from '@shared/utils/hiro-partner-fetch';
 
 import { persistAndRenderApp } from '@app/common/persistence';
 import { persistor } from '@app/store';
@@ -19,6 +20,7 @@ import { initAppServices } from './services/init-app-services';
 // do it globally for the entire app.
 bitcoin.initEccLib(ecc);
 
+installHiroPartnerFetch();
 initAppServices();
 initSentry();
 warnUsersAboutDevToolsDangers();

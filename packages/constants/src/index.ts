@@ -1,13 +1,14 @@
-import type {
-  AccountDisplayPreference,
-  AccountDisplayPreferenceInfo,
-  BitcoinUnit,
-  BitcoinUnitInfo,
-  BtcAsset,
-  CryptoCurrency,
-  Currency,
-  NetworkModes,
-  StxAsset,
+import {
+  type AccountDisplayPreference,
+  type AccountDisplayPreferenceInfo,
+  type BitcoinUnit,
+  type BitcoinUnitInfo,
+  type BtcAsset,
+  type CryptoCurrency,
+  type Currency,
+  HIRO_API_BASE_URL_MAINNET,
+  type NetworkModes,
+  type StxAsset,
 } from '@leather.io/models';
 
 export const ZERO_INDEX = 0;
@@ -185,6 +186,7 @@ export const ARKADIKO_LINK = 'https://app.arkadiko.finance/';
 export const GRANITE_LINK = 'https://www.granite.world/';
 export const HERMETICA_LINK = 'https://www.hermetica.fi/';
 export const BITFLOW_LINK = 'https://app.bitflow.finance/';
+export const bitflowReadonlyCallApiHost: string = HIRO_API_BASE_URL_MAINNET;
 export const VELAR_LINK = 'https://www.velar.co/';
 
 export const USDCX_ASSET_ID_MAINNET =
