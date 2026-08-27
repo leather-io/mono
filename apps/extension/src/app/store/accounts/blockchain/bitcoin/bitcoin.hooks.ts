@@ -1,9 +1,9 @@
 import { useLocation } from 'react-router';
 
+import AppClient from '@ledgerhq/ledger-bitcoin';
 import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
-import AppClient from 'ledger-bitcoin';
 
 import {
   getBitcoinJsLibNetworkConfigByMode,

@@ -17,6 +17,19 @@ const bondDescriptorPattern =
   /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\(([^()]+)\)\)\),((?:sorted)?multi\([^()]+\))\)\)$/;
 
 const compressedPubkeyHexPattern = /^0[23][0-9a-f]{64}$/;
+const compressedPubkeyAnyCaseHexPattern = /^0[23][0-9a-fA-F]{64}$/;
+
+function isBondCounterpartyKeyExpression(keyExpression: string): boolean {
+  return (
+    compressedPubkeyHexPattern.test(keyExpression) || isExtendedPublicKeyExpression(keyExpression)
+  );
+}
+
+function normalizeBondCounterpartyKey(keyExpression: string): string {
+  return compressedPubkeyAnyCaseHexPattern.test(keyExpression)
+    ? keyExpression.toLowerCase()
+    : keyExpression;
+}
 
 function isValidVaultMultiExpression(multiExpression: string): boolean {
   const args = multiExpression.slice(multiExpression.indexOf('(') + 1, -1).split(',');
@@ -43,10 +56,11 @@ export function matchBondDescriptor(descriptor: string): BondDescriptorMatch | n
 
   const rawUnlockHeight = match[1];
   const hash = match[2];
-  const counterpartyKey = match[3];
+  const rawCounterpartyKey = match[3];
   const multiExpression = match[4];
-  if (!rawUnlockHeight || !hash || !counterpartyKey || !multiExpression) return null;
-  if (!isExtendedPublicKeyExpression(counterpartyKey)) return null;
+  if (!rawUnlockHeight || !hash || !rawCounterpartyKey || !multiExpression) return null;
+  const counterpartyKey = normalizeBondCounterpartyKey(rawCounterpartyKey);
+  if (!isBondCounterpartyKeyExpression(counterpartyKey)) return null;
   if (!isValidVaultMultiExpression(multiExpression)) return null;
 
   const unlockHeight = Number(rawUnlockHeight);
@@ -116,8 +130,10 @@ export function instantiateBondDescriptor({
   keyExpressions,
 }: InstantiateBondDescriptorArgs): string {
   assertValidBondLockParams({ unlockHeight, hash });
-  if (!isExtendedPublicKeyExpression(counterpartyKey))
-    throw new Error('Bond counterparty key must be an xpub or tpub key expression');
+  if (!isBondCounterpartyKeyExpression(counterpartyKey))
+    throw new Error(
+      'Bond counterparty key must be an xpub or tpub key expression or a compressed public key'
+    );
   assertValidVaultKeyExpressions(keyExpressions);
 
   return fillBondTemplate({

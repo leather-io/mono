@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 
-import BitcoinApp from 'ledger-bitcoin';
+import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 
 import { isError } from '@leather.io/utils';
 

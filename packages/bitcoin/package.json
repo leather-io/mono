@@ -28,7 +28,7 @@
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
-    "@bitcoinerlab/descriptors": "1.1.1",
+    "@bitcoinerlab/descriptors": "3.1.7",
     "@bitcoinerlab/secp256k1": "1.0.2",
     "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",
@@ -42,11 +42,11 @@
     "@scure/btc-signer": "1.6.0",
     "bignumber.js": "9.1.2",
     "bip21": "3.0.0",
-    "bip32": "4.0.0",
+    "bip32": "5.0.1",
     "bitcoin-address-validation": "2.2.3",
-    "bitcoinjs-lib": "6.1.5",
-    "ecpair": "2.1.0",
-    "varuint-bitcoin": "1.1.2",
+    "bitcoinjs-lib": "7.0.1",
+    "ecpair": "3.0.1",
+    "varuint-bitcoin": "2.0.0",
     "zod": "4.0.17"
   },
   "devDependencies": {

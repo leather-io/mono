@@ -18,7 +18,9 @@ describe(createToSpendTx.name, () => {
   test('bitcoinjs example', () => {
     const result = createToSpendTx(address, 'generatedWithBitcoinJs', 'mainnet');
 
-    expect(result.script.toString('hex')).toEqual('00142b05d564e6a7a33c087f16e0f730d1440123799d');
+    expect(Buffer.from(result.script).toString('hex')).toEqual(
+      '00142b05d564e6a7a33c087f16e0f730d1440123799d'
+    );
 
     expect(result.virtualToSpend.toHex()).toEqual(
       '00000000010000000000000000000000000000000000000000000000000000000000000000ffffffff220020093bbd44da65116318b960749b3d6172ab9775b5d1923a7c71e18845c6524852000000000100000000000000001600142b05d564e6a7a33c087f16e0f730d1440123799d00000000'
@@ -137,9 +139,7 @@ describe(signBip322MessageSimple.name, () => {
         const { nonWitnessUtxo } = input;
         if (!nonWitnessUtxo) throw new Error('expected nonWitnessUtxo on the to-sign input');
 
-        expect(Buffer.from(nonWitnessUtxo).toString('hex')).toEqual(
-          virtualToSpend.toBuffer().toString('hex')
-        );
+        expect(Buffer.from(nonWitnessUtxo).toString('hex')).toEqual(virtualToSpend.toHex());
       });
 
       test('the nonWitnessUtxo hashes to the input prevout, so a Ledger accepts it', async () => {
