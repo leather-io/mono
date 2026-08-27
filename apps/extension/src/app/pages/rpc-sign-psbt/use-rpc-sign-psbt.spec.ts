@@ -307,9 +307,10 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.navigate).not.toHaveBeenCalled();
   });
 
-  test('responds with an error when the tx cannot satisfy the descriptor timelock', async () => {
+  test('falls back to returning the partially signed psbt when the tx cannot satisfy the descriptor timelock', async () => {
     const psbtHex = bytesToHex(buildPolicyTx(timelockDescriptor, []).toPSBT());
     const signedTx = buildPolicyTx(timelockDescriptor, [1]);
+    const signedPsbtHex = bytesToHex(signedTx.toPSBT());
     setRpcSignPsbtParams({ broadcast: true, descriptor: timelockDescriptor, psbtHex });
     mocks.signDescriptorPsbt.mockResolvedValue(signedTx);
 
@@ -318,19 +319,14 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.broadcastTx).not.toHaveBeenCalled();
     expect(mocks.sendMessage).toHaveBeenCalledWith(
       tabId,
-      createRpcErrorResponse('signPsbt', {
+      createRpcSuccessResponse('signPsbt', {
         id: requestId,
-        error: {
-          code: RpcErrorCode.INVALID_REQUEST,
-          message: RpcErrorMessage.InvalidTimelock,
-        },
+        result: { hex: signedPsbtHex },
       }),
       { frameId }
     );
-    expect(mocks.navigate).toHaveBeenCalledWith(RouteUrls.RequestError, {
-      state: { message: RpcErrorMessage.InvalidTimelock, title: 'Invalid timelock' },
-    });
-    expect(mocks.closeWindow).not.toHaveBeenCalled();
+    expect(mocks.closeWindow).toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
   });
 
   test('returns the signed descriptor psbt without broadcasting when broadcast is not requested', async () => {

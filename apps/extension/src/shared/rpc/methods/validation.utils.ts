@@ -9,7 +9,6 @@ export const RpcErrorMessage = {
   UndefinedTransaction: 'Error generating unsigned transaction',
   UnsignedTransaction: 'Error signing transaction',
   BroadcastError: 'Error broadcasting transaction',
-  InvalidTimelock: 'Transaction locktime or sequence does not satisfy the descriptor timelock',
 } as const;
 
 export const accountSchema = z.number().int();

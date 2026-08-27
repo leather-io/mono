@@ -412,11 +412,9 @@ export interface FinalizeWshDescriptorPsbtArgs {
 
 export type FinalizeWshDescriptorPsbtResult =
   | { status: 'finalized'; rawTx: string }
-  | { status: 'unsatisfied' }
-  | { status: 'invalid-timelock' };
+  | { status: 'unsatisfied' };
 
 const unsatisfiedResult: FinalizeWshDescriptorPsbtResult = { status: 'unsatisfied' };
-const invalidTimelockResult: FinalizeWshDescriptorPsbtResult = { status: 'invalid-timelock' };
 
 // Attempts to finalize the descriptor-locked inputs of an already-signed PSBT
 // and return the raw transaction hex, ready to broadcast. Finalization satisfies
@@ -471,14 +469,14 @@ export function finalizeWshDescriptorPsbt({
 
       const requiredLockTime = instance.getLockTime();
       if (requiredLockTime !== undefined) {
-        if (!isLockTimeSatisfied(psbt.locktime, requiredLockTime)) return invalidTimelockResult;
-        if (inputSequence === sequenceFinal) return invalidTimelockResult;
+        if (!isLockTimeSatisfied(psbt.locktime, requiredLockTime)) return unsatisfiedResult;
+        if (inputSequence === sequenceFinal) return unsatisfiedResult;
       }
 
       const requiredSequence = instance.getSequence();
       if (requiredSequence !== undefined) {
-        if (psbt.version < csvMinTxVersion) return invalidTimelockResult;
-        if (!isSequenceSatisfied(inputSequence, requiredSequence)) return invalidTimelockResult;
+        if (psbt.version < csvMinTxVersion) return unsatisfiedResult;
+        if (!isSequenceSatisfied(inputSequence, requiredSequence)) return unsatisfiedResult;
       }
 
       // bitcoinerlab v3 removed Output.finalizePsbtInput, so finalize here: the

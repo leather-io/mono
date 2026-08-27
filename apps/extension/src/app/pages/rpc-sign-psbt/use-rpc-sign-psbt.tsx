@@ -208,21 +208,6 @@ export function useRpcSignPsbt() {
               preimagePsbt: hexToBytes(psbtHex),
               descriptor,
             });
-            if (finalized.status === 'invalid-timelock') {
-              void sendMessageToOriginatingFrame(
-                { frameId, tabId },
-                createRpcErrorResponse('signPsbt', {
-                  id: requestId,
-                  error: {
-                    code: RpcErrorCode.INVALID_REQUEST,
-                    message: RpcErrorMessage.InvalidTimelock,
-                  },
-                })
-              );
-              return navigate(RouteUrls.RequestError, {
-                state: { message: RpcErrorMessage.InvalidTimelock, title: 'Invalid timelock' },
-              });
-            }
             if (finalized.status === 'finalized') {
               const destinations = descriptorDetails?.destinations ?? [];
               const amountSentFromPolicy = destinations.length

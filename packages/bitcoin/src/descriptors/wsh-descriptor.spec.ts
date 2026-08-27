@@ -710,7 +710,6 @@ function getFinalizedRawTx(result: FinalizeWshDescriptorPsbtResult) {
 
 const finalized = { status: 'finalized' };
 const unsatisfied = { status: 'unsatisfied' };
-const invalidTimelock = { status: 'invalid-timelock' };
 
 describe('finalizeWshDescriptorPsbt', () => {
   const singleSig = `wsh(pk(${xpubA}/0/0))`;
@@ -785,14 +784,14 @@ describe('finalizeWshDescriptorPsbt', () => {
     ).toEqual(unsatisfied);
   });
 
-  it('returns invalid-timelock when the timelock branch is planned but the tx locktime does not meet it', () => {
+  it('returns unsatisfied when the timelock branch is planned but the tx locktime does not meet it', () => {
     const psbt = buildPolicyTx(timelock, { signWith: [1] }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
-    ).toEqual(invalidTimelock);
+    ).toEqual(unsatisfied);
   });
 
-  it('returns invalid-timelock when the timelock is met but the input sequence is final', () => {
+  it('returns unsatisfied when the timelock is met but the input sequence is final', () => {
     const probe = makeWshDescriptorInstance(timelock, 0, {
       signersPubKeys: [Buffer.from(pubkeyA)],
     });
@@ -804,7 +803,7 @@ describe('finalizeWshDescriptorPsbt', () => {
     }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
-    ).toEqual(invalidTimelock);
+    ).toEqual(unsatisfied);
   });
 
   it('finalizes the timelock branch with an RBF-signalling sequence', () => {
@@ -833,7 +832,7 @@ describe('finalizeWshDescriptorPsbt', () => {
     ).toMatchObject(finalized);
   });
 
-  it('returns invalid-timelock when a time-based locktime is set for a height-based lock', () => {
+  it('returns unsatisfied when a time-based locktime is set for a height-based lock', () => {
     const psbt = buildPolicyTx(timelock, {
       signWith: [1],
       lockTime: 600_000_000,
@@ -841,7 +840,7 @@ describe('finalizeWshDescriptorPsbt', () => {
     }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
-    ).toEqual(invalidTimelock);
+    ).toEqual(unsatisfied);
   });
 
   describe('relative timelock', () => {
@@ -866,20 +865,20 @@ describe('finalizeWshDescriptorPsbt', () => {
       expect(finalizeWithSequence(200)).toMatchObject(finalized);
     });
 
-    it('returns invalid-timelock when the input sequence is below the required blocks', () => {
-      expect(finalizeWithSequence(100)).toEqual(invalidTimelock);
+    it('returns unsatisfied when the input sequence is below the required blocks', () => {
+      expect(finalizeWithSequence(100)).toEqual(unsatisfied);
     });
 
-    it('returns invalid-timelock when the input sequence is time-based for a block-based lock', () => {
-      expect(finalizeWithSequence(timeTypedSequence)).toEqual(invalidTimelock);
+    it('returns unsatisfied when the input sequence is time-based for a block-based lock', () => {
+      expect(finalizeWithSequence(timeTypedSequence)).toEqual(unsatisfied);
     });
 
-    it('returns invalid-timelock when the input sequence has the disable flag set', () => {
-      expect(finalizeWithSequence(disabledSequence)).toEqual(invalidTimelock);
+    it('returns unsatisfied when the input sequence has the disable flag set', () => {
+      expect(finalizeWithSequence(disabledSequence)).toEqual(unsatisfied);
     });
 
-    it('returns invalid-timelock when the tx version predates BIP-68', () => {
-      expect(finalizeWithSequence(144, 1)).toEqual(invalidTimelock);
+    it('returns unsatisfied when the tx version predates BIP-68', () => {
+      expect(finalizeWithSequence(144, 1)).toEqual(unsatisfied);
     });
   });
 
