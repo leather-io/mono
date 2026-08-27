@@ -14,12 +14,12 @@ export const bondTemplateV1 = {
 } as const;
 
 const bondDescriptorPattern =
-  /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\(([^()]+)\)\)\),(sortedmulti\([^()]+\))\)\)$/;
+  /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\(([^()]+)\)\)\),((?:sorted)?multi\([^()]+\))\)\)$/;
 
 const compressedPubkeyHexPattern = /^0[23][0-9a-f]{64}$/;
 
 function isValidVaultMultiExpression(multiExpression: string): boolean {
-  const args = multiExpression.slice('sortedmulti('.length, -1).split(',');
+  const args = multiExpression.slice(multiExpression.indexOf('(') + 1, -1).split(',');
   const [threshold, ...keyExpressions] = args;
   if (!threshold || !/^\d+$/.test(threshold)) return false;
   if (!keyExpressions.length) return false;

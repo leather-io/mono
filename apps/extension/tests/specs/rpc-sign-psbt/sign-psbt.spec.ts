@@ -548,6 +548,43 @@ test.describe('Sign PSBT', () => {
     });
   });
 
+  test.describe('Witness script (p2wsh) inputs', () => {
+    test('that a p2wsh input forging the p2wpkh scriptCode is not signed', async ({
+      page,
+      context,
+    }) => {
+      const witnessScript = btc.p2pkh(addressKeychain.publicKey!).script;
+      const psbt = new btc.Transaction();
+      psbt.addInput({
+        txid: '2965dc62a012028b529c902da59606d65d35353c966aeaf9287f534547609f5f',
+        index: 0,
+        witnessUtxo: {
+          amount: 20000n,
+          script: btc.OutScript.encode({ type: 'wsh', hash: sha256(witnessScript) }),
+        },
+        witnessScript,
+      });
+      psbt.addOutputAddress('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d', 1000n, bitcoinTestnet);
+
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          broadcast: false,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      delete result.id;
+
+      test.expect(result.jsonrpc).toEqual('2.0');
+      test.expect(result.result).toBeDefined();
+
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
+      test.expect(signedTx.getInput(0).partialSig).toBeUndefined();
+    });
+  });
+
   test.describe('Descriptor (wsh miniscript) inputs', () => {
     const seed = mnemonicToSeedSync(TEST_ACCOUNT_SECRET_KEY);
     const nativeSegwitAccountXpub =

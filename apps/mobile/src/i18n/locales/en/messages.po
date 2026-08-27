@@ -365,7 +365,7 @@ msgstr "App is not protected with device-level PIN or biometrics."
 msgid "App Store"
 msgstr "App Store"
 
-#: src/features/approver/components/approver-buttons/index.tsx:40
+#: src/features/approver/components/approver-buttons/index.tsx:29
 msgid "Approve"
 msgstr "Approve"
 
@@ -474,8 +474,8 @@ msgid "Can’t send to the same address"
 msgstr "Can’t send to the same address"
 
 #: src/components/sheets/warning-sheet.layout.tsx:51
-#: src/features/approver/components/approver-buttons/index.tsx:37
 #: src/features/approver/components/approver-buttons/index.tsx:49
+#: src/features/approver/components/approver-buttons/index.tsx:61
 #: src/features/qr-scanner/use-camera-permission.ts:39
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:31
 msgid "Cancel"
@@ -519,7 +519,7 @@ msgstr "Clear search"
 msgid "Close the scanner"
 msgstr "Close the scanner"
 
-#: src/features/approver/components/approver-buttons/index.tsx:93
+#: src/features/approver/components/approver-buttons/index.tsx:105
 msgid "Close window"
 msgstr "Close window"
 
@@ -639,7 +639,7 @@ msgstr "Copy"
 msgid "Copy address"
 msgstr "Copy address"
 
-#: src/features/approver/components/approver-buttons/index.tsx:83
+#: src/features/approver/components/approver-buttons/index.tsx:95
 msgid "Copy ID"
 msgstr "Copy ID"
 
@@ -822,7 +822,7 @@ msgstr "Failed"
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:242
+#: src/features/psbt-signer/psbt-signer.tsx:245
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
 
@@ -867,7 +867,7 @@ msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
 #: src/features/approver/stx/hooks.ts:27
-#: src/features/psbt-signer/psbt-signer.tsx:207
+#: src/features/psbt-signer/psbt-signer.tsx:210
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -973,7 +973,7 @@ msgid "Hide account"
 msgstr "Hide account"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
-#: src/features/psbt-signer/psbt-signer.tsx:310
+#: src/features/psbt-signer/psbt-signer.tsx:322
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -1100,6 +1100,18 @@ msgstr "Learn more about stacking"
 #: src/utils/dapps.ts:95
 msgid "Leather"
 msgstr "Leather"
+
+#: src/features/psbt-signer/components/psbt-request-no-broadcast-warning-label.tsx:14
+msgid "Leather will sign this transaction and hand it to {origin}, which can broadcast it at any time — including later, when the fee you chose may no longer be enough. Continue only if you trust {origin}"
+msgstr "Leather will sign this transaction and hand it to {origin}, which can broadcast it at any time — including later, when the fee you chose may no longer be enough. Continue only if you trust {origin}"
+
+#: src/features/psbt-signer/components/psbt-request-no-broadcast-warning-label.tsx:15
+msgid "Leather will sign this transaction and hand it to this app, which can broadcast it at any time — including later, when the fee you chose may no longer be enough. Continue only if you trust this app."
+msgstr "Leather will sign this transaction and hand it to this app, which can broadcast it at any time — including later, when the fee you chose may no longer be enough. Continue only if you trust this app."
+
+#: src/features/psbt-signer/components/psbt-request-no-broadcast-warning-label.tsx:12
+msgid "Leather won't broadcast this transaction"
+msgstr "Leather won't broadcast this transaction"
 
 #: src/utils/dapps.ts:30
 msgid "Lisa"
@@ -1482,7 +1494,7 @@ msgstr "Restake"
 msgid "Restore wallet"
 msgstr "Restore wallet"
 
-#: src/features/approver/components/approver-buttons/index.tsx:52
+#: src/features/approver/components/approver-buttons/index.tsx:64
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:26
 #: src/features/swap/components/quote-preview/quote-preview-error.tsx:18
 #: src/features/swap/components/review/swap-review-error-state.tsx:25
@@ -1572,7 +1584,7 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:272
+#: src/features/psbt-signer/psbt-signer.tsx:283
 msgid "Send token"
 msgstr "Send token"
 
@@ -1607,7 +1619,7 @@ msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:170
-#: src/features/psbt-signer/psbt-signer.tsx:309
+#: src/features/psbt-signer/psbt-signer.tsx:321
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1620,11 +1632,17 @@ msgstr "Show balances"
 msgid "Sign Message"
 msgstr "Sign Message"
 
+#: src/features/psbt-signer/psbt-signer.tsx:254
+#: src/features/psbt-signer/psbt-signer.tsx:283
+msgid "Sign transaction"
+msgstr "Sign transaction"
+
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:120
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
 #: src/features/activity/translate-activity-status.ts:46
+#: src/features/psbt-signer/psbt-signer.tsx:256
 msgid "Signed"
 msgstr "Signed"
 
@@ -1635,6 +1653,10 @@ msgstr "Signing"
 #: src/features/activity/translate-activity-status.ts:50
 msgid "Signing failed"
 msgstr "Signing failed"
+
+#: src/features/psbt-signer/psbt-signer.tsx:255
+msgid "Signing..."
+msgstr "Signing..."
 
 #: src/shared/display-preference.ts:58
 msgid "SIP-009"
@@ -1690,11 +1712,11 @@ msgstr "Stacks address"
 msgid "Standard"
 msgstr "Standard"
 
-#: src/features/approver/components/approver-buttons/index.tsx:73
+#: src/features/approver/components/approver-buttons/index.tsx:31
 msgid "Submitted"
 msgstr "Submitted"
 
-#: src/features/approver/components/approver-buttons/index.tsx:60
+#: src/features/approver/components/approver-buttons/index.tsx:30
 msgid "Submitting..."
 msgstr "Submitting..."
 
@@ -1873,7 +1895,7 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 
 #: src/features/approver/components/sip10-recipient.tsx:43
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:145
-#: src/features/psbt-signer/psbt-signer.tsx:288
+#: src/features/psbt-signer/psbt-signer.tsx:300
 msgid "To address"
 msgstr "To address"
 
@@ -1906,7 +1928,7 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:322
+#: src/features/psbt-signer/psbt-signer.tsx:334
 msgid "Total spend"
 msgstr "Total spend"
 
@@ -2029,7 +2051,7 @@ msgstr "View and manage all your wallets in one place"
 msgid "View and manage your hidden accounts"
 msgstr "View and manage your hidden accounts"
 
-#: src/features/approver/components/approver-buttons/index.tsx:89
+#: src/features/approver/components/approver-buttons/index.tsx:101
 msgid "View details"
 msgstr "View details"
 
@@ -2127,7 +2149,7 @@ msgid "You will transfer"
 msgstr "You will transfer"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:136
-#: src/features/psbt-signer/psbt-signer.tsx:282
+#: src/features/psbt-signer/psbt-signer.tsx:294
 msgid "You’ll send"
 msgstr "You’ll send"
 
