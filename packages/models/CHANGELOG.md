@@ -36,6 +36,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.61.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.61.0...@leather.io/models-v0.61.1) (2026-08-27)
+
+
+### Bug Fixes
+
+* add @stacks/connect ([#2580](https://github.com/leather-io/mono/issues/2580)) ([625b20b](https://github.com/leather-io/mono/commit/625b20b6a68ee0c1bba63e892b46b837561b71e9))
+
 ## [0.61.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.60.0...@leather.io/models-v0.61.0) (2026-08-18)
 
 
