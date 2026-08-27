@@ -226,9 +226,11 @@ interface HistoricalEvents {
   ledger_message_signed_rejected: undefined;
   ledger_public_keys_pulled_from_device: undefined;
   ledger_stacks_address_standard_selected: { type: 'stacks' | 'ledgerLive' };
-  address_verification_started: { type: 'btcNativeSegwit' | 'btcTaproot' | 'btcMultisig' | 'stx' };
+  address_verification_started: {
+    type: 'btcNativeSegwit' | 'btcTaproot' | 'btcMultisig' | 'stx' | 'stxMultisig';
+  };
   address_verification_completed: {
-    type: 'btcNativeSegwit' | 'btcTaproot' | 'btcMultisig' | 'stx';
+    type: 'btcNativeSegwit' | 'btcTaproot' | 'btcMultisig' | 'stx' | 'stxMultisig';
     verified: boolean;
   };
   user_clicked_requested_by_link: { endpoint: string };

@@ -1,6 +1,7 @@
 import Transport from '@ledgerhq/hw-transport-webusb';
 import { ChainId } from '@stacks/network';
 import {
+  AddressHashMode,
   AddressVersion,
   PubKeyEncoding,
   createMessageSignature,
@@ -10,6 +11,7 @@ import {
 } from '@stacks/transactions';
 import StacksApp, {
   LedgerError,
+  MultisigAddressOptions,
   ResponseAddress,
   ResponseSign,
   ResponseVersion,
@@ -42,11 +44,65 @@ export function showStxAddressOnDevice(app: StacksApp) {
     app.showAddressAndPubKey(derivationPath, version);
 }
 
+export function showStxMultisigAddressOnDevice(app: StacksApp) {
+  return async (
+    derivationPath: string,
+    version: AddressVersion,
+    options: MultisigAddressOptions
+  ): Promise<ResponseAddress> => app.showMultisigAddressAndPubKey(derivationPath, version, options);
+}
+
 export function stacksChainIdToSingleSigAddressVersion(chainId: number): AddressVersion {
   return whenStacksChainId(chainId)({
     [ChainId.Mainnet]: AddressVersion.MainnetSingleSig,
     [ChainId.Testnet]: AddressVersion.TestnetSingleSig,
   });
+}
+
+export function stacksChainIdToMultiSigAddressVersion(chainId: number): AddressVersion {
+  return whenStacksChainId(chainId)({
+    [ChainId.Mainnet]: AddressVersion.MainnetMultiSig,
+    [ChainId.Testnet]: AddressVersion.TestnetMultiSig,
+  });
+}
+
+const ledgerStacksMultisigMaxKeys = 15;
+
+interface MakeStxMultisigAddressOptionsArgs {
+  publicKeys: string[];
+  threshold: number;
+  devicePublicKey: string;
+}
+
+type StxMultisigAddressOptionsResult =
+  | { status: 'ok'; options: MultisigAddressOptions }
+  | { status: 'error'; message: string };
+
+export function makeStxMultisigAddressOptions({
+  publicKeys,
+  threshold,
+  devicePublicKey,
+}: MakeStxMultisigAddressOptionsArgs): StxMultisigAddressOptionsResult {
+  if (publicKeys.length > ledgerStacksMultisigMaxKeys) {
+    return {
+      status: 'error',
+      message: `Ledger can only verify multisig addresses with up to ${ledgerStacksMultisigMaxKeys} keys.`,
+    };
+  }
+  const normalizedPublicKeys = publicKeys.map(publicKey => publicKey.toLowerCase());
+  const deviceKeyIndex = normalizedPublicKeys.indexOf(devicePublicKey.toLowerCase());
+  if (deviceKeyIndex === -1) {
+    return { status: 'error', message: 'The active account is not a signer of this multisig.' };
+  }
+  return {
+    status: 'ok',
+    options: {
+      numRequired: threshold,
+      deviceKeyIndex,
+      cosignerPublicKeys: normalizedPublicKeys.filter((_, index) => index !== deviceKeyIndex),
+      hashMode: AddressHashMode.P2SHNonSequential,
+    },
+  };
 }
 
 export function isStxAddressResponseRejected(response: ResponseAddress) {
@@ -127,13 +183,18 @@ export function isStacksLedgerAppClosed(response: ResponseVersion) {
 // This enables proper multi-wallet support for Ledger Stacks accounts
 export const MINIMUM_STACKS_APP_VERSION = '0.26.17';
 
+export const MINIMUM_STACKS_APP_VERSION_MULTISIG_ADDRESS = '0.27.0';
+
 interface StacksVersionCheckResult {
   meetsMinimum: boolean;
   currentVersion: string;
 }
-export function validateStacksAppVersion(version: SemVerObject): StacksVersionCheckResult {
+export function validateStacksAppVersion(
+  version: SemVerObject,
+  minimumVersion = MINIMUM_STACKS_APP_VERSION
+): StacksVersionCheckResult {
   const currentVersion = versionObjectToVersionString(version);
-  const meetsMinimum = compare(currentVersion, MINIMUM_STACKS_APP_VERSION, '>=');
+  const meetsMinimum = compare(currentVersion, minimumVersion, '>=');
 
   return { meetsMinimum, currentVersion };
 }

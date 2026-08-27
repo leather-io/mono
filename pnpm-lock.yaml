@@ -297,8 +297,8 @@ importers:
         specifier: 5.85.5
         version: 5.85.5(@tanstack/react-query@5.85.5(react@19.1.0))(react@19.1.0)
       '@zondax/ledger-stacks':
-        specifier: 1.1.1
-        version: 1.1.1(encoding@0.1.13)
+        specifier: 1.2.0
+        version: 1.2.0(encoding@0.1.13)
       alex-sdk:
         specifier: 3.1.0
         version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.5.0(encoding@0.1.13))
@@ -9594,8 +9594,8 @@ packages:
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
 
-  '@zondax/ledger-stacks@1.1.1':
-    resolution: {integrity: sha512-4p1laoM+M7OIhQXGtTnP5WF5um8iucfkUIMxZB8mmszP3Fwr93Z7eKSntXBjSGd9d5/yiAVcxr4LTL1CURrguQ==}
+  '@zondax/ledger-stacks@1.2.0':
+    resolution: {integrity: sha512-FdNO1vk+pJjfU0kTQMOoIidm1keq6lnD5D4+eP1PV1Y+GX3FNHVFvcqr2tLpd0NvAIAClj9Uvqavnnl6FhrSqw==}
 
   JSONStream@1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
@@ -31265,7 +31265,7 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
-  '@zondax/ledger-stacks@1.1.1(encoding@0.1.13)':
+  '@zondax/ledger-stacks@1.2.0(encoding@0.1.13)':
     dependencies:
       '@ledgerhq/hw-transport': 6.32.0
       '@stacks/transactions': 7.5.0(encoding@0.1.13)

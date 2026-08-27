@@ -17,6 +17,7 @@ import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import { useNetworks } from '@app/store/networks/networks.selectors';
 
 import { usePolicyFeatureGate } from '../policy-feature-gate';
@@ -42,6 +43,7 @@ export function useStxAddAccount() {
   const stacksAccount = useCurrentStacksAccount();
   const registerStxPolicy = useRegisterStxPolicy();
   const networks = useNetworks();
+  const walletType = useActiveWalletType();
   const { isFeatureEnabled, rejectAsUnsupported } = usePolicyFeatureGate({
     method: request.method,
     frameId,
@@ -67,13 +69,16 @@ export function useStxAddAccount() {
   // Derived locally and identically to registration, so what the user verifies
   // equals what is stored / returned. Null on an unexpected derivation failure
   // (never throw in render); the page disables confirm and warns.
-  const address = useMemo(() => {
+  const derivedPolicy = useMemo(() => {
     try {
-      return deriveStxPolicyAddress({ params: request.params, networks }).address;
+      const { address, chainId } = deriveStxPolicyAddress({ params: request.params, networks });
+      return { address, chainId };
     } catch {
       return null;
     }
   }, [request.params, networks]);
+  const address = derivedPolicy?.address ?? null;
+  const chainId = derivedPolicy?.chainId ?? null;
 
   function focusInitiatingTab() {
     focusTabAndWindow(tabId);
@@ -139,8 +144,10 @@ export function useStxAddAccount() {
     publicKeys: request.params.publicKeys,
     threshold: request.params.threshold,
     address,
+    chainId,
     matchStatus,
     mode,
+    walletType,
     canApprove: matchStatus === 'match' && address !== null,
     isFeatureEnabled,
     rejectAsUnsupported,

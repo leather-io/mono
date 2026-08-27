@@ -1,7 +1,11 @@
 import { LedgerError } from '@zondax/ledger-stacks';
 
 import { BitcoinAppVersion } from './bitcoin-ledger-utils';
-import { MINIMUM_STACKS_APP_VERSION, StacksAppVersion } from './stacks-ledger-utils';
+import {
+  MINIMUM_STACKS_APP_VERSION,
+  MINIMUM_STACKS_APP_VERSION_MULTISIG_ADDRESS,
+  StacksAppVersion,
+} from './stacks-ledger-utils';
 import { stacksVersionGate } from './stacks-version-gate';
 
 function makeStacksAppVersion(version: {
@@ -60,5 +64,22 @@ describe(stacksVersionGate.name, () => {
     expect(await gate(makeStacksAppVersion({ major: 0, minor: 26, patch: 17 }))).toBe(true);
     expect(await gate(makeStacksAppVersion({ major: 1, minor: 0, patch: 0 }))).toBe(true);
     expect(toStacksAppOutdatedWarning).not.toHaveBeenCalled();
+  });
+
+  test('gates on an explicit minimum version and reports it as required', async () => {
+    const toStacksAppOutdatedWarning = vi.fn();
+    const gate = stacksVersionGate(
+      { toStacksAppOutdatedWarning },
+      MINIMUM_STACKS_APP_VERSION_MULTISIG_ADDRESS
+    );
+
+    expect(await gate(makeStacksAppVersion({ major: 0, minor: 26, patch: 17 }))).toBe(false);
+    expect(toStacksAppOutdatedWarning).toHaveBeenCalledWith({
+      currentVersion: '0.26.17',
+      requiredVersion: MINIMUM_STACKS_APP_VERSION_MULTISIG_ADDRESS,
+    });
+
+    expect(await gate(makeStacksAppVersion({ major: 0, minor: 27, patch: 0 }))).toBe(true);
+    expect(toStacksAppOutdatedWarning).toHaveBeenCalledOnce();
   });
 });

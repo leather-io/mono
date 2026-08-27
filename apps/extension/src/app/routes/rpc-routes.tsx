@@ -12,6 +12,7 @@ import { rpcSendTransferRoutes } from '@app/pages/rpc-send-transfer/rpc-send-tra
 import { RpcSignPsbt } from '@app/pages/rpc-sign-psbt/rpc-sign-psbt';
 import { RpcSignPsbtSummary } from '@app/pages/rpc-sign-psbt/rpc-sign-psbt-summary';
 import { RpcStacksMessageSigning } from '@app/pages/rpc-sign-stacks-message/rpc-sign-stacks-message';
+import { ledgerConfirmStxPolicyAddressRoutes } from '@app/pages/rpc-stx-add-account/ledger/ledger-confirm-stx-policy-address';
 import { RpcStxAddAccount } from '@app/pages/rpc-stx-add-account/rpc-stx-add-account';
 import { rpcStxCallContractRoutes } from '@app/pages/rpc-stx-call-contract/rpc-stx-call-contract.routes';
 import { rpcStxDeployContractRoutes } from '@app/pages/rpc-stx-deploy-contract/rpc-stx-deploy-contract.routes';
@@ -50,7 +51,9 @@ export const rpcRequestRoutes = (
           <RpcStxAddAccount />
         </AccountGate>
       }
-    />
+    >
+      {ledgerConfirmStxPolicyAddressRoutes}
+    </Route>
 
     {rpcSendTransferRoutes}
     {rpcStxCallContractRoutes}
