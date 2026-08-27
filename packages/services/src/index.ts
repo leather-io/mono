@@ -18,7 +18,6 @@ export * from './infrastructure/cache/http-cache.service';
 export * from './infrastructure/cache/http-cache.utils';
 export * from './infrastructure/api/leather/leather-api.error';
 export * from './infrastructure/api/leather/leather-auth-api.client';
-export * from './infrastructure/api/leather/leather-auth-api.utils';
 export * from './infrastructure/environment';
 export * from './infrastructure/auth/auth-session.service';
 export * from './infrastructure/auth/sign-in.types';
