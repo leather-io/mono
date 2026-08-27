@@ -37,8 +37,8 @@ overrides:
   seroval@<1.4.1: '>=1.4.1'
   undici@>=7.0.0 <7.29.0: '>=7.29.0 <8'
   undici@<6.24.0: '>=6.24.0 <7'
-  '@ledgerhq/hw-transport': 6.32.0
-  '@ledgerhq/logs': 6.14.0
+  '@ledgerhq/hw-transport': 6.35.5
+  '@ledgerhq/logs': ^6.17.0
   picomatch@2: 2.3.2
   picomatch@3: 3.0.2
   picomatch@4: 4.0.4
@@ -5188,9 +5188,6 @@ packages:
       react: '*'
       react-native: '*'
 
-  '@ledgerhq/devices@8.10.0':
-    resolution: {integrity: sha512-ytT66KI8MizFX6dGJKthOzPDw5uNRmmg+RaMta62jbFePKYqfXtYTp6Wc0ErTXaL8nFS3IujHENwKthPmsj6jw==}
-
   '@ledgerhq/devices@8.16.0':
     resolution: {integrity: sha512-brXLPzkvGM3D5YNsWQ25P5G4SmWdSNBed9W8wKoOIRLGdRfvE+bg9mzFty0iZ+aRLBkLoXwX7xKIL9zUi6LBKQ==}
 
@@ -5200,15 +5197,15 @@ packages:
   '@ledgerhq/hw-transport-webusb@6.35.0':
     resolution: {integrity: sha512-8fBNqzQnyR3pKLE2AVxCAc54nHMEKz9/eAYLDENVRuDp+A23lBJYWErxSyoZ6riCM19jIhRvtHjB0o4PXpa2tg==}
 
-  '@ledgerhq/hw-transport@6.32.0':
-    resolution: {integrity: sha512-bf2nxzDQ21DV/bsmExfWI0tatoVeoqhu/ePWalD/nPgPnTn/ZIDq7VBU+TY5p0JZaE87NQwmRUAjm6C1Exe61A==}
+  '@ledgerhq/hw-transport@6.35.5':
+    resolution: {integrity: sha512-P4+wtLewLWgxPtIb90h5kjpzXVlC6f4IBQBmvowVFkInvZt34ffXkX7wa5KfMzu4l3cqCcpNSqtPSCMp+0vuqg==}
 
   '@ledgerhq/ledger-bitcoin@0.3.1':
     resolution: {integrity: sha512-rzgU7+rvSsYVSI3cNAIfk9NUaLF1k4aFl3MuU66zV8Pyvy7rikcrbyPaPIAdNIdqYVrOE7evDB0b6aEwTRqLHg==}
     engines: {node: '>=18.14'}
 
-  '@ledgerhq/logs@6.14.0':
-    resolution: {integrity: sha512-kJFu1+asWQmU9XlfR1RM3lYR76wuEoPyZvkI/CNjpft78BQr3+MMf3Nu77ABzcKFnhIcmAkOLlDQ6B8L6hDXHA==}
+  '@ledgerhq/logs@6.17.0':
+    resolution: {integrity: sha512-yra33g5q/AU7+PwAws+GaVpQGUuxnDREjVBnviJjcaJLVKuLzI4pnj8Bd3nY3fypM5k1yZEYKEXfUuGFUjP2+w==}
 
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
@@ -24774,13 +24771,6 @@ snapshots:
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
 
-  '@ledgerhq/devices@8.10.0':
-    dependencies:
-      '@ledgerhq/errors': 6.37.0
-      '@ledgerhq/logs': 6.14.0
-      rxjs: 7.8.2
-      semver: 7.7.3
-
   '@ledgerhq/devices@8.16.0':
     dependencies:
       semver: 7.7.3
@@ -24791,21 +24781,21 @@ snapshots:
     dependencies:
       '@ledgerhq/devices': 8.16.0
       '@ledgerhq/errors': 6.37.0
-      '@ledgerhq/hw-transport': 6.32.0
-      '@ledgerhq/logs': 6.14.0
+      '@ledgerhq/hw-transport': 6.35.5
+      '@ledgerhq/logs': 6.17.0
 
-  '@ledgerhq/hw-transport@6.32.0':
+  '@ledgerhq/hw-transport@6.35.5':
     dependencies:
-      '@ledgerhq/devices': 8.10.0
+      '@ledgerhq/devices': 8.16.0
       '@ledgerhq/errors': 6.37.0
-      '@ledgerhq/logs': 6.14.0
+      '@ledgerhq/logs': 6.17.0
       events: 3.3.0
 
   '@ledgerhq/ledger-bitcoin@0.3.1(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(typescript@5.9.3)':
     dependencies:
       '@bitcoinerlab/descriptors': 3.1.7(@ledgerhq/ledger-bitcoin@0.3.1(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(typescript@5.9.3))(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(typescript@5.9.3)
       '@bitcoinerlab/secp256k1': 1.2.0
-      '@ledgerhq/hw-transport': 6.32.0
+      '@ledgerhq/hw-transport': 6.35.5
       bip32-path: 0.4.2
       bitcoinjs-lib: 7.0.1(typescript@5.9.3)
     transitivePeerDependencies:
@@ -24816,7 +24806,7 @@ snapshots:
       - '@scure/btc-signer'
       - typescript
 
-  '@ledgerhq/logs@6.14.0': {}
+  '@ledgerhq/logs@6.17.0': {}
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
@@ -31364,7 +31354,7 @@ snapshots:
 
   '@zondax/ledger-stacks@1.2.0(encoding@0.1.13)':
     dependencies:
-      '@ledgerhq/hw-transport': 6.32.0
+      '@ledgerhq/hw-transport': 6.35.5
       '@stacks/transactions': 7.5.0(encoding@0.1.13)
       varuint-bitcoin: 2.0.0
     transitivePeerDependencies:
