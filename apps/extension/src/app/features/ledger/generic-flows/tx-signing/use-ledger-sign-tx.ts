@@ -82,7 +82,12 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
       setAwaitingDeviceConnection(false);
       if (isError(e) && checkLockedDeviceError(e)) {
         setLatestDeviceResponse({ deviceLocked: true } as any);
+        void ledgerNavigate.toConnectStep();
         return;
+      }
+
+      if (isError(e) && e.name === LedgerConnectionErrors.AppOpenFailed) {
+        return ledgerNavigate.toErrorStep(chain, e.message);
       }
 
       return ledgerNavigate.toErrorStep(chain);
