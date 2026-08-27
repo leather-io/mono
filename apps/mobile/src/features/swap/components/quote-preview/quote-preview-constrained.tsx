@@ -49,6 +49,11 @@ function getConstraintCopy(
         title: t`Amount too large`,
         description: t`${operation} ${baseAssetSymbol} to ${targetAssetSymbol} is limited to ${threshold}`,
       };
+    case 'supply-cap-exceeded':
+      return {
+        title: t`Deposit cap reached`,
+        description: t`Only ${threshold} more ${baseAssetSymbol} can be deposited into ${targetAssetSymbol} right now`,
+      };
     default:
       assertUnreachable(constraint.reason);
   }

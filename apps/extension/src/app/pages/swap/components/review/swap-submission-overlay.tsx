@@ -12,10 +12,12 @@ import {
   ErrorTriangleIcon,
   Spinner,
 } from '@leather.io/ui';
+import { assertUnreachable, truncateMiddle } from '@leather.io/utils';
 
+import { type SwapAttention } from '../../hooks/use-swap-submission';
 import { SwapReviewSummary } from './swap-review-summary';
 
-type SwapSubmissionOverlayStatus = 'submitting' | 'success' | 'sbtc-notify-failure' | 'failure';
+type SwapSubmissionOverlayStatus = 'submitting' | 'success' | 'needs-attention' | 'failure';
 
 interface SwapSubmissionOverlayProps {
   baseAsset: SwappableFungibleCryptoAsset;
@@ -23,6 +25,7 @@ interface SwapSubmissionOverlayProps {
   baseAmount: Money;
   targetAmount: Money;
   status: SwapSubmissionOverlayStatus;
+  attention?: SwapAttention;
   onReset(): void;
   onViewActivity(): void;
 }
@@ -33,6 +36,7 @@ export function SwapSubmissionOverlay({
   baseAmount,
   targetAmount,
   status,
+  attention,
   onReset,
   onViewActivity,
 }: SwapSubmissionOverlayProps) {
@@ -76,8 +80,8 @@ export function SwapSubmissionOverlay({
             <Stack gap="space.03" alignItems="center">
               <SubmissionStatusMessage status={status} />
               {status === 'failure' && <SubmissionFailureMessage onReset={onReset} />}
-              {status === 'sbtc-notify-failure' && (
-                <SbtcNotifyFailureMessage onViewActivity={onViewActivity} />
+              {status === 'needs-attention' && attention && (
+                <SwapAttentionMessage attention={attention} onViewActivity={onViewActivity} />
               )}
             </Stack>
           </motion.div>
@@ -95,9 +99,7 @@ function SubmissionStatusDisplay({ status }: SubmissionStatusDisplayProps) {
   const render = {
     submitting: <Spinner size="24px" />,
     success: <CheckmarkCircleIcon variant="medium" color="green.action-primary-default" />,
-    'sbtc-notify-failure': (
-      <ErrorTriangleIcon variant="medium" color="yellow.action-primary-default" />
-    ),
+    'needs-attention': <ErrorTriangleIcon variant="medium" color="yellow.action-primary-default" />,
     failure: <ErrorCircleIcon variant="medium" color="red.action-primary-default" />,
   };
 
@@ -112,7 +114,7 @@ function SubmissionStatusMessage({ status }: SubmissionStatusMessageProps) {
   const message = {
     submitting: 'Initiating the swap...',
     success: 'Swap initiated',
-    'sbtc-notify-failure': 'Swap needs attention',
+    'needs-attention': 'Swap needs attention',
     failure: 'Failed to start a swap',
   };
 
@@ -156,11 +158,30 @@ function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {
   );
 }
 
-interface SbtcNotifyFailureMessageProps {
+function getAttentionCopy({ reason, txid }: SwapAttention): { lead: string; tail: string } {
+  switch (reason) {
+    case 'sbtc-notification-failed':
+      return {
+        lead: "Your Bitcoin was sent, but we couldn't notify the sBTC network to complete the swap. Please",
+        tail: 'for help completing it.',
+      };
+    case 'broadcast-uncertain':
+      return {
+        lead: `We couldn't confirm whether your Bitcoin transaction ${truncateMiddle(txid)} was sent. Check your activity before trying again, or`,
+        tail: "if you're unsure.",
+      };
+    default:
+      assertUnreachable(reason);
+  }
+}
+
+interface SwapAttentionMessageProps {
+  attention: SwapAttention;
   onViewActivity(): void;
 }
 
-function SbtcNotifyFailureMessage({ onViewActivity }: SbtcNotifyFailureMessageProps) {
+function SwapAttentionMessage({ attention, onViewActivity }: SwapAttentionMessageProps) {
+  const { lead, tail } = getAttentionCopy(attention);
   return (
     <Stack gap="space.05" alignItems="center" px="space.05">
       <styled.span
@@ -169,7 +190,7 @@ function SbtcNotifyFailureMessage({ onViewActivity }: SbtcNotifyFailureMessagePr
         textAlign="center"
         lineHeight="24px"
       >
-        Your Bitcoin was sent, but we couldn't notify the sBTC network to complete the swap. Please{' '}
+        {lead}{' '}
         <styled.a
           href={LEATHER_SUPPORT_URL}
           target="_blank"
@@ -180,7 +201,7 @@ function SbtcNotifyFailureMessage({ onViewActivity }: SbtcNotifyFailureMessagePr
         >
           contact support
         </styled.a>{' '}
-        for help completing it.
+        {tail}
       </styled.span>
       <Button size="sm" variant="outline" onClick={onViewActivity}>
         View activity

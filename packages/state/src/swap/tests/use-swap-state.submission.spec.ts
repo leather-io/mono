@@ -292,7 +292,7 @@ describe('useSwapState - submission', () => {
         submissionResult = await result.current.submit();
       });
 
-      expect(submissionResult).toEqual({ txid: 'test-txid' });
+      expect(submissionResult).toEqual({ status: 'submitted', txid: 'test-txid' });
       expect(broadcast).toHaveBeenCalledOnce();
       expect(trackEvent).toHaveBeenCalledWith('swap_submitted', expect.any(Object));
       expect(trackEvent).toHaveBeenCalledWith('swap_submission_success', expect.any(Object));
@@ -366,7 +366,7 @@ describe('useSwapState - submission', () => {
       });
 
       expect(onSwapSubmitted).toHaveBeenCalledTimes(1);
-      expect(onSwapSubmitted).toHaveBeenCalledWith({ txid: 'test-txid' });
+      expect(onSwapSubmitted).toHaveBeenCalledWith({ status: 'submitted', txid: 'test-txid' });
     });
   });
 });

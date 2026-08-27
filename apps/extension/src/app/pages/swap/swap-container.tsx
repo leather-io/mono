@@ -14,6 +14,7 @@ import { analytics } from '@shared/utils/analytics';
 import { useSwapAvailability } from '@app/common/hooks/use-swap-availability';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useUserSettings } from '@app/hooks/use-user-settings';
+import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 
 import { useSwapDependencies } from './hooks/use-swap-dependencies';
 import { useSwapDisabledPairs } from './hooks/use-swap-disabled-pairs';
@@ -33,6 +34,7 @@ export function SwapContainer() {
 }
 
 function SwapContainerContent() {
+  useBreakOnNonCompliantEntity('sbtc_deposit');
   const dependencies = useSwapDependencies();
   const disabledPairs = useSwapDisabledPairs();
   const { quoteCurrency } = useUserSettings();

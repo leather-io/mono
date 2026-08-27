@@ -7,8 +7,14 @@ import type { HttpCacheService } from '../../cache/http-cache.service';
 import { selectBitcoinNetworkMode } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import type { ApiRequestOptions } from '../types';
-import { type EmilySbtcLimitsResponse, emilySbtcLimitsResponseSchema } from './emily-api.types';
+import {
+  type EmilyDepositRequest,
+  type EmilySbtcLimitsResponse,
+  emilySbtcLimitsResponseSchema,
+} from './emily-api.types';
 import { getEmilyApiUrl } from './emily-api.utils';
+
+const emilyNotifyDepositTimeoutMs = 10_000;
 
 @injectable()
 export class EmilyApiClient {
@@ -17,11 +23,15 @@ export class EmilyApiClient {
     @inject(Types.CacheService) private readonly cacheService: HttpCacheService
   ) {}
 
+  private getBaseUrl() {
+    return getEmilyApiUrl(selectBitcoinNetworkMode(this.settingsService.getSettings()));
+  }
+
   public async getSbtcLimits({
     signal,
     skipCache,
   }: ApiRequestOptions = {}): Promise<EmilySbtcLimitsResponse> {
-    const baseUrl = getEmilyApiUrl(selectBitcoinNetworkMode(this.settingsService.getSettings()));
+    const baseUrl = this.getBaseUrl();
 
     const fetchFn = async () => {
       const response = await axios.get<EmilySbtcLimitsResponse>(`${baseUrl}/limits`, { signal });
@@ -31,5 +41,15 @@ export class EmilyApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(['emily-api-get-sbtc-limits'], fetchFn);
+  }
+
+  public async notifyDeposit(
+    request: EmilyDepositRequest,
+    { signal }: ApiRequestOptions = {}
+  ): Promise<void> {
+    await axios.post(`${this.getBaseUrl()}/deposit`, request, {
+      signal,
+      timeout: emilyNotifyDepositTimeoutMs,
+    });
   }
 }

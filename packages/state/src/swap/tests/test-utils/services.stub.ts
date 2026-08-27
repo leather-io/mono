@@ -19,6 +19,8 @@ import { createMoney } from '@leather.io/utils';
 
 import { defaultBaseSwapAssets, defaultSwapQuotes, getDefaultTargetSwapAssets } from './fixtures';
 
+const stubSignersPublicKey = '79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798';
+
 interface StubSwapServiceConfig {
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];
@@ -62,6 +64,14 @@ export function createStubSwapService({
         functionArgs: [],
         postConditions: [],
       });
+    },
+
+    async getSbtcSignersPublicKey() {
+      return Promise.resolve(stubSignersPublicKey);
+    },
+
+    async notifySbtcDeposit() {
+      return Promise.resolve({ status: 'notified' });
     },
   } as unknown as SwapService;
 }

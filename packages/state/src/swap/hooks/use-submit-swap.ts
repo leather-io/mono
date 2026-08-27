@@ -91,10 +91,17 @@ export function useSubmitSwap({
     },
     onSuccess(result) {
       dependencies.onSwapSubmitted?.(result);
-      if (result.sbtcNotificationFailure) {
+      if (result.status === 'sbtc-notification-failed') {
         trackEvent('swap_sbtc_notify_failed', {
           txid: result.txid,
-          errorMessage: result.sbtcNotificationFailure.errorMessage,
+          errorMessage: result.errorMessage,
+        });
+      }
+      if (result.status === 'broadcast-uncertain') {
+        trackEvent('swap_broadcast_uncertain', {
+          txid: result.txid,
+          errorMessage: result.errorMessage,
+          notified: result.notified,
         });
       }
       if (!readiness.canSubmit) return;

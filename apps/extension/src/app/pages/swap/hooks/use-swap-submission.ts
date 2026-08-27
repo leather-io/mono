@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { captureException } from '@sentry/react';
 
 import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { useSwapContext } from '@leather.io/state/swap';
+import { type SwapSubmissionResult, useSwapContext } from '@leather.io/state/swap';
 import { ensureAsyncFunctionMinimumDuration } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -22,12 +22,15 @@ export interface SwapSubmissionQuoteSnapshot {
   targetAmount: Money;
 }
 
+export interface SwapAttention {
+  reason: Exclude<SwapSubmissionResult['status'], 'submitted'>;
+  txid: string;
+}
+
 type SwapSubmissionState =
   | { status: 'idle' }
-  | {
-      status: 'submitting' | 'success' | 'sbtc-notify-failure' | 'failure';
-      quote: SwapSubmissionQuoteSnapshot;
-    };
+  | { status: 'submitting' | 'success' | 'failure'; quote: SwapSubmissionQuoteSnapshot }
+  | { status: 'needs-attention'; quote: SwapSubmissionQuoteSnapshot; attention: SwapAttention };
 
 export function useSwapSubmission() {
   const { submit } = useSwapContext();
@@ -67,16 +70,21 @@ export function useSwapSubmission() {
     );
     submitWithMinimumDuration()
       .then(result => {
-        if (result.sbtcNotificationFailure) {
-          captureException(new Error('sBTC bridge deposit notification failed'), {
+        if (result.status !== 'submitted') {
+          const exception =
+            result.status === 'sbtc-notification-failed'
+              ? new Error('sBTC bridge deposit notification failed')
+              : new Error('sBTC bridge deposit broadcast outcome unknown');
+          captureException(exception, {
             level: 'error',
             tags: { swap: 'sbtc-bridge-deposit' },
-            extra: {
-              txid: result.txid,
-              errorMessage: result.sbtcNotificationFailure.errorMessage,
-            },
+            extra: result,
           });
-          setSubmission({ status: 'sbtc-notify-failure', quote });
+          setSubmission({
+            status: 'needs-attention',
+            quote,
+            attention: { reason: result.status, txid: result.txid },
+          });
           return;
         }
         setSubmission({ status: 'success', quote });

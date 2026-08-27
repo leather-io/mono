@@ -3,7 +3,7 @@ import { STACKS_MAINNET } from '@stacks/network';
 import { describe, expect, test, vi } from 'vitest';
 
 import { SwapExecutionData, TransactionFeeQuote } from '@leather.io/models';
-import { BitcoinCoinSelectionService } from '@leather.io/services';
+import { BitcoinCoinSelectionService, SwapService } from '@leather.io/services';
 import { assertExistence, createMoney } from '@leather.io/utils';
 
 import { NetworkFee, SwapExecutionDependencies } from '../../swap-state.types';
@@ -25,15 +25,11 @@ vi.mock('./build-transaction/build-transaction/build-sbtc-bridge-deposit-tx', ()
   buildSbtcBridgeDepositTx: vi.fn(),
 }));
 
-vi.mock('@leather.io/utils', async () => {
-  return {
-    ...(await vi.importActual('@leather.io/utils')),
-    delay: () => Promise.resolve(),
-  };
-});
-
 const secp256k1GeneratorPublicKey =
   '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798';
+const signersPublicKey = '79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798';
+const signedDepositTxid = 'f'.repeat(64);
+const signedDepositTxHex = 'signed-deposit-hex';
 
 const stacksFeeQuote: TransactionFeeQuote = {
   type: 'stacksFeeRate',
@@ -71,6 +67,13 @@ const sbtcBridgeDepositExecutionData = {
   providerId: 'sbtc-bridge',
 } as unknown as SwapExecutionData;
 
+function createSwapServiceMocks() {
+  return {
+    notifySbtcDeposit: vi.fn().mockResolvedValue({ status: 'notified' }),
+    getSbtcSignersPublicKey: vi.fn().mockResolvedValue(signersPublicKey),
+  };
+}
+
 function createExecutionDependencies(
   overrides: Partial<SwapExecutionDependencies> = {}
 ): SwapExecutionDependencies {
@@ -90,12 +93,9 @@ function createExecutionDependencies(
         keyOrigin: "deadbeef/84'/0'/0'",
       },
       network: createStubNetwork(),
-      sbtcClient: {
-        broadcastTx: vi.fn().mockResolvedValue('btc-txid'),
-        notifySbtc: vi.fn().mockResolvedValue(undefined),
-      },
       signBitcoinPsbt: vi.fn(),
-    } as unknown as SwapExecutionDependencies['bitcoin'],
+      broadcast: vi.fn().mockResolvedValue({ status: 'accepted' }),
+    },
     services: {
       swapService: createStubSwapService(),
       marketDataService: createStubMarketDataService(),
@@ -130,7 +130,7 @@ describe('stacksContractCallStrategy', () => {
         tx: sign.mock.calls[0][0],
         stacksNetwork: STACKS_MAINNET,
       });
-      expect(result).toEqual({ txid: 'stacks-txid' });
+      expect(result).toEqual({ status: 'submitted', txid: 'stacks-txid' });
     });
 
     test('rejects when broadcast fails', async () => {
@@ -145,46 +145,83 @@ describe('stacksContractCallStrategy', () => {
 });
 
 describe('sbtcBridgeDepositStrategy', () => {
+  function createSbtcFixtures() {
+    const depositTransaction = {
+      addInput: vi.fn(),
+      addOutputAddress: vi.fn(),
+      toPSBT: vi.fn(() => new Uint8Array()),
+    };
+    vi.mocked(buildSbtcBridgeDepositTx).mockReturnValue({
+      address: 'bc1qdeposit',
+      depositScript: 'deposit-script',
+      reclaimScript: 'reclaim-script',
+      transaction: depositTransaction,
+    } as unknown as ReturnType<typeof buildSbtcBridgeDepositTx>);
+
+    const signedDepositTx = { finalize: vi.fn(), id: signedDepositTxid, hex: signedDepositTxHex };
+    const performCoinSelection = vi.fn().mockResolvedValue({
+      inputs: [
+        {
+          txid: '0000000000000000000000000000000000000000000000000000000000000000',
+          vout: 0,
+          value: 10_000,
+        },
+      ],
+      outputs: [{ value: BigInt(5000), address: 'bc1qdeposit' }, { value: BigInt(4000) }],
+    });
+
+    const swapServiceMocks = createSwapServiceMocks();
+    const dependencies = createExecutionDependencies({
+      executionData: sbtcBridgeDepositExecutionData,
+    });
+    assertExistence(dependencies.bitcoin, 'Expected bitcoin dependencies in fixture');
+    const bitcoin = dependencies.bitcoin;
+    bitcoin.signBitcoinPsbt = vi.fn().mockResolvedValue(signedDepositTx);
+    dependencies.services.bitcoinCoinSelectionService = {
+      performCoinSelection,
+    } as unknown as BitcoinCoinSelectionService;
+    dependencies.services.swapService = {
+      ...createStubSwapService(),
+      ...swapServiceMocks,
+    } as unknown as SwapService;
+
+    return {
+      dependencies,
+      bitcoin,
+      depositTransaction,
+      signedDepositTx,
+      performCoinSelection,
+      swapServiceMocks,
+    };
+  }
+
+  describe('getNetworkFee', () => {
+    test('builds the deposit with the signers public key from the sbtc deposit service', async () => {
+      const { dependencies, swapServiceMocks } = createSbtcFixtures();
+
+      await getExecutionTypeStrategy('sbtc-bridge-deposit').getNetworkFee(dependencies);
+
+      expect(swapServiceMocks.getSbtcSignersPublicKey).toHaveBeenCalledOnce();
+      expect(buildSbtcBridgeDepositTx).toHaveBeenLastCalledWith(
+        10_000,
+        dependencies.bitcoin?.network,
+        dependencies.accountRequest.account,
+        dependencies.bitcoin?.bitcoinPayer,
+        signersPublicKey
+      );
+    });
+  });
+
   describe('submitSwap', () => {
-    function createSbtcSubmissionFixtures() {
-      const depositTransaction = {
-        addInput: vi.fn(),
-        addOutputAddress: vi.fn(),
-        toPSBT: vi.fn(() => new Uint8Array()),
-      };
-      vi.mocked(buildSbtcBridgeDepositTx).mockResolvedValue({
-        address: 'bc1qdeposit',
-        transaction: depositTransaction,
-      } as unknown as Awaited<ReturnType<typeof buildSbtcBridgeDepositTx>>);
-
-      const signedDepositTx = { finalize: vi.fn() };
-      const performCoinSelection = vi.fn().mockResolvedValue({
-        inputs: [
-          {
-            txid: '0000000000000000000000000000000000000000000000000000000000000000',
-            vout: 0,
-            value: 10_000,
-          },
-        ],
-        outputs: [{ value: BigInt(5000), address: 'bc1qdeposit' }, { value: BigInt(4000) }],
-      });
-
-      const dependencies = createExecutionDependencies({
-        executionData: sbtcBridgeDepositExecutionData,
-      });
-      assertExistence(dependencies.bitcoin, 'Expected bitcoin dependencies in fixture');
-      const bitcoin = dependencies.bitcoin;
-      bitcoin.signBitcoinPsbt = vi.fn().mockResolvedValue(signedDepositTx);
-      dependencies.services.bitcoinCoinSelectionService = {
-        performCoinSelection,
-      } as unknown as BitcoinCoinSelectionService;
-
-      return { dependencies, bitcoin, depositTransaction, signedDepositTx, performCoinSelection };
-    }
-
     test('builds, signs and broadcasts the deposit, then notifies sbtc with the signed tx', async () => {
-      const { dependencies, bitcoin, depositTransaction, signedDepositTx, performCoinSelection } =
-        createSbtcSubmissionFixtures();
+      const {
+        dependencies,
+        bitcoin,
+        depositTransaction,
+        signedDepositTx,
+        performCoinSelection,
+        swapServiceMocks,
+      } = createSbtcFixtures();
 
       const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
         dependencies,
@@ -197,52 +234,126 @@ describe('sbtcBridgeDepositStrategy', () => {
       expect(depositTransaction.addInput).toHaveBeenCalledOnce();
       expect(depositTransaction.addOutputAddress).toHaveBeenCalledOnce();
       expect(signedDepositTx.finalize).toHaveBeenCalledOnce();
-      expect(bitcoin.sbtcClient.broadcastTx).toHaveBeenCalledWith(signedDepositTx);
-      expect(bitcoin.sbtcClient.notifySbtc).toHaveBeenCalledWith(
-        expect.objectContaining({ transaction: signedDepositTx })
-      );
-      expect(result).toEqual({ txid: 'btc-txid' });
+      expect(bitcoin.broadcast).toHaveBeenCalledWith(signedDepositTxHex);
+      expect(swapServiceMocks.notifySbtcDeposit).toHaveBeenCalledWith({
+        bitcoinTxid: signedDepositTxid,
+        bitcoinTxOutputIndex: 0,
+        depositScript: 'deposit-script',
+        reclaimScript: 'reclaim-script',
+        transactionHex: signedDepositTxHex,
+      });
+      expect(result).toEqual({ status: 'submitted', txid: signedDepositTxid });
     });
 
     test('rejects without broadcasting when the fee calculation is not a bitcoin fee rate', async () => {
-      const { dependencies, bitcoin } = createSbtcSubmissionFixtures();
+      const { dependencies, bitcoin, swapServiceMocks } = createSbtcFixtures();
 
       await expect(
         getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(dependencies, stacksNetworkFee)
       ).rejects.toThrowError(
         'sbtc-bridge-deposit submission requires a bitcoinFeeRate fee calculation'
       );
-      expect(bitcoin.sbtcClient.broadcastTx).not.toHaveBeenCalled();
+      expect(bitcoin.broadcast).not.toHaveBeenCalled();
+      expect(swapServiceMocks.notifySbtcDeposit).not.toHaveBeenCalled();
     });
 
-    test('retries the sbtc notification when it fails after the deposit is broadcast', async () => {
-      const { dependencies, bitcoin } = createSbtcSubmissionFixtures();
-      vi.mocked(bitcoin.sbtcClient.notifySbtc).mockRejectedValueOnce(
-        new Error('emily unavailable')
-      );
+    test('rejects without notifying sbtc when the node rejects the broadcast', async () => {
+      const { dependencies, bitcoin, swapServiceMocks } = createSbtcFixtures();
+      bitcoin.broadcast = vi.fn().mockResolvedValue({
+        status: 'rejected',
+        errorMessage: 'bad-txns-inputs-missingorspent',
+      });
+
+      await expect(
+        getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(dependencies, bitcoinNetworkFee)
+      ).rejects.toThrowError('bad-txns-inputs-missingorspent');
+      expect(swapServiceMocks.notifySbtcDeposit).not.toHaveBeenCalled();
+    });
+
+    test('still notifies sbtc and resolves broadcast-uncertain when the broadcast outcome is unknown', async () => {
+      const { dependencies, bitcoin, swapServiceMocks } = createSbtcFixtures();
+      bitcoin.broadcast = vi.fn().mockResolvedValue({
+        status: 'unknown',
+        errorMessage: 'Failed to fetch',
+      });
 
       const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
         dependencies,
         bitcoinNetworkFee
       );
 
-      expect(bitcoin.sbtcClient.notifySbtc).toHaveBeenCalledTimes(2);
-      expect(result).toEqual({ txid: 'btc-txid' });
-    });
-
-    test('resolves with a notification failure instead of rejecting when the sbtc notification keeps failing', async () => {
-      const { dependencies, bitcoin } = createSbtcSubmissionFixtures();
-      vi.mocked(bitcoin.sbtcClient.notifySbtc).mockRejectedValue(new Error('emily unavailable'));
-
-      const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
-        dependencies,
-        bitcoinNetworkFee
+      expect(swapServiceMocks.notifySbtcDeposit).toHaveBeenCalledWith(
+        expect.objectContaining({ bitcoinTxid: signedDepositTxid })
       );
-
-      expect(bitcoin.sbtcClient.notifySbtc).toHaveBeenCalledTimes(3);
       expect(result).toEqual({
-        txid: 'btc-txid',
-        sbtcNotificationFailure: { errorMessage: 'emily unavailable' },
+        status: 'broadcast-uncertain',
+        txid: signedDepositTxid,
+        errorMessage: 'Failed to fetch',
+        notified: true,
+      });
+    });
+
+    test('reports broadcast-uncertain over a failed notification when both are unknown', async () => {
+      const { dependencies, bitcoin, swapServiceMocks } = createSbtcFixtures();
+      bitcoin.broadcast = vi
+        .fn()
+        .mockResolvedValue({ status: 'unknown', errorMessage: 'Bad Gateway' });
+      swapServiceMocks.notifySbtcDeposit.mockResolvedValue({
+        status: 'failed',
+        errorMessage: 'Service unavailable',
+        httpStatus: 503,
+      });
+
+      const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
+        dependencies,
+        bitcoinNetworkFee
+      );
+
+      expect(result).toEqual({
+        status: 'broadcast-uncertain',
+        txid: signedDepositTxid,
+        errorMessage: 'Bad Gateway',
+        notified: false,
+      });
+    });
+
+    test('resolves with a notification failure instead of rejecting when sbtc cannot be notified', async () => {
+      const { dependencies, swapServiceMocks } = createSbtcFixtures();
+      swapServiceMocks.notifySbtcDeposit.mockResolvedValue({
+        status: 'failed',
+        errorMessage: 'Service unavailable',
+        httpStatus: 503,
+      });
+
+      const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
+        dependencies,
+        bitcoinNetworkFee
+      );
+
+      expect(result).toEqual({
+        status: 'sbtc-notification-failed',
+        txid: signedDepositTxid,
+        errorMessage: 'Service unavailable',
+        httpStatus: 503,
+      });
+    });
+
+    test('omits the http status from the notification failure when none is available', async () => {
+      const { dependencies, swapServiceMocks } = createSbtcFixtures();
+      swapServiceMocks.notifySbtcDeposit.mockResolvedValue({
+        status: 'failed',
+        errorMessage: 'timeout of 10000ms exceeded',
+      });
+
+      const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
+        dependencies,
+        bitcoinNetworkFee
+      );
+
+      expect(result).toEqual({
+        status: 'sbtc-notification-failed',
+        txid: signedDepositTxid,
+        errorMessage: 'timeout of 10000ms exceeded',
       });
     });
   });

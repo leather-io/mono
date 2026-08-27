@@ -92,8 +92,8 @@ export function renderUseSwapState({
         bitcoin: {
           bitcoinPayer: createStubBitcoinPayer(),
           network: createStubNetwork(),
-          sbtcClient: {} as any,
           signBitcoinPsbt: () => ({}) as any,
+          broadcast: () => Promise.resolve({ status: 'accepted' as const }),
         },
         ...dependencies,
       },

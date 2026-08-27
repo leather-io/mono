@@ -6,7 +6,6 @@ import {
   type TxBroadcastResultOk,
   broadcastTransaction,
 } from '@stacks/transactions';
-import { SbtcApiClientMainnet, SbtcApiClientTestnet } from 'sbtc';
 
 import { type BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import { type NetworkModes, bitcoinNetworkToNetworkMode } from '@leather.io/models';
@@ -18,10 +17,11 @@ import {
   getSwapService,
 } from '@leather.io/services';
 import { type StacksSigner } from '@leather.io/stacks';
-import { type SwapDependencies } from '@leather.io/state/swap';
+import { type SwapDependencies, broadcastBitcoinTransaction } from '@leather.io/state/swap';
 import { assertExistence } from '@leather.io/utils';
 
 import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
+import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -35,9 +35,6 @@ import { useSignStacksTransaction } from '@app/store/transactions/transaction.ho
 
 // This file is mostly vibed to be able to plug useSwapState and move forward with the UI work
 // TODO: Needs a careful rewrite.
-
-const sbtcClientMainnet = new SbtcApiClientMainnet({});
-const sbtcClientTestnet = new SbtcApiClientTestnet({});
 
 const accountDataRefreshDelayMs = 250;
 
@@ -77,13 +74,11 @@ export function useSwapDependencies(): SwapDependencies {
   const { data: nextNonce } = useNextNonce(stacksAccount?.address ?? '');
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
   const signBitcoinTx = useSignBitcoinTx();
+  const bitcoinClient = useBitcoinClient();
   const refreshAllAccountData = useRefreshAllAccountData();
 
   const bitcoinNetworkMode = bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork);
   const stacksNetworkMode: NetworkModes = bitcoinNetworkMode === 'mainnet' ? 'mainnet' : 'testnet';
-
-  const sbtcClient =
-    network.chain.bitcoin.mode === 'mainnet' ? sbtcClientMainnet : sbtcClientTestnet;
 
   assertExistence(stacksAccount, 'Stacks account missing during swap initialization');
   assertExistence(
@@ -147,11 +142,11 @@ export function useSwapDependencies(): SwapDependencies {
       ? {
           network,
           bitcoinPayer,
-          sbtcClient,
           signBitcoinPsbt: async (psbt: Uint8Array) => {
             const result = signBitcoinTx(psbt);
             return Promise.resolve(result);
           },
+          broadcast: (txHex: string) => broadcastBitcoinTransaction(bitcoinClient, txHex),
         }
       : undefined,
     onSwapSubmitted() {

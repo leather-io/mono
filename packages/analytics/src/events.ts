@@ -110,6 +110,11 @@ export interface Events extends HistoricalEvents {
     txid: string;
     errorMessage: string;
   };
+  swap_broadcast_uncertain: {
+    txid: string;
+    errorMessage: string;
+    notified: boolean;
+  };
   receive_sheet_opened: { type: string };
   receive_sheet_dismissed: undefined;
   send_asset_selected: { asset?: string };
