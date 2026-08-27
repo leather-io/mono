@@ -134,7 +134,6 @@
     "readable-stream": "4.5.2",
     "redux-persist": "6.0.0",
     "remeda": "2.21.2",
-    "sbtc": "0.3.2",
     "use-debounce": "10.0.5",
     "zod": "4.0.17"
   },

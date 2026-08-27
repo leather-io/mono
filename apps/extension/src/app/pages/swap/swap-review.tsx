@@ -87,6 +87,7 @@ export function SwapReview() {
             baseAmount={submission.quote.baseAmount}
             targetAmount={submission.quote.targetAmount}
             status={submission.status}
+            attention={submission.status === 'needs-attention' ? submission.attention : undefined}
             onReset={reset}
             onViewActivity={goToActivity}
           />

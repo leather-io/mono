@@ -3,7 +3,6 @@ import { type StacksNetwork } from '@stacks/network';
 import { type StacksTransactionWire, type TxBroadcastResultOk } from '@stacks/transactions';
 import { type UseQueryResult } from '@tanstack/react-query';
 import type BigNumber from 'bignumber.js';
-import type { SbtcApiClient } from 'sbtc';
 
 import { type configureAnalyticsClient } from '@leather.io/analytics';
 import { type BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
@@ -53,8 +52,8 @@ export interface SwapDependencies {
   bitcoin?: {
     bitcoinPayer: BitcoinNativeSegwitPayer;
     network: NetworkConfiguration;
-    sbtcClient: SbtcApiClient;
     signBitcoinPsbt(psbt: Uint8Array): Promise<btc.Transaction>;
+    broadcast(txHex: string): Promise<BitcoinBroadcastResult>;
   };
   services: {
     marketDataService: MarketDataService;
@@ -204,14 +203,25 @@ export interface SwapActions {
   setCustomFee(fee: number): void;
 }
 
-export interface SbtcNotificationFailure {
-  errorMessage: string;
-}
+export type BitcoinBroadcastResult =
+  | { status: 'accepted' }
+  | { status: 'rejected'; errorMessage: string }
+  | { status: 'unknown'; errorMessage: string };
 
-export interface SwapSubmissionResult {
-  txid: string;
-  sbtcNotificationFailure?: SbtcNotificationFailure;
-}
+export type SwapSubmissionResult =
+  | { status: 'submitted'; txid: string }
+  | {
+      status: 'sbtc-notification-failed';
+      txid: string;
+      errorMessage: string;
+      httpStatus?: number;
+    }
+  | {
+      status: 'broadcast-uncertain';
+      txid: string;
+      errorMessage: string;
+      notified: boolean;
+    };
 
 export interface UseSwapStateResult {
   state: SwapState;

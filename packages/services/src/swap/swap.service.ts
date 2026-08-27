@@ -27,11 +27,13 @@ import { FungibleAssetService } from '../assets/fungible-asset.service';
 import { AccountQuotedBtcBalance, BtcBalancesService } from '../balances/btc-balances.service';
 import { Sip10AddressBalance, Sip10BalancesService } from '../balances/sip10-balances.service';
 import { AddressQuotedStxBalance, StxBalancesService } from '../balances/stx-balances.service';
+import type { EmilyDepositRequest } from '../infrastructure/api/emily/emily-api.types';
 import { AccountRequest } from '../types';
 import { AlexSwapProviderService } from './alex-swap-provider.service';
 import { BitflowBffApiSwapProviderService } from './bitflow-bff-api-swap-provider.service';
 import { BitflowSdkSwapProviderService } from './bitflow-sdk-swap-provider.service';
 import { SbtcBridgeSwapProviderService } from './sbtc-bridge-swap-provider.service';
+import type { SbtcDepositNotificationResult } from './sbtc-bridge-swap-provider.utils';
 import { SwapProviderService } from './swap-provider.interface';
 import { hasValidMinReceiveAmountPostCondition } from './swap.utils';
 import { VelarSwapProviderService } from './velar-swap-provider.service';
@@ -266,5 +268,15 @@ export class SwapService {
       throw new Error('Min receive amount post condition not found');
     }
     return executionData;
+  }
+
+  public async getSbtcSignersPublicKey(signal?: AbortSignal): Promise<string> {
+    return this.sbtcBridgeProvider.getSignersPublicKey({ signal });
+  }
+
+  public async notifySbtcDeposit(
+    request: EmilyDepositRequest
+  ): Promise<SbtcDepositNotificationResult> {
+    return this.sbtcBridgeProvider.notifyDeposit(request);
   }
 }

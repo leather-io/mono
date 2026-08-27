@@ -429,9 +429,6 @@ importers:
       rxjs:
         specifier: 7.8.1
         version: 7.8.1
-      sbtc:
-        specifier: 0.3.2
-        version: 0.3.2(encoding@0.1.13)
       style-loader:
         specifier: 4.0.0
         version: 4.0.0(webpack@5.105.2)
@@ -982,9 +979,6 @@ importers:
       remeda:
         specifier: 2.21.2
         version: 2.21.2
-      sbtc:
-        specifier: 0.3.2
-        version: 0.3.2(encoding@0.1.13)
       use-debounce:
         specifier: 10.0.5
         version: 10.0.5(react@19.1.0)

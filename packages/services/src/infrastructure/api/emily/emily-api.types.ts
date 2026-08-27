@@ -9,3 +9,15 @@ export const emilySbtcLimitsResponseSchema = z.object({
 });
 
 export type EmilySbtcLimitsResponse = z.infer<typeof emilySbtcLimitsResponseSchema>;
+
+export interface EmilyDepositRequest {
+  bitcoinTxid: string;
+  bitcoinTxOutputIndex: number;
+  depositScript: string;
+  reclaimScript: string;
+  transactionHex: string;
+}
+
+export const emilyErrorResponseSchema = z.object({
+  message: z.string(),
+});
