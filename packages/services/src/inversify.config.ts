@@ -24,6 +24,7 @@ import type { AuthSessionService } from './infrastructure/auth/auth-session.serv
 import { SignInService } from './infrastructure/auth/sign-in.service';
 import { HttpCacheService } from './infrastructure/cache/http-cache.service';
 import { Environment } from './infrastructure/environment';
+import { installHiroPartnerFetch } from './infrastructure/hiro-partner-fetch';
 import { SettingsService } from './infrastructure/settings/settings.service';
 import { Types } from './inversify.types';
 import { MarketDataService } from './market/market-data.service';
@@ -55,6 +56,7 @@ export interface InitServicesContainerOptions {
 }
 
 export function initServicesContainer(options: InitServicesContainerOptions): Container {
+  installHiroPartnerFetch();
   if (!servicesContainer) {
     servicesContainer = new Container({ autobind: true, defaultScope: 'Singleton' });
     servicesContainer.bind(Types.Environment).toConstantValue(options.env);

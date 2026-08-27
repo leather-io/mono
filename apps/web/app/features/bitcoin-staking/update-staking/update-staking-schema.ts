@@ -10,6 +10,7 @@ import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io
 import { BitcoinNetworkModes } from '@leather.io/models';
 import { stxToMicroStx } from '@leather.io/utils';
 
+import { validatePayoutSatsFields } from '../start-staking/utils/staking-form-schema';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 
 export const updateStakingMessages = {
@@ -24,13 +25,14 @@ export const updateStakingMessages = {
 // an existing BTC payout setting.
 function normalizePayout(payout: Pox5PayoutPreference | null | undefined): string | null {
   if (!payout) return null;
-  return `${payout.btcRewardAddress}:${payout.maxFeeSats}`;
+  return `${payout.btcRewardAddress}:${payout.maxFeeSats}:${payout.minClaimSats ?? ''}`;
 }
 
 interface CreateUpdateStakingSchemaArgs {
   availableBalance: ReturnType<typeof stxToMicroStx>;
   maxCyclesToExtend: number;
   supportsBtcPayout: boolean;
+  supportsMinClaim: boolean;
   networkMode: BitcoinNetworkModes;
   currentPayout: Pox5PayoutPreference | null;
   isSwitching: boolean;
@@ -40,6 +42,7 @@ export function createUpdateStakingSchema({
   availableBalance,
   maxCyclesToExtend,
   supportsBtcPayout,
+  supportsMinClaim,
   networkMode,
   currentPayout,
   isSwitching,
@@ -51,10 +54,10 @@ export function createUpdateStakingSchema({
   return z
     .object({
       cyclesToExtend: z.coerce
-        .number({ error: () => chooseExtendCycles })
-        .int(chooseExtendCycles)
-        .min(0, chooseExtendCycles)
-        .max(maxCyclesToExtend, chooseExtendCycles),
+        .number()
+        .catch(Number.NaN)
+        .refine(value => Number.isInteger(value), chooseExtendCycles)
+        .refine(value => value >= 0 && value <= maxCyclesToExtend, chooseExtendCycles),
       amountIncrease: z
         .string()
         .optional()
@@ -70,6 +73,7 @@ export function createUpdateStakingSchema({
       payoutEnabled: z.boolean(),
       rewardAddress: z.string().optional(),
       maxFeeSats: z.string().optional(),
+      minClaimSats: z.string().optional(),
     })
     .superRefine((data, ctx) => {
       if (supportsBtcPayout && data.payoutEnabled) {
@@ -86,19 +90,15 @@ export function createUpdateStakingSchema({
             path: ['rewardAddress'],
           });
         }
-        if (!data.maxFeeSats || !/^\d+$/.test(data.maxFeeSats) || BigInt(data.maxFeeSats) <= 0n) {
-          ctx.addIssue({
-            code: 'custom',
-            message: validationMessages.enterMaxWithdrawalFee,
-            path: ['maxFeeSats'],
-          });
-        }
+        validatePayoutSatsFields(data, supportsMinClaim, (message, path) =>
+          ctx.addIssue({ code: 'custom', message, path: [path] })
+        );
       }
 
       const increase = data.amountIncrease ? Number(data.amountIncrease) : 0;
       const formPayout =
         supportsBtcPayout && data.payoutEnabled && data.rewardAddress && data.maxFeeSats
-          ? `${data.rewardAddress}:${data.maxFeeSats}`
+          ? `${data.rewardAddress}:${data.maxFeeSats}:${(supportsMinClaim && data.minClaimSats) || ''}`
           : null;
       const payoutChanged = formPayout !== normalizePayout(currentPayout);
       if (!isSwitching && data.cyclesToExtend === 0 && increase === 0 && !payoutChanged) {

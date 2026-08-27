@@ -6,6 +6,7 @@ const baseArgs = {
   availableBalance: stxToMicroStx(1_000),
   maxCyclesToExtend: 10,
   supportsBtcPayout: false,
+  supportsMinClaim: false,
   networkMode: 'mainnet' as const,
   currentPayout: null,
   isSwitching: false,
@@ -86,5 +87,29 @@ describe(createUpdateStakingSchema.name, () => {
       maxFeeSats: '5000',
     });
     expect(result.success).toBe(true);
+  });
+
+  test('treats a min-claim change alone as an update', () => {
+    const currentPayout = {
+      btcRewardAddress: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
+      maxFeeSats: 5000n,
+      minClaimSats: 5547n,
+    };
+    const schema = createUpdateStakingSchema({
+      ...baseArgs,
+      supportsBtcPayout: true,
+      supportsMinClaim: true,
+      currentPayout,
+    });
+    const unchangedPayout = {
+      ...emptyUpdate,
+      payoutEnabled: true,
+      rewardAddress: currentPayout.btcRewardAddress,
+      maxFeeSats: '5000',
+      minClaimSats: '5547',
+    };
+
+    expect(schema.safeParse(unchangedPayout).success).toBe(false);
+    expect(schema.safeParse({ ...unchangedPayout, minClaimSats: '25000' }).success).toBe(true);
   });
 });

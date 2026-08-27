@@ -12,6 +12,7 @@ import stylesheet from './app.css?url';
 import { defaultMetaTags } from './constants/meta-tags';
 import { InstallDialog } from './features/install-dialog/install-dialog';
 import { MockLeatherDialog } from './features/mock-dialog/mock-dialog';
+import { ToastsProvider } from './features/toasts/toasts-provider';
 import { Footer } from './layouts/footer/footer';
 import { GlobalLoader } from './layouts/nav/global-loader';
 import { Nav } from './layouts/nav/nav';
@@ -53,31 +54,33 @@ export function Layout({ children }: HasChildren) {
         <Links />
       </head>
       <styled.body bg="ink.background-primary">
-        <GlobalLoader />
-        {bareCanvas ? (
-          <styled.main minHeight="100vh" bg="ink.background-primary">
-            <NetworkGate>{children}</NetworkGate>
-          </styled.main>
-        ) : (
-          <>
-            <Nav />
-            <Flex
-              flexDir="column"
-              marginLeft={[null, null, 'navbar']}
-              minHeight="100vh"
-              px={['space.04', null, 'space.07']}
-            >
-              <styled.main flex={1} bg="ink.background-primary" className={maxWidthCss}>
-                <NetworkGate>{children}</NetworkGate>
-              </styled.main>
-              <Box className={maxWidthCss}>
-                <Footer />
-              </Box>
-            </Flex>
-          </>
-        )}
-        <InstallDialog />
-        <MockLeatherDialog />
+        <ToastsProvider>
+          <GlobalLoader />
+          {bareCanvas ? (
+            <styled.main minHeight="100vh" bg="ink.background-primary">
+              <NetworkGate>{children}</NetworkGate>
+            </styled.main>
+          ) : (
+            <>
+              <Nav />
+              <Flex
+                flexDir="column"
+                marginLeft={[null, null, 'navbar']}
+                minHeight="100vh"
+                px={['space.04', null, 'space.07']}
+              >
+                <styled.main flex={1} bg="ink.background-primary" className={maxWidthCss}>
+                  <NetworkGate>{children}</NetworkGate>
+                </styled.main>
+                <Box className={maxWidthCss}>
+                  <Footer />
+                </Box>
+              </Flex>
+            </>
+          )}
+          <InstallDialog />
+          <MockLeatherDialog />
+        </ToastsProvider>
         <ScrollRestoration />
         <Scripts />
       </styled.body>

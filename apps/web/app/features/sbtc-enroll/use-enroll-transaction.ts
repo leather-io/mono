@@ -4,7 +4,7 @@ import { StacksNetworkName } from '@stacks/network';
 import { Cl, fetchCallReadOnlyFunction, serializeCV } from '@stacks/transactions';
 import { useQuery } from '@tanstack/react-query';
 import { useLeatherConnect } from '~/store/addresses';
-import { leather } from '~/utils/leather-sdk';
+import { walletStxCallContract } from '~/utils/wallet';
 
 import { analytics } from '../../utils/analytics/analytics';
 
@@ -85,7 +85,7 @@ export function useSbtcEnroll() {
       try {
         analytics.untypedTrack('user_enrolled_sbtc');
 
-        const result = await leather.stxCallContract({
+        const result = await walletStxCallContract({
           contract: contractDetails.contract,
           functionName: 'enroll',
           functionArgs: [serializeCV(Cl.some(Cl.principal(stacksAccount.address)))],

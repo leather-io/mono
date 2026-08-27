@@ -12,6 +12,7 @@ interface GetTransactionActionsArgs {
   onApprove(): Promise<void> | void;
   approveLabel?: string;
   busyLabel?: string;
+  submittedLabel?: string;
 }
 export function getTransactionActions({
   isError,
@@ -23,6 +24,7 @@ export function getTransactionActions({
   onApprove,
   approveLabel = 'Approve',
   busyLabel = 'Submitting...',
+  submittedLabel = 'Submitted',
 }: GetTransactionActionsArgs) {
   if (isLoading) {
     return [
@@ -46,7 +48,7 @@ export function getTransactionActions({
       <Button key="submitting" bg="green.action-primary-default" fullWidth disabled>
         <HStack justifyContent="center" alignItems="center" gap="space.02">
           <CheckmarkIcon color="ink.text-primary" variant="small" />
-          <styled.span textStyle="label.02">Submitted</styled.span>
+          <styled.span textStyle="label.02">{submittedLabel}</styled.span>
         </HStack>
       </Button>,
     ];

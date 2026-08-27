@@ -19,14 +19,16 @@ import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { usePox5StackingClientRequired } from '~/features/bitcoin-staking/hooks/use-pox5-clients';
 import { useIsHydrated } from '~/hooks/use-is-hydrated';
 import {
+  DEFAULT_MIN_CLAIM_SATS,
+  MIN_MAX_WITHDRAWAL_FEE_SATS,
   POX5_MAX_NUM_CYCLES,
   byosmContractParam,
   byosmPaths,
   stakingPaths,
 } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
-import { leather } from '~/utils/leather-sdk';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
+import { wallet } from '~/utils/wallet';
 
 import { Button, Input, LoadingSpinner } from '@leather.io/ui';
 import { isDefined, stxToMicroStx, truncateMiddle } from '@leather.io/utils';
@@ -52,6 +54,7 @@ import { ChoosePayoutPreference } from '../start-staking/components/choose-payou
 import { createStakeUpdateMutationOptions } from '../transactions/pox5-mutations';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 import { getBroadcastTxId } from '../transactions/pox5-tx-status';
+import { getExpectedFeeBips } from '../utils/pool-fee';
 import { ChooseSignerManager } from './components/choose-signer-manager';
 import { CustomContractEntry } from './components/custom-contract-entry';
 import { SidebarSummaryCard } from './components/sidebar-summary-card';
@@ -167,7 +170,7 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
       pool={activePool}
       address={address}
       info={position.info}
-      currentPayout={payoutQuery.data ?? null}
+      currentPayout={payoutQuery.data?.preference ?? null}
       initialTargetSlug={parseSwitchTargetSlug({
         search,
         currentProviderId: activePool.providerId,
@@ -197,7 +200,7 @@ function UpdateStakingForm({
   const navigate = useNavigate();
   const { track } = usePox5TxTracker();
   const client = usePox5StackingClientRequired();
-  const { btcAddressP2wpkh } = useLeatherConnect();
+  const { btcPaymentAddress } = useLeatherConnect();
 
   const { cycleClock } = usePox5CycleClock();
   const { isLoading: availableBalanceIsLoading, availableBalance } =
@@ -228,7 +231,8 @@ function UpdateStakingForm({
     name: currentIsCustom ? truncateMiddle(info.signerManagerContractId) : pool.name,
     isCustom: currentIsCustom,
     supportsBtcPayout: pool.supportsBtcPayout,
-    feeBips: pool.fixedFeeBips ?? currentFeeQuery.data ?? null,
+    feeBips:
+      pool.fixedFeeBips ?? (currentFeeQuery.data ? getExpectedFeeBips(currentFeeQuery.data) : null),
   };
 
   const targetFacts = ((): SignerManagerFacts | null => {
@@ -245,13 +249,18 @@ function UpdateStakingForm({
       name: truncateMiddle(target.contractId),
       isCustom: true,
       supportsBtcPayout: true,
-      feeBips: customTargetFeeQuery.data ?? null,
+      feeBips: customTargetFeeQuery.data ? getExpectedFeeBips(customTargetFeeQuery.data) : null,
     };
   })();
 
   const effectiveSupportsBtcPayout = targetFacts
     ? targetFacts.supportsBtcPayout
     : pool.supportsBtcPayout;
+
+  const effectivePayoutQuery = usePox5PayoutPreferenceQuery(
+    effectiveSupportsBtcPayout ? (target?.contractId ?? info.signerManagerContractId) : undefined
+  );
+  const supportsMinClaim = effectivePayoutQuery.data?.supportsMinClaim ?? false;
 
   // pox-5 stake-update recomputes the TOTAL remaining lock — (unlock-cycle −
   // current-cycle − 1) + cycles-to-extend — and aborts with
@@ -273,14 +282,21 @@ function UpdateStakingForm({
       cyclesToExtend: 0,
       amountIncrease: '',
       payoutEnabled: currentPayout !== null,
-      rewardAddress: currentPayout?.btcRewardAddress ?? btcAddressP2wpkh?.address,
-      maxFeeSats: currentPayout ? String(currentPayout.maxFeeSats) : '',
+      rewardAddress: currentPayout?.btcRewardAddress ?? btcPaymentAddress?.address,
+      maxFeeSats: currentPayout
+        ? String(currentPayout.maxFeeSats)
+        : String(MIN_MAX_WITHDRAWAL_FEE_SATS),
+      minClaimSats:
+        currentPayout?.minClaimSats !== undefined
+          ? String(currentPayout.minClaimSats)
+          : String(DEFAULT_MIN_CLAIM_SATS),
     },
     resolver: zodResolver(
       createUpdateStakingSchema({
         availableBalance: availableBalance.amount,
         maxCyclesToExtend,
         supportsBtcPayout: effectiveSupportsBtcPayout,
+        supportsMinClaim,
         networkMode: pox5NetworkConfig.bitcoinNetworkMode,
         currentPayout,
         isSwitching,
@@ -292,7 +308,7 @@ function UpdateStakingForm({
     mutate: submitStakeUpdate,
     isPending,
     error: stakeUpdateError,
-  } = useMutation(createStakeUpdateMutationOptions({ leather, client }));
+  } = useMutation(createStakeUpdateMutationOptions({ wallet, client }));
 
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
 
@@ -312,6 +328,9 @@ function UpdateStakingForm({
         ? {
             btcRewardAddress: values.rewardAddress,
             maxFeeSats: BigInt(values.maxFeeSats),
+            ...(supportsMinClaim && values.minClaimSats
+              ? { minClaimSats: BigInt(values.minClaimSats) }
+              : {}),
           }
         : undefined;
 
@@ -518,7 +537,10 @@ function UpdateStakingForm({
 
           <Stack gap="space.02">
             <styled.p textStyle="label.02">Rewards payout</styled.p>
-            <ChoosePayoutPreference supportsBtcPayout={effectiveSupportsBtcPayout} />
+            <ChoosePayoutPreference
+              supportsBtcPayout={effectiveSupportsBtcPayout}
+              supportsMinClaim={supportsMinClaim}
+            />
             <styled.p textStyle="caption.01" color="ink.text-subdued">
               {bitcoinStakingContent.payoutPreference.updateHelper}
             </styled.p>

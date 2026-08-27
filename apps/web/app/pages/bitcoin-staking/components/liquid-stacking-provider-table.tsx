@@ -17,7 +17,6 @@ import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { learnArticles } from '~/content/learn-content';
 import { LiquidStackingPool } from '~/data/data';
 import { getProtocolSlugByProviderId } from '~/features/stacking/start-liquid-stacking/utils/utils-preset-protocols';
-import { useProtocolFee } from '~/queries/protocols/use-protocol-fee';
 import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';
 import { openExternalLink } from '~/utils/external-links';
 import { useViewportMinWidth } from '~/utils/hooks/use-media-query';
@@ -173,29 +172,7 @@ export function LiquidStackingProviderTable({
             textStyle="label.03"
           />
         ),
-        cell: info => {
-          const slug = getProtocolSlugByProviderId(info.row.original.providerId);
-          if (!slug) {
-            return <styled.div>{info.getValue() as string}</styled.div>;
-          }
-
-          // eslint-disable-next-line react-hooks/rules-of-hooks
-          const protocolFeeQuery = useProtocolFee(slug);
-
-          if (protocolFeeQuery?.isLoading) {
-            return <SkeletonLoader isLoading w={40} h={16} />;
-          }
-
-          if (protocolFeeQuery?.isError || isUndefined(protocolFeeQuery?.data)) {
-            return <styled.div>{info.getValue() as string}</styled.div>;
-          }
-
-          return (
-            <styled.div>
-              {toHumanReadablePercent(protocolFeeQuery?.data?.multipliedBy(100) || 0)}
-            </styled.div>
-          );
-        },
+        cell: info => <styled.div>{info.getValue() as string}</styled.div>,
         meta: { align: 'right' },
         size: 15,
         maxSize: 15,

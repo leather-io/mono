@@ -278,4 +278,59 @@ describe(Sip10BalancesService.name, () => {
       expect(aggregateBalance.quote.availableBalance.amount).toEqual(initBigNumber(7800));
     });
   });
+
+  describe('when market data is unavailable', () => {
+    const request = {
+      account: { stacks: { stxAddress: 'STACKS_ADDRESS' } },
+      assets: { includeHiddenAssets: true },
+    } as AccountRequest;
+
+    const originalGetMarketData = vi
+      .mocked(mockMarketDataService.getMarketData)
+      .getMockImplementation();
+    const originalGetAsset = vi.mocked(mockSip10AssetService.getAsset).getMockImplementation();
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    afterEach(() => {
+      vi.mocked(mockMarketDataService.getMarketData).mockImplementation(originalGetMarketData!);
+      vi.mocked(mockSip10AssetService.getAsset).mockImplementation(originalGetAsset!);
+    });
+
+    it('keeps the token in the list with its crypto balance intact', async () => {
+      vi.mocked(mockMarketDataService.getMarketData).mockRejectedValue(
+        new Error('price lookup failed')
+      );
+
+      const aggregateBalance = await sip10BalancesService.getSip10AccountBalance(request);
+
+      expect(aggregateBalance.sip10s.length).toEqual(2);
+      const first = aggregateBalance.sip10s.find(b => b.asset.assetId === assetId1);
+      expect(first?.crypto.availableBalance.amount).toEqual(initBigNumber(assetId1Balance));
+    });
+
+    it('reports a zero quote rather than dropping the balance', async () => {
+      vi.mocked(mockMarketDataService.getMarketData).mockRejectedValue(
+        new Error('price lookup failed')
+      );
+
+      const aggregateBalance = await sip10BalancesService.getSip10AccountBalance(request);
+
+      expect(aggregateBalance.sip10s.length).toEqual(2);
+      expect(aggregateBalance.sip10s.every(b => b.quote.totalBalance.amount.isEqualTo(0))).toBe(
+        true
+      );
+      expect(aggregateBalance.quote.totalBalance.amount).toEqual(initBigNumber(0));
+    });
+
+    it('still drops a token whose asset lookup rejects', async () => {
+      vi.mocked(mockSip10AssetService.getAsset).mockRejectedValue(new Error('metadata failed'));
+
+      const aggregateBalance = await sip10BalancesService.getSip10AccountBalance(request);
+
+      expect(aggregateBalance.sip10s.length).toEqual(0);
+    });
+  });
 });
