@@ -156,6 +156,31 @@ describe(useBondProposalRoute.name, () => {
     expect(route?.status).toBe('matched');
   });
 
+  test('matches a bond descriptor with a raw compressed pubkey counterparty', () => {
+    const rawCounterpartyKey = bytesToHex(makeNativeSegwitAddressPubkey(9));
+    const rawKeyBondDescriptor = instantiateBondDescriptor({
+      unlockHeight,
+      hash,
+      counterpartyKey: rawCounterpartyKey,
+      ...getBondVaultKeys(policyDescriptor),
+    });
+
+    const route = useBondProposalRoute({
+      descriptor: rawKeyBondDescriptor,
+      psbtHex: buildBondPsbtHex(),
+    });
+    expect(route).toEqual({
+      status: 'matched',
+      policy: bitcoinPolicy,
+      bondDescriptor: rawKeyBondDescriptor,
+      unlockHeight,
+      hash,
+      counterpartyKey: rawCounterpartyKey,
+      vaultThreshold: 2,
+      vaultKeyCount: 3,
+    });
+  });
+
   test('errors when the descriptor is missing', () => {
     const route = useBondProposalRoute({
       descriptor: undefined,
