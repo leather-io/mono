@@ -1,8 +1,8 @@
 import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import type { ColorToken } from 'leather-styles/tokens';
-import { BasicHoverCard } from '~/components/basic-hover-card';
 import { InfoGrid } from '~/components/info-grid/info-grid';
+import { InfoTooltipIcon } from '~/components/info-tooltip-icon';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { EM_DASH } from '~/constants/constants';
 import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
@@ -11,8 +11,6 @@ import { LearnMoreLink } from '~/layouts/page/page';
 import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { StakingPoolAvatar } from '~/pages/bitcoin-staking/components/staking-pool-avatar';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
-
-import { InfoCircleIcon } from '@leather.io/ui';
 
 import type { CycleClockInfo } from '../utils/pox5-cycle-clock';
 import { PoolFeeValue } from './pool-fee-value';
@@ -49,41 +47,6 @@ function humanizeSeconds(seconds: number) {
   const hours = Math.max(1, Math.ceil(seconds / SECONDS_PER_HOUR));
   if (hours < CLOSING_SOON_HOURS) return `${hours}h`;
   return `${Math.round(hours / 24)} days`;
-}
-
-interface InfoTooltipIconProps {
-  title: string;
-  explanation: string;
-  ariaLabel: string;
-  size?: number;
-  color?: ColorToken;
-}
-
-// Kept in the text flow rather than made a flex sibling, so the icon follows the
-// last word wherever the label wraps instead of detaching to the right. A flex
-// parent would blockify HoverCard.Trigger's anchor and break that.
-function InfoTooltipIcon({
-  title,
-  explanation,
-  ariaLabel,
-  size = 16,
-  color = 'ink.text-subdued',
-}: InfoTooltipIconProps) {
-  return (
-    <BasicHoverCard title={title} content={explanation}>
-      <styled.span
-        display="inline-flex"
-        alignItems="center"
-        height="1lh"
-        verticalAlign="top"
-        ml="space.01"
-        cursor="help"
-        aria-label={ariaLabel}
-      >
-        <InfoCircleIcon variant="small" width={size} height={size} color={color} />
-      </styled.span>
-    </BasicHoverCard>
-  );
 }
 
 // Inline elements only: ValueDisplayer renders the name inside an h4, which
@@ -203,7 +166,11 @@ export function StakingPoolOverview({
           name={
             <InfoLabel
               label={bitcoinStakingLabels.fee}
-              explanation={bitcoinStakingContent.poolOverviewInfo.fee}
+              explanation={
+                pool.requiresSelfClaim
+                  ? bitcoinStakingContent.selfClaim.explanation
+                  : bitcoinStakingContent.poolOverviewInfo.fee
+              }
             />
           }
           value={<PoolFeeValue pool={pool} signerManagerContractId={signerManagerContractId} />}
