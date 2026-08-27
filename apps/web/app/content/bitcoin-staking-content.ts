@@ -72,6 +72,44 @@ export const bitcoinStakingContent = {
       checkFailed: `We couldn't check this contract right now. Try again.`,
     },
   },
+  bondPools: {
+    title: `Bitcoin staking pools`,
+    sentence: `Operators pool participants into a Bitcoin bond. You lock sBTC rather than STX, and each pool sets whether you pair the STX yourself.`,
+    learnMoreUrl: `https://www.stacks.co/bitcoin-staking`,
+    providerInfo: `The operator running the pool. Leather does not operate these pools and cannot stake into them for you, so joining one hands you off to the operator's own app and contract.`,
+    providerInfoUrl: `https://www.stacks.co/bitcoin-staking`,
+    rewardsInfo: `Bond rewards accrue as sBTC. Who receives them, and whether native BTC or a liquid token reaches you instead, is decided by the operator's contract rather than by pox-5.`,
+    rewardsInfoUrl: `https://docs.stacks.co/pox-5/glossary`,
+    capacityInfo: `The share of a bond's community allocation this operator holds. Roughly 10% of each bond's paired capacity is reserved for pools, and the figure is confirmed when the bond is created on-chain.`,
+    capacityInfoUrl: `https://docs.stacks.co/pox-5/glossary`,
+    feeInfo: `The cut the operator keeps from your rewards. Each operator sets its own fee in its pool contract, so check the terms before joining.`,
+    lockedInfo: `What you hand over to join. Every bond pairs bitcoin with STX, but the pools differ on who supplies the STX: some take it from you alongside your sBTC, others pair it themselves. Esbee asks for STX worth about 5% of your sBTC.`,
+    lockedInfoUrl: `https://docs.stacks.co/pox-5/glossary`,
+    // Neither operator has a bond product page yet, and stacks.co routes retail
+    // to a waitlist rather than a live pool. Matching that keeps this page from
+    // being the only surface implying a bond pool can be joined today.
+    // Access is per operator, and each row carries its own destination: an open
+    // pool goes to the operator's deposit flow, a full one to whatever waitlist
+    // that operator keeps.
+    access: {
+      openLabel: `Deposit`,
+      waitlistLabel: `Join waitlist`,
+      info: `A pool only takes deposits while its window is open, and that shuts the moment the pool stakes. Each operator sets its own allocation and runs its own waitlist, so being open here is the operator's state, not Leather's, and it is never a promise you have made a particular bond.`,
+      // A deposit goes to the operator's pool contract, not to pox-5, so it
+      // does not revert in the prepare phase: it rolls into the next bond
+      // instead. The label says that rather than borrowing the STX flow's
+      // "staking paused", which describes a transaction that would fail.
+      closedLabel: `Closed for this bond`,
+      infoUrl: `https://www.stacks.co/bitcoin-staking`,
+    },
+    // Cold inbound for large holders. The pools above are capacity-bound, so
+    // anyone past that size needs the Endowment's whitelist, which this page's
+    // form feeds by way of the institutional onboarding team.
+    directBond: {
+      label: `Staking a larger amount? Request institutional access`,
+      url: `https://www.stacks.co/institutional-bitcoin-staking`,
+    },
+  },
   dualStackingTransition: {
     title: `Dual Stacking is winding down`,
     description: `It transitions to Bitcoin Staking on August 24, 2026 and keeps paying out until then. Stake your STX with a pool above to keep earning after that date.`,
@@ -220,6 +258,9 @@ export const bitcoinStakingLabels = {
   rewardsPayout: `Rewards payout`,
   totalStaked: `Total staked`,
   tvl: `TVL`,
+  capacity: `Capacity`,
+  access: `Access`,
+  lockedTokens: `Locked tokens`,
   historicalYield: `Historical yield`,
   fee: `Fee`,
   selfClaimOnly: `Self-claim only`,
