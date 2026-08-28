@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 
+import { StatusCodes, TransportStatusError } from '@ledgerhq/errors';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 
@@ -167,6 +168,13 @@ export function checkLockedDeviceError(e: Error) {
     e?.name === 'LockedDeviceError' ||
     e?.message?.includes('LockedDeviceError') ||
     e?.message === LedgerConnectionErrors.DeviceLocked
+  );
+}
+
+export function isLedgerUserDeniedError(error: unknown) {
+  return (
+    error instanceof TransportStatusError &&
+    error.statusCode === StatusCodes.CONDITIONS_OF_USE_NOT_SATISFIED
   );
 }
 
