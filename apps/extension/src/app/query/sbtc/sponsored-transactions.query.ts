@@ -21,30 +21,6 @@ export interface SbtcSponsorshipVerificationResult {
   result: SbtcSponsorshipEligibility | undefined;
 }
 
-interface SbtcSponsorshipSubmissionResult {
-  txid?: string;
-  error?: string;
-}
-
-export async function submitSponsoredSbtcTransaction(
-  apiUrl: string,
-  sponsoredTx: StacksTransactionWire
-): Promise<SbtcSponsorshipSubmissionResult> {
-  try {
-    const { data } = await axios.post(`${apiUrl}/submit`, {
-      tx: sponsoredTx.serialize(),
-    });
-    return {
-      txid: data.txid,
-    };
-  } catch (error: any) {
-    const errMsg = `sBTC Sponsorship Failure (${error?.response?.data?.error || 'Unknown'})`;
-    return {
-      error: errMsg,
-    };
-  }
-}
-
 interface VerifySponsoredSbtcTransactionArgs {
   apiUrl: string;
   baseTx: TransactionBase;
