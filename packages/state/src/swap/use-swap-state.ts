@@ -51,11 +51,14 @@ export function useSwapState({
   const { accountRequest, services } = dependencies;
   const { marketDataService, swapService } = services;
 
-  const hasBitcoinDependencies = Boolean(dependencies.bitcoin);
+  const hasMainnetBitcoinDependencies =
+    dependencies.bitcoin?.network.chain.bitcoin.mode === 'mainnet';
   const effectiveDisabledPairs = useMemo(
     () =>
-      hasBitcoinDependencies ? disabledPairs : [...disabledPairs, ...BITCOIN_EXCLUSION_PAIR_RULES],
-    [hasBitcoinDependencies, disabledPairs]
+      hasMainnetBitcoinDependencies
+        ? disabledPairs
+        : [...disabledPairs, ...BITCOIN_EXCLUSION_PAIR_RULES],
+    [hasMainnetBitcoinDependencies, disabledPairs]
   );
 
   const [state, dispatch] = useReducer(

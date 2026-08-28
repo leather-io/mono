@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { MarketData, SwapQuote } from '@leather.io/models';
+import { MarketData, NetworkConfiguration, SwapQuote } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
 import { DisabledPairRule, SwapDependencies, TrackEvent } from '../../swap-state.types';
@@ -36,6 +36,7 @@ vi.mock('@leather.io/utils', async () => {
 interface RenderUseSwapStateParams extends Omit<UseSwapStateProps, 'dependencies' | 'trackEvent'> {
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];
+  network?: NetworkConfiguration;
   swapQuotes?: SwapQuote[];
   getSwapQuotes?(): Promise<SwapQuote[]>;
   getBaseSwapAssets?(): Promise<AccountSwapAsset[]>;
@@ -57,6 +58,7 @@ export function renderUseSwapState({
   getTargetSwapAssets,
   marketData,
   maxSpendAmount,
+  network,
   dependencies,
   disabledPairs,
   trackEvent,
@@ -91,7 +93,7 @@ export function renderUseSwapState({
         },
         bitcoin: {
           bitcoinPayer: createStubBitcoinPayer(),
-          network: createStubNetwork(),
+          network: network ?? createStubNetwork(),
           signBitcoinPsbt: () => ({}) as any,
           broadcast: () => Promise.resolve({ status: 'accepted' as const }),
         },

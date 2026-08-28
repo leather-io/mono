@@ -14,6 +14,7 @@ import {
   type SwapQuoteSelectionResult,
   type TrackEvent,
 } from '../swap-state.types';
+import { SwapSigningCancelledError, isSwapSigningCancelledError } from '../swap-submission.errors';
 import { isQuoteAlignedWithCurrentInput } from '../utils/is-quote-aligned-with-current-input';
 import { type ValidationResult } from '../validation/swap-validation.types';
 
@@ -87,7 +88,12 @@ export function useSubmitSwap({
         nonce,
       };
       const strategy = getExecutionTypeStrategy(executionData.executionType);
-      return strategy.submitSwap(executionDependencies, networkFee);
+      try {
+        return await strategy.submitSwap(executionDependencies, networkFee);
+      } catch (error) {
+        if (dependencies.isSigningCancelledError?.(error)) throw new SwapSigningCancelledError();
+        throw error;
+      }
     },
     onSuccess(result) {
       dependencies.onSwapSubmitted?.(result);
@@ -104,6 +110,7 @@ export function useSubmitSwap({
           notified: result.notified,
         });
       }
+      if (result.status !== 'submitted') return;
       if (!readiness.canSubmit) return;
       const { quote } = readiness.prerequisites;
       trackEvent('swap_submission_success', {
@@ -115,6 +122,7 @@ export function useSubmitSwap({
       });
     },
     onError(error) {
+      if (isSwapSigningCancelledError(error)) return;
       if (!readiness.canSubmit) return;
       const { quote } = readiness.prerequisites;
       trackEvent('swap_submission_failure', {

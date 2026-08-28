@@ -11,6 +11,7 @@ import { isNonNullish } from 'remeda';
 import {
   LiveSwapEstimate,
   PRICE_IMPACT_WARNING_THRESHOLD,
+  type SwapSubmissionQuoteSnapshot,
   matchLiveEstimate,
   useSwapContext,
 } from '@leather.io/state/swap';
@@ -39,7 +40,7 @@ import { SwapReviewEmptyState } from './components/review/swap-review-empty-stat
 import { SwapReviewErrorState } from './components/review/swap-review-error-state';
 import { SwapReviewInfoTooltip } from './components/review/swap-review-info-tooltip';
 import { SwapSubmissionOverlay } from './components/review/swap-submission-overlay';
-import { type SwapSubmissionQuoteSnapshot, useSwapSubmission } from './hooks/use-swap-submission';
+import { useSwapSubmission } from './hooks/use-swap-submission';
 import { formatSwapRate, sumFeesInQuoteCurrency } from './swap-utils';
 
 const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [

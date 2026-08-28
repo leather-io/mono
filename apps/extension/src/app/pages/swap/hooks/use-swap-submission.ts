@@ -1,36 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { matchPath, useLocation, useNavigate } from 'react-router';
 
 import { captureException } from '@sentry/react';
 
-import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { type SwapSubmissionResult, useSwapContext } from '@leather.io/state/swap';
+import {
+  SWAP_ACCIDENTAL_TAP_SUPPRESSION_MS,
+  SWAP_SUBMISSION_DISPLAY_DURATION_MS,
+  SWAP_SUCCESS_EXIT_TIMEOUT_MS,
+  type SwapSubmissionQuoteSnapshot,
+  type SwapSubmissionState,
+  isSwapSigningCancelledError,
+  useSwapContext,
+} from '@leather.io/state/swap';
 import { ensureAsyncFunctionMinimumDuration } from '@leather.io/utils';
 
-import { RouteUrls } from '@shared/route-urls';
+import { RouteUrls, toRoutePattern } from '@shared/route-urls';
 
-import { isSigningCancelledError } from '../swap-utils';
-
-const submissionDisplayDuration = 1800;
-const successfulExitTimeout = 1200;
-const accidentalClickSuppressionMs = 500;
-
-export interface SwapSubmissionQuoteSnapshot {
-  baseAsset: SwappableFungibleCryptoAsset;
-  targetAsset: SwappableFungibleCryptoAsset;
-  baseAmount: Money;
-  targetAmount: Money;
-}
-
-export interface SwapAttention {
-  reason: Exclude<SwapSubmissionResult['status'], 'submitted'>;
-  txid: string;
-}
-
-type SwapSubmissionState =
-  | { status: 'idle' }
-  | { status: 'submitting' | 'success' | 'failure'; quote: SwapSubmissionQuoteSnapshot }
-  | { status: 'needs-attention'; quote: SwapSubmissionQuoteSnapshot; attention: SwapAttention };
+const swapReviewRoutePattern = toRoutePattern(RouteUrls.SwapReview);
 
 export function useSwapSubmission() {
   const { submit } = useSwapContext();
@@ -39,37 +25,37 @@ export function useSwapSubmission() {
   const [submission, setSubmission] = useState<SwapSubmissionState>({ status: 'idle' });
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mountedAtRef = useRef(Date.now());
+  const isMountedRef = useRef(true);
   const locationRef = useRef(location);
   locationRef.current = location;
 
   useEffect(() => {
     return () => {
+      isMountedRef.current = false;
       if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
     };
   }, []);
 
   function returnToReviewRoute() {
     const { pathname } = locationRef.current;
-    const reviewSegment = '/review';
-    const reviewIndex = pathname.indexOf(reviewSegment);
-    const isOnReviewChildRoute =
-      reviewIndex !== -1 && pathname.length > reviewIndex + reviewSegment.length;
-    if (isOnReviewChildRoute) {
-      void navigate(pathname.slice(0, reviewIndex + reviewSegment.length), { replace: true });
-    }
+    const reviewMatch = matchPath({ path: swapReviewRoutePattern, end: false }, pathname);
+    if (!reviewMatch || reviewMatch.pathnameBase === pathname) return;
+    void navigate(reviewMatch.pathnameBase, { replace: true });
   }
 
   function confirm(quote: SwapSubmissionQuoteSnapshot) {
-    if (Date.now() - mountedAtRef.current < accidentalClickSuppressionMs) return;
+    if (Date.now() - mountedAtRef.current < SWAP_ACCIDENTAL_TAP_SUPPRESSION_MS) return;
     if (submission.status !== 'idle') return;
 
     setSubmission({ status: 'submitting', quote });
     const submitWithMinimumDuration = ensureAsyncFunctionMinimumDuration(
       submit,
-      submissionDisplayDuration
+      SWAP_SUBMISSION_DISPLAY_DURATION_MS
     );
     submitWithMinimumDuration()
       .then(result => {
+        if (!isMountedRef.current) return;
+        returnToReviewRoute();
         if (result.status !== 'submitted') {
           const exception =
             result.status === 'sbtc-notification-failed'
@@ -90,11 +76,12 @@ export function useSwapSubmission() {
         setSubmission({ status: 'success', quote });
         exitTimerRef.current = setTimeout(() => {
           void navigate(RouteUrls.Activity);
-        }, successfulExitTimeout);
+        }, SWAP_SUCCESS_EXIT_TIMEOUT_MS);
       })
       .catch((error: unknown) => {
+        if (!isMountedRef.current) return;
         returnToReviewRoute();
-        if (isSigningCancelledError(error)) {
+        if (isSwapSigningCancelledError(error)) {
           setSubmission({ status: 'idle' });
           return;
         }

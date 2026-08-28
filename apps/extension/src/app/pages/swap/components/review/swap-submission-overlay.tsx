@@ -4,6 +4,7 @@ import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { LEATHER_SUPPORT_URL } from '@leather.io/constants';
 import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type SwapAttention } from '@leather.io/state/swap';
 import {
   ArrowLeftIcon,
   Button,
@@ -14,7 +15,6 @@ import {
 } from '@leather.io/ui';
 import { assertUnreachable, truncateMiddle } from '@leather.io/utils';
 
-import { type SwapAttention } from '../../hooks/use-swap-submission';
 import { SwapReviewSummary } from './swap-review-summary';
 
 type SwapSubmissionOverlayStatus = 'submitting' | 'success' | 'needs-attention' | 'failure';

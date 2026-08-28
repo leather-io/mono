@@ -63,6 +63,7 @@ export interface SwapDependencies {
     swapService: SwapService;
   };
   onSwapSubmitted?(result: SwapSubmissionResult): void;
+  isSigningCancelledError?(error: unknown): boolean;
 }
 
 export interface SwapExecutionDependencies extends SwapDependencies {
