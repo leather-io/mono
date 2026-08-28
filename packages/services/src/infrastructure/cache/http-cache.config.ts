@@ -172,5 +172,5 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'velar-sdk-get-token-pairs': { ttl: hoursInMs(1) },
   'velar-sdk-get-computed-amount': { ttl: secondsInMs(30) },
 
-  'emily-api-get-sbtc-limits': { ttl: hoursInMs(12) },
+  'emily-api-get-sbtc-limits': { ttl: secondsInMs(30) },
 };

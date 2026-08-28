@@ -14,19 +14,72 @@ const depositRequest: EmilyDepositRequest = {
   transactionHex: 'tx-hex',
 };
 
+const sbtcLimits = {
+  pegCap: 1000,
+  perDepositCap: 100,
+  perDepositMinimum: 1,
+  perWithdrawalCap: 50,
+  accountCaps: {},
+};
+
+const fetchWithCache = vi.fn((_key: unknown, fetchFn: () => Promise<unknown>) => fetchFn());
+
 function makeClient(mode: 'mainnet' | 'testnet' = 'mainnet') {
   const settingsService = {
     getSettings: () => ({ network: { chain: { bitcoin: { mode } } } }),
   } as unknown as SettingsService;
-  const cacheService = {
-    fetchWithCache: (_key: unknown, fetchFn: () => Promise<unknown>) => fetchFn(),
-  } as unknown as HttpCacheService;
+  const cacheService = { fetchWithCache } as unknown as HttpCacheService;
   return new EmilyApiClient(settingsService, cacheService);
 }
 
 describe(EmilyApiClient.name, () => {
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  describe('getSbtcLimits', () => {
+    it('caches limits per emily base url', async () => {
+      vi.spyOn(axios, 'get').mockResolvedValue({ data: sbtcLimits });
+
+      await makeClient('mainnet').getSbtcLimits();
+      expect(fetchWithCache).toHaveBeenLastCalledWith(
+        ['emily-api-get-sbtc-limits', 'https://sbtc-emily.com'],
+        expect.any(Function)
+      );
+
+      await makeClient('testnet').getSbtcLimits();
+      expect(fetchWithCache).toHaveBeenLastCalledWith(
+        ['emily-api-get-sbtc-limits', 'https://beta.sbtc-emily.com'],
+        expect.any(Function)
+      );
+    });
+
+    it('bypasses the cache when skipCache is set', async () => {
+      const get = vi.spyOn(axios, 'get').mockResolvedValue({ data: sbtcLimits });
+
+      await expect(makeClient().getSbtcLimits({ skipCache: true })).resolves.toEqual(sbtcLimits);
+
+      expect(fetchWithCache).not.toHaveBeenCalled();
+      expect(get).toHaveBeenCalledWith('https://sbtc-emily.com/limits', expect.anything());
+    });
+
+    it('does not forward the caller signal into the shared cached fetch', async () => {
+      const get = vi.spyOn(axios, 'get').mockResolvedValue({ data: sbtcLimits });
+      const { signal } = new AbortController();
+
+      await makeClient().getSbtcLimits({ signal });
+
+      expect(get.mock.calls[0][1]).toEqual({ signal: undefined });
+    });
+
+    it('forwards the caller signal when bypassing the cache', async () => {
+      const get = vi.spyOn(axios, 'get').mockResolvedValue({ data: sbtcLimits });
+      const { signal } = new AbortController();
+
+      await makeClient().getSbtcLimits({ signal, skipCache: true });
+
+      expect(get.mock.calls[0][1]).toEqual({ signal });
+    });
   });
 
   describe('notifyDeposit', () => {
