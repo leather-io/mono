@@ -34,6 +34,7 @@ function getConstraintCopy(
   targetAsset: SwappableFungibleCryptoAsset
 ): { title: string; description: string } {
   const threshold = formatCurrency(constraint.threshold);
+  const thresholdAmount = formatCurrency(constraint.threshold, { showCurrency: false });
   const operation = getOperationLabel(baseAsset.symbol, targetAsset.symbol);
   const baseAssetSymbol = baseAsset.symbol;
   const targetAssetSymbol = targetAsset.symbol;
@@ -52,7 +53,7 @@ function getConstraintCopy(
     case 'supply-cap-exceeded':
       return {
         title: t`Deposit cap reached`,
-        description: t`Only ${threshold} more ${baseAssetSymbol} can be deposited into ${targetAssetSymbol} right now`,
+        description: t`Only ${thresholdAmount} more ${baseAssetSymbol} can be deposited into ${targetAssetSymbol} right now`,
       };
     default:
       assertUnreachable(constraint.reason);

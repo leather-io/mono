@@ -8,7 +8,7 @@ import { usePreloadSwapData } from '@/features/swap/use-preload-swap-data';
 import { analytics } from '@/utils/analytics';
 
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { SheetInstance, useHaptics } from '@leather.io/ui/native';
+import { SheetInstance, SheetNativeBackdrop, useHaptics } from '@leather.io/ui/native';
 
 interface SwapSheetPresentParams {
   baseAsset?: SwappableFungibleCryptoAsset;
@@ -41,6 +41,8 @@ export function SwapSheet() {
     analytics.track('swap_sheet_dismissed');
   }
 
+  const [isSubmissionActive, setIsSubmissionActive] = useState(false);
+
   useImperativeHandle(swapSheetRef, () => ({
     present({ baseAsset, targetAsset } = {}) {
       analytics.track('swap_sheet_opened', { asset: baseAsset?.symbol });
@@ -59,9 +61,19 @@ export function SwapSheet() {
       onAnimate={handleAnimatedPositionChange}
       onDismiss={handleDismiss}
       name="swap"
+      enablePanDownToClose={!isSubmissionActive}
+      enableContentPanningGesture={!isSubmissionActive}
+      enableHandlePanningGesture={!isSubmissionActive}
+      backdropComponent={props => (
+        <SheetNativeBackdrop pressBehavior={isSubmissionActive ? 'none' : 'close'} {...props} />
+      )}
     >
       <SheetNavigationContainer base="swap">
-        <Swap baseAsset={baseAsset} targetAsset={targetAsset} />
+        <Swap
+          baseAsset={baseAsset}
+          targetAsset={targetAsset}
+          onSubmissionActiveChange={setIsSubmissionActive}
+        />
       </SheetNavigationContainer>
     </FullHeightSheet>
   );

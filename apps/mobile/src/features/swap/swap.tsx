@@ -16,11 +16,12 @@ import { SwapReviewScreen } from './screens/swap-review-screen';
 type SwapScreen = 'form' | 'review';
 
 interface SwapProps {
+  onSubmissionActiveChange(active: boolean): void;
   baseAsset?: SwappableFungibleCryptoAsset;
   targetAsset?: SwappableFungibleCryptoAsset;
 }
 
-export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
+export function Swap({ baseAsset = stxAsset, targetAsset, onSubmissionActiveChange }: SwapProps) {
   const { fiatCurrencyPreference } = useSettings();
   const dependencies = useSwapDependencies();
   const disabledPairs = useSwapDisabledPairs();
@@ -34,12 +35,16 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
       disabledPairs={disabledPairs}
       trackEvent={analytics.track}
     >
-      <SwapContent />
+      <SwapContent onSubmissionActiveChange={onSubmissionActiveChange} />
     </SwapProvider>
   );
 }
 
-function SwapContent() {
+interface SwapContentProps {
+  onSubmissionActiveChange(active: boolean): void;
+}
+
+function SwapContent({ onSubmissionActiveChange }: SwapContentProps) {
   const [currentScreen, setCurrentScreen] = useState<SwapScreen>('form');
   const swapContext = useSwapContext();
 
@@ -55,7 +60,7 @@ function SwapContent() {
     analytics.track('swap_review_initiated', {
       baseSymbol: state.baseSwapAsset?.asset.symbol ?? '',
       targetSymbol: state.targetSwapAsset?.asset.symbol ?? '',
-      baseAmount: Number(state.baseAmount),
+      baseAmount: quoteQuery.data?.selected?.baseAmount.amount.toNumber() ?? 0,
       provider: quoteQuery.data?.selected?.provider ?? '',
     });
     setCurrentScreen('review');
@@ -76,7 +81,11 @@ function SwapContent() {
         <SwapFormScreen liveEstimate={liveEstimate} onPressReview={goToReview} />
       )}
       {currentScreen === 'review' && (
-        <SwapReviewScreen liveEstimate={liveEstimate} onGoBack={goToForm} />
+        <SwapReviewScreen
+          liveEstimate={liveEstimate}
+          onGoBack={goToForm}
+          onSubmissionActiveChange={onSubmissionActiveChange}
+        />
       )}
     </Animated.View>
   );

@@ -5,6 +5,7 @@ import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { broadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
+import { isSecureStoreUserCancelledError } from '@/store/secure-store/secure-store-errors';
 import { useNetworkPreferenceStacksNetwork, useSettings } from '@/store/settings/settings';
 
 import {
@@ -54,5 +55,6 @@ export function useSwapDependencies(): SwapDependencies {
       signBitcoinPsbt: signTx,
       broadcast: (txHex: string) => broadcastBitcoinTransaction(bitcoinClient, txHex),
     },
+    isSigningCancelledError: isSecureStoreUserCancelledError,
   };
 }

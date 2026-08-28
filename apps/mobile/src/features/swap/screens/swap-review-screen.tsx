@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
@@ -24,9 +24,9 @@ import { SwapSubmissionOverlay } from '@/features/swap/components/review/swap-su
 import { SlippageInfoSheet } from '@/features/swap/components/slippage-info-sheet';
 import { SlippageSelectorSheet } from '@/features/swap/components/slippage-selector/slippage-selector-sheet';
 import { formatSwapRate, sumFeesInQuoteCurrency } from '@/features/swap/swap.utils';
+import { useSwapSubmission } from '@/features/swap/use-swap-submission';
 import { useAndroidBackHandler } from '@/hooks/use-android-back-handler';
 import { formatCurrency, formatPercentage } from '@/utils/currency-formatter';
-import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
 import { captureMessage } from '@sentry/react-native';
 import BigNumber from 'bignumber.js';
@@ -35,16 +35,11 @@ import { isNonNullish } from 'remeda';
 import {
   LiveSwapEstimate,
   PRICE_IMPACT_WARNING_THRESHOLD,
+  type SwapSubmissionQuoteSnapshot,
   matchLiveEstimate,
   useSwapContext,
 } from '@leather.io/state/swap';
 import { Box, Button, SheetInstance, Text } from '@leather.io/ui/native';
-import { ensureAsyncFunctionMinimumDuration } from '@leather.io/utils';
-
-type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'failure';
-
-const submissionDisplayDuration = 1800;
-const successfulExitTimeout = 1200;
 
 const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
   'loading',
@@ -56,43 +51,85 @@ const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
 interface SwapReviewScreenProps {
   liveEstimate: LiveSwapEstimate;
   onGoBack(): void;
+  onSubmissionActiveChange(active: boolean): void;
 }
 
-export function SwapReviewScreen({ liveEstimate, onGoBack }: SwapReviewScreenProps) {
-  useAndroidBackHandler(onGoBack);
-  useSwapReviewStatusGuard(liveEstimate, onGoBack);
+export function SwapReviewScreen({
+  liveEstimate,
+  onGoBack,
+  onSubmissionActiveChange,
+}: SwapReviewScreenProps) {
+  const { submission, confirm, reset, dismissSwapSheet } = useSwapSubmission();
+  const isSubmissionActive = submission.status !== 'idle';
+
+  useEffect(() => {
+    onSubmissionActiveChange(isSubmissionActive);
+    return () => onSubmissionActiveChange(false);
+  }, [isSubmissionActive, onSubmissionActiveChange]);
+
+  function handleGoBack() {
+    if (isSubmissionActive) return;
+    onGoBack();
+  }
+
+  useAndroidBackHandler(handleGoBack);
+  useSwapReviewStatusGuard(liveEstimate, isSubmissionActive, onGoBack);
 
   return (
     <FullHeightSheetLayout
       header={
         <FullHeightSheetHeader
           title={t`Review Swap`}
-          leftElement={<HeaderBackButton onPress={onGoBack} />}
+          leftElement={<HeaderBackButton onPress={handleGoBack} />}
         />
       }
     >
-      {matchLiveEstimate(liveEstimate, {
-        idle: () => null,
-        constrained: () => null,
-        loading: () => <SwapReviewLoadingState />,
-        error: liveEstimate => <SwapReviewErrorState onRetry={liveEstimate.refetch} />,
-        empty: () => <SwapReviewEmptyState onBack={onGoBack} />,
-        success: liveEstimate => <SwapReviewContent liveEstimate={liveEstimate} />,
-      })}
+      <Box flex={1}>
+        {matchLiveEstimate(liveEstimate, {
+          idle: () => null,
+          constrained: () => null,
+          loading: () => <SwapReviewLoadingState />,
+          error: liveEstimate => <SwapReviewErrorState onRetry={liveEstimate.refetch} />,
+          empty: () => <SwapReviewEmptyState onBack={onGoBack} />,
+          success: liveEstimate => (
+            <SwapReviewContent
+              liveEstimate={liveEstimate}
+              isSubmissionActive={isSubmissionActive}
+              onConfirm={confirm}
+            />
+          ),
+        })}
+
+        {submission.status !== 'idle' && (
+          <SwapSubmissionOverlay
+            baseAsset={submission.quote.baseAsset}
+            targetAsset={submission.quote.targetAsset}
+            baseAmount={submission.quote.baseAmount}
+            targetAmount={submission.quote.targetAmount}
+            status={submission.status}
+            attention={submission.status === 'needs-attention' ? submission.attention : undefined}
+            onReset={reset}
+            onDismiss={dismissSwapSheet}
+          />
+        )}
+      </Box>
     </FullHeightSheetLayout>
   );
 }
 
 interface SwapReviewContentProps {
   liveEstimate: Extract<LiveSwapEstimate, { status: 'success' }>;
+  isSubmissionActive: boolean;
+  onConfirm(quote: SwapSubmissionQuoteSnapshot): void;
 }
 
-function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
+function SwapReviewContent({
+  liveEstimate,
+  isSubmissionActive,
+  onConfirm,
+}: SwapReviewContentProps) {
   const swapState = useSwapContext();
   const slippageSheetRef = useRef<SheetInstance>(null);
-  const onSubmitSwap = usePreventAccidentalInstantTap(
-    ensureAsyncFunctionMinimumDuration(swapState.submit, submissionDisplayDuration)
-  );
   const { state } = swapState;
   const { selectedQuote, fees, intervalState, isRefetching } = liveEstimate;
   const {
@@ -107,21 +144,9 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
   } = selectedQuote;
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
   const showPriceImpact = shouldShowPriceImpact(priceImpactPercentage);
-  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
-  const { dismiss } = useBottomSheetModal();
 
   function handleConfirm() {
-    setSubmissionStatus('submitting');
-    onSubmitSwap()
-      .then(() => {
-        setSubmissionStatus('success');
-        setTimeout(() => {
-          dismiss('swap');
-        }, successfulExitTimeout);
-      })
-      .catch(() => {
-        setSubmissionStatus('failure');
-      });
+    onConfirm({ baseAsset, targetAsset, baseAmount, targetAmount });
   }
 
   return (
@@ -198,21 +223,10 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         >{t`Make sure everything looks correct.\nConfirmed transactions cannot be undone.`}</Text>
 
         <Button
-          disabled={!swapState.canSubmit || submissionStatus !== 'idle'}
+          disabled={!swapState.canSubmit || isSubmissionActive}
           onPress={handleConfirm}
         >{t`Confirm`}</Button>
       </SwapReviewFooter>
-
-      {submissionStatus !== 'idle' && (
-        <SwapSubmissionOverlay
-          baseAsset={baseAsset}
-          targetAsset={targetAsset}
-          baseAmount={baseAmount}
-          targetAmount={targetAmount}
-          status={submissionStatus}
-          onReset={() => setSubmissionStatus('idle')}
-        />
-      )}
 
       <SlippageSelectorSheet
         ref={slippageSheetRef}
@@ -223,8 +237,13 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
   );
 }
 
-function useSwapReviewStatusGuard(liveEstimate: LiveSwapEstimate, exitReview: () => void) {
+function useSwapReviewStatusGuard(
+  liveEstimate: LiveSwapEstimate,
+  isSubmissionActive: boolean,
+  exitReview: () => void
+) {
   useEffect(() => {
+    if (isSubmissionActive) return;
     if (!supportedLiveEstimateStatuses.includes(liveEstimate.status)) {
       captureMessage(`Swap review screen reached with ${liveEstimate.status} estimate state.`, {
         level: 'warning',
@@ -232,7 +251,7 @@ function useSwapReviewStatusGuard(liveEstimate: LiveSwapEstimate, exitReview: ()
       });
       exitReview();
     }
-  }, [liveEstimate.status, exitReview]);
+  }, [liveEstimate.status, isSubmissionActive, exitReview]);
 }
 
 function shouldShowPriceImpact(
@@ -241,28 +260,5 @@ function shouldShowPriceImpact(
   return (
     isNonNullish(priceImpactPercentage) &&
     priceImpactPercentage.isGreaterThanOrEqualTo(PRICE_IMPACT_WARNING_THRESHOLD)
-  );
-}
-
-function usePreventAccidentalInstantTap<T extends (...args: unknown[]) => unknown>(callback: T): T {
-  const pressSuppressionDuration = 500;
-  const isPressAllowedRef = useRef(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      isPressAllowedRef.current = true;
-    }, pressSuppressionDuration);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  return useCallback(
-    ((...args) => {
-      if (!isPressAllowedRef.current) {
-        return undefined;
-      }
-      return callback(...args);
-    }) as T,
-    [callback]
   );
 }

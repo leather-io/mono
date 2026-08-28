@@ -16,6 +16,7 @@ import * as Linking from 'expo-linking';
 
 import { LEATHER_SUPPORT_URL } from '@leather.io/constants';
 import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { SwapAttention } from '@leather.io/state/swap';
 import {
   AnimatedBox,
   ArrowLeftIcon,
@@ -23,20 +24,26 @@ import {
   Button,
   CheckmarkCircleIcon,
   ErrorCircleIcon,
+  ErrorTriangleIcon,
   Text,
   useOnMount,
 } from '@leather.io/ui/native';
+import { assertUnreachable, truncateMiddle } from '@leather.io/utils';
 
 const overlayEnteringAnimationDuration = 300;
 const summaryAnimationTravelDistance = 120;
+
+type SwapSubmissionOverlayStatus = 'submitting' | 'success' | 'needs-attention' | 'failure';
 
 interface SwapSubmissionOverlayProps {
   baseAsset: SwappableFungibleCryptoAsset;
   targetAsset: SwappableFungibleCryptoAsset;
   baseAmount: Money;
   targetAmount: Money;
-  status: 'submitting' | 'success' | 'failure';
+  status: SwapSubmissionOverlayStatus;
+  attention?: SwapAttention;
   onReset(): void;
+  onDismiss(): void;
 }
 
 export function SwapSubmissionOverlay({
@@ -45,7 +52,9 @@ export function SwapSubmissionOverlay({
   targetAmount,
   targetAsset,
   status,
+  attention,
   onReset,
+  onDismiss,
 }: SwapSubmissionOverlayProps) {
   const {
     startEnteringAnimation,
@@ -94,6 +103,9 @@ export function SwapSubmissionOverlay({
         <AnimatedBox alignItems="center" gap="3" style={[messageAnimationStyle]}>
           <SubmissionStatusMessage status={status} />
           {status === 'failure' && <SubmissionFailureMessage onReset={onReset} />}
+          {status === 'needs-attention' && attention && (
+            <SwapAttentionMessage attention={attention} onDismiss={onDismiss} />
+          )}
         </AnimatedBox>
       </Box>
     </AnimatedBox>
@@ -101,13 +113,14 @@ export function SwapSubmissionOverlay({
 }
 
 interface SubmissionStatusMessageProps {
-  status: 'submitting' | 'success' | 'failure';
+  status: SwapSubmissionOverlayStatus;
 }
 
 function SubmissionStatusMessage({ status }: SubmissionStatusMessageProps) {
   const message = {
     submitting: t`Initiating the swap...`,
     success: t`Swap initiated`,
+    'needs-attention': t`Swap needs attention`,
     failure: t`Failed to start a swap`,
   };
 
@@ -119,13 +132,14 @@ function SubmissionStatusMessage({ status }: SubmissionStatusMessageProps) {
 }
 
 interface SubmissionStatusDisplayProps {
-  status: 'submitting' | 'success' | 'failure';
+  status: SwapSubmissionOverlayStatus;
 }
 
 function SubmissionStatusDisplay({ status }: SubmissionStatusDisplayProps) {
   const render = {
     submitting: <SpinnerIcon width={24} height={24} />,
     success: <CheckmarkCircleIcon variant="medium" color="green.action-primary-default" />,
+    'needs-attention': <ErrorTriangleIcon variant="medium" color="yellow.action-primary-default" />,
     failure: <ErrorCircleIcon variant="medium" color="red.action-primary-default" />,
   };
 
@@ -156,6 +170,54 @@ function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {
       </Text>
       <Button size="sm" variant="outline" iconStart={ArrowLeftIcon} onPress={onReset}>
         {t`Back to review`}
+      </Button>
+    </Box>
+  );
+}
+
+function getAttentionCopy({ reason, txid }: SwapAttention): { lead: string; tail: string } {
+  switch (reason) {
+    case 'sbtc-notification-failed':
+      return {
+        lead: t`Your Bitcoin was sent, but we couldn't notify the sBTC network to complete the swap. Please`,
+        tail: t`for help completing it.`,
+      };
+    case 'broadcast-uncertain': {
+      const truncatedTxid = truncateMiddle(txid);
+      return {
+        lead: t`We couldn't confirm whether your Bitcoin transaction ${truncatedTxid} was sent. Check your activity before trying again, or`,
+        tail: t`if you're unsure.`,
+      };
+    }
+    default:
+      assertUnreachable(reason);
+  }
+}
+
+interface SwapAttentionMessageProps {
+  attention: SwapAttention;
+  onDismiss(): void;
+}
+
+function SwapAttentionMessage({ attention, onDismiss }: SwapAttentionMessageProps) {
+  const { lead, tail } = getAttentionCopy(attention);
+  return (
+    <Box alignItems="center" gap="5" px="5">
+      <Text variant="body02" color="ink.text-subdued" textAlign="center" lineHeight={24}>
+        {lead}{' '}
+        <Text
+          variant="body02"
+          color="ink.text-subdued"
+          onPress={() => Linking.openURL(LEATHER_SUPPORT_URL)}
+          textDecorationLine="underline"
+          textDecorationStyle="solid"
+        >
+          {t`contact support`}
+        </Text>{' '}
+        {tail}
+      </Text>
+      <Button size="sm" variant="outline" onPress={onDismiss}>
+        {t`Done`}
       </Button>
     </Box>
   );
