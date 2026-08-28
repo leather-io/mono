@@ -1,0 +1,38 @@
+{
+  "name": "@leather.io/test-app",
+  "description": "Button-driven catalog of Leather RPC requests for manual testing and as the Playwright host page",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
+    "lint": "eslint --cache --max-warnings 0",
+    "lint:fix": "pnpm lint --fix",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    "./catalog": "./src/catalog.ts"
+  },
+  "dependencies": {
+    "@scure/base": "1.2.4",
+    "@scure/btc-signer": "1.6.0",
+    "@stacks/transactions": "7.5.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/rpc": "workspace:*",
+    "@types/react": "19.1.17",
+    "@types/react-dom": "19.1.11",
+    "@vitejs/plugin-react": "5.2.0",
+    "prettier": "3.5.1",
+    "typescript": "5.9.3",
+    "vite": "7.3.2"
+  },
+  "prettier": "@leather.io/prettier-config",
+  "private": true
+}

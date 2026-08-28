@@ -50,34 +50,12 @@
         "src/inpage/inpage.ts",
         "src/content-scripts/content-script.ts",
         "src/shared/workers/decryption-worker.ts",
-        "test-app/src/index.tsx"
+        "webpack/dev-server.js"
       ],
       "project": [
-        "src/**/*.{ts,tsx}!",
-        "test-app/src/**/*.{ts,tsx}"
+        "src/**/*.{ts,tsx}!"
       ],
       "paths": {
-        "@store/*": [
-          "./test-app/src/store/*"
-        ],
-        "@store": [
-          "./test-app/src/store/index"
-        ],
-        "@dev/*": [
-          "./test-app/src/dev/*"
-        ],
-        "@components/*": [
-          "./test-app/src/components/*"
-        ],
-        "@containers/*": [
-          "./test-app/src/containers/*"
-        ],
-        "@common/*": [
-          "./test-app/src/common/*"
-        ],
-        "@cards/*": [
-          "./test-app/src/components/cards/*"
-        ],
         "@tests/*": [
           "./tests/*"
         ],
@@ -89,9 +67,7 @@
         "config": [
           "webpack/webpack.config.base.js",
           "webpack/webpack.config.dev.js",
-          "webpack/webpack.config.prod.js",
-          "test-app/webpack/webpack.config.base.cjs",
-          "test-app/webpack/webpack.config.prod.cjs"
+          "webpack/webpack.config.prod.js"
         ]
       },
       "ignoreDependencies": [
@@ -104,7 +80,6 @@
         "punycode",
         "webextension-polyfill",
         "@leather.io/panda-preset",
-        "@pmmmwh/react-refresh-webpack-plugin",
         "@types/dompurify",
         "@types/html-webpack-plugin",
         "@types/punycode",
@@ -154,6 +129,15 @@
         "index.d.ts",
         "lingui.config.ts",
         "src/tests/test-utils.tsx"
+      ]
+    },
+    "apps/test-app": {
+      "entry": [
+        "src/main.tsx",
+        "src/catalog.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}"
       ]
     },
     "apps/web": {
