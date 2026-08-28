@@ -1,10 +1,6 @@
 import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
 
-import type {
-  BlockchainActivityAvatar,
-  BlockchainActivityIndicator,
-  BlockchainActivityView,
-} from '@leather.io/features';
+import type { BlockchainActivityIndicator, BlockchainActivityView } from '@leather.io/features';
 import type { MultisigTransactionSummary, Sip10Asset, StxAsset } from '@leather.io/models';
 import { createMoneyFromDecimal } from '@leather.io/utils';
 
@@ -120,8 +116,6 @@ function proposal(
     threshold: 2,
   };
 }
-
-export const mockStxAvatar: BlockchainActivityAvatar = { kind: 'single', asset: stxAsset };
 
 export const mockVaultNames = new Map([['vault-playground', 'Team Treasury']]);
 export const mockAccountNames = new Map([['account-playground', 'Operating account']]);

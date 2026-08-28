@@ -2,7 +2,7 @@
 import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import BitcoinApp from 'ledger-bitcoin';
+import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 
 import { useRequestLedgerKeys } from './use-request-ledger-keys';
 
@@ -10,6 +10,7 @@ Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true);
 
 const mocks = vi.hoisted(() => ({
   toCheckingAppVersion: vi.fn(),
+  toConnectStep: vi.fn(),
   toConnectionSuccessStep: vi.fn(),
   toErrorStep: vi.fn(),
   toStacksAppOutdatedWarning: vi.fn(),
@@ -19,6 +20,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('../../hooks/use-ledger-navigate', () => ({
   useLedgerNavigate: () => ({
     toCheckingAppVersion: mocks.toCheckingAppVersion,
+    toConnectStep: mocks.toConnectStep,
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,
     toErrorStep: mocks.toErrorStep,
     toStacksAppOutdatedWarning: mocks.toStacksAppOutdatedWarning,
@@ -35,6 +37,10 @@ vi.mock('@leather.io/utils', async importOriginal => {
   const actual = await importOriginal<typeof import('@leather.io/utils')>();
   return { ...actual, delay: () => Promise.resolve() };
 });
+
+// The real client module loads @bitcoinerlab/descriptors at import time, whose
+// ecc self-test fails under jsdom; this spec only needs a prototype for fakes.
+vi.mock('@ledgerhq/ledger-bitcoin', () => ({ default: class {} }));
 
 const bitcoinAppVersion = {
   name: 'Bitcoin',
@@ -71,22 +77,33 @@ function renderHookValue<T>(useHook: () => T) {
 }
 
 interface SetupOptions {
-  pullKeysResult: { status: 'success' } | { status: 'failure' };
+  pullKeysResult?: { status: 'success' } | { status: 'failure' };
+  pullKeysError?: Error;
+  connectAppError?: Error;
+  passesAdditionalVersionCheck?(appVersion: unknown): Promise<boolean>;
 }
 
-function setupRequestKeys({ pullKeysResult }: SetupOptions) {
+function setupRequestKeys({
+  pullKeysResult,
+  pullKeysError,
+  connectAppError,
+  passesAdditionalVersionCheck,
+}: SetupOptions) {
   const onSuccess = vi.fn();
   const transportClose = vi.fn().mockResolvedValue(undefined);
-  const pullKeysFromDevice = vi.fn().mockResolvedValue(pullKeysResult);
+  const pullKeysFromDevice = pullKeysError
+    ? vi.fn().mockRejectedValue(pullKeysError)
+    : vi.fn().mockResolvedValue(pullKeysResult);
   const app = makeFakeBitcoinApp(transportClose);
 
   const { getValue } = renderHookValue(() =>
     useRequestLedgerKeys<BitcoinApp>({
       chain: 'bitcoin',
-      connectApp: () => Promise.resolve(app),
+      connectApp: () => (connectAppError ? Promise.reject(connectAppError) : Promise.resolve(app)),
       getAppVersion: () => Promise.resolve(bitcoinAppVersion),
       isAppOpen: () => true,
       pullKeysFromDevice,
+      passesAdditionalVersionCheck,
       onSuccess,
     })
   );
@@ -127,5 +144,68 @@ describe(useRequestLedgerKeys.name, () => {
     expect(mocks.publicKeysPulledFromLedgerSuccessfully).not.toHaveBeenCalled();
     expect(onSuccess).not.toHaveBeenCalled();
     expect(transportClose).toHaveBeenCalledOnce();
+  });
+
+  test('stops before pulling keys when the additional version check fails', async () => {
+    const passesAdditionalVersionCheck = vi.fn().mockResolvedValue(false);
+    const { getValue, onSuccess, transportClose, pullKeysFromDevice } = setupRequestKeys({
+      pullKeysResult: { status: 'success' },
+      passesAdditionalVersionCheck,
+    });
+
+    await act(async () => {
+      await getValue().requestKeys();
+    });
+
+    expect(passesAdditionalVersionCheck).toHaveBeenCalledWith(bitcoinAppVersion);
+    expect(pullKeysFromDevice).not.toHaveBeenCalled();
+    expect(mocks.toConnectionSuccessStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(transportClose).toHaveBeenCalledOnce();
+  });
+
+  test('continues to pull keys when the additional version check passes', async () => {
+    const passesAdditionalVersionCheck = vi.fn().mockResolvedValue(true);
+    const { getValue, onSuccess, transportClose, pullKeysFromDevice } = setupRequestKeys({
+      pullKeysResult: { status: 'success' },
+      passesAdditionalVersionCheck,
+    });
+
+    await act(async () => {
+      await getValue().requestKeys();
+    });
+
+    expect(passesAdditionalVersionCheck).toHaveBeenCalledWith(bitcoinAppVersion);
+    expect(pullKeysFromDevice).toHaveBeenCalledOnce();
+    expect(onSuccess).toHaveBeenCalledOnce();
+    expect(transportClose).toHaveBeenCalledOnce();
+  });
+
+  test('returns to the connect step when the device reports locked mid-flow', async () => {
+    const lockedError = new Error('LockedDeviceError');
+    lockedError.name = 'LockedDeviceError';
+    const { getValue, onSuccess } = setupRequestKeys({ pullKeysError: lockedError });
+
+    await act(async () => {
+      await getValue().requestKeys();
+    });
+
+    expect(mocks.toConnectStep).toHaveBeenCalledOnce();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+  });
+
+  test('surfaces the app-open failure message on the error step', async () => {
+    const appOpenError = new Error('Unable to open the Bitcoin Test app on your Ledger.');
+    appOpenError.name = 'AppOpenFailed';
+    const { getValue, onSuccess } = setupRequestKeys({ connectAppError: appOpenError });
+
+    await act(async () => {
+      await getValue().requestKeys();
+    });
+
+    expect(mocks.toErrorStep).toHaveBeenCalledWith('bitcoin', appOpenError.message);
+    expect(mocks.toConnectStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
   });
 });

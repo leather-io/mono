@@ -84,8 +84,11 @@ export function Sheet({
             bg: 'overlay',
             position: 'fixed',
             inset: 0,
-            animation: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+            animation: 'fadein 150ms cubic-bezier(0.16, 1, 0.3, 1)',
             zIndex: 999,
+            '&[data-state=closed]': {
+              animation: 'fadeout 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+            },
           })}
         >
           <RadixDialog.Content
@@ -109,6 +112,9 @@ export function Sheet({
               maxHeight: { base: '100vh', md: '90vh' },
               '&[data-state=open]': {
                 animation: { base: '', md: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)' },
+              },
+              '&[data-state=closed]': {
+                animation: { base: '', md: 'fadeout 150ms cubic-bezier(0.16, 1, 0.3, 1)' },
               },
               ...variantMap[variant],
             })}

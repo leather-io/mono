@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "pnpm run prepare:build && NODE_OPTIONS='--import ./instrument.server.mjs' react-router build",
+    "build": "pnpm run prepare:build && NODE_OPTIONS=\"$NODE_OPTIONS --import ./instrument.server.mjs --max-old-space-size=8192\" react-router build",
     "build:watch": "pnpm dev",
     "cf-typegen": "wrangler types",
     "deploy": "pnpm build && wrangler deploy",
@@ -50,6 +50,7 @@
     "@sanity/image-url": "1.2.0",
     "@sentry/react-router": "9.15.0",
     "@stacks/common": "7.0.2",
+    "@stacks/connect": "8.2.7",
     "@stacks/network": "7.0.2",
     "@stacks/stacking": "7.0.5",
     "@stacks/stacks-blockchain-api-types": "7.14.1",

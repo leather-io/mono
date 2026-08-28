@@ -28,4 +28,9 @@ export const validationMessages = {
   cannotStackMoreThanBalance: 'You cannot stake more than your available balance',
   chooseStakingCycles: 'Choose between 1 and 96 cycles',
   enterMaxWithdrawalFee: 'Enter a max withdrawal fee in sats',
+  maxWithdrawalFeeTooLow: 'Max withdrawal fee must be at least 1,000 sats',
+  minClaimNotNumeric: 'Minimum claim must be a number of sats',
+  minClaimTooLow(minSats: string) {
+    return `Minimum claim must be at least ${minSats} sats (enough to clear the max fee plus the 546 sats dust limit)`;
+  },
 } as const;

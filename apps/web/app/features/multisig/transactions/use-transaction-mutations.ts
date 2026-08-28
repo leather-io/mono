@@ -58,11 +58,21 @@ export function useCancelTransaction(network: AuthNetworkId) {
 }
 
 export function useBroadcastTransaction(network: AuthNetworkId) {
+  const queryClient = useQueryClient();
   const invalidate = useInvalidateTransaction(network);
   return useMutation<MultisigTransaction, Error, string>({
     mutationFn(transactionId) {
       return getMultisigService().broadcastTransaction(network, transactionId);
     },
-    onSuccess: invalidate,
+    onSuccess(transaction) {
+      invalidate(transaction);
+      void queryClient.invalidateQueries({ queryKey: ['asset-list-service--get-asset-list'] });
+      void queryClient.invalidateQueries({
+        queryKey: ['btc-balances-service--get-btc-account-balance'],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ['stx-balances-service--get-stx-account-balance'],
+      });
+    },
   });
 }

@@ -36,3 +36,8 @@ export function useCurrentUtxos() {
   const accountRequest = useAccountRequest();
   return useUtxos(accountRequest);
 }
+
+export function useCurrentUtxosFetchState() {
+  const accountRequest = useAccountRequest();
+  return toFetchState(useGetAccountUtxosQuery(accountRequest));
+}

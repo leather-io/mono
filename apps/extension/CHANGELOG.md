@@ -40,6 +40,116 @@
 
 ---
 
+## [6.111.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.110.0...@leather.io/extension-v6.111.0) (2026-08-27)
+
+
+### Features
+
+* bond exit ([#2648](https://github.com/leather-io/mono/issues/2648)) ([289275f](https://github.com/leather-io/mono/commit/289275f169a4b0563d2fec662e48c9a844792bf3))
+* update sendTransfer params ([#2634](https://github.com/leather-io/mono/issues/2634)) ([344da46](https://github.com/leather-io/mono/commit/344da46f4608c9e431522e99e5326af916deb499))
+
+
+### Bug Fixes
+
+* activity view drift revert ([#2645](https://github.com/leather-io/mono/issues/2645)) ([a4677e0](https://github.com/leather-io/mono/commit/a4677e08a42feedd38fb6a9cf7344dfc7f3b2af5))
+* add all balances settings tab ([#2552](https://github.com/leather-io/mono/issues/2552)) ([1ef1c33](https://github.com/leather-io/mono/commit/1ef1c33ecb393f6e2d87f0829773e88e7a59fcfa))
+* **extension:** classify psbt inputs by script type when building signing config ([#2680](https://github.com/leather-io/mono/issues/2680)) ([263e3c2](https://github.com/leather-io/mono/commit/263e3c28d3975ee0e0fb2ec8607421a75c81230b))
+* openswap-param-injection ([#2616](https://github.com/leather-io/mono/issues/2616)) ([ab3de86](https://github.com/leather-io/mono/commit/ab3de867c583bc315cbf90cdb6fc3c35eec56a61))
+* route bitflow readonly calls through hiro ([#2683](https://github.com/leather-io/mono/issues/2683)) ([9659a2f](https://github.com/leather-io/mono/commit/9659a2f1469e7e6d27428959e2d84264a23d7372))
+* update ledger dependencies ([#2661](https://github.com/leather-io/mono/issues/2661)) ([7ef2061](https://github.com/leather-io/mono/commit/7ef20613d3a4858da6f6102bb586bbb370201e4b))
+* update Ledger derivation path copy per review feedback ([#2600](https://github.com/leather-io/mono/issues/2600)) ([6de04e8](https://github.com/leather-io/mono/commit/6de04e800bd4f5f354a76bd9416a41e2ca7ccdd6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.25.0
+    * @leather.io/bitcoin bumped to 0.40.0
+    * @leather.io/constants bumped to 0.39.2
+    * @leather.io/crypto bumped to 1.13.7
+    * @leather.io/features bumped to 1.8.0
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/provider bumped to 1.7.2
+    * @leather.io/queries bumped to 0.15.4
+    * @leather.io/query bumped to 2.51.7
+    * @leather.io/rpc bumped to 2.25.0
+    * @leather.io/services bumped to 1.64.1
+    * @leather.io/stacks bumped to 1.22.5
+    * @leather.io/tokens bumped to 0.27.1
+    * @leather.io/ui bumped to 1.117.0
+    * @leather.io/utils bumped to 0.52.7
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.16.4
+
+## [6.110.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.109.0...@leather.io/extension-v6.110.0) (2026-08-18)
+
+
+### Features
+
+* **services:** replace chainalysis with leather api compliance endpoint ([#2606](https://github.com/leather-io/mono/issues/2606)) ([ac3a931](https://github.com/leather-io/mono/commit/ac3a931ed2dec18d52dd3832450fb59f4dc5282d))
+
+
+### Bug Fixes
+
+* **extension:** ledger testnet address verification ([#2649](https://github.com/leather-io/mono/issues/2649)) ([f16cc57](https://github.com/leather-io/mono/commit/f16cc5757b7300c58f6ee2c05e56644e5d737a00))
+* localhost tx proposal ([#2644](https://github.com/leather-io/mono/issues/2644)) ([1340cdc](https://github.com/leather-io/mono/commit/1340cdcd3c7eff4ba00746b41a9322a15b1d5461))
+* propogate BE error details to multisig app ([#2609](https://github.com/leather-io/mono/issues/2609)) ([e902bdb](https://github.com/leather-io/mono/commit/e902bdb0c9b692d570c696f67a1e3d78dc63e077))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.24.0
+    * @leather.io/bitcoin bumped to 0.39.6
+    * @leather.io/constants bumped to 0.39.1
+    * @leather.io/crypto bumped to 1.13.6
+    * @leather.io/features bumped to 1.7.2
+    * @leather.io/models bumped to 0.61.0
+    * @leather.io/provider bumped to 1.7.1
+    * @leather.io/queries bumped to 0.15.3
+    * @leather.io/query bumped to 2.51.6
+    * @leather.io/rpc bumped to 2.24.5
+    * @leather.io/services bumped to 1.64.0
+    * @leather.io/stacks bumped to 1.22.4
+    * @leather.io/ui bumped to 1.116.2
+    * @leather.io/utils bumped to 0.52.6
+
+## [6.109.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.108.0...@leather.io/extension-v6.109.0) (2026-08-10)
+
+
+### Features
+
+* bump stacks minimum app version and update designs ([#2591](https://github.com/leather-io/mono/issues/2591)) ([e491bd8](https://github.com/leather-io/mono/commit/e491bd86310f656f11e29fb16ead56c26d6cceb0))
+* delete legacy requests ([#2612](https://github.com/leather-io/mono/issues/2612)) ([c17d65f](https://github.com/leather-io/mono/commit/c17d65fc12fd799ff045d6fb725b57b50462fd84))
+
+
+### Bug Fixes
+
+* origin-principal-post-condition ([#2617](https://github.com/leather-io/mono/issues/2617)) ([c339004](https://github.com/leather-io/mono/commit/c339004db150a797ae4411ac3d4c85d17c303e95))
+* psbt-taproot-transfer-total ([#2613](https://github.com/leather-io/mono/issues/2613)) ([1902614](https://github.com/leather-io/mono/commit/1902614ae8315939cbf5fff68af28e781867df36))
+* rpc-method-type-confusion ([#2618](https://github.com/leather-io/mono/issues/2618)) ([b885858](https://github.com/leather-io/mono/commit/b8858585a25b2e86509c5cf95d4178188f7b0b8a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.23.0
+    * @leather.io/bitcoin bumped to 0.39.5
+    * @leather.io/constants bumped to 0.39.0
+    * @leather.io/crypto bumped to 1.13.5
+    * @leather.io/features bumped to 1.7.1
+    * @leather.io/provider bumped to 1.7.0
+    * @leather.io/queries bumped to 0.15.2
+    * @leather.io/query bumped to 2.51.5
+    * @leather.io/rpc bumped to 2.24.4
+    * @leather.io/services bumped to 1.63.1
+    * @leather.io/stacks bumped to 1.22.3
+    * @leather.io/ui bumped to 1.116.1
+    * @leather.io/utils bumped to 0.52.5
+
 ## [6.108.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.107.0...@leather.io/extension-v6.108.0) (2026-08-05)
 
 

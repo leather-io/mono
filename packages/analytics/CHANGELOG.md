@@ -114,6 +114,46 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.25.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.24.0...@leather.io/analytics-v3.25.0) (2026-08-27)
+
+
+### Features
+
+* **web:** update-stake signer-manager switching ([#2657](https://github.com/leather-io/mono/issues/2657)) ([5b7f7d8](https://github.com/leather-io/mono/commit/5b7f7d8f0cf948a1d23bd08ee5843274b073e701))
+
+
+### Bug Fixes
+
+* add all balances settings tab ([#2552](https://github.com/leather-io/mono/issues/2552)) ([1ef1c33](https://github.com/leather-io/mono/commit/1ef1c33ecb393f6e2d87f0829773e88e7a59fcfa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.61.1
+
+## [3.24.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.23.0...@leather.io/analytics-v3.24.0) (2026-08-18)
+
+
+### Features
+
+* **services:** replace chainalysis with leather api compliance endpoint ([#2606](https://github.com/leather-io/mono/issues/2606)) ([ac3a931](https://github.com/leather-io/mono/commit/ac3a931ed2dec18d52dd3832450fb59f4dc5282d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.61.0
+
+## [3.23.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.22.0...@leather.io/analytics-v3.23.0) (2026-08-10)
+
+
+### Features
+
+* delete legacy requests ([#2612](https://github.com/leather-io/mono/issues/2612)) ([c17d65f](https://github.com/leather-io/mono/commit/c17d65fc12fd799ff045d6fb725b57b50462fd84))
+
 ## [3.22.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.21.1...@leather.io/analytics-v3.22.0) (2026-08-05)
 
 

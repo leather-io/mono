@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 
-import BitcoinApp from 'ledger-bitcoin';
+import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 
@@ -96,7 +96,6 @@ function LedgerRequestBitcoinKeys() {
     pullPublicKeysFromDevice: requestKeys,
     latestDeviceResponse,
     awaitingDeviceConnection,
-    outdatedAppVersionWarning: false,
   };
 
   const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);

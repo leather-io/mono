@@ -9,6 +9,11 @@ import {
 
 export type SignedMessageType = 'utf8' | 'structured';
 
+export interface SignatureData {
+  signature: string;
+  publicKey: string;
+}
+
 export type StructuredMessageDataDomain = TupleCV<{
   name: StringAsciiCV;
   version: StringAsciiCV;

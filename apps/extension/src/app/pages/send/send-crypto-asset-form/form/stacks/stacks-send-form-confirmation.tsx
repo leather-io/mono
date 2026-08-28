@@ -19,9 +19,9 @@ import {
   isNonSequentialMultisigTransaction,
   isSip10TransferContactCall,
 } from '@app/common/transactions/stacks/transaction.utils';
+import { useStacksBroadcastTransaction } from '@app/common/transactions/stacks/use-stacks-broadcast-transaction';
 import { Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { useStacksBroadcastTransaction } from '@app/features/stacks-transaction-request/hooks/use-legacy-stacks-broadcast-transaction';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 

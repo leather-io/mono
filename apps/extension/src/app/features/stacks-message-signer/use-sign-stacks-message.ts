@@ -1,9 +1,7 @@
 import { useState } from 'react';
 
-import { SignatureData } from '@stacks/connect-jwt';
-
 import { logger } from '@shared/logger';
-import { UnsignedMessage } from '@shared/signature/signature-types';
+import { SignatureData, UnsignedMessage } from '@shared/signature/signature-types';
 import { analytics } from '@shared/utils/analytics';
 
 import { useWalletType } from '@app/common/use-wallet-type';

@@ -13,7 +13,7 @@ import {
 } from '@leather.io/crypto';
 import { BitcoinAddress, BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
 import type { BitcoinPaymentTypes } from '@leather.io/rpc';
-import { isDefined, whenNetwork } from '@leather.io/utils';
+import { isDefined, isUndefined, whenNetwork } from '@leather.io/utils';
 
 import { getTaprootPayment } from '../payments/p2tr-address-gen';
 import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
@@ -88,7 +88,7 @@ export function ecdsaPublicKeyToSchnorr(pubKey: Uint8Array) {
 }
 
 // Basically same as above, to remove
-export function toXOnly(pubKey: Buffer) {
+export function toXOnly(pubKey: Uint8Array) {
   return pubKey.length === 32 ? pubKey : pubKey.subarray(1, 33);
 }
 
@@ -143,7 +143,7 @@ export type BtcSignerLibPaymentTypeIdentifers = 'wpkh' | 'wsh' | 'tr' | 'pkh' | 
 
 export const paymentTypeMap: Record<BtcSignerLibPaymentTypeIdentifers, BitcoinPaymentTypes> = {
   wpkh: 'p2wpkh',
-  wsh: 'p2wpkh-p2sh',
+  wsh: 'p2wsh',
   tr: 'p2tr',
   pkh: 'p2pkh',
   sh: 'p2sh',
@@ -237,28 +237,26 @@ export function getHdKeyVersionsFromNetwork(network: NetworkModes) {
   });
 }
 
-export function getBitcoinInputAddress(input: TransactionInput, bitcoinNetwork: BtcSignerNetwork) {
-  if (isDefined(input.witnessUtxo))
-    return getAddressFromOutScript(input.witnessUtxo.script, bitcoinNetwork);
+function getBitcoinInputScript(input: TransactionInput) {
+  if (isDefined(input.witnessUtxo)) return input.witnessUtxo.script;
   if (isDefined(input.nonWitnessUtxo) && isDefined(input.index))
-    return getAddressFromOutScript(
-      input.nonWitnessUtxo.outputs[input.index]?.script,
-      bitcoinNetwork
-    );
-  return null;
+    return input.nonWitnessUtxo.outputs[input.index]?.script;
+  return undefined;
 }
 
-export function getInputPaymentType(
-  input: TransactionInput,
-  network: BitcoinNetworkModes
-): BitcoinPaymentTypes {
-  const address = getBitcoinInputAddress(input, getBtcSignerLibNetworkConfigByMode(network));
-  if (address === null) throw new Error('Input address cannot be empty');
-  if (address.startsWith('bc1p') || address.startsWith('tb1p') || address.startsWith('bcrt1p'))
-    return 'p2tr';
-  if (address.startsWith('bc1q') || address.startsWith('tb1q') || address.startsWith('bcrt1q'))
-    return 'p2wpkh';
-  throw new Error('Unable to infer payment type from input address');
+export function getBitcoinInputAddress(input: TransactionInput, bitcoinNetwork: BtcSignerNetwork) {
+  const script = getBitcoinInputScript(input);
+  if (isUndefined(script)) return null;
+  return getAddressFromOutScript(script, bitcoinNetwork);
+}
+
+export function getInputPaymentType(input: TransactionInput): BitcoinPaymentTypes {
+  const script = getBitcoinInputScript(input);
+  if (isUndefined(script)) throw new Error('Input script cannot be empty');
+  const scriptType = getOutputScriptType(script);
+  if (!isBtcSignerLibPaymentType(scriptType))
+    throw new Error('Unable to infer payment type from input script');
+  return btcSignerLibPaymentTypeToPaymentTypeMap(scriptType);
 }
 
 interface GetAddressArgs {
@@ -351,6 +349,23 @@ export function inferNetworkFromAddress(address: BitcoinAddress): BitcoinNetwork
   if (firstChar === '2') return 'testnet';
 
   throw new Error('Invalid or unsupported Bitcoin address format');
+}
+
+const testnetFamilyBech32Prefixes = ['tb1', 'bcrt1'];
+
+export function reencodeTestnetFamilyAddress(
+  address: string,
+  networkMode: BitcoinNetworkModes
+): string | null {
+  if (bitcoinNetworkModeToCoreNetworkMode(networkMode) !== 'testnet') return null;
+  if (!testnetFamilyBech32Prefixes.some(prefix => address.startsWith(prefix))) return null;
+  const sourceMode = address.startsWith('bcrt1') ? 'regtest' : 'testnet';
+  try {
+    const decoded = btc.Address(getBtcSignerLibNetworkConfigByMode(sourceMode)).decode(address);
+    return btc.Address(getBtcSignerLibNetworkConfigByMode(networkMode)).encode(decoded);
+  } catch {
+    return null;
+  }
 }
 
 export function inferPaymentTypeFromAddress(address: BitcoinAddress): SupportedPaymentType {

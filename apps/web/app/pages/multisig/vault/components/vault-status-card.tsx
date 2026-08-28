@@ -1,10 +1,16 @@
 import { Box, styled } from 'leather-styles/jsx';
 
 import type { Vault } from '@leather.io/models';
-import { ArrowTopRightIcon, ListItemBox } from '@leather.io/ui';
+import {
+  ArrowTopRightIcon,
+  BasicTooltip,
+  IconButton,
+  ListItemBox,
+  PencilIcon,
+} from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
-import { vaultThemeFromName } from '../../multisig-tokens';
+import { defaultVaultIcon, vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface VaultStatusCardProps {
@@ -14,6 +20,7 @@ interface VaultStatusCardProps {
   pendingCount: number;
   onShareInvite(): void;
   onCancelVault(): void;
+  onEdit?(): void;
 }
 
 function Row({ label, children }: { label: string; children?: React.ReactNode }) {
@@ -39,6 +46,7 @@ export function VaultStatusCard({
   pendingCount,
   onShareInvite,
   onCancelVault,
+  onEdit,
 }: VaultStatusCardProps) {
   const chain = chainFromNetwork(vault.network);
   const theme = vaultThemeFromName(vault.theme);
@@ -51,16 +59,35 @@ export function VaultStatusCard({
       borderRadius="md"
       borderWidth="1px"
       borderStyle="solid"
-      borderColor={vault.status === 'pending' ? 'yellow.border' : 'ink.border-default'}
+      borderColor="ink.border-default"
       overflow="hidden"
     >
       <Box p="space.04">
         <ListItemBox
           variant="plain"
           density="compact"
-          leading={<AvatarSq chain={chain} icon="vault" themeId={theme.id} size="sm" />}
+          leading={
+            <AvatarSq
+              chain={chain}
+              icon={vault.icon ?? defaultVaultIcon}
+              themeId={theme.id}
+              size="sm"
+            />
+          }
           title={vault.name}
           caption={`${chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault`}
+          trailing={
+            onEdit ? (
+              <BasicTooltip asChild label="Edit vault">
+                <IconButton
+                  icon={<PencilIcon variant="small" color="ink.text-subdued" />}
+                  onClick={onEdit}
+                  aria-label="Edit vault"
+                  size="sm"
+                />
+              </BasicTooltip>
+            ) : undefined
+          }
         />
       </Box>
 

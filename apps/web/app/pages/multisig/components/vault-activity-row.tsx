@@ -1,4 +1,8 @@
 import { styled } from 'leather-styles/jsx';
+import {
+  formatActivityActionStatusLine,
+  getActivityActionLine,
+} from '~/features/multisig/activity/activity-action-line';
 import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
 import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
@@ -30,6 +34,7 @@ interface VaultActivityRowProps {
   needsAttention?: boolean;
   location?: ActivityRowLocation;
   href?: string;
+  variant?: 'boxed' | 'plain';
   onClick?(): void;
 }
 
@@ -56,7 +61,8 @@ function resolveValueColor(
   indicator: BlockchainActivityIndicator,
   direction: BlockchainActivityDirection
 ) {
-  if (indicator === 'pending' || indicator === 'failed') return 'ink.text-subdued';
+  if (indicator === 'pending' || indicator === 'failed' || indicator === 'cancelled')
+    return 'ink.text-subdued';
   if (direction === 'received') return 'green.action-primary-default';
   return 'ink.text-primary';
 }
@@ -80,16 +86,19 @@ export function VaultActivityRow({
   needsAttention,
   location,
   href,
+  variant = 'boxed',
   onClick,
 }: VaultActivityRowProps) {
   const { view } = item;
   const cfg = scaleConfig[scale];
   const amount = view.amount;
   const valueColor = amount ? resolveValueColor(view.indicator, amount.direction) : undefined;
+  const actionLine = getActivityActionLine(view);
 
   return (
     <ListItemBox
       density={scale === 'compact' ? 'compact' : 'default'}
+      variant={variant}
       highlight={needsAttention ? 'attention' : undefined}
       href={href}
       onClick={onClick}
@@ -109,7 +118,9 @@ export function VaultActivityRow({
           textOverflow="ellipsis"
           whiteSpace="nowrap"
         >
-          {view.subtitle || view.title || '—'}
+          {actionLine
+            ? formatActivityActionStatusLine(view, actionLine)
+            : view.subtitle || view.title || '—'}
         </styled.span>
       }
       caption={captionText(item, location)}

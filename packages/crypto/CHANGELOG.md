@@ -492,6 +492,36 @@
   * dependencies
     * @leather.io/utils bumped to 0.46.4
 
+## [1.13.7](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.6...@leather.io/crypto-v1.13.7) (2026-08-27)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.2
+    * @leather.io/utils bumped to 0.52.7
+
+## [1.13.6](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.5...@leather.io/crypto-v1.13.6) (2026-08-18)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.1
+    * @leather.io/utils bumped to 0.52.6
+
+## [1.13.5](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.4...@leather.io/crypto-v1.13.5) (2026-08-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.0
+    * @leather.io/utils bumped to 0.52.5
+
 ## [1.13.4](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.3...@leather.io/crypto-v1.13.4) (2026-08-05)
 
 

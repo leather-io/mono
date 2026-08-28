@@ -144,6 +144,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.27.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.27.0...@leather.io/tokens-v0.27.1) (2026-08-27)
+
+
+### Bug Fixes
+
+* **tokens:** add missing caption.02 text style ([#2658](https://github.com/leather-io/mono/issues/2658)) ([5366529](https://github.com/leather-io/mono/commit/5366529da7e85abb209481257f0d7f422883ece3))
+
 ## [0.27.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.26.0...@leather.io/tokens-v0.27.0) (2026-06-23)
 
 

@@ -4,7 +4,13 @@ import { hexToCV, principalCV, serializeCV } from '@stacks/transactions';
 import { Pox5PayoutPreference, decodePayoutPreference } from '../transactions/pox5-signer-calldata';
 import { parseContractId } from '../utils/contract-id';
 
-export const payoutPreferenceFunctionNames = ['get-pox-addr', 'get-payout-config'];
+export const payoutPreferenceFunctionNames = ['get-payout-config', 'get-pox-addr'];
+const minClaimFunctionName = 'get-payout-config';
+
+interface Pox5PayoutPreferenceResult {
+  preference: Pox5PayoutPreference | null;
+  supportsMinClaim: boolean;
+}
 
 function isUndefinedFunctionCause(cause: string | undefined): boolean {
   return cause?.includes('UndefinedFunction') ?? false;
@@ -37,7 +43,7 @@ export function createGetPox5PayoutPreferenceQueryOptions({
     enabled: !!address && !!signerManagerContractId,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
-    async queryFn(): Promise<Pox5PayoutPreference | null> {
+    async queryFn(): Promise<Pox5PayoutPreferenceResult | null> {
       if (!address || !signerManagerContractId) return null;
       const { contractAddress, contractName } = parseContractId(signerManagerContractId);
 
@@ -56,7 +62,10 @@ export function createGetPox5PayoutPreferenceQueryOptions({
         if (!res.okay || !res.result) {
           throw new Error(res.cause ?? `Reading ${functionName} returned no result`);
         }
-        return decodePayoutPreference(hexToCV(res.result), networkName);
+        return {
+          preference: decodePayoutPreference(hexToCV(res.result), networkName),
+          supportsMinClaim: functionName === minClaimFunctionName,
+        };
       }
 
       throw new Error(

@@ -10,6 +10,7 @@ import {
   assembleWshMultisigPsbt,
   extractWshMultisigSignatures,
   psbtBase64ToHex,
+  psbtHexToBase64,
 } from './wsh-multisig-transaction';
 
 const publicKeys = [
@@ -97,6 +98,7 @@ describe(psbtBase64ToHex.name, () => {
     const psbtHex = psbtBase64ToHex(psbtBase64);
     expect(hexToBytes(psbtHex)).toEqual(base64.decode(psbtBase64));
     expect(btc.Transaction.fromPSBT(hexToBytes(psbtHex)).inputsLength).toEqual(1);
+    expect(psbtHexToBase64(psbtHex)).toEqual(psbtBase64);
   });
 });
 

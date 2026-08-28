@@ -30,8 +30,8 @@ test.describe('App with Ledger', () => {
     test.describe(testName, () => {
       test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
         await globalPage.setupAndUseApiCalls(extensionId);
-        await onboardingPage.signInWithLedgerAccount(extensionId, state);
         await mockMainnetTestAccountStacksConfirmedTxsRequests(globalPage.page);
+        await onboardingPage.signInWithLedgerAccount(extensionId, state);
       });
 
       test('that homepage renders correctly', async ({ homePage }) => {

@@ -49,7 +49,7 @@ export function RpcStxDeployContractContainer({ account }: RpcStxDeployContractC
     ? getTxSenderAddress(unsignedTxForFeeEstimation)
     : account.address;
 
-  useBreakOnNonCompliantEntity([txSenderAddress].filter(isDefined));
+  useBreakOnNonCompliantEntity('rpc_stx_deploy_contract', [txSenderAddress].filter(isDefined));
 
   if (!unsignedTxForFeeEstimation) return null;
 

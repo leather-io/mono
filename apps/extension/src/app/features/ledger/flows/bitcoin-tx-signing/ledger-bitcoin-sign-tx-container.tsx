@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Route, useLocation } from 'react-router';
 
+import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { hexToBytes } from '@stacks/common';
-import BitcoinApp from 'ledger-bitcoin';
 import get from 'lodash.get';
 
 import { delay, isError } from '@leather.io/utils';

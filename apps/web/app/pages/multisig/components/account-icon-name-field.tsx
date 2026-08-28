@@ -15,6 +15,8 @@ interface AccountIconNameFieldProps {
   themeId: number;
   name: string;
   icon: string;
+  icons?: string[];
+  maxLength?: number;
   onNameChange(value: string): void;
   onIconChange(value: string): void;
   placeholder?: string;
@@ -26,6 +28,8 @@ export function AccountIconNameField({
   themeId,
   name,
   icon,
+  icons = accountIcons,
+  maxLength = ACCOUNT_MAX_NAME_LENGTH,
   onNameChange,
   onIconChange,
   placeholder,
@@ -59,7 +63,7 @@ export function AccountIconNameField({
       gridTemplateColumns="repeat(7, 1fr)"
       gap="space.02"
     >
-      {accountIcons.map(option => (
+      {icons.map(option => (
         <GlyphButton
           key={option}
           icon={option}
@@ -149,7 +153,7 @@ export function AccountIconNameField({
           flex={1}
           value={name}
           placeholder={placeholder}
-          maxLength={ACCOUNT_MAX_NAME_LENGTH}
+          maxLength={maxLength}
           onChange={event => onNameChange(event.target.value)}
           border="none"
           bg="transparent"

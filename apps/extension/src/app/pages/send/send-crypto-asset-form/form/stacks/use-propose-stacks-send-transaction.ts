@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { type StacksTransactionWire } from '@stacks/transactions';
 
+import { getErrorDetail } from '@leather.io/services';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 import { isString } from '@leather.io/utils';
 
@@ -74,7 +75,7 @@ export function useProposeStacksSendTransaction() {
       // signing route when this rejects, so a relative navigation would
       // resolve against the wrong parent.
       void navigate(`${pathname}/${RouteUrls.BroadcastError}`, {
-        state: { message: getErrorMessage(error) },
+        state: { message: getErrorDetail(error) ?? getErrorMessage(error), proposeMode: true },
       });
     }
   }

@@ -5,6 +5,7 @@ import { styled } from 'leather-styles/jsx';
 import { link as linkRecipe } from 'leather-styles/recipes';
 import { HTMLStyledProps } from 'leather-styles/types';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
+import { InfoTooltipIcon } from '~/components/info-tooltip-icon';
 import { LearnHoverCard } from '~/components/learn-hover-card';
 import {
   ForceRowHeight,
@@ -13,7 +14,7 @@ import {
   rowPadding,
   theadBorderBottom,
 } from '~/components/table';
-import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
+import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { learnArticles } from '~/content/learn-content';
 import {
   BitcoinStakingPool,
@@ -59,6 +60,17 @@ function StakingProviderRow({ pool }: StakingProviderRowProps) {
           color="ink.text-primary"
         >
           {pool.name}
+          {pool.requiresSelfClaim && (
+            <styled.span display="block" textStyle="label.03" color="ink.text-subdued">
+              {bitcoinStakingLabels.selfClaimOnly}
+              <InfoTooltipIcon
+                title={bitcoinStakingLabels.selfClaimOnly}
+                explanation={bitcoinStakingContent.selfClaim.explanation}
+                ariaLabel={`About ${bitcoinStakingLabels.selfClaimOnly}`}
+                size={12}
+              />
+            </styled.span>
+          )}
         </Flag>
       </styled.td>
       <styled.td px="space.04" textAlign="left" color="black">

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
+import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 import StacksApp from '@zondax/ledger-stacks';
-import BitcoinApp from 'ledger-bitcoin';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 import { delay, isError } from '@leather.io/utils';
@@ -36,7 +36,6 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
   signTransactionWithDevice,
   passesAdditionalVersionCheck,
 }: UseLedgerSignTxArgs<App>) {
-  const [outdatedAppVersionWarning, setAppVersionOutdatedWarning] = useState(false);
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
   const ledgerNavigate = useLedgerNavigate();
@@ -83,7 +82,12 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
       setAwaitingDeviceConnection(false);
       if (isError(e) && checkLockedDeviceError(e)) {
         setLatestDeviceResponse({ deviceLocked: true } as any);
+        void ledgerNavigate.toConnectStep();
         return;
+      }
+
+      if (isError(e) && e.name === LedgerConnectionErrors.AppOpenFailed) {
+        return ledgerNavigate.toErrorStep(chain, e.message);
       }
 
       return ledgerNavigate.toErrorStep(chain);
@@ -98,8 +102,6 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
 
   return {
     signTransaction: signTransactionImpl,
-    outdatedAppVersionWarning,
-    setAppVersionOutdatedWarning,
     latestDeviceResponse,
     setLatestDeviceResponse,
     awaitingDeviceConnection,

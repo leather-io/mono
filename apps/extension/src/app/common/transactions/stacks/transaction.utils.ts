@@ -5,7 +5,6 @@ import {
 } from '@stacks/stacks-blockchain-api-types';
 import {
   AddressHashMode,
-  AuthType,
   ClarityType,
   type ContractCallPayload,
   type IntCV,
@@ -99,10 +98,6 @@ export function getTxTitle(tx: StacksTx) {
   }
 }
 
-export function isTxSponsored(tx: StacksTransactionWire) {
-  return tx.auth.authType === AuthType.Sponsored;
-}
-
 function getAddressFromPublicKeyHash(
   publicKeyHash: Buffer,
   hashMode: AddressHashMode,
@@ -141,7 +136,6 @@ export function isPendingTx(tx: StacksTx) {
 export enum StacksTransactionActionType {
   Cancel = 'cancel',
   IncreaseFee = 'increase-fee',
-  RpcRequest = 'rpc-request',
 }
 
 export function getRecipientFromStacksTransaction(transaction: StacksTransactionWire) {
