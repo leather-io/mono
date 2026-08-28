@@ -31,6 +31,14 @@ function getSwapDisabledTooltipLabel(swapAvailability: SwapAvailability): ReactN
   if (swapAvailability.reason === 'missingStacksAccount') {
     return <styled.span textStyle="caption.01">Swaps require a Stacks account.</styled.span>;
   }
+  if (swapAvailability.reason === 'policyAccount') {
+    return (
+      <styled.span textStyle="caption.01">Swaps are not available for this account.</styled.span>
+    );
+  }
+  if (swapAvailability.reason === 'loadingConfig') {
+    return <styled.span textStyle="caption.01">Checking swap availability…</styled.span>;
+  }
   return null;
 }
 

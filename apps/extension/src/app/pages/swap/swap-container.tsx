@@ -26,21 +26,28 @@ export interface SwapOutletContext {
 
 export function SwapContainer() {
   const swapAvailability = useSwapAvailability();
-  if (!swapAvailability.isEnabled) {
-    if (swapAvailability.reason === 'loadingConfig') return <LoadingSpinner />;
+  const hasBeenEnabledRef = useRef(false);
+  if (swapAvailability.isEnabled) hasBeenEnabledRef.current = true;
+  if (!hasBeenEnabledRef.current) {
+    if (!swapAvailability.isEnabled && swapAvailability.reason === 'loadingConfig') {
+      return <LoadingSpinner />;
+    }
     return <Navigate to={RouteUrls.Home} replace />;
   }
   return <SwapContainerContent />;
 }
 
 function SwapContainerContent() {
-  useBreakOnNonCompliantEntity('sbtc_deposit');
+  useBreakOnNonCompliantEntity('swap');
   const dependencies = useSwapDependencies();
   const disabledPairs = useSwapDisabledPairs();
   const { quoteCurrency } = useUserSettings();
-  const routeAssets = useSwapRouteAssets({ dependencies, disabledPairs });
-
   const initialRouteAssetsRef = useRef<Extract<SwapRouteAssets, { status: 'ready' }> | null>(null);
+  const routeAssets = useSwapRouteAssets({
+    dependencies,
+    disabledPairs,
+    enabled: initialRouteAssetsRef.current === null,
+  });
   if (initialRouteAssetsRef.current === null && routeAssets.status === 'ready') {
     initialRouteAssetsRef.current = routeAssets;
   }
