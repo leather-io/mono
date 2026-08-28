@@ -1,5 +1,5 @@
+import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 import { HDKey } from '@scure/bip32';
-import BitcoinApp from 'ledger-bitcoin';
 
 import {
   displayNativeSegwitAddressOnDevice,

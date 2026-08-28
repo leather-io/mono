@@ -23,13 +23,11 @@ import {
 } from '~/features/multisig/vaults/vault-account-index';
 import { useToast } from '~/features/toasts/use-toast';
 
-import { VAULT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { AuthNetworkId, Vault } from '@leather.io/models';
 import { getErrorDetail } from '@leather.io/services';
 import { Button, Callout } from '@leather.io/ui';
 
 import { Badge } from '../components/badge';
-import { EditableName } from '../components/editable-name';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
@@ -37,6 +35,7 @@ import { multisigPaths } from '../multisig.constants';
 import { AccountsSection } from './components/accounts-section';
 import { CancelVaultModal } from './components/cancel-vault-modal';
 import { CreateAccountModal } from './components/create-account-modal';
+import { EditVaultModal } from './components/edit-vault-modal';
 import { MembersSection } from './components/members-section';
 import { ShareInvitationsModal } from './components/share-invitations-modal';
 import { VaultBalanceHero } from './components/vault-balance-hero';
@@ -59,6 +58,7 @@ export function VaultDetailPage() {
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [isSharingInvites, setIsSharingInvites] = useState(false);
   const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
+  const [isEditingVault, setIsEditingVault] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
 
@@ -148,24 +148,7 @@ export function VaultDetailPage() {
   }
 
   return (
-    <MultisigPage
-      title={
-        <EditableName
-          value={vault.name}
-          onSave={name =>
-            updateVault.mutate(
-              { vaultId: vault.id, update: { name } },
-              { onError: err => showErrorToast(getErrorDetail(err) ?? 'Unknown error') }
-            )
-          }
-          title="Rename vault"
-          label="vault name"
-          canEdit={isCreator && vault.status !== 'cancelled'}
-          maxLength={VAULT_MAX_NAME_LENGTH}
-        />
-      }
-      backTo={multisigPaths.index}
-    >
+    <MultisigPage title={vault.name} backTo={multisigPaths.index}>
       {isInvited && myMembership && (
         <Callout variant="info" title="You've been invited to this vault">
           <Flex gap="space.03" mt="space.03">
@@ -260,6 +243,9 @@ export function VaultDetailPage() {
             pendingCount={pendingCount}
             onShareInvite={() => setIsSharingInvites(true)}
             onCancelVault={() => setIsConfirmingCancel(true)}
+            onEdit={
+              isCreator && vault.status !== 'cancelled' ? () => setIsEditingVault(true) : undefined
+            }
           />
           <SectionLabel>Activity</SectionLabel>
           <VaultTransactions accounts={accounts.data} />
@@ -271,6 +257,22 @@ export function VaultDetailPage() {
         accounts={accounts.data}
         isShowing={isCreatingAccount}
         onClose={() => setIsCreatingAccount(false)}
+      />
+
+      <EditVaultModal
+        vault={vault}
+        isShowing={isEditingVault}
+        isSaving={updateVault.isPending}
+        onClose={() => setIsEditingVault(false)}
+        onSave={update =>
+          updateVault.mutate(
+            { vaultId: vault.id, update },
+            {
+              onSuccess: () => setIsEditingVault(false),
+              onError: err => showErrorToast(getErrorDetail(err) ?? 'Unknown error'),
+            }
+          )
+        }
       />
 
       <ShareInvitationsModal

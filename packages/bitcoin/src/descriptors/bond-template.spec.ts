@@ -47,9 +47,11 @@ describe('matchBondDescriptor', () => {
     expect(matchBondDescriptor(withChecksum)?.unlockHeight).toBe(unlockHeight);
   });
 
-  it('rejects an unsorted multi tail', () => {
+  it('accepts a multi vault leaf', () => {
     const multiForm = makeBondDescriptor(`multi(2,${xpubA}/0/7,${xpubB}/0/7,${xpubC}/0/7)`);
-    expect(matchBondDescriptor(multiForm)).toBeNull();
+    const match = matchBondDescriptor(multiForm);
+    expect(match?.unlockHeight).toBe(unlockHeight);
+    expect(match?.multiExpression).toBe(`multi(2,${xpubA}/0/7,${xpubB}/0/7,${xpubC}/0/7)`);
   });
 
   it('rejects raw pubkeys and private keys in the vault multi', () => {
@@ -84,10 +86,21 @@ describe('matchBondDescriptor', () => {
     expect(match?.counterpartyKey).toBe(counterpartyKey);
   });
 
-  it('rejects a raw pubkey or private key counterparty', () => {
+  it('accepts a raw compressed pubkey counterparty and lowercases it', () => {
+    const rawCounterparty = makeNativeSegwitAddressPubkeyHex(9);
+    const match = matchBondDescriptor(bondDescriptor.replace(counterpartyKey, rawCounterparty));
+    expect(match?.counterpartyKey).toBe(rawCounterparty);
+
+    const uppercased = matchBondDescriptor(
+      bondDescriptor.replace(counterpartyKey, rawCounterparty.toUpperCase())
+    );
+    expect(uppercased?.counterpartyKey).toBe(rawCounterparty);
+  });
+
+  it('rejects an uncompressed pubkey or private key counterparty', () => {
     const rawCounterparty = makeNativeSegwitAddressPubkeyHex(9);
     expect(
-      matchBondDescriptor(bondDescriptor.replace(counterpartyKey, rawCounterparty))
+      matchBondDescriptor(bondDescriptor.replace(counterpartyKey, `04${rawCounterparty.slice(2)}`))
     ).toBeNull();
 
     const xprv = HDKey.fromMasterSeed(new Uint8Array(32).fill(9)).derive(
@@ -159,6 +172,32 @@ describe('instantiateBondDescriptor', () => {
     );
   });
 
+  it('compiles a pre-sorted multi leaf to the same script as the sortedmulti instantiation', () => {
+    const instantiated = instantiateBondDescriptor({
+      unlockHeight,
+      hash,
+      counterpartyKey,
+      ...vaultKeys,
+    });
+    const sortedKeyExpressions = [1, 2, 3]
+      .map(seedByte => ({
+        keyExpression: `${makeNativeSegwitAccountXpub(seedByte)}/0/7`,
+        pubkeyHex: makeNativeSegwitAddressPubkeyHex(seedByte, 7),
+      }))
+      .sort((a, b) => (a.pubkeyHex < b.pubkeyHex ? -1 : 1))
+      .map(({ keyExpression }) => keyExpression);
+    const multiForm = makeBondDescriptor(`multi(2,${sortedKeyExpressions.join(',')})`);
+
+    const compiledInstantiated = compileWshDescriptor(instantiated);
+    const compiledMultiForm = compileWshDescriptor(multiForm);
+    expect(bytesToHex(compiledMultiForm.scriptPubKey)).toBe(
+      bytesToHex(compiledInstantiated.scriptPubKey)
+    );
+    expect(bytesToHex(compiledMultiForm.witnessScript)).toBe(
+      bytesToHex(compiledInstantiated.witnessScript)
+    );
+  });
+
   it('derives a p2wsh address alongside the vault xpubs and a counterparty key expression', () => {
     const instantiated = instantiateBondDescriptor({
       unlockHeight,
@@ -169,15 +208,43 @@ describe('instantiateBondDescriptor', () => {
     expect(getWshDescriptorAddress(instantiated).startsWith('bc1q')).toBe(true);
   });
 
+  it('accepts a raw compressed pubkey counterparty and compiles like reconstructBondDescriptor', () => {
+    const covenantPubkey = makeNativeSegwitAddressPubkeyHex(9, 7);
+    const instantiated = instantiateBondDescriptor({
+      unlockHeight,
+      hash,
+      counterpartyKey: covenantPubkey,
+      ...vaultKeys,
+    });
+    expect(matchBondDescriptor(instantiated)?.counterpartyKey).toBe(covenantPubkey);
+
+    const reconstructed = reconstructBondDescriptor({
+      unlockHeight,
+      hash,
+      covenantPubkey,
+      ...vaultKeys,
+    });
+    expect(bytesToHex(compileWshDescriptor(instantiated).scriptPubKey)).toBe(
+      bytesToHex(compileWshDescriptor(reconstructed).scriptPubKey)
+    );
+  });
+
   it('throws on invalid params', () => {
     const validArgs = { unlockHeight, hash, counterpartyKey, ...vaultKeys };
+    const rawCounterparty = makeNativeSegwitAddressPubkeyHex(9);
     expect(() => instantiateBondDescriptor({ ...validArgs, unlockHeight: 500_000_000 })).toThrow();
     expect(() => instantiateBondDescriptor({ ...validArgs, unlockHeight: 0 })).toThrow();
     expect(() => instantiateBondDescriptor({ ...validArgs, hash: hash.slice(0, 10) })).toThrow();
     expect(() =>
       instantiateBondDescriptor({
         ...validArgs,
-        counterpartyKey: makeNativeSegwitAddressPubkeyHex(9),
+        counterpartyKey: `04${rawCounterparty.slice(2)}`,
+      })
+    ).toThrow();
+    expect(() =>
+      instantiateBondDescriptor({
+        ...validArgs,
+        counterpartyKey: rawCounterparty.toUpperCase(),
       })
     ).toThrow();
     expect(() => instantiateBondDescriptor({ ...validArgs, keyExpressions: [] })).toThrow();

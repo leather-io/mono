@@ -220,6 +220,8 @@ function RecentActivity({ activity }: RecentActivityProps) {
   return (
     <VaultActivityList
       items={activity.views.map(view => ({ view }))}
+      scale="compact"
+      variant="plain"
       limit={recentActivityLimit}
       onSelect={() => undefined}
     />

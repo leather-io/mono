@@ -271,7 +271,7 @@ export function TxDetailPage() {
           />
         </Box>
         <Box flex={['1', '1', '1']} width="100%" minWidth={0}>
-          <SectionLabel>Signatures</SectionLabel>
+          <SectionLabel noGutter>Signatures</SectionLabel>
           <SignerRollcall
             vault={vault.data}
             account={acct}

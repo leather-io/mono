@@ -89,3 +89,7 @@ export const accountIcons = [
 ];
 
 export const defaultAccountIcon = 'piggybank';
+
+export const defaultVaultIcon = 'vault';
+
+export const vaultIcons = [defaultVaultIcon, ...accountIcons];
