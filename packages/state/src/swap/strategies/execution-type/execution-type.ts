@@ -20,6 +20,7 @@ import {
   type SwapExecutionDependencies,
   type SwapSubmissionResult,
 } from '../../swap-state.types';
+import { toNativeSegwitAccountRequest } from '../../utils/account-request';
 import { estimateExchangeRate } from '../../utils/market-rates';
 import { buildSbtcBridgeDepositTx } from './build-transaction/build-transaction/build-sbtc-bridge-deposit-tx';
 import { buildStacksTx } from './build-transaction/build-transaction/build-stacks-tx';
@@ -112,7 +113,7 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
       },
     ];
     return services.bitcoinTransactionFeesService.getBitcoinTransactionFees(
-      accountRequest,
+      toNativeSegwitAccountRequest(accountRequest),
       recipients,
       isSendingMax,
       signal
@@ -144,7 +145,7 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
     ];
 
     const { inputs, outputs } = await services.bitcoinCoinSelectionService.performCoinSelection({
-      account: accountRequest,
+      account: toNativeSegwitAccountRequest(accountRequest),
       recipients,
       feeRate: fee.calculation.rate,
       isMaxSpend: isSendingMax,

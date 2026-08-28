@@ -10,7 +10,7 @@ import {
   buildSbtcDepositTx,
 } from 'sbtc';
 
-import { type BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
+import { type BitcoinNativeSegwitPayer, ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
 import {
   type AccountAddresses,
   type BitcoinNetworkModes,
@@ -38,7 +38,7 @@ export function buildSbtcBridgeDepositTx(
     stacksAddress: account.stacks?.stxAddress ?? '',
     maxSignerFee: DEFAULT_MAX_SIGNER_FEE,
     reclaimLockTime: DEFAULT_RECLAIM_LOCK_TIME,
-    reclaimPublicKey: bytesToHex(payer.publicKey).slice(2),
+    reclaimPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(payer.publicKey)),
     signersPublicKey,
   });
 }

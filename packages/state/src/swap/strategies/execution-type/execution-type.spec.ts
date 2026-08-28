@@ -3,7 +3,11 @@ import { STACKS_MAINNET } from '@stacks/network';
 import { describe, expect, test, vi } from 'vitest';
 
 import { SwapExecutionData, TransactionFeeQuote } from '@leather.io/models';
-import { BitcoinCoinSelectionService, SwapService } from '@leather.io/services';
+import {
+  BitcoinCoinSelectionService,
+  BitcoinTransactionFeesService,
+  SwapService,
+} from '@leather.io/services';
 import { assertExistence, createMoney } from '@leather.io/utils';
 
 import { NetworkFee, SwapExecutionDependencies } from '../../swap-state.types';
@@ -184,6 +188,12 @@ describe('sbtcBridgeDepositStrategy', () => {
       ...createStubSwapService(),
       ...swapServiceMocks,
     } as unknown as SwapService;
+    const getBitcoinTransactionFees = vi.fn(
+      createStubBitcoinTransactionFeesService().getBitcoinTransactionFees
+    );
+    dependencies.services.bitcoinTransactionFeesService = {
+      getBitcoinTransactionFees,
+    } as unknown as BitcoinTransactionFeesService;
 
     return {
       dependencies,
@@ -191,6 +201,7 @@ describe('sbtcBridgeDepositStrategy', () => {
       depositTransaction,
       signedDepositTx,
       performCoinSelection,
+      getBitcoinTransactionFees,
       swapServiceMocks,
     };
   }
@@ -209,6 +220,17 @@ describe('sbtcBridgeDepositStrategy', () => {
         dependencies.bitcoin?.bitcoinPayer,
         signersPublicKey
       );
+    });
+
+    test('estimates fees from native segwit utxos only', async () => {
+      const { dependencies, getBitcoinTransactionFees } = createSbtcFixtures();
+
+      await getExecutionTypeStrategy('sbtc-bridge-deposit').getNetworkFee(dependencies);
+
+      expect(getBitcoinTransactionFees.mock.calls[0][0]).toEqual({
+        account: dependencies.accountRequest.account,
+        exclusions: { taprootAddresses: true },
+      });
     });
   });
 
@@ -229,7 +251,13 @@ describe('sbtcBridgeDepositStrategy', () => {
       );
 
       expect(performCoinSelection).toHaveBeenCalledWith(
-        expect.objectContaining({ feeRate: bitcoinFeeQuote.rate })
+        expect.objectContaining({
+          account: {
+            account: dependencies.accountRequest.account,
+            exclusions: { taprootAddresses: true },
+          },
+          feeRate: bitcoinFeeQuote.rate,
+        })
       );
       expect(depositTransaction.addInput).toHaveBeenCalledOnce();
       expect(depositTransaction.addOutputAddress).toHaveBeenCalledOnce();
