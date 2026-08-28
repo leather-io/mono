@@ -1,18 +1,26 @@
 import { useMemo } from 'react';
-import { resolvePath, useLocation, useNavigate } from 'react-router';
+import { matchPath, resolvePath, useLocation, useNavigate } from 'react-router';
 
 import { bytesToHex } from '@stacks/common';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
-import { RouteUrls } from '@shared/route-urls';
+import { RouteUrls, toRoutePattern } from '@shared/route-urls';
 import {
   type UnsignedMessage,
   toSerializableUnsignedMessage,
 } from '@shared/signature/signature-types';
 
 import { immediatelyAttemptLedgerConnection } from './use-when-reattempt-ledger-connection';
+
+const swapReviewRoutePattern = toRoutePattern(RouteUrls.SwapReview);
+
+function getSwapLedgerConnectPath(pathname: string, chain: SupportedBlockchains) {
+  const swapReviewMatch = matchPath(swapReviewRoutePattern, pathname);
+  if (!swapReviewMatch) return null;
+  return `${swapReviewMatch.pathnameBase}/${chain}/${RouteUrls.ConnectLedger}`;
+}
 
 export function useLedgerNavigate() {
   const navigate = useNavigate();
@@ -38,10 +46,11 @@ export function useLedgerNavigate() {
       },
 
       toConnectAndSignStacksTransactionStep(transaction: string) {
-        return navigate(RouteUrls.ConnectLedger, {
+        const swapPath = getSwapLedgerConnectPath(location.pathname, 'stacks');
+        return navigate(swapPath ?? RouteUrls.ConnectLedger, {
           replace: true,
           relative: 'path',
-          state: { tx: transaction },
+          state: { tx: transaction, settleOnRejection: swapPath !== null },
         });
       },
 
@@ -51,22 +60,19 @@ export function useLedgerNavigate() {
         fromLocation?: typeof location,
         descriptor?: string
       ) {
-        return navigate(
-          location.pathname.includes('/swap/bitcoin')
-            ? `${location.pathname}/${RouteUrls.ConnectLedger}`
-            : RouteUrls.ConnectLedger,
-          {
-            replace: true,
-            relative: 'route',
-            state: {
-              tx: bytesToHex(psbt),
-              inputsToSign,
-              descriptor,
-              backgroundLocation: { pathname: RouteUrls.Home },
-              fromLocation,
-            },
-          }
-        );
+        const swapPath = getSwapLedgerConnectPath(location.pathname, 'bitcoin');
+        return navigate(swapPath ?? RouteUrls.ConnectLedger, {
+          replace: true,
+          relative: 'route',
+          state: {
+            tx: bytesToHex(psbt),
+            inputsToSign,
+            descriptor,
+            backgroundLocation: { pathname: RouteUrls.Home },
+            fromLocation,
+            settleOnRejection: swapPath !== null,
+          },
+        });
       },
 
       toConnectAndSignMessageStep(message: UnsignedMessage) {
@@ -194,7 +200,10 @@ export function useLedgerNavigate() {
         const fromLocation = location.state?.fromLocation ?? undefined;
 
         if (fromLocation) {
-          return navigate(fromLocation, { state: { ...fromLocation.state, wentBack: true } });
+          return navigate(fromLocation, {
+            replace: true,
+            state: { ...fromLocation.state, wentBack: true },
+          });
         }
 
         const resolvedPath = resolvePath('..', location.pathname);
