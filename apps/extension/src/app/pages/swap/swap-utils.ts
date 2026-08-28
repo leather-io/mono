@@ -1,13 +1,22 @@
 import BigNumber from 'bignumber.js';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
+import { parseTokenDetailsAssetId } from '@leather.io/features';
 import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
-import { createMoneyFromDecimal, isError, sumMoney } from '@leather.io/utils';
+import {
+  createMoneyFromDecimal,
+  deserializeAssetId,
+  getAssetId,
+  isError,
+  matchesAssetId,
+  serializeAssetId,
+  sumMoney,
+} from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 
-const signingCancelledMessages = ['User cancelled the signing operation', 'Signing cancelled'];
+const signingCancelledMessages = ['User cancelled the signing operation'];
 
 export function isSigningCancelledError(error: unknown) {
   return isError(error) && signingCancelledMessages.includes(error.message);
@@ -22,11 +31,31 @@ export function matchNativeAssetBySymbol(
   return undefined;
 }
 
-export function findSwapAssetBySymbol(
+function findSwapAssetBySymbol(
   assets: AccountSwapAsset[],
   symbol: string
 ): AccountSwapAsset | undefined {
-  return assets.find(swapAsset => swapAsset.asset.symbol.toLowerCase() === symbol.toLowerCase());
+  const matches = assets.filter(
+    swapAsset => swapAsset.asset.symbol.toLowerCase() === symbol.toLowerCase()
+  );
+  return matches.length === 1 ? matches[0] : undefined;
+}
+
+export function findSwapAssetByRouteParam(
+  assets: AccountSwapAsset[],
+  param: string
+): AccountSwapAsset | undefined {
+  const serializedAssetId = parseTokenDetailsAssetId(param);
+  if (serializedAssetId) {
+    const assetId = deserializeAssetId(serializedAssetId);
+    return assets.find(swapAsset => matchesAssetId(swapAsset.asset, assetId));
+  }
+  return findSwapAssetBySymbol(assets, param);
+}
+
+export function toSwapRouteParam(asset: SwappableFungibleCryptoAsset): string {
+  if (asset.protocol === 'sip10') return serializeAssetId(getAssetId(asset));
+  return asset.symbol;
 }
 
 export function getSwapRouteChain(asset: SwappableFungibleCryptoAsset): 'bitcoin' | 'stacks' {

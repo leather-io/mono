@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
+import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
 import { useSwapAvailability } from '@app/common/hooks/use-swap-availability';
 import type { ReceiveView } from '@app/common/receive/receive';
@@ -115,9 +116,10 @@ export function TokenDetailsActionsRow({
         disabled={!isSwapEnabled || !swapAvailability.isEnabled}
         onClick={() =>
           void navigate(
-            RouteUrls.Swap.replace('{chain}', swapChain)
-              .replace(':base', symbol)
-              .replace(':quote?', '')
+            replaceRouteParams(RouteUrls.Swap, { base: symbol, quote: '' }).replace(
+              '{chain}',
+              swapChain
+            )
           )
         }
         testId="token-details-swap-btn"
