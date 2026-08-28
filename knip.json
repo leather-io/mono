@@ -134,7 +134,8 @@
     "apps/test-app": {
       "entry": [
         "src/main.tsx",
-        "src/catalog.ts"
+        "src/catalog.ts",
+        "src/cli.ts"
       ],
       "project": [
         "src/**/*.{ts,tsx}"

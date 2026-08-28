@@ -28,3 +28,11 @@ export function readListOverride(name: string, fallback: string[]): string[] {
     .map(item => item.trim())
     .filter(item => item !== '');
 }
+
+/** Numeric override, ignored when it does not parse; `fallback` otherwise. */
+export function readNumberOverride(name: string, fallback: number): number {
+  const value = readOverride(name);
+  if (value === undefined) return fallback;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}

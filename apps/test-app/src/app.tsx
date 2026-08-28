@@ -1,55 +1,42 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { callRpc, getLeatherProvider } from './leather';
-import { resolveParams, rpcCategories, rpcMethods } from './rpc-methods';
-import type { RequestContext, RpcMethodSpec } from './types';
-
-type Status = 'pending' | 'success' | 'error';
-
-interface ResultState {
-  spec: RpcMethodSpec;
-  params: unknown;
-  status: Status;
-  payload: unknown;
-  at: string;
-}
+import { getLeatherProvider } from './leather';
+import { specBuilders } from './methods/builders';
+import { walletNetworks } from './networks';
+import { rpcCategories, rpcMethods, rpcTags, specsWithTag } from './rpc-methods';
+import { type SpecRun, runSpec } from './run-spec';
+import { scenarios } from './scenarios/scenarios';
+import {
+  clearAddressCache,
+  createCachedRequestContext,
+  getNetwork,
+  loadAccountSummary,
+  setNetwork,
+} from './session';
+import { installTestAppApi } from './test-api';
+import { type RpcMethodSpec, expectationFor } from './types';
+import { AccountBar } from './ui/account-bar';
+import { safeStringify } from './ui/format';
+import { MethodCard } from './ui/method-card';
+import { ResultPanel } from './ui/result-panel';
+import { ScenarioRunner } from './ui/scenario-runner';
+import { SpecBuilderPanel } from './ui/spec-builder';
+import { TagRunner } from './ui/tag-runner';
+import type { AccountSummary } from './wallet';
 
 const providerPollIntervalMs = 1000;
-
-// Wallet access for `params` builders: same provider, unwrapped `result`.
-const requestContext: RequestContext = {
-  request(method, params) {
-    return callRpc(method, params).then(response => response.result);
-  },
-};
-
-function safeStringify(value: unknown): string {
-  if (value === undefined) return 'undefined';
-  // Track only the current ancestor path so genuine cycles are flagged while
-  // shared-but-acyclic sibling references are still serialized in full.
-  const ancestors: object[] = [];
-  function normalize(val: unknown): unknown {
-    if (val instanceof Error) return { name: val.name, message: val.message };
-    if (typeof val === 'bigint') return val.toString();
-    if (val === null || typeof val !== 'object') return val;
-    if (ancestors.includes(val)) return '[Circular]';
-    ancestors.push(val);
-    const out = Array.isArray(val)
-      ? val.map(normalize)
-      : Object.fromEntries(Object.entries(val).map(([key, child]) => [key, normalize(child)]));
-    ancestors.pop();
-    return out;
-  }
-  return JSON.stringify(normalize(value), null, 2);
-}
+const historyLimit = 25;
 
 export function App() {
   const [installed, setInstalled] = useState(() => !!getLeatherProvider());
-  const [result, setResult] = useState<ResultState | null>(null);
+  const [network, setNetworkState] = useState(getNetwork);
+  const [account, setAccount] = useState<AccountSummary | undefined>();
+  const [accountError, setAccountError] = useState<string | undefined>();
+  const [runs, setRuns] = useState<SpecRun[]>([]);
   const [busyIds, setBusyIds] = useState<ReadonlySet<string>>(() => new Set());
-  // Monotonic token: only the most-recently-initiated call may write the panel,
-  // so out-of-order completions can't misattribute a response to another method.
-  const seqRef = useRef(0);
+  const [editing, setEditing] = useState<string | undefined>();
+  const [draft, setDraft] = useState('');
+  const [filter, setFilter] = useState('');
 
   useEffect(() => {
     function refresh() {
@@ -60,47 +47,117 @@ export function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSend = useCallback(async (spec: RpcMethodSpec) => {
-    const mySeq = ++seqRef.current;
-    function isCurrent() {
-      return seqRef.current === mySeq;
-    }
-    const at = new Date().toLocaleTimeString();
-    setBusyIds(prev => new Set(prev).add(spec.id));
+  useEffect(() => {
+    installTestAppApi(run => setRuns(previous => [...previous, run].slice(-historyLimit)));
+  }, []);
+
+  const refreshAccount = useCallback(async (force = false) => {
+    setAccountError(undefined);
     try {
-      let params: unknown;
-      try {
-        params = await resolveParams(spec, requestContext);
-      } catch (error) {
-        if (isCurrent())
-          setResult({ spec, params: undefined, status: 'error', payload: error, at });
-        return;
-      }
-      if (isCurrent()) setResult({ spec, params, status: 'pending', payload: undefined, at });
-      try {
-        const payload = await callRpc(spec.method, params);
-        if (isCurrent()) setResult({ spec, params, status: 'success', payload, at });
-      } catch (error) {
-        if (isCurrent()) setResult({ spec, params, status: 'error', payload: error, at });
-      }
-    } finally {
-      // Each call clears only its own id, never a concurrent call's busy state.
-      setBusyIds(prev => {
-        const next = new Set(prev);
-        next.delete(spec.id);
-        return next;
-      });
+      setAccount(await loadAccountSummary(force));
+    } catch (error) {
+      setAccount(undefined);
+      setAccountError(error instanceof Error ? error.message : String(error));
     }
   }, []);
 
-  const grouped = useMemo(
-    () =>
-      rpcCategories.map(category => ({
-        category,
-        methods: rpcMethods.filter(method => method.category === category),
-      })),
-    []
+  const handleNetworkChange = useCallback((next: string) => {
+    setNetwork(next);
+    setNetworkState(next);
+    setAccount(undefined);
+    setAccountError(undefined);
+  }, []);
+
+  const handleRefresh = useCallback(() => {
+    clearAddressCache();
+    void refreshAccount(true);
+  }, [refreshAccount]);
+
+  const record = useCallback((run: SpecRun) => {
+    setRuns(previous => [...previous, run].slice(-historyLimit));
+  }, []);
+
+  const handleSend = useCallback(
+    async (spec: RpcMethodSpec, params?: unknown) => {
+      setBusyIds(previous => new Set(previous).add(spec.id));
+      try {
+        const run = await runSpec(
+          spec,
+          { ctx: createCachedRequestContext(getNetwork()) },
+          params === undefined ? {} : { params }
+        );
+        // Every run is kept: the panel shows the newest, the history the rest,
+        // so a slow call finishing late cannot erase a later result.
+        record(run);
+        return run;
+      } finally {
+        // Each call clears only its own id, never a concurrent call's busy state.
+        setBusyIds(previous => {
+          const next = new Set(previous);
+          next.delete(spec.id);
+          return next;
+        });
+      }
+    },
+    [record]
   );
+
+  const handleEdit = useCallback(
+    async (spec: RpcMethodSpec) => {
+      if (editing === spec.id) {
+        setEditing(undefined);
+        return;
+      }
+      setEditing(spec.id);
+      setDraft('Resolving params…');
+      try {
+        const ctx = createCachedRequestContext(getNetwork());
+        const { resolveParams } = await import('./rpc-methods');
+        setDraft(safeStringify(await resolveParams(spec, ctx)));
+      } catch (error) {
+        setDraft(safeStringify(error));
+      }
+    },
+    [editing]
+  );
+
+  const grouped = useMemo(() => {
+    const needle = filter.trim().toLowerCase();
+    function matches(spec: RpcMethodSpec) {
+      return (
+        !needle ||
+        spec.id.toLowerCase().includes(needle) ||
+        spec.method.toLowerCase().includes(needle) ||
+        spec.label.toLowerCase().includes(needle) ||
+        (spec.tags ?? []).some(tag => tag.includes(needle))
+      );
+    }
+    return rpcCategories
+      .map(category => ({
+        category,
+        methods: rpcMethods.filter(spec => spec.category === category && matches(spec)),
+      }))
+      .filter(group => group.methods.length > 0);
+  }, [filter]);
+
+  // A sweep runs sequentially: each request may open an approval popup, and a
+  // wallet shows those one at a time.
+  const runSweep = useCallback(
+    async (specs: RpcMethodSpec[]) => {
+      const ctx = createCachedRequestContext(getNetwork());
+      const sweepResults: SpecRun[] = [];
+      for (const spec of specs) {
+        const run = await runSpec(spec, { ctx });
+        record(run);
+        sweepResults.push(run);
+      }
+      return sweepResults;
+    },
+    [record]
+  );
+
+  const latest = runs[runs.length - 1];
+  const tags = useMemo(() => rpcTags(), []);
 
   return (
     <div className="layout">
@@ -109,74 +166,120 @@ export function App() {
           <h1>Leather RPC test</h1>
           <p className="subtitle">
             Click a button to fire a <code>LeatherProvider.request()</code> call with a pre-filled
-            payload. Buttons that need your keys ask for <code>getAddresses</code> first.
+            payload. Buttons that need your keys ask for <code>getAddresses</code> first. Everything
+            here is also on <code>window.__leatherTestApp</code>.
           </p>
-          <span
-            className={`badge ${installed ? 'badge-ok' : 'badge-bad'}`}
-            data-testid="provider-status"
-            data-installed={installed}
-          >
-            {installed ? '● Leather detected' : '○ Leather not detected'}
-          </span>
+          <div className="masthead-row">
+            <span
+              className={`badge ${installed ? 'badge-ok' : 'badge-bad'}`}
+              data-testid="provider-status"
+              data-installed={installed}
+            >
+              {installed ? '● Leather detected' : '○ Leather not detected'}
+            </span>
+            <label className="field">
+              <span>Network</span>
+              <select
+                data-testid="network-select"
+                value={network}
+                onChange={event => handleNetworkChange(event.target.value)}
+              >
+                {walletNetworks.map(option => (
+                  <option key={option.id} value={option.id}>
+                    {option.label} ({option.mode})
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="field field-grow">
+              <span>Filter</span>
+              <input
+                data-testid="filter-input"
+                value={filter}
+                placeholder="id, method or tag"
+                onChange={event => setFilter(event.target.value)}
+              />
+            </label>
+          </div>
+
+          <AccountBar
+            account={account}
+            error={accountError}
+            onLoad={() => void refreshAccount()}
+            onRefresh={handleRefresh}
+          />
+
+          <TagRunner
+            tags={tags}
+            onRun={async tag => {
+              const specs = specsWithTag(tag);
+              const ctx = createCachedRequestContext(getNetwork());
+              const results: SpecRun[] = [];
+              for (const spec of specs) {
+                const run = await runSpec(spec, { ctx });
+                record(run);
+                results.push(run);
+              }
+              return results;
+            }}
+          />
         </header>
 
         {grouped.map(({ category, methods }) => (
           <section key={category} className="group">
-            <h2>{category}</h2>
+            <h2>
+              {category} <span className="muted">({methods.length})</span>
+            </h2>
+            {specBuilders
+              .filter(builder => builder.category === category)
+              .map(builder => (
+                <SpecBuilderPanel
+                  key={builder.id}
+                  builder={builder}
+                  busy={busyIds.size > 0}
+                  onSend={spec => void handleSend(spec)}
+                  onSweep={runSweep}
+                />
+              ))}
             <div className="grid">
               {methods.map(spec => (
-                <button
+                <MethodCard
                   key={spec.id}
-                  type="button"
-                  className="card"
-                  data-testid={spec.id}
-                  data-method={spec.method}
-                  disabled={busyIds.has(spec.id)}
-                  onClick={() => void handleSend(spec)}
-                >
-                  <span className="card-title">{spec.label}</span>
-                  <code className="card-method">{spec.method}</code>
-                  <span className="card-desc">{spec.description}</span>
-                </button>
+                  spec={spec}
+                  busy={busyIds.has(spec.id)}
+                  expectation={expectationFor(spec, 'extension')}
+                  verdict={[...runs].reverse().find(run => run.id === spec.id)?.verdict}
+                  editing={editing === spec.id}
+                  draft={draft}
+                  onDraftChange={setDraft}
+                  onSend={() => void handleSend(spec)}
+                  onEdit={() => void handleEdit(spec)}
+                  onSendEdited={() => {
+                    try {
+                      void handleSend(spec, JSON.parse(draft));
+                    } catch (error) {
+                      window.alert(
+                        `That is not valid JSON: ${error instanceof Error ? error.message : error}`
+                      );
+                    }
+                  }}
+                />
               ))}
             </div>
           </section>
         ))}
+
+        <section className="group">
+          <h2>Scenarios</h2>
+          <div className="scenarios">
+            {scenarios.map(scenario => (
+              <ScenarioRunner key={scenario.id} scenario={scenario} />
+            ))}
+          </div>
+        </section>
       </main>
 
-      {/* data-status / data-method let Playwright wait on and read the outcome. */}
-      <aside
-        className="result"
-        data-testid="rpc-result"
-        data-status={result?.status ?? 'idle'}
-        data-method={result?.spec.method ?? ''}
-        data-id={result?.spec.id ?? ''}
-      >
-        <h2>Result</h2>
-        {!result && (
-          <p className="muted">Fire a request to see the params sent and the wallet response.</p>
-        )}
-        {result && (
-          <div className="result-body">
-            <div className="result-head">
-              <span className={`status status-${result.status}`}>{result.status}</span>
-              <code>{result.spec.method}</code>
-              <span className="muted">{result.at}</span>
-            </div>
-
-            <h3>Request params</h3>
-            <pre data-testid="rpc-result-params">{safeStringify(result.params)}</pre>
-
-            <h3>{result.status === 'error' ? 'Error' : 'Response'}</h3>
-            <pre
-              className={result.status === 'error' ? 'pre-error' : undefined}
-              data-testid="rpc-result-payload"
-            >
-              {result.status === 'pending' ? 'Waiting for wallet…' : safeStringify(result.payload)}
-            </pre>
-          </div>
-        )}
-      </aside>
+      <ResultPanel run={latest} history={runs} />
     </div>
   );
 }
