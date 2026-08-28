@@ -57,7 +57,7 @@ function getConstraintCopy(
     case 'supply-cap-exceeded':
       return {
         title: 'Deposit cap reached',
-        description: `Only ${threshold} more ${baseAsset.symbol} can be deposited into ${targetAsset.symbol} right now`,
+        description: `Only ${formatCurrency(constraint.threshold, { showCurrency: false })} more ${baseAsset.symbol} can be deposited into ${targetAsset.symbol} right now`,
       };
     default:
       assertUnreachable(constraint.reason);
