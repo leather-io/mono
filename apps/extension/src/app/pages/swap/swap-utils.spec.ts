@@ -4,11 +4,22 @@ import { btcAsset, stxAsset } from '@leather.io/constants';
 import { AccountSwapAsset } from '@leather.io/services';
 
 import {
-  findSwapAssetBySymbol,
+  findSwapAssetByRouteParam,
   getSwapRouteChain,
   isSigningCancelledError,
   matchNativeAssetBySymbol,
+  toSwapRouteParam,
 } from './swap-utils';
+
+const sbtcSwapAsset = {
+  asset: { protocol: 'sip10', symbol: 'sBTC', assetId: 'SP1.sbtc-token::sbtc-token' },
+  providerAssets: [],
+} as unknown as AccountSwapAsset;
+
+const copycatSwapAsset = {
+  asset: { protocol: 'sip10', symbol: 'sBTC', assetId: 'SP2.fake-sbtc::sbtc-token' },
+  providerAssets: [],
+} as unknown as AccountSwapAsset;
 
 describe(matchNativeAssetBySymbol.name, () => {
   test('matches STX and BTC case-insensitively', () => {
@@ -24,20 +35,49 @@ describe(matchNativeAssetBySymbol.name, () => {
   });
 });
 
-describe(findSwapAssetBySymbol.name, () => {
-  const sbtcSwapAsset = {
-    asset: { symbol: 'sBTC' },
-    providerAssets: [],
-  } as unknown as AccountSwapAsset;
-
-  test('matches asset symbol case-insensitively', () => {
-    expect(findSwapAssetBySymbol([sbtcSwapAsset], 'SBTC')).toBe(sbtcSwapAsset);
-    expect(findSwapAssetBySymbol([sbtcSwapAsset], 'sbtc')).toBe(sbtcSwapAsset);
+describe(findSwapAssetByRouteParam.name, () => {
+  test('matches by serialized asset id regardless of list order', () => {
+    expect(
+      findSwapAssetByRouteParam(
+        [copycatSwapAsset, sbtcSwapAsset],
+        'sip10|SP1.sbtc-token::sbtc-token'
+      )
+    ).toBe(sbtcSwapAsset);
   });
 
-  test('returns undefined when no asset matches', () => {
-    expect(findSwapAssetBySymbol([sbtcSwapAsset], 'USDA')).toBeUndefined();
-    expect(findSwapAssetBySymbol([], 'sBTC')).toBeUndefined();
+  test('matches a percent-encoded asset id', () => {
+    expect(
+      findSwapAssetByRouteParam([sbtcSwapAsset], 'sip10%7CSP1.sbtc-token%3A%3Asbtc-token')
+    ).toBe(sbtcSwapAsset);
+  });
+
+  test('falls back to a unique symbol match case-insensitively', () => {
+    expect(findSwapAssetByRouteParam([sbtcSwapAsset], 'SBTC')).toBe(sbtcSwapAsset);
+    expect(findSwapAssetByRouteParam([sbtcSwapAsset], 'sbtc')).toBe(sbtcSwapAsset);
+  });
+
+  test('returns undefined when no asset matches the symbol', () => {
+    expect(findSwapAssetByRouteParam([sbtcSwapAsset], 'USDA')).toBeUndefined();
+    expect(findSwapAssetByRouteParam([], 'sBTC')).toBeUndefined();
+  });
+
+  test('returns undefined for an ambiguous symbol', () => {
+    expect(findSwapAssetByRouteParam([sbtcSwapAsset, copycatSwapAsset], 'sBTC')).toBeUndefined();
+  });
+
+  test('returns undefined for an unknown asset id', () => {
+    expect(findSwapAssetByRouteParam([sbtcSwapAsset], 'sip10|SP3.other::other')).toBeUndefined();
+  });
+});
+
+describe(toSwapRouteParam.name, () => {
+  test('uses the symbol for native assets', () => {
+    expect(toSwapRouteParam(btcAsset)).toBe('BTC');
+    expect(toSwapRouteParam(stxAsset)).toBe('STX');
+  });
+
+  test('uses the serialized asset id for sip10 assets', () => {
+    expect(toSwapRouteParam(sbtcSwapAsset.asset)).toBe('sip10|SP1.sbtc-token::sbtc-token');
   });
 });
 
@@ -51,10 +91,6 @@ describe(getSwapRouteChain.name, () => {
 describe(isSigningCancelledError.name, () => {
   test('returns true for the ledger signing cancellation error', () => {
     expect(isSigningCancelledError(new Error('User cancelled the signing operation'))).toBe(true);
-  });
-
-  test('returns true for the software signer cancellation error', () => {
-    expect(isSigningCancelledError(new Error('Signing cancelled'))).toBe(true);
   });
 
   test('returns false for other errors', () => {

@@ -1,4 +1,4 @@
-import { matchPath, useLocation } from 'react-router';
+import { useMatch } from 'react-router';
 
 import { stxAsset } from '@leather.io/constants';
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -12,15 +12,17 @@ import {
 } from '@leather.io/state/swap';
 import { getAssetId } from '@leather.io/utils';
 
-import { RouteUrls } from '@shared/route-urls';
+import { RouteUrls, toRoutePattern } from '@shared/route-urls';
 
-import { findSwapAssetBySymbol, matchNativeAssetBySymbol } from '../swap-utils';
+import { findSwapAssetByRouteParam, matchNativeAssetBySymbol } from '../swap-utils';
 
-const swapRoutePattern = RouteUrls.Swap.replace('{chain}', ':chain');
+const swapRoutePattern = toRoutePattern(RouteUrls.Swap);
+const swapRouteMatchPattern = { path: swapRoutePattern, end: false };
 
 interface UseSwapRouteAssetsParams {
   dependencies: SwapDependencies;
   disabledPairs: DisabledPairRule[];
+  enabled?: boolean;
 }
 
 export type SwapRouteAssets =
@@ -39,9 +41,9 @@ interface AssetResolution {
 export function useSwapRouteAssets({
   dependencies,
   disabledPairs,
+  enabled = true,
 }: UseSwapRouteAssetsParams): SwapRouteAssets {
-  const location = useLocation();
-  const routeMatch = matchPath({ path: swapRoutePattern, end: false }, location.pathname);
+  const routeMatch = useMatch(swapRouteMatchPattern);
   const { accountRequest } = dependencies;
   const { swapService } = dependencies.services;
 
@@ -52,6 +54,7 @@ export function useSwapRouteAssets({
     swapService,
     accountRequest,
     disabledPairs,
+    enabled,
   });
 
   const baseResolution: AssetResolution = (() => {
@@ -64,7 +67,7 @@ export function useSwapRouteAssets({
       return { done: true, asset: nativeAsset };
     }
     if (baseAssetsQuery.isPending) return { done: false };
-    const match = findSwapAssetBySymbol(baseAssetsQuery.data ?? [], baseParam);
+    const match = findSwapAssetByRouteParam(baseAssetsQuery.data ?? [], baseParam);
     return { done: true, asset: match?.asset ?? stxAsset };
   })();
 
@@ -77,6 +80,7 @@ export function useSwapRouteAssets({
         ? getAssetId(baseResolution.asset)
         : undefined,
     disabledPairs,
+    enabled,
   });
 
   const targetResolution: AssetResolution = (() => {
@@ -94,7 +98,7 @@ export function useSwapRouteAssets({
     }
     if (!baseResolution.done) return { done: false };
     if (targetAssetsQuery.isPending) return { done: false };
-    const match = findSwapAssetBySymbol(targetAssetsQuery.data ?? [], quoteParam);
+    const match = findSwapAssetByRouteParam(targetAssetsQuery.data ?? [], quoteParam);
     return { done: true, asset: match?.asset };
   })();
 

@@ -24,7 +24,7 @@ import { FlipButton } from '@app/pages/swap/components/flip-button';
 import { QuotePreview } from '@app/pages/swap/components/quote-preview/quote-preview';
 import { TargetAmountPreview } from '@app/pages/swap/components/target-amount-preview';
 import { type SwapOutletContext } from '@app/pages/swap/swap-container';
-import { focusAmountField, getSwapRouteChain } from '@app/pages/swap/swap-utils';
+import { focusAmountField, getSwapRouteChain, toSwapRouteParam } from '@app/pages/swap/swap-utils';
 
 export function SwapForm() {
   const amountFieldRef = useRef<HTMLInputElement>(null);
@@ -49,13 +49,13 @@ export function SwapForm() {
     analytics.track('swap_review_initiated', {
       baseSymbol: baseAsset.symbol,
       targetSymbol: targetAsset.symbol,
-      baseAmount: Number(state.baseAmount),
+      baseAmount: quoteQuery.data?.selected?.baseAmount.amount.toNumber() ?? 0,
       provider: quoteQuery.data?.selected?.provider ?? '',
     });
     void navigate(
       replaceRouteParams(RouteUrls.SwapReview, {
-        base: baseAsset.symbol,
-        quote: targetAsset.symbol,
+        base: toSwapRouteParam(baseAsset),
+        quote: toSwapRouteParam(targetAsset),
       }).replace('{chain}', getSwapRouteChain(baseAsset))
     );
   }
