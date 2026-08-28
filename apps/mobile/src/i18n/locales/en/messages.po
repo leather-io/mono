@@ -38,11 +38,11 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:50
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:51
 msgid "{operation} {baseAssetSymbol} to {targetAssetSymbol} is limited to {threshold}"
 msgstr "{operation} {baseAssetSymbol} to {targetAssetSymbol} is limited to {threshold}"
 
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:45
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:46
 msgid "{operation} {baseAssetSymbol} to {targetAssetSymbol} requires at least {threshold}"
 msgstr "{operation} {baseAssetSymbol} to {targetAssetSymbol} requires at least {threshold}"
 
@@ -268,11 +268,11 @@ msgstr "Amount must be greater than zero"
 msgid "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 msgstr "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:49
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:50
 msgid "Amount too large"
 msgstr "Amount too large"
 
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:44
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:45
 msgid "Amount too small"
 msgstr "Amount too small"
 
@@ -397,7 +397,7 @@ msgstr "Available balance"
 msgid "Avatar"
 msgstr "Avatar"
 
-#: src/features/swap/components/review/swap-submission-overlay.tsx:158
+#: src/features/swap/components/review/swap-submission-overlay.tsx:172
 msgid "Back to review"
 msgstr "Back to review"
 
@@ -456,7 +456,7 @@ msgstr "Browse on Gamma"
 msgid "Browser"
 msgstr "Browser"
 
-#: src/components/action-buttons.tsx:55
+#: src/components/action-buttons.tsx:58
 #: src/features/token/components/deposit-token-cell.tsx:60
 msgid "Buy"
 msgstr "Buy"
@@ -566,7 +566,7 @@ msgstr ""
 #: src/features/approver/components/nonce-sheet.tsx:18
 #: src/features/send/components/memo.tsx:88
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
-#: src/features/swap/screens/swap-review-screen.tsx:203
+#: src/features/swap/screens/swap-review-screen.tsx:228
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
 msgid "Confirm"
 msgstr "Confirm"
@@ -591,6 +591,10 @@ msgstr "Connection failed"
 #: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:20
 msgid "Connections"
 msgstr "Connections"
+
+#: src/features/swap/components/review/swap-submission-overlay.tsx:215
+msgid "contact support"
+msgstr "contact support"
 
 #: src/app/settings/help/index.tsx:17
 msgid "Contact us"
@@ -693,11 +697,11 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:54
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:55
 msgid "Deposit cap reached"
 msgstr "Deposit cap reached"
 
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:63
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:64
 msgid "Depositing"
 msgstr "Depositing"
 
@@ -745,6 +749,7 @@ msgid "Do not proceed"
 msgstr "Do not proceed"
 
 #: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:28
+#: src/features/swap/components/review/swap-submission-overlay.tsx:220
 msgid "Done"
 msgstr "Done"
 
@@ -785,7 +790,7 @@ msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
 
 #: src/features/swap/components/quote-preview/quote-preview-content.tsx:53
-#: src/features/swap/screens/swap-review-screen.tsx:187
+#: src/features/swap/screens/swap-review-screen.tsx:212
 msgid "Estimated fees"
 msgstr "Estimated fees"
 
@@ -850,7 +855,7 @@ msgstr "Failed to change nonce"
 msgid "Failed to load latest nonce"
 msgstr "Failed to load latest nonce"
 
-#: src/features/swap/components/review/swap-submission-overlay.tsx:111
+#: src/features/swap/components/review/swap-submission-overlay.tsx:124
 msgid "Failed to start a swap"
 msgstr "Failed to start a swap"
 
@@ -891,6 +896,10 @@ msgstr "Flip assets"
 #: src/features/token/stacks/sip9-token-stats.tsx:44
 msgid "Floor price"
 msgstr "Floor price"
+
+#: src/features/swap/components/review/swap-submission-overlay.tsx:183
+msgid "for help completing it."
+msgstr "for help completing it."
 
 #: src/app/create-new-wallet.tsx:99
 msgid "For your eyes only"
@@ -1013,6 +1022,10 @@ msgstr "ID copied to clipboard"
 msgid "If unsafe, your wallet could be drained."
 msgstr "If unsafe, your wallet could be drained."
 
+#: src/features/swap/components/review/swap-submission-overlay.tsx:189
+msgid "if you're unsure."
+msgstr "if you're unsure."
+
 #: src/features/collectibles/components/image-unavailable.tsx:15
 #: src/features/token/utils/image-unavailable-label.ts:5
 msgid "Image currently unavailable"
@@ -1030,7 +1043,7 @@ msgstr "Increase slippage"
 msgid "Info"
 msgstr "Info"
 
-#: src/features/swap/components/review/swap-submission-overlay.tsx:109
+#: src/features/swap/components/review/swap-submission-overlay.tsx:121
 msgid "Initiating the swap..."
 msgstr "Initiating the swap..."
 
@@ -1150,7 +1163,7 @@ msgstr "Locking"
 msgid "Mainnet, testnet or signet"
 msgstr "Mainnet, testnet or signet"
 
-#: src/features/swap/screens/swap-review-screen.tsx:198
+#: src/features/swap/screens/swap-review-screen.tsx:223
 msgid ""
 "Make sure everything looks correct.\n"
 "Confirmed transactions cannot be undone."
@@ -1207,7 +1220,7 @@ msgstr "Memo updated"
 msgid "Message"
 msgstr "Message"
 
-#: src/features/swap/screens/swap-review-screen.tsx:157
+#: src/features/swap/screens/swap-review-screen.tsx:182
 msgid "Min. receive"
 msgstr "Min. receive"
 
@@ -1316,9 +1329,9 @@ msgstr "Not enough liquidity or no route available right now. Try a smaller amou
 msgid "OK"
 msgstr "OK"
 
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:55
-msgid "Only {threshold} more {baseAssetSymbol} can be deposited into {targetAssetSymbol} right now"
-msgstr "Only {threshold} more {baseAssetSymbol} can be deposited into {targetAssetSymbol} right now"
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:56
+msgid "Only {thresholdAmount} more {baseAssetSymbol} can be deposited into {targetAssetSymbol} right now"
+msgstr "Only {thresholdAmount} more {baseAssetSymbol} can be deposited into {targetAssetSymbol} right now"
 
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:75
 msgid "Open wallet settings"
@@ -1371,7 +1384,7 @@ msgid "Price"
 msgstr "Price"
 
 #: src/features/swap/components/price-impact-info-sheet.tsx:8
-#: src/features/swap/screens/swap-review-screen.tsx:178
+#: src/features/swap/screens/swap-review-screen.tsx:203
 msgid "Price impact"
 msgstr "Price impact"
 
@@ -1406,7 +1419,7 @@ msgid "Rarity rank"
 msgstr "Rarity rank"
 
 #: src/features/swap/components/quote-preview/quote-preview-content.tsx:39
-#: src/features/swap/screens/swap-review-screen.tsx:142
+#: src/features/swap/screens/swap-review-screen.tsx:167
 msgid "Rate"
 msgstr "Rate"
 
@@ -1418,7 +1431,7 @@ msgstr "Read less"
 msgid "Read more"
 msgstr "Read more"
 
-#: src/components/action-buttons.tsx:44
+#: src/components/action-buttons.tsx:47
 #: src/features/receive/screens/asset-details.tsx:56
 #: src/features/receive/screens/select-asset.tsx:83
 msgid "Receive"
@@ -1520,7 +1533,7 @@ msgstr "Reveal account"
 msgid "Review"
 msgstr "Review"
 
-#: src/features/swap/screens/swap-review-screen.tsx:69
+#: src/features/swap/screens/swap-review-screen.tsx:82
 msgid "Review Swap"
 msgstr "Review Swap"
 
@@ -1578,11 +1591,11 @@ msgstr "Select"
 msgid "Select asset"
 msgstr "Select asset"
 
-#: src/components/action-buttons.tsx:66
+#: src/components/action-buttons.tsx:69
 msgid "Sell"
 msgstr "Sell"
 
-#: src/components/action-buttons.tsx:33
+#: src/components/action-buttons.tsx:36
 #: src/features/send/screens/form.tsx:54
 #: src/features/send/screens/select-asset.tsx:35
 msgid "Send"
@@ -1678,7 +1691,7 @@ msgstr "SIP-010"
 msgid "Skip for now"
 msgstr "Skip for now"
 
-#: src/features/swap/screens/swap-review-screen.tsx:165
+#: src/features/swap/screens/swap-review-screen.tsx:190
 msgid "Slippage"
 msgstr "Slippage"
 
@@ -1732,7 +1745,7 @@ msgstr "Submitting..."
 msgid "Success"
 msgstr "Success"
 
-#: src/components/action-buttons.tsx:77
+#: src/components/action-buttons.tsx:80
 #: src/features/swap/screens/swap-form-screen.tsx:58
 msgid "Swap"
 msgstr "Swap"
@@ -1742,11 +1755,15 @@ msgstr "Swap"
 msgid "Swap failed"
 msgstr "Swap failed"
 
-#: src/features/swap/components/review/swap-submission-overlay.tsx:110
+#: src/features/swap/components/review/swap-submission-overlay.tsx:122
 msgid "Swap initiated"
 msgstr "Swap initiated"
 
-#: src/features/swap/components/review/swap-submission-overlay.tsx:143
+#: src/features/swap/components/review/swap-submission-overlay.tsx:123
+msgid "Swap needs attention"
+msgstr "Swap needs attention"
+
+#: src/features/swap/components/review/swap-submission-overlay.tsx:157
 msgid "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 msgstr "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 
@@ -1757,7 +1774,7 @@ msgstr "Swapped"
 
 #: src/features/activity/activity-item.tsx:30
 #: src/features/activity/translate-activity-status.ts:36
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:65
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:66
 msgid "Swapping"
 msgstr "Swapping"
 
@@ -2092,11 +2109,15 @@ msgstr "Wallets"
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
 
+#: src/features/swap/components/review/swap-submission-overlay.tsx:188
+msgid "We couldn't confirm whether your Bitcoin transaction {truncatedTxid} was sent. Check your activity before trying again, or"
+msgstr "We couldn't confirm whether your Bitcoin transaction {truncatedTxid} was sent. Check your activity before trying again, or"
+
 #: src/components/home/components/learn-section.tsx:50
 msgid "What is sBTC?"
 msgstr "What is sBTC?"
 
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:64
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:65
 msgid "Withdrawing"
 msgstr "Withdrawing"
 
@@ -2164,6 +2185,10 @@ msgstr "You’ll send"
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx:23
 msgid "Your accounts"
 msgstr "Your accounts"
+
+#: src/features/swap/components/review/swap-submission-overlay.tsx:182
+msgid "Your Bitcoin was sent, but we couldn't notify the sBTC network to complete the swap. Please"
+msgstr "Your Bitcoin was sent, but we couldn't notify the sBTC network to complete the swap. Please"
 
 #: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:18
 msgid "Your Secret Key"
