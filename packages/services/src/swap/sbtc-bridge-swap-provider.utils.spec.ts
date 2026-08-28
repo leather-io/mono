@@ -1,4 +1,4 @@
-import { AxiosError, AxiosHeaders, type AxiosResponse } from 'axios';
+import { AxiosError, AxiosHeaders, type AxiosResponse, CanceledError } from 'axios';
 import BigNumber from 'bignumber.js';
 import { describe, expect, it } from 'vitest';
 
@@ -229,6 +229,13 @@ describe(classifySbtcNotifyError.name, () => {
     });
   });
 
+  it('treats cancelled requests as terminal', () => {
+    expect(classifySbtcNotifyError(new CanceledError())).toEqual({
+      retryable: false,
+      failure: { status: 'failed', errorMessage: 'canceled' },
+    });
+  });
+
   it('treats 5xx and 429 as retryable and extracts the emily message', () => {
     expect(
       classifySbtcNotifyError(createAxiosError(500, { message: 'Internal server error' }))
@@ -271,8 +278,6 @@ describe(toXOnlyPublicKeyHex.name, () => {
   });
 
   it('rejects keys of any other length', () => {
-    expect(() => toXOnlyPublicKeyHex('abcdef')).toThrowError(
-      'Unexpected signers public key length: 6 hex characters'
-    );
+    expect(() => toXOnlyPublicKeyHex('abcdef')).toThrowError('Invalid public key length');
   });
 });

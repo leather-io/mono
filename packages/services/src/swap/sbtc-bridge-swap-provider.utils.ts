@@ -1,9 +1,11 @@
+import { bytesToHex, hexToBytes } from '@stacks/common';
 import { Cl, Pc } from '@stacks/transactions';
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
 
-import { deconstructBtcAddress } from '@leather.io/bitcoin';
+import { deconstructBtcAddress, ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
 import type { ExecutionConstraint, Money, NetworkModes } from '@leather.io/models';
+import { cleanHex } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
 import {
@@ -141,16 +143,16 @@ interface SbtcNotifyErrorClassification {
 
 const httpTooManyRequestsStatus = 429;
 const httpServerErrorStatusFloor = 500;
-const hexPrefix = '0x';
-const compressedPublicKeyHexLength = 66;
-const xOnlyPublicKeyHexLength = 64;
-const compressedPublicKeyParityHexLength = 2;
+const schnorrPublicKeyLength = 32;
 
 export function classifySbtcNotifyError(error: unknown): SbtcNotifyErrorClassification {
   if (axios.isAxiosError(error)) {
     const httpStatus = error.response?.status;
     if (httpStatus === undefined) {
-      return { retryable: true, failure: { status: 'failed', errorMessage: error.message } };
+      return {
+        retryable: !axios.isCancel(error),
+        failure: { status: 'failed', errorMessage: error.message },
+      };
     }
     const parsedBody = emilyErrorResponseSchema.safeParse(error.response?.data);
     const errorMessage = parsedBody.success ? parsedBody.data.message : error.message;
@@ -168,12 +170,7 @@ export function classifySbtcNotifyError(error: unknown): SbtcNotifyErrorClassifi
 }
 
 export function toXOnlyPublicKeyHex(publicKeyHex: string): string {
-  const hex = publicKeyHex.startsWith(hexPrefix)
-    ? publicKeyHex.slice(hexPrefix.length)
-    : publicKeyHex;
-  if (hex.length === xOnlyPublicKeyHexLength) return hex;
-  if (hex.length === compressedPublicKeyHexLength) {
-    return hex.slice(compressedPublicKeyParityHexLength);
-  }
-  throw new Error(`Unexpected signers public key length: ${hex.length} hex characters`);
+  const publicKey = hexToBytes(cleanHex(publicKeyHex));
+  if (publicKey.length === schnorrPublicKeyLength) return bytesToHex(publicKey);
+  return bytesToHex(ecdsaPublicKeyToSchnorr(publicKey));
 }
