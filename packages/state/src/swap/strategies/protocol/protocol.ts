@@ -2,10 +2,12 @@ import BigNumber from 'bignumber.js';
 
 import { BITCOIN_MINIMUM_SPEND_IN_SATS } from '@leather.io/constants';
 import { type CryptoAssetBalance, type Money, type TransactionFeeTier } from '@leather.io/models';
+import { type AccountRequest } from '@leather.io/services';
 import { createMoney } from '@leather.io/utils';
 
 import { type FeeMode, type SwapDependencies } from '../../swap-state.types';
 import { DUMMY_P2TR_RECIPIENT, STX_SAFETY_BUFFER } from '../../swap.constants';
+import { toNativeSegwitAccountRequest } from '../../utils/account-request';
 
 export type SupportedProtocol = 'nativeBtc' | 'nativeStx' | 'sip10';
 
@@ -38,17 +40,18 @@ const nativeBtcStrategy: ProtocolStrategy = {
   }: SpendableAmountContext): Promise<Money> {
     const { accountRequest, services } = dependencies;
     const { bitcoinTransactionFeesService, bitcoinCoinSelectionService } = services;
+    const nativeSegwitAccountRequest = toNativeSegwitAccountRequest(accountRequest);
 
     const feeRate = await resolveFeeRate(
       customFee,
       feeTier,
-      accountRequest,
+      nativeSegwitAccountRequest,
       bitcoinTransactionFeesService,
       signal
     );
 
     const result = await bitcoinCoinSelectionService.calculateMaxSpend({
-      account: accountRequest,
+      account: nativeSegwitAccountRequest,
       recipient: DUMMY_P2TR_RECIPIENT,
       feeRate,
     });
@@ -120,7 +123,7 @@ export function getProtocolStrategy(protocol: SupportedProtocol): ProtocolStrate
 async function resolveFeeRate(
   customFee: number | null,
   feeTier: TransactionFeeTier,
-  accountRequest: SwapDependencies['accountRequest'],
+  accountRequest: AccountRequest,
   bitcoinTransactionFeesService: SwapDependencies['services']['bitcoinTransactionFeesService'],
   signal: AbortSignal
 ): Promise<number> {
