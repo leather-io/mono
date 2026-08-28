@@ -16,7 +16,6 @@ export function useSwapDisabledPairs(): DisabledPairRule[] {
   return [
     { base: btc, target: '*' },
     { base: sbtcMainnet, target: btc },
-    { base: btc, target: '*' },
     { base: sbtcTestnet, target: btc },
   ];
 }

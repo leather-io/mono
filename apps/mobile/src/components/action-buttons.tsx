@@ -1,4 +1,5 @@
 import { useOnramperBuyFlag, useOnramperSellFlag, useSwapFlag } from '@/features/feature-flags';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
 import { Button, ButtonProps } from '@leather.io/ui/native';
@@ -25,6 +26,8 @@ export function ActionButtons({
   const isSwapEnabled = useSwapFlag();
   const isOnramperBuyEnabled = useOnramperBuyFlag();
   const isOnramperSellEnabled = useOnramperSellFlag();
+  const { networkPreference } = useSettings();
+  const isMainnet = networkPreference.chain.bitcoin.mode === 'mainnet';
 
   return (
     <>
@@ -66,7 +69,7 @@ export function ActionButtons({
           {t`Sell`}
         </Button>
       )}
-      {onSwap && isSwapEnabled && (
+      {onSwap && isSwapEnabled && isMainnet && (
         <Button
           onPress={onSwap}
           minWidth={86}
