@@ -103,6 +103,7 @@ describe(useLedgerNavigate.name, () => {
     void getValue().cancelLedgerAction();
 
     expect(h.navigate).toHaveBeenCalledWith(fromLocation, {
+      replace: true,
       state: { ...fromLocation.state, wentBack: true },
     });
   });

@@ -104,3 +104,7 @@ export enum RouteUrls {
   NonceEditor = 'edit-nonce',
   BroadcastError = 'broadcast-error',
 }
+
+export function toRoutePattern(route: string) {
+  return route.replace('{chain}', ':chain');
+}
