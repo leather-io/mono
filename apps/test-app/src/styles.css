@@ -218,3 +218,311 @@ pre {
 .muted {
   color: var(--muted);
 }
+
+/* ── Header controls ─────────────────────────────────────────────────────── */
+.masthead-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.field-grow {
+  flex: 1 1 200px;
+}
+
+.field select,
+.field input {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.account-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding: 8px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.account-bar-error {
+  border-color: var(--bad);
+}
+
+.chip {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.chip-policy {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.chip-singlesig {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.chip-requires {
+  border-color: var(--pending);
+  color: var(--pending);
+}
+
+/* ── Tag runner ──────────────────────────────────────────────────────────── */
+.tag-runner {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.tag-results {
+  flex-basis: 100%;
+  max-height: 320px;
+  overflow: auto;
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────────── */
+.card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.card-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.card button,
+.tag-runner button,
+.account-bar button,
+.scenario button {
+  background: var(--accent);
+  color: #1a1200;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.card button.secondary,
+.account-bar button {
+  background: var(--card-hover);
+  color: var(--text);
+}
+
+.card button:disabled,
+.tag-runner button:disabled,
+.scenario button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.editor textarea {
+  min-height: 160px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 11px;
+  resize: vertical;
+}
+
+/* ── Verdicts and checks ─────────────────────────────────────────────────── */
+.verdict {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.verdict-pass {
+  color: var(--ok);
+}
+
+.verdict-fail {
+  color: var(--bad);
+}
+
+.verdict-unjudged,
+.verdict-idle {
+  color: var(--muted);
+}
+
+.checks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.check-ok {
+  color: var(--ok);
+}
+
+.check-fail {
+  color: var(--bad);
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.table-wrap table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+
+.table-wrap th,
+.table-wrap td {
+  text-align: left;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.table-wrap tr:last-child td {
+  border-bottom: none;
+}
+
+.history {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+}
+
+/* ── Scenarios ───────────────────────────────────────────────────────────── */
+.scenarios {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scenario {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.scenario-steps {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scenario-step-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.scenario-summary {
+  margin: 4px 0 0;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 11px;
+  word-break: break-all;
+}
+
+.scenario-check {
+  margin: 2px 0 0;
+  font-size: 12px;
+}
+
+/* ── Combination builder ─────────────────────────────────────────────────── */
+.builder {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.builder-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.builder .card-desc {
+  margin: 10px 0 6px;
+}
+
+.sweep-results {
+  margin-top: 10px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.builder-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
