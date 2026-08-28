@@ -56,6 +56,7 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
     case 'RECONCILE_BASE_WITH_PROVIDER': {
       const { baseSwapAsset, pairReconciliation } = state;
       if (!baseSwapAsset) return state;
+      if (action.payload.length === 0) return state;
 
       const realBaseSwapAsset = action.payload.find(swapAsset => {
         return isSameAsset(swapAsset.asset, baseSwapAsset.asset);

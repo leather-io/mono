@@ -17,7 +17,11 @@ import {
   getSwapService,
 } from '@leather.io/services';
 import { type StacksSigner } from '@leather.io/stacks';
-import { type SwapDependencies, broadcastBitcoinTransaction } from '@leather.io/state/swap';
+import {
+  type SwapDependencies,
+  SwapSigningCancelledError,
+  broadcastBitcoinTransaction,
+} from '@leather.io/state/swap';
 import { assertExistence } from '@leather.io/utils';
 
 import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
@@ -32,6 +36,8 @@ import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/s
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
+
+import { isSigningCancelledError } from '../swap-utils';
 
 // This file is mostly vibed to be able to plug useSwapState and move forward with the UI work
 // TODO: Needs a careful rewrite.
@@ -98,7 +104,7 @@ export function useSwapDependencies(): SwapDependencies {
       async sign(tx: StacksTransactionWire) {
         const result = signStacksTx(tx);
         const signed = await Promise.resolve(result);
-        if (!signed) throw new Error('Signing cancelled');
+        if (!signed) throw new SwapSigningCancelledError();
         return signed;
       },
       signMessage() {
@@ -152,5 +158,6 @@ export function useSwapDependencies(): SwapDependencies {
     onSwapSubmitted() {
       void refreshAllAccountData(accountDataRefreshDelayMs);
     },
+    isSigningCancelledError,
   };
 }

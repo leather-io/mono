@@ -21,3 +21,7 @@ export const PRICE_IMPACT_DANGER_THRESHOLD = 0.1;
 
 export const DUMMY_P2TR_RECIPIENT =
   'bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqzk5jj0';
+
+export const SWAP_SUBMISSION_DISPLAY_DURATION_MS = 1800;
+export const SWAP_SUCCESS_EXIT_TIMEOUT_MS = 1200;
+export const SWAP_ACCIDENTAL_TAP_SUPPRESSION_MS = 500;

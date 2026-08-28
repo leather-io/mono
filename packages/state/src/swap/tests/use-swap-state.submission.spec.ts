@@ -6,6 +6,7 @@ import { SwapQuote } from '@leather.io/models';
 import { createMoney, createMoneyFromDecimal } from '@leather.io/utils';
 
 import { SwapSubmissionResult } from '../swap-state.types';
+import { SwapSigningCancelledError } from '../swap-submission.errors';
 import {
   createAccountSwapAsset,
   createSwapQuote,
@@ -368,5 +369,42 @@ describe('useSwapState - submission', () => {
       expect(onSwapSubmitted).toHaveBeenCalledTimes(1);
       expect(onSwapSubmitted).toHaveBeenCalledWith({ status: 'submitted', txid: 'test-txid' });
     });
+  });
+});
+
+describe('useSwapState - signing cancellation', () => {
+  it('rejects with a signing cancellation without tracking a failure', async () => {
+    const trackEvent = vi.fn();
+    const deviceCancelMessage = 'User canceled the operation.';
+    const sign = vi.fn().mockRejectedValue(new Error(deviceCancelMessage));
+
+    const result = renderUseSwapState({
+      baseAsset: defaultBtcAsset,
+      targetAsset: defaultStxAsset,
+      swapQuotes: [createSwapQuote({ baseAmount: 1 })],
+      trackEvent,
+      dependencies: {
+        stacks: {
+          stacksSigner: { ...createStubStacksSigner(), sign },
+          stacksNetwork: STACKS_MAINNET,
+          broadcast: vi.fn(),
+          nextNonce: undefined,
+        },
+        isSigningCancelledError: error =>
+          error instanceof Error && error.message === deviceCancelMessage,
+      },
+    });
+
+    act(() => result.current.actions.setBaseAmount('1'));
+    await waitFor(() => {
+      expect(result.current.canSubmit).toBe(true);
+    });
+
+    await act(async () => {
+      await expect(result.current.submit()).rejects.toBeInstanceOf(SwapSigningCancelledError);
+    });
+
+    expect(sign).toHaveBeenCalledOnce();
+    expect(trackEvent).not.toHaveBeenCalledWith('swap_submission_failure', expect.any(Object));
   });
 });

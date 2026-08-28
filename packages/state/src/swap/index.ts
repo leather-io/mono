@@ -37,7 +37,15 @@ export {
   STX_SAFETY_BUFFER,
   PRICE_IMPACT_WARNING_THRESHOLD,
   PRICE_IMPACT_DANGER_THRESHOLD,
+  SWAP_SUBMISSION_DISPLAY_DURATION_MS,
+  SWAP_SUCCESS_EXIT_TIMEOUT_MS,
+  SWAP_ACCIDENTAL_TAP_SUPPRESSION_MS,
 } from './swap.constants';
+export type {
+  SwapAttention,
+  SwapSubmissionQuoteSnapshot,
+  SwapSubmissionState,
+} from './swap-submission.types';
 
 export { isBaseEntirelyDisabled, isPairDisabled } from './utils/disabled-pairs';
 
@@ -60,3 +68,4 @@ export { broadcastBitcoinTransaction } from './utils/broadcast-bitcoin-transacti
 
 export type * from './validation/swap-validation.types';
 export type { ValidationContext } from './validation/swap-validation';
+export { SwapSigningCancelledError, isSwapSigningCancelledError } from './swap-submission.errors';
