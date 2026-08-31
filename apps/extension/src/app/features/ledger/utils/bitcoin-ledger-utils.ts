@@ -1,7 +1,6 @@
 import Transport from '@ledgerhq/hw-transport-webusb';
+import BitcoinApp, { DefaultWalletPolicy, PartialSignature } from '@ledgerhq/ledger-bitcoin';
 import { Psbt } from 'bitcoinjs-lib';
-import BitcoinApp, { DefaultWalletPolicy } from 'ledger-bitcoin';
-import { PartialSignature } from 'ledger-bitcoin/build/main/lib/appClient';
 
 import {
   makeNativeSegwitAccountDerivationPath,

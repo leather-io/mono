@@ -96,15 +96,14 @@ describe('Bitcoin SegWit (P2WPKH-P2SH) address generation', () => {
       const child = root.derivePath(key.path);
 
       describe(key.path, () => {
-        test(`public key`, () => expect(child.publicKey.toString('hex')).toEqual(key.public_key));
+        test(`public key`, () =>
+          expect(Buffer.from(child.publicKey).toString('hex')).toEqual(key.public_key));
 
         test(`extended public key`, () =>
           expect(child.neutered().toBase58()).toEqual(key.extended_public_key));
 
         test(`private key`, () =>
-          expect(child.privateKey).toEqual(
-            Buffer.from(decodeCompressedWifPrivateKey(key.private_key))
-          ));
+          expect(child.privateKey).toEqual(decodeCompressedWifPrivateKey(key.private_key)));
 
         test(`extended private key`, () =>
           expect(child.privateKey).toEqual(bip32.fromBase58(key.extended_private_key).privateKey));

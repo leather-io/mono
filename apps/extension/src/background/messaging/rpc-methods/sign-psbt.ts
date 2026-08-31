@@ -122,6 +122,11 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
       requestParams.push(['signAtIndex', index.toString()])
     );
 
+  if (isDefined(request.params.allowedSighash))
+    request.params.allowedSighash.forEach(sighash =>
+      requestParams.push(['allowedSighash', sighash.toString()])
+    );
+
   const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
     port,
     requestParams

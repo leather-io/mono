@@ -12,6 +12,7 @@ import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useConvertCryptoCurrencyToFiatAmount } from '@app/common/hooks/use-convert-to-fiat-amount';
 import { AccountBitcoinAddress } from '@app/components/account/account-bitcoin-address';
 import { BackgroundOverlay } from '@app/components/loading-overlay';
+import { NoBroadcastWarningLabel } from '@app/components/rpc-transaction-request/no-broadcast-warning-label';
 import { TransactionActionsTitle } from '@app/components/rpc-transaction-request/transaction-actions-title';
 import { TransactionError } from '@app/components/rpc-transaction-request/transaction-error';
 import { TransactionHeader } from '@app/components/rpc-transaction-request/transaction-header';
@@ -32,7 +33,7 @@ export function RpcSendTransfer() {
   const policy = useCurrentPolicy();
   const { availableBalance, isLoadingFees, marketData, onUserActivatesFeeEditor, selectedFee } =
     useFeeEditorContext();
-  const { recipients, recipientAddresses, amount, origin, isLoadingBalance, tabId } =
+  const { recipients, recipientAddresses, amount, broadcast, origin, isLoadingBalance, tabId } =
     useRpcSendTransferContext();
 
   const convertToFiatAmount = useConvertCryptoCurrencyToFiatAmount('BTC');
@@ -42,6 +43,8 @@ export function RpcSendTransfer() {
   const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
   const { approverActions, isBroadcasting, isSubmitted } = useRpcSendTransferActions();
   const showOverlay = isBroadcasting || isSubmitted;
+  const isBitcoinPolicy = policy?.chain === 'bitcoin';
+  const isSignOnly = !broadcast && !isBitcoinPolicy;
 
   const totalFiatValue = useMemo(() => {
     const fee = selectedFee?.txFee;
@@ -55,7 +58,7 @@ export function RpcSendTransfer() {
         <Box position="relative">
           <BackgroundOverlay show={showOverlay} />
           <TransactionHeader
-            title="Send token"
+            title={isSignOnly ? 'Sign transaction' : 'Send token'}
             href="https://leather.io/guides/connect-dapps"
             onPressRequestedByLink={e => {
               e.preventDefault();
@@ -65,12 +68,13 @@ export function RpcSendTransfer() {
               focusTabAndWindow(tabId);
             }}
           />
+          {isSignOnly && <NoBroadcastWarningLabel origin={origin} />}
           <SigningAccountCard
             address={<AccountBitcoinAddress accountId={currentAccount} />}
             availableBalance={availableBalance}
             fiatBalance={convertToFiatAmount(availableBalance)}
             isLoadingBalance={isLoadingBalance}
-            showPolicyAccount={policy?.chain === 'bitcoin'}
+            showPolicyAccount={isBitcoinPolicy}
           />
           <TransactionRecipientsLayout
             title="Bitcoin"

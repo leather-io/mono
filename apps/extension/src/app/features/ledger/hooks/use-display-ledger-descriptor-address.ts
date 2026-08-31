@@ -1,10 +1,16 @@
-import { type LedgerState, ledger } from '@bitcoinerlab/descriptors';
-import AppClient, { WalletPolicy } from 'ledger-bitcoin';
+import { Output } from '@bitcoinerlab/descriptors';
+import {
+  type LedgerManager,
+  type LedgerState,
+  registerLedgerWallet,
+} from '@bitcoinerlab/descriptors/ledger';
+import AppClient, { WalletPolicy } from '@ledgerhq/ledger-bitcoin';
 
 import {
   compileWshDescriptor,
   findAccountDescriptorKey,
   makeWshDescriptorInstance,
+  toCompilableWshDescriptor,
   toLedgerSignableDescriptor,
 } from '@leather.io/bitcoin';
 
@@ -52,10 +58,15 @@ export function useDisplayLedgerDescriptorAddress() {
     // into a fresh state, so the registered policy is the only entry; the HMAC is
     // not persisted (the state is discarded with this call).
     const ledgerState: LedgerState = {};
-    await ledger.registerLedgerWallet({
-      descriptor: descriptorInstance,
+    const ledgerManager: LedgerManager = {
       ledgerClient: app,
       ledgerState,
+      Output,
+      network: descriptorInstance.getNetwork(),
+    };
+    await registerLedgerWallet({
+      descriptor: toCompilableWshDescriptor(ledgerDescriptor),
+      ledgerManager,
       policyName: 'Leather',
     });
 
@@ -68,13 +79,8 @@ export function useDisplayLedgerDescriptorAddress() {
       policy.keyRoots
     );
 
+    const policyHmac = policy.policyHmac ? Buffer.from(policy.policyHmac) : null;
     const { changeIndex, addressIndex } = compiled.keyPathIndexes;
-    return app.getWalletAddress(
-      walletPolicy,
-      policy.policyHmac ?? null,
-      changeIndex,
-      addressIndex,
-      true
-    );
+    return app.getWalletAddress(walletPolicy, policyHmac, changeIndex, addressIndex, true);
   };
 }

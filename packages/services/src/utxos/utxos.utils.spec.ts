@@ -1,4 +1,4 @@
-import { Utxo, UtxoId } from '@leather.io/models';
+import { OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
 import {
@@ -14,6 +14,7 @@ import {
   getKeyOrigin,
   getOutboundUtxos,
   getUtxoIdFromOutpoint,
+  getUtxoTotals,
   isDustUtxo,
   isUnconfirmedUtxo,
   selectUniqueUtxoIds,
@@ -402,5 +403,106 @@ describe(getKeyOrigin.name, () => {
     const path = "m/84'/0'/0'/0/0";
     const keyOrigin = getKeyOrigin(fingerprint, path);
     expect(keyOrigin).toEqual("deadbeef/84'/0'/0'/0/0");
+  });
+});
+
+describe(getUtxoTotals.name, () => {
+  const fingerprint = 'deadbeef';
+  const address = 'bc1q123';
+
+  const confirmedUtxo: OwnedUtxo = {
+    txid: 'a',
+    vout: 0,
+    value: 100_000,
+    height: 800_000,
+    address,
+    path: "m/84'/0'/0'/0/0",
+    keyOrigin: "deadbeef/84'/0'/0'/0/0",
+  };
+
+  const dustUtxo: OwnedUtxo = { ...confirmedUtxo, txid: 'b', value: dustSatThreshold - 1 };
+
+  const unconfirmedUtxo: OwnedUtxo = {
+    txid: 'c',
+    vout: 0,
+    value: 50_000,
+    address,
+    path: "m/84'/0'/0'/0/1",
+    keyOrigin: "deadbeef/84'/0'/0'/0/1",
+  };
+
+  function createPendingOutboundTx(vinTxid: string, value: string): LeatherApiBitcoinTransaction {
+    return {
+      txid: `pending-${vinTxid}`,
+      vin: [{ txid: vinTxid, n: 0, value, address, owned: true, path: "m/84'/0'/0'/0/2" }],
+      vout: [],
+    };
+  }
+
+  it('returns empty lists for empty inputs', () => {
+    expect(getUtxoTotals(fingerprint, [], [])).toEqual({
+      confirmed: [],
+      inbound: [],
+      outbound: [],
+      dust: [],
+      unspendable: [],
+      available: [],
+    });
+  });
+
+  it('splits utxos into confirmed and inbound by block height', () => {
+    const totals = getUtxoTotals(fingerprint, [confirmedUtxo, unconfirmedUtxo], []);
+
+    expect(totals.confirmed).toEqual([confirmedUtxo]);
+    expect(totals.inbound).toEqual([unconfirmedUtxo]);
+    expect(totals.available).toEqual([confirmedUtxo]);
+  });
+
+  it('keeps dust utxos in the confirmed list while marking them unspendable', () => {
+    const totals = getUtxoTotals(fingerprint, [confirmedUtxo, dustUtxo], []);
+
+    expect(totals.confirmed).toEqual([confirmedUtxo, dustUtxo]);
+    expect(totals.dust).toEqual([dustUtxo]);
+    expect(totals.unspendable).toEqual([dustUtxo]);
+    expect(totals.available).toEqual([confirmedUtxo]);
+  });
+
+  it('appends outbound utxos to the confirmed list and excludes them from available', () => {
+    const totals = getUtxoTotals(
+      fingerprint,
+      [confirmedUtxo],
+      [createPendingOutboundTx('d', '70000')]
+    );
+
+    expect(totals.outbound.length).toEqual(1);
+    expect(totals.outbound[0].txid).toEqual('d');
+    expect(totals.confirmed).toEqual([confirmedUtxo, totals.outbound[0]]);
+    expect(totals.unspendable).toEqual([totals.outbound[0]]);
+    expect(totals.available).toEqual([confirmedUtxo]);
+  });
+
+  it('lists a utxo that is both outbound and dust only once as unspendable', () => {
+    const totals = getUtxoTotals(
+      fingerprint,
+      [confirmedUtxo],
+      [createPendingOutboundTx('e', String(dustSatThreshold - 1))]
+    );
+
+    expect(totals.outbound.length).toEqual(1);
+    expect(totals.dust).toEqual(totals.outbound);
+    expect(totals.unspendable.length).toEqual(1);
+    expect(totals.available).toEqual([confirmedUtxo]);
+  });
+
+  it('keeps available equal to confirmed minus unspendable', () => {
+    const totals = getUtxoTotals(
+      fingerprint,
+      [confirmedUtxo, dustUtxo, unconfirmedUtxo],
+      [createPendingOutboundTx('d', '70000')]
+    );
+
+    expect(sumUtxoValues(totals.available)).toEqual(
+      sumUtxoValues(totals.confirmed).minus(sumUtxoValues(totals.unspendable))
+    );
   });
 });

@@ -1,3 +1,5 @@
+import type { ColorToken } from 'leather-styles/tokens';
+
 import type { AuthNetworkId } from '@leather.io/models';
 
 import type { Chain } from './multisig-types';
@@ -5,9 +7,10 @@ import type { Chain } from './multisig-types';
 export type NetworkMode = 'mainnet' | 'testnet';
 
 interface NetworkModeTone {
-  background: string;
-  border: string;
-  text: string;
+  background: ColorToken;
+  border: ColorToken;
+  text: ColorToken;
+  glow: ColorToken;
 }
 
 interface NetworkModeInfo {
@@ -28,6 +31,7 @@ export const networkModeInfo: Record<NetworkMode, NetworkModeInfo> = {
       background: 'ink.background-secondary',
       border: 'ink.border-default',
       text: 'ink.text-primary',
+      glow: 'ink.background-secondary',
     },
   },
   testnet: {
@@ -39,6 +43,7 @@ export const networkModeInfo: Record<NetworkMode, NetworkModeInfo> = {
       background: 'yellow.background-primary',
       border: 'yellow.border',
       text: 'yellow.text-primary',
+      glow: 'yellow.action-primary-default',
     },
   },
 };

@@ -25,6 +25,8 @@ import { UnsupportedBrowserLayout } from '@app/features/ledger/generic-steps';
 import { ConnectLedgerStart } from '@app/features/ledger/generic-steps/connect-device/connect-ledger-start';
 import { TokenDetails } from '@app/features/token/token-details';
 import { AddWallet } from '@app/pages/add-wallet/add-wallet';
+import { AllBalancesPage } from '@app/pages/all-balances/all-balances';
+import { AllBalancesDetail } from '@app/pages/all-balances/all-balances-detail';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { ManageTokensPage } from '@app/pages/manage-tokens/manage-tokens';
@@ -295,6 +297,23 @@ function useAppRoutes() {
             element={
               <AccountGate>
                 <SelectTheme />
+              </AccountGate>
+            }
+          />
+
+          <Route
+            path={RouteUrls.AllBalances}
+            element={
+              <AccountGate>
+                <AllBalancesPage />
+              </AccountGate>
+            }
+          />
+          <Route
+            path={RouteUrls.AllBalancesDetail}
+            element={
+              <AccountGate>
+                <AllBalancesDetail />
               </AccountGate>
             }
           />
