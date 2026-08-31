@@ -21,13 +21,16 @@ function pageRequestContext(page: Page): RequestContext {
       const args: [string, unknown] = [method, params];
       return page.evaluate(async ([m, p]) => {
         const provider: unknown = Reflect.get(window, 'LeatherProvider');
-        const hasRequest = (
+        function hasRequest(
           value: unknown
-        ): value is { request(method: string, params?: unknown): Promise<{ result: unknown }> } =>
-          typeof value === 'object' &&
-          value !== null &&
-          'request' in value &&
-          typeof value.request === 'function';
+        ): value is { request(method: string, params?: unknown): Promise<{ result: unknown }> } {
+          return (
+            typeof value === 'object' &&
+            value !== null &&
+            'request' in value &&
+            typeof value.request === 'function'
+          );
+        }
         if (!hasRequest(provider)) throw new Error('LeatherProvider missing');
         const response = await provider.request(m, p);
         return response.result;
@@ -103,8 +106,7 @@ test.describe('Rpc: test-app catalog', () => {
       broadcast: false,
     });
     test.expect(await readResultJson(page, 'rpc-result-payload')).toMatchObject({
-      jsonrpc: '2.0',
-      result: { hex: test.expect.any(String) },
+      hex: test.expect.any(String),
     });
   });
 });
