@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router';
 
-import { Box, styled } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
 
+import type { ActivityGroup } from '@leather.io/features';
 import { ListContainer } from '@leather.io/ui';
 
 import { multisigPaths } from '../multisig.constants';
@@ -13,6 +14,10 @@ import { type ActivityRowLocation, VaultActivityRow } from './vault-activity-row
 interface VaultActivityListProps {
   items: VaultActivityItem[];
   scale?: TransactionRowScale;
+  // 'plain' renders bare rows without the bordered list container — for
+  // read-only embeds (e.g. the asset detail sheet) where rows aren't clickable
+  // and the surrounding section already provides the frame.
+  variant?: 'contained' | 'plain';
   limit?: number;
   vaultNamesById?: ReadonlyMap<string, string>;
   accountNamesById?: ReadonlyMap<string, string>;
@@ -64,10 +69,28 @@ function needsAttention(item: VaultActivityItem) {
   );
 }
 
-function tierOf(item: VaultActivityItem): 'action' | 'inFlight' | 'history' {
+type VaultActivityTier = 'action' | 'inFlight' | 'history';
+
+function tierOf(item: VaultActivityItem): VaultActivityTier {
   if (needsAttention(item)) return 'action';
   if (item.view.status === 'pending') return 'inFlight';
   return 'history';
+}
+
+const vaultActivityTiers: { key: VaultActivityTier; label: string }[] = [
+  { key: 'action', label: 'Needs signatures' },
+  { key: 'inFlight', label: 'In progress' },
+  { key: 'history', label: 'History' },
+];
+
+function groupVaultActivityByTier(items: VaultActivityItem[]): ActivityGroup<VaultActivityItem>[] {
+  return vaultActivityTiers
+    .map(tier => ({
+      key: tier.key,
+      label: tier.label,
+      items: items.filter(item => tierOf(item) === tier.key),
+    }))
+    .filter(group => group.items.length > 0);
 }
 
 // One flat container, no divider lines between rows: the feed is grouped into
@@ -76,6 +99,7 @@ function tierOf(item: VaultActivityItem): 'action' | 'inFlight' | 'history' {
 export function VaultActivityList({
   items,
   scale,
+  variant = 'contained',
   limit,
   vaultNamesById,
   accountNamesById,
@@ -93,6 +117,7 @@ export function VaultActivityList({
         key={`${item.view.key}:${item.vaultAccountId ?? ''}`}
         item={item}
         scale={scale}
+        variant={variant === 'plain' ? 'plain' : 'boxed'}
         needsAttention={needsAttention(item)}
         location={location}
         href={link?.href}
@@ -101,35 +126,48 @@ export function VaultActivityList({
     );
   }
 
-  const tiers = [
-    { label: 'Needs signatures', items: visibleItems.filter(item => tierOf(item) === 'action') },
-    { label: 'In progress', items: visibleItems.filter(item => tierOf(item) === 'inFlight') },
-    { label: 'History', items: visibleItems.filter(item => tierOf(item) === 'history') },
-  ].filter(tier => tier.items.length > 0);
+  const tiers = groupVaultActivityByTier(visibleItems);
 
   // Labels only earn their place when they separate more than one tier; a feed
   // with a single tier (e.g. history only) renders as a plain list.
   const showLabels = tiers.length > 1;
 
+  const overflowNote =
+    limit !== undefined && items.length > limit ? (
+      <styled.p
+        textStyle="caption.01"
+        color="ink.text-subdued"
+        textAlign="center"
+        px="space.04"
+        py="space.03"
+      >
+        Open an account to view its full history
+      </styled.p>
+    ) : null;
+
+  if (variant === 'plain') {
+    return (
+      <Flex direction="column" gap="space.02">
+        {tiers.map(tier => (
+          <Flex key={tier.key} direction="column" gap="space.03">
+            {showLabels ? <GroupLabel>{tier.label}</GroupLabel> : null}
+            {tier.items.map(renderRow)}
+          </Flex>
+        ))}
+        {overflowNote}
+      </Flex>
+    );
+  }
+
   return (
     <ListContainer p="space.02">
       {tiers.map(tier => (
-        <Box key={tier.label}>
+        <Box key={tier.key}>
           {showLabels ? <GroupLabel>{tier.label}</GroupLabel> : null}
           {tier.items.map(renderRow)}
         </Box>
       ))}
-      {limit !== undefined && items.length > limit ? (
-        <styled.p
-          textStyle="caption.01"
-          color="ink.text-subdued"
-          textAlign="center"
-          px="space.04"
-          py="space.03"
-        >
-          Open an account to view its full history
-        </styled.p>
-      ) : null}
+      {overflowNote}
     </ListContainer>
   );
 }

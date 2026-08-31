@@ -5,7 +5,6 @@ import {
 } from '@stacks/stacks-blockchain-api-types';
 import {
   AddressHashMode,
-  AuthType,
   ClarityType,
   type ContractCallPayload,
   type IntCV,
@@ -99,19 +98,6 @@ export function getTxTitle(tx: StacksTx) {
   }
 }
 
-// calculate the real amount of the token based on the decimal number
-// specified in the corresponding token smart contract
-export function calculateTokenTransferAmount(
-  decimals: number,
-  amount: number | string | BigNumber
-) {
-  return new BigNumber(amount).shiftedBy(-decimals);
-}
-
-export function isTxSponsored(tx: StacksTransactionWire) {
-  return tx.auth.authType === AuthType.Sponsored;
-}
-
 function getAddressFromPublicKeyHash(
   publicKeyHash: Buffer,
   hashMode: AddressHashMode,
@@ -150,7 +136,6 @@ export function isPendingTx(tx: StacksTx) {
 export enum StacksTransactionActionType {
   Cancel = 'cancel',
   IncreaseFee = 'increase-fee',
-  RpcRequest = 'rpc-request',
 }
 
 export function getRecipientFromStacksTransaction(transaction: StacksTransactionWire) {

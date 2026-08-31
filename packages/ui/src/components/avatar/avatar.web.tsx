@@ -107,7 +107,7 @@ const AvatarRoot = styled(RadixAvatar.Root, {
     },
     variant: {
       circle: { borderRadius: 'round' },
-      square: { borderRadius: '10px' },
+      square: { borderRadius: 'md' },
     },
     size: {
       xs: { width: 16, height: 16 },
@@ -118,13 +118,11 @@ const AvatarRoot = styled(RadixAvatar.Root, {
     },
   },
   compoundVariants: [
-    {
-      size: 'xs',
-      variant: 'square',
-      css: {
-        borderRadius: 'xs',
-      },
-    },
+    { size: 'xs', variant: 'square', css: { borderRadius: '3px' } },
+    { size: 'sm', variant: 'square', css: { borderRadius: '5px' } },
+    { size: 'md', variant: 'square', css: { borderRadius: '6px' } },
+    { size: 'lg', variant: 'square', css: { borderRadius: '8px' } },
+    { size: 'xl', variant: 'square', css: { borderRadius: '10px' } },
   ],
   defaultVariants: {
     size: 'xl',

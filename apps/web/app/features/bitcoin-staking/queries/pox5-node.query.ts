@@ -12,7 +12,7 @@ import {
 } from '@leather.io/query';
 import { createMoney } from '@leather.io/utils';
 
-import { usePox5StackingClientRequired, usePox5StacksClient } from '../hooks/use-pox5-clients';
+import { usePox5ChainStackingClient, usePox5StacksClient } from '../hooks/use-pox5-clients';
 
 // Node-info queries for the configured pox-5 chain. These mirror the pox-4
 // hooks in features/stacking/hooks/stacking.query.ts but run against the
@@ -23,7 +23,7 @@ import { usePox5StackingClientRequired, usePox5StacksClient } from '../hooks/use
 // claiming staking is paused long after the prepare phase ended, and gate
 // actions that the contract would now accept.
 export function usePox5PoxInfoQuery() {
-  const client = usePox5StackingClientRequired();
+  const client = usePox5ChainStackingClient();
   return useQuery({
     ...createGetPoxInfoQueryOptions({ client }),
     refetchInterval: CYCLE_STATUS_REFETCH_INTERVAL_MS,
@@ -31,7 +31,7 @@ export function usePox5PoxInfoQuery() {
 }
 
 export function usePox5CoreInfoQuery() {
-  const client = usePox5StackingClientRequired();
+  const client = usePox5ChainStackingClient();
   return useQuery({
     ...createGetCoreInfoQueryOptions({ client }),
     refetchInterval: CYCLE_STATUS_REFETCH_INTERVAL_MS,
@@ -39,7 +39,7 @@ export function usePox5CoreInfoQuery() {
 }
 
 export function usePox5SecondsUntilNextCycleQuery() {
-  const client = usePox5StackingClientRequired();
+  const client = usePox5ChainStackingClient();
   return useQuery({
     ...createGetSecondsUntilNextCycleQueryOptions({ client }),
     refetchInterval: CYCLE_STATUS_REFETCH_INTERVAL_MS,

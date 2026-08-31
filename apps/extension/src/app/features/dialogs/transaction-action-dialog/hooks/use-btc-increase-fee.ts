@@ -14,9 +14,9 @@ import type { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-co
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { queryClient } from '@app/common/persistence';
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
 import { useToast } from '@app/features/toasts/use-toast';
+import { invalidateActivityQueries } from '@app/query/activity/blockchain-activity.query';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useBitcoinFeeRates } from '@app/query/bitcoin/fees/bitcoin-fee-rates.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
@@ -138,7 +138,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
           txid,
         });
         await refetchUtxos();
-        void queryClient.invalidateQueries({ queryKey: ['btc-txs-by-address'] });
+        void invalidateActivityQueries();
       },
       onError,
       delayTime: 5000,

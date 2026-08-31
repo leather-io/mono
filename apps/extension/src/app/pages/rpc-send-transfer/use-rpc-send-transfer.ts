@@ -17,13 +17,14 @@ function useRpcSendTransferRequestParams() {
       ...defaultParams,
       recipientAddresses: initialSearchParams.getAll('recipient') ?? [],
       amounts: initialSearchParams.getAll('amount') ?? [],
+      broadcast: initialSearchParams.get('broadcast') !== 'false',
     }),
     [defaultParams]
   );
 }
 
 export function useRpcSendTransfer() {
-  const { amounts, frameId, origin, recipientAddresses, requestId, tabId } =
+  const { amounts, broadcast, frameId, origin, recipientAddresses, requestId, tabId } =
     useRpcSendTransferRequestParams();
 
   if (origin === null) {
@@ -38,6 +39,7 @@ export function useRpcSendTransfer() {
 
   return {
     amount: createMoney(new BigNumber(sumNumbers(amounts.map(Number))), 'BTC'),
+    broadcast,
     frameId,
     origin,
     recipients,

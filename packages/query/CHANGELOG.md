@@ -779,6 +779,52 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.51.7](https://github.com/leather-io/mono/compare/@leather.io/query-v2.51.6...@leather.io/query-v2.51.7) (2026-08-27)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.2
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/stacks bumped to 1.22.5
+    * @leather.io/utils bumped to 0.52.7
+
+## [2.51.6](https://github.com/leather-io/mono/compare/@leather.io/query-v2.51.5...@leather.io/query-v2.51.6) (2026-08-18)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.1
+    * @leather.io/models bumped to 0.61.0
+    * @leather.io/stacks bumped to 1.22.4
+    * @leather.io/utils bumped to 0.52.6
+
+## [2.51.5](https://github.com/leather-io/mono/compare/@leather.io/query-v2.51.4...@leather.io/query-v2.51.5) (2026-08-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.0
+    * @leather.io/stacks bumped to 1.22.3
+    * @leather.io/utils bumped to 0.52.5
+
+## [2.51.4](https://github.com/leather-io/mono/compare/@leather.io/query-v2.51.3...@leather.io/query-v2.51.4) (2026-08-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.38.0
+    * @leather.io/stacks bumped to 1.22.2
+    * @leather.io/utils bumped to 0.52.4
+
 ## [2.51.3](https://github.com/leather-io/mono/compare/@leather.io/query-v2.51.2...@leather.io/query-v2.51.3) (2026-07-23)
 
 

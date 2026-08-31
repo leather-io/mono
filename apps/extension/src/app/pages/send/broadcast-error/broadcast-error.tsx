@@ -20,8 +20,19 @@ export function BroadcastError({ showInSheet = false }: Props) {
   const navigate = useNavigate();
 
   const msg = get(state, 'error.message', 'Unknown error response');
-  const title = get(state, 'title', 'There was an error broadcasting your transaction');
-  const body = get(state, 'body', 'Unable to broadcast transaction');
+  const proposeMode = Boolean(get(state, 'proposeMode', false));
+  const title = get(
+    state,
+    'title',
+    proposeMode
+      ? 'There was an error proposing your transaction'
+      : 'There was an error broadcasting your transaction'
+  );
+  const body = get(
+    state,
+    'body',
+    proposeMode ? 'Unable to propose transaction' : 'Unable to broadcast transaction'
+  );
 
   useOnMount(() => analytics.track('bitcoin_contract_error', { msg }));
 

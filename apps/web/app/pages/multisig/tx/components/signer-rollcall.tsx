@@ -1,4 +1,5 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 import { SignIcon } from '~/components/icons/sign-icon';
 
 import type { MultisigTransaction, Vault, VaultAccount } from '@leather.io/models';
@@ -6,7 +7,6 @@ import { Button, ListItemBox, Spinner } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
-import { CopyAddress } from '../../components/copy-address';
 import { formatDateTime } from '../relative-time';
 
 const cancellableStatuses = ['queued', 'pending', 'signed'];

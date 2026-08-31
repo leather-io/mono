@@ -411,6 +411,54 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.25.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.24.5...@leather.io/rpc-v2.25.0) (2026-08-27)
+
+
+### Features
+
+* bond exit ([#2648](https://github.com/leather-io/mono/issues/2648)) ([289275f](https://github.com/leather-io/mono/commit/289275f169a4b0563d2fec662e48c9a844792bf3))
+* update sendTransfer params ([#2634](https://github.com/leather-io/mono/issues/2634)) ([344da46](https://github.com/leather-io/mono/commit/344da46f4608c9e431522e99e5326af916deb499))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/stacks bumped to 1.22.5
+    * @leather.io/utils bumped to 0.52.7
+
+## [2.24.5](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.24.4...@leather.io/rpc-v2.24.5) (2026-08-18)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.61.0
+    * @leather.io/stacks bumped to 1.22.4
+    * @leather.io/utils bumped to 0.52.6
+
+## [2.24.4](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.24.3...@leather.io/rpc-v2.24.4) (2026-08-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/stacks bumped to 1.22.3
+    * @leather.io/utils bumped to 0.52.5
+
+## [2.24.3](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.24.2...@leather.io/rpc-v2.24.3) (2026-08-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/stacks bumped to 1.22.2
+    * @leather.io/utils bumped to 0.52.4
+
 ## [2.24.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.24.1...@leather.io/rpc-v2.24.2) (2026-07-23)
 
 

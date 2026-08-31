@@ -14,6 +14,12 @@ describe(extractAddressIndexFromPath.name, () => {
     expect(extractAddressIndexFromPath("m/84'/0'/0'/0/10")).toEqual(10);
     expect(extractAddressIndexFromPath("m/84'/0'/0'/0/9999")).toEqual(9999);
   });
+
+  test('should throw the parse error for paths without an address index', () => {
+    expect(() => extractAddressIndexFromPath("m/84'/0'/0'")).toThrowError(
+      'Cannot parse AddressIndex from path'
+    );
+  });
 });
 
 describe(extractChangeIndexFromPath.name, () => {

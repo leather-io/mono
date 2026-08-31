@@ -23,6 +23,7 @@ export default defineConfig({
     // Traces are heavy so we want to use them sparingly, but having full trace
     // to reference of the latest dev build is useful to inspect.
     trace: process.env.BRANCH_NAME === 'dev' ? 'on' : 'on-first-retry',
+    timezoneId: 'UTC',
   },
   projects: [
     {

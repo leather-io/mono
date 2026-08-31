@@ -1,70 +1,26 @@
-import { useState } from 'react';
-
 import { useMutation } from '@tanstack/react-query';
-import {
-  BitcoinStakingProviderId,
-  StakingPoolSlug,
-  getPoolBySignerManager,
-  stakingProviderIdToSlug,
-} from '~/data/bitcoin-staking-data';
-import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
+import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
 import { usePox5ClaimableRewards } from '~/features/bitcoin-staking/queries/pox5-stacking.query';
-import { createClaimRewardsMutationOptions } from '~/features/bitcoin-staking/transactions/pox5-claim-rewards';
-import { useLeatherConnect } from '~/store/addresses';
-import { leather } from '~/utils/leather-sdk';
+import { createClaimRewardsMutationOptions } from '~/features/bitcoin-staking/transactions/pox5-mutations';
+import { wallet } from '~/utils/wallet';
 
-import { Button, useOnMount } from '@leather.io/ui';
+import { Button } from '@leather.io/ui';
 
 interface ClaimRewardsButtonProps {
-  slug: StakingPoolSlug;
-}
-
-// Table-row companion to the active-position ClaimableRewardsCard: rendered
-// only when the connected account's position is in this pool AND it has
-// claimable rewards. Split in two because usePox5ClaimableRewards transitively
-// requires a connected StackingClient (usePox5StackingClientRequired throws
-// without one) — the outer gate uses only null-safe hooks so the table can
-// server-render for disconnected visitors; the inner part mounts client-side
-// once an account and an active position in this pool exist.
-export function ClaimRewardsButton({ slug }: ClaimRewardsButtonProps) {
-  const [isClient, setIsClient] = useState(false);
-  useOnMount(() => setIsClient(true));
-
-  const { stacksAccount } = useLeatherConnect();
-  const { position } = usePox5Position();
-
-  if (!isClient || !stacksAccount || position?.status !== 'active') return null;
-
-  const positionPool = getPoolBySignerManager(position.info.signerManagerContractId);
-  if (!positionPool || stakingProviderIdToSlug(positionPool.providerId) !== slug) return null;
-
-  return (
-    <ClaimRewardsButtonInner
-      slug={slug}
-      providerId={positionPool.providerId}
-      signerManagerContractId={position.info.signerManagerContractId}
-      stakerAddress={stacksAccount.address}
-    />
-  );
-}
-
-interface ClaimRewardsButtonInnerProps {
-  slug: StakingPoolSlug;
   providerId: BitcoinStakingProviderId;
   signerManagerContractId: string;
   stakerAddress: string;
 }
 
-function ClaimRewardsButtonInner({
-  slug,
+export function ClaimRewardsButton({
   providerId,
   signerManagerContractId,
   stakerAddress,
-}: ClaimRewardsButtonInnerProps) {
+}: ClaimRewardsButtonProps) {
   const claimable = usePox5ClaimableRewards();
 
   const { mutateAsync: claimRewards, isPending } = useMutation(
-    createClaimRewardsMutationOptions({ leather })
+    createClaimRewardsMutationOptions({ wallet })
   );
 
   // Claims are per-cycle transactions; claim the oldest unclaimed cycle first.
@@ -77,7 +33,7 @@ function ClaimRewardsButtonInner({
       variant="ghost"
       minW="fit-content"
       disabled={isPending}
-      data-testid={`claim-rewards-button-${slug}`}
+      data-testid="staking-position-claim-rewards"
       onClick={() =>
         claimRewards({
           providerId,

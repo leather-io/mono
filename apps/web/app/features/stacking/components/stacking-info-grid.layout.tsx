@@ -15,6 +15,7 @@ interface StackingInfoGridLayoutProps extends GridProps {
     rewardsToken: ReactNode;
     poolAddress: ReactNode;
     rewardAddress: ReactNode;
+    tvl?: ReactNode;
   };
 }
 export function StackingInfoGridLayout({ cells, ...props }: StackingInfoGridLayoutProps) {
@@ -91,13 +92,14 @@ export function StackingInfoGridLayout({ cells, ...props }: StackingInfoGridLayo
           'minmax(0, 1fr)',
           'minmax(0, 1fr)',
           'minmax(0, 1fr)',
-          'repeat(2, minmax(0, 1fr))',
+          cells.tvl ? 'repeat(3, minmax(0, 1fr))' : 'repeat(2, minmax(0, 1fr))',
         ]}
         gridTemplateRows="auto"
         height="fit-content"
       >
         <InfoGrid.Cell>{cells.rewardAddress}</InfoGrid.Cell>
         <InfoGrid.Cell>{cells.poolAddress}</InfoGrid.Cell>
+        {cells.tvl && <InfoGrid.Cell>{cells.tvl}</InfoGrid.Cell>}
       </InfoGrid>
     </VStack>
   );

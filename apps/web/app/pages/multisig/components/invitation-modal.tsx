@@ -1,4 +1,5 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useDeclineVault, useJoinVault } from '~/features/multisig/vaults/use-vault-mutations';
 import { useVault } from '~/features/multisig/vaults/use-vaults';
@@ -7,11 +8,10 @@ import type { VaultMember, VaultSummary } from '@leather.io/models';
 import { Button, CloseIcon, IconButton, ListItemBox, Sheet } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
-import { vaultThemeFromName } from '../multisig-tokens';
+import { defaultVaultIcon, vaultThemeFromName } from '../multisig-tokens';
 import { chainFromNetwork } from '../multisig.utils';
 import { AvatarCircle } from './avatar-circle';
 import { AvatarSq } from './avatar-sq';
-import { CopyAddress } from './copy-address';
 
 interface InvitationModalProps {
   vault: VaultSummary;
@@ -103,7 +103,12 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
           color={theme.dark ? 'white' : 'ink.text-primary'}
           style={{ background: theme.background }}
         >
-          <AvatarSq chain={chain} icon="vault" themeId={theme.id} size="lg" />
+          <AvatarSq
+            chain={chain}
+            icon={vault.icon ?? defaultVaultIcon}
+            themeId={theme.id}
+            size="lg"
+          />
           <Box minWidth={0}>
             <styled.div textStyle="heading.05">{vault.name}</styled.div>
             <styled.div textStyle="caption.01" opacity={0.85}>

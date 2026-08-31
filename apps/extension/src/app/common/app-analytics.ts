@@ -26,13 +26,12 @@ import { selectActiveWalletType } from '@app/store/common/wallet-type.selectors'
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useOnMount } from './hooks/use-on-mount';
-import { flow, origin } from './initial-search-params';
+import { origin } from './initial-search-params';
 
 const defaultStaticAnalyticContext = {
   ip: '0.0.0.0',
   platform: 'extension',
   version: VERSION,
-  ...(flow && { flow }),
   ...(origin && { origin }),
 };
 

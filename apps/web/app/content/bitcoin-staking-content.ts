@@ -43,14 +43,34 @@ export const bitcoinStakingContent = {
     explanationTitle: `Staking windows`,
     explanation: `In the last 100 Bitcoin blocks of a cycle the network locks in the signer set. New stakes and changes to an existing stake are rejected during that window, and resume when the next cycle starts.`,
   },
+  poolFeeChange: {
+    fromCycle(cycle: number) {
+      return `From cycle ${cycle}`;
+    },
+  },
+  selfClaim: {
+    explanation: `This pool takes no cut from your rewards. In exchange it never claims for you: rewards accrue each cycle and only you can claim them, through the pool's signer-manager contract.`,
+  },
   poolOverviewInfo: {
     rewardsToken: `Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool's signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall.`,
     fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so check the pool's terms before staking.`,
+    totalStaked: `The STX delegated to this pool for the current cycle, summed across all of the pool's signer-manager contracts. Pools need at least 50,000 STX staked to earn rewards for a cycle.`,
     nextCycle: `Your stake starts earning when the next cycle begins. A cycle lasts about two weeks.`,
   },
-  unlistedPool: {
-    label: `Staked with a pool Leather does not list`,
-    description: `Your STX is staked and still earning. Managing it here needs a pool Leather knows, so use the tools of whoever operates this signer manager.`,
+  byosm: {
+    entryTitle: `Bring your own signer manager`,
+    entryDescription: `Stake through any signer-manager contract that implements the standard interface. Leather checks the contract exists and is registered with PoX-5, but cannot vouch for its operator — verify who runs it before staking.`,
+    inputLabel: `Signer manager contract`,
+    continueLabel: `Continue`,
+    checkingLabel: `Checking contract…`,
+    errors: {
+      invalidFormat: `Enter a contract principal in address.contract-name format.`,
+      wrongNetwork: `This address belongs to a different network.`,
+      notFound: `No contract found at this address. Check the address and try again.`,
+      missingFunctions: `This contract does not implement the standard signer-manager interface.`,
+      notRegistered: `This contract is not registered as a PoX-5 signer manager.`,
+      checkFailed: `We couldn't check this contract right now. Try again.`,
+    },
   },
   dualStackingTransition: {
     title: `Dual Stacking is winding down`,
@@ -65,8 +85,46 @@ export const bitcoinStakingContent = {
     sbtcHelper: `Paid to your wallet once a cycle concludes — your pool usually claims for you.`,
     btcHelper: `Withdrawn from sBTC to your Bitcoin address, which costs a network fee.`,
     sbtcOnlyHelper: `This pool pays out in sBTC only, once a cycle concludes.`,
-    maxFeeNote: `Claims below the max fee can't be paid out until you lower it.`,
+    maxFeeNote: `Taken out of each payout to pay for the Bitcoin transaction. Rewards can't be paid out until they've grown past it, so a higher max fee means fewer, bigger payouts.`,
+    minClaimNote(smallestValidSats: string | null) {
+      const base = `Optional. Below this amount only you can trigger a payout, so nobody else can spend your max fee on a trivial payout.`;
+      if (!smallestValidSats) return base;
+      return `${base} At least ${smallestValidSats} sats with your current max fee.`;
+    },
     updateHelper: `This setting applies to every future claim.`,
+    loadError: `We couldn't load your current payout preference, which is needed before your stake can be updated.`,
+  },
+  switchSignerManager: {
+    sectionLabel: `Signer manager`,
+    helper: `Picking a different pool moves your whole position at the start of the next cycle. You'll accept the new pool's terms before confirming.`,
+    customOptionName: `Custom signer manager`,
+    customOptionNameWhenCurrentCustom: `Different custom contract`,
+    customOptionMeta: `Enter a contract address`,
+    inputPlaceholder: `Enter a contract address`,
+    validateLabel: `Validate contract`,
+    validatingLabel: `Validating…`,
+    contractValidLabel: `Contract valid`,
+    poolTerms(poolName: string) {
+      return `I have read and accepted ${poolName}'s terms and conditions`;
+    },
+    customAcknowledgment: `I understand this is a custom signer-manager contract and rewards depend on its policies`,
+    confirmSwitch: `Confirm switch`,
+    confirmUpdate: `Confirm update`,
+    validateFirst: `Validate contract first`,
+    summary: {
+      signerManager: `Signer manager`,
+      enterContractHint: `Enter a contract address to validate`,
+      pool: `Pool`,
+      fee: `Fee`,
+      rewardsToken: `Rewards token`,
+      amountStaked: `Amount staked`,
+      movesInFullSuffix: `, moves in full`,
+      lockedUntil: `Locked until`,
+      effective: `Effective`,
+      effectiveCaption: `One transaction, no unstaking needed`,
+      customRewardsValue: `Set by the custom contract`,
+      setByContract: `Set by the contract`,
+    },
   },
   preparePhase: {
     title: `Staking is briefly paused`,
@@ -110,6 +168,7 @@ export const bitcoinStakingContent = {
     },
     submitErrors: {
       rejected: `The request was cancelled in Leather. Nothing was submitted.`,
+      walletUnavailable: `No wallet connected. Reconnect your wallet and try again.`,
       unknown: `Couldn't submit the transaction. Please try again.`,
     },
     viewInExplorer: `View in explorer`,
@@ -160,8 +219,11 @@ export const bitcoinStakingLabels = {
   rewardsToken: `Rewards token`,
   rewardsPayout: `Rewards payout`,
   totalStaked: `Total staked`,
+  tvl: `TVL`,
   historicalYield: `Historical yield`,
   fee: `Fee`,
+  selfClaimOnly: `Self-claim only`,
   startEarning: `Start earning`,
   viewPosition: `View position`,
+  switchPool: `Switch`,
 };

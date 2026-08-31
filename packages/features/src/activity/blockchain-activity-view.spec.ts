@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import type { BlockchainActivity, Money, Sip10Asset } from '@leather.io/models';
+import {
+  type BlockchainActivity,
+  type Money,
+  type Sip10Asset,
+  stacksProtocolActions,
+} from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { createBlockchainActivityView } from './blockchain-activity-view';
@@ -58,14 +63,14 @@ const receivedStx = {
 };
 
 describe('createBlockchainActivityView', () => {
-  it('renders a send: single avatar, verb title, transfer subtitle, signed amount', () => {
+  it('renders a send: single avatar, symbol title, transfer subtitle, signed amount', () => {
     const view = createBlockchainActivityView(
       makeActivity({ action: 'send', counterparty: 'SP123', balanceChanges: [sentBtc] }),
       deps
     );
     expect(view.avatar).toEqual({ kind: 'single', asset: btcAsset });
     expect(view.indicator).toBe('sent');
-    expect(view.title).toBe('Send BTC');
+    expect(view.title).toBe('BTC');
     expect(view.subtitle).toBe('Sent to SP123');
     expect(view.amount).toMatchObject({ direction: 'sent' });
     expect(view.amount?.crypto).toBeDefined();
@@ -96,7 +101,7 @@ describe('createBlockchainActivityView', () => {
       deps
     );
     expect(view.indicator).toBe('received');
-    expect(view.title).toBe('Receive STX');
+    expect(view.title).toBe('STX');
     expect(view.subtitle).toBe('Received from SP999');
   });
 
@@ -124,7 +129,7 @@ describe('createBlockchainActivityView', () => {
     );
     expect(failed.indicator).toBe('failed');
     expect(failed.subtitle).toBe('Sending failed to SP1');
-    expect(failed.title).toBe('Send BTC');
+    expect(failed.title).toBe('BTC');
   });
 
   it('renders a swap: dimmed-back pair, two-leg title, no right amount', () => {
@@ -146,6 +151,58 @@ describe('createBlockchainActivityView', () => {
     expect(view.title).toBe('5 BTC → 9 STX');
     expect(view.subtitle).toBe('Swapped via Bitflow');
     expect(view.amount).toBeUndefined();
+  });
+
+  it('renders a bridge whose counter-leg settles off-chain as a single-asset swap row', () => {
+    const receivedSbtc = {
+      direction: 'received' as const,
+      asset: sbtcAsset,
+      amount: { crypto: createMoney(1, 'sBTC', 8), quote: createMoney(50, 'USD') },
+    };
+    const view = createBlockchainActivityView(
+      makeActivity({
+        action: 'bridge',
+        protocolName: 'Example Protocol',
+        contract: {
+          type: 'call',
+          contractId: 'SP000.sbtc-deposit',
+          functionName: 'complete-deposit-wrapper',
+        },
+        balanceChanges: [receivedSbtc],
+      }),
+      deps
+    );
+    expect(view.avatar).toEqual({ kind: 'single', asset: sbtcAsset });
+    expect(view.indicator).toBe('swap');
+    expect(view.title).toBe('sBTC');
+    expect(view.subtitle).toBe('Bridged via Example Protocol');
+    expect(view.amount).toMatchObject({ direction: 'received' });
+    expect(view.amount?.crypto).toBeDefined();
+  });
+
+  it('renders a one-legged swap from the sent leg alone', () => {
+    const view = createBlockchainActivityView(
+      makeActivity({ action: 'swap', protocolName: 'Bitflow', balanceChanges: [sentBtc] }),
+      deps
+    );
+    expect(view.avatar).toEqual({ kind: 'single', asset: btcAsset });
+    expect(view.indicator).toBe('swap');
+    expect(view.title).toBe('BTC');
+    expect(view.amount).toMatchObject({ direction: 'sent' });
+  });
+
+  it('keeps the two-leg shape when both legs are present', () => {
+    const view = createBlockchainActivityView(
+      makeActivity({
+        action: 'bridge',
+        protocolName: 'Example Protocol',
+        balanceChanges: [sentBtc, receivedStx],
+      }),
+      deps
+    );
+    expect(view.avatar).toMatchObject({ kind: 'pair' });
+    expect(view.title).toBe('5 BTC → 9 STX');
+    expect(view.subtitle).toBe('Bridged via Example Protocol');
   });
 
   it('renders 2-token add-liquidity: undimmed pair, symbol-pair title, combined quote', () => {
@@ -179,12 +236,13 @@ describe('createBlockchainActivityView', () => {
       deps
     );
     expect(view.avatar).toEqual({ kind: 'single', asset: btcAsset });
-    expect(view.title).toBe('Add liquidity');
+    expect(view.title).toBe('BTC');
+    expect(view.subtitle).toBe('Added liquidity via Velar');
     expect(view.indicator).toBe('function');
     expect(view.amount).toMatchObject({ direction: 'sent' });
   });
 
-  it('renders stack with an action title and the sent amount', () => {
+  it('renders stack with hardcoded STX and the sent amount', () => {
     const sentStx = {
       direction: 'sent' as const,
       asset: stxAsset,
@@ -195,8 +253,9 @@ describe('createBlockchainActivityView', () => {
       deps
     );
     expect(view.avatar).toEqual({ kind: 'single', asset: stxAsset });
-    expect(view.title).toBe('Stack');
-    expect(view.subtitle).toBe('via Stacking DAO');
+    expect(view.title).toBe('STX');
+    expect(view.subtitle).toBe('Stacked via Stacking DAO');
+    expect(view.protocolName).toBe('Stacking DAO');
     expect(view.amount).toMatchObject({ direction: 'sent' });
     expect(view.amount?.quote.amount.toNumber()).toBe(7500);
   });
@@ -215,18 +274,19 @@ describe('createBlockchainActivityView', () => {
       }),
       deps
     );
-    expect(view.title).toBe('Complete unstack');
+    expect(view.title).toBe('STX');
     expect(view.indicator).toBe('function');
     expect(view.amount).toMatchObject({ direction: 'received' });
   });
 
-  it('drops the subtitle entirely when a protocol-action has no protocol name', () => {
+  it('drops "via {protocol}" when a protocol-action has no protocol name', () => {
     const view = createBlockchainActivityView(
       makeActivity({ action: 'stack', balanceChanges: [] }),
       deps
     );
-    expect(view.title).toBe('Stack');
-    expect(view.subtitle).toBe('');
+    expect(view.title).toBe('STX');
+    expect(view.subtitle).toBe('Stacked');
+    expect(view.protocolName).toBeUndefined();
   });
 
   it('renders contract-execution with paper icon and via-contract subtitle', () => {
@@ -319,6 +379,25 @@ describe('createBlockchainActivityView', () => {
       { formatMoney, translate }
     );
     expect(view.subtitle).toBe('SENT TO SP123');
+  });
+
+  it('never emits a subtitle that is a bare "via {protocol}" fragment', () => {
+    const statuses = ['pending', 'success', 'failed'] as const;
+    for (const action of stacksProtocolActions) {
+      for (const status of statuses) {
+        const view = createBlockchainActivityView(
+          makeActivity({
+            action,
+            status,
+            protocolName: 'Example Protocol',
+            counterparty: 'SP123',
+            balanceChanges: [sentBtc, receivedStx],
+          }),
+          deps
+        );
+        expect(view.subtitle.startsWith('via ')).toBe(false);
+      }
+    }
   });
 
   it('carries txid, chain, and timestamp for routing and grouping', () => {

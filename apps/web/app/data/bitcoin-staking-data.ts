@@ -16,7 +16,9 @@ export type BitcoinStakingProviderId =
   | 'planbetter'
   | 'restake'
   | 'xversePool'
-  | 'stackingDao';
+  | 'stackingDao'
+  | 'senseiNode'
+  | 'byosm';
 
 const specialSignerManagerContracts: Partial<Record<NetworkMode, string[]>> = pox5NetworkConfig
   .specialSignerManagerContracts?.length
@@ -34,6 +36,7 @@ export interface BitcoinStakingPool {
   signerManagerContracts: Partial<Record<NetworkMode, string[]>>;
   supportsBtcPayout: boolean;
   fixedFeeBips?: number;
+  requiresSelfClaim?: boolean;
 }
 
 const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPool> = {
@@ -56,6 +59,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
       'Enjoy automatic pool operations. Rewards accrue as sBTC each cycle and can be claimed once the cycle concludes.',
     signerManagerContracts: {
       mainnet: [
+        'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.fastpool-max500-signer-manager',
         'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fastpool-1-signer-manager',
         'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.fastpool-2-signer-manager',
       ],
@@ -98,12 +102,51 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     providerId: 'stackingDao',
     name: 'Stacking DAO',
     url: 'https://www.stackingdao.com',
-    description: 'Stake without your STX leaving your wallet.',
+    description:
+      'Stake without your STX leaving your wallet. You claim rewards yourself; the pool never claims on your behalf, which is why it charges no fee.',
     signerManagerContracts: {
-      mainnet: ['SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager'],
+      // Verified on-chain 2026-07-31; signer-manager-luganodes-v1 from the
+      // partner list is deliberately absent — it is not deployed on mainnet,
+      // and a nonexistent principal silently reads as zero delegated forever.
+      mainnet: [
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-blockdaemon-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-foundry-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-hashkey-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-infstones-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-juicy-stake-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-restake-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-xverse-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-1-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-2-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-3-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-4-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-5-v1',
+        'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.signer-manager-bond-6-v1',
+      ],
     },
     supportsBtcPayout: false,
     fixedFeeBips: 0,
+    requiresSelfClaim: true,
+  },
+  senseiNode: {
+    providerId: 'senseiNode',
+    name: 'SenseiNode',
+    url: 'https://senseinode.com',
+    description: '',
+    signerManagerContracts: {
+      mainnet: ['SP20XZGWBWSMRE94WDJ6YJ1EKPJ55RGRGK4JDJHNK.signer-manager-pox5'],
+    },
+    supportsBtcPayout: true,
+  },
+  byosm: {
+    providerId: 'byosm',
+    name: 'Bring your own signer manager',
+    url: 'https://www.stacks.co/bitcoin-staking',
+    description:
+      'Stake through any signer-manager contract that implements the standard interface. Verify the operator of the contract before staking — Leather is not liable for the conduct of third parties.',
+    signerManagerContracts: {},
+    supportsBtcPayout: true,
   },
 };
 
@@ -116,6 +159,8 @@ const stakingPoolSlugMap = {
   restake: 'restake',
   'xverse-pool': 'xversePool',
   'stacking-dao': 'stackingDao',
+  'sensei-node': 'senseiNode',
+  byosm: 'byosm',
 } as const satisfies Record<string, BitcoinStakingProviderId>;
 
 export type StakingPoolSlug = keyof typeof stakingPoolSlugMap;
@@ -160,4 +205,30 @@ export function isPoolAvailableOnNetwork(
   networkMode: NetworkMode
 ): boolean {
   return (pool.signerManagerContracts[networkMode]?.length ?? 0) > 0;
+}
+
+// Stacking DAO is the one pool that cannot be staked against pox-5 directly:
+// its signer-manager's validate-stake! only passes while their native-pool
+// wrapper holds a transient is-delegating flag, so stake/stake-update/unstake
+// must be sent to the wrapper as delegate/delegate-update/undelegate (same
+// trailing args; delegate drops start-burn-ht and signer-calldata, which the
+// wrapper supplies itself). Their claim-staker-rewards is also non-standard:
+// it takes no staker principal and always claims for tx-sender. Everything
+// about this bespoke flow is keyed off the map below; no other pool should
+// ever be added here.
+const stackingDaoWrapperBySignerManager: Record<string, string> = {
+  'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-signer-manager':
+    'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-v1',
+};
+
+export function getStackingDaoWrapperContract(signerManagerContractId: string): string | undefined {
+  return stackingDaoWrapperBySignerManager[signerManagerContractId];
+}
+
+export function isStackingDaoSignerManager(signerManagerContractId: string): boolean {
+  return signerManagerContractId in stackingDaoWrapperBySignerManager;
+}
+
+export function isStackingDaoWrapperContract(contractId: string): boolean {
+  return Object.values(stackingDaoWrapperBySignerManager).includes(contractId);
 }

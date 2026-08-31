@@ -1,5 +1,4 @@
 import {
-  ExtensionMethods,
   InternalMethods,
   Message,
   SIGN_OUT_MESSAGE,
@@ -12,10 +11,7 @@ import type { MonitoredAddress } from '@background/monitors/address-monitor';
 /**
  * Popup <-> Background Script
  */
-type BackgroundMessage<Msg extends ExtensionMethods, Payload = undefined> = Omit<
-  Message<Msg, Payload>,
-  'source'
->;
+type BackgroundMessage<Msg extends InternalMethods, Payload = undefined> = Message<Msg, Payload>;
 
 type OriginatingTabClosed = BackgroundMessage<
   InternalMethods.OriginatingTabClosed,

@@ -3,7 +3,6 @@ import { useStackingClient } from '~/features/stacking/providers/stacking-client
 
 import {
   createGetAccountExtendedBalancesQueryOptions,
-  createGetPoxInfoQueryOptions,
   createGetStatusQueryOptions,
 } from '@leather.io/query';
 
@@ -11,12 +10,6 @@ export function useGetStatusQuery() {
   const { client } = useStackingClient();
   if (!client) throw new Error('Expected client to be defined.');
   return useQuery(createGetStatusQueryOptions({ client }));
-}
-
-export function useGetPoxInfoQuery() {
-  const { client } = useStackingClient();
-  if (!client) throw new Error('Expected client to be defined.');
-  return useQuery(createGetPoxInfoQueryOptions({ client }));
 }
 
 export function useGetAccountExtendedBalancesQuery() {

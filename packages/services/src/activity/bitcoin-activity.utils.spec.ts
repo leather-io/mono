@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { BitcoinTransaction } from '@leather.io/models';
+import { dateToUnixTimestamp } from '@leather.io/utils';
 
 import { mapBitcoinActivity } from './bitcoin-activity.utils';
 
@@ -83,5 +84,30 @@ describe('mapBitcoinActivity', () => {
       })
     );
     expect(result?.status).toBe('pending');
+  });
+
+  it('keeps the mempool first-seen time of an unconfirmed tx', () => {
+    const result = mapBitcoinActivity(
+      tx({
+        height: undefined,
+        time: 500,
+        vin: [vin('10000', { owned: true, address: 'mine' })],
+        vout: [vout('9500', { address: 'recipient' })],
+      })
+    );
+    expect(result?.timestamp).toBe(500);
+  });
+
+  it('falls back to now when an unconfirmed tx carries no time', () => {
+    const before = dateToUnixTimestamp(new Date());
+    const result = mapBitcoinActivity(
+      tx({
+        height: undefined,
+        time: undefined,
+        vin: [vin('10000', { owned: true, address: 'mine' })],
+        vout: [vout('9500', { address: 'recipient' })],
+      })
+    );
+    expect(result?.timestamp).toBeGreaterThanOrEqual(before);
   });
 });

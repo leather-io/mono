@@ -1,4 +1,4 @@
-import BitcoinApp, { DefaultWalletPolicy } from 'ledger-bitcoin';
+import BitcoinApp, { DefaultWalletPolicy } from '@ledgerhq/ledger-bitcoin';
 
 import {
   createWalletIdDecoratedPath,

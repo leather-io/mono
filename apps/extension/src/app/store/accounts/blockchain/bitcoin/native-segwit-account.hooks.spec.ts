@@ -89,8 +89,8 @@ describe(useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero.
 
     const entries = requireDefined(psbt.data.inputs[0].bip32Derivation);
     expect(entries).toHaveLength(1);
-    expect(entries[0].pubkey.equals(accountPubkey)).toBe(true);
-    expect(entries[0].masterFingerprint.toString('hex')).toBe(masterFingerprintHex);
+    expect(accountPubkey.equals(entries[0].pubkey)).toBe(true);
+    expect(Buffer.from(entries[0].masterFingerprint).toString('hex')).toBe(masterFingerprintHex);
     expect(entries[0].path).toBe(derivationPath);
   });
 
@@ -112,7 +112,7 @@ describe(useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero.
 
     const entries = requireDefined(psbt.data.inputs[0].bip32Derivation);
     expect(entries).toHaveLength(1);
-    expect(entries[0].masterFingerprint.toString('hex')).toBe('11223344');
+    expect(Buffer.from(entries[0].masterFingerprint).toString('hex')).toBe('11223344');
   });
 
   test('adds the account derivation alongside a co-signer derivation', () => {
@@ -133,7 +133,7 @@ describe(useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero.
 
     const entries = requireDefined(psbt.data.inputs[0].bip32Derivation);
     expect(entries).toHaveLength(2);
-    expect(entries.some(entry => entry.pubkey.equals(cosignerPubkey))).toBe(true);
-    expect(entries.some(entry => entry.pubkey.equals(accountPubkey))).toBe(true);
+    expect(entries.some(entry => cosignerPubkey.equals(entry.pubkey))).toBe(true);
+    expect(entries.some(entry => accountPubkey.equals(entry.pubkey))).toBe(true);
   });
 });

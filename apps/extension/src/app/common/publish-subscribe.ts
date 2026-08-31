@@ -1,8 +1,7 @@
 import type { Transaction } from '@scure/btc-signer';
-import type { SignatureData } from '@stacks/connect-jwt';
 import type { StacksTransactionWire } from '@stacks/transactions';
 
-import type { UnsignedMessage } from '@shared/signature/signature-types';
+import type { SignatureData, UnsignedMessage } from '@shared/signature/signature-types';
 
 type PubTypeFn<E> = <Key extends string & keyof E>(
   event: Key,
@@ -70,7 +69,6 @@ export interface GlobalAppEvents {
   ledgerStacksMessageSigningCancelled: {
     unsignedMessage: UnsignedMessage;
   };
-  ledgerJwtMessageSigningComplete: unknown;
 }
 
 export const appEvents = createPublishSubscribe<GlobalAppEvents>();

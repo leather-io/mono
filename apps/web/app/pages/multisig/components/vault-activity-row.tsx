@@ -1,4 +1,8 @@
 import { styled } from 'leather-styles/jsx';
+import {
+  formatActivityActionStatusLine,
+  getActivityActionLine,
+} from '~/features/multisig/activity/activity-action-line';
 import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
 import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
@@ -9,18 +13,13 @@ import {
 } from '@leather.io/features';
 import {
   BlockchainActivityAvatarIcon,
+  BlockchainActivityIndicatorIcon,
   Button,
-  FailedIcon,
-  FunctionActivityIcon,
   ListItemBox,
-  ReceivedIcon,
-  SentIcon,
-  SwapIcon,
 } from '@leather.io/ui';
-import { assertUnreachable } from '@leather.io/utils';
 
 import { formatRelativeTime } from '../tx/relative-time';
-import { PendingIndicatorIcon, type TransactionRowScale, scaleConfig } from './transaction-row';
+import { type TransactionRowScale, scaleConfig } from './transaction-row';
 
 export interface ActivityRowLocation {
   vault?: string;
@@ -35,6 +34,7 @@ interface VaultActivityRowProps {
   needsAttention?: boolean;
   location?: ActivityRowLocation;
   href?: string;
+  variant?: 'boxed' | 'plain';
   onClick?(): void;
 }
 
@@ -61,28 +61,10 @@ function resolveValueColor(
   indicator: BlockchainActivityIndicator,
   direction: BlockchainActivityDirection
 ) {
-  if (indicator === 'pending' || indicator === 'failed') return 'ink.text-subdued';
+  if (indicator === 'pending' || indicator === 'failed' || indicator === 'cancelled')
+    return 'ink.text-subdued';
   if (direction === 'received') return 'green.action-primary-default';
   return 'ink.text-primary';
-}
-
-export function renderActivityIndicator(indicator: BlockchainActivityIndicator, size: number) {
-  switch (indicator) {
-    case 'pending':
-      return <PendingIndicatorIcon size={size} />;
-    case 'failed':
-      return <FailedIcon width={size} height={size} />;
-    case 'received':
-      return <ReceivedIcon width={size} height={size} />;
-    case 'swap':
-      return <SwapIcon width={size} height={size} />;
-    case 'function':
-      return <FunctionActivityIcon width={size} height={size} />;
-    case 'sent':
-      return <SentIcon width={size} height={size} />;
-    default:
-      return assertUnreachable(indicator);
-  }
 }
 
 // Plain string, not an element, so ItemLayout applies its caption styles. In
@@ -104,23 +86,26 @@ export function VaultActivityRow({
   needsAttention,
   location,
   href,
+  variant = 'boxed',
   onClick,
 }: VaultActivityRowProps) {
   const { view } = item;
   const cfg = scaleConfig[scale];
   const amount = view.amount;
   const valueColor = amount ? resolveValueColor(view.indicator, amount.direction) : undefined;
+  const actionLine = getActivityActionLine(view);
 
   return (
     <ListItemBox
       density={scale === 'compact' ? 'compact' : 'default'}
+      variant={variant}
       highlight={needsAttention ? 'attention' : undefined}
       href={href}
       onClick={onClick}
       leading={
         <BlockchainActivityAvatarIcon
           avatar={view.avatar}
-          indicator={renderActivityIndicator(view.indicator, 12)}
+          indicator={<BlockchainActivityIndicatorIcon indicator={view.indicator} size={12} />}
         />
       }
       title={
@@ -133,7 +118,9 @@ export function VaultActivityRow({
           textOverflow="ellipsis"
           whiteSpace="nowrap"
         >
-          {view.subtitle || view.title || '—'}
+          {actionLine
+            ? formatActivityActionStatusLine(view, actionLine)
+            : view.subtitle || view.title || '—'}
         </styled.span>
       }
       caption={captionText(item, location)}

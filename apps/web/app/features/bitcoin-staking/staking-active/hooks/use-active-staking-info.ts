@@ -39,7 +39,9 @@ export function useActiveStakingInfo(): UseActiveStakingInfoResult {
   const secondsUntilNextCycleQuery = usePox5SecondsUntilNextCycleQuery();
 
   const signerManagerContractId =
-    position.status === 'active' ? position.info.signerManagerContractId : undefined;
+    position.status === 'active' && position.pool?.supportsBtcPayout !== false
+      ? position.info.signerManagerContractId
+      : undefined;
   const payoutPreferenceQuery = usePox5PayoutPreferenceQuery(signerManagerContractId);
 
   if (position.status !== 'active') {
@@ -70,7 +72,7 @@ export function useActiveStakingInfo(): UseActiveStakingInfoResult {
           ? Math.round(secondsUntilNextCycleQuery.data / (60 * 60 * 24))
           : null,
       claimable,
-      payoutPreference: payoutPreferenceQuery.data ?? null,
+      payoutPreference: payoutPreferenceQuery.data?.preference ?? null,
     },
   };
 }

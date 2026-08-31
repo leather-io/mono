@@ -1,17 +1,16 @@
 import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import type { ColorToken } from 'leather-styles/tokens';
-import { BasicHoverCard } from '~/components/basic-hover-card';
-import { ProviderIcon } from '~/components/icons/provider-icon';
 import { InfoGrid } from '~/components/info-grid/info-grid';
+import { InfoTooltipIcon } from '~/components/info-tooltip-icon';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { EM_DASH } from '~/constants/constants';
 import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { BitcoinStakingPool } from '~/data/bitcoin-staking-data';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-
-import { InfoCircleIcon } from '@leather.io/ui';
+import { StakingPoolAvatar } from '~/pages/bitcoin-staking/components/staking-pool-avatar';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import type { CycleClockInfo } from '../utils/pox5-cycle-clock';
 import { PoolFeeValue } from './pool-fee-value';
@@ -19,7 +18,7 @@ import { PoolFeeValue } from './pool-fee-value';
 const CLOSING_SOON_HOURS = 48;
 const SECONDS_PER_HOUR = 3600;
 
-export type StakingCycleStatus =
+type StakingCycleStatus =
   | { kind: 'open'; secondsUntilChangesClose: number }
   | { kind: 'paused'; secondsUntilStakingReopens: number };
 
@@ -35,6 +34,8 @@ export function cycleStatusFromClock(clock: CycleClockInfo): StakingCycleStatus 
 
 interface StakingPoolOverviewProps {
   pool: BitcoinStakingPool;
+  signerManagerContractId?: string;
+  totalStakedMicroStx: bigint | null;
   nextCycleNumber: number | null;
   daysUntilNextCycle: number | null;
   cycleStatus?: StakingCycleStatus | null;
@@ -46,41 +47,6 @@ function humanizeSeconds(seconds: number) {
   const hours = Math.max(1, Math.ceil(seconds / SECONDS_PER_HOUR));
   if (hours < CLOSING_SOON_HOURS) return `${hours}h`;
   return `${Math.round(hours / 24)} days`;
-}
-
-interface InfoTooltipIconProps {
-  title: string;
-  explanation: string;
-  ariaLabel: string;
-  size?: number;
-  color?: ColorToken;
-}
-
-// Kept in the text flow rather than made a flex sibling, so the icon follows the
-// last word wherever the label wraps instead of detaching to the right. A flex
-// parent would blockify HoverCard.Trigger's anchor and break that.
-function InfoTooltipIcon({
-  title,
-  explanation,
-  ariaLabel,
-  size = 16,
-  color = 'ink.text-subdued',
-}: InfoTooltipIconProps) {
-  return (
-    <BasicHoverCard title={title} content={explanation}>
-      <styled.span
-        display="inline-flex"
-        alignItems="center"
-        height="1lh"
-        verticalAlign="top"
-        ml="space.01"
-        cursor="help"
-        aria-label={ariaLabel}
-      >
-        <InfoCircleIcon variant="small" width={size} height={size} color={color} />
-      </styled.span>
-    </BasicHoverCard>
-  );
 }
 
 // Inline elements only: ValueDisplayer renders the name inside an h4, which
@@ -145,6 +111,8 @@ function CycleStatusLine({ cycleStatus }: { cycleStatus: StakingCycleStatus }) {
 
 export function StakingPoolOverview({
   pool,
+  signerManagerContractId,
+  totalStakedMicroStx,
   nextCycleNumber,
   daysUntilNextCycle,
   cycleStatus,
@@ -167,7 +135,7 @@ export function StakingPoolOverview({
         >
           <Flex alignItems="center" gap="space.02">
             <Box flexShrink={0}>
-              <ProviderIcon providerId={pool.providerId} size="32" />
+              <StakingPoolAvatar providerId={pool.providerId} size="md" />
             </Box>
             <styled.h4 textStyle="label.01">{pool.name}</styled.h4>
           </Flex>
@@ -198,16 +166,36 @@ export function StakingPoolOverview({
           name={
             <InfoLabel
               label={bitcoinStakingLabels.fee}
-              explanation={bitcoinStakingContent.poolOverviewInfo.fee}
+              explanation={
+                pool.requiresSelfClaim
+                  ? bitcoinStakingContent.selfClaim.explanation
+                  : bitcoinStakingContent.poolOverviewInfo.fee
+              }
             />
           }
-          value={<PoolFeeValue pool={pool} />}
+          value={<PoolFeeValue pool={pool} signerManagerContractId={signerManagerContractId} />}
         />
       </InfoGrid.Cell>
-      <InfoGrid.Cell
-        gridColumn={['1 / span 2', '1 / span 2', '2 / span 2']}
-        gridRow={['3', '3', '2']}
-      >
+      <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['3', '3', '2']}>
+        <ValueDisplayer
+          name={
+            <InfoLabel
+              label={bitcoinStakingLabels.totalStaked}
+              explanation={bitcoinStakingContent.poolOverviewInfo.totalStaked}
+            />
+          }
+          value={
+            totalStakedMicroStx === null ? (
+              EM_DASH
+            ) : (
+              <span data-testid="pool-total-staked">
+                {toHumanReadableMicroStx(totalStakedMicroStx, 0)}
+              </span>
+            )
+          }
+        />
+      </InfoGrid.Cell>
+      <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['3', '3', '2']}>
         <ValueDisplayer
           name={
             <InfoLabel

@@ -32,6 +32,11 @@ const providers = {
     name: 'Stacking DAO',
     url: 'https://www.stackingdao.com',
   },
+  senseiNode: {
+    providerId: 'senseiNode',
+    name: 'SenseiNode',
+    url: 'https://senseinode.com',
+  },
   lisa: {
     providerId: 'lisa',
     name: 'LISA',
@@ -56,7 +61,7 @@ const liquidStackingPoolData = {
     ...providers.stackingDao,
     slug: 'stacking-dao',
     estApr: '5%',
-    fee: '5%',
+    fee: '10%',
     payout: 'stSTX',
   },
   lisa: {

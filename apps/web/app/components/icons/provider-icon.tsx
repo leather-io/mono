@@ -14,8 +14,15 @@ const stackingProviderIconConfig: Record<ProviderId, ProviderIconConfig> = {
   restake: { src: '/icons/restake.webp', fill: '#124044' },
   xversePool: { src: '/icons/xverse.webp', fill: 'black' },
   stackingDao: { src: '/icons/stacking-dao.webp', fill: '#1C3830' },
+  senseiNode: { src: '/icons/senseinode.svg', fill: '#3F3FF9' },
   lisa: { src: '/icons/lisa.webp', fill: '#FB9DF1' },
 };
+
+export function getProviderIconSrc(providerId: string): string | undefined {
+  const provider = providerIdSchema.safeParse(providerId);
+  if (!provider.success) return undefined;
+  return stackingProviderIconConfig[provider.data].src;
+}
 
 interface ProviderIconProps {
   providerId: string;

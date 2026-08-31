@@ -91,7 +91,7 @@ test.describe('Token details', () => {
         const receiveButton = page.getByTestId(TokenDetailsSelectors.TokenDetailsReceiveButton);
         await receiveButton.click();
 
-        await expect(page.getByText('RECEIVE BTC')).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Receive BTC' })).toBeVisible();
       });
     });
 
@@ -167,7 +167,7 @@ test.describe('Token details', () => {
         const receiveButton = page.getByTestId(TokenDetailsSelectors.TokenDetailsReceiveButton);
         await receiveButton.click();
 
-        await expect(page.getByText('RECEIVE STX')).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Receive STX' })).toBeVisible();
       });
     });
   });
@@ -219,7 +219,7 @@ test.describe('Token details', () => {
         const receiveButton = page.getByTestId(TokenDetailsSelectors.TokenDetailsReceiveButton);
         await receiveButton.click();
 
-        await expect(page.getByText('RECEIVE STX')).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Receive STX' })).toBeVisible();
       });
     });
   });
@@ -319,7 +319,7 @@ test.describe('Token details', () => {
         const receiveButton = page.getByTestId(TokenDetailsSelectors.TokenDetailsReceiveButton);
         await receiveButton.click();
 
-        await expect(page.getByText('RECEIVE STX')).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Receive STX' })).toBeVisible();
       });
     });
   });

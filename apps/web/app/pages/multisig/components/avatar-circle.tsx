@@ -39,6 +39,7 @@ export function AvatarCircle({ name, size = 'sm' }: AvatarCircleProps) {
       variant="circle"
       size={size}
       fallback={initial}
+      fallbackDelayMs={0}
       className={cx(toneClass[toneForName(name)], fallbackFontClass[size])}
     />
   );

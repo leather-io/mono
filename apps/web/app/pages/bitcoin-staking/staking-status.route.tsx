@@ -6,7 +6,7 @@ import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { stakingProviderIdToSlug } from '~/data/bitcoin-staking-data';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
 import { Page } from '~/layouts/page/page';
-import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { byosmPaths, stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { LoadingSpinner } from '@leather.io/ui';
@@ -24,7 +24,7 @@ function StakingStatusResolver() {
 
   if (!stacksAccount) {
     return (
-      <Stack gap="space.02" maxWidth="60ch" mt="space.05">
+      <Stack gap="space.02" maxWidth="60ch">
         <styled.h2 textStyle="heading.05">
           {bitcoinStakingContent.stakingStatus.connectTitle}
         </styled.h2>
@@ -37,16 +37,19 @@ function StakingStatusResolver() {
 
   if (isLoading) return <LoadingSpinner />;
 
-  // A custom signer-manager has no pool page, and pending or absent positions
-  // are both already represented on the overview, so everything else lands
-  // there rather than 404ing on a pool slug we cannot resolve.
-  if (position.status === 'active' && position.pool) {
-    return (
-      <Navigate
-        replace
-        to={stakingPaths.active(stakingProviderIdToSlug(position.pool.providerId))}
-      />
-    );
+  // A custom signer-manager resolves to the byosm pool pages; pending or
+  // absent positions are both already represented on the overview, so they
+  // land there instead.
+  if (position.status === 'active') {
+    if (position.pool) {
+      return (
+        <Navigate
+          replace
+          to={stakingPaths.active(stakingProviderIdToSlug(position.pool.providerId))}
+        />
+      );
+    }
+    return <Navigate replace to={byosmPaths.active(position.info.signerManagerContractId)} />;
   }
 
   return <Navigate replace to={stakingPaths.index} />;
@@ -56,9 +59,11 @@ export default function StakingStatusRoute() {
   return (
     <Page>
       <Page.Header title="Your staking" backTo={stakingPaths.index} />
-      <WhenClient>
-        <StakingStatusResolver />
-      </WhenClient>
+      <Page.Content>
+        <WhenClient>
+          <StakingStatusResolver />
+        </WhenClient>
+      </Page.Content>
     </Page>
   );
 }

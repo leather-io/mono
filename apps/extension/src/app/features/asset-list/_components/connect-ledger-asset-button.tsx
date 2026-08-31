@@ -18,7 +18,9 @@ export function ConnectLedgerButton({ chain }: ConnectLedgerButtonProps) {
   const location = useLocation();
 
   function onClick() {
-    void navigate(`${chain}/connect-your-ledger`, {
+    const firstStepRoute =
+      chain === 'stacks' ? RouteUrls.LedgerStacksAddressStandard : RouteUrls.ConnectLedger;
+    void navigate(`${chain}/${firstStepRoute}`, {
       replace: true,
       state: {
         [immediatelyAttemptLedgerConnection]: false,

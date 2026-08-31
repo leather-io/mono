@@ -16,11 +16,7 @@ import StacksApp, {
 } from '@zondax/ledger-stacks';
 import { compare } from 'compare-versions';
 
-import {
-  makeStxDerivationPath,
-  stxDerivationWithAccount,
-  whenStacksChainId,
-} from '@leather.io/stacks';
+import { whenStacksChainId } from '@leather.io/stacks';
 
 import {
   LEDGER_APPS_MAP,
@@ -32,9 +28,9 @@ import {
 } from './generic-ledger-utils';
 
 export function requestPublicKeyForStxAccount(app: StacksApp) {
-  return async (index: number) =>
+  return async (derivationPath: string) =>
     app.getAddressAndPubKey(
-      makeStxDerivationPath(index),
+      derivationPath,
       // We pass mainnet as it expects something, however this is so it can return a formatted address
       // We only need the public key, and can derive the address later in any network format
       AddressVersion.MainnetSingleSig
@@ -42,8 +38,8 @@ export function requestPublicKeyForStxAccount(app: StacksApp) {
 }
 
 export function showStxAddressOnDevice(app: StacksApp) {
-  return async (index: number, version: AddressVersion): Promise<ResponseAddress> =>
-    app.showAddressAndPubKey(makeStxDerivationPath(index), version);
+  return async (derivationPath: string, version: AddressVersion): Promise<ResponseAddress> =>
+    app.showAddressAndPubKey(derivationPath, version);
 }
 
 export function stacksChainIdToSingleSigAddressVersion(chainId: number): AddressVersion {
@@ -92,18 +88,17 @@ export const prepareLedgerDeviceStacksAppConnection = prepareLedgerDeviceForAppF
 ) as (args: PrepareLedgerDeviceConnectionArgs) => Promise<StacksApp>;
 
 export function signLedgerStacksTransaction(app: StacksApp) {
-  return async (payload: Buffer, accountIndex: number) =>
-    app.sign(stxDerivationWithAccount.replace('{account}', accountIndex.toString()), payload);
+  return async (payload: Buffer, derivationPath: string) => app.sign(derivationPath, payload);
 }
 
 export function signLedgerStacksUtf8Message(app: StacksApp) {
-  return async (payload: string, accountIndex: number): Promise<ResponseSign> =>
-    app.sign_msg(makeStxDerivationPath(accountIndex), payload);
+  return async (payload: string, derivationPath: string): Promise<ResponseSign> =>
+    app.sign_msg(derivationPath, payload);
 }
 
 export function signLedgerStacksStructuredMessage(app: StacksApp) {
-  return async (domain: string, payload: string, accountIndex: number): Promise<ResponseSign> =>
-    app.sign_structured_msg(makeStxDerivationPath(accountIndex), domain, payload);
+  return async (domain: string, payload: string, derivationPath: string): Promise<ResponseSign> =>
+    app.sign_structured_msg(derivationPath, domain, payload);
 }
 
 export function signStacksTransactionWithSignature(transaction: string, signatureVRS: Buffer) {
@@ -130,7 +125,7 @@ export function isStacksLedgerAppClosed(response: ResponseVersion) {
 
 // Minimum version required to read master key fingerprint
 // This enables proper multi-wallet support for Ledger Stacks accounts
-export const MINIMUM_STACKS_APP_VERSION = '0.26.4';
+export const MINIMUM_STACKS_APP_VERSION = '0.26.17';
 
 interface StacksVersionCheckResult {
   meetsMinimum: boolean;

@@ -8,10 +8,8 @@ import {
   PoxConditionCode,
   type PoxPostConditionWire,
   addressToString,
-  parsePrincipalString,
 } from '@stacks/transactions';
 
-import { getPostCondition } from '@leather.io/stacks';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { stacksValue } from '@app/common/stacks-utils';
@@ -102,44 +100,6 @@ export function getPoxConditionCodeMessage(code: PoxConditionCode, isSender: boo
     default:
       assertUnreachable(code);
   }
-}
-
-/**
- * This method updates a post conditions principal
- * value to the current address principal if and only if
- * the `stxAddress` value from the original tx payload
- * matches the address in the original post condition
- *
- * This is used when a user might switch accounts during
- * the signing process. One can assume that if the post
- * condition has the principal set to the same value as the
- * `stxAddress` value, it should be updated when they switch
- * accounts.
- */
-export function handlePostConditions(
-  postConditions: PostConditionWire[],
-  payloadAddress: string,
-  currentAddress: string
-): PostConditionWire[] {
-  const payloadPrincipal = parsePrincipalString(payloadAddress);
-  const currentAddressPrincipal = parsePrincipalString(currentAddress);
-
-  return postConditions.map(postCondition => {
-    const formattedPostCondition = getPostCondition(postCondition);
-    if (
-      'contractName' in formattedPostCondition.principal ||
-      !('address' in formattedPostCondition.principal)
-    )
-      return formattedPostCondition;
-    const { principal, ...payload } = formattedPostCondition;
-    const sameType = payloadPrincipal.address.type === principal.address.type;
-    const sameHash = payloadPrincipal.address.hash160 === principal.address.hash160;
-    const isOriginatorAddress = sameHash && sameType;
-    return {
-      ...payload,
-      principal: isOriginatorAddress ? currentAddressPrincipal : principal,
-    };
-  });
 }
 
 function getTitleFromConditionCode(

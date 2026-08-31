@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 
 import type {
   AuthNetworkId,
@@ -9,7 +10,7 @@ import type {
   VaultAccountSigner,
   VaultMember,
 } from '@leather.io/models';
-import { BlockchainActivityAvatarIcon, ListContainer, ListItemBox } from '@leather.io/ui';
+import { ListContainer, ListItemBox } from '@leather.io/ui';
 
 import { AccountDetailsCard } from '../../../multisig/account/components/account-details-card';
 import { AvatarCircle } from '../../../multisig/components/avatar-circle';
@@ -17,12 +18,10 @@ import { AvatarSq } from '../../../multisig/components/avatar-sq';
 import { Badge, type BadgeVariant } from '../../../multisig/components/badge';
 import { ChainAvatar } from '../../../multisig/components/chain-avatar';
 import { ChainPill } from '../../../multisig/components/chain-pill';
-import { CopyAddress } from '../../../multisig/components/copy-address';
 import { MultisigErrorState } from '../../../multisig/components/multisig-error-state';
 import { MultisigHero } from '../../../multisig/components/multisig-hero';
 import { TextField } from '../../../multisig/components/text-field';
 import { VaultActivityList } from '../../../multisig/components/vault-activity-list';
-import { renderActivityIndicator } from '../../../multisig/components/vault-activity-row';
 import { CreateVaultTile } from '../../../multisig/dashboard/components/create-vault-tile';
 import { vaultThemeFromName } from '../../../multisig/multisig-tokens';
 import { VaultStatusCard } from '../../../multisig/vault/components/vault-status-card';
@@ -30,7 +29,6 @@ import {
   mockAccountNames,
   mockAccountThresholds,
   mockActivityItems,
-  mockStxAvatar,
   mockVaultNames,
 } from '../../data/activity-mock-data';
 
@@ -139,7 +137,7 @@ export function ComponentGalleryPage() {
 
       <Section
         title="Balance heroes"
-        note="Account, vault and tx-detail share the bold MultisigHero (variant=balance). Tx-detail leads with the asset avatar + indicator and a proposer byline."
+        note="Account, vault and tx-detail share the bold MultisigHero (variant=balance). Tx-detail adds a proposer byline below the title."
       >
         <Flex direction="column" gap="space.05" maxWidth="640px">
           <Slot label="Account hero — balance variant" width="100%">
@@ -162,21 +160,16 @@ export function ComponentGalleryPage() {
             <MultisigHero
               variant="balance"
               themeId={orangeTheme}
-              media={
-                <BlockchainActivityAvatarIcon
-                  size={48}
-                  avatar={mockStxAvatar}
-                  indicator={renderActivityIndicator('sent', 16)}
-                />
-              }
               primary={<styled.span>Send STX</styled.span>}
-              secondary={
+            >
+              <styled.div mt="space.02" textStyle="label.02">
                 <Flex alignItems="center" gap="space.02">
-                  <styled.span>Proposed 2h ago by Amber</styled.span>
-                  <AvatarCircle name="Amber" size="xs" />
+                  <styled.span>Proposed 2h ago by</styled.span>
+                  <AvatarCircle name="Amber" size="sm" />
+                  <styled.span>Amber</styled.span>
                 </Flex>
-              }
-            />
+              </styled.div>
+            </MultisigHero>
           </Slot>
         </Flex>
       </Section>
