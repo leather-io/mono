@@ -6,7 +6,6 @@ import type { RpcEndpointMap, RpcMethodNames } from '@leather.io/rpc';
 export type RpcCategory =
   | 'General'
   | 'Bitcoin'
-  | 'Sighash'
   | 'Stacks'
   | 'Staking'
   | 'Multisig'

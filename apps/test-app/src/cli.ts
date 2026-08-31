@@ -7,7 +7,6 @@
 // transaction someone already got out of a wallet.
 //
 // Run it with: pnpm --filter @leather.io/test-app catalog -- <command>
-import { builderCombinationSpecs, specBuilders } from './methods/builders';
 import { rpcMethods, rpcTags, specsWithTag } from './rpc-methods';
 import { scenarios } from './scenarios/scenarios';
 import type { NetworkMode, RpcMethodSpec } from './types';
@@ -21,8 +20,6 @@ const usage = `Leather RPC test app — catalog and offline verifiers
   list [--tag <tag>] [--category <name>]   every spec, as JSON
   tags                                     every tag in the catalog
   scenarios                                every multi-step flow
-  builders                                 request families declared as choices
-  builder <id>                             one builder's curated combinations
   verify-psbt <hex>                        per-input signatures + sighash semantics
   decode-psbt <hex> [--mode <mode>]        readable inputs, outputs and fee
   decode-stx <hex>                         sender, nonce, fee, post conditions, payload
@@ -84,29 +81,6 @@ export function run(argv: string[]): void {
     case 'tags':
       print(rpcTags().map(tag => ({ tag, count: specsWithTag(tag).length })));
       return;
-    case 'builders':
-      print(
-        specBuilders.map(builder => ({
-          id: builder.id,
-          label: builder.label,
-          description: builder.description,
-          category: builder.category,
-          combinations: builder.combinations().length,
-          fields: builder.fields.map(field => ({
-            key: field.key,
-            label: field.label,
-            options: field.options(builder.defaults).map(option => option.label),
-          })),
-          defaults: builder.defaults,
-        }))
-      );
-      return;
-    case 'builder': {
-      const builderId = argv[1];
-      if (!builderId || builderId.startsWith('--')) throw new Error('builder needs an id');
-      print(builderCombinationSpecs(builderId).map(summarize));
-      return;
-    }
     case 'scenarios':
       print(
         scenarios.map(scenario => ({
