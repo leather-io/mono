@@ -1,17 +1,33 @@
-import type { AuthIdentity, AuthNetworkId } from '@leather.io/models';
+import { SIGN_IN_MESSAGE_FIRST_LINE } from '@leather.io/constants';
+import type { AuthApplication, AuthIdentity, AuthNetworkId } from '@leather.io/models';
 
 export interface SignInMessage {
   message: string;
   timestamp: number;
 }
 
-export function buildSignInMessage(
-  network: AuthNetworkId,
-  timestamp: number = Math.floor(Date.now() / 1000)
-): SignInMessage {
+export interface BuildSignInMessageParams {
+  network: AuthNetworkId;
+  domain: string;
+  application: AuthApplication[];
+  timestamp?: number;
+}
+
+export function buildSignInMessage({
+  network,
+  domain,
+  application,
+  timestamp = Math.floor(Date.now() / 1000),
+}: BuildSignInMessageParams): SignInMessage {
   const networkMode = network.split(':')[1];
   return {
-    message: ['Sign in to Leather', `Network: ${networkMode}`, `Issued: ${timestamp}`].join('\n'),
+    message: [
+      SIGN_IN_MESSAGE_FIRST_LINE,
+      `Domain: ${domain}`,
+      `Application: ${application.slice().sort().join(',')}`,
+      `Network: ${networkMode}`,
+      `Issued: ${timestamp}`,
+    ].join('\n'),
     timestamp,
   };
 }

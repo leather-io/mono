@@ -1354,6 +1354,7 @@ export interface paths {
           'application/json': {
             /** @enum {string} */
             network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet' | 'btc:regtest';
+            domain: string;
             signature: string;
             publicKey: string;
             timestamp: number;

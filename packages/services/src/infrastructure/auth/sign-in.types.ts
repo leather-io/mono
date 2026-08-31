@@ -13,6 +13,7 @@ export interface WalletSignInPayload {
 
 export interface SignInInput {
   network: AuthNetworkId;
+  domain: string;
   application: AuthApplication[];
   payload: WalletSignInPayload;
 }
