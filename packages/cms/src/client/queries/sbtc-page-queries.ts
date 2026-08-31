@@ -1,10 +1,5 @@
 import { defineQuery } from 'groq';
 
-export const sbtcBasicEnrollQuery = defineQuery(`*[
-  _type == "sbtcPool"
-  && id == "basic"
-][0]`);
-
 export const sbtcFaqQuery = defineQuery(`*[
   _type == "faqSection"
   && category == "sbtc"
