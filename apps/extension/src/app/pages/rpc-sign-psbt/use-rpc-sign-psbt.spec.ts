@@ -142,6 +142,7 @@ const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
 const singleSigDescriptor = `wsh(pk(${xpubA}/0/0))`;
 const multiSigDescriptor = `wsh(multi(2,${xpubB}/0/0,${xpubA}/0/0))`;
+const timelockDescriptor = `wsh(and_v(v:after(1000),pk(${xpubA}/0/0)))`;
 const requestId = 'request-id';
 const origin = 'https://example.com';
 const frameId = 42;
@@ -289,6 +290,28 @@ describe(useRpcSignPsbt.name, () => {
     const signedTx = buildPolicyTx(multiSigDescriptor, [1]);
     const signedPsbtHex = bytesToHex(signedTx.toPSBT());
     setRpcSignPsbtParams({ broadcast: true, descriptor: multiSigDescriptor, psbtHex });
+    mocks.signDescriptorPsbt.mockResolvedValue(signedTx);
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.broadcastTx).not.toHaveBeenCalled();
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      createRpcSuccessResponse('signPsbt', {
+        id: requestId,
+        result: { hex: signedPsbtHex },
+      }),
+      { frameId }
+    );
+    expect(mocks.closeWindow).toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
+  });
+
+  test('falls back to returning the partially signed psbt when the tx cannot satisfy the descriptor timelock', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(timelockDescriptor, []).toPSBT());
+    const signedTx = buildPolicyTx(timelockDescriptor, [1]);
+    const signedPsbtHex = bytesToHex(signedTx.toPSBT());
+    setRpcSignPsbtParams({ broadcast: true, descriptor: timelockDescriptor, psbtHex });
     mocks.signDescriptorPsbt.mockResolvedValue(signedTx);
 
     await useRpcSignPsbt().onSignPsbt({ inputs: [] });

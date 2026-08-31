@@ -12,7 +12,9 @@ import {
   getConnectedTestAppPermissionsState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
+import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 
+import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 import { type RpcParams, type sendTransfer } from '@leather.io/rpc';
 import { truncateMiddle } from '@leather.io/utils';
 
@@ -33,26 +35,46 @@ const baseParams = {
 };
 
 function clickActionButton(context: BrowserContext) {
-  return async (buttonToPress: 'Cancel' | 'Approve') => {
+  return async (buttonToPress: 'Cancel' | 'Approve' | 'Sign transaction') => {
     const popup = await context.waitForEvent('page');
     await popup.waitForTimeout(1000);
-    const btn = popup.locator(`text="${buttonToPress}"`);
+    const btn = popup.getByRole('button', { name: buttonToPress });
     await btn.click();
   };
 }
 
-async function approveAndAcceptTaprootWarning(context: BrowserContext) {
-  const popup = await context.waitForEvent('page');
-  await popup.waitForTimeout(1000);
-  await popup.locator('text="Approve"').click();
-  const continueBtn = popup.locator('text="I understand, continue"');
-  await continueBtn.click({ timeout: 10000 });
+const noBroadcastWarningTitle = "Leather won't broadcast this transaction";
+
+function approveAndAcceptTaprootWarning(context: BrowserContext) {
+  return async (
+    buttonToPress: 'Approve' | 'Sign transaction',
+    beforeApprove?: (popup: Page) => Promise<void>
+  ) => {
+    const popup = await context.waitForEvent('page');
+    await popup.waitForTimeout(1000);
+    await beforeApprove?.(popup);
+    await popup.getByRole('button', { name: buttonToPress }).click();
+    const continueBtn = popup.locator('text="I understand, continue"');
+    await continueBtn.click({ timeout: 10000 });
+  };
 }
 
 async function mockPopupRequests(context: BrowserContext) {
   const popup = await context.waitForEvent('page');
   await mockLeatherApiRequests(popup);
   await mockTestAccountBtcBroadcastTransaction(popup);
+}
+
+async function mockPopupRequestsRecordingBroadcast(
+  context: BrowserContext,
+  broadcastCalls: string[]
+) {
+  const popup = await context.waitForEvent('page');
+  await mockLeatherApiRequests(popup);
+  await popup.route(`${BITCOIN_API_BASE_URL_TESTNET4}/tx`, route => {
+    broadcastCalls.push(route.request().url());
+    return route.fulfill({ body: 'mock-txid' });
+  });
 }
 
 function openSendTransfer(page: Page) {
@@ -78,15 +100,75 @@ test.describe('RPC: sendTransfer', () => {
 
     const [result] = await Promise.all([
       openSendTransfer(page)(baseParams),
-      approveAndAcceptTaprootWarning(context),
+      approveAndAcceptTaprootWarning(context)('Approve', async popup => {
+        await test.expect(popup.getByText(noBroadcastWarningTitle)).toHaveCount(0);
+      }),
     ]);
 
     delete result.id;
 
     test.expect(result).toEqual({
       jsonrpc: '2.0',
-      result: { txid: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce' },
+      result: {
+        txid: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce',
+        transaction: test.expect.stringMatching(/^[0-9a-f]+$/),
+      },
     });
+  });
+
+  test('that the signed transaction is returned without broadcasting when broadcast is false', async ({
+    page,
+    context,
+  }) => {
+    const broadcastCalls: string[] = [];
+    void mockPopupRequestsRecordingBroadcast(context, broadcastCalls);
+
+    const [result] = await Promise.all([
+      openSendTransfer(page)({ ...baseParams, broadcast: false }),
+      approveAndAcceptTaprootWarning(context)('Sign transaction', async popup => {
+        await test.expect(popup.getByText(noBroadcastWarningTitle)).toBeVisible();
+      }),
+    ]);
+
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      result: { transaction: test.expect.stringMatching(/^[0-9a-f]+$/) },
+    });
+    test.expect(broadcastCalls).toHaveLength(0);
+  });
+
+  test('that the taproot warning gates signing when broadcast is false', async ({
+    page,
+    context,
+  }) => {
+    const broadcastCalls: string[] = [];
+    void mockPopupRequestsRecordingBroadcast(context, broadcastCalls);
+
+    const resultPromise = openSendTransfer(page)({ ...baseParams, broadcast: false });
+    const popup = await context.waitForEvent('page');
+    await popup.waitForTimeout(1000);
+    await popup.getByRole('button', { name: 'Sign transaction' }).click();
+
+    const warningDialog = popup.getByTestId(SendCryptoAssetSelectors.TaprootUtxoWarningDialog);
+    await test.expect(warningDialog).toBeVisible({ timeout: 10000 });
+    await popup.getByRole('dialog').getByRole('button', { name: 'Cancel' }).click();
+    await test.expect(warningDialog).toHaveCount(0);
+
+    await popup.close();
+    const result = await resultPromise;
+
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      error: {
+        code: 4001,
+        message: 'User rejected request',
+      },
+    });
+    test.expect(broadcastCalls).toHaveLength(0);
   });
 
   test('that the request can be cancelled', async ({ page, context }) => {

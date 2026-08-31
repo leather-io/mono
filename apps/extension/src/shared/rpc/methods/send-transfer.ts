@@ -44,6 +44,7 @@ export const rpcSendTransferParamsSchemaLegacy = z.object({
   address: z.string(),
   amount: z.string(),
   network: z.string().optional(),
+  broadcast: z.boolean().optional(),
 });
 
 /** @knipignore */
@@ -51,6 +52,7 @@ export const rpcSendTransferParamsSchema = z
   .object({
     account: accountSchema.optional(),
     network: z.string().optional(),
+    broadcast: z.boolean().optional(),
     recipients: z
       .array(
         z.object({
@@ -94,6 +96,7 @@ export function convertRpcSendTransferLegacyParamsToNew(
     recipients: [{ address: params.address, amount: params.amount }],
     network: params.network,
     account: params.account,
+    broadcast: params.broadcast,
   };
 }
 

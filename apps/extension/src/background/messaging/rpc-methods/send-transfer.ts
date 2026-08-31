@@ -83,6 +83,8 @@ export const sendTransferHandler = defineRpcRequestHandler(
       requestParams.push(['accountIndex', params.account.toString()]);
     }
 
+    requestParams.push(['broadcast', String(params.broadcast ?? true)]);
+
     const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
       port,
       requestParams

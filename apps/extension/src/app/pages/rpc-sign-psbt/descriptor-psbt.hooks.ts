@@ -7,8 +7,8 @@ import {
   compileWshDescriptor,
   findAccountDescriptorKey,
   getDescriptorMatchingInputIndexes,
-  isExtendedPublicKeyExpression,
   makeNativeSegwitAddressIndexDerivationPath,
+  resolveLedgerSignableDescriptor,
 } from '@leather.io/bitcoin';
 
 import { useWalletType } from '@app/common/use-wallet-type';
@@ -35,7 +35,7 @@ function useGetDescriptorSigningPlan() {
     if (!nativeSegwitAccount) throw new Error('No native segwit account available');
 
     const compiled = compileWshDescriptor(descriptor);
-    const { scriptPubKey, witnessScript, keys } = compiled;
+    const { scriptPubKey, witnessScript } = compiled;
 
     const accountDescriptorKey = findAccountDescriptorKey(compiled, nativeSegwitAccount.keychain);
     if (!accountDescriptorKey) throw new Error('Current account is not part of this descriptor');
@@ -54,7 +54,7 @@ function useGetDescriptorSigningPlan() {
     inputIndexes.forEach(index => tx.updateInput(index, { witnessScript }));
     const signingConfig = inputIndexes.map(index => ({ index, derivationPath }));
 
-    return { tx, signingConfig, inputIndexes, keys, accountKey: accountDescriptorKey.key };
+    return { tx, signingConfig, inputIndexes, accountKey: accountDescriptorKey.key };
   };
 }
 
@@ -71,7 +71,7 @@ export function useSignDescriptorPsbt() {
   const location = useLocation();
 
   return async (psbtHex: string, descriptor: string) => {
-    const { tx, signingConfig, inputIndexes, keys, accountKey } = getDescriptorSigningPlan(
+    const { tx, signingConfig, inputIndexes, accountKey } = getDescriptorSigningPlan(
       psbtHex,
       descriptor
     );
@@ -79,23 +79,22 @@ export function useSignDescriptorPsbt() {
     const signedTx = await whenWallet({
       software: () => signPsbt({ tx, signingConfig }),
       ledger() {
-        // Ledger can only register a wallet policy whose keys are extended keys
-        // (`[fingerprint/path]xpub`). We convert the account's key, but a co-signer
-        // supplied as a raw public key has no xpub/origin and cannot be expressed
-        // in a Ledger policy — fail fast with a clear message instead of a masked
-        // on-device rejection.
-        if (
-          keys.some(key => key !== accountKey && !isExtendedPublicKeyExpression(key.keyExpression))
-        )
+        const ledgerDescriptor = resolveLedgerSignableDescriptor({
+          descriptor,
+          psbt: tx.toPSBT(),
+          inputIndexes,
+          accountKey,
+        });
+        if (!ledgerDescriptor)
           throw new Error(
-            'Ledger cannot sign this descriptor: another signer is a raw public key. Ledger requires every key to be an extended public key (xpub). Sign this contract with a software wallet instead.'
+            'Ledger cannot sign this descriptor: a co-signer raw public key could not be resolved to an xpub from PSBT_GLOBAL_XPUB and PSBT_IN_BIP32_DERIVATION.'
           );
 
         void ledgerNavigate.toConnectAndSignBitcoinTransactionStep(
           tx.toPSBT(),
           signingConfig,
           location,
-          descriptor
+          ledgerDescriptor
         );
         return listenForBitcoinTxLedgerSigning(bytesToHex(tx.toPSBT()));
       },

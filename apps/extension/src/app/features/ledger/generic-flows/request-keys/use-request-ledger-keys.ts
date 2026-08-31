@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
+import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 import StacksApp from '@zondax/ledger-stacks';
-import BitcoinApp from 'ledger-bitcoin';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 import { delay, isError } from '@leather.io/utils';
@@ -91,6 +91,12 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
       setAwaitingDeviceConnection(false);
       if (isError(e) && checkLockedDeviceError(e)) {
         setLatestDeviceResponse({ deviceLocked: true } as any);
+        void ledgerNavigate.toConnectStep();
+        return;
+      }
+
+      if (isError(e) && e.name === LedgerConnectionErrors.AppOpenFailed) {
+        void ledgerNavigate.toErrorStep(chain, e.message);
         return;
       }
 
