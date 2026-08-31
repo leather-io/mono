@@ -99,6 +99,8 @@ pre {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  width: 100%;
+  font: inherit;
   text-align: left;
   padding: 14px;
   border: 1px solid var(--border);
@@ -119,6 +121,11 @@ pre {
 
 .card:active {
   transform: translateY(1px);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .card:disabled {
@@ -325,13 +332,6 @@ pre {
   margin-top: 6px;
 }
 
-.card-actions {
-  display: flex;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.card button,
 .tag-runner button,
 .account-bar button,
 .scenario button {
@@ -346,36 +346,15 @@ pre {
   font-family: inherit;
 }
 
-.card button.secondary,
 .account-bar button {
   background: var(--card-hover);
   color: var(--text);
 }
 
-.card button:disabled,
 .tag-runner button:disabled,
 .scenario button:disabled {
   opacity: 0.5;
   cursor: default;
-}
-
-.editor {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.editor textarea {
-  min-height: 160px;
-  background: var(--bg);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 8px;
-  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 11px;
-  resize: vertical;
 }
 
 /* ── Verdicts and checks ─────────────────────────────────────────────────── */

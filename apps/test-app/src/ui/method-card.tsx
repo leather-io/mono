@@ -1,5 +1,5 @@
-// One catalog entry: what it sends, what it expects, how it last went, and an
-// escape hatch to edit the payload before sending it.
+// One catalog entry: what it sends, what it expects, and how it last went.
+// The whole card is the send button, so it carries the spec's `data-testid`.
 import type { SpecVerdict } from '../run-spec';
 import type { Outcome, RpcMethodSpec } from '../types';
 import { describeOutcome } from './format';
@@ -9,40 +9,29 @@ interface MethodCardProps {
   busy: boolean;
   expectation: Outcome;
   verdict?: SpecVerdict;
-  editing: boolean;
-  draft: string;
-  onDraftChange(value: string): void;
   onSend(): void;
-  onEdit(): void;
-  onSendEdited(): void;
 }
 
-export function MethodCard({
-  spec,
-  busy,
-  expectation,
-  verdict,
-  editing,
-  draft,
-  onDraftChange,
-  onSend,
-  onEdit,
-  onSendEdited,
-}: MethodCardProps) {
+export function MethodCard({ spec, busy, expectation, verdict, onSend }: MethodCardProps) {
   return (
-    <article
+    <button
+      type="button"
       className="card"
-      data-testid={`card-${spec.id}`}
+      data-testid={spec.id}
       data-verdict={verdict ?? 'none'}
       data-requires={(spec.requires ?? []).join(' ')}
+      disabled={busy}
+      aria-busy={busy}
+      onClick={onSend}
     >
-      <div className="card-head">
+      <span className="card-head">
         <span className="card-title">{spec.label}</span>
-        {verdict && <span className={`verdict verdict-${verdict}`}>{verdict}</span>}
-      </div>
+        {busy && <span className="verdict verdict-idle">waiting…</span>}
+        {!busy && verdict && <span className={`verdict verdict-${verdict}`}>{verdict}</span>}
+      </span>
       <code className="card-method">{spec.method}</code>
-      <p className="card-desc">{spec.description}</p>
-      <div className="card-meta">
+      <span className="card-desc">{spec.description}</span>
+      <span className="card-meta">
         <span className="muted">{describeOutcome(expectation)}</span>
         {(spec.requires ?? []).map(requirement => (
           <span key={requirement} className="chip chip-requires">
@@ -54,33 +43,7 @@ export function MethodCard({
             {tag}
           </span>
         ))}
-      </div>
-      <div className="card-actions">
-        <button type="button" data-testid={spec.id} disabled={busy} onClick={onSend}>
-          {busy ? 'Waiting…' : 'Send'}
-        </button>
-        <button
-          type="button"
-          className="secondary"
-          data-control={`edit-${spec.id}`}
-          onClick={onEdit}
-        >
-          {editing ? 'Close' : 'Edit JSON'}
-        </button>
-      </div>
-      {editing && (
-        <div className="editor">
-          <textarea
-            data-testid={`editor-${spec.id}`}
-            value={draft}
-            spellCheck={false}
-            onChange={event => onDraftChange(event.target.value)}
-          />
-          <button type="button" data-control={`send-edited-${spec.id}`} onClick={onSendEdited}>
-            Send edited
-          </button>
-        </div>
-      )}
-    </article>
+      </span>
+    </button>
   );
 }

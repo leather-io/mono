@@ -80,7 +80,7 @@ function judge(
 export interface RunSpecOptions {
   /** Which platform's expectation to judge against. Default `extension`. */
   platform?: Platform;
-  /** Params to send instead of the spec's own (the UI's JSON editor). */
+  /** Params to send instead of the spec's own (`__leatherTestApp.run`). */
   params?: unknown;
 }
 
