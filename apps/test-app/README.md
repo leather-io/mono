@@ -1,8 +1,9 @@
 # Leather RPC test app
 
 A Vite + React catalog of Leather wallet RPC requests (`window.LeatherProvider.request(...)`).
-Every entry is a button with a pre-filled payload — click it, approve (or reject) in the wallet, and
-the right-hand panel shows the params sent, the response, and **what the wallet actually signed**:
+Every entry is a card with a pre-filled payload, and the whole card is the button — click it, approve
+(or reject) in the wallet, and the right-hand panel shows the params sent, the response, and **what
+the wallet actually signed**:
 which key signed each input, under which sighash flag, and whether that signature verifies.
 
 It is also the host page the extension's Playwright suite opens on port 3000.
@@ -114,10 +115,10 @@ See "Extending the catalog" in `AGENTS.md`. In short: append one `RpcMethodSpec`
 The app serves on port 3000, which `apps/extension/playwright.config.ts` starts through
 `pnpm dev:test-app`.
 
-Only per-spec send buttons carry `data-testid` (it is the spec's `id`); every other control uses
-`data-control`, because the extension's rpc-catalog spec counts `button[data-testid]` against the
-catalog length. The result panel is `data-testid="rpc-result"` with `data-status`, `data-verdict`,
-`data-method` and `data-id`.
+Each card is itself the send button and carries `data-testid` (the spec's `id`); every other control
+uses `data-control`, because the extension's rpc-catalog spec counts `button[data-testid]` against
+the catalog length. The result panel is `data-testid="rpc-result"` with `data-status`,
+`data-verdict`, `data-method` and `data-id`.
 
 For payloads without the UI, import the React-free catalog (the extension lists
 `@leather.io/test-app` as a dev dependency):

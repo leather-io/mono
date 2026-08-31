@@ -15,7 +15,6 @@ import {
 import { installTestAppApi } from './test-api';
 import { type RpcMethodSpec, expectationFor } from './types';
 import { AccountBar } from './ui/account-bar';
-import { safeStringify } from './ui/format';
 import { MethodCard } from './ui/method-card';
 import { ResultPanel } from './ui/result-panel';
 import { ScenarioRunner } from './ui/scenario-runner';
@@ -32,8 +31,6 @@ export function App() {
   const [accountError, setAccountError] = useState<string | undefined>();
   const [runs, setRuns] = useState<SpecRun[]>([]);
   const [busyIds, setBusyIds] = useState<ReadonlySet<string>>(() => new Set());
-  const [editing, setEditing] = useState<string | undefined>();
-  const [draft, setDraft] = useState('');
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
@@ -76,14 +73,10 @@ export function App() {
   }, []);
 
   const handleSend = useCallback(
-    async (spec: RpcMethodSpec, params?: unknown) => {
+    async (spec: RpcMethodSpec) => {
       setBusyIds(previous => new Set(previous).add(spec.id));
       try {
-        const run = await runSpec(
-          spec,
-          { ctx: createCachedRequestContext(getNetwork()) },
-          params === undefined ? {} : { params }
-        );
+        const run = await runSpec(spec, { ctx: createCachedRequestContext(getNetwork()) });
         // Every run is kept: the panel shows the newest, the history the rest,
         // so a slow call finishing late cannot erase a later result.
         record(run);
@@ -98,25 +91,6 @@ export function App() {
       }
     },
     [record]
-  );
-
-  const handleEdit = useCallback(
-    async (spec: RpcMethodSpec) => {
-      if (editing === spec.id) {
-        setEditing(undefined);
-        return;
-      }
-      setEditing(spec.id);
-      setDraft('Resolving params…');
-      try {
-        const ctx = createCachedRequestContext(getNetwork());
-        const { resolveParams } = await import('./rpc-methods');
-        setDraft(safeStringify(await resolveParams(spec, ctx)));
-      } catch (error) {
-        setDraft(safeStringify(error));
-      }
-    },
-    [editing]
   );
 
   const grouped = useMemo(() => {
@@ -220,20 +194,7 @@ export function App() {
                   busy={busyIds.has(spec.id)}
                   expectation={expectationFor(spec, 'extension')}
                   verdict={[...runs].reverse().find(run => run.id === spec.id)?.verdict}
-                  editing={editing === spec.id}
-                  draft={draft}
-                  onDraftChange={setDraft}
                   onSend={() => void handleSend(spec)}
-                  onEdit={() => void handleEdit(spec)}
-                  onSendEdited={() => {
-                    try {
-                      void handleSend(spec, JSON.parse(draft));
-                    } catch (error) {
-                      window.alert(
-                        `That is not valid JSON: ${error instanceof Error ? error.message : error}`
-                      );
-                    }
-                  }}
                 />
               ))}
             </div>
