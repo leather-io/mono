@@ -491,38 +491,3 @@ pre {
   margin: 2px 0 0;
   font-size: 12px;
 }
-
-/* ── Combination builder ─────────────────────────────────────────────────── */
-.builder {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-  margin-bottom: 12px;
-}
-
-.builder-controls {
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.builder .card-desc {
-  margin: 10px 0 6px;
-}
-
-.sweep-results {
-  margin-top: 10px;
-  max-height: 320px;
-  overflow: auto;
-}
-
-.builder-head {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-  font-size: 12px;
-}

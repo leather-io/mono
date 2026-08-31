@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { getLeatherProvider } from './leather';
-import { specBuilders } from './methods/builders';
 import { walletNetworks } from './networks';
 import { rpcCategories, rpcMethods, rpcTags, specsWithTag } from './rpc-methods';
 import { type SpecRun, runSpec } from './run-spec';
@@ -20,7 +19,6 @@ import { safeStringify } from './ui/format';
 import { MethodCard } from './ui/method-card';
 import { ResultPanel } from './ui/result-panel';
 import { ScenarioRunner } from './ui/scenario-runner';
-import { SpecBuilderPanel } from './ui/spec-builder';
 import { TagRunner } from './ui/tag-runner';
 import type { AccountSummary } from './wallet';
 
@@ -140,22 +138,6 @@ export function App() {
       .filter(group => group.methods.length > 0);
   }, [filter]);
 
-  // A sweep runs sequentially: each request may open an approval popup, and a
-  // wallet shows those one at a time.
-  const runSweep = useCallback(
-    async (specs: RpcMethodSpec[]) => {
-      const ctx = createCachedRequestContext(getNetwork());
-      const sweepResults: SpecRun[] = [];
-      for (const spec of specs) {
-        const run = await runSpec(spec, { ctx });
-        record(run);
-        sweepResults.push(run);
-      }
-      return sweepResults;
-    },
-    [record]
-  );
-
   const latest = runs[runs.length - 1];
   const tags = useMemo(() => rpcTags(), []);
 
@@ -230,17 +212,6 @@ export function App() {
             <h2>
               {category} <span className="muted">({methods.length})</span>
             </h2>
-            {specBuilders
-              .filter(builder => builder.category === category)
-              .map(builder => (
-                <SpecBuilderPanel
-                  key={builder.id}
-                  builder={builder}
-                  busy={busyIds.size > 0}
-                  onSend={spec => void handleSend(spec)}
-                  onSweep={runSweep}
-                />
-              ))}
             <div className="grid">
               {methods.map(spec => (
                 <MethodCard

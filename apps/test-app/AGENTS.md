@@ -29,7 +29,7 @@ Prefer the programmatic API over the DOM:
 ```js
 await window.__leatherTestApp.setNetwork('testnet4');
 await window.__leatherTestApp.run('signPsbt'); // → SpecRun with a verdict
-await window.__leatherTestApp.runTag('sighash'); // → SpecRun[]
+await window.__leatherTestApp.runTag('ci'); // → SpecRun[]
 window.__leatherTestApp.list(); // every spec + metadata
 window.__leatherTestApp.tags();
 window.__leatherTestApp.refresh(); // after switching account in the wallet
@@ -59,8 +59,7 @@ developer switches account.
 ## Offline work — no wallet needed
 
 ```bash
-pnpm --filter @leather.io/test-app catalog builders             # families and their fields
-pnpm --filter @leather.io/test-app catalog builder psbt         # its curated combinations
+pnpm --filter @leather.io/test-app catalog list                  # every spec + metadata
 pnpm --filter @leather.io/test-app catalog scenarios
 pnpm --filter @leather.io/test-app catalog verify-psbt <hex>     # signatures + sighash semantics
 pnpm --filter @leather.io/test-app catalog decode-psbt <hex> --mode regtest
@@ -100,16 +99,11 @@ Rules:
 - `satisfies ParamsOf<'method'>` catches wrong fields before a wallet is involved. Drop it only when
   the workspace schema does not know a field the wallet accepts, and say so in the description.
 - Use `expect: { extension, mobile }` when the platforms genuinely differ, and explain why in a
-  comment. See `src/methods/sighash.ts` — the extension ignores `allowedSighash`, mobile honours it.
-- When the interesting space is a **product** of independent choices, add a `SpecBuilder` instead of
-  entries: a `fields` list, `defaults`, `build(selection)` and a CURATED `combinations()`. Register
-  it in `src/methods/builders.ts` and it gets the UI panel, `findSpec` resolution, tag membership,
-  the API and the CLI for free — see `src/methods/psbt-builder.ts`. Ids encode only the fields that
-  differ from the defaults (`psbt.inputs_p2tr.sighash_single`), so they round-trip; there is a test
-  that proves it for every builder.
-- **Do not** convert distinct methods or distinct flows. `getInfo` and `openSwap` share no axes, and
-  negatives like `invalid-params` are individually meaningful — a dropdown would hide them. Staking
-  is a form (its fields depend on the action), not a product, so it stays listed too.
+  comment. `getInfo` is the one case in the catalog: mobile answers it, the extension does not.
+- **The catalog is deliberately one happy-path entry per RPC method.** It is not a matrix, and it is
+  not where negatives, param variants or sighash sweeps belong. If you are exploring a space — every
+  sighash flag, every input kind, malformed params — do it in `src/methods/local.ts` or in a
+  Playwright spec built on `./catalog`, and leave the button list alone.
 - Scratch work goes in `src/methods/local.ts` (committed empty). Keep your edits out of commits with
   `git update-index --skip-worktree apps/test-app/src/methods/local.ts`.
 

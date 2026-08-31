@@ -9,28 +9,6 @@ export {
   rpcTags,
   specsWithTag,
 } from './rpc-methods';
-
-//
-// Request families declared as choices rather than as entries.
-export {
-  type BuilderField,
-  type BuilderFieldValue,
-  type BuilderOption,
-  type BuilderSelection,
-  type SpecBuilder,
-  buildFromSelection,
-  builderSpecId,
-  normalizeSelection,
-  parseBuilderSpecId,
-  visibleFields,
-} from './builders/spec-builder';
-export {
-  buildSpec,
-  builderCombinationSpecs,
-  findBuilder,
-  findBuilderSpec,
-  specBuilders,
-} from './methods/builders';
 export {
   expectationFor,
   isParamsBuilder,

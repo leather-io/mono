@@ -4,8 +4,6 @@
 // the catalog, runs specs and scenarios, and hands back the same verdict
 // objects the UI renders. Everything is JSON-serializable so it survives
 // `page.evaluate`.
-import type { BuilderSelection } from './builders/spec-builder';
-import { buildSpec, builderCombinationSpecs, specBuilders } from './methods/builders';
 import { walletNetworks } from './networks';
 import { findSpec, rpcMethods, rpcTags, specsWithTag } from './rpc-methods';
 import { type SpecRun, runSpec, runSpecs } from './run-spec';
@@ -46,16 +44,6 @@ export interface TestAppApi {
   run(id: string, options?: { platform?: Platform; params?: unknown }): Promise<SpecRun>;
   /** Run every spec carrying a tag, sequentially. */
   runTag(tag: string, options?: { platform?: Platform }): Promise<SpecRun[]>;
-  /** Request families declared as choices: their fields and defaults. */
-  builders(): { id: string; label: string; description: string; fields: string[] }[];
-  /** Build and run one combination, e.g. buildAndRun('psbt', { inputs: 'p2tr' }). */
-  buildAndRun(
-    builderId: string,
-    selection: Partial<BuilderSelection>,
-    options?: { platform?: Platform }
-  ): Promise<SpecRun>;
-  /** Run a builder's curated sweep, or every builder's when none is named. */
-  runBuilderMatrix(builderId?: string, options?: { platform?: Platform }): Promise<SpecRun[]>;
   /** Results of everything run in this session, newest last. */
   results(): SpecRun[];
   /** Network ids the app can pin requests to. */
@@ -99,31 +87,6 @@ function createTestAppApi(onRun?: (run: SpecRun) => void): TestAppApi {
       const specs = specsWithTag(tag);
       if (!specs.length) throw new Error(`No specs tagged ${tag}`);
       const runs = await runSpecs(specs, { ctx: createCachedRequestContext() }, options);
-      runs.forEach(publish);
-      return runs;
-    },
-    builders: () =>
-      specBuilders.map(builder => ({
-        id: builder.id,
-        label: builder.label,
-        description: builder.description,
-        fields: builder.fields.map(field => field.key),
-      })),
-    async buildAndRun(builderId, selection, options = {}) {
-      return publish(
-        await runSpec(
-          buildSpec(builderId, selection),
-          { ctx: createCachedRequestContext() },
-          options
-        )
-      );
-    },
-    async runBuilderMatrix(builderId, options = {}) {
-      const runs = await runSpecs(
-        builderCombinationSpecs(builderId),
-        { ctx: createCachedRequestContext() },
-        options
-      );
       runs.forEach(publish);
       return runs;
     },

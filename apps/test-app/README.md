@@ -19,15 +19,16 @@ is bound to.
 
 ## What's covered
 
-| Section      |     Entries | What it exercises                                                                                                                                                                                                                                                      |
-| ------------ | ----------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **General**  |           9 | `getInfo`, `supportedMethods`, `getAddresses` (all chains / bitcoin only / stacks only), `open`, `openSwap`, unknown method, invalid params                                                                                                                            |
-| **Bitcoin**  |          19 | `sendTransfer` (self-send, batch, legacy params, no-broadcast), `signPsbt` (native segwit, taproot key-path, mixed, foreign input, `signAtIndex`, `account`, change + OP_RETURN, descriptor, broadcast), BIP-322 `signMessage`, wrong-network and bogus-flag negatives |
-| **Sighash**  | 3 + builder | Pick an input kind, a flag and how the request whitelists it; the request is built from the selection. "Run every combination" sweeps all 57. Named cases: no flag set, mixed flags across inputs, mixed flags with `signAtIndex`                                      |
-| **Stacks**   |          16 | Transfers, SIP-10 / SIP-9, `stx_callContract` (deny / allow / originator, explicit fee + nonce, sponsored), deploy, message signing, `stx_signTransaction` (transfer, contract call, legacy `txHex`)                                                                   |
-| **Staking**  |          10 | pox-5 stake / stake-update (extend, increase) / unstake / claim-staker-rewards, PoX-4 delegate / revoke / allow-contract-caller, sBTC enroll                                                                                                                           |
-| **Multisig** |          13 | `btc_addAccount` (xpub and legacy raw-pubkey shapes), `stx_addAccount`, proposal commitments (BTC + STX), spending from a policy → proposal, PSBT and Stacks co-signing                                                                                                |
-| **Bonds**    |           6 | Bond descriptor preview, propose from a policy account, co-sign, timelock and hashlock exits, disallowed-sighash negative                                                                                                                                              |
+One happy-path entry per RPC method — no variants, no negatives, no matrices.
+
+| Section      | Entries | What it exercises                                                                                                                    |
+| ------------ | ------: | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **General**  |       5 | `getInfo`, `supportedMethods`, `getAddresses`, `open`, `openSwap`                                                                    |
+| **Bitcoin**  |       4 | `sendTransfer` (self-send), `signPsbt` (native segwit), BIP-322 `signMessage` (p2wpkh + p2tr)                                        |
+| **Stacks**   |       9 | `stx_getAddresses`, STX / SIP-10 / SIP-9 transfers, `stx_callContract`, `stx_deployContract`, message signing, `stx_signTransaction` |
+| **Staking**  |       1 | pox-5 stake, for the epoch-4.0 staking post condition                                                                                |
+| **Multisig** |       4 | `btc_addAccount`, `stx_addAccount`, spending from a policy → proposal, PSBT co-signing                                               |
+| **Bonds**    |       1 | Propose from a Bitcoin policy account against the bond-exit template                                                                 |
 
 Plus three **scenarios** — flows a single request cannot express:
 
@@ -53,14 +54,8 @@ that case.
 For Stacks responses it decodes the returned transaction and checks the post conditions and the
 post-condition **mode** survived the round trip, which is the whole point of the staking entries.
 
-Where a family of requests is a **product** of independent options — a PSBT is an input set × a
-count × a sighash flag × outputs × request flags — it is declared as choices rather than as dozens
-of near-identical entries: the panel renders the fields and builds the request from your selection.
-Each panel has a "Run N combinations" button for its curated sweep, and "Run tag" runs every entry
-carrying a tag, builder combinations included.
-
-Distinct methods and distinct flows stay listed. A dropdown would hide `invalid-params` or
-`stx_getNetworks`, not simplify them.
+"Run tag" runs every entry carrying a tag — `ci` is the set that needs no funds and no special
+wallet state.
 
 ## Personalised to the connected wallet
 
@@ -91,14 +86,13 @@ for adding an entry.
 ```js
 await window.__leatherTestApp.setNetwork('testnet4');
 await window.__leatherTestApp.run('signPsbt');
-await window.__leatherTestApp.buildAndRun('psbt', { inputs: 'p2tr', sighash: 3 });
-await window.__leatherTestApp.runBuilderMatrix('psbt');
+await window.__leatherTestApp.runTag('ci');
 ```
 
 Offline, without a wallet:
 
 ```bash
-pnpm --filter @leather.io/test-app catalog builder psbt
+pnpm --filter @leather.io/test-app catalog list
 pnpm --filter @leather.io/test-app catalog verify-psbt <hex>
 pnpm --filter @leather.io/test-app catalog decode-stx <hex>
 ```
@@ -106,8 +100,8 @@ pnpm --filter @leather.io/test-app catalog decode-stx <hex>
 ## Methods the extension does not implement
 
 - `stx_getNetworks` and `stx_updateProfile` — removed from the extension; they answer
-  `"<method>" is not supported`.
-- `getInfo` — mobile only. Kept as a negative test for the extension.
+  `"<method>" is not supported`. Not in the catalog.
+- `getInfo` — mobile only; the extension answers `not supported`, which is what its `expect` says.
 
 ## Adding a request
 
@@ -131,7 +125,7 @@ For payloads without the UI, import the React-free catalog (the extension lists
 ```ts
 import { type RequestContext, resolveParams, rpcMethods } from '@leather.io/test-app/catalog';
 
-const spec = rpcMethods.find(m => m.id === 'signPsbt-descriptor');
+const spec = rpcMethods.find(m => m.id === 'signPsbt');
 const ctx: RequestContext = {
   request(method, params) {
     return page.evaluate(/* call window.LeatherProvider.request and return .result */);
@@ -162,12 +156,11 @@ src/
 ├── constants.ts     Fixtures the wallet cannot supply
 ├── env.ts           VITE_TEST_APP_* overrides
 ├── wallet.ts        getAddresses reads: addresses, keys, xpubs, bound account
-├── builders/        spec-builder · psbt · descriptors · keys · stx-tx · pox5 · staking
+├── builders/        psbt · descriptors · keys · stx-tx · pox5 · staking
 ├── verifiers/       psbt-signatures · sighash-semantics · psbt-decode · stx-decode · spec-verifiers
 ├── utxo/esplora.ts  Optional real-UTXO mode
 ├── scenarios/       sign-in · multisig-roundtrip · bond-lifecycle
-└── methods/         general · bitcoin · sighash · stacks · staking · multisig · bonds · local
-                     builders (registry) · psbt-builder · stx-options-builder
+└── methods/         general · bitcoin · stacks · staking · multisig · bonds · local
 ```
 
 `src/builders/pox5.ts` deliberately duplicates the payload shapes `apps/web` ships in

@@ -7,7 +7,7 @@
 // whoever ends up signing.
 import { Cl, serializeCV } from '@stacks/transactions';
 
-import { buildUnsignedContractCallHex, buildUnsignedStxTransferHex } from '../builders/stx-tx';
+import { buildUnsignedStxTransferHex } from '../builders/stx-tx';
 import {
   SIP9_ASSET,
   SIP9_ASSET_ID,
@@ -124,6 +124,32 @@ export const stacksMethods: RpcMethodSpec[] = [
 
   // ── Contracts ─────────────────────────────────────────────────────────────
   {
+    id: 'stx_callContract',
+    method: 'stx_callContract',
+    label: 'stx_callContract',
+    category: 'Stacks',
+    description:
+      'A SIP-10 `transfer` call, with the post-condition mode left to the wallet. What the approval screen renders for the post conditions is the part worth watching.',
+    async params(ctx) {
+      const { address } = await fetchStxAccount(ctx);
+      return {
+        contract: SIP10_CONTRACT,
+        functionName: 'transfer',
+        functionArgs: [
+          Cl.uint(1_000_000),
+          Cl.standardPrincipal(address),
+          Cl.standardPrincipal(STX_RECIPIENT),
+          Cl.none(),
+        ].map(argument => serializeCV(argument)),
+        network: networkOf(ctx),
+      } satisfies ParamsOf<'stx_callContract'>;
+    },
+    expect: 'manual',
+    requires: ['singlesig'],
+    tags: ['funds', 'post-conditions'],
+    verify: verifyStxTransaction({ contract: SIP10_CONTRACT, functionName: 'transfer' }),
+  },
+  {
     id: 'stx_deployContract',
     method: 'stx_deployContract',
     label: 'stx_deployContract',
@@ -158,30 +184,12 @@ export const stacksMethods: RpcMethodSpec[] = [
     tags: ['ci'],
   },
   {
-    id: 'stx_signMessage-structured',
-    method: 'stx_signMessage',
-    label: 'stx_signMessage (structured)',
-    category: 'Stacks',
-    description:
-      'Sign SIP-018 structured data. The domain’s chain-id follows the selected network, so a testnet run does not sign a mainnet domain.',
-    params(ctx) {
-      const network = networkOf(ctx);
-      return {
-        messageType: 'structured',
-        domain: structuredDomain(chainIdFor(network)),
-        message: structuredMessage,
-        network,
-      } satisfies ParamsOf<'stx_signMessage'>;
-    },
-    expect: 'success',
-    tags: ['ci'],
-  },
-  {
     id: 'stx_signStructuredMessage',
     method: 'stx_signStructuredMessage',
     label: 'stx_signStructuredMessage',
     category: 'Stacks',
-    description: 'Legacy structured-data signing (domain + message as hex CVs).',
+    description:
+      'SIP-018 structured-data signing (domain + message as hex CVs). The domain’s chain-id follows the selected network, so a testnet run does not sign a mainnet domain.',
     params(ctx) {
       return {
         domain: structuredDomain(chainIdFor(networkOf(ctx))),
@@ -189,7 +197,7 @@ export const stacksMethods: RpcMethodSpec[] = [
       } satisfies ParamsOf<'stx_signStructuredMessage'>;
     },
     expect: 'success',
-    tags: ['ci', 'legacy'],
+    tags: ['ci'],
   },
   {
     id: 'stx_signTransaction-sip30',
@@ -214,66 +222,5 @@ export const stacksMethods: RpcMethodSpec[] = [
     requires: ['singlesig'],
     tags: ['ci'],
     verify: verifyStxTransaction(),
-  },
-  {
-    id: 'stx_signTransaction-contract-call',
-    method: 'stx_signTransaction',
-    label: 'stx_signTransaction (contract call)',
-    category: 'Stacks',
-    description:
-      'An unsigned CONTRACT CALL rather than a transfer — the shape that forces the approval screen to decode a payload instead of an amount.',
-    async params(ctx) {
-      const network = networkOf(ctx);
-      const { publicKey } = await fetchStxAccount(ctx);
-      return {
-        transaction: await buildUnsignedContractCallHex({
-          publicKey,
-          contract: SIP10_CONTRACT,
-          functionName: 'get-name',
-          functionArgs: [],
-          mode: networkModeOf(network),
-        }),
-        network,
-      } satisfies ParamsOf<'stx_signTransaction'>;
-    },
-    expect: 'success',
-    requires: ['singlesig'],
-    tags: ['ci'],
-    verify: verifyStxTransaction({ contract: SIP10_CONTRACT, functionName: 'get-name' }),
-  },
-  {
-    id: 'stx_signTransaction-legacy',
-    method: 'stx_signTransaction',
-    label: 'stx_signTransaction (legacy txHex)',
-    category: 'Stacks',
-    description: 'The same unsigned transfer, sent as the legacy `txHex` param.',
-    async params(ctx) {
-      const network = networkOf(ctx);
-      const { publicKey } = await fetchStxAccount(ctx);
-      return {
-        txHex: await buildUnsignedStxTransferHex({
-          publicKey,
-          recipient: STX_RECIPIENT,
-          mode: networkModeOf(network),
-        }),
-        network,
-      } satisfies ParamsOf<'stx_signTransaction'>;
-    },
-    expect: 'success',
-    requires: ['singlesig'],
-    tags: ['ci', 'legacy'],
-    verify: verifyStxTransaction(),
-  },
-
-  // ── Removed methods ───────────────────────────────────────────────────────
-  {
-    id: 'stx_getNetworks',
-    method: 'stx_getNetworks',
-    label: 'stx_getNetworks (removed)',
-    category: 'Stacks',
-    description:
-      'Removed from the extension. Kept as a negative test: it should answer "not supported" rather than silently resolve.',
-    expect: { extension: { error: 4002 } },
-    tags: ['negative'],
   },
 ];
