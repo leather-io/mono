@@ -15,12 +15,17 @@ export function useSignIn(network: AuthNetworkId, application: AuthApplication[]
   return useMutation<AuthSession, Error, void>({
     mutationKey: ['multisig-auth-sign-in', network, application],
     mutationFn: async () => {
-      const { message, timestamp } = buildSignInMessage(network);
+      const domain = window.location.origin;
+      const { message, timestamp } = buildSignInMessage({
+        network,
+        domain,
+        application,
+      });
       const payload = await walletSignIn({ network, message, timestamp });
       if (Math.floor(Date.now() / 1000) - timestamp > signInMessageMaxAgeSeconds) {
         throw new Error('Sign-in expired. The message has a 5-minute expiry, so please try again.');
       }
-      const session = await getSignInService().signIn({ network, application, payload });
+      const session = await getSignInService().signIn({ network, domain, application, payload });
       setSessions(prev => ({ ...prev, [network]: session }));
       return session;
     },

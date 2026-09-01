@@ -104,6 +104,8 @@ export const LEATHER_EXTENSION_CHROME_STORE_URL =
 export const LEATHER_API_URL_STAGING = 'https://staging.api.leather.io';
 export const LEATHER_API_URL_PRODUCTION = 'https://api.leather.io';
 
+export const SIGN_IN_MESSAGE_FIRST_LINE = 'Sign in to Leather';
+
 export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
   bitcoin: {
     name: 'bitcoin',
