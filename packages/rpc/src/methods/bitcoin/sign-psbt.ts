@@ -22,9 +22,13 @@ export const signatureHash = {
   SINGLE_ANYONECANPAY: 0x83,
 } as const;
 
+const validSighashValues: number[] = Object.values(signatureHash);
+
 const signPsbtRequestParamsSchema = z.object({
   account: z.number().optional(),
-  allowedSighash: z.array(z.any()).optional(),
+  allowedSighash: z
+    .array(z.number().refine(value => validSighashValues.includes(value)))
+    .optional(),
   broadcast: z.boolean().optional(),
   descriptor: z.string().optional(),
   hex: z.string(),
@@ -38,6 +42,8 @@ const signPsbtRequestParamsSchema = z.object({
 const signPsbtResponseBodySchema = z.object({
   hex: z.string(),
   txid: z.string().optional(),
+  proposalId: z.string().optional(),
+  status: z.enum(['broadcast', 'proposed']).optional(),
 });
 
 export const signPsbt = defineRpcEndpoint({

@@ -36,6 +36,25 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.61.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.61.0...@leather.io/models-v0.61.1) (2026-08-27)
+
+
+### Bug Fixes
+
+* add @stacks/connect ([#2580](https://github.com/leather-io/mono/issues/2580)) ([625b20b](https://github.com/leather-io/mono/commit/625b20b6a68ee0c1bba63e892b46b837561b71e9))
+
+## [0.61.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.60.0...@leather.io/models-v0.61.0) (2026-08-18)
+
+
+### Features
+
+* **web:** show nonce on multisig transaction details ([#2635](https://github.com/leather-io/mono/issues/2635)) ([b482b2d](https://github.com/leather-io/mono/commit/b482b2db89de8218130ef26a3d5893e91f6a6dd9))
+
+
+### Bug Fixes
+
+* add private-1 network ([#2650](https://github.com/leather-io/mono/issues/2650)) ([32c5518](https://github.com/leather-io/mono/commit/32c5518aa8410cf03f55365c53c617171980b166))
+
 ## [0.60.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.59.0...@leather.io/models-v0.60.0) (2026-07-15)
 
 

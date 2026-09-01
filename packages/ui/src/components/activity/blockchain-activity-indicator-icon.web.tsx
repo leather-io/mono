@@ -3,6 +3,7 @@ import { css } from 'leather-styles/css';
 import type { BlockchainActivityIndicator } from '@leather.io/features';
 import { assertUnreachable } from '@leather.io/utils';
 
+import { CancelledIcon } from '../../icons/activity/cancelled-icon.web';
 import { FailedIcon } from '../../icons/activity/failed-icon.web';
 import { FunctionActivityIcon } from '../../icons/activity/function-icon.web';
 import { ReceivedIcon } from '../../icons/activity/received-icon.web';
@@ -53,6 +54,8 @@ export function BlockchainActivityIndicatorIcon({
       return <PendingIndicatorIcon size={size} />;
     case 'failed':
       return <FailedIcon width={size} height={size} />;
+    case 'cancelled':
+      return <CancelledIcon width={size} height={size} />;
     case 'received':
       return <ReceivedIcon width={size} height={size} />;
     case 'swap':

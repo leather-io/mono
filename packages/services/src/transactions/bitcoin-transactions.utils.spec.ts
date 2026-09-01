@@ -1,5 +1,7 @@
 import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
+import type { MempoolTransaction } from '../infrastructure/api/mempool/mempool-api.schema';
 import {
+  createBitcoinTransactionFromMempool,
   isOutboundTx,
   isPendingTx,
   readTxOwnedVins,
@@ -72,5 +74,49 @@ describe(readTxOwnedVouts.name, () => {
     const ownedVouts = readTxOwnedVouts(mockTx);
     expect(ownedVouts.length).toBe(1);
     expect(ownedVouts[0]).toBe(ownedVout);
+  });
+});
+
+const vaultAddress = 'bcrt1qvault';
+const lockAddress = 'bcrt1qlock';
+
+const mempoolReceiveTx: MempoolTransaction = {
+  txid: '6',
+  status: { confirmed: true, block_height: 4471, block_hash: 'abc', block_time: 1_700_000_000 },
+  fees: 153,
+  vin: [{ txid: '5', vout: 0, prevout: { scriptpubkey_address: lockAddress, value: 10_000_000 } }],
+  vout: [{ scriptpubkey_address: vaultAddress, value: 9_999_847 }],
+};
+
+describe(createBitcoinTransactionFromMempool.name, () => {
+  it('should mark the queried address as owned for a fixed-address account', () => {
+    const tx = createBitcoinTransactionFromMempool({
+      ...mempoolReceiveTx,
+      address: vaultAddress,
+    });
+    expect(tx.vout[0]?.owned).toBe(true);
+    expect(tx.vin[0]?.owned).toBeUndefined();
+  });
+
+  it('should own nothing when no address is supplied', () => {
+    const tx = createBitcoinTransactionFromMempool(mempoolReceiveTx);
+    expect(tx.vout[0]?.owned).toBeUndefined();
+    expect(tx.vin[0]?.owned).toBeUndefined();
+  });
+
+  it('should not treat an addressless output as owned', () => {
+    const tx = createBitcoinTransactionFromMempool({
+      ...mempoolReceiveTx,
+      vout: [{ scriptpubkey_address: undefined, value: 0 }],
+    });
+    expect(tx.vout[0]?.owned).toBeUndefined();
+  });
+
+  it('should omit path when the account has no derivation path', () => {
+    const tx = createBitcoinTransactionFromMempool({
+      ...mempoolReceiveTx,
+      address: vaultAddress,
+    });
+    expect(tx.vout[0]?.path).toBeUndefined();
   });
 });

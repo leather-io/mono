@@ -10,7 +10,7 @@ import { isDefined } from '@leather.io/utils';
 import {
   type DecodedProposalPayload,
   decodeProposalPayload,
-} from '../transactions/decode-proposal-summary';
+} from '../transactions/decode-proposal-payload';
 import type { VaultMultisigTransaction } from './harmonize-vault-activity';
 import type { MultisigActivityClassification } from './multisig-transaction-activity-view';
 

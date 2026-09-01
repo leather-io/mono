@@ -489,6 +489,43 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.117.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.116.2...@leather.io/ui-v1.117.0) (2026-08-27)
+
+
+### Features
+
+* distinguish multisig cancelled activity items ([#2660](https://github.com/leather-io/mono/issues/2660)) ([4dc3931](https://github.com/leather-io/mono/commit/4dc3931374c6529b833d7e98e231e23e0bd78b23))
+
+
+### Bug Fixes
+
+* add all balances settings tab ([#2552](https://github.com/leather-io/mono/issues/2552)) ([1ef1c33](https://github.com/leather-io/mono/commit/1ef1c33ecb393f6e2d87f0829773e88e7a59fcfa))
+* multisig pre-release design QA pass ([#2670](https://github.com/leather-io/mono/issues/2670)) ([c14d933](https://github.com/leather-io/mono/commit/c14d933f0c29778e8583fc64fd9273e10c27f764))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.27.1
+    * @leather.io/utils bumped to 0.52.7
+  * devDependencies
+    * @leather.io/features bumped to 1.8.0
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/panda-preset bumped to 0.16.4
+
+## [1.116.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.116.1...@leather.io/ui-v1.116.2) (2026-08-18)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.52.6
+  * devDependencies
+    * @leather.io/features bumped to 1.7.2
+    * @leather.io/models bumped to 0.61.0
+
 ## [1.116.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.116.0...@leather.io/ui-v1.116.1) (2026-08-10)
 
 

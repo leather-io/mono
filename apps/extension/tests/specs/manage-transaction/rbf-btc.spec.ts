@@ -138,7 +138,7 @@ test.describe('Bitcoin RBF increase fee', () => {
 
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
     await expect(activityList).toBeVisible();
-    await expect(activityList.getByText('Receive BTC')).toBeVisible();
+    await expect(activityList.getByText('BTC', { exact: true })).toBeVisible();
     await expect(page.getByText('Increase fee')).not.toBeVisible();
   });
 });

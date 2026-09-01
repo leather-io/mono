@@ -1,7 +1,15 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
+import { bytesToHex } from '@noble/hashes/utils';
+import { base64 } from '@scure/base';
+
+import {
+  compileWshDescriptor,
+  decodeBitcoinTx,
+  findAccountDescriptorKey,
+  getPsbtAsTransaction,
+} from '@leather.io/bitcoin';
 import { createRpcSuccessResponse } from '@leather.io/rpc';
 import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
 import { delay } from '@leather.io/utils';
@@ -18,6 +26,7 @@ import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
 import { useProposeMultisigTransaction } from '@app/features/multisig/use-propose-multisig-transaction';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
+import { useCheckTaprootUtxos } from '@app/query/bitcoin/transaction/use-check-taproot-utxos';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -26,15 +35,34 @@ import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useRpcSendTransferContext } from './rpc-send-transfer.context';
 
+interface SendTransferActionLabels {
+  approveLabel?: string;
+  busyLabel?: string;
+  submittedLabel?: string;
+}
+function getSendTransferActionLabels({
+  broadcast,
+  isBitcoinPolicy,
+}: {
+  broadcast: boolean;
+  isBitcoinPolicy: boolean;
+}): SendTransferActionLabels {
+  if (isBitcoinPolicy) return { approveLabel: 'Propose transaction', busyLabel: 'Proposing...' };
+  if (!broadcast)
+    return { approveLabel: 'Sign transaction', busyLabel: 'Signing...', submittedLabel: 'Signed' };
+  return {};
+}
+
 export function useRpcSendTransferActions() {
   const { availableBalance, selectedFee } = useFeeEditorContext();
-  const { amount, frameId, isLoadingBalance, recipients, requestId, tabId, utxos } =
+  const { amount, broadcast, frameId, isLoadingBalance, recipients, requestId, tabId, utxos } =
     useRpcSendTransferContext();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const generateTx = useGenerateUnsignedBitcoinTx({ throwError: true });
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx } = useBitcoinBroadcastTransaction();
+  const { checkIfInputsIncludeTaproot } = useCheckTaprootUtxos();
   const navigate = useNavigate();
   const policy = useCurrentPolicy();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
@@ -98,7 +126,11 @@ export function useRpcSendTransferActions() {
             { frameId, tabId },
             createRpcSuccessResponse('sendTransfer', {
               id: requestId,
-              result: { proposalId: proposal.id, status: 'proposed' },
+              result: {
+                proposalId: proposal.id,
+                status: 'proposed',
+                transaction: bytesToHex(getPsbtAsTransaction(base64.decode(rawPayload)).unsignedTx),
+              },
             })
           );
 
@@ -111,12 +143,33 @@ export function useRpcSendTransferActions() {
         const resp = generateTx({ amount, recipients }, feeRate, utxos);
         if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
 
+        const shouldHalt = await checkIfInputsIncludeTaproot(decodeBitcoinTx(resp.hex).inputs);
+        if (shouldHalt) return;
+
         const tx = await signTransaction(resp.psbt, resp.signingConfig);
 
         tx.finalize();
 
+        if (!broadcast) {
+          setIsBroadcasting(false);
+
+          void sendMessageToOriginatingFrame(
+            { frameId, tabId },
+            createRpcSuccessResponse('sendTransfer', {
+              id: requestId,
+              result: { transaction: tx.hex },
+            })
+          );
+
+          setIsSubmitted(true);
+          await delay(500);
+          closeWindow();
+          return;
+        }
+
         await broadcastTx({
           tx: tx.hex,
+          skipTaprootWarning: true,
           async onSuccess(txid) {
             setIsBroadcasting(false);
 
@@ -129,7 +182,7 @@ export function useRpcSendTransferActions() {
               { frameId, tabId },
               createRpcSuccessResponse('sendTransfer', {
                 id: requestId,
-                result: { txid },
+                result: { txid, transaction: tx.hex },
               })
             );
 
@@ -153,8 +206,7 @@ export function useRpcSendTransferActions() {
       isSubmitted,
       onCancel,
       onApprove,
-      approveLabel: isBitcoinPolicy ? 'Propose transaction' : undefined,
-      busyLabel: isBitcoinPolicy ? 'Proposing...' : undefined,
+      ...getSendTransferActionLabels({ broadcast, isBitcoinPolicy }),
     });
   }, [
     isLoadingBalance,
@@ -165,11 +217,13 @@ export function useRpcSendTransferActions() {
     selectedFee?.feeRate,
     generateTx,
     amount,
+    broadcast,
     frameId,
     recipients,
     utxos,
     signTransaction,
     broadcastTx,
+    checkIfInputsIncludeTaproot,
     tabId,
     requestId,
     policy,

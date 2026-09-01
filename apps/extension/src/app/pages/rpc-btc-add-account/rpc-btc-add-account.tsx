@@ -10,6 +10,7 @@ import { closeWindow } from '@shared/utils';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
+import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
@@ -73,6 +74,7 @@ export function RpcBtcAddAccount() {
   return (
     <>
       <Approver requester={origin} width="100%">
+        <CrossOriginFrameCallout mb="space.03" width="100%" />
         <Approver.Header
           title={isVerifyMode ? 'Verify multisig address' : 'Add multisig account'}
           onPressRequestedByLink={focusInitiatingTab}

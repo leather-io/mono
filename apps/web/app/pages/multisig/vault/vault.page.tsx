@@ -23,13 +23,11 @@ import {
 } from '~/features/multisig/vaults/vault-account-index';
 import { useToast } from '~/features/toasts/use-toast';
 
-import { VAULT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { AuthNetworkId, Vault } from '@leather.io/models';
 import { getErrorDetail } from '@leather.io/services';
 import { Button, Callout } from '@leather.io/ui';
 
 import { Badge } from '../components/badge';
-import { EditableName } from '../components/editable-name';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigPage } from '../components/multisig-page';
 import { SectionLabel } from '../components/section-label';
@@ -37,14 +35,20 @@ import { multisigPaths } from '../multisig.constants';
 import { AccountsSection } from './components/accounts-section';
 import { CancelVaultModal } from './components/cancel-vault-modal';
 import { CreateAccountModal } from './components/create-account-modal';
+import { EditVaultModal } from './components/edit-vault-modal';
 import { MembersSection } from './components/members-section';
 import { ShareInvitationsModal } from './components/share-invitations-modal';
 import { VaultBalanceHero } from './components/vault-balance-hero';
 import { VaultStatusCard } from './components/vault-status-card';
 import { VaultTransactions } from './components/vault-transactions';
 
-function accountCreationBlockedReason(vault: Vault, atAccountLimit: boolean): string | undefined {
+function accountCreationBlockedReason(
+  vault: Vault,
+  isCreator: boolean,
+  atAccountLimit: boolean
+): string | undefined {
   if (vault.status === 'cancelled') return 'This vault has been cancelled.';
+  if (!isCreator) return 'Only the vault creator can create accounts.';
   if (vault.members.some(member => member.membershipStatus === 'declined')) {
     return "A member declined, so this vault can't add accounts. The creator can cancel and start over.";
   }
@@ -59,6 +63,7 @@ export function VaultDetailPage() {
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [isSharingInvites, setIsSharingInvites] = useState(false);
   const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
+  const [isEditingVault, setIsEditingVault] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
 
@@ -132,7 +137,8 @@ export function VaultDetailPage() {
     Array.from({ length: joinedMemberCount }, (_unused, index) => index + 1).every(value =>
       isThresholdAtAccountLimit(accountList, value, accountLimit)
     );
-  const canCreateAccount = vault.status !== 'cancelled' && allMembersJoined && !atAccountLimit;
+  const canCreateAccount =
+    isCreator && vault.status !== 'cancelled' && allMembersJoined && !atAccountLimit;
   const vaultDetailsHeading = `${vault.name.charAt(0).toUpperCase()}${vault.name.slice(1)} details`;
 
   function onCancel() {
@@ -148,24 +154,7 @@ export function VaultDetailPage() {
   }
 
   return (
-    <MultisigPage
-      title={
-        <EditableName
-          value={vault.name}
-          onSave={name =>
-            updateVault.mutate(
-              { vaultId: vault.id, update: { name } },
-              { onError: err => showErrorToast(getErrorDetail(err) ?? 'Unknown error') }
-            )
-          }
-          title="Rename vault"
-          label="vault name"
-          canEdit={isCreator && vault.status !== 'cancelled'}
-          maxLength={VAULT_MAX_NAME_LENGTH}
-        />
-      }
-      backTo={multisigPaths.index}
-    >
+    <MultisigPage title={vault.name} backTo={multisigPaths.index}>
       {isInvited && myMembership && (
         <Callout variant="info" title="You've been invited to this vault">
           <Flex gap="space.03" mt="space.03">
@@ -225,7 +214,7 @@ export function VaultDetailPage() {
             recoveryFailed={accountRecovery.recoveryFailed}
             onRetryRecovery={accountRecovery.retry}
             canCreate={canCreateAccount}
-            disabledReason={accountCreationBlockedReason(vault, atAccountLimit)}
+            disabledReason={accountCreationBlockedReason(vault, isCreator, atAccountLimit)}
             onCreateAccount={() => setIsCreatingAccount(true)}
             onOpenAccount={accountId => navigate(multisigPaths.account(vault.id, accountId))}
           />
@@ -260,6 +249,9 @@ export function VaultDetailPage() {
             pendingCount={pendingCount}
             onShareInvite={() => setIsSharingInvites(true)}
             onCancelVault={() => setIsConfirmingCancel(true)}
+            onEdit={
+              isCreator && vault.status !== 'cancelled' ? () => setIsEditingVault(true) : undefined
+            }
           />
           <SectionLabel>Activity</SectionLabel>
           <VaultTransactions accounts={accounts.data} />
@@ -271,6 +263,22 @@ export function VaultDetailPage() {
         accounts={accounts.data}
         isShowing={isCreatingAccount}
         onClose={() => setIsCreatingAccount(false)}
+      />
+
+      <EditVaultModal
+        vault={vault}
+        isShowing={isEditingVault}
+        isSaving={updateVault.isPending}
+        onClose={() => setIsEditingVault(false)}
+        onSave={update =>
+          updateVault.mutate(
+            { vaultId: vault.id, update },
+            {
+              onSuccess: () => setIsEditingVault(false),
+              onError: err => showErrorToast(getErrorDetail(err) ?? 'Unknown error'),
+            }
+          )
+        }
       />
 
       <ShareInvitationsModal

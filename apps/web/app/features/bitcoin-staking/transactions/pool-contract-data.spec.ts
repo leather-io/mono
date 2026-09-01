@@ -56,6 +56,35 @@ describe(getPoolContractData.name, () => {
     expect(options.functionName).toEqual('stake');
   });
 
+  test('routes a switch into Stacking DAO through their wrapper', () => {
+    const options = getPoolContractData(stackingDaoSignerManagerContractId).stakeUpdate({
+      newSignerManagerContractId: stackingDaoSignerManagerContractId,
+      currentSignerManagerContractId: signerManagerContractId,
+      cyclesToExtend: 0,
+      amountIncreaseMicroStx: 0n,
+      currentAmountMicroStx: 40_000_000n,
+      pox5ContractId,
+      network: 'mainnet',
+    });
+
+    expect(options.functionName).toEqual('delegate-update');
+  });
+
+  test('routes a switch out of Stacking DAO as a direct pox-5 stake-update', () => {
+    const options = getPoolContractData(signerManagerContractId).stakeUpdate({
+      newSignerManagerContractId: signerManagerContractId,
+      currentSignerManagerContractId: stackingDaoSignerManagerContractId,
+      cyclesToExtend: 0,
+      amountIncreaseMicroStx: 0n,
+      currentAmountMicroStx: 40_000_000n,
+      pox5ContractId,
+      network: 'mainnet',
+    });
+
+    expect(options.contract).toEqual(pox5ContractId);
+    expect(options.functionName).toEqual('stake-update');
+  });
+
   test('resolves the Stacking DAO signer-manager to their wrapper calls', () => {
     const pool = getPoolContractData(stackingDaoSignerManagerContractId);
 
