@@ -30,9 +30,9 @@ const frameId = 42;
 const tabId = 7;
 const request: RpcRequests = { jsonrpc: '2.0', id: 'req-1', method: 'supportedMethods' };
 
-function buildPort() {
+function buildPort(tabUrl?: string) {
   return {
-    sender: { frameId, url: `https://${hostname}`, tab: { id: tabId } },
+    sender: { frameId, url: `https://${hostname}`, tab: { id: tabId, url: tabUrl } },
   } as unknown as chrome.runtime.Port;
 }
 
@@ -75,6 +75,21 @@ describe(createConnectingAppMetadataSearchParams.name, () => {
     expect(result.tabId).toBe(tabId);
     expect(result.urlParams.get('frameId')).toBe(frameId.toString());
     expect(result.urlParams.get('tabId')).toBe(tabId.toString());
+  });
+
+  test('sets the frame origin and the top-level tab origin', () => {
+    const result = createConnectingAppMetadataSearchParams(
+      buildPort('https://top.example.com/some/page')
+    );
+
+    expect(result.urlParams.get('origin')).toBe(`https://${hostname}`);
+    expect(result.urlParams.get('topOrigin')).toBe('https://top.example.com');
+  });
+
+  test('sets an empty top origin when the sender tab has no url', () => {
+    const result = createConnectingAppMetadataSearchParams(buildPort());
+
+    expect(result.urlParams.get('topOrigin')).toBe('');
   });
 });
 

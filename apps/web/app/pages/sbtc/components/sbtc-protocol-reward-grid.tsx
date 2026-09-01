@@ -28,7 +28,6 @@ function RewardProtocolEnrollCell({
    * but should eventually be removed in favor of Sanity based
    */
   const legacyPostSlug: Record<string, string> = {
-    basic: 'sbtc-rewards-basic',
     alex: 'alex-sbtc-pools',
     bitflow: 'bitflow-sbtc-pools',
     velar: 'velar-sbtc-pools',
