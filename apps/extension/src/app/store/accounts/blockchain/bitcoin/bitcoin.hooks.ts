@@ -6,6 +6,7 @@ import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
 
 import {
+  defaultAllowedSighashTypes,
   getBitcoinJsLibNetworkConfigByMode,
   getInputPaymentType,
   getTaprootAddress,
@@ -40,7 +41,6 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useCurrentAccountId } from '../../account';
 import { useBitcoinSoftwareSignerLookup } from './bitcoin-keychain';
-import { allSighashTypes } from './bitcoin-payer';
 import {
   useCurrentNativeSegwitAccount,
   useNativeSegwitAccount,
@@ -81,8 +81,13 @@ function useSignBitcoinSoftwareTx() {
   const network = useCurrentNetwork();
   const signingCallbacksLookup = useBitcoinSoftwareSignerLookup();
 
-  return (psbt: Uint8Array, inputSigningConfig: BitcoinInputSigningConfig[]) => {
+  return (
+    psbt: Uint8Array,
+    inputSigningConfig: BitcoinInputSigningConfig[],
+    allowedSighash?: number[]
+  ) => {
     const tx = btc.Transaction.fromPSBT(psbt);
+    const sighashTypes = [...defaultAllowedSighashTypes, ...(allowedSighash ?? [])];
     const getSigningCallbacks = signingCallbacksLookup(account.fingerprint);
 
     if (!getSigningCallbacks) throw new Error('Signing callbacks not available');
@@ -108,10 +113,10 @@ function useSignBitcoinSoftwareTx() {
       });
 
       try {
-        nativeSegwitCallbacks.signAtIndex(tx, index, allSighashTypes);
+        nativeSegwitCallbacks.signAtIndex(tx, index, sighashTypes);
       } catch {
         try {
-          taprootCallbacks.signAtIndex(tx, index, allSighashTypes);
+          taprootCallbacks.signAtIndex(tx, index, sighashTypes);
         } catch {
           // Signing failed, continue without this signature
         }
@@ -284,7 +289,11 @@ export function useSignBitcoinTx() {
    * Bitcoin signing function. Don't forget to finalize the tx once it's
    * returned. You can broadcast with the hex value from `tx.hex`.
    */
-  return (psbt: Uint8Array, inputsToSign?: BitcoinInputSigningConfig[] | number[]) => {
+  return (
+    psbt: Uint8Array,
+    inputsToSign?: BitcoinInputSigningConfig[] | number[],
+    allowedSighash?: number[]
+  ) => {
     function getSigningConfig(inputsToSign?: BitcoinInputSigningConfig[] | number[]) {
       if (!inputsToSign) return getDefaultSigningConfig(psbt);
       if (inputsToSign.every(isNumber)) return getDefaultSigningConfig(psbt, inputsToSign);
@@ -305,7 +314,7 @@ export function useSignBitcoinTx() {
         return listenForBitcoinTxLedgerSigning(bytesToHex(psbt));
       },
       software() {
-        return signSoftwareTx(psbt, getSigningConfig(inputsToSign));
+        return signSoftwareTx(psbt, getSigningConfig(inputsToSign), allowedSighash);
       },
     })();
   };
