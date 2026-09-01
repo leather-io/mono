@@ -98,7 +98,14 @@ export function AccountDetailsCard({
       <CardRow highlight={!isAddedToWallet}>
         {isAddedToWallet ? (
           <>
-            <Button variant="outline" size="sm" fullWidth disabled>
+            <Button
+              variant="outline"
+              size="sm"
+              fullWidth
+              onClick={onAddToWallet}
+              aria-busy={isAddingToWallet}
+              disabled={isAddingToWallet}
+            >
               <Flex alignItems="center" gap="space.02">
                 <CheckmarkIcon variant="small" color="ink.text-subdued" />
                 Added to your Leather extension
