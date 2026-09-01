@@ -111,6 +111,7 @@ describe(LeatherAuthApiClient.name, () => {
 
     const result = await h.client.authenticate({
       network,
+      domain: 'https://app.leather.io',
       signature: 'sig',
       publicKey: 'pub',
       address: 'addr',
@@ -129,6 +130,7 @@ describe(LeatherAuthApiClient.name, () => {
     await expect(
       h.client.authenticate({
         network,
+        domain: 'https://app.leather.io',
         signature: 'sig',
         publicKey: 'pub',
         address: 'addr',

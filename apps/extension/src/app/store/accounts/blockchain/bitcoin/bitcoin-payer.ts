@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 
 import { HDKey } from '@scure/bip32';
-import { SigHash } from '@scure/btc-signer';
 import type { P2Ret, P2TROut } from '@scure/btc-signer/payment';
 
 import {
@@ -33,26 +32,6 @@ type PaymentToPayer<TPayment> = TPayment extends P2TROut
 type ExtractPaymentReturn<T> = T extends (keychain: HDKey, network: BitcoinNetworkModes) => infer R
   ? R
   : never;
-
-enum SignatureHash {
-  DEFAULT = 0x00,
-  ALL = 0x01,
-  NONE = 0x02,
-  SINGLE = 0x03,
-  ALL_ANYONECANPAY = 0x81,
-  NONE_ANYONECANPAY = 0x82,
-  SINGLE_ANYONECANPAY = 0x83,
-}
-export const allSighashTypes = [
-  SigHash.DEFAULT,
-  SignatureHash.ALL,
-  SignatureHash.NONE,
-  SignatureHash.SINGLE,
-  SigHash.ALL_ANYONECANPAY,
-  SignatureHash.ALL_ANYONECANPAY,
-  SignatureHash.NONE_ANYONECANPAY,
-  SignatureHash.SINGLE_ANYONECANPAY,
-];
 
 type SupportedPaymentReturn = P2Ret | P2TROut;
 

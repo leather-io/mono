@@ -46,9 +46,19 @@ export function getOriginatingFrameFromPort(port: chrome.runtime.Port): Originat
   return { frameId: getFrameIdFromPort(port), tabId: getTabIdFromPort(port) };
 }
 
-function getOriginFromPort(port: chrome.runtime.Port) {
+export function getOriginFromPort(port: chrome.runtime.Port) {
   if (port.sender?.url) return new URL(port.sender.url).origin;
   return port.sender?.origin;
+}
+
+function getTopOriginFromPort(port: chrome.runtime.Port) {
+  const tabUrl = port.sender?.tab?.url;
+  if (!tabUrl) return undefined;
+  try {
+    return new URL(tabUrl).origin;
+  } catch {
+    return undefined;
+  }
 }
 
 function getHostnameFromPort(port: chrome.runtime.Port) {
@@ -131,6 +141,7 @@ export function createConnectingAppMetadataSearchParams(
   const tabId = getTabIdFromPort(port);
   const frameId = getFrameIdFromPort(port);
   urlParams.set('origin', origin ?? '');
+  urlParams.set('topOrigin', getTopOriginFromPort(port) ?? '');
   urlParams.set('frameId', frameId.toString());
   urlParams.set('tabId', tabId.toString());
   otherParams.forEach(([key, value]) => urlParams.append(key, value));

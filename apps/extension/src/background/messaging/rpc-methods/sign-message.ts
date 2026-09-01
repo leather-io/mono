@@ -13,12 +13,14 @@ import {
   getRpcSignMessageParamErrors,
   validateRpcSignMessageParams,
 } from '@shared/rpc/methods/sign-message';
+import { shouldRefuseSignInMessageSigning } from '@shared/rpc/sign-in-message-veto';
 
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
+  getOriginFromPort,
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
@@ -49,6 +51,23 @@ export const signMessageHandler = defineRpcRequestHandler(
           error: {
             code: RpcErrorCode.INVALID_PARAMS,
             message: getRpcSignMessageParamErrors(request.params),
+          },
+        })
+      );
+      return;
+    }
+
+    if (shouldRefuseSignInMessageSigning(request.params.message, getOriginFromPort(port))) {
+      void trackRpcRequestError({ endpoint: 'signMessage', error: 'Sign-in domain mismatch' });
+
+      void sendMessageToOriginatingFrame(
+        getOriginatingFrameFromPort(port),
+        createRpcErrorResponse('signMessage', {
+          id: request.id,
+          error: {
+            code: RpcErrorCode.PERMISSION_DENIED,
+            message:
+              'This is a Leather sign-in message and its Domain line does not match the requesting origin.',
           },
         })
       );

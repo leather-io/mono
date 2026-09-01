@@ -9,6 +9,8 @@ export const RpcErrorMessage = {
   UndefinedTransaction: 'Error generating unsigned transaction',
   UnsignedTransaction: 'Error signing transaction',
   BroadcastError: 'Error broadcasting transaction',
+  DisallowedSighash:
+    'Request rejected: an input to sign uses a sighash type not covered by allowedSighash',
 } as const;
 
 export const accountSchema = z.number().int();

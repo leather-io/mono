@@ -954,6 +954,99 @@ describe('finalizeWshDescriptorPsbt', () => {
     ).toMatchObject(finalized);
   });
 
+  it('returns unsatisfied when the signed psbt spends the descriptor input in a different transaction', () => {
+    const { scriptPubKey, witnessScript } = compileWshDescriptor(singleSig);
+    const divergentTx = new btc.Transaction({ allowUnknownInputs: true });
+    divergentTx.addInput({
+      txid: hexToBytes('00'.repeat(32)),
+      index: 0,
+      sequence: 0xffffffff,
+      witnessUtxo: { script: scriptPubKey, amount: 20_000n },
+      witnessScript,
+    });
+    divergentTx.addOutput({
+      script: btc.p2wpkh(deriveAddressIndexKey(9).publicKey!).script,
+      amount: 18_000n,
+    });
+    divergentTx.signIdx(deriveAddressIndexKey(1).privateKey!, 0);
+
+    const preimagePsbt = buildPolicyTx(singleSig, { signWith: [] }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({
+        signedPsbt: divergentTx.toPSBT(),
+        preimagePsbt,
+        descriptor: singleSig,
+      })
+    ).toEqual(unsatisfied);
+  });
+
+  it('returns unsatisfied when the signed psbt reorders the inputs of the preimage psbt', () => {
+    const { scriptPubKey, witnessScript } = compileWshDescriptor(singleSig);
+    const descriptorInput = {
+      txid: hexToBytes('00'.repeat(32)),
+      index: 0,
+      sequence: 0xffffffff,
+      witnessUtxo: { script: scriptPubKey, amount: 20_000n },
+      witnessScript,
+    };
+    const foreignInput = {
+      txid: hexToBytes('11'.repeat(32)),
+      index: 0,
+      sequence: 0xffffffff,
+      witnessUtxo: {
+        script: btc.p2wpkh(deriveAddressIndexKey(3).publicKey!).script,
+        amount: 10_000n,
+      },
+    };
+    const output = {
+      script: btc.p2wpkh(deriveAddressIndexKey(1).publicKey!).script,
+      amount: 18_000n,
+    };
+
+    const preimageTx = new btc.Transaction({ allowUnknownInputs: true });
+    preimageTx.addInput(foreignInput);
+    preimageTx.addInput(descriptorInput);
+    preimageTx.addOutput(output);
+
+    const signedTx = new btc.Transaction({ allowUnknownInputs: true });
+    signedTx.addInput(descriptorInput);
+    signedTx.addInput(foreignInput);
+    signedTx.addOutput(output);
+    signedTx.signIdx(deriveAddressIndexKey(1).privateKey!, 0);
+
+    expect(
+      finalizeWshDescriptorPsbt({
+        signedPsbt: signedTx.toPSBT(),
+        preimagePsbt: preimageTx.toPSBT(),
+        descriptor: singleSig,
+      })
+    ).toEqual(unsatisfied);
+  });
+
+  it('returns unsatisfied when the two psbts differ only in locktime', () => {
+    const signedPsbt = buildPolicyTx(singleSig, { signWith: [1] }).toPSBT();
+    const preimagePsbt = buildPolicyTx(singleSig, { signWith: [], lockTime: 1 }).toPSBT();
+    expect(finalizeWshDescriptorPsbt({ signedPsbt, preimagePsbt, descriptor: singleSig })).toEqual(
+      unsatisfied
+    );
+  });
+
+  it('returns unsatisfied when the two psbts differ only in version', () => {
+    const signedPsbt = buildPolicyTx(singleSig, { signWith: [1], version: 1 }).toPSBT();
+    const preimagePsbt = buildPolicyTx(singleSig, { signWith: [] }).toPSBT();
+    expect(finalizeWshDescriptorPsbt({ signedPsbt, preimagePsbt, descriptor: singleSig })).toEqual(
+      unsatisfied
+    );
+  });
+
+  it('returns unsatisfied when the two psbts differ only in an input sequence', () => {
+    const signedPsbt = buildPolicyTx(singleSig, { signWith: [1], sequence: 0xfffffffe }).toPSBT();
+    const preimagePsbt = buildPolicyTx(singleSig, { signWith: [] }).toPSBT();
+    expect(finalizeWshDescriptorPsbt({ signedPsbt, preimagePsbt, descriptor: singleSig })).toEqual(
+      unsatisfied
+    );
+  });
+
   it('returns unsatisfied when a non-descriptor input cannot be finalized', () => {
     const psbt = buildPolicyTx(singleSig, { signWith: [1], foreignInput: true }).toPSBT();
     expect(
