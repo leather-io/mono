@@ -1,6 +1,6 @@
 import type { AuthNetworkId, VaultAccountSummary } from '@leather.io/models';
 
-const maxAccountsPerThreshold = 10;
+export const maxAccountsPerThreshold = 10;
 
 function factorial(n: number): number {
   let result = 1;

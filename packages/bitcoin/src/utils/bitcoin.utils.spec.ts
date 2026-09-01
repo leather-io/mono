@@ -1,4 +1,6 @@
+import { sha256 } from '@noble/hashes/sha256';
 import { HDKey } from '@scure/bip32';
+import * as btc from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
 import { HD_KEY_VERSIONS_BY_NETWORK } from '@leather.io/constants';
@@ -10,13 +12,16 @@ import { deriveNativeSegwitAccountFromRootKeychain } from '../payments/p2wpkh-ad
 import { createBitcoinAddress } from '../validation/bitcoin-address';
 import {
   deriveAddressIndexZeroFromAccount,
+  ecdsaPublicKeyToSchnorr,
   encodeExtendedPublicKeyForNetwork,
+  getInputPaymentType,
   getNativeSegwitAddress,
   getTaprootAddress,
   inferNetworkFromAddress,
   inferPaymentTypeFromAddress,
   isNativeSegwitDerivationPath,
   isTaprootDerivationPath,
+  reencodeTestnetFamilyAddress,
 } from './bitcoin.utils';
 
 describe(inferNetworkFromAddress.name, () => {
@@ -223,5 +228,101 @@ describe(isNativeSegwitDerivationPath.name, () => {
   test('should correctly check native segwit derivation path', () => {
     expect(isNativeSegwitDerivationPath("m/86'/1'/3'/0/5")).toBe(false);
     expect(isNativeSegwitDerivationPath("m/84'/0'/5'/1/7")).toBe(true);
+  });
+});
+
+describe(reencodeTestnetFamilyAddress.name, () => {
+  const testnetWshAddress = 'tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7';
+  const regtestWshAddress = 'bcrt1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qzf4jry';
+  const testnetSegwitAddress = 'tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx';
+  const regtestSegwitAddress = 'bcrt1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080';
+  const testnetTaprootAddress = 'tb1pmfr3p9j00pfxjh0zmgp99y8zftmd3s5pmedqhyptwy6lm87hf5ssk79hv2';
+  const regtestTaprootAddress = 'bcrt1pmfr3p9j00pfxjh0zmgp99y8zftmd3s5pmedqhyptwy6lm87hf5ssm803es';
+  const mainnetWshAddress = 'bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3';
+
+  it('should re-encode a testnet address for regtest', () => {
+    expect(reencodeTestnetFamilyAddress(testnetWshAddress, 'regtest')).toBe(regtestWshAddress);
+    expect(reencodeTestnetFamilyAddress(testnetSegwitAddress, 'regtest')).toBe(
+      regtestSegwitAddress
+    );
+  });
+
+  it('should re-encode a regtest address for testnet', () => {
+    expect(reencodeTestnetFamilyAddress(regtestWshAddress, 'testnet')).toBe(testnetWshAddress);
+    expect(reencodeTestnetFamilyAddress(regtestSegwitAddress, 'testnet')).toBe(
+      testnetSegwitAddress
+    );
+  });
+
+  it('should re-encode taproot addresses with bech32m', () => {
+    expect(reencodeTestnetFamilyAddress(testnetTaprootAddress, 'regtest')).toBe(
+      regtestTaprootAddress
+    );
+    expect(reencodeTestnetFamilyAddress(regtestTaprootAddress, 'testnet')).toBe(
+      testnetTaprootAddress
+    );
+  });
+
+  it('should re-encode a regtest address for signet with the tb prefix', () => {
+    expect(reencodeTestnetFamilyAddress(regtestWshAddress, 'signet')).toBe(testnetWshAddress);
+  });
+
+  it('should return the same address when it already matches the target encoding', () => {
+    expect(reencodeTestnetFamilyAddress(testnetWshAddress, 'testnet')).toBe(testnetWshAddress);
+  });
+
+  it('should return null for a mainnet target', () => {
+    expect(reencodeTestnetFamilyAddress(testnetWshAddress, 'mainnet')).toBeNull();
+  });
+
+  it('should return null for a mainnet address', () => {
+    expect(reencodeTestnetFamilyAddress(mainnetWshAddress, 'regtest')).toBeNull();
+  });
+
+  it('should return null for a base58 testnet address', () => {
+    expect(
+      reencodeTestnetFamilyAddress('mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn', 'regtest')
+    ).toBeNull();
+  });
+
+  it('should return null for a bech32 address with an invalid checksum', () => {
+    expect(
+      reencodeTestnetFamilyAddress('tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsy', 'regtest')
+    ).toBeNull();
+  });
+});
+
+describe(getInputPaymentType.name, async () => {
+  const rootKeychain = await deriveRootKeychainFromMnemonic(testMnemonic);
+  const nativeSegwitPublicKey = deriveAddressIndexZeroFromAccount(
+    deriveNativeSegwitAccountFromRootKeychain(rootKeychain, 'mainnet')(0).keychain
+  ).publicKey;
+  const taprootPublicKey = deriveAddressIndexZeroFromAccount(
+    deriveTaprootAccount(rootKeychain, 'mainnet')(0).keychain
+  ).publicKey;
+  if (!nativeSegwitPublicKey || !taprootPublicKey) throw new Error('Expected public keys');
+
+  function makeInput(script: Uint8Array, witnessScript?: Uint8Array) {
+    return { index: 0, witnessUtxo: { amount: 1000n, script }, witnessScript };
+  }
+
+  it('returns p2wpkh for a native segwit input', () => {
+    const input = makeInput(btc.p2wpkh(nativeSegwitPublicKey).script);
+    expect(getInputPaymentType(input)).toBe('p2wpkh');
+  });
+
+  it('returns p2tr for a taproot input', () => {
+    const input = makeInput(btc.p2tr(ecdsaPublicKeyToSchnorr(taprootPublicKey)).script);
+    expect(getInputPaymentType(input)).toBe('p2tr');
+  });
+
+  it('returns p2wsh for a witness script input forging the p2wpkh scriptCode', () => {
+    const witnessScript = btc.p2pkh(nativeSegwitPublicKey).script;
+    const script = btc.OutScript.encode({ type: 'wsh', hash: sha256(witnessScript) });
+    expect(getInputPaymentType(makeInput(script, witnessScript))).toBe('p2wsh');
+  });
+
+  it('throws for an input without a script', () => {
+    expect(() => getInputPaymentType({ index: 0 })).toThrow('Input script cannot be empty');
   });
 });

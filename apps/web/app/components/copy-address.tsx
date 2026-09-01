@@ -188,7 +188,7 @@ export function CopyAddress({
     // corners isn't possible in clean CSS (it needs a filter/JS hack). The block
     // wrapper + negative margin keep every line aligned with the label above.
     return (
-      <styled.span display="block" ml="-space.01">
+      <styled.span display="block" ml="-space.01" style={{ textWrap: 'balance' }}>
         <styled.span
           role="button"
           tabIndex={0}
@@ -205,16 +205,27 @@ export function CopyAddress({
           transition="background 0.1s ease"
           _hover={{ bg: 'ink.background-secondary' }}
         >
-          {groupByFour(addr).map((group, index) => (
-            <styled.span
-              key={index}
-              textStyle="code"
-              color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued'}
-            >
-              {group}{' '}
-            </styled.span>
-          ))}
-          {icon}
+          {groupByFour(addr).map((group, index, groups) =>
+            index < groups.length - 1 ? (
+              <styled.span
+                key={index}
+                textStyle="code"
+                color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued'}
+              >
+                {group}{' '}
+              </styled.span>
+            ) : (
+              <styled.span key={index} whiteSpace="nowrap">
+                <styled.span
+                  textStyle="code"
+                  color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued'}
+                >
+                  {group}{' '}
+                </styled.span>
+                {icon}
+              </styled.span>
+            )
+          )}
         </styled.span>
       </styled.span>
     );

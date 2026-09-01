@@ -1,9 +1,15 @@
+import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
 import { hexToBytes } from '@noble/hashes/utils';
 import { bytesToHex } from '@stacks/common';
 
-import { finalizeWshDescriptorPsbt } from '@leather.io/bitcoin';
+import {
+  finalizeWshDescriptorPsbt,
+  getInputsToSignWithDisallowedSighash,
+  getPsbtTxInputs,
+  psbtHexToBase64,
+} from '@leather.io/bitcoin';
 import type { Money } from '@leather.io/models';
 import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
 import { createMoney, isError, sumMoney } from '@leather.io/utils';
@@ -17,6 +23,8 @@ import { analytics } from '@shared/utils/analytics';
 import { formatCurrency } from '@app/common/currency-formatter';
 import { SignPsbtArgs } from '@app/common/psbt/requests';
 import { useRpcSignPsbtParams } from '@app/common/psbt/use-psbt-request-params';
+import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
+import { useProposeMultisigTransaction } from '@app/features/multisig/use-propose-multisig-transaction';
 import { useDescriptorPsbtDetails } from '@app/features/psbt-signer/hooks/use-descriptor-psbt-details';
 import { usePsbtSigner } from '@app/features/psbt-signer/hooks/use-psbt-signer';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
@@ -26,8 +34,12 @@ import {
   useCryptoCurrencyMarketDataMeanAverage,
 } from '@app/query/common/market-data/market-data.hooks';
 import { useGetAssumedZeroIndexSigningConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useSignDescriptorPsbt } from './descriptor-psbt.hooks';
+import { useBondProposalRoute } from './use-bond-proposal-route';
 
 interface BroadcastSignedPsbtTxArgs {
   addressNativeSegwitTotal: Money;
@@ -38,8 +50,17 @@ interface BroadcastSignedPsbtTxArgs {
 }
 export function useRpcSignPsbt() {
   const navigate = useNavigate();
-  const { broadcast, descriptor, frameId, origin, psbtHex, requestId, signAtIndex, tabId } =
-    useRpcSignPsbtParams();
+  const {
+    allowedSighash,
+    broadcast,
+    descriptor,
+    frameId,
+    origin,
+    psbtHex,
+    requestId,
+    signAtIndex,
+    tabId,
+  } = useRpcSignPsbtParams();
   const { signPsbt, getPsbtAsTransaction } = usePsbtSigner();
   const signDescriptorPsbt = useSignDescriptorPsbt();
   const descriptorDetails = useDescriptorPsbtDetails(psbtHex ?? '', descriptor ?? '');
@@ -48,8 +69,71 @@ export function useRpcSignPsbt() {
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
   const calculateBitcoinFiatValue = useCalculateBitcoinFiatValue();
   const getDefaultSigningConfig = useGetAssumedZeroIndexSigningConfig();
+  const { address: addressNativeSegwit } = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const { address: addressTaproot } = useCurrentAccountTaprootIndexZeroPayer();
+  const currentNetwork = useCurrentNetwork();
+  const { proposeMultisigTransaction, isProposing } = useProposeMultisigTransaction();
+  const bondRoute = useBondProposalRoute({ descriptor, psbtHex: psbtHex ?? '' });
+
+  useEffect(() => {
+    if (bondRoute?.status !== 'error' || !requestId) return;
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
+      createRpcErrorResponse('signPsbt', {
+        id: requestId,
+        error: { code: bondRoute.code, message: bondRoute.message },
+      })
+    );
+    void navigate(RouteUrls.RequestError, {
+      state: { message: bondRoute.message, title: 'Unable to propose transaction' },
+    });
+  }, [bondRoute, frameId, tabId, requestId, navigate]);
+
+  const hasDisallowedSighash = useMemo(() => {
+    if (descriptorDetails?.hasDisallowedSighash) return true;
+    try {
+      const inputs = getPsbtTxInputs(getPsbtAsTransaction(psbtHex ?? ''));
+      return (
+        getInputsToSignWithDisallowedSighash({
+          inputs,
+          indexesToSign: signAtIndex,
+          networkMode: currentNetwork.chain.bitcoin.mode,
+          psbtAddresses: [addressNativeSegwit, addressTaproot],
+          allowedSighash,
+        }).length > 0
+      );
+    } catch {
+      return true;
+    }
+  }, [
+    descriptorDetails?.hasDisallowedSighash,
+    getPsbtAsTransaction,
+    psbtHex,
+    signAtIndex,
+    currentNetwork.chain.bitcoin.mode,
+    addressNativeSegwit,
+    addressTaproot,
+    allowedSighash,
+  ]);
 
   if (!requestId || !psbtHex || !origin) throw new Error('Invalid params in useRpcSignPsbt');
+
+  function rejectDisallowedSighash() {
+    if (!requestId) throw new Error('Invalid request id');
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
+      createRpcErrorResponse('signPsbt', {
+        id: requestId,
+        error: {
+          code: RpcErrorCode.INVALID_PARAMS,
+          message: RpcErrorMessage.DisallowedSighash,
+        },
+      })
+    );
+    void navigate(RouteUrls.RequestError, {
+      state: { message: RpcErrorMessage.DisallowedSighash, title: 'Signing not permitted' },
+    });
+  }
 
   async function broadcastSignedPsbtTx({
     addressNativeSegwitTotal,
@@ -120,11 +204,62 @@ export function useRpcSignPsbt() {
   return {
     broadcast,
     descriptor,
+    bondProposal: bondRoute?.status === 'matched' ? bondRoute : null,
+    hasDisallowedSighash,
     indexesToSign: signAtIndex,
-    isBroadcasting,
+    isBroadcasting: isBroadcasting || isProposing,
     origin,
     psbtHex,
+    rejectDisallowedSighash,
     async onSignPsbt({ addressNativeSegwitTotal, addressTaprootTotal, fee }: SignPsbtArgs) {
+      if (hasDisallowedSighash) {
+        rejectDisallowedSighash();
+        return;
+      }
+
+      if (bondRoute?.status === 'error') return;
+
+      if (bondRoute?.status === 'matched') {
+        try {
+          const network = getPolicyAuthNetworkId('bitcoin', currentNetwork);
+          const rawPayload = psbtHexToBase64(psbtHex);
+          const proposal = await proposeMultisigTransaction({
+            network,
+            multisigAddress: bondRoute.policy.address,
+            rawPayload,
+          });
+
+          analytics.track('propose_multisig_transaction', { symbol: 'btc' });
+
+          await sendMessageToOriginatingFrame(
+            { frameId, tabId },
+            createRpcSuccessResponse('signPsbt', {
+              id: requestId,
+              result: { hex: psbtHex, proposalId: proposal.id, status: 'proposed' },
+            })
+          ).catch(() => null);
+          closeWindow();
+          return;
+        } catch (e) {
+          void sendMessageToOriginatingFrame(
+            { frameId, tabId },
+            createRpcErrorResponse('signPsbt', {
+              id: requestId,
+              error: {
+                code: RpcErrorCode.INTERNAL_ERROR,
+                message: 'Failed to propose transaction',
+              },
+            })
+          );
+          return navigate(RouteUrls.RequestError, {
+            state: {
+              message: isError(e) ? e.message : 'Failed to propose transaction',
+              title: 'Unable to propose transaction',
+            },
+          });
+        }
+      }
+
       // Descriptor signing adds the current account's partial signature for the
       // input(s) the descriptor locks. With broadcast requested, we additionally
       // try to satisfy the whole policy from what the PSBT already carries (other
@@ -137,12 +272,12 @@ export function useRpcSignPsbt() {
           const signedPsbtHex = bytesToHex(signedTx.toPSBT());
 
           if (broadcast) {
-            const rawTx = finalizeWshDescriptorPsbt({
+            const finalized = finalizeWshDescriptorPsbt({
               signedPsbt: signedTx.toPSBT(),
               preimagePsbt: hexToBytes(psbtHex),
               descriptor,
             });
-            if (rawTx) {
+            if (finalized.status === 'finalized') {
               const destinations = descriptorDetails?.destinations ?? [];
               const amountSentFromPolicy = destinations.length
                 ? sumMoney(destinations.map(destination => destination.value))
@@ -152,7 +287,7 @@ export function useRpcSignPsbt() {
                 addressNativeSegwitTotal: amountSentFromPolicy,
                 addressTaprootTotal: createMoney(0, 'BTC'),
                 fee: descriptorDetails?.fee ?? createMoney(0, 'BTC'),
-                tx: rawTx,
+                tx: finalized.rawTx,
                 psbt: signedPsbtHex,
               });
               return;
@@ -189,6 +324,7 @@ export function useRpcSignPsbt() {
 
       try {
         const signedTx = await signPsbt({
+          allowedSighash,
           tx,
           signingConfig: getDefaultSigningConfig(hexToBytes(psbtHex), signAtIndex),
         });

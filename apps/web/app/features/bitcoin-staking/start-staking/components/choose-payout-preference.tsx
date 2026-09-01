@@ -9,6 +9,8 @@ import { LearnMoreLink } from '~/layouts/page/page';
 
 import { Badge, BtcAvatarIcon, Input, SbtcAvatarIcon } from '@leather.io/ui';
 
+import { getSmallestValidMinClaimSats } from '../utils/staking-form-schema';
+
 const payoutOptionGroupName = 'payoutPreference';
 
 interface PayoutOptionProps {
@@ -89,13 +91,21 @@ function PayoutOption({
 
 interface ChoosePayoutPreferenceProps {
   supportsBtcPayout: boolean;
+  supportsMinClaim: boolean;
 }
 
-export function ChoosePayoutPreference({ supportsBtcPayout }: ChoosePayoutPreferenceProps) {
+export function ChoosePayoutPreference({
+  supportsBtcPayout,
+  supportsMinClaim,
+}: ChoosePayoutPreferenceProps) {
   const { control, watch } = useFormContext();
   const payoutEnabled = Boolean(watch('payoutEnabled'));
+  const watchedMaxFeeSats = watch('maxFeeSats');
   const { payoutPreference } = bitcoinStakingContent;
   const isBtcSelected = payoutEnabled && supportsBtcPayout;
+  const smallestValidMinClaimSats = getSmallestValidMinClaimSats(
+    typeof watchedMaxFeeSats === 'string' ? watchedMaxFeeSats : undefined
+  );
 
   function helperText() {
     if (!supportsBtcPayout) return payoutPreference.sbtcOnlyHelper;
@@ -161,7 +171,7 @@ export function ChoosePayoutPreference({ supportsBtcPayout }: ChoosePayoutPrefer
                       ref={ref}
                     />
                   </Input.Root>
-                  {invalid && error && <ErrorLabel>{error.message}</ErrorLabel>}
+                  {invalid && error && <ErrorLabel mt="space.02">{error.message}</ErrorLabel>}
                 </>
               )}
             />
@@ -186,7 +196,7 @@ export function ChoosePayoutPreference({ supportsBtcPayout }: ChoosePayoutPrefer
                       ref={ref}
                     />
                   </Input.Root>
-                  {invalid && error && <ErrorLabel>{error.message}</ErrorLabel>}
+                  {invalid && error && <ErrorLabel mt="space.02">{error.message}</ErrorLabel>}
                 </>
               )}
             />
@@ -194,6 +204,42 @@ export function ChoosePayoutPreference({ supportsBtcPayout }: ChoosePayoutPrefer
           <styled.span textStyle="caption.01" color="ink.text-subdued">
             {payoutPreference.maxFeeNote}
           </styled.span>
+          {supportsMinClaim && (
+            <>
+              <Box mt="space.02">
+                <Controller
+                  control={control}
+                  name="minClaimSats"
+                  render={({
+                    field: { onChange, onBlur, value, ref },
+                    fieldState: { invalid, error },
+                  }) => (
+                    <>
+                      <Input.Root>
+                        <Input.Label>Minimum claim (sats)</Input.Label>
+                        <Input.Field
+                          id="minClaimSats"
+                          inputMode="numeric"
+                          value={value ?? ''}
+                          onChange={input => onChange(input.target.value)}
+                          onBlur={onBlur}
+                          ref={ref}
+                        />
+                      </Input.Root>
+                      {invalid && error && <ErrorLabel mt="space.02">{error.message}</ErrorLabel>}
+                    </>
+                  )}
+                />
+              </Box>
+              <styled.span textStyle="caption.01" color="ink.text-subdued">
+                {payoutPreference.minClaimNote(
+                  smallestValidMinClaimSats === null
+                    ? null
+                    : smallestValidMinClaimSats.toLocaleString('en-US')
+                )}
+              </styled.span>
+            </>
+          )}
         </Stack>
       )}
     </Stack>

@@ -20,7 +20,7 @@ interface ActiveAccountButtonLayoutProps {
   address: string;
   onSignout(): void;
   onSwitchAccount(): void;
-  onOpenExtension(): void;
+  onOpenExtension?(): void;
 }
 export function ActiveAccountButtonLayout({
   address,
@@ -47,11 +47,13 @@ export function ActiveAccountButtonLayout({
               </Flag>
             </DropdownMenu.Item>
 
-            <DropdownMenu.Item onSelect={onOpenExtension}>
-              <Flag textStyle="label.03" img={<WalletSparkleIcon variant="small" />}>
-                Open extension
-              </Flag>
-            </DropdownMenu.Item>
+            {onOpenExtension && (
+              <DropdownMenu.Item onSelect={onOpenExtension}>
+                <Flag textStyle="label.03" img={<WalletSparkleIcon variant="small" />}>
+                  Open extension
+                </Flag>
+              </DropdownMenu.Item>
+            )}
             <DropdownMenu.Item onSelect={onSignout}>
               <Flag
                 color="red.action-primary-default"

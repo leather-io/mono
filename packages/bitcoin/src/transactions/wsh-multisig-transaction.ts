@@ -85,6 +85,10 @@ export function psbtBase64ToHex(psbtBase64: string): string {
   return hex.encode(base64.decode(psbtBase64));
 }
 
+export function psbtHexToBase64(psbtHex: string): string {
+  return base64.encode(hex.decode(psbtHex));
+}
+
 export interface WshMultisigSignature {
   inputIndex: number;
   signature: string;

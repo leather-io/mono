@@ -1,9 +1,9 @@
-import { type DescriptorInstance } from '@bitcoinerlab/descriptors';
+import { type LedgerManager } from '@bitcoinerlab/descriptors/ledger';
+import AppClient, { WalletPolicy } from '@ledgerhq/ledger-bitcoin';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
-import { type Psbt } from 'bitcoinjs-lib';
-import AppClient from 'ledger-bitcoin';
+import { Psbt } from 'bitcoinjs-lib';
 
 import { compileWshDescriptor } from '@leather.io/bitcoin';
 
@@ -11,18 +11,17 @@ import { useSignLedgerDescriptorTx } from './use-sign-ledger-descriptor-tx';
 
 const mocks = vi.hoisted(() => ({
   registerLedgerWallet: vi.fn(),
-  signLedger: vi.fn(),
+  signPsbt: vi.fn(),
   addNonWitnessUtxo: vi.fn(),
   addNativeSegwitBip32Derivation: vi.fn(),
   loggerWarn: vi.fn(),
 }));
 
-vi.mock('@bitcoinerlab/descriptors', async importOriginal => {
-  const actual = await importOriginal<typeof import('@bitcoinerlab/descriptors')>();
+vi.mock('@bitcoinerlab/descriptors/ledger', async importOriginal => {
+  const actual = await importOriginal<typeof import('@bitcoinerlab/descriptors/ledger')>();
   return {
     ...actual,
-    ledger: { ...actual.ledger, registerLedgerWallet: mocks.registerLedgerWallet },
-    signers: { ...actual.signers, signLedger: mocks.signLedger },
+    registerLedgerWallet: mocks.registerLedgerWallet,
   };
 });
 
@@ -65,10 +64,32 @@ const accountAddressIndexKey = deriveAddressIndexKey(1);
 const cosignerAddressIndexKey = deriveAddressIndexKey(2);
 const multiSigDescriptor = `wsh(multi(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0,${accountKeychain.publicExtendedKey}/0/0))`;
 const signingConfig = [{ index: 0, derivationPath: "m/84'/0'/0'/0/0" }];
+const registeredLedgerTemplate = 'wsh(multi(2,@0/**,@1/**))';
+const registeredPolicyHmac = new Uint8Array(32).fill(7);
+
+interface RegisterLedgerWalletArgs {
+  descriptor: string;
+  policyName: string;
+  ledgerManager: LedgerManager;
+}
+
+function fakeRegisterLedgerWallet({ ledgerManager, policyName }: RegisterLedgerWalletArgs) {
+  ledgerManager.ledgerState.policies = [
+    {
+      policyName,
+      ledgerTemplate: registeredLedgerTemplate,
+      keyRoots: [],
+      policyId: new Uint8Array(32),
+      policyHmac: registeredPolicyHmac,
+    },
+  ];
+  return Promise.resolve();
+}
 
 function makeFakeLedgerApp(): AppClient {
   const app: AppClient = Object.create(AppClient.prototype);
   app.getMasterFingerprint = () => Promise.resolve(masterFingerprintHex);
+  app.signPsbt = mocks.signPsbt;
   return app;
 }
 
@@ -111,14 +132,13 @@ describe(useSignLedgerDescriptorTx.name, () => {
     vi.clearAllMocks();
     partialSigPubkeysAtSignTime = undefined;
     mocks.addNonWitnessUtxo.mockResolvedValue(undefined);
-    mocks.registerLedgerWallet.mockResolvedValue(undefined);
+    mocks.registerLedgerWallet.mockImplementation(fakeRegisterLedgerWallet);
     const deviceSig = makeDevicePartialSig();
-    mocks.signLedger.mockImplementation(({ psbt }: { psbt: Psbt }) => {
-      partialSigPubkeysAtSignTime = psbt.data.inputs[0].partialSig?.map(sig =>
-        sig.pubkey.toString('hex')
+    mocks.signPsbt.mockImplementation((psbtBase64: string) => {
+      partialSigPubkeysAtSignTime = Psbt.fromBase64(psbtBase64).data.inputs[0]?.partialSig?.map(
+        sig => bytesToHex(sig.pubkey)
       );
-      psbt.updateInput(0, { partialSig: [deviceSig] });
-      return Promise.resolve();
+      return Promise.resolve([[0, deviceSig]]);
     });
     signTx = useSignLedgerDescriptorTx();
   });
@@ -207,32 +227,61 @@ describe(useSignLedgerDescriptorTx.name, () => {
     );
   });
 
-  test('registers a ledger policy with the account key rewritten to carry its origin', async () => {
-    let registered:
-      | { descriptor: DescriptorInstance; policyName: string; ledgerClient: AppClient }
-      | undefined;
-    mocks.registerLedgerWallet.mockImplementation(
-      (args: { descriptor: DescriptorInstance; policyName: string; ledgerClient: AppClient }) => {
-        registered = args;
-        return Promise.resolve();
-      }
+  test('signs when the psbt carries a foreign input without derivation metadata', async () => {
+    const tx = buildDescriptorTx(multiSigDescriptor, []);
+    tx.addInput({
+      txid: hexToBytes('11'.repeat(32)),
+      index: 0,
+      witnessUtxo: {
+        script: btc.p2wpkh(requireDefined(deriveAddressIndexKey(4).publicKey)).script,
+        amount: 30_000n,
+      },
+    });
+
+    const signedTx = await signTx(
+      makeFakeLedgerApp(),
+      tx.toPSBT(),
+      multiSigDescriptor,
+      signingConfig
     );
+
+    expect(hasPartialSigFor(signedTx, 0, requireDefined(accountAddressIndexKey.publicKey))).toBe(
+      true
+    );
+    expect(signedTx.getInput(1).partialSig).toBeUndefined();
+  });
+
+  test('signs with the registered wallet policy and its hmac', async () => {
+    await signLedgerDescriptorTx([]);
+
+    expect(mocks.signPsbt).toHaveBeenCalledTimes(1);
+    expect(mocks.signPsbt).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        name: 'Leather',
+        descriptorTemplate: registeredLedgerTemplate,
+      }),
+      Buffer.from(registeredPolicyHmac)
+    );
+    const [, walletPolicy] = mocks.signPsbt.mock.calls[0];
+    expect(walletPolicy).toBeInstanceOf(WalletPolicy);
+  });
+
+  test('registers a ledger policy with the account key rewritten to carry its origin', async () => {
+    let registered: RegisterLedgerWalletArgs | undefined;
+    mocks.registerLedgerWallet.mockImplementation((args: RegisterLedgerWalletArgs) => {
+      registered = args;
+      return fakeRegisterLedgerWallet(args);
+    });
 
     await signLedgerDescriptorTx([]);
 
-    const { policyName, descriptor } = requireDefined(registered);
+    const { policyName, descriptor, ledgerManager } = requireDefined(registered);
     expect(policyName).toEqual('Leather');
-    const { expansionMap } = descriptor.expand();
-    const accountPubkeyHex = bytesToHex(requireDefined(accountAddressIndexKey.publicKey));
-    const accountKeyInfo = requireDefined(
-      Object.values(requireDefined(expansionMap)).find(
-        key => key.pubkey && bytesToHex(key.pubkey) === accountPubkeyHex
-      )
+    expect(descriptor).toEqual(
+      `wsh(multi(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0,[${accountKeyOrigin}]${accountKeychain.publicExtendedKey}/0/0))`
     );
-    expect(accountKeyInfo.keyExpression.startsWith(`[${accountKeyOrigin}]`)).toBe(true);
-    expect(requireDefined(accountKeyInfo.masterFingerprint).toString('hex')).toEqual(
-      masterFingerprintHex
-    );
+    expect(ledgerManager.ledgerClient).toBeInstanceOf(AppClient);
     expect(mocks.addNativeSegwitBip32Derivation).toHaveBeenCalledWith(
       expect.anything(),
       masterFingerprintHex,

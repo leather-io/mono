@@ -21,5 +21,7 @@ export function stxRecipientValidator(
     .concat(stxAddressValidator(FormErrorMessages.InvalidAddress))
     .concat(stxAddressNetworkValidator(currentNetwork))
     .concat(notCurrentAddressValidator(currentAddress))
-    .concat(complianceValidator(stxAddressValidator(FormErrorMessages.InvalidAddress)));
+    .concat(
+      complianceValidator(stxAddressValidator(FormErrorMessages.InvalidAddress), 'send_form_stx')
+    );
 }

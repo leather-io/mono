@@ -136,7 +136,7 @@ export function ChooseAddressStandard() {
                 tooltipLabel={ledgerCompatibilityTooltip}
               />
             }
-            captionLeft="Only if you have accounts in Ledger Live"
+            captionLeft="Used in Ledger desktop software"
             showChevron
             chevronDirection="right"
           />

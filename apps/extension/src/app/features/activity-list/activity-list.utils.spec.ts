@@ -30,7 +30,7 @@ function createItem(
       action: 'send',
       avatar: { kind: 'single', asset: btcAsset },
       indicator: status === 'pending' ? 'pending' : 'sent',
-      title: 'Send BTC',
+      title: 'BTC',
       subtitle: '',
     },
   };

@@ -1,4 +1,5 @@
 import { Flex, styled } from 'leather-styles/jsx';
+import { token } from 'leather-styles/tokens';
 import { customNetworkConfig } from '~/constants/custom-network-config';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
@@ -97,8 +98,10 @@ export function NetworkModeSwitcher() {
                             textStyle="caption.01"
                             px="space.02"
                             borderRadius="round"
-                            bg="blue.background-primary"
-                            color="blue.action-primary-default"
+                            style={{
+                              background: token.var(`colors.${info.tone.background}`),
+                              color: token.var(`colors.${info.tone.text}`),
+                            }}
                           >
                             {customNetworkConfig.name}
                           </styled.span>

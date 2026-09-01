@@ -40,6 +40,8 @@ export enum RouteUrls {
   Send = '/send-transaction',
   ViewSecretKey = '/view-secret-key',
   Settings = '/settings',
+  AllBalances = '/all-balances',
+  AllBalancesDetail = '/all-balances/:category',
   AddWallet = '/add-wallet',
   CreateWallet = '/create-wallet',
   AddLedgerWallet = '/add-ledger-wallet',

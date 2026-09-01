@@ -18,9 +18,9 @@ const protocolActionSubtitles: Partial<Record<StacksProtocolAction, StatusTempla
     failed: 'Swap failed via {protocol}',
   },
   bridge: {
-    pending: 'Swapping via {protocol}',
-    success: 'Swapped via {protocol}',
-    failed: 'Swap failed via {protocol}',
+    pending: 'Bridging via {protocol}',
+    success: 'Bridged via {protocol}',
+    failed: 'Bridge failed via {protocol}',
   },
   deposit: {
     pending: 'Depositing via {protocol}',
@@ -161,14 +161,13 @@ interface SubtitleParams {
   protocolName?: string;
   counterparty?: string;
   contractName?: string;
-  actionInTitle?: boolean;
 }
 
 export function buildBlockchainActivitySubtitle(
   params: SubtitleParams,
   t: BlockchainActivityTranslate
 ): string {
-  const { action, status, protocolName, counterparty, contractName, actionInTitle } = params;
+  const { action, status, protocolName, counterparty, contractName } = params;
 
   switch (action) {
     case 'send':
@@ -188,9 +187,6 @@ export function buildBlockchainActivitySubtitle(
     default: {
       const entry = protocolActionSubtitles[action];
       if (!entry) return '';
-      if (actionInTitle) {
-        return protocolName ? t('via {protocol}', { protocol: protocolName }) : '';
-      }
       const template = protocolName ? entry[status] : entry[status].replace(viaProtocolSuffix, '');
       return t(template, protocolName ? { protocol: protocolName } : {});
     }

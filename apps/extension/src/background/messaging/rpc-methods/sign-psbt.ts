@@ -122,12 +122,33 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
       requestParams.push(['signAtIndex', index.toString()])
     );
 
-  void trackRpcRequestSuccess({ endpoint: request.method });
+  if (isDefined(request.params.allowedSighash))
+    request.params.allowedSighash.forEach(sighash =>
+      requestParams.push(['allowedSighash', sighash.toString()])
+    );
 
   const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
     port,
     requestParams
   );
+
+  if (urlParams.has('policyId') && isUndefined(request.params.descriptor)) {
+    void trackRpcRequestError({ endpoint: request.method, error: 'Propose without descriptor' });
+
+    void sendMessageToOriginatingFrame(
+      getOriginatingFrameFromPort(port),
+      createRpcErrorResponse('signPsbt', {
+        id: request.id,
+        error: {
+          code: RpcErrorCode.INVALID_PARAMS,
+          message: 'Proposing a transaction requires a descriptor',
+        },
+      })
+    );
+    return;
+  }
+
+  void trackRpcRequestSuccess({ endpoint: request.method });
 
   const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcSignPsbt, urlParams);
 

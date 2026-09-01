@@ -54,7 +54,10 @@ export function RpcStxTransferSip10FtContainer({ account }: RpcStxTransferSip10F
     ? getTxSenderAddress(unsignedTxForFeeEstimation)
     : account.address;
 
-  useBreakOnNonCompliantEntity([txSenderAddress, rpcRequest.params.recipient].filter(isDefined));
+  useBreakOnNonCompliantEntity(
+    'rpc_stx_transfer_sip10_ft',
+    [txSenderAddress, rpcRequest.params.recipient].filter(isDefined)
+  );
 
   if (!unsignedTxForFeeEstimation) return null;
 

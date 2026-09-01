@@ -75,6 +75,7 @@ function stxComplianceValidator() {
     addressComplianceValidator({
       address,
       shouldCheckCompliance: isValidStacksAddress(address),
+      screeningPoint: 'send_form_stx',
     });
 }
 
