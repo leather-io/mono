@@ -1,4 +1,4 @@
-import argon2, { ArgonType } from 'argon2-browser';
+import argon2, { ArgonType } from 'argon2-browser/dist/argon2-bundled.min.js';
 
 const context = self as unknown as Worker;
 
