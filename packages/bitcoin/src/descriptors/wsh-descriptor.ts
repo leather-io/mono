@@ -193,6 +193,20 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
   };
 }
 
+const p2wpkhScriptCodePattern = /^76a914[0-9a-f]{40}88ac$/;
+
+function isP2wpkhScriptCode(witnessScript: Uint8Array) {
+  return p2wpkhScriptCodePattern.test(bytesToHex(witnessScript));
+}
+
+export function isSignableWshDescriptor(descriptor: string) {
+  try {
+    return !isP2wpkhScriptCode(compileWshDescriptor(descriptor).witnessScript);
+  } catch {
+    return false;
+  }
+}
+
 const opReserved = 0x50;
 const maxMultisigOpcode = 0x60;
 
