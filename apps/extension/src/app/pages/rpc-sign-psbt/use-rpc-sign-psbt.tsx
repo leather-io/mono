@@ -1,10 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
 import { hexToBytes } from '@noble/hashes/utils';
 import { bytesToHex } from '@stacks/common';
 
-import { finalizeWshDescriptorPsbt, psbtHexToBase64 } from '@leather.io/bitcoin';
+import {
+  finalizeWshDescriptorPsbt,
+  getInputsToSignWithDisallowedSighash,
+  getPsbtTxInputs,
+  psbtHexToBase64,
+} from '@leather.io/bitcoin';
 import type { Money } from '@leather.io/models';
 import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
 import { createMoney, isError, sumMoney } from '@leather.io/utils';
@@ -29,6 +34,8 @@ import {
   useCryptoCurrencyMarketDataMeanAverage,
 } from '@app/query/common/market-data/market-data.hooks';
 import { useGetAssumedZeroIndexSigningConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useSignDescriptorPsbt } from './descriptor-psbt.hooks';
@@ -43,8 +50,17 @@ interface BroadcastSignedPsbtTxArgs {
 }
 export function useRpcSignPsbt() {
   const navigate = useNavigate();
-  const { broadcast, descriptor, frameId, origin, psbtHex, requestId, signAtIndex, tabId } =
-    useRpcSignPsbtParams();
+  const {
+    allowedSighash,
+    broadcast,
+    descriptor,
+    frameId,
+    origin,
+    psbtHex,
+    requestId,
+    signAtIndex,
+    tabId,
+  } = useRpcSignPsbtParams();
   const { signPsbt, getPsbtAsTransaction } = usePsbtSigner();
   const signDescriptorPsbt = useSignDescriptorPsbt();
   const descriptorDetails = useDescriptorPsbtDetails(psbtHex ?? '', descriptor ?? '');
@@ -53,6 +69,8 @@ export function useRpcSignPsbt() {
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
   const calculateBitcoinFiatValue = useCalculateBitcoinFiatValue();
   const getDefaultSigningConfig = useGetAssumedZeroIndexSigningConfig();
+  const { address: addressNativeSegwit } = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const { address: addressTaproot } = useCurrentAccountTaprootIndexZeroPayer();
   const currentNetwork = useCurrentNetwork();
   const { proposeMultisigTransaction, isProposing } = useProposeMultisigTransaction();
   const bondRoute = useBondProposalRoute({ descriptor, psbtHex: psbtHex ?? '' });
@@ -71,7 +89,51 @@ export function useRpcSignPsbt() {
     });
   }, [bondRoute, frameId, tabId, requestId, navigate]);
 
+  const hasDisallowedSighash = useMemo(() => {
+    if (descriptorDetails?.hasDisallowedSighash) return true;
+    try {
+      const inputs = getPsbtTxInputs(getPsbtAsTransaction(psbtHex ?? ''));
+      return (
+        getInputsToSignWithDisallowedSighash({
+          inputs,
+          indexesToSign: signAtIndex,
+          networkMode: currentNetwork.chain.bitcoin.mode,
+          psbtAddresses: [addressNativeSegwit, addressTaproot],
+          allowedSighash,
+        }).length > 0
+      );
+    } catch {
+      return true;
+    }
+  }, [
+    descriptorDetails?.hasDisallowedSighash,
+    getPsbtAsTransaction,
+    psbtHex,
+    signAtIndex,
+    currentNetwork.chain.bitcoin.mode,
+    addressNativeSegwit,
+    addressTaproot,
+    allowedSighash,
+  ]);
+
   if (!requestId || !psbtHex || !origin) throw new Error('Invalid params in useRpcSignPsbt');
+
+  function rejectDisallowedSighash() {
+    if (!requestId) throw new Error('Invalid request id');
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
+      createRpcErrorResponse('signPsbt', {
+        id: requestId,
+        error: {
+          code: RpcErrorCode.INVALID_PARAMS,
+          message: RpcErrorMessage.DisallowedSighash,
+        },
+      })
+    );
+    void navigate(RouteUrls.RequestError, {
+      state: { message: RpcErrorMessage.DisallowedSighash, title: 'Signing not permitted' },
+    });
+  }
 
   async function broadcastSignedPsbtTx({
     addressNativeSegwitTotal,
@@ -143,11 +205,18 @@ export function useRpcSignPsbt() {
     broadcast,
     descriptor,
     bondProposal: bondRoute?.status === 'matched' ? bondRoute : null,
+    hasDisallowedSighash,
     indexesToSign: signAtIndex,
     isBroadcasting: isBroadcasting || isProposing,
     origin,
     psbtHex,
+    rejectDisallowedSighash,
     async onSignPsbt({ addressNativeSegwitTotal, addressTaprootTotal, fee }: SignPsbtArgs) {
+      if (hasDisallowedSighash) {
+        rejectDisallowedSighash();
+        return;
+      }
+
       if (bondRoute?.status === 'error') return;
 
       if (bondRoute?.status === 'matched') {
@@ -255,6 +324,7 @@ export function useRpcSignPsbt() {
 
       try {
         const signedTx = await signPsbt({
+          allowedSighash,
           tx,
           signingConfig: getDefaultSigningConfig(hexToBytes(psbtHex), signAtIndex),
         });
