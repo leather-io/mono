@@ -1,12 +1,12 @@
 import { useLocation } from 'react-router';
 
+import AppClient from '@ledgerhq/ledger-bitcoin';
 import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
-import AppClient from 'ledger-bitcoin';
 
 import {
-  type SupportedPaymentType,
+  defaultAllowedSighashTypes,
   getBitcoinJsLibNetworkConfigByMode,
   getInputPaymentType,
   getTaprootAddress,
@@ -15,6 +15,7 @@ import {
 } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { type AccountId, bitcoinNetworkToNetworkMode } from '@leather.io/models';
+import type { BitcoinPaymentTypes } from '@leather.io/rpc';
 import { isNumber, isString, isUndefined } from '@leather.io/utils';
 
 import {
@@ -40,7 +41,6 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useCurrentAccountId } from '../../account';
 import { useBitcoinSoftwareSignerLookup } from './bitcoin-keychain';
-import { allSighashTypes } from './bitcoin-payer';
 import {
   useCurrentNativeSegwitAccount,
   useNativeSegwitAccount,
@@ -81,8 +81,13 @@ function useSignBitcoinSoftwareTx() {
   const network = useCurrentNetwork();
   const signingCallbacksLookup = useBitcoinSoftwareSignerLookup();
 
-  return (psbt: Uint8Array, inputSigningConfig: BitcoinInputSigningConfig[]) => {
+  return (
+    psbt: Uint8Array,
+    inputSigningConfig: BitcoinInputSigningConfig[],
+    allowedSighash?: number[]
+  ) => {
     const tx = btc.Transaction.fromPSBT(psbt);
+    const sighashTypes = [...defaultAllowedSighashTypes, ...(allowedSighash ?? [])];
     const getSigningCallbacks = signingCallbacksLookup(account.fingerprint);
 
     if (!getSigningCallbacks) throw new Error('Signing callbacks not available');
@@ -108,10 +113,10 @@ function useSignBitcoinSoftwareTx() {
       });
 
       try {
-        nativeSegwitCallbacks.signAtIndex(tx, index, allSighashTypes);
+        nativeSegwitCallbacks.signAtIndex(tx, index, sighashTypes);
       } catch {
         try {
-          taprootCallbacks.signAtIndex(tx, index, allSighashTypes);
+          taprootCallbacks.signAtIndex(tx, index, sighashTypes);
         } catch {
           // Signing failed, continue without this signature
         }
@@ -151,14 +156,13 @@ export function useSignLedgerBitcoinTx() {
 
     const btcSignerPsbtClone = btc.Transaction.fromPSBT(psbt.toBuffer());
 
-    const inputByPaymentType = signingConfig.map(config => {
-      const inputIndex = btcSignerPsbtClone.getInput(config.index).index;
-      if (isUndefined(inputIndex)) throw new Error('Input must have an index for payment type');
-      return [
-        config,
-        getInputPaymentType(btcSignerPsbtClone.getInput(config.index), bitcoinNetworkMode),
-      ];
-    }) as readonly [BitcoinInputSigningConfig, SupportedPaymentType][];
+    const inputByPaymentType = signingConfig.map(
+      (config): [BitcoinInputSigningConfig, BitcoinPaymentTypes] => {
+        const inputIndex = btcSignerPsbtClone.getInput(config.index).index;
+        if (isUndefined(inputIndex)) throw new Error('Input must have an index for payment type');
+        return [config, getInputPaymentType(btcSignerPsbtClone.getInput(config.index))];
+      }
+    );
 
     //
     // Taproot
@@ -285,7 +289,11 @@ export function useSignBitcoinTx() {
    * Bitcoin signing function. Don't forget to finalize the tx once it's
    * returned. You can broadcast with the hex value from `tx.hex`.
    */
-  return (psbt: Uint8Array, inputsToSign?: BitcoinInputSigningConfig[] | number[]) => {
+  return (
+    psbt: Uint8Array,
+    inputsToSign?: BitcoinInputSigningConfig[] | number[],
+    allowedSighash?: number[]
+  ) => {
     function getSigningConfig(inputsToSign?: BitcoinInputSigningConfig[] | number[]) {
       if (!inputsToSign) return getDefaultSigningConfig(psbt);
       if (inputsToSign.every(isNumber)) return getDefaultSigningConfig(psbt, inputsToSign);
@@ -306,7 +314,7 @@ export function useSignBitcoinTx() {
         return listenForBitcoinTxLedgerSigning(bytesToHex(psbt));
       },
       software() {
-        return signSoftwareTx(psbt, getSigningConfig(inputsToSign));
+        return signSoftwareTx(psbt, getSigningConfig(inputsToSign), allowedSighash);
       },
     })();
   };

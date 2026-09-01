@@ -38,8 +38,8 @@ export const bip322TransactionToSignValues = {
   sequence: 0,
 };
 
-function encodeVarString(b: Buffer) {
-  return Buffer.concat([encode(b.byteLength), b]);
+function encodeVarString(b: Uint8Array) {
+  return Buffer.concat([encode(b.byteLength).buffer, b]);
 }
 
 const supportedMessageSigningPaymentTypes: PaymentTypes[] = ['p2wpkh', 'p2tr'];
@@ -52,12 +52,12 @@ export function isSupportedMessageSigningPaymentType(paymentType: string) {
  * Encode witness data for a BIP322 message
  * TODO: Refactor to remove `Buffer` use
  */
-export function encodeMessageWitnessData(witnessArray: Buffer[]) {
+export function encodeMessageWitnessData(witnessArray: Uint8Array[]) {
   const len = encode(witnessArray.length);
-  return Buffer.concat([len, ...witnessArray.map(witness => encodeVarString(witness))]);
+  return Buffer.concat([len.buffer, ...witnessArray.map(witness => encodeVarString(witness))]);
 }
 
-function tapTweakHash(pubKey: Buffer, h: Buffer | undefined): Buffer {
+function tapTweakHash(pubKey: Uint8Array, h: Uint8Array | undefined): Uint8Array {
   return bitcoin.crypto.taggedHash('TapTweak', Buffer.concat(h ? [pubKey, h] : [pubKey]));
 }
 

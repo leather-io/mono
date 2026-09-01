@@ -43,6 +43,14 @@ export const bitcoinStakingContent = {
     explanationTitle: `Staking windows`,
     explanation: `In the last 100 Bitcoin blocks of a cycle the network locks in the signer set. New stakes and changes to an existing stake are rejected during that window, and resume when the next cycle starts.`,
   },
+  poolFeeChange: {
+    fromCycle(cycle: number) {
+      return `From cycle ${cycle}`;
+    },
+  },
+  selfClaim: {
+    explanation: `This pool takes no cut from your rewards. In exchange it never claims for you: rewards accrue each cycle and only you can claim them, through the pool's signer-manager contract.`,
+  },
   poolOverviewInfo: {
     rewardsToken: `Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool's signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall.`,
     fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so check the pool's terms before staking.`,
@@ -77,7 +85,12 @@ export const bitcoinStakingContent = {
     sbtcHelper: `Paid to your wallet once a cycle concludes — your pool usually claims for you.`,
     btcHelper: `Withdrawn from sBTC to your Bitcoin address, which costs a network fee.`,
     sbtcOnlyHelper: `This pool pays out in sBTC only, once a cycle concludes.`,
-    maxFeeNote: `Claims below the max fee can't be paid out until you lower it.`,
+    maxFeeNote: `Taken out of each payout to pay for the Bitcoin transaction. Rewards can't be paid out until they've grown past it, so a higher max fee means fewer, bigger payouts.`,
+    minClaimNote(smallestValidSats: string | null) {
+      const base = `Optional. Below this amount only you can trigger a payout, so nobody else can spend your max fee on a trivial payout.`;
+      if (!smallestValidSats) return base;
+      return `${base} At least ${smallestValidSats} sats with your current max fee.`;
+    },
     updateHelper: `This setting applies to every future claim.`,
     loadError: `We couldn't load your current payout preference, which is needed before your stake can be updated.`,
   },
@@ -209,6 +222,7 @@ export const bitcoinStakingLabels = {
   tvl: `TVL`,
   historicalYield: `Historical yield`,
   fee: `Fee`,
+  selfClaimOnly: `Self-claim only`,
   startEarning: `Start earning`,
   viewPosition: `View position`,
   switchPool: `Switch`,

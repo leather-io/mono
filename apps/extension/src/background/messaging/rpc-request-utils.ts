@@ -46,7 +46,7 @@ export function getOriginatingFrameFromPort(port: chrome.runtime.Port): Originat
   return { frameId: getFrameIdFromPort(port), tabId: getTabIdFromPort(port) };
 }
 
-function getOriginFromPort(port: chrome.runtime.Port) {
+export function getOriginFromPort(port: chrome.runtime.Port) {
   if (port.sender?.url) return new URL(port.sender.url).origin;
   return port.sender?.origin;
 }

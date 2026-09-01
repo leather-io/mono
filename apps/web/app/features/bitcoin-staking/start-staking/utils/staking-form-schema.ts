@@ -1,10 +1,14 @@
 import { z } from 'zod';
 import { validationMessages } from '~/content/messages';
-import { POX5_MAX_NUM_CYCLES } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import {
-  stxAmountSchema,
+  MIN_MAX_WITHDRAWAL_FEE_SATS,
+  POX5_MAX_NUM_CYCLES,
+  SBTC_WITHDRAWAL_DUST_LIMIT_SATS,
+} from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import {
   validateAvailableBalance,
   validateMaxStackingAmount,
+  validateStxAmountPrecision,
 } from '~/utils/validators/stx-amount-validator';
 
 import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
@@ -14,6 +18,43 @@ interface CreateStakingFormSchemaArgs {
   networkMode: BitcoinNetworkModes;
   availableBalance: Money;
   supportsBtcPayout: boolean;
+  supportsMinClaim: boolean;
+}
+
+function isNumericInput(value: string | undefined): value is string {
+  return !!value && /^\d+(\.\d+)?$/.test(value);
+}
+
+export function getSmallestValidMinClaimSats(maxFeeSats: string | undefined): bigint | null {
+  if (!maxFeeSats || !/^\d+$/.test(maxFeeSats)) return null;
+  return BigInt(maxFeeSats) + BigInt(SBTC_WITHDRAWAL_DUST_LIMIT_SATS) + 1n;
+}
+
+export function validatePayoutSatsFields(
+  data: { maxFeeSats?: string; minClaimSats?: string },
+  supportsMinClaim: boolean,
+  addIssue: (message: string, path: 'maxFeeSats' | 'minClaimSats') => void
+) {
+  const hasValidMaxFee = !!data.maxFeeSats && /^\d+$/.test(data.maxFeeSats);
+  if (!hasValidMaxFee) {
+    addIssue(validationMessages.enterMaxWithdrawalFee, 'maxFeeSats');
+  } else if (BigInt(data.maxFeeSats) < BigInt(MIN_MAX_WITHDRAWAL_FEE_SATS)) {
+    addIssue(validationMessages.maxWithdrawalFeeTooLow, 'maxFeeSats');
+  }
+
+  if (!supportsMinClaim || !data.minClaimSats) return;
+  const smallestValidMinClaimSats = getSmallestValidMinClaimSats(data.maxFeeSats);
+  if (!/^\d+$/.test(data.minClaimSats)) {
+    addIssue(validationMessages.minClaimNotNumeric, 'minClaimSats');
+  } else if (
+    smallestValidMinClaimSats !== null &&
+    BigInt(data.minClaimSats) < smallestValidMinClaimSats
+  ) {
+    addIssue(
+      validationMessages.minClaimTooLow(smallestValidMinClaimSats.toLocaleString('en-US')),
+      'minClaimSats'
+    );
+  }
 }
 
 // Unlike pox-4 delegation, a pox-5 stake locks exactly the entered amount, so
@@ -25,22 +66,42 @@ export function createStakingFormSchema({
   networkMode,
   availableBalance,
   supportsBtcPayout,
+  supportsMinClaim,
 }: CreateStakingFormSchemaArgs) {
   return z
     .object({
-      amount: stxAmountSchema()
-        .refine(value => validateMaxStackingAmount(value))
-        .refine(value => validateAvailableBalance(value, availableBalance.amount), {
-          message: validationMessages.cannotStackMoreThanBalance,
-        }),
+      amount: z
+        .string()
+        .optional()
+        .refine(value => value !== undefined && value !== '', validationMessages.enterAmount)
+        .refine(value => !value || /^\d+(\.\d+)?$/.test(value), validationMessages.invalidAmount)
+        .refine(
+          value => !isNumericInput(value) || Number(value) > 0,
+          validationMessages.mustStackAmount
+        )
+        .refine(
+          value => !isNumericInput(value) || validateStxAmountPrecision(Number(value)),
+          validationMessages.amountTooPrecise
+        )
+        .refine(value => !isNumericInput(value) || validateMaxStackingAmount(Number(value)))
+        .refine(
+          value =>
+            !isNumericInput(value) ||
+            validateAvailableBalance(Number(value), availableBalance.amount),
+          validationMessages.cannotStackMoreThanBalance
+        ),
       cycles: z.coerce
-        .number({ error: () => validationMessages.chooseStakingCycles })
-        .int(validationMessages.chooseStakingCycles)
-        .min(1, validationMessages.chooseStakingCycles)
-        .max(POX5_MAX_NUM_CYCLES, validationMessages.chooseStakingCycles),
+        .number()
+        .catch(Number.NaN)
+        .refine(value => Number.isInteger(value), validationMessages.chooseStakingCycles)
+        .refine(
+          value => value >= 1 && value <= POX5_MAX_NUM_CYCLES,
+          validationMessages.chooseStakingCycles
+        ),
       payoutEnabled: z.boolean(),
       rewardAddress: z.string().optional(),
       maxFeeSats: z.string().optional(),
+      minClaimSats: z.string().optional(),
     })
     .superRefine((data, ctx) => {
       if (!supportsBtcPayout || !data.payoutEnabled) return;
@@ -59,13 +120,9 @@ export function createStakingFormSchema({
         });
       }
 
-      if (!data.maxFeeSats || !/^\d+$/.test(data.maxFeeSats) || BigInt(data.maxFeeSats) <= 0n) {
-        ctx.addIssue({
-          code: 'custom',
-          message: validationMessages.enterMaxWithdrawalFee,
-          path: ['maxFeeSats'],
-        });
-      }
+      validatePayoutSatsFields(data, supportsMinClaim, (message, path) =>
+        ctx.addIssue({ code: 'custom', message, path: [path] })
+      );
     });
 }
 

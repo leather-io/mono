@@ -89,6 +89,8 @@ vi.mock('@app/features/ledger/utils/stacks-version-gate', () => ({
   stacksVersionGate: () => mocks.versionGate,
 }));
 
+vi.mock('@ledgerhq/ledger-bitcoin', () => ({ default: class {} }));
+
 vi.mock('@app/features/ledger/utils/generic-ledger-utils', async importOriginal => {
   const actual =
     await importOriginal<typeof import('@app/features/ledger/utils/generic-ledger-utils')>();

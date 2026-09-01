@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useLocation } from 'react-router';
 
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
-import BitcoinApp from 'ledger-bitcoin';
+import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 
 import { delay, isError } from '@leather.io/utils';
 
@@ -15,6 +15,7 @@ import { getStacksAppVersion } from './stacks-ledger-utils';
 
 export enum LedgerConnectionErrors {
   AppNotOpen = 'AppNotOpen',
+  AppOpenFailed = 'AppOpenFailed',
   DeviceLocked = 'DeviceLocked',
 }
 
@@ -150,7 +151,15 @@ export async function promptOpenAppOnDevice(appName: string) {
     await quitAppOnDevice();
   }
 
-  await switchAppOnDevice(transport => openApp(transport, appName));
+  try {
+    await switchAppOnDevice(transport => openApp(transport, appName));
+  } catch {
+    const error = new Error(
+      `Unable to open the ${appName} app on your Ledger. Make sure it is installed on the device, approve any prompt shown there, then try again.`
+    );
+    error.name = LedgerConnectionErrors.AppOpenFailed;
+    throw error;
+  }
 }
 
 export function checkLockedDeviceError(e: Error) {

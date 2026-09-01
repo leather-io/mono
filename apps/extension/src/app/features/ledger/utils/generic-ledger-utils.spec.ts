@@ -12,7 +12,7 @@ vi.mock('@ledgerhq/hw-transport-webusb', () => ({
   default: { create: mocks.create, list: mocks.list },
 }));
 
-vi.mock('ledger-bitcoin', () => ({
+vi.mock('@ledgerhq/ledger-bitcoin', () => ({
   default: vi.fn(() => ({ getAppAndVersion: mocks.getAppAndVersion })),
 }));
 
@@ -139,7 +139,7 @@ describe(promptOpenAppOnDevice.name, () => {
     expect(transports[1].close).not.toHaveBeenCalled();
   });
 
-  test('closes the transport and rethrows when opening the app fails for another reason', async () => {
+  test('closes the transport and throws an app-open failure when opening the app fails for another reason', async () => {
     mocks.getAppAndVersion.mockResolvedValue({ name: LEDGER_APPS_MAP.MAIN_MENU });
     mocks.create
       .mockImplementationOnce(() => {
@@ -154,9 +154,9 @@ describe(promptOpenAppOnDevice.name, () => {
         return Promise.resolve(transport);
       });
 
-    await expect(promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS)).rejects.toThrow(
-      'Condition of use not satisfied'
-    );
+    const promptPromise = promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS);
+    await expect(promptPromise).rejects.toThrow('Unable to open the Stacks app on your Ledger');
+    await expect(promptPromise).rejects.toMatchObject({ name: 'AppOpenFailed' });
 
     expect(transports[1].close).toHaveBeenCalledOnce();
   });

@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.8.0](https://github.com/leather-io/mono/compare/@leather.io/features-v1.7.2...@leather.io/features-v1.8.0) (2026-08-27)
+
+
+### Features
+
+* distinguish multisig cancelled activity items ([#2660](https://github.com/leather-io/mono/issues/2660)) ([4dc3931](https://github.com/leather-io/mono/commit/4dc3931374c6529b833d7e98e231e23e0bd78b23))
+
+
+### Bug Fixes
+
+* activity view drift revert ([#2645](https://github.com/leather-io/mono/issues/2645)) ([a4677e0](https://github.com/leather-io/mono/commit/a4677e08a42feedd38fb6a9cf7344dfc7f3b2af5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.2
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/services bumped to 1.64.1
+    * @leather.io/stacks bumped to 1.22.5
+    * @leather.io/tokens bumped to 0.27.1
+    * @leather.io/utils bumped to 0.52.7
+
 ## [1.7.2](https://github.com/leather-io/mono/compare/@leather.io/features-v1.7.1...@leather.io/features-v1.7.2) (2026-08-18)
 
 

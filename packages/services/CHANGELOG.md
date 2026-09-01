@@ -413,6 +413,31 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.64.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.64.0...@leather.io/services-v1.64.1) (2026-08-27)
+
+
+### Bug Fixes
+
+* add @stacks/connect ([#2580](https://github.com/leather-io/mono/issues/2580)) ([625b20b](https://github.com/leather-io/mono/commit/625b20b6a68ee0c1bba63e892b46b837561b71e9))
+* add all balances settings tab ([#2552](https://github.com/leather-io/mono/issues/2552)) ([1ef1c33](https://github.com/leather-io/mono/commit/1ef1c33ecb393f6e2d87f0829773e88e7a59fcfa))
+* route bitflow readonly calls through hiro ([#2683](https://github.com/leather-io/mono/issues/2683)) ([9659a2f](https://github.com/leather-io/mono/commit/9659a2f1469e7e6d27428959e2d84264a23d7372))
+* **services:** keep sip10 balance when price lookup fails ([#2682](https://github.com/leather-io/mono/issues/2682)) ([50f7322](https://github.com/leather-io/mono/commit/50f7322f7c51886ad847955262b712ba1b64544e))
+* **services:** mark owned inputs and outputs for fixed-address accounts ([#2664](https://github.com/leather-io/mono/issues/2664)) ([64965eb](https://github.com/leather-io/mono/commit/64965eba6cbd9f000d55f2c69ec7f588dca429f0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.40.0
+    * @leather.io/constants bumped to 0.39.2
+    * @leather.io/crypto bumped to 1.13.7
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/stacks bumped to 1.22.5
+    * @leather.io/utils bumped to 0.52.7
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.0
+
 ## [1.64.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.63.1...@leather.io/services-v1.64.0) (2026-08-18)
 
 
