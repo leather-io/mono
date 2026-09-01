@@ -3,17 +3,11 @@ import { MetaDescriptor } from 'react-router';
 import { cmsClient } from '~/constants/cms-client';
 import { SbtcRewards } from '~/pages/sbtc/sbtc-rewards';
 
-import {
-  sbtcBasicEnrollQuery,
-  sbtcConceptsQuery,
-  sbtcFaqQuery,
-  sbtcPoolsQuery,
-} from '@leather.io/cms';
+import { sbtcConceptsQuery, sbtcFaqQuery, sbtcPoolsQuery } from '@leather.io/cms';
 
 export async function loader() {
-  const [sbtcPools, sbtcEnroll, sbtcFaq, sbtcConcepts] = await Promise.all([
+  const [sbtcPools, sbtcFaq, sbtcConcepts] = await Promise.all([
     cmsClient.fetch(sbtcPoolsQuery),
-    cmsClient.fetch(sbtcBasicEnrollQuery),
     cmsClient.fetch(sbtcFaqQuery),
     cmsClient.fetch(sbtcConceptsQuery),
   ]);
@@ -21,7 +15,6 @@ export async function loader() {
   const { historicalYield, minimumCommitment, rewardsToken, tvl } = sbtcConcepts;
   return {
     sbtcPools,
-    sbtcEnroll,
     sbtcFaq,
     concepts: {
       tvlConcept: tvl,
