@@ -34,9 +34,19 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vitest/globals", "chrome"]
+    "types": ["vitest/globals", "chrome", "@crxjs/vite-plugin/client"]
   },
-  "include": ["./src/**/*", "./tests/**/*", "./scripts-ts/**/*", "leather-styles", "theme"],
+  "include": [
+    "./src/**/*",
+    "./tests/**/*",
+    "./scripts-ts/**/*",
+    "./build/**/*",
+    "./*.spec.ts",
+    "./manifest.config.ts",
+    "./vite.config.ts",
+    "leather-styles",
+    "theme"
+  ],
   "parserOptions": {
     "extraFileExtensions": [".mdx"]
   }
