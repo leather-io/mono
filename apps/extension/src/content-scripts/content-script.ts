@@ -9,6 +9,8 @@ import type { RpcRequests, RpcResponses } from '@leather.io/rpc';
 import { DomEventName } from '@shared/inpage-types';
 import { CONTENT_SCRIPT_PORT } from '@shared/message-types';
 
+import inpageScriptUrl from '../inpage/inpage?iife';
+
 let backgroundPort: any;
 
 // Connection to background script - fires onConnect event in background script
@@ -53,7 +55,7 @@ document.addEventListener(DomEventName.request, (event: any) => {
 
 function addLeatherToPage() {
   const inpage = document.createElement('script');
-  inpage.src = chrome.runtime.getURL('inpage.js');
+  inpage.src = chrome.runtime.getURL(inpageScriptUrl);
   inpage.id = 'leather-provider';
   document.body.appendChild(inpage);
 }

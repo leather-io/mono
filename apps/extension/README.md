@@ -32,6 +32,9 @@ pnpm i
 pnpm dev
 ```
 
+The extension uses Vite and CRXJS. Development output is written to `dist/`, and supported
+extension contexts update through the Vite development server on port 8080.
+
 #### Optional: run test app
 
 We bundle a test app to use along with the extension. It gives easy access to the various functions that the extension
@@ -47,6 +50,8 @@ pnpm dev:test-app
 
 You'll need to add it to your browser of choice. Leather only
 supports Chromium and Firefox browsers. When you run `pnpm dev`, it will compile the application to the `/dist` folder
+
+To target Firefox during development, run `TARGET_BROWSER=firefox pnpm dev`.
 
 - [Chrome instructions](https://developer.chrome.com/docs/extensions/mv3/faq/#faq-dev-01)
 - [Firefox instructions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension#trying_it_out)

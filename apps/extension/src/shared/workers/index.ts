@@ -1,10 +1,12 @@
 import { analytics } from '@shared/utils/analytics';
 
-export enum WorkerScript {
-  DecryptionWorker = 'decryption-worker.js',
-}
+import decryptionWorkerUrl from './decryption-worker?worker&url';
 
-export function createWorker(scriptName: WorkerScript) {
+export const WorkerScript = {
+  DecryptionWorker: decryptionWorkerUrl,
+};
+
+export function createWorker(scriptName: string) {
   const worker = new Worker(scriptName);
   worker.addEventListener('error', error => {
     analytics?.untypedTrack(`worker_error_thrown_${scriptName}`, { error });
