@@ -16,6 +16,7 @@ interface SignerRollcallProps {
   account: VaultAccount;
   transaction: MultisigTransaction;
   currentUserAddress?: string;
+  currentUserId?: string;
   isSigning: boolean;
   isCancelling: boolean;
   isBroadcasting: boolean;
@@ -66,6 +67,7 @@ export function SignerRollcall({
   account,
   transaction,
   currentUserAddress,
+  currentUserId,
   isSigning,
   isCancelling,
   isBroadcasting,
@@ -74,7 +76,12 @@ export function SignerRollcall({
   onBroadcast,
 }: SignerRollcallProps) {
   const signers = [...account.signers].sort((a, b) => a.signerIndex - b.signerIndex);
-  const canCancel = cancellableStatuses.includes(transaction.status);
+  const showActions = cancellableStatuses.includes(transaction.status);
+  const canCancel =
+    showActions &&
+    (transaction.status !== 'signed' ||
+      transaction.proposerUserId === currentUserId ||
+      vault.createdBy === currentUserId);
   const thresholdMet = transaction.signatures.length >= account.threshold;
   const busy = isSigning || isCancelling || isBroadcasting;
 
@@ -164,7 +171,7 @@ export function SignerRollcall({
         </Flex>
       )}
 
-      {canCancel && (
+      {showActions && (
         <Flex
           gap="space.03"
           justifyContent="flex-end"
@@ -174,9 +181,11 @@ export function SignerRollcall({
           borderTopStyle="solid"
           borderTopColor="ink.border-transparent"
         >
-          <Button variant="ghost" intent="danger" size="sm" disabled={busy} onClick={onCancel}>
-            {isCancelling ? 'Cancelling…' : 'Cancel transaction'}
-          </Button>
+          {canCancel && (
+            <Button variant="ghost" intent="danger" size="sm" disabled={busy} onClick={onCancel}>
+              {isCancelling ? 'Cancelling…' : 'Cancel transaction'}
+            </Button>
+          )}
           <Button variant="solid" size="sm" disabled={busy || !thresholdMet} onClick={onBroadcast}>
             {isBroadcasting ? 'Broadcasting…' : 'Broadcast transaction'}
           </Button>

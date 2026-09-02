@@ -2,6 +2,7 @@ import { Flex, styled } from 'leather-styles/jsx';
 
 import { Flag } from '@leather.io/ui';
 
+import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
 import { Favicon } from '@app/components/favicon';
 
 interface PsbtRequestHeaderProps {
@@ -14,6 +15,7 @@ export function PsbtRequestHeader({ name, origin }: PsbtRequestHeaderProps) {
 
   return (
     <Flex flexDirection="column" mb="space.05" width="100%">
+      <CrossOriginFrameCallout mb="space.04" width="100%" />
       <styled.h1 mb="space.04" textStyle="heading.03">
         Approve
         <br />

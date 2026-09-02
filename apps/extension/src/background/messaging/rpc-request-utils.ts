@@ -51,6 +51,16 @@ export function getOriginFromPort(port: chrome.runtime.Port) {
   return port.sender?.origin;
 }
 
+function getTopOriginFromPort(port: chrome.runtime.Port) {
+  const tabUrl = port.sender?.tab?.url;
+  if (!tabUrl) return undefined;
+  try {
+    return new URL(tabUrl).origin;
+  } catch {
+    return undefined;
+  }
+}
+
 function getHostnameFromPort(port: chrome.runtime.Port) {
   const origin = getOriginFromPort(port);
   if (!origin) throw new Error('No URL found in port sender');
@@ -131,6 +141,7 @@ export function createConnectingAppMetadataSearchParams(
   const tabId = getTabIdFromPort(port);
   const frameId = getFrameIdFromPort(port);
   urlParams.set('origin', origin ?? '');
+  urlParams.set('topOrigin', getTopOriginFromPort(port) ?? '');
   urlParams.set('frameId', frameId.toString());
   urlParams.set('tabId', tabId.toString());
   otherParams.forEach(([key, value]) => urlParams.append(key, value));

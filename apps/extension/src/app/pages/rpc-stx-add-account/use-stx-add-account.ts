@@ -31,14 +31,14 @@ import { deriveStxPolicyAddress } from './stx-policy-registration';
 const { decode } = createRequestEncoder(stxAddAccount.request);
 
 function useStxAddAccountParams() {
-  const { frameId, tabId, origin } = useRpcRequestParams();
+  const { frameId, tabId, origin, topOrigin } = useRpcRequestParams();
   const request = initialSearchParams.get('rpcRequest');
   if (!request) throw new Error('Missing rpcRequest');
-  return { frameId, tabId, origin, request: decode(request) };
+  return { frameId, tabId, origin, topOrigin, request: decode(request) };
 }
 
 export function useStxAddAccount() {
-  const { frameId, tabId, origin, request } = useStxAddAccountParams();
+  const { frameId, tabId, origin, topOrigin, request } = useStxAddAccountParams();
   const stacksAccount = useCurrentStacksAccount();
   const registerStxPolicy = useRegisterStxPolicy();
   const networks = useNetworks();
@@ -51,7 +51,7 @@ export function useStxAddAccount() {
 
   // Whitelisted origins may register the policy; any other origin may only let
   // the user verify the derived address (nothing is written to the extension).
-  const mode: PolicyApprovalMode = getPolicyApprovalMode(origin);
+  const mode: PolicyApprovalMode = getPolicyApprovalMode(origin, topOrigin);
 
   // The active account's public key must be one of the policy's public keys
   // before the user can confirm.
