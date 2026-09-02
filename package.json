@@ -133,7 +133,8 @@
       "axios@>=1.15.2 <1.18.0": ">=1.18.0",
       "adm-zip@<0.6.0": ">=0.6.0",
       "nanoid@<3.3.18": ">=3.3.18 <4",
-      "valibot@<1.4.2": ">=1.4.2 <2"
+      "valibot@<1.4.2": ">=1.4.2 <2",
+      "browserslist@<4.28.7": ">=4.28.7 <5"
     },
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
