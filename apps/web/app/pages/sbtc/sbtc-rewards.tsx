@@ -5,7 +5,6 @@ import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 import { BasicPageSectionHeading } from '~/components/basic-page/basic-page-section-heading';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
-import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { Page } from '~/layouts/page/page';
 import { SbtcRewardsPageHeading } from '~/pages/sbtc/components/sbtc-rewards-page-heading';
 import { loader } from '~/pages/sbtc/sbtc.route';
@@ -23,7 +22,7 @@ import { SbtcRewardsSunsetCallout } from './components/sbtc-rewards-sunset-callo
 import { SbtcRewardContext } from './sbtc-rewards-context';
 
 export function SbtcRewards(): ReactElement {
-  const { sbtcPools, sbtcEnroll } = useLoaderData<typeof loader>();
+  const { sbtcPools } = useLoaderData<typeof loader>();
   const { status, whenExtensionState } = useLeatherConnect();
 
   async function bridgeSbtc() {
@@ -79,16 +78,7 @@ export function SbtcRewards(): ReactElement {
             disclaimer="sBTC rewards providers are independent third-party protocols. Leather does not control their reward logic or smart contracts. Users should review platform-specific documentation before committing sBTC."
           />
 
-          {sbtcEnroll && (
-            <>
-              <SbtcRewardsSunsetCallout mt="space.05" />
-              <SbtcProtocolRewardGrid
-                enrollAction={<SbtcEnrollButton />}
-                mt="space.04"
-                pool={sbtcEnroll}
-              />
-            </>
-          )}
+          <SbtcRewardsSunsetCallout mt="space.05" />
 
           {sbtcPools.map(pool => (
             <SbtcProtocolRewardGrid

@@ -5,6 +5,7 @@ import {
   parseKeyExpression,
 } from '@bitcoinerlab/descriptors';
 import ecc from '@bitcoinerlab/secp256k1';
+import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
@@ -23,6 +24,7 @@ const csvMinTxVersion = 2;
 const sequenceDisableFlag = 0x80000000;
 const sequenceTypeFlag = 0x00400000;
 const sequenceLockTimeMask = 0xffff;
+const wshWitnessProgramOffset = 2;
 
 export function isWshDescriptor(descriptor: string) {
   return descriptor.trimStart().startsWith(wshDescriptorPrefix);
@@ -435,6 +437,10 @@ export function finalizeWshDescriptorPsbt({
     const { scriptPubKey } = compileWshDescriptor(descriptor);
 
     const preimageTx = btc.Transaction.fromPSBT(preimagePsbt);
+    const signedTx = btc.Transaction.fromPSBT(signedPsbt);
+    if (bytesToHex(signedTx.unsignedTx) !== bytesToHex(preimageTx.unsignedTx))
+      return unsatisfiedResult;
+
     const inputIndexes = getDescriptorMatchingInputIndexes(preimageTx, scriptPubKey);
     if (!inputIndexes.length) return unsatisfiedResult;
 
@@ -459,6 +465,11 @@ export function finalizeWshDescriptorPsbt({
 
       const witnessScript = instance.getWitnessScript();
       if (!witnessScript) return unsatisfiedResult;
+      if (
+        bytesToHex(sha256(witnessScript)) !==
+        bytesToHex(utxoScript.subarray(wshWitnessProgramOffset))
+      )
+        return unsatisfiedResult;
 
       input.witnessScript = witnessScript;
       if (!psbt.validateSignaturesOfInput(index, validateDescriptorSignature))
