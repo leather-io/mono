@@ -1,4 +1,4 @@
-import { IS_DEV_ENV } from './environment';
+import { IS_DEV_ENV, WALLET_ENVIRONMENT } from './environment';
 
 export const GITHUB_ORG = 'leather-io';
 export const GITHUB_REPO = 'extension';
@@ -6,11 +6,10 @@ export const GITHUB_REPO = 'extension';
 // Origins permitted to actually add (register) a multisig policy account via
 // btc_addAccount / stx_addAccount. Any other origin can still open the approver,
 // but only to let the user verify the derived address — nothing is registered.
-// TODO: set the real multisig dApp origin(s) before shipping the policy methods
-const POLICY_ALLOWED_ORIGINS: readonly string[] = [
-  'https://app.leather.io',
-  'https://dev-leather-web.wallet-6d1.workers.dev',
-];
+const stagingOrigins: readonly string[] =
+  WALLET_ENVIRONMENT === 'production' ? [] : ['https://dev-leather-web.wallet-6d1.workers.dev'];
+
+const POLICY_ALLOWED_ORIGINS: readonly string[] = ['https://app.leather.io', ...stagingOrigins];
 
 const LOOPBACK_HOSTNAMES: readonly string[] = ['localhost', '127.0.0.1', '[::1]'];
 

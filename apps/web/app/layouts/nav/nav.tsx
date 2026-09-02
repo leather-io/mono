@@ -6,7 +6,6 @@ import { Flex, HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { Drawer } from 'vaul';
 import { LeatherLogo } from '~/components/icons/leather-logo';
 import { StackingIcon } from '~/components/icons/stacking-icon';
-import { multisigEnabled } from '~/pages/multisig/multisig.constants';
 import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
 import {
@@ -50,11 +49,9 @@ function NavContents() {
         Apps
       </NavItem>
 
-      {multisigEnabled && (
-        <NavItem href="/multisig" icon={<KeyIcon variant="small" />}>
-          Multisig
-        </NavItem>
-      )}
+      <NavItem href="/multisig" icon={<KeyIcon variant="small" />}>
+        Multisig
+      </NavItem>
 
       <styled.div mt="auto" mb={[null, null, 'space.06']}>
         <NavItem href="/changelog" icon={<ChangelogIcon variant="small" />}>
