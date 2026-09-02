@@ -192,6 +192,11 @@ export default defineConfig([
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {
+    name: 'test-app',
+    files: ['apps/test-app/src/**/*.{ts,tsx}'],
+    extends: [reactConfig],
+  },
+  {
     name: 'mobile',
     files: ['apps/mobile/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginLingui.configs['flat/recommended']],
