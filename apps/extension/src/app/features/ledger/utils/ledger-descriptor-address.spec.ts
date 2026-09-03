@@ -1,3 +1,4 @@
+import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import { describe, expect, it } from 'vitest';
@@ -131,6 +132,29 @@ describe('descriptorHasNonAccountRawKey', () => {
     const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
 
     expect(accountKey.key.bip32).toBeUndefined();
+    expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(false);
+  });
+
+  const bondHash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
+
+  function makeBondDescriptor(counterpartyKey: string) {
+    return `wsh(and_v(v:or_i(after(1000),and_v(v:sha256(${bondHash}),pk(${counterpartyKey}))),sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0)))`;
+  }
+
+  it('returns true for a bond whose counterparty is a raw public key', () => {
+    const rawCounterparty = bytesToHex(makeNativeSegwitAddressPubkey(9));
+    const compiled = compileWshDescriptor(makeBondDescriptor(rawCounterparty));
+    const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
+
+    expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(true);
+  });
+
+  it('returns false for a bond whose counterparty is an extended key at the vault index', () => {
+    const compiled = compileWshDescriptor(
+      makeBondDescriptor(`${makeNativeSegwitAccountXpub(9)}/0/0`)
+    );
+    const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
+
     expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(false);
   });
 });
