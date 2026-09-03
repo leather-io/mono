@@ -22,6 +22,8 @@ const DIST_ROOT_PATH = path.join(__dirname, '../', 'dist');
 const WALLET_ENVIRONMENT = process.env.WALLET_ENVIRONMENT ?? 'development';
 const ANALYZE_BUNDLE = process.env.ANALYZE === 'true';
 const IS_PUBLISHING = !!process.env.IS_PUBLISHING;
+const IS_BIOMETRIC_UNLOCK_U0 = process.env.BIOMETRIC_UNLOCK_U0 === 'true';
+const TARGET_BROWSER = process.env.TARGET_BROWSER ?? 'chromium';
 
 const IS_DEV = WALLET_ENVIRONMENT === 'development';
 const IS_PROD = !IS_DEV;
@@ -93,7 +95,9 @@ export const config = {
     background: path.join(SRC_ROOT_PATH, 'background', 'background.ts'),
     inpage: path.join(SRC_ROOT_PATH, 'inpage', 'inpage.ts'),
     'content-script': path.join(SRC_ROOT_PATH, 'content-scripts', 'content-script.ts'),
-    index: path.join(SRC_ROOT_PATH, 'app', 'index.tsx'),
+    index: IS_BIOMETRIC_UNLOCK_U0
+      ? path.join(SRC_ROOT_PATH, 'u0-biometric-unlock-harness', 'index.ts')
+      : path.join(SRC_ROOT_PATH, 'app', 'index.tsx'),
     'decryption-worker': path.join(SRC_ROOT_PATH, 'shared/workers/decryption-worker.ts'),
     debug: path.join(SRC_ROOT_PATH, '../scripts/debug.js'),
   },
@@ -299,6 +303,7 @@ export const config = {
     new webpack.EnvironmentPlugin({
       BRANCH_NAME: BRANCH_NAME,
       COMMIT_SHA: COMMIT_SHA,
+      TARGET_BROWSER,
     }),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],

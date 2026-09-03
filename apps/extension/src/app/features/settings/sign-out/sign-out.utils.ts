@@ -26,3 +26,9 @@ export function getPasswordDisableLabel(softwareWalletCount: number): string {
     ? 'I understand that my password will not give me access to my wallets after I sign out.'
     : 'I understand that my password will not give me access to my wallet after I sign out.';
 }
+
+export function getBiometricDisableLabel(softwareWalletCount: number): string {
+  return softwareWalletCount > 1
+    ? 'I understand that biometric unlock will not give me access to my wallets after I sign out.'
+    : 'I understand that biometric unlock will not give me access to my wallet after I sign out.';
+}

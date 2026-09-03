@@ -4,12 +4,17 @@ import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { broadcastWalletListChanged } from '@shared/messages';
 
+import { clearBiometricAutoPromptSuppression } from '@app/common/wallet-authentication/biometric-auto-prompt';
+
 import { AppThunk, RootState, persistor } from '..';
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '../in-memory-key/keychain-selector-cache';
-import { selectCurrentAccount } from '../software-keys/software-key.selectors';
+import { readAuthoritativeWalletTransactionState } from '../software-keys/software-key-state';
+import { selectCurrentAccount, selectSoftwareKeys } from '../software-keys/software-key.selectors';
+import { hydrateSlicesFromStorage } from '../utils/storage-sync';
+import { withWalletWriteLock } from '../wallets/wallet-write-lock';
 import { selectAllWallets } from '../wallets/wallet.selectors';
 import { userSwitchesAccount } from './active.slice';
 
@@ -55,33 +60,36 @@ function selectFirstRemainingAccount(
 // ts-unused-exports:disable-next-line
 export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
   return async (dispatch, getState) => {
-    const state = getState();
-    const currentAccount = selectCurrentAccount(state);
+    await withWalletWriteLock(async () => {
+      const authoritative = await readAuthoritativeWalletTransactionState();
+      dispatch(hydrateSlicesFromStorage(authoritative.state));
+      const state = { ...getState(), ...authoritative.state };
+      const currentAccount = selectCurrentAccount(state);
+      const removesFinalSoftwareWallet =
+        selectSoftwareKeys(state).length === 1 && selectSoftwareKeys(state)[0]?.id === fingerprint;
 
-    dispatch(userRemovesWallet({ fingerprint }));
-    removeKey(fingerprint);
-    clearKeychainSelectorCaches();
+      dispatch(userRemovesWallet({ fingerprint }));
+      removeKey(fingerprint);
+      clearKeychainSelectorCaches();
 
-    if (currentAccount?.fingerprint === fingerprint) {
-      const nextAccount = selectFirstRemainingAccount(state, fingerprint);
-      if (nextAccount) dispatch(userSwitchesAccount(nextAccount));
-      else dispatch(userSwitchesAccount(null));
-    }
+      if (currentAccount?.fingerprint === fingerprint) {
+        const nextAccount = selectFirstRemainingAccount(state, fingerprint);
+        if (nextAccount) dispatch(userSwitchesAccount(nextAccount));
+        else dispatch(userSwitchesAccount(null));
+      }
 
-    await persistor.flush();
-    void broadcastWalletListChanged({ removedFingerprint: fingerprint });
+      await persistor.flush();
+      if (removesFinalSoftwareWallet) await clearBiometricAutoPromptSuppression();
+      void broadcastWalletListChanged({ removedFingerprint: fingerprint });
+    });
   };
 }
 
-export function applyRemoteWalletRemoval(removedFingerprint: string): AppThunk {
-  return (dispatch, getState) => {
-    const state = getState();
-    const currentAccount = selectCurrentAccount(state);
-
-    dispatch(userRemovesWallet({ fingerprint: removedFingerprint }));
-
-    if (currentAccount?.fingerprint !== removedFingerprint) return;
-
-    dispatch(userSwitchesAccount(selectFirstRemainingAccount(state, removedFingerprint)));
+export function applyRemoteWalletRemoval(): AppThunk {
+  return async dispatch => {
+    await withWalletWriteLock(async () => {
+      const authoritative = await readAuthoritativeWalletTransactionState();
+      dispatch(hydrateSlicesFromStorage(authoritative.state));
+    });
   };
 }

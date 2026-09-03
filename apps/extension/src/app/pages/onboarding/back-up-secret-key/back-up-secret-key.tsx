@@ -36,7 +36,11 @@ export function BackUpSecretKeyPage() {
   const [showPasswordPage, setShowPasswordPage] = useState(false);
 
   return showPasswordPage ? (
-    <SetPasswordPage mnemonicData={mnemonicData} onBack={() => setShowPasswordPage(false)} />
+    <SetPasswordPage
+      mnemonicData={mnemonicData}
+      onBack={() => setShowPasswordPage(false)}
+      startWithBiometrics
+    />
   ) : (
     <>
       <Header px="space.04">
@@ -49,7 +53,7 @@ export function BackUpSecretKeyPage() {
             <>
               <DescriptionColumn
                 title="Back up your Secret Key"
-                description="You'll need it to access your wallet on a new device, or this one if you lose your password — so back it up somewhere safe!"
+                description="You'll need it to access your wallet on a new device, or this one if you can no longer unlock Leather — so back it up somewhere safe!"
               />
               <Stack width="3/4" gap="space.05" mt="space.04">
                 <BulletPoint

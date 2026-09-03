@@ -1,5 +1,6 @@
 import {
   getBackupConfirmationLabel,
+  getBiometricDisableLabel,
   getPasswordDisableLabel,
   getSignOutCalloutBody,
   getSignOutCalloutTitle,
@@ -66,6 +67,17 @@ describe('sign-out copy helpers', () => {
     test('uses plural "wallets" for multiple software wallets', () => {
       expect(getPasswordDisableLabel(2)).toBe(
         'I understand that my password will not give me access to my wallets after I sign out.'
+      );
+    });
+  });
+
+  describe(getBiometricDisableLabel.name, () => {
+    test('uses biometric wording without claiming that a Leather password exists', () => {
+      expect(getBiometricDisableLabel(1)).toBe(
+        'I understand that biometric unlock will not give me access to my wallet after I sign out.'
+      );
+      expect(getBiometricDisableLabel(2)).toBe(
+        'I understand that biometric unlock will not give me access to my wallets after I sign out.'
       );
     });
   });
