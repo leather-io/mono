@@ -14,7 +14,7 @@ export const bondTemplateV1 = {
 } as const;
 
 const bondDescriptorPattern =
-  /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\(([^()]+)\)\)\),((?:sorted)?multi\([^()]+\))\)\)$/;
+  /^wsh\(and_v\(v:or_i\(after\((\d{1,10})\),and_v\(v:sha256\(([0-9a-fA-F]{64})\),pk\(([^()]+)\)\)\),((?:(?:sorted)?multi|pk)\([^()]+\))\)\)$/;
 
 const compressedPubkeyHexPattern = /^0[23][0-9a-f]{64}$/;
 const compressedPubkeyAnyCaseHexPattern = /^0[23][0-9a-fA-F]{64}$/;
@@ -31,12 +31,31 @@ function normalizeBondCounterpartyKey(keyExpression: string): string {
     : keyExpression;
 }
 
-function isValidVaultMultiExpression(multiExpression: string): boolean {
-  const args = multiExpression.slice(multiExpression.indexOf('(') + 1, -1).split(',');
+export interface BondVaultLeaf extends BondVaultKeys {
+  kind: 'pk' | 'multi';
+  expression: string;
+}
+
+function isBondVaultKeyExpression(keyExpression: string): boolean {
+  return (
+    compressedPubkeyAnyCaseHexPattern.test(keyExpression) ||
+    isExtendedPublicKeyExpression(keyExpression)
+  );
+}
+
+function parseBondVaultLeaf(expression: string): BondVaultLeaf | null {
+  const args = expression.slice(expression.indexOf('(') + 1, -1).split(',');
+  if (expression.startsWith('pk(')) {
+    const [keyExpression] = args;
+    if (args.length !== 1 || !keyExpression || !isBondVaultKeyExpression(keyExpression))
+      return null;
+    return { kind: 'pk', expression, threshold: 1, keyExpressions: [keyExpression] };
+  }
   const [threshold, ...keyExpressions] = args;
-  if (!threshold || !/^\d+$/.test(threshold)) return false;
-  if (!keyExpressions.length) return false;
-  return keyExpressions.every(isExtendedPublicKeyExpression);
+  if (!threshold || !/^\d+$/.test(threshold)) return null;
+  if (!keyExpressions.length) return null;
+  if (!keyExpressions.every(isBondVaultKeyExpression)) return null;
+  return { kind: 'multi', expression, threshold: Number(threshold), keyExpressions };
 }
 
 export interface BondDescriptorParams {
@@ -45,11 +64,17 @@ export interface BondDescriptorParams {
   counterpartyKey: string;
 }
 
+export interface BondTemplateDescriptorMatch extends BondDescriptorParams {
+  vault: BondVaultLeaf;
+}
+
 export interface BondDescriptorMatch extends BondDescriptorParams {
   multiExpression: string;
 }
 
-export function matchBondDescriptor(descriptor: string): BondDescriptorMatch | null {
+export function matchBondTemplateDescriptor(
+  descriptor: string
+): BondTemplateDescriptorMatch | null {
   const compactDescriptor = stripDescriptorChecksum(descriptor).replace(/\s/g, '');
   const match = bondDescriptorPattern.exec(compactDescriptor);
   if (!match) return null;
@@ -57,11 +82,12 @@ export function matchBondDescriptor(descriptor: string): BondDescriptorMatch | n
   const rawUnlockHeight = match[1];
   const hash = match[2];
   const rawCounterpartyKey = match[3];
-  const multiExpression = match[4];
-  if (!rawUnlockHeight || !hash || !rawCounterpartyKey || !multiExpression) return null;
+  const vaultExpression = match[4];
+  if (!rawUnlockHeight || !hash || !rawCounterpartyKey || !vaultExpression) return null;
   const counterpartyKey = normalizeBondCounterpartyKey(rawCounterpartyKey);
   if (!isBondCounterpartyKeyExpression(counterpartyKey)) return null;
-  if (!isValidVaultMultiExpression(multiExpression)) return null;
+  const vault = parseBondVaultLeaf(vaultExpression);
+  if (!vault) return null;
 
   const unlockHeight = Number(rawUnlockHeight);
   if (!isValidUnlockHeight(unlockHeight)) return null;
@@ -70,8 +96,16 @@ export function matchBondDescriptor(descriptor: string): BondDescriptorMatch | n
     unlockHeight,
     hash: hash.toLowerCase(),
     counterpartyKey,
-    multiExpression,
+    vault,
   };
+}
+
+export function matchBondDescriptor(descriptor: string): BondDescriptorMatch | null {
+  const match = matchBondTemplateDescriptor(descriptor);
+  if (!match || match.vault.kind !== 'multi') return null;
+  if (!match.vault.keyExpressions.every(isExtendedPublicKeyExpression)) return null;
+  const { vault, ...params } = match;
+  return { ...params, multiExpression: vault.expression };
 }
 
 function isValidUnlockHeight(unlockHeight: number): boolean {

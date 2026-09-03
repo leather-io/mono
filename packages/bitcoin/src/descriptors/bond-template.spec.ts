@@ -1,17 +1,26 @@
 import { checksum } from '@bitcoinerlab/descriptors';
 import { sha256 } from '@noble/hashes/sha256';
-import { bytesToHex } from '@noble/hashes/utils';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import { describe, expect, it } from 'vitest';
 
-import { makeNativeSegwitAccountXpub, makeNativeSegwitAddressPubkeyHex } from '../mocks/key-mocks';
+import {
+  makeNativeSegwitAccountKeychain,
+  makeNativeSegwitAccountXpub,
+  makeNativeSegwitAddressPubkeyHex,
+} from '../mocks/key-mocks';
 import {
   getBondVaultKeys,
   instantiateBondDescriptor,
   matchBondDescriptor,
+  matchBondTemplateDescriptor,
   reconstructBondDescriptor,
 } from './bond-template';
-import { compileWshDescriptor, getWshDescriptorAddress } from './wsh-descriptor';
+import {
+  compileWshDescriptor,
+  findAccountDescriptorKey,
+  getWshDescriptorAddress,
+} from './wsh-descriptor';
 
 const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
@@ -135,6 +144,97 @@ describe('matchBondDescriptor', () => {
       matchBondDescriptor(bondDescriptor.replace(counterpartyKey, 'not-a-key/0/0'))
     ).toBeNull();
   });
+
+  it('returns null for a single-signer pk vault', () => {
+    expect(matchBondDescriptor(makeBondDescriptor(`pk(${xpubA}/0/7)`))).toBeNull();
+  });
+});
+
+describe('matchBondTemplateDescriptor', () => {
+  it('extracts params and a multi vault leaf', () => {
+    expect(matchBondTemplateDescriptor(bondDescriptor)).toEqual({
+      unlockHeight,
+      hash,
+      counterpartyKey,
+      vault: {
+        kind: 'multi',
+        expression: `sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7,${xpubC}/0/7)`,
+        threshold: 2,
+        keyExpressions: [`${xpubA}/0/7`, `${xpubB}/0/7`, `${xpubC}/0/7`],
+      },
+    });
+  });
+
+  it('accepts a single-signer pk vault leaf that compiles and matches the account key', () => {
+    const pkVault = makeBondDescriptor(`pk(${xpubA}/0/7)`);
+    expect(matchBondTemplateDescriptor(pkVault)?.vault).toEqual({
+      kind: 'pk',
+      expression: `pk(${xpubA}/0/7)`,
+      threshold: 1,
+      keyExpressions: [`${xpubA}/0/7`],
+    });
+
+    const compiled = compileWshDescriptor(pkVault);
+    const accountKey = findAccountDescriptorKey(compiled, makeNativeSegwitAccountKeychain(1));
+    expect(accountKey?.addressIndex).toBe(7);
+    expect(findAccountDescriptorKey(compiled, makeNativeSegwitAccountKeychain(2))).toBeUndefined();
+  });
+
+  it('accepts an origin-prefixed pk vault key', () => {
+    const withOrigin = makeBondDescriptor(`pk([aabbccdd/84'/0'/0']${xpubA}/0/7)`);
+    expect(matchBondTemplateDescriptor(withOrigin)?.vault.kind).toBe('pk');
+  });
+
+  it('accepts raw compressed vault keys that matchBondDescriptor rejects', () => {
+    const rawKeyA = makeNativeSegwitAddressPubkeyHex(1);
+    const rawKeyB = makeNativeSegwitAddressPubkeyHex(2);
+
+    const rawMulti = makeBondDescriptor(`sortedmulti(2,${rawKeyA},${rawKeyB})`);
+    expect(matchBondTemplateDescriptor(rawMulti)?.vault).toEqual({
+      kind: 'multi',
+      expression: `sortedmulti(2,${rawKeyA},${rawKeyB})`,
+      threshold: 2,
+      keyExpressions: [rawKeyA, rawKeyB],
+    });
+    expect(matchBondDescriptor(rawMulti)).toBeNull();
+
+    const mixedMulti = makeBondDescriptor(`sortedmulti(2,${xpubA}/0/7,${rawKeyB})`);
+    expect(matchBondTemplateDescriptor(mixedMulti)?.vault.keyExpressions).toEqual([
+      `${xpubA}/0/7`,
+      rawKeyB,
+    ]);
+    expect(matchBondDescriptor(mixedMulti)).toBeNull();
+
+    const rawPk = makeBondDescriptor(`pk(${rawKeyA})`);
+    expect(matchBondTemplateDescriptor(rawPk)?.vault).toEqual({
+      kind: 'pk',
+      expression: `pk(${rawKeyA})`,
+      threshold: 1,
+      keyExpressions: [rawKeyA],
+    });
+    const compiled = compileWshDescriptor(rawPk);
+    expect(
+      findAccountDescriptorKey(compiled, makeNativeSegwitAccountKeychain(1))?.key.pubkey
+    ).toEqual(hexToBytes(rawKeyA));
+  });
+
+  it('rejects pk vault leaves that are not a single public key', () => {
+    const rawKeyA = makeNativeSegwitAddressPubkeyHex(1);
+    expect(matchBondTemplateDescriptor(makeBondDescriptor(`pk(04${rawKeyA.slice(2)})`))).toBeNull();
+
+    const xprvA = HDKey.fromMasterSeed(new Uint8Array(32).fill(1)).derive(
+      "m/84'/0'/0'"
+    ).privateExtendedKey;
+    expect(matchBondTemplateDescriptor(makeBondDescriptor(`pk(${xprvA}/0/7)`))).toBeNull();
+    expect(
+      matchBondTemplateDescriptor(makeBondDescriptor(`pk(${xpubA}/0/7,${xpubB}/0/7)`))
+    ).toBeNull();
+  });
+
+  it('rejects descriptors that are not the bond template shape', () => {
+    expect(matchBondTemplateDescriptor(policyDescriptor)).toBeNull();
+    expect(matchBondTemplateDescriptor(`wsh(pk(${xpubA}/0/7))`)).toBeNull();
+  });
 });
 
 describe('instantiateBondDescriptor', () => {
@@ -151,6 +251,7 @@ describe('instantiateBondDescriptor', () => {
     expect(match?.unlockHeight).toBe(unlockHeight);
     expect(match?.hash).toBe(hash);
     expect(match?.counterpartyKey).toBe(counterpartyKey);
+    expect(matchBondTemplateDescriptor(instantiated)?.vault.kind).toBe('multi');
   });
 
   it('compiles to the same script as a cosmetically different dApp descriptor', () => {

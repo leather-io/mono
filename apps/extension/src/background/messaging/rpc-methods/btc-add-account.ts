@@ -1,4 +1,8 @@
-import { compileWshDescriptor, isWshDescriptor } from '@leather.io/bitcoin';
+import {
+  compileWshDescriptor,
+  isWshDescriptor,
+  matchBondTemplateDescriptor,
+} from '@leather.io/bitcoin';
 import {
   RpcErrorCode,
   btcAddAccount,
@@ -22,14 +26,26 @@ import {
 // Only multisig wsh() descriptors are supported for now. `multi(` is a substring
 // of `sortedmulti(`, so this matches both. `compileWshDescriptor` then validates
 // the descriptor's structure and throws on anything malformed.
-function isSupportedMultisigDescriptor(descriptor: string) {
-  if (!isWshDescriptor(descriptor) || !descriptor.includes('multi(')) return false;
+function compilesAsWshDescriptor(descriptor: string) {
   try {
     compileWshDescriptor(descriptor);
     return true;
   } catch {
     return false;
   }
+}
+
+function isSupportedMultisigDescriptor(descriptor: string) {
+  if (!isWshDescriptor(descriptor) || !descriptor.includes('multi(')) return false;
+  return compilesAsWshDescriptor(descriptor);
+}
+
+function isSupportedBondDescriptor(descriptor: string) {
+  return matchBondTemplateDescriptor(descriptor) !== null && compilesAsWshDescriptor(descriptor);
+}
+
+function isSupportedDescriptor(descriptor: string) {
+  return isSupportedMultisigDescriptor(descriptor) || isSupportedBondDescriptor(descriptor);
 }
 
 export const btcAddAccountHandler = defineRpcRequestHandler(
@@ -44,7 +60,7 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
     });
     if (status === 'failure') return;
 
-    if (!isSupportedMultisigDescriptor(request.params.descriptor)) {
+    if (!isSupportedDescriptor(request.params.descriptor)) {
       void trackRpcRequestError({ endpoint: request.method, error: 'Invalid descriptor' });
       void sendMessageToOriginatingFrame(
         getOriginatingFrameFromPort(port),
@@ -52,7 +68,7 @@ export const btcAddAccountHandler = defineRpcRequestHandler(
           id: request.id,
           error: {
             code: RpcErrorCode.INVALID_PARAMS,
-            message: 'Only multisig wsh() descriptors are supported',
+            message: 'Only multisig or timelocked wsh() descriptors are supported',
           },
         })
       );
