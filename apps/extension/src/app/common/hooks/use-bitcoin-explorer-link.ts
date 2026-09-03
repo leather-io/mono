@@ -19,6 +19,7 @@ export function useBitcoinExplorerLink() {
         id: txid,
         type: 'tx',
         networkPreference: bitcoin.bitcoinNetwork,
+        bitcoinUrl: bitcoin.bitcoinUrl,
       });
       if (link) {
         openInNewTab(link);

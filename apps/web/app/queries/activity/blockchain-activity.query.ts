@@ -4,6 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { onchainActivityRefetchInterval } from '~/features/multisig/vaults/use-vaults';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import {
@@ -128,6 +129,11 @@ export function useBlockchainActivityByTxIdDetailQuery(
     initialDataUpdatedAt: () =>
       findCachedBlockchainActivityByTxid(queryClient, account, txid)?.dataUpdatedAt,
     enabled,
+    // Null data means the transaction has not reached the chain yet.
+    refetchInterval: query =>
+      query.state.data == null || query.state.data.status === 'pending'
+        ? onchainActivityRefetchInterval
+        : false,
   });
 }
 
