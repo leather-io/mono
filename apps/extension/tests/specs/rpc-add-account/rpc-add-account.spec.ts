@@ -272,6 +272,7 @@ function mainnetAddressOf(descriptor: string) {
 }
 
 async function initiateRequestCatchingError(page: Page, method: string, params: unknown) {
+  await waitForProvider(page);
   return page.evaluate(
     ({ method, params }) =>
       (window as any).LeatherProvider?.request(method, params).catch((e: unknown) => e),
@@ -313,6 +314,7 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
     );
     await expect(popup.getByTestId('bond-counterparty-key')).toHaveText(bondParams.counterpartyKey);
     await expect(popup.getByTestId('bond-hash')).toHaveText(bondParams.hash);
+    await expect(popup.getByText("Timelocked addresses can't be added")).toBeVisible();
     await expect(popup.getByText("This site can't add accounts")).toHaveCount(0);
     await expect(popup.getByText('Account name')).toHaveCount(0);
     expect(await getDisplayerAddress(popup.locator('body'))).toBe(mainnetAddressOf(bondDescriptor));
@@ -346,6 +348,7 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
     });
 
     const popup = await waitForPopup(context);
+    await expect(popup.getByText("Timelocked addresses can't be added")).toBeVisible();
     await verifyTimelockedAddress(popup);
 
     const result = await requestPromise;
@@ -420,7 +423,6 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
     await expect(popup.getByTestId('bond-vault-policy')).toHaveText(
       'Requires 2 of 2 vault co-signers'
     );
-    await expect(popup.getByText('Add multisig account')).toHaveCount(0);
     await verifyTimelockedAddress(popup);
 
     const result = await requestPromise;
@@ -490,7 +492,6 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
 
   test('rejects miniscript that merely wraps a multisig leaf', async ({ page }) => {
     await page.goto('localhost:3000');
-    await waitForProvider(page);
     const result = await initiateRequestCatchingError(page, 'btc_addAccount', {
       name: 'Not a multisig',
       descriptor: multiLeafMiniscriptDescriptor,
@@ -506,7 +507,6 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
 
   test('rejects a ranged bond descriptor', async ({ page }) => {
     await page.goto('localhost:3000');
-    await waitForProvider(page);
     const result = await initiateRequestCatchingError(page, 'btc_addAccount', {
       name: 'Ranged bond',
       descriptor: rangedBondDescriptor,

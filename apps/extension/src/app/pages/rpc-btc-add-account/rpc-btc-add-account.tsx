@@ -20,7 +20,11 @@ import { CurrentAccountDisplayer } from '@app/features/current-account/current-a
 import { ledgerRawKeyUnsupportedMessage } from '@app/features/ledger/utils/ledger-descriptor-address';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
-import { policyCallout, verifyModeCalloutMessage } from '../policy-match';
+import {
+  policyCallout,
+  timelockedVerifyCalloutMessage,
+  verifyModeCalloutMessage,
+} from '../policy-match';
 import { useBtcAddAccount } from './use-btc-add-account';
 
 function getApproverTitle(isTimelocked: boolean, isVerifyMode: boolean) {
@@ -100,10 +104,10 @@ export function RpcBtcAddAccount() {
           title={getApproverTitle(isTimelocked, isVerifyMode)}
           onPressRequestedByLink={focusInitiatingTab}
         />
-        {isVerifyMode && !isTimelocked && (
+        {isVerifyMode && (
           <Approver.Section>
-            <Callout variant="warning" mt="space.03">
-              {verifyModeCalloutMessage}
+            <Callout variant={isTimelocked ? 'info' : 'warning'} mt="space.03">
+              {isTimelocked ? timelockedVerifyCalloutMessage : verifyModeCalloutMessage}
             </Callout>
           </Approver.Section>
         )}

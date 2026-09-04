@@ -20,10 +20,21 @@ export function getPolicyApprovalMode(
   return isWhitelistedOrigin(origin) && isWhitelistedOrigin(topOrigin) ? 'add' : 'verify';
 }
 
+export function getBtcAddAccountApprovalMode(
+  origin: string | null | undefined,
+  topOrigin: string | null | undefined,
+  kind: BtcAddAccountKind
+): PolicyApprovalMode {
+  return kind === 'timelocked' ? 'verify' : getPolicyApprovalMode(origin, topOrigin);
+}
+
 // Shown in verify mode so the user understands the requesting site cannot add an
 // account — they are only double-checking the address it supplied.
 export const verifyModeCalloutMessage =
   "This site can't add accounts. You're only verifying the address.";
+
+export const timelockedVerifyCalloutMessage =
+  "Timelocked addresses can't be added to your wallet. You're only verifying the address.";
 
 interface PolicyCallout {
   variant: 'info' | 'warning';
