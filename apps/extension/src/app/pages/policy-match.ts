@@ -25,9 +25,6 @@ export function getPolicyApprovalMode(
 export const verifyModeCalloutMessage =
   "This site can't add accounts. You're only verifying the address.";
 
-export const ledgerRawKeyCalloutMessage =
-  "Ledger can't display this address because another key in the descriptor is a raw public key. Ask the requesting site to provide every key as an extended public key (xpub), or verify with a software wallet.";
-
 interface PolicyCallout {
   variant: 'info' | 'warning';
   message: string;

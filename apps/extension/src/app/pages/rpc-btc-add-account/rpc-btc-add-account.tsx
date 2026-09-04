@@ -11,20 +11,26 @@ import { closeWindow } from '@shared/utils';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
+import {
+  BondSpendingConditions,
+  type BondSpendingDetails,
+} from '@app/components/bond-spending-conditions';
 import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
+import { ledgerRawKeyUnsupportedMessage } from '@app/features/ledger/utils/ledger-descriptor-address';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
-import {
-  ledgerRawKeyCalloutMessage,
-  policyCallout,
-  verifyModeCalloutMessage,
-} from '../policy-match';
+import { policyCallout, verifyModeCalloutMessage } from '../policy-match';
 import { useBtcAddAccount } from './use-btc-add-account';
 
 function getApproverTitle(isTimelocked: boolean, isVerifyMode: boolean) {
   if (isTimelocked) return 'Verify timelocked address';
   return isVerifyMode ? 'Verify multisig address' : 'Add multisig account';
+}
+
+function getApprovalSubject(timelock: BondSpendingDetails | null) {
+  if (!timelock) return 'this multisig account';
+  return timelock.vaultKind === 'pk' ? 'this timelocked address' : 'this vault';
 }
 
 export function RpcBtcAddAccount() {
@@ -82,7 +88,7 @@ export function RpcBtcAddAccount() {
 
   const isVerifyMode = mode === 'verify';
   const isTimelocked = kind === 'timelocked';
-  const subject = isTimelocked ? 'this vault' : 'this multisig account';
+  const subject = getApprovalSubject(timelock);
   const confirmLabel = `${isVerifyMode ? 'Verify' : 'Confirm'}${walletType === 'ledger' ? ' on Ledger' : ''}`;
   const callout = policyCallout(matchStatus, 'Bitcoin', subject);
 
@@ -104,7 +110,7 @@ export function RpcBtcAddAccount() {
         {isLedgerVerifyUnsupported && (
           <Approver.Section>
             <Callout variant="warning" mt="space.03">
-              {ledgerRawKeyCalloutMessage}
+              {ledgerRawKeyUnsupportedMessage}
             </Callout>
           </Approver.Section>
         )}
@@ -135,16 +141,9 @@ export function RpcBtcAddAccount() {
         {timelock && (
           <Approver.Section>
             <Approver.Subheader>Spending conditions</Approver.Subheader>
-            <styled.p textStyle="caption.01" data-testid="btc-add-account-unlock-height">
-              From block {timelock.unlockHeight}
-            </styled.p>
-            <styled.p
-              textStyle="caption.01"
-              pb="space.03"
-              data-testid="btc-add-account-vault-policy"
-            >
-              Requires {timelock.vaultThreshold} of {timelock.vaultKeyCount} vault co-signers
-            </styled.p>
+            <styled.div pb="space.03">
+              <BondSpendingConditions details={timelock} />
+            </styled.div>
           </Approver.Section>
         )}
         {!isTimelocked && (

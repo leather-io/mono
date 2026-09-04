@@ -31,7 +31,7 @@ import {
 } from '../policy-match';
 import { deriveBtcPolicyAddress } from './btc-policy-registration';
 import { useRegisterBtcPolicy } from './register-btc-policy';
-import { matchTimelockedDescriptor } from './timelocked-descriptor';
+import { findTimelockedVaultAccountKey, matchTimelockedDescriptor } from './timelocked-descriptor';
 
 const { decode } = createRequestEncoder(btcAddAccount.request);
 
@@ -79,7 +79,9 @@ export function useBtcAddAccount() {
       return { matchStatus: 'no-active-account', hasNonAccountRawKey: false };
     try {
       const compiled = compileWshDescriptor(request.params.descriptor);
-      const accountKey = findAccountDescriptorKey(compiled, nativeSegwitAccount.keychain);
+      const accountKey = timelock
+        ? findTimelockedVaultAccountKey(compiled, timelock, nativeSegwitAccount.keychain)
+        : findAccountDescriptorKey(compiled, nativeSegwitAccount.keychain);
       if (!accountKey) return { matchStatus: 'mismatch', hasNonAccountRawKey: false };
       return {
         matchStatus: 'match',
@@ -88,10 +90,9 @@ export function useBtcAddAccount() {
     } catch {
       return { matchStatus: 'mismatch', hasNonAccountRawKey: false };
     }
-  }, [nativeSegwitAccount, request.params.descriptor]);
+  }, [nativeSegwitAccount, request.params.descriptor, timelock]);
 
-  const isLedgerVerifyUnsupported =
-    kind === 'timelocked' && walletType === 'ledger' && hasNonAccountRawKey;
+  const isLedgerVerifyUnsupported = walletType === 'ledger' && hasNonAccountRawKey;
 
   // Derived locally and identically to registration, so what the user verifies
   // (in the approver and on a Ledger) equals what is stored / returned. Null on

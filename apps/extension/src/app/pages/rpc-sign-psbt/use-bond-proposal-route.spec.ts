@@ -142,8 +142,9 @@ describe(useBondProposalRoute.name, () => {
       unlockHeight,
       hash,
       counterpartyKey,
+      vaultKind: 'multi',
       vaultThreshold: 2,
-      vaultKeyCount: 3,
+      vaultKeyExpressions: expect.arrayContaining([`${xpubA}/0/0`, `${xpubB}/0/0`, `${xpubC}/0/0`]),
     });
   });
 
@@ -176,8 +177,9 @@ describe(useBondProposalRoute.name, () => {
       unlockHeight,
       hash,
       counterpartyKey: rawCounterpartyKey,
+      vaultKind: 'multi',
       vaultThreshold: 2,
-      vaultKeyCount: 3,
+      vaultKeyExpressions: expect.arrayContaining([`${xpubA}/0/0`, `${xpubB}/0/0`, `${xpubC}/0/0`]),
     });
   });
 

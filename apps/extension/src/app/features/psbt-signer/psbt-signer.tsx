@@ -11,6 +11,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 
 import { SignPsbtArgs } from '@app/common/psbt/requests';
+import type { BondSpendingDetails } from '@app/components/bond-spending-conditions';
 import { ButtonRow, Card } from '@app/components/layout';
 import { PopupHeader } from '@app/features/container/headers/popup.header';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
@@ -21,13 +22,12 @@ import type { PolicyStore } from '@app/store/policy/policy-store.utils';
 
 import * as Psbt from './components';
 import { PsbtBondAccounts } from './components/psbt-bond-accounts';
-import type { PsbtBondDetails } from './components/psbt-descriptor-policy';
 import { useDescriptorPsbtDetails } from './hooks/use-descriptor-psbt-details';
 import { usePsbtDetails } from './hooks/use-psbt-details';
 import { usePsbtSigner } from './hooks/use-psbt-signer';
 import { PsbtSignerContext, PsbtSignerProvider } from './psbt-signer.context';
 
-interface PsbtSignerBondProposal extends PsbtBondDetails {
+interface PsbtSignerBondProposal extends BondSpendingDetails {
   policy: PolicyStore;
 }
 

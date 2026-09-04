@@ -247,6 +247,15 @@ const strangerBondDescriptor = instantiateBondDescriptor({
     `${makeNativeSegwitAccountXpub(2)}/0/0`,
   ],
 });
+const counterpartySlotBondDescriptor = instantiateBondDescriptor({
+  ...bondParams,
+  counterpartyKey: `${testAccountNativeSegwitXpub}/0/0`,
+  threshold: 2,
+  keyExpressions: [
+    `${makeNativeSegwitAccountXpub(1)}/0/0`,
+    `${makeNativeSegwitAccountXpub(2)}/0/0`,
+  ],
+});
 const nonBondMiniscriptDescriptor = `wsh(and_v(v:after(1000),pk(${testAccountNativeSegwitXpub}/0/0)))`;
 
 function deriveFirstAddressPubkeyHex(xpub: string) {
@@ -296,10 +305,12 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
 
     const popup = await waitForPopup(context);
     await expect(popup.getByText('Verify timelocked address')).toBeVisible();
-    await expect(popup.getByTestId('btc-add-account-unlock-height')).toHaveText('From block 1000');
-    await expect(popup.getByTestId('btc-add-account-vault-policy')).toHaveText(
+    await expect(popup.getByTestId('bond-unlock-height')).toHaveText('From block 1000');
+    await expect(popup.getByTestId('bond-vault-policy')).toHaveText(
       'Requires 2 of 2 vault co-signers'
     );
+    await expect(popup.getByTestId('bond-counterparty-key')).toHaveText(bondParams.counterpartyKey);
+    await expect(popup.getByTestId('bond-hash')).toHaveText(bondParams.hash);
     await expect(popup.getByText("This site can't add accounts")).toHaveCount(0);
     await expect(popup.getByText('Account name')).toHaveCount(0);
     expect(await getDisplayerAddress(popup.locator('body'))).toBe(mainnetAddressOf(bondDescriptor));
@@ -357,8 +368,9 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
     });
 
     const popup = await waitForPopup(context);
-    await expect(popup.getByTestId('btc-add-account-vault-policy')).toHaveText(
-      'Requires 1 of 1 vault co-signers'
+    await expect(popup.getByTestId('bond-vault-policy')).toHaveText('Requires the owner key');
+    await expect(popup.getByTestId('bond-owner-key')).toHaveText(
+      `${testAccountNativeSegwitXpub}/0/0`
     );
     await verifyTimelockedAddress(popup);
 
@@ -403,7 +415,7 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
     });
 
     const popup = await waitForPopup(context);
-    await expect(popup.getByTestId('btc-add-account-vault-policy')).toHaveText(
+    await expect(popup.getByTestId('bond-vault-policy')).toHaveText(
       'Requires 2 of 2 vault co-signers'
     );
     await expect(popup.getByText('Add multisig account')).toHaveCount(0);
@@ -430,6 +442,28 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
 
     const popup = await waitForPopup(context);
     await expect(popup.getByText('Verify timelocked address')).toBeVisible();
+    await expect(popup.getByText("isn't connected to this vault")).toBeVisible();
+    await expect(popup.getByTestId('btc-add-account-approve-button')).toBeDisabled();
+
+    await popup.close();
+    await expect(requestPromise).rejects.toThrow();
+  });
+
+  test('disables verify when the active account only holds the counterparty key', async ({
+    page,
+    context,
+  }) => {
+    await page.goto('localhost:3000');
+    const requestPromise = initiateRequest(page, 'btc_addAccount', {
+      name: 'Bond',
+      descriptor: counterpartySlotBondDescriptor,
+    });
+
+    const popup = await waitForPopup(context);
+    await expect(popup.getByText('Verify timelocked address')).toBeVisible();
+    await expect(popup.getByTestId('bond-counterparty-key')).toHaveText(
+      `${testAccountNativeSegwitXpub}/0/0`
+    );
     await expect(popup.getByText("isn't connected to this vault")).toBeVisible();
     await expect(popup.getByTestId('btc-add-account-approve-button')).toBeDisabled();
 
