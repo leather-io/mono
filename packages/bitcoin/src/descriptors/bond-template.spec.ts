@@ -231,6 +231,46 @@ describe('matchBondTemplateDescriptor', () => {
     ).toBeNull();
   });
 
+  it('rejects ranged, change-branch, pathless and deep-path extended keys', () => {
+    const badVaultKeys = [
+      `${xpubA}/0/*`,
+      `${xpubA}/1/7`,
+      xpubA,
+      `${xpubA}/0/7/0`,
+      `${xpubA}/<0;1>/7`,
+    ];
+    for (const vaultKey of badVaultKeys) {
+      expect(matchBondTemplateDescriptor(makeBondDescriptor(`pk(${vaultKey})`))).toBeNull();
+      expect(
+        matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(2,${vaultKey},${xpubB}/0/7)`))
+      ).toBeNull();
+    }
+    const badCounterparties = [`${xpubB}/0/*`, `${xpubB}/1/7`, xpubB, `${xpubB}/0/7/0`];
+    for (const counterparty of badCounterparties) {
+      expect(
+        matchBondTemplateDescriptor(bondDescriptor.replace(counterpartyKey, counterparty))
+      ).toBeNull();
+    }
+  });
+
+  it('rejects a multi vault threshold outside 1..keyCount', () => {
+    expect(
+      matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(0,${xpubA}/0/7,${xpubB}/0/7)`))
+    ).toBeNull();
+    expect(
+      matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(3,${xpubA}/0/7,${xpubB}/0/7)`))
+    ).toBeNull();
+    expect(
+      matchBondTemplateDescriptor(
+        makeBondDescriptor(`sortedmulti(99999999999999999999,${xpubA}/0/7,${xpubB}/0/7)`)
+      )
+    ).toBeNull();
+    expect(
+      matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7)`))
+        ?.vault.threshold
+    ).toBe(2);
+  });
+
   it('rejects descriptors that are not the bond template shape', () => {
     expect(matchBondTemplateDescriptor(policyDescriptor)).toBeNull();
     expect(matchBondTemplateDescriptor(`wsh(pk(${xpubA}/0/7))`)).toBeNull();
@@ -354,6 +394,12 @@ describe('instantiateBondDescriptor', () => {
         ...validArgs,
         keyExpressions: [makeNativeSegwitAddressPubkeyHex(1), makeNativeSegwitAddressPubkeyHex(2)],
       })
+    ).toThrow();
+    expect(() =>
+      instantiateBondDescriptor({ ...validArgs, counterpartyKey: `${xpubB}/1/7` })
+    ).toThrow();
+    expect(() =>
+      instantiateBondDescriptor({ ...validArgs, counterpartyKey: `${xpubB}/0/*` })
     ).toThrow();
   });
 });

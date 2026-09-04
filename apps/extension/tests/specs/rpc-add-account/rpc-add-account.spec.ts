@@ -257,6 +257,7 @@ const counterpartySlotBondDescriptor = instantiateBondDescriptor({
   ],
 });
 const multiLeafMiniscriptDescriptor = `wsh(or_d(multi(2,${testAccountNativeSegwitXpub}/0/0,${makeNativeSegwitAccountXpub(1)}/0/0),pk(${makeNativeSegwitAccountXpub(2)}/0/0)))`;
+const rangedBondDescriptor = `wsh(and_v(v:or_i(after(${bondParams.unlockHeight}),and_v(v:sha256(${bondParams.hash}),pk(${makeNativeSegwitAccountXpub(9)}/0/*))),sortedmulti(2,${testAccountNativeSegwitXpub}/0/*,${makeNativeSegwitAccountXpub(2)}/0/*)))`;
 const nonBondMiniscriptDescriptor = `wsh(and_v(v:after(1000),pk(${testAccountNativeSegwitXpub}/0/0)))`;
 
 function deriveFirstAddressPubkeyHex(xpub: string) {
@@ -493,6 +494,22 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
     const result = await initiateRequestCatchingError(page, 'btc_addAccount', {
       name: 'Not a multisig',
       descriptor: multiLeafMiniscriptDescriptor,
+    });
+
+    expect(result).toMatchObject({
+      error: {
+        code: RpcErrorCode.INVALID_PARAMS,
+        message: 'Only multisig or timelocked wsh() descriptors are supported',
+      },
+    });
+  });
+
+  test('rejects a ranged bond descriptor', async ({ page }) => {
+    await page.goto('localhost:3000');
+    await waitForProvider(page);
+    const result = await initiateRequestCatchingError(page, 'btc_addAccount', {
+      name: 'Ranged bond',
+      descriptor: rangedBondDescriptor,
     });
 
     expect(result).toMatchObject({
