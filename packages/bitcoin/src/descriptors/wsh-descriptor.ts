@@ -30,6 +30,13 @@ export function isWshDescriptor(descriptor: string) {
   return descriptor.trimStart().startsWith(wshDescriptorPrefix);
 }
 
+const wshMultisigDescriptorPattern = /^wsh\((?:sorted)?multi\(\d+(?:,[^(),*]+)+\)\)$/;
+
+export function isWshMultisigDescriptor(descriptor: string): boolean {
+  const compactDescriptor = stripDescriptorChecksum(descriptor).replace(/\s/g, '');
+  return wshMultisigDescriptorPattern.test(compactDescriptor);
+}
+
 const testnetExtendedKeyPrefixes = ['tpub', 'tprv', 'upub', 'uprv', 'vpub', 'vprv'];
 const mainnetExtendedKeyPrefixes = ['xpub', 'xprv', 'ypub', 'yprv', 'zpub', 'zprv'];
 const keyExpressionStarts = ['(', ',', ']'];

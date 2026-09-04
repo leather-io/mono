@@ -63,6 +63,10 @@ const mismatchedIndexBondDescriptor = instantiateBondDescriptor({
 });
 const nonBondMiniscriptDescriptor = `wsh(and_v(v:after(${unlockHeight}),pk(${xpubA}/0/0)))`;
 const nativeSegwitDescriptor = `wpkh(${xpubA}/0/0)`;
+const originPrefixedMultisigDescriptor = `wsh(multi(2,[aabbccdd/84'/0'/0']${xpubA}/0/0,${xpubB}/0/0))`;
+const multiLeafMiniscriptDescriptor = `wsh(or_d(multi(2,${xpubA}/0/0,${xpubB}/0/0),pk(${counterpartyXpub}/0/0)))`;
+const timelockedMultiDescriptor = `wsh(and_v(v:after(${unlockHeight}),multi(2,${xpubA}/0/0,${xpubB}/0/0)))`;
+const rangedMultisigDescriptor = `wsh(sortedmulti(2,${xpubA}/0/*,${xpubB}/0/*))`;
 
 const unsupportedDescriptorMessage = 'Only multisig or timelocked wsh() descriptors are supported';
 
@@ -143,6 +147,26 @@ describe('btcAddAccountHandler', () => {
 
   test('rejects a non-wsh descriptor', async () => {
     await invokeHandler(nativeSegwitDescriptor);
+    expectRejectedAsUnsupported();
+  });
+
+  test('opens the popup for a multi descriptor with origin-prefixed keys', async () => {
+    await invokeHandler(originPrefixedMultisigDescriptor);
+    expectPopupOpened();
+  });
+
+  test('rejects miniscript that merely wraps a multi leaf in another spend path', async () => {
+    await invokeHandler(multiLeafMiniscriptDescriptor);
+    expectRejectedAsUnsupported();
+  });
+
+  test('rejects miniscript that merely wraps a multi leaf in a timelock', async () => {
+    await invokeHandler(timelockedMultiDescriptor);
+    expectRejectedAsUnsupported();
+  });
+
+  test('rejects a ranged multisig descriptor', async () => {
+    await invokeHandler(rangedMultisigDescriptor);
     expectRejectedAsUnsupported();
   });
 
