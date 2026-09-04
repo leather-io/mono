@@ -1,6 +1,6 @@
-import type { FtMetadataResponse } from '@hirosystems/token-metadata-api-client';
 import { PostConditionPrincipalId, addressToString } from '@stacks/transactions';
 
+import type { Sip10Asset } from '@leather.io/models';
 import { formatContractId } from '@leather.io/stacks';
 import { truncateMiddle } from '@leather.io/utils';
 
@@ -19,7 +19,7 @@ import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks
 
 interface FormatPostConditionMessageArgs {
   account?: StacksAccount;
-  asset?: FtMetadataResponse;
+  asset?: Sip10Asset;
   context?: PostConditionVerb;
   isContractPrincipal: boolean;
   postCondition: NonPoxPostConditionWire;
@@ -42,7 +42,10 @@ export function formatPostConditionMessage({
   const isOriginPrincipal = pc.principal.prefix === PostConditionPrincipalId.Origin;
   const isSending = isOriginPrincipal || address === account?.address;
 
-  const contractId = 'asset' in pc ? formatContractId(address, pc.asset.contractName.content) : '';
+  const contractId =
+    'asset' in pc
+      ? formatContractId(addressToString(pc.asset.address), pc.asset.contractName.content)
+      : '';
   const amount = asset?.decimals ? ftDecimals(pcAmount, asset.decimals) : pcAmount;
   const ticker = asset?.symbol || pcTicker;
 
