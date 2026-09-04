@@ -25,9 +25,8 @@ import { useNetworks } from '@app/store/networks/networks.selectors';
 import { usePolicyFeatureGate } from '../policy-feature-gate';
 import {
   type BtcAddAccountKind,
-  type PolicyApprovalMode,
   type PolicyMatchStatus,
-  getPolicyApprovalMode,
+  getBtcAddAccountApprovalMode,
 } from '../policy-match';
 import { deriveBtcPolicyAddress } from './btc-policy-registration';
 import { useRegisterBtcPolicy } from './register-btc-policy';
@@ -68,7 +67,7 @@ export function useBtcAddAccount() {
 
   // Whitelisted origins may register the policy; any other origin may only let
   // the user verify the derived address (nothing is written to the extension).
-  const mode: PolicyApprovalMode = timelock ? 'verify' : getPolicyApprovalMode(origin, topOrigin);
+  const mode = getBtcAddAccountApprovalMode(origin, topOrigin, kind);
 
   // The active account must be one of the descriptor's cosigners before the user
   // can confirm. We only consider the native segwit account's xpub or its 0/0

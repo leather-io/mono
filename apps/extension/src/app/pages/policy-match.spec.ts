@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { getPolicyApprovalMode, policyCallout } from './policy-match';
+import { getBtcAddAccountApprovalMode, getPolicyApprovalMode, policyCallout } from './policy-match';
 
 const whitelistedOrigin = 'https://app.leather.io';
 const otherOrigin = 'https://evil.example.com';
@@ -26,6 +26,22 @@ describe(getPolicyApprovalMode.name, () => {
 
   test('returns verify when neither origin is whitelisted', () => {
     expect(getPolicyApprovalMode(otherOrigin, otherOrigin)).toBe('verify');
+  });
+});
+
+describe(getBtcAddAccountApprovalMode.name, () => {
+  test('forces verify for a timelocked descriptor even from a whitelisted origin', () => {
+    expect(getBtcAddAccountApprovalMode(whitelistedOrigin, whitelistedOrigin, 'timelocked')).toBe(
+      'verify'
+    );
+    expect(getBtcAddAccountApprovalMode(otherOrigin, otherOrigin, 'timelocked')).toBe('verify');
+  });
+
+  test('defers to the origin whitelist for a plain policy', () => {
+    expect(getBtcAddAccountApprovalMode(whitelistedOrigin, whitelistedOrigin, 'policy')).toBe(
+      'add'
+    );
+    expect(getBtcAddAccountApprovalMode(otherOrigin, whitelistedOrigin, 'policy')).toBe('verify');
   });
 });
 
