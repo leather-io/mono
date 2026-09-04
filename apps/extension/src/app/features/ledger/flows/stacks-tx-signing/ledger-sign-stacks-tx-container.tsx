@@ -10,6 +10,7 @@ import { delay, isError } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
 import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
@@ -39,6 +40,13 @@ export const ledgerStacksTxSigningRoutes = ledgerSignTxRoutes({
   ),
 });
 
+function publishStacksSigningSettled(unsignedTx: string, error?: string) {
+  appEvents.publish(
+    'ledgerStacksTxSigningCancelled',
+    error === undefined ? { unsignedTx } : { unsignedTx, error }
+  );
+}
+
 function LedgerSignStacksTxContainer() {
   const location = useLocation();
   const ledgerNavigate = useLedgerNavigate();
@@ -47,6 +55,7 @@ function LedgerSignStacksTxContainer() {
   const account = useCurrentStacksAccount();
   const migrateFingerprintIfNeeded = useLedgerFingerprintMigration();
   const [unsignedTx, setUnsignedTx] = useState<null | string>(null);
+  const settleOnRejection = useLocationStateWithCache<boolean>('settleOnRejection');
 
   const chain = 'stacks';
 
@@ -86,17 +95,29 @@ function LedgerSignStacksTxContainer() {
         );
 
         if (resp.returnCode === LedgerError.DataIsInvalid) {
-          void ledgerNavigate.toDevicePayloadInvalid();
+          if (settleOnRejection) {
+            publishStacksSigningSettled(unsignedTx, resp.errorMessage);
+          } else {
+            void ledgerNavigate.toDevicePayloadInvalid();
+          }
           return;
         }
 
         if (resp.returnCode === LedgerError.TransactionRejected) {
-          void ledgerNavigate.toOperationRejectedStep();
+          if (settleOnRejection) {
+            publishStacksSigningSettled(unsignedTx);
+          } else {
+            void ledgerNavigate.toOperationRejectedStep();
+          }
           ledgerAnalytics.transactionSignedOnLedgerRejected();
           return;
         }
 
         if (resp.returnCode !== LedgerError.NoErrors) {
+          if (settleOnRejection) {
+            publishStacksSigningSettled(unsignedTx, resp.errorMessage);
+            return;
+          }
           throw new Error('Some other error');
         }
 

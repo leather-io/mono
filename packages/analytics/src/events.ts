@@ -12,7 +12,8 @@ export type ComplianceScreeningPoint =
   | 'rpc_stx_transfer_stx'
   | 'sbtc_deposit'
   | 'send_form_btc'
-  | 'send_form_stx';
+  | 'send_form_stx'
+  | 'swap';
 
 // https://segment.com/academy/collecting-data/naming-conventions-for-clean-data/
 export interface Events extends HistoricalEvents {
@@ -105,6 +106,15 @@ export interface Events extends HistoricalEvents {
     targetSymbol: string;
     errorMessage: string;
     provider: string;
+  };
+  swap_sbtc_notify_failed: {
+    txid: string;
+    errorMessage: string;
+  };
+  swap_broadcast_uncertain: {
+    txid: string;
+    errorMessage: string;
+    notified: boolean;
   };
   receive_sheet_opened: { type: string };
   receive_sheet_dismissed: undefined;

@@ -26,7 +26,7 @@ import { useSip10AddressTransferableTokenBalances } from '@app/query/stacks/sip1
 import { useAlexSdkLatestPricesQuery } from './alex-sdk-latest-prices.query';
 import { useGetAlexSwappableCurrenciesQuery } from './alex-sdk-swappable-currency.query';
 
-export interface SwapAsset {
+interface SwapAsset {
   address?: string;
   balance: Money;
   tokenId: Currency;
@@ -38,7 +38,7 @@ export interface SwapAsset {
   principal: string;
 }
 
-export function useAlexCurrencyPriceAsMarketData() {
+function useAlexCurrencyPriceAsMarketData() {
   const { data: supportedCurrencies = [] } = useGetAlexSwappableCurrenciesQuery();
   const { data: prices } = useAlexSdkLatestPricesQuery();
 

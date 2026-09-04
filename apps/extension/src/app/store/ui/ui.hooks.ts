@@ -5,7 +5,6 @@ import { selectHasSwitched, selectLoadingState } from './ui.selectors';
 
 export enum LoadingKeys {
   SUBMIT_STACKS_TRANSACTION = 'loading/SUBMIT_STACKS_TRANSACTION',
-  SUBMIT_SWAP_TRANSACTION = 'loading/SUBMIT_SWAP_TRANSACTION',
 }
 
 export function useLoading(key: string) {

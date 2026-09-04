@@ -14,6 +14,7 @@ import {
   type SwapQuoteSelectionResult,
   type TrackEvent,
 } from '../swap-state.types';
+import { SwapSigningCancelledError, isSwapSigningCancelledError } from '../swap-submission.errors';
 import { isQuoteAlignedWithCurrentInput } from '../utils/is-quote-aligned-with-current-input';
 import { type ValidationResult } from '../validation/swap-validation.types';
 
@@ -87,9 +88,29 @@ export function useSubmitSwap({
         nonce,
       };
       const strategy = getExecutionTypeStrategy(executionData.executionType);
-      await strategy.submitSwap(executionDependencies, networkFee);
+      try {
+        return await strategy.submitSwap(executionDependencies, networkFee);
+      } catch (error) {
+        if (dependencies.isSigningCancelledError?.(error)) throw new SwapSigningCancelledError();
+        throw error;
+      }
     },
-    onSuccess() {
+    onSuccess(result) {
+      dependencies.onSwapSubmitted?.(result);
+      if (result.status === 'sbtc-notification-failed') {
+        trackEvent('swap_sbtc_notify_failed', {
+          txid: result.txid,
+          errorMessage: result.errorMessage,
+        });
+      }
+      if (result.status === 'broadcast-uncertain') {
+        trackEvent('swap_broadcast_uncertain', {
+          txid: result.txid,
+          errorMessage: result.errorMessage,
+          notified: result.notified,
+        });
+      }
+      if (result.status !== 'submitted') return;
       if (!readiness.canSubmit) return;
       const { quote } = readiness.prerequisites;
       trackEvent('swap_submission_success', {
@@ -101,6 +122,7 @@ export function useSubmitSwap({
       });
     },
     onError(error) {
+      if (isSwapSigningCancelledError(error)) return;
       if (!readiness.canSubmit) return;
       const { quote } = readiness.prerequisites;
       trackEvent('swap_submission_failure', {
@@ -132,11 +154,8 @@ function checkSwapReadiness(
   const selectedQuote = quoteQuery.data?.selected;
 
   if (
-    !spendableAmountQuery.isFetching &&
     spendableAmountQuery.isSuccess &&
-    !networkFeeQuery.isFetching &&
     networkFeeQuery.isSuccess &&
-    !quoteQuery.isRefetching &&
     isDefined(selectedQuote) &&
     validation.isValid &&
     isQuoteAlignedWithCurrentInput(selectedQuote.baseAmount, derivedAmounts.crypto)

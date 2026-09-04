@@ -14,7 +14,7 @@ import {
   type SwapService,
 } from '@leather.io/services';
 import { useDebouncedValue } from '@leather.io/ui';
-import { delay } from '@leather.io/utils';
+import { delay, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { type DisabledPairRule, type SwapQuotePolicy } from './swap-state.types';
 import { createSwapAssetsSelector } from './utils/asset-selection';
@@ -32,16 +32,19 @@ interface UseAccountBaseSwapAssetsQueryParams {
   swapService: SwapService;
   accountRequest: AccountRequest;
   disabledPairs?: DisabledPairRule[];
+  enabled?: boolean;
 }
 
 export function useAccountBaseSwapAssetsQuery({
   swapService,
   accountRequest,
   disabledPairs,
+  enabled = true,
 }: UseAccountBaseSwapAssetsQueryParams) {
   return useQuery({
     queryKey: ['account-base-swap-assets', { request: accountRequest }],
     queryFn: ({ signal }) => swapService.getAccountBaseSwapAssets(accountRequest, signal),
+    enabled,
     select: createSwapAssetsSelector('base', { disabledPairs }),
     refetchInterval: assetsRefetchInterval,
     ...globalRefetchOptions,
@@ -53,6 +56,7 @@ interface UseAccountTargetSwapAssetsQueryParams {
   accountRequest: AccountRequest;
   baseId?: CryptoAssetId;
   disabledPairs?: DisabledPairRule[];
+  enabled?: boolean;
 }
 
 export function useAccountTargetSwapAssetsQuery({
@@ -60,6 +64,7 @@ export function useAccountTargetSwapAssetsQuery({
   accountRequest,
   baseId,
   disabledPairs,
+  enabled = true,
 }: UseAccountTargetSwapAssetsQueryParams) {
   return useQuery({
     queryKey: ['account-target-swap-assets', { baseId, request: accountRequest }],
@@ -67,7 +72,7 @@ export function useAccountTargetSwapAssetsQuery({
       if (!baseId) return [];
       return swapService.getAccountTargetSwapAssets(accountRequest, baseId, signal);
     },
-    enabled: isDefined(baseId),
+    enabled: enabled && isDefined(baseId),
     select: createSwapAssetsSelector('target', { disabledPairs, currentBaseId: baseId }),
     refetchInterval: assetsRefetchInterval,
     ...globalRefetchOptions,
@@ -100,8 +105,8 @@ export function useSwapQuotesQuery({
   return useQuery({
     queryKey: [
       'swap-quotes',
-      baseSwapAsset?.asset.symbol,
-      targetSwapAsset?.asset.symbol,
+      baseSwapAsset ? serializeAssetId(getAssetId(baseSwapAsset.asset)) : undefined,
+      targetSwapAsset ? serializeAssetId(getAssetId(targetSwapAsset.asset)) : undefined,
       debouncedBaseAmount?.amount.toString(),
     ],
     queryFn: async ({ signal }) => {

@@ -3,7 +3,6 @@ import { type StacksNetwork } from '@stacks/network';
 import { type StacksTransactionWire, type TxBroadcastResultOk } from '@stacks/transactions';
 import { type UseQueryResult } from '@tanstack/react-query';
 import type BigNumber from 'bignumber.js';
-import type { SbtcApiClient } from 'sbtc';
 
 import { type configureAnalyticsClient } from '@leather.io/analytics';
 import { type BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
@@ -50,12 +49,11 @@ export interface SwapDependencies {
     }): Promise<TxBroadcastResultOk>;
     nextNonce: NextNonce | undefined;
   };
-  bitcoin: {
+  bitcoin?: {
     bitcoinPayer: BitcoinNativeSegwitPayer;
     network: NetworkConfiguration;
-    sbtcClient: SbtcApiClient;
     signBitcoinPsbt(psbt: Uint8Array): Promise<btc.Transaction>;
-    broadcast(tx: string): Promise<string | undefined>;
+    broadcast(txHex: string): Promise<BitcoinBroadcastResult>;
   };
   services: {
     marketDataService: MarketDataService;
@@ -64,6 +62,8 @@ export interface SwapDependencies {
     stacksTransactionFeesService: StacksTransactionFeesService;
     swapService: SwapService;
   };
+  onSwapSubmitted?(result: SwapSubmissionResult): void;
+  isSigningCancelledError?(error: unknown): boolean;
 }
 
 export interface SwapExecutionDependencies extends SwapDependencies {
@@ -204,6 +204,26 @@ export interface SwapActions {
   setCustomFee(fee: number): void;
 }
 
+export type BitcoinBroadcastResult =
+  | { status: 'accepted' }
+  | { status: 'rejected'; errorMessage: string }
+  | { status: 'unknown'; errorMessage: string };
+
+export type SwapSubmissionResult =
+  | { status: 'submitted'; txid: string }
+  | {
+      status: 'sbtc-notification-failed';
+      txid: string;
+      errorMessage: string;
+      httpStatus?: number;
+    }
+  | {
+      status: 'broadcast-uncertain';
+      txid: string;
+      errorMessage: string;
+      notified: boolean;
+    };
+
 export interface UseSwapStateResult {
   state: SwapState;
   actions: SwapActions;
@@ -217,5 +237,5 @@ export interface UseSwapStateResult {
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   networkFeeQuery: UseQueryResult<NetworkFee, Error>;
   canSubmit: boolean;
-  submit(): Promise<void>;
+  submit(): Promise<SwapSubmissionResult>;
 }

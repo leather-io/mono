@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useMemo, useReducer } from 'react';
 
 import { type QuoteCurrency, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { type AccountSwapAsset } from '@leather.io/services';
@@ -22,7 +22,7 @@ import {
   type TrackEvent,
   type UseSwapStateResult,
 } from './swap-state.types';
-import { DEFAULT_SLIPPAGE_PERCENTAGE } from './swap.constants';
+import { BITCOIN_EXCLUSION_PAIR_RULES, DEFAULT_SLIPPAGE_PERCENTAGE } from './swap.constants';
 import {
   useAccountBaseSwapAssetsQuery,
   useAccountTargetSwapAssetsQuery,
@@ -50,6 +50,16 @@ export function useSwapState({
 }: UseSwapStateProps): UseSwapStateResult {
   const { accountRequest, services } = dependencies;
   const { marketDataService, swapService } = services;
+
+  const hasMainnetBitcoinDependencies =
+    dependencies.bitcoin?.network.chain.bitcoin.mode === 'mainnet';
+  const effectiveDisabledPairs = useMemo(
+    () =>
+      hasMainnetBitcoinDependencies
+        ? disabledPairs
+        : [...disabledPairs, ...BITCOIN_EXCLUSION_PAIR_RULES],
+    [hasMainnetBitcoinDependencies, disabledPairs]
+  );
 
   const [state, dispatch] = useReducer(
     swapReducer,
@@ -82,14 +92,14 @@ export function useSwapState({
   const baseAssetsQuery = useAccountBaseSwapAssetsQuery({
     accountRequest,
     swapService,
-    disabledPairs,
+    disabledPairs: effectiveDisabledPairs,
   });
 
   const targetAssetsQuery = useAccountTargetSwapAssetsQuery({
     swapService,
     accountRequest,
     baseId: state.baseSwapAsset ? getAssetId(state.baseSwapAsset?.asset) : undefined,
-    disabledPairs,
+    disabledPairs: effectiveDisabledPairs,
   });
 
   useSwapAssetReconciliation({
@@ -160,7 +170,7 @@ export function useSwapState({
     state,
     derivedAmounts,
     spendableAmount: spendableAmountQuery.data ?? null,
-    disabledPairs,
+    disabledPairs: effectiveDisabledPairs,
     trackEvent,
   });
 
@@ -172,7 +182,7 @@ export function useSwapState({
       assetFlippingAllowed: isAssetFlippingAllowed(
         state.baseSwapAsset,
         state.targetSwapAsset,
-        disabledPairs
+        effectiveDisabledPairs
       ),
       isSendingMax,
       effectiveNonce,

@@ -62,12 +62,16 @@ export function useSbtcDepositActivity(feedTxids: ReadonlySet<string>): SbtcDepo
 
   const standaloneItems = useMemo(
     () =>
-      unmatchedDeposits.map((deposit, index) =>
-        createBlockchainActivityItem(
-          createSbtcDepositActivity(deposit, fundingTxs[index] ?? null, marketData),
-          activityViewDeps
-        )
-      ),
+      unmatchedDeposits.flatMap((deposit, index) => {
+        const fundingTx = fundingTxs[index] ?? null;
+        if (!fundingTx) return [];
+        return [
+          createBlockchainActivityItem(
+            createSbtcDepositActivity(deposit, fundingTx, marketData),
+            activityViewDeps
+          ),
+        ];
+      }),
     [unmatchedDeposits, fundingTxs, marketData]
   );
 

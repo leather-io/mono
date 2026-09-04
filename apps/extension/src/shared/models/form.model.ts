@@ -1,7 +1,5 @@
 import type { Money } from '@leather.io/models';
 
-import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
-
 export interface BitcoinSendFormValues {
   amount: number | string;
   fee: number | string;
@@ -37,11 +35,4 @@ export interface StacksTransactionFormValues {
 export interface TransferRecipient {
   address: string;
   amount: Money;
-}
-
-export interface SwapFormValues extends StacksTransactionFormValues {
-  swapAmountBase: string;
-  swapAmountQuote: string;
-  swapAssetBase?: SwapAsset;
-  swapAssetQuote?: SwapAsset;
 }

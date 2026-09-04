@@ -19,27 +19,38 @@ import { createMoney } from '@leather.io/utils';
 
 import { defaultBaseSwapAssets, defaultSwapQuotes, getDefaultTargetSwapAssets } from './fixtures';
 
+const stubSignersPublicKey = '79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798';
+
 interface StubSwapServiceConfig {
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];
   swapQuotes?: SwapQuote[];
+  getSwapQuotes?(): Promise<SwapQuote[]>;
+  getBaseSwapAssets?(): Promise<AccountSwapAsset[]>;
+  getTargetSwapAssets?(): Promise<AccountSwapAsset[]>;
 }
 
 export function createStubSwapService({
   baseSwapAssets,
   targetSwapAssets,
   swapQuotes,
+  getSwapQuotes,
+  getBaseSwapAssets,
+  getTargetSwapAssets,
 }: StubSwapServiceConfig = {}) {
   return {
     async getAccountBaseSwapAssets(): Promise<AccountSwapAsset[]> {
+      if (getBaseSwapAssets) return getBaseSwapAssets();
       return Promise.resolve(baseSwapAssets ?? defaultBaseSwapAssets);
     },
 
     async getAccountTargetSwapAssets(baseId: CryptoAssetId): Promise<AccountSwapAsset[]> {
+      if (getTargetSwapAssets) return getTargetSwapAssets();
       return Promise.resolve(targetSwapAssets ?? getDefaultTargetSwapAssets(baseId));
     },
 
     async getSwapQuotes(): Promise<SwapQuote[]> {
+      if (getSwapQuotes) return getSwapQuotes();
       return Promise.resolve(swapQuotes ?? defaultSwapQuotes);
     },
 
@@ -53,6 +64,14 @@ export function createStubSwapService({
         functionArgs: [],
         postConditions: [],
       });
+    },
+
+    async getSbtcSignersPublicKey() {
+      return Promise.resolve(stubSignersPublicKey);
+    },
+
+    async notifySbtcDeposit() {
+      return Promise.resolve({ status: 'notified' });
     },
   } as unknown as SwapService;
 }

@@ -1,11 +1,17 @@
+import { bytesToHex, hexToBytes } from '@stacks/common';
 import { Cl, Pc } from '@stacks/transactions';
-import type BigNumber from 'bignumber.js';
+import axios from 'axios';
+import BigNumber from 'bignumber.js';
 
-import { deconstructBtcAddress } from '@leather.io/bitcoin';
+import { deconstructBtcAddress, ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
 import type { ExecutionConstraint, Money, NetworkModes } from '@leather.io/models';
+import { cleanHex } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
-import type { EmilySbtcLimitsResponse } from '../infrastructure/api/emily/emily-api.types';
+import {
+  type EmilySbtcLimitsResponse,
+  emilyErrorResponseSchema,
+} from '../infrastructure/api/emily/emily-api.types';
 
 type SbtcBridgeTxType = 'deposit' | 'withdrawal';
 
@@ -14,16 +20,26 @@ export const sbtcStacksAddressMap = {
   testnet: 'SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70',
 };
 
+export function getRemainingSbtcSupply(
+  pegCap: number | null,
+  totalSupply: BigNumber | null
+): BigNumber | null {
+  if (pegCap === null || totalSupply === null) return null;
+  return BigNumber.max(new BigNumber(pegCap).minus(totalSupply), 0);
+}
+
 interface getSbtcBridgeExecutionConstraintsArgs {
   bridgeTxType: SbtcBridgeTxType;
   bridgeAmount: BigNumber;
   sbtcLimits: EmilySbtcLimitsResponse;
+  remainingSupply?: BigNumber | null;
 }
 
 export function getSbtcBridgeExecutionConstraints({
   bridgeTxType,
   bridgeAmount,
   sbtcLimits,
+  remainingSupply = null,
 }: getSbtcBridgeExecutionConstraintsArgs): ExecutionConstraint[] {
   if (bridgeTxType === 'deposit') {
     if (sbtcLimits.perDepositMinimum && bridgeAmount.isLessThan(sbtcLimits.perDepositMinimum)) {
@@ -39,6 +55,14 @@ export function getSbtcBridgeExecutionConstraints({
         {
           reason: 'maximum-threshold-exceeded',
           threshold: createMoney(sbtcLimits.perDepositCap, 'BTC'),
+        },
+      ];
+    }
+    if (remainingSupply && bridgeAmount.isGreaterThan(remainingSupply)) {
+      return [
+        {
+          reason: 'supply-cap-exceeded',
+          threshold: createMoney(remainingSupply, 'BTC'),
         },
       ];
     }
@@ -104,4 +128,49 @@ export function calculateSignerSweepTxFee(txType: SbtcBridgeTxType, feeRate: num
       ? depositSweepTxFeeWeightVbytes * feeRate
       : withdrawalSweepTxFeeWeightVbytes * feeRate
   );
+}
+
+export type SbtcDepositNotificationResult =
+  | { status: 'notified' }
+  | { status: 'failed'; errorMessage: string; httpStatus?: number };
+
+type SbtcDepositNotificationFailure = Extract<SbtcDepositNotificationResult, { status: 'failed' }>;
+
+interface SbtcNotifyErrorClassification {
+  retryable: boolean;
+  failure: SbtcDepositNotificationFailure;
+}
+
+const httpTooManyRequestsStatus = 429;
+const httpServerErrorStatusFloor = 500;
+const schnorrPublicKeyLength = 32;
+
+export function classifySbtcNotifyError(error: unknown): SbtcNotifyErrorClassification {
+  if (axios.isAxiosError(error)) {
+    const httpStatus = error.response?.status;
+    if (httpStatus === undefined) {
+      return {
+        retryable: !axios.isCancel(error),
+        failure: { status: 'failed', errorMessage: error.message },
+      };
+    }
+    const parsedBody = emilyErrorResponseSchema.safeParse(error.response?.data);
+    const errorMessage = parsedBody.success ? parsedBody.data.message : error.message;
+    const retryable =
+      httpStatus === httpTooManyRequestsStatus || httpStatus >= httpServerErrorStatusFloor;
+    return { retryable, failure: { status: 'failed', errorMessage, httpStatus } };
+  }
+  return {
+    retryable: false,
+    failure: {
+      status: 'failed',
+      errorMessage: error instanceof Error ? error.message : String(error),
+    },
+  };
+}
+
+export function toXOnlyPublicKeyHex(publicKeyHex: string): string {
+  const publicKey = hexToBytes(cleanHex(publicKeyHex));
+  if (publicKey.length === schnorrPublicKeyLength) return bytesToHex(publicKey);
+  return bytesToHex(ecdsaPublicKeyToSchnorr(publicKey));
 }

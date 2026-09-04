@@ -55,8 +55,8 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
     }
     case 'RECONCILE_BASE_WITH_PROVIDER': {
       const { baseSwapAsset, pairReconciliation } = state;
-      if (pairReconciliation.base === 'complete') return state;
       if (!baseSwapAsset) return state;
+      if (action.payload.length === 0) return state;
 
       const realBaseSwapAsset = action.payload.find(swapAsset => {
         return isSameAsset(swapAsset.asset, baseSwapAsset.asset);
@@ -72,6 +72,8 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
           },
         };
       }
+
+      if (pairReconciliation.base === 'complete') return state;
 
       return {
         ...state,
@@ -111,6 +113,8 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
           },
         };
       }
+
+      if (pairReconciliation.target === 'complete') return state;
 
       return {
         ...state,

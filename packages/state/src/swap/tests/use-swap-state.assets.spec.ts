@@ -1,6 +1,9 @@
 import { act, waitFor } from '@testing-library/react';
 import { assert, describe, expect, it } from 'vitest';
 
+import { defaultNetworksKeyedById } from '@leather.io/models';
+import { AccountSwapAsset } from '@leather.io/services';
+
 import {
   createAccountSwapAsset,
   defaultBtcAsset,
@@ -376,6 +379,155 @@ describe('initial placholder base asset reconciliation', () => {
     expect(result.current.state.pairReconciliation).toMatchObject({
       base: 'pending',
     });
+  });
+});
+
+describe('base asset reconciliation on data refresh', () => {
+  it('updates the base asset balance when provider data refreshes after reconciliation', async () => {
+    const staleAsset = createAccountSwapAsset({
+      asset: defaultBtcAsset,
+      balance: { quote: 1000, crypto: 0.5 },
+    });
+
+    const freshAsset = createAccountSwapAsset({
+      asset: defaultBtcAsset,
+      balance: { quote: 400, crypto: 0.2 },
+    });
+
+    let providerAssets = [staleAsset];
+    const result = renderUseSwapState({
+      baseAsset: defaultBtcAsset,
+      getBaseSwapAssets: () => Promise.resolve(providerAssets),
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.pairReconciliation.base).toBe('complete');
+    });
+    expect(result.current.state.baseSwapAsset).toEqual(staleAsset);
+
+    providerAssets = [freshAsset];
+    await act(async () => {
+      await result.current.baseAssetsQuery.refetch();
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.baseSwapAsset).toEqual(freshAsset);
+    });
+  });
+
+  it('keeps the selected pair when the base asset disappears from refreshed data', async () => {
+    const btcAsset = createAccountSwapAsset({
+      asset: defaultBtcAsset,
+      balance: { quote: 1000, crypto: 0.5 },
+    });
+
+    let providerAssets = [btcAsset];
+    const result = renderUseSwapState({
+      baseAsset: defaultBtcAsset,
+      getBaseSwapAssets: () => Promise.resolve(providerAssets),
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.pairReconciliation.base).toBe('complete');
+    });
+
+    providerAssets = [];
+    await act(async () => {
+      await result.current.baseAssetsQuery.refetch();
+    });
+
+    expect(result.current.state.baseSwapAsset).toEqual(btcAsset);
+    expect(result.current.state.pairReconciliation.base).toBe('complete');
+  });
+
+  it('keeps the placeholder base asset when the first asset list is empty', async () => {
+    const btcAsset = createAccountSwapAsset({
+      asset: defaultBtcAsset,
+      balance: { quote: 1000, crypto: 0.5 },
+    });
+    let providerAssets: AccountSwapAsset[] = [];
+    const result = renderUseSwapState({
+      baseAsset: defaultBtcAsset,
+      getBaseSwapAssets: () => Promise.resolve(providerAssets),
+    });
+
+    await waitFor(() => {
+      expect(result.current.baseAssetsQuery.status).toBe('success');
+    });
+    expect(result.current.state.baseSwapAsset?.asset).toEqual(defaultBtcAsset);
+    expect(result.current.state.pairReconciliation.base).toBe('pending');
+
+    providerAssets = [btcAsset];
+    await act(async () => {
+      await result.current.baseAssetsQuery.refetch();
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.baseSwapAsset).toEqual(btcAsset);
+    });
+    expect(result.current.state.pairReconciliation.base).toBe('complete');
+  });
+});
+
+describe('target asset reconciliation on data refresh', () => {
+  it('updates the target asset balance when provider data refreshes after reconciliation', async () => {
+    const staleAsset = createAccountSwapAsset({
+      asset: defaultStxAsset,
+      balance: { quote: 500, crypto: 100 },
+    });
+
+    const freshAsset = createAccountSwapAsset({
+      asset: defaultStxAsset,
+      balance: { quote: 250, crypto: 50 },
+    });
+
+    let providerAssets = [staleAsset];
+    const result = renderUseSwapState({
+      baseAsset: defaultBtcAsset,
+      targetAsset: defaultStxAsset,
+      getTargetSwapAssets: () => Promise.resolve(providerAssets),
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.pairReconciliation.target).toBe('complete');
+    });
+    expect(result.current.state.targetSwapAsset).toEqual(staleAsset);
+
+    providerAssets = [freshAsset];
+    await act(async () => {
+      await result.current.targetAssetsQuery.refetch();
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.targetSwapAsset).toEqual(freshAsset);
+    });
+  });
+
+  it('keeps the selected target when the target asset disappears from refreshed data', async () => {
+    const stxAsset = createAccountSwapAsset({
+      asset: defaultStxAsset,
+      balance: { quote: 500, crypto: 100 },
+    });
+
+    let providerAssets = [stxAsset];
+    const result = renderUseSwapState({
+      baseAsset: defaultBtcAsset,
+      targetAsset: defaultStxAsset,
+      getTargetSwapAssets: () => Promise.resolve(providerAssets),
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.pairReconciliation.target).toBe('complete');
+    });
+    expect(result.current.state.targetSwapAsset).toEqual(stxAsset);
+
+    providerAssets = [];
+    await act(async () => {
+      await result.current.targetAssetsQuery.refetch();
+    });
+
+    expect(result.current.state.targetSwapAsset).toEqual(stxAsset);
+    expect(result.current.state.pairReconciliation.target).toBe('complete');
   });
 });
 
@@ -1134,6 +1286,106 @@ describe('disabled pairs', () => {
       const filteredAssets = result.current.baseAssetsQuery.data;
       assert(filteredAssets);
       expect(filteredAssets).toHaveLength(2);
+    });
+  });
+
+  describe('non-mainnet bitcoin network', () => {
+    it('adds bitcoin exclusion rules when the bitcoin network is not mainnet', async () => {
+      const baseSwapAssets = [
+        createAccountSwapAsset({ asset: defaultBtcAsset }),
+        createAccountSwapAsset({ asset: defaultStxAsset }),
+        createAccountSwapAsset({ asset: defaultSbtcAsset, balance: { crypto: 1, quote: 100 } }),
+      ];
+
+      const result = renderUseSwapState({
+        baseSwapAssets,
+        network: defaultNetworksKeyedById.testnet4,
+      });
+
+      await waitFor(() => {
+        expect(result.current.baseAssetsQuery.status).toBe('success');
+      });
+
+      const filteredAssets = result.current.baseAssetsQuery.data;
+      assert(filteredAssets);
+      const symbols = filteredAssets.map(a => a.asset.symbol);
+      expect(symbols).not.toContain('BTC');
+      expect(symbols).toContain('STX');
+      expect(symbols).toContain('sBTC');
+    });
+  });
+
+  describe('missing bitcoin dependencies', () => {
+    it('filters BTC from base assets without any explicit rules', async () => {
+      const baseSwapAssets = [
+        createAccountSwapAsset({ asset: defaultBtcAsset }),
+        createAccountSwapAsset({ asset: defaultStxAsset }),
+        createAccountSwapAsset({ asset: defaultSbtcAsset, balance: { crypto: 1, quote: 100 } }),
+      ];
+
+      const result = renderUseSwapState({
+        baseSwapAssets,
+        dependencies: { bitcoin: undefined },
+      });
+
+      await waitFor(() => {
+        expect(result.current.baseAssetsQuery.status).toBe('success');
+      });
+
+      const filteredAssets = result.current.baseAssetsQuery.data;
+      assert(filteredAssets);
+      const symbols = filteredAssets.map(a => a.asset.symbol);
+      expect(symbols).not.toContain('BTC');
+      expect(symbols).toContain('STX');
+      expect(symbols).toContain('sBTC');
+    });
+
+    it('filters BTC from target assets without any explicit rules', async () => {
+      const targetSwapAssets = [
+        createAccountSwapAsset({ asset: defaultBtcAsset }),
+        createAccountSwapAsset({ asset: defaultSbtcAsset }),
+      ];
+
+      const result = renderUseSwapState({
+        baseAsset: defaultStxAsset,
+        targetSwapAssets,
+        dependencies: { bitcoin: undefined },
+      });
+
+      await waitFor(() => {
+        expect(result.current.targetAssetsQuery.status).toBe('success');
+      });
+
+      const filteredAssets = result.current.targetAssetsQuery.data;
+      assert(filteredAssets);
+      const symbols = filteredAssets.map(a => a.asset.symbol);
+      expect(symbols).not.toContain('BTC');
+      expect(symbols).toContain('sBTC');
+    });
+
+    it('combines injected rules with explicit disabled pairs', async () => {
+      const baseSwapAssets = [
+        createAccountSwapAsset({ asset: defaultBtcAsset }),
+        createAccountSwapAsset({ asset: defaultStxAsset }),
+        createAccountSwapAsset({ asset: defaultSbtcAsset, balance: { crypto: 1, quote: 100 } }),
+      ];
+
+      const result = renderUseSwapState({
+        baseSwapAssets,
+        dependencies: { bitcoin: undefined },
+        disabledPairs: [{ base: { protocol: 'nativeStx', id: 'STX' }, target: '*' }],
+      });
+
+      await waitFor(() => {
+        expect(result.current.baseAssetsQuery.status).toBe('success');
+      });
+
+      const filteredAssets = result.current.baseAssetsQuery.data;
+      assert(filteredAssets);
+      const symbols = filteredAssets.map(a => a.asset.symbol);
+      expect(symbols).not.toContain('BTC');
+      expect(symbols).not.toContain('STX');
+      expect(symbols).toContain('sBTC');
     });
   });
 });
