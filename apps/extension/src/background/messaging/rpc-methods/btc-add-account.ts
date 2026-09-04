@@ -1,6 +1,6 @@
 import {
   compileWshDescriptor,
-  isWshDescriptor,
+  isWshMultisigDescriptor,
   matchBondTemplateDescriptor,
 } from '@leather.io/bitcoin';
 import {
@@ -35,17 +35,12 @@ function compilesAsWshDescriptor(descriptor: string) {
   }
 }
 
-function isSupportedMultisigDescriptor(descriptor: string) {
-  if (!isWshDescriptor(descriptor) || !descriptor.includes('multi(')) return false;
-  return compilesAsWshDescriptor(descriptor);
-}
-
-function isSupportedBondDescriptor(descriptor: string) {
-  return matchBondTemplateDescriptor(descriptor) !== null && compilesAsWshDescriptor(descriptor);
+function hasSupportedDescriptorShape(descriptor: string) {
+  return isWshMultisigDescriptor(descriptor) || matchBondTemplateDescriptor(descriptor) !== null;
 }
 
 function isSupportedDescriptor(descriptor: string) {
-  return isSupportedMultisigDescriptor(descriptor) || isSupportedBondDescriptor(descriptor);
+  return hasSupportedDescriptorShape(descriptor) && compilesAsWshDescriptor(descriptor);
 }
 
 export const btcAddAccountHandler = defineRpcRequestHandler(
