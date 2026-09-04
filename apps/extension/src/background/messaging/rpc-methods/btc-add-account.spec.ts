@@ -67,6 +67,7 @@ const originPrefixedMultisigDescriptor = `wsh(multi(2,[aabbccdd/84'/0'/0']${xpub
 const multiLeafMiniscriptDescriptor = `wsh(or_d(multi(2,${xpubA}/0/0,${xpubB}/0/0),pk(${counterpartyXpub}/0/0)))`;
 const timelockedMultiDescriptor = `wsh(and_v(v:after(${unlockHeight}),multi(2,${xpubA}/0/0,${xpubB}/0/0)))`;
 const rangedMultisigDescriptor = `wsh(sortedmulti(2,${xpubA}/0/*,${xpubB}/0/*))`;
+const rangedBondDescriptor = `wsh(and_v(v:or_i(after(${unlockHeight}),and_v(v:sha256(${hash}),pk(${counterpartyXpub}/0/*))),sortedmulti(2,${xpubA}/0/*,${xpubB}/0/*)))`;
 
 const unsupportedDescriptorMessage = 'Only multisig or timelocked wsh() descriptors are supported';
 
@@ -167,6 +168,11 @@ describe('btcAddAccountHandler', () => {
 
   test('rejects a ranged multisig descriptor', async () => {
     await invokeHandler(rangedMultisigDescriptor);
+    expectRejectedAsUnsupported();
+  });
+
+  test('rejects a ranged bond descriptor', async () => {
+    await invokeHandler(rangedBondDescriptor);
     expectRejectedAsUnsupported();
   });
 

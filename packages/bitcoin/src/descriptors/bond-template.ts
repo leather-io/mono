@@ -18,10 +18,18 @@ const bondDescriptorPattern =
 
 const compressedPubkeyHexPattern = /^0[23][0-9a-f]{64}$/;
 const compressedPubkeyAnyCaseHexPattern = /^0[23][0-9a-fA-F]{64}$/;
+const bondReceiveKeyExpressionPattern = /^(?:\[[^\]]+\])?[1-9A-HJ-NP-Za-km-z]+\/0\/\d+$/;
+
+function isBondExtendedKeyExpression(keyExpression: string): boolean {
+  return (
+    bondReceiveKeyExpressionPattern.test(keyExpression) &&
+    isExtendedPublicKeyExpression(keyExpression)
+  );
+}
 
 function isBondCounterpartyKeyExpression(keyExpression: string): boolean {
   return (
-    compressedPubkeyHexPattern.test(keyExpression) || isExtendedPublicKeyExpression(keyExpression)
+    compressedPubkeyHexPattern.test(keyExpression) || isBondExtendedKeyExpression(keyExpression)
   );
 }
 
@@ -39,7 +47,7 @@ export interface BondVaultLeaf extends BondVaultKeys {
 function isBondVaultKeyExpression(keyExpression: string): boolean {
   return (
     compressedPubkeyAnyCaseHexPattern.test(keyExpression) ||
-    isExtendedPublicKeyExpression(keyExpression)
+    isBondExtendedKeyExpression(keyExpression)
   );
 }
 
@@ -51,11 +59,13 @@ function parseBondVaultLeaf(expression: string): BondVaultLeaf | null {
       return null;
     return { kind: 'pk', expression, threshold: 1, keyExpressions: [keyExpression] };
   }
-  const [threshold, ...keyExpressions] = args;
-  if (!threshold || !/^\d+$/.test(threshold)) return null;
+  const [rawThreshold, ...keyExpressions] = args;
+  if (!rawThreshold || !/^\d+$/.test(rawThreshold)) return null;
   if (!keyExpressions.length) return null;
   if (!keyExpressions.every(isBondVaultKeyExpression)) return null;
-  return { kind: 'multi', expression, threshold: Number(threshold), keyExpressions };
+  const threshold = Number(rawThreshold);
+  if (threshold < 1 || threshold > keyExpressions.length) return null;
+  return { kind: 'multi', expression, threshold, keyExpressions };
 }
 
 export interface BondDescriptorParams {
