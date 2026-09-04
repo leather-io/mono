@@ -38,6 +38,7 @@ function makeActivityExplorerLink({
   if (asset.chain === 'bitcoin') {
     return getBitcoinExplorerLink({
       networkPreference: networkPreference.chain.bitcoin.bitcoinNetwork,
+      bitcoinUrl: networkPreference.chain.bitcoin.bitcoinUrl,
       id: txid,
       type: 'tx',
     });
@@ -55,12 +56,21 @@ export interface GetMempoolExplorerLinkArgs {
   id: string;
   type: 'tx' | 'block';
   networkPreference: BitcoinNetwork;
+  bitcoinUrl?: string;
+}
+
+// A url with no api path is a bitcoind rpc endpoint, which has no explorer.
+function regtestExplorerBaseUrl(bitcoinUrl: string | undefined) {
+  if (!bitcoinUrl) return null;
+  const base = bitcoinUrl.replace(/\/api(\/proxy)?\/?$/, '');
+  return base === bitcoinUrl ? null : base;
 }
 
 export function getBitcoinExplorerLink({
   id,
   type,
   networkPreference,
+  bitcoinUrl,
 }: GetMempoolExplorerLinkArgs) {
   switch (networkPreference) {
     case 'mainnet':
@@ -71,6 +81,10 @@ export function getBitcoinExplorerLink({
       return `${MEMPOOL_BASE_URL}/testnet4/${type}/${id}`;
     case 'signet':
       return `${MEMPOOL_BASE_URL}/signet/${type}/${id}`;
+    case 'regtest': {
+      const base = regtestExplorerBaseUrl(bitcoinUrl);
+      return base ? `${base}/${type}/${id}` : null;
+    }
     default:
       return null;
   }

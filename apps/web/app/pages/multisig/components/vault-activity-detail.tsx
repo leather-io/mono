@@ -53,6 +53,7 @@ function explorerLink(
   if (chain === 'bitcoin') {
     return getBitcoinExplorerLink({
       networkPreference: network.chain.bitcoin.bitcoinNetwork,
+      bitcoinUrl: network.chain.bitcoin.bitcoinUrl,
       id: txid,
       type: 'tx',
     });
