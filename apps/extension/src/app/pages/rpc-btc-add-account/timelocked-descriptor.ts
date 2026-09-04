@@ -1,17 +1,33 @@
-import { matchBondTemplateDescriptor } from '@leather.io/bitcoin';
+import type { HDKey } from '@scure/bip32';
 
-interface TimelockedDescriptor {
-  unlockHeight: number;
-  vaultThreshold: number;
-  vaultKeyCount: number;
-}
+import {
+  type CompiledWshDescriptor,
+  findAccountDescriptorKey,
+  matchBondTemplateDescriptor,
+} from '@leather.io/bitcoin';
 
-export function matchTimelockedDescriptor(descriptor: string): TimelockedDescriptor | null {
+import type { BondSpendingDetails } from '@app/components/bond-spending-conditions';
+
+export function matchTimelockedDescriptor(descriptor: string): BondSpendingDetails | null {
   const match = matchBondTemplateDescriptor(descriptor);
   if (!match) return null;
   return {
     unlockHeight: match.unlockHeight,
+    hash: match.hash,
+    counterpartyKey: match.counterpartyKey,
+    vaultKind: match.vault.kind,
     vaultThreshold: match.vault.threshold,
-    vaultKeyCount: match.vault.keyExpressions.length,
+    vaultKeyExpressions: match.vault.keyExpressions,
   };
+}
+
+export function findTimelockedVaultAccountKey(
+  compiled: CompiledWshDescriptor,
+  timelock: BondSpendingDetails,
+  accountKeychain: HDKey
+) {
+  const vaultKeys = compiled.keys.filter(key =>
+    timelock.vaultKeyExpressions.includes(key.keyExpression)
+  );
+  return findAccountDescriptorKey({ ...compiled, keys: vaultKeys }, accountKeychain);
 }

@@ -20,3 +20,6 @@ export function descriptorHasNonAccountRawKey(
 ): boolean {
   return compiled.keys.some(key => key !== accountKey && !key.bip32);
 }
+
+export const ledgerRawKeyUnsupportedMessage =
+  "Ledger can't display this address because another key in the descriptor is a raw public key. Ask the requesting site to provide every key as an extended public key (xpub), or verify with a software wallet.";

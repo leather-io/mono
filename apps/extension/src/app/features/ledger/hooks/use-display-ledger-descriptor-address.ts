@@ -16,7 +16,10 @@ import {
 
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
-import { descriptorHasNonAccountRawKey } from '../utils/ledger-descriptor-address';
+import {
+  descriptorHasNonAccountRawKey,
+  ledgerRawKeyUnsupportedMessage,
+} from '../utils/ledger-descriptor-address';
 
 // Displays the `wsh(...)` multisig address on the Ledger screen so the user can
 // confirm it against the extension. Ledger can only show a non-standard
@@ -41,9 +44,7 @@ export function useDisplayLedgerDescriptorAddress() {
     // xpub/origin and cannot be expressed in a Ledger policy — fail fast with a
     // clear message instead of a masked on-device rejection.
     if (descriptorHasNonAccountRawKey(compiled, accountDescriptorKey.key))
-      throw new Error(
-        'Ledger cannot display this address: another signer is a raw public key. Ledger requires every key to be an extended public key (xpub).'
-      );
+      throw new Error(ledgerRawKeyUnsupportedMessage);
 
     const ledgerDescriptor = toLedgerSignableDescriptor(
       descriptor,
