@@ -1,7 +1,24 @@
+import { sha256 } from '@noble/hashes/sha256';
+import { bytesToHex } from '@noble/hashes/utils';
 import { type BrowserContext, type Page, expect } from '@playwright/test';
+import { HDKey } from '@scure/bip32';
 import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
-import { exampleStacksMultisigPublicKeys, exampleWshDescriptor } from '@tests/mocks/mock-policies';
+import {
+  exampleStacksMultisigPublicKeys,
+  exampleWshDescriptor,
+  testAccountNativeSegwitXpub,
+} from '@tests/mocks/mock-policies';
 import { testFingerprint } from '@tests/page-object-models/onboarding.page';
+import { getDisplayerAddress } from '@tests/utils';
+
+import {
+  getBondVaultKeys,
+  getWshDescriptorAddress,
+  instantiateBondDescriptor,
+  makeNativeSegwitAccountXpub,
+  makeNativeSegwitAddressPubkeyHex,
+} from '@leather.io/bitcoin';
+import { RpcErrorCode } from '@leather.io/rpc';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -206,5 +223,300 @@ test.describe('Rpc: add account when the feature is disabled', () => {
     });
 
     await expect(requestPromise).rejects.toThrow();
+  });
+});
+
+const bondParams = {
+  unlockHeight: 1000,
+  hash: bytesToHex(sha256(new Uint8Array([1, 2, 3]))),
+  counterpartyKey: `${makeNativeSegwitAccountXpub(9)}/0/0`,
+};
+const testAccountVaultKeys = getBondVaultKeys(exampleWshDescriptor);
+const bondDescriptor = instantiateBondDescriptor({ ...bondParams, ...testAccountVaultKeys });
+const singleSignerBondDescriptor = `wsh(and_v(v:or_i(after(${bondParams.unlockHeight}),and_v(v:sha256(${bondParams.hash}),pk(${bondParams.counterpartyKey}))),pk(${testAccountNativeSegwitXpub}/0/0)))`;
+const rawCounterpartyBondDescriptor = instantiateBondDescriptor({
+  ...bondParams,
+  counterpartyKey: makeNativeSegwitAddressPubkeyHex(9),
+  ...testAccountVaultKeys,
+});
+const strangerBondDescriptor = instantiateBondDescriptor({
+  ...bondParams,
+  threshold: 2,
+  keyExpressions: [
+    `${makeNativeSegwitAccountXpub(1)}/0/0`,
+    `${makeNativeSegwitAccountXpub(2)}/0/0`,
+  ],
+});
+const counterpartySlotBondDescriptor = instantiateBondDescriptor({
+  ...bondParams,
+  counterpartyKey: `${testAccountNativeSegwitXpub}/0/0`,
+  threshold: 2,
+  keyExpressions: [
+    `${makeNativeSegwitAccountXpub(1)}/0/0`,
+    `${makeNativeSegwitAccountXpub(2)}/0/0`,
+  ],
+});
+const multiLeafMiniscriptDescriptor = `wsh(or_d(multi(2,${testAccountNativeSegwitXpub}/0/0,${makeNativeSegwitAccountXpub(1)}/0/0),pk(${makeNativeSegwitAccountXpub(2)}/0/0)))`;
+const rangedBondDescriptor = `wsh(and_v(v:or_i(after(${bondParams.unlockHeight}),and_v(v:sha256(${bondParams.hash}),pk(${makeNativeSegwitAccountXpub(9)}/0/*))),sortedmulti(2,${testAccountNativeSegwitXpub}/0/*,${makeNativeSegwitAccountXpub(2)}/0/*)))`;
+const nonBondMiniscriptDescriptor = `wsh(and_v(v:after(1000),pk(${testAccountNativeSegwitXpub}/0/0)))`;
+
+function deriveFirstAddressPubkeyHex(xpub: string) {
+  const { publicKey } = HDKey.fromExtendedKey(xpub).deriveChild(0).deriveChild(0);
+  if (!publicKey) throw new Error('Expected a public key');
+  return bytesToHex(publicKey);
+}
+const rawVaultBondDescriptor = `wsh(and_v(v:or_i(after(${bondParams.unlockHeight}),and_v(v:sha256(${bondParams.hash}),pk(${makeNativeSegwitAddressPubkeyHex(9)}))),sortedmulti(2,${deriveFirstAddressPubkeyHex(testAccountNativeSegwitXpub)},${makeNativeSegwitAddressPubkeyHex(2)})))`;
+
+function mainnetAddressOf(descriptor: string) {
+  return getWshDescriptorAddress(descriptor, 'mainnet');
+}
+
+async function initiateRequestCatchingError(page: Page, method: string, params: unknown) {
+  await waitForProvider(page);
+  return page.evaluate(
+    ({ method, params }) =>
+      (window as any).LeatherProvider?.request(method, params).catch((e: unknown) => e),
+    { method, params }
+  );
+}
+
+async function verifyTimelockedAddress(popup: Page) {
+  await expect(popup.getByText('Verify timelocked address')).toBeVisible();
+  const verifyButton = popup.getByTestId('btc-add-account-approve-button');
+  await expect(verifyButton).toHaveText('Verify');
+  await expect(verifyButton).toBeEnabled();
+  await verifyButton.click();
+}
+
+test.describe('Rpc: add account with a timelocked descriptor', () => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await overrideLaunchDarklyFlags(context, { releaseAddAccount: true });
+    await onboardingPage.signInWithTestAccount(extensionId);
+  });
+
+  test('verifies a bond address without registering anything', async ({
+    page,
+    context,
+    extensionId,
+  }) => {
+    await page.goto('localhost:3000');
+    const requestPromise = initiateRequest(page, 'btc_addAccount', {
+      name: 'Bond',
+      descriptor: bondDescriptor,
+    });
+
+    const popup = await waitForPopup(context);
+    await expect(popup.getByText('Verify timelocked address')).toBeVisible();
+    await expect(popup.getByTestId('bond-unlock-height')).toHaveText('From block 1000');
+    await expect(popup.getByTestId('bond-vault-policy')).toHaveText(
+      'Requires 2 of 2 vault co-signers'
+    );
+    await expect(popup.getByTestId('bond-counterparty-key')).toHaveText(bondParams.counterpartyKey);
+    await expect(popup.getByTestId('bond-hash')).toHaveText(bondParams.hash);
+    await expect(popup.getByText("Timelocked addresses can't be added")).toBeVisible();
+    await expect(popup.getByText("This site can't add accounts")).toHaveCount(0);
+    await expect(popup.getByText('Account name')).toHaveCount(0);
+    expect(await getDisplayerAddress(popup.locator('body'))).toBe(mainnetAddressOf(bondDescriptor));
+
+    await verifyTimelockedAddress(popup);
+
+    const result = await requestPromise;
+    expect(result.result).toEqual({
+      added: false,
+      role: 'signer',
+      descriptor: bondDescriptor,
+      address: mainnetAddressOf(bondDescriptor),
+    });
+
+    expect(await getPersistedPolicyIds(page, extensionId)).toEqual([]);
+  });
+
+  test('only verifies a bond address even from a whitelisted origin', async ({
+    page,
+    context,
+    extensionId,
+  }) => {
+    await stubWhitelistedOriginPage(context);
+    const dappPage = await context.newPage();
+    await dappPage.goto(whitelistedOrigin);
+    await waitForProvider(dappPage);
+
+    const requestPromise = initiateRequest(dappPage, 'btc_addAccount', {
+      name: 'Bond',
+      descriptor: bondDescriptor,
+    });
+
+    const popup = await waitForPopup(context);
+    await expect(popup.getByText("Timelocked addresses can't be added")).toBeVisible();
+    await verifyTimelockedAddress(popup);
+
+    const result = await requestPromise;
+    expect(result.result).toMatchObject({
+      added: false,
+      address: mainnetAddressOf(bondDescriptor),
+    });
+    expect(result.result.accountId).toBeUndefined();
+
+    expect(await getPersistedPolicyIds(page, extensionId)).toEqual([]);
+  });
+
+  test('verifies a single-signer vault bond owned by the active account', async ({
+    page,
+    context,
+    extensionId,
+  }) => {
+    await page.goto('localhost:3000');
+    const requestPromise = initiateRequest(page, 'btc_addAccount', {
+      name: 'Bond',
+      descriptor: singleSignerBondDescriptor,
+    });
+
+    const popup = await waitForPopup(context);
+    await expect(popup.getByTestId('bond-vault-policy')).toHaveText('Requires the owner key');
+    await expect(popup.getByTestId('bond-owner-key')).toHaveText(
+      `${testAccountNativeSegwitXpub}/0/0`
+    );
+    await verifyTimelockedAddress(popup);
+
+    const result = await requestPromise;
+    expect(result.result).toMatchObject({
+      added: false,
+      address: mainnetAddressOf(singleSignerBondDescriptor),
+    });
+
+    expect(await getPersistedPolicyIds(page, extensionId)).toEqual([]);
+  });
+
+  test('verifies a bond with a raw counterparty key on a software wallet', async ({
+    page,
+    context,
+  }) => {
+    await page.goto('localhost:3000');
+    const requestPromise = initiateRequest(page, 'btc_addAccount', {
+      name: 'Bond',
+      descriptor: rawCounterpartyBondDescriptor,
+    });
+
+    const popup = await waitForPopup(context);
+    await verifyTimelockedAddress(popup);
+
+    const result = await requestPromise;
+    expect(result.result).toMatchObject({
+      added: false,
+      address: mainnetAddressOf(rawCounterpartyBondDescriptor),
+    });
+  });
+
+  test('verifies a bond whose vault keys are raw public keys', async ({
+    page,
+    context,
+    extensionId,
+  }) => {
+    await page.goto('localhost:3000');
+    const requestPromise = initiateRequest(page, 'btc_addAccount', {
+      name: 'RPC test timelocked vault',
+      descriptor: rawVaultBondDescriptor,
+    });
+
+    const popup = await waitForPopup(context);
+    await expect(popup.getByTestId('bond-vault-policy')).toHaveText(
+      'Requires 2 of 2 vault co-signers'
+    );
+    await verifyTimelockedAddress(popup);
+
+    const result = await requestPromise;
+    expect(result.result).toMatchObject({
+      added: false,
+      address: mainnetAddressOf(rawVaultBondDescriptor),
+    });
+
+    expect(await getPersistedPolicyIds(page, extensionId)).toEqual([]);
+  });
+
+  test('disables verify when the active account is not a vault signer', async ({
+    page,
+    context,
+  }) => {
+    await page.goto('localhost:3000');
+    const requestPromise = initiateRequest(page, 'btc_addAccount', {
+      name: 'Bond',
+      descriptor: strangerBondDescriptor,
+    });
+
+    const popup = await waitForPopup(context);
+    await expect(popup.getByText('Verify timelocked address')).toBeVisible();
+    await expect(popup.getByText("isn't connected to this vault")).toBeVisible();
+    await expect(popup.getByTestId('btc-add-account-approve-button')).toBeDisabled();
+
+    await popup.close();
+    await expect(requestPromise).rejects.toThrow();
+  });
+
+  test('disables verify when the active account only holds the counterparty key', async ({
+    page,
+    context,
+  }) => {
+    await page.goto('localhost:3000');
+    const requestPromise = initiateRequest(page, 'btc_addAccount', {
+      name: 'Bond',
+      descriptor: counterpartySlotBondDescriptor,
+    });
+
+    const popup = await waitForPopup(context);
+    await expect(popup.getByText('Verify timelocked address')).toBeVisible();
+    await expect(popup.getByTestId('bond-counterparty-key')).toHaveText(
+      `${testAccountNativeSegwitXpub}/0/0`
+    );
+    await expect(popup.getByText("isn't connected to this vault")).toBeVisible();
+    await expect(popup.getByTestId('btc-add-account-approve-button')).toBeDisabled();
+
+    await popup.close();
+    await expect(requestPromise).rejects.toThrow();
+  });
+
+  test('rejects a miniscript descriptor that is neither multisig nor a bond', async ({ page }) => {
+    await page.goto('localhost:3000');
+    const result = await initiateRequestCatchingError(page, 'btc_addAccount', {
+      name: 'Not a bond',
+      descriptor: nonBondMiniscriptDescriptor,
+    });
+
+    expect(result).toMatchObject({
+      error: {
+        code: RpcErrorCode.INVALID_PARAMS,
+        message: 'Only multisig or timelocked wsh() descriptors are supported',
+      },
+    });
+  });
+
+  test('rejects miniscript that merely wraps a multisig leaf', async ({ page }) => {
+    await page.goto('localhost:3000');
+    const result = await initiateRequestCatchingError(page, 'btc_addAccount', {
+      name: 'Not a multisig',
+      descriptor: multiLeafMiniscriptDescriptor,
+    });
+
+    expect(result).toMatchObject({
+      error: {
+        code: RpcErrorCode.INVALID_PARAMS,
+        message: 'Only multisig or timelocked wsh() descriptors are supported',
+      },
+    });
+  });
+
+  test('rejects a ranged bond descriptor', async ({ page }) => {
+    await page.goto('localhost:3000');
+    const result = await initiateRequestCatchingError(page, 'btc_addAccount', {
+      name: 'Ranged bond',
+      descriptor: rangedBondDescriptor,
+    });
+
+    expect(result).toMatchObject({
+      error: {
+        code: RpcErrorCode.INVALID_PARAMS,
+        message: 'Only multisig or timelocked wsh() descriptors are supported',
+      },
+    });
   });
 });

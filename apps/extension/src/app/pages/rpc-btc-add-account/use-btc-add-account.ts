@@ -17,20 +17,27 @@ import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to
 import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
+import { descriptorHasNonAccountRawKey } from '@app/features/ledger/utils/ledger-descriptor-address';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import { useNetworks } from '@app/store/networks/networks.selectors';
 
 import { usePolicyFeatureGate } from '../policy-feature-gate';
 import {
-  type PolicyApprovalMode,
+  type BtcAddAccountKind,
   type PolicyMatchStatus,
-  getPolicyApprovalMode,
+  getBtcAddAccountApprovalMode,
 } from '../policy-match';
 import { deriveBtcPolicyAddress } from './btc-policy-registration';
 import { useRegisterBtcPolicy } from './register-btc-policy';
+import { findTimelockedVaultAccountKey, matchTimelockedDescriptor } from './timelocked-descriptor';
 
 const { decode } = createRequestEncoder(btcAddAccount.request);
+
+interface DescriptorAccountMatch {
+  matchStatus: PolicyMatchStatus;
+  hasNonAccountRawKey: boolean;
+}
 
 function useBtcAddAccountParams() {
   const { frameId, tabId, origin, topOrigin } = useRpcRequestParams();
@@ -52,25 +59,39 @@ export function useBtcAddAccount() {
     tabId,
   });
 
+  const timelock = useMemo(
+    () => matchTimelockedDescriptor(request.params.descriptor),
+    [request.params.descriptor]
+  );
+  const kind: BtcAddAccountKind = timelock ? 'timelocked' : 'policy';
+
   // Whitelisted origins may register the policy; any other origin may only let
   // the user verify the derived address (nothing is written to the extension).
-  const mode: PolicyApprovalMode = getPolicyApprovalMode(origin, topOrigin);
+  const mode = getBtcAddAccountApprovalMode(origin, topOrigin, kind);
 
   // The active account must be one of the descriptor's cosigners before the user
   // can confirm. We only consider the native segwit account's xpub or its 0/0
   // public key: `findAccountDescriptorKey` matches the account xpub, or the raw
   // 0/0 public key, against the compiled descriptor — the same check signPsbt uses.
-  const matchStatus: PolicyMatchStatus = useMemo(() => {
-    if (!nativeSegwitAccount) return 'no-active-account';
+  const { matchStatus, hasNonAccountRawKey } = useMemo<DescriptorAccountMatch>(() => {
+    if (!nativeSegwitAccount)
+      return { matchStatus: 'no-active-account', hasNonAccountRawKey: false };
     try {
       const compiled = compileWshDescriptor(request.params.descriptor);
-      return findAccountDescriptorKey(compiled, nativeSegwitAccount.keychain)
-        ? 'match'
-        : 'mismatch';
+      const accountKey = timelock
+        ? findTimelockedVaultAccountKey(compiled, timelock, nativeSegwitAccount.keychain)
+        : findAccountDescriptorKey(compiled, nativeSegwitAccount.keychain);
+      if (!accountKey) return { matchStatus: 'mismatch', hasNonAccountRawKey: false };
+      return {
+        matchStatus: 'match',
+        hasNonAccountRawKey: descriptorHasNonAccountRawKey(compiled, accountKey.key),
+      };
     } catch {
-      return 'mismatch';
+      return { matchStatus: 'mismatch', hasNonAccountRawKey: false };
     }
-  }, [nativeSegwitAccount, request.params.descriptor]);
+  }, [nativeSegwitAccount, request.params.descriptor, timelock]);
+
+  const isLedgerVerifyUnsupported = walletType === 'ledger' && hasNonAccountRawKey;
 
   // Derived locally and identically to registration, so what the user verifies
   // (in the approver and on a Ledger) equals what is stored / returned. Null on
@@ -146,10 +167,13 @@ export function useBtcAddAccount() {
     name: request.params.name.substring(0, ACCOUNT_MAX_NAME_LENGTH),
     descriptor: request.params.descriptor,
     address,
+    kind,
+    timelock,
     matchStatus,
     mode,
     walletType,
-    canApprove: matchStatus === 'match' && address !== null,
+    isLedgerVerifyUnsupported,
+    canApprove: matchStatus === 'match' && address !== null && !isLedgerVerifyUnsupported,
     isFeatureEnabled,
     rejectAsUnsupported,
     focusInitiatingTab,

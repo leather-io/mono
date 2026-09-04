@@ -26,6 +26,7 @@ import {
   getWshDescriptorThreshold,
   isExtendedPublicKeyExpression,
   isWshDescriptor,
+  isWshMultisigDescriptor,
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
 } from './wsh-descriptor';
@@ -69,6 +70,34 @@ describe('wsh-descriptor', () => {
 
   it('rejects non-wsh descriptors', () => {
     expect(() => compileWshDescriptor(`wpkh(${xpubA})`)).toThrow();
+  });
+
+  it('recognises plain multisig wsh descriptors by shape', () => {
+    const plain = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`;
+    expect(isWshMultisigDescriptor(plain)).toBe(true);
+    expect(isWshMultisigDescriptor(`wsh(multi(1,${xpubA}/0/0))`)).toBe(true);
+    expect(
+      isWshMultisigDescriptor(
+        `wsh(multi(2,[aabbccdd/48'/0'/0'/2']${xpubA}/0/0,${bytesToHex(pubkeyA)}))`
+      )
+    ).toBe(true);
+    expect(isWshMultisigDescriptor(`wsh(sortedmulti(2, ${xpubA}/0/0, ${xpubB}/0/0))`)).toBe(true);
+    expect(isWshMultisigDescriptor(`${plain}#${checksum(plain)}`)).toBe(true);
+  });
+
+  it('rejects miniscript that merely contains a multi leaf, and ranged multisig', () => {
+    expect(
+      isWshMultisigDescriptor(`wsh(or_d(multi(2,${xpubA}/0/0,${xpubB}/0/0),pk(${xpubB}/0/1)))`)
+    ).toBe(false);
+    expect(
+      isWshMultisigDescriptor(`wsh(and_v(v:after(1000),multi(2,${xpubA}/0/0,${xpubB}/0/0)))`)
+    ).toBe(false);
+    expect(isWshMultisigDescriptor(descriptor)).toBe(false);
+    expect(isWshMultisigDescriptor(`wsh(sortedmulti(2,${xpubA}/0/*,${xpubB}/0/*))`)).toBe(false);
+    expect(isWshMultisigDescriptor(`wsh(pk(${xpubA}/0/0))`)).toBe(false);
+    expect(isWshMultisigDescriptor(`sh(wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0)))`)).toBe(
+      false
+    );
   });
 
   it('derives the mainnet p2wsh address for a multisig descriptor', () => {

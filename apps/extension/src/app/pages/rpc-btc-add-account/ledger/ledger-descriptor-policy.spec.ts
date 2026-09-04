@@ -1,10 +1,12 @@
 import { Output, networks } from '@bitcoinerlab/descriptors';
 import { type LedgerState, registerLedgerWallet } from '@bitcoinerlab/descriptors/ledger';
 import AppClient from '@ledgerhq/ledger-bitcoin';
-import { hexToBytes } from '@noble/hashes/utils';
+import { sha256 } from '@noble/hashes/sha256';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 
 import {
   compileWshDescriptor,
+  instantiateBondDescriptor,
   toCompilableWshDescriptor,
   toLedgerSignableDescriptor,
 } from '@leather.io/bitcoin';
@@ -38,6 +40,70 @@ function makeFakeLedgerClient(): AppClient {
     Promise.resolve<readonly [Buffer, Buffer]>([Buffer.alloc(32), Buffer.alloc(32)]);
   return client;
 }
+
+async function registerAsAccountZero(descriptor: string) {
+  const compiled = compileWshDescriptor(descriptor);
+  const accountKey = compiled.keys.find(key => key.keyExpression.startsWith(xpubs[0]));
+  if (!accountKey) throw new Error('Account key not found in descriptor');
+
+  const ledgerDescriptor = toLedgerSignableDescriptor(
+    descriptor,
+    accountKey,
+    xpubs[0],
+    fakeKeyOrigin
+  );
+
+  const ledgerState: LedgerState = { masterFingerprint: hexToBytes(fakeFingerprint) };
+  await registerLedgerWallet({
+    descriptor: toCompilableWshDescriptor(ledgerDescriptor),
+    ledgerManager: {
+      ledgerClient: makeFakeLedgerClient(),
+      ledgerState,
+      Output,
+      network: networks.bitcoin,
+    },
+    policyName: 'Leather',
+  });
+
+  const policy = ledgerState.policies?.[0];
+  if (!policy) throw new Error('Policy was not registered');
+  return policy;
+}
+
+const bondHash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
+const bondUnlockHeight = 1000;
+const bondCounterpartyKey = `${xpubs[5]}/0/0`;
+const bondTemplatePrefix = `wsh(and_v(v:or_i(after(${bondUnlockHeight}),and_v(v:sha256(${bondHash}),pk(@0/**))),`;
+
+describe('bond descriptor through the Ledger policy pipeline', () => {
+  test('registers a multisig-vault bond as a miniscript policy keyed by the account', async () => {
+    const bondDescriptor = instantiateBondDescriptor({
+      unlockHeight: bondUnlockHeight,
+      hash: bondHash,
+      counterpartyKey: bondCounterpartyKey,
+      threshold: 2,
+      keyExpressions: [`${xpubs[0]}/0/0`, `${xpubs[1]}/0/0`, `${xpubs[2]}/0/0`],
+    });
+
+    const policy = await registerAsAccountZero(bondDescriptor);
+
+    expect(policy.keyRoots).toHaveLength(4);
+    expect(policy.keyRoots[0]).toBe(xpubs[5]);
+    expect(policy.keyRoots.filter(keyRoot => keyRoot.startsWith(`[${fakeKeyOrigin}]`))).toEqual([
+      `[${fakeKeyOrigin}]${xpubs[0]}`,
+    ]);
+    expect(policy.ledgerTemplate).toBe(`${bondTemplatePrefix}multi(2,@1/**,@2/**,@3/**)))`);
+  });
+
+  test('registers a single-signer vault bond', async () => {
+    const bondDescriptor = `wsh(and_v(v:or_i(after(${bondUnlockHeight}),and_v(v:sha256(${bondHash}),pk(${bondCounterpartyKey}))),pk(${xpubs[0]}/0/0)))`;
+
+    const policy = await registerAsAccountZero(bondDescriptor);
+
+    expect(policy.keyRoots).toEqual([xpubs[5], `[${fakeKeyOrigin}]${xpubs[0]}`]);
+    expect(policy.ledgerTemplate).toBe(`${bondTemplatePrefix}pk(@1/**)))`);
+  });
+});
 
 describe('15-key descriptor through the Ledger policy pipeline', () => {
   test('compiles and finds uniform key path indexes', () => {

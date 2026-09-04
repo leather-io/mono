@@ -142,8 +142,9 @@ describe(useBondProposalRoute.name, () => {
       unlockHeight,
       hash,
       counterpartyKey,
+      vaultKind: 'multi',
       vaultThreshold: 2,
-      vaultKeyCount: 3,
+      vaultKeyExpressions: expect.arrayContaining([`${xpubA}/0/0`, `${xpubB}/0/0`, `${xpubC}/0/0`]),
     });
   });
 
@@ -176,8 +177,9 @@ describe(useBondProposalRoute.name, () => {
       unlockHeight,
       hash,
       counterpartyKey: rawCounterpartyKey,
+      vaultKind: 'multi',
       vaultThreshold: 2,
-      vaultKeyCount: 3,
+      vaultKeyExpressions: expect.arrayContaining([`${xpubA}/0/0`, `${xpubB}/0/0`, `${xpubC}/0/0`]),
     });
   });
 
@@ -188,6 +190,20 @@ describe(useBondProposalRoute.name, () => {
     });
     expect(route).toEqual(
       expect.objectContaining({ status: 'error', code: RpcErrorCode.INVALID_PARAMS })
+    );
+  });
+
+  test('errors when the bond vault is a single-signer pk leaf', () => {
+    const route = useBondProposalRoute({
+      descriptor: `wsh(and_v(v:or_i(after(${unlockHeight}),and_v(v:sha256(${hash}),pk(${counterpartyKey}))),pk(${xpubA}/0/0)))`,
+      psbtHex: buildBondPsbtHex(),
+    });
+    expect(route).toEqual(
+      expect.objectContaining({
+        status: 'error',
+        code: RpcErrorCode.INVALID_PARAMS,
+        message: 'Descriptor is not a supported bond template',
+      })
     );
   });
 
