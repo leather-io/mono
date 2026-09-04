@@ -18,4 +18,5 @@ export enum AllBalancesSelectors {
   DetailAddressGroup = 'all-balances-detail-address-group',
   DetailUtxoRow = 'all-balances-detail-utxo-row',
   DetailEmpty = 'all-balances-detail-empty',
+  DetailError = 'all-balances-detail-error',
 }

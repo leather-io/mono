@@ -11,6 +11,7 @@ import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 import { Content } from '@app/components/layout';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
@@ -60,6 +61,9 @@ function AllBalancesDetailContent({ category }: AllBalancesDetailContentProps) {
 
   const isLoading = utxosState.state === 'loading' || marketData.state === 'loading';
   const hasUtxos = utxosState.state === 'success';
+  // Without this, a failed fetch renders as "$0.00 across 0 addresses", which
+  // is indistinguishable from genuinely holding nothing.
+  const hasError = utxosState.state === 'error' || marketData.state === 'error';
 
   function calculateFiatValue(sats: NumType): Money | undefined {
     if (marketData.state !== 'success') return undefined;
@@ -105,7 +109,9 @@ function AllBalancesDetailContent({ category }: AllBalancesDetailContentProps) {
               </BasicTooltip>
               <BalanceAmount
                 textStyle="heading.03"
-                value={formatBalance(calculateFiatValue(totalSats))}
+                value={
+                  hasError ? emptyAmountPlaceholder : formatBalance(calculateFiatValue(totalSats))
+                }
                 isLoading={isLoading}
                 skeletonWidth="140px"
                 skeletonHeight="32px"
@@ -114,15 +120,19 @@ function AllBalancesDetailContent({ category }: AllBalancesDetailContentProps) {
                 <BalanceAmount
                   textStyle="caption.01"
                   color="ink.text-subdued"
-                  value={formatBalance(createMoney(totalSats, 'BTC'))}
+                  value={
+                    hasError ? emptyAmountPlaceholder : formatBalance(createMoney(totalSats, 'BTC'))
+                  }
                   isLoading={isLoading}
                   skeletonWidth="60px"
                   skeletonHeight="16px"
                 />
-                <styled.span textStyle="caption.01" color="ink.text-subdued">
-                  across {addressGroups.length}{' '}
-                  {addressGroups.length === 1 ? 'address' : 'addresses'}
-                </styled.span>
+                {!hasError && (
+                  <styled.span textStyle="caption.01" color="ink.text-subdued">
+                    across {addressGroups.length}{' '}
+                    {addressGroups.length === 1 ? 'address' : 'addresses'}
+                  </styled.span>
+                )}
               </Flex>
             </Stack>
             <BtcAvatarIcon />
@@ -136,6 +146,17 @@ function AllBalancesDetailContent({ category }: AllBalancesDetailContentProps) {
               data-testid={AllBalancesSelectors.DetailEmpty}
             >
               No UTXOs in this category
+            </styled.span>
+          )}
+
+          {hasError && (
+            <styled.span
+              textStyle="caption.01"
+              color="ink.text-subdued"
+              py="space.05"
+              data-testid={AllBalancesSelectors.DetailError}
+            >
+              Couldn't load this balance right now. Check your connection and try again.
             </styled.span>
           )}
 
