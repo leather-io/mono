@@ -44,6 +44,36 @@ describe(LeatherApiClient.name, () => {
     vi.clearAllMocks();
   });
 
+  test('sends proposals to the production API when no base URL override is given', async () => {
+    const requests: Request[] = [];
+    const fetchMock = vi.fn((request: Request) => {
+      requests.push(request);
+      return Promise.resolve(jsonResponse({}));
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const settingsService: SettingsService = {
+      getSettings() {
+        throw new Error('Settings should not be read in this test');
+      },
+    };
+    const environment: Environment = {
+      environment: 'production',
+    };
+    const client = new LeatherApiClient(
+      new PassthroughHttpCacheService(),
+      settingsService,
+      environment,
+      new ImmediateRateLimiterService(settingsService)
+    );
+
+    await client.proposeMultisigTransaction(proposalRequest);
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(requests[0].method).toBe('POST');
+    expect(requests[0].url).toBe(`${LEATHER_API_URL_PRODUCTION}/v1/multisig-ext/propose`);
+  });
+
   test('scopes a base URL override to the proposal request', async () => {
     const requests: Request[] = [];
     const fetchMock = vi.fn((request: Request) => {

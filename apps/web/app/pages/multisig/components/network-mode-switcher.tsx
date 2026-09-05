@@ -20,15 +20,12 @@ import {
   networkModeInfo,
   orderedNetworkModes,
 } from '../data/network-mode';
-import { multisigEnabled } from '../multisig.constants';
 
 export function NetworkModeSwitcher() {
   const { networkName, setNetworkName } = useStacksNetwork();
   const { btc, stx } = useMultisigNetworks();
   const btcSession = useSession(btc);
   const stxSession = useSession(stx);
-
-  if (!multisigEnabled) return null;
 
   const mode: NetworkMode = networkName === 'mainnet' ? 'mainnet' : 'testnet';
   const active = networkModeInfo[mode];
