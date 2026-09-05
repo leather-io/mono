@@ -1,11 +1,13 @@
+import { useState } from 'react';
 import { Controller, useFormContext, useFormState } from 'react-hook-form';
 
 import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
+import { ExitAnyTimeIcon } from '~/features/bitcoin-staking/start-staking/components/exit-any-time-icon';
 
-import { BoxedCatUnlockedIcon, Input } from '@leather.io/ui';
+import { Input } from '@leather.io/ui';
 import { isDefined } from '@leather.io/utils';
 
 interface ChooseStakingDurationProps {
@@ -20,6 +22,7 @@ function formatRenewalDate(date: Date | null) {
 export function ChooseStakingDuration({ estimatedUnlockDate }: ChooseStakingDurationProps) {
   const { control } = useFormContext();
   const { errors } = useFormState({ control, name: 'cycles' });
+  const [exitIconPlayCount, setExitIconPlayCount] = useState(0);
   const { chooseDuration } = bitcoinStakingContent;
   const renewalDate = formatRenewalDate(estimatedUnlockDate);
   const hasError = Boolean(errors.cycles);
@@ -50,6 +53,7 @@ export function ChooseStakingDuration({ estimatedUnlockDate }: ChooseStakingDura
                   maxLength={2}
                   value={value ?? ''}
                   onChange={input => onChange(input.target.value.replace(/\D/g, ''))}
+                  onFocus={() => setExitIconPlayCount(count => count + 1)}
                   onBlur={onBlur}
                   ref={ref}
                 />
@@ -87,7 +91,7 @@ export function ChooseStakingDuration({ estimatedUnlockDate }: ChooseStakingDura
         alignItems="flex-start"
       >
         <Box flexShrink={0}>
-          <BoxedCatUnlockedIcon />
+          <ExitAnyTimeIcon playCount={exitIconPlayCount} />
         </Box>
         <Stack gap="0">
           <styled.span textStyle="caption.01" fontWeight={500}>
