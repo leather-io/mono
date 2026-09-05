@@ -61,7 +61,9 @@ describe(recurseAccountsForActivity.name, () => {
     const found: number[] = [];
     const result = await recurseAccountsForActivity({
       doesAddressHaveActivityFn: mockHasActivityFn,
-      onActivityFound: index => found.push(index),
+      onActivityFound: index => {
+        found.push(index);
+      },
     });
     expect(result).toBe(79);
     expect(found.length).toBeGreaterThan(1);
@@ -76,7 +78,9 @@ describe(recurseAccountsForActivity.name, () => {
     await recurseAccountsForActivity({
       doesAddressHaveActivityFn: mockHasActivityFn,
       fromAccountIndex: 7,
-      onActivityFound: index => found.push(index),
+      onActivityFound: index => {
+        found.push(index);
+      },
     });
     expect(found).toStrictEqual([]);
   });

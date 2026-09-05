@@ -154,7 +154,9 @@ export function SwitchAccountSheet({
 
   function onViewSecretKey(fingerprint: string) {
     onClose();
-    void navigate(RouteUrls.ViewSecretKey, { state: { fingerprint } });
+    void navigate(RouteUrls.ViewSecretKey, {
+      state: { fingerprint, startWalletAuthentication: true },
+    });
   }
 
   if (!isShowing) return null;

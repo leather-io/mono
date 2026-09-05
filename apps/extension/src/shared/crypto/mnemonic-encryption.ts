@@ -12,6 +12,25 @@ interface EncryptMnemonicArgs {
   existingEncryptionKey?: string;
   existingSalt?: string;
 }
+
+interface EncryptMnemonicWithEncryptionKeyArgs {
+  secretKey: string;
+  encryptionKey: string;
+}
+
+function isWalletEncryptionKey(value: unknown): value is string {
+  return typeof value === 'string' && /^[0-9a-f]{96}$/.test(value);
+}
+
+export async function encryptMnemonicWithEncryptionKey({
+  secretKey,
+  encryptionKey,
+}: EncryptMnemonicWithEncryptionKeyArgs) {
+  if (!isWalletEncryptionKey(encryptionKey)) throw new Error('Invalid wallet encryption key');
+  const encryptedBuffer = await encrypt(secretKey, encryptionKey);
+  return { encryptedSecretKey: bytesToHex(encryptedBuffer) };
+}
+
 export async function encryptMnemonic({
   secretKey,
   password,
@@ -22,10 +41,10 @@ export async function encryptMnemonic({
   const encryptionKey = existingEncryptionKey
     ? existingEncryptionKey
     : await deriveEncryptionKey({ password, salt });
-  const encryptedBuffer = await encrypt(secretKey, encryptionKey);
+  const encrypted = await encryptMnemonicWithEncryptionKey({ secretKey, encryptionKey });
   return {
     salt,
-    encryptedSecretKey: bytesToHex(encryptedBuffer),
+    encryptedSecretKey: encrypted.encryptedSecretKey,
     encryptionKey,
   };
 }

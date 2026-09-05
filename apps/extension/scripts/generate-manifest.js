@@ -9,6 +9,10 @@ const IS_DEV = WALLET_ENVIRONMENT === 'development';
 const PREVIEW_RELEASE = process.env.PREVIEW_RELEASE;
 
 const TARGET_BROWSER = process.env.TARGET_BROWSER ?? 'chromium';
+const BIOMETRIC_UNLOCK_U0 = process.env.BIOMETRIC_UNLOCK_U0 === 'true';
+
+const biometricUnlockU0Key =
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwefS4alWEpkSHxvpWyNGUbax7+P/PYK1ylBqy4tT4Ae6+gKWS8KGfw0SSDccCmRwue8q5AevTxduH4cH3r2fkE/RXQaGAkoElJ4AjwsmeBihYynCSPSPbUrlpmxlxFXd5ll4J0u0PHXb/N9L2eFAs7LrxCESwu94nb+eTIWX7P0DJxezB7WU5BIxALjp3V9QnRKyRtofWRnBSGnW7ZQWKYLlFyMn8VhVa468kNRMMxxQ0qZzjYB6Gco08883BWFCumSF4no8ODOz4reCzfekAbEhODZvqfjzrrTOv7mbEtXmBtEiW9cLdsqc460GWPhtthbN3ckaiZ/hkLhVr9N6lQIDAQAB';
 
 function generateImageAssetUrlsWithSuffix(suffix = '') {
   return {
@@ -117,6 +121,13 @@ const prodManifest = {
   },
 };
 
+const biometricUnlockU0Manifest = BIOMETRIC_UNLOCK_U0
+  ? {
+      key: biometricUnlockU0Key,
+      name: 'Leather Biometric Unlock U0',
+    }
+  : {};
+
 export default function generateManifest(packageVersion) {
   if (!packageVersion)
     throw new Error('Version number must be passed to `generateManifest` function');
@@ -133,5 +144,6 @@ export default function generateManifest(packageVersion) {
     releaseEnvironmentConfig,
     browserConfig,
     environmentIcons[WALLET_ENVIRONMENT],
+    biometricUnlockU0Manifest,
   ]);
 }
