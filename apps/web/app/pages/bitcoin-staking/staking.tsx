@@ -6,6 +6,7 @@ import { learnArticles } from '~/content/learn-content';
 import { liquidStackingProvidersList } from '~/data/data';
 import { Page } from '~/layouts/page/page';
 
+import { BondPoolTable } from './components/bond-pool-table';
 import { DualStackingTransition } from './components/dual-stacking-transition';
 import { LiquidStackingProviderTable } from './components/liquid-stacking-provider-table';
 import { StakingExplainer } from './components/staking-explainer';
@@ -35,7 +36,7 @@ export function Staking() {
       </WhenClient>
 
       <SectionHeading
-        title="Staking pools"
+        title="Stacks staking pools"
         sentence={bitcoinStakingContent.providerDescription}
         mt="space.09"
       />
@@ -50,6 +51,14 @@ export function Staking() {
         mt="space.09"
       />
       <LiquidStackingProviderTable mt="space.05" providers={liquidProviders} />
+
+      <SectionHeading
+        title={bitcoinStakingContent.bondPools.title}
+        sentence={bitcoinStakingContent.bondPools.sentence}
+        learnMoreSlug={bitcoinStakingContent.bondPools.learnMoreUrl}
+        mt="space.09"
+      />
+      <BondPoolTable mt="space.05" />
 
       <DualStackingTransition mt="space.09" />
 

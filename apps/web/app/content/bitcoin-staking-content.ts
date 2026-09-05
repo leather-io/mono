@@ -72,6 +72,33 @@ export const bitcoinStakingContent = {
       checkFailed: `We couldn't check this contract right now. Try again.`,
     },
   },
+  bondPools: {
+    title: `Bitcoin staking pools`,
+    sentence: `Operators pool participants into a Bitcoin bond. These lock BTC paired with STX, unlike the STX-only pools above.`,
+    learnMoreUrl: `https://www.stacks.co/bitcoin-staking`,
+    providerInfo: `The operator running the pool. Leather does not operate these pools and cannot stake into them for you, so joining one hands you off to the operator's own app and contract.`,
+    providerInfoUrl: `https://www.stacks.co/bitcoin-staking`,
+    rewardsInfo: `Bond rewards accrue as sBTC. Who receives them, and whether native BTC or a liquid token reaches you instead, is decided by the operator's contract rather than by pox-5.`,
+    rewardsInfoUrl: `https://docs.stacks.co/pox-5/glossary`,
+    capacityInfo: `The share of a bond's community allocation this operator holds. Roughly 10% of each bond's paired capacity is reserved for pools, and the figure is confirmed when the bond is created on-chain.`,
+    capacityInfoUrl: `https://docs.stacks.co/pox-5/glossary`,
+    feeInfo: `The cut the operator keeps from your rewards. Each operator sets its own fee in its pool contract, so check the terms before joining.`,
+    // Neither operator has a bond product page yet, and stacks.co routes retail
+    // to a waitlist rather than a live pool. Matching that keeps this page from
+    // being the only surface implying a bond pool can be joined today.
+    waitlist: {
+      label: `Join waitlist`,
+      url: `https://www.stacks.co/bitcoin-staking`,
+      info: `Pooled access opens when a bond does, and each operator announces its own allocation. Registering on the official Bitcoin staking page is the way to be told when this pool is live.`,
+    },
+    // Cold inbound for large holders. The pools above are capacity-bound, so
+    // anyone past that size needs the Endowment's whitelist, which this page's
+    // form feeds by way of the institutional onboarding team.
+    directBond: {
+      label: `Staking a larger amount? Request institutional access`,
+      url: `https://www.stacks.co/institutional-bitcoin-staking`,
+    },
+  },
   dualStackingTransition: {
     title: `Dual Stacking is winding down`,
     description: `It transitions to Bitcoin Staking on August 24, 2026 and keeps paying out until then. Stake your STX with a pool above to keep earning after that date.`,
@@ -220,6 +247,8 @@ export const bitcoinStakingLabels = {
   rewardsPayout: `Rewards payout`,
   totalStaked: `Total staked`,
   tvl: `TVL`,
+  capacity: `Capacity`,
+  access: `Access`,
   historicalYield: `Historical yield`,
   fee: `Fee`,
   selfClaimOnly: `Self-claim only`,
