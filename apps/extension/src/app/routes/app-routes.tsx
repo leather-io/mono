@@ -27,6 +27,7 @@ import { TokenDetails } from '@app/features/token/token-details';
 import { AddWallet } from '@app/pages/add-wallet/add-wallet';
 import { AllBalancesPage } from '@app/pages/all-balances/all-balances';
 import { AllBalancesDetail } from '@app/pages/all-balances/all-balances-detail';
+import { BondDetailPage } from '@app/pages/bond-detail/bond-detail';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { ManageTokensPage } from '@app/pages/manage-tokens/manage-tokens';
@@ -37,6 +38,7 @@ import { NotFoundPage } from '@app/pages/not-found/not-found';
 import { BackUpSecretKeyPage } from '@app/pages/onboarding/back-up-secret-key/back-up-secret-key';
 import { SignIn } from '@app/pages/onboarding/sign-in/sign-in';
 import { WelcomePage } from '@app/pages/onboarding/welcome/welcome';
+import { BondsPlaygroundPage } from '@app/pages/playground/bonds-playground';
 import { RequestError } from '@app/pages/request-error/request-error';
 import { SellPage } from '@app/pages/sell/sell';
 import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error';
@@ -310,10 +312,26 @@ function useAppRoutes() {
             }
           />
           <Route
+            path={RouteUrls.BondDetail}
+            element={
+              <AccountGate>
+                <BondDetailPage />
+              </AccountGate>
+            }
+          />
+          <Route
             path={RouteUrls.AllBalancesDetail}
             element={
               <AccountGate>
                 <AllBalancesDetail />
+              </AccountGate>
+            }
+          />
+          <Route
+            path={RouteUrls.BondsPlayground}
+            element={
+              <AccountGate>
+                <BondsPlaygroundPage />
               </AccountGate>
             }
           />

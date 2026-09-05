@@ -1,0 +1,15 @@
+export enum BondsSelectors {
+  LockedBalanceCard = 'locked-balance-card',
+  BondCallout = 'bond-callout',
+  BondCalloutPrimaryAction = 'bond-callout-primary-action',
+  BondCalloutDismiss = 'bond-callout-dismiss',
+  BondDetailPage = 'bond-detail-page',
+  BondDetailTotal = 'bond-detail-total',
+  BondPeriodCard = 'bond-period-card',
+  BondRenewalCard = 'bond-renewal-card',
+  BondNextPeriodCard = 'bond-next-period-card',
+  BondManageLink = 'bond-manage-link',
+  BalanceRowBtcInBond = 'balance-row-btc-in-bond',
+  BalanceRowStxInBond = 'balance-row-stx-in-bond',
+  BondsPlaygroundPage = 'bonds-playground-page',
+}

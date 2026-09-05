@@ -8,11 +8,11 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { TokenDetailsBalanceItem } from './components/token-details-balance-item';
 import { TokenDetailsLayout } from './token-details.layout';
 
-interface BalanceEntry {
+export interface BitcoinBalanceEntry {
   title: string;
   address?: string;
   btcBalance: Money;
-  fiatBalance: Money;
+  fiatBalance?: Money;
   onPressAddress?(): void;
   onPressRow?(): void;
 }
@@ -25,7 +25,7 @@ interface BitcoinTokenDetailsLayoutProps {
   changePercent: number;
   priceChangeDelta?: string;
   descriptionText: string;
-  balances: BalanceEntry[];
+  balances: BitcoinBalanceEntry[];
   activity: BlockchainActivityItem[];
 }
 
@@ -63,7 +63,7 @@ export function BitcoinTokenDetailsLayout({
               title={balance.title}
               address={balance.address}
               rightTop={formatCurrency(balance.btcBalance, { preset: 'pad-decimals' })}
-              rightBottom={formatCurrency(balance.fiatBalance)}
+              rightBottom={balance.fiatBalance ? formatCurrency(balance.fiatBalance) : undefined}
               onPressAddress={balance.onPressAddress}
               onPressRow={balance.onPressRow}
             />
