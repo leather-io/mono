@@ -22,14 +22,17 @@ const lockedBalanceTooltip =
   'Amount you’ve committed to stacking. You won’t be able to move or spend it until the stacking period ends.';
 
 export function AccountCard() {
-  const { totalBalance, availableBalance, stxAccountBalance, isPrivateMode, togglePrivateMode } =
+  const { totalBalance, availableBalance, lockedBalance, isPrivateMode, togglePrivateMode } =
     useHomePageState();
   const scaleTextRef = useScaleText();
   const isAtLeastMd = useViewportMinWidth('md');
 
   const tooltipVariant = isAtLeastMd ? 'md' : 'sm';
-  const isLoadingBalance = totalBalance.state === 'loading' || availableBalance.state === 'loading';
-  const lockedBalanceMoney = stxAccountBalance.value?.quote.lockedBalance;
+  const isLoadingBalance =
+    totalBalance.state === 'loading' ||
+    availableBalance.state === 'loading' ||
+    lockedBalance.state === 'loading';
+  const lockedBalanceMoney = lockedBalance.value;
   const totalBalanceMoney = totalBalance.value;
   const totalBalanceFormatted =
     totalBalance.state !== 'success' ? emptyAmountPlaceholder : formatCurrency(totalBalance.value);

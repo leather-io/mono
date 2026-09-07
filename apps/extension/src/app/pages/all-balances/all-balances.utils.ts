@@ -26,6 +26,8 @@ export const tooltipTextMap = {
     'Funds already on their way to someone else, locked in transactions that haven’t been confirmed on the Bitcoin network yet.',
   btcUneconomical:
     'Tiny amounts that cost more to send than they’re worth, so they can’t be spent.',
+  btcBonded:
+    'BTC locked in a Bitcoin Staking bond. It stays in its timelock until the bond unlocks or an early exit completes.',
   stacksProtocol:
     'The total value of all your Stacks-based assets, including STX, SIP-10 tokens, and sBTC.',
   stxAvailable:
@@ -42,9 +44,9 @@ export const tooltipTextMap = {
 interface BtcBalanceCategoryConfig {
   balanceKey: keyof Pick<
     BtcBalance,
-    'availableBalance' | 'inboundBalance' | 'outboundBalance' | 'dustBalance'
+    'availableBalance' | 'lockedBalance' | 'inboundBalance' | 'outboundBalance' | 'dustBalance'
   >;
-  utxoKey: keyof Pick<UtxoTotals, 'available' | 'inbound' | 'outbound' | 'dust'>;
+  utxoKey: keyof Pick<UtxoTotals, 'available' | 'locked' | 'inbound' | 'outbound' | 'dust'>;
   title: string;
   tooltipText: string;
   dataTestId: AllBalancesSelectors;
@@ -57,6 +59,13 @@ export const btcBalanceCategoryMap = {
     title: 'Available to transfer',
     tooltipText: tooltipTextMap.btcAvailable,
     dataTestId: AllBalancesSelectors.BalanceRowAvailable,
+  },
+  bonded: {
+    balanceKey: 'lockedBalance',
+    utxoKey: 'locked',
+    title: 'In a bond',
+    tooltipText: tooltipTextMap.btcBonded,
+    dataTestId: AllBalancesSelectors.BalanceRowBonded,
   },
   pending: {
     balanceKey: 'inboundBalance',

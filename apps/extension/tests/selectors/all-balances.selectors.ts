@@ -6,6 +6,7 @@ export enum AllBalancesSelectors {
   BitcoinProtocolSection = 'bitcoin-protocol-section',
   StacksProtocolSection = 'stacks-protocol-section',
   BalanceRowAvailable = 'balance-row-available',
+  BalanceRowBonded = 'balance-row-bonded',
   BalanceRowPending = 'balance-row-pending',
   BalanceRowSending = 'balance-row-sending',
   BalanceRowUneconomical = 'balance-row-uneconomical',

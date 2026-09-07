@@ -50,6 +50,10 @@ test.describe('All balances', () => {
     await expect(availableRow).toContainText('$450.00');
     await expect(availableRow).toContainText('0.01');
 
+    const bondedRow = page.getByTestId(AllBalancesSelectors.BalanceRowBonded);
+    await expect(bondedRow).toContainText('In a bond');
+    await expect(bondedRow).toContainText('$0.00');
+
     await expect(page.getByTestId(AllBalancesSelectors.BalanceRowPending)).toContainText('$0.00');
     await expect(page.getByTestId(AllBalancesSelectors.BalanceRowSending)).toContainText('$0.00');
     await expect(page.getByTestId(AllBalancesSelectors.BalanceRowUneconomical)).toContainText(
