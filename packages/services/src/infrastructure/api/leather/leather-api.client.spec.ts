@@ -130,6 +130,25 @@ describe(LeatherApiClient.name, () => {
       expect(bonds).toEqual([bond]);
     });
 
+    test('asks for spent bonds only when requested', async () => {
+      const requests: Request[] = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn((request: Request) => {
+          requests.push(request);
+          return Promise.resolve(jsonResponse({ bonds: [] }));
+        })
+      );
+
+      await createClient(defaultNetworksKeyedById.mainnet).fetchStakingBonds('bc1qpayer', {
+        includeSpent: true,
+      });
+
+      expect(requests.map(request => request.url)).toEqual([
+        `${LEATHER_API_URL_PRODUCTION}/v1/staking/addresses/bc1qpayer/bonds?chain=mainnet&include=spent`,
+      ]);
+    });
+
     test('returns no bonds without a request on networks the staking index does not cover', async () => {
       const fetchMock = vi.fn();
       vi.stubGlobal('fetch', fetchMock);

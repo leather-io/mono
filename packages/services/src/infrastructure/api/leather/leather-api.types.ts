@@ -3444,7 +3444,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description List the pox-5 bond registrations whose staker unlock script belongs to a Bitcoin address (P2WPKH single-sig or P2WSH multisig vault), each with its timelocked lock outputs, spent status, and the witness script needed to spend them. Unspent outputs only unless include=spent. A bond with exitAnnouncedAtBurnHeight set has announced its early exit on Stacks and its outputs are awaiting release. `chain` is the physical Stacks chain the bonds live on. */
+    /** @description List staking bonds for a Bitcoin address */
     get: {
       parameters: {
         query: {
@@ -3468,22 +3468,21 @@ export interface paths {
             'application/json': {
               bonds: {
                 bondIndex: number;
-                /** @description Staker principal; the early-exit preimage is derived from it */
                 stxAddress: string;
                 enrollmentTxId: string;
                 registeredAtBurnHeight: number;
-                /** @description Burn height of the staker's announce-l1-early-exit call, null if never announced. Announced + unspent + before unlockBurnHeight = release pending; the bond stopped earning at the announce */
+                /** @description Burn height of announce-l1-early-exit; null if never announced */
                 exitAnnouncedAtBurnHeight: number | null;
                 outputs: {
                   txid: string;
                   vout: number;
                   amountSats: string;
-                  /** @description CLTV height of the lock script; the nLockTime a maturity claim must use */
+                  /** @description CLTV height of the lock script */
                   unlockBurnHeight: number;
-                  /** @description Full P2WSH witness script of the lock output */
+                  /** @description P2WSH witness script */
                   lockScriptHex: string;
                   spent: boolean;
-                  /** @description ISO time the outpoint was last checked against the Bitcoin chain; null = never */
+                  /** @description Last spent-status check; null = never */
                   lastCheckedAt: string | null;
                 }[];
               }[];

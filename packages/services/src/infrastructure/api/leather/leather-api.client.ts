@@ -63,6 +63,10 @@ interface ProposeMultisigTransactionOptions extends ApiRequestOptions {
   baseUrl?: string;
 }
 
+interface FetchStakingBondsOptions extends ApiRequestOptions {
+  includeSpent?: boolean;
+}
+
 function createLeatherOpenApiClient(baseUrl: string, clientId: string) {
   const client = createClient<paths>({ baseUrl });
   client.use({
@@ -157,16 +161,17 @@ export class LeatherApiClient {
 
   async fetchStakingBonds(
     address: string,
-    { signal, skipCache }: ApiRequestOptions = {}
+    { includeSpent = false, signal, skipCache }: FetchStakingBondsOptions = {}
   ): Promise<LeatherApiStakingBond[]> {
     const chain = selectStakingChainId(this.settingsService.getSettings());
     if (!chain) return [];
+    const include = includeSpent ? 'spent' : undefined;
     const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () =>
           this.client.GET('/v1/staking/addresses/{address}/bonds', {
-            params: { path: { address }, query: { chain } },
+            params: { path: { address }, query: { chain, include } },
             signal,
           }),
         {
@@ -179,7 +184,7 @@ export class LeatherApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(
-          ['leather-api-staking-bonds', chain, address],
+          ['leather-api-staking-bonds', chain, address, includeSpent],
           fetchFn
         );
   }
