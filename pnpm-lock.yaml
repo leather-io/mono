@@ -175,9 +175,6 @@ importers:
       '@bitflowlabs/core-sdk':
         specifier: 2.4.0
         version: 2.4.0(encoding@0.1.13)
-      '@hirosystems/token-metadata-api-client':
-        specifier: 1.2.0
-        version: 1.2.0(encoding@0.1.13)
       '@hookform/resolvers':
         specifier: 5.2.1
         version: 5.2.1(react-hook-form@7.62.0(react@19.1.0))
