@@ -3437,6 +3437,91 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/staking/addresses/{address}/bonds': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description List the pox-5 bond registrations whose staker unlock script belongs to a Bitcoin address (P2WPKH single-sig or P2WSH multisig vault), each with its timelocked lock outputs, spent status, and the witness script needed to spend them. Unspent outputs only unless include=spent. A bond with exitAnnouncedAtBurnHeight set has announced its early exit on Stacks and its outputs are awaiting release. `chain` is the physical Stacks chain the bonds live on. */
+    get: {
+      parameters: {
+        query: {
+          chain: 'mainnet' | 'testnet-primary' | 'private-1';
+          include?: 'spent';
+        };
+        header?: never;
+        path: {
+          address: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              bonds: {
+                bondIndex: number;
+                /** @description Staker principal; the early-exit preimage is derived from it */
+                stxAddress: string;
+                enrollmentTxId: string;
+                registeredAtBurnHeight: number;
+                /** @description Burn height of the staker's announce-l1-early-exit call, null if never announced. Announced + unspent + before unlockBurnHeight = release pending; the bond stopped earning at the announce */
+                exitAnnouncedAtBurnHeight: number | null;
+                outputs: {
+                  txid: string;
+                  vout: number;
+                  amountSats: string;
+                  /** @description CLTV height of the lock script; the nLockTime a maturity claim must use */
+                  unlockBurnHeight: number;
+                  /** @description Full P2WSH witness script of the lock output */
+                  lockScriptHex: string;
+                  spent: boolean;
+                  /** @description ISO time the outpoint was last checked against the Bitcoin chain; null = never */
+                  lastCheckedAt: string | null;
+                }[];
+              }[];
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/tokens/native': {
     parameters: {
       query?: never;
@@ -5340,7 +5425,7 @@ export interface paths {
       parameters: {
         query?: {
           status?: 'pending' | 'active' | 'cancelled';
-          membershipStatus?: 'invited' | 'joined' | 'declined';
+          membershipStatus?: 'invited' | 'joined';
         };
         header?: never;
         path?: never;
