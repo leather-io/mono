@@ -28,6 +28,7 @@ export const querySettingsDepsRegistry = {
   'sip10-balances-service--get-sip10-account-balance': ['currency', 'network', 'assetVisibility'],
   'account-balances-service--get-total-balance': ['currency', 'network', 'assetVisibility'],
   'account-balances-service--get-available-balance': ['currency', 'network', 'assetVisibility'],
+  'account-balances-service--get-locked-balance': ['currency', 'network'],
   'account-balances-service--get-unlocked-balance': ['currency', 'network', 'assetVisibility'],
   // utxos
   'utxos-service--get-account-utxos': ['network'],

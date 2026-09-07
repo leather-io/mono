@@ -47,6 +47,24 @@ export function createAccountAvailableBalanceQueryConfig(
   } satisfies UseQueryOptions<Money, Error>;
 }
 
+export function createAccountLockedBalanceQueryKey(
+  request: AccountRequest,
+  settings: UserSettings
+) {
+  return createServiceQueryKey('account-balances-service--get-locked-balance', [request], settings);
+}
+export function createAccountLockedBalanceQueryConfig(
+  request: AccountRequest,
+  settings: UserSettings
+) {
+  return {
+    queryKey: createAccountLockedBalanceQueryKey(request, settings),
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getAccountBalancesService().getLockedBalance(request, signal),
+    ...balanceQueryOptions,
+  } satisfies UseQueryOptions<Money, Error>;
+}
+
 export function createAccountUnlockedBalanceQueryKey(
   request: AccountRequest,
   settings: UserSettings
