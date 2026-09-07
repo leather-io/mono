@@ -27,6 +27,7 @@ import {
   isBtcBalanceCategory,
   sumUtxoSats,
 } from './all-balances.utils';
+import { BondPositionsDetail } from './bond-positions-detail';
 import { AddressBalanceGroup } from './components/address-balance-group';
 import { BalanceAmount } from './components/balance-amount';
 
@@ -34,10 +35,9 @@ const shortenedTxidLength = 8;
 
 export function AllBalancesDetail() {
   const { category } = useParams();
+  if (!isBtcBalanceCategory(category)) return <Navigate to={RouteUrls.AllBalances} replace />;
 
-  if (!isBtcBalanceCategory(category) || category === 'bonded') {
-    return <Navigate to={RouteUrls.AllBalances} replace />;
-  }
+  if (category === 'bonded') return <BondPositionsDetail />;
 
   return <AllBalancesDetailContent category={category} />;
 }

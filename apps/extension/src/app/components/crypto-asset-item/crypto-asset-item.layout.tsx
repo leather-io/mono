@@ -20,6 +20,7 @@ export interface CryptoAssetItemLayoutProps {
   availableBalance: Money;
   balanceSuffix?: string;
   captionLeft: string;
+  captionRightBadge?: React.ReactNode;
   captionRightBulletInfo?: React.ReactNode;
   contractId?: string;
   fiatBalance?: string;
@@ -36,6 +37,7 @@ export function CryptoAssetItemLayout({
   availableBalance,
   balanceSuffix,
   captionLeft,
+  captionRightBadge,
   captionRightBulletInfo,
   contractId,
   fiatBalance,
@@ -89,6 +91,7 @@ export function CryptoAssetItemLayout({
             </styled.span>
             {captionRightBulletInfo}
           </BulletSeparator>
+          {captionRightBadge}
         </Flex>
       </BasicTooltip>
     </SkeletonLoader>
