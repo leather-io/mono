@@ -1,8 +1,9 @@
 import { CoreAssetSelectors } from '@tests/selectors/mocked-tokens.selectors';
+import { styled } from 'leather-styles/jsx';
 
 import { btcAsset } from '@leather.io/constants';
 import type { AccountQuotedBtcBalance } from '@leather.io/services';
-import { BitcoinFilledCircleIcon, BtcAvatarIcon } from '@leather.io/ui';
+import { BitcoinFilledCircleIcon, BtcAvatarIcon, Caption } from '@leather.io/ui';
 import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -31,6 +32,15 @@ export function BtcCryptoAssetItem({
   const isPrivate = useIsPrivateMode();
   const { onBuy, showBuyButton } = useCryptoAssetBuy(btcAsset);
 
+  const { lockedBalance, totalBalance } = balance.btc;
+  const showLockedBalance = lockedBalance.amount.isGreaterThan(0) && !isPrivate;
+  const titleRightBulletInfo = (
+    <styled.span>{formatCurrency(balance.quote.lockedBalance)} locked</styled.span>
+  );
+  const captionRightBulletInfo = (
+    <Caption>{formatCurrency(lockedBalance, { showCurrency: false })} locked</Caption>
+  );
+
   const icon = <BtcAvatarIcon size="xl" indicator={<BitcoinFilledCircleIcon variant="small" />} />;
   const dataTestId = CoreAssetSelectors.BtcAsset;
   const titleLeft = 'Bitcoin';
@@ -53,8 +63,9 @@ export function BtcCryptoAssetItem({
 
   return (
     <CryptoAssetItemLayout
-      availableBalance={balance.btc.totalBalance}
+      availableBalance={totalBalance}
       captionLeft={captionLeft}
+      captionRightBulletInfo={showLockedBalance && captionRightBulletInfo}
       fiatBalance={formatCurrency(balance.quote.totalBalance)}
       icon={icon}
       isLoading={isLoading}
@@ -62,6 +73,7 @@ export function BtcCryptoAssetItem({
       isPrivate={isPrivate}
       onSelectAsset={onSelectAsset}
       titleLeft={titleLeft}
+      titleRightBulletInfo={showLockedBalance && titleRightBulletInfo}
       dataTestId={dataTestId}
     />
   );

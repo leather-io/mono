@@ -35,13 +35,15 @@ const shortenedTxidLength = 8;
 export function AllBalancesDetail() {
   const { category } = useParams();
 
-  if (!isBtcBalanceCategory(category)) return <Navigate to={RouteUrls.AllBalances} replace />;
+  if (!isBtcBalanceCategory(category) || category === 'bonded') {
+    return <Navigate to={RouteUrls.AllBalances} replace />;
+  }
 
   return <AllBalancesDetailContent category={category} />;
 }
 
 interface AllBalancesDetailContentProps {
-  category: BtcBalanceCategory;
+  category: Exclude<BtcBalanceCategory, 'bonded'>;
 }
 
 function AllBalancesDetailContent({ category }: AllBalancesDetailContentProps) {
