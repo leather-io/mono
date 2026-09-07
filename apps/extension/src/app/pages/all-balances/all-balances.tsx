@@ -37,7 +37,6 @@ export function AllBalancesPage() {
   const navigate = useNavigate();
   const accountId = useCurrentAccountId();
   const isMd = useViewportMinWidth('md');
-
   const btcBalance = useBtcAccountBalance(accountId);
   const stxBalance = useStxAccountBalance(accountId);
   const sip10Balance = useSip10AccountBalance(accountId);

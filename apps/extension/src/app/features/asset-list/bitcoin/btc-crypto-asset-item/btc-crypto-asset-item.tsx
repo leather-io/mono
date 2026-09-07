@@ -1,12 +1,12 @@
 import { CoreAssetSelectors } from '@tests/selectors/mocked-tokens.selectors';
-import { styled } from 'leather-styles/jsx';
 
 import { btcAsset } from '@leather.io/constants';
 import type { AccountQuotedBtcBalance } from '@leather.io/services';
-import { BitcoinFilledCircleIcon, BtcAvatarIcon, Caption } from '@leather.io/ui';
+import { BitcoinFilledCircleIcon, BtcAvatarIcon } from '@leather.io/ui';
 import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import { LockedBalanceBadge } from '@app/components/balance/locked-balance-badge';
 import { CryptoAssetItemLayout } from '@app/components/crypto-asset-item/crypto-asset-item.layout';
 import { DepositItem } from '@app/components/deposit-item/deposit-item';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
@@ -34,12 +34,6 @@ export function BtcCryptoAssetItem({
 
   const { lockedBalance, totalBalance } = balance.btc;
   const showLockedBalance = lockedBalance.amount.isGreaterThan(0) && !isPrivate;
-  const titleRightBulletInfo = (
-    <styled.span>{formatCurrency(balance.quote.lockedBalance)} locked</styled.span>
-  );
-  const captionRightBulletInfo = (
-    <Caption>{formatCurrency(lockedBalance, { showCurrency: false })} locked</Caption>
-  );
 
   const icon = <BtcAvatarIcon size="xl" indicator={<BitcoinFilledCircleIcon variant="small" />} />;
   const dataTestId = CoreAssetSelectors.BtcAsset;
@@ -65,7 +59,7 @@ export function BtcCryptoAssetItem({
     <CryptoAssetItemLayout
       availableBalance={totalBalance}
       captionLeft={captionLeft}
-      captionRightBulletInfo={showLockedBalance && captionRightBulletInfo}
+      captionRightBadge={showLockedBalance && <LockedBalanceBadge balance={lockedBalance} />}
       fiatBalance={formatCurrency(balance.quote.totalBalance)}
       icon={icon}
       isLoading={isLoading}
@@ -73,7 +67,6 @@ export function BtcCryptoAssetItem({
       isPrivate={isPrivate}
       onSelectAsset={onSelectAsset}
       titleLeft={titleLeft}
-      titleRightBulletInfo={showLockedBalance && titleRightBulletInfo}
       dataTestId={dataTestId}
     />
   );
