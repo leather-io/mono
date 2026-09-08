@@ -2,13 +2,7 @@ import DOMPurify from 'dompurify';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
-import {
-  BulletSeparator,
-  ItemLayout,
-  Pressable,
-  SkeletonLoader,
-  shimmerStyles,
-} from '@leather.io/ui';
+import { ItemLayout, Pressable, SkeletonLoader, shimmerStyles } from '@leather.io/ui';
 
 import { useSpamFilterWithWhitelist } from '@app/common/spam-filter/use-spam-filter';
 import { PrivateTextLayout } from '@app/components/privacy/private-text.layout';
@@ -21,7 +15,6 @@ export interface CryptoAssetItemLayoutProps {
   balanceSuffix?: string;
   captionLeft: string;
   captionRightBadge?: React.ReactNode;
-  captionRightBulletInfo?: React.ReactNode;
   contractId?: string;
   fiatBalance?: string;
   icon: React.ReactNode;
@@ -30,7 +23,6 @@ export interface CryptoAssetItemLayoutProps {
   isPrivate?: boolean;
   onSelectAsset?(symbol: string, contractId?: string): void;
   titleLeft: string;
-  titleRightBulletInfo?: React.ReactNode;
   dataTestId: string;
 }
 export function CryptoAssetItemLayout({
@@ -38,7 +30,6 @@ export function CryptoAssetItemLayout({
   balanceSuffix,
   captionLeft,
   captionRightBadge,
-  captionRightBulletInfo,
   contractId,
   fiatBalance,
   icon,
@@ -47,7 +38,6 @@ export function CryptoAssetItemLayout({
   isPrivate = false,
   onSelectAsset,
   titleLeft,
-  titleRightBulletInfo,
   dataTestId,
 }: CryptoAssetItemLayoutProps) {
   const { availableBalanceString, formattedBalance } = parseCryptoAssetBalance(availableBalance);
@@ -57,16 +47,13 @@ export function CryptoAssetItemLayout({
   const titleRight = (
     <SkeletonLoader width="126px" isLoading={isLoading}>
       <Flex alignItems="center" gap="space.02" textStyle="label.01">
-        <BulletSeparator>
-          <PrivateTextLayout
-            isPrivate={isPrivate}
-            data-state={isLoadingAdditionalData ? 'loading' : undefined}
-            className={shimmerStyles}
-          >
-            {fiatBalance}
-          </PrivateTextLayout>
-          {titleRightBulletInfo}
-        </BulletSeparator>
+        <PrivateTextLayout
+          isPrivate={isPrivate}
+          data-state={isLoadingAdditionalData ? 'loading' : undefined}
+          className={shimmerStyles}
+        >
+          {fiatBalance}
+        </PrivateTextLayout>
       </Flex>
     </SkeletonLoader>
   );
@@ -78,19 +65,16 @@ export function CryptoAssetItemLayout({
         label={formattedBalance.isCompact && !isPrivate ? availableBalanceString : undefined}
         side="left"
       >
-        <Flex alignItems="center" color="ink.text-primary" gap="space.02">
-          <BulletSeparator>
-            <styled.span
-              textStyle="label.03"
-              data-state={isLoadingAdditionalData ? 'loading' : undefined}
-              className={shimmerStyles}
-            >
-              <PrivateTextLayout isPrivate={isPrivate}>
-                {formattedBalance.value} {balanceSuffix}
-              </PrivateTextLayout>
-            </styled.span>
-            {captionRightBulletInfo}
-          </BulletSeparator>
+        <Flex alignItems="center" color="ink.text-primary" gap="space.01">
+          <styled.span
+            textStyle="label.03"
+            data-state={isLoadingAdditionalData ? 'loading' : undefined}
+            className={shimmerStyles}
+          >
+            <PrivateTextLayout isPrivate={isPrivate}>
+              {formattedBalance.value} {balanceSuffix}
+            </PrivateTextLayout>
+          </styled.span>
           {captionRightBadge}
         </Flex>
       </BasicTooltip>

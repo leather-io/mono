@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { BtcAvatarIcon, ExternalLinkIcon, Flag, InfoCircleIcon } from '@leather.io/ui';
+import { BtcAvatarIcon, ExternalLinkIcon, Flag } from '@leather.io/ui';
 
 import { BITCOIN_STAKING_URL } from '@shared/constants';
 import { RouteUrls } from '@shared/route-urls';
@@ -15,13 +15,14 @@ import { Divider } from '@app/components/layout/divider';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
+import { isUpcomingPosition, sortByUnlock } from '@app/features/bonds/bond-position.utils';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import {
   useBtcBondEnrollmentWindow,
   useCurrentBtcStakingPositions,
 } from '@app/query/bitcoin/staking/bitcoin-staking.hooks';
 import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
+import { InfoTooltip } from '@app/ui/components/tooltip/info-tooltip';
 
 import { btcBalanceCategoryMap, formatBalance } from './all-balances.utils';
 import {
@@ -33,6 +34,7 @@ import {
 import { BalanceAmount } from './components/balance-amount';
 import { BondPositionSection } from './components/bond-position-section';
 import { PastPeriodsRow } from './components/past-periods-row';
+import { RenewalRow } from './components/renewal-row';
 import { UpcomingBondSection } from './components/upcoming-bond-section';
 
 export function BondPositionsDetail() {
@@ -46,7 +48,8 @@ export function BondPositionsDetail() {
 
   const isLoading = balance.isLoading || positions.state === 'loading';
   const positionList = positions.state === 'success' ? positions.value : [];
-  const currentPositions = positionList.filter(position => !isPastPosition(position));
+  const currentPositions = sortByUnlock(positionList.filter(position => !isPastPosition(position)));
+  const hasRunningPosition = currentPositions.some(position => !isUpcomingPosition(position));
   const pastSummary = summarizePastPositions(positionList);
   const enrollmentWindowValue =
     enrollmentWindow.state === 'success' ? enrollmentWindow.value : null;
@@ -90,31 +93,27 @@ export function BondPositionsDetail() {
             pb="space.04"
             data-testid={AllBalancesSelectors.DetailTotal}
           >
-            <Stack gap="space.02">
-              <BasicTooltip label={tooltipText} side="top">
-                <Flag
-                  reverse
-                  spacing="space.01"
-                  img={<InfoCircleIcon color="ink.text-subdued" display="inline" variant="small" />}
-                >
-                  <styled.h2 textStyle="label.02">{title}</styled.h2>
-                </Flag>
-              </BasicTooltip>
-              <BalanceAmount
-                textStyle="heading.03"
-                value={formatBalance(balance.quote.lockedBalance)}
-                isLoading={isLoading}
-                skeletonWidth="140px"
-                skeletonHeight="32px"
-              />
-              <BalanceAmount
-                textStyle="caption.01"
-                color="ink.text-subdued"
-                value={formatBalance(balance.btc.lockedBalance)}
-                isLoading={isLoading}
-                skeletonWidth="60px"
-                skeletonHeight="16px"
-              />
+            <Stack gap="space.01">
+              <Flag reverse spacing="space.01" img={<InfoTooltip label={tooltipText} />}>
+                <styled.h2 textStyle="label.02">{title}</styled.h2>
+              </Flag>
+              <Stack gap="2px">
+                <BalanceAmount
+                  textStyle="heading.03"
+                  value={formatBalance(balance.quote.lockedBalance)}
+                  isLoading={isLoading}
+                  skeletonWidth="140px"
+                  skeletonHeight="32px"
+                />
+                <BalanceAmount
+                  textStyle="caption.01"
+                  color="ink.text-subdued"
+                  value={formatBalance(balance.btc.lockedBalance)}
+                  isLoading={isLoading}
+                  skeletonWidth="60px"
+                  skeletonHeight="16px"
+                />
+              </Stack>
             </Stack>
             <BtcAvatarIcon />
           </Flex>
@@ -144,7 +143,11 @@ export function BondPositionsDetail() {
           {currentPositions.map(position => (
             <Box key={`${position.bondIndex}:${position.stxAddress}`}>
               {endToEndDivider}
-              <BondPositionSection position={position} heldBy={describeHeldBy(account)} />
+              {hasRunningPosition && isUpcomingPosition(position) ? (
+                <RenewalRow position={position} heldBy={describeHeldBy(account)} />
+              ) : (
+                <BondPositionSection position={position} heldBy={describeHeldBy(account)} />
+              )}
             </Box>
           ))}
 

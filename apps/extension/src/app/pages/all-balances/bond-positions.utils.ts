@@ -7,18 +7,23 @@ import type {
 import type { BadgeProps } from '@leather.io/ui';
 import { sumMoney } from '@leather.io/utils';
 
+import { daysUntil, isEndingSoon } from '@app/features/bonds/bond-position.utils';
+
 import { formatBalance } from './all-balances.utils';
 
 interface PositionBadge {
   label: string;
   variant: BadgeProps['variant'];
+  isWaiting?: boolean;
 }
 
+// Follows the wallet's badge convention: grey resting, blue scheduled,
+// yellow a decision due, green completed
 const positionStatusBadgeMap: Record<BtcStakingPositionStatus, PositionBadge> = {
-  locked: { label: 'Active', variant: 'success' },
-  exiting: { label: 'Exiting', variant: 'warning' },
-  matured: { label: 'Ended', variant: 'info' },
-  reclaimed: { label: 'Withdrawn', variant: 'default' },
+  locked: { label: 'Active', variant: 'default' },
+  exiting: { label: 'Exiting', variant: 'default', isWaiting: true },
+  matured: { label: 'Ended', variant: 'warning' },
+  reclaimed: { label: 'Withdrawn', variant: 'success' },
   exited: { label: 'Exited', variant: 'default' },
 };
 
@@ -49,10 +54,14 @@ export function describePastPositions({ count, earned }: PastPositionsSummary): 
   return earned ? `${ended}, +${formatBalance(earned)} earned` : ended;
 }
 
-const upcomingBadge: PositionBadge = { label: 'Upcoming', variant: 'default' };
+const upcomingBadge: PositionBadge = { label: 'Upcoming', variant: 'info' };
 
-export function getPositionBadge(position: BtcStakingPosition): PositionBadge {
+export function getPositionBadge(position: BtcStakingPosition, now = new Date()): PositionBadge {
   if (position.status === 'locked' && position.bond.status === 'upcoming') return upcomingBadge;
+  if (isEndingSoon(position, now)) {
+    const days = daysUntil(position.estimatedUnlockAt, now);
+    return { label: `Ends in ${days} ${days === 1 ? 'day' : 'days'}`, variant: 'warning' };
+  }
   return positionStatusBadgeMap[position.status];
 }
 
