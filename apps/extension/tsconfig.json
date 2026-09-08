@@ -42,6 +42,8 @@
     "./scripts-ts/**/*",
     "./tooling/**/*",
     "./*.spec.ts",
+    "./content-script.ts",
+    "./inpage.ts",
     "./manifest.config.ts",
     "./vite.config.ts",
     "leather-styles",
