@@ -1,6 +1,11 @@
+import type { HDKey } from '@scure/bip32';
+
 import { minTimestampLockTime } from './bond-lock-script';
 import {
+  type AccountDescriptorKey,
+  type CompiledWshDescriptor,
   compileWshDescriptor,
+  findAccountDescriptorKey,
   getWshDescriptorThreshold,
   isExtendedPublicKeyExpression,
   isValidMultisigThreshold,
@@ -243,4 +248,23 @@ export function getBondVaultKeys(policyDescriptor: string): BondVaultKeys {
     threshold: getWshDescriptorThreshold(policyDescriptor),
     keyExpressions: keys.map(key => key.keyExpression),
   };
+}
+
+export function findBondVaultAccountKey(
+  compiled: CompiledWshDescriptor,
+  vault: BondVaultLeaf,
+  accountKeychain: HDKey
+): AccountDescriptorKey | undefined {
+  const vaultKeys = compiled.keys.filter(key => vault.keys.includes(key.keyExpression));
+  return findAccountDescriptorKey({ ...compiled, keys: vaultKeys }, accountKeychain);
+}
+
+export function findPolicyMemberAccountKey(
+  descriptor: string,
+  compiled: CompiledWshDescriptor,
+  accountKeychain: HDKey
+): AccountDescriptorKey | undefined {
+  const bond = matchBondTemplateDescriptor(descriptor);
+  if (bond) return findBondVaultAccountKey(compiled, bond.vault, accountKeychain);
+  return findAccountDescriptorKey(compiled, accountKeychain);
 }

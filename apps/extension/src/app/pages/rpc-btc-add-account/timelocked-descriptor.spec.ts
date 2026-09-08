@@ -3,14 +3,12 @@ import { bytesToHex } from '@noble/hashes/utils';
 import { describe, expect, it } from 'vitest';
 
 import {
-  compileWshDescriptor,
   instantiateBondDescriptor,
-  makeNativeSegwitAccountKeychain,
   makeNativeSegwitAccountXpub,
   makeNativeSegwitAddressPubkeyHex,
 } from '@leather.io/bitcoin';
 
-import { findTimelockedVaultAccountKey, matchTimelockedDescriptor } from './timelocked-descriptor';
+import { matchTimelockedDescriptor } from './timelocked-descriptor';
 
 const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
@@ -92,76 +90,5 @@ describe(matchTimelockedDescriptor.name, () => {
   it('returns null for a bond whose vault key is an uncompressed public key', () => {
     const uncompressedKey = `04${makeNativeSegwitAddressPubkeyHex(1).slice(2)}`;
     expect(matchTimelockedDescriptor(makeBondDescriptor(`pk(${uncompressedKey})`))).toBeNull();
-  });
-});
-
-describe(findTimelockedVaultAccountKey.name, () => {
-  function findVaultKeyFor(descriptor: string, seedByte: number) {
-    const timelock = matchTimelockedDescriptor(descriptor);
-    if (!timelock) throw new Error('Expected a bond descriptor');
-    return findTimelockedVaultAccountKey(
-      compileWshDescriptor(descriptor),
-      timelock,
-      makeNativeSegwitAccountKeychain(seedByte)
-    );
-  }
-
-  const vaultBond = makeBondDescriptor(`sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0)`);
-
-  it('finds the account key when it is a vault signer', () => {
-    expect(findVaultKeyFor(vaultBond, 1)?.key.keyExpression).toBe(`${xpubA}/0/0`);
-    expect(findVaultKeyFor(vaultBond, 2)?.key.keyExpression).toBe(`${xpubB}/0/0`);
-  });
-
-  it('does not match an account that only holds the counterparty key', () => {
-    expect(findVaultKeyFor(vaultBond, 9)).toBeUndefined();
-  });
-
-  it('does not match an account that is in neither slot', () => {
-    expect(findVaultKeyFor(vaultBond, 3)).toBeUndefined();
-  });
-
-  it('matches a vault key that carries a key origin', () => {
-    const withOrigin = makeBondDescriptor(
-      `sortedmulti(2,[aabbccdd/84'/0'/0']${xpubA}/0/0,${xpubB}/0/0)`
-    );
-    expect(findVaultKeyFor(withOrigin, 1)?.key.keyExpression).toBe(
-      `[aabbccdd/84'/0'/0']${xpubA}/0/0`
-    );
-  });
-
-  it('matches a raw public key vault signer by its 0/0 address key', () => {
-    const rawKeyA = makeNativeSegwitAddressPubkeyHex(1);
-    const rawVaultBond = makeBondDescriptor(`sortedmulti(2,${rawKeyA},${xpubB}/0/0)`);
-    expect(findVaultKeyFor(rawVaultBond, 1)?.key.keyExpression).toBe(rawKeyA);
-  });
-
-  it('does not match an account whose raw key is only the counterparty', () => {
-    const rawCounterparty = makeNativeSegwitAddressPubkeyHex(9);
-    const rawCounterpartyBond = makeBondDescriptor(
-      `sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0)`,
-      rawCounterparty
-    );
-    expect(findVaultKeyFor(rawCounterpartyBond, 9)).toBeUndefined();
-    expect(findVaultKeyFor(rawCounterpartyBond, 1)?.key.keyExpression).toBe(`${xpubA}/0/0`);
-  });
-
-  const pkBond = makeBondDescriptor(`pk(${xpubA}/0/0)`);
-
-  it('finds the owner key of a pk vault', () => {
-    expect(findVaultKeyFor(pkBond, 1)?.key.keyExpression).toBe(`${xpubA}/0/0`);
-  });
-
-  it('does not match an account that only holds the counterparty key of a pk vault', () => {
-    expect(findVaultKeyFor(pkBond, 9)).toBeUndefined();
-    expect(findVaultKeyFor(pkBond, 2)).toBeUndefined();
-  });
-
-  it('matches a raw public key pk vault by its 0/0 address key and not its counterparty', () => {
-    const rawPkBond = makeBondDescriptor(`pk(${makeNativeSegwitAddressPubkeyHex(1)})`);
-    expect(findVaultKeyFor(rawPkBond, 1)?.key.keyExpression).toBe(
-      makeNativeSegwitAddressPubkeyHex(1)
-    );
-    expect(findVaultKeyFor(rawPkBond, 9)).toBeUndefined();
   });
 });

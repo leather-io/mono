@@ -10,6 +10,7 @@ import {
   makeNativeSegwitAddressPubkeyHex,
 } from '../mocks/key-mocks';
 import {
+  findPolicyMemberAccountKey,
   getBondVaultKeys,
   instantiateBondDescriptor,
   matchBondDescriptor,
@@ -570,5 +571,58 @@ describe('bond template round trip', () => {
         keyExpressions,
       })
     ).toThrow();
+  });
+});
+
+describe('findPolicyMemberAccountKey', () => {
+  const xpubKeyA = `${xpubA}/0/0`;
+  const xpubKeyB = `${xpubB}/0/0`;
+  const rawKeyA = makeNativeSegwitAddressPubkeyHex(1);
+  const rawKeyNine = makeNativeSegwitAddressPubkeyHex(9);
+  const xpubCounterparty = `${makeNativeSegwitAccountXpub(9)}/0/0`;
+
+  function makeBond(vaultExpression: string, counterparty = xpubCounterparty) {
+    return `wsh(and_v(v:or_i(after(${unlockHeight}),and_v(v:sha256(${hash}),pk(${counterparty}))),${vaultExpression}))`;
+  }
+
+  function findFor(descriptor: string, seedByte: number) {
+    return findPolicyMemberAccountKey(
+      descriptor,
+      compileWshDescriptor(descriptor),
+      makeNativeSegwitAccountKeychain(seedByte)
+    );
+  }
+
+  it('finds a vault signer and ignores the counterparty slot', () => {
+    const bond = makeBond(`sortedmulti(2,${xpubKeyA},${xpubKeyB})`);
+    expect(findFor(bond, 1)?.key.keyExpression).toBe(xpubKeyA);
+    expect(findFor(bond, 2)?.key.keyExpression).toBe(xpubKeyB);
+    expect(findFor(bond, 9)).toBeUndefined();
+    expect(findFor(bond, 3)).toBeUndefined();
+  });
+
+  it('scopes a pk vault to its owner key', () => {
+    const bond = makeBond(`pk(${xpubKeyA})`);
+    expect(findFor(bond, 1)?.key.keyExpression).toBe(xpubKeyA);
+    expect(findFor(bond, 9)).toBeUndefined();
+  });
+
+  it('matches origin-prefixed vault keys', () => {
+    const withOrigin = makeBond(`sortedmulti(2,[aabbccdd/84'/0'/0']${xpubKeyA},${xpubKeyB})`);
+    expect(findFor(withOrigin, 1)?.key.keyExpression).toBe(`[aabbccdd/84'/0'/0']${xpubKeyA}`);
+  });
+
+  it('matches raw vault keys by the 0/0 address key and ignores a raw counterparty', () => {
+    const rawVault = makeBond(`sortedmulti(2,${rawKeyA},${xpubKeyB})`);
+    expect(findFor(rawVault, 1)?.key.keyExpression).toBe(rawKeyA);
+    const rawCounterparty = makeBond(`sortedmulti(2,${xpubKeyA},${xpubKeyB})`, rawKeyNine);
+    expect(findFor(rawCounterparty, 9)).toBeUndefined();
+    expect(findFor(rawCounterparty, 1)?.key.keyExpression).toBe(xpubKeyA);
+  });
+
+  it('falls back to the whole key set for a plain multisig', () => {
+    const multisig = `wsh(sortedmulti(2,${xpubKeyA},${xpubKeyB}))`;
+    expect(findFor(multisig, 2)?.key.keyExpression).toBe(xpubKeyB);
+    expect(findFor(multisig, 3)).toBeUndefined();
   });
 });
