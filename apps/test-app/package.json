@@ -1,0 +1,52 @@
+{
+  "name": "@leather.io/test-app",
+  "description": "Button-driven catalog of Leather RPC requests for manual testing and as the Playwright host page",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "catalog": "tsx src/cli.ts",
+    "dev": "vite",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
+    "lint": "eslint --cache --max-warnings 0",
+    "lint:fix": "pnpm lint --fix",
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    "./catalog": "./src/catalog.ts"
+  },
+  "dependencies": {
+    "@leather.io/bitcoin": "workspace:*",
+    "@noble/curves": "1.9.2",
+    "@noble/hashes": "1.5.0",
+    "@scure/base": "1.2.4",
+    "@scure/bip32": "1.6.2",
+    "@scure/btc-signer": "1.6.0",
+    "@stacks/common": "7.0.2",
+    "@stacks/stacking": "7.0.5",
+    "@stacks/transactions": "7.5.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "safe-buffer": "5.2.1"
+  },
+  "devDependencies": {
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/rpc": "workspace:*",
+    "@leather.io/test-config": "workspace:*",
+    "@types/react": "19.1.17",
+    "@types/react-dom": "19.1.11",
+    "@vitejs/plugin-react": "5.2.0",
+    "prettier": "3.5.1",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3",
+    "vite": "7.3.2",
+    "vite-plugin-node-polyfills": "0.24.0",
+    "vitest": "2.1.9"
+  },
+  "prettier": "@leather.io/prettier-config",
+  "private": true
+}
