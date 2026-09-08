@@ -18,7 +18,7 @@ import {
   makeNativeSegwitAccountXpub,
   makeNativeSegwitAddressPubkeyHex,
 } from '@leather.io/bitcoin';
-import { RpcErrorCode } from '@leather.io/rpc';
+import { RpcErrorCode, maxBtcDescriptorLength } from '@leather.io/rpc';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -518,5 +518,15 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
         message: 'Only multisig or timelocked wsh() descriptors are supported',
       },
     });
+  });
+
+  test('rejects a descriptor longer than the RPC length cap', async ({ page }) => {
+    await page.goto('localhost:3000');
+    const result = await initiateRequestCatchingError(page, 'btc_addAccount', {
+      name: 'Oversized',
+      descriptor: `wsh(sortedmulti(2,${'a'.repeat(maxBtcDescriptorLength)}))`,
+    });
+
+    expect(result).toMatchObject({ error: { code: RpcErrorCode.INVALID_PARAMS } });
   });
 });

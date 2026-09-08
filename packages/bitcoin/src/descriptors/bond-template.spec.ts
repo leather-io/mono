@@ -253,6 +253,45 @@ describe('matchBondTemplateDescriptor', () => {
     }
   });
 
+  it('bounds the vault to 20 keys and a threshold of 1..min(keys, 16)', () => {
+    function keys(count: number) {
+      return Array.from(
+        { length: count },
+        (_, index) => `${makeNativeSegwitAccountXpub(index + 1)}/0/7`
+      ).join(',');
+    }
+    expect(
+      matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(16,${keys(20)})`))?.vault
+        .threshold
+    ).toBe(16);
+    expect(
+      matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(17,${keys(20)})`))
+    ).toBeNull();
+    expect(
+      matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(2,${keys(21)})`))
+    ).toBeNull();
+  });
+
+  it('bounds key origin depth and key expression length', () => {
+    const eightLevelOrigin = `[aabbccdd${'/0'.repeat(8)}]${xpubA}/0/7`;
+    const nineLevelOrigin = `[aabbccdd${'/0'.repeat(9)}]${xpubA}/0/7`;
+    expect(
+      matchBondTemplateDescriptor(makeBondDescriptor(`pk(${eightLevelOrigin})`))?.vault.kind
+    ).toBe('pk');
+    expect(matchBondTemplateDescriptor(makeBondDescriptor(`pk(${nineLevelOrigin})`))).toBeNull();
+    expect(
+      matchBondTemplateDescriptor(
+        bondDescriptor.replace(counterpartyKey, nineLevelOrigin.replace(xpubA, xpubB))
+      )
+    ).toBeNull();
+    expect(
+      matchBondTemplateDescriptor(makeBondDescriptor(`pk([zzzzzzzz/0]${xpubA}/0/7)`))
+    ).toBeNull();
+    expect(
+      matchBondTemplateDescriptor(makeBondDescriptor(`pk(${'x'.repeat(121)}/0/7)`))
+    ).toBeNull();
+  });
+
   it('rejects a multi vault threshold outside 1..keyCount', () => {
     expect(
       matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(0,${xpubA}/0/7,${xpubB}/0/7)`))

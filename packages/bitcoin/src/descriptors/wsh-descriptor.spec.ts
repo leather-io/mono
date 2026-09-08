@@ -85,6 +85,27 @@ describe('wsh-descriptor', () => {
     expect(isWshMultisigDescriptor(`${plain}#${checksum(plain)}`)).toBe(true);
   });
 
+  it('bounds plain multisig to 20 keys and a threshold of 1..min(keys, 16)', () => {
+    function keys(count: number) {
+      return Array.from(
+        { length: count },
+        (_, index) => `${makeNativeSegwitAccountXpub(index + 1)}/0/0`
+      ).join(',');
+    }
+    expect(isWshMultisigDescriptor(`wsh(sortedmulti(16,${keys(20)}))`)).toBe(true);
+    expect(isWshMultisigDescriptor(`wsh(multi(1,${keys(1)}))`)).toBe(true);
+    expect(isWshMultisigDescriptor(`wsh(sortedmulti(17,${keys(20)}))`)).toBe(false);
+    expect(isWshMultisigDescriptor(`wsh(sortedmulti(20,${keys(20)}))`)).toBe(false);
+    expect(isWshMultisigDescriptor(`wsh(sortedmulti(2,${keys(21)}))`)).toBe(false);
+    expect(isWshMultisigDescriptor(`wsh(sortedmulti(0,${keys(2)}))`)).toBe(false);
+    expect(isWshMultisigDescriptor(`wsh(sortedmulti(3,${keys(2)}))`)).toBe(false);
+  });
+
+  it('bounds each multisig key expression length', () => {
+    expect(isWshMultisigDescriptor(`wsh(sortedmulti(1,${'x'.repeat(256)}))`)).toBe(true);
+    expect(isWshMultisigDescriptor(`wsh(sortedmulti(1,${'x'.repeat(257)}))`)).toBe(false);
+  });
+
   it('rejects miniscript that merely contains a multi leaf, and ranged multisig', () => {
     expect(
       isWshMultisigDescriptor(`wsh(or_d(multi(2,${xpubA}/0/0,${xpubB}/0/0),pk(${xpubB}/0/1)))`)

@@ -3,6 +3,8 @@ import {
   compileWshDescriptor,
   getWshDescriptorThreshold,
   isExtendedPublicKeyExpression,
+  isValidMultisigThreshold,
+  maxMultisigKeys,
   stripDescriptorChecksum,
 } from './wsh-descriptor';
 
@@ -18,7 +20,8 @@ const bondDescriptorPattern =
 
 const compressedPubkeyHexPattern = /^0[23][0-9a-f]{64}$/;
 const compressedPubkeyAnyCaseHexPattern = /^0[23][0-9a-fA-F]{64}$/;
-const bondReceiveKeyExpressionPattern = /^(?:\[[^\]]+\])?[1-9A-HJ-NP-Za-km-z]+\/0\/\d+$/;
+const bondReceiveKeyExpressionPattern =
+  /^(?:\[[0-9a-fA-F]{8}(?:\/\d{1,10}['h]?){0,8}\])?[1-9A-HJ-NP-Za-km-z]{1,120}\/0\/\d{1,10}$/;
 
 function isBondExtendedKeyExpression(keyExpression: string): boolean {
   return (
@@ -60,11 +63,11 @@ function parseBondVaultLeaf(expression: string): BondVaultLeaf | null {
     return { kind: 'pk', expression, threshold: 1, keyExpressions: [keyExpression] };
   }
   const [rawThreshold, ...keyExpressions] = args;
-  if (!rawThreshold || !/^\d+$/.test(rawThreshold)) return null;
-  if (!keyExpressions.length) return null;
+  if (!rawThreshold || !/^\d{1,2}$/.test(rawThreshold)) return null;
+  if (!keyExpressions.length || keyExpressions.length > maxMultisigKeys) return null;
   if (!keyExpressions.every(isBondVaultKeyExpression)) return null;
   const threshold = Number(rawThreshold);
-  if (threshold < 1 || threshold > keyExpressions.length) return null;
+  if (!isValidMultisigThreshold(threshold, keyExpressions.length)) return null;
   return { kind: 'multi', expression, threshold, keyExpressions };
 }
 

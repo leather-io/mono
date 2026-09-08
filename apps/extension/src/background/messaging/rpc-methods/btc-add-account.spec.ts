@@ -67,6 +67,14 @@ const originPrefixedMultisigDescriptor = `wsh(multi(2,[aabbccdd/84'/0'/0']${xpub
 const multiLeafMiniscriptDescriptor = `wsh(or_d(multi(2,${xpubA}/0/0,${xpubB}/0/0),pk(${counterpartyXpub}/0/0)))`;
 const timelockedMultiDescriptor = `wsh(and_v(v:after(${unlockHeight}),multi(2,${xpubA}/0/0,${xpubB}/0/0)))`;
 const rangedMultisigDescriptor = `wsh(sortedmulti(2,${xpubA}/0/*,${xpubB}/0/*))`;
+function manyKeys(count: number) {
+  return Array.from(
+    { length: count },
+    (_, index) => `${makeNativeSegwitAccountXpub(index + 1)}/0/0`
+  ).join(',');
+}
+const twentyOneKeyMultisigDescriptor = `wsh(sortedmulti(2,${manyKeys(21)}))`;
+const seventeenOfTwentyMultisigDescriptor = `wsh(sortedmulti(17,${manyKeys(20)}))`;
 const rangedBondDescriptor = `wsh(and_v(v:or_i(after(${unlockHeight}),and_v(v:sha256(${hash}),pk(${counterpartyXpub}/0/*))),sortedmulti(2,${xpubA}/0/*,${xpubB}/0/*)))`;
 
 const unsupportedDescriptorMessage = 'Only multisig or timelocked wsh() descriptors are supported';
@@ -168,6 +176,16 @@ describe('btcAddAccountHandler', () => {
 
   test('rejects a ranged multisig descriptor', async () => {
     await invokeHandler(rangedMultisigDescriptor);
+    expectRejectedAsUnsupported();
+  });
+
+  test('rejects a multisig with more than 20 keys', async () => {
+    await invokeHandler(twentyOneKeyMultisigDescriptor);
+    expectRejectedAsUnsupported();
+  });
+
+  test('rejects a multisig threshold above 16', async () => {
+    await invokeHandler(seventeenOfTwentyMultisigDescriptor);
     expectRejectedAsUnsupported();
   });
 
