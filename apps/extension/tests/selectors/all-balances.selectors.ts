@@ -22,4 +22,7 @@ export enum AllBalancesSelectors {
   DetailBondSection = 'all-balances-detail-bond-section',
   DetailUpcomingBond = 'all-balances-detail-upcoming-bond',
   DetailManageLink = 'all-balances-detail-manage-link',
+  DetailPastPeriods = 'all-balances-detail-past-periods',
+  BondHistoryPage = 'all-balances-bond-history-page',
+  BondHistoryEmpty = 'all-balances-bond-history-empty',
 }

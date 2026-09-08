@@ -10,10 +10,9 @@ import { BondDetailRow } from './bond-detail-row';
 interface UpcomingBondSectionProps {
   window: BtcBondEnrollmentWindow;
   opensAt?: Date;
-  hasPosition: boolean;
 }
 
-export function UpcomingBondSection({ window, opensAt, hasPosition }: UpcomingBondSectionProps) {
+export function UpcomingBondSection({ window, opensAt }: UpcomingBondSectionProps) {
   const closesAt = formatEstimatedDate(window.estimatedClosesAt);
   const badgeLabel = opensAt ? `Opens ${formatEstimatedDate(opensAt)}` : 'Open now';
   const windowLabel = opensAt
@@ -28,7 +27,7 @@ export function UpcomingBondSection({ window, opensAt, hasPosition }: UpcomingBo
       </Flex>
       <Stack gap="space.02">
         <BondDetailRow label="Window" value={windowLabel} />
-        <BondDetailRow label="Your bonds" value={hasPosition ? 'Registered' : 'None yet'} />
+        <BondDetailRow label="Your bonds" value="None yet" />
       </Stack>
     </Stack>
   );

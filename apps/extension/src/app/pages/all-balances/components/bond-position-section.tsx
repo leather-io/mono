@@ -40,10 +40,17 @@ export function BondPositionSection({ position, heldBy }: BondPositionSectionPro
           label="Policy"
           value={truncateMiddle(position.stakerAddress, policyAddressOffset)}
         />
-        <BondDetailRow
-          label="Unlocks"
-          value={`about ${formatEstimatedDate(position.estimatedUnlockAt)} · ${formatBlockHeight(position.unlockBurnHeight)}`}
-        />
+        {position.bond.status === 'upcoming' ? (
+          <BondDetailRow
+            label="Starts"
+            value={`about ${formatEstimatedDate(position.estimatedActivationAt)} · ${formatBlockHeight(position.bond.activationBurnHeight)}`}
+          />
+        ) : (
+          <BondDetailRow
+            label="Unlocks"
+            value={`about ${formatEstimatedDate(position.estimatedUnlockAt)} · ${formatBlockHeight(position.unlockBurnHeight)}`}
+          />
+        )}
         <BondDetailRow label="Held by" value={heldBy} />
         <BondDetailRow
           label="Paid out"
