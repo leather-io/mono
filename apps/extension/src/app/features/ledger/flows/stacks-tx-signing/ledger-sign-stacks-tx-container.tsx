@@ -85,6 +85,12 @@ function LedgerSignStacksTxContainer() {
           account.derivationPath
         );
 
+        if ('error' in resp) {
+          void ledgerNavigate.toOperationRejectedStep(resp.error);
+          appEvents.publish('ledgerStacksTxSigningCancelled', { unsignedTx });
+          return;
+        }
+
         if (resp.returnCode === LedgerError.DataIsInvalid) {
           void ledgerNavigate.toDevicePayloadInvalid();
           return;
