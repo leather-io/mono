@@ -32,7 +32,8 @@ export function useIsLatestPullRequestBuild() {
   return {
     // If the latest commit SHA on the PR is not the same one used for this build,
     // we can assume it's outdated
-    isLatestBuild: pullRequest.head.sha.startsWith(COMMIT_SHA ?? ''),
+    isLatestBuild:
+      isDefined(COMMIT_SHA) && COMMIT_SHA.length > 0 && pullRequest.head.sha.startsWith(COMMIT_SHA),
     pullRequestLink: pullRequest.html_url,
   };
 }

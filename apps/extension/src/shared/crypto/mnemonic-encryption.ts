@@ -39,11 +39,13 @@ interface DecryptionMnemonic {
   encryptedSecretKey: string;
   password: string;
   salt?: string;
+  existingEncryptionKey?: string;
 }
 export async function decryptMnemonic({
   encryptedSecretKey,
   password,
   salt,
+  existingEncryptionKey,
 }: DecryptionMnemonic): Promise<{
   encryptedSecretKey: string;
   salt: string;
@@ -52,7 +54,9 @@ export async function decryptMnemonic({
   fingerprint: string;
 }> {
   if (salt) {
-    const encryptionKey = await deriveEncryptionKey({ password, salt });
+    const encryptionKey = existingEncryptionKey
+      ? existingEncryptionKey
+      : await deriveEncryptionKey({ password, salt });
     const secretKey = await decrypt(encryptedSecretKey, encryptionKey);
     return {
       secretKey,

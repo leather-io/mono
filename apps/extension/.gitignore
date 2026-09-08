@@ -1,4 +1,5 @@
 dist/
+bundle-analysis.html
 node_modules/
 example/node_modules
 example/dist

@@ -9,6 +9,7 @@ import {
 import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 import { secondsInMs } from '@leather.io/utils';
 
+import { deriveEncryptionKey } from '@shared/crypto/generate-encryption-key';
 import { decryptMnemonic, encryptMnemonic } from '@shared/crypto/mnemonic-encryption';
 import { logger } from '@shared/logger';
 import { broadcastWalletListChanged } from '@shared/messages';
@@ -306,12 +307,15 @@ function unlockWalletAction(password: string): AppThunk {
     const salt = selectWalletSalt(state);
     const softwareKeys = selectSoftwareKeys(state);
 
+    const existingEncryptionKey = salt ? await deriveEncryptionKey({ password, salt }) : undefined;
+
     const decryptedResults = await Promise.all(
       softwareKeys.map(key =>
         decryptMnemonic({
           password,
           encryptedSecretKey: key.encryptedSecretKey,
           salt,
+          existingEncryptionKey,
         })
       )
     );

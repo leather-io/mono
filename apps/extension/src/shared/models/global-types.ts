@@ -1,5 +1,9 @@
 declare module '*.css';
 declare module '*.png';
+declare module '*?worker&url' {
+  const workerUrl: string;
+  export default workerUrl;
+}
 declare module '*.svg' {
   import React from 'react';
   const content: React.FC<React.SVGProps<SVGSVGElement>>;
@@ -64,4 +68,10 @@ declare module '@vkontakte/vk-qr' {
    * @param options QR code options
    */
   export function createQR(text: string, options?: QrOptions): string;
+}
+
+declare module 'argon2-browser/dist/argon2-bundled.min.js' {
+  export { ArgonType } from 'argon2-browser';
+  import argon2 from 'argon2-browser';
+  export default argon2;
 }
