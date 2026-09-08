@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 import { readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import sourcemaps from 'rollup-plugin-sourcemaps2';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
@@ -36,6 +37,11 @@ const firefoxDependencyGroups = new Map([
 ]);
 const dependencyJavaScriptSizes = new Map<string, number>();
 const backgroundEntry = path.join(extensionRoot, 'src/background/background.ts');
+const dependencySourceMapPatterns = [
+  '**/node_modules/@leather.io/**/*.{js,mjs,cjs}',
+  '**/node_modules/@stacks/**/*.{js,mjs,cjs}',
+  '**/packages/*/dist*/**/*.{js,mjs,cjs}',
+];
 const extensionAliases = {
   '@stacks/auth': '@stacks/auth/dist/esm',
   '@stacks/common': '@stacks/common/dist/esm',
@@ -108,6 +114,7 @@ function getRuntimeEnvironmentDefinitions(mode: string) {
 function getSharedPlugins() {
   return [
     tsconfigPaths(),
+    sourcemaps({ include: dependencySourceMapPatterns }),
     react(),
     svgr(),
     nodePolyfills({

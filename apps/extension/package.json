@@ -184,6 +184,7 @@
     "postcss": "8.5.20",
     "prettier": "3.5.1",
     "process": "0.11.10",
+    "rollup-plugin-sourcemaps2": "0.5.8",
     "rollup-plugin-visualizer": "7.1.1",
     "stream-browserify": "3.0.0",
     "ts-unused-exports": "10.0.1",
