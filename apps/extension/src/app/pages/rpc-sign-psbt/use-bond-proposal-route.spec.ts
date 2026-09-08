@@ -56,11 +56,13 @@ const bitcoinPolicy = {
   descriptor: policyDescriptor,
 };
 
+const policyVaultKeys = getBondVaultKeys(policyDescriptor);
+
 const bondDescriptor = instantiateBondDescriptor({
   unlockHeight,
   hash,
   counterpartyKey,
-  ...getBondVaultKeys(policyDescriptor),
+  ...policyVaultKeys,
 });
 
 interface BuildBondPsbtOptions {
@@ -144,7 +146,7 @@ describe(useBondProposalRoute.name, () => {
       counterpartyKey,
       vaultKind: 'multi',
       vaultThreshold: 2,
-      vaultKeyExpressions: expect.arrayContaining([`${xpubA}/0/0`, `${xpubB}/0/0`, `${xpubC}/0/0`]),
+      vaultKeyExpressions: policyVaultKeys.keyExpressions,
     });
   });
 
@@ -179,7 +181,7 @@ describe(useBondProposalRoute.name, () => {
       counterpartyKey: rawCounterpartyKey,
       vaultKind: 'multi',
       vaultThreshold: 2,
-      vaultKeyExpressions: expect.arrayContaining([`${xpubA}/0/0`, `${xpubB}/0/0`, `${xpubC}/0/0`]),
+      vaultKeyExpressions: policyVaultKeys.keyExpressions,
     });
   });
 

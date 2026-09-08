@@ -16,8 +16,8 @@ export function matchTimelockedDescriptor(descriptor: string): BondSpendingDetai
     hash: match.hash,
     counterpartyKey: match.counterpartyKey,
     vaultKind: match.vault.kind,
-    vaultThreshold: match.vault.threshold,
-    vaultKeyExpressions: match.vault.keyExpressions,
+    vaultThreshold: match.vault.requiredSignatures,
+    vaultKeyExpressions: match.vault.keys,
   };
 }
 

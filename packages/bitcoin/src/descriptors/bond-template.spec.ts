@@ -159,8 +159,8 @@ describe('matchBondTemplateDescriptor', () => {
       vault: {
         kind: 'multi',
         expression: `sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7,${xpubC}/0/7)`,
-        threshold: 2,
-        keyExpressions: [`${xpubA}/0/7`, `${xpubB}/0/7`, `${xpubC}/0/7`],
+        requiredSignatures: 2,
+        keys: [`${xpubA}/0/7`, `${xpubB}/0/7`, `${xpubC}/0/7`],
       },
     });
   });
@@ -170,8 +170,8 @@ describe('matchBondTemplateDescriptor', () => {
     expect(matchBondTemplateDescriptor(pkVault)?.vault).toEqual({
       kind: 'pk',
       expression: `pk(${xpubA}/0/7)`,
-      threshold: 1,
-      keyExpressions: [`${xpubA}/0/7`],
+      requiredSignatures: 1,
+      keys: [`${xpubA}/0/7`],
     });
 
     const compiled = compileWshDescriptor(pkVault);
@@ -193,24 +193,21 @@ describe('matchBondTemplateDescriptor', () => {
     expect(matchBondTemplateDescriptor(rawMulti)?.vault).toEqual({
       kind: 'multi',
       expression: `sortedmulti(2,${rawKeyA},${rawKeyB})`,
-      threshold: 2,
-      keyExpressions: [rawKeyA, rawKeyB],
+      requiredSignatures: 2,
+      keys: [rawKeyA, rawKeyB],
     });
     expect(matchBondDescriptor(rawMulti)).toBeNull();
 
     const mixedMulti = makeBondDescriptor(`sortedmulti(2,${xpubA}/0/7,${rawKeyB})`);
-    expect(matchBondTemplateDescriptor(mixedMulti)?.vault.keyExpressions).toEqual([
-      `${xpubA}/0/7`,
-      rawKeyB,
-    ]);
+    expect(matchBondTemplateDescriptor(mixedMulti)?.vault.keys).toEqual([`${xpubA}/0/7`, rawKeyB]);
     expect(matchBondDescriptor(mixedMulti)).toBeNull();
 
     const rawPk = makeBondDescriptor(`pk(${rawKeyA})`);
     expect(matchBondTemplateDescriptor(rawPk)?.vault).toEqual({
       kind: 'pk',
       expression: `pk(${rawKeyA})`,
-      threshold: 1,
-      keyExpressions: [rawKeyA],
+      requiredSignatures: 1,
+      keys: [rawKeyA],
     });
     const compiled = compileWshDescriptor(rawPk);
     expect(
@@ -262,7 +259,7 @@ describe('matchBondTemplateDescriptor', () => {
     }
     expect(
       matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(16,${keys(20)})`))?.vault
-        .threshold
+        .requiredSignatures
     ).toBe(16);
     expect(
       matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(17,${keys(20)})`))
@@ -306,7 +303,7 @@ describe('matchBondTemplateDescriptor', () => {
     ).toBeNull();
     expect(
       matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7)`))
-        ?.vault.threshold
+        ?.vault.requiredSignatures
     ).toBe(2);
   });
 
@@ -490,5 +487,88 @@ describe('getBondVaultKeys', () => {
     expect(keyExpressions).toEqual(
       expect.arrayContaining([`${xpubA}/0/7`, `${xpubB}/0/7`, `${xpubC}/0/7`])
     );
+  });
+});
+
+describe('bond template round trip', () => {
+  const vaultKeys = getBondVaultKeys(policyDescriptor);
+
+  it('matches every descriptor instantiateBondDescriptor emits', () => {
+    for (const counterparty of [counterpartyKey, makeNativeSegwitAddressPubkeyHex(9, 7)]) {
+      const instantiated = instantiateBondDescriptor({
+        unlockHeight,
+        hash,
+        counterpartyKey: counterparty,
+        ...vaultKeys,
+      });
+      expect(matchBondTemplateDescriptor(instantiated)).toEqual({
+        unlockHeight,
+        hash,
+        counterpartyKey: counterparty,
+        vault: {
+          kind: 'multi',
+          expression: `sortedmulti(${vaultKeys.threshold},${vaultKeys.keyExpressions.join(',')})`,
+          requiredSignatures: vaultKeys.threshold,
+          keys: vaultKeys.keyExpressions,
+        },
+      });
+      expect(matchBondDescriptor(instantiated)).not.toBeNull();
+    }
+  });
+
+  it('refuses to emit vault keys the matcher would reject', () => {
+    const badVaultKeys = [
+      `${xpubA}/1/7`,
+      `${xpubA}/0/*`,
+      xpubA,
+      `${xpubA}/0/7/0`,
+      `[aabbccdd${'/0'.repeat(9)}]${xpubA}/0/7`,
+    ];
+    for (const badKey of badVaultKeys) {
+      const keyExpressions = [badKey, `${xpubB}/0/7`];
+      expect(() =>
+        instantiateBondDescriptor({
+          unlockHeight,
+          hash,
+          counterpartyKey,
+          threshold: 2,
+          keyExpressions,
+        })
+      ).toThrow();
+      expect(
+        matchBondTemplateDescriptor(
+          makeBondDescriptor(`sortedmulti(2,${keyExpressions.join(',')})`)
+        )
+      ).toBeNull();
+    }
+  });
+
+  it('refuses to emit a threshold the matcher would reject', () => {
+    const keyExpressions = [`${xpubA}/0/7`, `${xpubB}/0/7`];
+    for (const threshold of [0, 3]) {
+      expect(() =>
+        instantiateBondDescriptor({
+          unlockHeight,
+          hash,
+          counterpartyKey,
+          threshold,
+          keyExpressions,
+        })
+      ).toThrow();
+      expect(
+        matchBondTemplateDescriptor(
+          makeBondDescriptor(`sortedmulti(${threshold},${keyExpressions.join(',')})`)
+        )
+      ).toBeNull();
+    }
+    expect(() =>
+      reconstructBondDescriptor({
+        unlockHeight,
+        hash,
+        covenantPubkey: makeNativeSegwitAddressPubkeyHex(9, 7),
+        threshold: 0,
+        keyExpressions,
+      })
+    ).toThrow();
   });
 });

@@ -145,4 +145,23 @@ describe(findTimelockedVaultAccountKey.name, () => {
     expect(findVaultKeyFor(rawCounterpartyBond, 9)).toBeUndefined();
     expect(findVaultKeyFor(rawCounterpartyBond, 1)?.key.keyExpression).toBe(`${xpubA}/0/0`);
   });
+
+  const pkBond = makeBondDescriptor(`pk(${xpubA}/0/0)`);
+
+  it('finds the owner key of a pk vault', () => {
+    expect(findVaultKeyFor(pkBond, 1)?.key.keyExpression).toBe(`${xpubA}/0/0`);
+  });
+
+  it('does not match an account that only holds the counterparty key of a pk vault', () => {
+    expect(findVaultKeyFor(pkBond, 9)).toBeUndefined();
+    expect(findVaultKeyFor(pkBond, 2)).toBeUndefined();
+  });
+
+  it('matches a raw public key pk vault by its 0/0 address key and not its counterparty', () => {
+    const rawPkBond = makeBondDescriptor(`pk(${makeNativeSegwitAddressPubkeyHex(1)})`);
+    expect(findVaultKeyFor(rawPkBond, 1)?.key.keyExpression).toBe(
+      makeNativeSegwitAddressPubkeyHex(1)
+    );
+    expect(findVaultKeyFor(rawPkBond, 9)).toBeUndefined();
+  });
 });

@@ -42,9 +42,11 @@ function normalizeBondCounterpartyKey(keyExpression: string): string {
     : keyExpression;
 }
 
-export interface BondVaultLeaf extends BondVaultKeys {
+export interface BondVaultLeaf {
   kind: 'pk' | 'multi';
   expression: string;
+  requiredSignatures: number;
+  keys: string[];
 }
 
 function isBondVaultKeyExpression(keyExpression: string): boolean {
@@ -60,7 +62,7 @@ function parseBondVaultLeaf(expression: string): BondVaultLeaf | null {
     const [keyExpression] = args;
     if (args.length !== 1 || !keyExpression || !isBondVaultKeyExpression(keyExpression))
       return null;
-    return { kind: 'pk', expression, threshold: 1, keyExpressions: [keyExpression] };
+    return { kind: 'pk', expression, requiredSignatures: 1, keys: [keyExpression] };
   }
   const [rawThreshold, ...keyExpressions] = args;
   if (!rawThreshold || !/^\d{1,2}$/.test(rawThreshold)) return null;
@@ -68,7 +70,7 @@ function parseBondVaultLeaf(expression: string): BondVaultLeaf | null {
   if (!keyExpressions.every(isBondVaultKeyExpression)) return null;
   const threshold = Number(rawThreshold);
   if (!isValidMultisigThreshold(threshold, keyExpressions.length)) return null;
-  return { kind: 'multi', expression, threshold, keyExpressions };
+  return { kind: 'multi', expression, requiredSignatures: threshold, keys: keyExpressions };
 }
 
 export interface BondDescriptorParams {
@@ -116,7 +118,7 @@ export function matchBondTemplateDescriptor(
 export function matchBondDescriptor(descriptor: string): BondDescriptorMatch | null {
   const match = matchBondTemplateDescriptor(descriptor);
   if (!match || match.vault.kind !== 'multi') return null;
-  if (!match.vault.keyExpressions.every(isExtendedPublicKeyExpression)) return null;
+  if (!match.vault.keys.every(isExtendedPublicKeyExpression)) return null;
   const { vault, ...params } = match;
   return { ...params, multiExpression: vault.expression };
 }
@@ -137,8 +139,15 @@ function assertValidBondLockParams({
 function assertValidVaultKeyExpressions(keyExpressions: string[]): void {
   if (!keyExpressions.length)
     throw new Error('Bond descriptor requires at least one vault key expression');
-  if (!keyExpressions.every(isExtendedPublicKeyExpression))
-    throw new Error('Bond vault keys must be xpub or tpub key expressions');
+  if (keyExpressions.length > maxMultisigKeys)
+    throw new Error(`Bond vault supports at most ${maxMultisigKeys} keys`);
+  if (!keyExpressions.every(isBondExtendedKeyExpression))
+    throw new Error('Bond vault keys must be xpub or tpub key expressions on a /0/N receive path');
+}
+
+function assertValidVaultThreshold(threshold: number, keyCount: number): void {
+  if (!isValidMultisigThreshold(threshold, keyCount))
+    throw new Error('Bond vault threshold must be between 1 and the vault key count');
 }
 
 interface FillBondTemplateArgs {
@@ -182,6 +191,7 @@ export function instantiateBondDescriptor({
       'Bond counterparty key must be an xpub or tpub key expression or a compressed public key'
     );
   assertValidVaultKeyExpressions(keyExpressions);
+  assertValidVaultThreshold(threshold, keyExpressions.length);
 
   return fillBondTemplate({
     unlockHeight,
@@ -211,6 +221,7 @@ export function reconstructBondDescriptor({
   if (!compressedPubkeyHexPattern.test(covenantPubkey))
     throw new Error('Bond covenant key must be a compressed public key in lowercase hex');
   assertValidVaultKeyExpressions(keyExpressions);
+  assertValidVaultThreshold(threshold, keyExpressions.length);
 
   return fillBondTemplate({
     unlockHeight,

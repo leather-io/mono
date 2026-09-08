@@ -258,6 +258,7 @@ const counterpartySlotBondDescriptor = instantiateBondDescriptor({
 });
 const multiLeafMiniscriptDescriptor = `wsh(or_d(multi(2,${testAccountNativeSegwitXpub}/0/0,${makeNativeSegwitAccountXpub(1)}/0/0),pk(${makeNativeSegwitAccountXpub(2)}/0/0)))`;
 const rangedBondDescriptor = `wsh(and_v(v:or_i(after(${bondParams.unlockHeight}),and_v(v:sha256(${bondParams.hash}),pk(${makeNativeSegwitAccountXpub(9)}/0/*))),sortedmulti(2,${testAccountNativeSegwitXpub}/0/*,${makeNativeSegwitAccountXpub(2)}/0/*)))`;
+const counterpartySlotSingleKeyBondDescriptor = `wsh(and_v(v:or_i(after(${bondParams.unlockHeight}),and_v(v:sha256(${bondParams.hash}),pk(${testAccountNativeSegwitXpub}/0/0))),pk(${makeNativeSegwitAccountXpub(1)}/0/0)))`;
 const nonBondMiniscriptDescriptor = `wsh(and_v(v:after(1000),pk(${testAccountNativeSegwitXpub}/0/0)))`;
 
 function deriveFirstAddressPubkeyHex(xpub: string) {
@@ -528,5 +529,24 @@ test.describe('Rpc: add account with a timelocked descriptor', () => {
     });
 
     expect(result).toMatchObject({ error: { code: RpcErrorCode.INVALID_PARAMS } });
+  });
+
+  test('disables verify when the active account only holds the counterparty key of a single-key vault', async ({
+    page,
+    context,
+  }) => {
+    await page.goto('localhost:3000');
+    const requestPromise = initiateRequest(page, 'btc_addAccount', {
+      name: 'Bond',
+      descriptor: counterpartySlotSingleKeyBondDescriptor,
+    });
+
+    const popup = await waitForPopup(context);
+    await expect(popup.getByTestId('bond-vault-policy')).toHaveText('Requires the owner key');
+    await expect(popup.getByText("isn't connected to this timelocked address")).toBeVisible();
+    await expect(popup.getByTestId('btc-add-account-approve-button')).toBeDisabled();
+
+    await popup.close();
+    await expect(requestPromise).rejects.toThrow();
   });
 });
