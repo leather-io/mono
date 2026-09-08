@@ -12,7 +12,7 @@ interface PastPeriodsRowProps {
 
 export function PastPeriodsRow({ summary, onClick }: PastPeriodsRowProps) {
   return (
-    <Pressable py="space.04" onClick={onClick} data-testid={AllBalancesSelectors.DetailPastPeriods}>
+    <Pressable my="space.04" onClick={onClick} data-testid={AllBalancesSelectors.DetailPastPeriods}>
       <ItemLayout
         titleLeft={<styled.span textStyle="label.01">Past periods</styled.span>}
         titleRight={null}

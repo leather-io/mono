@@ -38,10 +38,10 @@ describe(getRenewalOpensAt.name, () => {
 });
 
 describe(isPastPosition.name, () => {
-  test('treats ended, withdrawn, and exited bonds as past', () => {
-    expect(isPastPosition(createPosition('matured'))).toBe(true);
+  test('treats only withdrawn and exited bonds as past', () => {
     expect(isPastPosition(createPosition('reclaimed'))).toBe(true);
     expect(isPastPosition(createPosition('exited'))).toBe(true);
+    expect(isPastPosition(createPosition('matured'))).toBe(false);
     expect(isPastPosition(createPosition('locked'))).toBe(false);
     expect(isPastPosition(createPosition('exiting'))).toBe(false);
   });
@@ -51,9 +51,9 @@ describe(summarizePastPositions.name, () => {
   test('counts past positions and sums their paid out rewards', () => {
     const summary = summarizePastPositions([
       createPosition('reclaimed', undefined, createMoney(1_035_000, 'BTC')),
-      createPosition('matured', undefined, createMoney(2_069_000, 'BTC')),
+      createPosition('exited', undefined, createMoney(2_069_000, 'BTC')),
       createPosition('exited'),
-      createPosition('locked', undefined, createMoney(500_000, 'BTC')),
+      createPosition('matured', undefined, createMoney(500_000, 'BTC')),
     ]);
     expect(summary.count).toEqual(3);
     expect(summary.earned?.amount.toString()).toEqual('3104000');

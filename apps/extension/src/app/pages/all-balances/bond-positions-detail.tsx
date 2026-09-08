@@ -87,6 +87,7 @@ export function BondPositionsDetail() {
             justifyContent="space-between"
             alignItems="flex-start"
             pt="space.04"
+            pb="space.04"
             data-testid={AllBalancesSelectors.DetailTotal}
           >
             <Stack gap="space.02">

@@ -23,7 +23,7 @@ export function UpcomingBondSection({ window, opensAt }: UpcomingBondSectionProp
     <Stack gap="space.03" py="space.04" data-testid={AllBalancesSelectors.DetailUpcomingBond}>
       <Flex justifyContent="space-between" alignItems="center">
         <styled.span textStyle="label.01">Period {window.bondIndex}</styled.span>
-        <Badge label={badgeLabel} variant="default" />
+        <Badge label={badgeLabel} variant="default" textColor="primary" />
       </Flex>
       <Stack gap="space.02">
         <BondDetailRow label="Window" value={windowLabel} />
