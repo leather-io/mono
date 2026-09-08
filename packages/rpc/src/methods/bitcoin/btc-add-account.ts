@@ -4,8 +4,10 @@ import { defineRpcEndpoint } from '../../rpc/schemas';
 
 export const policyRoleSchema = z.enum(['signer']);
 
+export const maxBtcDescriptorLength = 4096;
+
 const btcAddAccountRequestParamsSchema = z.object({
-  descriptor: z.string(),
+  descriptor: z.string().max(maxBtcDescriptorLength),
   name: z.string(),
   network: z.string().optional(),
 });

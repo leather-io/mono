@@ -1,6 +1,11 @@
 import { useMemo } from 'react';
 
-import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
+import {
+  type AccountDescriptorKey,
+  type CompiledWshDescriptor,
+  compileWshDescriptor,
+  findPolicyMemberAccountKey,
+} from '@leather.io/bitcoin';
 import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import {
   RpcErrorCode,
@@ -17,26 +22,47 @@ import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to
 import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
+import { isLedgerDisplayableDescriptor } from '@app/features/ledger/utils/ledger-descriptor-address';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import { useNetworks } from '@app/store/networks/networks.selectors';
 
 import { usePolicyFeatureGate } from '../policy-feature-gate';
 import {
-  type PolicyApprovalMode,
+  type BtcAddAccountKind,
   type PolicyMatchStatus,
-  getPolicyApprovalMode,
+  getBtcAddAccountApprovalMode,
 } from '../policy-match';
 import { deriveBtcPolicyAddress } from './btc-policy-registration';
 import { useRegisterBtcPolicy } from './register-btc-policy';
+import { matchTimelockedDescriptor } from './timelocked-descriptor';
 
 const { decode } = createRequestEncoder(btcAddAccount.request);
 
+function tryCompileWshDescriptor(descriptor: string): CompiledWshDescriptor | null {
+  try {
+    return compileWshDescriptor(descriptor);
+  } catch {
+    return null;
+  }
+}
+
+function getPolicyMatchStatus(
+  hasActiveAccount: boolean,
+  accountKey: AccountDescriptorKey | undefined
+): PolicyMatchStatus {
+  if (!hasActiveAccount) return 'no-active-account';
+  return accountKey ? 'match' : 'mismatch';
+}
+
 function useBtcAddAccountParams() {
   const { frameId, tabId, origin, topOrigin } = useRpcRequestParams();
-  const request = initialSearchParams.get('rpcRequest');
-  if (!request) throw new Error('Missing rpcRequest');
-  return { frameId, tabId, origin, topOrigin, request: decode(request) };
+  const request = useMemo(() => {
+    const encodedRequest = initialSearchParams.get('rpcRequest');
+    if (!encodedRequest) throw new Error('Missing rpcRequest');
+    return decode(encodedRequest);
+  }, []);
+  return { frameId, tabId, origin, topOrigin, request };
 }
 
 export function useBtcAddAccount() {
@@ -52,36 +78,59 @@ export function useBtcAddAccount() {
     tabId,
   });
 
+  const timelock = useMemo(
+    () => matchTimelockedDescriptor(request.params.descriptor),
+    [request.params.descriptor]
+  );
+  const kind: BtcAddAccountKind = timelock ? 'timelocked' : 'policy';
+
   // Whitelisted origins may register the policy; any other origin may only let
   // the user verify the derived address (nothing is written to the extension).
-  const mode: PolicyApprovalMode = getPolicyApprovalMode(origin, topOrigin);
+  const mode = getBtcAddAccountApprovalMode(origin, topOrigin, kind);
 
   // The active account must be one of the descriptor's cosigners before the user
   // can confirm. We only consider the native segwit account's xpub or its 0/0
   // public key: `findAccountDescriptorKey` matches the account xpub, or the raw
   // 0/0 public key, against the compiled descriptor — the same check signPsbt uses.
-  const matchStatus: PolicyMatchStatus = useMemo(() => {
-    if (!nativeSegwitAccount) return 'no-active-account';
+  const compiled = useMemo(
+    () => tryCompileWshDescriptor(request.params.descriptor),
+    [request.params.descriptor]
+  );
+  const accountKey = useMemo(() => {
+    if (!compiled || !nativeSegwitAccount) return undefined;
     try {
-      const compiled = compileWshDescriptor(request.params.descriptor);
-      return findAccountDescriptorKey(compiled, nativeSegwitAccount.keychain)
-        ? 'match'
-        : 'mismatch';
+      return findPolicyMemberAccountKey(
+        request.params.descriptor,
+        compiled,
+        nativeSegwitAccount.keychain
+      );
     } catch {
-      return 'mismatch';
+      return undefined;
     }
-  }, [nativeSegwitAccount, request.params.descriptor]);
+  }, [compiled, nativeSegwitAccount, request.params.descriptor]);
+  const matchStatus = getPolicyMatchStatus(!!nativeSegwitAccount, accountKey);
+
+  const isLedgerVerifyUnsupported =
+    walletType === 'ledger' &&
+    !!compiled &&
+    !!accountKey &&
+    !isLedgerDisplayableDescriptor(compiled, accountKey);
 
   // Derived locally and identically to registration, so what the user verifies
   // (in the approver and on a Ledger) equals what is stored / returned. Null on
   // a descriptor/network mismatch (never throw in render); confirm is disabled.
   const address = useMemo(() => {
+    if (!compiled) return null;
     try {
-      return deriveBtcPolicyAddress({ params: request.params, networks }).address;
+      return deriveBtcPolicyAddress({
+        params: request.params,
+        networks,
+        scriptPubKey: compiled.scriptPubKey,
+      }).address;
     } catch {
       return null;
     }
-  }, [request.params, networks]);
+  }, [compiled, request.params, networks]);
 
   function focusInitiatingTab() {
     focusTabAndWindow(tabId);
@@ -146,10 +195,13 @@ export function useBtcAddAccount() {
     name: request.params.name.substring(0, ACCOUNT_MAX_NAME_LENGTH),
     descriptor: request.params.descriptor,
     address,
+    kind,
+    timelock,
     matchStatus,
     mode,
     walletType,
-    canApprove: matchStatus === 'match' && address !== null,
+    isLedgerVerifyUnsupported,
+    canApprove: matchStatus === 'match' && address !== null && !isLedgerVerifyUnsupported,
     isFeatureEnabled,
     rejectAsUnsupported,
     focusInitiatingTab,
