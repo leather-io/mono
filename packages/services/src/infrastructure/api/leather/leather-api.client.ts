@@ -25,8 +25,6 @@ export type LeatherApiUtxo =
   paths['/v1/utxos/{descriptor}']['get']['responses'][200]['content']['application/json'][number];
 export type LeatherApiStakingBond =
   paths['/v1/staking/addresses/{address}/bonds']['get']['responses'][200]['content']['application/json']['bonds'][number];
-export type LeatherApiStakingChainId =
-  paths['/v1/staking/addresses/{address}/bonds']['get']['parameters']['query']['chain'];
 export type LeatherApiTokenPriceHistory =
   paths['/v1/market/prices/native/{symbol}/history']['get']['responses'][200]['content']['application/json'];
 export type LeatherApiLocale = Required<
