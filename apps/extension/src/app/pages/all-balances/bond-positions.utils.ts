@@ -22,7 +22,7 @@ const positionStatusBadgeMap: Record<BtcStakingPositionStatus, PositionBadge> = 
   exited: { label: 'Exited', variant: 'default' },
 };
 
-const pastPositionStatuses: BtcStakingPositionStatus[] = ['matured', 'reclaimed', 'exited'];
+const pastPositionStatuses: BtcStakingPositionStatus[] = ['reclaimed', 'exited'];
 
 export function isPastPosition(position: BtcStakingPosition): boolean {
   return pastPositionStatuses.includes(position.status);

@@ -28,7 +28,7 @@ export function BondPositionSection({ position, heldBy }: BondPositionSectionPro
     <Stack gap="space.03" py="space.04" data-testid={AllBalancesSelectors.DetailBondSection}>
       <Flex justifyContent="space-between" alignItems="center">
         <styled.span textStyle="label.01">Period {position.bondIndex}</styled.span>
-        <Badge label={badge.label} variant={badge.variant} />
+        <Badge label={badge.label} variant={badge.variant} textColor="primary" />
       </Flex>
       <Stack gap="space.02">
         <BondDetailRow label="Amount" value={formatBalance(position.amount)} />
