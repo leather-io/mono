@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { AccountAddresses, AccountId } from '@leather.io/models';
+import type { AccountAddresses, AccountId, Money } from '@leather.io/models';
 import {
   createAccountLockedBalanceQueryConfig,
   createAccountTotalBalanceQueryConfig,
@@ -8,6 +8,7 @@ import {
 } from '@leather.io/queries';
 import type { AccountRequest } from '@leather.io/services';
 
+import { addMoney, useMockLockedBtc } from '@app/features/bonds/use-mock-locked-btc';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import {
   useAccountAddresses,
@@ -54,18 +55,24 @@ function useGetAccountUnlockedBalanceQuery(request: AccountRequest) {
   });
 }
 
+// Bond scenarios (non-production only) add their bonded BTC to locked and
+// total, matching what the balance service reports once the index knows the bond
 function useGetAccountLockedBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();
+  const mockLocked = useMockLockedBtc();
   return useQuery({
     ...createAccountLockedBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
+    select: mockLocked ? (locked: Money) => addMoney(locked, mockLocked.quote) : undefined,
   });
 }
 
 function useGetAccountTotalBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();
+  const mockLocked = useMockLockedBtc();
   return useQuery({
     ...createAccountTotalBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
+    select: mockLocked ? (total: Money) => addMoney(total, mockLocked.quote) : undefined,
   });
 }

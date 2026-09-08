@@ -43,6 +43,7 @@ export enum RouteUrls {
   AllBalances = '/all-balances',
   AllBalancesDetail = '/all-balances/:category',
   AllBalancesBondHistory = '/all-balances/bonded/history',
+  BondsPlayground = '/playground/bonds',
   AddWallet = '/add-wallet',
   CreateWallet = '/create-wallet',
   AddLedgerWallet = '/add-ledger-wallet',

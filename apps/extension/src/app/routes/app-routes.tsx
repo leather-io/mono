@@ -38,6 +38,7 @@ import { NotFoundPage } from '@app/pages/not-found/not-found';
 import { BackUpSecretKeyPage } from '@app/pages/onboarding/back-up-secret-key/back-up-secret-key';
 import { SignIn } from '@app/pages/onboarding/sign-in/sign-in';
 import { WelcomePage } from '@app/pages/onboarding/welcome/welcome';
+import { BondsPlaygroundPage } from '@app/pages/playground/bonds-playground';
 import { RequestError } from '@app/pages/request-error/request-error';
 import { SellPage } from '@app/pages/sell/sell';
 import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error';
@@ -323,6 +324,14 @@ function useAppRoutes() {
             element={
               <AccountGate>
                 <BondHistoryPage />
+              </AccountGate>
+            }
+          />
+          <Route
+            path={RouteUrls.BondsPlayground}
+            element={
+              <AccountGate>
+                <BondsPlaygroundPage />
               </AccountGate>
             }
           />
