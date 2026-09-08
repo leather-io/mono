@@ -177,6 +177,7 @@ describe(toBtcStakingPosition.name, () => {
     expect(position.stxStacked?.amount.toString()).toEqual('10000000000');
     expect(position.rewardsAccrued?.amount.toString()).toEqual('2000000');
     expect(position.rewardsClaimed?.amount.toString()).toEqual('1035000');
+    expect(position.estimatedActivationAt.toISOString()).toEqual('2026-09-04T00:40:00.000Z');
     expect(position.bond).toEqual({
       index: 4,
       status: 'active',

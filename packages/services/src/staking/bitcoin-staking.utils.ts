@@ -99,6 +99,11 @@ export function toBtcStakingPosition({
       : null,
     unlockBurnHeight,
     estimatedUnlockAt: estimateBurnHeightDate(unlockBurnHeight, burnTip, now),
+    estimatedActivationAt: estimateBurnHeightDate(
+      bond.schedule.activation.bitcoin_height,
+      burnTip,
+      now
+    ),
     bond: toBtcBond(bond),
   };
 }

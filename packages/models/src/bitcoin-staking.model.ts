@@ -32,6 +32,7 @@ export interface BtcStakingPosition {
   readonly rewardsClaimed: Money | null;
   readonly unlockBurnHeight: number;
   readonly estimatedUnlockAt: Date;
+  readonly estimatedActivationAt: Date;
   readonly bond: BtcBond;
 }
 
