@@ -32,8 +32,8 @@ pnpm i
 pnpm dev
 ```
 
-The extension uses Vite and CRXJS. Development output is written to `dist/`, and supported
-extension contexts update through the Vite development server on port 8080.
+The extension uses Vite and CRXJS. Development output is written to `dist/` and rebuilt when
+source files change. Reload the unpacked extension in the browser after a rebuild completes.
 
 #### Optional: run test app
 

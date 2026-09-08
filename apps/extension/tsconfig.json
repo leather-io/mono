@@ -40,7 +40,7 @@
     "./src/**/*",
     "./tests/**/*",
     "./scripts-ts/**/*",
-    "./build/**/*",
+    "./tooling/**/*",
     "./*.spec.ts",
     "./manifest.config.ts",
     "./vite.config.ts",

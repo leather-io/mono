@@ -2,6 +2,7 @@ import { createManifest } from './manifest.config';
 
 test('creates a Chromium development manifest', () => {
   const manifest = createManifest({
+    includeInpageBuildEntry: true,
     previewRelease: false,
     targetBrowser: 'chromium',
     version: '1.2.3.456',
@@ -21,6 +22,23 @@ test('creates a Chromium development manifest', () => {
         128: 'assets/icons/leather-icon-128-dev.png',
       },
     },
+    content_scripts: [
+      {
+        js: ['content-script.ts'],
+        run_at: 'document_start',
+      },
+      {
+        js: ['inpage.ts'],
+        matches: ['https://inpage.invalid/*'],
+        run_at: 'document_start',
+      },
+    ],
+    web_accessible_resources: [
+      {
+        resources: ['inpage.js'],
+        use_dynamic_url: false,
+      },
+    ],
   });
 });
 
@@ -41,10 +59,15 @@ test('creates a Firefox preview manifest', () => {
     browser_specific_settings: {
       gecko: {
         id: '{e22ae397-03d7-4622-bd8f-ecaca8c9b277}',
+        strict_min_version: '121.0',
       },
     },
     icons: {
       128: 'assets/icons/leather-icon-128-preview.png',
     },
   });
+  expect(manifest.content_security_policy.extension_pages).toContain(
+    "style-src 'self' 'unsafe-inline'"
+  );
+  expect(manifest.content_security_policy.extension_pages).toContain("font-src 'self'");
 });
