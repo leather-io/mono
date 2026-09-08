@@ -1,7 +1,11 @@
+import { useNavigate } from 'react-router';
+
 import { btcAsset } from '@leather.io/constants';
 import type { AccountAddresses, AccountId } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui';
 import { createMoney } from '@leather.io/utils';
+
+import { RouteUrls } from '@shared/route-urls';
 
 import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
@@ -24,6 +28,7 @@ interface BitcoinTokenDetailsProps {
 export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsProps) {
   const { showReceive } = useReceiveDialog();
   const toast = useToast();
+  const navigate = useNavigate();
 
   const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountId);
   const taprootBalance = useTaprootBtcAccountBalance(accountId);
@@ -91,6 +96,12 @@ export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsP
       fiatBalance: taprootBalance.value.quote.availableBalance,
       onPressAddress: taprootAddress ? () => handleCopyAddress(taprootAddress) : undefined,
       onPressRow: handleOpenReceive,
+    },
+    {
+      title: 'In a bond',
+      btcBalance: nativeSegwitBalance.value.btc.lockedBalance,
+      fiatBalance: nativeSegwitBalance.value.quote.lockedBalance,
+      onPressRow: () => navigate(RouteUrls.AllBalancesDetail.replace(':category', 'bonded')),
     },
   ];
 

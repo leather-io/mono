@@ -6,9 +6,15 @@ import {
   useGetBtcStakingPositionsQuery,
 } from './bitcoin-staking.query';
 
-export function useCurrentBtcStakingPositions() {
+interface UseCurrentBtcStakingPositionsOptions {
+  includeSpent?: boolean;
+}
+
+export function useCurrentBtcStakingPositions({
+  includeSpent,
+}: UseCurrentBtcStakingPositionsOptions = {}) {
   const request = useAccountRequest();
-  return toFetchState(useGetBtcStakingPositionsQuery(request));
+  return toFetchState(useGetBtcStakingPositionsQuery({ ...request, includeSpent }));
 }
 
 export function useBtcBondEnrollmentWindow() {

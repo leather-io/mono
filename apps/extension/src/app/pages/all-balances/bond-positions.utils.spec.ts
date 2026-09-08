@@ -1,12 +1,21 @@
 import type { BtcStakingPosition } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
 
-import { getRenewalOpensAt } from './bond-positions.utils';
+import { formatCurrency } from '@app/common/currency-formatter';
+
+import {
+  describePastPositions,
+  getRenewalOpensAt,
+  isPastPosition,
+  summarizePastPositions,
+} from './bond-positions.utils';
 
 function createPosition(
   status: BtcStakingPosition['status'],
-  estimatedUnlockAt: Date
+  estimatedUnlockAt = new Date('2026-11-12T00:00:00Z'),
+  rewardsClaimed: BtcStakingPosition['rewardsClaimed'] = null
 ): BtcStakingPosition {
-  return { status, estimatedUnlockAt } as unknown as BtcStakingPosition;
+  return { status, estimatedUnlockAt, rewardsClaimed } as unknown as BtcStakingPosition;
 }
 
 describe(getRenewalOpensAt.name, () => {
@@ -25,5 +34,45 @@ describe(getRenewalOpensAt.name, () => {
       createPosition('locked', new Date('2026-11-20T00:00:00Z')),
     ]);
     expect(opensAt).toBeUndefined();
+  });
+});
+
+describe(isPastPosition.name, () => {
+  test('treats ended, withdrawn, and exited bonds as past', () => {
+    expect(isPastPosition(createPosition('matured'))).toBe(true);
+    expect(isPastPosition(createPosition('reclaimed'))).toBe(true);
+    expect(isPastPosition(createPosition('exited'))).toBe(true);
+    expect(isPastPosition(createPosition('locked'))).toBe(false);
+    expect(isPastPosition(createPosition('exiting'))).toBe(false);
+  });
+});
+
+describe(summarizePastPositions.name, () => {
+  test('counts past positions and sums their paid out rewards', () => {
+    const summary = summarizePastPositions([
+      createPosition('reclaimed', undefined, createMoney(1_035_000, 'BTC')),
+      createPosition('matured', undefined, createMoney(2_069_000, 'BTC')),
+      createPosition('exited'),
+      createPosition('locked', undefined, createMoney(500_000, 'BTC')),
+    ]);
+    expect(summary.count).toEqual(3);
+    expect(summary.earned?.amount.toString()).toEqual('3104000');
+  });
+
+  test('has no earned figure when no past position reports rewards', () => {
+    expect(summarizePastPositions([createPosition('exited')]).earned).toBeNull();
+  });
+});
+
+describe(describePastPositions.name, () => {
+  test('describes the count and the earned amount', () => {
+    const earned = createMoney(3_104_000, 'BTC');
+    expect(describePastPositions({ count: 3, earned })).toEqual(
+      `3 ended, +${formatCurrency(earned)} earned`
+    );
+  });
+
+  test('describes the count alone without rewards', () => {
+    expect(describePastPositions({ count: 1, earned: null })).toEqual('1 ended');
   });
 });
