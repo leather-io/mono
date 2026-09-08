@@ -6,10 +6,10 @@ export const WorkerScript = {
   DecryptionWorker: decryptionWorkerUrl,
 };
 
-export function createWorker(scriptName: string) {
-  const worker = new Worker(scriptName, { type: 'module' });
+export function createWorker(scriptUrl: string) {
+  const worker = new Worker(scriptUrl, { type: 'module' });
   worker.addEventListener('error', error => {
-    analytics?.untypedTrack(`worker_error_thrown_${scriptName}`, { error });
+    analytics?.untypedTrack('worker_error_thrown', { scriptUrl, error });
   });
 
   return worker;
