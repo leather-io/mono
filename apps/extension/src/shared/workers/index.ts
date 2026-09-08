@@ -7,7 +7,7 @@ export const WorkerScript = {
 };
 
 export function createWorker(scriptName: string) {
-  const worker = new Worker(scriptName);
+  const worker = new Worker(scriptName, { type: 'module' });
   worker.addEventListener('error', error => {
     analytics?.untypedTrack(`worker_error_thrown_${scriptName}`, { error });
   });

@@ -9,7 +9,7 @@ import type { RpcRequests, RpcResponses } from '@leather.io/rpc';
 import { DomEventName } from '@shared/inpage-types';
 import { CONTENT_SCRIPT_PORT } from '@shared/message-types';
 
-import inpageScriptUrl from '../inpage/inpage?iife';
+const inpageScriptUrl = 'inpage.js';
 
 let backgroundPort: any;
 

@@ -1,10 +1,13 @@
 import { defineManifest } from '@crxjs/vite-plugin';
 
-import { buildMetadata } from './build/build-metadata';
+import { buildMetadata } from './tooling/build-metadata';
 
 type TargetBrowser = 'chromium' | 'firefox';
 
+export const inpageBuildMatch = 'https://inpage.invalid/*';
+
 interface CreateManifestOptions {
+  includeInpageBuildEntry?: boolean;
   previewRelease: boolean;
   targetBrowser: TargetBrowser;
   version: string;
@@ -30,6 +33,7 @@ function getManifestName(isProduction: boolean, previewRelease: boolean) {
 }
 
 export function createManifest({
+  includeInpageBuildEntry = false,
   previewRelease,
   targetBrowser,
   version,
@@ -38,7 +42,7 @@ export function createManifest({
   const isProduction = walletEnvironment === 'production';
   const iconSuffix = getIconSuffix(isProduction, previewRelease);
   const productionCsp =
-    "default-src 'none'; connect-src *; style-src 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; frame-src https://*.onramper.com; frame-ancestors 'none';";
+    "default-src 'none'; connect-src *; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; frame-src https://*.onramper.com; frame-ancestors 'none';";
   const developmentCsp =
     "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; frame-src https://*.onramper.com https://*.onramper.dev; frame-ancestors 'none';";
   const manifest = {
@@ -72,9 +76,25 @@ export function createManifest({
     content_scripts: [
       {
         run_at: 'document_start',
-        js: ['src/content-scripts/content-script.ts'],
+        js: ['content-script.ts'],
         matches: ['*://*/*'],
         all_frames: true,
+      },
+      ...(includeInpageBuildEntry
+        ? [
+            {
+              run_at: 'document_start',
+              js: ['inpage.ts'],
+              matches: [inpageBuildMatch],
+            },
+          ]
+        : []),
+    ],
+    web_accessible_resources: [
+      {
+        resources: ['inpage.js'],
+        matches: ['*://*/*'],
+        use_dynamic_url: false,
       },
     ],
     icons: generateImageAssetUrlsWithSuffix(iconSuffix),
@@ -86,6 +106,7 @@ export function createManifest({
           browser_specific_settings: {
             gecko: {
               id: '{e22ae397-03d7-4622-bd8f-ecaca8c9b277}',
+              strict_min_version: '121.0',
             },
           },
         }
@@ -105,8 +126,9 @@ export function getTargetBrowser(value: string | undefined): TargetBrowser {
   return value === 'firefox' ? 'firefox' : 'chromium';
 }
 
-export default defineManifest(() =>
+export default defineManifest(({ command }) =>
   createManifest({
+    includeInpageBuildEntry: command === 'build',
     previewRelease: Boolean(process.env.PREVIEW_RELEASE),
     targetBrowser: getTargetBrowser(process.env.TARGET_BROWSER),
     version: buildMetadata.version,
