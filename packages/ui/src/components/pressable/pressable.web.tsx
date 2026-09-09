@@ -11,6 +11,7 @@ const basePseudoOutlineProps = {
   left: '-space.03',
   bottom: '-space.03',
   right: '-space.03',
+  pointerEvents: 'none',
 };
 
 const focusVisibleStyles = {

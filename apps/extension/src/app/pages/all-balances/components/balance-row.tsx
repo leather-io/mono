@@ -1,8 +1,8 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { InfoCircleIcon, ItemLayout, Pressable } from '@leather.io/ui';
+import { ItemLayout, Pressable } from '@leather.io/ui';
 
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
+import { InfoTooltip } from '@app/ui/components/tooltip/info-tooltip';
 
 import { BalanceAmount } from './balance-amount';
 
@@ -30,11 +30,7 @@ export function BalanceRow({
       titleLeft={
         <Flex alignItems="center" gap="space.01">
           <styled.span textStyle="label.02">{label}</styled.span>
-          {tooltipText && (
-            <BasicTooltip label={tooltipText} side="top" asChild>
-              <InfoCircleIcon color="ink.text-subdued" variant="small" />
-            </BasicTooltip>
-          )}
+          <InfoTooltip label={tooltipText} />
         </Flex>
       }
       titleRight={

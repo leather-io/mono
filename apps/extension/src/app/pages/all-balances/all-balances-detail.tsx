@@ -2,22 +2,24 @@ import { useMemo } from 'react';
 import { Navigate, useParams } from 'react-router';
 
 import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
+import { BondsSelectors } from '@tests/selectors/bonds.selectors';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { btcAsset } from '@leather.io/constants';
 import type { Money, NumType } from '@leather.io/models';
-import { BtcAvatarIcon, Flag, InfoCircleIcon } from '@leather.io/ui';
+import { BtcAvatarIcon, Flag } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 import { Content } from '@app/components/layout';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 import { useCurrentUtxosFetchState } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useMarketData } from '@app/query/common/market-data/market-data.query';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
+import { InfoTooltip } from '@app/ui/components/tooltip/info-tooltip';
 
 import {
   type BtcBalanceCategory,
@@ -62,6 +64,8 @@ function AllBalancesDetailContent({ category }: AllBalancesDetailContentProps) {
 
   const isLoading = utxosState.state === 'loading' || marketData.state === 'loading';
   const hasUtxos = utxosState.state === 'success';
+  // A failed fetch would otherwise render as "$0.00 across 0 addresses"
+  const hasError = utxosState.state === 'error' || marketData.state === 'error';
 
   function calculateFiatValue(sats: NumType): Money | undefined {
     if (marketData.state !== 'success') return undefined;
@@ -95,37 +99,41 @@ function AllBalancesDetailContent({ category }: AllBalancesDetailContentProps) {
             pt="space.04"
             data-testid={AllBalancesSelectors.DetailTotal}
           >
-            <Stack gap="space.02">
-              <BasicTooltip label={tooltipText} side="top">
-                <Flag
-                  reverse
-                  spacing="space.01"
-                  img={<InfoCircleIcon color="ink.text-subdued" display="inline" variant="small" />}
-                >
-                  <styled.h2 textStyle="label.02">{title}</styled.h2>
-                </Flag>
-              </BasicTooltip>
-              <BalanceAmount
-                textStyle="heading.03"
-                value={formatBalance(calculateFiatValue(totalSats))}
-                isLoading={isLoading}
-                skeletonWidth="140px"
-                skeletonHeight="32px"
-              />
-              <Flex alignItems="center" gap="space.01">
+            <Stack gap="space.01">
+              <Flag reverse spacing="space.01" img={<InfoTooltip label={tooltipText} />}>
+                <styled.h2 textStyle="label.02">{title}</styled.h2>
+              </Flag>
+              <Stack gap="2px">
                 <BalanceAmount
-                  textStyle="caption.01"
-                  color="ink.text-subdued"
-                  value={formatBalance(createMoney(totalSats, 'BTC'))}
+                  textStyle="heading.03"
+                  value={
+                    hasError ? emptyAmountPlaceholder : formatBalance(calculateFiatValue(totalSats))
+                  }
                   isLoading={isLoading}
-                  skeletonWidth="60px"
-                  skeletonHeight="16px"
+                  skeletonWidth="140px"
+                  skeletonHeight="32px"
                 />
-                <styled.span textStyle="caption.01" color="ink.text-subdued">
-                  across {addressGroups.length}{' '}
-                  {addressGroups.length === 1 ? 'address' : 'addresses'}
-                </styled.span>
-              </Flex>
+                <Flex alignItems="center" gap="space.01">
+                  <BalanceAmount
+                    textStyle="caption.01"
+                    color="ink.text-subdued"
+                    value={
+                      hasError
+                        ? emptyAmountPlaceholder
+                        : formatBalance(createMoney(totalSats, 'BTC'))
+                    }
+                    isLoading={isLoading}
+                    skeletonWidth="60px"
+                    skeletonHeight="16px"
+                  />
+                  {!hasError && (
+                    <styled.span textStyle="caption.01" color="ink.text-subdued">
+                      across {addressGroups.length}{' '}
+                      {addressGroups.length === 1 ? 'address' : 'addresses'}
+                    </styled.span>
+                  )}
+                </Flex>
+              </Stack>
             </Stack>
             <BtcAvatarIcon />
           </Flex>
@@ -138,6 +146,17 @@ function AllBalancesDetailContent({ category }: AllBalancesDetailContentProps) {
               data-testid={AllBalancesSelectors.DetailEmpty}
             >
               No UTXOs in this category
+            </styled.span>
+          )}
+
+          {hasError && (
+            <styled.span
+              textStyle="caption.01"
+              color="ink.text-subdued"
+              py="space.05"
+              data-testid={BondsSelectors.DetailError}
+            >
+              Couldn't load this balance right now. Check your connection and try again.
             </styled.span>
           )}
 
