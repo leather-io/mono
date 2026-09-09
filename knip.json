@@ -46,6 +46,7 @@
     "apps/extension": {
       "entry": [
         "vite.config.ts",
+        "tooling/vite-plugins.ts",
         "src/app/index.tsx",
         "src/background/background.ts",
         "src/inpage/inpage.ts",

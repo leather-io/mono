@@ -21,7 +21,7 @@
     "build:watch": "cross-env WALLET_ENVIRONMENT=development NODE_ENV=development node ./tooling/watch-extension-build.js development",
     "clean": "rm -rf ./dist",
     "clean:all": "rm -rf ./dist && rm -rf ./coverage && rm -rf ./node_modules",
-    "dev": "concurrently --raw \"pnpm build:watch\" \"redux-devtools --hostname=localhost --port=8000\"",
+    "dev": "cross-env WALLET_ENVIRONMENT=development concurrently --raw \"vite --mode development\" \"redux-devtools --hostname=localhost --port=8000\"",
     "dev:test-app": "webpack serve --config test-app/webpack/webpack.config.dev.cjs",
     "format": "pnpm lint:prettier:fix",
     "format:check": "pnpm lint:prettier",

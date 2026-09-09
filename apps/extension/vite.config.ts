@@ -1,6 +1,5 @@
 import { crx } from '@crxjs/vite-plugin';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
-import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sourcemaps from 'rollup-plugin-sourcemaps2';
@@ -15,12 +14,18 @@ import packageJson from './package.json' with { type: 'json' };
 import { buildMetadata } from './tooling/build-metadata';
 import {
   assertServiceWorkerCompatibility,
+  buildInpageScript,
   copyExtensionAssets,
+  polyfillProcessBeforeViteEnv,
   protectPageContextArtifacts,
+  reactWithExternalRefreshPreamble,
 } from './tooling/vite-plugins';
 
 const extensionRoot = fileURLToPath(new URL('.', import.meta.url));
 const backgroundEntry = path.join(extensionRoot, 'src/background/background.ts');
+const inpageEntry = path.join(extensionRoot, 'inpage.ts');
+const devServerPort = 8080;
+const processShimSpecifier = 'vite-plugin-node-polyfills/shims/process';
 const dependencySourceMapPatterns = [
   '**/node_modules/@leather.io/**/*.{js,mjs,cjs}',
   '**/node_modules/@stacks/**/*.{js,mjs,cjs}',
@@ -95,12 +100,11 @@ function getRuntimeEnvironmentDefinitions(mode: string) {
   );
 }
 
-
 function getSharedPlugins() {
   return [
     tsconfigPaths(),
     sourcemaps({ include: dependencySourceMapPatterns }),
-    react(),
+    ...reactWithExternalRefreshPreamble(),
     svgr(),
     nodePolyfills({
       globals: {
@@ -136,16 +140,24 @@ function getManualChunkName(id: string) {
   return `vendor-${sanitizeChunkName(dependencyName)}`;
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, command }) => {
   const analyzeBundle = process.env.ANALYZE === 'true';
   const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN;
   const environmentDefinitions = getRuntimeEnvironmentDefinitions(mode);
-  const sourceMap = mode === 'development' ? 'inline' : 'hidden';
+  const sourceMap = mode === 'development' ? true : 'hidden';
 
   return {
     root: extensionRoot,
-    publicDir: false,
+    publicDir: command === 'serve' ? path.join(extensionRoot, 'public') : false,
     base: '/',
+    server: {
+      host: 'localhost',
+      port: devServerPort,
+      strictPort: true,
+      hmr: {
+        clientPort: devServerPort,
+      },
+    },
     define: {
       ...environmentDefinitions,
       VERSION: JSON.stringify(buildMetadata.version),
@@ -155,6 +167,7 @@ export default defineConfig(({ mode }) => {
       dedupe: ['react', 'react-dom'],
     },
     plugins: [
+      polyfillProcessBeforeViteEnv(processShimSpecifier),
       ...getSharedPlugins(),
       crx({
         manifest,
@@ -164,6 +177,7 @@ export default defineConfig(({ mode }) => {
         },
       }),
       copyExtensionAssets(extensionRoot),
+      buildInpageScript(inpageEntry),
       protectPageContextArtifacts(inpageBuildMatch),
       assertServiceWorkerCompatibility(backgroundEntry),
       ...(analyzeBundle
@@ -197,6 +211,7 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
       target: 'es2022',
       minify: false,
+      reportCompressedSize: false,
       sourcemap: sourceMap,
       rollupOptions: {
         input: {

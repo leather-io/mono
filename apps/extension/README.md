@@ -32,8 +32,12 @@ pnpm i
 pnpm dev
 ```
 
-The extension uses Vite and CRXJS. Development output is written to `dist/` and rebuilt when
-source files change. Reload the unpacked extension in the browser after a rebuild completes.
+The extension uses Vite and CRXJS. `pnpm dev` starts the Vite dev server on port 8080 and writes a
+thin development build to `dist/`. Load `dist/` as an unpacked extension once; extension pages and the
+content script then hot reload from the dev server, and the background service worker reloads the
+extension when its code changes. The page context script (`inpage.ts`) is bundled once at server
+start, so restart `pnpm dev` after editing it. `pnpm build:watch` remains available for a full rebuild
+on every change.
 
 #### Optional: run test app
 

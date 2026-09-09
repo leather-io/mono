@@ -1,7 +1,8 @@
 import type { CrxPlugin } from '@crxjs/vite-plugin';
+import react from '@vitejs/plugin-react';
 import { existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import type { Plugin } from 'vite';
+import { type Plugin, type PluginOption, type ResolvedConfig, build } from 'vite';
 
 interface StaticAsset {
   fileName: string;
@@ -10,6 +11,7 @@ interface StaticAsset {
 
 const pageContextArtifacts = ['content-script.js', 'inpage.js'];
 const inlineSourceMapPattern = /\n?\/\/# sourceMappingURL=data:[^\n]+\n?$/;
+const inpageScriptFileName = 'inpage.js';
 
 function collectStaticAssets(directory: string, prefix = ''): StaticAsset[] {
   if (!existsSync(directory)) return [];
@@ -22,21 +24,7 @@ function collectStaticAssets(directory: string, prefix = ''): StaticAsset[] {
 }
 
 function getStaticAssets(extensionRoot: string) {
-  const browserPolyfillDirectory = path.join(
-    extensionRoot,
-    'node_modules/webextension-polyfill/dist'
-  );
-  return [
-    ...collectStaticAssets(path.join(extensionRoot, 'public/assets'), 'assets'),
-    {
-      fileName: 'browser-polyfill.js',
-      sourcePath: path.join(browserPolyfillDirectory, 'browser-polyfill.js'),
-    },
-    {
-      fileName: 'browser-polyfill.js.map',
-      sourcePath: path.join(browserPolyfillDirectory, 'browser-polyfill.js.map'),
-    },
-  ];
+  return collectStaticAssets(path.join(extensionRoot, 'public/assets'), 'assets');
 }
 
 export function copyExtensionAssets(extensionRoot: string): Plugin {
@@ -51,6 +39,52 @@ export function copyExtensionAssets(extensionRoot: string): Plugin {
           fileName: file.fileName,
           source: readFileSync(file.sourcePath),
         });
+      });
+    },
+  };
+}
+
+export function buildInpageScript(inpageEntry: string): Plugin {
+  let config: ResolvedConfig;
+  return {
+    name: 'crx:inpage-script',
+    configResolved(resolvedConfig) {
+      config = resolvedConfig;
+    },
+    async generateBundle() {
+      if (config.command !== 'serve') return;
+      const result = await build({
+        configFile: false,
+        logLevel: 'warn',
+        root: config.root,
+        mode: config.mode,
+        define: config.define,
+        resolve: config.resolve,
+        build: {
+          write: false,
+          emptyOutDir: false,
+          minify: false,
+          sourcemap: false,
+          target: config.build.target,
+          lib: {
+            entry: inpageEntry,
+            formats: ['iife'],
+            name: 'leatherInpage',
+            fileName: () => inpageScriptFileName,
+          },
+        },
+      });
+      const outputs = Array.isArray(result) ? result : [result];
+      const entryChunk = outputs
+        .flatMap(output => ('output' in output ? output.output : []))
+        .find(output => output.type === 'chunk' && output.isEntry);
+      if (!entryChunk || entryChunk.type !== 'chunk') {
+        this.error(`Unable to build page context script ${inpageEntry}`);
+      }
+      this.emitFile({
+        type: 'asset',
+        fileName: inpageScriptFileName,
+        source: entryChunk.code,
       });
     },
   };
@@ -147,4 +181,64 @@ export function assertServiceWorkerCompatibility(backgroundEntry: string): Plugi
       );
     },
   };
+}
+
+export function polyfillProcessBeforeViteEnv(processShimSpecifier: string): Plugin {
+  return {
+    name: 'polyfill-process-before-vite-env',
+    apply: 'serve',
+    enforce: 'pre',
+    transform(code, id) {
+      if (!id.endsWith('/vite/dist/client/env.mjs')) return;
+      return {
+        code: [
+          `import processPolyfill from ${JSON.stringify(processShimSpecifier)};`,
+          'globalThis.process = globalThis.process || processPolyfill;',
+          code,
+        ].join('\n'),
+        map: null,
+      };
+    },
+  };
+}
+
+const reactRefreshPreambleId = '/@react-refresh-preamble';
+
+function isPlugin(plugin: PluginOption): plugin is Plugin {
+  return typeof plugin === 'object' && plugin !== null && 'name' in plugin;
+}
+
+export function reactWithExternalRefreshPreamble(): Plugin[] {
+  const plugins = react().filter(isPlugin);
+  const refreshPlugin = plugins.find(plugin => typeof plugin.transformIndexHtml === 'function');
+  if (!refreshPlugin) throw new Error('Unable to find the React refresh plugin');
+  let base = '/';
+  refreshPlugin.transformIndexHtml = (_, context) => {
+    if (!context.server) return;
+    return [
+      {
+        tag: 'script',
+        attrs: { type: 'module', src: reactRefreshPreambleId },
+        injectTo: 'head-prepend',
+      },
+    ];
+  };
+  return [
+    ...plugins,
+    {
+      name: 'react-refresh-preamble-module',
+      apply: 'serve',
+      configResolved(config) {
+        base = config.base;
+      },
+      resolveId(source) {
+        if (source === reactRefreshPreambleId) return reactRefreshPreambleId;
+        return null;
+      },
+      load(id) {
+        if (id === reactRefreshPreambleId) return react.preambleCode.replace('__BASE__', base);
+        return null;
+      },
+    },
+  ];
 }
