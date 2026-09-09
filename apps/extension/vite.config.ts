@@ -19,6 +19,7 @@ import {
   polyfillProcessBeforeViteEnv,
   protectPageContextArtifacts,
   reactWithExternalRefreshPreamble,
+  resolvePublicAssetUrls,
 } from './tooling/vite-plugins';
 
 const extensionRoot = fileURLToPath(new URL('.', import.meta.url));
@@ -26,6 +27,8 @@ const backgroundEntry = path.join(extensionRoot, 'src/background/background.ts')
 const inpageEntry = path.join(extensionRoot, 'inpage.ts');
 const devServerPort = 8080;
 const processShimSpecifier = 'vite-plugin-node-polyfills/shims/process';
+const publicAssetsDirectory = path.join(extensionRoot, 'public/assets');
+const lateDiscoveredDependencies = ['punycode'];
 const dependencySourceMapPatterns = [
   '**/node_modules/@leather.io/**/*.{js,mjs,cjs}',
   '**/node_modules/@stacks/**/*.{js,mjs,cjs}',
@@ -40,7 +43,7 @@ const extensionAliases = {
   '@stacks/transactions': '@stacks/transactions/dist/esm',
   '@stacks/wallet-sdk': '@stacks/wallet-sdk/dist/esm',
   '@app': path.resolve(extensionRoot, 'src/app'),
-  '@assets': path.resolve(extensionRoot, 'public/assets'),
+  '@assets': publicAssetsDirectory,
   '@background': path.resolve(extensionRoot, 'src/background'),
   '@content-scripts': path.resolve(extensionRoot, 'src/content-scripts'),
   '@inpage': path.resolve(extensionRoot, 'src/inpage'),
@@ -158,6 +161,9 @@ export default defineConfig(({ mode, command }) => {
         clientPort: devServerPort,
       },
     },
+    optimizeDeps: {
+      include: lateDiscoveredDependencies,
+    },
     define: {
       ...environmentDefinitions,
       VERSION: JSON.stringify(buildMetadata.version),
@@ -168,6 +174,7 @@ export default defineConfig(({ mode, command }) => {
     },
     plugins: [
       polyfillProcessBeforeViteEnv(processShimSpecifier),
+      resolvePublicAssetUrls(publicAssetsDirectory, '/assets'),
       ...getSharedPlugins(),
       crx({
         manifest,
@@ -188,7 +195,7 @@ export default defineConfig(({ mode, command }) => {
             }),
           ]
         : []),
-      ...(mode !== 'development' && process.env.EXTENSION_WATCH_BUILD !== 'true' && sentryAuthToken
+      ...(mode !== 'development' && sentryAuthToken
         ? [
             sentryVitePlugin({
               authToken: sentryAuthToken,
