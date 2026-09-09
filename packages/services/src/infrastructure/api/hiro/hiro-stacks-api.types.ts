@@ -186,3 +186,61 @@ export interface CallReadOnlyFunctionArgs {
   senderAddress?: string;
   tip?: string;
 }
+
+interface HiroCursorPageResponse<T> {
+  total: number;
+  limit: number;
+  cursor: { next: string | null; previous: string | null; current: string | null };
+  results: T[];
+}
+
+type HiroStakingBondStatus = 'upcoming' | 'active' | 'unlocked';
+
+interface HiroStakingBondSchedulePoint {
+  bitcoin_height: number;
+  pox_cycle: number;
+}
+
+export interface HiroStakingBond {
+  index: number;
+  pox_version: string;
+  status: HiroStakingBondStatus;
+  parameters: {
+    target_rate_bps: number;
+    stx_value_ratio: number;
+    minimum_stx_ratio: number;
+    btc_capacity: string;
+  };
+  registrations: { allowed_count: number; registered_count: number };
+  schedule: { activation: HiroStakingBondSchedulePoint; unlock: HiroStakingBondSchedulePoint };
+  balances: { locked: { btc: string; stx: string }; paid_out: { btc: string } };
+}
+
+export interface HiroStakingBondDetail extends HiroStakingBond {
+  transaction: {
+    tx_id: string;
+    block: { height: number; hash: string; index_hash: string; time: number; tx_index: number };
+    bitcoin_block: { height: number; time: number };
+  };
+}
+
+export type HiroStakingBondsResponse = HiroCursorPageResponse<HiroStakingBond>;
+
+export interface HiroPrincipalStakingBond {
+  bond_index: number;
+  status: string;
+  active: boolean;
+  enrollment: { tx_id: string; btc_lockup: { amount: string } };
+  locked: { btc: string; stx: string };
+  rewards: { btc: { accrued: string; claimed: string; claimable: string } };
+}
+
+export type HiroPrincipalStakingBondsResponse = HiroCursorPageResponse<HiroPrincipalStakingBond>;
+
+export interface HiroPoxInfoResponse {
+  contract_id: string;
+  first_burnchain_block_height: number;
+  current_burnchain_block_height: number;
+  prepare_phase_block_length: number;
+  reward_phase_block_length: number;
+}

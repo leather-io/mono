@@ -40,6 +40,7 @@ const btcCryptoBalance: BtcBalance = {
   outboundBalance: zeroBtc,
   dustBalance: zeroBtc,
   unspendableBalance: zeroBtc,
+  lockedBalance: zeroBtc,
 };
 
 const stxCryptoBalance: StxBalance = {

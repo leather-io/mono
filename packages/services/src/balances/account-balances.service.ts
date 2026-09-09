@@ -48,6 +48,14 @@ export class AccountBalancesService {
     return accountBalance;
   }
 
+  public async getLockedBalance(request: AccountRequest, signal?: AbortSignal): Promise<Money> {
+    const [btcBalance, stxBalance] = await Promise.all([
+      this.btcBalancesService.getBtcAccountBalance(request, signal),
+      this.stxBalancesService.getStxAccountBalance(request, signal),
+    ]);
+    return sumMoney([btcBalance.quote.lockedBalance, stxBalance.quote.lockedBalance]);
+  }
+
   public async getUnlockedBalance(request: AccountRequest, signal?: AbortSignal): Promise<Money> {
     const [btcBalance, stxBalance, sip10Balance] = await Promise.all([
       this.btcBalancesService.getBtcAccountBalance(request, signal),
