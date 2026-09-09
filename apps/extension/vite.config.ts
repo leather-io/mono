@@ -1,7 +1,6 @@
 import { crx } from '@crxjs/vite-plugin';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import react from '@vitejs/plugin-react';
-import { readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sourcemaps from 'rollup-plugin-sourcemaps2';
@@ -11,31 +10,16 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-import manifest, { getTargetBrowser, inpageBuildMatch } from './manifest.config';
+import manifest, { inpageBuildMatch } from './manifest.config';
 import packageJson from './package.json' with { type: 'json' };
 import { buildMetadata } from './tooling/build-metadata';
 import {
-  assertChunkSizes,
   assertServiceWorkerCompatibility,
   copyExtensionAssets,
-  isolateServiceWorker,
   protectPageContextArtifacts,
 } from './tooling/vite-plugins';
 
 const extensionRoot = fileURLToPath(new URL('.', import.meta.url));
-const firefoxChunkSizeLimit = 3_500_000;
-const firefoxDependencySplitThreshold = 250_000;
-const firefoxDependencyGroups = new Map([
-  ['@bitcoinerlab/descriptors', 'bitcoin-descriptors'],
-  ['@bitcoinerlab/descriptors-core', 'bitcoin-descriptors'],
-  ['@ledgerhq/ledger-bitcoin', 'bitcoin-descriptors'],
-  ['bitcoinjs-lib', 'bitcoin-descriptors'],
-  ['brorand', 'crypto-browserify'],
-  ['browserify-sign', 'crypto-browserify'],
-  ['crypto-browserify', 'crypto-browserify'],
-  ['elliptic', 'crypto-browserify'],
-]);
-const dependencyJavaScriptSizes = new Map<string, number>();
 const backgroundEntry = path.join(extensionRoot, 'src/background/background.ts');
 const dependencySourceMapPatterns = [
   '**/node_modules/@leather.io/**/*.{js,mjs,cjs}',
@@ -111,6 +95,7 @@ function getRuntimeEnvironmentDefinitions(mode: string) {
   );
 }
 
+
 function getSharedPlugins() {
   return [
     tsconfigPaths(),
@@ -141,70 +126,17 @@ function getDependencyName(id: string) {
   return scopeOrName;
 }
 
-function getDependencyRoot(id: string) {
-  const normalizedId = id.replaceAll('\0', '');
-  const nodeModulesMarker = '/node_modules/';
-  const markerIndex = normalizedId.lastIndexOf(nodeModulesMarker);
-  if (markerIndex === -1) return undefined;
-  const dependencyPath = normalizedId.slice(markerIndex + nodeModulesMarker.length);
-  const [scopeOrName, packageName] = dependencyPath.split('/');
-  if (!scopeOrName) return undefined;
-  const nodeModulesPath = normalizedId.slice(0, markerIndex + nodeModulesMarker.length);
-  if (!scopeOrName.startsWith('@')) return path.join(nodeModulesPath, scopeOrName);
-  if (!packageName) return undefined;
-  return path.join(nodeModulesPath, scopeOrName, packageName);
-}
-
-function getDirectoryJavaScriptSize(directory: string): number {
-  return readdirSync(directory, { withFileTypes: true }).reduce((size, entry) => {
-    if (entry.name === 'node_modules') return size;
-    const filePath = path.join(directory, entry.name);
-    if (entry.isDirectory()) return size + getDirectoryJavaScriptSize(filePath);
-    if (!/\.(c|m)?js$/.test(entry.name)) return size;
-    return size + statSync(filePath).size;
-  }, 0);
-}
-
-function shouldSplitFirefoxDependency(id: string, dependencyName: string) {
-  if (firefoxDependencyGroups.has(dependencyName)) return true;
-  const dependencyRoot = getDependencyRoot(id);
-  if (!dependencyRoot) return false;
-  const cachedSize = dependencyJavaScriptSizes.get(dependencyRoot);
-  if (cachedSize !== undefined) return cachedSize >= firefoxDependencySplitThreshold;
-  const dependencySize = getDirectoryJavaScriptSize(dependencyRoot);
-  dependencyJavaScriptSizes.set(dependencyRoot, dependencySize);
-  return dependencySize >= firefoxDependencySplitThreshold;
-}
-
 function sanitizeChunkName(name: string) {
   return name.replace(/[^a-zA-Z0-9-]/g, '-');
 }
 
-function getFirefoxVendorChunkName(dependencyName: string) {
-  const dependencyGroup = firefoxDependencyGroups.get(dependencyName);
-  if (dependencyGroup) return `vendor-${dependencyGroup}`;
+function getManualChunkName(id: string) {
+  const dependencyName = getDependencyName(id);
+  if (dependencyName !== '@stacks/transactions') return;
   return `vendor-${sanitizeChunkName(dependencyName)}`;
 }
 
-function getManualChunkName(id: string, targetBrowser: 'chromium' | 'firefox') {
-  const dependencyName = getDependencyName(id);
-  if (targetBrowser !== 'firefox') {
-    if (dependencyName !== '@stacks/transactions') return;
-    return `vendor-${sanitizeChunkName(dependencyName)}`;
-  }
-  if (dependencyName && shouldSplitFirefoxDependency(id, dependencyName)) {
-    return getFirefoxVendorChunkName(dependencyName);
-  }
-  const packagesMarker = '/packages/';
-  const packagesIndex = id.indexOf(packagesMarker);
-  if (packagesIndex === -1) return;
-  const packageName = id.slice(packagesIndex + packagesMarker.length).split('/')[0];
-  if (!packageName) return;
-  return `leather-${sanitizeChunkName(packageName)}`;
-}
-
 export default defineConfig(({ mode }) => {
-  const targetBrowser = getTargetBrowser(process.env.TARGET_BROWSER);
   const analyzeBundle = process.env.ANALYZE === 'true';
   const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN;
   const environmentDefinitions = getRuntimeEnvironmentDefinitions(mode);
@@ -226,47 +158,14 @@ export default defineConfig(({ mode }) => {
       ...getSharedPlugins(),
       crx({
         manifest,
-        browser: targetBrowser === 'firefox' ? 'firefox' : 'chrome',
+        browser: 'chrome',
         contentScripts: {
           standaloneFiles: ['content-script.ts', 'inpage.ts'],
-        },
-        liveReload: targetBrowser !== 'firefox',
-      }),
-      isolateServiceWorker({
-        backgroundEntry,
-        targetBrowser,
-        config: {
-          root: extensionRoot,
-          mode,
-          publicDir: false,
-          base: '/',
-          define: {
-            ...environmentDefinitions,
-            VERSION: JSON.stringify(buildMetadata.version),
-          },
-          resolve: {
-            alias: extensionAliases,
-            dedupe: ['react', 'react-dom'],
-          },
-          plugins: getSharedPlugins(),
-          build: {
-            target: 'es2022',
-            minify: mode === 'production' ? 'esbuild' : false,
-            sourcemap: sourceMap,
-          },
         },
       }),
       copyExtensionAssets(extensionRoot),
       protectPageContextArtifacts(inpageBuildMatch),
-      ...(targetBrowser === 'chromium' ? [assertServiceWorkerCompatibility(backgroundEntry)] : []),
-      ...(targetBrowser === 'firefox'
-        ? [
-            assertChunkSizes(
-              firefoxChunkSizeLimit,
-              'Lower firefoxDependencySplitThreshold to split more dependencies automatically'
-            ),
-          ]
-        : []),
+      assertServiceWorkerCompatibility(backgroundEntry),
       ...(analyzeBundle
         ? [
             visualizer({
@@ -309,7 +208,7 @@ export default defineConfig(({ mode }) => {
         output: {
           hoistTransitiveImports: false,
           manualChunks(id) {
-            return getManualChunkName(id, targetBrowser);
+            return getManualChunkName(id);
           },
         },
       },

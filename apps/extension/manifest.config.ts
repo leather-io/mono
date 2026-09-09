@@ -2,14 +2,11 @@ import { defineManifest } from '@crxjs/vite-plugin';
 
 import { buildMetadata } from './tooling/build-metadata';
 
-type TargetBrowser = 'chromium' | 'firefox';
-
 export const inpageBuildMatch = 'https://inpage.invalid/*';
 
 interface CreateManifestOptions {
   includeInpageBuildEntry?: boolean;
   previewRelease: boolean;
-  targetBrowser: TargetBrowser;
   version: string;
   walletEnvironment: string;
 }
@@ -35,7 +32,6 @@ function getManifestName(isProduction: boolean, previewRelease: boolean) {
 export function createManifest({
   includeInpageBuildEntry = false,
   previewRelease,
-  targetBrowser,
   version,
   walletEnvironment,
 }: CreateManifestOptions) {
@@ -98,39 +94,20 @@ export function createManifest({
       },
     ],
     icons: generateImageAssetUrlsWithSuffix(iconSuffix),
-    ...(targetBrowser === 'firefox'
-      ? {
-          background: {
-            scripts: ['src/background/background.ts'],
-          },
-          browser_specific_settings: {
-            gecko: {
-              id: '{e22ae397-03d7-4622-bd8f-ecaca8c9b277}',
-              strict_min_version: '121.0',
-            },
-          },
-        }
-      : {
-          background: {
-            service_worker: 'src/background/background.ts',
-            type: 'module',
-          },
-        }),
+    background: {
+      service_worker: 'src/background/background.ts',
+      type: 'module',
+    },
   };
 
   Reflect.set(manifest, 'author', 'Leather Wallet, LLC');
   return manifest;
 }
 
-export function getTargetBrowser(value: string | undefined): TargetBrowser {
-  return value === 'firefox' ? 'firefox' : 'chromium';
-}
-
 export default defineManifest(({ command }) =>
   createManifest({
     includeInpageBuildEntry: command === 'build',
     previewRelease: Boolean(process.env.PREVIEW_RELEASE),
-    targetBrowser: getTargetBrowser(process.env.TARGET_BROWSER),
     version: buildMetadata.version,
     walletEnvironment: process.env.WALLET_ENVIRONMENT ?? 'development',
   })
