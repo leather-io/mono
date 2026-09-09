@@ -59,11 +59,6 @@ export function vaultThemeFromName(name: string | null | undefined): VaultTheme 
   return vaultThemes.find(theme => theme.name === name) ?? vaultThemes[fallbackVaultThemeId];
 }
 
-// Account-icon glyph asset path (mask-image source, recolorable per theme).
-export function accountIconUrl(icon: string): string {
-  return `/multisig/icons/account/${icon}.svg`;
-}
-
 export const accountIcons = [
   'piggybank',
   'sparkles',
@@ -93,3 +88,9 @@ export const defaultAccountIcon = 'piggybank';
 export const defaultVaultIcon = 'vault';
 
 export const vaultIcons = [defaultVaultIcon, ...accountIcons];
+
+// Account-icon glyph asset path (mask-image source, recolorable per theme).
+export function accountIconUrl(icon: string): string {
+  const knownIcon = vaultIcons.includes(icon) ? icon : defaultAccountIcon;
+  return `/multisig/icons/account/${knownIcon}.svg`;
+}

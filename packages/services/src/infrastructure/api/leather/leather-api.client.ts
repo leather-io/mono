@@ -10,7 +10,7 @@ import { HttpCacheService } from '../../cache/http-cache.service';
 import type { Environment } from '../../environment';
 import { leatherApiPriorities } from '../../rate-limiter/leather-rate-limiter';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
-import { selectBitcoinNetwork } from '../../settings/settings.selectors';
+import { selectBitcoinNetwork, selectStakingChainId } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { ApiRequestOptions } from '../types';
 import { LeatherApiError, readLeatherApiErrorData } from './leather-api.error';
@@ -23,6 +23,8 @@ export type LeatherApiSip10Token =
   paths['/v1/tokens/sip10s/{principal}']['get']['responses']['200']['content']['application/json'];
 export type LeatherApiUtxo =
   paths['/v1/utxos/{descriptor}']['get']['responses'][200]['content']['application/json'][number];
+export type LeatherApiStakingBond =
+  paths['/v1/staking/addresses/{address}/bonds']['get']['responses'][200]['content']['application/json']['bonds'][number];
 export type LeatherApiTokenPriceHistory =
   paths['/v1/market/prices/native/{symbol}/history']['get']['responses'][200]['content']['application/json'];
 export type LeatherApiLocale = Required<
@@ -57,6 +59,10 @@ export type LeatherApiAddressComplianceCheck =
 
 interface ProposeMultisigTransactionOptions extends ApiRequestOptions {
   baseUrl?: string;
+}
+
+interface FetchStakingBondsOptions extends ApiRequestOptions {
+  includeSpent?: boolean;
 }
 
 function createLeatherOpenApiClient(baseUrl: string, clientId: string) {
@@ -147,6 +153,36 @@ export class LeatherApiClient {
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(
           ['leather-api-utxos-address', network, address],
+          fetchFn
+        );
+  }
+
+  async fetchStakingBonds(
+    address: string,
+    { includeSpent = false, signal, skipCache }: FetchStakingBondsOptions = {}
+  ): Promise<LeatherApiStakingBond[]> {
+    const chain = selectStakingChainId(this.settingsService.getSettings());
+    if (!chain) return [];
+    const include = includeSpent ? 'spent' : undefined;
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/staking/addresses/{address}/bonds', {
+            params: { path: { address }, query: { chain, include } },
+            signal,
+          }),
+        {
+          priority: leatherApiPriorities.stakingBonds,
+          signal,
+        }
+      );
+      return data!.bonds;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-staking-bonds', chain, address, includeSpent],
           fetchFn
         );
   }
