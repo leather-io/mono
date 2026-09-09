@@ -21,6 +21,7 @@ import {
   btcAmountPrecisionValidator,
   currencyAmountValidator,
 } from '@app/common/validation/forms/currency-validators';
+import { useLedgerBitcoinInputLimit } from '@app/features/ledger/hooks/use-ledger-bitcoin-input-limit';
 import { useUpdatePersistedSendFormValues } from '@app/features/popup-send-form-restoration/use-update-persisted-send-form-values';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
@@ -37,6 +38,7 @@ export function useBtcSendForm() {
   const { btc: balance } = useCurrentBtcBalanceWithFallback();
   const sendFormNavigate = useSendFormNavigate();
   const calcMaxSpend = useCalculateMaxBitcoinSpend();
+  const { getLedgerBitcoinInputLimit } = useLedgerBitcoinInputLimit();
   const { onFormStateChange } = useUpdatePersistedSendFormValues();
 
   // Forcing a refetch to ensure UTXOs are fresh
@@ -49,6 +51,7 @@ export function useBtcSendForm() {
     calcMaxSpend,
     currentNetwork,
     formRef,
+    getLedgerBitcoinInputLimit,
     isSendingMax,
     onFormStateChange,
     onSetIsSendingMax(value: boolean) {

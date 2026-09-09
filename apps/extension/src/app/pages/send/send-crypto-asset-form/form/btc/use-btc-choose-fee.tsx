@@ -1,4 +1,11 @@
-import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
+import { useState } from 'react';
+
+import {
+  calculateMaxSpendWithinInputLimit,
+  compileWshDescriptor,
+  findAccountDescriptorKey,
+} from '@leather.io/bitcoin';
+import { LEDGER_BITCOIN_MAX_INPUTS } from '@leather.io/constants';
 import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
 import { btcToSat, createMoney } from '@leather.io/utils';
 
@@ -7,6 +14,11 @@ import { logger } from '@shared/logger';
 import { formFeeRowValue } from '@app/common/send/utils';
 import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
+import { useLedgerBitcoinInputLimit } from '@app/features/ledger/hooks/use-ledger-bitcoin-input-limit';
+import {
+  type LedgerBitcoinInputLimit,
+  emptyLedgerBitcoinInputLimit,
+} from '@app/features/ledger/utils/ledger-bitcoin-input-limit';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -26,13 +38,19 @@ export function useBtcChooseFee() {
   const policy = useCurrentPolicy();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
   const network = useCurrentNetwork();
+  const { isLedger } = useLedgerBitcoinInputLimit();
+  const [ledgerInputLimit, setLedgerInputLimit] = useState<LedgerBitcoinInputLimit>(
+    emptyLedgerBitcoinInputLimit
+  );
   const amountAsMoney = createMoney(btcToSat(txValues.amount).toNumber(), 'BTC');
 
   return {
     amountAsMoney,
+    ledgerInputLimit,
 
     async previewTransaction({ feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs) {
       const feeRowValue = formFeeRowValue(feeRate, isCustomFee);
+      setLedgerInputLimit(emptyLedgerBitcoinInputLimit);
 
       if (policy?.chain === 'bitcoin') {
         const descriptorKey =
@@ -92,6 +110,20 @@ export function useBtcChooseFee() {
         isSendingMax
       );
       if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
+
+      if (isLedger && resp.inputs.length > LEDGER_BITCOIN_MAX_INPUTS) {
+        setLedgerInputLimit({
+          inputCount: resp.inputs.length,
+          exceedsLimit: true,
+          maxAmountWithinLimit: calculateMaxSpendWithinInputLimit({
+            recipient: txValues.recipient,
+            utxos,
+            feeRate,
+            maxInputs: LEDGER_BITCOIN_MAX_INPUTS,
+          }).amount,
+        });
+        return;
+      }
 
       const signedTx = await signTx(resp.psbt, resp.signingConfig);
 

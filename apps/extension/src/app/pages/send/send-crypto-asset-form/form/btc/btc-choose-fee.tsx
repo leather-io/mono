@@ -11,6 +11,7 @@ import { Content, Page } from '@app/components/layout';
 import { BitcoinChooseFee } from '@app/features/bitcoin-choose-fee/bitcoin-choose-fee';
 import { useValidateBitcoinSpend } from '@app/features/bitcoin-choose-fee/hooks/use-validate-bitcoin-spend';
 import { PageHeader } from '@app/features/container/headers/page.header';
+import { LedgerInputLimitWarningLabel } from '@app/features/ledger/components/ledger-input-limit-warning-label';
 import { useAccountRequest } from '@app/services/accounts/use-account-request';
 
 import { useSendBitcoinAssetContextState } from '../../family/bitcoin/components/send-bitcoin-asset-container';
@@ -26,7 +27,7 @@ export function useBtcChooseFeeState() {
 export function BtcChooseFee() {
   const { isSendingMax, txValues } = useBtcChooseFeeState();
   const { selectedFeeType, setSelectedFeeType } = useSendBitcoinAssetContextState();
-  const { amountAsMoney, previewTransaction } = useBtcChooseFee();
+  const { amountAsMoney, ledgerInputLimit, previewTransaction } = useBtcChooseFee();
   const account = useAccountRequest();
 
   const { feesList, isLoading } = useBitcoinFeesList({
@@ -55,6 +56,13 @@ export function BtcChooseFee() {
       <PageHeader title="Send" />
       <Content>
         <Page>
+          {ledgerInputLimit.exceedsLimit && ledgerInputLimit.inputCount !== null && (
+            <LedgerInputLimitWarningLabel
+              inputCount={ledgerInputLimit.inputCount}
+              maxAmount={ledgerInputLimit.maxAmountWithinLimit ?? undefined}
+              mb="space.04"
+            />
+          )}
           <BitcoinChooseFee
             amount={amountAsMoney}
             defaultToCustomFee={!feesList.length}
