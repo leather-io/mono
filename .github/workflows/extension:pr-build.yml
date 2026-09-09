@@ -72,7 +72,6 @@ jobs:
         run: pnpm build
         env:
           WALLET_ENVIRONMENT: feature
-          TARGET_BROWSER: ${{ matrix.target }}
           SENTRY_DSN: ${{ vars.PUBLIC_SENTRY_DSN }}
           MIXPANEL_TOKEN: ${{ vars.PUBLIC_MIXPANEL_TOKEN_STAGING }}
           LAUNCH_DARKLY_KEY: ${{ vars.PUBLIC_EXTENSION_LAUNCH_DARKLY_KEY}}

@@ -108,8 +108,7 @@
         "@types/react-router",
         "@types/remote-redux-devtools",
         "@types/webextension-polyfill",
-        "@redux-devtools/cli",
-        "web-ext-submit"
+        "@redux-devtools/cli"
       ],
       "ignore": [
         "src/shared/global-types.ts",

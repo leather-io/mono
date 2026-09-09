@@ -4,7 +4,6 @@ test('creates a Chromium development manifest', () => {
   const manifest = createManifest({
     includeInpageBuildEntry: true,
     previewRelease: false,
-    targetBrowser: 'chromium',
     version: '1.2.3.456',
     walletEnvironment: 'development',
   });
@@ -42,10 +41,9 @@ test('creates a Chromium development manifest', () => {
   });
 });
 
-test('creates a Firefox preview manifest', () => {
+test('creates a preview manifest', () => {
   const manifest = createManifest({
     previewRelease: true,
-    targetBrowser: 'firefox',
     version: '1.2.3-beta.1',
     walletEnvironment: 'production',
   });
@@ -54,13 +52,8 @@ test('creates a Firefox preview manifest', () => {
     name: 'Leather Preview',
     version: '1.2.3',
     background: {
-      scripts: ['src/background/background.ts'],
-    },
-    browser_specific_settings: {
-      gecko: {
-        id: '{e22ae397-03d7-4622-bd8f-ecaca8c9b277}',
-        strict_min_version: '121.0',
-      },
+      service_worker: 'src/background/background.ts',
+      type: 'module',
     },
     icons: {
       128: 'assets/icons/leather-icon-128-preview.png',

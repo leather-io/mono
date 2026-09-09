@@ -40,7 +40,6 @@ jobs:
       - extract-version
     env:
       NEW_VERSION: ${{ needs.extract-version.outputs.new_version }}
-      TARGET_BROWSER: chromium
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
