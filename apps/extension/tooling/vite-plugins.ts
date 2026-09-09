@@ -242,3 +242,21 @@ export function reactWithExternalRefreshPreamble(): Plugin[] {
     },
   ];
 }
+
+export function resolvePublicAssetUrls(publicAssetsDirectory: string, urlPrefix: string): Plugin {
+  const virtualIdPrefix = '\0public-asset-url:';
+  return {
+    name: 'resolve-public-asset-urls',
+    apply: 'serve',
+    enforce: 'pre',
+    resolveId(source) {
+      if (!source.startsWith(`${publicAssetsDirectory}/`)) return null;
+      return `${virtualIdPrefix}${path.relative(publicAssetsDirectory, source)}`;
+    },
+    load(id) {
+      if (!id.startsWith(virtualIdPrefix)) return null;
+      const assetPath = id.slice(virtualIdPrefix.length).split(path.sep).join('/');
+      return `export default ${JSON.stringify(`${urlPrefix}/${assetPath}`)};`;
+    },
+  };
+}
