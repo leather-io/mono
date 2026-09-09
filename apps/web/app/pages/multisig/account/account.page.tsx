@@ -112,6 +112,7 @@ export function AccountDetailPage() {
 
   const theme = vaultThemeFromName(vault.data.theme);
   const chain = chainFromNetwork(account.data.network);
+  const isCreator = vault.data.createdBy === me.data?.id;
 
   return (
     <MultisigPage title={account.data.name} backTo={multisigPaths.vault(vault.data.id)}>
@@ -164,7 +165,7 @@ export function AccountDetailPage() {
             onAddToWallet={() => void addAccountToWallet()}
             isAddingToWallet={isAddingToWallet}
             isAddedToWallet={isAddedToWallet}
-            onEdit={() => setIsEditingAccount(true)}
+            onEdit={isCreator ? () => setIsEditingAccount(true) : undefined}
           />
         </Box>
       </Flex>

@@ -277,6 +277,7 @@ export function TxDetailPage() {
             account={acct}
             transaction={tx}
             currentUserAddress={me.data?.address}
+            currentUserId={me.data?.id}
             isSigning={signTransaction.isPending}
             isCancelling={cancelTransaction.isPending}
             isBroadcasting={broadcastTransaction.isPending}

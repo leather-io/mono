@@ -11,6 +11,7 @@ export * from './assets/asset-type-guards';
 export * from './assets/asset.model';
 export * from './assets/sip9-asset.model';
 export * from './balance.model';
+export * from './bitcoin-staking.model';
 export * from './bitcoin.model';
 export * from './bns.model';
 export * from './currencies.model';

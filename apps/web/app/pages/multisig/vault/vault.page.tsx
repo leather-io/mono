@@ -42,8 +42,13 @@ import { VaultBalanceHero } from './components/vault-balance-hero';
 import { VaultStatusCard } from './components/vault-status-card';
 import { VaultTransactions } from './components/vault-transactions';
 
-function accountCreationBlockedReason(vault: Vault, atAccountLimit: boolean): string | undefined {
+function accountCreationBlockedReason(
+  vault: Vault,
+  isCreator: boolean,
+  atAccountLimit: boolean
+): string | undefined {
   if (vault.status === 'cancelled') return 'This vault has been cancelled.';
+  if (!isCreator) return 'Only the vault creator can create accounts.';
   if (vault.members.some(member => member.membershipStatus === 'declined')) {
     return "A member declined, so this vault can't add accounts. The creator can cancel and start over.";
   }
@@ -132,7 +137,8 @@ export function VaultDetailPage() {
     Array.from({ length: joinedMemberCount }, (_unused, index) => index + 1).every(value =>
       isThresholdAtAccountLimit(accountList, value, accountLimit)
     );
-  const canCreateAccount = vault.status !== 'cancelled' && allMembersJoined && !atAccountLimit;
+  const canCreateAccount =
+    isCreator && vault.status !== 'cancelled' && allMembersJoined && !atAccountLimit;
   const vaultDetailsHeading = `${vault.name.charAt(0).toUpperCase()}${vault.name.slice(1)} details`;
 
   function onCancel() {
@@ -208,7 +214,7 @@ export function VaultDetailPage() {
             recoveryFailed={accountRecovery.recoveryFailed}
             onRetryRecovery={accountRecovery.retry}
             canCreate={canCreateAccount}
-            disabledReason={accountCreationBlockedReason(vault, atAccountLimit)}
+            disabledReason={accountCreationBlockedReason(vault, isCreator, atAccountLimit)}
             onCreateAccount={() => setIsCreatingAccount(true)}
             onOpenAccount={accountId => navigate(multisigPaths.account(vault.id, accountId))}
           />

@@ -36,6 +36,7 @@ export * from './token-analytics/token-analytics.service';
 export * from './transactions/bitcoin-transactions.service';
 export * from './transactions/stacks-transactions.service';
 export * from './types';
+export * from './staking/bitcoin-staking.service';
 export * from './utxos/utxos.service';
 export * from './yield/providers/bitflow/bitflow-amm-lp.service';
 export * from './yield/providers/granite/granite-v1-borrow.service';
