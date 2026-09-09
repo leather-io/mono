@@ -19,14 +19,16 @@ export class OutdatedExtensionError extends Error {
 interface GatedClientOptions {
   getProvider(): unknown;
   onOutdated(installedVersion: string): void;
+  onUpToDate(): void;
 }
 
 // Wraps every method of a Leather SDK client so the installed extension's
 // version is checked before each RPC call. Too-old extensions are reported via
-// onOutdated and the call rejects with OutdatedExtensionError.
+// onOutdated and the call rejects with OutdatedExtensionError; every call that
+// passes the check reports onUpToDate so a stale warning can be cleared.
 export function createGatedLeatherClient<Client extends object>(
   client: Client,
-  { getProvider, onOutdated }: GatedClientOptions
+  { getProvider, onOutdated, onUpToDate }: GatedClientOptions
 ): Client {
   return new Proxy(client, {
     get(target, property, receiver) {
@@ -38,6 +40,7 @@ export function createGatedLeatherClient<Client extends object>(
           onOutdated(installedVersion);
           throw new OutdatedExtensionError(installedVersion);
         }
+        onUpToDate();
         const result: unknown = await Reflect.apply(value, target, args);
         return result;
       };

@@ -15,4 +15,7 @@ export const multisigLeather = createGatedLeatherClient(leather, {
   onOutdated(installedVersion) {
     getDefaultStore().set(outdatedExtensionVersionAtom, installedVersion);
   },
+  onUpToDate() {
+    getDefaultStore().set(outdatedExtensionVersionAtom, null);
+  },
 });
