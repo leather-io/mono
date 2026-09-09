@@ -12,6 +12,11 @@ const providers = {
     name: 'Fast Pool',
     url: 'https://fastpool.org',
   },
+  esbeeDao: {
+    providerId: 'esbeeDao',
+    name: 'Esbee DAO',
+    url: 'https://www.esbee-dao.org',
+  },
   fastPoolV2: {
     providerId: 'fastPoolV2',
     name: 'Fast Pool V2',
