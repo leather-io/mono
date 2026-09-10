@@ -1,16 +1,19 @@
-import { OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
+import { AccountAddresses, OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
 import {
   LeatherApiBitcoinTransaction,
+  LeatherApiStakingBond,
   LeatherApiUtxo,
 } from '../infrastructure/api/leather/leather-api.client';
 import {
+  createLockedUtxosFromBonds,
   createOwnedUtxoFromLeather,
   dustSatThreshold,
   fallbackUtxoHeight,
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
+  getBondStakerAddress,
   getKeyOrigin,
   getOutboundUtxos,
   getUtxoIdFromOutpoint,
@@ -447,6 +450,7 @@ describe(getUtxoTotals.name, () => {
       dust: [],
       unspendable: [],
       available: [],
+      locked: [],
     });
   });
 
@@ -504,5 +508,97 @@ describe(getUtxoTotals.name, () => {
     expect(sumUtxoValues(totals.available)).toEqual(
       sumUtxoValues(totals.confirmed).minus(sumUtxoValues(totals.unspendable))
     );
+  });
+});
+
+describe(getBondStakerAddress.name, () => {
+  const hdAccount: AccountAddresses = {
+    id: { fingerprint: 'deadbeef', accountIndex: 0 },
+    bitcoin: {
+      type: 'hd',
+      taprootDescriptor: 'tr(...)',
+      nativeSegwitDescriptor: 'wpkh(...)',
+      zeroIndexNativeSegwitPayerAddress: 'bc1qpayer',
+    },
+  };
+
+  it('uses the zero-index native segwit payer address for hd accounts', () => {
+    expect(getBondStakerAddress(hdAccount)).toEqual('bc1qpayer');
+  });
+
+  it('returns null for hd accounts without a payer address', () => {
+    const account: AccountAddresses = {
+      ...hdAccount,
+      bitcoin: { type: 'hd', taprootDescriptor: 'tr(...)', nativeSegwitDescriptor: 'wpkh(...)' },
+    };
+    expect(getBondStakerAddress(account)).toBeNull();
+  });
+
+  it('returns null when native segwit addresses are excluded', () => {
+    expect(getBondStakerAddress(hdAccount, { nativeSegwitAddresses: true })).toBeNull();
+  });
+
+  it('uses the fixed address for fixed-address accounts', () => {
+    const account: AccountAddresses = {
+      id: { fingerprint: 'multisig-fp', accountIndex: 0 },
+      bitcoin: { type: 'fixedAddress', address: 'bc1qvault', paymentType: 'p2wsh' },
+    };
+    expect(getBondStakerAddress(account)).toEqual('bc1qvault');
+  });
+
+  it('returns null for accounts without bitcoin address info', () => {
+    expect(getBondStakerAddress({ id: { fingerprint: 'no-btc', accountIndex: 0 } })).toBeNull();
+  });
+});
+
+describe(createLockedUtxosFromBonds.name, () => {
+  const bond: LeatherApiStakingBond = {
+    bondIndex: 4,
+    stxAddress: 'SP1STAKER',
+    enrollmentTxId: '0xenroll',
+    registeredAtBurnHeight: 900_000,
+    exitAnnouncedAtBurnHeight: null,
+    outputs: [
+      {
+        txid: 'lock-a',
+        vout: 1,
+        amountSats: '200000000',
+        unlockBurnHeight: 922_900,
+        lockScriptHex: '00',
+        spent: false,
+        lastCheckedAt: null,
+      },
+      {
+        txid: 'lock-b',
+        vout: 0,
+        amountSats: '50000000',
+        unlockBurnHeight: 922_900,
+        lockScriptHex: '00',
+        spent: true,
+        lastCheckedAt: '2026-09-01T00:00:00.000Z',
+      },
+    ],
+  };
+
+  it('maps unspent lock outputs to utxos and drops spent ones', () => {
+    expect(createLockedUtxosFromBonds([bond])).toEqual([
+      { txid: 'lock-a', vout: 1, value: 200_000_000 },
+    ]);
+  });
+
+  it('flattens outputs across bonds', () => {
+    const second: LeatherApiStakingBond = {
+      ...bond,
+      bondIndex: 5,
+      outputs: [{ ...bond.outputs[0], txid: 'lock-c', amountSats: '100' }],
+    };
+    expect(createLockedUtxosFromBonds([bond, second])).toEqual([
+      { txid: 'lock-a', vout: 1, value: 200_000_000 },
+      { txid: 'lock-c', vout: 1, value: 100 },
+    ]);
+  });
+
+  it('returns an empty list for no bonds', () => {
+    expect(createLockedUtxosFromBonds([])).toEqual([]);
   });
 });

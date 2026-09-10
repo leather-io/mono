@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest';
 
 import { AccountAddresses } from '@leather.io/models';
 
-import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import {
+  LeatherApiClient,
+  LeatherApiStakingBond,
+} from '../infrastructure/api/leather/leather-api.client';
 import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
 import { SettingsService } from '../infrastructure/settings/settings.service';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
@@ -64,6 +67,105 @@ describe(UtxosService.name, () => {
 
       expect(result.confirmed).toEqual([]);
       expect(result.available).toEqual([]);
+      expect(result.locked).toEqual([]);
+    });
+  });
+
+  describe('getAccountUtxos locked utxos', () => {
+    const hdAccount: AccountAddresses = {
+      id: { fingerprint: 'hd-fp', accountIndex: 0 },
+      bitcoin: {
+        type: 'hd',
+        taprootDescriptor: 'tr(...)',
+        nativeSegwitDescriptor: 'wpkh(...)',
+        zeroIndexNativeSegwitPayerAddress: 'bc1qpayer',
+      },
+    };
+    const bond: LeatherApiStakingBond = {
+      bondIndex: 4,
+      stxAddress: 'SP1STAKER',
+      enrollmentTxId: '0xenroll',
+      registeredAtBurnHeight: 900_000,
+      exitAnnouncedAtBurnHeight: null,
+      outputs: [
+        {
+          txid: 'lock-a',
+          vout: 1,
+          amountSats: '200000000',
+          unlockBurnHeight: 922_900,
+          lockScriptHex: '00',
+          spent: false,
+          lastCheckedAt: null,
+        },
+      ],
+    };
+    const ownedUtxo = {
+      txid: 'utxo1',
+      vout: 0,
+      value: '100000',
+      height: 800000,
+      address: 'bc1qpayer',
+      path: "m/84'/0'/0'/0/0",
+    };
+
+    function createService(
+      fetchStakingBonds: LeatherApiClient['fetchStakingBonds'],
+      fetchUtxos: LeatherApiClient['fetchUtxos'] = () => Promise.resolve([])
+    ) {
+      return new UtxosService(
+        { fetchUtxos, fetchStakingBonds } as unknown as LeatherApiClient,
+        {} as unknown as MempoolApiClient,
+        {
+          getDescriptorTransactions: () => Promise.resolve([]),
+        } as unknown as BitcoinTransactionsService,
+        {
+          getSettings: () => ({ network: { chain: { bitcoin: { mode: 'mainnet' } } } }),
+        } as unknown as SettingsService
+      );
+    }
+
+    it('lists unspent bond outputs as locked utxos for an hd account', async () => {
+      let requestedAddress: string | undefined;
+      const service = createService(address => {
+        requestedAddress = address;
+        return Promise.resolve([bond]);
+      });
+
+      const result = await service.getAccountUtxos({ account: hdAccount });
+
+      expect(requestedAddress).toEqual('bc1qpayer');
+      expect(result.locked).toEqual([{ txid: 'lock-a', vout: 1, value: 200_000_000 }]);
+      expect(result.confirmed).toEqual([]);
+      expect(result.available).toEqual([]);
+    });
+
+    it('does not request bonds when native segwit addresses are excluded', async () => {
+      let called = false;
+      const service = createService(() => {
+        called = true;
+        return Promise.resolve([bond]);
+      });
+
+      const result = await service.getAccountUtxos({
+        account: hdAccount,
+        exclusions: { nativeSegwitAddresses: true },
+      });
+
+      expect(called).toBe(false);
+      expect(result.locked).toEqual([]);
+    });
+
+    it('leaves owned utxos intact and reports no locked utxos when the bonds request fails', async () => {
+      const service = createService(
+        () => Promise.reject(new Error('staking index unavailable')),
+        () => Promise.resolve([ownedUtxo])
+      );
+
+      const result = await service.getAccountUtxos({ account: hdAccount });
+
+      expect(result.locked).toEqual([]);
+      expect(result.confirmed.map(utxo => utxo.txid)).toEqual(['utxo1', 'utxo1']);
+      expect(result.available).toHaveLength(2);
     });
   });
 });

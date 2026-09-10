@@ -1,12 +1,13 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
 import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io/constants';
+import { defaultNetworksKeyedById } from '@leather.io/models';
 
 import { HttpCacheService } from '../../cache/http-cache.service';
 import type { Environment } from '../../environment';
 import { RateLimiterService, type RateLimiterType } from '../../rate-limiter/rate-limiter.service';
 import type { SettingsService } from '../../settings/settings.service';
-import { LeatherApiClient } from './leather-api.client';
+import { LeatherApiClient, type LeatherApiStakingBond } from './leather-api.client';
 
 const proposalRequest = {
   multisigAddress: 'multisig-address',
@@ -113,5 +114,81 @@ describe(LeatherApiClient.name, () => {
         url: `${LEATHER_API_URL_PRODUCTION}/v1/protocols`,
       },
     ]);
+  });
+
+  describe('fetchStakingBonds', () => {
+    const bond: LeatherApiStakingBond = {
+      bondIndex: 4,
+      stxAddress: 'SP1STAKER',
+      enrollmentTxId: '0xenroll',
+      registeredAtBurnHeight: 900_000,
+      exitAnnouncedAtBurnHeight: null,
+      outputs: [],
+    };
+
+    function createClient(
+      network: (typeof defaultNetworksKeyedById)[keyof typeof defaultNetworksKeyedById]
+    ) {
+      const settingsService = {
+        getSettings: () => ({ quoteCurrency: 'USD', network, assetVisibility: {} }),
+      } as unknown as SettingsService;
+      return new LeatherApiClient(
+        new PassthroughHttpCacheService(),
+        settingsService,
+        { environment: 'production' },
+        new ImmediateRateLimiterService(settingsService)
+      );
+    }
+
+    test('requests bonds for the chain of the current network', async () => {
+      const requests: Request[] = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn((request: Request) => {
+          requests.push(request);
+          return Promise.resolve(jsonResponse({ bonds: [bond] }));
+        })
+      );
+
+      const bonds = await createClient(defaultNetworksKeyedById.mainnet).fetchStakingBonds(
+        'bc1qpayer'
+      );
+
+      expect(requests.map(request => request.url)).toEqual([
+        `${LEATHER_API_URL_PRODUCTION}/v1/staking/addresses/bc1qpayer/bonds?chain=mainnet`,
+      ]);
+      expect(bonds).toEqual([bond]);
+    });
+
+    test('asks for spent bonds only when requested', async () => {
+      const requests: Request[] = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn((request: Request) => {
+          requests.push(request);
+          return Promise.resolve(jsonResponse({ bonds: [] }));
+        })
+      );
+
+      await createClient(defaultNetworksKeyedById.mainnet).fetchStakingBonds('bc1qpayer', {
+        includeSpent: true,
+      });
+
+      expect(requests.map(request => request.url)).toEqual([
+        `${LEATHER_API_URL_PRODUCTION}/v1/staking/addresses/bc1qpayer/bonds?chain=mainnet&include=spent`,
+      ]);
+    });
+
+    test('returns no bonds without a request on networks the staking index does not cover', async () => {
+      const fetchMock = vi.fn();
+      vi.stubGlobal('fetch', fetchMock);
+
+      const bonds = await createClient(defaultNetworksKeyedById.testnet).fetchStakingBonds(
+        'tb1qpayer'
+      );
+
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(bonds).toEqual([]);
+    });
   });
 });
