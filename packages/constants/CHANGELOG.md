@@ -215,6 +215,20 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.39.3](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.39.2...@leather.io/constants-v0.39.3) (2026-09-10)
+
+
+### Bug Fixes
+
+* **auth:** bind sign-in message to requesting domain ([#2690](https://github.com/leather-io/mono/issues/2690)) ([dfb58cb](https://github.com/leather-io/mono/commit/dfb58cb5e85b2a10f89d830c5e3269c458dc6564))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.62.0
+
 ## [0.39.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.39.1...@leather.io/constants-v0.39.2) (2026-08-27)
 
 
