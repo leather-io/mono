@@ -2,11 +2,10 @@ import { useAccountScaledBalanceAnalytics } from '@app/common/app-analytics';
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import {
-  useCurrentAccountAvailableBalance,
+  useCurrentAccountLockedBalance,
   useCurrentAccountTotalBalance,
+  useCurrentAccountUnlockedBalance,
 } from '@app/query/common/account-balance/account-balance.query';
-import { useStxAccountBalanceByAddresses } from '@app/query/stacks/balance/stx-balance.hooks';
-import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import {
@@ -21,7 +20,6 @@ export function useHomePageState() {
   const { toggleSwitchAccount } = useSwitchAccountSheet();
   const account = useCurrentStacksAccount();
   const currentAccount = useCurrentAccountId();
-  const currentAccountAddresses = useCurrentAccountAddresses();
   const policy = useCurrentPolicy();
   const isPrivateMode = useIsPrivateMode();
   const togglePrivateMode = useTogglePrivateMode();
@@ -40,13 +38,13 @@ export function useHomePageState() {
   const isFetchingBnsName = policy ? false : isFetching;
 
   const totalBalance = useCurrentAccountTotalBalance();
-  const availableBalance = useCurrentAccountAvailableBalance();
-  const stxAccountBalance = useStxAccountBalanceByAddresses(currentAccountAddresses);
+  const availableBalance = useCurrentAccountUnlockedBalance();
+  const lockedBalance = useCurrentAccountLockedBalance();
 
   return {
     totalBalance,
     availableBalance,
-    stxAccountBalance,
+    lockedBalance,
     isFetchingBnsName,
     isPrivateMode,
     name,

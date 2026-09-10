@@ -53,6 +53,7 @@ const defaultContentStyles = css({
   willChange: 'transform, opacity',
   maxWidth: '250px',
   textAlign: 'center',
+  textWrap: 'pretty',
   wordWrap: 'break-word',
   color: 'ink.background-primary',
   zIndex: 999,

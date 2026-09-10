@@ -1,12 +1,12 @@
 import { CoreAssetSelectors } from '@tests/selectors/mocked-tokens.selectors';
-import { styled } from 'leather-styles/jsx';
 
 import { stxAsset } from '@leather.io/constants';
 import type { AddressQuotedStxBalance } from '@leather.io/services';
-import { Caption, StacksFilledCircleIcon, StxAvatarIcon } from '@leather.io/ui';
+import { StacksFilledCircleIcon, StxAvatarIcon } from '@leather.io/ui';
 import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import { LockedBalanceBadge } from '@app/components/balance/locked-balance-badge';
 import { CryptoAssetItemLayout } from '@app/components/crypto-asset-item/crypto-asset-item.layout';
 import { DepositItem } from '@app/components/deposit-item/deposit-item';
 
@@ -34,14 +34,7 @@ export function StxCryptoAssetItem({
   const { lockedBalance, totalBalance } = balance.stx;
   const showLockedBalance = lockedBalance.amount.isGreaterThan(0) && !isPrivate;
 
-  const fiatLockedBalance = formatCurrency(balance.quote.lockedBalance);
-
   const fiatTotalBalance = formatCurrency(balance.quote.totalBalance);
-
-  const titleRightBulletInfo = <styled.span>{fiatLockedBalance} locked</styled.span>;
-  const captionRightBulletInfo = (
-    <Caption>{formatCurrency(lockedBalance, { showCurrency: false })} locked</Caption>
-  );
 
   const icon = <StxAvatarIcon size="xl" indicator={<StacksFilledCircleIcon variant="small" />} />;
   const dataTestId = CoreAssetSelectors.StxAsset;
@@ -67,14 +60,13 @@ export function StxCryptoAssetItem({
     <CryptoAssetItemLayout
       availableBalance={totalBalance}
       captionLeft={captionLeft}
-      captionRightBulletInfo={showLockedBalance && captionRightBulletInfo}
+      captionRightBadge={showLockedBalance && <LockedBalanceBadge balance={lockedBalance} />}
       fiatBalance={fiatTotalBalance}
       icon={icon}
       isLoading={isLoading}
       isPrivate={isPrivate}
       onSelectAsset={onSelectAsset}
       titleLeft={titleLeft}
-      titleRightBulletInfo={showLockedBalance && titleRightBulletInfo}
       dataTestId={dataTestId}
     />
   );
