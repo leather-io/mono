@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { PsbtSelectors } from '@tests/selectors/requests.selectors';
 
 import { getPsbtTxInputs, getPsbtTxOutputs } from '@leather.io/bitcoin';
+import { LEDGER_BITCOIN_MAX_INPUTS } from '@leather.io/constants';
 import { Button } from '@leather.io/ui';
 import { isError } from '@leather.io/utils';
 
@@ -13,10 +14,12 @@ import { closeWindow } from '@shared/utils';
 import { SignPsbtArgs } from '@app/common/psbt/requests';
 import { ButtonRow, Card } from '@app/components/layout';
 import { PopupHeader } from '@app/features/container/headers/popup.header';
+import { LedgerInputLimitWarningLabel } from '@app/features/ledger/components/ledger-input-limit-warning-label';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import type { PolicyStore } from '@app/store/policy/policy-store.utils';
 
 import * as Psbt from './components';
@@ -77,6 +80,9 @@ export function PsbtSigner(props: PsbtSignerProps) {
   const psbtTx = useMemo(() => getPsbtAsTransaction(psbtHex), [getPsbtAsTransaction, psbtHex]);
   const psbtTxInputs = useMemo(() => getPsbtTxInputs(psbtTx), [psbtTx]);
   const psbtTxOutputs = useMemo(() => getPsbtTxOutputs(psbtTx), [psbtTx]);
+  const isLedger = useActiveWalletType() === 'ledger';
+  const psbtInputCount = psbtTx.inputsLength;
+  const exceedsLedgerInputLimit = isLedger && psbtInputCount > LEDGER_BITCOIN_MAX_INPUTS;
 
   const {
     addressNativeSegwitTotal,
@@ -131,6 +137,7 @@ export function PsbtSigner(props: PsbtSignerProps) {
             <Button
               flexGrow={1}
               aria-busy={isBroadcasting}
+              disabled={exceedsLedgerInputLimit}
               onClick={() =>
                 onSignPsbt({
                   addressNativeSegwitTotal,
@@ -149,6 +156,9 @@ export function PsbtSigner(props: PsbtSignerProps) {
         <Psbt.PsbtRequestDetailsLayout>
           {bondProposal ? (
             <PsbtBondAccounts policy={bondProposal.policy} signerAddress={addressNativeSegwit} />
+          ) : null}
+          {exceedsLedgerInputLimit ? (
+            <LedgerInputLimitWarningLabel inputCount={psbtInputCount} />
           ) : null}
           {isPsbtMutable || descriptorDetails?.hasDisallowedSighash ? (
             <Psbt.PsbtRequestSighashWarningLabel origin={origin} />

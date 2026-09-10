@@ -23,6 +23,8 @@ import { analytics } from '@shared/utils/analytics';
 import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { getTransactionActions } from '@app/components/rpc-transaction-request/get-transaction-actions';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
+import { useLedgerBitcoinInputLimit } from '@app/features/ledger/hooks/use-ledger-bitcoin-input-limit';
+import { emptyLedgerBitcoinInputLimit } from '@app/features/ledger/utils/ledger-bitcoin-input-limit';
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
 import { useProposeMultisigTransaction } from '@app/features/multisig/use-propose-multisig-transaction';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
@@ -69,6 +71,15 @@ export function useRpcSendTransferActions() {
   const network = useCurrentNetwork();
   const { proposeMultisigTransaction } = useProposeMultisigTransaction();
   const isBitcoinPolicy = policy?.chain === 'bitcoin';
+  const { getLedgerBitcoinInputLimit } = useLedgerBitcoinInputLimit();
+
+  const ledgerInputLimit = useMemo(
+    () =>
+      isBitcoinPolicy
+        ? emptyLedgerBitcoinInputLimit
+        : getLedgerBitcoinInputLimit({ utxos, recipients, feeRate: selectedFee?.feeRate }),
+    [getLedgerBitcoinInputLimit, isBitcoinPolicy, utxos, recipients, selectedFee?.feeRate]
+  );
 
   const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
 
@@ -204,6 +215,7 @@ export function useRpcSendTransferActions() {
       isError: isInsufficientBalance,
       isBroadcasting,
       isSubmitted,
+      isApproveDisabled: ledgerInputLimit.exceedsLimit,
       onCancel,
       onApprove,
       ...getSendTransferActionLabels({ broadcast, isBitcoinPolicy }),
@@ -231,11 +243,13 @@ export function useRpcSendTransferActions() {
     network,
     proposeMultisigTransaction,
     isBitcoinPolicy,
+    ledgerInputLimit.exceedsLimit,
   ]);
 
   return {
     approverActions,
     isBroadcasting,
     isSubmitted,
+    ledgerInputLimit,
   };
 }

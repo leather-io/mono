@@ -14,6 +14,7 @@ import {
 import { useWalletType } from '@app/common/use-wallet-type';
 import { listenForBitcoinTxLedgerSigning } from '@app/features/ledger/flows/bitcoin-tx-signing/bitcoin-tx-signing-event-listeners';
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import { assertLedgerBitcoinInputLimit } from '@app/features/ledger/utils/ledger-bitcoin-input-limit';
 import { usePsbtSigner } from '@app/features/psbt-signer/hooks/use-psbt-signer';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
@@ -79,6 +80,7 @@ export function useSignDescriptorPsbt() {
     const signedTx = await whenWallet({
       software: () => signPsbt({ tx, signingConfig }),
       ledger() {
+        assertLedgerBitcoinInputLimit(tx.inputsLength);
         const ledgerDescriptor = resolveLedgerSignableDescriptor({
           descriptor,
           psbt: tx.toPSBT(),

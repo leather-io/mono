@@ -20,6 +20,7 @@ import { TransactionRecipientsLayout } from '@app/components/rpc-transaction-req
 import { TransactionWrapper } from '@app/components/rpc-transaction-request/transaction-wrapper';
 import { FeeEditor } from '@app/features/fee-editor/fee-editor';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
+import { LedgerInputLimitWarningLabel } from '@app/features/ledger/components/ledger-input-limit-warning-label';
 import { SigningAccountCard } from '@app/features/rpc-stacks-transaction-request/signing-account-card/signing-account-card';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 import { useCurrentAccountId } from '@app/store/accounts/account';
@@ -41,7 +42,8 @@ export function RpcSendTransfer() {
   useBreakOnNonCompliantEntity('rpc_send_transfer', recipientAddresses);
 
   const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
-  const { approverActions, isBroadcasting, isSubmitted } = useRpcSendTransferActions();
+  const { approverActions, isBroadcasting, isSubmitted, ledgerInputLimit } =
+    useRpcSendTransferActions();
   const showOverlay = isBroadcasting || isSubmitted;
   const isBitcoinPolicy = policy?.chain === 'bitcoin';
   const isSignOnly = !broadcast && !isBitcoinPolicy;
@@ -93,6 +95,12 @@ export function RpcSendTransfer() {
           />
         </Box>
         <Approver.Actions actions={approverActions}>
+          {ledgerInputLimit.exceedsLimit && ledgerInputLimit.inputCount !== null && (
+            <LedgerInputLimitWarningLabel
+              inputCount={ledgerInputLimit.inputCount}
+              maxAmount={ledgerInputLimit.maxAmountWithinLimit ?? undefined}
+            />
+          )}
           <TransactionActionsTitle amount={totalFiatValue} isLoading={isLoadingBalance} />
           <TransactionError
             isLoading={isLoadingBalance}
