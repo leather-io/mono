@@ -42,13 +42,13 @@ describe(stacksVersionGate.name, () => {
     const toStacksAppOutdatedWarning = vi.fn();
 
     const passes = await stacksVersionGate({ toStacksAppOutdatedWarning })(
-      makeStacksAppVersion({ major: 0, minor: 26, patch: 16 })
+      makeStacksAppVersion({ major: 0, minor: 26, patch: 18 })
     );
 
     expect(passes).toBe(false);
     expect(toStacksAppOutdatedWarning).toHaveBeenCalledOnce();
     expect(toStacksAppOutdatedWarning).toHaveBeenCalledWith({
-      currentVersion: '0.26.16',
+      currentVersion: '0.26.18',
       requiredVersion: MINIMUM_STACKS_APP_VERSION,
     });
   });
@@ -57,7 +57,7 @@ describe(stacksVersionGate.name, () => {
     const toStacksAppOutdatedWarning = vi.fn();
     const gate = stacksVersionGate({ toStacksAppOutdatedWarning });
 
-    expect(await gate(makeStacksAppVersion({ major: 0, minor: 26, patch: 17 }))).toBe(true);
+    expect(await gate(makeStacksAppVersion({ major: 0, minor: 26, patch: 19 }))).toBe(true);
     expect(await gate(makeStacksAppVersion({ major: 1, minor: 0, patch: 0 }))).toBe(true);
     expect(toStacksAppOutdatedWarning).not.toHaveBeenCalled();
   });

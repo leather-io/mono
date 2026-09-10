@@ -156,22 +156,22 @@ describe(showStxAddressOnDevice.name, () => {
 
 describe(validateStacksAppVersion.name, () => {
   test('rejects versions below the minimum', () => {
-    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 16 })).toEqual({
+    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 18 })).toEqual({
       meetsMinimum: false,
-      currentVersion: '0.26.16',
+      currentVersion: '0.26.18',
     });
     expect(validateStacksAppVersion({ major: 0, minor: 25, patch: 99 }).meetsMinimum).toBe(false);
   });
 
   test('accepts the exact minimum version', () => {
-    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 17 })).toEqual({
+    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 19 })).toEqual({
       meetsMinimum: true,
       currentVersion: MINIMUM_STACKS_APP_VERSION,
     });
   });
 
   test('accepts versions above the minimum', () => {
-    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 18 }).meetsMinimum).toBe(true);
+    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 20 }).meetsMinimum).toBe(true);
     expect(validateStacksAppVersion({ major: 0, minor: 27, patch: 0 }).meetsMinimum).toBe(true);
     expect(validateStacksAppVersion({ major: 1, minor: 0, patch: 0 }).meetsMinimum).toBe(true);
   });
