@@ -3,6 +3,8 @@ import { IS_DEV_ENV, WALLET_ENVIRONMENT } from './environment';
 export const GITHUB_ORG = 'leather-io';
 export const GITHUB_REPO = 'extension';
 
+export const BITCOIN_STAKING_URL = 'https://app.leather.io/staking';
+
 // Origins permitted to actually add (register) a multisig policy account via
 // btc_addAccount / stx_addAccount. Any other origin can still open the approver,
 // but only to let the user verify the derived address — nothing is registered.

@@ -43,7 +43,7 @@ export function AddressBalanceGroup({
             Address unavailable
           </styled.span>
         )}
-        <Stack alignItems="flex-end" gap="space.01" flexShrink={0}>
+        <Stack alignItems="flex-end" gap="2px" flexShrink={0}>
           <BalanceAmount
             textStyle="label.02"
             value={fiatValue}
