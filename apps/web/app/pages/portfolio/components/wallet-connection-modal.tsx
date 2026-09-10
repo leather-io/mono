@@ -1,5 +1,6 @@
-import { Box, Circle } from 'leather-styles/jsx';
+import { Circle } from 'leather-styles/jsx';
 import { ConnectActionRow, ConnectCard } from '~/components/connect-card/connect-card';
+import { ConnectOverlay } from '~/components/connect-card/connect-overlay';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
 
@@ -14,15 +15,7 @@ export function WalletConnectionModal({ isOpen }: WalletConnectionModalProps) {
   if (!isOpen) return null;
 
   return (
-    <Box
-      position="fixed"
-      inset="0"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      ml={[null, null, 'navbar']}
-      mt="60px"
-    >
+    <ConnectOverlay>
       <ConnectCard
         mt="-60px"
         position="relative"
@@ -64,6 +57,6 @@ export function WalletConnectionModal({ isOpen }: WalletConnectionModalProps) {
           }
         />
       </ConnectCard>
-    </Box>
+    </ConnectOverlay>
   );
 }

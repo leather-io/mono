@@ -1,6 +1,8 @@
 import { Flex, styled } from 'leather-styles/jsx';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
+import { InstallLeatherButton } from '~/features/sign-in-button/install-leather-button';
 import { useAddressBnsName } from '~/queries/bns/bns.query';
+import { useLeatherConnect } from '~/store/addresses';
 
 import { Button, ChevronDownIcon, DropdownMenu, Flag, WalletIcon } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
@@ -11,6 +13,7 @@ import { ConnectedMenu } from './connected-menu';
 import { useChainConnection } from './use-chain-connection';
 
 export function MultisigConnectDropdown() {
+  const { status } = useLeatherConnect();
   const networks = useMultisigNetworks();
   const btc = useChainConnection('btc', networks.btc);
   const stx = useChainConnection('stx', networks.stx);
@@ -23,6 +26,10 @@ export function MultisigConnectDropdown() {
     networks.stx.endsWith('mainnet')
   );
   const connectedLabel = bnsName ?? (primaryAddress ? truncateMiddle(primaryAddress) : undefined);
+
+  // With no wallet the per-chain menu has nothing to offer, so the header falls
+  // back to the app-wide install call to action.
+  if (status === 'missing') return <InstallLeatherButton />;
 
   return (
     <DropdownMenu.Root modal={false}>
