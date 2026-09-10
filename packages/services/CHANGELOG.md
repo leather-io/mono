@@ -413,6 +413,33 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.65.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.64.1...@leather.io/services-v1.65.0) (2026-09-10)
+
+
+### Features
+
+* multisig production cutover ([#2704](https://github.com/leather-io/mono/issues/2704)) ([8950cac](https://github.com/leather-io/mono/commit/8950cac2a3228a1621272f377796cdb3f0e7c264))
+* **services:** bitcoin staking balances and positions service ([#2714](https://github.com/leather-io/mono/issues/2714)) ([695400d](https://github.com/leather-io/mono/commit/695400d198c48641ec00395ffe33562cafd35f66))
+
+
+### Bug Fixes
+
+* **auth:** bind sign-in message to requesting domain ([#2690](https://github.com/leather-io/mono/issues/2690)) ([dfb58cb](https://github.com/leather-io/mono/commit/dfb58cb5e85b2a10f89d830c5e3269c458dc6564))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.40.1
+    * @leather.io/constants bumped to 0.39.3
+    * @leather.io/crypto bumped to 1.13.8
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/stacks bumped to 1.22.6
+    * @leather.io/utils bumped to 0.53.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.1
+
 ## [1.64.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.64.0...@leather.io/services-v1.64.1) (2026-08-27)
 
 

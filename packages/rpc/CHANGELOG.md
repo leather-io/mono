@@ -411,6 +411,22 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.25.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.25.0...@leather.io/rpc-v2.25.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **extension:** block psbt signing with disallowed sighash types ([#2667](https://github.com/leather-io/mono/issues/2667)) ([9b4d0f4](https://github.com/leather-io/mono/commit/9b4d0f46d6e77cbbda5da1b519ae853514fd1c30))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/stacks bumped to 1.22.6
+    * @leather.io/utils bumped to 0.53.0
+
 ## [2.25.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.24.5...@leather.io/rpc-v2.25.0) (2026-08-27)
 
 

@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.15.4...@leather.io/queries-v0.16.0) (2026-09-10)
+
+
+### Features
+
+* **services:** bitcoin staking balances and positions service ([#2714](https://github.com/leather-io/mono/issues/2714)) ([695400d](https://github.com/leather-io/mono/commit/695400d198c48641ec00395ffe33562cafd35f66))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/cms bumped to 1.6.2
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/services bumped to 1.65.0
+    * @leather.io/utils bumped to 0.53.0
+
 ## [0.15.4](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.15.3...@leather.io/queries-v0.15.4) (2026-08-27)
 
 

@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.8.1](https://github.com/leather-io/mono/compare/@leather.io/features-v1.8.0...@leather.io/features-v1.8.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **web:** private network resolution, regtest explorer links, activity polling ([#2663](https://github.com/leather-io/mono/issues/2663)) ([243071c](https://github.com/leather-io/mono/commit/243071c811e4966f52cef00f67c0a5cba21ec3ad))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.3
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/services bumped to 1.65.0
+    * @leather.io/stacks bumped to 1.22.6
+    * @leather.io/utils bumped to 0.53.0
+
 ## [1.8.0](https://github.com/leather-io/mono/compare/@leather.io/features-v1.7.2...@leather.io/features-v1.8.0) (2026-08-27)
 
 
