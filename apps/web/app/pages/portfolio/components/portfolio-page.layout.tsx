@@ -1,4 +1,5 @@
 import { Box, BoxProps, Flex, Stack, styled } from 'leather-styles/jsx';
+import { ConnectOverlayBackdrop } from '~/components/connect-card/connect-overlay';
 import { ActivityButton } from '~/features/activity-button/activity-button';
 import { Page } from '~/layouts/page/page';
 
@@ -25,12 +26,7 @@ export function PortfolioPageLayout({
         <ActivityButton activityList={activityList} />
       </Page.Header>
 
-      <Box
-        filter={dummyDataMode ? 'blur(6px)' : 'blur(0px)'}
-        transform={dummyDataMode ? 'scale(0.97)' : 'none'}
-        pointerEvents={dummyDataMode ? 'none' : 'auto'}
-        userSelect={dummyDataMode ? 'none' : 'unset'}
-      >
+      <ConnectOverlayBackdrop isActive={dummyDataMode}>
         <styled.h2 textStyle="heading.05" mt="space.05" mb="space.04">
           Overview
         </styled.h2>
@@ -53,7 +49,7 @@ export function PortfolioPageLayout({
             </Stack>
           </Flex>
         </styled.div>
-      </Box>
+      </ConnectOverlayBackdrop>
     </Page>
   );
 }

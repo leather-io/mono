@@ -34,7 +34,7 @@ const StyledButton = styled('button', {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 'space.02',
+    px: 'var(--button-px)',
     whiteSpace: 'nowrap',
     ...loadingStyles,
   },
@@ -42,16 +42,25 @@ const StyledButton = styled('button', {
     size: {
       sm: {
         height: '32px',
-        px: 'space.03',
+        gap: 'space.01',
+        '--button-px': 'token(spacing.space.03)',
       },
       md: {
         height: '36px',
-        px: 'space.03',
+        gap: 'space.01',
+        '--button-px': 'token(spacing.space.03)',
       },
       lg: {
         height: '48px',
-        px: 'space.04',
+        gap: 'space.02',
+        '--button-px': 'token(spacing.space.04)',
       },
+    },
+    // A leading icon sits closer to the pill's rounded edge than a text label
+    // does, so the trailing side gains a step to look optically even. Set by
+    // Button from iconStart, and only when no iconEnd already balances the row.
+    hasIconStart: {
+      true: { pr: 'calc(var(--button-px) + {spacing.space.01})' },
     },
     variant: {
       solid: {
@@ -187,7 +196,9 @@ const StyledButton = styled('button', {
   },
 });
 
-export interface ButtonProps extends React.ComponentProps<typeof StyledButton> {
+// hasIconStart is derived from iconStart below, never passed in.
+export interface ButtonProps
+  extends Omit<React.ComponentProps<typeof StyledButton>, 'hasIconStart'> {
   iconStart?: ComponentType<IconProps> | ReactElement;
   iconEnd?: ComponentType<IconProps> | ReactElement;
 }
@@ -206,7 +217,14 @@ export function Button(props: ButtonProps) {
   const disabled = isLoading || disabledProp;
 
   return (
-    <StyledButton ref={ref} type={type} disabled={disabled} flexShrink={0} {...rest}>
+    <StyledButton
+      ref={ref}
+      type={type}
+      disabled={disabled}
+      flexShrink={0}
+      {...rest}
+      hasIconStart={Boolean(iconStart) && !iconEnd}
+    >
       {renderIcon(iconStart, { variant: 'small', color: 'current' })}
       <styled.span opacity={isLoading ? 0 : 1}>{children}</styled.span>
       {renderIcon(iconEnd, { variant: 'small', color: 'current' })}

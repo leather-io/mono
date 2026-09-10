@@ -1,7 +1,8 @@
 import { Navigate, useSearchParams } from 'react-router';
 
-import { Flex, styled } from 'leather-styles/jsx';
+import { styled } from 'leather-styles/jsx';
 import { ConnectCard } from '~/components/connect-card/connect-card';
+import { ConnectOverlay, ConnectOverlayBackdrop } from '~/components/connect-card/connect-overlay';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
@@ -13,6 +14,7 @@ import { Page } from '~/layouts/page/page';
 import { Link as UiLink } from '@leather.io/ui';
 
 import { multisigPaths } from '../multisig.constants';
+import { MultisigOnboardingBackdrop } from './components/onboarding-backdrop';
 import { OnboardingConnectRow } from './components/onboarding-connect-row';
 
 export function MultisigOnboardingPage() {
@@ -42,11 +44,16 @@ export function MultisigOnboardingPage() {
   }
 
   return (
-    <Page>
+    <Page overflow="hidden">
       <Page.Header title="Multisig" />
       <OutdatedExtensionCallout />
-      <Flex justifyContent="center" py="space.07">
+      <ConnectOverlayBackdrop>
+        <MultisigOnboardingBackdrop />
+      </ConnectOverlayBackdrop>
+      <ConnectOverlay>
         <ConnectCard
+          mt="-60px"
+          position="relative"
           width="100%"
           maxWidth="540px"
           title="Get started with Leather Multisig"
@@ -92,7 +99,7 @@ export function MultisigOnboardingPage() {
             onSignOut={stxSignOut}
           />
         </ConnectCard>
-      </Flex>
+      </ConnectOverlay>
     </Page>
   );
 }

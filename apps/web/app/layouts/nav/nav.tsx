@@ -14,10 +14,10 @@ import {
   CodeIcon,
   GridIcon,
   IconButton,
-  KeyIcon,
   StacksIcon,
   SuitcaseIcon,
   SupportIcon,
+  VaultIcon,
 } from '@leather.io/ui';
 
 import { NavItem } from './nav-item.layout';
@@ -49,7 +49,7 @@ function NavContents() {
         Apps
       </NavItem>
 
-      <NavItem href="/multisig" icon={<KeyIcon variant="small" />}>
+      <NavItem href="/multisig" icon={<VaultIcon variant="small" />}>
         Multisig
       </NavItem>
 
