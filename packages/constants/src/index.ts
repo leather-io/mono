@@ -87,16 +87,15 @@ export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
 export const LEATHER_APP_URL = 'https://app.leather.io';
 export const LEATHER_GUIDES_URL: string = `${LEATHER_APP_URL}/support`;
+export const LEATHER_PORTFOLIO_URL: string = `${LEATHER_APP_URL}/portfolio`;
 export const LEATHER_SBTC_URL: string = `${LEATHER_APP_URL}/sbtc`;
-export const LEATHER_STACKING_URL: string = `${LEATHER_APP_URL}/stacking`;
+export const LEATHER_STACKING_URL: string = `${LEATHER_APP_URL}/staking`;
 
 export const BTC_US_URL = 'https://btc.us/';
 
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 
 export const LEATHER_GITBOOK_DEVS = 'https://leather.gitbook.io/developers';
-
-export const LEATHER_EARN_URL = 'https://earn.leather.io';
 
 export const LEATHER_EXTENSION_CHROME_STORE_URL =
   'https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en';

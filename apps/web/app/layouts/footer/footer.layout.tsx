@@ -22,7 +22,7 @@ function FooterGrid(props: GridProps) {
     <Grid
       width="100%"
       gap={['space.07', 'space.07', 'space.09']}
-      gridTemplateColumns={['repeat(2, 1fr)', null, null, 'repeat(4, 1fr)']}
+      gridTemplateColumns={['repeat(2, 1fr)', null, null, 'repeat(3, 1fr)']}
       mt="space.07"
       {...props}
     />

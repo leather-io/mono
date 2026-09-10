@@ -27,17 +27,17 @@ export function ConnectOverlayBackdrop({ isActive = true, children }: ConnectOve
 // and the sticky header.
 export function ConnectOverlay({ children }: { children: ReactNode }) {
   return (
-    <Box
-      position="fixed"
-      inset="0"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      px="space.04"
-      ml={[null, null, 'navbar']}
-      mt="60px"
-    >
-      {children}
+    <Box position="absolute" inset="0" pointerEvents="none">
+      <Box
+        position="sticky"
+        top="50dvh"
+        transform="translateY(-50%)"
+        display="flex"
+        justifyContent="center"
+        px="space.04"
+      >
+        {children}
+      </Box>
     </Box>
   );
 }

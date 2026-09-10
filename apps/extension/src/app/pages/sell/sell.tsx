@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router';
 
-import { LEATHER_EARN_URL } from '@leather.io/constants';
+import { LEATHER_PORTFOLIO_URL } from '@leather.io/constants';
 import { getOnramperIframeParams } from '@leather.io/features';
 
 import {
@@ -31,8 +31,8 @@ export function SellPage() {
     apiKey: ONRAMPER_API_KEY,
     signingSecret: ONRAMPER_SIGNING_SECRET,
     mode: 'sell',
-    successRedirectUrl: LEATHER_EARN_URL,
-    failureRedirectUrl: LEATHER_EARN_URL,
+    successRedirectUrl: LEATHER_PORTFOLIO_URL,
+    failureRedirectUrl: LEATHER_PORTFOLIO_URL,
   });
 
   return (
