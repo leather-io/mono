@@ -2,11 +2,11 @@ import { useState } from 'react';
 
 import { useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
+import { multisigLeather } from '~/features/multisig/extension/multisig-leather-client';
 import { resolveWalletRpcNetwork } from '~/features/multisig/network/resolve-wallet-rpc-network';
 import { getMultisigDescriptor } from '~/features/multisig/transactions/btc-multisig-descriptor';
 import { getOrderedSigningPubkeys } from '~/features/multisig/transactions/derive-multisig-address';
 import { useToast } from '~/features/toasts/use-toast';
-import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
 import type { Vault, VaultAccount } from '@leather.io/models';
@@ -45,13 +45,13 @@ export function useAddAccountToWallet(vault?: Vault, account?: VaultAccount) {
     setIsAddingToWallet(true);
     try {
       if (account.network.startsWith('btc')) {
-        await leather.btcAddAccount({
+        await multisigLeather.btcAddAccount({
           descriptor: getMultisigDescriptor(account),
           name: account.name,
           network,
         });
       } else {
-        await leather.stxAddAccount({
+        await multisigLeather.stxAddAccount({
           publicKeys: getOrderedSigningPubkeys(account),
           threshold: account.threshold,
           name: account.name,
