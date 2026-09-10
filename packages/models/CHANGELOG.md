@@ -36,6 +36,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.62.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.61.1...@leather.io/models-v0.62.0) (2026-09-10)
+
+
+### Features
+
+* **services:** bitcoin staking balances and positions service ([#2714](https://github.com/leather-io/mono/issues/2714)) ([695400d](https://github.com/leather-io/mono/commit/695400d198c48641ec00395ffe33562cafd35f66))
+
 ## [0.61.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.61.0...@leather.io/models-v0.61.1) (2026-08-27)
 
 

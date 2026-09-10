@@ -40,6 +40,44 @@
 
 ---
 
+## [6.112.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.111.0...@leather.io/extension-v6.112.0) (2026-09-10)
+
+
+### Features
+
+* **extension:** bitcoin staking balances and positions UI ([#2715](https://github.com/leather-io/mono/issues/2715)) ([0af16a8](https://github.com/leather-io/mono/commit/0af16a8f1ac9509cf94a351f8f667ba5c2b85a83))
+* multisig production cutover ([#2704](https://github.com/leather-io/mono/issues/2704)) ([8950cac](https://github.com/leather-io/mono/commit/8950cac2a3228a1621272f377796cdb3f0e7c264))
+
+
+### Bug Fixes
+
+* **auth:** bind sign-in message to requesting domain ([#2690](https://github.com/leather-io/mono/issues/2690)) ([dfb58cb](https://github.com/leather-io/mono/commit/dfb58cb5e85b2a10f89d830c5e3269c458dc6564))
+* **extension:** block psbt signing with disallowed sighash types ([#2667](https://github.com/leather-io/mono/issues/2667)) ([9b4d0f4](https://github.com/leather-io/mono/commit/9b4d0f46d6e77cbbda5da1b519ae853514fd1c30))
+* **extension:** cross-origin iframe callout ([#2647](https://github.com/leather-io/mono/issues/2647)) ([aedf524](https://github.com/leather-io/mono/commit/aedf5248eb67d2c24acd106f9439cf8fd7e364f3))
+* **extension:** render sip10 avatars in rpc approver post conditions ([#2706](https://github.com/leather-io/mono/issues/2706)) ([b3e5f61](https://github.com/leather-io/mono/commit/b3e5f61c5af226d2aa14b75e6ff5274d5cd32b3d))
+* **web:** private network resolution, regtest explorer links, activity polling ([#2663](https://github.com/leather-io/mono/issues/2663)) ([243071c](https://github.com/leather-io/mono/commit/243071c811e4966f52cef00f67c0a5cba21ec3ad))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.25.1
+    * @leather.io/bitcoin bumped to 0.40.1
+    * @leather.io/cms bumped to 1.6.2
+    * @leather.io/constants bumped to 0.39.3
+    * @leather.io/crypto bumped to 1.13.8
+    * @leather.io/features bumped to 1.8.1
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/provider bumped to 1.7.3
+    * @leather.io/queries bumped to 0.16.0
+    * @leather.io/query bumped to 2.51.8
+    * @leather.io/rpc bumped to 2.25.1
+    * @leather.io/services bumped to 1.65.0
+    * @leather.io/stacks bumped to 1.22.6
+    * @leather.io/ui bumped to 1.118.0
+    * @leather.io/utils bumped to 0.53.0
+
 ## [6.111.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.110.0...@leather.io/extension-v6.111.0) (2026-08-27)
 
 

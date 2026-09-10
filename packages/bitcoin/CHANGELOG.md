@@ -939,6 +939,26 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.40.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.40.0...@leather.io/bitcoin-v0.40.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **bitcoin:** verify psbt consistency in wsh descriptor finalization ([#2701](https://github.com/leather-io/mono/issues/2701)) ([68e36b4](https://github.com/leather-io/mono/commit/68e36b4e1e43a96e1343d1506e3c279829c5d6eb))
+* **extension:** block psbt signing with disallowed sighash types ([#2667](https://github.com/leather-io/mono/issues/2667)) ([9b4d0f4](https://github.com/leather-io/mono/commit/9b4d0f46d6e77cbbda5da1b519ae853514fd1c30))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.3
+    * @leather.io/crypto bumped to 1.13.8
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/utils bumped to 0.53.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.1
+
 ## [0.40.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.39.6...@leather.io/bitcoin-v0.40.0) (2026-08-27)
 
 
