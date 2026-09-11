@@ -1,20 +1,27 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
 import BigNumber from 'bignumber.js';
-import { Box, Stack } from 'leather-styles/jsx';
+import { Box, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
+import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 
 import { Input } from '@leather.io/ui';
 import { isDefined } from '@leather.io/utils';
 
 import { AvailableBalanceRow } from '../../components/available-balance-row';
+import { PoolMinStake, formatMinStakeStx } from '../utils/staking-form-schema';
 
 interface ChooseStakingAmountProps {
   isLoading: boolean;
   availableAmount: BigNumber | undefined;
+  minStake?: PoolMinStake;
 }
 
-export function ChooseStakingAmount({ isLoading, availableAmount }: ChooseStakingAmountProps) {
+export function ChooseStakingAmount({
+  isLoading,
+  availableAmount,
+  minStake,
+}: ChooseStakingAmountProps) {
   const { setValue, control } = useFormContext();
 
   return (
@@ -46,6 +53,15 @@ export function ChooseStakingAmount({ isLoading, availableAmount }: ChooseStakin
         availableAmount={availableAmount}
         onSelectMax={amount => setValue('amount', amount)}
       />
+
+      {minStake && (
+        <styled.span textStyle="caption.01" color="ink.text-subdued" data-testid="pool-min-stake">
+          {bitcoinStakingContent.operatorPayout.minStakeNote(
+            minStake.poolName,
+            formatMinStakeStx(minStake)
+          )}
+        </styled.span>
+      )}
     </Stack>
   );
 }

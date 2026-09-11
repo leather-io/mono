@@ -3,6 +3,7 @@ import { poxAddressToBtcAddress, poxAddressToTuple } from '@stacks/stacking';
 import {
   ClarityType,
   ClarityValue,
+  TupleCV,
   bufferCV,
   deserializeCV,
   noneCV,
@@ -18,7 +19,7 @@ import {
 // confirmed by the SIP draft, so it is only ever touched here.
 export interface Pox5PayoutPreference {
   btcRewardAddress: string;
-  maxFeeSats: bigint;
+  maxFeeSats?: bigint;
   minClaimSats?: bigint;
 }
 
@@ -28,7 +29,7 @@ export function encodeSignerCalldata(preference: Pox5PayoutPreference | undefine
   if (!preference) return noneCV();
   const calldataTuple = tupleCV({
     'pox-addr': poxAddressToTuple(preference.btcRewardAddress),
-    'max-fee': uintCV(preference.maxFeeSats),
+    ...(preference.maxFeeSats !== undefined ? { 'max-fee': uintCV(preference.maxFeeSats) } : {}),
     ...(preference.minClaimSats !== undefined
       ? { 'min-claim': uintCV(preference.minClaimSats) }
       : {}),
@@ -54,16 +55,26 @@ export function decodePayoutPreference(
   const calldata = inner.type === ClarityType.Buffer ? deserializeCV(inner.value) : inner;
   if (calldata.type !== ClarityType.Tuple) return null;
 
+  if (isPoxAddrTuple(calldata)) {
+    return { btcRewardAddress: poxAddressToBtcAddress(calldata, network) };
+  }
+
   const poxAddr = calldata.value['pox-addr'];
   const maxFee = calldata.value['max-fee'];
   const minClaim = calldata.value['min-claim'];
-  if (!poxAddr || !maxFee || maxFee.type !== ClarityType.UInt) return null;
+  if (!poxAddr) return null;
 
   return {
     btcRewardAddress: poxAddressToBtcAddress(poxAddr, network),
-    maxFeeSats: BigInt(maxFee.value),
+    ...(maxFee && maxFee.type === ClarityType.UInt ? { maxFeeSats: BigInt(maxFee.value) } : {}),
     ...(minClaim && minClaim.type === ClarityType.UInt
       ? { minClaimSats: BigInt(minClaim.value) }
       : {}),
   };
+}
+
+function isPoxAddrTuple(tuple: TupleCV): boolean {
+  const version = tuple.value['version'];
+  const hashbytes = tuple.value['hashbytes'];
+  return version?.type === ClarityType.Buffer && hashbytes?.type === ClarityType.Buffer;
 }
