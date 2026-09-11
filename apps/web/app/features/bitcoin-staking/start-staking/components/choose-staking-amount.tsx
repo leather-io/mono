@@ -9,18 +9,21 @@ import { Input } from '@leather.io/ui';
 import { isDefined } from '@leather.io/utils';
 
 import { AvailableBalanceRow } from '../../components/available-balance-row';
+import { StakingConnectAction } from '../../hooks/use-staking-connect-action';
 import { PoolMinStake, formatMinStakeStx } from '../utils/staking-form-schema';
 
 interface ChooseStakingAmountProps {
   isLoading: boolean;
   availableAmount: BigNumber | undefined;
   minStake?: PoolMinStake;
+  connectAction?: StakingConnectAction;
 }
 
 export function ChooseStakingAmount({
   isLoading,
   availableAmount,
   minStake,
+  connectAction,
 }: ChooseStakingAmountProps) {
   const { setValue, control } = useFormContext();
 
@@ -52,6 +55,7 @@ export function ChooseStakingAmount({
         isLoading={isLoading}
         availableAmount={availableAmount}
         onSelectMax={amount => setValue('amount', amount)}
+        connectAction={connectAction}
       />
 
       {minStake && (
