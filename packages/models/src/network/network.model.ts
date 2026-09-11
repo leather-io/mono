@@ -15,7 +15,8 @@ export const BITCOIN_API_BASE_URL_TESTNET3 = 'https://leather.mempool.space/test
 export const BITCOIN_API_BASE_URL_TESTNET4 = 'https://leather.mempool.space/testnet4/api';
 export const BITCOIN_API_BASE_URL_SIGNET = 'https://mempool.space/signet/api';
 
-export const BNS_V2_API_BASE_URL = 'https://api.bnsv2.com';
+export const BNS_V2_API_BASE_URL_MAINNET = 'https://api.bnsv2.com';
+export const BNS_V2_API_BASE_URL_TESTNET = 'https://api.bnsv2.com/testnet';
 
 export const EMILY_API_BASE_URL_MAINNET = 'https://sbtc-emily.com';
 export const EMILY_API_BASE_URL_TESTNET = 'https://beta.sbtc-emily.com';

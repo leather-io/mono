@@ -33,6 +33,9 @@ export async function mockBnsV2NamesRequestEmpty(page: Page | BrowserContext) {
   await page.route(`**/api.bnsv2.com/names/address/*/valid`, route =>
     route.fulfill({ json: mockedBnsV2NamesResponseEmpty })
   );
+  await page.route(`**/api.bnsv2.com/testnet/names/address/*/valid`, route =>
+    route.fulfill({ json: mockedBnsV2NamesResponseEmpty })
+  );
 }
 
 export async function mockBnsV2NamesRequest(page: Page | BrowserContext) {
