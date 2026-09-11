@@ -27,6 +27,11 @@ const providers = {
     name: 'PlanBetter',
     url: 'https://planbetter.com',
   },
+  asymmetricResearch: {
+    providerId: 'asymmetricResearch',
+    name: 'Asymmetric Research',
+    url: 'https://www.asymmetric.re',
+  },
   restake: {
     providerId: 'restake',
     name: 'Restake',
