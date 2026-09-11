@@ -83,6 +83,24 @@ describe('planbetter pool entry', () => {
   });
 });
 
+describe('asymmetric research pool entry', () => {
+  const pool = getStakingPoolFromSlug('asymmetric-research');
+
+  test('pins the deployed signer-manager by full contract id on mainnet', () => {
+    expect(getPrimarySignerManagerContract('asymmetricResearch', 'mainnet')).toEqual(
+      'SPZACCJ8XPZ14P7K7NGFMT1BWQYF2JA9DFA2ZR8A.signer-manager'
+    );
+    expect(isPoolAvailableOnNetwork(pool, 'mainnet')).toBe(true);
+  });
+
+  test('supports the signer-manager payout options', () => {
+    expect(pool.supportsBtcPayout).toBe(true);
+    expect(pool.fixedFeeBips).toBeUndefined();
+    expect(pool.operatorBtcPayout).toBeUndefined();
+    expect(stakingProviderIdToSlug(pool.providerId)).toEqual('asymmetric-research');
+  });
+});
+
 describe(getSignerManagerContracts.name, () => {
   test('returns an empty list for a pool with no contract on the network', () => {
     expect(getSignerManagerContracts('restake', 'mainnet')).toEqual([]);
