@@ -37,6 +37,13 @@ export interface BitcoinStakingPool {
   supportsBtcPayout: boolean;
   fixedFeeBips?: number;
   requiresSelfClaim?: boolean;
+  operatorBtcPayout?: OperatorBtcPayout;
+  minStakeMicroStx?: bigint;
+}
+
+export interface OperatorBtcPayout {
+  cadence: string;
+  termsUrl: string;
 }
 
 const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPool> = {
@@ -70,9 +77,18 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     providerId: 'planbetter',
     name: 'PlanBetter',
     url: 'https://planbetter.com',
-    description: 'Earn non-custodial Bitcoin yield. No wrapped tokens.',
-    signerManagerContracts: {},
-    supportsBtcPayout: false,
+    description:
+      'Rewards are paid in native BTC to your Bitcoin address, roughly monthly. PlanBetter collects the pool’s sBTC rewards and pays members off chain, so this pool is custodial: there is no on-chain claim and no on-chain recourse.',
+    signerManagerContracts: {
+      mainnet: ['SP3ZA8J49HPS7M3KD7EB01Y0ZAJS7VJS2NG87MDGN.planbetter-signer-manager'],
+    },
+    supportsBtcPayout: true,
+    fixedFeeBips: 500,
+    operatorBtcPayout: {
+      cadence: 'every 2 cycles, roughly monthly',
+      termsUrl: 'https://planbetter.com/#faq',
+    },
+    minStakeMicroStx: 1_000_000_000n,
   },
   restake: {
     providerId: 'restake',

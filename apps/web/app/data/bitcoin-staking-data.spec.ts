@@ -64,15 +64,34 @@ describe('byosm pool entry', () => {
   });
 });
 
+describe('planbetter pool entry', () => {
+  const pool = getStakingPoolFromSlug('planbetter');
+
+  test('pins the deployed signer-manager by full contract id on mainnet', () => {
+    expect(getPrimarySignerManagerContract('planbetter', 'mainnet')).toEqual(
+      'SP3ZA8J49HPS7M3KD7EB01Y0ZAJS7VJS2NG87MDGN.planbetter-signer-manager'
+    );
+    expect(isPoolAvailableOnNetwork(pool, 'mainnet')).toBe(true);
+  });
+
+  test('mirrors the contract constants and operator policy', () => {
+    expect(pool.minStakeMicroStx).toEqual(1_000_000_000n);
+    expect(pool.fixedFeeBips).toEqual(500);
+    expect(pool.supportsBtcPayout).toBe(true);
+    expect(pool.operatorBtcPayout?.termsUrl).toMatch(/^https:\/\/planbetter\.com\//);
+    expect(pool.requiresSelfClaim).toBeUndefined();
+  });
+});
+
 describe(getSignerManagerContracts.name, () => {
   test('returns an empty list for a pool with no contract on the network', () => {
-    expect(getSignerManagerContracts('planbetter', 'mainnet')).toEqual([]);
+    expect(getSignerManagerContracts('restake', 'mainnet')).toEqual([]);
   });
 });
 
 describe(getPrimarySignerManagerContract.name, () => {
   test('is undefined for a pool with no contract on the network', () => {
-    expect(getPrimarySignerManagerContract('planbetter', 'mainnet')).toBeUndefined();
+    expect(getPrimarySignerManagerContract('restake', 'mainnet')).toBeUndefined();
   });
 });
 

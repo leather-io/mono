@@ -138,6 +138,9 @@ export const listedSignerManagerContractId =
 export const stackingDaoSignerManagerContractId =
   getPrimarySignerManagerContract('stackingDao', pox5NetworkConfig.contractNetworkMode) ?? '';
 
+export const planbetterSignerManagerContractId =
+  getPrimarySignerManagerContract('planbetter', pox5NetworkConfig.contractNetworkMode) ?? '';
+
 export const byosmContractIds = {
   valid: 'SP1H1733V5MZ3SZ9XRW9FKYGEZT0JDGEB8Y634C7R.community-signer-manager',
   notFound: 'SP1H1733V5MZ3SZ9XRW9FKYGEZT0JDGEB8Y634C7R.does-not-exist',
@@ -182,6 +185,10 @@ export const mockBtcPayoutPreference: Pox5PayoutPreference = {
   minClaimSats: 5_000n,
 };
 
+export const mockOperatorPayoutPreference: Pox5PayoutPreference = {
+  btcRewardAddress: 'bc1qyf4a3taahvv2sfs0zz0mtq2lxdsthmf3wcjjxq',
+};
+
 const mockTxId = '0x9f3b1d2c4e5a6b7c8d9e0f1a2b3c4d5e6f70819a2b3c4d5e6f708192a3b4c5d6';
 
 const mockPendingStakeTx: PendingPox5Tx = { kind: 'stake', txId: mockTxId };
@@ -203,6 +210,7 @@ const mockTotalStakedByProvider: Record<string, bigint> = {
   fastPool: 41_800_000_000_000n,
   xversePool: 12_400_000_000_000n,
   stackingDao: 128_600_000_000_000n,
+  planbetter: 6_300_000_000_000n,
   special: 900_000_000_000n,
 };
 
@@ -342,6 +350,16 @@ export function createSeededQueryClient(seed: StakingSurfaceSeed = {}) {
     { preference: null, supportsMinClaim: true }
   );
 
+  queryClient.setQueryData(
+    createGetPox5PayoutPreferenceQueryOptions({
+      address: mockStacksAddress,
+      signerManagerContractId: planbetterSignerManagerContractId,
+      networkName: pox5NetworkConfig.stacksNetworkName,
+      client: mockStacksClient,
+    }).queryKey,
+    { preference: null, supportsMinClaim: false }
+  );
+
   if (stakerInfo) {
     queryClient.setQueryData(
       createGetPox5PayoutPreferenceQueryOptions({
@@ -350,7 +368,10 @@ export function createSeededQueryClient(seed: StakingSurfaceSeed = {}) {
         networkName: pox5NetworkConfig.stacksNetworkName,
         client: mockStacksClient,
       }).queryKey,
-      { preference: payoutPreference, supportsMinClaim: true }
+      {
+        preference: payoutPreference,
+        supportsMinClaim: stakerInfo.signerManagerContractId !== planbetterSignerManagerContractId,
+      }
     );
 
     earnedRewards.forEach(rewards => {

@@ -61,7 +61,7 @@ describe(parseSwitchTargetSlug.name, () => {
   test('ignores a pool without signer-manager contracts on the network', () => {
     expect(
       parseSwitchTargetSlug({
-        search: '?to=planbetter',
+        search: '?to=restake',
         currentProviderId: 'stackingDao',
         networkMode: 'mainnet',
       })
