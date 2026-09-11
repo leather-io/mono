@@ -10,21 +10,21 @@ import {
 const stackingDaoFacts: SignerManagerFacts = {
   name: 'Stacking DAO',
   isCustom: false,
-  supportsBtcPayout: false,
+  payoutMode: 'sbtc',
   feeBips: 0,
 };
 
 const senseiNodeFacts: SignerManagerFacts = {
   name: 'SenseiNode',
   isCustom: false,
-  supportsBtcPayout: true,
+  payoutMode: 'sbtc-or-btc',
   feeBips: 1000,
 };
 
 const customFacts: SignerManagerFacts = {
   name: 'SP4SZ…DPBG.custom-signer-manager',
   isCustom: true,
-  supportsBtcPayout: true,
+  payoutMode: 'sbtc-or-btc',
   feeBips: null,
 };
 
@@ -74,7 +74,7 @@ describe(buildUpdateStakeSummaryRows.name, () => {
     const rows = buildUpdateStakeSummaryRows({
       ...baseInput,
       current: senseiNodeFacts,
-      target: { ...stackingDaoFacts, supportsBtcPayout: true },
+      target: { ...stackingDaoFacts, payoutMode: 'sbtc-or-btc' },
     });
     const feeRow = rows.find(row => row.label === 'Fee');
     expect(feeRow).toEqual({

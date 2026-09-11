@@ -27,6 +27,11 @@ import {
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { PoolFeeValue } from '~/features/bitcoin-staking/components/pool-fee-value';
 import { PoolTvlValue } from '~/features/bitcoin-staking/components/pool-tvl-value';
+import {
+  getPoolPayoutMode,
+  getRewardsTokenLabel,
+  getRewardsTokenSymbol,
+} from '~/features/bitcoin-staking/utils/pool-payout';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
 import { ArrowLeftIcon, Flag } from '@leather.io/ui';
@@ -47,6 +52,8 @@ function StakingProviderRow({ pool }: StakingProviderRowProps) {
   const navigate = useNavigate();
   const slug = stakingProviderIdToSlug(pool.providerId);
   const { to } = useStakingPoolLink(slug);
+  const payoutMode = getPoolPayoutMode(pool);
+  const { operatorPayout } = bitcoinStakingContent;
 
   return (
     <Table.Row
@@ -71,11 +78,23 @@ function StakingProviderRow({ pool }: StakingProviderRowProps) {
               />
             </styled.span>
           )}
+          {pool.operatorBtcPayout && (
+            <styled.span display="block" textStyle="label.03" color="ink.text-subdued">
+              {operatorPayout.badge}
+              <InfoTooltipIcon
+                title={operatorPayout.badge}
+                explanation={operatorPayout.explanation(pool.name)}
+                learnMoreUrl={pool.operatorBtcPayout.termsUrl}
+                ariaLabel={`About ${operatorPayout.badge}`}
+                size={12}
+              />
+            </styled.span>
+          )}
         </Flag>
       </styled.td>
       <styled.td px="space.04" textAlign="left" color="black">
-        <Flag spacing="space.02" img={<ChainLogoIcon symbol="sBTC" />}>
-          {pool.supportsBtcPayout ? 'sBTC / BTC' : 'sBTC'}
+        <Flag spacing="space.02" img={<ChainLogoIcon symbol={getRewardsTokenSymbol(payoutMode)} />}>
+          {getRewardsTokenLabel(payoutMode)}
         </Flag>
       </styled.td>
       <styled.td px="space.04" textAlign="right" color="black">
