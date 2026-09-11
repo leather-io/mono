@@ -24,11 +24,6 @@ export enum StacksQueryPrefixes {
   GetSip10AddressBalances = 'get-sip10-address-balances',
 }
 
-export enum BnsV2QueryPrefixes {
-  GetBnsNamesByAddress = 'get-bns-names-by-address',
-  GetBnsV2ZoneFileData = 'get-bns-v2-zone-file-data',
-}
-
 export enum StackingQueryPrefixes {
   GetAllowanceContractCallers = 'get-allowance-contract-callers',
   GetCycleDuration = 'get-cycle-duration',

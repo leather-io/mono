@@ -2,8 +2,6 @@ import { FtMetadataResponse, NftMetadataResponse } from '@hirosystems/token-meta
 import type {
   AddressNonces,
   AddressTransactionsWithTransfersListResponse,
-  BnsGetNameInfoResponse,
-  BnsNamesOwnByAddressResponse,
   GetRawTransactionResult,
   MempoolTransaction,
   MempoolTransactionListResponse,
@@ -106,30 +104,6 @@ export function stacksClient(basePath: string) {
         () =>
           axios.get<NetworkBlockTimesResponse>(`${basePath}/extended/v1/info/network_block_times`),
         { priority: hiroApiRequestsPriorityLevels.getNetworkBlockTimes, throwOnTimeout: true }
-      );
-      return resp.data;
-    },
-    async getNamesOwnedByAddress(address: string, signal: AbortSignal) {
-      const resp = await rateLimiter.add(
-        () =>
-          axios.get<BnsNamesOwnByAddressResponse>(`${basePath}/v1/addresses/stacks/${address}`, {
-            signal,
-          }),
-        {
-          priority: hiroApiRequestsPriorityLevels.getNamesOwnedByAddress,
-          signal,
-          throwOnTimeout: true,
-        }
-      );
-      return resp.data;
-    },
-    async getNameInfo(name: string, signal?: AbortSignal) {
-      const resp = await rateLimiter.add(
-        () =>
-          axios.get<BnsGetNameInfoResponse>(`${basePath}/v1/names/${name}`, {
-            signal,
-          }),
-        { priority: hiroApiRequestsPriorityLevels.getNameInfo, signal, throwOnTimeout: true }
       );
       return resp.data;
     },

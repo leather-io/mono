@@ -2,6 +2,8 @@
 import axios from 'axios';
 import { inject, injectable } from 'inversify';
 
+import { BNS_V2_API_BASE_URL } from '@leather.io/models';
+
 import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
 import { ApiRequestOptions } from '../types';
@@ -14,8 +16,6 @@ import {
   bnsV2ApiZoneFileResponseSchema,
 } from './bns-v2-api.schema';
 
-const BNS_V2_API_URL = 'https://api.bnsv2.com';
-
 @injectable()
 export class BnsV2ApiClient {
   constructor(@inject(Types.CacheService) private readonly cache: HttpCacheService) {}
@@ -25,9 +25,12 @@ export class BnsV2ApiClient {
     { signal, skipCache }: ApiRequestOptions = {}
   ): Promise<BnsV2ApiNameResponse> {
     const fetchFn = async () => {
-      const res = await axios.get<BnsV2ApiNameResponse>(`${BNS_V2_API_URL}/names/${fullName}`, {
-        signal,
-      });
+      const res = await axios.get<BnsV2ApiNameResponse>(
+        `${BNS_V2_API_BASE_URL}/names/${fullName}`,
+        {
+          signal,
+        }
+      );
       return bnsV2ApiNameResponseSchema.parse(res.data);
     };
     return skipCache
@@ -41,7 +44,7 @@ export class BnsV2ApiClient {
   ): Promise<BnsV2ApiAddressNamesResponse> {
     const fetchFn = async () => {
       const res = await axios.get<BnsV2ApiAddressNamesResponse>(
-        `${BNS_V2_API_URL}/names/address/${address}/valid`,
+        `${BNS_V2_API_BASE_URL}/names/address/${address}/valid`,
         {
           signal,
         }
@@ -59,7 +62,7 @@ export class BnsV2ApiClient {
   ): Promise<BnsV2ApiZoneFilResponse> {
     const fetchFn = async () => {
       const res = await axios.get<BnsV2ApiZoneFilResponse>(
-        `${BNS_V2_API_URL}/zonefile/${fullName}/raw`,
+        `${BNS_V2_API_BASE_URL}/zonefile/${fullName}/raw`,
         {
           signal,
         }
