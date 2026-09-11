@@ -10,7 +10,7 @@ const mainnet: BitcoinNetworkModes = 'mainnet';
 
 function createPermission(overrides: Partial<AppPermission> = {}): AppPermission {
   return {
-    origin: 'app.com',
+    origin: 'https://app.com',
     fingerprint,
     accountIndex: 0,
     requestedAccounts: '2026-01-01T00:00:00.000Z',
@@ -37,6 +37,26 @@ describe('isConnectedToExistingWallet', () => {
       false
     );
   });
+
+  test.each(['origin', 'fingerprint', 'accountIndex', 'networkMode'] as const)(
+    'returns false when the permission has no %s',
+    field => {
+      const permission = { ...createPermission(), [field]: undefined };
+      expect(isConnectedToExistingWallet(permission, createWalletEntities([fingerprint]))).toBe(
+        false
+      );
+    }
+  );
+
+  test.each(['app.com', 'app.com:8443', 'https://app.com/path', 'javascript:void(0)', ''])(
+    'returns false when the persisted origin %s is not a canonical web origin',
+    origin => {
+      const permission = createPermission({ origin });
+      expect(isConnectedToExistingWallet(permission, createWalletEntities([fingerprint]))).toBe(
+        false
+      );
+    }
+  );
 
   test('returns false when the granted fingerprint no longer has a wallet', () => {
     const permission = createPermission({ fingerprint: 'removed-wallet' });
