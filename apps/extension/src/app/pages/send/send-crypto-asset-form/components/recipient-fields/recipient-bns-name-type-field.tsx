@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { useFormikContext } from 'formik';
 
-import type { BnsV2Client } from '@leather.io/query';
-
 import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
 
 import { RecipientAddressTypeField } from '@app/pages/send/send-crypto-asset-form/components/recipient-address-type-field';
@@ -12,7 +10,7 @@ import { RecipientAddressDisplayer } from './components/recipient-address-displa
 import { useRecipientBnsName } from './hooks/use-recipient-bns-name';
 
 interface RecipientBnsNameTypeFieldProps {
-  fetchFn(client: BnsV2Client, name: string, isTestnet?: boolean): Promise<string | null>;
+  fetchFn(name: string): Promise<string | null>;
   topInputOverlay: React.JSX.Element;
   rightLabel: React.JSX.Element;
 }

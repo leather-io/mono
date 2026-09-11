@@ -1,10 +1,13 @@
 import { standardPrincipalCV } from '@stacks/transactions';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 
 import { BnsName, BnsProfile, bnsContractAddress, bnsContractName } from '@leather.io/models';
 
 import { BnsV2ApiClient } from '../infrastructure/api/bns-v2/bns-v2-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { selectStacksNetworkMode } from '../infrastructure/settings/settings.selectors';
+import type { SettingsService } from '../infrastructure/settings/settings.service';
+import { Types } from '../inversify.types';
 import { AccountRequest } from '../types';
 import {
   buildBnsName,
@@ -23,7 +26,8 @@ export interface AccountBnsName extends BnsName {
 export class BnsService {
   constructor(
     private readonly bnsV2ApiClient: BnsV2ApiClient,
-    private readonly stacksApiClient: HiroStacksApiClient
+    private readonly stacksApiClient: HiroStacksApiClient,
+    @inject(Types.SettingsService) private readonly settings: SettingsService
   ) {}
 
   public async getBnsName(fullName: string, signal?: AbortSignal): Promise<BnsName | null> {
@@ -124,7 +128,7 @@ export class BnsService {
   private async getPrimaryName(stacksAddress: string, signal?: AbortSignal) {
     const res = await this.stacksApiClient.callReadOnlyFunction(
       {
-        contractAddress: bnsContractAddress.mainnet,
+        contractAddress: bnsContractAddress[selectStacksNetworkMode(this.settings.getSettings())],
         contractName: bnsContractName,
         functionName: 'get-primary',
         functionArgs: [standardPrincipalCV(stacksAddress)],

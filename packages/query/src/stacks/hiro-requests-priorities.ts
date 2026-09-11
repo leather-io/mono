@@ -3,14 +3,12 @@ export const hiroApiRequestsPriorityLevels = {
   makeAuthResponse: 15,
 
   getNetworkStatus: 10,
-  getNamesOwnedByAddress: 9,
 
   getAddressBalance: 5,
 
   getAccountTransactionsWithTransfers: 4,
 
   getAccountNonces: 4,
-  getNameInfo: 4,
   getNftHoldings: 4,
   getAddressMempoolTransactions: 4,
   getRawTransactionById: 4,
