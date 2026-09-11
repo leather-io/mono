@@ -8,7 +8,7 @@ import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoi
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
 
-import { LEATHER_EARN_URL } from '@leather.io/constants';
+import { LEATHER_PORTFOLIO_URL } from '@leather.io/constants';
 import { type OnramperMode, getOnramperIframeParams } from '@leather.io/features';
 import type { FungibleCryptoAsset } from '@leather.io/models';
 import { useTheme } from '@leather.io/ui/native';
@@ -40,8 +40,8 @@ export function Ramp({ mode, asset }: RampProps) {
     mode,
     apiKey,
     signingSecret,
-    successRedirectUrl: LEATHER_EARN_URL,
-    failureRedirectUrl: LEATHER_EARN_URL,
+    successRedirectUrl: LEATHER_PORTFOLIO_URL,
+    failureRedirectUrl: LEATHER_PORTFOLIO_URL,
     redirectAtCheckout: true,
   });
   const link = `${widgetHost}?${iframeParams.toString()}`;

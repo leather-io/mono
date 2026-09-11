@@ -24,18 +24,6 @@ function AppFooter() {
           </Footer.Link>
         </Footer.Column>
 
-        <Footer.Column title="Advanced Earn">
-          <Footer.Link withIcon href="https://earn.leather.io/pool-admin">
-            Pool administration
-          </Footer.Link>
-          <Footer.Link withIcon href="https://earn.leather.io/signer/generate-signature">
-            Signer key signature
-          </Footer.Link>
-          <Footer.Link withIcon href="https://earn.leather.io/choose-stacking-method">
-            Stake independently
-          </Footer.Link>
-        </Footer.Column>
-
         <Footer.Column title="Stay in touch">
           <Footer.Link withIcon href="https://twitter.com/leatherbtc">
             X
