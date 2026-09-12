@@ -1,7 +1,7 @@
 import * as btc from '@scure/btc-signer';
 import { hexToBytes } from '@stacks/common';
 
-import { isWshDescriptor } from '@leather.io/bitcoin';
+import { isSignableWshDescriptor, isWshDescriptor } from '@leather.io/bitcoin';
 import { RpcErrorCode, createRpcErrorResponse, signPsbt } from '@leather.io/rpc';
 import { ensureArray, isDefined, isUndefined } from '@leather.io/utils';
 
@@ -39,6 +39,13 @@ function validateRpcSignPsbtParams(obj: unknown) {
 function getRpcSignPsbtParamErrors(obj: unknown) {
   return formatValidationErrors(getRpcParamErrors(obj, signPsbt.params));
 }
+
+function getDescriptorError(descriptor: string) {
+  if (!isWshDescriptor(descriptor)) return 'Only wsh() descriptors are supported';
+  if (!isSignableWshDescriptor(descriptor)) return 'Descriptor is not supported for signing';
+  return undefined;
+}
+
 export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (request, port) => {
   if (isUndefined(request.params)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Undefined parameters' });
@@ -80,7 +87,11 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
     return;
   }
 
-  if (isDefined(request.params.descriptor) && !isWshDescriptor(request.params.descriptor)) {
+  const descriptorError = isDefined(request.params.descriptor)
+    ? getDescriptorError(request.params.descriptor)
+    : undefined;
+
+  if (isDefined(descriptorError)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Invalid descriptor' });
 
     void sendMessageToOriginatingFrame(
@@ -89,7 +100,7 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
         id: request.id,
         error: {
           code: RpcErrorCode.INVALID_PARAMS,
-          message: 'Only wsh() descriptors are supported',
+          message: descriptorError,
         },
       })
     );
