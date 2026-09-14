@@ -226,4 +226,23 @@ describe(LedgerSignMsgContainer.name, () => {
     expect(mocks.toDeviceDisconnectStep).toHaveBeenCalledOnce();
     expect(transportClose).toHaveBeenCalledOnce();
   });
+
+  test('shows the validation error, cancels signing and closes the transport', async () => {
+    const { transportClose, context } = setupSignMessage();
+    const error = 'Ledger messages must be 270 bytes or fewer.';
+    mocks.signUtf8Message.mockReturnValue(() => Promise.resolve({ error }));
+
+    await act(async () => {
+      await context.signMessage();
+    });
+
+    expect(mocks.toOperationRejectedStep).toHaveBeenCalledWith(error);
+    expect(mocks.publish).toHaveBeenCalledOnce();
+    expect(mocks.publish).toHaveBeenCalledWith('ledgerStacksMessageSigningCancelled', {
+      unsignedMessage: { messageType: 'utf8', message: 'hello leather' },
+    });
+    expect(mocks.toDeviceDisconnectStep).not.toHaveBeenCalled();
+    expect(mocks.messageSignedOnLedgerSuccessfully).not.toHaveBeenCalled();
+    expect(transportClose).toHaveBeenCalledOnce();
+  });
 });

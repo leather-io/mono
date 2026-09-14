@@ -112,6 +112,12 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
         },
       });
 
+      if ('error' in resp) {
+        void ledgerNavigate.toOperationRejectedStep(resp.error);
+        appEvents.publish('ledgerStacksMessageSigningCancelled', { unsignedMessage });
+        return;
+      }
+
       // Assuming here that public keys are wrong. Alternatively, we may want
       // to proactively check the key before signing
       if (resp.returnCode === LedgerError.DataIsInvalid) {
