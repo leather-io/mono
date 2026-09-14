@@ -12,6 +12,7 @@ const stackingProviderIconConfig: Record<ProviderId, ProviderIconConfig> = {
   esbeeDao: { src: '/icons/esbee.svg', fill: '#F7CEB2' },
   fastPoolV2: { src: '/icons/fastpool.svg', fill: '#7A6FB0' },
   planbetter: { src: '/icons/planbetter.webp', fill: 'black' },
+  asymmetricResearch: { src: '/icons/asymmetric.svg', fill: '#F4F4F0' },
   restake: { src: '/icons/restake.webp', fill: '#124044' },
   xversePool: { src: '/icons/xverse.webp', fill: 'black' },
   stackingDao: { src: '/icons/stacking-dao.webp', fill: '#1C3830' },

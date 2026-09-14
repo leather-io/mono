@@ -14,6 +14,7 @@ export type BitcoinStakingProviderId =
   | 'special'
   | 'fastPool'
   | 'planbetter'
+  | 'asymmetricResearch'
   | 'restake'
   | 'xversePool'
   | 'stackingDao'
@@ -89,6 +90,17 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
       termsUrl: 'https://planbetter.com/#faq',
     },
     minStakeMicroStx: 1_000_000_000n,
+  },
+  asymmetricResearch: {
+    providerId: 'asymmetricResearch',
+    name: 'Asymmetric Research',
+    url: 'https://www.asymmetric.re',
+    description:
+      'Stack with Asymmetric Research, a security engineering firm and Stacks signer. Rewards accrue as sBTC each cycle and can be claimed once the cycle concludes.',
+    signerManagerContracts: {
+      mainnet: ['SPZACCJ8XPZ14P7K7NGFMT1BWQYF2JA9DFA2ZR8A.signer-manager'],
+    },
+    supportsBtcPayout: true,
   },
   restake: {
     providerId: 'restake',
@@ -172,6 +184,7 @@ const stakingPoolSlugMap = {
   special: 'special',
   'fast-pool': 'fastPool',
   planbetter: 'planbetter',
+  'asymmetric-research': 'asymmetricResearch',
   restake: 'restake',
   'xverse-pool': 'xversePool',
   'stacking-dao': 'stackingDao',

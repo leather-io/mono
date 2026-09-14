@@ -202,12 +202,14 @@ export const mockTrackedTx: Pox5TrackedTx = {
 
 const mockFeeByProvider: Record<string, Pox5PoolFee> = {
   fastPool: { activeFeeBips: 0, pendingFeeBips: 450, pendingActivationCycle: 142 },
+  asymmetricResearch: { activeFeeBips: 0, pendingFeeBips: null, pendingActivationCycle: null },
   xversePool: { activeFeeBips: 700, pendingFeeBips: null, pendingActivationCycle: null },
   special: { activeFeeBips: 300, pendingFeeBips: null, pendingActivationCycle: null },
 };
 
 const mockTotalStakedByProvider: Record<string, bigint> = {
   fastPool: 41_800_000_000_000n,
+  asymmetricResearch: 8_700_000_000_000n,
   xversePool: 12_400_000_000_000n,
   stackingDao: 128_600_000_000_000n,
   planbetter: 6_300_000_000_000n,
