@@ -51,6 +51,39 @@ export const bitcoinStakingContent = {
   selfClaim: {
     explanation: `This pool takes no cut from your rewards. In exchange it never claims for you: rewards accrue each cycle and only you can claim them, through the pool's signer-manager contract.`,
   },
+  operatorPayout: {
+    badge: `Custodial BTC payout`,
+    explanation(poolName: string) {
+      return `${poolName} collects the pool's sBTC rewards and pays members in native BTC off chain, on its own schedule. There is no on-chain claim and no on-chain recourse; payment status lives with ${poolName}.`;
+    },
+    rewardsTokenCaption(poolName: string) {
+      return `Paid off chain by ${poolName}`;
+    },
+    rewardsTokenExplanation(poolName: string, cadence: string) {
+      return `Rewards reach you as native BTC at the payout address you register, sent by ${poolName} ${cadence}. The pool's sBTC rewards are collected by ${poolName} and distributed off chain, so there is no on-chain claim.`;
+    },
+    feeCaption(poolName: string) {
+      return `${poolName} policy`;
+    },
+    feeExplanation(poolName: string) {
+      return `The fee ${poolName} publishes on its own site and applies when it distributes rewards off chain. It is operator policy rather than a value enforced by the contract, so it can change without a contract change.`;
+    },
+    minStakeNote(poolName: string, minStx: string) {
+      return `${poolName} requires at least ${minStx} STX. The contract rejects anything smaller.`;
+    },
+    activeCard: {
+      title: `Rewards payout`,
+      paidBy(poolName: string) {
+        return `Native BTC, paid by ${poolName}`;
+      },
+      description(poolName: string, cadence: string) {
+        return `${poolName} pays your share ${cadence} to this address, after its fee. Payments are made off chain, so there is nothing to claim here and payment status lives with ${poolName}.`;
+      },
+      linkLabel(poolName: string) {
+        return `Visit ${poolName}`;
+      },
+    },
+  },
   poolOverviewInfo: {
     rewardsToken: `Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool's signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall.`,
     fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so check the pool's terms before staking.`,
@@ -123,6 +156,13 @@ export const bitcoinStakingContent = {
     sbtcHelper: `Paid to your wallet once a cycle concludes — your pool usually claims for you.`,
     btcHelper: `Withdrawn from sBTC to your Bitcoin address, which costs a network fee.`,
     sbtcOnlyHelper: `This pool pays out in sBTC only, once a cycle concludes.`,
+    btcOnlyLabel: `BTC payout address`,
+    btcOnlyHelper(poolName: string, cadence: string) {
+      return `Required. ${poolName} pays your rewards in native BTC to this address ${cadence}, off chain and after its fee. There is no sBTC option for this pool.`;
+    },
+    registeredAddressChanged(poolName: string) {
+      return `Changing this address redirects every future payout from ${poolName}. The address currently registered stops receiving rewards.`;
+    },
     maxFeeNote: `Taken out of each payout to pay for the Bitcoin transaction. Rewards can't be paid out until they've grown past it, so a higher max fee means fewer, bigger payouts.`,
     minClaimNote(smallestValidSats: string | null) {
       const base = `Optional. Below this amount only you can trigger a payout, so nobody else can spend your max fee on a trivial payout.`;

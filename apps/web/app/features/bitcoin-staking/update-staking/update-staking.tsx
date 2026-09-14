@@ -51,10 +51,17 @@ import {
   usePox5PoolFeesByProvider,
 } from '../queries/pox5-stacking.query';
 import { ChoosePayoutPreference } from '../start-staking/components/choose-payout-preference';
+import { PoolMinStake, buildPayoutPreference } from '../start-staking/utils/staking-form-schema';
 import { createStakeUpdateMutationOptions } from '../transactions/pox5-mutations';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 import { getBroadcastTxId } from '../transactions/pox5-tx-status';
 import { getExpectedFeeBips } from '../utils/pool-fee';
+import {
+  canPayoutInBtc,
+  customPoolPayoutMode,
+  getPoolPayoutMode,
+  isBtcPayoutRequired,
+} from '../utils/pool-payout';
 import { ChooseSignerManager } from './components/choose-signer-manager';
 import { CustomContractEntry } from './components/custom-contract-entry';
 import { SidebarSummaryCard } from './components/sidebar-summary-card';
@@ -109,8 +116,11 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
     position.status === 'active' ? (position.pool ?? getStakingPoolFromSlug('byosm')) : undefined;
   // The form's defaults must include the stored payout preference, so the form
   // only mounts once this query settles (see the wipe note on normalizePayout).
+  const activePoolCanPayoutInBtc = activePool
+    ? canPayoutInBtc(getPoolPayoutMode(activePool))
+    : false;
   const payoutQuery = usePox5PayoutPreferenceQuery(
-    activePool?.supportsBtcPayout ? activeInfo?.signerManagerContractId : undefined
+    activePoolCanPayoutInBtc ? activeInfo?.signerManagerContractId : undefined
   );
 
   if (isLoading) {
@@ -139,7 +149,7 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
     );
   }
 
-  if (activePool.supportsBtcPayout && payoutQuery.isLoading) {
+  if (activePoolCanPayoutInBtc && payoutQuery.isLoading) {
     return (
       <Flex justifyContent="center" alignItems="center" h="100%">
         <LoadingSpinner fill="ink.text-subdued" />
@@ -147,7 +157,7 @@ function UpdateStakingLayout({ poolSlug, address }: UpdateStakingLayoutProps) {
     );
   }
 
-  if (activePool.supportsBtcPayout && payoutQuery.isError) {
+  if (activePoolCanPayoutInBtc && payoutQuery.isError) {
     return (
       <Stack gap="space.04" maxWidth="500px">
         <ErrorLabel>{bitcoinStakingContent.payoutPreference.loadError}</ErrorLabel>
@@ -230,7 +240,7 @@ function UpdateStakingForm({
   const currentFacts: SignerManagerFacts = {
     name: currentIsCustom ? truncateMiddle(info.signerManagerContractId) : pool.name,
     isCustom: currentIsCustom,
-    supportsBtcPayout: pool.supportsBtcPayout,
+    payoutMode: getPoolPayoutMode(pool),
     feeBips:
       pool.fixedFeeBips ?? (currentFeeQuery.data ? getExpectedFeeBips(currentFeeQuery.data) : null),
   };
@@ -241,24 +251,35 @@ function UpdateStakingForm({
       return {
         name: target.pool.name,
         isCustom: false,
-        supportsBtcPayout: target.pool.supportsBtcPayout,
+        payoutMode: getPoolPayoutMode(target.pool),
         feeBips: feeBipsByProvider[target.pool.providerId] ?? null,
       };
     }
     return {
       name: truncateMiddle(target.contractId),
       isCustom: true,
-      supportsBtcPayout: true,
+      payoutMode: customPoolPayoutMode,
       feeBips: customTargetFeeQuery.data ? getExpectedFeeBips(customTargetFeeQuery.data) : null,
     };
   })();
 
-  const effectiveSupportsBtcPayout = targetFacts
-    ? targetFacts.supportsBtcPayout
-    : pool.supportsBtcPayout;
+  const effectivePayoutMode = targetFacts ? targetFacts.payoutMode : currentFacts.payoutMode;
+  const effectivePool = ((): BitcoinStakingPool | null => {
+    if (target) return target.pool;
+    return currentIsCustom ? null : pool;
+  })();
+  const effectiveMinStake: PoolMinStake | undefined =
+    effectivePool?.minStakeMicroStx !== undefined
+      ? { poolName: effectivePool.name, minStakeMicroStx: effectivePool.minStakeMicroStx }
+      : undefined;
+  const effectiveOperatorPayout = effectivePool?.operatorBtcPayout
+    ? { poolName: effectivePool.name, cadence: effectivePool.operatorBtcPayout.cadence }
+    : undefined;
 
   const effectivePayoutQuery = usePox5PayoutPreferenceQuery(
-    effectiveSupportsBtcPayout ? (target?.contractId ?? info.signerManagerContractId) : undefined
+    canPayoutInBtc(effectivePayoutMode)
+      ? (target?.contractId ?? info.signerManagerContractId)
+      : undefined
   );
   const supportsMinClaim = effectivePayoutQuery.data?.supportsMinClaim ?? false;
 
@@ -283,9 +304,10 @@ function UpdateStakingForm({
       amountIncrease: '',
       payoutEnabled: currentPayout !== null,
       rewardAddress: currentPayout?.btcRewardAddress ?? btcPaymentAddress?.address,
-      maxFeeSats: currentPayout
-        ? String(currentPayout.maxFeeSats)
-        : String(MIN_MAX_WITHDRAWAL_FEE_SATS),
+      maxFeeSats:
+        currentPayout?.maxFeeSats !== undefined
+          ? String(currentPayout.maxFeeSats)
+          : String(MIN_MAX_WITHDRAWAL_FEE_SATS),
       minClaimSats:
         currentPayout?.minClaimSats !== undefined
           ? String(currentPayout.minClaimSats)
@@ -295,11 +317,13 @@ function UpdateStakingForm({
       createUpdateStakingSchema({
         availableBalance: availableBalance.amount,
         maxCyclesToExtend,
-        supportsBtcPayout: effectiveSupportsBtcPayout,
+        payoutMode: effectivePayoutMode,
         supportsMinClaim,
         networkMode: pox5NetworkConfig.bitcoinNetworkMode,
         currentPayout,
         isSwitching,
+        currentAmountMicroStx: info.amountMicroStx,
+        minStake: effectiveMinStake,
       })
     ),
   });
@@ -320,19 +344,7 @@ function UpdateStakingForm({
     // The submitted value is always the full intended end state: the (kept or
     // edited) preference when the toggle is on, or an explicit clear back to
     // sBTC when it is off (absent calldata deletes the stored preference).
-    const payoutPreference: Pox5PayoutPreference | undefined =
-      effectiveSupportsBtcPayout &&
-      values.payoutEnabled &&
-      values.rewardAddress &&
-      values.maxFeeSats
-        ? {
-            btcRewardAddress: values.rewardAddress,
-            maxFeeSats: BigInt(values.maxFeeSats),
-            ...(supportsMinClaim && values.minClaimSats
-              ? { minClaimSats: BigInt(values.minClaimSats) }
-              : {}),
-          }
-        : undefined;
+    const payoutPreference = buildPayoutPreference(values, effectivePayoutMode, supportsMinClaim);
 
     const targetProviderId = (() => {
       if (!target) return pool.providerId;
@@ -538,12 +550,20 @@ function UpdateStakingForm({
           <Stack gap="space.02">
             <styled.p textStyle="label.02">Rewards payout</styled.p>
             <ChoosePayoutPreference
-              supportsBtcPayout={effectiveSupportsBtcPayout}
+              payoutMode={effectivePayoutMode}
               supportsMinClaim={supportsMinClaim}
+              operatorPayout={effectiveOperatorPayout}
+              registeredAddress={
+                !isSwitching && isBtcPayoutRequired(effectivePayoutMode)
+                  ? currentPayout?.btcRewardAddress
+                  : undefined
+              }
             />
-            <styled.p textStyle="caption.01" color="ink.text-subdued">
-              {bitcoinStakingContent.payoutPreference.updateHelper}
-            </styled.p>
+            {!isBtcPayoutRequired(effectivePayoutMode) && (
+              <styled.p textStyle="caption.01" color="ink.text-subdued">
+                {bitcoinStakingContent.payoutPreference.updateHelper}
+              </styled.p>
+            )}
           </Stack>
         </Stack>
 

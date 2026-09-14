@@ -181,6 +181,7 @@ export * from './trash-icon.native';
 export * from './unlock-icon.native';
 export * from './user-icon.native';
 export * from './users-two-icon.native';
+export * from './vault-icon.native';
 export * from './wallet-icon.native';
 export * from './wallet-plus-icon.native';
 export * from './wallet-sparkle-icon.native';

@@ -1,7 +1,8 @@
 import { Navigate, useSearchParams } from 'react-router';
 
-import { Flex, styled } from 'leather-styles/jsx';
+import { styled } from 'leather-styles/jsx';
 import { ConnectCard } from '~/components/connect-card/connect-card';
+import { ConnectOverlay, ConnectOverlayBackdrop } from '~/components/connect-card/connect-overlay';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
@@ -9,10 +10,12 @@ import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useSignOut } from '~/features/multisig/auth/use-sign-out';
 import { OutdatedExtensionCallout } from '~/features/multisig/extension/outdated-extension-callout';
 import { Page } from '~/layouts/page/page';
+import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
 import { Link as UiLink } from '@leather.io/ui';
 
 import { multisigPaths } from '../multisig.constants';
+import { MultisigOnboardingBackdrop } from './components/onboarding-backdrop';
 import { OnboardingConnectRow } from './components/onboarding-connect-row';
 
 export function MultisigOnboardingPage() {
@@ -42,11 +45,17 @@ export function MultisigOnboardingPage() {
   }
 
   return (
-    <Page>
-      <Page.Header title="Multisig" />
-      <OutdatedExtensionCallout />
-      <Flex justifyContent="center" py="space.07">
+    <>
+      <Page overflow="hidden">
+        <Page.Header title="Multisig" />
+        <OutdatedExtensionCallout />
+        <ConnectOverlayBackdrop>
+          <MultisigOnboardingBackdrop />
+        </ConnectOverlayBackdrop>
+      </Page>
+      <ConnectOverlay>
         <ConnectCard
+          position="relative"
           width="100%"
           maxWidth="540px"
           title="Get started with Leather Multisig"
@@ -60,7 +69,7 @@ export function MultisigOnboardingPage() {
             >
               Don't have Leather yet?{' '}
               <UiLink
-                href="https://leather.io/wallet/extension"
+                href={externalLeatherNavigator.home}
                 size="sm"
                 target="_blank"
                 rel="noreferrer"
@@ -92,7 +101,7 @@ export function MultisigOnboardingPage() {
             onSignOut={stxSignOut}
           />
         </ConnectCard>
-      </Flex>
-    </Page>
+      </ConnectOverlay>
+    </>
   );
 }
