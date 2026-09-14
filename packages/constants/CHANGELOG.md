@@ -215,6 +215,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.39.4](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.39.3...@leather.io/constants-v0.39.4) (2026-09-14)
+
+
+### Bug Fixes
+
+* **web:** unblock footer links under the connect overlay and retire Advanced Earn ([#2731](https://github.com/leather-io/mono/issues/2731)) ([7c4ac69](https://github.com/leather-io/mono/commit/7c4ac6979a7f9f656bc7caf709fd61c521f504b8))
+
 ## [0.39.3](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.39.2...@leather.io/constants-v0.39.3) (2026-09-10)
 
 

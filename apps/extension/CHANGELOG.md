@@ -40,6 +40,32 @@
 
 ---
 
+## [6.112.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.112.0...@leather.io/extension-v6.112.1) (2026-09-14)
+
+
+### Bug Fixes
+
+* bump ledger stacks app minimum version ([#2720](https://github.com/leather-io/mono/issues/2720)) ([300ea15](https://github.com/leather-io/mono/commit/300ea1523f9c6be02d08debc74dc47f375f507ea))
+* **web:** unblock footer links under the connect overlay and retire Advanced Earn ([#2731](https://github.com/leather-io/mono/issues/2731)) ([7c4ac69](https://github.com/leather-io/mono/commit/7c4ac6979a7f9f656bc7caf709fd61c521f504b8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.40.2
+    * @leather.io/constants bumped to 0.39.4
+    * @leather.io/crypto bumped to 1.13.9
+    * @leather.io/features bumped to 1.8.2
+    * @leather.io/provider bumped to 1.7.4
+    * @leather.io/queries bumped to 0.16.1
+    * @leather.io/query bumped to 2.51.9
+    * @leather.io/rpc bumped to 2.25.2
+    * @leather.io/services bumped to 1.65.1
+    * @leather.io/stacks bumped to 1.22.7
+    * @leather.io/ui bumped to 1.119.0
+    * @leather.io/utils bumped to 0.53.1
+
 ## [6.112.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.111.0...@leather.io/extension-v6.112.0) (2026-09-10)
 
 

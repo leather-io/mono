@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.16.1](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.16.0...@leather.io/queries-v0.16.1) (2026-09-14)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.65.1
+    * @leather.io/utils bumped to 0.53.1
+
 ## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.15.4...@leather.io/queries-v0.16.0) (2026-09-10)
 
 
