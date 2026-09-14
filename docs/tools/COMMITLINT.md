@@ -42,7 +42,7 @@ Checking locally improves developer experience as it provides quick feedback on 
 
 ## Automation
 
-- Setup [➡ husky](../../docs/tools/husky.md) to schedule `commitlint` execution on commit.
+- Setup [➡ husky](../../docs/tools/HUSKY.md) to schedule `commitlint` execution on commit.
 
 ## Usage
 
