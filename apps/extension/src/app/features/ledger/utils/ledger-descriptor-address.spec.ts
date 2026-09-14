@@ -1,3 +1,4 @@
+import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import { describe, expect, it } from 'vitest';
@@ -5,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
 
 import {
-  descriptorHasNonAccountRawKey,
+  isLedgerDisplayableDescriptor,
   isLedgerOnDeviceAddressConfirmed,
   toLedgerDisplayedAddress,
 } from './ledger-descriptor-address';
@@ -95,21 +96,21 @@ describe('toLedgerDisplayedAddress', () => {
   });
 });
 
-describe('descriptorHasNonAccountRawKey', () => {
+describe('isLedgerDisplayableDescriptor raw-key rules', () => {
   const accountKeychain = makeNativeSegwitAccountKeychain(1);
 
   it('returns false for a multisig of only extended keys', () => {
     const compiled = compileWshDescriptor(`wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`);
     const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
 
-    expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(false);
+    expect(isLedgerDisplayableDescriptor(compiled, accountKey)).toBe(true);
   });
 
   it('returns false for a single extended-key descriptor', () => {
     const compiled = compileWshDescriptor(`wsh(pk(${xpubA}/0/0))`);
     const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
 
-    expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(false);
+    expect(isLedgerDisplayableDescriptor(compiled, accountKey)).toBe(true);
   });
 
   it('returns true when a co-signer is supplied as a raw public key', () => {
@@ -120,7 +121,7 @@ describe('descriptorHasNonAccountRawKey', () => {
     const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
 
     expect(accountKey.key.bip32).toBeDefined();
-    expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(true);
+    expect(isLedgerDisplayableDescriptor(compiled, accountKey)).toBe(false);
   });
 
   it('does not flag the account key itself when it is a raw public key', () => {
@@ -131,6 +132,59 @@ describe('descriptorHasNonAccountRawKey', () => {
     const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
 
     expect(accountKey.key.bip32).toBeUndefined();
-    expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(false);
+    expect(isLedgerDisplayableDescriptor(compiled, accountKey)).toBe(true);
+  });
+
+  const bondHash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
+
+  function makeBondDescriptor(counterpartyKey: string) {
+    return `wsh(and_v(v:or_i(after(1000),and_v(v:sha256(${bondHash}),pk(${counterpartyKey}))),sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0)))`;
+  }
+
+  it('returns true for a bond whose counterparty is a raw public key', () => {
+    const rawCounterparty = bytesToHex(makeNativeSegwitAddressPubkey(9));
+    const compiled = compileWshDescriptor(makeBondDescriptor(rawCounterparty));
+    const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
+
+    expect(isLedgerDisplayableDescriptor(compiled, accountKey)).toBe(false);
+  });
+
+  it('returns false for a bond whose counterparty is an extended key at the vault index', () => {
+    const compiled = compileWshDescriptor(
+      makeBondDescriptor(`${makeNativeSegwitAccountXpub(9)}/0/0`)
+    );
+    const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
+
+    expect(isLedgerDisplayableDescriptor(compiled, accountKey)).toBe(true);
+  });
+});
+
+describe('isLedgerDisplayableDescriptor', () => {
+  const accountKeychain = makeNativeSegwitAccountKeychain(1);
+  const accountRawPubkey = bytesToHex(makeNativeSegwitAddressPubkey(1));
+  const cosignerRawPubkey = bytesToHex(makeNativeSegwitAddressPubkey(2));
+
+  function isDisplayable(descriptor: string) {
+    const compiled = compileWshDescriptor(descriptor);
+    const accountKey = findAccountDescriptorKey(compiled, accountKeychain);
+    if (!accountKey) throw new Error('Expected the account to be part of the descriptor');
+    return isLedgerDisplayableDescriptor(compiled, accountKey);
+  }
+
+  it('accepts a multisig of extended keys at any uniform key path', () => {
+    expect(isDisplayable(`wsh(sortedmulti(2,${xpubA}/0/5,${xpubB}/0/5))`)).toBe(true);
+  });
+
+  it('rejects a raw co-signer key', () => {
+    expect(isDisplayable(`wsh(multi(2,${cosignerRawPubkey},${xpubA}/0/0))`)).toBe(false);
+  });
+
+  it('accepts a raw account key when the extended keys sit at 0/0', () => {
+    expect(isDisplayable(`wsh(multi(2,${accountRawPubkey},${xpubB}/0/0))`)).toBe(true);
+  });
+
+  it('rejects a raw account key when the extended keys sit at another index', () => {
+    expect(isDisplayable(`wsh(multi(2,${accountRawPubkey},${xpubB}/0/5))`)).toBe(false);
+    expect(isDisplayable(`wsh(multi(2,${accountRawPubkey},${xpubB}/1/0))`)).toBe(false);
   });
 });

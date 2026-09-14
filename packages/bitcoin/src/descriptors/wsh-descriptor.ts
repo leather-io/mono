@@ -30,6 +30,32 @@ export function isWshDescriptor(descriptor: string) {
   return descriptor.trimStart().startsWith(wshDescriptorPrefix);
 }
 
+export const maxMultisigKeys = 20;
+const maxMultisigThreshold = 16;
+const maxDescriptorKeyExpressionLength = 256;
+
+const wshMultisigDescriptorPattern = new RegExp(
+  `^wsh\\((?:sorted)?multi\\((\\d{1,2})((?:,[^(),*]{1,${maxDescriptorKeyExpressionLength}}){1,${maxMultisigKeys}})\\)\\)$`
+);
+
+export function isValidMultisigThreshold(threshold: number, keyCount: number): boolean {
+  return (
+    Number.isInteger(threshold) &&
+    threshold >= 1 &&
+    threshold <= Math.min(keyCount, maxMultisigThreshold)
+  );
+}
+
+export function isWshMultisigDescriptor(descriptor: string): boolean {
+  const compactDescriptor = stripDescriptorChecksum(descriptor).replace(/\s/g, '');
+  const match = wshMultisigDescriptorPattern.exec(compactDescriptor);
+  if (!match) return false;
+  const [, rawThreshold, rawKeys] = match;
+  if (!rawThreshold || !rawKeys) return false;
+  const keyCount = rawKeys.split(',').length - 1;
+  return isValidMultisigThreshold(Number(rawThreshold), keyCount);
+}
+
 const testnetExtendedKeyPrefixes = ['tpub', 'tprv', 'upub', 'uprv', 'vpub', 'vprv'];
 const mainnetExtendedKeyPrefixes = ['xpub', 'xprv', 'ypub', 'yprv', 'zpub', 'zprv'];
 const keyExpressionStarts = ['(', ',', ']'];
