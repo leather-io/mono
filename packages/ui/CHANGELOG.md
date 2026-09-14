@@ -489,6 +489,22 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.119.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.118.0...@leather.io/ui-v1.119.0) (2026-09-14)
+
+
+### Features
+
+* **web:** launch polish for multisig onboarding, nav icon and install button ([#2729](https://github.com/leather-io/mono/issues/2729)) ([bc8e964](https://github.com/leather-io/mono/commit/bc8e9646bec9aa202b988db716e14d0d94f8899c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.53.1
+  * devDependencies
+    * @leather.io/features bumped to 1.8.2
+
 ## [1.118.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.117.0...@leather.io/ui-v1.118.0) (2026-09-10)
 
 
