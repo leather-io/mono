@@ -2,8 +2,10 @@ import {
   BitcoinNetwork,
   BitcoinNetworkModes,
   ChainId,
+  NetworkModes,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
+import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import type { paths } from '../api/leather/leather-api.types';
@@ -30,6 +32,10 @@ export function selectStacksApiUrl(settings: UserSettings): string {
 
 export function selectStacksChainId(settings: UserSettings): ChainId {
   return settings.network.chain.stacks.chainId;
+}
+
+export function selectStacksNetworkMode(settings: UserSettings): NetworkModes {
+  return stacksChainIdToCoreNetworkMode(selectStacksChainId(settings));
 }
 
 export function selectAssetVisibility(
