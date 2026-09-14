@@ -1,12 +1,11 @@
 import { styled } from 'leather-styles/jsx';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
 import { useLeatherConnect } from '~/store/addresses';
-import { openExternalLink } from '~/utils/external-links';
 import { leather } from '~/utils/leather-sdk';
 
-import { LEATHER_EXTENSION_CHROME_STORE_URL } from '@leather.io/constants';
 import { Link, Sheet } from '@leather.io/ui';
 
+import { InstallLeatherButton } from './install-leather-button';
 import { ActiveAccountButtonLayout, SignInButtonLayout } from './sign-in-button.layout';
 
 function NoStacksAccountsWarningDialog() {
@@ -41,14 +40,6 @@ function NoStacksAccountsWarningDialog() {
         )}
       </styled.div>
     </Sheet>
-  );
-}
-
-function InstallLeatherButton() {
-  return (
-    <SignInButtonLayout onClick={() => openExternalLink(LEATHER_EXTENSION_CHROME_STORE_URL)}>
-      Install
-    </SignInButtonLayout>
   );
 }
 

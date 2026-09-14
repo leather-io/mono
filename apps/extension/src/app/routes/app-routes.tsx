@@ -27,6 +27,7 @@ import { TokenDetails } from '@app/features/token/token-details';
 import { AddWallet } from '@app/pages/add-wallet/add-wallet';
 import { AllBalancesPage } from '@app/pages/all-balances/all-balances';
 import { AllBalancesDetail } from '@app/pages/all-balances/all-balances-detail';
+import { BondHistoryPage } from '@app/pages/all-balances/bond-history';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { ManageTokensPage } from '@app/pages/manage-tokens/manage-tokens';
@@ -314,6 +315,14 @@ function useAppRoutes() {
             element={
               <AccountGate>
                 <AllBalancesDetail />
+              </AccountGate>
+            }
+          />
+          <Route
+            path={RouteUrls.AllBalancesBondHistory}
+            element={
+              <AccountGate>
+                <BondHistoryPage />
               </AccountGate>
             }
           />

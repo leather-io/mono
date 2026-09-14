@@ -8,11 +8,18 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { cx } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { ProviderIcon } from '~/components/icons/provider-icon';
 import { LearnHoverCard } from '~/components/learn-hover-card';
-import { ForceRowHeight, Table, rowPadding, theadBorderBottom } from '~/components/table';
+import {
+  ForceRowHeight,
+  Table,
+  hoverableRow,
+  rowPadding,
+  theadBorderBottom,
+} from '~/components/table';
 import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { learnArticles } from '~/content/learn-content';
 import { LiquidStackingPool } from '~/data/data';
@@ -254,7 +261,12 @@ export function LiquidStackingProviderTable({
         </Table.Head>
         <Table.Body>
           {table.getRowModel().rows.map(row => (
-            <Table.Row key={row.id} height="64px" className={rowPadding}>
+            <Table.Row
+              key={row.id}
+              height="64px"
+              className={cx(rowPadding, hoverableRow)}
+              onClick={() => openExternalLink(row.original.url)}
+            >
               {row.getVisibleCells().map(cell => (
                 <styled.td
                   style={{
@@ -265,6 +277,9 @@ export function LiquidStackingProviderTable({
                   px="space.04"
                   key={cell.id}
                   color="black"
+                  onClick={
+                    cell.column.id === 'actions' ? event => event.stopPropagation() : undefined
+                  }
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </styled.td>

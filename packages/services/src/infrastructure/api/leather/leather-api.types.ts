@@ -3437,6 +3437,90 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/staking/addresses/{address}/bonds': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description List staking bonds for a Bitcoin address */
+    get: {
+      parameters: {
+        query: {
+          chain: 'mainnet' | 'testnet-primary' | 'private-1';
+          include?: 'spent';
+        };
+        header?: never;
+        path: {
+          address: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              bonds: {
+                bondIndex: number;
+                stxAddress: string;
+                enrollmentTxId: string;
+                registeredAtBurnHeight: number;
+                /** @description Burn height of announce-l1-early-exit; null if never announced */
+                exitAnnouncedAtBurnHeight: number | null;
+                outputs: {
+                  txid: string;
+                  vout: number;
+                  amountSats: string;
+                  /** @description CLTV height of the lock script */
+                  unlockBurnHeight: number;
+                  /** @description P2WSH witness script */
+                  lockScriptHex: string;
+                  spent: boolean;
+                  /** @description Last spent-status check; null = never */
+                  lastCheckedAt: string | null;
+                }[];
+              }[];
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/tokens/native': {
     parameters: {
       query?: never;
@@ -5340,7 +5424,7 @@ export interface paths {
       parameters: {
         query?: {
           status?: 'pending' | 'active' | 'cancelled';
-          membershipStatus?: 'invited' | 'joined' | 'declined';
+          membershipStatus?: 'invited' | 'joined';
         };
         header?: never;
         path?: never;

@@ -30,10 +30,9 @@ export function FungiblePostConditionItem({
       postCondition,
     });
 
-  const imageCanonicalUri =
-    asset?.image_canonical_uri &&
-    asset.name &&
-    getSafeImageCanonicalUri(asset.image_canonical_uri, asset.name);
+  const imageCanonicalUri = asset
+    ? getSafeImageCanonicalUri(asset.imageCanonicalUri, asset.name)
+    : '';
 
   const icon =
     iconString !== 'STX' ? (
@@ -41,7 +40,7 @@ export function FungiblePostConditionItem({
         asset={{
           protocol: 'sip10',
           contractId,
-          imageCanonicalUri: imageCanonicalUri ?? '',
+          imageCanonicalUri,
           name,
         }}
         size="xl"

@@ -29,6 +29,10 @@ export type HttpCacheKey =
   | 'hiro-stacks-get-transfer-fee-rate'
   | 'hiro-stacks-get-transaction-fee-estimate'
   | 'hiro-stacks-get-api-status'
+  | 'hiro-stacks-get-pox-info'
+  | 'hiro-stacks-get-staking-bonds'
+  | 'hiro-stacks-get-staking-bond'
+  | 'hiro-stacks-get-principal-staking-bonds'
 
   // MempoolApiClient
   | 'mempool-api-address-utxos'
@@ -38,6 +42,7 @@ export type HttpCacheKey =
   // LeatherApiClient
   | 'leather-api-utxos'
   | 'leather-api-utxos-address'
+  | 'leather-api-staking-bonds'
   | 'leather-api-bitcoin-descriptor-transactions'
   | 'leather-api-bitcoin-address-transactions'
   | 'leather-api-bitcoin-transaction-by-txid'
@@ -117,6 +122,10 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'hiro-stacks-get-transfer-fee-rate': { ttl: secondsInMs(4) },
   'hiro-stacks-get-transaction-fee-estimate': { ttl: secondsInMs(4) },
   'hiro-stacks-get-api-status': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-pox-info': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-staking-bonds': { ttl: minutesInMs(5) },
+  'hiro-stacks-get-staking-bond': { ttl: minutesInMs(5) },
+  'hiro-stacks-get-principal-staking-bonds': { ttl: minutesInMs(1) },
 
   'mempool-api-address-utxos': { ttl: secondsInMs(5) },
   'mempool-api-address-transactions': { ttl: secondsInMs(5) },
@@ -124,6 +133,7 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
 
   'leather-api-utxos': { ttl: secondsInMs(10) },
   'leather-api-utxos-address': { ttl: secondsInMs(10) },
+  'leather-api-staking-bonds': { ttl: minutesInMs(1) },
   'leather-api-bitcoin-descriptor-transactions': { ttl: secondsInMs(10) },
   'leather-api-bitcoin-address-transactions': { ttl: secondsInMs(10) },
   'leather-api-bitcoin-transaction-by-txid': { ttl: secondsInMs(10) },

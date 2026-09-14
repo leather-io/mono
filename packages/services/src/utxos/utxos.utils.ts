@@ -1,13 +1,17 @@
-import { BitcoinTransaction, OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
-import { sumNumbers } from '@leather.io/utils';
+import { AccountAddresses, BitcoinTransaction, OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
+import { hasBitcoinAddress, sumNumbers } from '@leather.io/utils';
 
-import { LeatherApiUtxo } from '../infrastructure/api/leather/leather-api.client';
+import {
+  LeatherApiStakingBond,
+  LeatherApiUtxo,
+} from '../infrastructure/api/leather/leather-api.client';
 import { MempoolDescriptorUtxo } from '../infrastructure/api/mempool/mempool-api.schema';
 import {
   isOutboundTx,
   isPendingTx,
   readTxOwnedVins,
 } from '../transactions/bitcoin-transactions.utils';
+import { AccountRequestAddressExclusionOptions } from '../types/request.types';
 import { UtxoTotals } from './utxos.service';
 
 export function getUtxoIdFromOutpoint(outpoint: string) {
@@ -104,6 +108,23 @@ export function getKeyOrigin(fingerprint: string, path: string) {
   return `${fingerprint}/${path.replace('m/', '')}`;
 }
 
+export function getBondStakerAddress(
+  account: AccountAddresses,
+  exclusions?: AccountRequestAddressExclusionOptions
+): string | null {
+  if (!hasBitcoinAddress(account)) return null;
+  if (account.bitcoin.type === 'fixedAddress') return account.bitcoin.address;
+  if (exclusions?.nativeSegwitAddresses) return null;
+  return account.bitcoin.zeroIndexNativeSegwitPayerAddress ?? null;
+}
+
+export function createLockedUtxosFromBonds(bonds: LeatherApiStakingBond[]): Utxo[] {
+  return bonds
+    .flatMap(bond => bond.outputs)
+    .filter(output => !output.spent)
+    .map(output => ({ txid: output.txid, vout: output.vout, value: Number(output.amountSats) }));
+}
+
 export function getUtxoTotals(
   accountFingerprint: string,
   totalUtxos: OwnedUtxo[],
@@ -125,5 +146,6 @@ export function getUtxoTotals(
     dust: dustUtxos,
     unspendable: unspendableUtxos,
     available: availableUtxos,
+    locked: [],
   };
 }

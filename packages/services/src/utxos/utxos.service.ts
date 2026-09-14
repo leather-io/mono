@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 
-import { OwnedUtxo } from '@leather.io/models';
+import { OwnedUtxo, Utxo } from '@leather.io/models';
 import { hasBitcoinAddress } from '@leather.io/utils';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
@@ -11,8 +11,10 @@ import { Types } from '../inversify.types';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import { AccountRequest } from '../types/request.types';
 import {
+  createLockedUtxosFromBonds,
   createOwnedUtxoFromLeather,
   createOwnedUtxoFromMempool,
+  getBondStakerAddress,
   getUtxoTotals,
 } from './utxos.utils';
 
@@ -23,6 +25,7 @@ export interface UtxoTotals {
   dust: OwnedUtxo[];
   unspendable: OwnedUtxo[];
   available: OwnedUtxo[];
+  locked: Utxo[];
 }
 
 export const emptyUtxos: UtxoTotals = {
@@ -32,6 +35,7 @@ export const emptyUtxos: UtxoTotals = {
   dust: [],
   unspendable: [],
   available: [],
+  locked: [],
 };
 
 const btcTxPageRequest = { page: 1, pageSize: 750 };
@@ -47,7 +51,15 @@ export class UtxosService {
   /**
    * Retrieve categorized UTXO lists for given Bitcoin account.
    */
-  public async getAccountUtxos(
+  public async getAccountUtxos(request: AccountRequest, signal?: AbortSignal): Promise<UtxoTotals> {
+    const [ownedUtxos, locked] = await Promise.all([
+      this.getAccountOwnedUtxos(request, signal),
+      this.getAccountLockedUtxos(request, signal),
+    ]);
+    return { ...ownedUtxos, locked };
+  }
+
+  private async getAccountOwnedUtxos(
     { account, exclusions }: AccountRequest,
     signal?: AbortSignal
   ): Promise<UtxoTotals> {
@@ -76,7 +88,22 @@ export class UtxosService {
       dust: [...nativeSegwitUtxos.dust, ...taprootUtxos.dust],
       unspendable: [...nativeSegwitUtxos.unspendable, ...taprootUtxos.unspendable],
       available: [...nativeSegwitUtxos.available, ...taprootUtxos.available],
+      locked: [],
     };
+  }
+
+  private async getAccountLockedUtxos(
+    { account, exclusions }: AccountRequest,
+    signal?: AbortSignal
+  ): Promise<Utxo[]> {
+    const address = getBondStakerAddress(account, exclusions);
+    if (!address) return [];
+    try {
+      const bonds = await this.leatherApiClient.fetchStakingBonds(address, { signal });
+      return createLockedUtxosFromBonds(bonds);
+    } catch {
+      return [];
+    }
   }
 
   /**

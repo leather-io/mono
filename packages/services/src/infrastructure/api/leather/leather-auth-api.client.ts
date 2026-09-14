@@ -79,7 +79,10 @@ export class LeatherAuthApiClient {
 
   async fetchMultisigVaults(
     network: AuthNetworkId,
-    filters?: { status?: VaultStatus; membershipStatus?: VaultMembershipStatus },
+    filters?: {
+      status?: VaultStatus;
+      membershipStatus?: Exclude<VaultMembershipStatus, 'declined'>;
+    },
     { signal }: { signal?: AbortSignal } = {}
   ) {
     return this.authed(network, headers =>

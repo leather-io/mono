@@ -128,7 +128,7 @@ const stacksAppVersion = {
   targetId: '',
   major: 0,
   minor: 26,
-  patch: 17,
+  patch: 19,
 };
 
 function renderSignMsgContext(): LedgerMessageSigningContext {

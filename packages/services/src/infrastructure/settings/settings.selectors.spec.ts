@@ -9,6 +9,7 @@ import {
   selectBitcoinApiUrl,
   selectBitcoinNetworkMode,
   selectStacksApiUrl,
+  selectStakingChainId,
 } from './settings.selectors';
 import { UserSettings } from './settings.service';
 
@@ -47,5 +48,25 @@ describe(selectBitcoinApiUrl.name, () => {
   it('should select the Bitcoin API url from settings', () => {
     const bitcoinApiUrl = selectBitcoinApiUrl(userSettings);
     expect(bitcoinApiUrl).toEqual(defaultNetworksKeyedById.mainnet.chain.bitcoin.bitcoinUrl);
+  });
+});
+
+describe(selectStakingChainId.name, () => {
+  it('maps mainnet to the mainnet staking chain', () => {
+    expect(selectStakingChainId(userSettings)).toEqual('mainnet');
+  });
+
+  it('maps the BTC Staking Testnet to private-1', () => {
+    const settings = { ...userSettings, network: defaultNetworksKeyedById['private-1'] };
+    expect(selectStakingChainId(settings)).toEqual('private-1');
+  });
+
+  it('returns null for networks the staking index does not cover', () => {
+    expect(
+      selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.testnet })
+    ).toBeNull();
+    expect(
+      selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.sbtcTestnet })
+    ).toBeNull();
   });
 });

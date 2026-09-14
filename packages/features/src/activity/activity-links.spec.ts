@@ -112,6 +112,49 @@ describe('activity-links', () => {
       expect(result).toBe(`${MEMPOOL_BASE_URL}/signet/tx/txabc`);
     });
 
+    it('returns the custom mempool instance link for a regtest network', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txdef',
+        type: 'tx',
+        networkPreference: 'regtest',
+        bitcoinUrl: 'https://mempool.bitcoin.private-1.hiro.so/api',
+      });
+
+      expect(result).toBe('https://mempool.bitcoin.private-1.hiro.so/tx/txdef');
+    });
+
+    it('strips a proxied api path from a regtest bitcoin url', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txghi',
+        type: 'tx',
+        networkPreference: 'regtest',
+        bitcoinUrl: 'https://beta.sbtc-mempool.tech/api/proxy',
+      });
+
+      expect(result).toBe('https://beta.sbtc-mempool.tech/tx/txghi');
+    });
+
+    it('returns null for a regtest bitcoind rpc url with no api path', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txjkl',
+        type: 'tx',
+        networkPreference: 'regtest',
+        bitcoinUrl: 'http://localhost:18443',
+      });
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null for a regtest network with no bitcoin url', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txmno',
+        type: 'tx',
+        networkPreference: 'regtest',
+      });
+
+      expect(result).toBeNull();
+    });
+
     it('handles block type instead of tx', () => {
       const result = getBitcoinExplorerLink({
         id: 'block123',

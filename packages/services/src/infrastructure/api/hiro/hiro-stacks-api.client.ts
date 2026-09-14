@@ -29,11 +29,15 @@ import {
   HiroMetadata,
   HiroNftHolding,
   HiroPageRequest,
+  HiroPoxInfoResponse,
+  HiroPrincipalStakingBondsResponse,
   HiroPrincipalTransactionsResponse,
   HiroReadOnlyFunctionResponse,
   HiroServerStatusResponse,
   HiroStacksMempoolTransaction,
   HiroStacksTransaction,
+  HiroStakingBondDetail,
+  HiroStakingBondsResponse,
   HiroTransactionEvent,
   HiroTransactionEventsResponse,
   HiroTransactionFeeEstimateResponse,
@@ -41,6 +45,7 @@ import {
 import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
 
 const balanceChangesResultLimit = 50;
+const stakingBondsListLimit = 10;
 
 @injectable()
 export class HiroStacksApiClient {
@@ -622,6 +627,122 @@ export class HiroStacksApiClient {
           // shouldnt need to add entire txPayload to cache key, estimatedLen + sufficiently
           // low cache times should ensure acceptable refetching
           ['hiro-stacks-get-transaction-fee-estimate', txByteLength],
+          fetchFn
+        );
+  }
+
+  public async getPoxInfo({
+    signal,
+    skipCache,
+  }: ApiRequestOptions = {}): Promise<HiroPoxInfoResponse> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroPoxInfoResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/v2/pox`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getPoxInfo,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          ['hiro-stacks-get-pox-info', selectStacksChainId(this.settings.getSettings())],
+          fetchFn
+        );
+  }
+
+  public async getStakingBonds({
+    signal,
+    skipCache,
+  }: ApiRequestOptions = {}): Promise<HiroStakingBondsResponse> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroStakingBondsResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/staking/bonds`,
+            { params: { limit: stakingBondsListLimit }, signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getStakingBonds,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          ['hiro-stacks-get-staking-bonds', selectStacksChainId(this.settings.getSettings())],
+          fetchFn
+        );
+  }
+
+  public async getStakingBond(
+    index: number,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<HiroStakingBondDetail> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroStakingBondDetail>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/staking/bonds/${index}`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getStakingBond,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          ['hiro-stacks-get-staking-bond', index, selectStacksChainId(this.settings.getSettings())],
+          fetchFn
+        );
+  }
+
+  public async getPrincipalStakingBonds(
+    principal: string,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<HiroPrincipalStakingBondsResponse> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroPrincipalStakingBondsResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/principals/${principal}/staking/bonds`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getPrincipalStakingBonds,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          [
+            'hiro-stacks-get-principal-staking-bonds',
+            principal,
+            selectStacksChainId(this.settings.getSettings()),
+          ],
           fetchFn
         );
   }

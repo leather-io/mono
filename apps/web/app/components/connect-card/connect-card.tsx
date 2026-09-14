@@ -29,6 +29,7 @@ export function ConnectCard({ title, description, footer, children, ...props }: 
       animationFillMode="both"
       opacity="0"
       transform="translateY(20px)"
+      pointerEvents="auto"
       {...props}
     >
       <Flag
