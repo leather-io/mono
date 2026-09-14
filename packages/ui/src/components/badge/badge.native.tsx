@@ -51,9 +51,16 @@ export interface BadgeProps extends BoxProps {
   variant?: BadgeVariant;
   size?: BadgeSize;
   outlined?: boolean;
+  textColor?: 'primary';
 }
 
-export function Badge({ variant = 'default', size = 'sm', outlined, ...props }: BadgeProps) {
+export function Badge({
+  variant = 'default',
+  size = 'sm',
+  outlined,
+  textColor,
+  ...props
+}: BadgeProps) {
   const styles = badgeVariants[variant];
 
   return (
@@ -68,7 +75,7 @@ export function Badge({ variant = 'default', size = 'sm', outlined, ...props }: 
       px="2"
       {...props}
     >
-      <Text variant="label03" color={styles.color}>
+      <Text variant="label03" color={textColor === 'primary' ? 'ink.text-primary' : styles.color}>
         {props.label}
       </Text>
     </Box>

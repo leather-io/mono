@@ -52,8 +52,8 @@ import {
   usePox5PoolTotalStaked,
 } from '../queries/pox5-stacking.query';
 import { createStakeMutationOptions } from '../transactions/pox5-mutations';
-import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 import { getBroadcastTxId } from '../transactions/pox5-tx-status';
+import { canPayoutInBtc, getPoolPayoutMode, isBtcPayoutRequired } from '../utils/pool-payout';
 import { ChoosePayoutPreference } from './components/choose-payout-preference';
 import { ChooseStakingAmount } from './components/choose-staking-amount';
 import { ChooseStakingConditions } from './components/choose-staking-conditions';
@@ -62,7 +62,12 @@ import {
   StakingConfirmationSteps,
   StartStakingStepId,
 } from './components/staking-confirmation-steps';
-import { StakingFormSchema, createStakingFormSchema } from './utils/staking-form-schema';
+import {
+  PoolMinStake,
+  StakingFormSchema,
+  buildPayoutPreference,
+  createStakingFormSchema,
+} from './utils/staking-form-schema';
 
 interface StartStakingProps {
   poolSlug: StakingPoolSlug;
@@ -128,27 +133,36 @@ function StartStakingLayout({
   const { isLoading: totalAvailableBalanceIsLoading, availableBalance: totalAvailableBalance } =
     usePox5AvailableUnlockedBalance(stacksAccount.address);
 
+  const payoutMode = getPoolPayoutMode(pool);
   const payoutPreferenceQuery = usePox5PayoutPreferenceQuery(
-    pool.supportsBtcPayout ? signerManagerContractId : undefined
+    canPayoutInBtc(payoutMode) ? signerManagerContractId : undefined
   );
   const supportsMinClaim = payoutPreferenceQuery.data?.supportsMinClaim ?? false;
+  const minStake = useMemo<PoolMinStake | undefined>(
+    () =>
+      pool.minStakeMicroStx !== undefined
+        ? { poolName: pool.name, minStakeMicroStx: pool.minStakeMicroStx }
+        : undefined,
+    [pool.name, pool.minStakeMicroStx]
+  );
 
   const schema = useMemo(
     () =>
       createStakingFormSchema({
         networkMode: pox5NetworkConfig.bitcoinNetworkMode,
         availableBalance: totalAvailableBalance,
-        supportsBtcPayout: pool.supportsBtcPayout,
+        payoutMode,
         supportsMinClaim,
+        minStake,
       }),
-    [totalAvailableBalance, pool.supportsBtcPayout, supportsMinClaim]
+    [totalAvailableBalance, payoutMode, supportsMinClaim, minStake]
   );
 
   const formMethods = useForm({
     mode: 'onTouched',
     defaultValues: {
       cycles: DEFAULT_STAKING_CYCLES,
-      payoutEnabled: false,
+      payoutEnabled: isBtcPayoutRequired(payoutMode),
       rewardAddress: btcPaymentAddress?.address,
       maxFeeSats: String(MIN_MAX_WITHDRAWAL_FEE_SATS),
       minClaimSats: String(DEFAULT_MIN_CLAIM_SATS),
@@ -169,20 +183,7 @@ function StartStakingLayout({
   const handleStake = formMethods.handleSubmit(values => {
     if (!signerManagerContractId) return;
     const formValues: StakingFormSchema = values;
-
-    const payoutPreference: Pox5PayoutPreference | undefined =
-      pool.supportsBtcPayout &&
-      formValues.payoutEnabled &&
-      formValues.rewardAddress &&
-      formValues.maxFeeSats
-        ? {
-            btcRewardAddress: formValues.rewardAddress,
-            maxFeeSats: BigInt(formValues.maxFeeSats),
-            ...(supportsMinClaim && formValues.minClaimSats
-              ? { minClaimSats: BigInt(formValues.minClaimSats) }
-              : {}),
-          }
-        : undefined;
+    const payoutPreference = buildPayoutPreference(formValues, payoutMode, supportsMinClaim);
 
     submitStake(
       {
@@ -315,6 +316,7 @@ function StartStakingLayout({
                   <ChooseStakingAmount
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
+                    minStake={minStake}
                   />
                 </Stack>
 
@@ -335,8 +337,13 @@ function StartStakingLayout({
                     article={learnArticles.stackingRewardsAddress}
                   />
                   <ChoosePayoutPreference
-                    supportsBtcPayout={pool.supportsBtcPayout}
+                    payoutMode={payoutMode}
                     supportsMinClaim={supportsMinClaim}
+                    operatorPayout={
+                      pool.operatorBtcPayout
+                        ? { poolName: pool.name, cadence: pool.operatorBtcPayout.cadence }
+                        : undefined
+                    }
                   />
                 </Stack>
 

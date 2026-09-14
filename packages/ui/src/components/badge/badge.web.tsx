@@ -46,6 +46,7 @@ const badgeRecipe = cva({
     },
 
     outlined: { true: { bg: 'transparent' } },
+    textColor: { primary: { color: 'ink.text-primary' } },
   },
   defaultVariants: {
     size: 'sm',
@@ -62,9 +63,9 @@ interface BadgeOwnProps {
 
 export type BadgeProps = BadgeOwnProps & BadgeVariants & HTMLStyledProps<'div'>;
 
-export function Badge({ icon, label, outlined, size, variant, ...props }: BadgeProps) {
+export function Badge({ icon, label, outlined, size, textColor, variant, ...props }: BadgeProps) {
   return (
-    <styled.div className={badgeRecipe({ outlined, size, variant })} {...props}>
+    <styled.div className={badgeRecipe({ outlined, size, textColor, variant })} {...props}>
       {icon}
       {label}
     </styled.div>

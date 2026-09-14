@@ -115,6 +115,7 @@ export * from './terminal-icon.web';
 export * from './trash-icon.web';
 export * from './unlock-icon.web';
 export * from './user-icon.web';
+export * from './vault-icon.web';
 export * from './wallet-icon.web';
 export * from './wallet-sparkle-icon.web';
 export * from './wallet-plus-icon.web';

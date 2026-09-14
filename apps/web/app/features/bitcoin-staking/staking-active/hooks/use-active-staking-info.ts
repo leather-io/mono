@@ -10,6 +10,12 @@ import {
   usePox5PayoutPreferenceQuery,
 } from '../../queries/pox5-stacking.query';
 import { Pox5PayoutPreference } from '../../transactions/pox5-signer-calldata';
+import {
+  canPayoutInBtc,
+  customPoolPayoutMode,
+  getPoolPayoutMode,
+  isBtcPayoutRequired,
+} from '../../utils/pool-payout';
 import { estimateDateFromBurnBlocks } from '../../utils/pox5-cycle-clock';
 
 export interface ActiveStakingDetails {
@@ -34,12 +40,14 @@ interface UseActiveStakingInfoResult {
 export function useActiveStakingInfo(): UseActiveStakingInfoResult {
   const { isLoading: positionIsLoading, position } = usePox5Position();
   const { cycleClock } = usePox5CycleClock();
-  const claimable = usePox5ClaimableRewards();
+  const activePool = position.status === 'active' ? position.pool : null;
+  const payoutMode = activePool ? getPoolPayoutMode(activePool) : customPoolPayoutMode;
+  const claimable = usePox5ClaimableRewards({ enabled: !isBtcPayoutRequired(payoutMode) });
   const poxInfoQuery = usePox5PoxInfoQuery();
   const secondsUntilNextCycleQuery = usePox5SecondsUntilNextCycleQuery();
 
   const signerManagerContractId =
-    position.status === 'active' && position.pool?.supportsBtcPayout !== false
+    position.status === 'active' && canPayoutInBtc(payoutMode)
       ? position.info.signerManagerContractId
       : undefined;
   const payoutPreferenceQuery = usePox5PayoutPreferenceQuery(signerManagerContractId);

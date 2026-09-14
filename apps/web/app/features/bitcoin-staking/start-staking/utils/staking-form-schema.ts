@@ -13,16 +13,82 @@ import {
 
 import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import { BitcoinNetworkModes, Money } from '@leather.io/models';
+import { microStxToStx, stxToMicroStx } from '@leather.io/utils';
+
+import { Pox5PayoutPreference } from '../../transactions/pox5-signer-calldata';
+import { PoolPayoutMode, canPayoutInBtc, isBtcPayoutRequired } from '../../utils/pool-payout';
+
+export interface PoolMinStake {
+  poolName: string;
+  minStakeMicroStx: bigint;
+}
 
 interface CreateStakingFormSchemaArgs {
   networkMode: BitcoinNetworkModes;
   availableBalance: Money;
-  supportsBtcPayout: boolean;
+  payoutMode: PoolPayoutMode;
   supportsMinClaim: boolean;
+  minStake?: PoolMinStake;
 }
 
 function isNumericInput(value: string | undefined): value is string {
   return !!value && /^\d+(\.\d+)?$/.test(value);
+}
+
+export function meetsPoolMinStake(amountMicroStx: bigint, minStake: PoolMinStake | undefined) {
+  return minStake === undefined || amountMicroStx >= minStake.minStakeMicroStx;
+}
+
+export function formatMinStakeStx(minStake: PoolMinStake): string {
+  return microStxToStx(minStake.minStakeMicroStx.toString()).toFormat();
+}
+
+export function stxInputToMicroStx(value: string): bigint {
+  const micro = stxToMicroStx(Number(value));
+  return micro.isInteger() ? BigInt(micro.toString()) : 0n;
+}
+
+interface PayoutFormValues {
+  payoutEnabled: boolean;
+  rewardAddress?: string;
+  maxFeeSats?: string;
+  minClaimSats?: string;
+}
+
+export function wantsBtcPayout(
+  values: Pick<PayoutFormValues, 'payoutEnabled'>,
+  mode: PoolPayoutMode
+) {
+  return isBtcPayoutRequired(mode) || (canPayoutInBtc(mode) && values.payoutEnabled);
+}
+
+export function buildPayoutPreference(
+  values: PayoutFormValues,
+  payoutMode: PoolPayoutMode,
+  supportsMinClaim: boolean
+): Pox5PayoutPreference | undefined {
+  if (!wantsBtcPayout(values, payoutMode) || !values.rewardAddress) return undefined;
+  if (isBtcPayoutRequired(payoutMode)) return { btcRewardAddress: values.rewardAddress };
+  if (!values.maxFeeSats) return undefined;
+  return {
+    btcRewardAddress: values.rewardAddress,
+    maxFeeSats: BigInt(values.maxFeeSats),
+    ...(supportsMinClaim && values.minClaimSats
+      ? { minClaimSats: BigInt(values.minClaimSats) }
+      : {}),
+  };
+}
+
+export function validateRewardAddress(
+  rewardAddress: string | undefined,
+  networkMode: BitcoinNetworkModes,
+  addIssue: (message: string) => void
+) {
+  if (!rewardAddress || !isValidBitcoinAddress(rewardAddress)) {
+    addIssue(validationMessages.addressNotValid);
+  } else if (!isValidBitcoinNetworkAddress(rewardAddress, networkMode)) {
+    addIssue(validationMessages.addressIncorrectNetwork);
+  }
 }
 
 export function getSmallestValidMinClaimSats(maxFeeSats: string | undefined): bigint | null {
@@ -65,8 +131,9 @@ export function validatePayoutSatsFields(
 export function createStakingFormSchema({
   networkMode,
   availableBalance,
-  supportsBtcPayout,
+  payoutMode,
   supportsMinClaim,
+  minStake,
 }: CreateStakingFormSchemaArgs) {
   return z
     .object({
@@ -89,6 +156,15 @@ export function createStakingFormSchema({
             !isNumericInput(value) ||
             validateAvailableBalance(Number(value), availableBalance.amount),
           validationMessages.cannotStackMoreThanBalance
+        )
+        .refine(
+          value => !isNumericInput(value) || meetsPoolMinStake(stxInputToMicroStx(value), minStake),
+          minStake
+            ? validationMessages.stakeBelowPoolMinimum(
+                minStake.poolName,
+                formatMinStakeStx(minStake)
+              )
+            : undefined
         ),
       cycles: z.coerce
         .number()
@@ -104,21 +180,13 @@ export function createStakingFormSchema({
       minClaimSats: z.string().optional(),
     })
     .superRefine((data, ctx) => {
-      if (!supportsBtcPayout || !data.payoutEnabled) return;
+      if (!wantsBtcPayout(data, payoutMode)) return;
 
-      if (!data.rewardAddress || !isValidBitcoinAddress(data.rewardAddress)) {
-        ctx.addIssue({
-          code: 'custom',
-          message: validationMessages.addressNotValid,
-          path: ['rewardAddress'],
-        });
-      } else if (!isValidBitcoinNetworkAddress(data.rewardAddress, networkMode)) {
-        ctx.addIssue({
-          code: 'custom',
-          message: validationMessages.addressIncorrectNetwork,
-          path: ['rewardAddress'],
-        });
-      }
+      validateRewardAddress(data.rewardAddress, networkMode, message =>
+        ctx.addIssue({ code: 'custom', message, path: ['rewardAddress'] })
+      );
+
+      if (isBtcPayoutRequired(payoutMode)) return;
 
       validatePayoutSatsFields(data, supportsMinClaim, (message, path) =>
         ctx.addIssue({ code: 'custom', message, path: [path] })

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.2](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.6.1...@leather.io/cms-v1.6.2) (2026-09-10)
+
+
+### Bug Fixes
+
+* sunset basic sbtc rewards ([#2698](https://github.com/leather-io/mono/issues/2698)) ([745d583](https://github.com/leather-io/mono/commit/745d58317d430b8efe6bf1a7783dd086824fc6f5))
+
 ## [1.6.1](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.6.0...@leather.io/cms-v1.6.1) (2026-06-01)
 
 

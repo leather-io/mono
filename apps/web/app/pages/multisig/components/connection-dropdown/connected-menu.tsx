@@ -2,9 +2,10 @@ import { Fragment } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { leather } from '~/utils/leather-sdk';
+import { multisigLeather } from '~/features/multisig/extension/multisig-leather-client';
 
 import { DropdownMenu, ExitIcon, Flag, WalletSparkleIcon } from '@leather.io/ui';
+import { noop } from '@leather.io/utils';
 
 import { multisigPaths } from '../../multisig.constants';
 import { ChainAvatar } from '../chain-avatar';
@@ -14,7 +15,7 @@ import { SignInItem } from './sign-in-item';
 import type { ChainConnection } from './use-chain-connection';
 
 function openExtension() {
-  void leather.open({ mode: 'fullpage' });
+  void multisigLeather.open({ mode: 'fullpage' }).catch(noop);
 }
 
 function MenuDivider() {
