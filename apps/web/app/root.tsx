@@ -69,7 +69,12 @@ export function Layout({ children }: HasChildren) {
                 minHeight="100vh"
                 px={['space.04', null, 'space.07']}
               >
-                <styled.main flex={1} bg="ink.background-primary" className={maxWidthCss}>
+                <styled.main
+                  flex={1}
+                  position="relative"
+                  bg="ink.background-primary"
+                  className={maxWidthCss}
+                >
                   <NetworkGate>{children}</NetworkGate>
                 </styled.main>
                 <Box className={maxWidthCss}>

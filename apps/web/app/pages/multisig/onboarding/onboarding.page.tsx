@@ -10,6 +10,7 @@ import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useSignOut } from '~/features/multisig/auth/use-sign-out';
 import { OutdatedExtensionCallout } from '~/features/multisig/extension/outdated-extension-callout';
 import { Page } from '~/layouts/page/page';
+import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
 import { Link as UiLink } from '@leather.io/ui';
 
@@ -44,15 +45,16 @@ export function MultisigOnboardingPage() {
   }
 
   return (
-    <Page overflow="hidden">
-      <Page.Header title="Multisig" />
-      <OutdatedExtensionCallout />
-      <ConnectOverlayBackdrop>
-        <MultisigOnboardingBackdrop />
-      </ConnectOverlayBackdrop>
+    <>
+      <Page overflow="hidden">
+        <Page.Header title="Multisig" />
+        <OutdatedExtensionCallout />
+        <ConnectOverlayBackdrop>
+          <MultisigOnboardingBackdrop />
+        </ConnectOverlayBackdrop>
+      </Page>
       <ConnectOverlay>
         <ConnectCard
-          mt="-60px"
           position="relative"
           width="100%"
           maxWidth="540px"
@@ -67,7 +69,7 @@ export function MultisigOnboardingPage() {
             >
               Don't have Leather yet?{' '}
               <UiLink
-                href="https://leather.io/wallet/extension"
+                href={externalLeatherNavigator.home}
                 size="sm"
                 target="_blank"
                 rel="noreferrer"
@@ -100,6 +102,6 @@ export function MultisigOnboardingPage() {
           />
         </ConnectCard>
       </ConnectOverlay>
-    </Page>
+    </>
   );
 }

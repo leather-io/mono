@@ -17,7 +17,6 @@ export function WalletConnectionModal({ isOpen }: WalletConnectionModalProps) {
   return (
     <ConnectOverlay>
       <ConnectCard
-        mt="-60px"
         position="relative"
         title="Get started with Leather"
         description="Connect Leather to access your portfolio"
