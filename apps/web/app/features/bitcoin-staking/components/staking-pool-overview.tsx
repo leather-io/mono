@@ -51,11 +51,57 @@ function humanizeSeconds(seconds: number) {
 
 // Inline elements only: ValueDisplayer renders the name inside an h4, which
 // takes phrasing content.
-function InfoLabel({ label, explanation }: { label: string; explanation: string }) {
+interface InfoLabelProps {
+  label: string;
+  explanation: string;
+  learnMoreUrl?: string;
+}
+
+function InfoLabel({ label, explanation, learnMoreUrl }: InfoLabelProps) {
   return (
     <>
       {label}
-      <InfoTooltipIcon title={label} explanation={explanation} ariaLabel={`About ${label}`} />
+      <InfoTooltipIcon
+        title={label}
+        explanation={explanation}
+        learnMoreUrl={learnMoreUrl}
+        ariaLabel={`About ${label}`}
+      />
+    </>
+  );
+}
+
+function rewardsTokenExplanation(pool: BitcoinStakingPool): string {
+  if (pool.operatorBtcPayout) {
+    return bitcoinStakingContent.operatorPayout.rewardsTokenExplanation(
+      pool.name,
+      pool.operatorBtcPayout.cadence
+    );
+  }
+  return bitcoinStakingContent.poolOverviewInfo.rewardsToken;
+}
+
+function feeExplanation(pool: BitcoinStakingPool): string {
+  if (pool.operatorBtcPayout) return bitcoinStakingContent.operatorPayout.feeExplanation(pool.name);
+  if (pool.requiresSelfClaim) return bitcoinStakingContent.selfClaim.explanation;
+  return bitcoinStakingContent.poolOverviewInfo.fee;
+}
+
+function RewardsTokenValue({ pool }: { pool: BitcoinStakingPool }) {
+  if (pool.operatorBtcPayout) {
+    return (
+      <>
+        BTC
+        <Box textStyle="label.03">
+          {bitcoinStakingContent.operatorPayout.rewardsTokenCaption(pool.name)}
+        </Box>
+      </>
+    );
+  }
+  return (
+    <>
+      sBTC
+      <Box textStyle="label.03">{bitcoinStakingContent.heroYieldLabel}</Box>
     </>
   );
 }
@@ -150,15 +196,11 @@ export function StakingPoolOverview({
           name={
             <InfoLabel
               label={bitcoinStakingLabels.rewardsToken}
-              explanation={bitcoinStakingContent.poolOverviewInfo.rewardsToken}
+              explanation={rewardsTokenExplanation(pool)}
+              learnMoreUrl={pool.operatorBtcPayout?.termsUrl}
             />
           }
-          value={
-            <>
-              sBTC
-              <Box textStyle="label.03">{bitcoinStakingContent.heroYieldLabel}</Box>
-            </>
-          }
+          value={<RewardsTokenValue pool={pool} />}
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['2', '2', '1']}>
@@ -166,11 +208,8 @@ export function StakingPoolOverview({
           name={
             <InfoLabel
               label={bitcoinStakingLabels.fee}
-              explanation={
-                pool.requiresSelfClaim
-                  ? bitcoinStakingContent.selfClaim.explanation
-                  : bitcoinStakingContent.poolOverviewInfo.fee
-              }
+              explanation={feeExplanation(pool)}
+              learnMoreUrl={pool.operatorBtcPayout?.termsUrl}
             />
           }
           value={<PoolFeeValue pool={pool} signerManagerContractId={signerManagerContractId} />}

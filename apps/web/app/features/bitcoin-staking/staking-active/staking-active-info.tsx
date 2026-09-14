@@ -16,6 +16,7 @@ import { LoadingSpinner } from '@leather.io/ui';
 import { PendingStakePanel } from '../components/pending-stake-panel';
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
 import { ClaimableRewardsCard } from './components/claimable-rewards-card';
+import { OperatorPayoutCard } from './components/operator-payout-card';
 import { StakingPositionGrid } from './components/staking-position-grid';
 import { useActiveStakingInfo } from './hooks/use-active-staking-info';
 
@@ -96,11 +97,19 @@ function StakingActiveInfoLayout({ poolSlug }: StakingActiveInfoProps) {
         <PreparePhaseCallout secondsUntilStakingReopens={details.secondsUntilStakingReopens} />
       )}
 
-      <ClaimableRewardsCard
-        providerId={pool.providerId}
-        signerManagerContractId={position.info.signerManagerContractId}
-        claimable={details.claimable}
-      />
+      {pool.operatorBtcPayout ? (
+        <OperatorPayoutCard
+          pool={pool}
+          operatorPayout={pool.operatorBtcPayout}
+          payoutAddress={details.payoutPreference?.btcRewardAddress ?? null}
+        />
+      ) : (
+        <ClaimableRewardsCard
+          providerId={pool.providerId}
+          signerManagerContractId={position.info.signerManagerContractId}
+          claimable={details.claimable}
+        />
+      )}
 
       <StakingPositionGrid poolSlug={poolSlug} pool={pool} info={position.info} details={details} />
     </VStack>

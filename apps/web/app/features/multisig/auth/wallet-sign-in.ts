@@ -1,5 +1,5 @@
 import { customNetworkConfig } from '~/constants/custom-network-config';
-import { leather } from '~/utils/leather-sdk';
+import { multisigLeather } from '~/features/multisig/extension/multisig-leather-client';
 import { isLeatherInstalled } from '~/utils/utils';
 
 import { extractXpubFromDescriptor, getP2wpkhAddressFromPublicKey } from '@leather.io/bitcoin';
@@ -16,10 +16,10 @@ interface WalletSignInParams {
   timestamp: number;
 }
 
-type GetAddressesParams = NonNullable<Parameters<typeof leather.getAddresses>[0]>;
+type GetAddressesParams = NonNullable<Parameters<typeof multisigLeather.getAddresses>[0]>;
 
 async function fetchWalletAddresses(network: string, chains: GetAddressesParams['chains']) {
-  const result = await leather.getAddresses({ network, chains });
+  const result = await multisigLeather.getAddresses({ network, chains });
   return result.addresses;
 }
 
@@ -61,7 +61,7 @@ async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
   }
   assertWalletMatchesNetwork(account.address, params.network);
 
-  const signed = await leather.signMessage({
+  const signed = await multisigLeather.signMessage({
     message: params.message,
     paymentType: 'p2wpkh',
     network: rpcNetwork,
@@ -97,7 +97,10 @@ async function stxSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
   }
   assertWalletMatchesNetwork(account.address, params.network);
 
-  const signed = await leather.stxSignMessage({ message: params.message, network: rpcNetwork });
+  const signed = await multisigLeather.stxSignMessage({
+    message: params.message,
+    network: rpcNetwork,
+  });
 
   if (signed.publicKey !== account.publicKey) {
     throw new Error('Active wallet account changed during sign-in. Please try again.');

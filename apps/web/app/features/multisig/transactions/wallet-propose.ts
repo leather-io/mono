@@ -1,5 +1,5 @@
 import { serializeCV, stringAsciiCV } from '@stacks/transactions';
-import { leather } from '~/utils/leather-sdk';
+import { multisigLeather } from '~/features/multisig/extension/multisig-leather-client';
 
 import type { AuthNetworkId } from '@leather.io/models';
 import {
@@ -39,14 +39,14 @@ async function signProposalCommitment(
 ): Promise<string> {
   const rpcNetwork = resolveWalletRpcNetwork(network);
   if (network.startsWith('btc')) {
-    const signed = await leather.signMessage({
+    const signed = await multisigLeather.signMessage({
       message: proposalHash,
       paymentType: 'p2wpkh',
       network: rpcNetwork,
     });
     return signed.signature;
   }
-  const signed = await leather.stxSignMessage({
+  const signed = await multisigLeather.stxSignMessage({
     messageType: 'structured',
     domain: serializeCV(buildStxProposalDomain(resolveStxChainId(network))),
     message: serializeCV(stringAsciiCV(proposalHash)),

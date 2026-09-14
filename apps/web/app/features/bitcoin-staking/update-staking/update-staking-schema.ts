@@ -6,12 +6,21 @@ import {
   validateStxAmountPrecision,
 } from '~/utils/validators/stx-amount-validator';
 
-import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import { BitcoinNetworkModes } from '@leather.io/models';
 import { stxToMicroStx } from '@leather.io/utils';
 
-import { validatePayoutSatsFields } from '../start-staking/utils/staking-form-schema';
+import {
+  PoolMinStake,
+  buildPayoutPreference,
+  formatMinStakeStx,
+  meetsPoolMinStake,
+  stxInputToMicroStx,
+  validatePayoutSatsFields,
+  validateRewardAddress,
+  wantsBtcPayout,
+} from '../start-staking/utils/staking-form-schema';
 import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
+import { PoolPayoutMode, isBtcPayoutRequired } from '../utils/pool-payout';
 
 export const updateStakingMessages = {
   nothingToUpdate:
@@ -25,27 +34,31 @@ export const updateStakingMessages = {
 // an existing BTC payout setting.
 function normalizePayout(payout: Pox5PayoutPreference | null | undefined): string | null {
   if (!payout) return null;
-  return `${payout.btcRewardAddress}:${payout.maxFeeSats}:${payout.minClaimSats ?? ''}`;
+  return `${payout.btcRewardAddress}:${payout.maxFeeSats ?? ''}:${payout.minClaimSats ?? ''}`;
 }
 
 interface CreateUpdateStakingSchemaArgs {
   availableBalance: ReturnType<typeof stxToMicroStx>;
   maxCyclesToExtend: number;
-  supportsBtcPayout: boolean;
+  payoutMode: PoolPayoutMode;
   supportsMinClaim: boolean;
   networkMode: BitcoinNetworkModes;
   currentPayout: Pox5PayoutPreference | null;
   isSwitching: boolean;
+  currentAmountMicroStx?: bigint;
+  minStake?: PoolMinStake;
 }
 
 export function createUpdateStakingSchema({
   availableBalance,
   maxCyclesToExtend,
-  supportsBtcPayout,
+  payoutMode,
   supportsMinClaim,
   networkMode,
   currentPayout,
   isSwitching,
+  currentAmountMicroStx,
+  minStake,
 }: CreateUpdateStakingSchemaArgs) {
   const chooseExtendCycles =
     maxCyclesToExtend === 0
@@ -76,32 +89,40 @@ export function createUpdateStakingSchema({
       minClaimSats: z.string().optional(),
     })
     .superRefine((data, ctx) => {
-      if (supportsBtcPayout && data.payoutEnabled) {
-        if (!data.rewardAddress || !isValidBitcoinAddress(data.rewardAddress)) {
-          ctx.addIssue({
-            code: 'custom',
-            message: validationMessages.addressNotValid,
-            path: ['rewardAddress'],
-          });
-        } else if (!isValidBitcoinNetworkAddress(data.rewardAddress, networkMode)) {
-          ctx.addIssue({
-            code: 'custom',
-            message: validationMessages.addressIncorrectNetwork,
-            path: ['rewardAddress'],
-          });
-        }
-        validatePayoutSatsFields(data, supportsMinClaim, (message, path) =>
-          ctx.addIssue({ code: 'custom', message, path: [path] })
+      if (wantsBtcPayout(data, payoutMode)) {
+        validateRewardAddress(data.rewardAddress, networkMode, message =>
+          ctx.addIssue({ code: 'custom', message, path: ['rewardAddress'] })
         );
+        if (!isBtcPayoutRequired(payoutMode)) {
+          validatePayoutSatsFields(data, supportsMinClaim, (message, path) =>
+            ctx.addIssue({ code: 'custom', message, path: [path] })
+          );
+        }
       }
 
-      const increase = data.amountIncrease ? Number(data.amountIncrease) : 0;
-      const formPayout =
-        supportsBtcPayout && data.payoutEnabled && data.rewardAddress && data.maxFeeSats
-          ? `${data.rewardAddress}:${data.maxFeeSats}:${(supportsMinClaim && data.minClaimSats) || ''}`
-          : null;
-      const payoutChanged = formPayout !== normalizePayout(currentPayout);
-      if (!isSwitching && data.cyclesToExtend === 0 && increase === 0 && !payoutChanged) {
+      const increaseMicroStx =
+        data.amountIncrease && /^\d+(\.\d+)?$/.test(data.amountIncrease)
+          ? stxInputToMicroStx(data.amountIncrease)
+          : 0n;
+      if (
+        minStake &&
+        currentAmountMicroStx !== undefined &&
+        !meetsPoolMinStake(currentAmountMicroStx + increaseMicroStx, minStake)
+      ) {
+        ctx.addIssue({
+          code: 'custom',
+          message: validationMessages.totalStakeBelowPoolMinimum(
+            minStake.poolName,
+            formatMinStakeStx(minStake)
+          ),
+          path: ['amountIncrease'],
+        });
+      }
+
+      const payoutChanged =
+        normalizePayout(buildPayoutPreference(data, payoutMode, supportsMinClaim)) !==
+        normalizePayout(currentPayout);
+      if (!isSwitching && data.cyclesToExtend === 0 && increaseMicroStx === 0n && !payoutChanged) {
         ctx.addIssue({
           code: 'custom',
           message: updateStakingMessages.nothingToUpdate,
