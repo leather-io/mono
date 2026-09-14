@@ -42,7 +42,7 @@ jobs:
     needs:
       - sha-hash
     steps:
-      - uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
+      - uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
           header: extension-build
           message: '_Building extension at commit ${{ needs.sha-hash.outputs.SHORT_SHA }}_'
@@ -57,7 +57,7 @@ jobs:
         # Firefox removed while off store
         target: [chromium]
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
@@ -111,7 +111,7 @@ jobs:
           sanitized_branch="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
           echo "BRANCH_NAME=${sanitized_branch}" >> "$GITHUB_ENV"
 
-      - uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
+      - uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         env:
           EXTENSION_BUILD_LINK: '[Extension build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
         with:
