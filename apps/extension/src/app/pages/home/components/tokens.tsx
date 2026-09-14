@@ -14,6 +14,7 @@ import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-a
 
 import { AeusdcRetirementCallout } from './aeusdc-retirement-callout';
 import { FirstTokenBanner } from './first-token-banner';
+import { OrdinalsRunesSunsetCallout } from './ordinals-runes-sunset-callout';
 import { TokensLearn } from './tokens-learn';
 import { TokensTabHeader } from './tokens-tab-header';
 
@@ -31,6 +32,7 @@ export function Tokens() {
 
   return (
     <Stack data-testid={HomePageSelectors.AssetList} gap="space.05" pb="space.03">
+      <OrdinalsRunesSunsetCallout />
       <AeusdcRetirementCallout />
       {showFirstTokenBanner && <FirstTokenBanner />}
       {!showFirstTokenBanner && <TokensTabHeader />}
