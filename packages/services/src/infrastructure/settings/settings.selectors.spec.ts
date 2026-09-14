@@ -9,6 +9,7 @@ import {
   selectBitcoinApiUrl,
   selectBitcoinNetworkMode,
   selectStacksApiUrl,
+  selectStacksNetworkMode,
   selectStakingChainId,
 } from './settings.selectors';
 import { UserSettings } from './settings.service';
@@ -68,5 +69,17 @@ describe(selectStakingChainId.name, () => {
     expect(
       selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.sbtcTestnet })
     ).toBeNull();
+  });
+});
+
+describe(selectStacksNetworkMode.name, () => {
+  it('maps mainnet to mainnet', () => {
+    expect(selectStacksNetworkMode(userSettings)).toEqual('mainnet');
+  });
+
+  it('maps testnet to testnet', () => {
+    expect(
+      selectStacksNetworkMode({ ...userSettings, network: defaultNetworksKeyedById.testnet })
+    ).toEqual('testnet');
   });
 });

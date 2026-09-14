@@ -7,7 +7,7 @@ import { useRecipientSelectFields } from './hooks/use-recipient-select-fields';
 import { RecipientBnsNameTypeField } from './recipient-bns-name-type-field';
 
 interface RecipientFieldProps {
-  bnsLookupFn(client: any, name: string, isTestnet?: boolean): Promise<string | null>;
+  bnsLookupFn(name: string): Promise<string | null>;
 }
 export function RecipientField({ bnsLookupFn }: RecipientFieldProps) {
   const {
