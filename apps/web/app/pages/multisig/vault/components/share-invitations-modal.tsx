@@ -2,6 +2,7 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { CopyAddress } from '~/components/copy-address';
 import { useToast } from '~/features/toasts/use-toast';
 
+import { LEATHER_APP_URL } from '@leather.io/constants';
 import type { Vault, VaultMember } from '@leather.io/models';
 import {
   BasicTooltip,
@@ -16,6 +17,7 @@ import {
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
+import { multisigPaths } from '../../multisig.constants';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface ShareInvitationsModalProps {
@@ -26,7 +28,7 @@ interface ShareInvitationsModalProps {
 }
 
 function inviteLink(vault: Vault): string {
-  return `https://leather.io/multisig?invite=${encodeURIComponent(vault.id)}`;
+  return `${LEATHER_APP_URL}${multisigPaths.index}?invite=${encodeURIComponent(vault.id)}`;
 }
 
 function inviteMessage(vault: Vault, member: VaultMember, creatorName: string | null): string {
