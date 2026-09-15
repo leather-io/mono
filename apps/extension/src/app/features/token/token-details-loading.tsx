@@ -43,6 +43,22 @@ function LoadingOverview() {
   );
 }
 
+function LoadingPrice() {
+  return (
+    <Stack gap="space.03" px="space.05" pb="space.02">
+      <Stack gap="space.01">
+        <SkeletonLoader isLoading height="24px" width="120px" />
+        <SkeletonLoader isLoading height="20px" width="140px" />
+      </Stack>
+      <Flex gap="space.01">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <SkeletonLoader key={i} isLoading height="24px" flex="1" />
+        ))}
+      </Flex>
+    </Stack>
+  );
+}
+
 function LoadingDescription() {
   return (
     <Box px="space.05" pb="space.03">
@@ -90,12 +106,15 @@ export function TokenDetailsLoading({ title = 'Loading...' }: { title?: string }
         <Stack bg="ink.background-secondary" borderRadius={['0', null, 'md']} overflow="hidden">
           <LoadingOverview />
 
+          <TokenDetailsSection title="Price">
+            <LoadingPrice />
+          </TokenDetailsSection>
+
           <TokenDetailsSection title="Description">
             <LoadingDescription />
           </TokenDetailsSection>
 
           <TokenDetailsSection title="Token details">
-            <LoadingRow />
             <LoadingRow />
             <LoadingRow />
             <LoadingRow />

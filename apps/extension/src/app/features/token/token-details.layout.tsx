@@ -2,17 +2,13 @@ import type { ReactNode } from 'react';
 
 import { Box, styled } from 'leather-styles/jsx';
 
-import {
-  type BlockchainActivityItem,
-  formatPriceChangeText,
-  getPriceChangeColor,
-} from '@leather.io/features';
-import type { Money } from '@leather.io/models';
+import type { BlockchainActivityItem } from '@leather.io/features';
+import type { FungibleCryptoAsset, Money } from '@leather.io/models';
 
-import { formatCurrency } from '@app/common/currency-formatter';
 import type { ReceiveView } from '@app/common/receive/receive';
 
 import { ActivityRow } from '../activity-list/components/activity-row';
+import { TokenPriceHistory } from './components/price-history/token-price-history';
 import { type SwapChain, TokenDetailsActionsRow } from './components/token-details-actions';
 import { TokenDetailsRow } from './components/token-details-row';
 import { TokenDetailsScreen } from './components/token-details-screen';
@@ -28,9 +24,8 @@ interface TokenDetailsLayoutProps {
   availableBalance: Money;
   fiatBalance: Money;
   name: string;
+  asset: FungibleCryptoAsset;
   price?: Money;
-  changePercent: number;
-  priceChangeDelta?: string;
   layer: string;
   contractDetails?: string;
   descriptionText?: string;
@@ -49,9 +44,8 @@ export function TokenDetailsLayout({
   availableBalance,
   fiatBalance,
   name,
+  asset,
   price,
-  changePercent,
-  priceChangeDelta,
   layer,
   contractDetails = '—',
   descriptionText,
@@ -81,6 +75,10 @@ export function TokenDetailsLayout({
         />
       }
     >
+      <TokenDetailsSection title="Price">
+        <TokenPriceHistory asset={asset} price={price} />
+      </TokenDetailsSection>
+
       {descriptionText ? (
         <TokenDetailsSection title="Description">
           <Box px="space.05" pb="space.03">
@@ -93,20 +91,6 @@ export function TokenDetailsLayout({
 
       <TokenDetailsSection title="Token details">
         <TokenDetailsRow label="Name" value={name} testId="token-details-name" />
-        <TokenDetailsRow
-          label="Price"
-          value={price ? formatCurrency(price) : '—'}
-          testId="token-details-price"
-        />
-        <TokenDetailsRow
-          label="Price change (24hr)"
-          value={
-            <styled.span textStyle="caption.01" color={getPriceChangeColor(changePercent)}>
-              {formatPriceChangeText({ changePercent, priceChangeDelta })}
-            </styled.span>
-          }
-          testId="token-details-price-change"
-        />
         <TokenDetailsRow label="Layer" value={layer} testId="token-details-layer" />
         <TokenDetailsRow label="Contract details" value={contractDetails} />
       </TokenDetailsSection>

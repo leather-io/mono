@@ -112,8 +112,6 @@ export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}
       price={marketInfo.price!}
-      changePercent={marketInfo.changePercent}
-      priceChangeDelta={marketInfo.priceChangeDelta}
       descriptionText={marketInfo.descriptionText}
       balances={balances}
       activity={activityQuery.data ?? []}
