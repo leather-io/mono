@@ -9,8 +9,10 @@ import { delay, isError } from '@leather.io/utils';
 import { logger } from '@shared/logger';
 
 import {
+  deviceInUseErrorMessage,
   isLedgerAppOpenFailedError,
   isLedgerDeviceDisconnectedError,
+  isLedgerDeviceInUseError,
   isLedgerDeviceLockedError,
   isLedgerNoDeviceSelectedError,
   noDeviceSelectedErrorMessage,
@@ -99,6 +101,10 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
 
       if (isLedgerNoDeviceSelectedError(e)) {
         return ledgerNavigate.toErrorStep(chain, noDeviceSelectedErrorMessage);
+      }
+
+      if (isLedgerDeviceInUseError(e)) {
+        return ledgerNavigate.toErrorStep(chain, deviceInUseErrorMessage);
       }
 
       return ledgerNavigate.toErrorStep(chain);

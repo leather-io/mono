@@ -2,6 +2,7 @@ import { LedgerConnectionErrors } from '../utils/generic-ledger-utils';
 import {
   isLedgerAppOpenFailedError,
   isLedgerDeviceDisconnectedError,
+  isLedgerDeviceInUseError,
   isLedgerDeviceLockedError,
   isLedgerNoDeviceSelectedError,
   isLedgerUserDeniedError,
@@ -71,15 +72,36 @@ describe(isLedgerDeviceDisconnectedError.name, () => {
 });
 
 describe(isLedgerNoDeviceSelectedError.name, () => {
-  test.each(['NoAccessibleDeviceError', 'ConnectionOpeningError'])(
-    'is true for the %s tag',
+  test('is true when the browser device chooser was cancelled or empty', () => {
+    expect(isLedgerNoDeviceSelectedError({ _tag: 'NoAccessibleDeviceError' })).toBe(true);
+  });
+
+  test.each(['ConnectionOpeningError', 'DeviceNotRecognizedError', 'UnknownDeviceError'])(
+    'is false for the %s tag',
     tag => {
-      expect(isLedgerNoDeviceSelectedError({ _tag: tag })).toBe(true);
+      expect(isLedgerNoDeviceSelectedError({ _tag: tag })).toBe(false);
     }
   );
 
   test('is false for a plain error', () => {
     expect(isLedgerNoDeviceSelectedError(new Error('boom'))).toBe(false);
+  });
+});
+
+describe(isLedgerDeviceInUseError.name, () => {
+  test('is true when the granted device cannot be opened', () => {
+    expect(isLedgerDeviceInUseError({ _tag: 'ConnectionOpeningError' })).toBe(true);
+  });
+
+  test('is true for a normalised opening error', () => {
+    expect(
+      isLedgerDeviceInUseError(toLedgerTransportError({ _tag: 'ConnectionOpeningError' }))
+    ).toBe(true);
+  });
+
+  test('is false for a cancelled device chooser', () => {
+    expect(isLedgerDeviceInUseError({ _tag: 'NoAccessibleDeviceError' })).toBe(false);
+    expect(isLedgerDeviceInUseError(new Error('boom'))).toBe(false);
   });
 });
 

@@ -9,12 +9,8 @@ const deviceDisconnectedTags: readonly string[] = [
   'DeviceSessionNotFound',
   'WebHidSendReportError',
 ];
-const noDeviceSelectedTags: readonly string[] = [
-  'NoAccessibleDeviceError',
-  'DeviceNotRecognizedError',
-  'ConnectionOpeningError',
-  'UnknownDeviceError',
-];
+const noDeviceSelectedTag = 'NoAccessibleDeviceError';
+const deviceInUseTag = 'ConnectionOpeningError';
 
 const lockedDeviceStatusCode = 0x5515;
 const userDeniedStatusCode = 0x6985;
@@ -23,6 +19,8 @@ const unknownDeviceErrorMessage = 'Unknown Ledger device error';
 
 export const noDeviceSelectedErrorMessage =
   'Click "Try again" and choose your Ledger in the browser prompt.';
+export const deviceInUseErrorMessage =
+  'Your Ledger is in use by another app. Close Ledger Live and any other Leather windows, then try again.';
 
 interface DmkTaggedError {
   _tag: string;
@@ -81,7 +79,11 @@ export function isLedgerDeviceDisconnectedError(error: unknown): boolean {
 }
 
 export function isLedgerNoDeviceSelectedError(error: unknown): boolean {
-  return hasTag(error, noDeviceSelectedTags);
+  return hasTag(error, [noDeviceSelectedTag]);
+}
+
+export function isLedgerDeviceInUseError(error: unknown): boolean {
+  return hasTag(error, [deviceInUseTag]);
 }
 
 export function isLedgerAppOpenFailedError(error: unknown): boolean {
