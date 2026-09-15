@@ -1,3 +1,4 @@
+import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -19,7 +20,7 @@ export function SwapReviewSummary({
   targetAmount,
 }: SwapReviewSummaryProps) {
   return (
-    <Stack gap="space.03" alignItems="center">
+    <Stack gap="space.03" alignItems="center" data-testid={SwapRevampSelectors.ReviewSummary}>
       <Flex justifyContent="center" alignItems="center">
         <Box opacity={0.65}>
           <AssetAvatarIcon asset={baseAsset} size="lg" />

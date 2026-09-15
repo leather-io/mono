@@ -1,5 +1,8 @@
 import { Virtuoso } from 'react-virtuoso';
 
+import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
+import { Box } from 'leather-styles/jsx';
+
 import { AccountSwapAsset } from '@leather.io/services';
 import { AssetAvatarIcon, BitcoinIcon, StacksIcon } from '@leather.io/ui';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
@@ -33,14 +36,16 @@ export function AssetSelectorList({ assets = [], type, onSelectAsset }: AssetSel
   }
 
   return (
-    <Virtuoso
-      style={{ flex: 1, height: '100%' }}
-      data={assets}
-      computeItemKey={computeItemKey}
-      itemContent={itemContent}
-      overscan={10}
-      defaultItemHeight={72}
-    />
+    <Box data-testid={SwapRevampSelectors.AssetList} flex={1} height="100%">
+      <Virtuoso
+        style={{ flex: 1, height: '100%' }}
+        data={assets}
+        computeItemKey={computeItemKey}
+        itemContent={itemContent}
+        overscan={10}
+        defaultItemHeight={72}
+      />
+    </Box>
   );
 }
 

@@ -27,18 +27,18 @@ export class BitflowSdkClient {
     @inject(Types.Environment) env: Environment,
     @inject(Types.CacheService) private readonly cacheService: HttpCacheService
   ) {
-    try {
-      this.bitflow = new BitflowSDK({
-        BITFLOW_API_HOST: env.bitflow?.bitflowApiHost,
-        BITFLOW_API_KEY: env.bitflow?.bitflowApiKey,
-        READONLY_CALL_API_HOST: HIRO_API_BASE_URL_MAINNET,
-        KEEPER_API_KEY: env.bitflow?.keeperApiKey,
-        KEEPER_API_HOST: env.bitflow?.keeperApiHost,
-        BITFLOW_PROVIDER_ADDRESS: env.bitflow?.bitflowProviderAddress,
-      });
-    } catch {
+    if (!env.bitflow?.bitflowApiHost) {
       this.bitflow = null;
+      return;
     }
+    this.bitflow = new BitflowSDK({
+      BITFLOW_API_HOST: env.bitflow.bitflowApiHost,
+      BITFLOW_API_KEY: env.bitflow.bitflowApiKey,
+      READONLY_CALL_API_HOST: HIRO_API_BASE_URL_MAINNET,
+      KEEPER_API_KEY: env.bitflow.keeperApiKey,
+      KEEPER_API_HOST: env.bitflow.keeperApiHost,
+      BITFLOW_PROVIDER_ADDRESS: env.bitflow.bitflowProviderAddress,
+    });
   }
 
   public async getAvailableTokens(): Promise<BitflowSdkToken[]> {

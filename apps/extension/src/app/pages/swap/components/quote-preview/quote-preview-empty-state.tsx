@@ -12,8 +12,8 @@ export function QuotePreviewEmptyState() {
     >
       <styled.span textStyle="label.03">No quotes available for this swap.</styled.span>
       <styled.span textStyle="caption.01">
-        Not enough liquidity or no route available right now. Try a smaller amount or check back in
-        a few minutes.
+        Not enough liquidity or no route available right now. Try a smaller amount, check back in a
+        few minutes, or visit the token issuer's site for other options.
       </styled.span>
     </styled.div>
   );

@@ -87,9 +87,11 @@ export function Callout({
           {title && <styled.span textStyle="label.02">{title}</styled.span>}
           {children && <styled.span textStyle="caption.01">{children}</styled.span>}
         </Stack>
-        <styled.span aria-hidden="true" flexShrink={0}>
-          {icon ?? icons[variant]}
-        </styled.span>
+        {icon !== null && (
+          <styled.span aria-hidden="true" flexShrink={0}>
+            {icon ?? icons[variant]}
+          </styled.span>
+        )}
       </Flex>
     </Box>
   );

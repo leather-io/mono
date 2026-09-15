@@ -14,10 +14,7 @@ import { mockMarketDataRequests } from './mock-market-data';
 import { mockMainnetTestAccountSbtcDepositRequests } from './mock-sbtc';
 import { mockMainnetTestAccountStacksBalancesRequest } from './mock-stacks-balances';
 import { mockMainnetTestAccountStacksBalancesV2Request } from './mock-stacks-balances-v2';
-import {
-  mockBnsV2NamesRequestEmpty,
-  mockMainnetTestAccountStacksBnsNameRequest,
-} from './mock-stacks-bns';
+import { mockBnsV2NamesRequestEmpty } from './mock-stacks-bns';
 import { mockStacksFeeRequests } from './mock-stacks-fees';
 import { mockMainnetTestAccountStacksFTsRequest } from './mock-stacks-fts';
 import { mockMainnetTestAccountStacksNFTsRequest } from './mock-stacks-nfts';
@@ -41,7 +38,6 @@ export async function setupMockApis(page: Page | BrowserContext) {
     mockMainnetTestAccountBitcoinRequests(page),
     mockBitcoinFeeRequests(page),
     mockStacksFeeRequests(page),
-    mockMainnetTestAccountStacksBnsNameRequest(page),
     mockMainnetTestAccountStacksTxsRequests(page),
     mockMainnetTestAccountStacksNFTsRequest(page),
     mockMainnetTestAccountStacksFTsRequest(page),

@@ -35,7 +35,7 @@ interface FeatureFlags {
   releaseOnramperBuy: boolean;
   releaseOnramperSell: boolean;
   assetsRevamp: boolean;
-  swapRevamp: boolean;
+  swapSbtcBridging: boolean;
   releaseTrendingTokens: boolean;
   releaseAddAccount: boolean;
   enableAllowPolicyAccounts: boolean;

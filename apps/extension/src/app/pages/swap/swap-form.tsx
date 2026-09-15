@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useNavigate, useOutletContext } from 'react-router';
 
+import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { Box, Divider, Flex } from 'leather-styles/jsx';
 
 import { AccountSwapAsset } from '@leather.io/services';
@@ -8,6 +9,8 @@ import { useSwapContext } from '@leather.io/state/swap';
 import { Button } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
+import { analytics } from '@shared/utils/analytics';
+import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
@@ -21,7 +24,7 @@ import { FlipButton } from '@app/pages/swap/components/flip-button';
 import { QuotePreview } from '@app/pages/swap/components/quote-preview/quote-preview';
 import { TargetAmountPreview } from '@app/pages/swap/components/target-amount-preview';
 import { type SwapOutletContext } from '@app/pages/swap/swap-container';
-import { focusAmountField } from '@app/pages/swap/swap-utils';
+import { focusAmountField, getSwapRouteChain, toSwapRouteParam } from '@app/pages/swap/swap-utils';
 
 export function SwapForm() {
   const amountFieldRef = useRef<HTMLInputElement>(null);
@@ -32,10 +35,30 @@ export function SwapForm() {
     baseAssetsQuery,
     targetAssetsQuery,
     targetMarketDataQuery,
+    quoteQuery,
     canSubmit,
   } = useSwapContext();
   const { liveEstimate } = useOutletContext<SwapOutletContext>();
   const navigate = useNavigate();
+
+  function handleContinue() {
+    const baseAsset = state.baseSwapAsset?.asset;
+    const targetAsset = state.targetSwapAsset?.asset;
+    if (!baseAsset || !targetAsset) return;
+
+    analytics.track('swap_review_initiated', {
+      baseSymbol: baseAsset.symbol,
+      targetSymbol: targetAsset.symbol,
+      baseAmount: quoteQuery.data?.selected?.baseAmount.amount.toNumber() ?? 0,
+      provider: quoteQuery.data?.selected?.provider ?? '',
+    });
+    void navigate(
+      replaceRouteParams(RouteUrls.SwapReview, {
+        base: toSwapRouteParam(baseAsset),
+        quote: toSwapRouteParam(targetAsset),
+      }).replace('{chain}', getSwapRouteChain(baseAsset))
+    );
+  }
 
   function handleAssetSelection(type: 'base' | 'target', asset: AccountSwapAsset) {
     const action = {
@@ -59,7 +82,7 @@ export function SwapForm() {
   }
 
   return (
-    <Box width="100%">
+    <Box width="100%" data-testid={SwapRevampSelectors.FormReady}>
       <PageHeader title="Swap" onBackLocation={RouteUrls.Home} />
       <Content>
         <Page>
@@ -72,7 +95,7 @@ export function SwapForm() {
                 secondaryAmount={state.secondaryAmount}
                 inputCurrencyMode={state.inputCurrencyMode}
                 onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
-                quoteCurrencyPreference="USD"
+                quoteCurrencyPreference={state.quoteCurrencyPreference}
                 inputRef={amountFieldRef}
                 errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
               />
@@ -81,6 +104,7 @@ export function SwapForm() {
                 <AssetSelectorToggle
                   asset={state.baseSwapAsset?.asset}
                   onPress={() => actions.openAssetSelector('base')}
+                  testId={SwapRevampSelectors.BaseAssetTrigger}
                 />
                 <AssetBalance
                   balance={state.baseSwapAsset?.balance}
@@ -105,6 +129,7 @@ export function SwapForm() {
                   asset={state.targetSwapAsset?.asset}
                   onPress={() => actions.openAssetSelector('target')}
                   disabled={state.baseSwapAsset === null}
+                  testId={SwapRevampSelectors.TargetAssetTrigger}
                 />
                 <AssetBalance
                   balance={state.targetSwapAsset?.balance}
@@ -119,9 +144,8 @@ export function SwapForm() {
           <Flex direction="column" mt="space.04" gap="space.03">
             <Button
               disabled={!canSubmit}
-              onClick={() =>
-                navigate({ pathname: `${state.targetSwapAsset?.asset.symbol}/review` })
-              }
+              onClick={handleContinue}
+              data-testid={SwapRevampSelectors.ContinueBtn}
             >
               Continue
             </Button>
