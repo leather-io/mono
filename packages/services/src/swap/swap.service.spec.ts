@@ -136,6 +136,23 @@ describe(SwapService.name, () => {
       expect(providers.velar.getSwapQuotes).not.toHaveBeenCalled();
       expect(providers.alex.getSwapQuotes).not.toHaveBeenCalled();
     });
+    test('drops a provider that never settles once the quote timeout elapses', async () => {
+      vi.useFakeTimers();
+      try {
+        const providers = createStubProviderServices();
+        const velarQuote = createStubSwapQuote('velar-sdk');
+        providers.velar.getSwapQuotes.mockResolvedValue([velarQuote]);
+        providers.alex.getSwapQuotes.mockReturnValue(new Promise<SwapQuote[]>(() => undefined));
+        const swapService = createSwapService(providers);
+
+        const quotes = swapService.getSwapQuotes(baseAsset, targetAsset, oneStx);
+        await vi.runAllTimersAsync();
+
+        await expect(quotes).resolves.toEqual([velarQuote]);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 
   describe('getBaseSwapAssets', () => {
