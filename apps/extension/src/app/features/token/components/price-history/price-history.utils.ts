@@ -1,8 +1,10 @@
-import type {
-  HistoricalPeriod,
-  MarketPriceHistory,
-  MarketPriceSnapshot,
-  Money,
+import {
+  type HistoricalPeriod,
+  type MarketPriceHistory,
+  type MarketPriceSnapshot,
+  type MarketStats,
+  type Money,
+  historicalPeriods,
 } from '@leather.io/models';
 import { createMoney, subtractMoney } from '@leather.io/utils';
 
@@ -60,6 +62,10 @@ export function getPriceChange(
     delta:
       price && changePercentage ? calculatePriceChangeDelta(price, changePercentage) : undefined,
   };
+}
+
+export function getUnavailablePeriods(stats: MarketStats): HistoricalPeriod[] {
+  return historicalPeriods.filter(period => typeof stats.priceChange[period] !== 'number');
 }
 
 export function formatSnapshotTime(timestamp: number, period: HistoricalPeriod): string {

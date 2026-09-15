@@ -4,6 +4,7 @@ import { createMoney } from '@leather.io/utils';
 import {
   findNearestPointIndex,
   getPriceChange,
+  getUnavailablePeriods,
   toChartPoints,
   toSvgPath,
 } from './price-history.utils';
@@ -31,6 +32,18 @@ describe('getPriceChange', () => {
       changePercent: 20,
       delta: createMoney(2_000, 'USD'),
     });
+  });
+});
+
+describe('getUnavailablePeriods', () => {
+  it('lists periods the server sent no change for, treating null as missing', () => {
+    expect(getUnavailablePeriods({ priceChange: { '1d': 2.5, '1w': null } })).toEqual([
+      '1w',
+      '1m',
+      '3m',
+      '6m',
+      '1y',
+    ]);
   });
 });
 

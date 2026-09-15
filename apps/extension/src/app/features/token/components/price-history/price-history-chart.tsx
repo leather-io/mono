@@ -1,7 +1,7 @@
 import type { PointerEvent } from 'react';
 
 import { Box, styled } from 'leather-styles/jsx';
-import type { ColorToken } from 'leather-styles/tokens';
+import { type ColorToken, token } from 'leather-styles/tokens';
 
 import type { MarketPriceSnapshot } from '@leather.io/models';
 
@@ -13,6 +13,26 @@ import {
 } from './price-history.utils';
 
 export const chartHeight = '120px';
+const lineStrokeWidth = 2.5;
+
+interface LinePathProps {
+  d: string;
+  stroke: string;
+}
+
+function LinePath({ d, stroke }: LinePathProps) {
+  return (
+    <path
+      d={d}
+      fill="none"
+      stroke={stroke}
+      strokeWidth={lineStrokeWidth}
+      strokeLinejoin="round"
+      strokeLinecap="round"
+      vectorEffect="non-scaling-stroke"
+    />
+  );
+}
 
 interface PriceHistoryChartProps {
   prices: MarketPriceSnapshot[];
@@ -29,6 +49,8 @@ export function PriceHistoryChart({
 }: PriceHistoryChartProps) {
   const points = toChartPoints(prices);
   const hovered = hoveredIndex === undefined ? undefined : points[hoveredIndex];
+  const coloredPoints = hoveredIndex === undefined ? points : points.slice(0, hoveredIndex + 1);
+  const dimmedPoints = hoveredIndex === undefined ? [] : points.slice(hoveredIndex);
 
   function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
     const { left, width } = event.currentTarget.getBoundingClientRect();
@@ -56,15 +78,8 @@ export function PriceHistoryChart({
         role="img"
         aria-label="Price history chart"
       >
-        <path
-          d={toSvgPath(points)}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinejoin="round"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-        />
+        <LinePath d={toSvgPath(dimmedPoints)} stroke={token('colors.ink.text-subdued')} />
+        <LinePath d={toSvgPath(coloredPoints)} stroke="currentColor" />
       </styled.svg>
       {hovered ? (
         <>

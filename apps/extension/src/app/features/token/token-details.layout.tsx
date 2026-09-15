@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import BigNumber from 'bignumber.js';
 import { Box, styled } from 'leather-styles/jsx';
 
 import type { BlockchainActivityItem } from '@leather.io/features';
@@ -75,9 +76,11 @@ export function TokenDetailsLayout({
         />
       }
     >
-      <TokenDetailsSection title="Price">
-        <TokenPriceHistory asset={asset} price={price} />
-      </TokenDetailsSection>
+      {price && price.amount.isGreaterThan(BigNumber(0)) && (
+        <TokenDetailsSection title="Price">
+          <TokenPriceHistory asset={asset} price={price} />
+        </TokenDetailsSection>
+      )}
 
       {descriptionText ? (
         <TokenDetailsSection title="Description">
