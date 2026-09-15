@@ -51,10 +51,10 @@ export function TokenPriceHistory({ asset, price }: TokenPriceHistoryProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number>();
   const history = usePriceHistory(asset, period);
 
-  const prices = history.state === 'success' ? history.value.prices : [];
+  const periodHistory = history.state === 'success' ? history.value : undefined;
+  const prices = periodHistory?.prices ?? [];
   const hovered = hoveredIndex === undefined ? undefined : prices[hoveredIndex];
-  const change =
-    history.state === 'success' ? getPriceChange(history.value, hovered, price) : undefined;
+  const change = periodHistory ? getPriceChange(periodHistory, hovered, price) : undefined;
   const displayedPrice = hovered?.price ?? price;
 
   function handlePeriodChange(nextPeriod: HistoricalPeriod) {
@@ -78,10 +78,10 @@ export function TokenPriceHistory({ asset, price }: TokenPriceHistoryProps) {
         </SkeletonLoader>
       </Stack>
       <SkeletonLoader isLoading={history.state === 'loading'} height={chartHeight} width="100%">
-        {change && hasEnoughSnapshots(prices) ? (
+        {periodHistory && hasEnoughSnapshots(prices) ? (
           <PriceHistoryChart
             prices={prices}
-            color={getPriceChangeColor(change.changePercent)}
+            color={getPriceChangeColor(periodHistory.changePercentage)}
             hoveredIndex={hoveredIndex}
             onHover={setHoveredIndex}
           />
