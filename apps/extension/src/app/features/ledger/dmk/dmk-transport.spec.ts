@@ -18,6 +18,13 @@ function makeFakeDmk({ data, statusCode }: FakeApduResponse) {
   return dmk;
 }
 
+function makeRejectingDmk(error: unknown) {
+  const dmk: DeviceManagementKit = Object.create(DeviceManagementKit.prototype);
+  dmk.sendApdu = vi.fn().mockRejectedValue(error);
+  dmk.disconnect = vi.fn().mockResolvedValue(undefined);
+  return dmk;
+}
+
 describe(DmkTransport.name, () => {
   test('frames the APDU with a length byte and returns data followed by the status word', async () => {
     const dmk = makeFakeDmk({ data: [0x01, 0x02], statusCode: [0x90, 0x00] });
@@ -65,6 +72,22 @@ describe(DmkTransport.name, () => {
     );
 
     expect([...response]).toEqual([0x07, 0xe0, 0x00]);
+  });
+
+  test('rethrows tagged DMK rejections as Error instances that keep the tag', async () => {
+    const originalError = new Error('device unplugged');
+    const dmk = makeRejectingDmk({ _tag: 'DeviceDisconnectedWhileSendingError', originalError });
+    const transport = new DmkTransport(dmk, sessionId);
+
+    const rejection = transport.send(0xe0, 0x01, 0x00, 0x00);
+
+    await expect(rejection).rejects.toBeInstanceOf(Error);
+    await expect(rejection).rejects.toMatchObject({
+      name: 'DeviceDisconnectedWhileSendingError',
+      message: 'device unplugged',
+      _tag: 'DeviceDisconnectedWhileSendingError',
+      originalError,
+    });
   });
 
   test('disconnects the session once even when closed twice', async () => {

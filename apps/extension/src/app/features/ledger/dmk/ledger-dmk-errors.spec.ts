@@ -5,6 +5,7 @@ import {
   isLedgerDeviceLockedError,
   isLedgerNoDeviceSelectedError,
   isLedgerUserDeniedError,
+  toLedgerTransportError,
 } from './ledger-dmk-errors';
 
 function makeNamedError(name: string) {
@@ -54,8 +55,14 @@ describe(isLedgerDeviceDisconnectedError.name, () => {
     'DeviceDisconnectedWhileSendingError',
     'DeviceDisconnectedBeforeSendingApdu',
     'DeviceSessionNotFound',
+    'WebHidSendReportError',
   ])('is true for the %s tag', tag => {
     expect(isLedgerDeviceDisconnectedError({ _tag: tag })).toBe(true);
+  });
+
+  test('is true for a normalised disconnect error', () => {
+    const error = toLedgerTransportError({ _tag: 'DeviceDisconnectedWhileSendingError' });
+    expect(isLedgerDeviceDisconnectedError(error)).toBe(true);
   });
 
   test('is false for errors without a disconnect tag', () => {
@@ -82,5 +89,42 @@ describe(isLedgerAppOpenFailedError.name, () => {
       true
     );
     expect(isLedgerAppOpenFailedError({ _tag: 'UnknownDAError' })).toBe(false);
+  });
+});
+
+describe(toLedgerTransportError.name, () => {
+  test('returns Error instances unchanged', () => {
+    const error = new Error('boom');
+    expect(toLedgerTransportError(error)).toBe(error);
+  });
+
+  test('wraps a tagged DMK error into an Error that keeps the tag and original error', () => {
+    const originalError = new Error('HID send failed');
+    const error = toLedgerTransportError({ _tag: 'WebHidSendReportError', originalError });
+
+    expect(error).toBeInstanceOf(Error);
+    expect(error.name).toBe('WebHidSendReportError');
+    expect(error.message).toBe('HID send failed');
+    expect(error).toMatchObject({ _tag: 'WebHidSendReportError', originalError });
+    expect(String(error)).not.toContain('[object Object]');
+  });
+
+  test('prefers the DMK error message when present', () => {
+    const error = toLedgerTransportError({
+      _tag: 'UnknownDeviceExchangeError',
+      message: 'Device exchange failed',
+    });
+    expect(error.message).toBe('Device exchange failed');
+  });
+
+  test('falls back to the tag when there is no message', () => {
+    const error = toLedgerTransportError({ _tag: 'DeviceSessionNotFound' });
+    expect(error.message).toBe('DeviceSessionNotFound');
+  });
+
+  test('wraps untagged rejections into a readable Error', () => {
+    expect(toLedgerTransportError('device gone').message).toBe('device gone');
+    expect(toLedgerTransportError({}).message).toBe('Unknown Ledger device error');
+    expect(toLedgerTransportError(undefined).message).toBe('Unknown Ledger device error');
   });
 });

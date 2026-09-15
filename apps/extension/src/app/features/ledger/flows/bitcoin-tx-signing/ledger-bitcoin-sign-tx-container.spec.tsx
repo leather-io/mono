@@ -6,6 +6,7 @@ import * as btc from '@scure/btc-signer';
 import { act, render } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import { toLedgerTransportError } from '@app/features/ledger/dmk/ledger-dmk-errors';
 import type { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 
 import { ledgerBitcoinTxSigningRoutes } from './ledger-bitcoin-sign-tx-container';
@@ -129,8 +130,9 @@ const deniedError = Object.assign(
   new Error('Ledger device: Condition of use not satisfied (0x6985)'),
   { statusCode: 0x6985 }
 );
-const disconnectError = Object.assign(new Error('device disconnected'), {
-  name: 'DisconnectedDeviceDuringOperation',
+const disconnectError = toLedgerTransportError({
+  _tag: 'DeviceDisconnectedWhileSendingError',
+  originalError: new Error('device disconnected'),
 });
 
 function renderSignTxContext(): LedgerTxSigningContext {
