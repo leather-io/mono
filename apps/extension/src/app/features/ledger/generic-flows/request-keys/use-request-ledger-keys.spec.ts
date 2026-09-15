@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   toConnectStep: vi.fn(),
   toConnectionSuccessStep: vi.fn(),
   toErrorStep: vi.fn(),
+  toDeviceDisconnectStep: vi.fn(),
   toStacksAppOutdatedWarning: vi.fn(),
   publicKeysPulledFromLedgerSuccessfully: vi.fn(),
 }));
@@ -23,6 +24,7 @@ vi.mock('../../hooks/use-ledger-navigate', () => ({
     toConnectStep: mocks.toConnectStep,
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,
     toErrorStep: mocks.toErrorStep,
+    toDeviceDisconnectStep: mocks.toDeviceDisconnectStep,
     toStacksAppOutdatedWarning: mocks.toStacksAppOutdatedWarning,
   }),
 }));
@@ -78,8 +80,8 @@ function renderHookValue<T>(useHook: () => T) {
 
 interface SetupOptions {
   pullKeysResult?: { status: 'success' } | { status: 'failure' };
-  pullKeysError?: Error;
-  connectAppError?: Error;
+  pullKeysError?: unknown;
+  connectAppError?: unknown;
   passesAdditionalVersionCheck?(appVersion: unknown): Promise<boolean>;
 }
 
@@ -193,6 +195,36 @@ describe(useRequestLedgerKeys.name, () => {
     expect(mocks.toConnectStep).toHaveBeenCalledOnce();
     expect(mocks.toErrorStep).not.toHaveBeenCalled();
     expect(onSuccess).not.toHaveBeenCalled();
+  });
+
+  test('returns to the connect step when the device reports a DMK locked error', async () => {
+    const { getValue, onSuccess } = setupRequestKeys({
+      pullKeysError: { _tag: 'DeviceLockedError' },
+    });
+
+    await act(async () => {
+      await getValue().requestKeys();
+    });
+
+    expect(getValue().latestDeviceResponse).toMatchObject({ deviceLocked: true });
+    expect(mocks.toConnectStep).toHaveBeenCalledOnce();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+  });
+
+  test('shows the disconnected step when the device drops mid-flow', async () => {
+    const { getValue, onSuccess, transportClose } = setupRequestKeys({
+      pullKeysError: { _tag: 'DeviceDisconnectedWhileSendingError' },
+    });
+
+    await act(async () => {
+      await getValue().requestKeys();
+    });
+
+    expect(mocks.toDeviceDisconnectStep).toHaveBeenCalledOnce();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(transportClose).toHaveBeenCalledOnce();
   });
 
   test('surfaces the app-open failure message on the error step', async () => {

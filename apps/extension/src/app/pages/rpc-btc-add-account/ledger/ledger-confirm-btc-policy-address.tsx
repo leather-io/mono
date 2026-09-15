@@ -5,6 +5,7 @@ import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 
+import { LedgerDmkProvider, useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import { ConnectLedgerRequestKeys } from '@app/features/ledger/generic-flows/request-keys/steps/connect-ledger-request-keys';
@@ -40,6 +41,7 @@ import { useBtcAddAccount } from '../use-btc-add-account';
 // dApp response: it finalizes (registers in add mode, returns the verified
 // address in verify mode) and closes the popup.
 function LedgerConfirmBtcPolicyAddress() {
+  const dmk = useLedgerDmk();
   const ledgerNavigate = useLedgerNavigate();
   const network = useCurrentNetwork();
   const { descriptor, address, finalize } = useBtcAddAccount();
@@ -48,7 +50,7 @@ function LedgerConfirmBtcPolicyAddress() {
   const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
     useRequestLedgerKeys<BitcoinApp>({
       chain: 'bitcoin',
-      connectApp: connectLedgerBitcoinApp(network.chain.bitcoin.mode),
+      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode),
       getAppVersion: getBitcoinAppVersion,
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       async onSuccess() {
@@ -89,7 +91,13 @@ function LedgerConfirmBtcPolicyAddress() {
 }
 
 export const ledgerConfirmBtcPolicyAddressRoutes = (
-  <Route element={<LedgerConfirmBtcPolicyAddress />}>
+  <Route
+    element={
+      <LedgerDmkProvider>
+        <LedgerConfirmBtcPolicyAddress />
+      </LedgerDmkProvider>
+    }
+  >
     <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerRequestKeys />} />
     <Route path={RouteUrls.LedgerCheckingAppVersion} element={<CheckingAppVersion />} />
     <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />

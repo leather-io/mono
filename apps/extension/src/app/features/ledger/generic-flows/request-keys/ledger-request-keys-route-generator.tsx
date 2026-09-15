@@ -2,6 +2,7 @@ import { Route } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { LedgerDmkProvider } from '../../dmk/ledger-dmk.context';
 import { RequestKeyOutdatedStacksAppWarning } from '../../flows/request-stacks-keys/steps/outdated-stacks-app-warning';
 import {
   CheckingAppVersion,
@@ -23,7 +24,7 @@ export function ledgerRequestKeysRoutes({
   customRoutes,
 }: LedgerRequestKeysRoutesProps) {
   return (
-    <Route path={path} element={component}>
+    <Route path={path} element={<LedgerDmkProvider>{component}</LedgerDmkProvider>}>
       {customRoutes}
       <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerRequestKeys />} />
       <Route path={RouteUrls.LedgerCheckingAppVersion} element={<CheckingAppVersion />} />
