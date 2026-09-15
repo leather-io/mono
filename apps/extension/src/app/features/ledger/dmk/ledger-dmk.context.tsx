@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext } from 'react';
 
 import type { DeviceManagementKit } from '@ledgerhq/device-management-kit';
 
@@ -6,15 +6,18 @@ import { buildLedgerDmk } from './ledger-dmk';
 
 const ledgerDmkContext = createContext<DeviceManagementKit | null>(null);
 
+let ledgerDmk: DeviceManagementKit | null = null;
+
+function getLedgerDmk(): DeviceManagementKit {
+  ledgerDmk ??= buildLedgerDmk();
+  return ledgerDmk;
+}
+
 interface LedgerDmkProviderProps {
   children: React.ReactNode;
 }
 export function LedgerDmkProvider({ children }: LedgerDmkProviderProps) {
-  const [dmk] = useState(() => buildLedgerDmk());
-
-  useEffect(() => () => dmk.close(), [dmk]);
-
-  return <ledgerDmkContext.Provider value={dmk}>{children}</ledgerDmkContext.Provider>;
+  return <ledgerDmkContext.Provider value={getLedgerDmk()}>{children}</ledgerDmkContext.Provider>;
 }
 
 export function useLedgerDmk() {
