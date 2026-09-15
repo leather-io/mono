@@ -4,6 +4,8 @@ import { createRoot } from 'react-dom/client';
 
 import { LedgerError } from '@zondax/ledger-stacks';
 
+import { makeFakeDmk } from '../../dmk/ledger-dmk.mocks';
+import { fakeLedgerSessionId, makeFakeLedgerStacksApp } from '../../utils/ledger-app.mocks';
 import { LedgerSignMsgContainer } from './ledger-stacks-sign-msg-container';
 import { LedgerMessageSigningContext } from './ledger-stacks-sign-msg.context';
 
@@ -27,6 +29,7 @@ const mocks = vi.hoisted(() => ({
   versionGate: vi.fn(),
   migrateFingerprint: vi.fn(),
   publish: vi.fn(),
+  disconnect: vi.fn(),
   captureContext: vi.fn<(value: LedgerMessageSigningContext) => void>(),
 }));
 
@@ -89,10 +92,8 @@ vi.mock('@app/features/ledger/utils/stacks-version-gate', () => ({
   stacksVersionGate: () => mocks.versionGate,
 }));
 
-vi.mock('@ledgerhq/ledger-bitcoin', () => ({ default: class {} }));
-
 vi.mock('@app/features/ledger/dmk/ledger-dmk.context', () => ({
-  useLedgerDmk: () => ({}),
+  useLedgerDmk: () => makeFakeDmk({ disconnect: mocks.disconnect }),
 }));
 
 vi.mock('@app/features/ledger/utils/generic-ledger-utils', async importOriginal => {
@@ -146,15 +147,15 @@ function renderSignMsgContext(): LedgerMessageSigningContext {
 }
 
 function setupSignMessage() {
-  const transportClose = vi.fn().mockResolvedValue(undefined);
-  mocks.prepareConnection.mockResolvedValue({ transport: { close: transportClose } });
+  mocks.prepareConnection.mockResolvedValue(makeFakeLedgerStacksApp());
+  mocks.disconnect.mockResolvedValue(undefined);
   mocks.getStacksAppVersion.mockResolvedValue(stacksAppVersion);
   mocks.versionGate.mockResolvedValue(true);
   mocks.migrateFingerprint.mockResolvedValue(undefined);
   mocks.signUtf8Message.mockReturnValue(() =>
     Promise.resolve({ returnCode: LedgerError.NoErrors, signatureVRS: Buffer.alloc(65, 1) })
   );
-  return { transportClose, context: renderSignMsgContext() };
+  return { context: renderSignMsgContext() };
 }
 
 describe(LedgerSignMsgContainer.name, () => {
@@ -163,7 +164,7 @@ describe(LedgerSignMsgContainer.name, () => {
   });
 
   test('signs the message, publishes the signature and closes the transport once', async () => {
-    const { transportClose, context } = setupSignMessage();
+    const { context } = setupSignMessage();
 
     await act(async () => {
       await context.signMessage();
@@ -173,11 +174,12 @@ describe(LedgerSignMsgContainer.name, () => {
     expect(mocks.publish).toHaveBeenCalledOnce();
     expect(mocks.publish.mock.calls[0][0]).toBe('ledgerStacksMessageSigned');
     expect(mocks.toDeviceDisconnectStep).not.toHaveBeenCalled();
-    expect(transportClose).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
 
   test('stops before signing and closes the transport once when the version gate fails', async () => {
-    const { transportClose, context } = setupSignMessage();
+    const { context } = setupSignMessage();
     mocks.versionGate.mockResolvedValue(false);
 
     await act(async () => {
@@ -186,11 +188,12 @@ describe(LedgerSignMsgContainer.name, () => {
 
     expect(mocks.signUtf8Message).not.toHaveBeenCalled();
     expect(mocks.publish).not.toHaveBeenCalled();
-    expect(transportClose).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
 
   test('stops before signing and closes the transport once when the device is locked', async () => {
-    const { transportClose, context } = setupSignMessage();
+    const { context } = setupSignMessage();
     mocks.getStacksAppVersion.mockResolvedValue({ ...stacksAppVersion, deviceLocked: true });
 
     await act(async () => {
@@ -199,11 +202,12 @@ describe(LedgerSignMsgContainer.name, () => {
 
     expect(mocks.versionGate).not.toHaveBeenCalled();
     expect(mocks.signUtf8Message).not.toHaveBeenCalled();
-    expect(transportClose).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
 
   test('publishes a cancellation and closes the transport once when signing is rejected', async () => {
-    const { transportClose, context } = setupSignMessage();
+    const { context } = setupSignMessage();
     mocks.signUtf8Message.mockReturnValue(() =>
       Promise.resolve({ returnCode: LedgerError.TransactionRejected })
     );
@@ -216,18 +220,40 @@ describe(LedgerSignMsgContainer.name, () => {
     expect(mocks.messageSignedOnLedgerRejected).toHaveBeenCalledOnce();
     expect(mocks.publish).toHaveBeenCalledOnce();
     expect(mocks.publish.mock.calls[0][0]).toBe('ledgerStacksMessageSigningCancelled');
-    expect(transportClose).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
 
-  test('shows the disconnect step and closes the transport once when signing throws', async () => {
-    const { transportClose, context } = setupSignMessage();
-    mocks.signUtf8Message.mockReturnValue(() => Promise.reject(new Error('device unplugged')));
+  test('shows the disconnect step and closes the session once when the device drops', async () => {
+    const { context } = setupSignMessage();
+    mocks.signUtf8Message.mockReturnValue(() =>
+      Promise.reject(
+        Object.assign(new Error('Device disconnected'), {
+          _tag: 'DeviceDisconnectedWhileSendingError',
+        })
+      )
+    );
 
     await act(async () => {
       await context.signMessage();
     });
 
     expect(mocks.toDeviceDisconnectStep).toHaveBeenCalledOnce();
-    expect(transportClose).toHaveBeenCalledOnce();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+  });
+
+  test('shows the error step and closes the session once when signing throws', async () => {
+    const { context } = setupSignMessage();
+    mocks.signUtf8Message.mockReturnValue(() => Promise.reject(new Error('device unplugged')));
+
+    await act(async () => {
+      await context.signMessage();
+    });
+
+    expect(mocks.toErrorStep).toHaveBeenCalledWith('stacks');
+    expect(mocks.toDeviceDisconnectStep).not.toHaveBeenCalled();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
 });

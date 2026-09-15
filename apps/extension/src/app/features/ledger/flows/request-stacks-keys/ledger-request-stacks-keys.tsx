@@ -1,7 +1,6 @@
 import { Route, useNavigate } from 'react-router';
 
 import { bytesToHex } from '@noble/hashes/utils';
-import StacksApp from '@zondax/ledger-stacks';
 import {
   deviceMatchesLegacyLedgerWallet,
   pullStacksKeysFromLedgerDevice,
@@ -27,6 +26,7 @@ import {
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import { immediatelyAttemptLedgerConnection } from '@app/features/ledger/hooks/use-when-reattempt-ledger-connection';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
 import {
   connectLedgerStacksApp,
   getStacksAppVersion,
@@ -60,9 +60,11 @@ function LedgerRequestStacksKeys() {
   const chain = 'stacks';
 
   const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
-    useRequestLedgerKeys<StacksApp>({
+    useRequestLedgerKeys<LedgerStacksApp>({
       chain,
-      connectApp: () => connectLedgerStacksApp(dmk),
+      connectApp(options) {
+        return connectLedgerStacksApp(dmk, options);
+      },
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
@@ -70,7 +72,7 @@ function LedgerRequestStacksKeys() {
         void navigate('/', { replace: true });
       },
       async pullKeysFromDevice(app) {
-        const fingerprintResp = await app.getMasterFingerprint();
+        const fingerprintResp = await app.app.getMasterFingerprint();
         const fingerprint = bytesToHex(fingerprintResp.fingerprint);
 
         const addWalletError = getAddWalletError(wallets, fingerprint, 'ledger');

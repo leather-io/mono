@@ -2,8 +2,13 @@
 import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import BitcoinApp from '@ledgerhq/ledger-bitcoin';
+import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 
+import type { ConnectLedgerDeviceOptions } from '../../dmk/ledger-device-connection';
+import { LedgerConnectionErrors } from '../../dmk/ledger-dmk-errors';
+import { makeFakeDmk } from '../../dmk/ledger-dmk.mocks';
+import type { LedgerBitcoinApp } from '../../utils/ledger-app';
+import { fakeLedgerSessionId, makeFakeLedgerBitcoinApp } from '../../utils/ledger-app.mocks';
 import { useLedgerSignTx } from './use-ledger-sign-tx';
 
 Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true);
@@ -14,6 +19,8 @@ const mocks = vi.hoisted(() => ({
   toConnectionSuccessStep: vi.fn(),
   toErrorStep: vi.fn(),
   toDeviceDisconnectStep: vi.fn(),
+  toOperationRejectedStep: vi.fn(),
+  disconnect: vi.fn(),
 }));
 
 vi.mock('../../hooks/use-ledger-navigate', () => ({
@@ -23,7 +30,12 @@ vi.mock('../../hooks/use-ledger-navigate', () => ({
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,
     toErrorStep: mocks.toErrorStep,
     toDeviceDisconnectStep: mocks.toDeviceDisconnectStep,
+    toOperationRejectedStep: mocks.toOperationRejectedStep,
   }),
+}));
+
+vi.mock('../../dmk/ledger-dmk.context', () => ({
+  useLedgerDmk: () => makeFakeDmk({ disconnect: mocks.disconnect }),
 }));
 
 vi.mock('@leather.io/utils', async importOriginal => {
@@ -31,25 +43,11 @@ vi.mock('@leather.io/utils', async importOriginal => {
   return { ...actual, delay: () => Promise.resolve() };
 });
 
-// The real client module loads @bitcoinerlab/descriptors at import time, whose
-// ecc self-test fails under jsdom; this spec only needs a prototype for fakes.
-vi.mock('@ledgerhq/ledger-bitcoin', () => ({ default: class {} }));
-
 const bitcoinAppVersion = {
   name: 'Bitcoin',
   version: '2.1.0',
-  flags: 0,
   chain: 'bitcoin' as const,
 };
-
-function makeFakeBitcoinApp(transportClose: () => Promise<void>): BitcoinApp {
-  const app: BitcoinApp = Object.create(BitcoinApp.prototype);
-  Object.defineProperty(app, 'transport', {
-    value: { close: transportClose },
-    configurable: true,
-  });
-  return app;
-}
 
 function renderHookValue<T>(useHook: () => T) {
   let value: T | undefined;
@@ -77,27 +75,34 @@ function makeNamedError(name: string, message: string) {
 
 interface SetupOptions {
   connectAppError?: unknown;
+  connectApp?(options: ConnectLedgerDeviceOptions): Promise<LedgerBitcoinApp>;
   getAppVersionError?: unknown;
   signError?: unknown;
 }
 
-function setupSignTx({ connectAppError, getAppVersionError, signError }: SetupOptions = {}) {
+function setupSignTx({
+  connectAppError,
+  connectApp,
+  getAppVersionError,
+  signError,
+}: SetupOptions = {}) {
   const onSuccess = vi.fn();
-  const transportClose = vi.fn().mockResolvedValue(undefined);
   const signTransactionWithDevice = signError
     ? vi.fn().mockRejectedValue(signError)
     : vi.fn().mockResolvedValue(undefined);
   const getAppVersion = getAppVersionError
     ? vi.fn().mockRejectedValue(getAppVersionError)
     : vi.fn().mockResolvedValue(bitcoinAppVersion);
-  const app = makeFakeBitcoinApp(transportClose);
+  const app = makeFakeLedgerBitcoinApp();
 
   const { getValue } = renderHookValue(() =>
-    useLedgerSignTx<BitcoinApp>({
+    useLedgerSignTx<LedgerBitcoinApp>({
       chain: 'bitcoin',
-      connectApp: connectAppError
-        ? vi.fn().mockRejectedValue(connectAppError)
-        : vi.fn().mockResolvedValue(app),
+      connectApp:
+        connectApp ??
+        (connectAppError
+          ? vi.fn().mockRejectedValue(connectAppError)
+          : vi.fn().mockResolvedValue(app)),
       getAppVersion,
       isAppOpen: () => true,
       signTransactionWithDevice,
@@ -105,16 +110,17 @@ function setupSignTx({ connectAppError, getAppVersionError, signError }: SetupOp
     })
   );
 
-  return { getValue, onSuccess, transportClose, signTransactionWithDevice };
+  return { getValue, onSuccess, signTransactionWithDevice };
 }
 
 describe(useLedgerSignTx.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.disconnect.mockResolvedValue(undefined);
   });
 
   test('signs and fires onSuccess when the device flow completes', async () => {
-    const { getValue, onSuccess, transportClose, signTransactionWithDevice } = setupSignTx();
+    const { getValue, onSuccess, signTransactionWithDevice } = setupSignTx();
 
     await act(async () => {
       await getValue().signTransaction();
@@ -122,7 +128,8 @@ describe(useLedgerSignTx.name, () => {
 
     expect(signTransactionWithDevice).toHaveBeenCalledOnce();
     expect(onSuccess).toHaveBeenCalledOnce();
-    expect(transportClose).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
     expect(mocks.toErrorStep).not.toHaveBeenCalled();
   });
 
@@ -138,13 +145,12 @@ describe(useLedgerSignTx.name, () => {
     expect(mocks.toConnectStep).toHaveBeenCalledOnce();
     expect(mocks.toErrorStep).not.toHaveBeenCalled();
     expect(onSuccess).not.toHaveBeenCalled();
+    expect(mocks.disconnect).not.toHaveBeenCalled();
   });
 
   test('returns to the connect step when the device reports locked mid-flow', async () => {
     const lockedError = makeNamedError('LockedDeviceError', 'LockedDeviceError');
-    const { getValue, onSuccess, transportClose } = setupSignTx({
-      getAppVersionError: lockedError,
-    });
+    const { getValue, onSuccess } = setupSignTx({ getAppVersionError: lockedError });
 
     await act(async () => {
       await getValue().signTransaction();
@@ -154,7 +160,7 @@ describe(useLedgerSignTx.name, () => {
     expect(mocks.toConnectStep).toHaveBeenCalledOnce();
     expect(mocks.toErrorStep).not.toHaveBeenCalled();
     expect(onSuccess).not.toHaveBeenCalled();
-    expect(transportClose).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
   });
 
   test('surfaces the app-open failure message on the error step', async () => {
@@ -189,7 +195,7 @@ describe(useLedgerSignTx.name, () => {
   });
 
   test('shows the disconnected step when the device drops while signing', async () => {
-    const { getValue, onSuccess, transportClose } = setupSignTx({
+    const { getValue, onSuccess } = setupSignTx({
       signError: { _tag: 'DeviceDisconnectedWhileSendingError' },
     });
 
@@ -200,7 +206,40 @@ describe(useLedgerSignTx.name, () => {
     expect(mocks.toDeviceDisconnectStep).toHaveBeenCalledOnce();
     expect(mocks.toErrorStep).not.toHaveBeenCalled();
     expect(onSuccess).not.toHaveBeenCalled();
-    expect(transportClose).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+  });
+
+  test('shows the operation rejected step when the user refuses on the device', async () => {
+    const { getValue, onSuccess } = setupSignTx({
+      signError: makeNamedError(LedgerConnectionErrors.OperationRejected, 'Rejected by user'),
+    });
+
+    await act(async () => {
+      await getValue().signTransaction();
+    });
+
+    expect(mocks.toOperationRejectedStep).toHaveBeenCalledOnce();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+  });
+
+  test('shows the locked warning while the open-app action waits for an unlock', async () => {
+    const { getValue, onSuccess } = setupSignTx({
+      connectApp(options) {
+        options.onRequiredUserInteraction?.(UserInteractionRequired.UnlockDevice);
+        options.onRequiredUserInteraction?.(UserInteractionRequired.ConfirmOpenApp);
+        return Promise.resolve(makeFakeLedgerBitcoinApp());
+      },
+    });
+
+    await act(async () => {
+      await getValue().signTransaction();
+    });
+
+    expect(getValue().latestDeviceResponse).toMatchObject({ deviceLocked: false });
+    expect(mocks.toConnectStep).not.toHaveBeenCalled();
+    expect(onSuccess).toHaveBeenCalledOnce();
   });
 
   test('falls back to the generic error step for other failures', async () => {

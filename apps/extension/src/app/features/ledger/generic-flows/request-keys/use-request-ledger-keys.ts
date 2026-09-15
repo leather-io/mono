@@ -1,42 +1,35 @@
 import { useState } from 'react';
 
-import BitcoinApp from '@ledgerhq/ledger-bitcoin';
-import StacksApp from '@zondax/ledger-stacks';
+import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 
 import type { SupportedBlockchains } from '@leather.io/models';
-import { delay, isError } from '@leather.io/utils';
+import { delay } from '@leather.io/utils';
 
-import { logger } from '@shared/logger';
-
-import {
-  deviceInUseErrorMessage,
-  isLedgerAppOpenFailedError,
-  isLedgerDeviceDisconnectedError,
-  isLedgerDeviceInUseError,
-  isLedgerDeviceLockedError,
-  isLedgerNoDeviceSelectedError,
-  noDeviceSelectedErrorMessage,
-} from '../../dmk/ledger-dmk-errors';
+import type { ConnectLedgerDeviceOptions } from '../../dmk/ledger-device-connection';
+import { LedgerConnectionErrors, handleLedgerConnectionError } from '../../dmk/ledger-dmk-errors';
+import { useLedgerDmk } from '../../dmk/ledger-dmk.context';
+import { closeLedgerSession } from '../../dmk/ledger-session';
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
-import { LedgerConnectionErrors, useLedgerResponseState } from '../../utils/generic-ledger-utils';
+import { useLedgerResponseState } from '../../utils/generic-ledger-utils';
+import type { LedgerApp } from '../../utils/ledger-app';
 import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
 export const defaultNumberOfKeysToPullFromLedgerDevice = 10;
 
 type RequestLedgerKeysResult = { status: 'success' } | { status: 'failure' };
 
-interface UseRequestLedgerKeysArgs<App extends BitcoinApp | StacksApp> {
+interface UseRequestLedgerKeysArgs<App extends LedgerApp> {
   chain: SupportedBlockchains;
   isAppOpen({ name }: { name: string }): boolean;
   getAppVersion(app: App): Promise<StacksAppVersion> | Promise<BitcoinAppVersion>;
-  connectApp(): Promise<App>;
+  connectApp(options: ConnectLedgerDeviceOptions): Promise<App>;
   pullKeysFromDevice(app: App): Promise<RequestLedgerKeysResult>;
   passesAdditionalVersionCheck?(appVersion: StacksAppVersion | BitcoinAppVersion): Promise<boolean>;
   onSuccess(): void;
 }
-export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
+export function useRequestLedgerKeys<App extends LedgerApp>({
   chain,
   connectApp,
   getAppVersion,
@@ -45,6 +38,7 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
   passesAdditionalVersionCheck,
   onSuccess,
 }: UseRequestLedgerKeysArgs<App>) {
+  const dmk = useLedgerDmk();
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
   const ledgerNavigate = useLedgerNavigate();
@@ -72,11 +66,17 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
   }
 
   async function requestKeys() {
-    let app;
+    let app: App | undefined;
     try {
-      setLatestDeviceResponse({ deviceLocked: false } as any);
+      setLatestDeviceResponse({ deviceLocked: false });
       setAwaitingDeviceConnection(true);
-      app = await connectApp();
+      app = await connectApp({
+        onRequiredUserInteraction(interaction) {
+          setLatestDeviceResponse({
+            deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
+          });
+        },
+      });
       const versionCheckResult = await checkCorrectAppIsOpenWithFailState(app);
 
       // If version check failed, return early (navigation already handled)
@@ -94,39 +94,9 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
       onSuccess?.();
     } catch (e) {
       setAwaitingDeviceConnection(false);
-      if (isLedgerDeviceLockedError(e)) {
-        setLatestDeviceResponse({ deviceLocked: true } as any);
-        void ledgerNavigate.toConnectStep();
-        return;
-      }
-
-      if (isError(e) && isLedgerAppOpenFailedError(e)) {
-        void ledgerNavigate.toErrorStep(chain, e.message);
-        return;
-      }
-
-      if (isLedgerDeviceDisconnectedError(e)) {
-        void ledgerNavigate.toDeviceDisconnectStep();
-        return;
-      }
-
-      if (isLedgerNoDeviceSelectedError(e)) {
-        void ledgerNavigate.toErrorStep(chain, noDeviceSelectedErrorMessage);
-        return;
-      }
-
-      if (isLedgerDeviceInUseError(e)) {
-        void ledgerNavigate.toErrorStep(chain, deviceInUseErrorMessage);
-        return;
-      }
-
-      void ledgerNavigate.toErrorStep(chain);
+      handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
     } finally {
-      try {
-        await app?.transport.close();
-      } catch {
-        logger.warn('Failed to close transport connection to Ledger device');
-      }
+      if (app) await closeLedgerSession(dmk, app.sessionId);
     }
   }
 
