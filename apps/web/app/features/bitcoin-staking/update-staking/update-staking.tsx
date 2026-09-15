@@ -36,6 +36,7 @@ import { isDefined, stxToMicroStx, truncateMiddle } from '@leather.io/utils';
 import { AvailableBalanceRow } from '../components/available-balance-row';
 import { Pox5SubmitError } from '../components/pox5-submit-error';
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
+import { StakingConnectCard } from '../components/staking-connect-card';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
 import { usePox5Position } from '../hooks/use-pox5-position';
 import { usePox5TxTracker } from '../hooks/use-pox5-tx-tracker';
@@ -97,7 +98,14 @@ export function UpdateStaking({ poolSlug }: UpdateStakingProps) {
     );
   }
 
-  if (!stacksAccount) return 'You need to connect Leather';
+  if (!stacksAccount) {
+    return (
+      <StakingConnectCard
+        title={bitcoinStakingContent.connectGate.updateTitle}
+        description={bitcoinStakingContent.connectGate.updateDescription}
+      />
+    );
+  }
 
   return <UpdateStakingLayout poolSlug={poolSlug} address={stacksAccount.address} />;
 }
