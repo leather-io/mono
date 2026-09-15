@@ -227,7 +227,11 @@ describe(LedgerSignMsgContainer.name, () => {
   test('shows the disconnect step and closes the session once when the device drops', async () => {
     const { context } = setupSignMessage();
     mocks.signUtf8Message.mockReturnValue(() =>
-      Promise.reject({ _tag: 'DeviceDisconnectedWhileSendingError' })
+      Promise.reject(
+        Object.assign(new Error('Device disconnected'), {
+          _tag: 'DeviceDisconnectedWhileSendingError',
+        })
+      )
     );
 
     await act(async () => {
