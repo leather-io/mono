@@ -25,14 +25,30 @@ vi.mock('./rpc-helpers', () => ({
 }));
 
 const hostname = 'app.example.com';
+const origin = `https://${hostname}`;
 const fingerprint = 'abcd1234';
 const frameId = 42;
 const tabId = 7;
 const request: RpcRequests = { jsonrpc: '2.0', id: 'req-1', method: 'supportedMethods' };
 
-function buildPort(tabUrl?: string) {
+interface BuildPortArgs {
+  url?: string;
+  senderOrigin?: string;
+  tabUrl?: string;
+}
+
+function buildPort({
+  url = `${origin}/page?query=value#fragment`,
+  senderOrigin,
+  tabUrl,
+}: BuildPortArgs = {}) {
   return {
-    sender: { frameId, url: `https://${hostname}`, tab: { id: tabId, url: tabUrl } },
+    sender: {
+      frameId,
+      origin: senderOrigin ?? new URL(url).origin,
+      url,
+      tab: { id: tabId, url: tabUrl },
+    },
   } as unknown as chrome.runtime.Port;
 }
 
@@ -45,7 +61,7 @@ function buildWalletEntities(fingerprints: string[]) {
 
 function buildPermission(overrides: Record<string, unknown> = {}) {
   return {
-    origin: hostname,
+    origin,
     fingerprint,
     accountIndex: 0,
     requestedAccounts: '2024-01-01T00:00:00.000Z',
@@ -56,13 +72,15 @@ function buildPermission(overrides: Record<string, unknown> = {}) {
 
 function buildState({
   permission,
+  permissionKey = origin,
   walletFingerprints,
 }: {
   permission?: Record<string, unknown>;
+  permissionKey?: string;
   walletFingerprints: string[];
 }) {
   return {
-    appPermissions: { entities: permission ? { [hostname]: permission } : {} },
+    appPermissions: { entities: permission ? { [permissionKey]: permission } : {} },
     wallets: { entities: buildWalletEntities(walletFingerprints) },
   };
 }
@@ -79,7 +97,7 @@ describe(createConnectingAppMetadataSearchParams.name, () => {
 
   test('sets the frame origin and the top-level tab origin', () => {
     const result = createConnectingAppMetadataSearchParams(
-      buildPort('https://top.example.com/some/page')
+      buildPort({ tabUrl: 'https://top.example.com/some/page' })
     );
 
     expect(result.urlParams.get('origin')).toBe(`https://${hostname}`);
@@ -91,12 +109,85 @@ describe(createConnectingAppMetadataSearchParams.name, () => {
 
     expect(result.urlParams.get('topOrigin')).toBe('');
   });
+
+  test('uses the authenticated sender origin when it differs from the document URL', () => {
+    const senderOrigin = `http://${hostname}`;
+
+    const result = createConnectingAppMetadataSearchParams(
+      buildPort({ url: origin, senderOrigin })
+    );
+
+    expect(result.origin).toBe(senderOrigin);
+    expect(result.urlParams.get('origin')).toBe(senderOrigin);
+  });
+
+  test('rejects opaque sender origins', () => {
+    const result = createConnectingAppMetadataSearchParams(
+      buildPort({ url: origin, senderOrigin: 'null' })
+    );
+
+    expect(result.origin).toBeUndefined();
+    expect(result.urlParams.get('origin')).toBe('');
+  });
 });
 
 describe(createConnectingAppSearchParamsWithLastKnownAccount.name, () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
+
+  test('prefills the account for the exact canonical origin', async () => {
+    mocks.getRootState.mockResolvedValue(
+      buildState({ permission: buildPermission(), walletFingerprints: [fingerprint] })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
+
+    expect(result.urlParams.get('accountIndex')).toBe('0');
+    expect(result.urlParams.get('fingerprint')).toBe(fingerprint);
+  });
+
+  test('does not prefill an incomplete historical permission', async () => {
+    mocks.getRootState.mockResolvedValue(
+      buildState({
+        permission: buildPermission({ accountIndex: undefined }),
+        walletFingerprints: [fingerprint],
+      })
+    );
+
+    const result = await createConnectingAppSearchParamsWithLastKnownAccount(buildPort());
+
+    expect(result.urlParams.has('accountIndex')).toBe(false);
+    expect(result.urlParams.has('fingerprint')).toBe(false);
+  });
+
+  test.each([
+    {
+      requesterUrl: `http://${hostname}`,
+      senderOrigin: `http://${hostname}`,
+      variant: 'different scheme',
+    },
+    {
+      requesterUrl: `https://${hostname}:8443`,
+      senderOrigin: `https://${hostname}:8443`,
+      variant: 'different port',
+    },
+    { requesterUrl: origin, senderOrigin: 'null', variant: 'opaque sender origin' },
+  ])(
+    'does not prefill the account for an origin with a $variant',
+    async ({ requesterUrl, senderOrigin }) => {
+      mocks.getRootState.mockResolvedValue(
+        buildState({ permission: buildPermission(), walletFingerprints: [fingerprint] })
+      );
+
+      const result = await createConnectingAppSearchParamsWithLastKnownAccount(
+        buildPort({ url: requesterUrl, senderOrigin })
+      );
+
+      expect(result.urlParams.has('accountIndex')).toBe(false);
+      expect(result.urlParams.has('fingerprint')).toBe(false);
+    }
+  );
 
   test('pins the last known account from the origin permission', async () => {
     mocks.getRootState.mockResolvedValue(
@@ -171,6 +262,62 @@ describe('validateConnectedWalletExists', () => {
     expect(mocks.sendMissingStateErrorToTab).not.toHaveBeenCalled();
   });
 
+  test.each([
+    {
+      requesterUrl: `http://${hostname}`,
+      senderOrigin: `http://${hostname}`,
+      variant: 'different scheme',
+    },
+    {
+      requesterUrl: `https://${hostname}:8443`,
+      senderOrigin: `https://${hostname}:8443`,
+      variant: 'different port',
+    },
+    { requesterUrl: origin, senderOrigin: 'null', variant: 'opaque sender origin' },
+  ])(
+    'fails with UNAUTHENTICATED for an origin with a $variant',
+    async ({ requesterUrl, senderOrigin }) => {
+      mocks.getRootState.mockResolvedValue(
+        buildState({ permission: buildPermission(), walletFingerprints: [fingerprint] })
+      );
+
+      const result = await validateConnectedWalletExists(
+        request,
+        buildPort({ url: requesterUrl, senderOrigin })
+      );
+
+      expect(result).toEqual({ status: 'failure' });
+      expect(mocks.sendMessage).toHaveBeenCalledWith(
+        tabId,
+        expect.objectContaining({
+          error: expect.objectContaining({ code: RpcErrorCode.UNAUTHENTICATED }),
+        }),
+        { frameId }
+      );
+    }
+  );
+
+  test('fails closed for a legacy hostname-only permission', async () => {
+    mocks.getRootState.mockResolvedValue(
+      buildState({
+        permission: buildPermission({ origin: hostname }),
+        permissionKey: hostname,
+        walletFingerprints: [fingerprint],
+      })
+    );
+
+    const result = await validateConnectedWalletExists(request, buildPort());
+
+    expect(result).toEqual({ status: 'failure' });
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      expect.objectContaining({
+        error: expect.objectContaining({ code: RpcErrorCode.UNAUTHENTICATED }),
+      }),
+      { frameId }
+    );
+  });
+
   test('fails with UNAUTHENTICATED when the pinned wallet was removed', async () => {
     mocks.getRootState.mockResolvedValue(
       buildState({ permission: buildPermission(), walletFingerprints: [] })
@@ -235,7 +382,7 @@ describe('validateConnectedWalletExists', () => {
 
   test('fails and reports missing state when persisted state predates multiwallet support', async () => {
     mocks.getRootState.mockResolvedValue({
-      appPermissions: { entities: { [hostname]: buildPermission() } },
+      appPermissions: { entities: { [origin]: buildPermission() } },
     });
 
     const result = await validateConnectedWalletExists(request, buildPort());

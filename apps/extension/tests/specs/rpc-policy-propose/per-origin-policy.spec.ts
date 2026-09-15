@@ -91,7 +91,7 @@ function readPersistedPermission(page: Page, extensionId: string) {
     return page.evaluate(async () =>
       chrome.storage.local
         .get(['persist:root'])
-        .then(state => state['persist:root'].appPermissions.entities['localhost:3000'])
+        .then(state => state['persist:root'].appPermissions.entities['http://localhost:3000'])
     );
   };
 }

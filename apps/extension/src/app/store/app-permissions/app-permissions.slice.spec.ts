@@ -31,6 +31,24 @@ function createState(permissions: AppPermission[]) {
 }
 
 describe('appPermissionsSlice', () => {
+  test('stores different schemes for the same hostname as separate permissions', () => {
+    const httpOrigin = 'http://app.example.com';
+    const httpsOrigin = 'https://app.example.com';
+    const withHttpPermission = appPermissionsSlice.reducer(
+      undefined,
+      appPermissionsSlice.actions.updatePermission(createPermission(httpOrigin, fingerprintA))
+    );
+
+    const result = appPermissionsSlice.reducer(
+      withHttpPermission,
+      appPermissionsSlice.actions.updatePermission(createPermission(httpsOrigin, fingerprintA))
+    );
+
+    expect(result.ids).toEqual([httpOrigin, httpsOrigin]);
+    expect(result.entities[httpOrigin]).toEqual(createPermission(httpOrigin, fingerprintA));
+    expect(result.entities[httpsOrigin]).toEqual(createPermission(httpsOrigin, fingerprintA));
+  });
+
   test('removes only the removed wallet permissions and leaves others intact', () => {
     const state = createState([
       createPermission('app-a.com', fingerprintA),
