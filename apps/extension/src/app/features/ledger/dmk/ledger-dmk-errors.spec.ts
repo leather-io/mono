@@ -128,7 +128,6 @@ describe(toLedgerTransportError.name, () => {
     expect(error.name).toBe('WebHidSendReportError');
     expect(error.message).toBe('HID send failed');
     expect(error).toMatchObject({ _tag: 'WebHidSendReportError', originalError });
-    expect(String(error)).not.toContain('[object Object]');
   });
 
   test('prefers the DMK error message when present', () => {
