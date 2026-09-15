@@ -45,7 +45,9 @@ export function MenuButtons() {
           variant="chevron"
           title="Secret Key"
           data-testid={SettingsSelectors.ViewSecretKeyListItem}
-          onClick={() => navigate(RouteUrls.ViewSecretKey)}
+          onClick={() =>
+            navigate(RouteUrls.ViewSecretKey, { state: { startWalletAuthentication: true } })
+          }
           icon={<KeyIcon />}
         />
       )}

@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { useFormik } from 'formik';
 import { Flex, HStack, styled } from 'leather-styles/jsx';
@@ -6,10 +8,12 @@ import { mapToObj } from 'remeda';
 import { Button, Callout, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { ButtonRow } from '@app/components/layout';
+import { selectWalletAuthenticationCapabilities } from '@app/store/software-keys/software-key.selectors';
 import { useWallets } from '@app/store/wallets/wallet.selectors';
 
 import {
   getBackupConfirmationLabel,
+  getBiometricDisableLabel,
   getPasswordDisableLabel,
   getSignOutCalloutBody,
   getSignOutCalloutTitle,
@@ -24,6 +28,7 @@ export function SignOutSheet({ isShowing, onUserDeleteWallet, onClose }: SignOut
   const softwareWallets = useWallets().filter(wallet => wallet.type === 'software');
   const softwareWalletCount = softwareWallets.length;
   const hasSoftwareKeys = softwareWalletCount > 0;
+  const capabilities = useSelector(selectWalletAuthenticationCapabilities);
 
   const form = useFormik({
     initialValues: {
@@ -112,7 +117,9 @@ export function SignOutSheet({ isShowing, onUserDeleteWallet, onClose }: SignOut
                 data-testid={SettingsSelectors.SignOutConfirmPasswordDisable}
               />
               <styled.p textStyle="caption.01" userSelect="none">
-                {getPasswordDisableLabel(softwareWalletCount)}
+                {capabilities.authenticationMode === 'biometric-only'
+                  ? getBiometricDisableLabel(softwareWalletCount)
+                  : getPasswordDisableLabel(softwareWalletCount)}
               </styled.p>
             </HStack>
           </styled.label>
