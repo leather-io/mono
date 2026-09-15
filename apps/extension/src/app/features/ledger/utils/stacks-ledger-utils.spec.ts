@@ -5,8 +5,9 @@ import {
   isSingleSig,
   makeUnsignedSTXTokenTransfer,
 } from '@stacks/transactions';
-import StacksApp, { LedgerError } from '@zondax/ledger-stacks';
+import { LedgerError } from '@zondax/ledger-stacks';
 
+import { makeFakeLedgerStacksApp } from './ledger-app.mocks';
 import {
   MINIMUM_STACKS_APP_VERSION,
   isStxAddressResponseRejected,
@@ -126,28 +127,28 @@ describe(isStxAddressResponseSuccess.name, () => {
 
 describe(showStxAddressOnDevice.name, () => {
   test('shows the account derivation path with the given address version', async () => {
-    const app: StacksApp = Object.create(StacksApp.prototype);
-    app.showAddressAndPubKey = vi.fn(() =>
+    const showAddressAndPubKey = vi.fn(() =>
       Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
     );
+    const app = makeFakeLedgerStacksApp({ showAddressAndPubKey });
 
     await showStxAddressOnDevice(app)("m/44'/5757'/0'/0/3", AddressVersion.MainnetSingleSig);
 
-    expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
+    expect(showAddressAndPubKey).toHaveBeenCalledWith(
       "m/44'/5757'/0'/0/3",
       AddressVersion.MainnetSingleSig
     );
   });
 
   test('shows a ledger live derivation path unchanged', async () => {
-    const app: StacksApp = Object.create(StacksApp.prototype);
-    app.showAddressAndPubKey = vi.fn(() =>
+    const showAddressAndPubKey = vi.fn(() =>
       Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
     );
+    const app = makeFakeLedgerStacksApp({ showAddressAndPubKey });
 
     await showStxAddressOnDevice(app)("m/44'/5757'/3'/0/0", AddressVersion.MainnetSingleSig);
 
-    expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
+    expect(showAddressAndPubKey).toHaveBeenCalledWith(
       "m/44'/5757'/3'/0/0",
       AddressVersion.MainnetSingleSig
     );

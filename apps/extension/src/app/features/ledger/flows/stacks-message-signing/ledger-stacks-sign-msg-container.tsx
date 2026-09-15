@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router';
 
+import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 import { signatureVrsToRsv } from '@stacks/common';
 import { serializeCV } from '@stacks/transactions';
 import { LedgerError } from '@zondax/ledger-stacks';
@@ -8,13 +9,16 @@ import { LedgerError } from '@zondax/ledger-stacks';
 import { Sheet, SheetHeader } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
 
-import { logger } from '@shared/logger';
 import { UnsignedMessage, whenSignableMessageOfType } from '@shared/signature/signature-types';
 
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
-import { isLedgerDeviceLockedError } from '@app/features/ledger/dmk/ledger-dmk-errors';
+import {
+  handleLedgerConnectionError,
+  isLedgerDeviceLockedError,
+} from '@app/features/ledger/dmk/ledger-dmk-errors';
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
+import { closeLedgerSession } from '@app/features/ledger/dmk/ledger-session';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   getStacksAppVersion,
@@ -65,14 +69,20 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
   const chain = 'stacks';
 
   async function signMessage() {
-    const stacksApp = await prepareLedgerDeviceStacksAppConnection(dmk)({
+    const stacksApp = await prepareLedgerDeviceStacksAppConnection(dmk, {
+      onRequiredUserInteraction(interaction) {
+        setLatestDeviceResponse({
+          deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
+        });
+      },
+    })({
       setLoadingState: setAwaitingDeviceConnection,
       onError(e) {
         if (isLedgerDeviceLockedError(e)) {
-          setLatestDeviceResponse({ deviceLocked: true } as any);
+          setLatestDeviceResponse({ deviceLocked: true });
           return;
         }
-        void ledgerNavigate.toErrorStep(chain);
+        handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
       },
     });
 
@@ -145,14 +155,10 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
         },
         unsignedMessage,
       });
-    } catch {
-      void ledgerNavigate.toDeviceDisconnectStep();
+    } catch (e) {
+      handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
     } finally {
-      try {
-        await stacksApp.transport.close();
-      } catch (e) {
-        logger.error('Error closing transport after message signing', e);
-      }
+      await closeLedgerSession(dmk, stacksApp.sessionId);
     }
   }
 

@@ -9,12 +9,20 @@ import { LedgerRequestKeysContext, LedgerRequestKeysProvider } from './ledger-re
 interface RequestKeysFlowProps {
   context: LedgerRequestKeysContext;
   isActionCancellableByUser: boolean;
+  onCancelAction?(): void;
 }
-export function RequestKeysFlow({ context, isActionCancellableByUser }: RequestKeysFlowProps) {
+export function RequestKeysFlow({
+  context,
+  isActionCancellableByUser,
+  onCancelAction,
+}: RequestKeysFlowProps) {
   const ledgerNavigate = useLedgerNavigate();
   useScrollLock(true);
 
-  const onCancelConnectLedger = ledgerNavigate.cancelLedgerAction;
+  function onCancelConnectLedger() {
+    onCancelAction?.();
+    void ledgerNavigate.cancelLedgerAction();
+  }
 
   return (
     <LedgerRequestKeysProvider value={context}>

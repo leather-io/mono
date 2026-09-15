@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Route, useLocation } from 'react-router';
 
-import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { hexToBytes } from '@stacks/common';
@@ -16,7 +15,10 @@ import { RouteUrls } from '@shared/route-urls';
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
-import { isLedgerUserDeniedError } from '@app/features/ledger/dmk/ledger-dmk-errors';
+import {
+  isLedgerActionCancelledError,
+  isLedgerUserDeniedError,
+} from '@app/features/ledger/dmk/ledger-dmk-errors';
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { ApproveSignLedgerBitcoinTx } from '@app/features/ledger/flows/bitcoin-tx-signing/steps/approve-bitcoin-sign-ledger-tx';
 import { ledgerSignTxRoutes } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx-route-generator';
@@ -30,7 +32,9 @@ import {
   getBitcoinAppVersion,
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
+import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useSignLedgerBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -48,6 +52,7 @@ function LedgerSignBitcoinTxContainer() {
   const toast = useToast();
   const location = useLocation();
   const dmk = useLedgerDmk();
+  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerNavigate();
   const ledgerAnalytics = useLedgerAnalytics();
   useScrollLock(true);
@@ -75,11 +80,11 @@ function LedgerSignBitcoinTxContainer() {
   const chain = 'bitcoin';
 
   const { signTransaction, latestDeviceResponse, awaitingDeviceConnection } =
-    useLedgerSignTx<BitcoinApp>({
+    useLedgerSignTx<LedgerBitcoinApp>({
       chain,
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
-      getAppVersion: getBitcoinAppVersion,
-      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode),
+      getAppVersion: getBitcoinAppVersion(dmk),
+      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode, signerActions.run),
       async signTransactionWithDevice(bitcoinApp) {
         if (!inputsToSign) {
           void ledgerNavigate.cancelLedgerAction();
@@ -113,6 +118,7 @@ function LedgerSignBitcoinTxContainer() {
             unsignedPsbt: unsignedTransactionRaw,
           });
         } catch (e) {
+          if (isLedgerActionCancelledError(e)) return;
           logger.error('Unable to sign tx with ledger', e);
           ledgerAnalytics.transactionSignedOnLedgerRejected();
           // Descriptor signing is awaited by the rpc popup, which owns the error
@@ -131,13 +137,12 @@ function LedgerSignBitcoinTxContainer() {
           } else {
             void ledgerNavigate.toOperationRejectedStep();
           }
-        } finally {
-          void bitcoinApp.transport.close();
         }
       },
     });
 
   function closeAction() {
+    signerActions.cancelActive();
     appEvents.publish('ledgerBitcoinTxSigningCancelled', {
       unsignedPsbt: unsignedTransaction ? bytesToHex(unsignedTransaction.toPSBT()) : '',
     });

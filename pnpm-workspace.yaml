@@ -21,6 +21,8 @@ minimumReleaseAgeExclude:
   - "@stacks/transactions"
   - "@stacks/common"
   - "@stacks/network"
+  - "@zondax/ledger-stacks"
+  - "@zondax/ledger-js"
 packages:
   - 'apps/*'
   - 'packages/*'

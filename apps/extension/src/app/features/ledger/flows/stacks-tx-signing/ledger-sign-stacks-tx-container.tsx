@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Route, useLocation } from 'react-router';
 
 import { deserializeTransaction } from '@stacks/transactions';
-import StacksApp, { LedgerError } from '@zondax/ledger-stacks';
+import { LedgerError } from '@zondax/ledger-stacks';
 import get from 'lodash.get';
 
 import { delay, isError } from '@leather.io/utils';
@@ -16,6 +16,7 @@ import { appEvents } from '@app/common/publish-subscribe';
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
 import {
   connectLedgerStacksApp,
   getStacksAppVersion,
@@ -69,11 +70,13 @@ function LedgerSignStacksTxContainer() {
   useEffect(() => () => setUnsignedTx(null), []);
 
   const { signTransaction, latestDeviceResponse, awaitingDeviceConnection } =
-    useLedgerSignTx<StacksApp>({
+    useLedgerSignTx<LedgerStacksApp>({
       chain,
       isAppOpen: isStacksAppOpen,
       getAppVersion: getStacksAppVersion,
-      connectApp: () => connectLedgerStacksApp(dmk),
+      connectApp(options) {
+        return connectLedgerStacksApp(dmk, options);
+      },
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       async signTransactionWithDevice(stacksApp) {
         if (!account) {
