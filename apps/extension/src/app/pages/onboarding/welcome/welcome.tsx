@@ -5,7 +5,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
-import { doesBrowserSupportWebUsbApi, isPopupMode, whenPageMode } from '@app/common/utils';
+import { doesBrowserSupportWebHidApi, isPopupMode, whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 
 import { WelcomeLayout } from './welcome.layout';
@@ -43,22 +43,22 @@ export function WelcomePage() {
     });
   }
 
-  const supportsWebUsbAction = pageModeRoutingAction(
+  const supportsWebHidAction = pageModeRoutingAction(
     RouteUrls.Onboarding + '/' + RouteUrls.ConnectLedgerStart
   );
-  const doesNotSupportWebUsbAction = pageModeRoutingAction(
+  const doesNotSupportWebHidAction = pageModeRoutingAction(
     RouteUrls.Onboarding + '/' + RouteUrls.LedgerUnsupportedBrowser
   );
 
   const restoreWallet = pageModeRoutingAction(RouteUrls.SignIn);
 
   const onSelectConnectLedger = useCallback(() => {
-    if (doesBrowserSupportWebUsbApi()) {
-      return supportsWebUsbAction();
+    if (doesBrowserSupportWebHidApi()) {
+      return supportsWebHidAction();
     } else {
-      return doesNotSupportWebUsbAction();
+      return doesNotSupportWebHidAction();
     }
-  }, [doesNotSupportWebUsbAction, supportsWebUsbAction]);
+  }, [doesNotSupportWebHidAction, supportsWebHidAction]);
 
   return (
     <>

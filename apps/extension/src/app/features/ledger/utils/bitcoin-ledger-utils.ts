@@ -1,4 +1,4 @@
-import Transport from '@ledgerhq/hw-transport-webusb';
+import type { DeviceManagementKit } from '@ledgerhq/device-management-kit';
 import BitcoinApp, { DefaultWalletPolicy, PartialSignature } from '@ledgerhq/ledger-bitcoin';
 import { Psbt } from 'bitcoinjs-lib';
 
@@ -8,7 +8,9 @@ import {
 } from '@leather.io/bitcoin';
 import type { BitcoinNetworkModes } from '@leather.io/models';
 
-import { LEDGER_APPS_MAP, promptOpenAppOnDevice } from './generic-ledger-utils';
+import { DmkTransport } from '../dmk/dmk-transport';
+import { connectLedgerDeviceToApp } from '../dmk/ledger-device-connection';
+import { LEDGER_APPS_MAP } from './generic-ledger-utils';
 
 export interface BitcoinLedgerAccountDetails {
   id: string;
@@ -17,16 +19,16 @@ export interface BitcoinLedgerAccountDetails {
   fingerprint: string;
 }
 
-export function connectLedgerBitcoinApp(network: BitcoinNetworkModes) {
-  return async function connectLedgerBitcoinAppImpl() {
-    if (network === 'mainnet') {
-      await promptOpenAppOnDevice(LEDGER_APPS_MAP.BITCOIN_MAINNET);
-    } else if (network === 'testnet') {
-      await promptOpenAppOnDevice(LEDGER_APPS_MAP.BITCOIN_TESTNET);
-    }
+function bitcoinAppNameForNetwork(network: BitcoinNetworkModes): string | null {
+  if (network === 'mainnet') return LEDGER_APPS_MAP.BITCOIN_MAINNET;
+  if (network === 'testnet') return LEDGER_APPS_MAP.BITCOIN_TESTNET;
+  return null;
+}
 
-    const transport = await Transport.create();
-    return new BitcoinApp(transport);
+export function connectLedgerBitcoinApp(dmk: DeviceManagementKit, network: BitcoinNetworkModes) {
+  return async function connectLedgerBitcoinAppImpl() {
+    const sessionId = await connectLedgerDeviceToApp(dmk, bitcoinAppNameForNetwork(network));
+    return new BitcoinApp(new DmkTransport(dmk, sessionId));
   };
 }
 

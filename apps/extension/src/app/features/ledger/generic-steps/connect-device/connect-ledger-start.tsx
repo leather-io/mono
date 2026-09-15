@@ -5,7 +5,7 @@ import { Sheet, SheetHeader } from '@leather.io/ui';
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 
-import { doesBrowserSupportWebUsbApi, whenPageMode } from '@app/common/utils';
+import { doesBrowserSupportWebHidApi, whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 
 import { immediatelyAttemptLedgerConnection } from '../../hooks/use-when-reattempt-ledger-connection';
@@ -39,14 +39,14 @@ export function ConnectLedgerStart({
   function connectChain(chain: string) {
     const firstStepRoute =
       chain === 'stacks' ? RouteUrls.LedgerStacksAddressStandard : RouteUrls.ConnectLedger;
-    const supportsWebUsbAction = pageModeRoutingAction(
+    const supportsWebHidAction = pageModeRoutingAction(
       initialRoute + `/${chain}/` + firstStepRoute
     );
-    const doesNotSupportWebUsbAction = pageModeRoutingAction(
+    const doesNotSupportWebHidAction = pageModeRoutingAction(
       initialRoute + '/' + RouteUrls.LedgerUnsupportedBrowser
     );
 
-    return doesBrowserSupportWebUsbApi() ? supportsWebUsbAction() : doesNotSupportWebUsbAction();
+    return doesBrowserSupportWebHidApi() ? supportsWebHidAction() : doesNotSupportWebHidAction();
   }
 
   return (

@@ -8,14 +8,19 @@ import { delay, isError } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 
+import {
+  deviceInUseErrorMessage,
+  isLedgerAppOpenFailedError,
+  isLedgerDeviceDisconnectedError,
+  isLedgerDeviceInUseError,
+  isLedgerDeviceLockedError,
+  isLedgerNoDeviceSelectedError,
+  noDeviceSelectedErrorMessage,
+} from '../../dmk/ledger-dmk-errors';
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
-import {
-  LedgerConnectionErrors,
-  checkLockedDeviceError,
-  useLedgerResponseState,
-} from '../../utils/generic-ledger-utils';
+import { LedgerConnectionErrors, useLedgerResponseState } from '../../utils/generic-ledger-utils';
 import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
 export const defaultNumberOfKeysToPullFromLedgerDevice = 10;
@@ -89,14 +94,29 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
       onSuccess?.();
     } catch (e) {
       setAwaitingDeviceConnection(false);
-      if (isError(e) && checkLockedDeviceError(e)) {
+      if (isLedgerDeviceLockedError(e)) {
         setLatestDeviceResponse({ deviceLocked: true } as any);
         void ledgerNavigate.toConnectStep();
         return;
       }
 
-      if (isError(e) && e.name === LedgerConnectionErrors.AppOpenFailed) {
+      if (isError(e) && isLedgerAppOpenFailedError(e)) {
         void ledgerNavigate.toErrorStep(chain, e.message);
+        return;
+      }
+
+      if (isLedgerDeviceDisconnectedError(e)) {
+        void ledgerNavigate.toDeviceDisconnectStep();
+        return;
+      }
+
+      if (isLedgerNoDeviceSelectedError(e)) {
+        void ledgerNavigate.toErrorStep(chain, noDeviceSelectedErrorMessage);
+        return;
+      }
+
+      if (isLedgerDeviceInUseError(e)) {
+        void ledgerNavigate.toErrorStep(chain, deviceInUseErrorMessage);
         return;
       }
 

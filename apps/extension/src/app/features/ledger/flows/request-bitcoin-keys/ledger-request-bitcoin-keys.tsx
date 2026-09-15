@@ -4,6 +4,7 @@ import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { pullBitcoinKeysFromLedgerDevice } from '@app/features/ledger/flows/request-bitcoin-keys/request-bitcoin-keys.utils';
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
@@ -38,6 +39,7 @@ function LedgerRequestBitcoinKeys() {
   const wallets = useWalletEntities();
   const btcKeychainDescriptors = useBitcoinKeychainDescriptors();
 
+  const dmk = useLedgerDmk();
   const ledgerNavigate = useLedgerNavigate();
   const network = useCurrentNetwork();
 
@@ -46,7 +48,7 @@ function LedgerRequestBitcoinKeys() {
   const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
     useRequestLedgerKeys<BitcoinApp>({
       chain,
-      connectApp: connectLedgerBitcoinApp(network.chain.bitcoin.mode),
+      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode),
       getAppVersion: getBitcoinAppVersion,
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       onSuccess() {

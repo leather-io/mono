@@ -39,6 +39,10 @@ vi.mock('react-router', async importOriginal => {
   return { ...actual, useLocation: () => mocks.location };
 });
 
+vi.mock('@app/features/ledger/dmk/ledger-dmk.context', () => ({
+  useLedgerDmk: () => ({}),
+}));
+
 vi.mock('@ledgerhq/ledger-bitcoin', () => ({
   default: vi.fn(),
 }));

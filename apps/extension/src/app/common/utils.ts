@@ -30,8 +30,8 @@ export function addPortSuffix(url: string) {
   return port ? `:${port}` : '';
 }
 
-export function doesBrowserSupportWebUsbApi() {
-  return Boolean((navigator as any).usb);
+export function doesBrowserSupportWebHidApi() {
+  return 'hid' in navigator;
 }
 
 function isFullPage() {

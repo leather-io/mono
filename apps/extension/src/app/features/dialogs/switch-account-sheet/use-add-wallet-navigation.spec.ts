@@ -15,7 +15,7 @@ const h = vi.hoisted(() => ({
   openInNewTab: vi.fn(),
   closeWindow: vi.fn(),
   pageMode: 'full' as 'full' | 'popup',
-  webUsbSupported: true,
+  webHidSupported: true,
 }));
 
 vi.mock('react-router', () => ({ useNavigate: () => h.navigate }));
@@ -28,7 +28,7 @@ vi.mock('@shared/utils', () => ({ closeWindow: h.closeWindow }));
 
 vi.mock('@app/common/utils', () => ({
   whenPageMode: (map: Record<'full' | 'popup', unknown>) => map[h.pageMode],
-  doesBrowserSupportWebUsbApi: () => h.webUsbSupported,
+  doesBrowserSupportWebHidApi: () => h.webHidSupported,
 }));
 
 function renderHookValue<T>(useHook: () => T) {
@@ -53,7 +53,7 @@ describe('useAddWalletNavigation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     h.pageMode = 'full';
-    h.webUsbSupported = true;
+    h.webHidSupported = true;
   });
 
   test('onCreateNewWallet closes the sheets before navigating to create wallet', () => {
@@ -78,7 +78,7 @@ describe('useAddWalletNavigation', () => {
 
   test('onConnectLedger closes the sheets before navigating in full-page mode', () => {
     h.pageMode = 'full';
-    h.webUsbSupported = true;
+    h.webHidSupported = true;
     const closeSheets = vi.fn();
     const { getValue } = renderHookValue(() => useAddWalletNavigation({ closeSheets }));
 
@@ -88,9 +88,9 @@ describe('useAddWalletNavigation', () => {
     expect(h.navigate).toHaveBeenCalledWith(RouteUrls.ConnectLedgerStart);
   });
 
-  test('onConnectLedger routes to the unsupported-browser page when WebUSB is unavailable', () => {
+  test('onConnectLedger routes to the unsupported-browser page when WebHID is unavailable', () => {
     h.pageMode = 'full';
-    h.webUsbSupported = false;
+    h.webHidSupported = false;
     const closeSheets = vi.fn();
     const { getValue } = renderHookValue(() => useAddWalletNavigation({ closeSheets }));
 
@@ -102,7 +102,7 @@ describe('useAddWalletNavigation', () => {
 
   test('onConnectLedger opens a new tab and closes the window in popup mode', () => {
     h.pageMode = 'popup';
-    h.webUsbSupported = true;
+    h.webHidSupported = true;
     const closeSheets = vi.fn();
     const { getValue } = renderHookValue(() => useAddWalletNavigation({ closeSheets }));
 
