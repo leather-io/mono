@@ -39,7 +39,7 @@ export function CommonLedgerDeviceInlineWarnings({
   if (!latestDeviceResponse) return null;
 
   if (latestDeviceResponse.deviceLocked) return <LedgerDeviceLockedWarning chain={chain} />;
-  if (isStacksLedgerAppClosed(latestDeviceResponse))
+  if ('returnCode' in latestDeviceResponse && isStacksLedgerAppClosed(latestDeviceResponse))
     return <LedgerAppClosedWarning chain={chain} />;
   return null;
 }

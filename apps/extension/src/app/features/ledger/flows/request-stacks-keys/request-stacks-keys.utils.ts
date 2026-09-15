@@ -1,6 +1,5 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import * as secp from '@noble/secp256k1';
-import StacksApp from '@zondax/ledger-stacks';
 
 import {
   extractDerivationPathFromDescriptor,
@@ -20,12 +19,13 @@ import { getIdentityDerivationPath } from '@shared/crypto/stacks/stacks-address-
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { defaultNumberOfKeysToPullFromLedgerDevice } from '../../generic-flows/request-keys/use-request-ledger-keys';
+import type { LedgerStacksApp } from '../../utils/ledger-app';
 import {
   StacksAppKeysResponseItem,
   requestPublicKeyForStxAccount,
 } from '../../utils/stacks-ledger-utils';
 
-function requestPublicKeyForIdentityAccount(app: StacksApp) {
+function requestPublicKeyForIdentityAccount({ app }: LedgerStacksApp) {
   return async (index: number) => app.getIdentityPubKey(getIdentityDerivationPath(index));
 }
 
@@ -124,7 +124,7 @@ interface PullStacksKeysFromLedgerDeviceArgs {
   derivationPathType: StacksDerivationPathType;
   onRequestKey?(keyIndex: number): void;
 }
-export function pullStacksKeysFromLedgerDevice(stacksApp: StacksApp) {
+export function pullStacksKeysFromLedgerDevice(stacksApp: LedgerStacksApp) {
   return async ({
     derivationPathType,
     onRequestKey,

@@ -1,26 +1,40 @@
 import {
-  DeviceActionStatus,
+  type DeviceActionIntermediateValue,
   type DeviceManagementKit,
   type DeviceSessionId,
   type DiscoveredDevice,
+  GetAppAndVersionCommand,
+  type GetAppAndVersionResponse,
   OpenAppDeviceAction,
+  isSuccessCommandResult,
 } from '@ledgerhq/device-management-kit';
 import { filter, firstValueFrom, timeout } from 'rxjs';
 
 import { safeAwait } from '@app/common/utils/safe-await';
 
-import { LedgerConnectionErrors } from '../utils/generic-ledger-utils';
+import { type LedgerDeviceActionOptions, runLedgerDeviceAction } from './ledger-device-action';
 import { ledgerTransportIdentifier } from './ledger-dmk';
-import { isLedgerDeviceDisconnectedError, isLedgerDeviceLockedError } from './ledger-dmk-errors';
+import {
+  LedgerConnectionErrors,
+  isLedgerDeviceDisconnectedError,
+  isLedgerDeviceLockedError,
+  toLedgerTransportError,
+} from './ledger-dmk-errors';
 
 const grantedDeviceLookupTimeoutMs = 500;
-const failFastWhenLockedUnlockTimeoutMs = 500;
+const openAppUnlockTimeoutMs = 60_000;
+const postRefreshEmissionIndex = 1;
+
+export type ConnectLedgerDeviceOptions = LedgerDeviceActionOptions<DeviceActionIntermediateValue>;
 
 async function findGrantedDevice(dmk: DeviceManagementKit): Promise<DiscoveredDevice | null> {
   const [, devices] = await safeAwait(
     firstValueFrom(
       dmk.listenToAvailableDevices({ transport: ledgerTransportIdentifier }).pipe(
-        filter(availableDevices => availableDevices.length > 0),
+        filter(
+          (availableDevices, index) =>
+            availableDevices.length > 0 || index >= postRefreshEmissionIndex
+        ),
         timeout(grantedDeviceLookupTimeoutMs)
       )
     )
@@ -57,41 +71,44 @@ function toOpenAppError(error: unknown, appName: string): unknown {
 async function openLedgerApp(
   dmk: DeviceManagementKit,
   sessionId: DeviceSessionId,
-  appName: string
+  appName: string,
+  options: ConnectLedgerDeviceOptions
 ): Promise<void> {
-  const { observable } = dmk.executeDeviceAction({
+  const action = dmk.executeDeviceAction({
     sessionId,
     deviceAction: new OpenAppDeviceAction({
-      input: { appName, unlockTimeout: failFastWhenLockedUnlockTimeoutMs },
+      input: { appName, unlockTimeout: openAppUnlockTimeoutMs },
     }),
   });
 
-  const finalState = await firstValueFrom(
-    observable.pipe(
-      filter(
-        state =>
-          state.status === DeviceActionStatus.Completed || state.status === DeviceActionStatus.Error
-      )
-    ),
-    { defaultValue: null }
-  );
-
-  if (finalState === null) throw makeAppOpenFailedError(appName);
-  if (finalState.status === DeviceActionStatus.Error)
-    throw toOpenAppError(finalState.error, appName);
+  try {
+    await runLedgerDeviceAction(action, options).result;
+  } catch (error) {
+    throw toOpenAppError(error, appName);
+  }
 }
 
 export async function connectLedgerDeviceToApp(
   dmk: DeviceManagementKit,
-  appName: string | null
+  appName: string | null,
+  options: ConnectLedgerDeviceOptions = {}
 ): Promise<DeviceSessionId> {
   const sessionId = await connectLedgerDevice(dmk);
   if (appName === null) return sessionId;
   try {
-    await openLedgerApp(dmk, sessionId, appName);
+    await openLedgerApp(dmk, sessionId, appName, options);
   } catch (error) {
     await safeAwait(dmk.disconnect({ sessionId }));
     throw error;
   }
   return sessionId;
+}
+
+export async function getAppAndVersion(
+  dmk: DeviceManagementKit,
+  sessionId: DeviceSessionId
+): Promise<GetAppAndVersionResponse> {
+  const result = await dmk.sendCommand({ sessionId, command: new GetAppAndVersionCommand() });
+  if (!isSuccessCommandResult(result)) throw toLedgerTransportError(result.error);
+  return result.data;
 }

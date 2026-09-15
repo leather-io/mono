@@ -8,6 +8,7 @@ export * from './coin-selection/coin-selection';
 export * from './descriptors/bond-lock-script';
 export * from './descriptors/bond-template';
 export * from './descriptors/ledger-descriptor-resolver';
+export * from './descriptors/ledger-wallet-policy';
 export * from './descriptors/proposal-signing-descriptor';
 export * from './descriptors/wsh-descriptor';
 export * from './coin-selection/coin-selection.utils';

@@ -1,27 +1,29 @@
-import { Output } from '@bitcoinerlab/descriptors';
-import {
-  type LedgerManager,
-  type LedgerState,
-  registerLedgerWallet,
-} from '@bitcoinerlab/descriptors/ledger';
-import AppClient, { WalletPolicy } from '@ledgerhq/ledger-bitcoin';
+import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
+import { WalletPolicy } from '@ledgerhq/device-signer-kit-bitcoin';
 import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
 
 import {
+  buildLedgerWalletPolicy,
   compileWshDescriptor,
   findAccountDescriptorKey,
   getBitcoinJsLibNetworkConfigByMode,
-  makeWshDescriptorInstance,
-  toCompilableWshDescriptor,
   toLedgerSignableDescriptor,
 } from '@leather.io/bitcoin';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { logger } from '@shared/logger';
 
+import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import { addNativeSegwitSignaturesToPsbt } from '@app/features/ledger/utils/bitcoin-ledger-utils';
+import {
+  getMasterFingerprintHex,
+  registerLedgerWalletPolicyPrompt,
+  registerWalletPolicy,
+  signPsbtWithWallet,
+} from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
+import type { LedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app';
 import {
   useCurrentNativeSegwitAccount,
   useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero,
@@ -39,13 +41,14 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 export function useSignLedgerDescriptorTx() {
   const network = useCurrentNetwork();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
+  const ledgerNavigate = useLedgerNavigate();
   const addNativeSegwitBip32Derivation =
     useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero();
   const addNonWitnessUtxo = useUpdateLedgerSpecificNativeSegwitUtxoHexForAdddressIndexZero();
   const bitcoinNetworkMode = network.chain.bitcoin.mode;
 
   return async (
-    app: AppClient,
+    app: LedgerBitcoinApp,
     rawPsbt: Uint8Array,
     descriptor: string,
     signingConfig: BitcoinInputSigningConfig[]
@@ -65,9 +68,8 @@ export function useSignLedgerDescriptorTx() {
       nativeSegwitAccount.xpub,
       nativeSegwitAccount.keyOrigin
     );
-    const descriptorInstance = makeWshDescriptorInstance(ledgerDescriptor);
 
-    const fingerprint = await app.getMasterFingerprint();
+    const fingerprint = await getMasterFingerprintHex(app);
     const psbt = Psbt.fromBuffer(Buffer.from(rawPsbt), {
       network: getBitcoinJsLibNetworkConfigByMode(bitcoinNetworkMode),
     });
@@ -97,32 +99,20 @@ export function useSignLedgerDescriptorTx() {
       else delete input.partialSig;
     });
 
-    const ledgerState: LedgerState = {};
-    const ledgerManager: LedgerManager = {
-      ledgerClient: app,
-      ledgerState,
-      Output,
-      network: descriptorInstance.getNetwork(),
-    };
-    await registerLedgerWallet({
-      descriptor: toCompilableWshDescriptor(ledgerDescriptor),
-      ledgerManager,
-      policyName: 'Leather',
-    });
-    const registeredPolicy = ledgerState.policies?.[0];
-    if (!registeredPolicy?.policyName || !registeredPolicy.policyHmac)
-      throw new Error('Ledger wallet policy registration did not persist a policy');
+    const policy = buildLedgerWalletPolicy(ledgerDescriptor, fingerprint);
+    const registeredWallet = await registerWalletPolicy(
+      app,
+      new WalletPolicy(policy.name, policy.descriptorTemplate, policy.keys),
+      {
+        onRequiredUserInteraction(interaction) {
+          if (interaction !== UserInteractionRequired.RegisterWallet) return;
+          void ledgerNavigate.toDeviceBusyStep(registerLedgerWalletPolicyPrompt);
+        },
+      }
+    );
+    void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
 
-    const walletPolicy = new WalletPolicy(
-      registeredPolicy.policyName,
-      registeredPolicy.ledgerTemplate,
-      registeredPolicy.keyRoots
-    );
-    const signatures = await app.signPsbt(
-      psbt.toBase64(),
-      walletPolicy,
-      Buffer.from(registeredPolicy.policyHmac)
-    );
+    const signatures = await signPsbtWithWallet(app, registeredWallet, psbt.toBase64());
     addNativeSegwitSignaturesToPsbt(psbt, signatures);
 
     return btc.Transaction.fromPSBT(psbt.toBuffer());

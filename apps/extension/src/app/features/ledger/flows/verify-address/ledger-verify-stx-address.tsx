@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router';
 
-import StacksApp from '@zondax/ledger-stacks';
-
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
@@ -12,6 +10,7 @@ import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
 import { isLedgerOnDeviceAddressConfirmed } from '@app/features/ledger/utils/ledger-descriptor-address';
 import {
   connectLedgerStacksApp,
@@ -38,9 +37,11 @@ function LedgerVerifyStxAddress() {
   const stacksAccount = useCurrentStacksAccount();
 
   const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
-    useRequestLedgerKeys<StacksApp>({
+    useRequestLedgerKeys<LedgerStacksApp>({
       chain: 'stacks',
-      connectApp: () => connectLedgerStacksApp(dmk),
+      connectApp(options) {
+        return connectLedgerStacksApp(dmk, options);
+      },
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
