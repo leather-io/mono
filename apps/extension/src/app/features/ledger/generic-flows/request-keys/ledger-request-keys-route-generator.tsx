@@ -9,6 +9,7 @@ import {
   ConnectLedgerError,
   ConnectLedgerSuccess,
   DeviceBusy,
+  LedgerDisconnected,
   UnsupportedBrowserLayout,
 } from '../../generic-steps';
 import { ConnectLedgerRequestKeys } from './steps/connect-ledger-request-keys';
@@ -31,6 +32,7 @@ export function ledgerRequestKeysRoutes({
       <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />
       <Route path={RouteUrls.ConnectLedgerError} element={<ConnectLedgerError />} />
       <Route path={RouteUrls.ConnectLedgerSuccess} element={<ConnectLedgerSuccess />} />
+      <Route path={RouteUrls.LedgerDisconnected} element={<LedgerDisconnected />} />
       <Route path={RouteUrls.LedgerUnsupportedBrowser} element={<UnsupportedBrowserLayout />} />
       <Route
         path={RouteUrls.LedgerOutdatedAppWarning}

@@ -15,6 +15,7 @@ import {
   ConnectLedgerError,
   ConnectLedgerSuccess,
   DeviceBusy,
+  LedgerDisconnected,
   UnsupportedBrowserLayout,
 } from '@app/features/ledger/generic-steps';
 import { useDisplayLedgerDescriptorAddress } from '@app/features/ledger/hooks/use-display-ledger-descriptor-address';
@@ -103,6 +104,7 @@ export const ledgerConfirmBtcPolicyAddressRoutes = (
     <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />
     <Route path={RouteUrls.ConnectLedgerError} element={<ConnectLedgerError />} />
     <Route path={RouteUrls.ConnectLedgerSuccess} element={<ConnectLedgerSuccess />} />
+    <Route path={RouteUrls.LedgerDisconnected} element={<LedgerDisconnected />} />
     <Route path={RouteUrls.LedgerUnsupportedBrowser} element={<UnsupportedBrowserLayout />} />
   </Route>
 );
