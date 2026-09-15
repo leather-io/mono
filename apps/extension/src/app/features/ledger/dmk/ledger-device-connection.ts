@@ -14,7 +14,7 @@ import { ledgerTransportIdentifier } from './ledger-dmk';
 import { isLedgerDeviceDisconnectedError, isLedgerDeviceLockedError } from './ledger-dmk-errors';
 
 const grantedDeviceLookupTimeoutMs = 500;
-const openAppUnlockTimeoutMs = 500;
+const failFastWhenLockedUnlockTimeoutMs = 500;
 
 async function findGrantedDevice(dmk: DeviceManagementKit): Promise<DiscoveredDevice | null> {
   const [, devices] = await safeAwait(
@@ -62,7 +62,7 @@ async function openLedgerApp(
   const { observable } = dmk.executeDeviceAction({
     sessionId,
     deviceAction: new OpenAppDeviceAction({
-      input: { appName, unlockTimeout: openAppUnlockTimeoutMs },
+      input: { appName, unlockTimeout: failFastWhenLockedUnlockTimeoutMs },
     }),
   });
 
