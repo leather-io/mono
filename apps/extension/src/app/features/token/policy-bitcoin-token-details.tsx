@@ -81,6 +81,7 @@ export function PolicyBitcoinTokenDetails({ account }: PolicyBitcoinTokenDetails
       descriptionText={marketInfo.descriptionText}
       balances={balances}
       activity={activityQuery.data ?? []}
+      isSwapEnabled={false}
     />
   );
 }

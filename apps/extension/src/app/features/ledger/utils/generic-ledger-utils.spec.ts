@@ -1,4 +1,10 @@
-import { LEDGER_APPS_MAP, promptOpenAppOnDevice } from './generic-ledger-utils';
+import { LockedDeviceError, StatusCodes, TransportStatusError } from '@ledgerhq/errors';
+
+import {
+  LEDGER_APPS_MAP,
+  isLedgerUserDeniedError,
+  promptOpenAppOnDevice,
+} from './generic-ledger-utils';
 
 const mocks = vi.hoisted(() => ({
   create: vi.fn(),
@@ -184,5 +190,25 @@ describe(promptOpenAppOnDevice.name, () => {
     await expect(promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS)).resolves.toBeUndefined();
 
     expect(mocks.delay.mock.calls.filter(([ms]) => ms === 100)).toHaveLength(50);
+  });
+});
+
+describe(isLedgerUserDeniedError.name, () => {
+  test('matches the device denial status code', () => {
+    expect(
+      isLedgerUserDeniedError(new TransportStatusError(StatusCodes.CONDITIONS_OF_USE_NOT_SATISFIED))
+    ).toBe(true);
+  });
+
+  test('does not match other device status codes', () => {
+    expect(isLedgerUserDeniedError(new TransportStatusError(StatusCodes.INCORRECT_DATA))).toBe(
+      false
+    );
+    expect(isLedgerUserDeniedError(new LockedDeviceError())).toBe(false);
+  });
+
+  test('does not match errors that merely mention the status code', () => {
+    expect(isLedgerUserDeniedError(new Error('Ledger device: UNKNOWN_ERROR (0x6985)'))).toBe(false);
+    expect(isLedgerUserDeniedError(undefined)).toBe(false);
   });
 });

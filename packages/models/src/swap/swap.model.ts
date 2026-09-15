@@ -52,7 +52,10 @@ export interface BaseSwapQuote {
 }
 
 export interface ExecutionConstraint {
-  readonly reason: 'minimum-threshold-not-met' | 'maximum-threshold-exceeded';
+  readonly reason:
+    | 'minimum-threshold-not-met'
+    | 'maximum-threshold-exceeded'
+    | 'supply-cap-exceeded';
   readonly threshold: Money;
 }
 

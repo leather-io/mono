@@ -1,3 +1,4 @@
+import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -7,9 +8,15 @@ interface AssetSelectorToggleProps {
   asset: SwappableFungibleCryptoAsset | undefined;
   disabled?: boolean;
   onPress(): void;
+  testId?: string;
 }
 
-export function AssetSelectorToggle({ asset, disabled, onPress }: AssetSelectorToggleProps) {
+export function AssetSelectorToggle({
+  asset,
+  disabled,
+  onPress,
+  testId,
+}: AssetSelectorToggleProps) {
   return (
     <styled.button
       display="flex"
@@ -24,9 +31,12 @@ export function AssetSelectorToggle({ asset, disabled, onPress }: AssetSelectorT
       opacity={disabled ? 0.5 : 1}
       _active={{ opacity: 0.75 }}
       onClick={onPress}
+      data-testid={testId}
     >
       {renderAvatar(asset)}
-      <styled.span textStyle="label.03">{asset ? asset.symbol : `Select`}</styled.span>
+      <styled.span textStyle="label.03" data-testid={SwapRevampSelectors.SelectedAssetSymbol}>
+        {asset ? asset.symbol : `Select`}
+      </styled.span>
       <ChevronDownIcon variant="small" />
     </styled.button>
   );

@@ -693,7 +693,11 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:58
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:54
+msgid "Deposit cap reached"
+msgstr "Deposit cap reached"
+
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:63
 msgid "Depositing"
 msgstr "Depositing"
 
@@ -1312,6 +1316,10 @@ msgstr "Not enough liquidity or no route available right now. Try a smaller amou
 msgid "OK"
 msgstr "OK"
 
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:55
+msgid "Only {threshold} more {baseAssetSymbol} can be deposited into {targetAssetSymbol} right now"
+msgstr "Only {threshold} more {baseAssetSymbol} can be deposited into {targetAssetSymbol} right now"
+
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:75
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
@@ -1749,7 +1757,7 @@ msgstr "Swapped"
 
 #: src/features/activity/activity-item.tsx:30
 #: src/features/activity/translate-activity-status.ts:36
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:60
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:65
 msgid "Swapping"
 msgstr "Swapping"
 
@@ -2088,7 +2096,7 @@ msgstr "Wallets and accounts"
 msgid "What is sBTC?"
 msgstr "What is sBTC?"
 
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:59
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:64
 msgid "Withdrawing"
 msgstr "Withdrawing"
 

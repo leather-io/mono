@@ -19,7 +19,7 @@ export async function listenForStacksTxLedgerSigning(
       if (msg.unsignedTx === unsignedTx) {
         appEvents.unsubscribe('ledgerStacksTxSigningCancelled', signingAbortedHandler);
         appEvents.unsubscribe('ledgerStacksTxSigned', txSignedHandler);
-        reject(new Error('User cancelled the signing operation'));
+        reject(new Error(msg.error ?? 'User cancelled the signing operation'));
       }
     }
     appEvents.subscribe('ledgerStacksTxSigningCancelled', signingAbortedHandler);
