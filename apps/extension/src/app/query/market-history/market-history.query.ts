@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import type { FungibleCryptoAsset, HistoricalPeriod } from '@leather.io/models';
 import { createPriceHistoryQueryConfig } from '@leather.io/queries';
@@ -12,5 +12,8 @@ export function usePriceHistory(asset: FungibleCryptoAsset, period: HistoricalPe
 
 function usePriceHistoryQuery(asset: FungibleCryptoAsset, period: HistoricalPeriod) {
   const settings = useUserSettings();
-  return useQuery(createPriceHistoryQueryConfig(asset, period, settings));
+  return useQuery({
+    ...createPriceHistoryQueryConfig(asset, period, settings),
+    placeholderData: keepPreviousData,
+  });
 }

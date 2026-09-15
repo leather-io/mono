@@ -10,7 +10,8 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { usePriceHistory } from '@app/query/market-history/market-history.query';
 
 import { PeriodSelector } from './period-selector';
-import { calculatePriceChangeDelta } from './price-history.utils';
+import { PriceHistoryChart, chartHeight } from './price-history-chart';
+import { calculatePriceChangeDelta, hasEnoughSnapshots } from './price-history.utils';
 
 const defaultPeriod: HistoricalPeriod = '1d';
 
@@ -57,6 +58,14 @@ export function TokenPriceHistory({ asset, price }: TokenPriceHistoryProps) {
           ) : null}
         </SkeletonLoader>
       </Stack>
+      <SkeletonLoader isLoading={history.state === 'loading'} height={chartHeight} width="100%">
+        {history.state === 'success' && hasEnoughSnapshots(history.value.prices) ? (
+          <PriceHistoryChart
+            prices={history.value.prices}
+            color={getPriceChangeColor(history.value.changePercentage)}
+          />
+        ) : null}
+      </SkeletonLoader>
       <PeriodSelector value={period} onChange={setPeriod} />
     </Stack>
   );
