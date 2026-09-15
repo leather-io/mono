@@ -101,7 +101,9 @@ function setupRequestKeys({
   const { getValue } = renderHookValue(() =>
     useRequestLedgerKeys<BitcoinApp>({
       chain: 'bitcoin',
-      connectApp: () => (connectAppError ? Promise.reject(connectAppError) : Promise.resolve(app)),
+      connectApp: connectAppError
+        ? vi.fn().mockRejectedValue(connectAppError)
+        : vi.fn().mockResolvedValue(app),
       getAppVersion: () => Promise.resolve(bitcoinAppVersion),
       isAppOpen: () => true,
       pullKeysFromDevice,

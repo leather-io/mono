@@ -54,7 +54,7 @@ function toOpenAppError(error: unknown, appName: string): unknown {
   return makeAppOpenFailedError(appName);
 }
 
-function openLedgerApp(
+async function openLedgerApp(
   dmk: DeviceManagementKit,
   sessionId: DeviceSessionId,
   appName: string
@@ -66,21 +66,19 @@ function openLedgerApp(
     }),
   });
 
-  return new Promise((resolve, reject) => {
-    observable.subscribe({
-      next(state) {
-        if (state.status === DeviceActionStatus.Completed) {
-          resolve();
-          return;
-        }
-        if (state.status === DeviceActionStatus.Error) reject(toOpenAppError(state.error, appName));
-      },
-      error: reject,
-      complete() {
-        reject(makeAppOpenFailedError(appName));
-      },
-    });
-  });
+  const finalState = await firstValueFrom(
+    observable.pipe(
+      filter(
+        state =>
+          state.status === DeviceActionStatus.Completed || state.status === DeviceActionStatus.Error
+      )
+    ),
+    { defaultValue: null }
+  );
+
+  if (finalState === null) throw makeAppOpenFailedError(appName);
+  if (finalState.status === DeviceActionStatus.Error)
+    throw toOpenAppError(finalState.error, appName);
 }
 
 export async function connectLedgerDeviceToApp(

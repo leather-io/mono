@@ -95,7 +95,9 @@ function setupSignTx({ connectAppError, getAppVersionError, signError }: SetupOp
   const { getValue } = renderHookValue(() =>
     useLedgerSignTx<BitcoinApp>({
       chain: 'bitcoin',
-      connectApp: () => (connectAppError ? Promise.reject(connectAppError) : Promise.resolve(app)),
+      connectApp: connectAppError
+        ? vi.fn().mockRejectedValue(connectAppError)
+        : vi.fn().mockResolvedValue(app),
       getAppVersion,
       isAppOpen: () => true,
       signTransactionWithDevice,
