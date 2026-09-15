@@ -65,7 +65,6 @@ export class SwapService {
 
   private getSwapProviderServices(): SwapProviderService[] {
     return [
-      this.velarProvider,
       this.alexProvider,
       this.bitflowSdkProvider,
       this.bitflowBffApiProvider,

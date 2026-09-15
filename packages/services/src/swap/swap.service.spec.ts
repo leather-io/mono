@@ -86,25 +86,25 @@ const stubAccountRequest = { account: {} } as unknown as AccountRequest;
 
 describe(SwapService.name, () => {
   describe('getSwapQuotes', () => {
-    const baseAsset = createStubSwapAsset('STX', ['velar-sdk', 'alex-sdk']);
-    const targetAsset = createStubSwapAsset('USDA', ['velar-sdk', 'alex-sdk']);
+    const baseAsset = createStubSwapAsset('STX', ['bitflow-sdk', 'alex-sdk']);
+    const targetAsset = createStubSwapAsset('USDA', ['bitflow-sdk', 'alex-sdk']);
     const oneStx = createMoney(1_000_000, 'STX');
 
     test('returns quotes from remaining providers when one provider rejects', async () => {
       const providers = createStubProviderServices();
-      const velarQuote = createStubSwapQuote('velar-sdk');
-      providers.velar.getSwapQuotes.mockResolvedValue([velarQuote]);
+      const bitflowSdkQuote = createStubSwapQuote('bitflow-sdk');
+      providers.bitflowSdk.getSwapQuotes.mockResolvedValue([bitflowSdkQuote]);
       providers.alex.getSwapQuotes.mockRejectedValue(new Error('provider down'));
       const swapService = createSwapService(providers);
 
       const quotes = await swapService.getSwapQuotes(baseAsset, targetAsset, oneStx);
 
-      expect(quotes).toEqual([velarQuote]);
+      expect(quotes).toEqual([bitflowSdkQuote]);
     });
 
     test('returns empty array when all matching providers reject', async () => {
       const providers = createStubProviderServices();
-      providers.velar.getSwapQuotes.mockRejectedValue(new Error('provider down'));
+      providers.bitflowSdk.getSwapQuotes.mockRejectedValue(new Error('provider down'));
       providers.alex.getSwapQuotes.mockRejectedValue(new Error('provider down'));
       const swapService = createSwapService(providers);
 
@@ -115,14 +115,14 @@ describe(SwapService.name, () => {
 
     test('only queries providers present on both base and target assets', async () => {
       const providers = createStubProviderServices();
-      const velarQuote = createStubSwapQuote('velar-sdk');
-      providers.velar.getSwapQuotes.mockResolvedValue([velarQuote]);
-      const velarOnlyTarget = createStubSwapAsset('USDA', ['velar-sdk']);
+      const bitflowSdkQuote = createStubSwapQuote('bitflow-sdk');
+      providers.bitflowSdk.getSwapQuotes.mockResolvedValue([bitflowSdkQuote]);
+      const bitflowSdkOnlyTarget = createStubSwapAsset('USDA', ['bitflow-sdk']);
       const swapService = createSwapService(providers);
 
-      const quotes = await swapService.getSwapQuotes(baseAsset, velarOnlyTarget, oneStx);
+      const quotes = await swapService.getSwapQuotes(baseAsset, bitflowSdkOnlyTarget, oneStx);
 
-      expect(quotes).toEqual([velarQuote]);
+      expect(quotes).toEqual([bitflowSdkQuote]);
       expect(providers.alex.getSwapQuotes).not.toHaveBeenCalled();
     });
 
@@ -133,22 +133,22 @@ describe(SwapService.name, () => {
       const quotes = await swapService.getSwapQuotes(baseAsset, targetAsset, createMoney(0, 'STX'));
 
       expect(quotes).toEqual([]);
-      expect(providers.velar.getSwapQuotes).not.toHaveBeenCalled();
+      expect(providers.bitflowSdk.getSwapQuotes).not.toHaveBeenCalled();
       expect(providers.alex.getSwapQuotes).not.toHaveBeenCalled();
     });
     test('drops a provider that never settles once the quote timeout elapses', async () => {
       vi.useFakeTimers();
       try {
         const providers = createStubProviderServices();
-        const velarQuote = createStubSwapQuote('velar-sdk');
-        providers.velar.getSwapQuotes.mockResolvedValue([velarQuote]);
+        const bitflowSdkQuote = createStubSwapQuote('bitflow-sdk');
+        providers.bitflowSdk.getSwapQuotes.mockResolvedValue([bitflowSdkQuote]);
         providers.alex.getSwapQuotes.mockReturnValue(new Promise<SwapQuote[]>(() => undefined));
         const swapService = createSwapService(providers);
 
         const quotes = swapService.getSwapQuotes(baseAsset, targetAsset, oneStx);
         await vi.runAllTimersAsync();
 
-        await expect(quotes).resolves.toEqual([velarQuote]);
+        await expect(quotes).resolves.toEqual([bitflowSdkQuote]);
       } finally {
         vi.useRealTimers();
       }
@@ -158,7 +158,7 @@ describe(SwapService.name, () => {
   describe('getBaseSwapAssets', () => {
     test('returns assets from remaining providers when one provider rejects', async () => {
       const providers = createStubProviderServices();
-      providers.velar.getBaseProviderAssets.mockRejectedValue(new Error('provider down'));
+      providers.bitflowSdk.getBaseProviderAssets.mockRejectedValue(new Error('provider down'));
       providers.alex.getBaseProviderAssets.mockResolvedValue([
         { providerId: 'alex-sdk', providerAssetId: 'alex-stx', assetId: getAssetId(stxAsset) },
       ]);
