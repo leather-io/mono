@@ -7,7 +7,8 @@ import { useUserSettings } from '@app/hooks/use-user-settings';
 import { toFetchState } from '@app/services/fetch-state';
 
 export function usePriceHistory(asset: FungibleCryptoAsset, period: HistoricalPeriod) {
-  return toFetchState(usePriceHistoryQuery(asset, period));
+  const query = usePriceHistoryQuery(asset, period);
+  return { ...toFetchState(query), isPlaceholderData: query.isPlaceholderData };
 }
 
 function usePriceHistoryQuery(asset: FungibleCryptoAsset, period: HistoricalPeriod) {

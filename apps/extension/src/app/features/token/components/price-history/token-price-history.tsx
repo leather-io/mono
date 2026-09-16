@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Flex, Stack, styled } from 'leather-styles/jsx';
+import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { formatPriceChangeText, getPriceChangeColor } from '@leather.io/features';
 import type { FungibleCryptoAsset, HistoricalPeriod, Money } from '@leather.io/models';
@@ -74,33 +74,37 @@ export function TokenPriceHistory({ asset, price }: TokenPriceHistoryProps) {
         <styled.span textStyle="label.01" data-testid="token-details-price">
           {displayedPrice ? formatCurrency(displayedPrice) : emptyValue}
         </styled.span>
-        <SkeletonLoader isLoading={history.state === 'loading'} height="20px" width="140px">
-          {change ? (
-            <PriceChangeLine
-              {...change}
-              timestamp={hovered ? formatSnapshotTime(hovered.timestamp, period) : undefined}
-            />
-          ) : (
-            <styled.span
-              textStyle="label.02"
-              color="ink.text-subdued"
-              data-testid="token-details-price-change"
-            >
-              {emptyValue}
-            </styled.span>
-          )}
-        </SkeletonLoader>
+        <Box opacity={history.isPlaceholderData ? 0.5 : 1}>
+          <SkeletonLoader isLoading={history.state === 'loading'} height="20px" width="140px">
+            {change ? (
+              <PriceChangeLine
+                {...change}
+                timestamp={hovered ? formatSnapshotTime(hovered.timestamp, period) : undefined}
+              />
+            ) : (
+              <styled.span
+                textStyle="label.02"
+                color="ink.text-subdued"
+                data-testid="token-details-price-change"
+              >
+                {emptyValue}
+              </styled.span>
+            )}
+          </SkeletonLoader>
+        </Box>
       </Stack>
-      <SkeletonLoader isLoading={history.state === 'loading'} height={chartHeight} width="100%">
-        {periodHistory && hasEnoughSnapshots(prices) ? (
-          <PriceHistoryChart
-            prices={prices}
-            color={getPriceChangeColor(periodHistory.changePercentage)}
-            hoveredIndex={hoveredIndex}
-            onHover={setHoveredIndex}
-          />
-        ) : null}
-      </SkeletonLoader>
+      <Box opacity={history.isPlaceholderData ? 0.5 : 1}>
+        <SkeletonLoader isLoading={history.state === 'loading'} height={chartHeight} width="100%">
+          {periodHistory && hasEnoughSnapshots(prices) ? (
+            <PriceHistoryChart
+              prices={prices}
+              color={getPriceChangeColor(periodHistory.changePercentage)}
+              hoveredIndex={hoveredIndex}
+              onHover={setHoveredIndex}
+            />
+          ) : null}
+        </SkeletonLoader>
+      </Box>
       <PeriodSelector
         value={period}
         disabledPeriods={unavailablePeriods}

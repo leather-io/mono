@@ -1,5 +1,6 @@
 import { Box, Circle, Flex, Stack } from 'leather-styles/jsx';
 
+import { historicalPeriods } from '@leather.io/models';
 import { SkeletonLoader } from '@leather.io/ui';
 
 import { TokenDetailsHeader } from './components/token-details-header';
@@ -51,7 +52,7 @@ function LoadingPrice() {
         <SkeletonLoader isLoading height="20px" width="140px" />
       </Stack>
       <Flex gap="space.01">
-        {Array.from({ length: 6 }).map((_, i) => (
+        {Array.from({ length: historicalPeriods.length }).map((_, i) => (
           <SkeletonLoader key={i} isLoading height="24px" flex="1" />
         ))}
       </Flex>
