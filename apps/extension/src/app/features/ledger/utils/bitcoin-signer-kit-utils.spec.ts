@@ -27,16 +27,27 @@ describe(getMasterFingerprintHex.name, () => {
 });
 
 describe(getExtendedPublicKey.name, () => {
-  test('returns the extended public key for the path without opening the app', async () => {
+  test('strips the master key prefix before asking the signer kit for the key', async () => {
     const getExtendedPublicKeyAction = vi.fn<SignerBtc['getExtendedPublicKey']>(() =>
       fakeSignerAction({ extendedPublicKey: 'xpub6Fake' })
     );
     const app = makeFakeLedgerBitcoinApp({ getExtendedPublicKey: getExtendedPublicKeyAction });
 
     await expect(getExtendedPublicKey(app, "m/84'/0'/0'")).resolves.toBe('xpub6Fake');
-    expect(getExtendedPublicKeyAction).toHaveBeenCalledWith("m/84'/0'/0'", {
+    expect(getExtendedPublicKeyAction).toHaveBeenCalledWith("84'/0'/0'", {
       skipOpenApp: true,
     });
+  });
+
+  test('forwards a path that already lacks the master key prefix unchanged', async () => {
+    const getExtendedPublicKeyAction = vi.fn<SignerBtc['getExtendedPublicKey']>(() =>
+      fakeSignerAction({ extendedPublicKey: 'xpub6Fake' })
+    );
+    const app = makeFakeLedgerBitcoinApp({ getExtendedPublicKey: getExtendedPublicKeyAction });
+
+    await getExtendedPublicKey(app, "86'/1'/2'");
+
+    expect(getExtendedPublicKeyAction).toHaveBeenCalledWith("86'/1'/2'", { skipOpenApp: true });
   });
 });
 

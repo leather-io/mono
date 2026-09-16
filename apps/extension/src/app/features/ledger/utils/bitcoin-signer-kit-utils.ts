@@ -27,6 +27,7 @@ import type { LedgerBitcoinApp, RunSignerAction } from './ledger-app';
 
 const skipOpenApp = true;
 const changeChainIndex = 1;
+const masterKeyPathPrefix = 'm/';
 
 export const registerLedgerWalletPolicyPrompt = 'Approve the Leather wallet policy on your Ledger…';
 
@@ -94,6 +95,10 @@ export function createLedgerBitcoinApp(
   };
 }
 
+export function toSignerKitDerivationPath(path: string) {
+  return path.startsWith(masterKeyPathPrefix) ? path.slice(masterKeyPathPrefix.length) : path;
+}
+
 export async function getMasterFingerprintHex(app: LedgerBitcoinApp): Promise<string> {
   const { masterFingerprint } = await app.runAction(
     app.signer.getMasterFingerprint({ skipOpenApp })
@@ -106,7 +111,7 @@ export async function getExtendedPublicKey(
   derivationPath: string
 ): Promise<string> {
   const { extendedPublicKey } = await app.runAction(
-    app.signer.getExtendedPublicKey(derivationPath, { skipOpenApp })
+    app.signer.getExtendedPublicKey(toSignerKitDerivationPath(derivationPath), { skipOpenApp })
   );
   return extendedPublicKey;
 }

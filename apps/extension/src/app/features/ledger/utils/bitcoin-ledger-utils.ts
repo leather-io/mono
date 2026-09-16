@@ -17,6 +17,7 @@ import {
   type PartialSignature,
   createLedgerBitcoinApp,
   getWalletAddressOnDevice,
+  toSignerKitDerivationPath,
 } from './bitcoin-signer-kit-utils';
 import { LEDGER_APPS_MAP } from './generic-ledger-utils';
 import type { LedgerBitcoinApp, RunSignerAction } from './ledger-app';
@@ -91,22 +92,16 @@ export function createTaprootWalletPolicyKey(policyDetails: WalletPolicyDetails)
   return derivationPathToWalletPolicy(makeTaprootAccountDerivationPath)(policyDetails);
 }
 
-const masterKeyPathPrefix = 'm/';
-
-function toDefaultWalletDerivationPath(path: string) {
-  return path.startsWith(masterKeyPathPrefix) ? path.slice(masterKeyPathPrefix.length) : path;
-}
-
 export function makeNativeSegwitDefaultWallet(network: BitcoinNetworkModes, accountIndex: number) {
   return new DefaultWallet(
-    toDefaultWalletDerivationPath(makeNativeSegwitAccountDerivationPath(network, accountIndex)),
+    toSignerKitDerivationPath(makeNativeSegwitAccountDerivationPath(network, accountIndex)),
     DefaultDescriptorTemplate.NATIVE_SEGWIT
   );
 }
 
 export function makeTaprootDefaultWallet(network: BitcoinNetworkModes, accountIndex: number) {
   return new DefaultWallet(
-    toDefaultWalletDerivationPath(makeTaprootAccountDerivationPath(network, accountIndex)),
+    toSignerKitDerivationPath(makeTaprootAccountDerivationPath(network, accountIndex)),
     DefaultDescriptorTemplate.TAPROOT
   );
 }
