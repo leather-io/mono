@@ -4,13 +4,13 @@ import { Box } from 'leather-styles/jsx';
 
 interface ConnectOverlayBackdropProps {
   // Off once connected, when the same tree renders live and interactive.
-  isActive?: boolean;
+  isActive: boolean;
   children: ReactNode;
 }
 
 // Pushes the page behind a connect overlay into a blurred, inert preview of
 // what the screen looks like once connected.
-export function ConnectOverlayBackdrop({ isActive = true, children }: ConnectOverlayBackdropProps) {
+export function ConnectOverlayBackdrop({ isActive, children }: ConnectOverlayBackdropProps) {
   return (
     <Box
       filter={isActive ? 'blur(6px)' : 'none'}

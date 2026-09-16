@@ -49,7 +49,7 @@ export function MultisigOnboardingPage() {
       <Page overflow="hidden">
         <Page.Header title="Multisig" />
         <OutdatedExtensionCallout />
-        <ConnectOverlayBackdrop>
+        <ConnectOverlayBackdrop isActive>
           <MultisigOnboardingBackdrop />
         </ConnectOverlayBackdrop>
       </Page>
