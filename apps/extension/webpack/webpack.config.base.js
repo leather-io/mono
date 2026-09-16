@@ -86,7 +86,6 @@ const aliases = {
   'leather-styles': path.resolve('leather-styles'),
   react: path.resolve('./node_modules/react'),
   'react-dom': path.resolve('./node_modules/react-dom'),
-  '@ledgerhq/ledger-bitcoin': false,
 };
 
 export const config = {

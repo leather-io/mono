@@ -1,4 +1,4 @@
-import type { ExpansionMap, KeyInfo } from '@bitcoinerlab/descriptors';
+import type { ExpansionMap, KeyInfo } from '@bitcoinerlab/descriptors-core';
 import { bytesToHex } from '@noble/hashes/utils';
 
 import { makeWshDescriptorInstance } from './wsh-descriptor';
