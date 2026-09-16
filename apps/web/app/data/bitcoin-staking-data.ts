@@ -163,7 +163,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     url: 'https://senseinode.com',
     description: '',
     signerManagerContracts: {
-      mainnet: ['SP20XZGWBWSMRE94WDJ6YJ1EKPJ55RGRGK4JDJHNK.signer-manager-pox5'],
+      // mainnet: ['SP20XZGWBWSMRE94WDJ6YJ1EKPJ55RGRGK4JDJHNK.signer-manager-pox5'],
     },
     supportsBtcPayout: true,
   },
