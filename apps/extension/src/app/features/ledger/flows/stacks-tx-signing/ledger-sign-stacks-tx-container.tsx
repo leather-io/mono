@@ -13,6 +13,7 @@ import { analytics } from '@shared/utils/analytics';
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
@@ -49,6 +50,7 @@ function publishStacksSigningSettled(unsignedTx: string, error?: string) {
 
 function LedgerSignStacksTxContainer() {
   const location = useLocation();
+  const dmk = useLedgerDmk();
   const ledgerNavigate = useLedgerNavigate();
   const ledgerAnalytics = useLedgerAnalytics();
   useScrollLock(true);
@@ -71,7 +73,7 @@ function LedgerSignStacksTxContainer() {
       chain,
       isAppOpen: isStacksAppOpen,
       getAppVersion: getStacksAppVersion,
-      connectApp: connectLedgerStacksApp,
+      connectApp: () => connectLedgerStacksApp(dmk),
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       async signTransactionWithDevice(stacksApp) {
         if (!account) {

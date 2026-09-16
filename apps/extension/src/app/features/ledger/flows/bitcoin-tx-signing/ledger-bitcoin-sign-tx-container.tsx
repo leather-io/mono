@@ -16,6 +16,8 @@ import { RouteUrls } from '@shared/route-urls';
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
+import { isLedgerUserDeniedError } from '@app/features/ledger/dmk/ledger-dmk-errors';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { ApproveSignLedgerBitcoinTx } from '@app/features/ledger/flows/bitcoin-tx-signing/steps/approve-bitcoin-sign-ledger-tx';
 import { ledgerSignTxRoutes } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx-route-generator';
 import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
@@ -28,10 +30,7 @@ import {
   getBitcoinAppVersion,
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
-import {
-  isLedgerUserDeniedError,
-  useCancelLedgerAction,
-} from '@app/features/ledger/utils/generic-ledger-utils';
+import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useSignLedgerBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -48,6 +47,7 @@ export const ledgerBitcoinTxSigningRoutes = ledgerSignTxRoutes({
 function LedgerSignBitcoinTxContainer() {
   const toast = useToast();
   const location = useLocation();
+  const dmk = useLedgerDmk();
   const ledgerNavigate = useLedgerNavigate();
   const ledgerAnalytics = useLedgerAnalytics();
   useScrollLock(true);
@@ -79,7 +79,7 @@ function LedgerSignBitcoinTxContainer() {
       chain,
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       getAppVersion: getBitcoinAppVersion,
-      connectApp: connectLedgerBitcoinApp(network.chain.bitcoin.mode),
+      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode),
       async signTransactionWithDevice(bitcoinApp) {
         if (!inputsToSign) {
           void ledgerNavigate.cancelLedgerAction();

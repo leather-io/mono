@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   toConnectStep: vi.fn(),
   toConnectionSuccessStep: vi.fn(),
   toErrorStep: vi.fn(),
+  toDeviceDisconnectStep: vi.fn(),
 }));
 
 vi.mock('../../hooks/use-ledger-navigate', () => ({
@@ -21,6 +22,7 @@ vi.mock('../../hooks/use-ledger-navigate', () => ({
     toConnectStep: mocks.toConnectStep,
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,
     toErrorStep: mocks.toErrorStep,
+    toDeviceDisconnectStep: mocks.toDeviceDisconnectStep,
   }),
 }));
 
@@ -74,9 +76,9 @@ function makeNamedError(name: string, message: string) {
 }
 
 interface SetupOptions {
-  connectAppError?: Error;
-  getAppVersionError?: Error;
-  signError?: Error;
+  connectAppError?: unknown;
+  getAppVersionError?: unknown;
+  signError?: unknown;
 }
 
 function setupSignTx({ connectAppError, getAppVersionError, signError }: SetupOptions = {}) {
@@ -93,7 +95,9 @@ function setupSignTx({ connectAppError, getAppVersionError, signError }: SetupOp
   const { getValue } = renderHookValue(() =>
     useLedgerSignTx<BitcoinApp>({
       chain: 'bitcoin',
-      connectApp: () => (connectAppError ? Promise.reject(connectAppError) : Promise.resolve(app)),
+      connectApp: connectAppError
+        ? vi.fn().mockRejectedValue(connectAppError)
+        : vi.fn().mockResolvedValue(app),
       getAppVersion,
       isAppOpen: () => true,
       signTransactionWithDevice,
@@ -167,6 +171,36 @@ describe(useLedgerSignTx.name, () => {
     expect(mocks.toErrorStep).toHaveBeenCalledWith('bitcoin', appOpenError.message);
     expect(mocks.toConnectStep).not.toHaveBeenCalled();
     expect(onSuccess).not.toHaveBeenCalled();
+  });
+
+  test('returns to the connect step when the device reports a DMK locked error', async () => {
+    const { getValue, onSuccess } = setupSignTx({
+      connectAppError: { _tag: 'DeviceLockedError' },
+    });
+
+    await act(async () => {
+      await getValue().signTransaction();
+    });
+
+    expect(getValue().latestDeviceResponse).toMatchObject({ deviceLocked: true });
+    expect(mocks.toConnectStep).toHaveBeenCalledOnce();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+  });
+
+  test('shows the disconnected step when the device drops while signing', async () => {
+    const { getValue, onSuccess, transportClose } = setupSignTx({
+      signError: { _tag: 'DeviceDisconnectedWhileSendingError' },
+    });
+
+    await act(async () => {
+      await getValue().signTransaction();
+    });
+
+    expect(mocks.toDeviceDisconnectStep).toHaveBeenCalledOnce();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(transportClose).toHaveBeenCalledOnce();
   });
 
   test('falls back to the generic error step for other failures', async () => {

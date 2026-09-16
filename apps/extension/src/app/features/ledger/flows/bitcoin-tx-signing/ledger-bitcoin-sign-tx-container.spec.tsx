@@ -1,16 +1,12 @@
 // @vitest-environment jsdom
 import { type ReactNode } from 'react';
 
-import {
-  DisconnectedDeviceDuringOperation,
-  StatusCodes,
-  TransportStatusError,
-} from '@ledgerhq/errors';
 import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { act, render } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import { toLedgerTransportError } from '@app/features/ledger/dmk/ledger-dmk-errors';
 import type { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 
 import { ledgerBitcoinTxSigningRoutes } from './ledger-bitcoin-sign-tx-container';
@@ -38,6 +34,10 @@ vi.mock('react-router', async importOriginal => {
   const actual = await importOriginal<typeof import('react-router')>();
   return { ...actual, useLocation: () => mocks.location };
 });
+
+vi.mock('@app/features/ledger/dmk/ledger-dmk.context', () => ({
+  useLedgerDmk: () => ({}),
+}));
 
 vi.mock('@ledgerhq/ledger-bitcoin', () => ({
   default: vi.fn(),
@@ -126,8 +126,14 @@ vi.mock('@shared/logger', () => ({
 
 const bitcoinAppVersion = { name: 'Bitcoin', version: '2.1.0', flags: 0 };
 const unsignedPsbt = bytesToHex(new btc.Transaction().toPSBT());
-const deniedError = new TransportStatusError(StatusCodes.CONDITIONS_OF_USE_NOT_SATISFIED);
-const disconnectError = new DisconnectedDeviceDuringOperation('device disconnected');
+const deniedError = Object.assign(
+  new Error('Ledger device: Condition of use not satisfied (0x6985)'),
+  { statusCode: 0x6985 }
+);
+const disconnectError = toLedgerTransportError({
+  _tag: 'DeviceDisconnectedWhileSendingError',
+  originalError: new Error('device disconnected'),
+});
 
 function renderSignTxContext(): LedgerTxSigningContext {
   render(ledgerBitcoinTxSigningRoutes);
