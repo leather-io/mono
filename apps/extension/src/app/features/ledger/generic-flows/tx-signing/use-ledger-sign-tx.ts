@@ -11,7 +11,10 @@ import { useLedgerDmk } from '../../dmk/ledger-dmk.context';
 import { closeLedgerSession } from '../../dmk/ledger-session';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
-import { useLedgerResponseState } from '../../utils/generic-ledger-utils';
+import {
+  isCancellableConnectionInteraction,
+  useLedgerResponseState,
+} from '../../utils/generic-ledger-utils';
 import type { LedgerApp } from '../../utils/ledger-app';
 import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
@@ -37,6 +40,7 @@ export function useLedgerSignTx<App extends LedgerApp>({
   const dmk = useLedgerDmk();
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
+  const [isConnectionCancellable, setIsConnectionCancellable] = useState(false);
   const ledgerNavigate = useLedgerNavigate();
   async function checkCorrectAppIsOpenWithFailState(app: App) {
     // Show checking version page immediately
@@ -68,8 +72,10 @@ export function useLedgerSignTx<App extends LedgerApp>({
           setLatestDeviceResponse({
             deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
           });
+          setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
         },
       });
+      setIsConnectionCancellable(false);
       const versionCheckResult = await checkCorrectAppIsOpenWithFailState(app);
 
       // If version check failed, return early (navigation already handled)
@@ -85,6 +91,7 @@ export function useLedgerSignTx<App extends LedgerApp>({
       onSuccess?.();
     } catch (e) {
       setAwaitingDeviceConnection(false);
+      setIsConnectionCancellable(false);
       handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
     } finally {
       if (app) await closeLedgerSession(dmk, app.sessionId);
@@ -97,5 +104,6 @@ export function useLedgerSignTx<App extends LedgerApp>({
     setLatestDeviceResponse,
     awaitingDeviceConnection,
     setAwaitingDeviceConnection,
+    isConnectionCancellable,
   };
 }

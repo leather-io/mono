@@ -25,6 +25,7 @@ import {
 } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import { immediatelyAttemptLedgerConnection } from '@app/features/ledger/hooks/use-when-reattempt-ledger-connection';
+import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
 import {
@@ -50,6 +51,7 @@ function LedgerRequestStacksKeys() {
   const toast = useToast();
   const navigate = useNavigate();
   const dmk = useLedgerDmk();
+  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerNavigate();
 
   const stxKeychainsDescriptors = useStacksKeychainDescriptors();
@@ -59,11 +61,11 @@ function LedgerRequestStacksKeys() {
 
   const chain = 'stacks';
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
+  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, isConnectionCancellable } =
     useRequestLedgerKeys<LedgerStacksApp>({
       chain,
       connectApp(options) {
-        return connectLedgerStacksApp(dmk, options);
+        return connectLedgerStacksApp(dmk, { ...options, runAction: signerActions.run });
       },
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
@@ -164,11 +166,15 @@ function LedgerRequestStacksKeys() {
     awaitingDeviceConnection,
   };
 
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
   return (
     <RequestKeysFlow
       context={ledgerContextValue}
       isActionCancellableByUser={canCancelLedgerAction}
+      onCancelAction={signerActions.cancelActive}
     />
   );
 }

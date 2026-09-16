@@ -46,7 +46,7 @@ function LedgerRequestBitcoinKeys() {
 
   const chain = 'bitcoin';
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
+  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, isConnectionCancellable } =
     useRequestLedgerKeys<LedgerBitcoinApp>({
       chain,
       connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode, signerActions.run),
@@ -101,7 +101,10 @@ function LedgerRequestBitcoinKeys() {
     awaitingDeviceConnection,
   };
 
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
   return (
     <RequestKeysFlow
       context={ledgerContextValue}

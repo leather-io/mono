@@ -79,67 +79,71 @@ function LedgerSignBitcoinTxContainer() {
 
   const chain = 'bitcoin';
 
-  const { signTransaction, latestDeviceResponse, awaitingDeviceConnection } =
-    useLedgerSignTx<LedgerBitcoinApp>({
-      chain,
-      isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
-      getAppVersion: getBitcoinAppVersion(dmk),
-      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode, signerActions.run),
-      async signTransactionWithDevice(bitcoinApp) {
-        if (!inputsToSign) {
-          void ledgerNavigate.cancelLedgerAction();
-          toast.error('No input signing config defined');
-          return;
-        }
+  const {
+    signTransaction,
+    latestDeviceResponse,
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  } = useLedgerSignTx<LedgerBitcoinApp>({
+    chain,
+    isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
+    getAppVersion: getBitcoinAppVersion(dmk),
+    connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode, signerActions.run),
+    async signTransactionWithDevice(bitcoinApp) {
+      if (!inputsToSign) {
+        void ledgerNavigate.cancelLedgerAction();
+        toast.error('No input signing config defined');
+        return;
+      }
 
-        void ledgerNavigate.toDeviceBusyStep('Verifying public key on Ledger…');
+      void ledgerNavigate.toDeviceBusyStep('Verifying public key on Ledger…');
 
-        void ledgerNavigate.toConnectionSuccessStep('bitcoin');
+      void ledgerNavigate.toConnectionSuccessStep('bitcoin');
+      await delay(1200);
+      if (!unsignedTransaction) throw new Error('No unsigned tx');
+
+      void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
+
+      try {
+        const btcTx = descriptor
+          ? await signLedgerDescriptor(
+              bitcoinApp,
+              unsignedTransaction.toPSBT(),
+              descriptor,
+              inputsToSign
+            )
+          : await signLedger(bitcoinApp, unsignedTransaction.toPSBT(), inputsToSign);
+
+        if (!btcTx || !unsignedTransactionRaw) throw new Error('No tx returned');
+        void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
         await delay(1200);
-        if (!unsignedTransaction) throw new Error('No unsigned tx');
-
-        void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
-
-        try {
-          const btcTx = descriptor
-            ? await signLedgerDescriptor(
-                bitcoinApp,
-                unsignedTransaction.toPSBT(),
-                descriptor,
-                inputsToSign
-              )
-            : await signLedger(bitcoinApp, unsignedTransaction.toPSBT(), inputsToSign);
-
-          if (!btcTx || !unsignedTransactionRaw) throw new Error('No tx returned');
-          void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
-          await delay(1200);
-          appEvents.publish('ledgerBitcoinTxSigned', {
-            signedPsbt: btcTx,
-            unsignedPsbt: unsignedTransactionRaw,
+        appEvents.publish('ledgerBitcoinTxSigned', {
+          signedPsbt: btcTx,
+          unsignedPsbt: unsignedTransactionRaw,
+        });
+      } catch (e) {
+        if (isLedgerActionCancelledError(e)) return;
+        logger.error('Unable to sign tx with ledger', e);
+        ledgerAnalytics.transactionSignedOnLedgerRejected();
+        // Descriptor signing is awaited by the rpc popup, which owns the error
+        // UI and the dApp response. Settle that promise with the error rather
+        // than leaving it to hang forever. Other flows keep the standard
+        // on-device rejection screen.
+        if (descriptor || (settleOnRejection && !isLedgerUserDeniedError(e))) {
+          appEvents.publish('ledgerBitcoinTxSigningCancelled', {
+            unsignedPsbt: unsignedTransactionRaw ?? '',
+            error: isError(e) ? e.message : undefined,
           });
-        } catch (e) {
-          if (isLedgerActionCancelledError(e)) return;
-          logger.error('Unable to sign tx with ledger', e);
-          ledgerAnalytics.transactionSignedOnLedgerRejected();
-          // Descriptor signing is awaited by the rpc popup, which owns the error
-          // UI and the dApp response. Settle that promise with the error rather
-          // than leaving it to hang forever. Other flows keep the standard
-          // on-device rejection screen.
-          if (descriptor || (settleOnRejection && !isLedgerUserDeniedError(e))) {
-            appEvents.publish('ledgerBitcoinTxSigningCancelled', {
-              unsignedPsbt: unsignedTransactionRaw ?? '',
-              error: isError(e) ? e.message : undefined,
-            });
-          } else if (settleOnRejection) {
-            appEvents.publish('ledgerBitcoinTxSigningCancelled', {
-              unsignedPsbt: unsignedTransactionRaw ?? '',
-            });
-          } else {
-            void ledgerNavigate.toOperationRejectedStep();
-          }
+        } else if (settleOnRejection) {
+          appEvents.publish('ledgerBitcoinTxSigningCancelled', {
+            unsignedPsbt: unsignedTransactionRaw ?? '',
+          });
+        } else {
+          void ledgerNavigate.toOperationRejectedStep();
         }
-      },
-    });
+      }
+    },
+  });
 
   function closeAction() {
     signerActions.cancelActive();
@@ -156,7 +160,10 @@ function LedgerSignBitcoinTxContainer() {
     latestDeviceResponse,
     awaitingDeviceConnection,
   };
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
 
   return (
     <TxSigningFlow

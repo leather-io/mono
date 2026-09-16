@@ -20,6 +20,15 @@ export interface LedgerDeviceActionHandle<Output> {
   cancel(): void;
 }
 
+export type RunLedgerDeviceAction = <
+  Output,
+  Error,
+  Intermediate extends DeviceActionIntermediateValue,
+>(
+  action: ExecuteDeviceActionReturnType<Output, Error, Intermediate>,
+  options?: LedgerDeviceActionOptions<Intermediate>
+) => Promise<Output>;
+
 function toLedgerDeviceActionError(error: unknown): Error {
   if (isLedgerUserRefusedDeviceActionError(error)) return makeLedgerOperationRejectedError(error);
   return toLedgerTransportError(error);
@@ -83,4 +92,15 @@ export function runLedgerDeviceAction<
       action.cancel();
     },
   };
+}
+
+export function runLedgerDeviceActionToCompletion<
+  Output,
+  Error,
+  Intermediate extends DeviceActionIntermediateValue,
+>(
+  action: ExecuteDeviceActionReturnType<Output, Error, Intermediate>,
+  options?: LedgerDeviceActionOptions<Intermediate>
+): Promise<Output> {
+  return runLedgerDeviceAction(action, options).result;
 }

@@ -8,6 +8,7 @@ import {
 } from '@leather.io/bitcoin';
 import type { BitcoinNetworkModes } from '@leather.io/models';
 
+import type { RunLedgerDeviceAction } from '../dmk/ledger-device-action';
 import {
   type ConnectLedgerDeviceOptions,
   connectLedgerDeviceToApp,
@@ -20,7 +21,7 @@ import {
   toSignerKitDerivationPath,
 } from './bitcoin-signer-kit-utils';
 import { LEDGER_APPS_MAP } from './generic-ledger-utils';
-import type { LedgerBitcoinApp, RunSignerAction } from './ledger-app';
+import type { LedgerBitcoinApp } from './ledger-app';
 
 export interface BitcoinLedgerAccountDetails {
   id: string;
@@ -38,16 +39,15 @@ function bitcoinAppNameForNetwork(network: BitcoinNetworkModes): string | null {
 export function connectLedgerBitcoinApp(
   dmk: DeviceManagementKit,
   network: BitcoinNetworkModes,
-  runAction?: RunSignerAction
+  runAction?: RunLedgerDeviceAction
 ) {
   return async function connectLedgerBitcoinAppImpl(
     options?: ConnectLedgerDeviceOptions
   ): Promise<LedgerBitcoinApp> {
-    const sessionId = await connectLedgerDeviceToApp(
-      dmk,
-      bitcoinAppNameForNetwork(network),
-      options
-    );
+    const sessionId = await connectLedgerDeviceToApp(dmk, bitcoinAppNameForNetwork(network), {
+      ...options,
+      runAction,
+    });
     return createLedgerBitcoinApp(dmk, sessionId, runAction);
   };
 }

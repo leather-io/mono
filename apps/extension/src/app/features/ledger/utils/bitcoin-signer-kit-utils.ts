@@ -21,9 +21,11 @@ import { bytesToHex } from '@noble/hashes/utils';
 import {
   type LedgerDeviceActionHandle,
   type LedgerDeviceActionOptions,
+  type RunLedgerDeviceAction,
   runLedgerDeviceAction,
+  runLedgerDeviceActionToCompletion,
 } from '../dmk/ledger-device-action';
-import type { LedgerBitcoinApp, RunSignerAction } from './ledger-app';
+import type { LedgerBitcoinApp } from './ledger-app';
 
 const skipOpenApp = true;
 const changeChainIndex = 1;
@@ -42,17 +44,6 @@ export type PartialSignature = Extract<
 
 function isPartialSignature(signature: PsbtSignature): signature is PartialSignature {
   return 'pubkey' in signature && 'signature' in signature;
-}
-
-function runSignerActionToCompletion<
-  Output,
-  Error,
-  Intermediate extends DeviceActionIntermediateValue,
->(
-  action: ExecuteDeviceActionReturnType<Output, Error, Intermediate>,
-  options?: LedgerDeviceActionOptions<Intermediate>
-): Promise<Output> {
-  return runLedgerDeviceAction(action, options).result;
 }
 
 export function useSignerActionController() {
@@ -85,7 +76,7 @@ export function useSignerActionController() {
 export function createLedgerBitcoinApp(
   dmk: DeviceManagementKit,
   sessionId: DeviceSessionId,
-  runAction: RunSignerAction = runSignerActionToCompletion
+  runAction: RunLedgerDeviceAction = runLedgerDeviceActionToCompletion
 ): LedgerBitcoinApp {
   return {
     chain: 'bitcoin',

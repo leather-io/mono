@@ -14,7 +14,11 @@ import {
 import { Subject, of } from 'rxjs';
 
 import { connectLedgerDeviceToApp, getAppAndVersion } from './ledger-device-connection';
-import { LedgerConnectionErrors, isLedgerDeviceLockedError } from './ledger-dmk-errors';
+import {
+  LedgerConnectionErrors,
+  isLedgerActionCancelledError,
+  isLedgerDeviceLockedError,
+} from './ledger-dmk-errors';
 import { makeFakeDmk } from './ledger-dmk.mocks';
 
 const sessionId = 'session-1';
@@ -166,6 +170,32 @@ describe(connectLedgerDeviceToApp.name, () => {
         }),
       })
     );
+  });
+
+  test('runs the open-app action through the supplied runner', async () => {
+    const onRequiredUserInteraction = vi.fn();
+    const runAction = vi.fn().mockResolvedValue(undefined);
+    const dmk = makeConnectingDmk({ grantedDevices: [device] });
+
+    await connectLedgerDeviceToApp(dmk, 'Bitcoin', { onRequiredUserInteraction, runAction });
+
+    expect(runAction).toHaveBeenCalledOnce();
+    expect(runAction).toHaveBeenCalledWith(
+      vi.mocked(dmk.executeDeviceAction).mock.results[0]?.value,
+      { onRequiredUserInteraction }
+    );
+  });
+
+  test('passes a cancelled-action error through and disconnects the session', async () => {
+    const dmk = makeConnectingDmk({
+      grantedDevices: [device],
+      openAppStates: [pendingState, { status: DeviceActionStatus.Stopped }],
+    });
+
+    const rejection = connectLedgerDeviceToApp(dmk, 'Bitcoin');
+
+    await expect(rejection).rejects.toSatisfy(isLedgerActionCancelledError);
+    expect(dmk.disconnect).toHaveBeenCalledWith({ sessionId });
   });
 
   test('rejects with an AppOpenFailed error when the user refuses on the device', async () => {

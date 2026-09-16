@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 
+import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
+
 import { delay } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -67,8 +69,24 @@ function useIsLedgerActionCancellable(): boolean {
   );
 }
 
-export function useCancelLedgerAction(awaitingDeviceConnection: boolean): boolean {
+const cancellableConnectionInteractions: readonly string[] = [
+  UserInteractionRequired.UnlockDevice,
+  UserInteractionRequired.ConfirmOpenApp,
+];
+
+export function isCancellableConnectionInteraction(interaction: string): boolean {
+  return cancellableConnectionInteractions.includes(interaction);
+}
+
+interface UseCancelLedgerActionArgs {
+  awaitingDeviceConnection: boolean;
+  isConnectionCancellable: boolean;
+}
+export function useCancelLedgerAction({
+  awaitingDeviceConnection,
+  isConnectionCancellable,
+}: UseCancelLedgerActionArgs): boolean {
   const canUserCancelAction = useIsLedgerActionCancellable();
 
-  return !awaitingDeviceConnection && canUserCancelAction;
+  return (!awaitingDeviceConnection || isConnectionCancellable) && canUserCancelAction;
 }

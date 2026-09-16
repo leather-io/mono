@@ -73,6 +73,14 @@ function makeNamedError(name: string, message: string) {
   return error;
 }
 
+function makeDeferred<T>() {
+  let resolve: (value: T) => void = () => {};
+  const promise = new Promise<T>(res => {
+    resolve = res;
+  });
+  return { promise, resolve };
+}
+
 interface SetupOptions {
   connectAppError?: unknown;
   connectApp?(options: ConnectLedgerDeviceOptions): Promise<LedgerBitcoinApp>;
@@ -240,6 +248,45 @@ describe(useLedgerSignTx.name, () => {
     expect(getValue().latestDeviceResponse).toMatchObject({ deviceLocked: false });
     expect(mocks.toConnectStep).not.toHaveBeenCalled();
     expect(onSuccess).toHaveBeenCalledOnce();
+  });
+
+  test('reports the connection as cancellable while the device waits for the user', async () => {
+    const connection = makeDeferred<LedgerBitcoinApp>();
+    const { getValue } = setupSignTx({
+      connectApp(options) {
+        options.onRequiredUserInteraction?.(UserInteractionRequired.UnlockDevice);
+        return connection.promise;
+      },
+    });
+
+    const { signing } = await act(async () => ({ signing: getValue().signTransaction() }));
+
+    expect(getValue().awaitingDeviceConnection).toBe(true);
+    expect(getValue().isConnectionCancellable).toBe(true);
+
+    await act(async () => {
+      connection.resolve(makeFakeLedgerBitcoinApp());
+      await signing;
+    });
+
+    expect(getValue().awaitingDeviceConnection).toBe(false);
+    expect(getValue().isConnectionCancellable).toBe(false);
+  });
+
+  test('stays silent when the user cancels while connecting', async () => {
+    const { getValue, onSuccess } = setupSignTx({
+      connectAppError: makeNamedError('LedgerActionCancelled', 'Cancelled'),
+    });
+
+    await act(async () => {
+      await getValue().signTransaction();
+    });
+
+    expect(getValue().awaitingDeviceConnection).toBe(false);
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(mocks.toConnectStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(mocks.disconnect).not.toHaveBeenCalled();
   });
 
   test('falls back to the generic error step for other failures', async () => {

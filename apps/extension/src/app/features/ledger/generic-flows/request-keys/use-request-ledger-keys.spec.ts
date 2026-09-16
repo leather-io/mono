@@ -82,6 +82,14 @@ function makeNamedError(name: string, message = name) {
   return error;
 }
 
+function makeDeferred<T>() {
+  let resolve: (value: T) => void = () => {};
+  const promise = new Promise<T>(res => {
+    resolve = res;
+  });
+  return { promise, resolve };
+}
+
 interface SetupOptions {
   pullKeysResult?: { status: 'success' } | { status: 'failure' };
   pullKeysError?: unknown;
@@ -282,6 +290,46 @@ describe(useRequestLedgerKeys.name, () => {
 
     expect(getValue().latestDeviceResponse).toMatchObject({ deviceLocked: true });
     expect(mocks.toConnectStep).not.toHaveBeenCalled();
+  });
+
+  test('reports the connection as cancellable while the device waits for the user', async () => {
+    const connection = makeDeferred<LedgerBitcoinApp>();
+    const { getValue } = setupRequestKeys({
+      pullKeysResult: { status: 'success' },
+      connectApp(options) {
+        options.onRequiredUserInteraction?.(UserInteractionRequired.ConfirmOpenApp);
+        return connection.promise;
+      },
+    });
+
+    const { requesting } = await act(async () => ({ requesting: getValue().requestKeys() }));
+
+    expect(getValue().awaitingDeviceConnection).toBe(true);
+    expect(getValue().isConnectionCancellable).toBe(true);
+
+    await act(async () => {
+      connection.resolve(makeFakeLedgerBitcoinApp());
+      await requesting;
+    });
+
+    expect(getValue().awaitingDeviceConnection).toBe(false);
+    expect(getValue().isConnectionCancellable).toBe(false);
+  });
+
+  test('stays silent when the user cancels while connecting', async () => {
+    const { getValue, onSuccess } = setupRequestKeys({
+      connectAppError: makeNamedError('LedgerActionCancelled'),
+    });
+
+    await act(async () => {
+      await getValue().requestKeys();
+    });
+
+    expect(getValue().awaitingDeviceConnection).toBe(false);
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(mocks.toConnectStep).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(mocks.disconnect).not.toHaveBeenCalled();
   });
 
   test('surfaces the app-open failure message on the error step without a session to close', async () => {

@@ -12,10 +12,15 @@ import { filter, firstValueFrom, timeout } from 'rxjs';
 
 import { safeAwait } from '@app/common/utils/safe-await';
 
-import { type LedgerDeviceActionOptions, runLedgerDeviceAction } from './ledger-device-action';
+import {
+  type LedgerDeviceActionOptions,
+  type RunLedgerDeviceAction,
+  runLedgerDeviceActionToCompletion,
+} from './ledger-device-action';
 import { ledgerTransportIdentifier } from './ledger-dmk';
 import {
   LedgerConnectionErrors,
+  isLedgerActionCancelledError,
   isLedgerDeviceDisconnectedError,
   isLedgerDeviceLockedError,
   toLedgerTransportError,
@@ -25,7 +30,10 @@ const grantedDeviceLookupTimeoutMs = 500;
 const openAppUnlockTimeoutMs = 60_000;
 const postRefreshEmissionIndex = 1;
 
-export type ConnectLedgerDeviceOptions = LedgerDeviceActionOptions<DeviceActionIntermediateValue>;
+export interface ConnectLedgerDeviceOptions
+  extends LedgerDeviceActionOptions<DeviceActionIntermediateValue> {
+  runAction?: RunLedgerDeviceAction;
+}
 
 async function findGrantedDevice(dmk: DeviceManagementKit): Promise<DiscoveredDevice | null> {
   const [, devices] = await safeAwait(
@@ -64,7 +72,12 @@ function makeAppOpenFailedError(appName: string) {
 }
 
 function toOpenAppError(error: unknown, appName: string): unknown {
-  if (isLedgerDeviceLockedError(error) || isLedgerDeviceDisconnectedError(error)) return error;
+  if (
+    isLedgerActionCancelledError(error) ||
+    isLedgerDeviceLockedError(error) ||
+    isLedgerDeviceDisconnectedError(error)
+  )
+    return error;
   return makeAppOpenFailedError(appName);
 }
 
@@ -81,8 +94,9 @@ async function openLedgerApp(
     }),
   });
 
+  const { runAction = runLedgerDeviceActionToCompletion, ...actionOptions } = options;
   try {
-    await runLedgerDeviceAction(action, options).result;
+    await runAction(action, actionOptions);
   } catch (error) {
     throw toOpenAppError(error, appName);
   }
