@@ -226,12 +226,15 @@ importers:
       '@leather.io/utils':
         specifier: workspace:*
         version: link:../../packages/utils
-      '@ledgerhq/errors':
-        specifier: 6.29.0
-        version: 6.29.0
-      '@ledgerhq/hw-transport-webusb':
-        specifier: 6.35.0
-        version: 6.35.0
+      '@ledgerhq/device-management-kit':
+        specifier: 1.9.0
+        version: 1.9.0(rxjs@7.8.2)
+      '@ledgerhq/device-transport-kit-web-hid':
+        specifier: 1.2.4
+        version: 1.2.4(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@ledgerhq/hw-transport':
+        specifier: 6.35.5
+        version: 6.35.5
       '@ledgerhq/ledger-bitcoin':
         specifier: 0.3.1
         version: 0.3.1(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(typescript@5.9.3)
@@ -428,8 +431,8 @@ importers:
         specifier: 2.21.2
         version: 2.21.2
       rxjs:
-        specifier: 7.8.1
-        version: 7.8.1
+        specifier: 7.8.2
+        version: 7.8.2
       style-loader:
         specifier: 4.0.0
         version: 4.0.0(webpack@5.105.2)
@@ -5043,8 +5046,16 @@ packages:
     peerDependencies:
       reflect-metadata: ~0.2.2
 
+  '@inversifyjs/container@1.9.1':
+    resolution: {integrity: sha512-8EhjFoAx1LoD7TpCuP9ptitwc+7kVXEpZB0IeoEsCQb9sWaNYYaBi+7Lommu3/1nYxdMbX2t7AJhQnryT1EEsg==}
+    peerDependencies:
+      reflect-metadata: ~0.2.2
+
   '@inversifyjs/core@5.0.0':
     resolution: {integrity: sha512-axOl+VZFGVA3nAMbs6RuHhQ8HvgO6/tKjlWJk4Nt0rUqed+1ksak4p5yZNtown1Kdm0GV2Oc57qLqqWd943hgA==}
+
+  '@inversifyjs/core@5.2.0':
+    resolution: {integrity: sha512-MMaHGGRjQWT9uAof63sbZyEhRl4XptEAE17DJwrgUcN9LsdIEvecKP3r53pE9VF88PFR41knUKKzagUBvWLHmw==}
 
   '@inversifyjs/prototype-utils@0.1.0':
     resolution: {integrity: sha512-lNz1yyajMRDXBHLvJsYYX81FcmeD15e5Qz1zAZ/3zeYTl+u7ZF/GxNRKJzNOloeMPMtuR8BnvzHA1SZxjR+J9w==}
@@ -5186,17 +5197,22 @@ packages:
       react: '*'
       react-native: '*'
 
+  '@ledgerhq/device-management-kit@1.9.0':
+    resolution: {integrity: sha512-M9M8Uy8c6diJ0pdK/85oP1u2+S6iO8WQcQ8V5FCWu/LyjXKrmTakQ9GRwWYNOp79nbcO+oXcLxJpvZtvpgquIg==}
+    peerDependencies:
+      rxjs: 7.8.2
+
+  '@ledgerhq/device-transport-kit-web-hid@1.2.4':
+    resolution: {integrity: sha512-VMwkZ6QTUJpj4fS45ihnqdcNrJFDI58kg/KGKCDVhsknSZAe52R0JoH9yRqryemjL0eeo11Yj2KifXM8dNpsDA==}
+    peerDependencies:
+      '@ledgerhq/device-management-kit': ^1.7.0
+      rxjs: 7.8.2
+
   '@ledgerhq/devices@8.16.0':
     resolution: {integrity: sha512-brXLPzkvGM3D5YNsWQ25P5G4SmWdSNBed9W8wKoOIRLGdRfvE+bg9mzFty0iZ+aRLBkLoXwX7xKIL9zUi6LBKQ==}
 
-  '@ledgerhq/errors@6.29.0':
-    resolution: {integrity: sha512-mmDsGN662zd0XGKyjzSKkg+5o1/l9pvV1HkVHtbzaydvHAtRypghmVoWMY9XAQDLXiUBXGIsLal84NgmGeuKWA==}
-
   '@ledgerhq/errors@6.37.0':
     resolution: {integrity: sha512-T5yiKI5UX7ugeocdTF3TUsCIN2BH41Bio4ZeN410YFjFOf3es08n/5JyMzzKwzRgP0blG3HfBf7s7vJKqCSAeg==}
-
-  '@ledgerhq/hw-transport-webusb@6.35.0':
-    resolution: {integrity: sha512-8fBNqzQnyR3pKLE2AVxCAc54nHMEKz9/eAYLDENVRuDp+A23lBJYWErxSyoZ6riCM19jIhRvtHjB0o4PXpa2tg==}
 
   '@ledgerhq/hw-transport@6.35.5':
     resolution: {integrity: sha512-P4+wtLewLWgxPtIb90h5kjpzXVlC6f4IBQBmvowVFkInvZt34ffXkX7wa5KfMzu4l3cqCcpNSqtPSCMp+0vuqg==}
@@ -8274,6 +8290,14 @@ packages:
     resolution: {integrity: sha512-JfEpeQ8a1qVJEb9DxpFTFy1J1gkNdlgKAPiqYGNnm4yQbnfl2Kb/iEo1if70FkiHc52H8fJwISEF90pzMm6lPg==}
     engines: {node: '>=18'}
 
+  '@sentry/hub@6.19.7':
+    resolution: {integrity: sha512-y3OtbYFAqKHCWezF0EGGr5lcyI2KbaXW2Ik7Xp8Mu9TxbSTuwTe4rTntwg8ngPjUQU3SUHzgjqVB8qjiGqFXCA==}
+    engines: {node: '>=6'}
+
+  '@sentry/minimal@6.19.7':
+    resolution: {integrity: sha512-wcYmSJOdvk6VAPx8IcmZgN08XTXRwRtB1aOLZm+MVHjIZIhHoBGZJYTVQS/BWjldsamj2cX3YGbGXNunaCfYJQ==}
+    engines: {node: '>=6'}
+
   '@sentry/node@9.15.0':
     resolution: {integrity: sha512-K0LdJxIzYbbsbiT+1tKgNq6MUHuDs2DggBDcFEp3T+yXVJYN1AyalUli06Kmxq8yvou6hgLwWL4gjIcB1IQySA==}
     engines: {node: '>=18'}
@@ -8329,6 +8353,14 @@ packages:
   '@sentry/types@10.12.0':
     resolution: {integrity: sha512-sKGj3l3V8ZKISh2Tu88bHfnm5ztkRtSLdmpZ6TmCeJdSM9pV+RRd6CMJ0RnSEXmYHselPNUod521t2NQFd4W1w==}
     engines: {node: '>=18'}
+
+  '@sentry/types@6.19.7':
+    resolution: {integrity: sha512-jH84pDYE+hHIbVnab3Hr+ZXr1v8QABfhx39KknxqKWr2l0oEItzepV0URvbEhB446lk/S/59230dlUUIBGsXbg==}
+    engines: {node: '>=6'}
+
+  '@sentry/utils@6.19.7':
+    resolution: {integrity: sha512-z95ECmE3i9pbWoXQrD/7PgkBAzJYR+iXtPuTkpBjDKs86O3mT+PXOT3BAn79w2wkn7/i3vOGD2xVr1uiMl26dA==}
+    engines: {node: '>=6'}
 
   '@sentry/vite-plugin@3.4.0':
     resolution: {integrity: sha512-pUFBGrKsHuc8K6A7B1wU2nx65n9aIzvTlcHX9yZ1qvjEO0cZFih0JCwu1Fcav/yrtT9RMN44L/ugu/kMBHQhjQ==}
@@ -13922,6 +13954,11 @@ packages:
     peerDependencies:
       reflect-metadata: ~0.2.2
 
+  inversify@7.5.1:
+    resolution: {integrity: sha512-oWWFDU2BXiuqZynGcLDDD4tqiWAeaEUCALlCj0vk/QwHGgZY/tzDFPuTmWMY3jwRmDIHxVDkcj9SL3MFTlCEDw==}
+    peerDependencies:
+      reflect-metadata: ~0.2.2
+
   invert-kv@3.0.1:
     resolution: {integrity: sha512-CYdFeFexxhv/Bcny+Q0BfOV+ltRlJcd4BBZBYFX/O0u4npJrgZtIcjokegtiSMAvlMTJ+Koq0GBCc//3bueQxw==}
     engines: {node: '>=8'}
@@ -14323,6 +14360,11 @@ packages:
   isomorphic-timers-promises@1.0.1:
     resolution: {integrity: sha512-u4sej9B1LPSxTGKB/HiuzvEQnXH0ECYkSVQU39koSwmFAxhlEAFl9RdTvLv4TOTQUgBS5O3O5fwUxk6byBZ+IQ==}
     engines: {node: '>=10'}
+
+  isomorphic-ws@5.0.0:
+    resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
+    peerDependencies:
+      ws: '>=6.2.4 <7'
 
   isows@1.0.7:
     resolution: {integrity: sha512-I1fSfDCZL5P0v33sVqeTDSpcstAg/N+wF5HS033mogOVIp4B+oHC7oOCsA3axAbBSGTJ8QubbNmnIRN/h8U7hg==}
@@ -16963,6 +17005,9 @@ packages:
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
+  purify-ts@2.1.0:
+    resolution: {integrity: sha512-+KNUHV9FxB9BbjadFdvxa+LNJIaqZmSF7CQH5Rv6+f0rBzsxm9FEqrvkALQbWYJobAja2ZCbBDUY7O4fH2znMA==}
+
   qr.js@0.0.0:
     resolution: {integrity: sha512-c4iYnWb+k2E+vYpRimHqSu575b1/wKl4XFeJGpFmrJQz5I88v9aY2czh7s0w36srfCM1sXgC/xpoJz5dJfq+OQ==}
 
@@ -17875,9 +17920,6 @@ packages:
     engines: {node: '>=18.0.0'}
     peerDependencies:
       rxjs: 7.x
-
-  rxjs@7.8.1:
-    resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
 
   rxjs@7.8.2:
     resolution: {integrity: sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==}
@@ -19603,6 +19645,10 @@ packages:
   utrie@1.0.2:
     resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
 
+  uuid@11.0.3:
+    resolution: {integrity: sha512-d0z310fCWv5dJwnX1Y/MncBAqGMKEzlBb1AOf7z9K8ALnd0utBX/msg/fA0+sbyN1ihbMsLhrBlnl1ak7Wa0rg==}
+    hasBin: true
+
   uuid@11.1.0:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
     hasBin: true
@@ -19618,11 +19664,12 @@ packages:
 
   uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
-    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@7.0.3:
     resolution: {integrity: sha512-DPSke0pXhTZgoF/d+WSt2QaKMCFSfx7QegxEWT+JOuHF5aWrKEn0G+ztjuJg/gG8/ItK+rbPCD/yNv8yyih6Cg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@8.3.2:
@@ -20309,6 +20356,9 @@ packages:
 
   xregexp@2.0.0:
     resolution: {integrity: sha512-xl/50/Cf32VsGq/1R8jJE5ajH1yMCQkpmoS10QbFZWl2Oor4H0Me64Pu2yxvsRWK3m6soJbmGfzSR7BYmDcWAA==}
+
+  xstate@5.19.2:
+    resolution: {integrity: sha512-B8fL2aP0ogn5aviAXFzI5oZseAMqN00fg/TeDa3ZtatyDcViYLIfuQl4y8qmHCiKZgGEzmnTyNtNQL9oeJE2gw==}
 
   xstate@5.21.0:
     resolution: {integrity: sha512-y4wmqxjyAa0tgz4k3m/MgTF1kDOahE5+xLfWt5eh1sk+43DatLhKlI8lQDJZpvihZavjbD3TUgy2PRMphhhqgQ==}
@@ -23477,14 +23527,14 @@ snapshots:
       react: 19.1.0
       tslib: 2.6.2
 
-  '@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.2.3)':
+  '@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@dnd-kit/core': 6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@dnd-kit/utilities': 3.2.2(react@19.2.3)
       react: 19.2.3
       tslib: 2.6.2
 
-  '@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.2.3)':
+  '@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@dnd-kit/core': 6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@dnd-kit/utilities': 3.2.2(react@19.2.3)
@@ -23897,7 +23947,7 @@ snapshots:
       resolve: 1.22.11
       resolve-from: 5.0.0
       resolve.exports: 2.0.3
-      semver: 7.7.3
+      semver: 7.7.4
       send: 0.19.2
       slugify: 1.6.6
       source-map-support: 0.5.21
@@ -23932,7 +23982,7 @@ snapshots:
       getenv: 2.0.0
       glob: 11.1.0
       resolve-from: 5.0.0
-      semver: 7.7.3
+      semver: 7.7.4
       slash: 3.0.0
       slugify: 1.6.6
       xcode: 3.0.1
@@ -23954,7 +24004,7 @@ snapshots:
       require-from-string: 2.0.2
       resolve-from: 5.0.0
       resolve-workspace-root: 2.0.0
-      semver: 7.7.3
+      semver: 7.7.4
       slugify: 1.6.6
       sucrase: 3.35.1
     transitivePeerDependencies:
@@ -23996,7 +24046,7 @@ snapshots:
       minimatch: 9.0.7
       p-limit: 3.1.0
       resolve-from: 5.0.0
-      semver: 7.7.3
+      semver: 7.7.4
     transitivePeerDependencies:
       - supports-color
 
@@ -24009,7 +24059,7 @@ snapshots:
       parse-png: 2.1.0
       resolve-from: 5.0.0
       resolve-global: 1.0.0
-      semver: 7.7.3
+      semver: 7.7.4
       temp-dir: 2.0.0
       unique-string: 2.0.0
 
@@ -24104,7 +24154,7 @@ snapshots:
       debug: 4.4.3(supports-color@9.4.0)
       expo: 54.0.32(@babel/core@7.27.1)(@expo/metro-runtime@5.0.5(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)))(expo-router@6.0.22)(graphql@16.12.0)(react-native-webview@13.15.0(patch_hash=76cfeea66548fcf22fc5cb07253527086f0f00d783ef2b50399a871a98e5f25c)(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       resolve-from: 5.0.0
-      semver: 7.7.3
+      semver: 7.7.4
       xml2js: 0.6.0
     transitivePeerDependencies:
       - supports-color
@@ -24549,7 +24599,22 @@ snapshots:
       '@inversifyjs/reflect-metadata-utils': 1.1.0(reflect-metadata@0.2.2)
       reflect-metadata: 0.2.2
 
+  '@inversifyjs/container@1.9.1(reflect-metadata@0.2.2)':
+    dependencies:
+      '@inversifyjs/common': 1.5.0
+      '@inversifyjs/core': 5.2.0(reflect-metadata@0.2.2)
+      '@inversifyjs/reflect-metadata-utils': 1.1.0(reflect-metadata@0.2.2)
+      reflect-metadata: 0.2.2
+
   '@inversifyjs/core@5.0.0(reflect-metadata@0.2.2)':
+    dependencies:
+      '@inversifyjs/common': 1.5.0
+      '@inversifyjs/prototype-utils': 0.1.0
+      '@inversifyjs/reflect-metadata-utils': 1.1.0(reflect-metadata@0.2.2)
+    transitivePeerDependencies:
+      - reflect-metadata
+
+  '@inversifyjs/core@5.2.0(reflect-metadata@0.2.2)':
     dependencies:
       '@inversifyjs/common': 1.5.0
       '@inversifyjs/prototype-utils': 0.1.0
@@ -24740,20 +24805,36 @@ snapshots:
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
 
+  '@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2)':
+    dependencies:
+      '@noble/hashes': 1.8.0
+      '@sentry/minimal': 6.19.7
+      inversify: 7.5.1(reflect-metadata@0.2.2)
+      isomorphic-ws: 5.0.0(ws@8.21.0)
+      purify-ts: 2.1.0
+      reflect-metadata: 0.2.2
+      rxjs: 7.8.2
+      semver: 7.7.2
+      uuid: 11.0.3
+      ws: 8.21.0
+      xstate: 5.19.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@ledgerhq/device-transport-kit-web-hid@1.2.4(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(rxjs@7.8.2)':
+    dependencies:
+      '@ledgerhq/device-management-kit': 1.9.0(rxjs@7.8.2)
+      '@sentry/minimal': 6.19.7
+      purify-ts: 2.1.0
+      rxjs: 7.8.2
+      uuid: 11.0.3
+
   '@ledgerhq/devices@8.16.0':
     dependencies:
       semver: 7.7.3
 
-  '@ledgerhq/errors@6.29.0': {}
-
   '@ledgerhq/errors@6.37.0': {}
-
-  '@ledgerhq/hw-transport-webusb@6.35.0':
-    dependencies:
-      '@ledgerhq/devices': 8.16.0
-      '@ledgerhq/errors': 6.37.0
-      '@ledgerhq/hw-transport': 6.35.5
-      '@ledgerhq/logs': 6.17.0
 
   '@ledgerhq/hw-transport@6.35.5':
     dependencies:
@@ -25811,7 +25892,7 @@ snapshots:
     dependencies:
       '@portabletext/sanity-bridge': 1.1.7(@sanity/schema@4.6.1(@types/react@19.1.17)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1))
       '@portabletext/schema': 1.2.0
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       '@types/react': 19.1.17
       get-random-values-esm: 1.0.2
       lodash: 4.18.1
@@ -25827,7 +25908,7 @@ snapshots:
       '@portabletext/schema': 1.2.0
       '@portabletext/to-html': 3.0.0
       '@sanity/schema': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       '@xstate/react': 6.0.0(@types/react@19.1.17)(react@19.1.0)(xstate@5.21.0)
       debug: 4.4.3(supports-color@9.4.0)
       get-random-values-esm: 1.0.2
@@ -25869,7 +25950,7 @@ snapshots:
     dependencies:
       '@portabletext/schema': 1.2.0
       '@sanity/schema': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       get-random-values-esm: 1.0.2
       lodash.startcase: 4.4.0
 
@@ -27159,7 +27240,7 @@ snapshots:
       metro: 0.83.3
       metro-config: 0.83.3
       metro-core: 0.83.3
-      semver: 7.7.3
+      semver: 7.7.4
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -27562,8 +27643,8 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.28.4
       '@dnd-kit/core': 6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@dnd-kit/modifiers': 9.0.0(@dnd-kit/core@6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.2.3)
-      '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.2.3)
+      '@dnd-kit/modifiers': 9.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
+      '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
       '@dnd-kit/utilities': 3.2.2(react@19.2.3)
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
       '@redux-devtools/core': 4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1)
@@ -28298,7 +28379,7 @@ snapshots:
   '@sanity/bifur-client@0.4.1':
     dependencies:
       nanoid: 3.3.18
-      rxjs: 7.8.1
+      rxjs: 7.8.2
 
   '@sanity/cli@4.6.1(@types/node@25.0.3)(lightningcss@1.30.2)(react@19.1.0)(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)':
     dependencies:
@@ -28316,7 +28397,7 @@ snapshots:
       groq-js: 1.17.3
       pkg-dir: 5.0.0
       prettier: 3.7.4
-      semver: 7.7.3
+      semver: 7.7.4
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -28339,7 +28420,7 @@ snapshots:
       '@sanity/eventsource': 5.0.2
       get-it: 8.6.10(debug@4.4.1)
       nanoid: 3.3.18
-      rxjs: 7.8.1
+      rxjs: 7.8.2
     transitivePeerDependencies:
       - debug
 
@@ -28348,7 +28429,7 @@ snapshots:
       '@sanity/eventsource': 5.0.2
       get-it: 8.6.10(debug@4.4.3)
       nanoid: 3.3.18
-      rxjs: 7.8.1
+      rxjs: 7.8.2
     transitivePeerDependencies:
       - debug
 
@@ -28525,7 +28606,7 @@ snapshots:
   '@sanity/insert-menu@2.0.1(@emotion/is-prop-valid@1.4.0)(@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1))(react-dom@19.1.0(react@19.1.0))(react-is@19.1.1)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
     dependencies:
       '@sanity/icons': 3.7.4(react@19.1.0)
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       '@sanity/ui': 3.0.8(@emotion/is-prop-valid@1.4.0)(react-dom@19.1.0(react@19.1.0))(react-is@19.1.1)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       lodash: 4.18.1
       react: 19.1.0
@@ -28674,7 +28755,7 @@ snapshots:
     dependencies:
       '@sanity/descriptors': 1.1.1
       '@sanity/generate-help-url': 3.0.0
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       arrify: 2.0.1
       groq-js: 1.17.3
       humanize-list: 1.0.1
@@ -28713,7 +28794,7 @@ snapshots:
     dependencies:
       lodash: 4.18.1
       react: 19.1.0
-      rxjs: 7.8.1
+      rxjs: 7.8.2
       typeid-js: 0.3.0
 
   '@sanity/template-validator@2.4.3':
@@ -28740,7 +28821,7 @@ snapshots:
 
   '@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1)':
     dependencies:
-      '@sanity/client': 7.10.0(debug@4.4.3)
+      '@sanity/client': 7.10.0(debug@4.4.1)
       '@sanity/media-library-types': 1.0.0
       '@types/react': 19.1.17
     transitivePeerDependencies:
@@ -28864,7 +28945,7 @@ snapshots:
     dependencies:
       '@sanity/client': 7.10.0(debug@4.4.3)
     optionalDependencies:
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
 
   '@scure/base@1.1.1': {}
 
@@ -29190,6 +29271,18 @@ snapshots:
 
   '@sentry/core@9.30.0': {}
 
+  '@sentry/hub@6.19.7':
+    dependencies:
+      '@sentry/types': 6.19.7
+      '@sentry/utils': 6.19.7
+      tslib: 1.14.1
+
+  '@sentry/minimal@6.19.7':
+    dependencies:
+      '@sentry/hub': 6.19.7
+      '@sentry/types': 6.19.7
+      tslib: 1.14.1
+
   '@sentry/node@9.15.0':
     dependencies:
       '@opentelemetry/api': 1.9.0
@@ -29297,6 +29390,13 @@ snapshots:
   '@sentry/types@10.12.0':
     dependencies:
       '@sentry/core': 10.12.0
+
+  '@sentry/types@6.19.7': {}
+
+  '@sentry/utils@6.19.7':
+    dependencies:
+      '@sentry/types': 6.19.7
+      tslib: 1.14.1
 
   '@sentry/vite-plugin@3.4.0(encoding@0.1.13)':
     dependencies:
@@ -30594,7 +30694,7 @@ snapshots:
       fast-glob: 3.3.3
       is-glob: 4.0.3
       minimatch: 9.0.7
-      semver: 7.7.3
+      semver: 7.7.4
       ts-api-utils: 2.1.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -33122,7 +33222,7 @@ snapshots:
       chalk: 4.1.2
       date-fns: 2.30.0
       lodash: 4.18.1
-      rxjs: 7.8.1
+      rxjs: 7.8.2
       shell-quote: 1.10.0
       spawn-command: 0.0.2
       supports-color: 8.1.1
@@ -36612,6 +36712,13 @@ snapshots:
       '@inversifyjs/core': 5.0.0(reflect-metadata@0.2.2)
       reflect-metadata: 0.2.2
 
+  inversify@7.5.1(reflect-metadata@0.2.2):
+    dependencies:
+      '@inversifyjs/common': 1.5.0
+      '@inversifyjs/container': 1.9.1(reflect-metadata@0.2.2)
+      '@inversifyjs/core': 5.2.0(reflect-metadata@0.2.2)
+      reflect-metadata: 0.2.2
+
   invert-kv@3.0.1: {}
 
   ip-address@10.1.0:
@@ -36933,6 +37040,10 @@ snapshots:
       - encoding
 
   isomorphic-timers-promises@1.0.1: {}
+
+  isomorphic-ws@5.0.0(ws@8.21.0):
+    dependencies:
+      ws: 8.21.0
 
   isows@1.0.7(ws@8.21.0):
     dependencies:
@@ -38988,7 +39099,7 @@ snapshots:
       nopt: 5.0.0
       npmlog: 6.0.2
       rimraf: 3.0.2
-      semver: 7.7.3
+      semver: 7.7.4
       tar: 7.5.22
       which: 2.0.2
     transitivePeerDependencies:
@@ -39009,7 +39120,7 @@ snapshots:
     dependencies:
       growly: 1.3.0
       is-wsl: 2.2.0
-      semver: 7.7.3
+      semver: 7.7.4
       shellwords: 0.1.1
       uuid: 8.3.2
       which: 2.0.2
@@ -39088,7 +39199,7 @@ snapshots:
     dependencies:
       hosted-git-info: 7.0.2
       proc-log: 4.2.0
-      semver: 7.7.3
+      semver: 7.7.4
       validate-npm-package-name: 5.0.1
 
   npm-run-path@3.1.0:
@@ -40321,6 +40432,10 @@ snapshots:
       escape-goat: 4.0.0
 
   pure-rand@6.1.0: {}
+
+  purify-ts@2.1.0:
+    dependencies:
+      '@types/json-schema': 7.0.15
 
   qr.js@0.0.0: {}
 
@@ -41573,10 +41688,6 @@ snapshots:
     dependencies:
       rxjs: 7.8.2
 
-  rxjs@7.8.1:
-    dependencies:
-      tslib: 2.6.2
-
   rxjs@7.8.2:
     dependencies:
       tslib: 2.6.2
@@ -41668,7 +41779,7 @@ snapshots:
       '@sanity/schema': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
       '@sanity/sdk': 2.1.2(@types/react@19.1.17)(debug@4.4.1)(immer@11.1.3)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))
       '@sanity/telemetry': 0.8.1(react@19.1.0)
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       '@sanity/ui': 3.0.8(@emotion/is-prop-valid@1.4.0)(react-dom@19.1.0(react@19.1.0))(react-is@19.1.1)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@sanity/util': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
       '@sanity/uuid': 3.0.2
@@ -42178,7 +42289,7 @@ snapshots:
 
   simple-update-notifier@2.0.0:
     dependencies:
-      semver: 7.7.3
+      semver: 7.7.4
 
   simple-wcswidth@1.1.2: {}
 
@@ -43497,7 +43608,7 @@ snapshots:
       is-yarn-global: 0.4.1
       latest-version: 7.0.0
       pupa: 3.3.0
-      semver: 7.7.3
+      semver: 7.7.4
       semver-diff: 4.0.0
       xdg-basedir: 5.1.0
 
@@ -43511,7 +43622,7 @@ snapshots:
       is-npm: 6.1.0
       latest-version: 9.0.0
       pupa: 3.3.0
-      semver: 7.7.3
+      semver: 7.7.4
       xdg-basedir: 5.1.0
 
   uri-js-replace@1.0.1: {}
@@ -43627,6 +43738,8 @@ snapshots:
   utrie@1.0.2:
     dependencies:
       base64-arraybuffer: 1.0.2
+
+  uuid@11.0.3: {}
 
   uuid@11.1.0: {}
 
@@ -44786,6 +44899,8 @@ snapshots:
   xmlchars@2.2.0: {}
 
   xregexp@2.0.0: {}
+
+  xstate@5.19.2: {}
 
   xstate@5.21.0: {}
 

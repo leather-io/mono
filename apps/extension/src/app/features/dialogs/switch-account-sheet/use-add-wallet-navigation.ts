@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 
-import { doesBrowserSupportWebUsbApi, whenPageMode } from '@app/common/utils';
+import { doesBrowserSupportWebHidApi, whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 
 interface UseAddWalletNavigationArgs {
@@ -37,7 +37,7 @@ export function useAddWalletNavigation({ closeSheets }: UseAddWalletNavigationAr
 
   function onConnectLedger() {
     closeSheets();
-    if (doesBrowserSupportWebUsbApi()) {
+    if (doesBrowserSupportWebHidApi()) {
       return pageModeRoutingAction(RouteUrls.ConnectLedgerStart)();
     }
     return pageModeRoutingAction(RouteUrls.LedgerUnsupportedBrowser)();
