@@ -23,6 +23,8 @@ const userDeniedStatusCode = 0x6985;
 const actionRefusedStatusCode = 0x5501;
 const legacyLockedDeviceErrorName = 'LockedDeviceError';
 const unknownDeviceErrorMessage = 'Unknown Ledger device error';
+const unknownTransportReturnCode = 0xffff;
+const transportFailureErrorName = 'LedgerTransportFailure';
 
 export const ledgerActionCancelledErrorName = 'LedgerActionCancelled';
 
@@ -115,6 +117,23 @@ export function isLedgerDeviceDisconnectedError(error: unknown): boolean {
   return hasTag(error, deviceDisconnectedTags);
 }
 
+interface LedgerAppErrorResponse {
+  returnCode: number;
+  errorMessage: string;
+  cause?: unknown;
+}
+
+export function makeLedgerAppResponseError(response: LedgerAppErrorResponse): Error {
+  const error = new Error(response.errorMessage);
+  if (response.returnCode !== unknownTransportReturnCode) return error;
+  error.name = transportFailureErrorName;
+  return Object.assign(error, { originalError: getNestedError(response) });
+}
+
+function isLedgerTransportFailureError(error: unknown): boolean {
+  return isError(error) && error.name === transportFailureErrorName;
+}
+
 function isLedgerNoDeviceSelectedError(error: unknown): boolean {
   return hasTag(error, [noDeviceSelectedTag]);
 }
@@ -182,6 +201,11 @@ export function handleLedgerConnectionError(
 
   if (isLedgerDeviceInUseError(error)) {
     void ledgerNavigate.toErrorStep(chain, deviceInUseErrorMessage);
+    return;
+  }
+
+  if (isLedgerTransportFailureError(error)) {
+    void ledgerNavigate.toDeviceDisconnectStep();
     return;
   }
 

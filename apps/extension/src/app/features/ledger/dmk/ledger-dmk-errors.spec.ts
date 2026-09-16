@@ -6,9 +6,14 @@ import {
   isLedgerDeviceLockedError,
   isLedgerUserDeniedError,
   isLedgerUserRefusedDeviceActionError,
+  makeLedgerAppResponseError,
   makeLedgerOperationRejectedError,
   toLedgerTransportError,
 } from './ledger-dmk-errors';
+
+const unknownTransportReturnCode = 0xffff;
+const transportFailureMessage =
+  'Device Management Kit failed to send APDU: DeviceDisconnectedWhileSendingError';
 
 const noDeviceSelectedErrorMessage =
   'Click "Try again" and choose your Ledger in the browser prompt.';
@@ -96,6 +101,41 @@ describe(makeLedgerOperationRejectedError.name, () => {
     expect(makeLedgerOperationRejectedError(undefined).message).toBe(
       'Operation rejected on the Ledger device'
     );
+  });
+});
+
+describe(makeLedgerAppResponseError.name, () => {
+  test('keeps the device error message for app-level error codes', () => {
+    const error = makeLedgerAppResponseError({ returnCode: 0x6f00, errorMessage: 'Unknown error' });
+
+    expect(error).toBeInstanceOf(Error);
+    expect(error.message).toBe('Unknown error');
+    expect(error.name).toBe('Error');
+    expect(isLedgerDeviceDisconnectedError(error)).toBe(false);
+  });
+
+  test('preserves the DMK cause of a transport failure so the disconnect guard matches', () => {
+    const error = makeLedgerAppResponseError({
+      returnCode: unknownTransportReturnCode,
+      errorMessage: transportFailureMessage,
+      cause: { _tag: 'DeviceDisconnectedWhileSendingError' },
+    });
+
+    expect(error.message).toBe(transportFailureMessage);
+    expect(error).toMatchObject({
+      originalError: { _tag: 'DeviceDisconnectedWhileSendingError' },
+    });
+    expect(isLedgerDeviceDisconnectedError(error)).toBe(true);
+  });
+
+  test('still marks a transport failure when the cause was dropped', () => {
+    const error = makeLedgerAppResponseError({
+      returnCode: unknownTransportReturnCode,
+      errorMessage: transportFailureMessage,
+    });
+
+    expect(error.name).toBe('LedgerTransportFailure');
+    expect(isLedgerDeviceDisconnectedError(error)).toBe(false);
   });
 });
 
@@ -209,6 +249,40 @@ describe(handleLedgerConnectionError.name, () => {
     const { ledgerNavigate } = dispatch({ _tag: 'DeviceSessionNotFound' });
 
     expect(ledgerNavigate.toDeviceDisconnectStep).toHaveBeenCalledOnce();
+  });
+
+  test('routes a transport failure with a disconnect cause to the disconnected step', () => {
+    const { ledgerNavigate } = dispatch(
+      makeLedgerAppResponseError({
+        returnCode: unknownTransportReturnCode,
+        errorMessage: transportFailureMessage,
+        cause: { _tag: 'DeviceDisconnectedWhileSendingError' },
+      })
+    );
+
+    expect(ledgerNavigate.toDeviceDisconnectStep).toHaveBeenCalledOnce();
+    expect(ledgerNavigate.toErrorStep).not.toHaveBeenCalled();
+  });
+
+  test('routes a transport failure without a cause to the disconnected step', () => {
+    const { ledgerNavigate } = dispatch(
+      makeLedgerAppResponseError({
+        returnCode: unknownTransportReturnCode,
+        errorMessage: transportFailureMessage,
+      })
+    );
+
+    expect(ledgerNavigate.toDeviceDisconnectStep).toHaveBeenCalledOnce();
+    expect(ledgerNavigate.toErrorStep).not.toHaveBeenCalled();
+  });
+
+  test('routes an app-level error response to the generic error step', () => {
+    const { ledgerNavigate } = dispatch(
+      makeLedgerAppResponseError({ returnCode: 0x6f00, errorMessage: 'Unknown error' })
+    );
+
+    expect(ledgerNavigate.toErrorStep).toHaveBeenCalledWith('bitcoin');
+    expect(ledgerNavigate.toDeviceDisconnectStep).not.toHaveBeenCalled();
   });
 
   test('routes rejections to the operation rejected step', () => {

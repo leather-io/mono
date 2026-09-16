@@ -13,6 +13,7 @@ import { analytics } from '@shared/utils/analytics';
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
+import { makeLedgerAppResponseError } from '@app/features/ledger/dmk/ledger-dmk-errors';
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
@@ -129,7 +130,7 @@ function LedgerSignStacksTxContainer() {
           publishStacksSigningSettled(unsignedTx, resp.errorMessage);
           return;
         }
-        throw new Error('Some other error');
+        throw makeLedgerAppResponseError(resp);
       }
 
       void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });

@@ -16,6 +16,7 @@ import { appEvents } from '@app/common/publish-subscribe';
 import {
   handleLedgerConnectionError,
   isLedgerDeviceLockedError,
+  makeLedgerAppResponseError,
 } from '@app/features/ledger/dmk/ledger-dmk-errors';
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { closeLedgerSession } from '@app/features/ledger/dmk/ledger-session';
@@ -150,7 +151,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       }
 
       if (resp.returnCode !== LedgerError.NoErrors) {
-        throw new Error('Some other error');
+        throw makeLedgerAppResponseError(resp);
       }
 
       void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
