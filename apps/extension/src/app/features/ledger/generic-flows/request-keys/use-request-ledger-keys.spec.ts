@@ -82,14 +82,6 @@ function makeNamedError(name: string, message = name) {
   return error;
 }
 
-function makeDeferred<T>() {
-  let resolve: (value: T) => void = () => {};
-  const promise = new Promise<T>(res => {
-    resolve = res;
-  });
-  return { promise, resolve };
-}
-
 interface SetupOptions {
   pullKeysResult?: { status: 'success' } | { status: 'failure' };
   pullKeysError?: unknown;
@@ -293,7 +285,7 @@ describe(useRequestLedgerKeys.name, () => {
   });
 
   test('reports the connection as cancellable while the device waits for the user', async () => {
-    const connection = makeDeferred<LedgerBitcoinApp>();
+    const connection = Promise.withResolvers<LedgerBitcoinApp>();
     const { getValue } = setupRequestKeys({
       pullKeysResult: { status: 'success' },
       connectApp(options) {
@@ -302,7 +294,7 @@ describe(useRequestLedgerKeys.name, () => {
       },
     });
 
-    const { requesting } = await act(async () => ({ requesting: getValue().requestKeys() }));
+    const { requesting } = await act(() => ({ requesting: getValue().requestKeys() }));
 
     expect(getValue().awaitingDeviceConnection).toBe(true);
     expect(getValue().isConnectionCancellable).toBe(true);

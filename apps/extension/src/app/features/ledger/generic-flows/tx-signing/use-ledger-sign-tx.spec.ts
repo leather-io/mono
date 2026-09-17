@@ -73,14 +73,6 @@ function makeNamedError(name: string, message: string) {
   return error;
 }
 
-function makeDeferred<T>() {
-  let resolve: (value: T) => void = () => {};
-  const promise = new Promise<T>(res => {
-    resolve = res;
-  });
-  return { promise, resolve };
-}
-
 interface SetupOptions {
   connectAppError?: unknown;
   connectApp?(options: ConnectLedgerDeviceOptions): Promise<LedgerBitcoinApp>;
@@ -251,7 +243,7 @@ describe(useLedgerSignTx.name, () => {
   });
 
   test('reports the connection as cancellable while the device waits for the user', async () => {
-    const connection = makeDeferred<LedgerBitcoinApp>();
+    const connection = Promise.withResolvers<LedgerBitcoinApp>();
     const { getValue } = setupSignTx({
       connectApp(options) {
         options.onRequiredUserInteraction?.(UserInteractionRequired.UnlockDevice);
@@ -259,7 +251,7 @@ describe(useLedgerSignTx.name, () => {
       },
     });
 
-    const { signing } = await act(async () => ({ signing: getValue().signTransaction() }));
+    const { signing } = await act(() => ({ signing: getValue().signTransaction() }));
 
     expect(getValue().awaitingDeviceConnection).toBe(true);
     expect(getValue().isConnectionCancellable).toBe(true);
