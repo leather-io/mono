@@ -13,7 +13,6 @@ import StacksApp, {
   LedgerError,
   ResponseAddress,
   ResponseSign,
-  ResponseVersion,
 } from '@zondax/ledger-stacks';
 import { compare } from 'compare-versions';
 
@@ -122,14 +121,6 @@ export function signStacksTransactionWithSignature(transaction: string, signatur
 
   spendingCondition.fields.push(createTransactionAuthField(PubKeyEncoding.Compressed, signature));
   return deserializedTx;
-}
-
-export function isStacksLedgerAppClosed(response: ResponseVersion) {
-  const anotherUnknownErrorCodeMeaningAppClosed = 28161;
-  return (
-    response.returnCode === LedgerError.AppDoesNotSeemToBeOpen ||
-    response.returnCode === anotherUnknownErrorCodeMeaningAppClosed
-  );
 }
 
 // Minimum version required to read master key fingerprint

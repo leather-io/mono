@@ -108,7 +108,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
 
       const versionInfo = await getStacksAppVersion(stacksApp);
       ledgerAnalytics.trackDeviceVersionInfo(versionInfo);
-      setLatestDeviceResponse(versionInfo);
+      setLatestDeviceResponse({ deviceLocked: versionInfo.deviceLocked });
       if (versionInfo.deviceLocked) {
         setAwaitingDeviceConnection(false);
         return;

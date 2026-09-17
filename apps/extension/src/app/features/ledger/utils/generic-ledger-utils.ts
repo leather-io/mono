@@ -10,7 +10,6 @@ import { RouteUrls } from '@shared/route-urls';
 import { safeAwait } from '@app/common/utils/safe-await';
 
 import type { LedgerDeviceLockState } from '../dmk/ledger-dmk-errors';
-import type { StacksAppVersion } from './stacks-ledger-utils';
 
 export const LEDGER_APPS_MAP = {
   STACKS: 'Stacks',
@@ -21,7 +20,7 @@ export const LEDGER_APPS_MAP = {
 
 export const LEDGER_LIVE_MANAGER_URL = 'ledgerlive://manager';
 
-export type LatestDeviceResponse = null | StacksAppVersion | LedgerDeviceLockState;
+export type LatestDeviceResponse = null | LedgerDeviceLockState;
 
 export interface BaseLedgerOperationContext {
   latestDeviceResponse: LatestDeviceResponse;

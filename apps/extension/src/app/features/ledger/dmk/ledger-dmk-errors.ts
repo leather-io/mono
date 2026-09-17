@@ -110,7 +110,7 @@ export function makeLedgerOperationRejectedError(error: unknown): Error {
     : operationRejectedErrorMessage;
   const rejectedError = new Error(message);
   rejectedError.name = LedgerConnectionErrors.OperationRejected;
-  return Object.assign(rejectedError, { statusCode: userDeniedStatusCode, originalError: error });
+  return Object.assign(rejectedError, { originalError: error });
 }
 
 export function isLedgerDeviceDisconnectedError(error: unknown): boolean {
