@@ -13,6 +13,7 @@ import { UnsignedMessage, whenSignableMessageOfType } from '@shared/signature/si
 
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
+import { safeAwait } from '@app/common/utils/safe-await';
 import {
   handleLedgerConnectionError,
   isLedgerDeviceLockedError,
@@ -76,26 +77,29 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
   const chain = 'stacks';
 
   async function signMessage() {
-    const stacksApp = await prepareLedgerDeviceStacksAppConnection(dmk, {
-      runAction: signerActions.run,
-      onRequiredUserInteraction(interaction) {
-        setLatestDeviceResponse({
-          deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
-        });
-        setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
-      },
-    })({
-      setLoadingState: setAwaitingDeviceConnection,
-      onError(e) {
-        setIsConnectionCancellable(false);
-        if (isLedgerDeviceLockedError(e)) {
-          setLatestDeviceResponse({ deviceLocked: true });
-          return;
-        }
-        handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
-      },
-    });
+    const [connectionError, stacksApp] = await safeAwait(
+      prepareLedgerDeviceStacksAppConnection(dmk, {
+        runAction: signerActions.run,
+        onRequiredUserInteraction(interaction) {
+          setLatestDeviceResponse({
+            deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
+          });
+          setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
+        },
+      })({
+        setLoadingState: setAwaitingDeviceConnection,
+        onError(e) {
+          setIsConnectionCancellable(false);
+          if (isLedgerDeviceLockedError(e)) {
+            setLatestDeviceResponse({ deviceLocked: true });
+            return;
+          }
+          handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
+        },
+      })
+    );
     setIsConnectionCancellable(false);
+    if (connectionError || !stacksApp) return;
 
     try {
       // Show checking version page immediately

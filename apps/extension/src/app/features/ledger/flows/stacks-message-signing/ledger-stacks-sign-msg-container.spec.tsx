@@ -224,6 +224,21 @@ describe(LedgerSignMsgContainer.name, () => {
     expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
 
+  test('resolves without signing or navigating when the connection is cancelled', async () => {
+    const { context } = setupSignMessage();
+    mocks.prepareConnection.mockRejectedValue(new Error('Unable to initiate Ledger app'));
+
+    await act(async () => {
+      await expect(context.signMessage()).resolves.toBeUndefined();
+    });
+
+    expect(mocks.toCheckingAppVersion).not.toHaveBeenCalled();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(mocks.signUtf8Message).not.toHaveBeenCalled();
+    expect(mocks.publish).not.toHaveBeenCalled();
+    expect(mocks.disconnect).not.toHaveBeenCalled();
+  });
+
   test('shows the disconnect step and closes the session once when the device drops', async () => {
     const { context } = setupSignMessage();
     mocks.signUtf8Message.mockReturnValue(() =>
