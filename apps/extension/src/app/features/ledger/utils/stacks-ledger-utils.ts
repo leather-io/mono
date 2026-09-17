@@ -23,6 +23,7 @@ import {
   type ConnectLedgerDeviceOptions,
   connectLedgerDeviceToApp,
 } from '../dmk/ledger-device-connection';
+import { makeLedgerAppResponseError } from '../dmk/ledger-dmk-errors';
 import {
   LEDGER_APPS_MAP,
   SemVerObject,
@@ -83,7 +84,7 @@ export interface StacksAppVersion extends Awaited<ReturnType<StacksApp['getVersi
 export async function getStacksAppVersion({ app }: LedgerStacksApp): Promise<StacksAppVersion> {
   const appVersion = await app.getVersion();
   if (appVersion.errorMessage !== 'No errors') {
-    throw new Error(appVersion.errorMessage);
+    throw makeLedgerAppResponseError(appVersion);
   }
   return { name: LEDGER_APPS_MAP.STACKS, chain: 'stacks' as const, ...appVersion };
 }

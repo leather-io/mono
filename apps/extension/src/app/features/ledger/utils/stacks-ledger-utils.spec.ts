@@ -7,9 +7,14 @@ import {
 } from '@stacks/transactions';
 import { LedgerError } from '@zondax/ledger-stacks';
 
+import {
+  isLedgerDeviceDisconnectedError,
+  isLedgerDeviceLockedError,
+} from '../dmk/ledger-dmk-errors';
 import { makeFakeLedgerStacksApp } from './ledger-app.mocks';
 import {
   MINIMUM_STACKS_APP_VERSION,
+  getStacksAppVersion,
   isStxAddressResponseRejected,
   isStxAddressResponseSuccess,
   showStxAddressOnDevice,
@@ -82,6 +87,52 @@ function makeAddressResponse(returnCode: number) {
     address: 'SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB',
   };
 }
+
+describe(getStacksAppVersion.name, () => {
+  function makeVersionResponse(returnCode: number, errorMessage: string) {
+    return {
+      returnCode,
+      errorMessage,
+      testMode: false,
+      major: 0,
+      minor: 26,
+      patch: 19,
+      deviceLocked: false,
+      targetId: '',
+    };
+  }
+
+  test('returns the version tagged with the app name and chain', async () => {
+    const app = makeFakeLedgerStacksApp({
+      getVersion: vi.fn().mockResolvedValue(makeVersionResponse(LedgerError.NoErrors, 'No errors')),
+    });
+
+    await expect(getStacksAppVersion(app)).resolves.toMatchObject({
+      name: 'Stacks',
+      chain: 'stacks',
+      major: 0,
+      minor: 26,
+      patch: 19,
+    });
+  });
+
+  test('keeps the disconnect cause when the transport fails during the version check', async () => {
+    const response = Object.assign(makeVersionResponse(0xffff, 'Unknown transport error'), {
+      cause: { _tag: 'DeviceDisconnectedWhileSendingError' },
+    });
+    const app = makeFakeLedgerStacksApp({ getVersion: vi.fn().mockResolvedValue(response) });
+
+    await expect(getStacksAppVersion(app)).rejects.toSatisfy(isLedgerDeviceDisconnectedError);
+  });
+
+  test('keeps the status code when the device is locked during the version check', async () => {
+    const app = makeFakeLedgerStacksApp({
+      getVersion: vi.fn().mockResolvedValue(makeVersionResponse(0x5515, 'Unknown Status Code')),
+    });
+
+    await expect(getStacksAppVersion(app)).rejects.toSatisfy(isLedgerDeviceLockedError);
+  });
+});
 
 describe(stacksChainIdToSingleSigAddressVersion.name, () => {
   test('maps the mainnet chain id to the mainnet single sig version', () => {

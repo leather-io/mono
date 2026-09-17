@@ -114,6 +114,16 @@ describe(makeLedgerAppResponseError.name, () => {
     expect(isLedgerDeviceDisconnectedError(error)).toBe(false);
   });
 
+  test('keeps the status code so a locked device response routes to the locked guard', () => {
+    const error = makeLedgerAppResponseError({
+      returnCode: 0x5515,
+      errorMessage: 'Unknown Status Code: 21781',
+    });
+
+    expect(isLedgerDeviceLockedError(error)).toBe(true);
+    expect(isLedgerDeviceDisconnectedError(error)).toBe(false);
+  });
+
   test('preserves the DMK cause of a transport failure so the disconnect guard matches', () => {
     const error = makeLedgerAppResponseError({
       returnCode: unknownTransportReturnCode,

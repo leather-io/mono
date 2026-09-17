@@ -125,7 +125,9 @@ interface LedgerAppErrorResponse {
 
 export function makeLedgerAppResponseError(response: LedgerAppErrorResponse): Error {
   const error = new Error(response.errorMessage);
-  if (response.returnCode !== unknownTransportReturnCode) return error;
+  if (response.returnCode !== unknownTransportReturnCode) {
+    return Object.assign(error, { statusCode: response.returnCode });
+  }
   error.name = transportFailureErrorName;
   return Object.assign(error, { originalError: getNestedError(response) });
 }
