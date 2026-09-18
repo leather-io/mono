@@ -6,7 +6,7 @@ import type {
   OnChainActivityStatus,
   StacksProtocolAction,
 } from '@leather.io/models';
-import { sumMoney, truncateMiddle } from '@leather.io/utils';
+import { truncateMiddle } from '@leather.io/utils';
 
 import type { FormatMoney } from './activity-balance';
 import {
@@ -34,14 +34,9 @@ interface RowShape {
   title:
     | { kind: 'symbol'; from: AssetSlot }
     | { kind: 'two-leg' }
-    | { kind: 'symbol-pair'; from: 'sent' | 'received' }
     | { kind: 'function-name' }
     | { kind: 'deploy-verb' };
-  amount:
-    | { kind: 'none' }
-    | { kind: 'single'; from: 'sent' | 'received' }
-    | { kind: 'combined-quote'; from: 'sent' | 'received' }
-    | { kind: 'multi' };
+  amount: { kind: 'none' } | { kind: 'single'; from: 'sent' | 'received' } | { kind: 'multi' };
 }
 
 const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
@@ -167,20 +162,6 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
   },
 };
 
-const twoTokenAddLiquidity: RowShape = {
-  avatar: { kind: 'pair' },
-  indicator: 'function',
-  title: { kind: 'symbol-pair', from: 'sent' },
-  amount: { kind: 'combined-quote', from: 'sent' },
-};
-
-const twoTokenRemoveLiquidity: RowShape = {
-  avatar: { kind: 'pair' },
-  indicator: 'function',
-  title: { kind: 'symbol-pair', from: 'received' },
-  amount: { kind: 'combined-quote', from: 'received' },
-};
-
 const oneLeggedSwapSent: RowShape = {
   avatar: { kind: 'single', from: 'sent' },
   indicator: 'swap',
@@ -206,8 +187,6 @@ function getRowShape(
   sent: BlockchainActivityBalanceChange[],
   received: BlockchainActivityBalanceChange[]
 ): RowShape {
-  if (action === 'add-liquidity' && sent.length >= 2) return twoTokenAddLiquidity;
-  if (action === 'remove-liquidity' && received.length >= 2) return twoTokenRemoveLiquidity;
   if (isTwoLeggedAction(action)) {
     const hasSent = sent.length > 0;
     const hasReceived = received.length > 0;
@@ -302,12 +281,6 @@ function buildTitle(
       }
       return degradedTitle(activity);
     }
-    case 'symbol-pair': {
-      const changes = shape.title.from === 'sent' ? sent : received;
-      return changes.length >= 2
-        ? `${assetSymbol(changes[0].asset)} · ${assetSymbol(changes[1].asset)}`
-        : degradedTitle(activity);
-    }
     case 'function-name':
       return degradedTitle(activity);
     case 'deploy-verb':
@@ -362,11 +335,6 @@ function buildAmount(
         quote: change.amount.quote,
         crypto: change.amount.crypto,
       };
-    }
-    case 'combined-quote': {
-      const changes = shape.amount.from === 'sent' ? sent : received;
-      if (changes.length === 0) return undefined;
-      return { direction: shape.amount.from, quote: sumMoney(changes.map(c => c.amount.quote)) };
     }
     default:
       return undefined;

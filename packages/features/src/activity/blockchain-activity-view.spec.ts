@@ -210,7 +210,7 @@ describe('createBlockchainActivityView', () => {
     expect(view.subtitle).toBe('Bridged via Example Protocol');
   });
 
-  it('renders 2-token add-liquidity: undimmed pair, symbol-pair title, combined quote', () => {
+  it('renders 2-token add-liquidity as the single-asset row of the first token', () => {
     const secondSent = {
       direction: 'sent' as const,
       asset: sbtcAsset,
@@ -224,15 +224,9 @@ describe('createBlockchainActivityView', () => {
       }),
       deps
     );
-    expect(view.avatar).toMatchObject({
-      kind: 'pair',
-      back: { dimmed: false },
-      front: { dimmed: false },
-    });
-    expect(view.title).toBe('BTC · sBTC');
-    expect(view.subtitle).toBe('Added liquidity via Velar');
-    expect(view.amount?.crypto).toBeUndefined();
-    expect(view.amount?.quote.amount.toNumber()).toBe(150);
+    expect(view.avatar).toEqual({ kind: 'single', asset: btcAsset });
+    expect(view.title).toBe('BTC');
+    expect(view.amount).toMatchObject({ direction: 'sent', crypto: sentBtc.amount.crypto });
   });
 
   it('renders 1-token add-liquidity as a single-asset row', () => {
