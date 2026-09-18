@@ -79,7 +79,9 @@ jobs:
         env:
           ACTIONLINT: ${{ steps.get_actionlint.outputs.executable }}
         run: |
-          "$ACTIONLINT" -color
+          # actionlint does not yet understand GitHub's `$/` self-repository `uses:` syntax.
+          # Drop the -ignore flag once https://github.com/rhysd/actionlint/pull/732 is merged and released.
+          "$ACTIONLINT" -color -ignore 'specifying action "\$/[^"]*" in invalid format because ref is missing'
 
   audit-workflow-security:
     name: audit-workflow-security
