@@ -5,13 +5,15 @@ import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { broadcastWalletListChanged } from '@shared/messages';
 
+import { clearBiometricAutoPromptSuppression } from '@app/common/wallet-authentication/biometric-auto-prompt';
 import { persistor } from '@app/store';
 
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '../in-memory-key/keychain-selector-cache';
-import { selectCurrentAccount } from '../software-keys/software-key.selectors';
+import { selectCurrentAccount, selectSoftwareKeys } from '../software-keys/software-key.selectors';
+import { hydrateSlicesFromStorage } from '../utils/storage-sync';
 import { selectAllWallets } from '../wallets/wallet.selectors';
 import {
   activateFirstVisibleAccount,
@@ -19,6 +21,10 @@ import {
   removeWalletAndUpdateActive,
 } from './active.actions';
 import { userSwitchesAccount } from './active.slice';
+
+const mocks = vi.hoisted(() => ({
+  readAuthoritativeWalletTransactionState: vi.fn(),
+}));
 
 vi.mock('@app/store', () => ({
   persistor: { flush: vi.fn(() => Promise.resolve()) },
@@ -39,6 +45,15 @@ vi.mock('../wallets/wallet.selectors', () => ({
 
 vi.mock('../software-keys/software-key.selectors', () => ({
   selectCurrentAccount: vi.fn(),
+  selectSoftwareKeys: vi.fn(),
+}));
+
+vi.mock('../software-keys/software-key-state', () => ({
+  readAuthoritativeWalletTransactionState: mocks.readAuthoritativeWalletTransactionState,
+}));
+
+vi.mock('@app/common/wallet-authentication/biometric-auto-prompt', () => ({
+  clearBiometricAutoPromptSuppression: vi.fn(() => Promise.resolve()),
 }));
 
 vi.mock('../in-memory-key/in-memory-storage', () => ({
@@ -81,6 +96,10 @@ describe(activateFirstVisibleAccount.name, () => {
     vi.clearAllMocks();
     vi.mocked(selectWalletAccountRefTree).mockReturnValue(makeRefTree([0, 1, 2]));
     vi.mocked(selectHiddenAccountIds).mockReturnValue([]);
+    vi.mocked(selectSoftwareKeys).mockReturnValue([
+      { id: fingerprint, type: 'software', encryptedSecretKey: 'first' },
+      { id: otherFingerprint, type: 'software', encryptedSecretKey: 'second' },
+    ]);
   });
 
   test('activates account 0 when no accounts are hidden', () => {
@@ -143,13 +162,17 @@ function makeWalletRefTree(walletFingerprint: string, accountIndices: number[]) 
 
 function runRemoveThunk(state: object = { active: { account: null } }) {
   const dispatch = vi.fn();
+  const structuralDispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
-  dispatch.mockImplementation((action: unknown) =>
-    typeof action === 'function' ? action(dispatch, getState, undefined) : action
-  );
+  dispatch.mockImplementation((action: unknown) => {
+    if (hydrateSlicesFromStorage.match(action)) return action;
+    if (typeof action === 'function') return action(dispatch, getState, undefined);
+    return structuralDispatch(action);
+  });
+  mocks.readAuthoritativeWalletTransactionState.mockResolvedValue({ state });
   const promise = removeWalletAndUpdateActive(fingerprint)(dispatch, getState, undefined);
-  return { dispatch, promise };
+  return { dispatch: structuralDispatch, promise };
 }
 
 describe(removeWalletAndUpdateActive.name, () => {
@@ -162,31 +185,38 @@ describe(removeWalletAndUpdateActive.name, () => {
     ]);
     vi.mocked(selectWalletAccountRefTree).mockReturnValue(makeWalletRefTree(otherFingerprint, [0]));
     vi.mocked(selectHiddenAccountIds).mockReturnValue([]);
+    vi.mocked(selectSoftwareKeys).mockReturnValue([
+      { id: fingerprint, type: 'software', encryptedSecretKey: 'first' },
+      { id: otherFingerprint, type: 'software', encryptedSecretKey: 'second' },
+    ]);
   });
 
-  test('re-points to a remaining wallet when the removed wallet is the resolved current account', () => {
+  test('re-points to a remaining wallet when the removed wallet is the resolved current account', async () => {
     vi.mocked(selectCurrentAccount).mockReturnValue({ fingerprint, accountIndex: 2 });
-    const { dispatch } = runRemoveThunk();
+    const { dispatch, promise } = runRemoveThunk();
+    await promise;
     expect(dispatch).toHaveBeenCalledWith(userRemovesWallet({ fingerprint }));
     expect(dispatch).toHaveBeenCalledWith(
       userSwitchesAccount({ fingerprint: otherFingerprint, accountIndex: 0 })
     );
   });
 
-  test('switches the active account to null when no wallets remain', () => {
+  test('switches the active account to null when no wallets remain', async () => {
     vi.mocked(selectAllWallets).mockReturnValue([
       { fingerprint, type: 'software', name: 'Wallet', createdOn: null },
     ]);
-    const { dispatch } = runRemoveThunk();
+    const { dispatch, promise } = runRemoveThunk();
+    await promise;
     expect(dispatch).toHaveBeenCalledWith(userSwitchesAccount(null));
   });
 
-  test('does not re-point when the removed wallet is not the current account', () => {
+  test('does not re-point when the removed wallet is not the current account', async () => {
     vi.mocked(selectCurrentAccount).mockReturnValue({
       fingerprint: otherFingerprint,
       accountIndex: 0,
     });
-    const { dispatch } = runRemoveThunk();
+    const { dispatch, promise } = runRemoveThunk();
+    await promise;
     expect(dispatch).toHaveBeenCalledWith(userRemovesWallet({ fingerprint }));
     expect(dispatch).not.toHaveBeenCalledWith(expect.any(Function));
   });
@@ -206,12 +236,24 @@ describe(removeWalletAndUpdateActive.name, () => {
     expect(clearKeychainSelectorCaches).toHaveBeenCalledTimes(1);
   });
 
-  test('skips leading hidden accounts when re-pointing to the remaining wallet', () => {
+  test('clears automatic biometric prompt suppression after removing the final software wallet', async () => {
+    vi.mocked(selectSoftwareKeys).mockReturnValue([
+      { id: fingerprint, type: 'software', encryptedSecretKey: 'first' },
+    ]);
+    const { promise } = runRemoveThunk();
+
+    await promise;
+
+    expect(clearBiometricAutoPromptSuppression).toHaveBeenCalledTimes(1);
+  });
+
+  test('skips leading hidden accounts when re-pointing to the remaining wallet', async () => {
     vi.mocked(selectWalletAccountRefTree).mockReturnValue(
       makeWalletRefTree(otherFingerprint, [0, 1, 2])
     );
     vi.mocked(selectHiddenAccountIds).mockReturnValue([makeAccountIdentifer(otherFingerprint, 0)]);
-    const { dispatch } = runRemoveThunk();
+    const { dispatch, promise } = runRemoveThunk();
+    await promise;
     expect(dispatch).toHaveBeenCalledWith(
       userSwitchesAccount({ fingerprint: otherFingerprint, accountIndex: 1 })
     );
@@ -222,66 +264,39 @@ function runApplyRemoteRemovalThunk(state: object = { active: { account: null } 
   const dispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
-  dispatch.mockImplementation((action: unknown) =>
-    typeof action === 'function' ? action(dispatch, getState, undefined) : action
-  );
-  void applyRemoteWalletRemoval(fingerprint)(dispatch, getState, undefined);
-  return { dispatch };
+  mocks.readAuthoritativeWalletTransactionState.mockResolvedValue({ state });
+  const promise = applyRemoteWalletRemoval()(dispatch, getState, undefined);
+  return { dispatch, promise };
 }
 
 describe(applyRemoteWalletRemoval.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(selectCurrentAccount).mockReturnValue({ fingerprint, accountIndex: 0 });
-    vi.mocked(selectAllWallets).mockReturnValue([
-      { fingerprint, type: 'software', name: 'Wallet', createdOn: null },
-      { fingerprint: otherFingerprint, type: 'software', name: 'Other', createdOn: null },
-    ]);
-    vi.mocked(selectWalletAccountRefTree).mockReturnValue(makeWalletRefTree(otherFingerprint, [0]));
-    vi.mocked(selectHiddenAccountIds).mockReturnValue([]);
   });
 
-  test('re-points the local active account to a remaining wallet when it was removed', () => {
-    vi.mocked(selectCurrentAccount).mockReturnValue({ fingerprint, accountIndex: 2 });
-    const { dispatch } = runApplyRemoteRemovalThunk();
-    expect(dispatch).toHaveBeenCalledWith(userRemovesWallet({ fingerprint }));
-    expect(dispatch).toHaveBeenCalledWith(
-      userSwitchesAccount({ fingerprint: otherFingerprint, accountIndex: 0 })
-    );
-  });
+  test('hydrates the wallet state already persisted by the source frame', async () => {
+    const state = {
+      active: {
+        account: { fingerprint: otherFingerprint, accountIndex: 0 },
+        activePolicyId: null,
+      },
+    };
+    const { dispatch, promise } = runApplyRemoteRemovalThunk(state);
 
-  test('switches the local active account to null when no wallets remain', () => {
-    vi.mocked(selectAllWallets).mockReturnValue([
-      { fingerprint, type: 'software', name: 'Wallet', createdOn: null },
-    ]);
-    const { dispatch } = runApplyRemoteRemovalThunk();
-    expect(dispatch).toHaveBeenCalledWith(userSwitchesAccount(null));
-  });
+    await promise;
 
-  test('only removes the wallet when the local active account is a different wallet', () => {
-    vi.mocked(selectCurrentAccount).mockReturnValue({
-      fingerprint: otherFingerprint,
-      accountIndex: 0,
-    });
-    const { dispatch } = runApplyRemoteRemovalThunk();
     expect(dispatch).toHaveBeenCalledTimes(1);
-    expect(dispatch).toHaveBeenCalledWith(userRemovesWallet({ fingerprint }));
+    expect(dispatch).toHaveBeenCalledWith(hydrateSlicesFromStorage(state));
   });
 
-  test('does not re-broadcast — each frame heals its own pointer', () => {
-    vi.mocked(selectCurrentAccount).mockReturnValue({ fingerprint, accountIndex: 0 });
-    runApplyRemoteRemovalThunk();
+  test('does not dirty or flush stale local wallet slices', async () => {
+    const { dispatch, promise } = runApplyRemoteRemovalThunk();
+
+    await promise;
+
+    expect(dispatch).not.toHaveBeenCalledWith(userRemovesWallet({ fingerprint }));
+    expect(dispatch).not.toHaveBeenCalledWith(userSwitchesAccount(expect.anything()));
+    expect(persistor.flush).not.toHaveBeenCalled();
     expect(broadcastWalletListChanged).not.toHaveBeenCalled();
-  });
-
-  test('skips leading hidden accounts when re-pointing to the remaining wallet', () => {
-    vi.mocked(selectWalletAccountRefTree).mockReturnValue(
-      makeWalletRefTree(otherFingerprint, [0, 1, 2])
-    );
-    vi.mocked(selectHiddenAccountIds).mockReturnValue([makeAccountIdentifer(otherFingerprint, 0)]);
-    const { dispatch } = runApplyRemoteRemovalThunk();
-    expect(dispatch).toHaveBeenCalledWith(
-      userSwitchesAccount({ fingerprint: otherFingerprint, accountIndex: 1 })
-    );
   });
 });

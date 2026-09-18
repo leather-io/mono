@@ -14,11 +14,13 @@ import { getIndicatorsOfPasswordStrength } from './password-field.utils';
 import { PasswordStrengthIndicator } from './password-strength-indicator';
 
 interface PasswordFieldProps {
+  dataTestId?: string;
   strengthResult: ValidatedPassword;
   isDisabled: boolean;
   showStrength?: boolean;
 }
 export function PasswordField({
+  dataTestId = OnboardingSelectors.NewPasswordInput,
   strengthResult,
   isDisabled,
   showStrength = true,
@@ -41,7 +43,7 @@ export function PasswordField({
             autoCapitalize="off"
             autoComplete="off"
             autoFocus
-            data-testid={OnboardingSelectors.NewPasswordInput}
+            data-testid={dataTestId}
             disabled={isDisabled}
             key="password-input"
             type={showPassword ? 'text' : 'password'}

@@ -2,6 +2,7 @@ export const BRANCH = process.env.GITHUB_REF;
 export const BRANCH_NAME = 'dev'; // use only dev branch name as config is now stored in leather-io/extension repo
 export const PR_NUMBER = process.env.PR_NUMBER;
 export const COMMIT_SHA = process.env.COMMIT_SHA;
+export const TARGET_BROWSER = process.env.TARGET_BROWSER ?? 'chromium';
 // ts-unused-exports:disable-next-line
 export const IS_DEV_ENV = process.env.WALLET_ENVIRONMENT === 'development';
 export const IS_TEST_ENV = process.env.WALLET_ENVIRONMENT === 'testing';

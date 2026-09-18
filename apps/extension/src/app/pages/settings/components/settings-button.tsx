@@ -10,6 +10,8 @@ import {
   Switch,
 } from '@leather.io/ui';
 
+import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
+
 import { TitleWithTooltip } from './title-with-tooltip';
 
 interface GeneralSettingsButtonProps {
@@ -17,6 +19,9 @@ interface GeneralSettingsButtonProps {
   title: string;
   onClick(): void;
   tooltipText?: string;
+  disabledTooltipText?: string;
+  isDisabled?: boolean;
+  status?: string;
   ['data-testid']?: string;
 }
 
@@ -33,11 +38,14 @@ export function SettingsButton({
   title,
   onClick,
   tooltipText,
+  disabledTooltipText,
+  isDisabled = false,
+  status,
 
   ...props
 }: SimpleSettingsButtonProps | SwitchSettingsButtonProps) {
   const avatarIcon = icon ?? undefined;
-  return (
+  const button = (
     <button
       className={css({
         _hover: {
@@ -48,7 +56,10 @@ export function SettingsButton({
         py: 'space.03',
         borderRadius: 'xs',
       })}
-      onClick={onClick}
+      aria-disabled={isDisabled}
+      onClick={() => {
+        if (!isDisabled) onClick();
+      }}
       data-testid={props['data-testid']}
     >
       {props.variant === 'switch' && (
@@ -73,8 +84,8 @@ export function SettingsButton({
       )}
       {props.variant === 'chevron' && (
         <ItemLayout
-          showChevron
-          titleRight={null}
+          showChevron={!isDisabled}
+          titleRight={status ?? null}
           img={
             <Avatar
               size="lg"
@@ -106,5 +117,11 @@ export function SettingsButton({
         />
       )}
     </button>
+  );
+  if (!isDisabled) return button;
+  return (
+    <BasicTooltip asChild label={disabledTooltipText} side="top">
+      {button}
+    </BasicTooltip>
   );
 }

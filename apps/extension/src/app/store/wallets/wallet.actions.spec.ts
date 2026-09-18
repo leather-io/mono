@@ -12,6 +12,7 @@ import {
   fingerprintMigration,
   userAddsWallet,
   userRemovesWallet,
+  userRenamesWallet,
   walletAdapter,
   walletSlice,
 } from '@leather.io/state/wallet';
@@ -21,7 +22,16 @@ import { assumedZeroFingerprint } from '@shared/utils';
 
 import { persistor } from '@app/store';
 
-import { addOrMigrateLedgerKeychains, migrateLedgerStacksFingerprint } from './wallet.actions';
+import { hydrateSlicesFromStorage } from '../utils/storage-sync';
+import {
+  addOrMigrateLedgerKeychains,
+  migrateLedgerStacksFingerprint,
+  renameWallet,
+} from './wallet.actions';
+
+const mocks = vi.hoisted(() => ({
+  readAuthoritativeWalletTransactionState: vi.fn(),
+}));
 
 vi.mock('@app/store', () => ({
   persistor: { flush: vi.fn(() => Promise.resolve()) },
@@ -30,6 +40,10 @@ vi.mock('@app/store', () => ({
 
 vi.mock('@shared/messages', () => ({
   broadcastWalletListChanged: vi.fn(),
+}));
+
+vi.mock('../software-keys/software-key-state', () => ({
+  readAuthoritativeWalletTransactionState: mocks.readAuthoritativeWalletTransactionState,
 }));
 
 const realFingerprint = 'a1b2c3d4';
@@ -78,10 +92,16 @@ async function runThunk(
   args: { fingerprint: string; accountKeychains: Keychain[] }
 ) {
   const dispatch = vi.fn();
+  const structuralDispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
+  dispatch.mockImplementation(action => {
+    if (!hydrateSlicesFromStorage.match(action)) structuralDispatch(action);
+    return action;
+  });
+  mocks.readAuthoritativeWalletTransactionState.mockResolvedValue({ state });
   await addOrMigrateLedgerKeychains(args)(dispatch, getState, undefined);
-  return dispatch;
+  return structuralDispatch;
 }
 
 describe('addOrMigrateLedgerKeychains', () => {
@@ -230,10 +250,16 @@ describe('addOrMigrateLedgerKeychains', () => {
 
 async function runMigration(state: ReturnType<typeof buildState>, fingerprint: string) {
   const dispatch = vi.fn();
+  const structuralDispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
+  dispatch.mockImplementation(action => {
+    if (!hydrateSlicesFromStorage.match(action)) structuralDispatch(action);
+    return action;
+  });
+  mocks.readAuthoritativeWalletTransactionState.mockResolvedValue({ state });
   await migrateLedgerStacksFingerprint({ fingerprint })(dispatch, getState, undefined);
-  return dispatch;
+  return structuralDispatch;
 }
 
 describe('migrateLedgerStacksFingerprint', () => {
@@ -332,5 +358,39 @@ describe('migrateLedgerStacksFingerprint', () => {
     expect(dispatch).not.toHaveBeenCalled();
     expect(persistor.flush).not.toHaveBeenCalled();
     expect(broadcastWalletListChanged).not.toHaveBeenCalled();
+  });
+});
+
+describe(renameWallet.name, () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test('hydrates authoritative state and verifies the durable wallet name', async () => {
+    const wallet: WalletStore = {
+      fingerprint: realFingerprint,
+      name: 'Wallet 1',
+      type: 'software',
+      createdOn: null,
+    };
+    const state = buildState({ wallets: [wallet] });
+    const persistedState = buildState({ wallets: [{ ...wallet, name: 'Savings' }] });
+    mocks.readAuthoritativeWalletTransactionState
+      .mockResolvedValueOnce({ state })
+      .mockResolvedValueOnce({ state: persistedState });
+    const dispatch = vi.fn();
+
+    await renameWallet({ fingerprint: realFingerprint, name: 'Savings' })(
+      dispatch,
+      vi.fn(),
+      undefined
+    );
+
+    expect(dispatch).toHaveBeenNthCalledWith(1, hydrateSlicesFromStorage(state));
+    expect(dispatch).toHaveBeenNthCalledWith(
+      2,
+      userRenamesWallet({ fingerprint: realFingerprint, name: 'Savings' })
+    );
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
   });
 });

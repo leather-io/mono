@@ -1,8 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "tags": [
-    "-knipignore"
-  ],
+  "tags": ["-knipignore"],
   "ignoreDependencies": [
     "tslib",
     "@babel/runtime",
@@ -26,10 +24,7 @@
     "pinact",
     "sed"
   ],
-  "ignoreUnresolved": [
-    "metro-minify-terser",
-    "/\\+types/"
-  ],
+  "ignoreUnresolved": ["metro-minify-terser", "/\\+types/"],
   "ignore": [
     "*/**/*.spec.{ts,tsx}",
     "*/**/tsdown.config*.ts",
@@ -46,44 +41,24 @@
     "apps/extension": {
       "entry": [
         "src/app/index.tsx",
+        "src/u0-biometric-unlock-harness/index.ts",
         "src/background/background.ts",
         "src/inpage/inpage.ts",
         "src/content-scripts/content-script.ts",
         "src/shared/workers/decryption-worker.ts",
         "test-app/src/index.tsx"
       ],
-      "project": [
-        "src/**/*.{ts,tsx}!",
-        "test-app/src/**/*.{ts,tsx}"
-      ],
+      "project": ["src/**/*.{ts,tsx}!", "test-app/src/**/*.{ts,tsx}"],
       "paths": {
-        "@store/*": [
-          "./test-app/src/store/*"
-        ],
-        "@store": [
-          "./test-app/src/store/index"
-        ],
-        "@dev/*": [
-          "./test-app/src/dev/*"
-        ],
-        "@components/*": [
-          "./test-app/src/components/*"
-        ],
-        "@containers/*": [
-          "./test-app/src/containers/*"
-        ],
-        "@common/*": [
-          "./test-app/src/common/*"
-        ],
-        "@cards/*": [
-          "./test-app/src/components/cards/*"
-        ],
-        "@tests/*": [
-          "./tests/*"
-        ],
-        "leather-styles/*": [
-          "./leather-styles/*"
-        ]
+        "@store/*": ["./test-app/src/store/*"],
+        "@store": ["./test-app/src/store/index"],
+        "@dev/*": ["./test-app/src/dev/*"],
+        "@components/*": ["./test-app/src/components/*"],
+        "@containers/*": ["./test-app/src/containers/*"],
+        "@common/*": ["./test-app/src/common/*"],
+        "@cards/*": ["./test-app/src/components/cards/*"],
+        "@tests/*": ["./tests/*"],
+        "leather-styles/*": ["./leather-styles/*"]
       },
       "webpack": {
         "config": [
@@ -116,15 +91,10 @@
         "blns",
         "web-ext-submit"
       ],
-      "ignore": [
-        "src/shared/global-types.ts",
-        "src/shared/models/global-types.ts"
-      ]
+      "ignore": ["src/shared/global-types.ts", "src/shared/models/global-types.ts"]
     },
     "apps/mobile": {
-      "entry": [
-        "src/app/_layout.tsx"
-      ],
+      "entry": ["src/app/_layout.tsx"],
       "ignoreDependencies": [
         "expo-modules-core",
         "expo-status-bar",
@@ -145,16 +115,8 @@
         "@lingui/format-po",
         "@babel/plugin-transform-class-static-block"
       ],
-      "ignoreBinaries": [
-        "op",
-        "maestro"
-      ],
-      "ignore": [
-        ".detoxrc.cjs",
-        "index.d.ts",
-        "lingui.config.ts",
-        "src/tests/test-utils.tsx"
-      ]
+      "ignoreBinaries": ["op", "maestro"],
+      "ignore": [".detoxrc.cjs", "index.d.ts", "lingui.config.ts", "src/tests/test-utils.tsx"]
     },
     "apps/web": {
       "entry": [
@@ -166,41 +128,22 @@
         "workers/csp.ts"
       ],
       "paths": {
-        "~/*": [
-          "./app/*"
-        ]
+        "~/*": ["./app/*"]
       },
       "typescript": {
-        "config": [
-          "tsconfig.cloudflare.json"
-        ]
+        "config": ["tsconfig.cloudflare.json"]
       },
-      "ignoreDependencies": [
-        "leather-styles",
-        "@leather.io/panda-preset"
-      ],
-      "ignore": [
-        "stubs/**",
-        "app/layouts/nav/global-loader.styles.ts"
-      ]
+      "ignoreDependencies": ["leather-styles", "@leather.io/panda-preset"],
+      "ignore": ["stubs/**", "app/layouts/nav/global-loader.styles.ts"]
     },
     "packages/provider": {
-      "entry": [
-        "src/index.ts",
-        "src/mobile.ts"
-      ]
+      "entry": ["src/index.ts", "src/mobile.ts"]
     },
     "packages/utils": {
-      "ignoreDependencies": [
-        "@types/dompurify"
-      ]
+      "ignoreDependencies": ["@types/dompurify"]
     },
     "packages/ui": {
-      "entry": [
-        "src/index.ts!",
-        "src/native.ts!",
-        "src/exports.web.ts!"
-      ],
+      "entry": ["src/index.ts!", "src/native.ts!", "src/exports.web.ts!"],
       "metro": false,
       "ignoreDependencies": [
         "@expo/vector-icons",
