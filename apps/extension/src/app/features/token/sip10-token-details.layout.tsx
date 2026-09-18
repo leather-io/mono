@@ -37,7 +37,7 @@ export function Sip10TokenDetailsLayout({
       symbol={symbol}
       receiveView="stx"
       swapChain="stacks"
-      availableBalance={availableBalance}
+      balance={availableBalance}
       fiatBalance={fiatBalance}
       name={`${name} (${symbol})`}
       asset={asset}

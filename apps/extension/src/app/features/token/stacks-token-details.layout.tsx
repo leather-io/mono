@@ -6,30 +6,22 @@ import type { Money } from '@leather.io/models';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 
-import { TokenDetailsBalanceItem } from './components/token-details-balance-item';
+import { type TokenBalanceEntry, TokenBalancesTab } from './components/token-balances-tab';
 import { TokenDetailsLayout } from './token-details.layout';
-
-export interface StacksBalanceEntry {
-  title: string;
-  caption?: string;
-  stxBalance: Money;
-  fiatBalance?: Money;
-  onPressRow?(): void;
-}
 
 interface StacksTokenDetailsLayoutProps {
   icon: ReactNode;
-  availableBalance: Money;
+  balance: Money;
   fiatBalance: Money;
   price: Money;
   descriptionText: string;
-  balances?: StacksBalanceEntry[];
+  balances: TokenBalanceEntry[];
   activity: BlockchainActivityItem[];
 }
 
 export function StacksTokenDetailsLayout({
   icon,
-  availableBalance,
+  balance,
   fiatBalance,
   price,
   descriptionText,
@@ -43,7 +35,7 @@ export function StacksTokenDetailsLayout({
       symbol="STX"
       receiveView="stx"
       swapChain="stacks"
-      availableBalance={availableBalance}
+      balance={balance}
       fiatBalance={fiatBalance}
       name="Stacks (STX)"
       asset={stxAsset}
@@ -51,20 +43,7 @@ export function StacksTokenDetailsLayout({
       layer="Layer 2 (Stacks)"
       descriptionText={descriptionText}
       balancesContent={
-        balances?.length ? (
-          <>
-            {balances.map(balance => (
-              <TokenDetailsBalanceItem
-                key={balance.title}
-                title={balance.title}
-                caption={balance.caption}
-                rightTop={formatCurrency(balance.stxBalance)}
-                rightBottom={balance.fiatBalance ? formatCurrency(balance.fiatBalance) : undefined}
-                onPressRow={balance.onPressRow}
-              />
-            ))}
-          </>
-        ) : undefined
+        <TokenBalancesTab balances={balances} formatAmount={amount => formatCurrency(amount)} />
       }
       activity={activity}
     />
