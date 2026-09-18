@@ -92,16 +92,16 @@ export function TokenDetailsActionsRow({
       margin="0 auto"
     >
       <TokenDetailsPillButton
+        label="Receive"
+        onClick={() => showReceive(receiveView)}
+        testId="token-details-receive-btn"
+      />
+      <TokenDetailsPillButton
         label="Send"
         onClick={() =>
           void navigate(RouteUrls.SendCryptoAsset, { state: { backgroundLocation: location } })
         }
         testId="token-details-send-btn"
-      />
-      <TokenDetailsPillButton
-        label="Receive"
-        onClick={() => showReceive(receiveView)}
-        testId="token-details-receive-btn"
       />
       {releaseOnramperBuy && (
         <TokenDetailsPillButton

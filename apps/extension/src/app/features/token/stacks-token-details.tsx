@@ -1,12 +1,16 @@
 import { useNavigate } from 'react-router';
 
-import { stxAsset } from '@leather.io/constants';
+import { TokenDetailsSelectors } from '@tests/selectors/token-details.selectors';
+
+import { LEATHER_STACKING_URL, stxAsset } from '@leather.io/constants';
 import type { AccountAddresses, Money } from '@leather.io/models';
+import type { StxLockInfo } from '@leather.io/services';
 import { StxAvatarIcon } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import {
   formatShortDate,
   isCurrentPosition,
@@ -15,15 +19,24 @@ import {
   subtractMoneyFloor,
   sumBondStx,
 } from '@app/features/bonds/bond-position.utils';
+import { tooltipTextMap } from '@app/pages/all-balances/all-balances.utils';
 import { useBlockchainActivityByAssetId } from '@app/query/activity/blockchain-activity.query';
 import { useCurrentBtcStakingPositions } from '@app/query/bitcoin/staking/bitcoin-staking.hooks';
 import { useMarketData } from '@app/query/common/market-data/market-data.query';
 import { useStxAccountBalanceByAddresses } from '@app/query/stacks/balance/stx-balance.hooks';
 
+import type { TokenBalanceEntry } from './components/token-balances-tab';
 import { useTokenMarketInfo } from './hooks/use-token-market-info';
-import { type StacksBalanceEntry, StacksTokenDetailsLayout } from './stacks-token-details.layout';
+import { StacksTokenDetailsLayout } from './stacks-token-details.layout';
 import { TokenDetailsError } from './token-details-error';
 import { TokenDetailsLoading } from './token-details-loading';
+
+const stakingStatusUrl = `${LEATHER_STACKING_URL}/status`;
+
+function getStakedCaption(lock: StxLockInfo | undefined, hasBondStx: boolean, now = new Date()) {
+  if (!lock || hasBondStx || lock.estimatedUnlockAt <= now) return 'Staked';
+  return `Staked · unlocks about ${formatShortDate(lock.estimatedUnlockAt)}`;
+}
 
 interface StacksTokenDetailsProps {
   account: AccountAddresses;
@@ -50,6 +63,7 @@ export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
 
   const stx = balance.value.stx;
   const quote = balance.value.quote;
+  const lock = balance.value.lock;
   const availableBalance = stx.availableUnlockedBalance;
   const fiatBalance = quote.availableUnlockedBalance;
 
@@ -70,22 +84,25 @@ export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
     ? subtractMoneyFloor(stx.lockedBalance, bondStx)
     : stx.lockedBalance;
 
-  const balances: StacksBalanceEntry[] = [
+  const balances: TokenBalanceEntry[] = [
     {
       title: 'Available to transfer',
-      stxBalance: availableBalance,
-      fiatBalance,
+      tooltipText: tooltipTextMap.stxAvailable,
+      amount: availableBalance,
+      fiatAmount: fiatBalance,
+      testId: TokenDetailsSelectors.TokenDetailsBalanceAvailable,
     },
   ];
 
   if (hasBondStx) {
     balances.push({
       title: 'In a bond',
+      tooltipText: tooltipTextMap.stxBonded,
       caption: runningBond
         ? `Unlocks about ${formatShortDate(runningBond.estimatedUnlockAt)}`
         : undefined,
-      stxBalance: bondStx,
-      fiatBalance: toQuote(bondStx),
+      amount: bondStx,
+      fiatAmount: toQuote(bondStx),
       onPressRow: () => void navigate(RouteUrls.AllBalancesDetail.replace(':category', 'bonded')),
     });
   }
@@ -93,24 +110,29 @@ export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
   if (otherLockedStx.amount.isGreaterThan(0)) {
     balances.push({
       title: 'Locked',
-      stxBalance: otherLockedStx,
-      fiatBalance: hasBondStx ? toQuote(otherLockedStx) : quote.lockedBalance,
+      tooltipText: tooltipTextMap.stxLocked,
+      caption: getStakedCaption(lock, hasBondStx),
+      amount: otherLockedStx,
+      fiatAmount: hasBondStx ? toQuote(otherLockedStx) : quote.lockedBalance,
+      onPressRow: () => openInNewTab(stakingStatusUrl),
+      testId: TokenDetailsSelectors.TokenDetailsLockedRow,
     });
   }
 
   if (stx.inboundBalance.amount.isGreaterThan(0)) {
     balances.push({
       title: 'Pending',
-      stxBalance: stx.inboundBalance,
-      fiatBalance: quote.inboundBalance,
+      tooltipText: tooltipTextMap.stxPending,
+      amount: stx.inboundBalance,
+      fiatAmount: quote.inboundBalance,
     });
   }
 
   return (
     <StacksTokenDetailsLayout
       icon={<StxAvatarIcon size="xl" />}
-      availableBalance={availableBalance}
-      fiatBalance={fiatBalance}
+      balance={stx.totalBalance}
+      fiatBalance={quote.totalBalance}
       price={marketInfo.price!}
       descriptionText={marketInfo.descriptionText}
       balances={balances}
