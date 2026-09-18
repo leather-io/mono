@@ -1,23 +1,10 @@
-import { Route } from 'react-router';
-
-import { RouteUrls } from '@shared/route-urls';
-import { closeWindow } from '@shared/utils';
-
-import { LedgerDmkProvider, useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
+import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
+import type { ConfirmBtcPolicyAddressLedgerFlowRequest } from '@app/features/ledger/flow/ledger-flow.types';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
-import { ConnectLedgerRequestKeys } from '@app/features/ledger/generic-flows/request-keys/steps/connect-ledger-request-keys';
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
-import {
-  CheckingAppVersion,
-  ConnectLedgerError,
-  ConnectLedgerSuccess,
-  DeviceBusy,
-  LedgerDisconnected,
-  UnsupportedBrowserLayout,
-} from '@app/features/ledger/generic-steps';
 import { useDisplayLedgerDescriptorAddress } from '@app/features/ledger/hooks/use-display-ledger-descriptor-address';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import {
   connectLedgerBitcoinApp,
   getBitcoinAppVersion,
@@ -32,8 +19,6 @@ import {
 } from '@app/features/ledger/utils/ledger-descriptor-address';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-import { useBtcAddAccount } from '../use-btc-add-account';
-
 // Drives the on-device confirmation for btc_addAccount on a Ledger wallet. It
 // reuses the generic request-keys flow (connect → version → success/error) and,
 // once connected, displays the multisig `wsh` address on the device. The request
@@ -41,12 +26,15 @@ import { useBtcAddAccount } from '../use-btc-add-account';
 // stable popup search params via `useBtcAddAccount`, so on success this owns the
 // dApp response: it finalizes (registers in add mode, returns the verified
 // address in verify mode) and closes the popup.
-function LedgerConfirmBtcPolicyAddress() {
+interface LedgerConfirmBtcPolicyAddressProps {
+  request: ConfirmBtcPolicyAddressLedgerFlowRequest;
+}
+export function LedgerConfirmBtcPolicyAddress({ request }: LedgerConfirmBtcPolicyAddressProps) {
   const dmk = useLedgerDmk();
   const signerActions = useSignerActionController();
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerNavigate = useLedgerSteps();
   const network = useCurrentNetwork();
-  const { descriptor, address, finalize } = useBtcAddAccount();
+  const { descriptor, address, onConfirmed } = request;
   const displayLedgerDescriptorAddress = useDisplayLedgerDescriptorAddress();
 
   function toConfirmAddressStep() {
@@ -62,9 +50,8 @@ function LedgerConfirmBtcPolicyAddress() {
       connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode, signerActions.run),
       getAppVersion: getBitcoinAppVersion(dmk),
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
-      async onSuccess() {
-        await finalize();
-        closeWindow();
+      onSuccess() {
+        void onConfirmed();
       },
       async pullKeysFromDevice(app) {
         toConfirmAddressStep();
@@ -101,21 +88,3 @@ function LedgerConfirmBtcPolicyAddress() {
     />
   );
 }
-
-export const ledgerConfirmBtcPolicyAddressRoutes = (
-  <Route
-    element={
-      <LedgerDmkProvider>
-        <LedgerConfirmBtcPolicyAddress />
-      </LedgerDmkProvider>
-    }
-  >
-    <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerRequestKeys />} />
-    <Route path={RouteUrls.LedgerCheckingAppVersion} element={<CheckingAppVersion />} />
-    <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />
-    <Route path={RouteUrls.ConnectLedgerError} element={<ConnectLedgerError />} />
-    <Route path={RouteUrls.ConnectLedgerSuccess} element={<ConnectLedgerSuccess />} />
-    <Route path={RouteUrls.LedgerDisconnected} element={<LedgerDisconnected />} />
-    <Route path={RouteUrls.LedgerUnsupportedBrowser} element={<UnsupportedBrowserLayout />} />
-  </Route>
-);

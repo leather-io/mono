@@ -10,6 +10,7 @@ import {
 
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
+import { useLedgerSteps } from '../flow/ledger-flow.context';
 import {
   getMasterFingerprintHex,
   getWalletAddressOnDevice,
@@ -18,7 +19,6 @@ import {
 } from '../utils/bitcoin-signer-kit-utils';
 import type { LedgerBitcoinApp } from '../utils/ledger-app';
 import { descriptorHasNonAccountRawKey } from '../utils/ledger-descriptor-address';
-import { useLedgerNavigate } from './use-ledger-navigate';
 
 interface DisplayLedgerDescriptorAddressOptions {
   onWalletRegistered?(): void;
@@ -34,7 +34,7 @@ interface DisplayLedgerDescriptorAddressOptions {
 // assert against the locally derived one.
 export function useDisplayLedgerDescriptorAddress() {
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerNavigate = useLedgerSteps();
 
   return async (
     app: LedgerBitcoinApp,

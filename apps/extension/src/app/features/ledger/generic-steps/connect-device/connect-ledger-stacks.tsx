@@ -1,35 +1,31 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
-import { closeWindow } from '@shared/utils';
-
 import { whenPageMode } from '@app/common/utils';
-import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { handOffLedgerFlowToFullPage } from '@app/features/ledger/flow/ledger-flow-handoff';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
+import type { LedgerFlowHandoffRequest } from '@app/features/ledger/flow/ledger-flow.types';
 
-import { immediatelyAttemptLedgerConnection } from '../../hooks/use-when-reattempt-ledger-connection';
 import { ConnectLedger } from './connect-ledger';
+
+const connectStacksKeysRequest: LedgerFlowHandoffRequest = {
+  kind: 'request-keys',
+  chain: 'stacks',
+  autoConnect: true,
+};
 
 export function ConnectLedgerStacks() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { open } = useLedgerFlow();
 
   function onConnectStacks() {
     return whenPageMode({
       full() {
-        void navigate(`stacks/${RouteUrls.LedgerStacksAddressStandard}`, {
-          replace: true,
-          state: {
-            [immediatelyAttemptLedgerConnection]: true,
-            backgroundLocation: { pathname: RouteUrls.Home },
-            fromLocation: location,
-          },
-        });
+        open(connectStacksKeysRequest);
       },
       popup() {
-        void openIndexPageInNewTab(RouteUrls.Home);
-        closeWindow();
+        void handOffLedgerFlowToFullPage(connectStacksKeysRequest, { closeCurrentWindow: true });
       },
     });
   }

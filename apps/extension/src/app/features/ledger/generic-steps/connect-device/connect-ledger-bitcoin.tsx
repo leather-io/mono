@@ -1,35 +1,31 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
-import { closeWindow } from '@shared/utils';
-
 import { whenPageMode } from '@app/common/utils';
-import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { handOffLedgerFlowToFullPage } from '@app/features/ledger/flow/ledger-flow-handoff';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
+import type { LedgerFlowHandoffRequest } from '@app/features/ledger/flow/ledger-flow.types';
 
-import { immediatelyAttemptLedgerConnection } from '../../hooks/use-when-reattempt-ledger-connection';
 import { ConnectLedger } from './connect-ledger';
+
+const connectBitcoinKeysRequest: LedgerFlowHandoffRequest = {
+  kind: 'request-keys',
+  chain: 'bitcoin',
+  autoConnect: true,
+};
 
 export function ConnectLedgerBitcoin() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { open } = useLedgerFlow();
 
   function onConnectBitcoin() {
     return whenPageMode({
       full() {
-        void navigate('bitcoin/connect-your-ledger', {
-          replace: true,
-          state: {
-            [immediatelyAttemptLedgerConnection]: true,
-            backgroundLocation: { pathname: RouteUrls.Home },
-            fromLocation: location,
-          },
-        });
+        open(connectBitcoinKeysRequest);
       },
       popup() {
-        void openIndexPageInNewTab(RouteUrls.Home);
-        closeWindow();
+        void handOffLedgerFlowToFullPage(connectBitcoinKeysRequest, { closeCurrentWindow: true });
       },
     });
   }

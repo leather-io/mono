@@ -1,6 +1,4 @@
 // @vitest-environment jsdom
-import { type ReactNode } from 'react';
-
 import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { act, render } from '@testing-library/react';
@@ -14,7 +12,7 @@ import { makeFakeDmk } from '@app/features/ledger/dmk/ledger-dmk.mocks';
 import type { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { makeFakeLedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app.mocks';
 
-import { ledgerBitcoinTxSigningRoutes } from './ledger-bitcoin-sign-tx-container';
+import { LedgerSignBitcoinTxContainer } from './ledger-bitcoin-sign-tx-container';
 
 const mocks = vi.hoisted(() => ({
   toCheckingAppVersion: vi.fn(),
@@ -33,20 +31,15 @@ const mocks = vi.hoisted(() => ({
   publish: vi.fn(),
   disconnect: vi.fn(),
   captureContext: vi.fn<(value: LedgerTxSigningContext) => void>(),
-  location: { pathname: '/', state: {} as Record<string, unknown> },
 }));
-
-vi.mock('react-router', async importOriginal => {
-  const actual = await importOriginal<typeof import('react-router')>();
-  return { ...actual, useLocation: () => mocks.location };
-});
 
 vi.mock('@app/features/ledger/dmk/ledger-dmk.context', () => ({
   useLedgerDmk: () => makeFakeDmk({ disconnect: mocks.disconnect }),
 }));
 
-vi.mock('@app/features/ledger/hooks/use-ledger-navigate', () => ({
-  useLedgerNavigate: () => ({
+vi.mock('@app/features/ledger/flow/ledger-flow.context', () => ({
+  useLedgerFlowState: () => null,
+  useLedgerSteps: () => ({
     toCheckingAppVersion: mocks.toCheckingAppVersion,
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,
     toDeviceBusyStep: mocks.toDeviceBusyStep,
@@ -61,10 +54,6 @@ vi.mock('@app/features/ledger/hooks/use-ledger-analytics.hook', () => ({
   useLedgerAnalytics: () => ({
     transactionSignedOnLedgerRejected: mocks.transactionSignedOnLedgerRejected,
   }),
-}));
-
-vi.mock('@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx-route-generator', () => ({
-  ledgerSignTxRoutes: ({ component }: { component: ReactNode }) => component,
 }));
 
 vi.mock('@app/features/ledger/generic-flows/tx-signing/tx-signing-flow', () => ({
@@ -127,7 +116,8 @@ vi.mock('@shared/logger', () => ({
 }));
 
 const bitcoinAppVersion = { name: 'Bitcoin', version: '2.1.0', chain: 'bitcoin' };
-const unsignedPsbt = bytesToHex(new btc.Transaction().toPSBT());
+const psbt = new btc.Transaction().toPSBT();
+const unsignedPsbt = bytesToHex(psbt);
 const deniedError = Object.assign(new Error('Rejected by user'), {
   name: LedgerConnectionErrors.OperationRejected,
 });
@@ -139,8 +129,20 @@ const disconnectError = toLedgerTransportError({
   originalError: new Error('device disconnected'),
 });
 
-function renderSignTxContext(): LedgerTxSigningContext {
-  render(ledgerBitcoinTxSigningRoutes);
+interface RenderSignTxContextParams {
+  settleOnRejection: boolean;
+  descriptor?: string;
+}
+
+function renderSignTxContext({
+  settleOnRejection,
+  descriptor,
+}: RenderSignTxContextParams): LedgerTxSigningContext {
+  render(
+    <LedgerSignBitcoinTxContainer
+      request={{ kind: 'sign-bitcoin-tx', psbt, inputsToSign: [], descriptor, settleOnRejection }}
+    />
+  );
   const call = mocks.captureContext.mock.calls.at(-1);
   if (!call) throw new Error('Tx signing context was not rendered');
   return call[0];
@@ -157,10 +159,6 @@ function setupSignTransaction({
   descriptor,
   error,
 }: SetupSignTransactionParams) {
-  mocks.location = {
-    pathname: '/swap/bitcoin/BTC/sBTC/review/bitcoin/connect-your-ledger',
-    state: { tx: unsignedPsbt, inputsToSign: [], settleOnRejection, descriptor },
-  };
   mocks.connectApp.mockResolvedValue(makeFakeLedgerBitcoinApp());
   mocks.getBitcoinAppVersion.mockResolvedValue(bitcoinAppVersion);
   mocks.disconnect.mockResolvedValue(undefined);
@@ -171,7 +169,9 @@ function setupSignTransaction({
     mocks.signLedger.mockResolvedValue(undefined);
     mocks.signLedgerDescriptor.mockResolvedValue(undefined);
   }
-  return { context: renderSignTxContext() };
+  return {
+    context: renderSignTxContext({ settleOnRejection: settleOnRejection ?? false, descriptor }),
+  };
 }
 
 describe('LedgerSignBitcoinTxContainer', () => {

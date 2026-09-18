@@ -33,8 +33,9 @@ const mocks = vi.hoisted(() => ({
   captureContext: vi.fn<(value: LedgerMessageSigningContext) => void>(),
 }));
 
-vi.mock('../../hooks/use-ledger-navigate', () => ({
-  useLedgerNavigate: () => ({
+vi.mock('../../flow/ledger-flow.context', () => ({
+  useLedgerFlowState: () => null,
+  useLedgerSteps: () => ({
     toCheckingAppVersion: mocks.toCheckingAppVersion,
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,
     toAwaitingDeviceOperation: mocks.toAwaitingDeviceOperation,
@@ -73,8 +74,20 @@ vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
   }),
 }));
 
-vi.mock('./use-message-type', () => ({
-  useUnsignedMessageType: () => ({ messageType: 'utf8', message: 'hello leather' }),
+vi.mock('../../flow/ledger-flow-sheet', () => ({
+  LedgerFlowSheet: () => null,
+}));
+
+vi.mock('./steps/connect-ledger-sign-msg', () => ({
+  ConnectLedgerSignMsg: () => null,
+}));
+
+vi.mock('./steps/outdated-stacks-app-warning-msg-signing', () => ({
+  OutdatedStacksAppWarningMsgSigning: () => null,
+}));
+
+vi.mock('./steps/sign-stacks-ledger-message', () => ({
+  SignLedgerMessage: () => null,
 }));
 
 vi.mock('@app/features/ledger/utils/stacks-ledger-utils', async importOriginal => {
@@ -101,11 +114,6 @@ vi.mock('@app/features/ledger/utils/generic-ledger-utils', async importOriginal 
     await importOriginal<typeof import('@app/features/ledger/utils/generic-ledger-utils')>();
   return { ...actual, useCancelLedgerAction: () => false };
 });
-
-vi.mock('@leather.io/ui', () => ({
-  Sheet: () => null,
-  SheetHeader: () => null,
-}));
 
 vi.mock('@leather.io/utils', async importOriginal => {
   const actual = await importOriginal<typeof import('@leather.io/utils')>();
@@ -139,7 +147,14 @@ const stacksAppVersion = {
 function renderSignMsgContext(): LedgerMessageSigningContext {
   const root = createRoot(document.createElement('div'));
   act(() => {
-    root.render(createElement(LedgerSignMsgContainer));
+    root.render(
+      createElement(LedgerSignMsgContainer, {
+        request: {
+          kind: 'sign-stacks-message',
+          message: { messageType: 'utf8', message: 'hello leather' },
+        },
+      })
+    );
   });
   const call = mocks.captureContext.mock.calls.at(-1);
   if (!call) throw new Error('Message signing context was not rendered');
