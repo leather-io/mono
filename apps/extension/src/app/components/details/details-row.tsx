@@ -2,14 +2,14 @@ import type { ReactNode } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
-interface TokenDetailsRowProps {
+interface DetailsRowProps {
   label: string;
   value: ReactNode;
   valueAction?(): void;
   testId?: string;
 }
 
-export function TokenDetailsRow({ label, value, valueAction, testId }: TokenDetailsRowProps) {
+export function DetailsRow({ label, value, valueAction, testId }: DetailsRowProps) {
   return (
     <Flex
       px="space.05"
