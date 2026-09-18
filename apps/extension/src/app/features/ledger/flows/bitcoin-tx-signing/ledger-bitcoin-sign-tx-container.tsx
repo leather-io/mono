@@ -16,6 +16,8 @@ import { RouteUrls } from '@shared/route-urls';
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
+import { isLedgerUserDeniedError } from '@app/features/ledger/dmk/ledger-dmk-errors';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { ApproveSignLedgerBitcoinTx } from '@app/features/ledger/flows/bitcoin-tx-signing/steps/approve-bitcoin-sign-ledger-tx';
 import { ledgerSignTxRoutes } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx-route-generator';
 import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
@@ -45,6 +47,7 @@ export const ledgerBitcoinTxSigningRoutes = ledgerSignTxRoutes({
 function LedgerSignBitcoinTxContainer() {
   const toast = useToast();
   const location = useLocation();
+  const dmk = useLedgerDmk();
   const ledgerNavigate = useLedgerNavigate();
   const ledgerAnalytics = useLedgerAnalytics();
   useScrollLock(true);
@@ -57,6 +60,7 @@ function LedgerSignBitcoinTxContainer() {
 
   const inputsToSign = useLocationStateWithCache<BitcoinInputSigningConfig[]>('inputsToSign');
   const descriptor = useLocationStateWithCache<string>('descriptor');
+  const settleOnRejection = useLocationStateWithCache<boolean>('settleOnRejection');
 
   useEffect(() => {
     const tx = get(location.state, 'tx');
@@ -75,7 +79,7 @@ function LedgerSignBitcoinTxContainer() {
       chain,
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       getAppVersion: getBitcoinAppVersion,
-      connectApp: connectLedgerBitcoinApp(network.chain.bitcoin.mode),
+      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode),
       async signTransactionWithDevice(bitcoinApp) {
         if (!inputsToSign) {
           void ledgerNavigate.cancelLedgerAction();
@@ -115,10 +119,14 @@ function LedgerSignBitcoinTxContainer() {
           // UI and the dApp response. Settle that promise with the error rather
           // than leaving it to hang forever. Other flows keep the standard
           // on-device rejection screen.
-          if (descriptor) {
+          if (descriptor || (settleOnRejection && !isLedgerUserDeniedError(e))) {
             appEvents.publish('ledgerBitcoinTxSigningCancelled', {
               unsignedPsbt: unsignedTransactionRaw ?? '',
               error: isError(e) ? e.message : undefined,
+            });
+          } else if (settleOnRejection) {
+            appEvents.publish('ledgerBitcoinTxSigningCancelled', {
+              unsignedPsbt: unsignedTransactionRaw ?? '',
             });
           } else {
             void ledgerNavigate.toOperationRejectedStep();

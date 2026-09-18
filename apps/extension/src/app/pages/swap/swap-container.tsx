@@ -1,6 +1,6 @@
-import { Outlet } from 'react-router';
+import { useRef } from 'react';
+import { Navigate, Outlet } from 'react-router';
 
-import { stxAsset } from '@leather.io/constants';
 import {
   type LiveSwapEstimate,
   SwapProvider,
@@ -8,22 +8,60 @@ import {
   useSwapContext,
 } from '@leather.io/state/swap';
 
+import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { useSwapAvailability } from '@app/common/hooks/use-swap-availability';
+import { LoadingSpinner } from '@app/components/loading-spinner';
+import { useUserSettings } from '@app/hooks/use-user-settings';
+import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
+
 import { useSwapDependencies } from './hooks/use-swap-dependencies';
+import { useSwapDisabledPairs } from './hooks/use-swap-disabled-pairs';
+import { type SwapRouteAssets, useSwapRouteAssets } from './hooks/use-swap-route-assets';
 
 export interface SwapOutletContext {
   liveEstimate: LiveSwapEstimate;
 }
 
 export function SwapContainer() {
+  const swapAvailability = useSwapAvailability();
+  const hasBeenEnabledRef = useRef(false);
+  if (swapAvailability.isEnabled) hasBeenEnabledRef.current = true;
+  if (!hasBeenEnabledRef.current) {
+    if (!swapAvailability.isEnabled && swapAvailability.reason === 'loadingConfig') {
+      return <LoadingSpinner />;
+    }
+    return <Navigate to={RouteUrls.Home} replace />;
+  }
+  return <SwapContainerContent />;
+}
+
+function SwapContainerContent() {
+  useBreakOnNonCompliantEntity('swap');
   const dependencies = useSwapDependencies();
+  const disabledPairs = useSwapDisabledPairs();
+  const { quoteCurrency } = useUserSettings();
+  const initialRouteAssetsRef = useRef<Extract<SwapRouteAssets, { status: 'ready' }> | null>(null);
+  const routeAssets = useSwapRouteAssets({
+    dependencies,
+    disabledPairs,
+    enabled: initialRouteAssetsRef.current === null,
+  });
+  if (initialRouteAssetsRef.current === null && routeAssets.status === 'ready') {
+    initialRouteAssetsRef.current = routeAssets;
+  }
+  const initialRouteAssets = initialRouteAssetsRef.current;
+
+  if (initialRouteAssets === null) return <LoadingSpinner />;
 
   return (
     <SwapProvider
-      baseAsset={stxAsset}
+      baseAsset={initialRouteAssets.baseAsset}
+      targetAsset={initialRouteAssets.targetAsset}
       dependencies={dependencies}
-      quoteCurrencyPreference="USD"
+      quoteCurrencyPreference={quoteCurrency}
+      disabledPairs={disabledPairs}
       trackEvent={analytics.track}
     >
       <SwapOutlet />

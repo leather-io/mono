@@ -10,8 +10,10 @@ import { delay, isError } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
@@ -39,14 +41,23 @@ export const ledgerStacksTxSigningRoutes = ledgerSignTxRoutes({
   ),
 });
 
+function publishStacksSigningSettled(unsignedTx: string, error?: string) {
+  appEvents.publish(
+    'ledgerStacksTxSigningCancelled',
+    error === undefined ? { unsignedTx } : { unsignedTx, error }
+  );
+}
+
 function LedgerSignStacksTxContainer() {
   const location = useLocation();
+  const dmk = useLedgerDmk();
   const ledgerNavigate = useLedgerNavigate();
   const ledgerAnalytics = useLedgerAnalytics();
   useScrollLock(true);
   const account = useCurrentStacksAccount();
   const migrateFingerprintIfNeeded = useLedgerFingerprintMigration();
   const [unsignedTx, setUnsignedTx] = useState<null | string>(null);
+  const settleOnRejection = useLocationStateWithCache<boolean>('settleOnRejection');
 
   const chain = 'stacks';
 
@@ -62,7 +73,7 @@ function LedgerSignStacksTxContainer() {
       chain,
       isAppOpen: isStacksAppOpen,
       getAppVersion: getStacksAppVersion,
-      connectApp: connectLedgerStacksApp,
+      connectApp: () => connectLedgerStacksApp(dmk),
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       async signTransactionWithDevice(stacksApp) {
         if (!account) {
@@ -86,17 +97,29 @@ function LedgerSignStacksTxContainer() {
         );
 
         if (resp.returnCode === LedgerError.DataIsInvalid) {
-          void ledgerNavigate.toDevicePayloadInvalid();
+          if (settleOnRejection) {
+            publishStacksSigningSettled(unsignedTx, resp.errorMessage);
+          } else {
+            void ledgerNavigate.toDevicePayloadInvalid();
+          }
           return;
         }
 
         if (resp.returnCode === LedgerError.TransactionRejected) {
-          void ledgerNavigate.toOperationRejectedStep();
+          if (settleOnRejection) {
+            publishStacksSigningSettled(unsignedTx);
+          } else {
+            void ledgerNavigate.toOperationRejectedStep();
+          }
           ledgerAnalytics.transactionSignedOnLedgerRejected();
           return;
         }
 
         if (resp.returnCode !== LedgerError.NoErrors) {
+          if (settleOnRejection) {
+            publishStacksSigningSettled(unsignedTx, resp.errorMessage);
+            return;
+          }
           throw new Error('Some other error');
         }
 

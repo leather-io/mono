@@ -6,13 +6,15 @@ import { serializeCV } from '@stacks/transactions';
 import { LedgerError } from '@zondax/ledger-stacks';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
-import { delay, isError } from '@leather.io/utils';
+import { delay } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 import { UnsignedMessage, whenSignableMessageOfType } from '@shared/signature/signature-types';
 
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
+import { isLedgerDeviceLockedError } from '@app/features/ledger/dmk/ledger-dmk-errors';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   getStacksAppVersion,
@@ -27,7 +29,7 @@ import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-acco
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerFingerprintMigration } from '../../hooks/use-ledger-fingerprint-migration';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
-import { checkLockedDeviceError, useLedgerResponseState } from '../../utils/generic-ledger-utils';
+import { useLedgerResponseState } from '../../utils/generic-ledger-utils';
 import {
   LedgerMessageSigningContext,
   LedgerMsgSigningProvider,
@@ -51,6 +53,7 @@ function LedgerSignMsgData({ children }: LedgerSignMsgDataProps) {
 type LedgerSignMsgProps = LedgerSignMsgData;
 function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
   useScrollLock(true);
+  const dmk = useLedgerDmk();
   const ledgerNavigate = useLedgerNavigate();
   const ledgerAnalytics = useLedgerAnalytics();
   const migrateFingerprintIfNeeded = useLedgerFingerprintMigration();
@@ -62,10 +65,10 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
   const chain = 'stacks';
 
   async function signMessage() {
-    const stacksApp = await prepareLedgerDeviceStacksAppConnection({
+    const stacksApp = await prepareLedgerDeviceStacksAppConnection(dmk)({
       setLoadingState: setAwaitingDeviceConnection,
       onError(e) {
-        if (isError(e) && checkLockedDeviceError(e)) {
+        if (isLedgerDeviceLockedError(e)) {
           setLatestDeviceResponse({ deviceLocked: true } as any);
           return;
         }

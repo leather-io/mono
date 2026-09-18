@@ -56,7 +56,11 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
   return (
     <styled.span>
       {' '}
-      <Link href={href} style={{ fontSize: 'inherit', display: 'inline', whiteSpace: 'nowrap' }}>
+      <Link
+        href={href}
+        {...(isUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        style={{ fontSize: 'inherit', display: 'inline', whiteSpace: 'nowrap' }}
+      >
         Learn more
       </Link>
     </styled.span>

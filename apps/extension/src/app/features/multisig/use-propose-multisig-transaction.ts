@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { LEATHER_API_URL_STAGING } from '@leather.io/constants';
 import { createProposeMultisigTransactionMutationConfig } from '@leather.io/queries';
 
 import { MULTISIG_API_URL } from '@shared/environment';
@@ -11,7 +10,7 @@ export function useProposeMultisigTransaction() {
   const signProposalCommitment = useSignProposalCommitment();
   const mutation = useMutation(
     createProposeMultisigTransactionMutationConfig({
-      baseUrl: MULTISIG_API_URL || LEATHER_API_URL_STAGING,
+      baseUrl: MULTISIG_API_URL || undefined,
       signProposalCommitment,
     })
   );

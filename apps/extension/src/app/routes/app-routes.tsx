@@ -27,6 +27,7 @@ import { TokenDetails } from '@app/features/token/token-details';
 import { AddWallet } from '@app/pages/add-wallet/add-wallet';
 import { AllBalancesPage } from '@app/pages/all-balances/all-balances';
 import { AllBalancesDetail } from '@app/pages/all-balances/all-balances-detail';
+import { BondHistoryPage } from '@app/pages/all-balances/bond-history';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { ManageTokensPage } from '@app/pages/manage-tokens/manage-tokens';
@@ -42,10 +43,6 @@ import { SellPage } from '@app/pages/sell/sell';
 import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error';
 import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-form/send-crypto-asset-form.routes';
 import { SettingsPage } from '@app/pages/settings/settings';
-import {
-  bitcoinSwapLegacyRoutes,
-  stacksSwapLegacyRoutes,
-} from '@app/pages/swap-legacy/swap.routes';
 import { swapRoutes } from '@app/pages/swap/swap.routes';
 import { SelectTheme } from '@app/pages/theme/select-theme';
 import { Unlock } from '@app/pages/unlock';
@@ -80,7 +77,7 @@ export const homePageModalRoutes = (
 );
 
 function useAppRoutes() {
-  const { releaseOnramperBuy, releaseOnramperSell, swapRevamp } = useFlags();
+  const { releaseOnramperBuy, releaseOnramperSell } = useFlags();
 
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
@@ -202,8 +199,7 @@ function useAppRoutes() {
             }
           />
 
-          {swapRevamp ? swapRoutes : bitcoinSwapLegacyRoutes}
-          {swapRevamp ? swapRoutes : stacksSwapLegacyRoutes}
+          {swapRoutes}
 
           {/* OnBoarding Routes */}
           <Route
@@ -314,6 +310,14 @@ function useAppRoutes() {
             element={
               <AccountGate>
                 <AllBalancesDetail />
+              </AccountGate>
+            }
+          />
+          <Route
+            path={RouteUrls.AllBalancesBondHistory}
+            element={
+              <AccountGate>
+                <BondHistoryPage />
               </AccountGate>
             }
           />

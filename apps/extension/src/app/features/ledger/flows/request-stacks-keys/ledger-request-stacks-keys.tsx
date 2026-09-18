@@ -15,6 +15,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { ChooseAddressStandard } from '@app/features/ledger/flows/request-stacks-keys/steps/choose-address-standard';
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
@@ -48,6 +49,7 @@ const derivationPathTypeLabels: Record<StacksDerivationPathType, string> = {
 function LedgerRequestStacksKeys() {
   const toast = useToast();
   const navigate = useNavigate();
+  const dmk = useLedgerDmk();
   const ledgerNavigate = useLedgerNavigate();
 
   const stxKeychainsDescriptors = useStacksKeychainDescriptors();
@@ -60,7 +62,7 @@ function LedgerRequestStacksKeys() {
   const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
     useRequestLedgerKeys<StacksApp>({
       chain,
-      connectApp: connectLedgerStacksApp,
+      connectApp: () => connectLedgerStacksApp(dmk),
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),

@@ -27,6 +27,7 @@ interface BitcoinTokenDetailsLayoutProps {
   descriptionText: string;
   balances: BalanceEntry[];
   activity: BlockchainActivityItem[];
+  isSwapEnabled: boolean;
 }
 
 export function BitcoinTokenDetailsLayout({
@@ -39,6 +40,7 @@ export function BitcoinTokenDetailsLayout({
   descriptionText,
   balances,
   activity,
+  isSwapEnabled,
 }: BitcoinTokenDetailsLayoutProps) {
   return (
     <TokenDetailsLayout
@@ -47,6 +49,7 @@ export function BitcoinTokenDetailsLayout({
       symbol="BTC"
       receiveView="btc"
       swapChain="bitcoin"
+      isSwapEnabled={isSwapEnabled}
       availableBalance={totalBalance}
       fiatBalance={fiatBalance}
       name="Bitcoin (BTC)"

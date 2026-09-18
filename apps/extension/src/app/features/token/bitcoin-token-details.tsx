@@ -1,11 +1,17 @@
+import { useNavigate } from 'react-router';
+
 import { btcAsset } from '@leather.io/constants';
 import type { AccountAddresses, AccountId } from '@leather.io/models';
+import { isBaseEntirelyDisabled } from '@leather.io/state/swap';
 import { BtcAvatarIcon } from '@leather.io/ui';
-import { createMoney } from '@leather.io/utils';
+import { createMoney, getAssetId } from '@leather.io/utils';
+
+import { RouteUrls } from '@shared/route-urls';
 
 import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { useToast } from '@app/features/toasts/use-toast';
+import { useSwapDisabledPairs } from '@app/pages/swap/hooks/use-swap-disabled-pairs';
 import { useBlockchainActivityByAssetId } from '@app/query/activity/blockchain-activity.query';
 import {
   useNativeSegwitBtcAccountBalance,
@@ -24,10 +30,13 @@ interface BitcoinTokenDetailsProps {
 export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsProps) {
   const { showReceive } = useReceiveDialog();
   const toast = useToast();
+  const navigate = useNavigate();
 
   const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountId);
   const taprootBalance = useTaprootBtcAccountBalance(accountId);
   const marketInfo = useTokenMarketInfo(btcAsset);
+  const disabledPairs = useSwapDisabledPairs();
+  const isSwapEnabled = !isBaseEntirelyDisabled(getAssetId(btcAsset), disabledPairs);
   const activityQuery = useBlockchainActivityByAssetId(account, btcAsset);
 
   function handleCopyAddress(address: string) {
@@ -92,6 +101,12 @@ export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsP
       onPressAddress: taprootAddress ? () => handleCopyAddress(taprootAddress) : undefined,
       onPressRow: handleOpenReceive,
     },
+    {
+      title: 'In a bond',
+      btcBalance: nativeSegwitBalance.value.btc.lockedBalance,
+      fiatBalance: nativeSegwitBalance.value.quote.lockedBalance,
+      onPressRow: () => navigate(RouteUrls.AllBalancesDetail.replace(':category', 'bonded')),
+    },
   ];
 
   return (
@@ -105,6 +120,7 @@ export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsP
       descriptionText={marketInfo.descriptionText}
       balances={balances}
       activity={activityQuery.data ?? []}
+      isSwapEnabled={isSwapEnabled}
     />
   );
 }

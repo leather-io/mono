@@ -8,13 +8,18 @@ import { delay, isError } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 
+import {
+  deviceInUseErrorMessage,
+  isLedgerAppOpenFailedError,
+  isLedgerDeviceDisconnectedError,
+  isLedgerDeviceInUseError,
+  isLedgerDeviceLockedError,
+  isLedgerNoDeviceSelectedError,
+  noDeviceSelectedErrorMessage,
+} from '../../dmk/ledger-dmk-errors';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
-import {
-  LedgerConnectionErrors,
-  checkLockedDeviceError,
-  useLedgerResponseState,
-} from '../../utils/generic-ledger-utils';
+import { LedgerConnectionErrors, useLedgerResponseState } from '../../utils/generic-ledger-utils';
 import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
 interface UseLedgerSignTxArgs<App extends BitcoinApp | StacksApp> {
@@ -80,14 +85,26 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
       onSuccess?.();
     } catch (e) {
       setAwaitingDeviceConnection(false);
-      if (isError(e) && checkLockedDeviceError(e)) {
+      if (isLedgerDeviceLockedError(e)) {
         setLatestDeviceResponse({ deviceLocked: true } as any);
         void ledgerNavigate.toConnectStep();
         return;
       }
 
-      if (isError(e) && e.name === LedgerConnectionErrors.AppOpenFailed) {
+      if (isError(e) && isLedgerAppOpenFailedError(e)) {
         return ledgerNavigate.toErrorStep(chain, e.message);
+      }
+
+      if (isLedgerDeviceDisconnectedError(e)) {
+        return ledgerNavigate.toDeviceDisconnectStep();
+      }
+
+      if (isLedgerNoDeviceSelectedError(e)) {
+        return ledgerNavigate.toErrorStep(chain, noDeviceSelectedErrorMessage);
+      }
+
+      if (isLedgerDeviceInUseError(e)) {
+        return ledgerNavigate.toErrorStep(chain, deviceInUseErrorMessage);
       }
 
       return ledgerNavigate.toErrorStep(chain);

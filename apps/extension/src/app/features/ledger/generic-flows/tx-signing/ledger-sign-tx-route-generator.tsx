@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { LedgerDmkProvider } from '../../dmk/ledger-dmk.context';
 import { OutdatedStacksAppWarningTxSigning } from '../../flows/stacks-tx-signing/steps/outdated-stacks-app-warning-tx-signing';
 import {
   CheckingAppVersion,
@@ -24,7 +25,7 @@ interface LedgerSignTxRoutesProps {
 }
 export function ledgerSignTxRoutes({ component, customRoutes }: LedgerSignTxRoutesProps) {
   return (
-    <Route element={component}>
+    <Route element={<LedgerDmkProvider>{component}</LedgerDmkProvider>}>
       {customRoutes}
       <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerSignTx />} />
       <Route path={RouteUrls.LedgerCheckingAppVersion} element={<CheckingAppVersion />} />

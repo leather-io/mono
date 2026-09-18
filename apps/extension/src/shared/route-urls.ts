@@ -42,6 +42,7 @@ export enum RouteUrls {
   Settings = '/settings',
   AllBalances = '/all-balances',
   AllBalancesDetail = '/all-balances/:category',
+  AllBalancesBondHistory = '/all-balances/bonded/history',
   AddWallet = '/add-wallet',
   CreateWallet = '/create-wallet',
   AddLedgerWallet = '/add-ledger-wallet',
@@ -74,10 +75,7 @@ export enum RouteUrls {
 
   // Swap routes
   Swap = '/swap/{chain}/:base/:quote?',
-  SwapAssetSelectBase = 'select-base',
-  SwapAssetSelectQuote = 'select-quote',
   SwapReview = '/swap/{chain}/:base/:quote/review',
-  SwapError = '/swap/error',
 
   // Request routes bitcoin
   RpcGetAddresses = '/get-addresses',
@@ -106,4 +104,8 @@ export enum RouteUrls {
   FeeEditor = 'edit-fee',
   NonceEditor = 'edit-nonce',
   BroadcastError = 'broadcast-error',
+}
+
+export function toRoutePattern(route: string) {
+  return route.replace('{chain}', ':chain');
 }

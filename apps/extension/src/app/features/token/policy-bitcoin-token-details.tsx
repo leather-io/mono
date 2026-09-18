@@ -1,6 +1,10 @@
+import { useNavigate } from 'react-router';
+
 import { btcAsset } from '@leather.io/constants';
 import type { AccountAddresses } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui';
+
+import { RouteUrls } from '@shared/route-urls';
 
 import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
@@ -20,6 +24,7 @@ interface PolicyBitcoinTokenDetailsProps {
 export function PolicyBitcoinTokenDetails({ account }: PolicyBitcoinTokenDetailsProps) {
   const { showReceive } = useReceiveDialog();
   const toast = useToast();
+  const navigate = useNavigate();
 
   const balance = useBtcAccountBalanceByAddresses(account);
   const marketInfo = useTokenMarketInfo(btcAsset);
@@ -57,6 +62,12 @@ export function PolicyBitcoinTokenDetails({ account }: PolicyBitcoinTokenDetails
       onPressAddress: address ? handleCopyAddress : undefined,
       onPressRow: handleOpenReceive,
     },
+    {
+      title: 'In a bond',
+      btcBalance: balance.value.btc.lockedBalance,
+      fiatBalance: balance.value.quote.lockedBalance,
+      onPressRow: () => navigate(RouteUrls.AllBalancesDetail.replace(':category', 'bonded')),
+    },
   ];
 
   return (
@@ -70,6 +81,7 @@ export function PolicyBitcoinTokenDetails({ account }: PolicyBitcoinTokenDetails
       descriptionText={marketInfo.descriptionText}
       balances={balances}
       activity={activityQuery.data ?? []}
+      isSwapEnabled={false}
     />
   );
 }

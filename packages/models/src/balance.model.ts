@@ -32,6 +32,7 @@ export interface BtcBalance extends BaseCryptoAssetBalance {
    * Balance of the union set of pending-outbound and dust UTXOs
    */
   readonly unspendableBalance: Money;
+  readonly lockedBalance: Money;
 }
 
 export interface StxBalance extends BaseCryptoAssetBalance {

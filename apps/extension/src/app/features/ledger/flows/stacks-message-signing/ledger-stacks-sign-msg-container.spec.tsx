@@ -79,7 +79,7 @@ vi.mock('@app/features/ledger/utils/stacks-ledger-utils', async importOriginal =
     await importOriginal<typeof import('@app/features/ledger/utils/stacks-ledger-utils')>();
   return {
     ...actual,
-    prepareLedgerDeviceStacksAppConnection: mocks.prepareConnection,
+    prepareLedgerDeviceStacksAppConnection: () => mocks.prepareConnection,
     getStacksAppVersion: mocks.getStacksAppVersion,
     signLedgerStacksUtf8Message: mocks.signUtf8Message,
   };
@@ -90,6 +90,10 @@ vi.mock('@app/features/ledger/utils/stacks-version-gate', () => ({
 }));
 
 vi.mock('@ledgerhq/ledger-bitcoin', () => ({ default: class {} }));
+
+vi.mock('@app/features/ledger/dmk/ledger-dmk.context', () => ({
+  useLedgerDmk: () => ({}),
+}));
 
 vi.mock('@app/features/ledger/utils/generic-ledger-utils', async importOriginal => {
   const actual =
@@ -128,7 +132,7 @@ const stacksAppVersion = {
   targetId: '',
   major: 0,
   minor: 26,
-  patch: 17,
+  patch: 19,
 };
 
 function renderSignMsgContext(): LedgerMessageSigningContext {

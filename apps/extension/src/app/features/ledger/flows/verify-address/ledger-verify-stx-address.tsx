@@ -5,6 +5,7 @@ import StacksApp from '@zondax/ledger-stacks';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
@@ -31,6 +32,7 @@ import { verifyAddressPaths } from './verify-address-paths';
 function LedgerVerifyStxAddress() {
   const navigate = useNavigate();
   const toast = useToast();
+  const dmk = useLedgerDmk();
   const ledgerNavigate = useLedgerNavigate();
   const network = useCurrentNetwork();
   const stacksAccount = useCurrentStacksAccount();
@@ -38,7 +40,7 @@ function LedgerVerifyStxAddress() {
   const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
     useRequestLedgerKeys<StacksApp>({
       chain: 'stacks',
-      connectApp: connectLedgerStacksApp,
+      connectApp: () => connectLedgerStacksApp(dmk),
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),

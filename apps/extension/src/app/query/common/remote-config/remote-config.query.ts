@@ -84,8 +84,8 @@ export function useConfigSbtc() {
   }, [network.chain.bitcoin.mode, sbtc]);
 }
 
-function useRemoteConfig() {
-  const { data } = useQuery({
+function useRemoteConfigQuery() {
+  return useQuery({
     queryKey: ['walletConfig'],
     queryFn: () => fetchLeatherConfig(),
     // initialData: walletConfig as RemoteConfig,
@@ -95,6 +95,10 @@ function useRemoteConfig() {
     staleTime: 1000 * 60 * 10,
     retryDelay: 1000 * 60,
   });
+}
+
+function useRemoteConfig() {
+  const { data } = useRemoteConfigQuery();
 
   return data;
 }
@@ -104,9 +108,9 @@ export function useRemoteLeatherMessages(): HiroMessage[] {
   return get(config, 'messages.global', []);
 }
 
-export function useConfigSwapsEnabled() {
-  const config = useRemoteConfig();
-  return get(config, 'swapsEnabled', false);
+export function useConfigSwapsEnabledState() {
+  const { data, isPending } = useRemoteConfigQuery();
+  return { isPending, swapsEnabled: get(data, 'swapsEnabled', false) };
 }
 
 export function useConfigSpamFilterWhitelist(): string[] {

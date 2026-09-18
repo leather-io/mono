@@ -1,4 +1,4 @@
-import { leather } from '~/utils/leather-sdk';
+import { multisigLeather } from '~/features/multisig/extension/multisig-leather-client';
 
 import type { MultisigTransaction, VaultAccount } from '@leather.io/models';
 
@@ -18,7 +18,7 @@ export async function signStxTransaction(
     rawPayload: transaction.proposalRawPayload,
     nonce: transaction.nonce,
   });
-  const { txHex } = await leather.stxSignTransaction({
+  const { txHex } = await multisigLeather.stxSignTransaction({
     txHex: signingHex,
     network: resolveWalletRpcNetwork(transaction.network),
   });

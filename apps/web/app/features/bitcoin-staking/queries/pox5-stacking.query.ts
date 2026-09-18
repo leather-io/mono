@@ -218,14 +218,20 @@ export interface Pox5ClaimableRewards {
   byCycle: Pox5EarnedRewards[];
 }
 
-export function usePox5ClaimableRewards(): Pox5ClaimableRewards {
+interface UsePox5ClaimableRewardsArgs {
+  enabled?: boolean;
+}
+
+export function usePox5ClaimableRewards({
+  enabled = true,
+}: UsePox5ClaimableRewardsArgs = {}): Pox5ClaimableRewards {
   const { stacksAccount } = useLeatherConnect();
   const client = usePox5StacksClient();
   const stakerInfoQuery = usePox5StakerInfoQuery();
   const poxInfoQuery = usePox5PoxInfoQuery();
 
   const stakerInfo = stakerInfoQuery.data;
-  const cycles = getClaimableCycles(stakerInfo, poxInfoQuery.data?.current_cycle.id);
+  const cycles = enabled ? getClaimableCycles(stakerInfo, poxInfoQuery.data?.current_cycle.id) : [];
 
   const rewardsQueries = useQueries({
     queries: cycles.map(cycle =>
@@ -245,9 +251,10 @@ export function usePox5ClaimableRewards(): Pox5ClaimableRewards {
 
   return {
     isLoading:
-      stakerInfoQuery.isLoading ||
-      poxInfoQuery.isLoading ||
-      rewardsQueries.some(query => query.isLoading),
+      enabled &&
+      (stakerInfoQuery.isLoading ||
+        poxInfoQuery.isLoading ||
+        rewardsQueries.some(query => query.isLoading)),
     totalEarned: byCycle.reduce((sum, rewards) => sum + rewards.earned, 0n),
     byCycle,
   };

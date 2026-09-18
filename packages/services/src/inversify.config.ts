@@ -33,6 +33,7 @@ import { MarketStatsService } from './market/market-stats.service';
 import { MultisigService } from './multisig/multisig.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { StacksProtocolService } from './protocols/stacks-protocol.service';
+import { BitcoinStakingService } from './staking/bitcoin-staking.service';
 import { SwapService } from './swap/swap.service';
 import { TokenAnalyticsService } from './token-analytics/token-analytics.service';
 import { BitcoinTransactionsService } from './transactions/bitcoin-transactions.service';
@@ -108,6 +109,9 @@ export function getSip10AssetService() {
 }
 export function getUtxosService() {
   return getServicesContainer().get(UtxosService);
+}
+export function getBitcoinStakingService() {
+  return getServicesContainer().get(BitcoinStakingService);
 }
 export function getStacksTransactionsService() {
   return getServicesContainer().get(StacksTransactionsService);

@@ -7,6 +7,7 @@ import { truncateMiddle } from '@leather.io/utils';
 interface TokenDetailsBalanceItemProps {
   title: string;
   address?: string;
+  caption?: string;
   rightTop: ReactNode;
   rightBottom?: ReactNode;
   onPressAddress?(): void;
@@ -16,13 +17,21 @@ interface TokenDetailsBalanceItemProps {
 export function TokenDetailsBalanceItem({
   title,
   address,
+  caption,
   rightTop,
   rightBottom,
   onPressAddress,
   onPressRow,
 }: TokenDetailsBalanceItemProps) {
   const addressElement = useMemo(() => {
-    if (!address) return null;
+    if (!address) {
+      if (!caption) return null;
+      return (
+        <styled.span textStyle="caption.01" color="ink.text-subdued" textAlign="left">
+          {caption}
+        </styled.span>
+      );
+    }
     if (onPressAddress) {
       return (
         <styled.button
@@ -46,7 +55,7 @@ export function TokenDetailsBalanceItem({
         {truncateMiddle(address, 6)}
       </styled.span>
     );
-  }, [address, onPressAddress]);
+  }, [address, caption, onPressAddress]);
 
   const content = (
     <>

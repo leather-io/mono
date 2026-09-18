@@ -1,4 +1,4 @@
-import Transport from '@ledgerhq/hw-transport-webusb';
+import type { DeviceManagementKit } from '@ledgerhq/device-management-kit';
 import { ChainId } from '@stacks/network';
 import {
   AddressVersion,
@@ -18,12 +18,12 @@ import { compare } from 'compare-versions';
 
 import { whenStacksChainId } from '@leather.io/stacks';
 
+import { DmkTransport } from '../dmk/dmk-transport';
+import { connectLedgerDeviceToApp } from '../dmk/ledger-device-connection';
 import {
   LEDGER_APPS_MAP,
-  PrepareLedgerDeviceConnectionArgs,
   SemVerObject,
   prepareLedgerDeviceForAppFn,
-  promptOpenAppOnDevice,
   versionObjectToVersionString,
 } from './generic-ledger-utils';
 
@@ -63,10 +63,9 @@ export interface StacksAppKeysResponseItem {
   dataPublicKey: string;
 }
 
-export async function connectLedgerStacksApp() {
-  await promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS);
-  const transport = await Transport.create();
-  return new StacksApp(transport);
+export async function connectLedgerStacksApp(dmk: DeviceManagementKit) {
+  const sessionId = await connectLedgerDeviceToApp(dmk, LEDGER_APPS_MAP.STACKS);
+  return new StacksApp(new DmkTransport(dmk, sessionId));
 }
 
 export interface StacksAppVersion extends Awaited<ReturnType<StacksApp['getVersion']>> {
@@ -82,10 +81,9 @@ export async function getStacksAppVersion(app: StacksApp): Promise<StacksAppVers
   return { name: LEDGER_APPS_MAP.STACKS, chain: 'stacks' as const, ...appVersion };
 }
 
-export const prepareLedgerDeviceStacksAppConnection = prepareLedgerDeviceForAppFn(
-  connectLedgerStacksApp
-  // Casting type here as factory function reads it was a double Promise
-) as (args: PrepareLedgerDeviceConnectionArgs) => Promise<StacksApp>;
+export function prepareLedgerDeviceStacksAppConnection(dmk: DeviceManagementKit) {
+  return prepareLedgerDeviceForAppFn(() => connectLedgerStacksApp(dmk));
+}
 
 export function signLedgerStacksTransaction(app: StacksApp) {
   return async (payload: Buffer, derivationPath: string) => app.sign(derivationPath, payload);
@@ -125,7 +123,7 @@ export function isStacksLedgerAppClosed(response: ResponseVersion) {
 
 // Minimum version required to read master key fingerprint
 // This enables proper multi-wallet support for Ledger Stacks accounts
-export const MINIMUM_STACKS_APP_VERSION = '0.26.17';
+export const MINIMUM_STACKS_APP_VERSION = '0.26.19';
 
 interface StacksVersionCheckResult {
   meetsMinimum: boolean;

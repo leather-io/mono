@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router';
 
 import BitcoinApp from '@ledgerhq/ledger-bitcoin';
 
-import { isError } from '@leather.io/utils';
-
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { isLedgerDeviceLockedError } from '@app/features/ledger/dmk/ledger-dmk-errors';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
@@ -20,10 +20,7 @@ import {
   getBitcoinAppVersion,
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
-import {
-  checkLockedDeviceError,
-  useCancelLedgerAction,
-} from '@app/features/ledger/utils/generic-ledger-utils';
+import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   isLedgerOnDeviceAddressConfirmed,
   toLedgerDisplayedAddress,
@@ -43,6 +40,7 @@ interface LedgerVerifyBtcAddressProps {
 function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
   const navigate = useNavigate();
   const toast = useToast();
+  const dmk = useLedgerDmk();
   const ledgerNavigate = useLedgerNavigate();
   const network = useCurrentNetwork();
   const { accountIndex } = useCurrentAccountId();
@@ -72,7 +70,7 @@ function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
   const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
     useRequestLedgerKeys<BitcoinApp>({
       chain: 'bitcoin',
-      connectApp: connectLedgerBitcoinApp(network.chain.bitcoin.mode),
+      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode),
       getAppVersion: getBitcoinAppVersion,
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       onSuccess() {
@@ -99,7 +97,7 @@ function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
             return { status: 'failure' };
           }
         } catch (e) {
-          if (isError(e) && checkLockedDeviceError(e)) throw e;
+          if (isLedgerDeviceLockedError(e)) throw e;
           analytics.track('address_verification_completed', {
             type: variant,
             verified: false,

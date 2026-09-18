@@ -12,13 +12,15 @@ import {
   type SwapQuote,
   type TransactionFees,
 } from '@leather.io/models';
-import { createMoney } from '@leather.io/utils';
+import { assertExistence, createMoney } from '@leather.io/utils';
 
 import {
   type EnrichedSwapQuote,
   type NetworkFee,
   type SwapExecutionDependencies,
+  type SwapSubmissionResult,
 } from '../../swap-state.types';
+import { toNativeSegwitAccountRequest } from '../../utils/account-request';
 import { estimateExchangeRate } from '../../utils/market-rates';
 import { buildSbtcBridgeDepositTx } from './build-transaction/build-transaction/build-sbtc-bridge-deposit-tx';
 import { buildStacksTx } from './build-transaction/build-transaction/build-stacks-tx';
@@ -27,6 +29,8 @@ import {
   createBaseEnrichedQuote,
   estimateLiquidityFeePercentage,
 } from './execution-type.utils';
+
+const sbtcDepositOutputIndex = 0;
 
 interface ExecutionStrategy {
   enrichQuote(
@@ -38,7 +42,10 @@ interface ExecutionStrategy {
     dependencies: SwapExecutionDependencies,
     signal?: AbortSignal
   ): Promise<TransactionFees>;
-  submitSwap(dependencies: SwapExecutionDependencies, fee: NetworkFee): Promise<void>;
+  submitSwap(
+    dependencies: SwapExecutionDependencies,
+    fee: NetworkFee
+  ): Promise<SwapSubmissionResult>;
 }
 
 const stacksContractCallStrategy: ExecutionStrategy = {
@@ -75,7 +82,8 @@ const stacksContractCallStrategy: ExecutionStrategy = {
       nonce
     );
     const signed = await stacks.stacksSigner.sign(unsignedTx);
-    await stacks.broadcast({ tx: signed, stacksNetwork: stacks.stacksNetwork });
+    const response = await stacks.broadcast({ tx: signed, stacksNetwork: stacks.stacksNetwork });
+    return { status: 'submitted', txid: response.txid };
   },
 };
 
@@ -89,12 +97,14 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
   },
   async getNetworkFee(dependencies, signal?: AbortSignal) {
     const { accountRequest, derivedAmounts, isSendingMax, services, bitcoin } = dependencies;
-    const deposit = await buildSbtcBridgeDepositTx(
+    assertExistence(bitcoin, 'Bitcoin dependencies missing for sbtc-bridge-deposit fee estimation');
+    const signersPublicKey = await services.swapService.getSbtcSignersPublicKey(signal);
+    const deposit = buildSbtcBridgeDepositTx(
       derivedAmounts.crypto?.amount.toNumber() ?? 0,
       bitcoin.network,
       accountRequest.account,
       bitcoin.bitcoinPayer,
-      bitcoin.sbtcClient
+      signersPublicKey
     );
     const recipients: CoinSelectionRecipient[] = [
       {
@@ -103,7 +113,7 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
       },
     ];
     return services.bitcoinTransactionFeesService.getBitcoinTransactionFees(
-      accountRequest,
+      toNativeSegwitAccountRequest(accountRequest),
       recipients,
       isSendingMax,
       signal
@@ -111,16 +121,20 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
   },
   async submitSwap(dependencies, fee) {
     const { accountRequest, derivedAmounts, isSendingMax, bitcoin, services } = dependencies;
-    const deposit = await buildSbtcBridgeDepositTx(
+    assertExistence(bitcoin, 'Bitcoin dependencies missing for sbtc-bridge-deposit submission');
+    const signersPublicKey = await services.swapService.getSbtcSignersPublicKey();
+    const deposit = buildSbtcBridgeDepositTx(
       derivedAmounts.crypto?.amount.toNumber() ?? 0,
       bitcoin.network,
       accountRequest.account,
       bitcoin.bitcoinPayer,
-      bitcoin.sbtcClient
+      signersPublicKey
     );
 
     if (fee.calculation.type !== 'bitcoinFeeRate') {
-      return;
+      throw new Error(
+        `sbtc-bridge-deposit submission requires a bitcoinFeeRate fee calculation, received: ${fee.calculation.type}`
+      );
     }
 
     const recipients: CoinSelectionRecipient[] = [
@@ -131,7 +145,7 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
     ];
 
     const { inputs, outputs } = await services.bitcoinCoinSelectionService.performCoinSelection({
-      account: accountRequest,
+      account: toNativeSegwitAccountRequest(accountRequest),
       recipients,
       feeRate: fee.calculation.rate,
       isMaxSpend: isSendingMax,
@@ -166,11 +180,34 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
 
     const signedDepositTx = await bitcoin.signBitcoinPsbt(deposit.transaction.toPSBT());
     signedDepositTx.finalize();
-    await bitcoin.sbtcClient.broadcastTx(signedDepositTx);
+    const txid = signedDepositTx.id;
+    const broadcast = await bitcoin.broadcast(signedDepositTx.hex);
+    if (broadcast.status === 'rejected') throw new Error(broadcast.errorMessage);
     // Software wallets mutate the original transaction when signing and
     // finalizing the tx. Ledger devices return a new instance. Override tx
     // in `deposit` with the signed instance
-    await bitcoin.sbtcClient.notifySbtc({ ...deposit, transaction: signedDepositTx });
+    const notification = await services.swapService.notifySbtcDeposit({
+      bitcoinTxid: txid,
+      bitcoinTxOutputIndex: sbtcDepositOutputIndex,
+      depositScript: deposit.depositScript,
+      reclaimScript: deposit.reclaimScript,
+      transactionHex: signedDepositTx.hex,
+    });
+    if (broadcast.status === 'unknown') {
+      return {
+        status: 'broadcast-uncertain',
+        txid,
+        errorMessage: broadcast.errorMessage,
+        notified: notification.status === 'notified',
+      };
+    }
+    if (notification.status === 'failed') {
+      const { errorMessage, httpStatus } = notification;
+      if (httpStatus === undefined)
+        return { status: 'sbtc-notification-failed', txid, errorMessage };
+      return { status: 'sbtc-notification-failed', txid, errorMessage, httpStatus };
+    }
+    return { status: 'submitted', txid };
   },
 };
 

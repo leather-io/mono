@@ -134,3 +134,23 @@ describe('staking display helpers', () => {
     }
   });
 });
+
+describe('fungible post condition contract id', () => {
+  it('derives the contract id from the asset rather than the principal', () => {
+    const wire = postConditionToWire({
+      type: 'ft-postcondition',
+      address: SENDER_ADDRESS,
+      condition: 'eq',
+      amount: 100000000,
+      asset: 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token',
+    });
+    expect(wire.conditionType).toBe(PostConditionType.Fungible);
+    if (wire.conditionType === PostConditionType.Fungible) {
+      const formatted = formatPostConditionMessage({
+        isContractPrincipal: false,
+        postCondition: wire,
+      });
+      expect(formatted.contractId).toBe('SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token');
+    }
+  });
+});
