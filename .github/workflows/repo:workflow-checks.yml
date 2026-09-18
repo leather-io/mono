@@ -79,7 +79,9 @@ jobs:
         env:
           ACTIONLINT: ${{ steps.get_actionlint.outputs.executable }}
         run: |
-          "$ACTIONLINT" -color
+          # actionlint does not yet understand GitHub's `$/` self-repository `uses:` syntax.
+          # Drop the -ignore flag once https://github.com/rhysd/actionlint/pull/732 is merged and released.
+          "$ACTIONLINT" -color -ignore 'specifying action "\$/[^"]*" in invalid format because ref is missing'
 
   audit-workflow-security:
     name: audit-workflow-security
@@ -92,7 +94,7 @@ jobs:
         with:
           persist-credentials: false
       - name: zizmor-audit
-        uses: zizmorcore/zizmor-action@6fc4b006235f201fdab3722e17240ab420d580e5 # v0.6.1
+        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
         with:
           persona: auditor
           min-severity: informational
