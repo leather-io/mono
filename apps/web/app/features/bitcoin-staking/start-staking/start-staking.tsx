@@ -1,9 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Form, FormProvider, useForm } from 'react-hook-form';
 import { Navigate, useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { StackingClient } from '@stacks/stacking';
 import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { FormPageLayout } from '~/components/forms/form-page.layout';
@@ -37,10 +36,11 @@ import { PoolHealthWarning } from '../components/pool-health-warning';
 import { Pox5SubmitError } from '../components/pox5-submit-error';
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
 import { StakingPoolOverview, cycleStatusFromClock } from '../components/staking-pool-overview';
-import { usePox5StackingClient } from '../hooks/use-pox5-clients';
+import { usePox5ChainStackingClient } from '../hooks/use-pox5-clients';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
 import { usePox5Position } from '../hooks/use-pox5-position';
 import { usePox5TxTracker } from '../hooks/use-pox5-tx-tracker';
+import { useStakingConnectAction } from '../hooks/use-staking-connect-action';
 import {
   usePox5AvailableUnlockedBalance,
   usePox5PoxInfoQuery,
@@ -74,34 +74,13 @@ interface StartStakingProps {
   signerManagerContractId?: string;
 }
 
-export function StartStaking({ poolSlug, signerManagerContractId }: StartStakingProps) {
-  const client = usePox5StackingClient();
-  const { stacksAccount } = useLeatherConnect();
-
-  if (!stacksAccount || !client) return 'You need to connect Leather';
-
-  return (
-    <StartStakingLayout
-      client={client}
-      poolSlug={poolSlug}
-      signerManagerContractId={signerManagerContractId}
-    />
-  );
-}
-
-interface StartStakingLayoutProps {
-  poolSlug: StakingPoolSlug;
-  client: StackingClient;
-  signerManagerContractId?: string;
-}
-
-function StartStakingLayout({
+export function StartStaking({
   poolSlug,
-  client,
   signerManagerContractId: signerManagerContractIdOverride,
-}: StartStakingLayoutProps) {
+}: StartStakingProps) {
+  const client = usePox5ChainStackingClient();
   const { stacksAccount, btcPaymentAddress } = useLeatherConnect();
-  if (!stacksAccount) throw new Error('No STX address available');
+  const connectAction = useStakingConnectAction();
 
   const navigate = useNavigate();
   const { track } = usePox5TxTracker();
@@ -131,7 +110,7 @@ function StartStakingLayout({
   const getSecondsUntilNextCycleQuery = usePox5SecondsUntilNextCycleQuery();
 
   const { isLoading: totalAvailableBalanceIsLoading, availableBalance: totalAvailableBalance } =
-    usePox5AvailableUnlockedBalance(stacksAccount.address);
+    usePox5AvailableUnlockedBalance(stacksAccount?.address);
 
   const payoutMode = getPoolPayoutMode(pool);
   const payoutPreferenceQuery = usePox5PayoutPreferenceQuery(
@@ -150,12 +129,12 @@ function StartStakingLayout({
     () =>
       createStakingFormSchema({
         networkMode: pox5NetworkConfig.bitcoinNetworkMode,
-        availableBalance: totalAvailableBalance,
+        availableBalance: stacksAccount ? totalAvailableBalance : undefined,
         payoutMode,
         supportsMinClaim,
         minStake,
       }),
-    [totalAvailableBalance, payoutMode, supportsMinClaim, minStake]
+    [stacksAccount, totalAvailableBalance, payoutMode, supportsMinClaim, minStake]
   );
 
   const formMethods = useForm({
@@ -170,6 +149,16 @@ function StartStakingLayout({
     resolver: zodResolver(schema),
   });
 
+  useEffect(() => {
+    if (!btcPaymentAddress || formMethods.getValues('rewardAddress')) return;
+    formMethods.setValue('rewardAddress', btcPaymentAddress.address);
+  }, [btcPaymentAddress, formMethods]);
+
+  useEffect(() => {
+    if (!formMethods.getValues('amount')) return;
+    void formMethods.trigger('amount');
+  }, [schema, formMethods]);
+
   const stakeAmount = Number(formMethods.watch('amount') ?? NaN);
   const watchedCycles = Number(formMethods.watch('cycles') ?? NaN);
 
@@ -181,7 +170,7 @@ function StartStakingLayout({
   } = useMutation(createStakeMutationOptions({ wallet, client }));
 
   const handleStake = formMethods.handleSubmit(values => {
-    if (!signerManagerContractId) return;
+    if (!signerManagerContractId || !stacksAccount) return;
     const formValues: StakingFormSchema = values;
     const payoutPreference = buildPayoutPreference(formValues, payoutMode, supportsMinClaim);
 
@@ -250,6 +239,10 @@ function StartStakingLayout({
   }
 
   function onSubmit(confirmation: StartStakingStepId) {
+    if (confirmation === 'connect') {
+      if ('run' in connectAction) void connectAction.run();
+      return;
+    }
     if (confirmation === 'terms') {
       setTermsConfirmed(v => !v);
       return;
@@ -262,7 +255,14 @@ function StartStakingLayout({
     throw new Error(`Unknown confirmation type: ${confirmation}`);
   }
 
+  const isConnected = connectAction.status === 'connected';
+
   const confirmationState = {
+    connect: {
+      accepted: isConnected,
+      loading: connectAction.status === 'pending',
+      visible: !isConnected,
+    },
     terms: {
       accepted: termsConfirmed,
       loading: false,
@@ -270,7 +270,8 @@ function StartStakingLayout({
     },
     stake: {
       accepted: Boolean(stakeResult),
-      loading: handleStakePending || isInPreparePhase || totalAvailableBalanceIsLoading,
+      loading:
+        !isConnected || handleStakePending || isInPreparePhase || totalAvailableBalanceIsLoading,
       visible: true,
     },
   };
@@ -284,6 +285,7 @@ function StartStakingLayout({
       )}
       <StakingConfirmationSteps
         onSubmit={onSubmit}
+        connectAction={connectAction}
         confirmationState={confirmationState}
         stakeAmount={stakeAmount}
         cycles={watchedCycles}
@@ -317,6 +319,7 @@ function StartStakingLayout({
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
                     minStake={minStake}
+                    connectAction={connectAction}
                   />
                 </Stack>
 
