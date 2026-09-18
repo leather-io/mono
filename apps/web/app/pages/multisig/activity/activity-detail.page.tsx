@@ -50,6 +50,7 @@ export function ActivityDetailPage() {
 
   const activity = useBlockchainActivityByTxIdDetailQuery(
     accountAddresses,
+    inStx ? 'stacks' : 'bitcoin',
     txid ?? '',
     settings,
     Boolean(account.data && txid)

@@ -648,6 +648,27 @@ describe(BlockchainActivityService.name, () => {
       id: { fingerprint: 'fp', accountIndex: 0 },
       stacks: { stxAddress: 'SP1' },
     } as unknown as AccountAddresses;
+    const hdAccount: AccountAddresses = {
+      id: { fingerprint: 'fp', accountIndex: 0 },
+      bitcoin: { type: 'hd', nativeSegwitDescriptor: 'wpkh(x)', taprootDescriptor: 'tr(x)' },
+      stacks: { stxAddress: 'SP1' },
+    };
+
+    it('resolves a bitcoin txid for an hd account from its account transactions', async () => {
+      mockBtcTx.getAccountTransactions = vi.fn().mockResolvedValue([
+        btcTx({ txid: 'other' }),
+        btcTx({
+          txid: 'btc-hd',
+          vin: [{ owned: true, value: '1000', address: 'mine', n: 0 }],
+          vout: [{ owned: false, value: '900', address: 'ext', n: 0 }],
+        }),
+      ]);
+      const result = await service.getActivityByTxId(hdAccount, 'bitcoin', 'btc-hd');
+      expect(result?.chain).toBe('bitcoin');
+      expect(result?.action).toBe('send');
+      expect(result?.txid).toBe('btc-hd');
+      expect(mockBtcTx.getTransactionByTxId).not.toHaveBeenCalled();
+    });
 
     it('marks bitcoin ownership by the account address, not the fetched owned flags', async () => {
       mockBtcTx.getTransactionByTxId = vi.fn().mockResolvedValue(
@@ -657,7 +678,7 @@ describe(BlockchainActivityService.name, () => {
           vout: [{ owned: false, value: '900', address: 'bc1qmine', n: 0 }],
         })
       );
-      const result = await service.getActivityByTxId(btcAccount, 'btc-rx');
+      const result = await service.getActivityByTxId(btcAccount, 'bitcoin', 'btc-rx');
       expect(result?.chain).toBe('bitcoin');
       expect(result?.action).toBe('receive');
       expect(result?.txid).toBe('btc-rx');
@@ -675,7 +696,7 @@ describe(BlockchainActivityService.name, () => {
         burn_block_time: 1000,
         token_transfer: { recipient_address: 'SP1', amount: '5000', memo: '' },
       });
-      const result = await service.getActivityByTxId(stxAccount, '0xrx');
+      const result = await service.getActivityByTxId(stxAccount, 'stacks', '0xrx');
       expect(result?.action).toBe('receive');
       expect(result?.counterparty).toBe('SP2');
       expect(result?.balanceChanges[0].amount.crypto.amount.toString()).toBe('5000');
@@ -706,7 +727,7 @@ describe(BlockchainActivityService.name, () => {
           },
         ],
       });
-      const result = await service.getActivityByTxId(stxAccount, '0xcall');
+      const result = await service.getActivityByTxId(stxAccount, 'stacks', '0xcall');
       expect(mockHiro.getPrincipalBalanceChanges).toHaveBeenCalled();
       expect(result?.action).toBe('receive');
       expect(result?.counterparty).toBe('SP2');
@@ -716,7 +737,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('returns null when the transaction is not found', async () => {
-      const result = await service.getActivityByTxId(stxAccount, '0xmissing');
+      const result = await service.getActivityByTxId(stxAccount, 'stacks', '0xmissing');
       expect(result).toBeNull();
     });
   });
