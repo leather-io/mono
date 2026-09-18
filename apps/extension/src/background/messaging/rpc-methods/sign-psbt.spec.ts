@@ -49,7 +49,9 @@ function makePsbtHex() {
   return bytesToHex(tx.toPSBT());
 }
 
-const bondDescriptor = 'wsh(and_v(v:after(1000),multi(1,unimportant)))';
+const bondPubkey = '02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5';
+const bondDescriptor = `wsh(and_v(v:after(1000),multi(1,${bondPubkey})))`;
+const forgedDescriptor = `wsh(pkh(${bondPubkey}))`;
 
 function makeRequest(params: Record<string, unknown>): SignPsbtRequest {
   const request: unknown = {
@@ -126,6 +128,24 @@ describe('signPsbtHandler', () => {
     expect(mocks.sendMessage).not.toHaveBeenCalled();
     expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalled();
     expect(mocks.sendErrorResponseOnUserPopupClose).toHaveBeenCalled();
+  });
+
+  test('rejects a descriptor that compiles to a p2wpkh scriptCode before opening the popup', async () => {
+    mockPolicyBoundConnection();
+
+    await invokeHandler(makeRequest({ hex: makePsbtHex(), descriptor: forgedDescriptor }));
+
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      expect.objectContaining({
+        error: expect.objectContaining({
+          code: RpcErrorCode.INVALID_PARAMS,
+          message: 'Descriptor is not supported for signing',
+        }),
+      }),
+      { frameId }
+    );
+    expect(mocks.triggerRequestPopupWindowOpen).not.toHaveBeenCalled();
   });
 
   test('opens the popup without a descriptor when the connection is not policy bound', async () => {
