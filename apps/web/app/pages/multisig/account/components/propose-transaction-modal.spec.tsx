@@ -20,6 +20,8 @@ const feeEstimatesState = vi.hoisted(() => ({
   isFetching: false,
   isPaused: false,
   failureMessage: '',
+  stacksFees: { low: 345, standard: 400, high: 901 },
+  bitcoinFees: { low: 200, standard: 400, high: 800 },
   refetch: vi.fn(),
 }));
 const fireEvent = {
@@ -135,9 +137,9 @@ vi.mock('~/features/multisig/transactions/use-vault-stx-transaction-fees', () =>
         minimumFee: createMoney(345, 'STX'),
         highFeeThreshold: createMoney(5000000, 'STX'),
         options: {
-          low: { value: createMoney(345, 'STX') },
-          standard: { value: createMoney(400, 'STX') },
-          high: { value: createMoney(901, 'STX') },
+          low: { value: createMoney(feeEstimatesState.stacksFees.low, 'STX') },
+          standard: { value: createMoney(feeEstimatesState.stacksFees.standard, 'STX') },
+          high: { value: createMoney(feeEstimatesState.stacksFees.high, 'STX') },
         },
       },
     };
@@ -159,9 +161,9 @@ vi.mock('~/features/multisig/transactions/use-vault-btc-transaction-fees', () =>
       data: {
         chain: 'bitcoin',
         options: {
-          low: { value: createMoney(200, 'BTC'), rate: 1 },
-          standard: { value: createMoney(400, 'BTC'), rate: 2 },
-          high: { value: createMoney(800, 'BTC'), rate: 4 },
+          low: { value: createMoney(feeEstimatesState.bitcoinFees.low, 'BTC'), rate: 1 },
+          standard: { value: createMoney(feeEstimatesState.bitcoinFees.standard, 'BTC'), rate: 2 },
+          high: { value: createMoney(feeEstimatesState.bitcoinFees.high, 'BTC'), rate: 4 },
         },
       },
     };
@@ -224,6 +226,8 @@ beforeEach(() => {
   feeEstimatesState.isFetching = false;
   feeEstimatesState.isPaused = false;
   feeEstimatesState.failureMessage = '';
+  feeEstimatesState.stacksFees = { low: 345, standard: 400, high: 901 };
+  feeEstimatesState.bitcoinFees = { low: 200, standard: 400, high: 800 };
   vi.mocked(useVaultBtcCustomFee, { partial: true }).mockReturnValue({
     data: { fee: createMoney(250, 'BTC'), inputs: [], outputs: [], estimatedTxSize: 200 },
     isFetching: false,
@@ -233,6 +237,33 @@ beforeEach(() => {
 
 describe(ProposeTransactionModal.name, () => {
   test.each<AuthNetworkId>(['stx:testnet', 'btc:mainnet'])(
+    'explains equal fee amounts while keeping custom fees available on %s',
+    network => {
+      feeEstimatesState.stacksFees = { low: 400, standard: 400, high: 400 };
+      feeEstimatesState.bitcoinFees = { low: 400, standard: 400, high: 400 };
+      renderProposal(network);
+      expect(
+        screen.getByText('Low, Standard, and High currently have the same estimated fee.')
+      ).toBeDefined();
+      expect(screen.getByLabelText(/Custom fee/)).toBeDefined();
+      expect(
+        screen.getByText('Network conditions may change while signatures are collected.')
+      ).toBeDefined();
+    }
+  );
+
+  test.each([
+    { low: 400, standard: 400, high: 401 },
+    { low: 399, standard: 400, high: 400 },
+  ])('does not claim equal estimates when amounts differ by one base unit: %j', fees => {
+    feeEstimatesState.stacksFees = fees;
+    renderProposal('stx:testnet');
+    expect(
+      screen.queryByText('Low, Standard, and High currently have the same estimated fee.')
+    ).toBeNull();
+  });
+
+  test.each<AuthNetworkId>(['stx:testnet', 'btc:mainnet'])(
     'keeps presets and custom visible before estimates arrive on %s',
     network => {
       feeEstimatesState.available = false;
@@ -241,6 +272,9 @@ describe(ProposeTransactionModal.name, () => {
       expect(screen.getByRole('button', { name: /standard/i })).toBeDefined();
       expect(screen.getByRole('button', { name: /high/i })).toBeDefined();
       expect(screen.getAllByText('—')).toHaveLength(3);
+      expect(
+        screen.queryByText('Low, Standard, and High currently have the same estimated fee.')
+      ).toBeNull();
       expect(screen.getByRole('status').textContent).toContain(
         'Enter a valid recipient and amount'
       );

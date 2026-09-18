@@ -206,6 +206,10 @@ function FeeTierSelector({
   estimation,
 }: FeeTierSelectorProps) {
   const status = getFeeEstimateStatus(estimation);
+  const hasEqualEstimates =
+    options &&
+    options.low.amount.eq(options.standard.amount) &&
+    options.low.amount.eq(options.high.amount);
   return (
     <Flex direction="column" gap="space.02">
       <Flex alignItems="center" gap="space.01">
@@ -271,6 +275,11 @@ function FeeTierSelector({
           </FeeOptionButton>
         )}
       </Grid>
+      {hasEqualEstimates && (
+        <styled.p textStyle="caption.01" color="ink.text-subdued">
+          Low, Standard, and High currently have the same estimated fee.
+        </styled.p>
+      )}
       {!options && (
         <Flex direction="column" gap="space.02">
           <styled.p role="status" textStyle="caption.01" color="ink.text-subdued">
@@ -283,6 +292,9 @@ function FeeTierSelector({
           )}
         </Flex>
       )}
+      <styled.p textStyle="caption.01" color="ink.text-subdued">
+        Network conditions may change while signatures are collected.
+      </styled.p>
     </Flex>
   );
 }
