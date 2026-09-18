@@ -38,8 +38,10 @@ export {
   createBlockchainActivityItems,
   createBlockchainActivityViews,
 } from './activity/blockchain-activity-selectors';
+export type { BlockchainActivityHeroLines } from './activity/blockchain-activity-copy';
 export {
   buildBlockchainActivityActionTitle,
+  buildBlockchainActivityHeroLines,
   interpolateActivityTemplate,
 } from './activity/blockchain-activity-copy';
 export type {

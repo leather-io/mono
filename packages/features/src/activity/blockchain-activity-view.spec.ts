@@ -9,6 +9,10 @@ import {
 } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
+import {
+  buildBlockchainActivityHeroLines,
+  interpolateActivityTemplate,
+} from './blockchain-activity-copy';
 import { createBlockchainActivityView } from './blockchain-activity-view';
 
 const sbtcAsset: Sip10Asset = {
@@ -445,6 +449,41 @@ describe('createBlockchainActivityView', () => {
         expect(view.subtitle.startsWith('via ')).toBe(false);
       }
     }
+  });
+
+  it('builds hero lines: action + via protocol, verb + asset for transfers, row copy otherwise', () => {
+    const swap = createBlockchainActivityView(
+      makeActivity({
+        action: 'swap',
+        protocolName: 'Bitflow',
+        balanceChanges: [sentBtc, receivedStx],
+      }),
+      deps
+    );
+    expect(buildBlockchainActivityHeroLines(swap, interpolateActivityTemplate)).toEqual({
+      title: 'Swap',
+      subtitle: 'via Bitflow',
+    });
+
+    const receive = createBlockchainActivityView(
+      makeActivity({ action: 'receive', counterparty: 'SP2', balanceChanges: [receivedStx] }),
+      deps
+    );
+    expect(buildBlockchainActivityHeroLines(receive, interpolateActivityTemplate)).toEqual({
+      title: 'Receive STX',
+    });
+
+    const call = createBlockchainActivityView(
+      makeActivity({
+        action: 'contract-execution',
+        contract: { type: 'call', contractId: 'SP123.rewards', functionName: 'claim' },
+      }),
+      deps
+    );
+    expect(buildBlockchainActivityHeroLines(call, interpolateActivityTemplate)).toEqual({
+      title: 'claim',
+      subtitle: 'rewards',
+    });
   });
 
   it('carries txid, chain, and timestamp for routing and grouping', () => {

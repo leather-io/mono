@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useNavigate } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
 
@@ -15,11 +16,10 @@ import {
   ListItemBox,
 } from '@leather.io/ui';
 
-import { analytics } from '@shared/utils/analytics';
+import { RouteUrls } from '@shared/route-urls';
+import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useBitcoinExplorerLink } from '@app/common/hooks/use-bitcoin-explorer-link';
-import { useStacksExplorerLink } from '@app/common/hooks/use-stacks-explorer-link';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { Balance } from '@app/components/balance/balance';
 
@@ -48,21 +48,16 @@ function resolveValueColor(
 
 function Row({ item, sbtcOverlay }: ActivityRowProps) {
   const { activity, view } = item;
-  const { handleOpenBitcoinTxLink } = useBitcoinExplorerLink();
-  const { handleOpenStacksTxLink } = useStacksExplorerLink();
+  const navigate = useNavigate();
 
   const { amount } = view;
   const valueColor = amount ? resolveValueColor(view.indicator, amount.direction) : undefined;
   const actionKind = getActivityActionKind(activity);
 
-  function openInExplorer() {
-    if (view.chain === 'bitcoin') {
-      analytics.track('view_bitcoin_transaction');
-      handleOpenBitcoinTxLink({ txid: view.txid });
-      return;
-    }
-    analytics.track('view_transaction');
-    handleOpenStacksTxLink({ txid: view.txid });
+  function openDetails() {
+    void navigate(
+      replaceRouteParams(RouteUrls.ActivityDetails, { chain: view.chain, txid: view.txid })
+    );
   }
 
   function renderTrailingCaption() {
@@ -96,7 +91,7 @@ function Row({ item, sbtcOverlay }: ActivityRowProps) {
 
   return (
     <ListItemBox
-      onClick={sbtcOverlay?.reclaimUrl ? undefined : openInExplorer}
+      onClick={openDetails}
       leading={
         <BlockchainActivityAvatarIcon
           avatar={view.avatar}

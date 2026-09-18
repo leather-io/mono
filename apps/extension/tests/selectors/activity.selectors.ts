@@ -4,6 +4,10 @@ export enum ActivitySelectors {
   ActivityItemMenuBtn = 'activity-item-menu-btn',
   ActivityItemMenuIncreaseFee = 'activity-item-menu-increase-fee',
   ActivityItemMenuCancelTransaction = 'activity-item-menu-cancel-transaction',
+  ActivityDetails = 'activity-details',
+  ActivityDetailsBack = 'activity-details-back',
+  ActivityDetailsTitle = 'activity-details-title',
+  ActivityDetailsExplorer = 'activity-details-explorer',
 
   TransactionActionFeeInput = 'transaction-action-fee-input',
   TransactionActionSheet = 'transaction-action-sheet',

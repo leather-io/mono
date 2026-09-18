@@ -3,11 +3,19 @@ import { type InfiniteData, useInfiniteQuery, useQuery } from '@tanstack/react-q
 import {
   type BlockchainActivityItem,
   type BlockchainActivityViewDeps,
+  createBlockchainActivityItem,
   createBlockchainActivityItems,
 } from '@leather.io/features';
-import type { AccountAddresses, BlockchainActivity, CryptoAsset, Money } from '@leather.io/models';
+import type {
+  AccountAddresses,
+  BlockchainActivity,
+  CryptoAsset,
+  CryptoAssetChain,
+  Money,
+} from '@leather.io/models';
 import {
   createBlockchainActivityByAssetIdQueryConfig,
+  createBlockchainActivityByTxIdQueryConfig,
   createBlockchainActivityInfiniteQueryConfig,
 } from '@leather.io/queries';
 import { type ActivityResponse, getHttpCacheService } from '@leather.io/services';
@@ -25,6 +33,7 @@ const activityQueryPrefixes = [
   'blockchain-activity-service--get-activity',
   'blockchain-activity-service--get-activity-infinite',
   'blockchain-activity-service--get-activity-by-asset-id',
+  'blockchain-activity-service--get-activity-by-tx-id',
 ];
 
 export async function invalidateActivityQueries() {
@@ -52,6 +61,26 @@ function selectBlockchainActivityFeedItems(data: InfiniteData<ActivityResponse>)
 
 function selectBlockchainActivityItems(activities: BlockchainActivity[]) {
   return createBlockchainActivityItems(activities, activityViewDeps);
+}
+
+function selectBlockchainActivityItem(activity: BlockchainActivity | null) {
+  return activity ? createBlockchainActivityItem(activity, activityViewDeps) : null;
+}
+
+export function useBlockchainActivityByTxId(
+  account: AccountAddresses,
+  chain: CryptoAssetChain,
+  txid: string
+) {
+  const settings = useUserSettings();
+
+  return useQuery({
+    ...createBlockchainActivityByTxIdQueryConfig(account, chain, txid, settings),
+    select: selectBlockchainActivityItem,
+    refetchInterval(query) {
+      return query.state.data?.status === 'pending' ? feedRefetchInterval : false;
+    },
+  });
 }
 
 export function useBlockchainActivityByAssetId(account: AccountAddresses, asset: CryptoAsset) {
