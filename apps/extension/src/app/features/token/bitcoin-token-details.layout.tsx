@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { btcAsset } from '@leather.io/constants';
 import type { BlockchainActivityItem } from '@leather.io/features';
 import type { Money } from '@leather.io/models';
 
@@ -22,8 +23,6 @@ interface BitcoinTokenDetailsLayoutProps {
   totalBalance: Money;
   fiatBalance: Money;
   price: Money;
-  changePercent: number;
-  priceChangeDelta?: string;
   descriptionText: string;
   balances: BalanceEntry[];
   activity: BlockchainActivityItem[];
@@ -35,8 +34,6 @@ export function BitcoinTokenDetailsLayout({
   totalBalance,
   fiatBalance,
   price,
-  changePercent,
-  priceChangeDelta,
   descriptionText,
   balances,
   activity,
@@ -53,9 +50,8 @@ export function BitcoinTokenDetailsLayout({
       availableBalance={totalBalance}
       fiatBalance={fiatBalance}
       name="Bitcoin (BTC)"
+      asset={btcAsset}
       price={price}
-      changePercent={changePercent}
-      priceChangeDelta={priceChangeDelta}
       layer="Layer 1 (Bitcoin)"
       descriptionText={descriptionText}
       balancesContent={

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { stxAsset } from '@leather.io/constants';
 import type { BlockchainActivityItem } from '@leather.io/features';
 import type { Money } from '@leather.io/models';
 
@@ -21,8 +22,6 @@ interface StacksTokenDetailsLayoutProps {
   availableBalance: Money;
   fiatBalance: Money;
   price: Money;
-  changePercent: number;
-  priceChangeDelta?: string;
   descriptionText: string;
   balances?: StacksBalanceEntry[];
   activity: BlockchainActivityItem[];
@@ -33,8 +32,6 @@ export function StacksTokenDetailsLayout({
   availableBalance,
   fiatBalance,
   price,
-  changePercent,
-  priceChangeDelta,
   descriptionText,
   balances,
   activity,
@@ -49,9 +46,8 @@ export function StacksTokenDetailsLayout({
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}
       name="Stacks (STX)"
+      asset={stxAsset}
       price={price}
-      changePercent={changePercent}
-      priceChangeDelta={priceChangeDelta}
       layer="Layer 2 (Stacks)"
       descriptionText={descriptionText}
       balancesContent={

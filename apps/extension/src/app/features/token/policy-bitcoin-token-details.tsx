@@ -76,8 +76,6 @@ export function PolicyBitcoinTokenDetails({ account }: PolicyBitcoinTokenDetails
       totalBalance={balance.value.btc.totalBalance}
       fiatBalance={balance.value.quote.totalBalance}
       price={marketInfo.price!}
-      changePercent={marketInfo.changePercent}
-      priceChangeDelta={marketInfo.priceChangeDelta}
       descriptionText={marketInfo.descriptionText}
       balances={balances}
       activity={activityQuery.data ?? []}

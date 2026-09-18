@@ -1,5 +1,6 @@
 import { Box, Circle, Flex, Stack } from 'leather-styles/jsx';
 
+import { historicalPeriods } from '@leather.io/models';
 import { SkeletonLoader } from '@leather.io/ui';
 
 import { TokenDetailsHeader } from './components/token-details-header';
@@ -37,6 +38,22 @@ function LoadingOverview() {
       <Flex gap="space.02" pt="space.02">
         {Array.from({ length: 4 }).map((_, i) => (
           <SkeletonLoader key={i} isLoading height="36px" width="78px" borderRadius="999px" />
+        ))}
+      </Flex>
+    </Stack>
+  );
+}
+
+function LoadingPrice() {
+  return (
+    <Stack gap="space.03" px="space.05" pb="space.02">
+      <Stack gap="space.01">
+        <SkeletonLoader isLoading height="24px" width="120px" />
+        <SkeletonLoader isLoading height="20px" width="140px" />
+      </Stack>
+      <Flex gap="space.01">
+        {Array.from({ length: historicalPeriods.length }).map((_, i) => (
+          <SkeletonLoader key={i} isLoading height="24px" flex="1" />
         ))}
       </Flex>
     </Stack>
@@ -90,12 +107,15 @@ export function TokenDetailsLoading({ title = 'Loading...' }: { title?: string }
         <Stack bg="ink.background-secondary" borderRadius={['0', null, 'md']} overflow="hidden">
           <LoadingOverview />
 
+          <TokenDetailsSection title="Price">
+            <LoadingPrice />
+          </TokenDetailsSection>
+
           <TokenDetailsSection title="Description">
             <LoadingDescription />
           </TokenDetailsSection>
 
           <TokenDetailsSection title="Token details">
-            <LoadingRow />
             <LoadingRow />
             <LoadingRow />
             <LoadingRow />
