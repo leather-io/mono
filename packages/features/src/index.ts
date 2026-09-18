@@ -44,6 +44,7 @@ export {
 } from './activity/blockchain-activity-copy';
 export type {
   BlockchainActivityAmount,
+  BlockchainActivityAmountCaption,
   BlockchainActivityAvatar,
   BlockchainActivityDirection,
   BlockchainActivityIndicator,

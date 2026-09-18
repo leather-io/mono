@@ -61,6 +61,11 @@ const receivedStx = {
   asset: stxAsset,
   amount: { crypto: createMoney(9, 'STX'), quote: createMoney(90, 'USD') },
 };
+const receivedSbtc = {
+  direction: 'received' as const,
+  asset: sbtcAsset,
+  amount: { crypto: createMoney(12, 'sBTC', 8), quote: createMoney(10, 'USD') },
+};
 
 describe('createBlockchainActivityView', () => {
   it('renders a send: single avatar, symbol title, transfer subtitle, signed amount', () => {
@@ -305,6 +310,54 @@ describe('createBlockchainActivityView', () => {
     expect(view.avatar).toEqual({ kind: 'icon', icon: 'contract-call' });
     expect(view.title).toBe('collateralize');
     expect(view.subtitle).toBe('vault-manager - Arkadiko');
+  });
+
+  it('shows every balance change of an unmapped call, the second asset as caption', () => {
+    const view = createBlockchainActivityView(
+      makeActivity({
+        action: 'contract-execution',
+        contract: { type: 'call', contractId: 'SP123.rewards', functionName: 'claim' },
+        balanceChanges: [receivedStx, receivedSbtc],
+      }),
+      deps
+    );
+    expect(view.title).toBe('claim');
+    expect(view.amount).toEqual({
+      direction: 'received',
+      crypto: receivedStx.amount.crypto,
+      quote: receivedStx.amount.quote,
+      showSymbol: true,
+      caption: { kind: 'change', direction: 'received', crypto: receivedSbtc.amount.crypto },
+    });
+  });
+
+  it('ranks received above sent and collapses three or more changes into a count', () => {
+    const contract = { type: 'call' as const, contractId: 'SP123.router', functionName: 'swap' };
+    const mixed = createBlockchainActivityView(
+      makeActivity({
+        action: 'contract-execution',
+        contract,
+        balanceChanges: [sentBtc, receivedStx],
+      }),
+      deps
+    );
+    expect(mixed.amount).toMatchObject({
+      direction: 'received',
+      caption: { kind: 'change', direction: 'sent', crypto: sentBtc.amount.crypto },
+    });
+
+    const many = createBlockchainActivityView(
+      makeActivity({
+        action: 'contract-execution',
+        contract,
+        balanceChanges: [receivedStx, receivedSbtc, sentBtc],
+      }),
+      deps
+    );
+    expect(many.amount).toMatchObject({
+      direction: 'received',
+      caption: { kind: 'more', count: 2 },
+    });
   });
 
   it('renders contract-deploy with a status-conjugated verb title', () => {

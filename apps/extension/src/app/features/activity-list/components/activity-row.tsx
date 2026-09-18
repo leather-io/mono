@@ -33,6 +33,10 @@ interface ActivityRowProps {
   sbtcOverlay?: SbtcDepositOverlay;
 }
 
+function resolveOperator(direction: BlockchainActivityDirection) {
+  return direction === 'received' ? '+' : '−';
+}
+
 function resolveValueColor(
   indicator: BlockchainActivityIndicator,
   direction: BlockchainActivityDirection
@@ -59,6 +63,28 @@ function Row({ item, sbtcOverlay }: ActivityRowProps) {
     }
     analytics.track('view_transaction');
     handleOpenStacksTxLink({ txid: view.txid });
+  }
+
+  function renderTrailingCaption() {
+    if (!amount?.crypto) return undefined;
+    const { caption } = amount;
+    if (caption?.kind === 'more') {
+      return (
+        <styled.span textStyle="caption.01" color="ink.text-subdued" whiteSpace="nowrap">
+          +{caption.count} more
+        </styled.span>
+      );
+    }
+    return (
+      <Balance
+        balance={caption?.kind === 'change' ? caption.crypto : amount.quote}
+        operator={caption?.kind === 'change' ? resolveOperator(caption.direction) : undefined}
+        color="ink.text-subdued"
+        textStyle="caption.01"
+        whiteSpace="nowrap"
+        formatCurrency={formatCurrency}
+      />
+    );
   }
 
   function renderAction() {
@@ -105,8 +131,10 @@ function Row({ item, sbtcOverlay }: ActivityRowProps) {
         amount ? (
           <Balance
             balance={amount.crypto ?? amount.quote}
-            operator={amount.direction === 'received' ? '+' : '−'}
-            formattingOptions={amount.crypto ? { showCurrency: false } : undefined}
+            operator={resolveOperator(amount.direction)}
+            formattingOptions={
+              amount.crypto ? { showCurrency: amount.showSymbol ?? false } : undefined
+            }
             color={valueColor}
             textStyle="label.02"
             whiteSpace="nowrap"
@@ -114,17 +142,7 @@ function Row({ item, sbtcOverlay }: ActivityRowProps) {
           />
         ) : undefined
       }
-      trailingCaption={
-        amount?.crypto ? (
-          <Balance
-            balance={amount.quote}
-            color="ink.text-subdued"
-            textStyle="caption.01"
-            whiteSpace="nowrap"
-            formatCurrency={formatCurrency}
-          />
-        ) : undefined
-      }
+      trailingCaption={renderTrailingCaption()}
       action={renderAction()}
     />
   );

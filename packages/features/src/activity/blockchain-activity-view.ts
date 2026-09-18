@@ -16,6 +16,7 @@ import {
 } from './blockchain-activity-copy';
 import type {
   BlockchainActivityAmount,
+  BlockchainActivityAmountCaption,
   BlockchainActivityAvatar,
   BlockchainActivityIndicator,
   BlockchainActivityTranslate,
@@ -39,7 +40,8 @@ interface RowShape {
   amount:
     | { kind: 'none' }
     | { kind: 'single'; from: 'sent' | 'received' }
-    | { kind: 'combined-quote'; from: 'sent' | 'received' };
+    | { kind: 'combined-quote'; from: 'sent' | 'received' }
+    | { kind: 'multi' };
 }
 
 const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
@@ -59,7 +61,7 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
     avatar: { kind: 'icon', icon: 'contract-call' },
     indicator: 'function',
     title: { kind: 'function-name' },
-    amount: { kind: 'none' },
+    amount: { kind: 'multi' },
   },
   'contract-deploy': {
     avatar: { kind: 'icon', icon: 'contract-deploy' },
@@ -315,6 +317,33 @@ function buildTitle(
   }
 }
 
+function buildMultiCaption(
+  rest: BlockchainActivityBalanceChange[]
+): BlockchainActivityAmountCaption | undefined {
+  if (rest.length === 0) return undefined;
+  if (rest.length === 1) {
+    return { kind: 'change', direction: rest[0].direction, crypto: rest[0].amount.crypto };
+  }
+  return { kind: 'more', count: rest.length };
+}
+
+function buildMultiAmount(
+  showSymbol: boolean,
+  sent: BlockchainActivityBalanceChange[],
+  received: BlockchainActivityBalanceChange[]
+): BlockchainActivityAmount | undefined {
+  const [top, ...rest] = [...received, ...sent];
+  if (!top) return undefined;
+  const caption = buildMultiCaption(rest);
+  return {
+    direction: top.direction,
+    quote: top.amount.quote,
+    crypto: top.amount.crypto,
+    showSymbol,
+    ...(caption ? { caption } : {}),
+  };
+}
+
 function buildAmount(
   shape: RowShape,
   sent: BlockchainActivityBalanceChange[],
@@ -323,6 +352,8 @@ function buildAmount(
   switch (shape.amount.kind) {
     case 'none':
       return undefined;
+    case 'multi':
+      return buildMultiAmount(shape.title.kind !== 'symbol', sent, received);
     case 'single': {
       const change = (shape.amount.from === 'sent' ? sent : received)[0];
       if (!change) return undefined;
