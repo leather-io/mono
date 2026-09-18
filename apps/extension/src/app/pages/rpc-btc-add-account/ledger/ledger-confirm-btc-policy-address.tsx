@@ -1,7 +1,5 @@
 import { Route } from 'react-router';
 
-import BitcoinApp from '@ledgerhq/ledger-bitcoin';
-
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 
@@ -25,7 +23,9 @@ import {
   getBitcoinAppVersion,
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
+import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app';
 import {
   isLedgerOnDeviceAddressConfirmed,
   toLedgerDisplayedAddress,
@@ -43,27 +43,34 @@ import { useBtcAddAccount } from '../use-btc-add-account';
 // address in verify mode) and closes the popup.
 function LedgerConfirmBtcPolicyAddress() {
   const dmk = useLedgerDmk();
+  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerNavigate();
   const network = useCurrentNetwork();
   const { descriptor, address, finalize } = useBtcAddAccount();
   const displayLedgerDescriptorAddress = useDisplayLedgerDescriptorAddress();
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
-    useRequestLedgerKeys<BitcoinApp>({
+  function toConfirmAddressStep() {
+    void ledgerNavigate.toDeviceBusyStep(
+      'Confirm the address on your Ledger…',
+      address ? toLedgerDisplayedAddress(address) : undefined
+    );
+  }
+
+  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, isConnectionCancellable } =
+    useRequestLedgerKeys<LedgerBitcoinApp>({
       chain: 'bitcoin',
-      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode),
-      getAppVersion: getBitcoinAppVersion,
+      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode, signerActions.run),
+      getAppVersion: getBitcoinAppVersion(dmk),
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       async onSuccess() {
         await finalize();
         closeWindow();
       },
       async pullKeysFromDevice(app) {
-        void ledgerNavigate.toDeviceBusyStep(
-          'Confirm the address on your Ledger…',
-          address ? toLedgerDisplayedAddress(address) : undefined
-        );
-        const onDeviceAddress = await displayLedgerDescriptorAddress(app, descriptor);
+        toConfirmAddressStep();
+        const onDeviceAddress = await displayLedgerDescriptorAddress(app, descriptor, {
+          onWalletRegistered: toConfirmAddressStep,
+        });
         if (!isLedgerOnDeviceAddressConfirmed(onDeviceAddress, address)) {
           void ledgerNavigate.toErrorStep(
             'bitcoin',
@@ -82,11 +89,15 @@ function LedgerConfirmBtcPolicyAddress() {
     awaitingDeviceConnection,
   };
 
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
   return (
     <RequestKeysFlow
       context={ledgerContextValue}
       isActionCancellableByUser={canCancelLedgerAction}
+      onCancelAction={signerActions.cancelActive}
     />
   );
 }

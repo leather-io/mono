@@ -1,22 +1,28 @@
-import { Output } from '@bitcoinerlab/descriptors';
-import {
-  type LedgerManager,
-  type LedgerState,
-  registerLedgerWallet,
-} from '@bitcoinerlab/descriptors/ledger';
-import AppClient, { WalletPolicy } from '@ledgerhq/ledger-bitcoin';
+import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
+import { WalletPolicy } from '@ledgerhq/device-signer-kit-bitcoin';
 
 import {
+  buildLedgerWalletPolicy,
   compileWshDescriptor,
   findAccountDescriptorKey,
-  makeWshDescriptorInstance,
-  toCompilableWshDescriptor,
   toLedgerSignableDescriptor,
 } from '@leather.io/bitcoin';
 
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
+import {
+  getMasterFingerprintHex,
+  getWalletAddressOnDevice,
+  registerLedgerWalletPolicyPrompt,
+  registerWalletPolicy,
+} from '../utils/bitcoin-signer-kit-utils';
+import type { LedgerBitcoinApp } from '../utils/ledger-app';
 import { descriptorHasNonAccountRawKey } from '../utils/ledger-descriptor-address';
+import { useLedgerNavigate } from './use-ledger-navigate';
+
+interface DisplayLedgerDescriptorAddressOptions {
+  onWalletRegistered?(): void;
+}
 
 // Displays the `wsh(...)` multisig address on the Ledger screen so the user can
 // confirm it against the extension. Ledger can only show a non-standard
@@ -28,8 +34,13 @@ import { descriptorHasNonAccountRawKey } from '../utils/ledger-descriptor-addres
 // assert against the locally derived one.
 export function useDisplayLedgerDescriptorAddress() {
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
+  const ledgerNavigate = useLedgerNavigate();
 
-  return async (app: AppClient, descriptor: string): Promise<string> => {
+  return async (
+    app: LedgerBitcoinApp,
+    descriptor: string,
+    { onWalletRegistered }: DisplayLedgerDescriptorAddressOptions = {}
+  ): Promise<string> => {
     if (!nativeSegwitAccount) throw new Error('No native segwit account available');
 
     const compiled = compileWshDescriptor(descriptor);
@@ -51,36 +62,21 @@ export function useDisplayLedgerDescriptorAddress() {
       nativeSegwitAccount.xpub,
       nativeSegwitAccount.keyOrigin
     );
-    const descriptorInstance = makeWshDescriptorInstance(ledgerDescriptor);
 
-    // Registering the (non-standard) multisig policy stores its template,
-    // keyRoots and HMAC on `ledgerState.policies`. We register exactly one policy
-    // into a fresh state, so the registered policy is the only entry; the HMAC is
-    // not persisted (the state is discarded with this call).
-    const ledgerState: LedgerState = {};
-    const ledgerManager: LedgerManager = {
-      ledgerClient: app,
-      ledgerState,
-      Output,
-      network: descriptorInstance.getNetwork(),
-    };
-    await registerLedgerWallet({
-      descriptor: toCompilableWshDescriptor(ledgerDescriptor),
-      ledgerManager,
-      policyName: 'Leather',
-    });
-
-    const policy = ledgerState.policies?.[0];
-    if (!policy) throw new Error('Could not resolve the Ledger wallet policy for this descriptor');
-
-    const walletPolicy = new WalletPolicy(
-      policy.policyName ?? 'Leather',
-      policy.ledgerTemplate,
-      policy.keyRoots
+    const fingerprint = await getMasterFingerprintHex(app);
+    const policy = buildLedgerWalletPolicy(ledgerDescriptor, fingerprint);
+    const registeredWallet = await registerWalletPolicy(
+      app,
+      new WalletPolicy(policy.name, policy.descriptorTemplate, policy.keys),
+      {
+        onRequiredUserInteraction(interaction) {
+          if (interaction !== UserInteractionRequired.RegisterWallet) return;
+          void ledgerNavigate.toDeviceBusyStep(registerLedgerWalletPolicyPrompt);
+        },
+      }
     );
+    onWalletRegistered?.();
 
-    const policyHmac = policy.policyHmac ? Buffer.from(policy.policyHmac) : null;
-    const { changeIndex, addressIndex } = compiled.keyPathIndexes;
-    return app.getWalletAddress(walletPolicy, policyHmac, changeIndex, addressIndex, true);
+    return getWalletAddressOnDevice(app, registeredWallet, compiled.keyPathIndexes);
   };
 }
