@@ -1,20 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Route, useLocation } from 'react-router';
-
 import { deserializeTransaction } from '@stacks/transactions';
 import { LedgerError } from '@zondax/ledger-stacks';
-import get from 'lodash.get';
 
 import { delay, isError } from '@leather.io/utils';
 
-import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
-import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
 import { makeLedgerAppResponseError } from '@app/features/ledger/dmk/ledger-dmk-errors';
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
+import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
+import type { SignStacksTxLedgerFlowRequest } from '@app/features/ledger/flow/ledger-flow.types';
 import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
@@ -29,20 +24,11 @@ import {
 import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
-import { ledgerSignTxRoutes } from '../../generic-flows/tx-signing/ledger-sign-tx-route-generator';
 import { TxSigningFlow } from '../../generic-flows/tx-signing/tx-signing-flow';
 import { useLedgerSignTx } from '../../generic-flows/tx-signing/use-ledger-sign-tx';
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerFingerprintMigration } from '../../hooks/use-ledger-fingerprint-migration';
-import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { ApproveSignLedgerStacksTx } from './steps/approve-sign-stacks-ledger-tx';
-
-export const ledgerStacksTxSigningRoutes = ledgerSignTxRoutes({
-  component: <LedgerSignStacksTxContainer />,
-  customRoutes: (
-    <Route path={RouteUrls.AwaitingDeviceUserAction} element={<ApproveSignLedgerStacksTx />} />
-  ),
-});
 
 function publishStacksSigningSettled(unsignedTx: string, error?: string) {
   appEvents.publish(
@@ -51,26 +37,19 @@ function publishStacksSigningSettled(unsignedTx: string, error?: string) {
   );
 }
 
-function LedgerSignStacksTxContainer() {
-  const location = useLocation();
+interface LedgerSignStacksTxContainerProps {
+  request: SignStacksTxLedgerFlowRequest;
+}
+export function LedgerSignStacksTxContainer({ request }: LedgerSignStacksTxContainerProps) {
   const dmk = useLedgerDmk();
   const signerActions = useSignerActionController();
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerNavigate = useLedgerSteps();
   const ledgerAnalytics = useLedgerAnalytics();
-  useScrollLock(true);
   const account = useCurrentStacksAccount();
   const migrateFingerprintIfNeeded = useLedgerFingerprintMigration();
-  const [unsignedTx, setUnsignedTx] = useState<null | string>(null);
-  const settleOnRejection = useLocationStateWithCache<boolean>('settleOnRejection');
+  const { tx: unsignedTx, settleOnRejection } = request;
 
   const chain = 'stacks';
-
-  useEffect(() => {
-    const tx = get(location.state, 'tx');
-    if (tx) setUnsignedTx(tx);
-  }, [location.state]);
-
-  useEffect(() => () => setUnsignedTx(null), []);
 
   const {
     signTransaction,
@@ -96,8 +75,6 @@ function LedgerSignStacksTxContainer() {
 
       void ledgerNavigate.toConnectionSuccessStep('stacks');
       await delay(1000);
-
-      if (!unsignedTx) throw new Error('No unsigned tx');
 
       void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
 
@@ -162,13 +139,13 @@ function LedgerSignStacksTxContainer() {
 
   function closeAction() {
     signerActions.cancelActive();
-    appEvents.publish('ledgerStacksTxSigningCancelled', { unsignedTx: unsignedTx ?? '' });
+    appEvents.publish('ledgerStacksTxSigningCancelled', { unsignedTx });
     void ledgerNavigate.cancelLedgerAction();
   }
 
   const ledgerContextValue: LedgerTxSigningContext = {
     chain,
-    transaction: unsignedTx ? deserializeTransaction(unsignedTx) : null,
+    transaction: deserializeTransaction(unsignedTx),
     signTransaction,
     onCancelTxSigning: closeAction,
     latestDeviceResponse,
@@ -183,6 +160,7 @@ function LedgerSignStacksTxContainer() {
     <TxSigningFlow
       context={ledgerContextValue}
       closeAction={canCancelLedgerAction ? closeAction : undefined}
+      renderStep={{ 'awaiting-device-operation': <ApproveSignLedgerStacksTx /> }}
     />
   );
 }

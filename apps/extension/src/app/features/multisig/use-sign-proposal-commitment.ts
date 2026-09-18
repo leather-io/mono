@@ -11,8 +11,8 @@ import { buildStxProposalDomain } from '@leather.io/stacks';
 import type { UnsignedMessage } from '@shared/signature/signature-types';
 
 import { useWalletType } from '@app/common/use-wallet-type';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
 import { listenForStacksMessageSigning } from '@app/features/ledger/flows/stacks-message-signing/stacks-message-signing-event-listeners';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import { useMessageSignerStacksSoftwareWallet } from '@app/features/stacks-message-signer/stacks-message-signing.utils';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -29,7 +29,7 @@ export function useSignProposalCommitment(): SignProposalCommitment {
   const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
   const signBitcoinTx = useSignBitcoinTx();
   const signStacksMessage = useMessageSignerStacksSoftwareWallet();
-  const ledgerNavigate = useLedgerNavigate();
+  const { open: openLedgerFlow } = useLedgerFlow();
 
   return useCallback<SignProposalCommitment>(
     async (authNetwork: AuthNetworkId, proposalHash: string) => {
@@ -62,7 +62,7 @@ export function useSignProposalCommitment(): SignProposalCommitment {
           return signed.signature;
         },
         async ledger() {
-          void ledgerNavigate.toConnectAndSignStacksProposalStep(unsignedMessage);
+          openLedgerFlow({ kind: 'sign-stacks-message', message: unsignedMessage });
           const { signature } = await listenForStacksMessageSigning(unsignedMessage);
           return signature;
         },
@@ -75,7 +75,7 @@ export function useSignProposalCommitment(): SignProposalCommitment {
       signStacksMessage,
       networkMode,
       stacksChainId,
-      ledgerNavigate,
+      openLedgerFlow,
     ]
   );
 }

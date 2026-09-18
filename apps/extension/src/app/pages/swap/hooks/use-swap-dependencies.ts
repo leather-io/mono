@@ -76,10 +76,10 @@ export function useSwapDependencies(): SwapDependencies {
   const stacksAccount = useCurrentStacksAccount();
   const stacksNetwork = useCurrentStacksNetworkState();
   const network = useCurrentNetwork();
-  const signStacksTx = useSignStacksTransaction();
+  const signStacksTx = useSignStacksTransaction({ settleOnRejection: true });
   const { data: nextNonce } = useNextNonce(stacksAccount?.address ?? '');
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
-  const signBitcoinTx = useSignBitcoinTx();
+  const signBitcoinTx = useSignBitcoinTx({ settleOnRejection: true });
   const bitcoinClient = useBitcoinClient();
   const refreshAllAccountData = useRefreshAllAccountData();
 

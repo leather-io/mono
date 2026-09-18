@@ -3,15 +3,14 @@ import { useNavigate } from 'react-router';
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
+import { useLedgerFlow, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import { pullBitcoinKeysFromLedgerDevice } from '@app/features/ledger/flows/request-bitcoin-keys/request-bitcoin-keys.utils';
-import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import {
   defaultNumberOfKeysToPullFromLedgerDevice,
   useRequestLedgerKeys,
 } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import {
   connectLedgerBitcoinApp,
   getBitcoinAppVersion,
@@ -32,7 +31,7 @@ import {
   useWalletEntities,
 } from '@app/store/wallets/wallet.selectors';
 
-function LedgerRequestBitcoinKeys() {
+export function LedgerRequestBitcoinKeys() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const toast = useToast();
@@ -41,7 +40,8 @@ function LedgerRequestBitcoinKeys() {
 
   const dmk = useLedgerDmk();
   const signerActions = useSignerActionController();
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerNavigate = useLedgerSteps();
+  const { close } = useLedgerFlow();
   const network = useCurrentNetwork();
 
   const chain = 'bitcoin';
@@ -53,6 +53,7 @@ function LedgerRequestBitcoinKeys() {
       getAppVersion: getBitcoinAppVersion(dmk),
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       onSuccess() {
+        close();
         void navigate('/', { replace: true });
       },
       async pullKeysFromDevice(app) {
@@ -113,8 +114,3 @@ function LedgerRequestBitcoinKeys() {
     />
   );
 }
-
-export const requestBitcoinKeysRoutes = ledgerRequestKeysRoutes({
-  path: 'bitcoin',
-  component: <LedgerRequestBitcoinKeys />,
-});

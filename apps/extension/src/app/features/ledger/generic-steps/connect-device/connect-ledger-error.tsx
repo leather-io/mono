@@ -1,29 +1,25 @@
 import type { SupportedBlockchains } from '@leather.io/models';
 
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { capitalize } from '@app/common/utils';
-import { useLatestLedgerError } from '@app/features/ledger/hooks/use-ledger-latest-route-error.hook';
+import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 
-import { ConnectLedgerErrorLayout } from '../../generic-steps';
-import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
+import { ConnectLedgerErrorLayout } from './connect-ledger-error.layout';
 
-export function ConnectLedgerError() {
-  const latestLedgerError = useLatestLedgerError();
-  const ledgerNavigate = useLedgerNavigate();
-  const chain = useLocationStateWithCache<SupportedBlockchains>('chain');
+interface ConnectLedgerErrorProps {
+  chain: SupportedBlockchains;
+  errorMessage?: string;
+}
+export function ConnectLedgerError({ chain, errorMessage }: ConnectLedgerErrorProps) {
+  const ledgerSteps = useLedgerSteps();
   // TODO: here it would be better to use the actual app name from
   // LEDGER_APPS_MAP at src/app/features/ledger/utils/generic-ledger-utils.ts
-
-  if (!chain) {
-    throw new Error('No blockchain chain found in location state for ConnectLedgerError');
-  }
 
   const appName = capitalize(chain);
   return (
     <ConnectLedgerErrorLayout
-      warningText={latestLedgerError}
+      warningText={errorMessage ?? null}
       appName={appName}
-      onTryAgain={() => ledgerNavigate.toConnectStepAndTryAgain()}
+      onTryAgain={() => ledgerSteps.toConnectStepAndTryAgain()}
     />
   );
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
@@ -7,11 +7,15 @@ import { analytics } from '@shared/utils/analytics';
 
 import { doesBrowserSupportWebHidApi, isPopupMode, whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { handOffLedgerFlowToFullPage } from '@app/features/ledger/flow/ledger-flow-handoff';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
+import type { LedgerFlowHandoffRequest } from '@app/features/ledger/flow/ledger-flow.types';
 
 import { WelcomeLayout } from './welcome.layout';
 
 export function WelcomePage() {
   const navigate = useNavigate();
+  const { open: openLedgerFlow } = useLedgerFlow();
 
   const [isGeneratingWallet, setIsGeneratingWallet] = useState(false);
 
@@ -43,32 +47,31 @@ export function WelcomePage() {
     });
   }
 
-  const supportsWebHidAction = pageModeRoutingAction(
-    RouteUrls.Onboarding + '/' + RouteUrls.ConnectLedgerStart
-  );
-  const doesNotSupportWebHidAction = pageModeRoutingAction(
-    RouteUrls.Onboarding + '/' + RouteUrls.LedgerUnsupportedBrowser
-  );
-
   const restoreWallet = pageModeRoutingAction(RouteUrls.SignIn);
 
   const onSelectConnectLedger = useCallback(() => {
-    if (doesBrowserSupportWebHidApi()) {
-      return supportsWebHidAction();
-    } else {
-      return doesNotSupportWebHidAction();
-    }
-  }, [doesNotSupportWebHidAction, supportsWebHidAction]);
+    const request: LedgerFlowHandoffRequest = doesBrowserSupportWebHidApi()
+      ? { kind: 'connect-start' }
+      : { kind: 'unsupported-browser' };
+    return whenPageMode({
+      full() {
+        openLedgerFlow(request);
+      },
+      popup() {
+        void handOffLedgerFlowToFullPage(request, {
+          target: RouteUrls.Onboarding,
+          closeCurrentWindow: true,
+        });
+      },
+    })();
+  }, [openLedgerFlow]);
 
   return (
-    <>
-      <WelcomeLayout
-        isGeneratingWallet={isGeneratingWallet}
-        onSelectConnectLedger={onSelectConnectLedger}
-        onStartOnboarding={startOnboarding}
-        onRestoreWallet={restoreWallet}
-      />
-      <Outlet />
-    </>
+    <WelcomeLayout
+      isGeneratingWallet={isGeneratingWallet}
+      onSelectConnectLedger={onSelectConnectLedger}
+      onStartOnboarding={startOnboarding}
+      onRestoreWallet={restoreWallet}
+    />
   );
 }

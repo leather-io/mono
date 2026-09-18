@@ -15,14 +15,9 @@ const mocks = vi.hoisted(() => {
   return {
     walletState,
     signPsbt: vi.fn(),
-    toConnectAndSignBitcoinTransactionStep: vi.fn(),
+    openLedgerFlow: vi.fn(),
     listenForBitcoinTxLedgerSigning: vi.fn(),
   };
-});
-
-vi.mock('react-router', async importOriginal => {
-  const actual = await importOriginal<typeof import('react-router')>();
-  return { ...actual, useLocation: () => ({ pathname: '/' }) };
 });
 
 vi.mock('@app/common/use-wallet-type', () => ({
@@ -38,10 +33,8 @@ vi.mock('@app/features/ledger/flows/bitcoin-tx-signing/bitcoin-tx-signing-event-
   listenForBitcoinTxLedgerSigning: mocks.listenForBitcoinTxLedgerSigning,
 }));
 
-vi.mock('@app/features/ledger/hooks/use-ledger-navigate', () => ({
-  useLedgerNavigate: () => ({
-    toConnectAndSignBitcoinTransactionStep: mocks.toConnectAndSignBitcoinTransactionStep,
-  }),
+vi.mock('@app/features/ledger/flow/ledger-flow.context', () => ({
+  useLedgerFlow: () => ({ open: mocks.openLedgerFlow }),
 }));
 
 vi.mock('@app/features/psbt-signer/hooks/use-psbt-signer', () => ({
@@ -256,7 +249,7 @@ describe(useSignDescriptorPsbt.name, () => {
       await expect(useSignDescriptorPsbt()(psbtHex, rawPubkeyCosignerDescriptor)).rejects.toThrow(
         'Ledger cannot sign this descriptor'
       );
-      expect(mocks.toConnectAndSignBitcoinTransactionStep).not.toHaveBeenCalled();
+      expect(mocks.openLedgerFlow).not.toHaveBeenCalled();
       expect(mocks.listenForBitcoinTxLedgerSigning).not.toHaveBeenCalled();
     });
 
@@ -272,9 +265,9 @@ describe(useSignDescriptorPsbt.name, () => {
       const signedTx = await useSignDescriptorPsbt()(psbtHex, rawPubkeyCosignerDescriptor);
 
       expect(signedTx).toBe(deviceSignedTx);
-      const navigationCall = mocks.toConnectAndSignBitcoinTransactionStep.mock.calls[0];
-      if (!navigationCall) throw new Error('Expected Ledger navigation');
-      const ledgerDescriptor = navigationCall[3];
+      const openCall = mocks.openLedgerFlow.mock.calls[0];
+      if (!openCall) throw new Error('Expected the Ledger flow to open');
+      const ledgerDescriptor: unknown = openCall[0].descriptor;
       if (typeof ledgerDescriptor !== 'string') throw new Error('Expected Ledger descriptor');
       expect(ledgerDescriptor).toContain(
         `${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0`
@@ -285,27 +278,28 @@ describe(useSignDescriptorPsbt.name, () => {
       );
     });
 
-    test('threads the prepared psbt, signing config, location and descriptor through the ledger flow', async () => {
+    test('threads the prepared psbt, signing config and descriptor through the ledger flow', async () => {
       const psbtHex = buildDescriptorPsbtHex(multiSigDescriptor, [cosignerAddressIndexKey]);
       const deviceSignedTx = buildDescriptorTx(multiSigDescriptor, [
         cosignerAddressIndexKey,
         accountAddressIndexKey,
       ]);
       let threadedPsbt: Uint8Array | undefined;
-      mocks.toConnectAndSignBitcoinTransactionStep.mockImplementation((psbt: Uint8Array) => {
-        threadedPsbt = psbt;
+      mocks.openLedgerFlow.mockImplementation((request: { psbt: Uint8Array }) => {
+        threadedPsbt = request.psbt;
       });
       mocks.listenForBitcoinTxLedgerSigning.mockResolvedValue(deviceSignedTx);
 
       const signedTx = await useSignDescriptorPsbt()(psbtHex, multiSigDescriptor);
 
       expect(signedTx).toBe(deviceSignedTx);
-      expect(mocks.toConnectAndSignBitcoinTransactionStep).toHaveBeenCalledWith(
-        expect.any(Uint8Array),
-        [{ index: 0, derivationPath: accountDerivationPath }],
-        { pathname: '/' },
-        multiSigDescriptor
-      );
+      expect(mocks.openLedgerFlow).toHaveBeenCalledWith({
+        kind: 'sign-bitcoin-tx',
+        psbt: expect.any(Uint8Array),
+        inputsToSign: [{ index: 0, derivationPath: accountDerivationPath }],
+        descriptor: multiSigDescriptor,
+        settleOnRejection: false,
+      });
       const threadedTx = btc.Transaction.fromPSBT(requireBytes(threadedPsbt));
       const { witnessScript } = compileWshDescriptor(multiSigDescriptor);
       expect(bytesToHex(requireBytes(threadedTx.getInput(0).witnessScript))).toEqual(

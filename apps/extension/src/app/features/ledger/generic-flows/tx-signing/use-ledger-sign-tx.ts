@@ -9,7 +9,7 @@ import type { ConnectLedgerDeviceOptions } from '../../dmk/ledger-device-connect
 import { LedgerConnectionErrors, handleLedgerConnectionError } from '../../dmk/ledger-dmk-errors';
 import { useLedgerDmk } from '../../dmk/ledger-dmk.context';
 import { closeLedgerSession } from '../../dmk/ledger-session';
-import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
+import { useLedgerSteps } from '../../flow/ledger-flow.context';
 import { BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
 import {
   isCancellableConnectionInteraction,
@@ -41,7 +41,7 @@ export function useLedgerSignTx<App extends LedgerApp>({
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
   const [isConnectionCancellable, setIsConnectionCancellable] = useState(false);
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerNavigate = useLedgerSteps();
   async function checkCorrectAppIsOpenWithFailState(app: App) {
     // Show checking version page immediately
     void ledgerNavigate.toCheckingAppVersion();

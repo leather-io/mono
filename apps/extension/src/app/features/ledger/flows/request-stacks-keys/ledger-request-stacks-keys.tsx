@@ -1,4 +1,5 @@
-import { Route, useNavigate } from 'react-router';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import { bytesToHex } from '@noble/hashes/utils';
 import {
@@ -10,21 +11,17 @@ import {
 import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
 import type { StacksDerivationPathType } from '@leather.io/stacks';
 
-import { RouteUrls } from '@shared/route-urls';
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
+import { useLedgerFlow, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import { ChooseAddressStandard } from '@app/features/ledger/flows/request-stacks-keys/steps/choose-address-standard';
-import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import {
   defaultNumberOfKeysToPullFromLedgerDevice,
   useRequestLedgerKeys,
 } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
-import { immediatelyAttemptLedgerConnection } from '@app/features/ledger/hooks/use-when-reattempt-ledger-connection';
 import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
@@ -47,17 +44,19 @@ const derivationPathTypeLabels: Record<StacksDerivationPathType, string> = {
   ledgerLive: 'standard (Ledger)',
 };
 
-function LedgerRequestStacksKeys() {
+export function LedgerRequestStacksKeys() {
   const toast = useToast();
   const navigate = useNavigate();
   const dmk = useLedgerDmk();
   const signerActions = useSignerActionController();
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerNavigate = useLedgerSteps();
+  const { close } = useLedgerFlow();
 
   const stxKeychainsDescriptors = useStacksKeychainDescriptors();
   const wallets = useWalletEntities();
   const dispatch = useAppDispatch();
-  const chosenDerivationPathType = useLocationStateWithCache('stacksDerivationPathType');
+  const [chosenDerivationPathType, setChosenDerivationPathType] =
+    useState<StacksDerivationPathType>();
 
   const chain = 'stacks';
 
@@ -71,6 +70,7 @@ function LedgerRequestStacksKeys() {
       isAppOpen: isStacksAppOpen,
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       onSuccess() {
+        close();
         void navigate('/', { replace: true });
       },
       async pullKeysFromDevice(app) {
@@ -103,13 +103,7 @@ function LedgerRequestStacksKeys() {
 
         if (resolution.status === 'needs-choice') {
           toast.info('Confirm your preferred address standard to continue');
-          void navigate(RouteUrls.LedgerStacksAddressStandard, {
-            replace: true,
-            state: {
-              [immediatelyAttemptLedgerConnection]: true,
-              backgroundLocation: { pathname: RouteUrls.Home },
-            },
-          });
+          void ledgerNavigate.toChooseAddressStandardStep({ connectImmediatelyAfter: true });
           return { status: 'failure' };
         }
 
@@ -162,6 +156,7 @@ function LedgerRequestStacksKeys() {
   const ledgerContextValue: LedgerRequestKeysContext = {
     chain: 'stacks',
     pullPublicKeysFromDevice: requestKeys,
+    onSelectStandard: setChosenDerivationPathType,
     latestDeviceResponse,
     awaitingDeviceConnection,
   };
@@ -175,14 +170,7 @@ function LedgerRequestStacksKeys() {
       context={ledgerContextValue}
       isActionCancellableByUser={canCancelLedgerAction}
       onCancelAction={signerActions.cancelActive}
+      renderStep={{ 'choose-address-standard': <ChooseAddressStandard /> }}
     />
   );
 }
-
-export const requestStacksKeysRoutes = ledgerRequestKeysRoutes({
-  path: 'stacks',
-  component: <LedgerRequestStacksKeys />,
-  customRoutes: (
-    <Route path={RouteUrls.LedgerStacksAddressStandard} element={<ChooseAddressStandard />} />
-  ),
-});
