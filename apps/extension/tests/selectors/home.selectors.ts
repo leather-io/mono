@@ -1,3 +1,5 @@
+export const CopyAddressMenuBtn = 'copy-address-menu-btn';
+
 export enum HomePageSelectors {
   AssetList = 'asset-list',
   AvailableBalance = 'available-balance',
