@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router';
 
-import { Flex, styled } from 'leather-styles/jsx';
+import { Flex } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
@@ -10,40 +10,8 @@ import type { ReceiveView } from '@app/common/receive/receive';
 import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { DetailsPillButton } from '@app/components/details/details-pill-button';
 import { useFlags } from '@app/features/feature-flags';
-
-interface TokenDetailsPillButtonProps {
-  label: string;
-  onClick(): void;
-  disabled?: boolean;
-  testId?: string;
-}
-
-function TokenDetailsPillButton({ label, onClick, disabled, testId }: TokenDetailsPillButtonProps) {
-  return (
-    <styled.button
-      type="button"
-      display="inline-flex"
-      alignItems="center"
-      justifyContent="center"
-      px="space.03"
-      py="space.02"
-      height="36px"
-      flex="1"
-      bg="ink.background-primary"
-      border="default"
-      borderRadius="999px"
-      textStyle="label.02"
-      color={disabled ? 'ink.text-subdued' : 'ink.text-primary'}
-      opacity={disabled ? 0.6 : 1}
-      _hover={disabled ? undefined : { bg: 'ink.component-background-hover', cursor: 'pointer' }}
-      onClick={disabled ? undefined : onClick}
-      data-testid={testId}
-    >
-      {label}
-    </styled.button>
-  );
-}
 
 export type SwapChain = 'bitcoin' | 'stacks';
 
@@ -91,27 +59,27 @@ export function TokenDetailsActionsRow({
       maxWidth="390px"
       margin="0 auto"
     >
-      <TokenDetailsPillButton
+      <DetailsPillButton
         label="Send"
         onClick={() =>
           void navigate(RouteUrls.SendCryptoAsset, { state: { backgroundLocation: location } })
         }
         testId="token-details-send-btn"
       />
-      <TokenDetailsPillButton
+      <DetailsPillButton
         label="Receive"
         onClick={() => showReceive(receiveView)}
         testId="token-details-receive-btn"
       />
       {releaseOnramperBuy && (
-        <TokenDetailsPillButton
+        <DetailsPillButton
           label="Buy"
           disabled={!isBuyEnabled}
           onClick={() => pageModeRoutingAction(RouteUrls.Fund)}
           testId="token-details-buy-btn"
         />
       )}
-      <TokenDetailsPillButton
+      <DetailsPillButton
         label="Swap"
         disabled={!isSwapEnabled || !swapAvailability.isEnabled}
         onClick={() =>

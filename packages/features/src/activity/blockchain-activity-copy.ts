@@ -1,6 +1,9 @@
 import type { OnChainActivityStatus, StacksProtocolAction } from '@leather.io/models';
 
-import type { BlockchainActivityTranslate } from './blockchain-activity-view.types';
+import type {
+  BlockchainActivityTranslate,
+  BlockchainActivityView,
+} from './blockchain-activity-view.types';
 
 export function interpolateActivityTemplate(
   template: string,
@@ -153,6 +156,34 @@ export function buildBlockchainActivityActionTitle(
 ): string {
   const title = protocolActionTitles[action];
   return title ? t(title) : '';
+}
+
+const transferHeroVerbs: Partial<Record<StacksProtocolAction, string>> = {
+  send: 'Send {asset}',
+  receive: 'Receive {asset}',
+};
+
+export interface BlockchainActivityHeroLines {
+  title: string;
+  subtitle?: string;
+}
+
+export function buildBlockchainActivityHeroLines(
+  view: BlockchainActivityView,
+  t: BlockchainActivityTranslate
+): BlockchainActivityHeroLines {
+  const actionTitle = buildBlockchainActivityActionTitle(view.action, t);
+  if (actionTitle) {
+    return {
+      title: actionTitle,
+      ...(view.protocolName
+        ? { subtitle: t('via {protocol}', { protocol: view.protocolName }) }
+        : {}),
+    };
+  }
+  const transferVerb = transferHeroVerbs[view.action];
+  if (transferVerb && view.title) return { title: t(transferVerb, { asset: view.title }) };
+  return { title: view.title || '—', subtitle: view.subtitle };
 }
 
 interface SubtitleParams {

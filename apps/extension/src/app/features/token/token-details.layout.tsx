@@ -11,12 +11,13 @@ import type { Money } from '@leather.io/models';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import type { ReceiveView } from '@app/common/receive/receive';
+import { DetailsRow } from '@app/components/details/details-row';
+import { DetailsScreen } from '@app/components/details/details-screen';
+import { DetailsSection } from '@app/components/details/details-section';
 
 import { ActivityRow } from '../activity-list/components/activity-row';
 import { type SwapChain, TokenDetailsActionsRow } from './components/token-details-actions';
-import { TokenDetailsRow } from './components/token-details-row';
-import { TokenDetailsScreen } from './components/token-details-screen';
-import { TokenDetailsSection } from './components/token-details-section';
+import { TokenDetailsHeader } from './components/token-details-header';
 import { TokenOverview } from './components/token-overview';
 
 interface TokenDetailsLayoutProps {
@@ -61,8 +62,9 @@ export function TokenDetailsLayout({
   isSwapEnabled = true,
 }: TokenDetailsLayoutProps) {
   return (
-    <TokenDetailsScreen
-      title={title}
+    <DetailsScreen
+      header={<TokenDetailsHeader title={title} />}
+      testId="token-details-container"
       overview={
         <TokenOverview
           icon={icon}
@@ -82,23 +84,23 @@ export function TokenDetailsLayout({
       }
     >
       {descriptionText ? (
-        <TokenDetailsSection title="Description">
+        <DetailsSection title="Description">
           <Box px="space.05" pb="space.03">
             <styled.p textStyle="body.02" margin="0">
               {descriptionText}
             </styled.p>
           </Box>
-        </TokenDetailsSection>
+        </DetailsSection>
       ) : null}
 
-      <TokenDetailsSection title="Token details">
-        <TokenDetailsRow label="Name" value={name} testId="token-details-name" />
-        <TokenDetailsRow
+      <DetailsSection title="Token details">
+        <DetailsRow label="Name" value={name} testId="token-details-name" />
+        <DetailsRow
           label="Price"
           value={price ? formatCurrency(price) : '—'}
           testId="token-details-price"
         />
-        <TokenDetailsRow
+        <DetailsRow
           label="Price change (24hr)"
           value={
             <styled.span textStyle="caption.01" color={getPriceChangeColor(changePercent)}>
@@ -107,21 +109,19 @@ export function TokenDetailsLayout({
           }
           testId="token-details-price-change"
         />
-        <TokenDetailsRow label="Layer" value={layer} testId="token-details-layer" />
-        <TokenDetailsRow label="Contract details" value={contractDetails} />
-      </TokenDetailsSection>
+        <DetailsRow label="Layer" value={layer} testId="token-details-layer" />
+        <DetailsRow label="Contract details" value={contractDetails} />
+      </DetailsSection>
 
-      {balancesContent ? (
-        <TokenDetailsSection title="Balances">{balancesContent}</TokenDetailsSection>
-      ) : null}
+      {balancesContent ? <DetailsSection title="Balances">{balancesContent}</DetailsSection> : null}
 
       {activity.length > 0 ? (
-        <TokenDetailsSection title="Activity">
+        <DetailsSection title="Activity">
           {activity.map(item => (
             <ActivityRow key={item.view.key} item={item} />
           ))}
-        </TokenDetailsSection>
+        </DetailsSection>
       ) : null}
-    </TokenDetailsScreen>
+    </DetailsScreen>
   );
 }

@@ -7,6 +7,7 @@ import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-v
 import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
 import {
+  type BlockchainActivityAmount,
   type BlockchainActivityDirection,
   type BlockchainActivityIndicator,
   addOperator,
@@ -55,6 +56,18 @@ function signatureProgress(item: VaultActivityItem): string | undefined {
 
 function locationName({ vault, account }: ActivityRowLocation): string | undefined {
   return account ?? vault;
+}
+
+function resolveOperator(direction: BlockchainActivityDirection) {
+  return direction === 'received' ? '+' : '−';
+}
+
+function formatAmountCaption({ caption, quote }: BlockchainActivityAmount): string {
+  if (caption?.kind === 'more') return `+${caption.count} more`;
+  if (caption?.kind === 'change') {
+    return addOperator(formatCryptoGlanceable(caption.crypto), resolveOperator(caption.direction));
+  }
+  return formatCurrency(quote);
 }
 
 function resolveValueColor(
@@ -129,7 +142,7 @@ export function VaultActivityRow({
           <styled.span textStyle={cfg.title} whiteSpace="nowrap" color={valueColor}>
             {addOperator(
               formatCryptoGlanceable(amount.crypto ?? amount.quote),
-              amount.direction === 'received' ? '+' : '−'
+              resolveOperator(amount.direction)
             )}
           </styled.span>
         ) : undefined
@@ -137,7 +150,7 @@ export function VaultActivityRow({
       trailingCaption={
         !needsAttention && amount?.crypto ? (
           <styled.span textStyle="caption.01" color="ink.text-subdued" whiteSpace="nowrap">
-            {formatCurrency(amount.quote)}
+            {formatAmountCaption(amount)}
           </styled.span>
         ) : undefined
       }

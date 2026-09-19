@@ -26,10 +26,16 @@ export type BlockchainActivityAvatar =
     }
   | { kind: 'icon'; icon: 'contract-call' | 'contract-deploy' };
 
+export type BlockchainActivityAmountCaption =
+  | { kind: 'change'; direction: BlockchainActivityDirection; crypto: Money }
+  | { kind: 'more'; count: number };
+
 export interface BlockchainActivityAmount {
   direction: BlockchainActivityDirection;
   quote: Money;
   crypto?: Money;
+  showSymbol?: boolean;
+  caption?: BlockchainActivityAmountCaption;
 }
 
 export interface BlockchainActivityView {
