@@ -157,8 +157,8 @@ function ActivityDetailsHero({ item, overlay }: ActivityDetailsHeroProps) {
       </Stack>
       <ActivityDetailsActions item={item} reclaimUrl={overlay?.reclaimUrl} />
       <Button
-        mt={'space.02'}
-        px={'space.07'}
+        mt="space.02"
+        px="space.07"
         variant="outline"
         iconEnd={ExternalLinkIcon}
         onClick={() => openInExplorer(view.chain, view.txid)}

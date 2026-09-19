@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from 'react';
-import { GroupedVirtuoso } from 'react-virtuoso';
+import { useCallback, useMemo, useRef } from 'react';
+import { GroupedVirtuoso, type GroupedVirtuosoHandle, type StateSnapshot } from 'react-virtuoso';
 
 import { groupActivityByDate } from '@leather.io/features';
 
@@ -14,8 +14,12 @@ import { ActivityLoadingMore } from './components/activity-loading-more';
 import { ActivityRow } from './components/activity-row';
 import { useSbtcDepositActivity } from './use-sbtc-deposit-activity';
 
+const listStateByAccount = new Map<string, StateSnapshot>();
+
 export function ActivityList() {
   const accountAddresses = useCurrentAccountAddresses();
+  const listStateKey = `${accountAddresses.id.fingerprint}:${accountAddresses.id.accountIndex}`;
+  const virtuosoRef = useRef<GroupedVirtuosoHandle>(null);
   const {
     items,
     isLoading,
@@ -64,6 +68,14 @@ export function ActivityList() {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  const saveListState = useCallback(
+    (isScrolling: boolean) => {
+      if (isScrolling) return;
+      virtuosoRef.current?.getState(state => listStateByAccount.set(listStateKey, state));
+    },
+    [listStateKey]
+  );
+
   const components = useMemo(
     () => ({
       Footer() {
@@ -84,7 +96,10 @@ export function ActivityList() {
       onRetry={refetch}
     >
       <GroupedVirtuoso
+        ref={virtuosoRef}
         style={{ height: '100%' }}
+        restoreStateFrom={listStateByAccount.get(listStateKey)}
+        isScrolling={saveListState}
         groupCounts={groupCounts}
         groupContent={groupContent}
         itemContent={itemContent}
