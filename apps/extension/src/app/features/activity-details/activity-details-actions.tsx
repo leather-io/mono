@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { Flex } from 'leather-styles/jsx';
 
@@ -36,12 +36,17 @@ function StacksPendingActions({ txid }: PendingActionsProps) {
 
 function BitcoinPendingActions({ txid }: PendingActionsProps) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const pendingTx = usePendingBitcoinTxByTxid(txid);
   if (!pendingTx) return null;
   return (
     <DetailsPillButton
       label="Increase fee"
-      onClick={() => void navigate(RouteUrls.IncreaseBtcFee, { state: { btcTx: pendingTx } })}
+      onClick={() =>
+        void navigate(RouteUrls.IncreaseBtcFee, {
+          state: { btcTx: pendingTx, returnTo: pathname },
+        })
+      }
     />
   );
 }

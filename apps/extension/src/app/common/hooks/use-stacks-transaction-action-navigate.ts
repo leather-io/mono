@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -10,6 +10,7 @@ import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 
 export function useStacksTransactionActionNavigate() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { whenWallet } = useWalletType();
 
   return useCallback(
@@ -19,15 +20,16 @@ export function useStacksTransactionActionNavigate() {
           ? RouteUrls.IncreaseStacksFee.replace(':txid', txid)
           : RouteUrls.CancelStacksTransaction.replace(':txid', txid);
 
+      const state = { returnTo: pathname };
       return whenWallet({
         ledger: () =>
           whenPageMode({
-            full: () => void navigate(routeUrl),
+            full: () => void navigate(routeUrl, { state }),
             popup: () => void openIndexPageInNewTab(routeUrl),
           })(),
-        software: () => navigate(routeUrl),
+        software: () => navigate(routeUrl, { state }),
       })();
     },
-    [navigate, whenWallet]
+    [navigate, pathname, whenWallet]
   );
 }

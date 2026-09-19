@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Outlet, useLocation } from 'react-router';
 
 import { Formik } from 'formik';
 import { Flex, Stack } from 'leather-styles/jsx';
@@ -18,11 +18,12 @@ import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc
 
 import { TransactionActions } from './components/transaction-actions';
 import { useBtcIncreaseFee } from './hooks/use-btc-increase-fee';
+import { useReturnToCaller } from './hooks/use-return-to-caller';
 
 export function IncreaseBtcFeeSheet() {
   const tx = useLocationStateWithCache('btcTx') as BitcoinTx;
-  const navigate = useNavigate();
   const location = useLocation();
+  const returnToCaller = useReturnToCaller();
 
   const btcTx = tx;
   const { btc: balance } = useCurrentBtcBalanceWithFallback();
@@ -30,10 +31,6 @@ export function IncreaseBtcFeeSheet() {
     useBtcIncreaseFee(btcTx);
 
   const btcBalance = formatCurrency(sumMoney([balance.availableBalance, balance.outboundBalance]));
-
-  function onClose() {
-    void navigate(RouteUrls.Home);
-  }
 
   if (!tx) return null;
 
@@ -53,14 +50,14 @@ export function IncreaseBtcFeeSheet() {
           <>
             <Sheet
               isShowing={location.pathname === RouteUrls.IncreaseBtcFee}
-              onClose={onClose}
+              onClose={returnToCaller}
               header={<SheetHeader title="Increase fee" />}
               footer={
                 <TransactionActions
                   isDisabled={isBroadcasting}
                   isBroadcasting={isBroadcasting}
                   onSubmit={submitForm}
-                  onCancel={() => navigate(RouteUrls.Home)}
+                  onCancel={returnToCaller}
                 />
               }
             >

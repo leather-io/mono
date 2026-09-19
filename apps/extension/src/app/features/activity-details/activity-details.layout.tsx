@@ -129,7 +129,7 @@ function ActivityDetailsHero({ item, overlay }: ActivityDetailsHeroProps) {
       alignItems="center"
       justifyContent="center"
       px="space.05"
-      pt="space.03"
+      pt="space.04"
       pb="space.05"
       gap="space.03"
     >
@@ -157,7 +157,6 @@ function ActivityDetailsHero({ item, overlay }: ActivityDetailsHeroProps) {
       </Stack>
       <ActivityDetailsActions item={item} reclaimUrl={overlay?.reclaimUrl} />
       <Button
-        mt="space.02"
         px="space.07"
         variant="outline"
         iconEnd={ExternalLinkIcon}
