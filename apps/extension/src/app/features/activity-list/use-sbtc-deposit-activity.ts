@@ -25,7 +25,9 @@ function combineFundingTxs(results: UseQueryResult<BitcoinTransaction | null, Er
   return { fundingTxs: results.map(result => result.data ?? null) };
 }
 
-export function useSbtcDepositActivity(feedTxids: ReadonlySet<string>): SbtcDepositActivity {
+export function useSbtcDepositActivity(
+  isStandalone: (bitcoinTxid: string) => boolean
+): SbtcDepositActivity {
   const stxAddress = useCurrentStacksAccountAddress();
   const settings = useUserSettings();
   const { pendingSbtcDeposits } = useSbtcPendingDeposits(stxAddress);
@@ -38,8 +40,8 @@ export function useSbtcDepositActivity(feedTxids: ReadonlySet<string>): SbtcDepo
   );
 
   const unmatchedDeposits = useMemo(
-    () => deposits.filter(deposit => !feedTxids.has(deposit.bitcoinTxid)),
-    [deposits, feedTxids]
+    () => deposits.filter(deposit => isStandalone(deposit.bitcoinTxid)),
+    [deposits, isStandalone]
   );
 
   const { fundingTxs } = useQueries({

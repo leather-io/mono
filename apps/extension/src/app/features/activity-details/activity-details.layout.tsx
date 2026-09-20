@@ -15,7 +15,7 @@ import {
   ExternalLinkIcon,
   ListItemBox,
 } from '@leather.io/ui';
-import { truncateMiddle } from '@leather.io/utils';
+import { getAssetId, serializeAssetId, truncateMiddle } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useStacksExplorerLink } from '@app/common/hooks/use-stacks-explorer-link';
@@ -229,10 +229,7 @@ export function ActivityDetailsLayout({
       {activity.balanceChanges.length > 0 ? (
         <DetailsSection title="Balance changes">
           {sortReceivedFirst(activity.balanceChanges).map(change => (
-            <BalanceChangeRow
-              key={`${change.direction}-${assetLabel(change.asset)}`}
-              change={change}
-            />
+            <BalanceChangeRow key={serializeAssetId(getAssetId(change.asset))} change={change} />
           ))}
         </DetailsSection>
       ) : null}

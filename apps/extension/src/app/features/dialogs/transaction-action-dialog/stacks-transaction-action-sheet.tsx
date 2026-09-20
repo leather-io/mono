@@ -49,7 +49,7 @@ export function StacksTransactionActionSheetLoader({
 }: StacksTransactionActionSheetLoaderProps) {
   const { txid } = useParams();
   const toast = useToast();
-  const returnToCaller = useReturnToCaller();
+  const { returnToCaller } = useReturnToCaller();
 
   if (!txid) throw new Error('Transaction id should be provided');
 
@@ -77,7 +77,7 @@ export function StacksTransactionActionSheet({
   actionType,
 }: StacksTransactionActionSheetProps) {
   const location = useLocation();
-  const returnToCaller = useReturnToCaller();
+  const { returnToCaller } = useReturnToCaller();
 
   const StacksAddress = useCurrentStacksAccountAddress();
   const availableUnlockedBalance = useStxAddressAvailableUnlockedBalance(StacksAddress);

@@ -34,11 +34,13 @@ function StacksPendingActions({ txid }: PendingActionsProps) {
   );
 }
 
-function BitcoinPendingActions({ txid }: PendingActionsProps) {
+interface BitcoinPendingActionsProps {
+  pendingTx: NonNullable<ReturnType<typeof usePendingBitcoinTxByTxid>>;
+}
+
+function BitcoinPendingActions({ pendingTx }: BitcoinPendingActionsProps) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const pendingTx = usePendingBitcoinTxByTxid(txid);
-  if (!pendingTx) return null;
   return (
     <DetailsPillButton
       label="Increase fee"
@@ -59,7 +61,9 @@ interface ActivityDetailsActionsProps {
 export function ActivityDetailsActions({ item, reclaimUrl }: ActivityDetailsActionsProps) {
   const { activity, view } = item;
   const actionKind = getActivityActionKind(activity);
-  if (!reclaimUrl && actionKind === null) return null;
+  const pendingBitcoinTx = usePendingBitcoinTxByTxid(view.txid);
+  const bitcoinTx = actionKind === 'bitcoin-increase-fee' ? pendingBitcoinTx : undefined;
+  if (!reclaimUrl && actionKind !== 'stacks-manage' && !bitcoinTx) return null;
 
   return (
     <Flex
@@ -77,7 +81,7 @@ export function ActivityDetailsActions({ item, reclaimUrl }: ActivityDetailsActi
         <DetailsPillButton label="Reclaim" onClick={() => openInNewTab(reclaimUrl)} />
       ) : null}
       {actionKind === 'stacks-manage' ? <StacksPendingActions txid={view.txid} /> : null}
-      {actionKind === 'bitcoin-increase-fee' ? <BitcoinPendingActions txid={view.txid} /> : null}
+      {bitcoinTx ? <BitcoinPendingActions pendingTx={bitcoinTx} /> : null}
     </Flex>
   );
 }

@@ -8,5 +8,9 @@ import { useLocationStateWithCache } from '@app/common/hooks/use-location-state'
 export function useReturnToCaller() {
   const navigate = useNavigate();
   const returnTo = useLocationStateWithCache<string>('returnTo', RouteUrls.Home);
-  return useCallback(() => void navigate(returnTo), [navigate, returnTo]);
+  const returnToCaller = useCallback(
+    () => void navigate(returnTo, { replace: true }),
+    [navigate, returnTo]
+  );
+  return { returnTo, returnToCaller };
 }

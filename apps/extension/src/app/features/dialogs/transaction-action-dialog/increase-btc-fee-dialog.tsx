@@ -23,7 +23,7 @@ import { useReturnToCaller } from './hooks/use-return-to-caller';
 export function IncreaseBtcFeeSheet() {
   const tx = useLocationStateWithCache('btcTx') as BitcoinTx;
   const location = useLocation();
-  const returnToCaller = useReturnToCaller();
+  const { returnToCaller } = useReturnToCaller();
 
   const btcTx = tx;
   const { btc: balance } = useCurrentBtcBalanceWithFallback();

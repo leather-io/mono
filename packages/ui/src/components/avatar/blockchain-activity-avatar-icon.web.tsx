@@ -66,7 +66,6 @@ export function BlockchainActivityAvatarIcon({
         />
       );
     case 'pair': {
-      const geometry = pairGeometry;
       return (
         <styled.div position="relative" width={avatarSize} height={avatarSize}>
           <styled.div
@@ -102,8 +101,8 @@ export function BlockchainActivityAvatarIcon({
               overflow="hidden"
               borderRadius="round"
               bg="ink.background-primary"
-              width={geometry.indicatorSize}
-              height={geometry.indicatorSize}
+              width={pairGeometry.indicatorSize}
+              height={pairGeometry.indicatorSize}
             >
               {indicator}
             </styled.div>

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
@@ -14,8 +15,6 @@ import { useSbtcDepositActivity } from '../activity-list/use-sbtc-deposit-activi
 import { ActivityDetailsLoading } from './activity-details-loading';
 import { ActivityDetailsNotFound } from './activity-details-not-found';
 import { ActivityDetailsLayout } from './activity-details.layout';
-
-const noFeedTxids: ReadonlySet<string> = new Set();
 
 function parseChain(value: string | undefined): CryptoAssetChain | null {
   if (value === 'bitcoin' || value === 'stacks') return value;
@@ -43,7 +42,8 @@ interface ResolvedActivityDetailsProps {
 function ResolvedActivityDetails({ chain, txid, onBack }: ResolvedActivityDetailsProps) {
   const account = useCurrentAccountAddresses();
   const query = useBlockchainActivityByTxId(account, chain, txid);
-  const { overlays, standaloneItems } = useSbtcDepositActivity(noFeedTxids);
+  const isViewedDeposit = useCallback((bitcoinTxid: string) => bitcoinTxid === txid, [txid]);
+  const { overlays, standaloneItems } = useSbtcDepositActivity(isViewedDeposit);
   const marketData = useMarketData(chain === 'bitcoin' ? btcAsset : stxAsset);
 
   const item =

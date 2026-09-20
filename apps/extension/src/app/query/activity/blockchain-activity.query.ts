@@ -17,6 +17,7 @@ import {
   createBlockchainActivityByAssetIdQueryConfig,
   createBlockchainActivityByTxIdQueryConfig,
   createBlockchainActivityInfiniteQueryConfig,
+  createBlockchainActivityInfiniteQueryKey,
 } from '@leather.io/queries';
 import { type ActivityResponse, getHttpCacheService } from '@leather.io/services';
 import { type FormatAmountOptions, getAssetId } from '@leather.io/utils';
@@ -28,6 +29,7 @@ import { useUserSettings } from '@app/hooks/use-user-settings';
 const feedPageSize = 25;
 const feedRefetchInterval = 15_000;
 const feedRefetchMaxPages = 2;
+const unresolvedTxRefetchLimit = 4;
 
 const activityQueryPrefixes = [
   'blockchain-activity-service--get-activity',
@@ -67,18 +69,33 @@ function selectBlockchainActivityItem(activity: BlockchainActivity | null) {
   return activity ? createBlockchainActivityItem(activity, activityViewDeps) : null;
 }
 
+function findCachedFeedActivity(feedQueryKey: readonly unknown[], txid: string) {
+  return queryClient
+    .getQueryData<InfiniteData<ActivityResponse>>(feedQueryKey)
+    ?.pages.flatMap(page => page.items)
+    .find(activity => activity.txid === txid);
+}
+
 export function useBlockchainActivityByTxId(
   account: AccountAddresses,
   chain: CryptoAssetChain,
   txid: string
 ) {
   const settings = useUserSettings();
+  const feedQueryKey = createBlockchainActivityInfiniteQueryKey(
+    { account, limit: feedPageSize },
+    settings
+  );
 
   return useQuery({
     ...createBlockchainActivityByTxIdQueryConfig(account, chain, txid, settings),
     select: selectBlockchainActivityItem,
+    initialData: () => findCachedFeedActivity(feedQueryKey, txid),
+    initialDataUpdatedAt: () => queryClient.getQueryState(feedQueryKey)?.dataUpdatedAt,
     refetchInterval(query) {
-      return query.state.data?.status === 'pending' ? feedRefetchInterval : false;
+      const activity = query.state.data;
+      if (activity) return activity.status === 'pending' ? feedRefetchInterval : false;
+      return query.state.dataUpdateCount < unresolvedTxRefetchLimit ? feedRefetchInterval : false;
     },
   });
 }

@@ -1,3 +1,5 @@
+import { matchPath, useNavigate } from 'react-router';
+
 import * as btc from '@scure/btc-signer';
 import BigNumber from 'bignumber.js';
 import * as yup from 'yup';
@@ -9,7 +11,9 @@ import { emptyUtxos } from '@leather.io/services';
 import { createMoney, isError, sumMoney } from '@leather.io/utils';
 
 import type { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
+import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
+import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
 import { useToast } from '@app/features/toasts/use-toast';
@@ -27,7 +31,8 @@ import { useReturnToCaller } from './use-return-to-caller';
 
 export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const toast = useToast();
-  const returnToCaller = useReturnToCaller();
+  const navigate = useNavigate();
+  const { returnTo, returnToCaller } = useReturnToCaller();
   const networkMode = useBitcoinScureLibNetworkConfig();
 
   const indexZeroPayer = useCurrentAccountNativeSegwitIndexZeroPayer();
@@ -131,7 +136,13 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
       tx: tx.hex,
       async onSuccess(txid) {
         toast.success('Fee increased successfully');
-        returnToCaller();
+        if (matchPath(RouteUrls.ActivityDetails, returnTo)) {
+          void navigate(replaceRouteParams(RouteUrls.ActivityDetails, { chain: 'bitcoin', txid }), {
+            replace: true,
+          });
+        } else {
+          returnToCaller();
+        }
         analytics.track('increase_fee_transaction', {
           symbol: 'btc',
           txid,

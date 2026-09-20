@@ -6,6 +6,7 @@ import { Box } from 'leather-styles/jsx';
 
 import { groupActivityByDate } from '@leather.io/features';
 
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useBlockchainActivityFeed } from '@app/query/activity/blockchain-activity.query';
 import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 
@@ -34,7 +35,8 @@ const estimatedRowHeight = 72;
 
 export function ActivityList() {
   const accountAddresses = useCurrentAccountAddresses();
-  const listStateKey = `${accountAddresses.id.fingerprint}:${accountAddresses.id.accountIndex}`;
+  const { network } = useUserSettings();
+  const listStateKey = `${network.id}:${accountAddresses.id.fingerprint}:${accountAddresses.id.accountIndex}`;
   const virtuosoRef = useRef<GroupedVirtuosoHandle>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const isReturning = useNavigationType() === 'POP';
@@ -51,7 +53,12 @@ export function ActivityList() {
   } = useBlockchainActivityFeed(accountAddresses);
 
   const feedTxids = useMemo(() => new Set(items.map(item => item.view.txid)), [items]);
-  const { overlays: sbtcOverlays, standaloneItems: sbtcItems } = useSbtcDepositActivity(feedTxids);
+  const isStandaloneDeposit = useCallback(
+    (bitcoinTxid: string) => !feedTxids.has(bitcoinTxid),
+    [feedTxids]
+  );
+  const { overlays: sbtcOverlays, standaloneItems: sbtcItems } =
+    useSbtcDepositActivity(isStandaloneDeposit);
 
   const activityItems = useMemo(() => mergeSbtcDepositItems(items, sbtcItems), [items, sbtcItems]);
 
