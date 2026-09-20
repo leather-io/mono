@@ -193,7 +193,9 @@ export function ActivityDetailsLayout({
       overview={<ActivityDetailsHero item={item} overlay={overlay} />}
     >
       <DetailsSection title="Transaction details">
-        <DetailsRow label="Date" value={dateTimeFormat.format(new Date(view.timestamp * 1000))} />
+        {view.timestamp > 0 ? (
+          <DetailsRow label="Date" value={dateTimeFormat.format(new Date(view.timestamp * 1000))} />
+        ) : null}
         {activity.counterparty ? (
           <DetailsRow
             label={activity.initiatedByUser ? 'To' : 'From'}

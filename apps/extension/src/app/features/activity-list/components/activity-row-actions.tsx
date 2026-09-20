@@ -56,6 +56,7 @@ function BitcoinActivityAction({ txid }: ActivityActionProps) {
       onIncreaseFee={() =>
         void navigate(RouteUrls.IncreaseBtcFee, {
           state: { btcTx: pendingTx, returnTo: pathname },
+          replace: true,
         })
       }
     />

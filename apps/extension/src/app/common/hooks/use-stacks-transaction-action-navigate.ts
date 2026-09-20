@@ -20,14 +20,14 @@ export function useStacksTransactionActionNavigate() {
           ? RouteUrls.IncreaseStacksFee.replace(':txid', txid)
           : RouteUrls.CancelStacksTransaction.replace(':txid', txid);
 
-      const state = { returnTo: pathname };
+      const options = { state: { returnTo: pathname }, replace: true };
       return whenWallet({
         ledger: () =>
           whenPageMode({
-            full: () => void navigate(routeUrl, { state }),
+            full: () => void navigate(routeUrl, options),
             popup: () => void openIndexPageInNewTab(routeUrl),
           })(),
-        software: () => navigate(routeUrl, { state }),
+        software: () => navigate(routeUrl, options),
       })();
     },
     [navigate, pathname, whenWallet]

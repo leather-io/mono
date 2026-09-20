@@ -47,6 +47,7 @@ function BitcoinPendingActions({ pendingTx }: BitcoinPendingActionsProps) {
       onClick={() =>
         void navigate(RouteUrls.IncreaseBtcFee, {
           state: { btcTx: pendingTx, returnTo: pathname },
+          replace: true,
         })
       }
     />

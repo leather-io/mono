@@ -87,10 +87,6 @@ export function ActivityList() {
     if (heldLayout) window.scrollTo(0, heldLayout.scrollY);
   }, [heldLayout]);
 
-  const releaseHeldLayout = useCallback((listHeight: number) => {
-    if (listHeight > 0) setHeldLayout(current => (current ? undefined : current));
-  }, []);
-
   const groupContent = useCallback(
     (index: number) => (
       <ActivityGroupHeader label={groups[index].label} isFirstGroup={index === 0} />
@@ -122,6 +118,15 @@ export function ActivityList() {
       );
     },
     [listStateKey]
+  );
+
+  const releaseHeldLayout = useCallback(
+    (listHeight: number) => {
+      if (listHeight <= 0) return;
+      setHeldLayout(current => (current ? undefined : current));
+      saveListState(false);
+    },
+    [saveListState]
   );
 
   const components = useMemo(
