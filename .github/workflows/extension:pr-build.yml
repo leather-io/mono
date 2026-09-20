@@ -62,7 +62,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
 
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: build-packages
         run: pnpm build:packages

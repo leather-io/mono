@@ -37,7 +37,7 @@ jobs:
             echo "IS_MERGE_QUEUE=false" >> "$GITHUB_ENV"
           fi
 
-      - uses: wechuli/allcheckspassed@204ff63e89eabdc8086f0c50b91f675bcf37c8f6 # v2.4.0
+      - uses: wechuli/allcheckspassed@e4240aa9cc76fd6828ce27a71ad16c406c25adb3 # v2.5.0
         if: env.IS_MERGE_QUEUE != 'true'
         with:
           polling_interval: 0.5

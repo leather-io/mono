@@ -24,7 +24,6 @@ function makeStacksAppVersion(version: {
 const bitcoinAppVersion: BitcoinAppVersion = {
   name: 'Bitcoin',
   version: '2.1.0',
-  flags: 0,
   chain: 'bitcoin',
 };
 

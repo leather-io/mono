@@ -4,7 +4,6 @@ import { Callout } from '@leather.io/ui';
 import { Capitalize } from '@app/ui/utils/capitalize';
 
 import { LatestDeviceResponse } from '../utils/generic-ledger-utils';
-import { isStacksLedgerAppClosed } from '../utils/stacks-ledger-utils';
 
 interface RequiresChainProp {
   chain: SupportedBlockchains;
@@ -24,14 +23,6 @@ function LedgerDeviceLockedWarning({ chain }: RequiresChainProp) {
   );
 }
 
-function LedgerAppClosedWarning({ chain }: RequiresChainProp) {
-  return (
-    <Callout variant="warning" textAlign="left">
-      The <Capitalize>{chain}</Capitalize> app appears to be closed on Ledger. Open it to continue.
-    </Callout>
-  );
-}
-
 export function CommonLedgerDeviceInlineWarnings({
   chain,
   latestDeviceResponse,
@@ -39,7 +30,5 @@ export function CommonLedgerDeviceInlineWarnings({
   if (!latestDeviceResponse) return null;
 
   if (latestDeviceResponse.deviceLocked) return <LedgerDeviceLockedWarning chain={chain} />;
-  if (isStacksLedgerAppClosed(latestDeviceResponse))
-    return <LedgerAppClosedWarning chain={chain} />;
   return null;
 }

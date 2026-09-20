@@ -1,4 +1,4 @@
-import { type KeyInfo } from '@bitcoinerlab/descriptors';
+import { type KeyInfo } from '@bitcoinerlab/descriptors-core';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
 import { createBase58check } from '@scure/base';

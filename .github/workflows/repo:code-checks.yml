@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
       - name: lint-prettier
         run: pnpm format:check
 
@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
       - name: lint-packages-with-syncpack
         run: pnpm syncpack:lint
 
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
       - name: lint-eslint
         run: pnpm build && pnpm lint
 
@@ -55,7 +55,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
       - name: run-typecheck-recursively-in-each-package
         run: pnpm build && pnpm typecheck
 
@@ -68,7 +68,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: lint-commit-message
         run: pnpm exec commitlint --from origin/dev --to HEAD --verbose
@@ -80,7 +80,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: lint-dependency-rules
         run: pnpm build && pnpm lint:deps
@@ -92,7 +92,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: lint-dependency-rules
         run: pnpm lint:filenames
@@ -104,7 +104,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - run: pnpm build
 
@@ -118,7 +118,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - run: pnpm build
 
@@ -134,7 +134,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - run: pnpm build
 
@@ -154,7 +154,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: audit
         run: pnpm dlx pnpm@11.0.0-rc.1 audit --prod --audit-level high --config.manage-package-manager-versions=false
