@@ -28,13 +28,21 @@ interface HandOffLedgerFlowOptions {
   closeCurrentWindow?: boolean;
 }
 
+function toHandoffSafeRequest(request: LedgerFlowHandoffRequest): LedgerFlowHandoffRequest {
+  if (request.kind !== 'request-keys') return request;
+  return { ...request, autoConnect: false };
+}
+
 export async function handOffLedgerFlowToFullPage(
   request: LedgerFlowHandoffRequest,
   { target = RouteUrls.Home, closeCurrentWindow = false }: HandOffLedgerFlowOptions = {}
 ) {
   const sessionStorage = chrome.storage.session;
   if (sessionStorage) {
-    const record: LedgerFlowHandoffRecord = { request, createdAt: Date.now() };
+    const record: LedgerFlowHandoffRecord = {
+      request: toHandoffSafeRequest(request),
+      createdAt: Date.now(),
+    };
     await sessionStorage.set({ [ledgerFlowHandoffKey]: record });
   }
   await openIndexPageInNewTab(target);

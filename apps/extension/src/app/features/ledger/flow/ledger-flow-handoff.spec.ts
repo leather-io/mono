@@ -73,6 +73,32 @@ describe('ledger flow hand-off', () => {
     expect(h.closeWindow).toHaveBeenCalledOnce();
   });
 
+  test('stores request-keys hand-offs with auto connect disabled', async () => {
+    const { store } = installSessionStorage();
+
+    await handOffLedgerFlowToFullPage({
+      kind: 'request-keys',
+      chain: 'bitcoin',
+      autoConnect: true,
+    });
+
+    expect(store[handoffKey]).toEqual({
+      request: { kind: 'request-keys', chain: 'bitcoin', autoConnect: false },
+      createdAt: Date.now(),
+    });
+  });
+
+  test('stores other hand-off requests untouched', async () => {
+    const { store } = installSessionStorage();
+
+    await handOffLedgerFlowToFullPage({ kind: 'connect-start' });
+
+    expect(store[handoffKey]).toEqual({
+      request: { kind: 'connect-start' },
+      createdAt: Date.now(),
+    });
+  });
+
   test('still opens the tab when session storage is unavailable', async () => {
     Reflect.set(globalThis, 'chrome', { storage: {} });
 
