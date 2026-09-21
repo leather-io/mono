@@ -1,4 +1,4 @@
-import { Box, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, styled } from 'leather-styles/jsx';
 
 import { ArrowLeftIcon } from '@leather.io/ui';
 
@@ -11,11 +11,18 @@ interface DetailsHeaderProps {
   onBack(): void;
   backTestId: string;
   titleTestId: string;
+  px?: BoxProps['px'];
 }
 
-export function DetailsHeader({ title, onBack, backTestId, titleTestId }: DetailsHeaderProps) {
+export function DetailsHeader({
+  title,
+  onBack,
+  backTestId,
+  titleTestId,
+  px = ['space.03', null, 'space.00'],
+}: DetailsHeaderProps) {
   return (
-    <Header px={['space.03', null, 'space.00']}>
+    <Header px={px}>
       <Box width="100%" maxWidth={['100%', null, '780px']} margin="0 auto">
         <HeaderGrid
           leftCol={

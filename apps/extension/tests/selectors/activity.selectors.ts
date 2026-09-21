@@ -8,6 +8,8 @@ export enum ActivitySelectors {
   ActivityDetailsBack = 'activity-details-back',
   ActivityDetailsTitle = 'activity-details-title',
   ActivityDetailsExplorer = 'activity-details-explorer',
+  ActivityDetailsHeadline = 'activity-details-headline',
+  ActivityDetailsStatus = 'activity-details-status',
 
   TransactionActionFeeInput = 'transaction-action-fee-input',
   TransactionActionSheet = 'transaction-action-sheet',

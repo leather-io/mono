@@ -30,11 +30,11 @@ test.describe('Activity details', () => {
 
     const details = page.getByTestId(ActivitySelectors.ActivityDetails);
     await expect(details).toBeVisible();
-    await expect(page.getByTestId(ActivitySelectors.ActivityDetailsTitle)).toHaveText(
-      'Transaction'
+    await expect(page.getByTestId(ActivitySelectors.ActivityDetailsHeadline)).toHaveText('Sent');
+    await expect(page.getByTestId(ActivitySelectors.ActivityDetailsStatus)).toContainText(
+      'Confirmed'
     );
-    await expect(details.getByText('Send BTC', { exact: true })).toBeVisible();
-    await expect(details.getByText(`${minusSign} 0.00198`, { exact: true })).toBeVisible();
+    await expect(details.getByText(`${minusSign} 0.00198 BTC`, { exact: true })).toBeVisible();
     await expect(page.getByTestId(ActivitySelectors.ActivityDetailsExplorer)).toBeVisible();
 
     await page.getByTestId(ActivitySelectors.ActivityDetailsBack).click();
