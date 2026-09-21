@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router';
 
-import BitcoinApp from '@ledgerhq/ledger-bitcoin';
-
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { pullBitcoinKeysFromLedgerDevice } from '@app/features/ledger/flows/request-bitcoin-keys/request-bitcoin-keys.utils';
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
@@ -18,7 +17,9 @@ import {
   getBitcoinAppVersion,
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
+import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useAppDispatch } from '@app/store';
 import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
@@ -38,16 +39,18 @@ function LedgerRequestBitcoinKeys() {
   const wallets = useWalletEntities();
   const btcKeychainDescriptors = useBitcoinKeychainDescriptors();
 
+  const dmk = useLedgerDmk();
+  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerNavigate();
   const network = useCurrentNetwork();
 
   const chain = 'bitcoin';
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
-    useRequestLedgerKeys<BitcoinApp>({
+  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, isConnectionCancellable } =
+    useRequestLedgerKeys<LedgerBitcoinApp>({
       chain,
-      connectApp: connectLedgerBitcoinApp(network.chain.bitcoin.mode),
-      getAppVersion: getBitcoinAppVersion,
+      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode, signerActions.run),
+      getAppVersion: getBitcoinAppVersion(dmk),
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       onSuccess() {
         void navigate('/', { replace: true });
@@ -98,11 +101,15 @@ function LedgerRequestBitcoinKeys() {
     awaitingDeviceConnection,
   };
 
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
   return (
     <RequestKeysFlow
       context={ledgerContextValue}
       isActionCancellableByUser={canCancelLedgerAction}
+      onCancelAction={signerActions.cancelActive}
     />
   );
 }

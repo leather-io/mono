@@ -1,5 +1,5 @@
-import Transport from '@ledgerhq/hw-transport-webusb';
-import BitcoinApp, { DefaultWalletPolicy, PartialSignature } from '@ledgerhq/ledger-bitcoin';
+import type { DeviceManagementKit } from '@ledgerhq/device-management-kit';
+import { DefaultDescriptorTemplate, DefaultWallet } from '@ledgerhq/device-signer-kit-bitcoin';
 import { Psbt } from 'bitcoinjs-lib';
 
 import {
@@ -8,7 +8,20 @@ import {
 } from '@leather.io/bitcoin';
 import type { BitcoinNetworkModes } from '@leather.io/models';
 
-import { LEDGER_APPS_MAP, promptOpenAppOnDevice } from './generic-ledger-utils';
+import type { RunLedgerDeviceAction } from '../dmk/ledger-device-action';
+import {
+  type ConnectLedgerDeviceOptions,
+  connectLedgerDeviceToApp,
+  getAppAndVersion,
+} from '../dmk/ledger-device-connection';
+import {
+  type PartialSignature,
+  createLedgerBitcoinApp,
+  getWalletAddressOnDevice,
+  toSignerKitDerivationPath,
+} from './bitcoin-signer-kit-utils';
+import { LEDGER_APPS_MAP } from './generic-ledger-utils';
+import type { LedgerBitcoinApp } from './ledger-app';
 
 export interface BitcoinLedgerAccountDetails {
   id: string;
@@ -17,26 +30,41 @@ export interface BitcoinLedgerAccountDetails {
   fingerprint: string;
 }
 
-export function connectLedgerBitcoinApp(network: BitcoinNetworkModes) {
-  return async function connectLedgerBitcoinAppImpl() {
-    if (network === 'mainnet') {
-      await promptOpenAppOnDevice(LEDGER_APPS_MAP.BITCOIN_MAINNET);
-    } else if (network === 'testnet') {
-      await promptOpenAppOnDevice(LEDGER_APPS_MAP.BITCOIN_TESTNET);
-    }
+function bitcoinAppNameForNetwork(network: BitcoinNetworkModes): string | null {
+  if (network === 'mainnet') return LEDGER_APPS_MAP.BITCOIN_MAINNET;
+  if (network === 'testnet') return LEDGER_APPS_MAP.BITCOIN_TESTNET;
+  return null;
+}
 
-    const transport = await Transport.create();
-    return new BitcoinApp(transport);
+export function connectLedgerBitcoinApp(
+  dmk: DeviceManagementKit,
+  network: BitcoinNetworkModes,
+  runAction?: RunLedgerDeviceAction
+) {
+  return async function connectLedgerBitcoinAppImpl(
+    options?: ConnectLedgerDeviceOptions
+  ): Promise<LedgerBitcoinApp> {
+    const sessionId = await connectLedgerDeviceToApp(dmk, bitcoinAppNameForNetwork(network), {
+      ...options,
+      runAction,
+    });
+    return createLedgerBitcoinApp(dmk, sessionId, runAction);
   };
 }
 
-export interface BitcoinAppVersion extends Awaited<ReturnType<BitcoinApp['getAppAndVersion']>> {
+export interface BitcoinAppVersion {
   chain: 'bitcoin';
+  name: string;
+  version: string;
 }
 
-export async function getBitcoinAppVersion(app: BitcoinApp): Promise<BitcoinAppVersion> {
-  const appVersion = await app.getAppAndVersion();
-  return { chain: 'bitcoin' as const, ...appVersion };
+export function getBitcoinAppVersion(dmk: DeviceManagementKit) {
+  return async function getBitcoinAppVersionImpl(
+    app: LedgerBitcoinApp
+  ): Promise<BitcoinAppVersion> {
+    const { name, version } = await getAppAndVersion(dmk, app.sessionId);
+    return { chain: 'bitcoin', name, version };
+  };
 }
 
 export interface WalletPolicyDetails {
@@ -56,17 +84,25 @@ function derivationPathToWalletPolicy(
     '[' + makePath(network, accountIndex).replace('m', fingerprint) + ']' + xpub;
 }
 
-export function createNativeSegwitDefaultWalletPolicy(policyDetails: WalletPolicyDetails) {
-  return new DefaultWalletPolicy(
-    'wpkh(@0/**)',
-    derivationPathToWalletPolicy(makeNativeSegwitAccountDerivationPath)(policyDetails)
+export function createNativeSegwitWalletPolicyKey(policyDetails: WalletPolicyDetails) {
+  return derivationPathToWalletPolicy(makeNativeSegwitAccountDerivationPath)(policyDetails);
+}
+
+export function createTaprootWalletPolicyKey(policyDetails: WalletPolicyDetails) {
+  return derivationPathToWalletPolicy(makeTaprootAccountDerivationPath)(policyDetails);
+}
+
+export function makeNativeSegwitDefaultWallet(network: BitcoinNetworkModes, accountIndex: number) {
+  return new DefaultWallet(
+    toSignerKitDerivationPath(makeNativeSegwitAccountDerivationPath(network, accountIndex)),
+    DefaultDescriptorTemplate.NATIVE_SEGWIT
   );
 }
 
-export function createTaprootDefaultWalletPolicy(policyDetails: WalletPolicyDetails) {
-  return new DefaultWalletPolicy(
-    'tr(@0/**)',
-    derivationPathToWalletPolicy(makeTaprootAccountDerivationPath)(policyDetails)
+export function makeTaprootDefaultWallet(network: BitcoinNetworkModes, accountIndex: number) {
+  return new DefaultWallet(
+    toSignerKitDerivationPath(makeTaprootAccountDerivationPath(network, accountIndex)),
+    DefaultDescriptorTemplate.TAPROOT
   );
 }
 
@@ -82,57 +118,36 @@ interface DisplayAddressOnDeviceArgs {
 // device's own xpub, so a wrong device produces a mismatch rather than a
 // confirmation. Returns the address the device showed for the caller to assert
 // against the locally derived one.
-async function displayDefaultWalletPolicyAddress(
-  app: BitcoinApp,
+async function displayDefaultWalletAddress(
+  app: LedgerBitcoinApp,
   { network, accountIndex }: DisplayAddressOnDeviceArgs,
-  makePath: (network: BitcoinNetworkModes, accountIndex: number) => string,
-  createPolicy: (policyDetails: WalletPolicyDetails) => DefaultWalletPolicy
+  makeDefaultWallet: (network: BitcoinNetworkModes, accountIndex: number) => DefaultWallet
 ) {
-  const fingerprint = await app.getMasterFingerprint();
-  const xpub = await app.getExtendedPubkey(makePath(network, accountIndex));
-  const walletPolicy = createPolicy({ fingerprint, network, xpub, accountIndex });
-  return app.getWalletAddress(
-    walletPolicy,
-    null,
-    receiveAddressChangeIndex,
-    receiveAddressIndex,
-    true
+  return getWalletAddressOnDevice(app, makeDefaultWallet(network, accountIndex), {
+    changeIndex: receiveAddressChangeIndex,
+    addressIndex: receiveAddressIndex,
+  });
+}
+
+export function displayNativeSegwitAddressOnDevice(app: LedgerBitcoinApp) {
+  return async (args: DisplayAddressOnDeviceArgs) =>
+    displayDefaultWalletAddress(app, args, makeNativeSegwitDefaultWallet);
+}
+
+export function displayTaprootAddressOnDevice(app: LedgerBitcoinApp) {
+  return async (args: DisplayAddressOnDeviceArgs) =>
+    displayDefaultWalletAddress(app, args, makeTaprootDefaultWallet);
+}
+
+export function addNativeSegwitSignaturesToPsbt(psbt: Psbt, signatures: PartialSignature[]) {
+  signatures.forEach(({ inputIndex, pubkey, signature }) =>
+    psbt.updateInput(inputIndex, { partialSig: [{ pubkey, signature }] })
   );
 }
 
-export function displayNativeSegwitAddressOnDevice(app: BitcoinApp) {
-  return async (args: DisplayAddressOnDeviceArgs) =>
-    displayDefaultWalletPolicyAddress(
-      app,
-      args,
-      makeNativeSegwitAccountDerivationPath,
-      createNativeSegwitDefaultWalletPolicy
-    );
-}
-
-export function displayTaprootAddressOnDevice(app: BitcoinApp) {
-  return async (args: DisplayAddressOnDeviceArgs) =>
-    displayDefaultWalletPolicyAddress(
-      app,
-      args,
-      makeTaprootAccountDerivationPath,
-      createTaprootDefaultWalletPolicy
-    );
-}
-
-export function addNativeSegwitSignaturesToPsbt(
-  psbt: Psbt,
-  signatures: [number, PartialSignature][]
-) {
-  signatures.forEach(([index, signature]) => psbt.updateInput(index, { partialSig: [signature] }));
-}
-
-export function addTaprootInputSignaturesToPsbt(
-  psbt: Psbt,
-  signatures: [number, PartialSignature][]
-) {
-  signatures.forEach(([index, signature]) =>
-    psbt.updateInput(index, { tapKeySig: signature.signature })
+export function addTaprootInputSignaturesToPsbt(psbt: Psbt, signatures: PartialSignature[]) {
+  signatures.forEach(({ inputIndex, signature }) =>
+    psbt.updateInput(inputIndex, { tapKeySig: signature })
   );
 }
 

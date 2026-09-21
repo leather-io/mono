@@ -11,14 +11,13 @@ import { isNonNullish } from 'remeda';
 import {
   LiveSwapEstimate,
   PRICE_IMPACT_WARNING_THRESHOLD,
-  type SwapSubmissionQuoteSnapshot,
   matchLiveEstimate,
   useSwapContext,
 } from '@leather.io/state/swap';
 import { Button } from '@leather.io/ui';
 
 import { formatCurrency, formatPercentage } from '@app/common/currency-formatter';
-import { Card, Content, Page } from '@app/components/layout';
+import { ButtonRow, Card, Content, Page } from '@app/components/layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { QuoteRefetchIndicator } from '@app/pages/swap/components/quote-preview/quote-refetch-indicator';
@@ -53,29 +52,43 @@ const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
 export function SwapReview() {
   const { liveEstimate } = useOutletContext<SwapOutletContext>();
   const navigate = useNavigate();
+  const { canSubmit } = useSwapContext();
   const { submission, confirm, reset, goToActivity } = useSwapSubmission();
   const isSubmissionActive = submission.status !== 'idle';
   useSwapReviewStatusGuard(liveEstimate, isSubmissionActive, () => navigate(-1));
+
+  function handleConfirm() {
+    if (liveEstimate.status !== 'success') return;
+    const { baseAsset, targetAsset, baseAmount, targetAmount } = liveEstimate.selectedQuote;
+    confirm({ baseAsset, targetAsset, baseAmount, targetAmount });
+  }
+
+  const footer =
+    liveEstimate.status === 'success' ? (
+      <ButtonRow>
+        <Button
+          disabled={!canSubmit || isSubmissionActive}
+          onClick={handleConfirm}
+          data-testid={SwapRevampSelectors.ConfirmBtn}
+        >
+          Confirm
+        </Button>
+      </ButtonRow>
+    ) : undefined;
 
   return (
     <Box width="100%" position="relative">
       <PageHeader title="Swap" />
       <Content>
         <Page>
-          <Card>
+          <Card footer={footer}>
             {matchLiveEstimate(liveEstimate, {
               idle: () => null,
               constrained: () => null,
               loading: () => <LoadingSpinner />,
               error: estimate => <SwapReviewErrorState onRetry={estimate.refetch} />,
               empty: () => <SwapReviewEmptyState onBack={() => navigate(-1)} />,
-              success: liveEstimate => (
-                <SwapReviewContent
-                  liveEstimate={liveEstimate}
-                  isSubmissionActive={isSubmissionActive}
-                  onConfirm={confirm}
-                />
-              ),
+              success: liveEstimate => <SwapReviewContent liveEstimate={liveEstimate} />,
             })}
           </Card>
         </Page>
@@ -101,16 +114,10 @@ export function SwapReview() {
 
 interface SwapReviewContentProps {
   liveEstimate: Extract<LiveSwapEstimate, { status: 'success' }>;
-  isSubmissionActive: boolean;
-  onConfirm(quote: SwapSubmissionQuoteSnapshot): void;
 }
 
-function SwapReviewContent({
-  liveEstimate,
-  isSubmissionActive,
-  onConfirm,
-}: SwapReviewContentProps) {
-  const { state, actions, canSubmit } = useSwapContext();
+function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
+  const { state, actions } = useSwapContext();
   const [isSlippageSheetOpen, setIsSlippageSheetOpen] = useState(false);
 
   const { selectedQuote, isRefetching, intervalState, fees } = liveEstimate;
@@ -126,10 +133,6 @@ function SwapReviewContent({
   } = selectedQuote;
   const showPriceImpact = shouldShowPriceImpact(priceImpactPercentage);
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
-
-  function handleConfirm() {
-    onConfirm({ baseAsset, targetAsset, baseAmount, targetAmount });
-  }
 
   return (
     <Flex direction="column" gap="space.08" flex={1}>
@@ -212,21 +215,11 @@ function SwapReviewContent({
         <SbtcLedgerRecoveryWarning />
       )}
 
-      <Flex direction="column" gap="space.04" mt="auto" alignItems="center">
-        <styled.span textStyle="caption.01" textAlign="center" color="ink.text-subdued">
-          Make sure everything looks correct.
-          <br />
-          Confirmed transactions cannot be undone.
-        </styled.span>
-        <Button
-          fullWidth
-          disabled={!canSubmit || isSubmissionActive}
-          onClick={handleConfirm}
-          data-testid={SwapRevampSelectors.ConfirmBtn}
-        >
-          Confirm
-        </Button>
-      </Flex>
+      <styled.span textStyle="caption.01" textAlign="center" color="ink.text-subdued" mt="auto">
+        Make sure everything looks correct.
+        <br />
+        Confirmed transactions cannot be undone.
+      </styled.span>
 
       <SlippageSelectorSheet
         isShowing={isSlippageSheetOpen}

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Route, useLocation } from 'react-router';
 
 import { deserializeTransaction } from '@stacks/transactions';
-import StacksApp, { LedgerError } from '@zondax/ledger-stacks';
+import { LedgerError } from '@zondax/ledger-stacks';
 import get from 'lodash.get';
 
 import { delay, isError } from '@leather.io/utils';
@@ -13,8 +13,12 @@ import { analytics } from '@shared/utils/analytics';
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
+import { makeLedgerAppResponseError } from '@app/features/ledger/dmk/ledger-dmk-errors';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
+import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
 import {
   connectLedgerStacksApp,
   getStacksAppVersion,
@@ -49,6 +53,8 @@ function publishStacksSigningSettled(unsignedTx: string, error?: string) {
 
 function LedgerSignStacksTxContainer() {
   const location = useLocation();
+  const dmk = useLedgerDmk();
+  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerNavigate();
   const ledgerAnalytics = useLedgerAnalytics();
   useScrollLock(true);
@@ -66,89 +72,96 @@ function LedgerSignStacksTxContainer() {
 
   useEffect(() => () => setUnsignedTx(null), []);
 
-  const { signTransaction, latestDeviceResponse, awaitingDeviceConnection } =
-    useLedgerSignTx<StacksApp>({
-      chain,
-      isAppOpen: isStacksAppOpen,
-      getAppVersion: getStacksAppVersion,
-      connectApp: connectLedgerStacksApp,
-      passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
-      async signTransactionWithDevice(stacksApp) {
-        if (!account) {
-          const errorMessage = 'No active account found for transaction signing';
-          void ledgerNavigate.toErrorStep(chain, errorMessage);
+  const {
+    signTransaction,
+    latestDeviceResponse,
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  } = useLedgerSignTx<LedgerStacksApp>({
+    chain,
+    isAppOpen: isStacksAppOpen,
+    getAppVersion: getStacksAppVersion,
+    connectApp(options) {
+      return connectLedgerStacksApp(dmk, { ...options, runAction: signerActions.run });
+    },
+    passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
+    async signTransactionWithDevice(stacksApp) {
+      if (!account) {
+        const errorMessage = 'No active account found for transaction signing';
+        void ledgerNavigate.toErrorStep(chain, errorMessage);
+        return;
+      }
+
+      await migrateFingerprintIfNeeded(stacksApp);
+
+      void ledgerNavigate.toConnectionSuccessStep('stacks');
+      await delay(1000);
+
+      if (!unsignedTx) throw new Error('No unsigned tx');
+
+      void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
+
+      const resp = await signLedgerStacksTransaction(stacksApp)(
+        Buffer.from(unsignedTx, 'hex'),
+        account.derivationPath
+      );
+
+      if (resp.returnCode === LedgerError.DataIsInvalid) {
+        if (settleOnRejection) {
+          publishStacksSigningSettled(unsignedTx, resp.errorMessage);
+        } else {
+          void ledgerNavigate.toDevicePayloadInvalid();
+        }
+        return;
+      }
+
+      if (resp.returnCode === LedgerError.TransactionRejected) {
+        if (settleOnRejection) {
+          publishStacksSigningSettled(unsignedTx);
+        } else {
+          void ledgerNavigate.toOperationRejectedStep();
+        }
+        ledgerAnalytics.transactionSignedOnLedgerRejected();
+        return;
+      }
+
+      if (resp.returnCode !== LedgerError.NoErrors) {
+        if (settleOnRejection) {
+          publishStacksSigningSettled(unsignedTx, resp.errorMessage);
           return;
         }
+        throw makeLedgerAppResponseError(resp);
+      }
 
-        await migrateFingerprintIfNeeded(stacksApp);
+      void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
 
-        void ledgerNavigate.toConnectionSuccessStep('stacks');
-        await delay(1000);
+      await delay(1000);
 
-        if (!unsignedTx) throw new Error('No unsigned tx');
+      const signedTx = signStacksTransactionWithSignature(unsignedTx, resp.signatureVRS);
+      ledgerAnalytics.transactionSignedOnLedgerSuccessfully();
 
-        void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
+      try {
+        appEvents.publish('ledgerStacksTxSigned', {
+          unsignedTx,
+          signedTx,
+        });
+      } catch (e) {
+        const error = isError(e) ? e.message : 'Unknown error';
+        analytics.track('ledger_transaction_publish_error', {
+          error: {
+            message: error,
+            error: e,
+          },
+        });
 
-        const resp = await signLedgerStacksTransaction(stacksApp)(
-          Buffer.from(unsignedTx, 'hex'),
-          account.derivationPath
-        );
-
-        if (resp.returnCode === LedgerError.DataIsInvalid) {
-          if (settleOnRejection) {
-            publishStacksSigningSettled(unsignedTx, resp.errorMessage);
-          } else {
-            void ledgerNavigate.toDevicePayloadInvalid();
-          }
-          return;
-        }
-
-        if (resp.returnCode === LedgerError.TransactionRejected) {
-          if (settleOnRejection) {
-            publishStacksSigningSettled(unsignedTx);
-          } else {
-            void ledgerNavigate.toOperationRejectedStep();
-          }
-          ledgerAnalytics.transactionSignedOnLedgerRejected();
-          return;
-        }
-
-        if (resp.returnCode !== LedgerError.NoErrors) {
-          if (settleOnRejection) {
-            publishStacksSigningSettled(unsignedTx, resp.errorMessage);
-            return;
-          }
-          throw new Error('Some other error');
-        }
-
-        void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
-
-        await delay(1000);
-
-        const signedTx = signStacksTransactionWithSignature(unsignedTx, resp.signatureVRS);
-        ledgerAnalytics.transactionSignedOnLedgerSuccessfully();
-
-        try {
-          appEvents.publish('ledgerStacksTxSigned', {
-            unsignedTx,
-            signedTx,
-          });
-        } catch (e) {
-          const error = isError(e) ? e.message : 'Unknown error';
-          analytics.track('ledger_transaction_publish_error', {
-            error: {
-              message: error,
-              error: e,
-            },
-          });
-
-          void ledgerNavigate.toBroadcastErrorStep(error);
-          return;
-        }
-      },
-    });
+        void ledgerNavigate.toBroadcastErrorStep(error);
+        return;
+      }
+    },
+  });
 
   function closeAction() {
+    signerActions.cancelActive();
     appEvents.publish('ledgerStacksTxSigningCancelled', { unsignedTx: unsignedTx ?? '' });
     void ledgerNavigate.cancelLedgerAction();
   }
@@ -161,7 +174,10 @@ function LedgerSignStacksTxContainer() {
     latestDeviceResponse,
     awaitingDeviceConnection,
   };
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
 
   return (
     <TxSigningFlow

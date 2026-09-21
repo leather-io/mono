@@ -1,5 +1,3 @@
-import BitcoinApp, { DefaultWalletPolicy } from '@ledgerhq/ledger-bitcoin';
-
 import {
   createWalletIdDecoratedPath,
   makeNativeSegwitAccountDerivationPath,
@@ -12,16 +10,21 @@ import { defaultNumberOfKeysToPullFromLedgerDevice } from '../../generic-flows/r
 import {
   type BitcoinLedgerAccountDetails,
   WalletPolicyDetails,
-  createNativeSegwitDefaultWalletPolicy,
-  createTaprootDefaultWalletPolicy,
+  createNativeSegwitWalletPolicyKey,
+  createTaprootWalletPolicyKey,
 } from '../../utils/bitcoin-ledger-utils';
+import {
+  getExtendedPublicKey,
+  getMasterFingerprintHex,
+} from '../../utils/bitcoin-signer-kit-utils';
+import type { LedgerBitcoinApp } from '../../utils/ledger-app';
 
 interface GetPolicyForPaymentTypeFactoryArgs {
   derivationPathFn(network: BitcoinNetworkModes, accountIndex: number): string;
-  policyFn(policyDetails: WalletPolicyDetails): DefaultWalletPolicy;
+  policyFn(policyDetails: WalletPolicyDetails): string;
 }
 interface GetExtendedPublicKeyFactoryArgs {
-  bitcoinApp: BitcoinApp;
+  bitcoinApp: LedgerBitcoinApp;
   fingerprint: string;
   network: NetworkModes;
   accountIndex: number;
@@ -37,29 +40,29 @@ function getPolicyForPaymentType({
     network,
   }: GetExtendedPublicKeyFactoryArgs) => {
     const path = derivationPathFn(network, accountIndex);
-    const xpub = await bitcoinApp.getExtendedPubkey(path);
+    const xpub = await getExtendedPublicKey(bitcoinApp, path);
     const policy = policyFn({ xpub, fingerprint, network, accountIndex });
-    return { policy: policy.keys[0], xpub, fingerprint, path };
+    return { policy, xpub, fingerprint, path };
   };
 }
 
 const getNativeSegwitExtendedPublicKey = getPolicyForPaymentType({
   derivationPathFn: makeNativeSegwitAccountDerivationPath,
-  policyFn: createNativeSegwitDefaultWalletPolicy,
+  policyFn: createNativeSegwitWalletPolicyKey,
 });
 
 const getTaprootExtendedPublicKey = getPolicyForPaymentType({
   derivationPathFn: makeTaprootAccountDerivationPath,
-  policyFn: createTaprootDefaultWalletPolicy,
+  policyFn: createTaprootWalletPolicyKey,
 });
 
 interface PullBitcoinKeysFromLedgerDeviceArgs {
   onRequestKey?(keyIndex: number): void;
   network: NetworkModes;
 }
-export function pullBitcoinKeysFromLedgerDevice(bitcoinApp: BitcoinApp) {
+export function pullBitcoinKeysFromLedgerDevice(bitcoinApp: LedgerBitcoinApp) {
   return async ({ onRequestKey, network }: PullBitcoinKeysFromLedgerDeviceArgs) => {
-    const fingerprint = await bitcoinApp.getMasterFingerprint();
+    const fingerprint = await getMasterFingerprintHex(bitcoinApp);
     const keys: BitcoinLedgerAccountDetails[] = [];
     for (
       let accountIndex = 0;

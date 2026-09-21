@@ -1,33 +1,34 @@
 import { useState } from 'react';
 
-import BitcoinApp from '@ledgerhq/ledger-bitcoin';
-import StacksApp from '@zondax/ledger-stacks';
+import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 
 import type { SupportedBlockchains } from '@leather.io/models';
-import { delay, isError } from '@leather.io/utils';
+import { delay } from '@leather.io/utils';
 
-import { logger } from '@shared/logger';
-
+import type { ConnectLedgerDeviceOptions } from '../../dmk/ledger-device-connection';
+import { LedgerConnectionErrors, handleLedgerConnectionError } from '../../dmk/ledger-dmk-errors';
+import { useLedgerDmk } from '../../dmk/ledger-dmk.context';
+import { closeLedgerSession } from '../../dmk/ledger-session';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
 import {
-  LedgerConnectionErrors,
-  checkLockedDeviceError,
+  isCancellableConnectionInteraction,
   useLedgerResponseState,
 } from '../../utils/generic-ledger-utils';
+import type { LedgerApp } from '../../utils/ledger-app';
 import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
-interface UseLedgerSignTxArgs<App extends BitcoinApp | StacksApp> {
+interface UseLedgerSignTxArgs<App extends LedgerApp> {
   chain: SupportedBlockchains;
   isAppOpen({ name }: { name: string }): boolean;
   getAppVersion(app: App): Promise<StacksAppVersion> | Promise<BitcoinAppVersion>;
-  connectApp(): Promise<App>;
+  connectApp(options: ConnectLedgerDeviceOptions): Promise<App>;
   passesAdditionalVersionCheck?(appVersion: StacksAppVersion | BitcoinAppVersion): Promise<boolean>;
   onSuccess?(): void;
   signTransactionWithDevice(app: App): Promise<void>;
 }
 
-export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
+export function useLedgerSignTx<App extends LedgerApp>({
   chain,
   isAppOpen,
   getAppVersion,
@@ -36,8 +37,10 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
   signTransactionWithDevice,
   passesAdditionalVersionCheck,
 }: UseLedgerSignTxArgs<App>) {
+  const dmk = useLedgerDmk();
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
+  const [isConnectionCancellable, setIsConnectionCancellable] = useState(false);
   const ledgerNavigate = useLedgerNavigate();
   async function checkCorrectAppIsOpenWithFailState(app: App) {
     // Show checking version page immediately
@@ -60,11 +63,19 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
   }
 
   async function signTransactionImpl() {
-    let app;
+    let app: App | undefined;
     try {
-      setLatestDeviceResponse({ deviceLocked: false } as any);
+      setLatestDeviceResponse({ deviceLocked: false });
       setAwaitingDeviceConnection(true);
-      app = await connectApp();
+      app = await connectApp({
+        onRequiredUserInteraction(interaction) {
+          setLatestDeviceResponse({
+            deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
+          });
+          setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
+        },
+      });
+      setIsConnectionCancellable(false);
       const versionCheckResult = await checkCorrectAppIsOpenWithFailState(app);
 
       // If version check failed, return early (navigation already handled)
@@ -80,23 +91,10 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
       onSuccess?.();
     } catch (e) {
       setAwaitingDeviceConnection(false);
-      if (isError(e) && checkLockedDeviceError(e)) {
-        setLatestDeviceResponse({ deviceLocked: true } as any);
-        void ledgerNavigate.toConnectStep();
-        return;
-      }
-
-      if (isError(e) && e.name === LedgerConnectionErrors.AppOpenFailed) {
-        return ledgerNavigate.toErrorStep(chain, e.message);
-      }
-
-      return ledgerNavigate.toErrorStep(chain);
+      setIsConnectionCancellable(false);
+      handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
     } finally {
-      try {
-        await app?.transport.close();
-      } catch {
-        logger.warn('Failed to close transport connection to Ledger device');
-      }
+      if (app) await closeLedgerSession(dmk, app.sessionId);
     }
   }
 
@@ -106,5 +104,6 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
     setLatestDeviceResponse,
     awaitingDeviceConnection,
     setAwaitingDeviceConnection,
+    isConnectionCancellable,
   };
 }

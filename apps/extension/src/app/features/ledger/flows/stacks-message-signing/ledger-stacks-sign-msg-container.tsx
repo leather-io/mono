@@ -1,19 +1,31 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router';
 
+import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 import { signatureVrsToRsv } from '@stacks/common';
 import { serializeCV } from '@stacks/transactions';
 import { LedgerError } from '@zondax/ledger-stacks';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
-import { delay, isError } from '@leather.io/utils';
+import { delay } from '@leather.io/utils';
 
-import { logger } from '@shared/logger';
 import { UnsignedMessage, whenSignableMessageOfType } from '@shared/signature/signature-types';
 
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
-import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import { safeAwait } from '@app/common/utils/safe-await';
+import {
+  handleLedgerConnectionError,
+  isLedgerDeviceLockedError,
+  makeLedgerAppResponseError,
+} from '@app/features/ledger/dmk/ledger-dmk-errors';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
+import { closeLedgerSession } from '@app/features/ledger/dmk/ledger-session';
+import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
+import {
+  isCancellableConnectionInteraction,
+  useCancelLedgerAction,
+} from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   getStacksAppVersion,
   prepareLedgerDeviceStacksAppConnection,
@@ -27,7 +39,7 @@ import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-acco
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerFingerprintMigration } from '../../hooks/use-ledger-fingerprint-migration';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
-import { checkLockedDeviceError, useLedgerResponseState } from '../../utils/generic-ledger-utils';
+import { useLedgerResponseState } from '../../utils/generic-ledger-utils';
 import {
   LedgerMessageSigningContext,
   LedgerMsgSigningProvider,
@@ -51,6 +63,8 @@ function LedgerSignMsgData({ children }: LedgerSignMsgDataProps) {
 type LedgerSignMsgProps = LedgerSignMsgData;
 function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
   useScrollLock(true);
+  const dmk = useLedgerDmk();
+  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerNavigate();
   const ledgerAnalytics = useLedgerAnalytics();
   const migrateFingerprintIfNeeded = useLedgerFingerprintMigration();
@@ -58,20 +72,34 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
 
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
+  const [isConnectionCancellable, setIsConnectionCancellable] = useState(false);
 
   const chain = 'stacks';
 
   async function signMessage() {
-    const stacksApp = await prepareLedgerDeviceStacksAppConnection({
-      setLoadingState: setAwaitingDeviceConnection,
-      onError(e) {
-        if (isError(e) && checkLockedDeviceError(e)) {
-          setLatestDeviceResponse({ deviceLocked: true } as any);
-          return;
-        }
-        void ledgerNavigate.toErrorStep(chain);
-      },
-    });
+    const [connectionError, stacksApp] = await safeAwait(
+      prepareLedgerDeviceStacksAppConnection(dmk, {
+        runAction: signerActions.run,
+        onRequiredUserInteraction(interaction) {
+          setLatestDeviceResponse({
+            deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
+          });
+          setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
+        },
+      })({
+        setLoadingState: setAwaitingDeviceConnection,
+        onError(e) {
+          setIsConnectionCancellable(false);
+          if (isLedgerDeviceLockedError(e)) {
+            setLatestDeviceResponse({ deviceLocked: true });
+            return;
+          }
+          handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
+        },
+      })
+    );
+    setIsConnectionCancellable(false);
+    if (connectionError || !stacksApp) return;
 
     try {
       // Show checking version page immediately
@@ -80,7 +108,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
 
       const versionInfo = await getStacksAppVersion(stacksApp);
       ledgerAnalytics.trackDeviceVersionInfo(versionInfo);
-      setLatestDeviceResponse(versionInfo);
+      setLatestDeviceResponse({ deviceLocked: versionInfo.deviceLocked });
       if (versionInfo.deviceLocked) {
         setAwaitingDeviceConnection(false);
         return;
@@ -127,7 +155,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       }
 
       if (resp.returnCode !== LedgerError.NoErrors) {
-        throw new Error('Some other error');
+        throw makeLedgerAppResponseError(resp);
       }
 
       void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
@@ -142,18 +170,15 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
         },
         unsignedMessage,
       });
-    } catch {
-      void ledgerNavigate.toDeviceDisconnectStep();
+    } catch (e) {
+      handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
     } finally {
-      try {
-        await stacksApp.transport.close();
-      } catch (e) {
-        logger.error('Error closing transport after message signing', e);
-      }
+      await closeLedgerSession(dmk, stacksApp.sessionId);
     }
   }
 
   function closeAction() {
+    signerActions.cancelActive();
     appEvents.publish('ledgerStacksMessageSigningCancelled', { unsignedMessage });
     void ledgerNavigate.cancelLedgerAction();
   }
@@ -165,7 +190,10 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
     latestDeviceResponse,
     awaitingDeviceConnection,
   };
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
 
   return (
     <LedgerMsgSigningProvider value={ledgerContextValue}>

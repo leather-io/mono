@@ -1,4 +1,4 @@
-import Transport from '@ledgerhq/hw-transport-webusb';
+import type { DeviceManagementKit } from '@ledgerhq/device-management-kit';
 import { ChainId } from '@stacks/network';
 import {
   AddressVersion,
@@ -9,25 +9,29 @@ import {
   isSingleSig,
 } from '@stacks/transactions';
 import StacksApp, {
+  DMKTransport,
   LedgerError,
   ResponseAddress,
   ResponseSign,
-  ResponseVersion,
 } from '@zondax/ledger-stacks';
 import { compare } from 'compare-versions';
 
 import { whenStacksChainId } from '@leather.io/stacks';
 
 import {
+  type ConnectLedgerDeviceOptions,
+  connectLedgerDeviceToApp,
+} from '../dmk/ledger-device-connection';
+import { makeLedgerAppResponseError } from '../dmk/ledger-dmk-errors';
+import {
   LEDGER_APPS_MAP,
-  PrepareLedgerDeviceConnectionArgs,
   SemVerObject,
   prepareLedgerDeviceForAppFn,
-  promptOpenAppOnDevice,
   versionObjectToVersionString,
 } from './generic-ledger-utils';
+import type { LedgerStacksApp } from './ledger-app';
 
-export function requestPublicKeyForStxAccount(app: StacksApp) {
+export function requestPublicKeyForStxAccount({ app }: LedgerStacksApp) {
   return async (derivationPath: string) =>
     app.getAddressAndPubKey(
       derivationPath,
@@ -37,7 +41,7 @@ export function requestPublicKeyForStxAccount(app: StacksApp) {
     );
 }
 
-export function showStxAddressOnDevice(app: StacksApp) {
+export function showStxAddressOnDevice({ app }: LedgerStacksApp) {
   return async (derivationPath: string, version: AddressVersion): Promise<ResponseAddress> =>
     app.showAddressAndPubKey(derivationPath, version);
 }
@@ -63,10 +67,12 @@ export interface StacksAppKeysResponseItem {
   dataPublicKey: string;
 }
 
-export async function connectLedgerStacksApp() {
-  await promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS);
-  const transport = await Transport.create();
-  return new StacksApp(transport);
+export async function connectLedgerStacksApp(
+  dmk: DeviceManagementKit,
+  options?: ConnectLedgerDeviceOptions
+): Promise<LedgerStacksApp> {
+  const sessionId = await connectLedgerDeviceToApp(dmk, LEDGER_APPS_MAP.STACKS, options);
+  return { chain: 'stacks', app: new StacksApp(new DMKTransport(dmk, sessionId)), sessionId };
 }
 
 export interface StacksAppVersion extends Awaited<ReturnType<StacksApp['getVersion']>> {
@@ -74,29 +80,31 @@ export interface StacksAppVersion extends Awaited<ReturnType<StacksApp['getVersi
   chain: 'stacks';
 }
 
-export async function getStacksAppVersion(app: StacksApp): Promise<StacksAppVersion> {
+export async function getStacksAppVersion({ app }: LedgerStacksApp): Promise<StacksAppVersion> {
   const appVersion = await app.getVersion();
   if (appVersion.errorMessage !== 'No errors') {
-    throw new Error(appVersion.errorMessage);
+    throw makeLedgerAppResponseError(appVersion);
   }
   return { name: LEDGER_APPS_MAP.STACKS, chain: 'stacks' as const, ...appVersion };
 }
 
-export const prepareLedgerDeviceStacksAppConnection = prepareLedgerDeviceForAppFn(
-  connectLedgerStacksApp
-  // Casting type here as factory function reads it was a double Promise
-) as (args: PrepareLedgerDeviceConnectionArgs) => Promise<StacksApp>;
+export function prepareLedgerDeviceStacksAppConnection(
+  dmk: DeviceManagementKit,
+  options?: ConnectLedgerDeviceOptions
+) {
+  return prepareLedgerDeviceForAppFn(() => connectLedgerStacksApp(dmk, options));
+}
 
-export function signLedgerStacksTransaction(app: StacksApp) {
+export function signLedgerStacksTransaction({ app }: LedgerStacksApp) {
   return async (payload: Buffer, derivationPath: string) => app.sign(derivationPath, payload);
 }
 
-export function signLedgerStacksUtf8Message(app: StacksApp) {
+export function signLedgerStacksUtf8Message({ app }: LedgerStacksApp) {
   return async (payload: string, derivationPath: string): Promise<ResponseSign> =>
     app.sign_msg(derivationPath, payload);
 }
 
-export function signLedgerStacksStructuredMessage(app: StacksApp) {
+export function signLedgerStacksStructuredMessage({ app }: LedgerStacksApp) {
   return async (domain: string, payload: string, derivationPath: string): Promise<ResponseSign> =>
     app.sign_structured_msg(derivationPath, domain, payload);
 }
@@ -113,14 +121,6 @@ export function signStacksTransactionWithSignature(transaction: string, signatur
 
   spendingCondition.fields.push(createTransactionAuthField(PubKeyEncoding.Compressed, signature));
   return deserializedTx;
-}
-
-export function isStacksLedgerAppClosed(response: ResponseVersion) {
-  const anotherUnknownErrorCodeMeaningAppClosed = 28161;
-  return (
-    response.returnCode === LedgerError.AppDoesNotSeemToBeOpen ||
-    response.returnCode === anotherUnknownErrorCodeMeaningAppClosed
-  );
 }
 
 // Minimum version required to read master key fingerprint

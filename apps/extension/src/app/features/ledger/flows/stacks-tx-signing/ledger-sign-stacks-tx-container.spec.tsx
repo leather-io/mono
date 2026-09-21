@@ -5,7 +5,12 @@ import { act, render } from '@testing-library/react';
 import { LedgerError } from '@zondax/ledger-stacks';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import { makeFakeDmk } from '@app/features/ledger/dmk/ledger-dmk.mocks';
 import type { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
+import {
+  fakeLedgerSessionId,
+  makeFakeLedgerStacksApp,
+} from '@app/features/ledger/utils/ledger-app.mocks';
 
 import { ledgerStacksTxSigningRoutes } from './ledger-sign-stacks-tx-container';
 
@@ -25,6 +30,7 @@ const mocks = vi.hoisted(() => ({
   versionGate: vi.fn(),
   migrateFingerprint: vi.fn(),
   publish: vi.fn(),
+  disconnect: vi.fn(),
   captureContext: vi.fn<(value: LedgerTxSigningContext) => void>(),
   location: { pathname: '/', state: {} as Record<string, unknown> },
 }));
@@ -39,8 +45,8 @@ vi.mock('react-router', async importOriginal => {
   return { ...actual, useLocation: () => mocks.location };
 });
 
-vi.mock('@ledgerhq/ledger-bitcoin', () => ({
-  default: vi.fn(),
+vi.mock('@app/features/ledger/dmk/ledger-dmk.context', () => ({
+  useLedgerDmk: () => makeFakeDmk({ disconnect: mocks.disconnect }),
 }));
 
 vi.mock('@app/features/ledger/hooks/use-ledger-navigate', () => ({
@@ -166,17 +172,17 @@ function setupSignTransaction({
   errorMessage,
   settleOnRejection,
 }: SetupSignTransactionParams) {
-  const transportClose = vi.fn().mockResolvedValue(undefined);
   mocks.location = {
     pathname: '/swap/stacks/STX/aeUSDC/review/stacks/connect-your-ledger',
     state: { tx: unsignedTx, settleOnRejection },
   };
-  mocks.connectApp.mockResolvedValue({ transport: { close: transportClose } });
+  mocks.connectApp.mockResolvedValue(makeFakeLedgerStacksApp());
+  mocks.disconnect.mockResolvedValue(undefined);
   mocks.getStacksAppVersion.mockResolvedValue(stacksAppVersion);
   mocks.versionGate.mockResolvedValue(true);
   mocks.migrateFingerprint.mockResolvedValue(undefined);
   mocks.signTransaction.mockReturnValue(() => Promise.resolve({ returnCode, errorMessage }));
-  return { transportClose, context: renderSignTxContext() };
+  return { context: renderSignTxContext() };
 }
 
 describe('LedgerSignStacksTxContainer', () => {
@@ -185,7 +191,7 @@ describe('LedgerSignStacksTxContainer', () => {
   });
 
   test('settles a device denial as a cancellation when the swap opted in', async () => {
-    const { transportClose, context } = setupSignTransaction({
+    const { context } = setupSignTransaction({
       returnCode: LedgerError.TransactionRejected,
       errorMessage: 'Transaction rejected',
       settleOnRejection: true,
@@ -200,7 +206,8 @@ describe('LedgerSignStacksTxContainer', () => {
     expect(mocks.publish.mock.calls[0][1]).not.toHaveProperty('error');
     expect(mocks.toOperationRejectedStep).not.toHaveBeenCalled();
     expect(mocks.transactionSignedOnLedgerRejected).toHaveBeenCalledOnce();
-    expect(transportClose).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
 
   test('forwards an invalid payload error to the swap when it opted in', async () => {
@@ -242,7 +249,7 @@ describe('LedgerSignStacksTxContainer', () => {
   });
 
   test('keeps the rejected step and leaves the promise pending for other flows', async () => {
-    const { transportClose, context } = setupSignTransaction({
+    const { context } = setupSignTransaction({
       returnCode: LedgerError.TransactionRejected,
       errorMessage: 'Transaction rejected',
     });
@@ -253,7 +260,8 @@ describe('LedgerSignStacksTxContainer', () => {
 
     expect(mocks.toOperationRejectedStep).toHaveBeenCalledOnce();
     expect(mocks.publish).not.toHaveBeenCalled();
-    expect(transportClose).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
 
   test('shows the invalid payload step for other flows', async () => {

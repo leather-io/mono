@@ -2,6 +2,7 @@ import { Route } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { LedgerDmkProvider } from '../../dmk/ledger-dmk.context';
 import {
   CheckingAppVersion,
   ConnectLedgerError,
@@ -19,7 +20,13 @@ import { OutdatedStacksAppWarningMsgSigning } from './steps/outdated-stacks-app-
 import { SignLedgerMessage } from './steps/sign-stacks-ledger-message';
 
 export const ledgerStacksMessageSigningRoutes = (
-  <Route element={<LedgerSignMsgContainer />}>
+  <Route
+    element={
+      <LedgerDmkProvider>
+        <LedgerSignMsgContainer />
+      </LedgerDmkProvider>
+    }
+  >
     <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerSignMsg />} />
     <Route path={RouteUrls.LedgerCheckingAppVersion} element={<CheckingAppVersion />} />
     <Route

@@ -17,7 +17,7 @@ export function PortfolioPageLayout({
   activityList,
   visualization,
   assetCount,
-  dummyDataMode,
+  dummyDataMode = false,
   ...props
 }: PortfolioPageLayoutProps) {
   return (

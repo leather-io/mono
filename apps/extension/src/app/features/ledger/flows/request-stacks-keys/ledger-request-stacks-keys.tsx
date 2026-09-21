@@ -1,7 +1,6 @@
 import { Route, useNavigate } from 'react-router';
 
 import { bytesToHex } from '@noble/hashes/utils';
-import StacksApp from '@zondax/ledger-stacks';
 import {
   deviceMatchesLegacyLedgerWallet,
   pullStacksKeysFromLedgerDevice,
@@ -15,6 +14,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { ChooseAddressStandard } from '@app/features/ledger/flows/request-stacks-keys/steps/choose-address-standard';
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
@@ -25,7 +25,9 @@ import {
 } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import { immediatelyAttemptLedgerConnection } from '@app/features/ledger/hooks/use-when-reattempt-ledger-connection';
+import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
 import {
   connectLedgerStacksApp,
   getStacksAppVersion,
@@ -48,6 +50,8 @@ const derivationPathTypeLabels: Record<StacksDerivationPathType, string> = {
 function LedgerRequestStacksKeys() {
   const toast = useToast();
   const navigate = useNavigate();
+  const dmk = useLedgerDmk();
+  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerNavigate();
 
   const stxKeychainsDescriptors = useStacksKeychainDescriptors();
@@ -57,10 +61,12 @@ function LedgerRequestStacksKeys() {
 
   const chain = 'stacks';
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
-    useRequestLedgerKeys<StacksApp>({
+  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, isConnectionCancellable } =
+    useRequestLedgerKeys<LedgerStacksApp>({
       chain,
-      connectApp: connectLedgerStacksApp,
+      connectApp(options) {
+        return connectLedgerStacksApp(dmk, { ...options, runAction: signerActions.run });
+      },
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
@@ -68,7 +74,7 @@ function LedgerRequestStacksKeys() {
         void navigate('/', { replace: true });
       },
       async pullKeysFromDevice(app) {
-        const fingerprintResp = await app.getMasterFingerprint();
+        const fingerprintResp = await app.app.getMasterFingerprint();
         const fingerprint = bytesToHex(fingerprintResp.fingerprint);
 
         const addWalletError = getAddWalletError(wallets, fingerprint, 'ledger');
@@ -160,11 +166,15 @@ function LedgerRequestStacksKeys() {
     awaitingDeviceConnection,
   };
 
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
   return (
     <RequestKeysFlow
       context={ledgerContextValue}
       isActionCancellableByUser={canCancelLedgerAction}
+      onCancelAction={signerActions.cancelActive}
     />
   );
 }
