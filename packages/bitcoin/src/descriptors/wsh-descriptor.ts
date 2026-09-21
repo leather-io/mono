@@ -1,9 +1,9 @@
 import {
+  DescriptorsFactory,
   type KeyInfo,
-  Output,
   type OutputInstance,
-  parseKeyExpression,
-} from '@bitcoinerlab/descriptors';
+} from '@bitcoinerlab/descriptors-core';
+import { createBitcoinjsLib } from '@bitcoinerlab/descriptors-core/bitcoinjs';
 import ecc from '@bitcoinerlab/secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
@@ -16,6 +16,8 @@ import { type BitcoinNetworkModes, type NetworkModes } from '@leather.io/models'
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
+
+const { Output, parseKeyExpression } = DescriptorsFactory(createBitcoinjsLib(ecc));
 
 const wshDescriptorPrefix = 'wsh(';
 const sequenceFinal = 0xffffffff;

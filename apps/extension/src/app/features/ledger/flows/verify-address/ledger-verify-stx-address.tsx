@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router';
 
-import StacksApp from '@zondax/ledger-stacks';
-
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
@@ -11,7 +9,9 @@ import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/req
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
 import { isLedgerOnDeviceAddressConfirmed } from '@app/features/ledger/utils/ledger-descriptor-address';
 import {
   connectLedgerStacksApp,
@@ -33,14 +33,17 @@ function LedgerVerifyStxAddress() {
   const navigate = useNavigate();
   const toast = useToast();
   const dmk = useLedgerDmk();
+  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerNavigate();
   const network = useCurrentNetwork();
   const stacksAccount = useCurrentStacksAccount();
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
-    useRequestLedgerKeys<StacksApp>({
+  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, isConnectionCancellable } =
+    useRequestLedgerKeys<LedgerStacksApp>({
       chain: 'stacks',
-      connectApp: () => connectLedgerStacksApp(dmk),
+      connectApp(options) {
+        return connectLedgerStacksApp(dmk, { ...options, runAction: signerActions.run });
+      },
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
@@ -104,11 +107,15 @@ function LedgerVerifyStxAddress() {
     awaitingDeviceConnection,
   };
 
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
   return (
     <RequestKeysFlow
       context={ledgerContextValue}
       isActionCancellableByUser={canCancelLedgerAction}
+      onCancelAction={signerActions.cancelActive}
     />
   );
 }
