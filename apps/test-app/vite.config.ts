@@ -29,6 +29,7 @@ export default defineConfig({
   server: {
     // Port 3000 is what apps/extension/playwright.config.ts expects from its
     // host page, so this app serves the e2e suite as-is.
+    host: true,
     port: 3000,
     strictPort: true,
     open: false,
