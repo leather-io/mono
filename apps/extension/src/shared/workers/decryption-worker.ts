@@ -1,4 +1,4 @@
-import argon2, { ArgonType } from 'argon2-browser';
+import argon2, { ArgonType } from 'argon2-browser/dist/argon2-bundled.min.js';
 
 const context = self as unknown as Worker;
 
@@ -6,6 +6,9 @@ interface GenerateEncryptionKeyArgs {
   password: string;
   salt: string;
 }
+
+export type DecryptionWorkerResponse = { hex: string } | { error: string };
+
 async function generateEncryptionKey({ password, salt }: GenerateEncryptionKeyArgs) {
   const x = performance.now();
   const argonHash = await argon2.hash({
@@ -22,9 +25,19 @@ async function generateEncryptionKey({ password, salt }: GenerateEncryptionKeyAr
   return argonHash.hashHex;
 }
 
+function toErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : String(error);
+}
+
 async function stretchKeyPostMessageHandler(e: MessageEvent<GenerateEncryptionKeyArgs>) {
-  const hex = await generateEncryptionKey(e.data);
-  context.postMessage(hex);
+  try {
+    const hex = await generateEncryptionKey(e.data);
+    const response: DecryptionWorkerResponse = { hex };
+    context.postMessage(response);
+  } catch (error) {
+    const response: DecryptionWorkerResponse = { error: toErrorMessage(error) };
+    context.postMessage(response);
+  }
 }
 
 context.addEventListener('message', stretchKeyPostMessageHandler);

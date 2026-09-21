@@ -32,6 +32,12 @@ pnpm i
 pnpm dev
 ```
 
+The extension uses Vite and CRXJS. `pnpm dev` starts the Vite dev server on port 8080 and writes a
+thin development build to `dist/`. Load `dist/` as an unpacked extension once; extension pages and the
+content script then hot reload from the dev server, and the background service worker reloads the
+extension when its code changes. The page context script (`inpage.ts`) is bundled once at server
+start, so restart `pnpm dev` after editing it.
+
 #### Optional: run test app
 
 We bundle a test app to use along with the extension. It gives easy access to the various functions that the extension
@@ -46,10 +52,9 @@ pnpm dev:test-app
 ### Loading extension in your browser
 
 You'll need to add it to your browser of choice. Leather only
-supports Chromium and Firefox browsers. When you run `pnpm dev`, it will compile the application to the `/dist` folder
+supports Chromium browsers. When you run `pnpm dev`, it will compile the application to the `/dist` folder
 
 - [Chrome instructions](https://developer.chrome.com/docs/extensions/mv3/faq/#faq-dev-01)
-- [Firefox instructions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension#trying_it_out)
 
 ## Testing
 
@@ -124,16 +129,6 @@ pnpm && pnpm prepare && pnpm build
 ```
 
 The extension is now built in the `./dist` folder.
-
-### Firefox reviewers
-
-To build the extension in Firefox mode, the `TARGET_BROWSER=firefox` variable needs to be set.
-
-```bash
-pnpm && pnpm prepare && TARGET_BROWSER=firefox pnpm build
-```
-
-Note that when building in a clean environment, some code may vary between this and the submitted build. This is because some variables are set within the scope of the production build's CI.
 
 ## Security
 

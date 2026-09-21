@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import get from 'lodash.get';
 
-import { HiroMessage, type RemoteConfig } from '@leather.io/query';
+import type { HiroMessage, RemoteConfig } from '@leather.io/query';
 import { getPrincipalFromAssetString } from '@leather.io/stacks';
 
 import { GITHUB_ORG, GITHUB_REPO } from '@shared/constants';
@@ -16,7 +16,7 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import walletConfig from '../../../../../config/wallet-config.json';
 
-export { HiroMessage } from '@leather.io/query';
+export type { HiroMessage } from '@leather.io/query';
 
 async function fetchLeatherConfig(): Promise<RemoteConfig> {
   // TODO: BRANCH_NAME is not working here for config changes on PR branches
