@@ -6,36 +6,33 @@ import type { Money } from '@leather.io/models';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 
-import { TokenDetailsBalanceItem } from './components/token-details-balance-item';
+import {
+  type TokenAddressEntry,
+  type TokenBalanceEntry,
+  TokenBalancesTab,
+} from './components/token-balances-tab';
 import { TokenDetailsLayout } from './token-details.layout';
-
-interface BalanceEntry {
-  title: string;
-  address?: string;
-  btcBalance: Money;
-  fiatBalance: Money;
-  onPressAddress?(): void;
-  onPressRow?(): void;
-}
 
 interface BitcoinTokenDetailsLayoutProps {
   icon: ReactNode;
-  totalBalance: Money;
+  balance: Money;
   fiatBalance: Money;
   price: Money;
   descriptionText: string;
-  balances: BalanceEntry[];
+  balances: TokenBalanceEntry[];
+  addresses: TokenAddressEntry[];
   activity: BlockchainActivityItem[];
   isSwapEnabled: boolean;
 }
 
 export function BitcoinTokenDetailsLayout({
   icon,
-  totalBalance,
+  balance,
   fiatBalance,
   price,
   descriptionText,
   balances,
+  addresses,
   activity,
   isSwapEnabled,
 }: BitcoinTokenDetailsLayoutProps) {
@@ -47,7 +44,7 @@ export function BitcoinTokenDetailsLayout({
       receiveView="btc"
       swapChain="bitcoin"
       isSwapEnabled={isSwapEnabled}
-      availableBalance={totalBalance}
+      balance={balance}
       fiatBalance={fiatBalance}
       name="Bitcoin (BTC)"
       asset={btcAsset}
@@ -55,19 +52,11 @@ export function BitcoinTokenDetailsLayout({
       layer="Layer 1 (Bitcoin)"
       descriptionText={descriptionText}
       balancesContent={
-        <>
-          {balances.map(balance => (
-            <TokenDetailsBalanceItem
-              key={balance.title}
-              title={balance.title}
-              address={balance.address}
-              rightTop={formatCurrency(balance.btcBalance, { preset: 'pad-decimals' })}
-              rightBottom={formatCurrency(balance.fiatBalance)}
-              onPressAddress={balance.onPressAddress}
-              onPressRow={balance.onPressRow}
-            />
-          ))}
-        </>
+        <TokenBalancesTab
+          balances={balances}
+          addresses={addresses}
+          formatAmount={amount => formatCurrency(amount, { preset: 'pad-decimals' })}
+        />
       }
       activity={activity}
     />

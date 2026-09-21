@@ -1,18 +1,25 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 
-import { Box, styled } from 'leather-styles/jsx';
+import { Box } from 'leather-styles/jsx';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import type { BlockchainActivityItem } from '@leather.io/features';
 import type { FungibleCryptoAsset, Money } from '@leather.io/models';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
+
+import { analytics } from '@shared/utils/analytics';
 
 import type { ReceiveView } from '@app/common/receive/receive';
+import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useSelectTokenDetailsTab } from '@app/store/settings/settings.actions';
+import { useTokenDetailsTab } from '@app/store/settings/settings.selectors';
+import type { TokenDetailsTab } from '@app/store/settings/settings.slice';
 
-import { ActivityRow } from '../activity-list/components/activity-row';
 import { TokenPriceHistory } from './components/price-history/token-price-history';
 import { type SwapChain, TokenDetailsActionsRow } from './components/token-details-actions';
 import { TokenDetailsRow } from './components/token-details-row';
 import { TokenDetailsScreen } from './components/token-details-screen';
-import { TokenDetailsSection } from './components/token-details-section';
+import { TokenDetailsTabs, resolveVisibleTokenDetailsTab } from './components/token-details-tabs';
 import { TokenOverview } from './components/token-overview';
 
 interface TokenDetailsLayoutProps {
@@ -21,7 +28,7 @@ interface TokenDetailsLayoutProps {
   symbol: string;
   receiveView: ReceiveView;
   swapChain: SwapChain;
-  availableBalance: Money;
+  balance: Money;
   fiatBalance: Money;
   name: string;
   asset: FungibleCryptoAsset;
@@ -41,7 +48,7 @@ export function TokenDetailsLayout({
   symbol,
   receiveView,
   swapChain,
-  availableBalance,
+  balance,
   fiatBalance,
   name,
   asset,
@@ -54,60 +61,72 @@ export function TokenDetailsLayout({
   isBuyEnabled = true,
   isSwapEnabled = true,
 }: TokenDetailsLayoutProps) {
+  const activeTab = resolveVisibleTokenDetailsTab(useTokenDetailsTab(), !!balancesContent);
+  const selectTab = useSelectTokenDetailsTab();
+  const currentAccountId = useCurrentAccountId();
+  const hasPrice = !!price && price.amount.isGreaterThan(0);
+  const assetId = serializeAssetId(getAssetId(asset));
+  const walletAccountId = makeAccountIdentifer(
+    currentAccountId.fingerprint,
+    currentAccountId.accountIndex
+  );
+
+  const landingTab = useRef({ assetId, tab: activeTab });
+  if (landingTab.current.assetId !== assetId) landingTab.current = { assetId, tab: activeTab };
+
+  useEffect(() => {
+    analytics.track('token_details_viewed', {
+      assetId,
+      protocol: asset.protocol,
+      platform: 'extension',
+      walletAccountId,
+      tab: landingTab.current.tab,
+    });
+  }, [assetId, asset.protocol, walletAccountId]);
+
+  function handleSelectTab(tab: TokenDetailsTab) {
+    selectTab(tab);
+    analytics.track('token_details_tab_selected', { assetId, protocol: asset.protocol, tab });
+  }
+
   return (
-    <TokenDetailsScreen
-      title={title}
-      overview={
-        <TokenOverview
-          icon={icon}
-          availableBalance={availableBalance}
-          symbol={symbol}
-          fiatBalance={fiatBalance}
-          actions={
-            <TokenDetailsActionsRow
-              symbol={symbol}
-              receiveView={receiveView}
-              swapChain={swapChain}
-              isBuyEnabled={isBuyEnabled}
-              isSwapEnabled={isSwapEnabled}
-            />
-          }
-        />
-      }
-    >
-      {price && price.amount.isGreaterThan(0) && (
-        <TokenDetailsSection title="Price">
-          <TokenPriceHistory asset={asset} price={price} />
-        </TokenDetailsSection>
-      )}
-
-      {descriptionText ? (
-        <TokenDetailsSection title="Description">
-          <Box px="space.05" pb="space.03">
-            <styled.p textStyle="body.02" margin="0">
-              {descriptionText}
-            </styled.p>
-          </Box>
-        </TokenDetailsSection>
-      ) : null}
-
-      <TokenDetailsSection title="Token details">
-        <TokenDetailsRow label="Name" value={name} testId="token-details-name" />
-        <TokenDetailsRow label="Layer" value={layer} testId="token-details-layer" />
-        <TokenDetailsRow label="Contract details" value={contractDetails} />
-      </TokenDetailsSection>
-
-      {balancesContent ? (
-        <TokenDetailsSection title="Balances">{balancesContent}</TokenDetailsSection>
-      ) : null}
-
-      {activity.length > 0 ? (
-        <TokenDetailsSection title="Activity">
-          {activity.map(item => (
-            <ActivityRow key={item.view.key} item={item} />
-          ))}
-        </TokenDetailsSection>
-      ) : null}
+    <TokenDetailsScreen title={title}>
+      <TokenOverview
+        icon={icon}
+        balance={balance}
+        symbol={symbol}
+        fiatBalance={fiatBalance}
+        actions={
+          <TokenDetailsActionsRow
+            symbol={symbol}
+            receiveView={receiveView}
+            swapChain={swapChain}
+            isBuyEnabled={isBuyEnabled}
+            isSwapEnabled={isSwapEnabled}
+          />
+        }
+      />
+      <TokenDetailsTabs
+        activeTab={activeTab}
+        onSelectTab={handleSelectTab}
+        priceContent={
+          hasPrice ? (
+            <Box pt="space.04" pb="space.02">
+              <TokenPriceHistory asset={asset} price={price} />
+            </Box>
+          ) : null
+        }
+        descriptionText={descriptionText}
+        balancesContent={balancesContent}
+        activity={activity}
+        detailRows={
+          <>
+            <TokenDetailsRow label="Name" value={name} testId="token-details-name" />
+            <TokenDetailsRow label="Layer" value={layer} testId="token-details-layer" />
+            <TokenDetailsRow label="Contract details" value={contractDetails} />
+          </>
+        }
+      />
     </TokenDetailsScreen>
   );
 }
