@@ -130,6 +130,7 @@ export function initSentry() {
 
   SentryInit({
     dsn: SENTRY_DSN,
+    release: VERSION,
     tracesSampleRate: 0.5,
     profilesSampleRate: 0.25,
     integrations: [
