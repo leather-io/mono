@@ -45,6 +45,8 @@
   "workspaces": {
     "apps/extension": {
       "entry": [
+        "vite.config.ts",
+        "tooling/vite-plugins.ts",
         "src/app/index.tsx",
         "src/background/background.ts",
         "src/inpage/inpage.ts",
@@ -87,34 +89,27 @@
       },
       "webpack": {
         "config": [
-          "webpack/webpack.config.base.js",
-          "webpack/webpack.config.dev.js",
-          "webpack/webpack.config.prod.js",
           "test-app/webpack/webpack.config.base.cjs",
+          "test-app/webpack/webpack.config.dev.cjs",
           "test-app/webpack/webpack.config.prod.cjs"
         ]
       },
       "ignoreDependencies": [
         "assert",
+        "browserify-fs",
         "url",
         "process",
-        "path-browserify",
         "esbuild",
-        "postcss-preset-env",
+        "lottie-web",
         "punycode",
         "webextension-polyfill",
         "@leather.io/panda-preset",
-        "@pmmmwh/react-refresh-webpack-plugin",
         "@types/dompurify",
-        "@types/html-webpack-plugin",
         "@types/punycode",
         "@types/react-router",
         "@types/remote-redux-devtools",
         "@types/webextension-polyfill",
-        "@types/webpack",
-        "@redux-devtools/cli",
-        "blns",
-        "web-ext-submit"
+        "@redux-devtools/cli"
       ],
       "ignore": [
         "src/shared/global-types.ts",
@@ -190,6 +185,11 @@
       "entry": [
         "src/index.ts",
         "src/mobile.ts"
+      ]
+    },
+    "tools": {
+      "entry": [
+        "src/lt.ts"
       ]
     },
     "packages/utils": {
