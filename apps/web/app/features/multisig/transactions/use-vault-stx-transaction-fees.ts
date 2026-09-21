@@ -52,5 +52,7 @@ export function useVaultStxTransactionFees({
     data: feesQuery.data,
     error: draftQuery.error ?? feesQuery.error,
     isFetching: draftQuery.isFetching || feesQuery.isFetching,
+    isPaused: draftQuery.isPaused || feesQuery.isPaused,
+    refetch: draftTx ? feesQuery.refetch : draftQuery.refetch,
   };
 }
