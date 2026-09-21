@@ -1,11 +1,14 @@
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { bytesToHex } from '@noble/hashes/utils';
+
 import type { SupportedBlockchains } from '@leather.io/models';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { appEvents } from '@app/common/publish-subscribe';
 import { isPopupMode } from '@app/common/utils';
 
 import { consumeLedgerFlowHandoff } from './ledger-flow-handoff';
@@ -30,6 +33,26 @@ interface LedgerFlowContextValue {
 
 const ledgerFlowContext = createContext<LedgerFlowContextValue | null>(null);
 
+function settlePendingSigning(request: LedgerFlowRequest) {
+  switch (request.kind) {
+    case 'sign-bitcoin-tx':
+      appEvents.publish('ledgerBitcoinTxSigningCancelled', {
+        unsignedPsbt: bytesToHex(request.psbt),
+      });
+      return;
+    case 'sign-stacks-tx':
+      appEvents.publish('ledgerStacksTxSigningCancelled', { unsignedTx: request.tx });
+      return;
+    case 'sign-stacks-message':
+      appEvents.publish('ledgerStacksMessageSigningCancelled', {
+        unsignedMessage: request.message,
+      });
+      return;
+    default:
+      return;
+  }
+}
+
 function getInitialStep(request: LedgerFlowRequest): LedgerStep {
   const autoConnect = request.kind === 'request-keys' && request.autoConnect;
   if (request.kind === 'request-keys' && request.chain === 'stacks')
@@ -42,17 +65,29 @@ interface LedgerFlowProviderProps {
 }
 export function LedgerFlowProvider({ children }: LedgerFlowProviderProps) {
   const [state, setState] = useState<LedgerFlowState | null>(null);
+  const activeRequest = useRef<ActiveLedgerFlowRequest | null>(null);
   const nextRequestId = useRef(0);
 
-  const open = useCallback((request: LedgerFlowRequest) => {
-    nextRequestId.current += 1;
-    setState({
-      request: { ...request, id: nextRequestId.current },
-      step: getInitialStep(request),
-    });
+  const replaceRequest = useCallback((request: ActiveLedgerFlowRequest | null) => {
+    const previous = activeRequest.current;
+    activeRequest.current = request;
+    if (previous) settlePendingSigning(previous);
   }, []);
 
-  const close = useCallback(() => setState(null), []);
+  const open = useCallback(
+    (request: LedgerFlowRequest) => {
+      nextRequestId.current += 1;
+      const activeFlowRequest = { ...request, id: nextRequestId.current };
+      replaceRequest(activeFlowRequest);
+      setState({ request: activeFlowRequest, step: getInitialStep(request) });
+    },
+    [replaceRequest]
+  );
+
+  const close = useCallback(() => {
+    replaceRequest(null);
+    setState(null);
+  }, [replaceRequest]);
 
   const setStep = useCallback((requestId: number, step: LedgerStep) => {
     setState(current => {

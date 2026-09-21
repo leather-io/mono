@@ -19,10 +19,13 @@ Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true);
 const h = vi.hoisted(() => ({
   navigate: vi.fn(),
   consumeHandoff: vi.fn(),
+  publish: vi.fn(),
   isPopupMode: true,
 }));
 
 vi.mock('react-router', () => ({ useNavigate: () => h.navigate }));
+
+vi.mock('@app/common/publish-subscribe', () => ({ appEvents: { publish: h.publish } }));
 
 vi.mock('@app/common/utils', () => ({ isPopupMode: () => h.isPopupMode }));
 
@@ -163,6 +166,76 @@ describe(LedgerFlowProvider.name, () => {
 
     expect(rendered.value.flow.request).toBeNull();
     expect(h.navigate).not.toHaveBeenCalled();
+  });
+
+  test('closing a bitcoin signing flow settles its pending listener', () => {
+    const rendered = renderFlow();
+    act(() => rendered.value.flow.open(signBitcoinTxRequest));
+
+    act(() => rendered.value.steps.cancelLedgerAction());
+
+    expect(h.publish).toHaveBeenCalledTimes(1);
+    expect(h.publish).toHaveBeenCalledWith('ledgerBitcoinTxSigningCancelled', {
+      unsignedPsbt: '010203',
+    });
+  });
+
+  test('closing a stacks signing flow settles its pending listener', () => {
+    const rendered = renderFlow();
+    act(() =>
+      rendered.value.flow.open({ kind: 'sign-stacks-tx', tx: 'deadbeef', settleOnRejection: false })
+    );
+
+    act(() => rendered.value.flow.close());
+
+    expect(h.publish).toHaveBeenCalledWith('ledgerStacksTxSigningCancelled', {
+      unsignedTx: 'deadbeef',
+    });
+  });
+
+  test('closing a stacks message signing flow settles its pending listener', () => {
+    const rendered = renderFlow();
+    const message = { messageType: 'utf8', message: 'hello' } as const;
+    act(() => rendered.value.flow.open({ kind: 'sign-stacks-message', message }));
+
+    act(() => rendered.value.flow.close());
+
+    expect(h.publish).toHaveBeenCalledWith('ledgerStacksMessageSigningCancelled', {
+      unsignedMessage: message,
+    });
+  });
+
+  test('closing a non-signing flow publishes nothing', () => {
+    const rendered = renderFlow();
+    act(() =>
+      rendered.value.flow.open({ kind: 'request-keys', chain: 'bitcoin', autoConnect: false })
+    );
+
+    act(() => rendered.value.flow.close());
+
+    expect(h.publish).not.toHaveBeenCalled();
+  });
+
+  test('closing when no flow is open publishes nothing', () => {
+    const rendered = renderFlow();
+
+    act(() => rendered.value.flow.close());
+
+    expect(h.publish).not.toHaveBeenCalled();
+  });
+
+  test('re-opening over an active signing flow settles the previous listener', () => {
+    const rendered = renderFlow();
+    act(() => rendered.value.flow.open(signBitcoinTxRequest));
+
+    act(() =>
+      rendered.value.flow.open({ kind: 'request-keys', chain: 'bitcoin', autoConnect: false })
+    );
+
+    expect(h.publish).toHaveBeenCalledTimes(1);
+    expect(h.publish).toHaveBeenCalledWith('ledgerBitcoinTxSigningCancelled', {
+      unsignedPsbt: '010203',
+    });
   });
 
   test('cancelLedgerActionAndReturnHome closes the flow and navigates home', () => {

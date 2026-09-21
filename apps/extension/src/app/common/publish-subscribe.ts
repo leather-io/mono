@@ -27,7 +27,7 @@ function createPublishSubscribe<E>(): PubSubType<E> {
 
   return {
     publish(event, msg?) {
-      handlers[event].forEach(h => h(msg));
+      (handlers[event] ?? []).forEach(h => h(msg));
     },
 
     subscribe(event, callback) {
