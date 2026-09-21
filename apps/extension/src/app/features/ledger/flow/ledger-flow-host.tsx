@@ -1,5 +1,7 @@
 import * as Sentry from '@sentry/react';
 
+import { isError } from '@leather.io/utils';
+
 import { logger } from '@shared/logger';
 
 import { useToast } from '@app/features/toasts/use-toast';
@@ -17,6 +19,8 @@ import { ConnectLedgerStart } from '../generic-steps/connect-device/connect-ledg
 import { UnsupportedBrowserLayout } from '../generic-steps/unsupported-browser/unsupported-browser.layout';
 import { useLedgerFlow } from './ledger-flow.context';
 import type { ActiveLedgerFlowRequest } from './ledger-flow.types';
+
+const ledgerFlowRenderErrorMessage = 'Ledger flow failed to render';
 
 function renderLedgerFlow(request: ActiveLedgerFlowRequest, close: () => void) {
   switch (request.kind) {
@@ -48,7 +52,7 @@ function renderLedgerFlow(request: ActiveLedgerFlowRequest, close: () => void) {
 }
 
 export function LedgerFlowHost() {
-  const { request, close } = useLedgerFlow();
+  const { request, close, closeWithError } = useLedgerFlow();
   const toast = useToast();
 
   if (!request) return null;
@@ -58,9 +62,9 @@ export function LedgerFlowHost() {
       key={request.id}
       fallback={<></>}
       onError={error => {
-        logger.error('Ledger flow failed to render', error);
+        logger.error(ledgerFlowRenderErrorMessage, error);
         toast.error('Something went wrong with the Ledger flow');
-        close();
+        closeWithError(isError(error) ? error.message : ledgerFlowRenderErrorMessage);
       }}
     >
       <LedgerDmkProvider>{renderLedgerFlow(request, close)}</LedgerDmkProvider>

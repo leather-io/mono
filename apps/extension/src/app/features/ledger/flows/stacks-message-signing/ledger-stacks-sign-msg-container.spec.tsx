@@ -30,11 +30,24 @@ const mocks = vi.hoisted(() => ({
   migrateFingerprint: vi.fn(),
   publish: vi.fn(),
   disconnect: vi.fn(),
+  closeWithError: vi.fn(),
   captureContext: vi.fn<(value: LedgerMessageSigningContext) => void>(),
+  account: vi.fn<() => StacksAccountMock | undefined>(),
 }));
+
+interface StacksAccountMock {
+  derivationPath: string;
+  stxPublicKey: string;
+}
+
+const stacksAccount: StacksAccountMock = {
+  derivationPath: "m/44'/5757'/0'/0/0",
+  stxPublicKey: '029f9d43e161b2ecb86d78262d47d2cd10d20ab7b4c303cd4f0e26744c72e340fc',
+};
 
 vi.mock('../../flow/ledger-flow.context', () => ({
   useLedgerFlowState: () => null,
+  useLedgerFlow: () => ({ closeWithError: mocks.closeWithError }),
   useLedgerSteps: () => ({
     toCheckingAppVersion: mocks.toCheckingAppVersion,
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,
@@ -68,10 +81,7 @@ vi.mock('@app/common/publish-subscribe', () => ({
 }));
 
 vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
-  useCurrentStacksAccount: () => ({
-    derivationPath: "m/44'/5757'/0'/0/0",
-    stxPublicKey: '029f9d43e161b2ecb86d78262d47d2cd10d20ab7b4c303cd4f0e26744c72e340fc',
-  }),
+  useCurrentStacksAccount: () => mocks.account(),
 }));
 
 vi.mock('../../flow/ledger-flow-sheet', () => ({
@@ -144,7 +154,7 @@ const stacksAppVersion = {
   patch: 19,
 };
 
-function renderSignMsgContext(): LedgerMessageSigningContext {
+function renderSignMsgContainer() {
   const root = createRoot(document.createElement('div'));
   act(() => {
     root.render(
@@ -156,6 +166,10 @@ function renderSignMsgContext(): LedgerMessageSigningContext {
       })
     );
   });
+}
+
+function renderSignMsgContext(): LedgerMessageSigningContext {
+  renderSignMsgContainer();
   const call = mocks.captureContext.mock.calls.at(-1);
   if (!call) throw new Error('Message signing context was not rendered');
   return call[0];
@@ -176,6 +190,26 @@ function setupSignMessage() {
 describe(LedgerSignMsgContainer.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.account.mockReturnValue(stacksAccount);
+  });
+
+  test('closes the flow with an error when there is no active stacks account', () => {
+    mocks.account.mockReturnValue(undefined);
+
+    renderSignMsgContainer();
+
+    expect(mocks.captureContext).not.toHaveBeenCalled();
+    expect(mocks.closeWithError).toHaveBeenCalledOnce();
+    expect(mocks.closeWithError).toHaveBeenCalledWith(
+      'No active account found for message signing'
+    );
+  });
+
+  test('keeps the flow open when an active stacks account exists', () => {
+    renderSignMsgContainer();
+
+    expect(mocks.captureContext).toHaveBeenCalled();
+    expect(mocks.closeWithError).not.toHaveBeenCalled();
   });
 
   test('signs the message, publishes the signature and closes the transport once', async () => {

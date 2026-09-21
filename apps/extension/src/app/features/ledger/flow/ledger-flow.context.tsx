@@ -28,24 +28,31 @@ interface LedgerFlowContextValue {
   state: LedgerFlowState | null;
   open(request: LedgerFlowRequest): void;
   close(): void;
+  closeWithError(error: string): void;
   setStep(requestId: number, step: LedgerStep): void;
 }
 
 const ledgerFlowContext = createContext<LedgerFlowContextValue | null>(null);
 
-function settlePendingSigning(request: LedgerFlowRequest) {
+function settlePendingSigning(request: LedgerFlowRequest, error?: string) {
+  const errorPayload = error === undefined ? {} : { error };
   switch (request.kind) {
     case 'sign-bitcoin-tx':
       appEvents.publish('ledgerBitcoinTxSigningCancelled', {
         unsignedPsbt: bytesToHex(request.psbt),
+        ...errorPayload,
       });
       return;
     case 'sign-stacks-tx':
-      appEvents.publish('ledgerStacksTxSigningCancelled', { unsignedTx: request.tx });
+      appEvents.publish('ledgerStacksTxSigningCancelled', {
+        unsignedTx: request.tx,
+        ...errorPayload,
+      });
       return;
     case 'sign-stacks-message':
       appEvents.publish('ledgerStacksMessageSigningCancelled', {
         unsignedMessage: request.message,
+        ...errorPayload,
       });
       return;
     default:
@@ -68,10 +75,10 @@ export function LedgerFlowProvider({ children }: LedgerFlowProviderProps) {
   const activeRequest = useRef<ActiveLedgerFlowRequest | null>(null);
   const nextRequestId = useRef(0);
 
-  const replaceRequest = useCallback((request: ActiveLedgerFlowRequest | null) => {
+  const replaceRequest = useCallback((request: ActiveLedgerFlowRequest | null, error?: string) => {
     const previous = activeRequest.current;
     activeRequest.current = request;
-    if (previous) settlePendingSigning(previous);
+    if (previous) settlePendingSigning(previous, error);
   }, []);
 
   const open = useCallback(
@@ -89,6 +96,14 @@ export function LedgerFlowProvider({ children }: LedgerFlowProviderProps) {
     setState(null);
   }, [replaceRequest]);
 
+  const closeWithError = useCallback(
+    (error: string) => {
+      replaceRequest(null, error);
+      setState(null);
+    },
+    [replaceRequest]
+  );
+
   const setStep = useCallback((requestId: number, step: LedgerStep) => {
     setState(current => {
       if (!current || current.request.id !== requestId) return current;
@@ -102,7 +117,10 @@ export function LedgerFlowProvider({ children }: LedgerFlowProviderProps) {
     if (request) open(request);
   });
 
-  const value = useMemo(() => ({ state, open, close, setStep }), [state, open, close, setStep]);
+  const value = useMemo(
+    () => ({ state, open, close, closeWithError, setStep }),
+    [state, open, close, closeWithError, setStep]
+  );
 
   return <ledgerFlowContext.Provider value={value}>{children}</ledgerFlowContext.Provider>;
 }
@@ -114,8 +132,11 @@ function useLedgerFlowContext() {
 }
 
 export function useLedgerFlow() {
-  const { state, open, close } = useLedgerFlowContext();
-  return useMemo(() => ({ request: state?.request ?? null, open, close }), [state, open, close]);
+  const { state, open, close, closeWithError } = useLedgerFlowContext();
+  return useMemo(
+    () => ({ request: state?.request ?? null, open, close, closeWithError }),
+    [state, open, close, closeWithError]
+  );
 }
 
 export function useLedgerFlowState() {

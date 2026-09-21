@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 import { signatureVrsToRsv } from '@stacks/common';
@@ -19,7 +19,7 @@ import {
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { closeLedgerSession } from '@app/features/ledger/dmk/ledger-session';
 import { LedgerFlowSheet } from '@app/features/ledger/flow/ledger-flow-sheet';
-import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
+import { useLedgerFlow, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import type { SignStacksMessageLedgerFlowRequest } from '@app/features/ledger/flow/ledger-flow.types';
 import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import {
@@ -46,6 +46,8 @@ import {
 import { ConnectLedgerSignMsg } from './steps/connect-ledger-sign-msg';
 import { OutdatedStacksAppWarningMsgSigning } from './steps/outdated-stacks-app-warning-msg-signing';
 import { SignLedgerMessage } from './steps/sign-stacks-ledger-message';
+
+const noStacksAccountErrorMessage = 'No active account found for message signing';
 
 interface LedgerSignMsgProps {
   account: StacksAccount;
@@ -203,6 +205,12 @@ interface LedgerSignMsgContainerProps {
 }
 export function LedgerSignMsgContainer({ request }: LedgerSignMsgContainerProps) {
   const account = useCurrentStacksAccount();
+  const { closeWithError } = useLedgerFlow();
+
+  useEffect(() => {
+    if (!account) closeWithError(noStacksAccountErrorMessage);
+  }, [account, closeWithError]);
+
   if (!account) return null;
   return <LedgerSignStacksMsg account={account} unsignedMessage={request.message} />;
 }

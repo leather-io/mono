@@ -205,6 +205,59 @@ describe(LedgerFlowProvider.name, () => {
     });
   });
 
+  test('closing a bitcoin signing flow with an error forwards it to the listener', () => {
+    const rendered = renderFlow();
+    act(() => rendered.value.flow.open(signBitcoinTxRequest));
+
+    act(() => rendered.value.flow.closeWithError('Invalid PSBT'));
+
+    expect(rendered.value.flow.request).toBeNull();
+    expect(h.publish).toHaveBeenCalledTimes(1);
+    expect(h.publish).toHaveBeenCalledWith('ledgerBitcoinTxSigningCancelled', {
+      unsignedPsbt: '010203',
+      error: 'Invalid PSBT',
+    });
+  });
+
+  test('closing a stacks signing flow with an error forwards it to the listener', () => {
+    const rendered = renderFlow();
+    act(() =>
+      rendered.value.flow.open({ kind: 'sign-stacks-tx', tx: 'deadbeef', settleOnRejection: false })
+    );
+
+    act(() => rendered.value.flow.closeWithError('Invalid transaction'));
+
+    expect(h.publish).toHaveBeenCalledWith('ledgerStacksTxSigningCancelled', {
+      unsignedTx: 'deadbeef',
+      error: 'Invalid transaction',
+    });
+  });
+
+  test('closing a stacks message signing flow with an error forwards it to the listener', () => {
+    const rendered = renderFlow();
+    const message = { messageType: 'utf8', message: 'hello' } as const;
+    act(() => rendered.value.flow.open({ kind: 'sign-stacks-message', message }));
+
+    act(() => rendered.value.flow.closeWithError('No account'));
+
+    expect(h.publish).toHaveBeenCalledWith('ledgerStacksMessageSigningCancelled', {
+      unsignedMessage: message,
+      error: 'No account',
+    });
+  });
+
+  test('closing a non-signing flow with an error publishes nothing', () => {
+    const rendered = renderFlow();
+    act(() =>
+      rendered.value.flow.open({ kind: 'request-keys', chain: 'bitcoin', autoConnect: false })
+    );
+
+    act(() => rendered.value.flow.closeWithError('boom'));
+
+    expect(rendered.value.flow.request).toBeNull();
+    expect(h.publish).not.toHaveBeenCalled();
+  });
+
   test('closing a non-signing flow publishes nothing', () => {
     const rendered = renderFlow();
     act(() =>
