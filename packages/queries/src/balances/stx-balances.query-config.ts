@@ -2,6 +2,7 @@ import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-quer
 
 import {
   type AccountRequest,
+  type AddressQuotedStxBalance,
   type QuotedStxBalance,
   type UserSettings,
   getStxBalancesService,
@@ -27,7 +28,7 @@ export function createStxAccountBalanceQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getStxBalancesService().getStxAccountBalance(request, signal),
     ...balanceQueryOptions,
-  } satisfies UseQueryOptions<QuotedStxBalance, Error>;
+  } satisfies UseQueryOptions<AddressQuotedStxBalance, Error>;
 }
 
 export function createStxAggregateBalanceQueryKey(
@@ -50,7 +51,7 @@ export function createStxAggregateBalanceQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getStxBalancesService().getStxAggregateBalance(requests, signal),
     ...balanceQueryOptions,
-  } satisfies UseQueryOptions<QuotedStxBalance, Error>;
+  } satisfies UseQueryOptions<AddressQuotedStxBalance, Error>;
 }
 
 export function createStxAddressBalanceQueryKey(address: string, settings: UserSettings) {

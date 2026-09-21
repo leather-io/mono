@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 
-import { settingsSlice } from './settings.slice';
+import { type TokenDetailsTab, settingsSlice } from './settings.slice';
 
 export const settingsActions = settingsSlice.actions;
 
@@ -27,4 +27,9 @@ export function useToggleNetworkBadgeAlwaysOn() {
 export function useMarkFeatureAsSeen() {
   const dispatch = useDispatch();
   return (featureId: string) => dispatch(settingsActions.featureIntroSeen(featureId));
+}
+
+export function useSelectTokenDetailsTab() {
+  const dispatch = useDispatch();
+  return (tab: TokenDetailsTab) => dispatch(settingsActions.tokenDetailsTabSelected(tab));
 }
