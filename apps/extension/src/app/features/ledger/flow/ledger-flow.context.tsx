@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import { bytesToHex } from '@noble/hashes/utils';
 
@@ -11,7 +11,7 @@ import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { appEvents } from '@app/common/publish-subscribe';
 import { isPopupMode } from '@app/common/utils';
 
-import { consumeLedgerFlowHandoff } from './ledger-flow-handoff';
+import { consumeLedgerFlowHandoff, ledgerFlowHandoffParam } from './ledger-flow-handoff';
 import type {
   ActiveLedgerFlowRequest,
   LedgerFlowRequest,
@@ -72,6 +72,7 @@ interface LedgerFlowProviderProps {
 }
 export function LedgerFlowProvider({ children }: LedgerFlowProviderProps) {
   const [state, setState] = useState<LedgerFlowState | null>(null);
+  const [searchParams] = useSearchParams();
   const activeRequest = useRef<ActiveLedgerFlowRequest | null>(null);
   const nextRequestId = useRef(0);
 
@@ -113,7 +114,7 @@ export function LedgerFlowProvider({ children }: LedgerFlowProviderProps) {
 
   useOnMount(async () => {
     if (isPopupMode()) return;
-    const request = await consumeLedgerFlowHandoff();
+    const request = await consumeLedgerFlowHandoff(searchParams.get(ledgerFlowHandoffParam));
     if (request) open(request);
   });
 

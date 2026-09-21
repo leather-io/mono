@@ -17,13 +17,19 @@ const h = vi.hoisted(() => ({
   renderBitcoinContainer: vi.fn<() => null>(),
 }));
 
-vi.mock('react-router', () => ({ useNavigate: () => vi.fn() }));
+vi.mock('react-router', () => ({
+  useNavigate: () => vi.fn(),
+  useSearchParams: () => [new URLSearchParams()],
+}));
 
 vi.mock('@app/common/publish-subscribe', () => ({ appEvents: { publish: h.publish } }));
 
 vi.mock('@app/common/utils', () => ({ isPopupMode: () => true }));
 
-vi.mock('./ledger-flow-handoff', () => ({ consumeLedgerFlowHandoff: h.consumeHandoff }));
+vi.mock('./ledger-flow-handoff', () => ({
+  consumeLedgerFlowHandoff: h.consumeHandoff,
+  ledgerFlowHandoffParam: 'ledgerHandoff',
+}));
 
 vi.mock('@shared/logger', () => ({ logger: { error: h.logError } }));
 

@@ -21,15 +21,22 @@ const h = vi.hoisted(() => ({
   consumeHandoff: vi.fn(),
   publish: vi.fn(),
   isPopupMode: true,
+  search: '',
 }));
 
-vi.mock('react-router', () => ({ useNavigate: () => h.navigate }));
+vi.mock('react-router', () => ({
+  useNavigate: () => h.navigate,
+  useSearchParams: () => [new URLSearchParams(h.search)],
+}));
 
 vi.mock('@app/common/publish-subscribe', () => ({ appEvents: { publish: h.publish } }));
 
 vi.mock('@app/common/utils', () => ({ isPopupMode: () => h.isPopupMode }));
 
-vi.mock('./ledger-flow-handoff', () => ({ consumeLedgerFlowHandoff: h.consumeHandoff }));
+vi.mock('./ledger-flow-handoff', () => ({
+  consumeLedgerFlowHandoff: h.consumeHandoff,
+  ledgerFlowHandoffParam: 'ledgerHandoff',
+}));
 
 interface RenderedFlow {
   flow: ReturnType<typeof useLedgerFlow>;
@@ -66,6 +73,7 @@ describe(LedgerFlowProvider.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
     h.isPopupMode = true;
+    h.search = '';
     h.consumeHandoff.mockResolvedValue(null);
   });
 
@@ -301,14 +309,26 @@ describe(LedgerFlowProvider.name, () => {
     expect(h.navigate).toHaveBeenCalledWith(RouteUrls.Home);
   });
 
-  test('opens a handed-off flow when mounted in a full page', async () => {
+  test('opens a handed-off flow when mounted in a full page with its token', async () => {
     h.isPopupMode = false;
+    h.search = '?ledgerHandoff=abc';
     h.consumeHandoff.mockResolvedValue({ kind: 'verify-address', variant: 'stx' });
 
     const rendered = renderFlow();
     await act(async () => {});
 
+    expect(h.consumeHandoff).toHaveBeenCalledWith('abc');
     expect(rendered.value.flow.request).toMatchObject({ kind: 'verify-address', variant: 'stx' });
+  });
+
+  test('passes no token when the full page url carries none', async () => {
+    h.isPopupMode = false;
+
+    const rendered = renderFlow();
+    await act(async () => {});
+
+    expect(h.consumeHandoff).toHaveBeenCalledWith(null);
+    expect(rendered.value.flow.request).toBeNull();
   });
 
   test('never consumes a hand-off from popup mode', async () => {
