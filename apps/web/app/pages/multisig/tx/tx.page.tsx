@@ -99,6 +99,7 @@ export function TxDetailPage() {
 
   const onchainDetail = useBlockchainActivityByTxIdDetailQuery(
     getMultisigAccountAddresses(account.data),
+    inStx ? 'stacks' : 'bitcoin',
     transaction.data?.txId ?? '',
     settings,
     Boolean(transaction.data?.txId && account.data)

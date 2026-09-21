@@ -13,7 +13,12 @@ import {
   createBlockchainActivityItem,
   createBlockchainActivityViews,
 } from '@leather.io/features';
-import type { AccountAddresses, BlockchainActivity, Money } from '@leather.io/models';
+import type {
+  AccountAddresses,
+  BlockchainActivity,
+  CryptoAssetChain,
+  Money,
+} from '@leather.io/models';
 import {
   createBlockchainActivityByTxIdQueryConfig,
   createBlockchainActivityInfiniteQueryConfig,
@@ -116,13 +121,14 @@ export function findCachedBlockchainActivityByTxid(
 
 export function useBlockchainActivityByTxIdDetailQuery(
   account: AccountAddresses,
+  chain: CryptoAssetChain,
   txid: string,
   settings: UserSettings,
   enabled: boolean
 ) {
   const queryClient = useQueryClient();
   return useQuery({
-    ...createBlockchainActivityByTxIdQueryConfig(account, txid, settings),
+    ...createBlockchainActivityByTxIdQueryConfig(account, chain, txid, settings),
     ...activityFeedCacheOptions,
     select: selectBlockchainActivityDetail,
     initialData: () => findCachedBlockchainActivityByTxid(queryClient, account, txid)?.activity,

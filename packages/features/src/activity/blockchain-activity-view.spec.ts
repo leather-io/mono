@@ -9,6 +9,10 @@ import {
 } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
+import {
+  buildBlockchainActivityHeroLines,
+  interpolateActivityTemplate,
+} from './blockchain-activity-copy';
 import { createBlockchainActivityView } from './blockchain-activity-view';
 
 const sbtcAsset: Sip10Asset = {
@@ -60,6 +64,11 @@ const receivedStx = {
   direction: 'received' as const,
   asset: stxAsset,
   amount: { crypto: createMoney(9, 'STX'), quote: createMoney(90, 'USD') },
+};
+const receivedSbtc = {
+  direction: 'received' as const,
+  asset: sbtcAsset,
+  amount: { crypto: createMoney(12, 'sBTC', 8), quote: createMoney(10, 'USD') },
 };
 
 describe('createBlockchainActivityView', () => {
@@ -205,7 +214,7 @@ describe('createBlockchainActivityView', () => {
     expect(view.subtitle).toBe('Bridged via Example Protocol');
   });
 
-  it('renders 2-token add-liquidity: undimmed pair, symbol-pair title, combined quote', () => {
+  it('renders 2-token add-liquidity as the single-asset row of the first token', () => {
     const secondSent = {
       direction: 'sent' as const,
       asset: sbtcAsset,
@@ -219,15 +228,9 @@ describe('createBlockchainActivityView', () => {
       }),
       deps
     );
-    expect(view.avatar).toMatchObject({
-      kind: 'pair',
-      back: { dimmed: false },
-      front: { dimmed: false },
-    });
-    expect(view.title).toBe('BTC · sBTC');
-    expect(view.subtitle).toBe('Added liquidity via Velar');
-    expect(view.amount?.crypto).toBeUndefined();
-    expect(view.amount?.quote.amount.toNumber()).toBe(150);
+    expect(view.avatar).toEqual({ kind: 'single', asset: btcAsset });
+    expect(view.title).toBe('BTC');
+    expect(view.amount).toMatchObject({ direction: 'sent', crypto: sentBtc.amount.crypto });
   });
 
   it('renders 1-token add-liquidity as a single-asset row', () => {
@@ -305,6 +308,54 @@ describe('createBlockchainActivityView', () => {
     expect(view.avatar).toEqual({ kind: 'icon', icon: 'contract-call' });
     expect(view.title).toBe('collateralize');
     expect(view.subtitle).toBe('vault-manager - Arkadiko');
+  });
+
+  it('shows every balance change of an unmapped call, the second asset as caption', () => {
+    const view = createBlockchainActivityView(
+      makeActivity({
+        action: 'contract-execution',
+        contract: { type: 'call', contractId: 'SP123.rewards', functionName: 'claim' },
+        balanceChanges: [receivedStx, receivedSbtc],
+      }),
+      deps
+    );
+    expect(view.title).toBe('claim');
+    expect(view.amount).toEqual({
+      direction: 'received',
+      crypto: receivedStx.amount.crypto,
+      quote: receivedStx.amount.quote,
+      showSymbol: true,
+      caption: { kind: 'change', direction: 'received', crypto: receivedSbtc.amount.crypto },
+    });
+  });
+
+  it('ranks received above sent and collapses three or more changes into a count', () => {
+    const contract = { type: 'call' as const, contractId: 'SP123.router', functionName: 'swap' };
+    const mixed = createBlockchainActivityView(
+      makeActivity({
+        action: 'contract-execution',
+        contract,
+        balanceChanges: [sentBtc, receivedStx],
+      }),
+      deps
+    );
+    expect(mixed.amount).toMatchObject({
+      direction: 'received',
+      caption: { kind: 'change', direction: 'sent', crypto: sentBtc.amount.crypto },
+    });
+
+    const many = createBlockchainActivityView(
+      makeActivity({
+        action: 'contract-execution',
+        contract,
+        balanceChanges: [receivedStx, receivedSbtc, sentBtc],
+      }),
+      deps
+    );
+    expect(many.amount).toMatchObject({
+      direction: 'received',
+      caption: { kind: 'more', count: 2 },
+    });
   });
 
   it('renders contract-deploy with a status-conjugated verb title', () => {
@@ -398,6 +449,41 @@ describe('createBlockchainActivityView', () => {
         expect(view.subtitle.startsWith('via ')).toBe(false);
       }
     }
+  });
+
+  it('builds hero lines: action + via protocol, verb + asset for transfers, row copy otherwise', () => {
+    const swap = createBlockchainActivityView(
+      makeActivity({
+        action: 'swap',
+        protocolName: 'Bitflow',
+        balanceChanges: [sentBtc, receivedStx],
+      }),
+      deps
+    );
+    expect(buildBlockchainActivityHeroLines(swap, interpolateActivityTemplate)).toEqual({
+      title: 'Swap',
+      subtitle: 'via Bitflow',
+    });
+
+    const receive = createBlockchainActivityView(
+      makeActivity({ action: 'receive', counterparty: 'SP2', balanceChanges: [receivedStx] }),
+      deps
+    );
+    expect(buildBlockchainActivityHeroLines(receive, interpolateActivityTemplate)).toEqual({
+      title: 'Receive STX',
+    });
+
+    const call = createBlockchainActivityView(
+      makeActivity({
+        action: 'contract-execution',
+        contract: { type: 'call', contractId: 'SP123.rewards', functionName: 'claim' },
+      }),
+      deps
+    );
+    expect(buildBlockchainActivityHeroLines(call, interpolateActivityTemplate)).toEqual({
+      title: 'claim',
+      subtitle: 'rewards',
+    });
   });
 
   it('carries txid, chain, and timestamp for routing and grouping', () => {

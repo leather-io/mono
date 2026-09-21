@@ -32,8 +32,9 @@ export function BlockchainActivityAvatarIcon({
   // Grow the indicator badge with the box: the size presets carry the badge
   // dimensions (md = 16px, xl = 20px), so a hero-scale avatar uses xl.
   const avatarPreset = size >= 44 ? 'xl' : 'md';
+  const iconVariant = avatarPreset === 'xl' ? 'medium' : 'small';
+  const pairSubPreset = avatarPreset === 'xl' ? 'md' : 'sm';
   const pairGeometry = {
-    sub: `${Math.round(24 * scale)}px`,
     indicatorSize: `${Math.round(16 * scale)}px`,
   } as const;
   switch (avatar.kind) {
@@ -56,16 +57,15 @@ export function BlockchainActivityAvatarIcon({
           outlineColor="ink.border-default"
           icon={
             avatar.icon === 'contract-deploy' ? (
-              <CodeIcon variant="small" />
+              <CodeIcon variant={iconVariant} />
             ) : (
-              <NoteTextIcon variant="small" />
+              <NoteTextIcon variant={iconVariant} />
             )
           }
           indicator={indicator}
         />
       );
     case 'pair': {
-      const geometry = pairGeometry;
       return (
         <styled.div position="relative" width={avatarSize} height={avatarSize}>
           <styled.div
@@ -75,12 +75,7 @@ export function BlockchainActivityAvatarIcon({
             zIndex={1}
             opacity={avatar.back.dimmed ? dimmedOpacity : 1}
           >
-            <AssetAvatarIcon
-              asset={avatar.back.asset}
-              size="sm"
-              width={geometry.sub}
-              height={geometry.sub}
-            />
+            <AssetAvatarIcon asset={avatar.back.asset} size={pairSubPreset} />
           </styled.div>
           <styled.div
             borderRadius="round"
@@ -92,12 +87,7 @@ export function BlockchainActivityAvatarIcon({
             zIndex={2}
             opacity={avatar.front.dimmed ? dimmedOpacity : 1}
           >
-            <AssetAvatarIcon
-              asset={avatar.front.asset}
-              size="sm"
-              width={geometry.sub}
-              height={geometry.sub}
-            />
+            <AssetAvatarIcon asset={avatar.front.asset} size={pairSubPreset} />
           </styled.div>
           {indicator ? (
             <styled.div
@@ -111,8 +101,8 @@ export function BlockchainActivityAvatarIcon({
               overflow="hidden"
               borderRadius="round"
               bg="ink.background-primary"
-              width={geometry.indicatorSize}
-              height={geometry.indicatorSize}
+              width={pairGeometry.indicatorSize}
+              height={pairGeometry.indicatorSize}
             >
               {indicator}
             </styled.div>

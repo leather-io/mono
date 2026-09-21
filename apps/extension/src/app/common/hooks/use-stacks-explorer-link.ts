@@ -11,14 +11,16 @@ interface HandleOpenStacksTxLinkArgs {
   searchParams?: URLSearchParams;
   txid: string;
 }
+
 export function useStacksExplorerLink() {
   const { chain, isNakamotoTestnet } = useCurrentNetworkState();
+  const mode = chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
 
   const handleOpenStacksTxLink = useCallback(
     ({ searchParams, txid }: HandleOpenStacksTxLinkArgs) => {
       openInNewTab(
         getStacksExplorerLink({
-          mode: chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet',
+          mode,
           type: 'txid',
           value: txid,
           searchParams,
@@ -26,8 +28,19 @@ export function useStacksExplorerLink() {
         })
       );
     },
-    [chain.stacks.chainId, isNakamotoTestnet]
+    [mode, isNakamotoTestnet]
   );
 
-  return { handleOpenStacksTxLink };
+  const getStacksAddressLink = useCallback(
+    (address: string) =>
+      getStacksExplorerLink({
+        mode,
+        type: 'address',
+        value: address,
+        isNakamoto: isNakamotoTestnet,
+      }),
+    [mode, isNakamotoTestnet]
+  );
+
+  return { handleOpenStacksTxLink, getStacksAddressLink };
 }

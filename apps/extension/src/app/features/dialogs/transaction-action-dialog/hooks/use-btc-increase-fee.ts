@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { matchPath, useNavigate } from 'react-router';
 
 import * as btc from '@scure/btc-signer';
 import BigNumber from 'bignumber.js';
@@ -13,6 +13,7 @@ import { createMoney, isError, sumMoney } from '@leather.io/utils';
 import type { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
+import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
 import { useToast } from '@app/features/toasts/use-toast';
@@ -26,9 +27,12 @@ import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
+import { useReturnToCaller } from './use-return-to-caller';
+
 export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const toast = useToast();
   const navigate = useNavigate();
+  const { returnTo, returnToCaller } = useReturnToCaller();
   const networkMode = useBitcoinScureLibNetworkConfig();
 
   const indexZeroPayer = useCurrentAccountNativeSegwitIndexZeroPayer();
@@ -132,7 +136,13 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
       tx: tx.hex,
       async onSuccess(txid) {
         toast.success('Fee increased successfully');
-        void navigate(RouteUrls.Activity);
+        if (matchPath(RouteUrls.ActivityDetails, returnTo)) {
+          void navigate(replaceRouteParams(RouteUrls.ActivityDetails, { chain: 'bitcoin', txid }), {
+            replace: true,
+          });
+        } else {
+          returnToCaller();
+        }
         analytics.track('increase_fee_transaction', {
           symbol: 'btc',
           txid,
@@ -157,7 +167,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   function onError(error: unknown) {
     const message = isError(error) ? error.message : 'Unknown error';
     toast.error(message);
-    void navigate(RouteUrls.Home);
+    returnToCaller();
   }
 
   const validationSchema = yup.object({

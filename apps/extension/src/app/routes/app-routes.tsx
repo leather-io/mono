@@ -8,6 +8,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { Content } from '@app/components/layout/layouts/content.layout';
 import { SwitchAccountLayout } from '@app/components/layout/layouts/switch-account.layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
+import { ActivityDetails } from '@app/features/activity-details/activity-details';
 import { Container } from '@app/features/container/container';
 import { HomeHeader } from '@app/features/container/headers/home.header';
 import { CancelStacksTransactionSheet } from '@app/features/dialogs/transaction-action-dialog/cancel-stacks-transaction-sheet';
@@ -185,6 +186,15 @@ function useAppRoutes() {
             element={
               <AccountGate>
                 <TokenDetails />
+              </AccountGate>
+            }
+          />
+
+          <Route
+            path={RouteUrls.ActivityDetails}
+            element={
+              <AccountGate>
+                <ActivityDetails />
               </AccountGate>
             }
           />

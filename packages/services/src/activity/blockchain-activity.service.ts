@@ -6,6 +6,7 @@ import {
   type BitcoinTransaction,
   type BlockchainActivity,
   type BlockchainActivityBalanceChange,
+  type CryptoAssetChain,
   type CryptoAssetId,
   type FungibleCryptoAsset,
   type MarketData,
@@ -153,12 +154,14 @@ export class BlockchainActivityService {
   // Reconstructs one activity from a txid alone, for the read-only detail of proposal-less activity.
   public async getActivityByTxId(
     account: AccountAddresses,
+    chain: CryptoAssetChain,
     txid: string,
     signal?: AbortSignal
   ): Promise<BlockchainActivity | null> {
-    const activity = hasStacksAddress(account)
-      ? await this.getStacksActivityByTxId(account.stacks.stxAddress, txid, signal)
-      : await this.getBitcoinActivityByTxId(account, txid, signal);
+    const activity =
+      chain === 'stacks'
+        ? await this.getStacksActivityByTxId(account, txid, signal)
+        : await this.getBitcoinActivityByTxId(account, txid, signal);
     if (activity === null) return null;
     const [enriched] = await this.enrichWithMarketData([activity], signal);
     return enriched ?? null;
@@ -169,7 +172,16 @@ export class BlockchainActivityService {
     txid: string,
     signal?: AbortSignal
   ): Promise<BlockchainActivity | null> {
-    if (account.bitcoin?.type !== 'fixedAddress') return null;
+    if (account.bitcoin === undefined) return null;
+    if (account.bitcoin.type === 'hd') {
+      const txs = await this.bitcoinTransactionsService.getAccountTransactions(
+        account,
+        btcTxHorizonPageRequest,
+        signal
+      );
+      const tx = txs.find(candidate => candidate.txid === txid);
+      return tx === undefined ? null : mapBitcoinActivity(tx);
+    }
     const tx = await this.bitcoinTransactionsService.getTransactionByTxId(txid, signal);
     if (tx === null) return null;
     const { address } = account.bitcoin;
@@ -181,10 +193,12 @@ export class BlockchainActivityService {
   }
 
   private async getStacksActivityByTxId(
-    stxAddress: string,
+    account: AccountAddresses,
     txid: string,
     signal?: AbortSignal
   ): Promise<BlockchainActivity | null> {
+    if (!hasStacksAddress(account)) return null;
+    const { stxAddress } = account.stacks;
     const tx = await this.stacksTransactionsService.getTransactionById(txid, signal);
     if (tx === null) return null;
     const balanceChanges = await this.fetchTxStacksBalanceChanges(stxAddress, tx, signal);

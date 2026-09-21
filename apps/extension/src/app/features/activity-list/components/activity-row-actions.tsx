@@ -53,7 +53,12 @@ function BitcoinActivityAction({ txid }: ActivityActionProps) {
     <IncreaseFeeButton
       isEnabled
       isSelected={pathname === RouteUrls.IncreaseBtcFee}
-      onIncreaseFee={() => void navigate(RouteUrls.IncreaseBtcFee, { state: { btcTx: pendingTx } })}
+      onIncreaseFee={() =>
+        void navigate(RouteUrls.IncreaseBtcFee, {
+          state: { btcTx: pendingTx, returnTo: pathname },
+          replace: true,
+        })
+      }
     />
   );
 }
