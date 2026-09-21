@@ -1,10 +1,4 @@
-import { createWorker } from '../workers';
 import { deriveEncryptionKey } from './generate-encryption-key';
-
-vi.mock('../workers', () => ({
-  WorkerScript: { DecryptionWorker: 'decryption-worker.js' },
-  createWorker: vi.fn(),
-}));
 
 type Listener = (event: { data?: unknown; message?: string }) => void;
 
@@ -22,12 +16,23 @@ function createFakeWorker() {
   };
 }
 
+type FakeWorker = ReturnType<typeof createFakeWorker>;
+
+const { createWorkerMock } = vi.hoisted(() => ({
+  createWorkerMock: vi.fn<(scriptUrl: string) => FakeWorker>(),
+}));
+
+vi.mock('../workers', () => ({
+  WorkerScript: { DecryptionWorker: 'decryption-worker.js' },
+  createWorker: createWorkerMock,
+}));
+
 describe(deriveEncryptionKey.name, () => {
   const args = { password: 'pw', salt: 'salt' };
 
   test('resolves with the hex from a successful worker response and terminates', async () => {
     const worker = createFakeWorker();
-    vi.mocked(createWorker).mockReturnValue(worker as unknown as Worker);
+    createWorkerMock.mockReturnValue(worker);
 
     const promise = deriveEncryptionKey(args);
     expect(worker.postMessage).toHaveBeenCalledWith(args);
@@ -39,7 +44,7 @@ describe(deriveEncryptionKey.name, () => {
 
   test('rejects and terminates when the worker reports an internal failure', async () => {
     const worker = createFakeWorker();
-    vi.mocked(createWorker).mockReturnValue(worker as unknown as Worker);
+    createWorkerMock.mockReturnValue(worker);
 
     const promise = deriveEncryptionKey(args);
     worker.emit('message', { data: { error: 'wasm failed' } });
@@ -50,7 +55,7 @@ describe(deriveEncryptionKey.name, () => {
 
   test('rejects and terminates on a worker error event', async () => {
     const worker = createFakeWorker();
-    vi.mocked(createWorker).mockReturnValue(worker as unknown as Worker);
+    createWorkerMock.mockReturnValue(worker);
 
     const promise = deriveEncryptionKey(args);
     worker.emit('error', { message: 'script failed to load' });
