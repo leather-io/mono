@@ -4,10 +4,13 @@ import type { SbtcStatus } from '@app/query/sbtc/sbtc-deposits.query';
 
 const sbtcDepositTitle = 'BTC → sBTC';
 
+type SbtcDepositStatusTone = 'default' | 'warning' | 'error';
+
 export interface SbtcDepositOverlay {
   title: string;
   statusLabel: string;
   statusColor: string;
+  statusTone: SbtcDepositStatusTone;
   reclaimUrl?: string;
 }
 
@@ -23,6 +26,19 @@ function getDepositStatusLabel(status: SbtcStatus) {
       return 'Replaced';
     default:
       return '';
+  }
+}
+
+function getDepositStatusTone(status: SbtcStatus): SbtcDepositStatusTone {
+  switch (status) {
+    case 'pending':
+    case 'accepted':
+      return 'warning';
+    case 'failed':
+    case 'rbf':
+      return 'error';
+    default:
+      return 'default';
   }
 }
 
@@ -46,6 +62,7 @@ export function createSbtcDepositOverlay(status: SbtcStatus): SbtcDepositOverlay
     title: sbtcDepositTitle,
     statusLabel,
     statusColor: getDepositStatusColor(status),
+    statusTone: getDepositStatusTone(status),
     ...(status === 'failed' ? { reclaimUrl: SBTC_RECLAIM_URL } : {}),
   };
 }
