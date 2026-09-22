@@ -44,6 +44,7 @@ interface TokenDetailsTabsProps {
   balancesContent?: ReactNode;
   activity: BlockchainActivityItem[];
   isActivityLoading: boolean;
+  hasBalance: boolean;
 }
 
 export function TokenDetailsTabs({
@@ -55,6 +56,7 @@ export function TokenDetailsTabs({
   balancesContent,
   activity,
   isActivityLoading,
+  hasBalance,
 }: TokenDetailsTabsProps) {
   const tabItems = tokenDetailsTabItems.filter(
     item => item.value !== 'balances' || !!balancesContent
@@ -66,7 +68,7 @@ export function TokenDetailsTabs({
 
   function renderActivity() {
     if (isActivityLoading) return <TokenActivityLoading />;
-    if (activity.length === 0) return <TokenActivityEmpty />;
+    if (activity.length === 0) return <TokenActivityEmpty hasBalance={hasBalance} />;
     return activity.map(item => <ActivityRow key={item.view.key} item={item} />);
   }
 
