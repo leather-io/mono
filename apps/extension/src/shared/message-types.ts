@@ -9,6 +9,7 @@ export const WALLET_LIST_CHANGED_MESSAGE = 'wallet/list-changed';
 export enum InternalMethods {
   OriginatingTabClosed = 'OriginatingTabClosed',
   AddressMonitorUpdated = 'AddressMonitorUpdated',
+  ApplyPendingUpdate = 'ApplyPendingUpdate',
 }
 
 /**
