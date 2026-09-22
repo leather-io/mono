@@ -39,13 +39,12 @@ function Sip10TokenDetailsContent({ account, balance }: Sip10TokenDetailsContent
           name={asset.name}
         />
       }
+      asset={asset}
       name={asset.name}
       symbol={asset.symbol}
       availableBalance={crypto.availableBalance}
       fiatBalance={quote.availableBalance}
       price={marketInfo.price}
-      changePercent={marketInfo.changePercent}
-      priceChangeDelta={marketInfo.priceChangeDelta}
       descriptionText={marketInfo.descriptionText}
       contractDetails={truncateMiddle(asset.assetId, 4)}
       activity={activityQuery.data ?? []}
