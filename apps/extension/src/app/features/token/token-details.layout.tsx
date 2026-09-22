@@ -38,6 +38,7 @@ interface TokenDetailsLayoutProps {
   descriptionText?: string;
   balancesContent?: ReactNode;
   activity: BlockchainActivityItem[];
+  isActivityLoading: boolean;
   isBuyEnabled?: boolean;
   isSwapEnabled?: boolean;
 }
@@ -58,6 +59,7 @@ export function TokenDetailsLayout({
   descriptionText,
   balancesContent,
   activity,
+  isActivityLoading,
   isBuyEnabled = true,
   isSwapEnabled = true,
 }: TokenDetailsLayoutProps) {
@@ -119,6 +121,7 @@ export function TokenDetailsLayout({
         descriptionText={descriptionText}
         balancesContent={balancesContent}
         activity={activity}
+        isActivityLoading={isActivityLoading}
         detailRows={
           <>
             <TokenDetailsRow label="Name" value={name} testId="token-details-name" />

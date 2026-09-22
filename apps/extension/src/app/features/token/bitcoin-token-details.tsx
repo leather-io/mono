@@ -112,6 +112,7 @@ export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsP
       balances={balances}
       addresses={addresses}
       activity={activityQuery.data ?? []}
+      isActivityLoading={activityQuery.isLoading}
       isSwapEnabled={isSwapEnabled}
     />
   );
