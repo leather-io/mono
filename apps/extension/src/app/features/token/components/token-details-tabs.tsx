@@ -9,6 +9,7 @@ import { ActivityRow } from '@app/features/activity-list/components/activity-row
 import { type TokenDetailsTab, defaultTokenDetailsTab } from '@app/store/settings/settings.slice';
 
 import { TokenActivityEmpty } from './token-activity-empty';
+import { TokenActivityLoading } from './token-activity-loading';
 import { TokenDetailsSection } from './token-details-section';
 
 interface TokenDetailsTabItem {
@@ -42,6 +43,8 @@ interface TokenDetailsTabsProps {
   detailRows: ReactNode;
   balancesContent?: ReactNode;
   activity: BlockchainActivityItem[];
+  isActivityLoading: boolean;
+  hasBalance: boolean;
 }
 
 export function TokenDetailsTabs({
@@ -52,6 +55,8 @@ export function TokenDetailsTabs({
   detailRows,
   balancesContent,
   activity,
+  isActivityLoading,
+  hasBalance,
 }: TokenDetailsTabsProps) {
   const tabItems = tokenDetailsTabItems.filter(
     item => item.value !== 'balances' || !!balancesContent
@@ -59,6 +64,12 @@ export function TokenDetailsTabs({
 
   function handleTabChange(value: string) {
     if (isTokenDetailsTab(value)) onSelectTab(value);
+  }
+
+  function renderActivity() {
+    if (isActivityLoading) return <TokenActivityLoading />;
+    if (activity.length === 0) return <TokenActivityEmpty hasBalance={hasBalance} />;
+    return activity.map(item => <ActivityRow key={item.view.key} item={item} />);
   }
 
   return (
@@ -98,11 +109,7 @@ export function TokenDetailsTabs({
       ) : null}
       <Tabs.Content value="activity">
         <Box py="space.02" data-testid="token-details-activity">
-          {activity.length > 0 ? (
-            activity.map(item => <ActivityRow key={item.view.key} item={item} />)
-          ) : (
-            <TokenActivityEmpty />
-          )}
+          {renderActivity()}
         </Box>
       </Tabs.Content>
     </Tabs.Root>

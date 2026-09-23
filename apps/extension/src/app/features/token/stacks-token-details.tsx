@@ -137,6 +137,7 @@ export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
       descriptionText={marketInfo.descriptionText}
       balances={balances}
       activity={activityQuery.data ?? []}
+      isActivityLoading={activityQuery.isLoading}
     />
   );
 }

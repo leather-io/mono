@@ -76,6 +76,7 @@ export function PolicyBitcoinTokenDetails({ account }: PolicyBitcoinTokenDetails
       balances={balances}
       addresses={addresses}
       activity={activityQuery.data ?? []}
+      isActivityLoading={activityQuery.isLoading}
       isSwapEnabled={false}
     />
   );

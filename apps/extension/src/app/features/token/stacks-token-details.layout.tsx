@@ -17,6 +17,7 @@ interface StacksTokenDetailsLayoutProps {
   descriptionText: string;
   balances: TokenBalanceEntry[];
   activity: BlockchainActivityItem[];
+  isActivityLoading: boolean;
 }
 
 export function StacksTokenDetailsLayout({
@@ -27,6 +28,7 @@ export function StacksTokenDetailsLayout({
   descriptionText,
   balances,
   activity,
+  isActivityLoading,
 }: StacksTokenDetailsLayoutProps) {
   return (
     <TokenDetailsLayout
@@ -46,6 +48,7 @@ export function StacksTokenDetailsLayout({
         <TokenBalancesTab balances={balances} formatAmount={amount => formatCurrency(amount)} />
       }
       activity={activity}
+      isActivityLoading={isActivityLoading}
     />
   );
 }

@@ -22,6 +22,7 @@ interface BitcoinTokenDetailsLayoutProps {
   balances: TokenBalanceEntry[];
   addresses: TokenAddressEntry[];
   activity: BlockchainActivityItem[];
+  isActivityLoading: boolean;
   isSwapEnabled: boolean;
 }
 
@@ -34,6 +35,7 @@ export function BitcoinTokenDetailsLayout({
   balances,
   addresses,
   activity,
+  isActivityLoading,
   isSwapEnabled,
 }: BitcoinTokenDetailsLayoutProps) {
   return (
@@ -59,6 +61,7 @@ export function BitcoinTokenDetailsLayout({
         />
       }
       activity={activity}
+      isActivityLoading={isActivityLoading}
     />
   );
 }

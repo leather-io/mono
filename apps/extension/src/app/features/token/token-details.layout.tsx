@@ -38,6 +38,7 @@ interface TokenDetailsLayoutProps {
   descriptionText?: string;
   balancesContent?: ReactNode;
   activity: BlockchainActivityItem[];
+  isActivityLoading: boolean;
   isBuyEnabled?: boolean;
   isSwapEnabled?: boolean;
 }
@@ -58,6 +59,7 @@ export function TokenDetailsLayout({
   descriptionText,
   balancesContent,
   activity,
+  isActivityLoading,
   isBuyEnabled = true,
   isSwapEnabled = true,
 }: TokenDetailsLayoutProps) {
@@ -65,6 +67,7 @@ export function TokenDetailsLayout({
   const selectTab = useSelectTokenDetailsTab();
   const currentAccountId = useCurrentAccountId();
   const hasPrice = !!price && price.amount.isGreaterThan(0);
+  const hasBalance = balance.amount.isGreaterThan(0);
   const assetId = serializeAssetId(getAssetId(asset));
   const walletAccountId = makeAccountIdentifer(
     currentAccountId.fingerprint,
@@ -120,6 +123,8 @@ export function TokenDetailsLayout({
         descriptionText={descriptionText}
         balancesContent={balancesContent}
         activity={activity}
+        isActivityLoading={isActivityLoading}
+        hasBalance={hasBalance}
         detailRows={
           <>
             <TokenDetailsRow label="Name" value={name} testId="token-details-name" />

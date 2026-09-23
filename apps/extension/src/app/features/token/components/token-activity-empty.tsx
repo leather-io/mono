@@ -4,7 +4,11 @@ import { Stack } from 'leather-styles/jsx';
 
 import { Caption } from '@leather.io/ui';
 
-export function TokenActivityEmpty() {
+interface TokenActivityEmptyProps {
+  hasBalance: boolean;
+}
+
+export function TokenActivityEmpty({ hasBalance }: TokenActivityEmptyProps) {
   return (
     <Stack
       gap="space.04"
@@ -15,7 +19,7 @@ export function TokenActivityEmpty() {
     >
       <img src={CoinsHammockImage} width="160px" alt="" />
       <Caption maxWidth="26ch" textAlign="center">
-        No activity for this token yet
+        {hasBalance ? 'No recent activity for this token' : 'No activity for this token yet'}
       </Caption>
     </Stack>
   );
