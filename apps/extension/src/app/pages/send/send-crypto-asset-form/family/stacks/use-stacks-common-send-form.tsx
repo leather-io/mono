@@ -8,6 +8,7 @@ import { StacksSendFormValues } from '@shared/models/form.model';
 import { stxMemoValidator } from '@app/common/validation/forms/memo-validators';
 import { stxRecipientValidator } from '@app/common/validation/forms/recipient-validators';
 import { nonceValidator } from '@app/common/validation/nonce-validators';
+import { stxFeeCurrency } from '@app/components/fees-row/fees-row.constants';
 import { useStacksHighFeeWarningContext } from '@app/features/stacks-high-fee-warning/stacks-high-fee-warning-container';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
@@ -38,7 +39,7 @@ export function useStacksCommonSendForm({
     hasDismissedHighFeeWarning: false,
     isShowingHighFeeDiaglog: false,
     fee: '',
-    feeCurrency: 'STX',
+    feeCurrency: stxFeeCurrency,
     feeType: FeeTypes[FeeTypes.Unknown],
     memo: '',
     nonce: isStacksPolicy ? 0 : nextNonce?.nonce,
@@ -53,7 +54,8 @@ export function useStacksCommonSendForm({
   ) {
     const formErrors = await formikHelpers.validateForm();
 
-    if (isHighFeeWithNoFormErrors(formErrors, values.fee)) {
+    const isStxFee = values.feeCurrency === stxFeeCurrency;
+    if (isStxFee && isHighFeeWithNoFormErrors(formErrors, values.fee)) {
       setShowHighFeeWarningSheet(true);
       return false;
     }

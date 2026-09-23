@@ -17,9 +17,13 @@ import {
 
 import type { Sip10Asset } from '@leather.io/models';
 import {
+  type SbtcSponsoredTransferParams,
   TransactionTypes,
+  buildSbtcSponsoredTransferPostCondition,
+  buildSbtcTransferManyArgs,
   getStacksAssetStringParts,
   inferPrincipalTypeFromAddress,
+  sbtcTransferManyFunctionName,
 } from '@leather.io/stacks';
 import { createMoney, stxToMicroStx } from '@leather.io/utils';
 
@@ -228,4 +232,68 @@ export function useFtTokenTransferUnsignedTx(info: Sip10Asset) {
 
   const tx = useAsync(async () => generateTx(), [account, generateTx]);
   return tx.result;
+}
+
+interface SbtcSponsoredTransferQuote {
+  feeSats: number;
+  feeRecipientPrincipal: string;
+}
+
+interface UseGenerateSbtcSponsoredTransferUnsignedTxArgs {
+  assetId: string;
+  decimals: number;
+}
+export function useGenerateSbtcSponsoredTransferUnsignedTx({
+  assetId,
+  decimals,
+}: UseGenerateSbtcSponsoredTransferUnsignedTxArgs) {
+  const account = useCurrentStacksAccount();
+  const { data: nextNonce } = useNextNonce(account?.address ?? '');
+  const network = useCurrentStacksNetworkState();
+  const { contractAddress, contractName } = getStacksAssetStringParts(assetId);
+
+  return useCallback(
+    async (values: StacksSendFormValues, quote: SbtcSponsoredTransferQuote) => {
+      try {
+        if (!account) return;
+
+        const params: SbtcSponsoredTransferParams = {
+          contractAddress,
+          contractName,
+          sender: account.address,
+          recipient: values.recipient,
+          feeRecipient: quote.feeRecipientPrincipal,
+          amount: BigInt(ftUnshiftDecimals(values.amount, decimals)),
+          feeAmount: BigInt(quote.feeSats),
+          memo: values.memo !== '' ? values.memo : undefined,
+        };
+
+        const hasExplicitNonce = values.nonce !== undefined && values.nonce !== '';
+
+        const options: GenerateUnsignedTransactionOptions = {
+          txData: {
+            txType: TransactionTypes.ContractCall,
+            contractAddress,
+            contractName,
+            functionName: sbtcTransferManyFunctionName,
+            functionArgs: buildSbtcTransferManyArgs(params).map(arg => serializeCV(arg)),
+            postConditions: [buildSbtcSponsoredTransferPostCondition(params)],
+            postConditionMode: PostConditionMode.Deny,
+            network,
+            publicKey: account.stxPublicKey,
+            sponsored: true,
+          },
+          fee: 0,
+          publicKey: account.stxPublicKey,
+          nonce: hasExplicitNonce ? Number(values.nonce) : nextNonce?.nonce,
+        };
+
+        return await generateUnsignedTransaction(options);
+      } catch (error) {
+        logger.error('Failed to generate sponsored sBTC transaction', error);
+        return;
+      }
+    },
+    [account, contractAddress, contractName, decimals, network, nextNonce?.nonce]
+  );
 }

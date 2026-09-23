@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { StacksTransactionWire, broadcastTransaction } from '@stacks/transactions';
+import { AuthType, StacksTransactionWire, broadcastTransaction } from '@stacks/transactions';
 
 import { delay, isError } from '@leather.io/utils';
 
@@ -8,6 +8,7 @@ import { logger } from '@shared/logger';
 import { analytics } from '@shared/utils/analytics';
 
 import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
+import { sponsoredTransactionBroadcastRefusedMessage } from '@app/common/transactions/stacks/sbtc-sponsorship.utils';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useLoading } from '@app/store/ui/ui.hooks';
@@ -30,6 +31,11 @@ export function useSubmitTransactionCallback({ loadingKey }: UseSubmitTransactio
   return useCallback(
     ({ onSuccess, onError }: UseSubmitTransactionCallbackArgs) =>
       async (transaction: StacksTransactionWire) => {
+        if (transaction.auth.authType === AuthType.Sponsored) {
+          logger.error('Refusing to broadcast a sponsored transaction');
+          onError(sponsoredTransactionBroadcastRefusedMessage);
+          return;
+        }
         setIsLoading();
         try {
           const response = await broadcastTransaction({

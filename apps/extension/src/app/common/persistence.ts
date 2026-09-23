@@ -1,5 +1,10 @@
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { QueryCache, QueryClient } from '@tanstack/react-query';
+import {
+  type Query,
+  QueryCache,
+  QueryClient,
+  defaultShouldDehydrateQuery,
+} from '@tanstack/react-query';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { HttpStatusCode, isAxiosError } from 'axios';
 import { BigNumber } from 'bignumber.js';
@@ -37,6 +42,10 @@ const chromeStorageLocalPersister = createAsyncStoragePersister({
   serialize: superjson.stringify,
   deserialize: superjson.parse,
 });
+
+function shouldPersistQuery(query: Query) {
+  return defaultShouldDehydrateQuery(query) && query.meta?.persist !== false;
+}
 
 function isZodError(error: Error): error is ZodError {
   // `instanceof` check doesn't work when ZodError thrown from within a package
@@ -100,6 +109,7 @@ export function persistAndRenderApp(renderApp: () => void) {
       queryClient,
       persister: chromeStorageLocalPersister,
       buster: VERSION,
+      dehydrateOptions: { shouldDehydrateQuery: shouldPersistQuery },
     });
   }
   renderApp();

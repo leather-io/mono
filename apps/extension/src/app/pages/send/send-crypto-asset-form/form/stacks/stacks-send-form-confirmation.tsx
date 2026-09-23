@@ -3,6 +3,7 @@ import { Outlet, useParams } from 'react-router';
 import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transactions';
 import { Box, Stack } from 'leather-styles/jsx';
 
+import { getSbtcSponsoredTransferDetails } from '@leather.io/stacks';
 import { InfoCircleIcon } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote, convertAmountToBaseUnit, sumMoney } from '@leather.io/utils';
 
@@ -26,7 +27,9 @@ import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import type { ProposalSentSummaryState } from '../../../sent-summary/proposal-sent-summary';
+import type { SbtcSponsorshipRouteState } from '../../hooks/use-send-form-navigate';
 import { SendFormConfirmationLayout } from '../send-form-confirmation.layout';
+import { SbtcSponsoredSendFormConfirmation } from './sbtc-sponsored-send-form-confirmation';
 import { useProposeStacksSendTransaction } from './use-propose-stacks-send-transaction';
 
 function useStacksSendFormConfirmationState() {
@@ -34,11 +37,19 @@ function useStacksSendFormConfirmationState() {
     tx: useLocationStateWithCache('tx') as string,
     decimals: useLocationStateWithCache('decimals') as number,
     showFeeChangeWarning: useLocationStateWithCache('showFeeChangeWarning') as boolean,
+    sponsorship: useLocationStateWithCache<SbtcSponsorshipRouteState | undefined>('sponsorship'),
+    showRequoteCallout: useLocationStateWithCache<boolean>('showRequoteCallout', false),
   };
 }
 
 export function StacksSendFormConfirmation() {
-  const { tx: txHex, decimals, showFeeChangeWarning } = useStacksSendFormConfirmationState();
+  const {
+    tx: txHex,
+    decimals,
+    showFeeChangeWarning,
+    sponsorship,
+    showRequoteCallout,
+  } = useStacksSendFormConfirmationState();
   const tokenMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
 
   const { symbol = 'STX' } = useParams();
@@ -51,6 +62,19 @@ export function StacksSendFormConfirmation() {
 
   const tx = deserializeTransaction(txHex);
   const isMultisigProposal = isNonSequentialMultisigTransaction(tx);
+  const sponsoredDetails = getSbtcSponsoredTransferDetails(tx);
+
+  if (sponsorship && sponsoredDetails) {
+    return (
+      <SbtcSponsoredSendFormConfirmation
+        tx={tx}
+        details={sponsoredDetails}
+        sponsorship={sponsorship}
+        symbol={symbol}
+        showRequoteCallout={showRequoteCallout}
+      />
+    );
+  }
 
   const feeWarningTooltip = showFeeChangeWarning ? (
     <BasicTooltip
