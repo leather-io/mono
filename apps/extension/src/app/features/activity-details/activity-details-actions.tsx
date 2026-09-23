@@ -72,11 +72,8 @@ export function ActivityDetailsActions({ item, reclaimUrl }: ActivityDetailsActi
       alignItems="center"
       justifyContent="center"
       flexWrap="nowrap"
-      px="space.05"
-      py="space.01"
+      pt="space.01"
       width="100%"
-      maxWidth="390px"
-      margin="0 auto"
     >
       {reclaimUrl ? (
         <DetailsPillButton label="Reclaim" onClick={() => openInNewTab(reclaimUrl)} />

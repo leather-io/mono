@@ -28,6 +28,7 @@ export enum RouteUrls {
   Home = '/',
   TokenDetails = '/token/*',
   ActivityDetails = '/activity/:chain/:txid',
+  ActivityDetailsPlayground = '/playground/activity-details',
   AddNetwork = '/add-network',
   EditNetwork = '/edit-network',
   SelectNetwork = '/select-network',

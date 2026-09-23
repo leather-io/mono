@@ -1,8 +1,10 @@
+import { Suspense, lazy } from 'react';
 import { Route, createHashRouter, createRoutesFromElements } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 
 import * as Sentry from '@sentry/react';
 
+import { IS_DEV_ENV, IS_TEST_ENV } from '@shared/environment';
 import { RouteUrls } from '@shared/route-urls';
 
 import { Content } from '@app/components/layout/layouts/content.layout';
@@ -63,6 +65,12 @@ export function AppRoutes() {
 }
 
 const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV7(createHashRouter);
+
+const ActivityDetailsPlayground = lazy(() =>
+  import('@app/features/activity-details/playground/activity-details-playground').then(module => ({
+    default: module.ActivityDetailsPlayground,
+  }))
+);
 
 export const homePageModalRoutes = (
   <>
@@ -198,6 +206,17 @@ function useAppRoutes() {
               </AccountGate>
             }
           />
+
+          {IS_DEV_ENV || IS_TEST_ENV ? (
+            <Route
+              path={RouteUrls.ActivityDetailsPlayground}
+              element={
+                <Suspense fallback={<SuspenseLoadingSpinner />}>
+                  <ActivityDetailsPlayground />
+                </Suspense>
+              }
+            />
+          ) : null}
 
           <Route path={RouteUrls.Unlock} element={<Unlock />} />
           <Route

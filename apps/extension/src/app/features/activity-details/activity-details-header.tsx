@@ -1,18 +1,27 @@
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
+import type { BoxProps } from 'leather-styles/jsx';
 
-import { DetailsHeader } from '@app/components/details/details-header';
+import { ArrowLeftIcon } from '@leather.io/ui';
+
+import { Header } from '@app/components/layout/headers/header';
+import { HeaderActionButton } from '@app/components/layout/headers/header-action-button';
 
 interface ActivityDetailsHeaderProps {
   onBack(): void;
+  px?: BoxProps['px'];
 }
 
-export function ActivityDetailsHeader({ onBack }: ActivityDetailsHeaderProps) {
+export function ActivityDetailsHeader({
+  onBack,
+  px = ['space.03', null, 'space.00'],
+}: ActivityDetailsHeaderProps) {
   return (
-    <DetailsHeader
-      title="Transaction"
-      onBack={onBack}
-      backTestId={ActivitySelectors.ActivityDetailsBack}
-      titleTestId={ActivitySelectors.ActivityDetailsTitle}
-    />
+    <Header px={px}>
+      <HeaderActionButton
+        icon={<ArrowLeftIcon />}
+        onAction={onBack}
+        dataTestId={ActivitySelectors.ActivityDetailsBack}
+      />
+    </Header>
   );
 }

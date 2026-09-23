@@ -131,6 +131,19 @@ const deployTitles: StatusTemplates = {
 
 const viaProtocolSuffix = ' via {protocol}';
 
+const transferHeadlines: Record<'send' | 'receive', StatusTemplates> = {
+  send: {
+    pending: 'Sending',
+    success: 'Sent',
+    failed: 'Failed to send',
+  },
+  receive: {
+    pending: 'Receiving',
+    success: 'Received',
+    failed: 'Failed to receive',
+  },
+};
+
 const protocolActionTitles: Partial<Record<StacksProtocolAction, string>> = {
   swap: 'Swap',
   bridge: 'Bridge',
@@ -162,6 +175,23 @@ const transferHeroVerbs: Partial<Record<StacksProtocolAction, string>> = {
   send: 'Send {asset}',
   receive: 'Receive {asset}',
 };
+
+interface StatusHeadlineParams {
+  action: StacksProtocolAction;
+  status: OnChainActivityStatus;
+  fallbackTitle?: string;
+}
+
+export function buildBlockchainActivityStatusHeadline(
+  { action, status, fallbackTitle }: StatusHeadlineParams,
+  t: BlockchainActivityTranslate
+): string {
+  if (action === 'send' || action === 'receive') return t(transferHeadlines[action][status]);
+  if (action === 'contract-deploy') return buildBlockchainActivityDeployTitle(status, t);
+  const entry = protocolActionSubtitles[action];
+  if (entry) return t(entry[status].replace(viaProtocolSuffix, ''));
+  return fallbackTitle ?? '';
+}
 
 export interface BlockchainActivityHeroLines {
   title: string;
