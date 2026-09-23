@@ -102,6 +102,7 @@ export function TokenDetailsLayout({
         actions={
           <TokenDetailsActionsRow
             symbol={symbol}
+            assetId={assetId}
             receiveView={receiveView}
             swapChain={swapChain}
             isBuyEnabled={isBuyEnabled}
