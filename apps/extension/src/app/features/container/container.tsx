@@ -16,6 +16,7 @@ import { ReceiveDialog } from '@app/pages/receive/receive-dialog';
 import { useOnSignOut } from '@app/routes/hooks/use-on-sign-out';
 import { useOnWalletListChanged } from '@app/routes/hooks/use-on-wallet-list-changed';
 import { useOnWalletLock } from '@app/routes/hooks/use-on-wallet-lock';
+import { useScrollToTopOnScreenChange } from '@app/routes/hooks/use-scroll-to-top-on-screen-change';
 import { persistor, useAppDispatch, useHasStateRehydrated } from '@app/store';
 import { applyRemoteWalletRemoval } from '@app/store/active/active.actions';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
@@ -62,6 +63,7 @@ export function Container() {
   });
   useRestoreFormState();
   useHandleQueuedBackgroundAnalytics();
+  useScrollToTopOnScreenChange();
 
   useEffect(() => {
     analytics.page('view', `${pathname}`);

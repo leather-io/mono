@@ -1,6 +1,8 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { Flex, styled } from 'leather-styles/jsx';
+
+import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
@@ -11,6 +13,7 @@ import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useFlags } from '@app/features/feature-flags';
+import { useNavigateToSendForm } from '@app/pages/send/hooks/use-navigate-to-send-form';
 
 interface TokenDetailsPillButtonProps {
   label: string;
@@ -48,6 +51,7 @@ function TokenDetailsPillButton({ label, onClick, disabled, testId }: TokenDetai
 export type SwapChain = 'bitcoin' | 'stacks';
 
 interface TokenDetailsActionsRowProps {
+  assetId: SerializedCryptoAssetId;
   symbol: string;
   receiveView: ReceiveView;
   swapChain: SwapChain;
@@ -56,6 +60,7 @@ interface TokenDetailsActionsRowProps {
 }
 
 export function TokenDetailsActionsRow({
+  assetId,
   symbol,
   receiveView,
   swapChain,
@@ -63,7 +68,7 @@ export function TokenDetailsActionsRow({
   isSwapEnabled = true,
 }: TokenDetailsActionsRowProps) {
   const navigate = useNavigate();
-  const location = useLocation();
+  const navigateToSendForm = useNavigateToSendForm();
   const { showReceive } = useReceiveDialog();
   const { releaseOnramperBuy } = useFlags();
   const swapAvailability = useSwapAvailability();
@@ -98,9 +103,7 @@ export function TokenDetailsActionsRow({
       />
       <TokenDetailsPillButton
         label="Send"
-        onClick={() =>
-          void navigate(RouteUrls.SendCryptoAsset, { state: { backgroundLocation: location } })
-        }
+        onClick={() => void navigateToSendForm(assetId)}
         testId="token-details-send-btn"
       />
       {releaseOnramperBuy && (

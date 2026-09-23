@@ -98,6 +98,7 @@ export function TokenDetailsLayout({
         fiatBalance={fiatBalance}
         actions={
           <TokenDetailsActionsRow
+            assetId={assetId}
             symbol={symbol}
             receiveView={receiveView}
             swapChain={swapChain}

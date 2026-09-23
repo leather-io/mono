@@ -1,5 +1,8 @@
 import { type Page, expect } from '@playwright/test';
 import { mockTestAccountStacksTxsRequestsWithPendingTx } from '@tests/mocks/mock-stacks-txs';
+import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
+
+import { RouteUrls } from '@shared/route-urls';
 
 import { test } from '../../fixtures/fixtures';
 import { mockEmptyLeatherApiUtxosRequest } from '../../mocks/mock-leather-api';
@@ -76,6 +79,14 @@ test.describe('Token details', () => {
           page.getByTestId(TokenDetailsSelectors.TokenDetailsReceiveButton)
         ).toBeVisible();
         await expect(page.getByTestId(TokenDetailsSelectors.TokenDetailsSwapButton)).toBeVisible();
+      });
+
+      test('that send opens the BTC send form directly', async ({ homePage, page }) => {
+        await homePage.assetList.getByTestId(CoreAssetSelectors.BtcAsset).click();
+        await page.getByTestId(TokenDetailsSelectors.TokenDetailsSendButton).click();
+
+        await page.waitForURL('**' + RouteUrls.SendCryptoAssetForm.replace(':symbol', 'btc'));
+        await expect(page.getByTestId(SendCryptoAssetSelectors.SendForm)).toBeVisible();
       });
 
       test('that back button returns to home', async ({ homePage, page }) => {
@@ -194,6 +205,14 @@ test.describe('Token details', () => {
         await expect(page.getByTestId(TokenDetailsSelectors.TokenDetailsName)).toBeVisible();
       });
 
+      test('that send opens the STX send form directly', async ({ homePage, page }) => {
+        await homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset).click();
+        await page.getByTestId(TokenDetailsSelectors.TokenDetailsSendButton).click();
+
+        await page.waitForURL('**' + RouteUrls.SendCryptoAssetForm.replace(':symbol', 'stx'));
+        await expect(page.getByTestId(SendCryptoAssetSelectors.SendForm)).toBeVisible();
+      });
+
       test('that receive modal opens from STX token details', async ({ homePage, page }) => {
         const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
         await stxAsset.click();
@@ -246,6 +265,14 @@ test.describe('Token details', () => {
 
         const layer = page.getByTestId(TokenDetailsSelectors.TokenDetailsLayer);
         await expect(layer).toHaveText(/Layer 2 \(Stacks\)/);
+      });
+
+      test('that send opens the sBTC send form directly', async ({ homePage, page }) => {
+        await homePage.assetList.getByTestId(MockedTokensSelectors.SbtcTokenTestId).click();
+        await page.getByTestId(TokenDetailsSelectors.TokenDetailsSendButton).click();
+
+        await page.waitForURL('**/send/sbtc/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token');
+        await expect(page.getByTestId(SendCryptoAssetSelectors.SendForm)).toBeVisible();
       });
 
       test('that receive modal opens from sBTC token details', async ({ homePage, page }) => {
