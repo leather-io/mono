@@ -48,6 +48,7 @@ function Sip10TokenDetailsContent({ account, balance }: Sip10TokenDetailsContent
       descriptionText={marketInfo.descriptionText}
       contractDetails={truncateMiddle(asset.assetId, 4)}
       activity={activityQuery.data ?? []}
+      isActivityLoading={activityQuery.isLoading}
     />
   );
 }

@@ -3,6 +3,7 @@ import { Box, Circle, Flex, Stack } from 'leather-styles/jsx';
 import { historicalPeriods } from '@leather.io/models';
 import { SkeletonLoader } from '@leather.io/ui';
 
+import { TokenActivityLoading } from './components/token-activity-loading';
 import { TokenDetailsHeader } from './components/token-details-header';
 import { TokenDetailsSection } from './components/token-details-section';
 
@@ -72,33 +73,6 @@ function LoadingDescription() {
   );
 }
 
-function LoadingActivity() {
-  return (
-    <Stack>
-      {Array.from({ length: 3 }).map((_, i) => (
-        <Flex
-          key={i}
-          px="space.05"
-          py="space.03"
-          bg="ink.background-primary"
-          gap="space.03"
-          alignItems="center"
-        >
-          <Circle bgColor="ink.component-background-default" size="36px" />
-          <Stack gap="space.01" flex="1">
-            <SkeletonLoader isLoading height="16px" width="120px" />
-            <SkeletonLoader isLoading height="12px" width="80px" />
-          </Stack>
-          <Stack gap="space.01" alignItems="flex-end">
-            <SkeletonLoader isLoading height="16px" width="80px" />
-            <SkeletonLoader isLoading height="12px" width="60px" />
-          </Stack>
-        </Flex>
-      ))}
-    </Stack>
-  );
-}
-
 export function TokenDetailsLoading({ title = 'Loading...' }: { title?: string }) {
   return (
     <Stack width="100%" gap="space.00" data-testid="token-details-loading">
@@ -122,7 +96,7 @@ export function TokenDetailsLoading({ title = 'Loading...' }: { title?: string }
           </TokenDetailsSection>
 
           <TokenDetailsSection title="Activity">
-            <LoadingActivity />
+            <TokenActivityLoading />
           </TokenDetailsSection>
         </Stack>
       </Box>

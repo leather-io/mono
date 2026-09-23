@@ -16,6 +16,7 @@ interface Sip10TokenDetailsLayoutProps {
   descriptionText: string;
   contractDetails: string;
   activity: BlockchainActivityItem[];
+  isActivityLoading: boolean;
 }
 
 export function Sip10TokenDetailsLayout({
@@ -29,6 +30,7 @@ export function Sip10TokenDetailsLayout({
   descriptionText,
   contractDetails,
   activity,
+  isActivityLoading,
 }: Sip10TokenDetailsLayoutProps) {
   return (
     <TokenDetailsLayout
@@ -46,6 +48,7 @@ export function Sip10TokenDetailsLayout({
       contractDetails={contractDetails}
       descriptionText={descriptionText}
       activity={activity}
+      isActivityLoading={isActivityLoading}
     />
   );
 }
