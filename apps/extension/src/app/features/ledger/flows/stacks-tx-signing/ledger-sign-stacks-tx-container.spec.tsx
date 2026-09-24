@@ -1,6 +1,4 @@
 // @vitest-environment jsdom
-import { type ReactNode } from 'react';
-
 import { act, render } from '@testing-library/react';
 import { LedgerError } from '@zondax/ledger-stacks';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
@@ -12,7 +10,7 @@ import {
   makeFakeLedgerStacksApp,
 } from '@app/features/ledger/utils/ledger-app.mocks';
 
-import { ledgerStacksTxSigningRoutes } from './ledger-sign-stacks-tx-container';
+import { LedgerSignStacksTxContainer } from './ledger-sign-stacks-tx-container';
 
 const mocks = vi.hoisted(() => ({
   toCheckingAppVersion: vi.fn(),
@@ -32,7 +30,6 @@ const mocks = vi.hoisted(() => ({
   publish: vi.fn(),
   disconnect: vi.fn(),
   captureContext: vi.fn<(value: LedgerTxSigningContext) => void>(),
-  location: { pathname: '/', state: {} as Record<string, unknown> },
 }));
 
 vi.mock('@stacks/transactions', async importOriginal => {
@@ -40,17 +37,13 @@ vi.mock('@stacks/transactions', async importOriginal => {
   return { ...actual, deserializeTransaction: () => null };
 });
 
-vi.mock('react-router', async importOriginal => {
-  const actual = await importOriginal<typeof import('react-router')>();
-  return { ...actual, useLocation: () => mocks.location };
-});
-
 vi.mock('@app/features/ledger/dmk/ledger-dmk.context', () => ({
   useLedgerDmk: () => makeFakeDmk({ disconnect: mocks.disconnect }),
 }));
 
-vi.mock('@app/features/ledger/hooks/use-ledger-navigate', () => ({
-  useLedgerNavigate: () => ({
+vi.mock('@app/features/ledger/flow/ledger-flow.context', () => ({
+  useLedgerFlowState: () => null,
+  useLedgerSteps: () => ({
     toCheckingAppVersion: mocks.toCheckingAppVersion,
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,
     toAwaitingDeviceOperation: mocks.toAwaitingDeviceOperation,
@@ -70,10 +63,6 @@ vi.mock('@app/features/ledger/hooks/use-ledger-analytics.hook', () => ({
 
 vi.mock('@app/features/ledger/hooks/use-ledger-fingerprint-migration', () => ({
   useLedgerFingerprintMigration: () => mocks.migrateFingerprint,
-}));
-
-vi.mock('@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx-route-generator', () => ({
-  ledgerSignTxRoutes: ({ component }: { component: ReactNode }) => component,
 }));
 
 vi.mock('@app/features/ledger/generic-flows/tx-signing/tx-signing-flow', () => ({
@@ -152,8 +141,12 @@ const stacksAppVersion = {
 const unsignedTx =
   '000000000104008e3c2222876b4b723fdbf79ac3e60564c3639bad0000000000000000000000000000006400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000302000000000005163b11c6abb50beb04bb884dfefd2ae9993121331d00000000000001f400000000000000000000000000000000000000000000000000000000000000000000';
 
-function renderSignTxContext(): LedgerTxSigningContext {
-  render(ledgerStacksTxSigningRoutes);
+function renderSignTxContext(settleOnRejection: boolean): LedgerTxSigningContext {
+  render(
+    <LedgerSignStacksTxContainer
+      request={{ kind: 'sign-stacks-tx', tx: unsignedTx, settleOnRejection }}
+    />
+  );
   const call = mocks.captureContext.mock.calls.at(-1);
   if (!call) throw new Error('Tx signing context was not rendered');
   return call[0];
@@ -172,17 +165,13 @@ function setupSignTransaction({
   errorMessage,
   settleOnRejection,
 }: SetupSignTransactionParams) {
-  mocks.location = {
-    pathname: '/swap/stacks/STX/aeUSDC/review/stacks/connect-your-ledger',
-    state: { tx: unsignedTx, settleOnRejection },
-  };
   mocks.connectApp.mockResolvedValue(makeFakeLedgerStacksApp());
   mocks.disconnect.mockResolvedValue(undefined);
   mocks.getStacksAppVersion.mockResolvedValue(stacksAppVersion);
   mocks.versionGate.mockResolvedValue(true);
   mocks.migrateFingerprint.mockResolvedValue(undefined);
   mocks.signTransaction.mockReturnValue(() => Promise.resolve({ returnCode, errorMessage }));
-  return { context: renderSignTxContext() };
+  return { context: renderSignTxContext(settleOnRejection ?? false) };
 }
 
 describe('LedgerSignStacksTxContainer', () => {

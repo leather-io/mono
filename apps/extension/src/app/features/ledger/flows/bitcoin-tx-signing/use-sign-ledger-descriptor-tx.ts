@@ -15,7 +15,7 @@ import {
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { logger } from '@shared/logger';
 
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import { addNativeSegwitSignaturesToPsbt } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import {
   getMasterFingerprintHex,
@@ -41,7 +41,7 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 export function useSignLedgerDescriptorTx() {
   const network = useCurrentNetwork();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerNavigate = useLedgerSteps();
   const addNativeSegwitBip32Derivation =
     useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero();
   const addNonWitnessUtxo = useUpdateLedgerSpecificNativeSegwitUtxoHexForAdddressIndexZero();

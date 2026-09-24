@@ -1,17 +1,18 @@
-import { useLocationState } from '@app/common/hooks/use-location-state';
-import { LedgerOperationRejectedLayout } from '@app/features/ledger/generic-steps/operation-rejected/operation-rejected.layout';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 
-export function OperationRejected() {
-  const ledgerNavigate = useLedgerNavigate();
-  const description = useLocationState<string>(
-    'description',
-    'The operation on device was rejected'
-  );
+import { LedgerOperationRejectedLayout } from './operation-rejected.layout';
+
+const defaultOperationRejectedDescription = 'The operation on device was rejected';
+
+interface OperationRejectedProps {
+  description?: string;
+}
+export function OperationRejected({ description }: OperationRejectedProps) {
+  const ledgerSteps = useLedgerSteps();
   return (
     <LedgerOperationRejectedLayout
-      description={description}
-      onClose={() => ledgerNavigate.cancelLedgerAction()}
+      description={description ?? defaultOperationRejectedDescription}
+      onClose={() => ledgerSteps.cancelLedgerAction()}
     />
   );
 }

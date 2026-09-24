@@ -5,7 +5,7 @@ import { SignatureData, UnsignedMessage } from '@shared/signature/signature-type
 import { analytics } from '@shared/utils/analytics';
 
 import { useWalletType } from '@app/common/use-wallet-type';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
 import {
   improveUxWithShortDelayAsStacksSigningIsSoFast,
   useMessageSignerStacksSoftwareWallet,
@@ -24,7 +24,7 @@ export function useSignStacksMessage({
   const signSoftwareWalletMessage = useMessageSignerStacksSoftwareWallet();
 
   const { whenWallet } = useWalletType();
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerFlow = useLedgerFlow();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,7 +48,7 @@ export function useSignStacksMessage({
 
     async ledger(unsignedMessage: UnsignedMessage) {
       analytics.track('request_signature_sign', { type: 'ledger' });
-      void ledgerNavigate.toConnectAndSignMessageStep(unsignedMessage);
+      ledgerFlow.open({ kind: 'sign-stacks-message', message: unsignedMessage });
       try {
         const messageSignature = await listenForStacksMessageSigning(unsignedMessage);
         onSignMessageCompleted(messageSignature);

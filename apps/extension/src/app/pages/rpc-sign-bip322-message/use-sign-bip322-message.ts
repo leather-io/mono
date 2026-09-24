@@ -92,28 +92,34 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
         return;
       }
 
-      const { signature } = await signBip322MessageSimple({
-        message,
-        address,
-        signPsbt,
-        network: networkMode,
-      });
+      try {
+        const { signature } = await signBip322MessageSimple({
+          message,
+          address,
+          signPsbt,
+          network: networkMode,
+        });
 
-      await shortPauseBeforeToast();
-      toast.success('Message signed successfully');
+        await shortPauseBeforeToast();
+        toast.success('Message signed successfully');
 
-      void sendMessageToOriginatingFrame(
-        { frameId, tabId },
-        createRpcSuccessResponse('signMessage', {
-          id: requestId,
-          result: { signature, address, message },
-        })
-      );
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
+          createRpcSuccessResponse('signMessage', {
+            id: requestId,
+            result: { signature, address, message },
+          })
+        );
 
-      analytics.track('user_approved_message_signing', { origin });
+        analytics.track('user_approved_message_signing', { origin });
 
-      await allowTimeForUserToReadToast();
-      closeWindow();
+        await allowTimeForUserToReadToast();
+        closeWindow();
+      } catch (e) {
+        logger.error('Unable to sign bip322 message', e);
+      } finally {
+        setIsLoading(false);
+      }
     },
   };
 }

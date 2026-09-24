@@ -5,12 +5,12 @@ import { analytics } from '@shared/utils/analytics';
 
 import { isLedgerDeviceLockedError } from '@app/features/ledger/dmk/ledger-dmk-errors';
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
-import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
+import { useLedgerFlow, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
+import type { VerifyAddressVariant } from '@app/features/ledger/flow/ledger-flow.types';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
 import { useDisplayLedgerDescriptorAddress } from '@app/features/ledger/hooks/use-display-ledger-descriptor-address';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import {
   connectLedgerBitcoinApp,
   displayNativeSegwitAddressOnDevice,
@@ -32,17 +32,16 @@ import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accoun
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
-import { verifyAddressPaths } from './verify-address-paths';
-
 interface LedgerVerifyBtcAddressProps {
-  variant: 'btcNativeSegwit' | 'btcTaproot' | 'btcMultisig';
+  variant: Exclude<VerifyAddressVariant, 'stx'>;
 }
-function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
+export function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
   const navigate = useNavigate();
   const toast = useToast();
   const dmk = useLedgerDmk();
   const signerActions = useSignerActionController();
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerNavigate = useLedgerSteps();
+  const { close } = useLedgerFlow();
   const network = useCurrentNetwork();
   const { accountIndex } = useCurrentAccountId();
   const nativeSegwitAddress = useCurrentAccountNativeSegwitAddressIndexZero();
@@ -87,6 +86,7 @@ function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       onSuccess() {
         toast.success('Address verified on your Ledger');
+        close();
         void navigate(RouteUrls.Home, { replace: true });
       },
       async pullKeysFromDevice(app) {
@@ -141,20 +141,3 @@ function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
     />
   );
 }
-
-export const verifyBtcAddressRoutes = (
-  <>
-    {ledgerRequestKeysRoutes({
-      path: verifyAddressPaths.btcNativeSegwit,
-      component: <LedgerVerifyBtcAddress variant="btcNativeSegwit" />,
-    })}
-    {ledgerRequestKeysRoutes({
-      path: verifyAddressPaths.btcTaproot,
-      component: <LedgerVerifyBtcAddress variant="btcTaproot" />,
-    })}
-    {ledgerRequestKeysRoutes({
-      path: verifyAddressPaths.btcMultisig,
-      component: <LedgerVerifyBtcAddress variant="btcMultisig" />,
-    })}
-  </>
-);

@@ -1,12 +1,14 @@
 import { createContext, useContext } from 'react';
 
 import type { SupportedBlockchains } from '@leather.io/models';
+import type { StacksDerivationPathType } from '@leather.io/stacks';
 
 import { BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
 
 export interface LedgerRequestKeysContext extends BaseLedgerOperationContext {
   chain: SupportedBlockchains;
   pullPublicKeysFromDevice(): Promise<void>;
+  onSelectStandard?(type: StacksDerivationPathType): void;
 }
 
 const ledgerRequestKeysContext = createContext<LedgerRequestKeysContext | null>(null);

@@ -21,7 +21,7 @@ export async function listenForStacksMessageSigning(
       if (isEqual(msg.unsignedMessage, unsignedMessage)) {
         appEvents.unsubscribe('ledgerStacksMessageSigningCancelled', signingAbortedHandler);
         appEvents.unsubscribe('ledgerStacksMessageSigned', stacksMessageSignedHandler);
-        reject(new Error('User cancelled the signing operation'));
+        reject(new Error(msg.error ?? 'User cancelled the signing operation'));
       }
     }
     appEvents.subscribe('ledgerStacksMessageSigningCancelled', signingAbortedHandler);

@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-import { Outlet, useLocation } from 'react-router';
-
 import { ChainId } from '@stacks/network';
 
 import { truncateMiddle } from '@leather.io/utils';
@@ -34,23 +31,10 @@ function RpcSignBip322Message() {
     message,
     address,
     networkMode,
-    isLoading: signBip322MessageIsLoading,
+    isLoading,
     onUserApproveBip322MessageSigningRequest,
     onUserRejectBip322MessageSigningRequest,
   } = useSignBip322Message();
-
-  const location = useLocation();
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  // if user has wentBack need to stop button loading so they can retry
-  useEffect(() => {
-    if (location?.state?.wentBack) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(signBip322MessageIsLoading);
-    }
-  }, [location, signBip322MessageIsLoading, isLoading, setIsLoading]);
 
   if (origin === null) {
     closeWindow();
@@ -59,7 +43,6 @@ function RpcSignBip322Message() {
 
   return (
     <>
-      <Outlet />
       <PopupHeader showSwitchAccount balance="all" />
       <MessageSigningRequestLayout>
         <MessageSigningHeader
