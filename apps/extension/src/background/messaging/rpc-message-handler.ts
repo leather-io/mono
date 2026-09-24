@@ -1,3 +1,4 @@
+import { LEATHER_GITBOOK_DEVS } from '@leather.io/constants';
 import {
   RpcEndpointMap,
   RpcErrorCode,
@@ -83,7 +84,7 @@ export async function rpcMessageHandler(request: RpcRequests, port: chrome.runti
       id: request.id,
       error: {
         code: RpcErrorCode.METHOD_NOT_FOUND,
-        message: `"${request.method}" is not supported. Try running \`.request('supportedMethods')\` to see what Leather can do, or check out our developer documentation at https://leather.gitbook.io/developers/home/welcome`,
+        message: `"${request.method}" is not supported. Try running \`.request('supportedMethods')\` to see what Leather can do, or check out our developer documentation at ${LEATHER_GITBOOK_DEVS}`,
       },
     })
   );
