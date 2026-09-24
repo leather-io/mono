@@ -5,6 +5,7 @@ export * from './bip322/verify-message-bip322';
 
 export * from './coin-selection/calculate-max-spend';
 export * from './coin-selection/coin-selection';
+export * from './coin-selection/coin-selection-input-limit';
 export * from './descriptors/bond-lock-script';
 export * from './descriptors/bond-template';
 export * from './descriptors/ledger-descriptor-resolver';
