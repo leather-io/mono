@@ -241,7 +241,6 @@ export function CreateAccountModal({
               <Box mb="space.03">
                 <Callout
                   variant="default"
-                  bg="ink.component-background-default"
                   borderRadius="md"
                   icon={<InfoCircleIcon variant="small" color="ink.text-subdued" />}
                 >
