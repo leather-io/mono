@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { AccountAddresses } from '@leather.io/models';
+import { AccountAddresses, defaultNetworksKeyedById } from '@leather.io/models';
 
 import {
   LeatherApiClient,
@@ -166,6 +166,82 @@ describe(UtxosService.name, () => {
       expect(result.locked).toEqual([]);
       expect(result.confirmed.map(utxo => utxo.txid)).toEqual(['utxo1', 'utxo1']);
       expect(result.available).toHaveLength(2);
+    });
+  });
+
+  describe('staking testnet data source', () => {
+    const stakingTestnetSettings = {
+      getSettings: () => ({ network: defaultNetworksKeyedById.stakingTestnet }),
+    } as unknown as SettingsService;
+    const leatherApiClientThatMustNotBeCalled = {
+      fetchUtxos: () => Promise.reject(new Error('leather api must not be called')),
+      fetchUtxosByAddress: () => Promise.reject(new Error('leather api must not be called')),
+      fetchStakingBonds: () => Promise.resolve([]),
+    } as unknown as LeatherApiClient;
+
+    it('reads hd account utxos from the network mempool, not the leather api', async () => {
+      const requestedDescriptors: string[] = [];
+      const mempoolApiClient = {
+        fetchDescriptorUtxos: (descriptor: string) => {
+          requestedDescriptors.push(descriptor);
+          return Promise.resolve([]);
+        },
+      } as unknown as MempoolApiClient;
+      const service = new UtxosService(
+        leatherApiClientThatMustNotBeCalled,
+        mempoolApiClient,
+        {
+          getDescriptorTransactions: () => Promise.resolve([]),
+        } as unknown as BitcoinTransactionsService,
+        stakingTestnetSettings
+      );
+
+      const result = await service.getAccountUtxos({
+        account: {
+          id: { fingerprint: 'hd-fp', accountIndex: 0 },
+          bitcoin: {
+            type: 'hd',
+            taprootDescriptor: 'tr(...)',
+            nativeSegwitDescriptor: 'wpkh(...)',
+            zeroIndexNativeSegwitPayerAddress: 'tb1qvz04jt55sy7a4e9fg447gm2zlmnjck3d4yhelq',
+          },
+        },
+      });
+
+      expect(requestedDescriptors.sort()).toEqual(['tr(...)', 'wpkh(...)']);
+      expect(result.confirmed).toEqual([]);
+    });
+
+    it('reads fixed address utxos from the network mempool, not the leather api', async () => {
+      let requestedAddress: string | undefined;
+      const mempoolApiClient = {
+        fetchAddressUtxos: (address: string) => {
+          requestedAddress = address;
+          return Promise.resolve([]);
+        },
+      } as unknown as MempoolApiClient;
+      const service = new UtxosService(
+        leatherApiClientThatMustNotBeCalled,
+        mempoolApiClient,
+        {
+          getAddressTransactions: () => Promise.resolve([]),
+        } as unknown as BitcoinTransactionsService,
+        stakingTestnetSettings
+      );
+
+      await service.getAccountUtxos({
+        account: {
+          id: { fingerprint: 'multisig-fp', accountIndex: 0 },
+          bitcoin: {
+            type: 'fixedAddress',
+            address: 'tb1qvz04jt55sy7a4e9fg447gm2zlmnjck3d4yhelq',
+            paymentType: 'p2wsh',
+            multisig: { threshold: 2, signerCount: 3 },
+          },
+        },
+      });
+
+      expect(requestedAddress).toEqual('tb1qvz04jt55sy7a4e9fg447gm2zlmnjck3d4yhelq');
     });
   });
 });

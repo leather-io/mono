@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { AccountAddresses } from '@leather.io/models';
+import { AccountAddresses, defaultNetworksKeyedById } from '@leather.io/models';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
@@ -135,6 +135,85 @@ describe(BitcoinTransactionsService.name, () => {
       );
       const result = await service.getAccountTransactions(mockAccount, { page: 1, pageSize: 150 });
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('staking testnet data source', () => {
+    const stakingTestnetSettings = {
+      getSettings: () => ({ network: defaultNetworksKeyedById.stakingTestnet }),
+    } as unknown as SettingsService;
+    const leatherApiClientThatMustNotBeCalled = {
+      fetchBitcoinTransactions: () => Promise.reject(new Error('leather api must not be called')),
+      fetchBitcoinTransactionsByAddress: () =>
+        Promise.reject(new Error('leather api must not be called')),
+      fetchBitcoinTransactionByTxId: () =>
+        Promise.reject(new Error('leather api must not be called')),
+    } as unknown as LeatherApiClient;
+
+    it('reads descriptor transactions from the network mempool', async () => {
+      let requestedDescriptor: string | undefined;
+      const service = new BitcoinTransactionsService(
+        leatherApiClientThatMustNotBeCalled,
+        {
+          fetchDescriptorTransactions: (descriptor: string) => {
+            requestedDescriptor = descriptor;
+            return Promise.resolve([]);
+          },
+        } as unknown as MempoolApiClient,
+        stakingTestnetSettings
+      );
+
+      const result = await service.getDescriptorTransactions('wpkh(...)', {
+        page: 1,
+        pageSize: 150,
+      });
+
+      expect(requestedDescriptor).toEqual('wpkh(...)');
+      expect(result).toEqual([]);
+    });
+
+    it('reads address transactions from the network mempool', async () => {
+      let requestedAddress: string | undefined;
+      const service = new BitcoinTransactionsService(
+        leatherApiClientThatMustNotBeCalled,
+        {
+          fetchAddressTransactions: (address: string) => {
+            requestedAddress = address;
+            return Promise.resolve([]);
+          },
+        } as unknown as MempoolApiClient,
+        stakingTestnetSettings
+      );
+
+      await service.getAddressTransactions('tb1qvz04jt55sy7a4e9fg447gm2zlmnjck3d4yhelq', {
+        page: 1,
+        pageSize: 150,
+      });
+
+      expect(requestedAddress).toEqual('tb1qvz04jt55sy7a4e9fg447gm2zlmnjck3d4yhelq');
+    });
+
+    it('reads a transaction by txid from the network mempool', async () => {
+      let requestedTxid: string | undefined;
+      const service = new BitcoinTransactionsService(
+        leatherApiClientThatMustNotBeCalled,
+        {
+          fetchTransactionByTxId: (txid: string) => {
+            requestedTxid = txid;
+            return Promise.resolve(null);
+          },
+        } as unknown as MempoolApiClient,
+        stakingTestnetSettings
+      );
+
+      const result = await service.getTransactionByTxId(
+        '8782f581c9db06f4c1e4b86941fd9e16e04ce74ff6114b051066b49c97918319'
+      );
+
+      expect(requestedTxid).toEqual(
+        '8782f581c9db06f4c1e4b86941fd9e16e04ce74ff6114b051066b49c97918319'
+      );
+      expect(result).toBeNull();
     });
   });
 });
