@@ -9,6 +9,7 @@ export {
 export type { GetMempoolExplorerLinkArgs } from './activity/activity-links';
 export {
   getStacksExplorerLink,
+  getStacksExplorerMode,
   getBitcoinExplorerLink,
   makeActivityLink,
 } from './activity/activity-links';

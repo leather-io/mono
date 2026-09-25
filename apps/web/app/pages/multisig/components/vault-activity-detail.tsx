@@ -9,6 +9,7 @@ import {
   type BlockchainActivityView,
   getBitcoinExplorerLink,
   getStacksExplorerLink,
+  getStacksExplorerMode,
 } from '@leather.io/features';
 import type {
   BlockchainActivity,
@@ -59,9 +60,10 @@ function explorerLink(
     });
   }
   return getStacksExplorerLink({
-    mode: network.chain.bitcoin.mode,
+    mode: getStacksExplorerMode(network),
     type: 'txid',
     value: txid,
+    stacksApiUrl: network.chain.stacks.url,
   });
 }
 
@@ -161,9 +163,10 @@ export function VaultActivityDetail({
           <DetailRow label="Contract">
             <ExternalLink
               href={getStacksExplorerLink({
-                mode,
+                mode: getStacksExplorerMode(network),
                 type: 'address',
                 value: activity.contract.contractId,
+                stacksApiUrl: network.chain.stacks.url,
               })}
               withIcon
             >

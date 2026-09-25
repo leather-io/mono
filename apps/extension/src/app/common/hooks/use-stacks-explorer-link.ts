@@ -23,10 +23,11 @@ export function useStacksExplorerLink() {
           value: txid,
           searchParams,
           isNakamoto: isNakamotoTestnet,
+          stacksApiUrl: chain.stacks.url,
         })
       );
     },
-    [chain.stacks.chainId, isNakamotoTestnet]
+    [chain.stacks.chainId, chain.stacks.url, isNakamotoTestnet]
   );
 
   return { handleOpenStacksTxLink };
