@@ -183,6 +183,8 @@ interface HistoricalEvents {
   user_approved_send_transfer: { origin: string };
   user_approved_sign_and_broadcast_psbt: { origin: string };
   user_clicked_feedback_button: undefined;
+  update_available_callout_update_now: undefined;
+  update_available_callout_later: undefined;
   unable_to_read_fee_in_stx_validator: undefined;
   unable_to_read_available_balance_in_stx_validator: undefined;
   view_bitcoin_transaction: undefined;
