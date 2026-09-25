@@ -113,7 +113,7 @@ export function SignerRollcall({
       {signers.map(signer => {
         const member = vault.members.find(m => m.user?.id === signer.userId);
         const isMe = signer.address === currentUserAddress;
-        const name = isMe ? 'Me' : member?.name || truncateMiddle(signer.address);
+        const name = member?.name || truncateMiddle(signer.address);
         const signature = transaction.signatures.find(
           sig => sig.signerIndex === signer.signerIndex
         );
