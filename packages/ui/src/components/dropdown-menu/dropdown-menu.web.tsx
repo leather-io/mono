@@ -1,6 +1,6 @@
-import { forwardRef } from 'react';
+import { type ComponentPropsWithoutRef, type ComponentRef, forwardRef } from 'react';
 
-import { css } from 'leather-styles/css';
+import { css, cx } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 
@@ -112,15 +112,21 @@ const Label: typeof RadixDropdownMenu.Label = forwardRef((props, ref) => (
 Label.displayName = 'DropdownMenu.Label';
 
 const dropdownItemStyles = css({ p: 'space.03' });
-const Item: typeof RadixDropdownMenu.Item = forwardRef((props, ref) => (
-  <styled.div className={dropdownItemStyles}>
-    <RadixDropdownMenu.Item
-      ref={ref}
-      className={css(pressableBaseStyles, pressableStyles)}
-      {...props}
-    />
-  </styled.div>
-));
+interface DropdownMenuItemProps extends ComponentPropsWithoutRef<typeof RadixDropdownMenu.Item> {
+  wrapperClassName?: string;
+}
+
+const Item = forwardRef<ComponentRef<typeof RadixDropdownMenu.Item>, DropdownMenuItemProps>(
+  ({ className, wrapperClassName, ...props }, ref) => (
+    <styled.div className={cx(dropdownItemStyles, wrapperClassName)}>
+      <RadixDropdownMenu.Item
+        ref={ref}
+        className={cx(css(pressableBaseStyles, pressableStyles), className)}
+        {...props}
+      />
+    </styled.div>
+  )
+);
 
 Item.displayName = 'DropdownMenu.Item';
 
