@@ -1,22 +1,25 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 
-import { Box, styled } from 'leather-styles/jsx';
+import { Box } from 'leather-styles/jsx';
 
-import {
-  type BlockchainActivityItem,
-  formatPriceChangeText,
-  getPriceChangeColor,
-} from '@leather.io/features';
-import type { Money } from '@leather.io/models';
+import { makeAccountIdentifer } from '@leather.io/crypto';
+import type { BlockchainActivityItem } from '@leather.io/features';
+import type { FungibleCryptoAsset, Money } from '@leather.io/models';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { formatCurrency } from '@app/common/currency-formatter';
+import { analytics } from '@shared/utils/analytics';
+
 import type { ReceiveView } from '@app/common/receive/receive';
+import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useSelectTokenDetailsTab } from '@app/store/settings/settings.actions';
+import { useTokenDetailsTab } from '@app/store/settings/settings.selectors';
+import type { TokenDetailsTab } from '@app/store/settings/settings.slice';
 
-import { ActivityRow } from '../activity-list/components/activity-row';
+import { TokenPriceHistory } from './components/price-history/token-price-history';
 import { type SwapChain, TokenDetailsActionsRow } from './components/token-details-actions';
 import { TokenDetailsRow } from './components/token-details-row';
 import { TokenDetailsScreen } from './components/token-details-screen';
-import { TokenDetailsSection } from './components/token-details-section';
+import { TokenDetailsTabs, resolveVisibleTokenDetailsTab } from './components/token-details-tabs';
 import { TokenOverview } from './components/token-overview';
 
 interface TokenDetailsLayoutProps {
@@ -25,17 +28,17 @@ interface TokenDetailsLayoutProps {
   symbol: string;
   receiveView: ReceiveView;
   swapChain: SwapChain;
-  availableBalance: Money;
+  balance: Money;
   fiatBalance: Money;
   name: string;
+  asset: FungibleCryptoAsset;
   price?: Money;
-  changePercent: number;
-  priceChangeDelta?: string;
   layer: string;
   contractDetails?: string;
   descriptionText?: string;
   balancesContent?: ReactNode;
   activity: BlockchainActivityItem[];
+  isActivityLoading: boolean;
   isBuyEnabled?: boolean;
   isSwapEnabled?: boolean;
 }
@@ -46,82 +49,90 @@ export function TokenDetailsLayout({
   symbol,
   receiveView,
   swapChain,
-  availableBalance,
+  balance,
   fiatBalance,
   name,
+  asset,
   price,
-  changePercent,
-  priceChangeDelta,
   layer,
   contractDetails = '—',
   descriptionText,
   balancesContent,
   activity,
+  isActivityLoading,
   isBuyEnabled = true,
   isSwapEnabled = true,
 }: TokenDetailsLayoutProps) {
+  const activeTab = resolveVisibleTokenDetailsTab(useTokenDetailsTab(), !!balancesContent);
+  const selectTab = useSelectTokenDetailsTab();
+  const currentAccountId = useCurrentAccountId();
+  const hasPrice = !!price && price.amount.isGreaterThan(0);
+  const hasBalance = balance.amount.isGreaterThan(0);
+  const assetId = serializeAssetId(getAssetId(asset));
+  const walletAccountId = makeAccountIdentifer(
+    currentAccountId.fingerprint,
+    currentAccountId.accountIndex
+  );
+
+  const landingTab = useRef({ assetId, tab: activeTab });
+  if (landingTab.current.assetId !== assetId) landingTab.current = { assetId, tab: activeTab };
+
+  useEffect(() => {
+    analytics.track('token_details_viewed', {
+      assetId,
+      protocol: asset.protocol,
+      platform: 'extension',
+      walletAccountId,
+      tab: landingTab.current.tab,
+    });
+  }, [assetId, asset.protocol, walletAccountId]);
+
+  function handleSelectTab(tab: TokenDetailsTab) {
+    selectTab(tab);
+    analytics.track('token_details_tab_selected', { assetId, protocol: asset.protocol, tab });
+  }
+
   return (
-    <TokenDetailsScreen
-      title={title}
-      overview={
-        <TokenOverview
-          icon={icon}
-          availableBalance={availableBalance}
-          symbol={symbol}
-          fiatBalance={fiatBalance}
-          actions={
-            <TokenDetailsActionsRow
-              symbol={symbol}
-              receiveView={receiveView}
-              swapChain={swapChain}
-              isBuyEnabled={isBuyEnabled}
-              isSwapEnabled={isSwapEnabled}
-            />
-          }
-        />
-      }
-    >
-      {descriptionText ? (
-        <TokenDetailsSection title="Description">
-          <Box px="space.05" pb="space.03">
-            <styled.p textStyle="body.02" margin="0">
-              {descriptionText}
-            </styled.p>
-          </Box>
-        </TokenDetailsSection>
-      ) : null}
-
-      <TokenDetailsSection title="Token details">
-        <TokenDetailsRow label="Name" value={name} testId="token-details-name" />
-        <TokenDetailsRow
-          label="Price"
-          value={price ? formatCurrency(price) : '—'}
-          testId="token-details-price"
-        />
-        <TokenDetailsRow
-          label="Price change (24hr)"
-          value={
-            <styled.span textStyle="caption.01" color={getPriceChangeColor(changePercent)}>
-              {formatPriceChangeText({ changePercent, priceChangeDelta })}
-            </styled.span>
-          }
-          testId="token-details-price-change"
-        />
-        <TokenDetailsRow label="Layer" value={layer} testId="token-details-layer" />
-        <TokenDetailsRow label="Contract details" value={contractDetails} />
-      </TokenDetailsSection>
-
-      {balancesContent ? (
-        <TokenDetailsSection title="Balances">{balancesContent}</TokenDetailsSection>
-      ) : null}
-
-      {activity.length > 0 ? (
-        <TokenDetailsSection title="Activity">
-          {activity.map(item => (
-            <ActivityRow key={item.view.key} item={item} />
-          ))}
-        </TokenDetailsSection>
-      ) : null}
+    <TokenDetailsScreen title={title}>
+      <TokenOverview
+        icon={icon}
+        balance={balance}
+        symbol={symbol}
+        fiatBalance={fiatBalance}
+        actions={
+          <TokenDetailsActionsRow
+            symbol={symbol}
+            assetId={assetId}
+            receiveView={receiveView}
+            swapChain={swapChain}
+            isBuyEnabled={isBuyEnabled}
+            isSwapEnabled={isSwapEnabled}
+          />
+        }
+      />
+      <TokenDetailsTabs
+        activeTab={activeTab}
+        onSelectTab={handleSelectTab}
+        priceContent={
+          hasPrice ? (
+            <Box pt="space.04" pb="space.02">
+              <TokenPriceHistory asset={asset} price={price} />
+            </Box>
+          ) : null
+        }
+        descriptionText={descriptionText}
+        balancesContent={balancesContent}
+        activity={activity}
+        isActivityLoading={isActivityLoading}
+        hasBalance={hasBalance}
+        detailRows={
+          <>
+            <TokenDetailsRow label="Name" value={name} testId="token-details-name" />
+            <TokenDetailsRow label="Layer" value={layer} testId="token-details-layer" />
+            <TokenDetailsRow label="Contract details" value={contractDetails} />
+          </>
+        }
+      />
     </TokenDetailsScreen>
   );
 }
