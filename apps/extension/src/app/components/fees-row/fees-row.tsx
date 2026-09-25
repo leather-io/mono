@@ -16,7 +16,6 @@ import { CustomFeeField } from './components/custom-fee-field';
 import { FeeEstimateSelect } from './components/fee-estimate-select';
 import { FeesRowLayout } from './components/fees-row.layout';
 import { TransactionFee } from './components/transaction-fee';
-import { stxFeeCurrency } from './fees-row.constants';
 
 function toEstimate(quote: StacksTransactionFees['options']['low']): StacksFeeEstimate {
   return {
@@ -45,7 +44,7 @@ export function FeesRow({
   disableFeeSelection,
 }: FeeRowProps) {
   const [feeField, _, feeHelper] = useField('fee');
-  const [feeCurrencyField, ___, feeCurrencyHelper] = useField('feeCurrency');
+  const [feeCurrencyField] = useField('feeCurrency');
   const [feeTypeField, __, feeTypeHelper] = useField('feeType');
   const [fieldWarning, setFieldWarning] = useState<string | undefined>(undefined);
   const [isSelectVisible, setIsSelectVisible] = useState(false);
@@ -99,7 +98,6 @@ export function FeesRow({
   const handleSelectFeeEstimateOrCustomField = useCallback(
     (index: number) => {
       void feeTypeHelper.setValue(FeeTypes[index]);
-      void feeCurrencyHelper.setValue(stxFeeCurrency);
       if (index === FeeTypes.Custom)
         void feeHelper.setValue(
           defaultFeeValue
@@ -111,7 +109,7 @@ export function FeesRow({
       setFieldWarning('');
       setIsSelectVisible(false);
     },
-    [feeTypeHelper, feeCurrencyHelper, feeHelper, estimates, defaultFeeValue]
+    [feeTypeHelper, feeHelper, estimates, defaultFeeValue]
   );
 
   if (!hasFeeEstimates || !fees) return <LoadingRectangle height="32px" width="100%" />;

@@ -5,13 +5,12 @@ import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io
 import type { Environment } from '../../environment';
 import { RateLimiterService, type RateLimiterType } from '../../rate-limiter/rate-limiter.service';
 import type { SettingsService } from '../../settings/settings.service';
+import { LeatherApiError, getErrorDetail } from './leather-api.error';
+import { LeatherSponsorshipApiClient } from './leather-sponsorship-api.client';
 import {
-  LeatherApiError,
-  getErrorDetail,
   getSbtcSponsorshipErrorCode,
   getSbtcSponsorshipIneligibilityReason,
-} from './leather-api.error';
-import { LeatherSponsorshipApiClient } from './leather-sponsorship-api.client';
+} from './leather-sponsorship-api.types';
 
 const quoteRequest = {
   network: 'mainnet',
@@ -19,11 +18,8 @@ const quoteRequest = {
 } as const;
 
 const quoteResponse = {
-  quoteId: 'quote-medium',
   sponsorPrincipal: 'SP3SPONSOR',
   feeRecipientPrincipal: 'SP4FEES',
-  feeSats: 1500,
-  stxFeeMicro: 180_000,
   expiresAt: '2026-09-21T12:00:00.000Z',
   tiers: {
     low: { quoteId: 'quote-low', feeSats: 1000, stxFeeMicro: 120_000 },
@@ -151,14 +147,20 @@ describe(LeatherSponsorshipApiClient.name, () => {
   test('rejects a malformed success body', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(() => Promise.resolve(jsonResponse({ quoteId: 1 })))
+      vi.fn(() => Promise.resolve(jsonResponse({ sponsorPrincipal: 1 })))
     );
 
     await expect(createClient().fetchQuote(quoteRequest)).rejects.toThrow();
   });
 
   test('rejects a quote without the per-tier quotes', async () => {
-    const legacyQuote = { ...quoteResponse, tiers: undefined };
+    const legacyQuote = {
+      ...quoteResponse,
+      quoteId: 'quote-medium',
+      feeSats: 1500,
+      stxFeeMicro: 180_000,
+      tiers: undefined,
+    };
     vi.stubGlobal(
       'fetch',
       vi.fn(() => Promise.resolve(jsonResponse(legacyQuote)))
@@ -179,5 +181,16 @@ describe(getSbtcSponsorshipErrorCode.name, () => {
         new LeatherApiError('u', 500, 'x', { error: 'boom', code: 'something_else' })
       )
     ).toBeUndefined();
+  });
+
+  test('recognises the coded upstream failure', () => {
+    expect(
+      getSbtcSponsorshipErrorCode(
+        new LeatherApiError('u', 502, 'x', {
+          error: 'Stacks API unavailable',
+          code: 'upstream_unavailable',
+        })
+      )
+    ).toBe('upstream_unavailable');
   });
 });

@@ -12,15 +12,14 @@ import { StacksSendFormValues } from '@shared/models/form.model';
 
 import { getSafeImageCanonicalUri } from '@app/common/stacks-utils';
 import {
-  getSbtcAmountSats,
   getSbtcSponsorshipErrorMessage,
   getSbtcSponsorshipFeeTier,
+  isSbtcContractPrincipal,
 } from '@app/common/transactions/stacks/sbtc-sponsorship.utils';
+import { useBuildSbtcSponsoredTransfer } from '@app/common/transactions/stacks/use-build-sbtc-sponsored-transfer';
 import { stacksFungibleTokenAmountValidator } from '@app/common/validation/forms/amount-validators';
 import { stxFeeCurrency } from '@app/components/fees-row/fees-row.constants';
 import { useToast } from '@app/features/toasts/use-toast';
-import { useConfigSbtc } from '@app/query/common/remote-config/remote-config.query';
-import { useFetchSbtcSponsorshipQuote } from '@app/query/sbtc/sbtc-sponsorship.hooks';
 import { useStxAddressBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
@@ -28,7 +27,6 @@ import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 import {
   useFtTokenTransferUnsignedTx,
   useGenerateFtTokenTransferUnsignedTx,
-  useGenerateSbtcSponsoredTransferUnsignedTx,
 } from '@app/store/transactions/token-transfer.hooks';
 
 import { useStacksCommonSendForm } from '../../family/stacks/use-stacks-common-send-form';
@@ -36,23 +34,18 @@ import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
 const releaseSbtcSponsorship = true;
 
-const insufficientSbtcForFeeMessage = 'Insufficient sBTC balance to cover the amount and fee';
-const sbtcFeeUnavailableMessage = 'Paying the fee in sBTC is not available right now';
-
 interface UseSip10SendFormArgs {
   balance: CryptoAssetBalance;
   info: Sip10Asset;
 }
 export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
   const generateTx = useGenerateFtTokenTransferUnsignedTx(info);
-  const generateSponsoredTx = useGenerateSbtcSponsoredTransferUnsignedTx({
+  const buildSponsoredTransfer = useBuildSbtcSponsoredTransfer({
     assetId: info.assetId,
     decimals: info.decimals,
   });
-  const fetchSbtcSponsorshipQuote = useFetchSbtcSponsorshipQuote();
   const policy = useCurrentPolicy();
   const toast = useToast();
-  const { isSbtcContract } = useConfigSbtc();
   const stxAddress = useCurrentStacksAccountAddress();
   const stxBalance = useStxAddressBalance(stxAddress);
   const [selectedSbtcFee, setSelectedSbtcFee] = useState<Money | null>(null);
@@ -67,7 +60,7 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
 
   const isStacksPolicy = policy?.chain === 'stacks';
   const canPayFeeInSbtc =
-    releaseSbtcSponsorship && isSbtcContract(info.contractId) && !isStacksPolicy;
+    releaseSbtcSponsorship && isSbtcContractPrincipal(info.contractId) && !isStacksPolicy;
 
   const availableTokenBalance = balance.availableBalance;
 
@@ -104,46 +97,20 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
     };
   }
 
-  async function previewSponsoredTransaction(
-    values: StacksSendFormValues,
-    formikHelpers: FormikHelpers<StacksSendFormValues>
-  ) {
-    if (!canPayFeeInSbtc) {
-      formikHelpers.setFieldError('fee', sbtcFeeUnavailableMessage);
-      return;
-    }
-    const amountSats = getSbtcAmountSats(values.amount, info.decimals);
-    const feeTier = getSbtcSponsorshipFeeTier(values.feeType);
+  async function previewSponsoredTransaction(values: StacksSendFormValues) {
     try {
-      const { quote } = await fetchSbtcSponsorshipQuote();
-      const tier = quote.tiers[feeTier];
-      if (availableTokenBalance.amount.isLessThan(new BigNumber(amountSats).plus(tier.feeSats))) {
-        formikHelpers.setFieldError('amount', insufficientSbtcForFeeMessage);
-        return;
-      }
-      const tx = await generateSponsoredTx(values, {
-        feeSats: tier.feeSats,
-        feeRecipientPrincipal: quote.feeRecipientPrincipal,
+      const { tx, sponsorship } = await buildSponsoredTransfer({
+        formValues: values,
+        feeTier: getSbtcSponsorshipFeeTier(values.feeType),
       });
-      if (!tx) return logger.error('Attempted to generate sponsored tx, but tx is undefined');
-
       void sendFormNavigate.toConfirmAndSignStacksSip10Transaction({
         decimals: info.decimals,
         name: info.name,
         tx,
-        sponsorship: {
-          quoteId: tier.quoteId,
-          feeTier,
-          expiresAt: quote.expiresAt,
-          feeSats: tier.feeSats,
-          feeRecipientPrincipal: quote.feeRecipientPrincipal,
-          assetId: info.assetId,
-          decimals: info.decimals,
-          formValues: values,
-        },
+        sponsorship,
       });
     } catch (error) {
-      logger.error('Failed to fetch sBTC sponsorship quote', error);
+      logger.error('Failed to build the sponsored sBTC transaction', error);
       toast.error(getSbtcSponsorshipErrorMessage(error));
     }
   }
@@ -173,9 +140,7 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
       const isFormValid = await checkFormValidation(values, formikHelpers);
       if (!isFormValid) return;
 
-      if (values.feeCurrency !== stxFeeCurrency) {
-        return previewSponsoredTransaction(values, formikHelpers);
-      }
+      if (values.feeCurrency !== stxFeeCurrency) return previewSponsoredTransaction(values);
 
       const tx = await generateTx(values);
       if (!tx) return logger.error('Attempted to generate unsigned tx, but tx is undefined');

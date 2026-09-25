@@ -73,7 +73,7 @@ interface SbtcSponsorshipQuoteTierFixture {
   stxFeeMicro: number;
 }
 
-interface SbtcSponsorshipQuoteFixture extends SbtcSponsorshipQuoteTierFixture {
+interface SbtcSponsorshipQuoteFixture {
   sponsorPrincipal: string;
   feeRecipientPrincipal: string;
   expiresAt: string;
@@ -104,7 +104,6 @@ export function createSbtcSponsorshipQuoteFixture(
     high: createSbtcSponsorshipQuoteTierFixture('high', feeSatsByTier.high),
   };
   return {
-    ...tiers.medium,
     sponsorPrincipal: TEST_ACCOUNT_2_STX_ADDRESS,
     feeRecipientPrincipal: TEST_ACCOUNT_2_STX_ADDRESS,
     expiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString(),

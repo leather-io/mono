@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { LeatherApiError } from './leather-api.error';
+
 export const sbtcSponsorshipNetworkSchema = z.enum(['mainnet', 'testnet']);
 
 export type SbtcSponsorshipNetwork = z.infer<typeof sbtcSponsorshipNetworkSchema>;
@@ -23,7 +25,7 @@ export const sbtcSponsorshipQuoteTierSchema = z.object({
 
 export type SbtcSponsorshipQuoteTier = z.infer<typeof sbtcSponsorshipQuoteTierSchema>;
 
-export const sbtcSponsorshipQuoteResponseSchema = sbtcSponsorshipQuoteTierSchema.extend({
+export const sbtcSponsorshipQuoteResponseSchema = z.object({
   sponsorPrincipal: z.string(),
   feeRecipientPrincipal: z.string(),
   expiresAt: z.string(),
@@ -53,6 +55,7 @@ export const sbtcSponsorshipErrorCodeSchema = z.enum([
   'not_eligible',
   'stale_nonce',
   'broadcast_failed',
+  'upstream_unavailable',
   'rate_limited',
 ]);
 
@@ -82,3 +85,17 @@ export const sbtcSponsorshipIneligibilityReasonSchema = z.enum([
 export type SbtcSponsorshipIneligibilityReason = z.infer<
   typeof sbtcSponsorshipIneligibilityReasonSchema
 >;
+
+export function getSbtcSponsorshipErrorCode(error: unknown): SbtcSponsorshipErrorCode | undefined {
+  if (!LeatherApiError.isLeatherApiError(error)) return undefined;
+  const parsed = sbtcSponsorshipErrorCodeSchema.safeParse(error.data?.code);
+  return parsed.success ? parsed.data : undefined;
+}
+
+export function getSbtcSponsorshipIneligibilityReason(
+  error: unknown
+): SbtcSponsorshipIneligibilityReason | undefined {
+  if (!LeatherApiError.isLeatherApiError(error)) return undefined;
+  const parsed = sbtcSponsorshipIneligibilityReasonSchema.safeParse(error.data?.reason);
+  return parsed.success ? parsed.data : undefined;
+}

@@ -1,10 +1,3 @@
-import {
-  type SbtcSponsorshipErrorCode,
-  type SbtcSponsorshipIneligibilityReason,
-  sbtcSponsorshipErrorCodeSchema,
-  sbtcSponsorshipIneligibilityReasonSchema,
-} from './leather-sponsorship-api.types';
-
 export interface LeatherApiErrorData {
   error: string;
   code?: string;
@@ -42,20 +35,6 @@ export function getErrorDetail(error: unknown): string | undefined {
   }
   if (error instanceof Error && error.message.trim()) return error.message.trim();
   return undefined;
-}
-
-export function getSbtcSponsorshipErrorCode(error: unknown): SbtcSponsorshipErrorCode | undefined {
-  if (!LeatherApiError.isLeatherApiError(error)) return undefined;
-  const parsed = sbtcSponsorshipErrorCodeSchema.safeParse(error.data?.code);
-  return parsed.success ? parsed.data : undefined;
-}
-
-export function getSbtcSponsorshipIneligibilityReason(
-  error: unknown
-): SbtcSponsorshipIneligibilityReason | undefined {
-  if (!LeatherApiError.isLeatherApiError(error)) return undefined;
-  const parsed = sbtcSponsorshipIneligibilityReasonSchema.safeParse(error.data?.reason);
-  return parsed.success ? parsed.data : undefined;
 }
 
 export async function readLeatherApiErrorData(

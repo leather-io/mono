@@ -13,28 +13,25 @@ import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-
 import type { SbtcSponsorshipRouteState } from '@app/pages/send/send-crypto-asset-form/hooks/use-send-form-navigate';
 import {
   isSbtcSponsorshipQuoteExpired,
-  useFetchSbtcSponsorshipQuote,
   useSubmitSbtcSponsoredTransactionMutation,
 } from '@app/query/sbtc/sbtc-sponsorship.hooks';
-import { useGenerateSbtcSponsoredTransferUnsignedTx } from '@app/store/transactions/token-transfer.hooks';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 
 import {
   getSbtcSponsorshipErrorMessage,
   sponsoredTransactionBroadcastRefusedMessage,
 } from './sbtc-sponsorship.utils';
+import {
+  type SbtcSponsoredTransfer,
+  useBuildSbtcSponsoredTransfer,
+} from './use-build-sbtc-sponsored-transfer';
 
 const timeForApiToUpdate = 250;
-
-export interface RequotedSbtcSponsoredTransaction {
-  tx: StacksTransactionWire;
-  sponsorship: SbtcSponsorshipRouteState;
-}
 
 interface UseSubmitSbtcSponsoredTransactionArgs {
   token: string;
   sponsorship: SbtcSponsorshipRouteState;
-  onRequoted(next: RequotedSbtcSponsoredTransaction): void;
+  onRequoted(next: SbtcSponsoredTransfer): void;
 }
 export function useSubmitSbtcSponsoredTransaction({
   token,
@@ -43,8 +40,7 @@ export function useSubmitSbtcSponsoredTransaction({
 }: UseSubmitSbtcSponsoredTransactionArgs) {
   const signStacksTransaction = useSignStacksTransaction();
   const { submitSponsoredTransaction, isSubmitting } = useSubmitSbtcSponsoredTransactionMutation();
-  const fetchSbtcSponsorshipQuote = useFetchSbtcSponsorshipQuote();
-  const generateSponsoredTx = useGenerateSbtcSponsoredTransferUnsignedTx({
+  const buildSponsoredTransfer = useBuildSbtcSponsoredTransfer({
     assetId: sponsorship.assetId,
     decimals: sponsorship.decimals,
   });
@@ -60,33 +56,26 @@ export function useSubmitSbtcSponsoredTransaction({
   const requote = useCallback(async () => {
     setIsRequoting(true);
     try {
-      const { formValues } = sponsorship;
-      const { quote, nonce } = await fetchSbtcSponsorshipQuote({ fresh: true });
-      const tier = quote.tiers[sponsorship.feeTier];
-      const nextFormValues = { ...formValues, nonce };
-      const tx = await generateSponsoredTx(nextFormValues, {
-        feeSats: tier.feeSats,
-        feeRecipientPrincipal: quote.feeRecipientPrincipal,
-      });
-      if (!tx) throw new Error('Unable to rebuild the sponsored transaction');
-      onRequoted({
-        tx,
-        sponsorship: {
-          ...sponsorship,
-          quoteId: tier.quoteId,
-          expiresAt: quote.expiresAt,
-          feeSats: tier.feeSats,
-          feeRecipientPrincipal: quote.feeRecipientPrincipal,
-          formValues: nextFormValues,
-        },
-      });
+      onRequoted(
+        await buildSponsoredTransfer({
+          formValues: sponsorship.formValues,
+          feeTier: sponsorship.feeTier,
+          fresh: true,
+        })
+      );
     } catch (error) {
       logger.error('Failed to refresh the sBTC sponsorship quote', error);
       void navigateToError(getSbtcSponsorshipErrorMessage(error));
     } finally {
       setIsRequoting(false);
     }
-  }, [fetchSbtcSponsorshipQuote, generateSponsoredTx, navigateToError, onRequoted, sponsorship]);
+  }, [
+    buildSponsoredTransfer,
+    navigateToError,
+    onRequoted,
+    sponsorship.feeTier,
+    sponsorship.formValues,
+  ]);
 
   const submit = useCallback(
     async (unsignedTx: StacksTransactionWire) => {

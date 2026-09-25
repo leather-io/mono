@@ -9,10 +9,8 @@ import { baseCurrencyAmountInQuote, createMoney, sumMoney } from '@leather.io/ut
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { getNonceFromStacksTransaction } from '@app/common/transactions/stacks/transaction.utils';
-import {
-  type RequotedSbtcSponsoredTransaction,
-  useSubmitSbtcSponsoredTransaction,
-} from '@app/common/transactions/stacks/use-submit-sbtc-sponsored-transaction';
+import type { SbtcSponsoredTransfer } from '@app/common/transactions/stacks/use-build-sbtc-sponsored-transfer';
+import { useSubmitSbtcSponsoredTransaction } from '@app/common/transactions/stacks/use-submit-sbtc-sponsored-transaction';
 import { SponsoredFeeBadge } from '@app/components/fees-row/components/sponsored-fee-badge';
 import { Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
@@ -39,10 +37,7 @@ export function SbtcSponsoredSendFormConfirmation({
   const location = useLocation();
   const marketData = useMarketDataByAssetId({ protocol: 'sip10', id: details.contractId });
 
-  function onRequoted({
-    tx: nextTx,
-    sponsorship: nextSponsorship,
-  }: RequotedSbtcSponsoredTransaction) {
+  function onRequoted({ tx: nextTx, sponsorship: nextSponsorship }: SbtcSponsoredTransfer) {
     void navigate(location.pathname, {
       replace: true,
       state: {
