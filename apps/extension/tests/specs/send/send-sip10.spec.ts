@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { mockStacksBroadcastTransaction } from '@tests/mocks/mock-stacks-txs';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -36,6 +37,17 @@ test.describe('Send sip10', () => {
     await sendPage.confirmSendTransaction();
 
     await expect(sendPage.page.getByText('Sent')).toBeVisible();
+  });
+
+  test('charges the fee in STX for a non-sBTC token', async ({ sendPage }) => {
+    await sendPage.amountInput.fill(amount);
+    await sendPage.recipientInput.fill(TEST_ACCOUNT_2_STX_ADDRESS);
+    await sendPage.recipientInput.blur();
+
+    await expect(sendPage.feeToBePaid).toContainText('STX');
+    await expect(
+      sendPage.page.getByTestId(SharedComponentsSelectors.SponsoredFeeBadge)
+    ).toHaveCount(0);
   });
 
   test('can send sip10 token to contract principal', async ({ sendPage }) => {

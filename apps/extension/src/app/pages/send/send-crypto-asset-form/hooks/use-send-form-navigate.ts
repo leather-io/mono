@@ -5,20 +5,34 @@ import { StacksTransactionWire } from '@stacks/transactions';
 import { AxiosError } from 'axios';
 
 import type { OwnedUtxo } from '@leather.io/models';
+import type { SbtcSponsorshipFeeTier } from '@leather.io/services';
 
-import { BitcoinSendFormValues } from '@shared/models/form.model';
+import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
+
+export interface SbtcSponsorshipRouteState {
+  quoteId: string;
+  feeTier: SbtcSponsorshipFeeTier;
+  expiresAt: string;
+  feeSats: number;
+  feeRecipientPrincipal: string;
+  assetId: string;
+  decimals: number;
+  formValues: StacksSendFormValues;
+}
 
 interface ConfirmationRouteState {
   decimals?: number;
   token?: string;
   tx: string;
+  sponsorship?: SbtcSponsorshipRouteState;
 }
 
 interface ConfirmationRouteStacksSip10Args {
   decimals?: number;
   name?: string;
   tx: StacksTransactionWire;
+  sponsorship?: SbtcSponsorshipRouteState;
 }
 
 interface ConfirmationRouteBtcArgs {
@@ -91,12 +105,14 @@ export function useSendFormNavigate() {
         decimals,
         name,
         tx,
+        sponsorship,
       }: ConfirmationRouteStacksSip10Args) {
         return navigate(`${location.pathname}/confirm`, {
           state: {
             decimals,
             token: name,
             tx: tx.serialize(),
+            sponsorship,
           } as ConfirmationRouteState,
         });
       },

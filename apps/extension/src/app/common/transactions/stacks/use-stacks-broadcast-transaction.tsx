@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { StacksTransactionWire } from '@stacks/transactions';
+import { AuthType, StacksTransactionWire } from '@stacks/transactions';
 
 import type { CryptoCurrency } from '@leather.io/models';
 import { isError, isString } from '@leather.io/utils';
@@ -10,6 +10,7 @@ import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 
 import { useSubmitTransactionCallback } from '@app/common/hooks/use-submit-stx-transaction';
+import { sponsoredTransactionBroadcastRefusedMessage } from '@app/common/transactions/stacks/sbtc-sponsorship.utils';
 import {
   StacksTransactionActionType,
   stacksTransactionToHex,
@@ -93,6 +94,12 @@ export function useStacksBroadcastTransaction({
     async function broadcastTransaction(unsignedTx: StacksTransactionWire) {
       try {
         if (!unsignedTx) return;
+        if (unsignedTx.auth.authType === AuthType.Sponsored) {
+          logger.error('Refusing to sign and broadcast a sponsored transaction locally');
+          return navigate(RouteUrls.BroadcastError, {
+            state: { message: sponsoredTransactionBroadcastRefusedMessage },
+          });
+        }
         const signedTx = await signStacksTransaction(unsignedTx);
         // TODO: Maybe better error handling here?
         if (!signedTx) return;

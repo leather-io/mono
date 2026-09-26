@@ -2,7 +2,6 @@ import { AuthType, type StacksTransactionWire } from '@stacks/transactions';
 
 import { createMoneyFromDecimal } from '@leather.io/utils';
 
-import { useCheckSbtcSponsorshipEligible } from '@app/query/sbtc/sponsored-transactions.hooks';
 import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
 
 import { type Fee, type Fees } from '../fee-editor.context';
@@ -22,8 +21,6 @@ interface StacksFeesLoaderProps {
 export function StacksFeesLoader({ children, unsignedTx }: StacksFeesLoaderProps) {
   const { data: stxFees, isLoading: isLoadingFees } = useStacksTransactionFees(unsignedTx);
   const fees = useStacksFees({ fees: stxFees });
-  const { isVerifying: isVerifyingSbtcSponsorship, result: sbtcSponsorshipEligibility } =
-    useCheckSbtcSponsorshipEligible({ baseTx: { transaction: unsignedTx }, stxFees });
 
   function getCustomFee(feeValue: number): Fee {
     return {
@@ -37,9 +34,8 @@ export function StacksFeesLoader({ children, unsignedTx }: StacksFeesLoaderProps
   if (!fees) return null;
   return children({
     fees,
-    isLoading: isLoadingFees || isVerifyingSbtcSponsorship,
-    isSponsored:
-      sbtcSponsorshipEligibility?.isEligible || unsignedTx.auth.authType === AuthType.Sponsored,
+    isLoading: isLoadingFees,
+    isSponsored: unsignedTx.auth.authType === AuthType.Sponsored,
     getCustomFee,
   });
 }
