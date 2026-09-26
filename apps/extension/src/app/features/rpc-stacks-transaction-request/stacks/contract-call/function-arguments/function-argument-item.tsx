@@ -39,6 +39,7 @@ function FunctionArgumentValue({
               type: 'address',
               value,
               isNakamoto: isNakamotoTestnet,
+              stacksApiUrl: chain.stacks.url,
             })
           )
         }

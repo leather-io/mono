@@ -2,9 +2,13 @@ import { HIRO_EXPLORER_URL, MEMPOOL_BASE_URL } from '@leather.io/constants';
 import {
   type BitcoinNetwork,
   type BitcoinNetworkModes,
+  ChainId,
   type CryptoAsset,
+  HIRO_API_BASE_URL_MAINNET,
   HIRO_API_BASE_URL_NAKAMOTO_TESTNET,
+  HIRO_API_BASE_URL_TESTNET,
   type NetworkConfiguration,
+  isPublicMempoolUrl,
 } from '@leather.io/models';
 
 interface MakeActivityLinkArgs {
@@ -44,24 +48,24 @@ function makeActivityExplorerLink({
     });
   }
   return getStacksExplorerLink({
-    mode: networkPreference.chain.bitcoin.mode,
+    mode: getStacksExplorerMode(networkPreference),
     type: 'txid',
     value: txid,
     searchParams: undefined,
     isNakamoto: false,
+    stacksApiUrl: networkPreference.chain.stacks.url,
   });
 }
 
 export interface GetMempoolExplorerLinkArgs {
   id: string;
-  type: 'tx' | 'block';
+  type: 'tx' | 'block' | 'address';
   networkPreference: BitcoinNetwork;
   bitcoinUrl?: string;
 }
 
 // A url with no api path is a bitcoind rpc endpoint, which has no explorer.
-function regtestExplorerBaseUrl(bitcoinUrl: string | undefined) {
-  if (!bitcoinUrl) return null;
+function selfHostedExplorerBaseUrl(bitcoinUrl: string) {
   const base = bitcoinUrl.replace(/\/api(\/proxy)?\/?$/, '');
   return base === bitcoinUrl ? null : base;
 }
@@ -72,6 +76,10 @@ export function getBitcoinExplorerLink({
   networkPreference,
   bitcoinUrl,
 }: GetMempoolExplorerLinkArgs) {
+  if (bitcoinUrl && !isPublicMempoolUrl(bitcoinUrl)) {
+    const base = selfHostedExplorerBaseUrl(bitcoinUrl);
+    return base ? `${base}/${type}/${id}` : null;
+  }
   switch (networkPreference) {
     case 'mainnet':
       return `${MEMPOOL_BASE_URL}/${type}/${id}`;
@@ -81,10 +89,6 @@ export function getBitcoinExplorerLink({
       return `${MEMPOOL_BASE_URL}/testnet4/${type}/${id}`;
     case 'signet':
       return `${MEMPOOL_BASE_URL}/signet/${type}/${id}`;
-    case 'regtest': {
-      const base = regtestExplorerBaseUrl(bitcoinUrl);
-      return base ? `${base}/${type}/${id}` : null;
-    }
     default:
       return null;
   }
@@ -96,6 +100,28 @@ interface GetHiroExplorerLinkArgs {
   value: string;
   searchParams?: URLSearchParams;
   isNakamoto?: boolean;
+  stacksApiUrl?: string;
+}
+
+export function getStacksExplorerMode(network: NetworkConfiguration): BitcoinNetworkModes {
+  if (network.chain.bitcoin.mode === 'regtest') return 'regtest';
+  return network.chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
+}
+
+const defaultStacksApiUrls: Partial<Record<BitcoinNetworkModes, string>> = {
+  mainnet: HIRO_API_BASE_URL_MAINNET,
+  testnet: HIRO_API_BASE_URL_TESTNET,
+};
+
+function withoutTrailingSlash(url: string) {
+  return url.replace(/\/+$/, '');
+}
+
+function getCustomStacksApiUrl(mode: BitcoinNetworkModes, stacksApiUrl: string | undefined) {
+  const defaultUrl = defaultStacksApiUrls[mode];
+  if (!stacksApiUrl || !defaultUrl) return null;
+  const url = withoutTrailingSlash(stacksApiUrl);
+  return url === defaultUrl ? null : url;
 }
 
 export function getStacksExplorerLink({
@@ -104,9 +130,13 @@ export function getStacksExplorerLink({
   value,
   searchParams = new URLSearchParams(),
   isNakamoto = false,
+  stacksApiUrl,
 }: GetHiroExplorerLinkArgs) {
   if (mode === 'regtest' && type === 'txid') return `http://localhost:8000/txid/${value}`;
   searchParams.append('chain', mode);
-  if (isNakamoto) searchParams.append('api', HIRO_API_BASE_URL_NAKAMOTO_TESTNET);
+  const apiUrl = isNakamoto
+    ? HIRO_API_BASE_URL_NAKAMOTO_TESTNET
+    : getCustomStacksApiUrl(mode, stacksApiUrl);
+  if (apiUrl) searchParams.append('api', apiUrl);
   return `${HIRO_EXPLORER_URL}/${type}/${value}?${searchParams.toString()}`;
 }

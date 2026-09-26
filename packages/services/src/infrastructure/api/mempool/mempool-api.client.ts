@@ -16,7 +16,7 @@ import {
   mempoolTransactionSchema,
   mempoolUtxoSchema,
 } from './mempool-api.schema';
-import { getMempoolUrlFromUserSettings } from './mempool-api.utils';
+import { getMempoolUrlFromUserSettings, shouldReadBitcoinFromMempool } from './mempool-api.utils';
 
 export class MempoolApiClient {
   constructor(
@@ -102,9 +102,8 @@ export class MempoolApiClient {
     mempoolUrl?: string,
     { signal, skipCache }: ApiRequestOptions = {}
   ): Promise<MempoolTransaction[]> {
-    const network = this.settings.getSettings().network.chain.bitcoin.bitcoinNetwork;
-    if (network !== 'regtest') {
-      throw new Error('Mempool API is only supported on regtest');
+    if (!shouldReadBitcoinFromMempool(this.settings.getSettings())) {
+      throw new Error('Mempool API is only supported on networks with their own mempool');
     }
     const fetchFn = async () => {
       const { data } = await axios.get<MempoolTransaction[]>(

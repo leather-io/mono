@@ -1,7 +1,7 @@
 import { NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
 
 import { UserSettings } from '../../settings/settings.service';
-import { getMempoolUrlFromUserSettings } from './mempool-api.utils';
+import { getMempoolUrlFromUserSettings, shouldReadBitcoinFromMempool } from './mempool-api.utils';
 
 const customNetwork: NetworkConfiguration = {
   id: 'private',
@@ -67,5 +67,46 @@ describe(getMempoolUrlFromUserSettings.name, () => {
     expect(getMempoolUrlFromUserSettings(makeUserSettings(customNetwork))).toEqual(
       'https://mempool.bitcoin.private-1.hiro.so/api'
     );
+  });
+});
+
+describe(shouldReadBitcoinFromMempool.name, () => {
+  it.each(['mainnet', 'testnet', 'testnet4', 'signet'] as const)(
+    'reads %s from the leather api',
+    networkId => {
+      expect(
+        shouldReadBitcoinFromMempool(makeUserSettings(defaultNetworksKeyedById[networkId]))
+      ).toBe(false);
+    }
+  );
+
+  it('reads the staking testnet from its own mempool', () => {
+    expect(
+      shouldReadBitcoinFromMempool(makeUserSettings(defaultNetworksKeyedById.stakingTestnet))
+    ).toBe(true);
+  });
+
+  it.each(['private-1', 'sbtcTestnet', 'sbtcDevenv', 'devnet'] as const)(
+    'reads regtest network %s from its own mempool',
+    networkId => {
+      expect(
+        shouldReadBitcoinFromMempool(makeUserSettings(defaultNetworksKeyedById[networkId]))
+      ).toBe(true);
+    }
+  );
+
+  it('reads a regtest custom network from its own mempool', () => {
+    expect(shouldReadBitcoinFromMempool(makeUserSettings(customNetwork))).toBe(true);
+  });
+
+  it('keeps a non-regtest custom network on the leather api', () => {
+    const customSignetNetwork: NetworkConfiguration = {
+      ...customNetwork,
+      chain: {
+        ...customNetwork.chain,
+        bitcoin: { ...customNetwork.chain.bitcoin, bitcoinNetwork: 'signet', mode: 'signet' },
+      },
+    };
+    expect(shouldReadBitcoinFromMempool(makeUserSettings(customSignetNetwork))).toBe(false);
   });
 });

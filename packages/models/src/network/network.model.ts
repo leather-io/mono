@@ -69,6 +69,13 @@ export type BitcoinNetwork = (typeof bitcoinNetworks)[number];
 export type NetworkModes = (typeof networkModes)[number];
 type BitcoinTestnetModes = (typeof testnetModes)[number];
 
+const publicMempoolHosts = ['mempool.space', 'leather.mempool.space'];
+
+export function isPublicMempoolUrl(bitcoinUrl: string) {
+  const host = /^https?:\/\/([^/:?#]+)/.exec(bitcoinUrl)?.[1];
+  return host !== undefined && publicMempoolHosts.includes(host);
+}
+
 export function bitcoinNetworkToNetworkMode(network: BitcoinNetwork): BitcoinNetworkModes {
   switch (network) {
     case 'mainnet':
