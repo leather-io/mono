@@ -25,6 +25,7 @@ import {
   getWshDescriptorNetwork,
   getWshDescriptorThreshold,
   isExtendedPublicKeyExpression,
+  isSignableWshDescriptor,
   isWshDescriptor,
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
@@ -691,6 +692,53 @@ function buildPolicyTx(descriptor: string, options: BuildPolicyTxOptions) {
   for (const seed of options.signWith) tx.signIdx(deriveAddressIndexKey(seed).privateKey!, 0);
   return tx;
 }
+
+describe('isSignableWshDescriptor', () => {
+  const pubkeyAHash160 = ripemd160(sha256(pubkeyA));
+
+  it('rejects a pkh() descriptor that compiles to a p2wpkh scriptCode', () => {
+    const pkhDescriptor = `wsh(pkh(${bytesToHex(pubkeyA)}))`;
+    const { witnessScript } = compileWshDescriptor(pkhDescriptor);
+
+    expect(bytesToHex(witnessScript)).toBe(`76a914${bytesToHex(pubkeyAHash160)}88ac`);
+    expect(isSignableWshDescriptor(pkhDescriptor)).toBe(false);
+  });
+
+  it('rejects a ranged pkh() descriptor written with an extended key', () => {
+    expect(isSignableWshDescriptor(`wsh(pkh(${xpubA}/0/*))`)).toBe(false);
+    expect(isSignableWshDescriptor(`wsh(pkh(${xpubA}/1/3))`)).toBe(false);
+  });
+
+  it('rejects a checksummed pkh() descriptor', () => {
+    const pkhDescriptor = `wsh(pkh(${bytesToHex(pubkeyA)}))`;
+    expect(isSignableWshDescriptor(`${pkhDescriptor}#${checksum(pkhDescriptor)}`)).toBe(false);
+  });
+
+  it('rejects a descriptor that does not compile', () => {
+    expect(isSignableWshDescriptor(`wsh(pk(${xpubA}))`)).toBe(false);
+    expect(isSignableWshDescriptor(`wsh(multi(2,${xpubA}/2/0,${xpubB}/2/0))`)).toBe(false);
+    expect(isSignableWshDescriptor('wsh(nonsense)')).toBe(false);
+  });
+
+  it('rejects a non-wsh descriptor', () => {
+    expect(isSignableWshDescriptor(`wpkh(${xpubA}/0/*)`)).toBe(false);
+  });
+
+  it('allows the policy descriptors the wallet signs', () => {
+    expect(isSignableWshDescriptor(descriptor)).toBe(true);
+    expect(isSignableWshDescriptor(`wsh(pk(${xpubA}/0/*))`)).toBe(true);
+    expect(isSignableWshDescriptor(`wsh(sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7))`)).toBe(true);
+    expect(isSignableWshDescriptor(`wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyA)})))`)).toBe(true);
+  });
+
+  it('allows a policy that merely contains a pkh() branch', () => {
+    const policyWithPkhBranch = `wsh(and_v(v:pk(${xpubA}/0/0),pkh(${xpubB}/0/0)))`;
+    const { witnessScript } = compileWshDescriptor(policyWithPkhBranch);
+
+    expect(witnessScript.length).toBeGreaterThan(25);
+    expect(isSignableWshDescriptor(policyWithPkhBranch)).toBe(true);
+  });
+});
 
 function rewriteFirstPartialSig(
   psbtBytes: Uint8Array,
