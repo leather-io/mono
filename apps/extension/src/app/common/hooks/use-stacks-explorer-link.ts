@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { getStacksExplorerLink } from '@leather.io/features';
+import { getStacksExplorerApiUrl, getStacksExplorerLink } from '@leather.io/features';
 import { ChainId } from '@leather.io/models';
 
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
@@ -23,10 +23,11 @@ export function useStacksExplorerLink() {
           value: txid,
           searchParams,
           isNakamoto: isNakamotoTestnet,
+          apiUrl: getStacksExplorerApiUrl(chain.stacks.url),
         })
       );
     },
-    [chain.stacks.chainId, isNakamotoTestnet]
+    [chain.stacks.chainId, chain.stacks.url, isNakamotoTestnet]
   );
 
   return { handleOpenStacksTxLink };
