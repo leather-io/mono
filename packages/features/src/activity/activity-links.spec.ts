@@ -183,6 +183,28 @@ describe('activity-links', () => {
       expect(result).toBe('https://mempool.bitcoin.staking-testnet.hiro.so/tx/txabc');
     });
 
+    it('returns the custom mempool instance link for a testnet network with its own mempool', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txabc',
+        type: 'tx',
+        networkPreference: 'testnet3',
+        bitcoinUrl: 'https://mempool.bitcoin.staking-testnet.hiro.so/api',
+      });
+
+      expect(result).toBe('https://mempool.bitcoin.staking-testnet.hiro.so/tx/txabc');
+    });
+
+    it('returns the public testnet link for the public testnet mempool url', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txabc',
+        type: 'tx',
+        networkPreference: 'testnet3',
+        bitcoinUrl: defaultNetworksKeyedById.testnet.chain.bitcoin.bitcoinUrl,
+      });
+
+      expect(result).toBe(`${MEMPOOL_BASE_URL}/testnet/tx/txabc`);
+    });
+
     it('returns the custom mempool instance link for a regtest network', () => {
       const result = getBitcoinExplorerLink({
         id: 'txdef',

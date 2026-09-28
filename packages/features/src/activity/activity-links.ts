@@ -62,6 +62,14 @@ export interface GetMempoolExplorerLinkArgs {
   bitcoinUrl?: string;
 }
 
+const publicMempoolHosts = ['mempool.space', 'leather.mempool.space'];
+
+function isSelfHostedMempoolUrl(bitcoinUrl: string | undefined): bitcoinUrl is string {
+  if (!bitcoinUrl) return false;
+  const host = /^https?:\/\/([^/:?#]+)/.exec(bitcoinUrl)?.[1];
+  return host !== undefined && !publicMempoolHosts.includes(host);
+}
+
 // A url with no api path is a bitcoind rpc endpoint, which has no explorer.
 function mempoolExplorerBaseUrl(bitcoinUrl: string | undefined) {
   if (!bitcoinUrl) return null;
@@ -75,6 +83,10 @@ export function getBitcoinExplorerLink({
   networkPreference,
   bitcoinUrl,
 }: GetMempoolExplorerLinkArgs) {
+  if (isSelfHostedMempoolUrl(bitcoinUrl)) {
+    const base = mempoolExplorerBaseUrl(bitcoinUrl);
+    return base ? `${base}/${type}/${id}` : null;
+  }
   switch (networkPreference) {
     case 'mainnet':
       return `${MEMPOOL_BASE_URL}/${type}/${id}`;
@@ -82,10 +94,8 @@ export function getBitcoinExplorerLink({
       return `${MEMPOOL_BASE_URL}/testnet/${type}/${id}`;
     case 'testnet4':
       return `${MEMPOOL_BASE_URL}/testnet4/${type}/${id}`;
-    case 'signet': {
-      const base = mempoolExplorerBaseUrl(bitcoinUrl) ?? `${MEMPOOL_BASE_URL}/signet`;
-      return `${base}/${type}/${id}`;
-    }
+    case 'signet':
+      return `${MEMPOOL_BASE_URL}/signet/${type}/${id}`;
     case 'regtest': {
       const base = mempoolExplorerBaseUrl(bitcoinUrl);
       return base ? `${base}/${type}/${id}` : null;
