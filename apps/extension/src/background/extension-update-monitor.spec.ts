@@ -57,12 +57,14 @@ beforeEach(() => {
           listeners.onInstalled = listener;
         },
       },
+      ContextType: { TAB: 'TAB' },
+      getContexts: () => Promise.resolve([]),
       getManifest: () => ({ version: '6.113.0' }),
       getURL: (path: string) => `chrome-extension://leather/${path}`,
       reload: vi.fn(),
     },
     storage: { local: createStorageArea(), session: createStorageArea() },
-    windows: { getAll: () => Promise.resolve([]), remove: vi.fn() },
+    windows: { WINDOW_ID_NONE: -1, get: vi.fn(), remove: vi.fn() },
   });
   initExtensionUpdateMonitor();
 });

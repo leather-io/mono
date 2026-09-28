@@ -74,19 +74,33 @@ export function initExtensionUpdateMonitor() {
   });
 }
 
+function isFulfilled<T>(result: PromiseSettledResult<T>): result is PromiseFulfilledResult<T> {
+  return result.status === 'fulfilled';
+}
+
 async function closeOpenRequestWindows() {
-  const extensionUrlPrefix = chrome.runtime.getURL('index.html');
-  const windows = await chrome.windows.getAll({ populate: true });
-  const requestWindowIds = windows
-    .filter(browserWindow =>
-      browserWindow.tabs?.some(
-        tab => tab.url?.startsWith(extensionUrlPrefix) && tab.url.includes('origin=')
-      )
-    )
+  const requestPageUrl = chrome.runtime.getURL('popup.html');
+  const contexts = await chrome.runtime.getContexts({
+    contextTypes: [chrome.runtime.ContextType.TAB],
+  });
+  const candidateWindowIds = new Set(
+    contexts
+      .filter(context => context.documentUrl?.startsWith(requestPageUrl))
+      .map(context => context.windowId)
+      .filter(windowId => windowId !== chrome.windows.WINDOW_ID_NONE)
+  );
+
+  const candidateWindows = await Promise.allSettled(
+    [...candidateWindowIds].map(windowId => chrome.windows.get(windowId))
+  );
+  const requestWindowIds = candidateWindows
+    .filter(isFulfilled)
+    .map(result => result.value)
+    .filter(browserWindow => browserWindow.type === 'popup')
     .map(browserWindow => browserWindow.id)
     .filter(windowId => typeof windowId === 'number');
 
-  await Promise.all(requestWindowIds.map(windowId => chrome.windows.remove(windowId)));
+  await Promise.allSettled(requestWindowIds.map(windowId => chrome.windows.remove(windowId)));
 
   if (requestWindowIds.length === 0) return;
   await new Promise(resolve => setTimeout(resolve, requestWindowTeardownMs));
