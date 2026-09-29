@@ -9,12 +9,14 @@ import { CONTENT_SCRIPT_PORT } from '@shared/message-types';
 import { warnUsersAboutDevToolsDangers } from '@shared/utils/dev-tools-warning-log';
 
 import { queueAnalyticsRequest } from './background-analytics';
+import { initExtensionUpdateMonitor } from './extension-update-monitor';
 import { initContextMenuActions } from './init-context-menus';
 import { internalBackgroundMessageHandler } from './messaging/internal-methods/message-handler';
 import { rpcMessageHandler } from './messaging/rpc-message-handler';
 import { initAddressMonitor } from './monitors/address-monitor';
 
 initContextMenuActions();
+initExtensionUpdateMonitor();
 warnUsersAboutDevToolsDangers();
 
 chrome.runtime.onInstalled.addListener(async details => {
