@@ -779,6 +779,31 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.52.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.51.9...@leather.io/query-v2.52.0) (2026-09-29)
+
+
+### Features
+
+* add BNS testnet support ([#2733](https://github.com/leather-io/mono/issues/2733)) ([8f92aa3](https://github.com/leather-io/mono/commit/8f92aa3b6d0f87f765f7de98eeecfe24e2bd2939))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.40.0
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/stacks bumped to 1.22.8
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
 ## [2.51.9](https://github.com/leather-io/mono/compare/@leather.io/query-v2.51.8...@leather.io/query-v2.51.9) (2026-09-14)
 
 
