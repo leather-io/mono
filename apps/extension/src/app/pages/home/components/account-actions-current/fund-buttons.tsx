@@ -12,6 +12,7 @@ import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useFlags } from '@app/features/feature-flags';
 import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { ActionButton } from './action-button';
@@ -23,8 +24,10 @@ export function FundButtons() {
   const btcAccount = currentBtcSigner?.address;
   const policy = useCurrentPolicy();
   const { releaseOnramperBuy, releaseOnramperSell } = useFlags();
-  const showBuyButton = (!!stacksAccount || !!btcAccount) && releaseOnramperBuy && !policy;
-  const showSellButton = releaseOnramperSell && !policy;
+  const { isMainnet } = useCurrentNetworkState();
+  const showBuyButton =
+    (!!stacksAccount || !!btcAccount) && releaseOnramperBuy && !policy && isMainnet;
+  const showSellButton = releaseOnramperSell && !policy && isMainnet;
   const bothButtonsEnabled = showBuyButton && showSellButton;
 
   const navigate = useNavigate();
