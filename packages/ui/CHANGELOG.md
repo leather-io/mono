@@ -489,6 +489,33 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.119.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.119.0...@leather.io/ui-v1.119.1) (2026-09-29)
+
+
+### Bug Fixes
+
+* bring back ordinal banners and make those dismissable ([#2615](https://github.com/leather-io/mono/issues/2615)) ([c085334](https://github.com/leather-io/mono/commit/c08533430f9b6bfd7c18f8e03b4151e2ec13cd91))
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+* swaps ui improvements ([#2758](https://github.com/leather-io/mono/issues/2758)) ([be4e2cf](https://github.com/leather-io/mono/commit/be4e2cfa261d803c24eb504f675713f5e2235673))
+* **ui:** prevent avatar from shrinking in flex rows ([#2791](https://github.com/leather-io/mono/issues/2791)) ([00a23a3](https://github.com/leather-io/mono/commit/00a23a331e56593ad9394579bb478eda1bfd5537))
+* **ui:** render item layout chevron direction with dedicated icons ([#2792](https://github.com/leather-io/mono/issues/2792)) ([aace9d8](https://github.com/leather-io/mono/commit/aace9d8a2061b9bd8d6fe094351b751c64237929))
+* **ui:** repair default callout contrast and link underline and focus states ([#2800](https://github.com/leather-io/mono/issues/2800)) ([32d87f8](https://github.com/leather-io/mono/commit/32d87f8973cb71e06ebe7fc55c7a47fa94a6557f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.27.2
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/features bumped to 1.8.3
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/panda-preset bumped to 0.16.5
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
 ## [1.119.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.118.0...@leather.io/ui-v1.119.0) (2026-09-14)
 
 

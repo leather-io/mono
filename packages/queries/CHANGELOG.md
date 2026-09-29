@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.17.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.16.1...@leather.io/queries-v0.17.0) (2026-09-29)
+
+
+### Features
+
+* allow custom fee for transaction proposal from multisig account ([#2773](https://github.com/leather-io/mono/issues/2773)) ([cc45d87](https://github.com/leather-io/mono/commit/cc45d8779c65c5333ba56bfe5cbf187df8b6c88a))
+* token price history graph ([#2764](https://github.com/leather-io/mono/issues/2764)) ([b7c56bc](https://github.com/leather-io/mono/commit/b7c56bc7eb49b3a38ea7f40c6332e6c5ce390f93))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/cms bumped to 1.6.3
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/services bumped to 1.66.0
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
 ## [0.16.1](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.16.0...@leather.io/queries-v0.16.1) (2026-09-14)
 
 
