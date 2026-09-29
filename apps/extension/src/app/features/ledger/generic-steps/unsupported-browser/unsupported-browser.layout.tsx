@@ -18,14 +18,9 @@ export function UnsupportedBrowserLayout() {
         <LedgerTitle mb="space.03">Your browser isn't supported</LedgerTitle>
         <styled.span textStyle="label.03" color="ink.text-subdued">
           {'To connect your Ledger with Leather try '}
-          <Link textDecoration="underline" href="https://www.google.com/chrome/">
-            Chrome
-          </Link>
+          <Link href="https://www.google.com/chrome/">Chrome</Link>
           {' or '}
-          <Link textDecoration="underline" href="https://brave.com/download/">
-            Brave
-          </Link>
-          .
+          <Link href="https://brave.com/download/">Brave</Link>.
         </styled.span>
       </LedgerWrapper>
     </Sheet>

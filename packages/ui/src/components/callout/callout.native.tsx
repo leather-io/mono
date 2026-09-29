@@ -17,7 +17,7 @@ interface VariantStyle {
 
 const calloutVariants: Record<CalloutVariant, VariantStyle> = {
   default: {
-    bg: 'ink.text-non-interactive',
+    bg: 'ink.component-background-default',
   },
   error: {
     bg: 'red.background-secondary',
