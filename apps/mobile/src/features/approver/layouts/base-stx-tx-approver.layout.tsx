@@ -46,7 +46,7 @@ import { ContractCallPostConditionsSection } from '../contract-call-post-conditi
 import { useStxTransactionUpdatesHandler } from '../stx/hooks';
 
 interface BaseStxTxApproverLayoutProps {
-  onApprove(): Promise<string>;
+  onApprove(): Promise<string | null>;
   onCloseApprover(): void;
   onBack(): void;
   accountId: string | null;

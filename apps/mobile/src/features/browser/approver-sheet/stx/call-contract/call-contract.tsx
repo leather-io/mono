@@ -67,7 +67,7 @@ export function CallContractApprover({
         })
       );
       closeApprover();
-      return '';
+      return null;
     }
 
     try {
