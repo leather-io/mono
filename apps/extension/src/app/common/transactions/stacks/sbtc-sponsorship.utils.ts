@@ -3,7 +3,6 @@ import { FeeTypes } from '@leather.io/models';
 import {
   type SbtcSponsorshipErrorCode,
   type SbtcSponsorshipFeeTier,
-  type SbtcSponsorshipIneligibilityReason,
   getErrorDetail,
   getSbtcSponsorshipErrorCode,
   getSbtcSponsorshipIneligibilityReason,
@@ -34,9 +33,7 @@ const sbtcSponsorshipErrorMessages: Record<SbtcSponsorshipErrorCode, string> = {
   rate_limited: 'Too many requests. Wait a moment and try again.',
 };
 
-const sbtcSponsorshipIneligibilityMessages: Partial<
-  Record<SbtcSponsorshipIneligibilityReason, string>
-> = {
+const sbtcSponsorshipIneligibilityMessages: Partial<Record<string, string>> = {
   insufficient_sbtc: 'Your sBTC balance no longer covers the amount plus the fee.',
   bad_transfer_entry: 'The amount must be positive and the recipient cannot be your own address.',
   fee_too_low: 'The quoted fee is out of date. Review the updated fee and confirm again.',

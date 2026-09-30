@@ -61,41 +61,13 @@ export const sbtcSponsorshipErrorCodeSchema = z.enum([
 
 export type SbtcSponsorshipErrorCode = z.infer<typeof sbtcSponsorshipErrorCodeSchema>;
 
-export const sbtcSponsorshipIneligibilityReasonSchema = z.enum([
-  'malformed_transaction',
-  'wrong_auth_type',
-  'origin_not_single_sig',
-  'chain_mismatch',
-  'origin_fee_not_zero',
-  'bad_origin_signature',
-  'wrong_contract',
-  'wrong_function',
-  'malformed_args',
-  'entry_count_mismatch',
-  'entry_sender_mismatch',
-  'quote_mismatch',
-  'bad_transfer_entry',
-  'fee_entry_missing',
-  'fee_too_low',
-  'bad_post_conditions',
-  'insufficient_sbtc',
-  'float_low',
-]);
-
-export type SbtcSponsorshipIneligibilityReason = z.infer<
-  typeof sbtcSponsorshipIneligibilityReasonSchema
->;
-
 export function getSbtcSponsorshipErrorCode(error: unknown): SbtcSponsorshipErrorCode | undefined {
   if (!LeatherApiError.isLeatherApiError(error)) return undefined;
   const parsed = sbtcSponsorshipErrorCodeSchema.safeParse(error.data?.code);
   return parsed.success ? parsed.data : undefined;
 }
 
-export function getSbtcSponsorshipIneligibilityReason(
-  error: unknown
-): SbtcSponsorshipIneligibilityReason | undefined {
+export function getSbtcSponsorshipIneligibilityReason(error: unknown): string | undefined {
   if (!LeatherApiError.isLeatherApiError(error)) return undefined;
-  const parsed = sbtcSponsorshipIneligibilityReasonSchema.safeParse(error.data?.reason);
-  return parsed.success ? parsed.data : undefined;
+  return error.data?.reason;
 }

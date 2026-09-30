@@ -16,7 +16,6 @@ import {
   buildSbtcSponsoredTransferPostCondition,
   buildSbtcTransferManyArgs,
   getSbtcSponsoredTransferDetails,
-  getSbtcSponsoredTransferTotal,
   isSbtcTransferManyContractCall,
 } from './sbtc-sponsored-transfer';
 
@@ -94,12 +93,6 @@ describe(buildSbtcSponsoredTransferPostCondition.name, () => {
   });
 });
 
-describe(getSbtcSponsoredTransferTotal.name, () => {
-  test('sums amount and fee', () => {
-    expect(getSbtcSponsoredTransferTotal(10n, 5n)).toEqual(15n);
-  });
-});
-
 describe(getSbtcSponsoredTransferDetails.name, () => {
   test('extracts details from a compliant sponsored transfer-many', async () => {
     const tx = await makeTransferManyTx();
@@ -153,11 +146,6 @@ describe(getSbtcSponsoredTransferDetails.name, () => {
     const tx = await makeTransferManyTx({
       postConditions: [Pc.principal(recipient).willSendEq(2_501_500n).ft(contractId, 'sbtc-token')],
     });
-    expect(getSbtcSponsoredTransferDetails(tx)).toBeNull();
-  });
-
-  test('rejects allow mode', async () => {
-    const tx = await makeTransferManyTx({ postConditionMode: PostConditionMode.Allow });
     expect(getSbtcSponsoredTransferDetails(tx)).toBeNull();
   });
 

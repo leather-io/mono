@@ -14,10 +14,7 @@ export interface SbtcSponsorshipRouteState {
   quoteId: string;
   feeTier: SbtcSponsorshipFeeTier;
   expiresAt: string;
-  feeSats: number;
-  feeRecipientPrincipal: string;
   assetId: string;
-  decimals: number;
   formValues: StacksSendFormValues;
 }
 

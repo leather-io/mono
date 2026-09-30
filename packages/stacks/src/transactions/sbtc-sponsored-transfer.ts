@@ -1,14 +1,9 @@
-import { bytesToUtf8, hexToBytes } from '@stacks/common';
 import {
   AuthType,
   ClarityType,
   type ClarityValue,
   type ContractCallPayload,
-  FungibleConditionCode,
   Pc,
-  PostConditionMode,
-  PostConditionPrincipalId,
-  PostConditionType,
   type StacksTransactionWire,
   addressToString,
   bufferCVFromString,
@@ -20,7 +15,11 @@ import {
   uintCV,
 } from '@stacks/transactions';
 
-import { cleanHex, formatContractIdString } from '../stacks.utils';
+import { formatContractIdString } from '../stacks.utils';
+import {
+  getMemoString,
+  getVerifiedSingleFungiblePostCondition,
+} from './sip-10-contract-call.utils';
 
 export const sbtcTransferManyFunctionName = 'transfer-many';
 export const sbtcTokenContractName = 'sbtc-token';
@@ -55,10 +54,6 @@ function buildTransferEntry({ amount, sender, to, memo }: SbtcTransferEntry) {
   });
 }
 
-export function getSbtcSponsoredTransferTotal(amount: bigint, feeAmount: bigint) {
-  return amount + feeAmount;
-}
-
 export function buildSbtcTransferManyArgs({
   amount,
   feeAmount,
@@ -83,7 +78,7 @@ export function buildSbtcSponsoredTransferPostCondition({
   feeAmount,
 }: SbtcSponsoredTransferParams) {
   return Pc.principal(sender)
-    .willSendEq(getSbtcSponsoredTransferTotal(amount, feeAmount))
+    .willSendEq(amount + feeAmount)
     .ft(formatContractIdString({ contractAddress, contractName }), sbtcTokenAssetName);
 }
 
@@ -107,12 +102,6 @@ export function isSbtcTransferManyContractCall(
   );
 }
 
-function getMemoString(arg: ClarityValue | undefined): string | undefined {
-  if (!arg || arg.type !== ClarityType.OptionalSome) return undefined;
-  if (arg.value.type !== ClarityType.Buffer) return undefined;
-  return bytesToUtf8(hexToBytes(cleanHex(arg.value.value)));
-}
-
 function getTransferEntry(entry: ClarityValue): SbtcTransferEntry | null {
   if (entry.type !== ClarityType.Tuple) return null;
   const { amount, sender, to, memo } = entry.value;
@@ -134,8 +123,6 @@ export function getSbtcSponsoredTransferDetails(
 ): SbtcSponsoredTransferDetails | null {
   if (!isSbtcTransferManyContractCall(tx)) return null;
   if (tx.auth.authType !== AuthType.Sponsored) return null;
-  if (tx.postConditionMode !== PostConditionMode.Deny) return null;
-  if (tx.postConditions.values.length !== 1) return null;
   if (tx.payload.functionArgs.length !== 1) return null;
 
   const [entriesArg] = tx.payload.functionArgs;
@@ -146,24 +133,16 @@ export function getSbtcSponsoredTransferDetails(
   if (!transferEntry || !feeEntry) return null;
   if (transferEntry.sender !== feeEntry.sender) return null;
 
-  const postCondition = tx.postConditions.values[0];
-  if (postCondition.conditionType !== PostConditionType.Fungible) return null;
-  if (postCondition.conditionCode !== FungibleConditionCode.Equal) return null;
-  if (postCondition.principal.prefix !== PostConditionPrincipalId.Standard) return null;
-  if (addressToString(postCondition.principal.address) !== transferEntry.sender) return null;
+  const postCondition = getVerifiedSingleFungiblePostCondition(tx);
+  if (!postCondition) return null;
+  if (postCondition.principal !== transferEntry.sender) return null;
 
   const contractId = formatContractIdString({
     contractAddress: addressToString(tx.payload.contractAddress),
     contractName: tx.payload.contractName.content,
   });
-  const postConditionContractId = formatContractIdString({
-    contractAddress: addressToString(postCondition.asset.address),
-    contractName: postCondition.asset.contractName.content,
-  });
-  if (postConditionContractId !== contractId) return null;
-
-  const total = getSbtcSponsoredTransferTotal(transferEntry.amount, feeEntry.amount);
-  if (postCondition.amount !== total) return null;
+  if (postCondition.contractId !== contractId) return null;
+  if (postCondition.amount !== transferEntry.amount + feeEntry.amount) return null;
 
   return {
     contractId,

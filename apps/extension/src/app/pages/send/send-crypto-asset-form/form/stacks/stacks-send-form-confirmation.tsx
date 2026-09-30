@@ -64,18 +64,6 @@ export function StacksSendFormConfirmation() {
   const isMultisigProposal = isNonSequentialMultisigTransaction(tx);
   const sponsoredDetails = getSbtcSponsoredTransferDetails(tx);
 
-  if (sponsorship && sponsoredDetails) {
-    return (
-      <SbtcSponsoredSendFormConfirmation
-        tx={tx}
-        details={sponsoredDetails}
-        sponsorship={sponsorship}
-        symbol={symbol}
-        showRequoteCallout={showRequoteCallout}
-      />
-    );
-  }
-
   const feeWarningTooltip = showFeeChangeWarning ? (
     <BasicTooltip
       label="You are using a nonce for this transaction that is already pending. The fee has been increased so that it is exactly high enough to replace the pending transaction with the same nonce."
@@ -144,6 +132,16 @@ export function StacksSendFormConfirmation() {
       <Content>
         <Page>
           <Outlet />
+          {sponsorship && sponsoredDetails && (
+            <SbtcSponsoredSendFormConfirmation
+              tx={tx}
+              details={sponsoredDetails}
+              sponsorship={sponsorship}
+              symbol={symbol}
+              decimals={decimals}
+              showRequoteCallout={showRequoteCallout}
+            />
+          )}
           {isTokenTransferPayload(tx.payload) && (
             <SendFormConfirmationLayout
               txValue={getTokenTransferAmount(tx.payload)}

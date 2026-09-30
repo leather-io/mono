@@ -30,11 +30,13 @@ const timeForApiToUpdate = 250;
 
 interface UseSubmitSbtcSponsoredTransactionArgs {
   token: string;
+  decimals: number;
   sponsorship: SbtcSponsorshipRouteState;
   onRequoted(next: SbtcSponsoredTransfer): void;
 }
 export function useSubmitSbtcSponsoredTransaction({
   token,
+  decimals,
   sponsorship,
   onRequoted,
 }: UseSubmitSbtcSponsoredTransactionArgs) {
@@ -42,7 +44,7 @@ export function useSubmitSbtcSponsoredTransaction({
   const { submitSponsoredTransaction, isSubmitting } = useSubmitSbtcSponsoredTransactionMutation();
   const buildSponsoredTransfer = useBuildSbtcSponsoredTransfer({
     assetId: sponsorship.assetId,
-    decimals: sponsorship.decimals,
+    decimals,
   });
   const refreshAccountData = useRefreshAllAccountData();
   const navigate = useNavigate();
