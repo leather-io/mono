@@ -22,12 +22,12 @@ overrides:
   readdir-glob@1: 2.0.3
   svgo@>=3.0.0: '>=4.1.0'
   serialize-javascript: 7.0.3
-  '@expo/cli>undici': '>=7.29.0 <8'
-  '@actions/http-client>undici': '>=7.29.0 <8'
+  '@expo/cli>undici': '>=7.29.1 <8'
+  '@actions/http-client>undici': '>=7.29.1 <8'
   webpack-bundle-analyzer>ws: 8.21.0
   ws@>=8.0.0 <8.21.0: '>=8.21.0'
-  undici@>=7.0.0 <7.29.0: '>=7.29.0 <8'
-  undici@<6.24.0: '>=6.24.0 <7'
+  undici@>=7.0.0 <7.29.1: '>=7.29.1 <8'
+  undici@<6.28.1: '>=6.28.1 <7'
   picomatch@2: 2.3.2
   picomatch@3: 3.0.2
   picomatch@4: 4.0.4
@@ -38,7 +38,7 @@ overrides:
   postcss@<8.5.12: '>=8.5.12 <9'
   brace-expansion@<1.1.18: '>=1.1.18 <2'
   brace-expansion@>=2.0.0 <2.1.4: '>=2.1.4 <3'
-  brace-expansion@>=3.0.0 <5.0.9: '>=5.0.9 <6'
+  brace-expansion@>=3.0.0 <5.0.11: '>=5.0.11 <6'
   axios@>=1.15.2 <1.18.0: '>=1.18.0'
   adm-zip@<0.6.1: '>=0.6.1'
   nanoid@<3.3.18: '>=3.3.18 <4'
@@ -10138,8 +10138,8 @@ packages:
   brace-expansion@2.1.4:
     resolution: {integrity: sha512-hGfVzPxthbf3+2yjg/RBs60cB0FhqBS/zvdV/4wn4/BmN0bNMMHPc4V/BbFieqf1TKAGGAHnY4eSjajCl0f2Xg==}
 
-  brace-expansion@5.0.9:
-    resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
+  brace-expansion@5.0.12:
+    resolution: {integrity: sha512-YovQ3rzhaLMIrDjNDMkNS01tea93qhEhG5xy8f6+R0l+dw3Ki+5sCoIoI942iuLZTHWogWktgwVDhU09iNEimQ==}
     engines: {node: 20 || >=22}
 
   braces@3.0.3:
@@ -18204,12 +18204,12 @@ packages:
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
 
-  undici@6.27.0:
-    resolution: {integrity: sha512-YmfV3YnEDzXRC5lZ2jWtWWHKGUm1zIt8AhesR1tens+HTNv+YZlN/dp6G727LOvMJ8xjP9Be7Y2Sdr96LDm+pg==}
+  undici@6.29.0:
+    resolution: {integrity: sha512-R+RODBqp6i2pPflGdq+xIOUkl+RNfGgHwoinecKu/JCuf2uO06cOKoDbI2P7Dn6KcswdKwrczbU6IYJ6K8X+wg==}
     engines: {node: '>=18.17'}
 
-  undici@7.29.0:
-    resolution: {integrity: sha512-IDxfleLmmbSskfWSUATiN1nfn2rDuvnMOqb5CWR92iIfojA0Ud+ulOAAEQ57LPr9rWmsreUyf5lwyao+7GNNVw==}
+  undici@7.30.0:
+    resolution: {integrity: sha512-dkrQXeHSaoamnItlYbmzG0wFYrM0ZwDxCIg0A7aKjTyyhh9svRzCNFEzV+Vm05/yehjCzjDZ31KXfGEjYSztDQ==}
     engines: {node: '>=20.18.1'}
 
   unenv@2.0.0-rc.24:
@@ -19326,12 +19326,12 @@ snapshots:
       '@octokit/plugin-rest-endpoint-methods': 10.4.1(@octokit/core@5.2.2)
       '@octokit/request': 8.4.1
       '@octokit/request-error': 5.1.1
-      undici: 6.27.0
+      undici: 6.29.0
 
   '@actions/http-client@2.2.3':
     dependencies:
       tunnel: 0.0.6
-      undici: 7.29.0
+      undici: 7.30.0
 
   '@actions/io@1.1.3': {}
 
@@ -22584,7 +22584,7 @@ snapshots:
       structured-headers: 0.4.1
       tar: 7.5.22
       terminal-link: 2.1.1
-      undici: 7.29.0
+      undici: 7.30.0
       wrap-ansi: 7.0.0
       ws: 8.21.0
     optionalDependencies:
@@ -30769,7 +30769,7 @@ snapshots:
     dependencies:
       balanced-match: 1.0.2
 
-  brace-expansion@5.0.9:
+  brace-expansion@5.0.12:
     dependencies:
       balanced-match: 4.0.3
 
@@ -36333,7 +36333,7 @@ snapshots:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       sharp: 0.34.5
-      undici: 7.29.0
+      undici: 7.30.0
       workerd: 1.20260312.1
       ws: 8.21.0
       youch: 4.1.0-beta.10
@@ -36347,7 +36347,7 @@ snapshots:
 
   minimatch@10.2.3:
     dependencies:
-      brace-expansion: 5.0.9
+      brace-expansion: 5.0.12
 
   minimatch@3.1.4:
     dependencies:
@@ -36359,7 +36359,7 @@ snapshots:
 
   minimatch@9.0.7:
     dependencies:
-      brace-expansion: 5.0.9
+      brace-expansion: 5.0.12
 
   minimist-options@4.1.0:
     dependencies:
@@ -40641,9 +40641,9 @@ snapshots:
 
   undici-types@7.8.0: {}
 
-  undici@6.27.0: {}
+  undici@6.29.0: {}
 
-  undici@7.29.0: {}
+  undici@7.30.0: {}
 
   unenv@2.0.0-rc.24:
     dependencies:
