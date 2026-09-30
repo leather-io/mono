@@ -66,7 +66,6 @@ export function CallContractApprover({
           result: { transaction: signedTx.serialize() },
         })
       );
-      closeApprover();
       return null;
     }
 

@@ -68,7 +68,6 @@ export function DeployContractApprover({
           result: { transaction: signedTx.serialize() },
         })
       );
-      closeApprover();
       return null;
     }
 
