@@ -14,6 +14,7 @@ export const semanticTokens = {
       'border-transparent': createColorObjForKey('ink.border-transparent'),
       'border-default': createColorObjForKey('ink.border-default'),
       'text-non-interactive': createColorObjForKey('ink.text-non-interactive'),
+      underline: createColorObjForKey('ink.underline'),
       'component-background-non-interactive': createColorObjForKey(
         'ink.component-background-non-interactive'
       ),

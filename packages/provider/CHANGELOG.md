@@ -350,6 +350,23 @@
     * @leather.io/rpc bumped to 2.20.16
     * @leather.io/utils bumped to 0.46.3
 
+## [1.7.5](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.7.4...@leather.io/provider-v1.7.5) (2026-09-29)
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.25.3
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+
 ## [1.7.4](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.7.3...@leather.io/provider-v1.7.4) (2026-09-14)
 
 

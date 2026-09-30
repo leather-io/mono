@@ -40,6 +40,56 @@
 
 ---
 
+## [6.113.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.112.1...@leather.io/extension-v6.113.0) (2026-09-29)
+
+
+### Features
+
+* add BNS testnet support ([#2733](https://github.com/leather-io/mono/issues/2733)) ([8f92aa3](https://github.com/leather-io/mono/commit/8f92aa3b6d0f87f765f7de98eeecfe24e2bd2939))
+* **extension:** migrate from webpack to vite ([#2703](https://github.com/leather-io/mono/issues/2703)) ([f364905](https://github.com/leather-io/mono/commit/f364905b60510fedd4cb2284f55821c00f047952))
+* **extension:** new swaps flow with sBTC bridging ([#2554](https://github.com/leather-io/mono/issues/2554)) ([65c8518](https://github.com/leather-io/mono/commit/65c85186c847b2e99fd062d00997c81932268bc5))
+* **extension:** tell users when a new version is available ([#2793](https://github.com/leather-io/mono/issues/2793)) ([6ef500a](https://github.com/leather-io/mono/commit/6ef500afb68f502e3de3873d55397ca9ed4bd45e))
+* fully move to dmk btc/stx dmk packages ([#2763](https://github.com/leather-io/mono/issues/2763)) ([c4bb5f3](https://github.com/leather-io/mono/commit/c4bb5f39ed9f2ff88ce59c325e86dda0cb87568b))
+* ledger dmk transport (hid instead of usb) (1/2) ([#2759](https://github.com/leather-io/mono/issues/2759)) ([462ddbc](https://github.com/leather-io/mono/commit/462ddbcffe12dd4955535f3f913816acb41b5b7d))
+* token price history graph ([#2764](https://github.com/leather-io/mono/issues/2764)) ([b7c56bc](https://github.com/leather-io/mono/commit/b7c56bc7eb49b3a38ea7f40c6332e6c5ce390f93))
+
+
+### Bug Fixes
+
+* bring back ordinal banners and make those dismissable ([#2615](https://github.com/leather-io/mono/issues/2615)) ([c085334](https://github.com/leather-io/mono/commit/c08533430f9b6bfd7c18f8e03b4151e2ec13cd91))
+* **extension:** open send form directly from token details ([#2781](https://github.com/leather-io/mono/issues/2781)) ([ff99d19](https://github.com/leather-io/mono/commit/ff99d19ce1cdb087f3a4e4e7c43361aff98b2399))
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+* staking testnet network ([#2801](https://github.com/leather-io/mono/issues/2801)) ([20fe188](https://github.com/leather-io/mono/commit/20fe1889a867e9ecffb7c20ef7b5a2364e53b43b))
+* swaps ui improvements ([#2758](https://github.com/leather-io/mono/issues/2758)) ([be4e2cf](https://github.com/leather-io/mono/commit/be4e2cfa261d803c24eb504f675713f5e2235673))
+* token details activity loading ([#2782](https://github.com/leather-io/mono/issues/2782)) ([a505cac](https://github.com/leather-io/mono/commit/a505cac16639b0e15437f46d14f0093784045dab))
+* **ui:** repair default callout contrast and link underline and focus states ([#2800](https://github.com/leather-io/mono/issues/2800)) ([32d87f8](https://github.com/leather-io/mono/commit/32d87f8973cb71e06ebe7fc55c7a47fa94a6557f))
+* update supportedMethods docs urls and add stx methods ([#2795](https://github.com/leather-io/mono/issues/2795)) ([ae34f69](https://github.com/leather-io/mono/commit/ae34f694fe0d373fcf96fc0e9c157e5ff93a9417))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.26.0
+    * @leather.io/bitcoin bumped to 0.41.0
+    * @leather.io/cms bumped to 1.6.3
+    * @leather.io/constants bumped to 0.40.0
+    * @leather.io/crypto bumped to 1.13.10
+    * @leather.io/features bumped to 1.8.3
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/provider bumped to 1.7.5
+    * @leather.io/queries bumped to 0.17.0
+    * @leather.io/query bumped to 2.52.0
+    * @leather.io/rpc bumped to 2.25.3
+    * @leather.io/services bumped to 1.66.0
+    * @leather.io/stacks bumped to 1.22.8
+    * @leather.io/tokens bumped to 0.27.2
+    * @leather.io/ui bumped to 1.119.1
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.16.5
+    * @leather.io/prettier-config bumped to 0.9.1
+
 ## [6.112.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.112.0...@leather.io/extension-v6.112.1) (2026-09-14)
 
 
