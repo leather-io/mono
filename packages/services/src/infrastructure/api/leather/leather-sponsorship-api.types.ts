@@ -2,15 +2,6 @@ import { z } from 'zod';
 
 import { LeatherApiError } from './leather-api.error';
 
-export const sbtcSponsorshipNetworkSchema = z.enum(['mainnet', 'testnet']);
-
-export type SbtcSponsorshipNetwork = z.infer<typeof sbtcSponsorshipNetworkSchema>;
-
-export interface SbtcSponsorshipQuoteRequest {
-  network: SbtcSponsorshipNetwork;
-  origin: string;
-}
-
 export const sbtcSponsorshipFeeTiers = ['low', 'medium', 'high'] as const;
 
 export const sbtcSponsorshipFeeTierSchema = z.enum(sbtcSponsorshipFeeTiers);

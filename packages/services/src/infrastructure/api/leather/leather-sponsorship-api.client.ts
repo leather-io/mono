@@ -11,7 +11,6 @@ import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-lim
 import type { ApiRequestOptions } from '../types';
 import { LeatherApiError, readLeatherApiErrorData } from './leather-api.error';
 import {
-  type SbtcSponsorshipQuoteRequest,
   type SbtcSponsorshipQuoteResponse,
   type SbtcSponsorshipSubmitRequest,
   type SbtcSponsorshipSubmitResponse,
@@ -47,14 +46,16 @@ export class LeatherSponsorshipApiClient {
 
   private async post<T>(
     path: string,
-    body: unknown,
     responseSchema: ZodType<T>,
-    signal?: AbortSignal
+    { body, signal }: { body?: unknown; signal?: AbortSignal }
   ): Promise<T> {
     const response = await fetch(`${this.baseUrl}${path}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Client-ID': this.clientId },
-      body: JSON.stringify(body),
+      headers: {
+        ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        'X-Client-ID': this.clientId,
+      },
+      body: body !== undefined ? JSON.stringify(body) : undefined,
       signal,
     });
     if (!response.ok) {
@@ -68,13 +69,10 @@ export class LeatherSponsorshipApiClient {
     return responseSchema.parse(await response.json());
   }
 
-  async fetchQuote(
-    body: SbtcSponsorshipQuoteRequest,
-    { signal }: ApiRequestOptions = {}
-  ): Promise<SbtcSponsorshipQuoteResponse> {
+  async fetchQuote({ signal }: ApiRequestOptions = {}): Promise<SbtcSponsorshipQuoteResponse> {
     return this.rateLimiter.add(
       RateLimiterType.Leather,
-      () => this.post(sbtcSponsorshipQuotePath, body, sbtcSponsorshipQuoteResponseSchema, signal),
+      () => this.post(sbtcSponsorshipQuotePath, sbtcSponsorshipQuoteResponseSchema, { signal }),
       { priority: leatherApiPriorities.sbtcSponsorshipQuote, signal }
     );
   }
@@ -85,7 +83,8 @@ export class LeatherSponsorshipApiClient {
   ): Promise<SbtcSponsorshipSubmitResponse> {
     return this.rateLimiter.add(
       RateLimiterType.Leather,
-      () => this.post(sbtcSponsorshipSubmitPath, body, sbtcSponsorshipSubmitResponseSchema, signal),
+      () =>
+        this.post(sbtcSponsorshipSubmitPath, sbtcSponsorshipSubmitResponseSchema, { body, signal }),
       { priority: leatherApiPriorities.sbtcSponsorshipSubmit, signal }
     );
   }

@@ -12,11 +12,6 @@ import {
   getSbtcSponsorshipIneligibilityReason,
 } from './leather-sponsorship-api.types';
 
-const quoteRequest = {
-  network: 'mainnet',
-  origin: 'SP1ORIGIN',
-} as const;
-
 const quoteResponse = {
   sponsorPrincipal: 'SP3SPONSOR',
   feeRecipientPrincipal: 'SP4FEES',
@@ -59,22 +54,20 @@ describe(LeatherSponsorshipApiClient.name, () => {
     vi.unstubAllGlobals();
   });
 
-  test('posts the quote request to the production API and parses the response', async () => {
+  test('posts a bodyless quote request to the production API and parses the response', async () => {
     const fetchMock = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>(() =>
       Promise.resolve(jsonResponse(quoteResponse))
     );
     vi.stubGlobal('fetch', fetchMock);
 
-    const result = await createClient().fetchQuote(quoteRequest);
+    const result = await createClient().fetchQuote();
 
     expect(result).toEqual(quoteResponse);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe(`${LEATHER_API_URL_PRODUCTION}/v1/sponsorship/quote`);
     expect(init?.method).toBe('POST');
-    expect(typeof init?.body === 'string' ? JSON.parse(init.body) : undefined).toEqual(
-      quoteRequest
-    );
+    expect(init?.body).toBeUndefined();
     expect(new Headers(init?.headers).get('X-Client-ID')).toBeTruthy();
   });
 
@@ -84,7 +77,7 @@ describe(LeatherSponsorshipApiClient.name, () => {
     );
     vi.stubGlobal('fetch', fetchMock);
 
-    await createClient({ environment: 'development' }).fetchQuote(quoteRequest);
+    await createClient({ environment: 'development' }).fetchQuote();
 
     const [url] = fetchMock.mock.calls[0];
     expect(url).toBe(`${LEATHER_API_URL_STAGING}/v1/sponsorship/quote`);
@@ -99,26 +92,28 @@ describe(LeatherSponsorshipApiClient.name, () => {
     await createClient({
       environment: 'production',
       sponsorshipApiUrl: 'http://localhost:8791/',
-    }).fetchQuote(quoteRequest);
+    }).fetchQuote();
 
     const [url] = fetchMock.mock.calls[0];
     expect(url).toBe('http://localhost:8791/quote');
   });
 
-  test('submits the signed transaction and returns txid plus the sponsored hex', async () => {
-    const fetchMock = vi.fn<(url: string) => Promise<Response>>(() =>
+  test('submits the signed transaction as JSON and returns txid plus the sponsored hex', async () => {
+    const fetchMock = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>(() =>
       Promise.resolve(jsonResponse({ txid: 'abc', transaction: '00deadbeef' }))
     );
     vi.stubGlobal('fetch', fetchMock);
 
-    const result = await createClient().submitTransaction({
-      quoteId: 'quote-1',
-      transaction: '00cafe',
-    });
+    const submitRequest = { quoteId: 'quote-1', transaction: '00cafe' };
+    const result = await createClient().submitTransaction(submitRequest);
 
     expect(result).toEqual({ txid: 'abc', transaction: '00deadbeef' });
-    const [url] = fetchMock.mock.calls[0];
+    const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe(`${LEATHER_API_URL_PRODUCTION}/v1/sponsorship/submit`);
+    expect(new Headers(init?.headers).get('Content-Type')).toBe('application/json');
+    expect(typeof init?.body === 'string' ? JSON.parse(init.body) : undefined).toEqual(
+      submitRequest
+    );
   });
 
   test('throws a LeatherApiError carrying the typed error code', async () => {
