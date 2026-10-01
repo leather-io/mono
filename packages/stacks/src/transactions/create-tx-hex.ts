@@ -17,6 +17,7 @@ interface CreateTransferSip10TxHex {
   nonce: number;
   fee: Money;
   memo?: string;
+  sponsored?: boolean;
 }
 
 export async function createTransferSip10TxHex({
@@ -27,6 +28,7 @@ export async function createTransferSip10TxHex({
   nonce,
   fee,
   memo,
+  sponsored,
 }: CreateTransferSip10TxHex) {
   const { contractAddress, contractAssetName, contractName } = getStacksAssetStringParts(assetId);
 
@@ -48,6 +50,7 @@ export async function createTransferSip10TxHex({
     functionName: 'transfer',
     nonce,
     fee,
+    sponsored,
     postConditions: [
       Pc.principal(currentStacksAddress)
         .willSendEq(amount)
