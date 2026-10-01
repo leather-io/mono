@@ -413,6 +413,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.66.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.66.0...@leather.io/services-v1.66.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* axios audit ([#2815](https://github.com/leather-io/mono/issues/2815)) ([480ceda](https://github.com/leather-io/mono/commit/480ceda66cf6537701f7c3571a1fb6c08fc5f127))
+
 ## [1.66.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.65.1...@leather.io/services-v1.66.0) (2026-09-29)
 
 
