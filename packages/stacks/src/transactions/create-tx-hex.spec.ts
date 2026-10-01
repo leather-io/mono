@@ -5,13 +5,12 @@ import { describe, expect, it } from 'vitest';
 
 import { createMoney } from '@leather.io/utils';
 
-import { StacksSigner } from '../signer/signer';
 import { createTransferSip10TxHex } from './create-tx-hex';
 
 const signer = {
   address: 'SP2BM6AQSMQ04CX8KDE62QBFVZTDZ2ZX80GZJSBZ4',
   publicKey: hexToBytes('8721c6a5237f5e8d361161a7855aa56885a3e19e2ea6ee268fb14eabc5e2ed9001'),
-} as unknown as StacksSigner;
+};
 
 const transfer = {
   signer,

@@ -24,6 +24,7 @@ import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 import {
+  AuthType,
   PostConditionMode,
   deserializeTransaction,
   isTokenTransferPayload,
@@ -93,6 +94,8 @@ export function BaseStxTxApproverLayout({
       nonce: Number(tx.auth.spendingCondition.nonce),
       recipient: tx.payload.recipient,
       memo,
+      // Rebuilding must keep sponsored auth, or the approver would try to broadcast a 0-fee tx.
+      sponsored: tx.auth.authType === AuthType.Sponsored,
       ...txOptions,
     });
     const newTxHex = newTx.serialize();

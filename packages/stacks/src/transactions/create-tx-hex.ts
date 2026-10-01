@@ -10,7 +10,7 @@ import { createSip10FnArgs } from './get-contract-fn-args';
 import { TransactionTypes } from './transaction.types';
 
 interface CreateTransferSip10TxHex {
-  signer: StacksSigner;
+  signer: Pick<StacksSigner, 'address' | 'publicKey'>;
   assetId: string;
   recipient: string;
   amount: number;
