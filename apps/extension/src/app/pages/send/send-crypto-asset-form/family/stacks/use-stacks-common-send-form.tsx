@@ -54,6 +54,12 @@ export function useStacksCommonSendForm({
   ) {
     const formErrors = await formikHelpers.validateForm();
 
+    if (!values.recipient) {
+      formikHelpers.setFieldError('recipient', FormErrorMessages.AddressRequired);
+      formikHelpers.setFieldError('recipientBnsName', FormErrorMessages.AddressRequired);
+      return false;
+    }
+
     const isStxFee = values.feeCurrency === stxFeeCurrency;
     if (isStxFee && isHighFeeWithNoFormErrors(formErrors, values.fee)) {
       setShowHighFeeWarningSheet(true);
