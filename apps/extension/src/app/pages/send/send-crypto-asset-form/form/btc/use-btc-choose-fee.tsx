@@ -95,7 +95,7 @@ export function useBtcChooseFee() {
 
       const signedTx = await signTx(resp.psbt, resp.signingConfig);
 
-      if (!signedTx) return logger.error('Attempted to sign tx, but no tx exists');
+      if (!signedTx) return;
 
       signedTx.finalize();
 
