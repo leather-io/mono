@@ -1,17 +1,16 @@
-import { useLocation, useOutlet } from 'react-router';
-
 import { AnimatePresence, motion } from 'framer-motion';
 
-export function AnimatedOutlet() {
-  const location = useLocation();
-  const outlet = useOutlet();
+import type { LedgerStepName } from './ledger-flow.types';
 
-  if (!outlet) return null;
-
+interface AnimatedStepProps {
+  stepName: LedgerStepName;
+  children: React.ReactNode;
+}
+export function AnimatedStep({ stepName, children }: AnimatedStepProps) {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
-        key={location.pathname}
+        key={stepName}
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 10 }}
@@ -23,7 +22,7 @@ export function AnimatedOutlet() {
           width: '100%',
         }}
       >
-        {outlet}
+        {children}
       </motion.div>
     </AnimatePresence>
   );
