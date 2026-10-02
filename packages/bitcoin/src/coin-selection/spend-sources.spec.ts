@@ -1,4 +1,5 @@
 import { OwnedUtxo } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
 
 import {
   generateMockTaprootTransactions,
@@ -6,7 +7,7 @@ import {
   mockTaprootUtxos,
   mockUtxos,
 } from './coin-selection.mocks';
-import { summarizeSpendSources } from './spend-sources';
+import { breakDownSpendBySource, summarizeSpendSources } from './spend-sources';
 
 function createOwnedUtxo(address: string, value: number): OwnedUtxo {
   return { address, value, txid: 'txid', vout: 0, path: '', keyOrigin: '' };
@@ -90,5 +91,80 @@ describe(summarizeSpendSources.name, () => {
     expect(result.nativeSegwitInputCount).toEqual(1);
     expect(result.taprootInputCount).toEqual(0);
     expect(result.inputCount).toEqual(3);
+  });
+});
+
+describe(breakDownSpendBySource.name, () => {
+  test('takes change from native segwit for a native segwit only spend', () => {
+    const summary = summarizeSpendSources(generateMockTransactions([504404]));
+
+    const result = breakDownSpendBySource(summary, createMoney(300444, 'BTC'));
+
+    expect(result.nativeSegwit.amount.toString()).toEqual('300444');
+    expect(result.taproot.amount.toString()).toEqual('0');
+  });
+
+  test('takes change from native segwit before taproot for a mixed spend', () => {
+    const summary = summarizeSpendSources([
+      ...generateMockTransactions([200000]),
+      ...generateMockTaprootTransactions([300000]),
+    ]);
+
+    const result = breakDownSpendBySource(summary, createMoney(400500, 'BTC'));
+
+    expect(result.nativeSegwit.amount.toString()).toEqual('100500');
+    expect(result.taproot.amount.toString()).toEqual('300000');
+  });
+
+  test('takes change from taproot once native segwit is used up', () => {
+    const summary = summarizeSpendSources([
+      ...generateMockTransactions([10000]),
+      ...generateMockTaprootTransactions([300000]),
+    ]);
+
+    const result = breakDownSpendBySource(summary, createMoney(100500, 'BTC'));
+
+    expect(result.nativeSegwit.amount.toString()).toEqual('0');
+    expect(result.taproot.amount.toString()).toEqual('100500');
+  });
+
+  test('assigns a taproot only spend to taproot', () => {
+    const summary = summarizeSpendSources(generateMockTaprootTransactions([300000]));
+
+    const result = breakDownSpendBySource(summary, createMoney(100500, 'BTC'));
+
+    expect(result.nativeSegwit.amount.toString()).toEqual('0');
+    expect(result.taproot.amount.toString()).toEqual('100500');
+  });
+
+  test('sums to the total spend when inputs cover it', () => {
+    const summary = summarizeSpendSources([
+      ...generateMockTransactions([200000]),
+      ...generateMockTaprootTransactions([300000]),
+    ]);
+    const totalSpend = createMoney(450000, 'BTC');
+
+    const result = breakDownSpendBySource(summary, totalSpend);
+
+    expect(result.nativeSegwit.amount.plus(result.taproot.amount).toString()).toEqual('450000');
+  });
+
+  test('never exceeds the gross value of each source', () => {
+    const summary = summarizeSpendSources([
+      ...generateMockTransactions([1000]),
+      ...generateMockTaprootTransactions([2000]),
+    ]);
+
+    const result = breakDownSpendBySource(summary, createMoney(10000, 'BTC'));
+
+    expect(result.nativeSegwit.amount.toString()).toEqual('1000');
+    expect(result.taproot.amount.toString()).toEqual('2000');
+  });
+
+  test('returns zero for no inputs', () => {
+    const result = breakDownSpendBySource(summarizeSpendSources([]), createMoney(0, 'BTC'));
+
+    expect(result.nativeSegwit.amount.toString()).toEqual('0');
+    expect(result.taproot.amount.toString()).toEqual('0');
   });
 });

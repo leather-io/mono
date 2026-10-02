@@ -43,7 +43,7 @@ test.describe('send btc spend sources with mixed utxos', () => {
       .toBeVisible();
     await test
       .expect(details.getByTestId(SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow))
-      .toContainText('0.002');
+      .toContainText('0.001');
     await test
       .expect(details.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootRow))
       .toContainText('0.003');
@@ -62,7 +62,9 @@ test.describe('send btc spend sources with mixed utxos', () => {
     await test.expect(warningDialog).toHaveCount(0);
   });
 
-  test('that a taproot only spend shows the callout without rows', async ({ sendPage }) => {
+  test('that a taproot only spend shows the callout and a zero native segwit row', async ({
+    sendPage,
+  }) => {
     await goToReview(sendPage, '0.001');
 
     const details = sendPage.confirmationDetails;
@@ -71,10 +73,10 @@ test.describe('send btc spend sources with mixed utxos', () => {
       .toBeVisible();
     await test
       .expect(details.getByTestId(SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow))
-      .toHaveCount(0);
+      .toContainText('0.00000000');
     await test
       .expect(details.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootRow))
-      .toHaveCount(0);
+      .toContainText('0.001');
   });
 });
 
@@ -91,7 +93,7 @@ test.describe('send btc spend sources with native segwit utxos only', () => {
     await sendPage.page.waitForTimeout(1000);
   });
 
-  test('that the review shows no callout and no rows', async ({ sendPage }) => {
+  test('that the review shows no callout and a zero taproot row', async ({ sendPage }) => {
     await goToReview(sendPage, '0.001');
 
     const details = sendPage.confirmationDetails;
@@ -100,9 +102,9 @@ test.describe('send btc spend sources with native segwit utxos only', () => {
       .toHaveCount(0);
     await test
       .expect(details.getByTestId(SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow))
-      .toHaveCount(0);
+      .toContainText('0.001');
     await test
       .expect(details.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootRow))
-      .toHaveCount(0);
+      .toContainText('0.00000000');
   });
 });

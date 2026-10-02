@@ -8,7 +8,11 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 import { Stack } from 'leather-styles/jsx';
 import get from 'lodash.get';
 
-import { decodeBitcoinTx, summarizeSpendSources } from '@leather.io/bitcoin';
+import {
+  breakDownSpendBySource,
+  decodeBitcoinTx,
+  summarizeSpendSources,
+} from '@leather.io/bitcoin';
 import type { CryptoCurrency } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
 import {
@@ -96,6 +100,10 @@ function BtcBroadcastConfirmation() {
     preset: 'pad-decimals',
   });
   const summaryFee = formatCurrency(createMoney(Number(fee), symbol), { preset: 'pad-decimals' });
+  const spendSourcesBreakdown = breakDownSpendBySource(
+    spendSources,
+    createMoney(Number(decodedTx.outputs[0].amount) + Number(fee), symbol)
+  );
 
   async function initiateTransaction() {
     setIsBroadcasting(true);
@@ -189,7 +197,7 @@ function BtcBroadcastConfirmation() {
               />
               <InfoCardSeparator />
               <InfoCardRow title="Total spend" value={totalSpend} />
-              <SpendSourcesBreakdownRows summary={spendSources} />
+              <SpendSourcesBreakdownRows breakdown={spendSourcesBreakdown} />
               <InfoCardRow title="Sending" value={sendingValue} />
               <InfoCardRow
                 title="Fee"
