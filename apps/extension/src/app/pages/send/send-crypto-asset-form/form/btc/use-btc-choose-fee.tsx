@@ -93,19 +93,23 @@ export function useBtcChooseFee() {
       );
       if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
 
-      const signedTx = await signTx(resp.psbt, resp.signingConfig);
+      try {
+        const signedTx = await signTx(resp.psbt, resp.signingConfig);
 
-      if (!signedTx) return;
+        if (!signedTx) return;
 
-      signedTx.finalize();
+        signedTx.finalize();
 
-      void sendFormNavigate.toConfirmAndSignBtcTransaction({
-        tx: signedTx.hex,
-        recipient: txValues.recipient,
-        fee: feeValue,
-        feeRowValue,
-        time,
-      });
+        void sendFormNavigate.toConfirmAndSignBtcTransaction({
+          tx: signedTx.hex,
+          recipient: txValues.recipient,
+          fee: feeValue,
+          feeRowValue,
+          time,
+        });
+      } catch (error) {
+        return sendFormNavigate.toErrorPage(error);
+      }
     },
   };
 }

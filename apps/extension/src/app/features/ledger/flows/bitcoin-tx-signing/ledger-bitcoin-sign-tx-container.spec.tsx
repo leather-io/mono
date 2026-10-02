@@ -241,13 +241,38 @@ describe('LedgerSignBitcoinTxContainer', () => {
   });
 
   test('forwards the device error when settling a descriptor signing request', async () => {
+    const { context } = setupSignTransaction({
+      descriptor: 'wpkh(@0/**)',
+      error: disconnectError,
+    });
+
+    await act(async () => {
+      await context.signTransaction();
+    });
+
+    expectSettledOnceWith({ status: 'failed', error: disconnectError.message });
+    expect(mocks.toOperationRejectedStep).not.toHaveBeenCalled();
+  });
+
+  test('shows the rejected step when the user denies a descriptor signing on the device', async () => {
     const { context } = setupSignTransaction({ descriptor: 'wpkh(@0/**)', error: deniedError });
 
     await act(async () => {
       await context.signTransaction();
     });
 
-    expectSettledOnceWith({ status: 'failed', error: deniedError.message });
+    expect(mocks.toOperationRejectedStep).toHaveBeenCalledOnce();
+    expect(mocks.settleLedgerAction).not.toHaveBeenCalled();
+  });
+
+  test('fails other flows with the device error instead of showing the rejected step', async () => {
+    const { context } = setupSignTransaction({ error: disconnectError });
+
+    await act(async () => {
+      await context.signTransaction();
+    });
+
+    expectSettledOnceWith({ status: 'failed', error: disconnectError.message });
     expect(mocks.toOperationRejectedStep).not.toHaveBeenCalled();
   });
 

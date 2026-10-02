@@ -89,7 +89,7 @@ export function LedgerSignBitcoinTxContainer({ request }: LedgerSignBitcoinTxCon
         // UI and the dApp response. Settle that promise with the error rather
         // than leaving it to hang forever. Other flows keep the standard
         // on-device rejection screen.
-        if (descriptor || (settleOnRejection && !isLedgerUserDeniedError(e))) {
+        if (!isLedgerUserDeniedError(e)) {
           ledgerNavigate.settleLedgerAction(
             request,
             isError(e) ? { status: 'failed', error: e.message } : { status: 'cancelled' }
