@@ -8,7 +8,7 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 import { Stack } from 'leather-styles/jsx';
 import get from 'lodash.get';
 
-import { decodeBitcoinTx } from '@leather.io/bitcoin';
+import { decodeBitcoinTx, summarizeSpendSources } from '@leather.io/bitcoin';
 import type { CryptoCurrency } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
 import {
@@ -31,9 +31,12 @@ import {
   InfoCardSeparator,
 } from '@app/components/info-card/info-card';
 import { Card, Content, Page } from '@app/components/layout';
+import { SpendSourcesBreakdownRows } from '@app/components/spend-sources/spend-sources-breakdown-rows';
+import { SpendSourcesTaprootCallout } from '@app/components/spend-sources/spend-sources-taproot-callout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { invalidateActivityQueries } from '@app/query/activity/blockchain-activity.query';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
+import { useMatchWalletUtxos } from '@app/query/bitcoin/utxos/use-match-wallet-utxos';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 
@@ -72,6 +75,9 @@ function BtcBroadcastConfirmation() {
   const { broadcastTx } = useBitcoinBroadcastTransaction();
 
   const decodedTx = decodeBitcoinTx(transaction.hex);
+
+  const matchWalletUtxos = useMatchWalletUtxos();
+  const spendSources = summarizeSpendSources(matchWalletUtxos(decodedTx.inputs));
 
   const nav = useSendFormNavigate();
 
@@ -162,6 +168,8 @@ function BtcBroadcastConfirmation() {
               </Button>
             }
           >
+            <SpendSourcesTaprootCallout summary={spendSources} mt="space.05" mx="space.05" />
+
             <InfoCardAssetValue
               data-testid={SendCryptoAssetSelectors.ConfirmationDetailsAssetValue}
               fiatSymbol={txFiatValueSymbol}
@@ -181,6 +189,7 @@ function BtcBroadcastConfirmation() {
               />
               <InfoCardSeparator />
               <InfoCardRow title="Total spend" value={totalSpend} />
+              <SpendSourcesBreakdownRows summary={spendSources} />
               <InfoCardRow title="Sending" value={sendingValue} />
               <InfoCardRow
                 title="Fee"
