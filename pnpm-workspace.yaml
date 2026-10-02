@@ -15,6 +15,14 @@ auditConfig:
     # image-size JXL and HEIF parsers infinite-loop DoS. Same package, same
     # exposure, and same fix constraints as the ICNS advisory above.
     - GHSA-5p2g-fcmc-qvqq
+    # node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested
+    # DigestAlgorithm elements. Build-time only: node-forge is reached solely
+    # through @expo/cli (dev-server manifest signing, `expo login`, and iOS
+    # code-signing in `expo run:ios`) and webpack-dev-server's selfsigned dev
+    # certificate, and ships in no app artifact. The advisory's patched version
+    # (1.4.1) is not published on npm. Remove this entry once node-forge 1.4.1+
+    # is published and @expo/cli picks it up.
+    - GHSA-86w9-cpqp-85rv
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - axios
