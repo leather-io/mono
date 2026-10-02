@@ -34,6 +34,12 @@ const mockedLeoFtMetadata = {
   decimals: 6,
 };
 
+const mockedSbtcFtMetadata = {
+  name: 'sBTC',
+  symbol: 'sBTC',
+  decimals: 8,
+};
+
 export async function mockMainnetTestAccountStacksFTsRequest(page: Page | BrowserContext) {
   await page.route(`**/api.hiro.so/metadata/v1/ft/**`, route =>
     route.fulfill({
@@ -55,6 +61,14 @@ export async function mockMainnetTestAccountStacksFTsRequest(page: Page | Browse
     route =>
       route.fulfill({
         json: mockedLeoFtMetadata,
+      })
+  );
+
+  await page.route(
+    'https://api.hiro.so/metadata/v1/ft/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token',
+    route =>
+      route.fulfill({
+        json: mockedSbtcFtMetadata,
       })
   );
 }

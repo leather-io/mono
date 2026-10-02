@@ -89,11 +89,6 @@
   "sbtc": {
     "enabled": true,
     "emilyApiUrl": "https://sbtc-emily.com",
-    "sponsorshipsEnabled": true,
-    "sponsorshipApiUrl": {
-      "mainnet": "https://sponsor.leather.io",
-      "testnet": "https://sponsor-testnet.leather.io"
-    },
     "contracts": {
       "mainnet": {
         "address": "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token"
