@@ -4,6 +4,8 @@ import { HeaderAccountSelector } from '@app/components/layout/headers/header-acc
 import { HeaderGrid, HeaderGridRightCol } from '@app/components/layout/headers/header-grid';
 import { Settings } from '@app/features/settings/settings';
 
+import { CurrentAccountCopyAddressMenu } from './copy-address-menu';
+
 export function HomeHeader() {
   return (
     <Header>
@@ -12,6 +14,7 @@ export function HomeHeader() {
         leftCol={<HeaderAccountSelector />}
         rightCol={
           <HeaderGridRightCol>
+            <CurrentAccountCopyAddressMenu />
             <FullScreenButton />
             <Settings />
           </HeaderGridRightCol>
