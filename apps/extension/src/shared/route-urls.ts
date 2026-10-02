@@ -4,26 +4,6 @@ export enum RouteUrls {
   BackUpSecretKey = '/back-up-secret-key',
   SignIn = '/sign-in',
 
-  // Ledger routes
-  ConnectLedger = 'connect-your-ledger',
-  ConnectLedgerError = 'ledger-connection-error',
-  ConnectLedgerSuccess = 'successfully-connected-your-ledger',
-  LedgerCheckingAppVersion = 'checking-app-version',
-  DeviceBusy = 'please-wait',
-  AwaitingDeviceUserAction = 'awaiting-approval',
-  LedgerDisconnected = 'your-ledger-disconnected',
-  LedgerOperationRejected = 'action-rejected',
-  LedgerPublicKeyMismatch = 'wrong-ledger-device',
-  LedgerDevicePayloadInvalid = 'ledger-payload-invalid',
-  LedgerUnsupportedBrowser = 'unsupported-browser',
-  LedgerOutdatedAppWarning = 'outdated-app-warning',
-  LedgerUnexpectedFingerprint = 'unexpected-device-fingerprint',
-  LedgerBroadcastError = 'transaction-broadcast-error',
-  LedgerSignStacksProposal = 'sign-stacks-proposal',
-  ConnectLedgerStart = 'connect-ledger',
-  OutdatedStacksAppWarning = 'outdated-stacks-app-warning',
-  LedgerStacksAddressStandard = 'choose-address-standard',
-
   // Active wallet routes
   Home = '/',
   TokenDetails = '/token/*',
@@ -45,7 +25,6 @@ export enum RouteUrls {
   AllBalancesBondHistory = '/all-balances/bonded/history',
   AddWallet = '/add-wallet',
   CreateWallet = '/create-wallet',
-  AddLedgerWallet = '/add-ledger-wallet',
 
   // nested routes must have relative paths
   Activity = '/activity',
