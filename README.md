@@ -35,7 +35,7 @@ The current packages are listed below
 Configure code checks to run during pre-commit and/or pre-push hooks. Each check maps directly to a script in the root package.json.
 
 1. Copy `.env.example` to `.env`.
-2. Enable specific checks for each hook::
+2. Enable specific checks for each hook:
 
 ```
 PRE_COMMIT=format,lint
