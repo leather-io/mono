@@ -1,18 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { Box } from 'leather-styles/jsx';
 
-import type { StacksTransaction } from '@leather.io/models';
 import { createGetTransactionByIdQueryOptions } from '@leather.io/query';
 import { Badge, Spinner } from '@leather.io/ui';
 
+import { statusFromTx } from '@app/common/transactions/stacks/transaction.utils';
 import { capitalize } from '@app/common/utils';
 import { useStacksClient } from '@app/query/stacks/stacks-client';
-
-const failedTxStatuses: StacksTransaction['status'][] = [
-  'abort_by_response',
-  'abort_by_post_condition',
-  'problematic_skipped',
-];
 
 export function TxStatusBadge({ txid }: { txid: string }) {
   const client = useStacksClient();
@@ -36,7 +30,7 @@ export function TxStatusBadge({ txid }: { txid: string }) {
       />
     );
 
-  if (failedTxStatuses.includes(data.status))
+  if (statusFromTx(data) === 'failed')
     return <Badge variant="error" label={capitalize(data.status.replaceAll('_', ' '))} />;
 
   return <Badge variant="success" label="Confirmed" />;

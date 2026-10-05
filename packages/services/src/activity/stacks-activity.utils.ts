@@ -313,8 +313,9 @@ export function buildConfirmedStacksActivity(
 }
 
 function mapStacksTransactionActivityStatus(tx: StacksTransaction): OnChainActivityStatus {
-  if (isStacksMempoolTransaction(tx)) return 'pending';
-  return tx.status === 'success' ? 'success' : 'failed';
+  if (tx.status === 'pending') return 'pending';
+  if (tx.status === 'success') return 'success';
+  return 'failed';
 }
 
 function mapStacksTransactionTimestamp(tx: StacksTransaction) {

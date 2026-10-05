@@ -490,6 +490,25 @@ describe(buildOnchainStacksActivity.name, () => {
     expect(activity?.nonce).toBe(4);
   });
 
+  it('maps a dropped mempool transfer as failed with no balance change', () => {
+    const tx: StacksMempoolTransaction = {
+      tx_id: '0xdropped',
+      sender: { address: 'SP_SENDER', nonce: 4 },
+      sponsor: null,
+      fee_rate: '200',
+      receipt_time: 1_700_000_500,
+      receipt_block_height: 43,
+      status: 'dropped_replace_by_fee',
+      replaced_by_tx_id: '0xreplacement',
+      type: 'token_transfer',
+      token_transfer: { recipient: stxAddress, amount: '1000', memo: null },
+    };
+    const activity = buildOnchainStacksActivity(tx, stxAddress, noChanges);
+    expect(activity?.status).toBe('failed');
+    expect(activity?.blockHeight).toBeUndefined();
+    expect(activity?.balanceChanges).toHaveLength(0);
+  });
+
   it('nets the fee out of the stx balance change for a contract call the account paid for', () => {
     const tx = contractCall(
       { tx_id: '0x1', sender: { address: stxAddress, nonce: 3 } },
