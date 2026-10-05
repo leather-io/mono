@@ -1,6 +1,5 @@
 import { FtMetadataResponse, NftMetadataResponse } from '@hirosystems/token-metadata-api-client';
 import type {
-  AddressNonces,
   AddressTransactionsWithTransfersListResponse,
   GetRawTransactionResult,
   MempoolTransaction,
@@ -17,6 +16,7 @@ import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
 import { getHiroApiRateLimiter } from '../rate-limiter/hiro-rate-limiter';
 import type {
   CallReadOnlyFunctionArgs,
+  HiroPrincipalNoncesResponse,
   HiroSip10AddressBalancesResponse,
   HiroStxAddressBalanceResponse,
   NonFungibleTokenHoldingsResponse,
@@ -63,7 +63,10 @@ export function stacksClient(basePath: string) {
     async getAccountNonces(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () =>
-          axios.get<AddressNonces>(`${basePath}/extended/v1/address/${address}/nonces`, { signal }),
+          axios.get<HiroPrincipalNoncesResponse>(
+            `${basePath}/extended/v3/principals/${address}/nonces`,
+            { signal }
+          ),
         {
           priority: hiroApiRequestsPriorityLevels.getAccountNonces,
           signal,
