@@ -23,6 +23,16 @@ auditConfig:
     # (1.4.1) is not published on npm. Remove this entry once node-forge 1.4.1+
     # is published and @expo/cli picks it up.
     - GHSA-86w9-cpqp-85rv
+    # braces stack-exhaustion DoS through deeply nested brace patterns.
+    # Build-time only: braces is reached solely through the glob matching of
+    # build and dev tooling, via micromatch (metro-file-map, jest, fast-glob)
+    # and chokidar 3.x (sanity CLI, @sentry/vite-plugin, webpack-dev-server),
+    # and ships in no app artifact. The patterns it expands are our own config
+    # and watch globs, never untrusted input, and metro-file-map only calls
+    # micromatch.some, which does not invoke braces. The advisory's patched
+    # version (3.0.4) is not published on npm. Remove this entry once braces
+    # 3.0.4+ is published and micromatch and chokidar pick it up.
+    - GHSA-vfj7-8cjw-p6xm
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - axios
