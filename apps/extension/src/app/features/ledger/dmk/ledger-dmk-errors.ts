@@ -4,6 +4,7 @@ import { isError } from '@leather.io/utils';
 export enum LedgerConnectionErrors {
   AppNotOpen = 'AppNotOpen',
   AppOpenFailed = 'AppOpenFailed',
+  DeviceNotPaired = 'DeviceNotPaired',
   OperationRejected = 'OperationRejected',
 }
 
@@ -33,6 +34,8 @@ const noDeviceSelectedErrorMessage =
 const deviceInUseErrorMessage =
   'Your Ledger is in use by another app. Close Ledger Live and any other Leather windows, then try again.';
 const operationRejectedErrorMessage = 'Operation rejected on the Ledger device';
+const deviceNotPairedErrorMessage =
+  'Leather has not been given access to a Ledger device in this browser';
 
 interface DmkTaggedError {
   _tag: string;
@@ -152,6 +155,16 @@ export function isLedgerActionCancelledError(error: unknown): boolean {
   return isError(error) && error.name === ledgerActionCancelledErrorName;
 }
 
+export function makeLedgerDeviceNotPairedError(): Error {
+  const error = new Error(deviceNotPairedErrorMessage);
+  error.name = LedgerConnectionErrors.DeviceNotPaired;
+  return error;
+}
+
+function isLedgerDeviceNotPairedError(error: unknown): boolean {
+  return isError(error) && error.name === LedgerConnectionErrors.DeviceNotPaired;
+}
+
 export interface LedgerDeviceLockState {
   deviceLocked: boolean;
 }
@@ -161,6 +174,7 @@ interface LedgerConnectionErrorNavigate {
   toErrorStep(chain: SupportedBlockchains, errorMessage?: string): unknown;
   toDeviceDisconnectStep(): unknown;
   toOperationRejectedStep(description?: string): unknown;
+  toPairDeviceStep(): unknown;
 }
 
 interface HandleLedgerConnectionErrorArgs {
@@ -193,6 +207,11 @@ export function handleLedgerConnectionError(
 
   if (isLedgerOperationRejectedError(error)) {
     void ledgerNavigate.toOperationRejectedStep();
+    return;
+  }
+
+  if (isLedgerDeviceNotPairedError(error)) {
+    void ledgerNavigate.toPairDeviceStep();
     return;
   }
 
