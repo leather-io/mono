@@ -4,7 +4,6 @@ import type {
   BlockchainActivityBalanceChange,
   CryptoAsset,
   StacksConfirmedTransaction,
-  StacksConfirmedTransactionBase,
   StacksMempoolTransaction,
 } from '@leather.io/models';
 
@@ -329,6 +328,8 @@ describe(buildConfirmedStacksActivity.name, () => {
     expect(activity?.fee?.amount.toNumber()).toBe(100);
   });
 });
+
+type StacksConfirmedTransactionBase = Omit<StacksConfirmedTransaction, 'type'>;
 
 describe(buildOnchainStacksActivity.name, () => {
   const stxAddress = 'SP_ME';
