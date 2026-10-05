@@ -43,7 +43,11 @@ export function TokenSwitch({ icon, tokenName, value, onValueChange, ...rest }: 
         </Cell.Label>
       </Cell.Content>
       <Cell.Aside>
-        <Box pointerEvents="none">
+        <Box
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
           <Switch value={switchValue} onValueChange={updateValue} />
         </Box>
       </Cell.Aside>

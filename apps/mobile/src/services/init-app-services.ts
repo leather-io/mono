@@ -1,21 +1,10 @@
-import {
-  SBTC_ASSET_ID_MAINNET,
-  SBTC_ASSET_ID_TESTNET,
-  USDCX_ASSET_ID_MAINNET,
-  USDCX_ASSET_ID_TESTNET,
-} from '@leather.io/constants';
+import { defaultVisibleSip10AssetIds } from '@/shared/default-visible-sip10-assets';
+
 import { initServicesContainer } from '@leather.io/services';
 import { serializeAssetId } from '@leather.io/utils';
 
 import { MobileHttpCacheService } from './mobile-http-cache.service';
 import { MobileSettingsService } from './mobile-settings.service';
-
-const defaultVisibleAssetIds = [
-  SBTC_ASSET_ID_MAINNET,
-  SBTC_ASSET_ID_TESTNET,
-  USDCX_ASSET_ID_MAINNET,
-  USDCX_ASSET_ID_TESTNET,
-];
 
 export function initAppServices() {
   initServicesContainer({
@@ -34,7 +23,7 @@ export function initAppServices() {
     settingsService: MobileSettingsService,
     defaultAssetVisibility: {
       type: 'allowlist',
-      assets: defaultVisibleAssetIds.map(id => serializeAssetId({ protocol: 'sip10', id })),
+      assets: defaultVisibleSip10AssetIds.map(id => serializeAssetId({ protocol: 'sip10', id })),
     },
   });
 }

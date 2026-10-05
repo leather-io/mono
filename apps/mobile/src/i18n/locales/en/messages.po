@@ -850,6 +850,10 @@ msgstr "Failed to change nonce"
 msgid "Failed to load latest nonce"
 msgstr "Failed to load latest nonce"
 
+#: src/features/balances/manage-tokens.sheet.tsx:81
+msgid "Failed to load tokens"
+msgstr "Failed to load tokens"
+
 #: src/features/swap/components/review/swap-submission-overlay.tsx:111
 msgid "Failed to start a swap"
 msgstr "Failed to start a swap"
@@ -1162,7 +1166,7 @@ msgstr ""
 msgid "Make your first transaction to get started"
 msgstr "Make your first transaction to get started"
 
-#: src/features/balances/manage-tokens.sheet.tsx:88
+#: src/features/balances/manage-tokens.sheet.tsx:68
 msgid "Manage tokens"
 msgstr "Manage tokens"
 
@@ -1288,7 +1292,7 @@ msgstr "No results found"
 msgid "No swaps available"
 msgstr "No swaps available"
 
-#: src/features/balances/manage-tokens.sheet.tsx:101
+#: src/features/balances/manage-tokens.sheet.tsx:86
 msgid "No tokens found"
 msgstr "No tokens found"
 
@@ -1564,7 +1568,7 @@ msgstr "Search for asset"
 msgid "Search for BNS name or address"
 msgstr "Search for BNS name or address"
 
-#: src/features/balances/manage-tokens.sheet.tsx:94
+#: src/features/balances/manage-tokens.sheet.tsx:74
 msgid "Search tokens"
 msgstr "Search tokens"
 

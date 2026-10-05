@@ -3,6 +3,7 @@ import { ReactElement, useMemo } from 'react';
 import { Screen } from '@/components/screen/screen';
 import { useUsdcxBalance } from '@/features/balances/assets/use-usdcx-balance';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
+import { withUsdcxBalance } from '@/features/balances/assets/utils/with-usdcx-balance';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useRouter } from 'expo-router';
@@ -24,29 +25,15 @@ interface AssetsListProps {
 export function AssetsList({ account, sip10Data, header, footer }: AssetsListProps) {
   const router = useRouter();
   const theme = useTheme();
-  const {
-    assetId: usdcxAssetId,
-    balance: usdcxFetchState,
-    isVisible: isUsdcxVisible,
-  } = useUsdcxBalance(account);
+  const usdcx = useUsdcxBalance(account);
+  const usdcxBalance =
+    usdcx.isVisible && usdcx.balance.state === 'success' ? usdcx.balance.value : undefined;
+  const sip10List = sip10Data.state === 'success' ? sip10Data.value.sip10s : undefined;
 
   const sip10Memo = useMemo(() => {
-    const usdcxBalance =
-      isUsdcxVisible && usdcxFetchState.state === 'success' ? usdcxFetchState.value : undefined;
-
-    if (sip10Data.state !== 'success') {
-      return usdcxBalance ? [usdcxBalance] : [];
-    }
-
-    const sip10s = [...sip10Data.value.sip10s];
-    const hasUsdcxInSip10s = sip10s.some(sip10 => sip10.asset.assetId === usdcxAssetId);
-
-    if (!hasUsdcxInSip10s && usdcxBalance) {
-      sip10s.push(usdcxBalance);
-    }
-
-    return sip10s.sort(sortSip10Balances);
-  }, [sip10Data, usdcxAssetId, usdcxFetchState, isUsdcxVisible]);
+    if (!sip10List) return usdcxBalance ? [usdcxBalance] : [];
+    return withUsdcxBalance(sip10List, usdcx.assetId, usdcxBalance).sort(sortSip10Balances);
+  }, [sip10List, usdcx.assetId, usdcxBalance]);
 
   const allAssetsMemo = [...sip10Memo];
 

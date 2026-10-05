@@ -1,0 +1,13 @@
+import {
+  SBTC_ASSET_ID_MAINNET,
+  SBTC_ASSET_ID_TESTNET,
+  USDCX_ASSET_ID_MAINNET,
+  USDCX_ASSET_ID_TESTNET,
+} from '@leather.io/constants';
+
+export const defaultVisibleSip10AssetIds = [
+  SBTC_ASSET_ID_MAINNET,
+  SBTC_ASSET_ID_TESTNET,
+  USDCX_ASSET_ID_MAINNET,
+  USDCX_ASSET_ID_TESTNET,
+];
