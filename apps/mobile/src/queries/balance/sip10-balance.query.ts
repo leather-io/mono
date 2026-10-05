@@ -75,7 +75,7 @@ function useSip10AccountBalanceQuery(request: AccountRequest) {
   const settings: UserSettings = {
     network: networkPreference,
     quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
-    assetVisibility,
+    assetVisibility: request.assets?.includeHiddenAssets ? {} : assetVisibility,
   };
 
   return useQuery({

@@ -1,6 +1,5 @@
 import { Balance } from '@/components/balance/balance';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { useTokenManagementFlag } from '@/features/feature-flags';
 import { useAccountUnlockedBalance } from '@/queries/balance/account-balance.query';
 import { t } from '@lingui/core/macro';
 
@@ -16,14 +15,11 @@ import {
 interface AvailableAccountBalanceProps {
   account: AccountId;
   onOpenManageTokens(): void;
-  hasAssets: boolean;
 }
 export function AvailableAccountBalance({
   account,
   onOpenManageTokens,
-  hasAssets,
 }: AvailableAccountBalanceProps) {
-  const isTokenManagementReleased = useTokenManagementFlag();
   const { descriptionSheetRef } = useGlobalSheets();
   const unlockedBalance = useAccountUnlockedBalance({
     fingerprint: account.fingerprint,
@@ -70,11 +66,9 @@ export function AvailableAccountBalance({
           <Balance balance={unlockedBalance.value} variant="heading05" />
         )}
       </Box>
-      {isTokenManagementReleased && hasAssets && (
-        <Pressable p="2" onPress={onOpenManageTokens}>
-          <SettingsSliderHorIcon />
-        </Pressable>
-      )}
+      <Pressable p="2" onPress={onOpenManageTokens}>
+        <SettingsSliderHorIcon />
+      </Pressable>
     </Box>
   );
 }

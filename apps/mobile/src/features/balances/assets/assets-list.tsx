@@ -1,26 +1,18 @@
 import { ReactElement, useMemo } from 'react';
 
 import { Screen } from '@/components/screen/screen';
+import { useUsdcxBalance } from '@/features/balances/assets/use-usdcx-balance';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import {
-  useSip10AccountBalance,
-  useSip10BalanceByAssetId,
-} from '@/queries/balance/sip10-balance.query';
-import { useSettings } from '@/store/settings/settings';
+import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useRouter } from 'expo-router';
 
-import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
 import { Sip10Balance } from '@leather.io/services';
 import { useTheme } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { renderAsset } from './render-assets';
-
-function isUsdcxAssetId(assetId: string) {
-  return assetId === USDCX_ASSET_ID_MAINNET || assetId === USDCX_ASSET_ID_TESTNET;
-}
 
 interface AssetsListProps {
   account: AccountId;
@@ -30,34 +22,31 @@ interface AssetsListProps {
 }
 
 export function AssetsList({ account, sip10Data, header, footer }: AssetsListProps) {
-  const { fingerprint, accountIndex } = account;
-  const { networkPreference } = useSettings();
   const router = useRouter();
   const theme = useTheme();
-
-  const usdcxAssetId =
-    networkPreference.chain.bitcoin.mode === 'mainnet'
-      ? USDCX_ASSET_ID_MAINNET
-      : USDCX_ASSET_ID_TESTNET;
-
-  const usdcxBalance = useSip10BalanceByAssetId(fingerprint, accountIndex, usdcxAssetId);
+  const {
+    assetId: usdcxAssetId,
+    balance: usdcxFetchState,
+    isVisible: isUsdcxVisible,
+  } = useUsdcxBalance(account);
 
   const sip10Memo = useMemo(() => {
-    const hasUsdcxBalance = usdcxBalance.state === 'success' && usdcxBalance.value;
+    const usdcxBalance =
+      isUsdcxVisible && usdcxFetchState.state === 'success' ? usdcxFetchState.value : undefined;
 
     if (sip10Data.state !== 'success') {
-      return hasUsdcxBalance ? [usdcxBalance.value] : [];
+      return usdcxBalance ? [usdcxBalance] : [];
     }
 
     const sip10s = [...sip10Data.value.sip10s];
-    const hasUsdcxInSip10s = sip10s.some(sip10 => isUsdcxAssetId(sip10.asset.assetId));
+    const hasUsdcxInSip10s = sip10s.some(sip10 => sip10.asset.assetId === usdcxAssetId);
 
-    if (!hasUsdcxInSip10s && hasUsdcxBalance) {
-      sip10s.push(usdcxBalance.value);
+    if (!hasUsdcxInSip10s && usdcxBalance) {
+      sip10s.push(usdcxBalance);
     }
 
     return sip10s.sort(sortSip10Balances);
-  }, [sip10Data, usdcxBalance]);
+  }, [sip10Data, usdcxAssetId, usdcxFetchState, isUsdcxVisible]);
 
   const allAssetsMemo = [...sip10Memo];
 

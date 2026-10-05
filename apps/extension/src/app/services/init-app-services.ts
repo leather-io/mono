@@ -26,6 +26,7 @@ export function initAppServices() {
       },
     },
     cacheService: ExtensionHttpCacheService,
+    defaultAssetVisibility: { type: 'appConfig' },
     settingsService: ExtensionSettingsService,
     authSessionService: ExtensionAuthSessionService,
   });
