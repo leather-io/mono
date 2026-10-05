@@ -1,23 +1,30 @@
 import { useQuery } from '@tanstack/react-query';
 import { Box } from 'leather-styles/jsx';
 
+import type { StacksTransaction } from '@leather.io/models';
 import { createGetTransactionByIdQueryOptions } from '@leather.io/query';
 import { Badge, Spinner } from '@leather.io/ui';
 
 import { capitalize } from '@app/common/utils';
 import { useStacksClient } from '@app/query/stacks/stacks-client';
 
+const failedTxStatuses: StacksTransaction['status'][] = [
+  'abort_by_response',
+  'abort_by_post_condition',
+  'problematic_skipped',
+];
+
 export function TxStatusBadge({ txid }: { txid: string }) {
   const client = useStacksClient();
   const { data } = useQuery({
     ...createGetTransactionByIdQueryOptions({ client, txid }),
     refetchInterval(query) {
-      if (!query.state.data || query.state.data.tx_status === 'pending') return 3000;
+      if (!query.state.data || query.state.data.status === 'pending') return 3000;
       return false;
     },
   });
 
-  if (!data || data?.tx_status === 'pending')
+  if (!data || data.status === 'pending')
     return (
       <Badge
         label="In mempool"
@@ -29,8 +36,8 @@ export function TxStatusBadge({ txid }: { txid: string }) {
       />
     );
 
-  if (data?.tx_status === 'abort_by_response' || data?.tx_status === 'abort_by_post_condition')
-    return <Badge variant="error" label={capitalize(data.tx_status.replaceAll('_', ' '))} />;
+  if (failedTxStatuses.includes(data.status))
+    return <Badge variant="error" label={capitalize(data.status.replaceAll('_', ' '))} />;
 
   return <Badge variant="success" label="Confirmed" />;
 }

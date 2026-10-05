@@ -1,15 +1,17 @@
 import { entries, filter, groupBy, isNonNull, mapValues, pipe } from 'remeda';
 
 import { stxAsset } from '@leather.io/constants';
-import type {
-  BlockchainActivity,
-  BlockchainActivityBalanceChange,
-  CryptoAssetId,
-  Money,
-  OnChainActivityStatus,
-  StacksProtocolAction,
-  StacksProtocolId,
-  StacksTx,
+import {
+  type BlockchainActivity,
+  type BlockchainActivityBalanceChange,
+  type CryptoAssetId,
+  type Money,
+  type OnChainActivityStatus,
+  type StacksProtocolAction,
+  type StacksProtocolId,
+  type StacksTransaction,
+  type StacksTx,
+  isStacksMempoolTransaction,
 } from '@leather.io/models';
 import { assertUnreachable, createMoney, initBigNumber } from '@leather.io/utils';
 
@@ -20,11 +22,6 @@ import type {
   HiroPrincipalTxStatus,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import type { ActivitySourceItem } from './activity-paginator';
-import {
-  isMempoolTx,
-  mapStacksTxBlockHeight,
-  mapStacksTxBlockTime,
-} from './stacks-tx-activity.utils';
 
 type StacksActivityResultItem = HiroPrincipalTransactionsResultItem & {
   readonly transaction: Extract<
@@ -315,28 +312,36 @@ export function buildConfirmedStacksActivity(
   }
 }
 
-function mapStacksTxActivityStatus(tx: StacksTx): OnChainActivityStatus {
-  if (isMempoolTx(tx)) return 'pending';
-  return tx.tx_status === 'success' ? 'success' : 'failed';
+function mapStacksTransactionActivityStatus(tx: StacksTransaction): OnChainActivityStatus {
+  if (isStacksMempoolTransaction(tx)) return 'pending';
+  return tx.status === 'success' ? 'success' : 'failed';
+}
+
+function mapStacksTransactionTimestamp(tx: StacksTransaction) {
+  return isStacksMempoolTransaction(tx) ? tx.receipt_time : tx.block.time;
+}
+
+function mapStacksTransactionBlockHeight(tx: StacksTransaction) {
+  return isStacksMempoolTransaction(tx) ? undefined : tx.block.height;
 }
 
 // Single-tx sibling of buildPendingStacksActivity reading the v1 tx shape from get-tx-by-id.
 export function buildOnchainStacksActivity(
-  tx: StacksTx,
+  tx: StacksTransaction,
   stxAddress: string,
   balanceChanges: { stxNet: string; ftChanges: BlockchainActivityBalanceChange[] },
   classified?: ClassifiedContractCall
 ): BlockchainActivity | null {
-  const initiatedByUser = tx.sender_address === stxAddress;
-  const paidFee = initiatedByUser && !tx.sponsored;
-  const blockHeight = mapStacksTxBlockHeight(tx);
-  const status = mapStacksTxActivityStatus(tx);
+  const initiatedByUser = tx.sender.address === stxAddress;
+  const paidFee = initiatedByUser && tx.sponsor === null;
+  const blockHeight = mapStacksTransactionBlockHeight(tx);
+  const status = mapStacksTransactionActivityStatus(tx);
   const common = {
-    timestamp: mapStacksTxBlockTime(tx),
+    timestamp: mapStacksTransactionTimestamp(tx),
     txid: tx.tx_id,
     status,
     initiatedByUser,
-    nonce: tx.nonce,
+    nonce: tx.sender.nonce,
     ...(blockHeight !== undefined ? { blockHeight } : {}),
     ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
   };
@@ -346,9 +351,9 @@ export function buildOnchainStacksActivity(
   const hasAssetChange =
     !initBigNumber(balanceChanges.stxNet).isZero() || balanceChanges.ftChanges.length > 0;
 
-  switch (tx.tx_type) {
+  switch (tx.type) {
     case 'token_transfer': {
-      const isRecipient = tx.token_transfer.recipient_address === stxAddress;
+      const isRecipient = tx.token_transfer.recipient === stxAddress;
       if (!initiatedByUser && !isRecipient) return null;
       const stxChange =
         status === 'failed'
@@ -360,8 +365,8 @@ export function buildOnchainStacksActivity(
         common,
         core: {
           kind: 'token_transfer',
-          recipient: tx.token_transfer.recipient_address,
-          sender: tx.sender_address,
+          recipient: tx.token_transfer.recipient,
+          sender: tx.sender.address,
         },
         action: initiatedByUser ? 'send' : 'receive',
         balanceChanges: stxChange === null ? [] : [stxChange],
@@ -385,7 +390,7 @@ export function buildOnchainStacksActivity(
         classified ?? { action: 'contract-execution' },
         tx.contract_call.function_name,
         allChanges,
-        tx.sender_address
+        tx.sender.address
       );
       return buildStacksActivity({
         common,

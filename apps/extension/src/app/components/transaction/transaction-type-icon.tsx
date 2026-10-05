@@ -1,4 +1,4 @@
-import { StacksTx, StacksTxStatus } from '@leather.io/models';
+import type { StacksTransaction, StacksTxStatus } from '@leather.io/models';
 
 import { statusFromTx } from '@app/common/transactions/stacks/transaction.utils';
 
@@ -7,7 +7,7 @@ import { TransactionTypeIconWrapper } from './transaction-type-icon-wrapper';
 
 type StatusColorMap = Record<StacksTxStatus, string>;
 
-function getColorFromTx(tx: StacksTx) {
+function getColorFromTx(tx: StacksTransaction) {
   const colorMap: StatusColorMap = {
     pending: 'yellow.action-primary-default',
     success: 'stacks',
@@ -18,11 +18,11 @@ function getColorFromTx(tx: StacksTx) {
 }
 
 interface TransactionTypeIconProps {
-  transaction: StacksTx;
+  transaction: StacksTransaction;
 }
 export function TransactionTypeIcon({ transaction }: TransactionTypeIconProps) {
   if (
-    ['coinbase', 'contract_call', 'smart_contract', 'token_transfer'].includes(transaction.tx_type)
+    ['coinbase', 'contract_call', 'smart_contract', 'token_transfer'].includes(transaction.type)
   ) {
     return (
       <TransactionTypeIconWrapper

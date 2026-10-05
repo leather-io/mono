@@ -83,6 +83,23 @@ const mockedStacksPendingTransaction = {
   },
 };
 
+const mockedStacksPendingTransactionV3 = {
+  tx_id: mockedStacksPendingTransaction.tx_id,
+  sender: { address: TEST_ACCOUNT_1_STX_ADDRESS, nonce: 14 },
+  sponsor: null,
+  fee_rate: '3000',
+  receipt_time: 1729168336,
+  receipt_block_height: 1000,
+  status: 'pending',
+  replaced_by_tx_id: null,
+  type: 'token_transfer',
+  token_transfer: {
+    recipient: 'ST3WSKSKGNFCDGJN9EXF6AC9NFF69XNNFXN2DQA7E',
+    amount: '1000000',
+    memo: null,
+  },
+};
+
 const mockedStacksTxsRequestWithPendingTx = {
   limit: 50,
   offset: 0,
@@ -218,10 +235,10 @@ export async function mockStacksRawTx(page: Page | BrowserContext) {
 
 export async function mockStacksPendingTransaction(page: Page | BrowserContext) {
   await page.route(
-    `**/api.hiro.so/extended/v1/tx/0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4`,
+    `**/api.hiro.so/extended/v3/transactions/0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4`,
     route =>
       route.fulfill({
-        json: mockedStacksPendingTransaction,
+        json: mockedStacksPendingTransactionV3,
       })
   );
 }
@@ -235,26 +252,21 @@ export async function mockStacksBroadcastTransaction(page: Page | BrowserContext
     })
   );
 
-  await page.route(`**/api.hiro.so/extended/v1/tx/${txid}`, route =>
+  await page.route(`**/api.hiro.so/extended/v3/transactions/${txid}`, route =>
     route.fulfill({
       json: {
         tx_id: txid,
-        nonce: 0,
+        sender: { address: TEST_ACCOUNT_1_STX_ADDRESS, nonce: 0 },
+        sponsor: null,
         fee_rate: '1000',
-        sender_address: TEST_ACCOUNT_1_STX_ADDRESS,
-        sponsored: false,
-        post_condition_mode: 'allow',
-        post_conditions: [],
-        anchor_mode: 'any',
-        tx_status: 'pending',
-        receipt_time: Date.now() / 1000,
-        receipt_time_iso: new Date().toISOString(),
-        tx_type: 'contract_call',
+        receipt_time: Math.floor(Date.now() / 1000),
+        receipt_block_height: 1000,
+        status: 'pending',
+        replaced_by_tx_id: null,
+        type: 'contract_call',
         contract_call: {
           contract_id: 'SP000000000000000000002Q6VF78.leather-integration-tests',
           function_name: 'transfer',
-          function_signature: '',
-          function_args: [],
         },
       },
     })

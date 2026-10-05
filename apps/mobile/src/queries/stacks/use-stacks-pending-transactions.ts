@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react';
 import { MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
 import { useQueries } from '@tanstack/react-query';
 
+import { type StacksMempoolTransaction, isStacksMempoolTransaction } from '@leather.io/models';
 import { createGetAddressMempoolTransactionsQueryOptions } from '@leather.io/query';
 import { isUndefined, uniqueArray } from '@leather.io/utils';
 
@@ -49,17 +50,17 @@ export function useStacksPendingTransactions(addresses: string[]) {
       query,
       transactions: txs
         .map(tx => tx.data)
-        .filter(tx => {
+        .filter((tx): tx is StacksMempoolTransaction => {
           if (isUndefined(tx)) return false;
           if (droppedCache.has(tx.tx_id)) return false;
-          if (tx.tx_status !== 'pending') {
+          if (!isStacksMempoolTransaction(tx) || tx.status !== 'pending') {
             // Stale txs persist in the mempool endpoint so we
             // need to cache dropped txids to prevent unneeded fetches
             droppedCache.set(tx.tx_id, true);
             return false;
           }
           return true;
-        }) as MempoolTransaction[],
+        }),
     };
   }, [txs, query]);
 }

@@ -3,11 +3,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import type { MempoolTransaction, Transaction } from '@stacks/stacks-blockchain-api-types';
 import type { StacksTransactionWire } from '@stacks/transactions';
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { Flex, Stack } from 'leather-styles/jsx';
 
+import type { StacksTransaction } from '@leather.io/models';
 import { Caption, Sheet, SheetHeader, Spinner } from '@leather.io/ui';
 import { microStxToStx, stxToMicroStx } from '@leather.io/utils';
 
@@ -34,14 +34,14 @@ interface StacksTransactionActionSheetProps {
   actionType: StacksTransactionActionType;
   txid: string;
   rawTx: StacksTransactionWire;
-  tx: MempoolTransaction | Transaction;
+  tx: StacksTransaction;
 }
 
 interface StacksTransactionActionSheetLoaderProps {
   children(args: {
     txid: string;
     rawTx: StacksTransactionWire;
-    tx: MempoolTransaction | Transaction;
+    tx: StacksTransaction;
   }): React.ReactNode;
 }
 

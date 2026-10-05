@@ -1,6 +1,6 @@
 import { Box, BoxProps } from 'leather-styles/jsx';
 
-import { StacksTx } from '@leather.io/models';
+import type { StacksTransaction } from '@leather.io/models';
 import {
   AssetAvatarIcon,
   Avatar,
@@ -12,10 +12,10 @@ import {
 import { TransactionTypeIcon } from '../transaction/transaction-type-icon';
 
 interface TransactionIconProps extends BoxProps {
-  transaction: StacksTx;
+  transaction: StacksTransaction;
 }
 export function StacksTransactionIcon({ transaction, ...rest }: TransactionIconProps) {
-  switch (transaction.tx_type) {
+  switch (transaction.type) {
     case 'coinbase':
       return (
         <Box position="relative" flexShrink={0} {...rest}>

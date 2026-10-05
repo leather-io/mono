@@ -1,6 +1,6 @@
 import { useMatch } from 'react-router';
 
-import { StacksTx } from '@leather.io/models';
+import type { StacksTransaction } from '@leather.io/models';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
@@ -29,7 +29,7 @@ interface StacksTransactionItemProps {
   link?: string;
   title?: string;
   value?: string;
-  transaction?: StacksTx;
+  transaction?: StacksTransaction;
 }
 export function StacksTransactionItem({
   caption,
@@ -59,7 +59,7 @@ export function StacksTransactionItem({
     });
   }
 
-  const isOriginator = transaction?.sender_address === currentAccount?.address;
+  const isOriginator = transaction?.sender.address === currentAccount?.address;
   const isPending = transaction && isPendingTx(transaction);
 
   const txCaption = transaction ? getTxCaption(transaction) : caption || '';

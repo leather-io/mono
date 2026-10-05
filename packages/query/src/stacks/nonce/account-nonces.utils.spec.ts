@@ -1,5 +1,7 @@
-import type { MempoolTransaction, Transaction } from '@stacks/stacks-blockchain-api-types';
+import type { Transaction } from '@stacks/stacks-blockchain-api-types';
 import { describe, expect, it } from 'vitest';
+
+import type { StacksMempoolTransaction } from '@leather.io/models';
 
 import type { HiroPrincipalNoncesResponse } from '../hiro-api-types';
 import { parseAccountNoncesResponse } from './account-nonces.utils';
@@ -21,8 +23,19 @@ function createConfirmedTx(nonce: number) {
   return { nonce, sender_address: senderAddress } as Transaction;
 }
 
-function createPendingTx(nonce: number) {
-  return { nonce, sender_address: senderAddress } as MempoolTransaction;
+function createPendingTx(nonce: number): StacksMempoolTransaction {
+  return {
+    tx_id: `0x${nonce}`,
+    sender: { address: senderAddress, nonce },
+    sponsor: null,
+    fee_rate: '180',
+    receipt_time: 1_700_000_000,
+    receipt_block_height: 100,
+    status: 'pending',
+    replaced_by_tx_id: null,
+    type: 'token_transfer',
+    token_transfer: { recipient: 'SP000000000000000000002Q6VF78', amount: '1', memo: null },
+  };
 }
 
 describe('parseAccountNoncesResponse', () => {

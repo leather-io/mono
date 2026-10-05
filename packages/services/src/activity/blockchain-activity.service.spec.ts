@@ -666,14 +666,24 @@ describe(BlockchainActivityService.name, () => {
     it('maps an stx receive without a balance-changes call', async () => {
       mockStacksTx.getTransactionById = vi.fn().mockResolvedValue({
         tx_id: '0xrx',
-        tx_type: 'token_transfer',
-        tx_status: 'success',
-        sender_address: 'SP2',
-        sponsored: false,
+        sender: { address: 'SP2', nonce: 1 },
+        sponsor: null,
         fee_rate: '100',
-        block_height: 5,
-        burn_block_time: 1000,
-        token_transfer: { recipient_address: 'SP1', amount: '5000', memo: '' },
+        block: { height: 5, hash: '0x', index_hash: '0x', time: 1000, tx_index: 0 },
+        bitcoin_block: { height: 800_000, time: 1000 },
+        status: 'success',
+        parent_block: { hash: '0x', index_hash: '0x' },
+        event_count: 1,
+        execution_cost: {
+          read_count: 0,
+          read_length: 0,
+          runtime: 0,
+          write_count: 0,
+          write_length: 0,
+        },
+        vm_error: null,
+        type: 'token_transfer',
+        token_transfer: { recipient: 'SP1', amount: '5000', memo: null },
       });
       const result = await service.getActivityByTxId(stxAccount, '0xrx');
       expect(result?.action).toBe('receive');
@@ -685,13 +695,23 @@ describe(BlockchainActivityService.name, () => {
     it('fetches balance changes for a contract call and reclassifies a received sip10 transfer', async () => {
       mockStacksTx.getTransactionById = vi.fn().mockResolvedValue({
         tx_id: '0xcall',
-        tx_type: 'contract_call',
-        tx_status: 'success',
-        sender_address: 'SP2',
-        sponsored: false,
+        sender: { address: 'SP2', nonce: 1 },
+        sponsor: null,
         fee_rate: '100',
-        block_height: 5,
-        burn_block_time: 1000,
+        block: { height: 5, hash: '0x', index_hash: '0x', time: 1000, tx_index: 0 },
+        bitcoin_block: { height: 800_000, time: 1000 },
+        status: 'success',
+        parent_block: { hash: '0x', index_hash: '0x' },
+        event_count: 1,
+        execution_cost: {
+          read_count: 0,
+          read_length: 0,
+          runtime: 0,
+          write_count: 0,
+          write_length: 0,
+        },
+        vm_error: null,
+        type: 'contract_call',
         contract_call: { contract_id: 'SP.token', function_name: 'transfer' },
       });
       mockHiro.getPrincipalBalanceChanges = vi.fn().mockResolvedValue({

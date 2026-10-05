@@ -1,9 +1,5 @@
 import type { StacksNetwork } from '@stacks/network';
 import {
-  CoinbaseTransaction,
-  TransactionEventFungibleAsset,
-} from '@stacks/stacks-blockchain-api-types';
-import {
   AddressHashMode,
   ClarityType,
   type ContractCallPayload,
@@ -21,7 +17,11 @@ import {
 } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
 
-import { StacksTx, StacksTxStatus } from '@leather.io/models';
+import {
+  type StacksTransaction,
+  type StacksTxStatus,
+  isStacksMempoolTransaction,
+} from '@leather.io/models';
 import { getStacksContractName } from '@leather.io/stacks';
 import {
   createMoney,
@@ -35,10 +35,10 @@ import { safeCall } from '@shared/utils';
 import { stacksValue } from '@app/common/stacks-utils';
 import { getStacksNetworkFromChainId } from '@app/store/networks/networks.hooks';
 
-export function statusFromTx(tx: StacksTx): StacksTxStatus {
-  const { tx_status } = tx;
-  if (tx_status === 'pending') return 'pending';
-  if (tx_status === 'success') return 'success';
+export function statusFromTx(tx: StacksTransaction): StacksTxStatus {
+  const { status } = tx;
+  if (status === 'pending') return 'pending';
+  if (status === 'success') return 'success';
   return 'failed';
 }
 
@@ -46,8 +46,8 @@ export function stacksTransactionToHex(transaction: StacksTransactionWire) {
   return `0x${transaction.serialize()}`;
 }
 
-export function getTxCaption(transaction: StacksTx) {
-  switch (transaction.tx_type) {
+export function getTxCaption(transaction: StacksTransaction) {
+  switch (transaction.type) {
     case 'smart_contract':
       return truncateMiddle(transaction.smart_contract.contract_id.split('.')[0], 4);
     case 'contract_call':
@@ -61,28 +61,18 @@ export function getTxCaption(transaction: StacksTx) {
   }
 }
 
-function getAssetTransfer(tx: StacksTx): TransactionEventFungibleAsset | null {
-  if (tx.tx_type !== 'contract_call') return null;
-  if (tx.tx_status !== 'success') return null;
-  const transfer = tx.events.find(event => event.event_type === 'fungible_token_asset');
-  if (transfer?.event_type !== 'fungible_token_asset') return null;
-  return transfer;
-}
-
-export function getTxValue(tx: StacksTx, isOriginator: boolean): number | string | null {
-  if (tx.tx_type === 'token_transfer') {
+export function getTxValue(tx: StacksTransaction, isOriginator: boolean): string | null {
+  if (tx.type === 'token_transfer') {
     return `${isOriginator ? '-' : ''}${stacksValue({
       value: tx.token_transfer.amount,
       withTicker: false,
     })}`;
   }
-  const transfer = getAssetTransfer(tx);
-  if (transfer) return new BigNumber(transfer.asset.amount).toFormat();
   return null;
 }
 
-export function getTxTitle(tx: StacksTx) {
-  switch (tx.tx_type) {
+export function getTxTitle(tx: StacksTransaction) {
+  switch (tx.type) {
     case 'token_transfer':
       return 'Stacks';
     case 'contract_call':
@@ -90,7 +80,7 @@ export function getTxTitle(tx: StacksTx) {
     case 'smart_contract':
       return getStacksContractName(tx.smart_contract.contract_id);
     case 'coinbase':
-      return `Coinbase ${(tx as CoinbaseTransaction).block_height}`;
+      return isStacksMempoolTransaction(tx) ? 'Coinbase' : `Coinbase ${tx.block.height}`;
     case 'poison_microblock':
       return 'Poison Microblock';
     default:
@@ -129,8 +119,8 @@ export function isNonSequentialMultisigTransaction(tx: StacksTransactionWire) {
   );
 }
 
-export function isPendingTx(tx: StacksTx) {
-  return tx.tx_status === 'pending';
+export function isPendingTx(tx: StacksTransaction) {
+  return tx.status === 'pending';
 }
 
 export enum StacksTransactionActionType {

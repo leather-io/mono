@@ -23,7 +23,6 @@ function getMockFlag(key: string): string | null {
 // layer sends these requests.
 const stxBalancePath = `${pox5NetworkConfig.apiUrl}/extended/v2/addresses/SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST/balances/stx`;
 
-const mempoolPathSegment = 'mempool';
 const defaultMockTxStatus = 'success';
 const notFoundMockTxStatus = 'not-found';
 
@@ -45,14 +44,13 @@ export const pox5MockOverrideHandlers = [
     if (!burnHeight) return undefined;
     return HttpResponse.json({ ...hiroInfoHandler.resp, burn_block_height: Number(burnHeight) });
   }),
-  http.get(`${pox5NetworkConfig.apiUrl}/extended/v1/tx/:txId`, ({ params }) => {
-    if (params.txId === mempoolPathSegment) return undefined;
+  http.get(`${pox5NetworkConfig.apiUrl}/extended/v3/transactions/:txId`, ({ params }) => {
     const status = getMockFlag('leather-mock-pox5-tx-status') ?? defaultMockTxStatus;
     if (status === notFoundMockTxStatus) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json({
       tx_id: params.txId,
-      tx_status: status,
-      tx_type: 'contract_call',
+      status,
+      type: 'contract_call',
     });
   }),
   http.get(stxBalancePath, () => {
