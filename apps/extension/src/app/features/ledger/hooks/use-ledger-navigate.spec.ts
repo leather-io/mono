@@ -86,6 +86,20 @@ describe(useLedgerNavigate.name, () => {
     });
   });
 
+  test('toPairDeviceStep carries fromLocation so cancel returns to the origin', () => {
+    setLocation(`/bitcoin/${RouteUrls.ConnectLedger}`, { fromLocation });
+
+    void renderLedgerNavigate().toPairDeviceStep();
+
+    expect(h.navigate).toHaveBeenCalledWith(RouteUrls.LedgerPairDevice, {
+      replace: true,
+      state: {
+        backgroundLocation: { pathname: RouteUrls.Home },
+        fromLocation,
+      },
+    });
+  });
+
   test('toErrorStep carries fromLocation the same way', () => {
     setLocation(`/bitcoin/${RouteUrls.ConnectLedger}`, { fromLocation });
 

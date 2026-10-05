@@ -12,6 +12,7 @@ import {
   LedgerDisconnected,
   LedgerPublicKeyMismatch,
   OperationRejected,
+  PairLedgerDevice,
   UnsupportedBrowserLayout,
 } from '../../generic-steps';
 import { LedgerSignMsgContainer } from './ledger-stacks-sign-msg-container';
@@ -35,6 +36,7 @@ export const ledgerStacksMessageSigningRoutes = (
     />
     <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />
     <Route path={RouteUrls.ConnectLedgerError} element={<ConnectLedgerError />} />
+    <Route path={RouteUrls.LedgerPairDevice} element={<PairLedgerDevice />} />
     <Route path={RouteUrls.ConnectLedgerSuccess} element={<ConnectLedgerSuccess />} />
     <Route path={RouteUrls.AwaitingDeviceUserAction} element={<SignLedgerMessage />} />
     <Route path={RouteUrls.LedgerDisconnected} element={<LedgerDisconnected />} />
