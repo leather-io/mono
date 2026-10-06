@@ -121,7 +121,8 @@
       "browserslist@<4.28.7": ">=4.28.7 <5",
       "proxy-addr@>=2.0.0 <2.0.8": ">=2.0.8 <3",
       "source-map-js@>=1.0.0 <1.2.2": ">=1.2.2 <2",
-      "compression@<1.8.2": ">=1.8.2 <2"
+      "compression@<1.8.2": ">=1.8.2 <2",
+      "shell-quote@>=1.0.0 <1.11.0": ">=1.11.0 <2"
     },
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
