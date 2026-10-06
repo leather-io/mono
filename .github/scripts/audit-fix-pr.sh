@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+shopt -s inherit_errexit
 
 repo="$GITHUB_REPOSITORY"
 base_sha="$GITHUB_SHA"
@@ -10,7 +11,7 @@ files=(package.json pnpm-lock.yaml)
 
 function find_open_pr() {
   gh pr list --repo "$repo" --head "$branch" --base "$base_branch" --state open \
-    --json number --jq '.[0].number // empty'
+    --json number,isCrossRepository --jq 'map(select(.isCrossRepository | not)) | .[0].number // empty'
 }
 
 function find_branch_sha() {

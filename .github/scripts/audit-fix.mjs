@@ -44,6 +44,9 @@ const nothingFixedNote =
   'on a branch of your own: the bot rebuilds this branch and overwrites anything pushed to it.';
 const todoIntro =
   'These advisories still fail the gate. Each item says what is blocking it and what to do.';
+const introducedTodo =
+  'Reported only after the overrides above were applied. Check whether one of them pulled it ' +
+  'in before merging.';
 
 export function parseVersion(text) {
   const match = versionPattern.exec(text.trim());
@@ -85,6 +88,18 @@ function describeIgnore(advisory) {
   );
 }
 
+function findReleaseLine([major, minor]) {
+  if (major > 0) return { floor: [major, 0, 0], ceiling: [major + 1, 0, 0] };
+  return { floor: [0, minor, 0], ceiling: [0, minor + 1, 0] };
+}
+
+function isInReleaseLine(version, { floor, ceiling }) {
+  const parsed = parseVersion(version);
+  return (
+    parsed !== null && compareVersions(parsed, floor) >= 0 && compareVersions(parsed, ceiling) < 0
+  );
+}
+
 export function planOverride(advisory) {
   const name = advisory.module_name ?? '';
   if (!packageNamePattern.test(name)) {
@@ -107,10 +122,8 @@ export function planOverride(advisory) {
   }
 
   const patched = parseVersion(patchedMatch[1]);
-  const [major, minor] = patched;
-  const floor = major > 0 ? [major, 0, 0] : [0, minor, 0];
-  const ceiling = major > 0 ? [major + 1, 0, 0] : [0, minor + 1, 0];
-  const cap = major > 0 ? String(major + 1) : ceiling.join('.');
+  const { floor, ceiling } = findReleaseLine(patched);
+  const cap = patched[0] > 0 ? String(ceiling[0]) : ceiling.join('.');
   const range = `>=${patched.join('.')} <${cap}`;
 
   const selector = `${name}@>=${floor.join('.')} <${patched.join('.')}`;
@@ -124,14 +137,9 @@ export function planOverride(advisory) {
     );
   }
 
-  const outside = installedVersions.filter(version => {
-    const installed = parseVersion(version);
-    return (
-      installed === null ||
-      compareVersions(installed, floor) < 0 ||
-      compareVersions(installed, ceiling) >= 0
-    );
-  });
+  const outside = installedVersions.filter(
+    version => !isInReleaseLine(version, { floor, ceiling })
+  );
   if (outside.length > 0) {
     return manual(
       `Installed ${[...new Set(outside.map(cleanVersion))].join(', ')} is outside the patched release line ` +
@@ -180,6 +188,31 @@ export function describeInstallFailure(output, { advisory, plan }) {
   return (
     `\`pnpm install\` rejected ${describeEntry(plan)}: ` +
     `${error.trim().slice(0, maxErrorLength)}. Resolve it by hand.`
+  );
+}
+
+function escapePattern(text) {
+  return text.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+}
+
+function findLockfileVersions(lockfile, name) {
+  const keyPattern = new RegExp(`^  '?${escapePattern(name)}@([^('\\s:]+)`, 'gm');
+  return new Set([...lockfile.matchAll(keyPattern)].map(match => match[1]));
+}
+
+export function findDroppedVersions(before, after, { advisory, plan }) {
+  const line = findReleaseLine(plan.patched);
+  const remaining = findLockfileVersions(after, advisory.module_name);
+  return [...findLockfileVersions(before, advisory.module_name)].filter(
+    version => !isInReleaseLine(version, line) && !remaining.has(version)
+  );
+}
+
+export function describeDroppedVersions(dropped, { advisory, plan }) {
+  return (
+    `${describeEntry(plan)} also replaced installed ${dropped.map(cleanVersion).join(', ')}, ` +
+    'which is outside the patched release line, so it was rolled back. Narrow the override to the ' +
+    `vulnerable dependents after checking \`pnpm why ${advisory.module_name}\`.`
   );
 }
 
@@ -282,11 +315,16 @@ function applyOverride(fix) {
   writeFileSync(manifestPath, `${JSON.stringify(next, null, 2)}\n`);
 
   const install = runPnpm(installArgs);
-  if (install.status === 0) return null;
+  const dropped =
+    install.status === 0
+      ? findDroppedVersions(lockfile, readFileSync(lockfilePath, 'utf8'), fix)
+      : [];
+  if (install.status === 0 && dropped.length === 0) return null;
 
   writeFileSync(manifestPath, manifest);
   writeFileSync(lockfilePath, lockfile);
-  return install.output;
+  if (install.status !== 0) return describeInstallFailure(install.output, fix);
+  return describeDroppedVersions(dropped, fix);
 }
 
 function main() {
@@ -297,15 +335,20 @@ function main() {
 
   const fixes = [];
   for (const fix of planned.filter(({ plan }) => plan.status === 'fixable').sort(compareFixes)) {
-    const failure = applyOverride(fix);
-    if (failure === null) fixes.push(fix);
-    else todos.push({ advisory: fix.advisory, todo: describeInstallFailure(failure, fix) });
+    const todo = applyOverride(fix);
+    if (todo === null) fixes.push(fix);
+    else todos.push({ advisory: fix.advisory, todo });
   }
 
   if (fixes.length > 0) {
-    const reported = new Set(runAudit().map(advisory => advisory.id));
+    const confirming = runAudit();
+    const reported = new Set(confirming.map(advisory => advisory.id));
     for (const fix of fixes.filter(({ advisory }) => reported.has(advisory.id))) {
       todos.push({ advisory: fix.advisory, todo: describeStillReported(fix) });
+    }
+    const known = new Set(planned.map(({ advisory }) => advisory.id));
+    for (const advisory of confirming.filter(({ id }) => !known.has(id))) {
+      todos.push({ advisory, todo: introducedTodo });
     }
   }
 

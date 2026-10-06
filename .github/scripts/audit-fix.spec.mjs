@@ -20,8 +20,10 @@ import {
   buildTitle,
   compareFixes,
   compareVersions,
+  describeDroppedVersions,
   describeInstallFailure,
   describeStillReported,
+  findDroppedVersions,
   mergeOverrides,
   parseVersion,
   planOverride,
@@ -807,6 +809,56 @@ describe('describeInstallFailure', () => {
   });
 });
 
+describe('findDroppedVersions', () => {
+  const fix = createFix(compressionAdvisory);
+  function lockfileWith(keys) {
+    return ["lockfileVersion: '9.0'", '', 'packages:', '', ...keys.map(key => `  ${key}:`)].join(
+      '\n'
+    );
+  }
+
+  it('allows the vulnerable copy to move up inside the release line', () => {
+    const before = lockfileWith(['compression@1.8.1', 'compression@3.0.0']);
+    const after = lockfileWith(['compression@1.8.2', 'compression@3.0.0']);
+    assert.deepEqual(findDroppedVersions(before, after, fix), []);
+  });
+
+  it('flags a copy outside the release line that the override replaced', () => {
+    const before = lockfileWith(['compression@1.8.1', 'compression@3.0.0', 'compression@0.9.0']);
+    const after = lockfileWith(['compression@1.8.2']);
+    assert.deepEqual(findDroppedVersions(before, after, fix), ['3.0.0', '0.9.0']);
+  });
+
+  it('reads quoted scoped keys and snapshot keys with peer suffixes', () => {
+    const scoped = createFix(createAdvisory({ module_name: '@scope/pkg' }));
+    const before = lockfileWith(["'@scope/pkg@3.1.0(react@18.0.0)'", "'@scope/pkg@2.0.7'"]);
+    const after = lockfileWith(["'@scope/pkg@2.0.8'"]);
+    assert.deepEqual(findDroppedVersions(before, after, scoped), ['3.1.0']);
+  });
+
+  it('ignores packages whose name only starts with the advisory name', () => {
+    const before = lockfileWith(['compression-extra@3.0.0', 'compression@1.8.1']);
+    const after = lockfileWith(['compression@1.8.2']);
+    assert.deepEqual(findDroppedVersions(before, after, fix), []);
+  });
+
+  it('ignores dependency entries nested below a key', () => {
+    const before = `${lockfileWith(['compression@1.8.1'])}\n    compression@3.0.0: {}`;
+    assert.deepEqual(findDroppedVersions(before, lockfileWith(['compression@1.8.2']), fix), []);
+  });
+});
+
+describe('describeDroppedVersions', () => {
+  it('names the entry, the replaced versions and pnpm why', () => {
+    assert.equal(
+      describeDroppedVersions(['3.0.0'], createFix(compressionAdvisory)),
+      '`"compression@>=1.0.0 <1.8.2": ">=1.8.2 <2"` also replaced installed 3.0.0, which is ' +
+        'outside the patched release line, so it was rolled back. Narrow the override to the ' +
+        'vulnerable dependents after checking `pnpm why compression`.'
+    );
+  });
+});
+
 describe('describeStillReported', () => {
   it('names the entry and points at pnpm why', () => {
     assert.equal(
@@ -1575,6 +1627,25 @@ describe('audit-fix.mjs command', () => {
     });
   });
 
+  describe('when an override replaces a copy outside the release line', () => {
+    const sandbox = createSandbox();
+    const lockfile = "lockfileVersion: '9.0'\n\npackages:\n\n  compression@3.0.0:\n";
+    writeFileSync(join(sandbox.repo, 'pnpm-lock.yaml'), lockfile);
+    const run = runScript(sandbox, { advisories: [compressionAdvisory, proxyAddrAdvisory] });
+
+    it('rolls that override back and keeps the others', () => {
+      assert.deepEqual(run.selectors, [...baseSelectors, proxyAddrSelector]);
+    });
+
+    it('explains the rollback in the checklist', () => {
+      assert.match(
+        run.report,
+        /- \[ \] `compression` .+\n {2}`"compression@>=1\.0\.0 <1\.8\.2": ">=1\.8\.2 <2"` also replaced installed 3\.0\.0/
+      );
+      assert.equal(run.outputs, 'changed=true\nunresolved=1\ntitle=fix: proxy-addr audit\n');
+    });
+  });
+
   describe('when an applied override does not clear its advisory', () => {
     const sandbox = createSandbox();
     const run = runScript(sandbox, {
@@ -1611,9 +1682,12 @@ describe('audit-fix.mjs command', () => {
       stillReported: [unpatchedAdvisory],
     });
 
-    it('does not blame the applied override for an unrelated advisory', () => {
-      assert.doesNotMatch(run.report, /Needs a human/);
-      assert.equal(run.outputs, 'changed=true\nunresolved=0\ntitle=fix: compression audit\n');
+    it('lists the new advisory for a human instead of dropping it', () => {
+      assert.match(
+        run.report,
+        /- \[ \] `node-forge` .+\n {2}Reported only after the overrides above were applied\./
+      );
+      assert.equal(run.outputs, 'changed=true\nunresolved=1\ntitle=fix: compression audit\n');
     });
   });
 
