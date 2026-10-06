@@ -20,6 +20,7 @@ import { analytics } from '@shared/utils/analytics';
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { signBip322MessageUnlessDismissed } from '@app/common/sign-bip322-message-unless-dismissed';
+import { isLedgerSigningCancelledError } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import {
@@ -119,7 +120,9 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
         await allowTimeForUserToReadToast();
         closeWindow();
       } catch (e) {
+        if (isLedgerSigningCancelledError(e)) return;
         logger.error('Unable to sign bip322 message', e);
+        toast.error('Unable to sign message');
       } finally {
         setIsLoading(false);
       }
