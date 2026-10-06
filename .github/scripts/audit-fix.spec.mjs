@@ -949,6 +949,147 @@ describe('buildReport', () => {
       assert.ok(!report.endsWith('\n\n'));
     }
   });
+
+  describe('untrusted advisory fields', () => {
+    function reportFor(overrides) {
+      return buildReport([], [{ advisory: createAdvisory(overrides), todo: 'Do it.' }]);
+    }
+
+    it('builds the link from the advisory id and ignores the url field', () => {
+      const report = reportFor({ url: 'https://evil.example/x) [click](https://evil.example' });
+      assert.match(
+        report,
+        /`proxy-addr` \[GHSA-jqcg-44mw-7w3h\]\(https:\/\/github\.com\/advisories\/GHSA-jqcg-44mw-7w3h\) \(critical\)/
+      );
+      assert.doesNotMatch(report, /evil/);
+    });
+
+    const badIds = [
+      'GHSA-jqcg-44mw-7w3h](https://evil.example)',
+      'GHSA-jqcg-44mw',
+      'ghsa-jqcg-44mw-7w3h',
+      'CVE-2026-0001',
+      'GHSA-jqcg-44mw-7w3h\n# heading',
+      '',
+    ];
+    for (const id of badIds) {
+      it(`does not link an advisory id like ${JSON.stringify(id)}`, () => {
+        const report = reportFor({ github_advisory_id: id });
+        assert.match(report, /- \[ \] `proxy-addr` unidentified advisory \(critical\)/);
+        assert.doesNotMatch(report, /evil|heading|\]\(/);
+      });
+    }
+
+    it('does not link an advisory with no id field', () => {
+      const { github_advisory_id: removed, ...advisory } = proxyAddrAdvisory;
+      assert.equal(removed, 'GHSA-jqcg-44mw-7w3h');
+      assert.match(
+        buildReport([], [{ advisory, todo: 'Do it.' }]),
+        /`proxy-addr` unidentified advisory \(critical\)/
+      );
+    });
+
+    const badSeverities = ['High', 'high) [x](https://evil.example', 'high\n# heading', '', 7];
+    for (const severity of badSeverities) {
+      it(`replaces a severity like ${JSON.stringify(severity)}`, () => {
+        const report = reportFor({ severity });
+        assert.match(report, /\(unknown\), installed 2\.0\.7/);
+        assert.doesNotMatch(report, /evil|heading/);
+      });
+    }
+
+    it('replaces a missing severity', () => {
+      const { severity: removed, ...advisory } = proxyAddrAdvisory;
+      assert.equal(removed, 'critical');
+      assert.match(buildReport([], [{ advisory, todo: 'Do it.' }]), /\(unknown\), installed/);
+    });
+
+    it('strips backticks and newlines from the dependency path', () => {
+      const report = reportFor({
+        findings: [
+          { version: '2.0.7', paths: ['apps__web>evil`\n# heading\r\n`[x](y)>proxy-addr'] },
+        ],
+      });
+      assert.match(
+        report,
+        /reached through `apps__web>evil# heading\[x\]\(y\)>proxy-addr`\n {2}Do it\.\n$/
+      );
+      assert.equal(report.split('\n').filter(line => line.startsWith('#')).length, 1);
+    });
+
+    it('strips markdown from an installed version', () => {
+      const report = reportFor({
+        findings: [{ version: '2.0.7 [x](https://evil.example)\n# heading', paths: [] }],
+      });
+      assert.match(
+        report,
+        /\(critical\), installed 2\.0\.7xhttpsevil\.exampleheading\n {2}Do it\.\n$/
+      );
+      assert.doesNotMatch(report, /installed .*\]\(|\n# heading/);
+    });
+
+    it('keeps ordinary prerelease and build versions readable', () => {
+      const report = reportFor({
+        findings: [{ version: '2.0.0-rc.1+build.5', paths: [] }],
+      });
+      assert.match(report, /installed 2\.0\.0-rc\.1\+build\.5\n/);
+    });
+  });
+});
+
+describe('untrusted advisory fields in instructions', () => {
+  it('strips markdown from installed versions named in the cross-major instruction', () => {
+    const plan = planOverride(
+      createAdvisory({ findings: [{ version: '1.1.0`\n# heading [x](y)', paths: [] }] })
+    );
+    assert.equal(plan.status, 'manual');
+    assert.match(plan.todo, /^Installed 1\.1\.0headingxy is outside the patched release line/);
+    assert.doesNotMatch(plan.todo, /\n/);
+  });
+
+  it('strips backticks and newlines from an unusual patched range', () => {
+    const plan = planOverride(createAdvisory({ patched_versions: '>=2.0.8 `x`\n# heading' }));
+    assert.equal(plan.status, 'manual');
+    assert.ok(
+      plan.todo.startsWith('The patched range `>=2.0.8 x# heading` is not a single version.')
+    );
+  });
+
+  it('does not put an invalid advisory id into the ignore instruction', () => {
+    const plan = planOverride(
+      createAdvisory({ patched_versions: '<0.0.0', github_advisory_id: 'GHSA-x` [y](z)' })
+    );
+    assert.match(plan.todo, /add its GHSA id to `auditConfig\.ignoreGhsas`/);
+    assert.doesNotMatch(plan.todo, /\[y\]/);
+  });
+
+  it('uses the same rule in the unpublished-release instruction', () => {
+    const fix = createFix(compressionAdvisory);
+    const todo = describeInstallFailure(unpublishedError, {
+      ...fix,
+      advisory: { ...compressionAdvisory, github_advisory_id: 'not-an-id' },
+    });
+    assert.match(todo, /add its GHSA id to `auditConfig\.ignoreGhsas`/);
+  });
+});
+
+describe('agreement with the audit-dependencies gate', () => {
+  it('runs the same pnpm audit command as repo:code-checks, plus --json', () => {
+    const workflow = readFileSync(
+      fileURLToPath(new URL('../workflows/repo:code-checks.yml', import.meta.url)),
+      'utf8'
+    );
+    const commands = workflow
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.startsWith('run: pnpm ') && line.includes(' audit '));
+
+    assert.equal(commands.length, 1);
+    assert.deepEqual(
+      commands[0].replace('run: pnpm ', '').split(' '),
+      expectedAuditArgs.filter(argument => argument !== '--json')
+    );
+  });
 });
 
 describe('buildTitle', () => {
@@ -1480,7 +1621,7 @@ describe('audit-fix.mjs command', () => {
     const sandbox = createSandbox();
     const later = createAdvisory({
       id: 1,
-      github_advisory_id: 'GHSA-later-0000-0000',
+      github_advisory_id: 'GHSA-late-0000-0000',
       patched_versions: '>=2.0.9',
     });
     const earlier = createAdvisory({ id: 2 });

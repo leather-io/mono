@@ -26,6 +26,10 @@ const maxTitleLength = 72;
 const maxErrorLength = 300;
 
 const packageNamePattern = /^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/;
+const advisoryIdPattern = /^GHSA(?:-[a-z0-9]{4}){3}$/;
+const severityPattern = /^[a-z]+$/;
+const unsafeVersionPattern = /[^0-9A-Za-z.+-]/g;
+const unsafeCodePattern = /[`\r\n]/g;
 const versionPattern = /^(\d+)\.(\d+)\.(\d+)$/;
 const firstPatchedPattern = /^>=\s*(\d+\.\d+\.\d+)$/;
 const noPatchPattern = /^(?:<\s*0\.0\.0)?$/;
@@ -57,9 +61,25 @@ function manual(todo) {
   return { status: 'manual', todo };
 }
 
+function readAdvisoryId(advisory) {
+  const id = advisory.github_advisory_id ?? '';
+  if (!advisoryIdPattern.test(id)) return null;
+  return id;
+}
+
+function cleanVersion(version) {
+  return String(version).replace(unsafeVersionPattern, '');
+}
+
+function cleanCode(text) {
+  return String(text).replace(unsafeCodePattern, '');
+}
+
 function describeIgnore(advisory) {
+  const id = readAdvisoryId(advisory);
+  const entry = id === null ? 'its GHSA id' : `\`${id}\``;
   return (
-    `if the package never runs in a shipped app, add \`${advisory.github_advisory_id}\` to ` +
+    `if the package never runs in a shipped app, add ${entry} to ` +
     '`auditConfig.ignoreGhsas` in `pnpm-workspace.yaml` with a comment saying why it is not ' +
     'exploitable and when to remove the entry'
   );
@@ -81,7 +101,7 @@ export function planOverride(advisory) {
   const patchedMatch = firstPatchedPattern.exec(patchedRange);
   if (!patchedMatch) {
     return manual(
-      `The patched range \`${patchedRange}\` is not a single version. Pick the fixed release in ` +
+      `The patched range \`${cleanCode(patchedRange)}\` is not a single version. Pick the fixed release in ` +
         'the installed major and add an entry for it to `pnpm.overrides` in `package.json`.'
     );
   }
@@ -114,7 +134,7 @@ export function planOverride(advisory) {
   });
   if (outside.length > 0) {
     return manual(
-      `Installed ${[...new Set(outside)].join(', ')} is outside the patched release line ` +
+      `Installed ${[...new Set(outside.map(cleanVersion))].join(', ')} is outside the patched release line ` +
         `\`${range}\`, so the fix crosses a breaking version. Bump the dependency that pulls it in, ` +
         `or add \`"${name}@<${patched.join('.')}": "${range}"\` to \`pnpm.overrides\` after checking ` +
         'that its dependents work with the newer line.'
@@ -174,17 +194,21 @@ function describeAdvisory(advisory) {
   const name = packageNamePattern.test(advisory.module_name ?? '')
     ? advisory.module_name
     : 'unrecognised package';
-  return `\`${name}\` [${advisory.github_advisory_id}](${advisory.url}) (${advisory.severity})`;
+  const id = readAdvisoryId(advisory);
+  const link =
+    id === null ? 'unidentified advisory' : `[${id}](https://github.com/advisories/${id})`;
+  const severity = severityPattern.test(advisory.severity ?? '') ? advisory.severity : 'unknown';
+  return `\`${name}\` ${link} (${severity})`;
 }
 
 function describeContext(advisory) {
   const findings = advisory.findings ?? [];
-  const versions = [...new Set(findings.map(finding => finding.version))];
+  const versions = [...new Set(findings.map(finding => cleanVersion(finding.version)))];
   const paths = findings.flatMap(finding => finding.paths ?? []);
   const installed = versions.length > 0 ? `, installed ${versions.join(', ')}` : '';
   if (paths.length === 0) return installed;
   const more = paths.length > 1 ? ` (+${paths.length - 1} more)` : '';
-  return `${installed}, reached through \`${paths[0]}\`${more}`;
+  return `${installed}, reached through \`${cleanCode(paths[0])}\`${more}`;
 }
 
 function buildSection(heading, lines) {
