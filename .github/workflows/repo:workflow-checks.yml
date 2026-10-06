@@ -98,7 +98,7 @@ jobs:
           node-version: '22'
 
       - name: test-workflow-scripts
-        run: node --test .github/scripts/audit-fix.spec.mjs
+        run: node --test '.github/scripts/*.spec.mjs'
 
   audit-workflow-security:
     name: audit-workflow-security
