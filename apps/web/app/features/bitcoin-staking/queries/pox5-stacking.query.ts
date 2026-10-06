@@ -227,6 +227,7 @@ export function usePox5ClaimableRewards({
 }: UsePox5ClaimableRewardsArgs = {}): Pox5ClaimableRewards {
   const { stacksAccount } = useLeatherConnect();
   const client = usePox5StacksClient();
+  const pox5ContractId = usePox5ContractId();
   const stakerInfoQuery = usePox5StakerInfoQuery();
   const poxInfoQuery = usePox5PoxInfoQuery();
 
@@ -239,6 +240,7 @@ export function usePox5ClaimableRewards({
         address: stacksAccount?.address,
         signerManagerContractId: stakerInfo?.signerManagerContractId,
         cycle,
+        pox5ContractId,
         client,
       })
     ),
