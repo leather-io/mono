@@ -187,6 +187,15 @@ describe(LedgerFlowProvider.name, () => {
     expect(rendered.value.state?.step).toEqual({ name: 'connect', retryImmediately: true });
   });
 
+  test('toPairDeviceStep moves the active flow to the pairing step', () => {
+    const rendered = renderFlow();
+    startSigning(() => rendered.value.flow.sign(signBitcoinTxRequest));
+
+    act(() => rendered.value.steps.toPairDeviceStep());
+
+    expect(rendered.value.state?.step).toEqual({ name: 'pair-device' });
+  });
+
   test('steps captured for a previous flow do not affect a newer one', () => {
     const rendered = renderFlow();
     startSigning(() => rendered.value.flow.sign(signBitcoinTxRequest));

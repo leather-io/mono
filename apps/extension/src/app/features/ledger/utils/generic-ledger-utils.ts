@@ -60,6 +60,7 @@ export function prepareLedgerDeviceForAppFn<App>(connectAppFn: () => Promise<App
 const cancellableLedgerSteps: readonly LedgerStepName[] = [
   'connect',
   'connection-error',
+  'pair-device',
   'awaiting-device-operation',
   'choose-address-standard',
 ];

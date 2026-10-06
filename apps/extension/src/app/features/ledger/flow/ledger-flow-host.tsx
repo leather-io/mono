@@ -9,6 +9,7 @@ import { useToast } from '@app/features/toasts/use-toast';
 import { LedgerDmkProvider } from '../dmk/ledger-dmk.context';
 import { LedgerSignBitcoinTxContainer } from '../flows/bitcoin-tx-signing/ledger-bitcoin-sign-tx-container';
 import { LedgerConfirmBtcPolicyAddress } from '../flows/confirm-btc-policy-address/ledger-confirm-btc-policy-address';
+import { LedgerPairDevice } from '../flows/pair-device/ledger-pair-device';
 import { LedgerRequestBitcoinKeys } from '../flows/request-bitcoin-keys/ledger-request-bitcoin-keys';
 import { LedgerRequestStacksKeys } from '../flows/request-stacks-keys/ledger-request-stacks-keys';
 import { LedgerSignMsgContainer } from '../flows/stacks-message-signing/ledger-stacks-sign-msg-container';
@@ -48,6 +49,8 @@ function renderLedgerFlow(request: ActiveLedgerFlowRequest, close: () => void) {
       return <ConnectLedgerStart />;
     case 'unsupported-browser':
       return <UnsupportedBrowserLayout onClose={close} />;
+    case 'pair-device':
+      return <LedgerPairDevice onClose={close} />;
     default:
       return null;
   }

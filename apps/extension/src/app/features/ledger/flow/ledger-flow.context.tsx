@@ -234,6 +234,10 @@ export function useLedgerSteps() {
         goToStep({ name: 'connection-error', chain, errorMessage });
       },
 
+      toPairDeviceStep() {
+        goToStep({ name: 'pair-device' });
+      },
+
       toAwaitingDeviceOperation({ hasApprovedOperation }: ToAwaitingDeviceOperationArgs) {
         goToStep({ name: 'awaiting-device-operation', hasApprovedOperation });
       },

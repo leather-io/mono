@@ -13,6 +13,7 @@ import { DeviceBusy } from '../generic-steps/device-busy/device-busy';
 import { LedgerDeviceInvalidPayload } from '../generic-steps/invalid-payload/device-invalid-payload';
 import { LedgerDisconnected } from '../generic-steps/ledger-disconnected/ledger-disconnected';
 import { OperationRejected } from '../generic-steps/operation-rejected/operation-rejected';
+import { PairLedgerDevice } from '../generic-steps/pair-device/pair-ledger-device';
 import { AnimatedStep } from './animated-step';
 import { useLedgerFlowState } from './ledger-flow.context';
 import type { LedgerStep } from './ledger-flow.types';
@@ -41,6 +42,8 @@ function renderLedgerStep(step: LedgerStep, overrides: LedgerStepOverrides) {
       return <DeviceBusy description={step.description} address={step.address} />;
     case 'connection-error':
       return <ConnectLedgerError chain={step.chain} errorMessage={step.errorMessage} />;
+    case 'pair-device':
+      return <PairLedgerDevice />;
     case 'connection-success':
       return <ConnectLedgerSuccessLayout chain={step.chain} />;
     case 'payload-invalid':

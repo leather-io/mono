@@ -53,11 +53,16 @@ interface UnsupportedBrowserLedgerFlowRequest {
   kind: 'unsupported-browser';
 }
 
+interface PairDeviceLedgerFlowRequest {
+  kind: 'pair-device';
+}
+
 export type LedgerFlowHandoffRequest =
   | RequestKeysLedgerFlowRequest
   | VerifyAddressLedgerFlowRequest
   | ConnectStartLedgerFlowRequest
-  | UnsupportedBrowserLedgerFlowRequest;
+  | UnsupportedBrowserLedgerFlowRequest
+  | PairDeviceLedgerFlowRequest;
 
 interface LedgerSigningRequests {
   'sign-bitcoin-tx': SignBitcoinTxLedgerFlowRequest;
@@ -118,6 +123,7 @@ export type LedgerStep =
   | { name: 'checking-app-version' }
   | { name: 'device-busy'; description?: string; address?: string }
   | { name: 'connection-error'; chain: SupportedBlockchains; errorMessage?: string }
+  | { name: 'pair-device' }
   | { name: 'connection-success'; chain: SupportedBlockchains }
   | { name: 'awaiting-device-operation'; hasApprovedOperation: boolean }
   | { name: 'payload-invalid' }

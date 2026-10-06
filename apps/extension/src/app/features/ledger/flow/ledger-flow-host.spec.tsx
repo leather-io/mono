@@ -46,6 +46,10 @@ vi.mock('../flows/confirm-btc-policy-address/ledger-confirm-btc-policy-address',
   LedgerConfirmBtcPolicyAddress: () => null,
 }));
 
+vi.mock('../flows/pair-device/ledger-pair-device', () => ({
+  LedgerPairDevice: () => null,
+}));
+
 vi.mock('../flows/request-bitcoin-keys/ledger-request-bitcoin-keys', () => ({
   LedgerRequestBitcoinKeys: () => null,
 }));
