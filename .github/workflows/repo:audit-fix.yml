@@ -54,7 +54,7 @@ jobs:
     if: github.ref_name == 'dev'
     runs-on: ubuntu-24.04
     permissions:
-      contents: write # create the signed fix commit on the fix/audit branch, or delete that branch once dev is clean
+      contents: write # create the signed fix commit on the bot/audit-fix branch, or delete that branch once dev is clean
       pull-requests: write # open, update, or close the rolling audit pull request
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

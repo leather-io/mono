@@ -4,8 +4,7 @@ set -euo pipefail
 repo="$GITHUB_REPOSITORY"
 base_sha="$GITHUB_SHA"
 base_branch="dev"
-branch="fix/audit"
-bot_login="github-actions[bot]"
+branch="bot/audit-fix"
 report="tmp/audit-fix-report.md"
 files=(package.json pnpm-lock.yaml)
 
@@ -17,11 +16,6 @@ function find_open_pr() {
 function find_branch_sha() {
   gh api "repos/$repo/git/matching-refs/heads/$branch" \
     --jq ".[] | select(.ref == \"refs/heads/$branch\") | .object.sha"
-}
-
-function count_foreign_commits() {
-  gh api "repos/$repo/compare/$base_branch...$branch" \
-    --jq "[.commits[] | select(.author.login != \"$bot_login\")] | length"
 }
 
 function local_blobs() {
@@ -65,11 +59,6 @@ function create_commit() {
 
 pr=$(find_open_pr)
 branch_sha=$(find_branch_sha)
-
-if [ -n "$branch_sha" ] && [ "$(count_foreign_commits)" != "0" ]; then
-  echo "Branch $branch carries commits that are not the bot's; leaving it and its pull request alone."
-  exit 0
-fi
 
 if [ "$CHANGED" != "true" ] && [ "$UNRESOLVED" = "0" ]; then
   if [ -n "$pr" ]; then
