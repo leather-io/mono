@@ -10,5 +10,6 @@ export * from './invalid-payload/device-invalid-payload';
 export * from './ledger-disconnected/ledger-disconnected';
 export * from './operation-rejected/operation-rejected';
 export * from './outdated-stacks-app-warning/outdated-stacks-app-warning-base';
+export * from './pair-device/pair-ledger-device';
 export * from './public-key-mismatch/public-key-mismatch';
 export * from './unsupported-browser/unsupported-browser.layout';

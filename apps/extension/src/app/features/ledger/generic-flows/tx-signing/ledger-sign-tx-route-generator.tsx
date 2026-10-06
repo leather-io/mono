@@ -14,6 +14,7 @@ import {
   LedgerDisconnected,
   LedgerPublicKeyMismatch,
   OperationRejected,
+  PairLedgerDevice,
   UnsupportedBrowserLayout,
 } from '../../generic-steps';
 import { LedgerBroadcastError } from '../../generic-steps/broadcast-error/broadcast-error';
@@ -31,6 +32,7 @@ export function ledgerSignTxRoutes({ component, customRoutes }: LedgerSignTxRout
       <Route path={RouteUrls.LedgerCheckingAppVersion} element={<CheckingAppVersion />} />
       <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />
       <Route path={RouteUrls.ConnectLedgerError} element={<ConnectLedgerError />} />
+      <Route path={RouteUrls.LedgerPairDevice} element={<PairLedgerDevice />} />
       <Route path={RouteUrls.LedgerUnsupportedBrowser} element={<UnsupportedBrowserLayout />} />
       <Route path={RouteUrls.ConnectLedgerSuccess} element={<ConnectLedgerSuccess />} />
       <Route path={RouteUrls.LedgerDisconnected} element={<LedgerDisconnected />} />

@@ -18,6 +18,8 @@ import { compare } from 'compare-versions';
 
 import { whenStacksChainId } from '@leather.io/stacks';
 
+import { isPopupMode } from '@app/common/utils';
+
 import {
   type ConnectLedgerDeviceOptions,
   connectLedgerDeviceToApp,
@@ -71,7 +73,10 @@ export async function connectLedgerStacksApp(
   dmk: DeviceManagementKit,
   options?: ConnectLedgerDeviceOptions
 ): Promise<LedgerStacksApp> {
-  const sessionId = await connectLedgerDeviceToApp(dmk, LEDGER_APPS_MAP.STACKS, options);
+  const sessionId = await connectLedgerDeviceToApp(dmk, LEDGER_APPS_MAP.STACKS, {
+    canPromptForDevice: !isPopupMode(),
+    ...options,
+  });
   return { chain: 'stacks', app: new StacksApp(new DMKTransport(dmk, sessionId)), sessionId };
 }
 

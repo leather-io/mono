@@ -90,6 +90,34 @@ describe(connectLedgerDeviceToApp.name, () => {
     expect(dmk.connect).toHaveBeenCalledWith(expect.objectContaining({ device }));
   });
 
+  test('rejects as not paired instead of prompting when the chooser cannot be shown', async () => {
+    const dmk = makeConnectingDmk();
+
+    await expect(
+      connectLedgerDeviceToApp(dmk, 'Stacks', { canPromptForDevice: false })
+    ).rejects.toMatchObject({ name: LedgerConnectionErrors.DeviceNotPaired });
+
+    expect(dmk.startDiscovering).not.toHaveBeenCalled();
+    expect(dmk.connect).not.toHaveBeenCalled();
+  });
+
+  test('connects to a granted device when the chooser cannot be shown', async () => {
+    const onRequiredUserInteraction = vi.fn();
+    const runAction = vi.fn().mockResolvedValue(undefined);
+    const dmk = makeConnectingDmk({ grantedDevices: [device] });
+
+    await expect(
+      connectLedgerDeviceToApp(dmk, 'Stacks', {
+        canPromptForDevice: false,
+        onRequiredUserInteraction,
+        runAction,
+      })
+    ).resolves.toBe(sessionId);
+
+    expect(dmk.startDiscovering).not.toHaveBeenCalled();
+    expect(runAction).toHaveBeenCalledWith(expect.anything(), { onRequiredUserInteraction });
+  });
+
   test('falls back to the device chooser on the post-refresh emission without waiting out the window', async () => {
     const dmk = makeConnectingDmk();
     const availableDevices = new Subject<DiscoveredDevice[]>();
