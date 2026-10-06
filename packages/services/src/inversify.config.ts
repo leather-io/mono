@@ -20,6 +20,7 @@ import { BnsV2ApiClient } from './infrastructure/api/bns-v2/bns-v2-api.client';
 import { HiroStacksApiClient } from './infrastructure/api/hiro/hiro-stacks-api.client';
 import { LeatherApiClient } from './infrastructure/api/leather/leather-api.client';
 import { LeatherAuthApiClient } from './infrastructure/api/leather/leather-auth-api.client';
+import { LeatherSponsorshipApiClient } from './infrastructure/api/leather/leather-sponsorship-api.client';
 import type { AuthSessionService } from './infrastructure/auth/auth-session.service';
 import { SignInService } from './infrastructure/auth/sign-in.service';
 import { HttpCacheService } from './infrastructure/cache/http-cache.service';
@@ -206,6 +207,9 @@ export function getLeatherApiClient() {
 }
 export function getLeatherAuthApiClient() {
   return getServicesContainer().get(LeatherAuthApiClient);
+}
+export function getLeatherSponsorshipApiClient() {
+  return getServicesContainer().get(LeatherSponsorshipApiClient);
 }
 export function getHiroStacksApiClient() {
   return getServicesContainer().get(HiroStacksApiClient);

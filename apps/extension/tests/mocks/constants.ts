@@ -34,17 +34,11 @@ export const TEST_BNS_RESOLVED_ADDRESS = 'SP12YQ0M2KFT7YMJKVGP71B874YF055F77PFPH
 export const TEST_PASSWORD = 'my_s3cret_p@ssw0r4';
 
 export const SBTC_EMILY_API_URL = 'https://sbtc-emily.com';
-export const SBTC_SPONSORSHIP_API_URL = 'https://sponsor.leather.io';
 
 const mockSbtcConfig = {
   enabled: true,
   emilyApiUrl: SBTC_EMILY_API_URL,
-  sponsorshipApiUrl: {
-    mainnet: SBTC_SPONSORSHIP_API_URL,
-    testnet: SBTC_SPONSORSHIP_API_URL,
-  },
   swapsEnabled: true,
-  sponsorshipsEnabled: true,
   contracts: {
     mainnet: {
       address: '',

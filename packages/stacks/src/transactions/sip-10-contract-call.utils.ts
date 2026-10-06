@@ -12,7 +12,7 @@ import {
   addressToString,
 } from '@stacks/transactions';
 
-import { cleanHex } from '../stacks.utils';
+import { cleanHex, formatContractIdString } from '../stacks.utils';
 
 export function isSip10TransferContactCall(
   tx: StacksTransactionWire
@@ -43,16 +43,22 @@ export interface Sip10TransferDetails {
   memo?: string;
 }
 
-function getMemoString(arg: ClarityValue | undefined): string | undefined {
+export function getMemoString(arg: ClarityValue | undefined): string | undefined {
   if (!arg || arg.type !== ClarityType.OptionalSome) return undefined;
   if (arg.value.type !== ClarityType.Buffer) return undefined;
   return bytesToUtf8(hexToBytes(cleanHex(arg.value.value)));
 }
 
-export function getVerifiedSip10TransferDetails(
+export interface VerifiedFungiblePostCondition {
+  contractId: string;
+  assetName: string;
+  principal: string;
+  amount: bigint;
+}
+
+export function getVerifiedSingleFungiblePostCondition(
   tx: StacksTransactionWire
-): Sip10TransferDetails | null {
-  if (!isSip10TransferContactCall(tx)) return null;
+): VerifiedFungiblePostCondition | null {
   if (tx.postConditionMode !== PostConditionMode.Deny) return null;
   if (tx.postConditions.values.length !== 1) return null;
 
@@ -60,6 +66,24 @@ export function getVerifiedSip10TransferDetails(
   if (postCondition.conditionType !== PostConditionType.Fungible) return null;
   if (postCondition.conditionCode !== FungibleConditionCode.Equal) return null;
   if (postCondition.principal.prefix !== PostConditionPrincipalId.Standard) return null;
+
+  return {
+    contractId: formatContractIdString({
+      contractAddress: addressToString(postCondition.asset.address),
+      contractName: postCondition.asset.contractName.content,
+    }),
+    assetName: postCondition.asset.assetName.content,
+    principal: addressToString(postCondition.principal.address),
+    amount: postCondition.amount,
+  };
+}
+
+export function getVerifiedSip10TransferDetails(
+  tx: StacksTransactionWire
+): Sip10TransferDetails | null {
+  if (!isSip10TransferContactCall(tx)) return null;
+  const postCondition = getVerifiedSingleFungiblePostCondition(tx);
+  if (!postCondition) return null;
 
   const [amountArg, senderArg, recipientArg, memoArg] = tx.payload.functionArgs;
   if (amountArg.type !== ClarityType.UInt) return null;
@@ -69,15 +93,16 @@ export function getVerifiedSip10TransferDetails(
   const amount = BigInt(amountArg.value);
   if (postCondition.amount !== amount) return null;
 
-  const contractId = `${addressToString(tx.payload.contractAddress)}.${tx.payload.contractName.content}`;
-  const postConditionContractId = `${addressToString(postCondition.asset.address)}.${postCondition.asset.contractName.content}`;
-  if (postConditionContractId !== contractId) return null;
-
-  if (addressToString(postCondition.principal.address) !== senderArg.value) return null;
+  const contractId = formatContractIdString({
+    contractAddress: addressToString(tx.payload.contractAddress),
+    contractName: tx.payload.contractName.content,
+  });
+  if (postCondition.contractId !== contractId) return null;
+  if (postCondition.principal !== senderArg.value) return null;
 
   return {
     contractId,
-    assetName: postCondition.asset.assetName.content,
+    assetName: postCondition.assetName,
     amount,
     sender: senderArg.value,
     recipient: recipientArg.value,

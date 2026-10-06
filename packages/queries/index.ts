@@ -30,3 +30,5 @@ export * from './src/fees/stacks-transaction-fees.query-config';
 export * from './src/assets/fungible-asset-info.query-config';
 export * from './src/market-history/market-history.query-config';
 export * from './src/help-center/learn-section.query-config';
+export * from './src/sponsorship/sbtc-sponsorship-quote.query-config';
+export * from './src/sponsorship/submit-sbtc-sponsored-transaction.mutation-config';

@@ -27,6 +27,8 @@ export enum SendCryptoAssetSelectors {
 
   SentTransactionSummary = 'sent-transaction-summary',
 
+  SbtcFeeRequoteCallout = 'sbtc-fee-requote-callout',
+
   // stx high fee warning dialog
   HighFeeWarningSheet = 'high-fee-warning-sheet',
   HighFeeWarningSheetSubmit = 'high-fee-warning-sheet-submit',
