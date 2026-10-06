@@ -64,6 +64,8 @@ if [ "$CHANGED" != "true" ] && [ "$UNRESOLVED" = "0" ]; then
   if [ -n "$pr" ]; then
     gh pr close "$pr" --repo "$repo" --delete-branch \
       --comment "Closing: the latest \`repo:audit-fix\` run on \`$base_branch\` reports nothing to fix."
+  elif [ -n "$branch_sha" ]; then
+    gh api -X DELETE "repos/$repo/git/refs/heads/$branch" --silent
   fi
   exit 0
 fi

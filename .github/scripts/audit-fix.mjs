@@ -93,16 +93,25 @@ export function planOverride(advisory) {
   const cap = major > 0 ? String(major + 1) : ceiling.join('.');
   const range = `>=${patched.join('.')} <${cap}`;
 
-  const outside = (advisory.findings ?? [])
-    .map(finding => finding.version)
-    .filter(version => {
-      const installed = parseVersion(version);
-      return (
-        installed === null ||
-        compareVersions(installed, floor) < 0 ||
-        compareVersions(installed, ceiling) >= 0
-      );
-    });
+  const selector = `${name}@>=${floor.join('.')} <${patched.join('.')}`;
+
+  const installedVersions = (advisory.findings ?? []).map(finding => finding.version);
+  if (installedVersions.length === 0) {
+    return manual(
+      'The audit lists no installed version, so the script cannot tell whether a same-major fix ' +
+        `applies. Check \`pnpm why ${name}\`, then add \`"${selector}": "${range}"\` to ` +
+        '`pnpm.overrides` if every installed copy is in that release line.'
+    );
+  }
+
+  const outside = installedVersions.filter(version => {
+    const installed = parseVersion(version);
+    return (
+      installed === null ||
+      compareVersions(installed, floor) < 0 ||
+      compareVersions(installed, ceiling) >= 0
+    );
+  });
   if (outside.length > 0) {
     return manual(
       `Installed ${[...new Set(outside)].join(', ')} is outside the patched release line ` +
@@ -112,12 +121,7 @@ export function planOverride(advisory) {
     );
   }
 
-  return {
-    status: 'fixable',
-    selector: `${name}@>=${floor.join('.')} <${patched.join('.')}`,
-    range,
-    patched,
-  };
+  return { status: 'fixable', selector, range, patched };
 }
 
 export function compareFixes(a, b) {
@@ -228,11 +232,21 @@ function runPnpm(args) {
   };
 }
 
+function parseAdvisories(stdout) {
+  try {
+    return JSON.parse(stdout).advisories;
+  } catch {
+    return undefined;
+  }
+}
+
 function runAudit() {
   const result = runPnpm(auditArgs);
-  const advisories = JSON.parse(result.stdout).advisories;
+  const advisories = parseAdvisories(result.stdout);
   if (typeof advisories !== 'object' || advisories === null) {
-    throw new Error(`pnpm audit returned no advisory report:\n${result.output}`);
+    throw new Error(
+      `pnpm audit returned no advisory report (exit ${result.status}):\n${result.output}`
+    );
   }
   return Object.values(advisories);
 }
