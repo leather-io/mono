@@ -788,13 +788,24 @@ describe('describeInstallFailure', () => {
     assert.equal(
       describeInstallFailure(`Scope: all 28 workspace projects\n ${registryError}\nmore\n`, fix),
       '`pnpm install` rejected `"compression@>=1.0.0 <1.8.2": ">=1.8.2 <2"`: ' +
-        `${registryError}. Resolve it by hand.`
+        `\`${registryError}\`. Resolve it by hand.`
     );
   });
 
   it('falls back to the last line when pnpm prints no error code', () => {
     const todo = describeInstallFailure('first line\n\nKilled\n\n', fix);
-    assert.match(todo, /: Killed\. Resolve it by hand\.$/);
+    assert.match(todo, /: `Killed`\. Resolve it by hand\.$/);
+  });
+
+  it('keeps package names from the error inside one code span', () => {
+    const todo = describeInstallFailure(
+      'ERR_PNPM_FETCH_404  GET @evil/pkg `[click](https://evil.test)` failed',
+      fix
+    );
+    assert.match(
+      todo,
+      /: `ERR_PNPM_FETCH_404 {2}GET @evil\/pkg \[click\]\(https:\/\/evil\.test\) failed`\. Resolve it by hand\.$/
+    );
   });
 
   it('copes with empty output', () => {
@@ -805,7 +816,7 @@ describe('describeInstallFailure', () => {
   it('truncates a very long error line', () => {
     const todo = describeInstallFailure(`ERR_PNPM_UNEXPECTED ${'x'.repeat(5000)}`, fix);
     assert.ok(todo.length < 500);
-    assert.match(todo, /ERR_PNPM_UNEXPECTED x+\. Resolve it by hand\.$/);
+    assert.match(todo, /ERR_PNPM_UNEXPECTED x+`\. Resolve it by hand\.$/);
   });
 });
 
@@ -1618,7 +1629,7 @@ describe('audit-fix.mjs command', () => {
       assert.match(run.report, /`compression` .+\n {2}The fixed release is not on npm/);
       assert.match(
         run.report,
-        /`proxy-addr` .+\n {2}`pnpm install` rejected `"proxy-addr@>=2\.0\.0 <2\.0\.8": ">=2\.0\.8 <3"`: ERR_PNPM_FETCH_503 {2}GET https:\/\/registry\.npmjs\.org\/compression: Unavailable\. Resolve it by hand\./
+        /`proxy-addr` .+\n {2}`pnpm install` rejected `"proxy-addr@>=2\.0\.0 <2\.0\.8": ">=2\.0\.8 <3"`: `ERR_PNPM_FETCH_503 {2}GET https:\/\/registry\.npmjs\.org\/compression: Unavailable`\. Resolve it by hand\./
       );
     });
 

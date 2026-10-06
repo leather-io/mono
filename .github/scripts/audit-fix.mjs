@@ -184,11 +184,10 @@ export function describeInstallFailure(output, { advisory, plan }) {
     );
   }
   const lines = output.split('\n').filter(line => line.trim() !== '');
-  const error = pnpmErrorPattern.exec(output)?.[0] ?? lines.at(-1) ?? 'no output';
-  return (
-    `\`pnpm install\` rejected ${describeEntry(plan)}: ` +
-    `${error.trim().slice(0, maxErrorLength)}. Resolve it by hand.`
-  );
+  const error = pnpmErrorPattern.exec(output)?.[0] ?? lines.at(-1);
+  const quoted =
+    error === undefined ? 'no output' : `\`${cleanCode(error.trim().slice(0, maxErrorLength))}\``;
+  return `\`pnpm install\` rejected ${describeEntry(plan)}: ${quoted}. Resolve it by hand.`;
 }
 
 function escapePattern(text) {
