@@ -1,6 +1,7 @@
 import { createRequestHandler } from 'react-router';
 
 import { csp } from './csp';
+import { getStagingRedirect } from './staging-redirect';
 
 declare module 'react-router' {
   export interface AppLoadContext {
@@ -18,6 +19,9 @@ const requestHandler = createRequestHandler(
 
 export default {
   async fetch(request, env, ctx) {
+    const stagingRedirect = getStagingRedirect(request);
+    if (stagingRedirect) return stagingRedirect;
+
     const response = await requestHandler(request, {
       cloudflare: { env, ctx },
     });

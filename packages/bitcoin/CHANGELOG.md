@@ -939,6 +939,13 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.42.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.41.0...@leather.io/bitcoin-v0.42.0) (2026-10-06)
+
+
+### Features
+
+* spending sources foundation + btc send flow ([#2820](https://github.com/leather-io/mono/issues/2820)) ([181c4f7](https://github.com/leather-io/mono/commit/181c4f71366f1cb4a744ae04d261f1fa63d75f30))
+
 ## [0.41.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.40.2...@leather.io/bitcoin-v0.41.0) (2026-09-29)
 
 
