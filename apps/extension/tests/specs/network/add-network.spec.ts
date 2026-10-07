@@ -38,7 +38,7 @@ test.describe('Networks tests', () => {
     await test.expect(selector).not.toContainText('Custom');
 
     await selector.click();
-    await test.expect(page.locator('[data-testid^="bitcoin-api-option-"]')).toHaveCount(5);
+    await test.expect(page.locator('[data-testid^="bitcoin-api-option-"]')).toHaveCount(4);
   });
 
   test('reselecting the active preset after a custom edit resets its URLs', async ({

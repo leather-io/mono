@@ -13,6 +13,9 @@ async function fetchBitcoinFeeEstimates(client: BitcoinClient, network: BitcoinN
   if (network === 'testnet4')
     return Promise.allSettled([client.feeEstimatesApi.getFeeEstimatesFromMempoolSpaceApi('test4')]);
 
+  if (network === 'regtest')
+    return Promise.allSettled([client.feeEstimatesApi.getFeeEstimatesFromNetworkMempoolApi()]);
+
   // Using `allSettled` so we can add more testnet apis to the array
   return Promise.allSettled([client.feeEstimatesApi.getFeeEstimatesFromBlockcypherApi('test3')]);
 }

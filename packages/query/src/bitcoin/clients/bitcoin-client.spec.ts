@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
 import { bitcoinClient } from './bitcoin-client';
@@ -21,5 +22,28 @@ describe('broadcastTransaction', () => {
         'Content-Type': 'text/plain',
       },
     });
+  });
+});
+
+describe('getFeeEstimatesFromNetworkMempoolApi', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  test('that it reads recommended fees from the network mempool api', async () => {
+    const getMock = vi
+      .spyOn(axios, 'get')
+      .mockResolvedValue({ data: { fastestFee: 3, halfHourFee: 2, hourFee: 1 } });
+
+    const client = bitcoinClient({
+      networkName: 'regtest',
+      basePath: 'https://mempool.bitcoin.regtest.hiro.so/api',
+    });
+    const fees = await client.feeEstimatesApi.getFeeEstimatesFromNetworkMempoolApi();
+
+    expect(getMock).toHaveBeenCalledWith(
+      'https://mempool.bitcoin.regtest.hiro.so/api/v1/fees/recommended'
+    );
+    expect(fees).toEqual({ slow: 1, medium: 2, fast: 3 });
   });
 });
