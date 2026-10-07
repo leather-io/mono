@@ -779,6 +779,13 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.52.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.52.0...@leather.io/query-v2.52.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* axios audit ([#2815](https://github.com/leather-io/mono/issues/2815)) ([480ceda](https://github.com/leather-io/mono/commit/480ceda66cf6537701f7c3571a1fb6c08fc5f127))
+
 ## [2.52.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.51.9...@leather.io/query-v2.52.0) (2026-09-29)
 
 

@@ -1,8 +1,6 @@
-import type {
-  AddressNonces,
-  MempoolTransaction,
-  Transaction,
-} from '@stacks/stacks-blockchain-api-types';
+import type { MempoolTransaction, Transaction } from '@stacks/stacks-blockchain-api-types';
+
+import type { HiroPrincipalNoncesResponse } from '../hiro-api-types';
 
 enum NonceTypes {
   apiSuggestedNonce = 'api-suggested-nonce',
@@ -72,7 +70,7 @@ function findAnyMissingPendingTxsNonces(pendingNonces: number[]) {
 }
 
 interface ParseAccountNoncesResponseArgs {
-  addressNonces?: AddressNonces;
+  addressNonces?: HiroPrincipalNoncesResponse;
   confirmedTransactions: Transaction[];
   pendingTransactions: MempoolTransaction[];
   senderAddress: string;
@@ -85,9 +83,9 @@ export function parseAccountNoncesResponse({
 }: ParseAccountNoncesResponseArgs): NextNonce {
   if (!addressNonces) return { nonce: undefined, nonceType: NonceTypes.undefinedNonce };
 
-  const detectedMissingNonces = addressNonces.detected_missing_nonces;
-  const lastExecutedNonce = addressNonces.last_executed_tx_nonce;
-  const possibleNextNonce = addressNonces.possible_next_nonce;
+  const detectedMissingNonces = addressNonces.mempool.missing_nonces;
+  const lastExecutedNonce = addressNonces.last_confirmed_nonce;
+  const possibleNextNonce = addressNonces.next_nonce;
 
   const firstMissingNonce = detectedMissingNonces?.sort()[0];
   const pendingTxsNonces = pendingTransactions

@@ -16,6 +16,7 @@ import { IncreaseStacksTransactionFeeSheet } from '@app/features/dialogs/transac
 import { RouterErrorBoundary } from '@app/features/errors/app-error-boundary';
 import { useFlags } from '@app/features/feature-flags';
 import { ledgerBitcoinTxSigningRoutes } from '@app/features/ledger/flows/bitcoin-tx-signing/ledger-bitcoin-sign-tx-container';
+import { pairLedgerDeviceRoute } from '@app/features/ledger/flows/pair-device/ledger-pair-device';
 import { requestBitcoinKeysRoutes } from '@app/features/ledger/flows/request-bitcoin-keys/ledger-request-bitcoin-keys';
 import { requestStacksKeysRoutes } from '@app/features/ledger/flows/request-stacks-keys/ledger-request-stacks-keys';
 import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-tx-signing/ledger-sign-stacks-tx-container';
@@ -71,6 +72,7 @@ export const homePageModalRoutes = (
     {requestStacksKeysRoutes}
     {verifyBtcAddressRoutes}
     {verifyStxAddressRoutes}
+    {pairLedgerDeviceRoute}
     <Route path={RouteUrls.ConnectLedgerStart} element={<ConnectLedgerStart initialRoute="" />} />
     <Route path={RouteUrls.LedgerUnsupportedBrowser} element={<UnsupportedBrowserLayout />} />
   </>
