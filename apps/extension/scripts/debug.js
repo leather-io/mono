@@ -1,4 +1,4 @@
-const mnemonicCrypto = require('../src/shared/crypto/mnemonic-encryption');
+import { decryptMnemonic } from '../src/shared/crypto/mnemonic-encryption';
 
 function main() {
   const mnemonicForm = document.querySelector('.decrypt-mnemonic-form');
@@ -23,7 +23,7 @@ function main() {
     const formData = Object.fromEntries(new FormData(event.target).entries());
 
     try {
-      const result = await mnemonicCrypto.decryptMnemonic(formData);
+      const result = await decryptMnemonic(formData);
       console.log(result);
       alert(result.secretKey);
     } finally {

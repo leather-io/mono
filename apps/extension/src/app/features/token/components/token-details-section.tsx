@@ -14,11 +14,11 @@ export function TokenDetailsSection({
   isTitleCentered = false,
 }: TokenDetailsSectionProps) {
   return (
-    <Stack bg="ink.background-primary" py="space.03" width="100%">
+    <Stack bg="ink.background-primary" py="space.02" width="100%">
       <Flex
         px="space.05"
         py="space.02"
-        height="40px"
+        height="36px"
         alignItems="center"
         justifyContent={isTitleCentered ? 'center' : 'flex-start'}
       >

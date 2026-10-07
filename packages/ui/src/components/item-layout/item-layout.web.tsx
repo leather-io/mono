@@ -4,6 +4,7 @@ import { Box, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
 import { SpacingToken } from 'leather-styles/tokens';
 
 import { CheckmarkIcon } from '../../icons/checkmark-icon.web';
+import { ChevronDownIcon } from '../../icons/chevron-down-icon.web';
 import { ChevronRightIcon } from '../../icons/chevron-right-icon.web';
 import { Flag } from '../flag/flag.web';
 import { pressableCaptionStyles, pressableChevronStyles } from '../pressable/pressable.web';
@@ -30,7 +31,7 @@ interface ItemLayoutProps {
 export function ItemLayout({
   captionLeft,
   captionRight,
-  chevronDirection = 'down',
+  chevronDirection = 'right',
   columnGap = 'space.00',
   gap = 'space.00',
   img,
@@ -75,7 +76,7 @@ export function ItemLayout({
           </styled.span>
         )}
       </Stack>
-      <HStack gap={showChevron && chevronDirection === 'right' ? 'space.02' : gap} flexShrink={0}>
+      <HStack gap={showChevron ? 'space.02' : gap} flexShrink={0}>
         <Stack alignItems="end" gap={gap}>
           {componentWithFallback(
             titleRight,
@@ -88,12 +89,11 @@ export function ItemLayout({
             </styled.span>
           )}
         </Stack>
-        {showChevron && (
-          <ChevronRightIcon
-            className={pressableChevronStyles}
-            transform={chevronDirection === 'down' ? 'rotate(90deg)' : undefined}
-            variant="small"
-          />
+        {showChevron && chevronDirection === 'down' && (
+          <ChevronDownIcon className={pressableChevronStyles} variant="small" />
+        )}
+        {showChevron && chevronDirection === 'right' && (
+          <ChevronRightIcon className={pressableChevronStyles} variant="small" />
         )}
       </HStack>
     </Flex>

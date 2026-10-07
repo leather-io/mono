@@ -27,6 +27,18 @@ export interface HiroStxAddressBalanceResponse {
   burnchain_unlock_height: number;
 }
 
+export interface HiroPrincipalMempoolNonces {
+  last_nonce: number | null;
+  pending_nonces: number[];
+  missing_nonces: number[];
+}
+
+export interface HiroPrincipalNoncesResponse {
+  next_nonce: number;
+  last_confirmed_nonce: number | null;
+  mempool: HiroPrincipalMempoolNonces;
+}
+
 export interface HiroSip10AddressBalanceResult {
   token: string;
   balance: string;

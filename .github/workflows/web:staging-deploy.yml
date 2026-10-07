@@ -33,22 +33,25 @@ jobs:
       - name: build-web-app-dependencies
         run: pnpm turbo run build --filter=@leather.io/web^...
 
-      - name: build-web-app
+      - name: deploy-web-app
         working-directory: apps/web
         env:
+          CLOUDFLARE_ENV: staging
           LEATHER_FRONT_WEB_APP_API_TOKEN: ${{ secrets.FRONT_WEB_APP_API_TOKEN }}
           LEATHER_TARGET: staging
-          PRIVATE_NETWORK_FLAVOR: regtest
+          PRIVATE_NETWORK_FLAVOR: testnet
           PRIVATE_NETWORK_NAME: BTC Staking Testnet
-          PRIVATE_NETWORK_KEY: private-1
-          BITCOIN_API_URL: https://mempool.bitcoin.private-1.hiro.so/api
-          STACKS_API_URL: https://api.private-1.hiro.so
-          STACKS_CHAIN_ID: '256'
-        run: pnpm run build
+          PRIVATE_NETWORK_KEY: stakingTestnet
+          BITCOIN_API_URL: https://mempool.bitcoin.staking-testnet.hiro.so/api
+          STACKS_API_URL: https://api.staking-testnet.hiro.so
+          STACKS_CHAIN_ID: '1280'
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_STAGING_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
+        run: pnpm run deploy
 
-      - name: upload-staging-version
+      - name: upload-dev-alias-redirect
         working-directory: apps/web
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_STAGING_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
-        run: pnpm wrangler versions upload --preview-alias dev
+        run: pnpm wrangler versions upload --name leather-web --preview-alias dev

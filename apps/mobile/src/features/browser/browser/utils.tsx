@@ -6,6 +6,7 @@ import { getDappMap } from '@/utils/dapps';
 import * as Application from 'expo-application';
 import { File, Paths } from 'expo-file-system';
 
+import { LEATHER_GITBOOK_DEVS } from '@leather.io/constants';
 import {
   RpcRequest,
   RpcResponse,
@@ -80,7 +81,7 @@ const supportedMethodsLinks = Object.keys(endpoints)
   .filter(method => !unsupportedMethods.includes(method))
   .map(method => ({
     name: method,
-    docsUrl: 'https://leather.gitbook.io/developers',
+    docsUrl: LEATHER_GITBOOK_DEVS,
   }));
 
 export function createSupportedMethodsResponse(
@@ -89,7 +90,7 @@ export function createSupportedMethodsResponse(
   return createRpcSuccessResponse(supportedMethods.method, {
     id: request.id,
     result: {
-      documentation: 'https://leather.gitbook.io/developers/home/welcome',
+      documentation: LEATHER_GITBOOK_DEVS,
       methods: supportedMethodsLinks,
     },
   });

@@ -8,6 +8,7 @@ import {
   walletAdapter,
 } from '@leather.io/state/wallet';
 
+import { deriveEncryptionKey } from '@shared/crypto/generate-encryption-key';
 import { decryptMnemonic } from '@shared/crypto/mnemonic-encryption';
 import { assumedZeroFingerprint } from '@shared/utils';
 
@@ -52,6 +53,10 @@ vi.mock('@shared/messages', () => ({
 
 vi.mock('@shared/utils/analytics', () => ({
   identifyUser: vi.fn(),
+}));
+
+vi.mock('@shared/crypto/generate-encryption-key', () => ({
+  deriveEncryptionKey: vi.fn(),
 }));
 
 vi.mock('@shared/crypto/mnemonic-encryption', () => ({
@@ -145,6 +150,7 @@ describe('unlockWalletAction', () => {
       keys: [{ type: 'software', id: realFingerprint, encryptedSecretKey: 'enc-current' }],
     });
 
+    vi.mocked(deriveEncryptionKey).mockResolvedValue('encryption-key-current');
     vi.mocked(decryptMnemonic).mockResolvedValue({
       secretKey: 'decrypted-mnemonic',
       encryptedSecretKey: 'enc-current',
@@ -159,10 +165,13 @@ describe('unlockWalletAction', () => {
 
     await keyActions.unlockWalletAction(password)(dispatch, getState, undefined);
 
+    expect(deriveEncryptionKey).toHaveBeenCalledTimes(1);
+    expect(deriveEncryptionKey).toHaveBeenCalledWith({ password, salt: 'argon2-salt' });
     expect(decryptMnemonic).toHaveBeenCalledWith({
       password,
       encryptedSecretKey: 'enc-current',
       salt: 'argon2-salt',
+      existingEncryptionKey: 'encryption-key-current',
     });
 
     // The salt already exists, so nothing is re-encrypted or re-persisted.
@@ -195,10 +204,12 @@ describe('unlockWalletAction', () => {
 
     await keyActions.unlockWalletAction(password)(dispatch, getState, undefined);
 
+    expect(deriveEncryptionKey).not.toHaveBeenCalled();
     expect(decryptMnemonic).toHaveBeenCalledWith({
       password,
       encryptedSecretKey: 'enc-legacy',
       salt: undefined,
+      existingEncryptionKey: undefined,
     });
 
     expect(dispatch).toHaveBeenCalledWith(

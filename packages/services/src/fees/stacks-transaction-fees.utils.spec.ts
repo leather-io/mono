@@ -1,11 +1,17 @@
-import { PayloadType, StacksTransactionWire } from '@stacks/transactions';
+import {
+  PayloadType,
+  StacksTransactionWire,
+  makeUnsignedSTXTokenTransfer,
+} from '@stacks/transactions';
 
+import { estimateStacksTransactionByteLength } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
 import { HiroTransactionFeeEstimateResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { StacksFeeConfig } from '../infrastructure/app-config/app-config.service';
 import {
   createStacksTransactionFeeQuote,
+  getStacksMinimumFeeAmount,
   getStacksTxFeeBoundedEstimates,
   getStacksTxFeeDefaultAmounts,
   getStacksTxPayloadTypeFees,
@@ -112,10 +118,43 @@ describe(getStacksTxPayloadTypeFees.name, () => {
 });
 
 describe(getStacksTxFeeDefaultAmounts.name, () => {
+  test('keeps fallback fees above the signed multisig transaction minimum', async () => {
+    const publicKeys = [
+      '0250863ad64a87ae8a2fe83c1af1a8403cb53f53e486d8511dad8a04887e5b2352',
+      '03774ae7f858a9411e5ef4246b70c65aac5649980be5c17891bbec17895da008cb',
+      '02f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9',
+    ];
+    const tx = await makeUnsignedSTXTokenTransfer({
+      publicKeys,
+      numSignatures: 2,
+      useNonSequentialMultiSig: true,
+      recipient: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG',
+      amount: 1,
+      fee: 0,
+      nonce: 0,
+      network: 'testnet',
+    });
+    const size = estimateStacksTransactionByteLength(tx, publicKeys.length);
+    const config = {
+      ...mockStacksFeeConfig,
+      transfers: {
+        low: { default: 240, minimum: 180, maximum: 299 },
+        standard: { default: 400, minimum: 300, maximum: 800 },
+        high: { default: 901, minimum: 801, maximum: 1001 },
+      },
+    };
+    expect(size).toBeGreaterThan(config.transfers.low.default);
+    const fees = getStacksTxFeeDefaultAmounts(tx, config, size);
+    expect(fees.low).toBe(size);
+    expect(fees.standard).toBeGreaterThanOrEqual(size);
+    expect(fees.high).toBeGreaterThanOrEqual(size);
+  });
+
   it('should return default fee amounts for TokenTransfer', () => {
     const result = getStacksTxFeeDefaultAmounts(
       mockTokenTransferTx as StacksTransactionWire,
-      mockStacksFeeConfig
+      mockStacksFeeConfig,
+      200
     );
 
     expect(result).toEqual({
@@ -128,7 +167,8 @@ describe(getStacksTxFeeDefaultAmounts.name, () => {
   it('should return default fee amounts for ContractCall', () => {
     const result = getStacksTxFeeDefaultAmounts(
       mockContractCallTx as StacksTransactionWire,
-      mockStacksFeeConfig
+      mockStacksFeeConfig,
+      200
     );
 
     expect(result).toEqual({
@@ -141,7 +181,8 @@ describe(getStacksTxFeeDefaultAmounts.name, () => {
   it('should return default fee amounts for ContractDeploy', () => {
     const result = getStacksTxFeeDefaultAmounts(
       mockContractDeployTx as StacksTransactionWire,
-      mockStacksFeeConfig
+      mockStacksFeeConfig,
+      200
     );
 
     expect(result).toEqual({
@@ -149,6 +190,20 @@ describe(getStacksTxFeeDefaultAmounts.name, () => {
       standard: 10000,
       high: 25000,
     });
+  });
+});
+
+describe(getStacksMinimumFeeAmount.name, () => {
+  test('never allows a configured relay rate below one microSTX per byte', () => {
+    expect(getStacksMinimumFeeAmount(345, { ...mockStacksFeeConfig, minimumRelayFeeRate: 0 })).toBe(
+      345
+    );
+  });
+
+  test('rounds fractional relay fees up to a whole microSTX', () => {
+    expect(
+      getStacksMinimumFeeAmount(345, { ...mockStacksFeeConfig, minimumRelayFeeRate: 1.5 })
+    ).toBe(518);
   });
 });
 

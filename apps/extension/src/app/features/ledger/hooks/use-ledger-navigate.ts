@@ -126,6 +126,16 @@ export function useLedgerNavigate() {
         });
       },
 
+      toPairDeviceStep() {
+        return navigate(RouteUrls.LedgerPairDevice, {
+          replace: true,
+          state: {
+            backgroundLocation: { pathname: RouteUrls.Home },
+            fromLocation: location.state?.fromLocation,
+          },
+        });
+      },
+
       toAwaitingDeviceOperation({ hasApprovedOperation }: { hasApprovedOperation: boolean }) {
         return navigate(RouteUrls.AwaitingDeviceUserAction, {
           replace: true,
