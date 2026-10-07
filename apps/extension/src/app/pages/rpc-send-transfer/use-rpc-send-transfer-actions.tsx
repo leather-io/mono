@@ -53,7 +53,10 @@ function getSendTransferActionLabels({
   return {};
 }
 
-export function useRpcSendTransferActions(unsignedTx: RpcSendTransferTx) {
+export function useRpcSendTransferActions({
+  tx: unsignedTx,
+  error: unsignedTxError,
+}: RpcSendTransferTx) {
   const { availableBalance, selectedFee } = useFeeEditorContext();
   const { amount, broadcast, frameId, isLoadingBalance, recipients, requestId, tabId } =
     useRpcSendTransferContext();
@@ -139,6 +142,7 @@ export function useRpcSendTransferActions(unsignedTx: RpcSendTransferTx) {
           return;
         }
 
+        if (unsignedTxError) return onError(unsignedTxError);
         if (!unsignedTx) return logger.error('Attempted to generate raw tx, but no tx exists');
 
         const shouldHalt = await checkIfInputsIncludeTaproot(
@@ -216,6 +220,7 @@ export function useRpcSendTransferActions(unsignedTx: RpcSendTransferTx) {
     navigate,
     selectedFee?.feeRate,
     unsignedTx,
+    unsignedTxError,
     amount,
     broadcast,
     frameId,

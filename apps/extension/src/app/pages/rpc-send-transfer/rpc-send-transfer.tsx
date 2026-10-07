@@ -47,8 +47,9 @@ export function RpcSendTransfer() {
   const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
   const isBitcoinPolicy = policy?.chain === 'bitcoin';
   const isSignOnly = !broadcast && !isBitcoinPolicy;
-  const unsignedTx = useRpcSendTransferTx();
-  const { approverActions, isBroadcasting, isSubmitted } = useRpcSendTransferActions(unsignedTx);
+  const generatedTx = useRpcSendTransferTx();
+  const unsignedTx = generatedTx.tx;
+  const { approverActions, isBroadcasting, isSubmitted } = useRpcSendTransferActions(generatedTx);
   const showOverlay = isBroadcasting || isSubmitted;
 
   const spendSources = useMemo(() => {
