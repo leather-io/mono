@@ -3,7 +3,7 @@ import { BytesReader, addressToString, deserializeAddress } from '@stacks/transa
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { useConfigSbtc } from '../common/remote-config/remote-config.query';
+import { EMILY_API_BASE_URL_MAINNET } from '@leather.io/models';
 
 export type SbtcStatus = 'pending' | 'accepted' | 'confirmed' | 'failed' | 'rbf';
 
@@ -34,10 +34,9 @@ async function getSbtcDeposits(apiUrl: string, status: string): Promise<GetSbtcD
 }
 
 function useGetSbtcDeposits(stxAddress: string, status: string) {
-  const { emilyApiUrl } = useConfigSbtc();
   return useQuery({
-    queryKey: ['get-sbtc-deposits', emilyApiUrl, stxAddress, status],
-    queryFn: () => getSbtcDeposits(emilyApiUrl, status),
+    queryKey: ['get-sbtc-deposits', EMILY_API_BASE_URL_MAINNET, stxAddress, status],
+    queryFn: () => getSbtcDeposits(EMILY_API_BASE_URL_MAINNET, status),
     select: resp =>
       resp.deposits.filter(deposit => {
         const recipient = addressToString(

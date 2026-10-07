@@ -8,9 +8,6 @@ import { Tooltip } from '@leather.io/ui';
 
 import '@leather.io/ui/styles';
 
-import { GITHUB_ORG, GITHUB_REPO } from '@shared/constants';
-import { BRANCH_NAME, WALLET_ENVIRONMENT } from '@shared/environment';
-
 import { queryClient } from '@app/common/persistence';
 import { ThemeSwitcherProvider } from '@app/common/theme-provider';
 import { FullPageLoadingSpinner } from '@app/components/loading-spinner';
@@ -19,8 +16,6 @@ import { HeadProvider } from '@app/features/html-head/head-provider';
 import { ToastsProvider } from '@app/features/toasts/toasts-provider';
 import { AppRoutes } from '@app/routes/app-routes';
 import { persistor, store } from '@app/store';
-
-import localConfig from '../../config/wallet-config.json';
 
 import './index.css';
 
@@ -38,19 +33,7 @@ function ConnectedApp() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LeatherQueryProvider
-        client={queryClient}
-        network={network}
-        environment={{
-          env: WALLET_ENVIRONMENT,
-          github: {
-            org: GITHUB_ORG,
-            repo: GITHUB_REPO,
-            branchName: BRANCH_NAME,
-            localConfig: localConfig as any,
-          },
-        }}
-      >
+      <LeatherQueryProvider client={queryClient} network={network}>
         <LDProvider>
           <Suspense fallback={<FullPageLoadingSpinner />}>
             <AppRoutes />

@@ -11,7 +11,6 @@ import type { ReceiveView } from '@app/common/receive/receive';
 import { ContainerLayout } from '@app/components/layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { SwitchAccountSheet } from '@app/features/dialogs/switch-account-sheet/switch-account-sheet';
-import { InAppMessages } from '@app/features/in-app-messages/in-app-messages';
 import { UpdateAvailableCallout } from '@app/features/update-available/update-available-callout';
 import { useUpdateAppliedToast } from '@app/features/update-available/use-update-applied-toast';
 import { ReceiveDialog } from '@app/pages/receive/receive-dialog';
@@ -90,7 +89,6 @@ export function Container() {
           onClose={() => setReceiveView(null)}
         />
       )}
-      <InAppMessages />
       <ContainerLayout>
         <UpdateAvailableCallout />
         <Outlet
