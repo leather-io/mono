@@ -40,6 +40,30 @@
 
 ---
 
+## [6.114.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.113.1...@leather.io/extension-v6.114.0) (2026-10-06)
+
+
+### Features
+
+* spending sources foundation + btc send flow ([#2820](https://github.com/leather-io/mono/issues/2820)) ([181c4f7](https://github.com/leather-io/mono/commit/181c4f71366f1cb4a744ae04d261f1fa63d75f30))
+* web staging custom domain ([#2817](https://github.com/leather-io/mono/issues/2817)) ([75f6225](https://github.com/leather-io/mono/commit/75f6225ef5761febb89de502425b1ceaa8dff71e))
+
+
+### Bug Fixes
+
+* ledger popup pairing ([#2822](https://github.com/leather-io/mono/issues/2822)) ([b59d93a](https://github.com/leather-io/mono/commit/b59d93a4e93887cd6101f8a3da092466735941e2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.42.0
+    * @leather.io/features bumped to 1.8.5
+    * @leather.io/queries bumped to 0.17.2
+    * @leather.io/services bumped to 1.66.2
+    * @leather.io/ui bumped to 1.119.3
+
 ## [6.113.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.113.0...@leather.io/extension-v6.113.1) (2026-10-01)
 
 
