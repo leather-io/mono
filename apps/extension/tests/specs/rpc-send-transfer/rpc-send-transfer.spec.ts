@@ -6,6 +6,10 @@ import {
 } from '@tests/mocks/constants';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
 import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
+import {
+  mockMixedUtxosForSend,
+  mockNativeSegwitOnlyUtxosForSend,
+} from '@tests/mocks/mock-mixed-utxos';
 import { makeBitcoinPolicy, policyStateOverrides } from '@tests/mocks/mock-policies';
 import { mockFundedBitcoinAddressUtxos } from '@tests/mocks/mock-utxos';
 import {
@@ -191,6 +195,95 @@ test.describe('RPC: sendTransfer', () => {
   });
 });
 
+const spendSourcesRecipient = 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4';
+
+test.describe('RPC: sendTransfer spend sources with mixed utxos', () => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await mockLeatherApiRequests(context);
+    await mockMixedUtxosForSend(context);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+  });
+
+  test('that the approval shows the taproot callout and per-type rows', async ({
+    page,
+    context,
+  }) => {
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: spendSourcesRecipient, amount: '400000' }],
+      network: 'mainnet',
+    });
+    const popup = await context.waitForEvent('page');
+
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootCallout))
+      .toBeVisible({ timeout: 15_000 });
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow))
+      .toContainText('0.001');
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootRow))
+      .toContainText('0.003');
+    await test.expect(popup.getByText('Native SegWit + Taproot', { exact: false })).toBeVisible();
+
+    await popup.close();
+    await resultPromise;
+  });
+
+  test('that approving still shows the taproot utxo warning dialog', async ({ page, context }) => {
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: spendSourcesRecipient, amount: '400000' }],
+      network: 'mainnet',
+    });
+    const popup = await context.waitForEvent('page');
+
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootCallout))
+      .toBeVisible({ timeout: 15_000 });
+    await popup.getByRole('button', { name: 'Approve' }).click();
+
+    const warningDialog = popup.getByTestId(SendCryptoAssetSelectors.TaprootUtxoWarningDialog);
+    await test.expect(warningDialog).toBeVisible({ timeout: 10000 });
+    await popup.getByRole('dialog').getByRole('button', { name: 'Cancel' }).click();
+    await test.expect(warningDialog).toHaveCount(0);
+
+    await popup.close();
+    await resultPromise;
+  });
+});
+
+test.describe('RPC: sendTransfer spend sources with native segwit utxos only', () => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await mockLeatherApiRequests(context);
+    await mockNativeSegwitOnlyUtxosForSend(context);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+  });
+
+  test('that the approval shows no callout and a zero taproot row', async ({ page, context }) => {
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: spendSourcesRecipient, amount: '100000' }],
+      network: 'mainnet',
+    });
+    const popup = await context.waitForEvent('page');
+
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow))
+      .toContainText('0.001', { timeout: 15_000 });
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootRow))
+      .toContainText('0.00000000');
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootCallout))
+      .toHaveCount(0);
+
+    await popup.close();
+    await resultPromise;
+  });
+});
+
 test.describe('RPC: sendTransfer with an active Bitcoin multisig policy account', () => {
   const bitcoinPolicy = makeBitcoinPolicy();
 
@@ -235,6 +328,10 @@ test.describe('RPC: sendTransfer with an active Bitcoin multisig policy account'
     await test
       .expect(popup.getByText(truncateMiddle(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS, 4)))
       .toBeVisible();
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootRow))
+      .toHaveCount(0);
+    await test.expect(popup.getByText('Native SegWit + Taproot', { exact: false })).toHaveCount(0);
 
     // Close the popup so the pending request resolves before teardown
     await popup.close();
