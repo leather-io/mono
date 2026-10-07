@@ -40,13 +40,10 @@ export function getLedgerBitcoinInputLimit({
   const hasAmount = recipients.some(recipient => recipient.amount.amount.isGreaterThan(0));
   if (!isSendingMax && !hasAmount) return emptyLedgerBitcoinInputLimit;
 
-  const inputCount = countUtxosForSpend({
-    utxos,
-    recipients,
-    feeRate,
-    inputSizing,
-    isSendMax: isSendingMax,
-  });
+  const selectionArgs = { utxos, recipients, feeRate, inputSizing };
+  const inputCount =
+    countUtxosForSpend({ ...selectionArgs, isSendMax: isSendingMax }) ??
+    countUtxosForSpend({ ...selectionArgs, isSendMax: true });
   if (inputCount === null) return emptyLedgerBitcoinInputLimit;
 
   const exceedsLimit = inputCount > LEDGER_BITCOIN_MAX_INPUTS;
