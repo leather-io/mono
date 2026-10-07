@@ -33,7 +33,8 @@ export function useCurrentNetworkState() {
     const isTestnet = currentNetwork.chain.stacks.chainId !== ChainId.Mainnet;
     const isNakamotoTestnet =
       currentNetwork.chain.stacks.url === HIRO_API_BASE_URL_NAKAMOTO_TESTNET;
-    return { ...currentNetwork, isTestnet, isNakamotoTestnet };
+    const isMainnet = !isTestnet && currentNetwork.chain.bitcoin.mode === 'mainnet';
+    return { ...currentNetwork, isTestnet, isMainnet, isNakamotoTestnet };
   }, [currentNetwork]);
 }
 

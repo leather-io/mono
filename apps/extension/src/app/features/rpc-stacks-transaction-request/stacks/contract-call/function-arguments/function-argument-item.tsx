@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 
-import { getStacksExplorerLink } from '@leather.io/features';
+import { getStacksExplorerApiUrl, getStacksExplorerLink } from '@leather.io/features';
 import { ChainId } from '@leather.io/models';
 import { ChevronDownIcon, ChevronUpIcon, Link } from '@leather.io/ui';
 
@@ -39,6 +39,7 @@ function FunctionArgumentValue({
               type: 'address',
               value,
               isNakamoto: isNakamotoTestnet,
+              apiUrl: getStacksExplorerApiUrl(chain.stacks.url),
             })
           )
         }

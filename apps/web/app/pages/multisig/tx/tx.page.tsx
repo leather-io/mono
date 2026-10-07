@@ -185,10 +185,8 @@ export function TxDetailPage() {
 
   const proposer = vault.data.members.find(member => member.user?.id === tx.proposerUserId);
   const isMine = tx.proposerUserId === me.data?.id;
-  const proposerName = isMine
-    ? 'Me'
-    : proposer?.name || (proposer ? truncateMiddle(proposer.address) : 'Unknown');
-  const proposerLabel = `${proposerName}${isMine ? ' (you)' : ''}`;
+  const proposerName = proposer?.name || (proposer ? truncateMiddle(proposer.address) : 'Unknown');
+  const proposerLabel = `${proposerName}${isMine ? ' (me)' : ''}`;
   const initiationDate = formatRelativeTime(new Date(tx.proposalTimestamp * 1000));
 
   const memo =
@@ -198,8 +196,16 @@ export function TxDetailPage() {
   const effectiveStatus = reconcileStatus(tx.status, onchainDetail.data?.activity.status);
   const feeFiat = toFiat(item.activity?.fee, marketData.data);
   const heroTimeline = tx.broadcastAt
-    ? { verb: 'Broadcast', when: formatRelativeDateTime(new Date(tx.broadcastAt)) }
-    : { verb: 'Proposed', when: formatRelativeDateTime(new Date(tx.proposalTimestamp * 1000)) };
+    ? {
+        verb: 'Broadcast',
+        when: formatRelativeDateTime(new Date(tx.broadcastAt)),
+        showProposer: false,
+      }
+    : {
+        verb: 'Proposed',
+        when: formatRelativeDateTime(new Date(tx.proposalTimestamp * 1000)),
+        showProposer: true,
+      };
 
   function showActionError(err: Error) {
     const message = formatTransactionActionError(err);
@@ -252,10 +258,15 @@ export function TxDetailPage() {
             caption={
               <Flex alignItems="center" gap="space.02">
                 <span>
-                  {heroTimeline.verb} {heroTimeline.when} by
+                  {heroTimeline.verb} {heroTimeline.when}
+                  {heroTimeline.showProposer && ' by'}
                 </span>
-                <AvatarCircle name={proposerName} size="sm" />
-                <span>{proposerName}</span>
+                {heroTimeline.showProposer && (
+                  <>
+                    <AvatarCircle name={proposerName} size="sm" />
+                    <span>{proposerLabel}</span>
+                  </>
+                )}
               </Flex>
             }
             proposal={{

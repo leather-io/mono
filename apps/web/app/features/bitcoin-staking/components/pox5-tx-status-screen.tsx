@@ -9,6 +9,7 @@ import { useToast } from '~/features/toasts/use-toast';
 import { Page } from '~/layouts/page/page';
 import { makeExplorerTxLink, openExternalLink } from '~/utils/external-links';
 
+import { getStacksExplorerApiUrl } from '@leather.io/features';
 import { Button, ErrorCircleIcon, ExternalLinkIcon, Flag, LoadingSpinner } from '@leather.io/ui';
 
 import { Pox5TrackedTx, usePox5TxTracker } from '../hooks/use-pox5-tx-tracker';
@@ -75,7 +76,13 @@ export function Pox5TxStatusScreen({ trackedTx }: Pox5TxStatusScreenProps) {
       size="sm"
       iconEnd={ExternalLinkIcon}
       onClick={() =>
-        openExternalLink(makeExplorerTxLink(trackedTx.txId, pox5NetworkConfig.stacksNetworkName))
+        openExternalLink(
+          makeExplorerTxLink(
+            trackedTx.txId,
+            pox5NetworkConfig.stacksNetworkName,
+            getStacksExplorerApiUrl(pox5NetworkConfig.apiUrl)
+          )
+        )
       }
       data-testid="pox5-tx-explorer-link"
     >

@@ -2,6 +2,10 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { UserSelectedTheme } from '@app/common/theme-provider';
 
+export type TokenDetailsTab = 'activity' | 'balances' | 'info';
+
+export const defaultTokenDetailsTab: TokenDetailsTab = 'activity';
+
 interface InitialState {
   userSelectedTheme: UserSelectedTheme;
   dismissedMessages: string[];
@@ -12,6 +16,7 @@ interface InitialState {
   bypassInscriptionChecks?: boolean;
   discardedInscriptions: string[];
   networkBadgeAlwaysOn?: boolean;
+  tokenDetailsTab?: TokenDetailsTab;
 }
 
 const initialState: InitialState = {
@@ -61,6 +66,9 @@ export const settingsSlice = createSlice({
     },
     toggleNetworkBadgeAlwaysOn(state) {
       state.networkBadgeAlwaysOn = !state.networkBadgeAlwaysOn;
+    },
+    tokenDetailsTabSelected(state, action: PayloadAction<TokenDetailsTab>) {
+      state.tokenDetailsTab = action.payload;
     },
   },
 });

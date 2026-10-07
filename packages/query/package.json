@@ -2,7 +2,7 @@
   "name": "@leather.io/query",
   "author": "Leather.io contact@leather.io",
   "description": "Leather query",
-  "version": "2.51.9",
+  "version": "2.52.1",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/query",
   "repository": {
@@ -42,7 +42,7 @@
     "@stacks/stacks-blockchain-api-types": "7.14.1",
     "@stacks/transactions": "7.5.0",
     "alex-sdk": "3.1.0",
-    "axios": "1.18.1",
+    "axios": "1.20.0",
     "bignumber.js": "9.1.2",
     "p-queue": "8.1.1",
     "uuid": "11.1.0",

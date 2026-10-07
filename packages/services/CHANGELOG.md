@@ -413,6 +413,57 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.66.2](https://github.com/leather-io/mono/compare/@leather.io/services-v1.66.1...@leather.io/services-v1.66.2) (2026-10-06)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.42.0
+
+## [1.66.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.66.0...@leather.io/services-v1.66.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* axios audit ([#2815](https://github.com/leather-io/mono/issues/2815)) ([480ceda](https://github.com/leather-io/mono/commit/480ceda66cf6537701f7c3571a1fb6c08fc5f127))
+
+## [1.66.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.65.1...@leather.io/services-v1.66.0) (2026-09-29)
+
+
+### Features
+
+* add BNS testnet support ([#2733](https://github.com/leather-io/mono/issues/2733)) ([8f92aa3](https://github.com/leather-io/mono/commit/8f92aa3b6d0f87f765f7de98eeecfe24e2bd2939))
+* allow custom fee for transaction proposal from multisig account ([#2773](https://github.com/leather-io/mono/issues/2773)) ([cc45d87](https://github.com/leather-io/mono/commit/cc45d8779c65c5333ba56bfe5cbf187df8b6c88a))
+* **extension:** new swaps flow with sBTC bridging ([#2554](https://github.com/leather-io/mono/issues/2554)) ([65c8518](https://github.com/leather-io/mono/commit/65c85186c847b2e99fd062d00997c81932268bc5))
+* token price history graph ([#2764](https://github.com/leather-io/mono/issues/2764)) ([b7c56bc](https://github.com/leather-io/mono/commit/b7c56bc7eb49b3a38ea7f40c6332e6c5ce390f93))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+* staking testnet network ([#2801](https://github.com/leather-io/mono/issues/2801)) ([20fe188](https://github.com/leather-io/mono/commit/20fe1889a867e9ecffb7c20ef7b5a2364e53b43b))
+* swaps performance ([#2761](https://github.com/leather-io/mono/issues/2761)) ([797e1d1](https://github.com/leather-io/mono/commit/797e1d1b449f9f24fe8a1d2b7077f7afd19a7bb8))
+* token details activity loading ([#2782](https://github.com/leather-io/mono/issues/2782)) ([a505cac](https://github.com/leather-io/mono/commit/a505cac16639b0e15437f46d14f0093784045dab))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.41.0
+    * @leather.io/constants bumped to 0.40.0
+    * @leather.io/crypto bumped to 1.13.10
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/stacks bumped to 1.22.8
+    * @leather.io/test-config bumped to 0.1.4
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/rpc bumped to 2.25.3
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
 ## [1.65.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.65.0...@leather.io/services-v1.65.1) (2026-09-14)
 
 

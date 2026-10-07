@@ -15,6 +15,8 @@ export interface BitcoinTransactionFees extends TransactionFees<BitcoinTransacti
 
 export interface StacksTransactionFees extends TransactionFees<StacksTransactionFeeQuote> {
   readonly chain: 'stacks';
+  readonly minimumFee: Money;
+  readonly highFeeThreshold: Money;
 }
 
 export const transactionFeeQuoteType = [

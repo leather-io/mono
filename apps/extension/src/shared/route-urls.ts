@@ -8,6 +8,8 @@ export enum RouteUrls {
   ConnectLedger = 'connect-your-ledger',
   ConnectLedgerError = 'ledger-connection-error',
   ConnectLedgerSuccess = 'successfully-connected-your-ledger',
+  LedgerPairDevice = 'pair-your-ledger',
+  LedgerPairDeviceTab = 'pair-ledger',
   LedgerCheckingAppVersion = 'checking-app-version',
   DeviceBusy = 'please-wait',
   AwaitingDeviceUserAction = 'awaiting-approval',

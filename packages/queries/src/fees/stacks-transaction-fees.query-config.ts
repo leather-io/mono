@@ -12,9 +12,12 @@ export function createStacksTransactionFeesQueryKey(
   signerCount?: number
 ) {
   const payloadHex = serializePayload(unsignedTx.payload);
+  const { spendingCondition } = unsignedTx.auth;
+  const threshold =
+    'signaturesRequired' in spendingCondition ? spendingCondition.signaturesRequired : 1;
   return createServiceQueryKey(
     'stacks-transaction-fees-service--get-stacks-transaction-fees',
-    [payloadHex, signerCount ?? 1],
+    [payloadHex, signerCount ?? 1, spendingCondition.hashMode, threshold],
     settings
   );
 }

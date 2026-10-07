@@ -2,6 +2,7 @@ import { logger } from '@shared/logger';
 import { InternalMethods, SIGN_OUT_MESSAGE } from '@shared/message-types';
 import { BackgroundMessages } from '@shared/messages';
 
+import { applyPendingUpdate } from '@background/extension-update-monitor';
 import { syncAddressMonitor } from '@background/monitors/address-monitor';
 
 function validateMessagesAreFromExtension(sender: chrome.runtime.MessageSender) {
@@ -40,6 +41,9 @@ export async function internalBackgroundMessageHandler(
   switch (message.method) {
     case InternalMethods.AddressMonitorUpdated:
       await syncAddressMonitor(message.payload.addresses);
+      break;
+    case InternalMethods.ApplyPendingUpdate:
+      await applyPendingUpdate();
       break;
     default:
       break;

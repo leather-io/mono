@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.6.3](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.6.2...@leather.io/cms-v1.6.3) (2026-09-29)
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+
 ## [1.6.2](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.6.1...@leather.io/cms-v1.6.2) (2026-09-10)
 
 

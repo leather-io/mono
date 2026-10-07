@@ -30,12 +30,12 @@ import {
   makeNativeSegwitDefaultWallet,
   makeTaprootDefaultWallet,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
-import { assertLedgerBitcoinInputLimit } from '@app/features/ledger/utils/ledger-bitcoin-input-limit';
 import {
   getMasterFingerprintHex,
   signPsbtWithWallet,
 } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import type { LedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app';
+import { assertLedgerBitcoinInputLimit } from '@app/features/ledger/utils/ledger-bitcoin-input-limit';
 import {
   useCurrentAccountTaprootPayer,
   useTaprootAccount,
