@@ -165,7 +165,7 @@
     "@types/valid-url": "1.0.7",
     "@types/webextension-polyfill": "0.10.4",
     "@types/zxcvbn": "4.4.5",
-    "@vitejs/plugin-react": "4.7.0",
+    "@vitejs/plugin-react": "5.2.0",
     "blns": "2.0.4",
     "concurrently": "8.2.2",
     "cross-env": "7.0.3",
