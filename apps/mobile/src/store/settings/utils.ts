@@ -7,7 +7,7 @@ import type {
   EmailAddress,
 } from '@leather.io/models';
 
-export const defaultNetworkPreferences = ['mainnet', 'testnet4', 'signet'] as const;
+export const defaultNetworkPreferences = ['mainnet', 'testnet', 'signet'] as const;
 export const defaultThemePreferences = ['light', 'dark', 'system'] as const;
 
 export type ThemePreference = 'light' | 'dark' | 'system';

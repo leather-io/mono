@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { HIRO_EXPLORER_URL, MEMPOOL_BASE_URL } from '@leather.io/constants';
 import {
+  BITCOIN_API_BASE_URL_TESTNET3,
   HIRO_API_BASE_URL_NAKAMOTO_TESTNET,
   HIRO_API_BASE_URL_STAKING_TESTNET,
   HIRO_API_BASE_URL_TESTNET,
@@ -199,10 +200,21 @@ describe('activity-links', () => {
         id: 'txabc',
         type: 'tx',
         networkPreference: 'testnet3',
-        bitcoinUrl: defaultNetworksKeyedById.testnet.chain.bitcoin.bitcoinUrl,
+        bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET3,
       });
 
       expect(result).toBe(`${MEMPOOL_BASE_URL}/testnet/tx/txabc`);
+    });
+
+    it('returns the hiro regtest mempool link for the primary testnet', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txabc',
+        type: 'tx',
+        networkPreference: 'regtest',
+        bitcoinUrl: defaultNetworksKeyedById.testnet.chain.bitcoin.bitcoinUrl,
+      });
+
+      expect(result).toBe('https://mempool.bitcoin.regtest.hiro.so/tx/txabc');
     });
 
     it('returns the custom mempool instance link for a regtest network', () => {
@@ -350,24 +362,35 @@ describe('activity-links', () => {
       );
     });
 
-    it('returns localhost link for regtest with txid', () => {
+    it('returns localhost link for regtest with txid on a localhost api', () => {
+      const result = getStacksExplorerLink({
+        mode: 'regtest',
+        type: 'txid',
+        value: 'tx123',
+        apiUrl: 'http://localhost:3999',
+      });
+
+      expect(result).toBe('http://localhost:8000/txid/tx123');
+    });
+
+    it('returns testnet explorer link for regtest with txid on the primary testnet', () => {
       const result = getStacksExplorerLink({
         mode: 'regtest',
         type: 'txid',
         value: 'tx123',
       });
 
-      expect(result).toBe('http://localhost:8000/txid/tx123');
+      expect(result).toBe(`${HIRO_EXPLORER_URL}/txid/tx123?chain=testnet`);
     });
 
-    it('returns regular explorer link for regtest with address', () => {
+    it('returns testnet explorer link for regtest with address', () => {
       const result = getStacksExplorerLink({
         mode: 'regtest',
         type: 'address',
         value: 'ST123ABC',
       });
 
-      expect(result).toBe(`${HIRO_EXPLORER_URL}/address/ST123ABC?chain=regtest`);
+      expect(result).toBe(`${HIRO_EXPLORER_URL}/address/ST123ABC?chain=testnet`);
     });
   });
 

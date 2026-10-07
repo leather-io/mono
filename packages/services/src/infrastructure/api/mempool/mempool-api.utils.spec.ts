@@ -34,18 +34,15 @@ describe(getMempoolUrlFromUserSettings.name, () => {
     expect(getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.mainnet))).toBe(
       null
     );
-    expect(getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.testnet))).toBe(
-      null
-    );
     expect(getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.devnet))).toBe(
       null
     );
   });
 
-  it('returns the configured bitcoin url for sbtc networks', () => {
+  it('returns the configured bitcoin url for the primary testnet and sbtc devenv', () => {
     expect(
-      getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.sbtcTestnet))
-    ).toEqual(defaultNetworksKeyedById.sbtcTestnet.chain.bitcoin.bitcoinUrl);
+      getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.testnet))
+    ).toEqual(defaultNetworksKeyedById.testnet.chain.bitcoin.bitcoinUrl);
     expect(
       getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.sbtcDevenv))
     ).toEqual(defaultNetworksKeyedById.sbtcDevenv.chain.bitcoin.bitcoinUrl);

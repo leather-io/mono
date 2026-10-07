@@ -1,6 +1,7 @@
 import { MEMPOOL_BASE_URL } from '@leather.io/constants';
 import {
   BITCOIN_API_BASE_URL_MAINNET,
+  BITCOIN_API_BASE_URL_PRIMARY_TESTNET,
   BITCOIN_API_BASE_URL_TESTNET3,
   BITCOIN_API_BASE_URL_TESTNET4,
 } from '@leather.io/models';
@@ -37,20 +38,19 @@ describe('bitcoinNetworkPresets', () => {
       stacksUrl: 'https://api.testnet.hiro.so',
     });
     expect(bitcoinNetworkPresets.regtest).toEqual({
-      label: 'Regtest',
-      bitcoinUrl: `${MEMPOOL_BASE_URL}/testnet/api`,
+      label: 'Primary Hiro Testnet',
+      bitcoinUrl: BITCOIN_API_BASE_URL_PRIMARY_TESTNET,
       stacksUrl: 'https://api.testnet.hiro.so',
     });
   });
 
-  it('exposes one selectable option per preset and no Custom option', () => {
-    expect(networks).toHaveLength(5);
+  it('exposes one selectable option per preset except Testnet3 and no Custom option', () => {
+    expect(networks).toHaveLength(4);
     expect(networks.map(option => option.value)).toEqual([
       'mainnet',
-      'testnet3',
-      'testnet4',
-      'signet',
       'regtest',
+      'signet',
+      'testnet4',
     ]);
     expect(networks.some(option => option.label === customNetworkLabel)).toBe(false);
   });

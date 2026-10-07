@@ -13,5 +13,6 @@ export function resolveNetworkConfiguration(
   if (customNetworkConfig && networkName === 'testnet') {
     return buildCustomNetworkConfiguration(customNetworkConfig);
   }
+  if (networkName === 'testnet') return defaultNetworksKeyedById.testnet4;
   return defaultNetworksKeyedById[networkName];
 }

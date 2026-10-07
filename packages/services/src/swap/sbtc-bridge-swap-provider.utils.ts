@@ -17,7 +17,7 @@ type SbtcBridgeTxType = 'deposit' | 'withdrawal';
 
 export const sbtcStacksAddressMap = {
   mainnet: 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4',
-  testnet: 'SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70',
+  testnet: 'SN3VMHXEN64ZZF71JQ5VESXDWTR301XTTXGF4J8F1',
 };
 
 export function getRemainingSbtcSupply(
