@@ -32,6 +32,10 @@ export enum SendCryptoAssetSelectors {
   HighFeeWarningSheetSubmit = 'high-fee-warning-sheet-submit',
 
   TaprootUtxoWarningDialog = 'taproot-utxo-warning-dialog',
+
+  SpendSourcesTaprootCallout = 'spend-sources-taproot-callout',
+  SpendSourcesNativeSegwitRow = 'spend-sources-native-segwit-row',
+  SpendSourcesTaprootRow = 'spend-sources-taproot-row',
 }
 
 export function getRecipientSelectAccountTestId(fingerprint: string, accountIndex: number) {
