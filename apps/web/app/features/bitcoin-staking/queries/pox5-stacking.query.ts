@@ -200,7 +200,7 @@ function getClaimableCycles(
   currentCycleId: number | undefined
 ): number[] {
   if (!info || currentCycleId === undefined) return [];
-  const lastEarnedCycle = Math.min(currentCycleId - 1, info.firstRewardCycle + info.numCycles - 1);
+  const lastEarnedCycle = Math.min(currentCycleId, info.firstRewardCycle + info.numCycles - 1);
   if (lastEarnedCycle < info.firstRewardCycle) return [];
   const firstShownCycle = Math.max(
     info.firstRewardCycle,
