@@ -1,18 +1,16 @@
 import { useNavigate } from 'react-router';
 
-import BitcoinApp from '@ledgerhq/ledger-bitcoin';
-
-import { isError } from '@leather.io/utils';
-
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
+import { isLedgerDeviceLockedError } from '@app/features/ledger/dmk/ledger-dmk-errors';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
+import { useLedgerFlow, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
+import type { VerifyAddressVariant } from '@app/features/ledger/flow/ledger-flow.types';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
 import { useDisplayLedgerDescriptorAddress } from '@app/features/ledger/hooks/use-display-ledger-descriptor-address';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import {
   connectLedgerBitcoinApp,
   displayNativeSegwitAddressOnDevice,
@@ -20,10 +18,9 @@ import {
   getBitcoinAppVersion,
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
-import {
-  checkLockedDeviceError,
-  useCancelLedgerAction,
-} from '@app/features/ledger/utils/generic-ledger-utils';
+import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
+import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app';
 import {
   isLedgerOnDeviceAddressConfirmed,
   toLedgerDisplayedAddress,
@@ -35,15 +32,16 @@ import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accoun
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
-import { verifyAddressPaths } from './verify-address-paths';
-
 interface LedgerVerifyBtcAddressProps {
-  variant: 'btcNativeSegwit' | 'btcTaproot' | 'btcMultisig';
+  variant: Exclude<VerifyAddressVariant, 'stx'>;
 }
-function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
+export function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
   const navigate = useNavigate();
   const toast = useToast();
-  const ledgerNavigate = useLedgerNavigate();
+  const dmk = useLedgerDmk();
+  const signerActions = useSignerActionController();
+  const ledgerNavigate = useLedgerSteps();
+  const { close } = useLedgerFlow();
   const network = useCurrentNetwork();
   const { accountIndex } = useCurrentAccountId();
   const nativeSegwitAddress = useCurrentAccountNativeSegwitAddressIndexZero();
@@ -59,52 +57,61 @@ function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
     return nativeSegwitAddress;
   }
 
-  async function displayAddressOnDevice(app: BitcoinApp) {
+  function toConfirmAddressStep(expectedAddress: string | null) {
+    ledgerNavigate.toDeviceBusyStep(
+      'Confirm the address on your Ledger…',
+      expectedAddress ? toLedgerDisplayedAddress(expectedAddress) : undefined
+    );
+  }
+
+  async function displayAddressOnDevice(app: LedgerBitcoinApp, expectedAddress: string | null) {
     if (variant === 'btcMultisig') {
       if (!bitcoinPolicy) throw new Error('No active bitcoin multisig policy to verify');
-      return displayLedgerDescriptorAddress(app, bitcoinPolicy.descriptor);
+      return displayLedgerDescriptorAddress(app, bitcoinPolicy.descriptor, {
+        onWalletRegistered() {
+          toConfirmAddressStep(expectedAddress);
+        },
+      });
     }
     const args = { network: network.chain.bitcoin.mode, accountIndex };
     if (variant === 'btcTaproot') return displayTaprootAddressOnDevice(app)(args);
     return displayNativeSegwitAddressOnDevice(app)(args);
   }
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
-    useRequestLedgerKeys<BitcoinApp>({
+  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, isConnectionCancellable } =
+    useRequestLedgerKeys<LedgerBitcoinApp>({
       chain: 'bitcoin',
-      connectApp: connectLedgerBitcoinApp(network.chain.bitcoin.mode),
-      getAppVersion: getBitcoinAppVersion,
+      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode, signerActions.run),
+      getAppVersion: getBitcoinAppVersion(dmk),
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       onSuccess() {
         toast.success('Address verified on your Ledger');
+        close();
         void navigate(RouteUrls.Home, { replace: true });
       },
       async pullKeysFromDevice(app) {
         const expectedAddress = getExpectedAddress();
-        void ledgerNavigate.toDeviceBusyStep(
-          'Confirm the address on your Ledger…',
-          expectedAddress ? toLedgerDisplayedAddress(expectedAddress) : undefined
-        );
+        toConfirmAddressStep(expectedAddress);
         try {
-          const onDeviceAddress = await displayAddressOnDevice(app);
+          const onDeviceAddress = await displayAddressOnDevice(app, expectedAddress);
           if (!isLedgerOnDeviceAddressConfirmed(onDeviceAddress, expectedAddress)) {
             analytics.track('address_verification_completed', {
               type: variant,
               verified: false,
             });
-            void ledgerNavigate.toErrorStep(
+            ledgerNavigate.toErrorStep(
               'bitcoin',
               'The address shown on your Ledger does not match the one in Leather.'
             );
             return { status: 'failure' };
           }
         } catch (e) {
-          if (isError(e) && checkLockedDeviceError(e)) throw e;
+          if (isLedgerDeviceLockedError(e)) throw e;
           analytics.track('address_verification_completed', {
             type: variant,
             verified: false,
           });
-          void ledgerNavigate.toErrorStep(
+          ledgerNavigate.toErrorStep(
             'bitcoin',
             'Address verification was not completed on the device.'
           );
@@ -122,28 +129,15 @@ function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
     awaitingDeviceConnection,
   };
 
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
   return (
     <RequestKeysFlow
       context={ledgerContextValue}
       isActionCancellableByUser={canCancelLedgerAction}
+      onCancelAction={signerActions.cancelActive}
     />
   );
 }
-
-export const verifyBtcAddressRoutes = (
-  <>
-    {ledgerRequestKeysRoutes({
-      path: verifyAddressPaths.btcNativeSegwit,
-      component: <LedgerVerifyBtcAddress variant="btcNativeSegwit" />,
-    })}
-    {ledgerRequestKeysRoutes({
-      path: verifyAddressPaths.btcTaproot,
-      component: <LedgerVerifyBtcAddress variant="btcTaproot" />,
-    })}
-    {ledgerRequestKeysRoutes({
-      path: verifyAddressPaths.btcMultisig,
-      component: <LedgerVerifyBtcAddress variant="btcMultisig" />,
-    })}
-  </>
-);

@@ -31,3 +31,13 @@ export async function mockMixedUtxosForSend(page: Page) {
     return route.fulfill({ json: [mockNativeSegwitUtxo] });
   });
 }
+
+export async function mockNativeSegwitOnlyUtxosForSend(page: Page) {
+  await page.unroute('**/v1/utxos/**');
+  await page.route('**/v1/utxos/**', route => {
+    const url = route.request().url();
+    if (url.includes('/v1/utxos/addresses/')) return route.fulfill({ json: [] });
+    if (url.includes(encodeURIComponent('tr('))) return route.fulfill({ json: [] });
+    return route.fulfill({ json: [mockNativeSegwitUtxo] });
+  });
+}

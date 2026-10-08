@@ -1,4 +1,4 @@
-import { checksum } from '@bitcoinerlab/descriptors';
+import { checksum } from '@bitcoinerlab/descriptors-core';
 import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';

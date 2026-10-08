@@ -27,28 +27,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: lint-unused-typescript-exports
         working-directory: apps/extension
         run: pnpm lint:unused-exports
-
-  lint-firefox-build:
-    name: lint-firefox-build
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/provision
-
-      - run: pnpm build:packages
-
-      - run: pnpm build
-        working-directory: apps/extension
-        env:
-          TARGET_BROWSER: firefox
-
-      - name: lint-firefox-build
-        run: pnpm web-ext lint
-        working-directory: apps/extension

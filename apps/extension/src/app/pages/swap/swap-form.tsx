@@ -12,7 +12,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
-import { Card, Content, Page } from '@app/components/layout';
+import { ButtonRow, Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { AmountField } from '@app/pages/swap/components/amount-field/amount-field';
 import { getAmountErrorMessage } from '@app/pages/swap/components/amount-field/amount-field-error-messages';
@@ -86,72 +86,77 @@ export function SwapForm() {
       <PageHeader title="Swap" onBackLocation={RouteUrls.Home} />
       <Content>
         <Page>
-          <Card>
-            <Flex justifyContent="space-between" alignItems="flex-start">
-              <AmountField
-                asset={state.baseSwapAsset?.asset}
-                value={state.baseAmount}
-                onChange={actions.setBaseAmount}
-                secondaryAmount={state.secondaryAmount}
-                inputCurrencyMode={state.inputCurrencyMode}
-                onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
-                quoteCurrencyPreference={state.quoteCurrencyPreference}
-                inputRef={amountFieldRef}
-                errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
-              />
-
-              <Flex direction="column" gap="space.03" alignItems="flex-end">
-                <AssetSelectorToggle
+          <Card
+            contentStyle={{ gap: 'space.05' }}
+            footer={
+              <ButtonRow>
+                <Button
+                  disabled={!canSubmit}
+                  onClick={handleContinue}
+                  data-testid={SwapRevampSelectors.ContinueBtn}
+                >
+                  Continue
+                </Button>
+              </ButtonRow>
+            }
+          >
+            <Box position="relative">
+              <Flex justifyContent="space-between" alignItems="flex-start">
+                <AmountField
                   asset={state.baseSwapAsset?.asset}
-                  onPress={() => actions.openAssetSelector('base')}
-                  testId={SwapRevampSelectors.BaseAssetTrigger}
-                />
-                <AssetBalance
-                  balance={state.baseSwapAsset?.balance}
+                  value={state.baseAmount}
+                  onChange={actions.setBaseAmount}
+                  secondaryAmount={state.secondaryAmount}
                   inputCurrencyMode={state.inputCurrencyMode}
-                  onSetToMax={handleSetToMax}
+                  onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
+                  quoteCurrencyPreference={state.quoteCurrencyPreference}
+                  inputRef={amountFieldRef}
+                  errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
                 />
+
+                <Flex direction="column" gap="space.03" alignItems="flex-end">
+                  <AssetSelectorToggle
+                    asset={state.baseSwapAsset?.asset}
+                    onPress={() => actions.openAssetSelector('base')}
+                    testId={SwapRevampSelectors.BaseAssetTrigger}
+                  />
+                  <AssetBalance
+                    balance={state.baseSwapAsset?.balance}
+                    inputCurrencyMode={state.inputCurrencyMode}
+                    onSetToMax={handleSetToMax}
+                  />
+                </Flex>
               </Flex>
-            </Flex>
 
-            <Divider marginY="space.05" borderColor="ink.border-transparent" />
+              <Divider marginY="space.05" borderColor="ink.border-transparent" />
 
-            <Flex justifyContent="space-between" alignItems="flex-start">
-              <TargetAmountPreview
-                marketData={targetMarketDataQuery.data}
-                liveEstimate={liveEstimate}
-                baseAmount={state.baseAmount}
-                isTargetAssetSet={state.targetSwapAsset !== null}
-              />
-
-              <Flex direction="column" gap="space.03" alignItems="flex-end">
-                <AssetSelectorToggle
-                  asset={state.targetSwapAsset?.asset}
-                  onPress={() => actions.openAssetSelector('target')}
-                  disabled={state.baseSwapAsset === null}
-                  testId={SwapRevampSelectors.TargetAssetTrigger}
+              <Flex justifyContent="space-between" alignItems="flex-start">
+                <TargetAmountPreview
+                  marketData={targetMarketDataQuery.data}
+                  liveEstimate={liveEstimate}
+                  baseAmount={state.baseAmount}
+                  isTargetAssetSet={state.targetSwapAsset !== null}
                 />
-                <AssetBalance
-                  balance={state.targetSwapAsset?.balance}
-                  inputCurrencyMode={state.inputCurrencyMode}
-                />
+
+                <Flex direction="column" gap="space.03" alignItems="flex-end">
+                  <AssetSelectorToggle
+                    asset={state.targetSwapAsset?.asset}
+                    onPress={() => actions.openAssetSelector('target')}
+                    disabled={state.baseSwapAsset === null}
+                    testId={SwapRevampSelectors.TargetAssetTrigger}
+                  />
+                  <AssetBalance
+                    balance={state.targetSwapAsset?.balance}
+                    inputCurrencyMode={state.inputCurrencyMode}
+                  />
+                </Flex>
               </Flex>
-            </Flex>
 
-            <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
-          </Card>
-
-          <Flex direction="column" mt="space.04" gap="space.03">
-            <Button
-              disabled={!canSubmit}
-              onClick={handleContinue}
-              data-testid={SwapRevampSelectors.ContinueBtn}
-            >
-              Continue
-            </Button>
+              <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
+            </Box>
 
             <QuotePreview state={state} liveEstimate={liveEstimate} />
-          </Flex>
+          </Card>
 
           <AssetSelectorSheet
             type={state.selectingAsset}

@@ -14,7 +14,6 @@ import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { NotFoundContent } from '@app/pages/not-found/not-found';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
-import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
 import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
@@ -69,7 +68,6 @@ export function Home({ isBackground }: HomeProps) {
           <Route index element={<Tokens />} />
           <Route path={RouteUrls.Activity} element={<ActivityList />} />
           <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
-          {homePageModalRoutes}
           <Route path="*" element={<HomeNotFound />} />
         </ModalBackgroundWrapper>
       </HomeTabs>

@@ -4,7 +4,7 @@ import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { Box } from 'leather-styles/jsx';
 
 import { AccountSwapAsset } from '@leather.io/services';
-import { AssetAvatarIcon, BitcoinIcon, StacksIcon } from '@leather.io/ui';
+import { AssetAvatarIcon, BitcoinFilledCircleIcon, StacksFilledCircleIcon } from '@leather.io/ui';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { getFungibleAssetDisplayName } from '@app/pages/swap/swap-utils';
@@ -52,10 +52,10 @@ export function AssetSelectorList({ assets = [], type, onSelectAsset }: AssetSel
 function getAssetIndicator(asset: AccountSwapAsset['asset']) {
   switch (asset.protocol) {
     case 'nativeBtc':
-      return <BitcoinIcon variant="small" />;
+      return <BitcoinFilledCircleIcon variant="small" />;
     case 'nativeStx':
     case 'sip10':
-      return <StacksIcon variant="small" />;
+      return <StacksFilledCircleIcon variant="small" />;
     default:
       return undefined;
   }

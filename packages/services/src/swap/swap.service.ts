@@ -21,6 +21,7 @@ import {
   isSameAsset,
   matchesAssetId,
   serializeAssetId,
+  withTimeout,
 } from '@leather.io/utils';
 
 import { FungibleAssetService } from '../assets/fungible-asset.service';
@@ -37,6 +38,8 @@ import type { SbtcDepositNotificationResult } from './sbtc-bridge-swap-provider.
 import { SwapProviderService } from './swap-provider.interface';
 import { hasValidMinReceiveAmountPostCondition } from './swap.utils';
 import { VelarSwapProviderService } from './velar-swap-provider.service';
+
+const swapQuoteTimeoutMs = 10_000;
 
 export interface AccountSwapAsset extends SwapAsset {
   balance?: {
@@ -62,7 +65,6 @@ export class SwapService {
 
   private getSwapProviderServices(): SwapProviderService[] {
     return [
-      this.velarProvider,
       this.alexProvider,
       this.bitflowSdkProvider,
       this.bitflowBffApiProvider,
@@ -229,15 +231,18 @@ export class SwapService {
           b => b.providerId === targetProviderAsset.providerId
         );
         if (!baseProviderAsset) return;
-        return this.getSwapProviderServiceById(targetProviderAsset.providerId).getSwapQuotes(
-          {
-            baseAsset: baseAsset.asset,
-            baseProviderAsset: baseProviderAsset,
-            targetAsset: targetAsset.asset,
-            targetProviderAsset: targetProviderAsset,
-            baseAmount,
-          },
-          signal
+        return withTimeout(
+          this.getSwapProviderServiceById(targetProviderAsset.providerId).getSwapQuotes(
+            {
+              baseAsset: baseAsset.asset,
+              baseProviderAsset: baseProviderAsset,
+              targetAsset: targetAsset.asset,
+              targetProviderAsset: targetProviderAsset,
+              baseAmount,
+            },
+            signal
+          ),
+          swapQuoteTimeoutMs
         );
       })
       .filter(isNonNullish);

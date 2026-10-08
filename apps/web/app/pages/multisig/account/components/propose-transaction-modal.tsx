@@ -1,7 +1,7 @@
 import { type ChangeEvent, type ReactNode, useState } from 'react';
 
 import BigNumber from 'bignumber.js';
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
 import { useVaultAccountAssets } from '~/features/multisig/assets/use-vault-account-assets';
 import { filterSendableVaultAssets } from '~/features/multisig/assets/vault-asset-items';
@@ -10,7 +10,13 @@ import { resolveBtcNetworkMode } from '~/features/multisig/network/resolve-btc-n
 import { buildUnsignedMultisigBtcTransfer } from '~/features/multisig/transactions/build-btc-transfer';
 import { buildUnsignedMultisigSip10Transfer } from '~/features/multisig/transactions/build-sip10-transfer';
 import { buildUnsignedMultisigStxTransfer } from '~/features/multisig/transactions/build-stx-transfer';
+import { parseCustomBitcoinFeeRate } from '~/features/multisig/transactions/custom-bitcoin-fee';
+import {
+  getCustomStacksFee,
+  getStacksProposalFeeBalanceError,
+} from '~/features/multisig/transactions/custom-stacks-fee';
 import { useProposeTransaction } from '~/features/multisig/transactions/use-propose-transaction';
+import { useVaultBtcCustomFee } from '~/features/multisig/transactions/use-vault-btc-custom-fee';
 import { useVaultBtcTransactionFees } from '~/features/multisig/transactions/use-vault-btc-transaction-fees';
 import { useVaultStxTransactionFees } from '~/features/multisig/transactions/use-vault-stx-transaction-fees';
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
@@ -42,6 +48,10 @@ import {
 
 import { TextField } from '../../components/text-field';
 import { AssetSelectorSheet, AssetSelectorToggle } from './asset-selector';
+import { CustomBitcoinFeeField } from './custom-bitcoin-fee-field';
+import { CustomStacksFeeField } from './custom-stacks-fee-field';
+
+type ProposalFeeSelection = TransactionFeeTier | 'custom';
 
 function parseBtcAmount(value: string): Money | undefined {
   const sats = btcToSat(value.trim());
@@ -106,18 +116,100 @@ function feeTierFiatValues(
   };
 }
 
+interface FeeOptionButtonProps {
+  label: string;
+  selected: boolean;
+  onSelect(): void;
+  children: ReactNode;
+}
+
+function FeeOptionButton({ label, selected, onSelect, children }: FeeOptionButtonProps) {
+  return (
+    <styled.button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={selected}
+      display="flex"
+      flexDirection="column"
+      alignItems="flex-start"
+      gap="space.01"
+      p="space.03"
+      borderRadius="sm"
+      borderWidth="1px"
+      borderStyle="solid"
+      borderColor={selected ? 'ink.text-primary' : 'ink.border-default'}
+      bg={selected ? 'ink.component-background-hover' : 'transparent'}
+      cursor="pointer"
+    >
+      <styled.span
+        textStyle="caption.01"
+        textTransform="capitalize"
+        color={selected ? 'ink.text-primary' : 'ink.text-subdued'}
+      >
+        {label}
+      </styled.span>
+      {children}
+    </styled.button>
+  );
+}
+
+interface FeeEstimationState {
+  hasValidDetails: boolean;
+  isFetching: boolean;
+  isPaused: boolean;
+  error: Error | null;
+  onRetry(): void;
+}
+
+function getFeeEstimateStatus({
+  hasValidDetails,
+  isFetching,
+  isPaused,
+  error,
+}: FeeEstimationState) {
+  if (!hasValidDetails)
+    return {
+      label: '—',
+      message: 'Enter a valid recipient and amount to see estimated fees.',
+      canRetry: false,
+    };
+  if (isPaused)
+    return {
+      label: 'Offline',
+      message: 'Fee estimation is paused. Check your connection to continue.',
+      canRetry: false,
+    };
+  if (isFetching)
+    return { label: 'Estimating…', message: 'Estimating network fees…', canRetry: false };
+  return {
+    label: 'Unavailable',
+    message: error ? `Could not estimate fees: ${error.message}` : 'Fee estimates are unavailable.',
+    canRetry: true,
+  };
+}
+
+interface FeeTierSelectorProps {
+  options?: Record<TransactionFeeTier, Money>;
+  selected: ProposalFeeSelection;
+  onSelect(tier: TransactionFeeTier): void;
+  onCustom?(): void;
+  fiatOptions?: Record<TransactionFeeTier, Money | undefined>;
+  estimation: FeeEstimationState;
+}
+
 function FeeTierSelector({
   options,
   selected,
   onSelect,
   fiatOptions,
-}: {
-  options?: Record<TransactionFeeTier, Money>;
-  selected: TransactionFeeTier;
-  onSelect(tier: TransactionFeeTier): void;
-  fiatOptions?: Record<TransactionFeeTier, Money | undefined>;
-}) {
-  if (!options) return null;
+  onCustom,
+  estimation,
+}: FeeTierSelectorProps) {
+  const status = getFeeEstimateStatus(estimation);
+  const hasEqualEstimates =
+    options &&
+    options.low.amount.eq(options.standard.amount) &&
+    options.low.amount.eq(options.high.amount);
   return (
     <Flex direction="column" gap="space.02">
       <Flex alignItems="center" gap="space.01">
@@ -146,49 +238,63 @@ function FeeTierSelector({
           </styled.button>
         </BasicTooltip>
       </Flex>
-      <Flex gap="space.02">
+      <Grid columns={2} gap="space.02" role="group" aria-label="Network fee options">
         {transactionFeeTiers.map(tier => {
-          const isSelected = tier === selected;
-          const money = options[tier];
+          const money = options?.[tier];
           const fiat = fiatOptions?.[tier];
           const fiatText = fiat ? formatCurrency(fiat) : undefined;
           return (
-            <styled.button
+            <FeeOptionButton
               key={tier}
-              type="button"
-              onClick={() => onSelect(tier)}
-              flex={1}
-              display="flex"
-              flexDirection="column"
-              alignItems="flex-start"
-              gap="space.01"
-              p="space.02"
-              borderRadius="sm"
-              borderWidth="1px"
-              borderStyle="solid"
-              borderColor={isSelected ? 'ink.text-primary' : 'ink.border-default'}
-              bg={isSelected ? 'ink.component-background-hover' : 'transparent'}
-              cursor="pointer"
+              label={tier}
+              selected={tier === selected}
+              onSelect={() => onSelect(tier)}
             >
-              <styled.span
-                textStyle="caption.01"
-                textTransform="capitalize"
-                color={isSelected ? 'ink.text-primary' : 'ink.text-subdued'}
-              >
-                {tier}
-              </styled.span>
-              <styled.span textStyle="label.03">
-                <Balance balance={money} formatCurrency={formatCryptoPrecise} />
-              </styled.span>
+              {money ? (
+                <styled.span textStyle="label.03">
+                  <Balance balance={money} formatCurrency={formatCryptoPrecise} />
+                </styled.span>
+              ) : (
+                <styled.span textStyle="caption.01" color="ink.text-subdued">
+                  {status.label}
+                </styled.span>
+              )}
               {fiatText ? (
                 <styled.span textStyle="caption.01" color="ink.text-subdued">
                   {fiatText.startsWith('<') ? fiatText : `~${fiatText}`}
                 </styled.span>
               ) : null}
-            </styled.button>
+            </FeeOptionButton>
           );
         })}
-      </Flex>
+        {onCustom && (
+          <FeeOptionButton label="Custom fee" selected={selected === 'custom'} onSelect={onCustom}>
+            <styled.span textStyle="caption.01" color="ink.text-subdued">
+              Set your own
+            </styled.span>
+          </FeeOptionButton>
+        )}
+      </Grid>
+      {hasEqualEstimates && (
+        <styled.p textStyle="caption.01" color="ink.text-subdued">
+          Low, Standard, and High currently have the same estimated fee.
+        </styled.p>
+      )}
+      {!options && (
+        <Flex direction="column" gap="space.02">
+          <styled.p role="status" textStyle="caption.01" color="ink.text-subdued">
+            {status.message}
+          </styled.p>
+          {status.canRetry && (
+            <Button variant="ghost" onClick={estimation.onRetry}>
+              Retry fee estimates
+            </Button>
+          )}
+        </Flex>
+      )}
+      <styled.p textStyle="caption.01" color="ink.text-subdued">
+        Network conditions may change while signatures are collected.
+      </styled.p>
     </Flex>
   );
 }
@@ -218,15 +324,17 @@ interface ProposeFormFieldsProps {
   available?: Money;
   feeOptions?: Record<TransactionFeeTier, Money>;
   feeFiatOptions?: Record<TransactionFeeTier, Money | undefined>;
-  feeTier: TransactionFeeTier;
+  feeEstimation: FeeEstimationState;
+  feeTier: ProposalFeeSelection;
   onFeeTier(tier: TransactionFeeTier): void;
+  onCustomFee?(): void;
+  feeDetails?: ReactNode;
   threshold: number;
   signerCount: number;
   isProposing: boolean;
   canPropose: boolean;
   recipientError?: string;
   amountError?: string;
-  errorMessage?: string;
   onClose(): void;
   onSubmit(): void;
 }
@@ -244,15 +352,17 @@ function ProposeFormFields({
   available,
   feeOptions,
   feeFiatOptions,
+  feeEstimation,
   feeTier,
   onFeeTier,
+  onCustomFee,
+  feeDetails,
   threshold,
   signerCount,
   isProposing,
   canPropose,
   recipientError,
   amountError,
-  errorMessage,
   onClose,
   onSubmit,
 }: ProposeFormFieldsProps) {
@@ -341,7 +451,10 @@ function ProposeFormFields({
           fiatOptions={feeFiatOptions}
           selected={feeTier}
           onSelect={onFeeTier}
+          onCustom={onCustomFee}
+          estimation={feeEstimation}
         />
+        {feeDetails}
         <Flex justifyContent="space-between" gap="space.04">
           <styled.span textStyle="caption.01" color="ink.text-subdued">
             Threshold
@@ -351,12 +464,6 @@ function ProposeFormFields({
           </styled.span>
         </Flex>
       </Flex>
-
-      {errorMessage && (
-        <styled.span textStyle="caption.01" color="red.action-primary-default">
-          {errorMessage}
-        </styled.span>
-      )}
 
       <Flex gap="space.03" justifyContent="flex-end">
         <Button variant="ghost" onClick={onClose}>
@@ -404,20 +511,39 @@ function BtcProposeForm({
   });
   const propose = useProposeTransaction(account.network);
   const marketData = useMarketDataQuery(btcAsset);
-  const [feeTier, setFeeTier] = useState<TransactionFeeTier>('standard');
-  const feeQuote = feesQuery.data?.options[feeTier];
+  const [feeTier, setFeeTier] = useState<ProposalFeeSelection>('standard');
+  const [customFeeInput, setCustomFeeInput] = useState('');
+  const customFeeRate = parseCustomBitcoinFeeRate(customFeeInput);
+  const customFeeQuery = useVaultBtcCustomFee({
+    account,
+    recipient: recipientError ? undefined : recipientAddress,
+    amount: amountError ? undefined : amount,
+    feeRate: feeTier === 'custom' ? customFeeRate : undefined,
+  });
+  const feeQuote = feeTier === 'custom' ? undefined : feesQuery.data?.options[feeTier];
+  const feeRate = feeTier === 'custom' ? customFeeRate : feeQuote?.rate;
+  const customFee = customFeeQuery.data?.fee;
+  const customFeeError =
+    customFeeInput.trim() && customFeeRate === undefined ? 'Enter a positive fee rate' : undefined;
+  const canPropose = Boolean(
+    recipientAddress &&
+      amount &&
+      feeRate !== undefined &&
+      !recipientError &&
+      !amountError &&
+      (feeTier !== 'custom' || (customFee && !customFeeQuery.isFetching && !customFeeQuery.error))
+  );
   const feeOptions = feeTierValues(feesQuery.data);
   const feeFiatOptions = feeTierFiatValues(feesQuery.data, marketData.data);
 
   async function submit() {
-    if (!recipientAddress || !amount || feeQuote === undefined || recipientError || amountError)
-      return;
+    if (!canPropose || !recipientAddress || !amount || feeRate === undefined) return;
     try {
       const rawPayload = await buildUnsignedMultisigBtcTransfer({
         account,
         recipient: recipientAddress,
         amount,
-        feeRate: feeQuote.rate,
+        feeRate,
       });
       propose.mutate(
         { multisigAddress: account.multisigAddress, rawPayload },
@@ -449,17 +575,36 @@ function BtcProposeForm({
       available={balance.crypto}
       feeOptions={feeOptions}
       feeFiatOptions={feeFiatOptions}
+      feeEstimation={{
+        hasValidDetails: Boolean(recipientAddress && amount && !recipientError && !amountError),
+        isFetching: feesQuery.isFetching,
+        isPaused: feesQuery.isPaused,
+        error: feesQuery.error,
+        onRetry() {
+          void feesQuery.refetch();
+        },
+      }}
       feeTier={feeTier}
       onFeeTier={setFeeTier}
+      onCustomFee={() => setFeeTier('custom')}
+      feeDetails={
+        feeTier === 'custom' ? (
+          <CustomBitcoinFeeField
+            value={customFeeInput}
+            onChange={setCustomFeeInput}
+            fee={customFee}
+            fiat={customFee ? toFiat(customFee, marketData.data) : undefined}
+            error={customFeeError ?? customFeeQuery.error?.message}
+            isFetching={customFeeQuery.isFetching}
+          />
+        ) : undefined
+      }
       threshold={account.threshold}
       signerCount={account.signers.length}
       isProposing={propose.isPending}
-      canPropose={Boolean(
-        recipientAddress && amount && feeQuote && !recipientError && !amountError
-      )}
+      canPropose={canPropose}
       recipientError={recipientError}
       amountError={amountError}
-      errorMessage={feesQuery.error instanceof Error ? feesQuery.error.message : undefined}
       onClose={onClose}
       onSubmit={() => void submit()}
     />
@@ -512,13 +657,21 @@ function StxProposeForm({
   });
   const propose = useProposeTransaction(account.network);
   const marketData = useMarketDataQuery(stxAsset);
-  const [feeTier, setFeeTier] = useState<TransactionFeeTier>('standard');
-  const fee = feesQuery.data?.options[feeTier].value;
+  const [feeTier, setFeeTier] = useState<ProposalFeeSelection>('standard');
+  const [customFeeInput, setCustomFeeInput] = useState('');
+  const customFee = getCustomStacksFee(customFeeInput, feesQuery.data?.minimumFee);
+  const fee = feeTier === 'custom' ? customFee.fee : feesQuery.data?.options[feeTier].value;
+  const stxBalance = assets.items.find(item => item.asset.protocol === 'nativeStx')?.crypto;
+  const feeError =
+    (feeTier === 'custom' ? customFee.error : undefined) ??
+    getStacksProposalFeeBalanceError(fee, amount, stxBalance, Boolean(sip10Asset));
+  const highFeeThreshold = feesQuery.data?.highFeeThreshold;
+  const isHighFee = fee && highFeeThreshold && fee.amount.gt(highFeeThreshold.amount);
   const feeOptions = feeTierValues(feesQuery.data);
   const feeFiatOptions = feeTierFiatValues(feesQuery.data, marketData.data);
 
   async function submit() {
-    if (!recipientAddress || !amount || !fee || recipientError || amountError) return;
+    if (!recipientAddress || !amount || !fee || recipientError || amountError || feeError) return;
     try {
       const tx = sip10Asset
         ? await buildUnsignedMultisigSip10Transfer({
@@ -566,15 +719,50 @@ function StxProposeForm({
         available={selectedItem?.crypto}
         feeOptions={feeOptions}
         feeFiatOptions={feeFiatOptions}
+        feeEstimation={{
+          hasValidDetails: Boolean(recipientAddress && amount && !recipientError && !amountError),
+          isFetching: feesQuery.isFetching,
+          isPaused: feesQuery.isPaused,
+          error: feesQuery.error,
+          onRetry() {
+            void feesQuery.refetch();
+          },
+        }}
         feeTier={feeTier}
         onFeeTier={setFeeTier}
+        onCustomFee={() => setFeeTier('custom')}
+        feeDetails={
+          <>
+            {feeTier === 'custom' && (
+              <CustomStacksFeeField
+                value={customFeeInput}
+                onChange={setCustomFeeInput}
+                minimumFee={feesQuery.data?.minimumFee}
+                fiat={fee ? toFiat(fee, marketData.data) : undefined}
+                error={feeError}
+              />
+            )}
+            {feeTier !== 'custom' && feeError && (
+              <styled.p role="alert" textStyle="caption.01" color="red.action-primary-default">
+                {feeError}
+              </styled.p>
+            )}
+            {isHighFee && (
+              <styled.p role="alert" textStyle="caption.01" color="red.action-primary-default">
+                This fee exceeds {formatCryptoPrecise(highFeeThreshold)}. Check the amount before
+                proposing. A higher fee does not guarantee faster confirmation.
+              </styled.p>
+            )}
+          </>
+        }
         threshold={account.threshold}
         signerCount={account.signers.length}
         isProposing={propose.isPending}
-        canPropose={Boolean(recipientAddress && amount && fee && !recipientError && !amountError)}
+        canPropose={Boolean(
+          recipientAddress && amount && fee && !recipientError && !amountError && !feeError
+        )}
         recipientError={recipientError}
         amountError={amountError}
-        errorMessage={feesQuery.error instanceof Error ? feesQuery.error.message : undefined}
         onClose={onClose}
         onSubmit={() => void submit()}
       />

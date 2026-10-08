@@ -133,7 +133,8 @@ export interface Events extends HistoricalEvents {
   receive_share_button_pressed: { asset: string };
   token_portfolio_summary: TokenPortfolioSummary;
   collectibles_summary: CollectiblesSummary;
-  token_details_viewed: TokenCollectibleDetailsViewed;
+  token_details_viewed: TokenDetailsViewed;
+  token_details_tab_selected: TokenDetailsTabSelected;
   collectible_details_viewed: TokenCollectibleDetailsViewed;
   app_icon_picker_sheet_opened: undefined;
   app_icon_picker_sheet_dismissed: undefined;
@@ -182,6 +183,8 @@ interface HistoricalEvents {
   user_approved_send_transfer: { origin: string };
   user_approved_sign_and_broadcast_psbt: { origin: string };
   user_clicked_feedback_button: undefined;
+  update_available_callout_update_now: undefined;
+  update_available_callout_later: undefined;
   unable_to_read_fee_in_stx_validator: undefined;
   unable_to_read_available_balance_in_stx_validator: undefined;
   view_bitcoin_transaction: undefined;
@@ -290,11 +293,23 @@ interface CollectiblesSummary {
   byProtocol: Partial<Record<CryptoAssetProtocol, CollectibleProtocolBreakdown>>;
 }
 
+type TokenDetailsTab = 'activity' | 'balances' | 'info';
+
 interface TokenCollectibleDetailsViewed {
   assetId: string;
   protocol: CryptoAssetProtocol;
   platform: 'mobile' | 'extension';
   walletAccountId: string;
+}
+
+interface TokenDetailsViewed extends TokenCollectibleDetailsViewed {
+  tab?: TokenDetailsTab;
+}
+
+interface TokenDetailsTabSelected {
+  assetId: string;
+  protocol: CryptoAssetProtocol;
+  tab: TokenDetailsTab;
 }
 
 interface CollectibleProtocolBreakdown {

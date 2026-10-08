@@ -5,10 +5,16 @@ import {
   isSingleSig,
   makeUnsignedSTXTokenTransfer,
 } from '@stacks/transactions';
-import StacksApp, { LedgerError } from '@zondax/ledger-stacks';
+import { LedgerError } from '@zondax/ledger-stacks';
 
 import {
+  isLedgerDeviceDisconnectedError,
+  isLedgerDeviceLockedError,
+} from '../dmk/ledger-dmk-errors';
+import { makeFakeLedgerStacksApp } from './ledger-app.mocks';
+import {
   MINIMUM_STACKS_APP_VERSION,
+  getStacksAppVersion,
   isStxAddressResponseRejected,
   isStxAddressResponseSuccess,
   showStxAddressOnDevice,
@@ -82,6 +88,52 @@ function makeAddressResponse(returnCode: number) {
   };
 }
 
+describe(getStacksAppVersion.name, () => {
+  function makeVersionResponse(returnCode: number, errorMessage: string) {
+    return {
+      returnCode,
+      errorMessage,
+      testMode: false,
+      major: 0,
+      minor: 26,
+      patch: 19,
+      deviceLocked: false,
+      targetId: '',
+    };
+  }
+
+  test('returns the version tagged with the app name and chain', async () => {
+    const app = makeFakeLedgerStacksApp({
+      getVersion: vi.fn().mockResolvedValue(makeVersionResponse(LedgerError.NoErrors, 'No errors')),
+    });
+
+    await expect(getStacksAppVersion(app)).resolves.toMatchObject({
+      name: 'Stacks',
+      chain: 'stacks',
+      major: 0,
+      minor: 26,
+      patch: 19,
+    });
+  });
+
+  test('keeps the disconnect cause when the transport fails during the version check', async () => {
+    const response = Object.assign(makeVersionResponse(0xffff, 'Unknown transport error'), {
+      cause: { _tag: 'DeviceDisconnectedWhileSendingError' },
+    });
+    const app = makeFakeLedgerStacksApp({ getVersion: vi.fn().mockResolvedValue(response) });
+
+    await expect(getStacksAppVersion(app)).rejects.toSatisfy(isLedgerDeviceDisconnectedError);
+  });
+
+  test('keeps the status code when the device is locked during the version check', async () => {
+    const app = makeFakeLedgerStacksApp({
+      getVersion: vi.fn().mockResolvedValue(makeVersionResponse(0x5515, 'Unknown Status Code')),
+    });
+
+    await expect(getStacksAppVersion(app)).rejects.toSatisfy(isLedgerDeviceLockedError);
+  });
+});
+
 describe(stacksChainIdToSingleSigAddressVersion.name, () => {
   test('maps the mainnet chain id to the mainnet single sig version', () => {
     expect(stacksChainIdToSingleSigAddressVersion(ChainId.Mainnet)).toBe(
@@ -126,28 +178,28 @@ describe(isStxAddressResponseSuccess.name, () => {
 
 describe(showStxAddressOnDevice.name, () => {
   test('shows the account derivation path with the given address version', async () => {
-    const app: StacksApp = Object.create(StacksApp.prototype);
-    app.showAddressAndPubKey = vi.fn(() =>
+    const showAddressAndPubKey = vi.fn(() =>
       Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
     );
+    const app = makeFakeLedgerStacksApp({ showAddressAndPubKey });
 
     await showStxAddressOnDevice(app)("m/44'/5757'/0'/0/3", AddressVersion.MainnetSingleSig);
 
-    expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
+    expect(showAddressAndPubKey).toHaveBeenCalledWith(
       "m/44'/5757'/0'/0/3",
       AddressVersion.MainnetSingleSig
     );
   });
 
   test('shows a ledger live derivation path unchanged', async () => {
-    const app: StacksApp = Object.create(StacksApp.prototype);
-    app.showAddressAndPubKey = vi.fn(() =>
+    const showAddressAndPubKey = vi.fn(() =>
       Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
     );
+    const app = makeFakeLedgerStacksApp({ showAddressAndPubKey });
 
     await showStxAddressOnDevice(app)("m/44'/5757'/3'/0/0", AddressVersion.MainnetSingleSig);
 
-    expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
+    expect(showAddressAndPubKey).toHaveBeenCalledWith(
       "m/44'/5757'/3'/0/0",
       AddressVersion.MainnetSingleSig
     );

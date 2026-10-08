@@ -15,3 +15,10 @@ export function ensureAsyncFunctionMinimumDuration<Args extends unknown[], Resul
     return resultPromise;
   };
 }
+
+export function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`Timed out after ${ms}ms`)), ms);
+    void promise.then(resolve, reject).finally(() => clearTimeout(timer));
+  });
+}

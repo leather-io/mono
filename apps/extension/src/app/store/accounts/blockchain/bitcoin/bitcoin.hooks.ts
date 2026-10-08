@@ -1,7 +1,3 @@
-import { useLocation } from 'react-router';
-
-import AppClient from '@ledgerhq/ledger-bitcoin';
-import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
 
@@ -10,8 +6,6 @@ import {
   getBitcoinJsLibNetworkConfigByMode,
   getInputPaymentType,
   getTaprootAddress,
-  makeNativeSegwitAccountDerivationPath,
-  makeTaprootAccountDerivationPath,
 } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { type AccountId, bitcoinNetworkToNetworkMode } from '@leather.io/models';
@@ -25,14 +19,19 @@ import {
 import { analytics } from '@shared/utils/analytics';
 
 import { useWalletType } from '@app/common/use-wallet-type';
-import { listenForBitcoinTxLedgerSigning } from '@app/features/ledger/flows/bitcoin-tx-signing/bitcoin-tx-signing-event-listeners';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
+import { unwrapLedgerSigningOutcome } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
 import {
   addNativeSegwitSignaturesToPsbt,
   addTaprootInputSignaturesToPsbt,
-  createNativeSegwitDefaultWalletPolicy,
-  createTaprootDefaultWalletPolicy,
+  makeNativeSegwitDefaultWallet,
+  makeTaprootDefaultWallet,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
+import {
+  getMasterFingerprintHex,
+  signPsbtWithWallet,
+} from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
+import type { LedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app';
 import {
   useCurrentAccountTaprootPayer,
   useTaprootAccount,
@@ -142,11 +141,11 @@ export function useSignLedgerBitcoinTx() {
   const bitcoinNetworkMode = network.chain.bitcoin.mode;
 
   return async (
-    app: AppClient,
+    app: LedgerBitcoinApp,
     rawPsbt: Uint8Array,
     signingConfig: BitcoinInputSigningConfig[]
   ) => {
-    const fingerprint = await app.getMasterFingerprint();
+    const fingerprint = await getMasterFingerprintHex(app);
 
     // BtcSigner not compatible with Ledger. Encoded format returns more terse
     // version. BitcoinJsLib works.
@@ -173,18 +172,11 @@ export function useSignLedgerBitcoinTx() {
     if (taprootInputsToSign.length) {
       updateTaprootLedgerInputs(psbt, fingerprint, taprootInputsToSign);
 
-      const taprootExtendedPublicKey = await app.getExtendedPubkey(
-        makeTaprootAccountDerivationPath(bitcoinNetworkMode, account.accountIndex)
+      const taprootSignatures = await signPsbtWithWallet(
+        app,
+        makeTaprootDefaultWallet(bitcoinNetworkMode, account.accountIndex),
+        psbt.toBase64()
       );
-
-      const taprootPolicy = createTaprootDefaultWalletPolicy({
-        fingerprint,
-        accountIndex: account.accountIndex,
-        network: bitcoinNetworkMode,
-        xpub: taprootExtendedPublicKey,
-      });
-
-      const taprootSignatures = await app.signPsbt(psbt.toBase64(), taprootPolicy, null);
 
       addTaprootInputSignaturesToPsbt(psbt, taprootSignatures);
     }
@@ -196,10 +188,6 @@ export function useSignLedgerBitcoinTx() {
       .map(([index]) => index);
 
     if (nativeSegwitInputsToSign.length) {
-      const nativeSegwitExtendedPublicKey = await app.getExtendedPubkey(
-        makeNativeSegwitAccountDerivationPath(bitcoinNetworkMode, account.accountIndex)
-      );
-
       // Without adding the full non-witness data, the Ledger will present a
       // warning. In some cases, e.g. bip322, the original witness data doesn't
       // exist, and we want the user to proceed, despite the warning.
@@ -212,14 +200,11 @@ export function useSignLedgerBitcoinTx() {
 
       addNativeSegwitBip32Derivation(psbt, fingerprint, nativeSegwitInputsToSign);
 
-      const nativeSegwitPolicy = createNativeSegwitDefaultWalletPolicy({
-        fingerprint,
-        accountIndex: account.accountIndex,
-        network: bitcoinNetworkMode,
-        xpub: nativeSegwitExtendedPublicKey,
-      });
-
-      const nativeSegwitSignatures = await app.signPsbt(psbt.toBase64(), nativeSegwitPolicy, null);
+      const nativeSegwitSignatures = await signPsbtWithWallet(
+        app,
+        makeNativeSegwitDefaultWallet(bitcoinNetworkMode, account.accountIndex),
+        psbt.toBase64()
+      );
 
       addNativeSegwitSignaturesToPsbt(psbt, nativeSegwitSignatures);
     }
@@ -278,10 +263,12 @@ export function useGetAssumedZeroIndexSigningConfig() {
     }).forAccountIndex(account.accountIndex);
 }
 
-export function useSignBitcoinTx() {
+interface UseSignBitcoinTxOptions {
+  settleOnRejection?: boolean;
+}
+export function useSignBitcoinTx({ settleOnRejection = false }: UseSignBitcoinTxOptions = {}) {
   const { whenWallet } = useWalletType();
-  const ledgerNavigate = useLedgerNavigate();
-  const location = useLocation();
+  const ledgerFlow = useLedgerFlow();
   const signSoftwareTx = useSignBitcoinSoftwareTx();
   const getDefaultSigningConfig = useGetAssumedZeroIndexSigningConfig();
 
@@ -306,12 +293,13 @@ export function useSignBitcoinTx() {
         // many routes, in order to achieve a consistent API between
         // Ledger/software, we subscribe to the event that occurs when the
         // unsigned tx is signed
-        void ledgerNavigate.toConnectAndSignBitcoinTransactionStep(
+        const outcome = await ledgerFlow.sign({
+          kind: 'sign-bitcoin-tx',
           psbt,
-          getSigningConfig(inputsToSign),
-          location
-        );
-        return listenForBitcoinTxLedgerSigning(bytesToHex(psbt));
+          inputsToSign: getSigningConfig(inputsToSign),
+          settleOnRejection,
+        });
+        return unwrapLedgerSigningOutcome(outcome);
       },
       software() {
         return signSoftwareTx(psbt, getSigningConfig(inputsToSign), allowedSighash);

@@ -29,7 +29,7 @@ function ErroBoundaryBody() {
       textStyle="label.02"
     >
       Leather has crashed. If this problem persists, contact our{' '}
-      <Link href="https://app.leather.io/support" target="_blank" textDecoration="underline">
+      <Link href="https://app.leather.io/support" target="_blank">
         <styled.span
           data-testid={SharedComponentsSelectors.BroadcastErrorTitle}
           textStyle="label.02"

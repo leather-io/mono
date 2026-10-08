@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: build-web-app-dependencies
         run: pnpm turbo run build --filter=@leather.io/web^...
@@ -53,12 +53,12 @@ jobs:
         env:
           LEATHER_FRONT_WEB_APP_API_TOKEN: ${{ secrets.FRONT_WEB_APP_API_TOKEN }}
           LEATHER_TARGET: staging
-          PRIVATE_NETWORK_FLAVOR: regtest
+          PRIVATE_NETWORK_FLAVOR: testnet
           PRIVATE_NETWORK_NAME: BTC Staking Testnet
-          PRIVATE_NETWORK_KEY: private-1
-          BITCOIN_API_URL: https://mempool.bitcoin.private-1.hiro.so/api
-          STACKS_API_URL: https://api.private-1.hiro.so
-          STACKS_CHAIN_ID: '256'
+          PRIVATE_NETWORK_KEY: stakingTestnet
+          BITCOIN_API_URL: https://mempool.bitcoin.staking-testnet.hiro.so/api
+          STACKS_API_URL: https://api.staking-testnet.hiro.so
+          STACKS_CHAIN_ID: '1280'
         run: pnpm run build
 
       - name: upload-staging-version

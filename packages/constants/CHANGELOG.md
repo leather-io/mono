@@ -215,6 +215,28 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.40.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.39.4...@leather.io/constants-v0.40.0) (2026-09-29)
+
+
+### Features
+
+* **extension:** new swaps flow with sBTC bridging ([#2554](https://github.com/leather-io/mono/issues/2554)) ([65c8518](https://github.com/leather-io/mono/commit/65c85186c847b2e99fd062d00997c81932268bc5))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.63.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
 ## [0.39.4](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.39.3...@leather.io/constants-v0.39.4) (2026-09-14)
 
 

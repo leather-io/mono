@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.4](https://github.com/leather-io/mono/compare/@leather.io/test-config-v0.1.3...@leather.io/test-config-v0.1.4) (2026-09-29)
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
 ## [0.1.3](https://github.com/leather-io/mono/compare/@leather.io/test-config-v0.1.2...@leather.io/test-config-v0.1.3) (2026-01-23)
 
 

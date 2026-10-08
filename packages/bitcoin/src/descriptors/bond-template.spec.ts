@@ -1,4 +1,4 @@
-import { checksum } from '@bitcoinerlab/descriptors';
+import { checksum } from '@bitcoinerlab/descriptors-core';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';

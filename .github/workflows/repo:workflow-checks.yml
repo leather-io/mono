@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - '.github/workflows/**'
+      - '.github/scripts/**'
   push:
     branches:
       - main
       - dev
     paths:
       - '.github/workflows/**'
+      - '.github/scripts/**'
 
 # GITHUB_TOKEN only needs to read the repository for checkout.
 permissions:
@@ -79,7 +81,24 @@ jobs:
         env:
           ACTIONLINT: ${{ steps.get_actionlint.outputs.executable }}
         run: |
-          "$ACTIONLINT" -color
+          # actionlint does not yet understand GitHub's `$/` self-repository `uses:` syntax.
+          # Drop the -ignore flag once https://github.com/rhysd/actionlint/pull/732 is merged and released.
+          "$ACTIONLINT" -color -ignore 'specifying action "\$/[^"]*" in invalid format because ref is missing'
+
+  test-scripts:
+    name: test-scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: test-workflow-scripts
+        run: node --test '.github/scripts/*.spec.mjs'
 
   audit-workflow-security:
     name: audit-workflow-security
@@ -92,7 +111,7 @@ jobs:
         with:
           persist-credentials: false
       - name: zizmor-audit
-        uses: zizmorcore/zizmor-action@6fc4b006235f201fdab3722e17240ab420d580e5 # v0.6.1
+        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
         with:
           persona: auditor
           min-severity: informational

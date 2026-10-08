@@ -18,4 +18,11 @@ export enum TokenDetailsSelectors {
   TokenDetailsLayer = 'token-details-layer',
   TokenDetailsBalancesSection = 'token-details-balances',
   TokenDetailsActivitySection = 'token-details-activity',
+  TokenDetailsLockedRow = 'token-details-locked-row',
+  TokenDetailsBalanceAvailable = 'token-details-balance-available',
+  TokenDetailsActivityEmpty = 'token-details-activity-empty',
+  TokenDetailsActivityLoading = 'token-details-activity-loading',
+  TokenDetailsTabActivity = 'token-details-tab-activity',
+  TokenDetailsTabBalances = 'token-details-tab-balances',
+  TokenDetailsTabInfo = 'token-details-tab-info',
 }

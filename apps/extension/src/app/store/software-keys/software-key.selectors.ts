@@ -58,3 +58,7 @@ export function useActiveSoftwareKey() {
 const selectors = keyAdapter.getSelectors<RootState>(selectKeysSlice);
 
 export const selectSoftwareKeys = selectors.selectAll;
+
+export function useHasSoftwareWallets() {
+  return useSelector(selectSoftwareKeys).length > 0;
+}

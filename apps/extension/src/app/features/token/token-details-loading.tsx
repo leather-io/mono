@@ -1,7 +1,9 @@
 import { Box, Circle, Flex, Stack } from 'leather-styles/jsx';
 
+import { historicalPeriods } from '@leather.io/models';
 import { SkeletonLoader } from '@leather.io/ui';
 
+import { TokenActivityLoading } from './components/token-activity-loading';
 import { TokenDetailsHeader } from './components/token-details-header';
 import { TokenDetailsSection } from './components/token-details-section';
 
@@ -43,6 +45,22 @@ function LoadingOverview() {
   );
 }
 
+function LoadingPrice() {
+  return (
+    <Stack gap="space.03" px="space.05" pb="space.02">
+      <Stack gap="space.01">
+        <SkeletonLoader isLoading height="24px" width="120px" />
+        <SkeletonLoader isLoading height="20px" width="140px" />
+      </Stack>
+      <Flex gap="space.01">
+        {Array.from({ length: historicalPeriods.length }).map((_, i) => (
+          <SkeletonLoader key={i} isLoading height="24px" flex="1" />
+        ))}
+      </Flex>
+    </Stack>
+  );
+}
+
 function LoadingDescription() {
   return (
     <Box px="space.05" pb="space.03">
@@ -55,33 +73,6 @@ function LoadingDescription() {
   );
 }
 
-function LoadingActivity() {
-  return (
-    <Stack>
-      {Array.from({ length: 3 }).map((_, i) => (
-        <Flex
-          key={i}
-          px="space.05"
-          py="space.03"
-          bg="ink.background-primary"
-          gap="space.03"
-          alignItems="center"
-        >
-          <Circle bgColor="ink.component-background-default" size="36px" />
-          <Stack gap="space.01" flex="1">
-            <SkeletonLoader isLoading height="16px" width="120px" />
-            <SkeletonLoader isLoading height="12px" width="80px" />
-          </Stack>
-          <Stack gap="space.01" alignItems="flex-end">
-            <SkeletonLoader isLoading height="16px" width="80px" />
-            <SkeletonLoader isLoading height="12px" width="60px" />
-          </Stack>
-        </Flex>
-      ))}
-    </Stack>
-  );
-}
-
 export function TokenDetailsLoading({ title = 'Loading...' }: { title?: string }) {
   return (
     <Stack width="100%" gap="space.00" data-testid="token-details-loading">
@@ -89,6 +80,10 @@ export function TokenDetailsLoading({ title = 'Loading...' }: { title?: string }
       <Box width="100%" maxWidth={['100%', null, '780px']} margin="0 auto">
         <Stack bg="ink.background-secondary" borderRadius={['0', null, 'md']} overflow="hidden">
           <LoadingOverview />
+
+          <TokenDetailsSection title="Price">
+            <LoadingPrice />
+          </TokenDetailsSection>
 
           <TokenDetailsSection title="Description">
             <LoadingDescription />
@@ -98,11 +93,10 @@ export function TokenDetailsLoading({ title = 'Loading...' }: { title?: string }
             <LoadingRow />
             <LoadingRow />
             <LoadingRow />
-            <LoadingRow />
           </TokenDetailsSection>
 
           <TokenDetailsSection title="Activity">
-            <LoadingActivity />
+            <TokenActivityLoading />
           </TokenDetailsSection>
         </Stack>
       </Box>
