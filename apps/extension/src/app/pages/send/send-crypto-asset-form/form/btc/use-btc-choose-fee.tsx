@@ -15,13 +15,13 @@ import { formFeeRowValue } from '@app/common/send/utils';
 import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
 import { isLedgerSigningCancelledError } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
-import { useLedgerBitcoinInputLimit } from '@app/features/ledger/hooks/use-ledger-bitcoin-input-limit';
 import {
   type LedgerBitcoinInputLimit,
   emptyLedgerBitcoinInputLimit,
 } from '@app/features/ledger/utils/ledger-bitcoin-input-limit';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { createPolicyAddresses } from '@app/store/policy/policy-addresses';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
@@ -39,7 +39,7 @@ export function useBtcChooseFee() {
   const policy = useCurrentPolicy();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
   const network = useCurrentNetwork();
-  const { isLedger } = useLedgerBitcoinInputLimit();
+  const isLedger = useActiveWalletType() === 'ledger';
   const [ledgerInputLimit, setLedgerInputLimit] = useState<LedgerBitcoinInputLimit>(
     emptyLedgerBitcoinInputLimit
   );

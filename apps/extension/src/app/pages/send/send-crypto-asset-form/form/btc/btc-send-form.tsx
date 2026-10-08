@@ -6,12 +6,10 @@ import { Box } from 'leather-styles/jsx';
 
 import type { CryptoCurrency } from '@leather.io/models';
 import { BtcAvatarIcon, Button, Callout, Link } from '@leather.io/ui';
-import { btcToSat, createMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { AvailableBalance, ButtonRow, Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { LedgerInputLimitWarningLabel } from '@app/features/ledger/components/ledger-input-limit-warning-label';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
@@ -36,7 +34,6 @@ export function BtcSendForm() {
     chooseTransactionFee,
     currentNetwork,
     formRef,
-    getLedgerBitcoinInputLimit,
     isSendingMax,
     onFormStateChange,
     onSetIsSendingMax,
@@ -63,17 +60,6 @@ export function BtcSendForm() {
             {props => {
               onFormStateChange(props.values);
 
-              const ledgerInputLimit = getLedgerBitcoinInputLimit({
-                utxos: utxos.available,
-                recipients: [
-                  {
-                    address: props.values.recipient,
-                    amount: createMoney(btcToSat(Number(props.values.amount) || 0), 'BTC'),
-                  },
-                ],
-                isSendingMax,
-              });
-
               return (
                 <Form>
                   <Card
@@ -83,7 +69,6 @@ export function BtcSendForm() {
                         <Button
                           aria-busy={props.isValidating}
                           data-testid={SendCryptoAssetSelectors.PreviewSendTxBtn}
-                          disabled={ledgerInputLimit.exceedsLimit}
                           type="submit"
                         >
                           Continue
@@ -128,13 +113,6 @@ export function BtcSendForm() {
                           Get testnet BTC here ↗
                         </Link>
                       </Callout>
-                    )}
-                    {ledgerInputLimit.exceedsLimit && ledgerInputLimit.inputCount !== null && (
-                      <LedgerInputLimitWarningLabel
-                        inputCount={ledgerInputLimit.inputCount}
-                        maxAmount={ledgerInputLimit.maxAmountWithinLimit ?? undefined}
-                        mt="space.04"
-                      />
                     )}
                   </Card>
                   <Outlet />

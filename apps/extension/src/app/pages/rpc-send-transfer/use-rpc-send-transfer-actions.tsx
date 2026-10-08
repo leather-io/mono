@@ -11,7 +11,7 @@ import {
   getPsbtAsTransaction,
 } from '@leather.io/bitcoin';
 import { createRpcSuccessResponse } from '@leather.io/rpc';
-import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
+import { buildUnsignedMultisigBtcTransfer, getInputSizing } from '@leather.io/services';
 import { delay } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
@@ -23,14 +23,18 @@ import { analytics } from '@shared/utils/analytics';
 import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { getTransactionActions } from '@app/components/rpc-transaction-request/get-transaction-actions';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
-import { useLedgerBitcoinInputLimit } from '@app/features/ledger/hooks/use-ledger-bitcoin-input-limit';
-import { emptyLedgerBitcoinInputLimit } from '@app/features/ledger/utils/ledger-bitcoin-input-limit';
+import {
+  emptyLedgerBitcoinInputLimit,
+  getLedgerBitcoinInputLimit,
+} from '@app/features/ledger/utils/ledger-bitcoin-input-limit';
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
 import { useProposeMultisigTransaction } from '@app/features/multisig/use-propose-multisig-transaction';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCheckTaprootUtxos } from '@app/query/bitcoin/transaction/use-check-taproot-utxos';
+import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { createPolicyAddresses } from '@app/store/policy/policy-addresses';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
@@ -71,14 +75,20 @@ export function useRpcSendTransferActions() {
   const network = useCurrentNetwork();
   const { proposeMultisigTransaction } = useProposeMultisigTransaction();
   const isBitcoinPolicy = policy?.chain === 'bitcoin';
-  const { getLedgerBitcoinInputLimit } = useLedgerBitcoinInputLimit();
+  const isLedger = useActiveWalletType() === 'ledger';
+  const account = useCurrentAccountAddresses();
 
   const ledgerInputLimit = useMemo(
     () =>
-      isBitcoinPolicy
-        ? emptyLedgerBitcoinInputLimit
-        : getLedgerBitcoinInputLimit({ utxos, recipients, feeRate: selectedFee?.feeRate }),
-    [getLedgerBitcoinInputLimit, isBitcoinPolicy, utxos, recipients, selectedFee?.feeRate]
+      isLedger && !isBitcoinPolicy
+        ? getLedgerBitcoinInputLimit({
+            utxos,
+            recipients,
+            feeRate: selectedFee?.feeRate,
+            inputSizing: getInputSizing(account),
+          })
+        : emptyLedgerBitcoinInputLimit,
+    [isLedger, isBitcoinPolicy, utxos, recipients, selectedFee?.feeRate, account]
   );
 
   const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
