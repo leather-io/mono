@@ -148,6 +148,15 @@ describe('signPsbtHandler', () => {
     expect(mocks.triggerRequestPopupWindowOpen).not.toHaveBeenCalled();
   });
 
+  test('leaves a descriptor that does not compile to the popup to report', async () => {
+    const malformedDescriptor = 'wsh(and_v(v:after(1000),multi(1,unimportant)))';
+
+    await invokeHandler(makeRequest({ hex: makePsbtHex(), descriptor: malformedDescriptor }));
+
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+    expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalled();
+  });
+
   test('opens the popup without a descriptor when the connection is not policy bound', async () => {
     await invokeHandler(makeRequest({ hex: makePsbtHex() }));
 

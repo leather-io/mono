@@ -1,7 +1,7 @@
 import * as btc from '@scure/btc-signer';
 import { hexToBytes } from '@stacks/common';
 
-import { isSignableWshDescriptor, isWshDescriptor } from '@leather.io/bitcoin';
+import { compilesToP2wpkhScriptCode, isWshDescriptor } from '@leather.io/bitcoin';
 import { RpcErrorCode, createRpcErrorResponse, signPsbt } from '@leather.io/rpc';
 import { ensureArray, isDefined, isUndefined } from '@leather.io/utils';
 
@@ -42,7 +42,7 @@ function getRpcSignPsbtParamErrors(obj: unknown) {
 
 function getDescriptorError(descriptor: string) {
   if (!isWshDescriptor(descriptor)) return 'Only wsh() descriptors are supported';
-  if (!isSignableWshDescriptor(descriptor)) return 'Descriptor is not supported for signing';
+  if (compilesToP2wpkhScriptCode(descriptor)) return 'Descriptor is not supported for signing';
   return undefined;
 }
 
