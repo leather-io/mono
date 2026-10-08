@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { Formik } from 'formik';
 import { Flex, Stack } from 'leather-styles/jsx';
@@ -94,7 +94,6 @@ export function IncreaseBtcFeeSheet() {
                 </Suspense>
               </Stack>
             </Sheet>
-            <Outlet />
           </>
         )}
       </Formik>

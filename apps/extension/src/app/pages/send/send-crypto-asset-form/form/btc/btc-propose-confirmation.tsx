@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router';
+import { Navigate } from 'react-router';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -87,7 +87,6 @@ export function BtcProposeConfirmation() {
       <PageHeader title="Review" />
       <Content>
         <Page>
-          <Outlet />
           <Card
             contentStyle={{
               p: 'space.00',
