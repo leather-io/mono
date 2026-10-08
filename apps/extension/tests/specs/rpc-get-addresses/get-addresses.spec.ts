@@ -170,7 +170,7 @@ getAddressesMethods.forEach(method => {
             const result = await getAddressesPromise;
             test
               .expect(result.result.addresses[0].address)
-              .toEqual('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d');
+              .toEqual('bcrt1q4qgnjewwun2llgken94zqjrx5kpqqycaqad8ay');
           });
 
           test('it returns the second accounts data after changing account', async ({

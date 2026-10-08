@@ -24,10 +24,9 @@ function defaultNetworkIdToBitcoinNetworkMode(networkId: string): BitcoinNetwork
   switch (networkId) {
     case 'mainnet':
       return 'mainnet';
-    case 'testnet':
     case 'testnet4':
       return 'testnet';
-    case 'sbtcTestnet':
+    case 'testnet':
     case 'sbtcDevenv':
     case 'devnet':
       return 'regtest';

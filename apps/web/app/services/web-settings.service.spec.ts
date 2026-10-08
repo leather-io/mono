@@ -26,7 +26,7 @@ afterEach(() => {
 describe('WebSettingsService', () => {
   test('returns the default network config when no custom network is active', () => {
     store.set(networkNameAtom, 'testnet');
-    expect(service.getSettings().network).toBe(defaultNetworksKeyedById.testnet);
+    expect(service.getSettings().network).toBe(defaultNetworksKeyedById.testnet4);
   });
 
   test('overrides the testnet slot with the custom network when active', () => {

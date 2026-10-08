@@ -215,7 +215,7 @@ describe('sbtcStacksAddressMap', () => {
   });
 
   it('should have testnet address', () => {
-    expect(sbtcStacksAddressMap.testnet).toBe('SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70');
+    expect(sbtcStacksAddressMap.testnet).toBe('SN3VMHXEN64ZZF71JQ5VESXDWTR301XTTXGF4J8F1');
   });
 });
 
