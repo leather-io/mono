@@ -1,3 +1,5 @@
+import { Loading } from '@/components/loading/loading';
+import { TokenCell } from '@/features/token/components/token-cell';
 import { useSip10FtMetadata } from '@/queries/assets/sip10-asset.query';
 import {
   FungiblePostConditionWire,
@@ -5,7 +7,14 @@ import {
   addressToString,
 } from '@stacks/transactions';
 
-import { Approver, Box, CircledFunctionIcon } from '@leather.io/ui/native';
+import {
+  Approver,
+  Box,
+  Cell,
+  CircledFunctionIcon,
+  Sip10AvatarIcon,
+  Text,
+} from '@leather.io/ui/native';
 
 import { AssetOutcomeBalance } from '../asset-outcome';
 import { formatPostConditionMessage } from './post-conditions.utils';
@@ -28,14 +37,31 @@ export function FTPostCondition({ stacksAddress, postCondition }: FTPostConditio
     isContractPrincipal,
     postCondition,
   });
-  if (!asset.data) return null;
 
   return (
     <Box>
       <Approver.Subheader icon={<CircledFunctionIcon variant="small" />}>
         {title}
       </Approver.Subheader>
-      <AssetOutcomeBalance asset={asset.data} amount={Number(postCondition.amount)} />
+      {asset.isLoading && <Loading />}
+      {asset.data && <AssetOutcomeBalance asset={asset.data} amount={postCondition.amount} />}
+      {!asset.isLoading && !asset.data && (
+        <TokenCell
+          mx="-5"
+          icon={
+            <Sip10AvatarIcon contractId={contractId} imageCanonicalUri="" name={contractName} />
+          }
+          tokenName={contractName}
+          ticker={contractId}
+          asideComponent={
+            <Cell.Aside>
+              <Cell.Label variant="primary">
+                <Text variant="label02">{postCondition.amount.toString()}</Text>
+              </Cell.Label>
+            </Cell.Aside>
+          }
+        />
+      )}
     </Box>
   );
 }
