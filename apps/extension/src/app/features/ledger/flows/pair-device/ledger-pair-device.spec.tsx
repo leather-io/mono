@@ -1,16 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { pairLedgerDeviceRoute } from './ledger-pair-device';
+import { LedgerPairDevice } from './ledger-pair-device';
 
 const sessionId = 'session-1';
 
 const mocks = vi.hoisted(() => ({
   connectLedgerDeviceToApp: vi.fn(),
   closeLedgerSession: vi.fn(),
-  navigate: vi.fn(),
-  redirect: vi.fn(),
-  backgroundLocation: { pathname: '/' } as { pathname: string } | undefined,
+  onClose: vi.fn(),
 }));
 
 vi.mock('leather-styles/jsx', () => ({
@@ -46,24 +44,7 @@ vi.mock('../../components/ledger-title', () => ({
   },
 }));
 
-vi.mock('react-router', async importOriginal => {
-  const actual = await importOriginal<typeof import('react-router')>();
-  return {
-    ...actual,
-    useNavigate: () => mocks.navigate,
-    Navigate(props: { to: string; state: unknown }) {
-      mocks.redirect(props.to, props.state);
-      return null;
-    },
-  };
-});
-
-vi.mock('@app/routes/hooks/use-background-location', () => ({
-  useBackgroundLocation: () => mocks.backgroundLocation,
-}));
-
 vi.mock('../../dmk/ledger-dmk.context', () => ({
-  LedgerDmkProvider: ({ children }: { children: React.ReactNode }) => children,
   useLedgerDmk: () => ({}),
 }));
 
@@ -76,25 +57,13 @@ vi.mock('../../dmk/ledger-session', () => ({
 }));
 
 function clickConnect() {
-  render(pairLedgerDeviceRoute.props.element);
+  render(<LedgerPairDevice onClose={mocks.onClose} />);
   fireEvent.click(screen.getByRole('button', { name: 'Connect Ledger' }));
 }
 
-describe('LedgerPairDevice', () => {
+describe(LedgerPairDevice.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.backgroundLocation = { pathname: '/' };
-  });
-
-  test('reloads itself over the home page when opened directly in a new tab', () => {
-    mocks.backgroundLocation = undefined;
-
-    render(pairLedgerDeviceRoute.props.element);
-
-    expect(mocks.redirect).toHaveBeenCalledWith('/pair-ledger', {
-      backgroundLocation: { pathname: '/' },
-    });
-    expect(screen.queryByRole('button', { name: 'Connect Ledger' })).toBeNull();
   });
 
   test('releases the device and tells the user to restart their request once connected', async () => {
@@ -106,6 +75,10 @@ describe('LedgerPairDevice', () => {
     expect(mocks.connectLedgerDeviceToApp).toHaveBeenCalledWith(expect.anything(), null);
     expect(mocks.closeLedgerSession).toHaveBeenCalledWith(expect.anything(), sessionId);
     expect(screen.queryByRole('button', { name: 'Connect Ledger' })).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+
+    expect(mocks.onClose).toHaveBeenCalledOnce();
   });
 
   test('offers another attempt when the device does not connect', async () => {
