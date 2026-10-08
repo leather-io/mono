@@ -197,10 +197,8 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
   };
 }
 
-const p2wpkhScriptCodePattern = /^76a914[0-9a-f]{40}88ac$/;
-
 function isP2wpkhScriptCode(witnessScript: Uint8Array) {
-  return p2wpkhScriptCodePattern.test(bytesToHex(witnessScript));
+  return btc.OutScript.decode(witnessScript).type === 'pkh';
 }
 
 export function isSignableWshDescriptor(descriptor: string) {
