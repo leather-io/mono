@@ -971,6 +971,9 @@ importers:
       '@leather.io/bitcoin':
         specifier: workspace:*
         version: link:../../packages/bitcoin
+      '@leather.io/crypto':
+        specifier: workspace:*
+        version: link:../../packages/crypto
       '@noble/curves':
         specifier: 1.9.2
         version: 1.9.2

@@ -14,6 +14,7 @@ import * as btc from '@scure/btc-signer';
 import { sortedMultiDescriptor } from '../builders/descriptors';
 import { buildSelfSpendPsbtHex, descriptorScript } from '../builders/psbt';
 import { MULTISIG_THRESHOLD } from '../constants';
+import { readString } from '../guards';
 import { type Scenario, type ScenarioState, networkOf } from '../types';
 import { fetchAccountKeys } from '../wallet';
 
@@ -105,10 +106,7 @@ export const multisigRoundTrip: Scenario = {
           name: 'RPC test 2-of-2',
           network: networkOf(ctx),
         });
-        const address =
-          result && typeof result === 'object'
-            ? (result as { address?: string }).address
-            : undefined;
+        const address = readString(result, 'address');
         return { summary: `registered at ${address ?? 'unknown address'}` };
       },
     },
@@ -122,8 +120,9 @@ export const multisigRoundTrip: Scenario = {
           hex: psbtHex,
           descriptor,
           broadcast: false,
+          network: networkOf(ctx),
         });
-        const signed = (result as { hex?: string }).hex;
+        const signed = readString(result, 'hex');
         if (!signed) throw new Error('signPsbt returned no hex');
         return {
           summary: 'first signature collected',
@@ -142,8 +141,9 @@ export const multisigRoundTrip: Scenario = {
           hex: psbtHex,
           descriptor,
           broadcast: false,
+          network: networkOf(ctx),
         });
-        const signed = (result as { hex?: string }).hex;
+        const signed = readString(result, 'hex');
         if (!signed) throw new Error('signPsbt returned no hex');
         const existing = readState(state).signedHexes ?? [];
         return {

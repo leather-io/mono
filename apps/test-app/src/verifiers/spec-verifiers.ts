@@ -3,6 +3,7 @@
 // what the wallet DID rather than that it answered at all.
 //
 // Pure: no React, no `window`.
+import { isRecord, readString } from '../guards';
 import { networkModeOf } from '../networks';
 import { type Verifier, type VerifyCheck, type VerifyReport, networkOf } from '../types';
 import { decodePsbt } from './psbt-decode';
@@ -12,12 +13,6 @@ import { decodeStxTransaction } from './stx-decode';
 
 function fail(label: string, detail: string): VerifyReport {
   return { ok: false, checks: [{ label, ok: false, detail }] };
-}
-
-function readString(value: unknown, key: string): string | undefined {
-  if (!value || typeof value !== 'object') return undefined;
-  const field = (value as Record<string, unknown>)[key];
-  return typeof field === 'string' ? field : undefined;
 }
 
 export interface SignedPsbtExpectations {
@@ -205,11 +200,7 @@ export function verifyProposal(): Verifier {
 export function verifyAddresses(expected: { bitcoin?: boolean; stacks?: boolean }): Verifier {
   return ({ result }) => {
     const addresses =
-      result &&
-      typeof result === 'object' &&
-      Array.isArray((result as { addresses?: unknown }).addresses)
-        ? ((result as { addresses: { symbol?: string }[] }).addresses ?? [])
-        : [];
+      isRecord(result) && Array.isArray(result.addresses) ? result.addresses.filter(isRecord) : [];
     const hasBtc = addresses.some(address => address.symbol === 'BTC');
     const hasStx = addresses.some(address => address.symbol === 'STX');
     const checks: VerifyCheck[] = [{ label: 'addresses returned', ok: addresses.length > 0 }];

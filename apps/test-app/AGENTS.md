@@ -80,7 +80,7 @@ A test is **one object appended to an array**. Template:
   async params(ctx) {                  // or a static object for fixed payloads
     const keys = await collectPsbtKeys(ctx, ['p2wpkh']);
     const { psbtHex } = buildPsbtScenario({ inputs: [{ kind: 'p2wpkh' }] }, keys);
-    return { hex: psbtHex, broadcast: false } satisfies ParamsOf<'signPsbt'>;
+    return { hex: psbtHex, broadcast: false, network: networkOf(ctx) } satisfies ParamsOf<'signPsbt'>;
   },
   expect: 'success',                   // or { error: 4001 } / 'manual' / { extension, mobile }
   requires: ['singlesig'],

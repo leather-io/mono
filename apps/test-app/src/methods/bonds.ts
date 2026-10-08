@@ -13,7 +13,7 @@
 import { bondDescriptorFor } from '../builders/descriptors';
 import { collectPsbtKeys } from '../builders/keys';
 import { buildSelfSpendPsbtHex, descriptorScript } from '../builders/psbt';
-import { type ParamsOf, type RpcMethodSpec } from '../types';
+import { type ParamsOf, type RpcMethodSpec, networkOf } from '../types';
 import { verifySignedPsbt } from '../verifiers/spec-verifiers';
 
 export const bondMethods: RpcMethodSpec[] = [
@@ -32,6 +32,7 @@ export const bondMethods: RpcMethodSpec[] = [
         hex: buildSelfSpendPsbtHex(descriptorScript(descriptor)),
         descriptor,
         broadcast: false,
+        network: networkOf(ctx),
       } satisfies ParamsOf<'signPsbt'>;
     },
     expect: 'manual',

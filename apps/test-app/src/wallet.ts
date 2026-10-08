@@ -25,7 +25,7 @@ export interface WalletAddress {
   publicKeys?: string[];
 }
 
-function isWalletAddress(value: unknown): value is WalletAddress {
+export function isWalletAddress(value: unknown): value is WalletAddress {
   return (
     typeof value === 'object' &&
     value !== null &&

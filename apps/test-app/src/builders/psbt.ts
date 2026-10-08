@@ -11,8 +11,9 @@
 //
 // Pure: no React, no `window`.
 import { hex } from '@scure/base';
-import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
+
+import { deriveKeychainFromXpub } from '@leather.io/crypto';
 
 import { compileDescriptor } from './descriptors';
 
@@ -121,7 +122,7 @@ export function foreignScript(): LockingScript {
 
 /** The child key of an account xpub at `0/index` — the wallet's vault key. */
 export function deriveVaultKey(xpub: string, accountIndex = 0): Uint8Array {
-  const child = HDKey.fromExtendedKey(xpub).deriveChild(0).deriveChild(accountIndex);
+  const child = deriveKeychainFromXpub(xpub).deriveChild(0).deriveChild(accountIndex);
   if (!child.publicKey) throw new Error(`Cannot derive a public key from ${xpub}`);
   return child.publicKey;
 }

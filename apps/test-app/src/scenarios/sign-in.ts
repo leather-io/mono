@@ -4,6 +4,7 @@
 // interesting part: `getAddresses` and `signMessage` are separate prompts, so
 // the user can switch account in between and the dApp would otherwise register
 // one key while authenticating another.
+import { readString } from '../guards';
 import { type Scenario, networkOf } from '../types';
 import { extractXpub, fetchAddresses, pickBtcEntry } from '../wallet';
 
@@ -53,19 +54,20 @@ export const signInHandshake: Scenario = {
           paymentType: 'p2wpkh',
           network: networkOf(ctx),
         });
-        const signed = result as { address?: string; signature?: string };
+        const signedAddress = readString(result, 'address');
+        const signature = readString(result, 'signature');
         return {
-          summary: signed.address ?? 'no address in response',
-          state: { signature: signed.signature, message, timestamp },
+          summary: signedAddress ?? 'no address in response',
+          state: { signature, message, timestamp },
           checks: [
-            { label: 'a signature came back', ok: !!signed.signature },
+            { label: 'a signature came back', ok: !!signature },
             {
               label: 'signed by the address that was shared',
-              ok: signed.address === address,
+              ok: signedAddress === address,
               detail:
-                signed.address === address
+                signedAddress === address
                   ? undefined
-                  : `shared ${address}, signed ${signed.address} — the active account changed mid-flow`,
+                  : `shared ${address}, signed ${signedAddress} — the active account changed mid-flow`,
             },
           ],
         };

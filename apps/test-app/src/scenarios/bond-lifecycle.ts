@@ -12,6 +12,7 @@ import { bondDescriptorFor, bondHash } from '../builders/descriptors';
 import { collectPsbtKeys } from '../builders/keys';
 import { buildSelfSpendPsbtHex, descriptorScript } from '../builders/psbt';
 import { BOND_PREIMAGE, BOND_UNLOCK_HEIGHT } from '../constants';
+import { readString } from '../guards';
 import { networkModeOf } from '../networks';
 import { type Scenario, networkOf } from '../types';
 import { esploraConfigured, fetchBlockHeight, fetchSpendableUtxo } from '../utxo/esplora';
@@ -67,10 +68,7 @@ export const bondLifecycle: Scenario = {
           name: 'RPC test bond vault',
           network: networkOf(ctx),
         });
-        const address =
-          result && typeof result === 'object'
-            ? (result as { address?: string }).address
-            : undefined;
+        const address = readString(result, 'address');
         return { summary: `vault registered at ${address ?? 'unknown address'}` };
       },
     },
@@ -136,8 +134,9 @@ export const bondLifecycle: Scenario = {
           hex: psbtHex,
           descriptor: bondDescriptor,
           broadcast: false,
+          network: networkOf(ctx),
         });
-        const signedHex = (result as { hex?: string }).hex;
+        const signedHex = readString(result, 'hex');
         if (!signedHex) throw new Error('signPsbt returned no hex');
         const signed = btc.Transaction.fromPSBT(hex.decode(signedHex), {
           allowUnknownInputs: true,

@@ -99,7 +99,12 @@ export const multisigMethods: RpcMethodSpec[] = [
         { inputs: [{ kind: 'sortedmulti' }] },
         keys
       );
-      return { hex: psbtHex, descriptor, broadcast: false } satisfies ParamsOf<'signPsbt'>;
+      return {
+        hex: psbtHex,
+        descriptor,
+        broadcast: false,
+        network: networkOf(ctx),
+      } satisfies ParamsOf<'signPsbt'>;
     },
     expect: 'success',
     requires: ['singlesig'],

@@ -1,17 +1,17 @@
+/// <reference types="vite/types/importMeta.d.ts" />
 // Developer overrides from `apps/test-app/.env` (see .env.example). Vite exposes
 // `VITE_*` variables on `import.meta.env`; outside Vite (the catalog imported
 // from a Playwright spec) `import.meta.env` is undefined and every override
-// reads as unset, so the defaults in ./constants apply. Read reflectively so
-// the file also typechecks in projects without Vite's `ImportMeta` typings.
-const envPrefix = 'VITE_TEST_APP_';
+// reads as unset, so the defaults in ./constants apply. The literal
+// `import.meta.env` token is what Vite's injection matches, so it must appear
+// verbatim here — a reflective read would see undefined under Vite too.
+import { isRecord } from './guards';
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
+const envPrefix = 'VITE_TEST_APP_';
 
 /** `VITE_TEST_APP_<name>` if set to a non-blank string, otherwise undefined. */
 export function readOverride(name: string): string | undefined {
-  const env: unknown = Reflect.get(import.meta, 'env');
+  const env: unknown = import.meta.env;
   if (!isRecord(env)) return undefined;
   const value = env[envPrefix + name];
   if (typeof value !== 'string') return undefined;

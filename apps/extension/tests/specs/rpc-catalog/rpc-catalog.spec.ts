@@ -15,8 +15,22 @@ function findSpec(id: string) {
 
 // Backs the catalog's builders with the real provider inside the page, so a
 // spec resolves the exact payload a click on the same card would send.
-function pageRequestContext(page: Page): RequestContext {
+async function pageRequestContext(page: Page): Promise<RequestContext> {
+  const network = await page.evaluate(() => {
+    const api: unknown = Reflect.get(window, '__leatherTestApp');
+    function hasNetwork(value: unknown): value is { network(): string } {
+      return (
+        typeof value === 'object' &&
+        value !== null &&
+        'network' in value &&
+        typeof value.network === 'function'
+      );
+    }
+    if (!hasNetwork(api)) throw new Error('__leatherTestApp missing');
+    return api.network();
+  });
   return {
+    network,
     request(method, params) {
       const args: [string, unknown] = [method, params];
       return page.evaluate(async ([m, p]) => {
@@ -69,7 +83,7 @@ test.describe('Rpc: test-app catalog', () => {
   }) => {
     // 1. Payload straight from the catalog (no UI).
     const spec = findSpec('signMessage-p2wpkh');
-    const params = await resolveParams(spec, pageRequestContext(page));
+    const params = await resolveParams(spec, await pageRequestContext(page));
 
     // 2. Same entry driven through the UI.
     const popupPromise = interceptRequestPopup(context);

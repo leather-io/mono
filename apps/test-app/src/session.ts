@@ -4,10 +4,16 @@
 // `getAddresses` is cached per (network, allowPolicyAccounts) so a page full
 // of builder-backed buttons does not prompt for the same thing repeatedly; the
 // header's refresh clears it after the developer switches account.
+import { isRecord } from './guards';
 import { callRpc } from './leather';
 import { defaultNetworkId } from './networks';
 import type { RequestContext } from './types';
-import { type AccountSummary, type WalletAddress, fetchAccountSummary } from './wallet';
+import {
+  type AccountSummary,
+  type WalletAddress,
+  fetchAccountSummary,
+  isWalletAddress,
+} from './wallet';
 
 let currentNetwork = defaultNetworkId;
 
@@ -52,11 +58,9 @@ export function createCachedRequestContext(network = currentNetwork): RequestCon
       const pending = base
         .request(method, params)
         .then(result => {
-          const addresses =
-            result && typeof result === 'object'
-              ? ((result as { addresses?: WalletAddress[] }).addresses ?? [])
-              : [];
-          return addresses;
+          return isRecord(result) && Array.isArray(result.addresses)
+            ? result.addresses.filter(isWalletAddress)
+            : [];
         })
         .catch(error => {
           // A rejected prompt must not poison the cache for the next click.

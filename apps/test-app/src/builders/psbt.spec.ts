@@ -2,6 +2,7 @@
 // the same bytes — and it has to balance amounts, or the wallet rejects a
 // transaction for reasons that have nothing to do with what is being tested.
 import { hex } from '@scure/base';
+import { HDKey } from '@scure/bip32';
 import { pubECDSA, pubSchnorr } from '@scure/btc-signer/utils';
 import { describe, expect, test } from 'vitest';
 
@@ -11,6 +12,7 @@ import { sortedMultiDescriptor } from './descriptors';
 import { buildPsbtScenario, deriveVaultKey } from './psbt';
 
 const privateKey = hex.decode('3'.repeat(63) + '3');
+const testnetVersions = { private: 0x04358394, public: 0x043587cf };
 const keys = {
   nativeSegwitPubkey: pubECDSA(privateKey),
   taprootInternalKey: pubSchnorr(privateKey),
@@ -98,5 +100,18 @@ describe('buildPsbtScenario', () => {
     expect(scenario.descriptor).toBe(vaultDescriptor);
     expect(parsePsbt(scenario.psbtHex).getInput(0).witnessScript).toBeDefined();
     expect(scenario.inputs[0].expectedSigner).toBe(hex.encode(deriveVaultKey(ownXpub, 0)));
+  });
+});
+
+describe('deriveVaultKey', () => {
+  test('accepts a testnet tpub as well as a mainnet xpub', () => {
+    const seed = new Uint8Array(32).fill(7);
+    const xpub = HDKey.fromMasterSeed(seed).derive("m/84'/0'/0'").publicExtendedKey;
+    const tpub = HDKey.fromMasterSeed(seed, testnetVersions).derive(
+      "m/84'/1'/0'"
+    ).publicExtendedKey;
+    expect(tpub.startsWith('tpub')).toBe(true);
+    expect(deriveVaultKey(xpub, 0)).toHaveLength(33);
+    expect(deriveVaultKey(tpub, 0)).toHaveLength(33);
   });
 });

@@ -38,7 +38,11 @@ export const bitcoinMethods: RpcMethodSpec[] = [
     async params(ctx) {
       const keys = await collectPsbtKeys(ctx, ['p2wpkh']);
       const { psbtHex } = buildPsbtScenario({ inputs: [{ kind: 'p2wpkh' }] }, keys);
-      return { hex: psbtHex, broadcast: false } satisfies ParamsOf<'signPsbt'>;
+      return {
+        hex: psbtHex,
+        broadcast: false,
+        network: networkOf(ctx),
+      } satisfies ParamsOf<'signPsbt'>;
     },
     expect: 'success',
     requires: ['singlesig'],

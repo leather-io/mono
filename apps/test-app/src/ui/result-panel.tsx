@@ -5,6 +5,7 @@
 // flag, and whether that signature actually verifies.
 import { useMemo } from 'react';
 
+import { readString } from '../guards';
 import { networkModeOf } from '../networks';
 import type { SpecRun } from '../run-spec';
 import { getNetwork } from '../session';
@@ -26,12 +27,6 @@ function describeSigned(signed: boolean, finalized: boolean): string {
 function describeValid(signed: boolean, valid: boolean): string {
   if (!signed) return '—';
   return valid ? '✓' : '✗';
-}
-
-function readString(value: unknown, key: string): string | undefined {
-  if (!value || typeof value !== 'object') return undefined;
-  const field = (value as Record<string, unknown>)[key];
-  return typeof field === 'string' ? field : undefined;
 }
 
 export function ResultPanel({ run, history }: ResultPanelProps) {

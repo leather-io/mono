@@ -5,6 +5,7 @@
 // the same thing wherever it was produced.
 //
 // Pure: no React, no `window` — the wallet arrives as a `RequestContext`.
+import { isRecord } from './guards';
 import { resolveParams } from './rpc-methods';
 import {
   type Outcome,
@@ -36,16 +37,10 @@ export interface SpecRun {
 
 /** JSON-RPC error code out of whatever the provider rejected with. */
 function errorCodeOf(error: unknown): number | undefined {
-  if (!error || typeof error !== 'object') return undefined;
-  const record = error as Record<string, unknown>;
-  if (typeof record.code === 'number') return record.code;
-  const inner = record.error;
-  if (
-    inner &&
-    typeof inner === 'object' &&
-    typeof (inner as Record<string, unknown>).code === 'number'
-  )
-    return (inner as { code: number }).code;
+  if (!isRecord(error)) return undefined;
+  if (typeof error.code === 'number') return error.code;
+  const inner = error.error;
+  if (isRecord(inner) && typeof inner.code === 'number') return inner.code;
   return undefined;
 }
 
