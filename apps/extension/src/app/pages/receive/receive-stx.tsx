@@ -3,7 +3,7 @@ import { analytics } from '@shared/utils/analytics';
 import { useCurrentAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
-import { useVerifyAddressNavigate } from '@app/features/ledger/flows/verify-address/use-verify-address-navigate';
+import { useVerifyAddressOnLedger } from '@app/features/ledger/flows/verify-address/use-verify-address-on-ledger';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useHasLedgerStacksKeys } from '@app/store/ledger/ledger.selectors';
@@ -21,7 +21,7 @@ export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
   const policy = useCurrentPolicy();
   const { walletType } = useWalletType();
   const hasLedgerStacksKeys = useHasLedgerStacksKeys();
-  const verifyAddressNavigate = useVerifyAddressNavigate();
+  const verifyAddressOnLedger = useVerifyAddressOnLedger();
 
   const { data: accountName = 'Account' } = useCurrentAccountDisplayName();
   const policyName = usePolicyDisplayName(policy);
@@ -43,7 +43,7 @@ export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
         await copyToClipboard(address);
         toast.success('Copied to clipboard!');
       }}
-      onVerifyAddress={canVerifyOnLedger ? () => verifyAddressNavigate('stx') : undefined}
+      onVerifyAddress={canVerifyOnLedger ? () => verifyAddressOnLedger('stx') : undefined}
       title="STX"
     />
   );

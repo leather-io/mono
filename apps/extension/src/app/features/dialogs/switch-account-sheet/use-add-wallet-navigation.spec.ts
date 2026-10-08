@@ -14,6 +14,8 @@ const h = vi.hoisted(() => ({
   navigate: vi.fn(),
   openInNewTab: vi.fn(),
   closeWindow: vi.fn(),
+  openLedgerFlow: vi.fn(),
+  handOffLedgerFlow: vi.fn(),
   pageMode: 'full' as 'full' | 'popup',
   webHidSupported: true,
 }));
@@ -25,6 +27,14 @@ vi.mock('@app/common/utils/open-in-new-tab', () => ({
 }));
 
 vi.mock('@shared/utils', () => ({ closeWindow: h.closeWindow }));
+
+vi.mock('@app/features/ledger/flow/ledger-flow.context', () => ({
+  useLedgerFlow: () => ({ open: h.openLedgerFlow }),
+}));
+
+vi.mock('@app/features/ledger/flow/ledger-flow-handoff', () => ({
+  handOffLedgerFlowToFullPage: h.handOffLedgerFlow,
+}));
 
 vi.mock('@app/common/utils', () => ({
   whenPageMode: (map: Record<'full' | 'popup', unknown>) => map[h.pageMode],
@@ -76,7 +86,7 @@ describe('useAddWalletNavigation', () => {
     expect(h.navigate).toHaveBeenCalledWith(RouteUrls.AddWallet);
   });
 
-  test('onConnectLedger closes the sheets before navigating in full-page mode', () => {
+  test('onConnectLedger closes the sheets before opening the ledger flow in full-page mode', () => {
     h.pageMode = 'full';
     h.webHidSupported = true;
     const closeSheets = vi.fn();
@@ -85,10 +95,11 @@ describe('useAddWalletNavigation', () => {
     act(() => getValue().onConnectLedger());
 
     expect(closeSheets).toHaveBeenCalledOnce();
-    expect(h.navigate).toHaveBeenCalledWith(RouteUrls.ConnectLedgerStart);
+    expect(h.openLedgerFlow).toHaveBeenCalledWith({ kind: 'connect-start' });
+    expect(h.navigate).not.toHaveBeenCalled();
   });
 
-  test('onConnectLedger routes to the unsupported-browser page when WebHID is unavailable', () => {
+  test('onConnectLedger opens the unsupported-browser flow when WebHID is unavailable', () => {
     h.pageMode = 'full';
     h.webHidSupported = false;
     const closeSheets = vi.fn();
@@ -97,10 +108,10 @@ describe('useAddWalletNavigation', () => {
     act(() => getValue().onConnectLedger());
 
     expect(closeSheets).toHaveBeenCalledOnce();
-    expect(h.navigate).toHaveBeenCalledWith(RouteUrls.LedgerUnsupportedBrowser);
+    expect(h.openLedgerFlow).toHaveBeenCalledWith({ kind: 'unsupported-browser' });
   });
 
-  test('onConnectLedger opens a new tab and closes the window in popup mode', () => {
+  test('onConnectLedger hands the flow off to a full page in popup mode', () => {
     h.pageMode = 'popup';
     h.webHidSupported = true;
     const closeSheets = vi.fn();
@@ -109,8 +120,11 @@ describe('useAddWalletNavigation', () => {
     act(() => getValue().onConnectLedger());
 
     expect(closeSheets).toHaveBeenCalledOnce();
-    expect(h.openInNewTab).toHaveBeenCalledWith(RouteUrls.ConnectLedgerStart);
-    expect(h.closeWindow).toHaveBeenCalledOnce();
+    expect(h.handOffLedgerFlow).toHaveBeenCalledWith(
+      { kind: 'connect-start' },
+      { closeCurrentWindow: true }
+    );
+    expect(h.openLedgerFlow).not.toHaveBeenCalled();
     expect(h.navigate).not.toHaveBeenCalled();
   });
 
