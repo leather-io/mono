@@ -71,6 +71,8 @@ export const currencyNameMap = {
 // https://bitcoin.stackexchange.com/a/41082/139277
 export const BTC_P2WPKH_DUST_AMOUNT = 294;
 
+export const LEDGER_BITCOIN_MAX_INPUTS = 50;
+
 export const KEBAB_REGEX: RegExp = /[A-Z\u00C0-\u00D6\u00D8-\u00DE]/g;
 
 export const DEFAULT_LIST_LIMIT = 50;
