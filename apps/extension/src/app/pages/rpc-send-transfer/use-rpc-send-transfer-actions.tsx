@@ -130,6 +130,7 @@ export function useRpcSendTransferActions() {
             multisigAddress: policy.address,
             rawPayload,
           });
+          if (!proposal) return;
 
           analytics.track('propose_multisig_transaction', { symbol: 'btc' });
 
@@ -158,6 +159,7 @@ export function useRpcSendTransferActions() {
         if (shouldHalt) return;
 
         const tx = await signTransaction(resp.psbt, resp.signingConfig);
+        if (!tx) return;
 
         tx.finalize();
 

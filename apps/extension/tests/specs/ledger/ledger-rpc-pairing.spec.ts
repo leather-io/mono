@@ -54,7 +54,7 @@ test.describe('Ledger device pairing from an RPC popup', () => {
       continueToFullScreenPairing(context),
     ]);
 
-    await test.expect(pairingTab).toHaveURL(/index\.html#\/pair-ledger$/);
+    await test.expect(pairingTab).toHaveURL(/index\.html#\/\?ledgerHandoff=/);
     await test.expect(pairingTab.getByRole('button', { name: 'Connect Ledger' })).toBeVisible();
     test.expect(result.error).toEqual({
       code: 4001,

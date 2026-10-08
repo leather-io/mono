@@ -14,6 +14,7 @@ import { logger } from '@shared/logger';
 import { formFeeRowValue } from '@app/common/send/utils';
 import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
+import { isLedgerSigningCancelledError } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
 import { useLedgerBitcoinInputLimit } from '@app/features/ledger/hooks/use-ledger-bitcoin-input-limit';
 import {
   type LedgerBitcoinInputLimit,
@@ -125,19 +126,24 @@ export function useBtcChooseFee() {
         return;
       }
 
-      const signedTx = await signTx(resp.psbt, resp.signingConfig);
+      try {
+        const signedTx = await signTx(resp.psbt, resp.signingConfig);
 
-      if (!signedTx) return logger.error('Attempted to sign tx, but no tx exists');
+        if (!signedTx) return;
 
-      signedTx.finalize();
+        signedTx.finalize();
 
-      void sendFormNavigate.toConfirmAndSignBtcTransaction({
-        tx: signedTx.hex,
-        recipient: txValues.recipient,
-        fee: feeValue,
-        feeRowValue,
-        time,
-      });
+        void sendFormNavigate.toConfirmAndSignBtcTransaction({
+          tx: signedTx.hex,
+          recipient: txValues.recipient,
+          fee: feeValue,
+          feeRowValue,
+          time,
+        });
+      } catch (error) {
+        if (isLedgerSigningCancelledError(error)) return;
+        return sendFormNavigate.toErrorPage(error);
+      }
     },
   };
 }
