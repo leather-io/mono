@@ -2,16 +2,22 @@ import { useMemo } from 'react';
 
 import { VStack, styled } from 'leather-styles/jsx';
 import { ConfirmationStep, ConfirmationSteps } from '~/components/confirmations/confirmation-steps';
+import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { stxToMicroStx } from '@leather.io/utils';
 
-export type StartStakingStepId = 'terms' | 'stake';
+import { StakingConnectAction } from '../../hooks/use-staking-connect-action';
+
+export type StartStakingStepId = 'connect' | 'terms' | 'stake';
+
+const { connectGate } = bitcoinStakingContent;
 
 interface StakingConfirmationStepsProps {
   stakeAmount: number;
   cycles: number;
   estimatedUnlockDate: Date | null;
+  connectAction: StakingConnectAction;
   confirmationState: Record<StartStakingStepId, ConfirmationStep<StartStakingStepId>['state']>;
   onSubmit(confirmation: StartStakingStepId): void | Promise<void>;
 }
@@ -20,11 +26,25 @@ export function StakingConfirmationSteps({
   stakeAmount,
   cycles,
   estimatedUnlockDate,
+  connectAction,
   onSubmit,
   confirmationState,
 }: StakingConfirmationStepsProps) {
+  const connectStep = useMemo<ConfirmationStep<StartStakingStepId> | null>(() => {
+    if (connectAction.status === 'connected') return null;
+    const needsInstall = connectAction.status === 'install';
+    return {
+      id: 'connect',
+      text: needsInstall ? connectGate.installStep : connectGate.connectStep,
+      actionText: needsInstall ? connectGate.installAction : connectGate.connectAction,
+      state: confirmationState['connect'],
+      onClick: () => onSubmit('connect'),
+    };
+  }, [connectAction.status, confirmationState, onSubmit]);
+
   const confirmationSteps = useMemo<ConfirmationStep<StartStakingStepId>[]>(
     () => [
+      ...(connectStep ? [connectStep] : []),
       {
         id: 'terms',
         text: 'I have read and accepted the pool’s terms and conditions',
@@ -40,7 +60,7 @@ export function StakingConfirmationSteps({
         onClick: () => onSubmit('stake'),
       },
     ],
-    [onSubmit, confirmationState]
+    [connectStep, onSubmit, confirmationState]
   );
 
   const stxAmount = stxToMicroStx(stakeAmount);

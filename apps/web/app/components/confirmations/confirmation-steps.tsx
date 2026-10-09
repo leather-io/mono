@@ -4,7 +4,7 @@ import { Box, HStack, VStack, styled } from 'leather-styles/jsx';
 
 import { Button, CheckmarkCircleIcon, CircleIcon } from '@leather.io/ui';
 
-type ConfirmationStepId = 'terms' | 'stake' | 'stakeUpdate' | 'unstake';
+type ConfirmationStepId = 'connect' | 'terms' | 'stake' | 'stakeUpdate' | 'unstake';
 
 export interface ConfirmationStep<T extends ConfirmationStepId> {
   id: T;
