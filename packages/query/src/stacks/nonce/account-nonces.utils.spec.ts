@@ -88,4 +88,34 @@ describe('parseAccountNoncesResponse', () => {
       })
     ).toEqual({ nonce: 7, nonceType: 'client-fallback-nonce' });
   });
+
+  it('uses the numerically lowest mempool missing nonce', () => {
+    expect(
+      parseAccountNoncesResponse({
+        addressNonces: createNonces({
+          next_nonce: 11,
+          last_confirmed_nonce: 8,
+          mempool: { last_nonce: 11, pending_nonces: [11], missing_nonces: [10, 9] },
+        }),
+        confirmedTransactions: [createConfirmedTx(8)],
+        pendingTransactions: [],
+        senderAddress,
+      })
+    ).toEqual({ nonce: 9, nonceType: 'api-suggested-nonce' });
+  });
+
+  it('uses the numerically lowest missing nonce between pending transactions', () => {
+    expect(
+      parseAccountNoncesResponse({
+        addressNonces: createNonces({
+          next_nonce: 8,
+          last_confirmed_nonce: 7,
+          mempool: { last_nonce: 11, pending_nonces: [8, 11], missing_nonces: [] },
+        }),
+        confirmedTransactions: [createConfirmedTx(7)],
+        pendingTransactions: [createPendingTx(8), createPendingTx(11)],
+        senderAddress,
+      })
+    ).toEqual({ nonce: 9, nonceType: 'client-fallback-nonce' });
+  });
 });

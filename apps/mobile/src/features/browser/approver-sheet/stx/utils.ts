@@ -38,6 +38,7 @@ export function getAccountIdFromRequestParams({
 }
 
 function getFeeFromRequestParams({ params }: { params: BaseStacksTransactionRpcParams }) {
+  if (params.sponsored) return createMoney(0, 'STX');
   if (params.fee) {
     return createMoney(initBigNumber(params.fee).integerValue(), 'STX');
   }
