@@ -1,4 +1,6 @@
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { BrowserContext, Page } from '@playwright/test';
+import * as btc from '@scure/btc-signer';
 import {
   TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
   TEST_ACCOUNT_2_TAPROOT_ADDRESS,
@@ -9,6 +11,8 @@ import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
 import {
   mockMixedUtxosForSend,
   mockNativeSegwitOnlyUtxosForSend,
+  mockNativeSegwitUtxo,
+  mockTaprootUtxo,
 } from '@tests/mocks/mock-mixed-utxos';
 import { makeBitcoinPolicy, policyStateOverrides } from '@tests/mocks/mock-policies';
 import { mockFundedBitcoinAddressUtxos } from '@tests/mocks/mock-utxos';
@@ -197,6 +201,56 @@ test.describe('RPC: sendTransfer', () => {
 
 const spendSourcesRecipient = 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4';
 
+const satsPerBtc = 100_000_000;
+
+const mockUtxoValuesByTxid: Record<string, number> = {
+  [mockNativeSegwitUtxo.txid]: Number(mockNativeSegwitUtxo.value),
+  [mockTaprootUtxo.txid]: Number(mockTaprootUtxo.value),
+};
+
+async function readSpendSourceRowSats(popup: Page, testId: string) {
+  const text = await popup.getByTestId(testId).innerText();
+  const btcAmount = text.match(/\d+\.\d+/)?.[0];
+  if (!btcAmount) throw new Error(`No BTC amount in spend source row: ${text}`);
+  return Math.round(Number(btcAmount) * satsPerBtc);
+}
+
+async function readSpendSourceRows(popup: Page) {
+  await test
+    .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow))
+    .toBeVisible({ timeout: 15_000 });
+  return {
+    nativeSegwit: await readSpendSourceRowSats(
+      popup,
+      SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow
+    ),
+    taproot: await readSpendSourceRowSats(popup, SendCryptoAssetSelectors.SpendSourcesTaprootRow),
+  };
+}
+
+function summarizeSignedTx(hex: string) {
+  const tx = btc.Transaction.fromRaw(hexToBytes(hex));
+  const inputs = Array.from({ length: tx.inputsLength }, (_, index) => {
+    const txid = tx.getInput(index).txid;
+    if (!txid) throw new Error(`Signed tx input ${index} has no txid`);
+    const value = mockUtxoValuesByTxid[bytesToHex(txid)];
+    if (value === undefined)
+      throw new Error(`Signed tx spends an unknown utxo ${bytesToHex(txid)}`);
+    return { txid: bytesToHex(txid), value };
+  });
+  const outputsTotal = Array.from({ length: tx.outputsLength }, (_, index) =>
+    Number(tx.getOutput(index).amount ?? 0n)
+  ).reduce((sum, amount) => sum + amount, 0);
+  const inputsTotal = inputs.reduce((sum, input) => sum + input.value, 0);
+
+  return {
+    fee: inputsTotal - outputsTotal,
+    taprootInputTotal: inputs
+      .filter(input => input.txid === mockTaprootUtxo.txid)
+      .reduce((sum, input) => sum + input.value, 0),
+  };
+}
+
 test.describe('RPC: sendTransfer spend sources with mixed utxos', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
@@ -253,6 +307,42 @@ test.describe('RPC: sendTransfer spend sources with mixed utxos', () => {
   });
 });
 
+test.describe('RPC: sendTransfer spend sources match the signed transaction', () => {
+  const amount = 400_000;
+
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await mockLeatherApiRequests(context);
+    await mockMixedUtxosForSend(context);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+  });
+
+  test('that the displayed source totals equal the amount plus the signed fee', async ({
+    page,
+    context,
+  }) => {
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: spendSourcesRecipient, amount: String(amount) }],
+      network: 'mainnet',
+      broadcast: false,
+    });
+    const popup = await context.waitForEvent('page');
+
+    const rows = await readSpendSourceRows(popup);
+
+    await popup.getByRole('button', { name: 'Sign transaction' }).click();
+    await popup.locator('text="I understand, continue"').click({ timeout: 10000 });
+
+    const result = await resultPromise;
+    const signed = summarizeSignedTx(result.result.transaction);
+
+    test.expect(signed.fee).toBeGreaterThan(0);
+    test.expect(rows.nativeSegwit + rows.taproot).toEqual(amount + signed.fee);
+    test.expect(rows.taproot).toEqual(signed.taprootInputTotal);
+  });
+});
+
 test.describe('RPC: sendTransfer spend sources with native segwit utxos only', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
@@ -281,6 +371,31 @@ test.describe('RPC: sendTransfer spend sources with native segwit utxos only', (
 
     await popup.close();
     await resultPromise;
+  });
+
+  test('that the native segwit total equals the amount plus the signed fee', async ({
+    page,
+    context,
+  }) => {
+    const amount = 100_000;
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: spendSourcesRecipient, amount: String(amount) }],
+      network: 'mainnet',
+      broadcast: false,
+    });
+    const popup = await context.waitForEvent('page');
+
+    const rows = await readSpendSourceRows(popup);
+
+    await popup.getByRole('button', { name: 'Sign transaction' }).click();
+
+    const result = await resultPromise;
+    const signed = summarizeSignedTx(result.result.transaction);
+
+    test.expect(signed.fee).toBeGreaterThan(0);
+    test.expect(signed.taprootInputTotal).toEqual(0);
+    test.expect(rows.taproot).toEqual(0);
+    test.expect(rows.nativeSegwit).toEqual(amount + signed.fee);
   });
 });
 
