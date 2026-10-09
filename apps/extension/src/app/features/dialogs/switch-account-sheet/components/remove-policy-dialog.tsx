@@ -28,7 +28,7 @@ export function RemovePolicyDialog({ policy, isShowing, onClose }: RemovePolicyD
   return (
     <Sheet header={<SheetHeader title="Remove multisig" />} isShowing={isShowing} onClose={onClose}>
       <Stack gap="space.05" px="space.05" pb="space.05">
-        <styled.p textStyle="label.02" color="ink.text-subdued">
+        <styled.p textStyle="label.02" color="ink.text-secondary">
           {name} will be removed from this device. You can re-add it from the app that registered
           it.
         </styled.p>

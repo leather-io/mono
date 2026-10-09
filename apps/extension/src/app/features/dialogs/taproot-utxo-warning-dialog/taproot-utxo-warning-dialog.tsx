@@ -45,15 +45,15 @@ export const TaprootUtxoWarningDialog = createCallable<void, TaprootUtxoWarningR
         >
           <styled.h3 textStyle="heading.05">This transaction includes taproot UTXOs</styled.h3>
 
-          <styled.p textStyle="body.02" color="ink.text-subdued">
+          <styled.p textStyle="body.02" color="ink.text-secondary">
             This transaction spends from taproot UTXOs. These UTXOs may contain ordinal
             inscriptions, rune, or BRC-20 tokens.
           </styled.p>
-          <styled.p textStyle="body.02" color="ink.text-subdued">
+          <styled.p textStyle="body.02" color="ink.text-secondary">
             If you want to protect these assets, cancel this transaction and transfer them to
             another wallet.
           </styled.p>
-          <styled.p textStyle="body.02" color="ink.text-subdued">
+          <styled.p textStyle="body.02" color="ink.text-secondary">
             Reach out to our support (
             <a
               className={css({ textDecorationLine: 'underline' })}

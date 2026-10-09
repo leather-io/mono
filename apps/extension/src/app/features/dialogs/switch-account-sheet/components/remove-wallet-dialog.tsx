@@ -31,7 +31,7 @@ export function RemoveWalletDialog({
   return (
     <Sheet header={<SheetHeader title="Remove wallet" />} isShowing={isShowing} onClose={onClose}>
       <Stack gap="space.05" px="space.05" pb="space.05">
-        <styled.p textStyle="label.02" color="ink.text-subdued">
+        <styled.p textStyle="label.02" color="ink.text-secondary">
           {currentName} will be removed from this device. Make sure your Secret Key is backed up —
           without it you won't be able to restore this wallet or access its funds.
         </styled.p>

@@ -67,7 +67,7 @@ export function CancelVaultModal({
         </Flex>
       }
     >
-      <styled.p textStyle="body.02" color="ink.text-subdued" px="space.05" pb="space.05">
+      <styled.p textStyle="body.02" color="ink.text-secondary" px="space.05" pb="space.05">
         This vault hasn't activated yet, so no funds are at risk. Invited members will see that the
         invite was withdrawn.
       </styled.p>
