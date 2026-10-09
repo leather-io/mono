@@ -5,13 +5,7 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { QuoteCurrency } from '@leather.io/models';
 import { createSip10AccountBalanceQueryConfig } from '@leather.io/queries';
-import {
-  AccountRequest,
-  Sip10Balance,
-  UserSettings,
-  getSip10BalancesService,
-} from '@leather.io/services';
-import { getAssetId } from '@leather.io/utils';
+import { AccountRequest, UserSettings, getSip10BalancesService } from '@leather.io/services';
 
 import { balanceQueryOptions } from './balance-query-options';
 
@@ -34,17 +28,6 @@ export function useSip10AccountBalance(
   });
 
   return toFetchState(queryResult);
-}
-
-export function useManagedSip10Tools(fingerprint: string, accountIndex: number) {
-  const enabledSip10s = useSip10AccountBalance(fingerprint, accountIndex);
-
-  return {
-    isEnabled: (token: Sip10Balance) =>
-      !!enabledSip10s.value?.sip10s.find(sip10 => {
-        return getAssetId(sip10.asset).id === getAssetId(token.asset).id;
-      }),
-  };
 }
 
 export function useSip10BalanceByAssetId(
@@ -75,7 +58,7 @@ function useSip10AccountBalanceQuery(request: AccountRequest) {
   const settings: UserSettings = {
     network: networkPreference,
     quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
-    assetVisibility,
+    assetVisibility: request.assets?.includeHiddenAssets ? {} : assetVisibility,
   };
 
   return useQuery({

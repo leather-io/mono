@@ -264,7 +264,7 @@ msgstr "Allow collection of data"
 msgid "Amount must be greater than zero"
 msgstr "Amount must be greater than zero"
 
-#: src/features/account/components/available-account-balance.tsx:42
+#: src/features/account/components/available-account-balance.tsx:38
 msgid "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 msgstr "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 
@@ -385,11 +385,11 @@ msgstr "Attributes"
 msgid "Authentication failed"
 msgstr "Authentication failed"
 
-#: src/features/account/components/available-account-balance.tsx:66
+#: src/features/account/components/available-account-balance.tsx:62
 msgid "Available"
 msgstr "Available"
 
-#: src/features/account/components/available-account-balance.tsx:38
+#: src/features/account/components/available-account-balance.tsx:34
 msgid "Available balance"
 msgstr "Available balance"
 
@@ -850,6 +850,10 @@ msgstr "Failed to change nonce"
 msgid "Failed to load latest nonce"
 msgstr "Failed to load latest nonce"
 
+#: src/features/balances/manage-tokens.sheet.tsx:81
+msgid "Failed to load tokens"
+msgstr "Failed to load tokens"
+
 #: src/features/swap/components/review/swap-submission-overlay.tsx:111
 msgid "Failed to start a swap"
 msgstr "Failed to start a swap"
@@ -908,11 +912,11 @@ msgstr "From"
 msgid "Fund your wallet by buying tokens or transferring from another account."
 msgstr "Fund your wallet by buying tokens or transferring from another account."
 
-#: src/features/account/components/available-account-balance.tsx:47
+#: src/features/account/components/available-account-balance.tsx:43
 msgid "funds already on their way to someone else."
 msgstr "funds already on their way to someone else."
 
-#: src/features/account/components/available-account-balance.tsx:52
+#: src/features/account/components/available-account-balance.tsx:48
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
@@ -1138,7 +1142,7 @@ msgstr "Lock failed"
 msgid "Locked"
 msgstr "Locked"
 
-#: src/features/account/components/available-account-balance.tsx:51
+#: src/features/account/components/available-account-balance.tsx:47
 msgid "Locked Stacks balance:"
 msgstr "Locked Stacks balance:"
 
@@ -1166,7 +1170,7 @@ msgstr ""
 msgid "Make your first transaction to get started"
 msgstr "Make your first transaction to get started"
 
-#: src/features/balances/manage-tokens.sheet.tsx:61
+#: src/features/balances/manage-tokens.sheet.tsx:68
 msgid "Manage tokens"
 msgstr "Manage tokens"
 
@@ -1292,6 +1296,10 @@ msgstr "No results found"
 msgid "No swaps available"
 msgstr "No swaps available"
 
+#: src/features/balances/manage-tokens.sheet.tsx:86
+msgid "No tokens found"
+msgstr "No tokens found"
+
 #: src/features/approver/components/nonce-card.tsx:19
 msgid "Nonce"
 msgstr "Nonce"
@@ -1328,7 +1336,7 @@ msgstr "Only {threshold} more {baseAssetSymbol} can be deposited into {targetAss
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
 
-#: src/features/account/components/available-account-balance.tsx:46
+#: src/features/account/components/available-account-balance.tsx:42
 msgid "Outbound balance:"
 msgstr "Outbound balance:"
 
@@ -1563,6 +1571,10 @@ msgstr "Search for asset"
 #: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:72
 msgid "Search for BNS name or address"
 msgstr "Search for BNS name or address"
+
+#: src/features/balances/manage-tokens.sheet.tsx:74
+msgid "Search tokens"
+msgstr "Search tokens"
 
 #: src/app/secure-your-wallet.tsx:17
 msgid "Secure your wallet"
@@ -1905,7 +1917,7 @@ msgstr "This transaction sends funds to an output Leather can’t display as an 
 msgid "This transaction sends funds to an output Leather can’t display as an address. Continue only if you trust this app."
 msgstr "This transaction sends funds to an output Leather can’t display as an address. Continue only if you trust this app."
 
-#: src/features/account/components/available-account-balance.tsx:57
+#: src/features/account/components/available-account-balance.tsx:53
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
@@ -2004,7 +2016,7 @@ msgstr "Unable to open app store. Please update the app manually from your devic
 msgid "Unable to Open Store"
 msgstr "Unable to Open Store"
 
-#: src/features/account/components/available-account-balance.tsx:56
+#: src/features/account/components/available-account-balance.tsx:52
 msgid "Uneconomical balance:"
 msgstr "Uneconomical balance:"
 

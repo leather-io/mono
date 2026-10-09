@@ -61,10 +61,6 @@ export function useInternationalizationFlag() {
   return useBoolVariation('internationalization', false);
 }
 
-export function useTokenManagementFlag() {
-  return useBoolVariation('release_token_management', false);
-}
-
 export function useSwapFlag() {
   return useBoolVariation('swap', false);
 }

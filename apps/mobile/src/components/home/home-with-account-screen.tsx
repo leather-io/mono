@@ -42,11 +42,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
 
-  const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, {
-    includeHiddenAssets: true,
-  });
-
-  const hasAssets = !!allSip10Data.value?.sip10s.length;
   const activityState = useActivity(fingerprint, accountIndex);
   const hasActivity = !!activityState.value?.length;
   const displayLearningSections = activityState.state === 'success' && !hasActivity;
@@ -88,7 +83,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
                   onOpenManageTokens={() => {
                     manageTokensSheetRef.current?.present();
                   }}
-                  hasAssets={hasAssets}
                 />
               )}
               <BitcoinDepositTokenCell fingerprint={fingerprint} accountIndex={accountIndex} />

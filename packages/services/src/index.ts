@@ -3,6 +3,7 @@ export * from './asset-list/asset-list.types';
 export * from './activity/activity.service';
 export * from './activity/blockchain-activity.service';
 export * from './assets/sip10-asset.service';
+export type { DefaultAssetVisibilityPolicy } from './assets/fungible-asset-visibility.service';
 export * from './balances/btc-balances.service';
 export * from './balances/sip10-balances.service';
 export * from './balances/stx-balances.service';
