@@ -15,7 +15,7 @@ import { createMoney, sumMoney } from '@leather.io/utils';
 import { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
 import type { SettingsService } from '../../../infrastructure/settings/settings.service';
 import { Types } from '../../../inversify.types';
-import { YieldProductService } from '../../yield.service';
+import type { YieldProductService } from '../../yield.service';
 import { StackingDaoLstService } from './stacking-dao-lst.service';
 
 @injectable()

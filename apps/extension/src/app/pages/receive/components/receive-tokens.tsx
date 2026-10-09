@@ -11,7 +11,7 @@ import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useAlexSwappableAssets } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 
-import { receiveTabStyle } from '../receive-dialog';
+import { receiveTabStyle } from '../receive-tab-style';
 import { ReceiveItem } from './receive-item';
 
 interface ReceiveTokensProps {

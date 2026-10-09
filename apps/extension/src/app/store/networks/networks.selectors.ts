@@ -11,7 +11,6 @@ import {
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { RootState } from '@app/store';
 
-import { useAppRequestedNetworkId } from './networks.hooks';
 import { networksAdapter } from './networks.slice';
 import { transformNetworkStateToMultichainStucture } from './networks.utils';
 
@@ -32,7 +31,7 @@ const selectNetworks = createSelector(
 
 const selectCurrentNetworkId = createSelector(selectNetworksSlice, state => state.currentNetworkId);
 
-export const selectAppRequestedNetworkId = createSelector(selectNetworks, networks => {
+const selectAppRequestedNetworkId = createSelector(selectNetworks, networks => {
   // `network` param is a more generic network selector that doesn't deal with
   // custom networks
   const network = initialSearchParams.get('network');
@@ -46,6 +45,10 @@ export const selectCurrentNetwork = createSelector(
   (networks, currentNetworkId, appRequestedNetworkId) =>
     networks[appRequestedNetworkId || currentNetworkId] ?? defaultCurrentNetwork
 );
+
+function useAppRequestedNetworkId() {
+  return useSelector(selectAppRequestedNetworkId);
+}
 
 export function useNetworks(): Record<string, NetworkConfiguration> {
   return useSelector(selectNetworks);

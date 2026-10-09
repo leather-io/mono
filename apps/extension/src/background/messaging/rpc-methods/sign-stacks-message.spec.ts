@@ -15,7 +15,7 @@ const mocks = vi.hoisted(() => ({
   sendMessage: vi.fn(),
 }));
 
-vi.mock('../rpc-message-handler', () => ({
+vi.mock('../define-rpc-request-handler', () => ({
   defineRpcRequestHandler: (method: string, handler: unknown) => [method, handler],
 }));
 

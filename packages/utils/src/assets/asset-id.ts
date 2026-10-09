@@ -6,7 +6,7 @@ import {
   Sip9Asset,
 } from '@leather.io/models';
 
-import { assertUnreachable } from '../index';
+import { assertUnreachable } from '../assert-unreachable';
 
 export function matchesAssetId(asset: CryptoAsset, assetId: CryptoAssetId) {
   const assetIdentifier = getAssetId(asset);

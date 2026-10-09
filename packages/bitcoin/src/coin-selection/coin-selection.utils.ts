@@ -7,7 +7,7 @@ import { sumNumbers } from '@leather.io/utils';
 import { BtcSizeFeeEstimator } from '../fees/btc-size-fee-estimator';
 import { inferPaymentTypeFromAddress } from '../utils/bitcoin.utils';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
-import { CoinSelectionRecipient } from './coin-selection';
+import type { CoinSelectionRecipient } from './coin-selection';
 
 export interface InputData {
   value: number;

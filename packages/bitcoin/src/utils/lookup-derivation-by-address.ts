@@ -3,11 +3,15 @@ import { HARDENED_OFFSET, HDKey } from '@scure/bip32';
 import { BitcoinAddress } from '@leather.io/models';
 import { createCounter } from '@leather.io/utils';
 
-import { makeTaprootAddressIndexDerivationPath } from '../payments/p2tr-address-gen';
-import { makeNativeSegwitAddressIndexDerivationPath } from '../payments/p2wpkh-address-gen';
+import {
+  getTaprootAddress,
+  makeTaprootAddressIndexDerivationPath,
+} from '../payments/p2tr-address-gen';
 import {
   getNativeSegwitAddress,
-  getTaprootAddress,
+  makeNativeSegwitAddressIndexDerivationPath,
+} from '../payments/p2wpkh-address-gen';
+import {
   inferNetworkFromAddress,
   inferPaymentTypeFromAddress,
   whenSupportedPaymentType,

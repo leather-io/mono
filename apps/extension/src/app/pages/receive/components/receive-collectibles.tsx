@@ -6,7 +6,7 @@ import { StxAvatarIcon } from '@leather.io/ui';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { useToast } from '@app/features/toasts/use-toast';
 
-import { receiveTabStyle } from '../receive-dialog';
+import { receiveTabStyle } from '../receive-tab-style';
 import { ReceiveItem } from './receive-item';
 
 interface ReceiveCollectiblesProps {

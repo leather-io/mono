@@ -23,7 +23,7 @@ import type {
   LeatherApiClient,
 } from '../../../infrastructure/api/leather/leather-api.client';
 import { MarketDataService } from '../../../market/market-data.service';
-import { YieldProductService } from '../../yield.service';
+import type { YieldProductService } from '../../yield.service';
 import { calculatePoolUnderlyingTokenBalance } from './bitflow.utils';
 
 export interface BitflowPosition {
