@@ -2,8 +2,8 @@ import { BigNumber } from 'bignumber.js';
 
 import { type MarketData, type Money, type NumType, formatMarketPair } from '@leather.io/models';
 
-import { isNumber } from '..';
 import { initBigNumber } from '../math/helpers';
+import { isNumber } from '../type-guards';
 import { createMoney } from './create-money';
 import { isMoney } from './is-money';
 

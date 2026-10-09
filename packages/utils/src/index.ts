@@ -3,7 +3,11 @@ import { BigNumber } from 'bignumber.js';
 import { KEBAB_REGEX } from '@leather.io/constants';
 import type { NetworkModes } from '@leather.io/models';
 
+import { isNumber, isUndefined } from './type-guards';
+
 export * from './async';
+export * from './type-guards';
+export * from './assert-unreachable';
 export { createCounter } from './counter';
 export * from './math';
 export * from './money';
@@ -24,10 +28,6 @@ export { spamFilter } from './spam-filter/spam-filter';
 export { extractPhraseFromString } from './extract-phrase-from-string/extract-phrase-from-string';
 export { pxStringToNumber } from './px-string-to-number/px-string-to-number';
 
-export function isNumber(value: unknown): value is number {
-  return typeof value === 'number';
-}
-
 export function isString(value: unknown): value is string {
   return typeof value === 'string';
 }
@@ -36,24 +36,12 @@ export function isEmptyString(value: unknown): value is '' {
   return isString(value) && value === '';
 }
 
-export function isBigInt(value: unknown): value is bigint {
-  return typeof value === 'bigint';
-}
-
-export function isUndefined(value: unknown): value is undefined {
-  return typeof value === 'undefined';
-}
-
 export function isFunction(value: unknown): value is () => void {
   return typeof value === 'function';
 }
 
 export function isBoolean(value: unknown): value is boolean {
   return typeof value === 'boolean';
-}
-
-export function isObject(value: unknown): value is object {
-  return typeof value === 'object';
 }
 
 export function isError(value: unknown): value is Error {
@@ -194,16 +182,6 @@ export function mapObject<T extends object, U>(
 
 export function assertIsTruthy<T>(val: T): asserts val is NonNullable<T> {
   if (!val) throw new Error(`expected: true, actual: ${val}`);
-}
-
-/**
- * Ensure all cases in a control flow are handled by asserting a value is `never`.
- *
- * Typically used in `switch` statements to enforce exhaustiveness.
- * TypeScript's type checking will catch unhandled cases at compile time.
- */
-export function assertUnreachable(value: never): never {
-  throw new Error(`Unexpected value: ${JSON.stringify(value)}`);
 }
 
 export function assertExistence<T>(value: T, message: string): asserts value is NonNullable<T> {

@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import { Money } from '@leather.io/models';
 
-import { isObject } from '..';
+import { isObject } from '../type-guards';
 
 export function isMoney(val: unknown): val is Money {
   if (!isObject(val)) return false;

@@ -7,16 +7,17 @@ import { HD_KEY_VERSIONS_BY_NETWORK } from '@leather.io/constants';
 import { deriveRootKeychainFromMnemonic } from '@leather.io/crypto';
 import { testMnemonic } from '@leather.io/test-config';
 
-import { deriveTaprootAccount } from '../payments/p2tr-address-gen';
-import { deriveNativeSegwitAccountFromRootKeychain } from '../payments/p2wpkh-address-gen';
+import { deriveTaprootAccount, getTaprootAddress } from '../payments/p2tr-address-gen';
+import {
+  deriveNativeSegwitAccountFromRootKeychain,
+  getNativeSegwitAddress,
+} from '../payments/p2wpkh-address-gen';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
 import {
   deriveAddressIndexZeroFromAccount,
   ecdsaPublicKeyToSchnorr,
   encodeExtendedPublicKeyForNetwork,
   getInputPaymentType,
-  getNativeSegwitAddress,
-  getTaprootAddress,
   inferNetworkFromAddress,
   inferPaymentTypeFromAddress,
   isNativeSegwitDerivationPath,

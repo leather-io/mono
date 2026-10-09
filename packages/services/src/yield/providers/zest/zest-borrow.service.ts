@@ -28,7 +28,7 @@ import { LeatherApiClient } from '../../../infrastructure/api/leather/leather-ap
 import type { SettingsService } from '../../../infrastructure/settings/settings.service';
 import { Types } from '../../../inversify.types';
 import { MarketDataService } from '../../../market/market-data.service';
-import { YieldProductService } from '../../yield.service';
+import type { YieldProductService } from '../../yield.service';
 import {
   parseZestGetUserAssetsReadResponseCV,
   parseZestGetZTokenBalanceResponseCV,

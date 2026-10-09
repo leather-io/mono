@@ -104,7 +104,8 @@ module.exports = {
       to: {
         circular: true,
         // Allow type circular deps to be a little less strict
-        dependencyTypes: ['type-only'],
+        dependencyTypesNot: ['type-only'],
+        viaOnly: { dependencyTypesNot: ['type-only'] },
         // Panda has out the box circular dependencies
         pathNot: [
           'packages/ui/leather-styles/types',
@@ -116,14 +117,15 @@ module.exports = {
     },
     {
       name: 'no-circular-extension',
-      severity: 'warn',
+      severity: 'error',
       comment:
         'This dependency is part of a circular relationship. You might want to revise ' +
         'your solution (i.e. use dependency inversion, make sure the modules have a single responsibility) ',
       from: {},
       to: {
         circular: true,
-        dependencyTypes: ['type-only'],
+        dependencyTypesNot: ['type-only'],
+        viaOnly: { dependencyTypesNot: ['type-only'] },
         path: ['apps/extension'],
       },
     },

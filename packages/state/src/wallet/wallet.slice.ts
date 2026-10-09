@@ -3,8 +3,8 @@ import { produce } from 'immer';
 
 import { SupportedBlockchains, WalletId } from '@leather.io/models';
 
+import { handleAppResetWithState } from '../app-reset';
 import { handleEntityActionWith } from '../entity.helpers';
-import { handleAppResetWithState } from '../index';
 import { PartialWalletStore, WalletStore } from './wallet.utils';
 
 export const walletAdapter = createEntityAdapter<WalletStore, string>({

@@ -20,9 +20,9 @@ import {
   HiroStacksTransaction,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { StacksAssetTransferWithInfo } from './stacks-asset-transfer.utils';
+import { isMempoolTx } from './stacks-mempool-tx.utils';
 import {
   getEventsByTxId,
-  isMempoolTx,
   mapContractCallActivity,
   mapSmartContractActivity,
   mapStacksTxBlockHeight,

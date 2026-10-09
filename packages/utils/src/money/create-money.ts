@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { currencyDecimalsMap } from '@leather.io/constants';
 import type { Currency, Money, NumType } from '@leather.io/models';
 
-import { isBigInt, isUndefined } from '..';
+import { isBigInt, isUndefined } from '../type-guards';
 
 type KnownCurrencyDecimals = keyof typeof currencyDecimalsMap;
 

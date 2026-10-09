@@ -15,8 +15,8 @@ import { logger } from '@shared/logger';
 import type { TransferRecipient } from '@shared/models/form.model';
 
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/use-bitcoin-payer-from-input';
 
 interface GenerateBitcoinTxValues {
   amount: Money;

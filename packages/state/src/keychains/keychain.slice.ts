@@ -2,8 +2,8 @@ import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit
 
 import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
 
+import { handleAppResetWithState } from '../app-reset';
 import { handleEntityActionWith } from '../entity.helpers';
-import { handleAppResetWithState } from '../index';
 import { userAddsWallet, userRemovesWallet } from '../wallet/wallet.slice';
 import { BitcoinKeychain } from './bitcoin/bitcoin-keychain.utils';
 import { filterKeychainsToRemove } from './keychain.utils';
