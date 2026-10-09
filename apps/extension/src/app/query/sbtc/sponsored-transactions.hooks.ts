@@ -5,8 +5,8 @@ import type { StacksTransactionFees } from '@leather.io/models';
 import { logger } from '@shared/logger';
 
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-import { useConfigSbtc } from '../common/remote-config/remote-config.query';
 import { useNextNonce } from '../stacks/nonce/account-nonces.hooks';
 import {
   type SbtcSponsorshipEligibility,
@@ -14,6 +14,9 @@ import {
   type TransactionBase,
   verifySponsoredSbtcTransaction,
 } from './sponsored-transactions.query';
+
+const sponsorshipApiUrlMainnet = 'https://sponsor.leather.io';
+const sponsorshipApiUrlTestnet = 'https://sponsor-testnet.leather.io';
 
 interface UseCheckSbtcSponsorshipEligibleProps {
   baseTx?: TransactionBase;
@@ -23,7 +26,9 @@ export function useCheckSbtcSponsorshipEligible({
   baseTx,
   stxFees,
 }: UseCheckSbtcSponsorshipEligibleProps): SbtcSponsorshipVerificationResult {
-  const sbtcConfig = useConfigSbtc();
+  const network = useCurrentNetwork();
+  const sponsorshipApiUrl =
+    network.chain.bitcoin.mode === 'mainnet' ? sponsorshipApiUrlMainnet : sponsorshipApiUrlTestnet;
   const stxAddress = useCurrentStacksAccountAddress();
   const { data: nextNonce } = useNextNonce(stxAddress);
   const [isLoading, setIsLoading] = useState(true);
@@ -31,11 +36,7 @@ export function useCheckSbtcSponsorshipEligible({
   const [lastAddressChecked, setLastAddressChecked] = useState<string | undefined>();
 
   useEffect(() => {
-    if (!sbtcConfig.configLoading && !sbtcConfig.isSbtcSponsorshipsEnabled) {
-      if (isLoading) setIsLoading(false);
-      return;
-    }
-    if (!(sbtcConfig && baseTx && nextNonce && stxFees)) {
+    if (!(baseTx && nextNonce && stxFees)) {
       return;
     }
     if (result && stxAddress === lastAddressChecked) {
@@ -43,7 +44,7 @@ export function useCheckSbtcSponsorshipEligible({
     }
 
     verifySponsoredSbtcTransaction({
-      apiUrl: sbtcConfig.sponsorshipApiUrl,
+      apiUrl: sponsorshipApiUrl,
       baseTx,
       nonce: nextNonce.nonce,
       fee: stxFees.options.standard.value.amount.toNumber(),
@@ -59,7 +60,7 @@ export function useCheckSbtcSponsorshipEligible({
       .finally(() => {
         setIsLoading(false);
       });
-  }, [baseTx, stxFees, result, stxAddress, lastAddressChecked, nextNonce, isLoading, sbtcConfig]);
+  }, [baseTx, stxFees, result, stxAddress, lastAddressChecked, nextNonce, sponsorshipApiUrl]);
 
   return {
     isVerifying: isLoading,

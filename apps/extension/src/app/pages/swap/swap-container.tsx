@@ -28,12 +28,7 @@ export function SwapContainer() {
   const swapAvailability = useSwapAvailability();
   const hasBeenEnabledRef = useRef(false);
   if (swapAvailability.isEnabled) hasBeenEnabledRef.current = true;
-  if (!hasBeenEnabledRef.current) {
-    if (!swapAvailability.isEnabled && swapAvailability.reason === 'loadingConfig') {
-      return <LoadingSpinner />;
-    }
-    return <Navigate to={RouteUrls.Home} replace />;
-  }
+  if (!hasBeenEnabledRef.current) return <Navigate to={RouteUrls.Home} replace />;
   return <SwapContainerContent />;
 }
 
