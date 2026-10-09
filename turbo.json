@@ -1,12 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "agentGuidance": false,
   "tasks": {
     "build": {
       "outputs": [
         "dist/**",
         "dist-*/**",
         "build/**",
-        "{ios,android,build}/**",
         "leather-styles/**"
       ],
       "dependsOn": [

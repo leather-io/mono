@@ -21,7 +21,7 @@
     "build:test",
     "lingui:extract",
     "lingui:compile",
-    "prebuild",
+    "expo:prebuild",
     "only-allow",
     "pinact",
     "sed"
