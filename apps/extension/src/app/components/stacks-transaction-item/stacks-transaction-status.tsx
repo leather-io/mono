@@ -1,4 +1,4 @@
-import { StacksTx } from '@leather.io/models';
+import type { StacksTransaction } from '@leather.io/models';
 import { Caption } from '@leather.io/ui';
 
 import { isPendingTx } from '@app/common/transactions/stacks/transaction.utils';
@@ -8,11 +8,11 @@ const pendingWaitingMessage =
   'This transaction is waiting to be confirmed. Depending on network congestion, this may take anywhere from a few minutes, to a couple of hours.';
 
 interface TransactionStatusProps {
-  transaction: StacksTx;
+  transaction: StacksTransaction;
 }
 export function StacksTransactionStatus({ transaction }: TransactionStatusProps) {
   const isPending = isPendingTx(transaction);
-  const isFailed = !isPending && transaction.tx_status !== 'success';
+  const isFailed = !isPending && transaction.status !== 'success';
 
   return (
     <>
@@ -22,7 +22,7 @@ export function StacksTransactionStatus({ transaction }: TransactionStatusProps)
         </BasicTooltip>
       )}
       {isFailed && (
-        <BasicTooltip label={transaction.tx_status} side="bottom">
+        <BasicTooltip label={transaction.status} side="bottom">
           <Caption color="yellow.action-primary-default">Failed</Caption>
         </BasicTooltip>
       )}

@@ -29,7 +29,7 @@ function useGetStxTransactionByIdQuery(txid: string) {
   return useQuery({
     ...createStacksTransactionByIdQueryConfig(txid, settings),
     refetchInterval(query) {
-      if (!query.state.data || query.state.data.tx_status === 'pending') return 1000;
+      if (!query.state.data || query.state.data.status === 'pending') return 1000;
       return false;
     },
   });

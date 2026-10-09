@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { StacksTx } from '@leather.io/models';
+import { StacksTransaction, StacksTx } from '@leather.io/models';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import {
@@ -12,7 +12,10 @@ import {
 export class StacksTransactionsService {
   constructor(private readonly stacksApiClient: HiroStacksApiClient) {}
 
-  public async getTransactionById(txid: string, signal?: AbortSignal): Promise<StacksTx | null> {
+  public async getTransactionById(
+    txid: string,
+    signal?: AbortSignal
+  ): Promise<StacksTransaction | null> {
     return await this.stacksApiClient.getTransactionById(txid, { signal });
   }
 

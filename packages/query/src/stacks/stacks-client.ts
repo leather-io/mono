@@ -2,16 +2,15 @@ import { FtMetadataResponse, NftMetadataResponse } from '@hirosystems/token-meta
 import type {
   AddressTransactionsWithTransfersListResponse,
   GetRawTransactionResult,
-  MempoolTransaction,
   MempoolTransactionListResponse,
   NetworkBlockTimesResponse,
   ReadOnlyFunctionSuccessResponse,
-  Transaction,
 } from '@stacks/stacks-blockchain-api-types';
 import { ClarityAbi } from '@stacks/transactions';
 import axios from 'axios';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
+import type { StacksTransaction } from '@leather.io/models';
 
 import { getHiroApiRateLimiter } from '../rate-limiter/hiro-rate-limiter';
 import type {
@@ -162,7 +161,7 @@ export function stacksClient(basePath: string) {
     async getTransactionById(txid: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () =>
-          axios.get<MempoolTransaction | Transaction>(`${basePath}/extended/v1/tx/${txid}`, {
+          axios.get<StacksTransaction>(`${basePath}/extended/v3/transactions/${txid}`, {
             signal,
           }),
         {
