@@ -14,6 +14,7 @@ const badgeRecipe = cva({
   },
   variants: {
     size: {
+      xs: { fontSize: '10px', lineHeight: '12px', px: '6px', py: '0' },
       sm: { px: 'space.02', py: '2px' },
       md: { px: 'space.02', py: 'space.01' },
     },
