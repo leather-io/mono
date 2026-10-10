@@ -27,7 +27,7 @@ import {
   validateRpcParams,
 } from '@shared/rpc/methods/validation.utils';
 import { getRootState, sendMissingStateErrorToTab } from '@shared/storage/get-root-state';
-import { getHostnameFromUrl } from '@shared/utils/urls';
+import { getOriginFromUrl } from '@shared/utils/urls';
 
 import type { RootState } from '@app/store';
 import { popup } from '@background/popup';
@@ -47,8 +47,13 @@ export function getOriginatingFrameFromPort(port: chrome.runtime.Port): Originat
 }
 
 export function getOriginFromPort(port: chrome.runtime.Port) {
-  if (port.sender?.url) return new URL(port.sender.url).origin;
-  return port.sender?.origin;
+  const origin = port.sender?.origin ?? port.sender?.url;
+  if (!origin) return;
+  try {
+    return getOriginFromUrl(origin);
+  } catch {
+    return;
+  }
 }
 
 function getTopOriginFromPort(port: chrome.runtime.Port) {
@@ -59,12 +64,6 @@ function getTopOriginFromPort(port: chrome.runtime.Port) {
   } catch {
     return undefined;
   }
-}
-
-function getHostnameFromPort(port: chrome.runtime.Port) {
-  const origin = getOriginFromPort(port);
-  if (!origin) throw new Error('No URL found in port sender');
-  return getHostnameFromUrl(origin);
 }
 
 //
@@ -157,7 +156,7 @@ export async function createConnectingAppSearchParamsWithLastKnownAccount(
     otherParams
   );
   if (origin) {
-    const appPermissions = await getPermissionsByOrigin(getHostnameFromPort(port));
+    const appPermissions = await getPermissionsByOrigin(origin);
     if (appPermissions) {
       const hasRequestScopedAccount = urlParams.has('accountIndex');
       if (!hasRequestScopedAccount)
@@ -252,10 +251,14 @@ async function checkConnectedWalletExists(
   const walletEntities = state.wallets?.entities;
   if (!walletEntities) return { status: 'failure', reason: 'missing-state', frameId, tabId };
 
-  const hostname = getHostnameFromPort(port);
-  const originPermissions = state.appPermissions.entities[hostname];
+  const origin = getOriginFromPort(port);
+  const originPermissions = origin ? state.appPermissions.entities[origin] : undefined;
 
-  if (!isConnectedToExistingWallet(originPermissions, walletEntities))
+  if (
+    !origin ||
+    originPermissions?.origin !== origin ||
+    !isConnectedToExistingWallet(originPermissions, walletEntities)
+  )
     return { status: 'failure', reason: 'wallet-unavailable', frameId, tabId };
 
   return { status: 'success', frameId, tabId };

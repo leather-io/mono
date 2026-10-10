@@ -249,10 +249,10 @@ test.describe('RPC: sendTransfer with a software wallet alongside a Ledger walle
     // requires a connected wallet, and this is the account it signs with.
     await onboardingPage.signInWithMixedSoftwareAndLedgerWallets(extensionId, {
       appPermissions: {
-        ids: ['localhost:3000'],
+        ids: ['http://localhost:3000'],
         entities: {
-          'localhost:3000': {
-            origin: 'localhost:3000',
+          'http://localhost:3000': {
+            origin: 'http://localhost:3000',
             fingerprint: testFingerprint,
             accountIndex: 0,
             requestedAccounts: '2024-01-01T00:00:00.000Z',
