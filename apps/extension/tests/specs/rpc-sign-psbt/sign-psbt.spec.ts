@@ -866,6 +866,38 @@ test.describe('Sign PSBT', () => {
           createExpectedError(RpcErrorCode.INVALID_PARAMS, 'Only wsh() descriptors are supported')
         );
     });
+
+    test('that a pkh() descriptor forging a p2wpkh scriptCode is rejected with invalid params', async ({
+      page,
+    }) => {
+      const pkhDescriptor = `wsh(pkh(${bytesToHex(addressKeychain.publicKey!)}))`;
+      const { scriptPubKey: pkhScriptPubKey } = compileWshDescriptor(pkhDescriptor);
+
+      const psbt = new btc.Transaction();
+      psbt.addInput({
+        txid: '2965dc62a012028b529c902da59606d65d35353c966aeaf9287f534547609f5f',
+        index: 0,
+        witnessUtxo: { amount: 20000n, script: pkhScriptPubKey },
+      });
+      psbt.addOutputAddress('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d', 1000n, bitcoinTestnet);
+
+      const result = await initiatePsbtSigning(page)({
+        network: 'testnet',
+        hex: bytesToHex(psbt.toPSBT()),
+        descriptor: pkhDescriptor,
+      });
+
+      delete result.id;
+
+      test
+        .expect(result)
+        .toEqual(
+          createExpectedError(
+            RpcErrorCode.INVALID_PARAMS,
+            'Descriptor is not supported for signing'
+          )
+        );
+    });
   });
 });
 
