@@ -1,4 +1,4 @@
-import { isFiatCurrencyCode } from '../money';
+import { isFiatCurrencyCode } from '../money/is-fiat-currency-code';
 import {
   CurrencyFormatterPreset,
   CurrencyFormatterPresetResult,

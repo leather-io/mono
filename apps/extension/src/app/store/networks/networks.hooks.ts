@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 import {
   ChainId,
@@ -18,7 +17,7 @@ import { whenStacksChainId } from '@leather.io/stacks';
 import { useAppDispatch } from '@app/store';
 
 import { networksActions, userEditsNetwork, userRemovesNetwork } from './networks.actions';
-import { selectAppRequestedNetworkId, useCurrentNetwork } from './networks.selectors';
+import { useCurrentNetwork } from './networks.selectors';
 import type { PersistedNetworkConfiguration } from './networks.slice';
 
 export function getStacksNetworkFromChainId(chainId: number) {
@@ -102,8 +101,4 @@ export function useNetworksActions() {
     }),
     [dispatch]
   );
-}
-
-export function useAppRequestedNetworkId() {
-  return useSelector(selectAppRequestedNetworkId);
 }

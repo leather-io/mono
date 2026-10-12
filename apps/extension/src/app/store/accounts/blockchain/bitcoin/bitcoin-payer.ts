@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { HDKey } from '@scure/bip32';
 import type { P2Ret, P2TROut } from '@scure/btc-signer/payment';
 
@@ -8,19 +6,9 @@ import {
   BitcoinPayer,
   BitcoinTaprootPayer,
   deriveAddressIndexKeychainFromAccount,
-  isNativeSegwitDerivationPath,
-  isTaprootDerivationPath,
 } from '@leather.io/bitcoin';
-import {
-  appendAddressIndexToPath,
-  deriveKeychainFromXpub,
-  extractAddressIndexFromPath,
-  extractChangeIndexFromPath,
-} from '@leather.io/crypto';
-import type { BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
-
-import { useCurrentAccountNativeSegwitPayer } from './native-segwit-account.hooks';
-import { useCurrentAccountTaprootPayer } from './taproot-account.hooks';
+import { appendAddressIndexToPath, deriveKeychainFromXpub } from '@leather.io/crypto';
+import type { BitcoinNetworkModes } from '@leather.io/models';
 
 // Conditional type to infer payment-specific Payer type
 type PaymentToPayer<TPayment> = TPayment extends P2TROut
@@ -103,29 +91,4 @@ export function bitcoinSoftwarePayerFactory<
     });
     return payer as unknown as PaymentToPayer<ExtractPaymentReturn<TPaymentFn>>;
   };
-}
-
-export function useBitcoinPayerFromInput() {
-  const createNativeSegwitSigner = useCurrentAccountNativeSegwitPayer();
-  const createTaprootSigner = useCurrentAccountTaprootPayer();
-
-  return useCallback(
-    (input: OwnedUtxo): BitcoinPayer => {
-      const addressIndex = extractAddressIndexFromPath(input.path);
-      const changeIndex = extractChangeIndexFromPath(input.path);
-
-      if (isNativeSegwitDerivationPath(input.path)) {
-        const nativeSegwitSigner = createNativeSegwitSigner?.({ changeIndex, addressIndex });
-        if (nativeSegwitSigner) return nativeSegwitSigner;
-      }
-
-      if (isTaprootDerivationPath(input.path)) {
-        const taprootSigner = createTaprootSigner?.({ changeIndex, addressIndex });
-        if (taprootSigner) return taprootSigner;
-      }
-
-      throw new Error(`No signer found for input at path: ${input.path}`);
-    },
-    [createNativeSegwitSigner, createTaprootSigner]
-  );
 }

@@ -8,7 +8,7 @@ import { NoFeesWarningRow } from '@app/components/no-fees-warning-row';
 
 import { MessagePreviewBox } from '../../../features/message-signer/message-preview-box';
 import { SignMessageActions } from '../../../features/message-signer/stacks-sign-message-action';
-import { Utf8Payload } from '../stacks-message-signing';
+import type { Utf8Payload } from '../stacks-message-signing';
 import { StacksMessageSigningDisclaimer } from './message-signing-disclaimer';
 
 interface SignatureRequestMessageContentProps {

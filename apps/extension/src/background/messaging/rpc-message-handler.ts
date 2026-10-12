@@ -9,6 +9,7 @@ import {
 import { logger } from '@shared/logger';
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 
+import type { RpcHandler } from './define-rpc-request-handler';
 import { methodsRequiringConnectedWallet } from './methods-requiring-connected-wallet';
 import { btcAddAccountHandler } from './rpc-methods/btc-add-account';
 import { getAddressesHandler, stxGetAddressesHandler } from './rpc-methods/get-addresses';
@@ -35,8 +36,6 @@ import {
   validateConnectedWalletExists,
 } from './rpc-request-utils';
 
-type RpcHandler<T> = (request: T, port: chrome.runtime.Port) => Promise<void> | void;
-
 type RpcHandlers = {
   [Method in keyof RpcEndpointMap]: RpcHandler<RpcEndpointMap[Method]['request']>;
 };
@@ -48,13 +47,6 @@ function registerRpcRequestHandler<M extends RpcRequests['method']>(
   handler: RpcHandler<RpcEndpointMap[M]['request']>
 ) {
   rpcHandlers[method] = handler;
-}
-
-export function defineRpcRequestHandler<M extends RpcRequests['method']>(
-  method: M,
-  handler: RpcHandler<RpcEndpointMap[M]['request']>
-) {
-  return [method, handler] as const;
 }
 
 export async function rpcMessageHandler(request: RpcRequests, port: chrome.runtime.Port) {
