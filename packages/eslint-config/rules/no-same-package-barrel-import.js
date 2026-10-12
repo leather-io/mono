@@ -62,7 +62,7 @@ function resolveAliasedSpecifier(specifier, compilerOptions) {
     const wildcard = matchPathPattern(pattern, specifier);
     if (wildcard === null) continue;
     for (const target of targets) {
-      const resolved = resolveToFile(path.resolve(base, target.replace('*', wildcard)));
+      const resolved = resolveToFile(path.resolve(base, target.replaceAll('*', wildcard)));
       if (resolved) return resolved;
     }
   }

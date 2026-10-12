@@ -1034,7 +1034,7 @@
   },
   "src/app/features/dialogs/switch-account-sheet/switch-account-sheet.tsx": {
     "@typescript-eslint/no-misused-promises": {
-      "count": 3
+      "count": 1
     },
     "@typescript-eslint/unbound-method": {
       "count": 1
@@ -1044,14 +1044,14 @@
     "@typescript-eslint/consistent-type-assertions": {
       "count": 1
     },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 4
-    },
     "@typescript-eslint/unbound-method": {
       "count": 7
     }
   },
   "src/app/features/dialogs/switch-account-sheet/use-add-wallet-navigation.ts": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
     "@typescript-eslint/unbound-method": {
       "count": 1
     }
@@ -1897,7 +1897,7 @@
   },
   "src/app/features/stacks-message-signer/components/stacks-signature-message-content.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/unbound-method": {
       "count": 2
@@ -1910,7 +1910,7 @@
   },
   "src/app/features/stacks-message-signer/components/structured-data-content.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/unbound-method": {
       "count": 2
@@ -2735,12 +2735,6 @@
     }
   },
   "src/app/pages/send/send-crypto-asset-form/form/btc/btc-choose-fee.tsx": {
-    "@typescript-eslint/consistent-type-assertions": {
-      "count": 3
-    },
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/unbound-method": {
       "count": 3
     }
@@ -2776,8 +2770,11 @@
     }
   },
   "src/app/pages/send/send-crypto-asset-form/form/btc/use-btc-choose-fee.tsx": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 3
+    },
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
+      "count": 2
     }
   },
   "src/app/pages/send/send-crypto-asset-form/form/btc/use-btc-send-form.tsx": {
@@ -3443,6 +3440,11 @@
       "count": 3
     },
     "leather.io/no-same-package-barrel-import": {
+      "count": 1
+    }
+  },
+  "src/app/store/accounts/blockchain/bitcoin/use-bitcoin-payer-from-input.ts": {
+    "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
   },

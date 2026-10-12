@@ -771,11 +771,6 @@
       "count": 1
     }
   },
-  "app/layouts/page/error.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    }
-  },
   "app/layouts/page/page.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -891,37 +886,16 @@
   "app/pages/bitcoin-staking/pool/pool-staking-active.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
     }
   },
   "app/pages/bitcoin-staking/pool/pool-staking-update.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
     }
   },
   "app/pages/bitcoin-staking/pool/pool-staking.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
     }
   },
   "app/pages/bitcoin-staking/staking-status.route.tsx": {
@@ -937,40 +911,16 @@
   "app/pages/changelog/changelog-entry.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 8
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 7
     }
   },
   "app/pages/changelog/changelog.page.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
     }
   },
   "app/pages/changelog/changelog.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
     }
   },
   "app/pages/changelog/components/changelog-entry.tsx": {
@@ -1373,15 +1323,6 @@
   "app/pages/posts/post.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "app/pages/posts/post.tsx": {
@@ -1392,40 +1333,25 @@
   "app/pages/redirects/help-center-redirect.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
     }
   },
   "app/pages/redirects/help-center-wildcard.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-argument": {
       "count": 1
     }
   },
   "app/pages/redirects/stacking-redirect.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
     }
   },
   "app/pages/redirects/stacking-wildcard.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
     }
   },
   "app/pages/redirects/support-guide-redirect.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
     }
   },
@@ -1518,15 +1444,6 @@
   "app/pages/support/guide/guide.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "app/pages/support/guide/guide.tsx": {
@@ -1537,9 +1454,6 @@
   "app/pages/support/help-center.route.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
     }
   },
   "app/pages/support/help-center.tsx": {
@@ -1547,14 +1461,6 @@
       "count": 2
     },
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "app/pages/support/search.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
     }
   },
@@ -1590,12 +1496,6 @@
   },
   "app/root.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-return": {
       "count": 1
     }
   },

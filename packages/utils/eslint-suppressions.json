@@ -7,9 +7,6 @@
   "src/assets/asset-display-name.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "leather.io/no-same-package-barrel-import": {
-      "count": 1
     }
   },
   "src/assets/asset-id.ts": {
@@ -17,9 +14,6 @@
       "count": 1
     },
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "leather.io/no-same-package-barrel-import": {
       "count": 1
     },
     "no-restricted-properties": {
@@ -95,11 +89,6 @@
       "count": 1
     }
   },
-  "src/math/helpers.ts": {
-    "leather.io/no-same-package-barrel-import": {
-      "count": 1
-    }
-  },
   "src/money/calculate-money.spec.ts": {
     "@typescript-eslint/consistent-type-assertions": {
       "count": 3
@@ -114,21 +103,8 @@
       "count": 2
     }
   },
-  "src/money/calculate-money.ts": {
-    "leather.io/no-same-package-barrel-import": {
-      "count": 1
-    }
-  },
-  "src/money/create-money.ts": {
-    "leather.io/no-same-package-barrel-import": {
-      "count": 1
-    }
-  },
   "src/money/is-money.ts": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "leather.io/no-same-package-barrel-import": {
       "count": 1
     }
   },

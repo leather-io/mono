@@ -13,9 +13,6 @@
     },
     "@typescript-eslint/unbound-method": {
       "count": 4
-    },
-    "leather.io/no-same-package-barrel-import": {
-      "count": 1
     }
   },
   "src/keychains/keychain.utils.ts": {
@@ -237,9 +234,6 @@
     },
     "@typescript-eslint/unbound-method": {
       "count": 2
-    },
-    "leather.io/no-same-package-barrel-import": {
-      "count": 1
     }
   }
 }
