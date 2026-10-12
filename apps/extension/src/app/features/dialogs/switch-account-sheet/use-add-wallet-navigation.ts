@@ -5,6 +5,9 @@ import { closeWindow } from '@shared/utils';
 
 import { doesBrowserSupportWebHidApi, whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { handOffLedgerFlowToFullPage } from '@app/features/ledger/flow/ledger-flow-handoff';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
+import type { LedgerFlowHandoffRequest } from '@app/features/ledger/flow/ledger-flow.types';
 
 interface UseAddWalletNavigationArgs {
   closeSheets(): void;
@@ -12,6 +15,7 @@ interface UseAddWalletNavigationArgs {
 
 export function useAddWalletNavigation({ closeSheets }: UseAddWalletNavigationArgs) {
   const navigate = useNavigate();
+  const { open: openLedgerFlow } = useLedgerFlow();
 
   function pageModeRoutingAction(url: string) {
     return whenPageMode({
@@ -37,10 +41,17 @@ export function useAddWalletNavigation({ closeSheets }: UseAddWalletNavigationAr
 
   function onConnectLedger() {
     closeSheets();
-    if (doesBrowserSupportWebHidApi()) {
-      return pageModeRoutingAction(RouteUrls.ConnectLedgerStart)();
-    }
-    return pageModeRoutingAction(RouteUrls.LedgerUnsupportedBrowser)();
+    const request: LedgerFlowHandoffRequest = doesBrowserSupportWebHidApi()
+      ? { kind: 'connect-start' }
+      : { kind: 'unsupported-browser' };
+    return whenPageMode({
+      full() {
+        openLedgerFlow(request);
+      },
+      popup() {
+        void handOffLedgerFlowToFullPage(request, { closeCurrentWindow: true });
+      },
+    })();
   }
 
   return { onCreateNewWallet, onRestoreWallet, onConnectLedger };

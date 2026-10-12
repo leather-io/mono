@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router';
-
 import type { BtcFeeType, OwnedUtxo } from '@leather.io/models';
 
 import { BitcoinSendFormValues } from '@shared/models/form.model';
@@ -78,7 +76,6 @@ export function BtcChooseFee() {
             showError={showInsufficientBalanceError}
             maxRecommendedFeeRate={feesList[0]?.feeRate}
           />
-          <Outlet />
         </Page>
       </Content>
     </>

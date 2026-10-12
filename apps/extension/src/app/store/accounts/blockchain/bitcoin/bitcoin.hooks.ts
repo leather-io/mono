@@ -1,6 +1,3 @@
-import { useLocation } from 'react-router';
-
-import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
 
@@ -22,8 +19,8 @@ import {
 import { analytics } from '@shared/utils/analytics';
 
 import { useWalletType } from '@app/common/use-wallet-type';
-import { listenForBitcoinTxLedgerSigning } from '@app/features/ledger/flows/bitcoin-tx-signing/bitcoin-tx-signing-event-listeners';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
+import { unwrapLedgerSigningOutcome } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
 import {
   addNativeSegwitSignaturesToPsbt,
   addTaprootInputSignaturesToPsbt,
@@ -266,10 +263,12 @@ export function useGetAssumedZeroIndexSigningConfig() {
     }).forAccountIndex(account.accountIndex);
 }
 
-export function useSignBitcoinTx() {
+interface UseSignBitcoinTxOptions {
+  settleOnRejection?: boolean;
+}
+export function useSignBitcoinTx({ settleOnRejection = false }: UseSignBitcoinTxOptions = {}) {
   const { whenWallet } = useWalletType();
-  const ledgerNavigate = useLedgerNavigate();
-  const location = useLocation();
+  const ledgerFlow = useLedgerFlow();
   const signSoftwareTx = useSignBitcoinSoftwareTx();
   const getDefaultSigningConfig = useGetAssumedZeroIndexSigningConfig();
 
@@ -294,12 +293,13 @@ export function useSignBitcoinTx() {
         // many routes, in order to achieve a consistent API between
         // Ledger/software, we subscribe to the event that occurs when the
         // unsigned tx is signed
-        void ledgerNavigate.toConnectAndSignBitcoinTransactionStep(
+        const outcome = await ledgerFlow.sign({
+          kind: 'sign-bitcoin-tx',
           psbt,
-          getSigningConfig(inputsToSign),
-          location
-        );
-        return listenForBitcoinTxLedgerSigning(bytesToHex(psbt));
+          inputsToSign: getSigningConfig(inputsToSign),
+          settleOnRejection,
+        });
+        return unwrapLedgerSigningOutcome(outcome);
       },
       software() {
         return signSoftwareTx(psbt, getSigningConfig(inputsToSign), allowedSighash);

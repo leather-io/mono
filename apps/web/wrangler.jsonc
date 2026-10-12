@@ -16,6 +16,7 @@
   "env": {
     "staging": {
       "name": "leather-web-staging",
+      "workers_dev": false,
       "routes": ["https://staging.app.leather.io/*"]
     },
     "production": {

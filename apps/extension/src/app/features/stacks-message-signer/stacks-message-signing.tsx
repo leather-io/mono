@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router';
-
 import { StacksNetwork } from '@stacks/network';
 import type { ClarityValue } from '@stacks/transactions';
 
@@ -79,7 +77,6 @@ export function StacksMessageSigning({
           payload={payload}
         />
       )}
-      <Outlet />
     </MessageSigningRequestLayout>
   );
 }

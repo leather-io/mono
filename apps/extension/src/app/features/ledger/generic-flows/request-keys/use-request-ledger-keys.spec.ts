@@ -25,8 +25,8 @@ const mocks = vi.hoisted(() => ({
   disconnect: vi.fn(),
 }));
 
-vi.mock('../../hooks/use-ledger-navigate', () => ({
-  useLedgerNavigate: () => ({
+vi.mock('../../flow/ledger-flow.context', () => ({
+  useLedgerSteps: () => ({
     toCheckingAppVersion: mocks.toCheckingAppVersion,
     toConnectStep: mocks.toConnectStep,
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,

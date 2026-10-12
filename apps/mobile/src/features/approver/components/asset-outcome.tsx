@@ -5,12 +5,15 @@ import { Sip10Asset } from '@leather.io/models';
 import { Sip10AvatarIcon } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
-export function AssetOutcomeBalance({ asset, amount }: { asset: Sip10Asset; amount: number }) {
-  const marketData = useMarketDataQuery(asset);
-  if (!marketData.data) return null;
+interface AssetOutcomeBalanceProps {
+  asset: Sip10Asset;
+  amount: bigint;
+}
+export function AssetOutcomeBalance({ asset, amount }: AssetOutcomeBalanceProps) {
+  const marketData = useMarketDataQuery(asset).data;
 
-  const baseAmount = createMoney(amount, marketData.data.pair.base, asset.decimals);
-  const resultAmount = baseCurrencyAmountInQuote(baseAmount, marketData.data);
+  const baseAmount = createMoney(amount, marketData?.pair.base ?? asset.symbol, asset.decimals);
+  const resultAmount = marketData ? baseCurrencyAmountInQuote(baseAmount, marketData) : undefined;
 
   return (
     <TokenBalance

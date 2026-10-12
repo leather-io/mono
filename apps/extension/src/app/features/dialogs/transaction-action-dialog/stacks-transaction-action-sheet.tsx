@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import type { MempoolTransaction, Transaction } from '@stacks/stacks-blockchain-api-types';
@@ -153,8 +153,6 @@ export function StacksTransactionActionSheet({
           </Suspense>
         </Stack>
       </Sheet>
-
-      <Outlet />
     </FormProvider>
   );
 }

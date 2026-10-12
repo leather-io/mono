@@ -70,6 +70,28 @@ test.describe('App with Ledger', () => {
           await test.expect(connectBitcoin).toBeVisible();
         });
 
+        test('connecting bitcoin opens the ledger flow without changing the url', async ({
+          homePage,
+        }) => {
+          const urlBeforeConnect = homePage.page.url();
+
+          await homePage.assetList
+            .getByTestId(CoreAssetSelectors.ConnectLedgerBitcoin)
+            .getByRole('button', { name: 'Connect Bitcoin' })
+            .click();
+          await test.expect(homePage.page.getByText('Connect & unlock your Ledger')).toBeVisible();
+          test.expect(homePage.page.url()).toEqual(urlBeforeConnect);
+
+          await homePage.page.keyboard.press('Escape');
+          await test
+            .expect(homePage.page.getByText('Connect & unlock your Ledger'))
+            .not.toBeVisible();
+          await test
+            .expect(homePage.assetList.getByTestId(CoreAssetSelectors.ConnectLedgerBitcoin))
+            .toBeVisible();
+          test.expect(homePage.page.url()).toEqual(urlBeforeConnect);
+        });
+
         test('stacks address is shown by default', async ({ homePage }) => {
           const stacksAddress = await homePage.getReceiveStxAddress();
           test.expect(stacksAddress).toEqual(TEST_ACCOUNT_1_STX_ADDRESS);

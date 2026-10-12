@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useNavigate, useOutletContext } from 'react-router';
+import { useNavigate, useOutletContext } from 'react-router';
 
 import { captureMessage } from '@sentry/react';
 import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
@@ -107,7 +107,6 @@ export function SwapReview() {
           />
         )}
       </AnimatePresence>
-      <Outlet />
     </Box>
   );
 }

@@ -1,7 +1,4 @@
-import { useLocation, useNavigate } from 'react-router';
-
 import { Box, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
-import { z } from 'zod';
 
 import { Button, ExternalLinkIcon, Flag, InfoCircleIcon, Tooltip } from '@leather.io/ui';
 
@@ -9,16 +6,8 @@ import { useThemeSwitcher } from '@app/common/theme-provider';
 import { whenTheme } from '@app/common/utils/when-theme';
 import { LedgerTitle } from '@app/features/ledger/components/ledger-title';
 import { LedgerWrapper } from '@app/features/ledger/components/ledger-wrapper';
+import { useLedgerStep, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import { LEDGER_LIVE_MANAGER_URL } from '@app/features/ledger/utils/generic-ledger-utils';
-
-const locationStateSchema = z.object({
-  versionInfo: z
-    .object({
-      currentVersion: z.string(),
-      requiredVersion: z.string(),
-    })
-    .optional(),
-});
 
 interface OutdatedStacksAppWarningBaseProps {
   onTryAgain(): void | Promise<void>;
@@ -29,12 +18,11 @@ export function OutdatedStacksAppWarningBase({
   onTryAgain,
   onCancel,
 }: OutdatedStacksAppWarningBaseProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const step = useLedgerStep();
+  const ledgerSteps = useLedgerSteps();
   const { theme } = useThemeSwitcher();
 
-  const parseResult = locationStateSchema.safeParse(location.state);
-  const versionInfo = parseResult.success ? parseResult.data.versionInfo : undefined;
+  const versionInfo = step.name === 'outdated-stacks-app' ? step.versionInfo : undefined;
 
   const ledgerIconStyle = whenTheme(theme)({
     light: { filter: 'invert(1)' },
@@ -149,7 +137,7 @@ export function OutdatedStacksAppWarningBase({
           <Button flex={1} onClick={onTryAgain} variant="outline">
             Try again
           </Button>
-          <Button flex="1" onClick={onCancel ?? (() => navigate('../../'))} variant="outline">
+          <Button flex="1" onClick={onCancel ?? ledgerSteps.cancelLedgerAction} variant="outline">
             Cancel
           </Button>
         </HStack>

@@ -1,5 +1,3 @@
-import { useLocation, useNavigate } from 'react-router';
-
 import { Flex, HStack, Stack, styled } from 'leather-styles/jsx';
 
 import type { StacksDerivationPathType } from '@leather.io/stacks';
@@ -14,10 +12,11 @@ import {
   StacksIcon,
 } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { Divider } from '@app/components/layout/divider';
+import { useLedgerStep, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
+import { useLedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 const accountDiscoveryUrl = 'https://app.leather.io/posts/wallet-derivation-paths';
@@ -76,14 +75,15 @@ function TitleWithTooltip({ title, tooltipLabel, badge }: TitleWithTooltipProps)
 }
 
 export function ChooseAddressStandard() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const step = useLedgerStep();
+  const ledgerSteps = useLedgerSteps();
+  const { onSelectStandard: onSelectStandardInFlow } = useLedgerRequestKeysContext();
 
   function onSelectStandard(type: StacksDerivationPathType) {
     analytics.track('ledger_stacks_address_standard_selected', { type });
-    void navigate(`../${RouteUrls.ConnectLedger}`, {
-      replace: true,
-      state: { ...location.state, stacksDerivationPathType: type },
+    onSelectStandardInFlow?.(type);
+    ledgerSteps.toConnectStep({
+      retryImmediately: step.name === 'choose-address-standard' && step.connectImmediatelyAfter,
     });
   }
 
