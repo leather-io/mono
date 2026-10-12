@@ -68,12 +68,14 @@ export function useSip10BalanceByAssetId(
 }
 
 function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference, assetVisibility, defaultAssetVisibility } = useSettings();
   return useQuery({
     queryKey: [
       'sip10-balances-service-get-sip10-aggregate-balance',
       requests,
       fiatCurrencyPreference,
+      assetVisibility,
+      defaultAssetVisibility,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AggregateBalance(requests, signal),
