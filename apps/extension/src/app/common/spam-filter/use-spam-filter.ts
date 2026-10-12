@@ -1,8 +1,14 @@
 import { spamFilter } from '@leather.io/utils';
 
-import { useConfigSpamFilterWhitelist } from '@app/query/common/remote-config/remote-config.query';
+const whitelist = [
+  'DOG.GO.TO.THE.MOON',
+  'DOG.GO.TO.THE.MOON Transfer',
+  'SUSDH.SUSDH.SUSDH.SUSDH',
+  'SUSDH.SUSDH.SUSDH.SUSDH Transfer',
+  'USDH.USDH.USDH.USDH',
+  'USDH.USDH.USDH.USDH Transfer',
+];
 
 export function useSpamFilterWithWhitelist() {
-  const whitelist = useConfigSpamFilterWhitelist();
   return (input: string) => spamFilter({ input, whitelist });
 }

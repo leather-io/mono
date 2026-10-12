@@ -20,13 +20,6 @@ import { ReceiveTokens } from './components/receive-tokens';
 import { ReceiveBtcModal } from './receive-btc';
 import { ReceiveStxModal } from './receive-stx';
 
-export const receiveTabStyle = {
-  mt: 'space.03',
-  paddingX: 'space.05',
-  pb: 'space.05',
-  minHeight: '260px',
-};
-
 interface ReceiveDialogProps {
   view: ReceiveView;
   onChangeView(view: ReceiveView): void;
