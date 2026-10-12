@@ -12,7 +12,7 @@ import {
   readTxOwnedVins,
 } from '../transactions/bitcoin-transactions.utils';
 import { AccountRequestAddressExclusionOptions } from '../types/request.types';
-import { UtxoTotals } from './utxos.service';
+import type { UtxoTotals } from './utxos.service';
 
 export function getUtxoIdFromOutpoint(outpoint: string) {
   const splits = outpoint?.split(':');
