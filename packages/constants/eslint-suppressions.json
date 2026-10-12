@@ -1,0 +1,7 @@
+{
+  "src/index.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  }
+}

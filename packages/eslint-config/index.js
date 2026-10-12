@@ -2,6 +2,8 @@ import eslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import tseslint from 'typescript-eslint';
 
+import { noEnumSyntax } from './rules/no-enum.js';
+
 export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
@@ -16,6 +18,8 @@ export default tseslint.config(
     rules: {
       'prefer-const': ['error', { ignoreReadBeforeAssign: false }],
       'no-nested-ternary': 'error',
+      'no-restricted-syntax': ['error', noEnumSyntax],
+      'object-shorthand': ['error', 'always', { avoidExplicitReturnArrows: true }],
       'no-duplicate-imports': ['error'],
       'no-fallthrough': 'error',
       'default-case': 'error',
@@ -23,6 +27,12 @@ export default tseslint.config(
       'no-console': 'error',
       '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
       '@typescript-eslint/array-type': 'error',
+      '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'never' }],
+      '@typescript-eslint/no-non-null-assertion': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
+      ],
       '@typescript-eslint/no-meaningless-void-operator': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { destructuredArrayIgnorePattern: '^_' }],
       '@typescript-eslint/no-base-to-string': ['error', { ignoredTypeNames: ['To'] }],
@@ -46,24 +56,6 @@ export default tseslint.config(
       // '@typescript-eslint/no-unnecessary-condition': 'off',
       '@typescript-eslint/method-signature-style': ['error', 'method'],
       // 'no-warning-comments': [0],
-    },
-  },
-  {
-    name: 'Rules that should be enabled',
-    // The rules below are temporarily disabled until the related code is updated.
-    // Some are intentionally duplicated from the rule list above for easier deletion after addressing.
-    rules: {
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-return': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/unbound-method': 'off',
-      '@typescript-eslint/restrict-template-expressions': 'off',
-      '@typescript-eslint/no-misused-promises': 'off',
-      '@typescript-eslint/consistent-type-imports': 'off', // --fix-able
     },
   }
 );

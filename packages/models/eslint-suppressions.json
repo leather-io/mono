@@ -1,0 +1,125 @@
+{
+  "src/activity/activity.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 6
+    }
+  },
+  "src/activity/blockchain-activity.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 4
+    }
+  },
+  "src/assets/asset-id.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/assets/asset-type-guards.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "src/assets/asset.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/assets/sip9-asset.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/balance.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/bitcoin-staking.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/currencies.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/fees/bitcoin-fees.model.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/fees/fees.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "no-restricted-syntax": {
+      "count": 2
+    }
+  },
+  "src/fees/stacks-fees.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/fees/transaction-fees.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "src/multisig.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/network/network.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 2
+    }
+  },
+  "src/settings.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/swap/swap.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "src/types.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/types.utils.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/yield/helpers/yield.helpers.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 2
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "no-restricted-properties": {
+      "count": 1
+    }
+  },
+  "src/yield/yield-product.model.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  }
+}

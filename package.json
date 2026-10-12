@@ -22,7 +22,7 @@
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
     "knip": "knip",
     "lint": "turbo run lint",
-    "lint:deps": "pnpm dependency-cruiser .",
+    "lint:deps": "pnpm dependency-cruiser --ignore-known .dependency-cruiser-known-violations.json .",
     "lint:filenames": "pnpm ls-lint",
     "lint:fix": "turbo run lint:fix",
     "lt": "pnpm --filter @leather.io/tools lt",
