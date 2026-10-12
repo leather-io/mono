@@ -1,15 +1,14 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router';
 
 import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 
 import { delay } from '@leather.io/utils';
 
-import { RouteUrls } from '@shared/route-urls';
-
 import { safeAwait } from '@app/common/utils/safe-await';
 
 import type { LedgerDeviceLockState } from '../dmk/ledger-dmk-errors';
+import { useLedgerFlowState } from '../flow/ledger-flow.context';
+import type { LedgerStepName } from '../flow/ledger-flow.types';
 
 export const LEDGER_APPS_MAP = {
   STACKS: 'Stacks',
@@ -58,15 +57,17 @@ export function prepareLedgerDeviceForAppFn<App>(connectAppFn: () => Promise<App
   };
 }
 
+const cancellableLedgerSteps: readonly LedgerStepName[] = [
+  'connect',
+  'connection-error',
+  'pair-device',
+  'awaiting-device-operation',
+  'choose-address-standard',
+];
+
 function useIsLedgerActionCancellable(): boolean {
-  const { pathname } = useLocation();
-  return (
-    pathname.includes(RouteUrls.ConnectLedger) ||
-    pathname.includes(RouteUrls.ConnectLedgerError) ||
-    pathname.includes(RouteUrls.LedgerPairDevice) ||
-    pathname.includes(RouteUrls.AwaitingDeviceUserAction) ||
-    pathname.includes(RouteUrls.LedgerStacksAddressStandard)
-  );
+  const state = useLedgerFlowState();
+  return state !== null && cancellableLedgerSteps.includes(state.step.name);
 }
 
 const cancellableConnectionInteractions: readonly string[] = [

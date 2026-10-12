@@ -5,8 +5,11 @@ import { useQuery } from '@tanstack/react-query';
 
 import {
   createPostStacksFeeTransactionQueryOptions,
+  defaultContractCallFeeEstimations,
+  defaultContractDeploymentFeeEstimations,
   defaultFeesMaxValuesAsMoney,
   defaultFeesMinValuesAsMoney,
+  defaultTokenTransferFeeEstimations,
   parseStacksTxFeeEstimationResponse,
 } from '@leather.io/query';
 import {
@@ -14,40 +17,10 @@ import {
   getSerializedUnsignedStacksTxPayload,
 } from '@leather.io/stacks';
 
-import {
-  useConfigFeeEstimationsMaxEnabled,
-  useConfigFeeEstimationsMaxValues,
-  useConfigFeeEstimationsMinEnabled,
-  useConfigFeeEstimationsMinValues,
-  useConfigStacksContractCallFeeEstimations,
-  useConfigStacksContractDeploymentFeeEstimations,
-  useConfigTokenTransferFeeEstimations,
-} from '../../common/remote-config/remote-config.query';
 import { useStacksClient } from '../stacks-client';
-
-function useFeeEstimationsMaxValues() {
-  const configFeeEstimationsMaxEnabled = useConfigFeeEstimationsMaxEnabled();
-  const configFeeEstimationsMaxValues = useConfigFeeEstimationsMaxValues();
-
-  if (configFeeEstimationsMaxEnabled === false) return;
-  return configFeeEstimationsMaxValues || defaultFeesMaxValuesAsMoney;
-}
-
-function useFeeEstimationsMinValues() {
-  const configFeeEstimationsMinEnabled = useConfigFeeEstimationsMinEnabled();
-  const configFeeEstimationsMinValues = useConfigFeeEstimationsMinValues();
-
-  if (configFeeEstimationsMinEnabled === false) return;
-  return configFeeEstimationsMinValues || defaultFeesMinValuesAsMoney;
-}
 
 export function useCalculateStacksTxFees(unsignedTx?: StacksTransactionWire) {
   const client = useStacksClient();
-  const feeEstimationsMaxValues = useFeeEstimationsMaxValues();
-  const feeEstimationsMinValues = useFeeEstimationsMinValues();
-  const tokenTransferFeeEstimations = useConfigTokenTransferFeeEstimations();
-  const contractCallDefaultFeeEstimations = useConfigStacksContractCallFeeEstimations();
-  const contractDeploymentDefaultFeeEstimations = useConfigStacksContractDeploymentFeeEstimations();
 
   const { txByteLength, txPayload } = useMemo(() => {
     if (!unsignedTx) return { txByteLength: null, txPayload: '' };
@@ -68,12 +41,12 @@ export function useCalculateStacksTxFees(unsignedTx?: StacksTransactionWire) {
       parseStacksTxFeeEstimationResponse({
         feeEstimation: resp,
         payloadType: unsignedTx?.payload.payloadType,
-        maxValues: feeEstimationsMaxValues,
-        minValues: feeEstimationsMinValues,
+        maxValues: defaultFeesMaxValuesAsMoney,
+        minValues: defaultFeesMinValuesAsMoney,
         txByteLength,
-        tokenTransferFeeEstimations,
-        contractCallDefaultFeeEstimations,
-        contractDeploymentDefaultFeeEstimations,
+        tokenTransferFeeEstimations: defaultTokenTransferFeeEstimations,
+        contractCallDefaultFeeEstimations: defaultContractCallFeeEstimations,
+        contractDeploymentDefaultFeeEstimations: defaultContractDeploymentFeeEstimations,
       }),
   });
 }

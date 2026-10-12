@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import * as btc from '@scure/btc-signer';
 import * as bitcoin from 'bitcoinjs-lib';
 
-import { createBitcoinAddress, signBip322MessageSimple } from '@leather.io/bitcoin';
+import { createBitcoinAddress } from '@leather.io/bitcoin';
 import { BitcoinAddress } from '@leather.io/models';
 import {
   PaymentTypes,
@@ -19,6 +19,8 @@ import { analytics } from '@shared/utils/analytics';
 
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
+import { signBip322MessageUnlessDismissed } from '@app/common/sign-bip322-message-unless-dismissed';
+import { isLedgerSigningCancelledError } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import {
@@ -52,7 +54,7 @@ const allowTimeForUserToReadToast = createDelay(1200);
 
 interface SignBip322MessageFactoryArgs {
   address: BitcoinAddress;
-  signPsbt(a: bitcoin.Psbt): Promise<btc.Transaction>;
+  signPsbt(a: bitcoin.Psbt): Promise<btc.Transaction | null>;
 }
 function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFactoryArgs) {
   const network = useCurrentNetwork();
@@ -92,28 +94,38 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
         return;
       }
 
-      const { signature } = await signBip322MessageSimple({
-        message,
-        address,
-        signPsbt,
-        network: networkMode,
-      });
+      try {
+        const signed = await signBip322MessageUnlessDismissed({
+          message,
+          address,
+          signPsbt,
+          network: networkMode,
+        });
+        if (!signed) return;
+        const { signature } = signed;
 
-      await shortPauseBeforeToast();
-      toast.success('Message signed successfully');
+        await shortPauseBeforeToast();
+        toast.success('Message signed successfully');
 
-      void sendMessageToOriginatingFrame(
-        { frameId, tabId },
-        createRpcSuccessResponse('signMessage', {
-          id: requestId,
-          result: { signature, address, message },
-        })
-      );
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
+          createRpcSuccessResponse('signMessage', {
+            id: requestId,
+            result: { signature, address, message },
+          })
+        );
 
-      analytics.track('user_approved_message_signing', { origin });
+        analytics.track('user_approved_message_signing', { origin });
 
-      await allowTimeForUserToReadToast();
-      closeWindow();
+        await allowTimeForUserToReadToast();
+        closeWindow();
+      } catch (e) {
+        if (isLedgerSigningCancelledError(e)) return;
+        logger.error('Unable to sign bip322 message', e);
+        toast.error('Unable to sign message');
+      } finally {
+        setIsLoading(false);
+      }
     },
   };
 }

@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { logger } from '@shared/logger';
 import { whenSignableMessageOfType } from '@shared/signature/signature-types';
 
-import { ApproveLedgerOperationLayout } from '../../../generic-steps';
+import { ApproveLedgerOperationLayout } from '../../../generic-steps/approve-ledger-operation/approve-ledger-operation.layout';
 import { useHasApprovedOperation } from '../../../hooks/use-has-approved-transaction';
 import { ledgerMsgSigningContext } from '../ledger-stacks-sign-msg.context';
 import { cvToDisplay, deriveStructuredMessageHash } from '../message-signing.utils';

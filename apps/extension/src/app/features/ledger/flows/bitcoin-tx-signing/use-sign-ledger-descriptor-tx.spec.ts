@@ -25,8 +25,8 @@ vi.mock('@shared/logger', () => ({
   logger: { warn: mocks.loggerWarn },
 }));
 
-vi.mock('@app/features/ledger/hooks/use-ledger-navigate', () => ({
-  useLedgerNavigate: () => ({
+vi.mock('@app/features/ledger/flow/ledger-flow.context', () => ({
+  useLedgerSteps: () => ({
     toDeviceBusyStep: mocks.toDeviceBusyStep,
     toAwaitingDeviceOperation: mocks.toAwaitingDeviceOperation,
   }),

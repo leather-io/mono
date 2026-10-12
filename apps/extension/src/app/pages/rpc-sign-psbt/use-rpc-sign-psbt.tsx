@@ -228,6 +228,7 @@ export function useRpcSignPsbt() {
             multisigAddress: bondRoute.policy.address,
             rawPayload,
           });
+          if (!proposal) return;
 
           analytics.track('propose_multisig_transaction', { symbol: 'btc' });
 
@@ -269,6 +270,7 @@ export function useRpcSignPsbt() {
       if (descriptor) {
         try {
           const signedTx = await signDescriptorPsbt(psbtHex, descriptor);
+          if (!signedTx) return;
           const signedPsbtHex = bytesToHex(signedTx.toPSBT());
 
           if (broadcast) {
@@ -328,6 +330,7 @@ export function useRpcSignPsbt() {
           tx,
           signingConfig: getDefaultSigningConfig(hexToBytes(psbtHex), signAtIndex),
         });
+        if (!signedTx) return;
 
         const psbt = signedTx.toPSBT();
 

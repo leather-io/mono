@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
 
 import { useCalculateStacksTxFees } from '@/queries/stacks/fees/fees.hooks';
-import { deserializeTransaction } from '@stacks/transactions';
+import { AuthType, deserializeTransaction } from '@stacks/transactions';
 
 import { FeeTypes } from '@leather.io/models';
 import { Approver, SheetInstance } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
+import { SponsoredFeeCard } from './components/fees/sponsored-fee-card';
 import { StacksFeeCard } from './components/fees/stacks-fee-card';
 import { StacksFeesSheet } from './components/fees/stacks-fee-sheet';
 import { getTxFeeMoney } from './utils';
@@ -47,6 +48,15 @@ export function StacksFeesSection({ txHex, onChangeFee, disabled }: StacksFeesSe
     [FeeTypes.Custom]: zeroMoney,
   };
   const feeMoney = getTxFeeMoney(tx);
+
+  if (tx.auth.authType === AuthType.Sponsored) {
+    return (
+      <Approver.Section>
+        <SponsoredFeeCard />
+      </Approver.Section>
+    );
+  }
+
   return (
     <>
       <Approver.Section>

@@ -13,8 +13,8 @@ const mocks = vi.hoisted(() => ({
   toDeviceBusyStep: vi.fn(),
 }));
 
-vi.mock('./use-ledger-navigate', () => ({
-  useLedgerNavigate: () => ({ toDeviceBusyStep: mocks.toDeviceBusyStep }),
+vi.mock('../flow/ledger-flow.context', () => ({
+  useLedgerSteps: () => ({ toDeviceBusyStep: mocks.toDeviceBusyStep }),
 }));
 
 vi.mock('@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks', () => ({

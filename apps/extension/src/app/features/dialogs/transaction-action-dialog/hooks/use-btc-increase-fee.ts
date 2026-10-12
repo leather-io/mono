@@ -127,6 +127,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     signingConfig: BitcoinInputSigningConfig[]
   ) {
     const tx = await signTransaction(unsignedTx.toPSBT(), signingConfig);
+    if (!tx) return;
     tx.finalize();
     await broadcastTx({
       tx: tx.hex,

@@ -752,9 +752,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.1.0)
-      '@types/lodash.get':
-        specifier: 4.4.9
-        version: 4.4.9
       '@types/react-dom':
         specifier: 19.1.11
         version: 19.1.11(@types/react@19.1.17)
@@ -863,9 +860,6 @@ importers:
       just-memoize:
         specifier: 2.2.0
         version: 2.2.0
-      lodash.get:
-        specifier: 4.4.2
-        version: 4.4.2
       lottie-react-native:
         specifier: 7.3.5
         version: 7.3.5(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)

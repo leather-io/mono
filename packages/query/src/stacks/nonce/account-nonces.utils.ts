@@ -87,7 +87,9 @@ export function parseAccountNoncesResponse({
   const lastExecutedNonce = addressNonces.last_confirmed_nonce;
   const possibleNextNonce = addressNonces.next_nonce;
 
-  const firstMissingNonce = detectedMissingNonces?.sort()[0];
+  const firstMissingNonce = detectedMissingNonces?.length
+    ? Math.min(...detectedMissingNonces)
+    : undefined;
   const pendingTxsNonces = pendingTransactions
     .filter(tx => tx.sender_address === senderAddress)
     ?.map(tx => tx.nonce);
@@ -102,7 +104,9 @@ export function parseAccountNoncesResponse({
   const pendingTxsMissingNonces = findAnyMissingPendingTxsNonces(pendingTxsNonces).filter(
     nonce => !confirmedTxsNonces.includes(nonce)
   );
-  const firstPendingMissingNonce = pendingTxsMissingNonces.sort()[0];
+  const firstPendingMissingNonce = pendingTxsMissingNonces.length
+    ? Math.min(...pendingTxsMissingNonces)
+    : undefined;
 
   const hasApiMissingNonces = detectedMissingNonces?.length > 0;
   const hasPendingTxsNonces = pendingTxsNonces.length > 0;

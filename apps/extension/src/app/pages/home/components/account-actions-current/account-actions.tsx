@@ -13,14 +13,12 @@ import {
 } from '@app/common/hooks/use-swap-availability';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
-import { SwapsDisabledTooltipLabel } from '../swaps-disabled-tooltip-label';
 import { ActionButton } from './action-button';
 import { FundButtons } from './fund-buttons';
 import { TransferButtons } from './transfer-buttons';
 
 function getSwapDisabledTooltipLabel(swapAvailability: SwapAvailability): ReactNode {
   if (swapAvailability.isEnabled) return null;
-  if (swapAvailability.reason === 'disabledByConfig') return <SwapsDisabledTooltipLabel />;
   if (swapAvailability.reason === 'testnet') {
     return (
       <styled.span textStyle="caption.01">
@@ -35,9 +33,6 @@ function getSwapDisabledTooltipLabel(swapAvailability: SwapAvailability): ReactN
     return (
       <styled.span textStyle="caption.01">Swaps are not available for this account.</styled.span>
     );
-  }
-  if (swapAvailability.reason === 'loadingConfig') {
-    return <styled.span textStyle="caption.01">Checking swap availability…</styled.span>;
   }
   return null;
 }

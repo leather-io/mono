@@ -1,38 +1,38 @@
-import { Sheet, SheetHeader } from '@leather.io/ui';
-
-import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
-
-import { AnimatedOutlet } from '../../components/animated-outlet';
-import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
+import { LedgerFlowSheet, type LedgerStepOverrides } from '../../flow/ledger-flow-sheet';
+import { useLedgerFlow } from '../../flow/ledger-flow.context';
+import { RequestKeyOutdatedStacksAppWarning } from '../../flows/request-stacks-keys/steps/outdated-stacks-app-warning';
 import { LedgerRequestKeysContext, LedgerRequestKeysProvider } from './ledger-request-keys.context';
+import { ConnectLedgerRequestKeys } from './steps/connect-ledger-request-keys';
 
 interface RequestKeysFlowProps {
   context: LedgerRequestKeysContext;
   isActionCancellableByUser: boolean;
   onCancelAction?(): void;
+  renderStep?: LedgerStepOverrides;
 }
 export function RequestKeysFlow({
   context,
   isActionCancellableByUser,
   onCancelAction,
+  renderStep,
 }: RequestKeysFlowProps) {
-  const ledgerNavigate = useLedgerNavigate();
-  useScrollLock(true);
+  const { close } = useLedgerFlow();
 
   function onCancelConnectLedger() {
     onCancelAction?.();
-    void ledgerNavigate.cancelLedgerAction();
+    close();
   }
 
   return (
     <LedgerRequestKeysProvider value={context}>
-      <Sheet
-        isShowing
-        header={<SheetHeader />}
+      <LedgerFlowSheet
         onClose={isActionCancellableByUser ? onCancelConnectLedger : undefined}
-      >
-        <AnimatedOutlet />
-      </Sheet>
+        renderStep={{
+          connect: <ConnectLedgerRequestKeys />,
+          'outdated-stacks-app': <RequestKeyOutdatedStacksAppWarning />,
+          ...renderStep,
+        }}
+      />
     </LedgerRequestKeysProvider>
   );
 }

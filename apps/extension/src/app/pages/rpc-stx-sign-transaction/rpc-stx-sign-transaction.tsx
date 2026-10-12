@@ -45,7 +45,7 @@ import {
 } from './rpc-stx-sign-transaction.utils';
 
 export function RpcStxSignTransaction() {
-  const { address, frameId, isLoadingBalance, requestId, tabId } =
+  const { address, frameId, isLoadingBalance, onSetTransactionStatus, requestId, tabId } =
     useStacksRpcTransactionRequestContext();
   const {
     availableBalance,
@@ -74,6 +74,10 @@ export function RpcStxSignTransaction() {
     if (isSponsored) unsignedTxForBroadcast.setFee(0);
 
     const signedTransaction = await signStacksTx(unsignedTxForBroadcast);
+    if (signedTransaction === null) {
+      onSetTransactionStatus('idle');
+      return;
+    }
 
     if (!signedTransaction) {
       void sendMessageToOriginatingFrame(

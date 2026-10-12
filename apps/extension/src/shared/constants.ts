@@ -1,7 +1,7 @@
 import { IS_DEV_ENV } from './environment';
 
 export const GITHUB_ORG = 'leather-io';
-export const GITHUB_REPO = 'extension';
+export const GITHUB_REPO = 'mono';
 
 export const BITCOIN_STAKING_URL = 'https://app.leather.io/staking';
 
