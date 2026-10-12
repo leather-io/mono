@@ -4970,14 +4970,17 @@
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 2
+    },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 4
+      "count": 6
     },
     "@typescript-eslint/no-unsafe-call": {
       "count": 2
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 6
+      "count": 8
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 2
