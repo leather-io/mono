@@ -1,13 +1,14 @@
 import { Callout, type CalloutProps } from '@leather.io/ui';
 
 import { isCrossOriginFrameRequest } from '@shared/utils/cross-origin-frame';
-import { getHostnameFromUrl } from '@shared/utils/urls';
+import { getOriginFromUrl } from '@shared/utils/urls';
 
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
 
 function getDisplayHostname(origin: string) {
   try {
-    return getHostnameFromUrl(origin);
+    const { hostname, port } = new URL(getOriginFromUrl(origin));
+    return port ? `${hostname}:${port}` : hostname;
   } catch {
     return origin;
   }
