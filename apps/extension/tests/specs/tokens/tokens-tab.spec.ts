@@ -4,7 +4,7 @@ import { mockMainnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxo
 import { test } from '../../fixtures/fixtures';
 import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances';
 import { mockEmptyStacksBalancesV2Request } from '../../mocks/mock-stacks-balances-v2';
-import { CoreAssetSelectors } from '../../selectors/mocked-tokens.selectors';
+import { CoreAssetSelectors, MockedTokensSelectors } from '../../selectors/mocked-tokens.selectors';
 import { TokenDetailsSelectors } from '../../selectors/token-details.selectors';
 
 test.describe('Tokens tab', () => {
@@ -39,6 +39,23 @@ test.describe('Tokens tab', () => {
       await expect(btcAsset).toBeVisible();
       await expect(stxAsset).toBeVisible();
       await expect(usdcxAsset).toBeVisible();
+    });
+
+    test('that sBTC is pinned above USDCx, ahead of tokens sorted by fiat value', async ({
+      homePage,
+    }) => {
+      const sbtcAsset = homePage.assetList.getByTestId(MockedTokensSelectors.SbtcTokenTestId);
+      const usdcxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.UsdcxAsset);
+      const aeUsdcAsset = homePage.assetList.getByTestId(MockedTokensSelectors.AeUsdcTokenTestId);
+      await expect(aeUsdcAsset).toBeVisible();
+
+      const [sbtcBox, usdcxBox, aeUsdcBox] = await Promise.all([
+        sbtcAsset.boundingBox(),
+        usdcxAsset.boundingBox(),
+        aeUsdcAsset.boundingBox(),
+      ]);
+      expect(sbtcBox?.y).toBeLessThan(usdcxBox?.y ?? 0);
+      expect(usdcxBox?.y).toBeLessThan(aeUsdcBox?.y ?? 0);
     });
   });
 
@@ -85,6 +102,12 @@ test.describe('Tokens tab', () => {
       await expect(btcAsset).toBeVisible();
       await expect(stxAsset).toBeVisible();
       await expect(usdcxAsset).toBeVisible();
+    });
+
+    test('that zero balance USDCx displays a bridge button', async ({ homePage }) => {
+      await expect(
+        homePage.assetList.getByTestId(CoreAssetSelectors.UsdcxAssetBridgeButton)
+      ).toBeVisible();
     });
 
     test('that zero balance btc/stx assets display a buy button', async ({ homePage }) => {

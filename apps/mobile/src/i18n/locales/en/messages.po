@@ -448,6 +448,10 @@ msgstr "Bitflow"
 msgid "BNS name"
 msgstr "BNS name"
 
+#: src/features/balances/stacks/usdcx-bridge-token-cell.tsx:31
+msgid "Bridge"
+msgstr "Bridge"
+
 #: src/features/token/components/get-first-nft-section.tsx:57
 msgid "Browse on Gamma"
 msgstr "Browse on Gamma"

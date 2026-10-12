@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 
 import { Box } from 'leather-styles/jsx';
 
+import { STACKS_BRIDGE_URL } from '@leather.io/constants';
 import { useOnMount } from '@leather.io/ui';
 
 import { useConfigPromoCardEnabled } from '@app/query/common/remote-config/remote-config.query';
@@ -14,7 +15,7 @@ const promoCards = [
     eventName: 'usdcx',
     message: 'USDCx is live on Stacks!\nBridge your USDC now.',
     imgSrc: 'assets/illustrations/promo-banner-usdcx.svg',
-    linkUrl: 'https://bridge.stacks.co/',
+    linkUrl: STACKS_BRIDGE_URL,
   },
   {
     eventName: 'mobile',

@@ -10,6 +10,7 @@ export enum CoreAssetSelectors {
   BtcAssetBuyButton = 'btc-asset-buy-button',
   StxAssetBuyButton = 'stx-asset-buy-button',
   UsdcxAsset = 'SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx::usdcx-token',
+  UsdcxAssetBridgeButton = 'usdcx-asset-bridge-button',
   ConnectLedgerBitcoin = 'connect-ledger-bitcoin',
   ConnectLedgerStacks = 'connect-ledger-stacks',
 }
