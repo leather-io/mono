@@ -7,7 +7,7 @@ import {
   USDCX_ASSET_ID_TESTNET,
 } from '@leather.io/constants';
 
-import { getDefaultAssetVisibilityPolicy } from './token-preset';
+import { getDefaultAssetVisibilityPolicy, isAllowedByDefaultAssetVisibility } from './token-preset';
 
 describe('getDefaultAssetVisibilityPolicy', () => {
   it('allows nothing beyond gas tokens for gasOnly', () => {
@@ -28,5 +28,22 @@ describe('getDefaultAssetVisibilityPolicy', () => {
 
   it('uses the remote app config rule for allPricedTokens', () => {
     expect(getDefaultAssetVisibilityPolicy('allPricedTokens')).toEqual({ type: 'appConfig' });
+  });
+});
+
+describe('isAllowedByDefaultAssetVisibility', () => {
+  const usdcx = `sip10|${USDCX_ASSET_ID_MAINNET}` as const;
+
+  it('allows only allowlisted assets under an allowlist policy', () => {
+    expect(
+      isAllowedByDefaultAssetVisibility(getDefaultAssetVisibilityPolicy('gasOnly'), usdcx)
+    ).toBe(false);
+    expect(
+      isAllowedByDefaultAssetVisibility(getDefaultAssetVisibilityPolicy('mainTokens'), usdcx)
+    ).toBe(true);
+  });
+
+  it('does not restrict anything under the app config policy', () => {
+    expect(isAllowedByDefaultAssetVisibility({ type: 'appConfig' }, usdcx)).toBe(true);
   });
 });

@@ -94,6 +94,10 @@ export function useSettings() {
   const languagePreferenceSource = useSelector(selectLanguagePreferenceSource);
   const assetVisibility = useSelector(selectAssetVisibility);
   const tokenPreset = useSelector(selectTokenPreset);
+  const defaultAssetVisibility = useMemo(
+    () => getDefaultAssetVisibilityPolicy(tokenPreset),
+    [tokenPreset]
+  );
   const currentAccount = useSelector(selectCurrentAccount);
   const appIconPreference = useSelector(selectAppIconPreference);
 
@@ -118,7 +122,7 @@ export function useSettings() {
     languagePreferenceSource,
     assetVisibility,
     tokenPreset,
-    defaultAssetVisibility: getDefaultAssetVisibilityPolicy(tokenPreset),
+    defaultAssetVisibility,
     currentAccount,
     appIconPreference,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
