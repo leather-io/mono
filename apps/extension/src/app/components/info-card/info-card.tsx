@@ -1,7 +1,7 @@
-import { ComponentType, ReactNode } from 'react';
+import { type ComponentType, type ReactNode } from 'react';
 
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
-import { Box, BoxProps, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
 import { Button, DashedHr } from '@leather.io/ui';
@@ -87,7 +87,7 @@ export function InfoCardAssetValue({
 interface InfoCardBtnProps {
   icon: ComponentType;
   label: string;
-  onClick(): void;
+  onClick(this: void): void;
 }
 export function InfoCardBtn({ icon, label, onClick }: InfoCardBtnProps) {
   return (

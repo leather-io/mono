@@ -1,4 +1,4 @@
-import { PersistConfig } from 'redux-persist';
+import { type PersistConfig } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 import type { LocalRootState } from '@app/store';

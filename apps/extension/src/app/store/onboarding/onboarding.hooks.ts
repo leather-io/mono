@@ -32,5 +32,5 @@ export async function refreshLeatherTabs() {
       return leatherDomains.includes(hostname) && isDefined(tab.id);
     })
     .map(tab => ({ tabId: tab.id ?? 0 }))
-    .forEach(({ tabId }) => chrome.tabs.reload(tabId, { bypassCache: true }));
+    .forEach(({ tabId }) => void chrome.tabs.reload(tabId, { bypassCache: true }));
 }

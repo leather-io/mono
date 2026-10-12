@@ -1,7 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Box } from 'leather-styles/jsx';
 
-import { CryptoAssetBalance, InputCurrencyMode, whenInputCurrencyMode } from '@leather.io/models';
+import {
+  type CryptoAssetBalance,
+  type InputCurrencyMode,
+  whenInputCurrencyMode,
+} from '@leather.io/models';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { Balance } from '@app/components/balance/balance';
@@ -12,7 +16,7 @@ interface AssetBalanceProps {
     crypto: CryptoAssetBalance;
   };
   inputCurrencyMode: InputCurrencyMode;
-  onSetToMax?(): void;
+  onSetToMax?(this: void): void;
 }
 
 export function AssetBalance({ balance, inputCurrencyMode, onSetToMax }: AssetBalanceProps) {

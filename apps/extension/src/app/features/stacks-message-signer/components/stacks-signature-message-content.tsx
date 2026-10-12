@@ -2,7 +2,7 @@ import { bytesToHex } from '@stacks/common';
 import { hashMessage } from '@stacks/encryption';
 import { ChainId } from '@stacks/network';
 
-import { UnsignedMessage } from '@shared/signature/signature-types';
+import { type UnsignedMessage } from '@shared/signature/signature-types';
 
 import { NoFeesWarningRow } from '@app/components/no-fees-warning-row';
 
@@ -13,8 +13,8 @@ import { StacksMessageSigningDisclaimer } from './message-signing-disclaimer';
 
 interface SignatureRequestMessageContentProps {
   isLoading: boolean;
-  onSignMessage(unsignedMessage: UnsignedMessage): Promise<void>;
-  onCancelMessageSigning(): void;
+  onSignMessage(this: void, unsignedMessage: UnsignedMessage): Promise<void>;
+  onCancelMessageSigning(this: void): void;
   payload: Utf8Payload;
 }
 export function StacksSignatureRequestMessageContent({

@@ -1,7 +1,7 @@
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 import { addOperator } from '@leather.io/features';
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { type FormatAmountOptions } from '@leather.io/utils';
 
 import { PrivateText } from '../privacy/private-text';
@@ -12,7 +12,7 @@ interface BalanceProps extends HTMLStyledProps<'span'> {
   operator?: string;
   formattingOptions?: FormatAmountOptions;
   forceVisible?: boolean;
-  formatCurrency(money: Money, options?: FormatAmountOptions): string;
+  formatCurrency(this: void, money: Money, options?: FormatAmountOptions): string;
 }
 
 export function Balance({

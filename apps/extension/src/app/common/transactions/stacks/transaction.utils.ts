@@ -1,14 +1,10 @@
 import type { StacksNetwork } from '@stacks/network';
-import {
-  CoinbaseTransaction,
-  TransactionEventFungibleAsset,
-} from '@stacks/stacks-blockchain-api-types';
+import { type TransactionEventFungibleAsset } from '@stacks/stacks-blockchain-api-types';
 import {
   AddressHashMode,
   ClarityType,
   type ContractCallPayload,
-  type IntCV,
-  StacksTransactionWire,
+  type StacksTransactionWire,
   type TokenTransferPayloadWire,
   addressFromVersionHash,
   addressHashModeToVersion,
@@ -21,7 +17,7 @@ import {
 } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
 
-import { StacksTx, StacksTxStatus } from '@leather.io/models';
+import { type StacksTx, type StacksTxStatus } from '@leather.io/models';
 import { getStacksContractName } from '@leather.io/stacks';
 import {
   createMoney,
@@ -90,7 +86,7 @@ export function getTxTitle(tx: StacksTx) {
     case 'smart_contract':
       return getStacksContractName(tx.smart_contract.contract_id);
     case 'coinbase':
-      return `Coinbase ${(tx as CoinbaseTransaction).block_height}`;
+      return 'block_height' in tx ? `Coinbase ${tx.block_height}` : 'Coinbase';
     case 'poison_microblock':
       return 'Poison Microblock';
     default:
@@ -115,7 +111,7 @@ export function getTxSenderAddress(tx: StacksTransactionWire): string | undefine
   if (!tx?.auth?.spendingCondition?.signer) return;
   const txSender = getAddressFromPublicKeyHash(
     Buffer.from(tx.auth.spendingCondition.signer, 'hex'),
-    tx.auth.spendingCondition.hashMode as number,
+    tx.auth.spendingCondition.hashMode,
     getStacksNetworkFromChainId(tx.chainId)
   );
   return txSender;
@@ -133,10 +129,12 @@ export function isPendingTx(tx: StacksTx) {
   return tx.tx_status === 'pending';
 }
 
-export enum StacksTransactionActionType {
-  Cancel = 'cancel',
-  IncreaseFee = 'increase-fee',
-}
+export const StacksTransactionActionType = {
+  Cancel: 'cancel',
+  IncreaseFee: 'increase-fee',
+} as const;
+export type StacksTransactionActionType =
+  (typeof StacksTransactionActionType)[keyof typeof StacksTransactionActionType];
 
 export function getRecipientFromStacksTransaction(transaction: StacksTransactionWire) {
   if (isTokenTransferPayload(transaction.payload)) {
@@ -172,9 +170,12 @@ export function getNonceFromStacksTransaction(tx: StacksTransactionWire) {
 export function getSip10TransferAmount(
   payload: ContractCallPayload,
   symbol: string,
-  decimals: number
+  decimals?: number
 ) {
-  const amount = new BigNumber(Number((payload.functionArgs?.[0] as IntCV).value));
+  const amountArg = payload.functionArgs?.[0];
+  const amount = new BigNumber(
+    Number(amountArg && 'value' in amountArg ? amountArg.value : undefined)
+  );
   return createMoney(amount, symbol.toUpperCase(), decimals);
 }
 

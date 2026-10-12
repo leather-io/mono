@@ -77,10 +77,10 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
         const message = isString(error) ? error : error.message;
         trackIfNonceError(unsignedTx, error);
 
-        return navigate(RouteUrls.BroadcastError, { state: { message } });
+        void navigate(RouteUrls.BroadcastError, { state: { message } });
       }
 
-      async function onSuccess(txid: string, transaction: StacksTransactionWire) {
+      function onSuccess(txid: string, transaction: StacksTransactionWire) {
         onSetTransactionStatus('submitted');
 
         void sendMessageToOriginatingFrame(
@@ -93,8 +93,7 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
             },
           })
         );
-        await delay(250);
-        closeWindow();
+        void delay(250).then(() => closeWindow());
       }
 
       onSetTransactionStatus('broadcasting');

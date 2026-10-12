@@ -5,7 +5,7 @@ import type { BtcFeeType } from '@leather.io/models';
 
 interface SendBitcoinAssetContextState {
   selectedFeeType: BtcFeeType | null;
-  setSelectedFeeType(value: BtcFeeType | null): void;
+  setSelectedFeeType(this: void, value: BtcFeeType | null): void;
 }
 export function useSendBitcoinAssetContextState() {
   const context = useOutletContext<SendBitcoinAssetContextState>();

@@ -82,15 +82,15 @@ export function removeMinusSign(value: string) {
 
 export function serializeError(err: unknown) {
   if (err instanceof Error) {
-    const errorObj: Record<string, any> = {
+    const errorObj: Record<string, unknown> = {
       name: err.name,
       message: err.message,
       stack: err.stack,
     };
 
     // Include any custom enumerable properties
-    for (const key of Object.keys(err)) {
-      errorObj[key] = (err as any)[key];
+    for (const [key, value] of Object.entries(err)) {
+      errorObj[key] = value;
     }
 
     return errorObj;

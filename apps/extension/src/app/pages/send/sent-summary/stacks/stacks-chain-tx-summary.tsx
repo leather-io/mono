@@ -1,8 +1,6 @@
 import { type StacksTransactionWire, isTokenTransferPayload } from '@stacks/transactions';
-import { type UseQueryResult } from '@tanstack/react-query';
 
-import { type FtAssetResponse } from '@leather.io/query';
-import { baseCurrencyAmountInQuote, createMoney, sumMoney } from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoney, isNumber, sumMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import {
@@ -67,14 +65,16 @@ export function Sip10SentSummary({ txid, symbol, tx }: StacksChainSummaryProps) 
   const contract = getContractAddressFromContractCallPayload(tx.payload);
 
   // Type casting because monorepo returns inaccurate type
-  const { data: tokenMetadata } = useGetFungibleTokenMetadataQuery(
-    contract
-  ) as UseQueryResult<FtAssetResponse>;
+  const { data: tokenMetadata } = useGetFungibleTokenMetadataQuery(contract);
 
   if (!tokenMetadata || !('decimals' in tokenMetadata))
     return <StacksChainTxSummaryLoading txid={txid} />;
 
-  const amount = getSip10TransferAmount(tx.payload, symbol, tokenMetadata.decimals ?? 0);
+  const amount = getSip10TransferAmount(
+    tx.payload,
+    symbol,
+    isNumber(tokenMetadata.decimals) ? tokenMetadata.decimals : 0
+  );
   const recipient = getRecipientFromStacksTransaction(tx) ?? undefined;
   const fee = getStacksTransactionFee(tx);
   const memo = getSip10MemoDisplayText(tx.payload) || '—';

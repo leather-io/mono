@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
-
 import type { SupportedBlockchains } from '@leather.io/models';
 import { delay } from '@leather.io/utils';
 
@@ -11,13 +9,14 @@ import { useLedgerDmk } from '../../dmk/ledger-dmk.context';
 import { closeLedgerSession } from '../../dmk/ledger-session';
 import { useLedgerSteps } from '../../flow/ledger-flow.context';
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
-import { BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
+import { type BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
 import {
   isCancellableConnectionInteraction,
+  isUnlockDeviceInteraction,
   useLedgerResponseState,
 } from '../../utils/generic-ledger-utils';
 import type { LedgerApp } from '../../utils/ledger-app';
-import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
+import { type StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
 export const defaultNumberOfKeysToPullFromLedgerDevice = 10;
 
@@ -25,12 +24,15 @@ type RequestLedgerKeysResult = { status: 'success' } | { status: 'failure' };
 
 interface UseRequestLedgerKeysArgs<App extends LedgerApp> {
   chain: SupportedBlockchains;
-  isAppOpen({ name }: { name: string }): boolean;
-  getAppVersion(app: App): Promise<StacksAppVersion> | Promise<BitcoinAppVersion>;
-  connectApp(options: ConnectLedgerDeviceOptions): Promise<App>;
-  pullKeysFromDevice(app: App): Promise<RequestLedgerKeysResult>;
-  passesAdditionalVersionCheck?(appVersion: StacksAppVersion | BitcoinAppVersion): Promise<boolean>;
-  onSuccess(): void;
+  isAppOpen(this: void, { name }: { name: string }): boolean;
+  getAppVersion(this: void, app: App): Promise<StacksAppVersion> | Promise<BitcoinAppVersion>;
+  connectApp(this: void, options: ConnectLedgerDeviceOptions): Promise<App>;
+  pullKeysFromDevice(this: void, app: App): Promise<RequestLedgerKeysResult>;
+  passesAdditionalVersionCheck?(
+    this: void,
+    appVersion: StacksAppVersion | BitcoinAppVersion
+  ): Promise<boolean>;
+  onSuccess(this: void): void;
 }
 export function useRequestLedgerKeys<App extends LedgerApp>({
   chain,
@@ -77,7 +79,7 @@ export function useRequestLedgerKeys<App extends LedgerApp>({
       app = await connectApp({
         onRequiredUserInteraction(interaction) {
           setLatestDeviceResponse({
-            deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
+            deviceLocked: isUnlockDeviceInteraction(interaction),
           });
           setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
         },

@@ -21,7 +21,7 @@ export interface CryptoAssetItemLayoutProps {
   isLoading?: boolean;
   isLoadingAdditionalData?: boolean;
   isPrivate?: boolean;
-  onSelectAsset?(symbol: string, contractId?: string): void;
+  onSelectAsset?(this: void, symbol: string, contractId?: string): void;
   titleLeft: string;
   dataTestId: string;
 }

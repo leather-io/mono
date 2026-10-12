@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type * as LeatherCrypto from '@leather.io/crypto';
 import {
   type WalletStore,
   fingerprintMigration,
@@ -13,7 +14,6 @@ import { decryptMnemonic } from '@shared/crypto/mnemonic-encryption';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
-import { persistor } from '@app/store';
 import { initalizeWalletSession } from '@app/store/session-restore';
 
 import { getNativeSegwitMainnetAddressFromRootKeychain } from '../accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -24,8 +24,10 @@ import * as inMemoryStore from '../in-memory-key/in-memory-storage';
 import { keyActions } from './software-key.actions';
 import { keyAdapter, keySlice } from './software-key.slice';
 
-vi.mock('@app/store', () => ({
-  persistor: { flush: vi.fn(() => Promise.resolve()) },
+const persistorFlushMock = vi.hoisted(() => vi.fn(() => Promise.resolve()));
+
+vi.mock('@app/store/store', () => ({
+  persistor: { flush: persistorFlushMock },
   store: { getState: vi.fn(), dispatch: vi.fn() },
 }));
 
@@ -65,7 +67,7 @@ vi.mock('@shared/crypto/mnemonic-encryption', () => ({
 }));
 
 vi.mock('@leather.io/crypto', async importOriginal => {
-  const actual = await importOriginal<typeof import('@leather.io/crypto')>();
+  const actual = await importOriginal<typeof LeatherCrypto>();
   return {
     ...actual,
     deriveRootKeychainFromMnemonicSync: vi.fn(() => ({ publicKey: new Uint8Array([1, 2, 3]) })),
@@ -135,6 +137,10 @@ const password = 'correct-horse-battery-staple';
 const realFingerprint = 'abcd1234';
 const reEncryptType = keySlice.actions.softwareKeyReEncrypted.type;
 
+function anyAbortSignal(): unknown {
+  return expect.any(AbortSignal);
+}
+
 function flushPromises() {
   return new Promise(resolve => setTimeout(resolve, 0));
 }
@@ -176,7 +182,7 @@ describe('unlockWalletAction', () => {
 
     // The salt already exists, so nothing is re-encrypted or re-persisted.
     expect(dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: reEncryptType }));
-    expect(persistor.flush).not.toHaveBeenCalled();
+    expect(persistorFlushMock).not.toHaveBeenCalled();
 
     expect(initalizeWalletSession).toHaveBeenCalledWith('encryption-key-current');
     expect(inMemoryStore.setKey).toHaveBeenCalledWith(realFingerprint, 'decrypted-mnemonic');
@@ -218,7 +224,7 @@ describe('unlockWalletAction', () => {
         key: { type: 'software', id: realFingerprint, encryptedSecretKey: 'enc-reencrypted' },
       })
     );
-    expect(persistor.flush).toHaveBeenCalled();
+    expect(persistorFlushMock).toHaveBeenCalled();
 
     expect(initalizeWalletSession).toHaveBeenCalledWith('encryption-key-legacy');
     expect(inMemoryStore.setKey).toHaveBeenCalledWith(realFingerprint, 'decrypted-mnemonic');
@@ -312,11 +318,15 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
     };
     const leatherApiClient = {
       fetchUtxosByAddress: vi.fn().mockResolvedValue([]),
-      fetchBitcoinTransactionsByAddress: vi.fn((address: string) =>
-        Promise.resolve(
-          address === 'taproot-3' ? { data: [{ txid: 'txid' }], meta: {} } : { data: [], meta: {} }
-        )
-      ),
+      fetchBitcoinTransactionsByAddress: vi
+        .fn()
+        .mockImplementation((address: string) =>
+          Promise.resolve(
+            address === 'taproot-3'
+              ? { data: [{ txid: 'txid' }], meta: {} }
+              : { data: [], meta: {} }
+          )
+        ),
     };
     const bnsClient = {
       fetchAddressBnsNames: vi.fn().mockResolvedValue({ names: [] }),
@@ -325,30 +335,30 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
     const getState = vi.fn().mockReturnValue(state);
 
     await keyActions.probeNextAccountAndDiscoverAccounts({
-      leatherApiClient: leatherApiClient as never,
-      hiroClient: hiroClient as never,
-      bnsClient: bnsClient as never,
+      leatherApiClient,
+      hiroClient,
+      bnsClient,
     })(dispatch, getState, undefined);
     await flushPromises();
 
     expect(hiroClient.getAddressStxBalance).toHaveBeenCalledWith('stx-3', {
-      signal: expect.any(AbortSignal),
+      signal: anyAbortSignal(),
     });
     expect(leatherApiClient.fetchUtxosByAddress).toHaveBeenCalledWith('segwit-3', {
-      signal: expect.any(AbortSignal),
+      signal: anyAbortSignal(),
     });
     expect(leatherApiClient.fetchUtxosByAddress).toHaveBeenCalledWith('taproot-3', {
-      signal: expect.any(AbortSignal),
+      signal: anyAbortSignal(),
     });
     expect(leatherApiClient.fetchBitcoinTransactionsByAddress).toHaveBeenCalledWith(
       'segwit-3',
       { page: 1, pageSize: 1 },
-      { signal: expect.any(AbortSignal) }
+      { signal: anyAbortSignal() }
     );
     expect(leatherApiClient.fetchBitcoinTransactionsByAddress).toHaveBeenCalledWith(
       'taproot-3',
       { page: 1, pageSize: 1 },
-      { signal: expect.any(AbortSignal) }
+      { signal: anyAbortSignal() }
     );
     expect(recurseAccountsForActivity).toHaveBeenCalledTimes(1);
     expect(recurseAccountsForActivity).toHaveBeenCalledWith(
@@ -360,7 +370,7 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
       accountIndex: 4,
     });
     expect(dispatch).toHaveBeenCalledWith(restoreAction);
-    expect(persistor.flush).toHaveBeenCalled();
+    expect(persistorFlushMock).toHaveBeenCalled();
   });
 
   test('does not start recursive discovery when the next account has no activity', async () => {
@@ -392,13 +402,13 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
     const getState = vi.fn().mockReturnValue(state);
 
     await keyActions.probeNextAccountAndDiscoverAccounts({
-      leatherApiClient: leatherApiClient as never,
-      hiroClient: hiroClient as never,
-      bnsClient: bnsClient as never,
+      leatherApiClient,
+      hiroClient,
+      bnsClient,
     })(dispatch, getState, undefined);
 
     expect(hiroClient.getAddressStxBalance).toHaveBeenCalledWith('stx-2', {
-      signal: expect.any(AbortSignal),
+      signal: anyAbortSignal(),
     });
     expect(recurseAccountsForActivity).not.toHaveBeenCalled();
     expect(dispatch).not.toHaveBeenCalled();

@@ -95,11 +95,11 @@ function removeSourceMapsFromManifest(outputDirectory: string) {
   if (!existsSync(manifestPath)) return;
   const manifest: unknown = JSON.parse(readFileSync(manifestPath, 'utf8'));
   if (typeof manifest !== 'object' || manifest === null) return;
-  const webAccessibleResources = Reflect.get(manifest, 'web_accessible_resources');
+  const webAccessibleResources: unknown = Reflect.get(manifest, 'web_accessible_resources');
   if (!Array.isArray(webAccessibleResources)) return;
   webAccessibleResources.forEach(resource => {
     if (typeof resource !== 'object' || resource === null) return;
-    const resources = Reflect.get(resource, 'resources');
+    const resources: unknown = Reflect.get(resource, 'resources');
     if (!Array.isArray(resources)) return;
     Reflect.set(
       resource,

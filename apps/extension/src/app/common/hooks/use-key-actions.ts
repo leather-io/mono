@@ -31,15 +31,18 @@ export function useKeyActions() {
 
   return useMemo(
     () => ({
-      setPassword({
-        mnemonic,
-        password,
-        fingerprint,
-      }: {
-        mnemonic: string;
-        password: string;
-        fingerprint: string;
-      }) {
+      setPassword(
+        this: void,
+        {
+          mnemonic,
+          password,
+          fingerprint,
+        }: {
+          mnemonic: string;
+          password: string;
+          fingerprint: string;
+        }
+      ) {
         return dispatch(
           keyActions.setWalletEncryptionPassword({
             mnemonic,
@@ -52,30 +55,30 @@ export function useKeyActions() {
         );
       },
 
-      generateWalletKey() {
+      generateWalletKey(this: void) {
         const mnemonic = generateMnemonic();
         const fingerprint = getMnemonicRootKeyFingerprint(mnemonic);
         return { mnemonic, fingerprint };
       },
 
-      unlockWallet(password: string) {
+      unlockWallet(this: void, password: string) {
         return dispatch(keyActions.unlockWalletAction(password));
       },
 
-      switchAccount(accountId: AccountId) {
+      switchAccount(this: void, accountId: AccountId) {
         dispatch(userSwitchesAccount(accountId));
       },
 
-      switchAccountToPolicy(policyId: string) {
+      switchAccountToPolicy(this: void, policyId: string) {
         dispatch(userSwitchesToPolicy({ parent: parsePolicyParent(policyId), policyId }));
       },
 
-      createNewAccount(fingerprint?: string) {
+      createNewAccount(this: void, fingerprint?: string) {
         if (!activeAccount) throw new Error('No active account');
         return dispatch(createNewAccount(fingerprint ? fingerprint : activeAccount.fingerprint));
       },
 
-      async signOut() {
+      async signOut(this: void) {
         await clearWalletSession();
         inMemoryStore.clearAll();
         clearKeychainSelectorCaches();
@@ -87,7 +90,7 @@ export function useKeyActions() {
         queryClient.clear();
       },
 
-      async lockWallet({ afterLock }: { afterLock?(): void }) {
+      async lockWallet(this: void, { afterLock }: { afterLock?(this: void): void }) {
         await clearWalletSession();
         inMemoryStore.clearAll();
         clearKeychainSelectorCaches();

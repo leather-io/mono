@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useFormikContext } from 'formik';
 
-import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
+import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
 
 import { RecipientAddressTypeField } from '@app/pages/send/send-crypto-asset-form/components/recipient-address-type-field';
 
@@ -10,7 +10,7 @@ import { RecipientAddressDisplayer } from './components/recipient-address-displa
 import { useRecipientBnsName } from './hooks/use-recipient-bns-name';
 
 interface RecipientBnsNameTypeFieldProps {
-  fetchFn(name: string): Promise<string | null>;
+  fetchFn(this: void, name: string): Promise<string | null>;
   topInputOverlay: React.JSX.Element;
   rightLabel: React.JSX.Element;
 }
@@ -45,7 +45,7 @@ export function RecipientBnsNameTypeField({
     <>
       <RecipientAddressTypeField
         name="recipientBnsName"
-        onBlur={() => getBnsAddressAndValidate(fetchFn)}
+        onBlur={() => void getBnsAddressAndValidate(fetchFn)}
         placeholder="Enter recipient BNS name"
         topInputOverlay={topInputOverlay}
         rightLabel={rightLabel}

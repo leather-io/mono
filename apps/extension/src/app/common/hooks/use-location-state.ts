@@ -14,17 +14,18 @@ export function useLocationState<T extends LocationState>(
 ): T;
 export function useLocationState(propName: string): string | undefined;
 export function useLocationState(propName: string, defaultValue: string): string;
-export function useLocationState(propName: string, defaultValue?: string) {
+export function useLocationState(propName: string, defaultValue?: string): unknown {
   const location = useLocation();
-  return get(location, `state.${propName}`, defaultValue);
+  const value: unknown = get(location, `state.${propName}`, defaultValue);
+  return value;
 }
 
 export function useLocationStateWithCache<T = string>(propName: string): T | undefined;
 export function useLocationStateWithCache<T = string>(propName: string, defaultValue: T): T;
-export function useLocationStateWithCache<T = string>(propName: string, defaultValue?: T) {
+export function useLocationStateWithCache<T = string>(propName: string, defaultValue?: T): unknown {
   const location = useLocation();
-  const [value, setValue] = useState(defaultValue);
-  const stateVal = get(location, `state.${propName}`);
+  const [value, setValue] = useState<unknown>(defaultValue);
+  const stateVal: unknown = get(location, `state.${propName}`);
 
   useEffect(() => {
     if (!isUndefined(stateVal)) setValue(stateVal);

@@ -18,7 +18,7 @@ import { Row, SectionCard } from './collectible-details.layout';
 interface Sip9DetailsProps {
   asset: Sip9Asset;
   isDescriptionExpanded: boolean;
-  onToggleDescription(): void;
+  onToggleDescription(this: void): void;
 }
 
 export function Sip9Details({

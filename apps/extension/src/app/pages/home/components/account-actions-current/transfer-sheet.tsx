@@ -4,9 +4,9 @@ import { ActionDrawer } from './action-drawer';
 import { ActionDrawerButton } from './action-drawer-button';
 
 interface TransferSheetProps {
-  onSend(): void;
-  onReceive(): void;
-  onClose(): void;
+  onSend(this: void): void;
+  onReceive(this: void): void;
+  onClose(this: void): void;
   isShowing: boolean;
 }
 

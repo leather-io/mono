@@ -6,10 +6,21 @@ import get from 'lodash.get';
 
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
+function getStateMessage(state: unknown) {
+  if (
+    typeof state === 'object' &&
+    state !== null &&
+    'message' in state &&
+    typeof state.message === 'string'
+  )
+    return state.message;
+  return '';
+}
+
 export function BroadcastErrorSheet() {
   const navigate = useNavigate();
   const location = useLocation();
-  const message = get(location.state, 'message', '');
+  const message = getStateMessage(location.state);
   const proposeMode = Boolean(get(location.state, 'proposeMode', false));
   const action = proposeMode ? 'propose' : 'broadcast';
 
@@ -17,9 +28,9 @@ export function BroadcastErrorSheet() {
     <Sheet
       isShowing
       header={<SheetHeader />}
-      onClose={() => navigate('..')}
+      onClose={() => void navigate('..')}
       footer={
-        <Button fullWidth onClick={() => navigate('..')} mt="space.05">
+        <Button fullWidth onClick={() => void navigate('..')} mt="space.05">
           Close
         </Button>
       }

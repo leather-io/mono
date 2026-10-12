@@ -23,7 +23,8 @@ export async function safeAwait<T>(promise: Promise<T>, finallyFn?: () => void) 
     .then(data => {
       if (isError(data)) {
         throwNative(data);
-        return [data] as readonly [Error];
+        const errorResult: readonly [Error] = [data];
+        return errorResult;
       }
       return [undefined, data] as const;
     })

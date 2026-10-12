@@ -13,9 +13,9 @@ import {
 import { useThemeSwitcher } from '@app/common/theme-provider';
 
 interface AddWalletMenuProps {
-  onCreateNewWallet(): void;
-  onRestoreWallet(): void;
-  onConnectLedger(): void;
+  onCreateNewWallet(this: void): void;
+  onRestoreWallet(this: void): void;
+  onConnectLedger(this: void): void;
 }
 
 export function AddWalletMenu({

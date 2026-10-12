@@ -5,8 +5,8 @@ import { HStack, styled } from 'leather-styles/jsx';
 import { ChevronDownIcon, ChevronsRightIcon, CloseIcon, DropdownMenu, Flag } from '@leather.io/ui';
 
 interface StacksTransactionActionMenuProps {
-  onIncreaseFee(): void;
-  onCancelTransaction(): void;
+  onIncreaseFee(this: void): void;
+  onCancelTransaction(this: void): void;
 }
 
 export function StacksTransactionActionMenu({

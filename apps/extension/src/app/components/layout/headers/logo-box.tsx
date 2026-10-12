@@ -1,10 +1,10 @@
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
-import { Box, BoxProps } from 'leather-styles/jsx';
+import { Box, type BoxProps } from 'leather-styles/jsx';
 
 import { Logo } from '@leather.io/ui';
 
 interface LogoBoxProps extends BoxProps {
-  onClick?(): void;
+  onClick?(this: void): void;
 }
 
 export function LogoBox({ onClick, ...props }: LogoBoxProps) {

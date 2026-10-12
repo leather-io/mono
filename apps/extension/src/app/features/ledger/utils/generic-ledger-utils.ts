@@ -37,8 +37,8 @@ export function versionObjectToVersionString(version: SemVerObject) {
 }
 
 interface PrepareLedgerDeviceConnectionArgs {
-  setLoadingState(loadingState: boolean): void;
-  onError(error?: Error): void;
+  setLoadingState(this: void, loadingState: boolean): void;
+  onError(this: void, error?: Error): void;
 }
 export function prepareLedgerDeviceForAppFn<App>(connectAppFn: () => Promise<App>) {
   return async (args: PrepareLedgerDeviceConnectionArgs) => {
@@ -77,6 +77,12 @@ const cancellableConnectionInteractions: readonly string[] = [
 
 export function isCancellableConnectionInteraction(interaction: string): boolean {
   return cancellableConnectionInteractions.includes(interaction);
+}
+
+const unlockDeviceInteraction: string = UserInteractionRequired.UnlockDevice;
+
+export function isUnlockDeviceInteraction(interaction: string): boolean {
+  return interaction === unlockDeviceInteraction;
 }
 
 interface UseCancelLedgerActionArgs {

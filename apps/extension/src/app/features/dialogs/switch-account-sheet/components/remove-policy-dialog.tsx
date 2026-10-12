@@ -11,7 +11,7 @@ import { userRemovesPolicy } from '@app/store/policy/policy.slice';
 interface RemovePolicyDialogProps {
   policy: PolicyStore;
   isShowing: boolean;
-  onClose(): void;
+  onClose(this: void): void;
 }
 
 export function RemovePolicyDialog({ policy, isShowing, onClose }: RemovePolicyDialogProps) {

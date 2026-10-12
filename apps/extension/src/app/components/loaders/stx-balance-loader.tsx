@@ -14,6 +14,7 @@ import { CryptoAssetItemPlaceholder } from '../crypto-asset-item/crypto-asset-it
 interface StxBalanceLoaderProps {
   address: string;
   children(
+    this: void,
     balance: StxBalance,
     isLoading: boolean,
     isLoadingAdditionalData: boolean
@@ -28,6 +29,7 @@ export function StxBalanceLoader({ address, children }: StxBalanceLoaderProps) {
 interface StxAssetItemBalanceLoaderProps {
   accountId: AccountId;
   children(
+    this: void,
     balance: AddressQuotedStxBalance,
     isLoading: boolean,
     isLoadingAdditionalData: boolean
@@ -53,6 +55,7 @@ export function StxAssetItemBalanceLoader({ accountId, children }: StxAssetItemB
 interface StxAssetItemBalanceLoaderByAddressesProps {
   account: AccountAddresses;
   children(
+    this: void,
     balance: AddressQuotedStxBalance,
     isLoading: boolean,
     isLoadingAdditionalData: boolean

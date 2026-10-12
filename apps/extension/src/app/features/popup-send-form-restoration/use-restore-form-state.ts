@@ -19,6 +19,20 @@ async function run() {
 }
 void run();
 
+interface PersistedFormState {
+  symbol: string;
+}
+
+function isPersistedFormState(value: unknown): value is PersistedFormState {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'symbol' in value &&
+    typeof value.symbol === 'string' &&
+    value.symbol !== ''
+  );
+}
+
 export function useRestoreFormState() {
   const navigate = useNavigate();
 
@@ -26,8 +40,8 @@ export function useRestoreFormState() {
     if (!isPopupMode() || !currentTabId || !chrome.storage.session) return;
     const key = 'form-state-' + currentTabId.toString();
     const state = await chrome.storage.session.get('form-state-' + currentTabId.toString());
-    const persistedState = state[key];
-    if (!persistedState || !persistedState.symbol) return;
+    const persistedState: unknown = state[key];
+    if (!isPersistedFormState(persistedState)) return;
     void navigate('send/' + persistedState.symbol, { state: persistedState });
   });
 }

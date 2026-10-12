@@ -10,8 +10,8 @@ import { useLedgerStep, useLedgerSteps } from '@app/features/ledger/flow/ledger-
 import { LEDGER_LIVE_MANAGER_URL } from '@app/features/ledger/utils/generic-ledger-utils';
 
 interface OutdatedStacksAppWarningBaseProps {
-  onTryAgain(): void | Promise<void>;
-  onCancel?(): void;
+  onTryAgain(this: void): void | Promise<void>;
+  onCancel?(this: void): void;
 }
 
 export function OutdatedStacksAppWarningBase({
@@ -134,7 +134,7 @@ export function OutdatedStacksAppWarningBase({
           Open Ledger Wallet <ExternalLinkIcon color="ink.background-primary" />
         </styled.a>
         <HStack gap="space.03" width="100%">
-          <Button flex={1} onClick={onTryAgain} variant="outline">
+          <Button flex={1} onClick={() => void onTryAgain()} variant="outline">
             Try again
           </Button>
           <Button flex="1" onClick={onCancel ?? ledgerSteps.cancelLedgerAction} variant="outline">

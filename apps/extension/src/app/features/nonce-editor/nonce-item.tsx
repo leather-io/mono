@@ -13,7 +13,7 @@ import type { Nonce } from './nonce-editor.context';
 
 interface NonceItemProps {
   nonce: Nonce;
-  onEditNonce(): void;
+  onEditNonce(this: void): void;
 }
 export function NonceItem({ nonce, onEditNonce }: NonceItemProps) {
   return (

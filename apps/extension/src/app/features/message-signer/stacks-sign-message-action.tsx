@@ -5,8 +5,8 @@ import { Button } from '@leather.io/ui';
 import { useWalletType } from '@app/common/use-wallet-type';
 
 interface StacksSignMessageActionsProps {
-  onSignMessage(): void;
-  onSignMessageCancel(): void;
+  onSignMessage(this: void): void;
+  onSignMessageCancel(this: void): void;
   isLoading: boolean;
 }
 export function SignMessageActions(props: StacksSignMessageActionsProps) {

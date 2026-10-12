@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
@@ -15,7 +15,7 @@ interface AccountListItemLayoutProps extends AccountId {
   nonInteractive?: boolean;
   isLoading: boolean;
   isSelected: boolean;
-  onSelectAccount(accountId: AccountId): void;
+  onSelectAccount(this: void, accountId: AccountId): void;
   showChevron?: boolean;
   dataTestId?: string;
 }

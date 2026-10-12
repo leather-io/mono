@@ -18,11 +18,11 @@ interface FeeEditorProviderProps extends HasChildren {
   availableBalance: Money;
   fees: Fees;
   feeType: FeeType;
-  getCustomFee(rate: number): Fee;
+  getCustomFee(this: void, rate: number): Fee;
   isLoadingFees: boolean;
   isSponsored: boolean;
   marketData: MarketData;
-  onGoBack(): void;
+  onGoBack(this: void): void;
 }
 export function FeeEditorProvider({
   availableBalance,
@@ -60,7 +60,7 @@ export function FeeEditorProvider({
         onSetLoadedFee: (value: Fee) => setLoadedFee(value),
         onSetCustomFee: (value: string) => setCustomFee(value),
         onSetSelectedFee: (value: Fee) => setSelectedFee(value),
-        onUserActivatesFeeEditor: () => navigate(RouteUrls.FeeEditor),
+        onUserActivatesFeeEditor: () => void navigate(RouteUrls.FeeEditor),
       }}
     >
       {children}

@@ -25,7 +25,7 @@ import { Tokens } from './components/tokens';
 
 function HomeNotFound() {
   const navigate = useNavigate();
-  return <NotFoundContent onGoHome={() => navigate(RouteUrls.Home)} />;
+  return <NotFoundContent onGoHome={() => void navigate(RouteUrls.Home)} />;
 }
 
 const animationState = { hasPlayed: false };

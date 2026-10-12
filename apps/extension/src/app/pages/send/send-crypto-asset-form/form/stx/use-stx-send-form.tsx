@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 
-import { FormikHelpers } from 'formik';
+import { type FormikHelpers } from 'formik';
 import * as yup from 'yup';
 
 import { STX_DECIMALS } from '@leather.io/constants';
 import { convertAmountToBaseUnit, createMoney } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
-import { StacksSendFormValues } from '@shared/models/form.model';
+import { type StacksSendFormValues } from '@shared/models/form.model';
 
 import {
   stxAmountValidator,
@@ -80,6 +80,7 @@ export function useStxSendForm() {
     validationSchema,
 
     async previewTransaction(
+      this: void,
       values: StacksSendFormValues,
       formikHelpers: FormikHelpers<StacksSendFormValues>
     ) {

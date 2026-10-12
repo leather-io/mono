@@ -72,8 +72,8 @@ interface BlockchainActivityFeed {
   isFetchNextPageError: boolean;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
-  fetchNextPage(): void;
-  refetch(): void;
+  fetchNextPage(this: void): void;
+  refetch(this: void): void;
 }
 
 interface BlockchainActivityFeedOptions {

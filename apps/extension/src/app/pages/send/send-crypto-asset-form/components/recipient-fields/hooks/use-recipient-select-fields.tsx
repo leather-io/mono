@@ -2,8 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useFormikContext } from 'formik';
-
-import type { Entries } from '@leather.io/models';
+import { entries } from 'remeda';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -16,9 +15,7 @@ export type RecipientIdentifierType = keyof typeof recipientIdentifierTypesMap;
 function makeIteratbleListOfRecipientIdentifierTypes(
   recipientTypeMap: typeof recipientIdentifierTypesMap
 ) {
-  return (Object.entries(recipientTypeMap) as Entries<typeof recipientTypeMap>).map(
-    ([key, value]) => ({ key, label: value })
-  );
+  return entries(recipientTypeMap).map(([key, value]) => ({ key, label: value }));
 }
 export const recipientIdentifierTypes = makeIteratbleListOfRecipientIdentifierTypes(
   recipientIdentifierTypesMap
@@ -51,12 +48,12 @@ export function useRecipientSelectFields() {
 
       isSelectVisible,
 
-      showRecipientAccountsModal() {
+      showRecipientAccountsModal(this: void) {
         setSelectedRecipientField('address');
         void navigate(RouteUrls.SendCryptoAssetFormRecipientAccounts, { replace: true });
       },
 
-      async onSelectRecipientFieldType(recipientType: RecipientIdentifierType) {
+      async onSelectRecipientFieldType(this: void, recipientType: RecipientIdentifierType) {
         await resetAllRecipientFields();
         setBnsAddress('');
         setSelectedRecipientField(recipientType);

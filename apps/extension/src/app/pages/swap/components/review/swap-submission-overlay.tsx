@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { LEATHER_SUPPORT_URL } from '@leather.io/constants';
-import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type Money, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { type SwapAttention } from '@leather.io/state/swap';
 import {
   ArrowLeftIcon,
@@ -26,8 +26,8 @@ interface SwapSubmissionOverlayProps {
   targetAmount: Money;
   status: SwapSubmissionOverlayStatus;
   attention?: SwapAttention;
-  onReset(): void;
-  onViewActivity(): void;
+  onReset(this: void): void;
+  onViewActivity(this: void): void;
 }
 
 export function SwapSubmissionOverlay({
@@ -126,7 +126,7 @@ function SubmissionStatusMessage({ status }: SubmissionStatusMessageProps) {
 }
 
 interface SubmissionFailureMessageProps {
-  onReset(): void;
+  onReset(this: void): void;
 }
 
 function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {
@@ -177,7 +177,7 @@ function getAttentionCopy({ reason, txid }: SwapAttention): { lead: string; tail
 
 interface SwapAttentionMessageProps {
   attention: SwapAttention;
-  onViewActivity(): void;
+  onViewActivity(this: void): void;
 }
 
 function SwapAttentionMessage({ attention, onViewActivity }: SwapAttentionMessageProps) {

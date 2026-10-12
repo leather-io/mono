@@ -2,7 +2,8 @@ import { useSelector } from 'react-redux';
 
 import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
 
-import { RootState } from '..';
+import { type RootState } from '@app/store/store';
+
 import { selectCurrentAccount, selectSoftwareKeys } from '../software-keys/software-key.selectors';
 import * as inMemoryStore from './in-memory-storage';
 import { createKeychainSelector, registerKeychainSelectorCache } from './keychain-selector-cache';

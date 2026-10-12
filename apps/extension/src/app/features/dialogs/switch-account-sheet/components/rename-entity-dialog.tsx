@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
+import { type SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
 import { Stack } from 'leather-styles/jsx';
 
 import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
@@ -18,7 +18,7 @@ interface RenameEntityDialogProps {
   inputTestId: SwitchAccountSelectors;
   saveTestId: SwitchAccountSelectors;
   isShowing: boolean;
-  onClose(): void;
+  onClose(this: void): void;
 }
 
 export function RenameEntityDialog({

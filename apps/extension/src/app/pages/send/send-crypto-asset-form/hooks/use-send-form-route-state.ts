@@ -1,12 +1,15 @@
 import { useLocation } from 'react-router';
 
-import get from 'lodash.get';
+function isRouteStateRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
 
 export function useSendFormRouteState() {
-  const { state } = useLocation();
+  const location = useLocation();
+  const state: unknown = location.state;
   return {
-    amount: get(state, 'amount', ''),
-    recipient: get(state, 'recipient', ''),
-    ...state,
+    amount: '',
+    recipient: '',
+    ...(isRouteStateRecord(state) ? state : {}),
   };
 }

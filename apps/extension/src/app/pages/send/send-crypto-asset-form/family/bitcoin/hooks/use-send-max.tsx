@@ -11,7 +11,7 @@ import { useToast } from '@app/features/toasts/use-toast';
 interface UseSendMaxArgs {
   balance: Money;
   isSendingMax?: boolean;
-  onSetIsSendingMax(value: boolean): void;
+  onSetIsSendingMax(this: void, value: boolean): void;
   sendMaxBalance: string;
   sendMaxFee: string;
 }

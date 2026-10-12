@@ -15,7 +15,7 @@ import { ReceiveTokensLayout } from './components/receive-tokens.layout';
 
 interface ReceiveBtcModalProps {
   type?: 'btc' | 'btc-taproot';
-  onClose(): void;
+  onClose(this: void): void;
 }
 
 export function ReceiveBtcModal({ type = 'btc', onClose }: ReceiveBtcModalProps) {
@@ -48,10 +48,9 @@ export function ReceiveBtcModal({ type = 'btc', onClose }: ReceiveBtcModalProps)
     <ReceiveTokensLayout
       address={address}
       onClose={onClose}
-      onCopyAddressToClipboard={async () => {
+      onCopyAddressToClipboard={() => {
         analytics.track('copy_btc_address_to_clipboard', { type });
-        await copyToClipboard(address);
-        toast.success('Copied to clipboard!');
+        void copyToClipboard(address).then(() => toast.success('Copied to clipboard!'));
       }}
       onVerifyAddress={
         canVerifyOnLedger ? () => verifyAddressOnLedger(getVerifyVariant()) : undefined

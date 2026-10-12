@@ -14,7 +14,7 @@ import { Sip9Card } from './components/sip9-card';
 
 interface CollectibleItemProps {
   view: CollectibleView;
-  onSelect(asset: NonFungibleCryptoAsset): void;
+  onSelect(this: void, asset: NonFungibleCryptoAsset): void;
 }
 function CollectibleItem({ view, onSelect }: CollectibleItemProps) {
   switch (view.asset.protocol) {

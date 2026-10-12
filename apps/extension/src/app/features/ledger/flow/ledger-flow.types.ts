@@ -42,7 +42,7 @@ export interface ConfirmBtcPolicyAddressLedgerFlowRequest {
   kind: 'confirm-btc-policy-address';
   descriptor: string;
   address: string | null;
-  onConfirmed(): Promise<void>;
+  onConfirmed(this: void): Promise<void>;
 }
 
 interface ConnectStartLedgerFlowRequest {

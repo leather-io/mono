@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { FlexProps, styled } from 'leather-styles/jsx';
+import { type FlexProps, styled } from 'leather-styles/jsx';
 
 import { closeWindow } from '@shared/utils';
 
@@ -13,7 +13,7 @@ export function GenericErrorListItem({ text }: { text: ReactNode }) {
 interface GenericErrorProps extends FlexProps {
   body: string;
   helpTextList?: ReactNode[];
-  onClose?(): void;
+  onClose?(this: void): void;
   title: string;
 }
 

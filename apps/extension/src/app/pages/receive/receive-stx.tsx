@@ -12,7 +12,7 @@ import { useCurrentPolicy, usePolicyDisplayName } from '@app/store/policy/policy
 import { ReceiveTokensLayout } from './components/receive-tokens.layout';
 
 interface ReceiveStxModalProps {
-  onClose(): void;
+  onClose(this: void): void;
 }
 
 export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
@@ -38,10 +38,9 @@ export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
       address={address}
       accountName={policyName ?? accountName}
       onClose={onClose}
-      onCopyAddressToClipboard={async () => {
+      onCopyAddressToClipboard={() => {
         analytics.track('copy_stx_address_to_clipboard');
-        await copyToClipboard(address);
-        toast.success('Copied to clipboard!');
+        void copyToClipboard(address).then(() => toast.success('Copied to clipboard!'));
       }}
       onVerifyAddress={canVerifyOnLedger ? () => verifyAddressOnLedger('stx') : undefined}
       title="STX"

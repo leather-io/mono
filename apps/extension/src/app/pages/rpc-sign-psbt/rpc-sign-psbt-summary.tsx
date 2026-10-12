@@ -16,21 +16,29 @@ import {
 } from '@app/components/info-card/info-card';
 import { Card } from '@app/components/layout';
 import { useToast } from '@app/features/toasts/use-toast';
+import { readRouteStateString } from '@app/pages/read-route-state';
 
 export function RpcSignPsbtSummary() {
-  const { state } = useLocation();
+  const location = useLocation();
+  const state: unknown = location.state;
   const { handleOpenBitcoinTxLink: handleOpenTxLink } = useBitcoinExplorerLink();
 
   const toast = useToast();
 
-  const { fee, sendingValue, totalSpend, txId, txFiatValue, txFiatValueSymbol, txLink, txValue } =
-    state;
+  const fee = readRouteStateString(state, 'fee');
+  const sendingValue = readRouteStateString(state, 'sendingValue');
+  const totalSpend = readRouteStateString(state, 'totalSpend');
+  const txId = readRouteStateString(state, 'txId', '');
+  const txFiatValue = readRouteStateString(state, 'txFiatValue');
+  const txFiatValueSymbol = readRouteStateString(state, 'txFiatValueSymbol');
+  const txLinkTxid = readRouteStateString(state, 'txLink.txid', '');
+  const txValue = readRouteStateString(state, 'txValue', '');
 
   const { onCopy } = useClipboard(txId);
 
   function onClickLink() {
     analytics.track('view_rpc_sign_and_broadcast_psbt_confirmation', { symbol: 'BTC' });
-    handleOpenTxLink(txLink);
+    handleOpenTxLink({ txid: txLinkTxid });
   }
 
   function onClickCopy() {

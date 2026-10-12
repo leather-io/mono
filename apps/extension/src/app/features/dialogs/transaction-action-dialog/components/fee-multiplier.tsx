@@ -1,11 +1,11 @@
-import { HStack, HstackProps } from 'leather-styles/jsx';
+import { HStack, type HstackProps } from 'leather-styles/jsx';
 
 import { FeeMultiplierButton } from './fee-multiplier-button';
 
 const multipliers = [2, 5, 10];
 
 interface FeeMultiplierProps extends HstackProps {
-  onSelectMultiplier(multiplier: number): void;
+  onSelectMultiplier(this: void, multiplier: number): void;
   showReset?: boolean;
 }
 

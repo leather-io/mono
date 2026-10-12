@@ -8,10 +8,10 @@ export function useReceiveDialog() {
   return {
     receiveView,
     setReceiveView,
-    showReceive(view: ReceiveView = 'full') {
+    showReceive(this: void, view: ReceiveView = 'full') {
       setReceiveView(view);
     },
-    hideReceive() {
+    hideReceive(this: void) {
       setReceiveView(null);
     },
   };

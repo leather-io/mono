@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { css } from 'leather-styles/css';
@@ -9,8 +9,8 @@ import { SheetHeader } from '@leather.io/ui';
 interface AssetSelectorSheetProps {
   type: 'base' | 'target' | null;
   isOpen: boolean;
-  onClose(): void;
-  onCloseAutoFocus?(e: Event): void;
+  onClose(this: void): void;
+  onCloseAutoFocus?(this: void, e: Event): void;
   children: ReactNode;
 }
 

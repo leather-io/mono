@@ -15,34 +15,34 @@ import {
 import { Card, Content, Page, SummaryFooter } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useToast } from '@app/features/toasts/use-toast';
+import { readRouteStateString } from '@app/pages/read-route-state';
 
 import { TxDone } from '../send-crypto-asset-form/components/tx-done';
 
 export function BtcSentSummary() {
-  const { state } = useLocation();
+  const location = useLocation();
+  const state: unknown = location.state;
 
   const toast = useToast();
 
-  const {
-    txId,
-    txValue,
-    txFiatValue,
-    txFiatValueSymbol,
-    symbol,
-    txLink,
-    arrivesIn,
-    sendingValue,
-    recipient,
-    totalSpend,
-    feeRowValue,
-  } = state;
+  const txId = readRouteStateString(state, 'txId', '');
+  const txValue = readRouteStateString(state, 'txValue', '');
+  const txFiatValue = readRouteStateString(state, 'txFiatValue');
+  const txFiatValueSymbol = readRouteStateString(state, 'txFiatValueSymbol');
+  const symbol = readRouteStateString(state, 'symbol');
+  const txLinkTxid = readRouteStateString(state, 'txLink.txid', '');
+  const arrivesIn = readRouteStateString(state, 'arrivesIn');
+  const sendingValue = readRouteStateString(state, 'sendingValue');
+  const recipient = readRouteStateString(state, 'recipient', '');
+  const totalSpend = readRouteStateString(state, 'totalSpend');
+  const feeRowValue = readRouteStateString(state, 'feeRowValue');
 
   const { onCopy } = useClipboard(txId);
   const { handleOpenBitcoinTxLink: handleOpenTxLink } = useBitcoinExplorerLink();
 
   function onClickLink() {
     analytics.track('view_transaction_confirmation', { symbol: 'BTC' });
-    handleOpenTxLink({ txid: txLink.txid });
+    handleOpenTxLink({ txid: txLinkTxid });
   }
 
   function onClickCopy() {

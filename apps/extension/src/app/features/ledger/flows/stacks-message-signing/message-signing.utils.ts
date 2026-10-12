@@ -1,11 +1,16 @@
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@stacks/common';
 import { ChainId } from '@stacks/network';
-import { ClarityType, ClarityValue, cvToString, encodeStructuredData } from '@stacks/transactions';
+import {
+  ClarityType,
+  type ClarityValue,
+  cvToString,
+  encodeStructuredData,
+} from '@stacks/transactions';
 
 import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
 
-import { UnsignedMessageStructured } from '@shared/signature/signature-types';
+import { type UnsignedMessageStructured } from '@shared/signature/signature-types';
 
 import { capitalize } from '@app/common/utils';
 

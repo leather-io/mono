@@ -5,7 +5,7 @@ import type { DirtySliceTracker } from '@shared/storage/dirty-slice-tracker';
 import { getPersistVersion } from '@shared/storage/merge-persist-storage';
 import { type PersistedSliceKey, persistWhitelist } from '@shared/storage/persist-whitelist';
 
-import type { LocalRootState } from '@app/store';
+import type { LocalRootState } from '@app/store/store';
 
 const persistRootStorageKey = 'persist:root';
 

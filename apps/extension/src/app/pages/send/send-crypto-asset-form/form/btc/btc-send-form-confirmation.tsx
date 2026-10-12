@@ -6,7 +6,6 @@ import * as btc from '@scure/btc-signer';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Stack } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import {
   breakDownSpendBySource,
@@ -38,6 +37,7 @@ import { Card, Content, Page } from '@app/components/layout';
 import { SpendSourcesBreakdownRows } from '@app/components/spend-sources/spend-sources-breakdown-rows';
 import { SpendSourcesTaprootCallout } from '@app/components/spend-sources/spend-sources-taproot-callout';
 import { PageHeader } from '@app/features/container/headers/page.header';
+import { readRouteStateNumber, readRouteStateString } from '@app/pages/read-route-state';
 import { invalidateActivityQueries } from '@app/query/activity/blockchain-activity.query';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useMatchWalletUtxos } from '@app/query/bitcoin/utxos/use-match-wallet-utxos';
@@ -51,12 +51,13 @@ const symbol: CryptoCurrency = 'BTC';
 
 function useBtcSendFormConfirmationState() {
   const location = useLocation();
+  const state: unknown = location.state;
   return {
-    tx: get(location.state, 'tx') as string,
-    fee: get(location.state, 'fee') as number,
-    feeRowValue: get(location.state, 'feeRowValue') as string,
-    arrivesIn: get(location.state, 'time') as string,
-    recipient: get(location.state, 'recipient') as string,
+    tx: readRouteStateString(state, 'tx', ''),
+    fee: readRouteStateNumber(state, 'fee', 0),
+    feeRowValue: readRouteStateString(state, 'feeRowValue', ''),
+    arrivesIn: readRouteStateString(state, 'time', ''),
+    recipient: readRouteStateString(state, 'recipient', ''),
   };
 }
 
@@ -85,7 +86,7 @@ function BtcBroadcastConfirmation() {
 
   const nav = useSendFormNavigate();
 
-  const transferAmount = satToBtc(decodedTx.outputs[0].amount.toString()).toString();
+  const transferAmount = satToBtc(String(decodedTx.outputs[0].amount)).toString();
   const txFiatValue = formatCurrency(
     baseCurrencyAmountInQuote(createMoneyFromDecimal(Number(transferAmount), symbol), btcMarketData)
   );
@@ -109,21 +110,23 @@ function BtcBroadcastConfirmation() {
     setIsBroadcasting(true);
     await broadcastTx({
       tx: transaction.hex,
-      async onSuccess(txid) {
-        analytics.track('broadcast_transaction', {
-          symbol: 'btc',
-          amount: Number(transferAmount),
-          fee,
-          inputs: decodedTx.inputs.length,
-          outputs: decodedTx.inputs.length,
-        });
-        await refetchUtxos();
-        void navigate(RouteUrls.SentBtcTxSummary.replace(':txId', `${txid}`), {
-          state: formBtcTxSummaryState(txid),
-        });
+      onSuccess(txid) {
+        void (async () => {
+          analytics.track('broadcast_transaction', {
+            symbol: 'btc',
+            amount: Number(transferAmount),
+            fee,
+            inputs: decodedTx.inputs.length,
+            outputs: decodedTx.inputs.length,
+          });
+          await refetchUtxos();
+          void navigate(RouteUrls.SentBtcTxSummary.replace(':txId', `${txid}`), {
+            state: formBtcTxSummaryState(txid),
+          });
 
-        // invalidate txs query after some time to ensure that the new tx will be shown in the list
-        setTimeout(() => void invalidateActivityQueries(), 2000);
+          // invalidate txs query after some time to ensure that the new tx will be shown in the list
+          setTimeout(() => void invalidateActivityQueries(), 2000);
+        })();
       },
       onError(e) {
         analytics.track('broadcast_btc_error', {
@@ -169,7 +172,7 @@ function BtcBroadcastConfirmation() {
               <Button
                 data-testid={SharedComponentsSelectors.InfoCardButton}
                 aria-busy={isBroadcasting}
-                onClick={initiateTransaction}
+                onClick={() => void initiateTransaction()}
                 width="100%"
               >
                 Confirm and send transaction

@@ -7,14 +7,14 @@ import { ArrowLeftIcon } from '@leather.io/ui';
 import { HeaderActionButton } from './header-action-button';
 
 interface HeaderBackButtonProps {
-  onBack?(): void;
+  onBack?(this: void): void;
 }
 export function HeaderBackButton({ onBack }: HeaderBackButtonProps) {
   const navigate = useNavigate();
   return (
     <HeaderActionButton
       icon={<ArrowLeftIcon />}
-      onAction={() => (onBack ? onBack() : navigate(-1))}
+      onAction={() => (onBack ? onBack() : void navigate(-1))}
       dataTestId={SharedComponentsSelectors.HeaderBackBtn}
     />
   );

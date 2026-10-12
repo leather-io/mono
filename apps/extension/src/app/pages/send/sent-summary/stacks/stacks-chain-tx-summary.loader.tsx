@@ -5,7 +5,7 @@ import { useGetRawTransactionByIdQuery } from '@app/query/stacks/transactions/ra
 interface StacksChainTxSummaryLoaderProps {
   txid: string;
   fallback: React.ReactNode;
-  children(args: { rawTx: string }): React.ReactNode;
+  children(this: void, args: { rawTx: string }): React.ReactNode;
 }
 export function StacksChainTxSummaryLoader({
   txid,

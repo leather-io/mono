@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
@@ -7,7 +7,7 @@ import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 interface PrivateTextLayoutProps extends HTMLStyledProps<'span'> {
   children: React.ReactNode;
   isPrivate?: boolean;
-  onShowValue?(): void;
+  onShowValue?(this: void): void;
 }
 
 export function PrivateTextLayout({

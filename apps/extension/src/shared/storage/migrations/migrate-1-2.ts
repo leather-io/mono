@@ -1,16 +1,30 @@
 import { makeStxDerivationPath } from '@leather.io/stacks';
 
 import { assumedZeroFingerprint } from '@shared/utils';
+import { isRecord } from '@shared/utils/is-record';
 
-function processStacksLedgerKeys(stacksKeys: any) {
-  const newStacksKeys = stacksKeys.entities.default.publicKeys.reduce(
-    (acc: { ids: string[]; entities: Record<string, any> }, item: any, index: number) => {
+import { type LegacyRecord, getRecordAtPath, isUnknownArray } from './legacy-state';
+
+interface LegacyLedgerKeys {
+  ids: string[];
+  entities: LegacyRecord;
+}
+
+interface RenamedKeysStore {
+  [key: string]: unknown;
+  ledger: LegacyRecord;
+}
+
+function processStacksLedgerKeys(stacksKeys: unknown) {
+  const publicKeys = getRecordAtPath(stacksKeys, 'entities', 'default')?.publicKeys;
+  const newStacksKeys = (isUnknownArray(publicKeys) ? publicKeys : []).reduce<LegacyLedgerKeys>(
+    (acc, item, index) => {
       const path = makeStxDerivationPath(index);
       const id = path.replace('m', assumedZeroFingerprint);
 
       acc.ids.push(id);
       acc.entities[id] = {
-        ...item,
+        ...(isRecord(item) ? item : {}),
         path,
         id,
         walletId: 'default',
@@ -25,21 +39,22 @@ function processStacksLedgerKeys(stacksKeys: any) {
   return newStacksKeys;
 }
 
-export function migrateToRenameKeysStoreModule(state: any): any {
-  const resolvedState = structuredClone(state);
+export function migrateToRenameKeysStoreModule(state: unknown): RenamedKeysStore {
+  const clonedState: unknown = structuredClone(state);
+  const resolvedState = isRecord(clonedState) ? clonedState : {};
 
-  const newStore = {
+  const newStore: RenamedKeysStore = {
     ...resolvedState,
     softwareKeys: resolvedState.keys,
     ledger: {
-      ...resolvedState.ledger,
+      ...getRecordAtPath(resolvedState, 'ledger'),
     },
   };
 
   // add stacks ledger keys to new place
-  if (resolvedState.keys?.entities.default?.type === 'ledger') {
+  if (getRecordAtPath(resolvedState, 'keys', 'entities', 'default')?.type === 'ledger') {
     newStore.ledger = {
-      ...resolvedState.ledger,
+      ...getRecordAtPath(resolvedState, 'ledger'),
       stacks: processStacksLedgerKeys(resolvedState.keys),
     };
   }

@@ -1,4 +1,5 @@
 import type { BrowserContext, Page } from '@playwright/test';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 
@@ -16,7 +17,7 @@ async function interceptRequestPopup(context: BrowserContext) {
 }
 
 async function initiateGetAddresses(page: Page) {
-  return page.evaluate(() => (window as any).LeatherProvider?.request('getAddresses'));
+  return page.evaluate(() => window.LeatherProvider?.request('getAddresses'));
 }
 
 async function clickConnectLeatherButton(popup: Page) {
@@ -39,7 +40,9 @@ async function assertWalletHomeOpens(popup: Page) {
 }
 
 async function initiateOpen(page: Page) {
-  return page.evaluate(() => (window as any).LeatherProvider?.request('open').catch((e: any) => e));
+  return page.evaluate(() =>
+    window.LeatherProvider?.request('open').catch((e: TestRpcResponse) => e)
+  );
 }
 
 test.describe('Rpc: Open', () => {
@@ -57,7 +60,7 @@ test.describe('Rpc: Open', () => {
     const popup = await interceptRequestPopup(context);
     await assertWalletHomeOpens(popup);
 
-    const result = await openPromise;
+    const result = openPromise;
     if (!result) throw new Error('Expected result');
 
     test.expect(result).toEqual({ ...successResponse, id: test.expect.any(String) });

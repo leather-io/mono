@@ -1,3 +1,5 @@
+import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
+
 import {
   isFtNameLikeStx,
   stacksValue,
@@ -112,17 +114,19 @@ describe(validateStacksAddress.name, () => {
 });
 
 describe(validateAddressChain.name, () => {
-  const mainnetNetwork = {
-    chain: { stacks: { chainId: 1 as const } },
-  } as any;
+  function createNetworkWithStacksChainId(chainId: number): NetworkConfiguration {
+    const network = defaultNetworksKeyedById.mainnet;
+    return {
+      ...network,
+      chain: { ...network.chain, stacks: { ...network.chain.stacks, chainId } },
+    };
+  }
 
-  const testnetNetwork = {
-    chain: { stacks: { chainId: 2147483648 as const } },
-  } as any;
+  const mainnetNetwork = createNetworkWithStacksChainId(1);
 
-  const customChainIdNetwork = {
-    chain: { stacks: { chainId: 256 as const } },
-  } as any;
+  const testnetNetwork = createNetworkWithStacksChainId(2147483648);
+
+  const customChainIdNetwork = createNetworkWithStacksChainId(256);
 
   describe('standard principals', () => {
     it('validates mainnet addresses on mainnet network', () => {

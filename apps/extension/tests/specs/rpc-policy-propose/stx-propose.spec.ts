@@ -1,4 +1,4 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
 import {
   type ClarityValue,
   bufferCVFromString,
@@ -6,6 +6,7 @@ import {
   serializeCV,
   standardPrincipalCV,
 } from '@stacks/transactions';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import { TEST_ACCOUNT_1_STX_ADDRESS, TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import {
   exampleMultisigTransactionId,
@@ -54,7 +55,7 @@ function makeCallContractParams(recipient: string) {
 function requestStxCallContract(page: Page, recipient: string) {
   return page.evaluate(
     ({ params }) =>
-      (window as any).LeatherProvider?.request('stx_callContract', params).catch((e: unknown) => e),
+      window.LeatherProvider?.request('stx_callContract', params).catch((e: TestRpcResponse) => e),
     { params: makeCallContractParams(recipient) }
   );
 }
@@ -62,8 +63,8 @@ function requestStxCallContract(page: Page, recipient: string) {
 function openStxCallContract(page: Page, recipient: string) {
   return page.evaluate(
     ({ params }) =>
-      void (window as any).LeatherProvider?.request('stx_callContract', params).catch(
-        (e: unknown) => e
+      void window.LeatherProvider?.request('stx_callContract', params).catch(
+        (e: TestRpcResponse) => e
       ),
     { params: makeCallContractParams(recipient) }
   );
@@ -98,6 +99,7 @@ test.describe('RPC: stx_callContract from a policy (multisig) account', () => {
       clickPropose(context),
     ]);
 
+    if (!result) throw new Error('Expected result');
     delete result.id;
 
     test.expect(result.result).toMatchObject({
@@ -119,6 +121,7 @@ test.describe('RPC: stx_callContract from a policy (multisig) account', () => {
       clickPropose(context),
     ]);
 
+    if (!result) throw new Error('Expected result');
     delete result.id;
 
     test.expect(result.result).toMatchObject({
@@ -189,6 +192,7 @@ test.describe('RPC: stx_callContract acts on the per-origin policy binding', () 
       })(),
     ]);
 
+    if (!result) throw new Error('Expected result');
     delete result.id;
 
     test.expect(result.result).toMatchObject({

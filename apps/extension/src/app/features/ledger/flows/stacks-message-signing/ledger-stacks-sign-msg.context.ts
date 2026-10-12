@@ -2,14 +2,14 @@ import { createContext } from 'react';
 
 import { noop } from '@leather.io/utils';
 
-import { UnsignedMessage } from '@shared/signature/signature-types';
+import { type UnsignedMessage } from '@shared/signature/signature-types';
 
-import { BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
+import { type BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
 
 export interface LedgerMessageSigningContext extends BaseLedgerOperationContext {
   message: UnsignedMessage | undefined;
-  signMessage(): Promise<void> | void;
-  onCancelMessageSigning(): void;
+  signMessage(this: void): Promise<void> | void;
+  onCancelMessageSigning(this: void): void;
 }
 
 export const ledgerMsgSigningContext = createContext<LedgerMessageSigningContext>({

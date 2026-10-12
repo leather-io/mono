@@ -4,7 +4,7 @@ import { useNavigate, useOutletContext } from 'react-router';
 import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { Box, Divider, Flex } from 'leather-styles/jsx';
 
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 import { useSwapContext } from '@leather.io/state/swap';
 import { Button } from '@leather.io/ui';
 
@@ -62,8 +62,8 @@ export function SwapForm() {
 
   function handleAssetSelection(type: 'base' | 'target', asset: AccountSwapAsset) {
     const action = {
-      base: actions.setBaseSwapAsset,
-      target: actions.setTargetSwapAsset,
+      base: (selectedAsset: AccountSwapAsset) => actions.setBaseSwapAsset(selectedAsset),
+      target: (selectedAsset: AccountSwapAsset) => actions.setTargetSwapAsset(selectedAsset),
     };
 
     action[type](asset);
@@ -105,10 +105,10 @@ export function SwapForm() {
                 <AmountField
                   asset={state.baseSwapAsset?.asset}
                   value={state.baseAmount}
-                  onChange={actions.setBaseAmount}
+                  onChange={amount => actions.setBaseAmount(amount)}
                   secondaryAmount={state.secondaryAmount}
                   inputCurrencyMode={state.inputCurrencyMode}
-                  onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
+                  onInputCurrencyModeSwitch={() => actions.toggleInputCurrencyMode()}
                   quoteCurrencyPreference={state.quoteCurrencyPreference}
                   inputRef={amountFieldRef}
                   errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
@@ -152,7 +152,10 @@ export function SwapForm() {
                 </Flex>
               </Flex>
 
-              <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
+              <FlipButton
+                isVisible={state.assetFlippingAllowed}
+                onPress={() => actions.flipAssets()}
+              />
             </Box>
 
             <QuotePreview state={state} liveEstimate={liveEstimate} />
@@ -161,7 +164,7 @@ export function SwapForm() {
           <AssetSelectorSheet
             type={state.selectingAsset}
             isOpen={state.selectingAsset !== null}
-            onClose={actions.closeAssetSelector}
+            onClose={() => actions.closeAssetSelector()}
             onCloseAutoFocus={handleAssetSheetCloseAutoFocus}
           >
             {state.selectingAsset && (

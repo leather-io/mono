@@ -15,7 +15,7 @@ import { TitleWithTooltip } from './title-with-tooltip';
 interface GeneralSettingsButtonProps {
   icon: ComponentProps<typeof Avatar>['icon'] | null;
   title: string;
-  onClick(): void;
+  onClick(this: void): void;
   tooltipText?: string;
   ['data-testid']?: string;
 }

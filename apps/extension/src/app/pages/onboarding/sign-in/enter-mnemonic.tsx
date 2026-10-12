@@ -16,7 +16,7 @@ import { MnemonicForm } from '@app/pages/onboarding/sign-in/mnemonic-form';
 interface EnterMnemonicProps {
   title: string;
   description: string;
-  onSubmit(mnemonic: string): Promise<void>;
+  onSubmit(this: void, mnemonic: string): Promise<void>;
   error: string | undefined;
   isLoading: boolean;
 }

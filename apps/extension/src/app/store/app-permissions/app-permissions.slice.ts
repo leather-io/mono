@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/wallet';
 
@@ -16,7 +16,11 @@ const initialState = appPermissionsAdapter.getInitialState();
 export const appPermissionsSlice = createSlice({
   name: 'appPermissions',
   initialState,
-  reducers: { updatePermission: appPermissionsAdapter.setOne },
+  reducers: {
+    updatePermission(state, action: PayloadAction<AppPermission>) {
+      appPermissionsAdapter.setOne(state, action);
+    },
+  },
   extraReducers: builder =>
     builder
       .addCase(userRemovesWallet, (state, action) => {

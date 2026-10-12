@@ -2,6 +2,23 @@ import { assumedZeroFingerprint } from '@shared/utils';
 
 import { test } from '../../fixtures/fixtures';
 
+interface MigratedPersistedState {
+  _persist: { version: number };
+  softwareKeys: {
+    salt: string;
+    ids: string[];
+    entities: Record<string, { encryptedSecretKey: string } | undefined>;
+  };
+  active: { account: unknown };
+  wallets: { ids: string[]; entities: Record<string, unknown> };
+  chains: { stx: Record<string, unknown> };
+  accounts: { ids: string[] };
+  ledger?: unknown;
+  onboarding?: unknown;
+  ordinals?: unknown;
+  keychains?: unknown;
+}
+
 const demoEncryptedKey =
   'b7f516798e7160eca15c50b62e588698937f8ecf3930efc42baa690ddc0c7a51b74e3e4b129859274ed272652bc47651c6b6effbddf4d72a3eb9d2ea657b64a833c9bdccb562e45d94f0cc1366154072f12d35290566a99a6f952cd234ca9259';
 
@@ -36,7 +53,9 @@ test.describe('Store migrations', () => {
 
     // State now in new format
     const result = await page.evaluate(async () =>
-      chrome.storage.local.get(['persist:root']).then(state => state['persist:root'])
+      chrome.storage.local
+        .get<{ 'persist:root': MigratedPersistedState }>(['persist:root'])
+        .then(state => state['persist:root'])
     );
 
     // Assert that old values are present in unserialized format
@@ -106,14 +125,18 @@ test.describe('Store migrations', () => {
     await page.waitForTimeout(1000);
 
     const result = await page.evaluate(async () =>
-      chrome.storage.local.get(['persist:root']).then(state => state['persist:root'])
+      chrome.storage.local
+        .get<{ 'persist:root': MigratedPersistedState }>(['persist:root'])
+        .then(state => state['persist:root'])
     );
 
     test.expect(result._persist.version).toEqual(4);
     test.expect(result.softwareKeys.salt).toEqual(demoSalt);
     test.expect(result.softwareKeys.entities.default).toBeUndefined();
     test.expect(result.softwareKeys.entities.ef7bfd66).toBeDefined();
-    test.expect(result.softwareKeys.entities.ef7bfd66.encryptedSecretKey).toEqual(demoEncryptedKey);
+    test
+      .expect(result.softwareKeys.entities.ef7bfd66?.encryptedSecretKey)
+      .toEqual(demoEncryptedKey);
     test.expect(result.softwareKeys.ids).toEqual(['ef7bfd66']);
 
     test.expect(result.active.account).toEqual({

@@ -58,10 +58,11 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
         txData: {
           txType: TransactionTypes.StxTokenTransfer,
           recipient: getStacksBurnAddress(network.chainId),
-          amount: 1,
+          amount: '1',
           memo: '_cancel transaction',
-          network: network,
-        } as any,
+          network,
+          publicKey: account.stxPublicKey,
+        },
       };
       const newTx = await generateUnsignedTransaction(options);
       await refreshAccountData();

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 import { signatureVrsToRsv } from '@stacks/common';
 import { serializeCV } from '@stacks/transactions';
 import { LedgerError } from '@zondax/ledger-stacks';
@@ -23,23 +22,25 @@ import type { ActiveLedgerSigningRequest } from '@app/features/ledger/flow/ledge
 import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import {
   isCancellableConnectionInteraction,
+  isUnlockDeviceInteraction,
   useCancelLedgerAction,
 } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   getStacksAppVersion,
+  hasLedgerReturnCode,
   prepareLedgerDeviceStacksAppConnection,
   signLedgerStacksStructuredMessage,
   signLedgerStacksUtf8Message,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
+import { type StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerFingerprintMigration } from '../../hooks/use-ledger-fingerprint-migration';
 import { useLedgerResponseState } from '../../utils/generic-ledger-utils';
 import {
-  LedgerMessageSigningContext,
+  type LedgerMessageSigningContext,
   LedgerMsgSigningProvider,
 } from './ledger-stacks-sign-msg.context';
 import { ConnectLedgerSignMsg } from './steps/connect-ledger-sign-msg';
@@ -73,7 +74,7 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
         runAction: signerActions.run,
         onRequiredUserInteraction(interaction) {
           setLatestDeviceResponse({
-            deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
+            deviceLocked: isUnlockDeviceInteraction(interaction),
           });
           setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
         },
@@ -133,19 +134,19 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
 
       // Assuming here that public keys are wrong. Alternatively, we may want
       // to proactively check the key before signing
-      if (resp.returnCode === LedgerError.DataIsInvalid) {
+      if (hasLedgerReturnCode(resp, LedgerError.DataIsInvalid)) {
         ledgerNavigate.toDevicePayloadInvalid();
         return;
       }
 
-      if (resp.returnCode === LedgerError.TransactionRejected) {
+      if (hasLedgerReturnCode(resp, LedgerError.TransactionRejected)) {
         ledgerNavigate.toOperationRejectedStep(`Message signing operation rejected`);
         ledgerAnalytics.messageSignedOnLedgerRejected();
         ledgerNavigate.settleLedgerAction(request, { status: 'cancelled' });
         return;
       }
 
-      if (resp.returnCode !== LedgerError.NoErrors) {
+      if (!hasLedgerReturnCode(resp, LedgerError.NoErrors)) {
         throw makeLedgerAppResponseError(resp);
       }
 

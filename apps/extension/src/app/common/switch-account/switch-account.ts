@@ -1,6 +1,6 @@
 export interface SwitchAccountOutletContext {
   isShowingSwitchAccount: boolean;
-  setIsShowingSwitchAccount(isShowing: boolean): void;
+  setIsShowingSwitchAccount(this: void, isShowing: boolean): void;
   allowPolicyAccounts: boolean;
-  setAllowPolicyAccounts(allow: boolean): void;
+  setAllowPolicyAccounts(this: void, allow: boolean): void;
 }

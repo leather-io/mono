@@ -13,7 +13,7 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { useBitcoinTransactionFees } from '@app/query/bitcoin/fees/bitcoin-transaction-fees.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 
-import { FeesListItem } from './bitcoin-fees-list';
+import { type FeesListItem } from './bitcoin-fees-list';
 
 function mapFeeQuoteToListItem(
   quote: BitcoinTransactionFeeQuote,

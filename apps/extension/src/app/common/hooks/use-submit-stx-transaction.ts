@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { StacksTransactionWire, broadcastTransaction } from '@stacks/transactions';
+import { type StacksTransactionWire, broadcastTransaction } from '@stacks/transactions';
 
 import { delay, isError } from '@leather.io/utils';
 
@@ -19,8 +19,8 @@ interface UseSubmitTransactionArgs {
 }
 interface UseSubmitTransactionCallbackArgs {
   replaceByFee?: boolean;
-  onSuccess(txId: string): void;
-  onError(error: Error | string): void;
+  onSuccess(this: void, txId: string): void;
+  onError(this: void, error: Error | string): void;
 }
 export function useSubmitTransactionCallback({ loadingKey }: UseSubmitTransactionArgs) {
   const refreshAccountData = useRefreshAllAccountData();

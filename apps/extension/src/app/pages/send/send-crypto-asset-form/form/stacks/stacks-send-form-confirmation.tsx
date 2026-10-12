@@ -31,9 +31,9 @@ import { useProposeStacksSendTransaction } from './use-propose-stacks-send-trans
 
 function useStacksSendFormConfirmationState() {
   return {
-    tx: useLocationStateWithCache('tx') as string,
-    decimals: useLocationStateWithCache('decimals') as number,
-    showFeeChangeWarning: useLocationStateWithCache('showFeeChangeWarning') as boolean,
+    tx: useLocationStateWithCache<string>('tx') ?? '',
+    decimals: useLocationStateWithCache<number>('decimals'),
+    showFeeChangeWarning: useLocationStateWithCache<boolean>('showFeeChangeWarning') ?? false,
   };
 }
 
@@ -110,7 +110,7 @@ export function StacksSendFormConfirmation() {
     fee: getStacksTransactionFee(tx),
     nonce: isMultisigProposal ? undefined : getNonceFromStacksTransaction(tx).toString(),
     isLoading: isBroadcasting || isProposing,
-    feeWarningTooltip: feeWarningTooltip,
+    feeWarningTooltip,
     confirmButtonLabel: isMultisigProposal ? 'Propose transaction' : undefined,
   } as const;
 

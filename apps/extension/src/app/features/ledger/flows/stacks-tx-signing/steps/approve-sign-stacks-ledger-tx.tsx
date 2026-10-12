@@ -20,7 +20,7 @@ function formatSipTenTransferArgument(index: number) {
 
 function formatTooltipLabel(amount: bigint) {
   const stxFromMicroStx = microStxToStx(Number(amount));
-  return `The amount is displayed in microstacks (µSTX) and is equal to ${stxFromMicroStx} STX`;
+  return `The amount is displayed in microstacks (µSTX) and is equal to ${stxFromMicroStx.toString()} STX`;
 }
 
 export function ApproveSignLedgerStacksTx() {

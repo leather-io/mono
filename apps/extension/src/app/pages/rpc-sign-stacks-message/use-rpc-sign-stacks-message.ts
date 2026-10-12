@@ -17,8 +17,8 @@ import { analytics } from '@shared/utils/analytics';
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import {
-  StructuredPayload,
-  Utf8Payload,
+  type StructuredPayload,
+  type Utf8Payload,
 } from '@app/features/stacks-message-signer/stacks-message-signing';
 import { useSignStacksMessage } from '@app/features/stacks-message-signer/use-sign-stacks-message';
 

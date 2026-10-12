@@ -4,6 +4,7 @@ import { isDefined } from '@leather.io/utils';
 
 import { DEBUG_TX_MONITOR } from '@shared/environment';
 import { logger } from '@shared/logger';
+import { isRecord } from '@shared/utils/is-record';
 
 import type { AddressMonitor, MonitoredAddress } from '../address-monitor';
 import {
@@ -16,6 +17,23 @@ import {
 function logTxMonitorEvent(message: string, ...args: unknown[]) {
   if (!DEBUG_TX_MONITOR) return;
   logger.debug(message, ...args);
+}
+
+function isMempoolWsAddressTransactions(value: unknown) {
+  return isRecord(value) && Array.isArray(value.confirmed);
+}
+
+function isMempoolWsBitcoinTxMessage(value: unknown): value is MempoolWsBitcoinTxMessage {
+  if (!isRecord(value)) return false;
+  const addressTransactions = value['multi-address-transactions'];
+  return (
+    isRecord(addressTransactions) &&
+    Object.values(addressTransactions).every(isMempoolWsAddressTransactions)
+  );
+}
+
+function isMempoolWsBtcPrice(value: unknown): value is MempoolWsBtcPrice {
+  return isRecord(value) && typeof value.USD === 'number';
 }
 
 export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): AddressMonitor {
@@ -69,7 +87,7 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
   function sendWsTrackAddressSubscribe() {
     const addresses = _addresses.map(a => a.address);
     logTxMonitorEvent(`Subscribing to ${addresses.length} Track Addresses`);
-    _ws!.send(
+    _ws?.send(
       JSON.stringify({
         'track-addresses': addresses,
       })
@@ -131,11 +149,12 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
       });
   }
 
-  function handleMessageEvent(event: MessageEvent<any>) {
-    const message = JSON.parse(event.data);
+  function handleMessageEvent(event: MessageEvent<unknown>) {
+    const message: unknown = JSON.parse(String(event.data));
+    if (!isRecord(message)) return;
     if (message['multi-address-transactions']) {
-      handleTransactionMessage(message);
-    } else if (message['conversions']) {
+      if (isMempoolWsBitcoinTxMessage(message)) handleTransactionMessage(message);
+    } else if (isMempoolWsBtcPrice(message['conversions'])) {
       _btcPriceUsd = readMempooWsBtcPriceUsd(message['conversions']);
     }
   }

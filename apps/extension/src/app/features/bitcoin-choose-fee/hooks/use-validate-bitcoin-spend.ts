@@ -20,7 +20,7 @@ export function useValidateBitcoinSpend(amount?: Money, isSendingMax?: boolean) 
       }
       return true;
     },
-    onValidateBitcoinAmountSpend(feeValue: number) {
+    onValidateBitcoinAmountSpend(this: void, feeValue: number) {
       const feeAsMoney = createMoney(feeValue, 'BTC');
 
       if (!amount) {

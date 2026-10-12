@@ -8,7 +8,7 @@ import { LedgerTitle } from '../../components/ledger-title';
 import { LedgerWrapper } from '../../components/ledger-wrapper';
 
 interface UnsupportedBrowserLayoutProps {
-  onClose(): void;
+  onClose(this: void): void;
 }
 export function UnsupportedBrowserLayout({ onClose }: UnsupportedBrowserLayoutProps) {
   return (

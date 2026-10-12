@@ -22,9 +22,9 @@ interface ConnectAccountLayoutProps {
   banner?: ReactNode;
   requester: string;
   switchAccount: ReactNode;
-  onBeforeAnimation?(): void;
-  onUserApprovesGetAddresses(): void | Promise<void>;
-  onClickRequestedByLink(): void;
+  onBeforeAnimation?(this: void): void;
+  onUserApprovesGetAddresses(this: void): void | Promise<void>;
+  onClickRequestedByLink(this: void): void;
 }
 export function ConnectAccountLayout({
   banner,
@@ -139,7 +139,7 @@ export function ConnectAccountLayout({
               </Button>,
               <Button
                 key="confirm"
-                onClick={userApprovesGetAddresses}
+                onClick={() => void userApprovesGetAddresses()}
                 data-testid="get-addresses-approve-button"
               >
                 Confirm

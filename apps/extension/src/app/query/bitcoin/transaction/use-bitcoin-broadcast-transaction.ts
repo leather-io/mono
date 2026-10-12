@@ -10,9 +10,9 @@ interface BroadcastCallbackArgs {
   tx: string;
   skipTaprootWarning?: boolean;
   delayTime?: number;
-  onSuccess?(txid: string): void;
-  onError?(error: Error): void;
-  onFinally?(): void;
+  onSuccess?(this: void, txid: string): void;
+  onError?(this: void, error: Error): void;
+  onFinally?(this: void): void;
 }
 export function useBitcoinBroadcastTransaction() {
   const client = useBitcoinClient();
@@ -44,7 +44,7 @@ export function useBitcoinBroadcastTransaction() {
         onSuccess?.(txid);
         return txid;
       } catch (e) {
-        onError?.(e as Error);
+        onError?.(e instanceof Error ? e : new Error(String(e)));
         return;
       } finally {
         setIsBroadcasting(false);

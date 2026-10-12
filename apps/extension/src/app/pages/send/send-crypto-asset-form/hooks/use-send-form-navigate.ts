@@ -1,19 +1,13 @@
 import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
-import { StacksTransactionWire } from '@stacks/transactions';
+import { type StacksTransactionWire } from '@stacks/transactions';
 import { AxiosError } from 'axios';
 
 import type { OwnedUtxo } from '@leather.io/models';
 
-import { BitcoinSendFormValues } from '@shared/models/form.model';
+import { type BitcoinSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
-
-interface ConfirmationRouteState {
-  decimals?: number;
-  token?: string;
-  tx: string;
-}
 
 interface ConfirmationRouteStacksSip10Args {
   decimals?: number;
@@ -47,7 +41,7 @@ export function useSendFormNavigate() {
       toChooseTransactionFee(
         isSendingMax: boolean,
         utxos: OwnedUtxo[],
-        values: BitcoinSendFormValues
+        values: Pick<BitcoinSendFormValues, 'amount' | 'recipient'>
       ) {
         return navigate(RouteUrls.SendBtcChooseFee, {
           state: {
@@ -71,7 +65,7 @@ export function useSendFormNavigate() {
             fee,
             feeRowValue,
             time,
-          } as ConfirmationRouteState,
+          },
         });
       },
       toConfirmBtcProposal(args: ConfirmationRouteBtcProposalArgs) {
@@ -84,7 +78,7 @@ export function useSendFormNavigate() {
           state: {
             tx: tx.serialize(),
             showFeeChangeWarning,
-          } as ConfirmationRouteState,
+          },
         });
       },
       toConfirmAndSignStacksSip10Transaction({
@@ -97,7 +91,7 @@ export function useSendFormNavigate() {
             decimals,
             token: name,
             tx: tx.serialize(),
-          } as ConfirmationRouteState,
+          },
         });
       },
       toErrorPage(error: unknown, options?: { proposeMode?: boolean }) {

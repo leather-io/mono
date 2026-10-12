@@ -5,8 +5,8 @@ import { FeeEstimateSelectLayout } from './fee-estimate-select.layout';
 
 interface FeeEstimateSelectProps {
   isVisible: boolean;
-  onSelectItem(index: number): void;
-  onSetIsSelectVisible(value: boolean): void;
+  onSelectItem(this: void, index: number): void;
+  onSetIsSelectVisible(this: void, value: boolean): void;
   selectedItem: number;
   allowCustom: boolean;
   disableFeeSelection?: boolean;

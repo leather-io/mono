@@ -21,7 +21,7 @@ export function usePolicyFeatureGate({ frameId, method, id, tabId }: PolicyFeatu
 
   return {
     isFeatureEnabled: releaseAddAccount,
-    rejectAsUnsupported() {
+    rejectAsUnsupported(this: void) {
       if (tabId)
         void sendMessageToOriginatingFrame(
           { frameId, tabId },

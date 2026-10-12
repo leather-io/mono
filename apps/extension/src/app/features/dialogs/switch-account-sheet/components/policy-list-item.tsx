@@ -14,7 +14,7 @@ import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/acc
 interface PolicyListItemProps {
   policy: PolicyStore;
   nonInteractive?: boolean;
-  handleClose(): void;
+  handleClose(this: void): void;
   hideBalance?: boolean;
 }
 export function PolicyListItem({

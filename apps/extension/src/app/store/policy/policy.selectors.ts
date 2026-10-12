@@ -5,7 +5,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
-import { RootState } from '@app/store';
+import { type RootState } from '@app/store/store';
 
 import { useNameOverrideById } from '../accounts/accounts.selectors';
 import { selectActivePolicyId } from '../active/active.selectors';

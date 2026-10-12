@@ -1,4 +1,9 @@
-import { ClarityValue, StringAsciiCV, TupleCV, UIntCV } from '@stacks/transactions';
+import {
+  type ClarityValue,
+  type StringAsciiCV,
+  type TupleCV,
+  type UIntCV,
+} from '@stacks/transactions';
 
 export type SignedMessageType = 'utf8' | 'structured';
 
@@ -45,8 +50,8 @@ export function isSignableMessageType(messageType: unknown): messageType is Sign
 }
 
 interface WhenSignableMessageOfType<T> {
-  utf8(message: string): T;
-  structured(domain: StructuredMessageDataDomain, message: ClarityValue): T;
+  utf8(this: void, message: string): T;
+  structured(this: void, domain: StructuredMessageDataDomain, message: ClarityValue): T;
 }
 export function whenSignableMessageOfType(msg: UnsignedMessage) {
   return <T>({ utf8, structured }: WhenSignableMessageOfType<T>) => {

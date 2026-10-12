@@ -10,7 +10,7 @@ import { COMMIT_SHA, PR_NUMBER } from '@shared/environment';
 type PrDetailsResp = Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}']['response']['data'];
 
 async function getPullRequestDetails(pr: string): Promise<PrDetailsResp> {
-  const resp = await axios.get(
+  const resp = await axios.get<PrDetailsResp>(
     `https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/pulls/${pr}`
   );
   return resp.data;

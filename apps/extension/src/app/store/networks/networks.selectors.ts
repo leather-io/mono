@@ -9,7 +9,7 @@ import {
 } from '@leather.io/models';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
-import { RootState } from '@app/store';
+import { type RootState } from '@app/store/store';
 
 import { networksAdapter } from './networks.slice';
 import { transformNetworkStateToMultichainStucture } from './networks.utils';
@@ -22,11 +22,10 @@ const networksSelectors = networksAdapter.getSelectors<RootState>(selectNetworks
 
 const selectNetworks = createSelector(
   networksSelectors.selectEntities,
-  state =>
-    ({
-      ...defaultNetworksKeyedById,
-      ...transformNetworkStateToMultichainStucture(state),
-    }) as Record<string, NetworkConfiguration>
+  (state): Record<string, NetworkConfiguration> => ({
+    ...defaultNetworksKeyedById,
+    ...transformNetworkStateToMultichainStucture(state),
+  })
 );
 
 const selectCurrentNetworkId = createSelector(selectNetworksSlice, state => state.currentNetworkId);

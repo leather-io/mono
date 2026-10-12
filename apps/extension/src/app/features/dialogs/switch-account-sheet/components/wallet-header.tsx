@@ -4,7 +4,7 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { LedgerIcon } from '@leather.io/ui';
 import { noop } from '@leather.io/utils';
 
-import { WalletType } from '@app/store/common/wallet-type.selectors';
+import { type WalletType } from '@app/store/common/wallet-type.selectors';
 
 import { accountActionMenuTriggerSize } from '../switch-account-sheet.utils';
 import { WalletActionMenu } from './wallet-action-menu';
@@ -14,9 +14,9 @@ interface WalletHeaderProps {
   name: string;
   walletType: WalletType;
   canRemoveWallet?: boolean;
-  onRename?(): void;
-  onRemove?(): void;
-  onViewSecretKey?(): void;
+  onRename?(this: void): void;
+  onRemove?(this: void): void;
+  onViewSecretKey?(this: void): void;
 }
 
 export function WalletHeader({

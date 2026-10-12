@@ -14,14 +14,14 @@ import { AccountNameLayout } from '@app/components/account/account-name';
 import { getLedgerAccountIndicator } from '@app/components/account/ledger-account-indicator';
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { WalletType } from '@app/store/common/wallet-type.selectors';
+import { type WalletType } from '@app/store/common/wallet-type.selectors';
 import { useLoading } from '@app/store/ui/ui.hooks';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface SwitchAccountListItemProps {
   accountId: AccountId;
   nonInteractive?: boolean;
-  handleClose(): void;
+  handleClose(this: void): void;
   hideBalance?: boolean;
   walletType: WalletType;
 }

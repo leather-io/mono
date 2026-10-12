@@ -10,7 +10,7 @@ const testLabels = labels.map(label => label.toLowerCase());
 interface FeeEstimateItemProps {
   index: number;
   isVisible?: boolean;
-  onSelectItem(index: number): void;
+  onSelectItem(this: void, index: number): void;
   selectedItem: number;
   disableFeeSelection?: boolean;
 }

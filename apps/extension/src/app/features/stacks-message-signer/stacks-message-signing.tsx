@@ -1,10 +1,10 @@
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 import type { ClarityValue } from '@stacks/transactions';
 
 import {
-  SignedMessageType,
-  StructuredMessageDataDomain,
-  UnsignedMessage,
+  type SignedMessageType,
+  type StructuredMessageDataDomain,
+  type UnsignedMessage,
   isSignableMessageType,
   isStructuredMessageType,
   isUtf8MessageType,
@@ -38,8 +38,8 @@ interface StacksMessageSigningProps {
   tabId: number | null;
   origin: string | null;
   isLoading: boolean;
-  onSignMessage(unsignedMessage: UnsignedMessage): Promise<void>;
-  onCancelMessageSigning(): void;
+  onSignMessage(this: void, unsignedMessage: UnsignedMessage): Promise<void>;
+  onCancelMessageSigning(this: void): void;
   payload: Utf8Payload | StructuredPayload;
 }
 

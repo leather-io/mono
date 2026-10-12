@@ -18,7 +18,7 @@ import { shouldRefuseSignInMessageSigning } from '@shared/rpc/sign-in-message-ve
 import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
 import {
-  RequestParams,
+  type RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginFromPort,
   getOriginatingFrameFromPort,
@@ -75,7 +75,7 @@ export const signMessageHandler = defineRpcRequestHandler(
     }
 
     const paymentType: Extract<'p2tr' | 'p2wpkh', PaymentTypes> =
-      (request.params as any).paymentType ?? 'p2wpkh';
+      request.params.paymentType ?? 'p2wpkh';
 
     if (!isSupportedMessageSigningPaymentType(paymentType)) {
       void trackRpcRequestError({ endpoint: 'signMessage', error: 'Unsupported payment type' });
@@ -98,13 +98,13 @@ export const signMessageHandler = defineRpcRequestHandler(
 
     const requestParams: RequestParams = [
       ['message', request.params.message],
-      ['network', (request.params as any).network ?? 'mainnet'],
+      ['network', request.params.network ?? 'mainnet'],
       ['paymentType', paymentType],
       ['requestId', request.id],
     ];
 
-    if (isDefined((request.params as any).account)) {
-      requestParams.push(['accountIndex', (request.params as any).account.toString()]);
+    if (isDefined(request.params.account)) {
+      requestParams.push(['accountIndex', request.params.account.toString()]);
     }
 
     const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(

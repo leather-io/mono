@@ -8,6 +8,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { readRouteStateString } from '@app/pages/read-route-state';
 
 import { BroadcastErrorLayout } from './components/broadcast-error.layout';
 
@@ -16,19 +17,21 @@ interface Props {
 }
 
 export function BroadcastError({ showInSheet = false }: Props) {
-  const { state } = useLocation();
+  const location = useLocation();
+  const state: unknown = location.state;
   const navigate = useNavigate();
 
-  const msg = get(state, 'error.message', 'Unknown error response');
-  const proposeMode = Boolean(get(state, 'proposeMode', false));
-  const title = get(
+  const msg = readRouteStateString(state, 'error.message', 'Unknown error response');
+  const proposeModeValue: unknown = get(state, 'proposeMode', false);
+  const proposeMode = Boolean(proposeModeValue);
+  const title = readRouteStateString(
     state,
     'title',
     proposeMode
       ? 'There was an error proposing your transaction'
       : 'There was an error broadcasting your transaction'
   );
-  const body = get(
+  const body = readRouteStateString(
     state,
     'body',
     proposeMode ? 'Unable to propose transaction' : 'Unable to broadcast transaction'
@@ -51,7 +54,7 @@ export function BroadcastError({ showInSheet = false }: Props) {
       <Sheet
         header={<SheetHeader title="Error" />}
         isShowing
-        onClose={() => navigate(RouteUrls.Home)}
+        onClose={() => void navigate(RouteUrls.Home)}
       >
         {layout}
       </Sheet>

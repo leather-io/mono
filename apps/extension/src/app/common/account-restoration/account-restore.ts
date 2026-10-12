@@ -19,16 +19,16 @@ function returnHighestIndex(arr: AccountIndexActivityCheckHistory[]) {
   return Math.max(0, ...arr.filter(check => check.hasActivity).map(check => check.index));
 }
 
-async function recurseUntilGeneratorDone(generator: AsyncGenerator): Promise<any> {
+async function recurseUntilGeneratorDone<T>(generator: AsyncGenerator<unknown, T>): Promise<T> {
   const result = await generator.next();
   if (result.done) return result.value;
   return recurseUntilGeneratorDone(generator);
 }
 
 interface RecurseAccountsForActivityArgs {
-  doesAddressHaveActivityFn(index: number): Promise<boolean>;
+  doesAddressHaveActivityFn(this: void, index: number): Promise<boolean>;
   fromAccountIndex?: number;
-  onActivityFound?(highestAccountIndex: number): void;
+  onActivityFound?(this: void, highestAccountIndex: number): void;
 }
 
 export async function recurseAccountsForActivity({

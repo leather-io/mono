@@ -10,7 +10,7 @@ export function usePromos() {
   return useMemo(
     () => ({
       dismissedPromoIndexes,
-      dismissPromo(promoIndex: number) {
+      dismissPromo(this: void, promoIndex: number) {
         dispatch(settingsActions.promoDismissed(promoIndex));
       },
     }),

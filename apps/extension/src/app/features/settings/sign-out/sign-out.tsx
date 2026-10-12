@@ -17,8 +17,8 @@ import {
 
 interface SignOutSheetProps {
   isShowing: boolean;
-  onUserDeleteWallet(): void;
-  onClose(): void;
+  onUserDeleteWallet(this: void): void;
+  onClose(this: void): void;
 }
 export function SignOutSheet({ isShowing, onUserDeleteWallet, onClose }: SignOutSheetProps) {
   const softwareWallets = useWallets().filter(wallet => wallet.type === 'software');

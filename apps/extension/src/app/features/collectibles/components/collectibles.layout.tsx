@@ -26,7 +26,7 @@ interface CollectiblesLayoutProps {
   isFetching: boolean;
   hasCollectibles: boolean;
   isError: boolean;
-  onRefresh(): void;
+  onRefresh(this: void): void;
 }
 
 export function CollectiblesLayout({

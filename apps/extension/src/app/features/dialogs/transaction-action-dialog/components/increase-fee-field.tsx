@@ -15,7 +15,9 @@ interface IncreaseFeeFieldProps {
 }
 export function IncreaseFeeField({ initialFee }: IncreaseFeeFieldProps): React.JSX.Element {
   const [modified, setModified] = useState(false);
-  const { getValues, getFieldState, setValue, formState, register } = useFormContext();
+  const { getValues, getFieldState, setValue, formState, register } = useFormContext<{
+    fee?: number;
+  }>();
   const value = getValues('fee');
   const fieldState = getFieldState('fee', formState);
   const error = fieldState.error;

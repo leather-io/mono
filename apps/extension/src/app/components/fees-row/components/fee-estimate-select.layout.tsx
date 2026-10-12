@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from 'react';
+import { type ReactNode, useRef } from 'react';
 
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Stack } from 'leather-styles/jsx';
@@ -11,7 +11,7 @@ import { FeeEstimateItem } from './fee-estimate-item';
 
 interface FeeEstimateSelectLayoutProps {
   children: ReactNode;
-  onSetIsSelectVisible(value: boolean): void;
+  onSetIsSelectVisible(this: void, value: boolean): void;
   selectedItem: number;
   disableFeeSelection?: boolean;
   isVisible?: boolean;

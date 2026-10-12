@@ -148,7 +148,7 @@ export function useSwapDependencies(): SwapDependencies {
       ? {
           network,
           bitcoinPayer,
-          signBitcoinPsbt: async (psbt: Uint8Array) => {
+          async signBitcoinPsbt(psbt: Uint8Array) {
             const signed = await Promise.resolve(signBitcoinTx(psbt));
             if (!signed) throw new SwapSigningCancelledError();
             return signed;

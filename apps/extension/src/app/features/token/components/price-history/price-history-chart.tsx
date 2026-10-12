@@ -38,7 +38,7 @@ interface PriceHistoryChartProps {
   prices: MarketPriceSnapshot[];
   color: ColorToken;
   hoveredIndex?: number;
-  onHover(index: number | undefined): void;
+  onHover(this: void, index: number | undefined): void;
 }
 
 export function PriceHistoryChart({

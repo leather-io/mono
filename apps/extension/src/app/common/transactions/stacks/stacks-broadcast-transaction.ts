@@ -1,6 +1,6 @@
 import type { StacksNetwork } from '@stacks/network';
 import {
-  StacksTransactionWire,
+  type StacksTransactionWire,
   type TxBroadcastResultRejected,
   broadcastTransaction,
 } from '@stacks/transactions';
@@ -16,8 +16,8 @@ import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 interface StacksBroadcastTransactionArgs {
   network: StacksNetwork;
   signedTx: StacksTransactionWire;
-  onSuccess(txid: string, transaction: StacksTransactionWire): void;
-  onError(error: Error | string, reason?: TxBroadcastResultRejected['reason']): void;
+  onSuccess(this: void, txid: string, transaction: StacksTransactionWire): void;
+  onError(this: void, error: Error | string, reason?: TxBroadcastResultRejected['reason']): void;
 }
 export async function stacksBroadcastTransaction({
   network,

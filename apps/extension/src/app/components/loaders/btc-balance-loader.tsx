@@ -12,6 +12,7 @@ import { CryptoAssetItemPlaceholder } from '../crypto-asset-item/crypto-asset-it
 
 interface BtcAssetItemBalanceLoaderChildren {
   children(
+    this: void,
     balance: AccountQuotedBtcBalance,
     isLoading: boolean,
     isLoadingAdditionalData: boolean

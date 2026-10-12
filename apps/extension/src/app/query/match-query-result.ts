@@ -1,13 +1,13 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
-import { UseQueryResult } from '@tanstack/react-query';
+import { type UseQueryResult } from '@tanstack/react-query';
 
 import { assertUnreachable } from '@leather.io/utils';
 
 interface Matchers<TData, TError> {
-  pending(): ReactElement;
-  error(error: TError): ReactElement;
-  success(data: TData): ReactElement;
+  pending(this: void): ReactElement;
+  error(this: void, error: TError): ReactElement;
+  success(this: void, data: TData): ReactElement;
 }
 
 export function matchQueryResult<TData, TError>(

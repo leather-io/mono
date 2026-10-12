@@ -7,7 +7,7 @@ import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-call
 interface TransactionHeaderProps {
   title: string;
   href?: string;
-  onPressRequestedByLink(e: React.MouseEvent<HTMLAnchorElement>): void;
+  onPressRequestedByLink(this: void, e: React.MouseEvent<HTMLAnchorElement>): void;
 }
 export function TransactionHeader({
   title,

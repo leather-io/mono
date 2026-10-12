@@ -3,7 +3,7 @@ import { Virtuoso } from 'react-virtuoso';
 import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { Box } from 'leather-styles/jsx';
 
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 import { AssetAvatarIcon, BitcoinFilledCircleIcon, StacksFilledCircleIcon } from '@leather.io/ui';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
@@ -14,7 +14,7 @@ import { AssetSelectorItem } from './asset-selector-item';
 interface AssetSelectorListProps {
   assets?: AccountSwapAsset[];
   type: 'base' | 'target';
-  onSelectAsset(type: 'base' | 'target', asset: AccountSwapAsset): void;
+  onSelectAsset(this: void, type: 'base' | 'target', asset: AccountSwapAsset): void;
 }
 
 export function AssetSelectorList({ assets = [], type, onSelectAsset }: AssetSelectorListProps) {

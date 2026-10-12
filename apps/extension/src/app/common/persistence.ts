@@ -13,6 +13,10 @@ import { logger } from '@shared/logger';
 import { analytics } from '@shared/utils/analytics';
 
 const RETRY_LIMIT = 5;
+const retryableHttpStatusCodes: number[] = [
+  HttpStatusCode.RequestTimeout,
+  HttpStatusCode.TooManyRequests,
+];
 
 superjson.registerCustom<BigNumber, string>(
   {
@@ -24,8 +28,8 @@ superjson.registerCustom<BigNumber, string>(
 );
 
 const storage = {
-  getItem: async (key: string) => {
-    const storageVal = await chrome.storage.local.get(key);
+  async getItem(key: string) {
+    const storageVal = await chrome.storage.local.get<Record<string, string | undefined>>(key);
     return storageVal[key];
   },
   setItem: (key: string, value: string) => chrome.storage.local.set({ [key]: value }),
@@ -48,11 +52,7 @@ function isRetryableError(error: Error): boolean {
   if (!error.response) return true;
   const status = error.response.status;
 
-  return (
-    status >= 500 ||
-    status === HttpStatusCode.RequestTimeout ||
-    status === HttpStatusCode.TooManyRequests
-  );
+  return status >= 500 || retryableHttpStatusCodes.includes(status);
 }
 
 export const queryClient = new QueryClient({
@@ -94,7 +94,7 @@ export const queryClient = new QueryClient({
   },
 });
 
-export function persistAndRenderApp(renderApp: () => void) {
+export function persistAndRenderApp(renderApp: () => Promise<void>) {
   if (!IS_TEST_ENV) {
     void persistQueryClient({
       queryClient,
@@ -102,5 +102,5 @@ export function persistAndRenderApp(renderApp: () => void) {
       buster: VERSION,
     });
   }
-  renderApp();
+  void renderApp();
 }

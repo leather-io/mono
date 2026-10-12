@@ -1,9 +1,13 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
 import {
-  MultiSigSpendingCondition,
+  type MultiSigSpendingCondition,
+  PayloadType,
+  type StacksTransactionWire,
   type TokenTransferPayloadWire,
   deserializeTransaction,
+  isSingleSig,
 } from '@stacks/transactions';
+import { requestLeatherProvider } from '@tests/leather-provider';
 import {
   TEST_ACCOUNT_1_PUBKEY,
   TEST_ACCOUNT_2_STX_ADDRESS,
@@ -12,8 +16,24 @@ import {
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { generateMultisigUnsignedStxTransfer, generateUnsignedStxTransfer } from '@tests/utils';
+import { z } from 'zod';
 
 import { test } from '../../fixtures/fixtures';
+
+const signTransactionResultSchema = z.object({ txHex: z.string() });
+
+function getTokenTransferPayload(tx: StacksTransactionWire): TokenTransferPayloadWire {
+  if (tx.payload.payloadType !== PayloadType.TokenTransfer) {
+    throw new Error('Expected a token transfer payload');
+  }
+  return tx.payload;
+}
+
+function getMultiSigSpendingCondition(tx: StacksTransactionWire): MultiSigSpendingCondition {
+  const { spendingCondition } = tx.auth;
+  if (isSingleSig(spendingCondition)) throw new Error('Expected a multi-sig spending condition');
+  return spendingCondition;
+}
 
 test.describe('RPC: stx_signTransaction', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
@@ -47,25 +67,18 @@ test.describe('RPC: stx_signTransaction', () => {
 
   function initiateTxSigningLeatherFormat(page: Page) {
     return async (txHex: string) =>
-      page.evaluate(
-        txHex =>
-          (window as any).LeatherProvider.request('stx_signTransaction', {
-            txHex,
-            network: 'mainnet',
-          }).catch((e: unknown) => e),
-        txHex
-      );
+      page.evaluate(requestLeatherProvider, {
+        method: 'stx_signTransaction',
+        params: { txHex, network: 'mainnet' },
+      });
   }
 
   function initiateTxSigningSip30Format(page: Page) {
     return async (hex: string) =>
-      page.evaluate(
-        transaction =>
-          (window as any).LeatherProvider.request('stx_signTransaction', { transaction }).catch(
-            (e: unknown) => e
-          ),
-        hex
-      );
+      page.evaluate(requestLeatherProvider, {
+        method: 'stx_signTransaction',
+        params: { transaction: hex },
+      });
   }
 
   test('that transaction details are the same after signing multi-signature STX transfer', async ({
@@ -86,13 +99,15 @@ test.describe('RPC: stx_signTransaction', () => {
       checkVisibleContent(context)('Approve'),
     ]);
     const deserializedUnsignedTxHex = deserializeTransaction(multiSignatureTxHex);
-    const deserializedSignedTx = deserializeTransaction(result.result.txHex);
+    const deserializedSignedTx = deserializeTransaction(
+      signTransactionResultSchema.parse(result.result).txHex
+    );
     test
-      .expect((deserializedUnsignedTxHex.payload as TokenTransferPayloadWire).recipient)
-      .toEqual((deserializedSignedTx.payload as TokenTransferPayloadWire).recipient);
+      .expect(getTokenTransferPayload(deserializedUnsignedTxHex).recipient)
+      .toEqual(getTokenTransferPayload(deserializedSignedTx).recipient);
     test
-      .expect((deserializedUnsignedTxHex.payload as TokenTransferPayloadWire).amount)
-      .toEqual((deserializedSignedTx.payload as TokenTransferPayloadWire).amount);
+      .expect(getTokenTransferPayload(deserializedUnsignedTxHex).amount)
+      .toEqual(getTokenTransferPayload(deserializedSignedTx).amount);
     test.expect(deserializedUnsignedTxHex.payload.type).toEqual(deserializedSignedTx.payload.type);
     test
       .expect(deserializedUnsignedTxHex.auth.spendingCondition.nonce)
@@ -101,25 +116,15 @@ test.describe('RPC: stx_signTransaction', () => {
       .expect(deserializedUnsignedTxHex.auth.spendingCondition.fee)
       .toEqual(deserializedSignedTx.auth.spendingCondition.fee);
     test
-      .expect(
-        (deserializedUnsignedTxHex.auth.spendingCondition as MultiSigSpendingCondition)
-          .signaturesRequired
-      )
-      .toEqual(
-        (deserializedSignedTx.auth.spendingCondition as MultiSigSpendingCondition)
-          .signaturesRequired
-      );
+      .expect(getMultiSigSpendingCondition(deserializedUnsignedTxHex).signaturesRequired)
+      .toEqual(getMultiSigSpendingCondition(deserializedSignedTx).signaturesRequired);
     test
       .expect(deserializedUnsignedTxHex.auth.spendingCondition.signer)
       .toEqual(deserializedSignedTx.auth.spendingCondition.signer);
     test
       .expect(deserializedUnsignedTxHex.auth.spendingCondition.hashMode)
       .toEqual(deserializedSignedTx.auth.spendingCondition.hashMode);
-    test
-      .expect(
-        (deserializedSignedTx.auth.spendingCondition as MultiSigSpendingCondition).fields.length
-      )
-      .toEqual(1);
+    test.expect(getMultiSigSpendingCondition(deserializedSignedTx).fields.length).toEqual(1);
   });
 
   test('Single signature STX transfer being rejected', async ({ page, context }) => {

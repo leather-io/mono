@@ -40,7 +40,7 @@ function useAppVersion() {
   return {
     version: getVersion(),
     shouldUpdatePRBuild: !isLatestBuild && process.env.WALLET_ENVIRONMENT === 'feature',
-    openPullRequestLink() {
+    openPullRequestLink(this: void) {
       openInNewTab(pullRequestLink ?? '');
     },
   };

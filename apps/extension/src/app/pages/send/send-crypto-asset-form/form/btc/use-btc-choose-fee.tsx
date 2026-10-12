@@ -4,12 +4,12 @@ import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
 import { btcToSat, createMoney } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
-import { BitcoinSendFormValues } from '@shared/models/form.model';
+import { type BitcoinSendFormValues } from '@shared/models/form.model';
 
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { formFeeRowValue } from '@app/common/send/utils';
 import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
-import { OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
+import { type OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
 import { isLedgerSigningCancelledError } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -21,9 +21,11 @@ import { useCalculateMaxBitcoinSpend } from '../../../../../common/hooks/balance
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
 export function useBtcChooseFeeState() {
-  const isSendingMax = useLocationStateWithCache('isSendingMax') as boolean;
-  const txValues = useLocationStateWithCache('values') as BitcoinSendFormValues;
-  const utxos = useLocationStateWithCache('utxos') as OwnedUtxo[];
+  const isSendingMax = useLocationStateWithCache<boolean>('isSendingMax') ?? false;
+  const txValues =
+    useLocationStateWithCache<Pick<BitcoinSendFormValues, 'amount' | 'recipient'>>('values');
+  const utxos = useLocationStateWithCache<OwnedUtxo[]>('utxos') ?? [];
+  if (!txValues) throw new Error('Missing send form values in route state');
   return { isSendingMax, txValues, utxos };
 }
 
@@ -41,7 +43,10 @@ export function useBtcChooseFee() {
   return {
     amountAsMoney,
 
-    async previewTransaction({ feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs) {
+    async previewTransaction(
+      this: void,
+      { feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs
+    ) {
       const feeRowValue = formFeeRowValue(feeRate, isCustomFee);
 
       if (policy?.chain === 'bitcoin') {

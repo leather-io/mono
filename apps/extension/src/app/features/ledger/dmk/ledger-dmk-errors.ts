@@ -1,12 +1,14 @@
 import type { SupportedBlockchains } from '@leather.io/models';
 import { isError } from '@leather.io/utils';
 
-export enum LedgerConnectionErrors {
-  AppNotOpen = 'AppNotOpen',
-  AppOpenFailed = 'AppOpenFailed',
-  DeviceNotPaired = 'DeviceNotPaired',
-  OperationRejected = 'OperationRejected',
-}
+export const LedgerConnectionErrors = {
+  AppNotOpen: 'AppNotOpen',
+  AppOpenFailed: 'AppOpenFailed',
+  DeviceNotPaired: 'DeviceNotPaired',
+  OperationRejected: 'OperationRejected',
+} as const;
+export type LedgerConnectionErrors =
+  (typeof LedgerConnectionErrors)[keyof typeof LedgerConnectionErrors];
 
 const deviceLockedTag = 'DeviceLockedError';
 const deviceDisconnectedTags: readonly string[] = [
@@ -180,7 +182,7 @@ interface LedgerConnectionErrorNavigate {
 interface HandleLedgerConnectionErrorArgs {
   chain: SupportedBlockchains;
   ledgerNavigate: LedgerConnectionErrorNavigate;
-  setLatestDeviceResponse(response: LedgerDeviceLockState): void;
+  setLatestDeviceResponse(this: void, response: LedgerDeviceLockState): void;
 }
 
 export function handleLedgerConnectionError(

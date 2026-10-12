@@ -11,10 +11,10 @@
 //
 // Below, we use the sandbox attribute to limit what they can do, as well as
 // disabling any interaction with pointer events and user selection.
-import { HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 interface IframeProps extends HTMLStyledProps<'iframe'> {
-  onError?(): void;
+  onError?(this: void): void;
   src: string;
 }
 export function Iframe({ onError, src, ...props }: IframeProps) {

@@ -4,7 +4,7 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { Button } from '@leather.io/ui';
 
 interface SwapReviewEmptyStateProps {
-  onBack(): void;
+  onBack(this: void): void;
 }
 
 export function SwapReviewEmptyState({ onBack }: SwapReviewEmptyStateProps) {

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { HStack } from 'leather-styles/jsx';
 
@@ -7,7 +7,7 @@ import { Caption, ItemLayout, Pressable } from '@leather.io/ui';
 import { PrivateTextLayout } from '@app/components/privacy/private-text.layout';
 
 interface TransactionItemLayoutProps {
-  openTxLink(): void;
+  openTxLink(this: void): void;
   rightElement?: ReactNode;
   txCaption: ReactNode;
   txTitle: ReactNode;

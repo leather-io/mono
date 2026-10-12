@@ -13,8 +13,8 @@ interface TokenDetailsBalanceItemProps {
   tooltipText?: string;
   rightTop: ReactNode;
   rightBottom?: ReactNode;
-  onPressAddress?(): void;
-  onPressRow?(): void;
+  onPressAddress?(this: void): void;
+  onPressRow?(this: void): void;
   testId?: string;
 }
 

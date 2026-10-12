@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { logger } from '@shared/logger';
-import { SignatureData, UnsignedMessage } from '@shared/signature/signature-types';
+import { type SignatureData, type UnsignedMessage } from '@shared/signature/signature-types';
 import { analytics } from '@shared/utils/analytics';
 
 import { useWalletType } from '@app/common/use-wallet-type';
@@ -13,8 +13,8 @@ import {
 } from '@app/features/stacks-message-signer/stacks-message-signing.utils';
 
 interface SignStacksMessageProps {
-  onSignMessageCompleted(messageSignature: SignatureData): void;
-  onSignMessageCancelled(): void;
+  onSignMessageCompleted(this: void, messageSignature: SignatureData): void;
+  onSignMessageCancelled(this: void): void;
 }
 export function useSignStacksMessage({
   onSignMessageCompleted,

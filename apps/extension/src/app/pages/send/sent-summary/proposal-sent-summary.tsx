@@ -15,6 +15,7 @@ import {
 } from '@app/components/info-card/info-card';
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
+import { readRouteStateString } from '@app/pages/read-route-state';
 
 import { TxDone } from '../send-crypto-asset-form/components/tx-done';
 
@@ -30,21 +31,20 @@ export interface ProposalSentSummaryState {
 }
 
 export function ProposalSentSummary() {
-  const { state } = useLocation();
+  const location = useLocation();
+  const state: unknown = location.state;
   const navigate = useNavigate();
 
   if (!state) return <Navigate to={RouteUrls.Home} replace />;
 
-  const {
-    symbol,
-    txValue,
-    txFiatValue,
-    txFiatValueSymbol,
-    recipient,
-    feeRowValue,
-    memoDisplayText,
-    proposalId,
-  } = state;
+  const symbol = readRouteStateString(state, 'symbol', '');
+  const txValue = readRouteStateString(state, 'txValue', '');
+  const txFiatValue = readRouteStateString(state, 'txFiatValue');
+  const txFiatValueSymbol = readRouteStateString(state, 'txFiatValueSymbol');
+  const recipient = readRouteStateString(state, 'recipient', '');
+  const feeRowValue = readRouteStateString(state, 'feeRowValue');
+  const memoDisplayText = readRouteStateString(state, 'memoDisplayText');
+  const proposalId = readRouteStateString(state, 'proposalId');
 
   return (
     <>
@@ -56,7 +56,7 @@ export function ProposalSentSummary() {
               p: 'space.00',
             }}
             footer={
-              <Button width="100%" onClick={() => navigate(RouteUrls.Home)}>
+              <Button width="100%" onClick={() => void navigate(RouteUrls.Home)}>
                 Done
               </Button>
             }

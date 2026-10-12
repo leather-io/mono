@@ -11,7 +11,7 @@ import { Sip9Details } from './sip9-details';
 
 interface Sip9DetailsPageProps {
   view: CollectibleView;
-  onBack(): void;
+  onBack(this: void): void;
 }
 
 export function Sip9DetailsPage({ view, onBack }: Sip9DetailsPageProps) {

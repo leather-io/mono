@@ -5,8 +5,6 @@ import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { broadcastWalletListChanged } from '@shared/messages';
 
-import { persistor } from '@app/store';
-
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
@@ -20,8 +18,10 @@ import {
 } from './active.actions';
 import { userSwitchesAccount } from './active.slice';
 
-vi.mock('@app/store', () => ({
-  persistor: { flush: vi.fn(() => Promise.resolve()) },
+const persistorFlushMock = vi.hoisted(() => vi.fn(() => Promise.resolve()));
+
+vi.mock('@app/store/store', () => ({
+  persistor: { flush: persistorFlushMock },
   store: { getState: vi.fn(), dispatch: vi.fn() },
 }));
 
@@ -52,6 +52,12 @@ vi.mock('../in-memory-key/keychain-selector-cache', () => ({
 vi.mock('@shared/messages', () => ({
   broadcastWalletListChanged: vi.fn(),
 }));
+
+type ThunkFn = (dispatch: unknown, getState: unknown, extraArgument: unknown) => unknown;
+
+function isThunk(action: unknown): action is ThunkFn {
+  return typeof action === 'function';
+}
 
 const fingerprint = 'deadbeef';
 const otherFingerprint = 'cafebabe';
@@ -146,7 +152,7 @@ function runRemoveThunk(state: object = { active: { account: null } }) {
   const getState = vi.fn();
   getState.mockReturnValue(state);
   dispatch.mockImplementation((action: unknown) =>
-    typeof action === 'function' ? action(dispatch, getState, undefined) : action
+    isThunk(action) ? action(dispatch, getState, undefined) : action
   );
   const promise = removeWalletAndUpdateActive(fingerprint)(dispatch, getState, undefined);
   return { dispatch, promise };
@@ -195,7 +201,7 @@ describe(removeWalletAndUpdateActive.name, () => {
     const { promise } = runRemoveThunk();
     await promise;
     expect(removeKey).toHaveBeenCalledWith(fingerprint);
-    expect(persistor.flush).toHaveBeenCalledTimes(1);
+    expect(persistorFlushMock).toHaveBeenCalledTimes(1);
     expect(broadcastWalletListChanged).toHaveBeenCalledWith({ removedFingerprint: fingerprint });
   });
 
@@ -223,7 +229,7 @@ function runApplyRemoteRemovalThunk(state: object = { active: { account: null } 
   const getState = vi.fn();
   getState.mockReturnValue(state);
   dispatch.mockImplementation((action: unknown) =>
-    typeof action === 'function' ? action(dispatch, getState, undefined) : action
+    isThunk(action) ? action(dispatch, getState, undefined) : action
   );
   void applyRemoteWalletRemoval(fingerprint)(dispatch, getState, undefined);
   return { dispatch };

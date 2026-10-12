@@ -6,12 +6,12 @@ import { Box } from 'leather-styles/jsx';
 
 import { Input } from '@leather.io/ui';
 
-import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
+import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
 
 interface RecipientAddressTypeFieldProps {
   label?: string;
   name: string;
-  onBlur?(): void;
+  onBlur?(this: void): void;
   placeholder: string;
   topInputOverlay?: React.JSX.Element;
   rightLabel?: React.JSX.Element;
@@ -23,7 +23,7 @@ export function RecipientAddressTypeField({
   onBlur,
   placeholder,
 }: RecipientAddressTypeFieldProps) {
-  const [field] = useField(name);
+  const [field] = useField<string>(name);
   const { setFieldValue } = useFormikContext<BitcoinSendFormValues | StacksSendFormValues>();
 
   useEffect(() => {

@@ -1,10 +1,10 @@
-import { FlexProps } from 'leather-styles/jsx';
+import { type FlexProps } from 'leather-styles/jsx';
 
 import { IconButton } from '@leather.io/ui';
 
 interface HeaderActionButtonProps extends FlexProps {
   icon: React.JSX.Element;
-  onAction(): void;
+  onAction(this: void): void;
   dataTestId: string;
 }
 export function HeaderActionButton({ icon, onAction, dataTestId }: HeaderActionButtonProps) {

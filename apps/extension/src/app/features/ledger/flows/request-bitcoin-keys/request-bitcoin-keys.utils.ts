@@ -9,7 +9,7 @@ import { delay } from '@leather.io/utils';
 import { defaultNumberOfKeysToPullFromLedgerDevice } from '../../generic-flows/request-keys/use-request-ledger-keys';
 import {
   type BitcoinLedgerAccountDetails,
-  WalletPolicyDetails,
+  type WalletPolicyDetails,
   createNativeSegwitWalletPolicyKey,
   createTaprootWalletPolicyKey,
 } from '../../utils/bitcoin-ledger-utils';
@@ -20,8 +20,8 @@ import {
 import type { LedgerBitcoinApp } from '../../utils/ledger-app';
 
 interface GetPolicyForPaymentTypeFactoryArgs {
-  derivationPathFn(network: BitcoinNetworkModes, accountIndex: number): string;
-  policyFn(policyDetails: WalletPolicyDetails): string;
+  derivationPathFn(this: void, network: BitcoinNetworkModes, accountIndex: number): string;
+  policyFn(this: void, policyDetails: WalletPolicyDetails): string;
 }
 interface GetExtendedPublicKeyFactoryArgs {
   bitcoinApp: LedgerBitcoinApp;
@@ -57,7 +57,7 @@ const getTaprootExtendedPublicKey = getPolicyForPaymentType({
 });
 
 interface PullBitcoinKeysFromLedgerDeviceArgs {
-  onRequestKey?(keyIndex: number): void;
+  onRequestKey?(this: void, keyIndex: number): void;
   network: NetworkModes;
 }
 export function pullBitcoinKeysFromLedgerDevice(bitcoinApp: LedgerBitcoinApp) {

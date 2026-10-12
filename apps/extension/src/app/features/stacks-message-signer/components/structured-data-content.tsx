@@ -1,6 +1,6 @@
 import { ChainId } from '@stacks/network';
 
-import { UnsignedMessage } from '@shared/signature/signature-types';
+import { type UnsignedMessage } from '@shared/signature/signature-types';
 
 import { NoFeesWarningRow } from '@app/components/no-fees-warning-row';
 import { SignMessageActions } from '@app/features/message-signer/stacks-sign-message-action';
@@ -11,8 +11,8 @@ import { StructuredDataBox } from './structured-data-box';
 
 interface SignatureRequestStructuredDataContentProps {
   isLoading: boolean;
-  onSignMessage(unsignedMessage: UnsignedMessage): Promise<void>;
-  onCancelMessageSigning(): void;
+  onSignMessage(this: void, unsignedMessage: UnsignedMessage): Promise<void>;
+  onCancelMessageSigning(this: void): void;
   payload: StructuredPayload;
 }
 export function SignatureRequestStructuredDataContent({

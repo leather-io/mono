@@ -1,15 +1,15 @@
 import { Outlet, useNavigate } from 'react-router';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { Form, Formik, FormikHelpers } from 'formik';
+import { Form, Formik, type FormikHelpers } from 'formik';
 import { Box, Flex } from 'leather-styles/jsx';
-import { ObjectSchema } from 'yup';
+import { type AnyObjectSchema } from 'yup';
 
 import { HIGH_FEE_WARNING_LEARN_MORE_URL_STX } from '@leather.io/constants';
 import type { Money, StacksTransactionFees } from '@leather.io/models';
 import { Button, Link } from '@leather.io/ui';
 
-import { StacksSendFormValues } from '@shared/models/form.model';
+import { type StacksSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -27,11 +27,12 @@ import { defaultSendFormFormikProps } from '../../send-form.utils';
 
 interface StacksCommonSendFormProps {
   onSubmit(
+    this: void,
     values: StacksSendFormValues,
     formikHelpers: FormikHelpers<StacksSendFormValues>
   ): Promise<void>;
   initialValues: StacksSendFormValues;
-  validationSchema: ObjectSchema<any>;
+  validationSchema: AnyObjectSchema;
   amountField: React.JSX.Element;
   selectedAssetField: React.JSX.Element;
   availableTokenBalance: Money;
@@ -101,7 +102,7 @@ export function StacksCommonSendForm({
                       <Link
                         alignSelf="flex-end"
                         mt="space.04"
-                        onClick={() => navigate(RouteUrls.EditNonce)}
+                        onClick={() => void navigate(RouteUrls.EditNonce)}
                       >
                         Edit nonce
                       </Link>

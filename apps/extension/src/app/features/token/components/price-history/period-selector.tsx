@@ -5,7 +5,7 @@ import { type HistoricalPeriod, historicalPeriods } from '@leather.io/models';
 interface PeriodSelectorProps {
   value: HistoricalPeriod;
   disabledPeriods: HistoricalPeriod[];
-  onChange(period: HistoricalPeriod): void;
+  onChange(this: void, period: HistoricalPeriod): void;
 }
 
 export function PeriodSelector({ value, disabledPeriods, onChange }: PeriodSelectorProps) {

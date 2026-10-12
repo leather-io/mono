@@ -11,7 +11,7 @@ import { ReceiveItem } from './receive-item';
 
 interface ReceiveCollectiblesProps {
   stxAddress: string;
-  onClickQrStacksNft(): void;
+  onClickQrStacksNft(this: void): void;
 }
 export function ReceiveCollectibles({ stxAddress, onClickQrStacksNft }: ReceiveCollectiblesProps) {
   const toast = useToast();
@@ -20,9 +20,8 @@ export function ReceiveCollectibles({ stxAddress, onClickQrStacksNft }: ReceiveC
       <ReceiveItem
         address={stxAddress}
         icon={<StxAvatarIcon />}
-        onCopyAddress={async () => {
-          await copyToClipboard(stxAddress);
-          toast.success('Copied to clipboard!');
+        onCopyAddress={() => {
+          void copyToClipboard(stxAddress).then(() => toast.success('Copied to clipboard!'));
         }}
         onClickQrCode={onClickQrStacksNft}
         title="Stacks NFT"

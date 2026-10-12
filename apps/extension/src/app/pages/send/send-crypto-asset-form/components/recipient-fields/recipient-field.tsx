@@ -7,7 +7,7 @@ import { useRecipientSelectFields } from './hooks/use-recipient-select-fields';
 import { RecipientBnsNameTypeField } from './recipient-bns-name-type-field';
 
 interface RecipientFieldProps {
-  bnsLookupFn(name: string): Promise<string | null>;
+  bnsLookupFn(this: void, name: string): Promise<string | null>;
 }
 export function RecipientField({ bnsLookupFn }: RecipientFieldProps) {
   const {
@@ -20,7 +20,9 @@ export function RecipientField({ bnsLookupFn }: RecipientFieldProps) {
   const recipientDropdown = (
     <RecipientIdentifierTypeDropdown
       activeRecipientIdentifierType={selectedRecipientFieldName}
-      onSelectRecipientIdentifierType={recipientType => onSelectRecipientFieldType(recipientType)}
+      onSelectRecipientIdentifierType={recipientType =>
+        void onSelectRecipientFieldType(recipientType)
+      }
     />
   );
 

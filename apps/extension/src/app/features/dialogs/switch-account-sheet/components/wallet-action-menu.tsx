@@ -5,14 +5,14 @@ import { HStack, styled } from 'leather-styles/jsx';
 import { DropdownMenu, EllipsisHIcon, Eye1Icon, PencilIcon, TrashIcon } from '@leather.io/ui';
 
 import { useThemeSwitcher } from '@app/common/theme-provider';
-import { WalletType } from '@app/store/common/wallet-type.selectors';
+import { type WalletType } from '@app/store/common/wallet-type.selectors';
 
 interface WalletActionMenuProps {
   walletType: WalletType;
   canRemoveWallet: boolean;
-  onRename(): void;
-  onRemove(): void;
-  onViewSecretKey(): void;
+  onRename(this: void): void;
+  onRemove(this: void): void;
+  onViewSecretKey(this: void): void;
 }
 
 export function WalletActionMenu({

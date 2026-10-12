@@ -19,9 +19,9 @@ interface ConnectLedgerProps {
   awaitingLedgerConnection?: boolean;
   warning?: React.ReactNode;
   showInstructions?: boolean;
-  onConnectLedger?(): void;
-  connectBitcoin?(): void;
-  connectStacks?(): void;
+  onConnectLedger?(this: void): void;
+  connectBitcoin?(this: void): void;
+  connectStacks?(this: void): void;
 }
 
 export function ConnectLedger(props: ConnectLedgerProps) {

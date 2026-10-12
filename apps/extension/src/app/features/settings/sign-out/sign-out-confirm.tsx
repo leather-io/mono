@@ -7,7 +7,7 @@ import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { SignOutSheet } from './sign-out';
 
 interface SignOutProps {
-  onClose(): void;
+  onClose(this: void): void;
 }
 
 export function SignOut({ onClose }: SignOutProps) {

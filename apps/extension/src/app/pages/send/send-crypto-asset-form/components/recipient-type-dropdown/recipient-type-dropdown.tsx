@@ -10,7 +10,7 @@ import {
 
 interface RecipientIdentifierTypeDropdownProps {
   activeRecipientIdentifierType: string;
-  onSelectRecipientIdentifierType(recipientType: RecipientIdentifierType): void;
+  onSelectRecipientIdentifierType(this: void, recipientType: RecipientIdentifierType): void;
 }
 export function RecipientIdentifierTypeDropdown(props: RecipientIdentifierTypeDropdownProps) {
   const { activeRecipientIdentifierType, onSelectRecipientIdentifierType } = props;

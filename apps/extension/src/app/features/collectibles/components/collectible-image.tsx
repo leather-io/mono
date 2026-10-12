@@ -9,7 +9,7 @@ interface CollectibleImageProps {
   alt?: string;
   src: string;
   thumbnailSrc?: string;
-  onPress?(): void;
+  onPress?(this: void): void;
   isSvg?: boolean;
 }
 
@@ -19,7 +19,7 @@ interface CollectibleImageContentProps {
   alt?: string;
   src: string;
   isSvg: boolean;
-  onError(): void;
+  onError(this: void): void;
 }
 
 function CollectibleImageContent({ alt, src, isSvg, onError }: CollectibleImageContentProps) {
@@ -31,7 +31,7 @@ function CollectibleImageContent({ alt, src, isSvg, onError }: CollectibleImageC
       alt={alt}
       loading="lazy"
       onError={onError}
-      onLoad={e => setNaturalWidth((e.target as HTMLImageElement).naturalWidth)}
+      onLoad={e => setNaturalWidth(e.currentTarget.naturalWidth)}
       display="block"
       width="100%"
       height="100%"

@@ -10,7 +10,7 @@ import { StacksFeesLoader } from './stacks-fees-loader';
 interface StacksFeeEditorProviderProps extends HasChildren {
   availableBalance: Money;
   marketData: MarketData;
-  onGoBack(): void;
+  onGoBack(this: void): void;
   unsignedTx: StacksTransactionWire;
 }
 export function StacksFeeEditorProvider({

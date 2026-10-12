@@ -1,4 +1,4 @@
-import { ClarityType, ClarityValue, cvToString } from '@stacks/transactions';
+import { ClarityType, type ClarityValue, cvToString } from '@stacks/transactions';
 
 import { assertUnreachable } from '@leather.io/utils';
 

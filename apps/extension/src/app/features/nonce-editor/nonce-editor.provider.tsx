@@ -9,7 +9,7 @@ import { type Nonce, nonceEditorContext as NonceEditorContext } from './nonce-ed
 
 interface NonceEditorProviderProps extends HasChildren {
   nonce: Nonce;
-  onGoBack(): void;
+  onGoBack(this: void): void;
 }
 export function NonceEditorProvider({
   children,
@@ -36,11 +36,11 @@ export function NonceEditorProvider({
         nonce,
         onGoBack,
         onSetLoadedNonce: (value: Nonce) => setLoadedNonce(value),
-        onSetNonce: (value: Nonce) => {
+        onSetNonce(value: Nonce) {
           setNonce(value);
           setHasUserSetManualNonce(true);
         },
-        onUserActivatesNonceEditor: () => navigate(RouteUrls.NonceEditor),
+        onUserActivatesNonceEditor: () => void navigate(RouteUrls.NonceEditor),
       }}
     >
       {children}

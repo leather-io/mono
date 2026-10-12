@@ -32,7 +32,7 @@ function getOriginTabIdWithActionPopupFallback(sender: chrome.runtime.MessageSen
 const tabIdSessionStartMap = new Map<number, number>();
 
 interface ListenForSessionDurationPortArgs {
-  onSessionEnd(args: { sessionFrame: SessionFrame; durationSeconds: number }): void;
+  onSessionEnd(this: void, args: { sessionFrame: SessionFrame; durationSeconds: number }): void;
 }
 export function listenForSessionDurationPort({ onSessionEnd }: ListenForSessionDurationPortArgs) {
   chrome.runtime.onConnect.addListener(port => {

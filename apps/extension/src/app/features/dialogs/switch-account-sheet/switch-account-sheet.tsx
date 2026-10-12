@@ -43,7 +43,7 @@ import { useAddWalletNavigation } from './use-add-wallet-navigation';
 
 interface SwitchAccountSheetProps {
   isShowing: boolean;
-  onClose(): void;
+  onClose(this: void): void;
   allowPolicyAccounts?: boolean;
 }
 
@@ -134,9 +134,8 @@ export function SwitchAccountSheet({
     if (isCreatingAccountRef.current) return;
     isCreatingAccountRef.current = true;
     setCreatingFingerprint(fingerprint);
-    requestIdleCallback(async () => {
-      await createAccount(fingerprint);
-      onClose();
+    requestIdleCallback(() => {
+      void createAccount(fingerprint).then(() => onClose());
     });
   }
 

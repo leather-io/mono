@@ -20,7 +20,16 @@ import { TransactionActions } from './components/transaction-actions';
 import { useBtcIncreaseFee } from './hooks/use-btc-increase-fee';
 
 export function IncreaseBtcFeeSheet() {
-  const tx = useLocationStateWithCache('btcTx') as BitcoinTx;
+  const tx = useLocationStateWithCache<BitcoinTx>('btcTx');
+  if (!tx) return null;
+  return <IncreaseBtcFeeSheetContent tx={tx} />;
+}
+
+interface IncreaseBtcFeeSheetContentProps {
+  tx: BitcoinTx;
+}
+
+function IncreaseBtcFeeSheetContent({ tx }: IncreaseBtcFeeSheetContentProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,8 +43,6 @@ export function IncreaseBtcFeeSheet() {
   function onClose() {
     void navigate(RouteUrls.Home);
   }
-
-  if (!tx) return null;
 
   const initialFeeRate = `${(tx.fee / sizeInfo.txVBytes).toFixed(0)}`;
 
@@ -59,8 +66,8 @@ export function IncreaseBtcFeeSheet() {
                 <TransactionActions
                   isDisabled={isBroadcasting}
                   isBroadcasting={isBroadcasting}
-                  onSubmit={submitForm}
-                  onCancel={() => navigate(RouteUrls.Home)}
+                  onSubmit={() => void submitForm()}
+                  onCancel={() => void navigate(RouteUrls.Home)}
                 />
               }
             >

@@ -14,7 +14,7 @@ interface TransactionRecipientsLayoutProps {
   caption: string;
   recipients: TransferRecipient[];
   title: string;
-  convertToFiatAmount(value: Money): Money;
+  convertToFiatAmount(this: void, value: Money): Money;
 }
 export function TransactionRecipientsLayout({
   avatar,

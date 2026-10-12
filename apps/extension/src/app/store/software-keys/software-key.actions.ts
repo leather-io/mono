@@ -2,9 +2,9 @@ import { AddressVersion } from '@stacks/transactions';
 
 import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
 import {
-  getBnsV2ApiClient,
-  getHiroStacksApiClient,
-  getLeatherApiClient,
+  type getBnsV2ApiClient,
+  type getHiroStacksApiClient,
+  type getLeatherApiClient,
 } from '@leather.io/services';
 import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 import { secondsInMs } from '@leather.io/utils';
@@ -17,8 +17,8 @@ import { assumedZeroFingerprint } from '@shared/utils';
 import { identifyUser } from '@shared/utils/analytics';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
-import { AppThunk, persistor } from '@app/store';
 import { getWalletSessionKey, initalizeWalletSession } from '@app/store/session-restore';
+import { type AppThunk, persistor } from '@app/store/store';
 
 import { getNativeSegwitMainnetAddressFromRootKeychain } from '../accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { getTaprootMainnetAddressFromRootKeychain } from '../accounts/blockchain/bitcoin/taproot-account.hooks';
@@ -33,9 +33,15 @@ import { keySlice } from './software-key.slice';
 import { checkPassword } from './utils';
 
 interface AccountDiscoveryClients {
-  leatherApiClient: ReturnType<typeof getLeatherApiClient>;
-  hiroClient: ReturnType<typeof getHiroStacksApiClient>;
-  bnsClient: ReturnType<typeof getBnsV2ApiClient>;
+  leatherApiClient: Pick<
+    ReturnType<typeof getLeatherApiClient>,
+    'fetchUtxosByAddress' | 'fetchBitcoinTransactionsByAddress'
+  >;
+  hiroClient: Pick<
+    ReturnType<typeof getHiroStacksApiClient>,
+    'getAddressStxBalance' | 'getAddressTransactions'
+  >;
+  bnsClient: Pick<ReturnType<typeof getBnsV2ApiClient>, 'fetchAddressBnsNames'>;
 }
 
 interface AccountActivityCheckerArgs extends AccountDiscoveryClients {
@@ -132,7 +138,7 @@ function startRecursiveAccountDiscovery({
   fingerprint,
   fromAccountIndex,
 }: {
-  dispatch(action: ReturnType<typeof stxChainSlice.actions.restoreAccountIndex>): void;
+  dispatch(this: void, action: ReturnType<typeof stxChainSlice.actions.restoreAccountIndex>): void;
   doesAddressHaveActivityFn: ReturnType<typeof createAccountActivityChecker>;
   fingerprint: string;
   fromAccountIndex: number;
@@ -160,7 +166,7 @@ function startRecursiveAccountDiscovery({
         time: (end - start) / 1000 + ' seconds',
       });
     })
-    .catch(error => {
+    .catch((error: unknown) => {
       logger.warn('Account activity lookup failed', { error });
     })
     .finally(() => {

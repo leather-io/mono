@@ -53,7 +53,7 @@ function RpcSignBip322Message() {
         <NoFeesWarningRow chainId={networkMode === 'mainnet' ? ChainId.Mainnet : ChainId.Testnet} />
         <SignMessageActions
           isLoading={isLoading}
-          onSignMessage={() => onUserApproveBip322MessageSigningRequest()}
+          onSignMessage={() => void onUserApproveBip322MessageSigningRequest()}
           onSignMessageCancel={() => onUserRejectBip322MessageSigningRequest()}
         />
         <hr />

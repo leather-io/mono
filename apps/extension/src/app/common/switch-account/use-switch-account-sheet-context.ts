@@ -15,7 +15,7 @@ export function useSwitchAccountSheet() {
     setIsShowingSwitchAccount,
     allowPolicyAccounts,
     setAllowPolicyAccounts,
-    toggleSwitchAccount() {
+    toggleSwitchAccount(this: void) {
       setIsShowingSwitchAccount(!isShowingSwitchAccount);
     },
   };

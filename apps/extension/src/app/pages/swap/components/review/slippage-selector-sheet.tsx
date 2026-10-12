@@ -9,9 +9,9 @@ import { formatPercentage } from '@app/common/currency-formatter';
 
 interface SlippageSelectorSheetProps {
   isShowing: boolean;
-  onClose(): void;
+  onClose(this: void): void;
   slippage: number;
-  onSave(value: number): void;
+  onSave(this: void, value: number): void;
 }
 
 export function SlippageSelectorSheet({

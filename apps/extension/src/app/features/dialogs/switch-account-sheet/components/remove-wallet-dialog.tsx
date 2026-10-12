@@ -10,7 +10,7 @@ interface RemoveWalletDialogProps {
   currentName: string;
   fingerprint: string;
   isShowing: boolean;
-  onClose(): void;
+  onClose(this: void): void;
 }
 
 export function RemoveWalletDialog({

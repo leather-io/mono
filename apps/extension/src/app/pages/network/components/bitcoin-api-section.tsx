@@ -13,7 +13,7 @@ interface BitcoinApiSectionProps {
   handleChange: FormikHandlers['handleChange'];
   isEditNetworkMode?: boolean;
   setFieldValue: FormikHelpers<AddNetworkFormValues>['setFieldValue'];
-  setNetworkUrls(value: BitcoinNetwork): void;
+  setNetworkUrls(this: void, value: BitcoinNetwork): void;
   values: AddNetworkFormValues;
 }
 export function BitcoinApiSection({

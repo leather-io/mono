@@ -10,8 +10,8 @@ interface DepositItemProps {
   titleLeft: string;
   dataTestId?: string;
   buttonDataTestId?: string;
-  onBuy(): void;
-  onSelectAsset?(): void;
+  onBuy(this: void): void;
+  onSelectAsset?(this: void): void;
 }
 export function DepositItem({
   captionLeft,

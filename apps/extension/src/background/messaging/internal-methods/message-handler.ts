@@ -1,9 +1,9 @@
 import { logger } from '@shared/logger';
 import { InternalMethods, SIGN_OUT_MESSAGE } from '@shared/message-types';
-import { BackgroundMessages } from '@shared/messages';
+import { isRecord } from '@shared/utils/is-record';
 
 import { applyPendingUpdate } from '@background/extension-update-monitor';
-import { syncAddressMonitor } from '@background/monitors/address-monitor';
+import { isMonitoredAddressList, syncAddressMonitor } from '@background/monitors/address-monitor';
 
 function validateMessagesAreFromExtension(sender: chrome.runtime.MessageSender) {
   // Only respond to internal messages from our UI, not content scripts in other applications
@@ -19,16 +19,30 @@ async function removeFormState(tabId: number) {
 }
 
 // Remove any persisted form state when a tab is closed
-chrome.tabs.onRemoved.addListener(tabId => removeFormState(tabId));
+chrome.tabs.onRemoved.addListener(tabId => void removeFormState(tabId));
+
+interface InternalMessage {
+  method: string;
+  payload?: unknown;
+}
+
+function isInternalMessage(message: unknown): message is InternalMessage {
+  return isRecord(message) && typeof message.method === 'string';
+}
+
+function getMonitoredAddressesFromPayload(payload: unknown) {
+  if (!isRecord(payload) || !isMonitoredAddressList(payload.addresses)) return null;
+  return payload.addresses;
+}
 
 function logInternalMessage(message: { method: string }) {
   logger.debug('Internal message', message);
 }
 
 export async function internalBackgroundMessageHandler(
-  message: BackgroundMessages,
+  message: unknown,
   sender: chrome.runtime.MessageSender,
-  sendResponse: (response?: any) => void
+  sendResponse: (response?: unknown) => void
 ) {
   if (!validateMessagesAreFromExtension(sender)) {
     logger.error('Error: Received background script msg from ' + sender.url);
@@ -36,12 +50,19 @@ export async function internalBackgroundMessageHandler(
     return;
   }
 
+  if (!isInternalMessage(message)) {
+    sendResponse();
+    return;
+  }
+
   logInternalMessage(message);
 
   switch (message.method) {
-    case InternalMethods.AddressMonitorUpdated:
-      await syncAddressMonitor(message.payload.addresses);
+    case InternalMethods.AddressMonitorUpdated: {
+      const addresses = getMonitoredAddressesFromPayload(message.payload);
+      if (addresses) await syncAddressMonitor(addresses);
       break;
+    }
     case InternalMethods.ApplyPendingUpdate:
       await applyPendingUpdate();
       break;

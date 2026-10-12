@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import type { DistributedOmit } from 'type-fest';
 
@@ -9,10 +9,10 @@ import {
   useCurrentStacksAccount,
   useStacksAccount,
 } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
+import { type StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
 interface CurrentStacksAccountLoaderProps {
-  children(data: StacksAccount): ReactNode;
+  children(this: void, data: StacksAccount): ReactNode;
   fallback?: ReactNode;
 }
 export function CurrentStacksAccountLoader({
@@ -25,7 +25,7 @@ export function CurrentStacksAccountLoader({
 }
 
 interface StacksAccountBaseLoaderProps {
-  children(data: StacksAccount): React.ReactNode;
+  children(this: void, data: StacksAccount): React.ReactNode;
 }
 
 interface StacksAccountCurrentLoaderProps extends StacksAccountBaseLoaderProps {

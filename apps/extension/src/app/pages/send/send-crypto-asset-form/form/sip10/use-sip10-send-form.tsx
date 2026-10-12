@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 
-import { FormikHelpers } from 'formik';
+import { type FormikHelpers } from 'formik';
 import * as yup from 'yup';
 
 import type { CryptoAssetBalance, Sip10Asset } from '@leather.io/models';
 import { convertAmountToBaseUnit } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
-import { StacksSendFormValues } from '@shared/models/form.model';
+import { type StacksSendFormValues } from '@shared/models/form.model';
 
 import { getSafeImageCanonicalUri } from '@app/common/stacks-utils';
 import { stacksFungibleTokenAmountValidator } from '@app/common/validation/forms/amount-validators';
@@ -71,6 +71,7 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
     }),
 
     async previewTransaction(
+      this: void,
       values: StacksSendFormValues,
       formikHelpers: FormikHelpers<StacksSendFormValues>
     ) {

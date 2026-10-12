@@ -18,6 +18,23 @@ interface HeapSnapshot {
   strings: string[];
 }
 
+function toError(error: unknown) {
+  return error instanceof Error ? error : new Error(String(error));
+}
+
+function isHeapSnapshot(value: unknown): value is HeapSnapshot {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'strings' in value &&
+    Array.isArray(value.strings) &&
+    'nodes' in value &&
+    Array.isArray(value.nodes) &&
+    'edges' in value &&
+    Array.isArray(value.edges)
+  );
+}
+
 async function takeHeapSnapshot(page: Page): Promise<HeapSnapshot> {
   const client = await page.context().newCDPSession(page);
 
@@ -34,13 +51,14 @@ async function takeHeapSnapshot(page: Page): Promise<HeapSnapshot> {
     client.send('HeapProfiler.takeHeapSnapshot', { reportProgress: false }).then(
       () => {
         try {
-          const snapshotData = JSON.parse(chunks.join(''));
+          const snapshotData: unknown = JSON.parse(chunks.join(''));
+          if (!isHeapSnapshot(snapshotData)) throw new Error('Unexpected heap snapshot shape');
           resolve(snapshotData);
         } catch (error) {
-          reject(error as Error);
+          reject(toError(error));
         }
       },
-      (error: any) => reject(error as Error)
+      (error: unknown) => reject(toError(error))
     );
   });
 

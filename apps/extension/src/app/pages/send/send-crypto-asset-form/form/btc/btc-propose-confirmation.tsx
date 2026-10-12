@@ -96,7 +96,7 @@ export function BtcProposeConfirmation() {
               <Button
                 data-testid={SharedComponentsSelectors.InfoCardButton}
                 aria-busy={isProposing}
-                onClick={initiateProposal}
+                onClick={() => void initiateProposal()}
                 width="100%"
               >
                 Propose transaction

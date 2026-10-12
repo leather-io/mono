@@ -8,7 +8,7 @@ import { RenameEntityDialog } from './rename-entity-dialog';
 interface RenamePolicyDialogProps {
   policy: PolicyStore;
   isShowing: boolean;
-  onClose(): void;
+  onClose(this: void): void;
 }
 
 export function RenamePolicyDialog({ policy, isShowing, onClose }: RenamePolicyDialogProps) {

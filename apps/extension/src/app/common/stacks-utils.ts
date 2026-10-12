@@ -1,9 +1,12 @@
-import { ChainId } from '@stacks/network';
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 
 import { STX_DECIMALS } from '@leather.io/constants';
 import type { NetworkConfiguration } from '@leather.io/models';
-import { contractPrincipalSchema, principalSchema } from '@leather.io/stacks';
+import {
+  contractPrincipalSchema,
+  principalSchema,
+  stacksChainIdToCoreNetworkMode,
+} from '@leather.io/stacks';
 import { initBigNumber, microStxToStx } from '@leather.io/utils';
 
 import { isValidUrl } from '@shared/utils/urls';
@@ -66,13 +69,10 @@ export function validateAddressChain(address: string, currentNetwork: NetworkCon
   const addressToCheck = extractAddressFromStacksPrincipal(address);
 
   const prefix = addressToCheck.slice(0, 2);
-  switch (currentNetwork.chain.stacks.chainId) {
-    case ChainId.Mainnet:
-      return prefix === 'SM' || prefix === 'SP';
-    case ChainId.Testnet:
-    default:
-      return prefix === 'SN' || prefix === 'ST';
+  if (stacksChainIdToCoreNetworkMode(currentNetwork.chain.stacks.chainId) === 'mainnet') {
+    return prefix === 'SM' || prefix === 'SP';
   }
+  return prefix === 'SN' || prefix === 'ST';
 }
 
 /** @knipignore */

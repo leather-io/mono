@@ -19,7 +19,7 @@ vi.mock('@shared/utils/analytics', () => ({ analytics: { track: vi.fn() } }));
 vi.mock('@app/common/use-wallet-type', () => ({
   useWalletType: () => ({
     whenWallet:
-      ({ ledger }: { ledger(message: UnsignedMessage): Promise<void> }) =>
+      ({ ledger }: { ledger(this: void, message: UnsignedMessage): Promise<void> }) =>
       (message: UnsignedMessage) =>
         ledger(message),
   }),

@@ -65,7 +65,7 @@ export function useSignerActionController() {
 
     return {
       run,
-      cancelActive() {
+      cancelActive(this: void) {
         activeHandle.current?.cancel();
         activeHandle.current = null;
       },

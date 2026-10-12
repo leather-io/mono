@@ -21,7 +21,7 @@ import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { SignPsbtArgs } from '@app/common/psbt/requests';
+import { type SignPsbtArgs } from '@app/common/psbt/requests';
 import { useRpcSignPsbtParams } from '@app/common/psbt/use-psbt-request-params';
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
 import { useProposeMultisigTransaction } from '@app/features/multisig/use-propose-multisig-transaction';
@@ -151,34 +151,36 @@ export function useRpcSignPsbt() {
     return await broadcastTx({
       tx,
       skipTaprootWarning: true,
-      async onSuccess(txid) {
-        if (!requestId) throw new Error('Invalid request id');
+      onSuccess(txid) {
+        void (async () => {
+          if (!requestId) throw new Error('Invalid request id');
 
-        void sendMessageToOriginatingFrame(
-          { frameId, tabId },
-          createRpcSuccessResponse('signPsbt', {
-            id: requestId,
-            result: { hex: psbt, txid },
-          })
-        );
+          void sendMessageToOriginatingFrame(
+            { frameId, tabId },
+            createRpcSuccessResponse('signPsbt', {
+              id: requestId,
+              result: { hex: psbt, txid },
+            })
+          );
 
-        await refetchUtxos();
+          await refetchUtxos();
 
-        const psbtTxSummaryState = {
-          fee: formatCurrency(fee, { preset: 'pad-decimals' }),
-          sendingValue: formatCurrency(transferTotalAsMoney),
-          totalSpend: formatCurrency(sumMoney([transferTotalAsMoney, fee])),
-          txFiatValue: formatCurrency(calculateBitcoinFiatValue(transferTotalAsMoney)),
-          txFiatValueSymbol: btcMarketData.price.symbol,
-          txId: txid,
-          txLink: {
-            blockchain: 'bitcoin',
-            txId: txid || '',
-          },
-          txValue: formatCurrency(transferTotalAsMoney),
-        };
+          const psbtTxSummaryState = {
+            fee: formatCurrency(fee, { preset: 'pad-decimals' }),
+            sendingValue: formatCurrency(transferTotalAsMoney),
+            totalSpend: formatCurrency(sumMoney([transferTotalAsMoney, fee])),
+            txFiatValue: formatCurrency(calculateBitcoinFiatValue(transferTotalAsMoney)),
+            txFiatValueSymbol: btcMarketData.price.symbol,
+            txId: txid,
+            txLink: {
+              blockchain: 'bitcoin',
+              txId: txid || '',
+            },
+            txValue: formatCurrency(transferTotalAsMoney),
+          };
 
-        void navigate(RouteUrls.RpcSignPsbtSummary, { state: psbtTxSummaryState });
+          void navigate(RouteUrls.RpcSignPsbtSummary, { state: psbtTxSummaryState });
+        })();
       },
       onError(e) {
         if (!requestId) throw new Error('Invalid request id');
@@ -211,7 +213,10 @@ export function useRpcSignPsbt() {
     origin,
     psbtHex,
     rejectDisallowedSighash,
-    async onSignPsbt({ addressNativeSegwitTotal, addressTaprootTotal, fee }: SignPsbtArgs) {
+    async onSignPsbt(
+      this: void,
+      { addressNativeSegwitTotal, addressTaprootTotal, fee }: SignPsbtArgs
+    ) {
       if (hasDisallowedSighash) {
         rejectDisallowedSighash();
         return;
@@ -376,7 +381,7 @@ export function useRpcSignPsbt() {
         });
       }
     },
-    onCancel() {
+    onCancel(this: void) {
       void sendMessageToOriginatingFrame(
         { frameId, tabId },
         createRpcErrorResponse('signPsbt', {

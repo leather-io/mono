@@ -1,10 +1,10 @@
 import { useMatch } from 'react-router';
 
 import { stxAsset } from '@leather.io/constants';
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import {
-  DisabledPairRule,
-  SwapDependencies,
+  type DisabledPairRule,
+  type SwapDependencies,
   isBaseEntirelyDisabled,
   isPairDisabled,
   useAccountBaseSwapAssetsQuery,

@@ -37,15 +37,16 @@ interface LedgerFlowState {
 
 interface LedgerFlowContextValue {
   state: LedgerFlowState | null;
-  open(request: LedgerNonSigningFlowRequest): void;
+  open(this: void, request: LedgerNonSigningFlowRequest): void;
   sign<K extends LedgerSigningKind>(
+    this: void,
     request: LedgerSigningRequest<K>
   ): Promise<LedgerSigningOutcome<LedgerSigningResults[K]>>;
-  settle<T>(request: LedgerSigningTarget<T>, outcome: LedgerSigningOutcome<T>): void;
-  close(): void;
-  closeWithError(error: string): void;
-  dismiss(): void;
-  setStep(requestId: number, step: LedgerStep): void;
+  settle<T>(this: void, request: LedgerSigningTarget<T>, outcome: LedgerSigningOutcome<T>): void;
+  close(this: void): void;
+  closeWithError(this: void, error: string): void;
+  dismiss(this: void): void;
+  setStep(this: void, requestId: number, step: LedgerStep): void;
 }
 
 const ledgerFlowContext = createContext<LedgerFlowContextValue | null>(null);
@@ -262,7 +263,7 @@ export function useLedgerSteps() {
         goToStep({ name: 'choose-address-standard', connectImmediatelyAfter });
       },
 
-      cancelLedgerAction() {
+      cancelLedgerAction(this: void) {
         close();
       },
 

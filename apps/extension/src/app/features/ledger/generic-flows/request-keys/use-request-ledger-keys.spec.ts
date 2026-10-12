@@ -4,6 +4,8 @@ import { createRoot } from 'react-dom/client';
 
 import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 
+import type * as LeatherUtils from '@leather.io/utils';
+
 import type { ConnectLedgerDeviceOptions } from '../../dmk/ledger-device-connection';
 import { LedgerConnectionErrors } from '../../dmk/ledger-dmk-errors';
 import { makeFakeDmk } from '../../dmk/ledger-dmk.mocks';
@@ -48,7 +50,7 @@ vi.mock('../../dmk/ledger-dmk.context', () => ({
 }));
 
 vi.mock('@leather.io/utils', async importOriginal => {
-  const actual = await importOriginal<typeof import('@leather.io/utils')>();
+  const actual = await importOriginal<typeof LeatherUtils>();
   return { ...actual, delay: () => Promise.resolve() };
 });
 
@@ -69,7 +71,7 @@ function renderHookValue<T>(useHook: () => T) {
     root.render(createElement(TestComponent));
   });
   return {
-    getValue(): T {
+    getValue(this: void): T {
       if (value === undefined) throw new Error('Hook did not render a value');
       return value;
     },
@@ -86,8 +88,8 @@ interface SetupOptions {
   pullKeysResult?: { status: 'success' } | { status: 'failure' };
   pullKeysError?: unknown;
   connectAppError?: unknown;
-  connectApp?(options: ConnectLedgerDeviceOptions): Promise<LedgerBitcoinApp>;
-  passesAdditionalVersionCheck?(appVersion: unknown): Promise<boolean>;
+  connectApp?(this: void, options: ConnectLedgerDeviceOptions): Promise<LedgerBitcoinApp>;
+  passesAdditionalVersionCheck?(this: void, appVersion: unknown): Promise<boolean>;
 }
 
 function setupRequestKeys({

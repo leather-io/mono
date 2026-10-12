@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 
 import { createMoney, sumNumbers } from '@leather.io/utils';
 
-import { PsbtInput } from './use-parsed-inputs';
-import { PsbtOutput } from './use-parsed-outputs';
+import { type PsbtInput } from './use-parsed-inputs';
+import { type PsbtOutput } from './use-parsed-outputs';
 
 function calculateAddressInputsTotal(address: string, inputs: PsbtInput[]) {
   return createMoney(

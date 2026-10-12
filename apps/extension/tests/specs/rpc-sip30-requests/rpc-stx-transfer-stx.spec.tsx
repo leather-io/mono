@@ -1,17 +1,35 @@
 import type { BrowserContext, Page } from '@playwright/test';
-import { type TokenTransferPayloadWire, deserializeTransaction } from '@stacks/transactions';
+import {
+  PayloadType,
+  type StacksTransactionWire,
+  type TokenTransferPayloadWire,
+  deserializeTransaction,
+} from '@stacks/transactions';
+import { requestLeatherProvider } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { mockEmptyStacksBalancesRequest } from '@tests/mocks/mock-stacks-balances';
 import { mockEmptyStacksBalancesV2Request } from '@tests/mocks/mock-stacks-balances-v2';
 import { mockStacksBroadcastTransaction } from '@tests/mocks/mock-stacks-txs';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
+import { z } from 'zod';
 
 import type { RpcParams, stxTransferStx } from '@leather.io/rpc';
 
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 
 import { test } from '../../fixtures/fixtures';
+
+const broadcastRequestBodySchema = z.object({ tx: z.string() });
+
+const transferStxResultSchema = z.object({ txid: z.string(), transaction: z.string().optional() });
+
+function getTokenTransferPayload(tx: StacksTransactionWire): TokenTransferPayloadWire {
+  if (tx.payload.payloadType !== PayloadType.TokenTransfer) {
+    throw new Error('Expected a token transfer payload');
+  }
+  return tx.payload;
+}
 
 // Mocked fee estimations resolve to these three tiers (see mockStacksFeeRequests)
 const slowFee = { displayed: '0.0002 STX', microStx: 200 };
@@ -51,13 +69,7 @@ test.describe('RPC: stx_transferStx', () => {
 
   function initiateSip30RpcTransferStx(page: Page) {
     return async (params: RpcParams<typeof stxTransferStx>) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('stx_transferStx', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
+      page.evaluate(requestLeatherProvider, { method: 'stx_transferStx', params: { ...params } });
   }
 
   test('shows memo on SIP-30 STX transfer approval', async ({ page, context }) => {
@@ -107,7 +119,7 @@ test.describe('RPC: stx_transferStx', () => {
 
       const requestBody = broadcastRequest.postData();
       if (!requestBody) throw new Error('Broadcast request has no body');
-      return deserializeTransaction(JSON.parse(requestBody).tx);
+      return deserializeTransaction(broadcastRequestBodySchema.parse(JSON.parse(requestBody)).tx);
     };
   }
 
@@ -125,12 +137,13 @@ test.describe('RPC: stx_transferStx', () => {
       approveAndCaptureBroadcastedTx(context, { editFeeToSlow: false })(),
     ]);
 
-    const payload = broadcastedTx.payload as TokenTransferPayloadWire;
+    const payload = getTokenTransferPayload(broadcastedTx);
     test.expect(Number(payload.amount)).toEqual(100);
     test.expect(Number(broadcastedTx.auth.spendingCondition.fee)).toEqual(standardFee.microStx);
 
-    test.expect(result.result.txid).toEqual(mockedTxid);
-    test.expect(result.result.transaction).toEqual(broadcastedTx.serialize());
+    const transferResult = transferStxResultSchema.parse(result.result);
+    test.expect(transferResult.txid).toEqual(mockedTxid);
+    test.expect(transferResult.transaction).toEqual(broadcastedTx.serialize());
   });
 
   test('broadcasts the fee chosen in the fee editor', async ({ page, context }) => {
@@ -144,11 +157,12 @@ test.describe('RPC: stx_transferStx', () => {
       approveAndCaptureBroadcastedTx(context, { editFeeToSlow: true })(),
     ]);
 
-    const payload = broadcastedTx.payload as TokenTransferPayloadWire;
+    const payload = getTokenTransferPayload(broadcastedTx);
     test.expect(Number(payload.amount)).toEqual(100);
     test.expect(Number(broadcastedTx.auth.spendingCondition.fee)).toEqual(slowFee.microStx);
 
-    test.expect(result.result.txid).toEqual(mockedTxid);
+    const transferResult = transferStxResultSchema.parse(result.result);
+    test.expect(transferResult.txid).toEqual(mockedTxid);
   });
 
   test('shows insufficient balance error and no approve action when balance is empty', async ({

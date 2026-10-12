@@ -7,8 +7,8 @@ import { DropdownMenu, EllipsisHIcon, PencilIcon, TrashIcon } from '@leather.io/
 import { useThemeSwitcher } from '@app/common/theme-provider';
 
 interface PolicyActionMenuProps {
-  onRename(): void;
-  onRemove(): void;
+  onRename(this: void): void;
+  onRemove(this: void): void;
 }
 
 export function PolicyActionMenu({ onRename, onRemove }: PolicyActionMenuProps) {

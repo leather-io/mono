@@ -12,7 +12,7 @@ interface PsbtAddressTotalItemProps {
   subValue?: string;
   title?: string;
   value: string;
-  valueAction?(): void;
+  valueAction?(this: void): void;
 }
 export function PsbtAddressTotalItem({
   hoverLabel,

@@ -103,7 +103,7 @@ export function useGetAddresses() {
     missingChain,
     hasAvailableRequestedChain,
     focusInitiatingTab,
-    async onUserApproveGetAddresses() {
+    async onUserApproveGetAddresses(this: void) {
       if (!tabId || !origin) {
         logger.error('Cannot give app accounts: missing tabId, origin');
         return;

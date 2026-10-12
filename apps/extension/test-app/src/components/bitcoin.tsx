@@ -2,7 +2,7 @@ import React from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
-import { LeatherProvider } from '@leather.io/rpc';
+import { type LeatherProvider } from '@leather.io/rpc';
 
 declare global {
   interface Window {
@@ -55,7 +55,7 @@ export function Bitcoin() {
         <styled.button
           mt={3}
           onClick={() => {
-            (window as any).LeatherProvider?.request('sendTransfer', {
+            window.LeatherProvider?.request('sendTransfer', {
               recipients: [
                 {
                   address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
@@ -81,7 +81,7 @@ export function Bitcoin() {
         <styled.button
           mt={3}
           onClick={() => {
-            (window as any).LeatherProvider?.request('sendTransfer', {
+            window.LeatherProvider?.request('sendTransfer', {
               recipients: [
                 {
                   address: 'bc1qps90ws94pvk548y9jg03gn5lwjqnyud4lg6y56',
@@ -107,7 +107,7 @@ export function Bitcoin() {
         <styled.button
           mt={3}
           onClick={() => {
-            (window as any).LeatherProvider?.request('sendTransfer', {
+            window.LeatherProvider?.request('sendTransfer', {
               recipients: [
                 {
                   address: 'bc1p8nyc4sl8agqfjs2rq4yer6wnhd89naw05s0ha8hpmg8j36ht6yvswqyaxm',
@@ -133,7 +133,7 @@ export function Bitcoin() {
         <styled.button
           mt={3}
           onClick={() => {
-            (window as any).LeatherProvider?.request('sendTransfer', {
+            const paramsWithoutNetwork = {
               recipients: [
                 {
                   address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
@@ -144,7 +144,10 @@ export function Bitcoin() {
                   amount: '10000',
                 },
               ],
-            })
+              network: '',
+            };
+            Reflect.deleteProperty(paramsWithoutNetwork, 'network');
+            window.LeatherProvider?.request('sendTransfer', paramsWithoutNetwork)
               .then(() => {
                 // Transfer successful
               })

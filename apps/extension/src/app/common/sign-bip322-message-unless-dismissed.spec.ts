@@ -11,7 +11,11 @@ import { signBip322MessageUnlessDismissed } from './sign-bip322-message-unless-d
 
 vi.mock('@leather.io/bitcoin', async importOriginal => ({
   ...(await importOriginal<object>()),
-  async signBip322MessageSimple({ signPsbt }: { signPsbt(psbt: unknown): Promise<unknown> }) {
+  async signBip322MessageSimple({
+    signPsbt,
+  }: {
+    signPsbt(this: void, psbt: unknown): Promise<unknown>;
+  }) {
     await signPsbt({});
     return { signature: 'signature' };
   },

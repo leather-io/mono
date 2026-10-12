@@ -6,7 +6,7 @@ import { RawPSBTV0, RawPSBTV2 } from '@scure/btc-signer/psbt';
 
 import { isString } from '@leather.io/utils';
 
-import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
+import { type BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { logger } from '@shared/logger';
 
 import {
@@ -27,24 +27,24 @@ export function usePsbtSigner() {
 
   return useMemo(
     () => ({
-      async signPsbt({ allowedSighash, signingConfig, tx }: SignPsbtArgs) {
+      async signPsbt(this: void, { allowedSighash, signingConfig, tx }: SignPsbtArgs) {
         addMissingTapInteralKeys(tx, signingConfig);
         return signBitcoinTx(tx.toPSBT(), signingConfig, allowedSighash);
       },
-      getPsbtAsTransaction(psbt: string | Uint8Array) {
+      getPsbtAsTransaction(this: void, psbt: string | Uint8Array) {
         const bytes = isString(psbt) ? hexToBytes(psbt) : psbt;
         return btc.Transaction.fromPSBT(bytes);
       },
-      getRawPsbt(psbt: string | Uint8Array) {
+      getRawPsbt(this: void, psbt: string | Uint8Array) {
         const bytes = isString(psbt) ? hexToBytes(psbt) : psbt;
         try {
           return RawPSBTV0.decode(bytes);
         } catch (e1) {
-          logger.error(`Unable to decode PSBT as v0, trying v2, ${e1}`);
+          logger.error(`Unable to decode PSBT as v0, trying v2, ${String(e1)}`);
           try {
             return RawPSBTV2.decode(bytes);
           } catch (e2) {
-            throw new Error(`Unable to decode PSBT, ${e1 ?? e2}`);
+            throw new Error(`Unable to decode PSBT, ${String(e1 ?? e2)}`);
           }
         }
       },

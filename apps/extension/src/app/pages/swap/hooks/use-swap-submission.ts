@@ -17,7 +17,7 @@ import { ensureAsyncFunctionMinimumDuration } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 
 export function useSwapSubmission() {
-  const { submit } = useSwapContext();
+  const swapContext = useSwapContext();
   const navigate = useNavigate();
   const [submission, setSubmission] = useState<SwapSubmissionState>({ status: 'idle' });
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -37,7 +37,7 @@ export function useSwapSubmission() {
 
     setSubmission({ status: 'submitting', quote });
     const submitWithMinimumDuration = ensureAsyncFunctionMinimumDuration(
-      submit,
+      () => swapContext.submit(),
       SWAP_SUBMISSION_DISPLAY_DURATION_MS
     );
     submitWithMinimumDuration()

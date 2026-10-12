@@ -1,16 +1,11 @@
 import { useMemo, useState } from 'react';
 
-import * as btc from '@scure/btc-signer';
-import * as bitcoin from 'bitcoinjs-lib';
+import type * as btc from '@scure/btc-signer';
+import type * as bitcoin from 'bitcoinjs-lib';
 
 import { createBitcoinAddress } from '@leather.io/bitcoin';
-import { BitcoinAddress } from '@leather.io/models';
-import {
-  PaymentTypes,
-  RpcErrorCode,
-  createRpcErrorResponse,
-  createRpcSuccessResponse,
-} from '@leather.io/rpc';
+import { type BitcoinAddress } from '@leather.io/models';
+import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
@@ -40,10 +35,7 @@ function useRpcSignBitcoinMessage() {
       ...defaultParams,
       requestId: initialSearchParams.get('requestId') ?? '',
       message: initialSearchParams.get('message') ?? '',
-      paymentType: (initialSearchParams.get('paymentType') ?? 'p2wpkh') as Extract<
-        'p2tr' | 'p2wpkh',
-        PaymentTypes
-      >,
+      paymentType: initialSearchParams.get('paymentType') ?? 'p2wpkh',
     }),
     [defaultParams]
   );
@@ -54,7 +46,7 @@ const allowTimeForUserToReadToast = createDelay(1200);
 
 interface SignBip322MessageFactoryArgs {
   address: BitcoinAddress;
-  signPsbt(a: bitcoin.Psbt): Promise<btc.Transaction | null>;
+  signPsbt(this: void, a: bitcoin.Psbt): Promise<btc.Transaction | null>;
 }
 function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFactoryArgs) {
   const network = useCurrentNetwork();
@@ -72,7 +64,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
     isLoading,
     formattedOrigin: new URL(origin ?? '').host,
     address,
-    onUserRejectBip322MessageSigningRequest() {
+    onUserRejectBip322MessageSigningRequest(this: void) {
       if (!tabId) return;
       void sendMessageToOriginatingFrame(
         { frameId, tabId },
@@ -86,7 +78,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
       );
       closeWindow();
     },
-    async onUserApproveBip322MessageSigningRequest() {
+    async onUserApproveBip322MessageSigningRequest(this: void) {
       setIsLoading(true);
 
       if (!tabId || !origin) {

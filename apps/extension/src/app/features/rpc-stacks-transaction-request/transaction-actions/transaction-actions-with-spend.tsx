@@ -18,7 +18,7 @@ interface TransactionActionsWithSpendProps {
   isLoading: boolean;
   isSponsored: boolean;
   txAmount: Money;
-  onApprove(): Promise<void>;
+  onApprove(this: void): Promise<void>;
   approveLabel?: string;
   busyLabel?: string;
 }

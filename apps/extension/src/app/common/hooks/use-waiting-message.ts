@@ -19,10 +19,10 @@ export function useWaitingMessage(
   const [waitingMessage, setWaitingMessage] = useState(messageForSecondsPassed(waitingMessages, 0));
   const handlers = useMemo(
     () => ({
-      startWaitingMessage() {
+      startWaitingMessage(this: void) {
         setIsRunning(true);
       },
-      stopWaitingMessage() {
+      stopWaitingMessage(this: void) {
         setIsRunning(false);
       },
     }),

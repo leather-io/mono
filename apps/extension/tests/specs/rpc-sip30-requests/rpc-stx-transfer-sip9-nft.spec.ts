@@ -1,4 +1,5 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
+import { requestLeatherProvider } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -44,13 +45,10 @@ test.describe('RPC: stx_transferSip9Nft', () => {
 
   function initiateSip30RpcTransferSip9Nft(page: Page) {
     return async (params: RpcParams<typeof stxTransferSip9Nft>) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('stx_transferSip9Nft', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
+      page.evaluate(requestLeatherProvider, {
+        method: 'stx_transferSip9Nft',
+        params: { ...params },
+      });
   }
 
   test('SIP-30 transfer sip9 non-fungible token', async ({ page, context }) => {

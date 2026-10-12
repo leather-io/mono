@@ -18,7 +18,7 @@ interface StxCryptoAssetItemProps {
   balance: AddressQuotedStxBalance;
   isLoading: boolean;
   isPrivate?: boolean;
-  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
+  onSelectAsset?(this: void, assetId: SerializedCryptoAssetId): void;
   showDepositButtons?: boolean;
 }
 

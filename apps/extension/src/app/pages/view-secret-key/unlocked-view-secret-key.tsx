@@ -9,6 +9,7 @@ import {
   DescriptionColumn,
   TwoColumnLayout,
 } from '@app/components/layout/layouts/two-column.layout';
+import { readRouteStateString } from '@app/pages/read-route-state';
 import {
   useActiveWalletSecretKey,
   useWalletSecretKey,
@@ -16,12 +17,13 @@ import {
 import { SecretKey } from '@app/ui/components/secret-key/secret-key';
 
 export function UnlockedViewSecretKey() {
-  const { state } = useLocation();
+  const location = useLocation();
+  const fingerprint = readRouteStateString(location.state, 'fingerprint');
   const navigate = useNavigate();
   const activeWalletSecretKey = useActiveWalletSecretKey();
-  const requestedWalletSecretKey = useWalletSecretKey(state?.fingerprint);
+  const requestedWalletSecretKey = useWalletSecretKey(fingerprint);
 
-  const secretKey = state?.fingerprint ? requestedWalletSecretKey : activeWalletSecretKey;
+  const secretKey = fingerprint ? requestedWalletSecretKey : activeWalletSecretKey;
 
   useEffect(() => {
     if (!secretKey) void navigate(-1);
@@ -44,7 +46,7 @@ export function UnlockedViewSecretKey() {
             words, you lose your account."
             />
           }
-          rightColumn={<SecretKey secretKey={secretKey} onDone={() => navigate(-1)} />}
+          rightColumn={<SecretKey secretKey={secretKey} onDone={() => void navigate(-1)} />}
         />
       </Content>
     </>

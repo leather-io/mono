@@ -9,7 +9,7 @@ interface TransactionActionsProps {
   isDisabled?: boolean;
   isLoading?: boolean;
   onCancel(): void;
-  onSubmit?(): void;
+  onSubmit?(this: void): void;
 }
 export function TransactionActions(props: TransactionActionsProps) {
   const { isBroadcasting, isDisabled, isLoading, onSubmit } = props;

@@ -95,7 +95,7 @@ function ErrorCodeBlock({ errorText }: ErrorCodeBlockProps) {
 }
 
 interface ActionButtonsProps {
-  onClickCopy(): void;
+  onClickCopy(this: void): void;
 }
 
 function ActionButtons({ onClickCopy }: ActionButtonsProps) {

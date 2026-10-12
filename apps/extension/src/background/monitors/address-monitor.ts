@@ -1,3 +1,5 @@
+import { isRecord } from '@shared/utils/is-record';
+
 import { createBitcoinTransactionMonitor } from './address-monitors/bitcoin-transaction-monitor';
 
 export interface MonitoredAddress {
@@ -5,6 +7,20 @@ export interface MonitoredAddress {
   accountIndex: number;
   isCurrent: boolean;
   address: string;
+}
+
+function isMonitoredAddress(value: unknown): value is MonitoredAddress {
+  return (
+    isRecord(value) &&
+    (value.chain === 'bitcoin' || value.chain === 'stacks') &&
+    typeof value.accountIndex === 'number' &&
+    typeof value.isCurrent === 'boolean' &&
+    typeof value.address === 'string'
+  );
+}
+
+export function isMonitoredAddressList(value: unknown): value is MonitoredAddress[] {
+  return Array.isArray(value) && value.every(isMonitoredAddress);
 }
 
 export interface AddressMonitor {
@@ -27,8 +43,8 @@ const ADDRESS_MONITOR_STORE = 'addressMonitorStore';
 
 async function readMonitoredAddressStore() {
   const result = await chrome.storage.local.get(ADDRESS_MONITOR_STORE);
-  const addresses = result[ADDRESS_MONITOR_STORE] || [];
-  return addresses;
+  const addresses: unknown = result[ADDRESS_MONITOR_STORE];
+  return isMonitoredAddressList(addresses) ? addresses : [];
 }
 
 async function writeMonitoredAddressStore(addresses: MonitoredAddress[]) {

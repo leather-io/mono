@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 
 import { Stack } from 'leather-styles/jsx';
 
@@ -36,7 +36,7 @@ interface TokenListProps {
   variant?: TokenListVariant;
   assetRightElementVariant?: AssetRightElementVariant;
   showUnmanageableTokens?: boolean;
-  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
+  onSelectAsset?(this: void, assetId: SerializedCryptoAssetId): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
   showDepositButtons?: boolean;
 }

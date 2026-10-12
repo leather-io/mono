@@ -15,7 +15,7 @@ import { closeLedgerSession } from '../../dmk/ledger-session';
 type PairingStatus = 'idle' | 'connecting' | 'failed' | 'connected';
 
 interface LedgerPairDeviceProps {
-  onClose(): void;
+  onClose(this: void): void;
 }
 export function LedgerPairDevice({ onClose }: LedgerPairDeviceProps) {
   const dmk = useLedgerDmk();
@@ -54,7 +54,11 @@ export function LedgerPairDevice({ onClose }: LedgerPairDeviceProps) {
             Done
           </Button>
         ) : (
-          <Button width="100%" onClick={pairDevice} aria-busy={status === 'connecting'}>
+          <Button
+            width="100%"
+            onClick={() => void pairDevice()}
+            aria-busy={status === 'connecting'}
+          >
             Connect Ledger
           </Button>
         )}

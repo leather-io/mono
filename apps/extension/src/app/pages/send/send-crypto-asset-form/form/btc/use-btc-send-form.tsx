@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { FormikHelpers, FormikProps } from 'formik';
+import { type FormikHelpers, type FormikProps } from 'formik';
 import * as yup from 'yup';
 
 import {
@@ -8,7 +8,7 @@ import {
   btcAddressValidator,
   nonEmptyStringValidator,
 } from '@shared/forms/address-validators';
-import { BitcoinSendFormValues } from '@shared/models/form.model';
+import { type BitcoinSendFormValues } from '@shared/models/form.model';
 
 import { formatPrecisionError } from '@app/common/error-formatters';
 import { useOnMount } from '@app/common/hooks/use-on-mount';
@@ -29,9 +29,14 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useCalculateMaxBitcoinSpend } from '../../../../../common/hooks/balance/use-calculate-max-spend';
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
+type BtcSendFormValues = Pick<
+  BitcoinSendFormValues,
+  'amount' | 'recipient' | 'recipientBnsName' | 'symbol'
+>;
+
 export function useBtcSendForm() {
   const [isSendingMax, setIsSendingMax] = useState(false);
-  const formRef = useRef<FormikProps<BitcoinSendFormValues>>(null);
+  const formRef = useRef<FormikProps<BtcSendFormValues>>(null);
   const currentNetwork = useCurrentNetwork();
   const { utxos, refetchUtxos } = useCurrentUtxos();
   const { btc: balance } = useCurrentBtcBalanceWithFallback();
@@ -51,7 +56,7 @@ export function useBtcSendForm() {
     formRef,
     isSendingMax,
     onFormStateChange,
-    onSetIsSendingMax(value: boolean) {
+    onSetIsSendingMax(this: void, value: boolean) {
       setIsSendingMax(value);
     },
     utxos,
@@ -77,8 +82,9 @@ export function useBtcSendForm() {
     }),
 
     async chooseTransactionFee(
-      values: BitcoinSendFormValues,
-      formikHelpers: FormikHelpers<BitcoinSendFormValues>
+      this: void,
+      values: BtcSendFormValues,
+      formikHelpers: FormikHelpers<BtcSendFormValues>
     ) {
       // Validate and check high fee warning first
       await formikHelpers.validateForm();

@@ -61,7 +61,8 @@ export function initExtensionUpdateMonitor() {
   });
 
   chrome.runtime.onInstalled.addListener(details => {
-    if (details.reason !== 'update') return;
+    const reason: string = details.reason;
+    if (reason !== 'update') return;
     clearPendingUpdateVersion().catch(e =>
       logger.error('Unable to clear the pending extension update version: ', e)
     );

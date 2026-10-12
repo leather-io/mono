@@ -7,7 +7,7 @@ import {
   extractKeyFromDescriptor,
 } from '@leather.io/crypto';
 import {
-  StacksDerivationPathType,
+  type StacksDerivationPathType,
   inferStacksDerivationPathType,
   isStacksDerivationPathType,
   makeStxDerivationPath,
@@ -21,7 +21,7 @@ import { assumedZeroFingerprint } from '@shared/utils';
 import { defaultNumberOfKeysToPullFromLedgerDevice } from '../../generic-flows/request-keys/use-request-ledger-keys';
 import type { LedgerStacksApp } from '../../utils/ledger-app';
 import {
-  StacksAppKeysResponseItem,
+  type StacksAppKeysResponseItem,
   requestPublicKeyForStxAccount,
 } from '../../utils/stacks-ledger-utils';
 
@@ -122,7 +122,7 @@ export async function deviceMatchesLegacyLedgerWallet(
 
 interface PullStacksKeysFromLedgerDeviceArgs {
   derivationPathType: StacksDerivationPathType;
-  onRequestKey?(keyIndex: number): void;
+  onRequestKey?(this: void, keyIndex: number): void;
 }
 export function pullStacksKeysFromLedgerDevice(stacksApp: LedgerStacksApp) {
   return async ({

@@ -1,7 +1,7 @@
 import {
-  NonFungiblePostConditionWire,
-  STXPostConditionWire,
-  StakingPostConditionWire,
+  type NonFungiblePostConditionWire,
+  type STXPostConditionWire,
+  type StakingPostConditionWire,
 } from '@stacks/transactions';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 

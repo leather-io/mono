@@ -12,7 +12,10 @@ import {
 } from './ledger-dmk-errors';
 
 export interface LedgerDeviceActionOptions<Intermediate extends DeviceActionIntermediateValue> {
-  onRequiredUserInteraction?(interaction: Intermediate['requiredUserInteraction']): void;
+  onRequiredUserInteraction?(
+    this: void,
+    interaction: Intermediate['requiredUserInteraction']
+  ): void;
 }
 
 export interface LedgerDeviceActionHandle<Output> {

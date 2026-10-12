@@ -20,12 +20,20 @@ import {
 import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
 import {
-  RequestParams,
+  type RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
 } from '../rpc-request-utils';
+
+function isRpcSendTransferLegacyParams(params: unknown): params is RpcSendTransferLegacyParams {
+  return validateRpcSendTransferLegacyParams(params);
+}
+
+function isRpcSendTransferParams(params: unknown): params is RpcSendTransferParams {
+  return validateRpcSendTransferParams(params);
+}
 
 export const sendTransferHandler = defineRpcRequestHandler(
   sendTransfer.method,
@@ -44,11 +52,11 @@ export const sendTransferHandler = defineRpcRequestHandler(
     }
 
     // Legacy params support for backward compatibility
-    const params = validateRpcSendTransferLegacyParams(request.params)
-      ? convertRpcSendTransferLegacyParamsToNew(request.params as RpcSendTransferLegacyParams)
-      : (request.params as RpcSendTransferParams);
+    const params: unknown = isRpcSendTransferLegacyParams(request.params)
+      ? convertRpcSendTransferLegacyParamsToNew(request.params)
+      : request.params;
 
-    if (!validateRpcSendTransferParams(params)) {
+    if (!isRpcSendTransferParams(params)) {
       void trackRpcRequestError({ endpoint: 'sendTransfer', error: 'Invalid parameters' });
 
       void sendMessageToOriginatingFrame(

@@ -10,8 +10,8 @@ import { useIsFieldDirty } from '@app/common/form-utils';
 interface MnemonicWordInputProps {
   fieldNumber: number;
   value: string;
-  onUpdateWord(word: string): void;
-  onPasteEntireKey(word: string): void;
+  onUpdateWord(this: void, word: string): void;
+  onPasteEntireKey(this: void, word: string): void;
 }
 export function MnemonicWordInput({
   fieldNumber,
@@ -20,7 +20,7 @@ export function MnemonicWordInput({
   onPasteEntireKey,
 }: MnemonicWordInputProps) {
   const name = `${fieldNumber}`;
-  const [field, meta] = useField(name);
+  const [field, meta] = useField<string>(name);
   const [isFocused, setIsFocused] = useState(false);
   const isDirty = useIsFieldDirty(name);
   return (
@@ -39,7 +39,7 @@ export function MnemonicWordInput({
         {...field}
         value={value || field.value || ''}
         // using onChangeCapture + onBlurCapture to keep Formik validation
-        onChangeCapture={(e: any) => {
+        onChangeCapture={(e: React.ChangeEvent<HTMLInputElement>) => {
           e.preventDefault();
           onUpdateWord(e.target.value);
         }}

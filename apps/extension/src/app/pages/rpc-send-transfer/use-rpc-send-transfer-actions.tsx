@@ -176,25 +176,27 @@ export function useRpcSendTransferActions({
         await broadcastTx({
           tx: tx.hex,
           skipTaprootWarning: true,
-          async onSuccess(txid) {
-            setIsBroadcasting(false);
+          onSuccess(txid) {
+            void (async () => {
+              setIsBroadcasting(false);
 
-            analytics.track('broadcast_transaction', {
-              symbol: 'btc',
-              amount: amount.amount.toNumber(),
-            });
+              analytics.track('broadcast_transaction', {
+                symbol: 'btc',
+                amount: amount.amount.toNumber(),
+              });
 
-            void sendMessageToOriginatingFrame(
-              { frameId, tabId },
-              createRpcSuccessResponse('sendTransfer', {
-                id: requestId,
-                result: { txid, transaction: tx.hex },
-              })
-            );
+              void sendMessageToOriginatingFrame(
+                { frameId, tabId },
+                createRpcSuccessResponse('sendTransfer', {
+                  id: requestId,
+                  result: { txid, transaction: tx.hex },
+                })
+              );
 
-            setIsSubmitted(true);
-            await delay(500);
-            closeWindow();
+              setIsSubmitted(true);
+              await delay(500);
+              closeWindow();
+            })();
           },
           onError,
         });

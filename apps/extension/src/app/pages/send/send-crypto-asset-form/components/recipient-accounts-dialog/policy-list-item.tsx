@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik';
 import { Caption } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
-import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
+import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
 
 import { AccountListItemLayout } from '@app/components/account/account-list-item.layout';
 import { AccountNameLayout } from '@app/components/account/account-name';
@@ -14,7 +14,7 @@ import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/acc
 
 interface PolicyListItemProps {
   policy: PolicyStore;
-  onClose(): void;
+  onClose(this: void): void;
 }
 export function PolicyListItem({ policy, onClose }: PolicyListItemProps) {
   const { setFieldValue } = useFormikContext<BitcoinSendFormValues | StacksSendFormValues>();

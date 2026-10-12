@@ -21,7 +21,7 @@ export function useStacksPendingTransactions(address: string) {
       query,
       transactions: txs
         .map(tx => tx.data)
-        .filter(tx => {
+        .filter((tx): tx is MempoolTransaction => {
           if (isUndefined(tx)) return false;
           if (droppedCache.has(tx.tx_id)) return false;
           if (tx.tx_status !== 'pending') {
@@ -31,7 +31,7 @@ export function useStacksPendingTransactions(address: string) {
             return false;
           }
           return true;
-        }) as MempoolTransaction[],
+        }),
     };
   }, [txs, query]);
 }

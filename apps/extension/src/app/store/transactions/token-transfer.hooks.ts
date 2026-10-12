@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useAsync } from 'react-async-hook';
 
 import {
-  ClarityValue,
+  type ClarityValue,
   PostConditionMode,
   bufferCVFromString,
   contractPrincipalCV,
@@ -29,7 +29,7 @@ import { makeFtPostCondition } from '@shared/utils/post-conditions';
 
 import { ftUnshiftDecimals } from '@app/common/stacks-utils';
 import {
-  GenerateUnsignedTransactionOptions,
+  type GenerateUnsignedTransactionOptions,
   generateUnsignedTransaction,
 } from '@app/common/transactions/stacks/generate-unsigned-txs';
 import {
@@ -90,13 +90,14 @@ export function useGenerateStxTokenTransferUnsignedTx() {
           recipient: values?.recipient ?? account.address,
           amount: values?.amount ? stxToMicroStx(values?.amount).toString(10) : '0',
           memo: values?.memo || undefined,
-          network: network,
+          network,
+          publicKey: account.stxPublicKey,
           // Coercing type here as we don't have the public key
           // as expected by STXTransferPayload type.
           // This code will likely need to change soon with Ledger
           // work, and coercion allows us to remove lots of type mangling
           // and types are out of sync with @stacks/connect
-        } as any,
+        },
       };
       return generateUnsignedTransaction(options);
     },

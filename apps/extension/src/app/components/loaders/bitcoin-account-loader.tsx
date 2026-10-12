@@ -1,6 +1,6 @@
 import type { DistributedOmit } from 'type-fest';
 
-import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
+import { type BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import type { AccountId } from '@leather.io/models';
 
 import { useCurrentAccountId } from '@app/store/accounts/account';
@@ -8,7 +8,7 @@ import { useHasCurrentBitcoinAccount } from '@app/store/accounts/blockchain/bitc
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 interface BitcoinAccountLoaderBaseProps {
-  children(account: BitcoinNativeSegwitPayer): React.ReactNode;
+  children(this: void, account: BitcoinNativeSegwitPayer): React.ReactNode;
   fallback?: React.ReactNode;
 }
 interface BtcAccountLoaderCurrentProps extends BitcoinAccountLoaderBaseProps {

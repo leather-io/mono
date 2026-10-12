@@ -5,7 +5,7 @@ import { Flex, styled } from 'leather-styles/jsx';
 interface TokenDetailsRowProps {
   label: string;
   value: ReactNode;
-  valueAction?(): void;
+  valueAction?(this: void): void;
   testId?: string;
 }
 

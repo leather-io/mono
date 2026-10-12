@@ -26,7 +26,7 @@ export function useAnalyticsOnlyStacksNonceTracker() {
 
   return {
     nonceCalculation: context ?? {},
-    trackIfNonceError(unsignedTx: StacksTransactionWire, error: Error | string) {
+    trackIfNonceError(this: void, unsignedTx: StacksTransactionWire, error: Error | string) {
       const txNonce = Number(unsignedTx.auth.spendingCondition.nonce);
 
       if (!('nonceType' in context)) return;
@@ -47,7 +47,7 @@ const triggerIllegalAnalyticsEvent = runOnce(() =>
 );
 
 interface StacksNonceLoaderProps {
-  children(nonce: NonceData): React.ReactNode;
+  children(this: void, nonce: NonceData): React.ReactNode;
 }
 export function StacksNonceLoader({ children }: StacksNonceLoaderProps) {
   const stxAddress = useCurrentStacksAccountAddress();

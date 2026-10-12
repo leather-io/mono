@@ -11,7 +11,7 @@ import { CONTENT_SCRIPT_PORT } from '@shared/message-types';
 
 const inpageScriptUrl = 'inpage.js';
 
-let backgroundPort: any;
+let backgroundPort: chrome.runtime.Port;
 
 // Connection to background script - fires onConnect event in background script
 // and establishes two-way communication
@@ -47,8 +47,8 @@ function isRpcRequestEnvelope(value: unknown): value is RpcRequests {
   );
 }
 
-document.addEventListener(DomEventName.request, (event: any) => {
-  const request: unknown = event.detail;
+document.addEventListener(DomEventName.request, (event: Event) => {
+  const request: unknown = 'detail' in event ? event.detail : undefined;
   if (!isRpcRequestEnvelope(request)) return;
   sendMessageToBackground(request);
 });

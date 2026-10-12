@@ -2,11 +2,11 @@ import { css } from 'leather-styles/css';
 
 import { CheckmarkCircleIcon, ItemLayoutWithButtons } from '@leather.io/ui';
 
-import { UserSelectedTheme, getThemeLabel } from '@app/common/theme-provider';
+import { type UserSelectedTheme, getThemeLabel } from '@app/common/theme-provider';
 
 interface ThemeListItemProps {
   theme: UserSelectedTheme;
-  onThemeSelected(): void;
+  onThemeSelected(this: void): void;
   isActive: boolean;
 }
 export function ThemeListItem({ theme, onThemeSelected, isActive }: ThemeListItemProps) {

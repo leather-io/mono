@@ -123,18 +123,19 @@ describe(runLedgerDeviceAction.name, () => {
 
   test('propagates cancel to the device action and rejects once it stops', async () => {
     const states = new Subject<FakeState<string>>();
+    const cancel = vi.fn(() => {
+      states.next({ status: DeviceActionStatus.Stopped });
+      states.complete();
+    });
     const action: ExecuteDeviceActionReturnType<string, unknown, Interaction> = {
       observable: states.asObservable(),
-      cancel: vi.fn(() => {
-        states.next({ status: DeviceActionStatus.Stopped });
-        states.complete();
-      }),
+      cancel,
     };
 
     const handle = runLedgerDeviceAction(action);
     handle.cancel();
 
-    expect(action.cancel).toHaveBeenCalledOnce();
+    expect(cancel).toHaveBeenCalledOnce();
     await expect(handle.result).rejects.toMatchObject({ name: 'LedgerActionCancelled' });
   });
 

@@ -1,4 +1,4 @@
-import { KeyboardEvent, useId } from 'react';
+import { type KeyboardEvent, useId } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { Flex, VisuallyHidden, styled } from 'leather-styles/jsx';
@@ -9,13 +9,13 @@ const statusDebounceMs = 500;
 
 interface SearchInputProps {
   value: string;
-  onChange(value: string): void;
+  onChange(this: void, value: string): void;
   placeholder: string;
   label?: string;
   autoFocus?: boolean;
   resultsId?: string;
   statusMessage?: string;
-  onNavigateToResults?(): void;
+  onNavigateToResults?(this: void): void;
 }
 
 export function SearchInput({

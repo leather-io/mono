@@ -27,7 +27,7 @@ function CollectibleTitle({ title, subtitle }: CollectibleTitleProps) {
 interface CollectibleDetailsHeaderProps {
   title: string;
   subtitle?: string;
-  onBack(): void;
+  onBack(this: void): void;
 }
 
 export function CollectibleDetailsHeader({
