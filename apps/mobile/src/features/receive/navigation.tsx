@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { HasChildren, useTheme } from '@leather.io/ui/native';
 
-import { SelectedAsset } from './screens/select-asset';
+import type { SelectedAsset } from './screens/select-asset';
 
 // Required to use a type alias: https://reactnavigation.org/docs/typescript#typechecking-the-navigator
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
