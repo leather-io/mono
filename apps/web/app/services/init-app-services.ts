@@ -13,7 +13,6 @@ export function initAppServices() {
       leatherApiUrl: LEATHER_API_URL,
     },
     cacheService: WebHttpCacheService,
-    defaultAssetVisibility: { type: 'appConfig' },
     settingsService: WebSettingsService,
     authSessionService: WebAuthSessionService,
   });

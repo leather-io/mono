@@ -4,7 +4,6 @@ import { ActivityService } from './activity/activity.service';
 import { BlockchainActivityService } from './activity/blockchain-activity.service';
 import { AssetListService } from './asset-list/asset-list.service';
 import { FungibleAssetInfoService } from './assets/fungible-asset-info.service';
-import { DefaultAssetVisibilityPolicy } from './assets/fungible-asset-visibility.service';
 import { Sip10AssetService } from './assets/sip10-asset.service';
 import { AccountBalancesService } from './balances/account-balances.service';
 import { BtcBalancesService } from './balances/btc-balances.service';
@@ -54,7 +53,6 @@ export interface InitServicesContainerOptions {
   env: Environment;
   settingsService: Newable<SettingsService>;
   cacheService: Newable<HttpCacheService>;
-  defaultAssetVisibility: DefaultAssetVisibilityPolicy;
   authSessionService?: Newable<AuthSessionService>;
 }
 
@@ -63,9 +61,6 @@ export function initServicesContainer(options: InitServicesContainerOptions): Co
   if (!servicesContainer) {
     servicesContainer = new Container({ autobind: true, defaultScope: 'Singleton' });
     servicesContainer.bind(Types.Environment).toConstantValue(options.env);
-    servicesContainer
-      .bind(Types.DefaultAssetVisibilityPolicy)
-      .toConstantValue(options.defaultAssetVisibility);
     servicesContainer
       .bind<SettingsService>(Types.SettingsService)
       .to(options.settingsService)

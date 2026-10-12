@@ -4,16 +4,19 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SearchInput } from '@/components/search-input';
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { SpinnerIcon } from '@/components/spinner-icon';
-import { useSip10Visibility } from '@/features/balances/assets/use-sip10-visibility';
 import { useUsdcxBalance } from '@/features/balances/assets/use-usdcx-balance';
 import { matchesSip10SearchTerm } from '@/features/balances/assets/utils/search-sip10-balances';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { withUsdcxBalance } from '@/features/balances/assets/utils/with-usdcx-balance';
-import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
+import {
+  useManagedSip10Tools,
+  useSip10AccountBalance,
+} from '@/queries/balance/sip10-balance.query';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
 import { AccountId } from '@leather.io/models';
+import { Sip10Balance } from '@leather.io/services';
 import { Box, Sheet, SheetRef, Sip10AvatarIcon, Text, useTheme } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
@@ -28,14 +31,17 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
   const { bottom, top } = useSafeAreaInsets();
   const { spacing } = useTheme();
   const { changeAssetVisibility } = useSettings();
-  const { isVisible } = useSip10Visibility();
   const [searchTerm, setSearchTerm] = useState('');
   const sip10s = useSip10AccountBalance(currentAccount.fingerprint, currentAccount.accountIndex, {
     includeHiddenAssets: true,
   });
+  const { isEnabled, isLoading: isVisibilityLoading } = useManagedSip10Tools(
+    currentAccount.fingerprint,
+    currentAccount.accountIndex
+  );
   const usdcx = useUsdcxBalance(currentAccount);
 
-  const isLoading = sip10s.state === 'loading';
+  const isLoading = sip10s.state === 'loading' || isVisibilityLoading;
   const usdcxBalance = usdcx.balance.state === 'success' ? usdcx.balance.value : undefined;
   const sip10List = sip10s.state === 'success' ? sip10s.value.sip10s : undefined;
 
@@ -46,6 +52,11 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
         .filter(sip10 => matchesSip10SearchTerm(sip10.asset, searchTerm)),
     [sip10List, usdcx.assetId, usdcxBalance, searchTerm]
   );
+
+  function isTokenEnabled(sip10: Sip10Balance) {
+    if (sip10.asset.assetId === usdcx.assetId) return usdcx.isVisible;
+    return isEnabled(sip10);
+  }
 
   return (
     <FullHeightSheet sheetRef={sheetRef} handlePlacement="inside">
@@ -98,7 +109,7 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
                   }
                   tokenName={sip10.asset.name}
                   ticker={sip10.asset.symbol}
-                  value={isVisible(sip10.asset.assetId)}
+                  value={isTokenEnabled(sip10)}
                   onValueChange={val => {
                     changeAssetVisibility(serializeAssetId(getAssetId(sip10.asset)), val);
                   }}
