@@ -1,14 +1,21 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 import type { ToastProps } from '@leather.io/ui';
 
-export function useToastHandlers() {
-  const [toasts, setToasts] = useState(new Map());
+import type { ToastOptions } from './use-toast';
 
-  const handleAddToast = useCallback((toast: ToastProps) => {
+export interface ExtensionToast extends ToastProps, ToastOptions {}
+
+export function useToastHandlers() {
+  const [toasts, setToasts] = useState(new Map<string, ExtensionToast>());
+  const nextToastId = useRef(0);
+
+  const handleAddToast = useCallback((toast: ExtensionToast) => {
+    const key = String(nextToastId.current);
+    nextToastId.current += 1;
     setToasts(prev => {
       const newMap = new Map(prev);
-      newMap.set(String(Date.now()), { ...toast });
+      newMap.set(key, { ...toast });
       return newMap;
     });
   }, []);
@@ -16,7 +23,7 @@ export function useToastHandlers() {
   return useMemo(() => {
     return {
       toasts,
-      handleRemoveToast: (key: any) => {
+      handleRemoveToast: (key: string) => {
         setToasts(prev => {
           const newMap = new Map(prev);
           newMap.delete(key);
@@ -24,7 +31,8 @@ export function useToastHandlers() {
         });
       },
       handleDispatchInfo: (message: string) => handleAddToast({ message, variant: 'info' }),
-      handleDispatchSuccess: (message: string) => handleAddToast({ message, variant: 'success' }),
+      handleDispatchSuccess: (message: string, options?: ToastOptions) =>
+        handleAddToast({ message, variant: 'success', ...options }),
       handleDispatchError: (message: string) => handleAddToast({ message, variant: 'error' }),
       handleDispatchPromise: async (
         promise: Promise<any>,

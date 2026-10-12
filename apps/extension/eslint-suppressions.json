@@ -1939,17 +1939,9 @@
       "count": 2
     }
   },
-  "src/app/features/toasts/toasts-provider.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
-    }
-  },
   "src/app/features/toasts/use-toast-handlers.ts": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 2
