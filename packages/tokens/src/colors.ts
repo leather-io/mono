@@ -5,6 +5,7 @@ export const colors = {
 
 export interface Palette {
   'ink.text-primary': string;
+  'ink.text-secondary': string;
   'ink.text-subdued': string;
   'ink.text-non-interactive': string;
   'ink.underline': string;
@@ -66,6 +67,7 @@ interface Colors {
 export const colorThemes = {
   base: {
     'ink.text-primary': '#12100F',
+    'ink.text-secondary': '#5A5552',
     'ink.text-subdued': '#7B7572',
     'ink.text-non-interactive': '#9E9996',
     'ink.underline': '#12100F59',
@@ -115,6 +117,7 @@ export const colorThemes = {
   } as const satisfies Palette,
   dark: {
     'ink.text-primary': '#F9F9F8',
+    'ink.text-secondary': '#EDEBE9',
     'ink.text-subdued': '#D9D6D4',
     'ink.text-non-interactive': '#9E9996',
     'ink.underline': '#F9F9F873',

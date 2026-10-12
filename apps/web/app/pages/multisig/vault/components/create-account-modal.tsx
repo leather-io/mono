@@ -309,7 +309,7 @@ export function CreateAccountModal({
                 borderColor="yellow.border"
                 bg="yellow.background-primary"
               >
-                <styled.p textStyle="caption.01" color="ink.text-subdued">
+                <styled.p textStyle="caption.01" color="ink.text-secondary">
                   Any {threshold} of {memberCount} members will be able to approve transactions.
                   {threshold === 1 &&
                     ' A 1-of-1 threshold means any single member can transact alone.'}
@@ -327,7 +327,7 @@ export function CreateAccountModal({
               borderColor="red.border"
               bg="red.background-primary"
             >
-              <styled.p textStyle="caption.01" color="ink.text-subdued">
+              <styled.p textStyle="caption.01" color="ink.text-secondary">
                 {getErrorDetail(createAccount.error) ?? "Couldn't create this account. Try again."}
               </styled.p>
             </Box>

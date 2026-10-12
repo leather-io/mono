@@ -8,6 +8,7 @@ export const semanticTokens = {
   colors: {
     ink: {
       'text-primary': createColorObjForKey('ink.text-primary'),
+      'text-secondary': createColorObjForKey('ink.text-secondary'),
       'text-subdued': createColorObjForKey('ink.text-subdued'),
       'action-primary-hover': createColorObjForKey('ink.action-primary-hover'),
       'action-primary-default': createColorObjForKey('ink.action-primary-default'),
