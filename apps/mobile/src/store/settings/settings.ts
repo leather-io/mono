@@ -72,7 +72,7 @@ import {
 
 export function useSettings() {
   const dispatch = useAppDispatch();
-  const systemTheme = useColorScheme();
+  const systemTheme = useColorScheme() === 'dark' ? 'dark' : 'light';
 
   const accountDisplayPreference = useSelector(selectAccountDisplayPreference);
   const analyticsPreference = useSelector(selectAnalyticsPreference);
@@ -93,7 +93,7 @@ export function useSettings() {
   const appIconPreference = useSelector(selectAppIconPreference);
 
   const themeDerivedFromThemePreference =
-    (themePreference === 'system' ? systemTheme : themePreference) ?? 'light';
+    themePreference === 'system' ? systemTheme : themePreference;
 
   return {
     accountDisplayPreference,

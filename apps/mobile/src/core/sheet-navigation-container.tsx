@@ -6,15 +6,16 @@ import {
   NavigationContainer,
   type NavigationContainerProps,
   NavigationIndependentTree,
+  type ParamListBase,
   useNavigationContainerRef,
-} from '@react-navigation/native';
+} from 'expo-router/react-navigation';
 
 interface SheetNavigationContainerProps extends NavigationContainerProps {
   base: string;
 }
 
 export function SheetNavigationContainer({ base, ...props }: SheetNavigationContainerProps) {
-  const navigationRef = useNavigationContainerRef();
+  const navigationRef = useNavigationContainerRef<ParamListBase>();
   const routeNameRef = useRef<string | undefined>(undefined);
 
   return (

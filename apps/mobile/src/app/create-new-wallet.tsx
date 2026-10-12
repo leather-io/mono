@@ -19,7 +19,7 @@ function SecretBanner({ children, isHidden }: { children: ReactNode; isHidden: b
   return Platform.select({
     ios: (
       <BlurView
-        experimentalBlurMethod="dimezisBlurView"
+        blurMethod="dimezisBlurView"
         themeVariant={themeDerivedFromThemePreference}
         intensity={isHidden ? 30 : 0}
         style={{

@@ -64,7 +64,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     android: {
       ...config.android,
       package: 'io.leather.mobilewallet',
-      edgeToEdgeEnabled: true,
       adaptiveIcon: {
         foregroundImage: './src/assets/adaptive-icon.png',
         backgroundColor: '#12100F',
@@ -81,14 +80,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
     },
     plugins: [
-      [
-        'expo-build-properties',
-        {
-          ios: {
-            deploymentTarget: '15.1',
-          },
-        },
-      ],
       [
         '@sentry/react-native/expo',
         {
@@ -232,7 +223,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     experiments: {
       typedRoutes: true,
-      autolinkingModuleResolution: true,
     },
   };
 };

@@ -49,8 +49,8 @@ export function SheetScrollView({
   const styles = useSheetStyles();
   return (
     <BottomSheetScrollView
-      style={StyleSheet.flatten([styles.root, style])}
-      contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
+      style={[styles.root, style]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
       {...props}
     />
   );
@@ -64,8 +64,8 @@ export function SheetSectionList({
   const styles = useSheetStyles();
   return (
     <BottomSheetSectionList
-      style={StyleSheet.flatten([styles.root, style])}
-      contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
+      style={[styles.root, style]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
       {...props}
     />
   );
@@ -79,8 +79,8 @@ export function SheetVirtualizedList({
   const styles = useSheetStyles();
   return (
     <BottomSheetVirtualizedList
-      style={StyleSheet.flatten([styles.root, style])}
-      contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
+      style={[styles.root, style]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
       {...props}
     />
   );

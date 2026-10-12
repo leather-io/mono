@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { NativeSyntheticEvent, TextLayoutEventData, TextStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
 import { decimalSeparator } from '@/features/swap/swap.utils';
 
@@ -18,7 +18,7 @@ const AnimatedText = Animated.createAnimatedComponent(Text);
 interface PrimaryValueProps {
   value: string;
   caret: ReactNode;
-  animatedTextStyle?: TextStyle | { color: string };
+  animatedTextStyle?: AnimatedStyle<TextStyle>;
 }
 
 export function PrimaryValue({ value, caret, animatedTextStyle }: PrimaryValueProps) {

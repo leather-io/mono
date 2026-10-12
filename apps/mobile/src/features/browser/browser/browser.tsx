@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import ViewShot from 'react-native-view-shot';
+import ViewShot, { type ViewShotRef } from 'react-native-view-shot';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 
 import { useGlobalSheets } from '@/core/global-sheet-provider';
@@ -37,7 +37,7 @@ export function Browser({
   browserLoadingRef,
 }: BrowserProps) {
   const { top } = useSafeAreaInsets();
-  const viewShotRef = useRef<ViewShot>(null);
+  const viewShotRef = useRef<ViewShotRef>(null);
   const { approverSheetRef } = useGlobalSheets();
   const [origin, setOrigin] = useState<string | null>(null);
   const dispatch = useAppDispatch();

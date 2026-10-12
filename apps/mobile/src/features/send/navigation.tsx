@@ -1,6 +1,6 @@
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from 'expo-router/js-stack';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from 'expo-router/react-navigation';
 
 import { FungibleCryptoAsset } from '@leather.io/models';
 import { HasChildren, useTheme } from '@leather.io/ui/native';

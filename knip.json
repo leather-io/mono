@@ -123,7 +123,7 @@
         "src/app/_layout.tsx"
       ],
       "ignoreDependencies": [
-        "expo-modules-core",
+        "@expo/metro-config",
         "expo-status-bar",
         "expo-sharing",
         "expo-blur",
@@ -133,11 +133,10 @@
         "@leather.io/prettier-config",
         "@lingui/conf",
         "concurrently",
-        "@react-native/assets-registry",
         "buffer",
         "punycode",
         "@sentry/cli",
-        "babel-preset-expo",
+        "@babel/core",
         "@lingui/macro",
         "@lingui/format-po",
         "@babel/plugin-transform-class-static-block"
@@ -205,8 +204,7 @@
       ],
       "metro": false,
       "ignoreDependencies": [
-        "@expo/vector-icons",
-        "@react-native/assets-registry",
+        "@babel/core",
         "@rnx-kit/metro-resolver-symlinks",
         "react-native-webview",
         "@leather.io/models",

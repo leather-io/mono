@@ -1,8 +1,8 @@
 diff --git a/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java b/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
-index e20ae03bf1187f90d1eddce9203ac023ef00062f..767b6ac6cfbea586e581c47010e30222f0565d86 100644
+index 4709e2822499067cef3a4ce571991b96f844e085..d5387fe5f493071f1b96f6c07ea1f63572dd2f80 100644
 --- a/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
 +++ b/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
-@@ -312,6 +312,12 @@ public class RNCWebViewManager extends ViewGroupManager<RNCWebViewWrapper>
+@@ -313,6 +313,12 @@ public class RNCWebViewManager extends ViewGroupManager<RNCWebViewWrapper>
      public void setNewSource(RNCWebViewWrapper view, @Nullable ReadableMap value) {
          mRNCWebViewManagerImpl.setSource(view, value);
      }
@@ -16,10 +16,10 @@ index e20ae03bf1187f90d1eddce9203ac023ef00062f..767b6ac6cfbea586e581c47010e30222
      @Override
      @ReactProp(name = "textZoom")
 diff --git a/src/RNCWebViewNativeComponent.ts b/src/RNCWebViewNativeComponent.ts
-index 16b65ace4aaabae5c1bb882d6e4dbfe4d452ef30..f275bfabe6467fdc9224dc8de07b8ffe415af161 100644
+index 7f4e6c4f73506efa9517314a3ff89f91b097763e..5ddea39460ae2ce2a6d8d7f601151caf8ac3eb11 100644
 --- a/src/RNCWebViewNativeComponent.ts
 +++ b/src/RNCWebViewNativeComponent.ts
-@@ -291,6 +291,15 @@ export interface NativeProps extends ViewProps {
+@@ -292,6 +292,15 @@ export interface NativeProps extends ViewProps {
      html?: string;
      baseUrl?: string;
    }>;

@@ -1,6 +1,6 @@
 import {
   type ComponentProps,
-  FormEvent,
+  InputEvent,
   LegacyRef,
   createContext,
   forwardRef,
@@ -194,7 +194,7 @@ const Field = forwardRef(({ type, ...props }: ComponentProps<'input'>, ref) => {
       ref={innerRef}
       {...inputTypeProps}
       {...props}
-      onInput={(e: FormEvent<HTMLInputElement>) => {
+      onInput={(e: InputEvent<HTMLInputElement>) => {
         // Note: this logic to determine if the field is empty may have to be
         // made dynamic to `input=type`, and potentially made configurable with
         // a callback passed to `Input.Root` e.g.
