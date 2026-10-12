@@ -17,7 +17,7 @@ export default function PluggingInLedgerCableAnimation(props: BoxProps) {
         <Lottie
           animationData={animationDataBright}
           loop={true}
-          style={{ width: 380, marginLeft: 'auto', marginRight: 'auto' }}
+          style={{ width: '100%', maxWidth: 380, marginLeft: 'auto', marginRight: 'auto' }}
         />
       </Box>
     </Box>

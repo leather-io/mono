@@ -18,7 +18,7 @@ export function SwapReviewInfoTooltip({ label }: SwapReviewInfoTooltipProps) {
     <Tooltip.Root>
       <Tooltip.Trigger>
         <Box _hover={{ cursor: 'pointer' }} color="ink.text-subdued" ml="space.01">
-          <InfoCircleIcon variant="small" />
+          <InfoCircleIcon variant="small" color="ink.text-subdued" />
         </Box>
       </Tooltip.Trigger>
       <Tooltip.Portal>
