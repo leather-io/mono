@@ -34,12 +34,14 @@ function useGetAccountTotalBalanceQuery(
   request: AccountRequest,
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
-  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const { fiatCurrencyPreference, networkPreference, assetVisibility, defaultAssetVisibility } =
+    useSettings();
   const currencyPreference = overrideFiatCurrencyPreference ?? fiatCurrencyPreference;
   const settings: UserSettings = {
     network: networkPreference,
     quoteCurrency: currencyPreference,
     assetVisibility,
+    defaultAssetVisibility,
   };
 
   return useQuery({
@@ -52,12 +54,14 @@ function useGetAccountUnlockedBalanceQuery(
   request: AccountRequest,
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
-  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const { fiatCurrencyPreference, networkPreference, assetVisibility, defaultAssetVisibility } =
+    useSettings();
   const currencyPreference = overrideFiatCurrencyPreference ?? fiatCurrencyPreference;
   const settings: UserSettings = {
     network: networkPreference,
     quoteCurrency: currencyPreference,
     assetVisibility,
+    defaultAssetVisibility,
   };
 
   return useQuery({

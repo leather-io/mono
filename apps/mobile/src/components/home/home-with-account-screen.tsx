@@ -27,6 +27,7 @@ import { AccountScreenHeader } from './account-screen-header';
 import { AssetTabs } from './components/asset-tabs';
 import { FirstTokenBanner } from './components/first-token-banner';
 import { LearnSection } from './components/learn-section';
+import { ManageTokensFooter } from './components/manage-tokens-footer';
 import { TrendingTokens } from './components/trending-tokens';
 import { ListTab } from './constants';
 
@@ -91,6 +92,11 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
           }
           footer={
             <>
+              <ManageTokensFooter
+                onPress={() => {
+                  manageTokensSheetRef.current?.present();
+                }}
+              />
               <TrendingTokens />
               {displayLearningSections ? <LearnSection /> : undefined}
             </>

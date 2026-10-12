@@ -38,6 +38,7 @@ import {
   selectPrivacyModePreference,
   selectSecurityLevelPreference,
   selectThemePreference,
+  selectTokenPreset,
 } from './settings.read';
 import {
   userChangedAccountDisplayPreference,
@@ -57,7 +58,9 @@ import {
   userChangedQuoteCurrencyPreference,
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
+  userChangedTokenPreset,
 } from './settings.write';
+import { getDefaultAssetVisibilityPolicy } from './token-preset';
 import {
   AppIconPreference,
   CurrentAccount,
@@ -68,6 +71,7 @@ import {
   PrivacyModePreference,
   SecurityLevelPreference,
   ThemePreference,
+  TokenPreset,
 } from './utils';
 
 export function useSettings() {
@@ -89,6 +93,7 @@ export function useSettings() {
   const languagePreference = useSelector(selectLanguagePreference);
   const languagePreferenceSource = useSelector(selectLanguagePreferenceSource);
   const assetVisibility = useSelector(selectAssetVisibility);
+  const tokenPreset = useSelector(selectTokenPreset);
   const currentAccount = useSelector(selectCurrentAccount);
   const appIconPreference = useSelector(selectAppIconPreference);
 
@@ -112,6 +117,8 @@ export function useSettings() {
     languagePreference,
     languagePreferenceSource,
     assetVisibility,
+    tokenPreset,
+    defaultAssetVisibility: getDefaultAssetVisibilityPolicy(tokenPreset),
     currentAccount,
     appIconPreference,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
@@ -120,6 +127,12 @@ export function useSettings() {
     },
     changeAssetVisibility(assetId: SerializedCryptoAssetId, value: boolean) {
       dispatch(userChangedAssetVisibility({ assetId, value }));
+    },
+    changeTokenPreset(preset: TokenPreset) {
+      dispatch(userChangedTokenPreset(preset));
+      analytics.track('user_setting_updated', {
+        token_preset: preset,
+      });
     },
     changeAppIconPreference(icon: AppIconPreference) {
       dispatch(userChangedAppIconPreference(icon));

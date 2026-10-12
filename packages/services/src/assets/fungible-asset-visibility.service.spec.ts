@@ -69,6 +69,50 @@ describe(FungibleAssetVisibilityService.name, () => {
         })
       ).toEqual(false);
     });
+
+    it('should only show allowlisted assets under an allowlist policy', async () => {
+      const allowlistedSip10 = 'ALLOWLISTED_SIP10';
+      const defaultEnabledSip10 = 'DEFAULT_SIP10';
+      const pricedSip10 = 'PRICED_SIP10';
+
+      const fungibleAssetVisibilityService = new FungibleAssetVisibilityService(
+        {
+          getDefaultEnabledAssets: vi
+            .fn()
+            .mockResolvedValue([serializeAssetId({ protocol: 'sip10', id: defaultEnabledSip10 })]),
+        } as unknown as AppConfigService,
+        {
+          fetchSip10PriceMap: vi.fn().mockResolvedValue({ [pricedSip10]: 1 }),
+        } as unknown as LeatherApiClient,
+        {
+          getSettings: vi.fn().mockReturnValue({
+            assetVisibility: {},
+            defaultAssetVisibility: {
+              type: 'allowlist',
+              assets: [serializeAssetId({ protocol: 'sip10', id: allowlistedSip10 })],
+            },
+          }),
+        } as unknown as SettingsService
+      );
+      expect(
+        await fungibleAssetVisibilityService.getDefaultAssetVisibility({
+          protocol: 'sip10',
+          id: allowlistedSip10,
+        })
+      ).toEqual(true);
+      expect(
+        await fungibleAssetVisibilityService.getDefaultAssetVisibility({
+          protocol: 'sip10',
+          id: defaultEnabledSip10,
+        })
+      ).toEqual(false);
+      expect(
+        await fungibleAssetVisibilityService.getDefaultAssetVisibility({
+          protocol: 'sip10',
+          id: pricedSip10,
+        })
+      ).toEqual(false);
+    });
   });
 
   describe('isAssetVisibleById', () => {

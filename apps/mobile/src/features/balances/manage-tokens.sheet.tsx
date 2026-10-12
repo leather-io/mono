@@ -1,13 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SearchInput } from '@/components/search-input';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { SpinnerIcon } from '@/components/spinner-icon';
 import { useUsdcxBalance } from '@/features/balances/assets/use-usdcx-balance';
 import { matchesSip10SearchTerm } from '@/features/balances/assets/utils/search-sip10-balances';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { withUsdcxBalance } from '@/features/balances/assets/utils/with-usdcx-balance';
+import {
+  TokenPresetSheet,
+  getTokenPresetLabel,
+} from '@/features/balances/token-preset/token-preset-sheet';
 import {
   useManagedSip10Tools,
   useSip10AccountBalance,
@@ -17,7 +22,15 @@ import { t } from '@lingui/core/macro';
 
 import { AccountId } from '@leather.io/models';
 import { Sip10Balance } from '@leather.io/services';
-import { Box, Sheet, SheetRef, Sip10AvatarIcon, Text, useTheme } from '@leather.io/ui/native';
+import {
+  Box,
+  Sheet,
+  SheetInstance,
+  SheetRef,
+  Sip10AvatarIcon,
+  Text,
+  useTheme,
+} from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { TokenSwitch } from '../token/components/token-switch';
@@ -30,7 +43,8 @@ interface ManageTokenSheetProps {
 export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheetProps) {
   const { bottom, top } = useSafeAreaInsets();
   const { spacing } = useTheme();
-  const { changeAssetVisibility } = useSettings();
+  const { tokenPreset, changeAssetVisibility } = useSettings();
+  const presetSheetRef = useRef<SheetInstance>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const sip10s = useSip10AccountBalance(currentAccount.fingerprint, currentAccount.accountIndex, {
     includeHiddenAssets: true,
@@ -78,7 +92,14 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
             <Text variant="heading05" px="5">
               {t`Manage tokens`}
             </Text>
-            <Box px="5" pt="4">
+            <Box pt="3">
+              <SettingsListItem
+                title={t`Default set`}
+                caption={getTokenPresetLabel(tokenPreset).title}
+                onPress={() => presetSheetRef.current?.present()}
+              />
+            </Box>
+            <Box px="5" pt="2">
               <SearchInput
                 value={searchTerm}
                 onChange={setSearchTerm}
@@ -119,6 +140,7 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
           </>
         </Sheet.ScrollView>
       )}
+      <TokenPresetSheet sheetRef={presetSheetRef} />
     </FullHeightSheet>
   );
 }

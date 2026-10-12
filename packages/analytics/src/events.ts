@@ -266,7 +266,8 @@ type UserSettingValue =
   | { language: string }
   | { security_level: 'insecure' | 'secure' | 'not-selected' }
   | { notifications: 'disabled' | 'enabled' | 'not-selected' }
-  | { app_icon: string };
+  | { app_icon: string }
+  | { token_preset: 'gasOnly' | 'mainTokens' | 'allPricedTokens' };
 
 interface WalletCreatedValue {
   type: 'software' | 'ledger';
