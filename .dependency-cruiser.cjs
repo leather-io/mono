@@ -1,6 +1,69 @@
+const cleanLayers = {
+  presentation: ['ui', 'features'],
+  application: ['queries', 'query', 'services'],
+  domain: ['models', 'bitcoin', 'stacks'],
+  state: ['state'],
+  foundation: ['utils', 'constants', 'tokens', 'crypto'],
+};
+
+function fromLayer(layer) {
+  return `^packages/(${cleanLayers[layer].join('|')})/`;
+}
+
+function toLayers(layers) {
+  const names = layers.flatMap(layer => cleanLayers[layer]).join('|');
+  const paths = [`^packages/(${names})/`, `^@leather\\.io/(${names})(/|$)`];
+  if (layers.includes('presentation')) paths.push('^apps/');
+  return paths;
+}
+
 /** @type {import('dependency-cruiser').IConfiguration} */
 module.exports = {
   forbidden: [
+    {
+      name: 'clean-foundation-not-to-higher-layers',
+      severity: 'error',
+      comment: `Foundation packages (utils, constants, tokens, crypto) must not import domain, application, state or presentation code.`,
+      from: {
+        path: fromLayer('foundation'),
+      },
+      to: {
+        path: toLayers(['domain', 'application', 'state', 'presentation']),
+      },
+    },
+    {
+      name: 'clean-domain-not-to-higher-layers',
+      severity: 'error',
+      comment: `Domain packages (models, bitcoin, stacks) must not import application, state or presentation code.`,
+      from: {
+        path: fromLayer('domain'),
+      },
+      to: {
+        path: toLayers(['application', 'state', 'presentation']),
+      },
+    },
+    {
+      name: 'clean-application-not-to-presentation',
+      severity: 'error',
+      comment: `Application packages (queries, services) must not import presentation code (apps, ui, features).`,
+      from: {
+        path: fromLayer('application'),
+      },
+      to: {
+        path: toLayers(['presentation']),
+      },
+    },
+    {
+      name: 'clean-state-not-to-presentation',
+      severity: 'error',
+      comment: `The state package must not import presentation code (apps, ui, features).`,
+      from: {
+        path: fromLayer('state'),
+      },
+      to: {
+        path: toLayers(['presentation']),
+      },
+    },
     {
       name: 'type-only-deps-for-models',
       severity: 'error',
