@@ -2177,6 +2177,7 @@ msgstr "Your accounts"
 msgid "Your Secret Key"
 msgstr "Your Secret Key"
 
+#: src/app/create-new-wallet.tsx:80
 #: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:21
 msgid "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
 msgstr "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
