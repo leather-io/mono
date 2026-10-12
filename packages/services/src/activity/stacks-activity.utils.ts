@@ -20,11 +20,8 @@ import type {
   HiroPrincipalTxStatus,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import type { ActivitySourceItem } from './activity-paginator';
-import {
-  isMempoolTx,
-  mapStacksTxBlockHeight,
-  mapStacksTxBlockTime,
-} from './stacks-tx-activity.utils';
+import { isMempoolTx } from './stacks-mempool-tx.utils';
+import { mapStacksTxBlockHeight, mapStacksTxBlockTime } from './stacks-tx-activity.utils';
 
 type StacksActivityResultItem = HiroPrincipalTransactionsResultItem & {
   readonly transaction: Extract<

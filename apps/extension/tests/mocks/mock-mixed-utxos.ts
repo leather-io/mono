@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 import { TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS, TEST_ACCOUNT_1_TAPROOT_ADDRESS } from './constants';
 
@@ -20,7 +20,7 @@ export const mockTaprootUtxo = {
   path: "m/86'/0'/0'/0/0",
 };
 
-export async function mockMixedUtxosForSend(page: Page) {
+export async function mockMixedUtxosForSend(page: Page | BrowserContext) {
   await page.unroute('**/v1/utxos/**');
   await page.route('**/v1/utxos/**', route => {
     const url = route.request().url();
@@ -32,7 +32,7 @@ export async function mockMixedUtxosForSend(page: Page) {
   });
 }
 
-export async function mockNativeSegwitOnlyUtxosForSend(page: Page) {
+export async function mockNativeSegwitOnlyUtxosForSend(page: Page | BrowserContext) {
   await page.unroute('**/v1/utxos/**');
   await page.route('**/v1/utxos/**', route => {
     const url = route.request().url();
