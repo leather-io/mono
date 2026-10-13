@@ -1207,7 +1207,7 @@ msgstr "Matching"
 msgid "Max"
 msgstr "Max"
 
-#: src/features/swap/components/amount-presets.tsx:23
+#: src/features/swap/components/amount-presets.tsx:36
 msgid "MAX"
 msgstr "MAX"
 

@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { formatPercentage } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
@@ -8,9 +10,20 @@ interface AmountPresetsProps {
   onSelectPercentage(percentage: PresetPercentage): void;
 }
 
+// Below this row width the presets tighten their outer padding and gaps so labels like MAX keep
+// fitting on small phones (e.g. 320pt iPhone SE)
+const compactRowWidth = 360;
+
 export function AmountPresets({ onSelectPercentage }: AmountPresetsProps) {
+  const [isCompact, setIsCompact] = useState(false);
+
   return (
-    <Box flexDirection="row" px="7" gap="3">
+    <Box
+      flexDirection="row"
+      px={isCompact ? '5' : '7'}
+      gap={isCompact ? '2' : '3'}
+      onLayout={e => setIsCompact(e.nativeEvent.layout.width < compactRowWidth)}
+    >
       <PresetButton onPress={() => onSelectPercentage(0.25)}>
         {formatPercentage(0.25, 0)}
       </PresetButton>
@@ -31,9 +44,11 @@ interface PresetButtonProps {
 }
 
 function PresetButton({ children, onPress }: PresetButtonProps) {
+  // The row sets the width (flex={1}), so side padding only eats into the label's room
   return (
     <Button
       flex={1}
+      px="2"
       variant="outline"
       size="sm"
       hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
