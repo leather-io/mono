@@ -13,7 +13,7 @@ const { width } = Dimensions.get('window');
 
 interface ScreenshotCardProps {
   app: App;
-  onPress(): void;
+  onPress: () => void;
 }
 export function ScreenshotCard({ app, onPress }: ScreenshotCardProps) {
   const dispatch = useAppDispatch();

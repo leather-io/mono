@@ -14,7 +14,7 @@ import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/acc
 
 interface PolicyListItemProps {
   policy: PolicyStore;
-  onClose(this: void): void;
+  onClose: () => void;
 }
 export function PolicyListItem({ policy, onClose }: PolicyListItemProps) {
   const { setFieldValue } = useFormikContext<BitcoinSendFormValues | StacksSendFormValues>();

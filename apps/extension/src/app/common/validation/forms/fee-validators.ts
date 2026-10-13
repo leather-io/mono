@@ -10,8 +10,8 @@ import { stxAmountPrecisionValidator } from '@app/common/validation/forms/curren
 
 interface FeeValidatorFactoryArgs {
   availableBalance?: Money;
-  unitConverter(this: void, unit: string | number | BigNumber): BigNumber;
-  validator(this: void, errorMsg: string): NumberSchema<number | undefined, AnyObject>;
+  unitConverter: (unit: string | number | BigNumber) => BigNumber;
+  validator: (errorMsg: string) => NumberSchema<number | undefined, AnyObject>;
 }
 function feeValidatorFactory({
   availableBalance,

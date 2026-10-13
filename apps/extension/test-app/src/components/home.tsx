@@ -19,7 +19,7 @@ function Container({ children, ...props }: BoxProps) {
   );
 }
 
-function Page({ tab, setTab }: { tab: Tabs; setTab(this: void, value: Tabs): void }) {
+function Page({ tab, setTab }: { tab: Tabs; setTab: (value: Tabs) => void }) {
   return (
     <>
       <Container borderColor="#F0F0F5" borderWidth={0} borderBottomWidth="1px">

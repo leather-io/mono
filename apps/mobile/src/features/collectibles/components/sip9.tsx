@@ -45,7 +45,7 @@ function isSupportedContentType(
 interface Sip9Props {
   item: Sip9Asset;
   height: number;
-  onPress?(): void;
+  onPress?: () => void;
   imageUnavailableLabel?: ReactNode;
 }
 

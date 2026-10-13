@@ -24,7 +24,7 @@ const caption =
   'Your password is used to secure your Secret Key and is only used locally on your device.';
 
 interface RequestPasswordProps {
-  onSuccess(this: void): void;
+  onSuccess: () => void;
 }
 export function RequestPassword({ onSuccess }: RequestPasswordProps) {
   const [password, setPassword] = useState('');

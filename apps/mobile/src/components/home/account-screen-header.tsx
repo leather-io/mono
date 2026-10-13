@@ -7,7 +7,7 @@ import { Box } from '@leather.io/ui/native';
 
 interface AccountScreenHeaderProps {
   account: AccountId;
-  onOpenAccountSelector(): void;
+  onOpenAccountSelector: () => void;
 }
 
 export function AccountScreenHeader({ account, onOpenAccountSelector }: AccountScreenHeaderProps) {

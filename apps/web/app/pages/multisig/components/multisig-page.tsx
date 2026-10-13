@@ -7,7 +7,7 @@ import { Page } from '~/layouts/page/page';
 interface MultisigPageProps {
   title?: ReactNode;
   backTo?: string;
-  onBack?(): void;
+  onBack?: () => void;
   maxWidth?: string;
   children: ReactNode;
 }

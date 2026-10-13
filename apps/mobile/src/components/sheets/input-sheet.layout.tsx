@@ -11,8 +11,8 @@ interface InputSheetLayoutProps {
   description?: string;
   placeholder: string;
   submitTitle: string;
-  onSubmit(newVal: string): void;
-  onDismiss?(): void;
+  onSubmit: (newVal: string) => void;
+  onDismiss?: () => void;
   inputTestId?: string;
   submitTestId?: string;
 }

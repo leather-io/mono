@@ -5,7 +5,7 @@ import { AccountId } from '@leather.io/models';
 import { StacksTokenBalance } from './stacks-token-balance';
 
 interface StacksBalanceByAccountProps extends AccountId {
-  onPress?(): void;
+  onPress?: () => void;
 }
 
 export function StacksBalanceByAccount({

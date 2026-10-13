@@ -7,7 +7,7 @@ import { getFungibleAssetDisplayName } from '@app/pages/swap/swap-utils';
 
 interface AssetSelectorEmptyStateProps {
   isPerformingSearch: boolean;
-  onClearSearch(this: void): void;
+  onClearSearch: () => void;
   type: 'base' | 'target';
   selectedBaseAsset: AccountSwapAsset | null;
 }

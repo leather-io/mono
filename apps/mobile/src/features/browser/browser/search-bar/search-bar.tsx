@@ -21,12 +21,12 @@ import { useSearchBarAnimatedStyles } from './use-search-bar-animated-styles';
 interface SearchBarProps {
   webViewRef: RefObject<WebView | null>;
   textUrl: string;
-  setTextUrl(url: string): void;
+  setTextUrl: (url: string) => void;
   searchUrl: string;
-  onSubmit(): void;
+  onSubmit: () => void;
   navState: WebViewNavigation | null;
   browserLoadingRef: RefObject<BrowserLoadingMethods | null>;
-  goToUrl(url: string): void;
+  goToUrl: (url: string) => void;
 }
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);

@@ -13,8 +13,8 @@ import { StacksMessageSigningDisclaimer } from './message-signing-disclaimer';
 
 interface SignatureRequestMessageContentProps {
   isLoading: boolean;
-  onSignMessage(this: void, unsignedMessage: UnsignedMessage): Promise<void>;
-  onCancelMessageSigning(this: void): void;
+  onSignMessage: (unsignedMessage: UnsignedMessage) => Promise<void>;
+  onCancelMessageSigning: () => void;
   payload: Utf8Payload;
 }
 export function StacksSignatureRequestMessageContent({

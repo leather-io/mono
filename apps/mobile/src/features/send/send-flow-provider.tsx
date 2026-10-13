@@ -41,8 +41,8 @@ function initializer({ selectedAsset, currentAccount }: InitialData): SendState 
 
 interface SendFlowContextValue {
   state: SendState;
-  selectAsset(asset: FungibleCryptoAsset | null): void;
-  selectInputCurrencyMode(mode: InputCurrencyMode): void;
+  selectAsset: (asset: FungibleCryptoAsset) => void;
+  selectInputCurrencyMode: (mode: InputCurrencyMode) => void;
 }
 
 const SendFlowContext = createContext<SendFlowContextValue | null>(null);

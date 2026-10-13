@@ -6,7 +6,7 @@ import { AssetAvatarIcon, ListItemBox } from '@leather.io/ui';
 
 interface VaultAssetRowProps {
   item: VaultAssetItem;
-  onClick?(): void;
+  onClick?: () => void;
 }
 
 export function VaultAssetRow({ item, onClick }: VaultAssetRowProps) {

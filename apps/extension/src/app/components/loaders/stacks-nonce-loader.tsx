@@ -24,21 +24,23 @@ const StacksNonceContext = createContext<NonceData | Record<string, unknown>>({}
 export function useAnalyticsOnlyStacksNonceTracker() {
   const context = useContext(StacksNonceContext);
 
+  function trackIfNonceError(unsignedTx: StacksTransactionWire, error: Error | string) {
+    const txNonce = Number(unsignedTx.auth.spendingCondition.nonce);
+
+    if (!('nonceType' in context)) return;
+    if (isString(error)) return;
+
+    const serializedError = serializeError(error);
+    if ('name' in serializedError && serializedError.name === 'BadNonce') {
+      const report = { ...serializedError, ...context, txNonce };
+      if ('stack' in report) delete report.stack;
+      analytics.untypedTrack('investigation_bad_nonce_increase', report);
+    }
+  }
+
   return {
     nonceCalculation: context ?? {},
-    trackIfNonceError(this: void, unsignedTx: StacksTransactionWire, error: Error | string) {
-      const txNonce = Number(unsignedTx.auth.spendingCondition.nonce);
-
-      if (!('nonceType' in context)) return;
-      if (isString(error)) return;
-
-      const serializedError = serializeError(error);
-      if ('name' in serializedError && serializedError.name === 'BadNonce') {
-        const report = { ...serializedError, ...context, txNonce };
-        if ('stack' in report) delete report.stack;
-        analytics.untypedTrack('investigation_bad_nonce_increase', report);
-      }
-    },
+    trackIfNonceError,
   };
 }
 
@@ -47,7 +49,7 @@ const triggerIllegalAnalyticsEvent = runOnce(() =>
 );
 
 interface StacksNonceLoaderProps {
-  children(this: void, nonce: NonceData): React.ReactNode;
+  children: (nonce: NonceData) => React.ReactNode;
 }
 export function StacksNonceLoader({ children }: StacksNonceLoaderProps) {
   const stxAddress = useCurrentStacksAccountAddress();

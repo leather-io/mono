@@ -70,7 +70,7 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
 interface PageHeaderProps {
   title?: React.ReactNode;
   backTo?: string;
-  onBack?(): void;
+  onBack?: () => void;
   children?: React.ReactElement | React.ReactElement[];
 }
 function PageHeader({ title, backTo, onBack, children }: PageHeaderProps) {

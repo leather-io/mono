@@ -18,11 +18,11 @@ interface FeeEditorProviderProps extends HasChildren {
   availableBalance: Money;
   fees: Fees;
   feeType: FeeType;
-  getCustomFee(this: void, rate: number): Fee;
+  getCustomFee: (rate: number) => Fee;
   isLoadingFees: boolean;
   isSponsored: boolean;
   marketData: MarketData;
-  onGoBack(this: void): void;
+  onGoBack: () => void;
 }
 export function FeeEditorProvider({
   availableBalance,

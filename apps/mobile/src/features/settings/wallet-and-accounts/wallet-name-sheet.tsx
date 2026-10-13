@@ -7,7 +7,7 @@ import { SheetRef } from '@leather.io/ui/native';
 interface WalletNameSheetProps {
   sheetRef: SheetRef;
   name: string;
-  setName(name: string): { success: boolean };
+  setName: (name: string) => { success: boolean };
 }
 export function WalletNameSheet({ sheetRef, name, setName }: WalletNameSheetProps) {
   return (

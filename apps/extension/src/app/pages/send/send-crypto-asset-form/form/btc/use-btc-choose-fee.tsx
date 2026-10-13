@@ -40,92 +40,91 @@ export function useBtcChooseFee() {
   const network = useCurrentNetwork();
   const amountAsMoney = createMoney(btcToSat(txValues.amount).toNumber(), 'BTC');
 
-  return {
-    amountAsMoney,
+  async function previewTransaction({ feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs) {
+    const feeRowValue = formFeeRowValue(feeRate, isCustomFee);
 
-    async previewTransaction(
-      this: void,
-      { feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs
-    ) {
-      const feeRowValue = formFeeRowValue(feeRate, isCustomFee);
+    if (policy?.chain === 'bitcoin') {
+      const descriptorKey =
+        nativeSegwitAccount &&
+        findAccountDescriptorKey(
+          compileWshDescriptor(policy.descriptor),
+          nativeSegwitAccount.keychain
+        );
+      if (!descriptorKey)
+        return sendFormNavigate.toErrorPage(
+          new Error('Current account is not a signer of this multisig policy')
+        );
 
-      if (policy?.chain === 'bitcoin') {
-        const descriptorKey =
-          nativeSegwitAccount &&
-          findAccountDescriptorKey(
-            compileWshDescriptor(policy.descriptor),
-            nativeSegwitAccount.keychain
-          );
-        if (!descriptorKey)
-          return sendFormNavigate.toErrorPage(
-            new Error('Current account is not a signer of this multisig policy')
-          );
-
-        const maxSpend = isSendingMax ? calcMaxSpend(txValues.recipient, utxos, feeRate) : null;
-
-        try {
-          const psbt = await buildUnsignedMultisigBtcTransfer({
-            descriptor: policy.descriptor,
-            multisigAddress: policy.address,
-            network: network.chain.bitcoin.mode,
-            accountAddresses: createPolicyAddresses(policy),
-            recipients: [
-              { address: txValues.recipient, amount: maxSpend ? maxSpend.amount : amountAsMoney },
-            ],
-            feeRate,
-            isMaxSpend: isSendingMax,
-          });
-          return void sendFormNavigate.toConfirmBtcProposal({
-            psbt,
-            recipient: txValues.recipient,
-            fee: feeValue,
-            feeRowValue,
-            time,
-            amount: maxSpend ? maxSpend.spendableBitcoin.toString() : String(txValues.amount),
-          });
-        } catch (error) {
-          return sendFormNavigate.toErrorPage(error);
-        }
-      }
-
-      const amount = isSendingMax
-        ? calcMaxSpend(txValues.recipient, utxos, feeRate).amount
-        : amountAsMoney;
-
-      const resp = generateTx(
-        {
-          amount,
-          recipients: [
-            {
-              address: txValues.recipient,
-              amount,
-            },
-          ],
-        },
-        feeRate,
-        utxos,
-        isSendingMax
-      );
-      if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
+      const maxSpend = isSendingMax ? calcMaxSpend(txValues.recipient, utxos, feeRate) : null;
 
       try {
-        const signedTx = await signTx(resp.psbt, resp.signingConfig);
-
-        if (!signedTx) return;
-
-        signedTx.finalize();
-
-        void sendFormNavigate.toConfirmAndSignBtcTransaction({
-          tx: signedTx.hex,
+        const psbt = await buildUnsignedMultisigBtcTransfer({
+          descriptor: policy.descriptor,
+          multisigAddress: policy.address,
+          network: network.chain.bitcoin.mode,
+          accountAddresses: createPolicyAddresses(policy),
+          recipients: [
+            { address: txValues.recipient, amount: maxSpend ? maxSpend.amount : amountAsMoney },
+          ],
+          feeRate,
+          isMaxSpend: isSendingMax,
+        });
+        return void sendFormNavigate.toConfirmBtcProposal({
+          psbt,
           recipient: txValues.recipient,
           fee: feeValue,
           feeRowValue,
           time,
+          amount: maxSpend ? maxSpend.spendableBitcoin.toString() : String(txValues.amount),
         });
       } catch (error) {
-        if (isLedgerSigningCancelledError(error)) return;
         return sendFormNavigate.toErrorPage(error);
       }
-    },
+    }
+
+    const amount = isSendingMax
+      ? calcMaxSpend(txValues.recipient, utxos, feeRate).amount
+      : amountAsMoney;
+
+    const resp = generateTx(
+      {
+        amount,
+        recipients: [
+          {
+            address: txValues.recipient,
+            amount,
+          },
+        ],
+      },
+      feeRate,
+      utxos,
+      isSendingMax
+    );
+    if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
+
+    try {
+      const signedTx = await signTx(resp.psbt, resp.signingConfig);
+
+      if (!signedTx) return;
+
+      signedTx.finalize();
+
+      void sendFormNavigate.toConfirmAndSignBtcTransaction({
+        tx: signedTx.hex,
+        recipient: txValues.recipient,
+        fee: feeValue,
+        feeRowValue,
+        time,
+      });
+    } catch (error) {
+      if (isLedgerSigningCancelledError(error)) return;
+      return sendFormNavigate.toErrorPage(error);
+    }
+  }
+
+  return {
+    amountAsMoney,
+
+    previewTransaction,
   };
 }

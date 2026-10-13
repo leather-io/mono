@@ -61,11 +61,13 @@ function renderHookValue<T>(useHook: () => T) {
   act(() => {
     root.render(createElement(TestComponent));
   });
+  function getValue(): T {
+    if (value === undefined) throw new Error('Hook did not render a value');
+    return value;
+  }
+
   return {
-    getValue(this: void): T {
-      if (value === undefined) throw new Error('Hook did not render a value');
-      return value;
-    },
+    getValue,
   };
 }
 
@@ -77,7 +79,7 @@ function makeNamedError(name: string, message: string) {
 
 interface SetupOptions {
   connectAppError?: unknown;
-  connectApp?(this: void, options: ConnectLedgerDeviceOptions): Promise<LedgerBitcoinApp>;
+  connectApp?: (options: ConnectLedgerDeviceOptions) => Promise<LedgerBitcoinApp>;
   getAppVersionError?: unknown;
   signError?: unknown;
 }

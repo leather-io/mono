@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { Pressable, Text } from '@leather.io/ui/native';
 
 interface ToolbarButtonProps {
-  onPress(): void;
+  onPress: () => void;
   icon: ReactNode;
   label: string;
 }

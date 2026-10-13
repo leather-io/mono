@@ -6,7 +6,7 @@ import { AppIconButton } from './app-icon-button';
 import { type AppIcon } from './app-icon.utils';
 
 interface AppIconsProps {
-  setNewIcon(icon: AppIcon): void;
+  setNewIcon: (icon: AppIcon) => void;
   currentIcon: AppIcon;
   availableIcons: readonly AppIcon[];
 }

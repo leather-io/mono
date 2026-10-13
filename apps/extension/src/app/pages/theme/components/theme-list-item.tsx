@@ -6,7 +6,7 @@ import { type UserSelectedTheme, getThemeLabel } from '@app/common/theme-provide
 
 interface ThemeListItemProps {
   theme: UserSelectedTheme;
-  onThemeSelected(this: void): void;
+  onThemeSelected: () => void;
   isActive: boolean;
 }
 export function ThemeListItem({ theme, onThemeSelected, isActive }: ThemeListItemProps) {

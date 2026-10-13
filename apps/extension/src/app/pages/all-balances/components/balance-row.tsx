@@ -12,7 +12,7 @@ interface BalanceRowProps {
   cryptoValue: string;
   isLoading?: boolean;
   dataTestId?: string;
-  onClick?(this: void): void;
+  onClick?: () => void;
   tooltipText?: string;
 }
 

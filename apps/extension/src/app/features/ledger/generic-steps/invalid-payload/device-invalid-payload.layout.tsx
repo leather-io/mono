@@ -7,7 +7,7 @@ import { ConnectLedgerErr } from '@app/features/ledger/illustrations/ledger-illu
 import { LedgerWrapper } from '../../components/ledger-wrapper';
 
 interface LedgerDeviceInvalidPayloadLayoutProps {
-  onClose(this: void): void;
+  onClose: () => void;
 }
 export function LedgerDeviceInvalidPayloadLayout({
   onClose,

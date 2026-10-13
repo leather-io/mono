@@ -22,9 +22,9 @@ interface ConnectAccountLayoutProps {
   banner?: ReactNode;
   requester: string;
   switchAccount: ReactNode;
-  onBeforeAnimation?(this: void): void;
-  onUserApprovesGetAddresses(this: void): void | Promise<void>;
-  onClickRequestedByLink(this: void): void;
+  onBeforeAnimation?: () => void;
+  onUserApprovesGetAddresses: () => void | Promise<void>;
+  onClickRequestedByLink: () => void;
 }
 export function ConnectAccountLayout({
   banner,

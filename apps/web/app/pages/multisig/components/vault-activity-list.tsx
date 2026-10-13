@@ -22,7 +22,7 @@ interface VaultActivityListProps {
   vaultNamesById?: ReadonlyMap<string, string>;
   accountNamesById?: ReadonlyMap<string, string>;
   accountThresholdsById?: ReadonlyMap<string, string>;
-  onSelect(vaultId: string, txId: string): void;
+  onSelect: (vaultId: string, txId: string) => void;
 }
 
 function resolveLocation(
@@ -50,7 +50,7 @@ function resolveRowLink(
   item: VaultActivityItem,
   onSelect: (vaultId: string, txId: string) => void,
   navigate: ReturnType<typeof useNavigate>
-): { href: string; onClick(): void } | undefined {
+): { href: string; onClick: () => void } | undefined {
   const { multisig, vaultId, vaultAccountId, view } = item;
   if (multisig) {
     return {

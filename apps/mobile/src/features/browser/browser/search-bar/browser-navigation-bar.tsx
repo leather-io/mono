@@ -2,9 +2,9 @@ import { Box, ChevronLeftIcon, Pressable, Text } from '@leather.io/ui/native';
 
 interface BrowserNavigationBarProps {
   searchUrl: string;
-  onGoBack(): void;
+  onGoBack: () => void;
   canGoBack: boolean;
-  onPressUrl(): void;
+  onPressUrl: () => void;
 }
 export function BrowserNavigationBar({
   searchUrl,

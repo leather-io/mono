@@ -69,7 +69,7 @@ Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set.
 - No `as` casts, `!` non-null assertions, or `any`. Use runtime checks, type guards, or `unknown` with narrowing.
 - Prefer `const` over `let`. Prefer named constants over magic numbers or strings.
 - No nested ternary expressions.
-- Use object method shorthand syntax in objects and interfaces (`{ foo() {} }` not `{ foo: () => {} }`).
+- Use object method shorthand syntax in object literals (`{ foo() {} }` not `{ foo: () => {} }`). In interfaces and type aliases, declare function members as properties (`onClose: () => void`, not `onClose(): void`) so they can be destructured without `unbound-method` errors.
 - camelCase for file-level constants; SCREAMING_SNAKE_CASE in the constants package or `constants.ts` files.
 - The per-package `eslint-suppressions.json` files and `.dependency-cruiser-known-violations.json` are a frozen baseline of pre-existing violations. Never run `eslint --suppress-all` or regenerate the known-violations file, and never add entries by hand. Entries only go away by fixing the code (then `eslint --prune-suppressions` in that package).
 

@@ -4,7 +4,7 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { Button } from '@leather.io/ui';
 
 interface SwapReviewErrorStateProps {
-  onRetry(this: void): void;
+  onRetry: () => void;
 }
 
 export function SwapReviewErrorState({ onRetry }: SwapReviewErrorStateProps) {

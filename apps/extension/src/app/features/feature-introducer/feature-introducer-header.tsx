@@ -4,7 +4,7 @@ import { Flex } from 'leather-styles/jsx';
 import { CloseIcon, IconButton } from '@leather.io/ui';
 
 interface FeatureIntroducerHeaderProps {
-  onClose?(this: void): void;
+  onClose?: () => void;
 }
 export function FeatureIntroducerHeader({ onClose }: FeatureIntroducerHeaderProps) {
   if (!onClose) return null;

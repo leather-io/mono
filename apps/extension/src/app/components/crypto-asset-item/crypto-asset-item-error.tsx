@@ -6,7 +6,7 @@ import { ItemLayout } from '@leather.io/ui';
 interface CryptoAssetItemErrorProps {
   caption: string;
   icon: React.ReactNode;
-  onRefetch?(this: void): Promise<QueryObserverResult<unknown, unknown>>;
+  onRefetch?: () => Promise<QueryObserverResult<unknown, unknown>>;
   title: string;
 }
 export function CryptoAssetItemError({

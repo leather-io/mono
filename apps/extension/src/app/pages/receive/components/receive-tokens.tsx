@@ -18,12 +18,12 @@ interface ReceiveTokensProps {
   btcAddressNativeSegwit: string;
   btcAddressTaproot: string;
   stxAddress: string;
-  onClickQrBtc(this: void): void;
-  onClickQrBtcTaproot(this: void): void;
-  onClickQrStx(this: void): void;
-  onClickVerifyBtc?(this: void): void;
-  onClickVerifyBtcTaproot?(this: void): void;
-  onClickVerifyStx?(this: void): void;
+  onClickQrBtc: () => void;
+  onClickQrBtcTaproot: () => void;
+  onClickQrStx: () => void;
+  onClickVerifyBtc?: () => void;
+  onClickVerifyBtcTaproot?: () => void;
+  onClickVerifyStx?: () => void;
 }
 export function ReceiveTokens({
   btcAddressNativeSegwit,

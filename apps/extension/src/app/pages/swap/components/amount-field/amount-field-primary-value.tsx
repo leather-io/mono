@@ -12,7 +12,7 @@ import { resolveAmountFieldColors } from './amount-field-colors';
 interface PrimaryValueProps {
   asset: SwappableFungibleCryptoAsset | undefined;
   value: string;
-  onChange(this: void, value: string): void;
+  onChange: (value: string) => void;
   invalid: boolean;
   currency?: string;
   inputRef?: RefObject<HTMLInputElement | null>;

@@ -4,7 +4,7 @@ import { Box, type BoxProps } from 'leather-styles/jsx';
 import { Logo } from '@leather.io/ui';
 
 interface LogoBoxProps extends BoxProps {
-  onClick?(this: void): void;
+  onClick?: () => void;
 }
 
 export function LogoBox({ onClick, ...props }: LogoBoxProps) {

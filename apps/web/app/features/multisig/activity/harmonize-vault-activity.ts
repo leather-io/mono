@@ -34,11 +34,11 @@ interface HarmonizeVaultActivityInput {
   onchain: OnchainActivityItem[];
   multisigTransactions: VaultMultisigTransaction[];
   payloadsById?: ReadonlyMap<string, string>;
-  classifyContract?(
+  classifyContract?: (
     contractId: string,
     functionName: string
-  ): MultisigActivityClassification | undefined;
-  getTokenInfo?(contractId: string): ProposalTokenInfo | undefined;
+  ) => MultisigActivityClassification | undefined;
+  getTokenInfo?: (contractId: string) => ProposalTokenInfo | undefined;
   marketData?: { btc?: MarketData; stx?: MarketData };
   frontier?: number;
 }

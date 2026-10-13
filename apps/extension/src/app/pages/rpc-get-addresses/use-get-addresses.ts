@@ -97,101 +97,103 @@ export function useGetAddresses() {
     focusTabAndWindow(tabId);
   }
 
+  async function onUserApproveGetAddresses() {
+    if (!tabId || !origin) {
+      logger.error('Cannot give app accounts: missing tabId, origin');
+      return;
+    }
+
+    analytics.track('user_approved_get_addresses', { origin });
+
+    const connectedPolicy = allowPolicyAccounts && currentPolicy ? currentPolicy : null;
+
+    permissions.hasRequestedAccounts(origin, connectedPolicy?.id);
+
+    const keysToIncludeInResponse = [];
+
+    if (connectedPolicy) {
+      if (connectedPolicy.chain === 'bitcoin') {
+        const policyAddressResponse: BtcAddress = {
+          symbol: 'BTC',
+          type: 'p2wsh',
+          address: connectedPolicy.address,
+          descriptor: connectedPolicy.descriptor,
+        };
+        keysToIncludeInResponse.push(policyAddressResponse);
+      } else {
+        const multisigStacksAddressResponse: StxAddress = {
+          symbol: 'STX',
+          kind: 'multisig',
+          address: connectedPolicy.address,
+          threshold: connectedPolicy.threshold,
+          publicKeys: connectedPolicy.publicKeys,
+        };
+        keysToIncludeInResponse.push(multisigStacksAddressResponse);
+      }
+    } else {
+      if (requestedChains.includes('bitcoin') && createNativeSegwitPayer) {
+        const nativeSegwitSigner = createNativeSegwitPayer({
+          changeIndex: 0,
+          addressIndex: 0,
+        });
+
+        const nativeSegwitAddressResponse: BtcAddress = {
+          symbol: 'BTC',
+          type: 'p2wpkh',
+          address: nativeSegwitSigner.address,
+          publicKey: bytesToHex(nativeSegwitSigner.publicKey),
+          derivationPath: keyOriginToDerivationPath(nativeSegwitSigner.keyOrigin),
+          descriptor: nativeSegwitDescriptor ?? '',
+          fingerprint: currentAccount.fingerprint,
+        };
+
+        keysToIncludeInResponse.push(nativeSegwitAddressResponse);
+      }
+
+      if (requestedChains.includes('bitcoin') && createTaprootPayer) {
+        const taprootPayer = createTaprootPayer({ changeIndex: 0, addressIndex: 0 });
+        const taprootAddressResponse: BtcAddress = {
+          symbol: 'BTC',
+          type: 'p2tr',
+          address: taprootPayer.address,
+          publicKey: bytesToHex(taprootPayer.publicKey),
+          tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taprootPayer.publicKey)),
+          derivationPath: keyOriginToDerivationPath(taprootPayer.keyOrigin),
+          descriptor: taprootDescriptor ?? '',
+          fingerprint: currentAccount.fingerprint,
+        };
+        keysToIncludeInResponse.push(taprootAddressResponse);
+      }
+
+      if (requestedChains.includes('stacks') && stacksAccount) {
+        const stacksAddressResponse = {
+          symbol: 'STX',
+          kind: 'single-sig',
+          address: stacksAccount.address,
+          publicKey: stacksAccount.stxPublicKey,
+        } satisfies StxAddress;
+
+        keysToIncludeInResponse.push(stacksAddressResponse);
+      }
+    }
+
+    await persistor.flush();
+
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
+      createRpcSuccessResponse(request.method, {
+        id: request.id,
+        result: { addresses: keysToIncludeInResponse },
+      })
+    );
+  }
+
   return {
     origin,
     allowPolicyAccounts,
     missingChain,
     hasAvailableRequestedChain,
     focusInitiatingTab,
-    async onUserApproveGetAddresses(this: void) {
-      if (!tabId || !origin) {
-        logger.error('Cannot give app accounts: missing tabId, origin');
-        return;
-      }
-
-      analytics.track('user_approved_get_addresses', { origin });
-
-      const connectedPolicy = allowPolicyAccounts && currentPolicy ? currentPolicy : null;
-
-      permissions.hasRequestedAccounts(origin, connectedPolicy?.id);
-
-      const keysToIncludeInResponse = [];
-
-      if (connectedPolicy) {
-        if (connectedPolicy.chain === 'bitcoin') {
-          const policyAddressResponse: BtcAddress = {
-            symbol: 'BTC',
-            type: 'p2wsh',
-            address: connectedPolicy.address,
-            descriptor: connectedPolicy.descriptor,
-          };
-          keysToIncludeInResponse.push(policyAddressResponse);
-        } else {
-          const multisigStacksAddressResponse: StxAddress = {
-            symbol: 'STX',
-            kind: 'multisig',
-            address: connectedPolicy.address,
-            threshold: connectedPolicy.threshold,
-            publicKeys: connectedPolicy.publicKeys,
-          };
-          keysToIncludeInResponse.push(multisigStacksAddressResponse);
-        }
-      } else {
-        if (requestedChains.includes('bitcoin') && createNativeSegwitPayer) {
-          const nativeSegwitSigner = createNativeSegwitPayer({
-            changeIndex: 0,
-            addressIndex: 0,
-          });
-
-          const nativeSegwitAddressResponse: BtcAddress = {
-            symbol: 'BTC',
-            type: 'p2wpkh',
-            address: nativeSegwitSigner.address,
-            publicKey: bytesToHex(nativeSegwitSigner.publicKey),
-            derivationPath: keyOriginToDerivationPath(nativeSegwitSigner.keyOrigin),
-            descriptor: nativeSegwitDescriptor ?? '',
-            fingerprint: currentAccount.fingerprint,
-          };
-
-          keysToIncludeInResponse.push(nativeSegwitAddressResponse);
-        }
-
-        if (requestedChains.includes('bitcoin') && createTaprootPayer) {
-          const taprootPayer = createTaprootPayer({ changeIndex: 0, addressIndex: 0 });
-          const taprootAddressResponse: BtcAddress = {
-            symbol: 'BTC',
-            type: 'p2tr',
-            address: taprootPayer.address,
-            publicKey: bytesToHex(taprootPayer.publicKey),
-            tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taprootPayer.publicKey)),
-            derivationPath: keyOriginToDerivationPath(taprootPayer.keyOrigin),
-            descriptor: taprootDescriptor ?? '',
-            fingerprint: currentAccount.fingerprint,
-          };
-          keysToIncludeInResponse.push(taprootAddressResponse);
-        }
-
-        if (requestedChains.includes('stacks') && stacksAccount) {
-          const stacksAddressResponse = {
-            symbol: 'STX',
-            kind: 'single-sig',
-            address: stacksAccount.address,
-            publicKey: stacksAccount.stxPublicKey,
-          } satisfies StxAddress;
-
-          keysToIncludeInResponse.push(stacksAddressResponse);
-        }
-      }
-
-      await persistor.flush();
-
-      void sendMessageToOriginatingFrame(
-        { frameId, tabId },
-        createRpcSuccessResponse(request.method, {
-          id: request.id,
-          result: { addresses: keysToIncludeInResponse },
-        })
-      );
-    },
+    onUserApproveGetAddresses,
   };
 }

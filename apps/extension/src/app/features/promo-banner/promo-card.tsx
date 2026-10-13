@@ -17,7 +17,7 @@ interface PromoCardProps {
   totalCards: number;
   stackOffset: number;
   isDismissing: boolean;
-  onDismissCard?(this: void): void;
+  onDismissCard?: () => void;
 }
 export function PromoCard({
   eventName,

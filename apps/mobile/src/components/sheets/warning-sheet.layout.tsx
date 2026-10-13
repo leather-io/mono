@@ -16,8 +16,8 @@ interface WarningSheetLayoutProps {
   sheetRef: SheetRef;
   title: string;
   description: string;
-  onSubmit(): unknown;
-  onPressSupport?(): void;
+  onSubmit: () => unknown;
+  onPressSupport?: () => void;
   variant?: WarningSheetVariant;
 }
 export function WarningSheetLayout({

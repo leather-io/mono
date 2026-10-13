@@ -15,7 +15,7 @@ interface UseVaultAccountActivityFeedResult {
   isLoading: boolean;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
-  fetchNextPage(): void;
+  fetchNextPage: () => void;
 }
 
 export function useVaultAccountActivityFeed(

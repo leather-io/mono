@@ -9,7 +9,7 @@ import { ImageUnavailable } from './image-unavailable';
 interface CollectibleGltfProps {
   src: string;
   thumbnailSrc?: string;
-  onPress?(this: void): void;
+  onPress?: () => void;
 }
 
 function buildViewerHtml(src: string) {

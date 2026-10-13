@@ -5,9 +5,9 @@ import { Box, ClockIcon, ConnectionIcon, GridIcon } from '@leather.io/ui/native'
 import { ToolbarButton } from './toolbar-button';
 
 interface SearchBarToolbarProps {
-  onExplore(): void;
-  onConnections(): void;
-  onRecents(): void;
+  onExplore: () => void;
+  onConnections: () => void;
+  onRecents: () => void;
 }
 
 export function SearchBarToolbar({ onExplore, onConnections, onRecents }: SearchBarToolbarProps) {

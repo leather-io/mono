@@ -7,7 +7,7 @@ import { CollectibleCard } from './collectible-card';
 interface CollectibleAudioProps {
   src: string;
   alt: string;
-  onPress?(this: void): void;
+  onPress?: () => void;
 }
 
 export function CollectibleAudio({ src, alt, onPress }: CollectibleAudioProps) {

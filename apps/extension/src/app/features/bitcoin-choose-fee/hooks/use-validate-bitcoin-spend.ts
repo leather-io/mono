@@ -9,34 +9,38 @@ export function useValidateBitcoinSpend(amount?: Money, isSendingMax?: boolean) 
   const [showInsufficientBalanceError, setShowInsufficientBalanceError] = useState(false);
   const { btc: balance } = useCurrentBtcBalanceWithFallback();
 
+  function onValidateBitcoinFeeSpend(feeValue: number) {
+    const feeAsMoney = createMoney(feeValue, 'BTC');
+
+    if (feeAsMoney.amount.isGreaterThan(balance.availableBalance.amount)) {
+      setShowInsufficientBalanceError(true);
+      return false;
+    }
+    return true;
+  }
+
+  function onValidateBitcoinAmountSpend(feeValue: number) {
+    const feeAsMoney = createMoney(feeValue, 'BTC');
+
+    if (!amount) {
+      throw new Error('Amount should be defined to validate total spend');
+    }
+
+    const totalSpend = isSendingMax
+      ? subtractMoney(balance.availableBalance, feeAsMoney)
+      : sumMoney([amount, feeAsMoney]);
+
+    if (totalSpend.amount.isGreaterThan(balance.availableBalance.amount)) {
+      setShowInsufficientBalanceError(true);
+      return false;
+    }
+
+    return true;
+  }
+
   return {
     showInsufficientBalanceError,
-    onValidateBitcoinFeeSpend(feeValue: number) {
-      const feeAsMoney = createMoney(feeValue, 'BTC');
-
-      if (feeAsMoney.amount.isGreaterThan(balance.availableBalance.amount)) {
-        setShowInsufficientBalanceError(true);
-        return false;
-      }
-      return true;
-    },
-    onValidateBitcoinAmountSpend(this: void, feeValue: number) {
-      const feeAsMoney = createMoney(feeValue, 'BTC');
-
-      if (!amount) {
-        throw new Error('Amount should be defined to validate total spend');
-      }
-
-      const totalSpend = isSendingMax
-        ? subtractMoney(balance.availableBalance, feeAsMoney)
-        : sumMoney([amount, feeAsMoney]);
-
-      if (totalSpend.amount.isGreaterThan(balance.availableBalance.amount)) {
-        setShowInsufficientBalanceError(true);
-        return false;
-      }
-
-      return true;
-    },
+    onValidateBitcoinFeeSpend,
+    onValidateBitcoinAmountSpend,
   };
 }

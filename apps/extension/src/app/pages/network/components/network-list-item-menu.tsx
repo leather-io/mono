@@ -8,8 +8,8 @@ import { useThemeSwitcher } from '@app/common/theme-provider';
 
 interface Props {
   isPolicyLocked: boolean;
-  onEditNetwork(this: void): void;
-  onClickDeleteNetwork(this: void): void;
+  onEditNetwork: () => void;
+  onClickDeleteNetwork: () => void;
 }
 
 const editDisabledTooltip = 'Remove multisig policies before editing this network.';

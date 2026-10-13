@@ -20,8 +20,8 @@ import {
 import type { LedgerBitcoinApp } from '../../utils/ledger-app';
 
 interface GetPolicyForPaymentTypeFactoryArgs {
-  derivationPathFn(this: void, network: BitcoinNetworkModes, accountIndex: number): string;
-  policyFn(this: void, policyDetails: WalletPolicyDetails): string;
+  derivationPathFn: (network: BitcoinNetworkModes, accountIndex: number) => string;
+  policyFn: (policyDetails: WalletPolicyDetails) => string;
 }
 interface GetExtendedPublicKeyFactoryArgs {
   bitcoinApp: LedgerBitcoinApp;
@@ -57,7 +57,7 @@ const getTaprootExtendedPublicKey = getPolicyForPaymentType({
 });
 
 interface PullBitcoinKeysFromLedgerDeviceArgs {
-  onRequestKey?(this: void, keyIndex: number): void;
+  onRequestKey?: (keyIndex: number) => void;
   network: NetworkModes;
 }
 export function pullBitcoinKeysFromLedgerDevice(bitcoinApp: LedgerBitcoinApp) {

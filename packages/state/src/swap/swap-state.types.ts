@@ -43,17 +43,17 @@ export interface SwapDependencies {
   stacks: {
     stacksSigner: StacksSigner;
     stacksNetwork: StacksNetwork;
-    broadcast(params: {
+    broadcast: (params: {
       tx: StacksTransactionWire;
       stacksNetwork: StacksNetwork;
-    }): Promise<TxBroadcastResultOk>;
+    }) => Promise<TxBroadcastResultOk>;
     nextNonce: NextNonce | undefined;
   };
   bitcoin?: {
     bitcoinPayer: BitcoinNativeSegwitPayer;
     network: NetworkConfiguration;
-    signBitcoinPsbt(psbt: Uint8Array): Promise<btc.Transaction>;
-    broadcast(txHex: string): Promise<BitcoinBroadcastResult>;
+    signBitcoinPsbt: (psbt: Uint8Array) => Promise<btc.Transaction>;
+    broadcast: (txHex: string) => Promise<BitcoinBroadcastResult>;
   };
   services: {
     marketDataService: MarketDataService;
@@ -62,8 +62,8 @@ export interface SwapDependencies {
     stacksTransactionFeesService: StacksTransactionFeesService;
     swapService: SwapService;
   };
-  onSwapSubmitted?(result: SwapSubmissionResult): void;
-  isSigningCancelledError?(error: unknown): boolean;
+  onSwapSubmitted?: (result: SwapSubmissionResult) => void;
+  isSigningCancelledError?: (error: unknown) => boolean;
 }
 
 export interface SwapExecutionDependencies extends SwapDependencies {
@@ -189,19 +189,19 @@ export type SwapActionObject =
   | { type: 'SET_CUSTOM_FEE'; payload: number };
 
 export interface SwapActions {
-  setBaseSwapAsset(asset: AccountSwapAsset): void;
-  setTargetSwapAsset(asset: AccountSwapAsset): void;
-  setBaseAmount(amount: string): void;
-  setBaseAmountByPercentage(percentage: PresetPercentage): void;
-  toggleInputCurrencyMode(): void;
-  setSlippage(slippage: number): void;
-  setNonceOverride(nonce: number): void;
-  clearAssetSelection(): void;
-  flipAssets(): void;
-  openAssetSelector(target: 'base' | 'target'): void;
-  closeAssetSelector(): void;
-  setFeeTier(tier: TransactionFeeTier): void;
-  setCustomFee(fee: number): void;
+  setBaseSwapAsset: (asset: AccountSwapAsset) => void;
+  setTargetSwapAsset: (asset: AccountSwapAsset) => void;
+  setBaseAmount: (amount: string) => void;
+  setBaseAmountByPercentage: (percentage: PresetPercentage) => void;
+  toggleInputCurrencyMode: () => void;
+  setSlippage: (slippage: number) => void;
+  setNonceOverride: (nonce: number) => void;
+  clearAssetSelection: () => void;
+  flipAssets: () => void;
+  openAssetSelector: (target: 'base' | 'target') => void;
+  closeAssetSelector: () => void;
+  setFeeTier: (tier: TransactionFeeTier) => void;
+  setCustomFee: (fee: number) => void;
 }
 
 export type BitcoinBroadcastResult =
@@ -237,5 +237,5 @@ export interface UseSwapStateResult {
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   networkFeeQuery: UseQueryResult<NetworkFee, Error>;
   canSubmit: boolean;
-  submit(): Promise<SwapSubmissionResult>;
+  submit: () => Promise<SwapSubmissionResult>;
 }

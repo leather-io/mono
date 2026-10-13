@@ -12,7 +12,7 @@ import { SendFormWarningMessages } from '@app/common/warning-messages';
 interface CustomFeeFieldProps {
   feeCurrencySymbol: CryptoCurrency;
   lowFeeQuote: StacksTransactionFeeQuote;
-  setFieldWarning(this: void, value: string): void;
+  setFieldWarning: (value: string) => void;
   disableFeeSelection?: boolean;
 }
 export function CustomFeeField({

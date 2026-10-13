@@ -14,7 +14,7 @@ import { StakeUpdateArgs } from './pox5-stake-update';
 import { UnstakeArgs } from './pox5-unstake';
 
 interface StakingWallet {
-  stxCallContract(params: StxCallContractParams): Promise<WalletTransactionResult>;
+  stxCallContract: (params: StxCallContractParams) => Promise<WalletTransactionResult>;
 }
 
 interface StakeMutationValues {

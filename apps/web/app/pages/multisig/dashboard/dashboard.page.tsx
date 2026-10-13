@@ -23,7 +23,7 @@ import { multisigPaths } from '../multisig.constants';
 import { CreateVaultTile } from './components/create-vault-tile';
 import { VaultCard } from './components/vault-card';
 
-function EmptyVaults({ onCreate }: { onCreate(): void }) {
+function EmptyVaults({ onCreate }: { onCreate: () => void }) {
   return (
     <ListContainer height="100%">
       <Flex
@@ -66,7 +66,7 @@ function ActivityFeed({
   vaultNamesById: ReadonlyMap<string, string>;
   accountNamesById: ReadonlyMap<string, string>;
   accountThresholdsById: ReadonlyMap<string, string>;
-  onOpen(vaultId: string, txId: string): void;
+  onOpen: (vaultId: string, txId: string) => void;
 }) {
   if (isLoading) {
     return (
@@ -105,7 +105,7 @@ function ConnectChainPrompt({
   error,
 }: {
   chain: Chain;
-  onConnect(): void;
+  onConnect: () => void;
   isPending: boolean;
   error?: string;
 }) {

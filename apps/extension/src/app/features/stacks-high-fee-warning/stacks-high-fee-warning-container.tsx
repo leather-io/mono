@@ -10,14 +10,10 @@ import type { HasChildren } from '@app/common/has-children';
 
 interface StacksHighFeeWarningContext {
   showHighFeeWarningSheet: boolean;
-  setShowHighFeeWarningSheet(this: void, val: boolean): void;
+  setShowHighFeeWarningSheet: (val: boolean) => void;
   hasBypassedFeeWarning: boolean;
-  setHasBypassedFeeWarning(this: void, val: boolean): void;
-  isHighFeeWithNoFormErrors(
-    this: void,
-    errors: FormikErrors<unknown>,
-    fee: number | string
-  ): boolean;
+  setHasBypassedFeeWarning: (val: boolean) => void;
+  isHighFeeWithNoFormErrors: (errors: FormikErrors<unknown>, fee: number | string) => boolean;
 }
 
 const stacksHighFeeWarningContext = createContext<StacksHighFeeWarningContext | null>(null);

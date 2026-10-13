@@ -6,7 +6,7 @@ import { VaultAssetList } from '../../components/vault-asset-list';
 
 interface AccountAssetsProps {
   assets: VaultAccountAssets;
-  onSelectAsset?(item: VaultAssetItem): void;
+  onSelectAsset?: (item: VaultAssetItem) => void;
 }
 
 export function AccountAssets({ assets, onSelectAsset }: AccountAssetsProps) {

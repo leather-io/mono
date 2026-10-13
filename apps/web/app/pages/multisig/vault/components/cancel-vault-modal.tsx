@@ -6,11 +6,11 @@ interface CancelVaultModalProps {
   vaultName: string;
   isShowing: boolean;
   isCancelling: boolean;
-  onConfirm(): void;
-  onClose(): void;
+  onConfirm: () => void;
+  onClose: () => void;
 }
 
-function CancelVaultHeader({ vaultName, onClose }: { vaultName: string; onClose?(): void }) {
+function CancelVaultHeader({ vaultName, onClose }: { vaultName: string; onClose?: () => void }) {
   return (
     <Flex
       alignItems="center"

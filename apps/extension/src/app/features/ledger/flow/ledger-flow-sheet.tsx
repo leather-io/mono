@@ -58,7 +58,7 @@ function renderLedgerStep(step: LedgerStep, overrides: LedgerStepOverrides) {
 }
 
 interface LedgerFlowSheetProps {
-  onClose?(this: void): void;
+  onClose?: () => void;
   renderStep?: LedgerStepOverrides;
 }
 export function LedgerFlowSheet({ onClose, renderStep = {} }: LedgerFlowSheetProps) {

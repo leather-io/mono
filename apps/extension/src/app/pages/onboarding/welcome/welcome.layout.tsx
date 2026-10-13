@@ -5,9 +5,9 @@ import { Button, LeatherLettermarkIcon, LeatherLogomarkIcon, Link } from '@leath
 
 interface WelcomeLayoutProps {
   isGeneratingWallet: boolean;
-  onSelectConnectLedger(this: void): void;
-  onStartOnboarding(this: void): void;
-  onRestoreWallet(this: void): void;
+  onSelectConnectLedger: () => void;
+  onStartOnboarding: () => void;
+  onRestoreWallet: () => void;
 }
 export function WelcomeLayout({
   isGeneratingWallet,

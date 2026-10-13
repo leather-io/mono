@@ -19,7 +19,7 @@ interface BtcCryptoAssetItemProps {
   balance: AccountQuotedBtcBalance;
   isLoading: boolean;
   isLoadingAdditionalData?: boolean;
-  onSelectAsset?(this: void, assetId: SerializedCryptoAssetId): void;
+  onSelectAsset?: (assetId: SerializedCryptoAssetId) => void;
   showDepositButtons?: boolean;
 }
 export function BtcCryptoAssetItem({

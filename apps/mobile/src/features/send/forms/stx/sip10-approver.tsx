@@ -13,9 +13,9 @@ import { deserializeTransaction } from '@stacks/transactions';
 
 interface Sip10ApproverProps {
   txHex: string;
-  onEdit(): void;
+  onEdit: () => void;
   accountId: string;
-  closeApprover(): void;
+  closeApprover: () => void;
 }
 
 export function Sip10Approver({

@@ -13,7 +13,7 @@ type SheetVariant = 'dialog' | 'drawer';
 
 interface SheetProps {
   isShowing: boolean;
-  onClose?(): void;
+  onClose?: () => void;
 }
 interface RadixDialogProps extends SheetProps {
   title?: string;
@@ -21,7 +21,7 @@ interface RadixDialogProps extends SheetProps {
   children: ReactNode;
   footer?: ReactNode;
   header?: ReactElement<any, string | JSXElementConstructor<any>>;
-  onGoBack?(): void;
+  onGoBack?: () => void;
   wrapChildren?: boolean;
   variant?: SheetVariant;
   contentMaxVh?: number;

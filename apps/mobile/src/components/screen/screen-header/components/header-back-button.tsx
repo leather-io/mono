@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import { ArrowLeftIcon, IconButton } from '@leather.io/ui/native';
 
 interface HeaderBackButtonProps {
-  onPress?(event: GestureResponderEvent): void;
+  onPress?: (event: GestureResponderEvent) => void;
   testID?: string;
 }
 export function HeaderBackButton({ onPress, testID = TestId.backButton }: HeaderBackButtonProps) {

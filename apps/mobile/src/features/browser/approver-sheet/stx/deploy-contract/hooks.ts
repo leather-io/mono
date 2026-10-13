@@ -14,7 +14,7 @@ import { StxRequestParams } from '../utils';
 interface UseDeployContractTxHex {
   request: RpcRequest<typeof stxDeployContract>;
   stxRequestParams: StxRequestParams;
-  setTxHex(txHex: string): void;
+  setTxHex: (txHex: string) => void;
   accountId: string;
   network: StacksNetwork;
 }

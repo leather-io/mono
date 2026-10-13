@@ -19,7 +19,7 @@ export interface SignerManagerOption {
 interface SignerManagerOptionRowProps {
   option: SignerManagerOption;
   isSelected: boolean;
-  onSelect(): void;
+  onSelect: () => void;
   expandedContent?: ReactNode;
 }
 
@@ -94,7 +94,7 @@ function SignerManagerOptionRow({
 interface ChooseSignerManagerProps {
   options: SignerManagerOption[];
   selectedProviderId: string;
-  onSelect(providerId: string): void;
+  onSelect: (providerId: string) => void;
   customEntry?: ReactNode;
 }
 

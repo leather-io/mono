@@ -71,6 +71,35 @@ export function useStxSendForm() {
     [availableBalance, recipient, memo, nonce]
   );
 
+  async function previewTransaction(
+    values: StacksSendFormValues,
+    formikHelpers: FormikHelpers<StacksSendFormValues>
+  ) {
+    const isFormValid = await checkFormValidation(values, formikHelpers);
+
+    if (!isFormValid) return;
+
+    if (isStacksPolicy) {
+      const multisigTx = await generateTx(values);
+      if (!multisigTx)
+        return logger.error('Attempted to generate unsigned tx, but tx is undefined');
+      return void sendFormNavigate.toConfirmAndSignStxTransaction(multisigTx, false);
+    }
+
+    const initialFee = values.fee;
+    values.fee = changeFeeByNonce({
+      nonce: Number(values.nonce),
+      fee: Number(values.fee),
+    });
+
+    // if fee has changed, show info message
+    const showFeeChangeWarning = initialFee !== values.fee;
+
+    const tx = await generateTx(values);
+    if (!tx) return logger.error('Attempted to generate unsigned tx, but tx is undefined');
+    void sendFormNavigate.toConfirmAndSignStxTransaction(tx, showFeeChangeWarning);
+  }
+
   return {
     availableBalance,
     initialValues,
@@ -79,34 +108,6 @@ export function useStxSendForm() {
     stxFees,
     validationSchema,
 
-    async previewTransaction(
-      this: void,
-      values: StacksSendFormValues,
-      formikHelpers: FormikHelpers<StacksSendFormValues>
-    ) {
-      const isFormValid = await checkFormValidation(values, formikHelpers);
-
-      if (!isFormValid) return;
-
-      if (isStacksPolicy) {
-        const multisigTx = await generateTx(values);
-        if (!multisigTx)
-          return logger.error('Attempted to generate unsigned tx, but tx is undefined');
-        return void sendFormNavigate.toConfirmAndSignStxTransaction(multisigTx, false);
-      }
-
-      const initialFee = values.fee;
-      values.fee = changeFeeByNonce({
-        nonce: Number(values.nonce),
-        fee: Number(values.fee),
-      });
-
-      // if fee has changed, show info message
-      const showFeeChangeWarning = initialFee !== values.fee;
-
-      const tx = await generateTx(values);
-      if (!tx) return logger.error('Attempted to generate unsigned tx, but tx is undefined');
-      void sendFormNavigate.toConfirmAndSignStxTransaction(tx, showFeeChangeWarning);
-    },
+    previewTransaction,
   };
 }

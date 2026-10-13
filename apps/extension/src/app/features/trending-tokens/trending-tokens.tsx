@@ -21,7 +21,7 @@ const hideScrollbar = css({
 });
 
 interface TrendingTokensProps {
-  onSelectAsset(this: void, assetId: SerializedCryptoAssetId): void;
+  onSelectAsset: (assetId: SerializedCryptoAssetId) => void;
 }
 
 export function TrendingTokens({ onSelectAsset }: TrendingTokensProps) {

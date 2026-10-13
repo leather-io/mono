@@ -5,8 +5,8 @@ import { CloseIcon, Flag, IconButton } from '@leather.io/ui';
 interface PromoCardLayoutProps {
   img: React.ReactNode;
   message: string;
-  onClickCard(this: void): void;
-  onDismissCard?(this: void): void;
+  onClickCard: () => void;
+  onDismissCard?: () => void;
   isInteractive: boolean;
   isDismissing: boolean;
 }

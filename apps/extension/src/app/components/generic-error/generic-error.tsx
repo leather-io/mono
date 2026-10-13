@@ -13,7 +13,7 @@ export function GenericErrorListItem({ text }: { text: ReactNode }) {
 interface GenericErrorProps extends FlexProps {
   body: string;
   helpTextList?: ReactNode[];
-  onClose?(this: void): void;
+  onClose?: () => void;
   title: string;
 }
 

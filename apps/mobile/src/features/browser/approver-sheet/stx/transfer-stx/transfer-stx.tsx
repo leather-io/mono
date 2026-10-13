@@ -18,8 +18,8 @@ import { useTransferStxTxHex } from './hooks';
 interface TransferStxApproverProps {
   app: App;
   request: RpcRequest<typeof stxTransferStx>;
-  sendResult(result: RpcResponse<typeof stxTransferStx>): void;
-  closeApprover(): void;
+  sendResult: (result: RpcResponse<typeof stxTransferStx>) => void;
+  closeApprover: () => void;
   nonce: number;
   accountId: string;
 }

@@ -239,7 +239,7 @@ export function useSettings() {
 }
 
 interface CurrentAccountLoaderProps {
-  children(data: AccountId): React.ReactNode;
+  children: (data: AccountId) => React.ReactNode;
   fallback: React.ReactNode;
 }
 export function CurrentAccountLoader({ fallback, children }: CurrentAccountLoaderProps) {

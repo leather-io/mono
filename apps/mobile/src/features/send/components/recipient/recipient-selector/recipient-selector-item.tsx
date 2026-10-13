@@ -23,7 +23,7 @@ import { assertUnreachable } from '@leather.io/utils';
 
 interface RecipientSelectorItemProps {
   entry: RecipientSuggestionEntry;
-  onSelect(address: string): void;
+  onSelect: (address: string) => void;
   asset: FungibleCryptoAsset;
 }
 

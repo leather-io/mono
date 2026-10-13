@@ -8,7 +8,7 @@ import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 
 interface BaseFeeCardProps {
   amount: Money;
-  onPress(): void;
+  onPress: () => void;
   marketData: MarketData | undefined;
   icon: ReactElement<IconProps>;
   title: string;

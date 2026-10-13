@@ -37,16 +37,15 @@ interface LedgerFlowState {
 
 interface LedgerFlowContextValue {
   state: LedgerFlowState | null;
-  open(this: void, request: LedgerNonSigningFlowRequest): void;
-  sign<K extends LedgerSigningKind>(
-    this: void,
+  open: (request: LedgerNonSigningFlowRequest) => void;
+  sign: <K extends LedgerSigningKind>(
     request: LedgerSigningRequest<K>
-  ): Promise<LedgerSigningOutcome<LedgerSigningResults[K]>>;
-  settle<T>(this: void, request: LedgerSigningTarget<T>, outcome: LedgerSigningOutcome<T>): void;
-  close(this: void): void;
-  closeWithError(this: void, error: string): void;
-  dismiss(this: void): void;
-  setStep(this: void, requestId: number, step: LedgerStep): void;
+  ) => Promise<LedgerSigningOutcome<LedgerSigningResults[K]>>;
+  settle: <T>(request: LedgerSigningTarget<T>, outcome: LedgerSigningOutcome<T>) => void;
+  close: () => void;
+  closeWithError: (error: string) => void;
+  dismiss: () => void;
+  setStep: (requestId: number, step: LedgerStep) => void;
 }
 
 const ledgerFlowContext = createContext<LedgerFlowContextValue | null>(null);
@@ -210,70 +209,107 @@ export function useLedgerSteps() {
       setStep(requestId, step);
     }
 
+    function toConnectStep({ retryImmediately = false }: ToConnectStepOptions = {}) {
+      goToStep({ name: 'connect', retryImmediately });
+    }
+
+    function toConnectStepAndTryAgain() {
+      goToStep({ name: 'connect', retryImmediately: true });
+    }
+
+    function toCheckingAppVersion() {
+      goToStep({ name: 'checking-app-version' });
+    }
+
+    function toDeviceBusyStep(description?: string, address?: string) {
+      goToStep({ name: 'device-busy', description, address });
+    }
+
+    function toConnectionSuccessStep(chain: SupportedBlockchains) {
+      goToStep({ name: 'connection-success', chain });
+    }
+
+    function toErrorStep(chain: SupportedBlockchains, errorMessage?: string) {
+      goToStep({ name: 'connection-error', chain, errorMessage });
+    }
+
+    function toPairDeviceStep() {
+      goToStep({ name: 'pair-device' });
+    }
+
+    function toAwaitingDeviceOperation({ hasApprovedOperation }: ToAwaitingDeviceOperationArgs) {
+      goToStep({ name: 'awaiting-device-operation', hasApprovedOperation });
+    }
+
+    function toDevicePayloadInvalid() {
+      goToStep({ name: 'payload-invalid' });
+    }
+
+    function toOperationRejectedStep(description?: string) {
+      goToStep({ name: 'operation-rejected', description });
+    }
+
+    function toDeviceDisconnectStep() {
+      goToStep({ name: 'disconnected' });
+    }
+
+    function toStacksAppOutdatedWarning(versionInfo?: LedgerStacksAppVersionInfo) {
+      goToStep({ name: 'outdated-stacks-app', versionInfo });
+    }
+
+    function toChooseAddressStandardStep({
+      connectImmediatelyAfter,
+    }: ToChooseAddressStandardStepArgs) {
+      goToStep({ name: 'choose-address-standard', connectImmediatelyAfter });
+    }
+
+    function cancelLedgerAction() {
+      close();
+    }
+
+    function dismissLedgerAction() {
+      dismiss();
+    }
+
+    function settleLedgerAction<T>(
+      request: LedgerSigningTarget<T>,
+      outcome: LedgerSigningOutcome<T>
+    ) {
+      settle(request, outcome);
+    }
+
     return {
-      toConnectStep({ retryImmediately = false }: ToConnectStepOptions = {}) {
-        goToStep({ name: 'connect', retryImmediately });
-      },
+      toConnectStep,
 
-      toConnectStepAndTryAgain() {
-        goToStep({ name: 'connect', retryImmediately: true });
-      },
+      toConnectStepAndTryAgain,
 
-      toCheckingAppVersion() {
-        goToStep({ name: 'checking-app-version' });
-      },
+      toCheckingAppVersion,
 
-      toDeviceBusyStep(description?: string, address?: string) {
-        goToStep({ name: 'device-busy', description, address });
-      },
+      toDeviceBusyStep,
 
-      toConnectionSuccessStep(chain: SupportedBlockchains) {
-        goToStep({ name: 'connection-success', chain });
-      },
+      toConnectionSuccessStep,
 
-      toErrorStep(chain: SupportedBlockchains, errorMessage?: string) {
-        goToStep({ name: 'connection-error', chain, errorMessage });
-      },
+      toErrorStep,
 
-      toPairDeviceStep() {
-        goToStep({ name: 'pair-device' });
-      },
+      toPairDeviceStep,
 
-      toAwaitingDeviceOperation({ hasApprovedOperation }: ToAwaitingDeviceOperationArgs) {
-        goToStep({ name: 'awaiting-device-operation', hasApprovedOperation });
-      },
+      toAwaitingDeviceOperation,
 
-      toDevicePayloadInvalid() {
-        goToStep({ name: 'payload-invalid' });
-      },
+      toDevicePayloadInvalid,
 
-      toOperationRejectedStep(description?: string) {
-        goToStep({ name: 'operation-rejected', description });
-      },
+      toOperationRejectedStep,
 
-      toDeviceDisconnectStep() {
-        goToStep({ name: 'disconnected' });
-      },
+      toDeviceDisconnectStep,
 
-      toStacksAppOutdatedWarning(versionInfo?: LedgerStacksAppVersionInfo) {
-        goToStep({ name: 'outdated-stacks-app', versionInfo });
-      },
+      toStacksAppOutdatedWarning,
 
-      toChooseAddressStandardStep({ connectImmediatelyAfter }: ToChooseAddressStandardStepArgs) {
-        goToStep({ name: 'choose-address-standard', connectImmediatelyAfter });
-      },
+      toChooseAddressStandardStep,
 
-      cancelLedgerAction(this: void) {
-        close();
-      },
+      cancelLedgerAction,
 
-      dismissLedgerAction() {
-        dismiss();
-      },
+      dismissLedgerAction,
 
-      settleLedgerAction<T>(request: LedgerSigningTarget<T>, outcome: LedgerSigningOutcome<T>) {
-        settle(request, outcome);
-      },
+      settleLedgerAction,
     };
   }, [requestId, setStep, close, dismiss, settle]);
 }

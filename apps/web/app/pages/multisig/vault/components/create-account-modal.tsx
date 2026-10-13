@@ -32,7 +32,7 @@ interface CreateAccountModalProps {
   vault: Vault;
   accounts: VaultAccountSummary[] | undefined;
   isShowing: boolean;
-  onClose(): void;
+  onClose: () => void;
 }
 
 function accountLimitExplanation(memberCount: number, limit: number) {
@@ -43,7 +43,7 @@ function fullThresholdExplanation(threshold: number, limit: number) {
   return `Threshold ${threshold} already has its ${limit} ${limit === 1 ? 'account' : 'accounts'}, so you can’t pick it again.`;
 }
 
-function CreateAccountHeader({ title, onClose }: { title: string; onClose?(): void }) {
+function CreateAccountHeader({ title, onClose }: { title: string; onClose?: () => void }) {
   return (
     <Flex
       alignItems="center"

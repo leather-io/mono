@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 import { Avatar, IconProps, ItemLayout, Pressable } from '@leather.io/ui/native';
 
 interface BaseFeeOptionProps {
-  onPress(): void;
+  onPress: () => void;
   isSelected: boolean;
   disabled: boolean;
   icon: ReactElement<IconProps>;

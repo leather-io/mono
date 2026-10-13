@@ -26,11 +26,10 @@ import { StacksRecipientField } from '../../family/stacks/components/stacks-reci
 import { defaultSendFormFormikProps } from '../../send-form.utils';
 
 interface StacksCommonSendFormProps {
-  onSubmit(
-    this: void,
+  onSubmit: (
     values: StacksSendFormValues,
     formikHelpers: FormikHelpers<StacksSendFormValues>
-  ): Promise<void>;
+  ) => Promise<void>;
   initialValues: StacksSendFormValues;
   validationSchema: AnyObjectSchema;
   amountField: React.JSX.Element;

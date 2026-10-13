@@ -122,7 +122,7 @@ export async function deviceMatchesLegacyLedgerWallet(
 
 interface PullStacksKeysFromLedgerDeviceArgs {
   derivationPathType: StacksDerivationPathType;
-  onRequestKey?(this: void, keyIndex: number): void;
+  onRequestKey?: (keyIndex: number) => void;
 }
 export function pullStacksKeysFromLedgerDevice(stacksApp: LedgerStacksApp) {
   return async ({

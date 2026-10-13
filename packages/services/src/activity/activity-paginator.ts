@@ -30,12 +30,12 @@ export interface ActivitySourcePage {
 }
 
 export interface ActivitySources {
-  fetchStacksTxPage(cursor: string | null): Promise<{
+  fetchStacksTxPage: (cursor: string | null) => Promise<{
     items: ActivitySourceItem[];
     currentCursor: string | null;
     nextCursor: string | null;
   }>;
-  fetchAllBtcTx(): Promise<ActivitySourceItem[]>;
+  fetchAllBtcTx: () => Promise<ActivitySourceItem[]>;
 }
 
 const timestampKeyWidth = 16;

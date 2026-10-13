@@ -8,7 +8,7 @@ import { Input } from '@leather.io/ui';
 import { ErrorLabel } from '@app/components/error-label';
 
 interface EditNonceFieldProps extends StackProps {
-  onBlur(this: void): void;
+  onBlur: () => void;
 }
 
 export const EditNonceField = memo(function EditNonceField(props: EditNonceFieldProps) {

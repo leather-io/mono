@@ -17,7 +17,7 @@ import { assertUnreachable } from '@leather.io/utils';
 
 interface CurrencySwitchProps {
   secondaryAmount: SecondaryAmount;
-  onModeSwitch(): void;
+  onModeSwitch: () => void;
 }
 
 export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: CurrencySwitchProps) {

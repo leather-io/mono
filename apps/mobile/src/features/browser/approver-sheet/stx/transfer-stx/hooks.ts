@@ -13,7 +13,7 @@ import { createMoney } from '@leather.io/utils';
 
 interface UseTransferStxTxHex {
   request: RpcRequest<typeof stxTransferStx>;
-  setTxHex(txHex: string): void;
+  setTxHex: (txHex: string) => void;
   nonce: number;
   accountId: string;
   network: StacksNetwork;

@@ -80,7 +80,7 @@ function checkUnlockTime(lastActive: number) {
   return lastActive > +new Date() - unlockTimeout;
 }
 
-export function useAuthState({ playSplash }: { playSplash(): void }) {
+export function useAuthState({ playSplash }: { playSplash: () => void }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { userLeavesApp, lastActive } = useSettings();
   const { authenticate } = useAuthentication();

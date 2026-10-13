@@ -9,7 +9,7 @@ import {
 interface Pox5CycleClock {
   clock: CycleClockInfo;
   currentBurnHeight: number;
-  estimatedUnlockDateForCycles(cycles: number, now: Date): Date;
+  estimatedUnlockDateForCycles: (cycles: number, now: Date) => Date;
 }
 
 interface UsePox5CycleClockResult {

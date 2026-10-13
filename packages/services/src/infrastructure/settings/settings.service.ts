@@ -8,5 +8,5 @@ export interface UserSettings {
 }
 
 export interface SettingsService {
-  getSettings(): UserSettings;
+  getSettings: () => UserSettings;
 }

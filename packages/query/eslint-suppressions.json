@@ -22,11 +22,6 @@
       "count": 2
     }
   },
-  "src/common/market-data/market-data.utils.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/common/market-data/vendors/binance-market-data.query.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1

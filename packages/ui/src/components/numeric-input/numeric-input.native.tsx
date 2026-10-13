@@ -67,7 +67,7 @@ function Decrement(props: ButtonProps) {
 }
 
 interface DisplayProps extends TextProps {
-  formatter?(value: number, decimals?: number): string;
+  formatter?: (value: number, decimals?: number) => string;
 }
 
 function Display({ formatter: customFormatter, ...textProps }: DisplayProps) {

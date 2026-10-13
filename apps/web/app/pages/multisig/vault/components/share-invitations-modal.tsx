@@ -24,7 +24,7 @@ interface ShareInvitationsModalProps {
   vault: Vault;
   currentUserAddress?: string;
   isShowing: boolean;
-  onClose(): void;
+  onClose: () => void;
 }
 
 function inviteLink(vault: Vault): string {
@@ -49,7 +49,7 @@ function inviteMessage(vault: Vault, member: VaultMember, creatorName: string | 
   return lines.join('\n');
 }
 
-function ShareHeader({ onClose }: { onClose?(): void }) {
+function ShareHeader({ onClose }: { onClose?: () => void }) {
   return (
     <Flex
       alignItems="center"

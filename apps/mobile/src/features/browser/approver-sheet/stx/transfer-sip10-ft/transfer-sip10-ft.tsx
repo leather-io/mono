@@ -23,8 +23,8 @@ import { useTransferSip10FtTxHex } from './hooks';
 interface TransferSip10FtApproverProps {
   app: App;
   request: RpcRequest<typeof stxTransferSip10Ft>;
-  sendResult(result: RpcResponse<typeof stxTransferSip10Ft>): void;
-  closeApprover(): void;
+  sendResult: (result: RpcResponse<typeof stxTransferSip10Ft>) => void;
+  closeApprover: () => void;
   nonce: number;
   accountId: string;
 }

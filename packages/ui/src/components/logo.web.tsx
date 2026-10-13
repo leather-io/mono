@@ -3,7 +3,7 @@ import { styled } from 'leather-styles/jsx';
 import { LeatherLogomarkIcon } from '../icons/leather-logomark-icon.web';
 
 interface LogoProps {
-  onClick?(): void;
+  onClick?: () => void;
 }
 export function Logo({ onClick }: LogoProps) {
   return (

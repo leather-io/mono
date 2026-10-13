@@ -27,7 +27,7 @@ interface StxFormProps {
   marketData: MarketData;
   quoteCurrency: QuoteCurrency;
   assetItemAnimationOffsetTop?: number | null;
-  onOpenAssetPicker(): void;
+  onOpenAssetPicker: () => void;
 }
 
 export function StxForm({

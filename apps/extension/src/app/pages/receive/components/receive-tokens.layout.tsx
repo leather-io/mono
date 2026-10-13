@@ -12,9 +12,9 @@ import { ButtonRow } from '@app/components/layout';
 interface ReceiveTokensLayoutProps {
   address: string;
   accountName?: string;
-  onClose(this: void): void;
-  onCopyAddressToClipboard(this: void, address: string): void;
-  onVerifyAddress?(this: void): void;
+  onClose: () => void;
+  onCopyAddressToClipboard: (address: string) => void;
+  onVerifyAddress?: () => void;
   title: string;
   warning?: React.JSX.Element;
 }

@@ -11,14 +11,18 @@ export type LoadingKeys = (typeof LoadingKeys)[keyof typeof LoadingKeys];
 export function useLoading(key: string) {
   const loadingState = useSelector(selectLoadingState);
   const dispatch = useDispatch();
+  function setIsLoading() {
+    dispatch(uiActions.setIsLoading(key));
+  }
+
+  function setIsIdle() {
+    dispatch(uiActions.setIsIdle());
+  }
+
   return {
     isLoading: loadingState.value === 'loading',
-    setIsLoading(this: void) {
-      dispatch(uiActions.setIsLoading(key));
-    },
-    setIsIdle(this: void) {
-      dispatch(uiActions.setIsIdle());
-    },
+    setIsLoading,
+    setIsIdle,
   };
 }
 
@@ -27,10 +31,12 @@ export function useLoading(key: string) {
 export function useHasSwitchedAccounts() {
   const hasSwitched = useSelector(selectHasSwitched);
   const dispatch = useDispatch();
+  function setHasSwitched(value: boolean) {
+    dispatch(uiActions.setHasSwitched(value));
+  }
+
   return {
     hasSwitched,
-    setHasSwitched(this: void, value: boolean) {
-      dispatch(uiActions.setHasSwitched(value));
-    },
+    setHasSwitched,
   };
 }

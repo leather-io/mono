@@ -7,7 +7,7 @@ import { TextField } from '../../components/text-field';
 
 interface CustomBitcoinFeeFieldProps {
   value: string;
-  onChange(value: string): void;
+  onChange: (value: string) => void;
   fee?: Money;
   fiat?: Money;
   error?: string;

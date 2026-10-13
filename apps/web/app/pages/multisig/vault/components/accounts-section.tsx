@@ -17,11 +17,11 @@ interface AccountsSectionProps {
   isLoading: boolean;
   isRecovering: boolean;
   recoveryFailed: boolean;
-  onRetryRecovery(): void;
+  onRetryRecovery: () => void;
   canCreate: boolean;
   disabledReason?: string;
-  onCreateAccount(): void;
-  onOpenAccount(accountId: string): void;
+  onCreateAccount: () => void;
+  onOpenAccount: (accountId: string) => void;
 }
 
 function AccountCard({
@@ -31,7 +31,7 @@ function AccountCard({
 }: {
   vault: Vault;
   account: VaultAccountSummary;
-  onOpen(): void;
+  onOpen: () => void;
 }) {
   const theme = vaultThemeFromName(vault.theme);
   const chain = chainFromNetwork(vault.network);
@@ -91,7 +91,7 @@ function AccountCard({
   );
 }
 
-function CreateAccountTile({ onClick }: { onClick(): void }) {
+function CreateAccountTile({ onClick }: { onClick: () => void }) {
   return (
     <styled.button
       type="button"

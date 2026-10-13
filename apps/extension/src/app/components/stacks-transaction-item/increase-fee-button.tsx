@@ -5,7 +5,7 @@ import { ChevronsRightIcon } from '@leather.io/ui';
 interface IncreaseFeeButtonProps {
   isEnabled?: boolean;
   isSelected: boolean;
-  onIncreaseFee(this: void): void;
+  onIncreaseFee: () => void;
 }
 export function IncreaseFeeButton(props: IncreaseFeeButtonProps) {
   const { isEnabled, isSelected, onIncreaseFee } = props;

@@ -14,33 +14,36 @@ export function useToastHandlers() {
   }, []);
 
   return useMemo(() => {
+    function handleRemoveToast(key: string) {
+      setToasts(prev => {
+        const newMap = new Map(prev);
+        newMap.delete(key);
+        return newMap;
+      });
+    }
+
+    async function handleDispatchPromise<T>(
+      promise: Promise<T>,
+      msgs: { success: string; error: string }
+    ): Promise<T | undefined> {
+      return promise
+        .then(data => {
+          handleAddToast({ message: msgs.success, variant: 'success' });
+          return data;
+        })
+        .catch(() => {
+          handleAddToast({ message: msgs.error, variant: 'error' });
+          return undefined;
+        });
+    }
+
     return {
       toasts,
-      handleRemoveToast(this: void, key: string) {
-        setToasts(prev => {
-          const newMap = new Map(prev);
-          newMap.delete(key);
-          return newMap;
-        });
-      },
+      handleRemoveToast,
       handleDispatchInfo: (message: string) => handleAddToast({ message, variant: 'info' }),
       handleDispatchSuccess: (message: string) => handleAddToast({ message, variant: 'success' }),
       handleDispatchError: (message: string) => handleAddToast({ message, variant: 'error' }),
-      async handleDispatchPromise<T>(
-        this: void,
-        promise: Promise<T>,
-        msgs: { success: string; error: string }
-      ): Promise<T | undefined> {
-        return promise
-          .then(data => {
-            handleAddToast({ message: msgs.success, variant: 'success' });
-            return data;
-          })
-          .catch(() => {
-            handleAddToast({ message: msgs.error, variant: 'error' });
-            return undefined;
-          });
-      },
+      handleDispatchPromise,
     };
   }, [handleAddToast, toasts]);
 }

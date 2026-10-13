@@ -38,9 +38,9 @@ interface RenderUseSwapStateParams extends Omit<UseSwapStateProps, 'dependencies
   targetSwapAssets?: AccountSwapAsset[];
   network?: NetworkConfiguration;
   swapQuotes?: SwapQuote[];
-  getSwapQuotes?(): Promise<SwapQuote[]>;
-  getBaseSwapAssets?(): Promise<AccountSwapAsset[]>;
-  getTargetSwapAssets?(): Promise<AccountSwapAsset[]>;
+  getSwapQuotes?: () => Promise<SwapQuote[]>;
+  getBaseSwapAssets?: () => Promise<AccountSwapAsset[]>;
+  getTargetSwapAssets?: () => Promise<AccountSwapAsset[]>;
   marketData: MarketData;
   maxSpendAmount?: number;
   dependencies?: Partial<SwapDependencies>;

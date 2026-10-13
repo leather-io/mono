@@ -9,13 +9,13 @@ const statusDebounceMs = 500;
 
 interface SearchInputProps {
   value: string;
-  onChange(this: void, value: string): void;
+  onChange: (value: string) => void;
   placeholder: string;
   label?: string;
   autoFocus?: boolean;
   resultsId?: string;
   statusMessage?: string;
-  onNavigateToResults?(this: void): void;
+  onNavigateToResults?: () => void;
 }
 
 export function SearchInput({

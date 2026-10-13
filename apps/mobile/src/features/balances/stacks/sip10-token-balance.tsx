@@ -5,7 +5,7 @@ import { Sip10AvatarIcon } from '@leather.io/ui/native';
 
 interface Sip10TokenBalanceProps {
   item: Sip10BalanceType;
-  onPress?(): void;
+  onPress?: () => void;
 }
 export function Sip10TokenBalance({ item, onPress }: Sip10TokenBalanceProps) {
   return (

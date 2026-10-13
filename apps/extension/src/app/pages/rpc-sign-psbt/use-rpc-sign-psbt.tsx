@@ -203,6 +203,188 @@ export function useRpcSignPsbt() {
     });
   }
 
+  async function onSignPsbt({ addressNativeSegwitTotal, addressTaprootTotal, fee }: SignPsbtArgs) {
+    if (!requestId || !psbtHex) throw new Error('Invalid params in useRpcSignPsbt');
+    if (hasDisallowedSighash) {
+      rejectDisallowedSighash();
+      return;
+    }
+
+    if (bondRoute?.status === 'error') return;
+
+    if (bondRoute?.status === 'matched') {
+      try {
+        const network = getPolicyAuthNetworkId('bitcoin', currentNetwork);
+        const rawPayload = psbtHexToBase64(psbtHex);
+        const proposal = await proposeMultisigTransaction({
+          network,
+          multisigAddress: bondRoute.policy.address,
+          rawPayload,
+        });
+        if (!proposal) return;
+
+        analytics.track('propose_multisig_transaction', { symbol: 'btc' });
+
+        await sendMessageToOriginatingFrame(
+          { frameId, tabId },
+          createRpcSuccessResponse('signPsbt', {
+            id: requestId,
+            result: { hex: psbtHex, proposalId: proposal.id, status: 'proposed' },
+          })
+        ).catch(() => null);
+        closeWindow();
+        return;
+      } catch (e) {
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
+          createRpcErrorResponse('signPsbt', {
+            id: requestId,
+            error: {
+              code: RpcErrorCode.INTERNAL_ERROR,
+              message: 'Failed to propose transaction',
+            },
+          })
+        );
+        return navigate(RouteUrls.RequestError, {
+          state: {
+            message: isError(e) ? e.message : 'Failed to propose transaction',
+            title: 'Unable to propose transaction',
+          },
+        });
+      }
+    }
+
+    // Descriptor signing adds the current account's partial signature for the
+    // input(s) the descriptor locks. With broadcast requested, we additionally
+    // try to satisfy the whole policy from what the PSBT already carries (other
+    // signatures + relayed preimages) and broadcast; if it can't be fully
+    // satisfied we fall back to returning the partially-signed PSBT for the
+    // coordinator to complete.
+    if (descriptor) {
+      try {
+        const signedTx = await signDescriptorPsbt(psbtHex, descriptor);
+        if (!signedTx) return;
+        const signedPsbtHex = bytesToHex(signedTx.toPSBT());
+
+        if (broadcast) {
+          const finalized = finalizeWshDescriptorPsbt({
+            signedPsbt: signedTx.toPSBT(),
+            preimagePsbt: hexToBytes(psbtHex),
+            descriptor,
+          });
+          if (finalized.status === 'finalized') {
+            const destinations = descriptorDetails?.destinations ?? [];
+            const amountSentFromPolicy = destinations.length
+              ? sumMoney(destinations.map(destination => destination.value))
+              : createMoney(0, 'BTC');
+
+            await broadcastSignedPsbtTx({
+              addressNativeSegwitTotal: amountSentFromPolicy,
+              addressTaprootTotal: createMoney(0, 'BTC'),
+              fee: descriptorDetails?.fee ?? createMoney(0, 'BTC'),
+              tx: finalized.rawTx,
+              psbt: signedPsbtHex,
+            });
+            return;
+          }
+        }
+
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
+          createRpcSuccessResponse('signPsbt', {
+            id: requestId,
+            result: { hex: signedPsbtHex },
+          })
+        );
+        closeWindow();
+        return;
+      } catch (e) {
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
+          createRpcErrorResponse('signPsbt', {
+            id: requestId,
+            error: {
+              code: RpcErrorCode.INVALID_REQUEST,
+              message: RpcErrorMessage.UnsignedTransaction,
+            },
+          })
+        );
+        return navigate(RouteUrls.RequestError, {
+          state: { message: isError(e) ? e.message : '', title: 'Failed to sign' },
+        });
+      }
+    }
+
+    const tx = getPsbtAsTransaction(psbtHex);
+
+    try {
+      const signedTx = await signPsbt({
+        allowedSighash,
+        tx,
+        signingConfig: getDefaultSigningConfig(hexToBytes(psbtHex), signAtIndex),
+      });
+      if (!signedTx) return;
+
+      const psbt = signedTx.toPSBT();
+
+      if (!broadcast) {
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
+          createRpcSuccessResponse('signPsbt', {
+            id: requestId,
+            result: { hex: bytesToHex(psbt) },
+          })
+        );
+        closeWindow();
+        return;
+      }
+
+      // Optional args are handled here bc we support two request apis,
+      // but we only support broadcasting using the rpc request method
+      if (broadcast && addressNativeSegwitTotal && addressTaprootTotal && fee) {
+        try {
+          signedTx.finalize();
+
+          await broadcastSignedPsbtTx({
+            addressNativeSegwitTotal,
+            addressTaprootTotal,
+            fee,
+            tx: signedTx.hex,
+            psbt: bytesToHex(psbt),
+          });
+        } catch (e) {
+          return navigate(RouteUrls.RequestError, {
+            state: {
+              message: isError(e) ? e.message : '',
+              title: 'Failed to finalize tx',
+            },
+          });
+        }
+
+        return;
+      }
+    } catch (e) {
+      return navigate(RouteUrls.RequestError, {
+        state: { message: isError(e) ? e.message : '', title: 'Failed to sign' },
+      });
+    }
+  }
+
+  function onCancel() {
+    if (!requestId) throw new Error('Invalid request id');
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
+      createRpcErrorResponse('signPsbt', {
+        id: requestId,
+        error: {
+          code: RpcErrorCode.USER_REJECTION,
+          message: 'User rejected signing PSBT request',
+        },
+      })
+    );
+    closeWindow();
+  }
+
   return {
     broadcast,
     descriptor,
@@ -213,186 +395,7 @@ export function useRpcSignPsbt() {
     origin,
     psbtHex,
     rejectDisallowedSighash,
-    async onSignPsbt(
-      this: void,
-      { addressNativeSegwitTotal, addressTaprootTotal, fee }: SignPsbtArgs
-    ) {
-      if (hasDisallowedSighash) {
-        rejectDisallowedSighash();
-        return;
-      }
-
-      if (bondRoute?.status === 'error') return;
-
-      if (bondRoute?.status === 'matched') {
-        try {
-          const network = getPolicyAuthNetworkId('bitcoin', currentNetwork);
-          const rawPayload = psbtHexToBase64(psbtHex);
-          const proposal = await proposeMultisigTransaction({
-            network,
-            multisigAddress: bondRoute.policy.address,
-            rawPayload,
-          });
-          if (!proposal) return;
-
-          analytics.track('propose_multisig_transaction', { symbol: 'btc' });
-
-          await sendMessageToOriginatingFrame(
-            { frameId, tabId },
-            createRpcSuccessResponse('signPsbt', {
-              id: requestId,
-              result: { hex: psbtHex, proposalId: proposal.id, status: 'proposed' },
-            })
-          ).catch(() => null);
-          closeWindow();
-          return;
-        } catch (e) {
-          void sendMessageToOriginatingFrame(
-            { frameId, tabId },
-            createRpcErrorResponse('signPsbt', {
-              id: requestId,
-              error: {
-                code: RpcErrorCode.INTERNAL_ERROR,
-                message: 'Failed to propose transaction',
-              },
-            })
-          );
-          return navigate(RouteUrls.RequestError, {
-            state: {
-              message: isError(e) ? e.message : 'Failed to propose transaction',
-              title: 'Unable to propose transaction',
-            },
-          });
-        }
-      }
-
-      // Descriptor signing adds the current account's partial signature for the
-      // input(s) the descriptor locks. With broadcast requested, we additionally
-      // try to satisfy the whole policy from what the PSBT already carries (other
-      // signatures + relayed preimages) and broadcast; if it can't be fully
-      // satisfied we fall back to returning the partially-signed PSBT for the
-      // coordinator to complete.
-      if (descriptor) {
-        try {
-          const signedTx = await signDescriptorPsbt(psbtHex, descriptor);
-          if (!signedTx) return;
-          const signedPsbtHex = bytesToHex(signedTx.toPSBT());
-
-          if (broadcast) {
-            const finalized = finalizeWshDescriptorPsbt({
-              signedPsbt: signedTx.toPSBT(),
-              preimagePsbt: hexToBytes(psbtHex),
-              descriptor,
-            });
-            if (finalized.status === 'finalized') {
-              const destinations = descriptorDetails?.destinations ?? [];
-              const amountSentFromPolicy = destinations.length
-                ? sumMoney(destinations.map(destination => destination.value))
-                : createMoney(0, 'BTC');
-
-              await broadcastSignedPsbtTx({
-                addressNativeSegwitTotal: amountSentFromPolicy,
-                addressTaprootTotal: createMoney(0, 'BTC'),
-                fee: descriptorDetails?.fee ?? createMoney(0, 'BTC'),
-                tx: finalized.rawTx,
-                psbt: signedPsbtHex,
-              });
-              return;
-            }
-          }
-
-          void sendMessageToOriginatingFrame(
-            { frameId, tabId },
-            createRpcSuccessResponse('signPsbt', {
-              id: requestId,
-              result: { hex: signedPsbtHex },
-            })
-          );
-          closeWindow();
-          return;
-        } catch (e) {
-          void sendMessageToOriginatingFrame(
-            { frameId, tabId },
-            createRpcErrorResponse('signPsbt', {
-              id: requestId,
-              error: {
-                code: RpcErrorCode.INVALID_REQUEST,
-                message: RpcErrorMessage.UnsignedTransaction,
-              },
-            })
-          );
-          return navigate(RouteUrls.RequestError, {
-            state: { message: isError(e) ? e.message : '', title: 'Failed to sign' },
-          });
-        }
-      }
-
-      const tx = getPsbtAsTransaction(psbtHex);
-
-      try {
-        const signedTx = await signPsbt({
-          allowedSighash,
-          tx,
-          signingConfig: getDefaultSigningConfig(hexToBytes(psbtHex), signAtIndex),
-        });
-        if (!signedTx) return;
-
-        const psbt = signedTx.toPSBT();
-
-        if (!broadcast) {
-          void sendMessageToOriginatingFrame(
-            { frameId, tabId },
-            createRpcSuccessResponse('signPsbt', {
-              id: requestId,
-              result: { hex: bytesToHex(psbt) },
-            })
-          );
-          closeWindow();
-          return;
-        }
-
-        // Optional args are handled here bc we support two request apis,
-        // but we only support broadcasting using the rpc request method
-        if (broadcast && addressNativeSegwitTotal && addressTaprootTotal && fee) {
-          try {
-            signedTx.finalize();
-
-            await broadcastSignedPsbtTx({
-              addressNativeSegwitTotal,
-              addressTaprootTotal,
-              fee,
-              tx: signedTx.hex,
-              psbt: bytesToHex(psbt),
-            });
-          } catch (e) {
-            return navigate(RouteUrls.RequestError, {
-              state: {
-                message: isError(e) ? e.message : '',
-                title: 'Failed to finalize tx',
-              },
-            });
-          }
-
-          return;
-        }
-      } catch (e) {
-        return navigate(RouteUrls.RequestError, {
-          state: { message: isError(e) ? e.message : '', title: 'Failed to sign' },
-        });
-      }
-    },
-    onCancel(this: void) {
-      void sendMessageToOriginatingFrame(
-        { frameId, tabId },
-        createRpcErrorResponse('signPsbt', {
-          id: requestId,
-          error: {
-            code: RpcErrorCode.USER_REJECTION,
-            message: 'User rejected signing PSBT request',
-          },
-        })
-      );
-      closeWindow();
-    },
+    onSignPsbt,
+    onCancel,
   };
 }

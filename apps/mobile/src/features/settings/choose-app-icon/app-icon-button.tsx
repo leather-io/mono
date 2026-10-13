@@ -6,7 +6,7 @@ import { type AppIcon, appIconAssets } from './app-icon.utils';
 
 interface AppIconButtonProps {
   icon: AppIcon;
-  onPress(): void;
+  onPress: () => void;
   isSelected: boolean;
   size: number;
 }

@@ -7,8 +7,8 @@ import { type BaseLedgerOperationContext } from '../../utils/generic-ledger-util
 
 export interface LedgerRequestKeysContext extends BaseLedgerOperationContext {
   chain: SupportedBlockchains;
-  pullPublicKeysFromDevice(this: void): Promise<void>;
-  onSelectStandard?(this: void, type: StacksDerivationPathType): void;
+  pullPublicKeysFromDevice: () => Promise<void>;
+  onSelectStandard?: (type: StacksDerivationPathType) => void;
 }
 
 const ledgerRequestKeysContext = createContext<LedgerRequestKeysContext | null>(null);

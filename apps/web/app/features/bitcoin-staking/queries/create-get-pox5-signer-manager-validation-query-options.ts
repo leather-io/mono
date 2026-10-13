@@ -23,18 +23,18 @@ interface SignerManagerAbi {
 }
 
 interface SignerManagerValidationReader {
-  getContractInterface(
+  getContractInterface: (
     contractAddress: string,
     contractName: string,
     signal?: AbortSignal
-  ): Promise<SignerManagerAbi>;
-  callReadOnlyFunction(args: {
+  ) => Promise<SignerManagerAbi>;
+  callReadOnlyFunction: (args: {
     contractAddress: string;
     contractName: string;
     functionName: string;
     readOnlyFunctionArgs: { arguments: string[]; sender: string };
     signal?: AbortSignal;
-  }): Promise<{ okay: boolean; result?: string; cause?: string }>;
+  }) => Promise<{ okay: boolean; result?: string; cause?: string }>;
 }
 
 function getHttpStatus(error: unknown): number | undefined {

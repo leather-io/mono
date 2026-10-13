@@ -10,7 +10,7 @@ import { RecipientAddressDisplayer } from './components/recipient-address-displa
 import { useRecipientBnsName } from './hooks/use-recipient-bns-name';
 
 interface RecipientBnsNameTypeFieldProps {
-  fetchFn(this: void, name: string): Promise<string | null>;
+  fetchFn: (name: string) => Promise<string | null>;
   topInputOverlay: React.JSX.Element;
   rightLabel: React.JSX.Element;
 }

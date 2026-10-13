@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 
 interface AuthContextValue {
-  lockApp(): void;
+  lockApp: () => void;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

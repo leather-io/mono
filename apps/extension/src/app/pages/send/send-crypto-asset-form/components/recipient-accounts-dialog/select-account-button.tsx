@@ -4,7 +4,7 @@ import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { styled } from 'leather-styles/jsx';
 
 interface SelectAccountButtonProps extends ComponentProps<typeof styled.button> {
-  onClick(this: void): void;
+  onClick: () => void;
 }
 export function SelectAccountButton({ onClick, ...props }: SelectAccountButtonProps) {
   function preventFocusOfUnderlyingInput(e: React.MouseEvent) {

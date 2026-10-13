@@ -9,7 +9,7 @@ import { SwitchCheck } from './switch-check';
 
 interface AllowModeWarningSheetProps {
   ref: SheetRef;
-  onDismiss(): void;
+  onDismiss: () => void;
 }
 export function AllowModeWarningSheet({ ref, onDismiss: _onDismiss }: AllowModeWarningSheetProps) {
   const [hasAgreedToRisks, setHasAgreedToRisks] = useState(false);

@@ -19,7 +19,7 @@ interface PageHeaderProps {
   isSummaryPage?: boolean;
   isSettingsVisibleOnSm?: boolean;
   onBackLocation?: RouteUrls;
-  onClose?(): void;
+  onClose?: () => void;
 }
 
 export function PageHeader({

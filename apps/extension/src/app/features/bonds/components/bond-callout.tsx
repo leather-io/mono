@@ -30,8 +30,8 @@ interface BondCalloutLayoutProps {
   title: string;
   body: string;
   primaryActionLabel: string;
-  onPrimaryAction(this: void): void;
-  onDismiss(this: void): void;
+  onPrimaryAction: () => void;
+  onDismiss: () => void;
 }
 
 function BondCalloutLayout({

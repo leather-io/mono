@@ -14,8 +14,8 @@ import { useSelectAssets } from './use-select-assets';
 import { type ReceiveType } from './utils/get-receive-type';
 
 export interface ReceiveSheetInstance {
-  present(receiveType: ReceiveType): void;
-  dismiss(): void;
+  present: (receiveType: ReceiveType) => void;
+  dismiss: () => void;
 }
 export type ReceiveSheetRef = RefObject<ReceiveSheetInstance | null>;
 

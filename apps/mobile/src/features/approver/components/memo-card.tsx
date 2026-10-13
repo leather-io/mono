@@ -4,7 +4,7 @@ import { Avatar, Box, Cell, ChevronRightIcon, NoteTextIcon } from '@leather.io/u
 
 interface MemoCardProps {
   memo: string;
-  onPress(): void;
+  onPress: () => void;
   disabled?: boolean;
 }
 

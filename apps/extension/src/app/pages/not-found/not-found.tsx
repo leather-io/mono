@@ -12,7 +12,7 @@ import { Content } from '@app/components/layout';
 import { HomeHeader } from '@app/features/container/headers/home.header';
 
 interface NotFoundContentProps {
-  onGoHome(this: void): void;
+  onGoHome: () => void;
 }
 
 export function NotFoundContent({ onGoHome }: NotFoundContentProps) {

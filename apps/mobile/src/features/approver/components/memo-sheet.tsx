@@ -6,7 +6,7 @@ import { SheetRef } from '@leather.io/ui/native';
 interface MemoSheetProps {
   sheetRef: SheetRef;
   memo: string;
-  onChangeMemo(memo: string): void;
+  onChangeMemo: (memo: string) => void;
 }
 export function MemoSheet({ sheetRef, memo, onChangeMemo }: MemoSheetProps) {
   return (

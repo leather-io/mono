@@ -6,7 +6,7 @@ import { Pressable } from '@leather.io/ui/native';
 
 interface AvatarButtonProps {
   icon: AccountIcon;
-  onPress(): void;
+  onPress: () => void;
   isSelected: boolean;
 }
 export function AvatarButton({ icon, onPress, isSelected }: AvatarButtonProps) {

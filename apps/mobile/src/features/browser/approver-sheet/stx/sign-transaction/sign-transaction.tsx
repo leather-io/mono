@@ -21,8 +21,8 @@ import { getTxHexFromRequest } from './utils';
 interface SignTransactionApproverProps {
   app: App;
   request: RpcRequest<typeof stxSignTransaction>;
-  sendResult(result: RpcResponse<typeof stxSignTransaction>): void;
-  closeApprover(): void;
+  sendResult: (result: RpcResponse<typeof stxSignTransaction>) => void;
+  closeApprover: () => void;
   accountId: string;
 }
 

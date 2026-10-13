@@ -15,10 +15,10 @@ export interface AmountFieldProps {
   isValidating?: boolean;
   inputCurrencyMode: InputCurrencyMode;
   inputCurrencyModeChangeEnabled?: boolean;
-  onInputCurrencyModeChange?(inputCurrencyMode: InputCurrencyMode, newInputValue: string): void;
+  onInputCurrencyModeChange?: (inputCurrencyMode: InputCurrencyMode, newInputValue: string) => void;
   canSendMax?: boolean;
   isSendingMax?: boolean;
-  onSetIsSendingMax?(): void;
+  onSetIsSendingMax?: () => void;
   quoteCurrency: QuoteCurrency;
   cryptoCurrency: CryptoCurrency;
   marketData: MarketData;

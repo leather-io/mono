@@ -1,8 +1,8 @@
 import { createSelectorCreator, lruMemoize } from '@reduxjs/toolkit';
 
 interface ClearableKeychainSelector {
-  clearCache(): void;
-  memoizedResultFunc: { clearCache(): void };
+  clearCache: () => void;
+  memoizedResultFunc: { clearCache: () => void };
 }
 
 const keychainCacheClearers = new Set<() => void>();

@@ -10,7 +10,7 @@ import { ArrowTopBottomIcon, Box, Pressable, Text } from '@leather.io/ui/native'
 
 interface AmountFieldSecondaryValueProps {
   primaryValue: string;
-  onInputCurrencyModeChange?(inputCurrencyMode: InputCurrencyMode, newInputValue: string): void;
+  onInputCurrencyModeChange?: (inputCurrencyMode: InputCurrencyMode, newInputValue: string) => void;
   inputCurrencyModeChangeEnabled?: boolean;
   locale: string;
   inputCurrencyMode: InputCurrencyMode;

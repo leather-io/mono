@@ -30,16 +30,16 @@ interface UseSignerManagerPickerArgs {
 
 interface UseSignerManagerPickerResult {
   selectedRowId: string;
-  selectRow(rowId: string): void;
+  selectRow: (rowId: string) => void;
   customInput: string;
-  onCustomInputChange(value: string): void;
+  onCustomInputChange: (value: string) => void;
   customState: ByosmSignerManagerState;
-  validateCustom(): void;
+  validateCustom: () => void;
   isCustomSelected: boolean;
   target: SignerManagerTarget | null;
   isSwitching: boolean;
   termsAccepted: boolean;
-  toggleTermsAccepted(): void;
+  toggleTermsAccepted: () => void;
 }
 
 export function useSignerManagerPicker({

@@ -8,8 +8,8 @@ interface GetTransactionActionsArgs {
   isBroadcasting: boolean;
   isSubmitted: boolean;
   isApproveDisabled?: boolean;
-  onCancel(this: void): void;
-  onApprove(this: void): Promise<void> | void;
+  onCancel: () => void;
+  onApprove: () => Promise<void> | void;
   approveLabel?: string;
   busyLabel?: string;
   submittedLabel?: string;

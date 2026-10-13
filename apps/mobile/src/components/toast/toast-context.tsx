@@ -6,7 +6,7 @@ import { Toast } from '.';
 import { ToastData, ToastMethods } from './types';
 
 interface ToastContextType {
-  displayToast({ title, type }: ToastData): unknown;
+  displayToast: ({ title, type }: ToastData) => unknown;
 }
 
 const ToastContext = createContext<ToastContextType | null>(null);

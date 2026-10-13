@@ -24,8 +24,8 @@ import { useDeployContractTxHex } from './hooks';
 interface DeployContractApproverProps {
   app: App;
   request: RpcRequest<typeof stxDeployContract>;
-  sendResult(result: RpcResponse<typeof stxDeployContract>): void;
-  closeApprover(): void;
+  sendResult: (result: RpcResponse<typeof stxDeployContract>) => void;
+  closeApprover: () => void;
   nonce: number;
   accountId: string;
 }

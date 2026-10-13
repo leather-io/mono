@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 import { Box, Button, Text } from '@leather.io/ui/native';
 
 interface SwapReviewEmptyStateProps {
-  onBack(): void;
+  onBack: () => void;
 }
 
 export function SwapReviewEmptyState({ onBack }: SwapReviewEmptyStateProps) {

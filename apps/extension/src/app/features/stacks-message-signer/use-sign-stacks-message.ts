@@ -13,8 +13,8 @@ import {
 } from '@app/features/stacks-message-signer/stacks-message-signing.utils';
 
 interface SignStacksMessageProps {
-  onSignMessageCompleted(this: void, messageSignature: SignatureData): void;
-  onSignMessageCancelled(this: void): void;
+  onSignMessageCompleted: (messageSignature: SignatureData) => void;
+  onSignMessageCancelled: () => void;
 }
 export function useSignStacksMessage({
   onSignMessageCompleted,

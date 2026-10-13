@@ -21,10 +21,10 @@ import { PrimaryValue } from './amount-field-primary-value';
 interface AmountFieldProps {
   asset: SwappableFungibleCryptoAsset | undefined;
   value: string;
-  onChange(this: void, value: string): void;
+  onChange: (value: string) => void;
   secondaryAmount: SecondaryAmount;
   inputCurrencyMode: InputCurrencyMode;
-  onInputCurrencyModeSwitch(this: void): void;
+  onInputCurrencyModeSwitch: () => void;
   quoteCurrencyPreference: Currency;
   inputRef?: RefObject<HTMLInputElement | null>;
   errorMessage?: string;

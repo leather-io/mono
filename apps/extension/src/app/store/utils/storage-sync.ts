@@ -22,9 +22,9 @@ interface SyncStoreState extends Partial<Record<PersistedSliceKey, unknown>> {
 }
 
 interface SyncStore {
-  getState(): SyncStoreState;
-  dispatch(action: ReturnType<typeof hydrateSlicesFromStorage>): unknown;
-  subscribe(listener: () => void): () => void;
+  getState: () => SyncStoreState;
+  dispatch: (action: ReturnType<typeof hydrateSlicesFromStorage>) => unknown;
+  subscribe: (listener: () => void) => () => void;
 }
 
 function hasRehydrated(store: SyncStore) {

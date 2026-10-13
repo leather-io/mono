@@ -1,7 +1,7 @@
 import { Pressable, PressableProps } from '@leather.io/ui/native';
 
 interface CardProps extends PressableProps {
-  onPress?(): void;
+  onPress?: () => void;
   height?: number;
 }
 export function Card({ children, onPress, height = 180, ...props }: CardProps) {

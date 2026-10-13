@@ -3,7 +3,7 @@ import { Cell, Switch } from '@leather.io/ui/native';
 interface SwitchCheckProps {
   title: string;
   value: boolean;
-  onValueChange(val: boolean): void;
+  onValueChange: (val: boolean) => void;
 }
 export function SwitchCheck({ title, value, onValueChange }: SwitchCheckProps) {
   return (

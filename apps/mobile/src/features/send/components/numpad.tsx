@@ -7,10 +7,10 @@ import { Currency } from '@leather.io/models';
 import { Box, type NumpadProps, Numpad as RawNumpad } from '@leather.io/ui/native';
 
 interface SendFormNumpadProps extends NumpadProps {
-  clearSendingMax(): void;
+  clearSendingMax: () => void;
   spendableAmount: BigNumber;
   currency: Currency;
-  onBlur(): void;
+  onBlur: () => void;
   assetDecimals?: number;
 }
 

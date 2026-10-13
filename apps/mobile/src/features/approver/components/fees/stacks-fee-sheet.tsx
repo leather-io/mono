@@ -14,7 +14,7 @@ interface FeesSheetProps {
   selectedFeeType: FeeTypes;
   fees: Record<FeeTypes, Money>;
   currentFee: Money;
-  onChangeFeeType(feeType: FeeTypes): void;
+  onChangeFeeType: (feeType: FeeTypes) => void;
 }
 
 export function StacksFeesSheet({

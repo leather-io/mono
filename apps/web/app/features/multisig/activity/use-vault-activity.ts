@@ -52,11 +52,11 @@ interface MultisigActivityInputs {
   multisigTransactions: VaultMultisigTransaction[];
   payloadsById: Map<string, string>;
   marketData: { btc?: MarketData; stx?: MarketData };
-  classifyContract(
+  classifyContract: (
     contractId: string,
     functionName: string
-  ): MultisigActivityClassification | undefined;
-  getTokenInfo(contractId: string): ProposalTokenInfo | undefined;
+  ) => MultisigActivityClassification | undefined;
+  getTokenInfo: (contractId: string) => ProposalTokenInfo | undefined;
   isLoading: boolean;
 }
 

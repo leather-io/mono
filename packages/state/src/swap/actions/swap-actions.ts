@@ -15,8 +15,8 @@ import { calculatePercentageAmount, convertMoneyToInputValue } from '../utils/am
 import { isPairDisabled } from '../utils/disabled-pairs';
 
 interface CreateSwapActionsParams {
-  dispatch(action: SwapActionObject): void;
-  lockDerivedAmountsForNextRender(): void;
+  dispatch: (action: SwapActionObject) => void;
+  lockDerivedAmountsForNextRender: () => void;
   state: SwapInternalState;
   derivedAmounts: DerivedAmounts;
   spendableAmount: Money | null;

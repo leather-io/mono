@@ -28,9 +28,6 @@
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 3
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    },
     "object-shorthand": {
       "count": 3
     }

@@ -71,7 +71,7 @@ function useBtcData(account: AccountId): FetchState<BtcData> {
 
 interface BtcDataLoaderProps {
   account: AccountId;
-  children(data: BtcData): ReactNode;
+  children: (data: BtcData) => ReactNode;
 }
 
 export function BtcDataLoader({ account, children }: BtcDataLoaderProps) {

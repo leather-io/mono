@@ -3,8 +3,8 @@ import { AnimatedRef, runOnUI, scrollTo } from 'react-native-reanimated';
 
 interface TabLayoutContextValue {
   tabBarHeight: number;
-  registerScrollRef(tabName: string, ref: AnimatedRef<any>): () => void;
-  scrollToTop(tabName: string): void;
+  registerScrollRef: (tabName: string, ref: AnimatedRef<any>) => () => void;
+  scrollToTop: (tabName: string) => void;
 }
 
 export const TabLayoutContext = createContext<TabLayoutContextValue | null>(null);

@@ -20,7 +20,7 @@ vi.mock('leather-styles/jsx', () => ({
 }));
 
 vi.mock('@leather.io/ui', () => ({
-  Button({ children, onClick }: { children: React.ReactNode; onClick(this: void): void }) {
+  Button({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
     return <button onClick={onClick}>{children}</button>;
   },
 }));

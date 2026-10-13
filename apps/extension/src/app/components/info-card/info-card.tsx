@@ -87,7 +87,7 @@ export function InfoCardAssetValue({
 interface InfoCardBtnProps {
   icon: ComponentType;
   label: string;
-  onClick(this: void): void;
+  onClick: () => void;
 }
 export function InfoCardBtn({ icon, label, onClick }: InfoCardBtnProps) {
   return (

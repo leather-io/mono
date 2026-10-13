@@ -7,11 +7,11 @@ import { assertUnreachable } from '@leather.io/utils';
 import { useApproverButtons } from './use-approver-buttons';
 
 interface ApproverButtonsProps {
-  onBack(): void;
-  onApprove(): void | Promise<void>;
-  onClose(): void;
-  onCopy?(): void;
-  onViewDetails?(): void;
+  onBack: () => void;
+  onApprove: () => void | Promise<void>;
+  onClose: () => void;
+  onCopy?: () => void;
+  onViewDetails?: () => void;
   isSubmitDisabled?: boolean;
   approveLabel?: string;
   submittingLabel?: string;

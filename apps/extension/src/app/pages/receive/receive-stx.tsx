@@ -12,7 +12,7 @@ import { useCurrentPolicy, usePolicyDisplayName } from '@app/store/policy/policy
 import { ReceiveTokensLayout } from './components/receive-tokens.layout';
 
 interface ReceiveStxModalProps {
-  onClose(this: void): void;
+  onClose: () => void;
 }
 
 export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {

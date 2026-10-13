@@ -14,13 +14,13 @@ import {
 } from './utils';
 
 interface MnemonicStore {
-  getMnemonic(passphrase?: string): Promise<Mnemonic>;
-  setMnemonic(params: {
+  getMnemonic: (passphrase?: string) => Promise<Mnemonic>;
+  setMnemonic: (params: {
     mnemonic: string;
     passphrase?: string;
     biometrics: boolean;
-  }): Promise<unknown>;
-  deleteMnemonic(): Promise<unknown>;
+  }) => Promise<unknown>;
+  deleteMnemonic: () => Promise<unknown>;
 }
 // On iOS, secure store only prompts for biometrics when we read or update the existing value.
 // Ref: https://docs.expo.dev/versions/latest/sdk/securestore/#securestoreoptions

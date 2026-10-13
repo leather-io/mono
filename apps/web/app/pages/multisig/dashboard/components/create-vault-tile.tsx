@@ -3,7 +3,7 @@ import { styled } from 'leather-styles/jsx';
 import { PlusIcon } from '@leather.io/ui';
 
 interface CreateVaultTileProps {
-  onClick(): void;
+  onClick: () => void;
 }
 
 export function CreateVaultTile({ onClick }: CreateVaultTileProps) {

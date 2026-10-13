@@ -55,7 +55,7 @@ const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
 
 interface SwapReviewScreenProps {
   liveEstimate: LiveSwapEstimate;
-  onGoBack(): void;
+  onGoBack: () => void;
 }
 
 export function SwapReviewScreen({ liveEstimate, onGoBack }: SwapReviewScreenProps) {

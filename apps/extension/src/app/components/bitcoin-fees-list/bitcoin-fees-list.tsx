@@ -27,9 +27,9 @@ export interface OnChooseFeeArgs {
 interface BitcoinFeesListProps {
   feesList: FeesListItem[];
   isLoading: boolean;
-  onChooseFee(this: void, { feeRate, feeValue, time }: OnChooseFeeArgs): Promise<void>;
-  onSetSelectedFeeType(this: void, value: BtcFeeType): void;
-  onValidateBitcoinSpend(this: void, value: number): boolean;
+  onChooseFee: ({ feeRate, feeValue, time }: OnChooseFeeArgs) => Promise<void>;
+  onSetSelectedFeeType: (value: BtcFeeType) => void;
+  onValidateBitcoinSpend: (value: number) => boolean;
   selectedFeeType: BtcFeeType | null;
 }
 export function BitcoinFeesList({

@@ -117,8 +117,8 @@ const { withProvider, withContext } = createStyleContext(input);
 
 interface InputContextProps {
   hasValue: boolean;
-  setHasValue(hasValue: boolean): void;
-  registerChild(child: string): void;
+  setHasValue: (hasValue: boolean) => void;
+  registerChild: (child: InputChldren) => void;
   children: InputChldren[];
 }
 

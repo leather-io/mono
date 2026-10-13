@@ -15,8 +15,8 @@ interface MembersSectionProps {
   vault: Vault;
   currentUserAddress?: string;
   currentUserIsCreator: boolean;
-  onShareInvite(): void;
-  onRenameMember(membershipId: string, name: string): void;
+  onShareInvite: () => void;
+  onRenameMember: (membershipId: string, name: string) => void;
 }
 
 function isCreatorMember(member: VaultMember, createdBy: string): boolean {
@@ -40,7 +40,7 @@ function MemberTrailing({
 }: {
   member: VaultMember;
   isCreator: boolean;
-  onShareInvite(): void;
+  onShareInvite: () => void;
 }) {
   if (isCreator) return <CreatorPill />;
   if (member.membershipStatus === 'invited') {

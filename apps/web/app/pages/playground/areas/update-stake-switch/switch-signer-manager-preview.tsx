@@ -178,8 +178,8 @@ function buildSummaryRows({
 interface CustomContractEntryProps {
   contract: string;
   validation: CustomValidation;
-  onChange(contract: string): void;
-  onValidate(): void;
+  onChange: (contract: string) => void;
+  onValidate: () => void;
 }
 
 function CustomContractEntry({

@@ -9,8 +9,8 @@ import { useThemeSwitcher } from '@app/common/theme-provider';
 interface AccountActionMenuProps {
   isHidden: boolean;
   canHide: boolean;
-  onHide(this: void): void;
-  onRename(this: void): void;
+  onHide: () => void;
+  onRename: () => void;
 }
 
 export function AccountActionMenu({ isHidden, canHide, onHide, onRename }: AccountActionMenuProps) {

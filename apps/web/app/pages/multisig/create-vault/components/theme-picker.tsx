@@ -4,7 +4,7 @@ import { vaultThemes } from '../../multisig-tokens';
 
 interface ThemePickerProps {
   themeId: number;
-  onChange(themeId: number): void;
+  onChange: (themeId: number) => void;
 }
 
 export function ThemePicker({ themeId, onChange }: ThemePickerProps) {

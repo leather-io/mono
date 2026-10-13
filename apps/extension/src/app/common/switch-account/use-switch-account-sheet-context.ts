@@ -10,13 +10,15 @@ export function useSwitchAccountSheet() {
     setAllowPolicyAccounts,
   } = useOutletContext<SwitchAccountOutletContext>();
 
+  function toggleSwitchAccount() {
+    setIsShowingSwitchAccount(!isShowingSwitchAccount);
+  }
+
   return {
     isShowingSwitchAccount,
     setIsShowingSwitchAccount,
     allowPolicyAccounts,
     setAllowPolicyAccounts,
-    toggleSwitchAccount(this: void) {
-      setIsShowingSwitchAccount(!isShowingSwitchAccount);
-    },
+    toggleSwitchAccount,
   };
 }

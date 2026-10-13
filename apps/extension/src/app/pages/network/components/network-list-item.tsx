@@ -20,9 +20,9 @@ interface NetworkListItemProps {
   networkId: string;
   isCustom: boolean;
   isPolicyLocked: boolean;
-  onSelectNetwork(this: void): void;
-  onRemoveNetwork(this: void): void;
-  onEditNetwork(this: void): void;
+  onSelectNetwork: () => void;
+  onRemoveNetwork: () => void;
+  onEditNetwork: () => void;
 }
 export function NetworkListItem({
   networkId,

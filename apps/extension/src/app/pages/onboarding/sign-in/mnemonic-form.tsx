@@ -17,9 +17,9 @@ import { SecretKeyGrid } from '@app/ui/components/secret-key/secret-key-grid';
 
 interface MnemonicFormProps {
   mnemonic: (string | null)[];
-  setMnemonic(this: void, mnemonic: (string | null)[]): void;
+  setMnemonic: (mnemonic: (string | null)[]) => void;
   twentyFourWordMode: boolean;
-  onSubmit(this: void, mnemonic: string): Promise<void>;
+  onSubmit: (mnemonic: string) => Promise<void>;
   error: string | undefined;
   isLoading: boolean;
 }

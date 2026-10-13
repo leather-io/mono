@@ -10,7 +10,7 @@ import { ConnectLedgerRequestKeys } from './steps/connect-ledger-request-keys';
 interface RequestKeysFlowProps {
   context: LedgerRequestKeysContext;
   isActionCancellableByUser: boolean;
-  onCancelAction?(this: void): void;
+  onCancelAction?: () => void;
   renderStep?: LedgerStepOverrides;
 }
 export function RequestKeysFlow({

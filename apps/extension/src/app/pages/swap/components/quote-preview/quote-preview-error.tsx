@@ -2,7 +2,7 @@ import { Divider, styled } from 'leather-styles/jsx';
 
 interface QuotePreviewErrorProps {
   error: Error;
-  onRetry(this: void): void;
+  onRetry: () => void;
 }
 
 export function QuotePreviewError({ onRetry }: QuotePreviewErrorProps) {

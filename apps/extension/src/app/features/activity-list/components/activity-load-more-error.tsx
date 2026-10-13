@@ -3,7 +3,7 @@ import { Flex } from 'leather-styles/jsx';
 import { Button, Caption } from '@leather.io/ui';
 
 interface ActivityLoadMoreErrorProps {
-  onRetry(this: void): void;
+  onRetry: () => void;
 }
 
 export function ActivityLoadMoreError({ onRetry }: ActivityLoadMoreErrorProps) {

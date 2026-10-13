@@ -5,7 +5,7 @@ import { ItemLayoutWithButtons, Switch } from '@leather.io/ui';
 interface NetworkListSwitchProps {
   title: string;
   caption: string;
-  onClick(this: void): void;
+  onClick: () => void;
   isEnabled: boolean;
 }
 

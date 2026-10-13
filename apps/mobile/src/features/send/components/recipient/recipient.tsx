@@ -17,7 +17,7 @@ import { AccountId, type FungibleCryptoAsset } from '@leather.io/models';
 
 interface RecipientProps {
   value: string;
-  onChange(value: string): void;
+  onChange: (value: string) => void;
   asset: FungibleCryptoAsset;
   recipientSchema: ZodSchema;
   currentAccount: AccountId;

@@ -6,7 +6,7 @@ import { SheetRef } from '@leather.io/ui/native';
 interface RecoverWalletSheetProps {
   recoverWalletSheetRef: SheetRef;
   passphrase: string;
-  setPassphrase(passphrase: string): unknown;
+  setPassphrase: (passphrase: string) => unknown;
 }
 export function RecoverWalletSheet({
   recoverWalletSheetRef,

@@ -19,7 +19,7 @@ const triggerAccountDataWarning = once(() => {
 
 interface AccountHeaderProps {
   account: AccountId;
-  onPress?(): void;
+  onPress?: () => void;
 }
 
 export function AccountHeader({ account, onPress }: AccountHeaderProps) {

@@ -37,12 +37,14 @@ function useAppVersion() {
     }
   }
 
+  function openPullRequestLink() {
+    openInNewTab(pullRequestLink ?? '');
+  }
+
   return {
     version: getVersion(),
     shouldUpdatePRBuild: !isLatestBuild && process.env.WALLET_ENVIRONMENT === 'feature',
-    openPullRequestLink(this: void) {
-      openInNewTab(pullRequestLink ?? '');
-    },
+    openPullRequestLink,
   };
 }
 

@@ -5,7 +5,7 @@ import { ConnectLedgerSignTx } from './steps/connect-ledger-sign-tx';
 
 interface TxSigningFlowProps {
   context: LedgerTxSigningContext;
-  closeAction?(this: void): void;
+  closeAction?: () => void;
   renderStep?: LedgerStepOverrides;
 }
 export function TxSigningFlow({ context, closeAction, renderStep }: TxSigningFlowProps) {

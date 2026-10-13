@@ -11,7 +11,7 @@ import { TokenDetailsHeader } from './components/token-details-header';
 
 interface TokenDetailsErrorProps {
   title?: string;
-  onRetry?(this: void): void;
+  onRetry?: () => void;
 }
 
 export function TokenDetailsError({ title = 'Token', onRetry }: TokenDetailsErrorProps) {

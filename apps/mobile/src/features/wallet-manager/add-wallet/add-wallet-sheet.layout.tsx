@@ -32,8 +32,8 @@ interface AddWalletSheetBaseProps {
 }
 
 interface AddWalletSheetLayoutProps extends AddWalletSheetBaseProps {
-  createWallet(): unknown;
-  restoreWallet(): unknown;
+  createWallet: () => unknown;
+  restoreWallet: () => unknown;
   opensFully?: boolean;
 }
 export function AddWalletSheetLayout({

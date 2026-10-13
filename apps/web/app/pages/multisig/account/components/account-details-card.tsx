@@ -24,10 +24,10 @@ interface AccountDetailsCardProps {
   vault: Vault;
   account: VaultAccount;
   currentUserAddress?: string;
-  onAddToWallet(): void;
+  onAddToWallet: () => void;
   isAddingToWallet?: boolean;
   isAddedToWallet?: boolean;
-  onEdit?(): void;
+  onEdit?: () => void;
 }
 
 function CardRow({ children, highlight }: { children: ReactNode; highlight?: boolean }) {

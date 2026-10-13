@@ -12,7 +12,7 @@ import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 import { RequestPassword } from '@app/components/request-password';
 
 interface LockedViewSecretKeyProps {
-  onUnlock(this: void): void;
+  onUnlock: () => void;
 }
 export function LockedViewSecretKey({ onUnlock }: LockedViewSecretKeyProps) {
   useEffect(() => {

@@ -33,19 +33,19 @@ import {
 const sbtcDepositOutputIndex = 0;
 
 interface ExecutionStrategy {
-  enrichQuote(
+  enrichQuote: (
     quote: SwapQuote,
     fairMarketRate: BigNumber | null,
     slippage: number
-  ): EnrichedSwapQuote;
-  getNetworkFee(
+  ) => EnrichedSwapQuote;
+  getNetworkFee: (
     dependencies: SwapExecutionDependencies,
     signal?: AbortSignal
-  ): Promise<TransactionFees>;
-  submitSwap(
+  ) => Promise<TransactionFees>;
+  submitSwap: (
     dependencies: SwapExecutionDependencies,
     fee: NetworkFee
-  ): Promise<SwapSubmissionResult>;
+  ) => Promise<SwapSubmissionResult>;
 }
 
 const stacksContractCallStrategy: ExecutionStrategy = {

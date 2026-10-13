@@ -47,16 +47,15 @@ import { ContractCallPostConditionsSection } from '../contract-call-post-conditi
 import { useStxTransactionUpdatesHandler } from '../stx/hooks';
 
 interface BaseStxTxApproverLayoutProps {
-  onApprove(): Promise<string | null>;
-  onCloseApprover(): void;
-  onBack(): void;
+  onApprove: () => Promise<string | null>;
+  onCloseApprover: () => void;
   accountId: string | null;
   accounts: Account[];
   txHex: string;
-  setTxHex(txHex: string): void;
+  setTxHex: (txHex: string) => void;
   txOptions: TxOptions;
   origin?: string;
-  onBack(): void;
+  onBack: () => void;
 }
 
 export function BaseStxTxApproverLayout({

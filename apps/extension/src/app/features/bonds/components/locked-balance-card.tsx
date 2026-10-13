@@ -13,8 +13,8 @@ interface LockedBalanceCardLayoutProps {
   fiatValue: string;
   isLoading?: boolean;
   isPrivate?: boolean;
-  onShowValue?(this: void): void;
-  onClick?(this: void): void;
+  onShowValue?: () => void;
+  onClick?: () => void;
 }
 
 export function LockedBalanceCardLayout({

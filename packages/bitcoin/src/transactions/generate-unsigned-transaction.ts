@@ -22,7 +22,7 @@ export interface GenerateBitcoinUnsignedTransactionArgs<T> {
   recipients: CoinSelectionRecipient[];
   utxos: T[];
   changeAddress: string;
-  payerLookup(keyOrigin: string): BitcoinNativeSegwitPayer | BitcoinTaprootPayer | undefined;
+  payerLookup: (keyOrigin: string) => BitcoinNativeSegwitPayer | BitcoinTaprootPayer | undefined;
 }
 export function generateBitcoinUnsignedTransaction<
   T extends InputData & { vout: number; keyOrigin: string },

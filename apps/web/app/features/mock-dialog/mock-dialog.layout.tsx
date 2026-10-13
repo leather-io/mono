@@ -7,9 +7,9 @@ import { Button, CloseIcon, Flag, Sheet } from '@leather.io/ui';
 interface MockLeatherDialogLayoutProps {
   payload: RpcRequests;
   response: any;
-  onClose(): void;
-  onResolve(): void;
-  onReject(): void;
+  onClose: () => void;
+  onResolve: () => void;
+  onReject: () => void;
 }
 export function MockLeatherDialogLayout({
   payload,

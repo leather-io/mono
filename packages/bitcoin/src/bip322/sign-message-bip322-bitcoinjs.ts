@@ -70,7 +70,7 @@ interface SignBip322MessageSimple {
   address: BitcoinAddress;
   message: string;
   network: BitcoinNetworkModes;
-  signPsbt(psbt: bitcoin.Psbt): Promise<btc.Transaction>;
+  signPsbt: (psbt: bitcoin.Psbt) => Promise<btc.Transaction>;
 }
 export async function signBip322MessageSimple(args: SignBip322MessageSimple) {
   const { address, message, network, signPsbt } = args;

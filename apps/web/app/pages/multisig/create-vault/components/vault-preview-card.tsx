@@ -18,7 +18,7 @@ interface VaultPreviewCardProps {
   myAddress?: string;
   error?: string | null;
   disabled?: boolean;
-  onSubmit(): void;
+  onSubmit: () => void;
 }
 
 function PreviewSection({ label, children }: { label: string; children: React.ReactNode }) {

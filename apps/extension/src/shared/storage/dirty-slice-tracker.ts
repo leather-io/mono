@@ -3,13 +3,13 @@ import type { PersistedSliceKey } from './persist-whitelist';
 export type DirtySliceSnapshot = Map<PersistedSliceKey, number>;
 
 export interface DirtySliceTracker {
-  markDirty(key: PersistedSliceKey): void;
-  isDirty(key: PersistedSliceKey): boolean;
-  getDirtyKeys(): PersistedSliceKey[];
-  snapshot(): DirtySliceSnapshot;
-  clearIfUnchanged(snapshot: DirtySliceSnapshot): void;
-  suspendWrites(): void;
-  areWritesSuspended(): boolean;
+  markDirty: (key: PersistedSliceKey) => void;
+  isDirty: (key: PersistedSliceKey) => boolean;
+  getDirtyKeys: () => PersistedSliceKey[];
+  snapshot: () => DirtySliceSnapshot;
+  clearIfUnchanged: (snapshot: DirtySliceSnapshot) => void;
+  suspendWrites: () => void;
+  areWritesSuspended: () => boolean;
 }
 
 /** @knipignore */

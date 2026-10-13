@@ -9,7 +9,7 @@ import { CloseIcon, IconButton, Sheet } from '@leather.io/ui';
 
 interface ReceiveModalProps {
   account: VaultAccount;
-  onClose(): void;
+  onClose: () => void;
 }
 
 export function ReceiveModal({ account, onClose }: ReceiveModalProps) {

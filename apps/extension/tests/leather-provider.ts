@@ -22,7 +22,7 @@ export interface TestRpcResponse {
 }
 
 interface TestLeatherProvider {
-  request(method: string, params?: unknown): Promise<TestRpcResponse>;
+  request: (method: string, params?: unknown) => Promise<TestRpcResponse>;
 }
 
 declare global {
@@ -38,7 +38,7 @@ export function getResponseAddresses(response: TestRpcResponse | undefined) {
 }
 
 interface RpcRequester {
-  request(method: string, params: unknown): Promise<unknown>;
+  request: (method: string, params: unknown) => Promise<unknown>;
 }
 
 interface LeatherProviderRequest {

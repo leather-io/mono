@@ -26,9 +26,9 @@ import { getSendTransferRecipients } from './send-transfer.utils';
 
 interface SendTransferApproverProps {
   request: RpcRequest<typeof sendTransfer>;
-  sendResult(result: RpcResponse<typeof sendTransfer>): void;
+  sendResult: (result: RpcResponse<typeof sendTransfer>) => void;
   app: App;
-  closeApprover(): void;
+  closeApprover: () => void;
   accountId: string;
 }
 export function SendTransferApprover(props: SendTransferApproverProps) {

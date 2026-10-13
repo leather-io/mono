@@ -11,8 +11,8 @@ import { StructuredDataBox } from './structured-data-box';
 
 interface SignatureRequestStructuredDataContentProps {
   isLoading: boolean;
-  onSignMessage(this: void, unsignedMessage: UnsignedMessage): Promise<void>;
-  onCancelMessageSigning(this: void): void;
+  onSignMessage: (unsignedMessage: UnsignedMessage) => Promise<void>;
+  onCancelMessageSigning: () => void;
   payload: StructuredPayload;
 }
 export function SignatureRequestStructuredDataContent({

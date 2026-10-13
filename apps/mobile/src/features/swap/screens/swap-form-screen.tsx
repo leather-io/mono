@@ -24,7 +24,7 @@ import { TargetAmountPreview } from '../components/target-amount-preview';
 
 interface SwapFormScreenProps {
   liveEstimate: LiveSwapEstimate;
-  onPressReview(): void;
+  onPressReview: () => void;
 }
 
 export function SwapFormScreen({ liveEstimate, onPressReview }: SwapFormScreenProps) {

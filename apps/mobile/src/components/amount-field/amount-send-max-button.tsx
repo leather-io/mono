@@ -3,7 +3,7 @@ import { t } from '@lingui/core/macro';
 import { Pressable, Text } from '@leather.io/ui/native';
 
 interface AmountSendMaxButtonProps {
-  onPress(): void;
+  onPress: () => void;
 }
 
 export function AmountSendMaxButton({ onPress }: AmountSendMaxButtonProps) {

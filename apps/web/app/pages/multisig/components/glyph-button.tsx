@@ -5,7 +5,7 @@ import { accountIconUrl } from '../multisig-tokens';
 interface GlyphButtonProps {
   icon: string;
   selected: boolean;
-  onClick(): void;
+  onClick: () => void;
 }
 
 export function GlyphButton({ icon, selected, onClick }: GlyphButtonProps) {

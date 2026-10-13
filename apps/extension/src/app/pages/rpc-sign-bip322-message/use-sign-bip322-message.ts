@@ -46,7 +46,7 @@ const allowTimeForUserToReadToast = createDelay(1200);
 
 interface SignBip322MessageFactoryArgs {
   address: BitcoinAddress;
-  signPsbt(this: void, a: bitcoin.Psbt): Promise<btc.Transaction | null>;
+  signPsbt: (a: bitcoin.Psbt) => Promise<btc.Transaction | null>;
 }
 function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFactoryArgs) {
   const network = useCurrentNetwork();
@@ -57,6 +57,63 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
 
   const { frameId, tabId, origin, requestId, message } = useRpcSignBitcoinMessage();
 
+  function onUserRejectBip322MessageSigningRequest() {
+    if (!tabId) return;
+    void sendMessageToOriginatingFrame(
+      { frameId, tabId },
+      createRpcErrorResponse('signMessage', {
+        id: requestId,
+        error: {
+          code: RpcErrorCode.USER_REJECTION,
+          message: 'User rejected request',
+        },
+      })
+    );
+    closeWindow();
+  }
+
+  async function onUserApproveBip322MessageSigningRequest() {
+    setIsLoading(true);
+
+    if (!tabId || !origin) {
+      logger.error('Cannot give app accounts: missing tabId, origin');
+      return;
+    }
+
+    try {
+      const signed = await signBip322MessageUnlessDismissed({
+        message,
+        address,
+        signPsbt,
+        network: networkMode,
+      });
+      if (!signed) return;
+      const { signature } = signed;
+
+      await shortPauseBeforeToast();
+      toast.success('Message signed successfully');
+
+      void sendMessageToOriginatingFrame(
+        { frameId, tabId },
+        createRpcSuccessResponse('signMessage', {
+          id: requestId,
+          result: { signature, address, message },
+        })
+      );
+
+      analytics.track('user_approved_message_signing', { origin });
+
+      await allowTimeForUserToReadToast();
+      closeWindow();
+    } catch (e) {
+      if (isLedgerSigningCancelledError(e)) return;
+      logger.error('Unable to sign bip322 message', e);
+      toast.error('Unable to sign message');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return {
     origin,
     message,
@@ -64,61 +121,8 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
     isLoading,
     formattedOrigin: new URL(origin ?? '').host,
     address,
-    onUserRejectBip322MessageSigningRequest(this: void) {
-      if (!tabId) return;
-      void sendMessageToOriginatingFrame(
-        { frameId, tabId },
-        createRpcErrorResponse('signMessage', {
-          id: requestId,
-          error: {
-            code: RpcErrorCode.USER_REJECTION,
-            message: 'User rejected request',
-          },
-        })
-      );
-      closeWindow();
-    },
-    async onUserApproveBip322MessageSigningRequest(this: void) {
-      setIsLoading(true);
-
-      if (!tabId || !origin) {
-        logger.error('Cannot give app accounts: missing tabId, origin');
-        return;
-      }
-
-      try {
-        const signed = await signBip322MessageUnlessDismissed({
-          message,
-          address,
-          signPsbt,
-          network: networkMode,
-        });
-        if (!signed) return;
-        const { signature } = signed;
-
-        await shortPauseBeforeToast();
-        toast.success('Message signed successfully');
-
-        void sendMessageToOriginatingFrame(
-          { frameId, tabId },
-          createRpcSuccessResponse('signMessage', {
-            id: requestId,
-            result: { signature, address, message },
-          })
-        );
-
-        analytics.track('user_approved_message_signing', { origin });
-
-        await allowTimeForUserToReadToast();
-        closeWindow();
-      } catch (e) {
-        if (isLedgerSigningCancelledError(e)) return;
-        logger.error('Unable to sign bip322 message', e);
-        toast.error('Unable to sign message');
-      } finally {
-        setIsLoading(false);
-      }
-    },
+    onUserRejectBip322MessageSigningRequest,
+    onUserApproveBip322MessageSigningRequest,
   };
 }
 

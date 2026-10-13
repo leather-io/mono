@@ -7,7 +7,7 @@ import { type PastPositionsSummary, describePastPositions } from '../bond-positi
 
 interface PastPeriodsRowProps {
   summary: PastPositionsSummary;
-  onClick(this: void): void;
+  onClick: () => void;
 }
 
 export function PastPeriodsRow({ summary, onClick }: PastPeriodsRowProps) {

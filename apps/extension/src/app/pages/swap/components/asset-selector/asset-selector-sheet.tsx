@@ -9,8 +9,8 @@ import { SheetHeader } from '@leather.io/ui';
 interface AssetSelectorSheetProps {
   type: 'base' | 'target' | null;
   isOpen: boolean;
-  onClose(this: void): void;
-  onCloseAutoFocus?(this: void, e: Event): void;
+  onClose: () => void;
+  onCloseAutoFocus?: (e: Event) => void;
   children: ReactNode;
 }
 

@@ -17,9 +17,9 @@ export class OutdatedExtensionError extends Error {
 }
 
 interface GatedClientOptions {
-  getProvider(): unknown;
-  onOutdated(installedVersion: string): void;
-  onUpToDate(): void;
+  getProvider: () => unknown;
+  onOutdated: (installedVersion: string) => void;
+  onUpToDate: () => void;
 }
 
 // Wraps every method of a Leather SDK client so the installed extension's

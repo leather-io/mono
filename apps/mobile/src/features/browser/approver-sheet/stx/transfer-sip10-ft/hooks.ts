@@ -12,7 +12,7 @@ interface UseTransferSip10FtTxHex {
   assetId: string;
   recipient: string;
   accountId: string;
-  setTxHex(txHex: string): void;
+  setTxHex: (txHex: string) => void;
   nonce: number;
   network: StacksNetwork;
   sponsored: boolean | undefined;

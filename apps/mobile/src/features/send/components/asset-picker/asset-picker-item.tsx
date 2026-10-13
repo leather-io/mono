@@ -2,7 +2,7 @@ import { ReactElement, ReactNode, cloneElement, useRef } from 'react';
 import { View } from 'react-native';
 
 interface AssetPickerItemProps {
-  onPress(top: number | null): void;
+  onPress: (top: number | null) => void;
   children: ReactNode;
   canAnimate?: boolean;
 }
@@ -22,7 +22,7 @@ export function AssetPickerItem({ onPress, children, canAnimate }: AssetPickerIt
 
   return (
     <View ref={ref}>
-      {cloneElement(children as ReactElement<Partial<{ onPress(): void }>>, {
+      {cloneElement(children as ReactElement<Partial<{ onPress: () => void }>>, {
         onPress: handlePress,
       })}
     </View>

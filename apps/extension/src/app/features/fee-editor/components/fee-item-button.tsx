@@ -3,7 +3,7 @@ import { type ReactNode } from 'react';
 import { styled } from 'leather-styles/jsx';
 
 interface FeeItemButtonProps {
-  onClick(this: void): void;
+  onClick: () => void;
   isSelected?: boolean;
   disabled?: boolean;
   children: ReactNode;

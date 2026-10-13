@@ -26,7 +26,7 @@ interface TransactionRowProps {
   // steps avatar, status icon, title type and leading down a notch.
   scale?: TransactionRowScale;
   needsAttention?: boolean;
-  onClick?(): void;
+  onClick?: () => void;
 }
 
 function renderIndicator(status: MultisigTransactionSummary['status'], size: number) {

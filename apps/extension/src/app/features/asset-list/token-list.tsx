@@ -36,7 +36,7 @@ interface TokenListProps {
   variant?: TokenListVariant;
   assetRightElementVariant?: AssetRightElementVariant;
   showUnmanageableTokens?: boolean;
-  onSelectAsset?(this: void, assetId: SerializedCryptoAssetId): void;
+  onSelectAsset?: (assetId: SerializedCryptoAssetId) => void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
   showDepositButtons?: boolean;
 }

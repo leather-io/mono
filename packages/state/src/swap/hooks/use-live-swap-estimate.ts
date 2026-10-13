@@ -22,21 +22,21 @@ export type LiveSwapEstimate =
     }
   | {
       status: 'loading';
-      refetch(): Promise<void>;
+      refetch: () => Promise<void>;
     }
   | {
       status: 'error';
       error: Error;
-      refetch(): Promise<void>;
+      refetch: () => Promise<void>;
     }
   | {
       status: 'empty';
-      refetch(): Promise<void>;
+      refetch: () => Promise<void>;
     }
   | {
       status: 'constrained';
       constraints: ExecutionConstraint[];
-      refetch(): Promise<void>;
+      refetch: () => Promise<void>;
     }
   | {
       status: 'success';
@@ -48,7 +48,7 @@ export type LiveSwapEstimate =
         isRefetching: boolean;
       };
       isRefetching: boolean;
-      refetch(): Promise<void>;
+      refetch: () => Promise<void>;
       intervalState: UseIntervalState;
     };
 
@@ -190,12 +190,12 @@ function useNetworkFeeReadiness(
 }
 
 interface LiveEstimateMatchers<T> {
-  idle(): T;
-  loading(estimate: Extract<LiveSwapEstimate, { status: 'loading' }>): T;
-  error(estimate: Extract<LiveSwapEstimate, { status: 'error' }>): T;
-  empty(estimate: Extract<LiveSwapEstimate, { status: 'empty' }>): T;
-  constrained(estimate: Extract<LiveSwapEstimate, { status: 'constrained' }>): T;
-  success(estimate: Extract<LiveSwapEstimate, { status: 'success' }>): T;
+  idle: () => T;
+  loading: (estimate: Extract<LiveSwapEstimate, { status: 'loading' }>) => T;
+  error: (estimate: Extract<LiveSwapEstimate, { status: 'error' }>) => T;
+  empty: (estimate: Extract<LiveSwapEstimate, { status: 'empty' }>) => T;
+  constrained: (estimate: Extract<LiveSwapEstimate, { status: 'constrained' }>) => T;
+  success: (estimate: Extract<LiveSwapEstimate, { status: 'success' }>) => T;
 }
 
 export function matchLiveEstimate<T>(

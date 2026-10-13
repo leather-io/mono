@@ -1,7 +1,8 @@
-import { type PersistMigrate, createMigrate } from 'redux-persist';
+import { type MigrationManifest, createMigrate } from 'redux-persist';
 
 import { logger } from '@shared/logger';
 import { analytics } from '@shared/utils/analytics';
+import { isRecord } from '@shared/utils/is-record';
 
 import { migrateToUsingNoSerialization } from './migrate-0-1';
 import { migrateToRenameKeysStoreModule } from './migrate-1-2';
@@ -21,14 +22,16 @@ interface AsyncMigrationManifest {
   debug: boolean;
 }
 
-interface MigrateFactory {
-  createMigrate(manifest: object): PersistMigrate;
+function isMigrationManifest(value: unknown): value is MigrationManifest {
+  return (
+    isRecord(value) &&
+    Object.values(value).every(entry => typeof entry === 'function' || typeof entry === 'boolean')
+  );
 }
 
-const migrateFactory: MigrateFactory = { createMigrate };
-
 function createAsyncMigrate(manifest: AsyncMigrationManifest) {
-  return migrateFactory.createMigrate(manifest);
+  if (!isMigrationManifest(manifest)) throw new Error('Invalid migration manifest');
+  return createMigrate(manifest);
 }
 
 export const migrations = createAsyncMigrate({

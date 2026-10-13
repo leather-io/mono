@@ -7,7 +7,7 @@ import { Sip9 } from './sip9';
 interface Sip9CardProps {
   item: Sip9Asset;
   isBns?: boolean;
-  onSelect?(this: void, asset: Sip9Asset): void;
+  onSelect?: (asset: Sip9Asset) => void;
 }
 
 export function Sip9Card({ item, isBns, onSelect }: Sip9CardProps) {

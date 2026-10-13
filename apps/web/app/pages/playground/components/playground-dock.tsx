@@ -28,7 +28,7 @@ function DockRowLink({
   to: string;
   label: string;
   active?: boolean;
-  onNavigate(): void;
+  onNavigate: () => void;
 }) {
   return (
     <NavLink to={to} style={{ textDecoration: 'none' }} onClick={onNavigate}>
@@ -49,7 +49,7 @@ function SectionPicker({
   onSelect,
 }: {
   selected: PlaygroundSectionId;
-  onSelect(id: PlaygroundSectionId): void;
+  onSelect: (id: PlaygroundSectionId) => void;
 }) {
   const [open, setOpen] = useState(false);
   const selectedSection = playgroundSections.find(section => section.id === selected);

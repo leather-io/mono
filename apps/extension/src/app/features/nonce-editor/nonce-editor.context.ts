@@ -5,10 +5,10 @@ export type Nonce = string | number;
 interface NonceEditorContext {
   loadedNonce: Nonce;
   nonce: Nonce;
-  onGoBack(this: void): void;
-  onSetLoadedNonce(this: void, value: Nonce): void;
-  onSetNonce(this: void, value: Nonce): void;
-  onUserActivatesNonceEditor(this: void): void;
+  onGoBack: () => void;
+  onSetLoadedNonce: (value: Nonce) => void;
+  onSetNonce: (value: Nonce) => void;
+  onUserActivatesNonceEditor: () => void;
 }
 
 export const nonceEditorContext = createContext<NonceEditorContext | null>(null);

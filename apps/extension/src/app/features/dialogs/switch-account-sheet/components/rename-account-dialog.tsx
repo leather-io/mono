@@ -11,7 +11,7 @@ import { RenameEntityDialog } from './rename-entity-dialog';
 interface RenameAccountDialogProps {
   accountId: AccountId;
   isShowing: boolean;
-  onClose(this: void): void;
+  onClose: () => void;
 }
 
 export function RenameAccountDialog({ accountId, isShowing, onClose }: RenameAccountDialogProps) {

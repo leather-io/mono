@@ -29,7 +29,7 @@ function LoadingTitleSkeleton() {
 }
 
 interface LoadingHeaderProps {
-  onBack(this: void): void;
+  onBack: () => void;
 }
 
 function LoadingHeader({ onBack }: LoadingHeaderProps) {
@@ -51,7 +51,7 @@ function LoadingHeader({ onBack }: LoadingHeaderProps) {
 }
 
 interface CollectibleDetailsLoadingProps {
-  onBack(this: void): void;
+  onBack: () => void;
 }
 
 export function CollectibleDetailsLoading({ onBack }: CollectibleDetailsLoadingProps) {

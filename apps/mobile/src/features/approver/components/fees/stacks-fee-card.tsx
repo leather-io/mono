@@ -8,7 +8,7 @@ import { BaseFeeCard } from './base-fee-card';
 interface FeeCardProps {
   feeType: FeeTypes;
   amount: Money;
-  onPress(): void;
+  onPress: () => void;
   disabled?: boolean;
 }
 

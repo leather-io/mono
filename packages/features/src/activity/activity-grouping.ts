@@ -12,8 +12,8 @@ export interface ActivityGroup<TItem> {
 }
 
 export interface GroupActivityByDateOptions<TItem> {
-  getTimestamp(item: TItem): number;
-  isPending?(item: TItem): boolean;
+  getTimestamp: (item: TItem) => number;
+  isPending?: (item: TItem) => boolean;
   now?: Date;
 }
 

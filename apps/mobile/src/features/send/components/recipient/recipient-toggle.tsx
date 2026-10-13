@@ -17,9 +17,9 @@ import {
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 interface RecipientToggleProps {
-  onPress(): void;
+  onPress: () => void;
   value: string;
-  onQrButtonPress(source: 'toggle' | 'input'): void;
+  onQrButtonPress: (source: 'toggle' | 'input') => void;
 }
 
 export function RecipientToggle({ onPress, onQrButtonPress, value }: RecipientToggleProps) {

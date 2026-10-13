@@ -11,7 +11,7 @@ interface NftItem {
   caption: string;
   image: string;
   testId: string;
-  onAction(this: void): void;
+  onAction: () => void;
 }
 
 export function CollectiblesEmpty() {

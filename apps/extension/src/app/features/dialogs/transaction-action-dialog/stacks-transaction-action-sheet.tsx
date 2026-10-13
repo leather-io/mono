@@ -38,14 +38,11 @@ interface StacksTransactionActionSheetProps {
 }
 
 interface StacksTransactionActionSheetLoaderProps {
-  children(
-    this: void,
-    args: {
-      txid: string;
-      rawTx: StacksTransactionWire;
-      tx: MempoolTransaction | Transaction;
-    }
-  ): React.ReactNode;
+  children: (args: {
+    txid: string;
+    rawTx: StacksTransactionWire;
+    tx: MempoolTransaction | Transaction;
+  }) => React.ReactNode;
 }
 
 export function StacksTransactionActionSheetLoader({

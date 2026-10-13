@@ -6,7 +6,7 @@ import { Sheet } from '@leather.io/ui';
 
 interface ActionDrawerProps {
   children: ReactNode;
-  onClose(this: void): void;
+  onClose: () => void;
   isShowing: boolean;
 }
 

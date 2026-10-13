@@ -6,7 +6,7 @@ import type { ProposeMultisigTransactionArgs } from '@leather.io/queries';
 import { useProposeMultisigTransaction } from './use-propose-multisig-transaction';
 
 interface MockMutationConfig {
-  signProposalCommitment(this: void, network: AuthNetworkId, proposalHash: string): Promise<string>;
+  signProposalCommitment: (network: AuthNetworkId, proposalHash: string) => Promise<string>;
 }
 
 const mocks = vi.hoisted(() => ({
@@ -15,7 +15,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('@tanstack/react-query', () => ({
-  useMutation({ mutationFn }: { mutationFn(this: void, args: unknown): Promise<unknown> }) {
+  useMutation({ mutationFn }: { mutationFn: (args: unknown) => Promise<unknown> }) {
     return { mutateAsync: mutationFn, reset: mocks.reset, isPending: false };
   },
 }));

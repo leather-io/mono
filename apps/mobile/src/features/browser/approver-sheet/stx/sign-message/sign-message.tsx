@@ -11,8 +11,8 @@ import { SignatureData } from '@leather.io/stacks';
 interface StxSignMessageApproverProps {
   app: App;
   request: RpcRequest<typeof stxSignMessage>;
-  sendResult(result: RpcResponse<typeof stxSignMessage>): void;
-  closeApprover(): void;
+  sendResult: (result: RpcResponse<typeof stxSignMessage>) => void;
+  closeApprover: () => void;
   accountId: string;
 }
 

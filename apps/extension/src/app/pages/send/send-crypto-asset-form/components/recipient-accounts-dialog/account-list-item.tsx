@@ -21,7 +21,7 @@ import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/acc
 interface AccountListItemProps {
   accountId: AccountId;
   walletType: WalletType;
-  onClose(this: void): void;
+  onClose: () => void;
 }
 export const AccountListItem = memo(function AccountListItem({
   accountId,

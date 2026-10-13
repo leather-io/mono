@@ -6,7 +6,7 @@ export { type Account, deserializeAccountId };
 
 interface AccountLoaderProps extends AccountId {
   fallback?: React.ReactNode;
-  children(account: Account): React.ReactNode;
+  children: (account: Account) => React.ReactNode;
 }
 export function AccountLoader({
   fingerprint,

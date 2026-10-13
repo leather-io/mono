@@ -21,7 +21,7 @@ import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/acc
 interface SwitchAccountListItemProps {
   accountId: AccountId;
   nonInteractive?: boolean;
-  handleClose(this: void): void;
+  handleClose: () => void;
   hideBalance?: boolean;
   walletType: WalletType;
 }

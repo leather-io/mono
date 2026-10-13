@@ -16,7 +16,7 @@ import { AvatarSq } from './avatar-sq';
 interface InvitationModalProps {
   vault: VaultSummary;
   isShowing: boolean;
-  onClose(): void;
+  onClose: () => void;
 }
 
 function memberStatusLabel(member: VaultMember, currentUserAddress?: string): string {
@@ -26,7 +26,7 @@ function memberStatusLabel(member: VaultMember, currentUserAddress?: string): st
   return 'Pending';
 }
 
-function InvitationHeader({ onClose }: { onClose?(): void }) {
+function InvitationHeader({ onClose }: { onClose?: () => void }) {
   return (
     <Flex
       alignItems="center"

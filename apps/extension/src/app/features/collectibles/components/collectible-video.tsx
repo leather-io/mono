@@ -4,7 +4,7 @@ import { CollectibleCard } from './collectible-card';
 
 interface CollectibleVideoProps {
   src: string;
-  onPress?(this: void): void;
+  onPress?: () => void;
 }
 
 export function CollectibleVideo({ src, onPress }: CollectibleVideoProps) {

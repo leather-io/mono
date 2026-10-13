@@ -7,13 +7,13 @@ const repeatRate = 150;
 
 export interface UseNumericInputProps {
   value: number;
-  onChange(value: number): void;
+  onChange: (value: number) => void;
   step?: number;
   min?: number;
   max?: number;
   longPressStep?: number;
   disabled?: boolean;
-  formatter?(value: number, decimals?: number): string;
+  formatter?: (value: number, decimals?: number) => string;
 }
 
 export interface NumericInputState {
@@ -22,9 +22,9 @@ export interface NumericInputState {
   min: number;
   max: number;
   disabled: boolean;
-  formatter(value: number, decimals?: number): string;
-  handlePressIn(direction: 'increment' | 'decrement'): void;
-  handlePressOut(): void;
+  formatter: (value: number, decimals?: number) => string;
+  handlePressIn: (direction: 'increment' | 'decrement') => void;
+  handlePressOut: () => void;
 }
 
 export function useNumericInput({

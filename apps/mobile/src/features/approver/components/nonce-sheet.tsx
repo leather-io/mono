@@ -6,7 +6,7 @@ import { SheetRef } from '@leather.io/ui/native';
 interface NonceSheetProps {
   sheetRef: SheetRef;
   nonce: string;
-  onChangeNonce(nonce: string): void;
+  onChangeNonce: (nonce: string) => void;
 }
 export function NonceSheet({ sheetRef, nonce, onChangeNonce }: NonceSheetProps) {
   return (

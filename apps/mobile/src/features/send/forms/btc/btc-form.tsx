@@ -33,7 +33,7 @@ interface BtcFormProps {
   marketData: MarketData;
   quoteCurrency: QuoteCurrency;
   assetItemAnimationOffsetTop?: number | null;
-  onOpenAssetPicker(): void;
+  onOpenAssetPicker: () => void;
 }
 export function BtcForm({
   quoteBalance,

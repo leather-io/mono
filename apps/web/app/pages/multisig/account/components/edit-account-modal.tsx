@@ -14,8 +14,8 @@ interface EditAccountModalProps {
   account: VaultAccount;
   isShowing: boolean;
   isSaving?: boolean;
-  onClose(): void;
-  onSave(update: { name: string; icon: string }): void;
+  onClose: () => void;
+  onSave: (update: { name: string; icon: string }) => void;
 }
 
 export function EditAccountModal({

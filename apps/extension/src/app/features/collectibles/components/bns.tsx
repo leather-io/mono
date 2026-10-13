@@ -44,7 +44,7 @@ function BnsImageContent({ alt, src }: BnsImageContentProps) {
 interface BnsImageProps {
   alt?: string;
   src: string;
-  onPress?(this: void): void;
+  onPress?: () => void;
 }
 
 export function BnsImage({ alt, src, onPress }: BnsImageProps) {

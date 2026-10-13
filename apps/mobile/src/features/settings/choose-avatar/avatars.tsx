@@ -7,7 +7,7 @@ import { Box } from '@leather.io/ui/native';
 import { AvatarButton } from './avatar-button';
 
 interface AvatarProps {
-  setNewIcon(icon: AccountIcon): void;
+  setNewIcon: (icon: AccountIcon) => void;
   currentIcon: string;
 }
 

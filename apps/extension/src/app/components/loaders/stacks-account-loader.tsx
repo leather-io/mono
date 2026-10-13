@@ -12,7 +12,7 @@ import {
 import { type StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
 interface CurrentStacksAccountLoaderProps {
-  children(this: void, data: StacksAccount): ReactNode;
+  children: (data: StacksAccount) => ReactNode;
   fallback?: ReactNode;
 }
 export function CurrentStacksAccountLoader({
@@ -25,7 +25,7 @@ export function CurrentStacksAccountLoader({
 }
 
 interface StacksAccountBaseLoaderProps {
-  children(this: void, data: StacksAccount): React.ReactNode;
+  children: (data: StacksAccount) => React.ReactNode;
 }
 
 interface StacksAccountCurrentLoaderProps extends StacksAccountBaseLoaderProps {

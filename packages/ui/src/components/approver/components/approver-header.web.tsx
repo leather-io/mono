@@ -13,7 +13,7 @@ interface ApproverHeaderProps {
   title: ReactNode;
   info?: ReactNode;
   showLargeFavicon?: boolean;
-  onPressRequestedByLink?(e: React.MouseEvent<HTMLAnchorElement>): void;
+  onPressRequestedByLink?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 export function ApproverHeader({ title, info, onPressRequestedByLink }: ApproverHeaderProps) {
   useRegisterApproverChild('header');
@@ -45,7 +45,7 @@ export function ApproverHeader({ title, info, onPressRequestedByLink }: Approver
 }
 
 interface RequesterInfoProps {
-  onPressRequestedByLink?(e: React.MouseEvent<HTMLAnchorElement>): void;
+  onPressRequestedByLink?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 function RequesterInfo({ onPressRequestedByLink }: RequesterInfoProps) {

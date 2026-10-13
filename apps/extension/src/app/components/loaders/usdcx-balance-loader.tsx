@@ -9,7 +9,7 @@ import { CryptoAssetItemPlaceholder } from '../crypto-asset-item/crypto-asset-it
 
 interface UsdcxAssetItemBalanceLoaderProps {
   accountId: AccountId;
-  children(this: void, balance: Sip10Balance, isLoading: boolean): React.ReactNode;
+  children: (balance: Sip10Balance, isLoading: boolean) => React.ReactNode;
 }
 
 export function UsdcxAssetItemBalanceLoader({

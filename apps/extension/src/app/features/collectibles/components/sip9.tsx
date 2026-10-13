@@ -10,7 +10,7 @@ import { CollectibleVideo } from './collectible-video';
 
 interface Sip9Props {
   item: Sip9Asset;
-  onPress?(this: void): void;
+  onPress?: () => void;
 }
 
 export function Sip9({

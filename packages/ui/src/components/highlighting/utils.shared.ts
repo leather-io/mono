@@ -44,8 +44,10 @@ export interface RenderProps<Platform extends PrismPlatform> {
   tokens: GrammaticalToken[][];
   className: string;
   style?: Platform extends 'mobile' ? StyleProp<TextStyle> : CSSProperties;
-  getLineProps(input: LineInputProps<Platform>): LineOutputProps<Platform>;
-  getTokenProps(input: GrammaticalTokenInputProps<Platform>): GrammaticalTokenOutputProps<Platform>;
+  getLineProps: (input: LineInputProps<Platform>) => LineOutputProps<Platform>;
+  getTokenProps: (
+    input: GrammaticalTokenInputProps<Platform>
+  ) => GrammaticalTokenOutputProps<Platform>;
 }
 
 export type GetGrammaticalTokenProps<Platform extends PrismPlatform> = (

@@ -15,8 +15,8 @@ interface AccountCardProps extends PressableProps {
   primaryTitle: ReactNode;
   secondaryTitle?: ReactNode;
   address?: ReactNode;
-  onPress?(): void;
-  onLongPress?(): void;
+  onPress?: () => void;
+  onLongPress?: () => void;
   testID?: string;
   iconTestID?: string;
   appOrigins?: string[];

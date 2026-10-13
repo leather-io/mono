@@ -6,7 +6,7 @@ import type { Chain } from '../../data/multisig-types';
 interface ChainPickerProps {
   chain: Chain;
   connected: Record<Chain, boolean>;
-  onChange(chain: Chain): void;
+  onChange: (chain: Chain) => void;
 }
 
 const chains: { id: Chain; label: string }[] = [

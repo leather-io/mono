@@ -39,7 +39,7 @@ export function ErrorFallbackTab() {
 
 interface ErrorProps {
   error?: Error;
-  onRetry?(): void;
+  onRetry?: () => void;
 }
 function ErrorFallback({ error, onRetry }: ErrorProps) {
   return (

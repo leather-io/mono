@@ -28,9 +28,9 @@ const recentActivityLimit = 10;
 interface AssetDetailModalProps {
   account: VaultAccount;
   item: VaultAssetItem;
-  onClose(): void;
-  onSend(item: VaultAssetItem): void;
-  onReceive(): void;
+  onClose: () => void;
+  onSend: (item: VaultAssetItem) => void;
+  onReceive: () => void;
 }
 
 interface SectionProps {

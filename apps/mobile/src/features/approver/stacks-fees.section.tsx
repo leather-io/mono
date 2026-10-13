@@ -14,7 +14,7 @@ import { getTxFeeMoney } from './utils';
 
 interface StacksFeesSectionProps {
   txHex: string;
-  onChangeFee(fee: number): void;
+  onChangeFee: (fee: number) => void;
   disabled?: boolean;
 }
 

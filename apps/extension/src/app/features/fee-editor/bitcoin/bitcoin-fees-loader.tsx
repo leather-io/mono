@@ -14,12 +14,12 @@ import { useBitcoinFees } from './use-bitcoin-fees';
 interface BitcoinFees {
   fees: Fees;
   isLoading: boolean;
-  getCustomFee(this: void, rate: number): Fee;
+  getCustomFee: (rate: number) => Fee;
 }
 
 interface BitcoinFeesLoaderProps {
   account: AccountRequest;
-  children(this: void, { fees, isLoading, getCustomFee }: BitcoinFees): React.ReactNode;
+  children: ({ fees, isLoading, getCustomFee }: BitcoinFees) => React.ReactNode;
   isSendingMax?: boolean;
   recipients: TransferRecipient[];
   utxos: OwnedUtxo[];

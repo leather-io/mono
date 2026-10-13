@@ -9,7 +9,10 @@ import {
 
 interface CreateCurrencyFormatterParams {
   locale: string;
-  onError?(error: unknown, context: { locale: string; options: Intl.NumberFormatOptions }): void;
+  onError?: (
+    error: unknown,
+    context: { locale: string; options: Intl.NumberFormatOptions }
+  ) => void;
 }
 
 const fallback = '';

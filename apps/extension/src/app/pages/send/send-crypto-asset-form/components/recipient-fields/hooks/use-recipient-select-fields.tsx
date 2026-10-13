@@ -40,31 +40,36 @@ export function useRecipientSelectFields() {
     await setFieldTouched('recipientBnsName', false);
   }, [setFieldValue, setFieldError, setFieldTouched]);
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    function showRecipientAccountsModal() {
+      setSelectedRecipientField('address');
+      void navigate(RouteUrls.SendCryptoAssetFormRecipientAccounts, { replace: true });
+    }
+
+    async function onSelectRecipientFieldType(recipientType: RecipientIdentifierType) {
+      await resetAllRecipientFields();
+      setBnsAddress('');
+      setSelectedRecipientField(recipientType);
+      setIsSelectVisible(false);
+    }
+
+    async function onSetIsSelectVisible(value: boolean) {
+      await resetAllRecipientFields();
+      setIsSelectVisible(value);
+    }
+
+    return {
       selectedRecipientField,
 
       selectedRecipientFieldName: recipientIdentifierTypesMap[selectedRecipientField],
 
       isSelectVisible,
 
-      showRecipientAccountsModal(this: void) {
-        setSelectedRecipientField('address');
-        void navigate(RouteUrls.SendCryptoAssetFormRecipientAccounts, { replace: true });
-      },
+      showRecipientAccountsModal,
 
-      async onSelectRecipientFieldType(this: void, recipientType: RecipientIdentifierType) {
-        await resetAllRecipientFields();
-        setBnsAddress('');
-        setSelectedRecipientField(recipientType);
-        setIsSelectVisible(false);
-      },
+      onSelectRecipientFieldType,
 
-      async onSetIsSelectVisible(value: boolean) {
-        await resetAllRecipientFields();
-        setIsSelectVisible(value);
-      },
-    }),
-    [isSelectVisible, navigate, resetAllRecipientFields, selectedRecipientField, setBnsAddress]
-  );
+      onSetIsSelectVisible,
+    };
+  }, [isSelectVisible, navigate, resetAllRecipientFields, selectedRecipientField, setBnsAddress]);
 }

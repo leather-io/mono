@@ -18,9 +18,9 @@ import { formatAddressesForGetAddresses } from './utils';
 interface GetAddressesApproverProps {
   app: App;
   request: RpcRequest<typeof getAddresses>;
-  sendResult(result: RpcResponse<typeof getAddresses>): void;
+  sendResult: (result: RpcResponse<typeof getAddresses>) => void;
   origin: string;
-  closeApprover(): void;
+  closeApprover: () => void;
 }
 
 export function GetAddressesApprover(props: GetAddressesApproverProps) {

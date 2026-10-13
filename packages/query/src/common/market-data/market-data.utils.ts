@@ -5,7 +5,7 @@ import { convertAmountToFractionalUnit } from '@leather.io/utils';
 
 interface MarketDataVendorWithPriceSelector {
   result: unknown;
-  selector(v: unknown): string | number;
+  selector: (v: unknown) => string | number;
 }
 export function pullPriceDataFromAvailableResponses(
   responses: MarketDataVendorWithPriceSelector[]

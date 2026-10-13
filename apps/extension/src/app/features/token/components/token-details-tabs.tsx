@@ -37,7 +37,7 @@ export function resolveVisibleTokenDetailsTab(
 
 interface TokenDetailsTabsProps {
   activeTab: TokenDetailsTab;
-  onSelectTab(this: void, tab: TokenDetailsTab): void;
+  onSelectTab: (tab: TokenDetailsTab) => void;
   priceContent?: ReactNode;
   descriptionText?: string;
   detailRows: ReactNode;

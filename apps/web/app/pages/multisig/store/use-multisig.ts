@@ -12,21 +12,26 @@ function useSession() {
 }
 
 interface MultisigActions {
-  addVault(payload: { chain: Chain; name: string; theme: number; members: NewMemberInput[] }): void;
-  addAccount(payload: { vaultId: string; name: string; threshold: number; icon: string }): void;
-  acceptInvite(vaultId: string): void;
-  declineInvite(vaultId: string): void;
-  proposeTransaction(payload: {
+  addVault: (payload: {
+    chain: Chain;
+    name: string;
+    theme: number;
+    members: NewMemberInput[];
+  }) => void;
+  addAccount: (payload: { vaultId: string; name: string; threshold: number; icon: string }) => void;
+  acceptInvite: (vaultId: string) => void;
+  declineInvite: (vaultId: string) => void;
+  proposeTransaction: (payload: {
     vaultId: string;
     accountId: string;
     recipient: string;
     amount: string;
-  }): void;
-  signTransaction(payload: { vaultId: string; txId: string; signer: string }): void;
-  broadcastTransaction(vaultId: string, txId: string): void;
-  cancelTransaction(vaultId: string, txId: string): void;
-  cancelVault(vaultId: string): void;
-  resetSession(mode: 'empty' | 'seed'): void;
+  }) => void;
+  signTransaction: (payload: { vaultId: string; txId: string; signer: string }) => void;
+  broadcastTransaction: (vaultId: string, txId: string) => void;
+  cancelTransaction: (vaultId: string, txId: string) => void;
+  cancelVault: (vaultId: string) => void;
+  resetSession: (mode: 'empty' | 'seed') => void;
 }
 
 export function useMultisigActions(): MultisigActions {

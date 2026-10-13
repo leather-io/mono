@@ -9,7 +9,7 @@ import { FeatureIntroducerHeader } from './feature-introducer-header';
 
 interface FeatureIntroducerProps {
   children: ReactNode;
-  onClose?(this: void): void;
+  onClose?: () => void;
 }
 
 function FeatureIntroducerRoot({ children, onClose }: FeatureIntroducerProps) {

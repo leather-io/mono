@@ -8,7 +8,7 @@ import { Sheet, SheetRef } from '@leather.io/ui/native';
 
 interface InlineAssetPickerProps {
   sheetRef: SheetRef;
-  onSelectAsset(asset: FungibleCryptoAsset): void;
+  onSelectAsset: (asset: FungibleCryptoAsset) => void;
   fingerprint: string;
   accountIndex: number;
 }

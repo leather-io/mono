@@ -6,17 +6,17 @@ export interface DefaultProperties {
 }
 
 export interface AnalyticsClientInterface {
-  track(eventName: string, properties: Record<string, any>): void;
-  identify(uniqueId: string): Promise<void>;
-  setGroup(groupKey: string, groupId: string): void;
-  getGroup(
+  track: (eventName: string, properties: Record<string, any>) => void;
+  identify: (uniqueId: string) => Promise<void>;
+  setGroup: (groupKey: string, groupId: string) => void;
+  getGroup: (
     groupKey: string,
     groupId: string
-  ): {
-    set(prop: string, to: string): void;
+  ) => {
+    set: (prop: string, to: string) => void;
   };
-  getPeople(): {
-    set(properties: Record<string, any>): void;
+  getPeople: () => {
+    set: (properties: Record<string, any>) => void;
   };
 }
 

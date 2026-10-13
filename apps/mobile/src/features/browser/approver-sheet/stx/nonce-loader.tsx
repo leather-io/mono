@@ -12,7 +12,7 @@ export function NonceLoader({
   children,
 }: {
   accountId: string;
-  children(nonce: number): React.ReactNode;
+  children: (nonce: number) => React.ReactNode;
 }) {
   const { fromAccountId } = useStacksSigners();
   const signer = fromAccountId(accountId)[0];

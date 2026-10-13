@@ -11,8 +11,8 @@ import { SheetInstance } from '@leather.io/ui/native';
 import { Ramp } from './ramp';
 
 export interface RampSheetInstance {
-  present(mode: OnramperMode, asset?: FungibleCryptoAsset): void;
-  dismiss(): void;
+  present: (mode: OnramperMode, asset?: FungibleCryptoAsset) => void;
+  dismiss: () => void;
 }
 export type RampSheetRef = RefObject<RampSheetInstance | null>;
 

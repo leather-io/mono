@@ -41,7 +41,7 @@ interface AmountFieldProps {
   isSendingMax?: boolean;
   switchableAmount?: React.JSX.Element;
   tokenSymbol?: string;
-  onSetIsSendingMax?(this: void, value: boolean): void;
+  onSetIsSendingMax?: (value: boolean) => void;
 }
 export function AmountField({
   autoComplete = 'on',

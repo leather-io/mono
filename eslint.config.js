@@ -127,6 +127,7 @@ export default defineConfig([
       '**/.react-router/',
       '**/.wrangler/',
       '**/generated/',
+      '**/i18n/locales/**/messages.ts',
       'packages/ui/src/icons/docs',
     ],
   },

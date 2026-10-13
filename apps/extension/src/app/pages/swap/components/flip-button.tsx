@@ -7,7 +7,7 @@ import { ArrowsRepeatLeftRightIcon } from '@leather.io/ui';
 
 interface FlipButtonProps {
   isVisible: boolean;
-  onPress(this: void): void;
+  onPress: () => void;
 }
 
 export function FlipButton({ isVisible, onPress }: FlipButtonProps) {

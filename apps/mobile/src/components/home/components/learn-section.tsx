@@ -14,7 +14,7 @@ import { getLearnIcon } from './learn-icon-map.native';
 interface LearnListItemProps {
   title: string;
   icon: ReactNode;
-  onPress(): void;
+  onPress: () => void;
 }
 
 function LearnListItem({ title, icon, onPress }: LearnListItemProps) {

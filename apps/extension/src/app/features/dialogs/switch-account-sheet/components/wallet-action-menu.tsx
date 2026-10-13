@@ -10,9 +10,9 @@ import { type WalletType } from '@app/store/common/wallet-type.selectors';
 interface WalletActionMenuProps {
   walletType: WalletType;
   canRemoveWallet: boolean;
-  onRename(this: void): void;
-  onRemove(this: void): void;
-  onViewSecretKey(this: void): void;
+  onRename: () => void;
+  onRemove: () => void;
+  onViewSecretKey: () => void;
 }
 
 export function WalletActionMenu({

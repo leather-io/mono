@@ -20,7 +20,7 @@ interface Sip10SendLoaderData {
 
 interface Sip10DataLoaderProps {
   account: AccountId;
-  children(data: Sip10SendLoaderData): React.ReactNode;
+  children: (data: Sip10SendLoaderData) => React.ReactNode;
   asset: Sip10Asset;
 }
 

@@ -5,7 +5,7 @@ import { FeeMultiplierButton } from './fee-multiplier-button';
 const multipliers = [2, 5, 10];
 
 interface FeeMultiplierProps extends HstackProps {
-  onSelectMultiplier(this: void, multiplier: number): void;
+  onSelectMultiplier: (multiplier: number) => void;
   showReset?: boolean;
 }
 

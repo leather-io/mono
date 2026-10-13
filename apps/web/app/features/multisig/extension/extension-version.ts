@@ -32,7 +32,7 @@ export function isExtensionVersionSupported(version: string): boolean {
 }
 
 interface ProductInfoProvider {
-  getProductInfo(): unknown;
+  getProductInfo: () => unknown;
 }
 
 function hasProductInfo(provider: object): provider is ProductInfoProvider {

@@ -27,7 +27,7 @@ export function getThemeLabel(theme: UserSelectedTheme) {
 const ThemeContext = createContext<{
   theme: ComputedTheme;
   userSelectedTheme: UserSelectedTheme;
-  setUserSelectedTheme(this: void, theme: UserSelectedTheme): void;
+  setUserSelectedTheme: (theme: UserSelectedTheme) => void;
 }>({
   // These values are not used, but are set to satisfy the context's value type.
   theme: 'light',

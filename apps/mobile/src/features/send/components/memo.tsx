@@ -17,8 +17,8 @@ import {
 
 interface MemoProps {
   value?: string;
-  onChange(value: string): void;
-  onBlur(): void;
+  onChange: (value: string) => void;
+  onBlur: () => void;
   invalid: boolean;
   isDirty: boolean;
   isTouched: boolean;

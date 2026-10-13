@@ -15,7 +15,7 @@ interface ActivityListLayoutProps {
   isError: boolean;
   isRefetchError: boolean;
   hasActivity: boolean;
-  onRetry(this: void): void;
+  onRetry: () => void;
 }
 
 export function ActivityListLayout({

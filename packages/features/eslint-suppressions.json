@@ -10,11 +10,6 @@
       "count": 4
     }
   },
-  "src/activity/activity-grouping.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
   "src/activity/activity-links.spec.ts": {
     "@typescript-eslint/consistent-type-assertions": {
       "count": 1

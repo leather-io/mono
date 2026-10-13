@@ -19,12 +19,12 @@ import { useBitcoinCustomFee } from './hooks/use-bitcoin-custom-fee';
 const feeInputLabel = 'sats/vB';
 
 interface Props {
-  onClick?(this: void): void;
+  onClick?: () => void;
   isSendingMax: boolean;
   recipients: TransferRecipient[];
   hasInsufficientBalanceError: boolean;
   errorMessage?: string;
-  setCustomFeeInitialValue?(this: void, value: string): void;
+  setCustomFeeInitialValue?: (value: string) => void;
   customFeeInitialValue: string;
 }
 

@@ -39,7 +39,7 @@ function initializer({ selectedAsset, currentAccount, receiveType }: InitialData
 
 interface ReceiveFlowContextValue {
   state: ReceiveState;
-  selectAsset(asset: SelectedAsset | null): void;
+  selectAsset: (asset: SelectedAsset) => void;
 }
 
 const ReceiveFlowContext = createContext<ReceiveFlowContextValue | null>(null);
