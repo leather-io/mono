@@ -93,6 +93,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
           footer={
             <>
               <ManageTokensFooter
+                account={currentAccount}
                 onPress={() => {
                   manageTokensSheetRef.current?.present();
                 }}

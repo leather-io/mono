@@ -38,6 +38,10 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
+#: src/components/home/components/manage-tokens-footer.tsx:61
+msgid "{hiddenCount, plural, one {# hidden token} other {# hidden tokens}}"
+msgstr "{hiddenCount, plural, one {# hidden token} other {# hidden tokens}}"
+
 #: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:50
 msgid "{operation} {baseAssetSymbol} to {targetAssetSymbol} is limited to {threshold}"
 msgstr "{operation} {baseAssetSymbol} to {targetAssetSymbol} is limited to {threshold}"
@@ -1191,7 +1195,6 @@ msgstr ""
 msgid "Make your first transaction to get started"
 msgstr "Make your first transaction to get started"
 
-#: src/components/home/components/manage-tokens-footer.tsx:12
 #: src/features/balances/manage-tokens.sheet.tsx:93
 msgid "Manage tokens"
 msgstr "Manage tokens"
@@ -1204,7 +1207,7 @@ msgstr "Matching"
 msgid "Max"
 msgstr "Max"
 
-#: src/features/swap/components/amount-presets.tsx:23
+#: src/features/swap/components/amount-presets.tsx:36
 msgid "MAX"
 msgstr "MAX"
 
