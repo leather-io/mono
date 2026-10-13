@@ -24,9 +24,12 @@ function useHiddenSip10Count({ fingerprint, accountIndex }: AccountId) {
   }, [visible, all]);
 }
 
-function FadingLine({ direction }: { direction: 'left' | 'right' }) {
+interface FadingLineProps {
+  direction: 'left' | 'right';
+}
+function FadingLine({ direction }: FadingLineProps) {
   const { colors } = useTheme();
-  const fade = [colors['ink.background-primary'], colors['ink.border-default']] as const;
+  const fade: [string, string] = [colors['ink.background-primary'], colors['ink.border-default']];
 
   return (
     <LinearGradient
