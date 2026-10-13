@@ -214,7 +214,7 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         <SbtcLedgerRecoveryWarning />
       )}
 
-      <styled.span textStyle="caption.01" textAlign="center" color="ink.text-subdued" mt="auto">
+      <styled.span textStyle="caption.01" textAlign="center" color="ink.text-secondary" mt="auto">
         Make sure everything looks correct.
         <br />
         Confirmed transactions cannot be undone.
