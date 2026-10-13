@@ -145,6 +145,8 @@ msgid "Activity"
 msgstr "Activity"
 
 #: src/features/account/components/create-wallet-card.tsx:22
+#: src/features/account/sheets/add-account-sheet.tsx:26
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:141
 msgid "Add account"
 msgstr "Add account"
 
@@ -171,6 +173,7 @@ msgstr "Add to existing wallet"
 msgid "Add to new wallet"
 msgstr "Add to new wallet"
 
+#: src/app/settings/wallet/index.tsx:52
 #: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:26
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:75
 msgid "Add wallet"
@@ -232,6 +235,7 @@ msgstr "Address scan range"
 msgid "Address types"
 msgstr "Address types"
 
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:186
 #: src/features/recover-wallet/recover-wallet.layout.tsx:48
 msgid "Advanced options"
 msgstr "Advanced options"
@@ -410,11 +414,18 @@ msgid "Be careful with this transaction"
 msgstr "Be careful with this transaction"
 
 #: src/features/recover-wallet/recover-wallet.layout.tsx:68
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:18
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:20
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
+#: src/features/balances/bitcoin/bitcoin-deposit-token-cell.tsx:25
+#: src/features/balances/bitcoin/bitcoin-token-balance.tsx:11
+#: src/features/receive/get-assets.ts:29
+#: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
+#: src/features/swap/swap.utils.ts:10
+#: src/shared/display-preference.ts:59
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -446,6 +457,7 @@ msgid "Browser"
 msgstr "Browser"
 
 #: src/components/action-buttons.tsx:55
+#: src/features/token/components/deposit-token-cell.tsx:60
 msgid "Buy"
 msgstr "Buy"
 
@@ -575,6 +587,7 @@ msgstr "Connecting"
 msgid "Connection failed"
 msgstr "Connection failed"
 
+#: src/app/app-connections.tsx:12
 #: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:20
 msgid "Connections"
 msgstr "Connections"
@@ -699,6 +712,9 @@ msgstr "Description"
 msgid "Device ID"
 msgstr "Device ID"
 
+#: src/app/settings/networks/index.tsx:53
+#: src/app/settings/security/index.tsx:22
+#: src/app/settings/security/index.tsx:38
 #: src/features/recover-wallet/recover-wallet.layout.tsx:70
 msgid "Disabled"
 msgstr "Disabled"
@@ -748,6 +764,9 @@ msgstr "Edit Slippage"
 msgid "Enable device security"
 msgstr "Enable device security"
 
+#: src/app/settings/networks/index.tsx:53
+#: src/app/settings/security/index.tsx:18
+#: src/app/settings/security/index.tsx:38
 #: src/features/recover-wallet/recover-wallet.layout.tsx:70
 msgid "Enabled"
 msgstr "Enabled"
@@ -761,9 +780,11 @@ msgid "Enter recipient"
 msgstr "Enter recipient"
 
 #: src/features/recover-wallet/recover-wallet.layout.tsx:40
+#: src/features/recover-wallet/recover-wallet.tsx:112
 msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
 
+#: src/features/swap/components/quote-preview/quote-preview-content.tsx:53
 #: src/features/swap/screens/swap-review-screen.tsx:187
 msgid "Estimated fees"
 msgstr "Estimated fees"
@@ -849,6 +870,7 @@ msgstr "Feature waitlist notification"
 msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
+#: src/features/approver/stx/hooks.ts:27
 #: src/features/psbt-signer/psbt-signer.tsx:210
 msgid "Fee updated"
 msgstr "Fee updated"
@@ -894,6 +916,7 @@ msgstr "funds already on their way to someone else."
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
+#: src/features/account/sheets/add-account-sheet.tsx:37
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
 msgid "Generate new Secret Key for self-custody"
 msgstr "Generate new Secret Key for self-custody"
@@ -1073,6 +1096,7 @@ msgstr "Layer 2 · Stacks"
 msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
+#: src/app/settings/help/index.tsx:29
 #: src/components/home/components/learn-section.tsx:63
 msgid "Learn"
 msgstr "Learn"
@@ -1182,6 +1206,7 @@ msgid "Memo updated"
 msgstr "Memo updated"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:50
+#: src/features/approver/structured-message.section.tsx:48
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:50
 msgid "Message"
 msgstr "Message"
@@ -1206,12 +1231,18 @@ msgstr "Minimum receive"
 msgid "Minimum version format is invalid"
 msgstr "Minimum version format is invalid"
 
+#: src/app/settings/index.tsx:106
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:95
 msgid "More options"
 msgstr "More options"
 
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
+#: src/features/token/components/token-details-table.tsx:19
+#: src/features/token/components/token-loading.tsx:35
+#: src/features/token/stacks/bns-details.tsx:35
+#: src/features/token/stacks/sip9-token-details.tsx:50
 msgid "Name"
 msgstr "Name"
 
@@ -1343,6 +1374,7 @@ msgstr "Portfolio"
 msgid "Price"
 msgstr "Price"
 
+#: src/features/swap/components/price-impact-info-sheet.tsx:8
 #: src/features/swap/screens/swap-review-screen.tsx:178
 msgid "Price impact"
 msgstr "Price impact"
@@ -1377,6 +1409,7 @@ msgstr "Pull to refresh"
 msgid "Rarity rank"
 msgstr "Rarity rank"
 
+#: src/features/swap/components/quote-preview/quote-preview-content.tsx:39
 #: src/features/swap/screens/swap-review-screen.tsx:142
 msgid "Rate"
 msgstr "Rate"
@@ -1390,6 +1423,8 @@ msgid "Read more"
 msgstr "Read more"
 
 #: src/components/action-buttons.tsx:44
+#: src/features/receive/screens/asset-details.tsx:56
+#: src/features/receive/screens/select-asset.tsx:83
 msgid "Receive"
 msgstr "Receive"
 
@@ -1430,6 +1465,7 @@ msgid "Recently viewed"
 msgstr "Recently viewed"
 
 #: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:22
+#: src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx:22
 msgid "Recents"
 msgstr "Recents"
 
@@ -1441,6 +1477,7 @@ msgstr "Register .btc domain"
 msgid "Registered at block"
 msgstr "Registered at block"
 
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:175
 #: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:17
 msgid "Remove wallet"
 msgstr "Remove wallet"
@@ -1491,6 +1528,7 @@ msgstr "Review"
 msgid "Review Swap"
 msgstr "Review Swap"
 
+#: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:74
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:19
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:19
 msgid "Save"
@@ -1549,6 +1587,8 @@ msgid "Sell"
 msgstr "Sell"
 
 #: src/components/action-buttons.tsx:33
+#: src/features/send/screens/form.tsx:54
+#: src/features/send/screens/select-asset.tsx:35
 msgid "Send"
 msgstr "Send"
 
@@ -1576,6 +1616,8 @@ msgstr "Sending to your own address isn’t supported. Choose a different addres
 msgid "Sent"
 msgstr "Sent"
 
+#: src/app/settings/index.tsx:57
+#: src/components/screen/screen-header/components/header-actions.tsx:30
 #: src/features/qr-scanner/use-camera-permission.ts:38
 msgid "Settings"
 msgstr "Settings"
@@ -1611,6 +1653,7 @@ msgstr "Sign transaction"
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
+#: src/features/activity/translate-activity-status.ts:46
 #: src/features/psbt-signer/psbt-signer.tsx:256
 msgid "Signed"
 msgstr "Signed"
@@ -1668,7 +1711,12 @@ msgstr "Sponsored fee"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
+#: src/features/balances/stacks/stacks-deposit-token-cell.tsx:25
+#: src/features/balances/stacks/stacks-token-balance.tsx:12
+#: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
+#: src/features/swap/swap.utils.ts:9
+#: src/shared/display-preference.ts:60
 msgid "Stacks"
 msgstr "Stacks"
 
@@ -1861,6 +1909,7 @@ msgstr "This transaction sends funds to an output Leather can’t display as an 
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
+#: src/features/approver/components/sip10-recipient.tsx:43
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:148
 #: src/features/psbt-signer/psbt-signer.tsx:300
 msgid "To address"
