@@ -5,8 +5,8 @@ import { CopyIcon, ExternalLinkIcon } from '@leather.io/ui';
 import { InfoCardBtn } from '@app/components/info-card/info-card';
 
 interface SummaryFooterProps {
-  onClickLink: () => void;
-  onClickCopy: () => void;
+  onClickLink(): void;
+  onClickCopy(): void;
 }
 export function SummaryFooter({ onClickLink, onClickCopy }: SummaryFooterProps) {
   return (

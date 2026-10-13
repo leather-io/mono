@@ -10,7 +10,7 @@ import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
 import type { LedgerFlowHandoffRequest } from '@app/features/ledger/flow/ledger-flow.types';
 
 interface UseAddWalletNavigationArgs {
-  closeSheets: () => void;
+  closeSheets(): void;
 }
 
 export function useAddWalletNavigation({ closeSheets }: UseAddWalletNavigationArgs) {

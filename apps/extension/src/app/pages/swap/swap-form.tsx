@@ -62,8 +62,8 @@ export function SwapForm() {
 
   function handleAssetSelection(type: 'base' | 'target', asset: AccountSwapAsset) {
     const action = {
-      base: (selectedAsset: AccountSwapAsset) => actions.setBaseSwapAsset(selectedAsset),
-      target: (selectedAsset: AccountSwapAsset) => actions.setTargetSwapAsset(selectedAsset),
+      base: actions.setBaseSwapAsset,
+      target: actions.setTargetSwapAsset,
     };
 
     action[type](asset);
@@ -105,10 +105,10 @@ export function SwapForm() {
                 <AmountField
                   asset={state.baseSwapAsset?.asset}
                   value={state.baseAmount}
-                  onChange={amount => actions.setBaseAmount(amount)}
+                  onChange={actions.setBaseAmount}
                   secondaryAmount={state.secondaryAmount}
                   inputCurrencyMode={state.inputCurrencyMode}
-                  onInputCurrencyModeSwitch={() => actions.toggleInputCurrencyMode()}
+                  onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
                   quoteCurrencyPreference={state.quoteCurrencyPreference}
                   inputRef={amountFieldRef}
                   errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
@@ -152,10 +152,7 @@ export function SwapForm() {
                 </Flex>
               </Flex>
 
-              <FlipButton
-                isVisible={state.assetFlippingAllowed}
-                onPress={() => actions.flipAssets()}
-              />
+              <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
             </Box>
 
             <QuotePreview state={state} liveEstimate={liveEstimate} />
@@ -164,7 +161,7 @@ export function SwapForm() {
           <AssetSelectorSheet
             type={state.selectingAsset}
             isOpen={state.selectingAsset !== null}
-            onClose={() => actions.closeAssetSelector()}
+            onClose={actions.closeAssetSelector}
             onCloseAutoFocus={handleAssetSheetCloseAutoFocus}
           >
             {state.selectingAsset && (

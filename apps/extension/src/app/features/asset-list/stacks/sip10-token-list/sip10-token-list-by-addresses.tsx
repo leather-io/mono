@@ -11,7 +11,7 @@ import { Sip10TokenItem } from './sip10-token-item';
 interface Sip10TokenAssetListByAddressesProps {
   account: AccountAddresses;
   assetRightElementVariant?: AssetRightElementVariant;
-  onSelectAsset?: (assetId: SerializedCryptoAssetId) => void;
+  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
 }
 
 export function Sip10TokenAssetListByAddresses({

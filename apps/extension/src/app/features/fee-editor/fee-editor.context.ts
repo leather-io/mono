@@ -25,12 +25,12 @@ interface FeeEditorContext {
   marketData: MarketData;
   fees: Fees;
   selectedFee: Fee;
-  getCustomFee: (rate: number) => Fee;
-  onGoBack: () => void;
-  onSetCustomFee: (value: string) => void;
-  onSetLoadedFee: (value: Fee) => void;
-  onSetSelectedFee: (value: Fee) => void;
-  onUserActivatesFeeEditor: () => void;
+  getCustomFee(rate: number): Fee;
+  onGoBack(): void;
+  onSetCustomFee(value: string | null): void;
+  onSetLoadedFee(value: Fee): void;
+  onSetSelectedFee(value: Fee): void;
+  onUserActivatesFeeEditor(): void;
 }
 
 export const feeEditorContext = createContext<FeeEditorContext | null>(null);

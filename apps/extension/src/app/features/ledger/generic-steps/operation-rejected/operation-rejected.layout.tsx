@@ -9,7 +9,7 @@ import { LedgerWrapper } from '../../components/ledger-wrapper';
 
 interface LedgerOperationRejectedLayoutProps {
   description: string;
-  onClose: () => void;
+  onClose(): void;
 }
 export function LedgerOperationRejectedLayout({
   onClose,

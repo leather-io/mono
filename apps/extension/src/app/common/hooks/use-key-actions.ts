@@ -18,7 +18,7 @@ import { partiallyClearLocalStorage } from '@app/common/store-utils';
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { userSwitchesAccount, userSwitchesToPolicy } from '@app/store/active/active.slice';
-import { createNewAccount as createNewAccountAction } from '@app/store/chains/stx-chain.actions';
+import { createNewAccount } from '@app/store/chains/stx-chain.actions';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
 import { parsePolicyParent } from '@app/store/policy/policy-store.utils';
@@ -29,90 +29,73 @@ export function useKeyActions() {
   const dispatch = useAppDispatch();
   const activeAccount = useCurrentAccountId();
 
-  return useMemo(() => {
-    function setPassword({
-      mnemonic,
-      password,
-      fingerprint,
-    }: {
-      mnemonic: string;
-      password: string;
-      fingerprint: string;
-    }) {
-      return dispatch(
-        keyActions.setWalletEncryptionPassword({
-          mnemonic,
-          fingerprint,
-          password,
-          leatherApiClient: getLeatherApiClient(),
-          hiroClient: getHiroStacksApiClient(),
-          bnsClient: getBnsV2ApiClient(),
-        })
-      );
-    }
+  return useMemo(
+    () => ({
+      setPassword({
+        mnemonic,
+        password,
+        fingerprint,
+      }: {
+        mnemonic: string;
+        password: string;
+        fingerprint: string;
+      }) {
+        return dispatch(
+          keyActions.setWalletEncryptionPassword({
+            mnemonic,
+            fingerprint,
+            password,
+            leatherApiClient: getLeatherApiClient(),
+            hiroClient: getHiroStacksApiClient(),
+            bnsClient: getBnsV2ApiClient(),
+          })
+        );
+      },
 
-    function generateWalletKey() {
-      const mnemonic = generateMnemonic();
-      const fingerprint = getMnemonicRootKeyFingerprint(mnemonic);
-      return { mnemonic, fingerprint };
-    }
+      generateWalletKey() {
+        const mnemonic = generateMnemonic();
+        const fingerprint = getMnemonicRootKeyFingerprint(mnemonic);
+        return { mnemonic, fingerprint };
+      },
 
-    function unlockWallet(password: string) {
-      return dispatch(keyActions.unlockWalletAction(password));
-    }
+      unlockWallet(password: string) {
+        return dispatch(keyActions.unlockWalletAction(password));
+      },
 
-    function switchAccount(accountId: AccountId) {
-      dispatch(userSwitchesAccount(accountId));
-    }
+      switchAccount(accountId: AccountId) {
+        dispatch(userSwitchesAccount(accountId));
+      },
 
-    function switchAccountToPolicy(policyId: string) {
-      dispatch(userSwitchesToPolicy({ parent: parsePolicyParent(policyId), policyId }));
-    }
+      switchAccountToPolicy(policyId: string) {
+        dispatch(userSwitchesToPolicy({ parent: parsePolicyParent(policyId), policyId }));
+      },
 
-    function createNewAccount(fingerprint?: string) {
-      if (!activeAccount) throw new Error('No active account');
-      return dispatch(
-        createNewAccountAction(fingerprint ? fingerprint : activeAccount.fingerprint)
-      );
-    }
+      createNewAccount(fingerprint?: string) {
+        if (!activeAccount) throw new Error('No active account');
+        return dispatch(createNewAccount(fingerprint ? fingerprint : activeAccount.fingerprint));
+      },
 
-    async function signOut() {
-      await clearWalletSession();
-      inMemoryStore.clearAll();
-      clearKeychainSelectorCaches();
-      void broadcastSignOut();
-      dispatch(resetWallet());
-      await clearChromeStorage();
-      partiallyClearLocalStorage();
-      analytics.track('sign_out');
-      queryClient.clear();
-    }
+      async signOut() {
+        await clearWalletSession();
+        inMemoryStore.clearAll();
+        clearKeychainSelectorCaches();
+        void broadcastSignOut();
+        dispatch(resetWallet());
+        await clearChromeStorage();
+        partiallyClearLocalStorage();
+        analytics.track('sign_out');
+        queryClient.clear();
+      },
 
-    async function lockWallet({ afterLock }: { afterLock?: () => void }) {
-      await clearWalletSession();
-      inMemoryStore.clearAll();
-      clearKeychainSelectorCaches();
-      void broadcastWalletLock();
-      afterLock?.();
-      window.location.reload();
-    }
-
-    return {
-      setPassword,
-
-      generateWalletKey,
-
-      unlockWallet,
-
-      switchAccount,
-
-      switchAccountToPolicy,
-
-      createNewAccount,
-
-      signOut,
-
-      lockWallet,
-    };
-  }, [activeAccount, dispatch]);
+      async lockWallet({ afterLock }: { afterLock?(): void }) {
+        await clearWalletSession();
+        inMemoryStore.clearAll();
+        clearKeychainSelectorCaches();
+        void broadcastWalletLock();
+        afterLock?.();
+        window.location.reload();
+      },
+    }),
+    [activeAccount, dispatch]
+  );
 }

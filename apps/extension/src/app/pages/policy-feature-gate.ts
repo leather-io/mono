@@ -19,23 +19,21 @@ interface PolicyFeatureGateArgs {
 export function usePolicyFeatureGate({ frameId, method, id, tabId }: PolicyFeatureGateArgs) {
   const { releaseAddAccount } = useFlags();
 
-  function rejectAsUnsupported() {
-    if (tabId)
-      void sendMessageToOriginatingFrame(
-        { frameId, tabId },
-        createRpcErrorResponse(method, {
-          id,
-          error: {
-            code: RpcErrorCode.METHOD_NOT_SUPPORTED,
-            message: `"${method}" is not currently available`,
-          },
-        })
-      );
-    closeWindow();
-  }
-
   return {
     isFeatureEnabled: releaseAddAccount,
-    rejectAsUnsupported,
+    rejectAsUnsupported() {
+      if (tabId)
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
+          createRpcErrorResponse(method, {
+            id,
+            error: {
+              code: RpcErrorCode.METHOD_NOT_SUPPORTED,
+              message: `"${method}" is not currently available`,
+            },
+          })
+        );
+      closeWindow();
+    },
   };
 }

@@ -18,7 +18,7 @@ interface RenameEntityDialogProps {
   inputTestId: SwitchAccountSelectors;
   saveTestId: SwitchAccountSelectors;
   isShowing: boolean;
-  onClose: () => void;
+  onClose(): void;
 }
 
 export function RenameEntityDialog({

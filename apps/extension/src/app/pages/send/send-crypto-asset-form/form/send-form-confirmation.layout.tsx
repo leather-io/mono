@@ -28,7 +28,7 @@ interface SendFormConfirmationLayoutProps {
   isLoading: boolean;
   feeWarningTooltip?: React.ReactNode;
   confirmButtonLabel?: string;
-  onBroadcastTransaction: () => void;
+  onBroadcastTransaction(): void;
 }
 export function SendFormConfirmationLayout({
   txValue,

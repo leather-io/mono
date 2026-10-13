@@ -1,8 +1,8 @@
+import { analytics } from '@shared/utils/analytics';
+
 import { createWorker } from './create-worker';
 
-const { untypedTrackMock } = vi.hoisted(() => ({ untypedTrackMock: vi.fn() }));
-
-vi.mock('@shared/utils/analytics', () => ({ analytics: { untypedTrack: untypedTrackMock } }));
+vi.mock('@shared/utils/analytics', () => ({ analytics: { untypedTrack: vi.fn() } }));
 
 describe(createWorker.name, () => {
   test('creates a module worker', () => {
@@ -30,7 +30,7 @@ describe(createWorker.name, () => {
     const error = new Error('boom');
     listeners.error(error);
 
-    expect(untypedTrackMock).toHaveBeenCalledWith('worker_error_thrown', {
+    expect(analytics?.untypedTrack).toHaveBeenCalledWith('worker_error_thrown', {
       scriptUrl: '/assets/decryption-worker-abc123.js',
       error,
     });

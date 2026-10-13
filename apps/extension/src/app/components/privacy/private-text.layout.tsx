@@ -7,7 +7,7 @@ import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 interface PrivateTextLayoutProps extends HTMLStyledProps<'span'> {
   children: React.ReactNode;
   isPrivate?: boolean;
-  onShowValue?: () => void;
+  onShowValue?(): void;
 }
 
 export function PrivateTextLayout({

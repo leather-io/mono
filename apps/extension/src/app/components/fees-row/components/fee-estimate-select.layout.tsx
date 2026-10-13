@@ -11,7 +11,7 @@ import { FeeEstimateItem } from './fee-estimate-item';
 
 interface FeeEstimateSelectLayoutProps {
   children: ReactNode;
-  onSetIsSelectVisible: (value: boolean) => void;
+  onSetIsSelectVisible(value: boolean): void;
   selectedItem: number;
   disableFeeSelection?: boolean;
   isVisible?: boolean;

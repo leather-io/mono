@@ -38,13 +38,8 @@ interface PsbtSignerProps {
   isBroadcasting?: boolean;
   name?: string;
   origin: string;
-  onCancel: () => void;
-  onSignPsbt: ({
-    addressNativeSegwitTotal,
-    addressTaprootTotal,
-    fee,
-    inputs,
-  }: SignPsbtArgs) => void;
+  onCancel(): void;
+  onSignPsbt({ addressNativeSegwitTotal, addressTaprootTotal, fee, inputs }: SignPsbtArgs): void;
   psbtHex: string;
   willBroadcast?: boolean;
 }

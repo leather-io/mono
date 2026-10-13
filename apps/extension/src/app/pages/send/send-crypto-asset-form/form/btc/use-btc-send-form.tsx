@@ -49,19 +49,6 @@ export function useBtcSendForm() {
     void refetchUtxos();
   });
 
-  function onSetIsSendingMax(value: boolean) {
-    setIsSendingMax(value);
-  }
-
-  async function chooseTransactionFee(
-    values: BtcSendFormValues,
-    formikHelpers: FormikHelpers<BtcSendFormValues>
-  ) {
-    // Validate and check high fee warning first
-    await formikHelpers.validateForm();
-    void sendFormNavigate.toChooseTransactionFee(isSendingMax, utxos.available, values);
-  }
-
   return {
     balance,
     calcMaxSpend,
@@ -69,7 +56,9 @@ export function useBtcSendForm() {
     formRef,
     isSendingMax,
     onFormStateChange,
-    onSetIsSendingMax,
+    onSetIsSendingMax(value: boolean) {
+      setIsSendingMax(value);
+    },
     utxos,
     validationSchema: yup.object({
       amount: yup
@@ -92,6 +81,13 @@ export function useBtcSendForm() {
         .concat(complianceValidator(btcAddressValidator(), 'send_form_btc')),
     }),
 
-    chooseTransactionFee,
+    async chooseTransactionFee(
+      values: BtcSendFormValues,
+      formikHelpers: FormikHelpers<BtcSendFormValues>
+    ) {
+      // Validate and check high fee warning first
+      await formikHelpers.validateForm();
+      void sendFormNavigate.toChooseTransactionFee(isSendingMax, utxos.available, values);
+    },
   };
 }

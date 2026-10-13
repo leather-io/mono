@@ -7,7 +7,7 @@ type SignBip322MessageSimpleArgs = Parameters<typeof signBip322MessageSimple>[0]
 
 interface SignBip322MessageUnlessDismissedArgs
   extends Omit<SignBip322MessageSimpleArgs, 'signPsbt'> {
-  signPsbt: (psbt: bitcoin.Psbt) => Promise<btc.Transaction | null>;
+  signPsbt(psbt: bitcoin.Psbt): Promise<btc.Transaction | null>;
 }
 
 class SigningDismissedError extends Error {}

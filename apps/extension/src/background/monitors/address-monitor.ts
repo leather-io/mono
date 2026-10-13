@@ -24,7 +24,7 @@ export function isMonitoredAddressList(value: unknown): value is MonitoredAddres
 }
 
 export interface AddressMonitor {
-  syncAddresses: (addresses: MonitoredAddress[]) => void;
+  syncAddresses(addresses: MonitoredAddress[]): void;
 }
 
 const monitors: AddressMonitor[] = [];

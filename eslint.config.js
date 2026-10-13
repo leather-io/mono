@@ -210,10 +210,10 @@ export default defineConfig([
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {
-    name: 'extension-method-signature-style',
+    name: 'extension-unbound-method',
     files: ['apps/extension/**/*.{ts,tsx}'],
     rules: {
-      '@typescript-eslint/method-signature-style': ['error', 'property'],
+      '@typescript-eslint/unbound-method': 'off',
     },
   },
   {

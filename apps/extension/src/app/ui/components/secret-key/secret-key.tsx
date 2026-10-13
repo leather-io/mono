@@ -15,7 +15,7 @@ import { SecretKeyWord } from './secret-key-word';
 
 interface SecretKeyProps {
   secretKey: string;
-  onDone: () => void;
+  onDone(): void;
 }
 export function SecretKey({ secretKey, onDone }: SecretKeyProps) {
   const { onCopy, hasCopied } = useClipboard(secretKey || '');

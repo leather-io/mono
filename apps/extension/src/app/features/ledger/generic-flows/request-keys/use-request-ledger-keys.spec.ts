@@ -70,13 +70,11 @@ function renderHookValue<T>(useHook: () => T) {
   act(() => {
     root.render(createElement(TestComponent));
   });
-  function getValue(): T {
-    if (value === undefined) throw new Error('Hook did not render a value');
-    return value;
-  }
-
   return {
-    getValue,
+    getValue(): T {
+      if (value === undefined) throw new Error('Hook did not render a value');
+      return value;
+    },
   };
 }
 
@@ -90,8 +88,8 @@ interface SetupOptions {
   pullKeysResult?: { status: 'success' } | { status: 'failure' };
   pullKeysError?: unknown;
   connectAppError?: unknown;
-  connectApp?: (options: ConnectLedgerDeviceOptions) => Promise<LedgerBitcoinApp>;
-  passesAdditionalVersionCheck?: (appVersion: unknown) => Promise<boolean>;
+  connectApp?(options: ConnectLedgerDeviceOptions): Promise<LedgerBitcoinApp>;
+  passesAdditionalVersionCheck?(appVersion: unknown): Promise<boolean>;
 }
 
 function setupRequestKeys({

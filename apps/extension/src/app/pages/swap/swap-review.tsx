@@ -224,7 +224,7 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         isShowing={isSlippageSheetOpen}
         onClose={() => setIsSlippageSheetOpen(false)}
         slippage={state.slippage}
-        onSave={slippage => actions.setSlippage(slippage)}
+        onSave={actions.setSlippage}
       />
     </Flex>
   );

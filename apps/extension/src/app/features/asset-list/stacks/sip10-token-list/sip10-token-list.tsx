@@ -22,7 +22,7 @@ interface Sip10TokenAssetListProps {
   accountId: AccountId;
   assetFilter?: AssetFilter;
   assetRightElementVariant?: AssetRightElementVariant;
-  onSelectAsset?: (assetId: SerializedCryptoAssetId) => void;
+  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 

@@ -50,8 +50,8 @@ export function isSignableMessageType(messageType: unknown): messageType is Sign
 }
 
 interface WhenSignableMessageOfType<T> {
-  utf8: (message: string) => T;
-  structured: (domain: StructuredMessageDataDomain, message: ClarityValue) => T;
+  utf8(message: string): T;
+  structured(domain: StructuredMessageDataDomain, message: ClarityValue): T;
 }
 export function whenSignableMessageOfType(msg: UnsignedMessage) {
   return <T>({ utf8, structured }: WhenSignableMessageOfType<T>) => {

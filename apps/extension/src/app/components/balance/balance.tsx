@@ -12,7 +12,7 @@ interface BalanceProps extends HTMLStyledProps<'span'> {
   operator?: string;
   formattingOptions?: FormatAmountOptions;
   forceVisible?: boolean;
-  formatCurrency: (money: Money, options?: FormatAmountOptions) => string;
+  formatCurrency(money: Money, options?: FormatAmountOptions): string;
 }
 
 export function Balance({

@@ -8,8 +8,8 @@ interface TransactionActionsProps {
   isBroadcasting?: boolean;
   isDisabled?: boolean;
   isLoading?: boolean;
-  onCancel: () => void;
-  onSubmit?: () => void;
+  onCancel(): void;
+  onSubmit?(): void;
 }
 export function TransactionActions(props: TransactionActionsProps) {
   const { isBroadcasting, isDisabled, isLoading, onSubmit } = props;

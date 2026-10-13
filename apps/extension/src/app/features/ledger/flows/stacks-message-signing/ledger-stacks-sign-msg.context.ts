@@ -8,8 +8,8 @@ import { type BaseLedgerOperationContext } from '../../utils/generic-ledger-util
 
 export interface LedgerMessageSigningContext extends BaseLedgerOperationContext {
   message: UnsignedMessage | undefined;
-  signMessage: () => Promise<void> | void;
-  onCancelMessageSigning: () => void;
+  signMessage(): Promise<void> | void;
+  onCancelMessageSigning(): void;
 }
 
 export const ledgerMsgSigningContext = createContext<LedgerMessageSigningContext>({

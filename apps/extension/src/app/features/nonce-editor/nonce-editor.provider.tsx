@@ -9,7 +9,7 @@ import { type Nonce, nonceEditorContext as NonceEditorContext } from './nonce-ed
 
 interface NonceEditorProviderProps extends HasChildren {
   nonce: Nonce;
-  onGoBack: () => void;
+  onGoBack(): void;
 }
 export function NonceEditorProvider({
   children,

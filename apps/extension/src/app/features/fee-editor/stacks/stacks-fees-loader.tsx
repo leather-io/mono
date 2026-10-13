@@ -12,11 +12,11 @@ interface StacksFees {
   fees: Fees;
   isLoading: boolean;
   isSponsored: boolean;
-  getCustomFee: (value: number) => Fee;
+  getCustomFee(value: number): Fee;
 }
 
 interface StacksFeesLoaderProps {
-  children: ({ fees, isLoading, isSponsored, getCustomFee }: StacksFees) => React.JSX.Element;
+  children({ fees, isLoading, isSponsored, getCustomFee }: StacksFees): React.JSX.Element;
   unsignedTx: StacksTransactionWire;
 }
 export function StacksFeesLoader({ children, unsignedTx }: StacksFeesLoaderProps) {

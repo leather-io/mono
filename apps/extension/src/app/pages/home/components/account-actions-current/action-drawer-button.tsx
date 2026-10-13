@@ -6,7 +6,7 @@ interface ActionDrawerButtonProps {
   title: string;
   caption: string;
   icon: ComponentProps<typeof Avatar>['icon'] | null;
-  onClick: () => void;
+  onClick(): void;
 }
 
 export function ActionDrawerButton({ title, caption, icon, onClick }: ActionDrawerButtonProps) {

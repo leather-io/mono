@@ -13,7 +13,7 @@ export interface TokenBalanceEntry {
   fiatAmount?: Money;
   caption?: string;
   tooltipText?: string;
-  onPressRow?: () => void;
+  onPressRow?(): void;
   testId?: string;
 }
 
@@ -22,14 +22,14 @@ export interface TokenAddressEntry {
   address: string;
   amount: Money;
   fiatAmount: Money;
-  onPressAddress: () => void;
-  onPressRow?: () => void;
+  onPressAddress(): void;
+  onPressRow?(): void;
 }
 
 interface TokenBalancesTabProps {
   balances: TokenBalanceEntry[];
   addresses?: TokenAddressEntry[];
-  formatAmount: (amount: Money) => string;
+  formatAmount(amount: Money): string;
 }
 
 export function TokenBalancesTab({

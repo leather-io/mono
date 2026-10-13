@@ -26,9 +26,9 @@ async function recurseUntilGeneratorDone<T>(generator: AsyncGenerator<unknown, T
 }
 
 interface RecurseAccountsForActivityArgs {
-  doesAddressHaveActivityFn: (index: number) => Promise<boolean>;
+  doesAddressHaveActivityFn(index: number): Promise<boolean>;
   fromAccountIndex?: number;
-  onActivityFound?: (highestAccountIndex: number) => void;
+  onActivityFound?(highestAccountIndex: number): void;
 }
 
 export async function recurseAccountsForActivity({

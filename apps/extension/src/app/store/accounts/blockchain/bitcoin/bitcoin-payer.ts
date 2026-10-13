@@ -29,7 +29,7 @@ interface MakeBitcoinPayerArgs {
   keyOrigin: string;
   masterKeyFingerprint: string;
   paymentType: string;
-  paymentFn: (keychain: HDKey, network: BitcoinNetworkModes) => SupportedPaymentReturn;
+  paymentFn(keychain: HDKey, network: BitcoinNetworkModes): SupportedPaymentReturn;
 }
 function makeBitcoinPayer(args: MakeBitcoinPayerArgs) {
   const { keychain, network, paymentFn, keyOrigin, masterKeyFingerprint, paymentType } = args;

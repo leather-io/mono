@@ -21,7 +21,7 @@ import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface CurrentAccountDisplayerProps {
-  onSelectAccount: () => void;
+  onSelectAccount(): void;
   allowPolicyAccounts?: boolean;
 }
 

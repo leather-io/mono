@@ -26,8 +26,8 @@ interface SwapSubmissionOverlayProps {
   targetAmount: Money;
   status: SwapSubmissionOverlayStatus;
   attention?: SwapAttention;
-  onReset: () => void;
-  onViewActivity: () => void;
+  onReset(): void;
+  onViewActivity(): void;
 }
 
 export function SwapSubmissionOverlay({
@@ -126,7 +126,7 @@ function SubmissionStatusMessage({ status }: SubmissionStatusMessageProps) {
 }
 
 interface SubmissionFailureMessageProps {
-  onReset: () => void;
+  onReset(): void;
 }
 
 function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {
@@ -177,7 +177,7 @@ function getAttentionCopy({ reason, txid }: SwapAttention): { lead: string; tail
 
 interface SwapAttentionMessageProps {
   attention: SwapAttention;
-  onViewActivity: () => void;
+  onViewActivity(): void;
 }
 
 function SwapAttentionMessage({ attention, onViewActivity }: SwapAttentionMessageProps) {

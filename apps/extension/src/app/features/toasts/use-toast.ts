@@ -1,13 +1,10 @@
 import { createContext, useContext } from 'react';
 
 interface ToastContextProps {
-  error: (message: string) => void;
-  info: (message: string) => void;
-  success: (message: string) => void;
-  promise: <T>(
-    promise: Promise<T>,
-    msgs: { success: string; error: string }
-  ) => Promise<T | undefined>;
+  error(message: string): void;
+  info(message: string): void;
+  success(message: string): void;
+  promise<T>(promise: Promise<T>, msgs: { success: string; error: string }): Promise<T | undefined>;
 }
 export const ToastContext = createContext<ToastContextProps | null>(null);
 

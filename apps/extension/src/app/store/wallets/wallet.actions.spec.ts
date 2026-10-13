@@ -20,12 +20,12 @@ import {
 import { broadcastWalletListChanged } from '@shared/messages';
 import { assumedZeroFingerprint } from '@shared/utils';
 
+import { persistor } from '@app/store/store';
+
 import { addOrMigrateLedgerKeychains, migrateLedgerStacksFingerprint } from './wallet.actions';
 
-const persistorFlushMock = vi.hoisted(() => vi.fn(() => Promise.resolve()));
-
 vi.mock('@app/store/store', () => ({
-  persistor: { flush: persistorFlushMock },
+  persistor: { flush: vi.fn(() => Promise.resolve()) },
   store: { getState: vi.fn(), dispatch: vi.fn() },
 }));
 
@@ -120,7 +120,7 @@ describe('addOrMigrateLedgerKeychains', () => {
       })
     );
     expect(dispatch).toHaveBeenCalledTimes(3);
-    expect(persistorFlushMock).toHaveBeenCalledTimes(1);
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
     expect(broadcastWalletListChanged).toHaveBeenCalledWith({});
   });
 
@@ -161,7 +161,7 @@ describe('addOrMigrateLedgerKeychains', () => {
     expect(dispatch).not.toHaveBeenCalledWith(
       expect.objectContaining({ type: fingerprintMigration.type })
     );
-    expect(persistorFlushMock).toHaveBeenCalledTimes(1);
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
     expect(broadcastWalletListChanged).toHaveBeenCalledWith({});
   });
 
@@ -187,7 +187,7 @@ describe('addOrMigrateLedgerKeychains', () => {
 
       expect(dispatch).toHaveBeenCalledTimes(1);
       expect(dispatch).toHaveBeenCalledWith(userAddsKeychains({ accountKeychains: newKeychains }));
-      expect(persistorFlushMock).toHaveBeenCalledTimes(1);
+      expect(persistor.flush).toHaveBeenCalledTimes(1);
       expect(broadcastWalletListChanged).toHaveBeenCalledWith({});
     });
 
@@ -198,7 +198,7 @@ describe('addOrMigrateLedgerKeychains', () => {
       });
 
       expect(dispatch).not.toHaveBeenCalled();
-      expect(persistorFlushMock).not.toHaveBeenCalled();
+      expect(persistor.flush).not.toHaveBeenCalled();
       expect(broadcastWalletListChanged).not.toHaveBeenCalled();
     });
   });
@@ -229,7 +229,7 @@ describe('addOrMigrateLedgerKeychains', () => {
     expect(dispatch).not.toHaveBeenCalledWith(
       expect.objectContaining({ type: userRemovesWallet.type })
     );
-    expect(persistorFlushMock).toHaveBeenCalledTimes(1);
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
     expect(broadcastWalletListChanged).toHaveBeenCalledWith({});
   });
 });
@@ -270,7 +270,7 @@ describe('migrateLedgerStacksFingerprint', () => {
       })
     );
     expect(dispatch).toHaveBeenCalledTimes(3);
-    expect(persistorFlushMock).toHaveBeenCalledTimes(1);
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
     expect(broadcastWalletListChanged).toHaveBeenCalledWith({});
   });
 
@@ -299,7 +299,7 @@ describe('migrateLedgerStacksFingerprint', () => {
     const dispatch = await runMigration(state, assumedZeroFingerprint);
 
     expect(dispatch).not.toHaveBeenCalled();
-    expect(persistorFlushMock).not.toHaveBeenCalled();
+    expect(persistor.flush).not.toHaveBeenCalled();
     expect(broadcastWalletListChanged).not.toHaveBeenCalled();
   });
 
@@ -307,7 +307,7 @@ describe('migrateLedgerStacksFingerprint', () => {
     const dispatch = await runMigration(buildState(), realFingerprint);
 
     expect(dispatch).not.toHaveBeenCalled();
-    expect(persistorFlushMock).not.toHaveBeenCalled();
+    expect(persistor.flush).not.toHaveBeenCalled();
     expect(broadcastWalletListChanged).not.toHaveBeenCalled();
   });
 
@@ -326,7 +326,7 @@ describe('migrateLedgerStacksFingerprint', () => {
     const dispatch = await runMigration(state, realFingerprint);
 
     expect(dispatch).not.toHaveBeenCalled();
-    expect(persistorFlushMock).not.toHaveBeenCalled();
+    expect(persistor.flush).not.toHaveBeenCalled();
     expect(broadcastWalletListChanged).not.toHaveBeenCalled();
   });
 
@@ -337,7 +337,7 @@ describe('migrateLedgerStacksFingerprint', () => {
     const dispatch = await runMigration(state, realFingerprint);
 
     expect(dispatch).not.toHaveBeenCalled();
-    expect(persistorFlushMock).not.toHaveBeenCalled();
+    expect(persistor.flush).not.toHaveBeenCalled();
     expect(broadcastWalletListChanged).not.toHaveBeenCalled();
   });
 });

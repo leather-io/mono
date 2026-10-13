@@ -9,7 +9,7 @@ interface CollectibleImageProps {
   alt?: string;
   src: string;
   thumbnailSrc?: string;
-  onPress?: () => void;
+  onPress?(): void;
   isSvg?: boolean;
 }
 
@@ -19,7 +19,7 @@ interface CollectibleImageContentProps {
   alt?: string;
   src: string;
   isSvg: boolean;
-  onError: () => void;
+  onError(): void;
 }
 
 function CollectibleImageContent({ alt, src, isSvg, onError }: CollectibleImageContentProps) {

@@ -14,7 +14,7 @@ interface SelectedFeeItemProps {
   isLoading: boolean;
   isSponsored: boolean;
   marketData: MarketData;
-  onEditFee: () => void;
+  onEditFee(): void;
   selectedFee: Fee | null;
 }
 export function SelectedFeeItem({

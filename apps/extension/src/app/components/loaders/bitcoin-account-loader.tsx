@@ -8,7 +8,7 @@ import { useHasCurrentBitcoinAccount } from '@app/store/accounts/blockchain/bitc
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 interface BitcoinAccountLoaderBaseProps {
-  children: (account: BitcoinNativeSegwitPayer) => React.ReactNode;
+  children(account: BitcoinNativeSegwitPayer): React.ReactNode;
   fallback?: React.ReactNode;
 }
 interface BtcAccountLoaderCurrentProps extends BitcoinAccountLoaderBaseProps {

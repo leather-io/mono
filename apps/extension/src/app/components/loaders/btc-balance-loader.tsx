@@ -11,11 +11,11 @@ import { CryptoAssetItemError } from '../crypto-asset-item/crypto-asset-item-err
 import { CryptoAssetItemPlaceholder } from '../crypto-asset-item/crypto-asset-item-placeholder';
 
 interface BtcAssetItemBalanceLoaderChildren {
-  children: (
+  children(
     balance: AccountQuotedBtcBalance,
     isLoading: boolean,
     isLoadingAdditionalData: boolean
-  ) => React.ReactNode;
+  ): React.ReactNode;
 }
 
 function renderBtcBalance(

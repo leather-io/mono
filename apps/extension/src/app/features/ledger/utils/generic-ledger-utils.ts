@@ -37,8 +37,8 @@ export function versionObjectToVersionString(version: SemVerObject) {
 }
 
 interface PrepareLedgerDeviceConnectionArgs {
-  setLoadingState: (loadingState: boolean) => void;
-  onError: (error?: Error) => void;
+  setLoadingState(loadingState: boolean): void;
+  onError(error?: Error): void;
 }
 export function prepareLedgerDeviceForAppFn<App>(connectAppFn: () => Promise<App>) {
   return async (args: PrepareLedgerDeviceConnectionArgs) => {

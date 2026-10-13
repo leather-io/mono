@@ -3,7 +3,7 @@ import { Stack } from 'leather-styles/jsx';
 import { Button, Caption } from '@leather.io/ui';
 
 interface ActivityErrorProps {
-  onRetry: () => void;
+  onRetry(): void;
 }
 
 export function ActivityError({ onRetry }: ActivityErrorProps) {

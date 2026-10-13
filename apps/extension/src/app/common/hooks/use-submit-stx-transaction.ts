@@ -19,8 +19,8 @@ interface UseSubmitTransactionArgs {
 }
 interface UseSubmitTransactionCallbackArgs {
   replaceByFee?: boolean;
-  onSuccess: (txId: string) => void;
-  onError: (error: Error | string) => void;
+  onSuccess(txId: string): void;
+  onError(error: Error | string): void;
 }
 export function useSubmitTransactionCallback({ loadingKey }: UseSubmitTransactionArgs) {
   const refreshAccountData = useRefreshAllAccountData();

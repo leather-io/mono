@@ -138,7 +138,7 @@ function startRecursiveAccountDiscovery({
   fingerprint,
   fromAccountIndex,
 }: {
-  dispatch: (action: ReturnType<typeof stxChainSlice.actions.restoreAccountIndex>) => void;
+  dispatch(action: ReturnType<typeof stxChainSlice.actions.restoreAccountIndex>): void;
   doesAddressHaveActivityFn: ReturnType<typeof createAccountActivityChecker>;
   fingerprint: string;
   fromAccountIndex: number;

@@ -8,11 +8,11 @@ interface GenerateEncryptionKeyArgs {
 export type DecryptionWorkerResponse = { hex: string } | { error: string };
 
 interface DecryptionWorkerContext {
-  postMessage: (message: DecryptionWorkerResponse) => void;
-  addEventListener: (
+  postMessage(message: DecryptionWorkerResponse): void;
+  addEventListener(
     type: 'message',
     listener: (event: MessageEvent<GenerateEncryptionKeyArgs>) => void
-  ) => void;
+  ): void;
 }
 
 const context: DecryptionWorkerContext = self;

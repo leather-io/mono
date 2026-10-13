@@ -6,10 +6,10 @@ import {
 } from './stacks-ledger-utils';
 
 interface StacksVersionGateNavigate {
-  toStacksAppOutdatedWarning: (versionInfo: {
+  toStacksAppOutdatedWarning(versionInfo: {
     currentVersion: string;
     requiredVersion: string;
-  }) => void;
+  }): void;
 }
 
 export function stacksVersionGate(ledgerNavigate: StacksVersionGateNavigate) {

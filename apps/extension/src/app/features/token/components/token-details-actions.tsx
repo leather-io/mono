@@ -18,7 +18,7 @@ import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
 interface TokenDetailsPillButtonProps {
   label: string;
-  onClick: () => void;
+  onClick(): void;
   disabled?: boolean;
   testId?: string;
 }

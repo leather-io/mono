@@ -12,7 +12,7 @@ import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 
 interface CurrencyModeSwitcherProps {
   secondaryAmount: SecondaryAmount;
-  onModeSwitch: () => void;
+  onModeSwitch(): void;
 }
 
 export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: CurrencyModeSwitcherProps) {

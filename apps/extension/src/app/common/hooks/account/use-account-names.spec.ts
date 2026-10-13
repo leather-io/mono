@@ -82,13 +82,11 @@ function renderHookValue<T>(useHook: () => T) {
   act(() => {
     root.render(createElement(TestComponent));
   });
-  function getValue(): T {
-    if (value === undefined) throw new Error('Hook did not render a value');
-    return value;
-  }
-
   return {
-    getValue,
+    getValue(): T {
+      if (value === undefined) throw new Error('Hook did not render a value');
+      return value;
+    },
   };
 }
 

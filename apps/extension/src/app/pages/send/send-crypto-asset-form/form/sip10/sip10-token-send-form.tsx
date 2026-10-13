@@ -14,11 +14,11 @@ import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-a
 import { Sip10TokenSendFormContainer } from './sip10-token-send-form-container';
 
 interface Sip10TokenSendFormLoaderProps {
-  children: (balance: {
+  children(balance: {
     asset: Sip10Asset;
     balance: CryptoAssetBalance;
     marketData?: MarketData;
-  }) => React.ReactNode;
+  }): React.ReactNode;
 }
 function Sip10TokenSendFormLoader({ children }: Sip10TokenSendFormLoaderProps) {
   const { contractId } = useParams();

@@ -55,23 +55,6 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
     };
   }
 
-  async function previewTransaction(
-    values: StacksSendFormValues,
-    formikHelpers: FormikHelpers<StacksSendFormValues>
-  ) {
-    const isFormValid = await checkFormValidation(values, formikHelpers);
-    if (!isFormValid) return;
-
-    const tx = await generateTx(values);
-    if (!tx) return logger.error('Attempted to generate unsigned tx, but tx is undefined');
-
-    void sendFormNavigate.toConfirmAndSignStacksSip10Transaction({
-      decimals: info.decimals,
-      name: info.name,
-      tx,
-    });
-  }
-
   return {
     availableTokenBalance,
     initialValues,
@@ -87,6 +70,21 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
       nonce,
     }),
 
-    previewTransaction,
+    async previewTransaction(
+      values: StacksSendFormValues,
+      formikHelpers: FormikHelpers<StacksSendFormValues>
+    ) {
+      const isFormValid = await checkFormValidation(values, formikHelpers);
+      if (!isFormValid) return;
+
+      const tx = await generateTx(values);
+      if (!tx) return logger.error('Attempted to generate unsigned tx, but tx is undefined');
+
+      void sendFormNavigate.toConfirmAndSignStacksSip10Transaction({
+        decimals: info.decimals,
+        name: info.name,
+        tx,
+      });
+    },
   };
 }

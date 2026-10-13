@@ -22,8 +22,8 @@ import { ReceiveStxModal } from './receive-stx';
 
 interface ReceiveDialogProps {
   view: ReceiveView;
-  onChangeView: (view: ReceiveView) => void;
-  onClose: () => void;
+  onChangeView(view: ReceiveView): void;
+  onClose(): void;
 }
 
 export function ReceiveDialog({ view, onChangeView, onClose }: ReceiveDialogProps) {
@@ -35,8 +35,8 @@ export function ReceiveDialog({ view, onChangeView, onClose }: ReceiveDialogProp
 
 interface ReceiveSheetProps {
   type?: 'full' | 'collectible';
-  onChangeView: (view: ReceiveView) => void;
-  onClose: () => void;
+  onChangeView(view: ReceiveView): void;
+  onClose(): void;
 }
 
 function ReceiveSheet({ type = 'full', onChangeView, onClose }: ReceiveSheetProps) {

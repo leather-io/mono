@@ -15,7 +15,7 @@ import { ReceiveTokensLayout } from './components/receive-tokens.layout';
 
 interface ReceiveBtcModalProps {
   type?: 'btc' | 'btc-taproot';
-  onClose: () => void;
+  onClose(): void;
 }
 
 export function ReceiveBtcModal({ type = 'btc', onClose }: ReceiveBtcModalProps) {

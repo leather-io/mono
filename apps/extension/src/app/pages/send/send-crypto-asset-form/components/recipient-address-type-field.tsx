@@ -11,7 +11,7 @@ import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/m
 interface RecipientAddressTypeFieldProps {
   label?: string;
   name: string;
-  onBlur?: () => void;
+  onBlur?(): void;
   placeholder: string;
   topInputOverlay?: React.JSX.Element;
   rightLabel?: React.JSX.Element;

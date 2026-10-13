@@ -27,12 +27,8 @@ import {
 
 function configureMixpanel(mixpanelClient: OverridedMixpanel) {
   return Object.assign(mixpanelClient, {
-    setGroup(...args: Parameters<OverridedMixpanel['set_group']>) {
-      return mixpanelClient.set_group(...args);
-    },
-    getGroup(...args: Parameters<OverridedMixpanel['get_group']>) {
-      return mixpanelClient.get_group(...args);
-    },
+    setGroup: mixpanelClient.set_group,
+    getGroup: mixpanelClient.get_group,
     getPeople() {
       return mixpanelClient.people;
     },

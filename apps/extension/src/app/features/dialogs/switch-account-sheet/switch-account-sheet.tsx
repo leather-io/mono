@@ -43,7 +43,7 @@ import { useAddWalletNavigation } from './use-add-wallet-navigation';
 
 interface SwitchAccountSheetProps {
   isShowing: boolean;
-  onClose: () => void;
+  onClose(): void;
   allowPolicyAccounts?: boolean;
 }
 

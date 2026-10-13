@@ -21,7 +21,7 @@ import type { LedgerBitcoinApp } from '../utils/ledger-app';
 import { descriptorHasNonAccountRawKey } from '../utils/ledger-descriptor-address';
 
 interface DisplayLedgerDescriptorAddressOptions {
-  onWalletRegistered?: () => void;
+  onWalletRegistered?(): void;
 }
 
 // Displays the `wsh(...)` multisig address on the Ledger screen so the user can

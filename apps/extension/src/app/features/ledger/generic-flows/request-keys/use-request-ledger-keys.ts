@@ -24,14 +24,12 @@ type RequestLedgerKeysResult = { status: 'success' } | { status: 'failure' };
 
 interface UseRequestLedgerKeysArgs<App extends LedgerApp> {
   chain: SupportedBlockchains;
-  isAppOpen: ({ name }: { name: string }) => boolean;
-  getAppVersion: (app: App) => Promise<StacksAppVersion> | Promise<BitcoinAppVersion>;
-  connectApp: (options: ConnectLedgerDeviceOptions) => Promise<App>;
-  pullKeysFromDevice: (app: App) => Promise<RequestLedgerKeysResult>;
-  passesAdditionalVersionCheck?: (
-    appVersion: StacksAppVersion | BitcoinAppVersion
-  ) => Promise<boolean>;
-  onSuccess: () => void;
+  isAppOpen({ name }: { name: string }): boolean;
+  getAppVersion(app: App): Promise<StacksAppVersion> | Promise<BitcoinAppVersion>;
+  connectApp(options: ConnectLedgerDeviceOptions): Promise<App>;
+  pullKeysFromDevice(app: App): Promise<RequestLedgerKeysResult>;
+  passesAdditionalVersionCheck?(appVersion: StacksAppVersion | BitcoinAppVersion): Promise<boolean>;
+  onSuccess(): void;
 }
 export function useRequestLedgerKeys<App extends LedgerApp>({
   chain,

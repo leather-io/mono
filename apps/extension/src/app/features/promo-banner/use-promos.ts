@@ -7,14 +7,13 @@ import { useDismissedPromoIndexes } from '@app/store/settings/settings.selectors
 export function usePromos() {
   const dispatch = useAppDispatch();
   const dismissedPromoIndexes = useDismissedPromoIndexes();
-  return useMemo(() => {
-    function dismissPromo(promoIndex: number) {
-      dispatch(settingsActions.promoDismissed(promoIndex));
-    }
-
-    return {
+  return useMemo(
+    () => ({
       dismissedPromoIndexes,
-      dismissPromo,
-    };
-  }, [dismissedPromoIndexes, dispatch]);
+      dismissPromo(promoIndex: number) {
+        dispatch(settingsActions.promoDismissed(promoIndex));
+      },
+    }),
+    [dismissedPromoIndexes, dispatch]
+  );
 }

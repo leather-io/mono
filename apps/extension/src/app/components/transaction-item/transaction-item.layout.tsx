@@ -7,7 +7,7 @@ import { Caption, ItemLayout, Pressable } from '@leather.io/ui';
 import { PrivateTextLayout } from '@app/components/privacy/private-text.layout';
 
 interface TransactionItemLayoutProps {
-  openTxLink: () => void;
+  openTxLink(): void;
   rightElement?: ReactNode;
   txCaption: ReactNode;
   txTitle: ReactNode;

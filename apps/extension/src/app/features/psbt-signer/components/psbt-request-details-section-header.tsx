@@ -4,7 +4,7 @@ import { ArrowUpIcon, Link } from '@leather.io/ui';
 
 interface PsbtRequestDetailsSectionHeaderProps {
   hasDetails?: boolean;
-  onSetShowDetails?: (value: boolean) => void;
+  onSetShowDetails?(value: boolean): void;
   showDetails?: boolean;
   title: string;
 }

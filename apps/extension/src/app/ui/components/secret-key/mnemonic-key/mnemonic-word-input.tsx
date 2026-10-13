@@ -10,8 +10,8 @@ import { useIsFieldDirty } from '@app/common/form-utils';
 interface MnemonicWordInputProps {
   fieldNumber: number;
   value: string;
-  onUpdateWord: (word: string) => void;
-  onPasteEntireKey: (word: string) => void;
+  onUpdateWord(word: string): void;
+  onPasteEntireKey(word: string): void;
 }
 export function MnemonicWordInput({
   fieldNumber,

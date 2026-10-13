@@ -172,17 +172,17 @@ export interface LedgerDeviceLockState {
 }
 
 interface LedgerConnectionErrorNavigate {
-  toConnectStep: () => unknown;
-  toErrorStep: (chain: SupportedBlockchains, errorMessage?: string) => unknown;
-  toDeviceDisconnectStep: () => unknown;
-  toOperationRejectedStep: (description?: string) => unknown;
-  toPairDeviceStep: () => unknown;
+  toConnectStep(): unknown;
+  toErrorStep(chain: SupportedBlockchains, errorMessage?: string): unknown;
+  toDeviceDisconnectStep(): unknown;
+  toOperationRejectedStep(description?: string): unknown;
+  toPairDeviceStep(): unknown;
 }
 
 interface HandleLedgerConnectionErrorArgs {
   chain: SupportedBlockchains;
   ledgerNavigate: LedgerConnectionErrorNavigate;
-  setLatestDeviceResponse: (response: LedgerDeviceLockState) => void;
+  setLatestDeviceResponse(response: LedgerDeviceLockState): void;
 }
 
 export function handleLedgerConnectionError(

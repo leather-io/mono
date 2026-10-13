@@ -13,7 +13,7 @@ const supportUrl =
 interface GenericErrorProps extends FlexProps {
   body: string;
   helpTextList?: ReactNode[];
-  onClose: () => void;
+  onClose(): void;
   title: string;
 }
 export function GenericErrorLayout(props: GenericErrorProps) {

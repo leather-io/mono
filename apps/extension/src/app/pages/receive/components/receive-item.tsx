@@ -14,9 +14,9 @@ interface ReceiveItemProps {
   address?: string;
   dataTestId?: string;
   icon: React.ReactNode;
-  onCopyAddress: () => void;
-  onClickQrCode?: () => void;
-  onClickVerifyAddress?: () => void;
+  onCopyAddress(): void;
+  onClickQrCode?(): void;
+  onClickVerifyAddress?(): void;
   verifyDataTestId?: string;
   title: string;
 }

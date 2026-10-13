@@ -11,7 +11,7 @@ import { ReceiveItem } from './receive-item';
 
 interface ReceiveCollectiblesProps {
   stxAddress: string;
-  onClickQrStacksNft: () => void;
+  onClickQrStacksNft(): void;
 }
 export function ReceiveCollectibles({ stxAddress, onClickQrStacksNft }: ReceiveCollectiblesProps) {
   const toast = useToast();

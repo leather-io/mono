@@ -14,7 +14,7 @@ import { AssetSelectorItem } from './asset-selector-item';
 interface AssetSelectorListProps {
   assets?: AccountSwapAsset[];
   type: 'base' | 'target';
-  onSelectAsset: (type: 'base' | 'target', asset: AccountSwapAsset) => void;
+  onSelectAsset(type: 'base' | 'target', asset: AccountSwapAsset): void;
 }
 
 export function AssetSelectorList({ assets = [], type, onSelectAsset }: AssetSelectorListProps) {

@@ -5,6 +5,8 @@ import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { broadcastWalletListChanged } from '@shared/messages';
 
+import { persistor } from '@app/store/store';
+
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
@@ -18,10 +20,8 @@ import {
 } from './active.actions';
 import { userSwitchesAccount } from './active.slice';
 
-const persistorFlushMock = vi.hoisted(() => vi.fn(() => Promise.resolve()));
-
 vi.mock('@app/store/store', () => ({
-  persistor: { flush: persistorFlushMock },
+  persistor: { flush: vi.fn(() => Promise.resolve()) },
   store: { getState: vi.fn(), dispatch: vi.fn() },
 }));
 
@@ -201,7 +201,7 @@ describe(removeWalletAndUpdateActive.name, () => {
     const { promise } = runRemoveThunk();
     await promise;
     expect(removeKey).toHaveBeenCalledWith(fingerprint);
-    expect(persistorFlushMock).toHaveBeenCalledTimes(1);
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
     expect(broadcastWalletListChanged).toHaveBeenCalledWith({ removedFingerprint: fingerprint });
   });
 

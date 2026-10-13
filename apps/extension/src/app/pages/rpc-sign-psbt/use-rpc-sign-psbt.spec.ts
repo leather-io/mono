@@ -141,8 +141,8 @@ vi.mock('@app/store/accounts/blockchain/bitcoin/taproot-account.hooks', () => ({
 interface MockBroadcastTxArgs {
   tx: string;
   skipTaprootWarning?: boolean;
-  onSuccess?: (txid: string) => void | Promise<void>;
-  onError?: (error: Error) => void;
+  onSuccess?(txid: string): void | Promise<void>;
+  onError?(error: Error): void;
 }
 
 function requireBytes(bytes: Uint8Array | null) {

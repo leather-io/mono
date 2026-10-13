@@ -7,7 +7,7 @@ import { AssetAvatarIcon, ChevronDownIcon, PlusIcon } from '@leather.io/ui';
 interface AssetSelectorToggleProps {
   asset: SwappableFungibleCryptoAsset | undefined;
   disabled?: boolean;
-  onPress: () => void;
+  onPress(): void;
   testId?: string;
 }
 

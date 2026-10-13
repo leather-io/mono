@@ -26,9 +26,9 @@ interface BitcoinChooseFeeProps extends FlexProps {
   feesList: React.JSX.Element;
   isLoading: boolean;
   isSendingMax: boolean;
-  onChooseFee: ({ feeRate, feeValue, time }: OnChooseFeeArgs) => Promise<void>;
-  onSetSelectedFeeType: (value: BtcFeeType | null) => void;
-  onValidateBitcoinSpend: (value: number) => boolean;
+  onChooseFee({ feeRate, feeValue, time }: OnChooseFeeArgs): Promise<void>;
+  onSetSelectedFeeType(value: BtcFeeType | null): void;
+  onValidateBitcoinSpend(value: number): boolean;
   recipients: TransferRecipient[];
   recommendedFeeRate: string;
   showError: boolean;

@@ -15,7 +15,7 @@ interface RenameWalletDialogProps {
   currentName: string;
   fingerprint: string;
   isShowing: boolean;
-  onClose: () => void;
+  onClose(): void;
 }
 
 export function RenameWalletDialog({

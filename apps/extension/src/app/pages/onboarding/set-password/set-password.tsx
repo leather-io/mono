@@ -40,7 +40,7 @@ const setPasswordFormValues: SetPasswordFormValues = { password: '', confirmPass
 
 interface SetPasswordPageProps {
   mnemonicData: { mnemonic: string; fingerprint: string };
-  onBack?: () => void;
+  onBack?(): void;
 }
 export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) {
   const [loading, setLoading] = useState(false);

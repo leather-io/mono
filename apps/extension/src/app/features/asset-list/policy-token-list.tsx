@@ -17,7 +17,7 @@ import { BtcCryptoAssetItem } from './bitcoin/btc-crypto-asset-item/btc-crypto-a
 interface PolicyTokenListProps {
   policy: PolicyStore;
   showDepositButtons?: boolean;
-  onSelectAsset?: (assetId: SerializedCryptoAssetId) => void;
+  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
 }
 
 export function PolicyTokenList({

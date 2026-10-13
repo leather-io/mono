@@ -57,7 +57,7 @@ function SwapContainerContent() {
       dependencies={dependencies}
       quoteCurrencyPreference={quoteCurrency}
       disabledPairs={disabledPairs}
-      trackEvent={(event, ...properties) => analytics.track(event, ...properties)}
+      trackEvent={analytics.track}
     >
       <SwapOutlet />
     </SwapProvider>

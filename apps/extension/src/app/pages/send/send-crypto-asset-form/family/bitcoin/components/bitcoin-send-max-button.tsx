@@ -20,7 +20,7 @@ const sendMaxTooltipLabel = 'This amount is affected by the fee you choose';
 interface BitcoinSendMaxButtonProps {
   balance: Money;
   isSendingMax?: boolean;
-  onSetIsSendingMax: (value: boolean) => void;
+  onSetIsSendingMax(value: boolean): void;
 }
 export function BitcoinSendMaxButton({
   balance,

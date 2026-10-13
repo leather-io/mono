@@ -13,7 +13,7 @@ interface Sip10TokenItemProps {
   balance: Sip10Balance;
   isEnabled: boolean;
   assetRightElementVariant?: AssetRightElementVariant;
-  onSelectAsset?: (assetId: SerializedCryptoAssetId) => void;
+  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
 }
 export function Sip10TokenItem({
   balance,

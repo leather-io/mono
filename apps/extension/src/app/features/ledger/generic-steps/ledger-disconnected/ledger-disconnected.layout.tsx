@@ -7,8 +7,8 @@ import { LedgerWrapper } from '../../components/ledger-wrapper';
 import { LedgerIlluDisconnected } from '../../illustrations/ledger-illu-disconnected';
 
 interface LedgerDisconnectedLayoutProps {
-  onConnectAgain: () => void;
-  onClose: () => void;
+  onConnectAgain(): void;
+  onClose(): void;
 }
 export function LedgerDisconnectedLayout(props: LedgerDisconnectedLayoutProps) {
   const { onConnectAgain, onClose } = props;

@@ -11,8 +11,8 @@ vi.mock('./background-analytics', () => ({
 }));
 
 interface Listeners {
-  onUpdateAvailable?: (details: { version: string }) => void;
-  onInstalled?: (details: { reason: string }) => void;
+  onUpdateAvailable?(details: { version: string }): void;
+  onInstalled?(details: { reason: string }): void;
 }
 
 function createStorageArea() {

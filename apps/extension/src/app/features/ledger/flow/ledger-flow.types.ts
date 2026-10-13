@@ -42,7 +42,7 @@ export interface ConfirmBtcPolicyAddressLedgerFlowRequest {
   kind: 'confirm-btc-policy-address';
   descriptor: string;
   address: string | null;
-  onConfirmed: () => Promise<void>;
+  onConfirmed(): Promise<void>;
 }
 
 interface ConnectStartLedgerFlowRequest {
@@ -91,7 +91,7 @@ export type LedgerSigningOutcome<T> = { status: 'signed'; value: T } | LedgerSig
 
 export interface LedgerSigningTarget<T> {
   id: number;
-  resolve: (outcome: LedgerSigningOutcome<T>) => void;
+  resolve(outcome: LedgerSigningOutcome<T>): void;
 }
 
 type ActiveLedgerSigningRequests = {

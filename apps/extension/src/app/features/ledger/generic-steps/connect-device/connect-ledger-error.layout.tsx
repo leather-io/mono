@@ -25,7 +25,7 @@ function PossibleReasonUnableToConnect(props: PossibleReasonUnableToConnectProps
 
 interface ConnectLedgerErrorLayoutProps {
   warningText: string | null;
-  onTryAgain: () => void;
+  onTryAgain(): void;
   appName: string;
 }
 export function ConnectLedgerErrorLayout(props: ConnectLedgerErrorLayoutProps) {

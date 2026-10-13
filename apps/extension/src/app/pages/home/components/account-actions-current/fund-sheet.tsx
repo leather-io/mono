@@ -4,9 +4,9 @@ import { ActionDrawer } from './action-drawer';
 import { ActionDrawerButton } from './action-drawer-button';
 
 interface FundSheetProps {
-  onBuy: () => void;
-  onSell: () => void;
-  onClose: () => void;
+  onBuy(): void;
+  onSell(): void;
+  onClose(): void;
   isShowing: boolean;
 }
 

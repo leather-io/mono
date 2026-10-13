@@ -13,11 +13,11 @@ import { CryptoAssetItemPlaceholder } from '../crypto-asset-item/crypto-asset-it
 
 interface StxBalanceLoaderProps {
   address: string;
-  children: (
+  children(
     balance: StxBalance,
     isLoading: boolean,
     isLoadingAdditionalData: boolean
-  ) => React.ReactNode;
+  ): React.ReactNode;
 }
 export function StxBalanceLoader({ address, children }: StxBalanceLoaderProps) {
   const balance = useStxAddressBalance(address);
@@ -27,11 +27,11 @@ export function StxBalanceLoader({ address, children }: StxBalanceLoaderProps) {
 
 interface StxAssetItemBalanceLoaderProps {
   accountId: AccountId;
-  children: (
+  children(
     balance: AddressQuotedStxBalance,
     isLoading: boolean,
     isLoadingAdditionalData: boolean
-  ) => React.ReactNode;
+  ): React.ReactNode;
 }
 function renderStxBalance(
   stxBalance: ReturnType<typeof useStxAccountBalance>,
@@ -52,11 +52,11 @@ export function StxAssetItemBalanceLoader({ accountId, children }: StxAssetItemB
 
 interface StxAssetItemBalanceLoaderByAddressesProps {
   account: AccountAddresses;
-  children: (
+  children(
     balance: AddressQuotedStxBalance,
     isLoading: boolean,
     isLoadingAdditionalData: boolean
-  ) => React.ReactNode;
+  ): React.ReactNode;
 }
 export function StxAssetItemBalanceLoaderByAddresses({
   account,

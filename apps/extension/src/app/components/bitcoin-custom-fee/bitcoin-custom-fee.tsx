@@ -21,9 +21,9 @@ interface BitcoinCustomFeeProps {
   customFeeInitialValue: string;
   hasInsufficientBalanceError: boolean;
   isSendingMax: boolean;
-  onChooseFee: ({ feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs) => Promise<void>;
-  onSetSelectedFeeType: (value: BtcFeeType | null) => void;
-  onValidateBitcoinSpend: (value: number) => boolean;
+  onChooseFee({ feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs): Promise<void>;
+  onSetSelectedFeeType(value: BtcFeeType | null): void;
+  onValidateBitcoinSpend(value: number): boolean;
   recipients: TransferRecipient[];
   setCustomFeeInitialValue: Dispatch<SetStateAction<string>>;
   maxCustomFeeRate: number;

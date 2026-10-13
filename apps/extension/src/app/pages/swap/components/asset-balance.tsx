@@ -16,7 +16,7 @@ interface AssetBalanceProps {
     crypto: CryptoAssetBalance;
   };
   inputCurrencyMode: InputCurrencyMode;
-  onSetToMax?: () => void;
+  onSetToMax?(): void;
 }
 
 export function AssetBalance({ balance, inputCurrencyMode, onSetToMax }: AssetBalanceProps) {

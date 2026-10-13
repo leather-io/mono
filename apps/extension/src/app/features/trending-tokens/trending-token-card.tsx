@@ -6,7 +6,7 @@ import { ArrowTriangleTopIcon, Pressable, Sip10AvatarIcon } from '@leather.io/ui
 
 interface TrendingTokenCardProps {
   item: TrendingToken;
-  onSelectAsset: () => void;
+  onSelectAsset(): void;
 }
 
 export function TrendingTokenCard({ item, onSelectAsset }: TrendingTokenCardProps) {

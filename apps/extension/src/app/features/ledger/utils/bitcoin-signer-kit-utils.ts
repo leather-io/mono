@@ -63,14 +63,12 @@ export function useSignerActionController() {
       }
     }
 
-    function cancelActive() {
-      activeHandle.current?.cancel();
-      activeHandle.current = null;
-    }
-
     return {
       run,
-      cancelActive,
+      cancelActive() {
+        activeHandle.current?.cancel();
+        activeHandle.current = null;
+      },
     };
   }, []);
 }

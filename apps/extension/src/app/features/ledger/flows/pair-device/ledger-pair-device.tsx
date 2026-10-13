@@ -15,7 +15,7 @@ import { closeLedgerSession } from '../../dmk/ledger-session';
 type PairingStatus = 'idle' | 'connecting' | 'failed' | 'connected';
 
 interface LedgerPairDeviceProps {
-  onClose: () => void;
+  onClose(): void;
 }
 export function LedgerPairDevice({ onClose }: LedgerPairDeviceProps) {
   const dmk = useLedgerDmk();

@@ -13,7 +13,7 @@ interface BitcoinFeeEditorProviderProps extends HasChildren {
   availableBalance: Money;
   isSendingMax?: boolean;
   marketData: MarketData;
-  onGoBack: () => void;
+  onGoBack(): void;
   recipients: TransferRecipient[];
   utxos: OwnedUtxo[];
 }

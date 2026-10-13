@@ -38,8 +38,8 @@ interface StacksMessageSigningProps {
   tabId: number | null;
   origin: string | null;
   isLoading: boolean;
-  onSignMessage: (unsignedMessage: UnsignedMessage) => Promise<void>;
-  onCancelMessageSigning: () => void;
+  onSignMessage(unsignedMessage: UnsignedMessage): Promise<void>;
+  onCancelMessageSigning(): void;
   payload: Utf8Payload | StructuredPayload;
 }
 

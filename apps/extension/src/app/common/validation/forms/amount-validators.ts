@@ -39,10 +39,10 @@ function amountValidator() {
 }
 
 interface BtcInsufficientBalanceValidatorArgs {
-  calcMaxSpend: (
+  calcMaxSpend(
     recipient: string,
     utxos: OwnedUtxo[]
-  ) => {
+  ): {
     spendableBitcoin: BigNumber;
   };
   recipient: string;

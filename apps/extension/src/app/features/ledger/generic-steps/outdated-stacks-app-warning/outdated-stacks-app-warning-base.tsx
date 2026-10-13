@@ -10,8 +10,8 @@ import { useLedgerStep, useLedgerSteps } from '@app/features/ledger/flow/ledger-
 import { LEDGER_LIVE_MANAGER_URL } from '@app/features/ledger/utils/generic-ledger-utils';
 
 interface OutdatedStacksAppWarningBaseProps {
-  onTryAgain: () => void | Promise<void>;
-  onCancel?: () => void;
+  onTryAgain(): void | Promise<void>;
+  onCancel?(): void;
 }
 
 export function OutdatedStacksAppWarningBase({

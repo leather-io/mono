@@ -17,20 +17,17 @@ export function useWaitingMessage(
 ): [boolean, string, () => void, () => void] {
   const [isRunning, setIsRunning] = useState(false);
   const [waitingMessage, setWaitingMessage] = useState(messageForSecondsPassed(waitingMessages, 0));
-  const handlers = useMemo(() => {
-    function startWaitingMessage() {
-      setIsRunning(true);
-    }
-
-    function stopWaitingMessage() {
-      setIsRunning(false);
-    }
-
-    return {
-      startWaitingMessage,
-      stopWaitingMessage,
-    };
-  }, []);
+  const handlers = useMemo(
+    () => ({
+      startWaitingMessage() {
+        setIsRunning(true);
+      },
+      stopWaitingMessage() {
+        setIsRunning(false);
+      },
+    }),
+    []
+  );
   const secondsPassed = useRef(0);
 
   useInterval(

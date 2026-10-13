@@ -146,8 +146,8 @@ export function useBitcoinScureLibNetworkConfig() {
 }
 
 interface BitcoinSoftwareSignerFns {
-  sign: (tx: btc.Transaction) => void;
-  signAtIndex: (tx: btc.Transaction, index: number, allowedSighash?: number[]) => void;
+  sign(tx: btc.Transaction): void;
+  signAtIndex(tx: btc.Transaction, index: number, allowedSighash?: number[]): void;
 }
 function createBitcoinSoftwareSigner(rootKeychain: HDKey) {
   return ({

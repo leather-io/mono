@@ -15,6 +15,7 @@ import { assumedZeroFingerprint } from '@shared/utils';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
 import { initalizeWalletSession } from '@app/store/session-restore';
+import { persistor } from '@app/store/store';
 
 import { getNativeSegwitMainnetAddressFromRootKeychain } from '../accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { getTaprootMainnetAddressFromRootKeychain } from '../accounts/blockchain/bitcoin/taproot-account.hooks';
@@ -24,10 +25,8 @@ import * as inMemoryStore from '../in-memory-key/in-memory-storage';
 import { keyActions } from './software-key.actions';
 import { keyAdapter, keySlice } from './software-key.slice';
 
-const persistorFlushMock = vi.hoisted(() => vi.fn(() => Promise.resolve()));
-
 vi.mock('@app/store/store', () => ({
-  persistor: { flush: persistorFlushMock },
+  persistor: { flush: vi.fn(() => Promise.resolve()) },
   store: { getState: vi.fn(), dispatch: vi.fn() },
 }));
 
@@ -182,7 +181,7 @@ describe('unlockWalletAction', () => {
 
     // The salt already exists, so nothing is re-encrypted or re-persisted.
     expect(dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: reEncryptType }));
-    expect(persistorFlushMock).not.toHaveBeenCalled();
+    expect(persistor.flush).not.toHaveBeenCalled();
 
     expect(initalizeWalletSession).toHaveBeenCalledWith('encryption-key-current');
     expect(inMemoryStore.setKey).toHaveBeenCalledWith(realFingerprint, 'decrypted-mnemonic');
@@ -224,7 +223,7 @@ describe('unlockWalletAction', () => {
         key: { type: 'software', id: realFingerprint, encryptedSecretKey: 'enc-reencrypted' },
       })
     );
-    expect(persistorFlushMock).toHaveBeenCalled();
+    expect(persistor.flush).toHaveBeenCalled();
 
     expect(initalizeWalletSession).toHaveBeenCalledWith('encryption-key-legacy');
     expect(inMemoryStore.setKey).toHaveBeenCalledWith(realFingerprint, 'decrypted-mnemonic');
@@ -370,7 +369,7 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
       accountIndex: 4,
     });
     expect(dispatch).toHaveBeenCalledWith(restoreAction);
-    expect(persistorFlushMock).toHaveBeenCalled();
+    expect(persistor.flush).toHaveBeenCalled();
   });
 
   test('does not start recursive discovery when the next account has no activity', async () => {

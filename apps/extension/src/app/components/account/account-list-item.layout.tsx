@@ -15,7 +15,7 @@ interface AccountListItemLayoutProps extends AccountId {
   nonInteractive?: boolean;
   isLoading: boolean;
   isSelected: boolean;
-  onSelectAccount: (accountId: AccountId) => void;
+  onSelectAccount(accountId: AccountId): void;
   showChevron?: boolean;
   dataTestId?: string;
 }

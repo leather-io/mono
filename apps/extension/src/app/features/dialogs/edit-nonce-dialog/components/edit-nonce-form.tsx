@@ -5,9 +5,9 @@ import { Button } from '@leather.io/ui';
 import { EditNonceField } from './edit-nonce-field';
 
 interface EditNonceFormProps {
-  onBlur: () => void;
-  onClose: () => void;
-  onSubmit: () => void;
+  onBlur(): void;
+  onClose(): void;
+  onSubmit(): void;
 }
 export function EditNonceForm(props: EditNonceFormProps): React.JSX.Element {
   const { onBlur, onClose, onSubmit } = props;

@@ -19,14 +19,12 @@ import { type StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
 interface UseLedgerSignTxArgs<App extends LedgerApp> {
   chain: SupportedBlockchains;
-  isAppOpen: ({ name }: { name: string }) => boolean;
-  getAppVersion: (app: App) => Promise<StacksAppVersion> | Promise<BitcoinAppVersion>;
-  connectApp: (options: ConnectLedgerDeviceOptions) => Promise<App>;
-  passesAdditionalVersionCheck?: (
-    appVersion: StacksAppVersion | BitcoinAppVersion
-  ) => Promise<boolean>;
-  onSuccess?: () => void;
-  signTransactionWithDevice: (app: App) => Promise<void>;
+  isAppOpen({ name }: { name: string }): boolean;
+  getAppVersion(app: App): Promise<StacksAppVersion> | Promise<BitcoinAppVersion>;
+  connectApp(options: ConnectLedgerDeviceOptions): Promise<App>;
+  passesAdditionalVersionCheck?(appVersion: StacksAppVersion | BitcoinAppVersion): Promise<boolean>;
+  onSuccess?(): void;
+  signTransactionWithDevice(app: App): Promise<void>;
 }
 
 export function useLedgerSignTx<App extends LedgerApp>({

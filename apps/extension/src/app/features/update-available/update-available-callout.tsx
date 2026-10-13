@@ -22,8 +22,8 @@ const passwordWalletUpdateCopy = 'Your wallet will be locked during the update.'
 
 interface UpdateAvailableCalloutLayoutProps {
   body?: string;
-  onUpdateNow: () => void;
-  onUpdateLater: () => void;
+  onUpdateNow(): void;
+  onUpdateLater(): void;
 }
 function UpdateAvailableCalloutLayout({
   body,

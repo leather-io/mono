@@ -4,7 +4,7 @@ import type { Nonce } from './nonce-editor.context';
 
 interface NonceInputProps {
   nonce: Nonce;
-  onSetNonce: (value: string) => void;
+  onSetNonce(value: string): void;
 }
 export function NonceInput({ nonce, onSetNonce }: NonceInputProps) {
   return (
