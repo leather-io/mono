@@ -16,6 +16,8 @@ function useHiddenSip10Count({ fingerprint, accountIndex }: AccountId) {
 
   return useMemo(() => {
     if (visible.state !== 'success' || all.state !== 'success') return 0;
+    // Deliberately counts unpriced tokens too: the pill only signals there's more, and the
+    // sheet sorts by value
     const visibleIds = new Set(visible.value.sip10s.map(sip10 => sip10.asset.assetId));
     return all.value.sip10s.filter(
       sip10 =>

@@ -38,7 +38,7 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
-#: src/components/home/components/manage-tokens-footer.tsx:59
+#: src/components/home/components/manage-tokens-footer.tsx:61
 msgid "{hiddenCount, plural, one {# hidden token} other {# hidden tokens}}"
 msgstr "{hiddenCount, plural, one {# hidden token} other {# hidden tokens}}"
 

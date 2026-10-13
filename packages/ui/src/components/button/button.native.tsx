@@ -38,11 +38,9 @@ export function Button({
   ...props
 }: ButtonProps) {
   const { color, ...variantProps } = getButtonStyles({ size, variant, intent, disabled });
-  const iconSideStyles = getIconSideStyles({
-    size,
-    hasIconStart: !!iconStart,
-    hasIconEnd: !!iconEnd,
-  });
+  const iconSideStyles = hasExplicitHorizontalPadding(props)
+    ? {}
+    : getIconSideStyles({ size, hasIconStart: !!iconStart, hasIconEnd: !!iconEnd });
 
   return (
     <Pressable
@@ -128,6 +126,21 @@ const disabledOverrides: Record<ButtonVariant, VariantProps> = {
 const iconSidePadding: Partial<Record<ButtonSize, VariantProps['px']>> = {
   sm: '3',
 };
+
+// An explicit padding prop from the caller should win over the automatic icon-side padding
+const horizontalPaddingProps = [
+  'p',
+  'px',
+  'pl',
+  'pr',
+  'paddingHorizontal',
+  'paddingLeft',
+  'paddingRight',
+] as const;
+
+function hasExplicitHorizontalPadding(props: PressableProps) {
+  return horizontalPaddingProps.some(key => props[key] !== undefined);
+}
 
 function getIconSideStyles({
   size,
