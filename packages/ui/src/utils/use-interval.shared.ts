@@ -23,7 +23,7 @@ interface UseIntervalOptions {
   enabled?: boolean;
   runImmediately?: boolean;
   stopOnError?: boolean;
-  onError?: (error: unknown) => void;
+  onError?(error: unknown): void;
 }
 
 /**

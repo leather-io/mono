@@ -19,7 +19,7 @@ import { useOnMount } from '@leather.io/ui/native';
 
 interface UseTransferSip9NftTxHex {
   request: RpcRequest<typeof stxTransferSip9Nft>;
-  setTxHex: (txHex: string) => void;
+  setTxHex(txHex: string): void;
   nonce: number;
   accountId: string;
   network: StacksNetwork;

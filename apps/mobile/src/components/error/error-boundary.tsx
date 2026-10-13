@@ -6,7 +6,7 @@ import { Error } from './error';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
-  fallback?: (error: Error) => React.ReactNode;
+  fallback?(error: Error): React.ReactNode;
 }
 
 interface ErrorBoundaryState {

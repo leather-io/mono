@@ -33,14 +33,14 @@ export interface GetSwapExecutionDataParams {
 
 export interface SwapProviderService {
   providerId: SwapProviderId;
-  getBaseProviderAssets: (signal?: AbortSignal) => Promise<SwapProviderAsset[]>;
-  getTargetProviderAssets: (
+  getBaseProviderAssets(signal?: AbortSignal): Promise<SwapProviderAsset[]>;
+  getTargetProviderAssets(
     params: GetTargetProviderAssetsParams,
     signal?: AbortSignal
-  ) => Promise<SwapProviderAsset[]>;
-  getSwapQuotes: (params: GetSwapQuotesParams, signal?: AbortSignal) => Promise<SwapQuote[]>;
-  getSwapExecutionData: (
+  ): Promise<SwapProviderAsset[]>;
+  getSwapQuotes(params: GetSwapQuotesParams, signal?: AbortSignal): Promise<SwapQuote[]>;
+  getSwapExecutionData(
     params: GetSwapExecutionDataParams,
     signal?: AbortSignal
-  ) => Promise<SwapExecutionData>;
+  ): Promise<SwapExecutionData>;
 }

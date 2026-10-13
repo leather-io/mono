@@ -14,7 +14,7 @@ import {
 
 interface EditableNameProps {
   value: string;
-  onSave: (name: string) => void;
+  onSave(name: string): void;
   title: string;
   label?: string;
   canEdit?: boolean;

@@ -12,7 +12,7 @@ interface BitcoinFeeOptionProps {
   fee: number;
   feeRate: number;
   quoteFee: Money;
-  onPress: () => void;
+  onPress(): void;
   isSelected: boolean;
   disabled: boolean;
 }

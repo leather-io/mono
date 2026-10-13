@@ -7,7 +7,7 @@ import { t } from '@lingui/core/macro';
 import { PlusIcon, useTheme } from '@leather.io/ui/native';
 
 interface CreateWalletCardProps {
-  onPress: () => void;
+  onPress(): void;
 }
 
 export function CreateWalletCard({ onPress }: CreateWalletCardProps) {

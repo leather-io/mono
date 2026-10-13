@@ -6,11 +6,11 @@ import { Button, ButtonProps } from '@leather.io/ui/native';
 interface ActionButtonsProps {
   fullWidth?: boolean;
   size?: ButtonProps['size'];
-  onSend?: () => void;
-  onReceive?: () => void;
-  onSwap?: () => void;
-  onBuy?: () => void;
-  onSell?: () => void;
+  onSend?(): void;
+  onReceive?(): void;
+  onSwap?(): void;
+  onBuy?(): void;
+  onSell?(): void;
 }
 
 export function ActionButtons({

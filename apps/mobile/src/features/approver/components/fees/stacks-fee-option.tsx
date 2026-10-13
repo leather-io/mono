@@ -9,7 +9,7 @@ interface StacksFeeOptionProps {
   feeType: FeeTypes;
   fee: Money;
   quoteFee: Money;
-  onPress: () => void;
+  onPress(): void;
   isSelected: boolean;
   disabled: boolean;
 }

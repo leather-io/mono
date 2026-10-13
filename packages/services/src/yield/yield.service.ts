@@ -22,12 +22,9 @@ export interface YieldProductService {
   productKey: YieldProductKey;
   productCategory: YieldProductCategory;
 
-  getProvider: (signal?: AbortSignal) => Promise<StacksProtocol>;
-  getProduct: (signal?: AbortSignal) => Promise<YieldProduct>;
-  getAccountPositions: (
-    account: AccountAddresses,
-    signal?: AbortSignal
-  ) => Promise<YieldPosition[]>;
+  getProvider(signal?: AbortSignal): Promise<StacksProtocol>;
+  getProduct(signal?: AbortSignal): Promise<YieldProduct>;
+  getAccountPositions(account: AccountAddresses, signal?: AbortSignal): Promise<YieldPosition[]>;
 }
 
 @injectable()

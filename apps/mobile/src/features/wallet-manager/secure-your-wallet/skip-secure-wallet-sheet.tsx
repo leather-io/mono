@@ -5,7 +5,7 @@ import { SheetRef } from '@leather.io/ui/native';
 
 interface SkipSecureWalletSheetProps {
   sheetRef: SheetRef;
-  onSubmit: () => void;
+  onSubmit(): void;
 }
 export function SkipSecureWalletSheet({ sheetRef, onSubmit }: SkipSecureWalletSheetProps) {
   return (

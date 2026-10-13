@@ -84,11 +84,11 @@ export interface MultisigActivityClassification {
 interface CreateMultisigTransactionActivityViewOptions {
   rawPayload?: string;
   marketData?: MarketData;
-  classifyContract?: (
+  classifyContract?(
     contractId: string,
     functionName: string
-  ) => MultisigActivityClassification | undefined;
-  getTokenInfo?: (contractId: string) => ProposalTokenInfo | undefined;
+  ): MultisigActivityClassification | undefined;
+  getTokenInfo?(contractId: string): ProposalTokenInfo | undefined;
 }
 
 interface ActivityCommonFields {

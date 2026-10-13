@@ -22,9 +22,9 @@ import { SheetInstance } from '@leather.io/ui/native';
 interface StxGetAddressesApproverProps {
   app: App;
   request: RpcRequest<typeof stxGetAddresses>;
-  sendResult: (result: RpcResponse<typeof stxGetAddresses>) => void;
+  sendResult(result: RpcResponse<typeof stxGetAddresses>): void;
   origin: string;
-  closeApprover: () => void;
+  closeApprover(): void;
 }
 
 export function StxGetAddressesApprover(props: StxGetAddressesApproverProps) {

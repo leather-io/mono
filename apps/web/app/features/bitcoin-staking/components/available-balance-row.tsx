@@ -17,7 +17,7 @@ function maxStakeableAmount(availableAmount: BigNumber) {
 interface AvailableBalanceRowProps {
   isLoading: boolean;
   availableAmount: BigNumber | undefined;
-  onSelectMax: (maxStakeableStx: number) => void;
+  onSelectMax(maxStakeableStx: number): void;
 }
 
 export function AvailableBalanceRow({

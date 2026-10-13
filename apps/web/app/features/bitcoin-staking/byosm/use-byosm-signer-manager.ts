@@ -13,7 +13,7 @@ export type ByosmSignerManagerState =
   | { status: 'invalid-format'; reason: 'invalid-format' | 'wrong-network' }
   | { status: 'listed'; pool: BitcoinStakingPool }
   | { status: 'checking'; contractId: string }
-  | { status: 'check-failed'; contractId: string; retry: () => void }
+  | { status: 'check-failed'; contractId: string; retry(): void }
   | {
       status: 'invalid';
       contractId: string;

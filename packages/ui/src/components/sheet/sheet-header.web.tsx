@@ -6,7 +6,7 @@ import { CloseIcon } from '../../icons/close-icon.web';
 import { IconButton } from '../icon-button/icon-button.web';
 
 interface SheetHeaderProps {
-  onClose?: () => void;
+  onClose?(): void;
   title?: ReactNode;
   variant?: 'default' | 'large'; // large variant is BigTitle in designs
 }

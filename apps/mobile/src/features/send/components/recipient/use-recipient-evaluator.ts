@@ -32,7 +32,7 @@ export type GuardResult = GuardResultOk | GuardResultWarnOrBlock;
 
 interface CreateRecipientEvaluatorParams {
   schema: ZodSchema;
-  isNewAddress: (address: string) => boolean;
+  isNewAddress(address: string): boolean;
   canSelfSend: boolean;
 }
 

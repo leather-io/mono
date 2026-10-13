@@ -3,13 +3,13 @@ import { ClarityType, hexToCV, principalCV, serializeCV, uintCV } from '@stacks/
 import { parseContractId } from '../utils/contract-id';
 
 interface Pox5DelegatedAmountReader {
-  callReadOnlyFunction: (args: {
+  callReadOnlyFunction(args: {
     contractAddress: string;
     contractName: string;
     functionName: string;
     readOnlyFunctionArgs: { arguments: string[]; sender: string };
     signal?: AbortSignal;
-  }) => Promise<{ okay: boolean; result?: string }>;
+  }): Promise<{ okay: boolean; result?: string }>;
 }
 
 interface CreateGetPox5DelegatedAmountQueryOptionsArgs {

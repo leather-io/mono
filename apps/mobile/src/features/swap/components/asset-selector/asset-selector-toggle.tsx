@@ -13,7 +13,7 @@ import {
 interface AssetPickerTriggerProps {
   asset: SwappableFungibleCryptoAsset | undefined;
   disabled?: boolean;
-  onPress: () => void;
+  onPress(): void;
 }
 
 export function AssetSelectorToggle({ asset, onPress, disabled }: AssetPickerTriggerProps) {

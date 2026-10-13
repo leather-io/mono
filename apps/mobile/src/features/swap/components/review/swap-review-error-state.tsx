@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 import { Box, Button, Text } from '@leather.io/ui/native';
 
 interface SwapReviewErrorStateProps {
-  onRetry: () => void;
+  onRetry(): void;
 }
 
 export function SwapReviewErrorState({ onRetry }: SwapReviewErrorStateProps) {

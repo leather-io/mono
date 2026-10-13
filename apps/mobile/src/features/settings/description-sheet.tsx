@@ -21,8 +21,8 @@ interface DescriptionSheetData {
 }
 
 export interface DescriptionSheetInstance {
-  present: (sheetData: DescriptionSheetData) => void;
-  dismiss: () => void;
+  present(sheetData: DescriptionSheetData): void;
+  dismiss(): void;
 }
 
 export type DescriptionSheetRef = RefObject<DescriptionSheetInstance | null>;

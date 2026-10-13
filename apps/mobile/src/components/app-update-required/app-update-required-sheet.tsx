@@ -8,7 +8,7 @@ import { UpdateButton } from './update-button';
 
 interface AppUpdateRequiredSheetProps {
   isLoading?: boolean;
-  onUpdatePress?: () => void;
+  onUpdatePress?(): void;
 }
 
 export function AppUpdateRequiredSheet({ onUpdatePress }: AppUpdateRequiredSheetProps) {

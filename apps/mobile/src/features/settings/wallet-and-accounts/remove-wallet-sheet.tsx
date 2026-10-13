@@ -7,7 +7,7 @@ import { SheetRef } from '@leather.io/ui/native';
 
 interface RemoveWalletSheetProps {
   sheetRef: SheetRef;
-  onSubmit: () => unknown;
+  onSubmit(): unknown;
 }
 export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps) {
   const { openUrl } = useOpenUrl();

@@ -36,7 +36,7 @@ interface SwapSubmissionOverlayProps {
   baseAmount: Money;
   targetAmount: Money;
   status: 'submitting' | 'success' | 'failure';
-  onReset: () => void;
+  onReset(): void;
 }
 
 export function SwapSubmissionOverlay({
@@ -133,7 +133,7 @@ function SubmissionStatusDisplay({ status }: SubmissionStatusDisplayProps) {
 }
 
 interface SubmissionFailureMessageProps {
-  onReset: () => void;
+  onReset(): void;
 }
 
 function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {

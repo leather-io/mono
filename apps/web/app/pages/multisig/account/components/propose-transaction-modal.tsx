@@ -119,7 +119,7 @@ function feeTierFiatValues(
 interface FeeOptionButtonProps {
   label: string;
   selected: boolean;
-  onSelect: () => void;
+  onSelect(): void;
   children: ReactNode;
 }
 
@@ -158,7 +158,7 @@ interface FeeEstimationState {
   isFetching: boolean;
   isPaused: boolean;
   error: Error | null;
-  onRetry: () => void;
+  onRetry(): void;
 }
 
 function getFeeEstimateStatus({
@@ -191,8 +191,8 @@ function getFeeEstimateStatus({
 interface FeeTierSelectorProps {
   options?: Record<TransactionFeeTier, Money>;
   selected: ProposalFeeSelection;
-  onSelect: (tier: TransactionFeeTier) => void;
-  onCustom?: () => void;
+  onSelect(tier: TransactionFeeTier): void;
+  onCustom?(): void;
   fiatOptions?: Record<TransactionFeeTier, Money | undefined>;
   estimation: FeeEstimationState;
 }
@@ -317,17 +317,17 @@ interface ProposeFormFieldsProps {
   assetToggle?: ReactNode;
   recipientPlaceholder: string;
   recipient: string;
-  onRecipient: (value: string) => void;
-  onRecipientBlur?: (value: string) => void;
+  onRecipient(value: string): void;
+  onRecipientBlur?(value: string): void;
   amountInput: string;
-  onAmount: (value: string) => void;
+  onAmount(value: string): void;
   available?: Money;
   feeOptions?: Record<TransactionFeeTier, Money>;
   feeFiatOptions?: Record<TransactionFeeTier, Money | undefined>;
   feeEstimation: FeeEstimationState;
   feeTier: ProposalFeeSelection;
-  onFeeTier: (tier: TransactionFeeTier) => void;
-  onCustomFee?: () => void;
+  onFeeTier(tier: TransactionFeeTier): void;
+  onCustomFee?(): void;
   feeDetails?: ReactNode;
   threshold: number;
   signerCount: number;
@@ -335,8 +335,8 @@ interface ProposeFormFieldsProps {
   canPropose: boolean;
   recipientError?: string;
   amountError?: string;
-  onClose: () => void;
-  onSubmit: () => void;
+  onClose(): void;
+  onSubmit(): void;
 }
 
 function ProposeFormFields({
@@ -485,8 +485,8 @@ function BtcProposeForm({
 }: {
   account: VaultAccount;
   memberCount: number;
-  onClose: () => void;
-  onProposed: (transaction: MultisigTransaction) => void;
+  onClose(): void;
+  onProposed(transaction: MultisigTransaction): void;
 }) {
   const [recipient, setRecipient] = useState('');
   const [amountInput, setAmountInput] = useState('');
@@ -621,8 +621,8 @@ function StxProposeForm({
   account: VaultAccount;
   memberCount: number;
   initialAssetId?: SerializedCryptoAssetId;
-  onClose: () => void;
-  onProposed: (transaction: MultisigTransaction) => void;
+  onClose(): void;
+  onProposed(transaction: MultisigTransaction): void;
 }) {
   const [recipient, setRecipient] = useState('');
   const [amountInput, setAmountInput] = useState('');
@@ -784,8 +784,8 @@ interface ProposeTransactionModalProps {
   memberCount: number;
   isShowing: boolean;
   initialAssetId?: SerializedCryptoAssetId;
-  onClose: () => void;
-  onProposed: (transaction: MultisigTransaction) => void;
+  onClose(): void;
+  onProposed(transaction: MultisigTransaction): void;
 }
 
 export function ProposeTransactionModal({

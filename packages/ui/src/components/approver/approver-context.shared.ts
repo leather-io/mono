@@ -9,8 +9,8 @@ interface ApproverContext extends ChildRegister<ApproverChildren> {
   requester?: string;
   isDisplayingAdvancedView: boolean;
   actionBarHeight: number;
-  setActionBarHeight: (val: number) => void;
-  setIsDisplayingAdvancedView: (val: boolean) => void;
+  setActionBarHeight(val: number): void;
+  setIsDisplayingAdvancedView(val: boolean): void;
 }
 
 const approverContext = createContext<ApproverContext | null>(null);

@@ -7,7 +7,7 @@ import { TextField } from '../../components/text-field';
 
 interface CustomStacksFeeFieldProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange(value: string): void;
   minimumFee?: Money;
   fiat?: Money;
   error?: string;

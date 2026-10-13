@@ -20,10 +20,10 @@ interface SpendableAmountContext {
 }
 
 interface ProtocolStrategy {
-  resolveSpendableAmount: (context: SpendableAmountContext) => Promise<Money>;
-  getMinimumSpendAmount: () => number;
-  getMaximumSpendAmount: () => number;
-  getFeeCapabilities: () => FeeCapabilities;
+  resolveSpendableAmount(context: SpendableAmountContext): Promise<Money>;
+  getMinimumSpendAmount(): number;
+  getMaximumSpendAmount(): number;
+  getFeeCapabilities(): FeeCapabilities;
 }
 
 interface FeeCapabilities {

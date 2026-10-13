@@ -38,8 +38,8 @@ export type LeatherSdk = {
 };
 
 interface LeatherClientConfig {
-  getProvider?: () => LeatherProvider | undefined;
-  onProviderNotFound?: () => void;
+  getProvider?(): LeatherProvider | undefined;
+  onProviderNotFound?(): void;
 }
 const defaultOptions = {
   getProvider() {

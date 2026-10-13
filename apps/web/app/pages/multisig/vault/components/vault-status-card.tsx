@@ -18,9 +18,9 @@ interface VaultStatusCardProps {
   canCancel: boolean;
   isCancelling: boolean;
   pendingCount: number;
-  onShareInvite: () => void;
-  onCancelVault: () => void;
-  onEdit?: () => void;
+  onShareInvite(): void;
+  onCancelVault(): void;
+  onEdit?(): void;
 }
 
 function Row({ label, children }: { label: string; children?: React.ReactNode }) {

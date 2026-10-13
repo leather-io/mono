@@ -13,7 +13,7 @@ import { ArrowsRepeatLeftRightIcon, Pressable, usePressedState } from '@leather.
 
 interface FlipButtonProps {
   isVisible: boolean;
-  onPress?: () => void;
+  onPress?(): void;
 }
 
 export function FlipButton({ isVisible, onPress }: FlipButtonProps) {

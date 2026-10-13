@@ -7,7 +7,7 @@ import { NonceSheet } from './components/nonce-sheet';
 
 interface NonceSectionProps {
   nonce: string;
-  onChangeNonce: (nonce: string) => void;
+  onChangeNonce(nonce: string): void;
   disabled?: boolean;
 }
 export function NonceSection({ nonce, onChangeNonce, disabled }: NonceSectionProps) {

@@ -7,9 +7,9 @@ import { useBitcoinClient } from '../clients/bitcoin-client';
 interface BroadcastCallbackArgs {
   tx: string;
   delayTime?: number;
-  onResult?: (txid: string) => void;
-  onError?: (error: Error) => void;
-  onFinally?: () => void;
+  onResult?(txid: string): void;
+  onError?(error: Error): void;
+  onFinally?(): void;
 }
 
 export function useBitcoinBroadcastTransaction() {

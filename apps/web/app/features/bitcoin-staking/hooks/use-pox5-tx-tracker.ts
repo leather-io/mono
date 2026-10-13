@@ -11,8 +11,8 @@ export interface Pox5TrackedTx {
 
 interface Pox5TxTrackerContextValue {
   trackedTx: Pox5TrackedTx | null;
-  track: (trackedTx: Pox5TrackedTx) => void;
-  clear: () => void;
+  track(trackedTx: Pox5TrackedTx): void;
+  clear(): void;
 }
 
 export const Pox5TxTrackerContext = createContext<Pox5TxTrackerContextValue | null>(null);

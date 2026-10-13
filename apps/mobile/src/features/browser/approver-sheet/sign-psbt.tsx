@@ -17,8 +17,8 @@ import { addBip32DerivationFieldToInputs } from './utils';
 interface SignPsbtApproverProps {
   request: RpcRequest<typeof signPsbt>;
   app: App;
-  sendResult: (result: RpcResponse<typeof signPsbt>) => void;
-  closeApprover: () => void;
+  sendResult(result: RpcResponse<typeof signPsbt>): void;
+  closeApprover(): void;
 }
 export function SignPsbtApprover(props: SignPsbtApproverProps) {
   const { list: bitcoinAccounts } = useBitcoinAccounts();

@@ -11,7 +11,7 @@ const captions: Record<Chain, string> = {
 
 interface SendTransactionButtonProps {
   chain: Chain;
-  onClick: () => void;
+  onClick(): void;
 }
 
 export function SendTransactionButton({ chain, onClick }: SendTransactionButtonProps) {

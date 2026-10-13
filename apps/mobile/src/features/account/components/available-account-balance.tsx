@@ -15,7 +15,7 @@ import {
 
 interface AvailableAccountBalanceProps {
   account: AccountId;
-  onOpenManageTokens: () => void;
+  onOpenManageTokens(): void;
   hasAssets: boolean;
 }
 export function AvailableAccountBalance({

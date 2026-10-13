@@ -13,9 +13,9 @@ import { deserializeTransaction } from '@stacks/transactions';
 
 interface StxApproverProps {
   txHex: string;
-  onEdit: () => void;
+  onEdit(): void;
   accountId: string;
-  closeApprover: () => void;
+  closeApprover(): void;
 }
 
 export function StxApprover({ txHex: _txHex, onEdit, accountId, closeApprover }: StxApproverProps) {

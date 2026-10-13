@@ -25,7 +25,7 @@ interface Sip10FormProps {
   marketData: MarketData;
   quoteCurrency: QuoteCurrency;
   assetItemAnimationOffsetTop?: number | null;
-  onOpenAssetPicker: () => void;
+  onOpenAssetPicker(): void;
   asset: Sip10Asset;
 }
 

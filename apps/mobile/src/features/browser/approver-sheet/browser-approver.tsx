@@ -38,9 +38,9 @@ import { BrowserMessage } from './utils';
 
 interface BrowserApproverProps {
   request: BrowserMessage;
-  sendResult: (result: RpcResponses) => void;
+  sendResult(result: RpcResponses): void;
   origin: string;
-  closeApprover: () => void;
+  closeApprover(): void;
 }
 
 export function BrowserApprover(props: BrowserApproverProps) {

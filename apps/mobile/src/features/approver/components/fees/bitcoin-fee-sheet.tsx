@@ -16,7 +16,7 @@ interface FeesSheetProps {
   fees: AverageBitcoinFeeRates | undefined;
   txSize: number;
   currentFeeRate: number;
-  onChangeFee: (feeType: FeeTypes) => void;
+  onChangeFee(feeType: FeeTypes): void;
 }
 
 export function BitcoinFeesSheet({

@@ -5,7 +5,7 @@ import { Box, Pressable, Text } from '@leather.io/ui/native';
 
 interface QuoteErrorProps {
   error: Error;
-  onRetry: () => void;
+  onRetry(): void;
 }
 
 export function QuotePreviewError({ onRetry }: QuoteErrorProps) {

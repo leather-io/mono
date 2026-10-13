@@ -22,7 +22,7 @@ export type SidebarSummaryRow = SidebarSummaryValueRow | SidebarSummaryDiffRow;
 interface SidebarSummaryTerms {
   label: string;
   accepted: boolean;
-  onToggleAccepted: () => void;
+  onToggleAccepted(): void;
 }
 
 interface SidebarSummaryCardProps {
@@ -32,7 +32,7 @@ interface SidebarSummaryCardProps {
   confirmDisabled?: boolean;
   confirmTestId?: string;
   isBusy?: boolean;
-  onConfirm: () => void;
+  onConfirm(): void;
 }
 
 function SidebarSummaryRowContent({ row }: { row: SidebarSummaryRow }) {

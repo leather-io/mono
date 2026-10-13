@@ -35,7 +35,7 @@ interface VaultActivityRowProps {
   location?: ActivityRowLocation;
   href?: string;
   variant?: 'boxed' | 'plain';
-  onClick?: () => void;
+  onClick?(): void;
 }
 
 // Only while a proposal is in flight; settled transactions have no progress.

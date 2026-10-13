@@ -72,7 +72,7 @@ function Decrement(props: ButtonProps) {
 }
 
 interface DisplayProps extends ComponentProps<typeof styled.span> {
-  formatter?: (value: number, decimals?: number) => string;
+  formatter?(value: number, decimals?: number): string;
 }
 
 function Display({ formatter: customFormatter, ...spanProps }: DisplayProps) {

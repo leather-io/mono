@@ -7,7 +7,7 @@ import { VaultAssetRow } from './vault-asset-row';
 
 interface VaultAssetListProps {
   items: VaultAssetItem[];
-  onSelect?: (item: VaultAssetItem) => void;
+  onSelect?(item: VaultAssetItem): void;
 }
 
 export function VaultAssetList({ items, onSelect }: VaultAssetListProps) {

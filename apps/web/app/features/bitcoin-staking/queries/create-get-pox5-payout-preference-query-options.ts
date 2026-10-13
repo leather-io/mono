@@ -17,12 +17,12 @@ function isUndefinedFunctionCause(cause: string | undefined): boolean {
 }
 
 interface PayoutPreferenceReader {
-  callReadOnlyFunction: (args: {
+  callReadOnlyFunction(args: {
     contractAddress: string;
     contractName: string;
     functionName: string;
     readOnlyFunctionArgs: { arguments: string[]; sender: string };
-  }) => Promise<{ okay: boolean; result?: string; cause?: string }>;
+  }): Promise<{ okay: boolean; result?: string; cause?: string }>;
 }
 
 interface CreateGetPox5PayoutPreferenceQueryOptionsArgs {

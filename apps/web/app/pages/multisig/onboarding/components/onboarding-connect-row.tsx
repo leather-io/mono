@@ -15,8 +15,8 @@ interface OnboardingConnectRowProps {
   isPending: boolean;
   isRestoring: boolean;
   error: Error | null;
-  onSignIn: () => void;
-  onSignOut: () => void;
+  onSignIn(): void;
+  onSignOut(): void;
 }
 
 export function OnboardingConnectRow({

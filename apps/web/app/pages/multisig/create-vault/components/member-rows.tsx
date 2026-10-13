@@ -26,8 +26,8 @@ interface MemberRowsProps {
   myAddress?: string;
   statuses: MemberFieldStatus[];
   allowBnsName?: boolean;
-  onChange: (members: MemberDraft[]) => void;
-  onNormalizeAddress?: (address: string) => string;
+  onChange(members: MemberDraft[]): void;
+  onNormalizeAddress?(address: string): string;
 }
 
 const inputStyles = {

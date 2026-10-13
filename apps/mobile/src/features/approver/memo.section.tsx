@@ -8,7 +8,7 @@ import { MemoSheet } from './components/memo-sheet';
 interface MemoSectionProps {
   memo: string;
   disabled?: boolean;
-  onChangeMemo: (memo: string) => void;
+  onChangeMemo(memo: string): void;
 }
 
 export function MemoSection({ memo, disabled, onChangeMemo }: MemoSectionProps) {

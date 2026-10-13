@@ -66,9 +66,9 @@ interface PsbtSignerProps extends AccountId {
   signAtIndex?: RpcParams<typeof signPsbt>['signAtIndex'];
   network?: BitcoinNetworkModes;
   feeEditorEnabled: boolean;
-  onBack: () => void;
-  onResult: (result: { hex: string; txid?: string }) => void;
-  onClose: () => void;
+  onBack(): void;
+  onResult(result: { hex: string; txid?: string }): void;
+  onClose(): void;
 }
 export function PsbtSigner(props: PsbtSignerProps) {
   const { data: feeRates } = useAverageBitcoinFeeRates();

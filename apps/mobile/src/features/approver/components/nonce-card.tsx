@@ -4,7 +4,7 @@ import { Avatar, Box, Cell, ChevronRightIcon, NumberedListIcon, Text } from '@le
 
 interface NonceCardProps {
   nonce: string;
-  onPress: () => void;
+  onPress(): void;
   disabled?: boolean;
 }
 

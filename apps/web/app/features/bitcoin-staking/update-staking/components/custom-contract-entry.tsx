@@ -12,8 +12,8 @@ const switchContent = bitcoinStakingContent.switchSignerManager;
 interface CustomContractEntryProps {
   value: string;
   state: ByosmSignerManagerState;
-  onChange: (value: string) => void;
-  onValidate: () => void;
+  onChange(value: string): void;
+  onValidate(): void;
 }
 
 export function CustomContractEntry({

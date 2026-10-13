@@ -104,7 +104,7 @@ function ConnectChainCallout({
 }: {
   chainLabel: string;
   isPending: boolean;
-  onConnect: () => void;
+  onConnect(): void;
   error?: string;
 }) {
   return (

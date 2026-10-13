@@ -13,12 +13,12 @@ import { BrowserApprover } from './browser-approver';
 import { BrowserMessage, RpcErrorMessage } from './utils';
 
 interface ApproverSheetProps {
-  sendResult: (result: RpcResponses) => void;
+  sendResult(result: RpcResponses): void;
 }
 
 export interface ApproverSheetInstance {
-  present: (request: BrowserMessage, origin: string) => void;
-  dismiss: () => void;
+  present(request: BrowserMessage, origin: string): void;
+  dismiss(): void;
 }
 export type ApproverSheetRef = RefObject<ApproverSheetInstance | null>;
 

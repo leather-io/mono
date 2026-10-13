@@ -14,7 +14,7 @@ import { SheetInstance } from '@leather.io/ui/native';
 interface UseRecipientStateParams {
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
-  onChange: (address: string) => void;
+  onChange(address: string): void;
   currentAccount: AccountId;
 }
 

@@ -4,7 +4,7 @@ interface AddWalletCellProps {
   icon?: React.ReactNode;
   title: string;
   caption?: string;
-  onPress: () => void;
+  onPress(): void;
   testID?: string;
 }
 

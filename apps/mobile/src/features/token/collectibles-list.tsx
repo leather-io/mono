@@ -18,7 +18,7 @@ import { Sip9 } from './stacks/sip9';
 interface RenderCollectibleProps {
   item: NonFungibleCryptoAsset;
   height: number;
-  onPress?: () => void;
+  onPress?(): void;
 }
 function renderCollectible({ item, height, onPress }: RenderCollectibleProps) {
   if (item.protocol !== 'sip9') return null;

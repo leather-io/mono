@@ -16,8 +16,8 @@ interface SwapSheetPresentParams {
 }
 
 export interface SwapSheetInstance {
-  present: (args?: SwapSheetPresentParams) => void;
-  dismiss: () => void;
+  present(args?: SwapSheetPresentParams): void;
+  dismiss(): void;
 }
 export type SwapSheetRef = RefObject<SwapSheetInstance | null>;
 

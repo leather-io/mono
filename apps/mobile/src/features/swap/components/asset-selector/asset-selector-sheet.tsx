@@ -4,7 +4,7 @@ import { Sheet, SheetInstance } from '@leather.io/ui/native';
 
 interface AssetSelectorSheetProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose(): void;
   children: ReactNode;
 }
 

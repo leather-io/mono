@@ -20,7 +20,7 @@ interface PayoutOptionProps {
   tag?: string;
   isSelected: boolean;
   isDisabled?: boolean;
-  onSelect: () => void;
+  onSelect(): void;
 }
 
 function PayoutOption({

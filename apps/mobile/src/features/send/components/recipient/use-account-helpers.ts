@@ -9,8 +9,8 @@ import { omit } from 'remeda';
 import { FungibleCryptoAsset } from '@leather.io/models';
 
 interface UseAccountHelpersResult {
-  findAccountByAddress: (address: string) => Account | null;
-  getAddressByAccount: (fingerprint: string, index: number) => string | null;
+  findAccountByAddress(address: string): Account | null;
+  getAddressByAccount(fingerprint: string, index: number): string | null;
 }
 
 export function useAccountHelpers(asset: FungibleCryptoAsset): UseAccountHelpersResult {

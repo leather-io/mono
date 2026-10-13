@@ -9,8 +9,8 @@ import { delay } from '@leather.io/utils';
 import { useSupportForm } from './support-form-schema';
 
 interface SupportFormProps {
-  onSuccess?: () => void;
-  onError?: () => void;
+  onSuccess?(): void;
+  onError?(): void;
 }
 
 export function SupportForm({ onSuccess, onError }: SupportFormProps) {

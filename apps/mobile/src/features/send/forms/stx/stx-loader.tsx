@@ -51,7 +51,7 @@ function useStxData(account: AccountId): FetchState<StxData> {
 }
 
 interface StxDataLoaderProps {
-  children: (data: StxData) => React.ReactNode;
+  children(data: StxData): React.ReactNode;
   account: AccountId;
 }
 

@@ -20,8 +20,8 @@ interface EditVaultModalProps {
   vault: Vault;
   isShowing: boolean;
   isSaving?: boolean;
-  onClose: () => void;
-  onSave: (update: { name: string; icon: string; theme: string }) => void;
+  onClose(): void;
+  onSave(update: { name: string; icon: string; theme: string }): void;
 }
 
 export function EditVaultModal({

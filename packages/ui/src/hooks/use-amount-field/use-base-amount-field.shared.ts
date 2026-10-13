@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 
 export interface UseAmountFieldProps {
   value: string;
-  onChange: (rawValue: string) => void;
-  onReject?: () => void;
+  onChange(rawValue: string): void;
+  onReject?(): void;
   maxDecimals: number;
   locale?: string;
   enableGrouping?: boolean;
@@ -25,7 +25,7 @@ interface UseBaseAmountFieldResult {
   displayValue: string;
   touched: boolean;
   currencySign?: CurrencySign;
-  handleChange: (newText: string, cursorPosition: number) => ChangeResult;
+  handleChange(newText: string, cursorPosition: number): ChangeResult;
 }
 
 export function useBaseAmountField({

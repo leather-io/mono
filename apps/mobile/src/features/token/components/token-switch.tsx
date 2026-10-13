@@ -9,7 +9,7 @@ interface TokenSwitchProps extends PressableProps {
   icon: ReactNode;
   tokenName: string;
   value: boolean;
-  onValueChange: (val: boolean) => void;
+  onValueChange(val: boolean): void;
 }
 export function TokenSwitch({ icon, tokenName, value, onValueChange, ...rest }: TokenSwitchProps) {
   const [switchValue, setSwitchValue] = useState(value);

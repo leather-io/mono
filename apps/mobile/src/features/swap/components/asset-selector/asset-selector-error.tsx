@@ -5,7 +5,7 @@ import { Box, Button, Text } from '@leather.io/ui/native';
 
 interface AssetSelectorErrorProps {
   error: Error;
-  onRetry: () => void;
+  onRetry(): void;
 }
 
 export function AssetSelectorError({ onRetry }: AssetSelectorErrorProps) {

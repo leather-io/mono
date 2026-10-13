@@ -31,7 +31,7 @@ const connectAddressesParams: ConnectAddressesParams = {
 };
 
 interface RawWalletProvider {
-  request: (method: string) => Promise<unknown>;
+  request(method: string): Promise<unknown>;
 }
 
 const revokePermissionsTimeoutMs = 2000;

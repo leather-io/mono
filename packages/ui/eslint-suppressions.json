@@ -42,6 +42,14 @@
   "src/components/approver/components/approver-actions.web.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "src/components/approver/components/approver-advanced.native.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
     }
   },
   "src/components/approver/components/approver-advanced.web.tsx": {
@@ -49,6 +57,9 @@
       "count": 1
     },
     "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -64,6 +75,14 @@
   },
   "src/components/approver/components/approver-footer.native.tsx": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "src/components/approver/components/approver-header.web.tsx": {
+    "@typescript-eslint/unbound-method": {
       "count": 2
     }
   },
@@ -277,6 +296,9 @@
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 2
     }
   },
   "src/components/highlighting/utils.shared.ts": {
@@ -317,6 +339,9 @@
     },
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 2
     }
   },
   "src/components/input/text-input.native.tsx": {
@@ -344,24 +369,53 @@
       "count": 1
     }
   },
+  "src/components/list-item-box/list-item-box.web.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "src/components/logo.web.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
   "src/components/numeric-input/numeric-input-provider.shared.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
   },
+  "src/components/numeric-input/numeric-input.native.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 6
+    }
+  },
   "src/components/numeric-input/numeric-input.web.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 6
+    }
+  },
+  "src/components/numeric-input/use-numeric-input.shared.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
     }
   },
   "src/components/numpad/numpad-key.native.tsx": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/unbound-method": {
       "count": 2
     }
   },
   "src/components/numpad/numpad.native.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 2
     }
   },
   "src/components/pressable/pressable-core.native.tsx": {
@@ -426,6 +480,9 @@
   "src/components/sheet/sheet-header.web.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
     }
   },
   "src/components/sheet/sheet.native.tsx": {
@@ -456,6 +513,9 @@
     },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
     }
   },
   "src/components/skeleton-loader/skeleton-loader.native.tsx": {
@@ -509,9 +569,24 @@
       "count": 1
     }
   },
+  "src/hooks/use-amount-field/use-amount-field.native.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "src/hooks/use-amount-field/use-amount-field.web.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
   "src/hooks/use-amount-field/use-base-amount-field.shared.spec.ts": {
     "@typescript-eslint/consistent-type-assertions": {
       "count": 31
+    }
+  },
+  "src/hooks/use-amount-field/use-base-amount-field.shared.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
     }
   },
   "src/hooks/use-haptics.native.tsx": {
@@ -2130,6 +2205,11 @@
   "src/utils/use-interval.shared.spec.ts": {
     "@typescript-eslint/no-non-null-assertion": {
       "count": 16
+    }
+  },
+  "src/utils/use-interval.shared.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
     }
   },
   "src/utils/use-register-children.shared.ts": {

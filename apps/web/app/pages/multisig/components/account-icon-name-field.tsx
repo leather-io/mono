@@ -17,8 +17,8 @@ interface AccountIconNameFieldProps {
   icon: string;
   icons?: string[];
   maxLength?: number;
-  onNameChange: (value: string) => void;
-  onIconChange: (value: string) => void;
+  onNameChange(value: string): void;
+  onIconChange(value: string): void;
   placeholder?: string;
   inline?: boolean;
 }

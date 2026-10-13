@@ -20,9 +20,9 @@ interface SignerRollcallProps {
   isSigning: boolean;
   isCancelling: boolean;
   isBroadcasting: boolean;
-  onSign: () => void;
-  onCancel: () => void;
-  onBroadcast: () => void;
+  onSign(): void;
+  onCancel(): void;
+  onBroadcast(): void;
 }
 
 function SignerStatus({
@@ -36,7 +36,7 @@ function SignerStatus({
   signed: boolean;
   signedAt?: string;
   busy: boolean;
-  onSign: () => void;
+  onSign(): void;
 }) {
   if (canSign) {
     return (

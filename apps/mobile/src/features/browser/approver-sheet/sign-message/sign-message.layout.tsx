@@ -7,9 +7,9 @@ import { makeAccountIdentifer } from '@leather.io/crypto';
 import { Approver, Cell, ChevronRightIcon, Text } from '@leather.io/ui/native';
 
 interface SignMessageApproverLayoutProps {
-  onApprove: () => Promise<void>;
-  onOpenAccountSelection: () => void;
-  onCloseApprover: () => void;
+  onApprove(): Promise<void>;
+  onOpenAccountSelection(): void;
+  onCloseApprover(): void;
   selectedAccountId: string | null;
   accounts: Account[];
   messageToSign: string;

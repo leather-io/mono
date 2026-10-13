@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 import { Box, Button, PlusIcon, Text } from '@leather.io/ui/native';
 
 interface EmptyWalletsScreenProps {
-  onPressCreateWallet: () => void;
+  onPressCreateWallet(): void;
 }
 
 export function EmptyWalletsScreen({ onPressCreateWallet }: EmptyWalletsScreenProps) {

@@ -18,7 +18,7 @@ import { Sip10Balance } from '@leather.io/services';
 import { Sheet } from '@leather.io/ui/native';
 
 interface AssetListProps {
-  onSelectAsset: (asset: FungibleCryptoAsset, assetElementOffsetTop: number | null) => void;
+  onSelectAsset(asset: FungibleCryptoAsset, assetElementOffsetTop: number | null): void;
   fingerprint: string;
   accountIndex: number;
 }
@@ -26,7 +26,7 @@ interface AssetListProps {
 interface AssetPickerFlashListProps {
   sip10Data: ReturnType<typeof useSip10TotalBalance>;
   header: ReactNode;
-  handleSelectAsset: (asset: FungibleCryptoAsset) => (top: number | null) => void;
+  handleSelectAsset(asset: FungibleCryptoAsset): (top: number | null) => void;
 }
 
 function AssetPickerFlashList({ sip10Data, header, handleSelectAsset }: AssetPickerFlashListProps) {
@@ -56,7 +56,7 @@ function AccountAssetPicker({
   fingerprint,
   accountIndex,
 }: {
-  handleSelectAsset: (asset: FungibleCryptoAsset) => (top: number | null) => void;
+  handleSelectAsset(asset: FungibleCryptoAsset): (top: number | null) => void;
   fingerprint: string;
   accountIndex: number;
 }) {

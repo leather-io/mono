@@ -127,7 +127,6 @@ export default defineConfig([
       '**/.react-router/',
       '**/.wrangler/',
       '**/generated/',
-      '**/i18n/locales/**/messages.ts',
       'packages/ui/src/icons/docs',
     ],
   },
@@ -209,6 +208,13 @@ export default defineConfig([
     name: 'extension',
     files: ['apps/extension/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
+  },
+  {
+    name: 'extension-method-signature-style',
+    files: ['apps/extension/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/method-signature-style': ['error', 'property'],
+    },
   },
   {
     name: 'mobile',

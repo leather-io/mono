@@ -35,6 +35,9 @@
   "src/bip322/sign-message-bip322-bitcoinjs.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
     }
   },
   "src/coin-selection/coin-selection.mocks.ts": {
@@ -185,6 +188,9 @@
   "src/transactions/generate-unsigned-transaction.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
     }
   },
   "src/transactions/wsh-multisig-transaction.spec.ts": {

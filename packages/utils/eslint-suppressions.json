@@ -46,6 +46,9 @@
   "src/currency-formatter/currency-formatter.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
     }
   },
   "src/flatten-object.spec.ts": {

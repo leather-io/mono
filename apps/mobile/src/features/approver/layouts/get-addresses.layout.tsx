@@ -10,9 +10,9 @@ import { ApproverButtons } from '../components/approver-buttons';
 
 interface GetAddressesApproverLayoutProps {
   requester: string;
-  onApprove: () => void;
-  onOpenAccountSelection: () => void;
-  onCloseApprover: () => void;
+  onApprove(): void;
+  onOpenAccountSelection(): void;
+  onCloseApprover(): void;
   selectedAccountId: string | null;
   accounts: Account[];
   isSubmitDisabled: boolean;

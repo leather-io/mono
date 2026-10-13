@@ -4,7 +4,7 @@ import { Sheet } from '@leather.io/ui';
 
 interface ActivityModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose(): void;
   activityList: React.ReactElement;
 }
 

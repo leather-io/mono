@@ -15,8 +15,8 @@ const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 const defaultGradientWidth = '200%';
 export interface BrowserLoadingMethods {
-  activate: () => void;
-  deactivate: () => void;
+  activate(): void;
+  deactivate(): void;
 }
 export const BrowserLoading = forwardRef<BrowserLoadingMethods>((_, ref) => {
   const gradientWidth = useSharedValue<`${number}%`>(defaultGradientWidth);

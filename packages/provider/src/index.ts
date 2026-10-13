@@ -13,7 +13,7 @@ import './crypto-random-uuid-polyfill';
 import { deprecatedProviderMethods } from './deprecated-provider-methods';
 
 interface initInpageProviderArgs {
-  onDispatch: (rpcRequest: RpcRequests) => void;
+  onDispatch(rpcRequest: RpcRequests): void;
   env: { branch: string; commitSha: string; version: string };
 }
 

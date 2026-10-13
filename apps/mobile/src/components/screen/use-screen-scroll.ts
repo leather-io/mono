@@ -26,7 +26,7 @@ interface UseScrollContainerLogicProps {
   adjustmentOffset?: number;
   disableAutoFixScroll?: boolean;
   headerFadeInThreshold?: number; // 0 to 1
-  onScrollWorklet?: (evt: NativeScrollEvent) => void;
+  onScrollWorklet?(evt: NativeScrollEvent): void;
 }
 
 export function useScreenScroll({

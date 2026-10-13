@@ -5,9 +5,9 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { assertUnreachable } from '@leather.io/utils';
 
 interface Matchers<TData, TError> {
-  pending: () => ReactElement;
-  error: (error: TError) => ReactElement;
-  success: (data: TData) => ReactElement;
+  pending(): ReactElement;
+  error(error: TError): ReactElement;
+  success(data: TData): ReactElement;
 }
 
 export function matchQueryResult<TData, TError>(

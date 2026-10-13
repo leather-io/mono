@@ -31,7 +31,7 @@ interface ListItemBoxProps {
   // A full-row navigation target. When set, the row renders as a real <a> so
   // cmd/ctrl/middle-click open a new tab; plain left-click still calls onClick.
   href?: string;
-  onClick?: () => void;
+  onClick?(): void;
 }
 
 const attentionGradient =

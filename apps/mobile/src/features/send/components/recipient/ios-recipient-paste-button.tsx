@@ -3,7 +3,7 @@ import * as Clipboard from 'expo-clipboard';
 import { useTheme } from '@leather.io/ui/native';
 
 interface RecipientPasteButtonProps {
-  onPress: (value: string) => void;
+  onPress(value: string): void;
 }
 
 // Only implement a dedicated paste button for iOS. Android already provides a great out-of-the-box pasting interface.

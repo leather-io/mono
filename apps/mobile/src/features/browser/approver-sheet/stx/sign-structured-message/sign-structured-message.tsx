@@ -15,8 +15,8 @@ import {
 interface StxSignStructuredMessageApproverProps {
   app: App;
   request: RpcRequest<typeof stxSignStructuredMessage>;
-  sendResult: (result: RpcResponse<typeof stxSignStructuredMessage>) => void;
-  closeApprover: () => void;
+  sendResult(result: RpcResponse<typeof stxSignStructuredMessage>): void;
+  closeApprover(): void;
   accountId: string;
 }
 

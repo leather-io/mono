@@ -23,8 +23,8 @@ import { useTransferSip9NftTxHex } from './hooks';
 interface TransferSip9NftApproverProps {
   app: App;
   request: RpcRequest<typeof stxTransferSip9Nft>;
-  sendResult: (result: RpcResponse<typeof stxTransferSip9Nft>) => void;
-  closeApprover: () => void;
+  sendResult(result: RpcResponse<typeof stxTransferSip9Nft>): void;
+  closeApprover(): void;
   accountId: string;
   nonce: number;
 }

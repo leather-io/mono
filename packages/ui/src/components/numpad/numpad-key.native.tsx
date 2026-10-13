@@ -10,8 +10,8 @@ import { Text } from '../text/text.native';
 interface NumpadKeyProps {
   label: string;
   element: ReactNode;
-  onPress: () => void;
-  onLongPress?: () => void;
+  onPress(): void;
+  onLongPress?(): void;
 }
 
 export function NumpadKey({ element, label, onPress, onLongPress }: NumpadKeyProps) {

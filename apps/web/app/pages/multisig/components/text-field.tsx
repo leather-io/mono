@@ -6,8 +6,8 @@ interface TextFieldProps {
   label?: string;
   placeholder?: string;
   value: string;
-  onChange: (value: string) => void;
-  onBlur?: (value: string) => void;
+  onChange(value: string): void;
+  onBlur?(value: string): void;
   help?: ReactNode;
   mono?: boolean;
   invalid?: boolean;

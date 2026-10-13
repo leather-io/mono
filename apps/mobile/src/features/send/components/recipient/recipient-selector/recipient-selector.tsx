@@ -32,8 +32,8 @@ interface RecipientSelectorProps {
   activity: SendAssetActivity[];
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
-  onSelectAddress: (address: string) => void;
-  onQrButtonPress: (source: 'toggle' | 'input') => void;
+  onSelectAddress(address: string): void;
+  onQrButtonPress(source: 'toggle' | 'input'): void;
   currentAccount: AccountId;
 }
 

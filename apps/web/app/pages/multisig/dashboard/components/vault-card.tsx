@@ -19,7 +19,7 @@ import { chainFromNetwork } from '../../multisig.utils';
 
 interface VaultCardProps {
   vault: VaultSummary;
-  onClick: () => void;
+  onClick(): void;
 }
 
 interface TrailingContent {

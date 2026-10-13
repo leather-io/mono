@@ -26,7 +26,6 @@ export default tseslint.config(
       radix: 'error',
       'no-console': 'error',
       '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
-      '@typescript-eslint/method-signature-style': ['error', 'property'],
       '@typescript-eslint/array-type': 'error',
       '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'never' }],
       '@typescript-eslint/no-non-null-assertion': 'error',
@@ -55,6 +54,7 @@ export default tseslint.config(
       // '@typescript-eslint/no-unnecessary-type-constraint': ['off'],
       // '@typescript-eslint/no-non-null-asserted-optional-chain': ['off'],
       // '@typescript-eslint/no-unnecessary-condition': 'off',
+      '@typescript-eslint/method-signature-style': ['error', 'method'],
       // 'no-warning-comments': [0],
     },
   }

@@ -17,7 +17,7 @@ interface AssetDisplayProps {
   quoteBalance: Money;
   icon: ReactNode;
   assetItemElementInitialOffset?: number | null;
-  onPress?: () => void;
+  onPress?(): void;
 }
 
 export function AssetDisplay({

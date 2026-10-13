@@ -18,8 +18,8 @@ import { SignMessageApproverLayout } from './sign-message.layout';
 interface SignMessageApproverProps {
   app: App;
   request: RpcRequest<typeof signMessage>;
-  sendResult: (result: RpcResponse<typeof signMessage>) => void;
-  closeApprover: () => void;
+  sendResult(result: RpcResponse<typeof signMessage>): void;
+  closeApprover(): void;
 }
 
 export function SignMessageApprover(props: SignMessageApproverProps) {

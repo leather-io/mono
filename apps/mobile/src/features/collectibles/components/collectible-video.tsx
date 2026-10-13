@@ -11,7 +11,7 @@ interface CollectibleVideoProps {
   src: string;
   alt: string;
   height?: number;
-  onPress?: () => void;
+  onPress?(): void;
 }
 
 interface CaptureMessage {

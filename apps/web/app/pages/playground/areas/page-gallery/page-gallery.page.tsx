@@ -209,7 +209,7 @@ const mockTx: MultisigTransaction = {
 
 // VaultCard fetches its own balance, so the dashboard preview uses a lightweight
 // stand-in tile mirroring its shape and trailing states.
-function VaultCardMock({ summary, onClick }: { summary: VaultSummary; onClick?: () => void }) {
+function VaultCardMock({ summary, onClick }: { summary: VaultSummary; onClick?(): void }) {
   const chain = summary.network.startsWith('btc') ? 'btc' : 'stx';
   const chainLabel = chain === 'btc' ? 'Bitcoin' : 'Stacks';
   const invited = summary.membershipStatus === 'invited';

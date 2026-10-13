@@ -17,14 +17,12 @@ import { UnstakeArgs, getUnstakeOptions } from './pox5-unstake';
 // shapes; a pool with non-standard contracts overrides only the calls that
 // differ from the direct pox-5 ones.
 interface PoolContractData {
-  stake: (args: StakeArgs & { pox5ContractId: string; network: string }) => StxCallContractParams;
-  stakeUpdate: (
+  stake(args: StakeArgs & { pox5ContractId: string; network: string }): StxCallContractParams;
+  stakeUpdate(
     args: StakeUpdateArgs & { pox5ContractId: string; network: string }
-  ) => StxCallContractParams;
-  unstake: (
-    args: UnstakeArgs & { pox5ContractId: string; network: string }
-  ) => StxCallContractParams;
-  claimStakerRewards: (args: ClaimStakerRewardsArgs & { network: string }) => StxCallContractParams;
+  ): StxCallContractParams;
+  unstake(args: UnstakeArgs & { pox5ContractId: string; network: string }): StxCallContractParams;
+  claimStakerRewards(args: ClaimStakerRewardsArgs & { network: string }): StxCallContractParams;
 }
 
 export function buildPoolContractData(overrides: Partial<PoolContractData> = {}): PoolContractData {

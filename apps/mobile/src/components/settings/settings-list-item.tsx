@@ -18,7 +18,7 @@ interface ItemBaseProps {
   caption?: string;
   icon?: ReactElement<IconProps>;
   switchValue?: boolean | undefined;
-  onSwitchValueChange?: (value: boolean) => Promise<void> | void | undefined;
+  onSwitchValueChange?(value: boolean): Promise<void> | void | undefined;
   isRadioSelected?: boolean | undefined;
 }
 
@@ -28,7 +28,7 @@ interface ItemPropsSimple extends ItemBaseProps {
 
 interface ItemPropsSwitch extends ItemBaseProps {
   type: 'switch';
-  onSwitchValueChange: (value: boolean) => Promise<void> | void;
+  onSwitchValueChange(value: boolean): Promise<void> | void;
   switchValue: boolean;
 }
 

@@ -9,7 +9,7 @@ import { AddressDisplayer, Box, Button, SheetRef, Text } from '@leather.io/ui/na
 interface RecipientWarningSheetProps {
   sheetRef: SheetRef;
   config: GuardResult;
-  onConfirm: (address: string) => void;
+  onConfirm(address: string): void;
 }
 
 export function RecipientGuardSheet({ sheetRef, config, onConfirm }: RecipientWarningSheetProps) {

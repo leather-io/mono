@@ -7,7 +7,7 @@ import LottieView, { LottieViewProps } from 'lottie-react-native';
 const { width, height } = Dimensions.get('window');
 
 export interface SplashLottieView {
-  start: () => void;
+  start(): void;
 }
 
 interface LeatherSplashProps {

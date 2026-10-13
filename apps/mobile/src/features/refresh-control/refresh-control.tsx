@@ -27,7 +27,7 @@ function useRefreshHandler() {
 
 interface RefreshControlProps extends Omit<RNRefreshControlProps, 'onRefresh' | 'refreshing'> {
   refreshing?: boolean;
-  onRefresh?: () => void;
+  onRefresh?(): void;
 }
 
 export function RefreshControl(props: RefreshControlProps) {

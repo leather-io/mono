@@ -12,8 +12,8 @@ import { SheetInstance, useHaptics } from '@leather.io/ui/native';
 import { assertExistence } from '@leather.io/utils';
 
 export interface SendSheetInstance {
-  present: (asset?: FungibleCryptoAsset) => void;
-  dismiss: () => void;
+  present(asset?: FungibleCryptoAsset): void;
+  dismiss(): void;
 }
 export type SendSheetRef = RefObject<SendSheetInstance | null>;
 

@@ -12,7 +12,7 @@ import { Sip10DataLoader } from '../forms/stx/sip10-loader';
 interface FormLayoutProps {
   selectedAsset: FungibleCryptoAsset;
   currentAccount: AccountId;
-  handleOpenAssetPicker: () => void;
+  handleOpenAssetPicker(): void;
   assetItemElementInitialOffset: number | null | undefined;
 }
 

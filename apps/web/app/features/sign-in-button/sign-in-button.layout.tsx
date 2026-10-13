@@ -18,9 +18,9 @@ export function SignInButtonLayout(props: ButtonProps) {
 
 interface ActiveAccountButtonLayoutProps {
   address: string;
-  onSignout: () => void;
-  onSwitchAccount: () => void;
-  onOpenExtension?: () => void;
+  onSignout(): void;
+  onSwitchAccount(): void;
+  onOpenExtension?(): void;
 }
 export function ActiveAccountButtonLayout({
   address,

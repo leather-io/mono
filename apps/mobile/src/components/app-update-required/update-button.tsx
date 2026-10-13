@@ -8,7 +8,7 @@ import { Button } from '@leather.io/ui/native';
 import { isError } from '@leather.io/utils';
 
 interface UpdateButtonProps {
-  onPress?: () => void;
+  onPress?(): void;
 }
 
 export function UpdateButton({ onPress }: UpdateButtonProps) {

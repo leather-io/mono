@@ -10,7 +10,7 @@ export interface NotifyUserSheetData {
 }
 
 interface NotifyUserSheetLayoutProps {
-  onCloseSheet?: () => unknown;
+  onCloseSheet?(): unknown;
   sheetData: NotifyUserSheetData | null;
   sheetRef: SheetRef;
 }

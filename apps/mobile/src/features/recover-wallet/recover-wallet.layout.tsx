@@ -19,8 +19,8 @@ import {
 
 interface RecoverWalletLayoutProps extends HasChildren {
   passphrase: string;
-  setPassphrase: (passphrase: string) => void;
-  onSubmit: () => void;
+  setPassphrase(passphrase: string): void;
+  onSubmit(): void;
   isButtonDisabled: boolean;
 }
 

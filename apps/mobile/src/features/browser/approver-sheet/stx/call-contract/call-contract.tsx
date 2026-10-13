@@ -24,8 +24,8 @@ import { useCallContractTxHex } from './hooks';
 interface CallContractApproverProps {
   app: App;
   request: RpcRequest<typeof stxCallContract>;
-  sendResult: (result: RpcResponse<typeof stxCallContract>) => void;
-  closeApprover: () => void;
+  sendResult(result: RpcResponse<typeof stxCallContract>): void;
+  closeApprover(): void;
   nonce: number;
   accountId: string;
 }

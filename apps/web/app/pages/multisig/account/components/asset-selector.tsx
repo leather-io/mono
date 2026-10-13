@@ -7,7 +7,7 @@ import { VaultAssetList } from '../../components/vault-asset-list';
 
 interface AssetSelectorToggleProps {
   item: VaultAssetItem;
-  onClick: () => void;
+  onClick(): void;
 }
 
 export function AssetSelectorToggle({ item, onClick }: AssetSelectorToggleProps) {
@@ -37,8 +37,8 @@ export function AssetSelectorToggle({ item, onClick }: AssetSelectorToggleProps)
 interface AssetSelectorSheetProps {
   items: VaultAssetItem[];
   isShowing: boolean;
-  onSelect: (item: VaultAssetItem) => void;
-  onClose: () => void;
+  onSelect(item: VaultAssetItem): void;
+  onClose(): void;
 }
 
 export function AssetSelectorSheet({

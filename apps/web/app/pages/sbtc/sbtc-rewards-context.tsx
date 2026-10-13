@@ -5,8 +5,8 @@ import { ExtensionState, whenExtensionState } from '~/utils/utils';
 interface SbtcRewardContextValue {
   whenExtensionState: ReturnType<typeof whenExtensionState>;
   extensionStatus: ExtensionState;
-  onBridgeSbtc: () => void;
-  onSwapStxSbtc: () => void;
+  onBridgeSbtc(): void;
+  onSwapStxSbtc(): void;
 }
 export const SbtcRewardContext = createContext<SbtcRewardContextValue | null>(null);
 

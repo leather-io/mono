@@ -37,7 +37,7 @@ export function useWallets() {
 
 interface WalletLoaderProps extends WalletId {
   fallback?: React.ReactNode;
-  children: (wallet: WalletStore & { accounts: Account[] }) => React.ReactNode;
+  children(wallet: WalletStore & { accounts: Account[] }): React.ReactNode;
 }
 export function WalletLoader({ fingerprint, fallback, children }: WalletLoaderProps) {
   const wallet = useWalletByFingerprint(fingerprint);

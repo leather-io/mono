@@ -4,7 +4,7 @@ import { TAB_WIDTH } from '../constants';
 
 interface TabButtonProps {
   title: string;
-  onPress: () => void;
+  onPress(): void;
   isActive: boolean;
 }
 

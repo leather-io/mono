@@ -57,8 +57,8 @@ function isRelevantSendActivity(asset: FungibleCryptoAsset) {
 interface MatchRelevantActivityResult {
   result: FetchState<SendAssetActivity[]>;
   loading: React.ReactNode;
-  error: (error: string) => React.ReactNode;
-  success: (data: SendAssetActivity[]) => React.ReactNode;
+  error(error: string): React.ReactNode;
+  success(data: SendAssetActivity[]): React.ReactNode;
 }
 
 export function matchRelevantActivityResult({

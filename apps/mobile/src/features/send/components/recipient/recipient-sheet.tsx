@@ -5,7 +5,7 @@ import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
 interface RecipientSheetProps {
   sheetRef: SheetRef;
   children: ReactNode;
-  onDismiss?: () => void;
+  onDismiss?(): void;
 }
 
 export function RecipientSheet({ sheetRef, onDismiss, children }: RecipientSheetProps) {

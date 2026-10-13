@@ -10,8 +10,8 @@ import { StructuredMessageSection } from '../structured-message.section';
 
 interface BaseStxMessageApproverLayoutProps {
   origin: string;
-  onApprove: () => Promise<void>;
-  onCloseApprover: () => void;
+  onApprove(): Promise<void>;
+  onCloseApprover(): void;
   accountId: string | null;
   accounts: Account[];
   messageToSign:

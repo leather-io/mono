@@ -63,8 +63,8 @@ interface MatchSuggestionsResultParams {
   query: UseQueryResult<RecipientSection[], Error>;
   pending: React.ReactElement;
   fetching?: React.ReactElement;
-  error?: (error: unknown) => React.ReactElement;
-  success: (query: RecipientSection[]) => React.ReactElement;
+  error?(error: unknown): React.ReactElement;
+  success(query: RecipientSection[]): React.ReactElement;
 }
 
 export function matchSuggestionsResult({

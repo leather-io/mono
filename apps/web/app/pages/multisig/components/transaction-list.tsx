@@ -27,7 +27,7 @@ export interface TransactionListItem {
 interface TransactionListProps {
   items: TransactionListItem[];
   scale?: TransactionRowScale;
-  onSelect: (vaultId: string, txId: string) => void;
+  onSelect(vaultId: string, txId: string): void;
 }
 
 export function GroupLabel({ children }: { children: string }) {

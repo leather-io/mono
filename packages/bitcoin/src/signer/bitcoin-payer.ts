@@ -39,7 +39,7 @@ export interface BitcoinAccountKeychain {
 }
 
 export type WithDerivePayer<T, P extends BitcoinPayer> = T & {
-  derivePayer: (args: BitcoinPayerInfo) => P;
+  derivePayer(args: BitcoinPayerInfo): P;
 };
 
 export interface BitcoinPayerBase {

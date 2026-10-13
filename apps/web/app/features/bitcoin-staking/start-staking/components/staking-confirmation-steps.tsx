@@ -13,7 +13,7 @@ interface StakingConfirmationStepsProps {
   cycles: number;
   estimatedUnlockDate: Date | null;
   confirmationState: Record<StartStakingStepId, ConfirmationStep<StartStakingStepId>['state']>;
-  onSubmit: (confirmation: StartStakingStepId) => void | Promise<void>;
+  onSubmit(confirmation: StartStakingStepId): void | Promise<void>;
 }
 
 export function StakingConfirmationSteps({

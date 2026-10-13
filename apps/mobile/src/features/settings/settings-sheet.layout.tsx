@@ -13,8 +13,8 @@ import {
 interface SettingsSheetLayoutProps extends HasChildren {
   sheetRef: SheetRef;
   title: string;
-  onPressSupport?: () => void;
-  onChange?: (index: number) => void;
+  onPressSupport?(): void;
+  onChange?(index: number): void;
 }
 export function SettingsSheetLayout({
   children,

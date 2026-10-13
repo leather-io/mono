@@ -19,7 +19,7 @@ import { PortfolioHeader } from '../components/portfolio-header';
 
 interface AccountSelectorSheetLayoutProps {
   accounts: Account[];
-  onAccountPress: (account: Account) => void;
+  onAccountPress(account: Account): void;
   sheetRef: SheetRef;
 }
 

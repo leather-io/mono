@@ -9,7 +9,7 @@ interface CollectibleGltfProps {
   src: string;
   thumbnailSrc?: string;
   height?: number;
-  onPress?: () => void;
+  onPress?(): void;
   imageUnavailableLabel?: ReactNode;
 }
 

@@ -15,7 +15,7 @@ export interface ConfirmationStep<T extends ConfirmationStepId> {
     loading: boolean;
     visible: boolean;
   };
-  onClick: () => void;
+  onClick(): void;
 }
 
 interface ConfirmationStepsProps<T extends ConfirmationStepId> {

@@ -7,7 +7,7 @@ import { TabButton } from './tab-button';
 
 interface AssetTabsProps {
   listTab: ListTab;
-  setListTab: (listTab: ListTab) => void;
+  setListTab(listTab: ListTab): void;
 }
 
 export function AssetTabs({ listTab, setListTab }: AssetTabsProps) {

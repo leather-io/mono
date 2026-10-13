@@ -5,7 +5,7 @@ import { AccountId } from '@leather.io/models';
 import { BitcoinTokenBalance } from './bitcoin-token-balance';
 
 interface BitcoinBalanceByAccountProps extends AccountId {
-  onPress?: () => void;
+  onPress?(): void;
 }
 
 export function BitcoinBalanceByAccount({
