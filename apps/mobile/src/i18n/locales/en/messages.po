@@ -900,6 +900,10 @@ msgstr "Floor price"
 msgid "For your eyes only"
 msgstr "For your eyes only"
 
+#: src/features/approver/components/fees/sponsored-fee-card.tsx:16
+msgid "FREE"
+msgstr "FREE"
+
 #: src/features/swap/components/review/swap-review-account-details.tsx:23
 msgid "From"
 msgstr "From"
@@ -980,7 +984,7 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:174
 #: src/features/psbt-signer/psbt-signer.tsx:322
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
@@ -1638,7 +1642,7 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:170
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:173
 #: src/features/psbt-signer/psbt-signer.tsx:321
 msgid "Show advanced options"
 msgstr "Show advanced options"
@@ -1657,7 +1661,7 @@ msgstr "Sign Message"
 msgid "Sign transaction"
 msgstr "Sign transaction"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:120
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:123
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
@@ -1710,6 +1714,10 @@ msgstr "Some balances couldn’t load."
 #: src/components/error/error.tsx:58
 msgid "Something went wrong"
 msgstr "Something went wrong"
+
+#: src/features/approver/components/fees/sponsored-fee-card.tsx:13
+msgid "Sponsored fee"
+msgstr "Sponsored fee"
 
 #: src/utils/dapps.ts:60
 msgid "StackingDAO"
@@ -1914,7 +1922,7 @@ msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
 #: src/features/approver/components/sip10-recipient.tsx:43
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:145
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:148
 #: src/features/psbt-signer/psbt-signer.tsx:300
 msgid "To address"
 msgstr "To address"
@@ -2168,7 +2176,7 @@ msgstr "You will keep"
 msgid "You will transfer"
 msgstr "You will transfer"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:136
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:139
 #: src/features/psbt-signer/psbt-signer.tsx:294
 msgid "You’ll send"
 msgstr "You’ll send"

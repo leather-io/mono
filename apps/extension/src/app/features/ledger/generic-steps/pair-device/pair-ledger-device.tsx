@@ -2,22 +2,18 @@ import { Stack, styled } from 'leather-styles/jsx';
 
 import { Button } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
-import { closeWindow } from '@shared/utils';
-
-import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { handOffLedgerFlowToFullPage } from '@app/features/ledger/flow/ledger-flow-handoff';
+import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import { UnsupportedBrowserImg } from '@app/features/ledger/illustrations/ledger-illu-unsupported-browser';
 
 import { LedgerTitle } from '../../components/ledger-title';
 import { LedgerWrapper } from '../../components/ledger-wrapper';
-import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 
 export function PairLedgerDevice() {
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerSteps = useLedgerSteps();
 
-  async function openPairingTab() {
-    await openIndexPageInNewTab(`/${RouteUrls.LedgerPairDeviceTab}`);
-    closeWindow();
+  function openPairingTab() {
+    return handOffLedgerFlowToFullPage({ kind: 'pair-device' }, { closeCurrentWindow: true });
   }
 
   return (
@@ -29,7 +25,7 @@ export function PairLedgerDevice() {
       </styled.span>
       <Stack width="100%" gap="space.03">
         <Button onClick={openPairingTab}>Open Leather in full screen</Button>
-        <Button variant="outline" onClick={() => ledgerNavigate.toConnectStepAndTryAgain()}>
+        <Button variant="outline" onClick={() => ledgerSteps.toConnectStepAndTryAgain()}>
           Try again
         </Button>
       </Stack>

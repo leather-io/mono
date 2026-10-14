@@ -15,8 +15,8 @@ import {
 } from '@shared/rpc/methods/sign-message';
 import { shouldRefuseSignInMessageSigning } from '@shared/rpc/sign-in-message-veto';
 
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
-import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,

@@ -1,4 +1,5 @@
 import {
+  AuthType,
   ClarityVersion,
   PayloadType,
   TokenTransferPayloadWire,
@@ -124,5 +125,40 @@ describe('generateStacksUnsignedTransaction', () => {
       'ST1EXHZSN8MJSJ9DSG994G1V8CNKYXGMK7Z4SA6DH'
     );
     expect((result.payload as TokenTransferPayloadWire).amount).toBe(BigInt('100'));
+  });
+
+  it('should generate a sponsored STX token transfer with sponsored auth', async () => {
+    const options: StacksUnsignedTokenTransferOptions = {
+      txType: TransactionTypes.StxTokenTransfer,
+      fee: createMoney(new BigNumber(0), 'STX'),
+      nonce: '1',
+      recipient: 'ST1EXHZSN8MJSJ9DSG994G1V8CNKYXGMK7Z4SA6DH',
+      amount: createMoney(new BigNumber(100), 'STX'),
+      publicKey: testPublicKey,
+      sponsored: true,
+    };
+
+    const result = await generateStacksUnsignedTransaction(options);
+    expect(result.auth.authType).toEqual(AuthType.Sponsored);
+    expect(result.auth.spendingCondition.fee).toBe(BigInt('0'));
+  });
+
+  it('should generate a sponsored contract call with sponsored auth', async () => {
+    const options: StacksUnsignedContractCallOptions = {
+      txType: TransactionTypes.ContractCall,
+      contractAddress: 'ST1EXHZSN8MJSJ9DSG994G1V8CNKYXGMK7Z4SA6DH',
+      contractName: 'hello-world',
+      functionName: 'print',
+      fee: createMoney(new BigNumber(0), 'STX'),
+      functionArgs: [],
+      nonce: '1',
+      postConditions: [],
+      publicKey: testPublicKey,
+      sponsored: true,
+    };
+
+    const result = await generateStacksUnsignedTransaction(options);
+    expect(result.auth.authType).toEqual(AuthType.Sponsored);
+    expect(result.auth.spendingCondition.fee).toBe(BigInt('0'));
   });
 });

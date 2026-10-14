@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useNavigate, useOutletContext } from 'react-router';
+import { useNavigate, useOutletContext } from 'react-router';
 
 import { captureMessage } from '@sentry/react';
 import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
@@ -107,7 +107,6 @@ export function SwapReview() {
           />
         )}
       </AnimatePresence>
-      <Outlet />
     </Box>
   );
 }
@@ -215,7 +214,7 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         <SbtcLedgerRecoveryWarning />
       )}
 
-      <styled.span textStyle="caption.01" textAlign="center" color="ink.text-subdued" mt="auto">
+      <styled.span textStyle="caption.01" textAlign="center" color="ink.text-secondary" mt="auto">
         Make sure everything looks correct.
         <br />
         Confirmed transactions cannot be undone.

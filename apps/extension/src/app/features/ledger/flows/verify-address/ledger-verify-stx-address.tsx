@@ -4,11 +4,10 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
-import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
+import { useLedgerFlow, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
@@ -27,14 +26,13 @@ import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-import { verifyAddressPaths } from './verify-address-paths';
-
-function LedgerVerifyStxAddress() {
+export function LedgerVerifyStxAddress() {
   const navigate = useNavigate();
   const toast = useToast();
   const dmk = useLedgerDmk();
   const signerActions = useSignerActionController();
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerNavigate = useLedgerSteps();
+  const { close } = useLedgerFlow();
   const network = useCurrentNetwork();
   const stacksAccount = useCurrentStacksAccount();
 
@@ -49,18 +47,16 @@ function LedgerVerifyStxAddress() {
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       onSuccess() {
         toast.success('Address verified on your Ledger');
+        close();
         void navigate(RouteUrls.Home, { replace: true });
       },
       async pullKeysFromDevice(app) {
         if (!stacksAccount) {
-          void ledgerNavigate.toErrorStep('stacks');
+          ledgerNavigate.toErrorStep('stacks');
           return { status: 'failure' };
         }
         const expectedAddress = stacksAccount.address;
-        void ledgerNavigate.toDeviceBusyStep(
-          'Confirm the address on your Ledger…',
-          expectedAddress
-        );
+        ledgerNavigate.toDeviceBusyStep('Confirm the address on your Ledger…', expectedAddress);
         const response = await showStxAddressOnDevice(app)(
           stacksAccount.derivationPath,
           stacksChainIdToSingleSigAddressVersion(network.chain.stacks.chainId)
@@ -70,10 +66,7 @@ function LedgerVerifyStxAddress() {
             type: 'stx',
             verified: false,
           });
-          void ledgerNavigate.toErrorStep(
-            'stacks',
-            'Address verification was rejected on the device.'
-          );
+          ledgerNavigate.toErrorStep('stacks', 'Address verification was rejected on the device.');
           return { status: 'failure' };
         }
         if (!isStxAddressResponseSuccess(response)) {
@@ -81,7 +74,7 @@ function LedgerVerifyStxAddress() {
             type: 'stx',
             verified: false,
           });
-          void ledgerNavigate.toErrorStep('stacks', response.errorMessage);
+          ledgerNavigate.toErrorStep('stacks', response.errorMessage);
           return { status: 'failure' };
         }
         if (!isLedgerOnDeviceAddressConfirmed(response.address, expectedAddress)) {
@@ -89,7 +82,7 @@ function LedgerVerifyStxAddress() {
             type: 'stx',
             verified: false,
           });
-          void ledgerNavigate.toErrorStep(
+          ledgerNavigate.toErrorStep(
             'stacks',
             'The address shown on your Ledger does not match the one in Leather.'
           );
@@ -119,8 +112,3 @@ function LedgerVerifyStxAddress() {
     />
   );
 }
-
-export const verifyStxAddressRoutes = ledgerRequestKeysRoutes({
-  path: verifyAddressPaths.stx,
-  component: <LedgerVerifyStxAddress />,
-});

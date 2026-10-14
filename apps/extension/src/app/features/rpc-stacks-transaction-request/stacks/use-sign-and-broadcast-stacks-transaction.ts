@@ -35,6 +35,10 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
   return useCallback(
     async (unsignedTx: StacksTransactionWire) => {
       const signedTx = await signStacksTransaction(unsignedTx);
+      if (signedTx === null) {
+        onSetTransactionStatus('idle');
+        return;
+      }
 
       if (!signedTx) {
         void sendMessageToOriginatingFrame(

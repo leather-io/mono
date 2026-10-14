@@ -1,12 +1,16 @@
 import { compileWshDescriptor, findAccountDescriptorKey } from '@leather.io/bitcoin';
+import type { OwnedUtxo } from '@leather.io/models';
 import { buildUnsignedMultisigBtcTransfer } from '@leather.io/services';
 import { btcToSat, createMoney } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
+import { BitcoinSendFormValues } from '@shared/models/form.model';
 
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { formFeeRowValue } from '@app/common/send/utils';
 import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
+import { isLedgerSigningCancelledError } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -15,7 +19,13 @@ import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useCalculateMaxBitcoinSpend } from '../../../../../common/hooks/balance/use-calculate-max-spend';
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
-import { useBtcChooseFeeState } from './btc-choose-fee';
+
+export function useBtcChooseFeeState() {
+  const isSendingMax = useLocationStateWithCache('isSendingMax') as boolean;
+  const txValues = useLocationStateWithCache('values') as BitcoinSendFormValues;
+  const utxos = useLocationStateWithCache('utxos') as OwnedUtxo[];
+  return { isSendingMax, txValues, utxos };
+}
 
 export function useBtcChooseFee() {
   const { isSendingMax, txValues, utxos } = useBtcChooseFeeState();
@@ -93,19 +103,24 @@ export function useBtcChooseFee() {
       );
       if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
 
-      const signedTx = await signTx(resp.psbt, resp.signingConfig);
+      try {
+        const signedTx = await signTx(resp.psbt, resp.signingConfig);
 
-      if (!signedTx) return logger.error('Attempted to sign tx, but no tx exists');
+        if (!signedTx) return;
 
-      signedTx.finalize();
+        signedTx.finalize();
 
-      void sendFormNavigate.toConfirmAndSignBtcTransaction({
-        tx: signedTx.hex,
-        recipient: txValues.recipient,
-        fee: feeValue,
-        feeRowValue,
-        time,
-      });
+        void sendFormNavigate.toConfirmAndSignBtcTransaction({
+          tx: signedTx.hex,
+          recipient: txValues.recipient,
+          fee: feeValue,
+          feeRowValue,
+          time,
+        });
+      } catch (error) {
+        if (isLedgerSigningCancelledError(error)) return;
+        return sendFormNavigate.toErrorPage(error);
+      }
     },
   };
 }
