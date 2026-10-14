@@ -8,7 +8,6 @@ import { delay } from '@leather.io/utils';
 
 import { whenSignableMessageOfType } from '@shared/signature/signature-types';
 
-import { safeAwait } from '@app/common/utils/safe-await';
 import {
   handleLedgerConnectionError,
   isLedgerDeviceLockedError,
@@ -69,29 +68,27 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
   const chain = 'stacks';
 
   async function signMessage() {
-    const [connectionError, stacksApp] = await safeAwait(
-      prepareLedgerDeviceStacksAppConnection(dmk, {
-        runAction: signerActions.run,
-        onRequiredUserInteraction(interaction) {
-          setLatestDeviceResponse({
-            deviceLocked: isUnlockDeviceInteraction(interaction),
-          });
-          setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
-        },
-      })({
-        setLoadingState: setAwaitingDeviceConnection,
-        onError(e) {
-          setIsConnectionCancellable(false);
-          if (isLedgerDeviceLockedError(e)) {
-            setLatestDeviceResponse({ deviceLocked: true });
-            return;
-          }
-          handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
-        },
-      })
-    );
+    const stacksApp = await prepareLedgerDeviceStacksAppConnection(dmk, {
+      runAction: signerActions.run,
+      onRequiredUserInteraction(interaction) {
+        setLatestDeviceResponse({
+          deviceLocked: isUnlockDeviceInteraction(interaction),
+        });
+        setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
+      },
+    })({
+      setLoadingState: setAwaitingDeviceConnection,
+      onError(e) {
+        setIsConnectionCancellable(false);
+        if (isLedgerDeviceLockedError(e)) {
+          setLatestDeviceResponse({ deviceLocked: true });
+          return;
+        }
+        handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
+      },
+    }).catch(() => null);
     setIsConnectionCancellable(false);
-    if (connectionError || !stacksApp) return;
+    if (!stacksApp) return;
 
     try {
       // Show checking version page immediately

@@ -4,8 +4,6 @@ import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 
 import { delay } from '@leather.io/utils';
 
-import { safeAwait } from '@app/common/utils/safe-await';
-
 import type { LedgerDeviceLockState } from '../dmk/ledger-dmk-errors';
 import { useLedgerFlowState } from '../flow/ledger-flow.context';
 import type { LedgerStepName } from '../flow/ledger-flow.types';
@@ -38,22 +36,26 @@ export function versionObjectToVersionString(version: SemVerObject) {
 
 interface PrepareLedgerDeviceConnectionArgs {
   setLoadingState(loadingState: boolean): void;
-  onError(error?: Error): void;
+  onError(error: unknown): void;
 }
 export function prepareLedgerDeviceForAppFn<App>(connectAppFn: () => Promise<App>) {
   return async (args: PrepareLedgerDeviceConnectionArgs) => {
     const { setLoadingState, onError } = args;
-    setLoadingState(true);
-    const [error, app] = await safeAwait(connectAppFn());
-    await delay(1000);
-    setLoadingState(false);
+    async function stopLoading() {
+      await delay(1000);
+      setLoadingState(false);
+    }
 
-    if (error || !app) {
+    setLoadingState(true);
+    try {
+      const app = await connectAppFn();
+      await stopLoading();
+      return app;
+    } catch (error) {
+      await stopLoading();
       onError(error);
       throw new Error('Unable to initiate Ledger app');
     }
-
-    return app;
   };
 }
 
