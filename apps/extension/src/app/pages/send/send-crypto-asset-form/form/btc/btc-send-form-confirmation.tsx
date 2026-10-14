@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 
 import { hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
@@ -53,7 +53,9 @@ import { BtcProposeConfirmation } from './btc-propose-confirmation';
 const symbol: CryptoCurrency = 'BTC';
 
 export function BtcSendFormConfirmation() {
-  const state = useRouteState(btcConfirmationRouteStateSchema);
+  const state = useRouteState(btcConfirmationRouteStateSchema.nullable().catch(null));
+  if (!state)
+    return <Navigate to={RouteUrls.SendCryptoAssetForm.replace(':symbol', 'btc')} replace />;
   if (state.mode === 'propose') return <BtcProposeConfirmation state={state} />;
   return <BtcBroadcastConfirmation state={state} />;
 }
