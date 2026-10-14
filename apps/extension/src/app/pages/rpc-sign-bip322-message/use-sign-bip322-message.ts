@@ -18,14 +18,8 @@ import { signBip322MessageUnlessDismissed } from '@app/common/sign-bip322-messag
 import { isLedgerSigningCancelledError } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
-import {
-  useCurrentAccountNativeSegwitPayer,
-  useCurrentNativeSegwitAccount,
-} from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import {
-  useCurrentAccountTaprootPayer,
-  useCurrentTaprootAccount,
-} from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 function useRpcSignBitcoinMessage() {
@@ -44,25 +38,41 @@ function useRpcSignBitcoinMessage() {
 const shortPauseBeforeToast = createDelay(250);
 const allowTimeForUserToReadToast = createDelay(1200);
 
-interface SignBip322MessageFactoryArgs {
+interface Bip322Signer {
   address: BitcoinAddress;
   signPsbt(a: bitcoin.Psbt): Promise<btc.Transaction | null>;
 }
-function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFactoryArgs) {
+function useSignBip322MessageFactory(signer: Bip322Signer | null) {
   const network = useCurrentNetwork();
   const networkMode = network.chain.bitcoin.mode;
 
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
-  const { frameId, tabId, origin, requestId, message } = useRpcSignBitcoinMessage();
+  const { frameId, tabId, origin, requestId, message, paymentType } = useRpcSignBitcoinMessage();
 
   return {
     origin,
     message,
     networkMode,
     isLoading,
-    address,
+    paymentType,
+    address: signer?.address,
+    onSignerUnavailable() {
+      if (tabId) {
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
+          createRpcErrorResponse('signMessage', {
+            id: requestId,
+            error: {
+              code: RpcErrorCode.INVALID_REQUEST,
+              message: `The current account cannot sign ${paymentType} messages`,
+            },
+          })
+        );
+      }
+      closeWindow();
+    },
     onUserRejectBip322MessageSigningRequest() {
       if (!tabId) return;
       void sendMessageToOriginatingFrame(
@@ -78,6 +88,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
       closeWindow();
     },
     async onUserApproveBip322MessageSigningRequest() {
+      if (!signer) return;
       setIsLoading(true);
 
       if (!tabId || !origin) {
@@ -88,8 +99,8 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
       try {
         const signed = await signBip322MessageUnlessDismissed({
           message,
-          address,
-          signPsbt,
+          address: signer.address,
+          signPsbt: signer.signPsbt,
           network: networkMode,
         });
         if (!signed) return;
@@ -102,7 +113,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
           { frameId, tabId },
           createRpcSuccessResponse('signMessage', {
             id: requestId,
-            result: { signature, address, message },
+            result: { signature, address: signer.address, message },
           })
         );
 
@@ -121,62 +132,45 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
   };
 }
 
-function useSignBip322MessageTaproot() {
+function useBip322Signer(paymentType: string): Bip322Signer | null {
   const createTaprootPayer = useCurrentAccountTaprootPayer();
-  if (!createTaprootPayer) throw new Error('No taproot signer for current account');
-  const currentTaprootAccount = useCurrentTaprootAccount();
-  if (!currentTaprootAccount) throw new Error('No keychain for current account');
-  const sign = useSignBitcoinTx();
-  const payer = createTaprootPayer({ addressIndex: 0, changeIndex: 0 });
-
-  const {
-    payment: { tapInternalKey, address },
-  } = payer;
-
-  async function signPsbt(psbt: bitcoin.Psbt) {
-    psbt.data.inputs.forEach(input => (input.tapInternalKey = Buffer.from(tapInternalKey)));
-    return sign(psbt.toBuffer());
-  }
-  if (!address) throw new Error('No taproot address for current account');
-  const signerAddress = createBitcoinAddress(address);
-  return useSignBip322MessageFactory({ address: signerAddress, signPsbt });
-}
-
-function useSignBip322MessageNativeSegwit() {
   const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
-  if (!createNativeSegwitPayer) throw new Error('No native segwit signer for current account');
-
-  const currentNativeSegwitAccount = useCurrentNativeSegwitAccount();
-  if (!currentNativeSegwitAccount) throw new Error('No keychain for current account');
   const sign = useSignBitcoinTx();
 
-  const {
-    payment: { address },
-  } = createNativeSegwitPayer({ addressIndex: 0, changeIndex: 0 });
-  if (!address) throw new Error('No native segwit address for current account');
-
-  async function signPsbt(psbt: bitcoin.Psbt) {
-    return sign(psbt.toBuffer());
+  switch (paymentType) {
+    case 'p2tr': {
+      if (!createTaprootPayer) return null;
+      const {
+        payment: { tapInternalKey, address },
+      } = createTaprootPayer({ addressIndex: 0, changeIndex: 0 });
+      if (!address) return null;
+      return {
+        address: createBitcoinAddress(address),
+        async signPsbt(psbt) {
+          psbt.data.inputs.forEach(input => (input.tapInternalKey = Buffer.from(tapInternalKey)));
+          return sign(psbt.toBuffer());
+        },
+      };
+    }
+    case 'p2wpkh': {
+      if (!createNativeSegwitPayer) return null;
+      const {
+        payment: { address },
+      } = createNativeSegwitPayer({ addressIndex: 0, changeIndex: 0 });
+      if (!address) return null;
+      return {
+        address: createBitcoinAddress(address),
+        async signPsbt(psbt) {
+          return sign(psbt.toBuffer());
+        },
+      };
+    }
+    default:
+      return null;
   }
-
-  return useSignBip322MessageFactory({
-    address: createBitcoinAddress(address),
-    signPsbt,
-  });
 }
 
 export function useSignBip322Message() {
   const { paymentType } = useRpcSignBitcoinMessage();
-
-  const taprootMsgPayer = useSignBip322MessageTaproot();
-  const nativeSegwitMsgPayer = useSignBip322MessageNativeSegwit();
-
-  switch (paymentType) {
-    case 'p2tr':
-      return taprootMsgPayer;
-    case 'p2wpkh':
-      return nativeSegwitMsgPayer;
-    default:
-      throw new Error(`Unsupported payment type: ${paymentType}`);
-  }
+  return useSignBip322MessageFactory(useBip322Signer(paymentType));
 }
