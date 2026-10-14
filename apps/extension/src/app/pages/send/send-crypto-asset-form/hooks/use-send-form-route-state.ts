@@ -6,14 +6,21 @@ const sendFormRouteStateSchema = z
   .object({
     amount: z.union([z.number(), z.string()]).optional(),
     recipient: z.string().optional(),
+    recipientBnsName: z.string().optional(),
+    memo: z.string().optional(),
+    fee: z.union([z.number(), z.string()]).optional(),
+    feeCurrency: z.string().optional(),
+    feeType: z.string().optional(),
+    nonce: z.union([z.number(), z.string()]).optional(),
   })
   .nullish()
   .catch(null);
 
 export function useSendFormRouteState() {
-  const state = useRouteState(sendFormRouteStateSchema);
-  return {
-    amount: state?.amount ?? '',
-    recipient: state?.recipient ?? '',
-  };
+  const {
+    amount = '',
+    recipient = '',
+    ...restoredValues
+  } = useRouteState(sendFormRouteStateSchema) ?? {};
+  return { amount, recipient, ...restoredValues };
 }

@@ -8,10 +8,12 @@ import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { useRouteState } from '@app/common/hooks/use-route-state';
 
-const broadcastErrorSheetRouteStateSchema = z.object({
-  message: z.string().optional(),
-  proposeMode: z.boolean().optional(),
-});
+const broadcastErrorSheetRouteStateSchema = z
+  .object({
+    message: z.string().optional(),
+    proposeMode: z.boolean().optional(),
+  })
+  .catch({});
 
 export function BroadcastErrorSheet() {
   const navigate = useNavigate();

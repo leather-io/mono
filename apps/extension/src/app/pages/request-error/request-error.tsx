@@ -7,7 +7,9 @@ const helpTextList = [
   <GenericErrorListItem key={1} text="Please report issue to requesting app" />,
 ];
 
-const requestErrorRouteStateSchema = z.object({ message: z.string(), title: z.string() });
+const requestErrorRouteStateSchema = z
+  .object({ message: z.string().catch(''), title: z.string().catch('') })
+  .catch({ message: '', title: '' });
 
 export function RequestError() {
   const { message, title } = useRouteState(requestErrorRouteStateSchema);
