@@ -895,9 +895,6 @@
     }
   },
   "src/features/balances/manage-tokens.sheet.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    },
     "@typescript-eslint/unbound-method": {
       "count": 1
     }

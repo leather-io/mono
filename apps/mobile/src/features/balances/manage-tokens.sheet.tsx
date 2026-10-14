@@ -15,9 +15,9 @@ import {
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
-import { AccountId } from '@leather.io/models';
-import { Sip10Balance } from '@leather.io/services';
-import { Box, Sheet, SheetRef, Sip10AvatarIcon, Text, useTheme } from '@leather.io/ui/native';
+import { type AccountId } from '@leather.io/models';
+import { type Sip10Balance } from '@leather.io/services';
+import { Box, Sheet, type SheetRef, Sip10AvatarIcon, Text, useTheme } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { TokenSwitch } from '../token/components/token-switch';
