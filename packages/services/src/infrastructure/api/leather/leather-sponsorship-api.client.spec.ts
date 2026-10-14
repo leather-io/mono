@@ -13,14 +13,12 @@ import {
 } from './leather-sponsorship-api.types';
 
 const quoteResponse = {
-  sponsorPrincipal: 'SP3SPONSOR',
+  quoteId: 'quote-1',
   feeRecipientPrincipal: 'SP4FEES',
   expiresAt: '2026-09-21T12:00:00.000Z',
-  tiers: {
-    low: { quoteId: 'quote-low', feeSats: 1000, stxFeeMicro: 120_000 },
-    medium: { quoteId: 'quote-medium', feeSats: 1500, stxFeeMicro: 180_000 },
-    high: { quoteId: 'quote-high', feeSats: 3000, stxFeeMicro: 360_000 },
-  },
+  satsPerStx: '512.5',
+  minFeeSats: 1000,
+  maxFeeSats: 50_000,
 };
 
 class ImmediateRateLimiterService extends RateLimiterService {

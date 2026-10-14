@@ -1,9 +1,9 @@
 import { type Page, expect } from '@playwright/test';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import {
+  SBTC_SPONSORSHIP_QUOTE_ID,
   mockSbtcSponsorshipQuote,
   mockSbtcSponsorshipSubmit,
-  sbtcSponsorshipQuoteId,
 } from '@tests/mocks/mock-sbtc';
 import { mockZeroStxBalanceV2Request } from '@tests/mocks/mock-stacks-balances-v2';
 import { HomePage } from '@tests/page-object-models/home.page';
@@ -18,10 +18,10 @@ import { test } from '../../fixtures/fixtures';
 
 const sbtcTokenTestId = 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc';
 const amount = '0.0001';
-const mediumFee = '0.000015';
-const highFee = '0.00003';
-const totalWithMediumFee = '0.000115';
-const totalWithHighFee = '0.00013';
+const mediumFee = '0.00001402';
+const highFee = '0.00008002';
+const totalWithMediumFee = '0.00011402';
+const totalWithHighFee = '0.00018002';
 const unaffordableFeeSats = 50_000_000;
 const sponsoredFeeRowTimeout = 15_000;
 const hiroBroadcastUrl = '/v2/transactions';
@@ -105,7 +105,7 @@ test.describe('Send sBTC without STX to cover the fee', () => {
     await expect(sendPage.feeToBePaid).toContainText(`${highFee} sBTC`);
   });
 
-  test('submits through the sponsor with the quote of the selected tier', async ({
+  test('submits through the sponsor with the fee of the selected tier', async ({
     extensionId,
     homePage,
     onboardingPage,
@@ -136,7 +136,7 @@ test.describe('Send sBTC without STX to cover the fee', () => {
     await sendPage.confirmSendTransaction();
     const body: unknown = (await submitRequest).postDataJSON();
 
-    test.expect(body).toMatchObject({ quoteId: sbtcSponsorshipQuoteId('high') });
+    test.expect(body).toMatchObject({ quoteId: SBTC_SPONSORSHIP_QUOTE_ID });
     test.expect(body).toHaveProperty('transaction');
     await expect(page.getByText('Sent')).toBeVisible();
     await expect(page.getByTestId(SendCryptoAssetSelectors.SentTransactionSummary)).toContainText(
@@ -168,7 +168,7 @@ test.describe('Send sBTC without STX to cover the fee', () => {
     await sendPage.confirmSendTransaction();
     const body: unknown = (await submitRequest).postDataJSON();
 
-    test.expect(body).toMatchObject({ quoteId: sbtcSponsorshipQuoteId('medium') });
+    test.expect(body).toMatchObject({ quoteId: SBTC_SPONSORSHIP_QUOTE_ID });
     await expect(page.getByText('Sent')).toBeVisible();
   });
 
@@ -180,9 +180,8 @@ test.describe('Send sBTC without STX to cover the fee', () => {
     sendPage,
   }) => {
     await mockSbtcSponsorshipQuote(page, {
-      low: unaffordableFeeSats,
-      medium: unaffordableFeeSats,
-      high: unaffordableFeeSats,
+      minFeeSats: unaffordableFeeSats,
+      maxFeeSats: unaffordableFeeSats,
     });
     await openSbtcSendForm({ extensionId, homePage, onboardingPage, sendPage });
 

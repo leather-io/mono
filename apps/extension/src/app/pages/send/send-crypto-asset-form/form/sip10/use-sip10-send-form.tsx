@@ -33,6 +33,7 @@ import { useStacksCommonSendForm } from '../../family/stacks/use-stacks-common-s
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
 const releaseSbtcSponsorship = true;
+const stxFeeEstimateUnavailableMessage = 'The STX fee estimate is not available yet. Try again.';
 
 interface UseSip10SendFormArgs {
   balance: CryptoAssetBalance;
@@ -98,10 +99,15 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
   }
 
   async function previewSponsoredTransaction(values: StacksSendFormValues) {
+    const stxFee = stacksFtFees?.options[getSbtcSponsorshipFeeTier(values.feeType)].value;
+    if (!stxFee) {
+      toast.error(stxFeeEstimateUnavailableMessage);
+      return;
+    }
     try {
       const { tx, sponsorship } = await buildSponsoredTransfer({
         formValues: values,
-        feeTier: getSbtcSponsorshipFeeTier(values.feeType),
+        stxFeeMicro: stxFee.amount.toNumber(),
       });
       void sendFormNavigate.toConfirmAndSignStacksSip10Transaction({
         decimals: info.decimals,

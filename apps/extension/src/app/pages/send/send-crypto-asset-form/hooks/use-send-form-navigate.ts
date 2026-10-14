@@ -5,14 +5,13 @@ import { StacksTransactionWire } from '@stacks/transactions';
 import { AxiosError } from 'axios';
 
 import type { OwnedUtxo } from '@leather.io/models';
-import type { SbtcSponsorshipFeeTier } from '@leather.io/services';
 
 import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
 export interface SbtcSponsorshipRouteState {
   quoteId: string;
-  feeTier: SbtcSponsorshipFeeTier;
+  stxFeeMicro: number;
   expiresAt: string;
   assetId: string;
   formValues: StacksSendFormValues;

@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 
 import { PostConditionMode, type StacksTransactionWire, serializeCV } from '@stacks/transactions';
 
-import type { SbtcSponsorshipFeeTier } from '@leather.io/services';
 import {
   type SbtcSponsoredTransferParams,
   TransactionTypes,
@@ -21,6 +20,7 @@ import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/s
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 
 import { generateUnsignedTransaction } from './generate-unsigned-txs';
+import { getSbtcSponsorshipFeeSats } from './sbtc-sponsorship.utils';
 
 export interface SbtcSponsoredTransfer {
   tx: StacksTransactionWire;
@@ -34,7 +34,7 @@ interface UseBuildSbtcSponsoredTransferArgs {
 
 interface BuildSbtcSponsoredTransferArgs {
   formValues: StacksSendFormValues;
-  feeTier: SbtcSponsorshipFeeTier;
+  stxFeeMicro: number;
   fresh?: boolean;
 }
 
@@ -50,12 +50,11 @@ export function useBuildSbtcSponsoredTransfer({
   return useCallback(
     async ({
       formValues,
-      feeTier,
+      stxFeeMicro,
       fresh = false,
     }: BuildSbtcSponsoredTransferArgs): Promise<SbtcSponsoredTransfer> => {
       if (!account) throw new Error('No Stacks account selected');
       const { quote, nonce } = await fetchSbtcSponsorshipQuote({ fresh });
-      const tier = quote.tiers[feeTier];
       const values = fresh ? { ...formValues, nonce } : formValues;
       const hasExplicitNonce = values.nonce !== undefined && values.nonce !== '';
 
@@ -66,7 +65,7 @@ export function useBuildSbtcSponsoredTransfer({
         recipient: values.recipient,
         feeRecipient: quote.feeRecipientPrincipal,
         amount: BigInt(ftUnshiftDecimals(values.amount, decimals)),
-        feeAmount: BigInt(tier.feeSats),
+        feeAmount: BigInt(getSbtcSponsorshipFeeSats(stxFeeMicro, quote)),
         memo: values.memo !== '' ? values.memo : undefined,
       };
 
@@ -91,8 +90,8 @@ export function useBuildSbtcSponsoredTransfer({
       return {
         tx,
         sponsorship: {
-          quoteId: tier.quoteId,
-          feeTier,
+          quoteId: quote.quoteId,
+          stxFeeMicro,
           expiresAt: quote.expiresAt,
           assetId,
           formValues: values,

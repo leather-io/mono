@@ -61,7 +61,7 @@ export function useSubmitSbtcSponsoredTransaction({
       onRequoted(
         await buildSponsoredTransfer({
           formValues: sponsorship.formValues,
-          feeTier: sponsorship.feeTier,
+          stxFeeMicro: sponsorship.stxFeeMicro,
           fresh: true,
         })
       );
@@ -75,8 +75,8 @@ export function useSubmitSbtcSponsoredTransaction({
     buildSponsoredTransfer,
     navigateToError,
     onRequoted,
-    sponsorship.feeTier,
     sponsorship.formValues,
+    sponsorship.stxFeeMicro,
   ]);
 
   const submit = useCallback(

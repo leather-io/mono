@@ -13,19 +13,11 @@ const sbtcSponsorshipSubmitUrl = '**/v1/sponsorship/submit';
 export const SBTC_SPONSORSHIP_TXID =
   '9b709768122e6c62a37b087106cc9c23280ed6242b565484b6cc4e6a43ae1155';
 
-export type SbtcSponsorshipFeeTier = 'low' | 'medium' | 'high';
+export const SBTC_SPONSORSHIP_QUOTE_ID = 'quote-1';
 
-export const SBTC_SPONSORSHIP_FEE_SATS_BY_TIER: Record<SbtcSponsorshipFeeTier, number> = {
-  low: 1000,
-  medium: 1500,
-  high: 3000,
-};
-
-const sbtcSponsorshipStxFeeMicroByTier: Record<SbtcSponsorshipFeeTier, number> = {
-  low: 120_000,
-  medium: 180_000,
-  high: 360_000,
-};
+const sbtcSponsorshipSatsPerStx = '2000000';
+const sbtcSponsorshipMinFeeSats = 1000;
+const sbtcSponsorshipMaxFeeSats = 100_000;
 
 export type SbtcDepositStatus = 'pending' | 'accepted' | 'confirmed' | 'failed' | 'rbf';
 
@@ -67,47 +59,26 @@ export function createSbtcDepositFixture({
   };
 }
 
-interface SbtcSponsorshipQuoteTierFixture {
-  quoteId: string;
-  feeSats: number;
-  stxFeeMicro: number;
-}
-
 interface SbtcSponsorshipQuoteFixture {
-  sponsorPrincipal: string;
+  quoteId: string;
   feeRecipientPrincipal: string;
   expiresAt: string;
-  tiers: Record<SbtcSponsorshipFeeTier, SbtcSponsorshipQuoteTierFixture>;
-}
-
-export function sbtcSponsorshipQuoteId(tier: SbtcSponsorshipFeeTier) {
-  return `quote-${tier}`;
-}
-
-function createSbtcSponsorshipQuoteTierFixture(
-  tier: SbtcSponsorshipFeeTier,
-  feeSats: number
-): SbtcSponsorshipQuoteTierFixture {
-  return {
-    quoteId: sbtcSponsorshipQuoteId(tier),
-    feeSats,
-    stxFeeMicro: sbtcSponsorshipStxFeeMicroByTier[tier],
-  };
+  satsPerStx: string;
+  minFeeSats: number;
+  maxFeeSats: number;
 }
 
 export function createSbtcSponsorshipQuoteFixture(
-  feeSatsByTier: Record<SbtcSponsorshipFeeTier, number> = SBTC_SPONSORSHIP_FEE_SATS_BY_TIER
+  overrides: Partial<SbtcSponsorshipQuoteFixture> = {}
 ): SbtcSponsorshipQuoteFixture {
-  const tiers = {
-    low: createSbtcSponsorshipQuoteTierFixture('low', feeSatsByTier.low),
-    medium: createSbtcSponsorshipQuoteTierFixture('medium', feeSatsByTier.medium),
-    high: createSbtcSponsorshipQuoteTierFixture('high', feeSatsByTier.high),
-  };
   return {
-    sponsorPrincipal: TEST_ACCOUNT_2_STX_ADDRESS,
+    quoteId: SBTC_SPONSORSHIP_QUOTE_ID,
     feeRecipientPrincipal: TEST_ACCOUNT_2_STX_ADDRESS,
     expiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
-    tiers,
+    satsPerStx: sbtcSponsorshipSatsPerStx,
+    minFeeSats: sbtcSponsorshipMinFeeSats,
+    maxFeeSats: sbtcSponsorshipMaxFeeSats,
+    ...overrides,
   };
 }
 
@@ -117,11 +88,11 @@ function isPost(route: Route) {
 
 export async function mockSbtcSponsorshipQuote(
   target: Page | BrowserContext,
-  feeSatsByTier?: Record<SbtcSponsorshipFeeTier, number>
+  overrides?: Partial<SbtcSponsorshipQuoteFixture>
 ) {
   await target.route(sbtcSponsorshipQuoteUrl, route => {
     if (!isPost(route)) return route.fallback();
-    return route.fulfill({ json: createSbtcSponsorshipQuoteFixture(feeSatsByTier) });
+    return route.fulfill({ json: createSbtcSponsorshipQuoteFixture(overrides) });
   });
 }
 

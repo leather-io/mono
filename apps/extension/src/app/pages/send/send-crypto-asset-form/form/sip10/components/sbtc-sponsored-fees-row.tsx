@@ -11,9 +11,11 @@ import {
   type StacksTransactionFees,
   type TransactionFees,
 } from '@leather.io/models';
+import type { SbtcSponsorshipQuoteResponse } from '@leather.io/services';
 import { baseCurrencyAmountInQuote, convertAmountToBaseUnit, createMoney } from '@leather.io/utils';
 
 import {
+  getSbtcSponsorshipFeeSats,
   getSbtcSponsorshipFeeTier,
   isSbtcSponsorshipFeeType,
 } from '@app/common/transactions/stacks/sbtc-sponsorship.utils';
@@ -25,6 +27,15 @@ import {
   isSbtcSponsorshipQuoteExpired,
   useSbtcSponsorshipQuote,
 } from '@app/query/sbtc/sbtc-sponsorship.hooks';
+
+function createSbtcFeeQuote(
+  stxFee: Money,
+  quote: SbtcSponsorshipQuoteResponse,
+  asset: Sip10Asset
+): FlatTransactionFeeQuote {
+  const feeSats = getSbtcSponsorshipFeeSats(stxFee.amount, quote);
+  return { type: 'flat', value: createMoney(feeSats, asset.symbol, asset.decimals) };
+}
 
 interface SbtcSponsoredFeesRowProps {
   fees?: StacksTransactionFees;
@@ -51,26 +62,22 @@ export function SbtcSponsoredFeesRow({
   const feeCurrency = isSbtcFeeMode ? asset.symbol : stxFeeCurrency;
 
   const sbtcFees = useMemo<TransactionFees<FlatTransactionFeeQuote> | undefined>(() => {
-    if (!activeQuote || !isSbtcFeeMode) return undefined;
-    function toQuote(feeSats: number): FlatTransactionFeeQuote {
-      return { type: 'flat', value: createMoney(feeSats, asset.symbol, asset.decimals) };
-    }
+    if (!activeQuote || !isSbtcFeeMode || !fees) return undefined;
     return {
       chain: 'stacks',
       options: {
-        low: toQuote(activeQuote.tiers.low.feeSats),
-        standard: toQuote(activeQuote.tiers.medium.feeSats),
-        high: toQuote(activeQuote.tiers.high.feeSats),
+        low: createSbtcFeeQuote(fees.options.low.value, activeQuote, asset),
+        standard: createSbtcFeeQuote(fees.options.standard.value, activeQuote, asset),
+        high: createSbtcFeeQuote(fees.options.high.value, activeQuote, asset),
       },
     };
-  }, [activeQuote, asset.decimals, asset.symbol, isSbtcFeeMode]);
+  }, [activeQuote, asset, fees, isSbtcFeeMode]);
 
   const isTierSelected = isSbtcSponsorshipFeeType(feeTypeField.value);
   const selectedFee = useMemo(() => {
-    if (!activeQuote || !isSbtcFeeMode) return null;
-    const feeSats = activeQuote.tiers[getSbtcSponsorshipFeeTier(feeTypeField.value)].feeSats;
-    return createMoney(feeSats, asset.symbol, asset.decimals);
-  }, [activeQuote, asset.decimals, asset.symbol, feeTypeField.value, isSbtcFeeMode]);
+    if (!sbtcFees) return null;
+    return sbtcFees.options[getSbtcSponsorshipFeeTier(feeTypeField.value)].value;
+  }, [feeTypeField.value, sbtcFees]);
 
   const selectedFeeFiatValue = useMemo(() => {
     if (!selectedFee || !marketData || marketData.pair.base !== selectedFee.symbol) return null;

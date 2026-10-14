@@ -1,13 +1,16 @@
+import BigNumber from 'bignumber.js';
+
 import { SBTC_ASSET_ID_MAINNET, SBTC_ASSET_ID_TESTNET } from '@leather.io/constants';
-import { FeeTypes } from '@leather.io/models';
+import { FeeTypes, type TransactionFeeTier } from '@leather.io/models';
 import {
   type SbtcSponsorshipErrorCode,
-  type SbtcSponsorshipFeeTier,
+  type SbtcSponsorshipQuoteResponse,
   getErrorDetail,
   getSbtcSponsorshipErrorCode,
   getSbtcSponsorshipIneligibilityReason,
 } from '@leather.io/services';
 import { getPrincipalFromAssetString } from '@leather.io/stacks';
+import { microStxToStx } from '@leather.io/utils';
 
 const sbtcContractPrincipals = [SBTC_ASSET_ID_MAINNET, SBTC_ASSET_ID_TESTNET].map(
   getPrincipalFromAssetString
@@ -37,6 +40,7 @@ const sbtcSponsorshipIneligibilityMessages: Partial<Record<string, string>> = {
   insufficient_sbtc: 'Your sBTC balance no longer covers the amount plus the fee.',
   bad_transfer_entry: 'The amount must be positive and the recipient cannot be your own address.',
   fee_too_low: 'The quoted fee is out of date. Review the updated fee and confirm again.',
+  fee_too_high: 'The quoted fee is out of date. Review the updated fee and confirm again.',
   float_low: 'The sponsor is temporarily out of STX. Pay the fee in STX or try again later.',
 };
 
@@ -53,11 +57,11 @@ export function getSbtcSponsorshipErrorMessage(error: unknown): string {
   return getErrorDetail(error) ?? unknownSbtcSponsorshipErrorMessage;
 }
 
-const defaultSbtcSponsorshipFeeTier: SbtcSponsorshipFeeTier = 'medium';
+const defaultSbtcSponsorshipFeeTier: TransactionFeeTier = 'standard';
 
-const sbtcSponsorshipFeeTierByFeeType: Partial<Record<string, SbtcSponsorshipFeeTier>> = {
+const sbtcSponsorshipFeeTierByFeeType: Partial<Record<string, TransactionFeeTier>> = {
   [FeeTypes[FeeTypes.Low]]: 'low',
-  [FeeTypes[FeeTypes.Middle]]: 'medium',
+  [FeeTypes[FeeTypes.Middle]]: 'standard',
   [FeeTypes[FeeTypes.High]]: 'high',
 };
 
@@ -65,6 +69,19 @@ export function isSbtcSponsorshipFeeType(feeType: string) {
   return feeType in sbtcSponsorshipFeeTierByFeeType;
 }
 
-export function getSbtcSponsorshipFeeTier(feeType: string): SbtcSponsorshipFeeTier {
+export function getSbtcSponsorshipFeeTier(feeType: string): TransactionFeeTier {
   return sbtcSponsorshipFeeTierByFeeType[feeType] ?? defaultSbtcSponsorshipFeeTier;
+}
+
+type SbtcSponsorshipFeeQuote = Pick<
+  SbtcSponsorshipQuoteResponse,
+  'satsPerStx' | 'minFeeSats' | 'maxFeeSats'
+>;
+
+export function getSbtcSponsorshipFeeSats(
+  stxFeeMicro: number | string | BigNumber,
+  { satsPerStx, minFeeSats, maxFeeSats }: SbtcSponsorshipFeeQuote
+): number {
+  const feeSats = microStxToStx(stxFeeMicro).times(satsPerStx).integerValue(BigNumber.ROUND_CEIL);
+  return BigNumber.min(BigNumber.max(feeSats, minFeeSats), maxFeeSats).toNumber();
 }

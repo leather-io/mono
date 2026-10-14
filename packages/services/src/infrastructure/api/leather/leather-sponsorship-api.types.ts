@@ -2,29 +2,13 @@ import { z } from 'zod';
 
 import { LeatherApiError } from './leather-api.error';
 
-export const sbtcSponsorshipFeeTiers = ['low', 'medium', 'high'] as const;
-
-export const sbtcSponsorshipFeeTierSchema = z.enum(sbtcSponsorshipFeeTiers);
-
-export type SbtcSponsorshipFeeTier = z.infer<typeof sbtcSponsorshipFeeTierSchema>;
-
-export const sbtcSponsorshipQuoteTierSchema = z.object({
-  quoteId: z.string(),
-  feeSats: z.number().int().nonnegative(),
-  stxFeeMicro: z.number().int().nonnegative(),
-});
-
-export type SbtcSponsorshipQuoteTier = z.infer<typeof sbtcSponsorshipQuoteTierSchema>;
-
 export const sbtcSponsorshipQuoteResponseSchema = z.object({
-  sponsorPrincipal: z.string(),
+  quoteId: z.string(),
   feeRecipientPrincipal: z.string(),
   expiresAt: z.string(),
-  tiers: z.object({
-    low: sbtcSponsorshipQuoteTierSchema,
-    medium: sbtcSponsorshipQuoteTierSchema,
-    high: sbtcSponsorshipQuoteTierSchema,
-  }),
+  satsPerStx: z.string(),
+  minFeeSats: z.number().int().nonnegative(),
+  maxFeeSats: z.number().int().nonnegative(),
 });
 
 export type SbtcSponsorshipQuoteResponse = z.infer<typeof sbtcSponsorshipQuoteResponseSchema>;
