@@ -74,6 +74,7 @@ vi.mock('@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks', ()
 
 vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
   useCurrentStacksAccount: () => ({ address: 'ST000000000000000000002AMW42H', stxPublicKey: '02' }),
+  useCurrentStacksAccountAddress: () => 'ST000000000000000000002AMW42H',
 }));
 
 vi.mock('@app/store/networks/networks.hooks', () => ({

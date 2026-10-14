@@ -90,11 +90,12 @@ async function clickPropose(context: BrowserContext) {
 function readPersistedPermission(page: Page, extensionId: string) {
   return async function readPermission() {
     await page.goto(`chrome-extension://${extensionId}/index.html`);
-    const permission = await page.evaluate(async () =>
-      chrome.storage.local
-        .get<{ 'persist:root': PersistedRootState }>(['persist:root'])
-        .then(state => state['persist:root'].appPermissions?.entities?.['localhost:3000'])
-    );
+    const permission = await page.evaluate(async () => {
+      const state = await chrome.storage.local.get<{ 'persist:root': PersistedRootState }>([
+        'persist:root',
+      ]);
+      return state['persist:root'].appPermissions?.entities?.['localhost:3000'];
+    });
     if (!permission) throw new Error('Expected persisted permission');
     return permission;
   };

@@ -787,13 +787,14 @@ test.describe('Sign PSBT', () => {
     }) => {
       const psbt = createDescriptorTestPsbt();
       let broadcastAttempted = false;
-      const interceptPromise = (async () => {
+      async function interceptBroadcastAttempt() {
         const popup = await context.waitForEvent('page');
         await popup.route('**/api/tx', route => {
           broadcastAttempted = true;
           return route.fulfill({ body: 'not-a-real-txid-response' });
         });
-      })();
+      }
+      const interceptPromise = interceptBroadcastAttempt();
 
       const [result] = await Promise.all([
         initiatePsbtSigning(page)({
@@ -946,17 +947,19 @@ test.describe('Sign PSBT: bond proposal', () => {
       return route.fulfill({ json: makeMultisigTransaction() });
     });
 
+    async function clickProposeTransaction() {
+      const popup = await context.waitForEvent('page');
+      await popup.waitForTimeout(1000);
+      await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
+    }
+
     const [result] = await Promise.all([
       initiatePsbtSigning(page)({
         network: 'mainnet',
         hex: psbtHex,
         descriptor: bondDescriptor,
       }),
-      (async () => {
-        const popup = await context.waitForEvent('page');
-        await popup.waitForTimeout(1000);
-        await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
-      })(),
+      clickProposeTransaction(),
     ]);
 
     delete result.id;

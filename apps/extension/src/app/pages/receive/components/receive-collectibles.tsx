@@ -15,13 +15,18 @@ interface ReceiveCollectiblesProps {
 }
 export function ReceiveCollectibles({ stxAddress, onClickQrStacksNft }: ReceiveCollectiblesProps) {
   const toast = useToast();
+
+  async function copyAddress(address: string) {
+    await copyToClipboard(address);
+    toast.success('Copied to clipboard!');
+  }
   return (
     <Stack className={css(receiveTabStyle)}>
       <ReceiveItem
         address={stxAddress}
         icon={<StxAvatarIcon />}
         onCopyAddress={() => {
-          void copyToClipboard(stxAddress).then(() => toast.success('Copied to clipboard!'));
+          void copyAddress(stxAddress);
         }}
         onClickQrCode={onClickQrStacksNft}
         title="Stacks NFT"

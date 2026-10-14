@@ -62,7 +62,6 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
     message,
     networkMode,
     isLoading,
-    formattedOrigin: new URL(origin ?? '').host,
     address,
     onUserRejectBip322MessageSigningRequest() {
       if (!tabId) return;
@@ -138,7 +137,8 @@ function useSignBip322MessageTaproot() {
     psbt.data.inputs.forEach(input => (input.tapInternalKey = Buffer.from(tapInternalKey)));
     return sign(psbt.toBuffer());
   }
-  const signerAddress = createBitcoinAddress(address ?? '');
+  if (!address) throw new Error('No taproot address for current account');
+  const signerAddress = createBitcoinAddress(address);
   return useSignBip322MessageFactory({ address: signerAddress, signPsbt });
 }
 
@@ -153,13 +153,14 @@ function useSignBip322MessageNativeSegwit() {
   const {
     payment: { address },
   } = createNativeSegwitPayer({ addressIndex: 0, changeIndex: 0 });
+  if (!address) throw new Error('No native segwit address for current account');
 
   async function signPsbt(psbt: bitcoin.Psbt) {
     return sign(psbt.toBuffer());
   }
 
   return useSignBip322MessageFactory({
-    address: createBitcoinAddress(address ?? ''),
+    address: createBitcoinAddress(address),
     signPsbt,
   });
 }

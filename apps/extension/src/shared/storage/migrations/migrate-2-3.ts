@@ -6,13 +6,13 @@ import {
   extractFingerprintFromDescriptor,
   extractKeyOriginPathFromDescriptor,
 } from '@leather.io/crypto';
-import { isString } from '@leather.io/utils';
+import { isDefined, isString } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 import { assumedZeroFingerprint } from '@shared/utils';
 import { isRecord } from '@shared/utils/is-record';
 
-import { type LegacyRecord, getRecordAtPath, isUnknownArray } from './legacy-state';
+import { type LegacyRecord, asUnknownArray, getRecordAtPath } from './legacy-state';
 
 interface LegacyWalletEntity {
   fingerprint: string;
@@ -22,7 +22,7 @@ interface LegacyWalletEntity {
 }
 
 function getFirstId(ids: unknown) {
-  return isRecord(ids) ? ids[0] : undefined;
+  return asUnknownArray(ids)?.[0];
 }
 
 function addWalletEntity(wallets: LegacyRecord | undefined, wallet: LegacyWalletEntity) {
@@ -30,8 +30,8 @@ function addWalletEntity(wallets: LegacyRecord | undefined, wallet: LegacyWallet
   if (walletEntities && !walletEntities[wallet.fingerprint]) {
     walletEntities[wallet.fingerprint] = wallet;
   }
-  const walletIds = wallets?.ids;
-  if (isUnknownArray(walletIds) && !walletIds.includes(wallet.fingerprint)) {
+  const walletIds = asUnknownArray(wallets?.ids);
+  if (walletIds && !walletIds.includes(wallet.fingerprint)) {
     walletIds.push(wallet.fingerprint);
   }
 }
@@ -107,8 +107,8 @@ export function migrateMultiWalletSupport(state: unknown) {
     // Check if there are any keys in the wallet
     const bitcoinEntities = getRecordAtPath(draftState, 'ledger', 'bitcoin', 'entities') ?? {};
     const stacksEntities = getRecordAtPath(draftState, 'ledger', 'stacks', 'entities') ?? {};
-    const softwareKeyIds = softwareKeys?.ids;
-    const hasSoftwareKeys = isUnknownArray(softwareKeyIds) && softwareKeyIds.length > 0;
+    const softwareKeyIds = asUnknownArray(softwareKeys?.ids);
+    const hasSoftwareKeys = isDefined(softwareKeyIds) && softwareKeyIds.length > 0;
     const hasLedgerAccounts =
       Object.keys(bitcoinEntities).length > 0 || Object.keys(stacksEntities).length > 0;
     const hasAnyKeys = hasSoftwareKeys || hasLedgerAccounts;
@@ -136,7 +136,7 @@ export function migrateMultiWalletSupport(state: unknown) {
       };
       delete softwareKeyEntities.default;
 
-      if (isUnknownArray(softwareKeyIds)) {
+      if (softwareKeyIds) {
         const defaultIndex = softwareKeyIds.indexOf('default');
         if (defaultIndex !== -1) {
           softwareKeyIds[defaultIndex] = fingerprint;
@@ -182,7 +182,7 @@ export function migrateMultiWalletSupport(state: unknown) {
         const newBitcoinEntities: LegacyRecord = {};
         const newBitcoinIds: string[] = [];
         const ledgerBitcoinEntities = getRecordAtPath(ledgerBitcoin, 'entities');
-        const ledgerBitcoinIds = isUnknownArray(ledgerBitcoin.ids) ? ledgerBitcoin.ids : [];
+        const ledgerBitcoinIds = asUnknownArray(ledgerBitcoin.ids) ?? [];
 
         for (const id of ledgerBitcoinIds.filter(isString)) {
           if (id.startsWith('default/')) {
@@ -219,7 +219,7 @@ export function migrateMultiWalletSupport(state: unknown) {
         const newStacksEntities: LegacyRecord = {};
         const newStacksIds: string[] = [];
         const ledgerStacksEntities = getRecordAtPath(ledgerStacks, 'entities');
-        const ledgerStacksIds = isUnknownArray(ledgerStacks.ids) ? ledgerStacks.ids : [];
+        const ledgerStacksIds = asUnknownArray(ledgerStacks.ids) ?? [];
 
         for (const id of ledgerStacksIds.filter(isString)) {
           if (id.startsWith('default/')) {
@@ -293,7 +293,7 @@ export function migrateMultiWalletSupport(state: unknown) {
     if (hasLedgerAccounts) {
       if (!draftState.keychains) draftState.keychains = { ids: [], entities: {} };
       const keychainEntities = getRecordAtPath(draftState, 'keychains', 'entities') ?? {};
-      const keychainIds = getRecordAtPath(draftState, 'keychains')?.ids;
+      const keychainIds = asUnknownArray(getRecordAtPath(draftState, 'keychains')?.ids);
 
       // Migrate Bitcoin keys
       const bitcoinKeyEntities = getRecordAtPath(draftState, 'ledger', 'bitcoin', 'entities');
@@ -310,7 +310,7 @@ export function migrateMultiWalletSupport(state: unknown) {
                   descriptor,
                   chain: 'bitcoin',
                 };
-                if (isUnknownArray(keychainIds)) keychainIds.push(keyOriginPath);
+                keychainIds?.push(keyOriginPath);
               }
             } catch (error) {
               logger.error(
@@ -348,7 +348,7 @@ export function migrateMultiWalletSupport(state: unknown) {
               descriptor,
               chain: 'stacks',
             };
-            if (isUnknownArray(keychainIds)) keychainIds.push(keyOrigin);
+            keychainIds?.push(keyOrigin);
           }
         }
       }

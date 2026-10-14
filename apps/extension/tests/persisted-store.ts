@@ -1,25 +1,43 @@
 import type { Page } from '@playwright/test';
-import { isPlainObject } from 'remeda';
+import { z } from 'zod';
 
-interface PersistedStoreSnapshot {
-  wallets?: { ids?: string[] };
-  accounts?: {
-    ids?: string[];
-    entities?: Record<string, { name?: string; status?: string } | undefined>;
-  };
-  active?: {
-    account?: { fingerprint: string; accountIndex: number } | null;
-    activePolicyId?: string | null;
-  };
-  chains?: { stx?: Record<string, { highestAccountIndex?: number } | undefined> };
-  policy?: { ids?: string[] };
-}
-
-function isPersistedStoreSnapshot(value: unknown): value is PersistedStoreSnapshot {
-  return isPlainObject(value);
-}
+const persistedStoreSnapshotSchema = z.looseObject({
+  wallets: z.looseObject({ ids: z.array(z.string()).optional() }).optional(),
+  accounts: z
+    .looseObject({
+      ids: z.array(z.string()).optional(),
+      entities: z
+        .record(
+          z.string(),
+          z.looseObject({ name: z.string().optional(), status: z.string().optional() }).optional()
+        )
+        .optional(),
+    })
+    .optional(),
+  active: z
+    .looseObject({
+      account: z
+        .looseObject({ fingerprint: z.string(), accountIndex: z.number() })
+        .nullable()
+        .optional(),
+      activePolicyId: z.string().nullable().optional(),
+    })
+    .optional(),
+  chains: z
+    .looseObject({
+      stx: z
+        .record(
+          z.string(),
+          z.looseObject({ highestAccountIndex: z.number().optional() }).optional()
+        )
+        .optional(),
+    })
+    .optional(),
+  policy: z.looseObject({ ids: z.array(z.string()).optional() }).optional(),
+});
 
 export async function readPersistedStore(page: Page) {
   const store = await page.evaluate(() => window.debug.getPersistedStore());
-  return isPersistedStoreSnapshot(store) ? store : undefined;
+  const result = persistedStoreSnapshotSchema.safeParse(store);
+  return result.success ? result.data : undefined;
 }

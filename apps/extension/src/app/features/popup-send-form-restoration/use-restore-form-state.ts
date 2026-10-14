@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router';
 
+import { z } from 'zod';
+
 import { getActiveTab } from '@shared/utils/get-active-tab';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
@@ -19,19 +21,9 @@ async function run() {
 }
 void run();
 
-interface PersistedFormState {
-  symbol: string;
-}
-
-function isPersistedFormState(value: unknown): value is PersistedFormState {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'symbol' in value &&
-    typeof value.symbol === 'string' &&
-    value.symbol !== ''
-  );
-}
+const persistedFormStateSchema = z.looseObject({
+  symbol: z.string().min(1),
+});
 
 export function useRestoreFormState() {
   const navigate = useNavigate();
@@ -40,8 +32,9 @@ export function useRestoreFormState() {
     if (!isPopupMode() || !currentTabId || !chrome.storage.session) return;
     const key = 'form-state-' + currentTabId.toString();
     const state = await chrome.storage.session.get('form-state-' + currentTabId.toString());
-    const persistedState: unknown = state[key];
-    if (!isPersistedFormState(persistedState)) return;
+    const parsedState = persistedFormStateSchema.safeParse(state[key]);
+    if (!parsedState.success) return;
+    const persistedState = parsedState.data;
     void navigate('send/' + persistedState.symbol, { state: persistedState });
   });
 }

@@ -7,6 +7,7 @@ import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import {
+  type SignedMessageType,
   isSignableMessageType,
   isStructuredMessageType,
   isUtf8MessageType,
@@ -71,6 +72,7 @@ export function useRpcSignStacksMessageParams() {
 
   if (!requestId || !message || !origin || !isSignableMessageType(messageType))
     throw new Error('Missing required parameters for Stacks signing message request');
+  const signableMessageType: SignedMessageType = messageType;
 
   return useMemo(
     () => ({
@@ -80,11 +82,11 @@ export function useRpcSignStacksMessageParams() {
       requestId,
       network,
       message,
-      messageType,
+      messageType: signableMessageType,
       appName,
       domain,
     }),
-    [origin, frameId, requestId, network, message, messageType, tabId, appName, domain]
+    [origin, frameId, requestId, network, message, signableMessageType, tabId, appName, domain]
   );
 }
 

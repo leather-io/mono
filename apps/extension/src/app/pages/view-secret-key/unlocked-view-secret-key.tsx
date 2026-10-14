@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
+import { z } from 'zod';
+
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { Content } from '@app/components/layout';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
@@ -9,16 +12,16 @@ import {
   DescriptionColumn,
   TwoColumnLayout,
 } from '@app/components/layout/layouts/two-column.layout';
-import { readRouteStateString } from '@app/pages/read-route-state';
 import {
   useActiveWalletSecretKey,
   useWalletSecretKey,
 } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { SecretKey } from '@app/ui/components/secret-key/secret-key';
 
+const viewSecretKeyRouteStateSchema = z.object({ fingerprint: z.string().optional() }).nullish();
+
 export function UnlockedViewSecretKey() {
-  const location = useLocation();
-  const fingerprint = readRouteStateString(location.state, 'fingerprint');
+  const fingerprint = useRouteState(viewSecretKeyRouteStateSchema)?.fingerprint;
   const navigate = useNavigate();
   const activeWalletSecretKey = useActiveWalletSecretKey();
   const requestedWalletSecretKey = useWalletSecretKey(fingerprint);

@@ -71,7 +71,7 @@ export function useBitcoinFeesList({
       mapFeeQuoteToListItem(low, BtcFeeType.Low, btcTxTimeMap.hourFee, getFiatFeeValue),
     ];
 
-    return items.filter((item): item is FeesListItem => item !== null);
+    return items.filter(item => item !== null);
   }, [feeRates, btcMarketData]);
 
   return {

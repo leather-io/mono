@@ -1,9 +1,13 @@
+import { z } from 'zod';
+
 import { logger } from '@shared/logger';
 import { InternalMethods, SIGN_OUT_MESSAGE } from '@shared/message-types';
-import { isRecord } from '@shared/utils/is-record';
 
 import { applyPendingUpdate } from '@background/extension-update-monitor';
-import { isMonitoredAddressList, syncAddressMonitor } from '@background/monitors/address-monitor';
+import {
+  monitoredAddressListSchema,
+  syncAddressMonitor,
+} from '@background/monitors/address-monitor';
 
 function validateMessagesAreFromExtension(sender: chrome.runtime.MessageSender) {
   // Only respond to internal messages from our UI, not content scripts in other applications
@@ -21,18 +25,16 @@ async function removeFormState(tabId: number) {
 // Remove any persisted form state when a tab is closed
 chrome.tabs.onRemoved.addListener(tabId => void removeFormState(tabId));
 
-interface InternalMessage {
-  method: string;
-  payload?: unknown;
-}
+const internalMessageSchema = z.looseObject({
+  method: z.string(),
+  payload: z.unknown().optional(),
+});
 
-function isInternalMessage(message: unknown): message is InternalMessage {
-  return isRecord(message) && typeof message.method === 'string';
-}
+const monitoredAddressesPayloadSchema = z.looseObject({ addresses: monitoredAddressListSchema });
 
 function getMonitoredAddressesFromPayload(payload: unknown) {
-  if (!isRecord(payload) || !isMonitoredAddressList(payload.addresses)) return null;
-  return payload.addresses;
+  const parsedPayload = monitoredAddressesPayloadSchema.safeParse(payload);
+  return parsedPayload.success ? parsedPayload.data.addresses : null;
 }
 
 function logInternalMessage(message: { method: string }) {
@@ -50,16 +52,18 @@ export async function internalBackgroundMessageHandler(
     return;
   }
 
-  if (!isInternalMessage(message)) {
+  const parsedMessage = internalMessageSchema.safeParse(message);
+  if (!parsedMessage.success) {
     sendResponse();
     return;
   }
+  const internalMessage = parsedMessage.data;
 
-  logInternalMessage(message);
+  logInternalMessage(internalMessage);
 
-  switch (message.method) {
+  switch (internalMessage.method) {
     case InternalMethods.AddressMonitorUpdated: {
-      const addresses = getMonitoredAddressesFromPayload(message.payload);
+      const addresses = getMonitoredAddressesFromPayload(internalMessage.payload);
       if (addresses) await syncAddressMonitor(addresses);
       break;
     }
@@ -70,7 +74,7 @@ export async function internalBackgroundMessageHandler(
       break;
   }
 
-  const method: string = message.method;
+  const method: string = internalMessage.method;
   if (method === SIGN_OUT_MESSAGE) {
     await syncAddressMonitor([]);
   }

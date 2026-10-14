@@ -32,7 +32,7 @@ export function FungiblePostConditionItem({
 
   const imageCanonicalUri = asset
     ? getSafeImageCanonicalUri(asset.imageCanonicalUri, asset.name)
-    : '';
+    : undefined;
 
   const icon =
     iconString !== 'STX' ? (

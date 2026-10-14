@@ -34,7 +34,7 @@ const customFeeTypeIndex: number = FeeTypes.Custom;
 
 function toDisplayableFee(value: unknown) {
   if (isNumber(value) || isString(value)) return value;
-  return '';
+  return undefined;
 }
 
 function transactionFeesToEstimates(txFees: StacksTransactionFees): StacksFeeEstimate[] {

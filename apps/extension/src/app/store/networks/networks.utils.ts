@@ -1,7 +1,6 @@
 import {
   BITCOIN_API_BASE_URL_MAINNET,
   BITCOIN_API_BASE_URL_TESTNET4,
-  type BitcoinNetwork,
   type NetworkConfiguration,
   bitcoinNetworkToNetworkMode,
   bitcoinNetworks,
@@ -31,8 +30,8 @@ function checkBitcoinNetworkProperties(
   }
 }
 
-function isValidBitcoinNetwork(network: string): network is BitcoinNetwork {
-  return bitcoinNetworks.some(bitcoinNetwork => bitcoinNetwork === network);
+function findValidBitcoinNetwork(network: string) {
+  return bitcoinNetworks.find(bitcoinNetwork => bitcoinNetwork === network);
 }
 
 export function transformNetworkStateToMultichainStucture(
@@ -43,6 +42,7 @@ export function transformNetworkStateToMultichainStucture(
       if (!network) return [];
       const { id, name, chainId, subnetChainId, url, bitcoinNetwork, bitcoinUrl } =
         checkBitcoinNetworkProperties(network);
+      const validBitcoinNetwork = findValidBitcoinNetwork(bitcoinNetwork);
 
       return [
         [
@@ -59,9 +59,9 @@ export function transformNetworkStateToMultichainStucture(
               },
               bitcoin: {
                 blockchain: 'bitcoin',
-                bitcoinNetwork: isValidBitcoinNetwork(bitcoinNetwork) ? bitcoinNetwork : 'testnet4',
-                mode: isValidBitcoinNetwork(bitcoinNetwork)
-                  ? bitcoinNetworkToNetworkMode(bitcoinNetwork)
+                bitcoinNetwork: validBitcoinNetwork ?? 'testnet4',
+                mode: validBitcoinNetwork
+                  ? bitcoinNetworkToNetworkMode(validBitcoinNetwork)
                   : 'testnet',
                 bitcoinUrl: bitcoinUrl ?? BITCOIN_API_BASE_URL_TESTNET4,
               },

@@ -10,7 +10,7 @@ export function DefaultFeesList() {
       <FeeItem fee={fees.slow} />
       <FeeItem fee={fees.standard} />
       <FeeItem fee={fees.fast} />
-      <CustomFeeItem fee={getCustomFee(Number(customFee))} />
+      <CustomFeeItem fee={getCustomFee(Number(customFee ?? 0))} />
     </>
   );
 }

@@ -29,6 +29,8 @@ import {
 import { useStacksCommonSendForm } from '../../family/stacks/use-stacks-common-send-form';
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
+export type StxSendFormValidationSchema = ReturnType<typeof useStxSendForm>['validationSchema'];
+
 export function useStxSendForm() {
   const policy = useCurrentPolicy();
   const isStacksPolicy = policy?.chain === 'stacks';

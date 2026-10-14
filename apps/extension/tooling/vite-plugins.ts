@@ -204,7 +204,7 @@ export function polyfillProcessBeforeViteEnv(processShimSpecifier: string): Plug
 
 const reactRefreshPreambleId = '/@react-refresh-preamble';
 
-function isPlugin(plugin: PluginOption): plugin is Plugin {
+function isPlugin(plugin: PluginOption) {
   return typeof plugin === 'object' && plugin !== null && 'name' in plugin;
 }
 

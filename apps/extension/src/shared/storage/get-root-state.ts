@@ -5,15 +5,13 @@ import { isRecord } from '@shared/utils/is-record';
 
 import type { RootState } from '@app/store';
 
-function isPersistedRootState(value: unknown): value is RootState {
-  return isRecord(value);
-}
-
 export async function getRootState() {
-  const storage = await chrome.storage.local.get<Record<string, unknown>>(['persist:root']);
+  const storage = await chrome.storage.local.get<Partial<Record<string, RootState>>>([
+    'persist:root',
+  ]);
   if (!storage || !storage['persist:root']) return null;
   const persistedRoot = storage['persist:root'];
-  return isPersistedRootState(persistedRoot) ? persistedRoot : null;
+  return isRecord(persistedRoot) ? persistedRoot : null;
 }
 
 interface SendMissingStateErrorToTabArgs {

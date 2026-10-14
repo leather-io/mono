@@ -1,20 +1,21 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { createFetchFn } from '@stacks/common';
 import { ChainId } from '@stacks/network';
-import get from 'lodash.get';
+import { z } from 'zod';
 
 import {
   type BitcoinNetwork,
   bitcoinNetworkToNetworkMode,
   networkConfigurationSchema,
 } from '@leather.io/models';
-import { isBoolean, isDefined, isNumber } from '@leather.io/utils';
+import { isDefined } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 import { isValidUrl } from '@shared/utils/urls';
 
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { removeTrailingSlash } from '@app/common/url-join';
 import { useNetworksActions } from '@app/store/networks/networks.hooks';
 import { useNetworks } from '@app/store/networks/networks.selectors';
@@ -46,31 +47,22 @@ const initialFormValues: AddNetworkFormValues = {
   bitcoinNetwork: 'mainnet',
 };
 
-function useAddNetworkState() {
-  const location = useLocation();
-  const isEditNetworkMode: unknown = get(location.state, 'isEditNetworkMode');
-  const network: unknown = get(location.state, 'network');
+const stacksChainInfoSchema = z.object({
+  network_id: z.number().optional().catch(undefined),
+  parent_network_id: z.number().optional().catch(undefined),
+  l1_subnet_governing_contract: z.string().optional().catch(undefined),
+});
 
-  return {
-    isEditNetworkMode: isBoolean(isEditNetworkMode) ? isEditNetworkMode : undefined,
-    network,
-  };
-}
+const editNetworkRouteStateSchema = z
+  .object({ network: networkConfigurationSchema.optional().catch(undefined) })
+  .nullish();
 
 function useInitialValues() {
-  const { network: networkState } = useAddNetworkState();
+  const network = useRouteState(editNetworkRouteStateSchema)?.network;
 
-  if (!networkState) {
+  if (!network) {
     return initialFormValues;
   }
-
-  const parsedNetwork = networkConfigurationSchema.safeParse(networkState);
-
-  if (!parsedNetwork.success) {
-    return initialFormValues;
-  }
-
-  const network = parsedNetwork.data;
 
   return {
     key: network.id,
@@ -89,7 +81,6 @@ export function useAddNetwork() {
   const networksActions = useNetworksActions();
   const networks = useNetworks();
   const initialValues = useInitialValues();
-  const { isEditNetworkMode } = useAddNetworkState();
   const fetchFn = createFetchFn();
 
   function saveNetwork(network: PersistedNetworkConfiguration) {
@@ -104,7 +95,6 @@ export function useAddNetwork() {
     error,
     initialFormValues: initialValues,
     loading,
-    isEditNetworkMode,
     async onSubmit(values: AddNetworkFormValues) {
       const { name, stacksUrl, bitcoinUrl, key, bitcoinNetwork } = values;
 
@@ -166,13 +156,12 @@ export function useAddNetwork() {
       // For mainnet/testnet the v2/info response `.network_id` refers to the chain ID
       // For subnets the v2/info response `.network_id` refers to the network ID and the chain ID (they are the same for subnets)
       // The `.parent_network_id` refers to the actual peer network ID in both cases
-      const chainIdValue: unknown = get(stacksChainInfo, 'network_id');
-      const parentNetworkIdValue: unknown = get(stacksChainInfo, 'parent_network_id');
-      const subnetGoverningContract: unknown = get(stacksChainInfo, 'l1_subnet_governing_contract');
-      const chainId = isNumber(chainIdValue) ? chainIdValue : undefined;
-      const parentNetworkId = isNumber(parentNetworkIdValue) ? parentNetworkIdValue : undefined;
+      const parsedChainInfo = stacksChainInfoSchema.safeParse(stacksChainInfo);
+      const chainId = parsedChainInfo.data?.network_id;
+      const parentNetworkId = parsedChainInfo.data?.parent_network_id;
+      const subnetGoverningContract = parsedChainInfo.data?.l1_subnet_governing_contract;
 
-      const isSubnet = typeof subnetGoverningContract === 'string';
+      const isSubnet = isDefined(subnetGoverningContract);
       const isFirstLevelSubnet =
         isSubnet &&
         (parentNetworkId === PeerNetworkID.Mainnet || parentNetworkId === PeerNetworkID.Testnet);

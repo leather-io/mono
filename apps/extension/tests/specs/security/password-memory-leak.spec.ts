@@ -1,39 +1,17 @@
 import type { Page } from '@playwright/test';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
+import { z } from 'zod';
 
 import { test } from '../../fixtures/fixtures';
 
-interface HeapSnapshot {
-  snapshot: {
-    meta: {
-      node_fields: string[];
-      node_types: string[][];
-      edge_fields: string[];
-      edge_types: string[][];
-    };
-  };
-  nodes: number[];
-  edges: number[];
-  strings: string[];
-}
+const heapSnapshotSchema = z.object({
+  nodes: z.array(z.number()),
+  edges: z.array(z.number()),
+  strings: z.array(z.string()),
+});
 
-function toError(error: unknown) {
-  return error instanceof Error ? error : new Error(String(error));
-}
-
-function isHeapSnapshot(value: unknown): value is HeapSnapshot {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'strings' in value &&
-    Array.isArray(value.strings) &&
-    'nodes' in value &&
-    Array.isArray(value.nodes) &&
-    'edges' in value &&
-    Array.isArray(value.edges)
-  );
-}
+type HeapSnapshot = z.infer<typeof heapSnapshotSchema>;
 
 async function takeHeapSnapshot(page: Page): Promise<HeapSnapshot> {
   const client = await page.context().newCDPSession(page);
@@ -41,31 +19,22 @@ async function takeHeapSnapshot(page: Page): Promise<HeapSnapshot> {
   await client.send('HeapProfiler.enable');
   await client.send('HeapProfiler.collectGarbage');
 
-  const snapshot = await new Promise<HeapSnapshot>((resolve, reject) => {
-    const chunks: string[] = [];
+  const chunks: string[] = [];
 
-    client.on('HeapProfiler.addHeapSnapshotChunk', (event: { chunk: string }) => {
-      chunks.push(event.chunk);
-    });
-
-    client.send('HeapProfiler.takeHeapSnapshot', { reportProgress: false }).then(
-      () => {
-        try {
-          const snapshotData: unknown = JSON.parse(chunks.join(''));
-          if (!isHeapSnapshot(snapshotData)) throw new Error('Unexpected heap snapshot shape');
-          resolve(snapshotData);
-        } catch (error) {
-          reject(toError(error));
-        }
-      },
-      (error: unknown) => reject(toError(error))
-    );
+  client.on('HeapProfiler.addHeapSnapshotChunk', (event: { chunk: string }) => {
+    chunks.push(event.chunk);
   });
+
+  await client.send('HeapProfiler.takeHeapSnapshot', { reportProgress: false });
+
+  const snapshotData: unknown = JSON.parse(chunks.join(''));
+  const result = heapSnapshotSchema.safeParse(snapshotData);
+  if (!result.success) throw new Error('Unexpected heap snapshot shape');
 
   await client.send('HeapProfiler.disable');
   await client.detach();
 
-  return snapshot;
+  return result.data;
 }
 
 function searchHeapForString(snapshot: HeapSnapshot, searchString: string): boolean {

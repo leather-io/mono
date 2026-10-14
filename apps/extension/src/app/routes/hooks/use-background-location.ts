@@ -1,25 +1,23 @@
-import { useLocation } from 'react-router';
+import { z } from 'zod';
 
-import { isObject } from '@leather.io/utils';
+import { useRouteState } from '@app/common/hooks/use-route-state';
 
-interface BackgroundLocation {
-  pathname: string;
-}
+const backgroundLocationRouteStateSchema = z
+  .object({
+    backgroundLocation: z
+      .object({
+        pathname: z.string(),
+        search: z.string().optional(),
+        hash: z.string().optional(),
+        state: z.unknown(),
+        key: z.string().optional(),
+      })
+      .optional()
+      .catch(undefined),
+  })
+  .nullish()
+  .catch(null);
 
-function isBackgroundLocation(value: unknown): value is BackgroundLocation {
-  if (!isObject(value) || value === null) return false;
-  return 'pathname' in value && typeof value.pathname === 'string';
-}
-
-export function useBackgroundLocation(): BackgroundLocation | undefined {
-  const location = useLocation();
-  const state: unknown = location.state;
-
-  if (!isObject(state) || state === null || !('backgroundLocation' in state)) return undefined;
-
-  const { backgroundLocation } = state;
-
-  if (!isBackgroundLocation(backgroundLocation)) return undefined;
-
-  return backgroundLocation;
+export function useBackgroundLocation() {
+  return useRouteState(backgroundLocationRouteStateSchema)?.backgroundLocation;
 }

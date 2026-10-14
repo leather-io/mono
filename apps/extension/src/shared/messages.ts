@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import {
   type InternalMethods,
   type Message,
@@ -58,16 +60,10 @@ export function addSignOutListener(handler: () => void) {
   });
 }
 
-interface WalletListChangedPayload {
-  removedFingerprint?: string;
-}
-
-function isWalletListChangedPayload(payload: unknown): payload is WalletListChangedPayload {
-  return (
-    isRecord(payload) &&
-    (payload.removedFingerprint === undefined || typeof payload.removedFingerprint === 'string')
-  );
-}
+const walletListChangedPayloadSchema = z.object({
+  removedFingerprint: z.string().optional(),
+});
+type WalletListChangedPayload = z.infer<typeof walletListChangedPayloadSchema>;
 
 export function broadcastWalletListChanged(payload: WalletListChangedPayload) {
   return chrome.runtime.sendMessage({ method: WALLET_LIST_CHANGED_MESSAGE, payload });
@@ -75,8 +71,10 @@ export function broadcastWalletListChanged(payload: WalletListChangedPayload) {
 
 export function addWalletListChangedListener(handler: (payload: WalletListChangedPayload) => void) {
   chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
-    if (isRecord(message) && message.method === WALLET_LIST_CHANGED_MESSAGE)
-      handler(isWalletListChangedPayload(message.payload) ? message.payload : {});
+    if (isRecord(message) && message.method === WALLET_LIST_CHANGED_MESSAGE) {
+      const parsedPayload = walletListChangedPayloadSchema.safeParse(message.payload);
+      handler(parsedPayload.success ? parsedPayload.data : {});
+    }
     sendResponse();
   });
 }

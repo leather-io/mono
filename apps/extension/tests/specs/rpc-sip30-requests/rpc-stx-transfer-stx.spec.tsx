@@ -50,10 +50,10 @@ test.describe('RPC: stx_transferStx', () => {
       await popup.waitForSelector('text="0.0001 STX"');
       await test.expect(popup.getByText('Memo', { exact: true })).toBeVisible();
       await test.expect(popup.getByText(expectedMemo, { exact: true })).toBeVisible();
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB');
 
       await popup.waitForTimeout(500);
@@ -172,17 +172,19 @@ test.describe('RPC: stx_transferStx', () => {
     await mockEmptyStacksBalancesRequest(context);
     await mockEmptyStacksBalancesV2Request(context);
 
+    async function expectInsufficientBalanceAndClose() {
+      const popup = await context.waitForEvent('page');
+      await popup.waitForSelector('text="Available balance insufficient"');
+      await test.expect(popup.locator('text="Approve"')).toHaveCount(0);
+      await popup.close();
+    }
+
     const [result] = await Promise.all([
       initiateSip30RpcTransferStx(page)({
         amount: 100,
         recipient: TEST_ACCOUNT_2_STX_ADDRESS,
       }),
-      (async () => {
-        const popup = await context.waitForEvent('page');
-        await popup.waitForSelector('text="Available balance insufficient"');
-        await test.expect(popup.locator('text="Approve"')).toHaveCount(0);
-        await popup.close();
-      })(),
+      expectInsufficientBalanceAndClose(),
     ]);
 
     delete result.id;

@@ -48,10 +48,10 @@ test.describe('RPC: stx_signTransaction', () => {
       await popup.waitForSelector('text="Account 1"');
       await popup.waitForSelector('text="0.0005 STX"');
 
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB');
 
       await popup.waitForTimeout(500);

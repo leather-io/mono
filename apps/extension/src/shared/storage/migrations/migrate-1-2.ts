@@ -3,7 +3,7 @@ import { makeStxDerivationPath } from '@leather.io/stacks';
 import { assumedZeroFingerprint } from '@shared/utils';
 import { isRecord } from '@shared/utils/is-record';
 
-import { type LegacyRecord, getRecordAtPath, isUnknownArray } from './legacy-state';
+import { type LegacyRecord, asUnknownArray, getRecordAtPath } from './legacy-state';
 
 interface LegacyLedgerKeys {
   ids: string[];
@@ -17,7 +17,7 @@ interface RenamedKeysStore {
 
 function processStacksLedgerKeys(stacksKeys: unknown) {
   const publicKeys = getRecordAtPath(stacksKeys, 'entities', 'default')?.publicKeys;
-  const newStacksKeys = (isUnknownArray(publicKeys) ? publicKeys : []).reduce<LegacyLedgerKeys>(
+  const newStacksKeys = (asUnknownArray(publicKeys) ?? []).reduce<LegacyLedgerKeys>(
     (acc, item, index) => {
       const path = makeStxDerivationPath(index);
       const id = path.replace('m', assumedZeroFingerprint);

@@ -11,22 +11,24 @@ import {
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
-import { isPlainObject } from 'remeda';
+import { z } from 'zod';
 
 import { test } from '../../fixtures/fixtures';
 
-interface ComparableWalletState {
-  softwareKeys: {
-    salt?: string;
-    entities: Record<string, { encryptedSecretKey?: string }>;
-  };
-  wallets: { entities: Record<string, { createdOn?: unknown }> };
-  chains: { stx: Record<string, { highestAccountIndex?: number }> };
-}
+const comparableWalletStateSchema = z.looseObject({
+  softwareKeys: z.looseObject({
+    salt: z.string().optional(),
+    entities: z.record(z.string(), z.looseObject({ encryptedSecretKey: z.string().optional() })),
+  }),
+  wallets: z.looseObject({
+    entities: z.record(z.string(), z.looseObject({ createdOn: z.unknown().optional() })),
+  }),
+  chains: z.looseObject({
+    stx: z.record(z.string(), z.looseObject({ highestAccountIndex: z.number().optional() })),
+  }),
+});
 
-function isComparableWalletState(value: unknown): value is ComparableWalletState {
-  return isPlainObject(value) && 'softwareKeys' in value && 'wallets' in value && 'chains' in value;
-}
+type ComparableWalletState = z.infer<typeof comparableWalletStateSchema>;
 
 test.describe('Onboarding an existing user', () => {
   // Functionality is important for backwards compatibility with older wallet versions
@@ -74,8 +76,12 @@ test.describe('Onboarding an existing user', () => {
     await onboardingPage.signInExistingUser();
     await homePage.page.waitForTimeout(1000);
 
-    const walletState = await onboardingPage.page.evaluate(() => window.debug.getPersistedStore());
-    if (!isComparableWalletState(walletState)) throw new Error('Unexpected persisted wallet state');
+    const persistedStore = await onboardingPage.page.evaluate(() =>
+      window.debug.getPersistedStore()
+    );
+    const parsedWalletState = comparableWalletStateSchema.safeParse(persistedStore);
+    if (!parsedWalletState.success) throw new Error('Unexpected persisted wallet state');
+    const walletState = parsedWalletState.data;
 
     const testWalletState: ComparableWalletState = getTestSoftwareAccountDefaultWalletState();
 

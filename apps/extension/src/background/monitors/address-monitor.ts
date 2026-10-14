@@ -1,27 +1,16 @@
-import { isRecord } from '@shared/utils/is-record';
+import { z } from 'zod';
 
 import { createBitcoinTransactionMonitor } from './address-monitors/bitcoin-transaction-monitor';
 
-export interface MonitoredAddress {
-  chain: 'bitcoin' | 'stacks';
-  accountIndex: number;
-  isCurrent: boolean;
-  address: string;
-}
+const monitoredAddressSchema = z.object({
+  chain: z.enum(['bitcoin', 'stacks']),
+  accountIndex: z.number(),
+  isCurrent: z.boolean(),
+  address: z.string(),
+});
+export type MonitoredAddress = z.infer<typeof monitoredAddressSchema>;
 
-function isMonitoredAddress(value: unknown): value is MonitoredAddress {
-  return (
-    isRecord(value) &&
-    (value.chain === 'bitcoin' || value.chain === 'stacks') &&
-    typeof value.accountIndex === 'number' &&
-    typeof value.isCurrent === 'boolean' &&
-    typeof value.address === 'string'
-  );
-}
-
-export function isMonitoredAddressList(value: unknown): value is MonitoredAddress[] {
-  return Array.isArray(value) && value.every(isMonitoredAddress);
-}
+export const monitoredAddressListSchema = z.array(monitoredAddressSchema);
 
 export interface AddressMonitor {
   syncAddresses(addresses: MonitoredAddress[]): void;
@@ -44,7 +33,8 @@ const ADDRESS_MONITOR_STORE = 'addressMonitorStore';
 async function readMonitoredAddressStore() {
   const result = await chrome.storage.local.get(ADDRESS_MONITOR_STORE);
   const addresses: unknown = result[ADDRESS_MONITOR_STORE];
-  return isMonitoredAddressList(addresses) ? addresses : [];
+  const parsedAddresses = monitoredAddressListSchema.safeParse(addresses);
+  return parsedAddresses.success ? parsedAddresses.data : [];
 }
 
 async function writeMonitoredAddressStore(addresses: MonitoredAddress[]) {

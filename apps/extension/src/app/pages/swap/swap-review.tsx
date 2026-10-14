@@ -130,7 +130,7 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
     minReceive,
     priceImpactPercentage,
   } = selectedQuote;
-  const showPriceImpact = shouldShowPriceImpact(priceImpactPercentage);
+  const visiblePriceImpact = getVisiblePriceImpact(priceImpactPercentage);
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
 
   return (
@@ -187,10 +187,10 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
           />
         )}
 
-        {showPriceImpact && (
+        {visiblePriceImpact && (
           <SwapReviewDetailRow
             label="Price impact"
-            value={<PriceImpactValue value={priceImpactPercentage} />}
+            value={<PriceImpactValue value={visiblePriceImpact} />}
             info={
               <SwapReviewInfoTooltip label="The difference between the market price and the price you'll receive due to your trade size relative to the available liquidity. Larger trades typically have higher price impact." />
             }
@@ -247,11 +247,11 @@ function useSwapReviewStatusGuard(
   }, [liveEstimate.status, isSubmissionActive, exitReview]);
 }
 
-function shouldShowPriceImpact(
-  priceImpactPercentage: BigNumber | null
-): priceImpactPercentage is BigNumber {
-  return (
+function getVisiblePriceImpact(priceImpactPercentage: BigNumber | null) {
+  if (
     isNonNullish(priceImpactPercentage) &&
     priceImpactPercentage.isGreaterThanOrEqualTo(PRICE_IMPACT_WARNING_THRESHOLD)
-  );
+  )
+    return priceImpactPercentage;
+  return null;
 }

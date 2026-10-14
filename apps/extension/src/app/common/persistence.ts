@@ -4,7 +4,7 @@ import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { HttpStatusCode, isAxiosError } from 'axios';
 import { BigNumber } from 'bignumber.js';
 import superjson from 'superjson';
-import { ZodError } from 'zod';
+import { ZodError, z } from 'zod';
 
 import { PERSISTENCE_CACHE_TIME } from '@leather.io/constants';
 
@@ -20,7 +20,7 @@ const retryableHttpStatusCodes: number[] = [
 
 superjson.registerCustom<BigNumber, string>(
   {
-    isApplicable: (v): v is BigNumber => v instanceof BigNumber,
+    isApplicable: v => v instanceof BigNumber,
     serialize: v => v.toString(),
     deserialize: v => new BigNumber(v),
   },
@@ -42,7 +42,9 @@ const chromeStorageLocalPersister = createAsyncStoragePersister({
   deserialize: superjson.parse,
 });
 
-function isZodError(error: Error): error is ZodError {
+const zodIssuesSchema = z.object({ issues: z.array(z.unknown()) });
+
+function isZodError(error: Error) {
   // `instanceof` check doesn't work when ZodError thrown from within a package
   return error instanceof ZodError || error.name === 'ZodError';
 }
@@ -72,7 +74,7 @@ export const queryClient = new QueryClient({
         const zodErrorReport = {
           query: query.queryKey[0],
           hash: query.queryHash,
-          error: JSON.stringify(error.issues),
+          error: JSON.stringify(zodIssuesSchema.safeParse(error).data?.issues),
         };
         logger.error('schema_fail', zodErrorReport);
         // Replace with `formatQueryZodErrors` from `@leather.io/query`

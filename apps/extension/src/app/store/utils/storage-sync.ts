@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import { isDeepEqual, isPlainObject } from 'remeda';
+import { z } from 'zod';
 
 import type { DirtySliceTracker } from '@shared/storage/dirty-slice-tracker';
 import { getPersistVersion } from '@shared/storage/merge-persist-storage';
@@ -33,11 +34,9 @@ function hasRehydrated(store: SyncStore) {
 
 // Storage holds whatever this extension version last persisted; trusting its
 // slice shapes mirrors what redux-persist's own rehydration already does
-function isHydratedSlices(
-  slices: Partial<Record<PersistedSliceKey, unknown>>
-): slices is HydratedSlices {
-  return Object.values(slices).every(isPlainObject);
-}
+const hydratedSlicesSchema = z.custom<HydratedSlices>(
+  slices => isPlainObject(slices) && Object.values(slices).every(isPlainObject)
+);
 
 type InitialSlices = Partial<Record<PersistedSliceKey, unknown>>;
 
@@ -70,8 +69,10 @@ function applyRemoteRoot(
     changedSlices[key] = incoming;
     hasChanges = true;
   }
-  if (!hasChanges || !isHydratedSlices(changedSlices)) return;
-  store.dispatch(hydrateSlicesFromStorage(changedSlices));
+  if (!hasChanges) return;
+  const hydratedSlices = hydratedSlicesSchema.safeParse(changedSlices);
+  if (!hydratedSlices.success) return;
+  store.dispatch(hydrateSlicesFromStorage(hydratedSlices.data));
 }
 
 async function reconcileWithStorage(

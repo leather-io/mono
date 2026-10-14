@@ -89,8 +89,10 @@ export function getTxTitle(tx: StacksTx) {
       return 'block_height' in tx ? `Coinbase ${tx.block_height}` : 'Coinbase';
     case 'poison_microblock':
       return 'Poison Microblock';
+    case 'tenure_change':
+      return 'Tenure Change';
     default:
-      return '';
+      return 'Transaction';
   }
 }
 
@@ -141,8 +143,9 @@ export function getRecipientFromStacksTransaction(transaction: StacksTransaction
     return cvToString(transaction.payload.recipient);
   }
 
-  if (isSip10TransferContactCall(transaction)) {
-    const sip10RecipientArg = transaction.payload.functionArgs?.[2];
+  const sip10Payload = getSip10TransferPayload(transaction);
+  if (sip10Payload) {
+    const sip10RecipientArg = sip10Payload.functionArgs?.[2];
     if (!sip10RecipientArg) return null;
     const [result] = safeCall(() => cvToString(sip10RecipientArg));
     return result;
@@ -179,15 +182,12 @@ export function getSip10TransferAmount(
   return createMoney(amount, symbol.toUpperCase(), decimals);
 }
 
-export function isSip10TransferContactCall(
-  tx: StacksTransactionWire
-): tx is StacksTransactionWire & { payload: ContractCallPayload } {
-  if (!tx.payload || !('functionName' in tx.payload)) return false;
-  const payload = tx.payload;
-  return (
-    payload.functionName.content === 'transfer' &&
-    (payload.functionArgs.length === 3 || payload.functionArgs.length === 4)
-  );
+export function getSip10TransferPayload(tx: StacksTransactionWire) {
+  const { payload } = tx;
+  if (!payload || !('functionName' in payload)) return undefined;
+  if (payload.functionName.content !== 'transfer') return undefined;
+  if (payload.functionArgs.length !== 3 && payload.functionArgs.length !== 4) return undefined;
+  return payload;
 }
 
 export function getSip10MemoDisplayText(payload: ContractCallPayload) {

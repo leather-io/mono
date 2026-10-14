@@ -37,6 +37,11 @@ export function ReceiveTokens({
   onClickVerifyStx,
 }: ReceiveTokensProps) {
   const toast = useToast();
+
+  async function copyAddress(address: string) {
+    await copyToClipboard(address);
+    toast.success('Copied to clipboard!');
+  }
   const { data: swapAssets = [] } = useAlexSwappableAssets(stxAddress);
 
   const receivableAssets = useMemo(
@@ -57,9 +62,7 @@ export function ReceiveTokens({
         icon={<BtcAvatarIcon size="xl" />}
         dataTestId={HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn}
         onCopyAddress={() => {
-          void copyToClipboard(btcAddressNativeSegwit).then(() =>
-            toast.success('Copied to clipboard!')
-          );
+          void copyAddress(btcAddressNativeSegwit);
         }}
         onClickQrCode={onClickQrBtc}
         onClickVerifyAddress={onClickVerifyBtc}
@@ -71,7 +74,7 @@ export function ReceiveTokens({
         icon={<BtcAvatarIcon size="xl" />}
         dataTestId={HomePageSelectors.ReceiveBtcTaprootQrCodeBtn}
         onCopyAddress={() => {
-          void copyToClipboard(btcAddressTaproot).then(() => toast.success('Copied to clipboard!'));
+          void copyAddress(btcAddressTaproot);
         }}
         onClickQrCode={onClickQrBtcTaproot}
         onClickVerifyAddress={onClickVerifyBtcTaproot}
@@ -83,7 +86,7 @@ export function ReceiveTokens({
         icon={<StxAvatarIcon size="xl" />}
         dataTestId={HomePageSelectors.ReceiveStxQrCodeBtn}
         onCopyAddress={() => {
-          void copyToClipboard(stxAddress).then(() => toast.success('Copied to clipboard!'));
+          void copyAddress(stxAddress);
         }}
         onClickQrCode={onClickQrStx}
         onClickVerifyAddress={onClickVerifyStx}
@@ -103,7 +106,7 @@ export function ReceiveTokens({
             )
           }
           onCopyAddress={() => {
-            void copyToClipboard(asset.address).then(() => toast.success('Copied to clipboard!'));
+            void copyAddress(asset.address);
           }}
           title={asset.name}
         />

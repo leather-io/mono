@@ -1,15 +1,19 @@
-import { useLocation } from 'react-router';
+import { z } from 'zod';
 
-function isRouteStateRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
+import { useRouteState } from '@app/common/hooks/use-route-state';
+
+const sendFormRouteStateSchema = z
+  .object({
+    amount: z.union([z.number(), z.string()]).optional(),
+    recipient: z.string().optional(),
+  })
+  .nullish()
+  .catch(null);
 
 export function useSendFormRouteState() {
-  const location = useLocation();
-  const state: unknown = location.state;
+  const state = useRouteState(sendFormRouteStateSchema);
   return {
-    amount: '',
-    recipient: '',
-    ...(isRouteStateRecord(state) ? state : {}),
+    amount: state?.amount ?? '',
+    recipient: state?.recipient ?? '',
   };
 }

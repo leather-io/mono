@@ -1,15 +1,5 @@
 import { sumNumbers } from '@leather.io/utils';
 
-export interface MempoolWsBitcoinTxMessage {
-  'multi-address-transactions': {
-    [address: string]: {
-      mempool: MempoolWsBitcoinTx[];
-      confirmed: MempoolWsBitcoinTx[];
-      removed: MempoolWsBitcoinTx[];
-    };
-  };
-}
-
 /** @knipignore */
 export interface MempoolWsBitcoinTx {
   txid: string;

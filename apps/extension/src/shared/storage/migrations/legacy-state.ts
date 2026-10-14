@@ -2,8 +2,8 @@ import { isRecord } from '@shared/utils/is-record';
 
 export type LegacyRecord = Record<string, unknown>;
 
-export function isUnknownArray(value: unknown): value is unknown[] {
-  return Array.isArray(value);
+export function asUnknownArray(value: unknown): unknown[] | undefined {
+  return Array.isArray(value) ? value : undefined;
 }
 
 export function getRecordAtPath(value: unknown, ...path: string[]): LegacyRecord | undefined {

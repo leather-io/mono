@@ -39,12 +39,13 @@ export interface DescriptorPsbtDetails {
 // no descriptor), so the approval screen can fall back to a raw warning rather
 // than misleading numbers.
 export function useDescriptorPsbtDetails(
-  psbtHex: string,
-  descriptor: string
+  psbtHex: string | null | undefined,
+  descriptor: string | null | undefined
 ): DescriptorPsbtDetails | null {
   const network = useCurrentNetwork();
 
   return useMemo(() => {
+    if (!psbtHex || !descriptor) return null;
     try {
       const bitcoinNetwork = getBtcSignerLibNetworkConfigByMode(network.chain.bitcoin.mode);
       const { scriptPubKey } = compileWshDescriptor(descriptor);

@@ -32,7 +32,10 @@ import { useAccountAddresses } from '@app/services/accounts/use-account-addresse
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import {
+  useCurrentStacksAccount,
+  useCurrentStacksAccountAddress,
+} from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
@@ -77,7 +80,8 @@ export function useSwapDependencies(): SwapDependencies {
   const stacksNetwork = useCurrentStacksNetworkState();
   const network = useCurrentNetwork();
   const signStacksTx = useSignStacksTransaction({ settleOnRejection: true });
-  const { data: nextNonce } = useNextNonce(stacksAccount?.address ?? '');
+  const stxAddress = useCurrentStacksAccountAddress();
+  const { data: nextNonce } = useNextNonce(stxAddress);
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
   const signBitcoinTx = useSignBitcoinTx({ settleOnRejection: true });
   const bitcoinClient = useBitcoinClient();

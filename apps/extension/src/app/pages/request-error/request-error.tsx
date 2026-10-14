@@ -1,23 +1,16 @@
-import { useLocation } from 'react-router';
+import { z } from 'zod';
 
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { GenericError, GenericErrorListItem } from '@app/components/generic-error/generic-error';
-import { readRouteStateString } from '@app/pages/read-route-state';
 
 const helpTextList = [
   <GenericErrorListItem key={1} text="Please report issue to requesting app" />,
 ];
 
-function useRequestErrorState() {
-  const location = useLocation();
-  const state: unknown = location.state;
-  const message = readRouteStateString(state, 'message', '');
-  const title = readRouteStateString(state, 'title', '');
-
-  return { message, title };
-}
+const requestErrorRouteStateSchema = z.object({ message: z.string(), title: z.string() });
 
 export function RequestError() {
-  const { message, title } = useRequestErrorState();
+  const { message, title } = useRouteState(requestErrorRouteStateSchema);
 
   return <GenericError body={message} helpTextList={helpTextList} title={title} />;
 }

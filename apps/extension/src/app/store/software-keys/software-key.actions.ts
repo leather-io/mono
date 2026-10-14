@@ -7,7 +7,7 @@ import {
   type getLeatherApiClient,
 } from '@leather.io/services';
 import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
-import { secondsInMs } from '@leather.io/utils';
+import { isDefined, secondsInMs } from '@leather.io/utils';
 
 import { deriveEncryptionKey } from '@shared/crypto/generate-encryption-key';
 import { decryptMnemonic, encryptMnemonic } from '@shared/crypto/mnemonic-encryption';
@@ -103,7 +103,7 @@ function createAccountActivityChecker({
     const signal = AbortSignal.timeout(accountActivityRequestTimeoutMs);
     const stxAddress = deriveStacksAddress(index);
     const btcAddresses = [deriveNativeSegwitAddress(index), deriveTaprootAddress(index)].filter(
-      (address): address is string => !!address
+      isDefined
     );
 
     const results = await Promise.allSettled([
@@ -154,18 +154,20 @@ function startRecursiveAccountDiscovery({
     void persistor.flush();
   }
 
-  void recurseAccountsForActivity({
-    doesAddressHaveActivityFn,
-    fromAccountIndex,
-    onActivityFound: persistDiscoveredAccountIndex,
-  })
-    .then(recursiveActivityIndex => {
-      const end = performance.now();
-      logger.info('Found account activity at higher index', {
-        recursiveActivityIndex,
-        time: (end - start) / 1000 + ' seconds',
-      });
-    })
+  async function discoverAccounts() {
+    const recursiveActivityIndex = await recurseAccountsForActivity({
+      doesAddressHaveActivityFn,
+      fromAccountIndex,
+      onActivityFound: persistDiscoveredAccountIndex,
+    });
+    const end = performance.now();
+    logger.info('Found account activity at higher index', {
+      recursiveActivityIndex,
+      time: (end - start) / 1000 + ' seconds',
+    });
+  }
+
+  void discoverAccounts()
     .catch((error: unknown) => {
       logger.warn('Account activity lookup failed', { error });
     })

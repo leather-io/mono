@@ -37,7 +37,7 @@ export function PoxPostConditionItem({
     return 'Another address ';
   }
 
-  const title = `${getPrincipalPrefix()} ${getPoxConditionTitle(pc.conditionCode)}`;
+  const title = [getPrincipalPrefix(), getPoxConditionTitle(pc.conditionCode)].join(' ');
   const message = `${getPoxConditionCodeMessage(
     pc.conditionCode,
     isSending

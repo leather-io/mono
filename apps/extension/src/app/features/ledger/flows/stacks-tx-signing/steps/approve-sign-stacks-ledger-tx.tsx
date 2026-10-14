@@ -6,7 +6,7 @@ import { BigNumber } from 'bignumber.js';
 
 import { microStxToStx } from '@leather.io/utils';
 
-import { isSip10TransferContactCall } from '@app/common/transactions/stacks/transaction.utils';
+import { getSip10TransferPayload } from '@app/common/transactions/stacks/transaction.utils';
 import { useLedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { ApproveLedgerOperationLayout } from '@app/features/ledger/generic-steps/approve-ledger-operation/approve-ledger-operation.layout';
 import { useHasApprovedOperation } from '@app/features/ledger/hooks/use-has-approved-transaction';
@@ -76,7 +76,7 @@ export function ApproveSignLedgerStacksTx() {
           details.push(['Arguments', 'None']);
         }
 
-        if (isSip10TransferContactCall(transaction)) {
+        if (getSip10TransferPayload(transaction)) {
           transaction.payload.functionArgs.forEach((cv, index) => {
             details.push([formatSipTenTransferArgument(index), cvToString(cv)]);
           });

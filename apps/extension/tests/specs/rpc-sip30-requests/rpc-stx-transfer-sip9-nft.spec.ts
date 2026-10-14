@@ -26,10 +26,10 @@ test.describe('RPC: stx_transferSip9Nft', () => {
       await popup.waitForSelector('text="SPS8…WSFE"');
       await popup.waitForSelector('text="You will transfer LIV or the transaction will abort."');
 
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SP2XMGYYTA1KRBKBYJHTW8CFWB2QYZKZE4BMHG3PJ');
 
       await popup.waitForTimeout(500);

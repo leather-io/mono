@@ -7,17 +7,17 @@ import { InfoCircleIcon } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote, convertAmountToBaseUnit, sumMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import {
   getNonceFromStacksTransaction,
   getRecipientFromStacksTransaction,
   getSip10MemoDisplayText,
   getSip10TransferAmount,
+  getSip10TransferPayload,
   getStacksTransactionFee,
   getTokenTransferAmount,
   getTokenTransferMemoDisplayText,
   isNonSequentialMultisigTransaction,
-  isSip10TransferContactCall,
 } from '@app/common/transactions/stacks/transaction.utils';
 import { useStacksBroadcastTransaction } from '@app/common/transactions/stacks/use-stacks-broadcast-transaction';
 import { Content, Page } from '@app/components/layout';
@@ -26,19 +26,16 @@ import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import type { ProposalSentSummaryState } from '../../../sent-summary/proposal-sent-summary';
+import { stacksConfirmationRouteStateSchema } from '../../hooks/use-send-form-navigate';
 import { SendFormConfirmationLayout } from '../send-form-confirmation.layout';
 import { useProposeStacksSendTransaction } from './use-propose-stacks-send-transaction';
 
-function useStacksSendFormConfirmationState() {
-  return {
-    tx: useLocationStateWithCache<string>('tx') ?? '',
-    decimals: useLocationStateWithCache<number>('decimals'),
-    showFeeChangeWarning: useLocationStateWithCache<boolean>('showFeeChangeWarning') ?? false,
-  };
-}
-
 export function StacksSendFormConfirmation() {
-  const { tx: txHex, decimals, showFeeChangeWarning } = useStacksSendFormConfirmationState();
+  const {
+    tx: txHex,
+    decimals,
+    showFeeChangeWarning = false,
+  } = useRouteState(stacksConfirmationRouteStateSchema);
   const tokenMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
 
   const { symbol = 'STX' } = useParams();
@@ -50,6 +47,7 @@ export function StacksSendFormConfirmation() {
   const { proposeSendTransaction, isProposing } = useProposeStacksSendTransaction();
 
   const tx = deserializeTransaction(txHex);
+  const sip10Payload = getSip10TransferPayload(tx);
   const isMultisigProposal = isNonSequentialMultisigTransaction(tx);
 
   const feeWarningTooltip = showFeeChangeWarning ? (
@@ -81,12 +79,12 @@ export function StacksSendFormConfirmation() {
         memoDisplayText: getTokenTransferMemoDisplayText(tx.payload) || 'No memo',
       };
     }
-    if (isSip10TransferContactCall(tx)) {
-      const amount = getSip10TransferAmount(tx.payload, symbol, decimals);
+    if (sip10Payload) {
+      const amount = getSip10TransferAmount(sip10Payload, symbol, decimals);
       return {
         ...base,
         txValue: convertAmountToBaseUnit(amount).toString(),
-        memoDisplayText: getSip10MemoDisplayText(tx.payload) ?? 'No memo',
+        memoDisplayText: getSip10MemoDisplayText(sip10Payload) ?? 'No memo',
       };
     }
     return null;
@@ -134,15 +132,15 @@ export function StacksSendFormConfirmation() {
               {...sharedProps}
             />
           )}
-          {isSip10TransferContactCall(tx) && (
+          {sip10Payload && (
             <SendFormConfirmationLayout
-              txValue={getSip10TransferAmount(tx.payload, symbol, decimals)}
+              txValue={getSip10TransferAmount(sip10Payload, symbol, decimals)}
               totalSpend={[
-                formatCurrency(getSip10TransferAmount(tx.payload, symbol, decimals)),
+                formatCurrency(getSip10TransferAmount(sip10Payload, symbol, decimals)),
                 formatCurrency(sharedProps.fee),
               ].join(' + ')}
-              sendingValue={formatCurrency(getSip10TransferAmount(tx.payload, symbol, decimals))}
-              memoDisplayText={getSip10MemoDisplayText(tx.payload) ?? 'No memo'}
+              sendingValue={formatCurrency(getSip10TransferAmount(sip10Payload, symbol, decimals))}
+              memoDisplayText={getSip10MemoDisplayText(sip10Payload) ?? 'No memo'}
               {...sharedProps}
             />
           )}

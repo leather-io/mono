@@ -18,11 +18,11 @@ export function cvToDisplay(cv: ClarityValue): string {
   return cvToString(cv).replaceAll('"', '');
 }
 
-export function chainIdToDisplay(chainIdCv: ClarityValue): string {
-  if (chainIdCv.type !== ClarityType.UInt) return '';
+export function chainIdToDisplay(chainIdCv: ClarityValue): string | undefined {
+  if (chainIdCv.type !== ClarityType.UInt) return undefined;
   const chainIdString = cvToString(chainIdCv);
   const chainId = parseInt(chainIdString.replace('u', ''), 10);
-  if (!Object.values(ChainId).includes(chainId)) return '';
+  if (!Object.values(ChainId).includes(chainId)) return undefined;
   return capitalize(stacksChainIdToCoreNetworkMode(chainId));
 }
 

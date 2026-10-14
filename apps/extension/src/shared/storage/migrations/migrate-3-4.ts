@@ -1,4 +1,5 @@
 import { produce } from 'immer';
+import { z } from 'zod';
 
 import { countWalletAccounts, isValidAccountIndex, makeAccountIdentifer } from '@leather.io/crypto';
 import { isNumber, isString } from '@leather.io/utils';
@@ -6,19 +7,18 @@ import { isNumber, isString } from '@leather.io/utils';
 import { logger } from '@shared/logger';
 import { isRecord } from '@shared/utils/is-record';
 
-import { type LegacyRecord, getRecordAtPath, isUnknownArray } from './legacy-state';
+import { type LegacyRecord, asUnknownArray, getRecordAtPath } from './legacy-state';
 
-interface LegacyKeychain {
-  descriptor: string;
-  chain: 'bitcoin' | 'stacks';
-}
+const legacyKeychainSchema = z.object({
+  descriptor: z.string(),
+  chain: z.enum(['bitcoin', 'stacks']),
+});
 
-function isLegacyKeychain(keychain: unknown): keychain is LegacyKeychain {
-  return (
-    isRecord(keychain) &&
-    typeof keychain.descriptor === 'string' &&
-    (keychain.chain === 'bitcoin' || keychain.chain === 'stacks')
-  );
+function toLegacyKeychains(keychains: unknown[]) {
+  return keychains.flatMap(keychain => {
+    const parsedKeychain = legacyKeychainSchema.safeParse(keychain);
+    return parsedKeychain.success ? [parsedKeychain.data] : [];
+  });
 }
 
 function toAccountIndex(value: unknown) {
@@ -26,7 +26,7 @@ function toAccountIndex(value: unknown) {
 }
 
 function getStringIds(ids: unknown) {
-  return isUnknownArray(ids) ? ids.filter(isString) : [];
+  return asUnknownArray(ids)?.filter(isString) ?? [];
 }
 
 function repairSoftwareHighestAccountIndex(draftState: LegacyRecord, fingerprint: string): void {
@@ -80,7 +80,7 @@ export function migrateToAccountsSlice(state: unknown) {
 
     const keychainEntities = getRecordAtPath(draftState, 'keychains', 'entities') ?? {};
     const keychainIds = getStringIds(getRecordAtPath(draftState, 'keychains')?.ids);
-    const keychains = keychainIds.map(id => keychainEntities[id]).filter(isLegacyKeychain);
+    const keychains = toLegacyKeychains(keychainIds.map(id => keychainEntities[id]));
 
     const walletEntities = getRecordAtPath(draftState, 'wallets', 'entities') ?? {};
     const walletIds = getStringIds(getRecordAtPath(draftState, 'wallets')?.ids);

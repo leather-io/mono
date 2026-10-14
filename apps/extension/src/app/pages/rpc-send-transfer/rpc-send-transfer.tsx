@@ -59,7 +59,7 @@ export function RpcSendTransfer() {
 
   const totalFiatValue = useMemo(() => {
     const fee = selectedFee?.txFee;
-    if (!fee) return '';
+    if (!fee) return undefined;
     return formatCurrency(baseCurrencyAmountInQuote(sumMoney([amount, fee]), marketData));
   }, [amount, marketData, selectedFee?.txFee]);
 

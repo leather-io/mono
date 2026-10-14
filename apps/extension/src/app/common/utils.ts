@@ -21,13 +21,9 @@ export function getUrlHostname(url: string) {
   return new URL(url).hostname;
 }
 
-function getUrlPort(url: string) {
-  return new URL(url).port;
-}
-
-export function addPortSuffix(url: string) {
-  const port = getUrlPort(url);
-  return port ? `:${port}` : '';
+export function getUrlHost(url: string) {
+  if (!url.startsWith('http')) return url;
+  return new URL(url).host;
 }
 
 export function doesBrowserSupportWebHidApi() {

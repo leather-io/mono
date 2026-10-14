@@ -12,6 +12,105 @@ declare global {
 
 const TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS = 'tb1qr8me8t9gu9g6fu926ry5v44yp0wyljrespjtnz';
 
+async function sendTransfer() {
+  try {
+    await window.btc?.request('sendTransfer', {
+      address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
+      amount: '10000',
+      network: 'testnet4',
+    });
+    // Transfer successful
+  } catch {
+    // Transfer failed
+  }
+}
+
+async function sendTransferToMultipleAddresses() {
+  try {
+    await window.LeatherProvider?.request('sendTransfer', {
+      recipients: [
+        {
+          address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
+          amount: '800',
+        },
+        {
+          address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
+          amount: '900',
+        },
+      ],
+      network: 'testnet4',
+    });
+    // Transfer successful
+  } catch {
+    // Transfer failed
+  }
+}
+
+async function sendNativeSegwitTransferToMultipleAddresses() {
+  try {
+    await window.LeatherProvider?.request('sendTransfer', {
+      recipients: [
+        {
+          address: 'bc1qps90ws94pvk548y9jg03gn5lwjqnyud4lg6y56',
+          amount: '800',
+        },
+        {
+          address: 'bc1qyrtw5v0rkmytg0gu34f06fxpyfk24x7jevtvx3',
+          amount: '10000',
+        },
+      ],
+      network: 'mainnet',
+    });
+    // Transfer successful
+  } catch {
+    // Transfer failed
+  }
+}
+
+async function sendTaprootTransferToMultipleAddresses() {
+  try {
+    await window.LeatherProvider?.request('sendTransfer', {
+      recipients: [
+        {
+          address: 'bc1p8nyc4sl8agqfjs2rq4yer6wnhd89naw05s0ha8hpmg8j36ht6yvswqyaxm',
+          amount: '800',
+        },
+        {
+          address: 'bc1p8nyc4sl8agqfjs2rq4yer6wnhd89naw05s0ha8hpmg8j36ht6yvswqyaxm',
+          amount: '10000',
+        },
+      ],
+      network: 'mainnet',
+    });
+    // Transfer successful
+  } catch {
+    // Transfer failed
+  }
+}
+
+async function sendTransferWithoutNetwork() {
+  try {
+    const paramsWithoutNetwork = {
+      recipients: [
+        {
+          address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
+          amount: '10000',
+        },
+        {
+          address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
+          amount: '10000',
+        },
+      ],
+      network: '',
+    };
+    Reflect.deleteProperty(paramsWithoutNetwork, 'network');
+    await window.LeatherProvider?.request('sendTransfer', paramsWithoutNetwork);
+    // Transfer successful
+  } catch {
+    // Transfer failed
+  }
+}
+
 export function Bitcoin() {
   return (
     <div
@@ -33,129 +132,19 @@ export function Bitcoin() {
           width: '100%',
         }}
       >
-        <styled.button
-          mt={3}
-          onClick={() => {
-            window.btc
-              ?.request('sendTransfer', {
-                address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
-                amount: '10000',
-                network: 'testnet4',
-              })
-              .then(() => {
-                // Transfer successful
-              })
-              .catch(() => {
-                // Transfer failed
-              });
-          }}
-        >
+        <styled.button mt={3} onClick={() => void sendTransfer()}>
           Send transfer
         </styled.button>
-        <styled.button
-          mt={3}
-          onClick={() => {
-            window.LeatherProvider?.request('sendTransfer', {
-              recipients: [
-                {
-                  address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
-                  amount: '800',
-                },
-                {
-                  address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
-                  amount: '900',
-                },
-              ],
-              network: 'testnet4',
-            })
-              .then(() => {
-                // Transfer successful
-              })
-              .catch(() => {
-                // Transfer failed
-              });
-          }}
-        >
+        <styled.button mt={3} onClick={() => void sendTransferToMultipleAddresses()}>
           Send transfer to multiple addresses
         </styled.button>
-        <styled.button
-          mt={3}
-          onClick={() => {
-            window.LeatherProvider?.request('sendTransfer', {
-              recipients: [
-                {
-                  address: 'bc1qps90ws94pvk548y9jg03gn5lwjqnyud4lg6y56',
-                  amount: '800',
-                },
-                {
-                  address: 'bc1qyrtw5v0rkmytg0gu34f06fxpyfk24x7jevtvx3',
-                  amount: '10000',
-                },
-              ],
-              network: 'mainnet',
-            })
-              .then(() => {
-                // Transfer successful
-              })
-              .catch(() => {
-                // Transfer failed
-              });
-          }}
-        >
+        <styled.button mt={3} onClick={() => void sendNativeSegwitTransferToMultipleAddresses()}>
           Send native segwit transfer to multiple addresses
         </styled.button>
-        <styled.button
-          mt={3}
-          onClick={() => {
-            window.LeatherProvider?.request('sendTransfer', {
-              recipients: [
-                {
-                  address: 'bc1p8nyc4sl8agqfjs2rq4yer6wnhd89naw05s0ha8hpmg8j36ht6yvswqyaxm',
-                  amount: '800',
-                },
-                {
-                  address: 'bc1p8nyc4sl8agqfjs2rq4yer6wnhd89naw05s0ha8hpmg8j36ht6yvswqyaxm',
-                  amount: '10000',
-                },
-              ],
-              network: 'mainnet',
-            })
-              .then(() => {
-                // Transfer successful
-              })
-              .catch(() => {
-                // Transfer failed
-              });
-          }}
-        >
+        <styled.button mt={3} onClick={() => void sendTaprootTransferToMultipleAddresses()}>
           Send taproot transfer to multiple addresses
         </styled.button>
-        <styled.button
-          mt={3}
-          onClick={() => {
-            const paramsWithoutNetwork = {
-              recipients: [
-                {
-                  address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
-                  amount: '10000',
-                },
-                {
-                  address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
-                  amount: '10000',
-                },
-              ],
-              network: '',
-            };
-            Reflect.deleteProperty(paramsWithoutNetwork, 'network');
-            window.LeatherProvider?.request('sendTransfer', paramsWithoutNetwork)
-              .then(() => {
-                // Transfer successful
-              })
-              .catch(() => {
-                // Transfer failed
-              });
-          }}
-        >
+        <styled.button mt={3} onClick={() => void sendTransferWithoutNetwork()}>
           Send transfer validate error
         </styled.button>
       </div>

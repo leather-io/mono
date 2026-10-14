@@ -3,10 +3,8 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { type StacksTransactionWire } from '@stacks/transactions';
 import { AxiosError } from 'axios';
+import { z } from 'zod';
 
-import type { OwnedUtxo } from '@leather.io/models';
-
-import { type BitcoinSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
 interface ConfirmationRouteStacksSip10Args {
@@ -15,22 +13,64 @@ interface ConfirmationRouteStacksSip10Args {
   tx: StacksTransactionWire;
 }
 
-interface ConfirmationRouteBtcArgs {
-  tx: string;
-  recipient: string;
-  fee: number;
-  feeRowValue: string;
-  time: string;
-}
+const ownedUtxoSchema = z.object({
+  txid: z.string(),
+  vout: z.number(),
+  height: z.number().optional(),
+  value: z.number(),
+  address: z.string(),
+  path: z.string(),
+  keyOrigin: z.string(),
+});
 
-interface ConfirmationRouteBtcProposalArgs {
-  psbt: string;
-  recipient: string;
-  fee: number;
-  feeRowValue: string;
-  time: string;
-  amount: string;
-}
+export const btcChooseFeeRouteStateSchema = z.object({
+  isSendingMax: z.boolean(),
+  utxos: z.array(ownedUtxoSchema),
+  values: z.object({ amount: z.union([z.number(), z.string()]), recipient: z.string() }),
+});
+
+type BtcChooseFeeRouteState = z.infer<typeof btcChooseFeeRouteStateSchema>;
+
+const btcBroadcastConfirmationRouteStateSchema = z.object({
+  mode: z.literal('broadcast'),
+  tx: z.string(),
+  recipient: z.string(),
+  fee: z.number(),
+  feeRowValue: z.string(),
+  time: z.string(),
+});
+
+const btcProposalConfirmationRouteStateSchema = z.object({
+  mode: z.literal('propose'),
+  psbt: z.string(),
+  recipient: z.string(),
+  fee: z.number(),
+  feeRowValue: z.string(),
+  time: z.string(),
+  amount: z.string(),
+});
+
+export const btcConfirmationRouteStateSchema = z.discriminatedUnion('mode', [
+  btcBroadcastConfirmationRouteStateSchema,
+  btcProposalConfirmationRouteStateSchema,
+]);
+
+export type BtcBroadcastConfirmationRouteState = z.infer<
+  typeof btcBroadcastConfirmationRouteStateSchema
+>;
+
+export type BtcProposalConfirmationRouteState = z.infer<
+  typeof btcProposalConfirmationRouteStateSchema
+>;
+
+export const stacksConfirmationRouteStateSchema = z.object({
+  tx: z.string(),
+  decimals: z.number().optional(),
+  token: z.string().optional(),
+  showFeeChangeWarning: z.boolean().optional(),
+});
+
+type StacksConfirmationRouteState = z.infer<typeof stacksConfirmationRouteStateSchema>;
 
 export function useSendFormNavigate() {
   const navigate = useNavigate();
@@ -40,37 +80,25 @@ export function useSendFormNavigate() {
     () => ({
       toChooseTransactionFee(
         isSendingMax: boolean,
-        utxos: OwnedUtxo[],
-        values: Pick<BitcoinSendFormValues, 'amount' | 'recipient'>
+        utxos: BtcChooseFeeRouteState['utxos'],
+        values: BtcChooseFeeRouteState['values']
       ) {
         return navigate(RouteUrls.SendBtcChooseFee, {
           state: {
             isSendingMax,
             utxos,
             values,
-          },
+          } satisfies BtcChooseFeeRouteState,
         });
       },
-      toConfirmAndSignBtcTransaction({
-        tx,
-        recipient,
-        fee,
-        feeRowValue,
-        time,
-      }: ConfirmationRouteBtcArgs) {
+      toConfirmAndSignBtcTransaction(args: Omit<BtcBroadcastConfirmationRouteState, 'mode'>) {
         return navigate(RouteUrls.SendBtcConfirmation, {
-          state: {
-            tx,
-            recipient,
-            fee,
-            feeRowValue,
-            time,
-          },
+          state: { ...args, mode: 'broadcast' } satisfies BtcBroadcastConfirmationRouteState,
         });
       },
-      toConfirmBtcProposal(args: ConfirmationRouteBtcProposalArgs) {
+      toConfirmBtcProposal(args: Omit<BtcProposalConfirmationRouteState, 'mode'>) {
         return navigate(RouteUrls.SendBtcConfirmation, {
-          state: args,
+          state: { ...args, mode: 'propose' } satisfies BtcProposalConfirmationRouteState,
         });
       },
       toConfirmAndSignStxTransaction(tx: StacksTransactionWire, showFeeChangeWarning: boolean) {
@@ -78,7 +106,7 @@ export function useSendFormNavigate() {
           state: {
             tx: tx.serialize(),
             showFeeChangeWarning,
-          },
+          } satisfies StacksConfirmationRouteState,
         });
       },
       toConfirmAndSignStacksSip10Transaction({
@@ -91,7 +119,7 @@ export function useSendFormNavigate() {
             decimals,
             token: name,
             tx: tx.serialize(),
-          },
+          } satisfies StacksConfirmationRouteState,
         });
       },
       toErrorPage(error: unknown, options?: { proposeMode?: boolean }) {

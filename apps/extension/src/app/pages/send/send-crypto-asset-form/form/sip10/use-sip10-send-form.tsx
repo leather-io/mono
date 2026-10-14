@@ -25,6 +25,8 @@ interface UseSip10SendFormArgs {
   balance: CryptoAssetBalance;
   info: Sip10Asset;
 }
+export type Sip10SendFormValidationSchema = ReturnType<typeof useSip10SendForm>['validationSchema'];
+
 export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
   const generateTx = useGenerateFtTokenTransferUnsignedTx(info);
   const policy = useCurrentPolicy();

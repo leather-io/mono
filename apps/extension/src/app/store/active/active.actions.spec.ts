@@ -55,7 +55,9 @@ vi.mock('@shared/messages', () => ({
 
 type ThunkFn = (dispatch: unknown, getState: unknown, extraArgument: unknown) => unknown;
 
-function isThunk(action: unknown): action is ThunkFn {
+type DispatchedAction = ThunkFn | { type: string };
+
+function isThunk(action: DispatchedAction) {
   return typeof action === 'function';
 }
 
@@ -151,7 +153,7 @@ function runRemoveThunk(state: object = { active: { account: null } }) {
   const dispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
-  dispatch.mockImplementation((action: unknown) =>
+  dispatch.mockImplementation((action: DispatchedAction) =>
     isThunk(action) ? action(dispatch, getState, undefined) : action
   );
   const promise = removeWalletAndUpdateActive(fingerprint)(dispatch, getState, undefined);
@@ -228,7 +230,7 @@ function runApplyRemoteRemovalThunk(state: object = { active: { account: null } 
   const dispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
-  dispatch.mockImplementation((action: unknown) =>
+  dispatch.mockImplementation((action: DispatchedAction) =>
     isThunk(action) ? action(dispatch, getState, undefined) : action
   );
   void applyRemoteWalletRemoval(fingerprint)(dispatch, getState, undefined);

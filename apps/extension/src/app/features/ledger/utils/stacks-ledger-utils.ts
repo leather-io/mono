@@ -16,6 +16,7 @@ import StacksApp, {
   type ResponseSign,
 } from '@zondax/ledger-stacks';
 import { compare } from 'compare-versions';
+import { z } from 'zod';
 
 import { whenStacksChainId } from '@leather.io/stacks';
 
@@ -69,18 +70,18 @@ export function isStxAddressResponseSuccess(response: ResponseAddress) {
   return hasLedgerReturnCode(response, LedgerError.NoErrors);
 }
 
-function isLedgerSignResponse(response: unknown): response is ResponseSign {
-  return (
+const ledgerSignResponseSchema = z.custom<ResponseSign>(
+  response =>
     typeof response === 'object' &&
     response !== null &&
     'returnCode' in response &&
     'errorMessage' in response
-  );
-}
+);
 
 function toLedgerSignResponse(response: unknown): ResponseSign {
-  if (!isLedgerSignResponse(response)) throw new Error('Unexpected Ledger Stacks sign response');
-  return response;
+  const parsedResponse = ledgerSignResponseSchema.safeParse(response);
+  if (!parsedResponse.success) throw new Error('Unexpected Ledger Stacks sign response');
+  return parsedResponse.data;
 }
 
 export interface StacksAppKeysResponseItem {

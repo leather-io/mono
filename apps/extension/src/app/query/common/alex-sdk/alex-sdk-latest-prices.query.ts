@@ -6,8 +6,7 @@ import { alex } from '@leather.io/query';
 export function useAlexSdkLatestPricesQuery(): UseQueryResult<
   Partial<{
     [currency in Currency]: number;
-  }>,
-  Error
+  }>
 > {
   return useQuery({
     queryKey: ['alex-sdk-latest-prices'],

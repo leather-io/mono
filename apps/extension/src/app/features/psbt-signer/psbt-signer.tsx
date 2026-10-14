@@ -92,7 +92,7 @@ export function PsbtSigner(props: PsbtSignerProps) {
     outputs: psbtTxOutputs,
   });
 
-  const descriptorDetails = useDescriptorPsbtDetails(psbtHex, descriptor ?? '');
+  const descriptorDetails = useDescriptorPsbtDetails(psbtHex, descriptor);
 
   useBreakOnNonCompliantEntity(
     'psbt_signer',

@@ -21,7 +21,8 @@ function usePullRequestDetailsQuery() {
     enabled: isDefined(PR_NUMBER) && isDefined(COMMIT_SHA),
     queryKey: ['pull-request-details', PR_NUMBER],
     async queryFn() {
-      return getPullRequestDetails(PR_NUMBER ?? '');
+      if (!PR_NUMBER) throw new Error('Missing PR number');
+      return getPullRequestDetails(PR_NUMBER);
     },
   });
 }

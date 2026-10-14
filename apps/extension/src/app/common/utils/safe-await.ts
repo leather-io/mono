@@ -11,7 +11,7 @@ const nativeExceptions = [
   URIError,
 ].filter(except => typeof except === 'function');
 
-function throwNative(error: Error) {
+function throwNative(error: unknown) {
   for (const Exception of nativeExceptions) {
     if (error instanceof Exception) throw error;
   }
@@ -19,20 +19,19 @@ function throwNative(error: Error) {
 
 // TODO: Migrate to `@leather.io/utils`
 export async function safeAwait<T>(promise: Promise<T>, finallyFn?: () => void) {
-  return promise
-    .then(data => {
-      if (isError(data)) {
-        throwNative(data);
-        const errorResult: readonly [Error] = [data];
-        return errorResult;
-      }
-      return [undefined, data] as const;
-    })
-    .catch((error: Error) => {
-      throwNative(error);
-      return [error] as const;
-    })
-    .finally(() => {
-      if (finallyFn) finallyFn();
-    });
+  try {
+    const data = await promise;
+    if (isError(data)) {
+      throwNative(data);
+      const errorResult: readonly [Error] = [data];
+      return errorResult;
+    }
+    return [undefined, data] as const;
+  } catch (error) {
+    throwNative(error);
+    const errorResult: readonly [Error] = [isError(error) ? error : new Error(String(error))];
+    return errorResult;
+  } finally {
+    if (finallyFn) finallyFn();
+  }
 }

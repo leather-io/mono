@@ -83,5 +83,5 @@ export function isFtNameLikeStx(name: string) {
 export function getSafeImageCanonicalUri(imageCanonicalUri: string, name: string) {
   return imageCanonicalUri && isValidUrl(imageCanonicalUri) && !isFtNameLikeStx(name)
     ? imageCanonicalUri
-    : '';
+    : undefined;
 }

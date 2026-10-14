@@ -35,12 +35,22 @@ export function AdvancedMenuItems() {
       : `Delete ${logSizeInKiloBytes.toPrecision(2)}kB of diagnostic logs`;
   }, [logSizeInBytes]);
 
+  async function copyDiagnostics() {
+    await copyLogsToClipboard();
+    toast.success('Copied to clipboard');
+  }
+
+  async function clearDiagnostics() {
+    await clearBrowserStorageLogs();
+    toast.success('Diagnostic logs cleared');
+  }
+
   return (
     <Box width="100%">
       <DropdownMenu.Item
         style={{ display: 'block' }}
         onClick={() => {
-          void copyLogsToClipboard().then(() => toast.success('Copied to clipboard'));
+          void copyDiagnostics();
         }}
       >
         <styled.p>Copy diagnostics to clipboard</styled.p>
@@ -51,7 +61,7 @@ export function AdvancedMenuItems() {
       <DropdownMenu.Item
         style={{ display: 'block' }}
         onClick={() => {
-          void clearBrowserStorageLogs().then(() => toast.success('Diagnostic logs cleared'));
+          void clearDiagnostics();
         }}
       >
         <styled.p>Clear diagnostic information</styled.p>

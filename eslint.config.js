@@ -210,10 +210,68 @@ export default defineConfig([
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {
-    name: 'extension-unbound-method',
+    name: 'extension-rules',
     files: ['apps/extension/**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/unbound-method': 'off',
+      '@typescript-eslint/no-unnecessary-type-arguments': 'error',
+      '@typescript-eslint/no-unnecessary-type-parameters': 'error',
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'lodash.get',
+              message: 'Dotted-path reads erase types. Parse the value with a schema instead.',
+            },
+            {
+              name: 'lodash/get',
+              message: 'Dotted-path reads erase types. Parse the value with a schema instead.',
+            },
+          ],
+        },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        noEnumSyntax,
+        {
+          selector: "CallExpression[callee.property.name='then']",
+          message: 'Use async/await instead of .then().',
+        },
+        {
+          selector: 'CallExpression[callee.type=/^(ArrowFunctionExpression|FunctionExpression)$/]',
+          message:
+            'Do not use an IIFE. Declare a named function and call it, or compute the value with a function.',
+        },
+        {
+          selector:
+            ':matches(FunctionDeclaration, FunctionExpression, ArrowFunctionExpression)[returnType.typeAnnotation.type="TSTypePredicate"][returnType.typeAnnotation.asserts=false]',
+          message:
+            'Do not declare an explicit type predicate. Let TypeScript infer it, or validate with a schema.',
+        },
+        {
+          selector: 'ImportDeclaration[source.value="yup"] ImportSpecifier[imported.name=/^Any/]',
+          message:
+            'yup Any* aliases are any in disguise. Type the schema as ObjectSchema<YourFormValues>.',
+        },
+        {
+          selector:
+            ':matches(ReturnStatement, ArrowFunctionExpression) > Literal[value=""], ReturnStatement > ConditionalExpression > Literal[value=""]',
+          message:
+            'Do not return an empty string as a sentinel. Return undefined or null and let the caller decide.',
+        },
+        {
+          selector:
+            'MemberExpression[object.name="location"][property.name="state"], VariableDeclarator[init.callee.name="useLocation"] > ObjectPattern > Property[key.name="state"]',
+          message: 'location.state is any. Read route state through useRouteState(schema).',
+        },
+        {
+          selector:
+            ':matches(CallExpression, NewExpression) > LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="Literal"][right.value=""]',
+          message:
+            "Do not pass `x ?? ''` as an argument. Narrow the value first or let the callee accept undefined.",
+        },
+      ],
     },
   },
   {

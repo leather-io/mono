@@ -40,7 +40,10 @@ import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
-import { useCurrentStacksAccount } from '../accounts/blockchain/stacks/stacks-account.hooks';
+import {
+  useCurrentStacksAccount,
+  useCurrentStacksAccountAddress,
+} from '../accounts/blockchain/stacks/stacks-account.hooks';
 
 function createPrincipalCV(principal: string) {
   const principalType = inferPrincipalTypeFromAddress(principal);
@@ -57,7 +60,8 @@ function createPrincipalCV(principal: string) {
 
 export function useGenerateStxTokenTransferUnsignedTx() {
   const account = useCurrentStacksAccount();
-  const { data: nextNonce } = useNextNonce(account?.address ?? '');
+  const stxAddress = useCurrentStacksAccountAddress();
+  const { data: nextNonce } = useNextNonce(stxAddress);
   const network = useCurrentStacksNetworkState();
   const policy = useCurrentPolicy();
 
@@ -108,7 +112,8 @@ export function useGenerateStxTokenTransferUnsignedTx() {
 export function useStxTokenTransferUnsignedTxState(values?: StacksSendFormValues) {
   const generateTx = useGenerateStxTokenTransferUnsignedTx();
   const account = useCurrentStacksAccount();
-  const { data: nextNonce } = useNextNonce(account?.address ?? '');
+  const stxAddress = useCurrentStacksAccountAddress();
+  const { data: nextNonce } = useNextNonce(stxAddress);
   const network = useCurrentStacksNetworkState();
   const policy = useCurrentPolicy();
 
@@ -122,7 +127,8 @@ export function useStxTokenTransferUnsignedTxState(values?: StacksSendFormValues
 
 export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
   const account = useCurrentStacksAccount();
-  const { data: nextNonce } = useNextNonce(account?.address ?? '');
+  const stxAddress = useCurrentStacksAccountAddress();
+  const { data: nextNonce } = useNextNonce(stxAddress);
   const network = useCurrentStacksNetworkState();
   const policy = useCurrentPolicy();
   const { assetId } = info;
@@ -162,8 +168,8 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
             : standardPrincipalCVFromAddress(createEmptyAddress());
         const amount = values && 'amount' in values ? values.amount : 0;
         const memo =
-          values && 'memo' in values && values.memo !== ''
-            ? someCV(bufferCVFromString(values.memo || ''))
+          values && 'memo' in values && values.memo
+            ? someCV(bufferCVFromString(values.memo))
             : noneCV();
 
         const amountAsFractionalUnit = ftUnshiftDecimals(amount, info.decimals || 0);

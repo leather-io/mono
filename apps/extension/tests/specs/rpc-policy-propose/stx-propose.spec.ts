@@ -76,6 +76,19 @@ async function clickPropose(context: BrowserContext) {
   await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
 }
 
+async function verifySignerAndPropose(context: BrowserContext) {
+  const popup = await context.waitForEvent('page');
+  await popup.waitForTimeout(1500);
+  // "Transacting with account" shows the multisig (name + address).
+  await test.expect(popup.getByText('Transacting with account')).toBeVisible({ timeout: 20_000 });
+  await test.expect(popup.getByText('Family vault')).toBeVisible();
+  await test.expect(popup.getByText(truncateMiddle(stacksPolicy.address, 4))).toBeVisible();
+  // "Signing with account" shows the single-sig policy owner (the signer).
+  await test.expect(popup.getByText('Signing with account')).toBeVisible();
+  await test.expect(popup.getByText(truncateMiddle(TEST_ACCOUNT_1_STX_ADDRESS, 4))).toBeVisible();
+  await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
+}
+
 test.describe('RPC: stx_callContract from a policy (multisig) account', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
@@ -174,22 +187,7 @@ test.describe('RPC: stx_callContract acts on the per-origin policy binding', () 
 
     const [result] = await Promise.all([
       requestStxCallContract(page, TEST_ACCOUNT_2_STX_ADDRESS),
-      (async () => {
-        const popup = await context.waitForEvent('page');
-        await popup.waitForTimeout(1500);
-        // "Transacting with account" shows the multisig (name + address).
-        await test
-          .expect(popup.getByText('Transacting with account'))
-          .toBeVisible({ timeout: 20_000 });
-        await test.expect(popup.getByText('Family vault')).toBeVisible();
-        await test.expect(popup.getByText(truncateMiddle(stacksPolicy.address, 4))).toBeVisible();
-        // "Signing with account" shows the single-sig policy owner (the signer).
-        await test.expect(popup.getByText('Signing with account')).toBeVisible();
-        await test
-          .expect(popup.getByText(truncateMiddle(TEST_ACCOUNT_1_STX_ADDRESS, 4)))
-          .toBeVisible();
-        await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
-      })(),
+      verifySignerAndPropose(context),
     ]);
 
     if (!result) throw new Error('Expected result');

@@ -29,17 +29,21 @@ export function popup(options: PopupOptions) {
       const left = Math.floor(width / 2 - popupWidth / 2 + dualScreenLeft);
       const top = Math.floor(height / 2 - popupHeight / 2 + dualScreenTop);
 
-      void chrome.windows
-        .create({
-          url,
-          width: popupWidth,
-          height: popupHeight,
-          top,
-          left,
-          focused: true,
-          type: 'popup',
-        })
-        .then(popup => resolve(popup));
+      async function createPopupWindow() {
+        resolve(
+          await chrome.windows.create({
+            url,
+            width: popupWidth,
+            height: popupHeight,
+            top,
+            left,
+            focused: true,
+            type: 'popup',
+          })
+        );
+      }
+
+      void createPopupWindow();
     });
   });
 }

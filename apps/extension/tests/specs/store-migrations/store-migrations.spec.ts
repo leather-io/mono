@@ -52,11 +52,12 @@ test.describe('Store migrations', () => {
     await page.waitForTimeout(1000);
 
     // State now in new format
-    const result = await page.evaluate(async () =>
-      chrome.storage.local
-        .get<{ 'persist:root': MigratedPersistedState }>(['persist:root'])
-        .then(state => state['persist:root'])
-    );
+    const result = await page.evaluate(async () => {
+      const state = await chrome.storage.local.get<{ 'persist:root': MigratedPersistedState }>([
+        'persist:root',
+      ]);
+      return state['persist:root'];
+    });
 
     // Assert that old values are present in unserialized format
     test
@@ -124,11 +125,12 @@ test.describe('Store migrations', () => {
 
     await page.waitForTimeout(1000);
 
-    const result = await page.evaluate(async () =>
-      chrome.storage.local
-        .get<{ 'persist:root': MigratedPersistedState }>(['persist:root'])
-        .then(state => state['persist:root'])
-    );
+    const result = await page.evaluate(async () => {
+      const state = await chrome.storage.local.get<{ 'persist:root': MigratedPersistedState }>([
+        'persist:root',
+      ]);
+      return state['persist:root'];
+    });
 
     test.expect(result._persist.version).toEqual(4);
     test.expect(result.softwareKeys.salt).toEqual(demoSalt);

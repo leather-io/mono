@@ -11,16 +11,17 @@ import { sumMoney } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { BitcoinCustomFeeInput } from '@app/components/bitcoin-custom-fee/bitcoin-custom-fee-input';
 import { BitcoinTransactionItem } from '@app/components/bitcoin-transaction-item/bitcoin-transaction-item';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 
 import { TransactionActions } from './components/transaction-actions';
 import { useBtcIncreaseFee } from './hooks/use-btc-increase-fee';
+import { increaseBtcFeeRouteStateSchema } from './increase-btc-fee-route-state';
 
 export function IncreaseBtcFeeSheet() {
-  const tx = useLocationStateWithCache<BitcoinTx>('btcTx');
+  const tx = useRouteState(increaseBtcFeeRouteStateSchema.nullish().catch(null))?.btcTx;
   if (!tx) return null;
   return <IncreaseBtcFeeSheetContent tx={tx} />;
 }

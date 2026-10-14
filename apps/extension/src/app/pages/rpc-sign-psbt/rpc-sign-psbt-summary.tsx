@@ -1,6 +1,5 @@
-import { useLocation } from 'react-router';
-
 import { Flex, HStack, Stack } from 'leather-styles/jsx';
+import { z } from 'zod';
 
 import { CheckmarkIcon, CopyIcon, ExternalLinkIcon } from '@leather.io/ui';
 
@@ -8,6 +7,7 @@ import { analytics } from '@shared/utils/analytics';
 
 import { useBitcoinExplorerLink } from '@app/common/hooks/use-bitcoin-explorer-link';
 import { useClipboard } from '@app/common/hooks/use-copy-to-clipboard';
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import {
   InfoCardAssetValue,
   InfoCardBtn,
@@ -16,29 +16,31 @@ import {
 } from '@app/components/info-card/info-card';
 import { Card } from '@app/components/layout';
 import { useToast } from '@app/features/toasts/use-toast';
-import { readRouteStateString } from '@app/pages/read-route-state';
+
+const rpcSignPsbtSummaryStateSchema = z.object({
+  fee: z.string(),
+  sendingValue: z.string(),
+  totalSpend: z.string(),
+  txFiatValue: z.string(),
+  txFiatValueSymbol: z.string(),
+  txId: z.string(),
+  txValue: z.string(),
+});
+
+export type RpcSignPsbtSummaryState = z.infer<typeof rpcSignPsbtSummaryStateSchema>;
 
 export function RpcSignPsbtSummary() {
-  const location = useLocation();
-  const state: unknown = location.state;
+  const { fee, sendingValue, totalSpend, txFiatValue, txFiatValueSymbol, txId, txValue } =
+    useRouteState(rpcSignPsbtSummaryStateSchema);
   const { handleOpenBitcoinTxLink: handleOpenTxLink } = useBitcoinExplorerLink();
 
   const toast = useToast();
-
-  const fee = readRouteStateString(state, 'fee');
-  const sendingValue = readRouteStateString(state, 'sendingValue');
-  const totalSpend = readRouteStateString(state, 'totalSpend');
-  const txId = readRouteStateString(state, 'txId', '');
-  const txFiatValue = readRouteStateString(state, 'txFiatValue');
-  const txFiatValueSymbol = readRouteStateString(state, 'txFiatValueSymbol');
-  const txLinkTxid = readRouteStateString(state, 'txLink.txid', '');
-  const txValue = readRouteStateString(state, 'txValue', '');
 
   const { onCopy } = useClipboard(txId);
 
   function onClickLink() {
     analytics.track('view_rpc_sign_and_broadcast_psbt_confirmation', { symbol: 'BTC' });
-    handleOpenTxLink({ txid: txLinkTxid });
+    handleOpenTxLink({ txid: txId });
   }
 
   function onClickCopy() {

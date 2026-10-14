@@ -10,7 +10,7 @@ interface BroadcastCallbackArgs {
   tx: string;
   skipTaprootWarning?: boolean;
   delayTime?: number;
-  onSuccess?(txid: string): void;
+  onSuccess?(txid: string): void | Promise<void>;
   onError?(error: Error): void;
   onFinally?(): void;
 }
@@ -41,7 +41,7 @@ export function useBitcoinBroadcastTransaction() {
         await delay(delayTime);
         if (!resp.ok) throw new Error(await resp.text());
         const txid = await resp.text();
-        onSuccess?.(txid);
+        await onSuccess?.(txid);
         return txid;
       } catch (e) {
         onError?.(e instanceof Error ? e : new Error(String(e)));

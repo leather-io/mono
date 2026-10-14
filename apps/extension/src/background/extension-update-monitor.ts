@@ -75,10 +75,6 @@ export function initExtensionUpdateMonitor() {
   });
 }
 
-function isFulfilled<T>(result: PromiseSettledResult<T>): result is PromiseFulfilledResult<T> {
-  return result.status === 'fulfilled';
-}
-
 async function closeOpenRequestWindows() {
   const requestPageUrl = chrome.runtime.getURL('popup.html');
   const contexts = await chrome.runtime.getContexts({
@@ -95,7 +91,7 @@ async function closeOpenRequestWindows() {
     [...candidateWindowIds].map(windowId => chrome.windows.get(windowId))
   );
   const requestWindowIds = candidateWindows
-    .filter(isFulfilled)
+    .filter(result => result.status === 'fulfilled')
     .map(result => result.value)
     .filter(browserWindow => browserWindow.type === 'popup')
     .map(browserWindow => browserWindow.id)

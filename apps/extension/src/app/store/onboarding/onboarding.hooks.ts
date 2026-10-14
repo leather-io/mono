@@ -1,13 +1,20 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
 
+import { z } from 'zod';
+
 import { isDefined } from '@leather.io/utils';
 
-import { useLocationState } from '@app/common/hooks/use-location-state';
+import { useRouteState } from '@app/common/hooks/use-route-state';
+
+const onboardingRouteStateSchema = z
+  .object({ fromOnboarding: z.boolean().optional() })
+  .nullish()
+  .catch(null);
 
 export function useOnFinishedOnboarding(fn: () => void) {
   const hasCalledFn = useRef(false);
-  const fromOnboarding = useLocationState('fromOnboarding');
+  const fromOnboarding = useRouteState(onboardingRouteStateSchema)?.fromOnboarding;
   const navigate = useNavigate();
 
   useEffect(() => {

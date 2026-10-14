@@ -16,7 +16,7 @@ interface AssetSelectorProps {
   type: 'base' | 'target';
   selectedBaseAsset: AccountSwapAsset | null;
   selectedTargetAsset: AccountSwapAsset | null;
-  query: UseQueryResult<AccountSwapAsset[], Error>;
+  query: UseQueryResult<AccountSwapAsset[]>;
   onSelectAsset(type: 'base' | 'target', asset: AccountSwapAsset): void;
 }
 

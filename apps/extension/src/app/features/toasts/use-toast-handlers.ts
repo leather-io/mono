@@ -30,15 +30,14 @@ export function useToastHandlers() {
         promise: Promise<T>,
         msgs: { success: string; error: string }
       ): Promise<T | undefined> {
-        return promise
-          .then(data => {
-            handleAddToast({ message: msgs.success, variant: 'success' });
-            return data;
-          })
-          .catch(() => {
-            handleAddToast({ message: msgs.error, variant: 'error' });
-            return undefined;
-          });
+        try {
+          const data = await promise;
+          handleAddToast({ message: msgs.success, variant: 'success' });
+          return data;
+        } catch {
+          handleAddToast({ message: msgs.error, variant: 'error' });
+          return undefined;
+        }
       },
     };
   }, [handleAddToast, toasts]);

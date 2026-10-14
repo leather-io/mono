@@ -7,7 +7,7 @@ import { isEmptyString, isUndefined } from '@leather.io/utils';
 import { analytics } from '@shared/utils/analytics';
 
 export function complianceValidator(
-  shouldCheckCompliance: yup.StringSchema<string | undefined, yup.AnyObject>,
+  shouldCheckCompliance: yup.StringSchema,
   screeningPoint: ComplianceScreeningPoint
 ) {
   return yup.string().test({

@@ -21,6 +21,11 @@ interface ReceiveBtcModalProps {
 export function ReceiveBtcModal({ type = 'btc', onClose }: ReceiveBtcModalProps) {
   const toast = useToast();
 
+  async function copyAddress(address: string) {
+    await copyToClipboard(address);
+    toast.success('Copied to clipboard!');
+  }
+
   const currentAccount = useCurrentAccountId();
   const policy = useCurrentPolicy();
   const nativeSegwitAddress = useNativeSegwitAccountIndexAddressIndexZero(currentAccount);
@@ -50,7 +55,7 @@ export function ReceiveBtcModal({ type = 'btc', onClose }: ReceiveBtcModalProps)
       onClose={onClose}
       onCopyAddressToClipboard={() => {
         analytics.track('copy_btc_address_to_clipboard', { type });
-        void copyToClipboard(address).then(() => toast.success('Copied to clipboard!'));
+        void copyAddress(address);
       }}
       onVerifyAddress={
         canVerifyOnLedger ? () => verifyAddressOnLedger(getVerifyVariant()) : undefined

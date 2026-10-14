@@ -39,6 +39,7 @@ import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/bloc
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useSignDescriptorPsbt } from './descriptor-psbt.hooks';
+import type { RpcSignPsbtSummaryState } from './rpc-sign-psbt-summary';
 import { useBondProposalRoute } from './use-bond-proposal-route';
 
 interface BroadcastSignedPsbtTxArgs {
@@ -63,7 +64,7 @@ export function useRpcSignPsbt() {
   } = useRpcSignPsbtParams();
   const { signPsbt, getPsbtAsTransaction } = usePsbtSigner();
   const signDescriptorPsbt = useSignDescriptorPsbt();
-  const descriptorDetails = useDescriptorPsbtDetails(psbtHex ?? '', descriptor ?? '');
+  const descriptorDetails = useDescriptorPsbtDetails(psbtHex, descriptor);
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
   const { refetchUtxos } = useCurrentUtxos();
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
@@ -91,8 +92,9 @@ export function useRpcSignPsbt() {
 
   const hasDisallowedSighash = useMemo(() => {
     if (descriptorDetails?.hasDisallowedSighash) return true;
+    if (!psbtHex) return true;
     try {
-      const inputs = getPsbtTxInputs(getPsbtAsTransaction(psbtHex ?? ''));
+      const inputs = getPsbtTxInputs(getPsbtAsTransaction(psbtHex));
       return (
         getInputsToSignWithDisallowedSighash({
           inputs,
@@ -151,36 +153,30 @@ export function useRpcSignPsbt() {
     return await broadcastTx({
       tx,
       skipTaprootWarning: true,
-      onSuccess(txid) {
-        void (async () => {
-          if (!requestId) throw new Error('Invalid request id');
+      async onSuccess(txid) {
+        if (!requestId) throw new Error('Invalid request id');
 
-          void sendMessageToOriginatingFrame(
-            { frameId, tabId },
-            createRpcSuccessResponse('signPsbt', {
-              id: requestId,
-              result: { hex: psbt, txid },
-            })
-          );
+        void sendMessageToOriginatingFrame(
+          { frameId, tabId },
+          createRpcSuccessResponse('signPsbt', {
+            id: requestId,
+            result: { hex: psbt, txid },
+          })
+        );
 
-          await refetchUtxos();
+        await refetchUtxos();
 
-          const psbtTxSummaryState = {
-            fee: formatCurrency(fee, { preset: 'pad-decimals' }),
-            sendingValue: formatCurrency(transferTotalAsMoney),
-            totalSpend: formatCurrency(sumMoney([transferTotalAsMoney, fee])),
-            txFiatValue: formatCurrency(calculateBitcoinFiatValue(transferTotalAsMoney)),
-            txFiatValueSymbol: btcMarketData.price.symbol,
-            txId: txid,
-            txLink: {
-              blockchain: 'bitcoin',
-              txId: txid || '',
-            },
-            txValue: formatCurrency(transferTotalAsMoney),
-          };
+        const psbtTxSummaryState: RpcSignPsbtSummaryState = {
+          fee: formatCurrency(fee, { preset: 'pad-decimals' }),
+          sendingValue: formatCurrency(transferTotalAsMoney),
+          totalSpend: formatCurrency(sumMoney([transferTotalAsMoney, fee])),
+          txFiatValue: formatCurrency(calculateBitcoinFiatValue(transferTotalAsMoney)),
+          txFiatValueSymbol: btcMarketData.price.symbol,
+          txId: txid,
+          txValue: formatCurrency(transferTotalAsMoney),
+        };
 
-          void navigate(RouteUrls.RpcSignPsbtSummary, { state: psbtTxSummaryState });
-        })();
+        void navigate(RouteUrls.RpcSignPsbtSummary, { state: psbtTxSummaryState });
       },
       onError(e) {
         if (!requestId) throw new Error('Invalid request id');

@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { migrateToAccountsSlice } from '@shared/storage/migrations/migrate-3-4';
+import { isRecord } from '@shared/utils/is-record';
 
 import { selectWalletAccountRefTree } from './wallet-type.selectors';
 
@@ -8,10 +9,6 @@ const softwareFingerprint = 'a1b2c3d4';
 const ledgerFingerprint = 'e5f6a7b8';
 
 type RefTreeInputs = Parameters<typeof selectWalletAccountRefTree.resultFunc>;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
 
 function getAtPath(value: unknown, ...keys: string[]): unknown {
   return keys.reduce<unknown>(

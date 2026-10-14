@@ -8,6 +8,7 @@ import { type Plugin, defineConfig, loadEnv } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { z } from 'zod';
 
 import manifest, { inpageBuildMatch } from './manifest.config';
 import packageJson from './package.json' with { type: 'json' };
@@ -122,15 +123,14 @@ function getSharedPlugins() {
   ];
 }
 
-function isVitePlugin(value: unknown): value is Plugin {
-  return (
-    typeof value === 'object' && value !== null && 'name' in value && typeof value.name === 'string'
-  );
-}
+const vitePluginSchema = z.looseObject({ name: z.string() });
 
-function toVitePlugins(value: unknown) {
-  if (Array.isArray(value)) return value.filter(isVitePlugin);
-  return isVitePlugin(value) ? [value] : [];
+function toVitePlugins(value: unknown): Plugin[] {
+  const candidates: unknown[] = Array.isArray(value) ? value : [value];
+  return candidates.flatMap(candidate => {
+    const parsedPlugin = vitePluginSchema.safeParse(candidate);
+    return parsedPlugin.success ? [parsedPlugin.data] : [];
+  });
 }
 
 function getDependencyName(id: string) {

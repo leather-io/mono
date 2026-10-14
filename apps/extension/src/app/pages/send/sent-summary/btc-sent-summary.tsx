@@ -1,11 +1,11 @@
-import { useLocation } from 'react-router';
-
 import { Stack } from 'leather-styles/jsx';
+import { z } from 'zod';
 
 import { analytics } from '@shared/utils/analytics';
 
 import { useBitcoinExplorerLink } from '@app/common/hooks/use-bitcoin-explorer-link';
 import { useClipboard } from '@app/common/hooks/use-copy-to-clipboard';
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import {
   InfoCardAssetValue,
@@ -15,34 +15,46 @@ import {
 import { Card, Content, Page, SummaryFooter } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useToast } from '@app/features/toasts/use-toast';
-import { readRouteStateString } from '@app/pages/read-route-state';
 
 import { TxDone } from '../send-crypto-asset-form/components/tx-done';
 
+const btcSentSummaryStateSchema = z.object({
+  txId: z.string(),
+  txValue: z.string(),
+  txFiatValue: z.string(),
+  txFiatValueSymbol: z.string(),
+  symbol: z.string(),
+  arrivesIn: z.string(),
+  sendingValue: z.string(),
+  recipient: z.string(),
+  totalSpend: z.string(),
+  feeRowValue: z.string(),
+});
+
+export type BtcSentSummaryState = z.infer<typeof btcSentSummaryStateSchema>;
+
 export function BtcSentSummary() {
-  const location = useLocation();
-  const state: unknown = location.state;
+  const {
+    txId,
+    txValue,
+    txFiatValue,
+    txFiatValueSymbol,
+    symbol,
+    arrivesIn,
+    sendingValue,
+    recipient,
+    totalSpend,
+    feeRowValue,
+  } = useRouteState(btcSentSummaryStateSchema);
 
   const toast = useToast();
-
-  const txId = readRouteStateString(state, 'txId', '');
-  const txValue = readRouteStateString(state, 'txValue', '');
-  const txFiatValue = readRouteStateString(state, 'txFiatValue');
-  const txFiatValueSymbol = readRouteStateString(state, 'txFiatValueSymbol');
-  const symbol = readRouteStateString(state, 'symbol');
-  const txLinkTxid = readRouteStateString(state, 'txLink.txid', '');
-  const arrivesIn = readRouteStateString(state, 'arrivesIn');
-  const sendingValue = readRouteStateString(state, 'sendingValue');
-  const recipient = readRouteStateString(state, 'recipient', '');
-  const totalSpend = readRouteStateString(state, 'totalSpend');
-  const feeRowValue = readRouteStateString(state, 'feeRowValue');
 
   const { onCopy } = useClipboard(txId);
   const { handleOpenBitcoinTxLink: handleOpenTxLink } = useBitcoinExplorerLink();
 
   function onClickLink() {
     analytics.track('view_transaction_confirmation', { symbol: 'BTC' });
-    handleOpenTxLink({ txid: txLinkTxid });
+    handleOpenTxLink({ txid: txId });
   }
 
   function onClickCopy() {

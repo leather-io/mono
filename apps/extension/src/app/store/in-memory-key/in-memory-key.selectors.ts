@@ -47,16 +47,13 @@ export const selectRootKeychainsAtVersion = registerKeychainSelectorCache(
     [selectSoftwareKeys, (_state: RootState, version: number) => version],
     softwareKeys => {
       return Object.fromEntries(
-        softwareKeys
-          .map(wallet => {
+        softwareKeys.flatMap(
+          (wallet): [string, ReturnType<typeof deriveRootKeychainFromMnemonicSync>][] => {
             const key = inMemoryStore.getKey(wallet.id);
-            if (!key) return null;
-            return [wallet.id, deriveRootKeychainFromMnemonicSync(key)];
-          })
-          .filter(
-            (entry): entry is [string, ReturnType<typeof deriveRootKeychainFromMnemonicSync>] =>
-              Boolean(entry)
-          )
+            if (!key) return [];
+            return [[wallet.id, deriveRootKeychainFromMnemonicSync(key)]];
+          }
+        )
       );
     }
   )

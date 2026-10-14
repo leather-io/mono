@@ -122,6 +122,11 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     return { tx: newTx, signingConfig };
   }
 
+  async function refreshAfterBroadcast() {
+    await refetchUtxos();
+    await invalidateActivityQueries();
+  }
+
   async function initiateTransaction(
     unsignedTx: btc.Transaction,
     signingConfig: BitcoinInputSigningConfig[]
@@ -138,7 +143,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
           symbol: 'btc',
           txid,
         });
-        void refetchUtxos().then(() => invalidateActivityQueries());
+        void refreshAfterBroadcast();
       },
       onError,
       delayTime: 5000,

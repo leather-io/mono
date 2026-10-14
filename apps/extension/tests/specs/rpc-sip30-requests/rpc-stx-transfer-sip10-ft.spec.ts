@@ -27,10 +27,10 @@ test.describe('RPC: stx_transferSip10Ft', () => {
         'text="You will transfer exactly 0.001 LEO or the transaction will abort."'
       );
 
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6');
 
       await popup.waitForTimeout(500);

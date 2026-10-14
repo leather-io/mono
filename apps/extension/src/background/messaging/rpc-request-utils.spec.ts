@@ -89,10 +89,10 @@ describe(createConnectingAppMetadataSearchParams.name, () => {
     expect(result.urlParams.get('topOrigin')).toBe('https://top.example.com');
   });
 
-  test('sets an empty top origin when the sender tab has no url', () => {
+  test('omits the top origin when the sender tab has no url', () => {
     const result = createConnectingAppMetadataSearchParams(buildPort());
 
-    expect(result.urlParams.get('topOrigin')).toBe('');
+    expect(result.urlParams.get('topOrigin')).toBeNull();
   });
 });
 

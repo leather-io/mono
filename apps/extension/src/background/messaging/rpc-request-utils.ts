@@ -140,8 +140,9 @@ export function createConnectingAppMetadataSearchParams(
   const origin = getOriginFromPort(port);
   const tabId = getTabIdFromPort(port);
   const frameId = getFrameIdFromPort(port);
-  urlParams.set('origin', origin ?? '');
-  urlParams.set('topOrigin', getTopOriginFromPort(port) ?? '');
+  const topOrigin = getTopOriginFromPort(port);
+  if (origin) urlParams.set('origin', origin);
+  if (topOrigin) urlParams.set('topOrigin', topOrigin);
   urlParams.set('frameId', frameId.toString());
   urlParams.set('tabId', tabId.toString());
   otherParams.forEach(([key, value]) => urlParams.append(key, value));

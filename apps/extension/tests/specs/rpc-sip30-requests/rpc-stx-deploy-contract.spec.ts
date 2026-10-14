@@ -26,10 +26,10 @@ test.describe('RPC: stx_deployContract', () => {
         'text="Only fees will be transferred from your account or the transaction will abort."'
       );
 
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SPS8CKF63P16J28AYF7PXW9E5AACH0NZNTEFWSFE');
 
       await popup.waitForTimeout(500);

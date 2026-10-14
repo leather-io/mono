@@ -6,17 +6,11 @@ import { Stack } from 'leather-styles/jsx';
 
 import type { CryptoCurrency } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
-import {
-  baseCurrencyAmountInQuote,
-  createMoneyFromDecimal,
-  isUndefined,
-  satToBtc,
-} from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoneyFromDecimal, satToBtc } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import {
   InfoCardAssetValue,
@@ -28,30 +22,20 @@ import { PageHeader } from '@app/features/container/headers/page.header';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
+import type { BtcProposalConfirmationRouteState } from '../../hooks/use-send-form-navigate';
 import { useProposeBtcSendTransaction } from './use-propose-btc-send-transaction';
 
 const symbol: CryptoCurrency = 'BTC';
 
-export function BtcProposeConfirmation() {
+interface BtcProposeConfirmationProps {
+  state: BtcProposalConfirmationRouteState;
+}
+
+export function BtcProposeConfirmation({ state }: BtcProposeConfirmationProps) {
   const policy = useCurrentPolicy();
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
   const { proposeSendTransaction, isProposing } = useProposeBtcSendTransaction();
-
-  const psbt = useLocationStateWithCache<string>('psbt');
-  const recipient = useLocationStateWithCache<string>('recipient');
-  const fee = useLocationStateWithCache<number>('fee');
-  const feeRowValue = useLocationStateWithCache<string>('feeRowValue');
-  const time = useLocationStateWithCache<string>('time');
-  const amount = useLocationStateWithCache<string>('amount');
-
-  if (
-    isUndefined(psbt) ||
-    isUndefined(recipient) ||
-    isUndefined(fee) ||
-    isUndefined(feeRowValue) ||
-    isUndefined(amount)
-  )
-    return <Navigate to={RouteUrls.SendCryptoAssetForm.replace(':symbol', 'btc')} replace />;
+  const { psbt, recipient, fee, feeRowValue, time, amount } = state;
 
   if (policy?.chain !== 'bitcoin')
     return <Navigate to={RouteUrls.SendCryptoAssetForm.replace(':symbol', 'btc')} replace />;
@@ -71,7 +55,6 @@ export function BtcProposeConfirmation() {
   });
 
   async function initiateProposal() {
-    if (isUndefined(psbt) || isUndefined(recipient)) return;
     await proposeSendTransaction(psbt, {
       symbol,
       txValue: String(amount),

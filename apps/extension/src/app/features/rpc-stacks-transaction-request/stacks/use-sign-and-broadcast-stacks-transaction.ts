@@ -24,6 +24,11 @@ import { useSignStacksTransaction } from '@app/store/transactions/transaction.ho
 
 import { useStacksRpcTransactionRequestContext } from './stacks-rpc-transaction-request.context';
 
+async function closeWindowAfterDelay() {
+  await delay(250);
+  closeWindow();
+}
+
 export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
   const { onSetTransactionStatus, tabId, requestId, frameId } =
     useStacksRpcTransactionRequestContext();
@@ -93,7 +98,7 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
             },
           })
         );
-        void delay(250).then(() => closeWindow());
+        void closeWindowAfterDelay();
       }
 
       onSetTransactionStatus('broadcasting');

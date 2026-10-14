@@ -3,7 +3,6 @@ import { Outlet, useNavigate } from 'react-router';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Form, Formik, type FormikHelpers } from 'formik';
 import { Box, Flex } from 'leather-styles/jsx';
-import { type AnyObjectSchema } from 'yup';
 
 import { HIGH_FEE_WARNING_LEARN_MORE_URL_STX } from '@leather.io/constants';
 import type { Money, StacksTransactionFees } from '@leather.io/models';
@@ -24,6 +23,8 @@ import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 import { MemoField } from '../../components/memo-field';
 import { StacksRecipientField } from '../../family/stacks/components/stacks-recipient-field';
 import { defaultSendFormFormikProps } from '../../send-form.utils';
+import type { Sip10SendFormValidationSchema } from '../sip10/use-sip10-send-form';
+import type { StxSendFormValidationSchema } from '../stx/use-stx-send-form';
 
 interface StacksCommonSendFormProps {
   onSubmit(
@@ -31,7 +32,7 @@ interface StacksCommonSendFormProps {
     formikHelpers: FormikHelpers<StacksSendFormValues>
   ): Promise<void>;
   initialValues: StacksSendFormValues;
-  validationSchema: AnyObjectSchema;
+  validationSchema: StxSendFormValidationSchema | Sip10SendFormValidationSchema;
   amountField: React.JSX.Element;
   selectedAssetField: React.JSX.Element;
   availableTokenBalance: Money;

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { z } from 'zod';
 
 import { isDefined } from '@leather.io/utils';
 
@@ -8,7 +9,6 @@ import { isRecord } from '@shared/utils/is-record';
 
 import type { AddressMonitor, MonitoredAddress } from '../address-monitor';
 import {
-  type MempoolWsBitcoinTxMessage,
   type MempoolWsBtcPrice,
   readMempooWsBtcPriceUsd,
   readMempoolWsBitcoinTxAddressResult,
@@ -19,22 +19,46 @@ function logTxMonitorEvent(message: string, ...args: unknown[]) {
   logger.debug(message, ...args);
 }
 
-function isMempoolWsAddressTransactions(value: unknown) {
-  return isRecord(value) && Array.isArray(value.confirmed);
-}
+const mempoolWsBitcoinVoutSchema = z.object({
+  scriptpubkey_address: z.string(),
+  value: z.number(),
+});
 
-function isMempoolWsBitcoinTxMessage(value: unknown): value is MempoolWsBitcoinTxMessage {
-  if (!isRecord(value)) return false;
-  const addressTransactions = value['multi-address-transactions'];
-  return (
-    isRecord(addressTransactions) &&
-    Object.values(addressTransactions).every(isMempoolWsAddressTransactions)
-  );
-}
+const mempoolWsBitcoinVinSchema = z.object({
+  txid: z.string(),
+  prevout: mempoolWsBitcoinVoutSchema,
+});
 
-function isMempoolWsBtcPrice(value: unknown): value is MempoolWsBtcPrice {
-  return isRecord(value) && typeof value.USD === 'number';
-}
+const mempoolWsBitcoinTxSchema = z.object({
+  txid: z.string(),
+  vin: z.array(z.unknown()).transform(vins =>
+    vins.flatMap(vin => {
+      const parsedVin = mempoolWsBitcoinVinSchema.safeParse(vin);
+      return parsedVin.success ? [parsedVin.data] : [];
+    })
+  ),
+  vout: z.array(z.unknown()).transform(vouts =>
+    vouts.flatMap(vout => {
+      const parsedVout = mempoolWsBitcoinVoutSchema.safeParse(vout);
+      return parsedVout.success ? [parsedVout.data] : [];
+    })
+  ),
+  fee: z.number(),
+  status: z.object({
+    confirmed: z.boolean(),
+    block_height: z.number().optional(),
+  }),
+});
+
+const mempoolWsBitcoinTxMessageSchema = z.object({
+  'multi-address-transactions': z.record(
+    z.string(),
+    z.object({ confirmed: z.array(mempoolWsBitcoinTxSchema) })
+  ),
+});
+type MempoolWsBitcoinTxMessage = z.infer<typeof mempoolWsBitcoinTxMessageSchema>;
+
+const mempoolWsBtcPriceSchema = z.object({ USD: z.number() });
 
 export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): AddressMonitor {
   let _ws: WebSocket | null = null;
@@ -117,7 +141,9 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
       logTxMonitorEvent('Connected to Mempool WebSocket');
       sendWsTrackAddressSubscribe();
       startKeepAlive();
-      fetchBtcPrice();
+      void fetchBtcPrice().catch(e => {
+        logTxMonitorEvent('Unable to fetch BTC price, ', e);
+      });
     };
 
     _ws.onmessage = event => {
@@ -138,24 +164,20 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
     };
   }
 
-  function fetchBtcPrice() {
-    axios
-      .get<MempoolWsBtcPrice>('https://leather.mempool.space/api/v1/prices')
-      .then(res => {
-        _btcPriceUsd = readMempooWsBtcPriceUsd(res.data);
-      })
-      .catch(e => {
-        logTxMonitorEvent('Unable to fetch BTC price, ', e);
-      });
+  async function fetchBtcPrice() {
+    const res = await axios.get<MempoolWsBtcPrice>('https://leather.mempool.space/api/v1/prices');
+    _btcPriceUsd = readMempooWsBtcPriceUsd(res.data);
   }
 
   function handleMessageEvent(event: MessageEvent<unknown>) {
     const message: unknown = JSON.parse(String(event.data));
     if (!isRecord(message)) return;
     if (message['multi-address-transactions']) {
-      if (isMempoolWsBitcoinTxMessage(message)) handleTransactionMessage(message);
-    } else if (isMempoolWsBtcPrice(message['conversions'])) {
-      _btcPriceUsd = readMempooWsBtcPriceUsd(message['conversions']);
+      const parsedMessage = mempoolWsBitcoinTxMessageSchema.safeParse(message);
+      if (parsedMessage.success) handleTransactionMessage(parsedMessage.data);
+    } else {
+      const parsedPrice = mempoolWsBtcPriceSchema.safeParse(message['conversions']);
+      if (parsedPrice.success) _btcPriceUsd = parsedPrice.data.USD;
     }
   }
 

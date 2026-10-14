@@ -4,8 +4,8 @@ import { type CryptoCurrency } from '@leather.io/models';
 import { fetchBinanceMarketData, marketDataQueryOptions } from '@leather.io/query';
 
 export function useBinanceMarketDataQuery(currency: CryptoCurrency) {
-  return useQuery<unknown>({
-    queryFn: () => fetchBinanceMarketData(currency),
+  return useQuery({
+    queryFn: (): Promise<unknown> => fetchBinanceMarketData(currency),
     queryKey: [`binance-market-data-${currency}`],
     ...marketDataQueryOptions,
   });

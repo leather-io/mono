@@ -1,5 +1,5 @@
 import type BigNumber from 'bignumber.js';
-import { type AnyObject, type NumberSchema } from 'yup';
+import { type NumberSchema } from 'yup';
 
 import type { Money } from '@leather.io/models';
 import { isNumber, stxToMicroStx } from '@leather.io/utils';
@@ -11,7 +11,7 @@ import { stxAmountPrecisionValidator } from '@app/common/validation/forms/curren
 interface FeeValidatorFactoryArgs {
   availableBalance?: Money;
   unitConverter(unit: string | number | BigNumber): BigNumber;
-  validator(errorMsg: string): NumberSchema<number | undefined, AnyObject>;
+  validator(errorMsg: string): NumberSchema;
 }
 function feeValidatorFactory({
   availableBalance,
