@@ -3,6 +3,8 @@ import { useCallback, useState } from 'react';
 import { decodeBitcoinTx } from '@leather.io/bitcoin';
 import { delay } from '@leather.io/utils';
 
+import { logger } from '@shared/logger';
+
 import { useBitcoinClient } from '../clients/bitcoin-client';
 import { useCheckTaprootUtxos } from './use-check-taproot-utxos';
 
@@ -14,6 +16,15 @@ interface BroadcastCallbackArgs {
   onError?(error: Error): void;
   onFinally?(): void;
 }
+
+async function runSuccessHandler(onSuccess: BroadcastCallbackArgs['onSuccess'], txid: string) {
+  try {
+    await onSuccess?.(txid);
+  } catch (error) {
+    logger.error('Bitcoin transaction broadcast but the success handler failed', error);
+  }
+}
+
 export function useBitcoinBroadcastTransaction() {
   const client = useBitcoinClient();
   const [isBroadcasting, setIsBroadcasting] = useState(false);
@@ -41,7 +52,7 @@ export function useBitcoinBroadcastTransaction() {
         await delay(delayTime);
         if (!resp.ok) throw new Error(await resp.text());
         const txid = await resp.text();
-        await onSuccess?.(txid);
+        await runSuccessHandler(onSuccess, txid);
         return txid;
       } catch (e) {
         onError?.(e instanceof Error ? e : new Error(String(e)));
