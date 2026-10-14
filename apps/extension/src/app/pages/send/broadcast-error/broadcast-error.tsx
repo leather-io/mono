@@ -16,10 +16,12 @@ interface Props {
   showInSheet?: boolean;
 }
 
-const broadcastErrorRouteStateSchema = z.object({
-  error: z.object({ message: z.string() }).optional().catch(undefined),
-  proposeMode: z.boolean().optional(),
-});
+const broadcastErrorRouteStateSchema = z
+  .object({
+    error: z.object({ message: z.string() }).optional().catch(undefined),
+    proposeMode: z.boolean().optional(),
+  })
+  .catch({});
 
 export function BroadcastError({ showInSheet = false }: Props) {
   const { error, proposeMode } = useRouteState(broadcastErrorRouteStateSchema);
