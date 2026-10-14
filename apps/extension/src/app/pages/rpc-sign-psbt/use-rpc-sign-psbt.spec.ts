@@ -416,6 +416,18 @@ describe(useRpcSignPsbt.name, () => {
     });
   });
 
+  test('keeps the request open for a retry when descriptor Ledger signing is dismissed', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(singleSigDescriptor, []).toPSBT());
+    setRpcSignPsbtParams({ broadcast: true, descriptor: singleSigDescriptor, psbtHex });
+    mocks.signDescriptorPsbt.mockResolvedValue(null);
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
+    expect(mocks.closeWindow).not.toHaveBeenCalled();
+  });
+
   test('responds with the signed psbt in the error payload when broadcast fails', async () => {
     const psbtHex = bytesToHex(buildPolicyTx(singleSigDescriptor, []).toPSBT());
     const signedTx = buildPolicyTx(singleSigDescriptor, [1]);
@@ -485,6 +497,18 @@ describe(useRpcSignPsbt.name, () => {
         state: expect.objectContaining({ title: 'Failed to finalize tx' }),
       })
     );
+  });
+
+  test('keeps the request open for a retry when non-descriptor Ledger signing is dismissed', async () => {
+    const psbtHex = bytesToHex(buildTransferTx({ signed: false }).toPSBT());
+    setRpcSignPsbtParams({ broadcast: true, psbtHex });
+    mocks.signPsbt.mockResolvedValue(null);
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [], ...transferTotals });
+
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
+    expect(mocks.closeWindow).not.toHaveBeenCalled();
   });
 
   test('sends no response at all when broadcast is requested without transfer totals', async () => {
@@ -691,6 +715,19 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.navigate).toHaveBeenCalledWith(RouteUrls.RequestError, {
       state: { message: 'coordinator rejected', title: 'Unable to propose transaction' },
     });
+    expect(mocks.closeWindow).not.toHaveBeenCalled();
+  });
+
+  test('keeps the request open for a retry when Ledger signing of the proposal is dismissed', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
+    setRpcSignPsbtParams({ broadcast: false, descriptor: 'bond', psbtHex });
+    mocks.useBondProposalRoute.mockReturnValue(makeMatchedBondRoute());
+    mocks.proposeMultisigTransaction.mockResolvedValue(null);
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
     expect(mocks.closeWindow).not.toHaveBeenCalled();
   });
 

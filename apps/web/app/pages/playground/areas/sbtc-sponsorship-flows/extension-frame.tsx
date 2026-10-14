@@ -27,7 +27,7 @@ interface ExtensionFrameProps {
   footer?: ReactNode;
   overlay?: ReactNode;
   overlayKey?: string;
-  onBack?(): void;
+  onBack?(this: void): void;
   children: ReactNode;
 }
 export function ExtensionFrame({
@@ -201,7 +201,7 @@ interface FeeTierSelectProps {
   tier: FeeTier;
   feeByTier: Record<FeeTier, Money>;
   fiatByTier: Record<FeeTier, Money>;
-  onChange(tier: FeeTier): void;
+  onChange(this: void, tier: FeeTier): void;
 }
 export function FeeTierSelect({ tier, feeByTier, fiatByTier, onChange }: FeeTierSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -331,7 +331,7 @@ export function Timeline({ title, steps, activeIndex }: TimelineProps) {
 interface FlowBoardProps {
   frame: ReactNode;
   timeline: ReactNode;
-  onReset(): void;
+  onReset(this: void): void;
 }
 export function FlowBoard({ frame, timeline, onReset }: FlowBoardProps) {
   return (

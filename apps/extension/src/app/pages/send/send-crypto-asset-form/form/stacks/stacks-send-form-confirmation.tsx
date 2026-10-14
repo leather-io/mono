@@ -1,4 +1,4 @@
-import { Outlet, useParams } from 'react-router';
+import { useParams } from 'react-router';
 
 import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transactions';
 import { Box, Stack } from 'leather-styles/jsx';
@@ -131,7 +131,6 @@ export function StacksSendFormConfirmation() {
       <PageHeader title="Review" />
       <Content>
         <Page>
-          <Outlet />
           {sponsorship && sponsoredDetails && (
             <SbtcSponsoredSendFormConfirmation
               tx={tx}

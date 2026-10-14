@@ -64,6 +64,7 @@ export function useProposeStacksSendTransaction() {
         multisigAddress: policy.address,
         rawPayload,
       });
+      if (!proposal) return;
 
       analytics.track('propose_multisig_transaction', { symbol: 'stx' });
 

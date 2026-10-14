@@ -3448,7 +3448,7 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          chain: 'mainnet' | 'testnet-primary' | 'private-1';
+          chain: 'mainnet' | 'testnet-primary' | 'private-1' | 'staking-testnet';
           include?: 'spent';
         };
         header?: never;

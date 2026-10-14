@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { getDefaultFee } from '@/features/approver/utils';
+import { getApproverFee } from '@/features/approver/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { bytesToHex } from '@stacks/common';
@@ -28,7 +28,7 @@ export function useTransferStxTxHex({
 }: UseTransferStxTxHex) {
   const { fromAccountId } = useStacksSigners();
   const signer = fromAccountId(accountId)[0];
-  const fee = getDefaultFee();
+  const fee = getApproverFee(request.params.sponsored);
   assertStacksSigner(signer);
 
   const getTxHex = useCallback(
@@ -45,6 +45,7 @@ export function useTransferStxTxHex({
         fee,
         nonce,
         network,
+        sponsored: request.params.sponsored,
       });
       return tx.serialize();
     },

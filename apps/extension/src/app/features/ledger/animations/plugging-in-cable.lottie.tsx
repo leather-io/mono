@@ -3,7 +3,7 @@ import Lottie from 'lottie-react';
 
 import { useThemeSwitcher } from '@app/common/theme-provider';
 
-import * as animationDataBright from './plugged-in-cable-bright.lottie.json';
+import animationDataBright from './plugged-in-cable-bright.lottie.json';
 
 // Required for interop with `React.lazy`
 // ts-unused-exports:disable-next-line

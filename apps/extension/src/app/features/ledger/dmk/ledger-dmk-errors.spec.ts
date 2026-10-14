@@ -7,6 +7,7 @@ import {
   isLedgerUserDeniedError,
   isLedgerUserRefusedDeviceActionError,
   makeLedgerAppResponseError,
+  makeLedgerDeviceNotPairedError,
   makeLedgerOperationRejectedError,
   toLedgerTransportError,
 } from './ledger-dmk-errors';
@@ -226,6 +227,7 @@ describe(handleLedgerConnectionError.name, () => {
       toErrorStep: vi.fn(),
       toDeviceDisconnectStep: vi.fn(),
       toOperationRejectedStep: vi.fn(),
+      toPairDeviceStep: vi.fn(),
     };
   }
 
@@ -309,6 +311,13 @@ describe(handleLedgerConnectionError.name, () => {
     expect(
       dispatch({ _tag: 'ConnectionOpeningError' }).ledgerNavigate.toErrorStep
     ).toHaveBeenCalledWith('bitcoin', deviceInUseErrorMessage);
+  });
+
+  test('routes an unpaired device to the pairing step instead of the chooser error', () => {
+    const { ledgerNavigate } = dispatch(makeLedgerDeviceNotPairedError());
+
+    expect(ledgerNavigate.toPairDeviceStep).toHaveBeenCalledOnce();
+    expect(ledgerNavigate.toErrorStep).not.toHaveBeenCalled();
   });
 
   test('does nothing for a cancelled action', () => {

@@ -32,7 +32,7 @@ interface UseSubmitSbtcSponsoredTransactionArgs {
   token: string;
   decimals: number;
   sponsorship: SbtcSponsorshipRouteState;
-  onRequoted(next: SbtcSponsoredTransfer): void;
+  onRequoted(this: void, next: SbtcSponsoredTransfer): void;
 }
 export function useSubmitSbtcSponsoredTransaction({
   token,

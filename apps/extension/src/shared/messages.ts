@@ -23,7 +23,9 @@ type AddressMonitorUpdated = BackgroundMessage<
   { addresses: MonitoredAddress[] }
 >;
 
-export type BackgroundMessages = OriginatingTabClosed | AddressMonitorUpdated;
+type ApplyPendingUpdate = BackgroundMessage<InternalMethods.ApplyPendingUpdate>;
+
+export type BackgroundMessages = OriginatingTabClosed | AddressMonitorUpdated | ApplyPendingUpdate;
 
 export function sendMessage(message: BackgroundMessages) {
   return chrome.runtime.sendMessage(message);

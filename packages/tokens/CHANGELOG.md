@@ -144,6 +144,22 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.27.2](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.27.1...@leather.io/tokens-v0.27.2) (2026-09-29)
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+* **ui:** repair default callout contrast and link underline and focus states ([#2800](https://github.com/leather-io/mono/issues/2800)) ([32d87f8](https://github.com/leather-io/mono/commit/32d87f8973cb71e06ebe7fc55c7a47fa94a6557f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
 ## [0.27.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.27.0...@leather.io/tokens-v0.27.1) (2026-08-27)
 
 

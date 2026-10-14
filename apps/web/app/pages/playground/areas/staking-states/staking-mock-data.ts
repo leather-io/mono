@@ -382,6 +382,7 @@ export function createSeededQueryClient(seed: StakingSurfaceSeed = {}) {
           address: mockStacksAddress,
           signerManagerContractId: stakerInfo.signerManagerContractId,
           cycle: rewards.cycle,
+          pox5ContractId,
           client: mockStacksClient,
         }).queryKey,
         rewards

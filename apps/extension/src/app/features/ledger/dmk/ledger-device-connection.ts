@@ -23,6 +23,7 @@ import {
   isLedgerActionCancelledError,
   isLedgerDeviceDisconnectedError,
   isLedgerDeviceLockedError,
+  makeLedgerDeviceNotPairedError,
   toLedgerTransportError,
 } from './ledger-dmk-errors';
 
@@ -33,6 +34,7 @@ const postRefreshEmissionIndex = 1;
 export interface ConnectLedgerDeviceOptions
   extends LedgerDeviceActionOptions<DeviceActionIntermediateValue> {
   runAction?: RunLedgerDeviceAction;
+  canPromptForDevice?: boolean;
 }
 
 async function findGrantedDevice(dmk: DeviceManagementKit): Promise<DiscoveredDevice | null> {
@@ -58,8 +60,13 @@ async function discoverDevice(dmk: DeviceManagementKit): Promise<DiscoveredDevic
   }
 }
 
-async function connectLedgerDevice(dmk: DeviceManagementKit): Promise<DeviceSessionId> {
-  const device = (await findGrantedDevice(dmk)) ?? (await discoverDevice(dmk));
+async function connectLedgerDevice(
+  dmk: DeviceManagementKit,
+  canPromptForDevice: boolean
+): Promise<DeviceSessionId> {
+  const grantedDevice = await findGrantedDevice(dmk);
+  if (!grantedDevice && !canPromptForDevice) throw makeLedgerDeviceNotPairedError();
+  const device = grantedDevice ?? (await discoverDevice(dmk));
   return dmk.connect({ device, sessionRefresherOptions: { isRefresherDisabled: true } });
 }
 
@@ -107,10 +114,11 @@ export async function connectLedgerDeviceToApp(
   appName: string | null,
   options: ConnectLedgerDeviceOptions = {}
 ): Promise<DeviceSessionId> {
-  const sessionId = await connectLedgerDevice(dmk);
+  const { canPromptForDevice = true, ...openAppOptions } = options;
+  const sessionId = await connectLedgerDevice(dmk, canPromptForDevice);
   if (appName === null) return sessionId;
   try {
-    await openLedgerApp(dmk, sessionId, appName, options);
+    await openLedgerApp(dmk, sessionId, appName, openAppOptions);
   } catch (error) {
     await safeAwait(dmk.disconnect({ sessionId }));
     throw error;

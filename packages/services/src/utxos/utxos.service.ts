@@ -5,7 +5,7 @@ import { hasBitcoinAddress } from '@leather.io/utils';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
-import { selectBitcoinNetworkMode } from '../infrastructure/settings/settings.selectors';
+import { getMempoolUrlFromUserSettings } from '../infrastructure/api/mempool/mempool-api.utils';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
@@ -130,8 +130,8 @@ export class UtxosService {
     fingerprint: string,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
-    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
-    if (networkMode === 'regtest') {
+    const mempoolUrl = getMempoolUrlFromUserSettings(this.settings.getSettings());
+    if (mempoolUrl) {
       const mempoolApiUtxos = await this.mempoolApiClient.fetchDescriptorUtxos(descriptor, {
         signal,
       });
@@ -158,9 +158,9 @@ export class UtxosService {
     fingerprint: string,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
-    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
-    if (networkMode === 'regtest') {
-      const mempoolApiUtxos = await this.mempoolApiClient.fetchAddressUtxos(address, undefined, {
+    const mempoolUrl = getMempoolUrlFromUserSettings(this.settings.getSettings());
+    if (mempoolUrl) {
+      const mempoolApiUtxos = await this.mempoolApiClient.fetchAddressUtxos(address, mempoolUrl, {
         signal,
       });
       return mempoolApiUtxos.map(utxo =>

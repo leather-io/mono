@@ -42,10 +42,10 @@ jobs:
 
       - name: expo-prebuild
         working-directory: apps/mobile
-        run: pnpm prebuild
+        run: pnpm expo:prebuild
 
       - name: setup-ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
         with:
           ruby-version: '3.3'
           bundler-cache: true
@@ -101,10 +101,10 @@ jobs:
 
       - name: expo-prebuild
         working-directory: apps/mobile
-        run: pnpm prebuild
+        run: pnpm expo:prebuild
 
       - name: setup-ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
         with:
           ruby-version: '3.3'
           bundler-cache: true
@@ -152,7 +152,7 @@ jobs:
 
       - name: expo-prebuild
         working-directory: apps/mobile
-        run: pnpm prebuild
+        run: pnpm expo:prebuild
 
       - name: setup-java
         uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
@@ -161,7 +161,7 @@ jobs:
           java-version: '17'
 
       - name: setup-ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
         with:
           ruby-version: '3.3'
           bundler-cache: true
@@ -221,7 +221,7 @@ jobs:
           java-version: '17'
 
       - name: setup-ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
         with:
           ruby-version: '3.3'
           bundler-cache: true

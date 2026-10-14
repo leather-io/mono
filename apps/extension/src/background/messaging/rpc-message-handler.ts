@@ -1,3 +1,4 @@
+import { LEATHER_GITBOOK_DEVS } from '@leather.io/constants';
 import {
   RpcEndpointMap,
   RpcErrorCode,
@@ -8,6 +9,7 @@ import {
 import { logger } from '@shared/logger';
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 
+import type { RpcHandler } from './define-rpc-request-handler';
 import { methodsRequiringConnectedWallet } from './methods-requiring-connected-wallet';
 import { btcAddAccountHandler } from './rpc-methods/btc-add-account';
 import { getAddressesHandler, stxGetAddressesHandler } from './rpc-methods/get-addresses';
@@ -34,8 +36,6 @@ import {
   validateConnectedWalletExists,
 } from './rpc-request-utils';
 
-type RpcHandler<T> = (request: T, port: chrome.runtime.Port) => Promise<void> | void;
-
 type RpcHandlers = {
   [Method in keyof RpcEndpointMap]: RpcHandler<RpcEndpointMap[Method]['request']>;
 };
@@ -47,13 +47,6 @@ function registerRpcRequestHandler<M extends RpcRequests['method']>(
   handler: RpcHandler<RpcEndpointMap[M]['request']>
 ) {
   rpcHandlers[method] = handler;
-}
-
-export function defineRpcRequestHandler<M extends RpcRequests['method']>(
-  method: M,
-  handler: RpcHandler<RpcEndpointMap[M]['request']>
-) {
-  return [method, handler] as const;
 }
 
 export async function rpcMessageHandler(request: RpcRequests, port: chrome.runtime.Port) {
@@ -83,7 +76,7 @@ export async function rpcMessageHandler(request: RpcRequests, port: chrome.runti
       id: request.id,
       error: {
         code: RpcErrorCode.METHOD_NOT_FOUND,
-        message: `"${request.method}" is not supported. Try running \`.request('supportedMethods')\` to see what Leather can do, or check out our developer documentation at https://leather.gitbook.io/developers/home/welcome`,
+        message: `"${request.method}" is not supported. Try running \`.request('supportedMethods')\` to see what Leather can do, or check out our developer documentation at ${LEATHER_GITBOOK_DEVS}`,
       },
     })
   );

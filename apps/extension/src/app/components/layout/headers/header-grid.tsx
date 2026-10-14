@@ -22,7 +22,11 @@ export function HeaderGrid({ leftCol, centerCol, rightCol, ...props }: HeaderGri
           {leftCol}
         </Flex>
       </GridItem>
-      {centerCol && <GridItem margin="auto">{centerCol}</GridItem>}
+      {centerCol && (
+        <GridItem margin="auto" textAlign="center">
+          {centerCol}
+        </GridItem>
+      )}
       {rightCol && <GridItem>{rightCol}</GridItem>}
     </Grid>
   );

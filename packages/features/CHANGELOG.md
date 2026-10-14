@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.8.5](https://github.com/leather-io/mono/compare/@leather.io/features-v1.8.4...@leather.io/features-v1.8.5) (2026-10-06)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.66.2
+
+## [1.8.4](https://github.com/leather-io/mono/compare/@leather.io/features-v1.8.3...@leather.io/features-v1.8.4) (2026-10-01)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.66.1
+
+## [1.8.3](https://github.com/leather-io/mono/compare/@leather.io/features-v1.8.2...@leather.io/features-v1.8.3) (2026-09-29)
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+* staking testnet network ([#2801](https://github.com/leather-io/mono/issues/2801)) ([20fe188](https://github.com/leather-io/mono/commit/20fe1889a867e9ecffb7c20ef7b5a2364e53b43b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.40.0
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/services bumped to 1.66.0
+    * @leather.io/stacks bumped to 1.22.8
+    * @leather.io/tokens bumped to 0.27.2
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
 ## [1.8.2](https://github.com/leather-io/mono/compare/@leather.io/features-v1.8.1...@leather.io/features-v1.8.2) (2026-09-14)
 
 

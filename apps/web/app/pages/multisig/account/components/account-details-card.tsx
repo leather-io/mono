@@ -159,14 +159,14 @@ export function AccountDetailsCard({
           {account.signers.map(signer => {
             const isMe = signer.address === currentUserAddress;
             const member = vault.members.find(item => item.address === signer.address);
-            const name = isMe ? 'Me' : member?.name || truncateMiddle(signer.address);
+            const name = member?.name || truncateMiddle(signer.address);
             return (
               <ListItemBox
                 key={signer.id}
                 variant="plain"
                 density="compact"
                 leading={<AvatarCircle name={name} size="md" />}
-                title={name}
+                title={`${name}${isMe ? ' (me)' : ''}`}
                 caption={<CopyAddress addr={signer.address} wide />}
               />
             );

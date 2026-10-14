@@ -12,10 +12,11 @@ export function openExternalLink(url: string) {
 
 const utmSource = 'utm_source=stacking-app';
 
-function makeExplorerLink(path: string, network: string) {
-  return urljoin(HIRO_EXPLORER_URL, `${path}?${utmSource}&chain=${network}`);
+function makeExplorerLink(path: string, network: string, apiUrl?: string) {
+  const api = apiUrl ? `&api=${encodeURIComponent(apiUrl)}` : '';
+  return urljoin(HIRO_EXPLORER_URL, `${path}?${utmSource}&chain=${network}${api}`);
 }
 
-export function makeExplorerTxLink(txId: string, network: string) {
-  return makeExplorerLink(`/txid/${txId}`, network);
+export function makeExplorerTxLink(txId: string, network: string, apiUrl?: string) {
+  return makeExplorerLink(`/txid/${txId}`, network, apiUrl);
 }

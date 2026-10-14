@@ -76,10 +76,10 @@ export function useSwapDependencies(): SwapDependencies {
   const stacksAccount = useCurrentStacksAccount();
   const stacksNetwork = useCurrentStacksNetworkState();
   const network = useCurrentNetwork();
-  const signStacksTx = useSignStacksTransaction();
+  const signStacksTx = useSignStacksTransaction({ settleOnRejection: true });
   const { data: nextNonce } = useNextNonce(stacksAccount?.address ?? '');
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
-  const signBitcoinTx = useSignBitcoinTx();
+  const signBitcoinTx = useSignBitcoinTx({ settleOnRejection: true });
   const bitcoinClient = useBitcoinClient();
   const refreshAllAccountData = useRefreshAllAccountData();
 
@@ -149,8 +149,9 @@ export function useSwapDependencies(): SwapDependencies {
           network,
           bitcoinPayer,
           signBitcoinPsbt: async (psbt: Uint8Array) => {
-            const result = signBitcoinTx(psbt);
-            return Promise.resolve(result);
+            const signed = await Promise.resolve(signBitcoinTx(psbt));
+            if (!signed) throw new SwapSigningCancelledError();
+            return signed;
           },
           broadcast: (txHex: string) => broadcastBitcoinTransaction(bitcoinClient, txHex),
         }

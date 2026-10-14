@@ -69,7 +69,7 @@ const defaultActivityPageSize = 50;
 const maxActivityPageFetches = 5;
 // Hiro v3 caps /balance-changes at 20 tx_ids per call, so ft lookups are chunked.
 const balanceChangesBatchSize = 20;
-const activityByAssetScanPages = 10;
+const activityByAssetScanPages = 20;
 // BTC is fetched wholesale in a single request; this depth IS the BTC visibility horizon —
 // older BTC activity is silently absent (the server imposes no page-size maximum).
 const btcTxHorizonPageRequest = { page: 1, pageSize: 1000 };

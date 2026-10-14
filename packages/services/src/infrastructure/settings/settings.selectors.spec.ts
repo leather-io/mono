@@ -62,6 +62,11 @@ describe(selectStakingChainId.name, () => {
     expect(selectStakingChainId(settings)).toEqual('private-1');
   });
 
+  it('maps the staking testnet network to the staking-testnet chain', () => {
+    const settings = { ...userSettings, network: defaultNetworksKeyedById.stakingTestnet };
+    expect(selectStakingChainId(settings)).toEqual('staking-testnet');
+  });
+
   it('returns null for networks the staking index does not cover', () => {
     expect(
       selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.testnet })

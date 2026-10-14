@@ -6,7 +6,7 @@ import { hasBitcoinAddress } from '@leather.io/utils';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import type { LeatherApiPageRequest } from '../infrastructure/api/leather/leather-api.pagination';
 import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
-import { selectBitcoinNetworkMode } from '../infrastructure/settings/settings.selectors';
+import { getMempoolUrlFromUserSettings } from '../infrastructure/api/mempool/mempool-api.utils';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import {
@@ -26,9 +26,9 @@ export class BitcoinTransactionsService {
     txid: string,
     signal?: AbortSignal
   ): Promise<BitcoinTransaction | null> {
-    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
-    if (networkMode === 'regtest') {
-      const mempoolTx = await this.mempoolApiClient.fetchTransactionByTxId(txid, undefined, {
+    const mempoolUrl = getMempoolUrlFromUserSettings(this.settings.getSettings());
+    if (mempoolUrl) {
+      const mempoolTx = await this.mempoolApiClient.fetchTransactionByTxId(txid, mempoolUrl, {
         signal,
       });
       return mempoolTx ? createBitcoinTransactionFromMempool(mempoolTx) : null;
@@ -74,8 +74,8 @@ export class BitcoinTransactionsService {
     pageRequest: LeatherApiPageRequest,
     signal?: AbortSignal
   ): Promise<BitcoinTransaction[]> {
-    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
-    if (networkMode === 'regtest') {
+    const mempoolUrl = getMempoolUrlFromUserSettings(this.settings.getSettings());
+    if (mempoolUrl) {
       const mempoolTxs = await this.mempoolApiClient.fetchDescriptorTransactions(descriptor, {
         signal,
       });
@@ -92,9 +92,9 @@ export class BitcoinTransactionsService {
     pageRequest: LeatherApiPageRequest,
     signal?: AbortSignal
   ): Promise<BitcoinTransaction[]> {
-    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
-    if (networkMode === 'regtest') {
-      const mempoolTxs = await this.mempoolApiClient.fetchAddressTransactions(address, undefined, {
+    const mempoolUrl = getMempoolUrlFromUserSettings(this.settings.getSettings());
+    if (mempoolUrl) {
+      const mempoolTxs = await this.mempoolApiClient.fetchAddressTransactions(address, mempoolUrl, {
         signal,
       });
       return mempoolTxs.map(tx => createBitcoinTransactionFromMempool({ ...tx, address }));

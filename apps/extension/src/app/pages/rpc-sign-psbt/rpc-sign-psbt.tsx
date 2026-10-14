@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { Outlet } from 'react-router';
 
 import { PsbtSigner } from '@app/features/psbt-signer/psbt-signer';
 
@@ -42,7 +41,6 @@ export function RpcSignPsbt() {
         psbtHex={psbtHex}
         willBroadcast={bondProposal ? false : broadcast}
       />
-      <Outlet />
     </>
   );
 }

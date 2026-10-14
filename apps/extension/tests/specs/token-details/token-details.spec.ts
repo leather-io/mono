@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 import { mockTestAccountStacksTxsRequestsWithPendingTx } from '@tests/mocks/mock-stacks-txs';
 
 import { test } from '../../fixtures/fixtures';
@@ -7,6 +7,10 @@ import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances
 import { mockEmptyStacksBalancesV2Request } from '../../mocks/mock-stacks-balances-v2';
 import { CoreAssetSelectors, MockedTokensSelectors } from '../../selectors/mocked-tokens.selectors';
 import { TokenDetailsSelectors } from '../../selectors/token-details.selectors';
+
+async function openInfoTab(page: Page) {
+  await page.getByTestId(TokenDetailsSelectors.TokenDetailsTabInfo).click();
+}
 
 test.describe('Token details', () => {
   test.describe('BTC token details', () => {
@@ -48,6 +52,8 @@ test.describe('Token details', () => {
       test('that token details section shows price info', async ({ homePage, page }) => {
         const btcAsset = homePage.assetList.getByTestId(CoreAssetSelectors.BtcAsset);
         await btcAsset.click();
+
+        await openInfoTab(page);
 
         const name = page.getByTestId(TokenDetailsSelectors.TokenDetailsName);
         await expect(name).toHaveText(/Bitcoin \(BTC\)/);
@@ -153,11 +159,39 @@ test.describe('Token details', () => {
         const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
         await stxAsset.click();
 
+        await openInfoTab(page);
+
         const name = page.getByTestId(TokenDetailsSelectors.TokenDetailsName);
         await expect(name).toHaveText(/Stacks \(STX\)/);
 
         const layer = page.getByTestId(TokenDetailsSelectors.TokenDetailsLayer);
         await expect(layer).toHaveText(/Layer 2 \(Stacks\)/);
+      });
+
+      test('that the selected tab is remembered when reopening token details', async ({
+        homePage,
+        page,
+      }) => {
+        const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
+        await stxAsset.click();
+
+        await expect(
+          page.getByTestId(TokenDetailsSelectors.TokenDetailsTabActivity)
+        ).toHaveAttribute('data-state', 'active');
+        await openInfoTab(page);
+        await expect(page.getByTestId(TokenDetailsSelectors.TokenDetailsTabInfo)).toHaveAttribute(
+          'data-state',
+          'active'
+        );
+
+        await page.getByTestId(TokenDetailsSelectors.TokenDetailsBackButton).click();
+        await homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset).click();
+
+        await expect(page.getByTestId(TokenDetailsSelectors.TokenDetailsTabInfo)).toHaveAttribute(
+          'data-state',
+          'active'
+        );
+        await expect(page.getByTestId(TokenDetailsSelectors.TokenDetailsName)).toBeVisible();
       });
 
       test('that receive modal opens from STX token details', async ({ homePage, page }) => {
@@ -203,6 +237,8 @@ test.describe('Token details', () => {
       test('that token details section shows sBTC info', async ({ homePage, page }) => {
         const sbtcAsset = homePage.assetList.getByTestId(MockedTokensSelectors.SbtcTokenTestId);
         await sbtcAsset.click();
+
+        await openInfoTab(page);
 
         const name = page.getByTestId(TokenDetailsSelectors.TokenDetailsName);
         await expect(name).toBeVisible();
@@ -256,6 +292,8 @@ test.describe('Token details', () => {
         const usdcAsset = homePage.assetList.getByTestId(MockedTokensSelectors.AeUsdcTokenTestId);
         await usdcAsset.click();
 
+        await openInfoTab(page);
+
         const name = page.getByTestId(TokenDetailsSelectors.TokenDetailsName);
         await expect(name).toBeVisible();
         await expect(name).toHaveText(/Wrapped USDC/);
@@ -300,6 +338,8 @@ test.describe('Token details', () => {
       test('that token details section shows USDCx info', async ({ homePage, page }) => {
         const usdcxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.UsdcxAsset);
         await usdcxAsset.click();
+
+        await openInfoTab(page);
 
         const name = page.getByTestId(TokenDetailsSelectors.TokenDetailsName);
         await expect(name).toBeVisible();

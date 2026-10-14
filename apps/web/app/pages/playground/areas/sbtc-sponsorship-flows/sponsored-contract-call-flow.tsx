@@ -169,7 +169,7 @@ interface BundleTransactionProps {
   nonce: number;
   isLast?: boolean;
   isExpanded: boolean;
-  onToggle(): void;
+  onToggle(this: void): void;
   children: ReactNode;
 }
 function BundleTransaction({
@@ -240,7 +240,7 @@ function BundleTransaction({
 }
 
 interface LedgerSheetProps {
-  onClose(): void;
+  onClose(this: void): void;
   children: ReactNode;
 }
 function LedgerSheet({ onClose, children }: LedgerSheetProps) {
@@ -258,7 +258,7 @@ function LedgerSheet({ onClose, children }: LedgerSheetProps) {
 }
 
 interface LedgerConnectStepProps {
-  onConnect(): void;
+  onConnect(this: void): void;
 }
 function LedgerConnectStep({ onConnect }: LedgerConnectStepProps) {
   return (
@@ -285,7 +285,7 @@ interface LedgerSignStepProps {
   label: string;
   details: [string, string][];
   approval: LedgerApproval;
-  onApproveOnDevice(): void;
+  onApproveOnDevice(this: void): void;
 }
 function LedgerSignStep({
   index,

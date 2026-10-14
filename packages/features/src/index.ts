@@ -8,6 +8,7 @@ export {
 } from './activity/activity-balance';
 export type { GetMempoolExplorerLinkArgs } from './activity/activity-links';
 export {
+  getStacksExplorerApiUrl,
   getStacksExplorerLink,
   getBitcoinExplorerLink,
   makeActivityLink,

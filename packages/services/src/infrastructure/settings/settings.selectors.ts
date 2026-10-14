@@ -52,5 +52,6 @@ export function selectStakingChainId(settings: UserSettings): StakingChainId | n
   const networkId = selectNetworkConfigurationId(settings);
   if (networkId === WalletDefaultNetworkConfigurationIds.mainnet) return 'mainnet';
   if (networkId === WalletDefaultNetworkConfigurationIds['private-1']) return 'private-1';
+  if (networkId === WalletDefaultNetworkConfigurationIds.stakingTestnet) return 'staking-testnet';
   return null;
 }

@@ -22,9 +22,9 @@ import { useBitcoinFeeRates } from '@app/query/bitcoin/fees/bitcoin-fee-rates.ho
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/use-bitcoin-payer-from-input';
 
 export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const toast = useToast();
@@ -127,6 +127,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     signingConfig: BitcoinInputSigningConfig[]
   ) {
     const tx = await signTransaction(unsignedTx.toPSBT(), signingConfig);
+    if (!tx) return;
     tx.finalize();
     await broadcastTx({
       tx: tx.hex,

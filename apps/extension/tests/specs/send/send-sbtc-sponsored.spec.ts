@@ -6,9 +6,9 @@ import {
   mockSbtcSponsorshipSubmit,
 } from '@tests/mocks/mock-sbtc';
 import { mockZeroStxBalanceV2Request } from '@tests/mocks/mock-stacks-balances-v2';
-import { HomePage } from '@tests/page-object-models/home.page';
-import { OnboardingPage } from '@tests/page-object-models/onboarding.page';
-import { SendPage } from '@tests/page-object-models/send.page';
+import { type HomePage } from '@tests/page-object-models/home.page';
+import { type OnboardingPage } from '@tests/page-object-models/onboarding.page';
+import { type SendPage } from '@tests/page-object-models/send.page';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
