@@ -19,6 +19,15 @@ interface StacksBroadcastTransactionArgs {
   onSuccess(txid: string, transaction: StacksTransactionWire): void;
   onError(error: Error | string, reason?: TxBroadcastResultRejected['reason']): void;
 }
+
+function runSuccessHandler(handleSuccess: () => void) {
+  try {
+    handleSuccess();
+  } catch (error) {
+    logger.error('Stacks transaction broadcast but the success handler failed', error);
+  }
+}
+
 export async function stacksBroadcastTransaction({
   network,
   signedTx,
@@ -65,7 +74,7 @@ export async function stacksBroadcastTransaction({
 
     await delay(500);
 
-    onSuccess(response.txid, signedTx);
+    runSuccessHandler(() => onSuccess(response.txid, signedTx));
     return;
   } catch (error) {
     logger.error('Transaction error', { error });

@@ -9,7 +9,9 @@ import { isRecord } from '@shared/utils/is-record';
 
 import type { AddressMonitor, MonitoredAddress } from '../address-monitor';
 import {
+  type MempoolWsBitcoinTxMessage,
   type MempoolWsBtcPrice,
+  parseMempoolWsBitcoinTxMessage,
   readMempooWsBtcPriceUsd,
   readMempoolWsBitcoinTxAddressResult,
 } from './bitcoin-transaction-monitor/mempool-ws';
@@ -18,45 +20,6 @@ function logTxMonitorEvent(message: string, ...args: unknown[]) {
   if (!DEBUG_TX_MONITOR) return;
   logger.debug(message, ...args);
 }
-
-const mempoolWsBitcoinVoutSchema = z.object({
-  scriptpubkey_address: z.string(),
-  value: z.number(),
-});
-
-const mempoolWsBitcoinVinSchema = z.object({
-  txid: z.string(),
-  prevout: mempoolWsBitcoinVoutSchema,
-});
-
-const mempoolWsBitcoinTxSchema = z.object({
-  txid: z.string(),
-  vin: z.array(z.unknown()).transform(vins =>
-    vins.flatMap(vin => {
-      const parsedVin = mempoolWsBitcoinVinSchema.safeParse(vin);
-      return parsedVin.success ? [parsedVin.data] : [];
-    })
-  ),
-  vout: z.array(z.unknown()).transform(vouts =>
-    vouts.flatMap(vout => {
-      const parsedVout = mempoolWsBitcoinVoutSchema.safeParse(vout);
-      return parsedVout.success ? [parsedVout.data] : [];
-    })
-  ),
-  fee: z.number(),
-  status: z.object({
-    confirmed: z.boolean(),
-    block_height: z.number().optional(),
-  }),
-});
-
-const mempoolWsBitcoinTxMessageSchema = z.object({
-  'multi-address-transactions': z.record(
-    z.string(),
-    z.object({ confirmed: z.array(mempoolWsBitcoinTxSchema) })
-  ),
-});
-type MempoolWsBitcoinTxMessage = z.infer<typeof mempoolWsBitcoinTxMessageSchema>;
 
 const mempoolWsBtcPriceSchema = z.object({ USD: z.number() });
 
@@ -173,8 +136,8 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
     const message: unknown = JSON.parse(String(event.data));
     if (!isRecord(message)) return;
     if (message['multi-address-transactions']) {
-      const parsedMessage = mempoolWsBitcoinTxMessageSchema.safeParse(message);
-      if (parsedMessage.success) handleTransactionMessage(parsedMessage.data);
+      const parsedMessage = parseMempoolWsBitcoinTxMessage(message);
+      if (parsedMessage) handleTransactionMessage(parsedMessage);
     } else {
       const parsedPrice = mempoolWsBtcPriceSchema.safeParse(message['conversions']);
       if (parsedPrice.success) _btcPriceUsd = parsedPrice.data.USD;

@@ -4,10 +4,7 @@ import { logger } from '@shared/logger';
 import { InternalMethods, SIGN_OUT_MESSAGE } from '@shared/message-types';
 
 import { applyPendingUpdate } from '@background/extension-update-monitor';
-import {
-  monitoredAddressListSchema,
-  syncAddressMonitor,
-} from '@background/monitors/address-monitor';
+import { parseMonitoredAddresses, syncAddressMonitor } from '@background/monitors/address-monitor';
 
 function validateMessagesAreFromExtension(sender: chrome.runtime.MessageSender) {
   // Only respond to internal messages from our UI, not content scripts in other applications
@@ -30,11 +27,15 @@ const internalMessageSchema = z.looseObject({
   payload: z.unknown().optional(),
 });
 
-const monitoredAddressesPayloadSchema = z.looseObject({ addresses: monitoredAddressListSchema });
+const monitoredAddressesPayloadSchema = z.looseObject({ addresses: z.array(z.unknown()) });
 
 function getMonitoredAddressesFromPayload(payload: unknown) {
   const parsedPayload = monitoredAddressesPayloadSchema.safeParse(payload);
-  return parsedPayload.success ? parsedPayload.data.addresses : null;
+  if (!parsedPayload.success) {
+    logger.warn('Ignoring an address monitor update without an address list');
+    return null;
+  }
+  return parseMonitoredAddresses(parsedPayload.data.addresses);
 }
 
 function logInternalMessage(message: { method: string }) {

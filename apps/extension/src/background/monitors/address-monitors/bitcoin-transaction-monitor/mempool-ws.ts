@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { sumNumbers } from '@leather.io/utils';
 
 /** @knipignore */
@@ -8,7 +10,7 @@ export interface MempoolWsBitcoinTx {
   fee: number;
   status: {
     confirmed: boolean;
-    block_height?: number;
+    block_height?: number | null;
   };
 }
 
@@ -20,6 +22,52 @@ interface MempoolWsBitcoinVin {
 interface MempoolWsBitcoinVout {
   scriptpubkey_address: string;
   value: number;
+}
+
+function parseEach<T>(schema: z.ZodType<T>, values: unknown[]) {
+  return values.flatMap(value => {
+    const parsedValue = schema.safeParse(value);
+    return parsedValue.success ? [parsedValue.data] : [];
+  });
+}
+
+const mempoolWsBitcoinVoutSchema = z.object({
+  scriptpubkey_address: z.string(),
+  value: z.number(),
+});
+
+const mempoolWsBitcoinVinSchema = z.object({
+  txid: z.string(),
+  prevout: mempoolWsBitcoinVoutSchema,
+});
+
+const mempoolWsBitcoinTxSchema = z.object({
+  txid: z.string(),
+  vin: z.array(z.unknown()).transform(vins => parseEach(mempoolWsBitcoinVinSchema, vins)),
+  vout: z.array(z.unknown()).transform(vouts => parseEach(mempoolWsBitcoinVoutSchema, vouts)),
+  fee: z.number(),
+  status: z.object({
+    confirmed: z.boolean(),
+    block_height: z.number().nullish(),
+  }),
+});
+
+const mempoolWsAddressTransactionsSchema = z
+  .object({
+    confirmed: z
+      .array(z.unknown())
+      .transform(transactions => parseEach(mempoolWsBitcoinTxSchema, transactions)),
+  })
+  .catch({ confirmed: [] });
+
+const mempoolWsBitcoinTxMessageSchema = z.object({
+  'multi-address-transactions': z.record(z.string(), mempoolWsAddressTransactionsSchema),
+});
+export type MempoolWsBitcoinTxMessage = z.infer<typeof mempoolWsBitcoinTxMessageSchema>;
+
+export function parseMempoolWsBitcoinTxMessage(message: unknown) {
+  const parsedMessage = mempoolWsBitcoinTxMessageSchema.safeParse(message);
+  return parsedMessage.success ? parsedMessage.data : null;
 }
 
 export interface MempoolWsBtcPrice {
