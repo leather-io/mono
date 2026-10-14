@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { logger } from '@shared/logger';
+
 const bitcoinTxVectorOutputSchema = z.object({
   scriptpubkey: z.string(),
   scriptpubkey_asm: z.string(),
@@ -43,10 +45,10 @@ const bitcoinTxVectorInputSchema = z.object({
   sequence: z.number(),
   txid: z.string(),
   vout: z.number(),
-  witness: z.array(z.string()),
+  witness: z.array(z.string()).default([]),
 });
 
-export const increaseBtcFeeRouteStateSchema = z.object({
+const btcTxRouteStateSchema = z.object({
   btcTx: z.object({
     fee: z.number(),
     locktime: z.number(),
@@ -64,4 +66,9 @@ export const increaseBtcFeeRouteStateSchema = z.object({
     vout: z.array(bitcoinTxVectorOutputSchema),
     weight: z.number(),
   }),
+});
+
+export const increaseBtcFeeRouteStateSchema = btcTxRouteStateSchema.nullish().catch(({ error }) => {
+  logger.warn('Unable to read the transaction for the increase fee sheet', error.issues);
+  return null;
 });

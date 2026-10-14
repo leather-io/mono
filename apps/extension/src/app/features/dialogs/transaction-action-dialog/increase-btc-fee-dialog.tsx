@@ -21,7 +21,7 @@ import { useBtcIncreaseFee } from './hooks/use-btc-increase-fee';
 import { increaseBtcFeeRouteStateSchema } from './increase-btc-fee-route-state';
 
 export function IncreaseBtcFeeSheet() {
-  const tx = useRouteState(increaseBtcFeeRouteStateSchema.nullish().catch(null))?.btcTx;
+  const tx = useRouteState(increaseBtcFeeRouteStateSchema)?.btcTx;
   if (!tx) return null;
   return <IncreaseBtcFeeSheetContent tx={tx} />;
 }
