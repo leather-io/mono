@@ -38,6 +38,6 @@ const persistedStoreSnapshotSchema = z.looseObject({
 
 export async function readPersistedStore(page: Page) {
   const store = await page.evaluate(() => window.debug.getPersistedStore());
-  const result = persistedStoreSnapshotSchema.safeParse(store);
-  return result.success ? result.data : undefined;
+  if (store === undefined || store === null) return undefined;
+  return persistedStoreSnapshotSchema.parse(store);
 }
