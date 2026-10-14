@@ -114,7 +114,10 @@ export function StacksTransactionActionSheet({
         header={<SheetHeader title={title} />}
         footer={
           <TransactionActions
-            isDisabled={stxToMicroStx(feeValue ?? 0).isLessThanOrEqualTo(initialTransactionFee)}
+            isDisabled={
+              feeValue === undefined ||
+              stxToMicroStx(feeValue).isLessThanOrEqualTo(initialTransactionFee)
+            }
             isLoading={isBroadcasting}
             onCancel={() => void navigate(RouteUrls.Home)}
             onSubmit={() => void methods.handleSubmit(onSubmit)()}

@@ -58,6 +58,11 @@ function createPrincipalCV(principal: string) {
   throw new Error(`Invalid principal: ${principal}`);
 }
 
+function formValueToStxMoney(value: number | string | undefined) {
+  if (!value) return undefined;
+  return createMoney(stxToMicroStx(value), 'STX');
+}
+
 export function useGenerateStxTokenTransferUnsignedTx() {
   const account = useCurrentStacksAccount();
   const stxAddress = useCurrentStacksAccountAddress();
@@ -78,8 +83,8 @@ export function useGenerateStxTokenTransferUnsignedTx() {
           policy,
           network,
           recipient: values?.recipient || policy.address,
-          amount: createMoney(stxToMicroStx(values?.amount || 0), 'STX'),
-          fee: createMoney(stxToMicroStx(values?.fee || 0), 'STX'),
+          amount: formValueToStxMoney(values?.amount),
+          fee: formValueToStxMoney(values?.fee),
           memo: values?.memo || undefined,
         });
       }
@@ -87,7 +92,7 @@ export function useGenerateStxTokenTransferUnsignedTx() {
       const options: GenerateUnsignedTransactionOptions = {
         publicKey: account.stxPublicKey,
         nonce: values?.nonce ? Number(values.nonce) : nextNonce?.nonce,
-        fee: stxToMicroStx(values?.fee || 0).toNumber(),
+        fee: formValueToStxMoney(values?.fee)?.amount.toNumber(),
         txData: {
           txType: TransactionTypes.StxTokenTransfer,
           // Using account address here as a fallback for a fee estimation
@@ -143,10 +148,10 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
             logger.error('Current account is not a signer of this multisig policy');
             return;
           }
-          const amountInBaseUnits = ftUnshiftDecimals(
-            values && 'amount' in values ? values.amount || 0 : 0,
-            info.decimals || 0
-          );
+          const amountInBaseUnits =
+            values && 'amount' in values && values.amount
+              ? ftUnshiftDecimals(values.amount, info.decimals)
+              : undefined;
           return await buildUnsignedPolicySip10Transfer({
             policy,
             network,
@@ -156,7 +161,7 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
                 ? values.recipient
                 : policy.address,
             baseUnitAmount: amountInBaseUnits,
-            fee: createMoney(stxToMicroStx(values?.fee || 0), 'STX'),
+            fee: formValueToStxMoney(values?.fee),
             memo: values && 'memo' in values && values.memo !== '' ? values.memo : undefined,
           });
         }
@@ -172,7 +177,7 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
             ? someCV(bufferCVFromString(values.memo))
             : noneCV();
 
-        const amountAsFractionalUnit = ftUnshiftDecimals(amount, info.decimals || 0);
+        const amountAsFractionalUnit = ftUnshiftDecimals(amount, info.decimals);
         const postConditionOptions = {
           amount: amountAsFractionalUnit,
           contractAddress,
@@ -204,7 +209,7 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
             network,
             publicKey: account.stxPublicKey,
           },
-          fee: stxToMicroStx(values?.fee || 0).toNumber(),
+          fee: formValueToStxMoney(values?.fee)?.amount.toNumber(),
           publicKey: account.stxPublicKey,
           nonce: values?.nonce ? Number(values.nonce) : nextNonce?.nonce,
         } as const;

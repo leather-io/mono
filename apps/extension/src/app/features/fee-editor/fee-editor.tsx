@@ -27,6 +27,9 @@ function FeeEditor({ children }: FeeEditorProps) {
     onSetSelectedFee,
   } = useFeeEditorContext();
 
+  const customFeeValue = Number(customFee);
+  const isCustomFeeValid = selectedFee.priority !== 'custom' || customFeeValue > 0;
+
   useOnMount(() => {
     onSetLoadedFee(selectedFee);
   });
@@ -41,7 +44,7 @@ function FeeEditor({ children }: FeeEditorProps) {
   function onSave() {
     // Need to handle custom fee input change on save
     const isCustomFee = selectedFee?.priority === 'custom';
-    if (isCustomFee) onSetSelectedFee(getCustomFee(Number(customFee ?? 0)));
+    if (isCustomFee) onSetSelectedFee(getCustomFee(customFeeValue));
     if (!isCustomFee) {
       onSetCustomFee(selectedFee?.feeRate?.toString());
     }
@@ -65,7 +68,7 @@ function FeeEditor({ children }: FeeEditorProps) {
           <Button key="cancel" onClick={onCancel} fullWidth variant="outline">
             Cancel
           </Button>,
-          <Button key="save" onClick={onSave} fullWidth>
+          <Button key="save" onClick={onSave} disabled={!isCustomFeeValid} fullWidth>
             Save
           </Button>,
         ]}

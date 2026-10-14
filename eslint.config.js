@@ -271,6 +271,12 @@ export default defineConfig([
           message:
             "Do not pass `x ?? ''` as an argument. Narrow the value first or let the callee accept undefined.",
         },
+        {
+          selector:
+            ':matches(CallExpression, NewExpression) > LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="Literal"][right.value=0]',
+          message:
+            'Do not pass `x ?? 0` as an argument. A missing value is not zero: narrow it first or let the callee accept undefined.',
+        },
       ],
     },
   },

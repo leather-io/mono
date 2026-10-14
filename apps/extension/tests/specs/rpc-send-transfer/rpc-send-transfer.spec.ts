@@ -251,9 +251,11 @@ function summarizeSignedTx(hex: string) {
       throw new Error(`Signed tx spends an unknown utxo ${bytesToHex(txid)}`);
     return { txid: bytesToHex(txid), value };
   });
-  const outputsTotal = Array.from({ length: tx.outputsLength }, (_, index) =>
-    Number(tx.getOutput(index).amount ?? 0n)
-  ).reduce((sum, amount) => sum + amount, 0);
+  const outputsTotal = Array.from({ length: tx.outputsLength }, (_, index) => {
+    const { amount } = tx.getOutput(index);
+    if (amount === undefined) throw new Error(`Signed tx output ${index} has no amount`);
+    return Number(amount);
+  }).reduce((sum, amount) => sum + amount, 0);
   const inputsTotal = inputs.reduce((sum, input) => sum + input.value, 0);
 
   return {
