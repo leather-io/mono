@@ -43,6 +43,9 @@ export function useBtcChooseFee() {
     async previewTransaction({ feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs) {
       const feeRowValue = formFeeRowValue(feeRate, isCustomFee);
 
+      if (!Number.isFinite(feeValue))
+        return sendFormNavigate.toErrorPage(new Error('Unable to determine the transaction fee'));
+
       if (policy?.chain === 'bitcoin') {
         const descriptorKey =
           nativeSegwitAccount &&
