@@ -22,8 +22,24 @@ import { increaseBtcFeeRouteStateSchema } from './increase-btc-fee-route-state';
 
 export function IncreaseBtcFeeSheet() {
   const tx = useRouteState(increaseBtcFeeRouteStateSchema)?.btcTx;
-  if (!tx) return null;
+  if (!tx) return <IncreaseBtcFeeUnsupportedSheet />;
   return <IncreaseBtcFeeSheetContent tx={tx} />;
+}
+
+function IncreaseBtcFeeUnsupportedSheet() {
+  const navigate = useNavigate();
+
+  function onClose() {
+    void navigate(RouteUrls.Home);
+  }
+
+  return (
+    <Sheet isShowing onClose={onClose} header={<SheetHeader title="Increase fee" />}>
+      <Stack gap="space.05" px="space.05" pb="space.05">
+        <Caption>This transaction can't be sped up in Leather.</Caption>
+      </Stack>
+    </Sheet>
+  );
 }
 
 interface IncreaseBtcFeeSheetContentProps {
