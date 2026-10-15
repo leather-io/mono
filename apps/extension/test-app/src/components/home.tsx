@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, Flex, styled } from 'leather-styles/jsx';
 
 import { Bitcoin } from './bitcoin';
 import { Bns } from './bns';

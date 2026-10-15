@@ -4,8 +4,8 @@ import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
 import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
 import {
-  ClarityValue,
-  TupleCV,
+  type ClarityValue,
+  type TupleCV,
   bufferCVFromString,
   contractPrincipalCV,
   encodeStructuredData,
@@ -26,7 +26,7 @@ import {
 } from '@stacks/transactions';
 import { Box, styled } from 'leather-styles/jsx';
 
-import { LeatherProvider } from '@leather.io/rpc';
+import { type LeatherProvider } from '@leather.io/rpc';
 
 declare global {
   interface Window {
@@ -146,11 +146,11 @@ export function Signature() {
       )}
       <span>RPC</span>
       <br />
-      <styled.button mt={3} onClick={() => signMessageRpc(signatureMessage)}>
+      <styled.button mt={3} onClick={() => void signMessageRpc(signatureMessage)}>
         Signature RPC (Testnet)
       </styled.button>
       <br />
-      <styled.button mt={3} onClick={() => signStructureRpc(structuredData, domain)}>
+      <styled.button mt={3} onClick={() => void signStructureRpc(structuredData, domain)}>
         Signature Structure RPC (Testnet)
       </styled.button>
     </Box>

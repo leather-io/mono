@@ -13,7 +13,7 @@ interface StacksTokenDetailsLayoutProps {
   icon: ReactNode;
   balance: Money;
   fiatBalance: Money;
-  price: Money;
+  price?: Money;
   descriptionText: string;
   balances: TokenBalanceEntry[];
   activity: BlockchainActivityItem[];

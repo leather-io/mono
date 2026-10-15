@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import type { ToastProps } from '@leather.io/ui';
 
 export function useToastHandlers() {
-  const [toasts, setToasts] = useState(new Map());
+  const [toasts, setToasts] = useState(new Map<string, ToastProps>());
 
   const handleAddToast = useCallback((toast: ToastProps) => {
     setToasts(prev => {
@@ -16,7 +16,7 @@ export function useToastHandlers() {
   return useMemo(() => {
     return {
       toasts,
-      handleRemoveToast: (key: any) => {
+      handleRemoveToast(key: string) {
         setToasts(prev => {
           const newMap = new Map(prev);
           newMap.delete(key);
@@ -26,18 +26,18 @@ export function useToastHandlers() {
       handleDispatchInfo: (message: string) => handleAddToast({ message, variant: 'info' }),
       handleDispatchSuccess: (message: string) => handleAddToast({ message, variant: 'success' }),
       handleDispatchError: (message: string) => handleAddToast({ message, variant: 'error' }),
-      handleDispatchPromise: async (
-        promise: Promise<any>,
+      async handleDispatchPromise<T>(
+        promise: Promise<T>,
         msgs: { success: string; error: string }
-      ) => {
-        return promise
-          .then(data => {
-            handleAddToast({ message: msgs.success, variant: 'success' });
-            return data;
-          })
-          .catch(() => {
-            handleAddToast({ message: msgs.error, variant: 'error' });
-          });
+      ): Promise<T | undefined> {
+        try {
+          const data = await promise;
+          handleAddToast({ message: msgs.success, variant: 'success' });
+          return data;
+        } catch {
+          handleAddToast({ message: msgs.error, variant: 'error' });
+          return undefined;
+        }
       },
     };
   }, [handleAddToast, toasts]);

@@ -47,10 +47,10 @@ function useAlexCurrencyPriceAsMarketData() {
       const tokenInfo = supportedCurrencies
         .filter(isDefined)
         .find(token => getPrincipalFromAssetString(token.underlyingToken) === principal);
-      if (!prices || !tokenInfo)
+      const currencyPrice = tokenInfo && prices?.[tokenInfo.id];
+      if (currencyPrice === undefined)
         return createMarketData(createMarketPair(symbol, 'USD'), createMoney(0, 'USD'));
-      const currency = tokenInfo.id;
-      const price = convertAmountToFractionalUnit(new BigNumber(prices[currency] ?? 0), 2);
+      const price = convertAmountToFractionalUnit(new BigNumber(currencyPrice), 2);
       return createMarketData(createMarketPair(symbol, 'USD'), createMoney(price, 'USD'));
     },
     [prices, supportedCurrencies]

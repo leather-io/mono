@@ -1,6 +1,6 @@
 import { useMatch } from 'react-router';
 
-import { StacksTx } from '@leather.io/models';
+import { type StacksTx } from '@leather.io/models';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
@@ -79,8 +79,8 @@ export function StacksTransactionItem({
   const rightElement =
     isOriginator && isPending && !isTransactionActionRoute ? (
       <StacksTransactionActionMenu
-        onIncreaseFee={() => handleTransactionAction(StacksTransactionActionType.IncreaseFee)}
-        onCancelTransaction={() => handleTransactionAction(StacksTransactionActionType.Cancel)}
+        onIncreaseFee={() => void handleTransactionAction(StacksTransactionActionType.IncreaseFee)}
+        onCancelTransaction={() => void handleTransactionAction(StacksTransactionActionType.Cancel)}
       />
     ) : undefined;
 

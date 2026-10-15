@@ -2,12 +2,19 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { RpcErrorCode } from '@leather.io/rpc';
 
+import { createMockPort } from '../create-mock-port';
 import { signMessageHandler } from './sign-message';
 
 type SignMessageRequest = Parameters<(typeof signMessageHandler)[1]>[0];
 
 const mocks = vi.hoisted(() => ({
-  createConnectingAppSearchParamsWithLastKnownAccount: vi.fn(),
+  createConnectingAppSearchParamsWithLastKnownAccount:
+    vi.fn<
+      (
+        port: chrome.runtime.Port,
+        otherParams: [string, string][]
+      ) => Promise<{ frameId: number; urlParams: URLSearchParams; tabId: number }>
+    >(),
   triggerRequestPopupWindowOpen: vi.fn(),
   sendErrorResponseOnUserPopupClose: vi.fn(),
   trackRpcRequestError: vi.fn(),
@@ -45,26 +52,26 @@ function signInMessage(domain: string) {
   return `Sign in to Leather\nDomain: ${domain}\nApplication: multisig\nNetwork: mainnet\nIssued: 1780651887`;
 }
 
-function makeRequest(params: Record<string, unknown>): SignMessageRequest {
-  const request: unknown = {
+function makeRequest(params: SignMessageRequest['params']): SignMessageRequest {
+  return {
     jsonrpc: '2.0',
     id: 'req-1',
     method: 'signMessage',
     params,
   };
-  return request as SignMessageRequest;
 }
 
 function buildPort() {
-  const port: unknown = {
-    sender: { frameId, url: requestingOrigin, tab: { id: tabId } },
-  };
-  return port as chrome.runtime.Port;
+  return createMockPort({ frameId, url: requestingOrigin, tab: { id: tabId } });
 }
 
 function invokeHandler(request: SignMessageRequest) {
   const [, handler] = signMessageHandler;
   return handler(request, buildPort());
+}
+
+function objectContaining(expected: Record<string, unknown>): unknown {
+  return expect.objectContaining(expected);
 }
 
 describe('signMessageHandler', () => {
@@ -84,12 +91,14 @@ describe('signMessageHandler', () => {
   });
 
   test('refuses a sign-in message naming a different origin before opening the popup', async () => {
-    await invokeHandler(makeRequest({ message: signInMessage('https://app.leather.io') }));
+    await invokeHandler(
+      makeRequest({ message: signInMessage('https://app.leather.io'), paymentType: 'p2wpkh' })
+    );
 
     expect(mocks.sendMessage).toHaveBeenCalledWith(
       tabId,
       expect.objectContaining({
-        error: expect.objectContaining({ code: RpcErrorCode.PERMISSION_DENIED }),
+        error: objectContaining({ code: RpcErrorCode.PERMISSION_DENIED }),
       }),
       { frameId }
     );
@@ -97,7 +106,9 @@ describe('signMessageHandler', () => {
   });
 
   test('opens the popup for a sign-in message naming the requesting origin', async () => {
-    await invokeHandler(makeRequest({ message: signInMessage(requestingOrigin) }));
+    await invokeHandler(
+      makeRequest({ message: signInMessage(requestingOrigin), paymentType: 'p2wpkh' })
+    );
 
     expect(mocks.sendMessage).not.toHaveBeenCalled();
     expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalled();
@@ -105,7 +116,7 @@ describe('signMessageHandler', () => {
   });
 
   test('opens the popup for an ordinary message', async () => {
-    await invokeHandler(makeRequest({ message: 'gm, sign this' }));
+    await invokeHandler(makeRequest({ message: 'gm, sign this', paymentType: 'p2wpkh' }));
 
     expect(mocks.sendMessage).not.toHaveBeenCalled();
     expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalled();

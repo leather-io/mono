@@ -1,6 +1,7 @@
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
 import * as btc from '@scure/btc-signer';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import {
   TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
   TEST_ACCOUNT_2_TAPROOT_ADDRESS,
@@ -89,9 +90,9 @@ function openSendTransfer(page: Page) {
   return async (params: RpcParams<typeof sendTransfer>) =>
     page.evaluate(
       params =>
-        (window as any).LeatherProvider?.request('sendTransfer', {
+        window.LeatherProvider?.request('sendTransfer', {
           ...params,
-        }).catch((e: unknown) => e),
+        }).catch((e: TestRpcResponse) => e),
       { ...params }
     );
 }
@@ -113,6 +114,7 @@ test.describe('RPC: sendTransfer', () => {
       }),
     ]);
 
+    if (!result) throw new Error('Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -138,6 +140,7 @@ test.describe('RPC: sendTransfer', () => {
       }),
     ]);
 
+    if (!result) throw new Error('Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -167,6 +170,7 @@ test.describe('RPC: sendTransfer', () => {
     await popup.close();
     const result = await resultPromise;
 
+    if (!result) throw new Error('Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -187,6 +191,7 @@ test.describe('RPC: sendTransfer', () => {
       clickActionButton(context)('Cancel'),
     ]);
 
+    if (!result) throw new Error('Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -228,6 +233,14 @@ async function readSpendSourceRows(popup: Page) {
   };
 }
 
+function readSignedTransactionHex(response: TestRpcResponse | undefined) {
+  const transaction = response?.result?.transaction;
+  if (typeof transaction !== 'string') {
+    throw new Error('Expected signed transaction hex in RPC response');
+  }
+  return transaction;
+}
+
 function summarizeSignedTx(hex: string) {
   const tx = btc.Transaction.fromRaw(hexToBytes(hex));
   const inputs = Array.from({ length: tx.inputsLength }, (_, index) => {
@@ -238,9 +251,11 @@ function summarizeSignedTx(hex: string) {
       throw new Error(`Signed tx spends an unknown utxo ${bytesToHex(txid)}`);
     return { txid: bytesToHex(txid), value };
   });
-  const outputsTotal = Array.from({ length: tx.outputsLength }, (_, index) =>
-    Number(tx.getOutput(index).amount ?? 0n)
-  ).reduce((sum, amount) => sum + amount, 0);
+  const outputsTotal = Array.from({ length: tx.outputsLength }, (_, index) => {
+    const { amount } = tx.getOutput(index);
+    if (amount === undefined) throw new Error(`Signed tx output ${index} has no amount`);
+    return Number(amount);
+  }).reduce((sum, amount) => sum + amount, 0);
   const inputsTotal = inputs.reduce((sum, input) => sum + input.value, 0);
 
   return {
@@ -335,7 +350,7 @@ test.describe('RPC: sendTransfer spend sources match the signed transaction', ()
     await popup.locator('text="I understand, continue"').click({ timeout: 10000 });
 
     const result = await resultPromise;
-    const signed = summarizeSignedTx(result.result.transaction);
+    const signed = summarizeSignedTx(readSignedTransactionHex(result));
 
     test.expect(signed.fee).toBeGreaterThan(0);
     test.expect(rows.nativeSegwit + rows.taproot).toEqual(amount + signed.fee);
@@ -390,7 +405,7 @@ test.describe('RPC: sendTransfer spend sources with native segwit utxos only', (
     await popup.getByRole('button', { name: 'Sign transaction' }).click();
 
     const result = await resultPromise;
-    const signed = summarizeSignedTx(result.result.transaction);
+    const signed = summarizeSignedTx(readSignedTransactionHex(result));
 
     test.expect(signed.fee).toBeGreaterThan(0);
     test.expect(signed.taprootInputTotal).toEqual(0);

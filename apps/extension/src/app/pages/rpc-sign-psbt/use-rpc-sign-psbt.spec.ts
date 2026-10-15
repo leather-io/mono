@@ -1,3 +1,6 @@
+import type * as ReactModule from 'react';
+import type * as ReactRouterModule from 'react-router';
+
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
@@ -8,6 +11,9 @@ import { createMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
+import type * as SharedUtilsModule from '@shared/utils';
+
+import type * as NetworksSelectorsModule from '@app/store/networks/networks.selectors';
 
 import { useRpcSignPsbt } from './use-rpc-sign-psbt';
 
@@ -33,8 +39,13 @@ const mocks = vi.hoisted(() => ({
   useCurrentNetwork: vi.fn(),
 }));
 
+function expectNavigationState(state: Record<string, unknown>): unknown {
+  const expectedState: unknown = expect.objectContaining(state);
+  return expect.objectContaining({ state: expectedState });
+}
+
 vi.mock('react', async importOriginal => {
-  const actual = await importOriginal<typeof import('react')>();
+  const actual = await importOriginal<typeof ReactModule>();
   return {
     ...actual,
     useEffect(effect: () => void) {
@@ -47,7 +58,7 @@ vi.mock('react', async importOriginal => {
 });
 
 vi.mock('react-router', async importOriginal => {
-  const actual = await importOriginal<typeof import('react-router')>();
+  const actual = await importOriginal<typeof ReactRouterModule>();
   return { ...actual, useNavigate: () => mocks.navigate };
 });
 
@@ -63,12 +74,12 @@ vi.mock('@app/features/multisig/use-propose-multisig-transaction', () => ({
 }));
 
 vi.mock('@app/store/networks/networks.selectors', async importOriginal => {
-  const actual = await importOriginal<typeof import('@app/store/networks/networks.selectors')>();
+  const actual = await importOriginal<typeof NetworksSelectorsModule>();
   return { ...actual, useCurrentNetwork: mocks.useCurrentNetwork };
 });
 
 vi.mock('@shared/utils', async importOriginal => {
-  const actual = await importOriginal<typeof import('@shared/utils')>();
+  const actual = await importOriginal<typeof SharedUtilsModule>();
   return { ...actual, closeWindow: mocks.closeWindow };
 });
 
@@ -322,7 +333,7 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.refetchUtxos).toHaveBeenCalled();
     expect(mocks.navigate).toHaveBeenCalledWith(
       RouteUrls.RpcSignPsbtSummary,
-      expect.objectContaining({ state: expect.objectContaining({ txId: 'txid-123' }) })
+      expectNavigationState({ txId: 'txid-123' })
     );
     expect(mocks.closeWindow).not.toHaveBeenCalled();
   });
@@ -478,7 +489,7 @@ describe(useRpcSignPsbt.name, () => {
     );
     expect(mocks.navigate).toHaveBeenCalledWith(
       RouteUrls.RpcSignPsbtSummary,
-      expect.objectContaining({ state: expect.objectContaining({ txId: 'txid-456' }) })
+      expectNavigationState({ txId: 'txid-456' })
     );
   });
 
@@ -493,9 +504,7 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.sendMessage).not.toHaveBeenCalled();
     expect(mocks.navigate).toHaveBeenCalledWith(
       RouteUrls.RequestError,
-      expect.objectContaining({
-        state: expect.objectContaining({ title: 'Failed to finalize tx' }),
-      })
+      expectNavigationState({ title: 'Failed to finalize tx' })
     );
   });
 
@@ -547,9 +556,7 @@ describe(useRpcSignPsbt.name, () => {
     );
     expect(mocks.navigate).toHaveBeenCalledWith(
       RouteUrls.RequestError,
-      expect.objectContaining({
-        state: expect.objectContaining({ title: 'Signing not permitted' }),
-      })
+      expectNavigationState({ title: 'Signing not permitted' })
     );
   });
 

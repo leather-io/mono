@@ -2,16 +2,34 @@
 import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { type Mock, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { useCurrentAccountDisplayName } from './use-account-names';
 
 Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true);
 
-const h = vi.hoisted(() => ({
-  effectiveAccount: undefined as
-    | { address: string; accountIndex: number; fingerprint: string; index: number; type: string }
-    | undefined,
+function expectedAccountWithStxAddress(stxAddress: string): unknown {
+  return expect.objectContaining({ stacks: { stxAddress } });
+}
+
+interface EffectiveAccount {
+  address: string;
+  accountIndex: number;
+  fingerprint: string;
+  index: number;
+  type: string;
+}
+
+interface HoistedMocks {
+  effectiveAccount: EffectiveAccount | undefined;
+  activeAccountId: { accountIndex: number; fingerprint: string };
+  useAccountNameOverride: Mock<(args: unknown) => unknown>;
+  createAccountAddresses: Mock<(id: unknown, descriptors: unknown, stxAddress?: string) => unknown>;
+  bnsQueryConfig: Mock<(request: unknown, settings: unknown) => unknown>;
+}
+
+const h = vi.hoisted<HoistedMocks>(() => ({
+  effectiveAccount: undefined,
   activeAccountId: { accountIndex: 0, fingerprint: 'fp-active' },
   useAccountNameOverride: vi.fn<(args: unknown) => unknown>(() => undefined),
   createAccountAddresses: vi.fn<
@@ -101,9 +119,7 @@ describe('useCurrentAccountDisplayName', () => {
       'SP_EFFECTIVE'
     );
     expect(h.bnsQueryConfig).toHaveBeenCalledWith(
-      expect.objectContaining({
-        account: expect.objectContaining({ stacks: { stxAddress: 'SP_EFFECTIVE' } }),
-      }),
+      expect.objectContaining({ account: expectedAccountWithStxAddress('SP_EFFECTIVE') }),
       expect.anything()
     );
   });
@@ -130,9 +146,7 @@ describe('useCurrentAccountDisplayName', () => {
       'SP_ACTIVE'
     );
     expect(h.bnsQueryConfig).toHaveBeenCalledWith(
-      expect.objectContaining({
-        account: expect.objectContaining({ stacks: { stxAddress: 'SP_ACTIVE' } }),
-      }),
+      expect.objectContaining({ account: expectedAccountWithStxAddress('SP_ACTIVE') }),
       expect.anything()
     );
   });

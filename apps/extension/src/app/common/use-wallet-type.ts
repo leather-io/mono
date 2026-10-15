@@ -10,12 +10,15 @@ function isSoftwareWallet(walletType?: WalletType) {
   return walletType === 'software';
 }
 
-type WalletTypeMap<T> = Record<WalletType, T>;
+interface WalletTypeMap<TLedger, TSoftware> {
+  ledger: TLedger;
+  software: TSoftware;
+}
 
 function whenWallet(walletType?: WalletType) {
-  return <T extends WalletTypeMap<unknown>>(walletTypeMap: T) => {
-    if (isLedgerWallet(walletType)) return walletTypeMap.ledger as T['ledger'];
-    if (isSoftwareWallet(walletType)) return walletTypeMap.software as T['software'];
+  return <TLedger, TSoftware>(walletTypeMap: WalletTypeMap<TLedger, TSoftware>) => {
+    if (isLedgerWallet(walletType)) return walletTypeMap.ledger;
+    if (isSoftwareWallet(walletType)) return walletTypeMap.software;
     throw new Error('Wallet is neither of type `ledger` nor `software`');
   };
 }

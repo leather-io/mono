@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
@@ -44,7 +44,7 @@ export function AccountActions() {
   const swapsBtnDisabled = !swapAvailability.isEnabled;
   const swapDisabledTooltipLabel = getSwapDisabledTooltipLabel(swapAvailability);
   function navigateToDefaultSwapRoute() {
-    return navigate(
+    void navigate(
       replaceRouteParams(RouteUrls.Swap, {
         base: 'STX',
         quote: '',

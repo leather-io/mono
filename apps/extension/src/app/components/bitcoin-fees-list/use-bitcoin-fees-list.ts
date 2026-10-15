@@ -13,7 +13,7 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { useBitcoinTransactionFees } from '@app/query/bitcoin/fees/bitcoin-transaction-fees.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 
-import { FeesListItem } from './bitcoin-fees-list';
+import { type FeesListItem } from './bitcoin-fees-list';
 
 function mapFeeQuoteToListItem(
   quote: BitcoinTransactionFeeQuote,
@@ -71,7 +71,7 @@ export function useBitcoinFeesList({
       mapFeeQuoteToListItem(low, BtcFeeType.Low, btcTxTimeMap.hourFee, getFiatFeeValue),
     ];
 
-    return items.filter((item): item is FeesListItem => item !== null);
+    return items.filter(item => item !== null);
   }, [feeRates, btcMarketData]);
 
   return {

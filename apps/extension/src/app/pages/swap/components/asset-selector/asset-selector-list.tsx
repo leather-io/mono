@@ -3,7 +3,7 @@ import { Virtuoso } from 'react-virtuoso';
 import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { Box } from 'leather-styles/jsx';
 
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 import { AssetAvatarIcon, BitcoinFilledCircleIcon, StacksFilledCircleIcon } from '@leather.io/ui';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 

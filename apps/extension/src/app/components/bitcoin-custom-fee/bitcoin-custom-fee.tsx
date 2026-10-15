@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useRef } from 'react';
+import { type Dispatch, type SetStateAction, useCallback, useRef } from 'react';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Form, Formik } from 'formik';
@@ -12,7 +12,7 @@ import type { TransferRecipient } from '@shared/models/form.model';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 
-import { OnChooseFeeArgs } from '../bitcoin-fees-list/bitcoin-fees-list';
+import { type OnChooseFeeArgs } from '../bitcoin-fees-list/bitcoin-fees-list';
 import { BitcoinCustomFeeInput } from './bitcoin-custom-fee-input';
 import { useBitcoinCustomFee } from './hooks/use-bitcoin-custom-fee';
 
@@ -64,7 +64,7 @@ export function BitcoinCustomFee({
       .integer('Fee must be a whole number')
       .test({
         message: 'Fee is too high',
-        test: value => {
+        test(value) {
           return value <= maxCustomFeeRate;
         },
       }),
@@ -95,9 +95,9 @@ export function BitcoinCustomFee({
               </styled.span>
               <BitcoinCustomFeeInput
                 isSendingMax={isSendingMax}
-                onClick={async () => {
+                onClick={() => {
                   feeInputRef.current?.focus();
-                  await props.setValues({ ...props.values });
+                  void props.setValues({ ...props.values });
                 }}
                 customFeeInitialValue={customFeeInitialValue}
                 setCustomFeeInitialValue={setCustomFeeInitialValue}

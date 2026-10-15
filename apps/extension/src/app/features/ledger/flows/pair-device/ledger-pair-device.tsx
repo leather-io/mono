@@ -4,8 +4,6 @@ import { styled } from 'leather-styles/jsx';
 
 import { Button, Callout, Sheet, SheetHeader } from '@leather.io/ui';
 
-import { safeAwait } from '@app/common/utils/safe-await';
-
 import { LedgerTitle } from '../../components/ledger-title';
 import { LedgerWrapper } from '../../components/ledger-wrapper';
 import { connectLedgerDeviceToApp } from '../../dmk/ledger-device-connection';
@@ -24,13 +22,13 @@ export function LedgerPairDevice({ onClose }: LedgerPairDeviceProps) {
 
   async function pairDevice() {
     setStatus('connecting');
-    const [error, sessionId] = await safeAwait(connectLedgerDeviceToApp(dmk, null));
-    if (error || !sessionId) {
+    try {
+      const sessionId = await connectLedgerDeviceToApp(dmk, null);
+      await closeLedgerSession(dmk, sessionId);
+      setStatus('connected');
+    } catch {
       setStatus('failed');
-      return;
     }
-    await closeLedgerSession(dmk, sessionId);
-    setStatus('connected');
   }
 
   return (
@@ -54,7 +52,11 @@ export function LedgerPairDevice({ onClose }: LedgerPairDeviceProps) {
             Done
           </Button>
         ) : (
-          <Button width="100%" onClick={pairDevice} aria-busy={status === 'connecting'}>
+          <Button
+            width="100%"
+            onClick={() => void pairDevice()}
+            aria-busy={status === 'connecting'}
+          >
             Connect Ledger
           </Button>
         )}
