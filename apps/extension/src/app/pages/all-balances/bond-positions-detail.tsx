@@ -166,7 +166,7 @@ export function BondPositionsDetail() {
               {endToEndDivider}
               <PastPeriodsRow
                 summary={pastSummary}
-                onClick={() => navigate(RouteUrls.AllBalancesBondHistory)}
+                onClick={() => void navigate(RouteUrls.AllBalancesBondHistory)}
               />
             </>
           )}

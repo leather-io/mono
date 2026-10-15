@@ -1,20 +1,20 @@
 import { Suspense } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import type { MempoolTransaction, Transaction } from '@stacks/stacks-blockchain-api-types';
 import type { StacksTransactionWire } from '@stacks/transactions';
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { Flex, Stack } from 'leather-styles/jsx';
 
+import type { StacksTransaction } from '@leather.io/models';
 import { Caption, Sheet, SheetHeader, Spinner } from '@leather.io/ui';
 import { microStxToStx, stxToMicroStx } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { stacksValue } from '@app/common/stacks-utils';
-import { StacksTransactionActionType } from '@app/common/transactions/stacks/transaction.utils';
+import { type StacksTransactionActionType } from '@app/common/transactions/stacks/transaction.utils';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { StacksTransactionItem } from '@app/components/stacks-transaction-item/stacks-transaction-item';
 import { useToast } from '@app/features/toasts/use-toast';
@@ -34,14 +34,14 @@ interface StacksTransactionActionSheetProps {
   actionType: StacksTransactionActionType;
   txid: string;
   rawTx: StacksTransactionWire;
-  tx: MempoolTransaction | Transaction;
+  tx: StacksTransaction;
 }
 
 interface StacksTransactionActionSheetLoaderProps {
   children(args: {
     txid: string;
     rawTx: StacksTransactionWire;
-    tx: MempoolTransaction | Transaction;
+    tx: StacksTransaction;
   }): React.ReactNode;
 }
 
@@ -110,14 +110,17 @@ export function StacksTransactionActionSheet({
     <FormProvider {...methods}>
       <Sheet
         isShowing={location.pathname === routeUrl.replace(':txid', txid)}
-        onClose={() => navigate(RouteUrls.Home)}
+        onClose={() => void navigate(RouteUrls.Home)}
         header={<SheetHeader title={title} />}
         footer={
           <TransactionActions
-            isDisabled={stxToMicroStx(feeValue ?? 0).isLessThanOrEqualTo(initialTransactionFee)}
+            isDisabled={
+              feeValue === undefined ||
+              stxToMicroStx(feeValue).isLessThanOrEqualTo(initialTransactionFee)
+            }
             isLoading={isBroadcasting}
-            onCancel={() => navigate(RouteUrls.Home)}
-            onSubmit={methods.handleSubmit(onSubmit)}
+            onCancel={() => void navigate(RouteUrls.Home)}
+            onSubmit={() => void methods.handleSubmit(onSubmit)()}
           />
         }
       >
@@ -153,8 +156,6 @@ export function StacksTransactionActionSheet({
           </Suspense>
         </Stack>
       </Sheet>
-
-      <Outlet />
     </FormProvider>
   );
 }

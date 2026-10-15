@@ -1,7 +1,7 @@
 import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { AssetAvatarIcon, ChevronDownIcon, PlusIcon } from '@leather.io/ui';
 
 interface AssetSelectorToggleProps {

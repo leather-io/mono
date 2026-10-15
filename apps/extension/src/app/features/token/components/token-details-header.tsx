@@ -23,7 +23,7 @@ export function TokenDetailsHeader({ title }: TokenDetailsHeaderProps) {
           leftCol={
             <HeaderActionButton
               icon={<ArrowLeftIcon />}
-              onAction={() => navigate(RouteUrls.Home)}
+              onAction={() => void navigate(RouteUrls.Home)}
               dataTestId="token-details-back"
             />
           }

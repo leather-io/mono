@@ -1,4 +1,4 @@
-import { Flex, FlexProps } from 'leather-styles/jsx';
+import { Flex, type FlexProps } from 'leather-styles/jsx';
 
 import { Spinner } from '@leather.io/ui';
 

@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { Formik } from 'formik';
 import { Flex, Stack } from 'leather-styles/jsx';
@@ -11,16 +11,42 @@ import { sumMoney } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { BitcoinCustomFeeInput } from '@app/components/bitcoin-custom-fee/bitcoin-custom-fee-input';
 import { BitcoinTransactionItem } from '@app/components/bitcoin-transaction-item/bitcoin-transaction-item';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 
 import { TransactionActions } from './components/transaction-actions';
 import { useBtcIncreaseFee } from './hooks/use-btc-increase-fee';
+import { increaseBtcFeeRouteStateSchema } from './increase-btc-fee-route-state';
 
 export function IncreaseBtcFeeSheet() {
-  const tx = useLocationStateWithCache('btcTx') as BitcoinTx;
+  const tx = useRouteState(increaseBtcFeeRouteStateSchema)?.btcTx;
+  if (!tx) return <IncreaseBtcFeeUnsupportedSheet />;
+  return <IncreaseBtcFeeSheetContent tx={tx} />;
+}
+
+function IncreaseBtcFeeUnsupportedSheet() {
+  const navigate = useNavigate();
+
+  function onClose() {
+    void navigate(RouteUrls.Home);
+  }
+
+  return (
+    <Sheet isShowing onClose={onClose} header={<SheetHeader title="Increase fee" />}>
+      <Stack gap="space.05" px="space.05" pb="space.05">
+        <Caption>This transaction can't be sped up in Leather.</Caption>
+      </Stack>
+    </Sheet>
+  );
+}
+
+interface IncreaseBtcFeeSheetContentProps {
+  tx: BitcoinTx;
+}
+
+function IncreaseBtcFeeSheetContent({ tx }: IncreaseBtcFeeSheetContentProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,8 +60,6 @@ export function IncreaseBtcFeeSheet() {
   function onClose() {
     void navigate(RouteUrls.Home);
   }
-
-  if (!tx) return null;
 
   const initialFeeRate = `${(tx.fee / sizeInfo.txVBytes).toFixed(0)}`;
 
@@ -59,8 +83,8 @@ export function IncreaseBtcFeeSheet() {
                 <TransactionActions
                   isDisabled={isBroadcasting}
                   isBroadcasting={isBroadcasting}
-                  onSubmit={submitForm}
-                  onCancel={() => navigate(RouteUrls.Home)}
+                  onSubmit={() => void submitForm()}
+                  onCancel={() => void navigate(RouteUrls.Home)}
                 />
               }
             >
@@ -94,7 +118,6 @@ export function IncreaseBtcFeeSheet() {
                 </Suspense>
               </Stack>
             </Sheet>
-            <Outlet />
           </>
         )}
       </Formik>

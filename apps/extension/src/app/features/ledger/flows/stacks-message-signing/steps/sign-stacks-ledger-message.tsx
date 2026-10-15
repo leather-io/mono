@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { logger } from '@shared/logger';
 import { whenSignableMessageOfType } from '@shared/signature/signature-types';
 
-import { ApproveLedgerOperationLayout } from '../../../generic-steps';
+import { ApproveLedgerOperationLayout } from '../../../generic-steps/approve-ledger-operation/approve-ledger-operation.layout';
 import { useHasApprovedOperation } from '../../../hooks/use-has-approved-transaction';
 import { ledgerMsgSigningContext } from '../ledger-stacks-sign-msg.context';
 import { cvToDisplay, deriveStructuredMessageHash } from '../message-signing.utils';
@@ -25,7 +25,7 @@ export function SignLedgerMessage() {
         status={hasApprovedOperation ? 'approved' : 'awaiting-approval'}
       />
     ),
-    structured: (domain, message) => {
+    structured(domain, message) {
       const ledgerFirstHashPageInView = 34;
       const hash = deriveStructuredMessageHash({ domain, message });
       const [hashPart1, hashPart2] = [

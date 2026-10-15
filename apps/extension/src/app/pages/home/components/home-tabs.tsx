@@ -63,7 +63,7 @@ export function HomeTabs({ children, showCollectibles = true }: HomeTabsProps) {
               key={tab.value}
               data-testid={tab.testId}
               value={tab.value}
-              onClick={() => navigate(tab.value)}
+              onClick={() => void navigate(tab.value)}
             >
               {tab.label}
             </Tabs.Trigger>

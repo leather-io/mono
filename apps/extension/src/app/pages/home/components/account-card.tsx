@@ -99,7 +99,7 @@ export function AccountCard() {
                     isLoading={isLoadingBalance}
                     isPrivate={isPrivateMode}
                     onShowValue={togglePrivateMode}
-                    onClick={() => navigate(RouteUrls.AllBalances)}
+                    onClick={() => void navigate(RouteUrls.AllBalances)}
                   />
                 </Box>
               )}

@@ -1,9 +1,9 @@
-import { FormikHelpers } from 'formik';
+import { type FormikHelpers } from 'formik';
 
 import { FeeTypes, type Money } from '@leather.io/models';
 
 import { FormErrorMessages } from '@shared/error-messages';
-import { StacksSendFormValues } from '@shared/models/form.model';
+import { type StacksSendFormValues } from '@shared/models/form.model';
 
 import { stxMemoValidator } from '@app/common/validation/forms/memo-validators';
 import { stxRecipientValidator } from '@app/common/validation/forms/recipient-validators';

@@ -4,6 +4,8 @@ import { createRoot } from 'react-dom/client';
 
 import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 
+import type * as LeatherUtils from '@leather.io/utils';
+
 import type { ConnectLedgerDeviceOptions } from '../../dmk/ledger-device-connection';
 import { LedgerConnectionErrors } from '../../dmk/ledger-dmk-errors';
 import { makeFakeDmk } from '../../dmk/ledger-dmk.mocks';
@@ -23,8 +25,8 @@ const mocks = vi.hoisted(() => ({
   disconnect: vi.fn(),
 }));
 
-vi.mock('../../hooks/use-ledger-navigate', () => ({
-  useLedgerNavigate: () => ({
+vi.mock('../../flow/ledger-flow.context', () => ({
+  useLedgerSteps: () => ({
     toCheckingAppVersion: mocks.toCheckingAppVersion,
     toConnectStep: mocks.toConnectStep,
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,
@@ -39,7 +41,7 @@ vi.mock('../../dmk/ledger-dmk.context', () => ({
 }));
 
 vi.mock('@leather.io/utils', async importOriginal => {
-  const actual = await importOriginal<typeof import('@leather.io/utils')>();
+  const actual = await importOriginal<typeof LeatherUtils>();
   return { ...actual, delay: () => Promise.resolve() };
 });
 

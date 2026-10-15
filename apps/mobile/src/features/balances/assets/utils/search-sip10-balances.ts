@@ -1,4 +1,4 @@
-import { Sip10Asset } from '@leather.io/models';
+import { type Sip10Asset } from '@leather.io/models';
 
 export function matchesSip10SearchTerm(
   asset: Pick<Sip10Asset, 'name' | 'symbol'>,

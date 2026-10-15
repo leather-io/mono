@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { LEATHER_SUPPORT_URL } from '@leather.io/constants';
-import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type Money, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { type SwapAttention } from '@leather.io/state/swap';
 import {
   ArrowLeftIcon,

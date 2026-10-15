@@ -21,13 +21,9 @@ export function getUrlHostname(url: string) {
   return new URL(url).hostname;
 }
 
-function getUrlPort(url: string) {
-  return new URL(url).port;
-}
-
-export function addPortSuffix(url: string) {
-  const port = getUrlPort(url);
-  return port ? `:${port}` : '';
+export function getUrlHost(url: string) {
+  if (!url.startsWith('http')) return url;
+  return new URL(url).host;
 }
 
 export function doesBrowserSupportWebHidApi() {
@@ -82,15 +78,15 @@ export function removeMinusSign(value: string) {
 
 export function serializeError(err: unknown) {
   if (err instanceof Error) {
-    const errorObj: Record<string, any> = {
+    const errorObj: Record<string, unknown> = {
       name: err.name,
       message: err.message,
       stack: err.stack,
     };
 
     // Include any custom enumerable properties
-    for (const key of Object.keys(err)) {
-      errorObj[key] = (err as any)[key];
+    for (const [key, value] of Object.entries(err)) {
+      errorObj[key] = value;
     }
 
     return errorObj;

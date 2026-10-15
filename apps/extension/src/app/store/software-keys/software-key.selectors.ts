@@ -7,7 +7,7 @@ import { initBigNumber } from '@leather.io/utils';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
-import { RootState } from '@app/store';
+import { type RootState } from '@app/store/store';
 
 import { selectActiveAccount } from '../active/active.selectors';
 import { selectHasSwitched } from '../ui/ui.selectors';

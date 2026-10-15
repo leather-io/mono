@@ -5,11 +5,8 @@ import { DEFAULT_FEE_RATE } from '@leather.io/constants';
 import { FeeCalculationTypes, Fees, Money, StacksFeeEstimate } from '@leather.io/models';
 import { createMoney, createMoneyFromDecimal, microStxToStx } from '@leather.io/utils';
 
-import {
-  DefaultMinMaxRangeFeeEstimations,
-  StacksFeeEstimationRange,
-} from '../../common/remote-config/remote-config.types';
 import { FeeEstimation, StacksTxFeeEstimation } from '../hiro-api-types';
+import { DefaultMinMaxRangeFeeEstimations, StacksFeeEstimationRange } from './fees.types';
 
 function initStxAmount(amount: number) {
   return createMoney(amount, 'STX');
@@ -20,6 +17,20 @@ export const defaultFeesMaxValuesAsMoney = defaultFeesMaxAmounts.map(initStxAmou
 
 const defaultFeesMinAmounts = [2500, 3000, 3500];
 export const defaultFeesMinValuesAsMoney = defaultFeesMinAmounts.map(initStxAmount);
+
+export const defaultTokenTransferFeeEstimations = [200, 400, 800];
+
+export const defaultContractCallFeeEstimations: DefaultMinMaxRangeFeeEstimations = {
+  low: { min: 2500, max: 2999 },
+  standard: { min: 3000, max: 10000 },
+  high: { min: 10000, max: 1000001 },
+};
+
+export const defaultContractDeploymentFeeEstimations: DefaultMinMaxRangeFeeEstimations = {
+  low: { min: 10000, max: 50000 },
+  standard: { min: 100001, max: 500000 },
+  high: { min: 1000001, max: 2000000 },
+};
 
 export const defaultApiFeeEstimations: FeeEstimation[] = defaultFeesMinAmounts.map(amount => ({
   fee: amount,

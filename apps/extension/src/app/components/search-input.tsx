@@ -1,4 +1,4 @@
-import { KeyboardEvent, useId } from 'react';
+import { type KeyboardEvent, useId } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { Flex, VisuallyHidden, styled } from 'leather-styles/jsx';

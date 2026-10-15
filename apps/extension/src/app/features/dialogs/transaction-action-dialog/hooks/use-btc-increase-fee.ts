@@ -22,9 +22,9 @@ import { useBitcoinFeeRates } from '@app/query/bitcoin/fees/bitcoin-fee-rates.ho
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/use-bitcoin-payer-from-input';
 
 export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const toast = useToast();
@@ -122,23 +122,28 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     return { tx: newTx, signingConfig };
   }
 
+  async function refreshAfterBroadcast() {
+    await refetchUtxos();
+    await invalidateActivityQueries();
+  }
+
   async function initiateTransaction(
     unsignedTx: btc.Transaction,
     signingConfig: BitcoinInputSigningConfig[]
   ) {
     const tx = await signTransaction(unsignedTx.toPSBT(), signingConfig);
+    if (!tx) return;
     tx.finalize();
     await broadcastTx({
       tx: tx.hex,
-      async onSuccess(txid) {
+      onSuccess(txid) {
         toast.success('Fee increased successfully');
         void navigate(RouteUrls.Activity);
         analytics.track('increase_fee_transaction', {
           symbol: 'btc',
           txid,
         });
-        await refetchUtxos();
-        void invalidateActivityQueries();
+        void refreshAfterBroadcast();
       },
       onError,
       delayTime: 5000,

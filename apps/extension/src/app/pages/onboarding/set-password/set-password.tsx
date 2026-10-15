@@ -102,7 +102,10 @@ export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) 
           .required()
           .test({
             message: 'Weak',
-            test: debounce((value: unknown) => {
+            test: debounce<
+              [value: unknown, ...rest: unknown[]],
+              (value: unknown, ...rest: unknown[]) => boolean
+            >((value: unknown) => {
               if (isUndefined(value)) {
                 setStrengthResult(blankPasswordValidation);
                 return false;
@@ -114,7 +117,7 @@ export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) 
                 analytics.track('submit_invalid_password');
               }
               return result.meetsAllStrengthRequirements;
-            }, 60) as unknown as yup.TestFunction<any, any>,
+            }, 60),
           }),
   });
   const title = hasSoftwareKeys ? 'Enter your Password' : 'Set a password';

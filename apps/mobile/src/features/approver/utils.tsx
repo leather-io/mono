@@ -141,6 +141,10 @@ export function getDefaultFee() {
   return createMoneyFromDecimal(defaultFee, 'STX');
 }
 
+export function getApproverFee(sponsored: boolean | undefined) {
+  return sponsored ? createMoneyFromDecimal(0, 'STX') : getDefaultFee();
+}
+
 export function getTransferSip10TxHex(props: {
   signer: StacksSigner;
   assetId: string;
@@ -149,7 +153,8 @@ export function getTransferSip10TxHex(props: {
   nonce: number;
   network: StacksNetwork;
   memo?: string;
+  sponsored?: boolean;
 }) {
-  const fee = getDefaultFee();
+  const fee = getApproverFee(props.sponsored);
   return createTransferSip10TxHex({ ...props, fee });
 }

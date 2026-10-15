@@ -21,7 +21,7 @@ function generateImageAssetUrlsWithSuffix(suffix = '') {
 
 function getIconSuffix(isProduction: boolean, previewRelease: boolean) {
   if (!isProduction) return '-dev';
-  return previewRelease ? '-preview' : '';
+  return previewRelease ? '-preview' : undefined;
 }
 
 function getManifestName(isProduction: boolean, previewRelease: boolean) {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 import { useDebouncedValue } from '@leather.io/ui';
 
 import { getFungibleAssetDisplayName } from '@app/pages/swap/swap-utils';
