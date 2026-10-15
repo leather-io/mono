@@ -1,4 +1,4 @@
-import { Sip10Balance } from '@leather.io/services';
+import { type Sip10Balance } from '@leather.io/services';
 import { isPinnedAsset } from '@leather.io/utils';
 
 export interface UsdcxBridgeItem {

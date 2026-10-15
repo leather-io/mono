@@ -54,8 +54,9 @@ test.describe('Tokens tab', () => {
         usdcxAsset.boundingBox(),
         aeUsdcAsset.boundingBox(),
       ]);
-      expect(sbtcBox?.y).toBeLessThan(usdcxBox?.y ?? 0);
-      expect(usdcxBox?.y).toBeLessThan(aeUsdcBox?.y ?? 0);
+      if (!sbtcBox || !usdcxBox || !aeUsdcBox) throw new Error('Token rows have no bounding box');
+      expect(sbtcBox.y).toBeLessThan(usdcxBox.y);
+      expect(usdcxBox.y).toBeLessThan(aeUsdcBox.y);
     });
   });
 
