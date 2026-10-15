@@ -68,6 +68,7 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
         </Box>
       ) : (
         <Sheet.ScrollView
+          keyboardShouldPersistTaps="handled"
           style={{ paddingTop: top }}
           contentContainerStyle={{
             paddingTop: spacing['5'],
