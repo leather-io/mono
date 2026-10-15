@@ -45,7 +45,7 @@ export function MenuButtons() {
           variant="chevron"
           title="Secret Key"
           data-testid={SettingsSelectors.ViewSecretKeyListItem}
-          onClick={() => navigate(RouteUrls.ViewSecretKey)}
+          onClick={() => void navigate(RouteUrls.ViewSecretKey)}
           icon={<KeyIcon />}
         />
       )}
@@ -119,7 +119,7 @@ export function MenuButtons() {
         data-testid={SettingsSelectors.FeedbackMenuItem}
         variant="external"
         title="Feedback"
-        onClick={() => openFeedbackSheet()}
+        onClick={() => void openFeedbackSheet()}
         icon={<MegaphoneIcon />}
       />
 

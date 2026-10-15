@@ -1,6 +1,6 @@
 import { analytics } from '@shared/utils/analytics';
 
-import { createWorker } from './index';
+import { createWorker } from './create-worker';
 
 vi.mock('@shared/utils/analytics', () => ({ analytics: { untypedTrack: vi.fn() } }));
 

@@ -151,7 +151,7 @@ export function AllBalancesPage() {
                   dataTestId={dataTestId}
                   tooltipText={tooltipText}
                   onClick={() =>
-                    navigate(RouteUrls.AllBalancesDetail.replace(':category', category))
+                    void navigate(RouteUrls.AllBalancesDetail.replace(':category', category))
                   }
                 />
               );

@@ -122,6 +122,11 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     return { tx: newTx, signingConfig };
   }
 
+  async function refreshAfterBroadcast() {
+    await refetchUtxos();
+    await invalidateActivityQueries();
+  }
+
   async function initiateTransaction(
     unsignedTx: btc.Transaction,
     signingConfig: BitcoinInputSigningConfig[]
@@ -131,15 +136,14 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     tx.finalize();
     await broadcastTx({
       tx: tx.hex,
-      async onSuccess(txid) {
+      onSuccess(txid) {
         toast.success('Fee increased successfully');
         void navigate(RouteUrls.Activity);
         analytics.track('increase_fee_transaction', {
           symbol: 'btc',
           txid,
         });
-        await refetchUtxos();
-        void invalidateActivityQueries();
+        void refreshAfterBroadcast();
       },
       onError,
       delayTime: 5000,

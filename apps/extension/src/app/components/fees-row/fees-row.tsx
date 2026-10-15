@@ -6,7 +6,12 @@ import { useField } from 'formik';
 import { Box } from 'leather-styles/jsx';
 
 import { STX_DECIMALS } from '@leather.io/constants';
-import { FeeTypes, type StacksFeeEstimate, type StacksTransactionFees } from '@leather.io/models';
+import {
+  type CryptoCurrency,
+  FeeTypes,
+  type StacksFeeEstimate,
+  type StacksTransactionFees,
+} from '@leather.io/models';
 import { convertAmountToBaseUnit, createMoney, isNumber, isString } from '@leather.io/utils';
 
 import { useConvertCryptoCurrencyToFiatAmount } from '@app/common/hooks/use-convert-to-fiat-amount';
@@ -22,6 +27,14 @@ function toEstimate(quote: StacksTransactionFees['options']['low']): StacksFeeEs
     fee: quote.value,
     feeRate: quote.type === 'stacksFeeRate' ? quote.rate : 0,
   };
+}
+
+const feeTypesByName: Record<string, unknown> = FeeTypes;
+const customFeeTypeIndex: number = FeeTypes.Custom;
+
+function toDisplayableFee(value: unknown) {
+  if (isNumber(value) || isString(value)) return value;
+  return undefined;
 }
 
 function transactionFeesToEstimates(txFees: StacksTransactionFees): StacksFeeEstimate[] {
@@ -43,14 +56,14 @@ export function FeesRow({
   defaultFeeValue,
   disableFeeSelection,
 }: FeeRowProps) {
-  const [feeField, _, feeHelper] = useField('fee');
-  const [feeCurrencyField] = useField('feeCurrency');
-  const [feeTypeField, __, feeTypeHelper] = useField('feeType');
+  const [feeField, _, feeHelper] = useField<unknown>('fee');
+  const [feeCurrencyField] = useField<CryptoCurrency>('feeCurrency');
+  const [feeTypeField, __, feeTypeHelper] = useField<string>('feeType');
   const [fieldWarning, setFieldWarning] = useState<string | undefined>(undefined);
   const [isSelectVisible, setIsSelectVisible] = useState(false);
 
   const isCustom = feeTypeField.value === FeeTypes[FeeTypes.Custom];
-  const selectedItem = Number(FeeTypes[feeTypeField.value]);
+  const selectedItem = Number(feeTypesByName[feeTypeField.value]);
 
   const estimates = useMemo(() => (fees ? transactionFeesToEstimates(fees) : []), [fees]);
   const hasFeeEstimates = estimates.length > 0;
@@ -98,7 +111,7 @@ export function FeesRow({
   const handleSelectFeeEstimateOrCustomField = useCallback(
     (index: number) => {
       void feeTypeHelper.setValue(FeeTypes[index]);
-      if (index === FeeTypes.Custom)
+      if (index === customFeeTypeIndex)
         void feeHelper.setValue(
           defaultFeeValue
             ? convertAmountToBaseUnit(new BigNumber(Number(defaultFeeValue)), STX_DECIMALS)
@@ -132,7 +145,7 @@ export function FeesRow({
             width="100%"
           >
             <TransactionFee
-              fee={feeField.value}
+              fee={toDisplayableFee(feeField.value)}
               feeCurrencySymbol={feeCurrencySymbol}
               usdAmount={feeInUsd}
             />

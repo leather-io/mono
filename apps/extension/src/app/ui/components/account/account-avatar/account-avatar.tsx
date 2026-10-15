@@ -1,6 +1,6 @@
-import { ReactElement, memo } from 'react';
+import { type ReactElement, memo } from 'react';
 
-import { Box, CircleProps } from 'leather-styles/jsx';
+import { Box, type CircleProps } from 'leather-styles/jsx';
 
 import { Avatar, getAvatarUrl } from '@leather.io/ui';
 

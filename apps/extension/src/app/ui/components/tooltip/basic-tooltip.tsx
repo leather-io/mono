@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import * as RadixTooltip from '@radix-ui/react-tooltip';
+import type * as RadixTooltip from '@radix-ui/react-tooltip';
 import { css } from 'leather-styles/css';
 
 import { Tooltip } from './tooltip';

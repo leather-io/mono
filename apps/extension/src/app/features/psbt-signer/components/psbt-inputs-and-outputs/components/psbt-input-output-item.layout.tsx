@@ -22,7 +22,7 @@ export function PsbtInputOutputItemLayout({
   txId,
   txIdHoverLabel,
 }: PsbtInputOutputItemLayoutProps) {
-  const { onCopy, hasCopied } = useClipboard(addressHoverLabel ?? '');
+  const { onCopy, hasCopied } = useClipboard(addressHoverLabel);
   const { handleOpenBitcoinTxLink: handleOpenTxLink } = useBitcoinExplorerLink();
 
   return (

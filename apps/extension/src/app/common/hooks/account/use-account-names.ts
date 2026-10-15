@@ -33,7 +33,7 @@ export function useAccountDisplayName({
 }) {
   const settings = useUserSettings();
   const customName = useAccountNameOverride({
-    fingerprint: fingerprint,
+    fingerprint,
     accountIndex: index,
   });
 
@@ -44,7 +44,7 @@ export function useAccountDisplayName({
   const query = useQuery({
     ...createAccountBnsNamesQueryConfig(request, settings),
     enabled: Boolean(address),
-    select: (names: AccountBnsName[]) => {
+    select(names: AccountBnsName[]) {
       if (customName) return customName;
       const primaryName = names.find(name => name.isPrimary)?.fullName ?? names[0]?.fullName;
       return (

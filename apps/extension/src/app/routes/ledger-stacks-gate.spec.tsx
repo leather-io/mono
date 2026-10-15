@@ -2,8 +2,8 @@ import { renderToString } from 'react-dom/server';
 
 import { LedgerStacksGate } from './ledger-stacks-gate';
 
-const activeWalletTypeMock = vi.fn();
-const hasLedgerStacksKeysMock = vi.fn();
+const activeWalletTypeMock = vi.fn<() => unknown>();
+const hasLedgerStacksKeysMock = vi.fn<() => unknown>();
 
 vi.mock('@app/store/common/wallet-type.selectors', () => ({
   useActiveWalletType: () => activeWalletTypeMock(),

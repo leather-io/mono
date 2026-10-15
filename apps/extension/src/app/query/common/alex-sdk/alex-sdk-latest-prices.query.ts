@@ -1,13 +1,12 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { Currency } from 'alex-sdk';
+import { type UseQueryResult, useQuery } from '@tanstack/react-query';
+import { type Currency } from 'alex-sdk';
 
 import { alex } from '@leather.io/query';
 
 export function useAlexSdkLatestPricesQuery(): UseQueryResult<
   Partial<{
     [currency in Currency]: number;
-  }>,
-  Error
+  }>
 > {
   return useQuery({
     queryKey: ['alex-sdk-latest-prices'],

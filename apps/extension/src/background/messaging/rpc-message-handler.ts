@@ -1,6 +1,6 @@
 import { LEATHER_GITBOOK_DEVS } from '@leather.io/constants';
 import {
-  RpcEndpointMap,
+  type RpcEndpointMap,
   RpcErrorCode,
   type RpcRequests,
   createRpcErrorResponse,
@@ -49,6 +49,12 @@ function registerRpcRequestHandler<M extends RpcRequests['method']>(
   rpcHandlers[method] = handler;
 }
 
+function getRpcHandler<M extends keyof RpcEndpointMap>(
+  method: M
+): RpcHandler<RpcEndpointMap[M]['request']> | undefined {
+  return rpcHandlers[method];
+}
+
 export async function rpcMessageHandler(request: RpcRequests, port: chrome.runtime.Port) {
   listenForOriginTabClose({ tabId: port.sender?.tab?.id });
 
@@ -60,7 +66,7 @@ export async function rpcMessageHandler(request: RpcRequests, port: chrome.runti
   // This typecast safely bypasses the compiler since it cannot infer or narrow
   // the type to know the `request` being passed to `handler` is the correct
   // one. Type safety is guaranteed by `registerRpcRequestHandler`
-  const handler = isRegisteredMethod ? (rpcHandlers[request.method] as RpcHandler<any>) : undefined;
+  const handler = isRegisteredMethod ? getRpcHandler(request.method) : undefined;
 
   if (handler) {
     if (methodsRequiringConnectedWallet.has(request.method)) {

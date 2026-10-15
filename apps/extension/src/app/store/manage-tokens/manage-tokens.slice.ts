@@ -1,10 +1,15 @@
 import { useSelector } from 'react-redux';
 
-import { PayloadAction, createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
+import {
+  type PayloadAction,
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+} from '@reduxjs/toolkit';
 
 import { resetWallet } from '@leather.io/state';
 
-import type { RootState } from '..';
+import type { RootState } from '@app/store/store';
 
 interface TokenUserSetting {
   id: string;

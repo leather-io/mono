@@ -14,6 +14,11 @@ import { makeNumberRange } from '@leather.io/utils';
 
 import { getAssumedZeroIndexSigningConfig } from './signer-config';
 
+function getPublicKey(keychain: HDKey) {
+  if (!keychain.publicKey) throw new Error('Keychain is missing a public key');
+  return keychain.publicKey;
+}
+
 describe(getAssumedZeroIndexSigningConfig.name, () => {
   const seed = mnemonicToSeedSync(STANDARD_BIP_FAKE_MNEMONIC);
   const keychain = HDKey.fromMasterSeed(seed);
@@ -27,7 +32,7 @@ describe(getAssumedZeroIndexSigningConfig.name, () => {
     changeIndex: 0,
     addressIndex: 0,
   });
-  const nativeSegwitPayment = btc.p2wpkh(nativeSegwitKeychain.publicKey!);
+  const nativeSegwitPayment = btc.p2wpkh(getPublicKey(nativeSegwitKeychain));
 
   test('for a given transaction with p2wpkh', () => {
     const testTx = new btc.Transaction();
@@ -52,7 +57,7 @@ describe(getAssumedZeroIndexSigningConfig.name, () => {
     changeIndex: 0,
     addressIndex: 0,
   });
-  const taprootPayment = btc.p2tr(ecdsaPublicKeyToSchnorr(taprootKeychain.publicKey!));
+  const taprootPayment = btc.p2tr(ecdsaPublicKeyToSchnorr(getPublicKey(taprootKeychain)));
 
   test('for a given transaction with p2tr', () => {
     const testTx = new btc.Transaction();
@@ -93,7 +98,7 @@ describe(getAssumedZeroIndexSigningConfig.name, () => {
     ]);
   });
 
-  const forgedWitnessScript = btc.p2pkh(nativeSegwitKeychain.publicKey!).script;
+  const forgedWitnessScript = btc.p2pkh(getPublicKey(nativeSegwitKeychain)).script;
   const forgedP2wshScript = btc.OutScript.encode({
     type: 'wsh',
     hash: sha256(forgedWitnessScript),

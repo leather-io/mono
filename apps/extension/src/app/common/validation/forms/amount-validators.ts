@@ -21,6 +21,15 @@ import { currencyAmountValidator, stxAmountPrecisionValidator } from './currency
 
 const minSpendAmountInSats = 546;
 
+function getFeeFromFormValues(formValues: unknown): string | number | BigNumber {
+  if (typeof formValues !== 'object' || formValues === null || !('fee' in formValues)) {
+    return Number.NaN;
+  }
+  const { fee } = formValues;
+  if (typeof fee === 'string' || typeof fee === 'number' || BigNumber.isBigNumber(fee)) return fee;
+  return Number.NaN;
+}
+
 function amountValidator() {
   return yup
     .number()
@@ -65,7 +74,7 @@ export function btcMinimumSpendValidator() {
     .number()
     .typeError(FormErrorMessages.MustBeNumber)
     .test({
-      message: `Minimum is ${satToBtc(minSpendAmountInSats)}`,
+      message: `Minimum is ${satToBtc(minSpendAmountInSats).toString()}`,
       test(value) {
         if (!value) return false;
         const desiredSpend = btcToSat(value);
@@ -90,7 +99,8 @@ export function stxAvailableBalanceValidator(availableBalance: Money) {
     .test({
       message: formatInsufficientBalanceError(availableBalance, formatCurrency),
       test(value: unknown) {
-        const fee = new BigNumber(stxToMicroStx(this.parent.fee));
+        const formValues: unknown = this.parent;
+        const fee = new BigNumber(stxToMicroStx(getFeeFromFormValues(formValues)));
         if (!fee.isFinite()) {
           analytics.track('unable_to_read_fee_in_stx_validator');
           return this.createError({ message: 'Unable to read current fee' });

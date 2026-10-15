@@ -2,7 +2,7 @@ import { bytesToHex } from '@stacks/common';
 import { hashMessage } from '@stacks/encryption';
 import { ChainId } from '@stacks/network';
 
-import { UnsignedMessage } from '@shared/signature/signature-types';
+import { type UnsignedMessage } from '@shared/signature/signature-types';
 
 import { NoFeesWarningRow } from '@app/components/no-fees-warning-row';
 

@@ -1,12 +1,11 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import { createSelector } from '@reduxjs/toolkit';
-import { HARDENED_OFFSET, HDKey } from '@scure/bip32';
+import { HARDENED_OFFSET, type HDKey } from '@scure/bip32';
 import {
   createStacksPublicKey,
   privateKeyToPublic,
   publicKeyToAddressSingleSig,
 } from '@stacks/transactions';
-import { deriveStxPrivateKey } from '@stacks/wallet-sdk';
 import { mapValues } from 'remeda';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
@@ -19,7 +18,11 @@ import {
   softwareAccountCountFromHighestIndex,
 } from '@leather.io/crypto';
 import type { AccountId, NetworkModes } from '@leather.io/models';
-import { extractStacksDerivationPathAccountIndex, makeStxDerivationPath } from '@leather.io/stacks';
+import {
+  deriveStxPrivateKey,
+  extractStacksDerivationPathAccountIndex,
+  makeStxDerivationPath,
+} from '@leather.io/stacks';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/stacks-address-gen';
@@ -27,7 +30,6 @@ import { logger } from '@shared/logger';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import type { StacksAppKeysResponseItem } from '@app/features/ledger/utils/stacks-ledger-utils';
-import type { RootState } from '@app/store';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
 import { selectRootKeychainsAtVersion } from '@app/store/in-memory-key/in-memory-key.selectors';
 import {
@@ -36,8 +38,13 @@ import {
 } from '@app/store/in-memory-key/keychain-selector-cache';
 import { selectStacksKeychains } from '@app/store/keychains/keychain.selectors';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
+import type { RootState } from '@app/store/store';
 
 import type { HardwareStacksAccount, SoftwareStacksAccount } from './stacks-account.models';
+
+function publicKeyToHex(publicKey: string | Uint8Array) {
+  return typeof publicKey === 'string' ? publicKey : bytesToHex(publicKey);
+}
 
 function initalizeSoftwareStacksAccount(
   rootKeychain: HDKey,
@@ -46,7 +53,7 @@ function initalizeSoftwareStacksAccount(
 ): SoftwareStacksAccount {
   const stxPrivateKey = deriveStxPrivateKey({
     // Type assertion needed: @stacks/wallet-sdk uses @scure/bip32@1.1.3 while we use 1.6.2
-    rootNode: rootKeychain as any,
+    keychain: rootKeychain,
     index: accountId.accountIndex,
   });
 
@@ -58,8 +65,8 @@ function initalizeSoftwareStacksAccount(
   const appsKey = identityKeychain.deriveChild(0 + HARDENED_OFFSET).privateExtendedKey;
   const salt = deriveStacksSalt(identitiesKeychain);
 
-  const stxPublicKey = privateKeyToPublic(stxPrivateKey) as string;
-  const dataPublicKey = privateKeyToPublic(dataPrivateKey) as string;
+  const stxPublicKey = publicKeyToHex(privateKeyToPublic(stxPrivateKey));
+  const dataPublicKey = publicKeyToHex(privateKeyToPublic(dataPrivateKey));
   const address = publicKeyToAddressSingleSig(stxPublicKey, network);
 
   return {

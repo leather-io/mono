@@ -1,6 +1,6 @@
 import { ChainId } from '@stacks/network';
 
-import { UnsignedMessage } from '@shared/signature/signature-types';
+import { type UnsignedMessage } from '@shared/signature/signature-types';
 
 import { NoFeesWarningRow } from '@app/components/no-fees-warning-row';
 import { SignMessageActions } from '@app/features/message-signer/stacks-sign-message-action';
