@@ -2,6 +2,9 @@
   "src/accounts/account-addresses.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 2
     }
   },
   "src/assets/asset-display-name.ts": {
@@ -30,6 +33,11 @@
       "count": 1
     }
   },
+  "src/async.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
   "src/currency-formatter/currency-formatter-presets.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -45,9 +53,6 @@
   },
   "src/currency-formatter/currency-formatter.ts": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -79,6 +84,9 @@
     },
     "no-restricted-properties": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 10
     }
   },
   "src/math/fibonacci.spec.ts": {
@@ -103,8 +111,21 @@
       "count": 2
     }
   },
+  "src/money/calculate-money.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/money/create-money.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
   "src/money/is-money.ts": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -119,6 +140,16 @@
     },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    }
+  },
+  "src/truncate-middle.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/type-guards.ts": {
+    "no-restricted-syntax": {
+      "count": 4
     }
   }
 }
