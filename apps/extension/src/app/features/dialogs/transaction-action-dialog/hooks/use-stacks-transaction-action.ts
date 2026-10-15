@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { AuthType } from '@stacks/transactions';
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import { TransactionTypes, getStacksBurnAddress } from '@leather.io/stacks';
 import { stxToMicroStx } from '@leather.io/utils';
@@ -40,7 +40,7 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
 
   const stacksAddress = useCurrentStacksAccountAddress();
   const availableUnlockedBalance = useStxAddressAvailableUnlockedBalance(stacksAddress);
-  const validationSchema = yup.object({ fee: stxFeeValidator(availableUnlockedBalance) });
+  const validationSchema = z.object({ fee: stxFeeValidator(availableUnlockedBalance) });
 
   const { data: tx, isLoading: isLoadingTx } = useGetTransactionByIdQuery(txid);
   const { isLoadingRawTx, rawTx } = useStacksRawTransaction(txid);

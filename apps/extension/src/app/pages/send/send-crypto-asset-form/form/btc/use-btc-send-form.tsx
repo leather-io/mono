@@ -1,17 +1,20 @@
 import { useRef, useState } from 'react';
 
 import { type FormikHelpers, type FormikProps } from 'formik';
-import * as yup from 'yup';
+import { z } from 'zod';
 
+import { FormErrorMessages } from '@shared/error-messages';
 import {
   btcAddressNetworkValidator,
   btcAddressValidator,
   nonEmptyStringValidator,
 } from '@shared/forms/address-validators';
+import { numberField, stringField } from '@shared/forms/field-schemas';
 import { type BitcoinSendFormValues } from '@shared/models/form.model';
 
 import { formatPrecisionError } from '@app/common/error-formatters';
 import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 import {
   btcInsufficientBalanceValidator,
   btcMinimumSpendValidator,
@@ -60,13 +63,12 @@ export function useBtcSendForm() {
       setIsSendingMax(value);
     },
     utxos,
-    validationSchema: yup.object({
-      amount: yup
-        .number()
-        .concat(btcMinimumSpendValidator())
-        .concat(btcAmountPrecisionValidator(formatPrecisionError(balance.availableBalance)))
-        .concat(currencyAmountValidator())
-        .concat(
+    validationSchema: createFormikValidationSchema(
+      z.object({
+        amount: numberField(FormErrorMessages.MustBeNumber).check(
+          btcMinimumSpendValidator(),
+          btcAmountPrecisionValidator(formatPrecisionError(balance.availableBalance)),
+          currencyAmountValidator(),
           btcInsufficientBalanceValidator({
             calcMaxSpend,
             // TODO: investigate yup features for cross-field validation
@@ -75,11 +77,14 @@ export function useBtcSendForm() {
             utxos: utxos.available,
           })
         ),
-      recipient: nonEmptyStringValidator()
-        .concat(btcAddressValidator())
-        .concat(btcAddressNetworkValidator(currentNetwork.chain.bitcoin.mode))
-        .concat(complianceValidator(btcAddressValidator(), 'send_form_btc')),
-    }),
+        recipient: stringField().check(
+          nonEmptyStringValidator(),
+          btcAddressValidator(),
+          btcAddressNetworkValidator(currentNetwork.chain.bitcoin.mode),
+          complianceValidator(btcAddressValidator(), 'send_form_btc')
+        ),
+      })
+    ),
 
     async chooseTransactionFee(
       values: BtcSendFormValues,

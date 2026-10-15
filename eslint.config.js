@@ -250,11 +250,6 @@ export default defineConfig([
             'Do not declare an explicit type predicate. Let TypeScript infer it, or validate with a schema.',
         },
         {
-          selector: 'ImportDeclaration[source.value="yup"] ImportSpecifier[imported.name=/^Any/]',
-          message:
-            'yup Any* aliases are any in disguise. Type the schema as ObjectSchema<YourFormValues>.',
-        },
-        {
           selector:
             ':matches(ReturnStatement, ArrowFunctionExpression) > Literal[value=""], ReturnStatement > ConditionalExpression > Literal[value=""]',
           message:
