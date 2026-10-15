@@ -9,12 +9,28 @@
 // Network access lives here and nowhere else, so the rest of the catalog stays
 // pure and offline.
 import { ESPLORA_URL } from '../constants';
+import { isRecord, readString } from '../guards';
 
 export interface EsploraUtxo {
   txid: string;
   vout: number;
   value: number;
   status: { confirmed: boolean; block_height?: number };
+}
+
+function parseUtxo(value: unknown): EsploraUtxo | undefined {
+  if (!isRecord(value) || !isRecord(value.status)) return undefined;
+  const { txid, vout, value: amount, status } = value;
+  if (typeof txid !== 'string' || typeof vout !== 'number' || typeof amount !== 'number')
+    return undefined;
+  if (typeof status.confirmed !== 'boolean') return undefined;
+  const blockHeight = typeof status.block_height === 'number' ? status.block_height : undefined;
+  return {
+    txid,
+    vout,
+    value: amount,
+    status: { confirmed: status.confirmed, block_height: blockHeight },
+  };
 }
 
 export function esploraConfigured(): boolean {
@@ -38,7 +54,10 @@ async function esploraFetch(path: string, init?: RequestInit): Promise<Response>
 
 /** Confirmed utxos at `address`, largest first. */
 export async function fetchUtxos(address: string): Promise<EsploraUtxo[]> {
-  const utxos: EsploraUtxo[] = await (await esploraFetch(`/address/${address}/utxo`)).json();
+  const body: unknown = await (await esploraFetch(`/address/${address}/utxo`)).json();
+  if (!Array.isArray(body))
+    throw new Error(`Esplora returned a non-array utxo list for ${address}`);
+  const utxos = body.map(parseUtxo).filter(utxo => utxo !== undefined);
   return utxos.filter(utxo => utxo.status.confirmed).sort((a, b) => b.value - a.value);
 }
 
@@ -54,10 +73,13 @@ export async function broadcastTransaction(txHex: string): Promise<string> {
 
 /** The scriptPubKey Esplora reports for an outpoint, needed as a witnessUtxo. */
 export async function fetchOutputScript(txid: string, vout: number): Promise<string> {
-  const tx: { vout: { scriptpubkey: string }[] } = await (await esploraFetch(`/tx/${txid}`)).json();
-  const output = tx.vout[vout];
-  if (!output) throw new Error(`Transaction ${txid} has no output ${vout}`);
-  return output.scriptpubkey;
+  const tx: unknown = await (await esploraFetch(`/tx/${txid}`)).json();
+  const outputs: unknown = isRecord(tx) ? tx.vout : undefined;
+  const scriptPubKey = Array.isArray(outputs)
+    ? readString(outputs[vout], 'scriptpubkey')
+    : undefined;
+  if (!scriptPubKey) throw new Error(`Transaction ${txid} has no output ${vout}`);
+  return scriptPubKey;
 }
 
 export interface SpendableUtxo extends EsploraUtxo {

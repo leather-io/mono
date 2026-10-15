@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 
 import {
   findSwapAssetByRouteParam,
@@ -11,15 +11,28 @@ import {
   toSwapRouteParam,
 } from './swap-utils';
 
-const sbtcSwapAsset = {
-  asset: { protocol: 'sip10', symbol: 'sBTC', assetId: 'SP1.sbtc-token::sbtc-token' },
-  providerAssets: [],
-} as unknown as AccountSwapAsset;
+function createSip10SwapAsset(assetId: string, contractId: string): AccountSwapAsset {
+  return {
+    asset: {
+      chain: 'stacks',
+      category: 'fungible',
+      protocol: 'sip10',
+      symbol: 'sBTC',
+      name: 'sBTC',
+      decimals: 8,
+      hasMemo: true,
+      canTransfer: true,
+      assetId,
+      contractId,
+      imageCanonicalUri: '',
+    },
+    providerAssets: [],
+  };
+}
 
-const copycatSwapAsset = {
-  asset: { protocol: 'sip10', symbol: 'sBTC', assetId: 'SP2.fake-sbtc::sbtc-token' },
-  providerAssets: [],
-} as unknown as AccountSwapAsset;
+const sbtcSwapAsset = createSip10SwapAsset('SP1.sbtc-token::sbtc-token', 'SP1.sbtc-token');
+
+const copycatSwapAsset = createSip10SwapAsset('SP2.fake-sbtc::sbtc-token', 'SP2.fake-sbtc');
 
 describe(matchNativeAssetBySymbol.name, () => {
   test('matches STX and BTC case-insensitively', () => {

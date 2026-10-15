@@ -23,8 +23,20 @@ export function btcAddressValidator() {
   });
 }
 
+const networkToBitcoinNetworkMode: Record<Network, BitcoinNetworkModes> = {
+  [Network.mainnet]: 'mainnet',
+  [Network.testnet]: 'testnet',
+  [Network.regtest]: 'regtest',
+};
+
+const bitcoinNetworkModeToNetwork: Record<Exclude<BitcoinNetworkModes, 'signet'>, Network> = {
+  mainnet: Network.mainnet,
+  testnet: Network.testnet,
+  regtest: Network.regtest,
+};
+
 export function getNetworkTypeFromAddress(address: string) {
-  return getAddressInfo(address).network as BitcoinNetworkModes;
+  return networkToBitcoinNetworkMode[getAddressInfo(address).network];
 }
 
 function btcAddressNetworkValidatorFactory(network: BitcoinNetworkModes) {
@@ -32,7 +44,7 @@ function btcAddressNetworkValidatorFactory(network: BitcoinNetworkModes) {
     // Signet uses testnet address format, this parsing is to please the
     // validation library
     if (network === 'signet') return Network.testnet;
-    return network as Network;
+    return bitcoinNetworkModeToNetwork[network];
   }
   return (value?: string) => {
     if (isUndefined(value) || isEmptyString(value)) return true;

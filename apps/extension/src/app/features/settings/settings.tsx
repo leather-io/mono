@@ -111,7 +111,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
       onSelect={() => {
         analytics.track('lock_session');
         void lockWallet({
-          afterLock: () => navigate(RouteUrls.Unlock, { state: { from: location.pathname } }),
+          afterLock: () => void navigate(RouteUrls.Unlock, { state: { from: location.pathname } }),
         });
       }}
       data-testid={SettingsSelectors.LockListItem}

@@ -10,6 +10,7 @@ import { resolveParams } from './rpc-methods';
 import {
   type Outcome,
   type Platform,
+  type RequestContext,
   type RpcMethodSpec,
   type VerifyReport,
   expectationFor,
@@ -81,7 +82,7 @@ export interface RunSpecOptions {
 
 export interface RunSpecDeps {
   /** Sends the request and resolves with the wallet's unwrapped result. */
-  ctx: import('./types').RequestContext;
+  ctx: RequestContext;
 }
 
 /**

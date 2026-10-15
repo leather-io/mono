@@ -118,15 +118,19 @@ describe(LedgerFlowHost.name, () => {
     const rendered = renderHost();
     const onSettled = vi.fn();
 
-    act(() => {
-      void rendered.flow
-        .sign({
+    async function signAndSettle() {
+      onSettled(
+        await rendered.flow.sign({
           kind: 'sign-bitcoin-tx',
           psbt: new Uint8Array([1, 2, 3]),
           inputsToSign: [],
           settleOnRejection: false,
         })
-        .then(onSettled);
+      );
+    }
+
+    act(() => {
+      void signAndSettle();
     });
     await act(() => Promise.resolve());
 
@@ -143,15 +147,19 @@ describe(LedgerFlowHost.name, () => {
 
     const onSettled = vi.fn();
 
-    act(() => {
-      void rendered.flow
-        .sign({
+    async function signAndSettle() {
+      onSettled(
+        await rendered.flow.sign({
           kind: 'sign-bitcoin-tx',
           psbt: new Uint8Array([1, 2, 3]),
           inputsToSign: [],
           settleOnRejection: false,
         })
-        .then(onSettled);
+      );
+    }
+
+    act(() => {
+      void signAndSettle();
     });
     await act(() => Promise.resolve());
 

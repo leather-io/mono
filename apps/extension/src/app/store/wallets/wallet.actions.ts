@@ -5,14 +5,15 @@ import {
   extractFingerprintFromDescriptor,
   extractKeyFromDescriptor,
 } from '@leather.io/crypto';
-import { SupportedBlockchains } from '@leather.io/models';
+import { type SupportedBlockchains } from '@leather.io/models';
 import { userAddsKeychains } from '@leather.io/state';
 import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
 import { broadcastWalletListChanged } from '@shared/messages';
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import { type AppThunk, persistor } from '..';
+import { type AppThunk, persistor } from '@app/store/store';
+
 import { selectStacksKeychains } from '../keychains/keychain.selectors';
 import { selectWalletEntities } from './wallet.selectors';
 

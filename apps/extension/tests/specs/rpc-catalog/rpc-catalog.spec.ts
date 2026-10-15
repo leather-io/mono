@@ -18,35 +18,22 @@ function findSpec(id: string) {
 async function pageRequestContext(page: Page): Promise<RequestContext> {
   const network = await page.evaluate(() => {
     const api: unknown = Reflect.get(window, '__leatherTestApp');
-    function hasNetwork(value: unknown): value is { network(): string } {
-      return (
-        typeof value === 'object' &&
-        value !== null &&
-        'network' in value &&
-        typeof value.network === 'function'
-      );
+    if (typeof api !== 'object' || api === null || !('network' in api)) {
+      throw new Error('__leatherTestApp missing');
     }
-    if (!hasNetwork(api)) throw new Error('__leatherTestApp missing');
-    return api.network();
+    const { network } = api;
+    if (typeof network !== 'function') throw new Error('__leatherTestApp missing');
+    const value: unknown = Reflect.apply(network, api, []);
+    if (typeof value !== 'string') throw new Error('__leatherTestApp.network() is not a string');
+    return value;
   });
   return {
     network,
     request(method, params) {
       const args: [string, unknown] = [method, params];
       return page.evaluate(async ([m, p]) => {
-        const provider: unknown = Reflect.get(window, 'LeatherProvider');
-        function hasRequest(
-          value: unknown
-        ): value is { request(method: string, params?: unknown): Promise<{ result: unknown }> } {
-          return (
-            typeof value === 'object' &&
-            value !== null &&
-            'request' in value &&
-            typeof value.request === 'function'
-          );
-        }
-        if (!hasRequest(provider)) throw new Error('LeatherProvider missing');
-        const response = await provider.request(m, p);
+        if (!window.LeatherProvider) throw new Error('LeatherProvider missing');
+        const response = await window.LeatherProvider.request(m, p);
         return response.result;
       }, args);
     },
@@ -59,7 +46,8 @@ function interceptRequestPopup(context: BrowserContext) {
 
 async function readResultJson(page: Page, testId: 'rpc-result-params' | 'rpc-result-payload') {
   const text = await page.getByTestId(testId).textContent();
-  return JSON.parse(text ?? 'null');
+  const value: unknown = JSON.parse(text ?? 'null');
+  return value;
 }
 
 test.describe('Rpc: test-app catalog', () => {

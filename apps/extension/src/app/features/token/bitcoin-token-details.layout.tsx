@@ -17,7 +17,7 @@ interface BitcoinTokenDetailsLayoutProps {
   icon: ReactNode;
   balance: Money;
   fiatBalance: Money;
-  price: Money;
+  price?: Money;
   descriptionText: string;
   balances: TokenBalanceEntry[];
   addresses: TokenAddressEntry[];

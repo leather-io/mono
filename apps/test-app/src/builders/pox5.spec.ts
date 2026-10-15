@@ -16,6 +16,16 @@ const pox5ContractId = 'SP000000000000000000002Q6VF78.pox-5';
 const signerManagerContractId = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.signer-manager';
 const stakerAddress = 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7';
 
+function decodeFirstPostCondition({ postConditions }: { postConditions?: string[] }) {
+  const [postCondition] = postConditions ?? [];
+  if (!postCondition) throw new Error('Expected a post condition');
+  return decodePostCondition(postCondition);
+}
+
+function readAmount(decoded: ReturnType<typeof decodePostCondition>) {
+  return 'amount' in decoded ? String(decoded.amount) : undefined;
+}
+
 const stakeArgs = {
   signerManagerContractId,
   amountMicroStx: 40_000_000n,
@@ -50,7 +60,7 @@ describe('getStakeOptions', () => {
     const options = getStakeOptions(stakeArgs);
     expect(options.postConditionMode).toBe('deny');
     expect(options.postConditions).toHaveLength(1);
-    const decoded = decodePostCondition(options.postConditions![0]);
+    const decoded = decodeFirstPostCondition(options);
     expect(decoded).toMatchObject({ type: 'staking-postcondition', condition: 'eq' });
   });
 
@@ -73,17 +83,17 @@ describe('getStakeUpdateOptions', () => {
 
   test('an amount increase pins the RESULTING TOTAL with eq', () => {
     const options = getStakeUpdateOptions({ ...updateArgs, amountIncreaseMicroStx: 10_000_000n });
-    const decoded = decodePostCondition(options.postConditions![0]);
+    const decoded = decodeFirstPostCondition(options);
     expect(decoded).toMatchObject({ type: 'staking-postcondition', condition: 'eq' });
     // 40 STX already staked + 10 STX added = 50 STX total.
-    expect(String((decoded as { amount: unknown }).amount)).toBe('50000000');
+    expect(readAmount(decoded)).toBe('50000000');
   });
 
   test('a cycles-only extend caps the total with lte, because node builds disagree', () => {
     const options = getStakeUpdateOptions({ ...updateArgs, cyclesToExtend: 6 });
-    const decoded = decodePostCondition(options.postConditions![0]);
+    const decoded = decodeFirstPostCondition(options);
     expect(decoded).toMatchObject({ condition: 'lte' });
-    expect(String((decoded as { amount: unknown }).amount)).toBe('40000000');
+    expect(readAmount(decoded)).toBe('40000000');
   });
 });
 
@@ -96,7 +106,7 @@ describe('getUnstakeOptions', () => {
     });
     expect(options.functionName).toBe('unstake');
     expect(options.postConditionMode).toBe('deny');
-    expect(decodePostCondition(options.postConditions![0])).toMatchObject({
+    expect(decodeFirstPostCondition(options)).toMatchObject({
       type: 'pox-postcondition',
       condition: 'will-perform',
     });

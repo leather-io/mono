@@ -1,5 +1,5 @@
-import { Locator } from '@playwright/test';
-import { makeUnsignedSTXTokenTransfer } from '@stacks/transactions';
+import { type Locator } from '@playwright/test';
+import { type TokenTransferOptions, makeUnsignedSTXTokenTransfer } from '@stacks/transactions';
 
 import { SharedComponentsSelectors } from './selectors/shared-component.selectors';
 
@@ -25,7 +25,7 @@ export async function getDisplayerAddress(locator: Locator) {
 export async function generateUnsignedStxTransfer(
   recipient: string,
   amount: number,
-  network: any,
+  network: TokenTransferOptions['network'],
   publicKey: string,
   memo?: string
 ) {
@@ -43,7 +43,7 @@ export async function generateMultisigUnsignedStxTransfer(
   recipient: string,
   amount: number,
   fee: number,
-  network: any,
+  network: TokenTransferOptions['network'],
   publicKeys: string[],
   threshold: number,
   nonce: number,

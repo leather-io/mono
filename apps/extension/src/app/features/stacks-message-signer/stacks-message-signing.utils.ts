@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import type { PrivateKey } from '@stacks/common';
-import { ClarityValue, TupleCV } from '@stacks/transactions';
+import { type ClarityValue, type TupleCV } from '@stacks/transactions';
 
 import { isString } from '@leather.io/utils';
 

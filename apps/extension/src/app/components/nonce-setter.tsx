@@ -4,7 +4,10 @@ import { useFormikContext } from 'formik';
 
 import { isDefined } from '@leather.io/utils';
 
-import { StacksSendFormValues, StacksTransactionFormValues } from '@shared/models/form.model';
+import {
+  type StacksSendFormValues,
+  type StacksTransactionFormValues,
+} from '@shared/models/form.model';
 
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';

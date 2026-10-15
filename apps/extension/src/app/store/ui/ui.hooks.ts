@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { uiActions } from './ui.actions';
 import { selectHasSwitched, selectLoadingState } from './ui.selectors';
 
-export enum LoadingKeys {
-  SUBMIT_STACKS_TRANSACTION = 'loading/SUBMIT_STACKS_TRANSACTION',
-}
+export const LoadingKeys = {
+  SUBMIT_STACKS_TRANSACTION: 'loading/SUBMIT_STACKS_TRANSACTION',
+} as const;
+export type LoadingKeys = (typeof LoadingKeys)[keyof typeof LoadingKeys];
 
 export function useLoading(key: string) {
   const loadingState = useSelector(selectLoadingState);

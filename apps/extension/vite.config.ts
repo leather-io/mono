@@ -4,10 +4,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sourcemaps from 'rollup-plugin-sourcemaps2';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { defineConfig, loadEnv } from 'vite';
+import { type Plugin, defineConfig, loadEnv } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { z } from 'zod';
 
 import manifest, { inpageBuildMatch } from './manifest.config';
 import packageJson from './package.json' with { type: 'json' };
@@ -122,6 +123,16 @@ function getSharedPlugins() {
   ];
 }
 
+const vitePluginSchema = z.looseObject({ name: z.string() });
+
+function toVitePlugins(value: unknown): Plugin[] {
+  const candidates: unknown[] = Array.isArray(value) ? value : [value];
+  return candidates.flatMap(candidate => {
+    const parsedPlugin = vitePluginSchema.safeParse(candidate);
+    return parsedPlugin.success ? [parsedPlugin.data] : [];
+  });
+}
+
 function getDependencyName(id: string) {
   const nodeModulesMarker = '/node_modules/';
   const markerIndex = id.lastIndexOf(nodeModulesMarker);
@@ -196,7 +207,7 @@ export default defineConfig(({ mode, command }) => {
           ]
         : []),
       ...(mode !== 'development' && sentryAuthToken
-        ? [
+        ? toVitePlugins(
             sentryVitePlugin({
               authToken: sentryAuthToken,
               org: 'trust-machines',
@@ -209,8 +220,8 @@ export default defineConfig(({ mode, command }) => {
               sourcemaps: {
                 disable: true,
               },
-            }),
-          ]
+            })
+          )
         : []),
     ],
     build: {

@@ -1,0 +1,1713 @@
+{
+  "app/app.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "app/components/apy-hero-card.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/balance/balance.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/components/basic-hover-card.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/components/basic-page/basic-page-hover-card.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/basic-page/basic-page-hover-icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/confirmations/confirmation-steps.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/components/connect-card/connect-card.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/content/content-components.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/content/portable-text-content.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    },
+    "object-shorthand": {
+      "count": 1
+    }
+  },
+  "app/components/copy-address.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/components/explainer.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/components/forms/form-page.layout.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/components/icons/bitcoin-icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/icons/chain-logo-group.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/icons/leather-logo.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/icons/listx-icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/icons/provider-icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/icons/rotated-icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/icons/sbtc-logo.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/components/icons/sign-icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/icons/stacking-icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/icons/stacks-icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/icons/stop-pooling-icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/icons/ststx-icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/info-grid/info-grid.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/learn-hover-card.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/mock-mode-toggle.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "app/components/table.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/components/value-displayer/default-value-displayer.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/components/value-displayer/reward-value-displayer.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/components/value-hover-card.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/constants/environment.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "app/constants/meta-tags.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/data/bitcoin-staking-data.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/data/bitcoin-staking-data.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/data/bond-pool-data.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/data/data.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    }
+  },
+  "app/data/pox5-network-config.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "app/entry.client.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "app/entry.server.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/activity-button/activity-modal.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/byosm/byosm-contract-entry.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/byosm/byosm-contract-schema.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/byosm/byosm-error-messages.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/byosm/use-byosm-signer-manager.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/components/available-balance-row.tsx": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/components/pool-fee-value.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/components/pox5-tx-status-screen.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/components/pox5-tx-tracker-provider.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/components/staking-pool-overview.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/hooks/use-pox5-clients.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/hooks/use-pox5-cycle-clock.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/hooks/use-pox5-position.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "app/features/bitcoin-staking/hooks/use-pox5-tx-tracker.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/queries/create-get-pox5-earned-rewards-query-options.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/queries/create-get-pox5-payout-preference-query-options.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/queries/create-get-pox5-pool-fee-query-options.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/queries/create-get-pox5-staker-info-query-options.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/queries/create-get-pox5-transaction-query-options.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/queries/get-pending-pox5-txs.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/queries/pox5-node.query.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/queries/pox5-stacking.query.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "app/features/bitcoin-staking/staking-active/components/claimable-rewards-card.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/staking-active/components/operator-payout-card.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/staking-active/components/staking-action-buttons.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/staking-active/components/staking-position-grid.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "app/features/bitcoin-staking/staking-active/hooks/use-active-staking-info.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "app/features/bitcoin-staking/staking-active/staking-active-info.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/start-staking/components/choose-payout-preference.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/start-staking/components/choose-staking-amount.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/start-staking/components/choose-staking-duration.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/start-staking/components/staking-confirmation-steps.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/start-staking/start-staking.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 4
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/start-staking/utils/staking-form-schema.spec.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/start-staking/utils/staking-form-schema.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "app/features/bitcoin-staking/transactions/pool-contract-data.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 5
+    }
+  },
+  "app/features/bitcoin-staking/transactions/pox5-claim-rewards.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/transactions/pox5-mutations.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 8
+    },
+    "object-shorthand": {
+      "count": 4
+    }
+  },
+  "app/features/bitcoin-staking/transactions/pox5-signer-calldata.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/transactions/pox5-stacking-dao.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 5
+    }
+  },
+  "app/features/bitcoin-staking/transactions/pox5-stake-update.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "app/features/bitcoin-staking/transactions/pox5-stake.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "app/features/bitcoin-staking/transactions/pox5-unstake.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/update-staking/components/choose-signer-manager.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/update-staking/components/custom-contract-entry.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/update-staking/components/sidebar-summary-card.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/update-staking/switch-target.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/update-staking/update-staking-schema.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 5
+    }
+  },
+  "app/features/bitcoin-staking/update-staking/update-staking-summary.spec.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/update-staking/update-staking-summary.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 4
+    }
+  },
+  "app/features/bitcoin-staking/update-staking/update-staking.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 5
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 5
+    }
+  },
+  "app/features/bitcoin-staking/update-staking/use-signer-manager-picker.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/bitcoin-staking/utils/pool-fee.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/utils/pool-payout.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/utils/pox5-contracts.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/utils/pox5-transition.spec.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/bitcoin-staking/utils/pox5-transition.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/error/error-layout.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "app/features/mock-dialog/mock-dialog.layout.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/features/mock-dialog/mock-dialog.tsx": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 2
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    }
+  },
+  "app/features/multisig/activity/harmonize-vault-activity.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/features/multisig/activity/multisig-transaction-activity-view.spec.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "app/features/multisig/activity/use-proposal-activity-item.ts": {
+    "object-shorthand": {
+      "count": 1
+    }
+  },
+  "app/features/multisig/activity/use-vault-account-activity-feed.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/features/multisig/activity/use-vault-activity.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/features/multisig/auth/use-sign-in.ts": {
+    "object-shorthand": {
+      "count": 1
+    }
+  },
+  "app/features/multisig/extension/create-gated-leather-client.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/features/multisig/network/resolve-network-configuration.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    }
+  },
+  "app/features/multisig/network/resolve-network-configuration.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/multisig/transactions/signing/substitute-stx-nonce.ts": {
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 2
+    }
+  },
+  "app/features/multisig/transactions/use-vault-btc-custom-fee.ts": {
+    "object-shorthand": {
+      "count": 1
+    }
+  },
+  "app/features/multisig/transactions/use-vault-stx-transaction-fees.ts": {
+    "object-shorthand": {
+      "count": 1
+    }
+  },
+  "app/features/multisig/vaults/use-add-account-to-wallet.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/features/multisig/vaults/use-multisig-me.ts": {
+    "object-shorthand": {
+      "count": 1
+    }
+  },
+  "app/features/multisig/vaults/use-vault-account-mutations.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/features/multisig/vaults/use-vault-accounts.ts": {
+    "object-shorthand": {
+      "count": 2
+    }
+  },
+  "app/features/multisig/vaults/use-vault-transactions.ts": {
+    "object-shorthand": {
+      "count": 1
+    }
+  },
+  "app/features/multisig/vaults/use-vaults.ts": {
+    "object-shorthand": {
+      "count": 1
+    }
+  },
+  "app/features/sign-in-button/sign-in-button.layout.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/features/sign-in-button/sign-in-button.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 4
+    }
+  },
+  "app/features/stacking/components/stacking-conditions.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/stacking/components/stacking-form-steps-panel.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/stacking/components/stacking-info-grid.layout.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/stacking/components/start-stacking-drawer.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/stacking/direct-stacking-info/utils-pending-txs.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 2
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 4
+    }
+  },
+  "app/features/stacking/providers/stacking-client-provider.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/features/stacking/start-liquid-stacking/utils/utils-preset-protocols.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/features/stacking/utils/stacking-network-utils.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 1
+    }
+  },
+  "app/layouts/footer/footer.layout.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/layouts/nav/nav.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/layouts/page/page.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/mocks/api/leather.io/multisig.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "app/mocks/extension/event-bus.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 2
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/mocks/extension/leather-provider.mock.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "app/pages/bitcoin-staking/components/bond-pool-table.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/bitcoin-staking/components/claim-rewards-button.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "app/pages/bitcoin-staking/components/dual-stacking-transition.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/bitcoin-staking/components/liquid-stacking-provider-table.tsx": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 8
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "object-shorthand": {
+      "count": 2
+    }
+  },
+  "app/pages/bitcoin-staking/components/staking-faq.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/bitcoin-staking/components/staking-provider-table.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/bitcoin-staking/components/staking-user-position.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/bitcoin-staking/components/start-staking-button.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/bitcoin-staking/components/use-staking-pool-link.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/bitcoin-staking/pool/byosm-staking.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/bitcoin-staking/pool/pool-staking-active.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/bitcoin-staking/pool/pool-staking-update.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/bitcoin-staking/pool/pool-staking.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/bitcoin-staking/staking-status.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/bitcoin-staking/staking.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/changelog/changelog-entry.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/changelog/changelog.page.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/changelog/changelog.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/changelog/components/changelog-entry.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/changelog/components/changelog-page-layout.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/error/error-not-found.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/index.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/account/account.page.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/account/components/account-assets.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/account/components/account-details-card.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/account/components/account-transactions.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/account/components/asset-detail-modal.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/pages/multisig/account/components/asset-selector.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/pages/multisig/account/components/custom-bitcoin-fee-field.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/account/components/custom-stacks-fee-field.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/account/components/edit-account-modal.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/account/components/propose-transaction-modal.spec.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/account/components/propose-transaction-modal.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 19
+    }
+  },
+  "app/pages/multisig/account/components/receive-modal.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/account/components/send-transaction-button.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/activity/activity-detail.page.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/components/account-icon-name-field.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/components/dev-tools/btc-propose-tool.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/components/dev-tools/dev-tools-panel.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/components/dev-tools/stx-propose-tool.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/components/editable-name.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/components/glyph-button.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/components/invitation-modal.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/components/multisig-page.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/components/text-field.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/components/transaction-list.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/components/transaction-row.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/components/vault-activity-list.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/components/vault-activity-row.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/components/vault-asset-list.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/components/vault-asset-row.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/create-vault/components/chain-picker.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/create-vault/components/member-rows.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/create-vault/components/theme-picker.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/create-vault/components/vault-preview-card.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/create-vault/create-vault.page.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/dashboard/components/create-vault-tile.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/dashboard/components/vault-card.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/dashboard/dashboard.page.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/pages/multisig/onboarding/components/onboarding-connect-row.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/tx/components/signer-rollcall.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 4
+    }
+  },
+  "app/pages/multisig/tx/tx.page.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "object-shorthand": {
+      "count": 1
+    }
+  },
+  "app/pages/multisig/vault/components/accounts-section.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 5
+    }
+  },
+  "app/pages/multisig/vault/components/cancel-vault-modal.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/pages/multisig/vault/components/create-account-modal.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/pages/multisig/vault/components/edit-vault-modal.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/multisig/vault/components/members-section.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/pages/multisig/vault/components/share-invitations-modal.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 6
+    }
+  },
+  "app/pages/multisig/vault/components/vault-status-card.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/pages/multisig/vault/vault.page.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 3
+    }
+  },
+  "app/pages/playground/areas/page-gallery/page-gallery.page.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/playground/areas/staking-states/staking-mock-data.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    }
+  },
+  "app/pages/playground/areas/staking-states/staking-surface.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/playground/areas/update-stake-switch/switch-signer-manager-preview.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/playground/components/playground-dock.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/portfolio/components/portfolio-chart.spec.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/portfolio/components/portfolio-chart.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "app/pages/portfolio/components/portfolio-page.layout.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/portfolio/components/portfolio-summary.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/portfolio/components/wallet-connection-modal.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/pages/portfolio/dummy-portfolio-data.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "app/pages/portfolio/portfolio-events.tsx": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "app/pages/portfolio/portfolio-table/portfolio-table-cells.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "app/pages/portfolio/portfolio-table/portfolio-table.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "object-shorthand": {
+      "count": 5
+    }
+  },
+  "app/pages/portfolio/portfolio.page.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/portfolio/portfolio.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/posts/post.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/posts/post.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/redirects/help-center-redirect.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/redirects/help-center-wildcard.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/redirects/stacking-redirect.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/redirects/stacking-wildcard.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/redirects/support-guide-redirect.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/sbtc/components/get-sbtc-grid.layout.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/sbtc/components/get-sbtc-grid.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/sbtc/components/sbtc-protocol-reward-grid.layout.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/sbtc/components/sbtc-protocol-reward-grid.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 4
+    }
+  },
+  "app/pages/sbtc/components/sbtc-rewards-faq.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/sbtc/components/sbtc-rewards-page-heading.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/sbtc/components/sbtc-rewards-sunset-callout.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/sbtc/sbtc-rewards-context.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/sbtc/sbtc-rewards.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "app/pages/sbtc/sbtc.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/support/components/guide-search.tsx": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    }
+  },
+  "app/pages/support/components/related-guides.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/support/components/support-form-provider.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/support/components/support-form-schema.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/support/components/support-form.tsx": {
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/pages/support/guide/components/reading-progress.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/support/guide/guide.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/pages/support/guide/guide.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/pages/support/help-center.route.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "app/pages/support/help-center.tsx": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 2
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/queries/balance/btc-balance.hooks.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/queries/balance/sip10-balance.hooks.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/queries/balance/stx-balance.hooks.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/queries/balance/total-balance.hooks.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/queries/market-data/market-data.query.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/queries/stacking-tracker/protocols.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/root.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/services/web-auth-session.service.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    }
+  },
+  "app/services/web-http-cache.service.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/services/web-settings.service.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    }
+  },
+  "app/services/web-settings.service.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/store/account.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/store/addresses.spec.tsx": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "app/store/addresses.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 1
+    }
+  },
+  "app/store/quote-currency.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/store/stacks-network.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/utils/analytics/analytics.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    }
+  },
+  "app/utils/analytics/use-on-route-change.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "app/utils/currency-formatter.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "app/utils/hooks/use-media-query.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/utils/leather-sdk.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "app/utils/post-link.test.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    }
+  },
+  "app/utils/transactions.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/utils/validators/stx-amount-validator.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/utils/wallet.spec.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/utils/wallet.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 1
+    }
+  },
+  "tests/bitcoin-staking.spec.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 17
+    },
+    "leather.io/no-same-package-barrel-import": {
+      "count": 1
+    }
+  },
+  "tests/index.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "object-shorthand": {
+      "count": 2
+    }
+  },
+  "tests/mode-fixture.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    },
+    "leather.io/no-same-package-barrel-import": {
+      "count": 1
+    }
+  },
+  "tests/utils/mock-data.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "tests/xss-protection.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 3
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    }
+  },
+  "vite.config.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "workers/csp.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 3
+    }
+  }
+}

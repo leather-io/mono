@@ -5,7 +5,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
 
-import { RootState } from '@app/store';
+import { type RootState } from '@app/store/store';
 
 import { accountsAdapter } from './accounts.slice';
 

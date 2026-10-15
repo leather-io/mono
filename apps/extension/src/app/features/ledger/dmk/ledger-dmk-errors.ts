@@ -1,12 +1,16 @@
+import { z } from 'zod';
+
 import type { SupportedBlockchains } from '@leather.io/models';
 import { isError } from '@leather.io/utils';
 
-export enum LedgerConnectionErrors {
-  AppNotOpen = 'AppNotOpen',
-  AppOpenFailed = 'AppOpenFailed',
-  DeviceNotPaired = 'DeviceNotPaired',
-  OperationRejected = 'OperationRejected',
-}
+export const LedgerConnectionErrors = {
+  AppNotOpen: 'AppNotOpen',
+  AppOpenFailed: 'AppOpenFailed',
+  DeviceNotPaired: 'DeviceNotPaired',
+  OperationRejected: 'OperationRejected',
+} as const;
+export type LedgerConnectionErrors =
+  (typeof LedgerConnectionErrors)[keyof typeof LedgerConnectionErrors];
 
 const deviceLockedTag = 'DeviceLockedError';
 const deviceDisconnectedTags: readonly string[] = [
@@ -37,15 +41,16 @@ const operationRejectedErrorMessage = 'Operation rejected on the Ledger device';
 const deviceNotPairedErrorMessage =
   'Leather has not been given access to a Ledger device in this browser';
 
-interface DmkTaggedError {
-  _tag: string;
-  originalError?: unknown;
-  message?: unknown;
-}
+const dmkTaggedErrorSchema = z.object({
+  _tag: z.string(),
+  originalError: z.unknown().optional(),
+  message: z.unknown().optional(),
+});
+type DmkTaggedError = z.infer<typeof dmkTaggedErrorSchema>;
 
-function isDmkTaggedError(error: unknown): error is DmkTaggedError {
-  if (typeof error !== 'object' || error === null || !('_tag' in error)) return false;
-  return typeof error._tag === 'string';
+function parseDmkTaggedError(error: unknown) {
+  const result = dmkTaggedErrorSchema.safeParse(error);
+  return result.success ? result.data : undefined;
 }
 
 function getNestedError(error: unknown): unknown {
@@ -56,7 +61,8 @@ function getNestedError(error: unknown): unknown {
 }
 
 function hasTag(error: unknown, tags: readonly string[]): boolean {
-  if (isDmkTaggedError(error) && tags.includes(error._tag)) return true;
+  const taggedError = parseDmkTaggedError(error);
+  if (taggedError && tags.includes(taggedError._tag)) return true;
   const nestedError = getNestedError(error);
   return nestedError !== undefined && nestedError !== error && hasTag(nestedError, tags);
 }
@@ -79,12 +85,16 @@ function getDmkErrorMessage({ _tag, originalError, message }: DmkTaggedError): s
 
 export function toLedgerTransportError(error: unknown): Error {
   if (isError(error)) return error;
-  if (!isDmkTaggedError(error)) {
+  const taggedError = parseDmkTaggedError(error);
+  if (!taggedError) {
     return new Error(typeof error === 'string' ? error : unknownDeviceErrorMessage);
   }
-  const transportError = new Error(getDmkErrorMessage(error));
-  transportError.name = error._tag;
-  return Object.assign(transportError, { _tag: error._tag, originalError: error.originalError });
+  const transportError = new Error(getDmkErrorMessage(taggedError));
+  transportError.name = taggedError._tag;
+  return Object.assign(transportError, {
+    _tag: taggedError._tag,
+    originalError: taggedError.originalError,
+  });
 }
 
 export function isLedgerDeviceLockedError(error: unknown): boolean {
@@ -108,9 +118,8 @@ export function isLedgerUserRefusedDeviceActionError(error: unknown): boolean {
 }
 
 export function makeLedgerOperationRejectedError(error: unknown): Error {
-  const message = isDmkTaggedError(error)
-    ? getDmkErrorMessage(error)
-    : operationRejectedErrorMessage;
+  const taggedError = parseDmkTaggedError(error);
+  const message = taggedError ? getDmkErrorMessage(taggedError) : operationRejectedErrorMessage;
   const rejectedError = new Error(message);
   rejectedError.name = LedgerConnectionErrors.OperationRejected;
   return Object.assign(rejectedError, { originalError: error });

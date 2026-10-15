@@ -1,4 +1,5 @@
-import { RootState } from '..';
+import { type RootState } from '@app/store/store';
+
 import { appPermissionsAdapter } from './app-permissions.slice';
 
 function selectAppPermissionsSlice(state: RootState) {

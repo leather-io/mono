@@ -14,7 +14,7 @@ import { microStxToStx, stxToMicroStx } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 
 import { stacksValue } from '@app/common/stacks-utils';
-import { StacksTransactionActionType } from '@app/common/transactions/stacks/transaction.utils';
+import { type StacksTransactionActionType } from '@app/common/transactions/stacks/transaction.utils';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { StacksTransactionItem } from '@app/components/stacks-transaction-item/stacks-transaction-item';
 import { useToast } from '@app/features/toasts/use-toast';
@@ -110,14 +110,17 @@ export function StacksTransactionActionSheet({
     <FormProvider {...methods}>
       <Sheet
         isShowing={location.pathname === routeUrl.replace(':txid', txid)}
-        onClose={() => navigate(RouteUrls.Home)}
+        onClose={() => void navigate(RouteUrls.Home)}
         header={<SheetHeader title={title} />}
         footer={
           <TransactionActions
-            isDisabled={stxToMicroStx(feeValue ?? 0).isLessThanOrEqualTo(initialTransactionFee)}
+            isDisabled={
+              feeValue === undefined ||
+              stxToMicroStx(feeValue).isLessThanOrEqualTo(initialTransactionFee)
+            }
             isLoading={isBroadcasting}
-            onCancel={() => navigate(RouteUrls.Home)}
-            onSubmit={methods.handleSubmit(onSubmit)}
+            onCancel={() => void navigate(RouteUrls.Home)}
+            onSubmit={() => void methods.handleSubmit(onSubmit)()}
           />
         }
       >

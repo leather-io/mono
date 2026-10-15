@@ -5,6 +5,8 @@ import { defineConfig } from 'eslint/config';
 import baseConfig from '@leather.io/eslint-config';
 import reactConfig from '@leather.io/eslint-config/react';
 import { noDimensionsScreenRule } from '@leather.io/eslint-config/rules/no-dimensions-screen';
+import { noEnumSyntax } from '@leather.io/eslint-config/rules/no-enum';
+import { noSamePackageBarrelImportRule } from '@leather.io/eslint-config/rules/no-same-package-barrel-import';
 
 const useQueryConfigOrKeyRule = {
   meta: {
@@ -61,11 +63,26 @@ const leatherCustomPlugin = {
   },
 };
 
+const leatherPlugin = {
+  rules: {
+    'no-dimensions-screen': noDimensionsScreenRule,
+    'no-same-package-barrel-import': noSamePackageBarrelImportRule,
+  },
+};
+
+function remedaMessage(native, remeda) {
+  return `Use ${remeda} from remeda instead of ${native} in library code for typed results.`;
+}
+
 export default defineConfig([
   {
     files: ['{packages,apps}/**/*.{ts,tsx}'],
     extends: [baseConfig],
+    plugins: {
+      'leather.io': leatherPlugin,
+    },
     rules: {
+      'leather.io/no-same-package-barrel-import': 'error',
       '@typescript-eslint/no-floating-promises': [
         'error',
         {
@@ -166,6 +183,7 @@ export default defineConfig([
       ],
       'no-restricted-syntax': [
         'error',
+        noEnumSyntax,
         {
           selector: 'TSTypeAliasDeclaration[id.name=/QueryOptions$/]',
           message:
@@ -195,18 +213,85 @@ export default defineConfig([
     name: 'test-app',
     files: ['apps/test-app/src/**/*.{ts,tsx}'],
     extends: [reactConfig],
+    rules: {
+      '@typescript-eslint/unbound-method': 'off',
+    },
+  },
+  {
+    name: 'extension-rules',
+    files: ['apps/extension/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/unbound-method': 'off',
+      '@typescript-eslint/no-unnecessary-type-arguments': 'error',
+      '@typescript-eslint/no-unnecessary-type-parameters': 'error',
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'lodash.get',
+              message: 'Dotted-path reads erase types. Parse the value with a schema instead.',
+            },
+            {
+              name: 'lodash/get',
+              message: 'Dotted-path reads erase types. Parse the value with a schema instead.',
+            },
+          ],
+        },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        noEnumSyntax,
+        {
+          selector: "CallExpression[callee.property.name='then']",
+          message: 'Use async/await instead of .then().',
+        },
+        {
+          selector: 'CallExpression[callee.type=/^(ArrowFunctionExpression|FunctionExpression)$/]',
+          message:
+            'Do not use an IIFE. Declare a named function and call it, or compute the value with a function.',
+        },
+        {
+          selector:
+            ':matches(FunctionDeclaration, FunctionExpression, ArrowFunctionExpression)[returnType.typeAnnotation.type="TSTypePredicate"][returnType.typeAnnotation.asserts=false]',
+          message:
+            'Do not declare an explicit type predicate. Let TypeScript infer it, or validate with a schema.',
+        },
+        {
+          selector: 'ImportDeclaration[source.value="yup"] ImportSpecifier[imported.name=/^Any/]',
+          message:
+            'yup Any* aliases are any in disguise. Type the schema as ObjectSchema<YourFormValues>.',
+        },
+        {
+          selector:
+            ':matches(ReturnStatement, ArrowFunctionExpression) > Literal[value=""], ReturnStatement > ConditionalExpression > Literal[value=""]',
+          message:
+            'Do not return an empty string as a sentinel. Return undefined or null and let the caller decide.',
+        },
+        {
+          selector:
+            'MemberExpression[object.name="location"][property.name="state"], VariableDeclarator[init.callee.name="useLocation"] > ObjectPattern > Property[key.name="state"]',
+          message: 'location.state is any. Read route state through useRouteState(schema).',
+        },
+        {
+          selector:
+            ':matches(CallExpression, NewExpression) > LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="Literal"][right.value=""]',
+          message:
+            "Do not pass `x ?? ''` as an argument. Narrow the value first or let the callee accept undefined.",
+        },
+        {
+          selector:
+            ':matches(CallExpression, NewExpression) > LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="Literal"][right.value=0]',
+          message:
+            'Do not pass `x ?? 0` as an argument. A missing value is not zero: narrow it first or let the callee accept undefined.',
+        },
+      ],
+    },
   },
   {
     name: 'mobile',
     files: ['apps/mobile/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginLingui.configs['flat/recommended']],
-    plugins: {
-      'leather.io': {
-        rules: {
-          'no-dimensions-screen': noDimensionsScreenRule,
-        },
-      },
-    },
     rules: {
       'leather.io/no-dimensions-screen': 'error',
       'lingui/no-unlocalized-strings': [
@@ -276,6 +361,32 @@ export default defineConfig([
     files: ['**/*.spec.ts', '**/*.mocks.ts'],
     rules: {
       'lingui/no-unlocalized-strings': 'off',
+    },
+  },
+  {
+    name: 'library-packages-prefer-remeda',
+    files: ['packages/**/src/**/*.{ts,tsx}'],
+    ignores: ['**/*.spec.{ts,tsx}'],
+    rules: {
+      'no-restricted-properties': [
+        'error',
+        { object: 'Object', property: 'keys', message: remedaMessage('Object.keys', 'keys()') },
+        {
+          object: 'Object',
+          property: 'entries',
+          message: remedaMessage('Object.entries', 'entries()'),
+        },
+        {
+          object: 'Object',
+          property: 'values',
+          message: remedaMessage('Object.values', 'values()'),
+        },
+        {
+          object: 'Object',
+          property: 'fromEntries',
+          message: remedaMessage('Object.fromEntries', 'fromEntries()'),
+        },
+      ],
     },
   },
   {

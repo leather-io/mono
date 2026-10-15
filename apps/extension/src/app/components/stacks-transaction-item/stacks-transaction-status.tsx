@@ -1,4 +1,4 @@
-import { StacksTx } from '@leather.io/models';
+import { type StacksTx } from '@leather.io/models';
 import { Caption } from '@leather.io/ui';
 
 import { isPendingTx } from '@app/common/transactions/stacks/transaction.utils';
