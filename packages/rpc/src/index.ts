@@ -98,12 +98,12 @@ export type RpcMethodNames = keyof RpcEndpointMap;
 export interface RequestFn {
   (
     arg: 'getAddresses',
-    params: { network?: string; allowPolicyAccounts: true }
-  ): Promise<ExtractSuccessResponse<RpcEndpointMap['getAddresses']['response']>>;
+    params: { network?: string; allowPolicyAccounts: false }
+  ): Promise<RpcSuccessResponse<SingleSigAddressResponseBody>>;
   (
     arg: 'getAddresses',
-    params?: { network?: string; allowPolicyAccounts?: false }
-  ): Promise<RpcSuccessResponse<SingleSigAddressResponseBody>>;
+    params?: { network?: string; allowPolicyAccounts?: true }
+  ): Promise<ExtractSuccessResponse<RpcEndpointMap['getAddresses']['response']>>;
   <
     T extends RpcMethodNames,
     P extends RpcEndpointMap[T]['request'] extends { params?: infer P } ? P : never,
