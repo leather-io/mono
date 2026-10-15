@@ -9,7 +9,6 @@ function isValidMnemonic(word: string): boolean {
   return wordlist.includes(word);
 }
 
-// field names are dynamically generated
 const dynamicObjectValue = stringField().check(
   z.refine<string | undefined>(
     value => {
@@ -20,7 +19,6 @@ const dynamicObjectValue = stringField().check(
   )
 );
 
-// YUP validation of dynamic field names => https://github.com/jquense/yup/issues/130
 export const validationSchema = createFormikValidationSchema(
   z.object({}).catchall(dynamicObjectValue)
 );

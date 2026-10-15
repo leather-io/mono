@@ -192,12 +192,10 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
             const highestFeeRate =
               (feeRates?.high.rate ?? 10) * sizeInfo.txVBytes * MAX_FEE_RATE_MULTIPLIER;
 
-            // check if fee is higher than 50 times the highest fee
             if (feeRates && bnValue.isGreaterThan(highestFeeRate)) {
               return false;
             }
 
-            // check if fee is higher than the available balance
             return bnValue.isLessThanOrEqualTo(rbfAvailableBalance.amount);
           },
           { error: 'Fee is too high' }

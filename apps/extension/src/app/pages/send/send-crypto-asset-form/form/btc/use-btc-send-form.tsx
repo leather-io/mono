@@ -71,8 +71,6 @@ export function useBtcSendForm() {
           currencyAmountValidator(),
           btcInsufficientBalanceValidator({
             calcMaxSpend,
-            // TODO: investigate yup features for cross-field validation
-            // to prevent need to access form via ref
             recipient: formRef.current?.values.recipient ?? '',
             utxos: utxos.available,
           })
