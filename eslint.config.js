@@ -336,37 +336,13 @@ export default defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          paths: [
-            ...sharedRestrictedImportPaths,
+          paths: sharedRestrictedImportPaths,
+          patterns: [
             {
-              name: '@leather.io/services',
-              importNames: [
-                'getAccountBalancesService',
-                'getActivityService',
-                'getAssetListService',
-                'getBitcoinStakingService',
-                'getBitcoinTransactionFeesService',
-                'getBitcoinTransactionsService',
-                'getBlockchainActivityService',
-                'getBnsService',
-                'getBtcBalancesService',
-                'getCollectiblesService',
-                'getComplianceService',
-                'getFungibleAssetInfoService',
-                'getMarketDataService',
-                'getMarketHistoryService',
-                'getMarketStatsService',
-                'getMultisigService',
-                'getSip10AssetService',
-                'getSip10BalancesService',
-                'getStacksTransactionFeesService',
-                'getStacksTransactionsService',
-                'getStxBalancesService',
-                'getTokenAnalyticsService',
-                'getUtxosService',
-              ],
+              group: ['@leather.io/services'],
+              importNamePattern: '^get[A-Z]\\w*Service$',
               message:
-                'In query modules, use @leather.io/queries builders instead of importing get*Service directly.',
+                'In query modules, use a @leather.io/queries builder instead of calling a service getter directly. Add a builder if none exists.',
             },
           ],
         },
