@@ -8,7 +8,6 @@ import {
 } from '@stacks/transactions';
 import { type TestRpcResponse, getResponseAddresses } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
-import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
 import {
   exampleMultisigTransactionId,
   mockFundedStacksAddress,
@@ -140,10 +139,6 @@ test.describe('RPC: per-origin policy binding', () => {
   }) => {
     test.slow();
 
-    await overrideLaunchDarklyFlags(context, {
-      releaseAddAccount: true,
-      enableAllowPolicyAccounts: true,
-    });
     await mockProposeMultisigTransaction(context);
     await mockFundedStacksAddress(context, stacksPolicy.address);
     await onboardingPage.signInWithTestAccount(
@@ -191,10 +186,6 @@ test.describe('RPC: per-origin policy binding', () => {
   }) => {
     test.slow();
 
-    await overrideLaunchDarklyFlags(context, {
-      releaseAddAccount: true,
-      enableAllowPolicyAccounts: true,
-    });
     await onboardingPage.signInWithTestAccount(extensionId, {
       ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
       ...policyStateOverrides({ policies: [stacksPolicy] }),
