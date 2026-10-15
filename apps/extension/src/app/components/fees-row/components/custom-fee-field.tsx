@@ -1,4 +1,4 @@
-import { FormEvent, useCallback } from 'react';
+import { type FormEvent, useCallback } from 'react';
 
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { useField } from 'formik';
@@ -21,7 +21,7 @@ export function CustomFeeField({
   setFieldWarning,
   disableFeeSelection,
 }: CustomFeeFieldProps) {
-  const [field, meta, helpers] = useField('fee');
+  const [field, meta, helpers] = useField<string>('fee');
 
   const checkFieldWarning = useCallback(
     (value: string) => {

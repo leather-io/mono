@@ -3,8 +3,7 @@ import {
   AddressHashMode,
   ClarityType,
   type ContractCallPayload,
-  type IntCV,
-  StacksTransactionWire,
+  type StacksTransactionWire,
   type TokenTransferPayloadWire,
   addressFromVersionHash,
   addressHashModeToVersion,
@@ -83,8 +82,10 @@ export function getTxTitle(tx: StacksTransaction) {
       return isStacksMempoolTransaction(tx) ? 'Coinbase' : `Coinbase ${tx.block.height}`;
     case 'poison_microblock':
       return 'Poison Microblock';
+    case 'tenure_change':
+      return 'Tenure Change';
     default:
-      return '';
+      return 'Transaction';
   }
 }
 
@@ -105,7 +106,7 @@ export function getTxSenderAddress(tx: StacksTransactionWire): string | undefine
   if (!tx?.auth?.spendingCondition?.signer) return;
   const txSender = getAddressFromPublicKeyHash(
     Buffer.from(tx.auth.spendingCondition.signer, 'hex'),
-    tx.auth.spendingCondition.hashMode as number,
+    tx.auth.spendingCondition.hashMode,
     getStacksNetworkFromChainId(tx.chainId)
   );
   return txSender;
@@ -123,18 +124,21 @@ export function isPendingTx(tx: StacksTransaction) {
   return tx.status === 'pending';
 }
 
-export enum StacksTransactionActionType {
-  Cancel = 'cancel',
-  IncreaseFee = 'increase-fee',
-}
+export const StacksTransactionActionType = {
+  Cancel: 'cancel',
+  IncreaseFee: 'increase-fee',
+} as const;
+export type StacksTransactionActionType =
+  (typeof StacksTransactionActionType)[keyof typeof StacksTransactionActionType];
 
 export function getRecipientFromStacksTransaction(transaction: StacksTransactionWire) {
   if (isTokenTransferPayload(transaction.payload)) {
     return cvToString(transaction.payload.recipient);
   }
 
-  if (isSip10TransferContactCall(transaction)) {
-    const sip10RecipientArg = transaction.payload.functionArgs?.[2];
+  const sip10Payload = getSip10TransferPayload(transaction);
+  if (sip10Payload) {
+    const sip10RecipientArg = sip10Payload.functionArgs?.[2];
     if (!sip10RecipientArg) return null;
     const [result] = safeCall(() => cvToString(sip10RecipientArg));
     return result;
@@ -162,21 +166,21 @@ export function getNonceFromStacksTransaction(tx: StacksTransactionWire) {
 export function getSip10TransferAmount(
   payload: ContractCallPayload,
   symbol: string,
-  decimals: number
+  decimals?: number
 ) {
-  const amount = new BigNumber(Number((payload.functionArgs?.[0] as IntCV).value));
+  const amountArg = payload.functionArgs?.[0];
+  const amount = new BigNumber(
+    Number(amountArg && 'value' in amountArg ? amountArg.value : undefined)
+  );
   return createMoney(amount, symbol.toUpperCase(), decimals);
 }
 
-export function isSip10TransferContactCall(
-  tx: StacksTransactionWire
-): tx is StacksTransactionWire & { payload: ContractCallPayload } {
-  if (!tx.payload || !('functionName' in tx.payload)) return false;
-  const payload = tx.payload;
-  return (
-    payload.functionName.content === 'transfer' &&
-    (payload.functionArgs.length === 3 || payload.functionArgs.length === 4)
-  );
+export function getSip10TransferPayload(tx: StacksTransactionWire) {
+  const { payload } = tx;
+  if (!payload || !('functionName' in payload)) return undefined;
+  if (payload.functionName.content !== 'transfer') return undefined;
+  if (payload.functionArgs.length !== 3 && payload.functionArgs.length !== 4) return undefined;
+  return payload;
 }
 
 export function getSip10MemoDisplayText(payload: ContractCallPayload) {

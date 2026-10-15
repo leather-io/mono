@@ -22,7 +22,7 @@ const { createWorkerMock } = vi.hoisted(() => ({
   createWorkerMock: vi.fn<(scriptUrl: string) => FakeWorker>(),
 }));
 
-vi.mock('../workers', () => ({
+vi.mock('../workers/create-worker', () => ({
   WorkerScript: { DecryptionWorker: 'decryption-worker.js' },
   createWorker: createWorkerMock,
 }));

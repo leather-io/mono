@@ -10,6 +10,11 @@ import {
   toLedgerDisplayedAddress,
 } from './ledger-descriptor-address';
 
+function requireDefined<T>(value: T | null | undefined): T {
+  if (value === undefined || value === null) throw new Error('Expected value to be defined');
+  return value;
+}
+
 function makeNativeSegwitAccountKeychain(seedByte: number) {
   return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'");
 }
@@ -19,7 +24,9 @@ function makeNativeSegwitAccountXpub(seedByte: number) {
 }
 
 function makeNativeSegwitAddressPubkey(seedByte: number) {
-  return makeNativeSegwitAccountKeychain(seedByte).deriveChild(0).deriveChild(0).publicKey!;
+  return requireDefined(
+    makeNativeSegwitAccountKeychain(seedByte).deriveChild(0).deriveChild(0).publicKey
+  );
 }
 
 const xpubA = makeNativeSegwitAccountXpub(1);
@@ -100,14 +107,14 @@ describe('descriptorHasNonAccountRawKey', () => {
 
   it('returns false for a multisig of only extended keys', () => {
     const compiled = compileWshDescriptor(`wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`);
-    const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const accountKey = requireDefined(findAccountDescriptorKey(compiled, accountKeychain));
 
     expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(false);
   });
 
   it('returns false for a single extended-key descriptor', () => {
     const compiled = compileWshDescriptor(`wsh(pk(${xpubA}/0/0))`);
-    const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const accountKey = requireDefined(findAccountDescriptorKey(compiled, accountKeychain));
 
     expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(false);
   });
@@ -117,7 +124,7 @@ describe('descriptorHasNonAccountRawKey', () => {
     const compiled = compileWshDescriptor(
       `wsh(multi(2,${bytesToHex(cosignerRawPubkey)},${xpubA}/0/7))`
     );
-    const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const accountKey = requireDefined(findAccountDescriptorKey(compiled, accountKeychain));
 
     expect(accountKey.key.bip32).toBeDefined();
     expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(true);
@@ -128,7 +135,7 @@ describe('descriptorHasNonAccountRawKey', () => {
     const compiled = compileWshDescriptor(
       `wsh(multi(2,${bytesToHex(accountRawPubkey)},${xpubB}/0/0))`
     );
-    const accountKey = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const accountKey = requireDefined(findAccountDescriptorKey(compiled, accountKeychain));
 
     expect(accountKey.key.bip32).toBeUndefined();
     expect(descriptorHasNonAccountRawKey(compiled, accountKey.key)).toBe(false);

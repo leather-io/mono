@@ -1,13 +1,16 @@
-import { StacksTransactionWire } from '@stacks/transactions';
+import { type StacksTransactionWire } from '@stacks/transactions';
 import axios from 'axios';
 
 import { logger } from '@shared/logger';
 
 import { queryClient } from '@app/common/persistence';
-import { generateUnsignedTransaction } from '@app/common/transactions/stacks/generate-unsigned-txs';
+import {
+  type GenerateUnsignedTransactionOptions,
+  generateUnsignedTransaction,
+} from '@app/common/transactions/stacks/generate-unsigned-txs';
 
 export interface TransactionBase {
-  options?: any;
+  options?: GenerateUnsignedTransactionOptions;
   transaction: StacksTransactionWire | undefined;
 }
 
@@ -25,7 +28,7 @@ interface VerifySponsoredSbtcTransactionArgs {
   apiUrl: string;
   baseTx: TransactionBase;
   nonce?: number;
-  fee?: number;
+  fee: number;
 }
 export async function verifySponsoredSbtcTransaction({
   apiUrl,
@@ -34,7 +37,8 @@ export async function verifySponsoredSbtcTransaction({
   fee,
 }: VerifySponsoredSbtcTransactionArgs): Promise<SbtcSponsorshipEligibility> {
   try {
-    const { options } = baseTx as any;
+    const { options } = baseTx;
+    if (!options) throw new Error('Missing transaction options');
     options.txData.sponsored = true;
     const sponsoredTx = await generateUnsignedTransaction({
       ...options,
@@ -45,8 +49,8 @@ export async function verifySponsoredSbtcTransaction({
 
     const result = await queryClient.fetchQuery({
       queryKey: ['verify-sponsored-sbtc-transaction', apiUrl, serializedTx],
-      queryFn: async () => {
-        const { data } = await axios.post(
+      async queryFn() {
+        const { data } = await axios.post<boolean>(
           `${apiUrl}/verify`,
           {
             tx: serializedTx,

@@ -21,7 +21,7 @@ interface SbtcDepositActivity {
   standaloneItems: BlockchainActivityItem[];
 }
 
-function combineFundingTxs(results: UseQueryResult<BitcoinTransaction | null, Error>[]) {
+function combineFundingTxs(results: UseQueryResult<BitcoinTransaction | null>[]) {
   return { fundingTxs: results.map(result => result.data ?? null) };
 }
 

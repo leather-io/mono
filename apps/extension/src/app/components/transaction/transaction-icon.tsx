@@ -1,4 +1,4 @@
-import type { StacksTransaction } from '@leather.io/models';
+import { type StacksTransaction } from '@leather.io/models';
 import { CodeIcon, FunctionIcon, PlusIcon } from '@leather.io/ui';
 
 import { TokenTransferIcon } from './token-transfer-icon';

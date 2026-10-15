@@ -1,4 +1,4 @@
-import type { StacksTransaction } from '@leather.io/models';
+import { type StacksTransaction } from '@leather.io/models';
 import { ArrowDownIcon, ArrowUpIcon } from '@leather.io/ui';
 
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';

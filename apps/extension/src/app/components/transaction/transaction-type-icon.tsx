@@ -1,4 +1,4 @@
-import type { StacksTransaction, StacksTxStatus } from '@leather.io/models';
+import { type StacksTransaction, type StacksTxStatus } from '@leather.io/models';
 
 import { statusFromTx } from '@app/common/transactions/stacks/transaction.utils';
 

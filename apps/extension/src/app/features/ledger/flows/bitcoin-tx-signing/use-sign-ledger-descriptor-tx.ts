@@ -12,7 +12,7 @@ import {
   toLedgerSignableDescriptor,
 } from '@leather.io/bitcoin';
 
-import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
+import { type BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { logger } from '@shared/logger';
 
 import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';

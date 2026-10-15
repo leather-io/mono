@@ -1,6 +1,6 @@
-import { Box, BoxProps } from 'leather-styles/jsx';
+import { Box, type BoxProps } from 'leather-styles/jsx';
 
-import type { StacksTransaction } from '@leather.io/models';
+import { type StacksTransaction } from '@leather.io/models';
 import {
   AssetAvatarIcon,
   Avatar,

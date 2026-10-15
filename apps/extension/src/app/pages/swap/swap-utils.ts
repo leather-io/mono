@@ -1,9 +1,9 @@
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import { parseTokenDetailsAssetId } from '@leather.io/features';
-import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { AccountSwapAsset } from '@leather.io/services';
+import { type Money, type SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type AccountSwapAsset } from '@leather.io/services';
 import {
   createMoneyFromDecimal,
   deserializeAssetId,

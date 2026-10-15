@@ -1,10 +1,12 @@
+import type * as ReactModule from 'react';
+
 import { HDKey } from '@scure/bip32';
 import { Psbt } from 'bitcoinjs-lib';
 
 import { useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero } from './native-segwit-account.hooks';
 
 vi.mock('react', async importOriginal => {
-  const actual = await importOriginal<typeof import('react')>();
+  const actual = await importOriginal<typeof ReactModule>();
   return {
     ...actual,
     useMemo<T>(factory: () => T) {
