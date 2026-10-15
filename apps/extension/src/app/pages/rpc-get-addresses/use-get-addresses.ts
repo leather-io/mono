@@ -73,7 +73,7 @@ export function useGetAddresses() {
   const stacksAccount = useCurrentStacksAccount();
   const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
   const currentPolicy = useCurrentPolicy();
-  const allowPolicyAccounts = Boolean(request.params?.allowPolicyAccounts);
+  const allowPolicyAccounts = request.params?.allowPolicyAccounts !== false;
 
   const requestedChains: GetAddressesChain[] =
     request.method === 'getAddresses' && request.params?.chains
