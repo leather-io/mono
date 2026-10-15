@@ -53,7 +53,7 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
       if (!tx || !rawTx || !account) return;
       const options: GenerateUnsignedTransactionOptions = {
         publicKey: account.stxPublicKey,
-        nonce: tx.nonce,
+        nonce: tx.sender.nonce,
         fee: stxToMicroStx(fee).toNumber(),
         txData: {
           txType: TransactionTypes.StxTokenTransfer,

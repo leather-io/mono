@@ -591,11 +591,6 @@
       "count": 1
     }
   },
-  "src/features/approver/components/status-row/utils.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    }
-  },
   "src/features/approver/components/utxo-row.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -683,11 +678,6 @@
   "src/features/balances/bitcoin/bitcoin-token-balance.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    }
-  },
-  "src/features/balances/manage-tokens.sheet.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 2
     }
   },
   "src/features/balances/stacks/sip10-token-balance.tsx": {
@@ -2189,9 +2179,12 @@
   },
   "src/queries/stacks/use-stacks-pending-transactions.ts": {
     "@typescript-eslint/consistent-type-assertions": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
       "count": 1
     }
   },

@@ -94,6 +94,11 @@
       "count": 3
     }
   },
+  "src/transactions/stacks-transaction.model.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
   "src/types.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
