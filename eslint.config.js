@@ -2,10 +2,12 @@ import pluginQuery from '@tanstack/eslint-plugin-query';
 import pluginLingui from 'eslint-plugin-lingui';
 import { defineConfig } from 'eslint/config';
 
-import baseConfig from '@leather.io/eslint-config';
+import baseConfig, {
+  sharedRestrictedImportPaths,
+  sharedRestrictedSyntax,
+} from '@leather.io/eslint-config';
 import reactConfig from '@leather.io/eslint-config/react';
 import { noDimensionsScreenRule } from '@leather.io/eslint-config/rules/no-dimensions-screen';
-import { noEnumSyntax } from '@leather.io/eslint-config/rules/no-enum';
 import { noSamePackageBarrelImportRule } from '@leather.io/eslint-config/rules/no-same-package-barrel-import';
 
 const useQueryConfigOrKeyRule = {
@@ -73,6 +75,12 @@ const leatherPlugin = {
 function remedaMessage(native, remeda) {
   return `Use ${remeda} from remeda instead of ${native} in library code for typed results.`;
 }
+
+const reactRouterLocationStateSyntax = {
+  selector:
+    'MemberExpression[object.name="location"][property.name="state"], VariableDeclarator[init.callee.name="useLocation"] > ObjectPattern > Property[key.name="state"]',
+  message: 'location.state is any. Read route state through useRouteState(schema).',
+};
 
 export default defineConfig([
   {
@@ -155,6 +163,7 @@ export default defineConfig([
         'error',
         {
           paths: [
+            ...sharedRestrictedImportPaths,
             {
               name: '@tanstack/react-query',
               importNames: [
@@ -183,7 +192,7 @@ export default defineConfig([
       ],
       'no-restricted-syntax': [
         'error',
-        noEnumSyntax,
+        ...sharedRestrictedSyntax,
         {
           selector: 'TSTypeAliasDeclaration[id.name=/QueryOptions$/]',
           message:
@@ -213,79 +222,12 @@ export default defineConfig([
     name: 'test-app',
     files: ['apps/test-app/src/**/*.{ts,tsx}'],
     extends: [reactConfig],
-    rules: {
-      '@typescript-eslint/unbound-method': 'off',
-    },
   },
   {
-    name: 'extension-rules',
-    files: ['apps/extension/**/*.{ts,tsx}'],
+    name: 'react-router-apps',
+    files: ['apps/extension/**/*.{ts,tsx}', 'apps/web/**/*.{ts,tsx}'],
     rules: {
-      '@typescript-eslint/unbound-method': 'off',
-      '@typescript-eslint/no-unnecessary-type-arguments': 'error',
-      '@typescript-eslint/no-unnecessary-type-parameters': 'error',
-      'no-restricted-imports': [
-        'error',
-        {
-          paths: [
-            {
-              name: 'lodash.get',
-              message: 'Dotted-path reads erase types. Parse the value with a schema instead.',
-            },
-            {
-              name: 'lodash/get',
-              message: 'Dotted-path reads erase types. Parse the value with a schema instead.',
-            },
-          ],
-        },
-      ],
-      'no-restricted-syntax': [
-        'error',
-        noEnumSyntax,
-        {
-          selector: "CallExpression[callee.property.name='then']",
-          message: 'Use async/await instead of .then().',
-        },
-        {
-          selector: 'CallExpression[callee.type=/^(ArrowFunctionExpression|FunctionExpression)$/]',
-          message:
-            'Do not use an IIFE. Declare a named function and call it, or compute the value with a function.',
-        },
-        {
-          selector:
-            ':matches(FunctionDeclaration, FunctionExpression, ArrowFunctionExpression)[returnType.typeAnnotation.type="TSTypePredicate"][returnType.typeAnnotation.asserts=false]',
-          message:
-            'Do not declare an explicit type predicate. Let TypeScript infer it, or validate with a schema.',
-        },
-        {
-          selector: 'ImportDeclaration[source.value="yup"] ImportSpecifier[imported.name=/^Any/]',
-          message:
-            'yup Any* aliases are any in disguise. Type the schema as ObjectSchema<YourFormValues>.',
-        },
-        {
-          selector:
-            ':matches(ReturnStatement, ArrowFunctionExpression) > Literal[value=""], ReturnStatement > ConditionalExpression > Literal[value=""]',
-          message:
-            'Do not return an empty string as a sentinel. Return undefined or null and let the caller decide.',
-        },
-        {
-          selector:
-            'MemberExpression[object.name="location"][property.name="state"], VariableDeclarator[init.callee.name="useLocation"] > ObjectPattern > Property[key.name="state"]',
-          message: 'location.state is any. Read route state through useRouteState(schema).',
-        },
-        {
-          selector:
-            ':matches(CallExpression, NewExpression) > LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="Literal"][right.value=""]',
-          message:
-            "Do not pass `x ?? ''` as an argument. Narrow the value first or let the callee accept undefined.",
-        },
-        {
-          selector:
-            ':matches(CallExpression, NewExpression) > LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="Literal"][right.value=0]',
-          message:
-            'Do not pass `x ?? 0` as an argument. A missing value is not zero: narrow it first or let the callee accept undefined.',
-        },
-      ],
+      'no-restricted-syntax': ['error', ...sharedRestrictedSyntax, reactRouterLocationStateSyntax],
     },
   },
   {
@@ -399,26 +341,13 @@ export default defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          paths: [
+          paths: sharedRestrictedImportPaths,
+          patterns: [
             {
-              name: '@leather.io/services',
-              importNames: [
-                'getActivityService',
-                'getMarketDataService',
-                'getBtcBalancesService',
-                'getStxBalancesService',
-                'getRunesBalancesService',
-                'getAccountBalancesService',
-                'getFungibleAssetInfoService',
-                'getMarketHistoryService',
-                'getUtxosService',
-                'getBnsService',
-                'getCollectiblesService',
-                'getStacksTransactionsService',
-                'getBitcoinTransactionsService',
-              ],
+              group: ['@leather.io/services'],
+              importNamePattern: '^get[A-Z]\\w*Service$',
               message:
-                'In query modules, use @leather.io/queries builders instead of importing get*Service directly.',
+                'In query modules, use a @leather.io/queries builder instead of calling a service getter directly. Add a builder if none exists.',
             },
           ],
         },

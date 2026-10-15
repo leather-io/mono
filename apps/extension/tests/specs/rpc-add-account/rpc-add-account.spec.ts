@@ -1,5 +1,4 @@
 import { type BrowserContext, type Page, expect } from '@playwright/test';
-import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
 import { exampleStacksMultisigPublicKeys, exampleWshDescriptor } from '@tests/mocks/mock-policies';
 import { testFingerprint } from '@tests/page-object-models/onboarding.page';
 import { readPersistedStore } from '@tests/persisted-store';
@@ -37,11 +36,8 @@ async function getPersistedPolicyIds(page: Page, extensionId: string) {
 }
 
 test.describe('Rpc: add account in verify mode (non-whitelisted origin)', () => {
-  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, context }) => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    // The add-account approver is gated behind `releaseAddAccount`; enable it so
-    // the popup renders instead of rejecting as unsupported.
-    await overrideLaunchDarklyFlags(context, { releaseAddAccount: true });
     await onboardingPage.signInWithTestAccount(extensionId);
   });
 
@@ -152,7 +148,6 @@ async function readPersistedPolicyIds(page: Page) {
 test.describe('Rpc: add account in add mode (whitelisted origin)', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, context }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await overrideLaunchDarklyFlags(context, { releaseAddAccount: true });
     await stubWhitelistedOriginPage(context);
     await onboardingPage.signInWithTestAccount(extensionId);
   });
@@ -188,23 +183,5 @@ test.describe('Rpc: add account in add mode (whitelisted origin)', () => {
     if (typeof address !== 'string') throw new Error('Expected address in result');
     const expectedPolicyId = `${testFingerprint}/0/${address}/mainnet`;
     await expect.poll(() => readPersistedPolicyIds(page)).toEqual([expectedPolicyId]);
-  });
-});
-
-test.describe('Rpc: add account when the feature is disabled', () => {
-  test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
-    await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
-  });
-
-  test('rejects stx_addAccount as unsupported', async ({ page }) => {
-    await page.goto('localhost:3000');
-    const requestPromise = initiateRequest(page, 'stx_addAccount', {
-      name: 'Shared treasury',
-      publicKeys: [testAccountStxPublicKey, cosignerPublicKey],
-      threshold: 2,
-    });
-
-    await expect(requestPromise).rejects.toThrow();
   });
 });
