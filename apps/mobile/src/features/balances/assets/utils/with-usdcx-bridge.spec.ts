@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { SBTC_ASSET_ID_MAINNET, USDCX_ASSET_ID_MAINNET } from '@leather.io/constants';
-import { Sip10Balance } from '@leather.io/services';
+import { type Sip10Balance } from '@leather.io/services';
 import { createMoney } from '@leather.io/utils';
 
 import { isUsdcxBridgeItem, shouldShowUsdcxBridge, withUsdcxBridge } from './with-usdcx-bridge';

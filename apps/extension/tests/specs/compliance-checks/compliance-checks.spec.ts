@@ -1,4 +1,5 @@
 import type { BrowserContext, Page, Route } from '@playwright/test';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 
 import { delay } from '@leather.io/utils';
@@ -6,7 +7,7 @@ import { delay } from '@leather.io/utils';
 import { test } from '../../fixtures/fixtures';
 
 function mockComplianceCheckRequest(context: BrowserContext) {
-  return async (routeHandler: (route: Route) => void) => {
+  return async (routeHandler: (route: Route) => Promise<void>) => {
     return context.route('**/v1/compliance/addresses/**', route => routeHandler(route));
   };
 }
@@ -22,12 +23,12 @@ test.describe('Compliance checks', () => {
     return page.evaluate(
       () =>
         // We only want the page window, don't wait for actual promise to finish
-        void (window as any).LeatherProvider.request('sendTransfer', {
+        void window.LeatherProvider?.request('sendTransfer', {
           // Known address from list, in readme of this
           // page https://github.com/0xB10C/ofac-sanctioned-digital-currency-addresses
           address: '12QtD5BFwRsdNsAZY76UVE1xyCGNTojH9h',
           amount: '1231',
-        }).catch((e: unknown) => e)
+        }).catch((e: TestRpcResponse) => e)
     );
   }
 

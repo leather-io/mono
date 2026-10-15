@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useAsync } from 'react-async-hook';
 
 import {
-  ClarityValue,
+  type ClarityValue,
   PostConditionMode,
   bufferCVFromString,
   contractPrincipalCV,
@@ -29,7 +29,7 @@ import { makeFtPostCondition } from '@shared/utils/post-conditions';
 
 import { ftUnshiftDecimals } from '@app/common/stacks-utils';
 import {
-  GenerateUnsignedTransactionOptions,
+  type GenerateUnsignedTransactionOptions,
   generateUnsignedTransaction,
 } from '@app/common/transactions/stacks/generate-unsigned-txs';
 import {
@@ -40,7 +40,10 @@ import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
-import { useCurrentStacksAccount } from '../accounts/blockchain/stacks/stacks-account.hooks';
+import {
+  useCurrentStacksAccount,
+  useCurrentStacksAccountAddress,
+} from '../accounts/blockchain/stacks/stacks-account.hooks';
 
 function createPrincipalCV(principal: string) {
   const principalType = inferPrincipalTypeFromAddress(principal);
@@ -55,9 +58,15 @@ function createPrincipalCV(principal: string) {
   throw new Error(`Invalid principal: ${principal}`);
 }
 
+function formValueToStxMoney(value: number | string | undefined) {
+  if (!value) return undefined;
+  return createMoney(stxToMicroStx(value), 'STX');
+}
+
 export function useGenerateStxTokenTransferUnsignedTx() {
   const account = useCurrentStacksAccount();
-  const { data: nextNonce } = useNextNonce(account?.address ?? '');
+  const stxAddress = useCurrentStacksAccountAddress();
+  const { data: nextNonce } = useNextNonce(stxAddress);
   const network = useCurrentStacksNetworkState();
   const policy = useCurrentPolicy();
 
@@ -74,8 +83,8 @@ export function useGenerateStxTokenTransferUnsignedTx() {
           policy,
           network,
           recipient: values?.recipient || policy.address,
-          amount: createMoney(stxToMicroStx(values?.amount || 0), 'STX'),
-          fee: createMoney(stxToMicroStx(values?.fee || 0), 'STX'),
+          amount: formValueToStxMoney(values?.amount),
+          fee: formValueToStxMoney(values?.fee),
           memo: values?.memo || undefined,
         });
       }
@@ -83,20 +92,21 @@ export function useGenerateStxTokenTransferUnsignedTx() {
       const options: GenerateUnsignedTransactionOptions = {
         publicKey: account.stxPublicKey,
         nonce: values?.nonce ? Number(values.nonce) : nextNonce?.nonce,
-        fee: stxToMicroStx(values?.fee || 0).toNumber(),
+        fee: formValueToStxMoney(values?.fee)?.amount.toNumber(),
         txData: {
           txType: TransactionTypes.StxTokenTransfer,
           // Using account address here as a fallback for a fee estimation
           recipient: values?.recipient ?? account.address,
           amount: values?.amount ? stxToMicroStx(values?.amount).toString(10) : '0',
           memo: values?.memo || undefined,
-          network: network,
+          network,
+          publicKey: account.stxPublicKey,
           // Coercing type here as we don't have the public key
           // as expected by STXTransferPayload type.
           // This code will likely need to change soon with Ledger
           // work, and coercion allows us to remove lots of type mangling
           // and types are out of sync with @stacks/connect
-        } as any,
+        },
       };
       return generateUnsignedTransaction(options);
     },
@@ -107,7 +117,8 @@ export function useGenerateStxTokenTransferUnsignedTx() {
 export function useStxTokenTransferUnsignedTxState(values?: StacksSendFormValues) {
   const generateTx = useGenerateStxTokenTransferUnsignedTx();
   const account = useCurrentStacksAccount();
-  const { data: nextNonce } = useNextNonce(account?.address ?? '');
+  const stxAddress = useCurrentStacksAccountAddress();
+  const { data: nextNonce } = useNextNonce(stxAddress);
   const network = useCurrentStacksNetworkState();
   const policy = useCurrentPolicy();
 
@@ -121,7 +132,8 @@ export function useStxTokenTransferUnsignedTxState(values?: StacksSendFormValues
 
 export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
   const account = useCurrentStacksAccount();
-  const { data: nextNonce } = useNextNonce(account?.address ?? '');
+  const stxAddress = useCurrentStacksAccountAddress();
+  const { data: nextNonce } = useNextNonce(stxAddress);
   const network = useCurrentStacksNetworkState();
   const policy = useCurrentPolicy();
   const { assetId } = info;
@@ -136,10 +148,10 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
             logger.error('Current account is not a signer of this multisig policy');
             return;
           }
-          const amountInBaseUnits = ftUnshiftDecimals(
-            values && 'amount' in values ? values.amount || 0 : 0,
-            info.decimals || 0
-          );
+          const amountInBaseUnits =
+            values && 'amount' in values && values.amount
+              ? ftUnshiftDecimals(values.amount, info.decimals)
+              : undefined;
           return await buildUnsignedPolicySip10Transfer({
             policy,
             network,
@@ -149,7 +161,7 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
                 ? values.recipient
                 : policy.address,
             baseUnitAmount: amountInBaseUnits,
-            fee: createMoney(stxToMicroStx(values?.fee || 0), 'STX'),
+            fee: formValueToStxMoney(values?.fee),
             memo: values && 'memo' in values && values.memo !== '' ? values.memo : undefined,
           });
         }
@@ -161,11 +173,11 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
             : standardPrincipalCVFromAddress(createEmptyAddress());
         const amount = values && 'amount' in values ? values.amount : 0;
         const memo =
-          values && 'memo' in values && values.memo !== ''
-            ? someCV(bufferCVFromString(values.memo || ''))
+          values && 'memo' in values && values.memo
+            ? someCV(bufferCVFromString(values.memo))
             : noneCV();
 
-        const amountAsFractionalUnit = ftUnshiftDecimals(amount, info.decimals || 0);
+        const amountAsFractionalUnit = ftUnshiftDecimals(amount, info.decimals);
         const postConditionOptions = {
           amount: amountAsFractionalUnit,
           contractAddress,
@@ -197,7 +209,7 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
             network,
             publicKey: account.stxPublicKey,
           },
-          fee: stxToMicroStx(values?.fee || 0).toNumber(),
+          fee: formValueToStxMoney(values?.fee)?.amount.toNumber(),
           publicKey: account.stxPublicKey,
           nonce: values?.nonce ? Number(values.nonce) : nextNonce?.nonce,
         } as const;

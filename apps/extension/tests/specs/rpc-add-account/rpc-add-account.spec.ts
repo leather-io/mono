@@ -2,6 +2,7 @@ import { type BrowserContext, type Page, expect } from '@playwright/test';
 import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
 import { exampleStacksMultisigPublicKeys, exampleWshDescriptor } from '@tests/mocks/mock-policies';
 import { testFingerprint } from '@tests/page-object-models/onboarding.page';
+import { readPersistedStore } from '@tests/persisted-store';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -14,10 +15,10 @@ const cosignerPublicKey = exampleStacksMultisigPublicKeys[1];
 const strangerPublicKey = '030347be500a8b2707a00e7576c0c527a247cddc6e8363ee51147b8e43b590baa9';
 
 async function initiateRequest(page: Page, method: string, params: unknown) {
-  return page.evaluate(
-    ({ method, params }) => (window as any).LeatherProvider?.request(method, params),
-    { method, params }
-  );
+  return page.evaluate(({ method, params }) => window.LeatherProvider?.request(method, params), {
+    method,
+    params,
+  });
 }
 
 async function waitForPopup(context: BrowserContext) {
@@ -31,10 +32,8 @@ async function waitForPopup(context: BrowserContext) {
 async function getPersistedPolicyIds(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/index.html`);
   await page.waitForFunction(() => typeof window.debug?.getPersistedStore === 'function');
-  return page.evaluate(async () => {
-    const store = await window.debug.getPersistedStore();
-    return (store as { policy?: { ids?: string[] } } | undefined)?.policy?.ids ?? [];
-  });
+  const store = await readPersistedStore(page);
+  return store?.policy?.ids ?? [];
 }
 
 test.describe('Rpc: add account in verify mode (non-whitelisted origin)', () => {
@@ -66,14 +65,15 @@ test.describe('Rpc: add account in verify mode (non-whitelisted origin)', () => 
     await verifyButton.click();
 
     const result = await requestPromise;
+    if (!result) throw new Error('Expected result');
     expect(result.result).toMatchObject({
       added: false,
       role: 'signer',
       threshold: 2,
       publicKeys: [testAccountStxPublicKey, cosignerPublicKey],
     });
-    expect(typeof result.result.address).toBe('string');
-    expect(result.result.accountId).toBeUndefined();
+    expect(typeof result.result?.address).toBe('string');
+    expect(result.result?.accountId).toBeUndefined();
 
     // Verify mode must not write anything to the wallet
     expect(await getPersistedPolicyIds(page, extensionId)).toEqual([]);
@@ -114,13 +114,14 @@ test.describe('Rpc: add account in verify mode (non-whitelisted origin)', () => 
     await verifyButton.click();
 
     const result = await requestPromise;
+    if (!result) throw new Error('Expected result');
     expect(result.result).toMatchObject({
       added: false,
       role: 'signer',
       descriptor: exampleWshDescriptor,
     });
-    expect(result.result.address).toMatch(/^bc1q/);
-    expect(result.result.accountId).toBeUndefined();
+    expect(result.result?.address).toMatch(/^bc1q/);
+    expect(result.result?.accountId).toBeUndefined();
 
     expect(await getPersistedPolicyIds(page, extensionId)).toEqual([]);
   });
@@ -140,16 +141,12 @@ async function stubWhitelistedOriginPage(context: BrowserContext) {
 }
 
 async function waitForProvider(page: Page) {
-  await page.waitForFunction(() =>
-    Boolean((window as { LeatherProvider?: unknown }).LeatherProvider)
-  );
+  await page.waitForFunction(() => Boolean(window.LeatherProvider));
 }
 
 async function readPersistedPolicyIds(page: Page) {
-  return page.evaluate(async () => {
-    const store = await window.debug.getPersistedStore();
-    return (store as { policy?: { ids?: string[] } } | undefined)?.policy?.ids ?? [];
-  });
+  const store = await readPersistedStore(page);
+  return store?.policy?.ids ?? [];
 }
 
 test.describe('Rpc: add account in add mode (whitelisted origin)', () => {
@@ -178,15 +175,18 @@ test.describe('Rpc: add account in add mode (whitelisted origin)', () => {
     await confirmButton.click();
 
     const result = await requestPromise;
+    if (!result) throw new Error('Expected result');
     expect(result.result).toMatchObject({
       added: true,
       role: 'signer',
       descriptor: exampleWshDescriptor,
     });
-    expect(result.result.address).toMatch(/^bc1q/);
-    expect(result.result.accountId).toBe(result.result.address);
+    expect(result.result?.address).toMatch(/^bc1q/);
+    expect(result.result?.accountId).toBe(result.result?.address);
 
-    const expectedPolicyId = `${testFingerprint}/0/${result.result.address}/mainnet`;
+    const address = result.result?.address;
+    if (typeof address !== 'string') throw new Error('Expected address in result');
+    const expectedPolicyId = `${testFingerprint}/0/${address}/mainnet`;
     await expect.poll(() => readPersistedPolicyIds(page)).toEqual([expectedPolicyId]);
   });
 });

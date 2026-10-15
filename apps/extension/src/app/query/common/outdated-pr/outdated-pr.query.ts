@@ -10,7 +10,7 @@ import { COMMIT_SHA, PR_NUMBER } from '@shared/environment';
 type PrDetailsResp = Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}']['response']['data'];
 
 async function getPullRequestDetails(pr: string): Promise<PrDetailsResp> {
-  const resp = await axios.get(
+  const resp = await axios.get<PrDetailsResp>(
     `https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/pulls/${pr}`
   );
   return resp.data;
@@ -21,7 +21,8 @@ function usePullRequestDetailsQuery() {
     enabled: isDefined(PR_NUMBER) && isDefined(COMMIT_SHA),
     queryKey: ['pull-request-details', PR_NUMBER],
     async queryFn() {
-      return getPullRequestDetails(PR_NUMBER ?? '');
+      if (!PR_NUMBER) throw new Error('Missing PR number');
+      return getPullRequestDetails(PR_NUMBER);
     },
   });
 }

@@ -7,7 +7,7 @@ import { Button, Cell, Sip10AvatarIcon } from '@leather.io/ui/native';
 
 interface UsdcxBridgeTokenCellProps {
   assetId: string;
-  onPress?(): void;
+  onPress?(this: void): void;
 }
 export function UsdcxBridgeTokenCell({ assetId, onPress }: UsdcxBridgeTokenCellProps) {
   const { openUrl } = useOpenUrl();

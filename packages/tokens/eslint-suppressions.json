@@ -1,0 +1,7 @@
+{
+  "src/semantic-tokens.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  }
+}

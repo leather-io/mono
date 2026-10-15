@@ -43,7 +43,7 @@ export function UsdcxCryptoAssetItem({
           <Sip10AvatarIcon
             indicator="stacksIcon"
             contractId={contractId}
-            imageCanonicalUri={getSafeImageCanonicalUri(imageCanonicalUri, name)}
+            imageCanonicalUri={getSafeImageCanonicalUri(imageCanonicalUri, name) ?? ''}
             name={name}
             size="xl"
           />

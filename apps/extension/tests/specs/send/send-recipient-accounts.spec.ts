@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 import {
   TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
   TEST_ACCOUNT_1_STX_ADDRESS,
@@ -10,9 +10,9 @@ import {
   policyStateOverrides,
 } from '@tests/mocks/mock-policies';
 import { mockBnsV2NamesRequestEmpty } from '@tests/mocks/mock-stacks-bns';
-import { HomePage } from '@tests/page-object-models/home.page';
+import { type HomePage } from '@tests/page-object-models/home.page';
 import { mixedLedgerFingerprint, testFingerprint } from '@tests/page-object-models/onboarding.page';
-import { SendPage } from '@tests/page-object-models/send.page';
+import { type SendPage } from '@tests/page-object-models/send.page';
 import {
   getRecipientSelectAccountTestId,
   getRecipientSelectPolicyTestId,

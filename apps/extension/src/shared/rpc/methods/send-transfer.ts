@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 import { type BitcoinNetworkModes } from '@leather.io/models';
-import type { RpcParams, sendTransfer } from '@leather.io/rpc';
 import { uniqueArray } from '@leather.io/utils';
 
 import { FormErrorMessages } from '@shared/error-messages';
@@ -11,12 +10,7 @@ import {
 } from '@shared/forms/address-validators';
 import { checkIfDigitsOnly } from '@shared/forms/amount-validators';
 
-import {
-  accountSchema,
-  formatValidationErrors,
-  getRpcParamErrors,
-  validateRpcParams,
-} from './validation.utils';
+import { accountSchema, formatValidationErrors, getRpcParamErrors } from './validation.utils';
 
 export const defaultRpcSendTransferNetwork = 'mainnet';
 
@@ -90,7 +84,7 @@ export const rpcSendTransferParamsSchema = z
   );
 
 export function convertRpcSendTransferLegacyParamsToNew(
-  params: Extract<RpcParams<typeof sendTransfer>, { address: string }>
+  params: z.infer<typeof rpcSendTransferParamsSchemaLegacy>
 ) {
   return {
     recipients: [{ address: params.address, amount: params.amount }],
@@ -98,14 +92,6 @@ export function convertRpcSendTransferLegacyParamsToNew(
     account: params.account,
     broadcast: params.broadcast,
   };
-}
-
-export function validateRpcSendTransferLegacyParams(obj: unknown) {
-  return validateRpcParams(obj, rpcSendTransferParamsSchemaLegacy);
-}
-
-export function validateRpcSendTransferParams(obj: unknown) {
-  return validateRpcParams(obj, rpcSendTransferParamsSchema);
 }
 
 export function getRpcSendTransferParamErrors(obj: unknown) {

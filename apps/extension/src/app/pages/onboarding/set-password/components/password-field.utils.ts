@@ -1,6 +1,6 @@
 import { token } from 'leather-styles/tokens';
 
-import { PasswordStrength, ValidatedPassword } from '@app/common/validation/validate-password';
+import { PasswordStrength, type ValidatedPassword } from '@app/common/validation/validate-password';
 
 export const defaultColor = token('colors.ink.background-secondary');
 

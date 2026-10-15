@@ -28,7 +28,7 @@ export function CryptoAssetItemError({
         }
         captionRight={
           onRefetch && (
-            <styled.button lineHeight="20px" onClick={onRefetch}>
+            <styled.button lineHeight="20px" onClick={() => void onRefetch()}>
               <styled.span textStyle="caption.01">Retry</styled.span>
             </styled.button>
           )

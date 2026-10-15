@@ -1,15 +1,14 @@
 import { Outlet, useNavigate } from 'react-router';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { Form, Formik, FormikHelpers } from 'formik';
+import { Form, Formik, type FormikHelpers } from 'formik';
 import { Box, Flex } from 'leather-styles/jsx';
-import { ObjectSchema } from 'yup';
 
 import { HIGH_FEE_WARNING_LEARN_MORE_URL_STX } from '@leather.io/constants';
 import type { Money, StacksTransactionFees } from '@leather.io/models';
 import { Button, Link } from '@leather.io/ui';
 
-import { StacksSendFormValues } from '@shared/models/form.model';
+import { type StacksSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -24,6 +23,8 @@ import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 import { MemoField } from '../../components/memo-field';
 import { StacksRecipientField } from '../../family/stacks/components/stacks-recipient-field';
 import { defaultSendFormFormikProps } from '../../send-form.utils';
+import type { Sip10SendFormValidationSchema } from '../sip10/use-sip10-send-form';
+import type { StxSendFormValidationSchema } from '../stx/use-stx-send-form';
 
 interface StacksCommonSendFormProps {
   onSubmit(
@@ -31,7 +32,7 @@ interface StacksCommonSendFormProps {
     formikHelpers: FormikHelpers<StacksSendFormValues>
   ): Promise<void>;
   initialValues: StacksSendFormValues;
-  validationSchema: ObjectSchema<any>;
+  validationSchema: StxSendFormValidationSchema | Sip10SendFormValidationSchema;
   amountField: React.JSX.Element;
   selectedAssetField: React.JSX.Element;
   availableTokenBalance: Money;
@@ -101,7 +102,7 @@ export function StacksCommonSendForm({
                       <Link
                         alignSelf="flex-end"
                         mt="space.04"
-                        onClick={() => navigate(RouteUrls.EditNonce)}
+                        onClick={() => void navigate(RouteUrls.EditNonce)}
                       >
                         Edit nonce
                       </Link>

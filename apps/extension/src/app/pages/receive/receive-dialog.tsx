@@ -5,7 +5,7 @@ import { Sheet, SheetHeader, Tabs } from '@leather.io/ui';
 
 import type { ReceiveView } from '@app/common/receive/receive';
 import { useWalletType } from '@app/common/use-wallet-type';
-import { useVerifyAddressNavigate } from '@app/features/ledger/flows/verify-address/use-verify-address-navigate';
+import { useVerifyAddressOnLedger } from '@app/features/ledger/flows/verify-address/use-verify-address-on-ledger';
 import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
@@ -19,13 +19,6 @@ import { ReceiveCollectibles } from './components/receive-collectibles';
 import { ReceiveTokens } from './components/receive-tokens';
 import { ReceiveBtcModal } from './receive-btc';
 import { ReceiveStxModal } from './receive-stx';
-
-export const receiveTabStyle = {
-  mt: 'space.03',
-  paddingX: 'space.05',
-  pb: 'space.05',
-  minHeight: '260px',
-};
 
 interface ReceiveDialogProps {
   view: ReceiveView;
@@ -54,7 +47,7 @@ function ReceiveSheet({ type = 'full', onChangeView, onClose }: ReceiveSheetProp
   const hasLedgerBitcoinKeys = useHasLedgerBitcoinKeys();
   const hasLedgerStacksKeys = useHasLedgerStacksKeys();
   const policy = useCurrentPolicy();
-  const verifyAddressNavigate = useVerifyAddressNavigate();
+  const verifyAddressOnLedger = useVerifyAddressOnLedger();
 
   const canVerifyOnLedger = walletType === 'ledger' && !policy;
   const canVerifyBtc = canVerifyOnLedger && hasLedgerBitcoinKeys;
@@ -108,12 +101,12 @@ function ReceiveSheet({ type = 'full', onChangeView, onClose }: ReceiveSheetProp
                 onClickQrBtcTaproot={() => onChangeView('btc-taproot')}
                 onClickQrStx={() => onChangeView('stx')}
                 onClickVerifyBtc={
-                  canVerifyBtc ? () => verifyAddressNavigate('btcNativeSegwit') : undefined
+                  canVerifyBtc ? () => verifyAddressOnLedger('btcNativeSegwit') : undefined
                 }
                 onClickVerifyBtcTaproot={
-                  canVerifyBtc ? () => verifyAddressNavigate('btcTaproot') : undefined
+                  canVerifyBtc ? () => verifyAddressOnLedger('btcTaproot') : undefined
                 }
-                onClickVerifyStx={canVerifyStx ? () => verifyAddressNavigate('stx') : undefined}
+                onClickVerifyStx={canVerifyStx ? () => verifyAddressOnLedger('stx') : undefined}
               />
             </Box>
           </Tabs.Content>

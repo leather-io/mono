@@ -18,6 +18,6 @@ const dynamicObjectValue = yup.string().test({
   },
 });
 
-export const validationSchema = yup.lazy(map =>
+export const validationSchema = yup.lazy((map: Record<string, unknown>) =>
   yup.object(mapRules<typeof dynamicObjectValue>(map, dynamicObjectValue))
 );

@@ -62,7 +62,7 @@ export function TokensTabHeader() {
       <IconButton
         data-testid={HomePageSelectors.ManageTokensBtn}
         icon={<SettingsSliderIcon variant="small" />}
-        onClick={() => navigate(RouteUrls.ManageTokens)}
+        onClick={() => void navigate(RouteUrls.ManageTokens)}
         width="40px"
         height="40px"
       />

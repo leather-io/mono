@@ -1,4 +1,4 @@
-import { Sip10Balance } from '@leather.io/services';
+import { type Sip10Balance } from '@leather.io/services';
 
 export function withUsdcxBalance(
   sip10s: Sip10Balance[],

@@ -1,4 +1,6 @@
-import type { MempoolTransaction, Transaction } from '@stacks/stacks-blockchain-api-types';
+import type { Transaction } from '@stacks/stacks-blockchain-api-types';
+
+import type { StacksMempoolTransaction } from '@leather.io/models';
 
 import type { HiroPrincipalNoncesResponse } from '../hiro-api-types';
 
@@ -72,7 +74,7 @@ function findAnyMissingPendingTxsNonces(pendingNonces: number[]) {
 interface ParseAccountNoncesResponseArgs {
   addressNonces?: HiroPrincipalNoncesResponse;
   confirmedTransactions: Transaction[];
-  pendingTransactions: MempoolTransaction[];
+  pendingTransactions: StacksMempoolTransaction[];
   senderAddress: string;
 }
 export function parseAccountNoncesResponse({
@@ -87,10 +89,12 @@ export function parseAccountNoncesResponse({
   const lastExecutedNonce = addressNonces.last_confirmed_nonce;
   const possibleNextNonce = addressNonces.next_nonce;
 
-  const firstMissingNonce = detectedMissingNonces?.sort()[0];
+  const firstMissingNonce = detectedMissingNonces?.length
+    ? Math.min(...detectedMissingNonces)
+    : undefined;
   const pendingTxsNonces = pendingTransactions
-    .filter(tx => tx.sender_address === senderAddress)
-    ?.map(tx => tx.nonce);
+    .filter(tx => tx.sender.address === senderAddress)
+    ?.map(tx => tx.sender.nonce);
   const lastPendingTxNonce = pendingTxsNonces[0];
   const confirmedTxsNonces = confirmedTransactions
     .filter(tx => tx.sender_address === senderAddress)
@@ -102,7 +106,9 @@ export function parseAccountNoncesResponse({
   const pendingTxsMissingNonces = findAnyMissingPendingTxsNonces(pendingTxsNonces).filter(
     nonce => !confirmedTxsNonces.includes(nonce)
   );
-  const firstPendingMissingNonce = pendingTxsMissingNonces.sort()[0];
+  const firstPendingMissingNonce = pendingTxsMissingNonces.length
+    ? Math.min(...pendingTxsMissingNonces)
+    : undefined;
 
   const hasApiMissingNonces = detectedMissingNonces?.length > 0;
   const hasPendingTxsNonces = pendingTxsNonces.length > 0;

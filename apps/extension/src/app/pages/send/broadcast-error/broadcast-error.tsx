@@ -1,6 +1,6 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
-import get from 'lodash.get';
+import { z } from 'zod';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
@@ -8,6 +8,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { useRouteState } from '@app/common/hooks/use-route-state';
 
 import { BroadcastErrorLayout } from './components/broadcast-error.layout';
 
@@ -15,24 +16,22 @@ interface Props {
   showInSheet?: boolean;
 }
 
+const broadcastErrorRouteStateSchema = z
+  .object({
+    error: z.object({ message: z.string() }).optional().catch(undefined),
+    proposeMode: z.boolean().optional(),
+  })
+  .catch({});
+
 export function BroadcastError({ showInSheet = false }: Props) {
-  const { state } = useLocation();
+  const { error, proposeMode } = useRouteState(broadcastErrorRouteStateSchema);
   const navigate = useNavigate();
 
-  const msg = get(state, 'error.message', 'Unknown error response');
-  const proposeMode = Boolean(get(state, 'proposeMode', false));
-  const title = get(
-    state,
-    'title',
-    proposeMode
-      ? 'There was an error proposing your transaction'
-      : 'There was an error broadcasting your transaction'
-  );
-  const body = get(
-    state,
-    'body',
-    proposeMode ? 'Unable to propose transaction' : 'Unable to broadcast transaction'
-  );
+  const msg = error?.message ?? 'Unknown error response';
+  const title = proposeMode
+    ? 'There was an error proposing your transaction'
+    : 'There was an error broadcasting your transaction';
+  const body = proposeMode ? 'Unable to propose transaction' : 'Unable to broadcast transaction';
 
   useOnMount(() => analytics.track('bitcoin_contract_error', { msg }));
 
@@ -51,7 +50,7 @@ export function BroadcastError({ showInSheet = false }: Props) {
       <Sheet
         header={<SheetHeader title="Error" />}
         isShowing
-        onClose={() => navigate(RouteUrls.Home)}
+        onClose={() => void navigate(RouteUrls.Home)}
       >
         {layout}
       </Sheet>

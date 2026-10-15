@@ -4,7 +4,11 @@ import {
   USDCX_ASSET_ID_MAINNET,
   USDCX_ASSET_ID_TESTNET,
 } from '@leather.io/constants';
-import type { FungibleCryptoAsset } from '@leather.io/models';
+
+type PinnableAsset =
+  | { protocol: 'nativeBtc' }
+  | { protocol: 'nativeStx' }
+  | { protocol: 'sip10'; contractId: string };
 
 const unpinnedAssetPriority = Number.MAX_SAFE_INTEGER;
 
@@ -15,7 +19,7 @@ function toContractId(assetId: string) {
 const sbtcContractIds = [SBTC_ASSET_ID_MAINNET, SBTC_ASSET_ID_TESTNET].map(toContractId);
 const usdcxContractIds = [USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET].map(toContractId);
 
-export function getPinnedAssetPriority(asset: FungibleCryptoAsset) {
+export function getPinnedAssetPriority(asset: PinnableAsset) {
   if (asset.protocol === 'nativeBtc') return 0;
   if (asset.protocol === 'nativeStx') return 1;
   if (sbtcContractIds.includes(asset.contractId)) return 2;
@@ -23,13 +27,11 @@ export function getPinnedAssetPriority(asset: FungibleCryptoAsset) {
   return unpinnedAssetPriority;
 }
 
-export function isPinnedAsset(asset: FungibleCryptoAsset) {
+export function isPinnedAsset(asset: PinnableAsset) {
   return getPinnedAssetPriority(asset) !== unpinnedAssetPriority;
 }
 
-export function sortByPinnedAssetOrder<T extends { asset: FungibleCryptoAsset }>(
-  items: readonly T[]
-) {
+export function sortByPinnedAssetOrder<T extends { asset: PinnableAsset }>(items: readonly T[]) {
   return [...items].sort(
     (a, b) => getPinnedAssetPriority(a.asset) - getPinnedAssetPriority(b.asset)
   );

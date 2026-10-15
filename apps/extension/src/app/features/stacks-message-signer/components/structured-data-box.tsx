@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { ClarityValue } from '@stacks/transactions';
+import { type ClarityValue } from '@stacks/transactions';
 import { Box, Divider, HStack, Stack, styled } from 'leather-styles/jsx';
 
-import { StructuredMessageDataDomain } from '@shared/signature/signature-types';
+import { type StructuredMessageDataDomain } from '@shared/signature/signature-types';
 
 import {
   chainIdToDisplay,

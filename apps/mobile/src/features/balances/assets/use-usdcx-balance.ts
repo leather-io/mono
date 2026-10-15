@@ -2,7 +2,7 @@ import { useSip10BalanceByAssetId } from '@/queries/balance/sip10-balance.query'
 import { useSettings } from '@/store/settings/settings';
 
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { serializeAssetId } from '@leather.io/utils';
 
 function useUsdcxVisibility() {

@@ -30,6 +30,7 @@ export function useProposeBtcSendTransaction() {
         multisigAddress: policy.address,
         rawPayload: psbt,
       });
+      if (!proposal) return;
 
       analytics.track('propose_multisig_transaction', { symbol: 'btc' });
 

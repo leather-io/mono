@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { bytesToHex } from '@noble/hashes/utils';
 import { createSelector } from '@reduxjs/toolkit';
-import { HDKey } from '@scure/bip32';
-import { Psbt } from 'bitcoinjs-lib';
+import { type HDKey } from '@scure/bip32';
+import { type Psbt } from 'bitcoinjs-lib';
 
 import {
   deriveAddressIndexZeroFromAccount,
@@ -15,14 +15,14 @@ import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leathe
 import { type AccountId } from '@leather.io/models';
 import { reverseBytes } from '@leather.io/utils';
 
-import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
+import { type BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { analytics } from '@shared/utils/analytics';
 
 import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
-import type { RootState } from '@app/store';
 import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
+import type { RootState } from '@app/store/store';
 
 import { useCurrentAccountId } from '../../account';
 import { selectCurrentNetworkBitcoinAccountLookup } from './bitcoin-keychain';
@@ -111,9 +111,9 @@ export function useCurrentAccountNativeSegwitIndexZeroPayerNullable() {
 export function useCurrentAccountNativeSegwitAddressIndexZero() {
   const createPayer = useCurrentAccountNativeSegwitPayer();
   return useMemo(
-    () => createPayer?.({ changeIndex: 0, addressIndex: 0 }).payment.address,
+    () => createPayer?.({ changeIndex: 0, addressIndex: 0 }).payment.address ?? '',
     [createPayer]
-  ) as string;
+  );
 }
 
 /**
@@ -122,7 +122,7 @@ export function useCurrentAccountNativeSegwitAddressIndexZero() {
 export function useNativeSegwitAccountIndexAddressIndexZero(accountId: AccountId) {
   const createPayer = useNativeSegwitPayer(accountId);
   const payer = createPayer?.({ changeIndex: 0, addressIndex: 0 });
-  return payer?.payment.address as string;
+  return payer?.payment.address ?? '';
 }
 
 export function getNativeSegwitMainnetAddressFromRootKeychain(rootKeychain: HDKey) {
@@ -143,12 +143,15 @@ export function useUpdateLedgerSpecificNativeSegwitUtxoHexForAdddressIndexZero()
 
   return async (tx: Psbt, inputSigningConfig: BitcoinInputSigningConfig[]) => {
     const inputsTxHex = await Promise.all(
-      tx.txInputs.map(input =>
-        bitcoinClient.transactionsApi.getBitcoinTransactionHex(
+      tx.txInputs.map(async input => {
+        const txHex: unknown = await bitcoinClient.transactionsApi.getBitcoinTransactionHex(
           // txids are encoded onchain in reverse byte order
           Buffer.from(reverseBytes(input.hash)).toString('hex')
-        )
-      )
+        );
+        if (typeof txHex !== 'string')
+          throw new Error('Unexpected bitcoin transaction hex response');
+        return txHex;
+      })
     );
 
     inputSigningConfig.forEach(({ index }) => {

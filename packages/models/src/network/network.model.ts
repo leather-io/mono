@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { Blockchain } from '../types';
-import { networkConfigurationSchema } from './network.schema';
+import type { networkConfigurationSchema } from './network.schema';
 
 export const HIRO_API_BASE_URL_MAINNET = 'https://api.hiro.so';
 export const HIRO_API_BASE_URL_TESTNET = 'https://api.testnet.hiro.so';

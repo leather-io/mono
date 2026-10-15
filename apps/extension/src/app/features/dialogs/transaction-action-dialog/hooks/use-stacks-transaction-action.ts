@@ -53,15 +53,16 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
       if (!tx || !rawTx || !account) return;
       const options: GenerateUnsignedTransactionOptions = {
         publicKey: account.stxPublicKey,
-        nonce: tx.nonce,
+        nonce: tx.sender.nonce,
         fee: stxToMicroStx(fee).toNumber(),
         txData: {
           txType: TransactionTypes.StxTokenTransfer,
           recipient: getStacksBurnAddress(network.chainId),
-          amount: 1,
+          amount: '1',
           memo: '_cancel transaction',
-          network: network,
-        } as any,
+          network,
+          publicKey: account.stxPublicKey,
+        },
       };
       const newTx = await generateUnsignedTransaction(options);
       await refreshAccountData();

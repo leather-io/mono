@@ -1,4 +1,5 @@
 import type { BrowserContext, Page } from '@playwright/test';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import {
   getConnectedTestAppPermissionsState,
@@ -11,8 +12,12 @@ import { test } from '../../fixtures/fixtures';
 
 function requestStxTransfer(page: Page) {
   return page.evaluate(
-    params =>
-      (window as any).LeatherProvider.request('stx_transferStx', params).catch((e: unknown) => e),
+    params => {
+      if (!window.LeatherProvider) throw new Error('LeatherProvider not found');
+      return window.LeatherProvider.request('stx_transferStx', params).catch(
+        (e: TestRpcResponse) => e
+      );
+    },
     { amount: 100, recipient: TEST_ACCOUNT_2_STX_ADDRESS }
   );
 }
@@ -54,7 +59,7 @@ test.describe('Ledger device pairing from an RPC popup', () => {
       continueToFullScreenPairing(context),
     ]);
 
-    await test.expect(pairingTab).toHaveURL(/index\.html#\/pair-ledger$/);
+    await test.expect(pairingTab).toHaveURL(/index\.html#\/\?ledgerHandoff=/);
     await test.expect(pairingTab.getByRole('button', { name: 'Connect Ledger' })).toBeVisible();
     test.expect(result.error).toEqual({
       code: 4001,
