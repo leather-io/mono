@@ -1,6 +1,5 @@
 import { type BrowserContext, type Page, expect } from '@playwright/test';
 import { getResponseAddresses } from '@tests/leather-provider';
-import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
 import {
   makeBitcoinPolicy,
   makeStacksPolicy,
@@ -51,14 +50,7 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
     await globalPage.setupAndUseApiCalls(extensionId);
   });
 
-  test.describe('when the enableAllowPolicyAccounts flag is on (param is enforced)', () => {
-    test.beforeEach(async ({ context }) => {
-      await overrideLaunchDarklyFlags(context, {
-        releaseAddAccount: true,
-        enableAllowPolicyAccounts: true,
-      });
-    });
-
+  test.describe('allowPolicyAccounts param', () => {
     test('returns only the active bitcoin policy when connecting with that policy account', async ({
       page,
       context,
@@ -211,63 +203,6 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
 
       const popup = await openSwitcher(context);
       await expect(popup.getByTestId(`switch-account-policy-${bitcoinPolicy.id}`)).toHaveCount(0);
-
-      await popup.close();
-      await expect(requestPromise).rejects.toThrow();
-    });
-  });
-
-  test.describe('when the enableAllowPolicyAccounts flag is off (param is ignored)', () => {
-    test.beforeEach(async ({ context }) => {
-      await overrideLaunchDarklyFlags(context, {
-        releaseAddAccount: true,
-        enableAllowPolicyAccounts: false,
-      });
-    });
-
-    test('returns the active policy even when the param is not set', async ({
-      page,
-      context,
-      extensionId,
-      onboardingPage,
-    }) => {
-      await onboardingPage.signInWithTestAccount(
-        extensionId,
-        policyStateOverrides({
-          policies: [bitcoinPolicy, stacksPolicy],
-          activePolicyId: bitcoinPolicy.id,
-        })
-      );
-      await page.goto('localhost:3000');
-      const requestPromise = initiateGetAddresses(page, {});
-      await approve(context);
-
-      const result = await requestPromise;
-      expect(getResponseAddresses(result)).toEqual([
-        {
-          symbol: 'BTC',
-          type: 'p2wsh',
-          address: bitcoinPolicy.address,
-          descriptor: bitcoinPolicy.descriptor,
-        },
-      ]);
-    });
-
-    test('shows policy accounts in the switcher even when the param is not set', async ({
-      page,
-      context,
-      extensionId,
-      onboardingPage,
-    }) => {
-      await onboardingPage.signInWithTestAccount(
-        extensionId,
-        policyStateOverrides({ policies: [bitcoinPolicy, stacksPolicy] })
-      );
-      await page.goto('localhost:3000');
-      const requestPromise = initiateGetAddresses(page, {});
-
-      const popup = await openSwitcher(context);
-      await expect(popup.getByTestId(`switch-account-policy-${bitcoinPolicy.id}`)).toBeVisible();
 
       await popup.close();
       await expect(requestPromise).rejects.toThrow();

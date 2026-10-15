@@ -20,7 +20,6 @@ import { analytics } from '@shared/utils/analytics';
 import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
-import { useFlags } from '@app/features/feature-flags';
 import { persistor } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import {
@@ -73,11 +72,8 @@ export function useGetAddresses() {
   const currentAccount = useCurrentAccountId();
   const stacksAccount = useCurrentStacksAccount();
   const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
-  const { releaseAddAccount, enableAllowPolicyAccounts } = useFlags();
   const currentPolicy = useCurrentPolicy();
-  const allowPolicyAccounts =
-    releaseAddAccount &&
-    (enableAllowPolicyAccounts ? Boolean(request.params?.allowPolicyAccounts) : true);
+  const allowPolicyAccounts = Boolean(request.params?.allowPolicyAccounts);
 
   const requestedChains: GetAddressesChain[] =
     request.method === 'getAddresses' && request.params?.chains
