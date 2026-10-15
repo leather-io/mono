@@ -1,24 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import type { FungibleCryptoAsset, Sip10Asset } from '@leather.io/models';
 
 import { isPinnedAsset, sortByPinnedAssetOrder } from './pinned-asset-order';
 
-function createSip10Asset(contractId: string, tokenName: string, symbol: string): Sip10Asset {
-  return {
-    assetId: `${contractId}::${tokenName}`,
-    canTransfer: true,
-    category: 'fungible',
-    chain: 'stacks',
-    contractId,
-    decimals: 6,
-    hasMemo: true,
-    imageCanonicalUri: '',
-    name: symbol,
-    protocol: 'sip10',
-    symbol,
-  };
+interface TestSip10Asset {
+  assetId: string;
+  contractId: string;
+  protocol: 'sip10';
+  symbol: string;
+}
+
+function createSip10Asset(contractId: string, tokenName: string, symbol: string): TestSip10Asset {
+  return { assetId: `${contractId}::${tokenName}`, contractId, protocol: 'sip10', symbol };
 }
 
 const sbtc = createSip10Asset(
@@ -42,7 +36,7 @@ const alex = createSip10Asset(
   'ALEX'
 );
 
-function symbols(items: { asset: FungibleCryptoAsset }[]) {
+function symbols(items: { asset: { symbol: string } }[]) {
   return items.map(item => item.asset.symbol);
 }
 
@@ -106,7 +100,8 @@ describe('isPinnedAsset', () => {
   });
 
   it('matches the sBTC contract whatever the token name in the asset id', () => {
-    expect(isPinnedAsset({ ...sbtc, assetId: `${sbtc.contractId}::sbtc` })).toBe(true);
+    const renamed: TestSip10Asset = { ...sbtc, assetId: `${sbtc.contractId}::sbtc` };
+    expect(isPinnedAsset(renamed)).toBe(true);
   });
 
   it('does not pin other tokens', () => {
