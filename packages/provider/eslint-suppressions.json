@@ -4,11 +4,6 @@
       "count": 2
     }
   },
-  "src/crypto-random-uuid-polyfill.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/index.ts": {
     "@typescript-eslint/consistent-type-assertions": {
       "count": 4
@@ -28,11 +23,13 @@
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 3
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    },
     "object-shorthand": {
       "count": 3
+    }
+  },
+  "src/injected-provider.ts": {
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/mobile.ts": {

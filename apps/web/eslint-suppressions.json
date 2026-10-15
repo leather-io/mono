@@ -2,6 +2,9 @@
   "app/app.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/components/apy-hero-card.tsx": {
@@ -11,9 +14,6 @@
   },
   "app/components/balance/balance.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -35,9 +35,6 @@
   "app/components/confirmations/confirmation-steps.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "app/components/connect-card/connect-card.tsx": {
@@ -48,6 +45,9 @@
   "app/components/content/content-components.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 2
     }
   },
   "app/components/content/portable-text-content.tsx": {
@@ -64,11 +64,6 @@
       "count": 5
     },
     "object-shorthand": {
-      "count": 1
-    }
-  },
-  "app/components/copy-address.tsx": {
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -230,15 +225,13 @@
   "app/entry.client.tsx": {
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/entry.server.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "app/features/activity-button/activity-modal.tsx": {
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -268,9 +261,6 @@
   "app/features/bitcoin-staking/components/available-balance-row.tsx": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "app/features/bitcoin-staking/components/pool-fee-value.tsx": {
@@ -280,9 +270,6 @@
   },
   "app/features/bitcoin-staking/components/pox5-tx-status-screen.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -354,14 +341,14 @@
   "app/features/bitcoin-staking/queries/pox5-stacking.query.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/features/bitcoin-staking/staking-active/components/claimable-rewards-card.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "app/features/bitcoin-staking/staking-active/components/operator-payout-card.tsx": {
@@ -375,9 +362,6 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "app/features/bitcoin-staking/staking-active/components/staking-position-grid.tsx": {
@@ -388,6 +372,9 @@
   "app/features/bitcoin-staking/staking-active/hooks/use-active-staking-info.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/features/bitcoin-staking/staking-active/staking-active-info.tsx": {
@@ -401,9 +388,6 @@
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 5
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "app/features/bitcoin-staking/start-staking/components/choose-staking-amount.tsx": {
@@ -425,9 +409,6 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "app/features/bitcoin-staking/start-staking/start-staking.tsx": {
@@ -435,9 +416,6 @@
       "count": 4
     },
     "@typescript-eslint/restrict-template-expressions": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -449,6 +427,9 @@
   "app/features/bitcoin-staking/start-staking/utils/staking-form-schema.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/features/bitcoin-staking/transactions/pool-contract-data.ts": {
@@ -494,22 +475,9 @@
       "count": 2
     }
   },
-  "app/features/bitcoin-staking/update-staking/components/choose-signer-manager.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
   "app/features/bitcoin-staking/update-staking/components/custom-contract-entry.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/features/bitcoin-staking/update-staking/components/sidebar-summary-card.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "app/features/bitcoin-staking/update-staking/switch-target.ts": {
@@ -539,13 +507,16 @@
     "@typescript-eslint/no-misused-promises": {
       "count": 1
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 5
+    "no-restricted-syntax": {
+      "count": 7
     }
   },
   "app/features/bitcoin-staking/update-staking/use-signer-manager-picker.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/features/bitcoin-staking/utils/pool-fee.ts": {
@@ -584,9 +555,6 @@
     },
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "app/features/mock-dialog/mock-dialog.tsx": {
@@ -609,39 +577,30 @@
       "count": 2
     }
   },
-  "app/features/multisig/activity/harmonize-vault-activity.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
   "app/features/multisig/activity/multisig-transaction-activity-view.spec.ts": {
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
     }
   },
   "app/features/multisig/activity/use-proposal-activity-item.ts": {
+    "no-restricted-syntax": {
+      "count": 2
+    },
     "object-shorthand": {
       "count": 1
-    }
-  },
-  "app/features/multisig/activity/use-vault-account-activity-feed.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/features/multisig/activity/use-vault-activity.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "app/features/multisig/auth/use-sign-in.ts": {
+    "@typescript-eslint/no-unnecessary-type-arguments": {
+      "count": 1
+    },
     "object-shorthand": {
       "count": 1
     }
   },
-  "app/features/multisig/extension/create-gated-leather-client.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
+  "app/features/multisig/extension/extension-version.ts": {
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/features/multisig/network/resolve-network-configuration.spec.ts": {
@@ -669,18 +628,8 @@
       "count": 1
     }
   },
-  "app/features/multisig/vaults/use-add-account-to-wallet.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
   "app/features/multisig/vaults/use-multisig-me.ts": {
     "object-shorthand": {
-      "count": 1
-    }
-  },
-  "app/features/multisig/vaults/use-vault-account-mutations.ts": {
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -699,17 +648,9 @@
       "count": 1
     }
   },
-  "app/features/sign-in-button/sign-in-button.layout.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
-    }
-  },
   "app/features/sign-in-button/sign-in-button.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 4
     }
   },
   "app/features/stacking/components/stacking-conditions.tsx": {
@@ -773,9 +714,6 @@
   },
   "app/layouts/page/page.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -868,9 +806,6 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "app/pages/bitcoin-staking/components/use-staking-pool-link.ts": {
@@ -944,48 +879,8 @@
     }
   },
   "app/pages/multisig/account/account.page.tsx": {
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
-    }
-  },
-  "app/pages/multisig/account/components/account-assets.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/account/components/account-details-card.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/pages/multisig/account/components/account-transactions.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/account/components/asset-detail-modal.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
-    }
-  },
-  "app/pages/multisig/account/components/asset-selector.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
-    }
-  },
-  "app/pages/multisig/account/components/custom-bitcoin-fee-field.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/account/components/custom-stacks-fee-field.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/account/components/edit-account-modal.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "app/pages/multisig/account/components/propose-transaction-modal.spec.tsx": {
@@ -994,215 +889,54 @@
     }
   },
   "app/pages/multisig/account/components/propose-transaction-modal.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 19
-    }
-  },
-  "app/pages/multisig/account/components/receive-modal.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/account/components/send-transaction-button.tsx": {
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
   "app/pages/multisig/activity/activity-detail.page.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 2
-    }
-  },
-  "app/pages/multisig/components/account-icon-name-field.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/pages/multisig/components/dev-tools/btc-propose-tool.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "app/pages/multisig/components/dev-tools/dev-tools-panel.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "app/pages/multisig/components/dev-tools/stx-propose-tool.tsx": {
     "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/pages/multisig/components/editable-name.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/components/glyph-button.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/components/invitation-modal.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/pages/multisig/components/multisig-page.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/components/text-field.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/pages/multisig/components/transaction-list.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/components/transaction-row.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/components/vault-activity-list.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/pages/multisig/components/vault-activity-row.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/components/vault-asset-list.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/components/vault-asset-row.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/create-vault/components/chain-picker.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/create-vault/components/member-rows.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/pages/multisig/create-vault/components/theme-picker.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/create-vault/components/vault-preview-card.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/create-vault/create-vault.page.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/pages/multisig/dashboard/components/create-vault-tile.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/multisig/dashboard/components/vault-card.tsx": {
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
   "app/pages/multisig/dashboard/dashboard.page.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
-    }
-  },
-  "app/pages/multisig/onboarding/components/onboarding-connect-row.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/pages/multisig/tx/components/signer-rollcall.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 4
     }
   },
   "app/pages/multisig/tx/tx.page.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
     },
+    "no-restricted-syntax": {
+      "count": 3
+    },
     "object-shorthand": {
       "count": 1
-    }
-  },
-  "app/pages/multisig/vault/components/accounts-section.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 5
-    }
-  },
-  "app/pages/multisig/vault/components/cancel-vault-modal.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
-    }
-  },
-  "app/pages/multisig/vault/components/create-account-modal.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
-    }
-  },
-  "app/pages/multisig/vault/components/edit-vault-modal.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/pages/multisig/vault/components/members-section.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
-    }
-  },
-  "app/pages/multisig/vault/components/share-invitations-modal.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 6
-    }
-  },
-  "app/pages/multisig/vault/components/vault-status-card.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "app/pages/multisig/vault/vault.page.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
-    }
-  },
-  "app/pages/playground/areas/page-gallery/page-gallery.page.tsx": {
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -1220,19 +954,6 @@
   "app/pages/playground/areas/staking-states/staking-surface.tsx": {
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "app/pages/playground/areas/update-stake-switch/switch-signer-manager-preview.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "app/pages/playground/components/playground-dock.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "app/pages/portfolio/components/portfolio-chart.spec.tsx": {
@@ -1263,9 +984,6 @@
   },
   "app/pages/portfolio/components/wallet-connection-modal.tsx": {
     "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -1328,6 +1046,9 @@
   "app/pages/posts/post.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/pages/redirects/help-center-redirect.route.tsx": {
@@ -1363,9 +1084,6 @@
   "app/pages/sbtc/components/get-sbtc-grid.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "app/pages/sbtc/components/sbtc-protocol-reward-grid.layout.tsx": {
@@ -1432,8 +1150,8 @@
     }
   },
   "app/pages/support/components/support-form.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/pages/support/guide/components/reading-progress.tsx": {
@@ -1449,6 +1167,9 @@
   "app/pages/support/guide/guide.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "app/pages/support/help-center.route.tsx": {
@@ -1461,6 +1182,11 @@
       "count": 2
     },
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "app/queries/activity/blockchain-activity.query.ts": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -1491,6 +1217,9 @@
   },
   "app/queries/stacking-tracker/protocols.ts": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -1530,9 +1259,6 @@
     },
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "app/store/addresses.ts": {
@@ -1559,9 +1285,6 @@
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "app/utils/analytics/use-on-route-change.ts": {
@@ -1569,6 +1292,9 @@
       "count": 1
     },
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-arguments": {
       "count": 1
     }
   },
@@ -1607,6 +1333,9 @@
   "app/utils/transactions.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 2
     }
   },
   "app/utils/validators/stx-amount-validator.ts": {
@@ -1628,14 +1357,14 @@
     },
     "@typescript-eslint/no-unsafe-enum-comparison": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 3
     }
   },
   "tests/bitcoin-staking.spec.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 17
     },
     "leather.io/no-same-package-barrel-import": {
       "count": 1
@@ -1668,10 +1397,10 @@
     "@typescript-eslint/no-unsafe-return": {
       "count": 2
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    },
     "leather.io/no-same-package-barrel-import": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
       "count": 1
     }
   },

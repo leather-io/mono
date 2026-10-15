@@ -10,13 +10,13 @@
   "src/keychains/keychain.slice.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 4
     }
   },
   "src/keychains/keychain.utils.ts": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-parameters": {
       "count": 1
     },
     "no-restricted-properties": {
@@ -26,19 +26,11 @@
   "src/swap/actions/swap-actions.ts": {
     "@typescript-eslint/consistent-type-assertions": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/swap/hooks/use-derived-amounts.ts": {
     "object-shorthand": {
       "count": 3
-    }
-  },
-  "src/swap/hooks/use-live-swap-estimate.spec.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/swap/hooks/use-live-swap-estimate.test-utils.ts": {
@@ -47,33 +39,42 @@
     },
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    }
-  },
-  "src/swap/hooks/use-live-swap-estimate.ts": {
-    "@typescript-eslint/unbound-method": {
+    },
+    "@typescript-eslint/no-unnecessary-type-arguments": {
       "count": 6
     }
   },
+  "src/swap/hooks/use-live-swap-estimate.ts": {
+    "@typescript-eslint/no-unnecessary-type-arguments": {
+      "count": 5
+    }
+  },
   "src/swap/hooks/use-network-fee.ts": {
-    "@typescript-eslint/unbound-method": {
+    "@typescript-eslint/no-unnecessary-type-arguments": {
       "count": 1
     },
     "object-shorthand": {
       "count": 2
     }
   },
+  "src/swap/hooks/use-secondary-amount.ts": {
+    "@typescript-eslint/no-unnecessary-type-arguments": {
+      "count": 1
+    }
+  },
   "src/swap/hooks/use-spendable-amount.ts": {
+    "@typescript-eslint/no-unnecessary-type-arguments": {
+      "count": 1
+    },
     "object-shorthand": {
       "count": 1
     }
   },
   "src/swap/hooks/use-submit-swap.ts": {
+    "@typescript-eslint/no-unnecessary-type-arguments": {
+      "count": 6
+    },
     "object-shorthand": {
-      "count": 1
-    }
-  },
-  "src/swap/hooks/use-swap-asset-reconciliation.ts": {
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -97,19 +98,14 @@
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/swap/strategies/execution-type/execution-type.ts": {
     "@typescript-eslint/consistent-type-assertions": {
       "count": 2
-    }
-  },
-  "src/swap/strategies/execution-type/transform-transaction-fees.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 2
     }
   },
   "src/swap/strategies/protocol/protocol.spec.ts": {
@@ -118,14 +114,14 @@
     },
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/swap/swap-state.types.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-arguments": {
+      "count": 8
     }
   },
   "src/swap/swap.queries.ts": {
@@ -173,13 +169,15 @@
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/swap/tests/use-swap-state.assets.spec.ts": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/swap/tests/use-swap-state.quotes.spec.ts": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -199,16 +197,23 @@
       "count": 2
     }
   },
+  "src/swap/utils/amount-operations.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
   "src/swap/utils/broadcast-bitcoin-transaction.spec.ts": {
     "@typescript-eslint/consistent-type-assertions": {
       "count": 2
     }
   },
+  "src/swap/utils/broadcast-bitcoin-transaction.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
   "src/swap/utils/swap-quote-selection.ts": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -230,9 +235,6 @@
       "count": 1
     },
     "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 2
     }
   }

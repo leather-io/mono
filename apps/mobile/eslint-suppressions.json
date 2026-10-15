@@ -7,9 +7,6 @@
   "src/app/(tabs)/browser.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/app/_layout.tsx": {
@@ -49,17 +46,14 @@
   "src/app/settings/display/index.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/app/settings/index.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/app/settings/networks/index.tsx": {
@@ -68,9 +62,6 @@
     },
     "@typescript-eslint/no-unsafe-enum-comparison": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/app/settings/security/index.tsx": {
@@ -86,25 +77,16 @@
   "src/app/settings/wallet/configure/[wallet]/[account]/index.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/app/settings/wallet/configure/[wallet]/index.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 3
     }
   },
   "src/components/action-buttons.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 5
     }
   },
   "src/components/activity/activity-with-account.screen.tsx": {
@@ -120,26 +102,18 @@
   "src/components/amount-field/amount-field-secondary-value.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/components/amount-field/amount-field.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/components/amount-field/amount-field.utils.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    }
-  },
-  "src/components/amount-field/amount-send-max-button.tsx": {
-    "@typescript-eslint/unbound-method": {
+    },
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -159,25 +133,16 @@
   "src/components/app-update-required/app-update-required-sheet.tsx": {
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/components/app-update-required/update-button.tsx": {
     "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
   "src/components/balance/balance.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/components/balance/price-change.tsx": {
@@ -188,9 +153,6 @@
   "src/components/card.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/components/error/error.tsx": {
@@ -199,29 +161,23 @@
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/components/external-link.tsx": {
     "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
       "count": 1
     }
   },
   "src/components/home/account-screen-header.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/components/home/components/asset-tabs.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -230,22 +186,9 @@
       "count": 1
     }
   },
-  "src/components/home/components/learn-section.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/components/home/components/tab-button.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/components/home/home-with-account-screen.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/components/loading/empty-layout.tsx": {
@@ -279,21 +222,10 @@
     },
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 4
-    }
-  },
-  "src/components/screen/screen-header/components/header-actions.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/components/screen/screen-header/components/header-back-button.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -315,9 +247,6 @@
   "src/components/screen/screen-header/screen-header-animation-target.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/components/screen/screen-header/screen-header.tsx": {
@@ -328,9 +257,6 @@
   "src/components/screen/screen-list.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 4
     }
   },
   "src/components/screen/screen-scroll-context.tsx": {
@@ -344,9 +270,6 @@
   "src/components/screen/screen-scrollview.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 4
     }
   },
   "src/components/screen/screen.tsx": {
@@ -365,22 +288,11 @@
     },
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/components/search-input.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/components/settings/settings-list-item.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/components/sheets/full-height-sheet/full-height-sheet-header.tsx": {
@@ -401,9 +313,6 @@
   "src/components/sheets/input-sheet.layout.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/components/sheets/notify-user-sheet.layout.tsx": {
@@ -411,9 +320,6 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -425,9 +331,6 @@
   "src/components/sheets/warning-sheet.layout.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/components/spinner-icon.tsx": {
@@ -438,11 +341,6 @@
   "src/components/splash-screen-guard/splash-screen-guard.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    }
-  },
-  "src/components/splash-screen-guard/use-auth-state.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/components/sticker.tsx": {
@@ -478,11 +376,6 @@
       "count": 1
     }
   },
-  "src/components/version-guard/version-guard.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/core/global-sheet-provider.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 7
@@ -511,17 +404,11 @@
   "src/features/account/account-selector/account-selector-sheet.layout.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/account/account-selector/account-selector-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/account/components/account-address.tsx": {
@@ -537,16 +424,10 @@
   "src/features/account/components/account-card.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/account/components/account-header.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -562,14 +443,6 @@
   },
   "src/features/account/components/available-account-balance.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/features/account/components/create-wallet-card.tsx": {
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -601,30 +474,16 @@
   "src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/features/approver/components/allow-mode-warning-sheet/switch-check.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/approver/components/approver-account-card.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 2
     }
   },
   "src/features/approver/components/approver-buttons/index.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 5
     }
   },
   "src/features/approver/components/asset-outcome.tsx": {
@@ -640,41 +499,26 @@
   "src/features/approver/components/fees/base-fee-card.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/approver/components/fees/base-fee-option.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/approver/components/fees/bitcoin-fee-card.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
   "src/features/approver/components/fees/bitcoin-fee-option.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/approver/components/fees/bitcoin-fee-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/approver/components/fees/fee-sheet.layout.tsx": {
@@ -685,25 +529,16 @@
   "src/features/approver/components/fees/stacks-fee-card.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/approver/components/fees/stacks-fee-option.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
   "src/features/approver/components/fees/stacks-fee-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/approver/components/inputs-outputs-card.tsx": {
@@ -711,29 +546,13 @@
       "count": 1
     }
   },
-  "src/features/approver/components/memo-card.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/features/approver/components/memo-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/features/approver/components/nonce-card.tsx": {
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
   "src/features/approver/components/nonce-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -777,17 +596,9 @@
       "count": 1
     }
   },
-  "src/features/approver/contract-call-post-conditions.section.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/features/approver/layouts/base-stx-message-approver.layout.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/approver/layouts/base-stx-tx-approver.layout.tsx": {
@@ -796,55 +607,41 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 4
     }
   },
   "src/features/approver/layouts/get-addresses.layout.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/approver/memo.section.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
   "src/features/approver/nonce.section.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/approver/stacks-fees.section.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
   "src/features/approver/structured-message.section.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    }
-  },
-  "src/features/approver/stx/hooks.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 2
     }
   },
   "src/features/approver/utils.tsx": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    },
+    "no-restricted-syntax": {
       "count": 3
     }
   },
@@ -855,9 +652,6 @@
   },
   "src/features/balances/assets/render-assets.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -874,9 +668,6 @@
   "src/features/balances/bitcoin/bitcoin-balance-by-account.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/balances/bitcoin/bitcoin-deposit-token-cell.tsx": {
@@ -889,24 +680,13 @@
       "count": 1
     }
   },
-  "src/features/balances/manage-tokens.sheet.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/features/balances/stacks/sip10-token-balance.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
   "src/features/balances/stacks/stacks-balance-by-account.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -945,9 +725,6 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 26
-    },
     "object-shorthand": {
       "count": 2
     }
@@ -955,9 +732,6 @@
   "src/features/browser/approver-sheet/get-addresses/get-addresses.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 4
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/browser/approver-sheet/get-addresses/utils.ts": {
@@ -968,9 +742,6 @@
   "src/features/browser/approver-sheet/send-transfer.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 4
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/browser/approver-sheet/send-transfer.utils.ts": {
@@ -986,93 +757,66 @@
   "src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/browser/approver-sheet/sign-message/sign-message.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 4
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/browser/approver-sheet/sign-psbt.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 2
     }
   },
   "src/features/browser/approver-sheet/stx/call-contract/call-contract.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/browser/approver-sheet/stx/call-contract/hooks.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
     },
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
   "src/features/browser/approver-sheet/stx/deploy-contract/deploy-contract.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/browser/approver-sheet/stx/deploy-contract/hooks.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
     },
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
   "src/features/browser/approver-sheet/stx/get-addresses/get-addresses.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 4
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/browser/approver-sheet/stx/nonce-loader.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/features/browser/approver-sheet/stx/sign-message/sign-message.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/browser/approver-sheet/stx/sign-structured-message/sign-structured-message.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/browser/approver-sheet/stx/sign-transaction/sign-transaction.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 2
     }
   },
@@ -1085,48 +829,39 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
   "src/features/browser/approver-sheet/stx/transfer-sip10-ft/transfer-sip10-ft.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/browser/approver-sheet/stx/transfer-sip9-nft/hooks.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
     },
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
   "src/features/browser/approver-sheet/stx/transfer-sip9-nft/transfer-sip9-nft.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/browser/approver-sheet/stx/transfer-stx/hooks.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
     },
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
   "src/features/browser/approver-sheet/stx/transfer-stx/transfer-stx.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/browser/approver-sheet/stx/utils.ts": {
@@ -1137,6 +872,9 @@
   "src/features/browser/approver-sheet/utils.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/features/browser/browser/browser.tsx": {
@@ -1160,16 +898,10 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 8
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/browser/browser/link-card.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -1181,27 +913,11 @@
   "src/features/browser/browser/screenshot-card.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/features/browser/browser/search-bar/browser-navigation-bar.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "src/features/browser/browser/search-bar/search-bar-toolbar.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/browser/browser/search-bar/search-bar.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 4
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/browser/browser/search-bar/search-input/browser-search-input.tsx": {
@@ -1210,9 +926,6 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/browser/browser/search-bar/search-input/generic-clear-search-button.tsx": {
@@ -1233,9 +946,6 @@
   "src/features/browser/browser/search-bar/toolbar-button.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/browser/browser/utils.tsx": {
@@ -1251,16 +961,8 @@
       "count": 1
     }
   },
-  "src/features/collectibles/components/collectible-audio.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/features/collectibles/components/collectible-gltf.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -1273,7 +975,7 @@
     "@typescript-eslint/consistent-type-assertions": {
       "count": 1
     },
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -1289,8 +991,8 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
+    "no-restricted-syntax": {
+      "count": 4
     },
     "object-shorthand": {
       "count": 4
@@ -1302,14 +1004,14 @@
     },
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/features/navigation/tab-button.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/navigation/tab-layout-context.tsx": {
@@ -1329,8 +1031,8 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 4
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 4
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/features/psbt-signer/signer.spec.ts": {
@@ -1341,6 +1043,9 @@
   "src/features/psbt-signer/signer.ts": {
     "@typescript-eslint/no-non-null-assertion": {
       "count": 2
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/features/psbt-signer/utils.ts": {
@@ -1351,14 +1056,6 @@
   "src/features/qr-scanner/qr-scanner-camera.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/features/qr-scanner/qr-scanner-chrome.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/qr-scanner/qr-scanner-frame.tsx": {
@@ -1366,16 +1063,8 @@
       "count": 1
     }
   },
-  "src/features/qr-scanner/qr-scanner.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
-    }
-  },
   "src/features/qr-scanner/use-camera-permission.ts": {
     "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -1397,9 +1086,6 @@
   "src/features/receive/components/receive-asset-item.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/receive/get-assets.ts": {
@@ -1430,9 +1116,6 @@
   "src/features/receive/screens/select-asset.tsx": {
     "@typescript-eslint/no-non-null-assertion": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/receive/use-select-assets.ts": {
@@ -1451,9 +1134,6 @@
   "src/features/recover-wallet/recover-wallet.layout.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/recover-wallet/recover-wallet.tsx": {
@@ -1480,17 +1160,11 @@
   "src/features/send/components/amount-field.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/components/asset-display.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/components/asset-picker/asset-picker-item.tsx": {
@@ -1499,46 +1173,34 @@
     },
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/components/asset-picker/asset-picker.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 5
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/send/components/inline-asset-picker.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/components/memo.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/send/components/numpad.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/send/components/recipient/build-recipient-suggestions.spec.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
+    },
+    "no-restricted-syntax": {
+      "count": 1
     },
     "object-shorthand": {
       "count": 3
@@ -1548,28 +1210,17 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 8
-    }
-  },
-  "src/features/send/components/recipient/ios-recipient-paste-button.tsx": {
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
   "src/features/send/components/recipient/recipient-guard-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/components/recipient/recipient-qr-scanner.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 2
     }
   },
@@ -1586,9 +1237,6 @@
   "src/features/send/components/recipient/recipient-selector/recipient-selector-item.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx": {
@@ -1600,23 +1248,12 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    },
     "object-shorthand": {
       "count": 1
     }
   },
   "src/features/send/components/recipient/recipient-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/features/send/components/recipient/recipient-toggle.tsx": {
-    "@typescript-eslint/unbound-method": {
       "count": 2
     }
   },
@@ -1626,9 +1263,6 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/components/recipient/recipient.types.ts": {
@@ -1639,9 +1273,6 @@
   "src/features/send/components/recipient/recipient.utils.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/components/recipient/use-account-helpers.ts": {
@@ -1653,9 +1284,6 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    },
     "object-shorthand": {
       "count": 1
     }
@@ -1663,17 +1291,17 @@
   "src/features/send/components/recipient/use-recipient-state.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/components/recipient/use-recipient-suggestions.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 4
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 4
+    "@typescript-eslint/no-unnecessary-type-arguments": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/features/send/components/recipient/use-relevant-activity.ts": {
@@ -1683,8 +1311,8 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/features/send/components/send-form-layout.tsx": {
@@ -1700,9 +1328,6 @@
   "src/features/send/forms/btc/btc-form.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/forms/btc/btc-loader.tsx": {
@@ -1710,9 +1335,6 @@
       "count": 2
     },
     "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     },
     "object-shorthand": {
@@ -1723,13 +1345,8 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
-    }
-  },
-  "src/features/send/forms/stx/sip10-approver.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/send/forms/stx/sip10-form.tsx": {
@@ -1737,9 +1354,6 @@
       "count": 1
     },
     "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -1749,14 +1363,6 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/features/send/forms/stx/stx-approver.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/features/send/forms/stx/stx-form-schema.ts": {
@@ -1770,9 +1376,6 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/forms/stx/stx-loader.tsx": {
@@ -1781,16 +1384,13 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/forms/stx/use-sip10-form.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
     },
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -1798,7 +1398,7 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
     },
-    "@typescript-eslint/unbound-method": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -1852,24 +1452,15 @@
   "src/features/send/screens/form.layout.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/screens/form.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/send/screens/select-asset.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -1896,16 +1487,10 @@
   "src/features/settings/account-identifier-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/settings/analytics-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -1913,21 +1498,13 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/features/settings/bitcoin-unit-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/features/settings/choose-app-icon/app-icon-button.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/settings/choose-app-icon/app-icon-picker-sheet.tsx": {
@@ -1936,9 +1513,6 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/settings/choose-app-icon/app-icon.utils.ts": {
@@ -1949,33 +1523,19 @@
       "count": 24
     }
   },
-  "src/features/settings/choose-app-icon/app-icons.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/features/settings/choose-avatar/avatar-button.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
   "src/features/settings/choose-avatar/avatars.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/settings/conversion-unit-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/settings/description-sheet.tsx": {
@@ -1999,24 +1559,15 @@
   "src/features/settings/settings-sheet.layout.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/settings/theme-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/settings/wallet-and-accounts/account-name-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -2028,16 +1579,10 @@
   "src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx": {
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -2052,16 +1597,10 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -2083,9 +1622,6 @@
   "src/features/swap/components/amount-field/amount-field.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/swap/components/amount-field/use-amount-field.ts": {
@@ -2096,9 +1632,6 @@
   "src/features/swap/components/amount-presets.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/swap/components/asset-balance.tsx": {
@@ -2112,40 +1645,25 @@
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/swap/components/asset-selector/asset-selector-error.tsx": {
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
   "src/features/swap/components/asset-selector/asset-selector-item.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/swap/components/asset-selector/asset-selector-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/swap/components/asset-selector/asset-selector-toggle.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -2156,7 +1674,7 @@
     "@typescript-eslint/no-misused-promises": {
       "count": 1
     },
-    "@typescript-eslint/unbound-method": {
+    "@typescript-eslint/no-unnecessary-type-arguments": {
       "count": 1
     },
     "object-shorthand": {
@@ -2171,19 +1689,11 @@
   "src/features/swap/components/currency-mode-switcher.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/swap/components/fees-info-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    }
-  },
-  "src/features/swap/components/flip-button.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/swap/components/info-sheet/info-sheet.tsx": {
@@ -2206,19 +1716,11 @@
       "count": 2
     }
   },
-  "src/features/swap/components/quote-preview/quote-preview-error.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/features/swap/components/quote-preview/quote-preview.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
     "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -2230,24 +1732,15 @@
   "src/features/swap/components/review/swap-review-details.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/swap/components/review/swap-review-empty-state.tsx": {
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/swap/components/review/swap-review-error-state.tsx": {
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -2267,14 +1760,6 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    }
-  },
-  "src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/swap/components/target-amount-preview.tsx": {
@@ -2285,9 +1770,6 @@
   "src/features/swap/screens/swap-form-screen.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 8
     }
   },
   "src/features/swap/screens/swap-review-screen.tsx": {
@@ -2300,8 +1782,8 @@
     "@typescript-eslint/no-misused-promises": {
       "count": 1
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 4
+    "no-restricted-syntax": {
+      "count": 2
     }
   },
   "src/features/swap/swap-sheet.tsx": {
@@ -2312,9 +1794,6 @@
   "src/features/swap/swap.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/swap/swap.utils.ts": {
@@ -2324,6 +1803,9 @@
   },
   "src/features/swap/use-swap-dependencies.ts": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -2350,9 +1832,6 @@
   "src/features/token/collectibles-list.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/token/components/address-list.tsx": {
@@ -2406,9 +1885,6 @@
   "src/features/token/components/token-switch.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/token/stacks/bns-details.tsx": {
@@ -2442,9 +1918,6 @@
   "src/features/token/stacks/sip9.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/token/stacks/stacks-token-details.tsx": {
@@ -2463,6 +1936,9 @@
     },
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
+    },
+    "no-restricted-syntax": {
+      "count": 2
     }
   },
   "src/features/token/use-get-token-details.ts": {
@@ -2475,20 +1951,12 @@
       "count": 2
     }
   },
-  "src/features/wallet-manager/add-wallet/add-wallet-cell.tsx": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 2
     }
   },
   "src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx": {
@@ -2497,24 +1965,15 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -2526,6 +1985,9 @@
   "src/hooks/use-account-display-address.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
+    },
+    "no-restricted-syntax": {
+      "count": 3
     }
   },
   "src/hooks/use-account-request.ts": {
@@ -2534,9 +1996,6 @@
     }
   },
   "src/hooks/use-app-state.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 2
-    },
     "object-shorthand": {
       "count": 2
     }
@@ -2547,23 +2006,15 @@
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/hooks/use-copy-address.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/hooks/use-create-wallet.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/hooks/use-current-account.ts": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/hooks/use-device-id.ts": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -2579,6 +2030,9 @@
   },
   "src/i18n/i18n.tsx": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -2616,6 +2070,9 @@
   "src/queries/assets/sip10-asset.query.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
     }
   },
   "src/queries/balance/account-balance.query.ts": {
@@ -2642,6 +2099,9 @@
     },
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
+    },
+    "no-restricted-imports": {
+      "count": 1
     }
   },
   "src/queries/balance/stx-balance.query.ts": {
@@ -2705,9 +2165,6 @@
   "src/queries/match-query-result.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/queries/query.ts": {
@@ -2725,6 +2182,9 @@
       "count": 1
     },
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -2752,9 +2212,6 @@
   "src/queries/transaction/use-bitcoin-broadcast-transaction.ts": {
     "@typescript-eslint/consistent-type-assertions": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/queries/utxos/utxos.query.ts": {
@@ -2814,17 +2271,11 @@
   "src/store/accounts/accounts.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/store/accounts/accounts.write.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 3
     }
   },
   "src/store/apps/apps.read.ts": {
@@ -2837,9 +2288,6 @@
   },
   "src/store/apps/apps.write.ts": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
       "count": 1
     }
   },
@@ -2862,6 +2310,9 @@
     },
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
+    },
+    "@typescript-eslint/no-unnecessary-type-parameters": {
+      "count": 1
     }
   },
   "src/store/keychains/keychains.read.ts": {
@@ -2977,6 +2428,9 @@
     },
     "leather.io/no-same-package-barrel-import": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/store/settings/settings.read.spec.ts": {
@@ -2998,9 +2452,6 @@
   "src/store/settings/settings.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 4
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/store/settings/settings.write.ts": {
@@ -3031,9 +2482,6 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 4
     },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    },
     "leather.io/no-same-package-barrel-import": {
       "count": 1
     }
@@ -3063,6 +2511,9 @@
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 2
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/utils/currency-formatter.ts": {
@@ -3071,6 +2522,11 @@
     },
     "object-shorthand": {
       "count": 1
+    }
+  },
+  "src/utils/version-utils.ts": {
+    "no-restricted-syntax": {
+      "count": 2
     }
   },
   "src/utils/when-currency-input-mode.ts": {
