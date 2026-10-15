@@ -210,6 +210,14 @@ export default defineConfig([
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {
+    name: 'test-app',
+    files: ['apps/test-app/src/**/*.{ts,tsx}'],
+    extends: [reactConfig],
+    rules: {
+      '@typescript-eslint/unbound-method': 'off',
+    },
+  },
+  {
     name: 'extension-rules',
     files: ['apps/extension/**/*.{ts,tsx}'],
     rules: {
