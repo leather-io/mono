@@ -219,6 +219,11 @@ export default defineConfig([
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {
+    name: 'test-app',
+    files: ['apps/test-app/src/**/*.{ts,tsx}'],
+    extends: [reactConfig],
+  },
+  {
     name: 'react-router-apps',
     files: ['apps/extension/**/*.{ts,tsx}', 'apps/web/**/*.{ts,tsx}'],
     rules: {
