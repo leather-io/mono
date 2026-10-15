@@ -45,5 +45,10 @@
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 5
     }
+  },
+  "src/studio/structure/structure.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
   }
 }

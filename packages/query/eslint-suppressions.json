@@ -22,11 +22,6 @@
       "count": 2
     }
   },
-  "src/common/market-data/market-data.utils.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    }
-  },
   "src/common/market-data/vendors/binance-market-data.query.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -61,6 +56,11 @@
       "count": 2
     },
     "no-restricted-properties": {
+      "count": 1
+    }
+  },
+  "src/query-config.ts": {
+    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -193,6 +193,11 @@
       "count": 1
     }
   },
+  "src/stacks/token-metadata/token-metadata.utils.ts": {
+    "no-restricted-syntax": {
+      "count": 3
+    }
+  },
   "src/stacks/transactions/raw-transaction-by-id.query.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -238,6 +243,9 @@
   },
   "src/utils.ts": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-arguments": {
       "count": 1
     }
   }

@@ -4,6 +4,59 @@ import tseslint from 'typescript-eslint';
 
 import { noEnumSyntax } from './rules/no-enum.js';
 
+export const sharedRestrictedSyntax = [
+  noEnumSyntax,
+  {
+    selector: "CallExpression[callee.property.name='then']",
+    message: 'Use async/await instead of .then().',
+  },
+  {
+    selector: 'CallExpression[callee.type=/^(ArrowFunctionExpression|FunctionExpression)$/]',
+    message:
+      'Do not use an IIFE. Declare a named function and call it, or compute the value with a function.',
+  },
+  {
+    selector:
+      ':matches(ReturnStatement, ArrowFunctionExpression) > Literal[value=""], ReturnStatement > ConditionalExpression > Literal[value=""]',
+    message:
+      'Do not return an empty string as a sentinel. Return undefined or null and let the caller decide.',
+  },
+  {
+    selector:
+      ':matches(CallExpression, NewExpression) > LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="Literal"][right.value=""]',
+    message:
+      "Do not pass `x ?? ''` as an argument. Narrow the value first or let the callee accept undefined.",
+  },
+  {
+    selector:
+      ':matches(CallExpression, NewExpression) > LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="Literal"][right.value=0]',
+    message:
+      'Do not pass `x ?? 0` as an argument. A missing value is not zero: narrow it first or let the callee accept undefined.',
+  },
+  {
+    selector:
+      ':matches(FunctionDeclaration, FunctionExpression, ArrowFunctionExpression)[returnType.typeAnnotation.type="TSTypePredicate"][returnType.typeAnnotation.asserts=false]',
+    message:
+      'Do not declare an explicit type predicate. Let TypeScript infer it, or validate with a schema.',
+  },
+  {
+    selector: 'ImportDeclaration[source.value="yup"] ImportSpecifier[imported.name=/^Any/]',
+    message:
+      'yup Any* aliases are any in disguise. Type the schema as ObjectSchema<YourFormValues>.',
+  },
+];
+
+export const sharedRestrictedImportPaths = [
+  {
+    name: 'lodash.get',
+    message: 'Dotted-path reads erase types. Parse the value with a schema instead.',
+  },
+  {
+    name: 'lodash/get',
+    message: 'Dotted-path reads erase types. Parse the value with a schema instead.',
+  },
+];
+
 export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
@@ -18,7 +71,8 @@ export default tseslint.config(
     rules: {
       'prefer-const': ['error', { ignoreReadBeforeAssign: false }],
       'no-nested-ternary': 'error',
-      'no-restricted-syntax': ['error', noEnumSyntax],
+      'no-restricted-syntax': ['error', ...sharedRestrictedSyntax],
+      'no-restricted-imports': ['error', { paths: sharedRestrictedImportPaths }],
       'object-shorthand': ['error', 'always', { avoidExplicitReturnArrows: true }],
       'no-duplicate-imports': ['error'],
       'no-fallthrough': 'error',
@@ -39,6 +93,9 @@ export default tseslint.config(
       '@typescript-eslint/no-empty-object-type': 'error',
       '@typescript-eslint/no-unsafe-function-type': 'error',
       '@typescript-eslint/no-wrapper-object-types': 'error',
+      '@typescript-eslint/no-unnecessary-type-arguments': 'error',
+      '@typescript-eslint/no-unnecessary-type-parameters': 'error',
+      '@typescript-eslint/unbound-method': 'off',
       'no-empty-function': 'off',
       '@typescript-eslint/no-empty-function': 'error',
       '@typescript-eslint/no-inferrable-types': 'error',

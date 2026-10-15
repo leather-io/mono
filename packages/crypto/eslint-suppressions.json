@@ -16,5 +16,10 @@
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
+  },
+  "src/wallet-account-count.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
   }
 }

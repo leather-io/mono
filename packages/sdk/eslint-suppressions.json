@@ -28,6 +28,9 @@
     },
     "no-restricted-properties": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 2
     }
   }
 }
