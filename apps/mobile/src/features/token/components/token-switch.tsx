@@ -1,8 +1,8 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 import { TestId } from '@/shared/test-id';
 
-import { Cell, type PressableProps, Switch, Text } from '@leather.io/ui/native';
+import { Box, Cell, type PressableProps, Switch, Text } from '@leather.io/ui/native';
 
 interface TokenSwitchProps extends PressableProps {
   ticker: string;
@@ -13,6 +13,7 @@ interface TokenSwitchProps extends PressableProps {
 }
 export function TokenSwitch({ icon, tokenName, value, onValueChange, ...rest }: TokenSwitchProps) {
   const [switchValue, setSwitchValue] = useState(value);
+  useEffect(() => setSwitchValue(value), [value]);
   function updateValue(val: boolean) {
     // We need to optimistically set Switch value to a new position, otherwise Switch value bounces back
     // to the old position if it takes too long to update the value prop. (redux doesn't work here)
@@ -23,6 +24,8 @@ export function TokenSwitch({ icon, tokenName, value, onValueChange, ...rest }: 
     <Cell.Root
       pressable
       testID={`${TestId.tokenSwitchItem}-${rest.ticker}`}
+      accessibilityRole="switch"
+      accessibilityState={{ checked: switchValue }}
       onPress={() => {
         updateValue(!switchValue);
       }}
@@ -40,7 +43,13 @@ export function TokenSwitch({ icon, tokenName, value, onValueChange, ...rest }: 
         </Cell.Label>
       </Cell.Content>
       <Cell.Aside>
-        <Switch value={switchValue} onValueChange={updateValue} />
+        <Box
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
+          <Switch value={switchValue} onValueChange={updateValue} />
+        </Box>
       </Cell.Aside>
     </Cell.Root>
   );

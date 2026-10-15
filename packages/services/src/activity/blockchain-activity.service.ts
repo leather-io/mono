@@ -9,6 +9,7 @@ import {
   type CryptoAssetId,
   type FungibleCryptoAsset,
   type MarketData,
+  type StacksTransaction,
   type StacksTx,
 } from '@leather.io/models';
 import { assertUnreachable, createMoney, hasStacksAddress, initBigNumber } from '@leather.io/utils';
@@ -189,7 +190,7 @@ export class BlockchainActivityService {
     if (tx === null) return null;
     const balanceChanges = await this.fetchTxStacksBalanceChanges(stxAddress, tx, signal);
     const classified =
-      tx.tx_type === 'contract_call'
+      tx.type === 'contract_call'
         ? await this.classifyContractCall(
             tx.contract_call.contract_id,
             tx.contract_call.function_name,
@@ -202,10 +203,10 @@ export class BlockchainActivityService {
   // Only contract calls / deploys need this lookup; token transfers carry their stx amount inline.
   private async fetchTxStacksBalanceChanges(
     principal: string,
-    tx: StacksTx,
+    tx: StacksTransaction,
     signal?: AbortSignal
   ): Promise<{ stxNet: string; ftChanges: BlockchainActivityBalanceChange[] }> {
-    if (tx.tx_type !== 'contract_call' && tx.tx_type !== 'smart_contract') {
+    if (tx.type !== 'contract_call' && tx.type !== 'smart_contract') {
       return { stxNet: '0', ftChanges: [] };
     }
     const rows = await this.fetchBalanceChangesBatch(principal, [tx.tx_id], signal);

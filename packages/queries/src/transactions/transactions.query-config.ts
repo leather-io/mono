@@ -1,6 +1,6 @@
 import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
 
-import type { BitcoinTransaction, StacksTx } from '@leather.io/models';
+import type { BitcoinTransaction, StacksTransaction } from '@leather.io/models';
 import {
   type UserSettings,
   getBitcoinTransactionsService,
@@ -22,7 +22,7 @@ export function createStacksTransactionByIdQueryConfig(txid: string, settings: U
     queryKey: createStacksTransactionByIdQueryKey(txid, settings),
     queryFn: ({ signal }: QueryFunctionContext) =>
       getStacksTransactionsService().getTransactionById(txid, signal),
-  } satisfies UseQueryOptions<StacksTx | null, Error>;
+  } satisfies UseQueryOptions<StacksTransaction | null, Error>;
 }
 
 export function createBitcoinTransactionByTxIdQueryKey(txid: string, settings: UserSettings) {
