@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { isStacksMempoolTransaction } from '@leather.io/models';
 import { increaseValueByOneMicroStx, isUndefined, microStxToStx } from '@leather.io/utils';
 
 import { useGetTransactionByIdListQuery } from '../transactions/transactions-by-id.query';
@@ -22,7 +23,7 @@ export function useStacksPendingTransactions(address: string) {
         .flatMap(tx => {
           if (isUndefined(tx)) return [];
           if (droppedCache.has(tx.tx_id)) return [];
-          if (tx.tx_status !== 'pending') {
+          if (!isStacksMempoolTransaction(tx) || tx.status !== 'pending') {
             // Stale txs persist in the mempool endpoint so we
             // need to cache dropped txids to prevent unneeded fetches
             droppedCache.set(tx.tx_id, true);
@@ -39,7 +40,7 @@ export function useStacksValidateFeeByNonce(address: string) {
 
   function changeFeeByNonce({ nonce, fee }: { nonce: number; fee: number }) {
     return transactions.reduce((updatedFee, tx) => {
-      if (Number(tx.nonce) === nonce && microStxToStx(tx.fee_rate).toNumber() >= fee) {
+      if (tx.sender.nonce === nonce && microStxToStx(tx.fee_rate).toNumber() >= fee) {
         return increaseValueByOneMicroStx(microStxToStx(tx.fee_rate));
       }
       return updatedFee;

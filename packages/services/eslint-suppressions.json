@@ -46,12 +46,7 @@
   },
   "src/activity/stacks-activity.utils.spec.ts": {
     "@typescript-eslint/consistent-type-assertions": {
-      "count": 12
-    }
-  },
-  "src/activity/stacks-activity.utils.ts": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
+      "count": 4
     }
   },
   "src/activity/stacks-asset-transfer.utils.spec.ts": {

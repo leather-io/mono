@@ -126,11 +126,6 @@
       "count": 1
     }
   },
-  "src/stacks/mempool/mempool.utils.ts": {
-    "@typescript-eslint/consistent-type-assertions": {
-      "count": 4
-    }
-  },
   "src/stacks/network/network.query.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -138,7 +133,7 @@
   },
   "src/stacks/nonce/account-nonces.utils.spec.ts": {
     "@typescript-eslint/consistent-type-assertions": {
-      "count": 2
+      "count": 1
     }
   },
   "src/stacks/nonce/account-nonces.utils.ts": {
