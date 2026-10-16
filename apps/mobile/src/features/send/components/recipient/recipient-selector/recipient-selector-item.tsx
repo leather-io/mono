@@ -3,15 +3,15 @@ import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { AccountBalance } from '@/features/balances/total-balance';
 import {
-  ExternalRecipientSuggestionEntry,
-  InternalRecipientSuggestionEntry,
-  RecipientSuggestionEntry,
+  type ExternalRecipientSuggestionEntry,
+  type InternalRecipientSuggestionEntry,
+  type RecipientSuggestionEntry,
 } from '@/features/send/components/recipient/recipient.types';
 import { useWalletByFingerprint } from '@/store/wallets/wallets.read';
 import { analytics } from '@/utils/analytics';
 import dayjs from 'dayjs';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
+import { type FungibleCryptoAsset } from '@leather.io/models';
 import {
   ArrowTopRightIcon,
   Avatar,

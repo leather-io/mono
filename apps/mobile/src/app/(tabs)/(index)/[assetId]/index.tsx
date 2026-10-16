@@ -7,7 +7,11 @@ import { useSettings } from '@/store/settings/settings';
 import { useLocalSearchParams } from 'expo-router';
 
 import { CryptoAssetProtocols } from '@leather.io/models';
-import { SerializedCryptoAssetId, assertExistence, deserializeAssetId } from '@leather.io/utils';
+import {
+  type SerializedCryptoAssetId,
+  assertExistence,
+  deserializeAssetId,
+} from '@leather.io/utils';
 
 export default function AccountTokenScreen() {
   const { assetId } = useLocalSearchParams<{

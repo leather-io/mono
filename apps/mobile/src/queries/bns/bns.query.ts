@@ -3,9 +3,8 @@ import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 
-import { QuoteCurrency } from '@leather.io/models';
 import { createAccountBnsNamesQueryConfig, createBnsNameQueryConfig } from '@leather.io/queries';
-import { AccountRequest, UserSettings } from '@leather.io/services';
+import { type AccountRequest, type UserSettings } from '@leather.io/services';
 
 export function useAccountBnsNames(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
@@ -16,7 +15,7 @@ export function useGetBnsName(fullName?: string) {
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    quoteCurrency: fiatCurrencyPreference,
     assetVisibility,
   };
 
@@ -30,7 +29,7 @@ function useGetAccountBnsNamesQuery(request: AccountRequest) {
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    quoteCurrency: fiatCurrencyPreference,
     assetVisibility,
   };
 

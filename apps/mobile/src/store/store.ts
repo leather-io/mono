@@ -35,7 +35,7 @@ export type RootState = ReturnType<typeof reducer>;
 export const store = configureStore({
   reducer: persistReducer<RootState>(persistConfig, reducer),
   devTools: false,
-  enhancers: getDefaultEnhancers => {
+  enhancers(getDefaultEnhancers) {
     if (!isProduction()) return getDefaultEnhancers().concat(devToolsEnhancer({ trace: true }));
     return getDefaultEnhancers();
   },

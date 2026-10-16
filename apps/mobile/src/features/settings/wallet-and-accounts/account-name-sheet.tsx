@@ -2,7 +2,7 @@ import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { type SheetRef } from '@leather.io/ui/native';
 
 interface AccountNameSheetProps {
   sheetRef: SheetRef;

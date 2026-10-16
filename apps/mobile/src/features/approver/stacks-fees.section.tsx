@@ -4,7 +4,7 @@ import { useCalculateStacksTxFees } from '@/queries/stacks/fees/fees.hooks';
 import { AuthType, deserializeTransaction } from '@stacks/transactions';
 
 import { FeeTypes } from '@leather.io/models';
-import { Approver, SheetInstance } from '@leather.io/ui/native';
+import { Approver, type SheetInstance } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
 import { SponsoredFeeCard } from './components/fees/sponsored-fee-card';

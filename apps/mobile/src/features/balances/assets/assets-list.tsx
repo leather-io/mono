@@ -1,15 +1,15 @@
-import { ReactElement, useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 
 import { Screen } from '@/components/screen/screen';
 import { useUsdcxBalance } from '@/features/balances/assets/use-usdcx-balance';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { withUsdcxBalance } from '@/features/balances/assets/utils/with-usdcx-balance';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
+import { type useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useRouter } from 'expo-router';
 
-import { AccountId } from '@leather.io/models';
-import { Sip10Balance } from '@leather.io/services';
+import { type AccountId } from '@leather.io/models';
+import { type Sip10Balance } from '@leather.io/services';
 import { useTheme } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 

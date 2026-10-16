@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 
-import { MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
+import { type MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
 import { useQueries } from '@tanstack/react-query';
 
-import { type StacksMempoolTransaction, isStacksMempoolTransaction } from '@leather.io/models';
+import { isStacksMempoolTransaction } from '@leather.io/models';
 import { createGetAddressMempoolTransactionsQueryOptions } from '@leather.io/query';
 import { isUndefined, uniqueArray } from '@leather.io/utils';
 
@@ -22,12 +22,12 @@ function useGetAddressMempoolTransactionsQueries(addresses: string[]) {
     () => ({
       totalData: queries
         .map(result => result.data)
-        .reduce((acc, result) => {
+        .reduce<MempoolTransaction[]>((acc, result) => {
           if (result?.results) {
             return [...acc, ...result.results];
           }
           return acc;
-        }, [] as MempoolTransaction[]),
+        }, []),
       isPending: queries.some(result => result.isPending),
     }),
     [queries]
@@ -50,16 +50,16 @@ export function useStacksPendingTransactions(addresses: string[]) {
       query,
       transactions: txs
         .map(tx => tx.data)
-        .filter((tx): tx is StacksMempoolTransaction => {
-          if (isUndefined(tx)) return false;
-          if (droppedCache.has(tx.tx_id)) return false;
+        .flatMap(tx => {
+          if (isUndefined(tx)) return [];
+          if (droppedCache.has(tx.tx_id)) return [];
           if (!isStacksMempoolTransaction(tx) || tx.status !== 'pending') {
             // Stale txs persist in the mempool endpoint so we
             // need to cache dropped txids to prevent unneeded fetches
             droppedCache.set(tx.tx_id, true);
-            return false;
+            return [];
           }
-          return true;
+          return [tx];
         }),
     };
   }, [txs, query]);

@@ -1,4 +1,4 @@
-import { Sip10AggregateBalance } from '@leather.io/services';
+import { type Sip10AggregateBalance } from '@leather.io/services';
 
 export function sortSip10Balances(
   a: Sip10AggregateBalance['sip10s'][number],
