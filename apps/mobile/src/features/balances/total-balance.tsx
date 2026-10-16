@@ -1,9 +1,9 @@
 import { Balance } from '@/components/balance/balance';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
-import { AccountLookup } from '@/shared/types';
+import { type AccountLookup } from '@/shared/types';
 
-import { SkeletonLoader, TextProps } from '@leather.io/ui/native';
+import { SkeletonLoader, type TextProps } from '@leather.io/ui/native';
 
 export function TotalBalance(props: TextProps) {
   const { totalBalance } = useTotalBalance();

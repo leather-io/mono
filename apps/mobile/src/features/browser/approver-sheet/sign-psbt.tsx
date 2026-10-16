@@ -1,15 +1,15 @@
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
 import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
 import { deserializeAccountId } from '@/store/accounts/accounts';
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 
 import {
-  RpcRequest,
-  RpcResponse,
-  RpcResult,
+  type RpcRequest,
+  type RpcResponse,
+  type RpcResult,
   createRpcSuccessResponse,
-  signPsbt,
+  type signPsbt,
 } from '@leather.io/rpc';
 
 import { addBip32DerivationFieldToInputs } from './utils';

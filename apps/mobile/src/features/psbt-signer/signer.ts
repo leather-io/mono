@@ -6,7 +6,7 @@ import {
   deriveChildKeychainFromMnemnonic,
   extractFingerprintFromKeyOriginPath,
 } from '@leather.io/crypto';
-import { isDefined, uniqueArray } from '@leather.io/utils';
+import { assertExistence, isDefined, uniqueArray } from '@leather.io/utils';
 
 interface SignOptions {
   signAtIndex?: number[];
@@ -48,11 +48,10 @@ export async function signTx(tx: Uint8Array, options?: SignOptions) {
   const { mnemonic, passphrase } = await mnemonicStore(rootKeyFingerprint).getMnemonic();
 
   const privateKeychains = await Promise.all(
-    requiredPaths.map(path =>
-      deriveChildKeychainFromMnemnonic(path, mnemonic, passphrase).then(
-        keychain => [path, keychain] as const
-      )
-    )
+    requiredPaths.map(async path => {
+      const keychain = await deriveChildKeychainFromMnemnonic(path, mnemonic, passphrase);
+      return [path, keychain] as const;
+    })
   );
 
   const pkMap = Object.fromEntries(privateKeychains);
@@ -68,7 +67,9 @@ export async function signTx(tx: Uint8Array, options?: SignOptions) {
     if (!key || keys.length !== 1) throw new Error('Unimplemented: Multisig transactions');
 
     try {
-      unsignedTx.signIdx(pkMap[key]!.privateKey!, index, options?.allowedSighash);
+      const privateKey = pkMap[key]?.privateKey;
+      assertExistence(privateKey, 'Missing private key for input');
+      unsignedTx.signIdx(privateKey, index, options?.allowedSighash);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e);

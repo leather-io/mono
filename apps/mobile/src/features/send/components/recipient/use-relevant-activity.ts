@@ -1,18 +1,17 @@
-import { FetchState, toFetchState } from '@/components/loading/fetch-state';
+import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 import { filter, isDefined, isShallowEqual, pipe } from 'remeda';
 
 import {
-  AccountId,
-  Activity,
-  FungibleCryptoAsset,
-  QuoteCurrency,
-  SendAssetActivity,
+  type AccountId,
+  type Activity,
+  type FungibleCryptoAsset,
+  type SendAssetActivity,
 } from '@leather.io/models';
 import { createActivityQueryConfig } from '@leather.io/queries';
-import { UserSettings } from '@leather.io/services';
+import { type UserSettings } from '@leather.io/services';
 
 interface UseRelevantActivityProps {
   asset: FungibleCryptoAsset;
@@ -25,7 +24,7 @@ export function useRelevantActivity({ asset, currentAccount }: UseRelevantActivi
   const accountAddresses = useAccountAddresses(fingerprint, accountIndex);
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    quoteCurrency: fiatCurrencyPreference,
     assetVisibility,
   };
   const baseConfig = createActivityQueryConfig(accountAddresses, settings);
@@ -36,17 +35,24 @@ export function useRelevantActivity({ asset, currentAccount }: UseRelevantActivi
       ...baseConfig,
       queryKey: queryKeyWithCurrency,
       select: data =>
-        pipe(data, filter(isValidSendActivity), filter(isRelevantSendActivity(asset))),
+        pipe(
+          data,
+          filter(isSendActivity),
+          filter(hasReceivers),
+          filter(isRelevantSendActivity(asset))
+        ),
     })
   );
 }
 
-function isValidSendActivity(activity: Activity): activity is SendAssetActivity {
+function isSendActivity(activity: Activity) {
+  return activity.type === 'sendAsset';
+}
+
+function hasReceivers(activity: SendAssetActivity) {
   return (
-    activity.type === 'sendAsset' &&
     // Items from the API response sometimes erroneously contain no receivers or empty strings
-    isDefined(activity.receivers[0]) &&
-    activity.receivers[0].length !== 0
+    isDefined(activity.receivers[0]) && activity.receivers[0].length !== 0
   );
 }
 

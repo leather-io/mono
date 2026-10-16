@@ -28,9 +28,9 @@ type DeriveNextAccountKeychainsProps =
       passphrase?: string;
     };
 
-enum KEYCHAIN_ERROR {
-  WALLET_ALREADY_EXISTS = 'WALLET_ALREADY_EXISTS',
-}
+const KEYCHAIN_ERROR = {
+  WALLET_ALREADY_EXISTS: 'WALLET_ALREADY_EXISTS',
+} as const;
 
 export const keychainErrorHandlers = {
   throwKeyExistsError() {

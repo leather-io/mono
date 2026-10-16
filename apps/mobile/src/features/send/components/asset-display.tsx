@@ -1,13 +1,13 @@
-import { ReactNode, useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import Animated, {
-  EntryAnimationsValues,
-  EntryExitAnimationFunction,
+  type EntryAnimationsValues,
+  type EntryExitAnimationFunction,
   withTiming,
 } from 'react-native-reanimated';
 
 import { TokenBalance } from '@/features/token/components/token-balance';
 
-import { FungibleCryptoAsset, Money } from '@leather.io/models';
+import { type FungibleCryptoAsset, type Money } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
 interface AssetDisplayProps {

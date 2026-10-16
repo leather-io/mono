@@ -14,12 +14,6 @@ interface CollectibleVideoProps {
   onPress?(): void;
 }
 
-interface CaptureMessage {
-  type: 'thumbnail' | 'error';
-  payload?: string;
-  message?: string;
-}
-
 const thumbnailCache = new Map<string, string>();
 
 function buildThumbnailCaptureHtml(src: string) {
@@ -122,8 +116,18 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
   const handleCaptureMessage = useCallback(
     (event: WebViewMessageEvent) => {
       try {
-        const data = JSON.parse(event.nativeEvent.data) as CaptureMessage;
-        if (data.type === 'thumbnail' && data.payload) {
+        const data: unknown = JSON.parse(event.nativeEvent.data);
+        if (data === null) {
+          setShouldCaptureThumbnail(false);
+          return;
+        }
+        if (typeof data !== 'object' || !('type' in data)) return;
+        if (
+          data.type === 'thumbnail' &&
+          'payload' in data &&
+          typeof data.payload === 'string' &&
+          data.payload
+        ) {
           thumbnailCache.set(src, data.payload);
           setThumbnailUri(data.payload);
           setShouldCaptureThumbnail(false);

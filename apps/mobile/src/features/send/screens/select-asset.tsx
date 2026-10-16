@@ -8,7 +8,7 @@ import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
+import { type FungibleCryptoAsset } from '@leather.io/models';
 
 export function SelectAsset() {
   const { navigate } = useSendNavigation();

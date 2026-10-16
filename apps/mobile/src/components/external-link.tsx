@@ -24,7 +24,11 @@ interface ExternalLinkProps {
 }
 export function ExternalLink({ url, label }: ExternalLinkProps) {
   return (
-    <Pressable onPress={() => Linking.openURL(url || '')}>
+    <Pressable
+      onPress={() => {
+        if (url) void Linking.openURL(url);
+      }}
+    >
       {({ pressed }) => (
         <Box flexDirection="row" alignItems="center" gap="1">
           <ArrowTopRightIcon color="ink.text-subdued" variant="small" />
