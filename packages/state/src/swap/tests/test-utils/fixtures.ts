@@ -1,26 +1,26 @@
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import {
-  CryptoAssetBalance,
-  CryptoAssetId,
-  Currency,
-  ExecutionConstraint,
-  Sip10Asset,
-  StacksProtocol,
-  SwapExecutionType,
-  SwapProviderAsset,
-  SwapProviderId,
-  SwapQuote,
-  SwappableFungibleCryptoAsset,
+  type BaseSwapQuote,
+  type CryptoAssetBalance,
+  type Currency,
+  type ExecutionConstraint,
+  type StacksProtocol,
+  type SwapExecutionType,
+  type SwapProviderAsset,
+  type SwapProviderId,
+  type SwapQuote,
+  type SwappableFungibleCryptoAsset,
 } from '@leather.io/models';
-import { AccountRequest, AccountSwapAsset } from '@leather.io/services';
+import { type AccountRequest, type AccountSwapAsset } from '@leather.io/services';
 import { createMoney, createMoneyFromDecimal } from '@leather.io/utils';
 
 function createFungibleAsset(
   overrides: Partial<SwappableFungibleCryptoAsset> = {}
 ): SwappableFungibleCryptoAsset {
-  const protocol = overrides.protocol ?? 'nativeBtc';
+  const { protocol } = overrides;
 
   switch (protocol) {
+    case undefined:
     case 'nativeBtc':
       return btcAsset;
     case 'nativeStx':
@@ -40,10 +40,10 @@ function createFungibleAsset(
         contractId: symbol,
         imageCanonicalUri: 'https://example.com/token.png',
         ...overrides,
-      } as Sip10Asset;
+      };
     }
     default:
-      throw new Error(`Unsupported protocol: ${protocol}`);
+      throw new Error(`Unsupported protocol: ${String(protocol)}`);
   }
 }
 
@@ -164,11 +164,9 @@ export const defaultBaseSwapAssets = [
   }),
 ];
 
-export function getDefaultTargetSwapAssets(id: CryptoAssetId) {
-  if (id.protocol === 'nativeBtc') {
-    return [createAccountSwapAsset({ asset: defaultSbtcAsset })];
-  } else return defaultBaseSwapAssets.filter(swapAsset => swapAsset.asset.protocol !== 'nativeBtc');
-}
+export const defaultTargetSwapAssets = defaultBaseSwapAssets.filter(
+  swapAsset => swapAsset.asset.protocol !== 'nativeBtc'
+);
 
 interface CreateSwapQuoteParams {
   executionType?: SwapExecutionType;
@@ -181,8 +179,43 @@ interface CreateSwapQuoteParams {
   isExecutable?: boolean;
   executionConstraints?: ExecutionConstraint[];
   createdAt?: Date;
-  providerQuoteData?: unknown;
 }
+
+type ProviderSwapQuote<Id extends SwapProviderId> = Extract<SwapQuote, { providerId: Id }>;
+
+const providerQuoteBuilders: {
+  [Id in SwapProviderId]: (quote: BaseSwapQuote) => ProviderSwapQuote<Id>;
+} = {
+  'alex-sdk': quote => ({
+    ...quote,
+    providerId: 'alex-sdk',
+    providerQuoteData: {
+      baseProviderAssetId: '',
+      targetProviderAssetId: '',
+      alexSdkAmmRoute: null,
+    },
+  }),
+  'velar-sdk': quote => ({
+    ...quote,
+    providerId: 'velar-sdk',
+    providerQuoteData: { baseProviderAssetId: '', targetProviderAssetId: '' },
+  }),
+  'bitflow-sdk': quote => ({
+    ...quote,
+    providerId: 'bitflow-sdk',
+    providerQuoteData: { bitflowSdkSelectedSwapRoute: null },
+  }),
+  'bitflow-bff-api': quote => ({
+    ...quote,
+    providerId: 'bitflow-bff-api',
+    providerQuoteData: { bitflowBffApiQuote: null },
+  }),
+  'sbtc-bridge': quote => ({
+    ...quote,
+    providerId: 'sbtc-bridge',
+    providerQuoteData: { signerSweepTxFeeSats: 0 },
+  }),
+};
 
 export function createSwapQuote({
   executionType = 'stacks-contract-call',
@@ -203,9 +236,8 @@ export function createSwapQuote({
   isExecutable = true,
   executionConstraints = [],
   createdAt = new Date(),
-  providerQuoteData = { valid: true },
 }: CreateSwapQuoteParams = {}): SwapQuote {
-  return {
+  return providerQuoteBuilders[providerId]({
     executionType,
     providerId,
     baseAsset,
@@ -217,8 +249,7 @@ export function createSwapQuote({
     isExecutable,
     executionConstraints,
     createdAt,
-    providerQuoteData,
-  } as SwapQuote;
+  });
 }
 
 export const defaultSwapQuotes = [

@@ -2,7 +2,7 @@ import { act, waitFor } from '@testing-library/react';
 import { assert, describe, expect, it } from 'vitest';
 
 import { defaultNetworksKeyedById } from '@leather.io/models';
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 
 import {
   createAccountSwapAsset,
