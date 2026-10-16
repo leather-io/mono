@@ -12,7 +12,7 @@ interface TransactionPayloadBase {
 }
 
 export interface ContractCallPayload extends TransactionPayloadBase {
-  txType: TransactionTypes.ContractCall;
+  txType: typeof TransactionTypes.ContractCall;
   contractAddress: string;
   contractName: string;
   functionName: string;
@@ -20,13 +20,13 @@ export interface ContractCallPayload extends TransactionPayloadBase {
 }
 
 export interface ContractDeployPayload extends TransactionPayloadBase {
-  txType: TransactionTypes.ContractDeploy;
+  txType: typeof TransactionTypes.ContractDeploy;
   contractName: string;
   codeBody: string;
 }
 
 export interface STXTransferPayload extends TransactionPayloadBase {
-  txType: TransactionTypes.StxTokenTransfer;
+  txType: typeof TransactionTypes.StxTokenTransfer;
   recipient: string;
   amount: string;
   memo?: string;

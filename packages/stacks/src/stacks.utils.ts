@@ -1,10 +1,11 @@
-import { HDKey } from '@scure/bip32';
+import { type HDKey } from '@scure/bip32';
 import { ChainId } from '@stacks/network';
 import {
-  AssetString,
-  ContractIdString,
+  type AssetString,
+  type ContractIdString,
   compressPrivateKey,
   privateKeyToPublic,
+  publicKeyToHex,
 } from '@stacks/transactions';
 
 import {
@@ -24,7 +25,7 @@ export const stxLedgerLiveDerivationWithAccount = `m/44'/5757'/{account}'/0/0`;
 
 export type StacksDerivationPathType = 'stacks' | 'ledgerLive';
 
-export function isStacksDerivationPathType(value: unknown): value is StacksDerivationPathType {
+export function isStacksDerivationPathType(value: unknown) {
   return value === 'stacks' || value === 'ledgerLive';
 }
 
@@ -82,14 +83,16 @@ interface WhenStacksChainIdMap<T> {
   [ChainId.Mainnet]: T;
   [ChainId.Testnet]: T;
 }
+const mainnetChainId: number = ChainId.Mainnet;
 export function whenStacksChainId(chainId: number) {
   return <T>(chainIdMap: WhenStacksChainIdMap<T>): T =>
-    chainId === ChainId.Mainnet ? chainIdMap[ChainId.Mainnet] : chainIdMap[ChainId.Testnet];
+    chainId === mainnetChainId ? chainIdMap[ChainId.Mainnet] : chainIdMap[ChainId.Testnet];
 }
 
 // From `@stacks/wallet-sdk` package we are trying not to use
+const rootDerivationPathDepth: number = DerivationPathDepth.Root;
 export function deriveStxPrivateKey({ keychain, index }: { keychain: HDKey; index: number }) {
-  if (keychain.depth !== DerivationPathDepth.Root) throw new Error('Root keychain must be depth 0');
+  if (keychain.depth !== rootDerivationPathDepth) throw new Error('Root keychain must be depth 0');
   const accountKeychain = keychain.derive(makeStxDerivationPath(index));
   assertIsTruthy(accountKeychain.privateKey);
   return compressPrivateKey(accountKeychain.privateKey);
@@ -102,7 +105,7 @@ export function deriveStxPublicKey({
   keychain: HDKey;
   index: number;
 }): string {
-  return privateKeyToPublic(deriveStxPrivateKey({ keychain, index })) as string;
+  return publicKeyToHex(privateKeyToPublic(deriveStxPrivateKey({ keychain, index })));
 }
 
 /**
