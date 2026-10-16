@@ -3,13 +3,13 @@ import { Form, FormProvider, useForm } from 'react-hook-form';
 import { Navigate, useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { StackingClient } from '@stacks/stacking';
+import { type StackingClient } from '@stacks/stacking';
 import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { FormPageLayout } from '~/components/forms/form-page.layout';
 import { learnArticles } from '~/content/learn-content';
 import {
-  StakingPoolSlug,
+  type StakingPoolSlug,
   getPrimarySignerManagerContract,
   getSignerManagerContracts,
   getStakingPoolFromSlug,
@@ -60,11 +60,11 @@ import { ChooseStakingConditions } from './components/choose-staking-conditions'
 import { ChooseStakingDuration } from './components/choose-staking-duration';
 import {
   StakingConfirmationSteps,
-  StartStakingStepId,
+  type StartStakingStepId,
 } from './components/staking-confirmation-steps';
 import {
-  PoolMinStake,
-  StakingFormSchema,
+  type PoolMinStake,
+  type StakingFormSchema,
   buildPayoutPreference,
   createStakingFormSchema,
 } from './utils/staking-form-schema';
@@ -259,7 +259,7 @@ function StartStakingLayout({
       return handleStake();
     }
 
-    throw new Error(`Unknown confirmation type: ${confirmation}`);
+    throw new Error(`Unknown confirmation type: ${String(confirmation)}`);
   }
 
   const confirmationState = {

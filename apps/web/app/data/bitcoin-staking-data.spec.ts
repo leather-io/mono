@@ -1,4 +1,4 @@
-import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
+import { typedKeys } from '~/utils/typed-keys';
 
 import {
   bitcoinStakingPoolList,
@@ -18,10 +18,10 @@ const stackingDaoSignerManagerContractId =
 const stackingDaoWrapperContractId = 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-pool-v1';
 
 const declaredContracts = bitcoinStakingPoolList.flatMap(pool =>
-  Object.entries(pool.signerManagerContracts).flatMap(([networkMode, contractIds]) =>
-    (contractIds ?? []).map((contractId, index) => ({
+  typedKeys(pool.signerManagerContracts).flatMap(networkMode =>
+    (pool.signerManagerContracts[networkMode] ?? []).map((contractId, index) => ({
       providerId: pool.providerId,
-      networkMode: networkMode as NetworkMode,
+      networkMode,
       contractId,
       isPrimary: index === 0,
     }))

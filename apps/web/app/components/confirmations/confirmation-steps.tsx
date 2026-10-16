@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 
 import { Box, HStack, VStack, styled } from 'leather-styles/jsx';
 
