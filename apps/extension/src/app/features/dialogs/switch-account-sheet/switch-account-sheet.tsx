@@ -130,13 +130,17 @@ export function SwitchAccountSheet({
     }
   }, [isShowing]);
 
+  async function createAccountAndClose(fingerprint: string) {
+    await createAccount(fingerprint);
+    onClose();
+  }
+
   function onCreateAccount(fingerprint: string) {
     if (isCreatingAccountRef.current) return;
     isCreatingAccountRef.current = true;
     setCreatingFingerprint(fingerprint);
-    requestIdleCallback(async () => {
-      await createAccount(fingerprint);
-      onClose();
+    requestIdleCallback(() => {
+      void createAccountAndClose(fingerprint);
     });
   }
 

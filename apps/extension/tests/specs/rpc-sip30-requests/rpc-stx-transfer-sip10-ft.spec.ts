@@ -1,4 +1,5 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
+import { requestLeatherProvider } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -26,10 +27,10 @@ test.describe('RPC: stx_transferSip10Ft', () => {
         'text="You will transfer exactly 0.001 LEO or the transaction will abort."'
       );
 
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6');
 
       await popup.waitForTimeout(500);
@@ -45,13 +46,10 @@ test.describe('RPC: stx_transferSip10Ft', () => {
 
   function initiateSip30RpcTransferSip10Ft(page: Page) {
     return async (params: RpcParams<typeof stxTransferSip10Ft>) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('stx_transferSip10Ft', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
+      page.evaluate(requestLeatherProvider, {
+        method: 'stx_transferSip10Ft',
+        params: { ...params },
+      });
   }
 
   test('SIP-30 transfer sip10 fungible token', async ({ page, context }) => {

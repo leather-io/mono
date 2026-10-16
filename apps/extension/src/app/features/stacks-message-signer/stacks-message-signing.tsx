@@ -1,12 +1,10 @@
-import { Outlet } from 'react-router';
-
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 import type { ClarityValue } from '@stacks/transactions';
 
 import {
-  SignedMessageType,
-  StructuredMessageDataDomain,
-  UnsignedMessage,
+  type SignedMessageType,
+  type StructuredMessageDataDomain,
+  type UnsignedMessage,
   isSignableMessageType,
   isStructuredMessageType,
   isUtf8MessageType,
@@ -79,7 +77,6 @@ export function StacksMessageSigning({
           payload={payload}
         />
       )}
-      <Outlet />
     </MessageSigningRequestLayout>
   );
 }

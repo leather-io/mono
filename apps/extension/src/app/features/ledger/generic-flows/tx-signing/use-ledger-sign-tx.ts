@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
-
 import type { SupportedBlockchains } from '@leather.io/models';
 import { delay } from '@leather.io/utils';
 
@@ -9,14 +7,15 @@ import type { ConnectLedgerDeviceOptions } from '../../dmk/ledger-device-connect
 import { LedgerConnectionErrors, handleLedgerConnectionError } from '../../dmk/ledger-dmk-errors';
 import { useLedgerDmk } from '../../dmk/ledger-dmk.context';
 import { closeLedgerSession } from '../../dmk/ledger-session';
-import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
-import { BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
+import { useLedgerSteps } from '../../flow/ledger-flow.context';
+import { type BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
 import {
   isCancellableConnectionInteraction,
+  isUnlockDeviceInteraction,
   useLedgerResponseState,
 } from '../../utils/generic-ledger-utils';
 import type { LedgerApp } from '../../utils/ledger-app';
-import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
+import { type StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
 interface UseLedgerSignTxArgs<App extends LedgerApp> {
   chain: SupportedBlockchains;
@@ -41,10 +40,10 @@ export function useLedgerSignTx<App extends LedgerApp>({
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
   const [isConnectionCancellable, setIsConnectionCancellable] = useState(false);
-  const ledgerNavigate = useLedgerNavigate();
+  const ledgerNavigate = useLedgerSteps();
   async function checkCorrectAppIsOpenWithFailState(app: App) {
     // Show checking version page immediately
-    void ledgerNavigate.toCheckingAppVersion();
+    ledgerNavigate.toCheckingAppVersion();
     await delay(500);
 
     const response = await getAppVersion(app);
@@ -70,7 +69,7 @@ export function useLedgerSignTx<App extends LedgerApp>({
       app = await connectApp({
         onRequiredUserInteraction(interaction) {
           setLatestDeviceResponse({
-            deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
+            deviceLocked: isUnlockDeviceInteraction(interaction),
           });
           setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
         },
@@ -85,7 +84,7 @@ export function useLedgerSignTx<App extends LedgerApp>({
       }
 
       setAwaitingDeviceConnection(false);
-      void ledgerNavigate.toConnectionSuccessStep(chain);
+      ledgerNavigate.toConnectionSuccessStep(chain);
       await delay(1250);
       await signTransactionWithDevice(app);
       onSuccess?.();

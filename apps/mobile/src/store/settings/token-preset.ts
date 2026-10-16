@@ -4,10 +4,14 @@ import {
   USDCX_ASSET_ID_MAINNET,
   USDCX_ASSET_ID_TESTNET,
 } from '@leather.io/constants';
-import { DefaultAssetVisibilityPolicy } from '@leather.io/services';
-import { SerializedCryptoAssetId, assertUnreachable, serializeAssetId } from '@leather.io/utils';
+import { type DefaultAssetVisibilityPolicy } from '@leather.io/services';
+import {
+  type SerializedCryptoAssetId,
+  assertUnreachable,
+  serializeAssetId,
+} from '@leather.io/utils';
 
-import { TokenPreset } from './utils';
+import { type TokenPreset } from './utils';
 
 const mainTokenAssetIds = [
   SBTC_ASSET_ID_MAINNET,

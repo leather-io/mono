@@ -61,7 +61,8 @@ export function initExtensionUpdateMonitor() {
   });
 
   chrome.runtime.onInstalled.addListener(details => {
-    if (details.reason !== 'update') return;
+    const reason: string = details.reason;
+    if (reason !== 'update') return;
     clearPendingUpdateVersion().catch(e =>
       logger.error('Unable to clear the pending extension update version: ', e)
     );
@@ -72,10 +73,6 @@ export function initExtensionUpdateMonitor() {
       logger.error('Unable to report the applied extension update: ', e)
     );
   });
-}
-
-function isFulfilled<T>(result: PromiseSettledResult<T>): result is PromiseFulfilledResult<T> {
-  return result.status === 'fulfilled';
 }
 
 async function closeOpenRequestWindows() {
@@ -94,7 +91,7 @@ async function closeOpenRequestWindows() {
     [...candidateWindowIds].map(windowId => chrome.windows.get(windowId))
   );
   const requestWindowIds = candidateWindows
-    .filter(isFulfilled)
+    .filter(result => result.status === 'fulfilled')
     .map(result => result.value)
     .filter(browserWindow => browserWindow.type === 'popup')
     .map(browserWindow => browserWindow.id)

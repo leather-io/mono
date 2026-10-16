@@ -578,12 +578,7 @@ msgstr ""
 "Configure\n"
 "wallet"
 
-#: src/features/approver/components/memo-sheet.tsx:18
-#: src/features/approver/components/nonce-sheet.tsx:18
-#: src/features/send/components/memo.tsx:88
-#: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
 #: src/features/swap/screens/swap-review-screen.tsx:203
-#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -805,7 +800,6 @@ msgstr "Enter recipient"
 msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
 
-#: src/features/swap/components/quote-preview/quote-preview-content.tsx:53
 #: src/features/swap/screens/swap-review-screen.tsx:187
 msgid "Estimated fees"
 msgstr "Estimated fees"
@@ -921,6 +915,10 @@ msgstr "Floor price"
 msgid "For your eyes only"
 msgstr "For your eyes only"
 
+#: src/features/approver/components/fees/sponsored-fee-card.tsx:16
+msgid "FREE"
+msgstr "FREE"
+
 #: src/features/swap/components/review/swap-review-account-details.tsx:23
 msgid "From"
 msgstr "From"
@@ -1005,8 +1003,7 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
-#: src/features/psbt-signer/psbt-signer.tsx:322
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:174
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -1407,7 +1404,6 @@ msgstr "Portfolio"
 msgid "Price"
 msgstr "Price"
 
-#: src/features/swap/components/price-impact-info-sheet.tsx:8
 #: src/features/swap/screens/swap-review-screen.tsx:178
 msgid "Price impact"
 msgstr "Price impact"
@@ -1442,7 +1438,6 @@ msgstr "Pull to refresh"
 msgid "Rarity rank"
 msgstr "Rarity rank"
 
-#: src/features/swap/components/quote-preview/quote-preview-content.tsx:39
 #: src/features/swap/screens/swap-review-screen.tsx:142
 msgid "Rate"
 msgstr "Rate"
@@ -1671,8 +1666,7 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:170
-#: src/features/psbt-signer/psbt-signer.tsx:321
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:173
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1690,7 +1684,7 @@ msgstr "Sign Message"
 msgid "Sign transaction"
 msgstr "Sign transaction"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:120
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:123
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
@@ -1743,6 +1737,10 @@ msgstr "Some balances couldn’t load."
 #: src/components/error/error.tsx:58
 msgid "Something went wrong"
 msgstr "Something went wrong"
+
+#: src/features/approver/components/fees/sponsored-fee-card.tsx:13
+msgid "Sponsored fee"
+msgstr "Sponsored fee"
 
 #: src/utils/dapps.ts:60
 msgid "StackingDAO"
@@ -1946,9 +1944,7 @@ msgstr "This transaction sends funds to an output Leather can’t display as an 
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
-#: src/features/approver/components/sip10-recipient.tsx:43
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:145
-#: src/features/psbt-signer/psbt-signer.tsx:300
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:148
 msgid "To address"
 msgstr "To address"
 
@@ -2201,8 +2197,7 @@ msgstr "You will keep"
 msgid "You will transfer"
 msgstr "You will transfer"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:136
-#: src/features/psbt-signer/psbt-signer.tsx:294
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:139
 msgid "You’ll send"
 msgstr "You’ll send"
 

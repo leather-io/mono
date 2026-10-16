@@ -69,12 +69,12 @@ export function RpcStxTransferSip9NftContainer({ account }: RpcStxTransferSip9Nf
             <StacksFeeEditorProvider
               availableBalance={balance.availableBalance}
               marketData={stxMarketData}
-              onGoBack={() => navigate(RouteUrls.RpcStxTransferSip9Nft)}
+              onGoBack={() => void navigate(RouteUrls.RpcStxTransferSip9Nft)}
               unsignedTx={unsignedTxForFeeEstimation}
             >
               <NonceEditorProvider
                 nonce={nonceCalc.nonce}
-                onGoBack={() => navigate(RouteUrls.RpcStxTransferSip9Nft)}
+                onGoBack={() => void navigate(RouteUrls.RpcStxTransferSip9Nft)}
               >
                 <StacksRpcTransactionRequestProvider
                   value={{

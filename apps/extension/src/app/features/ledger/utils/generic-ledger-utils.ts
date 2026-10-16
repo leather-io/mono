@@ -1,15 +1,12 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router';
 
 import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 
 import { delay } from '@leather.io/utils';
 
-import { RouteUrls } from '@shared/route-urls';
-
-import { safeAwait } from '@app/common/utils/safe-await';
-
 import type { LedgerDeviceLockState } from '../dmk/ledger-dmk-errors';
+import { useLedgerFlowState } from '../flow/ledger-flow.context';
+import type { LedgerStepName } from '../flow/ledger-flow.types';
 
 export const LEDGER_APPS_MAP = {
   STACKS: 'Stacks',
@@ -39,34 +36,40 @@ export function versionObjectToVersionString(version: SemVerObject) {
 
 interface PrepareLedgerDeviceConnectionArgs {
   setLoadingState(loadingState: boolean): void;
-  onError(error?: Error): void;
+  onError(error: unknown): void;
 }
 export function prepareLedgerDeviceForAppFn<App>(connectAppFn: () => Promise<App>) {
   return async (args: PrepareLedgerDeviceConnectionArgs) => {
     const { setLoadingState, onError } = args;
-    setLoadingState(true);
-    const [error, app] = await safeAwait(connectAppFn());
-    await delay(1000);
-    setLoadingState(false);
+    async function stopLoading() {
+      await delay(1000);
+      setLoadingState(false);
+    }
 
-    if (error || !app) {
+    setLoadingState(true);
+    try {
+      const app = await connectAppFn();
+      await stopLoading();
+      return app;
+    } catch (error) {
+      await stopLoading();
       onError(error);
       throw new Error('Unable to initiate Ledger app');
     }
-
-    return app;
   };
 }
 
+const cancellableLedgerSteps: readonly LedgerStepName[] = [
+  'connect',
+  'connection-error',
+  'pair-device',
+  'awaiting-device-operation',
+  'choose-address-standard',
+];
+
 function useIsLedgerActionCancellable(): boolean {
-  const { pathname } = useLocation();
-  return (
-    pathname.includes(RouteUrls.ConnectLedger) ||
-    pathname.includes(RouteUrls.ConnectLedgerError) ||
-    pathname.includes(RouteUrls.LedgerPairDevice) ||
-    pathname.includes(RouteUrls.AwaitingDeviceUserAction) ||
-    pathname.includes(RouteUrls.LedgerStacksAddressStandard)
-  );
+  const state = useLedgerFlowState();
+  return state !== null && cancellableLedgerSteps.includes(state.step.name);
 }
 
 const cancellableConnectionInteractions: readonly string[] = [
@@ -76,6 +79,12 @@ const cancellableConnectionInteractions: readonly string[] = [
 
 export function isCancellableConnectionInteraction(interaction: string): boolean {
   return cancellableConnectionInteractions.includes(interaction);
+}
+
+const unlockDeviceInteraction: string = UserInteractionRequired.UnlockDevice;
+
+export function isUnlockDeviceInteraction(interaction: string): boolean {
+  return interaction === unlockDeviceInteraction;
 }
 
 interface UseCancelLedgerActionArgs {

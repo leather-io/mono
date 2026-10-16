@@ -1,0 +1,52 @@
+{
+  "src/add-leather-to-providers.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 2
+    }
+  },
+  "src/index.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 4
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    },
+    "object-shorthand": {
+      "count": 3
+    }
+  },
+  "src/injected-provider.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/mobile.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 2
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "leather.io/no-same-package-barrel-import": {
+      "count": 1
+    }
+  }
+}

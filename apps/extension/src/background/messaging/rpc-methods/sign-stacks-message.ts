@@ -3,7 +3,6 @@ import { serializeCV } from '@stacks/transactions';
 import {
   RpcErrorCode,
   type RpcRequest,
-  type StxSignMessageRequestParamsStructured,
   createRpcErrorResponse,
   stxSignMessage,
   stxSignStructuredMessage,
@@ -18,10 +17,10 @@ import {
 } from '@shared/rpc/methods/sign-stacks-message';
 import { shouldRefuseSignInMessageSigning } from '@shared/rpc/sign-in-message-veto';
 
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
-import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
-  RequestParams,
+  type RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginFromPort,
   getOriginatingFrameFromPort,
@@ -106,10 +105,7 @@ export const stxSignMessageHandler = defineRpcRequestHandler(
     }
 
     if ('domain' in request.params) {
-      requestParams.push([
-        'domain',
-        (request.params as StxSignMessageRequestParamsStructured).domain.toString(),
-      ]);
+      requestParams.push(['domain', request.params.domain.toString()]);
     }
 
     return handleRpcSignStacksMessage(request.method, request, port, requestParams);

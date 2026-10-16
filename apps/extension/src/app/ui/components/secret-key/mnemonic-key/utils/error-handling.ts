@@ -1,4 +1,4 @@
-import { FormikErrors, FormikTouched, FormikValues } from 'formik';
+import { type FormikErrors, type FormikTouched, type FormikValues } from 'formik';
 
 export function hasMnemonicFormValues(values: FormikValues): boolean {
   return Object.values(values).filter(value => value !== '').length > 0;
@@ -9,7 +9,7 @@ export function getMnemonicErrorMessage(mnemonicErrorFields: string[]): string {
     ? `Words ${mnemonicErrorFields
         .toString()
         .replace(/,(?=[^,]+$)/, ' and')} are incorrect or misspelled` // replace last , with 'and'
-    : `Word ${mnemonicErrorFields} is incorrect or misspelled`;
+    : `Word ${mnemonicErrorFields.toString()} is incorrect or misspelled`;
 }
 
 export function getMnemonicErrorFields(

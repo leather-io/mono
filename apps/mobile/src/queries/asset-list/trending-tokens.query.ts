@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { trendingTokensRequest } from '@leather.io/features';
 import { createAssetListQueryConfig } from '@leather.io/queries';
-import { AssetListRequest } from '@leather.io/services';
+import { type AssetListRequest } from '@leather.io/services';
 
 const mobileTrendingTokensRequest: AssetListRequest = {
   ...trendingTokensRequest,

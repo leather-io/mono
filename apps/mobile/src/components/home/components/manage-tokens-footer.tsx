@@ -4,7 +4,7 @@ import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { plural, t } from '@lingui/core/macro';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { Box, Button, ChevronRightIcon, useTheme } from '@leather.io/ui/native';
 
 function useHiddenSip10Count({ fingerprint, accountIndex }: AccountId) {

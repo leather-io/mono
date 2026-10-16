@@ -45,17 +45,16 @@ export function useManagedSip10Tools(fingerprint: string, accountIndex: number) 
     keepPreviousData: true,
   });
 
-  return {
-    isLoading: visibleSip10s.state === 'loading',
-    isEnabled(token: Sip10Balance) {
-      const userSetting = assetVisibility[serializeAssetId(getAssetId(token.asset))];
-      if (isDefined(userSetting)) return userSetting;
-      return (
-        visibleSip10s.value?.sip10s.some(sip10 => sip10.asset.assetId === token.asset.assetId) ??
-        false
-      );
-    },
-  };
+  function isEnabled(token: Sip10Balance) {
+    const userSetting = assetVisibility[serializeAssetId(getAssetId(token.asset))];
+    if (isDefined(userSetting)) return userSetting;
+    return (
+      visibleSip10s.value?.sip10s.some(sip10 => sip10.asset.assetId === token.asset.assetId) ??
+      false
+    );
+  }
+
+  return { isLoading: visibleSip10s.state === 'loading', isEnabled };
 }
 
 export function useSip10BalanceByAssetId(

@@ -15,9 +15,9 @@ describe(FungibleAssetVisibilityService.name, () => {
     fetchSip10PriceMap: vi.fn().mockResolvedValue({}),
   } as unknown as LeatherApiClient;
 
-  const mockSettingsService = {
+  const mockSettingsService: SettingsService = {
     getSettings: vi.fn().mockReturnValue({}),
-  } as unknown as SettingsService;
+  };
 
   describe('getDefaultAssetVisibility', () => {
     it('should influence visibility based on default enabled assets', async () => {
@@ -92,7 +92,7 @@ describe(FungibleAssetVisibilityService.name, () => {
               assets: [serializeAssetId({ protocol: 'sip10', id: allowlistedSip10 })],
             },
           }),
-        } as unknown as SettingsService
+        }
       );
       expect(
         await fungibleAssetVisibilityService.getDefaultAssetVisibility({
@@ -138,7 +138,7 @@ describe(FungibleAssetVisibilityService.name, () => {
               [`${FungibleCryptoAssetProtocols.sip10}|${unpricedSip10}`]: true,
             },
           }),
-        } as unknown as SettingsService
+        }
       );
       expect(
         await fungibleAssetVisibilityService.isAssetVisibleById({

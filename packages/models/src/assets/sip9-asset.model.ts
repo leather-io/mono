@@ -1,5 +1,5 @@
 import { Money } from '../money.model';
-import { BaseNonFungibleCryptoAsset } from './asset.model';
+import type { BaseNonFungibleCryptoAsset } from './asset.model';
 
 export const sip9ContentTypes = [
   'image/jpeg',

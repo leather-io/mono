@@ -3,7 +3,7 @@ import { useSettings } from '@/store/settings/settings';
 import { isAllowedByDefaultAssetVisibility } from '@/store/settings/token-preset';
 
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { serializeAssetId } from '@leather.io/utils';
 
 export function useUsdcxBalance({ fingerprint, accountIndex }: AccountId) {

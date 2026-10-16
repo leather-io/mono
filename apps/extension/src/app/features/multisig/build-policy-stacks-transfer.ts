@@ -28,7 +28,7 @@ interface BuildUnsignedPolicyStxTransferArgs {
   policy: StacksPolicy;
   network: StacksNetwork;
   recipient: string;
-  amount: Money;
+  amount?: Money;
   fee?: Money;
   memo?: string;
 }
@@ -37,7 +37,7 @@ export async function buildUnsignedPolicyStxTransfer({
   policy,
   network,
   recipient,
-  amount,
+  amount = createMoney(0, 'STX'),
   fee = createMoney(0, 'STX'),
   memo,
 }: BuildUnsignedPolicyStxTransferArgs): Promise<StacksTransactionWire> {
@@ -60,7 +60,7 @@ interface BuildUnsignedPolicySip10TransferArgs {
   network: StacksNetwork;
   assetId: string;
   recipient: string;
-  baseUnitAmount: string;
+  baseUnitAmount?: string;
   fee?: Money;
   memo?: string;
 }
@@ -70,7 +70,7 @@ export async function buildUnsignedPolicySip10Transfer({
   network,
   assetId,
   recipient,
-  baseUnitAmount,
+  baseUnitAmount = '0',
   fee = createMoney(0, 'STX'),
   memo,
 }: BuildUnsignedPolicySip10TransferArgs): Promise<StacksTransactionWire> {

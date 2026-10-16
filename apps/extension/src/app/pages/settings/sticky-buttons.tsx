@@ -46,7 +46,8 @@ export function StickyButtons() {
             onClick={() => {
               analytics.track('lock_session');
               void lockWallet({
-                afterLock: () => navigate(RouteUrls.Unlock, { state: { from: location.pathname } }),
+                afterLock: () =>
+                  void navigate(RouteUrls.Unlock, { state: { from: location.pathname } }),
               });
             }}
           >

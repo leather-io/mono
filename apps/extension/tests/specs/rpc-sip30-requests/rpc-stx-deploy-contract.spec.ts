@@ -1,5 +1,6 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
 import { ClarityVersion } from '@stacks/transactions';
+import { requestLeatherProvider } from '@tests/leather-provider';
 import { mockStacksTokenContract } from '@tests/mocks/mock-stacks-contract';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -25,10 +26,10 @@ test.describe('RPC: stx_deployContract', () => {
         'text="Only fees will be transferred from your account or the transaction will abort."'
       );
 
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SPS8CKF63P16J28AYF7PXW9E5AACH0NZNTEFWSFE');
 
       await popup.waitForTimeout(500);
@@ -44,13 +45,10 @@ test.describe('RPC: stx_deployContract', () => {
 
   function initiateSip30RpcDeployContract(page: Page) {
     return async (params: RpcParams<typeof stxDeployContract>) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('stx_deployContract', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
+      page.evaluate(requestLeatherProvider, {
+        method: 'stx_deployContract',
+        params: { ...params },
+      });
   }
 
   test('SIP-30 deploy contract', async ({ page, context }) => {

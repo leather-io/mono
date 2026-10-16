@@ -1,0 +1,36 @@
+{
+  "src/client.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 2
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "object-shorthand": {
+      "count": 1
+    }
+  },
+  "src/client.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 4
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "no-restricted-properties": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 2
+    }
+  }
+}

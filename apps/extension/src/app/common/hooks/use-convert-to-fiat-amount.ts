@@ -7,9 +7,7 @@ import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market
 
 export function useConvertCryptoCurrencyToFiatAmount(currency: CryptoCurrency) {
   // TODO: unsafe type assumption
-  const cryptoCurrencyMarketData = useCryptoCurrencyMarketDataMeanAverage(
-    currency as 'BTC' | 'STX'
-  );
+  const cryptoCurrencyMarketData = useCryptoCurrencyMarketDataMeanAverage(currency);
 
   return useCallback(
     (value: Money) => baseCurrencyAmountInQuote(value, cryptoCurrencyMarketData),

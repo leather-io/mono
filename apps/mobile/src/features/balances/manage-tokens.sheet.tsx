@@ -20,13 +20,13 @@ import {
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
-import { AccountId } from '@leather.io/models';
-import { Sip10Balance } from '@leather.io/services';
+import { type AccountId } from '@leather.io/models';
+import { type Sip10Balance } from '@leather.io/services';
 import {
   Box,
   Sheet,
-  SheetInstance,
-  SheetRef,
+  type SheetInstance,
+  type SheetRef,
   Sip10AvatarIcon,
   Text,
   useTheme,

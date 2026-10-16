@@ -69,6 +69,10 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
           multisigAddress: policy.address,
           rawPayload,
         });
+        if (!proposal) {
+          onSetTransactionStatus('idle');
+          return;
+        }
 
         analytics.track('propose_multisig_transaction', { symbol: 'stx' });
         onSetTransactionStatus('submitted');

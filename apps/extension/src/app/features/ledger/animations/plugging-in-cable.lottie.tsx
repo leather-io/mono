@@ -1,4 +1,4 @@
-import { Box, BoxProps } from 'leather-styles/jsx';
+import { Box, type BoxProps } from 'leather-styles/jsx';
 import Lottie from 'lottie-react';
 
 import { useThemeSwitcher } from '@app/common/theme-provider';

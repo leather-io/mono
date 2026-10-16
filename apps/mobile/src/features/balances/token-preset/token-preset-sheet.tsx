@@ -2,10 +2,10 @@ import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { SettingsSheetLayout } from '@/features/settings/settings-sheet.layout';
 import { useSettings } from '@/store/settings/settings';
-import { TokenPreset, tokenPresets } from '@/store/settings/utils';
+import { type TokenPreset, tokenPresets } from '@/store/settings/utils';
 import { t } from '@lingui/core/macro';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { type SheetRef } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 export function getTokenPresetLabel(preset: TokenPreset) {

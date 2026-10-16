@@ -71,6 +71,7 @@ Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set.
 - No nested ternary expressions.
 - Use object method shorthand syntax in objects and interfaces (`{ foo() {} }` not `{ foo: () => {} }`).
 - camelCase for file-level constants; SCREAMING_SNAKE_CASE in the constants package or `constants.ts` files.
+- The per-package `eslint-suppressions.json` files and `.dependency-cruiser-known-violations.json` are a frozen baseline of pre-existing violations. Never run `eslint --suppress-all` or regenerate the known-violations file, and never add entries by hand. Entries only go away by fixing the code (then `eslint --prune-suppressions` in that package).
 
 ## Error handling
 
