@@ -1281,6 +1281,10 @@ importers:
         version: 4.73.0(@cloudflare/workers-types@4.20260111.0)
 
   packages/analytics:
+    dependencies:
+      remeda:
+        specifier: 2.21.2
+        version: 2.21.2
     devDependencies:
       '@leather.io/models':
         specifier: workspace:*
