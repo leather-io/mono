@@ -13,7 +13,7 @@ import { formatActivityStatusLabel, getActivityStatusIndicatorId } from './activ
 import { formatActivityCaption } from './activity-timestamp';
 import type { ActivityView } from './types';
 
-function getActivityUniqueIdentifier(activity: Activity): string {
+function getActivityUniqueIdentifier(activity: Activity): string | undefined {
   switch (activity.type) {
     case 'receiveAsset': {
       const sender = activity.senders?.[0] ?? '';
@@ -42,7 +42,7 @@ function getActivityUniqueIdentifier(activity: Activity): string {
     case 'executeSmartContract':
       return `${activity.contractId}-${activity.functionName}`;
     default:
-      return '';
+      return undefined;
   }
 }
 

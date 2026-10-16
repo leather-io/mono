@@ -1,4 +1,6 @@
-import { CryptoAssetProtocol, CryptoAssetProtocols } from '@leather.io/models';
+import { isIncludedIn } from 'remeda';
+
+import { type CryptoAssetProtocol, CryptoAssetProtocols } from '@leather.io/models';
 import { type SerializedCryptoAssetId, deserializeAssetId } from '@leather.io/utils';
 
 const supportedAssetProtocols = ['nativeBtc', 'nativeStx', 'sip10', 'sip9'] as const;
@@ -11,22 +13,16 @@ export type SupportedAssetProtocol = (typeof supportedAssetProtocols)[number];
 export type SupportedFungibleAssetProtocol = (typeof supportedFungibleAssetProtocols)[number];
 export type SupportedNonFungibleAssetProtocol = (typeof supportedNonFungibleAssetProtocols)[number];
 
-export function isSupportedFungibleAssetProtocol(
-  value: CryptoAssetProtocol
-): value is SupportedFungibleAssetProtocol {
-  return (supportedFungibleAssetProtocols as readonly string[]).includes(value);
+export function isSupportedFungibleAssetProtocol(value: CryptoAssetProtocol) {
+  return isIncludedIn(value, supportedFungibleAssetProtocols);
 }
 
-export function isSupportedNonFungibleAssetProtocol(
-  value: CryptoAssetProtocol
-): value is SupportedNonFungibleAssetProtocol {
-  return (supportedNonFungibleAssetProtocols as readonly string[]).includes(value);
+export function isSupportedNonFungibleAssetProtocol(value: CryptoAssetProtocol) {
+  return isIncludedIn(value, supportedNonFungibleAssetProtocols);
 }
 
-export function isSupportedAssetProtocol(
-  value: CryptoAssetProtocol
-): value is SupportedAssetProtocol {
-  return (supportedAssetProtocols as readonly string[]).includes(value);
+export function isSupportedAssetProtocol(value: CryptoAssetProtocol) {
+  return isIncludedIn(value, supportedAssetProtocols);
 }
 
 export function assetIdToSendPath(assetId: SerializedCryptoAssetId): string {
@@ -66,10 +62,10 @@ export function parseTokenDetailsAssetId(
 
   const upperPath = encodedAssetId.toUpperCase();
   if (upperPath === 'BTC') {
-    return `${CryptoAssetProtocols.nativeBtc}|BTC` as SerializedCryptoAssetId;
+    return `${CryptoAssetProtocols.nativeBtc}|BTC`;
   }
   if (upperPath === 'STX') {
-    return `${CryptoAssetProtocols.nativeStx}|STX` as SerializedCryptoAssetId;
+    return `${CryptoAssetProtocols.nativeStx}|STX`;
   }
 
   try {

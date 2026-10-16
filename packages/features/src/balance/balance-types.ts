@@ -1,17 +1,17 @@
 import { CryptoAssetProtocols } from '@leather.io/models';
 import {
-  AccountQuotedBtcBalance,
-  AddressQuotedStxBalance,
-  Sip10Balance,
+  type AccountQuotedBtcBalance,
+  type AddressQuotedStxBalance,
+  type Sip10Balance,
 } from '@leather.io/services';
 
 export type TokenBalance = AccountQuotedBtcBalance | AddressQuotedStxBalance | Sip10Balance;
 
-export function isAccountQuotedBtcBalance(value: TokenBalance): value is AccountQuotedBtcBalance {
+export function isAccountQuotedBtcBalance(value: TokenBalance) {
   return 'btc' in value;
 }
 
-export function isAddressQuotedStxBalance(value: TokenBalance): value is AddressQuotedStxBalance {
+export function isAddressQuotedStxBalance(value: TokenBalance) {
   return 'stx' in value;
 }
 
