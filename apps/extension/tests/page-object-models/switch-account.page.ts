@@ -1,4 +1,5 @@
-import { Locator, Page } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
+import { readPersistedStore } from '@tests/persisted-store';
 import { getSwitchAccountSheetAccountNameSelector } from '@tests/selectors/account.selectors';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
@@ -49,23 +50,15 @@ export class SwitchAccountPage {
   }
 
   async getWalletCount() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const wallets = (store as { wallets?: { ids?: string[] } } | undefined)?.wallets;
-      return wallets?.ids?.length ?? 0;
-    });
+    const store = await readPersistedStore(this.page);
+    const wallets = store?.wallets;
+    return wallets?.ids?.length ?? 0;
   }
 
   async getActiveAccount() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const active = (
-        store as
-          | { active?: { account?: { fingerprint: string; accountIndex: number } | null } }
-          | undefined
-      )?.active;
-      return active?.account ?? null;
-    });
+    const store = await readPersistedStore(this.page);
+    const active = store?.active;
+    return active?.account ?? null;
   }
 
   accountName(accountIndex: number) {
@@ -77,42 +70,27 @@ export class SwitchAccountPage {
   }
 
   async getPersistedAccountIds() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const accounts = (store as { accounts?: { ids?: string[] } } | undefined)?.accounts;
-      return accounts?.ids ?? [];
-    });
+    const store = await readPersistedStore(this.page);
+    const accounts = store?.accounts;
+    return accounts?.ids ?? [];
   }
 
   async getPersistedAccount(accountId: string) {
-    return this.page.evaluate(async id => {
-      const store = await window.debug.getPersistedStore();
-      const accounts = (
-        store as
-          | { accounts?: { entities?: Record<string, { name?: string; status?: string }> } }
-          | undefined
-      )?.accounts;
-      return accounts?.entities?.[id] ?? null;
-    }, accountId);
+    const store = await readPersistedStore(this.page);
+    const accounts = store?.accounts;
+    return accounts?.entities?.[accountId] ?? null;
   }
 
   async getPersistedStxChainFingerprints() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const stx = (store as { chains?: { stx?: Record<string, unknown> } } | undefined)?.chains
-        ?.stx;
-      return stx ? Object.keys(stx) : [];
-    });
+    const store = await readPersistedStore(this.page);
+    const stx = store?.chains?.stx;
+    return stx ? Object.keys(stx) : [];
   }
 
   async getHighestAccountIndex(fingerprint: string) {
-    return this.page.evaluate(async fp => {
-      const store = await window.debug.getPersistedStore();
-      const stx = (
-        store as { chains?: { stx?: Record<string, { highestAccountIndex?: number }> } } | undefined
-      )?.chains?.stx;
-      return stx?.[fp]?.highestAccountIndex ?? -1;
-    }, fingerprint);
+    const store = await readPersistedStore(this.page);
+    const stx = store?.chains?.stx;
+    return stx?.[fingerprint]?.highestAccountIndex ?? -1;
   }
 
   async selectAccount(accountIndex: number) {
@@ -141,19 +119,15 @@ export class SwitchAccountPage {
   }
 
   async getPersistedPolicyIds() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const policy = (store as { policy?: { ids?: string[] } } | undefined)?.policy;
-      return policy?.ids ?? [];
-    });
+    const store = await readPersistedStore(this.page);
+    const policy = store?.policy;
+    return policy?.ids ?? [];
   }
 
   async getActivePolicyId() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const active = (store as { active?: { activePolicyId?: string | null } } | undefined)?.active;
-      return active?.activePolicyId ?? null;
-    });
+    const store = await readPersistedStore(this.page);
+    const active = store?.active;
+    return active?.activePolicyId ?? null;
   }
 
   async addAccount(nth = 0) {

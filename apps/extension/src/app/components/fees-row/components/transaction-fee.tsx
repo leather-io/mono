@@ -7,7 +7,7 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface TransactionFeeProps {
-  fee: string | number;
+  fee?: string | number;
   feeCurrencySymbol: CryptoCurrency;
   usdAmount: Money | null;
 }

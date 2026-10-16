@@ -25,7 +25,7 @@ export function SignLedgerMessage() {
         status={hasApprovedOperation ? 'approved' : 'awaiting-approval'}
       />
     ),
-    structured: (domain, message) => {
+    structured(domain, message) {
       const ledgerFirstHashPageInView = 34;
       const hash = deriveStructuredMessageHash({ domain, message });
       const [hashPart1, hashPart2] = [

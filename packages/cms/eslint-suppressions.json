@@ -1,0 +1,54 @@
+{
+  "src/client/client.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/client/queries/queries.spec.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "leather.io/no-same-package-barrel-import": {
+      "count": 1
+    }
+  },
+  "src/studio/schema-types/help-center/help-center-category-type.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    }
+  },
+  "src/studio/schema-types/help-center/help-center-guide-type.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    }
+  },
+  "src/studio/schema-types/learn-section-type.ts": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/studio/schema-types/legacy-help-center/legacy-help-center-category-type.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/studio/schema-types/post-type.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    }
+  },
+  "src/studio/structure/structure.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  }
+}

@@ -1,15 +1,20 @@
 // @vitest-environment jsdom
+import type * as StacksTransactions from '@stacks/transactions';
 import { act, render } from '@testing-library/react';
 import { LedgerError } from '@zondax/ledger-stacks';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type * as LeatherUtils from '@leather.io/utils';
+
 import { makeFakeDmk } from '@app/features/ledger/dmk/ledger-dmk.mocks';
 import type { LedgerSigningOutcome } from '@app/features/ledger/flow/ledger-flow.types';
 import type { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
+import type * as GenericLedgerUtils from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   fakeLedgerSessionId,
   makeFakeLedgerStacksApp,
 } from '@app/features/ledger/utils/ledger-app.mocks';
+import type * as StacksLedgerUtils from '@app/features/ledger/utils/stacks-ledger-utils';
 
 import { LedgerSignStacksTxContainer } from './ledger-sign-stacks-tx-container';
 
@@ -34,7 +39,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('@stacks/transactions', async importOriginal => {
-  const actual = await importOriginal<typeof import('@stacks/transactions')>();
+  const actual = await importOriginal<typeof StacksTransactions>();
   return { ...actual, deserializeTransaction: () => null };
 });
 
@@ -89,8 +94,7 @@ vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
 }));
 
 vi.mock('@app/features/ledger/utils/stacks-ledger-utils', async importOriginal => {
-  const actual =
-    await importOriginal<typeof import('@app/features/ledger/utils/stacks-ledger-utils')>();
+  const actual = await importOriginal<typeof StacksLedgerUtils>();
   return {
     ...actual,
     connectLedgerStacksApp: mocks.connectApp,
@@ -105,13 +109,12 @@ vi.mock('@app/features/ledger/utils/stacks-version-gate', () => ({
 }));
 
 vi.mock('@app/features/ledger/utils/generic-ledger-utils', async importOriginal => {
-  const actual =
-    await importOriginal<typeof import('@app/features/ledger/utils/generic-ledger-utils')>();
+  const actual = await importOriginal<typeof GenericLedgerUtils>();
   return { ...actual, useCancelLedgerAction: () => false };
 });
 
 vi.mock('@leather.io/utils', async importOriginal => {
-  const actual = await importOriginal<typeof import('@leather.io/utils')>();
+  const actual = await importOriginal<typeof LeatherUtils>();
   return { ...actual, delay: () => Promise.resolve() };
 });
 

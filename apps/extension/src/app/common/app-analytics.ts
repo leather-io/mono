@@ -7,7 +7,7 @@ import {
   type AccountId,
   HIRO_API_BASE_URL_MAINNET,
   HIRO_API_BASE_URL_TESTNET,
-  Money,
+  type Money,
 } from '@leather.io/models';
 import { convertAmountToBaseUnit, isDefined, scaleValue } from '@leather.io/utils';
 

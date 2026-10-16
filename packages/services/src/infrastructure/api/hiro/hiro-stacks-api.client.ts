@@ -7,6 +7,7 @@ import axios, { AxiosError, AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
+import type { StacksTransaction } from '@leather.io/models';
 import { generateRandomStacksAddress } from '@leather.io/stacks';
 
 import { Types } from '../../../inversify.types';
@@ -34,8 +35,6 @@ import {
   HiroPrincipalTransactionsResponse,
   HiroReadOnlyFunctionResponse,
   HiroServerStatusResponse,
-  HiroStacksMempoolTransaction,
-  HiroStacksTransaction,
   HiroStakingBondDetail,
   HiroStakingBondsResponse,
   HiroTransactionEvent,
@@ -384,14 +383,14 @@ export class HiroStacksApiClient {
   public async getTransactionById(
     txid: string,
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroStacksTransaction | HiroStacksMempoolTransaction | null> {
+  ): Promise<StacksTransaction | null> {
     const fetchFn = async () => {
       try {
         const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
-            this._axios.get<HiroStacksTransaction | HiroStacksMempoolTransaction>(
-              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tx/${txid}`,
+            this._axios.get<StacksTransaction>(
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/transactions/${txid}`,
               { signal }
             ),
           {

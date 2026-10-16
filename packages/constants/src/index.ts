@@ -20,6 +20,7 @@ export const GAMMA_API_URL: string = `${GAMMA_URL}/api`;
 export const BNS_REGISTRATION_URL = 'https://bns.one/';
 export const LEATHER_IPFS_GATEWAY_URL = 'https://leather.quicknode-ipfs.com/ipfs/';
 export const SBTC_RECLAIM_URL = 'https://sbtc.stacks.co/activity';
+export const STACKS_BRIDGE_URL = 'https://bridge.stacks.co/';
 
 export const HIGH_FEE_AMOUNT_STX = 5;
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_BTC = 'https://bitcoinfees.earn.com/';
@@ -193,6 +194,8 @@ export const USDCX_ASSET_ID_MAINNET =
 
 export const USDCX_ASSET_ID_TESTNET =
   'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usdcx::usdcx-token';
+
+export const USDCX_SYMBOL = 'USDCx';
 
 export const SBTC_ASSET_ID_MAINNET =
   'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token';

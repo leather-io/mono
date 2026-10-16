@@ -20,6 +20,7 @@ import {
   supportedMethods,
 } from '@leather.io/rpc';
 
+import { createMockPort } from './create-mock-port';
 import { methodsRequiringConnectedWallet } from './methods-requiring-connected-wallet';
 import { rpcMessageHandler } from './rpc-message-handler';
 
@@ -122,17 +123,25 @@ describe('methodsRequiringConnectedWallet', () => {
 
 describe('rpcMessageHandler', () => {
   const originatingFrame = { frameId: 0, tabId: 7 };
-  const port = { sender: { ...originatingFrame, url: 'https://evil.example' } };
+  const port = createMockPort({ frameId: originatingFrame.frameId, url: 'https://evil.example' });
 
-  function buildRequest(method: unknown) {
-    return { jsonrpc: '2.0', id: 'req-1', method, params: { hex: '70736274ff' } };
+  function buildRequest(method: unknown): RpcRequests {
+    const request: RpcRequests = {
+      jsonrpc: '2.0',
+      id: 'req-1',
+      method: 'signPsbt',
+      params: { hex: '70736274ff' },
+    };
+    Reflect.set(request, 'method', method);
+    return request;
   }
 
   async function handleRequest(method: unknown) {
-    return rpcMessageHandler(
-      buildRequest(method) as RpcRequests,
-      port as unknown as chrome.runtime.Port
-    );
+    return rpcMessageHandler(buildRequest(method), port);
+  }
+
+  function objectContaining(expected: Record<string, unknown>): unknown {
+    return expect.objectContaining(expected);
   }
 
   function expectRejectedAsUnknownMethod() {
@@ -141,7 +150,7 @@ describe('rpcMessageHandler', () => {
     expect(mocks.sendMessageToOriginatingFrame).toHaveBeenCalledWith(
       originatingFrame,
       expect.objectContaining({
-        error: expect.objectContaining({ code: RpcErrorCode.METHOD_NOT_FOUND }),
+        error: objectContaining({ code: RpcErrorCode.METHOD_NOT_FOUND }),
       })
     );
   }

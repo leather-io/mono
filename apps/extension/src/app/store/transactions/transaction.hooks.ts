@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { StacksTransactionWire, TransactionSigner } from '@stacks/transactions';
+import { type StacksTransactionWire, TransactionSigner } from '@stacks/transactions';
 
 import { logger } from '@shared/logger';
 
@@ -17,16 +17,16 @@ function useSignTransactionSoftwareWallet() {
   return useCallback(
     (tx: StacksTransactionWire) => {
       if (account?.type !== 'software') {
-        [toast.error, logger.error].forEach(fn =>
-          fn('Cannot use this method to sign a non-software wallet transaction')
-        );
+        const message = 'Cannot use this method to sign a non-software wallet transaction';
+        toast.error(message);
+        logger.error(message);
         return;
       }
       const signer = new TransactionSigner(tx);
       signer.signOrigin(account.stxPrivateKey);
       return tx;
     },
-    [account, toast.error]
+    [account, toast]
   );
 }
 

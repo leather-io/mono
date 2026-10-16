@@ -1,10 +1,4 @@
-import {
-  RpcErrorCode,
-  type RpcSendTransferLegacyParams,
-  type RpcSendTransferParams,
-  createRpcErrorResponse,
-  sendTransfer,
-} from '@leather.io/rpc';
+import { RpcErrorCode, createRpcErrorResponse, sendTransfer } from '@leather.io/rpc';
 import { isUndefined } from '@leather.io/utils';
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
@@ -13,14 +7,14 @@ import {
   convertRpcSendTransferLegacyParamsToNew,
   defaultRpcSendTransferNetwork,
   getRpcSendTransferParamErrors,
-  validateRpcSendTransferLegacyParams,
-  validateRpcSendTransferParams,
+  rpcSendTransferParamsSchema,
+  rpcSendTransferParamsSchemaLegacy,
 } from '@shared/rpc/methods/send-transfer';
 
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
-import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
-  RequestParams,
+  type RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
@@ -44,11 +38,13 @@ export const sendTransferHandler = defineRpcRequestHandler(
     }
 
     // Legacy params support for backward compatibility
-    const params = validateRpcSendTransferLegacyParams(request.params)
-      ? convertRpcSendTransferLegacyParamsToNew(request.params as RpcSendTransferLegacyParams)
-      : (request.params as RpcSendTransferParams);
+    const legacyParams = rpcSendTransferParamsSchemaLegacy.safeParse(request.params);
+    const params: unknown = legacyParams.success
+      ? convertRpcSendTransferLegacyParamsToNew(legacyParams.data)
+      : request.params;
 
-    if (!validateRpcSendTransferParams(params)) {
+    const parsedParams = rpcSendTransferParamsSchema.safeParse(params);
+    if (!parsedParams.success) {
       void trackRpcRequestError({ endpoint: 'sendTransfer', error: 'Invalid parameters' });
 
       void sendMessageToOriginatingFrame(
@@ -66,24 +62,29 @@ export const sendTransferHandler = defineRpcRequestHandler(
 
     void trackRpcRequestSuccess({ endpoint: request.method });
 
-    const recipients: [string, string][] = params.recipients.map(({ address }) => [
+    const validParams = parsedParams.data;
+
+    const recipients: [string, string][] = validParams.recipients.map(({ address }) => [
       'recipient',
       address,
     ]);
-    const amounts: [string, string][] = params.recipients.map(({ amount }) => ['amount', amount]);
+    const amounts: [string, string][] = validParams.recipients.map(({ amount }) => [
+      'amount',
+      amount,
+    ]);
 
     const requestParams: RequestParams = [
       ...recipients,
       ...amounts,
-      ['network', params.network ?? defaultRpcSendTransferNetwork],
+      ['network', validParams.network ?? defaultRpcSendTransferNetwork],
       ['requestId', request.id],
     ];
 
-    if (params.account) {
-      requestParams.push(['accountIndex', params.account.toString()]);
+    if (validParams.account) {
+      requestParams.push(['accountIndex', validParams.account.toString()]);
     }
 
-    requestParams.push(['broadcast', String(params.broadcast ?? true)]);
+    requestParams.push(['broadcast', String(validParams.broadcast ?? true)]);
 
     const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
       port,

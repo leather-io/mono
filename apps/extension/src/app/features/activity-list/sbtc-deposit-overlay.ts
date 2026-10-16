@@ -22,7 +22,7 @@ function getDepositStatusLabel(status: SbtcStatus) {
     case 'rbf':
       return 'Replaced';
     default:
-      return '';
+      return undefined;
   }
 }
 

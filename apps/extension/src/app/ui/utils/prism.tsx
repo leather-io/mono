@@ -1,7 +1,7 @@
-import { CSSProperties } from 'react';
+import { type CSSProperties } from 'react';
 
 import { token } from 'leather-styles/tokens';
-import { PrismTheme } from 'prism-react-renderer';
+import { type PrismTheme } from 'prism-react-renderer';
 
 export interface GrammaticalToken {
   types: string[];
@@ -14,7 +14,7 @@ interface GrammaticalTokenOutputProps {
   style?: CSSProperties;
   className: string;
   children: string;
-  [otherProp: string]: any;
+  [otherProp: string]: unknown;
 }
 
 interface GrammaticalTokenInputProps {
@@ -22,7 +22,7 @@ interface GrammaticalTokenInputProps {
   style?: CSSProperties;
   className?: string;
   token: GrammaticalToken;
-  [otherProp: string]: any;
+  [otherProp: string]: unknown;
 }
 
 interface LineInputProps {
@@ -30,14 +30,14 @@ interface LineInputProps {
   style?: CSSProperties;
   className?: string;
   line: GrammaticalToken[];
-  [otherProp: string]: any;
+  [otherProp: string]: unknown;
 }
 
 interface LineOutputProps {
   key?: React.Key;
   style?: CSSProperties;
   className: string;
-  [otherProps: string]: any;
+  [otherProps: string]: unknown;
 }
 
 export interface RenderProps {

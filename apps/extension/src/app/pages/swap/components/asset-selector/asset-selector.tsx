@@ -1,7 +1,7 @@
-import { UseQueryResult } from '@tanstack/react-query';
+import { type UseQueryResult } from '@tanstack/react-query';
 import { Box, Flex } from 'leather-styles/jsx';
 
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 
 import { SearchInput } from '@app/components/search-input';
 import { matchQueryResult } from '@app/query/match-query-result';
@@ -16,7 +16,7 @@ interface AssetSelectorProps {
   type: 'base' | 'target';
   selectedBaseAsset: AccountSwapAsset | null;
   selectedTargetAsset: AccountSwapAsset | null;
-  query: UseQueryResult<AccountSwapAsset[], Error>;
+  query: UseQueryResult<AccountSwapAsset[]>;
   onSelectAsset(type: 'base' | 'target', asset: AccountSwapAsset): void;
 }
 
@@ -48,7 +48,7 @@ export function AssetSelector({
       {matchQueryResult(query, {
         pending: () => <AssetSelectorLoadingState />,
         error: error => <AssetSelectorError error={error} onRetry={() => void query.refetch()} />,
-        success: () => {
+        success() {
           if (assets?.length === 0) {
             return (
               <AssetSelectorEmptyState

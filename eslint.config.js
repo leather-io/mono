@@ -2,9 +2,13 @@ import pluginQuery from '@tanstack/eslint-plugin-query';
 import pluginLingui from 'eslint-plugin-lingui';
 import { defineConfig } from 'eslint/config';
 
-import baseConfig from '@leather.io/eslint-config';
+import baseConfig, {
+  sharedRestrictedImportPaths,
+  sharedRestrictedSyntax,
+} from '@leather.io/eslint-config';
 import reactConfig from '@leather.io/eslint-config/react';
 import { noDimensionsScreenRule } from '@leather.io/eslint-config/rules/no-dimensions-screen';
+import { noSamePackageBarrelImportRule } from '@leather.io/eslint-config/rules/no-same-package-barrel-import';
 
 const useQueryConfigOrKeyRule = {
   meta: {
@@ -61,11 +65,32 @@ const leatherCustomPlugin = {
   },
 };
 
+const leatherPlugin = {
+  rules: {
+    'no-dimensions-screen': noDimensionsScreenRule,
+    'no-same-package-barrel-import': noSamePackageBarrelImportRule,
+  },
+};
+
+function remedaMessage(native, remeda) {
+  return `Use ${remeda} from remeda instead of ${native} in library code for typed results.`;
+}
+
+const reactRouterLocationStateSyntax = {
+  selector:
+    'MemberExpression[object.name="location"][property.name="state"], VariableDeclarator[init.callee.name="useLocation"] > ObjectPattern > Property[key.name="state"]',
+  message: 'location.state is any. Read route state through useRouteState(schema).',
+};
+
 export default defineConfig([
   {
     files: ['{packages,apps}/**/*.{ts,tsx}'],
     extends: [baseConfig],
+    plugins: {
+      'leather.io': leatherPlugin,
+    },
     rules: {
+      'leather.io/no-same-package-barrel-import': 'error',
       '@typescript-eslint/no-floating-promises': [
         'error',
         {
@@ -138,6 +163,7 @@ export default defineConfig([
         'error',
         {
           paths: [
+            ...sharedRestrictedImportPaths,
             {
               name: '@tanstack/react-query',
               importNames: [
@@ -166,6 +192,7 @@ export default defineConfig([
       ],
       'no-restricted-syntax': [
         'error',
+        ...sharedRestrictedSyntax,
         {
           selector: 'TSTypeAliasDeclaration[id.name=/QueryOptions$/]',
           message:
@@ -192,16 +219,21 @@ export default defineConfig([
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {
+    name: 'test-app',
+    files: ['apps/test-app/src/**/*.{ts,tsx}'],
+    extends: [reactConfig],
+  },
+  {
+    name: 'react-router-apps',
+    files: ['apps/extension/**/*.{ts,tsx}', 'apps/web/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': ['error', ...sharedRestrictedSyntax, reactRouterLocationStateSyntax],
+    },
+  },
+  {
     name: 'mobile',
     files: ['apps/mobile/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginLingui.configs['flat/recommended']],
-    plugins: {
-      'leather.io': {
-        rules: {
-          'no-dimensions-screen': noDimensionsScreenRule,
-        },
-      },
-    },
     rules: {
       'leather.io/no-dimensions-screen': 'error',
       'lingui/no-unlocalized-strings': [
@@ -274,6 +306,32 @@ export default defineConfig([
     },
   },
   {
+    name: 'library-packages-prefer-remeda',
+    files: ['packages/**/src/**/*.{ts,tsx}'],
+    ignores: ['**/*.spec.{ts,tsx}'],
+    rules: {
+      'no-restricted-properties': [
+        'error',
+        { object: 'Object', property: 'keys', message: remedaMessage('Object.keys', 'keys()') },
+        {
+          object: 'Object',
+          property: 'entries',
+          message: remedaMessage('Object.entries', 'entries()'),
+        },
+        {
+          object: 'Object',
+          property: 'values',
+          message: remedaMessage('Object.values', 'values()'),
+        },
+        {
+          object: 'Object',
+          property: 'fromEntries',
+          message: remedaMessage('Object.fromEntries', 'fromEntries()'),
+        },
+      ],
+    },
+  },
+  {
     name: 'app-query-service-usage',
     files: ['apps/mobile/src/queries/**/*.{ts,tsx}', 'apps/web/app/queries/**/*.{ts,tsx}'],
     plugins: {
@@ -283,26 +341,13 @@ export default defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          paths: [
+          paths: sharedRestrictedImportPaths,
+          patterns: [
             {
-              name: '@leather.io/services',
-              importNames: [
-                'getActivityService',
-                'getMarketDataService',
-                'getBtcBalancesService',
-                'getStxBalancesService',
-                'getRunesBalancesService',
-                'getAccountBalancesService',
-                'getFungibleAssetInfoService',
-                'getMarketHistoryService',
-                'getUtxosService',
-                'getBnsService',
-                'getCollectiblesService',
-                'getStacksTransactionsService',
-                'getBitcoinTransactionsService',
-              ],
+              group: ['@leather.io/services'],
+              importNamePattern: '^get[A-Z]\\w*Service$',
               message:
-                'In query modules, use @leather.io/queries builders instead of importing get*Service directly.',
+                'In query modules, use a @leather.io/queries builder instead of calling a service getter directly. Add a builder if none exists.',
             },
           ],
         },

@@ -134,14 +134,17 @@ export function leatherTxFromEsplora(tx: BitcoinTx): LeatherApiBitcoinTx {
     ...(tx.status.confirmed
       ? { height: tx.status.block_height ?? undefined, time: tx.status.block_time ?? undefined }
       : {}),
-    vin: tx.vin.map(input => ({
-      n: input.vout,
-      txid: input.txid,
-      owned: isOwnedTestAddress(input.prevout?.scriptpubkey_address),
-      address: input.prevout?.scriptpubkey_address,
-      ...ownedTestAddressPath(input.prevout?.scriptpubkey_address),
-      value: String(input.prevout?.value ?? 0),
-    })),
+    vin: tx.vin.map(input => {
+      if (!input.prevout) throw new Error(`Mock tx ${tx.txid} has an input without a prevout`);
+      return {
+        n: input.vout,
+        txid: input.txid,
+        owned: isOwnedTestAddress(input.prevout.scriptpubkey_address),
+        address: input.prevout.scriptpubkey_address,
+        ...ownedTestAddressPath(input.prevout.scriptpubkey_address),
+        value: String(input.prevout.value),
+      };
+    }),
     vout: tx.vout.map((output, n) => ({
       n,
       owned: isOwnedTestAddress(output.scriptpubkey_address),

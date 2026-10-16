@@ -1,7 +1,8 @@
 import {
-  type Action,
+  type ConfigureStoreOptions,
   type Middleware,
   Tuple,
+  type UnknownAction,
   combineReducers,
   configureStore,
   isAction,
@@ -18,6 +19,7 @@ import {
   persistReducer,
   persistStore,
 } from 'redux-persist';
+import type { PersistPartial } from 'redux-persist/es/persistReducer';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { isPlainObject } from 'remeda';
 import { describe, expect, test } from 'vitest';
@@ -43,7 +45,11 @@ const frameReducer = combineReducers({
 
 type FrameState = ReturnType<typeof frameReducer>;
 
-function frameRootReducer(state: FrameState | undefined, action: Action) {
+type FrameGetDefaultMiddleware = Parameters<
+  NonNullable<ConfigureStoreOptions<FrameState & PersistPartial>['middleware']>
+>[0];
+
+function frameRootReducer(state: FrameState | undefined, action: UnknownAction) {
   if (hydrateSlicesFromStorage.match(action) && state) return { ...state, ...action.payload };
   return frameReducer(state, action);
 }
@@ -80,7 +86,7 @@ function createFrame({ withSync = true }: CreateFrameArgs = {}) {
 
   const store = configureStore({
     reducer: persistReducer(persistConfig, frameRootReducer),
-    middleware: getDefaultMiddleware =>
+    middleware: (getDefaultMiddleware: FrameGetDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
@@ -132,7 +138,7 @@ const devnetNetwork: PersistedNetworkConfiguration = {
 
 async function readStoredRoot() {
   const stored = await chrome.storage.local.get(persistRootKey);
-  const root = stored[persistRootKey];
+  const root: unknown = stored[persistRootKey];
   if (!isPlainObject(root)) throw new Error('persist:root is not an object');
   return root;
 }

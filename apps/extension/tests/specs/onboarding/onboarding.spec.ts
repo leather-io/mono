@@ -11,8 +11,24 @@ import {
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
+import { z } from 'zod';
 
 import { test } from '../../fixtures/fixtures';
+
+const comparableWalletStateSchema = z.looseObject({
+  softwareKeys: z.looseObject({
+    salt: z.string().optional(),
+    entities: z.record(z.string(), z.looseObject({ encryptedSecretKey: z.string().optional() })),
+  }),
+  wallets: z.looseObject({
+    entities: z.record(z.string(), z.looseObject({ createdOn: z.unknown().optional() })),
+  }),
+  chains: z.looseObject({
+    stx: z.record(z.string(), z.looseObject({ highestAccountIndex: z.number().optional() })),
+  }),
+});
+
+type ComparableWalletState = z.infer<typeof comparableWalletStateSchema>;
 
 test.describe('Onboarding an existing user', () => {
   // Functionality is important for backwards compatibility with older wallet versions
@@ -37,7 +53,9 @@ test.describe('Onboarding an existing user', () => {
       await homePage.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
 
       const encryptionKey = await globalPage.page.evaluate(async () => {
-        const { encryptionKey } = await chrome.storage.session.get('encryptionKey');
+        const { encryptionKey } = await chrome.storage.session.get<{ encryptionKey?: string }>(
+          'encryptionKey'
+        );
         return encryptionKey;
       });
 
@@ -58,20 +76,25 @@ test.describe('Onboarding an existing user', () => {
     await onboardingPage.signInExistingUser();
     await homePage.page.waitForTimeout(1000);
 
-    const walletState = await onboardingPage.page.evaluate(() => window.debug.getPersistedStore());
+    const persistedStore = await onboardingPage.page.evaluate(() =>
+      window.debug.getPersistedStore()
+    );
+    const parsedWalletState = comparableWalletStateSchema.safeParse(persistedStore);
+    if (!parsedWalletState.success) throw new Error('Unexpected persisted wallet state');
+    const walletState = parsedWalletState.data;
 
-    const testWalletState = getTestSoftwareAccountDefaultWalletState();
+    const testWalletState: ComparableWalletState = getTestSoftwareAccountDefaultWalletState();
 
     // Deleting values that are known to differ at random
-    delete (walletState as any).softwareKeys.entities[testFingerprint].encryptedSecretKey;
-    delete (walletState as any).softwareKeys.salt;
-    delete (walletState as any).wallets.entities[testFingerprint].createdOn;
-    delete (testWalletState as any).softwareKeys.entities[testFingerprint].encryptedSecretKey;
-    delete (testWalletState as any).softwareKeys.salt;
-    delete (testWalletState as any).wallets.entities[testFingerprint].createdOn;
+    delete walletState.softwareKeys.entities[testFingerprint].encryptedSecretKey;
+    delete walletState.softwareKeys.salt;
+    delete walletState.wallets.entities[testFingerprint].createdOn;
+    delete testWalletState.softwareKeys.entities[testFingerprint].encryptedSecretKey;
+    delete testWalletState.softwareKeys.salt;
+    delete testWalletState.wallets.entities[testFingerprint].createdOn;
     // Don't test highest account index
-    delete (walletState as any).chains.stx[testFingerprint].highestAccountIndex;
-    delete (testWalletState as any).chains.stx[testFingerprint].highestAccountIndex;
+    delete walletState.chains.stx[testFingerprint].highestAccountIndex;
+    delete testWalletState.chains.stx[testFingerprint].highestAccountIndex;
 
     test.expect(walletState).toEqual(testWalletState);
   });

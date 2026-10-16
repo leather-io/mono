@@ -1,14 +1,15 @@
 import { useMemo } from 'react';
 
-import { FormikHelpers } from 'formik';
-import * as yup from 'yup';
+import { type FormikHelpers } from 'formik';
+import { z } from 'zod';
 
 import { STX_DECIMALS } from '@leather.io/constants';
 import { convertAmountToBaseUnit, createMoney } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
-import { StacksSendFormValues } from '@shared/models/form.model';
+import { type StacksSendFormValues } from '@shared/models/form.model';
 
+import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 import {
   stxAmountValidator,
   stxAvailableBalanceValidator,
@@ -59,15 +60,17 @@ export function useStxSendForm() {
 
   const validationSchema = useMemo(
     () =>
-      yup.object({
-        amount: stxAmountValidator(availableBalance).concat(
-          stxAvailableBalanceValidator(availableBalance)
-        ),
-        fee: stxFeeValidator(availableBalance),
-        recipient,
-        memo,
-        nonce,
-      }),
+      createFormikValidationSchema(values =>
+        z.object({
+          amount: stxAmountValidator(availableBalance).check(
+            stxAvailableBalanceValidator(availableBalance, values)
+          ),
+          fee: stxFeeValidator(availableBalance),
+          recipient,
+          memo,
+          nonce,
+        })
+      ),
     [availableBalance, recipient, memo, nonce]
   );
 

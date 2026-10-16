@@ -2,9 +2,8 @@ import { useMemo, useState } from 'react';
 
 import { Box } from 'leather-styles/jsx';
 
+import { STACKS_BRIDGE_URL } from '@leather.io/constants';
 import { useOnMount } from '@leather.io/ui';
-
-import { useConfigPromoCardEnabled } from '@app/query/common/remote-config/remote-config.query';
 
 import { PromoCard } from './promo-card';
 import { usePromos } from './use-promos';
@@ -14,7 +13,7 @@ const promoCards = [
     eventName: 'usdcx',
     message: 'USDCx is live on Stacks!\nBridge your USDC now.',
     imgSrc: 'assets/illustrations/promo-banner-usdcx.svg',
-    linkUrl: 'https://bridge.stacks.co/',
+    linkUrl: STACKS_BRIDGE_URL,
   },
   {
     eventName: 'mobile',
@@ -42,7 +41,6 @@ export function PromoBanner() {
   const [promoIndexes, setPromoIndexes] = useState<number[]>([]);
   const [dismissingIndex, setDismissingIndex] = useState<number | null>(null);
   const { dismissPromo, dismissedPromoIndexes } = usePromos();
-  const shouldDisplayPromoCard = useConfigPromoCardEnabled();
 
   useOnMount(() => {
     if (promoCards.length > 0 && promoIndexes.length === 0) {
@@ -65,7 +63,7 @@ export function PromoBanner() {
     }, ANIMATION_DURATION);
   }
 
-  if (!shouldDisplayPromoCard || visibleIndexes.length === 0) return null;
+  if (visibleIndexes.length === 0) return null;
 
   const stackOffset = 5;
   const topPadding = (visibleIndexes.length - 1) * stackOffset;

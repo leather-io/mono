@@ -1,10 +1,11 @@
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { broadcastWalletListChanged } from '@shared/messages';
 
-import { AppThunk, RootState, persistor } from '..';
+import { type AppThunk, type RootState, persistor } from '@app/store/store';
+
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
