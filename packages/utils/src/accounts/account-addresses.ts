@@ -1,8 +1,8 @@
 import {
-  AccountAddresses,
-  AccountId,
-  BitcoinAddressInfo,
-  StacksAddressInfo,
+  type AccountAddresses,
+  type AccountId,
+  type BitcoinAddressInfo,
+  type StacksAddressInfo,
 } from '@leather.io/models';
 
 export function createAccountAddresses(

@@ -1,12 +1,12 @@
-export function isNumber(value: unknown): value is number {
+export function isNumber(value: unknown) {
   return typeof value === 'number';
 }
 
-export function isBigInt(value: unknown): value is bigint {
+export function isBigInt(value: unknown) {
   return typeof value === 'bigint';
 }
 
-export function isUndefined(value: unknown): value is undefined {
+export function isUndefined(value: unknown) {
   return typeof value === 'undefined';
 }
 
