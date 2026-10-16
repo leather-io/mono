@@ -107,7 +107,7 @@ export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsP
       icon={<BtcAvatarIcon size="xl" />}
       balance={btc.totalBalance}
       fiatBalance={quote.totalBalance}
-      price={marketInfo.price!}
+      price={marketInfo.price}
       descriptionText={marketInfo.descriptionText}
       balances={balances}
       addresses={addresses}

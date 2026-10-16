@@ -13,15 +13,18 @@ export function useUpdateAppliedToast(isWalletReady: boolean) {
     if (!isWalletReady || hasCheckedAppliedUpdate.current) return;
     hasCheckedAppliedUpdate.current = true;
 
-    getAppliedUpdateVersion()
-      .then(appliedVersion => {
-        if (!appliedVersion) return;
-        void clearAppliedUpdateVersion();
-        if (appliedVersion !== VERSION) return;
-        toast.success(`Leather is updated to ${appliedVersion}`, {
-          duration: toastDurations.long,
-        });
-      })
-      .catch(e => logger.error('Unable to read the applied extension update version: ', e));
+    async function showAppliedUpdateToast() {
+      const appliedVersion = await getAppliedUpdateVersion();
+      if (!appliedVersion) return;
+      void clearAppliedUpdateVersion();
+      if (appliedVersion !== VERSION) return;
+      toast.success(`Leather is updated to ${appliedVersion}`, {
+        duration: toastDurations.long,
+      });
+    }
+
+    void showAppliedUpdateToast().catch(e =>
+      logger.error('Unable to read the applied extension update version: ', e)
+    );
   }, [isWalletReady, toast]);
 }

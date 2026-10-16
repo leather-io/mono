@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Box, Flex, FlexProps, Stack } from 'leather-styles/jsx';
+import { Box, Flex, type FlexProps, Stack } from 'leather-styles/jsx';
 
 import type { BtcFeeType, Money } from '@leather.io/models';
 
@@ -9,7 +9,7 @@ import type { TransferRecipient } from '@shared/models/form.model';
 import { formatCurrency } from '@app/common/currency-formatter';
 import { BitcoinCustomFee } from '@app/components/bitcoin-custom-fee/bitcoin-custom-fee';
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
-import { OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
+import { type OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
 import { AvailableBalance, Card } from '@app/components/layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';

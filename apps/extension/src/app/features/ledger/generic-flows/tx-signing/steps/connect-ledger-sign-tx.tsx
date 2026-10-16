@@ -8,7 +8,7 @@ export function ConnectLedgerSignTx() {
   const { chain, signTransaction, latestDeviceResponse, awaitingDeviceConnection } =
     useLedgerTxSigningContext();
 
-  useWhenReattemptingLedgerConnection(() => signTransaction());
+  useWhenReattemptingLedgerConnection(() => void signTransaction());
 
   return (
     <ConnectLedger
@@ -20,7 +20,7 @@ export function ConnectLedgerSignTx() {
           latestDeviceResponse={latestDeviceResponse}
         />
       }
-      onConnectLedger={signTransaction}
+      onConnectLedger={() => void signTransaction()}
       showInstructions={false}
     />
   );

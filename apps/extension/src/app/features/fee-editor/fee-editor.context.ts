@@ -17,7 +17,7 @@ export type FeeType = 'fee-rate' | 'fee-value';
 
 interface FeeEditorContext {
   availableBalance: Money;
-  customFee: string;
+  customFee: string | undefined;
   feeType: FeeType;
   loadedFee: Fee;
   isLoadingFees: boolean;
@@ -27,7 +27,7 @@ interface FeeEditorContext {
   selectedFee: Fee;
   getCustomFee(rate: number): Fee;
   onGoBack(): void;
-  onSetCustomFee(value: string | null): void;
+  onSetCustomFee(value: string | undefined): void;
   onSetLoadedFee(value: Fee): void;
   onSetSelectedFee(value: Fee): void;
   onUserActivatesFeeEditor(): void;

@@ -24,6 +24,11 @@ import { useSignStacksTransaction } from '@app/store/transactions/transaction.ho
 
 import { useStacksRpcTransactionRequestContext } from './stacks-rpc-transaction-request.context';
 
+async function closeWindowAfterDelay() {
+  await delay(250);
+  closeWindow();
+}
+
 export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
   const { onSetTransactionStatus, tabId, requestId, frameId } =
     useStacksRpcTransactionRequestContext();
@@ -77,10 +82,10 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
         const message = isString(error) ? error : error.message;
         trackIfNonceError(unsignedTx, error);
 
-        return navigate(RouteUrls.BroadcastError, { state: { message } });
+        void navigate(RouteUrls.BroadcastError, { state: { message } });
       }
 
-      async function onSuccess(txid: string, transaction: StacksTransactionWire) {
+      function onSuccess(txid: string, transaction: StacksTransactionWire) {
         onSetTransactionStatus('submitted');
 
         void sendMessageToOriginatingFrame(
@@ -93,8 +98,7 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
             },
           })
         );
-        await delay(250);
-        closeWindow();
+        void closeWindowAfterDelay();
       }
 
       onSetTransactionStatus('broadcasting');

@@ -25,7 +25,7 @@ export function useHomePageState() {
   const togglePrivateMode = useTogglePrivateMode();
 
   useAccountScaledBalanceAnalytics(currentAccount);
-  useOnFinishedOnboarding(() => refreshLeatherTabs());
+  useOnFinishedOnboarding(() => void refreshLeatherTabs());
 
   const { data: bnsName = '', isFetching } = useAccountDisplayName({
     address: account?.address,

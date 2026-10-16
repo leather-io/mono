@@ -48,7 +48,16 @@ export function ToastCountdownIcon({
       { duration, easing: 'linear', fill: 'forwards' }
     );
     animationRef.current = animation ?? null;
-    void animation?.finished.then(() => onCompleteRef.current?.()).catch(() => undefined);
+    async function completeWhenFinished() {
+      if (!animation) return;
+      try {
+        await animation.finished;
+      } catch {
+        return;
+      }
+      onCompleteRef.current?.();
+    }
+    void completeWhenFinished();
     return () => animation?.cancel();
   }, [duration]);
 

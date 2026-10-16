@@ -31,7 +31,7 @@ export function ConnectLedgerBitcoin() {
   }
 
   return (
-    <Sheet isShowing header={<SheetHeader />} onClose={() => navigate('../')}>
+    <Sheet isShowing header={<SheetHeader />} onClose={() => void navigate('../')}>
       <ConnectLedger connectBitcoin={onConnectBitcoin()} showInstructions />
     </Sheet>
   );

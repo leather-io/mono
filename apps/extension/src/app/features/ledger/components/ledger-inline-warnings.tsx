@@ -3,7 +3,7 @@ import { Callout } from '@leather.io/ui';
 
 import { Capitalize } from '@app/ui/utils/capitalize';
 
-import { LatestDeviceResponse } from '../utils/generic-ledger-utils';
+import { type LatestDeviceResponse } from '../utils/generic-ledger-utils';
 
 interface RequiresChainProp {
   chain: SupportedBlockchains;

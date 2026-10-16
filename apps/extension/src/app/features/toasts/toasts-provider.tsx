@@ -23,11 +23,16 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
 
   useLayoutEffect(() => animateToastEnter(rootRef.current), []);
 
+  async function exitAndRemove() {
+    await animateToastExit(rootRef.current);
+    onClose();
+  }
+
   function close() {
     if (isClosingRef.current) return;
     isClosingRef.current = true;
     setIsClosing(true);
-    void animateToastExit(rootRef.current).then(onClose);
+    void exitAndRemove();
   }
 
   return (

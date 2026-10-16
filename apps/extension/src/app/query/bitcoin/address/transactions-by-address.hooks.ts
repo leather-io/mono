@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import { useQueries } from '@tanstack/react-query';
 
-import { BitcoinTx } from '@leather.io/models';
+import { type BitcoinTx } from '@leather.io/models';
 import { createGetBitcoinTransactionsByAddressQueryOptions } from '@leather.io/query';
 import { isDefined } from '@leather.io/utils';
 

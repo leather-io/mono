@@ -20,7 +20,6 @@ export * from './stacks/hiro-api-types';
 export * from './stacks/hiro-requests-priorities';
 export * from './stacks/info/block-time.query';
 export * from './stacks/mempool/mempool.query';
-export * from './stacks/mempool/mempool.utils';
 export * from './stacks/network/network.query';
 export * from './stacks/nonce/account-nonces.query';
 export * from './stacks/nonce/account-nonces.utils';

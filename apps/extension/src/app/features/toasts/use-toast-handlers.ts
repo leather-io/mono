@@ -23,7 +23,7 @@ export function useToastHandlers() {
   return useMemo(() => {
     return {
       toasts,
-      handleRemoveToast: (key: string) => {
+      handleRemoveToast(key: string) {
         setToasts(prev => {
           const newMap = new Map(prev);
           newMap.delete(key);
@@ -34,18 +34,18 @@ export function useToastHandlers() {
       handleDispatchSuccess: (message: string, options?: ToastOptions) =>
         handleAddToast({ message, variant: 'success', ...options }),
       handleDispatchError: (message: string) => handleAddToast({ message, variant: 'error' }),
-      handleDispatchPromise: async (
-        promise: Promise<any>,
+      async handleDispatchPromise<T>(
+        promise: Promise<T>,
         msgs: { success: string; error: string }
-      ) => {
-        return promise
-          .then(data => {
-            handleAddToast({ message: msgs.success, variant: 'success' });
-            return data;
-          })
-          .catch(() => {
-            handleAddToast({ message: msgs.error, variant: 'error' });
-          });
+      ): Promise<T | undefined> {
+        try {
+          const data = await promise;
+          handleAddToast({ message: msgs.success, variant: 'success' });
+          return data;
+        } catch {
+          handleAddToast({ message: msgs.error, variant: 'error' });
+          return undefined;
+        }
       },
     };
   }, [handleAddToast, toasts]);

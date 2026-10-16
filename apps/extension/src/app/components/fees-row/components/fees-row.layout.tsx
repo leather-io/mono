@@ -1,5 +1,5 @@
 import { useField } from 'formik';
-import { HStack, HstackProps, styled } from 'leather-styles/jsx';
+import { HStack, type HstackProps, styled } from 'leather-styles/jsx';
 
 import { Callout, InfoCircleIcon } from '@leather.io/ui';
 

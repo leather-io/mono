@@ -2,10 +2,12 @@ import pluginQuery from '@tanstack/eslint-plugin-query';
 import pluginLingui from 'eslint-plugin-lingui';
 import { defineConfig } from 'eslint/config';
 
-import baseConfig from '@leather.io/eslint-config';
+import baseConfig, {
+  sharedRestrictedImportPaths,
+  sharedRestrictedSyntax,
+} from '@leather.io/eslint-config';
 import reactConfig from '@leather.io/eslint-config/react';
 import { noDimensionsScreenRule } from '@leather.io/eslint-config/rules/no-dimensions-screen';
-import { noEnumSyntax } from '@leather.io/eslint-config/rules/no-enum';
 import { noSamePackageBarrelImportRule } from '@leather.io/eslint-config/rules/no-same-package-barrel-import';
 
 const useQueryConfigOrKeyRule = {
@@ -73,6 +75,12 @@ const leatherPlugin = {
 function remedaMessage(native, remeda) {
   return `Use ${remeda} from remeda instead of ${native} in library code for typed results.`;
 }
+
+const reactRouterLocationStateSyntax = {
+  selector:
+    'MemberExpression[object.name="location"][property.name="state"], VariableDeclarator[init.callee.name="useLocation"] > ObjectPattern > Property[key.name="state"]',
+  message: 'location.state is any. Read route state through useRouteState(schema).',
+};
 
 export default defineConfig([
   {
@@ -155,6 +163,7 @@ export default defineConfig([
         'error',
         {
           paths: [
+            ...sharedRestrictedImportPaths,
             {
               name: '@tanstack/react-query',
               importNames: [
@@ -183,7 +192,7 @@ export default defineConfig([
       ],
       'no-restricted-syntax': [
         'error',
-        noEnumSyntax,
+        ...sharedRestrictedSyntax,
         {
           selector: 'TSTypeAliasDeclaration[id.name=/QueryOptions$/]',
           message:
@@ -208,6 +217,18 @@ export default defineConfig([
     name: 'extension',
     files: ['apps/extension/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
+  },
+  {
+    name: 'test-app',
+    files: ['apps/test-app/src/**/*.{ts,tsx}'],
+    extends: [reactConfig],
+  },
+  {
+    name: 'react-router-apps',
+    files: ['apps/extension/**/*.{ts,tsx}', 'apps/web/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': ['error', ...sharedRestrictedSyntax, reactRouterLocationStateSyntax],
+    },
   },
   {
     name: 'mobile',
@@ -320,26 +341,13 @@ export default defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          paths: [
+          paths: sharedRestrictedImportPaths,
+          patterns: [
             {
-              name: '@leather.io/services',
-              importNames: [
-                'getActivityService',
-                'getMarketDataService',
-                'getBtcBalancesService',
-                'getStxBalancesService',
-                'getRunesBalancesService',
-                'getAccountBalancesService',
-                'getFungibleAssetInfoService',
-                'getMarketHistoryService',
-                'getUtxosService',
-                'getBnsService',
-                'getCollectiblesService',
-                'getStacksTransactionsService',
-                'getBitcoinTransactionsService',
-              ],
+              group: ['@leather.io/services'],
+              importNamePattern: '^get[A-Z]\\w*Service$',
               message:
-                'In query modules, use @leather.io/queries builders instead of importing get*Service directly.',
+                'In query modules, use a @leather.io/queries builder instead of calling a service getter directly. Add a builder if none exists.',
             },
           ],
         },

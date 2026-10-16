@@ -1,9 +1,9 @@
 import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
-import { ChainId } from '@stacks/network';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { NetworkConfiguration, NetworkModes } from '@leather.io/models';
+import { type NetworkConfiguration, type NetworkModes } from '@leather.io/models';
+import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
 
 const LeatherNetworkContext = createContext<NetworkConfiguration | null>(null);
 
@@ -26,8 +26,8 @@ export function useCurrentNetworkState(): NetworkState {
   const currentNetwork = useLeatherNetwork();
 
   return useMemo(() => {
-    const isTestnet = currentNetwork.chain.stacks.chainId !== ChainId.Mainnet;
-    const mode = isTestnet ? 'testnet' : 'mainnet';
+    const mode = stacksChainIdToCoreNetworkMode(currentNetwork.chain.stacks.chainId);
+    const isTestnet = mode !== 'mainnet';
     return { ...currentNetwork, isTestnet, mode };
   }, [currentNetwork]);
 }

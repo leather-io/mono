@@ -3,7 +3,7 @@ import { Form, Formik } from 'formik';
 import { Stack } from 'leather-styles/jsx';
 
 import { Button } from '@leather.io/ui';
-import { createNullArrayOfLength, isEmpty } from '@leather.io/utils';
+import { isEmpty } from '@leather.io/utils';
 
 import { ErrorLabel } from '@app/components/error-label';
 import { MnemonicWordInput } from '@app/ui/components/secret-key/mnemonic-key/mnemonic-word-input';
@@ -19,7 +19,7 @@ interface MnemonicFormProps {
   mnemonic: (string | null)[];
   setMnemonic(mnemonic: (string | null)[]): void;
   twentyFourWordMode: boolean;
-  onSubmit(mnemonic: string): void;
+  onSubmit(mnemonic: string): Promise<void>;
   error: string | undefined;
   isLoading: boolean;
 }
@@ -41,7 +41,7 @@ export function MnemonicForm({
     const newKey = key.split(' ');
     newKey.map((index, value) => setFieldValue(`${index + 1}`, value));
     setMnemonic(newKey);
-    onSubmit(key);
+    void onSubmit(key);
   }
 
   function handleSubmit() {
@@ -50,10 +50,10 @@ export function MnemonicForm({
 
   const mnemonicFieldArray = mnemonic
     ? mnemonic
-    : createNullArrayOfLength(twentyFourWordMode ? 24 : 12);
+    : new Array<string | null>(twentyFourWordMode ? 24 : 12).fill(null);
 
   // set initialValues to avoid throwing uncontrolled inputs error
-  const initialValues = mnemonicFieldArray.reduce(
+  const initialValues = mnemonicFieldArray.reduce<Record<string, string>>(
     (accumulator, _, index) => ((accumulator[`${index + 1}`] = ''), accumulator),
     {}
   );
@@ -82,8 +82,9 @@ export function MnemonicForm({
                     key={i}
                     value={mnemonic[i] || ''}
                     onPasteEntireKey={key => {
-                      (document.activeElement as HTMLInputElement).blur();
-                      updateEntireKey(key, setFieldValue);
+                      if (document.activeElement instanceof HTMLElement)
+                        document.activeElement.blur();
+                      updateEntireKey(key, (name, value) => void setFieldValue(name, value));
                     }}
                     onUpdateWord={w => mnemonicWordUpdate(i, w)}
                   />
@@ -105,7 +106,7 @@ export function MnemonicForm({
                 variant="solid"
                 onClick={e => {
                   e.preventDefault();
-                  return handleSubmit();
+                  void handleSubmit();
                 }}
               >
                 Continue

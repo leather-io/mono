@@ -17,6 +17,9 @@
   "src/assets/asset-type-guards.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
+    },
+    "no-restricted-syntax": {
+      "count": 8
     }
   },
   "src/assets/sip9-asset.model.ts": {
@@ -91,6 +94,11 @@
       "count": 3
     }
   },
+  "src/transactions/stacks-transaction.model.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
   "src/types.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -110,6 +118,9 @@
     },
     "no-restricted-properties": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 8
     }
   },
   "src/yield/yield-product.model.ts": {

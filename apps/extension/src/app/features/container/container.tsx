@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 
-import { RouteUrls } from '@shared/route-urls';
 import { persistDirtyTracker } from '@shared/storage/dirty-slice-tracker';
 import { analytics } from '@shared/utils/analytics';
 
@@ -30,8 +29,7 @@ import { useRestoreFormState } from '../popup-send-form-restoration/use-restore-
 initalizeAnalytics();
 
 export function Container() {
-  const { pathname: locationPathname } = useLocation();
-  const pathname = locationPathname as RouteUrls;
+  const { pathname } = useLocation();
   const [isShowingSwitchAccount, setIsShowingSwitchAccount] = useState(false);
   const [allowPolicyAccounts, setAllowPolicyAccounts] = useState(true);
   const [receiveView, setReceiveView] = useState<ReceiveView | null>(null);

@@ -19,9 +19,10 @@ initContextMenuActions();
 initExtensionUpdateMonitor();
 warnUsersAboutDevToolsDangers();
 
-chrome.runtime.onInstalled.addListener(async details => {
-  if (details.reason === 'install' && process.env.WALLET_ENVIRONMENT !== 'testing') {
-    await chrome.tabs.create({
+chrome.runtime.onInstalled.addListener(details => {
+  const reason: string = details.reason;
+  if (reason === 'install' && process.env.WALLET_ENVIRONMENT !== 'testing') {
+    void chrome.tabs.create({
       url: chrome.runtime.getURL(`index.html`),
     });
   }

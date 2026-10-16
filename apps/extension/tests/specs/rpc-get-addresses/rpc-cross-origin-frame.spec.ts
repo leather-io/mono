@@ -1,4 +1,5 @@
 import type { BrowserContext, Page } from '@playwright/test';
+import { getResponseAddresses } from '@tests/leather-provider';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -44,7 +45,7 @@ test.describe('Rpc: cross-origin iframe requests', () => {
     const frame = getIframe(page, iframeUrl);
 
     const getAddressesPromise = frame.evaluate(() =>
-      (window as any).LeatherProvider?.request('getAddresses')
+      window.LeatherProvider?.request('getAddresses')
     );
 
     const popup = await interceptRequestPopup(context);
@@ -62,14 +63,14 @@ test.describe('Rpc: cross-origin iframe requests', () => {
 
     const result = await getAddressesPromise;
     if (!result) throw new Error('Expected result');
-    test.expect(result.result.addresses.length).toBeGreaterThan(0);
+    test.expect(getResponseAddresses(result).length).toBeGreaterThan(0);
   });
 
   test('a top-level request shows no embedded app warning', async ({ page, context }) => {
     await page.goto(topLevelUrl);
 
     const getAddressesPromise = page.evaluate(() =>
-      (window as any).LeatherProvider?.request('getAddresses')
+      window.LeatherProvider?.request('getAddresses')
     );
 
     const popup = await interceptRequestPopup(context);
@@ -81,6 +82,6 @@ test.describe('Rpc: cross-origin iframe requests', () => {
     await approveButton.click();
     const result = await getAddressesPromise;
     if (!result) throw new Error('Expected result');
-    test.expect(result.result.addresses.length).toBeGreaterThan(0);
+    test.expect(getResponseAddresses(result).length).toBeGreaterThan(0);
   });
 });

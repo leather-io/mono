@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import type { DistributedOmit } from 'type-fest';
 
@@ -9,7 +9,7 @@ import {
   useCurrentStacksAccount,
   useStacksAccount,
 } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
+import { type StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
 interface CurrentStacksAccountLoaderProps {
   children(data: StacksAccount): ReactNode;

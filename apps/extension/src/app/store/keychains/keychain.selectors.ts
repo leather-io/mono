@@ -4,7 +4,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { keychainAdapter } from '@leather.io/state/keychains';
 
-import { RootState } from '..';
+import { type RootState } from '@app/store/store';
 
 function selectKeychainsSlice(state: RootState) {
   return state.keychains;
