@@ -75,4 +75,13 @@ export const playgroundAreas: PlaygroundArea[] = [
     issue: 2643,
     appShell: true,
   },
+  {
+    slug: 'approval-flows',
+    title: 'Approval flows',
+    description:
+      'Proposal for one approval pattern across every dApp request the extension shows: today’s screen next to the proposed one at popup size, built from @leather.io/ui, with the account, network and state rules it depends on.',
+    status: 'exploration',
+    section: 'extension',
+    issue: 2741,
+  },
 ];
