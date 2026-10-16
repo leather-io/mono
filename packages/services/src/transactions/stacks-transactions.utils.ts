@@ -1,6 +1,6 @@
-import { MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
+import { type MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
 
-import { StacksTx } from '@leather.io/models';
+import { type StacksTx } from '@leather.io/models';
 
 export function filterOutConfirmedTransactions(confirmedTxs: StacksTx[]) {
   return (mempoolTx: MempoolTransaction) =>

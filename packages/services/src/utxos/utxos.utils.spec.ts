@@ -1,10 +1,10 @@
-import { AccountAddresses, OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
+import { type AccountAddresses, type OwnedUtxo, type Utxo, type UtxoId } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
 import {
-  LeatherApiBitcoinTransaction,
-  LeatherApiStakingBond,
-  LeatherApiUtxo,
+  type LeatherApiBitcoinTransaction,
+  type LeatherApiStakingBond,
+  type LeatherApiUtxo,
 } from '../infrastructure/api/leather/leather-api.client';
 import {
   createLockedUtxosFromBonds,
@@ -39,13 +39,13 @@ describe(getUtxoIdFromOutpoint.name, () => {
     expect(getUtxoIdFromOutpoint('abcdef12345')).toEqual(undefined);
     expect(getUtxoIdFromOutpoint('abcdef:abcdef')).toEqual(undefined);
     expect(getUtxoIdFromOutpoint('')).toEqual(undefined);
-    expect(getUtxoIdFromOutpoint(null!)).toEqual(undefined);
-    expect(getUtxoIdFromOutpoint(undefined!)).toEqual(undefined);
+    expect(getUtxoIdFromOutpoint(null)).toEqual(undefined);
+    expect(getUtxoIdFromOutpoint(undefined)).toEqual(undefined);
   });
 });
 
 describe('utxo list filtering', () => {
-  const utxos = [
+  const utxos: Utxo[] = [
     {
       txid: '1234',
       vout: 0,
@@ -66,9 +66,9 @@ describe('utxo list filtering', () => {
       vout: 3,
       value: 100000,
     },
-  ] as Utxo[];
+  ];
 
-  const ids = [
+  const ids: UtxoId[] = [
     {
       txid: '1234',
       vout: 4,
@@ -85,7 +85,7 @@ describe('utxo list filtering', () => {
       txid: '5050',
       vout: 5,
     },
-  ] as UtxoId[];
+  ];
 
   describe(filterMatchesAnyUtxoId.name, () => {
     it('filters for matching utxos against list of utxo ids', () => {
@@ -133,7 +133,7 @@ describe('utxo list filtering', () => {
 });
 
 describe(isUnconfirmedUtxo.name, () => {
-  const utxos = [
+  const utxos: Utxo[] = [
     {
       txid: '1234',
       vout: 0,
@@ -156,7 +156,7 @@ describe(isUnconfirmedUtxo.name, () => {
       vout: 3,
       value: 100000,
     },
-  ] as Utxo[];
+  ];
 
   it('should filter confirmed tx with a block height value', () => {
     const unconfirmedUtxos = utxos.filter(isUnconfirmedUtxo);
@@ -180,22 +180,26 @@ describe(utxoToId.name, () => {
     const txid = 'txid';
     const vout = 2;
     const utxoId = { txid, vout };
-    const utxo = {
+    const utxo: Utxo = {
       ...utxoId,
       value: 50000,
-    } as unknown as Utxo;
+    };
     expect(utxoToId(utxo)).toEqual(utxoId);
   });
 });
 
 describe(isDustUtxo.name, () => {
   it('returns a boolean reflecting whether utxo value is less than dust sat threshold', () => {
-    const dustUtxo = {
+    const dustUtxo: Utxo = {
+      txid: 'dust',
+      vout: 0,
       value: dustSatThreshold - 1,
-    } as unknown as Utxo;
-    const nonDustUtxo = {
+    };
+    const nonDustUtxo: Utxo = {
+      txid: 'non-dust',
+      vout: 0,
       value: dustSatThreshold + 1,
-    } as unknown as Utxo;
+    };
     expect(isDustUtxo(dustUtxo)).toEqual(true);
     expect(isDustUtxo(nonDustUtxo)).toEqual(false);
   });
@@ -203,26 +207,34 @@ describe(isDustUtxo.name, () => {
 
 describe(sumUtxoValues.name, () => {
   it('returns summed values of all utxo in list', () => {
-    const utxos = [
+    const utxos: Utxo[] = [
       {
+        txid: '1',
+        vout: 0,
         value: 10000,
       },
       {
+        txid: '2',
+        vout: 0,
         value: 20000,
       },
       {
+        txid: '3',
+        vout: 0,
         value: 30000,
       },
       {
+        txid: '4',
+        vout: 0,
         value: 40000,
       },
-    ] as Utxo[];
+    ];
     expect(sumUtxoValues(utxos)).toEqual(initBigNumber('100000'));
   });
 });
 
 describe(selectUniqueUtxoIds.name, () => {
-  const utxos = [
+  const utxos: Utxo[] = [
     {
       txid: '1234',
       vout: 0,
@@ -248,7 +260,7 @@ describe(selectUniqueUtxoIds.name, () => {
       vout: 0,
       value: 300000,
     },
-  ] as Utxo[];
+  ];
 
   it('removes duplicate UTXOs, keeping first occurrence', () => {
     expect(selectUniqueUtxoIds(utxos)).toEqual([
@@ -383,17 +395,17 @@ describe(getOutboundUtxos.name, () => {
 describe(createOwnedUtxoFromLeather.name, () => {
   it('maps a Leather API UTXO to an Owned UTXO', () => {
     const fingerprint = 'deadbeef';
-    const utxo = {
+    const utxo: LeatherApiUtxo = {
       txid: '1234',
       vout: 0,
-      value: 100000,
+      value: '100000',
       address: 'bc1q123',
       path: 'bc1q123-path',
-    } as unknown as LeatherApiUtxo;
+    };
     const ownedUtxo = createOwnedUtxoFromLeather(utxo, fingerprint);
     expect(ownedUtxo.txid).toEqual(utxo.txid);
     expect(ownedUtxo.vout).toEqual(utxo.vout);
-    expect(ownedUtxo.value).toEqual(utxo.value);
+    expect(ownedUtxo.value).toEqual(100000);
     expect(ownedUtxo.address).toEqual(utxo.address);
     expect(ownedUtxo.path).toEqual(utxo.path);
     expect(ownedUtxo.keyOrigin).toEqual('deadbeef/bc1q123-path');

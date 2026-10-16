@@ -6,7 +6,6 @@ import { stxAsset } from '@leather.io/constants';
 import {
   type BitflowBffApiSwapQuote,
   CryptoAssetProtocols,
-  type FungibleAssetId,
   type SwapExecutionData,
   type SwapProviderAsset,
   type SwapProviderId,
@@ -15,18 +14,19 @@ import {
 } from '@leather.io/models';
 import { createMoney, getAssetId } from '@leather.io/utils';
 
+import { toFungibleAssetId } from '../assets/fungible-asset-id.utils';
 import { FungibleAssetService } from '../assets/fungible-asset.service';
 import {
   BitflowBffApiClient,
   type BitflowBffApiExecutionStep,
-  type BitflowBffApiQuoteResponse,
-  type BitflowBffApiSwapSimpleParameter,
   type BitflowBffApiToken,
 } from '../infrastructure/api/bitflow/bitflow-bff-api.client';
+import { bitflowBffApiQuoteResponseSchema } from '../infrastructure/api/bitflow/bitflow-bff-api.schema';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import {
   convertBffApiPostConditions,
   convertBffApiSimpleSwapToFunctionArgs,
+  isBitflowBffApiSwapSimpleParameter,
   parseSwapContractAddress,
 } from './bitflow-bff-api-swap-provider.utils';
 import {
@@ -60,6 +60,7 @@ export class BitflowBffApiSwapProviderService implements SwapProviderService {
       this.getBaseProviderAssets(signal),
       this.bitflowBffApiClient.getPairs(baseProviderAsset.providerAssetId, signal),
     ]);
+    if (!pairsResponse) throw new Error('Bitflow BFF API pairs unavailable');
     const validOutputTokens = new Set(pairsResponse.pairs.map(pair => pair.output_token));
     return allAssets.filter(asset => validOutputTokens.has(asset.providerAssetId));
   }
@@ -82,7 +83,7 @@ export class BitflowBffApiSwapProviderService implements SwapProviderService {
         this.leatherApiClient.fetchSwapDexes({ signal }),
       ]);
 
-      if (!quoteResponse.success) return [];
+      if (!quoteResponse?.success) return [];
 
       const targetAmount = createMoney(
         new BigNumber(quoteResponse.amount_out).integerValue(BigNumber.ROUND_DOWN),
@@ -135,7 +136,13 @@ export class BitflowBffApiSwapProviderService implements SwapProviderService {
       throw new Error('Stacks address required for swap execution');
     }
 
-    const quoteResponse = quote.providerQuoteData.bitflowBffApiQuote as BitflowBffApiQuoteResponse;
+    const parsedQuoteResponse = bitflowBffApiQuoteResponseSchema.safeParse(
+      quote.providerQuoteData.bitflowBffApiQuote
+    );
+    if (!parsedQuoteResponse.success) {
+      throw new Error('Invalid Bitflow BFF API quote');
+    }
+    const quoteResponse = parsedQuoteResponse.data;
 
     const inputToken = quoteResponse.route_path[0];
     const outputToken = quoteResponse.route_path[quoteResponse.route_path.length - 1];
@@ -156,9 +163,11 @@ export class BitflowBffApiSwapProviderService implements SwapProviderService {
     }
 
     const { contractAddress, contractName } = parseSwapContractAddress(swapResponse.swap_contract);
-    const functionArgs = convertBffApiSimpleSwapToFunctionArgs(
-      swapResponse.swap_parameters as BitflowBffApiSwapSimpleParameter[]
-    );
+    const swapParameters = swapResponse.swap_parameters.filter(isBitflowBffApiSwapSimpleParameter);
+    if (swapParameters.length !== swapResponse.swap_parameters.length) {
+      throw new Error('Bitflow BFF API returned non-simple swap parameters');
+    }
+    const functionArgs = convertBffApiSimpleSwapToFunctionArgs(swapParameters);
     const postConditions = convertBffApiPostConditions(swapResponse.post_conditions, stxAddress);
 
     return {
@@ -212,7 +221,9 @@ export class BitflowBffApiSwapProviderService implements SwapProviderService {
     const promises = tokenTraits
       .map(trait => allAssets.find(a => a.providerAssetId === trait))
       .filter(isNonNullish)
-      .map(a => this.fungibleAssetService.getAsset(a.assetId as FungibleAssetId, signal));
+      .map(a => toFungibleAssetId(a.assetId))
+      .filter(isNonNullish)
+      .map(assetId => this.fungibleAssetService.getAsset(assetId, signal));
 
     const results = await Promise.allSettled(promises);
     return results
