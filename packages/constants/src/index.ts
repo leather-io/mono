@@ -118,12 +118,14 @@ export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
   },
 };
 
-export enum AccountDisplayPreferenceType {
-  NativeSegwit = 'native-segwit',
-  Taproot = 'taproot',
-  Bns = 'bns',
-  Stacks = 'stacks',
-}
+export const AccountDisplayPreferenceType = {
+  NativeSegwit: 'native-segwit',
+  Taproot: 'taproot',
+  Bns: 'bns',
+  Stacks: 'stacks',
+} as const;
+export type AccountDisplayPreferenceType =
+  (typeof AccountDisplayPreferenceType)[keyof typeof AccountDisplayPreferenceType];
 
 export const accountDisplayPreferencesKeyedByType: Record<
   AccountDisplayPreference,
