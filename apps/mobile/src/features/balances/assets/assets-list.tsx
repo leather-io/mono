@@ -4,7 +4,7 @@ import { Screen } from '@/components/screen/screen';
 import { useUsdcxBalance } from '@/features/balances/assets/use-usdcx-balance';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import {
-  type UsdcxBridgeItem,
+  type AssetsListItem,
   isUsdcxBridgeItem,
   shouldShowUsdcxBridge,
   withUsdcxBridge,
@@ -15,13 +15,10 @@ import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useRouter } from 'expo-router';
 
 import { AccountId, CryptoAssetId } from '@leather.io/models';
-import { Sip10Balance } from '@leather.io/services';
 import { useTheme } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { renderAsset } from './render-assets';
-
-type AssetsListItem = Sip10Balance | UsdcxBridgeItem;
 
 interface AssetsListProps {
   account: AccountId;

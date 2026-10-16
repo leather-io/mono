@@ -1,13 +1,15 @@
 import { type Sip10Balance } from '@leather.io/services';
 import { isPinnedAsset } from '@leather.io/utils';
 
-export interface UsdcxBridgeItem {
+interface UsdcxBridgeItem {
   kind: 'usdcxBridge';
   assetId: string;
 }
 
-export function isUsdcxBridgeItem(item: Sip10Balance | UsdcxBridgeItem): item is UsdcxBridgeItem {
-  return 'kind' in item && item.kind === 'usdcxBridge';
+export type AssetsListItem = (Sip10Balance & { kind?: undefined }) | UsdcxBridgeItem;
+
+export function isUsdcxBridgeItem(item: AssetsListItem) {
+  return item.kind === 'usdcxBridge';
 }
 
 interface ShouldShowUsdcxBridgeArgs {
@@ -28,7 +30,7 @@ export function withUsdcxBridge(
   sortedSip10s: Sip10Balance[],
   usdcxAssetId: string,
   showBridge: boolean
-): (Sip10Balance | UsdcxBridgeItem)[] {
+): AssetsListItem[] {
   const holdsUsdcx = sortedSip10s.some(sip10 => sip10.asset.assetId === usdcxAssetId);
   if (holdsUsdcx || !showBridge) return sortedSip10s;
   const pinnedCount = sortedSip10s.filter(sip10 => isPinnedAsset(sip10.asset)).length;
