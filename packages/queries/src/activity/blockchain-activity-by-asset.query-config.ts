@@ -28,5 +28,5 @@ export function createBlockchainActivityByAssetIdQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBlockchainActivityService().getActivityByAssetId(account, assetId, signal),
     ...activityQueryOptions,
-  } satisfies UseQueryOptions<BlockchainActivity[], Error>;
+  } satisfies UseQueryOptions<BlockchainActivity[]>;
 }
