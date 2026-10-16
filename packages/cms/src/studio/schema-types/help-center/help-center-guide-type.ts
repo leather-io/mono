@@ -53,7 +53,7 @@ export const helpCenterGuideType = defineType({
       title: 'title',
       date: 'publishedAt',
     },
-    prepare(selection) {
+    prepare(selection: { title: string | undefined; date: string | undefined }) {
       const { title, date } = selection;
       const dateFormatted = date ? new Date(date).toLocaleDateString() : 'No date';
       return {
