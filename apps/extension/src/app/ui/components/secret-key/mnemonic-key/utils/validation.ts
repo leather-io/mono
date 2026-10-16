@@ -1,23 +1,24 @@
 import { wordlist } from '@scure/bip39/wordlists/english';
-import * as yup from 'yup';
+import { z } from 'zod';
+
+import { stringField } from '@shared/forms/field-schemas';
+
+import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 
 function isValidMnemonic(word: string): boolean {
   return wordlist.includes(word);
 }
 
-// YUP validation of dynamic field names => https://github.com/jquense/yup/issues/130
-function mapRules<T>(map: Record<string, unknown>, rule: T): Record<string, T> {
-  return Object.keys(map).reduce((newMap, key) => ({ ...newMap, [key]: rule }), {});
-}
+const dynamicObjectValue = stringField().check(
+  z.refine<string | undefined>(
+    value => {
+      if (!value) return false;
+      return isValidMnemonic(value);
+    },
+    { error: issue => `${String(issue.path?.at(-1))} is invalid` }
+  )
+);
 
-// field names are dynamically generated
-const dynamicObjectValue = yup.string().test({
-  test(value) {
-    if (!value) return false;
-    return isValidMnemonic(value);
-  },
-});
-
-export const validationSchema = yup.lazy((map: Record<string, unknown>) =>
-  yup.object(mapRules<typeof dynamicObjectValue>(map, dynamicObjectValue))
+export const validationSchema = createFormikValidationSchema(
+  z.object({}).catchall(dynamicObjectValue)
 );
