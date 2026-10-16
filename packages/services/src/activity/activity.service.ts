@@ -44,6 +44,11 @@ import {
 
 const btcTxPageRequest = { page: 1, pageSize: 750 };
 
+function readNftTokenValue(transfer: StacksAssetTransfer) {
+  if (transfer.tokenValue === undefined) throw new Error('Missing NFT token value');
+  return transfer.tokenValue;
+}
+
 @injectable()
 export class ActivityService {
   constructor(
@@ -324,7 +329,7 @@ export class ActivityService {
               ? await this.sip10AssetService.getAsset(transfer.assetId, signal)
               : await this.sip9AssetService.getAsset(
                   transfer.assetId,
-                  transfer.tokenValue!,
+                  readNftTokenValue(transfer),
                   signal
                 ),
         };

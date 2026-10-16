@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Sip9ContentType, sip9ContentTypes } from '@leather.io/models';
+import { type Sip9ContentType, sip9ContentTypes } from '@leather.io/models';
 
 const sip9ContentTypeSchema = z.enum(sip9ContentTypes) satisfies z.ZodType<Sip9ContentType>;
 

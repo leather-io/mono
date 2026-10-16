@@ -1,10 +1,11 @@
 import { initBigNumber } from '@leather.io/utils';
 
-import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
-import { SettingsService } from '../infrastructure/settings/settings.service';
-import { MarketDataService } from '../market/market-data.service';
-import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
-import { AccountRequest } from '../types';
+import { type HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { type SettingsService } from '../infrastructure/settings/settings.service';
+import { type MarketDataService } from '../market/market-data.service';
+import { createTestAccountRequest } from '../test/balances-account-request';
+import { createMock } from '../test/create-mock';
+import { type StacksTransactionsService } from '../transactions/stacks-transactions.service';
 import { StxBalancesService } from './stx-balances.service';
 
 describe(StxBalancesService.name, () => {
@@ -12,54 +13,56 @@ describe(StxBalancesService.name, () => {
   const stacksAddress2 = 'STACKS_ADDRESS2';
   const stacksAddress3 = 'STACKS_ADDRESS3';
 
-  const mockSettingsService = {
+  const mockSettingsService: SettingsService = {
     getSettings: vi.fn().mockResolvedValue({
       quoteCurrency: 'USD',
     }),
-  } as unknown as SettingsService;
+  };
 
-  const mockStacksApiClient = {
-    getAddressStxBalance: vi.fn().mockResolvedValue({
-      balance: '5000000',
-      locked: '1000000',
-    }),
-    getPoxInfo: vi.fn().mockResolvedValue({
-      current_burnchain_block_height: 900000,
-    }),
-  } as unknown as HiroStacksApiClient;
+  const getAddressStxBalance = vi.fn().mockResolvedValue({
+    balance: '5000000',
+    locked: '1000000',
+  });
+  const getPoxInfo = vi.fn().mockResolvedValue({
+    current_burnchain_block_height: 900000,
+  });
+  const mockStacksApiClient = createMock<HiroStacksApiClient>({
+    getAddressStxBalance,
+    getPoxInfo,
+  });
 
-  const mockMarketDataService = {
-    getMarketData: vi.fn().mockResolvedValue({
-      pair: { base: 'STX', quote: 'USD' },
-      price: { amount: initBigNumber(100), symbol: 'USD', decimals: 2 },
-    }),
-  } as unknown as MarketDataService;
+  const getMarketData = vi.fn().mockResolvedValue({
+    pair: { base: 'STX', quote: 'USD' },
+    price: { amount: initBigNumber(100), symbol: 'USD', decimals: 2 },
+  });
+  const mockMarketDataService = createMock<MarketDataService>({ getMarketData });
 
-  const mockStacksTransactionsService = {
-    getPendingTransactions: vi.fn().mockResolvedValue([
-      {
-        tx_type: 'token_transfer',
-        token_transfer: {
-          recipient_address: stacksAddress1,
-          amount: '1000000',
-        },
+  const getPendingTransactions = vi.fn().mockResolvedValue([
+    {
+      tx_type: 'token_transfer',
+      token_transfer: {
+        recipient_address: stacksAddress1,
+        amount: '1000000',
       },
-      {
-        tx_type: 'token_transfer',
-        token_transfer: {
-          recipient_address: stacksAddress2,
-          amount: '1000000',
-        },
+    },
+    {
+      tx_type: 'token_transfer',
+      token_transfer: {
+        recipient_address: stacksAddress2,
+        amount: '1000000',
       },
-      {
-        tx_type: 'token_transfer',
-        token_transfer: {
-          recipient_address: stacksAddress3,
-          amount: '1000000',
-        },
+    },
+    {
+      tx_type: 'token_transfer',
+      token_transfer: {
+        recipient_address: stacksAddress3,
+        amount: '1000000',
       },
-    ]),
-  } as unknown as StacksTransactionsService;
+    },
+  ]);
+  const mockStacksTransactionsService = createMock<StacksTransactionsService>({
+    getPendingTransactions,
+  });
 
   const stxBalancesService = new StxBalancesService(
     mockSettingsService,
@@ -69,13 +72,7 @@ describe(StxBalancesService.name, () => {
   );
 
   describe('getStxAccountBalance', () => {
-    const request = {
-      account: {
-        stacks: {
-          stxAddress: stacksAddress1,
-        },
-      },
-    } as AccountRequest;
+    const request = createTestAccountRequest({ stxAddress: stacksAddress1 });
 
     beforeEach(() => {
       vi.clearAllMocks();
@@ -157,27 +154,9 @@ describe(StxBalancesService.name, () => {
   });
 
   describe('getStxAggregateBalance', () => {
-    const request1 = {
-      account: {
-        stacks: {
-          stxAddress: stacksAddress1,
-        },
-      },
-    } as AccountRequest;
-    const request2 = {
-      account: {
-        stacks: {
-          stxAddress: stacksAddress2,
-        },
-      },
-    } as AccountRequest;
-    const request3 = {
-      account: {
-        stacks: {
-          stxAddress: stacksAddress3,
-        },
-      },
-    } as AccountRequest;
+    const request1 = createTestAccountRequest({ stxAddress: stacksAddress1 });
+    const request2 = createTestAccountRequest({ stxAddress: stacksAddress2 });
+    const request3 = createTestAccountRequest({ stxAddress: stacksAddress3 });
 
     beforeEach(() => {
       vi.clearAllMocks();

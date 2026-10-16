@@ -12,7 +12,13 @@ import {
   type StacksTransaction,
   type StacksTx,
 } from '@leather.io/models';
-import { assertUnreachable, createMoney, hasStacksAddress, initBigNumber } from '@leather.io/utils';
+import {
+  assertUnreachable,
+  createMoney,
+  hasStacksAddress,
+  initBigNumber,
+  isDefined,
+} from '@leather.io/utils';
 
 import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
@@ -44,9 +50,9 @@ import {
   buildOnchainStacksActivity,
   buildPendingStacksActivity,
   groupFtChangesByTxId,
-  isFtBalanceChangeRow,
-  isStacksActivityResultItem,
   mayTouchStacksAsset,
+  toFtBalanceChangeRow,
+  toStacksActivityResultItem,
   toStacksSourceItem,
 } from './stacks-activity.utils';
 
@@ -213,9 +219,12 @@ export class BlockchainActivityService {
     const stxNet = rows.find(row => row.asset.type === 'stx')?.balance_change.net ?? '0';
     const ftChanges = (
       await Promise.all(
-        rows.filter(isFtBalanceChangeRow).map(row => this.mapBalanceChange(row, signal))
+        rows
+          .map(toFtBalanceChangeRow)
+          .filter(isDefined)
+          .map(row => this.mapBalanceChange(row, signal))
       )
-    ).filter((change): change is BlockchainActivityBalanceChange => change !== null);
+    ).filter(change => change !== null);
     return { stxNet, ftChanges };
   }
 
@@ -232,7 +241,7 @@ export class BlockchainActivityService {
     const confirmed = txs
       .filter(tx => tx.height !== undefined)
       .map(mapBitcoinActivity)
-      .filter((activity): activity is BlockchainActivity => activity !== null)
+      .filter(activity => activity !== null)
       .sort(sortActivityByTimestampDesc);
     return this.enrichWithMarketData([...pending, ...confirmed], signal);
   }
@@ -269,7 +278,9 @@ export class BlockchainActivityService {
         { cursor, limit: stacksTxPageSize },
         { signal }
       );
-      items.push(...res.results.filter(isStacksActivityResultItem).map(toStacksSourceItem));
+      items.push(
+        ...res.results.map(toStacksActivityResultItem).filter(isDefined).map(toStacksSourceItem)
+      );
       if (res.cursor.next === null) break;
       cursor = res.cursor.next;
     }
@@ -287,7 +298,7 @@ export class BlockchainActivityService {
         this.mapSourceItem(item, ftChangesByTxId.get(item.txid) ?? [], signal)
       )
     );
-    return mapped.filter((activity): activity is BlockchainActivity => activity !== null);
+    return mapped.filter(activity => activity !== null);
   }
 
   // BTC pending carry no timestamp, so they sit above the receipt_time-sorted STX pending.
@@ -315,9 +326,7 @@ export class BlockchainActivityService {
     const mapped = await Promise.all(
       txs.map(tx => this.mapPendingStacksTx(tx, account.stacks.stxAddress, signal))
     );
-    return mapped
-      .filter((activity): activity is BlockchainActivity => activity !== null)
-      .sort(sortActivityByTimestampDesc);
+    return mapped.filter(activity => activity !== null).sort(sortActivityByTimestampDesc);
   }
 
   private async getPendingBitcoinActivity(
@@ -327,7 +336,7 @@ export class BlockchainActivityService {
     return txs
       .filter(tx => tx.height === undefined)
       .map(mapBitcoinActivity)
-      .filter((activity): activity is BlockchainActivity => activity !== null);
+      .filter(activity => activity !== null);
   }
 
   // Classification is the only async dependency in mapping; the pure builders do the rest.
@@ -417,10 +426,13 @@ export class BlockchainActivityService {
     ).flat();
 
     const balanceChanges = await Promise.all(
-      rawBalanceChanges.filter(isFtBalanceChangeRow).map(async c => {
-        const mapped = await this.mapBalanceChange(c, signal);
-        return mapped === null ? null : { txId: c.tx_id, change: mapped };
-      })
+      rawBalanceChanges
+        .map(toFtBalanceChangeRow)
+        .filter(isDefined)
+        .map(async c => {
+          const mapped = await this.mapBalanceChange(c, signal);
+          return mapped === null ? null : { txId: c.tx_id, change: mapped };
+        })
     );
 
     return groupFtChangesByTxId(balanceChanges);
@@ -500,9 +512,7 @@ export class BlockchainActivityService {
         }
       })
     );
-    return new Map(
-      entries.filter((entry): entry is readonly [string, MarketData] => entry !== null)
-    );
+    return new Map(entries.filter(entry => entry !== null));
   }
 
   private createSources(
@@ -511,7 +521,7 @@ export class BlockchainActivityService {
     signal?: AbortSignal
   ): ActivitySources {
     return {
-      fetchAllBtcTx: async () => {
+      async fetchAllBtcTx() {
         const txs = await btcTxs;
         const items: ActivitySourceItem[] = [];
         for (const tx of txs) {
@@ -532,7 +542,10 @@ export class BlockchainActivityService {
           { signal }
         );
         return {
-          items: res.results.filter(isStacksActivityResultItem).map(toStacksSourceItem),
+          items: res.results
+            .map(toStacksActivityResultItem)
+            .filter(isDefined)
+            .map(toStacksSourceItem),
           currentCursor: res.cursor.current,
           nextCursor: res.cursor.next,
         };
