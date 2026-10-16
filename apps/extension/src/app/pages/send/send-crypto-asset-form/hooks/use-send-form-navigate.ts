@@ -1,28 +1,35 @@
 import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
-import { StacksTransactionWire } from '@stacks/transactions';
+import { type StacksTransactionWire } from '@stacks/transactions';
 import { AxiosError } from 'axios';
+import { z } from 'zod';
 
-import type { OwnedUtxo } from '@leather.io/models';
-
-import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
+import type { StacksSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
-export interface SbtcSponsorshipRouteState {
-  quoteId: string;
-  stxFeeMicro: number;
-  expiresAt: string;
-  assetId: string;
-  formValues: StacksSendFormValues;
-}
+const stacksSendFormValuesSchema = z.object({
+  amount: z.union([z.number(), z.string()]),
+  assetId: z.string().optional(),
+  fee: z.union([z.number(), z.string()]),
+  feeCurrency: z.string(),
+  feeType: z.string(),
+  memo: z.string(),
+  nonce: z.union([z.number(), z.string()]).optional(),
+  recipient: z.string(),
+  recipientBnsName: z.string(),
+  symbol: z.string().optional(),
+}) satisfies z.ZodType<StacksSendFormValues>;
 
-interface ConfirmationRouteState {
-  decimals?: number;
-  token?: string;
-  tx: string;
-  sponsorship?: SbtcSponsorshipRouteState;
-}
+const sbtcSponsorshipRouteStateSchema = z.object({
+  quoteId: z.string(),
+  stxFeeMicro: z.number(),
+  expiresAt: z.string(),
+  assetId: z.string(),
+  formValues: stacksSendFormValuesSchema,
+});
+
+export type SbtcSponsorshipRouteState = z.infer<typeof sbtcSponsorshipRouteStateSchema>;
 
 interface ConfirmationRouteStacksSip10Args {
   decimals?: number;
@@ -31,22 +38,66 @@ interface ConfirmationRouteStacksSip10Args {
   sponsorship?: SbtcSponsorshipRouteState;
 }
 
-interface ConfirmationRouteBtcArgs {
-  tx: string;
-  recipient: string;
-  fee: number;
-  feeRowValue: string;
-  time: string;
-}
+const ownedUtxoSchema = z.object({
+  txid: z.string(),
+  vout: z.number(),
+  height: z.number().optional(),
+  value: z.number(),
+  address: z.string(),
+  path: z.string(),
+  keyOrigin: z.string(),
+});
 
-interface ConfirmationRouteBtcProposalArgs {
-  psbt: string;
-  recipient: string;
-  fee: number;
-  feeRowValue: string;
-  time: string;
-  amount: string;
-}
+export const btcChooseFeeRouteStateSchema = z.object({
+  isSendingMax: z.boolean(),
+  utxos: z.array(ownedUtxoSchema),
+  values: z.object({ amount: z.union([z.number(), z.string()]), recipient: z.string() }),
+});
+
+type BtcChooseFeeRouteState = z.infer<typeof btcChooseFeeRouteStateSchema>;
+
+const btcBroadcastConfirmationRouteStateSchema = z.object({
+  mode: z.literal('broadcast'),
+  tx: z.string(),
+  recipient: z.string(),
+  fee: z.number(),
+  feeRowValue: z.string(),
+  time: z.string(),
+});
+
+const btcProposalConfirmationRouteStateSchema = z.object({
+  mode: z.literal('propose'),
+  psbt: z.string(),
+  recipient: z.string(),
+  fee: z.number(),
+  feeRowValue: z.string(),
+  time: z.string(),
+  amount: z.string(),
+});
+
+export const btcConfirmationRouteStateSchema = z.discriminatedUnion('mode', [
+  btcBroadcastConfirmationRouteStateSchema,
+  btcProposalConfirmationRouteStateSchema,
+]);
+
+export type BtcBroadcastConfirmationRouteState = z.infer<
+  typeof btcBroadcastConfirmationRouteStateSchema
+>;
+
+export type BtcProposalConfirmationRouteState = z.infer<
+  typeof btcProposalConfirmationRouteStateSchema
+>;
+
+export const stacksConfirmationRouteStateSchema = z.object({
+  tx: z.string(),
+  decimals: z.number().optional(),
+  token: z.string().optional(),
+  showFeeChangeWarning: z.boolean().optional(),
+  sponsorship: sbtcSponsorshipRouteStateSchema.optional(),
+  showRequoteCallout: z.boolean().optional(),
+});
+
+type StacksConfirmationRouteState = z.infer<typeof stacksConfirmationRouteStateSchema>;
 
 export function useSendFormNavigate() {
   const navigate = useNavigate();
@@ -56,37 +107,25 @@ export function useSendFormNavigate() {
     () => ({
       toChooseTransactionFee(
         isSendingMax: boolean,
-        utxos: OwnedUtxo[],
-        values: BitcoinSendFormValues
+        utxos: BtcChooseFeeRouteState['utxos'],
+        values: BtcChooseFeeRouteState['values']
       ) {
         return navigate(RouteUrls.SendBtcChooseFee, {
           state: {
             isSendingMax,
             utxos,
             values,
-          },
+          } satisfies BtcChooseFeeRouteState,
         });
       },
-      toConfirmAndSignBtcTransaction({
-        tx,
-        recipient,
-        fee,
-        feeRowValue,
-        time,
-      }: ConfirmationRouteBtcArgs) {
+      toConfirmAndSignBtcTransaction(args: Omit<BtcBroadcastConfirmationRouteState, 'mode'>) {
         return navigate(RouteUrls.SendBtcConfirmation, {
-          state: {
-            tx,
-            recipient,
-            fee,
-            feeRowValue,
-            time,
-          } as ConfirmationRouteState,
+          state: { ...args, mode: 'broadcast' } satisfies BtcBroadcastConfirmationRouteState,
         });
       },
-      toConfirmBtcProposal(args: ConfirmationRouteBtcProposalArgs) {
+      toConfirmBtcProposal(args: Omit<BtcProposalConfirmationRouteState, 'mode'>) {
         return navigate(RouteUrls.SendBtcConfirmation, {
-          state: args,
+          state: { ...args, mode: 'propose' } satisfies BtcProposalConfirmationRouteState,
         });
       },
       toConfirmAndSignStxTransaction(tx: StacksTransactionWire, showFeeChangeWarning: boolean) {
@@ -94,7 +133,7 @@ export function useSendFormNavigate() {
           state: {
             tx: tx.serialize(),
             showFeeChangeWarning,
-          } as ConfirmationRouteState,
+          } satisfies StacksConfirmationRouteState,
         });
       },
       toConfirmAndSignStacksSip10Transaction({
@@ -109,7 +148,7 @@ export function useSendFormNavigate() {
             token: name,
             tx: tx.serialize(),
             sponsorship,
-          } as ConfirmationRouteState,
+          } satisfies StacksConfirmationRouteState,
         });
       },
       toErrorPage(error: unknown, options?: { proposeMode?: boolean }) {

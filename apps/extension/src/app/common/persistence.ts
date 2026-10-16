@@ -9,7 +9,7 @@ import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { HttpStatusCode, isAxiosError } from 'axios';
 import { BigNumber } from 'bignumber.js';
 import superjson from 'superjson';
-import { ZodError } from 'zod';
+import { ZodError, z } from 'zod';
 
 import { PERSISTENCE_CACHE_TIME } from '@leather.io/constants';
 
@@ -18,10 +18,14 @@ import { logger } from '@shared/logger';
 import { analytics } from '@shared/utils/analytics';
 
 const RETRY_LIMIT = 5;
+const retryableHttpStatusCodes: number[] = [
+  HttpStatusCode.RequestTimeout,
+  HttpStatusCode.TooManyRequests,
+];
 
 superjson.registerCustom<BigNumber, string>(
   {
-    isApplicable: (v): v is BigNumber => v instanceof BigNumber,
+    isApplicable: v => v instanceof BigNumber,
     serialize: v => v.toString(),
     deserialize: v => new BigNumber(v),
   },
@@ -29,8 +33,8 @@ superjson.registerCustom<BigNumber, string>(
 );
 
 const storage = {
-  getItem: async (key: string) => {
-    const storageVal = await chrome.storage.local.get(key);
+  async getItem(key: string) {
+    const storageVal = await chrome.storage.local.get<Record<string, string | undefined>>(key);
     return storageVal[key];
   },
   setItem: (key: string, value: string) => chrome.storage.local.set({ [key]: value }),
@@ -43,11 +47,13 @@ const chromeStorageLocalPersister = createAsyncStoragePersister({
   deserialize: superjson.parse,
 });
 
+const zodIssuesSchema = z.object({ issues: z.array(z.unknown()) });
+
 function shouldPersistQuery(query: Query) {
   return defaultShouldDehydrateQuery(query) && query.meta?.persist !== false;
 }
 
-function isZodError(error: Error): error is ZodError {
+function isZodError(error: Error) {
   // `instanceof` check doesn't work when ZodError thrown from within a package
   return error instanceof ZodError || error.name === 'ZodError';
 }
@@ -57,11 +63,7 @@ function isRetryableError(error: Error): boolean {
   if (!error.response) return true;
   const status = error.response.status;
 
-  return (
-    status >= 500 ||
-    status === HttpStatusCode.RequestTimeout ||
-    status === HttpStatusCode.TooManyRequests
-  );
+  return status >= 500 || retryableHttpStatusCodes.includes(status);
 }
 
 export const queryClient = new QueryClient({
@@ -81,7 +83,7 @@ export const queryClient = new QueryClient({
         const zodErrorReport = {
           query: query.queryKey[0],
           hash: query.queryHash,
-          error: JSON.stringify(error.issues),
+          error: JSON.stringify(zodIssuesSchema.safeParse(error).data?.issues),
         };
         logger.error('schema_fail', zodErrorReport);
         // Replace with `formatQueryZodErrors` from `@leather.io/query`
@@ -103,7 +105,7 @@ export const queryClient = new QueryClient({
   },
 });
 
-export function persistAndRenderApp(renderApp: () => void) {
+export function persistAndRenderApp(renderApp: () => Promise<void>) {
   if (!IS_TEST_ENV) {
     void persistQueryClient({
       queryClient,
@@ -112,5 +114,5 @@ export function persistAndRenderApp(renderApp: () => void) {
       dehydrateOptions: { shouldDehydrateQuery: shouldPersistQuery },
     });
   }
-  renderApp();
+  void renderApp();
 }

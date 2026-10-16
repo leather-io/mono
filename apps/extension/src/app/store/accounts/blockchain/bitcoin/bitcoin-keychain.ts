@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
-import { HDKey } from '@scure/bip32';
-import * as btc from '@scure/btc-signer';
+import { type HDKey } from '@scure/bip32';
+import type * as btc from '@scure/btc-signer';
 import { mapValues } from 'remeda';
 
 import {
@@ -23,7 +23,6 @@ import {
 import type { BitcoinNetworkModes } from '@leather.io/models';
 import type { BitcoinKeychain } from '@leather.io/state/keychains';
 
-import type { RootState } from '@app/store';
 import { selectRootKeychainsAtVersion } from '@app/store/in-memory-key/in-memory-key.selectors';
 import {
   createKeychainSelector,
@@ -32,6 +31,7 @@ import {
 import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { selectBitcoinKeychains } from '@app/store/keychains/keychain.selectors';
 import { selectCurrentNetwork, useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import type { RootState } from '@app/store/store';
 
 // For any given root keychain, return a derivation function accepting the
 // minimum state required to derive the underlying account keychain, represented

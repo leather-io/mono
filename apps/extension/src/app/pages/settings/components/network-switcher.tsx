@@ -11,6 +11,8 @@ import { RouteUrls } from '@shared/route-urls';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 import { useNetworkBadgeAlwaysOn } from '@app/store/settings/settings.selectors';
 
+const mainnetChainId: number = ChainId.Mainnet;
+
 export function NetworkSwitcherBadge() {
   const { chain, name: chainName } = useCurrentNetworkState();
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ export function NetworkSwitcherBadge() {
     >
       <NetworkModeBadge
         data-testid={HomePageSelectors.NetworkSwitcher}
-        isVisible={networkBadgeAlwaysOn || chain.stacks.chainId !== ChainId.Mainnet}
+        isVisible={networkBadgeAlwaysOn || chain.stacks.chainId !== mainnetChainId}
         name={chainName}
       />
     </styled.button>

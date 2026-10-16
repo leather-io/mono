@@ -29,6 +29,7 @@
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
+    "@stacks/blockchain-api-client": "9.4.0",
     "@stacks/stacks-blockchain-api-types": "7.14.1",
     "bignumber.js": "9.1.2",
     "zod": "4.0.17"

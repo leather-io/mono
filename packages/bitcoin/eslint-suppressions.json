@@ -10,6 +10,9 @@
   "src/bip322/auth-fixture.gen.spec.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/bip322/bip322-utils.ts": {
@@ -35,9 +38,6 @@
   "src/bip322/sign-message-bip322-bitcoinjs.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/coin-selection/coin-selection.mocks.ts": {
@@ -62,6 +62,9 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
+    "@typescript-eslint/no-unnecessary-type-parameters": {
+      "count": 3
+    },
     "no-restricted-properties": {
       "count": 1
     }
@@ -74,11 +77,24 @@
   "src/coin-selection/spend-sources.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-type-parameters": {
+      "count": 2
     }
   },
   "src/descriptors/bond-lock-script.spec.ts": {
     "@typescript-eslint/no-non-null-assertion": {
       "count": 13
+    }
+  },
+  "src/descriptors/bond-lock-script.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/descriptors/ledger-descriptor-resolver.ts": {
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/descriptors/ledger-wallet-policy.ts": {
@@ -97,6 +113,9 @@
     },
     "no-restricted-properties": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 2
     }
   },
   "src/fees/bitcoin-fees.spec.ts": {
@@ -138,9 +157,19 @@
       "count": 1
     }
   },
+  "src/psbt/psbt-details.spec.ts": {
+    "no-restricted-syntax": {
+      "count": 2
+    }
+  },
   "src/psbt/psbt-details.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    }
+  },
+  "src/psbt/psbt-inputs.spec.ts": {
+    "no-restricted-syntax": {
+      "count": 2
     }
   },
   "src/psbt/psbt-outputs.ts": {
@@ -188,9 +217,6 @@
   "src/transactions/generate-unsigned-transaction.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
     }
   },
   "src/transactions/wsh-multisig-transaction.spec.ts": {
@@ -206,6 +232,9 @@
   "src/utils/bitcoin.descriptors.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-type-parameters": {
+      "count": 1
     }
   },
   "src/utils/bitcoin.network.ts": {
@@ -231,6 +260,9 @@
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 4
     }
   },
   "src/utils/lookup-derivation-by-address.ts": {
@@ -253,6 +285,9 @@
   },
   "src/validation/bitcoin-address.ts": {
     "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
       "count": 1
     }
   },

@@ -248,7 +248,8 @@ describe(useSignLedgerDescriptorTx.name, () => {
     await signLedgerDescriptorTx([]);
 
     expect(mocks.registerWallet).toHaveBeenCalledTimes(1);
-    const [policy, options] = mocks.registerWallet.mock.calls[0];
+    const registerWalletCall: unknown[] = mocks.registerWallet.mock.calls[0];
+    const [policy, options] = registerWalletCall;
     expect(policy).toBeInstanceOf(WalletPolicy);
     expect(policy).toMatchObject({
       name: 'Leather',
@@ -267,7 +268,8 @@ describe(useSignLedgerDescriptorTx.name, () => {
     await signLedgerDescriptorTx([]);
 
     expect(mocks.signPsbt).toHaveBeenCalledTimes(1);
-    const [wallet, psbtBase64, options] = mocks.signPsbt.mock.calls[0];
+    const signPsbtCall: unknown[] = mocks.signPsbt.mock.calls[0];
+    const [wallet, psbtBase64, options] = signPsbtCall;
     expect(wallet).toBeInstanceOf(RegisteredWallet);
     expect(wallet).toMatchObject({
       name: 'Leather',

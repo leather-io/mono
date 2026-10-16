@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
-import { HDKey } from '@scure/bip32';
-import { Psbt } from 'bitcoinjs-lib';
+import { type HDKey } from '@scure/bip32';
+import { type Psbt } from 'bitcoinjs-lib';
 
 import {
   deriveTaprootAccount,
@@ -14,12 +14,12 @@ import {
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { type AccountId } from '@leather.io/models';
 
-import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
+import { type BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 
-import type { RootState } from '@app/store';
 import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
+import type { RootState } from '@app/store/store';
 
 import { useCurrentAccountId } from '../../account';
 import { selectCurrentNetworkBitcoinAccountLookup } from './bitcoin-keychain';

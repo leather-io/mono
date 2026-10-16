@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import type { Money, OwnedUtxo } from '@leather.io/models';
 import {
@@ -12,6 +12,7 @@ import {
 } from '@leather.io/utils';
 
 import { FormErrorMessages } from '@shared/error-messages';
+import { numberField, parseNumberString, requiredNumberField } from '@shared/forms/field-schemas';
 import { analytics } from '@shared/utils/analytics';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -21,12 +22,21 @@ import { currencyAmountValidator, stxAmountPrecisionValidator } from './currency
 
 const minSpendAmountInSats = 546;
 
+function getFeeFromFormValues(formValues: unknown): string | number | BigNumber {
+  if (typeof formValues !== 'object' || formValues === null || !('fee' in formValues)) {
+    return Number.NaN;
+  }
+  const { fee } = formValues;
+  if (typeof fee === 'string') return parseNumberString(fee);
+  if (typeof fee === 'number' || BigNumber.isBigNumber(fee)) return fee;
+  return Number.NaN;
+}
+
 function amountValidator() {
-  return yup
-    .number()
-    .required(FormErrorMessages.AmountRequired)
-    .positive(FormErrorMessages.MustBePositive)
-    .typeError('Amount must be a number');
+  return requiredNumberField({
+    requiredError: FormErrorMessages.AmountRequired,
+    typeError: 'Amount must be a number',
+  }).check(currencyAmountValidator());
 }
 
 interface BtcInsufficientBalanceValidatorArgs {
@@ -44,88 +54,82 @@ export function btcInsufficientBalanceValidator({
   recipient,
   utxos,
 }: BtcInsufficientBalanceValidatorArgs) {
-  return yup
-    .number()
-    .typeError(FormErrorMessages.MustBeNumber)
-    .test({
-      message: FormErrorMessages.InsufficientFunds,
-      test(value) {
-        if (!value) return false;
-        const maxSpend = calcMaxSpend(recipient, utxos);
-        if (!maxSpend) return false;
-        const desiredSpend = new BigNumber(value);
-        if (desiredSpend.isGreaterThan(maxSpend.spendableBitcoin)) return false;
-        return true;
-      },
-    });
+  return z.refine<number | undefined>(
+    value => {
+      if (!value) return false;
+      const maxSpend = calcMaxSpend(recipient, utxos);
+      if (!maxSpend) return false;
+      const desiredSpend = new BigNumber(value);
+      if (desiredSpend.isGreaterThan(maxSpend.spendableBitcoin)) return false;
+      return true;
+    },
+    { error: FormErrorMessages.InsufficientFunds }
+  );
 }
 
 export function btcMinimumSpendValidator() {
-  return yup
-    .number()
-    .typeError(FormErrorMessages.MustBeNumber)
-    .test({
-      message: `Minimum is ${satToBtc(minSpendAmountInSats)}`,
-      test(value) {
-        if (!value) return false;
-        const desiredSpend = btcToSat(value);
-        if (desiredSpend.isLessThan(minSpendAmountInSats)) return false;
-        return true;
-      },
-    });
+  return z.refine<number | undefined>(
+    value => {
+      if (!value) return false;
+      const desiredSpend = btcToSat(value);
+      if (desiredSpend.isLessThan(minSpendAmountInSats)) return false;
+      return true;
+    },
+    { error: `Minimum is ${satToBtc(minSpendAmountInSats).toString()}` }
+  );
 }
 
 export function stxAmountValidator(availableStxBalance: Money) {
-  return yup
-    .number()
-    .typeError(FormErrorMessages.MustBeNumber)
-    .concat(currencyAmountValidator())
-    .concat(stxAmountPrecisionValidator(formatPrecisionError(availableStxBalance)));
+  return numberField(FormErrorMessages.MustBeNumber).check(
+    currencyAmountValidator(),
+    stxAmountPrecisionValidator(formatPrecisionError(availableStxBalance))
+  );
 }
 
-export function stxAvailableBalanceValidator(availableBalance: Money) {
-  return yup
-    .number()
-    .typeError(FormErrorMessages.MustBeNumber)
-    .test({
-      message: formatInsufficientBalanceError(availableBalance, formatCurrency),
-      test(value: unknown) {
-        const fee = new BigNumber(stxToMicroStx(this.parent.fee));
-        if (!fee.isFinite()) {
-          analytics.track('unable_to_read_fee_in_stx_validator');
-          return this.createError({ message: 'Unable to read current fee' });
-        }
-        if (!isNumber(value)) return false;
-        if (!availableBalance) {
-          analytics.track('unable_to_read_available_balance_in_stx_validator');
-          return this.createError({ message: 'Available balance unknown' });
-        }
-        const availableBalanceLessFee = availableBalance.amount.minus(fee);
-        return availableBalanceLessFee.isGreaterThanOrEqualTo(stxToMicroStx(value));
-      },
-    });
+export function stxAvailableBalanceValidator(availableBalance: Money, formValues: unknown) {
+  const insufficientBalanceError = formatInsufficientBalanceError(availableBalance, formatCurrency);
+  return z.superRefine<number | undefined>((value, ctx) => {
+    const fee = new BigNumber(stxToMicroStx(getFeeFromFormValues(formValues)));
+    if (!fee.isFinite()) {
+      analytics.track('unable_to_read_fee_in_stx_validator');
+      ctx.addIssue('Unable to read current fee');
+      return;
+    }
+    if (!isNumber(value)) {
+      ctx.addIssue(insufficientBalanceError);
+      return;
+    }
+    if (!availableBalance) {
+      analytics.track('unable_to_read_available_balance_in_stx_validator');
+      ctx.addIssue('Available balance unknown');
+      return;
+    }
+    const availableBalanceLessFee = availableBalance.amount.minus(fee);
+    if (!availableBalanceLessFee.isGreaterThanOrEqualTo(stxToMicroStx(value))) {
+      ctx.addIssue(insufficientBalanceError);
+    }
+  });
 }
 
 export function stacksFungibleTokenAmountValidator(balance: Money) {
   const { amount, decimals } = balance;
 
-  return amountValidator()
-    .test((value, context) => {
-      if (!isNumber(value)) return false;
-      if (!decimals && countDecimals(value) > 0)
-        return context.createError({
-          message: FormErrorMessages.DoesNotSupportDecimals,
-        });
-      if (countDecimals(value) > decimals) {
-        return context.createError({ message: formatPrecisionError(balance) });
+  return amountValidator().check(
+    z.superRefine<number>((value, ctx) => {
+      if (!decimals && countDecimals(value) > 0) {
+        ctx.addIssue(FormErrorMessages.DoesNotSupportDecimals);
+        return;
       }
-      return true;
-    })
-    .test({
-      message: formatInsufficientBalanceError(balance, formatCurrency),
-      test(value) {
-        if (!isNumber(value) || !amount) return false;
+      if (countDecimals(value) > decimals) {
+        ctx.addIssue(formatPrecisionError(balance));
+      }
+    }),
+    z.refine<number>(
+      value => {
+        if (!amount) return false;
         return new BigNumber(value).isLessThanOrEqualTo(convertAmountToBaseUnit(amount, decimals));
       },
-    });
+      { error: formatInsufficientBalanceError(balance, formatCurrency) }
+    )
+  );
 }

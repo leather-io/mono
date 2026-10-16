@@ -3,7 +3,7 @@ import { Navigate, useParams } from 'react-router';
 import { deserializeTransaction } from '@stacks/transactions';
 import z from 'zod';
 
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { StacksChainTxSummaryLoader } from '@app/pages/send/sent-summary/stacks/stacks-chain-tx-summary.loader';
 
 import { Sip10SentSummary, StxSentSummary } from './stacks-chain-tx-summary';
@@ -14,9 +14,14 @@ const routeParamsSchema = z.object({
   txid: z.string(),
 });
 
+const stacksChainTxSummaryRouteStateSchema = z
+  .object({ tx: z.string().optional() })
+  .nullish()
+  .catch(null);
+
 export function StacksChainTxSummaryRoute() {
   const { data: params } = routeParamsSchema.safeParse(useParams());
-  const tx = useLocationStateWithCache('tx');
+  const tx = useRouteState(stacksChainTxSummaryRouteStateSchema)?.tx;
 
   if (!params) return <Navigate to="/" replace />;
 

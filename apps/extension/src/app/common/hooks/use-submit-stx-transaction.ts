@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { AuthType, StacksTransactionWire, broadcastTransaction } from '@stacks/transactions';
+import { AuthType, type StacksTransactionWire, broadcastTransaction } from '@stacks/transactions';
 
 import { delay, isError } from '@leather.io/utils';
 

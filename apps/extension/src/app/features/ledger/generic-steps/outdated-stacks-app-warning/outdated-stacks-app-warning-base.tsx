@@ -134,7 +134,7 @@ export function OutdatedStacksAppWarningBase({
           Open Ledger Wallet <ExternalLinkIcon color="ink.background-primary" />
         </styled.a>
         <HStack gap="space.03" width="100%">
-          <Button flex={1} onClick={onTryAgain} variant="outline">
+          <Button flex={1} onClick={() => void onTryAgain()} variant="outline">
             Try again
           </Button>
           <Button flex="1" onClick={onCancel ?? ledgerSteps.cancelLedgerAction} variant="outline">

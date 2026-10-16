@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { AuthType, StacksTransactionWire } from '@stacks/transactions';
+import { AuthType, type StacksTransactionWire } from '@stacks/transactions';
 
 import type { CryptoCurrency } from '@leather.io/models';
 import { isError, isString } from '@leather.io/utils';
@@ -71,7 +71,7 @@ export function useStacksBroadcastTransaction({
         return await broadcastTransactionFn({
           onError(e: Error | string) {
             const message = isString(e) ? e : e.message;
-            return navigate(RouteUrls.BroadcastError, { state: { message } });
+            void navigate(RouteUrls.BroadcastError, { state: { message } });
           },
           onSuccess(txId) {
             if (showSummaryPage) return handlePreviewSuccess(signedTx, txId);

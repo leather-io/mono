@@ -133,7 +133,7 @@ export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
       icon={<StxAvatarIcon size="xl" />}
       balance={stx.totalBalance}
       fiatBalance={quote.totalBalance}
-      price={marketInfo.price!}
+      price={marketInfo.price}
       descriptionText={marketInfo.descriptionText}
       balances={balances}
       activity={activityQuery.data ?? []}

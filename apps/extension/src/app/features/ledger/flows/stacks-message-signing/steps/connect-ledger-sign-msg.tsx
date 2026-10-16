@@ -10,7 +10,7 @@ export function ConnectLedgerSignMsg() {
   const { signMessage, latestDeviceResponse, awaitingDeviceConnection } =
     useContext(ledgerMsgSigningContext);
 
-  useWhenReattemptingLedgerConnection(() => signMessage());
+  useWhenReattemptingLedgerConnection(() => void signMessage());
 
   return (
     <ConnectLedger
@@ -22,7 +22,7 @@ export function ConnectLedgerSignMsg() {
           latestDeviceResponse={latestDeviceResponse}
         />
       }
-      onConnectLedger={signMessage}
+      onConnectLedger={() => void signMessage()}
       showInstructions={false}
     />
   );

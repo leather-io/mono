@@ -6,6 +6,9 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
     },
+    "@typescript-eslint/no-unnecessary-type-parameters": {
+      "count": 1
+    },
     "no-restricted-properties": {
       "count": 1
     }
@@ -32,6 +35,9 @@
     },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-type-arguments": {
+      "count": 1
     },
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1

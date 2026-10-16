@@ -93,8 +93,11 @@ const requestKeysRequest: LedgerNonSigningFlowRequest = {
 
 function startSigning<T>(start: () => Promise<LedgerSigningOutcome<T>>): SignedRequest<T> {
   const settled = vi.fn<(outcome: LedgerSigningOutcome<T>) => void>();
+  async function settle() {
+    settled(await start());
+  }
   act(() => {
-    void start().then(settled);
+    void settle();
   });
   return { settled };
 }

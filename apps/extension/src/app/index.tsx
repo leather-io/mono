@@ -46,7 +46,8 @@ document.addEventListener('visibilitychange', () => {
 async function renderApp() {
   await restoreWalletSession();
   const container = document.getElementById('app');
-  return createRoot(container!).render(<App />);
+  if (!container) throw new Error('App container element not found');
+  return createRoot(container).render(<App />);
 }
 
 persistAndRenderApp(renderApp);

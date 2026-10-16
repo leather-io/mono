@@ -10,7 +10,7 @@ import {
 import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import type { Money, OwnedUtxo } from '@leather.io/models';
 
-import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
+import { type BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { logger } from '@shared/logger';
 import type { TransferRecipient } from '@shared/models/form.model';
 
