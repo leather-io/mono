@@ -1,4 +1,4 @@
-import { Circle, CircleProps, Flex } from 'leather-styles/jsx';
+import { Circle, type CircleProps, Flex } from 'leather-styles/jsx';
 
 import { ArrowDownIcon, ArrowUpIcon } from '@leather.io/ui';
 

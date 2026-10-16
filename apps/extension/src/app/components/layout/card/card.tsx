@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { Flex, FlexProps } from 'leather-styles/jsx';
+import { Flex, type FlexProps } from 'leather-styles/jsx';
 import { token } from 'leather-styles/tokens';
 
 interface CardProps {

@@ -1,7 +1,7 @@
-import { BitcoinAppVersion } from './bitcoin-ledger-utils';
+import { type BitcoinAppVersion } from './bitcoin-ledger-utils';
 import {
   MINIMUM_STACKS_APP_VERSION,
-  StacksAppVersion,
+  type StacksAppVersion,
   validateStacksAppVersion,
 } from './stacks-ledger-utils';
 

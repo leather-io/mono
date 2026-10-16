@@ -1,6 +1,6 @@
 import { Stack } from 'leather-styles/jsx';
 
-import { HasChildren } from '@app/common/has-children';
+import { type HasChildren } from '@app/common/has-children';
 
 export function PsbtRequestDetailsLayout({ children }: HasChildren) {
   return (

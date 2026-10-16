@@ -1,0 +1,157 @@
+{
+  "src/activity/activity-balance.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 4
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 4
+    }
+  },
+  "src/activity/activity-filter.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/activity/activity-links.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "src/activity/activity-links.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/activity/activity-metadata.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 6
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 6
+    }
+  },
+  "src/activity/activity-metadata.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/activity/activity-status.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 5
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    }
+  },
+  "src/activity/activity-status.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/activity/activity-view.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    }
+  },
+  "src/activity/activity-view.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/activity/blockchain-activity-copy.ts": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 2
+    }
+  },
+  "src/activity/blockchain-activity-view.spec.ts": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/activity/blockchain-activity-view.ts": {
+    "no-restricted-syntax": {
+      "count": 2
+    }
+  },
+  "src/balance/balance-types.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 3
+    }
+  },
+  "src/collectibles/collectible-details.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 2
+    }
+  },
+  "src/collectibles/sip9-media.spec.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 3
+    }
+  },
+  "src/collectibles/sip9-media.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/onramper/onramper-params.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/token/token-details-utils.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/token/token-types.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 6
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 3
+    }
+  },
+  "src/token/token-url.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 1
+    }
+  },
+  "src/trending-tokens/trending-tokens.utils.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  }
+}

@@ -103,14 +103,18 @@ function generateUnsignedStxTransferTx(args: GenerateUnsignedStxTransferTxArgs) 
   return makeUnsignedSTXTokenTransfer(options);
 }
 
-export type GenerateUnsignedTransactionOptions = GenerateUnsignedTxArgs<
-  ContractCallPayload | STXTransferPayload | ContractDeployPayload
->;
+export interface GenerateUnsignedTransactionOptions
+  extends Omit<
+    GenerateUnsignedTxArgs<ContractCallPayload | STXTransferPayload | ContractDeployPayload>,
+    'fee'
+  > {
+  fee?: number | string;
+}
 /**
  * @deprecated Use updated version from `@leather.io/stacks`
  */
 export async function generateUnsignedTransaction(options: GenerateUnsignedTransactionOptions) {
-  const { txData, publicKey, nonce, fee } = options;
+  const { txData, publicKey, nonce, fee = 0 } = options;
   const isValid = isTransactionTypeSupported(txData.txType);
 
   if (!isValid) throw new Error(`Invalid Transaction Type: ${txData.txType}`);

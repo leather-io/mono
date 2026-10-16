@@ -24,7 +24,7 @@ export function SelectAccountButton({ onClick, ...props }: SelectAccountButtonPr
         // Improves UX of selecting a recipient from the window. As the button
         // to open the drawer is inside the input, we force focus the button,
         // such that the focus is taken away from the input in background
-        (e.target as HTMLButtonElement).focus();
+        if (e.target instanceof HTMLElement) e.target.focus();
         onClick?.();
       }}
       zIndex={9}

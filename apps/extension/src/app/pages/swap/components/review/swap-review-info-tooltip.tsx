@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Box } from 'leather-styles/jsx';

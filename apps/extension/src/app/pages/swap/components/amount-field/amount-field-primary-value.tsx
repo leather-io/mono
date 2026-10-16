@@ -4,7 +4,7 @@ import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { useComposedRefs } from 'framer-motion';
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { useAmountField } from '@leather.io/ui';
 
 import { resolveAmountFieldColors } from './amount-field-colors';

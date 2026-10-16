@@ -1,4 +1,4 @@
-import { PsbtOutput } from '@app/features/psbt-signer/hooks/use-parsed-outputs';
+import { type PsbtOutput } from '@app/features/psbt-signer/hooks/use-parsed-outputs';
 
 import { PsbtOutputItem } from './components/psbt-output-item';
 import { PsbtOutputListLayout } from './components/psbt-output-list.layout';

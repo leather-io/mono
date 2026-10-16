@@ -1,7 +1,7 @@
 import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type Money, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { AssetAvatarIcon } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';

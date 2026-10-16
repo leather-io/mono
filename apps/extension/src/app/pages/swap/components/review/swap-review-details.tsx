@@ -1,12 +1,12 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { Flex, styled } from 'leather-styles/jsx';
 import { isString } from 'remeda';
 
-import { Button, Hr, HrProps, SettingsGearIcon } from '@leather.io/ui';
+import { Button, Hr, type HrProps, SettingsGearIcon } from '@leather.io/ui';
 
-import { HasChildren } from '@app/common/has-children';
+import { type HasChildren } from '@app/common/has-children';
 
 const layoutTransition = { type: 'spring' as const, mass: 2, stiffness: 700, damping: 200 };
 const enteringTransition = { duration: 0.24, delay: 0.24, ease: [0.25, 0.46, 0.45, 0.94] as const };

@@ -95,8 +95,14 @@ export type BtcBalanceCategory = keyof typeof btcBalanceCategoryMap;
 
 export const btcBalanceCategories = keys(btcBalanceCategoryMap);
 
-export function isBtcBalanceCategory(value?: string): value is BtcBalanceCategory {
-  return btcBalanceCategories.some(category => category === value);
+export function isBtcBalanceCategory(value?: string) {
+  return (
+    value === 'available' ||
+    value === 'bonded' ||
+    value === 'pending' ||
+    value === 'sending' ||
+    value === 'uneconomical'
+  );
 }
 
 const nativeSegwitLabel = 'Native Segwit';

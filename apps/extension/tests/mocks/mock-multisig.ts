@@ -1,4 +1,4 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
 
 // Only `id` is load-bearing for the dApp result (it becomes `proposalId`).
 export const exampleMultisigTransactionId = 'multisig-tx-e2e-123';

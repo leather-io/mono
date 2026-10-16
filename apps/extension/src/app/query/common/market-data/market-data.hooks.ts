@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 
 import {
-  CryptoCurrency,
-  MarketData,
-  Money,
+  type CryptoCurrency,
+  type MarketData,
+  type Money,
   createMarketData,
   createMarketPair,
 } from '@leather.io/models';

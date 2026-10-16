@@ -1,7 +1,7 @@
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { AccountSwapAsset } from '@leather.io/services';
-import { Button, HasChildren } from '@leather.io/ui';
+import { type AccountSwapAsset } from '@leather.io/services';
+import { Button, type HasChildren } from '@leather.io/ui';
 
 import { getFungibleAssetDisplayName } from '@app/pages/swap/swap-utils';
 

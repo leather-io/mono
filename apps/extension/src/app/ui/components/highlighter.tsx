@@ -6,10 +6,10 @@ import { Highlight } from 'prism-react-renderer';
 import type { PrismType } from '@app/common/clarity-prism';
 
 import {
-  GetGrammaticalTokenProps,
-  GrammaticalToken,
-  Language,
-  RenderProps,
+  type GetGrammaticalTokenProps,
+  type GrammaticalToken,
+  type Language,
+  type RenderProps,
   theme,
 } from '../utils/prism';
 import { startPad } from '../utils/start-pad';
@@ -147,7 +147,7 @@ export const Highlighter = memo(function Highlighter({
   prism,
 }: HighlighterProps) {
   return (
-    <Highlight theme={theme} code={code} language={language} prism={prism as any}>
+    <Highlight theme={theme} code={code} language={language} prism={prism}>
       {props => (
         <Lines showLineNumbers={showLineNumbers} hideLineHover={hideLineHover} {...props} />
       )}

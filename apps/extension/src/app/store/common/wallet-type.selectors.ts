@@ -74,7 +74,7 @@ export const selectWalletAccountRefTree = createSelector(
       tree.push({
         fingerprint: wallet.fingerprint,
         name: wallet.name ?? wallet.fingerprint,
-        type: wallet.type as WalletType,
+        type: wallet.type,
         accounts,
         createdOn: wallet.createdOn,
       });

@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { createFetchFn } from '@stacks/common';
 import { ChainId } from '@stacks/network';
+import { z } from 'zod';
 
 import {
   type BitcoinNetwork,
-  type DefaultNetworkConfigurations,
-  type NetworkConfiguration,
   bitcoinNetworkToNetworkMode,
   networkConfigurationSchema,
 } from '@leather.io/models';
@@ -16,6 +15,7 @@ import { isDefined } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 import { isValidUrl } from '@shared/utils/urls';
 
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { removeTrailingSlash } from '@app/common/url-join';
 import { useNetworksActions } from '@app/store/networks/networks.hooks';
 import { useNetworks } from '@app/store/networks/networks.selectors';
@@ -25,10 +25,11 @@ import type { PersistedNetworkConfiguration } from '@app/store/networks/networks
  * The **peer** network ID.
  * Not used in signing, but needed to determine the parent of a subnet.
  */
-enum PeerNetworkID {
-  Mainnet = 0x17000000,
-  Testnet = 0xff000000,
-}
+const PeerNetworkID = {
+  Mainnet: 0x17000000,
+  Testnet: 0xff000000,
+} as const;
+type PeerNetworkID = (typeof PeerNetworkID)[keyof typeof PeerNetworkID];
 
 export interface AddNetworkFormValues {
   key: string;
@@ -46,25 +47,20 @@ const initialFormValues: AddNetworkFormValues = {
   bitcoinNetwork: 'mainnet',
 };
 
-function useAddNetworkState() {
-  const { state } = useLocation();
+const stacksChainInfoSchema = z.object({
+  network_id: z.number().optional().catch(undefined),
+  parent_network_id: z.number().optional().catch(undefined),
+  l1_subnet_governing_contract: z.string().optional().catch(undefined),
+});
 
-  return {
-    isEditNetworkMode: state?.isEditNetworkMode,
-    network: state?.network as NetworkConfiguration | undefined,
-  };
-}
+const editNetworkRouteStateSchema = z
+  .object({ network: networkConfigurationSchema.optional().catch(undefined) })
+  .nullish();
 
 function useInitialValues() {
-  const { network } = useAddNetworkState();
+  const network = useRouteState(editNetworkRouteStateSchema)?.network;
 
   if (!network) {
-    return initialFormValues;
-  }
-
-  const isProperStateProvided = networkConfigurationSchema.safeParse(network).success;
-
-  if (!isProperStateProvided) {
     return initialFormValues;
   }
 
@@ -85,7 +81,6 @@ export function useAddNetwork() {
   const networksActions = useNetworksActions();
   const networks = useNetworks();
   const initialValues = useInitialValues();
-  const { isEditNetworkMode } = useAddNetworkState();
   const fetchFn = createFetchFn();
 
   function saveNetwork(network: PersistedNetworkConfiguration) {
@@ -100,8 +95,7 @@ export function useAddNetwork() {
     error,
     initialFormValues: initialValues,
     loading,
-    isEditNetworkMode,
-    onSubmit: async (values: AddNetworkFormValues) => {
+    async onSubmit(values: AddNetworkFormValues) {
       const { name, stacksUrl, bitcoinUrl, key, bitcoinNetwork } = values;
 
       if (!name) {
@@ -138,7 +132,7 @@ export function useAddNetwork() {
       try {
         const bitcoinResponse = await fetchFn(`${bitcoinPath}/mempool/recent`);
         if (!bitcoinResponse?.ok) throw new Error('Unable to fetch mempool from bitcoin node');
-        const bitcoinMempool = await bitcoinResponse.json();
+        const bitcoinMempool: unknown = await bitcoinResponse.json();
         if (!Array.isArray(bitcoinMempool))
           throw new Error('Unable to fetch mempool from bitcoin node');
       } catch {
@@ -147,7 +141,7 @@ export function useAddNetwork() {
         return;
       }
 
-      let stacksChainInfo: any;
+      let stacksChainInfo: unknown;
       try {
         const stacksResponse = await fetchFn(`${stacksPath}/v2/info`);
         stacksChainInfo = await stacksResponse?.json();
@@ -162,9 +156,12 @@ export function useAddNetwork() {
       // For mainnet/testnet the v2/info response `.network_id` refers to the chain ID
       // For subnets the v2/info response `.network_id` refers to the network ID and the chain ID (they are the same for subnets)
       // The `.parent_network_id` refers to the actual peer network ID in both cases
-      const { network_id: chainId, parent_network_id: parentNetworkId } = stacksChainInfo;
+      const parsedChainInfo = stacksChainInfoSchema.safeParse(stacksChainInfo);
+      const chainId = parsedChainInfo.data?.network_id;
+      const parentNetworkId = parsedChainInfo.data?.parent_network_id;
+      const subnetGoverningContract = parsedChainInfo.data?.l1_subnet_governing_contract;
 
-      const isSubnet = typeof stacksChainInfo.l1_subnet_governing_contract === 'string';
+      const isSubnet = isDefined(subnetGoverningContract);
       const isFirstLevelSubnet =
         isSubnet &&
         (parentNetworkId === PeerNetworkID.Mainnet || parentNetworkId === PeerNetworkID.Testnet);
@@ -174,8 +171,8 @@ export function useAddNetwork() {
         const parentChainId =
           parentNetworkId === PeerNetworkID.Mainnet ? ChainId.Mainnet : ChainId.Testnet;
         saveNetwork({
-          id: key as DefaultNetworkConfigurations,
-          name: name,
+          id: key,
+          name,
           chainId: parentChainId, // Used for differentiating control flow in the wallet
           subnetChainId: chainId, // Used for signing transactions (via the network object, not to be confused with the NetworkConfigurations)
           url: stacksPath,
@@ -186,9 +183,9 @@ export function useAddNetwork() {
         return navigate(RouteUrls.Home);
       } else if (isDefined(chainId)) {
         saveNetwork({
-          id: key as DefaultNetworkConfigurations,
-          name: name,
-          chainId: chainId,
+          id: key,
+          name,
+          chainId,
           url: stacksPath,
           bitcoinNetwork,
           mode: bitcoinNetworkToNetworkMode(bitcoinNetwork),
