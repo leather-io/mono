@@ -55,7 +55,6 @@ test.describe('Multiwallet integrity', () => {
   test('that custom names and hidden accounts survive a lock and unlock', async ({
     switchAccountPage,
     homePage,
-    page,
   }) => {
     test.slow();
     await switchAccountPage.open();
@@ -66,8 +65,7 @@ test.describe('Multiwallet integrity', () => {
     await switchAccountPage.close();
 
     await homePage.lock();
-    await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
-    await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+    await homePage.unlock();
     await homePage.waitForHomePageReady();
 
     await switchAccountPage.open();
@@ -141,6 +139,7 @@ test.describe('Multiwallet integrity', () => {
   });
 
   test("that viewing a non-active wallet's secret key shows that wallet's key", async ({
+    homePage,
     switchAccountPage,
     page,
   }) => {
@@ -155,8 +154,7 @@ test.describe('Multiwallet integrity', () => {
     await switchAccountPage.enterManageMode();
     await switchAccountPage.viewSecretKey(0);
 
-    await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
-    await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+    await homePage.unlock();
     await page.getByTestId(SettingsSelectors.ShowSecretKeyBtn).click();
 
     const words = TEST_ACCOUNT_SECRET_KEY.split(' ');

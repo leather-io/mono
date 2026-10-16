@@ -1,4 +1,3 @@
-import { TEST_PASSWORD } from '@tests/mocks/constants';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
@@ -34,21 +33,19 @@ test.describe('Settings menu', () => {
 
   test('that menu item can lock and unlock the extension', async ({ homePage, page }) => {
     await homePage.lock();
-
-    await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
-    await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+    await homePage.unlock();
 
     const displayName = page.getByTestId(SettingsSelectors.CurrentAccountDisplayName);
     await test.expect(displayName).toHaveText('Account 1');
   });
 
   test('that menu item allows viewing and saving secret key to clipboard', async ({
+    homePage,
     page,
     settingsPage,
   }) => {
     await settingsPage.openViewSecretKeyPage();
-    await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
-    await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+    await homePage.unlock();
     await page.getByTestId(SettingsSelectors.CopyKeyToClipboardBtn).click();
 
     const copySuccessMessage = await page

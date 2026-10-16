@@ -27,9 +27,6 @@ test.describe('send btc spend sources with mixed utxos', () => {
     await onboardingPage.signInWithTestAccount(extensionId);
     await homePage.sendButton.click();
     await sendPage.selectBtcAndGoToSendForm();
-    await sendPage.page
-      .getByTestId(SendCryptoAssetSelectors.SendForm)
-      .waitFor({ state: 'attached' });
   });
 
   test('that the review shows the taproot callout and per-type rows', async ({ sendPage }) => {
@@ -85,9 +82,6 @@ test.describe('send btc spend sources with native segwit utxos only', () => {
     await onboardingPage.signInWithTestAccount(extensionId);
     await homePage.sendButton.click();
     await sendPage.selectBtcAndGoToSendForm();
-    await sendPage.page
-      .getByTestId(SendCryptoAssetSelectors.SendForm)
-      .waitFor({ state: 'attached' });
   });
 
   test('that the review shows no callout and a zero taproot row', async ({ sendPage }) => {

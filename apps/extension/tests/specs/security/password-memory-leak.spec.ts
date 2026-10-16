@@ -89,12 +89,7 @@ test.describe('Security: Password Memory Leak', () => {
     await homePage.lock();
 
     const unlockInput = page.getByTestId(SettingsSelectors.EnterPasswordInput);
-    await unlockInput.waitFor({ state: 'visible' });
-    await unlockInput.fill(TEST_PASSWORD);
-
-    const unlockButton = page.getByTestId(SettingsSelectors.UnlockWalletBtn);
-    await unlockButton.waitFor({ state: 'visible' });
-    await unlockButton.click();
+    await homePage.unlock();
 
     await page
       .getByTestId(SettingsSelectors.CurrentAccountDisplayName)
@@ -128,12 +123,7 @@ test.describe('Security: Password Memory Leak', () => {
     await homePage.lock();
 
     const unlockInput = page.getByTestId(SettingsSelectors.EnterPasswordInput);
-    await unlockInput.waitFor({ state: 'visible' });
-    await unlockInput.fill(TEST_PASSWORD);
-
-    const unlockButton = page.getByTestId(SettingsSelectors.UnlockWalletBtn);
-    await unlockButton.waitFor({ state: 'visible' });
-    await unlockButton.click();
+    await homePage.unlock();
 
     await page
       .getByTestId(SettingsSelectors.CurrentAccountDisplayName)
@@ -175,12 +165,7 @@ test.describe('Security: Password Memory Leak', () => {
     await homePage.lock();
 
     const unlockInput = page.getByTestId(SettingsSelectors.EnterPasswordInput);
-    await unlockInput.waitFor({ state: 'visible' });
-    await unlockInput.fill(TEST_PASSWORD);
-
-    const unlockButton = page.getByTestId(SettingsSelectors.UnlockWalletBtn);
-    await unlockButton.waitFor({ state: 'visible' });
-    await unlockButton.click();
+    await homePage.unlock();
 
     await page
       .getByTestId(SettingsSelectors.CurrentAccountDisplayName)

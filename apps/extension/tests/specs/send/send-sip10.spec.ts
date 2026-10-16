@@ -1,13 +1,12 @@
 import { expect } from '@playwright/test';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { mockStacksBroadcastTransaction } from '@tests/mocks/mock-stacks-txs';
-import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-
-import { RouteUrls } from '@shared/route-urls';
 
 import { test } from '../../fixtures/fixtures';
 
 const amount = '0.000001';
+const leatherTestTokenTestId =
+  'SP000000000000000000002Q6VF78.leather-integration-tests::leather-test-token';
 
 test.describe('Send sip10', () => {
   test.beforeEach(async ({ extensionId, globalPage, homePage, onboardingPage, sendPage }) => {
@@ -16,12 +15,7 @@ test.describe('Send sip10', () => {
 
     await onboardingPage.signInWithTestAccount(extensionId);
     await homePage.sendButton.click();
-    await sendPage.page.waitForURL('**' + RouteUrls.SendCryptoAsset);
-    await sendPage.page
-      .getByTestId('SP000000000000000000002Q6VF78.leather-integration-tests::leather-test-token')
-      .click();
-    await sendPage.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
-    await sendPage.waitForFeeEstimate();
+    await sendPage.selectSip10AndGoToSendForm(leatherTestTokenTestId);
   });
 
   test('can send sip10 token', async ({ sendPage }) => {

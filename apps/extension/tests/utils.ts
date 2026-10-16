@@ -22,6 +22,9 @@ export async function getDisplayerAddress(locator: Locator) {
   return displayerAddress.replaceAll('\n', '');
 }
 
+const unsignedTransferFee = 200;
+const unsignedTransferNonce = 0;
+
 export async function generateUnsignedStxTransfer(
   recipient: string,
   amount: number,
@@ -35,6 +38,8 @@ export async function generateUnsignedStxTransfer(
     publicKey,
     amount,
     network,
+    fee: unsignedTransferFee,
+    nonce: unsignedTransferNonce,
   };
   return (await makeUnsignedSTXTokenTransfer(options)).serialize();
 }

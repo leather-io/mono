@@ -4,7 +4,6 @@ import {
   TEST_ACCOUNT_2_TAPROOT_ADDRESS,
 } from '@tests/mocks/constants';
 import { mockMixedUtxoRequests } from '@tests/mocks/mock-utxos';
-import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -33,9 +32,6 @@ test.describe('send btc send max with mixed utxos', () => {
     await onboardingPage.signInWithTestAccount(extensionId);
     await homePage.sendButton.click();
     await sendPage.selectBtcAndGoToSendForm();
-    await sendPage.page
-      .getByTestId(SendCryptoAssetSelectors.SendForm)
-      .waitFor({ state: 'attached' });
     await sendPage.waitForSendPageReady();
   });
 

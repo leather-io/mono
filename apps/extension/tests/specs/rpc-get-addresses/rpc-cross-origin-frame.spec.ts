@@ -24,9 +24,10 @@ async function injectIframe(page: Page, src: string) {
   );
 }
 
-function getIframe(page: Page, url: string) {
+async function getIframe(page: Page, url: string) {
   const frame = page.frames().find(candidate => candidate.url().startsWith(url));
   if (!frame) throw new Error(`No frame found for ${url}`);
+  await frame.waitForFunction(() => Boolean(window.LeatherProvider));
   return frame;
 }
 
@@ -42,7 +43,7 @@ test.describe('Rpc: cross-origin iframe requests', () => {
   }) => {
     await page.goto(topLevelUrl);
     await injectIframe(page, iframeUrl);
-    const frame = getIframe(page, iframeUrl);
+    const frame = await getIframe(page, iframeUrl);
 
     const getAddressesPromise = frame.evaluate(() =>
       window.LeatherProvider?.request('getAddresses')

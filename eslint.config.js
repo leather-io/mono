@@ -83,6 +83,50 @@ const reactRouterLocationStateSyntax = {
   message: 'location.state is any. Read route state through useRouteState(schema).',
 };
 
+const e2eRestrictedSyntax = [
+  ...sharedRestrictedSyntax,
+  reactRouterLocationStateSyntax,
+  {
+    selector: "CallExpression[callee.property.name='waitForTimeout']",
+    message:
+      'Do not sleep in e2e tests. Wait for the UI state with a locator or a web-first assertion instead.',
+  },
+  {
+    selector: "CallExpression[callee.property.name='allInnerTexts']",
+    message:
+      'allInnerTexts() resolves to an array that is always truthy, so asserting on it proves nothing. Assert on the locator with toBeVisible, toHaveText or toHaveCount instead.',
+  },
+];
+
+const pageObjectOnlySelectors = [
+  {
+    object: 'SendCryptoAssetSelectors',
+    property: 'SendForm',
+    action:
+      'SendPage.selectBtcAndGoToSendForm, selectStxAndGoToSendForm or selectSip10AndGoToSendForm',
+  },
+  {
+    object: 'SharedComponentsSelectors',
+    property: 'CardAvailableBalance',
+    action: 'SendPage.selectBtcAndGoToSendForm',
+  },
+  {
+    object: 'ActivitySelectors',
+    property: 'TransactionActionFeeInput',
+    action: 'HomePage.setBitcoinIncreasedFeeRate or HomePage.setStacksTransactionActionFee',
+  },
+  {
+    object: 'ActivitySelectors',
+    property: 'TransactionActionBalance',
+    action: 'HomePage.setBitcoinIncreasedFeeRate',
+  },
+  {
+    object: 'SettingsSelectors',
+    property: 'UnlockWalletBtn',
+    action: 'HomePage.unlock',
+  },
+];
+
 export default defineConfig([
   {
     files: ['{packages,apps}/**/*.{ts,tsx}'],
@@ -243,21 +287,7 @@ export default defineConfig([
       'playwright/no-raw-locators': 'error',
       'playwright/prefer-native-locators': 'error',
       'playwright/prefer-ending-with-an-expect': 'error',
-      'no-restricted-syntax': [
-        'error',
-        ...sharedRestrictedSyntax,
-        reactRouterLocationStateSyntax,
-        {
-          selector: "CallExpression[callee.property.name='waitForTimeout']",
-          message:
-            'Do not sleep in e2e tests. Wait for the UI state with a locator or a web-first assertion instead.',
-        },
-        {
-          selector: "CallExpression[callee.property.name='allInnerTexts']",
-          message:
-            'allInnerTexts() resolves to an array that is always truthy, so asserting on it proves nothing. Assert on the locator with toBeVisible, toHaveText or toHaveCount instead.',
-        },
-      ],
+      'no-restricted-syntax': ['error', ...e2eRestrictedSyntax],
       'no-restricted-imports': [
         'error',
         {
@@ -271,6 +301,20 @@ export default defineConfig([
             },
           ],
         },
+      ],
+    },
+  },
+  {
+    name: 'extension-e2e-specs-use-page-object-actions',
+    files: ['apps/extension/tests/specs/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        ...e2eRestrictedSyntax,
+        ...pageObjectOnlySelectors.map(({ object, property, action }) => ({
+          selector: `MemberExpression[object.name='${object}'][property.name='${property}']`,
+          message: `Use ${action} instead. It waits for the data this element depends on before acting.`,
+        })),
       ],
     },
   },

@@ -8,6 +8,9 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 
 import { RouteUrls } from '@shared/route-urls';
 
+const loadedAvailableBalance = /[1-9]/;
+const loadedFeeEstimate = /\d/;
+
 export class SendPage {
   readonly page: Page;
   readonly amountInput: Locator;
@@ -70,7 +73,7 @@ export class SendPage {
     this.broadcastErrorTitle = page.getByTestId(SharedComponentsSelectors.BroadcastErrorTitle);
   }
 
-  async selectBtcAndGoToSendForm() {
+  async selectBtcAndGoToSendForm(expectedAvailableBalance = loadedAvailableBalance) {
     await this.page.waitForURL('**' + RouteUrls.SendCryptoAsset);
     await expect(
       this.page.getByTestId(SendCryptoAssetSelectors.ChooseAssetToSendPage)
@@ -79,7 +82,7 @@ export class SendPage {
     await this.page.waitForURL('**' + `${RouteUrls.SendCryptoAsset}/btc`);
 
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
-    await this.waitForAvailableBalance();
+    await this.waitForAvailableBalance(expectedAvailableBalance);
   }
 
   async selectStxAndGoToSendForm() {
@@ -93,10 +96,11 @@ export class SendPage {
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
   }
 
-  async selectSIP10AndGoToSendForm() {
+  async selectSip10AndGoToSendForm(tokenTestId: string = MockedTokensSelectors.Sip10TokenTestId) {
     await this.page.waitForURL('**' + RouteUrls.SendCryptoAsset);
-    await this.page.getByTestId(MockedTokensSelectors.Sip10TokenTestId).click();
+    await this.page.getByTestId(tokenTestId).click();
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
+    await this.waitForFeeEstimate();
   }
 
   async waitForSendPageReady() {
@@ -118,14 +122,14 @@ export class SendPage {
     await this.infoCardButton.click();
   }
 
-  async waitForAvailableBalance(expectedBalance = /[1-9]/) {
+  private async waitForAvailableBalance(expectedBalance: RegExp) {
     await expect(this.page.getByTestId(SharedComponentsSelectors.CardAvailableBalance)).toHaveText(
       expectedBalance
     );
   }
 
-  async waitForFeeEstimate() {
-    await expect(this.feeToBePaid).toHaveText(/\d/);
+  private async waitForFeeEstimate() {
+    await expect(this.feeToBePaid).toHaveText(loadedFeeEstimate);
   }
 
   async waitForFeeRow() {

@@ -1,5 +1,4 @@
 import { mockMixedUtxosForSend } from '@tests/mocks/mock-mixed-utxos';
-import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { withNbsp } from '@tests/utils';
 
@@ -16,11 +15,7 @@ test.describe('send btc with mixed utxos', () => {
     await mockMixedUtxosForSend(page);
     await onboardingPage.signInWithTestAccount(extensionId);
     await homePage.sendButton.click();
-    await sendPage.selectBtcAndGoToSendForm();
-    await sendPage.page
-      .getByTestId(SendCryptoAssetSelectors.SendForm)
-      .waitFor({ state: 'attached' });
-    await sendPage.waitForAvailableBalance(combinedUtxoBalance);
+    await sendPage.selectBtcAndGoToSendForm(combinedUtxoBalance);
   });
 
   test('that send succeeds when amount requires both taproot and native segwit utxos', async ({

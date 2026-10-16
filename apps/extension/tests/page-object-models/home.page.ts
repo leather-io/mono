@@ -1,10 +1,14 @@
 import { type Locator, type Page, expect } from '@playwright/test';
+import { TEST_PASSWORD } from '@tests/mocks/constants';
+import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { createTestSelector } from '@tests/utils';
 
 const settingsMenuOpenTimeoutMs = 1000;
+const unlockTimeoutMs = 15_000;
+const loadedTransactionActionBalance = /Balance: 0\.0*[1-9]\d*\sBTC/;
 
 export class HomePage {
   readonly page: Page;
@@ -114,6 +118,29 @@ export class HomePage {
     }
     await this.signOutConfirmPasswordDisable.click();
     await this.signOutDeleteWalletBtn.click();
+  }
+
+  async unlock(password = TEST_PASSWORD) {
+    const passwordInput = this.page.getByTestId(SettingsSelectors.EnterPasswordInput);
+    await passwordInput.fill(password);
+    await this.page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+    await expect(passwordInput).toBeHidden({ timeout: unlockTimeoutMs });
+  }
+
+  async setBitcoinIncreasedFeeRate(feeRate: string) {
+    await expect(this.page.getByTestId(ActivitySelectors.TransactionActionBalance)).toHaveText(
+      loadedTransactionActionBalance
+    );
+    const feeInput = this.page.getByTestId(ActivitySelectors.TransactionActionFeeInput);
+    await feeInput.clear();
+    await feeInput.fill(feeRate);
+  }
+
+  async setStacksTransactionActionFee(action: 'cancel' | 'increase-fee', fee: string) {
+    const actionSheet = this.page.getByTestId(
+      `${ActivitySelectors.TransactionActionSheet}-${action}`
+    );
+    await actionSheet.getByTestId(ActivitySelectors.TransactionActionFeeInput).fill(fee);
   }
 
   async lock() {
