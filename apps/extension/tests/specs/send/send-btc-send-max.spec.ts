@@ -44,34 +44,24 @@ test.describe('send btc send max with mixed utxos', () => {
   }) => {
     await sendPage.recipientInput.fill('bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4');
     await sendPage.recipientInput.blur();
-    await sendPage.page.waitForTimeout(500);
 
     await sendPage.sendMaxButton.click();
-    await sendPage.page.waitForTimeout(500);
 
-    const amount = await sendPage.amountInput.inputValue();
-    test.expect(amount).toBe('0.00299165');
+    await test.expect(sendPage.amountInput).toHaveValue('0.00299165');
   });
 
   test('that send max recalculates when recipient address type changes', async ({ sendPage }) => {
     await sendPage.recipientInput.fill('bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4');
     await sendPage.recipientInput.blur();
-    await sendPage.page.waitForTimeout(500);
 
     await sendPage.sendMaxButton.click();
-    await sendPage.page.waitForTimeout(500);
 
-    const amountWithP2wpkhRecipient = await sendPage.amountInput.inputValue();
-    test.expect(amountWithP2wpkhRecipient).toBe('0.00299165');
+    await test.expect(sendPage.amountInput).toHaveValue('0.00299165');
 
     await sendPage.recipientInput.clear();
     await sendPage.recipientInput.fill(TEST_ACCOUNT_2_TAPROOT_ADDRESS);
     await sendPage.recipientInput.blur();
-    await sendPage.page.waitForTimeout(500);
 
-    const amountWithP2trRecipient = await sendPage.amountInput.inputValue();
-    test.expect(amountWithP2trRecipient).toBe('0.00299105');
-
-    test.expect(amountWithP2wpkhRecipient).not.toBe(amountWithP2trRecipient);
+    await test.expect(sendPage.amountInput).toHaveValue('0.00299105');
   });
 });

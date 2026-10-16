@@ -27,15 +27,13 @@ test.describe('send btc', () => {
       await sendPage.previewSendTxButton.click();
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
 
-      const details = await sendPage.confirmationDetails.allInnerTexts();
-      test.expect(details).toBeTruthy();
+      await test.expect(sendPage.confirmationDetails).toBeVisible();
     });
 
     test('that recipient input is trimmed correctly', async ({ sendPage }) => {
       await sendPage.amountInput.fill('0.00006');
       await sendPage.recipientInput.fill(' ' + TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS + ' ');
       await sendPage.recipientInput.blur();
-      await sendPage.page.waitForTimeout(1000);
       await sendPage.previewSendTxButton.click();
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
 
@@ -50,7 +48,6 @@ test.describe('send btc', () => {
       await sendPage.amountInput.fill(amount);
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
       await sendPage.recipientInput.blur();
-      await sendPage.page.waitForTimeout(1000);
 
       await sendPage.previewSendTxButton.click();
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
@@ -58,11 +55,10 @@ test.describe('send btc', () => {
       const displayerAddress = await getDisplayerAddress(sendPage.confirmationDetailsRecipient);
       test.expect(displayerAddress).toEqual(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
 
-      const confirmationAssetValue = await sendPage.confirmationDetails
-        .getByTestId(SharedComponentsSelectors.InfoCardAssetValue)
-        .innerText();
-
-      test.expect(confirmationAssetValue).toEqual(withNbsp(`${amount} ${amountSymbol}`));
+      const confirmationAssetValue = sendPage.confirmationDetails.getByTestId(
+        SharedComponentsSelectors.InfoCardAssetValue
+      );
+      await test.expect(confirmationAssetValue).toHaveText(withNbsp(`${amount} ${amountSymbol}`));
     });
 
     test('that fee value on preview match chosen one', async ({ sendPage }) => {

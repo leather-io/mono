@@ -117,7 +117,6 @@ test.describe('Sign PSBT', () => {
   function clickActionButton(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForTimeout(1000);
       const btn = popup.locator(`text="${buttonToPress}"`);
       await btn.click();
     };
@@ -125,10 +124,9 @@ test.describe('Sign PSBT', () => {
 
   async function clickErrorCloseWindowButton(context: BrowserContext) {
     const popup = await context.waitForEvent('page');
-    await popup.waitForTimeout(1000);
-    const errorMsg = popup.locator('text="Failed to sign"');
-    const btn = popup.locator('text="Close window"');
-    test.expect(errorMsg).toBeTruthy();
+    const errorMsg = popup.getByText('Failed to sign', { exact: true });
+    const btn = popup.getByText('Close window', { exact: true });
+    await test.expect(errorMsg).toBeVisible();
     await btn.click();
   }
 
@@ -949,8 +947,7 @@ test.describe('Sign PSBT: bond proposal', () => {
 
     async function clickProposeTransaction() {
       const popup = await context.waitForEvent('page');
-      await popup.waitForTimeout(1000);
-      await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
+      await popup.getByText('Propose transaction', { exact: true }).click({ timeout: 20_000 });
     }
 
     const [result] = await Promise.all([

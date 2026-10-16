@@ -1,5 +1,6 @@
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import pluginLingui from 'eslint-plugin-lingui';
+import pluginPlaywright from 'eslint-plugin-playwright';
 import { defineConfig } from 'eslint/config';
 
 import baseConfig, {
@@ -228,6 +229,49 @@ export default defineConfig([
     files: ['apps/extension/**/*.{ts,tsx}', 'apps/web/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-syntax': ['error', ...sharedRestrictedSyntax, reactRouterLocationStateSyntax],
+    },
+  },
+  {
+    name: 'extension-e2e-tests',
+    files: ['apps/extension/tests/**/*.{ts,tsx}'],
+    extends: [pluginPlaywright.configs['flat/recommended']],
+    rules: {
+      'no-empty-pattern': 'error',
+      'playwright/no-conditional-in-test': 'off',
+      'playwright/no-conditional-expect': 'off',
+      'playwright/require-top-level-describe': 'error',
+      'playwright/no-raw-locators': 'error',
+      'playwright/prefer-native-locators': 'error',
+      'playwright/prefer-ending-with-an-expect': 'error',
+      'no-restricted-syntax': [
+        'error',
+        ...sharedRestrictedSyntax,
+        reactRouterLocationStateSyntax,
+        {
+          selector: "CallExpression[callee.property.name='waitForTimeout']",
+          message:
+            'Do not sleep in e2e tests. Wait for the UI state with a locator or a web-first assertion instead.',
+        },
+        {
+          selector: "CallExpression[callee.property.name='allInnerTexts']",
+          message:
+            'allInnerTexts() resolves to an array that is always truthy, so asserting on it proves nothing. Assert on the locator with toBeVisible, toHaveText or toHaveCount instead.',
+        },
+      ],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            ...sharedRestrictedImportPaths,
+            {
+              name: '@leather.io/utils',
+              importNames: ['delay'],
+              message:
+                'Do not sleep in e2e tests. Wait for the UI state with a locator, expect.poll or expect().toPass() instead.',
+            },
+          ],
+        },
+      ],
     },
   },
   {

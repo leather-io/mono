@@ -15,7 +15,6 @@ async function goToReview(sendPage: SendPage, amount: string) {
   await sendPage.amountInput.fill(amount);
   await sendPage.recipientInput.fill(recipient);
   await sendPage.recipientInput.blur();
-  await sendPage.page.waitForTimeout(1000);
   await sendPage.previewSendTxButton.click();
   await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
   await test.expect(sendPage.confirmationDetails).toBeVisible();
@@ -31,7 +30,6 @@ test.describe('send btc spend sources with mixed utxos', () => {
     await sendPage.page
       .getByTestId(SendCryptoAssetSelectors.SendForm)
       .waitFor({ state: 'attached' });
-    await sendPage.page.waitForTimeout(1000);
   });
 
   test('that the review shows the taproot callout and per-type rows', async ({ sendPage }) => {
@@ -90,7 +88,6 @@ test.describe('send btc spend sources with native segwit utxos only', () => {
     await sendPage.page
       .getByTestId(SendCryptoAssetSelectors.SendForm)
       .waitFor({ state: 'attached' });
-    await sendPage.page.waitForTimeout(1000);
   });
 
   test('that the review shows no callout and a zero taproot row', async ({ sendPage }) => {

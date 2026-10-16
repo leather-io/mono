@@ -5,7 +5,6 @@ import {
 } from '@tests/selectors/mocked-tokens.selectors';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
-import { createTestSelector } from '@tests/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -48,7 +47,6 @@ export class SendPage {
     this.recipientChooseAccountButton = page.getByTestId(
       SendCryptoAssetSelectors.RecipientChooseAccountButton
     );
-    this.page.getByTestId(SendCryptoAssetSelectors.RecipientSelectFieldAddress);
     this.recipientSelectRecipientTypeDropdown = this.page.getByTestId(
       SendCryptoAssetSelectors.RecipientSelectRecipientTypeDropdown
     );
@@ -81,6 +79,7 @@ export class SendPage {
     await this.page.waitForURL('**' + `${RouteUrls.SendCryptoAsset}/btc`);
 
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
+    await this.waitForAvailableBalance();
   }
 
   async selectStxAndGoToSendForm() {
@@ -90,6 +89,7 @@ export class SendPage {
     ).toBeVisible();
     await this.page.getByTestId(CoreAssetSelectors.StxAsset).click();
     await this.page.waitForURL('**' + `${RouteUrls.SendCryptoAsset}/stx`);
+    await this.waitForFeeEstimate();
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
   }
 
@@ -100,13 +100,13 @@ export class SendPage {
   }
 
   async waitForSendPageReady() {
-    await this.page.waitForSelector(createTestSelector(SendCryptoAssetSelectors.SendPageReady), {
-      state: 'attached',
-    });
+    await this.page
+      .getByTestId(SendCryptoAssetSelectors.SendPageReady)
+      .waitFor({ state: 'attached' });
   }
 
   async goBack() {
-    await this.page.getByTestId(SharedComponentsSelectors.HeaderBackBtn).click({ force: true });
+    await this.page.getByTestId(SharedComponentsSelectors.HeaderBackBtn).click();
   }
 
   async goBackSelectStx() {
@@ -116,6 +116,16 @@ export class SendPage {
 
   async clickInfoCardButton() {
     await this.infoCardButton.click();
+  }
+
+  async waitForAvailableBalance(expectedBalance = /[1-9]/) {
+    await expect(this.page.getByTestId(SharedComponentsSelectors.CardAvailableBalance)).toHaveText(
+      expectedBalance
+    );
+  }
+
+  async waitForFeeEstimate() {
+    await expect(this.feeToBePaid).toHaveText(/\d/);
   }
 
   async waitForFeeRow() {

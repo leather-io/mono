@@ -29,7 +29,7 @@ test.describe('Settings menu', () => {
   test('that menu item can perform sign out', async ({ homePage, onboardingPage }) => {
     await homePage.signOut();
     const button = onboardingPage.page.getByTestId(OnboardingSelectors.SignUpBtn);
-    test.expect(button).toBeTruthy();
+    await test.expect(button).toBeVisible();
   });
 
   test('that menu item can lock and unlock the extension', async ({ homePage, page }) => {
@@ -38,11 +38,8 @@ test.describe('Settings menu', () => {
     await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
     await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
 
-    const displayName = await page
-      .getByTestId(SettingsSelectors.CurrentAccountDisplayName)
-      .innerText();
-
-    test.expect(displayName).toEqual('Account 1');
+    const displayName = page.getByTestId(SettingsSelectors.CurrentAccountDisplayName);
+    await test.expect(displayName).toHaveText('Account 1');
   });
 
   test('that menu item allows viewing and saving secret key to clipboard', async ({
@@ -72,10 +69,10 @@ test.describe('Settings menu', () => {
   });
 
   test('that menu item can toggle privacy', async ({ page, homePage }) => {
-    const visibleBalanceText = await homePage.page
-      .getByTestId(SharedComponentsSelectors.AccountCardBalanceText)
-      .innerText();
-    test.expect(visibleBalanceText).toBeTruthy();
+    const visibleBalanceText = homePage.page.getByTestId(
+      SharedComponentsSelectors.AccountCardBalanceText
+    );
+    await test.expect(visibleBalanceText).toBeVisible();
 
     await homePage.clickSettingsButton();
     await page.getByTestId(SettingsSelectors.TogglePrivacy).click();

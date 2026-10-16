@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 import {
   TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
   TEST_ACCOUNT_1_TAPROOT_ADDRESS,
@@ -18,6 +18,17 @@ import { mockMixedUtxoRequests } from '@tests/mocks/mock-utxos';
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 
 import { test } from '../../fixtures/fixtures';
+
+const loadedBalanceCaption = /Balance: 0\.0*[1-9]\d*\sBTC/;
+
+async function setIncreasedFeeRate(page: Page, feeRate: string) {
+  await expect(page.getByTestId(ActivitySelectors.TransactionActionBalance)).toHaveText(
+    loadedBalanceCaption
+  );
+  const feeInput = page.getByTestId(ActivitySelectors.TransactionActionFeeInput);
+  await feeInput.clear();
+  await feeInput.fill(feeRate);
+}
 
 // The activity row comes from the Leather API; the replacement payload comes
 // from esplora, so every pending tx here is mocked into both.
@@ -58,9 +69,7 @@ test.describe('Bitcoin RBF increase fee', () => {
     await expect(increaseFeeBtn).toBeVisible();
     await increaseFeeBtn.click();
 
-    const feeInput = page.getByTestId(ActivitySelectors.TransactionActionFeeInput);
-    await feeInput.clear();
-    await feeInput.fill('25');
+    await setIncreasedFeeRate(page, '25');
 
     const submitBtn = page.getByTestId(ActivitySelectors.TransactionSubmitAction);
     await submitBtn.click();
@@ -108,10 +117,7 @@ test.describe('Bitcoin RBF increase fee', () => {
     await expect(increaseFeeBtn).toBeVisible();
     await increaseFeeBtn.click();
 
-    const feeInput = page.getByTestId(ActivitySelectors.TransactionActionFeeInput);
-
-    await feeInput.clear();
-    await feeInput.fill('10');
+    await setIncreasedFeeRate(page, '10');
 
     const submitBtn = page.getByTestId(ActivitySelectors.TransactionSubmitAction);
     await submitBtn.click();
@@ -139,6 +145,6 @@ test.describe('Bitcoin RBF increase fee', () => {
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
     await expect(activityList).toBeVisible();
     await expect(activityList.getByText('BTC', { exact: true })).toBeVisible();
-    await expect(page.getByText('Increase fee')).not.toBeVisible();
+    await expect(page.getByText('Increase fee')).toBeHidden();
   });
 });

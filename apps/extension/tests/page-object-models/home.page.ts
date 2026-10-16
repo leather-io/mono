@@ -61,7 +61,7 @@ export class HomePage {
 
   async goToReceiveDialog() {
     await this.page.getByTestId(HomePageSelectors.ReceiveCryptoAssetBtn).click();
-    await this.page.waitForSelector('[data-state="open"]');
+    await this.page.getByRole('dialog').first().waitFor();
   }
 
   // Open issue with Playwright's ability to copyToClipboard from legacy tests:
@@ -84,7 +84,7 @@ export class HomePage {
     const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
     const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
     await qrCodeBtn.or(addressDisplayer).first().waitFor();
-    if (await qrCodeBtn.isVisible()) await qrCodeBtn.click({ force: true });
+    if (await qrCodeBtn.isVisible()) await qrCodeBtn.click();
     const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
@@ -102,7 +102,7 @@ export class HomePage {
   }
 
   async clickSettingsButton() {
-    await this.settingsButton.click({ force: true });
+    await this.settingsButton.click();
   }
 
   async signOut() {
@@ -130,9 +130,9 @@ export class HomePage {
 
   async goToManageTokensPage() {
     await this.manageTokensBtn.click();
-    await this.page.waitForSelector(`[data-testid="${HomePageSelectors.ManageTokensAssetsList}"]`, {
-      state: 'attached',
-    });
+    await this.page
+      .getByTestId(HomePageSelectors.ManageTokensAssetsList)
+      .waitFor({ state: 'attached' });
   }
 
   async goBackFromManageTokens() {
@@ -141,9 +141,7 @@ export class HomePage {
   }
 
   async waitForHomePageReady() {
-    await this.page.waitForSelector(createTestSelector(HomePageSelectors.HomePageContainer), {
-      state: 'attached',
-    });
+    await this.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor({ state: 'attached' });
   }
 
   async switchAccount(accountIndex: number) {

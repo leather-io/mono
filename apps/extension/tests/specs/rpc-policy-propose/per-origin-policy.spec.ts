@@ -82,8 +82,7 @@ async function approveGetAddresses(context: BrowserContext) {
 
 async function clickPropose(context: BrowserContext) {
   const popup = await context.waitForEvent('page');
-  await popup.waitForTimeout(1500);
-  await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
+  await popup.getByText('Propose transaction', { exact: true }).click({ timeout: 20_000 });
 }
 
 function readPersistedPermission(page: Page, extensionId: string) {
@@ -117,18 +116,17 @@ test.describe('RPC: per-origin policy binding', () => {
       ...getConnectedTestAppPermissionsState(),
       ...policyStateOverrides({ policies: [stacksPolicy], activePolicyId: stacksPolicy.id }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
 
     const [popup] = await Promise.all([
       context.waitForEvent('page'),
       openStxCallContract(page, TEST_ACCOUNT_2_STX_ADDRESS),
     ]);
-    await popup.waitForTimeout(1500);
 
     await test
       .expect(popup.getByRole('button', { name: 'Approve' }))
       .toBeVisible({ timeout: 20_000 });
-    await test.expect(popup.locator('text="Propose transaction"')).toHaveCount(0);
+    await test.expect(popup.getByText('Propose transaction', { exact: true })).toHaveCount(0);
   });
 
   test('connecting with a policy persists the binding and later requests propose', async ({
@@ -145,7 +143,7 @@ test.describe('RPC: per-origin policy binding', () => {
       extensionId,
       policyStateOverrides({ policies: [stacksPolicy], activePolicyId: stacksPolicy.id })
     );
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
 
     const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: true });
     await approveGetAddresses(context);
@@ -163,7 +161,7 @@ test.describe('RPC: per-origin policy binding', () => {
     const permission = await readPersistedPermission(page, extensionId)();
     test.expect(permission.policyId).toBe(stacksPolicy.id);
 
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
     const [result] = await Promise.all([
       requestStxCallContract(page, TEST_ACCOUNT_2_STX_ADDRESS),
       clickPropose(context),
@@ -190,7 +188,7 @@ test.describe('RPC: per-origin policy binding', () => {
       ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
       ...policyStateOverrides({ policies: [stacksPolicy] }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
 
     const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: true });
     await approveGetAddresses(context);

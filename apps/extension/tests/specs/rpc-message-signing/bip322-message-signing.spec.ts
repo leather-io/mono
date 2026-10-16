@@ -4,7 +4,7 @@ import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/o
 
 import { test } from '../../fixtures/fixtures';
 
-test.describe('Message signing', () =>
+test.describe('Message signing', () => {
   test.describe('BIP-322 message signing', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
@@ -12,7 +12,7 @@ test.describe('Message signing', () =>
         extensionId,
         getConnectedTestAppPermissionsState()
       );
-      await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+      await page.goto('localhost:3000');
     });
 
     function clickActionButton(context: BrowserContext) {
@@ -72,4 +72,5 @@ test.describe('Message signing', () =>
         },
       });
     });
-  }));
+  });
+});

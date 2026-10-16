@@ -1,3 +1,5 @@
+import type { Page } from '@playwright/test';
+
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { test } from '../../fixtures/fixtures';
@@ -24,10 +26,31 @@ const demoEncryptedKey =
 
 const demoSalt = 'c4cccf33166051f7704cd877a2f03f93';
 
+const latestPersistedVersion = 4;
+
+function readPersistedState(page: Page) {
+  return page.evaluate(async () => {
+    const state = await chrome.storage.local.get<{ 'persist:root': MigratedPersistedState }>([
+      'persist:root',
+    ]);
+    return state['persist:root'];
+  });
+}
+
+async function readPersistedVersion(page: Page) {
+  const state = await readPersistedState(page);
+  if (typeof state !== 'object') return undefined;
+  return state._persist?.version;
+}
+
+async function readMigratedPersistedState(page: Page) {
+  await test.expect.poll(() => readPersistedVersion(page)).toEqual(latestPersistedVersion);
+  return readPersistedState(page);
+}
+
 test.describe('Store migrations', () => {
   test.beforeEach(async ({ extensionId, globalPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await globalPage.page.waitForTimeout(1000);
   });
 
   test('Migration 0 --> 3', async ({ extensionId, globalPage }) => {
@@ -36,28 +59,17 @@ test.describe('Store migrations', () => {
 
     const { page } = globalPage;
 
-    await globalPage.page.waitForTimeout(1000);
-
     // Force wallet into old state format using Redux Persist serialization
     await page.evaluate(
       async state => chrome.storage.local.set({ ['persist:root']: state }),
       previousSerializedState
     );
 
-    await page.waitForTimeout(1000);
-
     // Refresh to simulate user returning to app for first time since migration
     await globalPage.gotoNakedRoot(extensionId);
 
-    await page.waitForTimeout(1000);
-
     // State now in new format
-    const result = await page.evaluate(async () => {
-      const state = await chrome.storage.local.get<{ 'persist:root': MigratedPersistedState }>([
-        'persist:root',
-      ]);
-      return state['persist:root'];
-    });
+    const result = await readMigratedPersistedState(page);
 
     // Assert that old values are present in unserialized format
     test
@@ -112,25 +124,14 @@ test.describe('Store migrations', () => {
 
     const { page } = globalPage;
 
-    await page.waitForTimeout(1000);
-
     await page.evaluate(
       async state => chrome.storage.local.set({ ['persist:root']: state }),
       version2State
     );
 
-    await page.waitForTimeout(1000);
-
     await globalPage.gotoNakedRoot(extensionId);
 
-    await page.waitForTimeout(1000);
-
-    const result = await page.evaluate(async () => {
-      const state = await chrome.storage.local.get<{ 'persist:root': MigratedPersistedState }>([
-        'persist:root',
-      ]);
-      return state['persist:root'];
-    });
+    const result = await readMigratedPersistedState(page);
 
     test.expect(result._persist.version).toEqual(4);
     test.expect(result.softwareKeys.salt).toEqual(demoSalt);

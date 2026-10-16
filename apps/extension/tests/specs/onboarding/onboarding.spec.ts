@@ -66,15 +66,14 @@ test.describe('Onboarding an existing user', () => {
         );
     });
   });
+
   test('going through the onboarding flow to sign in', async ({
     extensionId,
     globalPage,
     onboardingPage,
-    homePage,
   }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInExistingUser();
-    await homePage.page.waitForTimeout(1000);
 
     const persistedStore = await onboardingPage.page.evaluate(() =>
       window.debug.getPersistedStore()
@@ -124,7 +123,7 @@ test.describe('Onboarding an existing user', () => {
     const validPartialKey = 'shoulder any pencil';
     await onboardingPage.signInMnemonicKey(validPartialKey);
     const signInSeedError = onboardingPage.page.getByTestId(OnboardingSelectors.SignInSeedError);
-    await test.expect(signInSeedError).not.toBeVisible();
+    await test.expect(signInSeedError).toBeHidden();
   });
 
   test('Activity tab', async ({ extensionId, globalPage, onboardingPage, homePage, page }) => {

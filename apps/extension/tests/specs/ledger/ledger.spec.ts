@@ -35,9 +35,11 @@ test.describe('App with Ledger', () => {
       });
 
       test('that homepage renders correctly', async ({ homePage }) => {
-        await test.expect(homePage.page.locator('text="Send"').first()).toBeVisible();
-        await test.expect(homePage.page.locator('text="Receive"').first()).toBeVisible();
-        await test.expect(homePage.page.locator('text="Swap"').first()).toBeVisible();
+        await test.expect(homePage.page.getByText('Send', { exact: true }).first()).toBeVisible();
+        await test
+          .expect(homePage.page.getByText('Receive', { exact: true }).first())
+          .toBeVisible();
+        await test.expect(homePage.page.getByText('Swap', { exact: true }).first()).toBeVisible();
       });
 
       test('receive modal opens', async ({ homePage }) => {
@@ -83,9 +85,7 @@ test.describe('App with Ledger', () => {
           test.expect(homePage.page.url()).toEqual(urlBeforeConnect);
 
           await homePage.page.keyboard.press('Escape');
-          await test
-            .expect(homePage.page.getByText('Connect & unlock your Ledger'))
-            .not.toBeVisible();
+          await test.expect(homePage.page.getByText('Connect & unlock your Ledger')).toBeHidden();
           await test
             .expect(homePage.assetList.getByTestId(CoreAssetSelectors.ConnectLedgerBitcoin))
             .toBeVisible();
@@ -179,7 +179,7 @@ test.describe('App with Ledger', () => {
         await homePage.clickActivityTab();
         const noActivityText = homePage.page.getByText('No activity yet');
         // Account has activity to make sure we don't see label
-        await test.expect(noActivityText).not.toBeVisible();
+        await test.expect(noActivityText).toBeHidden();
         test.expect(homePage.page.url()).toContain('/activity');
       });
     });
