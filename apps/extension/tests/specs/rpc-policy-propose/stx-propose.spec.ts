@@ -22,7 +22,7 @@ import {
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
-import { truncateMiddle } from '@leather.io/utils';
+import { assertExistence, truncateMiddle } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -110,7 +110,7 @@ test.describe('RPC: stx_callContract from a policy (multisig) account', () => {
       clickPropose(context),
     ]);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result.result).toMatchObject({
@@ -132,7 +132,7 @@ test.describe('RPC: stx_callContract from a policy (multisig) account', () => {
       clickPropose(context),
     ]);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result.result).toMatchObject({
@@ -187,7 +187,7 @@ test.describe('RPC: stx_callContract acts on the per-origin policy binding', () 
       verifySignerAndPropose(context),
     ]);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result.result).toMatchObject({

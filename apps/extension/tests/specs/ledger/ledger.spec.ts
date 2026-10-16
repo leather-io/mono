@@ -18,11 +18,14 @@ const specs = {
   withLedgerLiveStacksKeys: makeLedgerLiveLedgerWalletState(),
 };
 
-async function interceptBitcoinRequests(homePage: HomePage) {
-  const requestPromise = homePage.page.waitForRequest(/bestinslot|mempool\.space/, {
-    timeout: 1000,
+const bitcoinApiUrl = /bestinslot|mempool\.space/;
+
+function trackBitcoinRequests(homePage: HomePage) {
+  const bitcoinRequestUrls: string[] = [];
+  homePage.page.on('request', request => {
+    if (bitcoinApiUrl.test(request.url())) bitcoinRequestUrls.push(request.url());
   });
-  return requestPromise;
+  return bitcoinRequestUrls;
 }
 
 test.describe('App with Ledger', () => {
@@ -98,14 +101,14 @@ test.describe('App with Ledger', () => {
         });
 
         test('there are no bitcoin requests', async ({ homePage }) => {
-          const requestPromise = interceptBitcoinRequests(homePage);
+          const bitcoinRequestUrls = trackBitcoinRequests(homePage);
 
           await homePage.page.getByTestId(SettingsSelectors.CurrentAccountDisplayName).click();
-
           await test
-            .expect(async () => await test.expect(requestPromise).rejects.toThrowError())
-            .toPass()
-            .catch();
+            .expect(homePage.page.getByRole('heading', { name: 'Select account' }))
+            .toBeVisible();
+
+          test.expect(bitcoinRequestUrls).toEqual([]);
         });
 
         test('that you can switch accounts', async ({ homePage }) => {

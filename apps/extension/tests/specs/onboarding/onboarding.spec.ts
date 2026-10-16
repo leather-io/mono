@@ -74,9 +74,7 @@ test.describe('Onboarding an existing user', () => {
     const persistedStore = await onboardingPage.page.evaluate(() =>
       window.debug.getPersistedStore()
     );
-    const parsedWalletState = comparableWalletStateSchema.safeParse(persistedStore);
-    if (!parsedWalletState.success) throw new Error('Unexpected persisted wallet state');
-    const walletState = parsedWalletState.data;
+    const walletState = comparableWalletStateSchema.parse(persistedStore);
 
     const testWalletState: ComparableWalletState = getTestSoftwareAccountDefaultWalletState();
 

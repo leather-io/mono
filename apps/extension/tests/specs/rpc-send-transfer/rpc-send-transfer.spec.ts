@@ -25,7 +25,7 @@ import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 
 import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 import { type RpcParams, type sendTransfer } from '@leather.io/rpc';
-import { truncateMiddle } from '@leather.io/utils';
+import { assertExistence, truncateMiddle } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -112,7 +112,7 @@ test.describe('RPC: sendTransfer', () => {
       }),
     ]);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -138,7 +138,7 @@ test.describe('RPC: sendTransfer', () => {
       }),
     ]);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -167,7 +167,7 @@ test.describe('RPC: sendTransfer', () => {
     await popup.close();
     const result = await resultPromise;
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -188,7 +188,7 @@ test.describe('RPC: sendTransfer', () => {
       clickActionButton(context)('Cancel'),
     ]);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result).toEqual({

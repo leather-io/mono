@@ -281,8 +281,6 @@ export default defineConfig([
     extends: [pluginPlaywright.configs['flat/recommended']],
     rules: {
       'no-empty-pattern': 'error',
-      'playwright/no-conditional-in-test': 'off',
-      'playwright/no-conditional-expect': 'off',
       'playwright/require-top-level-describe': 'error',
       'playwright/no-raw-locators': 'error',
       'playwright/prefer-native-locators': 'error',

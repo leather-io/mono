@@ -11,6 +11,8 @@ import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
 
+import { assertExistence } from '@leather.io/utils';
+
 import { test } from '../../fixtures/fixtures';
 
 test.describe('Multiwallet integrity', () => {
@@ -286,7 +288,7 @@ test.describe('Multiwallet integrity', () => {
 
     const active = await switchAccountPage.getActiveAccount();
     const removedFingerprint = active?.fingerprint;
-    if (!removedFingerprint) throw new Error('expected the new wallet to be active');
+    assertExistence(removedFingerprint, 'expected the new wallet to be active');
     expect(removedFingerprint).not.toBe(testFingerprint);
 
     await expect

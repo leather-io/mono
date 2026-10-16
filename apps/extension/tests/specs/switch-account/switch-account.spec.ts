@@ -1,6 +1,8 @@
 import { expect } from '@playwright/test';
 import { mockBnsV2NamesRequestEmpty } from '@tests/mocks/mock-stacks-bns';
 
+import { assertExistence } from '@leather.io/utils';
+
 import { test } from '../../fixtures/fixtures';
 
 test.describe('Switch account sheet', () => {
@@ -57,7 +59,7 @@ test.describe('Switch account sheet', () => {
     await switchAccountPage.open();
 
     const activeAccount = await switchAccountPage.getActiveAccount();
-    if (!activeAccount) throw new Error('Expected an active account before adding one');
+    assertExistence(activeAccount, 'Expected an active account before adding one');
     const { fingerprint } = activeAccount;
     const before = await switchAccountPage.getHighestAccountIndex(fingerprint);
 

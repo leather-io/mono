@@ -8,6 +8,7 @@ import {
 } from '@tests/page-object-models/onboarding.page';
 
 import type { SupportedBlockchains } from '@leather.io/models';
+import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -124,7 +125,7 @@ getAddressesMethods.forEach(method => {
           await clickConnectLeatherButton(popup);
 
           const result = await getAddressesPromise;
-          if (!result) throw new Error('Expected result');
+          assertExistence(result, 'Expected result');
 
           test.expect(result).toEqual(expectedResult);
         });

@@ -21,6 +21,7 @@ import {
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
+import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -167,7 +168,7 @@ test.describe('RPC: per-origin policy binding', () => {
       clickPropose(context),
     ]);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result.result).toMatchObject({

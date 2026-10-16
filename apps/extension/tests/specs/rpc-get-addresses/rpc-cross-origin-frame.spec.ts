@@ -1,6 +1,8 @@
 import type { BrowserContext, Page } from '@playwright/test';
 import { getResponseAddresses } from '@tests/leather-provider';
 
+import { assertExistence } from '@leather.io/utils';
+
 import { test } from '../../fixtures/fixtures';
 
 const topLevelUrl = 'http://127.0.0.1:3000';
@@ -63,7 +65,7 @@ test.describe('Rpc: cross-origin iframe requests', () => {
     await approveButton.click();
 
     const result = await getAddressesPromise;
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     test.expect(getResponseAddresses(result).length).toBeGreaterThan(0);
   });
 
@@ -82,7 +84,7 @@ test.describe('Rpc: cross-origin iframe requests', () => {
 
     await approveButton.click();
     const result = await getAddressesPromise;
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     test.expect(getResponseAddresses(result).length).toBeGreaterThan(0);
   });
 });

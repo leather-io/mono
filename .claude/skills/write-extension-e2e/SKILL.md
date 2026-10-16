@@ -39,7 +39,11 @@ these bans. Fix the cause, never add a suppression.
 | `innerText()` + `toEqual`                                                                                                                                                                                                              | `expect(locator).toHaveText()` so the assertion retries                                              |
 | In `specs/**`: `SendCryptoAssetSelectors.SendForm`, `SharedComponentsSelectors.CardAvailableBalance`, `ActivitySelectors.TransactionActionFeeInput`, `ActivitySelectors.TransactionActionBalance`, `SettingsSelectors.UnlockWalletBtn` | The page-object action named in the lint message                                                     |
 
-Every test must end with an assertion and sit inside a top-level `test.describe`.
+Every test must end with an assertion and sit inside a top-level `test.describe`. Test bodies
+cannot contain `if`: narrow optional values with `assertExistence(value, message)` from
+`@leather.io/utils` or a zod `schema.parse(value)`, and move any genuine branch into a named helper
+outside the test. Expectations cannot sit inside callbacks or `catch`; assert directly so a failure
+cannot be swallowed.
 
 ## Actions own their preconditions
 
