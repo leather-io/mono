@@ -197,6 +197,31 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
   };
 }
 
+const pkhFragmentPattern = /pk_?h\(/i;
+const pubkeyHashLength = 20;
+
+function isP2wpkhScriptCode(witnessScript: Uint8Array) {
+  const [dup, hash160, keyHash, equalVerify, checkSig, ...rest] = btc.Script.decode(witnessScript);
+  return (
+    rest.length === 0 &&
+    dup === 'DUP' &&
+    hash160 === 'HASH160' &&
+    keyHash instanceof Uint8Array &&
+    keyHash.length === pubkeyHashLength &&
+    equalVerify === 'EQUALVERIFY' &&
+    checkSig === 'CHECKSIG'
+  );
+}
+
+export function compilesToP2wpkhScriptCode(descriptor: string) {
+  if (!pkhFragmentPattern.test(descriptor)) return false;
+  try {
+    return isP2wpkhScriptCode(compileWshDescriptor(descriptor).witnessScript);
+  } catch {
+    return false;
+  }
+}
+
 const opReserved = 0x50;
 const maxMultisigOpcode = 0x60;
 

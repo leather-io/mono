@@ -15,6 +15,7 @@ import {
 import {
   type FinalizeWshDescriptorPsbtResult,
   compileWshDescriptor,
+  compilesToP2wpkhScriptCode,
   extractWshDescriptorPreimages,
   finalizeWshDescriptorPsbt,
   findAccountDescriptorKey,
@@ -691,6 +692,67 @@ function buildPolicyTx(descriptor: string, options: BuildPolicyTxOptions) {
   for (const seed of options.signWith) tx.signIdx(deriveAddressIndexKey(seed).privateKey!, 0);
   return tx;
 }
+
+describe('compilesToP2wpkhScriptCode', () => {
+  const pubkeyAHash160 = ripemd160(sha256(pubkeyA));
+
+  it('flags a pkh() descriptor that compiles to a p2wpkh scriptCode', () => {
+    const pkhDescriptor = `wsh(pkh(${bytesToHex(pubkeyA)}))`;
+    const { witnessScript } = compileWshDescriptor(pkhDescriptor);
+
+    expect(bytesToHex(witnessScript)).toBe(`76a914${bytesToHex(pubkeyAHash160)}88ac`);
+    expect(compilesToP2wpkhScriptCode(pkhDescriptor)).toBe(true);
+  });
+
+  it('flags a ranged pkh() descriptor written with an extended key', () => {
+    expect(compilesToP2wpkhScriptCode(`wsh(pkh(${xpubA}/0/*))`)).toBe(true);
+    expect(compilesToP2wpkhScriptCode(`wsh(pkh(${xpubA}/1/3))`)).toBe(true);
+  });
+
+  it('flags a checksummed pkh() descriptor', () => {
+    const pkhDescriptor = `wsh(pkh(${bytesToHex(pubkeyA)}))`;
+    expect(compilesToP2wpkhScriptCode(`${pkhDescriptor}#${checksum(pkhDescriptor)}`)).toBe(true);
+  });
+
+  it('leaves a descriptor that does not compile to the signing flow', () => {
+    expect(compilesToP2wpkhScriptCode(`wsh(pk(${xpubA}))`)).toBe(false);
+    expect(compilesToP2wpkhScriptCode(`wsh(multi(2,${xpubA}/2/0,${xpubB}/2/0))`)).toBe(false);
+    expect(compilesToP2wpkhScriptCode('wsh(nonsense)')).toBe(false);
+    expect(compilesToP2wpkhScriptCode(`wsh(pkh(${xpubA}))`)).toBe(false);
+  });
+
+  it('does not flag a non-wsh descriptor', () => {
+    expect(compilesToP2wpkhScriptCode(`wpkh(${xpubA}/0/*)`)).toBe(false);
+  });
+
+  it('does not flag the policy descriptors the wallet signs', () => {
+    expect(compilesToP2wpkhScriptCode(descriptor)).toBe(false);
+    expect(compilesToP2wpkhScriptCode(`wsh(pk(${xpubA}/0/*))`)).toBe(false);
+    expect(compilesToP2wpkhScriptCode(`wsh(sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7))`)).toBe(false);
+    expect(compilesToP2wpkhScriptCode(`wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyA)})))`)).toBe(
+      false
+    );
+  });
+
+  it('does not flag a chain of v:pk() keys ending in pk()', () => {
+    expect(compilesToP2wpkhScriptCode(`wsh(and_v(v:pk(${xpubA}/0/0),pk(${xpubB}/0/0)))`)).toBe(
+      false
+    );
+    expect(
+      compilesToP2wpkhScriptCode(
+        `wsh(and_v(v:pk(${bytesToHex(pubkeyA)}),and_v(v:pk(${xpubA}/0/1),pk(${xpubB}/0/1))))`
+      )
+    ).toBe(false);
+  });
+
+  it('does not flag a policy that merely contains a pkh() branch', () => {
+    const policyWithPkhBranch = `wsh(and_v(v:pk(${xpubA}/0/0),pkh(${xpubB}/0/0)))`;
+    const { witnessScript } = compileWshDescriptor(policyWithPkhBranch);
+
+    expect(witnessScript.length).toBeGreaterThan(25);
+    expect(compilesToP2wpkhScriptCode(policyWithPkhBranch)).toBe(false);
+  });
+});
 
 function rewriteFirstPartialSig(
   psbtBytes: Uint8Array,
