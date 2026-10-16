@@ -1,5 +1,3 @@
-import { type FormikHelpers } from 'formik';
-
 import { FeeTypes, type Money } from '@leather.io/models';
 
 import { FormErrorMessages } from '@shared/error-messages';
@@ -31,8 +29,7 @@ export function useStacksCommonSendForm({
   const currentNetwork = useCurrentNetworkState();
   const policy = useCurrentPolicy();
   const isStacksPolicy = policy?.chain === 'stacks';
-  const { isHighFeeWithNoFormErrors, setShowHighFeeWarningSheet } =
-    useStacksHighFeeWarningContext();
+  const { shouldWarnAboutHighFee, setShowHighFeeWarningSheet } = useStacksHighFeeWarningContext();
 
   const initialValues: StacksSendFormValues = createDefaultInitialFormValues({
     hasDismissedHighFeeWarning: false,
@@ -47,13 +44,8 @@ export function useStacksCommonSendForm({
     ...routeState,
   });
 
-  async function checkFormValidation(
-    values: StacksSendFormValues,
-    formikHelpers: FormikHelpers<StacksSendFormValues>
-  ) {
-    const formErrors = await formikHelpers.validateForm();
-
-    if (isHighFeeWithNoFormErrors(formErrors, values.fee)) {
+  function checkFormValidation(values: StacksSendFormValues) {
+    if (shouldWarnAboutHighFee(values.fee)) {
       setShowHighFeeWarningSheet(true);
       return false;
     }

@@ -1,4 +1,5 @@
-import { useField } from 'formik';
+import { useFormState } from 'react-hook-form';
+
 import { HStack, type HstackProps, styled } from 'leather-styles/jsx';
 
 import { Callout, InfoCircleIcon } from '@leather.io/ui';
@@ -19,7 +20,7 @@ interface FeesRowLayoutProps extends HstackProps {
 }
 export function FeesRowLayout(props: FeesRowLayoutProps) {
   const { feeField, fieldWarning, isSponsored, selectInput, ...rest } = props;
-  const [_, meta] = useField('fee');
+  const { errors } = useFormState<{ fee: string }>({ name: 'fee' });
 
   return (
     <HStack gap="space.04" width="100%" {...rest} flexWrap="wrap">
@@ -42,7 +43,7 @@ export function FeesRowLayout(props: FeesRowLayoutProps) {
         {feeField}
       </HStack>
       {isSponsored && <SponsoredLabel />}
-      {!meta.error && fieldWarning && (
+      {!errors.fee && fieldWarning && (
         <Callout variant="warning" width="100%">
           {fieldWarning}
         </Callout>
