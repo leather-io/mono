@@ -1824,6 +1824,9 @@ importers:
       '@stacks/transactions':
         specifier: 7.5.0
         version: 7.5.0(encoding@0.1.13)
+      remeda:
+        specifier: 2.21.2
+        version: 2.21.2
       zod:
         specifier: 4.0.17
         version: 4.0.17
