@@ -1,4 +1,4 @@
-import { Palette, colorThemes } from './colors';
+import { type Palette, colorThemes } from './colors';
 
 function createColorObjForKey<T extends keyof Palette>(key: T) {
   return { value: { base: colorThemes.base[key], _dark: colorThemes.dark[key] } };

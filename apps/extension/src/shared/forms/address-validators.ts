@@ -1,5 +1,5 @@
 import { Network, getAddressInfo, validate } from 'bitcoin-address-validation';
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import type { BitcoinNetworkModes } from '@leather.io/models';
 import { isEmptyString, isUndefined } from '@leather.io/utils';
@@ -7,20 +7,19 @@ import { isEmptyString, isUndefined } from '@leather.io/utils';
 import { FormErrorMessages } from '@shared/error-messages';
 
 export function nonEmptyStringValidator(message = '') {
-  return yup.string().test({
-    message,
-    test: value => value !== undefined && value.trim() !== '',
+  return z.refine<string | undefined>(value => value !== undefined && value.trim() !== '', {
+    error: message,
   });
 }
 
 export function btcAddressValidator() {
-  return yup.string().test({
-    message: FormErrorMessages.InvalidAddress,
-    test(value) {
+  return z.refine<string | undefined>(
+    value => {
       if (isUndefined(value) || isEmptyString(value)) return true;
       return validate(value);
     },
-  });
+    { error: FormErrorMessages.InvalidAddress }
+  );
 }
 
 const networkToBitcoinNetworkMode: Record<Network, BitcoinNetworkModes> = {
@@ -53,8 +52,7 @@ function btcAddressNetworkValidatorFactory(network: BitcoinNetworkModes) {
 }
 
 export function btcAddressNetworkValidator(network: BitcoinNetworkModes) {
-  return yup.string().test({
-    test: btcAddressNetworkValidatorFactory(network),
-    message: FormErrorMessages.IncorrectNetworkAddress,
+  return z.refine<string | undefined>(btcAddressNetworkValidatorFactory(network), {
+    error: FormErrorMessages.IncorrectNetworkAddress,
   });
 }

@@ -1,16 +1,11 @@
 import { Sip10AggregateBalance } from '@leather.io/services';
+import { getPinnedAssetPriority } from '@leather.io/utils';
 
 export function sortSip10Balances(
   a: Sip10AggregateBalance['sip10s'][number],
   b: Sip10AggregateBalance['sip10s'][number]
 ) {
-  function priority(symbol: string) {
-    if (symbol === 'USDCx') return 0;
-    if (symbol === 'sBTC') return 1;
-    return 2;
-  }
-
-  const priorityDiff = priority(a.asset.symbol) - priority(b.asset.symbol);
+  const priorityDiff = getPinnedAssetPriority(a.asset) - getPinnedAssetPriority(b.asset);
   if (priorityDiff !== 0) return priorityDiff;
 
   // Sort by quote total balance
