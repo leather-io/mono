@@ -128,7 +128,6 @@
     "uuid": "11.1.0",
     "valid-url": "1.0.9",
     "webextension-polyfill": "0.12.0",
-    "yup": "1.4.0",
     "zod": "4.0.17",
     "zod-validation-error": "4.0.1",
     "zxcvbn": "4.4.2"
