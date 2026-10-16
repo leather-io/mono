@@ -1,8 +1,8 @@
-import { HARDENED_OFFSET, HDKey } from '@scure/bip32';
+import { HARDENED_OFFSET, type HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
-import { P2Ret, P2TROut } from '@scure/btc-signer/payment';
-import { SigHash } from '@scure/btc-signer/transaction';
-import * as bitcoin from 'bitcoinjs-lib';
+import { type P2Ret, type P2TROut } from '@scure/btc-signer/payment';
+import { type SigHash } from '@scure/btc-signer/transaction';
+import type * as bitcoin from 'bitcoinjs-lib';
 
 import {
   DerivationPathDepth,
@@ -15,16 +15,17 @@ import {
   keyOriginToDerivationPath,
 } from '@leather.io/crypto';
 import type { BitcoinAddress, BitcoinNetworkModes, ValueOf } from '@leather.io/models';
-import { signatureHash } from '@leather.io/rpc';
+import { type signatureHash } from '@leather.io/rpc';
 import { hexToNumber } from '@leather.io/utils';
 
 import { getTaprootPaymentFromAddressIndex } from '../payments/p2tr-address-gen';
 import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
 import {
-  SupportedPaymentType,
+  type SupportedPaymentType,
   ecdsaPublicKeyToSchnorr,
   extractExtendedPublicKeyFromPolicy,
   inferPaymentTypeFromPath,
+  isSupportedPaymentType,
   whenSupportedPaymentType,
 } from '../utils/bitcoin.utils';
 
@@ -83,13 +84,16 @@ export interface BitcoinPayerInfo {
 export function deriveBitcoinPayerFromAccount(descriptor: string, network: BitcoinNetworkModes) {
   const { fingerprint, keyOrigin } = decomposeDescriptor(descriptor);
   const accountKeychain = deriveKeychainFromXpub(extractExtendedPublicKeyFromPolicy(descriptor));
-  const paymentType = inferPaymentTypeFromPath(keyOrigin) as SupportedPaymentType;
+  const paymentType = inferPaymentTypeFromPath(keyOrigin);
 
-  if (accountKeychain.depth !== DerivationPathDepth.Account)
+  if (accountKeychain.depth !== Number(DerivationPathDepth.Account))
     throw new Error('Keychain passed is not an account');
 
   return ({ change, addressIndex }: BitcoinPayerInfo) => {
     const childKeychain = accountKeychain.deriveChild(change).deriveChild(addressIndex);
+
+    if (!isSupportedPaymentType(paymentType))
+      throw new Error(`Unsupported payment type: ${paymentType}`);
 
     const derivePayerFromAccount = whenSupportedPaymentType(paymentType)({
       p2tr: getTaprootPaymentFromAddressIndex,

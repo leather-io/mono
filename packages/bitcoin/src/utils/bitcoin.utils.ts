@@ -2,7 +2,7 @@ import { hexToBytes } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
-import { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt';
+import { type TransactionInput, type TransactionOutput } from '@scure/btc-signer/psbt';
 import type { BitcoinPayer, BitcoinTaprootPayer } from 'signer/bitcoin-payer';
 
 import { HD_KEY_VERSIONS_BY_NETWORK } from '@leather.io/constants';
@@ -11,12 +11,16 @@ import {
   deriveKeychainFromXpub,
   extractPurposeFromPath,
 } from '@leather.io/crypto';
-import { BitcoinAddress, BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
+import {
+  type BitcoinAddress,
+  type BitcoinNetworkModes,
+  type NetworkModes,
+} from '@leather.io/models';
 import type { BitcoinPaymentTypes } from '@leather.io/rpc';
 import { isDefined, isUndefined, whenNetwork } from '@leather.io/utils';
 
 import { createBitcoinAddress } from '../validation/bitcoin-address';
-import { BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
+import { type BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
 
 export interface BitcoinAccount {
   type: BitcoinPaymentTypes;
@@ -44,8 +48,8 @@ export function bitcoinNetworkModeToCoreNetworkMode(mode: BitcoinNetworkModes) {
 type BitcoinNetworkMap<T> = Record<BitcoinNetworkModes, T>;
 
 export function whenBitcoinNetwork(mode: BitcoinNetworkModes) {
-  return <T extends BitcoinNetworkMap<unknown>>(networkMap: T) =>
-    networkMap[mode] as T[BitcoinNetworkModes];
+  return <T extends BitcoinNetworkMap<unknown>>(networkMap: T): T[BitcoinNetworkModes] =>
+    networkMap[mode];
 }
 
 /**
@@ -64,7 +68,7 @@ export function getBitcoinCoinTypeIndexByNetwork(network: BitcoinNetworkModes) {
 }
 
 export function deriveAddressIndexKeychainFromAccount(keychain: HDKey) {
-  if (keychain.depth !== DerivationPathDepth.Account)
+  if (keychain.depth !== Number(DerivationPathDepth.Account))
     throw new Error('Keychain passed is not an account');
 
   return ({ changeIndex, addressIndex }: { changeIndex: number; addressIndex: number }) =>
@@ -153,10 +157,14 @@ export function btcSignerLibPaymentTypeToPaymentTypeMap(
   return paymentTypeMap[payment];
 }
 
-export function isBtcSignerLibPaymentType(
-  payment: string
-): payment is BtcSignerLibPaymentTypeIdentifers {
-  return payment in paymentTypeMap;
+export function isBtcSignerLibPaymentType(payment: string) {
+  return (
+    payment === 'wpkh' ||
+    payment === 'wsh' ||
+    payment === 'tr' ||
+    payment === 'pkh' ||
+    payment === 'sh'
+  );
 }
 
 export function parseKnownPaymentType(
@@ -174,6 +182,9 @@ export function whenPaymentType(mode: BitcoinPaymentTypes | BtcSignerLibPaymentT
 
 export type SupportedPaymentType = 'p2wpkh' | 'p2tr';
 export type SupportedPaymentTypeMap<T> = Record<SupportedPaymentType, T>;
+export function isSupportedPaymentType(paymentType: string) {
+  return paymentType === 'p2wpkh' || paymentType === 'p2tr';
+}
 export function whenSupportedPaymentType(mode: SupportedPaymentType) {
   return <T>(paymentMap: SupportedPaymentTypeMap<T>): T => paymentMap[mode];
 }
@@ -237,8 +248,10 @@ export function getHdKeyVersionsFromNetwork(network: NetworkModes) {
 
 function getBitcoinInputScript(input: TransactionInput) {
   if (isDefined(input.witnessUtxo)) return input.witnessUtxo.script;
-  if (isDefined(input.nonWitnessUtxo) && isDefined(input.index))
-    return input.nonWitnessUtxo.outputs[input.index]?.script;
+  if (isDefined(input.nonWitnessUtxo) && isDefined(input.index)) {
+    const script: unknown = input.nonWitnessUtxo.outputs[input.index]?.script;
+    return script instanceof Uint8Array ? script : undefined;
+  }
   return undefined;
 }
 

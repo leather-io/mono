@@ -1,4 +1,4 @@
-import { TransactionErrorKey } from '@leather.io/models';
+import { type TransactionErrorKey } from '@leather.io/models';
 
 export class BitcoinError extends Error {
   public message: BitcoinErrorKey;
