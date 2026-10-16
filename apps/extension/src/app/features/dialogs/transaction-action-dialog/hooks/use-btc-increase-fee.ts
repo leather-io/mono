@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router';
 
 import * as btc from '@scure/btc-signer';
 import BigNumber from 'bignumber.js';
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import { getSizeInfo, isTaprootPayer } from '@leather.io/bitcoin';
 import { keyOriginToDerivationPath } from '@leather.io/crypto';
@@ -11,9 +11,11 @@ import { emptyUtxos } from '@leather.io/services';
 import { createMoney, isError, sumMoney } from '@leather.io/utils';
 
 import type { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
+import { requiredNumberField } from '@shared/forms/field-schemas';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
 import { useToast } from '@app/features/toasts/use-toast';
 import { invalidateActivityQueries } from '@app/query/activity/blockchain-activity.query';
@@ -165,38 +167,42 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     void navigate(RouteUrls.Home);
   }
 
-  const validationSchema = yup.object({
-    feeRate: yup
-      .number()
-      .integer('Fee must be a whole number')
-      .required('Fee is required')
-      .test({
-        message: 'Fee rate cannot be less or equal to previous',
-        test(value) {
-          const bnValue = new BigNumber(value);
-          const prevFee = new BigNumber(btcTx.fee);
+  const validationSchema = createFormikValidationSchema(
+    z.object({
+      feeRate: requiredNumberField({
+        requiredError: 'Fee is required',
+        typeError: 'Fee must be a number',
+      }).check(
+        z.refine<number>(value => Number.isInteger(value), {
+          error: 'Fee must be a whole number',
+        }),
+        z.refine<number>(
+          value => {
+            const bnValue = new BigNumber(value);
+            const prevFee = new BigNumber(btcTx.fee);
 
-          return prevFee.isLessThan(bnValue.multipliedBy(sizeInfo.txVBytes));
-        },
-      })
-      .test({
-        message: 'Fee is too high',
-        test(value) {
-          const bnValue = new BigNumber(value);
+            return prevFee.isLessThan(bnValue.multipliedBy(sizeInfo.txVBytes));
+          },
+          { error: 'Fee rate cannot be less or equal to previous' }
+        ),
+        z.refine<number>(
+          value => {
+            const bnValue = new BigNumber(value);
 
-          const highestFeeRate =
-            (feeRates?.high.rate ?? 10) * sizeInfo.txVBytes * MAX_FEE_RATE_MULTIPLIER;
+            const highestFeeRate =
+              (feeRates?.high.rate ?? 10) * sizeInfo.txVBytes * MAX_FEE_RATE_MULTIPLIER;
 
-          // check if fee is higher than 50 times the highest fee
-          if (feeRates && bnValue.isGreaterThan(highestFeeRate)) {
-            return false;
-          }
+            if (feeRates && bnValue.isGreaterThan(highestFeeRate)) {
+              return false;
+            }
 
-          // check if fee is higher than the available balance
-          return bnValue.isLessThanOrEqualTo(rbfAvailableBalance.amount);
-        },
-      }),
-  });
+            return bnValue.isLessThanOrEqualTo(rbfAvailableBalance.amount);
+          },
+          { error: 'Fee is too high' }
+        )
+      ),
+    })
+  );
 
   return {
     generateTx: generateUnsignedTx,
