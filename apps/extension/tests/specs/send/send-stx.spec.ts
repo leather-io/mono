@@ -1,5 +1,4 @@
 import {
-  TEST_ACCOUNT_2_STX_ADDRESS,
   TEST_BNS_NAME,
   TEST_BNS_RESOLVED_ADDRESS,
   TEST_TESTNET_ACCOUNT_2_STX_ADDRESS,
@@ -47,8 +46,7 @@ test.describe('send stx: tests on testnet', () => {
     await page.getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheet).isVisible();
     await page.getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheetSubmit).click();
 
-    const details = await sendPage.confirmationDetails.allInnerTexts();
-    test.expect(details).toBeTruthy();
+    await test.expect(sendPage.confirmationDetails).toBeVisible();
   });
 
   test('that send max button sets available balance minus fee', async ({ sendPage }) => {
@@ -57,6 +55,7 @@ test.describe('send stx: tests on testnet', () => {
     await sendPage.amountInput.blur();
     await sendPage.sendMaxButton.click();
     await sendPage.amountInput.blur();
+    await test.expect(sendPage.amountInput).not.toHaveValue('');
   });
 
   test('that empty memo on preview matches default empty value', async ({ sendPage }) => {
@@ -64,18 +63,15 @@ test.describe('send stx: tests on testnet', () => {
 
     await sendPage.amountInput.fill('1');
     await sendPage.amountInput.blur();
-    await sendPage.page.waitForTimeout(2000);
     await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
     await sendPage.recipientInput.blur();
-    await sendPage.page.waitForTimeout(2000);
     await sendPage.previewSendTxButton.focus();
     await sendPage.previewSendTxButton.click();
 
-    const confirmationMemo = await sendPage.memoRow
-      .getByTestId(SharedComponentsSelectors.InfoCardRowValue)
-      .innerText();
-
-    test.expect(confirmationMemo).toEqual(emptyMemoPreviewValue);
+    const confirmationMemo = sendPage.memoRow.getByTestId(
+      SharedComponentsSelectors.InfoCardRowValue
+    );
+    await test.expect(confirmationMemo).toHaveText(emptyMemoPreviewValue);
   });
 
   test('that asset value, recipient, memo and fees on preview match input', async ({
@@ -96,20 +92,20 @@ test.describe('send stx: tests on testnet', () => {
 
     test.expect(displayerAddress).toEqual(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
 
-    const confirmationAssetValue = await sendPage.confirmationDetails
-      .getByTestId(SharedComponentsSelectors.InfoCardAssetValue)
-      .innerText();
-    test.expect(confirmationAssetValue).toEqual(withNbsp(`${amount} ${amountSymbol}`));
+    const confirmationAssetValue = sendPage.confirmationDetails.getByTestId(
+      SharedComponentsSelectors.InfoCardAssetValue
+    );
+    await test.expect(confirmationAssetValue).toHaveText(withNbsp(`${amount} ${amountSymbol}`));
 
-    const confirmationFees = await sendPage.feesRow
-      .getByTestId(SharedComponentsSelectors.InfoCardRowValue)
-      .innerText();
-    test.expect(confirmationFees).toEqual(withNbsp(fees));
+    const confirmationFees = sendPage.feesRow.getByTestId(
+      SharedComponentsSelectors.InfoCardRowValue
+    );
+    await test.expect(confirmationFees).toHaveText(withNbsp(fees));
 
-    const confirmationMemo2 = await sendPage.memoRow
-      .getByTestId(SharedComponentsSelectors.InfoCardRowValue)
-      .innerText();
-    test.expect(confirmationMemo2).toEqual(memo);
+    const confirmationMemo2 = sendPage.memoRow.getByTestId(
+      SharedComponentsSelectors.InfoCardRowValue
+    );
+    await test.expect(confirmationMemo2).toHaveText(memo);
   });
 
   test.describe('send form validation', () => {
@@ -120,23 +116,23 @@ test.describe('send stx: tests on testnet', () => {
     test('that the amount must be a number', async ({ sendPage }) => {
       await sendPage.amountInput.fill('aaaaaa');
       await sendPage.amountInput.blur();
-      const errorMsg = await sendPage.amountInputErrorLabel.innerText();
-      test.expect(errorMsg).toBeTruthy();
+      const errorMsg = sendPage.amountInputErrorLabel;
+      await test.expect(errorMsg).toBeVisible();
     });
 
     test('that the amount must be positive', async ({ sendPage }) => {
       await sendPage.amountInput.fill('-9999');
       await sendPage.amountInput.blur();
-      const errorMsg = await sendPage.amountInputErrorLabel.innerText();
-      test.expect(errorMsg).toEqual(FormErrorMessages.MustBePositive);
+      const errorMsg = sendPage.amountInputErrorLabel;
+      await test.expect(errorMsg).toHaveText(FormErrorMessages.MustBePositive);
     });
 
     test('that the amount field enforces max length based on decimals', async ({ sendPage }) => {
       await sendPage.amountInput.fill('0.0000001');
       await sendPage.amountInput.blur();
-      const errorMsg = await sendPage.amountInputErrorLabel.innerText();
+      const errorMsg = sendPage.amountInputErrorLabel;
       const error = FormErrorMessages.TooMuchPrecision;
-      test.expect(errorMsg).toEqual(error.replace('{decimals}', String(STX_DECIMALS)));
+      await test.expect(errorMsg).toHaveText(error.replace('{decimals}', String(STX_DECIMALS)));
     });
 
     test('that the amount is greater than the available balance', async ({ sendPage }) => {
@@ -163,10 +159,9 @@ test.describe('send stx: tests on testnet', () => {
 
     test('that valid addresses are accepted', async ({ sendPage }) => {
       await sendPage.amountInput.fill('0.000001');
-      await sendPage.recipientInput.fill(TEST_ACCOUNT_2_STX_ADDRESS);
+      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
       await sendPage.previewSendTxButton.click();
-      const details = await sendPage.confirmationDetails.allInnerTexts();
-      test.expect(details).toBeTruthy();
+      await test.expect(sendPage.confirmationDetails).toBeVisible();
     });
   });
 
@@ -177,8 +172,7 @@ test.describe('send stx: tests on testnet', () => {
       await sendPage.amountInput.fill('0.000001');
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
       await sendPage.previewSendTxButton.click();
-      const details = await sendPage.confirmationDetails.allInnerTexts();
-      test.expect(details).toBeTruthy();
+      await test.expect(sendPage.confirmationDetails).toBeVisible();
     });
 
     test('send form preview: that it shows preview of tx details after validation error is resolved', async ({
@@ -188,13 +182,12 @@ test.describe('send stx: tests on testnet', () => {
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
 
       await sendPage.previewSendTxButton.click();
-      const errorMsg = await sendPage.amountInputErrorLabel.innerText();
+      const errorMsg = sendPage.amountInputErrorLabel;
       const error = FormErrorMessages.TooMuchPrecision;
-      test.expect(errorMsg).toEqual(error.replace('{decimals}', String(STX_DECIMALS)));
+      await test.expect(errorMsg).toHaveText(error.replace('{decimals}', String(STX_DECIMALS)));
       await sendPage.amountInput.fill('0.000001');
       await sendPage.previewSendTxButton.click();
-      const details = await sendPage.confirmationDetails.allInnerTexts();
-      test.expect(details).toBeTruthy();
+      await test.expect(sendPage.confirmationDetails).toBeVisible();
     });
   });
 
@@ -202,19 +195,17 @@ test.describe('send stx: tests on testnet', () => {
     const contractPrincipal = `${TEST_TESTNET_ACCOUNT_2_STX_ADDRESS}.token-contract`;
     await sendPage.amountInput.fill(amount);
     await sendPage.amountInput.blur();
-    await sendPage.page.waitForTimeout(2000);
     await sendPage.recipientInput.fill(contractPrincipal);
     await sendPage.recipientInput.blur();
-    await sendPage.page.waitForTimeout(2000);
 
     await sendPage.previewSendTxButton.click();
 
-    const recipientText = await sendPage.confirmationDetailsRecipient.locator('code').innerText();
+    const recipientText = await sendPage.confirmationDetailsRecipient.getByRole('code').innerText();
     test.expect(recipientText).toContain('token-contract');
     test.expect(recipientText).toContain(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
 
-    const calloutText = await sendPage.page.getByText('Sending to a smart contract').innerText();
-    test.expect(calloutText).toBeTruthy();
+    const calloutText = sendPage.page.getByText('Sending to a smart contract');
+    await test.expect(calloutText).toBeVisible();
   });
 });
 
@@ -241,11 +232,8 @@ test.describe('send stx: tests on mainnet', () => {
       await sendPage.recipientInput.fill(TEST_BNS_NAME);
       await sendPage.recipientInput.blur();
       await sendPage.recipientBnsAddressLabel.waitFor();
-      const bnsResolvedAddress = await sendPage.page
-        .getByText(TEST_BNS_RESOLVED_ADDRESS)
-        .innerText();
-
-      test.expect(bnsResolvedAddress).toBeTruthy();
+      const bnsResolvedAddress = sendPage.page.getByText(TEST_BNS_RESOLVED_ADDRESS);
+      await test.expect(bnsResolvedAddress).toBeVisible();
     });
 
     test('that fee row defaults to middle fee estimation', async ({ sendPage }) => {

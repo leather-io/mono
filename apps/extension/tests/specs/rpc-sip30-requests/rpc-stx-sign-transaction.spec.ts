@@ -39,7 +39,7 @@ test.describe('RPC: stx_signTransaction', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   function checkVisibleContent(context: BrowserContext) {
@@ -54,8 +54,7 @@ test.describe('RPC: stx_signTransaction', () => {
       const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB');
 
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Approve"');
+      const btn = popup.getByText('Approve', { exact: true });
 
       if (buttonToPress === 'Approve') {
         await btn.click();
@@ -124,7 +123,7 @@ test.describe('RPC: stx_signTransaction', () => {
     test
       .expect(deserializedUnsignedTxHex.auth.spendingCondition.hashMode)
       .toEqual(deserializedSignedTx.auth.spendingCondition.hashMode);
-    test.expect(getMultiSigSpendingCondition(deserializedSignedTx).fields.length).toEqual(1);
+    test.expect(getMultiSigSpendingCondition(deserializedSignedTx).fields).toHaveLength(1);
   });
 
   test('Single signature STX transfer being rejected', async ({ page, context }) => {

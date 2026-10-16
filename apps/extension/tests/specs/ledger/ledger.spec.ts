@@ -18,11 +18,14 @@ const specs = {
   withLedgerLiveStacksKeys: makeLedgerLiveLedgerWalletState(),
 };
 
-async function interceptBitcoinRequests(homePage: HomePage) {
-  const requestPromise = homePage.page.waitForRequest(/bestinslot|mempool\.space/, {
-    timeout: 1000,
+const bitcoinApiUrl = /bestinslot|mempool\.space/;
+
+function trackBitcoinRequests(homePage: HomePage) {
+  const bitcoinRequestUrls: string[] = [];
+  homePage.page.on('request', request => {
+    if (bitcoinApiUrl.test(request.url())) bitcoinRequestUrls.push(request.url());
   });
-  return requestPromise;
+  return bitcoinRequestUrls;
 }
 
 test.describe('App with Ledger', () => {
@@ -35,9 +38,11 @@ test.describe('App with Ledger', () => {
       });
 
       test('that homepage renders correctly', async ({ homePage }) => {
-        await test.expect(homePage.page.locator('text="Send"').first()).toBeVisible();
-        await test.expect(homePage.page.locator('text="Receive"').first()).toBeVisible();
-        await test.expect(homePage.page.locator('text="Swap"').first()).toBeVisible();
+        await test.expect(homePage.page.getByText('Send', { exact: true }).first()).toBeVisible();
+        await test
+          .expect(homePage.page.getByText('Receive', { exact: true }).first())
+          .toBeVisible();
+        await test.expect(homePage.page.getByText('Swap', { exact: true }).first()).toBeVisible();
       });
 
       test('receive modal opens', async ({ homePage }) => {
@@ -83,9 +88,7 @@ test.describe('App with Ledger', () => {
           test.expect(homePage.page.url()).toEqual(urlBeforeConnect);
 
           await homePage.page.keyboard.press('Escape');
-          await test
-            .expect(homePage.page.getByText('Connect & unlock your Ledger'))
-            .not.toBeVisible();
+          await test.expect(homePage.page.getByText('Connect & unlock your Ledger')).toBeHidden();
           await test
             .expect(homePage.assetList.getByTestId(CoreAssetSelectors.ConnectLedgerBitcoin))
             .toBeVisible();
@@ -98,14 +101,14 @@ test.describe('App with Ledger', () => {
         });
 
         test('there are no bitcoin requests', async ({ homePage }) => {
-          const requestPromise = interceptBitcoinRequests(homePage);
+          const bitcoinRequestUrls = trackBitcoinRequests(homePage);
 
           await homePage.page.getByTestId(SettingsSelectors.CurrentAccountDisplayName).click();
-
           await test
-            .expect(async () => await test.expect(requestPromise).rejects.toThrowError())
-            .toPass()
-            .catch();
+            .expect(homePage.page.getByRole('heading', { name: 'Select account' }))
+            .toBeVisible();
+
+          test.expect(bitcoinRequestUrls).toEqual([]);
         });
 
         test('that you can switch accounts', async ({ homePage }) => {
@@ -179,7 +182,7 @@ test.describe('App with Ledger', () => {
         await homePage.clickActivityTab();
         const noActivityText = homePage.page.getByText('No activity yet');
         // Account has activity to make sure we don't see label
-        await test.expect(noActivityText).not.toBeVisible();
+        await test.expect(noActivityText).toBeHidden();
         test.expect(homePage.page.url()).toContain('/activity');
       });
     });

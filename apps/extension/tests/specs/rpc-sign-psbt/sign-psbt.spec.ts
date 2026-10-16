@@ -26,6 +26,7 @@ import {
   psbtHexToBase64,
 } from '@leather.io/bitcoin';
 import { RpcErrorCode, type RpcParams, type signPsbt } from '@leather.io/rpc';
+import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -117,7 +118,6 @@ test.describe('Sign PSBT', () => {
   function clickActionButton(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForTimeout(1000);
       const btn = popup.locator(`text="${buttonToPress}"`);
       await btn.click();
     };
@@ -125,10 +125,9 @@ test.describe('Sign PSBT', () => {
 
   async function clickErrorCloseWindowButton(context: BrowserContext) {
     const popup = await context.waitForEvent('page');
-    await popup.waitForTimeout(1000);
-    const errorMsg = popup.locator('text="Failed to sign"');
-    const btn = popup.locator('text="Close window"');
-    test.expect(errorMsg).toBeTruthy();
+    const errorMsg = popup.getByText('Failed to sign', { exact: true });
+    const btn = popup.getByText('Close window', { exact: true });
+    await test.expect(errorMsg).toBeVisible();
     await btn.click();
   }
 
@@ -645,7 +644,7 @@ test.describe('Sign PSBT', () => {
       const signedTx = btc.Transaction.fromPSBT(hexToBytes(signedResult.hex));
       const partialSig = signedTx.getInput(0).partialSig;
       test.expect(partialSig).toBeDefined();
-      if (!partialSig) throw new Error('Missing partialSig');
+      assertExistence(partialSig, 'Missing partialSig');
       test.expect(bytesToHex(partialSig[0][0])).toEqual(bytesToHex(addressPublicKey));
     });
 
@@ -680,7 +679,7 @@ test.describe('Sign PSBT', () => {
       const signedTx = btc.Transaction.fromPSBT(hexToBytes(signedResult.hex));
       const partialSig = signedTx.getInput(0).partialSig;
       test.expect(partialSig).toBeDefined();
-      if (!partialSig) throw new Error('Missing partialSig');
+      assertExistence(partialSig, 'Missing partialSig');
       test.expect(bytesToHex(partialSig[0][0])).toEqual(bytesToHex(addressPublicKey));
     });
 
@@ -719,8 +718,8 @@ test.describe('Sign PSBT', () => {
       const signedTx = btc.Transaction.fromPSBT(hexToBytes(signedResult.hex));
       const partialSig = signedTx.getInput(0).partialSig;
       test.expect(partialSig).toBeDefined();
-      if (!partialSig) throw new Error('Missing partialSig');
-      if (!vaultAddressKey.publicKey) throw new Error('No vault publicKey');
+      assertExistence(partialSig, 'Missing partialSig');
+      assertExistence(vaultAddressKey.publicKey, 'No vault publicKey');
       test.expect(bytesToHex(partialSig[0][0])).toEqual(bytesToHex(vaultAddressKey.publicKey));
     });
 
@@ -769,12 +768,12 @@ test.describe('Sign PSBT', () => {
       const signedTx = btc.Transaction.fromPSBT(hexToBytes(signedResult.hex));
       const partialSig = signedTx.getInput(0).partialSig;
       test.expect(partialSig).toBeDefined();
-      if (!partialSig) throw new Error('Missing partialSig');
+      assertExistence(partialSig, 'Missing partialSig');
       test.expect(bytesToHex(partialSig[0][0])).toEqual(bytesToHex(addressPublicKey));
 
       const broadcastBody = request.postDataBuffer();
       test.expect(broadcastBody).toBeDefined();
-      if (!broadcastBody) throw new Error('Broadcast request has no body');
+      assertExistence(broadcastBody, 'Broadcast request has no body');
       const broadcastTx = btc.Transaction.fromRaw(hexToBytes(broadcastBody.toString()), {
         allowUnknownInputs: true,
       });
@@ -818,7 +817,7 @@ test.describe('Sign PSBT', () => {
       const signedTx = btc.Transaction.fromPSBT(hexToBytes(signedResult.hex));
       const partialSig = signedTx.getInput(0).partialSig;
       test.expect(partialSig).toBeDefined();
-      if (!partialSig) throw new Error('Missing partialSig');
+      assertExistence(partialSig, 'Missing partialSig');
       test.expect(bytesToHex(partialSig[0][0])).toEqual(bytesToHex(addressPublicKey));
     });
 
@@ -853,7 +852,7 @@ test.describe('Sign PSBT', () => {
       const signedTx = btc.Transaction.fromPSBT(hexToBytes(signError.data.hex));
       const partialSig = signedTx.getInput(0).partialSig;
       test.expect(partialSig).toBeDefined();
-      if (!partialSig) throw new Error('Missing partialSig');
+      assertExistence(partialSig, 'Missing partialSig');
       test.expect(bytesToHex(partialSig[0][0])).toEqual(bytesToHex(addressPublicKey));
     });
 
@@ -949,8 +948,7 @@ test.describe('Sign PSBT: bond proposal', () => {
 
     async function clickProposeTransaction() {
       const popup = await context.waitForEvent('page');
-      await popup.waitForTimeout(1000);
-      await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
+      await popup.getByText('Propose transaction', { exact: true }).click({ timeout: 20_000 });
     }
 
     const [result] = await Promise.all([

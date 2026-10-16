@@ -21,7 +21,7 @@ test.describe('RPC: stx_callContract', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   function checkVisibleContentWithNoPostConditions(context: BrowserContext) {
@@ -43,8 +43,7 @@ test.describe('RPC: stx_callContract', () => {
       await popup.waitForSelector('text="0x74657374"');
       await popup.waitForSelector('text="SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB"');
       await popup.waitForSelector('text="none"');
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Confirm"');
+      const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
@@ -60,8 +59,7 @@ test.describe('RPC: stx_callContract', () => {
       await popup.waitForSelector(
         'text="The contract will transfer exactly 0.000042 STX or the transaction will abort."'
       );
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Confirm"');
+      const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
@@ -75,8 +73,7 @@ test.describe('RPC: stx_callContract', () => {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
       await popup.waitForSelector('text="This transaction can transfer any of your assets"');
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Confirm"');
+      const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();

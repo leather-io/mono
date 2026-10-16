@@ -1,5 +1,6 @@
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import pluginLingui from 'eslint-plugin-lingui';
+import pluginPlaywright from 'eslint-plugin-playwright';
 import { defineConfig } from 'eslint/config';
 
 import baseConfig, {
@@ -81,6 +82,55 @@ const reactRouterLocationStateSyntax = {
     'MemberExpression[object.name="location"][property.name="state"], VariableDeclarator[init.callee.name="useLocation"] > ObjectPattern > Property[key.name="state"]',
   message: 'location.state is any. Read route state through useRouteState(schema).',
 };
+
+const e2eRestrictedSyntax = [
+  ...sharedRestrictedSyntax,
+  reactRouterLocationStateSyntax,
+  {
+    selector: "CallExpression[callee.property.name='waitForTimeout']",
+    message:
+      'Do not sleep in e2e tests. Wait for the UI state with a locator or a web-first assertion instead.',
+  },
+  {
+    selector: "CallExpression[callee.property.name='allInnerTexts']",
+    message:
+      'allInnerTexts() resolves to an array that is always truthy, so asserting on it proves nothing. Assert on the locator with toBeVisible, toHaveText or toHaveCount instead.',
+  },
+];
+
+const pageObjectOnlySelectors = [
+  {
+    object: 'SendCryptoAssetSelectors',
+    property: 'SendForm',
+    action:
+      'SendPage.selectBtcAndGoToSendForm, selectStxAndGoToSendForm or selectSip10AndGoToSendForm',
+  },
+  {
+    object: 'SharedComponentsSelectors',
+    property: 'CardAvailableBalance',
+    action: 'SendPage.selectBtcAndGoToSendForm',
+  },
+  {
+    object: 'ActivitySelectors',
+    property: 'TransactionActionFeeInput',
+    action: 'HomePage.setBitcoinIncreasedFeeRate or HomePage.setStacksTransactionActionFee',
+  },
+  {
+    object: 'ActivitySelectors',
+    property: 'TransactionActionBalance',
+    action: 'HomePage.setBitcoinIncreasedFeeRate',
+  },
+  {
+    object: 'SettingsSelectors',
+    property: 'UnlockWalletBtn',
+    action: 'HomePage.unlock',
+  },
+  {
+    object: 'OnboardingSelectors',
+    property: 'SetPasswordBtn',
+    action: 'OnboardingPage.setPassword or SwitchAccountPage.submitNewWalletPassword',
+  },
+];
 
 export default defineConfig([
   {
@@ -228,6 +278,47 @@ export default defineConfig([
     files: ['apps/extension/**/*.{ts,tsx}', 'apps/web/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-syntax': ['error', ...sharedRestrictedSyntax, reactRouterLocationStateSyntax],
+    },
+  },
+  {
+    name: 'extension-e2e-tests',
+    files: ['apps/extension/tests/**/*.{ts,tsx}'],
+    extends: [pluginPlaywright.configs['flat/recommended']],
+    rules: {
+      'no-empty-pattern': 'error',
+      'playwright/require-top-level-describe': 'error',
+      'playwright/no-raw-locators': 'error',
+      'playwright/prefer-native-locators': 'error',
+      'playwright/prefer-ending-with-an-expect': 'error',
+      'no-restricted-syntax': ['error', ...e2eRestrictedSyntax],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            ...sharedRestrictedImportPaths,
+            {
+              name: '@leather.io/utils',
+              importNames: ['delay'],
+              message:
+                'Do not sleep in e2e tests. Wait for the UI state with a locator, expect.poll or expect().toPass() instead.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    name: 'extension-e2e-specs-use-page-object-actions',
+    files: ['apps/extension/tests/specs/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        ...e2eRestrictedSyntax,
+        ...pageObjectOnlySelectors.map(({ object, property, action }) => ({
+          selector: `MemberExpression[object.name='${object}'][property.name='${property}']`,
+          message: `Use ${action} instead. It waits for the data this element depends on before acting.`,
+        })),
+      ],
     },
   },
   {

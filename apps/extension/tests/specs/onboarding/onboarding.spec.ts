@@ -1,7 +1,6 @@
 import {
   TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
   TEST_ACCOUNT_1_STX_ADDRESS,
-  TEST_PASSWORD,
 } from '@tests/mocks/constants';
 import { mockLeatherBitcoinTransactions } from '@tests/mocks/mock-leather-btc-txs';
 import {
@@ -10,7 +9,6 @@ import {
 } from '@tests/page-object-models/onboarding.page';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
-import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { z } from 'zod';
 
 import { test } from '../../fixtures/fixtures';
@@ -45,11 +43,9 @@ test.describe('Onboarding an existing user', () => {
     test('that the encryption key is generated correctly against a known working value', async ({
       globalPage,
       homePage,
-      page,
     }) => {
       await homePage.lock();
-      await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
-      await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+      await homePage.unlock();
       await homePage.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
 
       const encryptionKey = await globalPage.page.evaluate(async () => {
@@ -66,22 +62,19 @@ test.describe('Onboarding an existing user', () => {
         );
     });
   });
+
   test('going through the onboarding flow to sign in', async ({
     extensionId,
     globalPage,
     onboardingPage,
-    homePage,
   }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInExistingUser();
-    await homePage.page.waitForTimeout(1000);
 
     const persistedStore = await onboardingPage.page.evaluate(() =>
       window.debug.getPersistedStore()
     );
-    const parsedWalletState = comparableWalletStateSchema.safeParse(persistedStore);
-    if (!parsedWalletState.success) throw new Error('Unexpected persisted wallet state');
-    const walletState = parsedWalletState.data;
+    const walletState = comparableWalletStateSchema.parse(persistedStore);
 
     const testWalletState: ComparableWalletState = getTestSoftwareAccountDefaultWalletState();
 
@@ -124,7 +117,7 @@ test.describe('Onboarding an existing user', () => {
     const validPartialKey = 'shoulder any pencil';
     await onboardingPage.signInMnemonicKey(validPartialKey);
     const signInSeedError = onboardingPage.page.getByTestId(OnboardingSelectors.SignInSeedError);
-    await test.expect(signInSeedError).not.toBeVisible();
+    await test.expect(signInSeedError).toBeHidden();
   });
 
   test('Activity tab', async ({ extensionId, globalPage, onboardingPage, homePage, page }) => {

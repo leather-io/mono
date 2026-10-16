@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
+import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { Formik } from 'formik';
 import { Flex, Stack } from 'leather-styles/jsx';
 
@@ -112,7 +113,11 @@ function IncreaseBtcFeeSheetContent({ tx }: IncreaseBtcFeeSheetContentProps) {
                         />
                       </Stack>
 
-                      {balance && <Caption>Balance: {btcBalance}</Caption>}
+                      {balance && (
+                        <Caption data-testid={ActivitySelectors.TransactionActionBalance}>
+                          Balance: {btcBalance}
+                        </Caption>
+                      )}
                     </Stack>
                   </Stack>
                 </Suspense>

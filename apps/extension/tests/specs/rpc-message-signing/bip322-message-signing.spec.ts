@@ -2,9 +2,11 @@ import { type BrowserContext, type Page } from '@playwright/test';
 import type { TestRpcResponse } from '@tests/leather-provider';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 
+import { assertExistence } from '@leather.io/utils';
+
 import { test } from '../../fixtures/fixtures';
 
-test.describe('Message signing', () =>
+test.describe('Message signing', () => {
   test.describe('BIP-322 message signing', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
@@ -12,7 +14,7 @@ test.describe('Message signing', () =>
         extensionId,
         getConnectedTestAppPermissionsState()
       );
-      await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+      await page.goto('localhost:3000');
     });
 
     function clickActionButton(context: BrowserContext) {
@@ -40,7 +42,7 @@ test.describe('Message signing', () =>
         clickActionButton(context)('Sign'),
       ]);
 
-      if (!result) throw new Error('Expected result');
+      assertExistence(result, 'Expected result');
       // ID is random, removed so we can test known values
       delete result.id;
 
@@ -61,7 +63,7 @@ test.describe('Message signing', () =>
         clickActionButton(context)('Cancel'),
       ]);
 
-      if (!result) throw new Error('Expected result');
+      assertExistence(result, 'Expected result');
       delete result.id;
 
       test.expect(result).toEqual({
@@ -72,4 +74,5 @@ test.describe('Message signing', () =>
         },
       });
     });
-  }));
+  });
+});
