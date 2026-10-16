@@ -1,6 +1,11 @@
 import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
 
-import { type AccountRequest, type UserSettings, getUtxosService } from '@leather.io/services';
+import {
+  type AccountRequest,
+  type UserSettings,
+  type UtxoTotals,
+  getUtxosService,
+} from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
 
@@ -19,5 +24,5 @@ export function createAccountUtxosQueryConfig(request: AccountRequest, settings:
     retryOnMount: false,
     staleTime: 1000,
     gcTime: 1000,
-  } satisfies UseQueryOptions<unknown, Error>;
+  } satisfies UseQueryOptions<UtxoTotals>;
 }

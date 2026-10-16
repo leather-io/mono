@@ -24,5 +24,5 @@ export function createSip10AssetByPrincipalQueryConfig(principal: string, settin
     retryOnMount: false,
     staleTime: 300_000,
     gcTime: 300_000,
-  } satisfies UseQueryOptions<Sip10Asset, Error>;
+  } satisfies UseQueryOptions<Sip10Asset>;
 }
