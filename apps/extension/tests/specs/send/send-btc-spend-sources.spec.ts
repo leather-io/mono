@@ -15,7 +15,7 @@ async function goToReview(sendPage: SendPage, amount: string) {
   await sendPage.amountInput.fill(amount);
   await sendPage.recipientInput.fill(recipient);
   await sendPage.recipientInput.blur();
-  await sendPage.previewSendTxButton.click();
+  await sendPage.previewBitcoinTransaction();
   await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
   await test.expect(sendPage.confirmationDetails).toBeVisible();
 }

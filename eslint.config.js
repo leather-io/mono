@@ -125,6 +125,11 @@ const pageObjectOnlySelectors = [
     property: 'UnlockWalletBtn',
     action: 'HomePage.unlock',
   },
+  {
+    object: 'OnboardingSelectors',
+    property: 'SetPasswordBtn',
+    action: 'OnboardingPage.setPassword or SwitchAccountPage.submitNewWalletPassword',
+  },
 ];
 
 export default defineConfig([

@@ -103,10 +103,9 @@ test.describe('Multiwallet integrity', () => {
     await switchAccountPage.open();
     await switchAccountPage.createNewWallet();
     await page.getByTestId(OnboardingSelectors.BackUpSecretKeyBtn).click();
-    await page.getByTestId(OnboardingSelectors.NewPasswordInput).fill('the-wrong-password');
-    await page.getByTestId(OnboardingSelectors.SetPasswordBtn).click();
+    await switchAccountPage.submitNewWalletPassword('the-wrong-password');
 
-    await expect(page.getByText("The password you entered doesn't match")).toBeVisible();
+    await expect(switchAccountPage.passwordMismatchError).toBeVisible();
     expect(await switchAccountPage.getWalletCount()).toBe(1);
   });
 

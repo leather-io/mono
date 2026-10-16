@@ -37,14 +37,16 @@ function readPersistedState(page: Page) {
   });
 }
 
-async function readPersistedVersion(page: Page) {
+async function isMigrationPersisted(page: Page) {
   const state = await readPersistedState(page);
-  if (typeof state !== 'object') return undefined;
-  return state._persist?.version;
+  if (typeof state !== 'object') return false;
+  const hasLatestVersion = state._persist?.version === latestPersistedVersion;
+  const hasMigratedSoftwareKeys = typeof state.softwareKeys?.salt === 'string';
+  return hasLatestVersion && hasMigratedSoftwareKeys;
 }
 
 async function readMigratedPersistedState(page: Page) {
-  await test.expect.poll(() => readPersistedVersion(page)).toEqual(latestPersistedVersion);
+  await test.expect.poll(() => isMigrationPersisted(page)).toBe(true);
   return readPersistedState(page);
 }
 

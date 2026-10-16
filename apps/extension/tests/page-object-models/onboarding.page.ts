@@ -13,6 +13,7 @@ export const TEST_ACCOUNT_SECRET_KEY = process.env.EXTENSION_INTEGRATION_TEST_MN
 
 const testAccountDerivedKey =
   'd904f412b8d116540017c302f3f7033813c95902af5a067c7befcc34fa5e5290709f157f80548603a1e4f8edc2c0d5d7';
+const multiWalletIntroducerId = 'multi-wallet-support';
 const signInAttemptLimit = 3;
 const signInPollTimeoutMs = 5000;
 const signInPollIntervalMs = 100;
@@ -473,6 +474,14 @@ export class OnboardingPage {
     }
     await tryItOutBtn.click();
     await tryItOutBtn.waitFor({ state: 'detached' });
+    await expect.poll(() => this.isFeatureIntroPersistedAsSeen()).toBe(true);
+  }
+
+  private isFeatureIntroPersistedAsSeen() {
+    return this.page.evaluate(async featureId => {
+      const persisted = await chrome.storage.local.get(['persist:root']);
+      return JSON.stringify(persisted).includes(featureId);
+    }, multiWalletIntroducerId);
   }
 
   async signInMnemonicKey(secretKey = TEST_ACCOUNT_SECRET_KEY) {

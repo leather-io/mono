@@ -29,7 +29,7 @@ test.describe('send btc with mixed utxos', () => {
     await sendPage.recipientInput.fill(recipient);
     await sendPage.recipientInput.blur();
 
-    await sendPage.previewSendTxButton.click();
+    await sendPage.previewBitcoinTransaction();
     await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
 
     const confirmationAssetValue = sendPage.confirmationDetails.getByTestId(
@@ -51,7 +51,7 @@ test.describe('send btc with mixed utxos', () => {
     test.expect(Number(amountValue)).toBeGreaterThan(0.003);
     test.expect(Number(amountValue)).toBeLessThan(0.005);
 
-    await sendPage.previewSendTxButton.click();
+    await sendPage.previewBitcoinTransaction();
     await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
 
     await test.expect(sendPage.confirmationDetails).toBeVisible();
@@ -63,7 +63,7 @@ test.describe('send btc with mixed utxos', () => {
     await sendPage.recipientInput.fill(recipient);
     await sendPage.recipientInput.blur();
 
-    await sendPage.previewSendTxButton.click();
+    await sendPage.previewBitcoinTransaction();
 
     const lowFee = sendPage.feesListItem.filter({ hasText: BtcFeeType.Low });
     await test.expect(lowFee).toBeVisible();

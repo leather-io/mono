@@ -24,7 +24,7 @@ test.describe('send btc', () => {
       await sendPage.amountInput.fill('0.00006');
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
 
-      await sendPage.previewSendTxButton.click();
+      await sendPage.previewBitcoinTransaction();
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
 
       await test.expect(sendPage.confirmationDetails).toBeVisible();
@@ -34,7 +34,7 @@ test.describe('send btc', () => {
       await sendPage.amountInput.fill('0.00006');
       await sendPage.recipientInput.fill(' ' + TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS + ' ');
       await sendPage.recipientInput.blur();
-      await sendPage.previewSendTxButton.click();
+      await sendPage.previewBitcoinTransaction();
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
 
       const displayerAddress = await getDisplayerAddress(sendPage.confirmationDetailsRecipient);
@@ -49,7 +49,7 @@ test.describe('send btc', () => {
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
       await sendPage.recipientInput.blur();
 
-      await sendPage.previewSendTxButton.click();
+      await sendPage.previewBitcoinTransaction();
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
 
       const displayerAddress = await getDisplayerAddress(sendPage.confirmationDetailsRecipient);
@@ -65,7 +65,7 @@ test.describe('send btc', () => {
       await sendPage.amountInput.fill('0.00006');
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
 
-      await sendPage.previewSendTxButton.click();
+      await sendPage.previewBitcoinTransaction();
 
       const feeType = BtcFeeType.Standard;
       const fee = await sendPage.feesListItem

@@ -18,9 +18,12 @@ async function injectIframe(page: Page, src: string) {
       new Promise((resolve, reject) => {
         const iframe = document.createElement('iframe');
         iframe.src = iframeSrc;
+        iframe.style.position = 'fixed';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
         iframe.onload = () => resolve(undefined);
         iframe.onerror = () => reject(new Error('Failed to load iframe'));
-        document.body.appendChild(iframe);
+        document.body.prepend(iframe);
       }),
     src
   );

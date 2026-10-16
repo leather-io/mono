@@ -10,6 +10,7 @@ import { RouteUrls } from '@shared/route-urls';
 
 const loadedAvailableBalance = /[1-9]/;
 const loadedFeeEstimate = /\d/;
+const feeListTimeoutMs = 1000;
 
 export class SendPage {
   readonly page: Page;
@@ -134,6 +135,13 @@ export class SendPage {
 
   async waitForFeeRow() {
     await this.page.getByTestId(SharedComponentsSelectors.FeeRow).waitFor({ state: 'attached' });
+  }
+
+  async previewBitcoinTransaction() {
+    await expect(async () => {
+      await this.previewSendTxButton.click();
+      await expect(this.feesListItem.first()).toBeVisible({ timeout: feeListTimeoutMs });
+    }).toPass();
   }
 
   async confirmSendTransaction() {
