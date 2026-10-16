@@ -12,6 +12,7 @@ import { type StacksSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import type { FormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 import { FeesRow } from '@app/components/fees-row/fees-row';
 import { AvailableBalance, ButtonRow, Card, Page } from '@app/components/layout';
 import { NonceSetter } from '@app/components/nonce-setter';
@@ -23,8 +24,6 @@ import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 import { MemoField } from '../../components/memo-field';
 import { StacksRecipientField } from '../../family/stacks/components/stacks-recipient-field';
 import { defaultSendFormFormikProps } from '../../send-form.utils';
-import type { Sip10SendFormValidationSchema } from '../sip10/use-sip10-send-form';
-import type { StxSendFormValidationSchema } from '../stx/use-stx-send-form';
 
 interface StacksCommonSendFormProps {
   onSubmit(
@@ -32,7 +31,7 @@ interface StacksCommonSendFormProps {
     formikHelpers: FormikHelpers<StacksSendFormValues>
   ): Promise<void>;
   initialValues: StacksSendFormValues;
-  validationSchema: StxSendFormValidationSchema | Sip10SendFormValidationSchema;
+  validationSchema: FormikValidationSchema;
   amountField: React.JSX.Element;
   selectedAssetField: React.JSX.Element;
   availableTokenBalance: Money;

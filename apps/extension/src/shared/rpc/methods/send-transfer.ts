@@ -9,6 +9,7 @@ import {
   getNetworkTypeFromAddress,
 } from '@shared/forms/address-validators';
 import { checkIfDigitsOnly } from '@shared/forms/amount-validators';
+import { stringField } from '@shared/forms/field-schemas';
 
 import { accountSchema, formatValidationErrors, getRpcParamErrors } from './validation.utils';
 
@@ -74,8 +75,10 @@ export const rpcSendTransferParamsSchema = z
       const networkMode = defaultNetworkIdToBitcoinNetworkMode(network);
       if (!networkMode) return true;
 
-      const addressNetworks = recipients.map(recipient =>
-        btcAddressNetworkValidator(networkMode).isValidSync(recipient.address)
+      const addressNetworks = recipients.map(
+        recipient =>
+          stringField().check(btcAddressNetworkValidator(networkMode)).safeParse(recipient.address)
+            .success
       );
 
       return !addressNetworks.some(val => val === false);

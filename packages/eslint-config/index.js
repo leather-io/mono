@@ -39,11 +39,6 @@ export const sharedRestrictedSyntax = [
     message:
       'Do not declare an explicit type predicate. Let TypeScript infer it, or validate with a schema.',
   },
-  {
-    selector: 'ImportDeclaration[source.value="yup"] ImportSpecifier[imported.name=/^Any/]',
-    message:
-      'yup Any* aliases are any in disguise. Type the schema as ObjectSchema<YourFormValues>.',
-  },
 ];
 
 export const sharedRestrictedImportPaths = [
