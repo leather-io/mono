@@ -64,6 +64,7 @@ export function MnemonicForm({
     defaultValues: initialValues,
     resolver: mnemonicFormResolver,
     mode: 'all',
+    shouldUnregister: true,
   });
   const { errors, isValid, touchedFields } = form.formState;
   const values = form.watch();
