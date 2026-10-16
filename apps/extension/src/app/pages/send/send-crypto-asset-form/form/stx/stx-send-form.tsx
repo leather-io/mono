@@ -22,7 +22,7 @@ export function StxSendForm() {
     previewTransaction,
     sendMaxBalance,
     stxFees: fees,
-    validationSchema,
+    resolver,
   } = useStxSendForm();
 
   const amountField = (
@@ -46,7 +46,7 @@ export function StxSendForm() {
         <StacksCommonSendForm
           onSubmit={previewTransaction}
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          resolver={resolver}
           amountField={amountField}
           selectedAssetField={selectedAssetField}
           fees={fees}
