@@ -1,4 +1,4 @@
-import { Queue, QueueAddOptions } from 'p-queue';
+import { type Queue, type QueueAddOptions } from 'p-queue';
 import { v4 as uuid } from 'uuid';
 
 type RunFunction = () => Promise<unknown>;
@@ -27,7 +27,8 @@ function lowerBound<T>(array: readonly T[], value: T, comparator: (a: T, b: T) =
 }
 
 export class PriorityQueue implements Queue<RunFunction, PriorityQueueOptions> {
-  readonly queue: (PriorityQueueOptions & { run: RunFunction; id: string })[] = [];
+  readonly queue: (PriorityQueueOptions & { run: RunFunction; id: string; priority: number })[] =
+    [];
 
   enqueue(run: RunFunction, options?: Partial<PriorityQueueOptions>): void {
     options = {
@@ -35,9 +36,10 @@ export class PriorityQueue implements Queue<RunFunction, PriorityQueueOptions> {
       ...options,
     };
     const id = uuid();
+    const priority = options.priority ?? 0;
 
     const element = {
-      priority: options.priority,
+      priority,
       run,
       id,
     };
@@ -51,7 +53,7 @@ export class PriorityQueue implements Queue<RunFunction, PriorityQueueOptions> {
       }
     });
 
-    if (this.size && this.queue[this.size - 1].priority! >= options.priority!) {
+    if (this.size && this.queue[this.size - 1].priority >= priority) {
       this.queue.push(element);
       return;
     }
@@ -59,8 +61,8 @@ export class PriorityQueue implements Queue<RunFunction, PriorityQueueOptions> {
     const index = lowerBound(
       this.queue,
       element,
-      (a: Readonly<PriorityQueueOptions>, b: Readonly<PriorityQueueOptions>) =>
-        b.priority! - a.priority!
+      (a: Readonly<{ priority: number }>, b: Readonly<{ priority: number }>) =>
+        b.priority - a.priority
     );
 
     this.queue.splice(index, 0, element);
