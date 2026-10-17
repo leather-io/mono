@@ -1,17 +1,17 @@
 import { createContext, useContext, useRef } from 'react';
 
-import {
+import type {
   ApproverSheetInstance,
-  type ApproverSheetRef,
+  ApproverSheetRef,
 } from '@/features/browser/approver-sheet/approver-sheet';
-import { RampSheetInstance, RampSheetRef } from '@/features/ramp/ramp-sheet';
-import { ReceiveSheetInstance, ReceiveSheetRef } from '@/features/receive/receive-sheet';
-import { SendSheetInstance, SendSheetRef } from '@/features/send/send-sheet';
-import {
+import type { RampSheetInstance, RampSheetRef } from '@/features/ramp/ramp-sheet';
+import type { ReceiveSheetInstance, ReceiveSheetRef } from '@/features/receive/receive-sheet';
+import type { SendSheetInstance, SendSheetRef } from '@/features/send/send-sheet';
+import type {
   DescriptionSheetInstance,
   DescriptionSheetRef,
 } from '@/features/settings/description-sheet';
-import { SwapSheetInstance, SwapSheetRef } from '@/features/swap/swap-sheet';
+import type { SwapSheetInstance, SwapSheetRef } from '@/features/swap/swap-sheet';
 
 import { HasChildren, SheetInstance, SheetRef } from '@leather.io/ui/native';
 

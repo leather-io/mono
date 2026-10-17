@@ -1,5 +1,5 @@
 import { AddressTypeBadge } from '@/components/address-type-badge';
-import { SelectedAsset } from '@/features/receive/screens/select-asset';
+import type { SelectedAsset } from '@/features/receive/screens/select-asset';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
 
