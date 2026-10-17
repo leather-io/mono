@@ -1,22 +1,4 @@
 {
-  "src/derivation-path-utils.ts": {
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/keychain.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 1
-    }
-  },
-  "src/signer/signer.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/wallet-account-count.ts": {
     "no-restricted-syntax": {
       "count": 1
