@@ -25,5 +25,5 @@ export function createAddressComplianceCheckQueryConfig(address: string, setting
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
-  } satisfies UseQueryOptions<AddressComplianceCheckResult, Error>;
+  } satisfies UseQueryOptions<AddressComplianceCheckResult>;
 }

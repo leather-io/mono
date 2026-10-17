@@ -6,16 +6,19 @@ import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/cons
 import { type AccountId } from '@leather.io/models';
 import { serializeAssetId } from '@leather.io/utils';
 
-export function useUsdcxBalance({ fingerprint, accountIndex }: AccountId) {
+function useUsdcxVisibility() {
   const { networkPreference, assetVisibility, defaultAssetVisibility } = useSettings();
-  const assetId =
-    networkPreference.chain.bitcoin.mode === 'mainnet'
-      ? USDCX_ASSET_ID_MAINNET
-      : USDCX_ASSET_ID_TESTNET;
+  const isMainnet = networkPreference.chain.bitcoin.mode === 'mainnet';
+  const assetId = isMainnet ? USDCX_ASSET_ID_MAINNET : USDCX_ASSET_ID_TESTNET;
   const serializedAssetId = serializeAssetId({ protocol: 'sip10', id: assetId });
-  const balance = useSip10BalanceByAssetId(fingerprint, accountIndex, assetId);
   const isVisible =
     assetVisibility[serializedAssetId] ??
     isAllowedByDefaultAssetVisibility(defaultAssetVisibility, serializedAssetId);
-  return { assetId, balance, isVisible };
+  return { assetId, isMainnet, isVisible };
+}
+
+export function useUsdcxBalance({ fingerprint, accountIndex }: AccountId) {
+  const { assetId, isMainnet, isVisible } = useUsdcxVisibility();
+  const balance = useSip10BalanceByAssetId(fingerprint, accountIndex, assetId);
+  return { assetId, balance, isMainnet, isVisible };
 }
