@@ -1,4 +1,4 @@
-import { type CryptoAssetId, CryptoAssetProtocols } from '@leather.io/models';
+import { CryptoAssetProtocols } from '@leather.io/models';
 import { type SerializedCryptoAssetId, serializeAssetId } from '@leather.io/utils';
 
 export function urlPathToAssetId(urlPath: string): SerializedCryptoAssetId {
@@ -17,5 +17,5 @@ export function urlPathToAssetId(urlPath: string): SerializedCryptoAssetId {
   const protocol = urlPath.slice(0, slashIndex);
   const id = decodeURIComponent(urlPath.slice(slashIndex + 1));
 
-  return serializeAssetId({ protocol, id } as CryptoAssetId);
+  return `${protocol}|${id}`;
 }
