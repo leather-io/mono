@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 import { MEMPOOL_BASE_URL } from '@leather.io/constants';
-import { BitcoinTx } from '@leather.io/models';
+import { type BitcoinTx } from '@leather.io/models';
 
-import { UtxoResponseItem } from '../../types/utxo';
+import { type UtxoResponseItem } from '../../types/utxo';
 import { getBitcoinRatelimiter } from '../bitcoin-rate-limiter';
 
 function AddressApi(basePath: string) {
@@ -94,12 +94,12 @@ function FeeEstimatesApi() {
 function TransactionsApi(basePath: string) {
   return {
     async getBitcoinTransaction(txid: string) {
-      const resp = await axios.get(`${basePath}/tx/${txid}`);
+      const resp = await axios.get<BitcoinTx>(`${basePath}/tx/${txid}`);
       return resp.data;
     },
 
     async getBitcoinTransactionHex(txid: string) {
-      const resp = await axios.get(`${basePath}/tx/${txid}/hex`, {
+      const resp = await axios.get<string>(`${basePath}/tx/${txid}/hex`, {
         responseType: 'text',
       });
       return resp.data;

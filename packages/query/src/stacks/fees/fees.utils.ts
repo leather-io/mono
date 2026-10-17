@@ -2,11 +2,16 @@ import { PayloadType } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
 
 import { DEFAULT_FEE_RATE } from '@leather.io/constants';
-import { FeeCalculationTypes, Fees, Money, StacksFeeEstimate } from '@leather.io/models';
+import {
+  FeeCalculationTypes,
+  type Fees,
+  type Money,
+  type StacksFeeEstimate,
+} from '@leather.io/models';
 import { createMoney, createMoneyFromDecimal, microStxToStx } from '@leather.io/utils';
 
-import { FeeEstimation, StacksTxFeeEstimation } from '../hiro-api-types';
-import { DefaultMinMaxRangeFeeEstimations, StacksFeeEstimationRange } from './fees.types';
+import { type FeeEstimation, type StacksTxFeeEstimation } from '../hiro-api-types';
+import { type DefaultMinMaxRangeFeeEstimations, type StacksFeeEstimationRange } from './fees.types';
 
 function initStxAmount(amount: number) {
   return createMoney(amount, 'STX');

@@ -1,9 +1,9 @@
 import type { QueryFunctionContext } from '@tanstack/react-query';
 
-import { BitcoinTx } from '@leather.io/models';
+import { type BitcoinTx } from '@leather.io/models';
 
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
-import { BitcoinClient } from '../clients/bitcoin-client';
+import { type BitcoinClient } from '../clients/bitcoin-client';
 
 const staleTime = 10 * 1000;
 
