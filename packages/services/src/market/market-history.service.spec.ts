@@ -1,15 +1,19 @@
 import { btcAsset } from '@leather.io/constants';
 import {
   CryptoAssetProtocols,
-  FungibleCryptoAsset,
-  MarketData,
-  Sip10Asset,
+  type FungibleCryptoAsset,
+  type MarketData,
 } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
-import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
-import { SettingsService } from '../infrastructure/settings/settings.service';
-import { MarketDataService } from './market-data.service';
+import { type LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import {
+  type SettingsService,
+  type UserSettings,
+} from '../infrastructure/settings/settings.service';
+import { createMock } from '../test/create-mock';
+import { createMarketSip10Asset, createMarketUserSettings } from '../test/market-fixtures';
+import { type MarketDataService } from './market-data.service';
 import { MarketHistoryService } from './market-history.service';
 import { convertApiPriceSnapshots } from './market-history.utils';
 
@@ -36,20 +40,18 @@ describe(MarketHistoryService.name, () => {
     ],
   };
 
-  const mockLeatherApiClient = {
-    fetchNativeTokenHistory: vi.fn().mockResolvedValue(nativeTokenApiPriceHistory),
-    fetchSip10TokenHistory: vi.fn().mockResolvedValue(sip10TokenApiPriceHistory),
-  } as unknown as LeatherApiClient;
+  const fetchNativeTokenHistory = vi.fn().mockResolvedValue(nativeTokenApiPriceHistory);
+  const fetchSip10TokenHistory = vi.fn().mockResolvedValue(sip10TokenApiPriceHistory);
+  const mockLeatherApiClient = createMock<LeatherApiClient>({
+    fetchNativeTokenHistory,
+    fetchSip10TokenHistory,
+  });
 
-  const mockSettingsService = {
-    getSettings: vi.fn().mockReturnValue({
-      quoteCurrency: 'USD',
-    }),
-  } as unknown as SettingsService;
+  const getSettings = vi.fn<() => UserSettings>().mockReturnValue(createMarketUserSettings('USD'));
+  const mockSettingsService: SettingsService = { getSettings };
 
-  const mockMarketDataService = {
-    getUsdExchangeRate: vi.fn().mockResolvedValue(1),
-  } as unknown as MarketDataService;
+  const getUsdExchangeRate = vi.fn().mockResolvedValue(1);
+  const mockMarketDataService = createMock<MarketDataService>({ getUsdExchangeRate });
 
   const marketHistoryService = new MarketHistoryService(
     mockLeatherApiClient,
@@ -69,7 +71,7 @@ describe(MarketHistoryService.name, () => {
         signal
       );
       const sip10AssetPriceChange = await marketHistoryService.getPriceChangePercentage(
-        { contractId, protocol: CryptoAssetProtocols.sip10 } as Sip10Asset,
+        createMarketSip10Asset({ contractId, protocol: CryptoAssetProtocols.sip10 }),
         period,
         signal
       );
@@ -91,7 +93,8 @@ describe(MarketHistoryService.name, () => {
 
     it('should throw an error if the asset protocol is not supported', async () => {
       const signal = new AbortController().signal;
-      const asset = { protocol: 'unsupported' } as unknown as FungibleCryptoAsset;
+      const asset: FungibleCryptoAsset = { ...btcAsset };
+      Reflect.set(asset, 'protocol', 'unsupported');
       await expect(
         marketHistoryService.getPriceChangePercentage(asset, '1d', signal)
       ).rejects.toThrow();
@@ -110,7 +113,7 @@ describe(MarketHistoryService.name, () => {
         signal
       );
       const sip10AssetPriceHistory = await marketHistoryService.getPriceHistory(
-        { contractId, protocol: CryptoAssetProtocols.sip10 } as Sip10Asset,
+        createMarketSip10Asset({ contractId, protocol: CryptoAssetProtocols.sip10 }),
         period,
         signal
       );
@@ -141,10 +144,8 @@ describe(MarketHistoryService.name, () => {
     it('should adapt price history currency to the users quote currency setting', async () => {
       const userQuoteCurrency = 'EUR';
 
-      mockSettingsService.getSettings = vi.fn().mockReturnValue({
-        quoteCurrency: userQuoteCurrency,
-      });
-      mockMarketDataService.getUsdExchangeRate = vi.fn().mockResolvedValue({
+      getSettings.mockReturnValue(createMarketUserSettings(userQuoteCurrency));
+      const usdExchangeRate: MarketData = {
         pair: {
           quote: 'USD',
           base: userQuoteCurrency,
@@ -154,7 +155,8 @@ describe(MarketHistoryService.name, () => {
           symbol: 'USD',
           decimals: 2,
         },
-      } as MarketData);
+      };
+      getUsdExchangeRate.mockResolvedValue(usdExchangeRate);
 
       const signal = new AbortController().signal;
 

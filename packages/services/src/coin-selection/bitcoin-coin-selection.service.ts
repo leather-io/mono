@@ -76,7 +76,7 @@ export class BitcoinCoinSelectionService {
       feeRate = feeRates.standard.rate;
     }
     return calculateMaxSpend({
-      recipient: recipient,
+      recipient,
       utxos: utxos.available,
       feeRate,
       inputSizing: getInputSizing(account.account),

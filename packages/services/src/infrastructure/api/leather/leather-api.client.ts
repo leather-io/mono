@@ -13,7 +13,11 @@ import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-lim
 import { selectBitcoinNetwork, selectStakingChainId } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { ApiRequestOptions } from '../types';
-import { LeatherApiError, readLeatherApiErrorData } from './leather-api.error';
+import {
+  LeatherApiError,
+  assertLeatherApiData,
+  readLeatherApiErrorData,
+} from './leather-api.error';
 import { LeatherApiPageRequest, getPageRequestQueryParams } from './leather-api.pagination';
 import { paths } from './leather-api.types';
 
@@ -122,7 +126,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -147,7 +151,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -177,7 +181,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!.bonds;
+      return assertLeatherApiData(data).bonds;
     };
     return skipCache
       ? await fetchFn()
@@ -214,7 +218,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -251,7 +255,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -277,7 +281,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -306,7 +310,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -328,7 +332,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -395,7 +399,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -420,7 +424,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -448,7 +452,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -516,7 +520,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -582,7 +586,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -616,7 +620,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -638,7 +642,7 @@ export class LeatherApiClient {
           params: { path: { principal }, query: { period } },
         })
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -678,7 +682,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -693,7 +697,7 @@ export class LeatherApiClient {
       const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
         this.client.GET('/v1/swap/dexes', { signal })
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
 
     return skipCache
@@ -706,7 +710,7 @@ export class LeatherApiClient {
       const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
         this.client.GET('/v1/app-config', { signal })
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
 
     return skipCache
@@ -755,7 +759,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -776,7 +780,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -796,7 +800,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -842,7 +846,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -873,7 +877,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -931,7 +935,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -962,7 +966,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -991,7 +995,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -1012,7 +1016,7 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
     return skipCache
       ? await fetchFn()
@@ -1035,7 +1039,7 @@ export class LeatherApiClient {
         signal,
       }
     );
-    return data!;
+    return assertLeatherApiData(data);
   }
 
   async proposeMultisigTransaction(
@@ -1056,6 +1060,6 @@ export class LeatherApiClient {
         signal,
       }
     );
-    return data!;
+    return assertLeatherApiData(data);
   }
 }

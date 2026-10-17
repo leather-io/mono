@@ -2,13 +2,14 @@ import { inject, injectable } from 'inversify';
 
 import { FungibleAssetId, FungibleCryptoAsset } from '@leather.io/models';
 import { getPrincipalFromAssetString } from '@leather.io/stacks';
-import { getAssetId, isDefined, serializeAssetId } from '@leather.io/utils';
+import { isDefined, serializeAssetId } from '@leather.io/utils';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { AppConfigService } from '../infrastructure/app-config/app-config.service';
 import { selectAssetVisibility } from '../infrastructure/settings/settings.selectors';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
+import { getFungibleAssetId } from './fungible-asset-id.utils';
 
 @injectable()
 export class FungibleAssetVisibilityService {
@@ -19,7 +20,7 @@ export class FungibleAssetVisibilityService {
   ) {}
 
   async isAssetVisible(asset: FungibleCryptoAsset, signal?: AbortSignal) {
-    return await this.isAssetVisibleById(getAssetId(asset) as FungibleAssetId, signal);
+    return await this.isAssetVisibleById(getFungibleAssetId(asset), signal);
   }
 
   async isAssetVisibleById(assetId: FungibleAssetId, signal?: AbortSignal) {
