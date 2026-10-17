@@ -1,21 +1,30 @@
-import { ViewStyle } from 'react-native';
+import { type ViewStyle } from 'react-native';
 import {
-  CSSTransitionDelay,
-  CSSTransitionDuration,
-  CSSTransitionTimingFunction,
+  type CSSTransitionDelay,
+  type CSSTransitionDuration,
+  type CSSTransitionTimingFunction,
 } from 'react-native-reanimated';
 
 import { isEmpty } from 'remeda';
 
-import { ResolvedPressEffect, pressEffectProperties } from './pressable.types.native';
+import { type ResolvedPressEffect, pressEffectProperties } from './pressable.types.native';
 
 const defaultDuration = 150;
+const defaultDelay = 0;
 
 interface PressEffectStyle extends ViewStyle {
   transitionProperty?: string[];
   transitionDuration?: CSSTransitionDuration[];
   transitionTimingFunction?: CSSTransitionTimingFunction[];
   transitionDelay?: CSSTransitionDelay[];
+}
+
+function setStyleValue<K extends keyof PressEffectStyle>(
+  style: PressEffectStyle,
+  property: K,
+  value: PressEffectStyle[K]
+) {
+  style[property] = value;
 }
 
 export function buildPressEffectStyles(
@@ -34,11 +43,11 @@ export function buildPressEffectStyles(
     const config = pressEffect[property];
     if (!config) continue;
 
-    (style[property] as typeof config.to) = isPressed ? config.to : config.from;
+    setStyleValue(style, property, isPressed ? config.to : config.from);
     transitionProperty.push(property);
     transitionDuration.push(config.duration ?? defaultDuration);
     transitionTimingFunction.push(config.timing ?? 'ease');
-    transitionDelay.push(config.delay ?? 0);
+    transitionDelay.push(config.delay ?? defaultDelay);
   }
 
   style.transitionProperty = transitionProperty;

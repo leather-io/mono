@@ -1,9 +1,9 @@
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@shopify/restyle';
-import { HasChildren } from 'utils/has-children.shared';
+import { type HasChildren } from 'utils/has-children.shared';
 
-import { Theme } from '../../../theme-native';
+import { type Theme } from '../../../theme-native';
 import { Box } from '../../box/box.native';
 import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 

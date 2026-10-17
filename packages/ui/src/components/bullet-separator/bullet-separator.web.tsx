@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { Box, BoxProps, Circle } from 'leather-styles/jsx';
-import { SpacingToken } from 'leather-styles/tokens';
+import { Box, type BoxProps, Circle } from 'leather-styles/jsx';
+import { type SpacingToken } from 'leather-styles/tokens';
 
 import { BulletSeparator as BulletSeparatorContainer } from './bullet-separator.shared';
 

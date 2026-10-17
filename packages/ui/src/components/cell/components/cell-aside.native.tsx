@@ -1,4 +1,4 @@
-import { Box, BoxProps } from '../../box/box.native';
+import { Box, type BoxProps } from '../../box/box.native';
 
 type CellAsideProps = BoxProps;
 
