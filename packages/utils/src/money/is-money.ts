@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 
 import { isObject } from '../type-guards';
 

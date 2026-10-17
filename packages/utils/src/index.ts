@@ -1,9 +1,10 @@
 import { BigNumber } from 'bignumber.js';
+import { keys } from 'remeda';
 
 import { KEBAB_REGEX } from '@leather.io/constants';
 import type { NetworkModes } from '@leather.io/models';
 
-import { isNumber, isUndefined } from './type-guards';
+import { isNumber } from './type-guards';
 
 export * from './async';
 export * from './type-guards';
@@ -29,11 +30,11 @@ export { spamFilter } from './spam-filter/spam-filter';
 export { extractPhraseFromString } from './extract-phrase-from-string/extract-phrase-from-string';
 export { pxStringToNumber } from './px-string-to-number/px-string-to-number';
 
-export function isString(value: unknown): value is string {
+export function isString(value: unknown) {
   return typeof value === 'string';
 }
 
-export function isEmptyString(value: unknown): value is '' {
+export function isEmptyString(value: unknown) {
   return isString(value) && value === '';
 }
 
@@ -41,25 +42,25 @@ export function isFunction(value: unknown): value is () => void {
   return typeof value === 'function';
 }
 
-export function isBoolean(value: unknown): value is boolean {
+export function isBoolean(value: unknown) {
   return typeof value === 'boolean';
 }
 
-export function isError(value: unknown): value is Error {
+export function isError(value: unknown) {
   return value instanceof Error;
 }
 
 export function isEmpty(value: object) {
-  return Object.keys(value).length === 0;
+  return keys(value).length === 0;
 }
 
-export function isDefined<T>(argument: T | undefined): argument is T {
-  return !isUndefined(argument);
+export function isDefined<T>(argument: T | undefined) {
+  return argument !== undefined;
 }
 
 export function isTypedArray(val: unknown): val is Uint8Array {
-  const TypedArray = Object.getPrototypeOf(Uint8Array);
-  return val instanceof TypedArray;
+  const TypedArray: unknown = Object.getPrototypeOf(Uint8Array);
+  return typeof TypedArray === 'function' && val instanceof TypedArray;
 }
 
 export function noop() {
@@ -70,14 +71,14 @@ export function ensureArray<T>(value: T | T[]): T[] {
   return Array.isArray(value) ? value : [value];
 }
 
-export function undefinedIfLengthZero<T extends any[]>(arr: T) {
+export function undefinedIfLengthZero<T extends unknown[]>(arr: T) {
   return arr.length ? arr : undefined;
 }
 
 type NetworkMap<T> = Record<NetworkModes, T>;
 
 export function whenNetwork(mode: NetworkModes) {
-  return <T extends NetworkMap<unknown>>(networkMap: T) => networkMap[mode] as T[NetworkModes];
+  return <T extends NetworkMap<unknown>>(networkMap: T): T[NetworkModes] => networkMap[mode];
 }
 
 export function isEmptyArray(data: unknown[]) {
@@ -107,16 +108,16 @@ export function sumNumbers(nums: number[]) {
   return nums.reduce((acc, num) => acc.plus(num), new BigNumber(0));
 }
 
-export function isFulfilled<T>(p: PromiseSettledResult<T>): p is PromiseFulfilledResult<T> {
+export function isFulfilled<T>(p: PromiseSettledResult<T>) {
   return p.status === 'fulfilled';
 }
 
-export function isRejected<T>(p: PromiseSettledResult<T>): p is PromiseRejectedResult {
+export function isRejected<T>(p: PromiseSettledResult<T>) {
   return p.status === 'rejected';
 }
 
 export function createNullArrayOfLength(length: number) {
-  return new Array(length).fill(null);
+  return new Array<null>(length).fill(null);
 }
 
 export function safelyFormatHexTxid(id: string) {
@@ -148,7 +149,7 @@ export function getTicker(value: string) {
   return name.toUpperCase();
 }
 
-export function propIfDefined(prop: string, value: any) {
+export function propIfDefined(prop: string, value: unknown) {
   return isBoolean(value) ? { [prop]: value } : {};
 }
 
@@ -169,7 +170,11 @@ type MapFunction<T, U> = (value: T[keyof T], key: string) => U;
 export function mapObject<T extends object, U>(
   obj: T,
   mapFn: MapFunction<T, U>
-): { [K in keyof T]: U } {
+): { [K in keyof T]: U };
+export function mapObject<T extends object, U>(
+  obj: T,
+  mapFn: MapFunction<T, U>
+): Partial<{ [K in keyof T]: U }> {
   const result: Partial<{ [K in keyof T]: U }> = {};
 
   for (const key in obj) {
@@ -178,11 +183,11 @@ export function mapObject<T extends object, U>(
     }
   }
 
-  return result as { [K in keyof T]: U };
+  return result;
 }
 
 export function assertIsTruthy<T>(val: T): asserts val is NonNullable<T> {
-  if (!val) throw new Error(`expected: true, actual: ${val}`);
+  if (!val) throw new Error(`expected: true, actual: ${String(val)}`);
 }
 
 export function assertExistence<T>(value: T, message: string): asserts value is NonNullable<T> {
@@ -203,9 +208,8 @@ export function removeTrailingNullCharacters(s: string) {
   return s.replace(/\0*$/g, '');
 }
 
-export function isNumberOrNumberList(value: unknown): value is number | number[] {
-  if (Array.isArray(value)) return value.every(item => isNumber(item));
-  return isNumber(value);
+export function isNumberOrNumberList(value: unknown) {
+  return isNumber(value) || (Array.isArray(value) && value.every(item => isNumber(item)));
 }
 
 export { sanitizeContent } from './sanitize-content';
