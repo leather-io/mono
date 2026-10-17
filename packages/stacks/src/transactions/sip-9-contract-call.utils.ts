@@ -1,9 +1,9 @@
 import {
-  ClarityAbi,
+  type ClarityAbi,
   ClarityType,
-  ClarityValue,
-  ContractCallPayload,
-  StacksTransactionWire,
+  type ClarityValue,
+  type ContractCallPayload,
+  type StacksTransactionWire,
 } from '@stacks/transactions';
 
 export function isSip9TransferContactCall(
