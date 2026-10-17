@@ -64,4 +64,6 @@ export const querySettingsDepsRegistry = {
   'leather-api--bitcoin-fee-rates': ['network'],
   'bitcoin-transaction-fees-service--get-bitcoin-transaction-fees': ['network'],
   'stacks-transaction-fees-service--get-stacks-transaction-fees': ['network'],
+  // sbtc sponsorship
+  'leather-sponsorship-api--get-quote': ['network'],
 } as const satisfies Record<string, readonly QuerySettingsDep[]>;
