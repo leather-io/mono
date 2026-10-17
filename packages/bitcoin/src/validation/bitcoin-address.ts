@@ -1,4 +1,4 @@
-import { BitcoinAddress } from '@leather.io/models';
+import { type BitcoinAddress } from '@leather.io/models';
 
 import { isValidBitcoinAddress } from './address-validation';
 import { BitcoinError } from './bitcoin-error';
