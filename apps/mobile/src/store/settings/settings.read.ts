@@ -93,6 +93,8 @@ export const selectLanguagePreferenceSource = createSelector(
 
 export const selectAssetVisibility = createSelector(selectSettings, state => state.assetVisibility);
 
+export const selectTokenPreset = createSelector(selectSettings, state => state.tokenPreset);
+
 export const selectCurrentAccount = createSelector(selectSettings, state => state.currentAccount);
 
 export const selectAppIconPreference = createSelector(

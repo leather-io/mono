@@ -38,6 +38,10 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
+#: src/components/home/components/manage-tokens-footer.tsx:61
+msgid "{hiddenCount, plural, one {# hidden token} other {# hidden tokens}}"
+msgstr "{hiddenCount, plural, one {# hidden token} other {# hidden tokens}}"
+
 #: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:50
 msgid "{operation} {baseAssetSymbol} to {targetAssetSymbol} is limited to {threshold}"
 msgstr "{operation} {baseAssetSymbol} to {targetAssetSymbol} is limited to {threshold}"
@@ -247,6 +251,10 @@ msgstr "Alex"
 #: src/features/swap/components/fees-info-sheet.tsx:19
 msgid "ALEX"
 msgstr "ALEX"
+
+#: src/features/balances/token-preset/token-preset-sheet.tsx:18
+msgid "All priced tokens"
+msgstr "All priced tokens"
 
 #: src/store/secure-store/utils.ts:7
 msgid "Allow app to access secure storage"
@@ -459,6 +467,14 @@ msgstr "Browse on Gamma"
 #: src/features/navigation/tab-layout.tsx:68
 msgid "Browser"
 msgstr "Browser"
+
+#: src/features/balances/token-preset/token-preset-sheet.tsx:14
+msgid "BTC, STX"
+msgstr "BTC, STX"
+
+#: src/features/balances/token-preset/token-preset-sheet.tsx:16
+msgid "BTC, STX, sBTC, USDCx"
+msgstr "BTC, STX, sBTC, USDCx"
 
 #: src/components/action-buttons.tsx:55
 #: src/features/token/components/deposit-token-cell.tsx:60
@@ -685,6 +701,11 @@ msgstr "Decentralized Bitcoin identity"
 msgid "Decrease slippage"
 msgstr "Decrease slippage"
 
+#: src/features/balances/manage-tokens.sheet.tsx:97
+#: src/features/balances/token-preset/token-preset-sheet.tsx:31
+msgid "Default set"
+msgstr "Default set"
+
 #: src/features/activity/translate-activity-status.ts:22
 msgid "Deployed"
 msgstr "Deployed"
@@ -854,7 +875,7 @@ msgstr "Failed to change nonce"
 msgid "Failed to load latest nonce"
 msgstr "Failed to load latest nonce"
 
-#: src/features/balances/manage-tokens.sheet.tsx:93
+#: src/features/balances/manage-tokens.sheet.tsx:113
 msgid "Failed to load tokens"
 msgstr "Failed to load tokens"
 
@@ -923,6 +944,10 @@ msgstr "funds already on their way to someone else."
 #: src/features/account/components/available-account-balance.tsx:48
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
+
+#: src/features/balances/token-preset/token-preset-sheet.tsx:14
+msgid "Gas only"
+msgstr "Gas only"
 
 #: src/features/account/sheets/add-account-sheet.tsx:37
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
@@ -1158,6 +1183,10 @@ msgstr "Locked STX"
 msgid "Locking"
 msgstr "Locking"
 
+#: src/features/balances/token-preset/token-preset-sheet.tsx:16
+msgid "Main tokens"
+msgstr "Main tokens"
+
 #: src/app/settings/index.tsx:83
 msgid "Mainnet, testnet or signet"
 msgstr "Mainnet, testnet or signet"
@@ -1174,7 +1203,7 @@ msgstr ""
 msgid "Make your first transaction to get started"
 msgstr "Make your first transaction to get started"
 
-#: src/features/balances/manage-tokens.sheet.tsx:80
+#: src/features/balances/manage-tokens.sheet.tsx:93
 msgid "Manage tokens"
 msgstr "Manage tokens"
 
@@ -1186,7 +1215,7 @@ msgstr "Matching"
 msgid "Max"
 msgstr "Max"
 
-#: src/features/swap/components/amount-presets.tsx:23
+#: src/features/swap/components/amount-presets.tsx:36
 msgid "MAX"
 msgstr "MAX"
 
@@ -1300,7 +1329,7 @@ msgstr "No results found"
 msgid "No swaps available"
 msgstr "No swaps available"
 
-#: src/features/balances/manage-tokens.sheet.tsx:98
+#: src/features/balances/manage-tokens.sheet.tsx:118
 msgid "No tokens found"
 msgstr "No tokens found"
 
@@ -1540,6 +1569,10 @@ msgstr "Review"
 msgid "Review Swap"
 msgstr "Review Swap"
 
+#: src/features/balances/token-preset/token-preset-sheet.tsx:18
+msgid "Same as the extension"
+msgstr "Same as the extension"
+
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:74
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:19
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:19
@@ -1576,7 +1609,7 @@ msgstr "Search for asset"
 msgid "Search for BNS name or address"
 msgstr "Search for BNS name or address"
 
-#: src/features/balances/manage-tokens.sheet.tsx:86
+#: src/features/balances/manage-tokens.sheet.tsx:106
 msgid "Search tokens"
 msgstr "Search tokens"
 

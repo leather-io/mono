@@ -6,7 +6,10 @@ import { getAssetId, isDefined, serializeAssetId } from '@leather.io/utils';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { AppConfigService } from '../infrastructure/app-config/app-config.service';
-import { selectAssetVisibility } from '../infrastructure/settings/settings.selectors';
+import {
+  selectAssetVisibility,
+  selectDefaultAssetVisibility,
+} from '../infrastructure/settings/settings.selectors';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 
@@ -34,6 +37,10 @@ export class FungibleAssetVisibilityService {
   }
 
   async getDefaultAssetVisibility(assetId: FungibleAssetId, signal?: AbortSignal) {
+    const policy = selectDefaultAssetVisibility(this.settingsService.getSettings());
+    if (policy.type === 'allowlist') {
+      return policy.assets.includes(serializeAssetId(assetId));
+    }
     const defaultAssets = await this.appConfigService.getDefaultEnabledAssets(signal);
     if (defaultAssets.includes(serializeAssetId(assetId))) {
       return true;

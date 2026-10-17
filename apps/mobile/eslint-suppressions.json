@@ -2414,18 +2414,6 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
     },
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 2
-    },
     "leather.io/no-same-package-barrel-import": {
       "count": 1
     },

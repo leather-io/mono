@@ -13,7 +13,7 @@ function isHydrateAction(action: Action): action is Action<typeof REHYDRATE> & {
   return action.type === REHYDRATE;
 }
 
-export function handleSettingsRehydration(state: any, action: Action): SettingsState {
+export function handleSettingsRehydration(state: SettingsState, action: Action): SettingsState {
   if (!isHydrateAction(action)) return state;
 
   const firstAccountId = action.payload?.accounts.ids?.[0];
@@ -33,6 +33,7 @@ export function handleSettingsRehydration(state: any, action: Action): SettingsS
     notificationsPreference:
       action.payload?.settings.notificationsPreference ?? state.notificationsPreference,
     assetVisibility: action.payload?.settings.assetVisibility ?? state.assetVisibility,
+    tokenPreset: action.payload?.settings.tokenPreset ?? state.tokenPreset,
     languagePreference,
     currentAccount,
   };
