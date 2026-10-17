@@ -1,7 +1,7 @@
 import { type FormEvent, useCallback } from 'react';
+import { useController } from 'react-hook-form';
 
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
-import { useField } from 'formik';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import type { CryptoCurrency, StacksTransactionFeeQuote } from '@leather.io/models';
@@ -21,18 +21,19 @@ export function CustomFeeField({
   setFieldWarning,
   disableFeeSelection,
 }: CustomFeeFieldProps) {
-  const [field, meta, helpers] = useField<string>('fee');
+  const { field, fieldState } = useController<{ fee: string }>({ name: 'fee' });
+  const error = fieldState.error;
 
   const checkFieldWarning = useCallback(
     (value: string) => {
-      if (meta.error) return setFieldWarning('');
+      if (error) return setFieldWarning('');
       const fee = stxToMicroStx(value);
       if (lowFeeQuote.value.amount.isGreaterThan(fee)) {
         return setFieldWarning(SendFormWarningMessages.AdjustedFeeBelowLowestEstimate);
       }
       return setFieldWarning('');
     },
-    [lowFeeQuote, meta.error, setFieldWarning]
+    [lowFeeQuote, error, setFieldWarning]
   );
 
   return (
@@ -56,10 +57,12 @@ export function CustomFeeField({
           data-testid={SharedComponentsSelectors.CustomFeeFieldInput}
           display="block"
           height="32px"
-          name="fee"
+          name={field.name}
+          ref={field.ref}
           disabled={disableFeeSelection}
+          onBlur={field.onBlur}
           onChange={(evt: FormEvent<HTMLInputElement>) => {
-            void helpers.setValue(evt.currentTarget.value);
+            field.onChange(evt.currentTarget.value);
             // Separating warning check from field validations
             // bc we want the user to be able to submit the form
             // with the low fee warning present.
