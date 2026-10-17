@@ -647,7 +647,7 @@
   },
   "src/features/balances/assets/assets-list.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/balances/assets/render-assets.tsx": {
