@@ -1,4 +1,4 @@
-import { MetaDescriptor } from 'react-router';
+import { type MetaDescriptor } from 'react-router';
 
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { Staking } from '~/pages/bitcoin-staking/staking';

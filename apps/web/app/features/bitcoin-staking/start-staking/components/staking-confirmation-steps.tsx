@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
 
 import { VStack, styled } from 'leather-styles/jsx';
-import { ConfirmationStep, ConfirmationSteps } from '~/components/confirmations/confirmation-steps';
+import {
+  type ConfirmationStep,
+  ConfirmationSteps,
+} from '~/components/confirmations/confirmation-steps';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { stxToMicroStx } from '@leather.io/utils';
@@ -30,14 +33,14 @@ export function StakingConfirmationSteps({
         text: 'I have read and accepted the pool’s terms and conditions',
         actionText: 'Confirm',
         state: confirmationState['terms'],
-        onClick: () => onSubmit('terms'),
+        onClick: () => void onSubmit('terms'),
       },
       {
         id: 'stake',
         text: 'Confirm and start staking',
         actionText: 'Confirm',
         state: confirmationState['stake'],
-        onClick: () => onSubmit('stake'),
+        onClick: () => void onSubmit('stake'),
       },
     ],
     [onSubmit, confirmationState]

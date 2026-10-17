@@ -2,14 +2,18 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { WalletAddressEntry } from '~/utils/wallet-addresses';
+import { type WalletAddressEntry } from '~/utils/wallet-addresses';
 
 import { ChainId } from '@leather.io/models';
 
 import { useDetectLeatherProvider, useLeatherConnect } from './addresses';
 
+interface WalletMockState {
+  selectedWalletId: string | null;
+}
+
 const { walletMock } = vi.hoisted(() => {
-  const state = { selectedWalletId: null as string | null };
+  const state: WalletMockState = { selectedWalletId: null };
   return {
     walletMock: {
       state,

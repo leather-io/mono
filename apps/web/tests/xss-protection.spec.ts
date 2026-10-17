@@ -2,6 +2,13 @@ import { expect, test } from '@playwright/test';
 
 import { setupXssMocks } from './utils/mock-data';
 
+declare global {
+  interface Window {
+    __xss_executed?: boolean;
+    __xss_test_result?: string;
+  }
+}
+
 test.describe('XSS Protection', () => {
   test.beforeEach(async ({ page }) => {
     await setupXssMocks(page);
@@ -31,15 +38,15 @@ test.describe('XSS Protection', () => {
     await page.waitForTimeout(500);
 
     // Verify the XSS attack was prevented
-    const xssExecuted = await page.evaluate(() => (window as any).__xss_executed);
+    const xssExecuted = await page.evaluate(() => window.__xss_executed);
     expect(xssExecuted).toBeUndefined();
 
     // Verify our sanitized content testing works
     await page.evaluate(() => {
-      (window as any).__xss_test_result = 'safe';
+      window.__xss_test_result = 'safe';
     });
 
-    const testResult = await page.evaluate(() => (window as any).__xss_test_result);
+    const testResult = await page.evaluate(() => window.__xss_test_result);
     expect(testResult).toBe('safe');
   });
 });

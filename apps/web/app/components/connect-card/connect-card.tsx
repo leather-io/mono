@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, Flex, styled } from 'leather-styles/jsx';
 
 import { Flag } from '@leather.io/ui';
 

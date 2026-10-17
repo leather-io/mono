@@ -228,9 +228,10 @@ describe(createMultisigTransactionActivityView.name, () => {
     expect(view.subtitle).toBe(
       `Sending to ${truncateMiddle(recipient, activityCounterpartyOffset)}`
     );
+    const stxAssetMatcher: unknown = expect.objectContaining({ symbol: 'STX' });
     expect(view.avatar).toEqual({
       kind: 'single',
-      asset: expect.objectContaining({ symbol: 'STX' }),
+      asset: stxAssetMatcher,
     });
     expect(view.indicator).toBe('pending');
     expect(view.amount?.direction).toBe('sent');

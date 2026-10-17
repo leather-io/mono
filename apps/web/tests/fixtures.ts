@@ -14,7 +14,7 @@ interface Fixtures {
 }
 
 export const test = base.extend<Fixtures>({
-  page: async ({ page }, use) => {
+  async page({ page }, use) {
     const messages: string[] = [];
     page.on('console', msg => {
       if (
@@ -50,10 +50,10 @@ export const test = base.extend<Fixtures>({
   },
   network: createNetworkFixture({
     initialHandlers: [...successHandlers],
-  }) as any,
+  }),
 
   // Used to configure varying extension states
-  mode: async ({ page, network }, use) => {
+  async mode({ page, network }, use) {
     // API mocks must always be enabled
     network.use();
 

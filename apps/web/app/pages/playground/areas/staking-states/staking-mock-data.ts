@@ -37,7 +37,10 @@ import {
   stacksClient,
 } from '@leather.io/query';
 
-export const mockAddresses = createMockGetAddressesResponse('playground').result.addresses;
+const mockGetAddressesResponse = createMockGetAddressesResponse('playground');
+
+export const mockAddresses =
+  'result' in mockGetAddressesResponse ? mockGetAddressesResponse.result.addresses : [];
 
 const mockStacksAddress = mockAddresses.find(address => address.symbol === 'STX')?.address ?? '';
 

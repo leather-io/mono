@@ -87,21 +87,21 @@ export function DevToolsPanel() {
               <Button
                 variant={previewMode === 'live' ? 'solid' : 'ghost'}
                 size="sm"
-                onClick={() => applyPreview('live')}
+                onClick={() => void applyPreview('live')}
               >
                 Live
               </Button>
               <Button
                 variant={previewMode === 'populated' ? 'solid' : 'ghost'}
                 size="sm"
-                onClick={() => applyPreview('populated')}
+                onClick={() => void applyPreview('populated')}
               >
                 Populated
               </Button>
               <Button
                 variant={previewMode === 'empty' ? 'solid' : 'ghost'}
                 size="sm"
-                onClick={() => applyPreview('empty')}
+                onClick={() => void applyPreview('empty')}
               >
                 Empty
               </Button>

@@ -96,7 +96,7 @@ export function VaultDetailPage() {
   const joinVault = useJoinVault(network);
   const declineVault = useDeclineVault(network);
   const updateVault = useUpdateVault(network);
-  const updateMember = useUpdateVaultMember(network, vaultId ?? '');
+  const updateMember = useUpdateVaultMember(network, vaultId);
 
   if (!vault) {
     return (
@@ -216,7 +216,7 @@ export function VaultDetailPage() {
             canCreate={canCreateAccount}
             disabledReason={accountCreationBlockedReason(vault, isCreator, atAccountLimit)}
             onCreateAccount={() => setIsCreatingAccount(true)}
-            onOpenAccount={accountId => navigate(multisigPaths.account(vault.id, accountId))}
+            onOpenAccount={accountId => void navigate(multisigPaths.account(vault.id, accountId))}
           />
           <SectionLabel
             accessory={

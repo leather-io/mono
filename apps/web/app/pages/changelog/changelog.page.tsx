@@ -1,4 +1,4 @@
-import { Route } from './+types/changelog.route';
+import { type Route } from './+types/changelog.route';
 import { ChangelogEntry } from './components/changelog-entry';
 import { ChangelogEntryLayout, ChangelogPageLayout } from './components/changelog-page-layout';
 

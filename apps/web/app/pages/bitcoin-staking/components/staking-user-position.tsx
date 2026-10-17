@@ -5,7 +5,7 @@ import { HStack, Stack, styled } from 'leather-styles/jsx';
 import { CopyAddress } from '~/components/copy-address';
 import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import {
-  BitcoinStakingProviderId,
+  type BitcoinStakingProviderId,
   getPoolBySignerManager,
   stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';

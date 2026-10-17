@@ -31,7 +31,7 @@ export function WalletConnectionModal({ isOpen }: WalletConnectionModalProps) {
           title="Connect"
           description="Connect Leather to reveal your portfolio"
           trailing={
-            <Button width="100px" height="48px" onClick={() => connect()}>
+            <Button width="100px" height="48px" onClick={() => void connect()}>
               Connect
             </Button>
           }
