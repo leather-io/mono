@@ -37,7 +37,7 @@ export function isEmptyString(value: unknown) {
   return isString(value) && value === '';
 }
 
-export function isFunction(value: unknown): value is () => void {
+export function isFunction<T>(value: T) {
   return typeof value === 'function';
 }
 
@@ -57,9 +57,8 @@ export function isDefined<T>(argument: T | undefined) {
   return argument !== undefined;
 }
 
-export function isTypedArray(val: unknown): val is Uint8Array {
-  const TypedArray: unknown = Object.getPrototypeOf(Uint8Array);
-  return typeof TypedArray === 'function' && val instanceof TypedArray;
+export function isTypedArray(val: unknown) {
+  return val instanceof Uint8Array;
 }
 
 export function noop() {

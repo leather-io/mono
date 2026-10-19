@@ -1,9 +1,4 @@
-import {
-  type AccountAddresses,
-  type AccountId,
-  type BitcoinAddressInfo,
-  type StacksAddressInfo,
-} from '@leather.io/models';
+import { type AccountAddresses, type AccountId } from '@leather.io/models';
 
 export function createAccountAddresses(
   accountId: AccountId,
@@ -24,16 +19,4 @@ export function createAccountAddresses(
     accountAddresses.stacks = { stxAddress };
   }
   return accountAddresses;
-}
-
-export function hasBitcoinAddress(
-  account: AccountAddresses
-): account is AccountAddresses & { bitcoin: BitcoinAddressInfo } {
-  return account.bitcoin !== undefined;
-}
-
-export function hasStacksAddress(
-  account: AccountAddresses
-): account is AccountAddresses & { stacks: StacksAddressInfo } {
-  return account.stacks !== undefined;
 }

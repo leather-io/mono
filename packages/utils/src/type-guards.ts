@@ -10,6 +10,6 @@ export function isUndefined(value: unknown) {
   return typeof value === 'undefined';
 }
 
-export function isObject(value: unknown): value is object {
+export function isObject(value: unknown) {
   return typeof value === 'object';
 }
