@@ -1,3 +1,4 @@
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Box, Flex, HStack, styled } from 'leather-styles/jsx';
 
 import { InfoCircleIcon } from '@leather.io/ui';
@@ -28,7 +29,12 @@ export function AvailableBalance({
           </Box>
         </BasicTooltip>
       </HStack>
-      <styled.span color="ink.text-subdued" mr="space.02" textStyle="caption.01">
+      <styled.span
+        color="ink.text-subdued"
+        data-testid={SharedComponentsSelectors.CardAvailableBalance}
+        mr="space.02"
+        textStyle="caption.01"
+      >
         <PrivateTextLayout isPrivate={isPrivate}>{balance}</PrivateTextLayout>
       </styled.span>
     </Flex>

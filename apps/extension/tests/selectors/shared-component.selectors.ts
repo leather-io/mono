@@ -5,6 +5,7 @@ export const SharedComponentsSelectors = {
 
   // AccountCard
   AccountCardBalanceText: 'account-card-balance-text',
+  CardAvailableBalance: 'card-available-balance',
 
   // InfoCard
   InfoCardAssetValue: 'info-card-asset-value',
