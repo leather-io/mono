@@ -71,10 +71,13 @@ test.describe('Onboarding an existing user', () => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInExistingUser();
 
-    const persistedStore = await onboardingPage.page.evaluate(() =>
-      window.debug.getPersistedStore()
-    );
-    const walletState = comparableWalletStateSchema.parse(persistedStore);
+    function readPersistedStore() {
+      return onboardingPage.page.evaluate(() => window.debug.getPersistedStore());
+    }
+    await test.expect
+      .poll(async () => comparableWalletStateSchema.safeParse(await readPersistedStore()).success)
+      .toBe(true);
+    const walletState = comparableWalletStateSchema.parse(await readPersistedStore());
 
     const testWalletState: ComparableWalletState = getTestSoftwareAccountDefaultWalletState();
 

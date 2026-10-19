@@ -6,7 +6,8 @@ const testAppUrl = 'http://localhost:3000';
 async function warmUpTestApp() {
   const browser = await chromium.launch({ channel: 'chromium' });
   const page = await browser.newPage();
-  await page.goto(testAppUrl, { waitUntil: 'networkidle' });
+  await page.goto(testAppUrl);
+  await page.getByTestId('provider-status').waitFor();
   await browser.close();
 }
 

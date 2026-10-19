@@ -21,10 +21,15 @@ test.describe('RPC: stx_deployContract', () => {
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="mock-contract-name"');
-      await popup.waitForSelector(
-        'text="Only fees will be transferred from your account or the transaction will abort."'
-      );
+      await test.expect(popup.getByText('mock-contract-name', { exact: true })).toBeVisible();
+      await test
+        .expect(
+          popup.getByText(
+            'Only fees will be transferred from your account or the transaction will abort.',
+            { exact: true }
+          )
+        )
+        .toBeVisible();
 
       const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)

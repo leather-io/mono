@@ -1,4 +1,5 @@
 import {
+  TEST_ACCOUNT_2_STX_ADDRESS,
   TEST_BNS_NAME,
   TEST_BNS_RESOLVED_ADDRESS,
   TEST_TESTNET_ACCOUNT_2_STX_ADDRESS,
@@ -157,11 +158,13 @@ test.describe('send stx: tests on testnet', () => {
       test.expect(errorMsg).toContain(FormErrorMessages.SameAddress);
     });
 
-    test('that valid addresses are accepted', async ({ sendPage }) => {
+    test('that an address for another network is rejected', async ({ sendPage }) => {
       await sendPage.amountInput.fill('0.000001');
-      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
-      await sendPage.previewSendTxButton.click();
-      await test.expect(sendPage.confirmationDetails).toBeVisible();
+      await sendPage.recipientInput.fill(TEST_ACCOUNT_2_STX_ADDRESS);
+      await sendPage.recipientInput.blur();
+      await test
+        .expect(sendPage.formInputErrorLabel)
+        .toContainText(FormErrorMessages.IncorrectNetworkAddress);
     });
   });
 

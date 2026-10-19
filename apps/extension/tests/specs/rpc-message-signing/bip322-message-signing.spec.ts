@@ -20,7 +20,7 @@ test.describe('Message signing', () => {
     function clickActionButton(context: BrowserContext) {
       return async (buttonToPress: 'Cancel' | 'Sign') => {
         const popup = await context.waitForEvent('page');
-        const btn = popup.locator(`text="${buttonToPress}"`);
+        const btn = popup.getByText(buttonToPress, { exact: true });
         await btn.click();
       };
     }

@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { mockBnsV2NamesRequestEmpty } from '@tests/mocks/mock-stacks-bns';
+import { expectToSettleAt } from '@tests/utils';
 
 import { assertExistence } from '@leather.io/utils';
 
@@ -66,9 +67,7 @@ test.describe('Switch account sheet', () => {
     await switchAccountPage.addAccountButton.first().dblclick();
     await switchAccountPage.selectAccountHeader.waitFor({ state: 'hidden' });
 
-    await expect
-      .poll(async () => switchAccountPage.getHighestAccountIndex(fingerprint), { timeout: 5000 })
-      .toBe(before + 1);
+    await expectToSettleAt(() => switchAccountPage.getHighestAccountIndex(fingerprint), before + 1);
   });
 
   test('that manage mode can be toggled on and off', async ({ switchAccountPage, page }) => {

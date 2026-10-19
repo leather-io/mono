@@ -46,8 +46,8 @@ test.describe('RPC: stx_transferStx', () => {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
 
-      await popup.waitForSelector('text="Account 1"');
-      await popup.waitForSelector('text="0.0001 STX"');
+      await test.expect(popup.getByText('Account 1', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('0.0001 STX', { exact: true })).toBeVisible();
       await test.expect(popup.getByText('Memo', { exact: true })).toBeVisible();
       await test.expect(popup.getByText(expectedMemo, { exact: true })).toBeVisible();
       const displayerText = await popup
@@ -99,15 +99,15 @@ test.describe('RPC: stx_transferStx', () => {
     return async () => {
       const popup = await context.waitForEvent('page');
 
-      await popup.waitForSelector('text="0.0001 STX"');
-      await popup.waitForSelector(`text="${standardFee.displayed}"`);
+      await test.expect(popup.getByText('0.0001 STX', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText(standardFee.displayed, { exact: true })).toBeVisible();
 
       if (editFeeToSlow) {
         await popup.getByText('Standard', { exact: true }).click();
-        await popup.waitForSelector('text="Edit fee"');
+        await test.expect(popup.getByText('Edit fee', { exact: true })).toBeVisible();
         await popup.getByText('Slow', { exact: true }).click();
         await popup.getByText('Save', { exact: true }).click();
-        await popup.waitForSelector(`text="${slowFee.displayed}"`);
+        await test.expect(popup.getByText(slowFee.displayed, { exact: true })).toBeVisible();
       }
 
       const broadcastRequestPromise = popup.waitForRequest('**/v2/transactions');
@@ -171,7 +171,9 @@ test.describe('RPC: stx_transferStx', () => {
 
     async function expectInsufficientBalanceAndClose() {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="Available balance insufficient"');
+      await test
+        .expect(popup.getByText('Available balance insufficient', { exact: true }))
+        .toBeVisible();
       await test.expect(popup.getByText('Approve', { exact: true })).toHaveCount(0);
       await popup.close();
     }

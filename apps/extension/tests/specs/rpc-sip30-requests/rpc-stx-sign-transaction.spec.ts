@@ -45,8 +45,8 @@ test.describe('RPC: stx_signTransaction', () => {
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Approve') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="Account 1"');
-      await popup.waitForSelector('text="0.0005 STX"');
+      await test.expect(popup.getByText('Account 1', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('0.0005 STX', { exact: true })).toBeVisible();
 
       const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)

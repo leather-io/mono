@@ -20,12 +20,16 @@ test.describe('RPC: stx_transferSip10Ft', () => {
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="LEO"');
-      await popup.waitForSelector('text="0.001"');
-      await popup.waitForSelector('text="transfer"');
-      await popup.waitForSelector(
-        'text="You will transfer exactly 0.001 LEO or the transaction will abort."'
-      );
+      await test.expect(popup.getByText('LEO', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('0.001', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('transfer', { exact: true })).toBeVisible();
+      await test
+        .expect(
+          popup.getByText('You will transfer exactly 0.001 LEO or the transaction will abort.', {
+            exact: true,
+          })
+        )
+        .toBeVisible();
 
       const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)

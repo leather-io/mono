@@ -34,15 +34,22 @@ test.describe('RPC: stx_callContract', () => {
       const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SP000000000000000000002Q6VF78');
 
-      await popup.waitForSelector(
-        'text="Only fees will be transferred from your account or the transaction will abort."'
-      );
-      await popup.waitForSelector('text="bns"');
-      await popup.waitForSelector('text="name-transfer"');
-      await popup.waitForSelector('text="0x6964"');
-      await popup.waitForSelector('text="0x74657374"');
-      await popup.waitForSelector('text="SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB"');
-      await popup.waitForSelector('text="none"');
+      await test
+        .expect(
+          popup.getByText(
+            'Only fees will be transferred from your account or the transaction will abort.',
+            { exact: true }
+          )
+        )
+        .toBeVisible();
+      await test.expect(popup.getByText('bns', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('name-transfer', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('0x6964', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('0x74657374', { exact: true })).toBeVisible();
+      await test
+        .expect(popup.getByText('SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB', { exact: true }))
+        .toBeVisible();
+      await test.expect(popup.getByText('none', { exact: true })).toBeVisible();
       const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
@@ -56,9 +63,14 @@ test.describe('RPC: stx_callContract', () => {
   function checkVisiblePostConditions(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector(
-        'text="The contract will transfer exactly 0.000042 STX or the transaction will abort."'
-      );
+      await test
+        .expect(
+          popup.getByText(
+            'The contract will transfer exactly 0.000042 STX or the transaction will abort.',
+            { exact: true }
+          )
+        )
+        .toBeVisible();
       const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
@@ -72,7 +84,11 @@ test.describe('RPC: stx_callContract', () => {
   function checkVisiblePostConditionModeWarning(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="This transaction can transfer any of your assets"');
+      await test
+        .expect(
+          popup.getByText('This transaction can transfer any of your assets', { exact: true })
+        )
+        .toBeVisible();
       const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {

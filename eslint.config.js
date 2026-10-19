@@ -96,7 +96,24 @@ const e2eRestrictedSyntax = [
     message:
       'allInnerTexts() resolves to an array that is always truthy, so asserting on it proves nothing. Assert on the locator with toBeVisible, toHaveText or toHaveCount instead.',
   },
+  {
+    selector: "CallExpression[callee.property.name='waitForSelector']",
+    message: 'Use a locator with waitFor() or a web-first assertion instead of waitForSelector().',
+  },
+  {
+    selector:
+      "CallExpression[callee.property.name='locator'] > :matches(Literal[value=/^text=/], TemplateLiteral[quasis.0.value.raw=/^text=/])",
+    message: 'Use getByText(text, { exact: true }) instead of a text= selector.',
+  },
 ];
+
+const e2eAssertionHelpers = ['expectToSettleAt'];
+
+const playwrightRecommendedAsErrors = Object.fromEntries(
+  Object.entries(pluginPlaywright.configs['flat/recommended'].rules)
+    .filter(([, severity]) => severity === 'warn')
+    .map(([rule]) => [rule, 'error'])
+);
 
 const pageObjectOnlySelectors = [
   {
@@ -285,11 +302,16 @@ export default defineConfig([
     files: ['apps/extension/tests/**/*.{ts,tsx}'],
     extends: [pluginPlaywright.configs['flat/recommended']],
     rules: {
+      ...playwrightRecommendedAsErrors,
       'no-empty-pattern': 'error',
       'playwright/require-top-level-describe': 'error',
       'playwright/no-raw-locators': 'error',
       'playwright/prefer-native-locators': 'error',
-      'playwright/prefer-ending-with-an-expect': 'error',
+      'playwright/expect-expect': ['error', { assertFunctionNames: e2eAssertionHelpers }],
+      'playwright/prefer-ending-with-an-expect': [
+        'error',
+        { assertFunctionNames: e2eAssertionHelpers },
+      ],
       'no-restricted-syntax': ['error', ...e2eRestrictedSyntax],
       'no-restricted-imports': [
         'error',

@@ -8,6 +8,7 @@ import {
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { CoreAssetSelectors } from '@tests/selectors/mocked-tokens.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
+import { expectToSettleAt } from '@tests/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -107,6 +108,7 @@ test.describe('App with Ledger', () => {
           await test
             .expect(homePage.page.getByRole('heading', { name: 'Select account' }))
             .toBeVisible();
+          await expectToSettleAt(() => Promise.resolve(bitcoinRequestUrls.length), 0);
 
           test.expect(bitcoinRequestUrls).toEqual([]);
         });

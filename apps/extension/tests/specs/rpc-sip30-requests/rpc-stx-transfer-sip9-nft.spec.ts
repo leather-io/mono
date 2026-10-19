@@ -20,11 +20,15 @@ test.describe('RPC: stx_transferSip9Nft', () => {
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="LIV"');
-      await popup.waitForSelector('text="You will transfer"');
-      await popup.waitForSelector('text="living-leather"');
-      await popup.waitForSelector('text="SPS8…WSFE"');
-      await popup.waitForSelector('text="You will transfer LIV or the transaction will abort."');
+      await test.expect(popup.getByText('LIV', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('You will transfer', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('living-leather', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('SPS8…WSFE', { exact: true }).first()).toBeVisible();
+      await test
+        .expect(
+          popup.getByText('You will transfer LIV or the transaction will abort.', { exact: true })
+        )
+        .toBeVisible();
 
       const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
