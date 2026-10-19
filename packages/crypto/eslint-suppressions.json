@@ -1,7 +1,0 @@
-{
-  "src/wallet-account-count.ts": {
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  }
-}
