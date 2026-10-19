@@ -14,7 +14,7 @@ import {
   StacksTransactionActionType,
   stacksTransactionToHex,
 } from '@app/common/transactions/stacks/transaction.utils';
-import { useToast } from '@app/features/toasts/use-toast';
+import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 import { LoadingKeys } from '@app/store/ui/ui.hooks';
 
@@ -75,8 +75,14 @@ export function useStacksBroadcastTransaction({
           onSuccess(txId) {
             if (showSummaryPage) return handlePreviewSuccess(signedTx, txId);
             void navigate(RouteUrls.Activity);
-            if (isCancelTransaction) return toast.success('Transaction cancelled successfully');
-            if (isIncreaseFeeTransaction) return toast.success('Fee increased successfully');
+            if (isCancelTransaction)
+              return toast.success('Transaction cancelled successfully', {
+                duration: toastDurations.standard,
+              });
+            if (isIncreaseFeeTransaction)
+              return toast.success('Fee increased successfully', {
+                duration: toastDurations.standard,
+              });
             return;
           },
           replaceByFee: false,
