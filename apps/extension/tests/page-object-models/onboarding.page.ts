@@ -11,6 +11,12 @@ import { RouteUrls } from '@shared/route-urls';
 
 export const TEST_ACCOUNT_SECRET_KEY = process.env.EXTENSION_INTEGRATION_TEST_MNEMONIC ?? '';
 
+const testAccountDerivedKey =
+  'd904f412b8d116540017c302f3f7033813c95902af5a067c7befcc34fa5e5290709f157f80548603a1e4f8edc2c0d5d7';
+const signInAttemptLimit = 3;
+const signInPollTimeoutMs = 5000;
+const signInPollIntervalMs = 100;
+
 // If default wallet state changes, this needs to be updated
 export const testFingerprint = 'e87a850b';
 export function getTestSoftwareAccountDefaultWalletState() {
@@ -489,10 +495,18 @@ export class OnboardingPage {
    * account
    */
   async signInWithTestAccount(id: string, stateOverrides: object = {}) {
-    const testAccountDerivedKey =
-      'd904f412b8d116540017c302f3f7033813c95902af5a067c7befcc34fa5e5290709f157f80548603a1e4f8edc2c0d5d7';
+    await this.seedWalletStateAndWaitForSignIn(id, {
+      ...getTestSoftwareAccountDefaultWalletState(),
+      ...stateOverrides,
+    });
 
-    const isSignedIn = async () => {
+    await this.page.evaluate(() => window.debug.setHighestAccountIndex(2));
+
+    await this.dismissFeatureIntroducer();
+  }
+
+  private async isSignedInWithTestAccountKey() {
+    try {
       const { encryptionKey } = await this.page.evaluate(() =>
         chrome.storage.session.get(['encryptionKey'])
       );
@@ -503,16 +517,30 @@ export class OnboardingPage {
         .isVisible();
 
       return hasSessionKey && hasTokensTab && hasActivityTab;
-    };
+    } catch {
+      return false;
+    }
+  }
 
-    const iterationCounter = createCounter();
+  private async waitForSignedInWithTestAccountKey() {
+    const deadline = Date.now() + signInPollTimeoutMs;
+    do {
+      if (await this.isSignedInWithTestAccountKey()) return true;
+      await delay(signInPollIntervalMs);
+    } while (Date.now() < deadline);
+    return false;
+  }
+
+  private async seedWalletStateAndWaitForSignIn(id: string, walletState: object) {
+    const attemptCounter = createCounter();
 
     do {
-      if (iterationCounter.getValue() > 5) throw new Error('Unable to initialize wallet state');
+      if (attemptCounter.getValue() >= signInAttemptLimit)
+        throw new Error('Unable to initialize wallet state');
 
       await this.page.evaluate(
         async walletState => chrome.storage.local.set({ 'persist:root': walletState }),
-        { ...getTestSoftwareAccountDefaultWalletState(), ...stateOverrides }
+        walletState
       );
 
       await this.page.evaluate(
@@ -521,14 +549,9 @@ export class OnboardingPage {
       );
 
       await this.page.goto(`chrome-extension://${id}/index.html`);
-      await delay(1000 * iterationCounter.getValue());
 
-      iterationCounter.increment();
-    } while (!(await isSignedIn()));
-
-    await this.page.evaluate(() => window.debug.setHighestAccountIndex(2));
-
-    await this.dismissFeatureIntroducer();
+      attemptCounter.increment();
+    } while (!(await this.waitForSignedInWithTestAccountKey()));
   }
 
   /**
@@ -538,41 +561,10 @@ export class OnboardingPage {
    * come from stored keychains.
    */
   async signInWithMixedSoftwareAndLedgerWallets(id: string, stateOverrides: object = {}) {
-    const testAccountDerivedKey =
-      'd904f412b8d116540017c302f3f7033813c95902af5a067c7befcc34fa5e5290709f157f80548603a1e4f8edc2c0d5d7';
-
-    const isSignedIn = async () => {
-      const { encryptionKey } = await this.page.evaluate(() =>
-        chrome.storage.session.get(['encryptionKey'])
-      );
-      const hasSessionKey = encryptionKey === testAccountDerivedKey;
-      const hasTokensTab = await this.page.getByTestId(HomePageSelectors.TokensTabBtn).isVisible();
-      const hasActivityTab = await this.page
-        .getByTestId(HomePageSelectors.ActivityTabBtn)
-        .isVisible();
-      return hasSessionKey && hasTokensTab && hasActivityTab;
-    };
-
-    const iterationCounter = createCounter();
-
-    do {
-      if (iterationCounter.getValue() > 5) throw new Error('Unable to initialize wallet state');
-
-      await this.page.evaluate(
-        async walletState => chrome.storage.local.set({ 'persist:root': walletState }),
-        { ...makeMixedSoftwareAndLedgerWalletState(), ...stateOverrides }
-      );
-
-      await this.page.evaluate(
-        async encryptionKey => chrome.storage.session.set({ encryptionKey }),
-        testAccountDerivedKey
-      );
-
-      await this.page.goto(`chrome-extension://${id}/index.html`);
-      await delay(1000 * iterationCounter.getValue());
-
-      iterationCounter.increment();
-    } while (!(await isSignedIn()));
+    await this.seedWalletStateAndWaitForSignIn(id, {
+      ...makeMixedSoftwareAndLedgerWalletState(),
+      ...stateOverrides,
+    });
 
     await this.dismissFeatureIntroducer();
   }

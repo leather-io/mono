@@ -22,7 +22,7 @@ import {
   stacksChainIdToSingleSigAddressVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
-import { useToast } from '@app/features/toasts/use-toast';
+import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
@@ -46,7 +46,7 @@ export function LedgerVerifyStxAddress() {
       isAppOpen: isStacksAppOpen,
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       onSuccess() {
-        toast.success('Address verified on your Ledger');
+        toast.success('Address verified on your Ledger', { duration: toastDurations.standard });
         close();
         void navigate(RouteUrls.Home, { replace: true });
       },
