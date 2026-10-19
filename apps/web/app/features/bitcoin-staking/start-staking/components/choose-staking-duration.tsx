@@ -45,7 +45,7 @@ export function ChooseStakingDuration({ estimatedUnlockDate }: ChooseStakingDura
                   _before: { inset: '0' },
                 })}
               >
-                <Input.Label>{chooseDuration.inputLabel}</Input.Label>
+                <Input.Label htmlFor="cycles">{chooseDuration.inputLabel}</Input.Label>
                 <Input.Field
                   id="cycles"
                   inputMode="numeric"

@@ -1,10 +1,14 @@
 import { type Locator, type Page, expect } from '@playwright/test';
+import { TEST_PASSWORD } from '@tests/mocks/constants';
+import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { createTestSelector } from '@tests/utils';
 
 const settingsMenuOpenTimeoutMs = 1000;
+const unlockTimeoutMs = 15_000;
+const loadedTransactionActionBalance = /Balance: 0\.0*[1-9]\d*\sBTC/;
 
 export class HomePage {
   readonly page: Page;
@@ -61,7 +65,7 @@ export class HomePage {
 
   async goToReceiveDialog() {
     await this.page.getByTestId(HomePageSelectors.ReceiveCryptoAssetBtn).click();
-    await this.page.waitForSelector('[data-state="open"]');
+    await this.page.getByRole('dialog').first().waitFor();
   }
 
   // Open issue with Playwright's ability to copyToClipboard from legacy tests:
@@ -84,7 +88,7 @@ export class HomePage {
     const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
     const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
     await qrCodeBtn.or(addressDisplayer).first().waitFor();
-    if (await qrCodeBtn.isVisible()) await qrCodeBtn.click({ force: true });
+    if (await qrCodeBtn.isVisible()) await qrCodeBtn.click();
     const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
@@ -102,7 +106,7 @@ export class HomePage {
   }
 
   async clickSettingsButton() {
-    await this.settingsButton.click({ force: true });
+    await this.settingsButton.click();
   }
 
   async signOut() {
@@ -114,6 +118,29 @@ export class HomePage {
     }
     await this.signOutConfirmPasswordDisable.click();
     await this.signOutDeleteWalletBtn.click();
+  }
+
+  async unlock(password = TEST_PASSWORD) {
+    const passwordInput = this.page.getByTestId(SettingsSelectors.EnterPasswordInput);
+    await passwordInput.fill(password);
+    await this.page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+    await expect(passwordInput).toBeHidden({ timeout: unlockTimeoutMs });
+  }
+
+  async setBitcoinIncreasedFeeRate(feeRate: string) {
+    await expect(this.page.getByTestId(ActivitySelectors.TransactionActionBalance)).toHaveText(
+      loadedTransactionActionBalance
+    );
+    const feeInput = this.page.getByTestId(ActivitySelectors.TransactionActionFeeInput);
+    await feeInput.clear();
+    await feeInput.fill(feeRate);
+  }
+
+  async setStacksTransactionActionFee(action: 'cancel' | 'increase-fee', fee: string) {
+    const actionSheet = this.page.getByTestId(
+      `${ActivitySelectors.TransactionActionSheet}-${action}`
+    );
+    await actionSheet.getByTestId(ActivitySelectors.TransactionActionFeeInput).fill(fee);
   }
 
   async lock() {
@@ -130,9 +157,9 @@ export class HomePage {
 
   async goToManageTokensPage() {
     await this.manageTokensBtn.click();
-    await this.page.waitForSelector(`[data-testid="${HomePageSelectors.ManageTokensAssetsList}"]`, {
-      state: 'attached',
-    });
+    await this.page
+      .getByTestId(HomePageSelectors.ManageTokensAssetsList)
+      .waitFor({ state: 'attached' });
   }
 
   async goBackFromManageTokens() {
@@ -141,9 +168,7 @@ export class HomePage {
   }
 
   async waitForHomePageReady() {
-    await this.page.waitForSelector(createTestSelector(HomePageSelectors.HomePageContainer), {
-      state: 'attached',
-    });
+    await this.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor({ state: 'attached' });
   }
 
   async switchAccount(accountIndex: number) {
