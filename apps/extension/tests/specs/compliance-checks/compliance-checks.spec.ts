@@ -14,7 +14,7 @@ test.describe('Compliance checks', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   async function openIllegalTransfer(page: Page) {
@@ -59,10 +59,12 @@ test.describe('Compliance checks', () => {
       openIllegalTransfer(page),
     ]);
 
-    await test.expect(leatherApprover.locator('text="0.00001231 BTC"')).toBeVisible();
+    await test.expect(leatherApprover.getByText('0.00001231 BTC', { exact: true })).toBeVisible();
 
     await test
-      .expect(leatherApprover.locator('text="Unable to handle request, errorCode: 1398"'))
+      .expect(
+        leatherApprover.getByText('Unable to handle request, errorCode: 1398', { exact: true })
+      )
       .toBeHidden();
   });
 

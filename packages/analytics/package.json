@@ -29,6 +29,9 @@
       "require": "./dist/index.js"
     }
   },
+  "dependencies": {
+    "remeda": "2.21.2"
+  },
   "devDependencies": {
     "@leather.io/models": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
