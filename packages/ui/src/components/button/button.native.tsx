@@ -122,12 +122,10 @@ const disabledOverrides: Record<ButtonVariant, VariantProps> = {
   ghost: { color: 'ink.text-non-interactive' },
 };
 
-// Icons carry their own inner whitespace, so the icon side needs less padding to look even
 const iconSidePadding: Partial<Record<ButtonSize, VariantProps['px']>> = {
   sm: '3',
 };
 
-// An explicit padding prop from the caller should win over the automatic icon-side padding
 const horizontalPaddingProps = [
   'p',
   'px',

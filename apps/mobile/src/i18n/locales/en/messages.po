@@ -38,7 +38,7 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
-#: src/components/home/components/manage-tokens-footer.tsx:61
+#: src/components/home/components/manage-tokens-footer.tsx:57
 msgid "{hiddenCount, plural, one {# hidden token} other {# hidden tokens}}"
 msgstr "{hiddenCount, plural, one {# hidden token} other {# hidden tokens}}"
 
@@ -1215,7 +1215,7 @@ msgstr "Matching"
 msgid "Max"
 msgstr "Max"
 
-#: src/features/swap/components/amount-presets.tsx:36
+#: src/features/swap/components/amount-presets.tsx:34
 msgid "MAX"
 msgstr "MAX"
 

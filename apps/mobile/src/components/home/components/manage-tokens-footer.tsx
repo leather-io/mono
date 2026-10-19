@@ -16,8 +16,6 @@ function useHiddenSip10Count({ fingerprint, accountIndex }: AccountId) {
 
   return useMemo(() => {
     if (visible.state !== 'success' || all.state !== 'success') return 0;
-    // Deliberately counts unpriced tokens too: the pill only signals there's more, and the
-    // sheet sorts by value
     const visibleIds = new Set(visible.value.sip10s.map(sip10 => sip10.asset.assetId));
     return all.value.sip10s.filter(
       sip10 =>
@@ -53,8 +51,6 @@ export function ManageTokensFooter({ account, onPress }: ManageTokensFooterProps
   if (hiddenCount === 0) return null;
 
   return (
-    // Pull up into the list footer's top padding so the entry reads as the end of the token
-    // list, and leave more room before Trending tokens
     <Box flexDirection="row" alignItems="center" px="5" pb="6" style={{ marginTop: -spacing['3'] }}>
       <FadingLine direction="left" />
       <Button variant="outline" size="sm" iconEnd={ChevronRightIcon} onPress={onPress}>

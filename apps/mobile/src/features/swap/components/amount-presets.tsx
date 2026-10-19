@@ -10,8 +10,6 @@ interface AmountPresetsProps {
   onSelectPercentage(percentage: PresetPercentage): void;
 }
 
-// Below this row width the presets tighten their outer padding and gaps so labels like MAX keep
-// fitting on small phones (e.g. 320pt iPhone SE)
 const compactRowWidth = 360;
 
 export function AmountPresets({ onSelectPercentage }: AmountPresetsProps) {
@@ -44,7 +42,6 @@ interface PresetButtonProps {
 }
 
 function PresetButton({ children, onPress }: PresetButtonProps) {
-  // The row sets the width (flex={1}), so side padding only eats into the label's room
   return (
     <Button
       flex={1}
