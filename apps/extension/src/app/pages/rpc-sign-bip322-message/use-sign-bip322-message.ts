@@ -16,7 +16,7 @@ import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-s
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { signBip322MessageUnlessDismissed } from '@app/common/sign-bip322-message-unless-dismissed';
 import { isLedgerSigningCancelledError } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
-import { useToast } from '@app/features/toasts/use-toast';
+import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
@@ -107,7 +107,7 @@ function useSignBip322MessageFactory(signer: Bip322Signer | null) {
         const { signature } = signed;
 
         await shortPauseBeforeToast();
-        toast.success('Message signed successfully');
+        toast.success('Message signed successfully', { duration: toastDurations.standard });
 
         void sendMessageToOriginatingFrame(
           { frameId, tabId },
