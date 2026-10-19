@@ -59,9 +59,6 @@
   "src/app/settings/networks/index.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 3
     }
   },
   "src/app/settings/security/index.tsx": {

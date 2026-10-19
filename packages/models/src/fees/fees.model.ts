@@ -1,16 +1,14 @@
 import { type Blockchain } from '../types';
 import { type StacksFeeEstimate } from './stacks-fees.model';
 
-interface FeeTypesMap {
+export const FeeTypes: {
   readonly Low: 0;
   readonly Middle: 1;
   readonly High: 2;
   readonly Custom: 3;
   readonly Unknown: 4;
   readonly [index: number]: string;
-}
-
-export const FeeTypes: FeeTypesMap = {
+} = {
   Low: 0,
   Middle: 1,
   High: 2,
@@ -22,7 +20,7 @@ export const FeeTypes: FeeTypesMap = {
   3: 'Custom',
   4: 'Unknown',
 };
-export type FeeTypes = FeeTypesMap['Low' | 'Middle' | 'High' | 'Custom' | 'Unknown'];
+export type FeeTypes = (typeof FeeTypes)['Low' | 'Middle' | 'High' | 'Custom' | 'Unknown'];
 
 export const FeeCalculationTypes = {
   Api: 'api',
