@@ -22,10 +22,20 @@ const toastRootStyles = css({
   rounded: 'xs',
 
   '&[data-state=open]': {
-    animation: 'toastAppear 160ms cubic-bezier(0, 0.45, 0.6, 1) forwards',
+    animation: 'toastAppear 160ms cubic-bezier(0, 0.45, 0.6, 1)',
   },
   '&[data-state=closed]': {
     animation: 'fadeout',
+  },
+  '&[data-swipe=move]': {
+    transform: 'translateX(var(--radix-toast-swipe-move-x))',
+  },
+  '&[data-swipe=cancel]': {
+    transform: 'translateX(0)',
+    transition: 'transform 200ms ease-out',
+  },
+  '&[data-swipe=end]': {
+    transform: 'translateX(var(--radix-toast-swipe-end-x))',
   },
 });
 const Root: typeof RadixToast.Root = forwardRef((props, ref) => (

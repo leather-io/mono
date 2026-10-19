@@ -23,5 +23,5 @@ export function createLearnSectionQueryConfig(key: LearnSectionKey) {
     queryKey: createLearnSectionQueryKey(key),
     queryFn: ({ signal }: QueryFunctionContext) => fetchLearnSection(key, signal),
     ...learnSectionQueryOptions,
-  } satisfies UseQueryOptions<ResolvedLearnItem[] | null, Error>;
+  } satisfies UseQueryOptions<ResolvedLearnItem[] | null>;
 }

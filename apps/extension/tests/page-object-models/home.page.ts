@@ -1,10 +1,10 @@
-import { type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { createTestSelector } from '@tests/utils';
 
-import { delay } from '@leather.io/utils';
+const settingsMenuOpenTimeoutMs = 1000;
 
 export class HomePage {
   readonly page: Page;
@@ -82,11 +82,10 @@ export class HomePage {
     await this.goToReceiveDialog();
     // In Ledger mode, this element isn't visible, so clicking is conditional
     const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
-    await delay(1000);
+    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    await qrCodeBtn.or(addressDisplayer).first().waitFor();
     if (await qrCodeBtn.isVisible()) await qrCodeBtn.click({ force: true });
-    const displayerAddress = await this.page
-      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-      .innerText();
+    const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
@@ -118,7 +117,10 @@ export class HomePage {
   }
 
   async lock() {
-    await this.clickSettingsButton();
+    await expect(async () => {
+      await this.clickSettingsButton();
+      await expect(this.lockSettingsListItem).toBeVisible({ timeout: settingsMenuOpenTimeoutMs });
+    }).toPass();
     await this.lockSettingsListItem.click();
   }
 
