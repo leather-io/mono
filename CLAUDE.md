@@ -133,7 +133,7 @@ pnpm --filter @leather.io/{package} typecheck
 
 - Turborepo + `pnpm`.
 - Vitest for unit/integration tests. Use the `testing-patterns` skill for conventions.
-- Playwright for E2E tests (extension). Avoid `force: true` — it hides accessibility issues. Never nest interactive elements.
+- Playwright for E2E tests (extension and web). Sleeps, `networkidle`, `waitForSelector` and raw locators are lint errors in both suites. For the extension use the `write-extension-e2e` skill: page-object actions own their readiness waits. Avoid `force: true` — it hides accessibility issues. Never nest interactive elements.
 
 ## Common tasks
 
@@ -141,3 +141,4 @@ pnpm --filter @leather.io/{package} typecheck
 - **Add a Redux slice** → Extension: `{feature}.slice.ts`; Mobile: `{feature}.write.ts` + `{feature}.read.ts`
 - **Add a React Query hook** → `packages/queries/` or app-level `src/queries/`
 - **Run a single package's tests** → `pnpm --filter @leather.io/{package} test:unit`
+- **Add or fix an extension E2E test** → `apps/extension/tests`, use the `write-extension-e2e` skill

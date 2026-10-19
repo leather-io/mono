@@ -50,6 +50,15 @@ function searchHeapForString(snapshot: HeapSnapshot, searchString: string): bool
   return false;
 }
 
+const sampleOccurrenceCount = 3;
+
+async function attachHeapOccurrences(result: ReturnType<typeof searchHeapForStringWithDetails>) {
+  await test.info().attach('password-heap-occurrences', {
+    body: JSON.stringify(result.occurrences.slice(0, sampleOccurrenceCount), null, 2),
+    contentType: 'application/json',
+  });
+}
+
 function searchHeapForStringWithDetails(
   snapshot: HeapSnapshot,
   searchString: string
@@ -89,12 +98,7 @@ test.describe('Security: Password Memory Leak', () => {
     await homePage.lock();
 
     const unlockInput = page.getByTestId(SettingsSelectors.EnterPasswordInput);
-    await unlockInput.waitFor({ state: 'visible' });
-    await unlockInput.fill(TEST_PASSWORD);
-
-    const unlockButton = page.getByTestId(SettingsSelectors.UnlockWalletBtn);
-    await unlockButton.waitFor({ state: 'visible' });
-    await unlockButton.click();
+    await homePage.unlock();
 
     await page
       .getByTestId(SettingsSelectors.CurrentAccountDisplayName)
@@ -128,12 +132,7 @@ test.describe('Security: Password Memory Leak', () => {
     await homePage.lock();
 
     const unlockInput = page.getByTestId(SettingsSelectors.EnterPasswordInput);
-    await unlockInput.waitFor({ state: 'visible' });
-    await unlockInput.fill(TEST_PASSWORD);
-
-    const unlockButton = page.getByTestId(SettingsSelectors.UnlockWalletBtn);
-    await unlockButton.waitFor({ state: 'visible' });
-    await unlockButton.click();
+    await homePage.unlock();
 
     await page
       .getByTestId(SettingsSelectors.CurrentAccountDisplayName)
@@ -175,12 +174,7 @@ test.describe('Security: Password Memory Leak', () => {
     await homePage.lock();
 
     const unlockInput = page.getByTestId(SettingsSelectors.EnterPasswordInput);
-    await unlockInput.waitFor({ state: 'visible' });
-    await unlockInput.fill(TEST_PASSWORD);
-
-    const unlockButton = page.getByTestId(SettingsSelectors.UnlockWalletBtn);
-    await unlockButton.waitFor({ state: 'visible' });
-    await unlockButton.click();
+    await homePage.unlock();
 
     await page
       .getByTestId(SettingsSelectors.CurrentAccountDisplayName)
@@ -200,21 +194,13 @@ test.describe('Security: Password Memory Leak', () => {
 
     const result = searchHeapForStringWithDetails(snapshot, TEST_PASSWORD);
 
-    if (result.found) {
-      // eslint-disable-next-line no-console
-      console.error(`\n❌ Security Vulnerability Detected!`);
-      // eslint-disable-next-line no-console
-      console.error(`Password found ${result.count} time(s) in heap memory after locking wallet\n`);
-      // eslint-disable-next-line no-console
-      console.error(`Sample occurrences (first 3):`);
-      result.occurrences.slice(0, 3).forEach((occurrence, index) => {
-        // eslint-disable-next-line no-console
-        console.error(`  ${index + 1}. "${occurrence}"`);
-      });
-      // eslint-disable-next-line no-console
-      console.error('');
-    }
+    await attachHeapOccurrences(result);
 
-    test.expect(result.found).toBe(false);
+    test
+      .expect(
+        result.found,
+        `Password found ${result.count} time(s) in heap memory after locking wallet`
+      )
+      .toBe(false);
   });
 });
