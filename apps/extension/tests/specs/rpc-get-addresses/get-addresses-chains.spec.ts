@@ -2,6 +2,8 @@ import type { BrowserContext, Page } from '@playwright/test';
 import { type TestRpcResponse, getResponseAddresses } from '@tests/leather-provider';
 import { makeLedgerTestAccountWalletState } from '@tests/page-object-models/onboarding.page';
 
+import { assertExistence } from '@leather.io/utils';
+
 import { test } from '../../fixtures/fixtures';
 
 async function interceptRequestPopup(context: BrowserContext) {
@@ -57,7 +59,7 @@ test.describe('Rpc: getAddresses with chains param', () => {
     test('chains: [] is rejected with invalid params', async ({ page }) => {
       const result = await initiateGetAddresses(page, { chains: [] });
 
-      if (!result) throw new Error('Expected result');
+      assertExistence(result, 'Expected result');
       delete result.id;
       test.expect(result.error?.code).toEqual(-32602);
     });
