@@ -23,7 +23,7 @@ export const recipientIdentifierTypes = makeIteratbleListOfRecipientIdentifierTy
 );
 
 export function useRecipientSelectFields() {
-  const { resetField } = useFormContext<RecipientFormValues>();
+  const { clearErrors, setValue } = useFormContext<RecipientFormValues>();
 
   const [selectedRecipientField, setSelectedRecipientField] =
     useState<RecipientIdentifierType>('address');
@@ -33,9 +33,11 @@ export function useRecipientSelectFields() {
   const navigate = useNavigate();
 
   const resetAllRecipientFields = useCallback(() => {
-    resetField('recipient', { defaultValue: '' });
-    resetField('recipientBnsName', { defaultValue: '' });
-  }, [resetField]);
+    setValue('recipient', '');
+    clearErrors('recipient');
+    setValue('recipientBnsName', '');
+    clearErrors('recipientBnsName');
+  }, [clearErrors, setValue]);
 
   return useMemo(
     () => ({

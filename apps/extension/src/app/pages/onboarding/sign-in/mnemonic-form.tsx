@@ -66,7 +66,7 @@ export function MnemonicForm({
     mode: 'all',
     shouldUnregister: true,
   });
-  const { errors, isValid, touchedFields } = form.formState;
+  const { errors, touchedFields } = form.formState;
   const values = form.watch();
   const hasFormValues = hasMnemonicFormValues(values);
   const mnemonicErrorFields = getMnemonicErrorFields(errors, touchedFields, values);
@@ -100,7 +100,7 @@ export function MnemonicForm({
           <Button
             data-testid={OnboardingSelectors.SignInBtn}
             aria-disabled={isLoading || showMnemonicErrors}
-            disabled={isEmpty(touchedFields) || !isValid || !hasFormValues}
+            disabled={isEmpty(touchedFields) || !isEmpty(errors) || !hasFormValues}
             aria-busy={isLoading}
             fullWidth
             type="submit"

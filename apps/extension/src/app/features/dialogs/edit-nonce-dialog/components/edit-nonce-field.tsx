@@ -23,10 +23,7 @@ export const EditNonceField = memo(function EditNonceField(props: EditNonceField
         <Input.Field
           name={field.name}
           ref={field.ref}
-          onBlur={() => {
-            field.onBlur();
-            onBlur();
-          }}
+          onBlur={onBlur}
           value={field.value}
           onChange={(evt: FormEvent<HTMLInputElement>) => {
             field.onChange(evt.currentTarget.value);

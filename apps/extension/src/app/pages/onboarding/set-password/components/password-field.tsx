@@ -23,9 +23,13 @@ export function PasswordField({
   isDisabled,
   showStrength = true,
 }: PasswordFieldProps) {
-  const { field, fieldState } = useController<{ password: string }>({ name: 'password' });
+  const { field, fieldState, formState } = useController<{ password: string }>({
+    name: 'password',
+  });
   const { error: fieldError, isTouched } = fieldState;
+  const { submitCount } = formState;
   const error = fieldError?.message;
+  const showError = isTouched || submitCount > 0;
   const [showPassword, setShowPassword] = useState(false);
   const { theme } = useThemeSwitcher();
 
@@ -37,7 +41,7 @@ export function PasswordField({
   return (
     <>
       <Box position="relative">
-        <Input.Root hasError={!showStrength && isTouched && !!error}>
+        <Input.Root hasError={!showStrength && showError && !!error}>
           <Input.Label>Password</Input.Label>
           <Input.Field
             autoCapitalize="off"
@@ -85,7 +89,7 @@ export function PasswordField({
           </Flex>
         </>
       ) : (
-        isTouched && error && <ErrorLabel>{error}</ErrorLabel>
+        showError && error && <ErrorLabel>{error}</ErrorLabel>
       )}
     </>
   );
