@@ -298,8 +298,8 @@ export default defineConfig([
     },
   },
   {
-    name: 'extension-e2e-tests',
-    files: ['apps/extension/tests/**/*.{ts,tsx}'],
+    name: 'e2e-tests',
+    files: ['apps/extension/tests/**/*.{ts,tsx}', 'apps/web/tests/**/*.{ts,tsx}'],
     extends: [pluginPlaywright.configs['flat/recommended']],
     rules: {
       ...playwrightRecommendedAsErrors,

@@ -1,5 +1,5 @@
 import { type NetworkFixture, createNetworkFixture } from '@msw/playwright';
-import { test as base } from '@playwright/test';
+import { type Response, test as base, expect } from '@playwright/test';
 
 import { successHandlers } from '../app/mocks/api/mock-handlers';
 
@@ -11,6 +11,10 @@ interface ModeOptions {
 interface Fixtures {
   network: NetworkFixture;
   mode(options?: ModeOptions): Promise<void>;
+}
+
+function isConnectQuestResponse(response: Response) {
+  return response.url().includes('/v1/quests/connect-earn/complete');
 }
 
 export const test = base.extend<Fixtures>({
@@ -59,7 +63,7 @@ export const test = base.extend<Fixtures>({
 
     async function setMode(options: ModeOptions = { mode: 'mock-installed' }) {
       await page.goto('/');
-      await page.waitForLoadState('networkidle');
+      await expect(page.getByRole('button', { name: 'Install' })).toBeVisible();
 
       if (options.mode === 'uninstalled') {
         // No action needed here, wallet uninstalled is the default state
@@ -74,7 +78,9 @@ export const test = base.extend<Fixtures>({
         await page.evaluate(() => localStorage.setItem('leather-mock-mode', 'true'));
         await page.reload();
         await page.getByRole('button', { name: 'Connect' }).click();
+        const questCompleted = page.waitForResponse(isConnectQuestResponse);
         await page.getByRole('button', { name: 'Resolve' }).click();
+        await questCompleted;
       }
     }
     await use(setMode);

@@ -132,7 +132,7 @@ pnpm --filter @leather.io/{package} typecheck
 
 - Turborepo + `pnpm`.
 - Vitest for unit/integration tests. Use the `testing-patterns` skill for conventions.
-- Playwright for E2E tests (extension). Use the `write-extension-e2e` skill: page-object actions own their readiness waits, and sleeps, `networkidle` and raw locators are lint errors. Avoid `force: true` — it hides accessibility issues. Never nest interactive elements.
+- Playwright for E2E tests (extension and web). Sleeps, `networkidle`, `waitForSelector` and raw locators are lint errors in both suites. For the extension use the `write-extension-e2e` skill: page-object actions own their readiness waits. Avoid `force: true` — it hides accessibility issues. Never nest interactive elements.
 
 ## Common tasks
 
