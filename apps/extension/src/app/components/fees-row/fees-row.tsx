@@ -114,7 +114,10 @@ export function FeesRow({
       if (index === customFeeTypeIndex)
         void feeHelper.setValue(
           defaultFeeValue
-            ? convertAmountToBaseUnit(new BigNumber(Number(defaultFeeValue)), STX_DECIMALS)
+            ? convertAmountToBaseUnit(
+                new BigNumber(Number(defaultFeeValue)),
+                STX_DECIMALS
+              ).toString()
             : ''
         );
       else if (estimates.length > 0)

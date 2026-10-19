@@ -29,7 +29,7 @@ export function createBtcStakingPositionsQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBitcoinStakingService().getAccountStakingPositions(request, signal),
     ...balanceQueryOptions,
-  } satisfies UseQueryOptions<BtcStakingPosition[], Error>;
+  } satisfies UseQueryOptions<BtcStakingPosition[]>;
 }
 
 export function createBtcBondEnrollmentWindowQueryKey(settings: UserSettings) {
@@ -45,5 +45,5 @@ export function createBtcBondEnrollmentWindowQueryConfig(settings: UserSettings)
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBitcoinStakingService().getUpcomingBondEnrollmentWindow(signal),
     ...balanceQueryOptions,
-  } satisfies UseQueryOptions<BtcBondEnrollmentWindow | null, Error>;
+  } satisfies UseQueryOptions<BtcBondEnrollmentWindow | null>;
 }
