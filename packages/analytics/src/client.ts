@@ -1,4 +1,6 @@
-import { AnalyticsClientConfig, Events, JsonMap } from './types';
+import { entries, keys } from 'remeda';
+
+import { type AnalyticsClientConfig, type Events, type JsonMap } from './types';
 
 export function AnalyticsClient(config: AnalyticsClientConfig) {
   const { client: analyticsClient, defaultProperties = {}, defaultTraits = {} } = config;
@@ -15,7 +17,7 @@ export function AnalyticsClient(config: AnalyticsClientConfig) {
       if (event.match(/^[a-zA-Z0-9\s][a-zA-Z0-9\s]*$/)) {
         throw new Error('Event must be snake_case');
       }
-      analyticsClient.track(event as any, {
+      analyticsClient.track(event, {
         ...properties,
         ...defaultProperties,
       });
@@ -30,7 +32,7 @@ export function AnalyticsClient(config: AnalyticsClientConfig) {
     },
 
     group(groupId: string, traits: JsonMap | Record<string, unknown>) {
-      if (Object.keys(traits).length === 0) {
+      if (keys(traits).length === 0) {
         // eslint-disable-next-line no-console
         console.warn('Calling group analytics without traits');
         return;
@@ -39,7 +41,7 @@ export function AnalyticsClient(config: AnalyticsClientConfig) {
       analyticsClient.setGroup('company', groupId);
       const group = analyticsClient.getGroup('company', groupId);
       if (group) {
-        Object.entries(traits).forEach(([key, value]) => {
+        entries(traits).forEach(([key, value]) => {
           group.set(key, JSON.stringify(value));
         });
       }
@@ -51,7 +53,7 @@ export function AnalyticsClient(config: AnalyticsClientConfig) {
       }
 
       const allTraits = { ...traits, ...defaultTraits };
-      if (Object.keys(allTraits).length > 0) {
+      if (keys(allTraits).length > 0) {
         const people = analyticsClient.getPeople();
         if (people) {
           people.set(allTraits);
