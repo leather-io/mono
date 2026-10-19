@@ -25,9 +25,7 @@ export class NetworkPage {
   }
 
   async waitForNetworkPageReady() {
-    await this.page.waitForSelector(createTestSelector(NetworkSelectors.NetworkPageReady), {
-      state: 'attached',
-    });
+    await this.page.getByTestId(NetworkSelectors.NetworkPageReady).waitFor({ state: 'attached' });
   }
 
   async inputNetworkNameField(input: string) {
@@ -47,7 +45,7 @@ export class NetworkPage {
   }
 
   async waitForErrorMessage() {
-    await this.page.waitForSelector(this.errorTextSelector);
+    await this.page.locator(this.errorTextSelector).first().waitFor();
   }
 
   getErrorMessage() {
@@ -55,7 +53,7 @@ export class NetworkPage {
   }
 
   async clickAddNetwork() {
-    await this.page.locator(this.btnAddNetworkSelector).click({ force: true });
+    await this.page.locator(this.btnAddNetworkSelector).click();
   }
 
   async openNetworkPage() {

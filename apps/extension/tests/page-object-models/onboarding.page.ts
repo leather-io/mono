@@ -1,11 +1,11 @@
-import { type Page } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
 import type { SupportedBlockchains } from '@leather.io/models';
-import { createCounter, delay } from '@leather.io/utils';
+import { createCounter } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -13,6 +13,7 @@ export const TEST_ACCOUNT_SECRET_KEY = process.env.EXTENSION_INTEGRATION_TEST_MN
 
 const testAccountDerivedKey =
   'd904f412b8d116540017c302f3f7033813c95902af5a067c7befcc34fa5e5290709f157f80548603a1e4f8edc2c0d5d7';
+const multiWalletIntroducerId = 'multi-wallet-support';
 const signInAttemptLimit = 3;
 const signInPollTimeoutMs = 5000;
 const signInPollIntervalMs = 100;
@@ -434,7 +435,6 @@ export class OnboardingPage {
     const passwordInput = this.page.getByTestId(OnboardingSelectors.NewPasswordInput);
     await passwordInput.waitFor();
     await passwordInput.fill(password);
-    await this.page.waitForTimeout(100);
     await this.page.getByTestId(OnboardingSelectors.SetPasswordBtn).click();
   }
 
@@ -474,6 +474,14 @@ export class OnboardingPage {
     }
     await tryItOutBtn.click();
     await tryItOutBtn.waitFor({ state: 'detached' });
+    await expect.poll(() => this.isFeatureIntroPersistedAsSeen()).toBe(true);
+  }
+
+  private isFeatureIntroPersistedAsSeen() {
+    return this.page.evaluate(async featureId => {
+      const persisted = await chrome.storage.local.get(['persist:root']);
+      return JSON.stringify(persisted).includes(featureId);
+    }, multiWalletIntroducerId);
   }
 
   async signInMnemonicKey(secretKey = TEST_ACCOUNT_SECRET_KEY) {
@@ -505,53 +513,75 @@ export class OnboardingPage {
     await this.dismissFeatureIntroducer();
   }
 
+  private async isHomePageVisible() {
+    const hasTokensTab = await this.page.getByTestId(HomePageSelectors.TokensTabBtn).isVisible();
+    const hasActivityTab = await this.page
+      .getByTestId(HomePageSelectors.ActivityTabBtn)
+      .isVisible();
+    return hasTokensTab && hasActivityTab;
+  }
+
   private async isSignedInWithTestAccountKey() {
     try {
       const { encryptionKey } = await this.page.evaluate(() =>
         chrome.storage.session.get(['encryptionKey'])
       );
       const hasSessionKey = encryptionKey === testAccountDerivedKey;
-      const hasTokensTab = await this.page.getByTestId(HomePageSelectors.TokensTabBtn).isVisible();
-      const hasActivityTab = await this.page
-        .getByTestId(HomePageSelectors.ActivityTabBtn)
-        .isVisible();
-
-      return hasSessionKey && hasTokensTab && hasActivityTab;
+      return hasSessionKey && (await this.isHomePageVisible());
     } catch {
       return false;
     }
   }
 
-  private async waitForSignedInWithTestAccountKey() {
-    const deadline = Date.now() + signInPollTimeoutMs;
-    do {
-      if (await this.isSignedInWithTestAccountKey()) return true;
-      await delay(signInPollIntervalMs);
-    } while (Date.now() < deadline);
-    return false;
+  private async pollUntil(isReady: () => Promise<boolean>) {
+    try {
+      await expect
+        .poll(isReady, { timeout: signInPollTimeoutMs, intervals: [signInPollIntervalMs] })
+        .toBe(true);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  private async seedWalletStateAndWaitForSignIn(id: string, walletState: object) {
+  private async seedWalletState(walletState: object, encryptionKey?: string) {
+    await this.page.evaluate(
+      async walletState => chrome.storage.local.set({ 'persist:root': walletState }),
+      walletState
+    );
+    if (!encryptionKey) return;
+    await this.page.evaluate(
+      async encryptionKey => chrome.storage.session.set({ encryptionKey }),
+      encryptionKey
+    );
+  }
+
+  private async seedWalletStateAndWaitFor(
+    id: string,
+    walletState: object,
+    isReady: () => Promise<boolean>,
+    encryptionKey?: string
+  ) {
     const attemptCounter = createCounter();
 
     do {
       if (attemptCounter.getValue() >= signInAttemptLimit)
         throw new Error('Unable to initialize wallet state');
 
-      await this.page.evaluate(
-        async walletState => chrome.storage.local.set({ 'persist:root': walletState }),
-        walletState
-      );
-
-      await this.page.evaluate(
-        async encryptionKey => chrome.storage.session.set({ encryptionKey }),
-        testAccountDerivedKey
-      );
-
+      await this.seedWalletState(walletState, encryptionKey);
       await this.page.goto(`chrome-extension://${id}/index.html`);
 
       attemptCounter.increment();
-    } while (!(await this.waitForSignedInWithTestAccountKey()));
+    } while (!(await this.pollUntil(isReady)));
+  }
+
+  private async seedWalletStateAndWaitForSignIn(id: string, walletState: object) {
+    await this.seedWalletStateAndWaitFor(
+      id,
+      walletState,
+      () => this.isSignedInWithTestAccountKey(),
+      testAccountDerivedKey
+    );
   }
 
   /**
@@ -581,14 +611,7 @@ export class OnboardingPage {
     // open or 2) the popup would open but it would load the unsigned in state.
     // This behaviour took place before I upgraded the playwright version in
     // that PR.
-    await delay(2000);
-    await this.page.evaluate(
-      async walletState => chrome.storage.local.set({ 'persist:root': walletState }),
-      state
-    );
-    await delay(2000);
-    await this.page.goto(`chrome-extension://${id}/index.html`);
-    await delay(2000);
+    await this.seedWalletStateAndWaitFor(id, state, () => this.isHomePageVisible());
     await this.dismissFeatureIntroducer();
   }
 }
