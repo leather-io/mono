@@ -23,7 +23,7 @@ export function PsbtAddressTotalItem({
   value,
   valueAction,
 }: PsbtAddressTotalItemProps) {
-  const { onCopy, hasCopied } = useClipboard(hoverLabel ?? '');
+  const { onCopy, hasCopied } = useClipboard(hoverLabel);
 
   return (
     <Flag img={image ? image : <BtcAvatarIcon />} mt="space.05" spacing="space.04" width="100%">

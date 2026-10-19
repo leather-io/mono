@@ -1,4 +1,5 @@
 import type { BrowserContext, Page } from '@playwright/test';
+import { getResponseAddresses } from '@tests/leather-provider';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import {
   makeLedgerTestAccountWalletState,
@@ -76,9 +77,9 @@ async function interceptRequestPopup(context: BrowserContext) {
   return context.waitForEvent('page');
 }
 
-async function initiateGetAddresses(page: Page, eventName: GetAddressesMethods, params?: any) {
+async function initiateGetAddresses(page: Page, eventName: GetAddressesMethods, params?: unknown) {
   return page.evaluate(
-    ({ eventName, params }) => (window as any).LeatherProvider?.request(eventName, params),
+    ({ eventName, params }) => window.LeatherProvider?.request(eventName, params),
     { eventName, params }
   );
 }
@@ -169,7 +170,7 @@ getAddressesMethods.forEach(method => {
 
             const result = await getAddressesPromise;
             test
-              .expect(result.result.addresses[0].address)
+              .expect(getResponseAddresses(result)[0].address)
               .toEqual('bcrt1q4qgnjewwun2llgken94zqjrx5kpqqycaqad8ay');
           });
 
@@ -190,7 +191,7 @@ getAddressesMethods.forEach(method => {
             await clickConnectLeatherButton(popup);
             const result = await getAddressesPromise;
             test
-              .expect(result.result.addresses[0].address)
+              .expect(getResponseAddresses(result)[0].address)
               .toEqual('bc1qr9wmz342txkcmxxq5ysmfqrd5rvmxtu6nldjgp');
           });
         }

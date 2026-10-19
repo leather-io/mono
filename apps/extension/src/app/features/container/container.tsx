@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 
-import { RouteUrls } from '@shared/route-urls';
 import { persistDirtyTracker } from '@shared/storage/dirty-slice-tracker';
 import { analytics } from '@shared/utils/analytics';
 
@@ -11,7 +10,6 @@ import type { ReceiveView } from '@app/common/receive/receive';
 import { ContainerLayout } from '@app/components/layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { SwitchAccountSheet } from '@app/features/dialogs/switch-account-sheet/switch-account-sheet';
-import { InAppMessages } from '@app/features/in-app-messages/in-app-messages';
 import { LedgerFlowHost } from '@app/features/ledger/flow/ledger-flow-host';
 import { UpdateAvailableCallout } from '@app/features/update-available/update-available-callout';
 import { useUpdateAppliedToast } from '@app/features/update-available/use-update-applied-toast';
@@ -31,8 +29,7 @@ import { useRestoreFormState } from '../popup-send-form-restoration/use-restore-
 initalizeAnalytics();
 
 export function Container() {
-  const { pathname: locationPathname } = useLocation();
-  const pathname = locationPathname as RouteUrls;
+  const { pathname } = useLocation();
   const [isShowingSwitchAccount, setIsShowingSwitchAccount] = useState(false);
   const [allowPolicyAccounts, setAllowPolicyAccounts] = useState(true);
   const [receiveView, setReceiveView] = useState<ReceiveView | null>(null);
@@ -92,7 +89,6 @@ export function Container() {
         />
       )}
       <LedgerFlowHost />
-      <InAppMessages />
       <ContainerLayout>
         <UpdateAvailableCallout />
         <Outlet

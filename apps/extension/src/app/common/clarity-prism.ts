@@ -1,11 +1,6 @@
 import * as PrismLib from 'prismjs';
 
-export interface PrismType {
-  languages: typeof PrismLib.languages;
-  tokenize: typeof PrismLib.tokenize;
-  highlight: typeof PrismLib.highlight;
-  [key: string]: any;
-}
+export type PrismType = typeof PrismLib;
 
 function clarity(Prism: PrismType) {
   // Functions to construct regular expressions
@@ -123,4 +118,4 @@ buff|hash160|sha256|sha512|sha512/256|keccak256|true|false|none)' +
 
 clarity(PrismLib);
 
-export const Prism = PrismLib as PrismType;
+export const Prism: PrismType = PrismLib;

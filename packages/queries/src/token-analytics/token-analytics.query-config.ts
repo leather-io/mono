@@ -24,7 +24,7 @@ export function createTokenAnalyticsQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getTokenAnalyticsService().getAnalytics(asset, signal),
     ...tokenAnalyticsQueryOptions,
-  } satisfies UseQueryOptions<TokenAnalytics | null, Error>;
+  } satisfies UseQueryOptions<TokenAnalytics | null>;
 }
 
 export function createTokenAnalyticsByAssetIdQueryKey(
@@ -47,7 +47,7 @@ export function createTokenAnalyticsByAssetIdQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getTokenAnalyticsService().getAnalyticsByAssetId(assetId, signal),
     ...tokenAnalyticsQueryOptions,
-  } satisfies UseQueryOptions<TokenAnalytics | null, Error>;
+  } satisfies UseQueryOptions<TokenAnalytics | null>;
 }
 
 export function createTokenDistributionQueryKey(
@@ -66,7 +66,7 @@ export function createTokenDistributionQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getTokenAnalyticsService().getDistribution(asset, signal),
     ...tokenAnalyticsQueryOptions,
-  } satisfies UseQueryOptions<TokenDistribution | null, Error>;
+  } satisfies UseQueryOptions<TokenDistribution | null>;
 }
 
 export function createTokenDistributionByAssetIdQueryKey(
@@ -89,5 +89,5 @@ export function createTokenDistributionByAssetIdQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getTokenAnalyticsService().getDistributionByAssetId(assetId, signal),
     ...tokenAnalyticsQueryOptions,
-  } satisfies UseQueryOptions<TokenDistribution | null, Error>;
+  } satisfies UseQueryOptions<TokenDistribution | null>;
 }

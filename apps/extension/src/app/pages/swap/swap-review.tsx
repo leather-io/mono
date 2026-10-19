@@ -3,13 +3,13 @@ import { useNavigate, useOutletContext } from 'react-router';
 
 import { captureMessage } from '@sentry/react';
 import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 import { AnimatePresence } from 'framer-motion';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { isNonNullish } from 'remeda';
 
 import {
-  LiveSwapEstimate,
+  type LiveSwapEstimate,
   PRICE_IMPACT_WARNING_THRESHOLD,
   matchLiveEstimate,
   useSwapContext,
@@ -55,7 +55,7 @@ export function SwapReview() {
   const { canSubmit } = useSwapContext();
   const { submission, confirm, reset, goToActivity } = useSwapSubmission();
   const isSubmissionActive = submission.status !== 'idle';
-  useSwapReviewStatusGuard(liveEstimate, isSubmissionActive, () => navigate(-1));
+  useSwapReviewStatusGuard(liveEstimate, isSubmissionActive, () => void navigate(-1));
 
   function handleConfirm() {
     if (liveEstimate.status !== 'success') return;
@@ -86,8 +86,8 @@ export function SwapReview() {
               idle: () => null,
               constrained: () => null,
               loading: () => <LoadingSpinner />,
-              error: estimate => <SwapReviewErrorState onRetry={estimate.refetch} />,
-              empty: () => <SwapReviewEmptyState onBack={() => navigate(-1)} />,
+              error: estimate => <SwapReviewErrorState onRetry={() => void estimate.refetch()} />,
+              empty: () => <SwapReviewEmptyState onBack={() => void navigate(-1)} />,
               success: liveEstimate => <SwapReviewContent liveEstimate={liveEstimate} />,
             })}
           </Card>
@@ -130,7 +130,7 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
     minReceive,
     priceImpactPercentage,
   } = selectedQuote;
-  const showPriceImpact = shouldShowPriceImpact(priceImpactPercentage);
+  const visiblePriceImpact = getVisiblePriceImpact(priceImpactPercentage);
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
 
   return (
@@ -187,10 +187,10 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
           />
         )}
 
-        {showPriceImpact && (
+        {visiblePriceImpact && (
           <SwapReviewDetailRow
             label="Price impact"
-            value={<PriceImpactValue value={priceImpactPercentage} />}
+            value={<PriceImpactValue value={visiblePriceImpact} />}
             info={
               <SwapReviewInfoTooltip label="The difference between the market price and the price you'll receive due to your trade size relative to the available liquidity. Larger trades typically have higher price impact." />
             }
@@ -214,7 +214,7 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         <SbtcLedgerRecoveryWarning />
       )}
 
-      <styled.span textStyle="caption.01" textAlign="center" color="ink.text-subdued" mt="auto">
+      <styled.span textStyle="caption.01" textAlign="center" color="ink.text-secondary" mt="auto">
         Make sure everything looks correct.
         <br />
         Confirmed transactions cannot be undone.
@@ -247,11 +247,11 @@ function useSwapReviewStatusGuard(
   }, [liveEstimate.status, isSubmissionActive, exitReview]);
 }
 
-function shouldShowPriceImpact(
-  priceImpactPercentage: BigNumber | null
-): priceImpactPercentage is BigNumber {
-  return (
+function getVisiblePriceImpact(priceImpactPercentage: BigNumber | null) {
+  if (
     isNonNullish(priceImpactPercentage) &&
     priceImpactPercentage.isGreaterThanOrEqualTo(PRICE_IMPACT_WARNING_THRESHOLD)
-  );
+  )
+    return priceImpactPercentage;
+  return null;
 }

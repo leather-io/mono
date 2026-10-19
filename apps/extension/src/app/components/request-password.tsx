@@ -9,7 +9,7 @@ import { analytics } from '@shared/utils/analytics';
 
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { buildEnterKeyEvent } from '@app/common/hooks/use-modifier-key';
-import { WaitingMessages, useWaitingMessage } from '@app/common/hooks/use-waiting-message';
+import { type WaitingMessages, useWaitingMessage } from '@app/common/hooks/use-waiting-message';
 import { Card, Page } from '@app/components/layout';
 
 import { ErrorLabel } from './error-label';
@@ -29,7 +29,7 @@ interface RequestPasswordProps {
 export function RequestPassword({ onSuccess }: RequestPasswordProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { unlockWallet } = useKeyActions();
+  const keyActions = useKeyActions();
 
   const [isRunning, waitingMessage, startWaitingMessage, stopWaitingMessage] =
     useWaitingMessage(waitingMessages);
@@ -40,7 +40,7 @@ export function RequestPassword({ onSuccess }: RequestPasswordProps) {
     startWaitingMessage();
     setError('');
     try {
-      await unlockWallet(password);
+      await keyActions.unlockWallet(password);
       onSuccess();
     } catch {
       setError('The password you entered is invalid');
@@ -50,7 +50,7 @@ export function RequestPassword({ onSuccess }: RequestPasswordProps) {
     analytics.track('complete_unlock', {
       durationMs: unlockSuccessTimeMs - startUnlockTimeMs,
     });
-  }, [startWaitingMessage, stopWaitingMessage, unlockWallet, password, onSuccess]);
+  }, [startWaitingMessage, stopWaitingMessage, keyActions, password, onSuccess]);
 
   return (
     <Page>
@@ -70,7 +70,7 @@ export function RequestPassword({ onSuccess }: RequestPasswordProps) {
             data-testid={SettingsSelectors.UnlockWalletBtn}
             disabled={isRunning || !!error}
             aria-busy={isRunning}
-            onClick={submit}
+            onClick={() => void submit()}
             variant="solid"
             fullWidth
           >
@@ -94,7 +94,7 @@ export function RequestPassword({ onSuccess }: RequestPasswordProps) {
                 setError('');
                 setPassword(event.currentTarget.value);
               }}
-              onKeyUp={buildEnterKeyEvent(submit)}
+              onKeyUp={buildEnterKeyEvent(() => void submit())}
             />
           </Input.Root>
           {error && <ErrorLabel width="100%">{error}</ErrorLabel>}

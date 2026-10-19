@@ -1,8 +1,6 @@
 import { type StacksTransactionWire, isTokenTransferPayload } from '@stacks/transactions';
-import { type UseQueryResult } from '@tanstack/react-query';
 
-import { type FtAssetResponse } from '@leather.io/query';
-import { baseCurrencyAmountInQuote, createMoney, sumMoney } from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoney, isNumber, sumMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import {
@@ -11,10 +9,10 @@ import {
   getRecipientFromStacksTransaction,
   getSip10MemoDisplayText,
   getSip10TransferAmount,
+  getSip10TransferPayload,
   getStacksTransactionFee,
   getTokenTransferAmount,
   getTokenTransferMemoDisplayText,
-  isSip10TransferContactCall,
   safeAddressToString,
 } from '@app/common/transactions/stacks/transaction.utils';
 import { TxStatusBadge } from '@app/features/tx-status-badge/tx-status-badge';
@@ -63,21 +61,24 @@ export function StxSentSummary({ txid, tx }: StacksChainSummaryProps) {
 }
 
 export function Sip10SentSummary({ txid, symbol, tx }: StacksChainSummaryProps) {
-  if (!isSip10TransferContactCall(tx)) throw new Error('Impossible state, not a SIP-10 transfer');
-  const contract = getContractAddressFromContractCallPayload(tx.payload);
+  const sip10Payload = getSip10TransferPayload(tx);
+  if (!sip10Payload) throw new Error('Impossible state, not a SIP-10 transfer');
+  const contract = getContractAddressFromContractCallPayload(sip10Payload);
 
   // Type casting because monorepo returns inaccurate type
-  const { data: tokenMetadata } = useGetFungibleTokenMetadataQuery(
-    contract
-  ) as UseQueryResult<FtAssetResponse>;
+  const { data: tokenMetadata } = useGetFungibleTokenMetadataQuery(contract);
 
   if (!tokenMetadata || !('decimals' in tokenMetadata))
     return <StacksChainTxSummaryLoading txid={txid} />;
 
-  const amount = getSip10TransferAmount(tx.payload, symbol, tokenMetadata.decimals ?? 0);
+  const amount = getSip10TransferAmount(
+    sip10Payload,
+    symbol,
+    isNumber(tokenMetadata.decimals) ? tokenMetadata.decimals : 0
+  );
   const recipient = getRecipientFromStacksTransaction(tx) ?? undefined;
   const fee = getStacksTransactionFee(tx);
-  const memo = getSip10MemoDisplayText(tx.payload) || '—';
+  const memo = getSip10MemoDisplayText(sip10Payload) || '—';
 
   return (
     <StacksChainTxSummaryLayout

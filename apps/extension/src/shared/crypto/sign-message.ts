@@ -1,19 +1,20 @@
 import { type PrivateKey, bytesToHex } from '@stacks/common';
 import { hashMessage } from '@stacks/encryption';
 import {
-  ClarityValue,
+  type ClarityValue,
   privateKeyToPublic,
+  publicKeyToHex,
   signMessageHashRsv,
   signStructuredData,
 } from '@stacks/transactions';
 
-import { SignatureData } from '@shared/signature/signature-types';
+import { type SignatureData } from '@shared/signature/signature-types';
 
 export function signMessage(message: string, privateKey: PrivateKey): SignatureData {
   const hash = hashMessage(message);
   return {
     signature: signMessageHashRsv({ privateKey, messageHash: bytesToHex(hash) }),
-    publicKey: privateKeyToPublic(privateKey) as string,
+    publicKey: publicKeyToHex(privateKeyToPublic(privateKey)),
   };
 }
 
@@ -30,6 +31,6 @@ export function signStructuredDataMessage(
 
   return {
     signature,
-    publicKey: privateKeyToPublic(privateKey) as string,
+    publicKey: publicKeyToHex(privateKeyToPublic(privateKey)),
   };
 }

@@ -7,6 +7,7 @@ import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import {
+  type SignedMessageType,
   isSignableMessageType,
   isStructuredMessageType,
   isUtf8MessageType,
@@ -17,8 +18,8 @@ import { analytics } from '@shared/utils/analytics';
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import {
-  StructuredPayload,
-  Utf8Payload,
+  type StructuredPayload,
+  type Utf8Payload,
 } from '@app/features/stacks-message-signer/stacks-message-signing';
 import { useSignStacksMessage } from '@app/features/stacks-message-signer/use-sign-stacks-message';
 
@@ -71,6 +72,7 @@ export function useRpcSignStacksMessageParams() {
 
   if (!requestId || !message || !origin || !isSignableMessageType(messageType))
     throw new Error('Missing required parameters for Stacks signing message request');
+  const signableMessageType: SignedMessageType = messageType;
 
   return useMemo(
     () => ({
@@ -80,11 +82,11 @@ export function useRpcSignStacksMessageParams() {
       requestId,
       network,
       message,
-      messageType,
+      messageType: signableMessageType,
       appName,
       domain,
     }),
-    [origin, frameId, requestId, network, message, messageType, tabId, appName, domain]
+    [origin, frameId, requestId, network, message, signableMessageType, tabId, appName, domain]
   );
 }
 

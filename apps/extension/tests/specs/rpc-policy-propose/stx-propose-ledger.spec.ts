@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import {
   type ClarityValue,
   bufferCVFromString,
@@ -6,6 +6,7 @@ import {
   serializeCV,
   standardPrincipalCV,
 } from '@stacks/transactions';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import { TEST_ACCOUNT_1_STX_ADDRESS } from '@tests/mocks/constants';
 import { mockFundedStacksAddress } from '@tests/mocks/mock-multisig';
 import {
@@ -52,8 +53,8 @@ function makeCallContractParams(recipient: string) {
 function openStxCallContract(page: Page, recipient: string) {
   return page.evaluate(
     ({ params }) =>
-      void (window as any).LeatherProvider?.request('stx_callContract', params).catch(
-        (e: unknown) => e
+      void window.LeatherProvider?.request('stx_callContract', params).catch(
+        (e: TestRpcResponse) => e
       ),
     { params: makeCallContractParams(recipient) }
   );

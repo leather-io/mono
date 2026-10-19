@@ -3,8 +3,8 @@ import { createRpcSuccessResponse, open } from '@leather.io/rpc';
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { openNewTabWithWallet, trackRpcRequestSuccess } from '../rpc-helpers';
-import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   createConnectingAppSearchParamsWithLastKnownAccount,
   triggerRequestPopupWindowOpen,

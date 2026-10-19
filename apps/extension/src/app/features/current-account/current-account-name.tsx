@@ -1,9 +1,9 @@
 import { Suspense, memo } from 'react';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
-import { Box, BoxProps, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, styled } from 'leather-styles/jsx';
 
-import { HasChildren } from '@app/common/has-children';
+import { type HasChildren } from '@app/common/has-children';
 import { useCurrentAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { truncateString } from '@app/common/utils';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';

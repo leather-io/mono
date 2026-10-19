@@ -12,12 +12,12 @@ interface TransactionTitleProps {
 export function TransactionTitle(props: TransactionTitleProps) {
   const { title } = props;
   const ref = useRef<HTMLDivElement | null>(null);
-  const element = ref.current!;
+  const element = ref.current;
   const [isEllipsisActive, setIsEllipsisActive] = useState(
-    element?.scrollWidth > element?.clientWidth
+    !!element && element.scrollWidth > element.clientWidth
   );
   function onResize() {
-    setIsEllipsisActive(element?.scrollWidth > element?.clientWidth);
+    setIsEllipsisActive(!!element && element.scrollWidth > element.clientWidth);
   }
 
   const spamFilter = useSpamFilterWithWhitelist();

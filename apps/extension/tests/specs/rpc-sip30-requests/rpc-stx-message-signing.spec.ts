@@ -1,4 +1,4 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
 import {
   intCV,
   serializeCV,
@@ -7,6 +7,7 @@ import {
   tupleCV,
   uintCV,
 } from '@stacks/transactions';
+import { requestLeatherProvider } from '@tests/leather-provider';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 
 import { test } from '../../fixtures/fixtures';
@@ -28,14 +29,10 @@ test.describe('stx_signMessage', () => {
 
   function initiateUtf8MessageSigning(page: Page) {
     return async (message: string) =>
-      page.evaluate(
-        ({ message }) =>
-          (window as any).LeatherProvider.request('stx_signMessage', {
-            message,
-            messageType: 'utf8',
-          }).catch((e: unknown) => e),
-        { message }
-      );
+      page.evaluate(requestLeatherProvider, {
+        method: 'stx_signMessage',
+        params: { message, messageType: 'utf8' },
+      });
   }
 
   test.describe('MessageType: utf8', () => {
@@ -68,15 +65,10 @@ test.describe('stx_signMessage', () => {
 
     function initiateStxStructuredMessageSigning(page: Page) {
       return async (message: string, domain: string) =>
-        page.evaluate(
-          ({ message, domain }) =>
-            (window as any).LeatherProvider.request('stx_signMessage', {
-              message,
-              domain,
-              messageType: 'structured',
-            }).catch((e: unknown) => e),
-          { message, domain }
-        );
+        page.evaluate(requestLeatherProvider, {
+          method: 'stx_signMessage',
+          params: { message, domain, messageType: 'structured' },
+        });
     }
 
     test('Signature approved', async ({ page, context }) => {

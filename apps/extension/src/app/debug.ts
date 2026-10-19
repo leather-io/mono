@@ -14,9 +14,10 @@ import { stxChainSlice } from './store/chains/stx-chain.slice';
 import { settingsSlice } from './store/settings/settings.slice';
 
 const debug = {
-  printDiagnosticInfo() {
+  async printDiagnosticInfo() {
+    const logs = await getLogsFromBrowserStorage();
     // eslint-disable-next-line no-console
-    void getLogsFromBrowserStorage().then(logs => console.log(JSON.stringify(logs)));
+    console.log(JSON.stringify(logs));
   },
   logStore() {
     return store.getState();
@@ -33,9 +34,10 @@ const debug = {
   getPersistedStore() {
     return reduxPersist.getStoredState(persistConfig);
   },
-  logPersistedStore() {
+  async logPersistedStore() {
+    const state = await reduxPersist.getStoredState(persistConfig);
     // eslint-disable-next-line no-console
-    void reduxPersist.getStoredState(persistConfig).then(state => console.log(state));
+    console.log(state);
   },
   setHighestAccountIndex(accountIndex: number) {
     const activeAccount = selectActiveAccount(store.getState());

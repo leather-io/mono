@@ -3,7 +3,7 @@ import { HStack, styled } from 'leather-styles/jsx';
 import { SkeletonLoader } from '@leather.io/ui';
 
 interface TransactionActionsTitleProps {
-  amount: string;
+  amount?: string;
   isLoading: boolean;
 }
 export function TransactionActionsTitle({ amount, isLoading }: TransactionActionsTitleProps) {

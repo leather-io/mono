@@ -139,7 +139,7 @@ export function ConnectAccountLayout({
               </Button>,
               <Button
                 key="confirm"
-                onClick={userApprovesGetAddresses}
+                onClick={() => void userApprovesGetAddresses()}
                 data-testid="get-addresses-approve-button"
               >
                 Confirm

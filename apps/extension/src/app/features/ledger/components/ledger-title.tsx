@@ -1,4 +1,4 @@
-import { BoxProps, styled } from 'leather-styles/jsx';
+import { type BoxProps, styled } from 'leather-styles/jsx';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 

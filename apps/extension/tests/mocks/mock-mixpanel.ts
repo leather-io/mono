@@ -1,7 +1,5 @@
-import mixpanel from 'mixpanel-browser';
-
 export function setupMixpanelMock() {
-  vi.mock(import('mixpanel-browser'), () => {
+  vi.mock('mixpanel-browser', () => {
     return {
       default: {
         track: vi.fn(),
@@ -14,6 +12,6 @@ export function setupMixpanelMock() {
           set: vi.fn(),
         })),
       },
-    } as Partial<typeof mixpanel>;
+    };
   });
 }

@@ -23,12 +23,15 @@ export function usePendingUpdateVersion() {
 
     chrome.storage.onChanged.addListener(onStorageChanged);
 
-    getPendingUpdateVersion()
-      .then(version => {
-        if (hasObservedChange) return;
-        setPendingVersion(version);
-      })
-      .catch(e => logger.error('Unable to read the pending extension update version: ', e));
+    async function loadPendingVersion() {
+      const version = await getPendingUpdateVersion();
+      if (hasObservedChange) return;
+      setPendingVersion(version);
+    }
+
+    void loadPendingVersion().catch(e =>
+      logger.error('Unable to read the pending extension update version: ', e)
+    );
 
     return () => chrome.storage.onChanged.removeListener(onStorageChanged);
   }, []);

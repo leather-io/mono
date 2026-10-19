@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import BroadcastError from '@assets/images/unhappy-face-ui.png';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
-import { Box, Flex, FlexProps, styled } from 'leather-styles/jsx';
+import { Box, Flex, type FlexProps, styled } from 'leather-styles/jsx';
 
 interface BroadcastErrorProps extends FlexProps {
   title: string;
