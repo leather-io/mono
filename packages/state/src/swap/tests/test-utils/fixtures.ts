@@ -1,4 +1,4 @@
-import { btcAsset, stxAsset } from '@leather.io/constants';
+import { SBTC_ASSET_ID_MAINNET, btcAsset, stxAsset } from '@leather.io/constants';
 import {
   type BaseSwapQuote,
   type CryptoAssetBalance,
@@ -138,7 +138,12 @@ export function createAccountRequest(): AccountRequest {
 
 export const defaultBtcAsset = createFungibleAsset({ protocol: 'nativeBtc' });
 export const defaultStxAsset = createFungibleAsset({ protocol: 'nativeStx' });
-export const defaultSbtcAsset = createFungibleAsset({ protocol: 'sip10', symbol: 'sBTC' });
+export const defaultSbtcAsset = createFungibleAsset({
+  protocol: 'sip10',
+  symbol: 'sBTC',
+  assetId: SBTC_ASSET_ID_MAINNET,
+  contractId: SBTC_ASSET_ID_MAINNET.split('::')[0],
+});
 const defaultABCDAsset = createFungibleAsset({
   protocol: 'sip10',
   symbol: 'ABCD',
