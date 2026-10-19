@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import type { StacksTransactionWire } from '@stacks/transactions';
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { Flex, Stack } from 'leather-styles/jsx';
@@ -97,9 +97,7 @@ export function StacksTransactionActionSheet({
     : initialTransactionFee;
 
   const methods = useForm({
-    resolver: yupResolver(validationSchema, {
-      stripUnknown: true,
-    }),
+    resolver: zodResolver(validationSchema),
     defaultValues: {
       fee: microStxToStx(modifiedInitialTransactionFee).toNumber(),
     },

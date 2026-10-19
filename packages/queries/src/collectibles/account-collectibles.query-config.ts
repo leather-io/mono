@@ -28,5 +28,5 @@ export function createAccountCollectiblesQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getCollectiblesService().getAccountCollectibles(request, signal),
     ...collectiblesQueryOptions,
-  } satisfies UseQueryOptions<NonFungibleCryptoAsset[], Error>;
+  } satisfies UseQueryOptions<NonFungibleCryptoAsset[]>;
 }

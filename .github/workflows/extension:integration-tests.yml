@@ -107,7 +107,7 @@ jobs:
           key: ${{ runner.os }}-playwright-cache-1-${{ env.PLAYWRIGHT_VERSION }}
 
       - name: install-playwright-browsers
-        run: pnpm playwright install chromium --with-deps
+        run: pnpm playwright install chromium --no-shell --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: extract-branch-name
@@ -131,7 +131,7 @@ jobs:
           EXTENSION_INTEGRATION_TEST_MNEMONIC: ${{ vars.EXTENSION_INTEGRATION_TEST_MNEMONIC }}
           SHARD_INDEX: ${{ matrix.shardIndex }}
           SHARD_TOTAL: ${{ matrix.shardTotal }}
-        run: xvfb-run pnpm playwright test tests/specs --shard="${SHARD_INDEX}/${SHARD_TOTAL}" --workers=1
+        run: pnpm playwright test tests/specs --shard="${SHARD_INDEX}/${SHARD_TOTAL}"
 
       - name: upload-blob-report-to-github-actions-artifacts
         if: always()
