@@ -16,13 +16,13 @@ test.describe('stx_signMessage', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   function clickActionButton(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Sign') => {
       const popup = await context.waitForEvent('page');
-      const btn = popup.locator(`text="${buttonToPress}"`);
+      const btn = popup.getByText(buttonToPress, { exact: true });
       await btn.click();
     };
   }
