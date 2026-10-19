@@ -28,7 +28,7 @@ export function createPriceChangePercentageQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getMarketHistoryService().getPriceChangePercentage(asset, period, signal),
     ...marketHistoryQueryOptions,
-  } satisfies UseQueryOptions<number, Error>;
+  } satisfies UseQueryOptions<number>;
 }
 
 export function createPriceHistoryQueryKey(
@@ -53,5 +53,5 @@ export function createPriceHistoryQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getMarketHistoryService().getPriceHistory(asset, period, signal),
     ...marketHistoryQueryOptions,
-  } satisfies UseQueryOptions<MarketPriceHistory, Error>;
+  } satisfies UseQueryOptions<MarketPriceHistory>;
 }

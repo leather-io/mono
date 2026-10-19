@@ -6,15 +6,17 @@ import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { Form, Formik, type FormikHelpers } from 'formik';
 import { Stack } from 'leather-styles/jsx';
 import { debounce } from 'ts-debounce';
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import { Button } from '@leather.io/ui';
 import { isUndefined } from '@leather.io/utils';
 
+import { requiredStringField } from '@shared/forms/field-schemas';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
+import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 import {
   blankPasswordValidation,
   validatePassword,
@@ -94,32 +96,33 @@ export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) 
     [hasSoftwareKeys, checkPassword, strengthResult, submit]
   );
 
-  const validationSchema = yup.object({
-    password: hasSoftwareKeys
-      ? yup.string().required('Enter your password')
-      : yup
-          .string()
-          .required()
-          .test({
-            message: 'Weak',
-            test: debounce<
-              [value: unknown, ...rest: unknown[]],
-              (value: unknown, ...rest: unknown[]) => boolean
-            >((value: unknown) => {
-              if (isUndefined(value)) {
-                setStrengthResult(blankPasswordValidation);
-                return false;
-              }
-              if (typeof value !== 'string') return false;
-              const result = validatePassword(value);
-              setStrengthResult(result);
-              if (!result.meetsAllStrengthRequirements) {
-                analytics.track('submit_invalid_password');
-              }
-              return result.meetsAllStrengthRequirements;
-            }, 60),
-          }),
-  });
+  const validationSchema = createFormikValidationSchema(
+    z.object({
+      password: hasSoftwareKeys
+        ? requiredStringField('Enter your password')
+        : requiredStringField('password is a required field').check(
+            z.refine<string>(
+              debounce<
+                [value: unknown, ...rest: unknown[]],
+                (value: unknown, ...rest: unknown[]) => boolean
+              >((value: unknown) => {
+                if (isUndefined(value)) {
+                  setStrengthResult(blankPasswordValidation);
+                  return false;
+                }
+                if (typeof value !== 'string') return false;
+                const result = validatePassword(value);
+                setStrengthResult(result);
+                if (!result.meetsAllStrengthRequirements) {
+                  analytics.track('submit_invalid_password');
+                }
+                return result.meetsAllStrengthRequirements;
+              }, 60),
+              { error: 'Weak' }
+            )
+          ),
+    })
+  );
   const title = hasSoftwareKeys ? 'Enter your Password' : 'Set a password';
   const description = hasSoftwareKeys
     ? 'Enter the password you set on this device.'

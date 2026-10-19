@@ -1,7 +1,9 @@
 import { MEMO_MAX_LENGTH_BYTES } from '@stacks/transactions';
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import { isString } from '@leather.io/utils';
+
+import { stringField } from '@shared/forms/field-schemas';
 
 function exceedsMaxLengthBytes(string: string, maxLengthBytes: number): boolean {
   return string ? Buffer.from(string).length > maxLengthBytes : false;
@@ -12,11 +14,13 @@ function isTxMemoValid(memo: string) {
 }
 
 export function stxMemoValidator(errorMsg: string) {
-  return yup.string().test({
-    message: errorMsg,
-    test(value: unknown) {
-      if (!isString(value)) return true;
-      return isTxMemoValid(value);
-    },
-  });
+  return stringField().check(
+    z.refine<string | undefined>(
+      value => {
+        if (!isString(value)) return true;
+        return isTxMemoValid(value);
+      },
+      { error: errorMsg }
+    )
+  );
 }
