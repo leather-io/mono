@@ -67,6 +67,7 @@ Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set.
 - Destructure props directly in the function signature.
 - Prefer Remeda (`keys`, `entries`, `pipe`, `filter`, etc.) over `Object.keys`/`Object.entries` for typed utilities and non-trivial transforms. Use native methods for trivial cases.
 - No `as` casts, `!` non-null assertions, or `any`. Use runtime checks, type guards, or `unknown` with narrowing.
+- When a rule removes a type predicate, narrow with an existing guard (`isNumber`, `isDefined`, a zod schema) before reaching for `flatMap(x => cond ? [x] : [])`.
 - Prefer `const` over `let`. Prefer named constants over magic numbers or strings.
 - No nested ternary expressions.
 - Use object method shorthand syntax in objects and interfaces (`{ foo() {} }` not `{ foo: () => {} }`).
