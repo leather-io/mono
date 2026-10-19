@@ -31,14 +31,9 @@ export const bitcoinNetworkPresets: Record<BitcoinNetwork, NetworkPreset> = {
     bitcoinUrl: BITCOIN_API_BASE_URL_MAINNET,
     stacksUrl: HIRO_API_BASE_URL_MAINNET,
   },
-  regtest: {
-    label: 'Primary Hiro Testnet',
-    bitcoinUrl: BITCOIN_API_BASE_URL_PRIMARY_TESTNET,
-    stacksUrl: HIRO_API_BASE_URL_TESTNET,
-  },
-  signet: {
-    label: 'Signet',
-    bitcoinUrl: `${MEMPOOL_BASE_URL}/signet/api`,
+  testnet3: {
+    label: 'Testnet3',
+    bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET3,
     stacksUrl: HIRO_API_BASE_URL_TESTNET,
   },
   testnet4: {
@@ -46,19 +41,24 @@ export const bitcoinNetworkPresets: Record<BitcoinNetwork, NetworkPreset> = {
     bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET4,
     stacksUrl: HIRO_API_BASE_URL_TESTNET,
   },
-  testnet3: {
-    label: 'Testnet3',
-    bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET3,
+  signet: {
+    label: 'Signet',
+    bitcoinUrl: `${MEMPOOL_BASE_URL}/signet/api`,
+    stacksUrl: HIRO_API_BASE_URL_TESTNET,
+  },
+  regtest: {
+    label: 'Primary Hiro Testnet',
+    bitcoinUrl: BITCOIN_API_BASE_URL_PRIMARY_TESTNET,
     stacksUrl: HIRO_API_BASE_URL_TESTNET,
   },
 };
 
-export const networks: { label: string; value: BitcoinNetwork }[] = keys(bitcoinNetworkPresets)
-  .filter(value => value !== 'testnet3')
-  .map(value => ({
+export const networks: { label: string; value: BitcoinNetwork }[] = keys(bitcoinNetworkPresets).map(
+  value => ({
     label: bitcoinNetworkPresets[value].label,
     value,
-  }));
+  })
+);
 
 function getMatchingNetwork(values: NetworkPresetMatchInput): BitcoinNetwork | undefined {
   const preset = bitcoinNetworkPresets[values.bitcoinNetwork];

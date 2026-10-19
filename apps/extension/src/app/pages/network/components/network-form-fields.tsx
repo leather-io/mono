@@ -49,13 +49,10 @@ export function NetworkFormFields({ isEditNetworkMode }: NetworkFormFieldsProps)
 
   return (
     <Flex direction="column" gap="space.05">
-      <NetworkNameSection
-        handleChange={handleChange}
-        isEditNetworkMode={isEditNetworkMode}
-        values={values}
-      />
+      <NetworkNameSection handleChange={handleChange} values={values} />
       <BitcoinApiSection
         handleChange={handleChange}
+        isEditNetworkMode={isEditNetworkMode}
         setFieldValue={setFieldValue}
         setNetworkUrls={setNetworkUrls}
         values={values}

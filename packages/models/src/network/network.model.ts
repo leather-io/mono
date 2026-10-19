@@ -35,6 +35,7 @@ export enum ChainId {
 export enum WalletDefaultNetworkConfigurationIds {
   mainnet = 'mainnet',
   testnet = 'testnet',
+  testnet3 = 'testnet3',
   testnet4 = 'testnet4',
   signet = 'signet',
   sbtcDevenv = 'sbtcDevenv',
@@ -46,6 +47,7 @@ export enum WalletDefaultNetworkConfigurationIds {
 export const defaultNetworkConfigurationsSchema = z.enum([
   'mainnet',
   'testnet',
+  'testnet3',
   'testnet4',
   'signet',
   'sbtcDevenv',
@@ -143,6 +145,24 @@ const networkTestnet: NetworkConfiguration = {
       bitcoinNetwork: 'regtest',
       mode: 'regtest',
       bitcoinUrl: BITCOIN_API_BASE_URL_PRIMARY_TESTNET,
+    },
+  },
+};
+
+const networkTestnet3: NetworkConfiguration = {
+  id: WalletDefaultNetworkConfigurationIds.testnet3,
+  name: 'Testnet3',
+  chain: {
+    stacks: {
+      blockchain: 'stacks',
+      chainId: ChainId.Testnet,
+      url: HIRO_API_BASE_URL_TESTNET,
+    },
+    bitcoin: {
+      blockchain: 'bitcoin',
+      bitcoinNetwork: 'testnet3',
+      mode: 'testnet',
+      bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET3,
     },
   },
 };
@@ -271,6 +291,7 @@ export const defaultNetworksKeyedById: Record<
   [WalletDefaultNetworkConfigurationIds.signet]: networkSignet,
   [WalletDefaultNetworkConfigurationIds['private-1']]: networkPrivate1,
   [WalletDefaultNetworkConfigurationIds.testnet4]: networkTestnet4,
+  [WalletDefaultNetworkConfigurationIds.testnet3]: networkTestnet3,
   [WalletDefaultNetworkConfigurationIds.sbtcDevenv]: networkSbtcDevenv,
   [WalletDefaultNetworkConfigurationIds.devnet]: networkDevnet,
 };

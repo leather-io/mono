@@ -28,7 +28,7 @@ afterEach(() => {
 
 describe('resolveNetworkConfiguration', () => {
   test('returns the default network when no custom network is configured', () => {
-    expect(resolveNetworkConfiguration('testnet')).toBe(defaultNetworksKeyedById.testnet4);
+    expect(resolveNetworkConfiguration('testnet')).toBe(defaultNetworksKeyedById.testnet3);
     expect(resolveNetworkConfiguration('mainnet')).toBe(defaultNetworksKeyedById.mainnet);
   });
 

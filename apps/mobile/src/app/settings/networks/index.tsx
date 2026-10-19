@@ -9,7 +9,6 @@ import { t } from '@lingui/core/macro';
 import {
   DefaultNetworkConfigurations,
   WalletDefaultNetworkConfigurationIds,
-  defaultNetworksKeyedById,
 } from '@leather.io/models';
 import {
   GlobeIcon,
@@ -17,12 +16,13 @@ import {
   PlaygroundFormsIcon,
   TestTubeIcon,
 } from '@leather.io/ui/native';
+import { capitalize } from '@leather.io/utils';
 
 function getNetworkIcon(network: DefaultNetworkConfigurations) {
   switch (network) {
     case WalletDefaultNetworkConfigurationIds.mainnet:
       return <GlobeIcon />;
-    case WalletDefaultNetworkConfigurationIds.testnet:
+    case WalletDefaultNetworkConfigurationIds.testnet4:
       return <TestTubeIcon />;
     case WalletDefaultNetworkConfigurationIds.signet:
       return <PlaygroundFormsIcon />;
@@ -49,7 +49,7 @@ export default function SettingsNetworksScreen() {
         {defaultNetworkPreferences.map(network => (
           <SettingsListItem
             icon={getNetworkIcon(network)}
-            title={defaultNetworksKeyedById[network].name}
+            title={capitalize(network)}
             caption={settings.networkPreference.id === network ? t`Enabled` : t`Disabled`}
             key={network}
             onPress={() => onChangeNetwork(network)}

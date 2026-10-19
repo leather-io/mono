@@ -56,7 +56,7 @@ export interface FeeResult {
   slow: number;
 }
 
-function FeeEstimatesApi(basePath: string) {
+function FeeEstimatesApi() {
   return {
     async getFeeEstimatesFromBlockcypherApi(network: 'main' | 'test3'): Promise<FeeResult> {
       // https://www.blockcypher.com/dev/bitcoin/#restful-resources
@@ -81,17 +81,6 @@ function FeeEstimatesApi(basePath: string) {
         signet: `${MEMPOOL_BASE_URL}/signet/api/v1/fees/recommended`,
       }[network];
       const resp = await axios.get<FeeEstimateMempoolSpaceApiResponse>(networkApi);
-      const { fastestFee, halfHourFee, hourFee } = resp.data;
-      return {
-        slow: hourFee,
-        medium: halfHourFee,
-        fast: fastestFee,
-      };
-    },
-    async getFeeEstimatesFromNetworkMempoolApi(): Promise<FeeResult> {
-      const resp = await axios.get<FeeEstimateMempoolSpaceApiResponse>(
-        `${basePath}/v1/fees/recommended`
-      );
       const { fastestFee, halfHourFee, hourFee } = resp.data;
       return {
         slow: hourFee,
@@ -146,7 +135,7 @@ export function bitcoinClient({ networkName, basePath }: BitcoinClientArgs): Bit
   return {
     networkName,
     addressApi: AddressApi(basePath),
-    feeEstimatesApi: FeeEstimatesApi(basePath),
+    feeEstimatesApi: FeeEstimatesApi(),
     transactionsApi: TransactionsApi(basePath),
   };
 }

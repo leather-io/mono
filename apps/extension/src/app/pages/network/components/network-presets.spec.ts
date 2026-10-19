@@ -44,13 +44,14 @@ describe('bitcoinNetworkPresets', () => {
     });
   });
 
-  it('exposes one selectable option per preset except Testnet3 and no Custom option', () => {
-    expect(networks).toHaveLength(4);
+  it('exposes one selectable option per preset and no Custom option', () => {
+    expect(networks).toHaveLength(5);
     expect(networks.map(option => option.value)).toEqual([
       'mainnet',
-      'regtest',
-      'signet',
+      'testnet3',
       'testnet4',
+      'signet',
+      'regtest',
     ]);
     expect(networks.some(option => option.label === customNetworkLabel)).toBe(false);
   });
