@@ -72,7 +72,7 @@ describe(selectStakingChainId.name, () => {
       selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.testnet })
     ).toBeNull();
     expect(
-      selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.sbtcTestnet })
+      selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.testnet4 })
     ).toBeNull();
   });
 });

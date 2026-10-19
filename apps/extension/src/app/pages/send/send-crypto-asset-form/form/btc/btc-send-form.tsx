@@ -5,7 +5,7 @@ import { Form, Formik } from 'formik';
 import { Box } from 'leather-styles/jsx';
 
 import type { CryptoCurrency } from '@leather.io/models';
-import { BtcAvatarIcon, Button, Callout, Link } from '@leather.io/ui';
+import { BtcAvatarIcon, Button, Callout } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { AvailableBalance, ButtonRow, Card, Content, Page } from '@app/components/layout';
@@ -102,16 +102,9 @@ export function BtcSendForm() {
                       symbol={symbol}
                     />
                     <TransferRecipientField />
-                    {currentNetwork.chain.bitcoin.mode === 'testnet' && (
+                    {currentNetwork.chain.bitcoin.mode !== 'mainnet' && (
                       <Callout variant="warning" title="Funds have no value" mt="space.04">
                         This is a Bitcoin testnet transaction.
-                        <Link
-                          variant="text"
-                          href="https://coinfaucet.eu/en/btc-testnet"
-                          textStyle="caption.01"
-                        >
-                          Get testnet BTC here ↗
-                        </Link>
                       </Callout>
                     )}
                   </Card>

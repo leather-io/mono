@@ -34,7 +34,7 @@ const baseParams = {
 describe(createBtcPolicyRegistration.name, () => {
   test('uses the requested network for BTC address derivation and policy identity', () => {
     const registration = createBtcPolicyRegistration({
-      params: { ...baseParams, descriptor: testnetDescriptor, network: 'testnet' },
+      params: { ...baseParams, descriptor: testnetDescriptor, network: 'testnet4' },
       fingerprint: 'deadbeef',
       accountIndex: 0,
       networks,
@@ -43,8 +43,8 @@ describe(createBtcPolicyRegistration.name, () => {
     expect(registration.result.address.startsWith('tb1q')).toBe(true);
     expect(registration.addPolicyPayload.policy).toEqual(
       expect.objectContaining({
-        id: `deadbeef/0/${registration.result.address}/testnet`,
-        networkId: 'testnet',
+        id: `deadbeef/0/${registration.result.address}/testnet4`,
+        networkId: 'testnet4',
         address: registration.result.address,
       })
     );
