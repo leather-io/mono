@@ -19,7 +19,7 @@ function amountInput(page: Page) {
 }
 
 function cyclesInput(page: Page) {
-  return page.getByLabel('Cycles before renewal (1–96)');
+  return page.getByLabel('Staking duration (1–96 cycles)');
 }
 
 // Must match mockCustomSignerManagerContractId in
@@ -41,7 +41,7 @@ test.describe('Bitcoin Staking', () => {
     await page.getByTestId('start-staking-button-stacking-dao').click();
     await amountInput(page).fill('500');
     await cyclesInput(page).fill('12');
-    await page.getByTestId('confirmation-terms-button').click();
+    await page.getByTestId('staking-acknowledgment-checkbox').check();
     await page.getByTestId('confirmation-stake-button').click();
     await setMockFlag(page, 'leather-mock-pox5-staked', 'true');
     await page.getByRole('button', { name: 'Resolve' }).click();
@@ -61,7 +61,7 @@ test.describe('Bitcoin Staking', () => {
     await page.getByTestId('start-staking-button-stacking-dao').click();
     await amountInput(page).fill('500');
     await cyclesInput(page).fill('12');
-    await page.getByTestId('confirmation-terms-button').click();
+    await page.getByTestId('staking-acknowledgment-checkbox').check();
     await page.getByTestId('confirmation-stake-button').click();
     await page.getByRole('button', { name: 'Resolve' }).click();
 
@@ -83,7 +83,7 @@ test.describe('Bitcoin Staking', () => {
     await page.goto('/staking/pool/stacking-dao');
     await amountInput(page).fill('500');
     await cyclesInput(page).fill('12');
-    await page.getByTestId('confirmation-terms-button').click();
+    await page.getByTestId('staking-acknowledgment-checkbox').check();
     await page.getByTestId('confirmation-stake-button').click();
     await page.getByRole('button', { name: 'Resolve' }).click();
 
@@ -99,7 +99,7 @@ test.describe('Bitcoin Staking', () => {
     await page.goto('/staking/pool/stacking-dao');
     await amountInput(page).fill('500');
     await cyclesInput(page).fill('12');
-    await page.getByTestId('confirmation-terms-button').click();
+    await page.getByTestId('staking-acknowledgment-checkbox').check();
     await page.getByTestId('confirmation-stake-button').click();
     await page.getByRole('button', { name: 'Reject' }).click();
 
@@ -169,7 +169,7 @@ test.describe('Bitcoin Staking', () => {
 
     await page.goto('/staking/pool/stacking-dao');
     await amountInput(page).fill('500');
-    await page.getByTestId('confirmation-terms-button').click();
+    await page.getByTestId('staking-acknowledgment-checkbox').check();
 
     await test.expect(page.getByTestId('prepare-phase-callout')).toBeVisible();
     await test.expect(page.getByTestId('confirmation-stake-button')).toBeDisabled();
@@ -189,7 +189,7 @@ test.describe('Bitcoin Staking', () => {
 
     await amountInput(page).fill('500');
     await cyclesInput(page).fill('12');
-    await page.getByTestId('confirmation-terms-button').click();
+    await page.getByTestId('staking-acknowledgment-checkbox').check();
     await page.getByTestId('confirmation-stake-button').click();
     await setMockFlag(page, 'leather-mock-pox5-staked-custom', 'true');
     await page.getByRole('button', { name: 'Resolve' }).click();
