@@ -42,7 +42,7 @@ function isQueueTimeoutError(error: unknown) {
 }
 
 function isNetworkShapedError(error: unknown) {
-  return error instanceof TypeError || isQueueTimeoutError(error);
+  return error instanceof TypeError;
 }
 
 function waitUnlessAborted(ms: number, signal?: AbortSignal) {

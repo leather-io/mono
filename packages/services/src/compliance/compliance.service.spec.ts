@@ -334,9 +334,9 @@ describe(ComplianceService.name, () => {
         expect(vi.getTimerCount()).toBe(0);
       });
 
-      it('retries once after a rate limiter timeout and maps a repeated timeout to leather_api_timeout', async () => {
+      it('does not retry a rate limiter timeout and maps it to leather_api_timeout', async () => {
         vi.useFakeTimers();
-        const api = makeFlakyApi([makeTimeoutError(), makeTimeoutError()]);
+        const api = makeFlakyApi([makeTimeoutError()]);
         const service = makeService(api.fetchAddressComplianceCheck);
 
         const promise = service.checkAddressCompliance(testAddress);
@@ -344,7 +344,7 @@ describe(ComplianceService.name, () => {
         const result = await promise;
 
         expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_timeout' });
-        expect(api.getCalls()).toBe(2);
+        expect(api.getCalls()).toBe(1);
       });
 
       it('maps a network error to leather_api_offline when the runtime reports no connectivity', async () => {
