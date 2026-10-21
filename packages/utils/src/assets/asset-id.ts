@@ -1,9 +1,10 @@
+import { keys } from 'remeda';
+
 import {
-  CryptoAsset,
-  CryptoAssetId,
-  CryptoAssetProtocol,
+  type CryptoAsset,
+  type CryptoAssetId,
   CryptoAssetProtocols,
-  Sip9Asset,
+  type Sip9Asset,
 } from '@leather.io/models';
 
 import { assertUnreachable } from '../assert-unreachable';
@@ -68,14 +69,15 @@ export function serializeAssetId(assetId: CryptoAssetId): SerializedCryptoAssetI
 }
 
 export function deserializeAssetId(serializedAssetId: SerializedCryptoAssetId): CryptoAssetId {
-  const [protocol, ...idParts] = serializedAssetId.split('|');
+  const [serializedProtocol, ...idParts] = serializedAssetId.split('|');
   const id = idParts.join('|');
-  if (!Object.keys(CryptoAssetProtocols).includes(protocol)) {
-    throw new Error(`Unrecognized Asset Protocol: ${protocol}`);
+  const protocol = keys(CryptoAssetProtocols).find(key => key === serializedProtocol);
+  if (!protocol) {
+    throw new Error(`Unrecognized Asset Protocol: ${serializedProtocol}`);
   }
 
   return {
-    protocol: protocol as CryptoAssetProtocol,
+    protocol,
     id,
   };
 }
