@@ -3,8 +3,8 @@ import {
   type ClarityAbi,
   ClarityType,
   type ClarityValue,
-  type ContractCallPayload,
   FungibleConditionCode,
+  PayloadType,
   PostConditionMode,
   PostConditionPrincipalId,
   PostConditionType,
@@ -14,9 +14,7 @@ import {
 
 import { cleanHex } from '../stacks.utils';
 
-export function isSip10TransferContactCall(
-  tx: StacksTransactionWire
-): tx is StacksTransactionWire & { payload: ContractCallPayload } {
+export function isSip10TransferContactCall(tx: StacksTransactionWire) {
   if (tx.payload && 'functionName' in tx.payload) {
     if (
       tx.payload.functionName.content === 'transfer' &&
@@ -53,6 +51,7 @@ export function getVerifiedSip10TransferDetails(
   tx: StacksTransactionWire
 ): Sip10TransferDetails | null {
   if (!isSip10TransferContactCall(tx)) return null;
+  if (tx.payload.payloadType !== PayloadType.ContractCall) return null;
   if (tx.postConditionMode !== PostConditionMode.Deny) return null;
   if (tx.postConditions.values.length !== 1) return null;
 

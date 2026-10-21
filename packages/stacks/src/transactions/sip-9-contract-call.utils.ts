@@ -2,13 +2,10 @@ import {
   type ClarityAbi,
   ClarityType,
   type ClarityValue,
-  type ContractCallPayload,
   type StacksTransactionWire,
 } from '@stacks/transactions';
 
-export function isSip9TransferContactCall(
-  tx: StacksTransactionWire
-): tx is StacksTransactionWire & { payload: ContractCallPayload } {
+export function isSip9TransferContactCall(tx: StacksTransactionWire) {
   if (tx.payload && 'functionName' in tx.payload) {
     if (tx.payload.functionName.content === 'transfer' && tx.payload.functionArgs.length === 3) {
       if (
