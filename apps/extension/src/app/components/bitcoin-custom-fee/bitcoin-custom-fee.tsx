@@ -3,14 +3,16 @@ import { type Dispatch, type SetStateAction, useCallback, useRef } from 'react';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Form, Formik } from 'formik';
 import { Stack, styled } from 'leather-styles/jsx';
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import type { BtcFeeType } from '@leather.io/models';
 import { Button, Link } from '@leather.io/ui';
 
+import { requiredNumberField } from '@shared/forms/field-schemas';
 import type { TransferRecipient } from '@shared/models/form.model';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
+import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 
 import { type OnChooseFeeArgs } from '../bitcoin-fees-list/bitcoin-fees-list';
 import { BitcoinCustomFeeInput } from './bitcoin-custom-fee-input';
@@ -57,18 +59,19 @@ export function BitcoinCustomFee({
     [onSetSelectedFeeType, getCustomFeeValues, onValidateBitcoinSpend, onChooseFee]
   );
 
-  const validationSchema = yup.object({
-    feeRate: yup
-      .number()
-      .required('Fee is required')
-      .integer('Fee must be a whole number')
-      .test({
-        message: 'Fee is too high',
-        test(value) {
-          return value <= maxCustomFeeRate;
-        },
-      }),
-  });
+  const validationSchema = createFormikValidationSchema(
+    z.object({
+      feeRate: requiredNumberField({
+        requiredError: 'Fee is required',
+        typeError: 'Fee must be a number',
+      }).check(
+        z.refine<number>(value => Number.isInteger(value), {
+          error: 'Fee must be a whole number',
+        }),
+        z.refine<number>(value => value <= maxCustomFeeRate, { error: 'Fee is too high' })
+      ),
+    })
+  );
 
   return (
     <Formik

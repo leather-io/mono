@@ -42,7 +42,7 @@ export function useDerivedAmounts(state: SwapInternalState, marketData: MarketDa
     }
 
     return whenInputCurrencyMode(inputCurrencyMode)({
-      crypto: () => {
+      crypto() {
         const crypto = parseEditingValue(
           baseAmount,
           baseSwapAsset.asset.symbol,
@@ -51,7 +51,7 @@ export function useDerivedAmounts(state: SwapInternalState, marketData: MarketDa
         const quote = convertCryptoToQuote(crypto, marketData);
         return { crypto, quote };
       },
-      quote: () => {
+      quote() {
         const quote = parseEditingValue(
           baseAmount,
           quoteCurrencyPreference,
@@ -65,7 +65,7 @@ export function useDerivedAmounts(state: SwapInternalState, marketData: MarketDa
 
   return {
     derivedAmounts,
-    lockDerivedAmountsForNextRender: () => {
+    lockDerivedAmountsForNextRender() {
       lockRef.current = derivedAmounts;
       suspend.current = true;
     },
