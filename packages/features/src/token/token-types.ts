@@ -55,6 +55,12 @@ export function createTokenDetailsPath(assetId: SerializedCryptoAssetId): string
   return `/token/${encodeURIComponent(assetId)}`;
 }
 
+function toSerializedAssetId(value: string): SerializedCryptoAssetId | null {
+  const separatorIndex = value.indexOf('|');
+  if (separatorIndex === -1) return null;
+  return `${value.slice(0, separatorIndex)}|${value.slice(separatorIndex + 1)}`;
+}
+
 export function parseTokenDetailsAssetId(
   encodedAssetId: string | undefined
 ): SerializedCryptoAssetId | null {
@@ -69,7 +75,8 @@ export function parseTokenDetailsAssetId(
   }
 
   try {
-    const assetId = decodeURIComponent(encodedAssetId) as SerializedCryptoAssetId;
+    const assetId = toSerializedAssetId(decodeURIComponent(encodedAssetId));
+    if (!assetId) return null;
     deserializeAssetId(assetId);
     return assetId;
   } catch {
