@@ -418,9 +418,6 @@
   "src/infrastructure/api/mempool/mempool-api.utils.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 4
     }
   },
   "src/infrastructure/auth/sign-in.utils.ts": {
@@ -464,9 +461,6 @@
   },
   "src/infrastructure/settings/settings.selectors.ts": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-enum-comparison": {
       "count": 3
     }
   },

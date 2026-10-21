@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 import { filter, isDefined, map, pipe, prop, sortBy } from 'remeda';
 
 import { type SwapQuote } from '@leather.io/models';

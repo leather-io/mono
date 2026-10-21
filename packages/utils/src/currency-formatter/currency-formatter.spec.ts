@@ -234,13 +234,9 @@ describe('formatAmount', () => {
     it('returns an object with meta information', () => {
       const result = formatAmountWithMeta(createBtc(12.34));
 
-      expect(result).toEqual(
-        expect.objectContaining({
-          result: expect.any(String),
-          parts: expect.any(Array),
-          resolvedOptions: expect.any(Object),
-        })
-      );
+      expect(typeof result.result).toBe('string');
+      expect(result.parts).toBeInstanceOf(Array);
+      expect(typeof result.resolvedOptions).toBe('object');
     });
 
     it('returns parts for crypto', () => {
