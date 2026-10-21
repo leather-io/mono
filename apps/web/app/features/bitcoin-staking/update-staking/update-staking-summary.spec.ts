@@ -60,7 +60,7 @@ describe(buildUpdateStakeSummaryRows.name, () => {
       { kind: 'diff', label: 'Fee', from: '0%', to: '10%', isCritical: true },
       { kind: 'diff', label: 'Rewards token', from: 'sBTC', to: 'sBTC / BTC' },
       { kind: 'value', label: 'Amount staked', value: '3,200 STX, moves in full' },
-      { kind: 'value', label: 'Locked until', value: 'Cycle 122' },
+      { kind: 'value', label: 'Scheduled end', value: 'Cycle 122' },
       {
         kind: 'value',
         label: 'Effective',
@@ -155,7 +155,7 @@ describe(buildUpdateStakeSummaryRows.name, () => {
     });
     expect(rows).toEqual([
       { kind: 'diff', label: 'Amount staked', from: '3,200 STX', to: '3,210 STX' },
-      { kind: 'diff', label: 'Locked until', from: 'Cycle 122', to: 'Cycle 124' },
+      { kind: 'diff', label: 'Scheduled end', from: 'Cycle 122', to: 'Cycle 124' },
       {
         kind: 'value',
         label: 'Effective',

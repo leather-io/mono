@@ -19,7 +19,7 @@ export function useSpendableAmount({
   baseSwapAsset,
   feeTier,
   customFee,
-}: UseSpendableAmountParams): UseQueryResult<Money | null, Error> {
+}: UseSpendableAmountParams): UseQueryResult<Money | null> {
   const protocol = baseSwapAsset?.asset.protocol;
   const balance = baseSwapAsset?.balance?.crypto;
 
@@ -32,7 +32,7 @@ export function useSpendableAmount({
       customFee,
       balance?.availableBalance.amount.toString(),
     ],
-    queryFn: async ({ signal }) => {
+    async queryFn({ signal }) {
       if (!protocol || !balance) {
         return null;
       }
