@@ -240,11 +240,17 @@ export function findAccountKeyByPubkey(
 ): AccountDescriptorKey['key'] | undefined {
   const pubkeyHex = bytesToHex(pubkey);
   const key = keys.find(key => !!key.pubkey && bytesToHex(key.pubkey) === pubkeyHex);
-  return key?.pubkey ? { ...key, pubkey: key.pubkey } : undefined;
+  if (!key) return undefined;
+  assertKeyHasPubkey(key);
+  return key;
 }
 
 export interface AccountDescriptorKey extends DescriptorKeyPathIndexes {
   key: KeyInfo & { pubkey: Uint8Array };
+}
+
+function assertKeyHasPubkey(key: KeyInfo): asserts key is AccountDescriptorKey['key'] {
+  if (!key.pubkey) throw new Error('Descriptor key has no public key');
 }
 
 export function findAccountDescriptorKey(
@@ -267,8 +273,10 @@ export function findAccountDescriptorKey(
         bytesToHex(key.bip32.publicKey) === accountPubkeyHex &&
         bytesToHex(key.pubkey) === addressIndexPubkeyHex
     );
-    if (extendedKey?.pubkey)
-      return { key: { ...extendedKey, pubkey: extendedKey.pubkey }, ...keyPathIndexes };
+    if (extendedKey) {
+      assertKeyHasPubkey(extendedKey);
+      return { key: extendedKey, ...keyPathIndexes };
+    }
   }
 
   const addressIndexZeroKeychain = deriveAddressIndexKeychainFromAccount(accountKeychain)({
