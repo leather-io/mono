@@ -2,6 +2,7 @@ import { type BrowserContext, type Page } from '@playwright/test';
 import { requestLeatherProvider } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
+import { PostConditionSelectors } from '@tests/selectors/requests.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
 import type { RpcParams, stxTransferSip9Nft } from '@leather.io/rpc';
@@ -20,10 +21,13 @@ test.describe('RPC: stx_transferSip9Nft', () => {
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
+      const postConditionItem = popup.getByTestId(PostConditionSelectors.PostConditionItem);
       await test.expect(popup.getByText('LIV', { exact: true })).toBeVisible();
       await test.expect(popup.getByText('You will transfer', { exact: true })).toBeVisible();
-      await test.expect(popup.getByText('living-leather', { exact: true })).toBeVisible();
-      await test.expect(popup.getByText('SPS8…WSFE', { exact: true }).first()).toBeVisible();
+      await test
+        .expect(postConditionItem.getByText('living-leather', { exact: true }))
+        .toBeVisible();
+      await test.expect(postConditionItem.getByText('SPS8…WSFE', { exact: true })).toBeVisible();
       await test
         .expect(
           popup.getByText('You will transfer LIV or the transaction will abort.', { exact: true })
