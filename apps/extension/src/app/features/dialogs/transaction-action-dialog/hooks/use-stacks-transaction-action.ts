@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { AuthType } from '@stacks/transactions';
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import { TransactionTypes, getStacksBurnAddress } from '@leather.io/stacks';
 import { stxToMicroStx } from '@leather.io/utils';
@@ -40,7 +40,7 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
 
   const stacksAddress = useCurrentStacksAccountAddress();
   const availableUnlockedBalance = useStxAddressAvailableUnlockedBalance(stacksAddress);
-  const validationSchema = yup.object({ fee: stxFeeValidator(availableUnlockedBalance) });
+  const validationSchema = z.object({ fee: stxFeeValidator(availableUnlockedBalance) });
 
   const { data: tx, isLoading: isLoadingTx } = useGetTransactionByIdQuery(txid);
   const { isLoadingRawTx, rawTx } = useStacksRawTransaction(txid);
@@ -53,15 +53,16 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
       if (!tx || !rawTx || !account) return;
       const options: GenerateUnsignedTransactionOptions = {
         publicKey: account.stxPublicKey,
-        nonce: tx.nonce,
+        nonce: tx.sender.nonce,
         fee: stxToMicroStx(fee).toNumber(),
         txData: {
           txType: TransactionTypes.StxTokenTransfer,
           recipient: getStacksBurnAddress(network.chainId),
-          amount: 1,
+          amount: '1',
           memo: '_cancel transaction',
-          network: network,
-        } as any,
+          network,
+          publicKey: account.stxPublicKey,
+        },
       };
       const newTx = await generateUnsignedTransaction(options);
       await refreshAccountData();

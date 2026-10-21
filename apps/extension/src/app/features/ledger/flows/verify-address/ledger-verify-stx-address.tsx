@@ -5,7 +5,7 @@ import { analytics } from '@shared/utils/analytics';
 
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { useLedgerFlow, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
-import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
+import { type LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
 import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
@@ -22,7 +22,7 @@ import {
   stacksChainIdToSingleSigAddressVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
-import { useToast } from '@app/features/toasts/use-toast';
+import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
@@ -46,7 +46,7 @@ export function LedgerVerifyStxAddress() {
       isAppOpen: isStacksAppOpen,
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate),
       onSuccess() {
-        toast.success('Address verified on your Ledger');
+        toast.success('Address verified on your Ledger', { duration: toastDurations.standard });
         close();
         void navigate(RouteUrls.Home, { replace: true });
       },

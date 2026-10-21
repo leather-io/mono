@@ -1,7 +1,6 @@
 import {
   TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
   TEST_ACCOUNT_1_STX_ADDRESS,
-  TEST_PASSWORD,
 } from '@tests/mocks/constants';
 import { mockLeatherBitcoinTransactions } from '@tests/mocks/mock-leather-btc-txs';
 import {
@@ -10,9 +9,24 @@ import {
 } from '@tests/page-object-models/onboarding.page';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
-import { SettingsSelectors } from '@tests/selectors/settings.selectors';
+import { z } from 'zod';
 
 import { test } from '../../fixtures/fixtures';
+
+const comparableWalletStateSchema = z.looseObject({
+  softwareKeys: z.looseObject({
+    salt: z.string().optional(),
+    entities: z.record(z.string(), z.looseObject({ encryptedSecretKey: z.string().optional() })),
+  }),
+  wallets: z.looseObject({
+    entities: z.record(z.string(), z.looseObject({ createdOn: z.unknown().optional() })),
+  }),
+  chains: z.looseObject({
+    stx: z.record(z.string(), z.looseObject({ highestAccountIndex: z.number().optional() })),
+  }),
+});
+
+type ComparableWalletState = z.infer<typeof comparableWalletStateSchema>;
 
 test.describe('Onboarding an existing user', () => {
   // Functionality is important for backwards compatibility with older wallet versions
@@ -29,15 +43,15 @@ test.describe('Onboarding an existing user', () => {
     test('that the encryption key is generated correctly against a known working value', async ({
       globalPage,
       homePage,
-      page,
     }) => {
       await homePage.lock();
-      await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
-      await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+      await homePage.unlock();
       await homePage.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
 
       const encryptionKey = await globalPage.page.evaluate(async () => {
-        const { encryptionKey } = await chrome.storage.session.get('encryptionKey');
+        const { encryptionKey } = await chrome.storage.session.get<{ encryptionKey?: string }>(
+          'encryptionKey'
+        );
         return encryptionKey;
       });
 
@@ -48,30 +62,35 @@ test.describe('Onboarding an existing user', () => {
         );
     });
   });
+
   test('going through the onboarding flow to sign in', async ({
     extensionId,
     globalPage,
     onboardingPage,
-    homePage,
   }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInExistingUser();
-    await homePage.page.waitForTimeout(1000);
 
-    const walletState = await onboardingPage.page.evaluate(() => window.debug.getPersistedStore());
+    function readPersistedStore() {
+      return onboardingPage.page.evaluate(() => window.debug.getPersistedStore());
+    }
+    await test.expect
+      .poll(async () => comparableWalletStateSchema.safeParse(await readPersistedStore()).success)
+      .toBe(true);
+    const walletState = comparableWalletStateSchema.parse(await readPersistedStore());
 
-    const testWalletState = getTestSoftwareAccountDefaultWalletState();
+    const testWalletState: ComparableWalletState = getTestSoftwareAccountDefaultWalletState();
 
     // Deleting values that are known to differ at random
-    delete (walletState as any).softwareKeys.entities[testFingerprint].encryptedSecretKey;
-    delete (walletState as any).softwareKeys.salt;
-    delete (walletState as any).wallets.entities[testFingerprint].createdOn;
-    delete (testWalletState as any).softwareKeys.entities[testFingerprint].encryptedSecretKey;
-    delete (testWalletState as any).softwareKeys.salt;
-    delete (testWalletState as any).wallets.entities[testFingerprint].createdOn;
+    delete walletState.softwareKeys.entities[testFingerprint].encryptedSecretKey;
+    delete walletState.softwareKeys.salt;
+    delete walletState.wallets.entities[testFingerprint].createdOn;
+    delete testWalletState.softwareKeys.entities[testFingerprint].encryptedSecretKey;
+    delete testWalletState.softwareKeys.salt;
+    delete testWalletState.wallets.entities[testFingerprint].createdOn;
     // Don't test highest account index
-    delete (walletState as any).chains.stx[testFingerprint].highestAccountIndex;
-    delete (testWalletState as any).chains.stx[testFingerprint].highestAccountIndex;
+    delete walletState.chains.stx[testFingerprint].highestAccountIndex;
+    delete testWalletState.chains.stx[testFingerprint].highestAccountIndex;
 
     test.expect(walletState).toEqual(testWalletState);
   });
@@ -101,7 +120,7 @@ test.describe('Onboarding an existing user', () => {
     const validPartialKey = 'shoulder any pencil';
     await onboardingPage.signInMnemonicKey(validPartialKey);
     const signInSeedError = onboardingPage.page.getByTestId(OnboardingSelectors.SignInSeedError);
-    await test.expect(signInSeedError).not.toBeVisible();
+    await test.expect(signInSeedError).toBeHidden();
   });
 
   test('Activity tab', async ({ extensionId, globalPage, onboardingPage, homePage, page }) => {

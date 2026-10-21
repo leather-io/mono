@@ -37,8 +37,6 @@ interface FeatureFlags {
   assetsRevamp: boolean;
   swapSbtcBridging: boolean;
   releaseTrendingTokens: boolean;
-  releaseAddAccount: boolean;
-  enableAllowPolicyAccounts: boolean;
 }
 
 export function useFlags() {

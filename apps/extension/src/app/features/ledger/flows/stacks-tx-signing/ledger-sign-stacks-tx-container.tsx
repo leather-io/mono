@@ -10,13 +10,14 @@ import type {
   ActiveLedgerSigningRequest,
   LedgerSigningFailure,
 } from '@app/features/ledger/flow/ledger-flow.types';
-import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
+import { type LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
 import {
   connectLedgerStacksApp,
   getStacksAppVersion,
+  hasLedgerReturnCode,
   isStacksAppOpen,
   signLedgerStacksTransaction,
   signStacksTransactionWithSignature,
@@ -80,7 +81,7 @@ export function LedgerSignStacksTxContainer({ request }: LedgerSignStacksTxConta
         account.derivationPath
       );
 
-      if (resp.returnCode === LedgerError.DataIsInvalid) {
+      if (hasLedgerReturnCode(resp, LedgerError.DataIsInvalid)) {
         if (settleOnRejection) {
           ledgerNavigate.settleLedgerAction(request, toSigningFailure(resp.errorMessage));
         } else {
@@ -89,7 +90,7 @@ export function LedgerSignStacksTxContainer({ request }: LedgerSignStacksTxConta
         return;
       }
 
-      if (resp.returnCode === LedgerError.TransactionRejected) {
+      if (hasLedgerReturnCode(resp, LedgerError.TransactionRejected)) {
         if (settleOnRejection) {
           ledgerNavigate.settleLedgerAction(request, toSigningFailure());
         } else {
@@ -99,7 +100,7 @@ export function LedgerSignStacksTxContainer({ request }: LedgerSignStacksTxConta
         return;
       }
 
-      if (resp.returnCode !== LedgerError.NoErrors) {
+      if (!hasLedgerReturnCode(resp, LedgerError.NoErrors)) {
         if (settleOnRejection) {
           ledgerNavigate.settleLedgerAction(request, toSigningFailure(resp.errorMessage));
           return;

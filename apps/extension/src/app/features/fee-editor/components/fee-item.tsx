@@ -19,7 +19,7 @@ export function FeeItem({ fee }: FeeItemProps) {
     useFeeEditorContext();
 
   const isSelected = selectedFee?.priority === fee.priority;
-  const isInsufficientBalance = availableBalance.amount.isLessThan(selectedFee?.txFee?.amount ?? 0);
+  const isInsufficientBalance = availableBalance.amount.isLessThan(selectedFee.txFee.amount);
   const showInsufficientBalanceError = isTouched && isInsufficientBalance;
 
   return (

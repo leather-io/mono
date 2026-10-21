@@ -64,7 +64,7 @@ export function BitcoinFeesList({
           feeType={label}
           key={label}
           isSelected={label === selectedFeeType}
-          onClick={() => onSelectBtcFeeType({ feeRate, feeValue: value, time }, label)}
+          onClick={() => void onSelectBtcFeeType({ feeRate, feeValue: value, time }, label)}
         />
       ))}
     </Stack>

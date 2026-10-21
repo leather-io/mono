@@ -1,14 +1,9 @@
 import type { StacksNetwork } from '@stacks/network';
 import {
-  CoinbaseTransaction,
-  TransactionEventFungibleAsset,
-} from '@stacks/stacks-blockchain-api-types';
-import {
   AddressHashMode,
   ClarityType,
   type ContractCallPayload,
-  type IntCV,
-  StacksTransactionWire,
+  type StacksTransactionWire,
   type TokenTransferPayloadWire,
   addressFromVersionHash,
   addressHashModeToVersion,
@@ -21,7 +16,11 @@ import {
 } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
 
-import { StacksTx, StacksTxStatus } from '@leather.io/models';
+import {
+  type StacksTransaction,
+  type StacksTxStatus,
+  isStacksMempoolTransaction,
+} from '@leather.io/models';
 import { getStacksContractName } from '@leather.io/stacks';
 import {
   createMoney,
@@ -35,10 +34,10 @@ import { safeCall } from '@shared/utils';
 import { stacksValue } from '@app/common/stacks-utils';
 import { getStacksNetworkFromChainId } from '@app/store/networks/networks.hooks';
 
-export function statusFromTx(tx: StacksTx): StacksTxStatus {
-  const { tx_status } = tx;
-  if (tx_status === 'pending') return 'pending';
-  if (tx_status === 'success') return 'success';
+export function statusFromTx(tx: StacksTransaction): StacksTxStatus {
+  const { status } = tx;
+  if (status === 'pending') return 'pending';
+  if (status === 'success') return 'success';
   return 'failed';
 }
 
@@ -46,8 +45,8 @@ export function stacksTransactionToHex(transaction: StacksTransactionWire) {
   return `0x${transaction.serialize()}`;
 }
 
-export function getTxCaption(transaction: StacksTx) {
-  switch (transaction.tx_type) {
+export function getTxCaption(transaction: StacksTransaction) {
+  switch (transaction.type) {
     case 'smart_contract':
       return truncateMiddle(transaction.smart_contract.contract_id.split('.')[0], 4);
     case 'contract_call':
@@ -61,28 +60,18 @@ export function getTxCaption(transaction: StacksTx) {
   }
 }
 
-function getAssetTransfer(tx: StacksTx): TransactionEventFungibleAsset | null {
-  if (tx.tx_type !== 'contract_call') return null;
-  if (tx.tx_status !== 'success') return null;
-  const transfer = tx.events.find(event => event.event_type === 'fungible_token_asset');
-  if (transfer?.event_type !== 'fungible_token_asset') return null;
-  return transfer;
-}
-
-export function getTxValue(tx: StacksTx, isOriginator: boolean): number | string | null {
-  if (tx.tx_type === 'token_transfer') {
+export function getTxValue(tx: StacksTransaction, isOriginator: boolean): string | null {
+  if (tx.type === 'token_transfer') {
     return `${isOriginator ? '-' : ''}${stacksValue({
       value: tx.token_transfer.amount,
       withTicker: false,
     })}`;
   }
-  const transfer = getAssetTransfer(tx);
-  if (transfer) return new BigNumber(transfer.asset.amount).toFormat();
   return null;
 }
 
-export function getTxTitle(tx: StacksTx) {
-  switch (tx.tx_type) {
+export function getTxTitle(tx: StacksTransaction) {
+  switch (tx.type) {
     case 'token_transfer':
       return 'Stacks';
     case 'contract_call':
@@ -90,11 +79,13 @@ export function getTxTitle(tx: StacksTx) {
     case 'smart_contract':
       return getStacksContractName(tx.smart_contract.contract_id);
     case 'coinbase':
-      return `Coinbase ${(tx as CoinbaseTransaction).block_height}`;
+      return isStacksMempoolTransaction(tx) ? 'Coinbase' : `Coinbase ${tx.block.height}`;
     case 'poison_microblock':
       return 'Poison Microblock';
+    case 'tenure_change':
+      return 'Tenure Change';
     default:
-      return '';
+      return 'Transaction';
   }
 }
 
@@ -115,7 +106,7 @@ export function getTxSenderAddress(tx: StacksTransactionWire): string | undefine
   if (!tx?.auth?.spendingCondition?.signer) return;
   const txSender = getAddressFromPublicKeyHash(
     Buffer.from(tx.auth.spendingCondition.signer, 'hex'),
-    tx.auth.spendingCondition.hashMode as number,
+    tx.auth.spendingCondition.hashMode,
     getStacksNetworkFromChainId(tx.chainId)
   );
   return txSender;
@@ -129,22 +120,25 @@ export function isNonSequentialMultisigTransaction(tx: StacksTransactionWire) {
   );
 }
 
-export function isPendingTx(tx: StacksTx) {
-  return tx.tx_status === 'pending';
+export function isPendingTx(tx: StacksTransaction) {
+  return tx.status === 'pending';
 }
 
-export enum StacksTransactionActionType {
-  Cancel = 'cancel',
-  IncreaseFee = 'increase-fee',
-}
+export const StacksTransactionActionType = {
+  Cancel: 'cancel',
+  IncreaseFee: 'increase-fee',
+} as const;
+export type StacksTransactionActionType =
+  (typeof StacksTransactionActionType)[keyof typeof StacksTransactionActionType];
 
 export function getRecipientFromStacksTransaction(transaction: StacksTransactionWire) {
   if (isTokenTransferPayload(transaction.payload)) {
     return cvToString(transaction.payload.recipient);
   }
 
-  if (isSip10TransferContactCall(transaction)) {
-    const sip10RecipientArg = transaction.payload.functionArgs?.[2];
+  const sip10Payload = getSip10TransferPayload(transaction);
+  if (sip10Payload) {
+    const sip10RecipientArg = sip10Payload.functionArgs?.[2];
     if (!sip10RecipientArg) return null;
     const [result] = safeCall(() => cvToString(sip10RecipientArg));
     return result;
@@ -172,21 +166,21 @@ export function getNonceFromStacksTransaction(tx: StacksTransactionWire) {
 export function getSip10TransferAmount(
   payload: ContractCallPayload,
   symbol: string,
-  decimals: number
+  decimals?: number
 ) {
-  const amount = new BigNumber(Number((payload.functionArgs?.[0] as IntCV).value));
+  const amountArg = payload.functionArgs?.[0];
+  const amount = new BigNumber(
+    Number(amountArg && 'value' in amountArg ? amountArg.value : undefined)
+  );
   return createMoney(amount, symbol.toUpperCase(), decimals);
 }
 
-export function isSip10TransferContactCall(
-  tx: StacksTransactionWire
-): tx is StacksTransactionWire & { payload: ContractCallPayload } {
-  if (!tx.payload || !('functionName' in tx.payload)) return false;
-  const payload = tx.payload;
-  return (
-    payload.functionName.content === 'transfer' &&
-    (payload.functionArgs.length === 3 || payload.functionArgs.length === 4)
-  );
+export function getSip10TransferPayload(tx: StacksTransactionWire) {
+  const { payload } = tx;
+  if (!payload || !('functionName' in payload)) return undefined;
+  if (payload.functionName.content !== 'transfer') return undefined;
+  if (payload.functionArgs.length !== 3 && payload.functionArgs.length !== 4) return undefined;
+  return payload;
 }
 
 export function getSip10MemoDisplayText(payload: ContractCallPayload) {

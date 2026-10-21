@@ -1,5 +1,8 @@
 import type { BrowserContext, Page } from '@playwright/test';
+import { type TestRpcResponse, getResponseAddresses } from '@tests/leather-provider';
 import { makeLedgerTestAccountWalletState } from '@tests/page-object-models/onboarding.page';
+
+import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -8,11 +11,10 @@ async function interceptRequestPopup(context: BrowserContext) {
 }
 
 async function initiateGetAddresses(page: Page, params?: object) {
-  return page.evaluate(
-    params =>
-      (window as any).LeatherProvider.request('getAddresses', params).catch((e: unknown) => e),
-    params
-  );
+  return page.evaluate(params => {
+    if (!window.LeatherProvider) throw new Error('LeatherProvider not found');
+    return window.LeatherProvider.request('getAddresses', params).catch((e: TestRpcResponse) => e);
+  }, params);
 }
 
 async function clickConnectLeatherButton(popup: Page) {
@@ -21,8 +23,8 @@ async function clickConnectLeatherButton(popup: Page) {
   await button.click();
 }
 
-function getAddressSymbols(result: any) {
-  return result.result.addresses.map((address: { symbol: string }) => address.symbol);
+function getAddressSymbols(result: TestRpcResponse | undefined) {
+  return getResponseAddresses(result).map(address => address.symbol);
 }
 
 test.describe('Rpc: getAddresses with chains param', () => {
@@ -57,8 +59,9 @@ test.describe('Rpc: getAddresses with chains param', () => {
     test('chains: [] is rejected with invalid params', async ({ page }) => {
       const result = await initiateGetAddresses(page, { chains: [] });
 
+      assertExistence(result, 'Expected result');
       delete result.id;
-      test.expect(result.error.code).toEqual(-32602);
+      test.expect(result.error?.code).toEqual(-32602);
     });
   });
 
@@ -83,7 +86,7 @@ test.describe('Rpc: getAddresses with chains param', () => {
       await clickConnectLeatherButton(popup);
 
       const result = await getAddressesPromise;
-      test.expect(result.result.addresses).toEqual([]);
+      test.expect(getResponseAddresses(result)).toEqual([]);
     });
 
     test('default chains shows a warning callout and returns stacks addresses', async ({

@@ -1,11 +1,13 @@
 import { renderToString } from 'react-dom/server';
 
+import type * as WalletSelectors from '@app/store/wallets/wallet.selectors';
+
 import { CurrentAccountDisplayer } from './current-account-displayer';
 
 const currentAccountId = { fingerprint: 'abc123', accountIndex: 0 };
 
-const walletEntitiesMock = vi.fn();
-const useCurrentPolicyMock = vi.fn();
+const walletEntitiesMock = vi.fn<() => unknown>();
+const useCurrentPolicyMock = vi.fn<() => unknown>();
 
 vi.mock('react-redux', () => ({
   useSelector: () => ({ fingerprint: 'abc123' }),
@@ -33,7 +35,7 @@ vi.mock('@app/common/hooks/account/use-account-names', () => ({
 }));
 
 vi.mock('@app/store/wallets/wallet.selectors', async importOriginal => ({
-  ...(await importOriginal<typeof import('@app/store/wallets/wallet.selectors')>()),
+  ...(await importOriginal<typeof WalletSelectors>()),
   useWalletEntities: () => walletEntitiesMock(),
 }));
 

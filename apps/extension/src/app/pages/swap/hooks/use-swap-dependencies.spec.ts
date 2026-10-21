@@ -1,3 +1,5 @@
+import type * as ReactModule from 'react';
+
 import { makeUnsignedSTXTokenTransfer } from '@stacks/transactions';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
@@ -11,7 +13,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('react', async importOriginal => {
-  const actual = await importOriginal<typeof import('react')>();
+  const actual = await importOriginal<typeof ReactModule>();
   return {
     ...actual,
     useMemo<T>(factory: () => T) {
@@ -72,6 +74,7 @@ vi.mock('@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks', ()
 
 vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
   useCurrentStacksAccount: () => ({ address: 'ST000000000000000000002AMW42H', stxPublicKey: '02' }),
+  useCurrentStacksAccountAddress: () => 'ST000000000000000000002AMW42H',
 }));
 
 vi.mock('@app/store/networks/networks.hooks', () => ({
@@ -137,8 +140,10 @@ describe(useSwapDependencies.name, () => {
   });
 
   test('treats a user cancelled signing as a swap signing cancellation', () => {
-    const { isSigningCancelledError } = useSwapDependencies();
+    const dependencies = useSwapDependencies();
 
-    expect(isSigningCancelledError?.(new Error('User cancelled the signing operation'))).toBe(true);
+    expect(
+      dependencies.isSigningCancelledError?.(new Error('User cancelled the signing operation'))
+    ).toBe(true);
   });
 });

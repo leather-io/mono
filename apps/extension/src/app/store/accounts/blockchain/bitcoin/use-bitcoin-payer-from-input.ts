@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import {
-  BitcoinPayer,
+  type BitcoinPayer,
   isNativeSegwitDerivationPath,
   isTaprootDerivationPath,
 } from '@leather.io/bitcoin';

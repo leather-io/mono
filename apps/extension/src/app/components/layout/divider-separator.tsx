@@ -1,12 +1,14 @@
-import { ReactNode, cloneElement, isValidElement } from 'react';
+import { type ReactNode, cloneElement, isValidElement } from 'react';
 
-import { Hr, HrProps } from '@leather.io/ui';
+import { isArray } from 'remeda';
+
+import { Hr, type HrProps } from '@leather.io/ui';
 
 interface DividerSeparatorProps extends HrProps {
   children: ReactNode;
 }
 export function DividerSeparator({ children, ...props }: DividerSeparatorProps) {
-  const parsedChildren = Array.isArray(children) ? children : [children];
+  const parsedChildren = isArray(children) ? children : [children];
 
   return (
     <>

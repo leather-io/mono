@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import GenericError from '@assets/images/generic-error.png';
-import { Flex, FlexProps, HStack, styled } from 'leather-styles/jsx';
+import { Flex, type FlexProps, HStack, styled } from 'leather-styles/jsx';
 
 import { ExternalLinkIcon, Link } from '@leather.io/ui';
 
