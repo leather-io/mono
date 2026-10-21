@@ -926,22 +926,6 @@
       "count": 1
     }
   },
-  "app/pages/playground/areas/staking-states/staking-mock-data.ts": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 9
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    }
-  },
-  "app/pages/playground/areas/staking-states/staking-surface.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    }
-  },
   "app/pages/portfolio/components/portfolio-chart.spec.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
