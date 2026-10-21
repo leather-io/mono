@@ -1,15 +1,15 @@
 import type { BigNumber } from 'bignumber.js';
 
-import { AccountId } from '../account.model';
-import { CryptoAsset } from '../assets/asset.model';
-import { Money } from '../money.model';
-import { ActivityLevel } from './activity-level.model';
-import { OnChainActivityStatus } from './activity-status.model';
+import { type AccountId } from '../account.model';
+import { type CryptoAsset } from '../assets/asset.model';
+import { type Money } from '../money.model';
+import { type ActivityLevel } from './activity-level.model';
+import { type OnChainActivityStatus } from './activity-status.model';
 import {
-  ActivityType,
-  GeneralActivityType,
-  OnChainActivityType,
-  WalletActivityType,
+  type ActivityType,
+  type GeneralActivityType,
+  type OnChainActivityType,
+  type WalletActivityType,
 } from './activity-type.model';
 
 export type SbtcBridgeStatus = 'pending' | 'accepted' | 'confirmed' | 'failed' | 'rbf';
