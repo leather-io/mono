@@ -2,6 +2,8 @@ import type { BrowserContext, Page } from '@playwright/test';
 
 import { TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS } from './constants';
 
+const transparentSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" />';
+
 const mockedSip10TokenMap = {
   'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin': {
     assetIdentifier: 'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin::longcoin',
@@ -355,5 +357,9 @@ export async function mockLeatherApiRequests(page: Page | BrowserContext) {
         },
       },
     })
+  );
+
+  await page.route('https://images.leather.io/**', route =>
+    route.fulfill({ body: transparentSvg, contentType: 'image/svg+xml' })
   );
 }
