@@ -1,7 +1,6 @@
 import {
   BitcoinNetwork,
   BitcoinNetworkModes,
-  ChainId,
   NetworkModes,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
@@ -30,7 +29,7 @@ export function selectStacksApiUrl(settings: UserSettings): string {
   return settings.network.chain.stacks.url;
 }
 
-export function selectStacksChainId(settings: UserSettings): ChainId {
+export function selectStacksChainId(settings: UserSettings): number {
   return settings.network.chain.stacks.chainId;
 }
 

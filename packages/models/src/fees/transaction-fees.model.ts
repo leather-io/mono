@@ -1,5 +1,5 @@
-import { Money } from '../money.model';
-import { Blockchain } from '../types';
+import { type Money } from '../money.model';
+import { type Blockchain } from '../types';
 
 export const transactionFeeTiers = ['low', 'standard', 'high'] as const;
 export type TransactionFeeTier = (typeof transactionFeeTiers)[number];

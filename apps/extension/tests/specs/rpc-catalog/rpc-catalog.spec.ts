@@ -6,6 +6,7 @@ import { type RequestContext, resolveParams, rpcMethods } from '@leather.io/test
 import { test } from '../../fixtures/fixtures';
 
 const hostPage = 'localhost:3000';
+const catalogCardTestId = new RegExp(`^(${rpcMethods.map(method => method.id).join('|')})$`);
 
 function findSpec(id: string) {
   const spec = rpcMethods.find(m => m.id === id);
@@ -61,7 +62,7 @@ test.describe('Rpc: test-app catalog', () => {
     await test
       .expect(page.getByTestId('provider-status'))
       .toHaveAttribute('data-installed', 'true');
-    await test.expect(page.locator('button[data-testid]')).toHaveCount(rpcMethods.length);
+    await test.expect(page.getByTestId(catalogCardTestId)).toHaveCount(rpcMethods.length);
     await test.expect(page.getByTestId('rpc-result')).toHaveAttribute('data-status', 'idle');
   });
 
@@ -77,7 +78,7 @@ test.describe('Rpc: test-app catalog', () => {
     const popupPromise = interceptRequestPopup(context);
     await page.getByTestId(spec.id).click();
     const popup = await popupPromise;
-    await popup.locator('text="Sign"').click();
+    await popup.getByText('Sign', { exact: true }).click();
 
     const result = page.getByTestId('rpc-result');
     await test.expect(result).toHaveAttribute('data-status', 'success');
@@ -99,7 +100,7 @@ test.describe('Rpc: test-app catalog', () => {
     const signPopupPromise = interceptRequestPopup(context);
     await addressesPopup.getByTestId('get-addresses-approve-button').click();
     const signPopup = await signPopupPromise;
-    await signPopup.locator('text="Confirm"').click();
+    await signPopup.getByText('Confirm', { exact: true }).click();
 
     const result = page.getByTestId('rpc-result');
     await test.expect(result).toHaveAttribute('data-status', 'success', { timeout: 15_000 });

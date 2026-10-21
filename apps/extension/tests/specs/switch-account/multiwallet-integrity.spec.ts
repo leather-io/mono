@@ -11,6 +11,8 @@ import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
 
+import { assertExistence } from '@leather.io/utils';
+
 import { test } from '../../fixtures/fixtures';
 
 test.describe('Multiwallet integrity', () => {
@@ -55,7 +57,6 @@ test.describe('Multiwallet integrity', () => {
   test('that custom names and hidden accounts survive a lock and unlock', async ({
     switchAccountPage,
     homePage,
-    page,
   }) => {
     test.slow();
     await switchAccountPage.open();
@@ -66,8 +67,7 @@ test.describe('Multiwallet integrity', () => {
     await switchAccountPage.close();
 
     await homePage.lock();
-    await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
-    await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+    await homePage.unlock();
     await homePage.waitForHomePageReady();
 
     await switchAccountPage.open();
@@ -103,10 +103,9 @@ test.describe('Multiwallet integrity', () => {
     await switchAccountPage.open();
     await switchAccountPage.createNewWallet();
     await page.getByTestId(OnboardingSelectors.BackUpSecretKeyBtn).click();
-    await page.getByTestId(OnboardingSelectors.NewPasswordInput).fill('the-wrong-password');
-    await page.getByTestId(OnboardingSelectors.SetPasswordBtn).click();
+    await switchAccountPage.submitNewWalletPassword('the-wrong-password');
 
-    await expect(page.getByText("The password you entered doesn't match")).toBeVisible();
+    await expect(switchAccountPage.passwordMismatchError).toBeVisible();
     expect(await switchAccountPage.getWalletCount()).toBe(1);
   });
 
@@ -141,6 +140,7 @@ test.describe('Multiwallet integrity', () => {
   });
 
   test("that viewing a non-active wallet's secret key shows that wallet's key", async ({
+    homePage,
     switchAccountPage,
     page,
   }) => {
@@ -155,8 +155,7 @@ test.describe('Multiwallet integrity', () => {
     await switchAccountPage.enterManageMode();
     await switchAccountPage.viewSecretKey(0);
 
-    await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
-    await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+    await homePage.unlock();
     await page.getByTestId(SettingsSelectors.ShowSecretKeyBtn).click();
 
     const words = TEST_ACCOUNT_SECRET_KEY.split(' ');
@@ -288,7 +287,7 @@ test.describe('Multiwallet integrity', () => {
 
     const active = await switchAccountPage.getActiveAccount();
     const removedFingerprint = active?.fingerprint;
-    if (!removedFingerprint) throw new Error('expected the new wallet to be active');
+    assertExistence(removedFingerprint, 'expected the new wallet to be active');
     expect(removedFingerprint).not.toBe(testFingerprint);
 
     await expect

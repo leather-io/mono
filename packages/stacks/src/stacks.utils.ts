@@ -90,9 +90,8 @@ export function whenStacksChainId(chainId: number) {
 }
 
 // From `@stacks/wallet-sdk` package we are trying not to use
-const rootDerivationPathDepth: number = DerivationPathDepth.Root;
 export function deriveStxPrivateKey({ keychain, index }: { keychain: HDKey; index: number }) {
-  if (keychain.depth !== rootDerivationPathDepth) throw new Error('Root keychain must be depth 0');
+  if (keychain.depth !== DerivationPathDepth.Root) throw new Error('Root keychain must be depth 0');
   const accountKeychain = keychain.derive(makeStxDerivationPath(index));
   assertIsTruthy(accountKeychain.privateKey);
   return compressPrivateKey(accountKeychain.privateKey);

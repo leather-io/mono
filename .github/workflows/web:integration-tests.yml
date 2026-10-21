@@ -51,11 +51,7 @@ jobs:
           key: ${{ runner.os }}-playwright-cache-${{ env.PLAYWRIGHT_VERSION }}
 
       - name: install-playwright-browsers
-        run: pnpm exec playwright install chrome chromium
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-
-      - name: install-playwright-deps
-        run: pnpm exec playwright install --with-deps
+        run: pnpm exec playwright install chromium --only-shell --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: prepare-script

@@ -24,16 +24,19 @@ export function stacksAddressNetwork(address: string): 'mainnet' | 'testnet' | u
   return undefined;
 }
 
-const mainnetChainId: number = ChainId.Mainnet;
-
 export function isValidAddressChain(address: string, chainId: number) {
   if (!address) {
     return false;
   }
 
   const network = stacksAddressNetwork(address);
-  if (chainId === mainnetChainId) return network === 'mainnet';
-  return network === 'testnet';
+  switch (chainId) {
+    case ChainId.Mainnet:
+      return network === 'mainnet';
+    case ChainId.Testnet:
+    default:
+      return network === 'testnet';
+  }
 }
 
 export function validatePayerNotRecipient(senderAddress: string, recipientAddress: string) {

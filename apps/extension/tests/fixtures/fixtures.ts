@@ -38,7 +38,8 @@ export const test = base.extend<TestFixtures>({
   async context({}, use) {
     const pathToExtension = path.join(__dirname, '../../dist');
     const context = await chromium.launchPersistentContext('', {
-      headless: false,
+      headless: true,
+      channel: 'chromium',
       permissions: ['clipboard-read'],
       args: [
         `--disable-extensions-except=${pathToExtension}`,
