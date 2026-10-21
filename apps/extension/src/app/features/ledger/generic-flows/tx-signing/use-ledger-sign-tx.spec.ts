@@ -66,6 +66,9 @@ function renderHookValue<T>(useHook: () => T) {
       if (value === undefined) throw new Error('Hook did not render a value');
       return value;
     },
+    unmount() {
+      act(() => root.unmount());
+    },
   };
 }
 
@@ -80,6 +83,7 @@ interface SetupOptions {
   connectApp?(options: ConnectLedgerDeviceOptions): Promise<LedgerBitcoinApp>;
   getAppVersionError?: unknown;
   signError?: unknown;
+  signTransactionWithDevice?(app: LedgerBitcoinApp): Promise<void>;
 }
 
 function setupSignTx({
@@ -87,17 +91,21 @@ function setupSignTx({
   connectApp,
   getAppVersionError,
   signError,
+  signTransactionWithDevice: signTransactionWithDeviceOverride,
 }: SetupOptions = {}) {
   const onSuccess = vi.fn();
   const signTransactionWithDevice = signError
     ? vi.fn().mockRejectedValue(signError)
     : vi.fn().mockResolvedValue(undefined);
+  if (signTransactionWithDeviceOverride) {
+    signTransactionWithDevice.mockImplementation(signTransactionWithDeviceOverride);
+  }
   const getAppVersion = getAppVersionError
     ? vi.fn().mockRejectedValue(getAppVersionError)
     : vi.fn().mockResolvedValue(bitcoinAppVersion);
   const app = makeFakeLedgerBitcoinApp();
 
-  const { getValue } = renderHookValue(() =>
+  const { getValue, unmount } = renderHookValue(() =>
     useLedgerSignTx<LedgerBitcoinApp>({
       chain: 'bitcoin',
       connectApp:
@@ -112,7 +120,7 @@ function setupSignTx({
     })
   );
 
-  return { getValue, onSuccess, signTransactionWithDevice };
+  return { getValue, unmount, onSuccess, signTransactionWithDevice };
 }
 
 describe(useLedgerSignTx.name, () => {
@@ -293,5 +301,119 @@ describe(useLedgerSignTx.name, () => {
     expect(mocks.toErrorStep).toHaveBeenCalledWith('bitcoin');
     expect(mocks.toConnectStep).not.toHaveBeenCalled();
     expect(onSuccess).not.toHaveBeenCalled();
+  });
+
+  test('ignores a second sign attempt while the first is still in flight', async () => {
+    const connection = Promise.withResolvers<LedgerBitcoinApp>();
+    const connectApp = vi.fn(() => connection.promise);
+    const { getValue, onSuccess, signTransactionWithDevice } = setupSignTx({ connectApp });
+
+    const { first, second } = await act(() => ({
+      first: getValue().signTransaction(),
+      second: getValue().signTransaction(),
+    }));
+
+    await act(async () => {
+      connection.resolve(makeFakeLedgerBitcoinApp());
+      await Promise.all([first, second]);
+    });
+
+    expect(connectApp).toHaveBeenCalledOnce();
+    expect(signTransactionWithDevice).toHaveBeenCalledOnce();
+    expect(onSuccess).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+  });
+
+  test('allows a new sign attempt once the previous one has settled', async () => {
+    const connectApp = vi
+      .fn<(options: ConnectLedgerDeviceOptions) => Promise<LedgerBitcoinApp>>()
+      .mockRejectedValueOnce(makeNamedError('LockedDeviceError', 'LockedDeviceError'))
+      .mockResolvedValueOnce(makeFakeLedgerBitcoinApp());
+    const { getValue, onSuccess } = setupSignTx({ connectApp });
+
+    await act(async () => {
+      await getValue().signTransaction();
+    });
+    await act(async () => {
+      await getValue().signTransaction();
+    });
+
+    expect(connectApp).toHaveBeenCalledTimes(2);
+    expect(onSuccess).toHaveBeenCalledOnce();
+  });
+
+  test('stops after connecting and closes the session when the flow is dismissed mid-connect', async () => {
+    const connection = Promise.withResolvers<LedgerBitcoinApp>();
+    const { getValue, unmount, onSuccess, signTransactionWithDevice } = setupSignTx({
+      connectApp: () => connection.promise,
+    });
+
+    const { signing } = await act(() => ({ signing: getValue().signTransaction() }));
+    unmount();
+
+    await act(async () => {
+      connection.resolve(makeFakeLedgerBitcoinApp());
+      await signing;
+    });
+
+    expect(mocks.toCheckingAppVersion).not.toHaveBeenCalled();
+    expect(mocks.toConnectionSuccessStep).not.toHaveBeenCalled();
+    expect(signTransactionWithDevice).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
+  });
+
+  test('does nothing when signing settles after the flow was dismissed', async () => {
+    const signing = Promise.withResolvers<void>();
+    const reachedDevice = Promise.withResolvers<void>();
+    const { getValue, unmount, onSuccess } = setupSignTx({
+      signTransactionWithDevice() {
+        reachedDevice.resolve();
+        return signing.promise;
+      },
+    });
+
+    const { attempt } = await act(async () => {
+      const attempt = getValue().signTransaction();
+      await reachedDevice.promise;
+      return { attempt };
+    });
+    unmount();
+
+    await act(async () => {
+      signing.resolve();
+      await attempt;
+    });
+
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+  });
+
+  test('does not navigate when signing fails after the flow was dismissed', async () => {
+    const signing = Promise.withResolvers<void>();
+    const reachedDevice = Promise.withResolvers<void>();
+    const { getValue, unmount } = setupSignTx({
+      signTransactionWithDevice() {
+        reachedDevice.resolve();
+        return signing.promise;
+      },
+    });
+
+    const { attempt } = await act(async () => {
+      const attempt = getValue().signTransaction();
+      await reachedDevice.promise;
+      return { attempt };
+    });
+    unmount();
+
+    await act(async () => {
+      signing.reject({ _tag: 'DeviceDisconnectedWhileSendingError' });
+      await attempt;
+    });
+
+    expect(mocks.toDeviceDisconnectStep).not.toHaveBeenCalled();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
   });
 });
