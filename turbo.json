@@ -39,6 +39,9 @@
       ]
     },
     "test:coverage": {
+      "outputs": [
+        "coverage/**"
+      ],
       "dependsOn": [
         "^build"
       ]

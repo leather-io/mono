@@ -39,6 +39,11 @@ runs:
           ${{ runner.os }}-turbo-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.workflow }}-${{ github.job }}-
           ${{ runner.os }}-turbo-${{ hashFiles('pnpm-lock.yaml') }}-
 
+    - name: prune-turbo-cache
+      if: inputs.TURBO_CACHE == 'true'
+      shell: bash
+      run: find .turbo/cache -type f -mtime +7 -delete || true
+
     - name: build-panda
       shell: bash
       run: pnpm turbo run build --filter="@leather.io/panda-preset"
