@@ -2,8 +2,6 @@ import type { BrowserContext, Page } from '@playwright/test';
 
 import { TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS } from './constants';
 
-const transparentSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" />';
-
 const mockedSip10TokenMap = {
   'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin': {
     assetIdentifier: 'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin::longcoin',
@@ -46,6 +44,15 @@ const mockedSip10TokenMap = {
     image: 'https://images.leather.io/tokens/usdcx.svg',
     principal: 'SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx',
   },
+};
+
+const mockedLeoToken = {
+  assetIdentifier: 'SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6.leo-token::leo',
+  name: 'Leo',
+  symbol: 'LEO',
+  decimals: 6,
+  image: 'https://images.leather.io/tokens/leo.svg',
+  principal: 'SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6.leo-token',
 };
 
 const mockedSip10PriceMap = {
@@ -114,7 +121,42 @@ export async function mockEmptyLeatherApiUtxosRequest(page: Page | BrowserContex
   );
 }
 
+const mockedSwapDexMap = {
+  alex: {
+    id: 'alex',
+    name: 'ALEX',
+    url: 'https://app.alexlab.co',
+    logo: '',
+    description: '',
+    addresses: [],
+  },
+  bitflow: {
+    id: 'bitflow',
+    name: 'Bitflow',
+    url: 'https://app.bitflow.finance',
+    logo: '',
+    description: '',
+    addresses: [],
+  },
+  velar: {
+    id: 'velar',
+    name: 'Velar',
+    url: 'https://app.velar.com',
+    logo: '',
+    description: '',
+    addresses: [],
+  },
+};
+
 export async function mockLeatherApiRequests(page: Page | BrowserContext) {
+  await page.route('**/v1/swap/dexes**', route => route.fulfill({ json: mockedSwapDexMap }));
+  await page.route('**/v1/tokens/sip10s/*', route => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/v1/tokens/**/description**', route =>
+    route.fulfill({ json: { description: null } })
+  );
+  await page.route('**/v1/staking/addresses/*/bonds**', route =>
+    route.fulfill({ json: { bonds: [] } })
+  );
   await page.route('**/v1/market/bitcoin/fees**', route =>
     route.fulfill({
       json: {
@@ -156,6 +198,11 @@ export async function mockLeatherApiRequests(page: Page | BrowserContext) {
       route.fulfill({
         json: mockedSip10TokenMap['SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc'],
       })
+  );
+
+  await page.route(
+    '**/v1/tokens/sip10s/SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6.leo-token',
+    route => route.fulfill({ json: mockedLeoToken })
   );
 
   await page.route('**/v1/tokens/sip10s/SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx', route =>
@@ -357,9 +404,5 @@ export async function mockLeatherApiRequests(page: Page | BrowserContext) {
         },
       },
     })
-  );
-
-  await page.route('https://images.leather.io/**', route =>
-    route.fulfill({ body: transparentSvg, contentType: 'image/svg+xml' })
   );
 }
