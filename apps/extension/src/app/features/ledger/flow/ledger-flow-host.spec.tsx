@@ -34,8 +34,8 @@ vi.mock('@app/features/toasts/use-toast', () => ({
   useToast: () => ({ error: h.toastError }),
 }));
 
-vi.mock('../dmk/ledger-dmk.context', () => ({
-  LedgerDmkProvider: ({ children }: { children: React.ReactNode }) => children,
+vi.mock('../hardware-wallet/hardware-wallet.context', () => ({
+  HardwareWalletProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 vi.mock('../flows/bitcoin-tx-signing/ledger-bitcoin-sign-tx-container', () => ({

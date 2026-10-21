@@ -29,7 +29,6 @@ import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/st
 import { logger } from '@shared/logger';
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import type { StacksAppKeysResponseItem } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
 import { selectRootKeychainsAtVersion } from '@app/store/in-memory-key/in-memory-key.selectors';
 import {
@@ -41,6 +40,15 @@ import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 import type { RootState } from '@app/store/store';
 
 import type { HardwareStacksAccount, SoftwareStacksAccount } from './stacks-account.models';
+
+interface LedgerStacksKeychain {
+  id: string;
+  fingerprint: string;
+  derivationPath: string;
+  path: string;
+  stxPublicKey: string;
+  dataPublicKey: string;
+}
 
 function publicKeyToHex(publicKey: string | Uint8Array) {
   return typeof publicKey === 'string' ? publicKey : bytesToHex(publicKey);
@@ -85,11 +93,7 @@ function initalizeSoftwareStacksAccount(
 }
 
 function initalizeHardwareStacksAccount(
-  ledgerKeychain: StacksAppKeysResponseItem & {
-    id: string;
-    fingerprint: string;
-    derivationPath: string;
-  },
+  ledgerKeychain: LedgerStacksKeychain,
   accountId: AccountId,
   network: NetworkModes
 ): HardwareStacksAccount {
@@ -134,11 +138,7 @@ const selectSoftwareAccounts = registerKeychainSelectorCache(
 
 interface LedgerStacksKeychainEntry {
   accountIndex: number;
-  keychain: StacksAppKeysResponseItem & {
-    id: string;
-    fingerprint: string;
-    derivationPath: string;
-  };
+  keychain: LedgerStacksKeychain;
 }
 
 const selectDedupedLedgerStacksKeychains = createSelector(
@@ -242,10 +242,7 @@ const selectSoftwareStacksAccountGenerators = registerKeychainSelectorCache(
 );
 
 function generateLedgerStacksAccount(
-  ledgerKeys: Record<
-    string,
-    StacksAppKeysResponseItem & { id: string; fingerprint: string; derivationPath: string }
-  >,
+  ledgerKeys: Record<string, LedgerStacksKeychain>,
   accountId: AccountId,
   network: NetworkModes
 ): HardwareStacksAccount | undefined {
@@ -259,10 +256,7 @@ const selectLedgerStacksAccountLookup = createSelector(
   selectDedupedLedgerStacksKeychains,
   dedupedKeychains => {
     // Convert keychains to a Record format for lookup
-    const ledgerKeys: Record<
-      string,
-      StacksAppKeysResponseItem & { id: string; fingerprint: string; derivationPath: string }
-    > = {};
+    const ledgerKeys: Record<string, LedgerStacksKeychain> = {};
 
     dedupedKeychains.forEach((entry, accountIdentifier) => {
       ledgerKeys[accountIdentifier] = entry.keychain;

@@ -92,13 +92,8 @@
       "count": 1
     }
   },
-  "src/descriptors/ledger-descriptor-resolver.ts": {
+  "src/descriptors/wallet-policy-descriptor-resolver.ts": {
     "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/descriptors/ledger-wallet-policy.ts": {
-    "no-restricted-properties": {
       "count": 1
     }
   },

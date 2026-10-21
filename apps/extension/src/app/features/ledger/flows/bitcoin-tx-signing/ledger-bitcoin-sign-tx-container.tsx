@@ -2,15 +2,11 @@ import { useMemo } from 'react';
 
 import * as btc from '@scure/btc-signer';
 
+import { getBitcoinSigner, isHardwareWalletErrorOfKind } from '@leather.io/ledger';
 import { delay, isError } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 
-import {
-  isLedgerActionCancelledError,
-  isLedgerUserDeniedError,
-} from '@app/features/ledger/dmk/ledger-dmk-errors';
-import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import type { ActiveLedgerSigningRequest } from '@app/features/ledger/flow/ledger-flow.types';
 import { ApproveSignLedgerBitcoinTx } from '@app/features/ledger/flows/bitcoin-tx-signing/steps/approve-bitcoin-sign-ledger-tx';
@@ -18,14 +14,7 @@ import { type LedgerTxSigningContext } from '@app/features/ledger/generic-flows/
 import { TxSigningFlow } from '@app/features/ledger/generic-flows/tx-signing/tx-signing-flow';
 import { useLedgerSignTx } from '@app/features/ledger/generic-flows/tx-signing/use-ledger-sign-tx';
 import { useLedgerAnalytics } from '@app/features/ledger/hooks/use-ledger-analytics.hook';
-import {
-  connectLedgerBitcoinApp,
-  getBitcoinAppVersion,
-  isBitcoinAppOpen,
-} from '@app/features/ledger/utils/bitcoin-ledger-utils';
-import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
-import type { LedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app';
 import { useSignLedgerBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
@@ -35,8 +24,6 @@ interface LedgerSignBitcoinTxContainerProps {
   request: ActiveLedgerSigningRequest<'sign-bitcoin-tx'>;
 }
 export function LedgerSignBitcoinTxContainer({ request }: LedgerSignBitcoinTxContainerProps) {
-  const dmk = useLedgerDmk();
-  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerSteps();
   const ledgerAnalytics = useLedgerAnalytics();
 
@@ -51,15 +38,14 @@ export function LedgerSignBitcoinTxContainer({ request }: LedgerSignBitcoinTxCon
 
   const {
     signTransaction,
+    cancel,
     latestDeviceResponse,
     awaitingDeviceConnection,
     isConnectionCancellable,
-  } = useLedgerSignTx<LedgerBitcoinApp>({
-    chain,
-    isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
-    getAppVersion: getBitcoinAppVersion(dmk),
-    connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode, signerActions.run),
-    async signTransactionWithDevice(bitcoinApp) {
+  } = useLedgerSignTx({
+    connectRequest: { chain, network: network.chain.bitcoin.mode },
+    async signTransactionWithDevice(wallet, ctx) {
+      const signer = getBitcoinSigner(wallet);
       ledgerNavigate.toDeviceBusyStep('Verifying public key on Ledger…');
 
       ledgerNavigate.toConnectionSuccessStep('bitcoin');
@@ -70,26 +56,26 @@ export function LedgerSignBitcoinTxContainer({ request }: LedgerSignBitcoinTxCon
       try {
         const btcTx = descriptor
           ? await signLedgerDescriptor(
-              bitcoinApp,
+              signer,
               unsignedTransaction.toPSBT(),
               descriptor,
-              inputsToSign
+              inputsToSign,
+              ctx
             )
-          : await signLedger(bitcoinApp, unsignedTransaction.toPSBT(), inputsToSign);
+          : await signLedger(signer, unsignedTransaction.toPSBT(), inputsToSign, ctx);
 
-        if (!btcTx) throw new Error('No tx returned');
         ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
         await delay(1200);
         ledgerNavigate.settleLedgerAction(request, { status: 'signed', value: btcTx });
       } catch (e) {
-        if (isLedgerActionCancelledError(e)) return;
+        if (isHardwareWalletErrorOfKind(e, 'cancelled')) return;
         logger.error('Unable to sign tx with ledger', e);
         ledgerAnalytics.transactionSignedOnLedgerRejected();
         // Descriptor signing is awaited by the rpc popup, which owns the error
         // UI and the dApp response. Settle that promise with the error rather
         // than leaving it to hang forever. Other flows keep the standard
         // on-device rejection screen.
-        if (!isLedgerUserDeniedError(e)) {
+        if (!isHardwareWalletErrorOfKind(e, 'rejected')) {
           ledgerNavigate.settleLedgerAction(
             request,
             isError(e) ? { status: 'failed', error: e.message } : { status: 'cancelled' }
@@ -104,7 +90,7 @@ export function LedgerSignBitcoinTxContainer({ request }: LedgerSignBitcoinTxCon
   });
 
   function closeAction() {
-    signerActions.cancelActive();
+    cancel();
     ledgerNavigate.cancelLedgerAction();
   }
 
