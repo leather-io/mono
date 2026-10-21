@@ -8,7 +8,7 @@ import { type configureAnalyticsClient } from '@leather.io/analytics';
 import { type BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import {
   type AccountAddresses,
-  CryptoAssetId,
+  type CryptoAssetId,
   type ExecutionConstraint,
   type InputCurrencyMode,
   type MarketData,
@@ -36,6 +36,29 @@ import { type StacksSigner } from '@leather.io/stacks';
 
 import { type ValidationResult } from './validation/swap-validation.types';
 
+export type SwapServiceClient = Pick<
+  SwapService,
+  | 'getAccountBaseSwapAssets'
+  | 'getAccountTargetSwapAssets'
+  | 'getSwapQuotes'
+  | 'getSwapExecutionData'
+  | 'getSbtcSignersPublicKey'
+  | 'notifySbtcDeposit'
+>;
+export type MarketDataServiceClient = Pick<MarketDataService, 'getMarketData'>;
+export type BitcoinTransactionFeesServiceClient = Pick<
+  BitcoinTransactionFeesService,
+  'getBitcoinTransactionFees'
+>;
+export type BitcoinCoinSelectionServiceClient = Pick<
+  BitcoinCoinSelectionService,
+  'performCoinSelection' | 'calculateMaxSpend'
+>;
+export type StacksTransactionFeesServiceClient = Pick<
+  StacksTransactionFeesService,
+  'getStacksTransactionFees'
+>;
+
 export type TrackEvent = ReturnType<typeof configureAnalyticsClient>['track'];
 
 export interface SwapDependencies {
@@ -56,11 +79,11 @@ export interface SwapDependencies {
     broadcast(txHex: string): Promise<BitcoinBroadcastResult>;
   };
   services: {
-    marketDataService: MarketDataService;
-    bitcoinTransactionFeesService: BitcoinTransactionFeesService;
-    bitcoinCoinSelectionService: BitcoinCoinSelectionService;
-    stacksTransactionFeesService: StacksTransactionFeesService;
-    swapService: SwapService;
+    marketDataService: MarketDataServiceClient;
+    bitcoinTransactionFeesService: BitcoinTransactionFeesServiceClient;
+    bitcoinCoinSelectionService: BitcoinCoinSelectionServiceClient;
+    stacksTransactionFeesService: StacksTransactionFeesServiceClient;
+    swapService: SwapServiceClient;
   };
   onSwapSubmitted?(result: SwapSubmissionResult): void;
   isSigningCancelledError?(error: unknown): boolean;
@@ -228,14 +251,14 @@ export interface UseSwapStateResult {
   state: SwapState;
   actions: SwapActions;
   validation: ValidationResult;
-  baseAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
-  targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
-  baseMarketDataQuery: UseQueryResult<MarketData, Error>;
-  targetMarketDataQuery: UseQueryResult<MarketData, Error>;
-  networkFeeAssetMarkedDataQuery: UseQueryResult<MarketData, Error>;
-  spendableAmountQuery: UseQueryResult<Money | null, Error>;
-  quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
-  networkFeeQuery: UseQueryResult<NetworkFee, Error>;
+  baseAssetsQuery: UseQueryResult<AccountSwapAsset[]>;
+  targetAssetsQuery: UseQueryResult<AccountSwapAsset[]>;
+  baseMarketDataQuery: UseQueryResult<MarketData>;
+  targetMarketDataQuery: UseQueryResult<MarketData>;
+  networkFeeAssetMarkedDataQuery: UseQueryResult<MarketData>;
+  spendableAmountQuery: UseQueryResult<Money | null>;
+  quoteQuery: UseQueryResult<SwapQuoteSelectionResult>;
+  networkFeeQuery: UseQueryResult<NetworkFee>;
   canSubmit: boolean;
   submit(): Promise<SwapSubmissionResult>;
 }
