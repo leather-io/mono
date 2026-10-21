@@ -1,42 +1,33 @@
-import {
-  BtcAsset,
-  CryptoAsset,
-  FungibleCryptoAsset,
-  NativeCryptoAsset,
-  NonFungibleCryptoAsset,
-  Sip10Asset,
-  StxAsset,
-} from './asset.model';
-import { Sip9Asset } from './sip9-asset.model';
+import { type CryptoAsset } from './asset.model';
 
-export function isFungibleAsset(asset: CryptoAsset): asset is FungibleCryptoAsset {
+export function isFungibleAsset(asset: CryptoAsset) {
   return asset.category === 'fungible';
 }
 
-export function isNonFungibleAsset(asset: CryptoAsset): asset is NonFungibleCryptoAsset {
+export function isNonFungibleAsset(asset: CryptoAsset) {
   return asset.category === 'nft';
 }
 
-export function isBtcAsset(asset: CryptoAsset): asset is BtcAsset {
+export function isBtcAsset(asset: CryptoAsset) {
   return asset.protocol === 'nativeBtc';
 }
 
-export function isStxAsset(asset: CryptoAsset): asset is StxAsset {
+export function isStxAsset(asset: CryptoAsset) {
   return asset.protocol === 'nativeStx';
 }
 
-export function isNativeAsset(asset: CryptoAsset): asset is NativeCryptoAsset {
+export function isNativeAsset(asset: CryptoAsset) {
   return isBtcAsset(asset) || isStxAsset(asset);
 }
 
-export function isSip10Asset(asset: CryptoAsset): asset is Sip10Asset {
+export function isSip10Asset(asset: CryptoAsset) {
   return asset.protocol === 'sip10';
 }
 
-export function isSwappableAsset(asset: CryptoAsset): asset is NativeCryptoAsset | Sip10Asset {
+export function isSwappableAsset(asset: CryptoAsset) {
   return isNativeAsset(asset) || isSip10Asset(asset);
 }
 
-export function isSip9Asset(asset: CryptoAsset): asset is Sip9Asset {
+export function isSip9Asset(asset: CryptoAsset) {
   return asset.protocol === 'sip9';
 }
