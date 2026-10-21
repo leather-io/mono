@@ -1250,9 +1250,6 @@
   "app/store/addresses.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 1
     }
   },
   "app/store/quote-currency.ts": {

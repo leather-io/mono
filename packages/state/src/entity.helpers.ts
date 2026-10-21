@@ -1,7 +1,12 @@
-import { EntityState, PayloadAction } from '@reduxjs/toolkit';
+import { type EntityState, type PayloadAction } from '@reduxjs/toolkit';
 import z from 'zod';
 
-type AdapterMethod<T> = (state: EntityState<T, string>, args: any) => void;
+type AdapterMethod<T> = (state: EntityState<T, string>, args: never) => unknown;
+
+type EntityCaseReducer<State, Payload> = (
+  state: EntityState<State, string>,
+  action: PayloadAction<Payload>
+) => void;
 
 export function handleEntityActionWith<State, Payload, R extends AdapterMethod<State>>(
   adapterMethod: R,
@@ -11,8 +16,12 @@ export function handleEntityActionWith<State, Payload, R extends AdapterMethod<S
     payload: Payload,
     state: EntityState<State, string>
   ) => Parameters<R>[1]['payload']
-) {
-  return (state: EntityState<State, string>, action: PayloadAction<Payload>) => {
+): EntityCaseReducer<State, Payload>;
+export function handleEntityActionWith<State, Payload, Arg>(
+  adapterMethod: (state: EntityState<State, string>, arg: Arg) => unknown,
+  payloadSelector: (payload: Payload, state: EntityState<State, string>) => Arg
+): EntityCaseReducer<State, Payload> {
+  return (state, action) => {
     const selectedPayload = payloadSelector(action.payload, state);
     adapterMethod(state, selectedPayload);
   };

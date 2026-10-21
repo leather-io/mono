@@ -16,7 +16,7 @@ import { useSwapQuotes } from './hooks/use-swap-quotes';
 import { useSwapValidation } from './hooks/use-swap-validation';
 import { swapReducer } from './swap-state.reducer';
 import {
-  DisabledPairRule,
+  type DisabledPairRule,
   type SwapDependencies,
   type SwapInternalState,
   type TrackEvent,
@@ -217,8 +217,8 @@ function initializeState({
   const targetSwapAsset = targetAsset ? { asset: targetAsset, providerAssets: [] } : null;
 
   return {
-    baseSwapAsset: baseSwapAsset,
-    targetSwapAsset: targetSwapAsset,
+    baseSwapAsset,
+    targetSwapAsset,
     pairReconciliation: { base: 'pending', target: 'pending' },
     nonceOverride: undefined,
     baseAmount: '0',
