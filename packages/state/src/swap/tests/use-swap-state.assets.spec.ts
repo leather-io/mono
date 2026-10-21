@@ -3,7 +3,7 @@ import { assert, describe, expect, it } from 'vitest';
 
 import { SBTC_ASSET_ID_MAINNET } from '@leather.io/constants';
 import { defaultNetworksKeyedById } from '@leather.io/models';
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 
 import {
   createAccountSwapAsset,

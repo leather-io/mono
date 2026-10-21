@@ -15,16 +15,21 @@ test.describe('RPC: stx_deployContract', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="mock-contract-name"');
-      await popup.waitForSelector(
-        'text="Only fees will be transferred from your account or the transaction will abort."'
-      );
+      await test.expect(popup.getByText('mock-contract-name', { exact: true })).toBeVisible();
+      await test
+        .expect(
+          popup.getByText(
+            'Only fees will be transferred from your account or the transaction will abort.',
+            { exact: true }
+          )
+        )
+        .toBeVisible();
 
       const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
@@ -32,8 +37,7 @@ test.describe('RPC: stx_deployContract', () => {
       const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SPS8CKF63P16J28AYF7PXW9E5AACH0NZNTEFWSFE');
 
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Confirm"');
+      const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
