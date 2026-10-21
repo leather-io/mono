@@ -1,5 +1,6 @@
 import { type BtcFormSchema } from '@/features/send/forms/btc/btc-form-schema';
 import { type StxFormSchema } from '@/features/send/forms/stx/stx-form-schema';
+import { queryClient } from '@/queries/query';
 import { PayerLookupFn } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { analytics } from '@/utils/analytics';
 import { bytesToHex } from '@noble/hashes/utils';
@@ -14,8 +15,9 @@ import {
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import { type BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
+import { createAddressComplianceCheckQueryConfig } from '@leather.io/queries';
 import { defaultStacksFees } from '@leather.io/query';
-import { getComplianceService, isOfflineComplianceCheckReason } from '@leather.io/services';
+import { type UserSettings, isOfflineComplianceCheckReason } from '@leather.io/services';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import {
   convertAmountToBaseUnit,
@@ -100,16 +102,20 @@ interface addressComplianceValidatorParams {
   address: string;
   shouldCheckCompliance: boolean;
   screeningPoint: ComplianceScreeningPoint;
+  settings: UserSettings;
 }
 
 export async function addressComplianceValidator({
   address,
   shouldCheckCompliance,
   screeningPoint,
+  settings,
 }: addressComplianceValidatorParams) {
   if (!shouldCheckCompliance) return true;
 
-  const result = await getComplianceService().checkAddressCompliance(address);
+  const result = await queryClient.fetchQuery(
+    createAddressComplianceCheckQueryConfig(address, settings)
+  );
   if (result.status === 'non_compliant') {
     analytics.track('non_compliant_entity_detected', {
       address,

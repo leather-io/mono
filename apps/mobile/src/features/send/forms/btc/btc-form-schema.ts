@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { getErrorMessages } from '@/features/send/error-messages';
 import { CalculateBtcMaxSpend } from '@/features/send/hooks/use-calculate-btc-max-spend';
 import { addressComplianceValidator } from '@/features/send/utils';
+import { useUserSettings } from '@/hooks/use-user-settings';
 import * as z from 'zod';
 
 import {
@@ -13,6 +14,7 @@ import {
 } from '@leather.io/bitcoin';
 import { BTC_DECIMALS } from '@leather.io/constants';
 import { BitcoinNetworkModes } from '@leather.io/models';
+import type { UserSettings } from '@leather.io/services';
 import { countDecimals, createMoneyFromDecimal } from '@leather.io/utils';
 
 interface SchemaCreationParams {
@@ -21,13 +23,18 @@ interface SchemaCreationParams {
 }
 
 export function useBtcSendFormSchema({ networkMode, calculateBtcMaxSpend }: SchemaCreationParams) {
+  const settings = useUserSettings();
   return useMemo(
-    () => createBtcSendFormSchema({ networkMode, calculateBtcMaxSpend }),
-    [networkMode, calculateBtcMaxSpend]
+    () => createBtcSendFormSchema({ networkMode, calculateBtcMaxSpend, settings }),
+    [networkMode, calculateBtcMaxSpend, settings]
   );
 }
 
-function createBtcSendFormSchema({ networkMode, calculateBtcMaxSpend }: SchemaCreationParams) {
+function createBtcSendFormSchema({
+  networkMode,
+  calculateBtcMaxSpend,
+  settings,
+}: SchemaCreationParams & { settings: UserSettings }) {
   const errorMessages = getErrorMessages();
 
   return (
@@ -44,7 +51,7 @@ function createBtcSendFormSchema({ networkMode, calculateBtcMaxSpend }: SchemaCr
           .string()
           .refine(isValidBitcoinAddress, errorMessages.invalidAddress)
           .refine(btcAddressNetworkValidator(networkMode), errorMessages.incorrectNetworkAddress)
-          .refine(btcComplianceValidator(), errorMessages.nonCompliantAddress),
+          .refine(btcComplianceValidator(settings), errorMessages.nonCompliantAddress),
         feeRate: z.number(),
         isSendingMax: z.boolean(),
       })
@@ -65,12 +72,13 @@ function btcAddressNetworkValidator(networkMode: BitcoinNetworkModes) {
   return (address: string) => isValidBitcoinNetworkAddress(address, networkMode);
 }
 
-function btcComplianceValidator() {
+function btcComplianceValidator(settings: UserSettings) {
   return (address: string) =>
     addressComplianceValidator({
       address,
       shouldCheckCompliance: isValidBitcoinAddress(address),
       screeningPoint: 'send_form_btc',
+      settings,
     });
 }
 

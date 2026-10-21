@@ -1,15 +1,19 @@
 import { z } from 'zod';
 
 import type { ComplianceScreeningPoint } from '@leather.io/analytics';
-import { getComplianceService, isOfflineComplianceCheckReason } from '@leather.io/services';
+import { createAddressComplianceCheckQueryConfig } from '@leather.io/queries';
+import { type UserSettings, isOfflineComplianceCheckReason } from '@leather.io/services';
 import { isEmptyString, isUndefined } from '@leather.io/utils';
 
 import { stringField } from '@shared/forms/field-schemas';
 import { analytics } from '@shared/utils/analytics';
 
+import { queryClient } from '@app/common/persistence';
+
 export function complianceValidator(
   shouldCheckCompliance: z.core.$ZodCheck<string | undefined>,
-  screeningPoint: ComplianceScreeningPoint
+  screeningPoint: ComplianceScreeningPoint,
+  settings: UserSettings
 ) {
   const shouldCheckComplianceSchema = stringField().check(shouldCheckCompliance);
   return z.refine<string | undefined>(
@@ -17,7 +21,9 @@ export function complianceValidator(
       if (!shouldCheckComplianceSchema.safeParse(value).success) return true;
       if (isUndefined(value) || isEmptyString(value)) return true;
 
-      const result = await getComplianceService().checkAddressCompliance(value);
+      const result = await queryClient.fetchQuery(
+        createAddressComplianceCheckQueryConfig(value, settings)
+      );
       if (result.status === 'non_compliant') {
         analytics.track('non_compliant_entity_detected', {
           address: value,
