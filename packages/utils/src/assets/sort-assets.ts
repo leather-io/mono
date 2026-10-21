@@ -19,8 +19,8 @@ export function sortAssetsByName<T extends { name: string }[]>(assets: T) {
     });
 }
 
-export function migratePositiveAssetBalancesToTop<T extends { balance: Money }[]>(assets: T) {
+export function migratePositiveAssetBalancesToTop<T extends { balance: Money }>(assets: T[]) {
   const assetsWithPositiveBalance = assets.filter(asset => asset.balance.amount.isGreaterThan(0));
   const assetsWithZeroBalance = assets.filter(asset => asset.balance.amount.isEqualTo(0));
-  return [...assetsWithPositiveBalance, ...assetsWithZeroBalance] as T;
+  return [...assetsWithPositiveBalance, ...assetsWithZeroBalance];
 }

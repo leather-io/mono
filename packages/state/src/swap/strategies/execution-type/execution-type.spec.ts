@@ -1,17 +1,14 @@
+import * as btc from '@scure/btc-signer';
 import { hexToBytes } from '@stacks/common';
 import { STACKS_MAINNET } from '@stacks/network';
+import { type StacksTransactionWire } from '@stacks/transactions';
 import { describe, expect, test, vi } from 'vitest';
 
-import { SwapExecutionData, TransactionFeeQuote } from '@leather.io/models';
-import {
-  BitcoinCoinSelectionService,
-  BitcoinTransactionFeesService,
-  SwapService,
-} from '@leather.io/services';
+import { type SwapExecutionData, type TransactionFeeQuote } from '@leather.io/models';
 import { assertExistence, createMoney } from '@leather.io/utils';
 
-import { NetworkFee, SwapExecutionDependencies } from '../../swap-state.types';
-import { createAccountRequest } from '../../tests/test-utils/fixtures';
+import { type NetworkFee, type SwapExecutionDependencies } from '../../swap-state.types';
+import { createAccountRequest, createSwapQuote } from '../../tests/test-utils/fixtures';
 import {
   createStubBitcoinCoinSelectionService,
   createStubBitcoinPayer,
@@ -56,7 +53,7 @@ const bitcoinFeeQuote: TransactionFeeQuote = {
 const stacksNetworkFee: NetworkFee = { mode: 'fixed', calculation: stacksFeeQuote };
 const bitcoinNetworkFee: NetworkFee = { mode: 'fixed', calculation: bitcoinFeeQuote };
 
-const stacksContractCallExecutionData = {
+const stacksContractCallExecutionData: SwapExecutionData = {
   executionType: 'stacks-contract-call',
   providerId: 'alex-sdk',
   contractAddress: 'SP000000000000000000002Q6VF78',
@@ -64,12 +61,14 @@ const stacksContractCallExecutionData = {
   functionName: 'swap',
   functionArgs: [],
   postConditions: [],
-} as unknown as SwapExecutionData;
+  quote: createSwapQuote(),
+};
 
-const sbtcBridgeDepositExecutionData = {
+const sbtcBridgeDepositExecutionData: SwapExecutionData = {
   executionType: 'sbtc-bridge-deposit',
   providerId: 'sbtc-bridge',
-} as unknown as SwapExecutionData;
+  quote: createSwapQuote({ executionType: 'sbtc-bridge-deposit', providerId: 'sbtc-bridge' }),
+};
 
 function createSwapServiceMocks() {
   return {
@@ -118,7 +117,7 @@ function createExecutionDependencies(
 describe('stacksContractCallStrategy', () => {
   describe('submitSwap', () => {
     test('signs the built transaction, broadcasts it and resolves with the txid', async () => {
-      const sign = vi.fn(tx => Promise.resolve(tx));
+      const sign = vi.fn((tx: StacksTransactionWire) => Promise.resolve(tx));
       const broadcast = vi.fn().mockResolvedValue({ txid: 'stacks-txid' });
       const dependencies = createExecutionDependencies();
       dependencies.stacks.stacksSigner = { ...createStubStacksSigner(), sign };
@@ -150,17 +149,19 @@ describe('stacksContractCallStrategy', () => {
 
 describe('sbtcBridgeDepositStrategy', () => {
   function createSbtcFixtures() {
+    const transaction = new btc.Transaction();
     const depositTransaction = {
-      addInput: vi.fn(),
-      addOutputAddress: vi.fn(),
-      toPSBT: vi.fn(() => new Uint8Array()),
+      addInput: vi.spyOn(transaction, 'addInput').mockReturnValue(0),
+      addOutputAddress: vi.spyOn(transaction, 'addOutputAddress').mockReturnValue(0),
+      toPSBT: vi.spyOn(transaction, 'toPSBT').mockReturnValue(new Uint8Array()),
     };
     vi.mocked(buildSbtcBridgeDepositTx).mockReturnValue({
       address: 'bc1qdeposit',
       depositScript: 'deposit-script',
       reclaimScript: 'reclaim-script',
-      transaction: depositTransaction,
-    } as unknown as ReturnType<typeof buildSbtcBridgeDepositTx>);
+      transaction,
+      trOut: btc.p2tr(hexToBytes(signersPublicKey)),
+    });
 
     const signedDepositTx = { finalize: vi.fn(), id: signedDepositTxid, hex: signedDepositTxHex };
     const performCoinSelection = vi.fn().mockResolvedValue({
@@ -182,18 +183,17 @@ describe('sbtcBridgeDepositStrategy', () => {
     const bitcoin = dependencies.bitcoin;
     bitcoin.signBitcoinPsbt = vi.fn().mockResolvedValue(signedDepositTx);
     dependencies.services.bitcoinCoinSelectionService = {
+      ...createStubBitcoinCoinSelectionService(),
       performCoinSelection,
-    } as unknown as BitcoinCoinSelectionService;
+    };
     dependencies.services.swapService = {
       ...createStubSwapService(),
       ...swapServiceMocks,
-    } as unknown as SwapService;
+    };
     const getBitcoinTransactionFees = vi.fn(
       createStubBitcoinTransactionFeesService().getBitcoinTransactionFees
     );
-    dependencies.services.bitcoinTransactionFeesService = {
-      getBitcoinTransactionFees,
-    } as unknown as BitcoinTransactionFeesService;
+    dependencies.services.bitcoinTransactionFeesService = { getBitcoinTransactionFees };
 
     return {
       dependencies,

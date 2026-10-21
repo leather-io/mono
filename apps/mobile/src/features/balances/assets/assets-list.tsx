@@ -3,13 +3,18 @@ import { ReactElement, useMemo } from 'react';
 import { Screen } from '@/components/screen/screen';
 import { useUsdcxBalance } from '@/features/balances/assets/use-usdcx-balance';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
-import { withUsdcxBalance } from '@/features/balances/assets/utils/with-usdcx-balance';
+import {
+  type AssetsListItem,
+  isUsdcxBridgeItem,
+  shouldShowUsdcxBridge,
+  withUsdcxBridge,
+} from '@/features/balances/assets/utils/with-usdcx-bridge';
+import { UsdcxBridgeTokenCell } from '@/features/balances/stacks/usdcx-bridge-token-cell';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useRouter } from 'expo-router';
 
-import { AccountId } from '@leather.io/models';
-import { Sip10Balance } from '@leather.io/services';
+import { AccountId, CryptoAssetId } from '@leather.io/models';
 import { useTheme } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
@@ -26,33 +31,43 @@ export function AssetsList({ account, sip10Data, header, footer }: AssetsListPro
   const router = useRouter();
   const theme = useTheme();
   const usdcx = useUsdcxBalance(account);
-  const usdcxBalance =
-    usdcx.isVisible && usdcx.balance.state === 'success' ? usdcx.balance.value : undefined;
   const sip10List = sip10Data.state === 'success' ? sip10Data.value.sip10s : undefined;
+  const isUsdcxBalanceLoading = usdcx.balance.state === 'loading';
+  const showUsdcxBridge = shouldShowUsdcxBridge({
+    usdcxBalance: usdcx.balance.state === 'success' ? usdcx.balance.value : undefined,
+    isMainnet: usdcx.isMainnet,
+    isVisible: usdcx.isVisible,
+  });
 
-  const sip10Memo = useMemo(() => {
-    if (!sip10List) return usdcxBalance ? [usdcxBalance] : [];
-    return withUsdcxBalance(sip10List, usdcx.assetId, usdcxBalance).sort(sortSip10Balances);
-  }, [sip10List, usdcx.assetId, usdcxBalance]);
+  const assetsMemo = useMemo<AssetsListItem[]>(() => {
+    if (!sip10List || isUsdcxBalanceLoading) return [];
+    return withUsdcxBridge([...sip10List].sort(sortSip10Balances), usdcx.assetId, showUsdcxBridge);
+  }, [sip10List, isUsdcxBalanceLoading, usdcx.assetId, showUsdcxBridge]);
 
-  const allAssetsMemo = [...sip10Memo];
+  function navigateToAsset(assetId: CryptoAssetId) {
+    router.navigate({
+      pathname: '/(tabs)/(index)/[assetId]',
+      params: {
+        assetId: serializeAssetId(assetId),
+      },
+    });
+  }
 
   return (
-    <Screen.FlashList<Sip10Balance>
-      data={allAssetsMemo}
-      renderItem={({ item }) =>
-        renderAsset({
-          item,
-          onPress: () =>
-            router.navigate({
-              pathname: '/(tabs)/(index)/[assetId]',
-              params: {
-                assetId: serializeAssetId(getAssetId(item.asset)),
-              },
-            }),
-        })
-      }
-      getItemType={item => item.asset.protocol}
+    <Screen.FlashList<AssetsListItem>
+      data={assetsMemo}
+      renderItem={({ item }) => {
+        if (isUsdcxBridgeItem(item)) {
+          return (
+            <UsdcxBridgeTokenCell
+              assetId={item.assetId}
+              onPress={() => navigateToAsset({ protocol: 'sip10', id: item.assetId })}
+            />
+          );
+        }
+        return renderAsset({ item, onPress: () => navigateToAsset(getAssetId(item.asset)) });
+      }}
+      getItemType={item => (isUsdcxBridgeItem(item) ? item.kind : item.asset.protocol)}
       // TODO: RefreshControl is working but isn't showing
       refreshControl={<RefreshControl />}
       ListFooterComponentStyle={{ paddingTop: theme.spacing['5'] }}

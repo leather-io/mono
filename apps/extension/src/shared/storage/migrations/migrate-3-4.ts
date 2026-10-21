@@ -48,7 +48,9 @@ function repairSoftwareHighestAccountIndex(draftState: LegacyRecord, fingerprint
       toAccountIndex(existing?.currentAccountIndex),
       toAccountIndex(activeIndex),
       ...priorIndices,
-    ].filter(isValidAccountIndex)
+    ]
+      .filter(isNumber)
+      .filter(isValidAccountIndex)
   );
 
   if (!draftState.chains) draftState.chains = {};

@@ -17,7 +17,7 @@ import { analytics } from '@shared/utils/analytics';
 
 import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
-import { useToast } from '@app/features/toasts/use-toast';
+import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 import { invalidateActivityQueries } from '@app/query/activity/blockchain-activity.query';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useBitcoinFeeRates } from '@app/query/bitcoin/fees/bitcoin-fee-rates.hooks';
@@ -139,7 +139,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     await broadcastTx({
       tx: tx.hex,
       onSuccess(txid) {
-        toast.success('Fee increased successfully');
+        toast.success('Fee increased successfully', { duration: toastDurations.standard });
         void navigate(RouteUrls.Activity);
         analytics.track('increase_fee_transaction', {
           symbol: 'btc',

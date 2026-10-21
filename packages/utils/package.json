@@ -31,7 +31,8 @@
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "bignumber.js": "9.1.2",
-    "dompurify": "3.2.4"
+    "dompurify": "3.2.4",
+    "remeda": "2.21.2"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",
