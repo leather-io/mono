@@ -1,7 +1,6 @@
 import { inject, injectable } from 'inversify';
 
 import { OwnedUtxo, Utxo } from '@leather.io/models';
-import { hasBitcoinAddress } from '@leather.io/utils';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
@@ -63,7 +62,7 @@ export class UtxosService {
     { account, exclusions }: AccountRequest,
     signal?: AbortSignal
   ): Promise<UtxoTotals> {
-    if (!hasBitcoinAddress(account)) return emptyUtxos;
+    if (!account.bitcoin) return emptyUtxos;
 
     if (account.bitcoin.type === 'fixedAddress') {
       return this.getAddressUtxos(account.bitcoin.address, account.id.fingerprint, signal);
