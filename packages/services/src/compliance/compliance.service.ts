@@ -16,7 +16,7 @@ export type AddressComplianceCheckResult =
   | { status: 'non_compliant'; reason: string }
   | { status: 'unavailable'; reason: string };
 
-export type LeatherApiUnavailableReason =
+type LeatherApiUnavailableReason =
   | `leather_api_http_${number}`
   | 'leather_api_timeout'
   | 'leather_api_offline'
@@ -47,19 +47,15 @@ function isNetworkShapedError(error: unknown) {
 
 function waitUnlessAborted(ms: number, signal?: AbortSignal) {
   return new Promise<void>(resolve => {
-    if (signal?.aborted) {
+    function onAbort() {
+      clearTimeout(timer);
       resolve();
-      return;
     }
-    const timer = setTimeout(resolve, ms);
-    signal?.addEventListener(
-      'abort',
-      () => {
-        clearTimeout(timer);
-        resolve();
-      },
-      { once: true }
-    );
+    const timer = setTimeout(() => {
+      signal?.removeEventListener('abort', onAbort);
+      resolve();
+    }, ms);
+    signal?.addEventListener('abort', onAbort, { once: true });
   });
 }
 
@@ -100,9 +96,9 @@ export class ComplianceService {
     try {
       return await this.leatherApiClient.fetchAddressComplianceCheck(address, { signal });
     } catch (error) {
-      if (signal?.aborted || !isNetworkShapedError(error)) throw error;
+      if (signal?.aborted || isRuntimeOffline() || !isNetworkShapedError(error)) throw error;
       await waitUnlessAborted(complianceCheckRetryDelayMs, signal);
-      if (signal?.aborted) throw error;
+      signal?.throwIfAborted();
       return this.leatherApiClient.fetchAddressComplianceCheck(address, { signal });
     }
   }
@@ -130,8 +126,9 @@ export class ComplianceService {
   private getLeatherApiUnavailableReason(error: unknown): LeatherApiUnavailableReason {
     if (LeatherApiError.isLeatherApiError(error)) return `leather_api_http_${error.status}`;
     if (isQueueTimeoutError(error)) return 'leather_api_timeout';
-    if (isRuntimeOffline()) return offlineUnavailableReason;
-    if (error instanceof TypeError) return 'leather_api_network_error';
+    if (error instanceof TypeError) {
+      return isRuntimeOffline() ? offlineUnavailableReason : 'leather_api_network_error';
+    }
     return 'leather_api_unknown_error';
   }
 }
