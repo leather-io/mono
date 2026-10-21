@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Blockchain } from '../types';
+import { type Blockchain } from '../types';
 import type { networkConfigurationSchema } from './network.schema';
 
 export const HIRO_API_BASE_URL_MAINNET = 'https://api.hiro.so';
@@ -26,22 +26,25 @@ export const EMILY_API_BASE_URL_TESTNET = 'https://beta.sbtc-emily.com';
 export const EMILY_API_BASE_URL_DEVENV = 'http://localhost:3031';
 
 // Copied from @stacks/transactions to avoid dependencies
-export enum ChainId {
-  Testnet = 2147483648,
-  Mainnet = 1,
-}
+export const ChainId = {
+  Testnet: 2147483648,
+  Mainnet: 1,
+} as const;
+export type ChainId = (typeof ChainId)[keyof typeof ChainId];
 
-export enum WalletDefaultNetworkConfigurationIds {
-  mainnet = 'mainnet',
-  testnet = 'testnet',
-  testnet4 = 'testnet4',
-  signet = 'signet',
-  sbtcTestnet = 'sbtcTestnet',
-  sbtcDevenv = 'sbtcDevenv',
-  devnet = 'devnet',
-  'private-1' = 'private-1',
-  stakingTestnet = 'stakingTestnet',
-}
+export const WalletDefaultNetworkConfigurationIds = {
+  mainnet: 'mainnet',
+  testnet: 'testnet',
+  testnet4: 'testnet4',
+  signet: 'signet',
+  sbtcTestnet: 'sbtcTestnet',
+  sbtcDevenv: 'sbtcDevenv',
+  devnet: 'devnet',
+  'private-1': 'private-1',
+  stakingTestnet: 'stakingTestnet',
+} as const;
+export type WalletDefaultNetworkConfigurationIds =
+  (typeof WalletDefaultNetworkConfigurationIds)[keyof typeof WalletDefaultNetworkConfigurationIds];
 
 export const defaultNetworkConfigurationsSchema = z.enum([
   'mainnet',
@@ -84,7 +87,7 @@ export function bitcoinNetworkToNetworkMode(network: BitcoinNetwork): BitcoinNet
     default:
       // TODO: Needs exhaustive check. Cannot import 'assertUnreachable' since 'utils' package depends on 'models'.
       //       Ideally this function should live in utils, but it's currently widely used in the extension.
-      throw new Error(`Unhandled case: ${network}`);
+      throw new Error(`Unhandled case: ${String(network)}`);
   }
 }
 
