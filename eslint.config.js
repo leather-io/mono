@@ -273,6 +273,13 @@ export default defineConfig([
     files: ['packages/cms/src/**/*.{ts,tsx}'],
   },
   {
+    name: 'ledger',
+    files: ['packages/ledger/src/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/unbound-method': 'off',
+    },
+  },
+  {
     name: 'web',
     files: ['apps/web/app/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],

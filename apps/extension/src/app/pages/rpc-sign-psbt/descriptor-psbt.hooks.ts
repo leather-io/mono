@@ -6,7 +6,7 @@ import {
   findAccountDescriptorKey,
   getDescriptorMatchingInputIndexes,
   makeNativeSegwitAddressIndexDerivationPath,
-  resolveLedgerSignableDescriptor,
+  resolveWalletPolicyDescriptor,
 } from '@leather.io/bitcoin';
 
 import { useWalletType } from '@app/common/use-wallet-type';
@@ -76,13 +76,13 @@ export function useSignDescriptorPsbt() {
     const signedTx = await whenWallet({
       software: () => signPsbt({ tx, signingConfig }),
       async ledger() {
-        const ledgerDescriptor = resolveLedgerSignableDescriptor({
+        const policyDescriptor = resolveWalletPolicyDescriptor({
           descriptor,
           psbt: tx.toPSBT(),
           inputIndexes,
           accountKey,
         });
-        if (!ledgerDescriptor)
+        if (!policyDescriptor)
           throw new Error(
             'Ledger cannot sign this descriptor: a co-signer raw public key could not be resolved to an xpub from PSBT_GLOBAL_XPUB and PSBT_IN_BIP32_DERIVATION.'
           );
@@ -91,7 +91,7 @@ export function useSignDescriptorPsbt() {
           kind: 'sign-bitcoin-tx',
           psbt: tx.toPSBT(),
           inputsToSign: signingConfig,
-          descriptor: ledgerDescriptor,
+          descriptor: policyDescriptor,
           settleOnRejection: false,
         });
         return unwrapLedgerSigningOutcome(outcome);

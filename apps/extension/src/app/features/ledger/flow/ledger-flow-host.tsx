@@ -6,7 +6,6 @@ import { logger } from '@shared/logger';
 
 import { useToast } from '@app/features/toasts/use-toast';
 
-import { LedgerDmkProvider } from '../dmk/ledger-dmk.context';
 import { LedgerSignBitcoinTxContainer } from '../flows/bitcoin-tx-signing/ledger-bitcoin-sign-tx-container';
 import { LedgerConfirmBtcPolicyAddress } from '../flows/confirm-btc-policy-address/ledger-confirm-btc-policy-address';
 import { LedgerPairDevice } from '../flows/pair-device/ledger-pair-device';
@@ -18,6 +17,7 @@ import { LedgerVerifyBtcAddress } from '../flows/verify-address/ledger-verify-bt
 import { LedgerVerifyStxAddress } from '../flows/verify-address/ledger-verify-stx-address';
 import { ConnectLedgerStart } from '../generic-steps/connect-device/connect-ledger-start';
 import { UnsupportedBrowserLayout } from '../generic-steps/unsupported-browser/unsupported-browser.layout';
+import { HardwareWalletProvider } from '../hardware-wallet/hardware-wallet.context';
 import { useLedgerFlow } from './ledger-flow.context';
 import type { ActiveLedgerFlowRequest } from './ledger-flow.types';
 
@@ -72,7 +72,7 @@ export function LedgerFlowHost() {
         closeWithError(isError(error) ? error.message : ledgerFlowRenderErrorMessage);
       }}
     >
-      <LedgerDmkProvider>{renderLedgerFlow(request, close)}</LedgerDmkProvider>
+      <HardwareWalletProvider>{renderLedgerFlow(request, close)}</HardwareWalletProvider>
     </Sentry.ErrorBoundary>
   );
 }

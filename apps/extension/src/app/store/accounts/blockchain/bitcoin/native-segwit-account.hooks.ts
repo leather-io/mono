@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { bytesToHex } from '@noble/hashes/utils';
 import { createSelector } from '@reduxjs/toolkit';
 import { type HDKey } from '@scure/bip32';
 import { type Psbt } from 'bitcoinjs-lib';
@@ -11,7 +10,6 @@ import {
   deriveNativeSegwitAccountFromRootKeychain,
   getNativeSegwitPaymentFromAddressIndex,
 } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { type AccountId } from '@leather.io/models';
 import { reverseBytes } from '@leather.io/utils';
 
@@ -167,41 +165,6 @@ export function useUpdateLedgerSpecificNativeSegwitUtxoHexForAdddressIndexZero()
           action: 'skip_add_nonwitness_utxo',
         });
       }
-    });
-  };
-}
-
-export function useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero() {
-  const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
-
-  return (tx: Psbt, fingerprint: string, inputSigningConfig: BitcoinInputSigningConfig[]) => {
-    inputSigningConfig.forEach(({ index, derivationPath }) => {
-      const nativeSegwitPayer = createNativeSegwitPayer?.({
-        changeIndex: extractChangeIndexFromPath(derivationPath),
-        addressIndex: extractAddressIndexFromPath(derivationPath),
-      });
-
-      if (!nativeSegwitPayer) throw new Error(`Unable to update input for path ${derivationPath}}`);
-
-      // Coordinator PSBTs routinely populate bip32_derivation for every policy
-      // key. Re-adding our key would hit bip174's by-pubkey dedupe and throw
-      // "Can not add duplicate data to array", so skip when it is already present.
-      const pubkey = Buffer.from(nativeSegwitPayer.publicKey);
-      const pubkeyHex = bytesToHex(pubkey);
-      const hasDerivationForPubkey = tx.data.inputs[index].bip32Derivation?.some(
-        entry => bytesToHex(entry.pubkey) === pubkeyHex
-      );
-      if (hasDerivationForPubkey) return;
-
-      tx.updateInput(index, {
-        bip32Derivation: [
-          {
-            masterFingerprint: Buffer.from(fingerprint, 'hex'),
-            pubkey,
-            path: derivationPath,
-          },
-        ],
-      });
     });
   };
 }

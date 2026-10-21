@@ -72,9 +72,7 @@
       ],
       "ignore": [
         "src/shared/global-types.ts",
-        "src/shared/models/global-types.ts",
-        "src/app/features/ledger/dmk/ledger-dmk.mocks.ts",
-        "src/app/features/ledger/utils/ledger-app.mocks.ts"
+        "src/shared/models/global-types.ts"
       ]
     },
     "apps/mobile": {
