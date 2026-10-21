@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router';
 
+import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { Flex, Stack } from 'leather-styles/jsx';
 
 import type { BitcoinTx } from '@leather.io/models';
@@ -110,7 +111,11 @@ function IncreaseBtcFeeSheetContent({ tx }: IncreaseBtcFeeSheetContentProps) {
                   />
                 </Stack>
 
-                {balance && <Caption>Balance: {btcBalance}</Caption>}
+                {balance && (
+                  <Caption data-testid={ActivitySelectors.TransactionActionBalance}>
+                    Balance: {btcBalance}
+                  </Caption>
+                )}
               </Stack>
             </Stack>
           </Suspense>

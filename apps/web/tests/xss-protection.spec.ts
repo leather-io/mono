@@ -12,12 +12,9 @@ test.describe('XSS Protection', () => {
     await page.goto('/stacking/faq');
 
     // Wait for the page to load
-    await page.waitForTimeout(500);
-
     // Check that the safe content is visible
-    const safeText = await page.textContent('#content');
-    expect(safeText).toContain('Safe text');
-    expect(safeText).toContain('more text');
+    await expect(page.getByText('Safe text', { exact: true })).toBeVisible();
+    await expect(page.getByText('more text', { exact: true })).toBeVisible();
 
     // Add a potential XSS attack to the page and verify it's sanitized
     await page.evaluate(() => {
@@ -28,9 +25,8 @@ test.describe('XSS Protection', () => {
     });
 
     // Wait a moment for any scripts to execute (they shouldn't)
-    await page.waitForTimeout(500);
-
     // Verify the XSS attack was prevented
+    await expect(page.getByText('Content with script tag', { exact: true })).toBeVisible();
     const xssExecuted = await page.evaluate(() => (window as any).__xss_executed);
     expect(xssExecuted).toBeUndefined();
 
