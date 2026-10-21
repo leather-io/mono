@@ -21,7 +21,6 @@ import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bi
 import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import { useNetworks } from '@app/store/networks/networks.selectors';
 
-import { usePolicyFeatureGate } from '../policy-feature-gate';
 import {
   type PolicyApprovalMode,
   type PolicyMatchStatus,
@@ -45,12 +44,6 @@ export function useBtcAddAccount() {
   const registerBtcPolicy = useRegisterBtcPolicy();
   const networks = useNetworks();
   const walletType = useActiveWalletType();
-  const { isFeatureEnabled, rejectAsUnsupported } = usePolicyFeatureGate({
-    method: request.method,
-    frameId,
-    id: request.id,
-    tabId,
-  });
 
   // Whitelisted origins may register the policy; any other origin may only let
   // the user verify the derived address (nothing is written to the extension).
@@ -150,8 +143,6 @@ export function useBtcAddAccount() {
     mode,
     walletType,
     canApprove: matchStatus === 'match' && address !== null,
-    isFeatureEnabled,
-    rejectAsUnsupported,
     focusInitiatingTab,
     finalize,
   };

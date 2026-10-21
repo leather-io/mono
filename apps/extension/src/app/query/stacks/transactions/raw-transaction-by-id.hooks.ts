@@ -6,7 +6,7 @@ import { isUndefined } from '@leather.io/utils';
 
 import { useGetRawTransactionByIdQuery } from './raw-transaction-by-id.query';
 
-const rawTxCache = new Map();
+const rawTxCache = new Map<string, string>();
 
 export function useStacksRawTransaction(txid: string) {
   const { data: rawTxData, isLoading: isLoadingRawTx } = useGetRawTransactionByIdQuery(txid);

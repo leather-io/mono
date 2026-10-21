@@ -2,8 +2,8 @@ import { encodeBase64Json, stxAddAccount } from '@leather.io/rpc';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestSuccess } from '../rpc-helpers';
-import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   createConnectingAppMetadataSearchParams,
   sendErrorResponseOnUserPopupClose,

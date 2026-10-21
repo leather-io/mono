@@ -13,7 +13,7 @@ import {
 } from '@shared/logger-storage';
 
 import { Divider } from '@app/components/layout/divider';
-import { useToast } from '@app/features/toasts/use-toast';
+import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 
 const isAnEmptyLogsArrayByteThreshold = 7;
 
@@ -35,13 +35,22 @@ export function AdvancedMenuItems() {
       : `Delete ${logSizeInKiloBytes.toPrecision(2)}kB of diagnostic logs`;
   }, [logSizeInBytes]);
 
+  async function copyDiagnostics() {
+    await copyLogsToClipboard();
+    toast.success('Copied to clipboard');
+  }
+
+  async function clearDiagnostics() {
+    await clearBrowserStorageLogs();
+    toast.success('Diagnostic logs cleared', { duration: toastDurations.standard });
+  }
+
   return (
     <Box width="100%">
       <DropdownMenu.Item
         style={{ display: 'block' }}
-        onClick={async () => {
-          await copyLogsToClipboard();
-          toast.success('Copied to clipboard');
+        onClick={() => {
+          void copyDiagnostics();
         }}
       >
         <styled.p>Copy diagnostics to clipboard</styled.p>
@@ -51,9 +60,8 @@ export function AdvancedMenuItems() {
       </DropdownMenu.Item>
       <DropdownMenu.Item
         style={{ display: 'block' }}
-        onClick={async () => {
-          await clearBrowserStorageLogs();
-          toast.success('Diagnostic logs cleared');
+        onClick={() => {
+          void clearDiagnostics();
         }}
       >
         <styled.p>Clear diagnostic information</styled.p>

@@ -1,7 +1,7 @@
 import { Divider, Flex, styled } from 'leather-styles/jsx';
 
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { LiveSwapEstimate } from '@leather.io/state/swap';
+import { type SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type LiveSwapEstimate } from '@leather.io/state/swap';
 import { SkeletonLoader } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';

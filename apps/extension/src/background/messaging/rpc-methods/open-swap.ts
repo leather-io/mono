@@ -4,8 +4,8 @@ import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to
 import { RouteUrls } from '@shared/route-urls';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestSuccess } from '../rpc-helpers';
-import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   createConnectingAppSearchParamsWithLastKnownAccount,
   triggerSwapWindowOpen,
@@ -29,7 +29,7 @@ export const openSwapHandler = defineRpcRequestHandler(openSwap.method, async (r
   if (base === 'BTC') {
     await triggerSwapWindowOpen(
       replaceRouteParams(RouteUrls.Swap, {
-        base: base,
+        base,
         quote: quote ?? '',
       }).replace('{chain}', 'bitcoin'),
       urlParams
@@ -37,7 +37,7 @@ export const openSwapHandler = defineRpcRequestHandler(openSwap.method, async (r
   } else {
     await triggerSwapWindowOpen(
       replaceRouteParams(RouteUrls.Swap, {
-        base: base,
+        base,
         quote: quote ?? '',
       }).replace('{chain}', 'stacks'),
       urlParams

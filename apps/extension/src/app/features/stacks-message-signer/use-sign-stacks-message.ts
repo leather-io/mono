@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { logger } from '@shared/logger';
-import { SignatureData, UnsignedMessage } from '@shared/signature/signature-types';
+import { type SignatureData, type UnsignedMessage } from '@shared/signature/signature-types';
 import { analytics } from '@shared/utils/analytics';
 
 import { useWalletType } from '@app/common/use-wallet-type';

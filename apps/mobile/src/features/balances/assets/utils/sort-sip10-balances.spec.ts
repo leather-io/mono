@@ -361,8 +361,8 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
 ];
 
 /** Expected order
- * USDCx - $0
  * sBTC - $1
+ * USDCx - $0
  * WELSH - $5
  * LiSTX - $4
  * ALEX - $3
@@ -375,10 +375,43 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
  * USDA - $0
  */
 describe('sortSip10Balances', () => {
-  it('should sort USDCx first then sBTC regardless of balance', () => {
+  it('should sort sBTC first then USDCx regardless of balance', () => {
     const sorted = [...mockBalances].sort(sortSip10Balances);
-    expect(sorted[0]?.asset.symbol).toBe('USDCx');
-    expect(sorted[1]?.asset.symbol).toBe('sBTC');
+    expect(sorted[0]?.asset.symbol).toBe('sBTC');
+    expect(sorted[1]?.asset.symbol).toBe('USDCx');
+  });
+
+  it('should keep sBTC above USDCx when USDCx is worth more', () => {
+    const [usdcx, sbtc] = [
+      mockBalances.find(balance => balance.asset.symbol === 'USDCx'),
+      mockBalances.find(balance => balance.asset.symbol === 'sBTC'),
+    ];
+    if (!usdcx || !sbtc) throw new Error('Missing sBTC or USDCx fixture');
+    const richUsdcx = {
+      ...usdcx,
+      quote: { ...usdcx.quote, totalBalance: createMoney(10_000, 'USD') },
+    };
+    const sorted = [richUsdcx, sbtc].sort(sortSip10Balances);
+    expect(sorted.map(balance => balance.asset.symbol)).toEqual(['sBTC', 'USDCx']);
+  });
+
+  it('should not pin a token that only copies the sBTC symbol', () => {
+    const sbtc = mockBalances.find(balance => balance.asset.symbol === 'sBTC');
+    const welsh = mockBalances.find(balance => balance.asset.symbol === 'WELSH');
+    if (!sbtc || !welsh) throw new Error('Missing sBTC or WELSH fixture');
+    const lookalike = {
+      ...sbtc,
+      asset: {
+        ...sbtc.asset,
+        contractId: 'SP2KAF9RF86PVX3NEE27DFV1CQX0T4WGR41X3S45C.fake-sbtc',
+        assetId: 'SP2KAF9RF86PVX3NEE27DFV1CQX0T4WGR41X3S45C.fake-sbtc::sbtc-token',
+      },
+    };
+    const sorted = [lookalike, welsh].sort(sortSip10Balances);
+    expect(sorted.map(balance => balance.asset.contractId)).toEqual([
+      welsh.asset.contractId,
+      lookalike.asset.contractId,
+    ]);
   });
 
   it('should next sort by quote total balance when symbols are different', () => {

@@ -37,7 +37,7 @@ export function PoxPostConditionItem({
     return 'Another address ';
   }
 
-  const title = `${getPrincipalPrefix()} ${getPoxConditionTitle(pc.conditionCode)}`;
+  const title = [getPrincipalPrefix(), getPoxConditionTitle(pc.conditionCode)].join(' ');
   const message = `${getPoxConditionCodeMessage(
     pc.conditionCode,
     isSending
@@ -54,7 +54,7 @@ export function PoxPostConditionItem({
         captionRight={contract}
       />
       <Box py="space.03" borderTop="default" borderBottom={!isLast ? 'active' : 'unset'}>
-        <styled.span color="ink.text-subdued" textStyle="caption.01">
+        <styled.span color="ink.text-secondary" textStyle="caption.01">
           {message}
         </styled.span>
       </Box>

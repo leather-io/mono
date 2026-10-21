@@ -21,7 +21,7 @@ export function FaviconDisplayer({ requester }: FaviconDisplayerProps) {
     >
       {/* Remove as any when setting prop as number in mono */}
       <Box className={css({ transform: 'scale(0.9)' })}>
-        <Favicon origin={requester} size={64 as any} />
+        <Favicon origin={requester} size={64} />
       </Box>
     </Box>
   );

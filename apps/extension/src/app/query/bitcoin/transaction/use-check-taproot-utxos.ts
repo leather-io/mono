@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { TransactionInput } from '@scure/btc-signer/psbt';
+import { type TransactionInput } from '@scure/btc-signer/psbt';
 
 import { TaprootUtxoWarningDialog } from '../../../features/dialogs/taproot-utxo-warning-dialog/taproot-utxo-warning-dialog';
 import { useMatchWalletUtxos } from '../utxos/use-match-wallet-utxos';

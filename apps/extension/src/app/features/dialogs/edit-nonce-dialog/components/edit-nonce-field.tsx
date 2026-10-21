@@ -1,7 +1,7 @@
-import { FormEvent, memo } from 'react';
+import { type FormEvent, memo } from 'react';
 
 import { useField } from 'formik';
-import { Stack, StackProps } from 'leather-styles/jsx';
+import { Stack, type StackProps } from 'leather-styles/jsx';
 
 import { Input } from '@leather.io/ui';
 
@@ -13,7 +13,7 @@ interface EditNonceFieldProps extends StackProps {
 
 export const EditNonceField = memo(function EditNonceField(props: EditNonceFieldProps) {
   const { onBlur } = props;
-  const [field, meta, helpers] = useField('nonce');
+  const [field, meta, helpers] = useField<number | string | undefined>('nonce');
 
   return (
     <Stack width="100%" {...props}>
@@ -22,8 +22,8 @@ export const EditNonceField = memo(function EditNonceField(props: EditNonceField
         <Input.Field
           onBlur={onBlur}
           value={field.value}
-          onChange={async (evt: FormEvent<HTMLInputElement>) => {
-            await helpers.setValue(evt.currentTarget.value);
+          onChange={(evt: FormEvent<HTMLInputElement>) => {
+            void helpers.setValue(evt.currentTarget.value);
           }}
         />
       </Input.Root>

@@ -6,7 +6,10 @@ import { Stack, styled } from 'leather-styles/jsx';
 
 import { Link, Sheet, SheetHeader } from '@leather.io/ui';
 
-import { StacksSendFormValues, StacksTransactionFormValues } from '@shared/models/form.model';
+import {
+  type StacksSendFormValues,
+  type StacksTransactionFormValues,
+} from '@shared/models/form.model';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
@@ -48,7 +51,7 @@ export function EditNonceSheet() {
   }, [loadedNextNonce, onGoBack, setFieldError, setFieldValue, values.nonce]);
 
   return (
-    <Sheet isShowing onClose={onClose} header={<SheetHeader title="Edit nonce" />}>
+    <Sheet isShowing onClose={() => void onClose()} header={<SheetHeader title="Edit nonce" />}>
       <Stack gap="space.05" pb="space.06" px="space.05">
         <styled.span textStyle="caption.01">
           If your transaction has been pending for a long time, its nonce might not be correct.
@@ -56,7 +59,11 @@ export function EditNonceSheet() {
             Learn more.
           </Link>
         </styled.span>
-        <EditNonceForm onBlur={onBlur} onClose={onClose} onSubmit={onSubmit} />
+        <EditNonceForm
+          onBlur={() => void onBlur()}
+          onClose={() => void onClose()}
+          onSubmit={() => void onSubmit()}
+        />
       </Stack>
     </Sheet>
   );

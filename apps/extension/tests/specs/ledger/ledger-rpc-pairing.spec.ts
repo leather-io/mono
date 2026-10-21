@@ -1,4 +1,5 @@
 import type { BrowserContext, Page } from '@playwright/test';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import {
   getConnectedTestAppPermissionsState,
@@ -11,8 +12,12 @@ import { test } from '../../fixtures/fixtures';
 
 function requestStxTransfer(page: Page) {
   return page.evaluate(
-    params =>
-      (window as any).LeatherProvider.request('stx_transferStx', params).catch((e: unknown) => e),
+    params => {
+      if (!window.LeatherProvider) throw new Error('LeatherProvider not found');
+      return window.LeatherProvider.request('stx_transferStx', params).catch(
+        (e: TestRpcResponse) => e
+      );
+    },
     { amount: 100, recipient: TEST_ACCOUNT_2_STX_ADDRESS }
   );
 }
@@ -20,7 +25,7 @@ function requestStxTransfer(page: Page) {
 async function continueToFullScreenPairing(context: BrowserContext) {
   const popup = await context.waitForEvent('page');
 
-  await popup.locator('text="Approve"').click({ timeout: 20_000 });
+  await popup.getByText('Approve', { exact: true }).click({ timeout: 20_000 });
   await popup.getByText('Connect Stacks').click();
 
   await test.expect(popup.getByText('Connect your Ledger in full screen')).toBeVisible();
@@ -42,7 +47,7 @@ test.describe('Ledger device pairing from an RPC popup', () => {
       ...makeLedgerTestAccountWalletState(['stacks']),
       ...getConnectedTestAppPermissionsState(),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('sends the user to full screen to connect the device and ends the request', async ({

@@ -25,7 +25,7 @@ interface GetSbtcDepositsResponse {
 }
 
 async function getSbtcDeposits(apiUrl: string, status: string): Promise<GetSbtcDepositsResponse> {
-  const resp = await axios.get(`${apiUrl}/deposit?status=${status}`, {
+  const resp = await axios.get<GetSbtcDepositsResponse>(`${apiUrl}/deposit?status=${status}`, {
     headers: {
       'Content-Type': 'application/json',
     },

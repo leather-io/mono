@@ -1,4 +1,4 @@
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import type { NetworkConfiguration } from '@leather.io/models';
 import { isEmptyString, isUndefined } from '@leather.io/utils';
@@ -12,9 +12,8 @@ function notCurrentAddressValidatorFactory(currentAddress: string) {
 }
 
 export function notCurrentAddressValidator(currentAddress: string) {
-  return yup.string().test({
-    message: FormErrorMessages.SameAddress,
-    test: notCurrentAddressValidatorFactory(currentAddress),
+  return z.refine<string | undefined>(notCurrentAddressValidatorFactory(currentAddress), {
+    error: FormErrorMessages.SameAddress,
   });
 }
 
@@ -26,18 +25,17 @@ function stxAddressNetworkValidatorFactory(currentNetwork: NetworkConfiguration)
 }
 
 export function stxAddressNetworkValidator(currentNetwork: NetworkConfiguration) {
-  return yup.string().test({
-    message: FormErrorMessages.IncorrectNetworkAddress,
-    test: stxAddressNetworkValidatorFactory(currentNetwork),
+  return z.refine<string | undefined>(stxAddressNetworkValidatorFactory(currentNetwork), {
+    error: FormErrorMessages.IncorrectNetworkAddress,
   });
 }
 
 export function stxAddressValidator(errorMsg: string) {
-  return yup.string().test({
-    message: errorMsg,
-    test(value) {
+  return z.refine<string | undefined>(
+    value => {
       if (isUndefined(value) || isEmptyString(value)) return true;
       return validateStacksAddress(value);
     },
-  });
+    { error: errorMsg }
+  );
 }

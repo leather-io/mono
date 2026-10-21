@@ -10,8 +10,8 @@ export function initContextMenuActions() {
   });
 }
 
-chrome.contextMenus.onClicked.addListener(async args => {
+chrome.contextMenus.onClicked.addListener(args => {
   if (args.menuItemId === 'open_in_new_tab') {
-    await openNewTabWithWallet();
+    void openNewTabWithWallet();
   }
 });

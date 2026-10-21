@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 interface UiClipboard {
-  value: string;
+  value: string | undefined;
   onCopy(): void;
   hasCopied: boolean;
 }
@@ -26,11 +26,12 @@ function copyToClipboard(value: string) {
   }
 }
 
-export function useClipboard(value: string): UiClipboard {
+export function useClipboard(value: string | undefined): UiClipboard {
   const [hasCopied, setHasCopied] = useState(false);
   const timers = useRef<number[]>([]);
 
   function onCopy() {
+    if (value === undefined) return;
     copyToClipboard(value);
     setHasCopied(true);
     timers.current.push(window.setTimeout(() => setHasCopied(false), 1250));

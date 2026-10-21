@@ -4,10 +4,16 @@ import { createRoot } from 'react-dom/client';
 
 import { LedgerError } from '@zondax/ledger-stacks';
 
+import type * as LeatherUtils from '@leather.io/utils';
+
+import type * as GenericLedgerUtils from '@app/features/ledger/utils/generic-ledger-utils';
+import type * as StacksLedgerUtils from '@app/features/ledger/utils/stacks-ledger-utils';
+
 import { makeFakeDmk } from '../../dmk/ledger-dmk.mocks';
 import { fakeLedgerSessionId, makeFakeLedgerStacksApp } from '../../utils/ledger-app.mocks';
 import { LedgerSignMsgContainer } from './ledger-stacks-sign-msg-container';
-import { LedgerMessageSigningContext } from './ledger-stacks-sign-msg.context';
+import { type LedgerMessageSigningContext } from './ledger-stacks-sign-msg.context';
+import type * as LedgerStacksSignMsgContext from './ledger-stacks-sign-msg.context';
 
 Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true);
 
@@ -98,8 +104,7 @@ vi.mock('./steps/sign-stacks-ledger-message', () => ({
 }));
 
 vi.mock('@app/features/ledger/utils/stacks-ledger-utils', async importOriginal => {
-  const actual =
-    await importOriginal<typeof import('@app/features/ledger/utils/stacks-ledger-utils')>();
+  const actual = await importOriginal<typeof StacksLedgerUtils>();
   return {
     ...actual,
     prepareLedgerDeviceStacksAppConnection: () => mocks.prepareConnection,
@@ -117,18 +122,17 @@ vi.mock('@app/features/ledger/dmk/ledger-dmk.context', () => ({
 }));
 
 vi.mock('@app/features/ledger/utils/generic-ledger-utils', async importOriginal => {
-  const actual =
-    await importOriginal<typeof import('@app/features/ledger/utils/generic-ledger-utils')>();
+  const actual = await importOriginal<typeof GenericLedgerUtils>();
   return { ...actual, useCancelLedgerAction: () => false };
 });
 
 vi.mock('@leather.io/utils', async importOriginal => {
-  const actual = await importOriginal<typeof import('@leather.io/utils')>();
+  const actual = await importOriginal<typeof LeatherUtils>();
   return { ...actual, delay: () => Promise.resolve() };
 });
 
 vi.mock('./ledger-stacks-sign-msg.context', async importOriginal => {
-  const actual = await importOriginal<typeof import('./ledger-stacks-sign-msg.context')>();
+  const actual = await importOriginal<typeof LedgerStacksSignMsgContext>();
   return {
     ...actual,
     LedgerMsgSigningProvider(props: { value: LedgerMessageSigningContext }) {

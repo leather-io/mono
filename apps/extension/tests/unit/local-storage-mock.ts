@@ -1,5 +1,5 @@
 export class LocalStorageMock {
-  store: any;
+  store: Record<string, string>;
   constructor() {
     this.store = {};
   }

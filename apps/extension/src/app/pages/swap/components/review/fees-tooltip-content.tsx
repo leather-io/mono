@@ -1,7 +1,7 @@
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { SwapProviderId } from '@leather.io/models';
-import { LiveSwapEstimate } from '@leather.io/state/swap';
+import { type SwapProviderId } from '@leather.io/models';
+import { type LiveSwapEstimate } from '@leather.io/state/swap';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 
