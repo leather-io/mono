@@ -6,7 +6,6 @@ import { bytesToHex } from '@noble/hashes/utils';
 import { type PublicKey } from '@stacks/common';
 import { StacksNetwork } from '@stacks/network';
 import BigNumber from 'bignumber.js';
-import memoize from 'p-memoize';
 
 import type { ComplianceScreeningPoint } from '@leather.io/analytics';
 import {
@@ -103,7 +102,7 @@ interface addressComplianceValidatorParams {
   screeningPoint: ComplianceScreeningPoint;
 }
 
-async function rawAddressComplianceValidator({
+export async function addressComplianceValidator({
   address,
   shouldCheckCompliance,
   screeningPoint,
@@ -128,7 +127,3 @@ async function rawAddressComplianceValidator({
   }
   return true;
 }
-
-export const addressComplianceValidator = memoize(rawAddressComplianceValidator, {
-  cacheKey: ([argument]) => argument.address,
-});
