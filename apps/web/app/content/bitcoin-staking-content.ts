@@ -34,6 +34,22 @@ export const bitcoinStakingContent = {
     connectTitle: `Connect Leather to see your staking`,
     connectDescription: `Once connected, this page takes you straight to the pool you are staking with.`,
   },
+  connectGate: {
+    connectStep: `Connect Leather to stake`,
+    installStep: `Install Leather to stake`,
+    connectAction: `Connect`,
+    installAction: `Install`,
+    balancePrompt: {
+      connect: `Connect Leather to see your balance`,
+      install: `Install Leather to see your balance`,
+    },
+    connectRowTitle: `Connect`,
+    connectRowDescription: `Connect Leather to load your staking position`,
+    installRowTitle: `Install`,
+    installRowDescription: `Add Leather extension to your browser`,
+    updateTitle: `Connect Leather to update your staking`,
+    updateDescription: `Your current position and available balance come from your wallet, so this page needs a connection before it can load.`,
+  },
   cycleStatus: {
     openLabel: `Staking closes in`,
     closingSoonLabel: `Closing soon`,
