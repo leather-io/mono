@@ -68,7 +68,7 @@ export function getBitcoinCoinTypeIndexByNetwork(network: BitcoinNetworkModes) {
 }
 
 export function deriveAddressIndexKeychainFromAccount(keychain: HDKey) {
-  if (keychain.depth !== Number(DerivationPathDepth.Account))
+  if (keychain.depth !== DerivationPathDepth.Account)
     throw new Error('Keychain passed is not an account');
 
   return ({ changeIndex, addressIndex }: { changeIndex: number; addressIndex: number }) =>

@@ -86,7 +86,7 @@ export function deriveBitcoinPayerFromAccount(descriptor: string, network: Bitco
   const accountKeychain = deriveKeychainFromXpub(extractExtendedPublicKeyFromPolicy(descriptor));
   const paymentType = inferPaymentTypeFromPath(keyOrigin);
 
-  if (accountKeychain.depth !== Number(DerivationPathDepth.Account))
+  if (accountKeychain.depth !== DerivationPathDepth.Account)
     throw new Error('Keychain passed is not an account');
 
   return ({ change, addressIndex }: BitcoinPayerInfo) => {

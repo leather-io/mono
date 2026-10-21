@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { DerivedAmounts, SwapInternalState } from '../swap-state.types';
+import { type DerivedAmounts, type SwapInternalState } from '../swap-state.types';
 import {
   createAccountSwapAsset,
   defaultBtcAsset,
@@ -409,7 +409,7 @@ describe('swap validation', () => {
   describe('slippage validation', () => {
     it('returns REQUIRED when slippage is null or undefined', () => {
       const context = createValidationContext({
-        state: { slippage: null as unknown as number },
+        state: { slippage: undefined },
       });
 
       const result = runValidation(context);
@@ -500,7 +500,7 @@ describe('swap validation', () => {
             baseSwapAsset: null,
             targetSwapAsset: null,
             baseAmount: '',
-            slippage: null as unknown as number,
+            slippage: undefined,
           },
         });
 
@@ -580,7 +580,7 @@ describe('swap validation', () => {
         const context = createValidationContext({
           state: {
             baseAmount: '',
-            slippage: null as unknown as number,
+            slippage: undefined,
           },
         });
 
@@ -784,7 +784,7 @@ describe('swap validation', () => {
 
       it('REQUIRED issue does not have context', () => {
         const context = createValidationContext({
-          state: { slippage: null as unknown as number },
+          state: { slippage: undefined },
         });
 
         const result = runValidation(context);
@@ -803,7 +803,7 @@ describe('swap validation', () => {
             baseSwapAsset: null,
             targetSwapAsset: null,
             baseAmount: '',
-            slippage: null as unknown as number,
+            slippage: undefined,
           },
         });
 

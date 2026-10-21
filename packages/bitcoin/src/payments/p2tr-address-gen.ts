@@ -36,7 +36,7 @@ export function makeTaprootAddressIndexDerivationPath({
   );
 }
 export function deriveTaprootAccount(keychain: HDKey, network: BitcoinNetworkModes) {
-  if (keychain.depth !== Number(DerivationPathDepth.Root))
+  if (keychain.depth !== DerivationPathDepth.Root)
     throw new Error('Keychain passed is not an account');
 
   return (accountIndex: number): BitcoinAccount => ({
@@ -58,7 +58,7 @@ export function getTaprootPayment(publicKey: Uint8Array, network: BitcoinNetwork
 }
 
 export function getTaprootPaymentFromAddressIndex(keychain: HDKey, network: BitcoinNetworkModes) {
-  if (keychain.depth !== Number(DerivationPathDepth.AddressIndex))
+  if (keychain.depth !== DerivationPathDepth.AddressIndex)
     throw new Error('Keychain passed is not an address index');
 
   if (!keychain.publicKey) throw new Error('Keychain has no public key');
@@ -89,7 +89,7 @@ export function getTaprootAddress({
 }: GetAddressArgs) {
   if (!keychain) throw new Error('Expected keychain to be provided');
 
-  if (keychain.depth !== Number(DerivationPathDepth.Account))
+  if (keychain.depth !== DerivationPathDepth.Account)
     throw new Error('Expects keychain to be on the account index');
 
   const addresskeychain = deriveAddressIndexKeychainFromAccount(keychain)({

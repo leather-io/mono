@@ -41,8 +41,7 @@ export function deriveNativeSegwitAccountFromRootKeychain(
   keychain: HDKey,
   network: BitcoinNetworkModes
 ) {
-  if (keychain.depth !== Number(DerivationPathDepth.Root))
-    throw new Error('Keychain passed is not a root');
+  if (keychain.depth !== DerivationPathDepth.Root) throw new Error('Keychain passed is not a root');
   return (accountIndex: number): BitcoinAccount => ({
     type: 'p2wpkh',
     network,
@@ -56,7 +55,7 @@ export function getNativeSegwitPaymentFromAddressIndex(
   keychain: HDKey,
   network: BitcoinNetworkModes
 ) {
-  if (keychain.depth !== Number(DerivationPathDepth.AddressIndex))
+  if (keychain.depth !== DerivationPathDepth.AddressIndex)
     throw new Error('Keychain passed is not an address index');
 
   if (!keychain.publicKey) throw new Error('Keychain does not have a public key');
@@ -100,7 +99,7 @@ export function getNativeSegwitAddress({
 }: GetAddressArgs) {
   if (!keychain) throw new Error('Expected keychain to be provided');
 
-  if (keychain.depth !== Number(DerivationPathDepth.Account))
+  if (keychain.depth !== DerivationPathDepth.Account)
     throw new Error('Expects keychain to be on the account index');
 
   const addressKeychain = deriveAddressIndexKeychainFromAccount(keychain)({

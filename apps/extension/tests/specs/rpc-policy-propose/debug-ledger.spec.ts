@@ -64,7 +64,7 @@ test.describe('DEBUG ledger propose', () => {
       ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
       ...policyStateOverrides({ policies: [stacksPolicy] }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('debug cancel', async ({ page, context }) => {
@@ -74,7 +74,6 @@ test.describe('DEBUG ledger propose', () => {
       context.waitForEvent('page'),
       openStxCallContract(page, TEST_ACCOUNT_1_STX_ADDRESS),
     ]);
-    await popup.waitForTimeout(1500);
 
     const proposeButton = popup.getByRole('button', { name: 'Propose transaction' });
     await test.expect(proposeButton).toBeEnabled({ timeout: 20_000 });
@@ -85,12 +84,16 @@ test.describe('DEBUG ledger propose', () => {
       .toBeVisible({ timeout: 20_000 });
 
     await popup.keyboard.press('Escape');
-    await popup.waitForTimeout(3000);
 
     // Try clicking the header close icon if sheet still open
-    const stillConnect = await popup.getByText('Connect & unlock your Ledger').isVisible();
-    if (stillConnect) {
-      await popup.getByRole('button', { name: 'Close' }).first().click();
-    }
+    const connectSheetTitle = popup.getByText('Connect & unlock your Ledger');
+    await test
+      .expect(async () => {
+        if (await connectSheetTitle.isVisible()) {
+          await popup.getByRole('button', { name: 'Close' }).first().click();
+        }
+        await test.expect(connectSheetTitle).toBeHidden({ timeout: 1000 });
+      })
+      .toPass();
   });
 });

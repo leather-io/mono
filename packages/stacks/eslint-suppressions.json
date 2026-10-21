@@ -41,7 +41,7 @@
       "count": 2
     },
     "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 2
+      "count": 1
     },
     "no-restricted-syntax": {
       "count": 1
@@ -123,11 +123,6 @@
     },
     "no-restricted-syntax": {
       "count": 1
-    }
-  },
-  "src/validation/address-validation.ts": {
-    "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 2
     }
   },
   "src/validation/amount-validation.ts": {
