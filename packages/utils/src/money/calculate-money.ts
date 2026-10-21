@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { type MarketData, type Money, type NumType, formatMarketPair } from '@leather.io/models';
 
 import { initBigNumber } from '../math/helpers';
-import { isNumber } from '../type-guards';
+import { isNumber, isUndefined } from '../type-guards';
 import { createMoney } from './create-money';
 import { isMoney } from './is-money';
 
@@ -59,7 +59,8 @@ export function convertToMoneyTypeWithDefaultOfZero(
   num?: NumType,
   decimals?: number
 ) {
-  return createMoney(initBigNumber(num ?? 0), symbol.toUpperCase(), decimals);
+  const amount = isUndefined(num) ? initBigNumber(0) : initBigNumber(num);
+  return createMoney(amount, symbol.toUpperCase(), decimals);
 }
 
 export function convertAmountToBaseUnit(num: Money | BigNumber, decimals?: number) {
