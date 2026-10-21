@@ -1,4 +1,4 @@
-import { Money } from './money.model';
+import { type Money } from './money.model';
 
 export interface BaseCryptoAssetBalance {
   /**
