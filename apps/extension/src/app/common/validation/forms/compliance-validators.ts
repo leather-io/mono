@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import type { ComplianceScreeningPoint } from '@leather.io/analytics';
-import { getComplianceService } from '@leather.io/services';
+import { getComplianceService, isOfflineComplianceCheckReason } from '@leather.io/services';
 import { isEmptyString, isUndefined } from '@leather.io/utils';
 
 import { stringField } from '@shared/forms/field-schemas';
@@ -26,7 +26,7 @@ export function complianceValidator(
         });
         return false;
       }
-      if (result.status === 'unavailable') {
+      if (result.status === 'unavailable' && !isOfflineComplianceCheckReason(result.reason)) {
         analytics.track('compliance_check_unavailable', {
           address: value,
           reason: result.reason,

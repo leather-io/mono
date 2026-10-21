@@ -4,6 +4,7 @@ import { useQueries } from '@tanstack/react-query';
 
 import type { ComplianceScreeningPoint } from '@leather.io/analytics';
 import { createAddressComplianceCheckQueryConfig } from '@leather.io/queries';
+import { isOfflineComplianceCheckReason } from '@leather.io/services';
 import { ensureArray, isEmptyString, uniqueArray } from '@leather.io/utils';
 
 import { analytics } from '@shared/utils/analytics';
@@ -42,6 +43,7 @@ export function useBreakOnNonCompliantEntity(
   complianceChecks.forEach(({ address: checkedAddress, check }) => {
     if (
       check?.status === 'unavailable' &&
+      !isOfflineComplianceCheckReason(check.reason) &&
       !trackedUnavailableAddresses.current.has(checkedAddress)
     ) {
       trackedUnavailableAddresses.current.add(checkedAddress);

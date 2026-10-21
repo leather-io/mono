@@ -16,7 +16,7 @@ import {
 } from '@leather.io/bitcoin';
 import { type BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
 import { defaultStacksFees } from '@leather.io/query';
-import { getComplianceService } from '@leather.io/services';
+import { getComplianceService, isOfflineComplianceCheckReason } from '@leather.io/services';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import {
   convertAmountToBaseUnit,
@@ -119,7 +119,7 @@ async function rawAddressComplianceValidator({
     });
     return false;
   }
-  if (result.status === 'unavailable') {
+  if (result.status === 'unavailable' && !isOfflineComplianceCheckReason(result.reason)) {
     analytics.track('compliance_check_unavailable', {
       address,
       reason: result.reason,
