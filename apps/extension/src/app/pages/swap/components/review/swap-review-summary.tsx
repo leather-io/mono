@@ -38,16 +38,10 @@ export function SwapReviewSummary({
       </Flex>
 
       <Stack gap="space.01" alignItems="center">
-        <styled.span
-          textStyle="heading.03"
-          textTransform="none"
-          fontSize={24}
-          lineHeight={1.2}
-          opacity={0.5}
-        >
+        <styled.span textStyle="heading.04" opacity={0.5}>
           -{formatCurrency(baseAmount, { compactThreshold: Infinity })}
         </styled.span>
-        <styled.span textStyle="heading.03" textTransform="none" fontSize={24} lineHeight={1.2}>
+        <styled.span textStyle="heading.04">
           +{formatCurrency(targetAmount, { compactThreshold: Infinity })}
         </styled.span>
       </Stack>
