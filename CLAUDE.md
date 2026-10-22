@@ -142,3 +142,4 @@ pnpm --filter @leather.io/{package} typecheck
 - **Add a React Query hook** → `packages/queries/` or app-level `src/queries/`
 - **Run a single package's tests** → `pnpm --filter @leather.io/{package} test:unit`
 - **Add or fix an extension E2E test** → `apps/extension/tests`, use the `write-extension-e2e` skill
+- **Verify an extension screen renders** → `pnpm --filter @leather.io/extension verify`, use the `verify-extension` skill

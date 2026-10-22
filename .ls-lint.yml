@@ -18,6 +18,7 @@ ignore:
   - apps/mobile/android
   - apps/mobile/artifacts
   - apps/mobile/ios
+  - apps/extension/.verify
   - apps/extension/dist
   # Skip names in [brackets] in file-based routing, as they represent variables:
   - apps/mobile/src/app/**//*\[*\]*

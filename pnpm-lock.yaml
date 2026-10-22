@@ -504,6 +504,9 @@ importers:
       blns:
         specifier: 2.0.4
         version: 2.0.4
+      commander:
+        specifier: 12.0.0
+        version: 12.0.0
       concurrently:
         specifier: 8.2.2
         version: 8.2.2
@@ -537,6 +540,9 @@ importers:
       ts-unused-exports:
         specifier: 10.0.1
         version: 10.0.1(typescript@5.9.3)
+      tsx:
+        specifier: 4.21.0
+        version: 4.21.0
       type-fest:
         specifier: 4.30.2
         version: 4.30.2

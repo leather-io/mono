@@ -19,6 +19,7 @@ coverage
 release_body.md
 trace*
 /test-results/
+.verify/
 /playwright-report/
 /playwright/.cache/
 leather-styles

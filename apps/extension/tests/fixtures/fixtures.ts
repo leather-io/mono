@@ -1,4 +1,10 @@
-import { type BrowserContext, type Page, test as base, chromium } from '@playwright/test';
+import { type BrowserContext, type Page, test as base } from '@playwright/test';
+import {
+  type LaunchedExtension,
+  disableAnimations,
+  getInitialPage,
+  launchExtensionContext,
+} from '@tests/fixtures/launch-extension';
 import { GlobalPage } from '@tests/page-object-models/global.page';
 import { HomePage } from '@tests/page-object-models/home.page';
 import { NetworkPage } from '@tests/page-object-models/network.page';
@@ -11,6 +17,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 interface TestFixtures {
+  launchedExtension: LaunchedExtension;
   context: BrowserContext;
   page: Page;
   extensionId: string;
@@ -35,42 +42,23 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const test = base.extend<TestFixtures>({
   // Playwright always needs object destructuring for fixtures https://github.com/microsoft/playwright/issues/14590
   // eslint-disable-next-line no-empty-pattern
-  async context({}, use) {
+  async launchedExtension({}, use) {
     const pathToExtension = path.join(__dirname, '../../dist');
-    const context = await chromium.launchPersistentContext('', {
-      headless: true,
-      channel: 'chromium',
-      permissions: ['clipboard-read'],
-      args: [
-        `--disable-extensions-except=${pathToExtension}`,
-        `--load-extension=${pathToExtension}`,
-        '--use-gl=egl',
-      ],
-    });
-    await use(context);
-    await context.close();
-    await context.browser()?.close();
+    const launchedExtension = await launchExtensionContext(pathToExtension);
+    await use(launchedExtension);
+    await launchedExtension.context.close();
+    await launchedExtension.context.browser()?.close();
+  },
+  async context({ launchedExtension }, use) {
+    await use(launchedExtension.context);
   },
   async page({ context }, use) {
-    const pages = context.pages();
-    const page = pages.length > 0 ? pages[0] : await context.newPage();
-    await page.addStyleTag({
-      content: `
-        *, *::before, *::after {
-          animation-duration: 0s !important;
-          animation-delay: 0s !important;
-          transition-duration: 0s !important;
-          transition-delay: 0s !important;
-        }
-      `,
-    });
+    const page = await getInitialPage(context);
+    await disableAnimations(page);
     await use(page);
   },
-  async extensionId({ context }, use) {
-    let [background] = context.serviceWorkers();
-    if (!background) background = await context.waitForEvent('serviceworker');
-    const extensionId = background.url().split('/')[2];
-    await use(extensionId);
+  async extensionId({ launchedExtension }, use) {
+    await use(launchedExtension.extensionId);
   },
   async globalPage({ page }, use) {
     await use(new GlobalPage(page));

@@ -11,6 +11,7 @@ package.json
 CHANGELOG.md
 **/locales/**/messages.ts
 coverage/
+.verify/
 apps/mobile/index.js
 *.lottie.json
 worker-configuration.d.ts

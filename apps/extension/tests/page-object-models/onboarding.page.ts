@@ -556,7 +556,7 @@ export class OnboardingPage {
     );
   }
 
-  private async seedWalletStateAndWaitFor(
+  async seedWalletStateAndWaitFor(
     id: string,
     walletState: object,
     isReady: () => Promise<boolean>,

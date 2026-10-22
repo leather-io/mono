@@ -34,7 +34,8 @@
     "test:coverage": "vitest run --coverage",
     "test:integration": "playwright test",
     "test:unit": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "verify": "tsx --tsconfig tsconfig.json tests/cli/verify.ts"
   },
   "dependencies": {
     "@bitcoinerlab/secp256k1": "1.0.2",
@@ -163,6 +164,7 @@
     "@types/zxcvbn": "4.4.5",
     "@vitejs/plugin-react": "5.2.0",
     "blns": "2.0.4",
+    "commander": "12.0.0",
     "concurrently": "8.2.2",
     "cross-env": "7.0.3",
     "deepmerge": "4.3.1",
@@ -174,6 +176,7 @@
     "rollup-plugin-sourcemaps2": "0.5.8",
     "rollup-plugin-visualizer": "7.1.1",
     "ts-unused-exports": "10.0.1",
+    "tsx": "4.21.0",
     "type-fest": "4.30.2",
     "typescript": "5.9.3",
     "vite": "7.3.2",
