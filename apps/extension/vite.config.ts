@@ -85,7 +85,6 @@ const runtimeEnvironmentKeys = [
   'PR_NUMBER',
   'REACT_QUERY_DEVTOOLS_ENABLED',
   'SENTRY_DSN',
-  'TEST_ENV',
   'WALLET_ENVIRONMENT',
 ];
 

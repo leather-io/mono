@@ -70,12 +70,6 @@ function getHostnameFromPort(port: chrome.runtime.Port) {
 //
 // Playwright does not currently support Chrome extension popup testing:
 // https://github.com/microsoft/playwright/issues/5593
-async function openRequestInFullPage(path: string | To, urlParams: URLSearchParams) {
-  return chrome.tabs.create({
-    url: chrome.runtime.getURL(`index.html#${String(path)}?${urlParams.toString()}`),
-  });
-}
-
 interface ListenForPopupCloseArgs {
   // ID that comes from newly created window
   id?: number;
@@ -171,15 +165,11 @@ export async function createConnectingAppSearchParamsWithLastKnownAccount(
   return { urlParams, origin, frameId, tabId };
 }
 
-const IS_TEST_ENV = process.env.TEST_ENV === 'true';
-
 export async function triggerRequestPopupWindowOpen(path: RouteUrls, urlParams: URLSearchParams) {
-  if (IS_TEST_ENV) return openRequestInFullPage(path, urlParams);
   return popup({ url: `/popup.html#${path}?${urlParams.toString()}` });
 }
 
 export async function triggerSwapWindowOpen(path: To, urlParams: URLSearchParams) {
-  if (IS_TEST_ENV) return openRequestInFullPage(path, urlParams);
   return popup({ url: `/popup.html#${String(path)}?${urlParams.toString()}` });
 }
 

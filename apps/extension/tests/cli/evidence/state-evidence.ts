@@ -9,9 +9,25 @@ export interface SessionEvidence {
   encryptionKeyPresent: boolean;
 }
 
+const queryRecordSchema = z.object({
+  queryKey: z.unknown(),
+  status: z.string(),
+  fetchStatus: z.string(),
+  dataUpdatedAt: z.number(),
+});
+
+export type QueryRecord = z.infer<typeof queryRecordSchema>;
+
+export interface QueryCacheSummary {
+  count: number;
+  byStatus: Record<string, number>;
+}
+
 export interface StateEvidence {
   slices: Record<string, unknown>;
   session: SessionEvidence;
+  location: string | null;
+  queries: QueryRecord[] | null;
 }
 
 export const redactedValue = '[redacted]';
@@ -20,6 +36,7 @@ const redactedSoftwareKeyFields = new Set(['salt', 'encryptedSecretKey']);
 
 const recordSchema = z.record(z.string(), z.unknown());
 const sessionAreaSchema = z.object({ encryptionKey: z.string().optional() });
+const queriesSchema = z.array(queryRecordSchema).nullable();
 
 export function redactSoftwareKeys(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(redactSoftwareKeys);
@@ -51,6 +68,29 @@ export function selectSlices(
   return selected;
 }
 
+export function summarizeQueries(queries: readonly QueryRecord[] | null): QueryCacheSummary | null {
+  if (queries === null) return null;
+  const byStatus: Record<string, number> = {};
+  for (const query of queries) byStatus[query.status] = (byStatus[query.status] ?? 0) + 1;
+  return { count: queries.length, byStatus };
+}
+
+async function readDebugSnapshot(page: Page) {
+  const snapshot = await page.evaluate(() => {
+    const location =
+      typeof window.debug.getRouterLocation === 'function'
+        ? window.debug.getRouterLocation()
+        : null;
+    const queries =
+      typeof window.debug.getQueryCacheSummary === 'function'
+        ? window.debug.getQueryCacheSummary()
+        : null;
+    return { location, queries };
+  });
+  const queries = queriesSchema.safeParse(snapshot.queries);
+  return { location: snapshot.location, queries: queries.success ? queries.data : null };
+}
+
 export async function captureState(
   page: Page,
   slices: readonly PersistedSliceKey[]
@@ -60,8 +100,11 @@ export async function captureState(
     await page.evaluate(() => chrome.storage.session.get(['encryptionKey']))
   );
   const encryptionKey = sessionArea.success ? sessionArea.data.encryptionKey : undefined;
+  const { location, queries } = await readDebugSnapshot(page);
   return {
     slices: selectSlices(store, slices),
     session: { encryptionKeyPresent: encryptionKey !== undefined && encryptionKey.length > 0 },
+    location,
+    queries,
   };
 }

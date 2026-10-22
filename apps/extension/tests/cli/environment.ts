@@ -20,6 +20,9 @@ const htmlExtension = '.html';
 const excludedHtmlFiles = new Set(['bundle-analysis.html']);
 const lockfileName = 'pnpm-lock.yaml';
 const unknownCommit = 'unknown';
+const launchDarklyKeyName = 'LAUNCH_DARKLY_KEY';
+const envFileName = '.env';
+const launchDarklyKeyLinePattern = /^\s*LAUNCH_DARKLY_KEY\s*=\s*\S+/;
 const buildOutputBufferBytes = 64 * 1024 * 1024;
 
 const buildStampSchema = z.object({
@@ -190,13 +193,23 @@ function runCommand(file: string, args: string[]): string | undefined {
   return result.stdout;
 }
 
-function findPortListener(): DevServerProcess | undefined {
-  const output = runCommand('lsof', ['-nP', `-iTCP:${devServerPort}`, '-sTCP:LISTEN', '-Fp']);
+export function findPortListener(port: number): DevServerProcess | undefined {
+  const output = runCommand('lsof', ['-nP', `-iTCP:${port}`, '-sTCP:LISTEN', '-Fp']);
   const pidLine = output?.split('\n').find(line => line.startsWith('p'));
   if (pidLine === undefined) return undefined;
   const pid = Number.parseInt(pidLine.slice(1), 10);
   if (Number.isNaN(pid)) return undefined;
-  return { pid, reason: `listens on TCP ${devServerPort}` };
+  return { pid, reason: `listens on TCP ${port}` };
+}
+
+export function hasLaunchDarklyKey(extensionRoot: string): boolean {
+  const fromEnvironment = process.env[launchDarklyKeyName];
+  if (fromEnvironment !== undefined && fromEnvironment.length > 0) return true;
+  const envFilePath = path.join(extensionRoot, envFileName);
+  if (!existsSync(envFilePath)) return false;
+  return readFileSync(envFilePath, 'utf8')
+    .split('\n')
+    .some(line => launchDarklyKeyLinePattern.test(line));
 }
 
 function readProcessCwd(pid: number): string | undefined {
@@ -223,7 +236,7 @@ function findViteDevProcess(worktreeRoot: string): DevServerProcess | undefined 
 }
 
 export function detectDevServer(worktreeRoot: string): DevServerProcess | undefined {
-  return findPortListener() ?? findViteDevProcess(worktreeRoot);
+  return findPortListener(devServerPort) ?? findViteDevProcess(worktreeRoot);
 }
 
 export function runTestBuild(extensionRoot: string, logPath: string): BuildResult {

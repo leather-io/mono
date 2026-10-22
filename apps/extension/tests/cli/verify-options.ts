@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 import { type PersistedSliceKey, persistWhitelist } from '@shared/storage/persist-whitelist';
 
+import { parseFlagOverrides } from './feature-flags';
+import { type MocksPlan, parseMocksSpec } from './mock-registry';
 import { type ResolvedReadyTarget, resolveReadyTarget } from './selector-registry';
 import { VerifyUsageError } from './verify-errors';
 
@@ -12,6 +14,9 @@ export type SessionMode = (typeof sessionModes)[number];
 export const consoleLevels = ['error', 'warning', 'all'] as const;
 export type ConsoleLevel = (typeof consoleLevels)[number];
 
+export const accountTypes = ['software', 'ledger', 'mixed', 'policy'] as const;
+export type AccountType = (typeof accountTypes)[number];
+
 export const defaultRoute = '/';
 export const defaultSessionMode: SessionMode = 'signed-in';
 export const defaultNetworkId = 'mainnet';
@@ -19,7 +24,10 @@ export const defaultShotMode = 'viewport';
 export const defaultConsoleLevel: ConsoleLevel = 'all';
 export const defaultStateSlices = 'active,networks,wallets';
 export const defaultTimeoutMs = 15_000;
+export const defaultAccountType: AccountType = 'software';
+export const defaultMocksSpec = 'default';
 export const verifyOutputDirName = '.verify';
+export const catalogRpcPrefix = 'catalog:';
 
 const allSlicesKeyword = 'all';
 const shotTestIdPrefix = 'testid:';
@@ -44,6 +52,20 @@ export interface TestIdShot {
 
 export type ShotMode = ViewportShot | FullPageShot | NoShot | TestIdShot;
 
+export interface ParamsRpcPlan {
+  source: 'params';
+  method: string;
+  paramsFile: string;
+}
+
+export interface CatalogRpcPlan {
+  source: 'catalog';
+  method: string;
+  catalogId: string;
+}
+
+export type RpcPlan = ParamsRpcPlan | CatalogRpcPlan;
+
 export interface VerifyPlan {
   route: string;
   session: SessionMode;
@@ -56,15 +78,22 @@ export interface VerifyPlan {
   outDir: string;
   build: boolean;
   timeoutMs: number;
+  flags: Record<string, boolean>;
+  mocks: MocksPlan;
+  accountType: AccountType;
+  rpc: RpcPlan | undefined;
+  onboard: boolean;
+  mnemonicFromGh: boolean;
 }
 
 export interface VerifyOptionsContext {
   extensionRoot: string;
   now: Date;
+  catalogMethods: ReadonlyMap<string, string>;
 }
 
 const rawOptionsSchema = z.object({
-  route: z.string().min(1).default(defaultRoute),
+  route: z.string().min(1).optional(),
   param: z.array(z.string()).default([]),
   session: z.enum(sessionModes).default(defaultSessionMode),
   network: z.string().min(1).default(defaultNetworkId),
@@ -76,6 +105,13 @@ const rawOptionsSchema = z.object({
   out: z.string().optional(),
   build: z.boolean().default(true),
   timeout: z.coerce.number().int().positive().default(defaultTimeoutMs),
+  flag: z.array(z.string()).default([]),
+  mocks: z.string().default(defaultMocksSpec),
+  accountType: z.enum(accountTypes).optional(),
+  rpc: z.string().min(1).optional(),
+  params: z.string().min(1).optional(),
+  onboard: z.boolean().default(false),
+  mnemonicFromGh: z.boolean().default(false),
 });
 
 const sliceSchema = z.enum(persistWhitelist);
@@ -148,30 +184,78 @@ export function parseStateSlices(state: string): PersistedSliceKey[] {
 }
 
 export function routeSlug(route: string): string {
-  const slug = route
-    .replace(/[^A-Za-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .toLowerCase();
+  const slug = route.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   if (slug.length === 0) return fallbackRouteSlug;
   return slug;
 }
 
-export function defaultOutDir(extensionRoot: string, route: string, now: Date): string {
+export function defaultOutDir(extensionRoot: string, label: string, now: Date): string {
   const timestamp = now.toISOString().replace(/[:.]/g, '-');
-  return path.join(extensionRoot, verifyOutputDirName, `${timestamp}-${routeSlug(route)}`);
+  return path.join(extensionRoot, verifyOutputDirName, `${timestamp}-${routeSlug(label)}`);
+}
+
+export function parseRpcPlan(
+  rpc: string,
+  params: string | undefined,
+  catalogMethods: ReadonlyMap<string, string>
+): RpcPlan {
+  if (rpc.startsWith(catalogRpcPrefix)) {
+    const catalogId = rpc.slice(catalogRpcPrefix.length);
+    const method = catalogMethods.get(catalogId);
+    if (method === undefined) {
+      throw new VerifyUsageError(
+        `Unknown catalog id "${catalogId}". Known ids: ${[...catalogMethods.keys()].sort().join(', ')}`
+      );
+    }
+    if (params !== undefined) {
+      throw new VerifyUsageError('--params only applies to a bare --rpc method, not a catalog id');
+    }
+    return { source: 'catalog', method, catalogId };
+  }
+  if (params === undefined) {
+    throw new VerifyUsageError(`--rpc ${rpc} needs --params <file.json> with the request params`);
+  }
+  return { source: 'params', method: rpc, paramsFile: path.resolve(params) };
 }
 
 export function parseVerifyOptions(
   rawOptions: unknown,
-  { extensionRoot, now }: VerifyOptionsContext
+  { extensionRoot, now, catalogMethods }: VerifyOptionsContext
 ): VerifyPlan {
   const parsed = rawOptionsSchema.safeParse(rawOptions);
   if (!parsed.success) throw new VerifyUsageError(z.prettifyError(parsed.error));
   const options = parsed.data;
-  const route = substituteRouteParams(options.route, parseRouteParams(options.param));
+  const rpc =
+    options.rpc === undefined
+      ? undefined
+      : parseRpcPlan(options.rpc, options.params, catalogMethods);
+  if (rpc !== undefined && options.session !== 'signed-in') {
+    throw new VerifyUsageError('--rpc needs --session signed-in');
+  }
+  if (rpc !== undefined && options.route !== undefined) {
+    throw new VerifyUsageError('--route cannot be combined with --rpc; the popup is the subject');
+  }
+  if (rpc === undefined && options.params !== undefined) {
+    throw new VerifyUsageError('--params only applies together with --rpc');
+  }
+  const accountType = options.accountType ?? defaultAccountType;
+  if (options.accountType !== undefined && options.session !== 'signed-in') {
+    throw new VerifyUsageError('--account-type only applies to --session signed-in');
+  }
+  if (options.onboard && options.session !== 'signed-out') {
+    throw new VerifyUsageError('--onboard only applies to --session signed-out');
+  }
+  if (options.mnemonicFromGh && !options.onboard) {
+    throw new VerifyUsageError('--mnemonic-from-gh only applies together with --onboard');
+  }
+  const route = substituteRouteParams(
+    options.route ?? defaultRoute,
+    parseRouteParams(options.param)
+  );
+  const outDirLabel = rpc === undefined ? route : rpc.method;
   const outDir =
     options.out === undefined
-      ? defaultOutDir(extensionRoot, route, now)
+      ? defaultOutDir(extensionRoot, outDirLabel, now)
       : path.resolve(options.out);
   return {
     route,
@@ -185,5 +269,11 @@ export function parseVerifyOptions(
     outDir,
     build: options.build,
     timeoutMs: options.timeout,
+    flags: parseFlagOverrides(options.flag),
+    mocks: parseMocksSpec(options.mocks),
+    accountType,
+    rpc,
+    onboard: options.onboard,
+    mnemonicFromGh: options.mnemonicFromGh,
   };
 }

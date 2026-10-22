@@ -3,8 +3,10 @@ import * as reduxPersist from 'redux-persist';
 import { HIRO_API_BASE_URL_MAINNET } from '@leather.io/models';
 import { getHiroApiRateLimiter } from '@leather.io/query';
 
+import { IS_TEST_ENV } from '@shared/environment';
 import { logger } from '@shared/logger';
 import { getLogsFromBrowserStorage } from '@shared/logger-storage';
+import { backgroundErrorsStorageKey } from '@shared/storage/background-errors';
 import { persistConfig } from '@shared/storage/redux-persist';
 
 import { queryClient } from './common/persistence';
@@ -13,7 +15,7 @@ import { selectActiveAccount } from './store/active/active.selectors';
 import { stxChainSlice } from './store/chains/stx-chain.slice';
 import { settingsSlice } from './store/settings/settings.slice';
 
-const debug = {
+const baseDebug = {
   async printDiagnosticInfo() {
     const logs = await getLogsFromBrowserStorage();
     // eslint-disable-next-line no-console
@@ -70,6 +72,30 @@ const debug = {
     void chrome.storage.session.clear();
   },
 };
+
+const testEnvironmentDebug = {
+  getRouterLocation() {
+    return window.location.hash;
+  },
+  getQueryCacheSummary() {
+    return queryClient
+      .getQueryCache()
+      .getAll()
+      .map(query => ({
+        queryKey: query.queryKey,
+        status: query.state.status,
+        fetchStatus: query.state.fetchStatus,
+        dataUpdatedAt: query.state.dataUpdatedAt,
+      }));
+  },
+  async getBackgroundErrors() {
+    const stored = await chrome.storage.session.get([backgroundErrorsStorageKey]);
+    const errors: unknown = stored[backgroundErrorsStorageKey];
+    return errors;
+  },
+};
+
+const debug = { ...baseDebug, ...(IS_TEST_ENV ? testEnvironmentDebug : {}) };
 
 declare global {
   interface Window {

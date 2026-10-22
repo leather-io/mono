@@ -8,7 +8,14 @@ import {
   substituteRouteParams,
 } from './verify-options';
 
-const optionsContext = { extensionRoot: '/ext', now: new Date('2026-10-22T10:00:00.000Z') };
+const optionsContext = {
+  extensionRoot: '/ext',
+  now: new Date('2026-10-22T10:00:00.000Z'),
+  catalogMethods: new Map([
+    ['signMessage-p2wpkh', 'signMessage'],
+    ['getAddresses', 'getAddresses'],
+  ]),
+};
 
 describe('parseVerifyOptions', () => {
   test('applies the defaults around the required ready target', () => {
@@ -28,6 +35,12 @@ describe('parseVerifyOptions', () => {
       outDir: '/ext/.verify/2026-10-22T10-00-00-000Z-root',
       build: true,
       timeoutMs: 15_000,
+      flags: {},
+      mocks: { mode: 'default', extras: [] },
+      accountType: 'software',
+      rpc: undefined,
+      onboard: false,
+      mnemonicFromGh: false,
     });
   });
 
@@ -62,6 +75,87 @@ describe('parseVerifyOptions', () => {
     expect(() => parseVerifyOptions({ ready: 'x', timeout: '0' }, optionsContext)).toThrow(
       VerifyUsageError
     );
+  });
+
+  test('parses flags, extra mocks and an account type', () => {
+    const plan = parseVerifyOptions(
+      {
+        ready: 'x',
+        flag: ['releaseOnramperBuy=false'],
+        mocks: 'default,+mockBnsV2NamesRequest',
+        accountType: 'ledger',
+      },
+      optionsContext
+    );
+    expect(plan).toMatchObject({
+      flags: { releaseOnramperBuy: false },
+      mocks: { mode: 'default', extras: ['mockBnsV2NamesRequest'] },
+      accountType: 'ledger',
+    });
+  });
+
+  test('names the output directory after the rpc method', () => {
+    const plan = parseVerifyOptions(
+      { ready: 'x', rpc: 'catalog:signMessage-p2wpkh' },
+      optionsContext
+    );
+    expect(plan.rpc).toEqual({
+      source: 'catalog',
+      method: 'signMessage',
+      catalogId: 'signMessage-p2wpkh',
+    });
+    expect(plan.outDir).toBe('/ext/.verify/2026-10-22T10-00-00-000Z-signMessage');
+  });
+
+  test('resolves the params file for a bare rpc method', () => {
+    const plan = parseVerifyOptions(
+      { ready: 'x', rpc: 'getAddresses', params: '/evidence/params.json' },
+      optionsContext
+    );
+    expect(plan.rpc).toEqual({
+      source: 'params',
+      method: 'getAddresses',
+      paramsFile: '/evidence/params.json',
+    });
+  });
+
+  test('rejects rpc without params, with a route, or outside signed-in', () => {
+    expect(() => parseVerifyOptions({ ready: 'x', rpc: 'getAddresses' }, optionsContext)).toThrow(
+      /--params/
+    );
+    expect(() =>
+      parseVerifyOptions(
+        { ready: 'x', rpc: 'catalog:getAddresses', route: '/send' },
+        optionsContext
+      )
+    ).toThrow(/--route/);
+    expect(() =>
+      parseVerifyOptions(
+        { ready: 'x', rpc: 'catalog:getAddresses', session: 'locked' },
+        optionsContext
+      )
+    ).toThrow(/signed-in/);
+  });
+
+  test('rejects an unknown catalog id naming the known ids', () => {
+    expect(() => parseVerifyOptions({ ready: 'x', rpc: 'catalog:nope' }, optionsContext)).toThrow(
+      /signMessage-p2wpkh/
+    );
+  });
+
+  test('rejects account types, onboarding and gh mnemonics in the wrong session', () => {
+    expect(() =>
+      parseVerifyOptions({ ready: 'x', session: 'locked', accountType: 'ledger' }, optionsContext)
+    ).toThrow(VerifyUsageError);
+    expect(() => parseVerifyOptions({ ready: 'x', onboard: true }, optionsContext)).toThrow(
+      /signed-out/
+    );
+    expect(() =>
+      parseVerifyOptions(
+        { ready: 'x', session: 'signed-out', mnemonicFromGh: true },
+        optionsContext
+      )
+    ).toThrow(/--onboard/);
   });
 });
 

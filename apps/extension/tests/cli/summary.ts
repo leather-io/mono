@@ -2,7 +2,10 @@ import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { ConsoleCounts, PageErrorRecord } from './evidence/console-evidence';
-import type { SessionMode } from './verify-options';
+import type { NetworkSummary } from './evidence/network-evidence';
+import type { MockMode } from './mock-registry';
+import type { TestAppHandle } from './test-app';
+import type { AccountType, SessionMode } from './verify-options';
 
 export const verdictExitCodes = {
   verified: 0,
@@ -36,17 +39,46 @@ export interface BuildSummary {
   rebuilt: boolean;
 }
 
-export type ArtifactName = 'screenshot' | 'aria' | 'console' | 'state' | 'buildLog';
+export interface MocksSummary {
+  mode: MockMode;
+  installed: string[];
+}
+
+export interface RpcSummary {
+  method: string;
+  source: 'params' | 'catalog';
+  catalogId?: string;
+  popupUrl: string | null;
+  response: unknown;
+  testApp: TestAppHandle['mode'] | null;
+}
+
+export type ArtifactName =
+  | 'screenshot'
+  | 'aria'
+  | 'console'
+  | 'state'
+  | 'buildLog'
+  | 'network'
+  | 'backgroundErrors'
+  | 'rpcRequest'
+  | 'testAppLog';
 
 export interface VerifySummary {
   verdict: Verdict;
   exitCode: number;
   route: string;
   session: SessionMode;
+  accountType: AccountType;
   network: string;
+  flags: Record<string, boolean>;
+  mocks: MocksSummary;
+  rpc: RpcSummary | null;
   ready: ReadySummary;
   pageErrors: PageErrorRecord[];
   console: ConsoleCounts;
+  backgroundErrors: number;
+  requests: NetworkSummary | null;
   state: Record<string, unknown>;
   build: BuildSummary | null;
   artifacts: Partial<Record<ArtifactName, string>>;
@@ -66,8 +98,12 @@ export function decideVerdict({
   return 'verified';
 }
 
-export function writeSummary(outDir: string, summary: VerifySummary): string {
+export function writeSummary(
+  outDir: string,
+  summary: VerifySummary,
+  redact: (text: string) => string
+): string {
   const summaryPath = path.join(outDir, summaryFileName);
-  writeFileSync(summaryPath, `${JSON.stringify(summary, null, 2)}\n`);
+  writeFileSync(summaryPath, redact(`${JSON.stringify(summary, null, 2)}\n`));
   return summaryPath;
 }

@@ -14,9 +14,11 @@ import { initContextMenuActions } from './init-context-menus';
 import { internalBackgroundMessageHandler } from './messaging/internal-methods/message-handler';
 import { rpcMessageHandler } from './messaging/rpc-message-handler';
 import { initAddressMonitor } from './monitors/address-monitor';
+import { initTestErrorBuffer } from './test-error-buffer';
 
 initContextMenuActions();
 initExtensionUpdateMonitor();
+initTestErrorBuffer();
 warnUsersAboutDevToolsDangers();
 
 chrome.runtime.onInstalled.addListener(details => {

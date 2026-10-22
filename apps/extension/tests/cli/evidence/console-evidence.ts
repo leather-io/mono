@@ -1,5 +1,4 @@
 import type { BrowserContext, ConsoleMessage, Page } from '@playwright/test';
-import { writeFileSync } from 'node:fs';
 
 import type { ConsoleLevel } from '../verify-options';
 
@@ -48,7 +47,7 @@ export interface ConsoleRecorder {
   attachToPage(page: Page): void;
   attachToContext(context: BrowserContext): void;
   entries(): ConsoleEntry[];
-  writeTo(filePath: string): void;
+  serialize(): string;
 }
 
 const recordedTypesByLevel: Record<ConsoleLevel, ReadonlySet<string> | undefined> = {
@@ -148,8 +147,8 @@ export function createConsoleRecorder(level: ConsoleLevel): ConsoleRecorder {
     entries() {
       return [...entries];
     },
-    writeTo(filePath) {
-      writeFileSync(filePath, entries.map(entry => `${JSON.stringify(entry)}\n`).join(''));
+    serialize() {
+      return entries.map(entry => `${JSON.stringify(entry)}\n`).join('');
     },
   };
 }
