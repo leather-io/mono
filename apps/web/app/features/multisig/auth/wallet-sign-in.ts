@@ -91,13 +91,16 @@ async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
 async function stxSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
   const rpcNetwork = resolveWalletRpcNetwork(params.network);
   const addresses = await fetchWalletAddresses(rpcNetwork, ['stacks']);
-  const account = addresses.find(address => address.symbol === 'STX');
+  const account = addresses.find(
+    address => address.symbol === 'STX' && address.kind === 'single-sig'
+  );
   if (!account) {
     throw new Error('No Stacks account available in the connected wallet');
   }
   assertWalletMatchesNetwork(account.address, params.network);
 
   const signed = await multisigLeather.stxSignMessage({
+    messageType: 'utf8',
     message: params.message,
     network: rpcNetwork,
   });

@@ -13,7 +13,7 @@ export type BnsResolution =
 
 function useStableMap<V>(entries: [string, V][]): Map<string, V> {
   const signature = entries.map(([key, value]) => `${key}=${JSON.stringify(value)}`).join('|');
-  const cache = useRef<{ signature: string; map: Map<string, V> }>();
+  const cache = useRef<{ signature: string; map: Map<string, V> } | null>(null);
   const current = cache.current;
   if (!current || current.signature !== signature) {
     const map = new Map(entries);
