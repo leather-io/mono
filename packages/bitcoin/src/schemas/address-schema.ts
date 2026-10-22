@@ -2,7 +2,15 @@ import { Network, getAddressInfo, validate } from 'bitcoin-address-validation';
 import { z } from 'zod';
 
 import type { BitcoinNetworkModes } from '@leather.io/models';
-import { isEmptyString, isUndefined } from '@leather.io/utils';
+import { isDefined, isEmptyString, isUndefined } from '@leather.io/utils';
+
+import { getBitcoinAddressNetworkType } from '../validation/address-validation';
+
+const networkModeByAddressNetwork: Record<Network, BitcoinNetworkModes> = {
+  [Network.mainnet]: 'mainnet',
+  [Network.testnet]: 'testnet',
+  [Network.regtest]: 'regtest',
+};
 
 export function nonEmptyStringValidator(message = '') {
   return z
@@ -21,19 +29,20 @@ export function btcAddressValidator() {
 }
 
 export function getNetworkTypeFromAddress(address: string) {
-  return getAddressInfo(address).network as BitcoinNetworkModes;
+  return networkModeByAddressNetwork[getAddressInfo(address).network];
 }
 
 function btcAddressNetworkValidatorFactory(network: BitcoinNetworkModes) {
-  function getAddressNetworkType(network: BitcoinNetworkModes): Network {
+  function getAddressNetworkType(network: BitcoinNetworkModes): Network | undefined {
     // Signet uses testnet address format, this parsing is to please the
     // validation library
     if (network === 'signet') return Network.testnet;
-    return network as Network;
+    return getBitcoinAddressNetworkType(network);
   }
   return (value?: string) => {
     if (isUndefined(value) || isEmptyString(value)) return true;
-    return validate(value, getAddressNetworkType(network));
+    const addressNetwork = getAddressNetworkType(network);
+    return isDefined(addressNetwork) && validate(value, addressNetwork);
   };
 }
 

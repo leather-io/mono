@@ -1,6 +1,6 @@
 import { HARDENED_OFFSET, HDKey } from '@scure/bip32';
 
-import { BitcoinAddress } from '@leather.io/models';
+import { type BitcoinAddress } from '@leather.io/models';
 import { createCounter } from '@leather.io/utils';
 
 import {

@@ -1,14 +1,14 @@
 import { hexToBytes } from '@noble/hashes/utils';
-import { HDKey } from '@scure/bip32';
+import { type HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
 import { DerivationPathDepth } from '@leather.io/crypto';
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { type BitcoinNetworkModes } from '@leather.io/models';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import {
-  BitcoinAccount,
-  GetAddressArgs,
+  type BitcoinAccount,
+  type GetAddressArgs,
   deriveAddressIndexKeychainFromAccount,
   deriveAddressIndexZeroFromAccount,
   getBitcoinCoinTypeIndexByNetwork,
