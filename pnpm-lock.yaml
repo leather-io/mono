@@ -1643,6 +1643,9 @@ importers:
       '@pandacss/dev':
         specifier: 1.7.1
         version: 1.7.1(jsdom@27.4.0(@noble/hashes@1.8.0))(typescript@5.9.3)
+      remeda:
+        specifier: 2.21.2
+        version: 2.21.2
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*

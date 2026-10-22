@@ -17,7 +17,7 @@
     "test:coverage": "vitest run --coverage",
     "test:integration": "playwright test",
     "test:unit": "vitest run",
-    "typecheck": "pnpm cf-typegen && react-router typegen && tsc --noEmit",
+    "typecheck": "pnpm cf-typegen && react-router typegen && tsc --build --noEmit",
     "typegen": "pnpm cf-typegen && react-router typegen"
   },
   "msw": {
