@@ -8,7 +8,7 @@ import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import type { paths } from '../api/leather/leather-api.types';
-import { UserSettings } from './settings.service';
+import { DefaultAssetVisibilityPolicy, UserSettings } from './settings.service';
 
 type StakingChainId =
   paths['/v1/staking/addresses/{address}/bonds']['get']['parameters']['query']['chain'];
@@ -41,6 +41,10 @@ export function selectAssetVisibility(
   settings: UserSettings
 ): Record<SerializedCryptoAssetId, boolean> {
   return settings.assetVisibility;
+}
+
+export function selectDefaultAssetVisibility(settings: UserSettings): DefaultAssetVisibilityPolicy {
+  return settings.defaultAssetVisibility ?? { type: 'appConfig' };
 }
 
 export function selectBitcoinApiUrl(settings: UserSettings): string {

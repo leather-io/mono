@@ -67,12 +67,14 @@ export function useSip10BalanceByAssetId(
 }
 
 function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference, assetVisibility, defaultAssetVisibility } = useSettings();
   return useQuery({
     queryKey: [
       'sip10-balances-service-get-sip10-aggregate-balance',
       requests,
       fiatCurrencyPreference,
+      assetVisibility,
+      defaultAssetVisibility,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AggregateBalance(requests, signal),
@@ -81,11 +83,14 @@ function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
 }
 
 function useSip10AccountBalanceQuery(request: AccountRequest, shouldKeepPreviousData: boolean) {
-  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const { fiatCurrencyPreference, networkPreference, assetVisibility, defaultAssetVisibility } =
+    useSettings();
+  const includesHiddenAssets = request.assets?.includeHiddenAssets ?? false;
   const settings: UserSettings = {
     network: networkPreference,
     quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
-    assetVisibility: request.assets?.includeHiddenAssets ? {} : assetVisibility,
+    assetVisibility: includesHiddenAssets ? {} : assetVisibility,
+    defaultAssetVisibility: includesHiddenAssets ? undefined : defaultAssetVisibility,
   };
 
   return useQuery({
