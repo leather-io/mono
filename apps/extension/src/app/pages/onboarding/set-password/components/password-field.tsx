@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
+import { useController } from 'react-hook-form';
 
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
-import { useField } from 'formik';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { Caption, Eye1ClosedIcon, Eye1Icon, Input } from '@leather.io/ui';
@@ -23,7 +23,13 @@ export function PasswordField({
   isDisabled,
   showStrength = true,
 }: PasswordFieldProps) {
-  const [field, meta] = useField<string>('password');
+  const { field, fieldState, formState } = useController<{ password: string }>({
+    name: 'password',
+  });
+  const { error: fieldError, isTouched } = fieldState;
+  const { submitCount } = formState;
+  const error = fieldError?.message;
+  const showError = isTouched || submitCount > 0;
   const [showPassword, setShowPassword] = useState(false);
   const { theme } = useThemeSwitcher();
 
@@ -35,7 +41,7 @@ export function PasswordField({
   return (
     <>
       <Box position="relative">
-        <Input.Root hasError={!showStrength && meta.touched && !!meta.error}>
+        <Input.Root hasError={!showStrength && showError && !!error}>
           <Input.Label>Password</Input.Label>
           <Input.Field
             autoCapitalize="off"
@@ -46,7 +52,11 @@ export function PasswordField({
             key="password-input"
             type={showPassword ? 'text' : 'password'}
             width="100%"
-            {...field}
+            name={field.name}
+            ref={field.ref}
+            value={field.value}
+            onBlur={field.onBlur}
+            onChange={field.onChange}
           />
         </Input.Root>
         <styled.button
@@ -79,7 +89,7 @@ export function PasswordField({
           </Flex>
         </>
       ) : (
-        meta.touched && meta.error && <ErrorLabel>{meta.error}</ErrorLabel>
+        showError && error && <ErrorLabel>{error}</ErrorLabel>
       )}
     </>
   );

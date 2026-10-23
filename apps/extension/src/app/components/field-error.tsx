@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import AnimateHeight from 'react-animate-height';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { useField } from 'formik';
 import { Box, Flex } from 'leather-styles/jsx';
 
-import { useShowFieldError } from '@app/common/form-utils';
+import { useFieldError, useShowFieldError } from '@app/common/form-utils';
 import { ErrorLabel } from '@app/components/error-label';
 
 const closedHeight = 0;
@@ -13,7 +12,7 @@ const openHeight = 24;
 
 export function TextInputFieldError(props: { name: string }) {
   const { name } = props;
-  const [, meta] = useField(name);
+  const error = useFieldError(name);
   const [showHide, setShowHide] = useState(closedHeight);
   const showError = useShowFieldError(name);
 
@@ -32,7 +31,7 @@ export function TextInputFieldError(props: { name: string }) {
       <AnimateHeight duration={400} easing="ease-out" height={showHide}>
         <Flex height={openHeight + 'px'}>
           <ErrorLabel data-testid={SendCryptoAssetSelectors.FormFieldInputErrorLabel}>
-            {meta.error}
+            {error}
           </ErrorLabel>
         </Flex>
       </AnimateHeight>

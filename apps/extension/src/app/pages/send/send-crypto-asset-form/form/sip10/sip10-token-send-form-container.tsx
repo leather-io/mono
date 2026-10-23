@@ -24,7 +24,7 @@ export function Sip10TokenSendFormContainer({
     previewTransaction,
     sendMaxBalance,
     stacksFtFees: fees,
-    validationSchema,
+    resolver,
     avatar,
     decimals,
     symbol,
@@ -71,7 +71,7 @@ export function Sip10TokenSendFormContainer({
     <StacksCommonSendForm
       onSubmit={previewTransaction}
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      resolver={resolver}
       amountField={amountField}
       selectedAssetField={selectedAssetField}
       fees={fees}
