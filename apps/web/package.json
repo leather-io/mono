@@ -17,7 +17,7 @@
     "test:coverage": "vitest run --coverage",
     "test:integration": "playwright test",
     "test:unit": "vitest run",
-    "typecheck": "pnpm cf-typegen && react-router typegen && tsc --noEmit",
+    "typecheck": "pnpm cf-typegen && react-router typegen && tsc --build --noEmit",
     "typegen": "pnpm cf-typegen && react-router typegen"
   },
   "msw": {
@@ -92,7 +92,7 @@
     "@msw/playwright": "0.4.5",
     "@originjs/vite-plugin-commonjs": "1.0.3",
     "@pandacss/dev": "1.7.1",
-    "@playwright/test": "1.58.2",
+    "@playwright/test": "1.64.0",
     "@react-router/dev": "7.18.1",
     "@testing-library/react": "16.3.0",
     "@types/d3": "7.4.3",

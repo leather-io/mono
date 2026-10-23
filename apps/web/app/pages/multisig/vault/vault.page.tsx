@@ -141,10 +141,12 @@ export function VaultDetailPage() {
     isCreator && vault.status !== 'cancelled' && allMembersJoined && !atAccountLimit;
   const vaultDetailsHeading = `${vault.name.charAt(0).toUpperCase()}${vault.name.slice(1)} details`;
 
+  const { id: resolvedVaultId, name: resolvedVaultName } = vault;
+
   function onCancel() {
-    cancelVault.mutate(vault.id, {
+    cancelVault.mutate(resolvedVaultId, {
       onSuccess() {
-        showToast(`“${vault.name}” cancelled`);
+        showToast(`“${resolvedVaultName}” cancelled`);
         void navigate(multisigPaths.index);
       },
       onError(err) {

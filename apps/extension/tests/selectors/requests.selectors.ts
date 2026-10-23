@@ -8,3 +8,9 @@ export const ConnectAccountSelectors = {
 } as const;
 export type ConnectAccountSelectors =
   (typeof ConnectAccountSelectors)[keyof typeof ConnectAccountSelectors];
+
+export const PostConditionSelectors = {
+  PostConditionItem: 'post-condition-item',
+} as const;
+export type PostConditionSelectors =
+  (typeof PostConditionSelectors)[keyof typeof PostConditionSelectors];
