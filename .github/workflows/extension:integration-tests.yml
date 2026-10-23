@@ -134,13 +134,25 @@ jobs:
         run: pnpm playwright test tests/specs --shard="${SHARD_INDEX}/${SHARD_TOTAL}"
 
       - name: upload-blob-report-to-github-actions-artifacts
+        id: upload-blob-report
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: blob-report-${{ matrix.shardIndex }}
           path: apps/extension/blob-report
           retention-days: 1
           if-no-files-found: error
+
+      - name: retry-upload-blob-report-to-github-actions-artifacts
+        if: always() && steps.upload-blob-report.outcome == 'failure'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: blob-report-${{ matrix.shardIndex }}
+          path: apps/extension/blob-report
+          retention-days: 1
+          if-no-files-found: error
+          overwrite: true
 
   merge-reports:
     name: merge-reports

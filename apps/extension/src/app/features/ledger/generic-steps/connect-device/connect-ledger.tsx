@@ -100,13 +100,13 @@ export function ConnectLedger(props: ConnectLedgerProps) {
         </HStack>
       </Stack>
       {warning && (
-        <Box mb="space.04" mx="space.06">
+        <Box mb="space.04" width="100%">
           {warning}
         </Box>
       )}
 
       {isWindows && (
-        <Callout variant="warning" mb="space.06" mx="space.06" textAlign="left">
+        <Callout variant="warning" mb="space.06" textAlign="left">
           If you're experiencing problems connecting your Ledger, try updating the firmware to the
           latest version in Ledger Live.
         </Callout>
