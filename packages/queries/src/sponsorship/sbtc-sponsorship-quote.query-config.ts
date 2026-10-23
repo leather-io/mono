@@ -25,5 +25,5 @@ export function createSbtcSponsorshipQuoteQueryConfig(settings: UserSettings) {
     refetchOnMount: true,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
-  } satisfies UseQueryOptions<SbtcSponsorshipQuoteResponse, Error>;
+  } satisfies UseQueryOptions<SbtcSponsorshipQuoteResponse>;
 }

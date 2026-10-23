@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 
 import { isNumberOrNumberList, isUndefined } from '@leather.io/utils';
 
@@ -7,7 +7,7 @@ export function testIsNumberOrArrayOfNumbers(value: unknown) {
   return isNumberOrNumberList(value);
 }
 
-export function encodeBase64Json(payload: Record<any, unknown>) {
+export function encodeBase64Json(payload: Record<string, unknown>) {
   const jsonString = JSON.stringify(payload);
   return btoa(jsonString);
 }
@@ -17,9 +17,9 @@ export function decodeBase64Json(encodedPayload: string): unknown {
   return JSON.parse(jsonString);
 }
 
-export function createRequestEncoder<T extends z.ZodType<unknown>>(schema: T) {
+export function createRequestEncoder<T extends z.ZodType<Record<string, unknown>>>(schema: T) {
   function encode(request: z.infer<T>) {
-    return encodeBase64Json(schema.parse(request) as any);
+    return encodeBase64Json(schema.parse(request));
   }
 
   function decode(encodedRequest: string): z.infer<T> {

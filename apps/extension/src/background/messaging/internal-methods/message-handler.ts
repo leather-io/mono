@@ -1,8 +1,10 @@
+import { z } from 'zod';
+
 import { logger } from '@shared/logger';
 import { InternalMethods, SIGN_OUT_MESSAGE } from '@shared/message-types';
-import { BackgroundMessages } from '@shared/messages';
 
-import { syncAddressMonitor } from '@background/monitors/address-monitor';
+import { applyPendingUpdate } from '@background/extension-update-monitor';
+import { parseMonitoredAddresses, syncAddressMonitor } from '@background/monitors/address-monitor';
 
 function validateMessagesAreFromExtension(sender: chrome.runtime.MessageSender) {
   // Only respond to internal messages from our UI, not content scripts in other applications
@@ -18,16 +20,32 @@ async function removeFormState(tabId: number) {
 }
 
 // Remove any persisted form state when a tab is closed
-chrome.tabs.onRemoved.addListener(tabId => removeFormState(tabId));
+chrome.tabs.onRemoved.addListener(tabId => void removeFormState(tabId));
+
+const internalMessageSchema = z.looseObject({
+  method: z.string(),
+  payload: z.unknown().optional(),
+});
+
+const monitoredAddressesPayloadSchema = z.looseObject({ addresses: z.array(z.unknown()) });
+
+function getMonitoredAddressesFromPayload(payload: unknown) {
+  const parsedPayload = monitoredAddressesPayloadSchema.safeParse(payload);
+  if (!parsedPayload.success) {
+    logger.warn('Ignoring an address monitor update without an address list');
+    return null;
+  }
+  return parseMonitoredAddresses(parsedPayload.data.addresses);
+}
 
 function logInternalMessage(message: { method: string }) {
   logger.debug('Internal message', message);
 }
 
 export async function internalBackgroundMessageHandler(
-  message: BackgroundMessages,
+  message: unknown,
   sender: chrome.runtime.MessageSender,
-  sendResponse: (response?: any) => void
+  sendResponse: (response?: unknown) => void
 ) {
   if (!validateMessagesAreFromExtension(sender)) {
     logger.error('Error: Received background script msg from ' + sender.url);
@@ -35,17 +53,29 @@ export async function internalBackgroundMessageHandler(
     return;
   }
 
-  logInternalMessage(message);
+  const parsedMessage = internalMessageSchema.safeParse(message);
+  if (!parsedMessage.success) {
+    sendResponse();
+    return;
+  }
+  const internalMessage = parsedMessage.data;
 
-  switch (message.method) {
-    case InternalMethods.AddressMonitorUpdated:
-      await syncAddressMonitor(message.payload.addresses);
+  logInternalMessage(internalMessage);
+
+  switch (internalMessage.method) {
+    case InternalMethods.AddressMonitorUpdated: {
+      const addresses = getMonitoredAddressesFromPayload(internalMessage.payload);
+      if (addresses) await syncAddressMonitor(addresses);
+      break;
+    }
+    case InternalMethods.ApplyPendingUpdate:
+      await applyPendingUpdate();
       break;
     default:
       break;
   }
 
-  const method: string = message.method;
+  const method: string = internalMessage.method;
   if (method === SIGN_OUT_MESSAGE) {
     await syncAddressMonitor([]);
   }

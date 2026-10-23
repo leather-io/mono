@@ -1,21 +1,23 @@
 import { useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 
 import { hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Stack } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
-import { decodeBitcoinTx } from '@leather.io/bitcoin';
+import {
+  breakDownSpendBySource,
+  decodeBitcoinTx,
+  summarizeSpendSources,
+} from '@leather.io/bitcoin';
 import type { CryptoCurrency } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
 import {
   baseCurrencyAmountInQuote,
   createMoney,
   createMoneyFromDecimal,
-  isDefined,
   satToBtc,
 } from '@leather.io/utils';
 
@@ -23,7 +25,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import {
   InfoCardAssetValue,
@@ -31,38 +33,41 @@ import {
   InfoCardSeparator,
 } from '@app/components/info-card/info-card';
 import { Card, Content, Page } from '@app/components/layout';
+import { SpendSourcesBreakdownRows } from '@app/components/spend-sources/spend-sources-breakdown-rows';
+import { SpendSourcesTaprootCallout } from '@app/components/spend-sources/spend-sources-taproot-callout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { invalidateActivityQueries } from '@app/query/activity/blockchain-activity.query';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
+import { useMatchWalletUtxos } from '@app/query/bitcoin/utxos/use-match-wallet-utxos';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 
-import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
+import type { BtcSentSummaryState } from '../../../sent-summary/btc-sent-summary';
+import {
+  type BtcBroadcastConfirmationRouteState,
+  btcConfirmationRouteStateSchema,
+  useSendFormNavigate,
+} from '../../hooks/use-send-form-navigate';
 import { BtcProposeConfirmation } from './btc-propose-confirmation';
 
 const symbol: CryptoCurrency = 'BTC';
 
-function useBtcSendFormConfirmationState() {
-  const location = useLocation();
-  return {
-    tx: get(location.state, 'tx') as string,
-    fee: get(location.state, 'fee') as number,
-    feeRowValue: get(location.state, 'feeRowValue') as string,
-    arrivesIn: get(location.state, 'time') as string,
-    recipient: get(location.state, 'recipient') as string,
-  };
-}
-
 export function BtcSendFormConfirmation() {
-  const psbt = useLocationStateWithCache<string>('psbt');
-  if (isDefined(psbt)) return <BtcProposeConfirmation />;
-  return <BtcBroadcastConfirmation />;
+  const state = useRouteState(btcConfirmationRouteStateSchema.nullable().catch(null));
+  if (!state)
+    return <Navigate to={RouteUrls.SendCryptoAssetForm.replace(':symbol', 'btc')} replace />;
+  if (state.mode === 'propose') return <BtcProposeConfirmation state={state} />;
+  return <BtcBroadcastConfirmation state={state} />;
 }
 
-function BtcBroadcastConfirmation() {
+interface BtcBroadcastConfirmationProps {
+  state: BtcBroadcastConfirmationRouteState;
+}
+
+function BtcBroadcastConfirmation({ state }: BtcBroadcastConfirmationProps) {
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const navigate = useNavigate();
-  const { tx, recipient, fee, arrivesIn, feeRowValue } = useBtcSendFormConfirmationState();
+  const { tx, recipient, fee, time: arrivesIn, feeRowValue } = state;
 
   const transaction = useMemo(() => btc.Transaction.fromRaw(hexToBytes(tx)), [tx]);
 
@@ -73,9 +78,12 @@ function BtcBroadcastConfirmation() {
 
   const decodedTx = decodeBitcoinTx(transaction.hex);
 
+  const matchWalletUtxos = useMatchWalletUtxos();
+  const spendSources = summarizeSpendSources(matchWalletUtxos(decodedTx.inputs));
+
   const nav = useSendFormNavigate();
 
-  const transferAmount = satToBtc(decodedTx.outputs[0].amount.toString()).toString();
+  const transferAmount = satToBtc(String(decodedTx.outputs[0].amount)).toString();
   const txFiatValue = formatCurrency(
     baseCurrencyAmountInQuote(createMoneyFromDecimal(Number(transferAmount), symbol), btcMarketData)
   );
@@ -89,7 +97,10 @@ function BtcBroadcastConfirmation() {
   const sendingValue = formatCurrency(createMoneyFromDecimal(Number(transferAmount), symbol), {
     preset: 'pad-decimals',
   });
-  const summaryFee = formatCurrency(createMoney(Number(fee), symbol), { preset: 'pad-decimals' });
+  const spendSourcesBreakdown = breakDownSpendBySource(
+    spendSources,
+    createMoney(Number(decodedTx.outputs[0].amount) + Number(fee), symbol)
+  );
 
   async function initiateTransaction() {
     setIsBroadcasting(true);
@@ -121,15 +132,10 @@ function BtcBroadcastConfirmation() {
     setIsBroadcasting(false);
   }
 
-  function formBtcTxSummaryState(txId: string) {
+  function formBtcTxSummaryState(txId: string): BtcSentSummaryState {
     return {
-      txLink: {
-        blockchain: 'bitcoin',
-        txid: txId || '',
-      },
       txId,
       recipient,
-      fee: summaryFee,
       txValue: transferAmount,
       arrivesIn,
       totalSpend,
@@ -155,13 +161,15 @@ function BtcBroadcastConfirmation() {
               <Button
                 data-testid={SharedComponentsSelectors.InfoCardButton}
                 aria-busy={isBroadcasting}
-                onClick={initiateTransaction}
+                onClick={() => void initiateTransaction()}
                 width="100%"
               >
                 Confirm and send transaction
               </Button>
             }
           >
+            <SpendSourcesTaprootCallout summary={spendSources} mt="space.05" mx="space.05" />
+
             <InfoCardAssetValue
               data-testid={SendCryptoAssetSelectors.ConfirmationDetailsAssetValue}
               fiatSymbol={txFiatValueSymbol}
@@ -181,6 +189,7 @@ function BtcBroadcastConfirmation() {
               />
               <InfoCardSeparator />
               <InfoCardRow title="Total spend" value={totalSpend} />
+              <SpendSourcesBreakdownRows breakdown={spendSourcesBreakdown} />
               <InfoCardRow title="Sending" value={sendingValue} />
               <InfoCardRow
                 title="Fee"

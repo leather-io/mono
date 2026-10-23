@@ -1,14 +1,17 @@
 import axios from 'axios';
+import { z } from 'zod';
 
 import { isDefined } from '@leather.io/utils';
 
 import { DEBUG_TX_MONITOR } from '@shared/environment';
 import { logger } from '@shared/logger';
+import { isRecord } from '@shared/utils/is-record';
 
 import type { AddressMonitor, MonitoredAddress } from '../address-monitor';
 import {
   type MempoolWsBitcoinTxMessage,
   type MempoolWsBtcPrice,
+  parseMempoolWsBitcoinTxMessage,
   readMempooWsBtcPriceUsd,
   readMempoolWsBitcoinTxAddressResult,
 } from './bitcoin-transaction-monitor/mempool-ws';
@@ -17,6 +20,8 @@ function logTxMonitorEvent(message: string, ...args: unknown[]) {
   if (!DEBUG_TX_MONITOR) return;
   logger.debug(message, ...args);
 }
+
+const mempoolWsBtcPriceSchema = z.object({ USD: z.number() });
 
 export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): AddressMonitor {
   let _ws: WebSocket | null = null;
@@ -69,7 +74,7 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
   function sendWsTrackAddressSubscribe() {
     const addresses = _addresses.map(a => a.address);
     logTxMonitorEvent(`Subscribing to ${addresses.length} Track Addresses`);
-    _ws!.send(
+    _ws?.send(
       JSON.stringify({
         'track-addresses': addresses,
       })
@@ -99,7 +104,9 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
       logTxMonitorEvent('Connected to Mempool WebSocket');
       sendWsTrackAddressSubscribe();
       startKeepAlive();
-      fetchBtcPrice();
+      void fetchBtcPrice().catch(e => {
+        logTxMonitorEvent('Unable to fetch BTC price, ', e);
+      });
     };
 
     _ws.onmessage = event => {
@@ -120,23 +127,20 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
     };
   }
 
-  function fetchBtcPrice() {
-    axios
-      .get<MempoolWsBtcPrice>('https://leather.mempool.space/api/v1/prices')
-      .then(res => {
-        _btcPriceUsd = readMempooWsBtcPriceUsd(res.data);
-      })
-      .catch(e => {
-        logTxMonitorEvent('Unable to fetch BTC price, ', e);
-      });
+  async function fetchBtcPrice() {
+    const res = await axios.get<MempoolWsBtcPrice>('https://leather.mempool.space/api/v1/prices');
+    _btcPriceUsd = readMempooWsBtcPriceUsd(res.data);
   }
 
-  function handleMessageEvent(event: MessageEvent<any>) {
-    const message = JSON.parse(event.data);
+  function handleMessageEvent(event: MessageEvent<unknown>) {
+    const message: unknown = JSON.parse(String(event.data));
+    if (!isRecord(message)) return;
     if (message['multi-address-transactions']) {
-      handleTransactionMessage(message);
-    } else if (message['conversions']) {
-      _btcPriceUsd = readMempooWsBtcPriceUsd(message['conversions']);
+      const parsedMessage = parseMempoolWsBitcoinTxMessage(message);
+      if (parsedMessage) handleTransactionMessage(parsedMessage);
+    } else {
+      const parsedPrice = mempoolWsBtcPriceSchema.safeParse(message['conversions']);
+      if (parsedPrice.success) _btcPriceUsd = parsedPrice.data.USD;
     }
   }
 

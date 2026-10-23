@@ -1,15 +1,15 @@
-import { isFiatCurrencyCode } from '../money';
+import { isFiatCurrencyCode } from '../money/is-fiat-currency-code';
 import {
-  CurrencyFormatterPreset,
-  CurrencyFormatterPresetResult,
-  CurrencyFormatterPresetValue,
+  type CurrencyFormatterPreset,
+  type CurrencyFormatterPresetResult,
+  type CurrencyFormatterPresetValue,
 } from './currency-formatter.types';
 
 export const currencyFormatterPresets: Record<
   CurrencyFormatterPreset,
   CurrencyFormatterPresetValue
 > = {
-  price: input => {
+  price(input) {
     const options: CurrencyFormatterPresetResult = {
       compactThreshold: Infinity,
       approximateDust: false,
@@ -29,7 +29,7 @@ export const currencyFormatterPresets: Record<
 
     return options;
   },
-  'shorthand-balance': input => {
+  'shorthand-balance'(input) {
     function getMaximumFractionDigits() {
       if (isFiatCurrencyCode(input.currencyCode)) {
         return 2;

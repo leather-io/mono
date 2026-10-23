@@ -31,6 +31,7 @@ import {
   aggregateTransferSenders,
   sumAssetTransferAmounts,
 } from './stacks-asset-transfer.utils';
+import { isMempoolTx } from './stacks-mempool-tx.utils';
 
 export function getEventsByTxId(events: TransactionEvent[]) {
   return events.reduce((acc, event) => {
@@ -59,16 +60,6 @@ export function mapStacksTxBlockHeight(
 
 export function mapStacksTxFee(tx: HiroStacksTransaction | HiroStacksMempoolTransaction): string {
   return tx.fee_rate;
-}
-
-export function isMempoolTx(
-  tx: HiroStacksTransaction | HiroStacksMempoolTransaction
-): tx is HiroStacksMempoolTransaction {
-  return (
-    tx.tx_status !== 'success' &&
-    tx.tx_status !== 'abort_by_post_condition' &&
-    tx.tx_status !== 'abort_by_response'
-  );
 }
 
 export function mapStacksTxStatus(tx: HiroStacksTransaction | HiroStacksMempoolTransaction) {

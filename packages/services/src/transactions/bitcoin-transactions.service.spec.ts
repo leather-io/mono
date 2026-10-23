@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { AccountAddresses } from '@leather.io/models';
+import { AccountAddresses, defaultNetworksKeyedById } from '@leather.io/models';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
@@ -101,9 +101,7 @@ describe(BitcoinTransactionsService.name, () => {
         {} as unknown as LeatherApiClient,
         mockMempoolApiClient,
         {
-          getSettings: () => ({
-            network: { chain: { bitcoin: { bitcoinNetwork: 'regtest', mode: 'regtest' } } },
-          }),
+          getSettings: () => ({ network: defaultNetworksKeyedById['private-1'] }),
         } as unknown as SettingsService
       );
       const mockAccount: AccountAddresses = {
@@ -119,6 +117,46 @@ describe(BitcoinTransactionsService.name, () => {
       expect(result).toHaveLength(1);
       expect(result[0].vout[0].owned).toBe(true);
       expect(result[0].vin[0].owned).toBeUndefined();
+    });
+
+    it('fetches from the network mempool for the signet staking testnet', async () => {
+      let requestedMempoolUrl: string | undefined;
+      const mockMempoolApiClient = {
+        fetchAddressTransactions: (_address: string, mempoolUrl: string) => {
+          requestedMempoolUrl = mempoolUrl;
+          return Promise.resolve([]);
+        },
+      } as unknown as MempoolApiClient;
+      const service = new BitcoinTransactionsService(
+        {} as unknown as LeatherApiClient,
+        mockMempoolApiClient,
+        {
+          getSettings: () => ({ network: defaultNetworksKeyedById.stakingTestnet }),
+        } as unknown as SettingsService
+      );
+      await service.getAddressTransactions('tb1qvault', { page: 1, pageSize: 150 });
+      expect(requestedMempoolUrl).toEqual(
+        defaultNetworksKeyedById.stakingTestnet.chain.bitcoin.bitcoinUrl
+      );
+    });
+
+    it('fetches from the Leather API for the default signet network', async () => {
+      let requestedAddress: string | undefined;
+      const mockLeatherApiClient = {
+        fetchBitcoinTransactionsByAddress: (address: string) => {
+          requestedAddress = address;
+          return Promise.resolve({ data: [], meta: { totalPages: 1 } });
+        },
+      } as unknown as LeatherApiClient;
+      const service = new BitcoinTransactionsService(
+        mockLeatherApiClient,
+        {} as unknown as MempoolApiClient,
+        {
+          getSettings: () => ({ network: defaultNetworksKeyedById.signet }),
+        } as unknown as SettingsService
+      );
+      await service.getAddressTransactions('tb1qsignet', { page: 1, pageSize: 150 });
+      expect(requestedAddress).toEqual('tb1qsignet');
     });
 
     it('should return empty array for accounts without bitcoin address info', async () => {

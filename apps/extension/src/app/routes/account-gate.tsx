@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { Navigate } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -15,7 +15,7 @@ interface AccountGateDestinationArgs {
 export function selectAccountGateDestination({
   walletCount,
   hasLockedSoftwareWallets,
-}: AccountGateDestinationArgs): RouteUrls.Onboarding | RouteUrls.Unlock | null {
+}: AccountGateDestinationArgs): typeof RouteUrls.Onboarding | typeof RouteUrls.Unlock | null {
   if (walletCount === 0) return RouteUrls.Onboarding;
   if (hasLockedSoftwareWallets) return RouteUrls.Unlock;
   return null;

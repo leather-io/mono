@@ -1,12 +1,23 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "agentGuidance": false,
+  "globalDependencies": [
+    ".dependency-cruiser-known-violations.json",
+    ".dependency-cruiser.cjs",
+    ".ls-lint.yml",
+    ".prettierignore",
+    ".prettierrc.js",
+    "eslint.config.js",
+    "knip.json",
+    "tsconfig.json",
+    "turbo.json"
+  ],
   "tasks": {
     "build": {
       "outputs": [
         "dist/**",
         "dist-*/**",
         "build/**",
-        "{ios,android,build}/**",
         "leather-styles/**"
       ],
       "dependsOn": [
@@ -16,11 +27,30 @@
     "build:watch": {},
     "format": {},
     "format:check": {},
-    "lint": {},
+    "lint": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "lint:fix": {},
-    "test:unit": {},
-    "test:coverage": {},
-    "typecheck": {},
+    "test:unit": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "test:coverage": {
+      "outputs": [
+        "coverage/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "check:all": {
       "dependsOn": [
         "build",

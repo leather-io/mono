@@ -102,10 +102,6 @@ export class MempoolApiClient {
     mempoolUrl?: string,
     { signal, skipCache }: ApiRequestOptions = {}
   ): Promise<MempoolTransaction[]> {
-    const network = this.settings.getSettings().network.chain.bitcoin.bitcoinNetwork;
-    if (network !== 'regtest') {
-      throw new Error('Mempool API is only supported on regtest');
-    }
     const fetchFn = async () => {
       const { data } = await axios.get<MempoolTransaction[]>(
         `${mempoolUrl ?? getMempoolUrlFromUserSettings(this.settings.getSettings())}/address/${address}/txs`,

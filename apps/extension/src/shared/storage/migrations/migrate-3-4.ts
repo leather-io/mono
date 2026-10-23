@@ -1,16 +1,41 @@
 import { produce } from 'immer';
+import { z } from 'zod';
 
 import { countWalletAccounts, isValidAccountIndex, makeAccountIdentifer } from '@leather.io/crypto';
+import { isNumber, isString } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
+import { isRecord } from '@shared/utils/is-record';
 
-function repairSoftwareHighestAccountIndex(draftState: any, fingerprint: string): void {
-  const existing = draftState?.chains?.stx?.[fingerprint];
-  const activeAccount = draftState?.active?.account;
+import { type LegacyRecord, asUnknownArray, getRecordAtPath } from './legacy-state';
+
+const legacyKeychainSchema = z.object({
+  descriptor: z.string(),
+  chain: z.enum(['bitcoin', 'stacks']),
+});
+
+function toLegacyKeychains(keychains: unknown[]) {
+  return keychains.flatMap(keychain => {
+    const parsedKeychain = legacyKeychainSchema.safeParse(keychain);
+    return parsedKeychain.success ? [parsedKeychain.data] : [];
+  });
+}
+
+function toAccountIndex(value: unknown) {
+  return isNumber(value) ? value : undefined;
+}
+
+function getStringIds(ids: unknown) {
+  return asUnknownArray(ids)?.filter(isString) ?? [];
+}
+
+function repairSoftwareHighestAccountIndex(draftState: LegacyRecord, fingerprint: string): void {
+  const existing = getRecordAtPath(draftState, 'chains', 'stx', fingerprint);
+  const activeAccount = getRecordAtPath(draftState, 'active', 'account');
   const activeIndex =
-    activeAccount?.fingerprint === fingerprint ? activeAccount?.accountIndex : undefined;
+    activeAccount?.fingerprint === fingerprint ? activeAccount.accountIndex : undefined;
 
-  const priorAccountEntities = draftState?.accounts?.entities ?? {};
+  const priorAccountEntities = getRecordAtPath(draftState, 'accounts', 'entities') ?? {};
   const fingerprintPrefix = `${fingerprint}/`;
   const priorIndices = Object.keys(priorAccountEntities)
     .filter(id => id.startsWith(fingerprintPrefix))
@@ -19,67 +44,67 @@ function repairSoftwareHighestAccountIndex(draftState: any, fingerprint: string)
   const repairedHighest = Math.max(
     0,
     ...[
-      existing?.highestAccountIndex,
-      existing?.currentAccountIndex,
-      activeIndex,
+      toAccountIndex(existing?.highestAccountIndex),
+      toAccountIndex(existing?.currentAccountIndex),
+      toAccountIndex(activeIndex),
       ...priorIndices,
-    ].filter(isValidAccountIndex)
+    ]
+      .filter(isNumber)
+      .filter(isValidAccountIndex)
   );
 
   if (!draftState.chains) draftState.chains = {};
-  if (!draftState.chains.stx) draftState.chains.stx = {};
-  draftState.chains.stx[fingerprint] = {
-    currentAccountStacksDescriptor: existing?.currentAccountStacksDescriptor ?? '',
-    highestAccountIndex: repairedHighest,
-  };
+  const chains = getRecordAtPath(draftState, 'chains');
+  if (chains && !chains.stx) chains.stx = {};
+  const stxChains = getRecordAtPath(chains, 'stx');
+  if (stxChains) {
+    stxChains[fingerprint] = {
+      currentAccountStacksDescriptor: existing?.currentAccountStacksDescriptor ?? '',
+      highestAccountIndex: repairedHighest,
+    };
+  }
 }
 
 // Introduces the `accounts` entity slice, materializing an entity per derived
 // account so name/hidden/icon metadata has a home keyed by
 // `fingerprint/accountIndex`, with a lifecycle tied to the owning wallet.
-export function migrateToAccountsSlice(state: any): any {
+export function migrateToAccountsSlice(state: unknown) {
   logger.info('Beginning accounts slice migration');
 
-  return produce(state, (draftState: any) => {
-    const entities: Record<string, { id: string; name?: string; status?: 'active' | 'hidden' }> =
+  return produce(state, draftState => {
+    if (!isRecord(draftState)) return;
+
+    const entities: Record<string, { id: string; name?: unknown; status?: 'active' | 'hidden' }> =
       {};
     const ids: string[] = [];
 
-    const priorAccountEntities = draftState?.accounts?.entities ?? {};
+    const priorAccountEntities = getRecordAtPath(draftState, 'accounts', 'entities') ?? {};
 
-    const keychainEntities = draftState?.keychains?.entities ?? {};
-    const keychainIds: string[] = Array.isArray(draftState?.keychains?.ids)
-      ? draftState.keychains.ids
-      : [];
-    const keychains = keychainIds
-      .map(id => keychainEntities[id])
-      .filter(
-        (keychain): keychain is { descriptor: string; chain: 'bitcoin' | 'stacks' } =>
-          typeof keychain?.descriptor === 'string' &&
-          (keychain.chain === 'bitcoin' || keychain.chain === 'stacks')
-      );
+    const keychainEntities = getRecordAtPath(draftState, 'keychains', 'entities') ?? {};
+    const keychainIds = getStringIds(getRecordAtPath(draftState, 'keychains')?.ids);
+    const keychains = toLegacyKeychains(keychainIds.map(id => keychainEntities[id]));
 
-    const walletEntities = draftState?.wallets?.entities ?? {};
-    const walletIds: string[] = Array.isArray(draftState?.wallets?.ids)
-      ? draftState.wallets.ids
-      : [];
-    for (const wallet of walletIds.map(id => walletEntities[id]).filter(Boolean)) {
-      if (!wallet?.fingerprint) continue;
+    const walletEntities = getRecordAtPath(draftState, 'wallets', 'entities') ?? {};
+    const walletIds = getStringIds(getRecordAtPath(draftState, 'wallets')?.ids);
+    for (const wallet of walletIds.map(id => getRecordAtPath(walletEntities, id))) {
+      if (!wallet?.fingerprint || !isString(wallet.fingerprint)) continue;
 
       if (wallet.type === 'software') {
         repairSoftwareHighestAccountIndex(draftState, wallet.fingerprint);
       }
 
       const accountCount = countWalletAccounts({
-        walletType: wallet.type,
+        walletType: isString(wallet.type) ? wallet.type : '',
         fingerprint: wallet.fingerprint,
-        highestAccountIndex: draftState?.chains?.stx?.[wallet.fingerprint]?.highestAccountIndex,
+        highestAccountIndex: toAccountIndex(
+          getRecordAtPath(draftState, 'chains', 'stx', wallet.fingerprint)?.highestAccountIndex
+        ),
         keychains,
       });
 
       for (let accountIndex = 0; accountIndex < accountCount; accountIndex++) {
         const id = makeAccountIdentifer(wallet.fingerprint, accountIndex);
-        const prior = priorAccountEntities[id];
+        const prior = getRecordAtPath(priorAccountEntities, id);
         entities[id] = {
           id,
           ...(prior?.name ? { name: prior.name } : {}),
@@ -93,17 +118,22 @@ export function migrateToAccountsSlice(state: any): any {
 
     draftState.accounts = { ids, entities };
 
-    const activeAccount = draftState?.active?.account;
-    if (activeAccount?.fingerprint) {
-      const activeId = makeAccountIdentifer(activeAccount.fingerprint, activeAccount.accountIndex);
-      if (!entities[activeId]) {
-        const sameWalletId = ids.find(id => id.startsWith(`${activeAccount.fingerprint}/`));
+    const active = getRecordAtPath(draftState, 'active');
+    const activeAccount = getRecordAtPath(active, 'account');
+    const activeFingerprint = activeAccount?.fingerprint;
+    if (active && activeAccount && isString(activeFingerprint) && activeFingerprint) {
+      const activeAccountIndex = activeAccount.accountIndex;
+      const activeId = isNumber(activeAccountIndex)
+        ? makeAccountIdentifer(activeFingerprint, activeAccountIndex)
+        : undefined;
+      if (!activeId || !entities[activeId]) {
+        const sameWalletId = ids.find(id => id.startsWith(`${activeFingerprint}/`));
         if (sameWalletId) {
-          draftState.active.account = { fingerprint: activeAccount.fingerprint, accountIndex: 0 };
+          active.account = { fingerprint: activeFingerprint, accountIndex: 0 };
         } else if (ids.length > 0) {
           const fallbackId = ids[0];
           const separatorIndex = fallbackId.lastIndexOf('/');
-          draftState.active.account = {
+          active.account = {
             fingerprint: fallbackId.slice(0, separatorIndex),
             accountIndex: Number(fallbackId.slice(separatorIndex + 1)),
           };

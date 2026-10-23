@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
-import validate, { AddressInfo, AddressType, getAddressInfo } from 'bitcoin-address-validation';
+import validate, { AddressType, getAddressInfo } from 'bitcoin-address-validation';
+import { entries } from 'remeda';
 
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
 import { sumNumbers } from '@leather.io/utils';
@@ -7,7 +8,7 @@ import { sumNumbers } from '@leather.io/utils';
 import { BtcSizeFeeEstimator } from '../fees/btc-size-fee-estimator';
 import { inferPaymentTypeFromAddress } from '../utils/bitcoin.utils';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
-import { CoinSelectionRecipient } from './coin-selection';
+import type { CoinSelectionRecipient } from './coin-selection';
 
 export interface InputData {
   value: number;
@@ -15,7 +16,7 @@ export interface InputData {
   address: string;
 }
 
-export function getUtxoTotal<T extends InputData>(utxos: T[]) {
+export function getUtxoTotal(utxos: InputData[]) {
   return sumNumbers(utxos.map(utxo => utxo.value));
 }
 
@@ -23,9 +24,7 @@ interface CountInputsByScriptTypeResponse {
   p2wpkh: number;
   p2tr: number;
 }
-export function countInputsByScriptType<T extends InputData>(
-  utxos: T[]
-): CountInputsByScriptTypeResponse {
+export function countInputsByScriptType(utxos: InputData[]): CountInputsByScriptTypeResponse {
   return utxos.reduce(
     (acc, utxo) => {
       const paymentType = inferPaymentTypeFromAddress(createBitcoinAddress(utxo.address));
@@ -44,8 +43,8 @@ export interface InputSizing {
   signerCount: number;
 }
 
-export function getSizeInfo<T extends InputData>(payload: {
-  utxos: T[];
+export function getSizeInfo(payload: {
+  utxos: InputData[];
   recipients: CoinSelectionRecipient[];
   isSendMax?: boolean;
   inputSizing?: InputSizing;
@@ -53,17 +52,14 @@ export function getSizeInfo<T extends InputData>(payload: {
   const { utxos, recipients, isSendMax, inputSizing } = payload;
 
   const validAddressesInfo = recipients
-    .map(recipient => validate(recipient.address) && getAddressInfo(recipient.address))
-    .filter(Boolean) as AddressInfo[];
+    .filter(recipient => validate(recipient.address))
+    .map(recipient => getAddressInfo(recipient.address));
 
   function getTxOutputsLengthByPaymentType() {
-    return validAddressesInfo.reduce(
-      (acc, { type }) => {
-        acc[type] = (acc[type] || 0) + 1;
-        return acc;
-      },
-      {} as Record<AddressType, number>
-    );
+    return validAddressesInfo.reduce<Partial<Record<AddressType, number>>>((acc, { type }) => {
+      acc[type] = (acc[type] || 0) + 1;
+      return acc;
+    }, {});
   }
 
   const outputTypesCount = getTxOutputsLengthByPaymentType();
@@ -76,12 +72,12 @@ export function getSizeInfo<T extends InputData>(payload: {
   }
 
   // Prepare the output data map for consumption by the txSizer
-  const outputsData = Object.entries(outputTypesCount).reduce(
+  const outputsData = entries(outputTypesCount).reduce<Record<string, number>>(
     (acc, [type, count]) => {
       acc[type + '_output_count'] = count;
       return acc;
     },
-    {} as Record<string, number>
+    {}
   );
 
   const txSizer = new BtcSizeFeeEstimator();

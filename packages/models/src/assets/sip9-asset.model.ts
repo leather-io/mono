@@ -1,5 +1,5 @@
-import { Money } from '../money.model';
-import { BaseNonFungibleCryptoAsset } from './asset.model';
+import { type Money } from '../money.model';
+import type { BaseNonFungibleCryptoAsset } from './asset.model';
 
 export const sip9ContentTypes = [
   'image/jpeg',
@@ -58,7 +58,7 @@ export interface Sip9AssetContent {
 
 export interface Sip9Attribute {
   traitType: string;
-  value: any;
+  value: unknown;
   rarityPercent?: number;
 }
 

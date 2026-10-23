@@ -23,6 +23,9 @@ describe(StxBalancesService.name, () => {
       balance: '5000000',
       locked: '1000000',
     }),
+    getPoxInfo: vi.fn().mockResolvedValue({
+      current_burnchain_block_height: 900000,
+    }),
   } as unknown as HiroStacksApiClient;
 
   const mockMarketDataService = {
@@ -96,6 +99,47 @@ describe(StxBalancesService.name, () => {
       expect(balance.stx.availableBalance.amount).toEqual(initBigNumber(5000000));
       expect(balance.stx.pendingBalance.amount).toEqual(initBigNumber(6000000));
       expect(balance.stx.availableUnlockedBalance.amount).toEqual(initBigNumber(4000000));
+    });
+
+    it('omits lock info when the api reports no unlock height', async () => {
+      const balance = await stxBalancesService.getStxAccountBalance(request);
+      expect(mockStacksApiClient.getPoxInfo).not.toHaveBeenCalled();
+      expect(balance.lock).toBeUndefined();
+    });
+
+    it('estimates the unlock date from the burnchain unlock height and current burn tip', async () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2026-09-18T12:00:00Z'));
+      vi.mocked(mockStacksApiClient.getAddressStxBalance).mockResolvedValueOnce({
+        balance: '5000000',
+        total_miner_rewards_received: '0',
+        lock_tx_id: '0x01',
+        locked: '1000000',
+        lock_height: 100,
+        burnchain_lock_height: 898000,
+        burnchain_unlock_height: 900144,
+      });
+      const balance = await stxBalancesService.getStxAccountBalance(request);
+      expect(mockStacksApiClient.getPoxInfo).toHaveBeenCalled();
+      expect(balance.lock?.unlockBurnHeight).toEqual(900144);
+      expect(balance.lock?.estimatedUnlockAt).toEqual(new Date('2026-09-19T12:00:00Z'));
+      vi.useRealTimers();
+    });
+
+    it('still returns the balance when the pox info request fails', async () => {
+      vi.mocked(mockStacksApiClient.getAddressStxBalance).mockResolvedValueOnce({
+        balance: '5000000',
+        total_miner_rewards_received: '0',
+        lock_tx_id: '0x01',
+        locked: '1000000',
+        lock_height: 100,
+        burnchain_lock_height: 898000,
+        burnchain_unlock_height: 900144,
+      });
+      vi.mocked(mockStacksApiClient.getPoxInfo).mockRejectedValueOnce(new Error('pox down'));
+      const balance = await stxBalancesService.getStxAccountBalance(request);
+      expect(balance.lock).toBeUndefined();
+      expect(balance.stx.lockedBalance.amount).toEqual(initBigNumber(1000000));
     });
 
     it('uses market data to calculate usd-denominated balances', async () => {

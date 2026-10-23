@@ -4,10 +4,16 @@ import { createRoot } from 'react-dom/client';
 
 import { LedgerError } from '@zondax/ledger-stacks';
 
+import type * as LeatherUtils from '@leather.io/utils';
+
+import type * as GenericLedgerUtils from '@app/features/ledger/utils/generic-ledger-utils';
+import type * as StacksLedgerUtils from '@app/features/ledger/utils/stacks-ledger-utils';
+
 import { makeFakeDmk } from '../../dmk/ledger-dmk.mocks';
 import { fakeLedgerSessionId, makeFakeLedgerStacksApp } from '../../utils/ledger-app.mocks';
 import { LedgerSignMsgContainer } from './ledger-stacks-sign-msg-container';
-import { LedgerMessageSigningContext } from './ledger-stacks-sign-msg.context';
+import { type LedgerMessageSigningContext } from './ledger-stacks-sign-msg.context';
+import type * as LedgerStacksSignMsgContext from './ledger-stacks-sign-msg.context';
 
 Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true);
 
@@ -20,6 +26,7 @@ const mocks = vi.hoisted(() => ({
   toDeviceDisconnectStep: vi.fn(),
   toStacksAppOutdatedWarning: vi.fn(),
   toErrorStep: vi.fn(),
+  settleLedgerAction: vi.fn(),
   trackDeviceVersionInfo: vi.fn(),
   messageSignedOnLedgerSuccessfully: vi.fn(),
   messageSignedOnLedgerRejected: vi.fn(),
@@ -28,13 +35,26 @@ const mocks = vi.hoisted(() => ({
   signUtf8Message: vi.fn(),
   versionGate: vi.fn(),
   migrateFingerprint: vi.fn(),
-  publish: vi.fn(),
   disconnect: vi.fn(),
+  closeWithError: vi.fn(),
   captureContext: vi.fn<(value: LedgerMessageSigningContext) => void>(),
+  account: vi.fn<() => StacksAccountMock | undefined>(),
 }));
 
-vi.mock('../../hooks/use-ledger-navigate', () => ({
-  useLedgerNavigate: () => ({
+interface StacksAccountMock {
+  derivationPath: string;
+  stxPublicKey: string;
+}
+
+const stacksAccount: StacksAccountMock = {
+  derivationPath: "m/44'/5757'/0'/0/0",
+  stxPublicKey: '029f9d43e161b2ecb86d78262d47d2cd10d20ab7b4c303cd4f0e26744c72e340fc',
+};
+
+vi.mock('../../flow/ledger-flow.context', () => ({
+  useLedgerFlowState: () => null,
+  useLedgerFlow: () => ({ closeWithError: mocks.closeWithError }),
+  useLedgerSteps: () => ({
     toCheckingAppVersion: mocks.toCheckingAppVersion,
     toConnectionSuccessStep: mocks.toConnectionSuccessStep,
     toAwaitingDeviceOperation: mocks.toAwaitingDeviceOperation,
@@ -43,6 +63,7 @@ vi.mock('../../hooks/use-ledger-navigate', () => ({
     toDeviceDisconnectStep: mocks.toDeviceDisconnectStep,
     toStacksAppOutdatedWarning: mocks.toStacksAppOutdatedWarning,
     toErrorStep: mocks.toErrorStep,
+    settleLedgerAction: mocks.settleLedgerAction,
   }),
 }));
 
@@ -62,24 +83,28 @@ vi.mock('@app/common/hooks/use-scroll-lock', () => ({
   useScrollLock: vi.fn(),
 }));
 
-vi.mock('@app/common/publish-subscribe', () => ({
-  appEvents: { publish: mocks.publish },
-}));
-
 vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
-  useCurrentStacksAccount: () => ({
-    derivationPath: "m/44'/5757'/0'/0/0",
-    stxPublicKey: '029f9d43e161b2ecb86d78262d47d2cd10d20ab7b4c303cd4f0e26744c72e340fc',
-  }),
+  useCurrentStacksAccount: () => mocks.account(),
 }));
 
-vi.mock('./use-message-type', () => ({
-  useUnsignedMessageType: () => ({ messageType: 'utf8', message: 'hello leather' }),
+vi.mock('../../flow/ledger-flow-sheet', () => ({
+  LedgerFlowSheet: () => null,
+}));
+
+vi.mock('./steps/connect-ledger-sign-msg', () => ({
+  ConnectLedgerSignMsg: () => null,
+}));
+
+vi.mock('./steps/outdated-stacks-app-warning-msg-signing', () => ({
+  OutdatedStacksAppWarningMsgSigning: () => null,
+}));
+
+vi.mock('./steps/sign-stacks-ledger-message', () => ({
+  SignLedgerMessage: () => null,
 }));
 
 vi.mock('@app/features/ledger/utils/stacks-ledger-utils', async importOriginal => {
-  const actual =
-    await importOriginal<typeof import('@app/features/ledger/utils/stacks-ledger-utils')>();
+  const actual = await importOriginal<typeof StacksLedgerUtils>();
   return {
     ...actual,
     prepareLedgerDeviceStacksAppConnection: () => mocks.prepareConnection,
@@ -97,23 +122,17 @@ vi.mock('@app/features/ledger/dmk/ledger-dmk.context', () => ({
 }));
 
 vi.mock('@app/features/ledger/utils/generic-ledger-utils', async importOriginal => {
-  const actual =
-    await importOriginal<typeof import('@app/features/ledger/utils/generic-ledger-utils')>();
+  const actual = await importOriginal<typeof GenericLedgerUtils>();
   return { ...actual, useCancelLedgerAction: () => false };
 });
 
-vi.mock('@leather.io/ui', () => ({
-  Sheet: () => null,
-  SheetHeader: () => null,
-}));
-
 vi.mock('@leather.io/utils', async importOriginal => {
-  const actual = await importOriginal<typeof import('@leather.io/utils')>();
+  const actual = await importOriginal<typeof LeatherUtils>();
   return { ...actual, delay: () => Promise.resolve() };
 });
 
 vi.mock('./ledger-stacks-sign-msg.context', async importOriginal => {
-  const actual = await importOriginal<typeof import('./ledger-stacks-sign-msg.context')>();
+  const actual = await importOriginal<typeof LedgerStacksSignMsgContext>();
   return {
     ...actual,
     LedgerMsgSigningProvider(props: { value: LedgerMessageSigningContext }) {
@@ -136,11 +155,24 @@ const stacksAppVersion = {
   patch: 19,
 };
 
-function renderSignMsgContext(): LedgerMessageSigningContext {
+function renderSignMsgContainer() {
   const root = createRoot(document.createElement('div'));
   act(() => {
-    root.render(createElement(LedgerSignMsgContainer));
+    root.render(
+      createElement(LedgerSignMsgContainer, {
+        request: {
+          kind: 'sign-stacks-message',
+          id: 1,
+          resolve: vi.fn(),
+          message: { messageType: 'utf8', message: 'hello leather' },
+        },
+      })
+    );
   });
+}
+
+function renderSignMsgContext(): LedgerMessageSigningContext {
+  renderSignMsgContainer();
   const call = mocks.captureContext.mock.calls.at(-1);
   if (!call) throw new Error('Message signing context was not rendered');
   return call[0];
@@ -161,9 +193,29 @@ function setupSignMessage() {
 describe(LedgerSignMsgContainer.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.account.mockReturnValue(stacksAccount);
   });
 
-  test('signs the message, publishes the signature and closes the transport once', async () => {
+  test('closes the flow with an error when there is no active stacks account', () => {
+    mocks.account.mockReturnValue(undefined);
+
+    renderSignMsgContainer();
+
+    expect(mocks.captureContext).not.toHaveBeenCalled();
+    expect(mocks.closeWithError).toHaveBeenCalledOnce();
+    expect(mocks.closeWithError).toHaveBeenCalledWith(
+      'No active account found for message signing'
+    );
+  });
+
+  test('keeps the flow open when an active stacks account exists', () => {
+    renderSignMsgContainer();
+
+    expect(mocks.captureContext).toHaveBeenCalled();
+    expect(mocks.closeWithError).not.toHaveBeenCalled();
+  });
+
+  test('signs the message, settles the flow with the signature and closes the transport once', async () => {
     const { context } = setupSignMessage();
 
     await act(async () => {
@@ -171,8 +223,8 @@ describe(LedgerSignMsgContainer.name, () => {
     });
 
     expect(mocks.messageSignedOnLedgerSuccessfully).toHaveBeenCalledOnce();
-    expect(mocks.publish).toHaveBeenCalledOnce();
-    expect(mocks.publish.mock.calls[0][0]).toBe('ledgerStacksMessageSigned');
+    expect(mocks.settleLedgerAction).toHaveBeenCalledOnce();
+    expect(mocks.settleLedgerAction.mock.calls[0][1]).toMatchObject({ status: 'signed' });
     expect(mocks.toDeviceDisconnectStep).not.toHaveBeenCalled();
     expect(mocks.disconnect).toHaveBeenCalledOnce();
     expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
@@ -187,7 +239,7 @@ describe(LedgerSignMsgContainer.name, () => {
     });
 
     expect(mocks.signUtf8Message).not.toHaveBeenCalled();
-    expect(mocks.publish).not.toHaveBeenCalled();
+    expect(mocks.settleLedgerAction).not.toHaveBeenCalled();
     expect(mocks.disconnect).toHaveBeenCalledOnce();
     expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
@@ -206,7 +258,7 @@ describe(LedgerSignMsgContainer.name, () => {
     expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
 
-  test('publishes a cancellation and closes the transport once when signing is rejected', async () => {
+  test('settles the flow as cancelled and closes the transport once when signing is rejected', async () => {
     const { context } = setupSignMessage();
     mocks.signUtf8Message.mockReturnValue(() =>
       Promise.resolve({ returnCode: LedgerError.TransactionRejected })
@@ -218,8 +270,8 @@ describe(LedgerSignMsgContainer.name, () => {
 
     expect(mocks.toOperationRejectedStep).toHaveBeenCalledOnce();
     expect(mocks.messageSignedOnLedgerRejected).toHaveBeenCalledOnce();
-    expect(mocks.publish).toHaveBeenCalledOnce();
-    expect(mocks.publish.mock.calls[0][0]).toBe('ledgerStacksMessageSigningCancelled');
+    expect(mocks.settleLedgerAction).toHaveBeenCalledOnce();
+    expect(mocks.settleLedgerAction.mock.calls[0][1]).toEqual({ status: 'cancelled' });
     expect(mocks.disconnect).toHaveBeenCalledOnce();
     expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
@@ -235,7 +287,7 @@ describe(LedgerSignMsgContainer.name, () => {
     expect(mocks.toCheckingAppVersion).not.toHaveBeenCalled();
     expect(mocks.toErrorStep).not.toHaveBeenCalled();
     expect(mocks.signUtf8Message).not.toHaveBeenCalled();
-    expect(mocks.publish).not.toHaveBeenCalled();
+    expect(mocks.settleLedgerAction).not.toHaveBeenCalled();
     expect(mocks.disconnect).not.toHaveBeenCalled();
   });
 

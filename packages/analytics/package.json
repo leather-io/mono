@@ -2,7 +2,7 @@
   "name": "@leather.io/analytics",
   "author": "Leather.io contact@leather.io",
   "description": "Analytics package for Leather using Mixpanel",
-  "version": "3.25.1",
+  "version": "3.26.0",
   "license": "MIT",
   "homepage": "https://github.com/leather.io/mono/tree/dev/packages/analytics",
   "repository": {
@@ -28,6 +28,9 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     }
+  },
+  "dependencies": {
+    "remeda": "2.21.2"
   },
   "devDependencies": {
     "@leather.io/models": "workspace:*",

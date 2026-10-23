@@ -1,9 +1,9 @@
 import { hexToBytes } from '@noble/hashes/utils';
 import {
   BytesReader,
-  PoxPostCondition,
-  StakingPostCondition,
-  StxPostCondition,
+  type PoxPostCondition,
+  type StakingPostCondition,
+  type StxPostCondition,
   deserializePostConditionWire,
   postConditionToHex,
 } from '@stacks/transactions';

@@ -1,11 +1,10 @@
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { produce } from 'immer';
 
-import { SupportedBlockchains, WalletId } from '@leather.io/models';
+import { type SupportedBlockchains, type WalletId } from '@leather.io/models';
 
+import { handleAppResetWithState } from '../app-reset';
 import { handleEntityActionWith } from '../entity.helpers';
-import { handleAppResetWithState } from '../index';
-import { PartialWalletStore, WalletStore } from './wallet.utils';
+import { type PartialWalletStore, type WalletStore } from './wallet.utils';
 
 export const walletAdapter = createEntityAdapter<WalletStore, string>({
   selectId: key => key.fingerprint,
@@ -25,13 +24,7 @@ function addWalletDefaults({
   wallet: PartialWalletStore;
   walletIdx: number;
 }): WalletStore {
-  const updatedWallet = produce(wallet, draftWallet => {
-    if (!draftWallet.name) {
-      draftWallet.name = `Wallet ${walletIdx}`;
-    }
-    return draftWallet;
-  });
-  return updatedWallet as WalletStore;
+  return { ...wallet, name: wallet.name || `Wallet ${walletIdx}` };
 }
 
 export interface AddWalletPayload {

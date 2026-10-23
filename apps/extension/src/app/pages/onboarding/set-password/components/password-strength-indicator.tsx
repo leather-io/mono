@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { createNullArrayOfLength } from '@leather.io/utils';
 
-import { ValidatedPassword } from '@app/common/validation/validate-password';
+import { type ValidatedPassword } from '@app/common/validation/validate-password';
 
 import { PasswordStrengthBars } from './password-bars';
 import { defaultColor } from './password-field.utils';

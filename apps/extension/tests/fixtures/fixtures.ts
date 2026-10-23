@@ -1,4 +1,4 @@
-import { BrowserContext, Page, test as base, chromium } from '@playwright/test';
+import { type BrowserContext, type Page, test as base, chromium } from '@playwright/test';
 import { GlobalPage } from '@tests/page-object-models/global.page';
 import { HomePage } from '@tests/page-object-models/home.page';
 import { NetworkPage } from '@tests/page-object-models/network.page';
@@ -35,10 +35,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const test = base.extend<TestFixtures>({
   // Playwright always needs object destructuring for fixtures https://github.com/microsoft/playwright/issues/14590
   // eslint-disable-next-line no-empty-pattern
-  context: async ({}, use) => {
+  async context({}, use) {
     const pathToExtension = path.join(__dirname, '../../dist');
     const context = await chromium.launchPersistentContext('', {
-      headless: false,
+      headless: true,
+      channel: 'chromium',
       permissions: ['clipboard-read'],
       args: [
         `--disable-extensions-except=${pathToExtension}`,
@@ -50,7 +51,7 @@ export const test = base.extend<TestFixtures>({
     await context.close();
     await context.browser()?.close();
   },
-  page: async ({ context }, use) => {
+  async page({ context }, use) {
     const pages = context.pages();
     const page = pages.length > 0 ? pages[0] : await context.newPage();
     await page.addStyleTag({
@@ -65,34 +66,34 @@ export const test = base.extend<TestFixtures>({
     });
     await use(page);
   },
-  extensionId: async ({ context }, use) => {
+  async extensionId({ context }, use) {
     let [background] = context.serviceWorkers();
     if (!background) background = await context.waitForEvent('serviceworker');
     const extensionId = background.url().split('/')[2];
     await use(extensionId);
   },
-  globalPage: async ({ page }, use) => {
+  async globalPage({ page }, use) {
     await use(new GlobalPage(page));
   },
-  homePage: async ({ page }, use) => {
+  async homePage({ page }, use) {
     await use(new HomePage(page));
   },
-  onboardingPage: async ({ page }, use) => {
+  async onboardingPage({ page }, use) {
     await use(new OnboardingPage(page));
   },
-  sendPage: async ({ page }, use) => {
+  async sendPage({ page }, use) {
     await use(new SendPage(page));
   },
-  swapRevampPage: async ({ page }, use) => {
+  async swapRevampPage({ page }, use) {
     await use(new SwapRevampPage(page));
   },
-  networkPage: async ({ page }, use) => {
+  async networkPage({ page }, use) {
     await use(new NetworkPage(page));
   },
-  settingsPage: async ({ page }, use) => {
+  async settingsPage({ page }, use) {
     await use(new SettingsPage(page));
   },
-  switchAccountPage: async ({ page }, use) => {
+  async switchAccountPage({ page }, use) {
     await use(new SwitchAccountPage(page));
   },
 });

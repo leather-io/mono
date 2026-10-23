@@ -15,6 +15,24 @@ auditConfig:
     # image-size JXL and HEIF parsers infinite-loop DoS. Same package, same
     # exposure, and same fix constraints as the ICNS advisory above.
     - GHSA-5p2g-fcmc-qvqq
+    # node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested
+    # DigestAlgorithm elements. Build-time only: node-forge is reached solely
+    # through @expo/cli (dev-server manifest signing, `expo login`, and iOS
+    # code-signing in `expo run:ios`) and webpack-dev-server's selfsigned dev
+    # certificate, and ships in no app artifact. The advisory's patched version
+    # (1.4.1) is not published on npm. Remove this entry once node-forge 1.4.1+
+    # is published and @expo/cli picks it up.
+    - GHSA-86w9-cpqp-85rv
+    # braces stack-exhaustion DoS through deeply nested brace patterns.
+    # Build-time only: braces is reached solely through the glob matching of
+    # build and dev tooling, via micromatch (metro-file-map, jest, fast-glob)
+    # and chokidar 3.x (sanity CLI, @sentry/vite-plugin, webpack-dev-server),
+    # and ships in no app artifact. The patterns it expands are our own config
+    # and watch globs, never untrusted input, and metro-file-map only calls
+    # micromatch.some, which does not invoke braces. The advisory's patched
+    # version (3.0.4) is not published on npm. Remove this entry once braces
+    # 3.0.4+ is published and micromatch and chokidar pick it up.
+    - GHSA-vfj7-8cjw-p6xm
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - axios

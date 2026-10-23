@@ -6,13 +6,11 @@ import {
   mockSbtcSponsorshipSubmit,
 } from '@tests/mocks/mock-sbtc';
 import { mockZeroStxBalanceV2Request } from '@tests/mocks/mock-stacks-balances-v2';
-import { HomePage } from '@tests/page-object-models/home.page';
-import { OnboardingPage } from '@tests/page-object-models/onboarding.page';
-import { SendPage } from '@tests/page-object-models/send.page';
+import type { HomePage } from '@tests/page-object-models/home.page';
+import type { OnboardingPage } from '@tests/page-object-models/onboarding.page';
+import type { SendPage } from '@tests/page-object-models/send.page';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
-
-import { RouteUrls } from '@shared/route-urls';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -53,9 +51,7 @@ async function openSbtcSendForm({
 }: SbtcSendFixtures) {
   await onboardingPage.signInWithTestAccount(extensionId);
   await homePage.sendButton.click();
-  await sendPage.page.waitForURL('**' + RouteUrls.SendCryptoAsset);
-  await sendPage.page.getByTestId(sbtcTokenTestId).click();
-  await sendPage.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
+  await sendPage.selectSip10AndGoToSendForm(sbtcTokenTestId);
   await sendPage.amountInput.fill(amount);
   await sendPage.recipientInput.fill(TEST_ACCOUNT_2_STX_ADDRESS);
   await sendPage.recipientInput.blur();

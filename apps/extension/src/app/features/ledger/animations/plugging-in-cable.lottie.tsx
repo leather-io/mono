@@ -1,9 +1,9 @@
-import { Box, BoxProps } from 'leather-styles/jsx';
+import { Box, type BoxProps } from 'leather-styles/jsx';
 import Lottie from 'lottie-react';
 
 import { useThemeSwitcher } from '@app/common/theme-provider';
 
-import * as animationDataBright from './plugged-in-cable-bright.lottie.json';
+import animationDataBright from './plugged-in-cable-bright.lottie.json';
 
 // Required for interop with `React.lazy`
 // ts-unused-exports:disable-next-line
@@ -17,7 +17,7 @@ export default function PluggingInLedgerCableAnimation(props: BoxProps) {
         <Lottie
           animationData={animationDataBright}
           loop={true}
-          style={{ width: 380, marginLeft: 'auto', marginRight: 'auto' }}
+          style={{ width: '100%', maxWidth: 380, marginLeft: 'auto', marginRight: 'auto' }}
         />
       </Box>
     </Box>

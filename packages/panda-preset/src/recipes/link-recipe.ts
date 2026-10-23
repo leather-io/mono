@@ -12,7 +12,13 @@ export const linkRecipe = defineRecipe({
     pt: 'space.01',
     textAlign: 'left',
     textUnderlineOffset: '3px',
-    textDecorationThickness: '2px',
+    textDecorationThickness: '1px',
+    outline: 'none',
+    _focusVisible: {
+      outline: '2px solid {colors.blue.action-primary-default}',
+      outlineOffset: '2px',
+      rounded: 'xs',
+    },
   },
 
   variants: {
@@ -30,32 +36,27 @@ export const linkRecipe = defineRecipe({
 
     variant: {
       underlined: {
-        textDecoration: 'underline',
+        textDecorationLine: 'underline',
         _active: {
           color: 'ink.text-primary',
-        },
-        _focus: {
-          textDecorationColor: 'blue.border',
-          outline: 0,
         },
         _hover: {
           textDecorationColor: 'ink.text-primary',
         },
-        textDecorationColor: 'ink.text-non-interactive',
+        textDecorationColor: 'ink.underline',
       },
 
       text: {
         _active: {
           color: 'ink.text-primary',
-          textDecoration: 'underline',
+          textDecorationLine: 'underline',
         },
         _focus: {
           color: 'ink.text-primary',
-          outline: 0,
-          textDecoration: 'underline',
+          textDecorationLine: 'underline',
         },
         _hover: {
-          textDecoration: 'underline',
+          textDecorationLine: 'underline',
         },
       },
     },
@@ -74,8 +75,8 @@ export const linkRecipe = defineRecipe({
     {
       css: {
         color: 'ink.background-secondary',
-        outline: 0,
-        textDecoration: 'underline',
+        textDecorationLine: 'underline',
+        textDecorationColor: 'currentColor',
       },
       invert: true,
       variant: 'underlined',
@@ -86,7 +87,8 @@ export const linkRecipe = defineRecipe({
       css: {
         color: 'ink.text-non-interactive',
         cursor: 'not-allowed',
-        textDecoration: 'underline',
+        textDecorationLine: 'underline',
+        textDecorationColor: 'currentColor',
       },
     },
     {
@@ -95,7 +97,7 @@ export const linkRecipe = defineRecipe({
       css: {
         color: 'ink.text-non-interactive',
         cursor: 'not-allowed',
-        textDecoration: 'none',
+        textDecorationLine: 'none',
       },
     },
   ],

@@ -1,40 +1,46 @@
-export enum SendCryptoAssetSelectors {
-  AmountFieldInput = 'amount-field-input',
-  AmountFieldInputErrorLabel = 'amount-field-input-error-label',
-  ConfirmationDetails = 'confirmation-details',
-  ConfirmSendTxBtn = 'confirm-send-tx-btn',
-  ConfirmationDetailsAmountAndSymbol = 'confirmation-details-amount-and-symbol',
-  ConfirmationDetailsRecipient = 'confirmation-details-recipient',
-  ConfirmationDetailsAssetValue = 'confirmation-details-asset-value',
-  ConfirmationDetailsFee = 'confirmation-details-fee',
-  ConfirmationDetailsMemo = 'confirmation-details-memo',
-  ConfirmationDetailText = 'confirmation-detail-text',
-  ChooseAssetToSendPage = 'choose-asset-to-send-page',
-  FormFieldInputErrorLabel = 'form-field-input-error-label',
-  MemoFieldInput = 'memo-field-input',
-  PreviewSendTxBtn = 'preview-send-tx-btn',
-  RecipientChooseAccountButton = 'recipient-choose-account-button',
-  RecipientSelectRecipientTypeDropdown = 'recipient-select-field-dropdown-button',
-  RecipientSelectFieldAddress = 'recipient-select-field-address',
-  RecipientSelectFieldBnsName = 'recipient-select-field-bnsName',
-  RecipientFieldInput = 'recipient-field-input',
-  RecipientBnsAddressLabel = 'recipient-bns-address-label',
-  RecipientBnsAddressCopyToClipboard = 'recipient-bns-address-copy-to-clipboard',
-  SendForm = 'send-form',
-  SendMaxBtn = 'send-max-btn',
+export const SendCryptoAssetSelectors = {
+  AmountFieldInput: 'amount-field-input',
+  AmountFieldInputErrorLabel: 'amount-field-input-error-label',
+  ConfirmationDetails: 'confirmation-details',
+  ConfirmSendTxBtn: 'confirm-send-tx-btn',
+  ConfirmationDetailsAmountAndSymbol: 'confirmation-details-amount-and-symbol',
+  ConfirmationDetailsRecipient: 'confirmation-details-recipient',
+  ConfirmationDetailsAssetValue: 'confirmation-details-asset-value',
+  ConfirmationDetailsFee: 'confirmation-details-fee',
+  ConfirmationDetailsMemo: 'confirmation-details-memo',
+  ConfirmationDetailText: 'confirmation-detail-text',
+  ChooseAssetToSendPage: 'choose-asset-to-send-page',
+  FormFieldInputErrorLabel: 'form-field-input-error-label',
+  MemoFieldInput: 'memo-field-input',
+  PreviewSendTxBtn: 'preview-send-tx-btn',
+  RecipientChooseAccountButton: 'recipient-choose-account-button',
+  RecipientSelectRecipientTypeDropdown: 'recipient-select-field-dropdown-button',
+  RecipientSelectFieldAddress: 'recipient-select-field-address',
+  RecipientSelectFieldBnsName: 'recipient-select-field-bnsName',
+  RecipientFieldInput: 'recipient-field-input',
+  RecipientBnsAddressLabel: 'recipient-bns-address-label',
+  RecipientBnsAddressCopyToClipboard: 'recipient-bns-address-copy-to-clipboard',
+  SendForm: 'send-form',
+  SendMaxBtn: 'send-max-btn',
 
-  SendPageReady = 'send-page-ready',
+  SendPageReady: 'send-page-ready',
 
-  SentTransactionSummary = 'sent-transaction-summary',
+  SentTransactionSummary: 'sent-transaction-summary',
 
-  SbtcFeeRequoteCallout = 'sbtc-fee-requote-callout',
+  SbtcFeeRequoteCallout: 'sbtc-fee-requote-callout',
 
   // stx high fee warning dialog
-  HighFeeWarningSheet = 'high-fee-warning-sheet',
-  HighFeeWarningSheetSubmit = 'high-fee-warning-sheet-submit',
+  HighFeeWarningSheet: 'high-fee-warning-sheet',
+  HighFeeWarningSheetSubmit: 'high-fee-warning-sheet-submit',
 
-  TaprootUtxoWarningDialog = 'taproot-utxo-warning-dialog',
-}
+  TaprootUtxoWarningDialog: 'taproot-utxo-warning-dialog',
+
+  SpendSourcesTaprootCallout: 'spend-sources-taproot-callout',
+  SpendSourcesNativeSegwitRow: 'spend-sources-native-segwit-row',
+  SpendSourcesTaprootRow: 'spend-sources-taproot-row',
+} as const;
+export type SendCryptoAssetSelectors =
+  (typeof SendCryptoAssetSelectors)[keyof typeof SendCryptoAssetSelectors];
 
 export function getRecipientSelectAccountTestId(fingerprint: string, accountIndex: number) {
   return `recipient-select-account-${fingerprint}-${accountIndex}`;

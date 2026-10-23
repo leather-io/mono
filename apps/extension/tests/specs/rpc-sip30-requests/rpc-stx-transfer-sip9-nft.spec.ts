@@ -1,6 +1,8 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
+import { requestLeatherProvider } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
+import { PostConditionSelectors } from '@tests/selectors/requests.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
 import type { RpcParams, stxTransferSip9Nft } from '@leather.io/rpc';
@@ -13,26 +15,32 @@ test.describe('RPC: stx_transferSip9Nft', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="LIV"');
-      await popup.waitForSelector('text="You will transfer"');
-      await popup.waitForSelector('text="living-leather"');
-      await popup.waitForSelector('text="SPS8…WSFE"');
-      await popup.waitForSelector('text="You will transfer LIV or the transaction will abort."');
+      const postConditionItem = popup.getByTestId(PostConditionSelectors.PostConditionItem);
+      await test.expect(popup.getByText('LIV', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('You will transfer', { exact: true })).toBeVisible();
+      await test
+        .expect(postConditionItem.getByText('living-leather', { exact: true }))
+        .toBeVisible();
+      await test.expect(postConditionItem.getByText('SPS8…WSFE', { exact: true })).toBeVisible();
+      await test
+        .expect(
+          popup.getByText('You will transfer LIV or the transaction will abort.', { exact: true })
+        )
+        .toBeVisible();
 
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SP2XMGYYTA1KRBKBYJHTW8CFWB2QYZKZE4BMHG3PJ');
 
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Confirm"');
+      const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
@@ -44,13 +52,10 @@ test.describe('RPC: stx_transferSip9Nft', () => {
 
   function initiateSip30RpcTransferSip9Nft(page: Page) {
     return async (params: RpcParams<typeof stxTransferSip9Nft>) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('stx_transferSip9Nft', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
+      page.evaluate(requestLeatherProvider, {
+        method: 'stx_transferSip9Nft',
+        params: { ...params },
+      });
   }
 
   test('SIP-30 transfer sip9 non-fungible token', async ({ page, context }) => {

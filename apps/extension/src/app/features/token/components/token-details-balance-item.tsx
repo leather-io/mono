@@ -4,24 +4,30 @@ import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { truncateMiddle } from '@leather.io/utils';
 
+import { InfoTooltip } from '@app/ui/components/tooltip/info-tooltip';
+
 interface TokenDetailsBalanceItemProps {
   title: string;
   address?: string;
   caption?: string;
+  tooltipText?: string;
   rightTop: ReactNode;
   rightBottom?: ReactNode;
   onPressAddress?(): void;
   onPressRow?(): void;
+  testId?: string;
 }
 
 export function TokenDetailsBalanceItem({
   title,
   address,
   caption,
+  tooltipText,
   rightTop,
   rightBottom,
   onPressAddress,
   onPressRow,
+  testId,
 }: TokenDetailsBalanceItemProps) {
   const addressElement = useMemo(() => {
     if (!address) {
@@ -60,7 +66,14 @@ export function TokenDetailsBalanceItem({
   const content = (
     <>
       <Stack gap="2px" minWidth="0" alignItems="flex-start">
-        <styled.span textStyle="label.02">{title}</styled.span>
+        <Flex alignItems="center" gap="space.01">
+          <styled.span textStyle="label.02">{title}</styled.span>
+          {tooltipText ? (
+            <Flex display="inline-flex" onClick={e => e.stopPropagation()}>
+              <InfoTooltip label={tooltipText} />
+            </Flex>
+          ) : null}
+        </Flex>
         {addressElement}
       </Stack>
       <Stack gap="2px" alignItems="flex-end">
@@ -88,6 +101,7 @@ export function TokenDetailsBalanceItem({
         bg="transparent"
         _hover={{ bg: 'ink.component-background-hover', cursor: 'pointer' }}
         onClick={onPressRow}
+        data-testid={testId}
       >
         {content}
       </styled.button>
@@ -101,6 +115,7 @@ export function TokenDetailsBalanceItem({
       alignItems="center"
       justifyContent="space-between"
       gap="space.03"
+      data-testid={testId}
     >
       {content}
     </Flex>

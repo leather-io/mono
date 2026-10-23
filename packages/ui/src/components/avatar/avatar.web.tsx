@@ -89,6 +89,7 @@ const AvatarRoot = styled(RadixAvatar.Root, {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
     bg: 'ink.background-secondary',
     userSelect: 'none',
     outlineWidth: 1,

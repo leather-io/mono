@@ -1,4 +1,5 @@
 import { type FungiblePostConditionWire } from '@stacks/transactions';
+import { PostConditionSelectors } from '@tests/selectors/requests.selectors';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { AssetAvatarIcon, ItemLayout, StxAvatarIcon } from '@leather.io/ui';
@@ -32,7 +33,7 @@ export function FungiblePostConditionItem({
 
   const imageCanonicalUri = asset
     ? getSafeImageCanonicalUri(asset.imageCanonicalUri, asset.name)
-    : '';
+    : undefined;
 
   const icon =
     iconString !== 'STX' ? (
@@ -50,7 +51,7 @@ export function FungiblePostConditionItem({
     );
 
   return (
-    <Stack gap="space.03">
+    <Stack data-testid={PostConditionSelectors.PostConditionItem} gap="space.03">
       <styled.span textStyle="label.03">{title}</styled.span>
       <ItemLayout
         img={icon}
@@ -61,7 +62,7 @@ export function FungiblePostConditionItem({
       />
       {message && (
         <Box py="space.03" borderTop="default" borderBottom={!isLast ? 'active' : 'unset'}>
-          <styled.span color="ink.text-subdued" textStyle="caption.01">
+          <styled.span color="ink.text-secondary" textStyle="caption.01">
             {message}
           </styled.span>
         </Box>

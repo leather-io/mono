@@ -1,22 +1,17 @@
 import type { Page } from '@playwright/test';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
+import { z } from 'zod';
 
 import { test } from '../../fixtures/fixtures';
 
-interface HeapSnapshot {
-  snapshot: {
-    meta: {
-      node_fields: string[];
-      node_types: string[][];
-      edge_fields: string[];
-      edge_types: string[][];
-    };
-  };
-  nodes: number[];
-  edges: number[];
-  strings: string[];
-}
+const heapSnapshotSchema = z.object({
+  nodes: z.array(z.number()),
+  edges: z.array(z.number()),
+  strings: z.array(z.string()),
+});
+
+type HeapSnapshot = z.infer<typeof heapSnapshotSchema>;
 
 async function takeHeapSnapshot(page: Page): Promise<HeapSnapshot> {
   const client = await page.context().newCDPSession(page);
@@ -24,30 +19,22 @@ async function takeHeapSnapshot(page: Page): Promise<HeapSnapshot> {
   await client.send('HeapProfiler.enable');
   await client.send('HeapProfiler.collectGarbage');
 
-  const snapshot = await new Promise<HeapSnapshot>((resolve, reject) => {
-    const chunks: string[] = [];
+  const chunks: string[] = [];
 
-    client.on('HeapProfiler.addHeapSnapshotChunk', (event: { chunk: string }) => {
-      chunks.push(event.chunk);
-    });
-
-    client.send('HeapProfiler.takeHeapSnapshot', { reportProgress: false }).then(
-      () => {
-        try {
-          const snapshotData = JSON.parse(chunks.join(''));
-          resolve(snapshotData);
-        } catch (error) {
-          reject(error as Error);
-        }
-      },
-      (error: any) => reject(error as Error)
-    );
+  client.on('HeapProfiler.addHeapSnapshotChunk', (event: { chunk: string }) => {
+    chunks.push(event.chunk);
   });
+
+  await client.send('HeapProfiler.takeHeapSnapshot', { reportProgress: false });
+
+  const snapshotData: unknown = JSON.parse(chunks.join(''));
+  const result = heapSnapshotSchema.safeParse(snapshotData);
+  if (!result.success) throw new Error('Unexpected heap snapshot shape');
 
   await client.send('HeapProfiler.disable');
   await client.detach();
 
-  return snapshot;
+  return result.data;
 }
 
 function searchHeapForString(snapshot: HeapSnapshot, searchString: string): boolean {
@@ -61,6 +48,15 @@ function searchHeapForString(snapshot: HeapSnapshot, searchString: string): bool
   }
 
   return false;
+}
+
+const sampleOccurrenceCount = 3;
+
+async function attachHeapOccurrences(result: ReturnType<typeof searchHeapForStringWithDetails>) {
+  await test.info().attach('password-heap-occurrences', {
+    body: JSON.stringify(result.occurrences.slice(0, sampleOccurrenceCount), null, 2),
+    contentType: 'application/json',
+  });
 }
 
 function searchHeapForStringWithDetails(
@@ -102,12 +98,7 @@ test.describe('Security: Password Memory Leak', () => {
     await homePage.lock();
 
     const unlockInput = page.getByTestId(SettingsSelectors.EnterPasswordInput);
-    await unlockInput.waitFor({ state: 'visible' });
-    await unlockInput.fill(TEST_PASSWORD);
-
-    const unlockButton = page.getByTestId(SettingsSelectors.UnlockWalletBtn);
-    await unlockButton.waitFor({ state: 'visible' });
-    await unlockButton.click();
+    await homePage.unlock();
 
     await page
       .getByTestId(SettingsSelectors.CurrentAccountDisplayName)
@@ -141,12 +132,7 @@ test.describe('Security: Password Memory Leak', () => {
     await homePage.lock();
 
     const unlockInput = page.getByTestId(SettingsSelectors.EnterPasswordInput);
-    await unlockInput.waitFor({ state: 'visible' });
-    await unlockInput.fill(TEST_PASSWORD);
-
-    const unlockButton = page.getByTestId(SettingsSelectors.UnlockWalletBtn);
-    await unlockButton.waitFor({ state: 'visible' });
-    await unlockButton.click();
+    await homePage.unlock();
 
     await page
       .getByTestId(SettingsSelectors.CurrentAccountDisplayName)
@@ -188,12 +174,7 @@ test.describe('Security: Password Memory Leak', () => {
     await homePage.lock();
 
     const unlockInput = page.getByTestId(SettingsSelectors.EnterPasswordInput);
-    await unlockInput.waitFor({ state: 'visible' });
-    await unlockInput.fill(TEST_PASSWORD);
-
-    const unlockButton = page.getByTestId(SettingsSelectors.UnlockWalletBtn);
-    await unlockButton.waitFor({ state: 'visible' });
-    await unlockButton.click();
+    await homePage.unlock();
 
     await page
       .getByTestId(SettingsSelectors.CurrentAccountDisplayName)
@@ -213,21 +194,13 @@ test.describe('Security: Password Memory Leak', () => {
 
     const result = searchHeapForStringWithDetails(snapshot, TEST_PASSWORD);
 
-    if (result.found) {
-      // eslint-disable-next-line no-console
-      console.error(`\n❌ Security Vulnerability Detected!`);
-      // eslint-disable-next-line no-console
-      console.error(`Password found ${result.count} time(s) in heap memory after locking wallet\n`);
-      // eslint-disable-next-line no-console
-      console.error(`Sample occurrences (first 3):`);
-      result.occurrences.slice(0, 3).forEach((occurrence, index) => {
-        // eslint-disable-next-line no-console
-        console.error(`  ${index + 1}. "${occurrence}"`);
-      });
-      // eslint-disable-next-line no-console
-      console.error('');
-    }
+    await attachHeapOccurrences(result);
 
-    test.expect(result.found).toBe(false);
+    test
+      .expect(
+        result.found,
+        `Password found ${result.count} time(s) in heap memory after locking wallet`
+      )
+      .toBe(false);
   });
 });

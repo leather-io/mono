@@ -6,10 +6,12 @@ export const SIGN_OUT_MESSAGE = 'wallet/sign-out';
 
 export const WALLET_LIST_CHANGED_MESSAGE = 'wallet/list-changed';
 
-export enum InternalMethods {
-  OriginatingTabClosed = 'OriginatingTabClosed',
-  AddressMonitorUpdated = 'AddressMonitorUpdated',
-}
+export const InternalMethods = {
+  OriginatingTabClosed: 'OriginatingTabClosed',
+  AddressMonitorUpdated: 'AddressMonitorUpdated',
+  ApplyPendingUpdate: 'ApplyPendingUpdate',
+} as const;
+export type InternalMethods = (typeof InternalMethods)[keyof typeof InternalMethods];
 
 /**
  * Content Script <-> Background Script

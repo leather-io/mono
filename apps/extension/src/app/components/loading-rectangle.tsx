@@ -1,4 +1,4 @@
-import { Box, BoxProps } from 'leather-styles/jsx';
+import { Box, type BoxProps } from 'leather-styles/jsx';
 
 export function LoadingRectangle(props: BoxProps) {
   return (

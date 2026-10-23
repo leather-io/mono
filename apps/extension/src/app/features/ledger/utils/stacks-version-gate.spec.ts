@@ -1,7 +1,7 @@
 import { LedgerError } from '@zondax/ledger-stacks';
 
-import { BitcoinAppVersion } from './bitcoin-ledger-utils';
-import { MINIMUM_STACKS_APP_VERSION, StacksAppVersion } from './stacks-ledger-utils';
+import { type BitcoinAppVersion } from './bitcoin-ledger-utils';
+import { MINIMUM_STACKS_APP_VERSION, type StacksAppVersion } from './stacks-ledger-utils';
 import { stacksVersionGate } from './stacks-version-gate';
 
 function makeStacksAppVersion(version: {

@@ -67,10 +67,12 @@ Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set.
 - Destructure props directly in the function signature.
 - Prefer Remeda (`keys`, `entries`, `pipe`, `filter`, etc.) over `Object.keys`/`Object.entries` for typed utilities and non-trivial transforms. Use native methods for trivial cases.
 - No `as` casts, `!` non-null assertions, or `any`. Use runtime checks, type guards, or `unknown` with narrowing.
+- When a rule removes a type predicate, narrow with an existing guard (`isNumber`, `isDefined`, a zod schema) before reaching for `flatMap(x => cond ? [x] : [])`.
 - Prefer `const` over `let`. Prefer named constants over magic numbers or strings.
 - No nested ternary expressions.
 - Use object method shorthand syntax in objects and interfaces (`{ foo() {} }` not `{ foo: () => {} }`).
 - camelCase for file-level constants; SCREAMING_SNAKE_CASE in the constants package or `constants.ts` files.
+- The per-package `eslint-suppressions.json` files and `.dependency-cruiser-known-violations.json` are a frozen baseline of pre-existing violations. Never run `eslint --suppress-all` or regenerate the known-violations file, and never add entries by hand. Entries only go away by fixing the code (then `eslint --prune-suppressions` in that package).
 
 ## Error handling
 
@@ -131,7 +133,7 @@ pnpm --filter @leather.io/{package} typecheck
 
 - Turborepo + `pnpm`.
 - Vitest for unit/integration tests. Use the `testing-patterns` skill for conventions.
-- Playwright for E2E tests (extension). Avoid `force: true` — it hides accessibility issues. Never nest interactive elements.
+- Playwright for E2E tests (extension and web). Sleeps, `networkidle`, `waitForSelector` and raw locators are lint errors in both suites. For the extension use the `write-extension-e2e` skill: page-object actions own their readiness waits. Avoid `force: true` — it hides accessibility issues. Never nest interactive elements.
 
 ## Common tasks
 
@@ -139,3 +141,4 @@ pnpm --filter @leather.io/{package} typecheck
 - **Add a Redux slice** → Extension: `{feature}.slice.ts`; Mobile: `{feature}.write.ts` + `{feature}.read.ts`
 - **Add a React Query hook** → `packages/queries/` or app-level `src/queries/`
 - **Run a single package's tests** → `pnpm --filter @leather.io/{package} test:unit`
+- **Add or fix an extension E2E test** → `apps/extension/tests`, use the `write-extension-e2e` skill

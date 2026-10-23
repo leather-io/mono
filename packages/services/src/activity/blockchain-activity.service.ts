@@ -9,9 +9,10 @@ import {
   type CryptoAssetId,
   type FungibleCryptoAsset,
   type MarketData,
+  type StacksTransaction,
   type StacksTx,
 } from '@leather.io/models';
-import { assertUnreachable, createMoney, hasStacksAddress, initBigNumber } from '@leather.io/utils';
+import { assertUnreachable, createMoney, initBigNumber } from '@leather.io/utils';
 
 import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
@@ -69,7 +70,7 @@ const defaultActivityPageSize = 50;
 const maxActivityPageFetches = 5;
 // Hiro v3 caps /balance-changes at 20 tx_ids per call, so ft lookups are chunked.
 const balanceChangesBatchSize = 20;
-const activityByAssetScanPages = 10;
+const activityByAssetScanPages = 20;
 // BTC is fetched wholesale in a single request; this depth IS the BTC visibility horizon —
 // older BTC activity is silently absent (the server imposes no page-size maximum).
 const btcTxHorizonPageRequest = { page: 1, pageSize: 1000 };
@@ -156,7 +157,7 @@ export class BlockchainActivityService {
     txid: string,
     signal?: AbortSignal
   ): Promise<BlockchainActivity | null> {
-    const activity = hasStacksAddress(account)
+    const activity = account.stacks
       ? await this.getStacksActivityByTxId(account.stacks.stxAddress, txid, signal)
       : await this.getBitcoinActivityByTxId(account, txid, signal);
     if (activity === null) return null;
@@ -189,7 +190,7 @@ export class BlockchainActivityService {
     if (tx === null) return null;
     const balanceChanges = await this.fetchTxStacksBalanceChanges(stxAddress, tx, signal);
     const classified =
-      tx.tx_type === 'contract_call'
+      tx.type === 'contract_call'
         ? await this.classifyContractCall(
             tx.contract_call.contract_id,
             tx.contract_call.function_name,
@@ -202,10 +203,10 @@ export class BlockchainActivityService {
   // Only contract calls / deploys need this lookup; token transfers carry their stx amount inline.
   private async fetchTxStacksBalanceChanges(
     principal: string,
-    tx: StacksTx,
+    tx: StacksTransaction,
     signal?: AbortSignal
   ): Promise<{ stxNet: string; ftChanges: BlockchainActivityBalanceChange[] }> {
-    if (tx.tx_type !== 'contract_call' && tx.tx_type !== 'smart_contract') {
+    if (tx.type !== 'contract_call' && tx.type !== 'smart_contract') {
       return { stxNet: '0', ftChanges: [] };
     }
     const rows = await this.fetchBalanceChangesBatch(principal, [tx.tx_id], signal);
@@ -259,7 +260,7 @@ export class BlockchainActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<ActivitySourceItem[]> {
-    if (!hasStacksAddress(account)) return [];
+    if (!account.stacks) return [];
     const items: ActivitySourceItem[] = [];
     let cursor: string | null = null;
     for (let page = 0; page < activityByAssetScanPages; page++) {
@@ -306,13 +307,14 @@ export class BlockchainActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<BlockchainActivity[]> {
-    if (!hasStacksAddress(account)) return [];
+    const { stacks } = account;
+    if (!stacks) return [];
     const txs = await this.stacksTransactionsService.getPendingTransactions(
-      account.stacks.stxAddress,
+      stacks.stxAddress,
       signal
     );
     const mapped = await Promise.all(
-      txs.map(tx => this.mapPendingStacksTx(tx, account.stacks.stxAddress, signal))
+      txs.map(tx => this.mapPendingStacksTx(tx, stacks.stxAddress, signal))
     );
     return mapped
       .filter((activity): activity is BlockchainActivity => activity !== null)
@@ -522,7 +524,7 @@ export class BlockchainActivityService {
         return items;
       },
       fetchStacksTxPage: async (cursor: string | null) => {
-        if (!hasStacksAddress(account)) {
+        if (!account.stacks) {
           return { items: [], currentCursor: cursor, nextCursor: null };
         }
         const res = await this.hiroStacksApiClient.getPrincipalTransactions(

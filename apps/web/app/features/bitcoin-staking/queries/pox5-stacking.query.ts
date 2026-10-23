@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { type UseQueryResult, useQueries, useQuery } from '@tanstack/react-query';
 import {
   BitcoinStakingPool,
   BitcoinStakingProviderId,
@@ -16,7 +16,10 @@ import {
   Pox5EarnedRewards,
   createGetPox5EarnedRewardsQueryOptions,
 } from './create-get-pox5-earned-rewards-query-options';
-import { createGetPox5PayoutPreferenceQueryOptions } from './create-get-pox5-payout-preference-query-options';
+import {
+  type Pox5PayoutPreferenceResult,
+  createGetPox5PayoutPreferenceQueryOptions,
+} from './create-get-pox5-payout-preference-query-options';
 import { createGetPox5PoolFeeQueryOptions } from './create-get-pox5-pool-fee-query-options';
 import { createGetPox5SignerManagerValidationQueryOptions } from './create-get-pox5-signer-manager-validation-query-options';
 import {
@@ -48,7 +51,9 @@ export function usePox5StakerInfoQuery() {
   );
 }
 
-export function usePox5PayoutPreferenceQuery(signerManagerContractId: string | undefined) {
+export function usePox5PayoutPreferenceQuery(
+  signerManagerContractId: string | undefined
+): UseQueryResult<Pox5PayoutPreferenceResult | null> {
   const { stacksAccount } = useLeatherConnect();
   const client = usePox5StacksClient();
 
@@ -200,7 +205,7 @@ function getClaimableCycles(
   currentCycleId: number | undefined
 ): number[] {
   if (!info || currentCycleId === undefined) return [];
-  const lastEarnedCycle = Math.min(currentCycleId - 1, info.firstRewardCycle + info.numCycles - 1);
+  const lastEarnedCycle = Math.min(currentCycleId, info.firstRewardCycle + info.numCycles - 1);
   if (lastEarnedCycle < info.firstRewardCycle) return [];
   const firstShownCycle = Math.max(
     info.firstRewardCycle,
@@ -227,6 +232,7 @@ export function usePox5ClaimableRewards({
 }: UsePox5ClaimableRewardsArgs = {}): Pox5ClaimableRewards {
   const { stacksAccount } = useLeatherConnect();
   const client = usePox5StacksClient();
+  const pox5ContractId = usePox5ContractId();
   const stakerInfoQuery = usePox5StakerInfoQuery();
   const poxInfoQuery = usePox5PoxInfoQuery();
 
@@ -239,6 +245,7 @@ export function usePox5ClaimableRewards({
         address: stacksAccount?.address,
         signerManagerContractId: stakerInfo?.signerManagerContractId,
         cycle,
+        pox5ContractId,
         client,
       })
     ),

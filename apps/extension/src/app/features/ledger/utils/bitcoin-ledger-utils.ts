@@ -1,12 +1,14 @@
 import type { DeviceManagementKit } from '@ledgerhq/device-management-kit';
 import { DefaultDescriptorTemplate, DefaultWallet } from '@ledgerhq/device-signer-kit-bitcoin';
-import { Psbt } from 'bitcoinjs-lib';
+import { type Psbt } from 'bitcoinjs-lib';
 
 import {
   makeNativeSegwitAccountDerivationPath,
   makeTaprootAccountDerivationPath,
 } from '@leather.io/bitcoin';
 import type { BitcoinNetworkModes } from '@leather.io/models';
+
+import { isPopupMode } from '@app/common/utils';
 
 import type { RunLedgerDeviceAction } from '../dmk/ledger-device-action';
 import {
@@ -45,6 +47,7 @@ export function connectLedgerBitcoinApp(
     options?: ConnectLedgerDeviceOptions
   ): Promise<LedgerBitcoinApp> {
     const sessionId = await connectLedgerDeviceToApp(dmk, bitcoinAppNameForNetwork(network), {
+      canPromptForDevice: !isPopupMode(),
       ...options,
       runAction,
     });

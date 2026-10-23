@@ -2,7 +2,7 @@ import {
   AuthType,
   ClarityType,
   type ClarityValue,
-  type ContractCallPayload,
+  PayloadType,
   Pc,
   type StacksTransactionWire,
   addressToString,
@@ -92,9 +92,7 @@ export interface SbtcSponsoredTransferDetails {
   memo?: string;
 }
 
-export function isSbtcTransferManyContractCall(
-  tx: StacksTransactionWire
-): tx is StacksTransactionWire & { payload: ContractCallPayload } {
+export function isSbtcTransferManyContractCall(tx: StacksTransactionWire) {
   if (!tx.payload || !('functionName' in tx.payload)) return false;
   return (
     tx.payload.functionName.content === sbtcTransferManyFunctionName &&
@@ -122,6 +120,7 @@ export function getSbtcSponsoredTransferDetails(
   tx: StacksTransactionWire
 ): SbtcSponsoredTransferDetails | null {
   if (!isSbtcTransferManyContractCall(tx)) return null;
+  if (tx.payload.payloadType !== PayloadType.ContractCall) return null;
   if (tx.auth.authType !== AuthType.Sponsored) return null;
   if (tx.payload.functionArgs.length !== 1) return null;
 

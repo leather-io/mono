@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik';
 
 import { FormErrorMessages } from '@shared/error-messages';
 import { logger } from '@shared/logger';
-import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
+import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
 
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 

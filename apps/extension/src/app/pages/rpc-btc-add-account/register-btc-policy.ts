@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { type RpcParams, type RpcResult, btcAddAccount } from '@leather.io/rpc';
+import { type RpcParams, type RpcResult, type btcAddAccount } from '@leather.io/rpc';
 
 import { logger } from '@shared/logger';
 

@@ -13,7 +13,7 @@ import {
   HiroStacksTransaction,
   HiroTransactionEvent,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { isMempoolTx } from './stacks-tx-activity.utils';
+import { isMempoolTx } from './stacks-mempool-tx.utils';
 
 export interface StacksAssetTransfer {
   assetCategory: CryptoAssetCategory;

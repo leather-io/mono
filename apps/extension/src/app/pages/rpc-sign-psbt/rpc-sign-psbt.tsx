@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { Outlet } from 'react-router';
 
 import { PsbtSigner } from '@app/features/psbt-signer/psbt-signer';
 
@@ -37,12 +36,11 @@ export function RpcSignPsbt() {
         indexesToSign={indexesToSign}
         isBroadcasting={isBroadcasting}
         origin={origin}
-        onSignPsbt={onSignPsbt}
+        onSignPsbt={args => void onSignPsbt(args)}
         onCancel={onCancel}
         psbtHex={psbtHex}
         willBroadcast={bondProposal ? false : broadcast}
       />
-      <Outlet />
     </>
   );
 }

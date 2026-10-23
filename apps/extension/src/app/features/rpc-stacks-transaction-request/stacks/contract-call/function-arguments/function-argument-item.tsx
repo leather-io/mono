@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 
-import { getStacksExplorerLink } from '@leather.io/features';
+import { getStacksExplorerApiUrl, getStacksExplorerLink } from '@leather.io/features';
 import { ChainId } from '@leather.io/models';
 import { ChevronDownIcon, ChevronUpIcon, Link } from '@leather.io/ui';
 
@@ -10,6 +10,7 @@ import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
 const longValueThreshold = 512;
+const stacksMainnetChainId: number = ChainId.Mainnet;
 const previewLength = 80;
 
 interface ExpandableValueProps {
@@ -25,7 +26,7 @@ function FunctionArgumentValue({
   isLongValue: boolean;
 }) {
   const { chain, isNakamotoTestnet } = useCurrentNetworkState();
-  const networkMode = chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
+  const networkMode = chain.stacks.chainId === stacksMainnetChainId ? 'mainnet' : 'testnet';
   if (isPrincipal) {
     return (
       <Link
@@ -39,6 +40,7 @@ function FunctionArgumentValue({
               type: 'address',
               value,
               isNakamoto: isNakamotoTestnet,
+              apiUrl: getStacksExplorerApiUrl(chain.stacks.url),
             })
           )
         }

@@ -56,7 +56,7 @@ export function UpdateStakeSwitchPage() {
         <Stack gap="space.07">
           <Board
             label="Switch armed, moving to Fast Pool"
-            note="The state a Switch action on the pool table would deep-link into: target preselected, the summary shows old to new, and the new pool's terms gate the confirm. Every board here is interactive, so pick other pools to see the summary react."
+            note="The state a Switch action on the pool table would deep-link into: target preselected, the summary shows old to new, and the Leather acknowledgment gates confirmation. Every board here is interactive, so pick other pools to see the summary react."
             route={routes.update}
           >
             <SwitchSignerManagerPreview initialProviderId="fastPool" />
@@ -72,7 +72,7 @@ export function UpdateStakeSwitchPage() {
 
           <Board
             label="Quiet state, pool unchanged"
-            note="The same form covers plain updates: with the current pool still selected the summary only narrates the extend and top-up, and there is no terms step because no new pool relationship is created."
+            note="The same form covers plain updates: with the current pool still selected the summary only narrates the extend and top-up, and there is no new acknowledgment step because the pool stays the same."
             route={routes.update}
           >
             <SwitchSignerManagerPreview initialProviderId="stackingDao" />
@@ -82,7 +82,7 @@ export function UpdateStakeSwitchPage() {
 
       <Section
         title="Custom signer managers"
-        description="Both directions of the custom (byosm) case. Validation reuses the existing byosm state machine: checking, valid, invalid, not found, and a contract that turns out to be a listed pool snaps the selection to that pool's row instead. A custom contract has no hosted terms, so the confirm is gated by an acknowledgment rather than a T&C step."
+        description="Both directions of the custom (byosm) case. Validation reuses the existing byosm state machine: checking, valid, invalid, not found, and a contract that turns out to be a listed pool snaps the selection to that pool's row instead. Every switch requires the Leather acknowledgment, with additional context for custom contracts."
       >
         <Stack gap="space.07">
           <Board

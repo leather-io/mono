@@ -1,5 +1,9 @@
 // All new events should use the object-action framework.
-import { CryptoAssetProtocol, DefaultNetworkConfigurations, StxBalance } from '@leather.io/models';
+import {
+  type CryptoAssetProtocol,
+  type DefaultNetworkConfigurations,
+  type StxBalance,
+} from '@leather.io/models';
 
 export type ComplianceScreeningPoint =
   | 'psbt_signer'
@@ -133,7 +137,8 @@ export interface Events extends HistoricalEvents {
   receive_share_button_pressed: { asset: string };
   token_portfolio_summary: TokenPortfolioSummary;
   collectibles_summary: CollectiblesSummary;
-  token_details_viewed: TokenCollectibleDetailsViewed;
+  token_details_viewed: TokenDetailsViewed;
+  token_details_tab_selected: TokenDetailsTabSelected;
   collectible_details_viewed: TokenCollectibleDetailsViewed;
   app_icon_picker_sheet_opened: undefined;
   app_icon_picker_sheet_dismissed: undefined;
@@ -155,7 +160,7 @@ interface HistoricalEvents {
     inputs?: number;
     outputs?: number;
   };
-  broadcast_btc_error: { error: any };
+  broadcast_btc_error: { error: unknown };
   propose_multisig_transaction: { symbol: string };
   copy_btc_address_to_clipboard: { type: string };
   copy_secret_key_to_clipboard: undefined;
@@ -182,6 +187,8 @@ interface HistoricalEvents {
   user_approved_send_transfer: { origin: string };
   user_approved_sign_and_broadcast_psbt: { origin: string };
   user_clicked_feedback_button: undefined;
+  update_available_callout_update_now: undefined;
+  update_available_callout_later: undefined;
   unable_to_read_fee_in_stx_validator: undefined;
   unable_to_read_available_balance_in_stx_validator: undefined;
   view_bitcoin_transaction: undefined;
@@ -200,7 +207,7 @@ interface HistoricalEvents {
   generate_new_secret_key: undefined;
   bitcoin_contract_error: { msg: string };
   schema_fail: {
-    query: any;
+    query: unknown;
     hash: string;
     error: string;
   };
@@ -217,7 +224,7 @@ interface HistoricalEvents {
     reason: string;
     screeningPoint: ComplianceScreeningPoint;
   };
-  ledger_transaction_publish_error: { error: { message: string; error: any } };
+  ledger_transaction_publish_error: { error: { message: string; error: unknown } };
   native_segwit_tx_hex_to_ledger_tx: { success: boolean };
   psbt_sign_request_p2tr_missing_taproot_internal_key: undefined;
   ledger_nativesegwit_add_nonwitnessutxo: {
@@ -290,11 +297,23 @@ interface CollectiblesSummary {
   byProtocol: Partial<Record<CryptoAssetProtocol, CollectibleProtocolBreakdown>>;
 }
 
+type TokenDetailsTab = 'activity' | 'balances' | 'info';
+
 interface TokenCollectibleDetailsViewed {
   assetId: string;
   protocol: CryptoAssetProtocol;
   platform: 'mobile' | 'extension';
   walletAccountId: string;
+}
+
+interface TokenDetailsViewed extends TokenCollectibleDetailsViewed {
+  tab?: TokenDetailsTab;
+}
+
+interface TokenDetailsTabSelected {
+  assetId: string;
+  protocol: CryptoAssetProtocol;
+  tab: TokenDetailsTab;
 }
 
 interface CollectibleProtocolBreakdown {

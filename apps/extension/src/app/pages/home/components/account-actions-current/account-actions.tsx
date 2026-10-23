@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
@@ -13,14 +13,12 @@ import {
 } from '@app/common/hooks/use-swap-availability';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
-import { SwapsDisabledTooltipLabel } from '../swaps-disabled-tooltip-label';
 import { ActionButton } from './action-button';
 import { FundButtons } from './fund-buttons';
 import { TransferButtons } from './transfer-buttons';
 
 function getSwapDisabledTooltipLabel(swapAvailability: SwapAvailability): ReactNode {
   if (swapAvailability.isEnabled) return null;
-  if (swapAvailability.reason === 'disabledByConfig') return <SwapsDisabledTooltipLabel />;
   if (swapAvailability.reason === 'testnet') {
     return (
       <styled.span textStyle="caption.01">
@@ -36,9 +34,6 @@ function getSwapDisabledTooltipLabel(swapAvailability: SwapAvailability): ReactN
       <styled.span textStyle="caption.01">Swaps are not available for this account.</styled.span>
     );
   }
-  if (swapAvailability.reason === 'loadingConfig') {
-    return <styled.span textStyle="caption.01">Checking swap availability…</styled.span>;
-  }
   return null;
 }
 
@@ -49,7 +44,7 @@ export function AccountActions() {
   const swapsBtnDisabled = !swapAvailability.isEnabled;
   const swapDisabledTooltipLabel = getSwapDisabledTooltipLabel(swapAvailability);
   function navigateToDefaultSwapRoute() {
-    return navigate(
+    void navigate(
       replaceRouteParams(RouteUrls.Swap, {
         base: 'STX',
         quote: '',

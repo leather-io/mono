@@ -1,33 +1,19 @@
-import { useLocation, useNavigate } from 'react-router';
-
 import { HStack, styled } from 'leather-styles/jsx';
 
-import type { Blockchain } from '@leather.io/models';
+import type { SupportedBlockchains } from '@leather.io/models';
 import { Button, LedgerIcon } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
-
 import { capitalize } from '@app/common/utils';
-import { immediatelyAttemptLedgerConnection } from '@app/features/ledger/hooks/use-when-reattempt-ledger-connection';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
 
 interface ConnectLedgerButtonProps {
-  chain: Blockchain;
+  chain: SupportedBlockchains;
 }
 export function ConnectLedgerButton({ chain }: ConnectLedgerButtonProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { open } = useLedgerFlow();
 
   function onClick() {
-    const firstStepRoute =
-      chain === 'stacks' ? RouteUrls.LedgerStacksAddressStandard : RouteUrls.ConnectLedger;
-    void navigate(`${chain}/${firstStepRoute}`, {
-      replace: true,
-      state: {
-        [immediatelyAttemptLedgerConnection]: false,
-        backgroundLocation: { pathname: RouteUrls.Home },
-        fromLocation: location,
-      },
-    });
+    open({ kind: 'request-keys', chain, autoConnect: false });
   }
 
   return (

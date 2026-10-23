@@ -1,0 +1,12 @@
+{
+  "src/utils/bitcoin.utils.ts": {
+    "no-restricted-syntax": {
+      "count": 3
+    }
+  },
+  "src/validation/bitcoin-address.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  }
+}

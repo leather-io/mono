@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -132,6 +132,8 @@ test.describe('All balances', () => {
       await goBack(page);
       await page.getByTestId(AllBalancesSelectors.AllBalancesPage).waitFor();
     }
+
+    await expect(page.getByTestId(AllBalancesSelectors.AllBalancesPage)).toBeVisible();
   });
 
   test('that an unknown category redirects to the all balances page', async ({

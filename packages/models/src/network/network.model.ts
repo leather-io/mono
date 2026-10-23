@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
-import { Blockchain } from '../types';
-import { networkConfigurationSchema } from './network.schema';
+import { type Blockchain } from '../types';
+import type { networkConfigurationSchema } from './network.schema';
 
 export const HIRO_API_BASE_URL_MAINNET = 'https://api.hiro.so';
 export const HIRO_API_BASE_URL_TESTNET = 'https://api.testnet.hiro.so';
 export const HIRO_API_BASE_URL_NAKAMOTO_TESTNET = 'https://api.nakamoto.testnet.hiro.so';
+export const HIRO_API_BASE_URL_STAKING_TESTNET = 'https://api.staking-testnet.hiro.so';
 
 export const HIRO_API_BASE_URL_MAINNET_EXTENDED = 'https://api.hiro.so/extended/v1';
 export const HIRO_API_BASE_URL_TESTNET_EXTENDED = 'https://api.testnet.hiro.so/extended';
@@ -14,6 +15,8 @@ export const BITCOIN_API_BASE_URL_MAINNET = 'https://leather.mempool.space/api';
 export const BITCOIN_API_BASE_URL_TESTNET3 = 'https://leather.mempool.space/testnet/api';
 export const BITCOIN_API_BASE_URL_TESTNET4 = 'https://leather.mempool.space/testnet4/api';
 export const BITCOIN_API_BASE_URL_SIGNET = 'https://mempool.space/signet/api';
+export const BITCOIN_API_BASE_URL_STAKING_TESTNET =
+  'https://mempool.bitcoin.staking-testnet.hiro.so/api';
 
 export const BNS_V2_API_BASE_URL_MAINNET = 'https://api.bnsv2.com';
 export const BNS_V2_API_BASE_URL_TESTNET = 'https://api.bnsv2.com/testnet';
@@ -23,21 +26,25 @@ export const EMILY_API_BASE_URL_TESTNET = 'https://beta.sbtc-emily.com';
 export const EMILY_API_BASE_URL_DEVENV = 'http://localhost:3031';
 
 // Copied from @stacks/transactions to avoid dependencies
-export enum ChainId {
-  Testnet = 2147483648,
-  Mainnet = 1,
-}
+export const ChainId = {
+  Testnet: 2147483648,
+  Mainnet: 1,
+} as const;
+export type ChainId = (typeof ChainId)[keyof typeof ChainId];
 
-export enum WalletDefaultNetworkConfigurationIds {
-  mainnet = 'mainnet',
-  testnet = 'testnet',
-  testnet4 = 'testnet4',
-  signet = 'signet',
-  sbtcTestnet = 'sbtcTestnet',
-  sbtcDevenv = 'sbtcDevenv',
-  devnet = 'devnet',
-  'private-1' = 'private-1',
-}
+export const WalletDefaultNetworkConfigurationIds = {
+  mainnet: 'mainnet',
+  testnet: 'testnet',
+  testnet4: 'testnet4',
+  signet: 'signet',
+  sbtcTestnet: 'sbtcTestnet',
+  sbtcDevenv: 'sbtcDevenv',
+  devnet: 'devnet',
+  'private-1': 'private-1',
+  stakingTestnet: 'stakingTestnet',
+} as const;
+export type WalletDefaultNetworkConfigurationIds =
+  (typeof WalletDefaultNetworkConfigurationIds)[keyof typeof WalletDefaultNetworkConfigurationIds];
 
 export const defaultNetworkConfigurationsSchema = z.enum([
   'mainnet',
@@ -48,6 +55,7 @@ export const defaultNetworkConfigurationsSchema = z.enum([
   'sbtcDevenv',
   'devnet',
   'private-1',
+  'stakingTestnet',
 ]);
 export type DefaultNetworkConfigurations = z.infer<typeof defaultNetworkConfigurationsSchema>;
 
@@ -79,7 +87,7 @@ export function bitcoinNetworkToNetworkMode(network: BitcoinNetwork): BitcoinNet
     default:
       // TODO: Needs exhaustive check. Cannot import 'assertUnreachable' since 'utils' package depends on 'models'.
       //       Ideally this function should live in utils, but it's currently widely used in the extension.
-      throw new Error(`Unhandled case: ${network}`);
+      throw new Error(`Unhandled case: ${String(network)}`);
   }
 }
 
@@ -237,7 +245,7 @@ const privateNetworkStacksChainId = 256;
 
 const networkPrivate1: NetworkConfiguration = {
   id: WalletDefaultNetworkConfigurationIds['private-1'],
-  name: 'BTC Staking Testnet',
+  name: 'BTC Staking Testnet (Legacy)',
   chain: {
     stacks: {
       blockchain: 'stacks',
@@ -249,6 +257,26 @@ const networkPrivate1: NetworkConfiguration = {
       bitcoinNetwork: 'regtest',
       mode: 'regtest',
       bitcoinUrl: 'https://mempool.bitcoin.private-1.hiro.so/api',
+    },
+  },
+};
+
+const stakingTestnetStacksChainId = 1280;
+
+const networkStakingTestnet: NetworkConfiguration = {
+  id: WalletDefaultNetworkConfigurationIds.stakingTestnet,
+  name: 'BTC Staking Testnet',
+  chain: {
+    stacks: {
+      blockchain: 'stacks',
+      chainId: stakingTestnetStacksChainId,
+      url: HIRO_API_BASE_URL_STAKING_TESTNET,
+    },
+    bitcoin: {
+      blockchain: 'bitcoin',
+      bitcoinNetwork: 'signet',
+      mode: 'signet',
+      bitcoinUrl: BITCOIN_API_BASE_URL_STAKING_TESTNET,
     },
   },
 };
@@ -266,5 +294,6 @@ export const defaultNetworksKeyedById: Record<
   [WalletDefaultNetworkConfigurationIds.sbtcTestnet]: networkSbtcTestnet,
   [WalletDefaultNetworkConfigurationIds.sbtcDevenv]: networkSbtcDevenv,
   [WalletDefaultNetworkConfigurationIds.devnet]: networkDevnet,
+  [WalletDefaultNetworkConfigurationIds.stakingTestnet]: networkStakingTestnet,
   [WalletDefaultNetworkConfigurationIds['private-1']]: networkPrivate1,
 };

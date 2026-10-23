@@ -8,19 +8,13 @@ import { formatCurrency } from '@app/common/currency-formatter';
 
 interface TokenOverviewProps {
   icon: ReactNode;
-  availableBalance: Money;
+  balance: Money;
   symbol?: string;
   fiatBalance: Money;
   actions?: ReactNode;
 }
 
-export function TokenOverview({
-  icon,
-  availableBalance,
-  symbol,
-  fiatBalance,
-  actions,
-}: TokenOverviewProps) {
+export function TokenOverview({ icon, balance, symbol, fiatBalance, actions }: TokenOverviewProps) {
   return (
     <Stack
       bg="ink.background-primary"
@@ -33,7 +27,7 @@ export function TokenOverview({
       <Box>{icon}</Box>
       <Stack gap="space.00" alignItems="center">
         <styled.div textStyle="heading.03" data-testid="token-overview-amount">
-          {formatCurrency(availableBalance, { showCurrency: false })}
+          {formatCurrency(balance, { showCurrency: false })}
           {symbol && <styled.span color="ink.text-subdued"> {symbol}</styled.span>}
         </styled.div>
         <styled.div

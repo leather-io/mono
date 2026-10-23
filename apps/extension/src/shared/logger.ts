@@ -33,7 +33,7 @@ const pinoLogger = pino({
   },
 });
 
-type LoggerFnApi = (msg: string, ...args: any[]) => void;
+type LoggerFnApi = (msg: string, ...args: unknown[]) => void;
 
 // Pino offers a handful of APIs to log messages. Here we enforce a single one,
 // described by `LoggerFnApi`

@@ -1,4 +1,5 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
+import { requestLeatherProvider } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -13,27 +14,30 @@ test.describe('RPC: stx_transferSip10Ft', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="LEO"');
-      await popup.waitForSelector('text="0.001"');
-      await popup.waitForSelector('text="transfer"');
-      await popup.waitForSelector(
-        'text="You will transfer exactly 0.001 LEO or the transaction will abort."'
-      );
+      await test.expect(popup.getByText('LEO', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('0.001', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('transfer', { exact: true })).toBeVisible();
+      await test
+        .expect(
+          popup.getByText('You will transfer exactly 0.001 LEO or the transaction will abort.', {
+            exact: true,
+          })
+        )
+        .toBeVisible();
 
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6');
 
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Confirm"');
+      const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
@@ -45,13 +49,10 @@ test.describe('RPC: stx_transferSip10Ft', () => {
 
   function initiateSip30RpcTransferSip10Ft(page: Page) {
     return async (params: RpcParams<typeof stxTransferSip10Ft>) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('stx_transferSip10Ft', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
+      page.evaluate(requestLeatherProvider, {
+        method: 'stx_transferSip10Ft',
+        params: { ...params },
+      });
   }
 
   test('SIP-30 transfer sip10 fungible token', async ({ page, context }) => {

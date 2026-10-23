@@ -1,19 +1,20 @@
 import {
-  UnsignedContractCallOptions,
-  UnsignedContractDeployOptions,
-  UnsignedMultiSigContractCallOptions,
-  UnsignedMultiSigContractDeployOptions,
-  UnsignedMultiSigTokenTransferOptions,
-  UnsignedTokenTransferOptions,
+  type UnsignedContractCallOptions,
+  type UnsignedContractDeployOptions,
+  type UnsignedMultiSigContractCallOptions,
+  type UnsignedMultiSigContractDeployOptions,
+  type UnsignedMultiSigTokenTransferOptions,
+  type UnsignedTokenTransferOptions,
 } from '@stacks/transactions';
 
-import { Money, ReplaceTypes } from '@leather.io/models';
+import { type Money, type ReplaceTypes } from '@leather.io/models';
 
-export enum TransactionTypes {
-  ContractCall = 'contract_call',
-  ContractDeploy = 'smart_contract',
-  StxTokenTransfer = 'token_transfer',
-}
+export const TransactionTypes = {
+  ContractCall: 'contract_call',
+  ContractDeploy: 'smart_contract',
+  StxTokenTransfer: 'token_transfer',
+} as const;
+export type TransactionTypes = (typeof TransactionTypes)[keyof typeof TransactionTypes];
 
 export function isTransactionTypeSupported(txType: TransactionTypes) {
   return (
@@ -30,7 +31,7 @@ export type StacksUnsignedSingleSigContractCallOptions = ReplaceTypes<
     functionArgs: string[];
     nonce: number | string;
   }
-> & { txType: TransactionTypes.ContractCall };
+> & { txType: typeof TransactionTypes.ContractCall };
 
 export type StacksUnsignedMultiSigContractCallOptions = ReplaceTypes<
   UnsignedMultiSigContractCallOptions,
@@ -39,7 +40,7 @@ export type StacksUnsignedMultiSigContractCallOptions = ReplaceTypes<
     functionArgs: string[];
     nonce: number | string;
   }
-> & { txType: TransactionTypes.ContractCall };
+> & { txType: typeof TransactionTypes.ContractCall };
 
 export type StacksUnsignedContractCallOptions =
   | StacksUnsignedSingleSigContractCallOptions
@@ -51,7 +52,7 @@ export type StacksUnsignedSingleSigContractDeployOptions = ReplaceTypes<
     fee: Money;
     nonce: number | string;
   }
-> & { txType: TransactionTypes.ContractDeploy };
+> & { txType: typeof TransactionTypes.ContractDeploy };
 
 export type StacksUnsignedMultiSigContractDeployOptions = ReplaceTypes<
   UnsignedMultiSigContractDeployOptions,
@@ -59,7 +60,7 @@ export type StacksUnsignedMultiSigContractDeployOptions = ReplaceTypes<
     fee: Money;
     nonce: number | string;
   }
-> & { txType: TransactionTypes.ContractDeploy };
+> & { txType: typeof TransactionTypes.ContractDeploy };
 
 export type StacksUnsignedContractDeployOptions =
   | StacksUnsignedSingleSigContractDeployOptions
@@ -72,7 +73,7 @@ export type StacksUnsignedTokenTransferOptions = ReplaceTypes<
     fee: Money;
     nonce: number | string;
   }
-> & { txType: TransactionTypes.StxTokenTransfer };
+> & { txType: typeof TransactionTypes.StxTokenTransfer };
 
 export type StacksUnsignedMultiSigTokenTransferOptions = ReplaceTypes<
   UnsignedMultiSigTokenTransferOptions,
@@ -81,7 +82,7 @@ export type StacksUnsignedMultiSigTokenTransferOptions = ReplaceTypes<
     fee: Money;
     nonce: number | string;
   }
-> & { txType: TransactionTypes.StxTokenTransfer };
+> & { txType: typeof TransactionTypes.StxTokenTransfer };
 
 export type StacksUnsignedStxTokenTransferOptions =
   | StacksUnsignedTokenTransferOptions

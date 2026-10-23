@@ -7,6 +7,7 @@ import { HStack } from 'leather-styles/jsx';
 
 import { STX_DECIMALS } from '@leather.io/constants';
 import {
+  type CryptoCurrency,
   FeeTypes,
   type FlatTransactionFeeQuote,
   type Money,
@@ -34,6 +35,14 @@ function toEstimate(quote: FeeRowQuote): StacksFeeEstimate {
   };
 }
 
+const feeTypesByName: Record<string, unknown> = FeeTypes;
+const customFeeTypeIndex: number = FeeTypes.Custom;
+
+function toDisplayableFee(value: unknown) {
+  if (isNumber(value) || isString(value)) return value;
+  return undefined;
+}
+
 function transactionFeesToEstimates(txFees: TransactionFees<FeeRowQuote>): StacksFeeEstimate[] {
   const { low, standard, high } = txFees.options;
   return [toEstimate(low), toEstimate(standard), toEstimate(high)];
@@ -57,14 +66,14 @@ export function FeesRow({
   feeBadge,
   feeFiatValue,
 }: FeeRowProps) {
-  const [feeField, _, feeHelper] = useField('fee');
-  const [feeCurrencyField] = useField('feeCurrency');
-  const [feeTypeField, __, feeTypeHelper] = useField('feeType');
+  const [feeField, _, feeHelper] = useField<unknown>('fee');
+  const [feeCurrencyField] = useField<CryptoCurrency>('feeCurrency');
+  const [feeTypeField, __, feeTypeHelper] = useField<string>('feeType');
   const [fieldWarning, setFieldWarning] = useState<string | undefined>(undefined);
   const [isSelectVisible, setIsSelectVisible] = useState(false);
 
   const isCustom = feeTypeField.value === FeeTypes[FeeTypes.Custom];
-  const selectedItem = Number(FeeTypes[feeTypeField.value]);
+  const selectedItem = Number(feeTypesByName[feeTypeField.value]);
 
   const estimates = useMemo(() => (fees ? transactionFeesToEstimates(fees) : []), [fees]);
   const hasFeeEstimates = estimates.length > 0;
@@ -122,10 +131,13 @@ export function FeesRow({
   const handleSelectFeeEstimateOrCustomField = useCallback(
     (index: number) => {
       void feeTypeHelper.setValue(FeeTypes[index]);
-      if (index === FeeTypes.Custom)
+      if (index === customFeeTypeIndex)
         void feeHelper.setValue(
           defaultFeeValue
-            ? convertAmountToBaseUnit(new BigNumber(Number(defaultFeeValue)), STX_DECIMALS)
+            ? convertAmountToBaseUnit(
+                new BigNumber(Number(defaultFeeValue)),
+                STX_DECIMALS
+              ).toString()
             : ''
         );
       else if (estimates.length > 0)
@@ -160,7 +172,7 @@ export function FeesRow({
           >
             {feeBadge}
             <TransactionFee
-              fee={feeField.value}
+              fee={toDisplayableFee(feeField.value)}
               feeCurrencySymbol={feeCurrencySymbol}
               usdAmount={feeInUsd}
             />

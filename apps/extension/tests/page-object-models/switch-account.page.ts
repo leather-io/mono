@@ -1,9 +1,12 @@
-import { Locator, Page } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
+import { readPersistedStore } from '@tests/persisted-store';
 import { getSwitchAccountSheetAccountNameSelector } from '@tests/selectors/account.selectors';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
+
+const passwordCheckTimeoutMs = 15_000;
 
 export class SwitchAccountPage {
   readonly page: Page;
@@ -14,6 +17,7 @@ export class SwitchAccountPage {
   readonly manageButton: Locator;
   readonly doneButton: Locator;
   readonly selectAccountHeader: Locator;
+  readonly passwordMismatchError: Locator;
   readonly manageWalletsHeader: Locator;
   readonly walletHeaderNames: Locator;
   readonly walletActionMenuTriggers: Locator;
@@ -28,6 +32,7 @@ export class SwitchAccountPage {
     this.manageButton = page.getByRole('button', { name: 'Manage' });
     this.doneButton = page.getByRole('button', { name: 'Done' });
     this.selectAccountHeader = page.getByRole('heading', { name: 'Select account' });
+    this.passwordMismatchError = page.getByText("The password you entered doesn't match");
     this.manageWalletsHeader = page.getByRole('heading', { name: 'Manage wallets' });
     this.walletHeaderNames = page.getByTestId(SwitchAccountSelectors.WalletHeaderName);
     this.walletActionMenuTriggers = page.getByTestId(
@@ -49,23 +54,15 @@ export class SwitchAccountPage {
   }
 
   async getWalletCount() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const wallets = (store as { wallets?: { ids?: string[] } } | undefined)?.wallets;
-      return wallets?.ids?.length ?? 0;
-    });
+    const store = await readPersistedStore(this.page);
+    const wallets = store?.wallets;
+    return wallets?.ids?.length ?? 0;
   }
 
   async getActiveAccount() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const active = (
-        store as
-          | { active?: { account?: { fingerprint: string; accountIndex: number } | null } }
-          | undefined
-      )?.active;
-      return active?.account ?? null;
-    });
+    const store = await readPersistedStore(this.page);
+    const active = store?.active;
+    return active?.account ?? null;
   }
 
   accountName(accountIndex: number) {
@@ -77,42 +74,27 @@ export class SwitchAccountPage {
   }
 
   async getPersistedAccountIds() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const accounts = (store as { accounts?: { ids?: string[] } } | undefined)?.accounts;
-      return accounts?.ids ?? [];
-    });
+    const store = await readPersistedStore(this.page);
+    const accounts = store?.accounts;
+    return accounts?.ids ?? [];
   }
 
   async getPersistedAccount(accountId: string) {
-    return this.page.evaluate(async id => {
-      const store = await window.debug.getPersistedStore();
-      const accounts = (
-        store as
-          | { accounts?: { entities?: Record<string, { name?: string; status?: string }> } }
-          | undefined
-      )?.accounts;
-      return accounts?.entities?.[id] ?? null;
-    }, accountId);
+    const store = await readPersistedStore(this.page);
+    const accounts = store?.accounts;
+    return accounts?.entities?.[accountId] ?? null;
   }
 
   async getPersistedStxChainFingerprints() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const stx = (store as { chains?: { stx?: Record<string, unknown> } } | undefined)?.chains
-        ?.stx;
-      return stx ? Object.keys(stx) : [];
-    });
+    const store = await readPersistedStore(this.page);
+    const stx = store?.chains?.stx;
+    return stx ? Object.keys(stx) : [];
   }
 
   async getHighestAccountIndex(fingerprint: string) {
-    return this.page.evaluate(async fp => {
-      const store = await window.debug.getPersistedStore();
-      const stx = (
-        store as { chains?: { stx?: Record<string, { highestAccountIndex?: number }> } } | undefined
-      )?.chains?.stx;
-      return stx?.[fp]?.highestAccountIndex ?? -1;
-    }, fingerprint);
+    const store = await readPersistedStore(this.page);
+    const stx = store?.chains?.stx;
+    return stx?.[fingerprint]?.highestAccountIndex ?? -1;
   }
 
   async selectAccount(accountIndex: number) {
@@ -141,19 +123,15 @@ export class SwitchAccountPage {
   }
 
   async getPersistedPolicyIds() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const policy = (store as { policy?: { ids?: string[] } } | undefined)?.policy;
-      return policy?.ids ?? [];
-    });
+    const store = await readPersistedStore(this.page);
+    const policy = store?.policy;
+    return policy?.ids ?? [];
   }
 
   async getActivePolicyId() {
-    return this.page.evaluate(async () => {
-      const store = await window.debug.getPersistedStore();
-      const active = (store as { active?: { activePolicyId?: string | null } } | undefined)?.active;
-      return active?.activePolicyId ?? null;
-    });
+    const store = await readPersistedStore(this.page);
+    const active = store?.active;
+    return active?.activePolicyId ?? null;
   }
 
   async addAccount(nth = 0) {
@@ -249,9 +227,19 @@ export class SwitchAccountPage {
   async addNewWallet(password: string) {
     await this.createNewWallet();
     await this.page.getByTestId(OnboardingSelectors.BackUpSecretKeyBtn).click();
+    await this.submitNewWalletPassword(password);
+    await this.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
+  }
+
+  async submitNewWalletPassword(password: string) {
     await this.page.getByTestId(OnboardingSelectors.NewPasswordInput).fill(password);
     await this.page.getByTestId(OnboardingSelectors.SetPasswordBtn).click();
-    await this.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
+    await expect(
+      this.page
+        .getByTestId(HomePageSelectors.HomePageContainer)
+        .or(this.passwordMismatchError)
+        .first()
+    ).toBeVisible({ timeout: passwordCheckTimeoutMs });
   }
 
   async restoreWallet(mnemonic: string, password: string) {

@@ -36,6 +36,29 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.63.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.62.0...@leather.io/models-v0.63.0) (2026-09-29)
+
+
+### Features
+
+* add BNS testnet support ([#2733](https://github.com/leather-io/mono/issues/2733)) ([8f92aa3](https://github.com/leather-io/mono/commit/8f92aa3b6d0f87f765f7de98eeecfe24e2bd2939))
+* allow custom fee for transaction proposal from multisig account ([#2773](https://github.com/leather-io/mono/issues/2773)) ([cc45d87](https://github.com/leather-io/mono/commit/cc45d8779c65c5333ba56bfe5cbf187df8b6c88a))
+* **extension:** new swaps flow with sBTC bridging ([#2554](https://github.com/leather-io/mono/issues/2554)) ([65c8518](https://github.com/leather-io/mono/commit/65c85186c847b2e99fd062d00997c81932268bc5))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+* staking testnet network ([#2801](https://github.com/leather-io/mono/issues/2801)) ([20fe188](https://github.com/leather-io/mono/commit/20fe1889a867e9ecffb7c20ef7b5a2364e53b43b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
 ## [0.62.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.61.1...@leather.io/models-v0.62.0) (2026-09-10)
 
 

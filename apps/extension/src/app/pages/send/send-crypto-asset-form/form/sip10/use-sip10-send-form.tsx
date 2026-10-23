@@ -1,14 +1,14 @@
 import { useMemo, useState } from 'react';
 
 import BigNumber from 'bignumber.js';
-import { FormikHelpers } from 'formik';
-import * as yup from 'yup';
+import { type FormikHelpers } from 'formik';
+import { z } from 'zod';
 
 import type { CryptoAssetBalance, Money, Sip10Asset } from '@leather.io/models';
 import { convertAmountToBaseUnit, subtractMoney } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
-import { StacksSendFormValues } from '@shared/models/form.model';
+import { type StacksSendFormValues } from '@shared/models/form.model';
 
 import { getSafeImageCanonicalUri } from '@app/common/stacks-utils';
 import {
@@ -17,6 +17,7 @@ import {
   isSbtcContractPrincipal,
 } from '@app/common/transactions/stacks/sbtc-sponsorship.utils';
 import { useBuildSbtcSponsoredTransfer } from '@app/common/transactions/stacks/use-build-sbtc-sponsored-transfer';
+import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 import { stacksFungibleTokenAmountValidator } from '@app/common/validation/forms/amount-validators';
 import { stxFeeCurrency } from '@app/components/fees-row/fees-row.constants';
 import { useToast } from '@app/features/toasts/use-toast';
@@ -132,12 +133,14 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
     symbol: info.symbol,
     decimals: info.decimals,
     avatar: createFtAvatar(),
-    validationSchema: yup.object({
-      amount: stacksFungibleTokenAmountValidator(spendableTokenBalance),
-      recipient,
-      memo,
-      nonce,
-    }),
+    validationSchema: createFormikValidationSchema(
+      z.object({
+        amount: stacksFungibleTokenAmountValidator(spendableTokenBalance),
+        recipient,
+        memo,
+        nonce,
+      })
+    ),
 
     async previewTransaction(
       values: StacksSendFormValues,

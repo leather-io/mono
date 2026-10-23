@@ -52,7 +52,7 @@ export function SbtcSponsoredFeesRow({
   onSelectedSbtcFeeChange,
 }: SbtcSponsoredFeesRowProps) {
   const [feeField, _, feeHelper] = useField('fee');
-  const [feeTypeField, __, feeTypeHelper] = useField('feeType');
+  const [feeTypeField, __, feeTypeHelper] = useField<string>('feeType');
   const [feeCurrencyField, ___, feeCurrencyHelper] = useField('feeCurrency');
 
   const quote = useSbtcSponsorshipQuote({ enabled: offerSbtcFee });

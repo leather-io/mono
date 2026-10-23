@@ -51,11 +51,7 @@ jobs:
           key: ${{ runner.os }}-playwright-cache-${{ env.PLAYWRIGHT_VERSION }}
 
       - name: install-playwright-browsers
-        run: pnpm exec playwright install chrome chromium
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-
-      - name: install-playwright-deps
-        run: pnpm exec playwright install --with-deps
+        run: pnpm exec playwright install chromium --only-shell --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: prepare-script
@@ -74,13 +70,25 @@ jobs:
         run: pnpm exec playwright test --shard="${SHARD_INDEX}/${SHARD_TOTAL}"
 
       - name: upload-blob-report-to-github-actions-artifacts
+        id: upload-blob-report
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        continue-on-error: true
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: blob-report-${{ matrix.shardIndex }}
           path: apps/web/blob-report
           retention-days: 1
           if-no-files-found: error
+
+      - name: retry-upload-blob-report-to-github-actions-artifacts
+        if: always() && steps.upload-blob-report.outcome == 'failure'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: blob-report-${{ matrix.shardIndex }}
+          path: apps/web/blob-report
+          retention-days: 1
+          if-no-files-found: error
+          overwrite: true
 
   merge-reports:
     name: merge-reports
@@ -93,7 +101,7 @@ jobs:
           persist-credentials: false
 
       - name: download-blob-reports-from-github-actions-artifacts
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           path: all-blob-reports
           pattern: blob-report-*
@@ -104,7 +112,7 @@ jobs:
 
       - name: upload-html-report
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: playwright-html-report
           path: playwright-report

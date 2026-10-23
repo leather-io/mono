@@ -28,7 +28,7 @@ export function createBlockchainActivityQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBlockchainActivityService().getActivity(request, signal),
     ...activityQueryOptions,
-  } satisfies UseQueryOptions<ActivityResponse, Error>;
+  } satisfies UseQueryOptions<ActivityResponse>;
 }
 
 export function createBlockchainActivityByTxIdQueryKey(
@@ -53,7 +53,7 @@ export function createBlockchainActivityByTxIdQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBlockchainActivityService().getActivityByTxId(account, txid, signal),
     ...activityQueryOptions,
-  } satisfies UseQueryOptions<BlockchainActivity | null, Error>;
+  } satisfies UseQueryOptions<BlockchainActivity | null>;
 }
 
 type BlockchainActivityFeedRequest = Omit<ActivityRequest, 'cursor'>;
