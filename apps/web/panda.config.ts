@@ -34,6 +34,10 @@ export default defineConfig({
     },
     extend: {
       keyframes: {
+        sheetRiseIn: {
+          from: { opacity: 0, transform: 'translateY(32px)' },
+          to: { opacity: 1, transform: 'translateY(0)' },
+        },
         stakingIconAttention: {
           '0%': {
             transform: 'scale(1)',
