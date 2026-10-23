@@ -20,7 +20,7 @@ const deviceDisconnectedTags: readonly string[] = [
   'WebHidSendReportError',
 ];
 const noDeviceSelectedTag = 'NoAccessibleDeviceError';
-const deviceInUseTag = 'ConnectionOpeningError';
+const connectionOpeningFailedTag = 'ConnectionOpeningError';
 const refusedByUserTag = 'RefusedByUserDAError';
 
 const lockedDeviceStatusCode = 0x5515;
@@ -35,8 +35,8 @@ export const ledgerActionCancelledErrorName = 'LedgerActionCancelled';
 
 const noDeviceSelectedErrorMessage =
   'Click "Try again" and choose your Ledger in the browser prompt.';
-const deviceInUseErrorMessage =
-  'Your Ledger is in use by another app. Close Ledger Live and any other Leather windows, then try again.';
+const connectionOpeningFailedErrorMessage =
+  'Your browser could not open your Ledger. Close Ledger Live, unplug and replug your Ledger, then try again.';
 const operationRejectedErrorMessage = 'Operation rejected on the Ledger device';
 const deviceNotPairedErrorMessage =
   'Leather has not been given access to a Ledger device in this browser';
@@ -152,8 +152,8 @@ function isLedgerNoDeviceSelectedError(error: unknown): boolean {
   return hasTag(error, [noDeviceSelectedTag]);
 }
 
-function isLedgerDeviceInUseError(error: unknown): boolean {
-  return hasTag(error, [deviceInUseTag]);
+function isLedgerConnectionOpeningFailedError(error: unknown): boolean {
+  return hasTag(error, [connectionOpeningFailedTag]);
 }
 
 function isLedgerAppOpenFailedError(error: unknown): boolean {
@@ -229,8 +229,8 @@ export function handleLedgerConnectionError(
     return;
   }
 
-  if (isLedgerDeviceInUseError(error)) {
-    void ledgerNavigate.toErrorStep(chain, deviceInUseErrorMessage);
+  if (isLedgerConnectionOpeningFailedError(error)) {
+    void ledgerNavigate.toErrorStep(chain, connectionOpeningFailedErrorMessage);
     return;
   }
 

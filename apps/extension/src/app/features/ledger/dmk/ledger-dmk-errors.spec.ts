@@ -18,8 +18,8 @@ const transportFailureMessage =
 
 const noDeviceSelectedErrorMessage =
   'Click "Try again" and choose your Ledger in the browser prompt.';
-const deviceInUseErrorMessage =
-  'Your Ledger is in use by another app. Close Ledger Live and any other Leather windows, then try again.';
+const connectionOpeningFailedErrorMessage =
+  'Your browser could not open your Ledger. Close Ledger Live, unplug and replug your Ledger, then try again.';
 
 function makeNamedError(name: string) {
   const error = new Error(name);
@@ -304,13 +304,13 @@ describe(handleLedgerConnectionError.name, () => {
     expect(ledgerNavigate.toErrorStep).not.toHaveBeenCalled();
   });
 
-  test('explains a cancelled device chooser and a device in use', () => {
+  test('explains a cancelled device chooser and a device the browser could not open', () => {
     expect(
       dispatch({ _tag: 'NoAccessibleDeviceError' }).ledgerNavigate.toErrorStep
     ).toHaveBeenCalledWith('bitcoin', noDeviceSelectedErrorMessage);
     expect(
       dispatch({ _tag: 'ConnectionOpeningError' }).ledgerNavigate.toErrorStep
-    ).toHaveBeenCalledWith('bitcoin', deviceInUseErrorMessage);
+    ).toHaveBeenCalledWith('bitcoin', connectionOpeningFailedErrorMessage);
   });
 
   test('routes an unpaired device to the pairing step instead of the chooser error', () => {
