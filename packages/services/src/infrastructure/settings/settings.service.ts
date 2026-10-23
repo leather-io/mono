@@ -1,5 +1,5 @@
-import { NetworkConfiguration, QuoteCurrency } from '@leather.io/models';
-import { SerializedCryptoAssetId } from '@leather.io/utils';
+import { type NetworkConfiguration, type QuoteCurrency } from '@leather.io/models';
+import { type SerializedCryptoAssetId } from '@leather.io/utils';
 
 export interface UserSettings {
   network: NetworkConfiguration;
