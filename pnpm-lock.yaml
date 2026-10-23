@@ -430,6 +430,9 @@ importers:
       '@leather.io/test-app':
         specifier: workspace:*
         version: link:../test-app
+      '@leather.io/tools':
+        specifier: workspace:*
+        version: link:../../tools
       '@pandacss/dev':
         specifier: 1.7.1
         version: 1.7.1(jsdom@26.1.0)(typescript@5.9.3)
@@ -2403,13 +2406,25 @@ importers:
       commander:
         specifier: 12.0.0
         version: 12.0.0
-    devDependencies:
-      '@types/node':
-        specifier: 24.0.8
-        version: 24.0.8
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+    devDependencies:
+      '@leather.io/prettier-config':
+        specifier: workspace:*
+        version: link:../packages/prettier-config
+      '@leather.io/test-config':
+        specifier: workspace:*
+        version: link:../packages/test-config
+      '@types/node':
+        specifier: 24.0.8
+        version: 24.0.8
+      prettier:
+        specifier: 3.5.1
+        version: 3.5.1
+      vitest:
+        specifier: 2.1.9
+        version: 2.1.9(@types/node@24.0.8)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.8.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@24.0.8)(typescript@5.9.3))(terser@5.46.0)
 
 packages:
 
