@@ -1033,6 +1033,7 @@ export class LeatherApiClient {
       {
         priority: leatherApiPriorities.compliance,
         signal,
+        throwOnTimeout: true,
       }
     );
     return data!;
