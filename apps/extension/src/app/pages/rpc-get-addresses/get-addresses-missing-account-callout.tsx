@@ -1,7 +1,6 @@
 import { type GetAddressesChain } from '@leather.io/rpc';
 import { Callout } from '@leather.io/ui';
-
-import { capitalize } from '@app/common/utils';
+import { capitalize } from '@leather.io/utils';
 
 interface GetAddressesMissingAccountCalloutProps {
   missingChain: GetAddressesChain;
