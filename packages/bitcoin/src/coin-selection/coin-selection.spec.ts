@@ -231,7 +231,7 @@ describe(determineUtxosForSpend.name, () => {
     recipients[0].amount = createMoney(amount, 'BTC');
 
     const result = determineUtxosForSpendAll({
-      utxos: utxos,
+      utxos,
       recipients,
       feeRate,
     });
