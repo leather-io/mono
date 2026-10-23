@@ -160,4 +160,54 @@ describe(FungibleAssetVisibilityService.name, () => {
       ).toEqual(true);
     });
   });
+
+  describe('isSwapAssetVisibleById', () => {
+    it('should ignore an allowlist policy but keep user settings', async () => {
+      const pricedSip10 = 'PRICED_SIP10';
+      const hiddenPricedSip10 = 'HIDDEN_PRICED_SIP10';
+      const unpricedSip10 = 'UNPRICED_SIP10';
+
+      const price = { price: 1, lastPriceAt: '2026-10-23T00:00:00Z', change24h: null };
+      vi.mocked(mockLeatherApiClient.fetchSip10PriceMap).mockResolvedValue({
+        [pricedSip10]: price,
+        [hiddenPricedSip10]: price,
+      });
+      const fungibleAssetVisibilityService = new FungibleAssetVisibilityService(
+        mockAppConfigService,
+        mockLeatherApiClient,
+        {
+          getSettings: vi.fn().mockReturnValue({
+            assetVisibility: {
+              [`${FungibleCryptoAssetProtocols.sip10}|${hiddenPricedSip10}`]: false,
+            },
+            defaultAssetVisibility: { type: 'allowlist', assets: [] },
+          }),
+        }
+      );
+      expect(
+        await fungibleAssetVisibilityService.isSwapAssetVisibleById({
+          protocol: 'sip10',
+          id: pricedSip10,
+        })
+      ).toEqual(true);
+      expect(
+        await fungibleAssetVisibilityService.isSwapAssetVisibleById({
+          protocol: 'sip10',
+          id: hiddenPricedSip10,
+        })
+      ).toEqual(false);
+      expect(
+        await fungibleAssetVisibilityService.isSwapAssetVisibleById({
+          protocol: 'sip10',
+          id: unpricedSip10,
+        })
+      ).toEqual(false);
+      expect(
+        await fungibleAssetVisibilityService.isAssetVisibleById({
+          protocol: 'sip10',
+          id: pricedSip10,
+        })
+      ).toEqual(false);
+    });
+  });
 });

@@ -198,7 +198,7 @@ export class SwapService {
 
     const assetResults = await Promise.allSettled(
       keys(groupedAssets).map(key =>
-        this.fungibleAssetService.getVisibleAsset(deserializeAssetId(key) as FungibleAssetId)
+        this.fungibleAssetService.getSwapAsset(deserializeAssetId(key) as FungibleAssetId)
       )
     );
 
