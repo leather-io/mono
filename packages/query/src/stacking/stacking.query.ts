@@ -1,6 +1,6 @@
-import { ClientParam } from '@stacks/common';
-import { StacksNetwork } from '@stacks/network';
-import { StackingClient } from '@stacks/stacking';
+import { type ClientParam } from '@stacks/common';
+import { type StacksNetwork } from '@stacks/network';
+import { type StackingClient } from '@stacks/stacking';
 import { fetchCallReadOnlyFunction, noneCV, principalCV } from '@stacks/transactions';
 import type { UseQueryOptions } from '@tanstack/react-query';
 
@@ -41,7 +41,7 @@ export function createGetAllowanceContractCallersQueryOptions({
       contractAddress,
       contractName,
     ],
-    queryFn: () => {
+    queryFn() {
       if (senderAddress) {
         return fetchCallReadOnlyFunction({
           contractAddress,

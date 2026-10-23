@@ -2,7 +2,7 @@ import type { UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { z } from 'zod';
 
-import { BitcoinNetwork } from '@leather.io/models';
+import { type BitcoinNetwork } from '@leather.io/models';
 
 // E.g.
 // mainnet/wpkh(xpub6CxzM41aUbKigFCifZxs9wkX37SMm5qRFqYjk1VdUZtwK3a5YoNnqZuNe29xycKLLThEEXDaKLLhke2Kwi2xKhrj14mwCCyzBGChGcaJH9L)

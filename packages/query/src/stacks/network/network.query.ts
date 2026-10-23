@@ -1,5 +1,5 @@
 import { StacksQueryPrefixes } from '../../query-prefixes';
-import { StacksClient } from '../stacks-client';
+import { type StacksClient } from '../stacks-client';
 
 const staleTime = 15 * 60 * 1000; // 15 min
 
