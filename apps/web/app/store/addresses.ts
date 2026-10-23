@@ -114,7 +114,7 @@ export function useLeatherConnect() {
 
   const stacksAccount = useStacksAccount();
 
-  const btcPaymentAddress = useMemo(() => {
+  const btcPaymentAddress = useMemo((): WalletAddressEntry | undefined => {
     for (const type of btcPaymentAddressPreference) {
       const match = addresses.find(address => 'type' in address && address.type === type);
       if (match) return match;

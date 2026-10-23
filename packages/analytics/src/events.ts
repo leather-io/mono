@@ -1,5 +1,9 @@
 // All new events should use the object-action framework.
-import { CryptoAssetProtocol, DefaultNetworkConfigurations, StxBalance } from '@leather.io/models';
+import {
+  type CryptoAssetProtocol,
+  type DefaultNetworkConfigurations,
+  type StxBalance,
+} from '@leather.io/models';
 
 export type ComplianceScreeningPoint =
   | 'psbt_signer'
@@ -156,7 +160,7 @@ interface HistoricalEvents {
     inputs?: number;
     outputs?: number;
   };
-  broadcast_btc_error: { error: any };
+  broadcast_btc_error: { error: unknown };
   propose_multisig_transaction: { symbol: string };
   copy_btc_address_to_clipboard: { type: string };
   copy_secret_key_to_clipboard: undefined;
@@ -203,7 +207,7 @@ interface HistoricalEvents {
   generate_new_secret_key: undefined;
   bitcoin_contract_error: { msg: string };
   schema_fail: {
-    query: any;
+    query: unknown;
     hash: string;
     error: string;
   };
@@ -220,7 +224,7 @@ interface HistoricalEvents {
     reason: string;
     screeningPoint: ComplianceScreeningPoint;
   };
-  ledger_transaction_publish_error: { error: { message: string; error: any } };
+  ledger_transaction_publish_error: { error: { message: string; error: unknown } };
   native_segwit_tx_hex_to_ledger_tx: { success: boolean };
   psbt_sign_request_p2tr_missing_taproot_internal_key: undefined;
   ledger_nativesegwit_add_nonwitnessutxo: {

@@ -1,5 +1,5 @@
 import { AccountAddresses, BitcoinTransaction, OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
-import { hasBitcoinAddress, sumNumbers } from '@leather.io/utils';
+import { sumNumbers } from '@leather.io/utils';
 
 import {
   LeatherApiStakingBond,
@@ -112,7 +112,7 @@ export function getBondStakerAddress(
   account: AccountAddresses,
   exclusions?: AccountRequestAddressExclusionOptions
 ): string | null {
-  if (!hasBitcoinAddress(account)) return null;
+  if (!account.bitcoin) return null;
   if (account.bitcoin.type === 'fixedAddress') return account.bitcoin.address;
   if (exclusions?.nativeSegwitAddresses) return null;
   return account.bitcoin.zeroIndexNativeSegwitPayerAddress ?? null;

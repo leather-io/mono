@@ -38,8 +38,6 @@ interface UseSignerManagerPickerResult {
   isCustomSelected: boolean;
   target: SignerManagerTarget | null;
   isSwitching: boolean;
-  termsAccepted: boolean;
-  toggleTermsAccepted(): void;
 }
 
 export function useSignerManagerPicker({
@@ -54,14 +52,12 @@ export function useSignerManagerPicker({
   );
   const [customInput, setCustomInput] = useState('');
   const [submittedCustomInput, setSubmittedCustomInput] = useState<string | null>(null);
-  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const isCustomSelected = selectedRowId === customRowId;
   const customState = useSignerManagerContractInput(isCustomSelected ? submittedCustomInput : null);
 
   function selectRow(rowId: string) {
     setSelectedRowId(rowId);
-    setTermsAccepted(false);
     if (rowId !== customRowId) {
       setCustomInput('');
       setSubmittedCustomInput(null);
@@ -71,7 +67,6 @@ export function useSignerManagerPicker({
   function onCustomInputChange(value: string) {
     setCustomInput(value);
     setSubmittedCustomInput(null);
-    setTermsAccepted(false);
   }
 
   function validateCustom() {
@@ -122,9 +117,5 @@ export function useSignerManagerPicker({
     isCustomSelected,
     target,
     isSwitching: target !== null,
-    termsAccepted,
-    toggleTermsAccepted() {
-      setTermsAccepted(accepted => !accepted);
-    },
   };
 }

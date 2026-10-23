@@ -1,6 +1,7 @@
 import {
   type InfiniteData,
   type QueryClient,
+  infiniteQueryOptions,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
@@ -154,9 +155,9 @@ export function createBlockchainActivityViewsFeedQuery(
   settings: UserSettings,
   limit?: number
 ) {
-  return {
+  return infiniteQueryOptions({
     ...createBlockchainActivityInfiniteQueryConfig({ account, limit }, settings),
     ...activityFeedCacheOptions,
     select: selectBlockchainActivityFeedViews,
-  };
+  });
 }

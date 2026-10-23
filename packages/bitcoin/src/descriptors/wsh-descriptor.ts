@@ -7,9 +7,10 @@ import { createBitcoinjsLib } from '@bitcoinerlab/descriptors-core/bitcoinjs';
 import ecc from '@bitcoinerlab/secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
-import { HDKey } from '@scure/bip32';
+import { type HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { type Network, Psbt, networks, payments } from 'bitcoinjs-lib';
+import { values } from 'remeda';
 import { encode as encodeVaruint } from 'varuint-bitcoin';
 
 import { type BitcoinNetworkModes, type NetworkModes } from '@leather.io/models';
@@ -187,7 +188,7 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
   if (!witnessScript) throw new Error('Descriptor does not produce a witness script');
 
   const { expansionMap } = instance.expand();
-  const keys = expansionMap ? Object.values(expansionMap) : [];
+  const keys = expansionMap ? values(expansionMap) : [];
 
   return {
     scriptPubKey: Uint8Array.from(instance.getScriptPubKey()),
@@ -233,16 +234,23 @@ export function getWshDescriptorAddress(
 // xpub key expressions (resolved at the descriptor's index) and raw-pubkey key
 // expressions, and confirms the current account participates in the descriptor
 // at the address index it was derived for.
-export function findAccountKeyByPubkey(keys: KeyInfo[], pubkey: Uint8Array) {
+export function findAccountKeyByPubkey(
+  keys: KeyInfo[],
+  pubkey: Uint8Array
+): AccountDescriptorKey['key'] | undefined {
   const pubkeyHex = bytesToHex(pubkey);
-  return keys.find(
-    (key): key is KeyInfo & { pubkey: Uint8Array } =>
-      !!key.pubkey && bytesToHex(key.pubkey) === pubkeyHex
-  );
+  const key = keys.find(key => !!key.pubkey && bytesToHex(key.pubkey) === pubkeyHex);
+  if (!key) return undefined;
+  assertKeyHasPubkey(key);
+  return key;
 }
 
 export interface AccountDescriptorKey extends DescriptorKeyPathIndexes {
   key: KeyInfo & { pubkey: Uint8Array };
+}
+
+function assertKeyHasPubkey(key: KeyInfo): asserts key is AccountDescriptorKey['key'] {
+  if (!key.pubkey) throw new Error('Descriptor key has no public key');
 }
 
 export function findAccountDescriptorKey(
@@ -259,13 +267,16 @@ export function findAccountDescriptorKey(
       ? bytesToHex(addressIndexKeychain.publicKey)
       : undefined;
     const extendedKey = keys.find(
-      (key): key is KeyInfo & { pubkey: Uint8Array } =>
+      key =>
         !!key.pubkey &&
         !!key.bip32 &&
         bytesToHex(key.bip32.publicKey) === accountPubkeyHex &&
         bytesToHex(key.pubkey) === addressIndexPubkeyHex
     );
-    if (extendedKey) return { key: extendedKey, ...keyPathIndexes };
+    if (extendedKey) {
+      assertKeyHasPubkey(extendedKey);
+      return { key: extendedKey, ...keyPathIndexes };
+    }
   }
 
   const addressIndexZeroKeychain = deriveAddressIndexKeychainFromAccount(accountKeychain)({

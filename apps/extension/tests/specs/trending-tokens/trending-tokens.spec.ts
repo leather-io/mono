@@ -17,6 +17,6 @@ test.describe('Trending tokens', () => {
     await expect(trendingToken).toBeVisible();
     await trendingToken.click();
 
-    await page.waitForURL(/\/token\//);
+    await expect(page).toHaveURL(/\/token\//);
   });
 });

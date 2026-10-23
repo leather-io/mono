@@ -32,7 +32,7 @@ export function useNetworkFee({
   quote,
   baseAmount,
   dependencies,
-}: UseNetworkFeeProps): UseQueryResult<NetworkFee, Error> {
+}: UseNetworkFeeProps): UseQueryResult<NetworkFee> {
   const { baseSwapAsset } = state;
   const { accountRequest, services } = dependencies;
   const { swapService } = services;
@@ -48,7 +48,7 @@ export function useNetworkFee({
       quote?.providerId,
       quote?.assetPath,
     ],
-    queryFn: async ({ signal }) => {
+    async queryFn({ signal }) {
       assertExistence(
         quote,
         `useNetworkFee expects a valid quote but got undefined.
@@ -72,7 +72,7 @@ export function useNetworkFee({
       const { getNetworkFee } = getExecutionTypeStrategy(executionData.executionType);
       return await getNetworkFee(executionDependencies, signal);
     },
-    select: data => {
+    select(data) {
       assertExistence(baseSwapAsset, "useNetworkFee expects 'baseSwapAsset' to be set.");
       return transformTransactionFees(
         data,
