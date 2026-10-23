@@ -1,6 +1,6 @@
-import { addSignOutListener } from '@shared/messages';
+import { useOnMount } from '@leather.io/ui';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { addSignOutListener } from '@shared/messages';
 
 export function useOnSignOut(handler: () => void) {
   useOnMount(() => {

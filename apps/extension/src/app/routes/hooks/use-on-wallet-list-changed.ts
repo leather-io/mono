@@ -1,6 +1,6 @@
-import { addWalletListChangedListener } from '@shared/messages';
+import { useOnMount } from '@leather.io/ui';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { addWalletListChangedListener } from '@shared/messages';
 
 export function useOnWalletListChanged(
   handler: (payload: { removedFingerprint?: string }) => void

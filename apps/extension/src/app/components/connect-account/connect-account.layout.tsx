@@ -10,12 +10,12 @@ import {
   Flag,
   LeatherLogomarkIcon,
   QuestionCircleIcon,
+  useOnMount,
 } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
 
 import { closeWindow } from '@shared/utils';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { FaviconDisplayer } from '@app/components/favicon-displayer/favicon-displayer';
 
 interface ConnectAccountLayoutProps {

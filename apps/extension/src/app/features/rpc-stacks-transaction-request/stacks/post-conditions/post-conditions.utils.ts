@@ -2,9 +2,13 @@ import { PostConditionPrincipalId, addressToString } from '@stacks/transactions'
 
 import type { Sip10Asset } from '@leather.io/models';
 import { formatContractId } from '@leather.io/stacks';
-import { isDefined, truncateMiddle } from '@leather.io/utils';
+import {
+  convertAmountToBaseUnit,
+  initBigNumber,
+  isDefined,
+  truncateMiddle,
+} from '@leather.io/utils';
 
-import { ftDecimals } from '@app/common/stacks-utils';
 import {
   type NonPoxPostConditionWire,
   type PostConditionVerb,
@@ -47,7 +51,11 @@ export function formatPostConditionMessage({
       ? formatContractId(addressToString(pc.asset.address), pc.asset.contractName.content)
       : '';
   const amount =
-    asset?.decimals && isDefined(pcAmount) ? ftDecimals(pcAmount, asset.decimals) : pcAmount;
+    asset?.decimals && isDefined(pcAmount)
+      ? convertAmountToBaseUnit(initBigNumber(pcAmount), asset.decimals)
+          .toNumber()
+          .toLocaleString('en-US', { maximumFractionDigits: asset.decimals })
+      : pcAmount;
   const ticker = asset?.symbol || pcTicker;
 
   const message = pc.conditionCode

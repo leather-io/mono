@@ -1,16 +1,18 @@
 import { type StacksTransactionWire } from '@stacks/transactions';
 import axios from 'axios';
 
+import {
+  type StacksUnsignedTransactionOptions,
+  generateStacksUnsignedTransaction,
+} from '@leather.io/stacks';
+import { createMoney } from '@leather.io/utils';
+
 import { logger } from '@shared/logger';
 
 import { queryClient } from '@app/common/persistence';
-import {
-  type GenerateUnsignedTransactionOptions,
-  generateUnsignedTransaction,
-} from '@app/common/transactions/stacks/generate-unsigned-txs';
 
 export interface TransactionBase {
-  options?: GenerateUnsignedTransactionOptions;
+  options?: StacksUnsignedTransactionOptions;
   transaction: StacksTransactionWire | undefined;
 }
 
@@ -39,11 +41,11 @@ export async function verifySponsoredSbtcTransaction({
   try {
     const { options } = baseTx;
     if (!options) throw new Error('Missing transaction options');
-    options.txData.sponsored = true;
-    const sponsoredTx = await generateUnsignedTransaction({
+    const sponsoredTx = await generateStacksUnsignedTransaction({
       ...options,
-      fee,
-      nonce,
+      sponsored: true,
+      fee: createMoney(fee, 'STX'),
+      nonce: nonce ?? options.nonce,
     });
     const serializedTx = sponsoredTx.serialize();
 

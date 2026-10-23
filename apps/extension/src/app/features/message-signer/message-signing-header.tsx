@@ -1,10 +1,9 @@
 import { Stack, styled } from 'leather-styles/jsx';
 
-import { Flag } from '@leather.io/ui';
+import { Favicon, Flag } from '@leather.io/ui';
 
 import { getUrlHost, getUrlHostname } from '@app/common/utils';
 import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
-import { Favicon } from '@app/components/favicon';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
 interface MessageSigningHeaderProps {

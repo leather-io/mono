@@ -6,6 +6,7 @@ import * as btc from '@scure/btc-signer';
 import {
   compileWshDescriptor,
   getAddressFromOutScript,
+  getBitcoinInputValue,
   getBtcSignerLibNetworkConfigByMode,
   getDescriptorInputsWithDisallowedSighash,
   getDescriptorMatchingInputIndexes,
@@ -14,7 +15,6 @@ import {
 import type { Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { getBitcoinInputValue } from '@shared/crypto/bitcoin/bitcoin.utils';
 import { logger } from '@shared/logger';
 
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
