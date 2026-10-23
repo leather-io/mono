@@ -10,7 +10,7 @@ import { parseContractId } from '../utils/contract-id';
 export const payoutPreferenceFunctionNames = ['get-payout-config', 'get-pox-addr'];
 const minClaimFunctionName = 'get-payout-config';
 
-interface Pox5PayoutPreferenceResult {
+export interface Pox5PayoutPreferenceResult {
   preference: Pox5PayoutPreference | null;
   supportsMinClaim: boolean;
 }

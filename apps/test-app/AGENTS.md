@@ -43,8 +43,8 @@ failed.
 If you must use the DOM: the whole card IS the send button — `[data-testid="<id>"]`, carrying
 `data-verdict` and `data-requires`. **Only those cards carry `data-testid`** — every other control
 uses `data-control` (`load-account`, `refresh-account`, `run-tag`, `run-<scenario>-<step>`), because
-`apps/extension`'s rpc-catalog spec counts `button[data-testid]` against the catalog length. Keep it
-that way when adding controls.
+`apps/extension`'s rpc-catalog spec counts the elements whose `data-testid` is a catalog id against
+the catalog length. Keep it that way when adding controls.
 
 The result panel is `[data-testid="rpc-result"]` with `data-status`, `data-verdict`, `data-method`
 and `data-id`; `rpc-result-params` / `rpc-result-payload` hold the JSON, `rpc-checks` the verifier

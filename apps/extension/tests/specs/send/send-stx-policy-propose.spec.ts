@@ -9,11 +9,13 @@ import {
   policyStateOverrides,
 } from '@tests/mocks/mock-policies';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { isPlainObject } from 'remeda';
+import { z } from 'zod';
 
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 
 import { test } from '../../fixtures/fixtures';
+
+const proposeRequestBodySchema = z.record(z.string(), z.unknown());
 
 const mainnetChainId = 1;
 // The propose flow re-derives + asserts the multisig sender, so the policy's
@@ -69,8 +71,7 @@ test.describe('send stx from a policy (multisig) account', () => {
       confirmButton.click(),
     ]);
 
-    const body: unknown = proposeRequest.postDataJSON();
-    if (!isPlainObject(body)) throw new Error('Expected propose request body to be an object');
+    const body = proposeRequestBodySchema.parse(proposeRequest.postDataJSON());
     test.expect(body.multisigAddress).toEqual(stacksPolicy.address);
     test.expect(typeof body.rawPayload).toEqual('string');
     test.expect(typeof body.proposalSignature).toEqual('string');

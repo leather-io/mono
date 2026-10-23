@@ -66,7 +66,11 @@ const mockAccessTokenPayloadSchema = z.object({
 
 const mockRefreshRequestSchema = z.object({ refreshToken: z.string() });
 
-function networkFromAuthHeader(request: Request): AuthNetworkId {
+interface AuthHeaderSource {
+  headers: { get(name: string): string | null };
+}
+
+function networkFromAuthHeader(request: AuthHeaderSource): AuthNetworkId {
   const token = request.headers.get('Authorization')?.replace('Bearer ', '');
   const segment = token?.split('.')[1];
   if (!segment) return 'stx:mainnet';

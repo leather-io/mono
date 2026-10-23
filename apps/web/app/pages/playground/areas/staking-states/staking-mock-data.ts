@@ -194,7 +194,13 @@ export const mockOperatorPayoutPreference: Pox5PayoutPreference = {
 
 const mockTxId = '0x9f3b1d2c4e5a6b7c8d9e0f1a2b3c4d5e6f70819a2b3c4d5e6f708192a3b4c5d6';
 
-const mockPendingStakeTx: PendingPox5Tx = { kind: 'stake', txId: mockTxId };
+const mockPendingStakeTx: PendingPox5Tx = {
+  kind: 'stake',
+  txId: mockTxId,
+  amountMicroStx: 12_500_000_000n,
+  numCycles: 12,
+  signerManagerContractId: listedSignerManagerContractId,
+};
 
 export const mockTrackedTx: Pox5TrackedTx = {
   kind: 'stake',

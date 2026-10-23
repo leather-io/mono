@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { type UseQueryResult, useQueries, useQuery } from '@tanstack/react-query';
 import {
   type BitcoinStakingPool,
   type BitcoinStakingProviderId,
@@ -16,7 +16,10 @@ import {
   type Pox5EarnedRewards,
   createGetPox5EarnedRewardsQueryOptions,
 } from './create-get-pox5-earned-rewards-query-options';
-import { createGetPox5PayoutPreferenceQueryOptions } from './create-get-pox5-payout-preference-query-options';
+import {
+  type Pox5PayoutPreferenceResult,
+  createGetPox5PayoutPreferenceQueryOptions,
+} from './create-get-pox5-payout-preference-query-options';
 import { createGetPox5PoolFeeQueryOptions } from './create-get-pox5-pool-fee-query-options';
 import { createGetPox5SignerManagerValidationQueryOptions } from './create-get-pox5-signer-manager-validation-query-options';
 import {
@@ -48,7 +51,9 @@ export function usePox5StakerInfoQuery() {
   );
 }
 
-export function usePox5PayoutPreferenceQuery(signerManagerContractId: string | undefined) {
+export function usePox5PayoutPreferenceQuery(
+  signerManagerContractId: string | undefined
+): UseQueryResult<Pox5PayoutPreferenceResult | null> {
   const { stacksAccount } = useLeatherConnect();
   const client = usePox5StacksClient();
 

@@ -46,6 +46,7 @@
     "bitcoin-address-validation": "2.2.3",
     "bitcoinjs-lib": "7.0.1",
     "ecpair": "3.0.1",
+    "remeda": "2.21.2",
     "varuint-bitcoin": "2.0.0",
     "zod": "4.0.17"
   },

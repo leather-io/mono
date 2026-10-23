@@ -37,7 +37,7 @@ export function ChooseStakingAmount({
           render={({ field: { onChange, onBlur, value, ref }, fieldState: { invalid, error } }) => (
             <>
               <Input.Root data-shrink={isDefined(value)}>
-                <Input.Label>Amount of STX to stake</Input.Label>
+                <Input.Label htmlFor="amount">Amount of STX to stake</Input.Label>
                 <Input.Field
                   id="amount"
                   value={value ?? ''}

@@ -135,6 +135,7 @@ function makeTransaction(
     createdAt: '2026-06-27T00:00:00Z',
     updatedAt: '2026-06-27T00:00:00Z',
     approvalCount: 1,
+    signedByMe: false,
     ...overrides,
   };
 }

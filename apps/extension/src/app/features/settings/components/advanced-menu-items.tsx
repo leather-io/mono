@@ -13,7 +13,7 @@ import {
 } from '@shared/logger-storage';
 
 import { Divider } from '@app/components/layout/divider';
-import { useToast } from '@app/features/toasts/use-toast';
+import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 
 const isAnEmptyLogsArrayByteThreshold = 7;
 
@@ -42,7 +42,7 @@ export function AdvancedMenuItems() {
 
   async function clearDiagnostics() {
     await clearBrowserStorageLogs();
-    toast.success('Diagnostic logs cleared');
+    toast.success('Diagnostic logs cleared', { duration: toastDurations.standard });
   }
 
   return (

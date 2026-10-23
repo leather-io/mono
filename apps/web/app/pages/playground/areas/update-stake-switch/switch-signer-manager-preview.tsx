@@ -2,6 +2,10 @@ import { useState } from 'react';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
+import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
+import { bitcoinStakingPoolList } from '~/data/bitcoin-staking-data';
+import { StakingAcknowledgment } from '~/features/bitcoin-staking/components/staking-acknowledgment';
+import { useStakingAcknowledgment } from '~/features/bitcoin-staking/hooks/use-staking-acknowledgment';
 import {
   ChooseSignerManager,
   type SignerManagerOption,
@@ -32,6 +36,7 @@ interface PreviewPoolFacts {
 
 const previewPoolFacts: Record<string, PreviewPoolFacts> = {
   stackingDao: { name: 'Stacking DAO', feePercent: 0, rewardsLabel: 'sBTC' },
+  planbetter: { name: 'PlanBetter', feePercent: 5, rewardsLabel: 'BTC' },
   fastPool: { name: 'Fast Pool', feePercent: 0, rewardsLabel: 'sBTC / BTC' },
   xversePool: { name: 'Xverse', feePercent: 4.95, rewardsLabel: 'sBTC / BTC' },
   senseiNode: { name: 'SenseiNode', feePercent: 10, rewardsLabel: 'sBTC / BTC' },
@@ -106,7 +111,7 @@ function buildSummaryRows({
   };
   const lockRow: SidebarSummaryRow = {
     kind: 'diff',
-    label: 'Locked until',
+    label: bitcoinStakingContent.switchSignerManager.summary.lockedUntil,
     from: 'Cycle 122',
     to: 'Cycle 124',
   };
@@ -276,10 +281,15 @@ export function SwitchSignerManagerPreview({
     : previewPoolFacts[listedCurrentProviderId].name;
 
   const [selectedProviderId, setSelectedProviderId] = useState(initialProviderId);
-  const [termsAccepted, setTermsAccepted] = useState(false);
   const [hasConfirmed, setHasConfirmed] = useState(false);
   const [customContract, setCustomContract] = useState('');
   const [customValidation, setCustomValidation] = useState<CustomValidation>('idle');
+
+  const acknowledgment = useStakingAcknowledgment(
+    JSON.stringify({ currentProviderId, selectedProviderId, customContract, customValidation })
+  );
+  const selectedPool =
+    bitcoinStakingPoolList.find(pool => pool.providerId === selectedProviderId) ?? null;
 
   const isCustomSelected = selectedProviderId === customProviderId;
   const isSwitchingToPool = selectedProviderId !== currentProviderId && !isCustomSelected;
@@ -287,14 +297,12 @@ export function SwitchSignerManagerPreview({
 
   function handleSelect(providerId: string) {
     setSelectedProviderId(providerId);
-    setTermsAccepted(false);
     setHasConfirmed(false);
   }
 
   function handleContractChange(contract: string) {
     setCustomContract(contract);
     setCustomValidation('idle');
-    setTermsAccepted(false);
   }
 
   function handleValidate() {
@@ -318,34 +326,13 @@ export function SwitchSignerManagerPreview({
     }, validationDelayMs);
   }
 
-  function terms() {
-    if (isSwitchingToPool) {
-      return {
-        label: `I have read and accepted ${previewPoolFacts[selectedProviderId].name}'s terms and conditions`,
-        accepted: termsAccepted,
-        onToggleAccepted: () => setTermsAccepted(accepted => !accepted),
-      };
-    }
-    if (isSwitchingToCustom) {
-      return {
-        label:
-          'I understand this is a custom signer-manager contract and rewards depend on its policies',
-        accepted: termsAccepted,
-        onToggleAccepted: () => setTermsAccepted(accepted => !accepted),
-      };
-    }
-    return undefined;
-  }
-
   function confirmLabel() {
     if (isCustomSelected && customValidation !== 'valid') return 'Validate contract first';
     if (isSwitchingToPool || isSwitchingToCustom) return 'Confirm switch';
     return 'Confirm update';
   }
 
-  const confirmDisabled =
-    ((isSwitchingToPool || isSwitchingToCustom) && !termsAccepted) ||
-    (isCustomSelected && customValidation !== 'valid');
+  const confirmDisabled = isCustomSelected && customValidation !== 'valid';
 
   return (
     <Stack gap="space.05">
@@ -378,8 +365,7 @@ export function SwitchSignerManagerPreview({
               }
             />
             <styled.p textStyle="caption.01" color="ink.text-subdued">
-              Picking a different pool moves your whole position at the start of the next cycle.
-              You&apos;ll accept the new pool&apos;s terms before confirming.
+              {bitcoinStakingContent.switchSignerManager.helper}
             </styled.p>
           </Stack>
         </Stack>
@@ -394,11 +380,27 @@ export function SwitchSignerManagerPreview({
               customValidation,
               customContract,
             })}
-            terms={terms()}
+            acknowledgment={
+              isSwitchingToPool || isSwitchingToCustom ? (
+                <StakingAcknowledgment pool={selectedPool} acknowledgment={acknowledgment} />
+              ) : undefined
+            }
             confirmLabel={confirmLabel()}
+            confirmAttemptCount={acknowledgment.attemptCount}
+            confirmError={
+              acknowledgment.isInvalid
+                ? bitcoinStakingContent.acknowledgment.requiredMessage
+                : undefined
+            }
             confirmDisabled={confirmDisabled}
             isBusy={isCustomSelected && customValidation === 'checking'}
-            onConfirm={() => setHasConfirmed(true)}
+            onConfirm={() => {
+              if (confirmDisabled) return;
+              if ((isSwitchingToPool || isSwitchingToCustom) && !acknowledgment.requireAccepted()) {
+                return;
+              }
+              setHasConfirmed(true);
+            }}
           />
           {hasConfirmed && (
             <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.02">
