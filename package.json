@@ -101,7 +101,8 @@
       "valibot@<1.4.2": ">=1.4.2 <2",
       "browserslist@<4.28.7": ">=4.28.7 <5",
       "follow-redirects@>=1.0.0 <1.16.1": ">=1.16.1 <2",
-      "vite@>=7.0.0 <7.3.7": ">=7.3.7 <8"
+      "vite@>=7.0.0 <7.3.7": ">=7.3.7 <8",
+      "dompurify@>=3.0.0 <3.4.17": ">=3.4.17 <4"
     },
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
