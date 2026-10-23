@@ -28,9 +28,10 @@ export interface ResolveLedgerSignableDescriptorArgs {
 
 function getForeignRawPublicKeys(keys: KeyInfo[], accountKey: RawPublicKey): RawPublicKey[] {
   const accountPublicKey = bytesToHex(accountKey.pubkey);
-  return keys.filter(
-    (key): key is RawPublicKey =>
-      !key.bip32 && !!key.pubkey && bytesToHex(key.pubkey) !== accountPublicKey
+  return keys.flatMap(key =>
+    !key.bip32 && key.pubkey && bytesToHex(key.pubkey) !== accountPublicKey
+      ? [{ ...key, pubkey: key.pubkey }]
+      : []
   );
 }
 

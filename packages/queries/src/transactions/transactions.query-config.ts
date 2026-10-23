@@ -22,7 +22,7 @@ export function createStacksTransactionByIdQueryConfig(txid: string, settings: U
     queryKey: createStacksTransactionByIdQueryKey(txid, settings),
     queryFn: ({ signal }: QueryFunctionContext) =>
       getStacksTransactionsService().getTransactionById(txid, signal),
-  } satisfies UseQueryOptions<StacksTransaction | null, Error>;
+  } satisfies UseQueryOptions<StacksTransaction | null>;
 }
 
 export function createBitcoinTransactionByTxIdQueryKey(txid: string, settings: UserSettings) {
@@ -38,5 +38,5 @@ export function createBitcoinTransactionByTxIdQueryConfig(txid: string, settings
     queryKey: createBitcoinTransactionByTxIdQueryKey(txid, settings),
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBitcoinTransactionsService().getTransactionByTxId(txid, signal),
-  } satisfies UseQueryOptions<BitcoinTransaction | null, Error>;
+  } satisfies UseQueryOptions<BitcoinTransaction | null>;
 }

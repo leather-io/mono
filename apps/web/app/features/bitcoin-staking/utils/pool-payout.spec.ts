@@ -17,7 +17,10 @@ describe(getPoolPayoutMode.name, () => {
 
   test('is btc-only for a pool whose operator pays native BTC off chain', () => {
     expect(
-      getPoolPayoutMode({ supportsBtcPayout: true, operatorBtcPayout: { cadence: 'monthly' } })
+      getPoolPayoutMode({
+        supportsBtcPayout: true,
+        operatorBtcPayout: { cadence: 'monthly', termsUrl: 'https://example.com/terms' },
+      })
     ).toBe('btc-only');
   });
 });

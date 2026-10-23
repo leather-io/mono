@@ -138,10 +138,14 @@ msgid "Account name cannot be empty"
 msgstr "Account name cannot be empty"
 
 #: src/components/activity/activity-with-account.screen.tsx:19
+#: src/components/activity/activity-without-account-screen.tsx:9
+#: src/features/navigation/tab-layout.tsx:60
 #: src/features/token/components/token-activity.tsx:40
 msgid "Activity"
 msgstr "Activity"
 
+#: src/features/account/components/create-wallet-card.tsx:22
+#: src/features/account/sheets/add-account-sheet.tsx:26
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:143
 msgid "Add account"
 msgstr "Add account"
@@ -169,6 +173,7 @@ msgstr "Add to existing wallet"
 msgid "Add to new wallet"
 msgstr "Add to new wallet"
 
+#: src/app/settings/wallet/index.tsx:52
 #: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:24
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:72
 msgid "Add wallet"
@@ -435,12 +440,17 @@ msgstr "Bitcoin unit updated"
 
 #: src/features/swap/components/fees-info-sheet.tsx:18
 #: src/features/swap/components/fees-info-sheet.tsx:22
+#: src/utils/dapps.ts:45
 msgid "Bitflow"
 msgstr "Bitflow"
 
 #: src/shared/display-preference.ts:35
 msgid "BNS name"
 msgstr "BNS name"
+
+#: src/features/balances/stacks/usdcx-bridge-token-cell.tsx:31
+msgid "Bridge"
+msgstr "Bridge"
 
 #: src/features/token/components/get-first-nft-section.tsx:52
 msgid "Browse on Gamma"
@@ -504,6 +514,7 @@ msgstr "Choose an account"
 msgid "Choose existing wallet"
 msgstr "Choose existing wallet"
 
+#: src/components/search-input.tsx:67
 #: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:32
 msgid "Clear search"
 msgstr "Clear search"
@@ -520,6 +531,7 @@ msgstr "Close window"
 msgid "Code"
 msgstr "Code"
 
+#: src/features/token/components/token-loading.tsx:33
 #: src/features/token/stacks/bns-details.tsx:33
 #: src/features/token/stacks/sip9-token-details.tsx:48
 msgid "Collectible Info"
@@ -529,6 +541,7 @@ msgstr "Collectible Info"
 msgid "Collectibles"
 msgstr "Collectibles"
 
+#: src/features/token/components/token-loading.tsx:36
 #: src/features/token/stacks/sip9-token-details.tsx:53
 msgid "Collection"
 msgstr "Collection"
@@ -579,6 +592,7 @@ msgid "Connection failed"
 msgstr "Connection failed"
 
 #: src/app/app-connections.tsx:13
+#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:20
 msgid "Connections"
 msgstr "Connections"
 
@@ -864,6 +878,7 @@ msgstr "Feature waitlist notification"
 msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
+#: src/features/approver/stx/hooks.ts:27
 #: src/features/psbt-signer/psbt-signer.tsx:205
 msgid "Fee updated"
 msgstr "Fee updated"
@@ -909,10 +924,12 @@ msgstr "funds already on their way to someone else."
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
+#: src/features/account/sheets/add-account-sheet.tsx:37
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:78
 msgid "Generate new Secret Key for self-custody"
 msgstr "Generate new Secret Key for self-custody"
 
+#: src/app/settings/help/index.tsx:18
 #: src/app/settings/index.tsx:96
 msgid "Get support or provide feedback"
 msgstr "Get support or provide feedback"
@@ -953,6 +970,7 @@ msgstr "Guides"
 msgid "Haptics"
 msgstr "Haptics"
 
+#: src/app/settings/help/index.tsx:14
 #: src/app/settings/index.tsx:95
 msgid "Help"
 msgstr "Help"
@@ -1008,6 +1026,7 @@ msgid "If unsafe, your wallet could be drained."
 msgstr "If unsafe, your wallet could be drained."
 
 #: src/features/collectibles/components/image-unavailable.tsx:15
+#: src/features/token/utils/image-unavailable-label.ts:5
 msgid "Image currently unavailable"
 msgstr "Image currently unavailable"
 
@@ -1123,6 +1142,7 @@ msgid "Lock failed"
 msgstr "Lock failed"
 
 #: src/features/account/components/account-stacking.tsx:50
+#: src/features/activity/translate-activity-status.ts:28
 msgid "Locked"
 msgstr "Locked"
 
@@ -1178,6 +1198,7 @@ msgstr "Maximum {formattedMaximum}"
 msgid "Maybe later"
 msgstr "Maybe later"
 
+#: src/features/approver/components/memo-card.tsx:19
 #: src/features/approver/components/memo-sheet.tsx:17
 #: src/features/approver/components/nonce-sheet.tsx:17
 #: src/features/send/components/memo.tsx:74
@@ -1227,6 +1248,7 @@ msgstr "More options"
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
 #: src/features/token/components/token-details-table.tsx:19
+#: src/features/token/components/token-loading.tsx:35
 #: src/features/token/stacks/bns-details.tsx:35
 #: src/features/token/stacks/sip9-token-details.tsx:50
 msgid "Name"
@@ -1364,6 +1386,7 @@ msgstr "Portfolio"
 msgid "Price"
 msgstr "Price"
 
+#: src/features/swap/components/price-impact-info-sheet.tsx:8
 #: src/features/swap/screens/swap-review-screen.tsx:178
 msgid "Price impact"
 msgstr "Price impact"
@@ -1384,6 +1407,7 @@ msgstr "Proceed with caution since the wallet will be removed entirely from this
 msgid "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 msgstr "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 
+#: src/features/token/components/token-loading.tsx:37
 #: src/features/token/stacks/bns-details.tsx:42
 #: src/features/token/stacks/sip9-token-details.tsx:73
 msgid "Protocol"
@@ -1411,6 +1435,7 @@ msgid "Read more"
 msgstr "Read more"
 
 #: src/components/action-buttons.tsx:44
+#: src/features/receive/screens/asset-details.tsx:56
 #: src/features/receive/screens/select-asset.tsx:86
 msgid "Receive"
 msgstr "Receive"
@@ -1451,6 +1476,7 @@ msgstr "Recent sale"
 msgid "Recently viewed"
 msgstr "Recently viewed"
 
+#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:22
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx:22
 msgid "Recents"
 msgstr "Recents"
@@ -1494,6 +1520,7 @@ msgstr "Restore wallet"
 
 #: src/features/approver/components/approver-buttons/index.tsx:72
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:23
+#: src/features/swap/components/quote-preview/quote-preview-error.tsx:18
 #: src/features/swap/components/review/swap-review-error-state.tsx:22
 msgid "Retry"
 msgstr "Retry"
@@ -1533,6 +1560,7 @@ msgid "Scan a Bitcoin or Stacks address"
 msgstr "Scan a Bitcoin or Stacks address"
 
 #: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:83
+#: src/features/send/components/recipient/recipient-toggle.tsx:61
 msgid "Scan a QR code"
 msgstr "Scan a QR code"
 
@@ -1605,6 +1633,7 @@ msgid "Sent"
 msgstr "Sent"
 
 #: src/app/settings/index.tsx:57
+#: src/components/screen/screen-header/components/header-actions.tsx:30
 #: src/features/qr-scanner/use-camera-permission.ts:38
 msgid "Settings"
 msgstr "Settings"
@@ -1640,6 +1669,7 @@ msgstr "Sign transaction"
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
+#: src/features/activity/translate-activity-status.ts:46
 #: src/features/psbt-signer/psbt-signer.tsx:251
 msgid "Signed"
 msgstr "Signed"
@@ -1732,6 +1762,7 @@ msgid "Swap"
 msgstr "Swap"
 
 #: src/features/activity/activity-item.tsx:31
+#: src/features/activity/translate-activity-status.ts:38
 msgid "Swap failed"
 msgstr "Swap failed"
 
@@ -1744,10 +1775,12 @@ msgid "Swap wasn't submitted due to an unexpected error. Please try again, or <0
 msgstr "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 
 #: src/features/activity/activity-item.tsx:33
+#: src/features/activity/translate-activity-status.ts:34
 msgid "Swapped"
 msgstr "Swapped"
 
 #: src/features/activity/activity-item.tsx:29
+#: src/features/activity/translate-activity-status.ts:36
 #: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:65
 msgid "Swapping"
 msgstr "Swapping"
@@ -1859,6 +1892,7 @@ msgid "This is an “Allow Mode” transaction"
 msgstr "This is an “Allow Mode” transaction"
 
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:19
+#: src/features/swap/components/quote-preview/quote-preview-error.tsx:15
 #: src/features/swap/components/review/swap-review-error-state.tsx:18
 msgid "This is usually a temporary network or provider-side issue."
 msgstr "This is usually a temporary network or provider-side issue."
@@ -1891,6 +1925,7 @@ msgstr "This transaction sends funds to an output Leather can’t display as an 
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
+#: src/features/approver/components/sip10-recipient.tsx:43
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:150
 #: src/features/psbt-signer/psbt-signer.tsx:295
 msgid "To address"
@@ -2028,6 +2063,7 @@ msgid "Use your device PIN, Face ID or other biometrics to secure your wallets"
 msgstr "Use your device PIN, Face ID or other biometrics to secure your wallets"
 
 #: src/features/swap/components/fees-info-sheet.tsx:20
+#: src/utils/dapps.ts:70
 msgid "Velar"
 msgstr "Velar"
 
@@ -2158,6 +2194,7 @@ msgid "Your Secret Key"
 msgstr "Your Secret Key"
 
 #: src/app/create-new-wallet.tsx:83
+#: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:21
 msgid "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
 msgstr "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
 

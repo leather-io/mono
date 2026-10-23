@@ -114,6 +114,7 @@ function txSummary(
       createdAt: '',
       updatedAt: '',
       approvalCount,
+      signedByMe: false,
     },
   };
 }

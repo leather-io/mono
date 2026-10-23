@@ -1,4 +1,4 @@
-import { AuthIdentity, AuthNetworkId } from './auth.model';
+import { type AuthIdentity, type AuthNetworkId } from './auth.model';
 
 export const vaultStatuses = ['pending', 'active', 'cancelled'] as const;
 export type VaultStatus = (typeof vaultStatuses)[number];

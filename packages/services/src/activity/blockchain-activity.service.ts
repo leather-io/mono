@@ -12,7 +12,7 @@ import {
   type StacksTransaction,
   type StacksTx,
 } from '@leather.io/models';
-import { assertUnreachable, createMoney, hasStacksAddress, initBigNumber } from '@leather.io/utils';
+import { assertUnreachable, createMoney, initBigNumber } from '@leather.io/utils';
 
 import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
@@ -157,7 +157,7 @@ export class BlockchainActivityService {
     txid: string,
     signal?: AbortSignal
   ): Promise<BlockchainActivity | null> {
-    const activity = hasStacksAddress(account)
+    const activity = account.stacks
       ? await this.getStacksActivityByTxId(account.stacks.stxAddress, txid, signal)
       : await this.getBitcoinActivityByTxId(account, txid, signal);
     if (activity === null) return null;
@@ -260,7 +260,7 @@ export class BlockchainActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<ActivitySourceItem[]> {
-    if (!hasStacksAddress(account)) return [];
+    if (!account.stacks) return [];
     const items: ActivitySourceItem[] = [];
     let cursor: string | null = null;
     for (let page = 0; page < activityByAssetScanPages; page++) {
@@ -307,13 +307,14 @@ export class BlockchainActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<BlockchainActivity[]> {
-    if (!hasStacksAddress(account)) return [];
+    const { stacks } = account;
+    if (!stacks) return [];
     const txs = await this.stacksTransactionsService.getPendingTransactions(
-      account.stacks.stxAddress,
+      stacks.stxAddress,
       signal
     );
     const mapped = await Promise.all(
-      txs.map(tx => this.mapPendingStacksTx(tx, account.stacks.stxAddress, signal))
+      txs.map(tx => this.mapPendingStacksTx(tx, stacks.stxAddress, signal))
     );
     return mapped
       .filter((activity): activity is BlockchainActivity => activity !== null)
@@ -523,7 +524,7 @@ export class BlockchainActivityService {
         return items;
       },
       fetchStacksTxPage: async (cursor: string | null) => {
-        if (!hasStacksAddress(account)) {
+        if (!account.stacks) {
           return { items: [], currentCursor: cursor, nextCursor: null };
         }
         const res = await this.hiroStacksApiClient.getPrincipalTransactions(

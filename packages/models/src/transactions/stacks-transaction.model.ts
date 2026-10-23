@@ -10,7 +10,7 @@ export type StacksConfirmedTransaction = Exclude<StacksTransaction, StacksMempoo
 export type StacksMempoolTransactionStatus = StacksMempoolTransaction['status'];
 export type StacksConfirmedTransactionStatus = StacksConfirmedTransaction['status'];
 
-export function isStacksMempoolTransaction(tx: StacksTransaction): tx is StacksMempoolTransaction {
+export function isStacksMempoolTransaction(tx: StacksTransaction) {
   return 'receipt_time' in tx;
 }
 

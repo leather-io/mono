@@ -53,7 +53,7 @@ export function filterSip9Attributes(attributes?: Sip9Attribute[]): Sip9Attribut
 
 export function formatAttributeValue(attribute: Sip9Attribute): string {
   if (attribute.rarityPercent) {
-    return `${attribute.value} (${attribute.rarityPercent}%)`;
+    return `${String(attribute.value)} (${attribute.rarityPercent}%)`;
   }
   return String(attribute.value);
 }
