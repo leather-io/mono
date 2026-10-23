@@ -9,7 +9,7 @@ import { AnimateChangeInHeight } from '../../../components/animate-height/animat
 import { Button } from '../../../components/button/button.web';
 import { Flag } from '../../../components/flag/flag.web';
 import { ChevronDownIcon } from '../../../icons/chevron-down-icon.web';
-import { HasChildren } from '../../../utils/has-children.shared';
+import { type HasChildren } from '../../../utils/has-children.shared';
 import { getScrollParent } from '../../../utils/utils.web';
 import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 
@@ -42,7 +42,7 @@ export function ApproverAdvanced({ children }: HasChildren) {
         mt="space.03"
         mb={!isDisplayingAdvancedView ? 'space.03' : 0}
         px="space.05"
-        onClick={handleToggleAdvancedView}
+        onClick={() => void handleToggleAdvancedView()}
       >
         <Flag img={<ChevronDownIcon variant="small" />} reverse>
           {isDisplayingAdvancedView ? 'Hide' : 'Show'} advanced details

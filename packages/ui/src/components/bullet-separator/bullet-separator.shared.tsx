@@ -1,4 +1,4 @@
-import { ReactNode, cloneElement, isValidElement } from 'react';
+import { type ReactNode, cloneElement, isValidElement } from 'react';
 
 import { ensureArray } from '@leather.io/utils';
 

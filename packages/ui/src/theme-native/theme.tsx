@@ -1,4 +1,4 @@
-import { ColorSchemeName } from 'react-native';
+import { type ColorSchemeName } from 'react-native';
 
 import { ThemeProvider as ThemeProviderRestyle, createTheme } from '@shopify/restyle';
 
