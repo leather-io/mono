@@ -1,5 +1,5 @@
-import { EntityState } from '@reduxjs/toolkit';
-import { PersistedState } from 'redux-persist';
+import { type EntityState } from '@reduxjs/toolkit';
+import { type PersistedState } from 'redux-persist';
 
 interface KeychainEntity {
   descriptor: string;
@@ -143,7 +143,7 @@ export function migratePadFingerprints(state: PersistedState) {
   };
 
   return {
-    ...state,
+    ...typedState,
     keychains: updatedKeychains,
     wallets: updatedWallets,
     accounts: updatedAccounts,

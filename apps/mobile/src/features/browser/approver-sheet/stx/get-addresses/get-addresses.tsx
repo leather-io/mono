@@ -4,20 +4,20 @@ import { AccountSelectorSheet } from '@/features/account/account-selector/accoun
 import { GetAddressesApproverLayout } from '@/features/approver/layouts/get-addresses.layout';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userConnectsApp } from '@/store/apps/apps.write';
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useAppDispatch } from '@/store/utils';
 import { bytesToHex } from '@stacks/common';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import {
-  RpcRequest,
-  RpcResponse,
+  type RpcRequest,
+  type RpcResponse,
   createRpcSuccessResponse,
-  stxGetAddresses,
+  type stxGetAddresses,
 } from '@leather.io/rpc';
-import { SheetInstance } from '@leather.io/ui/native';
+import { type SheetInstance } from '@leather.io/ui/native';
 
 interface StxGetAddressesApproverProps {
   app: App;

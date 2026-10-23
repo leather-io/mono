@@ -2,7 +2,7 @@ import { t } from '@lingui/core/macro';
 
 import { Box } from '@leather.io/ui/native';
 
-import { ListTab, TAB_WIDTH } from '../constants';
+import { type ListTab, TAB_WIDTH } from '../constants';
 import { TabButton } from './tab-button';
 
 interface AssetTabsProps {

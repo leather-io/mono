@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { AddressTransactionWithTransfers } from '@stacks/stacks-blockchain-api-types';
+import { type AddressTransactionWithTransfers } from '@stacks/stacks-blockchain-api-types';
 import { useQueries } from '@tanstack/react-query';
 
 import { createGetAccountTransactionsWithTransfersQueryOptions } from '@leather.io/query';
@@ -27,12 +27,12 @@ export function useGetAccountTransactionsWithTransfersQueries(addresses: string[
       queries,
       totalData: queries
         .map(result => result.data)
-        .reduce((acc, result) => {
+        .reduce<AddressTransactionWithTransfers[]>((acc, result) => {
           if (result?.results) {
             return [...acc, ...result.results];
           }
           return acc;
-        }, [] as AddressTransactionWithTransfers[]),
+        }, []),
       pending: queries.some(result => result.isPending),
     }),
     [queries]

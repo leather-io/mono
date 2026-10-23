@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import BigNumber from 'bignumber.js';
 
 import { STX_DECIMALS } from '@leather.io/constants';
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { defaultStacksFees } from '@leather.io/query';
 import { convertAmountToBaseUnit, createMoney, stxToMicroStx } from '@leather.io/utils';
 

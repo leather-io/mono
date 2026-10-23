@@ -11,7 +11,7 @@ import { MemoSection } from '@/features/approver/memo.section';
 import { NonceSection } from '@/features/approver/nonce.section';
 import { StacksFeesSection } from '@/features/approver/stacks-fees.section';
 import {
-  TxOptions,
+  type TxOptions,
   assertTokenTransferPayload,
   getTotalSpendMoney,
   getTxRecipient,
@@ -21,7 +21,7 @@ import {
 } from '@/features/approver/utils';
 import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
-import { Account } from '@/store/accounts/accounts';
+import { type Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 import {
   AuthType,
@@ -35,7 +35,7 @@ import { stxAsset } from '@leather.io/constants';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { makeActivityLink } from '@leather.io/features';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import { Approver, SentIcon, SheetInstance } from '@leather.io/ui/native';
+import { Approver, SentIcon, type SheetInstance } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
 import { AllowModeWarningSheet } from '../components/allow-mode-warning-sheet/allow-mode-warning-sheet';
@@ -85,7 +85,7 @@ export function BaseStxTxApproverLayout({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onChangeMemo = changeMemoToastHandler(async (memo: string) => {
+  async function changeMemo(memo: string) {
     assertTokenTransferPayload(tx.payload);
     const newTx = await generateStacksUnsignedTransaction({
       txType: TransactionTypes.StxTokenTransfer,
@@ -100,7 +100,9 @@ export function BaseStxTxApproverLayout({
     });
     const newTxHex = newTx.serialize();
     setTxHex(newTxHex);
-  });
+  }
+
+  const onChangeMemo = changeMemoToastHandler((memo: string) => void changeMemo(memo));
 
   const onChangeFee = changeFeeToastHandler((fee: number) => {
     tx.setFee(fee);

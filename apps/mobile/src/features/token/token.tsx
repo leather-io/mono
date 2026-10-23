@@ -1,7 +1,7 @@
 import { ActionButtons } from '@/components/action-buttons';
 import { Balance } from '@/components/balance/balance';
 import { PriceChange } from '@/components/balance/price-change';
-import { FetchState } from '@/components/loading';
+import { type FetchState } from '@/components/loading';
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
@@ -11,7 +11,7 @@ import { TokenDetailsTable } from '@/features/token/components/token-details-tab
 import { TokenOverview } from '@/features/token/components/token-overview';
 
 import { type ActivityView, type TokenBalance } from '@leather.io/features';
-import { FungibleCryptoAsset, isSwappableAsset } from '@leather.io/models';
+import { type FungibleCryptoAsset, isSwappableAsset } from '@leather.io/models';
 import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
 
 import { getReceiveType } from '../receive/utils/get-receive-type';
