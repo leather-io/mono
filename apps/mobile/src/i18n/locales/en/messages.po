@@ -701,7 +701,7 @@ msgstr "Decentralized Bitcoin identity"
 msgid "Decrease slippage"
 msgstr "Decrease slippage"
 
-#: src/features/balances/manage-tokens.sheet.tsx:97
+#: src/features/balances/manage-tokens.sheet.tsx:98
 #: src/features/balances/token-preset/token-preset-sheet.tsx:31
 msgid "Default set"
 msgstr "Default set"
@@ -875,7 +875,7 @@ msgstr "Failed to change nonce"
 msgid "Failed to load latest nonce"
 msgstr "Failed to load latest nonce"
 
-#: src/features/balances/manage-tokens.sheet.tsx:113
+#: src/features/balances/manage-tokens.sheet.tsx:114
 msgid "Failed to load tokens"
 msgstr "Failed to load tokens"
 
@@ -1203,7 +1203,7 @@ msgstr ""
 msgid "Make your first transaction to get started"
 msgstr "Make your first transaction to get started"
 
-#: src/features/balances/manage-tokens.sheet.tsx:93
+#: src/features/balances/manage-tokens.sheet.tsx:94
 msgid "Manage tokens"
 msgstr "Manage tokens"
 
@@ -1329,7 +1329,7 @@ msgstr "No results found"
 msgid "No swaps available"
 msgstr "No swaps available"
 
-#: src/features/balances/manage-tokens.sheet.tsx:118
+#: src/features/balances/manage-tokens.sheet.tsx:119
 msgid "No tokens found"
 msgstr "No tokens found"
 
@@ -1609,7 +1609,7 @@ msgstr "Search for asset"
 msgid "Search for BNS name or address"
 msgstr "Search for BNS name or address"
 
-#: src/features/balances/manage-tokens.sheet.tsx:106
+#: src/features/balances/manage-tokens.sheet.tsx:107
 msgid "Search tokens"
 msgstr "Search tokens"
 
