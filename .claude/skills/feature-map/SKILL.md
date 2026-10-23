@@ -111,3 +111,7 @@ Run `pnpm --filter @leather.io/tools build` first if `pnpm lt` reports an unknow
   references only; wrong prose passes it.
 - After editing a source run `check`, then `generate` to refresh your local `extension.md`; the file
   is gitignored and never committed.
+- The check validates references, not prose. Every Monday `repo:feature-map-fix` reads every entry
+  against the source (`.github/prompts/feature-map-fix.md`), fixes the statements it can prove
+  false and opens or updates the `bot/feature-map-fix` pull request with a per-row citation; it
+  closes that PR when a run finds nothing. Re-read the cited lines before merging it.
