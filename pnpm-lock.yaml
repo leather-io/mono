@@ -31,6 +31,7 @@ overrides:
   browserslist@<4.28.7: '>=4.28.7 <5'
   follow-redirects@>=1.0.0 <1.16.1: '>=1.16.1 <2'
   vite@>=7.0.0 <7.3.7: '>=7.3.7 <8'
+  dompurify@>=3.0.0 <3.4.17: '>=3.4.17 <4'
 
 patchedDependencies:
   expo-secure-store@15.0.8:
@@ -297,8 +298,8 @@ importers:
         specifier: 6.1.0
         version: 6.1.0
       dompurify:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: '>=3.4.17 <4'
+        version: 3.4.17
       formik:
         specifier: 2.4.6
         version: 2.4.6(@types/react@19.1.17)(react@19.1.0)
@@ -2215,8 +2216,8 @@ importers:
         specifier: 2.4.2
         version: 2.4.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       dompurify:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: '>=3.4.17 <4'
+        version: 3.4.17
       expo:
         specifier: 54.0.32
         version: 54.0.32(@babel/core@7.27.1)(@expo/metro-runtime@5.0.5(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)))(expo-router@6.0.22)(graphql@16.12.0)(react-native-webview@13.15.0(patch_hash=76cfeea66548fcf22fc5cb07253527086f0f00d783ef2b50399a871a98e5f25c)(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -2366,8 +2367,8 @@ importers:
         specifier: 9.1.2
         version: 9.1.2
       dompurify:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: '>=3.4.17 <4'
+        version: 3.4.17
       remeda:
         specifier: 2.21.2
         version: 2.21.2
@@ -11269,11 +11270,8 @@ packages:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
 
-  dompurify@3.2.4:
-    resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
-
-  dompurify@3.3.3:
-    resolution: {integrity: sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==}
+  dompurify@3.4.17:
+    resolution: {integrity: sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w==}
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
@@ -25584,9 +25582,9 @@ snapshots:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
-      '@rjsf/core': 5.24.13(@rjsf/utils@5.24.13(react@19.1.0))(react@19.2.3)
+      '@rjsf/core': 5.24.13(@rjsf/utils@5.24.13(react@19.2.3))(react@19.2.3)
       '@rjsf/utils': 5.24.13(react@19.2.3)
-      '@rjsf/validator-ajv8': 5.24.13(@rjsf/utils@5.24.13(react@19.1.0))
+      '@rjsf/validator-ajv8': 5.24.13(@rjsf/utils@5.24.13(react@19.2.3))
       '@types/codemirror': 5.60.17
       '@types/json-schema': 7.0.15
       '@types/react': 19.1.17
@@ -25995,23 +25993,14 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@rjsf/core@5.24.13(@rjsf/utils@5.24.13(react@19.1.0))(react@19.2.3)':
+  '@rjsf/core@5.24.13(@rjsf/utils@5.24.13(react@19.2.3))(react@19.2.3)':
     dependencies:
-      '@rjsf/utils': 5.24.13(react@19.1.0)
+      '@rjsf/utils': 5.24.13(react@19.2.3)
       lodash: 4.18.1
       lodash-es: 4.18.1
       markdown-to-jsx: 7.7.17(react@19.2.3)
       prop-types: 15.8.1
       react: 19.2.3
-
-  '@rjsf/utils@5.24.13(react@19.1.0)':
-    dependencies:
-      json-schema-merge-allof: 0.8.1
-      jsonpointer: 5.0.1
-      lodash: 4.18.1
-      lodash-es: 4.18.1
-      react: 19.1.0
-      react-is: 18.3.1
 
   '@rjsf/utils@5.24.13(react@19.2.3)':
     dependencies:
@@ -26022,9 +26011,9 @@ snapshots:
       react: 19.2.3
       react-is: 18.3.1
 
-  '@rjsf/validator-ajv8@5.24.13(@rjsf/utils@5.24.13(react@19.1.0))':
+  '@rjsf/validator-ajv8@5.24.13(@rjsf/utils@5.24.13(react@19.2.3))':
     dependencies:
-      '@rjsf/utils': 5.24.13(react@19.1.0)
+      '@rjsf/utils': 5.24.13(react@19.2.3)
       ajv: 8.18.0
       ajv-formats: 2.1.1(ajv@8.18.0)
       lodash: 4.18.1
@@ -31271,11 +31260,7 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  dompurify@3.2.4:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
-
-  dompurify@3.3.3:
+  dompurify@3.4.17:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -33537,7 +33522,7 @@ snapshots:
 
   isomorphic-dompurify@2.26.0:
     dependencies:
-      dompurify: 3.3.3
+      dompurify: 3.4.17
       jsdom: 26.1.0
     transitivePeerDependencies:
       - bufferutil
