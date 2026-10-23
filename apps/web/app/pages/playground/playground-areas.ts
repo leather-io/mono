@@ -38,6 +38,15 @@ export interface PlaygroundArea {
 
 export const playgroundAreas: PlaygroundArea[] = [
   {
+    slug: 'staking-acknowledgment',
+    title: 'Staking acknowledgment',
+    description: 'Review the start-staking and switch-pool acknowledgment across payout models.',
+    status: 'exploration',
+    section: 'web-app',
+    issue: 2605,
+    appShell: true,
+  },
+  {
     slug: 'component-gallery',
     title: 'Component gallery',
     description:
