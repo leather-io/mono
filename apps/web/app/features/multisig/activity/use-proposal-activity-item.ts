@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 import { useUserSettings } from '~/hooks/use-user-settings';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
 
@@ -44,8 +44,10 @@ export function useProposalActivityItem(
   const contractAddress = contractCall?.contractId.split('.')[0];
   const protocolQuery = useQuery({
     queryKey: ['stacks-protocol-by-address', settings.network.id, contractAddress],
-    queryFn: ({ signal }: { signal: AbortSignal }) =>
-      getStacksProtocolService().getProtocolByAddress(contractAddress ?? '', signal),
+    queryFn: contractAddress
+      ? ({ signal }: { signal: AbortSignal }) =>
+          getStacksProtocolService().getProtocolByAddress(contractAddress, signal)
+      : skipToken,
     enabled: Boolean(contractAddress),
     ...protocolRegistryCacheOptions,
   });
@@ -66,7 +68,7 @@ export function useProposalActivityItem(
       targetContractName,
       targetFunctionName,
     ],
-    queryFn: ({ signal }: { signal: AbortSignal }) => {
+    queryFn({ signal }: { signal: AbortSignal }) {
       if (
         targetProtocolId === undefined ||
         targetContractName === undefined ||

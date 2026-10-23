@@ -1,6 +1,6 @@
 import { Stack, styled } from 'leather-styles/jsx';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
-import { BitcoinStakingPool } from '~/data/bitcoin-staking-data';
+import { type BitcoinStakingPool } from '~/data/bitcoin-staking-data';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Button } from '@leather.io/ui';

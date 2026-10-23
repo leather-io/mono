@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { Box, Flex } from 'leather-styles/jsx';
+import { z } from 'zod';
 import { useProposalActivityItem } from '~/features/multisig/activity/use-proposal-activity-item';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
@@ -17,6 +18,7 @@ import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useMultisigTransaction } from '~/features/multisig/vaults/use-vault-transactions';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
+import { useRouteState } from '~/hooks/use-route-state';
 import { useUserSettings } from '~/hooks/use-user-settings';
 import { useBlockchainActivityByTxIdDetailQuery } from '~/queries/activity/blockchain-activity.query';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
@@ -65,16 +67,16 @@ function isAwaitingSignatureFrom(
   return transaction.status === 'pending' && !signed;
 }
 
-function readAutoSign(state: unknown): boolean {
-  return (
-    typeof state === 'object' && state !== null && 'autoSign' in state && state.autoSign === true
-  );
-}
+const autoSignRouteStateSchema = z
+  .object({ autoSign: z.literal(true) })
+  .nullable()
+  .catch(null);
 
 export function TxDetailPage() {
   const { vaultId, txId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const autoSign = useRouteState(autoSignRouteStateSchema) !== null;
   // location.key is 'default' only when this is the first entry in the session's
   // history (deep link / refresh), where there is nowhere to go back to.
   const canGoBack = location.key !== 'default';
@@ -112,7 +114,7 @@ export function TxDetailPage() {
 
   useEffect(() => {
     if (autoSignStarted) return;
-    if (!readAutoSign(location.state)) return;
+    if (!autoSign) return;
     if (!transaction.data || !account.data) return;
     if (!isAwaitingSignatureFrom(transaction.data, account.data, me.data?.address)) return;
     setAutoSignStarted(true);
@@ -121,7 +123,7 @@ export function TxDetailPage() {
       { transaction: transaction.data, account: account.data },
       {
         onSuccess: () => toast.success('Signature added'),
-        onError: err => {
+        onError(err) {
           const message = formatTransactionActionError(err);
           if (message) toast.error(message);
         },
@@ -129,7 +131,7 @@ export function TxDetailPage() {
     );
   }, [
     autoSignStarted,
-    location.state,
+    autoSign,
     location.pathname,
     transaction.data,
     account.data,
@@ -237,7 +239,7 @@ export function TxDetailPage() {
     <MultisigPage
       title="Transaction details"
       backTo={multisigPaths.account(vault.data.id, tx.vaultAccountId)}
-      onBack={canGoBack ? () => navigate(-1) : undefined}
+      onBack={canGoBack ? () => void navigate(-1) : undefined}
     >
       <Flex
         direction={['column', 'column', 'row']}

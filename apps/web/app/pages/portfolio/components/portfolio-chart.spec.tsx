@@ -5,9 +5,9 @@ import { createRoot } from 'react-dom/client';
 import BigNumber from 'bignumber.js';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { BaseCryptoAssetBalance, Money, Sip10Asset } from '@leather.io/models';
+import { type BaseCryptoAssetBalance, type Money, type Sip10Asset } from '@leather.io/models';
 
-import { PortfolioAsset } from '../portfolio-table/portfolio-table';
+import { type PortfolioAsset } from '../portfolio-table/portfolio-table';
 import { PortfolioChart } from './portfolio-chart';
 
 const xssSymbol = '<img src=x onerror="window.__xssFired = true">';

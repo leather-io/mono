@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { FlexProps } from 'leather-styles/jsx';
+import { type FlexProps } from 'leather-styles/jsx';
 
 import { ValueDisplayerBase } from './reward-value-displayer';
 

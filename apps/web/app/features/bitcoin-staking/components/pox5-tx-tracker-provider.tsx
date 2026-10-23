@@ -1,6 +1,6 @@
-import { ReactNode, useCallback, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useMemo, useState } from 'react';
 
-import { Pox5TrackedTx, Pox5TxTrackerContext } from '../hooks/use-pox5-tx-tracker';
+import { type Pox5TrackedTx, Pox5TxTrackerContext } from '../hooks/use-pox5-tx-tracker';
 import { Pox5TxStatusScreen } from './pox5-tx-status-screen';
 
 interface Pox5TxTrackerProviderProps {
