@@ -32,6 +32,8 @@ overrides:
   follow-redirects@>=1.0.0 <1.16.1: '>=1.16.1 <2'
   vite@>=7.0.0 <7.3.7: '>=7.3.7 <8'
   dompurify@>=3.0.0 <3.4.17: '>=3.4.17 <4'
+  undici@>=6.0.0 <6.29.1: '>=6.29.1 <7'
+  undici@>=7.0.0 <7.30.1: '>=7.30.1 <8'
 
 patchedDependencies:
   expo-secure-store@15.0.8:
@@ -17600,6 +17602,10 @@ packages:
     resolution: {integrity: sha512-dkrQXeHSaoamnItlYbmzG0wFYrM0ZwDxCIg0A7aKjTyyhh9svRzCNFEzV+Vm05/yehjCzjDZ31KXfGEjYSztDQ==}
     engines: {node: '>=20.18.1'}
 
+  undici@7.30.1:
+    resolution: {integrity: sha512-03KrMbjIFDWQR5RNPrSw3bd1r12JpyFQl9/yxjUbJtqkjmllqC5lFjZh6ujeuJCKr8EOQvRW872Oy/az+nLYxg==}
+    engines: {node: '>=20.18.1'}
+
   unenv@2.0.0-rc.24:
     resolution: {integrity: sha512-i7qRCmY42zmCwnYlh9H2SvLEypEFGye5iRmEMKjcGi7zk9UquigRjFtTLz0TYqr0ZGLZhaMHl/foy1bZR+Cwlw==}
 
@@ -35043,7 +35049,7 @@ snapshots:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       sharp: 0.34.5
-      undici: 7.30.0
+      undici: 7.30.1
       workerd: 1.20260312.1
       ws: 8.21.0
       youch: 4.1.0-beta.10
@@ -39125,6 +39131,8 @@ snapshots:
   undici@6.29.0: {}
 
   undici@7.30.0: {}
+
+  undici@7.30.1: {}
 
   unenv@2.0.0-rc.24:
     dependencies:
