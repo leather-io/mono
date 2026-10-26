@@ -180,21 +180,21 @@ describe(calculateSignerSweepTxFee.name, () => {
   it('should calculate deposit sweep fee correctly', () => {
     const feeRate = 10; // 10 sat/vB
     const result = calculateSignerSweepTxFee('deposit', feeRate);
-    // deposit uses 250 vBytes
-    expect(result).toBe(2500);
+    // deposit uses 530 vBytes
+    expect(result).toBe(5300);
   });
 
   it('should calculate withdrawal sweep fee correctly', () => {
     const feeRate = 10; // 10 sat/vB
     const result = calculateSignerSweepTxFee('withdrawal', feeRate);
-    // withdrawal uses 170 vBytes
-    expect(result).toBe(1700);
+    // withdrawal uses 470 vBytes
+    expect(result).toBe(4700);
   });
 
   it('should handle high fee rates', () => {
     const feeRate = 100;
-    expect(calculateSignerSweepTxFee('deposit', feeRate)).toBe(25000);
-    expect(calculateSignerSweepTxFee('withdrawal', feeRate)).toBe(17000);
+    expect(calculateSignerSweepTxFee('deposit', feeRate)).toBe(53000);
+    expect(calculateSignerSweepTxFee('withdrawal', feeRate)).toBe(47000);
   });
 
   it('should handle zero fee rate', () => {
@@ -204,8 +204,8 @@ describe(calculateSignerSweepTxFee.name, () => {
 
   it('should handle decimal fee rates', () => {
     const feeRate = 5.5;
-    expect(calculateSignerSweepTxFee('deposit', feeRate)).toBe(1375);
-    expect(calculateSignerSweepTxFee('withdrawal', feeRate)).toBe(935);
+    expect(calculateSignerSweepTxFee('deposit', feeRate)).toBe(2915);
+    expect(calculateSignerSweepTxFee('withdrawal', feeRate)).toBe(2585);
   });
 });
 
