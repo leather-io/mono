@@ -1,17 +1,17 @@
-import { ReactElement, cloneElement, forwardRef, useEffect, useState } from 'react';
+import { type ReactElement, cloneElement, forwardRef, useEffect, useState } from 'react';
 
-import { ResponsiveValue } from '@shopify/restyle';
-import { Image, ImageProps } from 'expo-image';
+import { type ResponsiveValue } from '@shopify/restyle';
+import { Image, type ImageProps } from 'expo-image';
 
 import { isDefined } from '@leather.io/utils';
 
-import { IconProps } from '../../icons/icon/create-icon.native';
-import { Theme } from '../../theme-native';
-import { Box, BoxProps } from '../box/box.native';
+import { type IconProps } from '../../icons/icon/create-icon.native';
+import { type Theme } from '../../theme-native';
+import { Box, type BoxProps } from '../box/box.native';
 import { Text } from '../text/text.native';
 import {
-  AvatarSize,
-  AvatarVariant,
+  type AvatarSize,
+  type AvatarVariant,
   badgeSizeMap,
   defaultFallbackDelay,
   iconSizeMap,

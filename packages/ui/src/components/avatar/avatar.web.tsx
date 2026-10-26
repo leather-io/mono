@@ -1,7 +1,7 @@
 import {
-  ComponentPropsWithoutRef,
-  ComponentRef,
-  ReactElement,
+  type ComponentPropsWithoutRef,
+  type ComponentRef,
+  type ReactElement,
   cloneElement,
   forwardRef,
 } from 'react';
@@ -11,8 +11,13 @@ import { Avatar as RadixAvatar } from 'radix-ui';
 
 import { isDefined } from '@leather.io/utils';
 
-import { IconProps } from '../../icons/icon/create-icon.web';
-import { AvatarSize, AvatarVariant, defaultFallbackDelay, iconSizeMap } from './avatar.shared';
+import { type IconProps } from '../../icons/icon/create-icon.web';
+import {
+  type AvatarSize,
+  type AvatarVariant,
+  defaultFallbackDelay,
+  iconSizeMap,
+} from './avatar.shared';
 
 type AvatarElement = ComponentRef<typeof AvatarRoot>;
 

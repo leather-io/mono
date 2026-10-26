@@ -1,6 +1,6 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
-import { Square, SquareProps } from 'leather-styles/jsx';
+import { Square, type SquareProps } from 'leather-styles/jsx';
 import { useFocus, useHover } from 'use-events';
 
 function ItemHover({
@@ -41,7 +41,7 @@ interface StateReturnProps {
   isFocused: boolean;
 }
 
-type UsePressableReturn = [ReactElement, DefaultSpreadProps, StateReturnProps];
+type UsePressableReturn = [ReactElement, Partial<DefaultSpreadProps>, StateReturnProps];
 
 export function usePressable(isPressable?: boolean): UsePressableReturn {
   const [isHovered, bind] = useHover();
@@ -52,7 +52,7 @@ export function usePressable(isPressable?: boolean): UsePressableReturn {
     return [
       <></>,
       // Not really this type but it's safe to spread
-      {} as unknown as DefaultSpreadProps,
+      {},
       { isFocused: false, isHovered: false } as const,
     ];
   return [
