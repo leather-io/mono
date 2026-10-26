@@ -1,11 +1,11 @@
-import { ComponentType, ReactElement, ReactNode, isValidElement } from 'react';
+import { type ComponentType, type ReactElement, type ReactNode, isValidElement } from 'react';
 
 import { isNullish } from 'remeda';
 
-import { IconProps } from '../../icons/icon/create-icon.native';
-import { Theme } from '../../theme-native';
-import { PressableRef, PressableRestyleProps } from '../pressable/pressable-core.native';
-import { Pressable, PressableProps } from '../pressable/pressable.native';
+import { type IconProps } from '../../icons/icon/create-icon.native';
+import { type Theme } from '../../theme-native';
+import { type PressableRef, type PressableRestyleProps } from '../pressable/pressable-core.native';
+import { Pressable, type PressableProps } from '../pressable/pressable.native';
 import { Text } from '../text/text.native';
 
 type ButtonVariant = 'solid' | 'outline' | 'ghost';
@@ -64,11 +64,11 @@ export function Button({
   );
 }
 
-function renderIcon(icon: ComponentType<IconProps> | ReactNode, props: IconProps) {
+function renderIcon(icon: ComponentType<IconProps> | ReactElement | undefined, props: IconProps) {
   if (isValidElement(icon) || isNullish(icon)) {
     return icon;
   }
-  const IconComponent = icon as ComponentType<IconProps>;
+  const IconComponent = icon;
   return <IconComponent {...props} />;
 }
 

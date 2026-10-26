@@ -1,7 +1,7 @@
 import {
   type ComponentProps,
-  FormEvent,
-  LegacyRef,
+  type FormEvent,
+  type LegacyRef,
   createContext,
   forwardRef,
   useContext,
@@ -11,7 +11,7 @@ import {
 } from 'react';
 
 import { sva } from 'leather-styles/css';
-import { SystemStyleObject } from 'leather-styles/types';
+import { type SystemStyleObject } from 'leather-styles/types';
 
 import { propIfDefined } from '@leather.io/utils';
 
@@ -162,7 +162,7 @@ function Root({ hasError, shrink, ...props }: RootProps) {
   );
 }
 
-const FieldBase = withContext<HTMLInputElement, any>('input', 'input');
+const FieldBase = withContext<HTMLInputElement, ComponentProps<'input'>>('input', 'input');
 
 const Field = forwardRef(({ type, ...props }: ComponentProps<'input'>, ref) => {
   const { setHasValue } = useInputContext();
