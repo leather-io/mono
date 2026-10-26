@@ -21,6 +21,12 @@ import {
 } from '@app/common/transactions/stacks/post-condition.utils';
 import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
+function ftDecimals(value: number | string, decimals: number) {
+  return convertAmountToBaseUnit(initBigNumber(value), decimals)
+    .toNumber()
+    .toLocaleString('en-US', { maximumFractionDigits: decimals });
+}
+
 interface FormatPostConditionMessageArgs {
   account?: StacksAccount;
   asset?: Sip10Asset;
@@ -51,11 +57,7 @@ export function formatPostConditionMessage({
       ? formatContractId(addressToString(pc.asset.address), pc.asset.contractName.content)
       : '';
   const amount =
-    asset?.decimals && isDefined(pcAmount)
-      ? convertAmountToBaseUnit(initBigNumber(pcAmount), asset.decimals)
-          .toNumber()
-          .toLocaleString('en-US', { maximumFractionDigits: asset.decimals })
-      : pcAmount;
+    asset?.decimals && isDefined(pcAmount) ? ftDecimals(pcAmount, asset.decimals) : pcAmount;
   const ticker = asset?.symbol || pcTicker;
 
   const message = pc.conditionCode
