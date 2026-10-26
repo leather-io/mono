@@ -138,7 +138,7 @@ export function createStakingFormSchema({
     .object({
       amount: z
         .string()
-        .optional()
+        .or(z.undefined())
         .refine(value => value !== undefined && value !== '', validationMessages.enterAmount)
         .refine(value => !value || /^\d+(\.\d+)?$/.test(value), validationMessages.invalidAmount)
         .refine(
