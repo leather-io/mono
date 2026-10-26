@@ -1,14 +1,14 @@
-import { RefObject, useEffect } from 'react';
+import { type RefObject, useEffect } from 'react';
 import { Platform } from 'react-native';
 
 import {
-  ExperimentalBlurMethod,
-  BlurTint as ExpoBlurTint,
+  type ExperimentalBlurMethod,
+  type BlurTint as ExpoBlurTint,
   BlurView as ExpoBlurView,
-  BlurViewProps as ExpoBlurViewProps,
+  type BlurViewProps as ExpoBlurViewProps,
 } from 'expo-blur';
 
-import { ThemeVariant } from '../../theme-native/theme';
+import { type ThemeVariant } from '../../theme-native/theme';
 
 interface BlurViewProps extends ExpoBlurViewProps {
   themeVariant: ThemeVariant;

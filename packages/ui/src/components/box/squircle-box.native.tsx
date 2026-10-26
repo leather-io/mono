@@ -1,18 +1,17 @@
-import { ViewStyle } from 'react-native';
+import { type ViewStyle } from 'react-native';
 
 import {
-  BackgroundColorProps,
-  BackgroundColorShorthandProps,
-  BaseTheme,
-  LayoutProps,
-  OpacityProps,
-  PositionProps,
-  ResponsiveValue,
-  RestyleFunctionContainer,
-  ShadowProps,
-  SpacingProps,
-  SpacingShorthandProps,
-  VisibleProps,
+  type BackgroundColorProps,
+  type BackgroundColorShorthandProps,
+  type BaseTheme,
+  type LayoutProps,
+  type OpacityProps,
+  type PositionProps,
+  type ResponsiveValue,
+  type ShadowProps,
+  type SpacingProps,
+  type SpacingShorthandProps,
+  type VisibleProps,
   backgroundColor,
   backgroundColorShorthand,
   createRestyleComponent,
@@ -25,16 +24,13 @@ import {
   spacingShorthand,
   visible,
 } from '@shopify/restyle';
-import { SquircleView, SquircleViewProps } from 'expo-squircle-view';
+import { SquircleView, type SquircleViewProps } from 'expo-squircle-view';
+import { keys } from 'remeda';
 
-import { Theme } from '../../theme-native';
+import { type Theme } from '../../theme-native';
 
 // Custom fork of `createBox` to leave out the `borderRadius` prop.
 // Restyle doesn't support arbitrary style values, necessary for tweaking squircle borderRadius.
-
-function getKeys<T extends { [key: string]: any }>(object: T) {
-  return Object.keys(object) as (keyof T)[];
-}
 
 const borderProperties = {
   borderBottomWidth: true,
@@ -67,12 +63,12 @@ type BorderProps<Theme extends BaseTheme> = {
 };
 
 const border = [
-  ...getKeys(borderProperties).map(property => {
+  ...keys(borderProperties).map(property => {
     return createRestyleFunction({
       property,
     });
   }),
-  ...getKeys(borderColorProperties).map(property => {
+  ...keys(borderColorProperties).map(property => {
     return createRestyleFunction({
       property,
       themeKey: 'colors',
@@ -107,6 +103,6 @@ const boxRestyleFunctions = [
 export type SquircleBoxProps = BoxProps & SquircleViewProps;
 
 export const SquircleBox = createRestyleComponent<BoxProps & SquircleViewProps, Theme>(
-  boxRestyleFunctions as RestyleFunctionContainer<BoxProps, Theme>[],
+  boxRestyleFunctions,
   SquircleView
 );
