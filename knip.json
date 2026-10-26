@@ -136,7 +136,7 @@
       "ignoreDependencies": ["@types/dompurify"]
     },
     "packages/ui": {
-      "entry": ["src/index.ts!", "src/native.ts!", "src/exports.web.ts!"],
+      "entry": ["src/index.ts!", "src/native.ts!", "src/exports.web.ts!", "src/svg.native.d.ts!"],
       "metro": false,
       "ignoreDependencies": [
         "@expo/vector-icons",

@@ -46,7 +46,7 @@
     "bignumber.js": "9.1.2",
     "p-queue": "8.1.1",
     "uuid": "11.1.0",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

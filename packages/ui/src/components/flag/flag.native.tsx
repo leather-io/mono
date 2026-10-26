@@ -1,8 +1,8 @@
-import { BoxProps, ResponsiveValue } from '@shopify/restyle';
+import { type BoxProps, type ResponsiveValue } from '@shopify/restyle';
 
 import { assertUnreachable } from '@leather.io/utils';
 
-import { Theme } from '../../theme-native';
+import { type Theme } from '../../theme-native';
 import { Box } from '../box/box.native';
 import type { FlagAlignment } from './flag.shared';
 
