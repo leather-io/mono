@@ -13,7 +13,7 @@ interface SwapReviewInfoTooltipProps {
 
 export function SwapReviewInfoTooltip({ label }: SwapReviewInfoTooltipProps) {
   return (
-    <Tooltip.Root delayDuration={300}>
+    <Tooltip.Root>
       <Tooltip.Trigger>
         <Box _hover={{ cursor: 'pointer' }} color="ink.text-subdued" ml="space.01">
           <InfoCircleIcon variant="small" color="ink.text-subdued" />

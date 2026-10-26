@@ -118,16 +118,10 @@ export function useGenerateStxTokenTransferUnsignedTx() {
             publicKey: account.stxPublicKey,
             nonce,
             fee: formValueToStxMoney(values?.fee) ?? createMoney(0, 'STX'),
-            // Using account address here as a fallback for a fee estimation
             recipient: values?.recipient ?? account.address,
             amount: createMoney(values?.amount ? stxToMicroStx(values?.amount) : 0, 'STX'),
             memo: values?.memo || undefined,
             network,
-            // Coercing type here as we don't have the public key
-            // as expected by STXTransferPayload type.
-            // This code will likely need to change soon with Ledger
-            // work, and coercion allows us to remove lots of type mangling
-            // and types are out of sync with @stacks/connect
           })
       );
     },
@@ -209,7 +203,6 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
 
         const postConditions = [makeFtPostCondition(postConditionOptions)];
 
-        // (transfer (uint principal principal) (response bool uint))
         const functionArgs: ClarityValue[] = [
           uintCV(amountAsFractionalUnit),
           createPrincipalCV(account.address),
