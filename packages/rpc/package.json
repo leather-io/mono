@@ -30,7 +30,7 @@
     "@leather.io/utils": "workspace:*",
     "@stacks/transactions": "7.5.0",
     "remeda": "2.21.2",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",
