@@ -1,0 +1,114 @@
+name: repo:review-gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+permissions: {}
+
+concurrency:
+  group: review-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  classify:
+    name: classify
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action != 'labeled' &&
+      github.event.action != 'unlabeled' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: read # reads the pull request and its diff
+    outputs:
+      decision: ${{ steps.decide.outputs.decision }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: apply-path-rules
+        id: prepare
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node .github/scripts/review-gate.mjs prepare
+
+      - name: ask-claude
+        id: claude
+        if: steps.prepare.outputs.rule-decision == ''
+        continue-on-error: true
+        uses: anthropics/claude-code-action@374f254f5efaf968abfe15d399fd90972e8138b9 # v1.0.251
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          claude_args: ${{ steps.prepare.outputs.claude-args }}
+          prompt: ${{ steps.prepare.outputs.prompt }}
+
+      - name: decide-review-count
+        id: decide
+        env:
+          RULE_DECISION: ${{ steps.prepare.outputs.rule-decision }}
+          STRUCTURED_OUTPUT: ${{ steps.claude.outputs.structured_output }}
+        run: node .github/scripts/review-gate.mjs decide
+
+  label:
+    name: label
+    needs: classify
+    if: ${{ !cancelled() && needs.classify.result != 'skipped' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write # sets or removes the review:single label
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: apply-review-label
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          DECISION: ${{ needs.classify.outputs.decision }}
+        run: node .github/scripts/review-gate.mjs label
+
+  review-gate:
+    name: review-gate
+    needs: label
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read # reads labels and reviews to count approvals
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: check-approvals
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node .github/scripts/review-gate.mjs gate
