@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
-import { Tooltip as RadixTooltip } from 'radix-ui';
+import { type Tooltip as RadixTooltip } from 'radix-ui';
 
 import { Tooltip } from './tooltip.web';
 

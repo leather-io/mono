@@ -1,4 +1,4 @@
-import { BoxProps } from '@shopify/restyle';
+import { type BoxProps } from '@shopify/restyle';
 
 import type { Theme } from '../../theme-native';
 import { Box } from '../box/box.native';

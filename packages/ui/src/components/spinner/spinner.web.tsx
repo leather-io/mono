@@ -1,4 +1,4 @@
-import { Square, SquareProps, VisuallyHidden } from 'leather-styles/jsx';
+import { Square, type SquareProps, VisuallyHidden } from 'leather-styles/jsx';
 
 interface SpinnerProps extends SquareProps {
   emptyColor?: string;
