@@ -1,9 +1,9 @@
-import { ComponentType, ReactElement, ReactNode, isValidElement } from 'react';
+import { type ComponentType, type ReactElement, isValidElement } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 import { isNullish } from 'remeda';
 
-import { IconProps } from '../../icons/icon/create-icon.web';
+import { type IconProps } from '../../icons/icon/create-icon.web';
 
 const loadingStyles = {
   _loading: {
@@ -234,10 +234,10 @@ export function Button(props: ButtonProps) {
 
 Button.displayName = 'Button';
 
-function renderIcon(icon: ComponentType<IconProps> | ReactNode, props: IconProps) {
+function renderIcon(icon: ComponentType<IconProps> | ReactElement | undefined, props: IconProps) {
   if (isValidElement(icon) || isNullish(icon)) {
     return icon;
   }
-  const IconComponent = icon as ComponentType<IconProps>;
+  const IconComponent = icon;
   return <IconComponent {...props} />;
 }
