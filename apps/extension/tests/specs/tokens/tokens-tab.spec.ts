@@ -1,6 +1,8 @@
 import { expect } from '@playwright/test';
 import { mockMainnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
 
+import { assertExistence } from '@leather.io/utils';
+
 import { test } from '../../fixtures/fixtures';
 import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances';
 import { mockEmptyStacksBalancesV2Request } from '../../mocks/mock-stacks-balances-v2';
@@ -54,7 +56,9 @@ test.describe('Tokens tab', () => {
         usdcxAsset.boundingBox(),
         aeUsdcAsset.boundingBox(),
       ]);
-      if (!sbtcBox || !usdcxBox || !aeUsdcBox) throw new Error('Token rows have no bounding box');
+      assertExistence(sbtcBox, 'sBTC row has no bounding box');
+      assertExistence(usdcxBox, 'USDCx row has no bounding box');
+      assertExistence(aeUsdcBox, 'aeUSDC row has no bounding box');
       expect(sbtcBox.y).toBeLessThan(usdcxBox.y);
       expect(usdcxBox.y).toBeLessThan(aeUsdcBox.y);
     });

@@ -1,7 +1,7 @@
-import { ReactNode, isValidElement } from 'react';
+import { type ReactNode, isValidElement } from 'react';
 
 import { Box, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
-import { SpacingToken } from 'leather-styles/tokens';
+import { type SpacingToken } from 'leather-styles/tokens';
 
 import { CheckmarkIcon } from '../../icons/checkmark-icon.web';
 import { ChevronDownIcon } from '../../icons/chevron-down-icon.web';

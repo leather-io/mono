@@ -101,8 +101,7 @@ export function validatePayoutSatsFields(
   supportsMinClaim: boolean,
   addIssue: (message: string, path: 'maxFeeSats' | 'minClaimSats') => void
 ) {
-  const hasValidMaxFee = !!data.maxFeeSats && /^\d+$/.test(data.maxFeeSats);
-  if (!hasValidMaxFee) {
+  if (!data.maxFeeSats || !/^\d+$/.test(data.maxFeeSats)) {
     addIssue(validationMessages.enterMaxWithdrawalFee, 'maxFeeSats');
   } else if (BigInt(data.maxFeeSats) < BigInt(MIN_MAX_WITHDRAWAL_FEE_SATS)) {
     addIssue(validationMessages.maxWithdrawalFeeTooLow, 'maxFeeSats');
@@ -139,7 +138,7 @@ export function createStakingFormSchema({
     .object({
       amount: z
         .string()
-        .optional()
+        .or(z.undefined())
         .refine(value => value !== undefined && value !== '', validationMessages.enterAmount)
         .refine(value => !value || /^\d+(\.\d+)?$/.test(value), validationMessages.invalidAmount)
         .refine(
