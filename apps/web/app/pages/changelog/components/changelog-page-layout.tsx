@@ -19,7 +19,7 @@ export function ChangelogPageLayout(props: ChangelogPageLayoutProps) {
             iconStart={FeedIcon}
             onClick={() => openExternalLink(`${window.location.origin}/changelog.xml`)}
           >
-            Subscribe
+            Subscribe via RSS
           </Button>
         </Box>
       </Page.Header>
