@@ -47,6 +47,9 @@ management mode uses outline actions. Use it for every full popup screen. A focu
 - **Scrolling.** The header and `pinned` (the recipient field over a contact list, a search field)
   stay fixed; only the body scrolls; the footer stays at the bottom. Never scroll the header away
   with the list (Phantom's send keeps "To" in place; so does this shell).
+- **Width.** The shell and its body can shrink to their frame. Keep child compositions bounded
+  too: use `minmax(0, 1fr)` columns for paired full-width controls and `minWidth={0}` for
+  shrinkable children. Hiding a horizontal scrollbar does not repair overflowing content.
 - **One gutter.** `pageGutter` (space.05, 24px) is the only horizontal padding: rows, inputs,
   section headers and the footer sit on it, and the header's back and trailing glyphs land on it
   (16px header inset + the 40px IconButton's 8px). Both header slots are 40px, so the header stays

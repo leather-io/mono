@@ -224,10 +224,18 @@ If you're not sure, use `ink.text-secondary`. Never use opacity to create a shad
 ## Choose primary or secondary action
 
 ```tsx
+import { Grid } from 'leather-styles/jsx';
+
 import { Button } from '@leather.io/ui';
 
-<Button variant="outline" fullWidth onClick={onCancel}>Cancel</Button>
-<Button fullWidth disabled={!isValid} onClick={onSave}>Save</Button>
+<Grid gridTemplateColumns="repeat(2, minmax(0, 1fr))" gap="space.04" minWidth={0}>
+  <Button variant="outline" fullWidth minWidth={0} onClick={onCancel}>
+    Cancel
+  </Button>
+  <Button fullWidth minWidth={0} disabled={!isValid} onClick={onSave}>
+    Save
+  </Button>
+</Grid>;
 ```
 
 - Use one `solid` (primary) per view, then `outline` for secondary and `ghost` for tertiary.
@@ -236,7 +244,11 @@ import { Button } from '@leather.io/ui';
 - `intent="danger"` is only for destructive confirms. `intent="success"` exists on web only.
 - Sizes are `sm` (32px), `md` (36px) and `lg` (48px, the default). Icons go in `iconStart` and
   `iconEnd`, as a component (`iconEnd={CopyIcon}`) or an element (`iconEnd={<CopyIcon />}`); both
-  take the label's ink and the small size. Don't set the icon's `color`.
+  take the label's ink and the small size. Don't set the icon's `color`. Use the exported
+  `CheckmarkIcon` for selection; a text glyph such as `✓` is not the Leather icon.
+- `Button` does not shrink by default. Two `fullWidth` buttons inside a `Flex` row overflow:
+  use bounded grid columns as above, or explicit flexible widths. Check the actual body
+  scroller, not only the document, at 390px.
 - One solid per screen is checked on the render: `pnpm design:words <url>` lists frames with more.
 - **Native:** `<Button variant="solid" onPress={…}>`. The variants match web and the intents are
   `default` and `danger`.

@@ -54,6 +54,8 @@ consequential choices. The answer becomes a recipe or a component.
 
 If you're unsure, use `ink.text-secondary`. Don't use opacity to make an in-between shade.
 An icon next to text matches the text's ink or is lighter, never darker: use `InlineIcon`.
+Use exported Leather icons for UI symbols, including `CheckmarkIcon` for selection; never
+substitute a font glyph.
 
 **Type.** Web `textStyle` values are `display.01–02`, `heading.01–05`, `label.01–03`,
 `body.01–02`, `caption.01–02`, `code` and `address`. Native `Text variant` uses the same names
@@ -149,6 +151,16 @@ Keep UI copy concise enough to scan while leaving the information needed to deci
   decision, then count words again (`pnpm design:words <url>`).
 
 ## Before you say done
+
+Inspect the current equivalent app pattern first. For fees, read
+`apps/extension/src/app/features/fee-editor/fee-editor.tsx` and its `components/` before choosing
+a composition. Reuse its decisions without copying known bulk or clipping problems.
+
+At narrow widths, inspect every interactive state, including edit forms. Check each body
+scroller's `scrollWidth` against `clientWidth`, not only the document: nested horizontal overflow
+can be missed. Two `fullWidth` Buttons in a Flex row do not fit by default because Button does
+not shrink; use bounded grid columns. Popup screens have one vertical body scroller with
+header/footer in reach; tab pages may scroll as a whole.
 
 1. Run `pnpm --filter @leather.io/<package> lint`. The design rules are part of it. When a design
    rule fails, its message names the replacement, so apply that. Don't add suppressions.

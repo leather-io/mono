@@ -61,7 +61,15 @@ export function PopupPage({
   children,
 }: PopupPageProps) {
   return (
-    <Flex direction="column" flex="1" minHeight={0} height="100%" data-page-shell="popup">
+    <Flex
+      direction="column"
+      flex="1"
+      minWidth={0}
+      maxWidth="100%"
+      minHeight={0}
+      height="100%"
+      data-page-shell="popup"
+    >
       <PageHeader title={title} onBack={onBack} onClose={onClose} trailing={trailing} />
       {pinned ? (
         <Box px={pageGutter} pb="space.04" flexShrink={0} data-gutter="" data-pinned="">
@@ -75,9 +83,10 @@ export function PopupPage({
         pt="space.01"
         pb="space.05"
         flex="1"
+        minWidth={0}
         minHeight={0}
         overflowY="auto"
-        css={{ '& > *': { flexShrink: 0 } }}
+        css={{ '& > *': { flexShrink: 0, minWidth: 0, maxWidth: '100%' } }}
         data-gutter=""
         data-page-body=""
       >

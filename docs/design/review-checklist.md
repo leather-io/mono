@@ -38,7 +38,8 @@ design:fidelity` side-by-side attached), and the baseline has a clean state plus
       the other way round. Callouts run edge to edge at the top of their region, never as an
       inset note between rows.
 - [ ] Screen actions (Add, Save, Done) are in the footer; never two competing primaries.
-- [ ] When an asset is the subject, its token icon is shown.
+- [ ] When an asset is the subject, its token icon is shown. Selection marks and other UI symbols
+      use exported Leather icons, not text glyphs.
 - [ ] No new component in an app duplicates something in `@leather.io/ui`. If the ui version is
       missing a prop, the PR adds the prop to ui.
 
@@ -85,6 +86,8 @@ design:fidelity` side-by-side attached), and the baseline has a clean state plus
       (lint: `no-dead-chevron`).
 - [ ] Scrolling: the header and any pinned region (the recipient field over a contact list)
       stay fixed while the body scrolls; the footer stays at the bottom (`PopupPage pinned`).
+- [ ] Every changed state, including edit forms, fits horizontally at 390px. Check nested body
+      scrollers as well as the document; clipping or hiding a scrollbar does not count as a fix.
 - [ ] The keyboard path works: you can tab to every action, and Escape closes sheets.
 - [ ] Destructive actions have a confirm step, and that step can be cancelled.
 - [ ] Loading never shifts layout: skeletons are sized to the content.

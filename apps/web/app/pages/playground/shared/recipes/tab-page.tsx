@@ -29,6 +29,7 @@ export function TabPage({
     <Flex
       direction="column"
       width="100%"
+      minWidth={0}
       maxWidth="pageWidth"
       mx="auto"
       bg="ink.background-primary"
@@ -39,7 +40,15 @@ export function TabPage({
       overflow="hidden"
     >
       <PageHeader title={title} onBack={onBack} onClose={onClose} trailing={trailing} />
-      <Stack gap="space.05" px={pageGutter} pb="space.05" data-gutter="" data-page-body="">
+      <Stack
+        gap="space.05"
+        minWidth={0}
+        px={pageGutter}
+        pb="space.05"
+        css={{ '& > *': { minWidth: 0, maxWidth: '100%' } }}
+        data-gutter=""
+        data-page-body=""
+      >
         {notice ? <PageNotice {...notice} /> : null}
         {pinned}
         {children}
