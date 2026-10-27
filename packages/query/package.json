@@ -47,7 +47,7 @@
     "p-queue": "8.1.1",
     "remeda": "2.21.2",
     "uuid": "11.1.0",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",
