@@ -16,6 +16,7 @@ const severities = ['high', 'medium', 'low'];
 const blockingSeverities = new Set(['high', 'medium']);
 const claudeAuthorLogin = 'github-actions';
 const findingCommentPattern = /^\*\*(?:high|medium): /;
+const findingTitlePattern = /^\*\*(?:high|medium): (.+?)\*\*/;
 const maxCandidates = 40;
 const maxThreadBodyLength = 2000;
 const reviewTools = 'Read,Grep,Glob';
@@ -33,6 +34,7 @@ const findingsSchema = {
           severity: { type: 'string', enum: severities },
           title: { type: 'string' },
           body: { type: 'string' },
+          causePath: { type: 'string' },
         },
         required: ['path', 'line', 'severity', 'title', 'body'],
         additionalProperties: false,
@@ -92,7 +94,7 @@ Report a finding only when you can point to a concrete failure: specific inputs 
 
 Severity: high means loss of funds, key or secret exposure, signing or broadcasting something the user did not approve, a security bypass or data loss. medium means a real bug that users or developers will hit. low means a minor issue worth knowing that should not block the merge.
 
-path is relative to the repository root. line is the line in the head version of the file that best anchors the finding, preferably a changed line. title is one short sentence. body explains the failure scenario and then the fix, in a few sentences. Return an empty list when you find nothing.`;
+path is relative to the repository root. line is the line in the head version of the file that best anchors the finding, preferably a changed line. When the finding is in a file the pull request does not change, such as a caller broken by a changed function, set causePath to the changed file whose change causes it. title is one short sentence. body explains the failure scenario and then the fix, in a few sentences. Return an empty list when you find nothing.`;
 
 export const angleGuides = {
   correctness: `Correctness: logic errors, wrong conditions and comparisons, off-by-one errors, missing null or undefined handling, async ordering and race conditions, stale React state, effects and memoisation, error paths that swallow failures, callers broken by a changed signature or return value, and behaviour that differs between the .web, .native and .shared variants of a file.`,
@@ -177,7 +179,9 @@ export function toThread(node) {
     path: node.path,
     line: node.line,
     resolved: node.isResolved,
+    raisedByClaude,
     resolvable: raisedByClaude && !node.isResolved,
+    title: raisedByClaude ? (findingTitlePattern.exec(body)?.[1] ?? '') : '',
     body: body.slice(0, maxThreadBodyLength),
   };
 }
@@ -188,7 +192,8 @@ function isFinding(value) {
     Number.isInteger(value.line) &&
     severities.includes(value.severity) &&
     typeof value.title === 'string' &&
-    typeof value.body === 'string'
+    typeof value.body === 'string' &&
+    (value.causePath === undefined || typeof value.causePath === 'string')
   );
 }
 
@@ -257,31 +262,82 @@ export function parseVerdicts(text, candidateIds) {
 }
 
 export function formatFindingComment(finding) {
+  const location =
+    finding.anchorPath && finding.anchorPath !== finding.path
+      ? `Location: \`${finding.path}:${finding.line}\`, which this pull request does not change.\n\n`
+      : '';
   return neutraliseMentions(
-    `**${finding.severity}: ${finding.title}**\n\n${finding.body}\n\n` +
+    `**${finding.severity}: ${finding.title}**\n\n${location}${finding.body}\n\n` +
       `Verified: ${finding.reason}\n\nFix this, or resolve the thread with a reply explaining why not.`
   );
 }
 
-export function planReview({ candidates, verdicts, patches }) {
+export function createPathResolver({ files, workspace }) {
+  const renamed = new Map(
+    files.filter(file => file.previousPath).map(file => [file.previousPath, file.path])
+  );
+  const prefix = workspace ? `${workspace.replace(/\/$/, '')}/` : null;
+  return path => {
+    const relative = prefix && path.startsWith(prefix) ? path.slice(prefix.length) : path;
+    const clean = relative.replace(/^\.\//, '');
+    return renamed.get(clean) ?? clean;
+  };
+}
+
+export function planReview({ candidates, verdicts, patches, resolvePath = path => path }) {
   const verdictById = new Map(verdicts.findings.map(verdict => [verdict.id, verdict]));
+  const changedPaths = Object.keys(patches);
   const inline = [];
   const fileLevel = [];
   const notes = [];
   for (const candidate of candidates) {
     const verdict = verdictById.get(candidate.id);
     if (verdict?.verdict !== 'confirmed') continue;
-    const finding = { ...candidate, severity: verdict.severity, reason: verdict.reason };
-    const patch = patches[finding.path];
-    if (!blockingSeverities.has(finding.severity) || patch === undefined) {
+    const finding = {
+      ...candidate,
+      path: resolvePath(candidate.path),
+      severity: verdict.severity,
+      reason: verdict.reason,
+    };
+    if (!blockingSeverities.has(finding.severity)) {
       notes.push(finding);
-    } else if (findCommentableLines(patch).has(finding.line)) {
-      inline.push(finding);
+      continue;
+    }
+    if (Object.hasOwn(patches, finding.path)) {
+      if (findCommentableLines(patches[finding.path]).has(finding.line)) {
+        inline.push(finding);
+      } else {
+        fileLevel.push({ ...finding, anchorPath: finding.path });
+      }
+      continue;
+    }
+    const causePath = candidate.causePath ? resolvePath(candidate.causePath) : undefined;
+    const anchorPath = causePath && Object.hasOwn(patches, causePath) ? causePath : changedPaths[0];
+    if (anchorPath) {
+      fileLevel.push({ ...finding, anchorPath });
     } else {
-      fileLevel.push(finding);
+      notes.push(finding);
     }
   }
   return { inline, fileLevel, notes };
+}
+
+function postedKey(path, title) {
+  return `${path}\n${neutraliseMentions(title).trim()}`;
+}
+
+export function dropAlreadyPosted({ inline, fileLevel }, threads) {
+  const posted = new Set(
+    threads
+      .filter(thread => thread.raisedByClaude)
+      .map(thread => postedKey(thread.path, thread.title))
+  );
+  return {
+    inline: inline.filter(finding => !posted.has(postedKey(finding.path, finding.title))),
+    fileLevel: fileLevel.filter(
+      finding => !posted.has(postedKey(finding.anchorPath, finding.title))
+    ),
+  };
 }
 
 export function findFixedThreads({ threads, verdicts }) {
@@ -348,11 +404,18 @@ async function runPrepare() {
   const headSha = readRequiredEnv('HEAD_SHA');
   const contextDir = readRequiredEnv('CONTEXT_DIR');
   const [owner, name] = readRequiredEnv('GITHUB_REPOSITORY').split('/');
-  const [pullRequest, files, threadData] = await Promise.all([
-    github.request(`/pulls/${number}`),
+  const [files, threadData] = await Promise.all([
     github.requestAllPages(`/pulls/${number}/files`),
     github.graphql(threadsQuery, { owner, name, number }),
   ]);
+  const pullRequest = await github.request(`/pulls/${number}`);
+  if (pullRequest.head.sha !== headSha) {
+    writeOutput('reviewable', 'false');
+    writeSummary(
+      `Skipped: the head moved from ${headSha} to ${pullRequest.head.sha}, which has its own review run.`
+    );
+    return;
+  }
   const threads = threadData.repository.pullRequest.reviewThreads.nodes.map(toThread);
 
   mkdirSync(contextDir, { recursive: true });
@@ -422,8 +485,11 @@ async function runPost() {
   const { candidates, failedAngles, skippedCount, skippedBlockingCount } = readJson(
     join(contextDir, 'candidates.json')
   );
-  const threads = readJson(join(contextDir, 'threads.json'));
   const patches = readJson(join(contextDir, 'patches.json'));
+  const { files } = readJson(join(contextDir, 'pull-request.json'));
+  const [owner, name] = readRequiredEnv('GITHUB_REPOSITORY').split('/');
+  const threadData = await github.graphql(threadsQuery, { owner, name, number });
+  const threads = threadData.repository.pullRequest.reviewThreads.nodes.map(toThread);
   const hasWork = process.env.HAS_WORK === 'true';
   const verdicts = hasWork
     ? parseVerdicts(
@@ -440,7 +506,10 @@ async function runPost() {
     return;
   }
 
-  const { inline, fileLevel, notes } = planReview({ candidates, verdicts, patches });
+  const resolvePath = createPathResolver({ files, workspace: process.env.GITHUB_WORKSPACE });
+  const plan = planReview({ candidates, verdicts, patches, resolvePath });
+  const { inline, fileLevel } = dropAlreadyPosted(plan, threads);
+  const { notes } = plan;
   const blockingCount = inline.length + fileLevel.length;
 
   if (blockingCount > 0 || notes.length > 0 || failedAngles.length > 0 || skippedCount > 0) {
@@ -464,7 +533,7 @@ async function runPost() {
       method: 'POST',
       body: {
         commit_id: headSha,
-        path: finding.path,
+        path: finding.anchorPath,
         subject_type: 'file',
         body: formatFindingComment(finding),
       },

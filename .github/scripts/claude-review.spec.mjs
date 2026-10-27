@@ -7,6 +7,8 @@ import {
   buildFinderArgs,
   buildVerifierArgs,
   collectCandidates,
+  createPathResolver,
+  dropAlreadyPosted,
   findCommentableLines,
   findFixedThreads,
   formatDiff,
@@ -80,6 +82,12 @@ describe('parseFindings', () => {
     assert.deepEqual(parseFindings(JSON.stringify({ findings: [finding('a.ts', 1)] })), [
       finding('a.ts', 1),
     ]);
+  });
+
+  it('accepts an optional cause path', () => {
+    const value = finding('a.ts', 1, { causePath: 'b.ts' });
+    assert.deepEqual(parseFindings(JSON.stringify({ findings: [value] })), [value]);
+    assert.equal(parseFindings(JSON.stringify({ findings: [{ ...value, causePath: 3 }] })), null);
   });
 
   it('rejects empty or malformed output', () => {
@@ -173,7 +181,7 @@ describe('planReview', () => {
     return { id, verdict: verdictValue, severity, reason: 'traced' };
   }
 
-  it('posts blocking findings inline or on the file and keeps the rest as notes', () => {
+  it('posts blocking findings inline or on a file and keeps low ones as notes', () => {
     const candidates = [
       { id: 'F1', ...finding('a.ts', 12) },
       { id: 'F2', ...finding('a.ts', 99) },
@@ -200,14 +208,54 @@ describe('planReview', () => {
       ['F1']
     );
     assert.deepEqual(
-      plan.fileLevel.map(item => item.id),
-      ['F2']
+      plan.fileLevel.map(item => [item.id, item.anchorPath]),
+      [
+        ['F2', 'a.ts'],
+        ['F4', 'a.ts'],
+      ]
     );
     assert.deepEqual(
       plan.notes.map(item => item.id),
-      ['F3', 'F4']
+      ['F3']
     );
     assert.equal(plan.inline[0].severity, 'high');
+  });
+
+  it('anchors a finding in an unchanged file on the changed file that causes it', () => {
+    const plan = planReview({
+      candidates: [{ id: 'F1', ...finding('caller.ts', 5, { causePath: 'b.ts' }) }],
+      patches: { 'a.ts': patch, 'b.ts': patch },
+      verdicts: { findings: [verdict('F1', 'high')], threads: [] },
+    });
+    assert.deepEqual(
+      plan.fileLevel.map(item => [item.path, item.anchorPath]),
+      [['caller.ts', 'b.ts']]
+    );
+  });
+
+  it('matches normalised and renamed paths against the diff', () => {
+    const resolvePath = createPathResolver({
+      files: [{ path: 'a.ts', previousPath: 'old-a.ts' }],
+      workspace: '/home/runner/work/mono/mono',
+    });
+    const candidates = [
+      { id: 'F1', ...finding('./a.ts', 12) },
+      { id: 'F2', ...finding('/home/runner/work/mono/mono/a.ts', 12, { title: 'Other' }) },
+      { id: 'F3', ...finding('old-a.ts', 12, { title: 'Third' }) },
+    ];
+    const plan = planReview({
+      candidates,
+      patches,
+      resolvePath,
+      verdicts: {
+        findings: [verdict('F1', 'high'), verdict('F2', 'high'), verdict('F3', 'high')],
+        threads: [],
+      },
+    });
+    assert.deepEqual(
+      plan.inline.map(item => item.path),
+      ['a.ts', 'a.ts', 'a.ts']
+    );
   });
 
   it('ignores verdicts for unknown candidates', () => {
@@ -242,6 +290,48 @@ describe('toThread', () => {
   });
 });
 
+describe('dropAlreadyPosted', () => {
+  it('skips findings that already have a Claude thread on the same file', () => {
+    const threads = [
+      toThread({
+        id: 'T1',
+        isResolved: true,
+        path: 'a.ts',
+        line: 3,
+        comments: {
+          nodes: [{ author: { login: 'github-actions' }, body: '**high: Bug at 3**\n\nx' }],
+        },
+      }),
+    ];
+    const kept = dropAlreadyPosted(
+      {
+        inline: [finding('a.ts', 3), finding('a.ts', 4)],
+        fileLevel: [{ ...finding('c.ts', 3), anchorPath: 'a.ts' }],
+      },
+      threads
+    );
+    assert.deepEqual(
+      kept.inline.map(item => item.line),
+      [4]
+    );
+    assert.deepEqual(kept.fileLevel, []);
+  });
+
+  it('ignores threads Claude did not start', () => {
+    const threads = [
+      toThread({
+        id: 'T1',
+        isResolved: false,
+        path: 'a.ts',
+        line: 3,
+        comments: { nodes: [{ author: { login: 'alice' }, body: '**high: Bug at 3**' }] },
+      }),
+    ];
+    const kept = dropAlreadyPosted({ inline: [finding('a.ts', 3)], fileLevel: [] }, threads);
+    assert.equal(kept.inline.length, 1);
+  });
+});
+
 describe('findFixedThreads', () => {
   it('returns only fixed verdicts for resolvable threads', () => {
     const threads = [
@@ -268,6 +358,15 @@ describe('findFixedThreads', () => {
 });
 
 describe('formatFindingComment', () => {
+  it('names the unchanged file when the thread is anchored elsewhere', () => {
+    const comment = formatFindingComment({
+      ...finding('caller.ts', 7, { severity: 'high' }),
+      anchorPath: 'b.ts',
+      reason: 'traced',
+    });
+    assert.match(comment, /^\*\*high: Bug at 7\*\*\n\nLocation: `caller\.ts:7`/);
+  });
+
   it('starts with the marker threads are recognised by and defuses mentions', () => {
     const comment = formatFindingComment({
       ...finding('a.ts', 1, { severity: 'high', body: 'ping @alice' }),

@@ -78,7 +78,6 @@ jobs:
 
       - name: find-issues
         id: claude
-        continue-on-error: true
         uses: anthropics/claude-code-action@374f254f5efaf968abfe15d399fd90972e8138b9 # v1.0.251
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -94,6 +93,10 @@ jobs:
           ANGLE: ${{ matrix.angle }}
           STRUCTURED_OUTPUT: ${{ steps.claude.outputs.structured_output }}
         run: |
+          if [ -z "$STRUCTURED_OUTPUT" ]; then
+            echo "::error::The $ANGLE review returned no findings JSON."
+            exit 1
+          fi
           mkdir -p "$RUNNER_TEMP/findings"
           printf '%s' "$STRUCTURED_OUTPUT" > "$RUNNER_TEMP/findings/$ANGLE.json"
 
@@ -149,7 +152,7 @@ jobs:
   verify:
     name: verify
     needs: [prepare, collect]
-    if: needs.collect.outputs.has-work == 'true'
+    if: ${{ !cancelled() && needs.collect.result == 'success' && needs.collect.outputs.has-work == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
