@@ -131,12 +131,12 @@ describe(BitcoinTransactionsService.name, () => {
         {} as unknown as LeatherApiClient,
         mockMempoolApiClient,
         {
-          getSettings: () => ({ network: defaultNetworksKeyedById.stakingTestnet }),
+          getSettings: () => ({ network: defaultNetworksKeyedById.btcStakingStacksTestnet }),
         } as unknown as SettingsService
       );
       await service.getAddressTransactions('tb1qvault', { page: 1, pageSize: 150 });
       expect(requestedMempoolUrl).toEqual(
-        defaultNetworksKeyedById.stakingTestnet.chain.bitcoin.bitcoinUrl
+        defaultNetworksKeyedById.btcStakingStacksTestnet.chain.bitcoin.bitcoinUrl
       );
     });
 

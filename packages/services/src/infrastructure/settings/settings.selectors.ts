@@ -50,6 +50,7 @@ export function selectBitcoinApiUrl(settings: UserSettings): string {
 export function selectStakingChainId(settings: UserSettings): StakingChainId | null {
   const networkId = selectNetworkConfigurationId(settings);
   if (networkId === WalletDefaultNetworkConfigurationIds.mainnet) return 'mainnet';
-  if (networkId === WalletDefaultNetworkConfigurationIds.stakingTestnet) return 'staking-testnet';
+  if (networkId === WalletDefaultNetworkConfigurationIds.btcStakingStacksTestnet)
+    return 'staking-testnet';
   return null;
 }

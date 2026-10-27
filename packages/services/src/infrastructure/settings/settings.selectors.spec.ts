@@ -58,7 +58,7 @@ describe(selectStakingChainId.name, () => {
   });
 
   it('maps the staking testnet network to the staking-testnet chain', () => {
-    const settings = { ...userSettings, network: defaultNetworksKeyedById.stakingTestnet };
+    const settings = { ...userSettings, network: defaultNetworksKeyedById.btcStakingStacksTestnet };
     expect(selectStakingChainId(settings)).toEqual('staking-testnet');
   });
 

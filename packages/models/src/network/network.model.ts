@@ -41,7 +41,7 @@ export const WalletDefaultNetworkConfigurationIds = {
   signet: 'signet',
   sbtcDevenv: 'sbtcDevenv',
   devnet: 'devnet',
-  stakingTestnet: 'stakingTestnet',
+  btcStakingStacksTestnet: 'btcStakingStacksTestnet',
 } as const;
 export type WalletDefaultNetworkConfigurationIds =
   (typeof WalletDefaultNetworkConfigurationIds)[keyof typeof WalletDefaultNetworkConfigurationIds];
@@ -54,7 +54,7 @@ export const defaultNetworkConfigurationsSchema = z.enum([
   'signet',
   'sbtcDevenv',
   'devnet',
-  'stakingTestnet',
+  'btcStakingStacksTestnet',
 ]);
 export type DefaultNetworkConfigurations = z.infer<typeof defaultNetworkConfigurationsSchema>;
 
@@ -240,15 +240,15 @@ const networkDevnet: NetworkConfiguration = {
   },
 };
 
-const stakingTestnetStacksChainId = 1280;
+const btcStakingStacksTestnetChainId = 1280;
 
-const networkStakingTestnet: NetworkConfiguration = {
-  id: WalletDefaultNetworkConfigurationIds.stakingTestnet,
+const networkBtcStakingStacksTestnet: NetworkConfiguration = {
+  id: WalletDefaultNetworkConfigurationIds.btcStakingStacksTestnet,
   name: 'BTC Staking Testnet',
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: stakingTestnetStacksChainId,
+      chainId: btcStakingStacksTestnetChainId,
       url: HIRO_API_BASE_URL_STAKING_TESTNET,
     },
     bitcoin: {
@@ -268,7 +268,7 @@ export const defaultNetworksKeyedById: Record<
 > = {
   [WalletDefaultNetworkConfigurationIds.mainnet]: networkMainnet,
   [WalletDefaultNetworkConfigurationIds.primaryStacksTestnet]: networkPrimaryStacksTestnet,
-  [WalletDefaultNetworkConfigurationIds.stakingTestnet]: networkStakingTestnet,
+  [WalletDefaultNetworkConfigurationIds.btcStakingStacksTestnet]: networkBtcStakingStacksTestnet,
   [WalletDefaultNetworkConfigurationIds.signet]: networkSignet,
   [WalletDefaultNetworkConfigurationIds.testnet4]: networkTestnet4,
   [WalletDefaultNetworkConfigurationIds.testnet]: networkTestnet,
@@ -277,10 +277,14 @@ export const defaultNetworksKeyedById: Record<
 };
 
 const legacyNetworkIdsResolvedToPrimaryStacksTestnet = ['sbtcTestnet', 'private-1'];
+const legacyBtcStakingStacksTestnetId = 'stakingTestnet';
 
 export function resolveLegacyNetworkConfigurationId(networkId: string): string {
   if (legacyNetworkIdsResolvedToPrimaryStacksTestnet.includes(networkId)) {
     return WalletDefaultNetworkConfigurationIds.primaryStacksTestnet;
+  }
+  if (networkId === legacyBtcStakingStacksTestnetId) {
+    return WalletDefaultNetworkConfigurationIds.btcStakingStacksTestnet;
   }
   return networkId;
 }

@@ -57,7 +57,7 @@ describe('activity-links', () => {
     it('returns the staking testnet mempool link for a Bitcoin asset', () => {
       const result = makeActivityLink({
         txid: 'abc123',
-        networkPreference: defaultNetworksKeyedById.stakingTestnet,
+        networkPreference: defaultNetworksKeyedById.btcStakingStacksTestnet,
         asset: {
           chain: 'bitcoin',
           category: 'fungible',
@@ -75,7 +75,7 @@ describe('activity-links', () => {
     it('returns a testnet explorer link pinned to the staking testnet api for a Stacks asset', () => {
       const result = makeActivityLink({
         txid: 'def456',
-        networkPreference: defaultNetworksKeyedById.stakingTestnet,
+        networkPreference: defaultNetworksKeyedById.btcStakingStacksTestnet,
         asset: {
           chain: 'stacks',
           category: 'fungible',

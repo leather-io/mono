@@ -16,7 +16,7 @@ export function getMempoolUrlFromUserSettings(settings: UserSettings): string | 
   return isCustomNetwork ||
     networkConfigurationId === WalletDefaultNetworkConfigurationIds.primaryStacksTestnet ||
     networkConfigurationId === WalletDefaultNetworkConfigurationIds.sbtcDevenv ||
-    networkConfigurationId === WalletDefaultNetworkConfigurationIds.stakingTestnet
+    networkConfigurationId === WalletDefaultNetworkConfigurationIds.btcStakingStacksTestnet
     ? selectBitcoinApiUrl(settings)
     : null;
 }
