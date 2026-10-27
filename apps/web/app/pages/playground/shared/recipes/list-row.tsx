@@ -55,7 +55,7 @@ export const listRowMeta = defineRecipeMeta({
     },
     {
       situation: 'An important action on a row (Save this address)',
-      use: 'a labelled Button under the row or in the footer (LabelledAction / PostActionPrompt), not a bare + icon',
+      use: 'a labelled Button under the row, or PageActions for a screen-level action, not a bare + icon',
     },
     { situation: 'Key-value facts on a review', use: 'ReviewRow' },
     { situation: 'A primary screen action such as Add or Save', use: 'the page footer, not a row' },

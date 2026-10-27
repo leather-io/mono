@@ -16,12 +16,14 @@ tokens, and mirrors how the extension composes the same thing today.
 | [Review sheet](#review-sheet)     | `review-sheet` → `ReviewSheet`, `ReviewRow` | Confirming a task: headline, rows, action            |
 | [Amount display](#amount-display) | `amount-display` → `AmountDisplay`          | The one hero amount on a screen (send, review, sent) |
 | [Section header](#section-header) | `section-header` → `SectionHeader`          | Splitting a list or review into groups               |
-| [Inline info](#inline-info)       | `inline-info` → `InfoLabel`, `HelperText`   | A term explained behind a tooltip, one helper line   |
-| [Footer actions](#footer-actions) | `page-header` → `PageFooter` (footer slot)  | Add, Save, Continue, Done: the screen's actions      |
+| [Inline info](#inline-info)       | `inline-info` → `InfoLabel`, `HelperText`   | Optional background and visible decision context     |
+| [Footer actions](#footer-actions) | `page-actions` → `PageActions`              | Add, Save, Continue, Done: the screen's actions      |
+| [Page notice](#page-notice)       | `page-notice` → `PageNotice`                | A persistent problem at the top of its region        |
 | [Address QR](#address-qr)         | `address-qr` → `AddressQr`                  | Receive QR with the asset's token icon               |
 
-Each recipe file exports a meta (`listRowMeta`, `reviewSheetMeta`, …) with `mirrors` (the
-extension file it copies), `useWhen` and `dontUseWhen`. `/playground/recipes` prints it under
+Documented recipe metadata (`listRowMeta`, `reviewSheetMeta`, …) provides `mirrors` (the
+extension file it copies), `useWhen` and `dontUseWhen`. Small recipe parts such as `PageActions`
+and `PageNotice` are used through their parent compositions. `/playground/recipes` prints it under
 the demo. Product mirrors are copied type for type: when one disagrees with the extension,
 the recipe is the bug. Owner-reviewed new directions are explicitly labelled; they are not
 evidence of what ships today.
@@ -39,8 +41,8 @@ use the real `Sheet`.
 ## Popup page
 
 Header with back, an optional title and close (or `trailing`, e.g. Send's settings); an optional
-`pinned` region; a body; a footer with the screen's one solid action. Use it for every full popup
-screen. A focused sub-task over the current screen is a sheet instead.
+`pinned` region; a body; a footer with typed `actions`. Task mode has one solid action;
+management mode uses outline actions. Use it for every full popup screen. A focused sub-task over the current screen is a sheet instead.
 
 - **Scrolling.** The header and `pinned` (the recipient field over a contact list, a search field)
   stay fixed; only the body scrolls; the footer stays at the bottom. Never scroll the header away
@@ -54,11 +56,7 @@ screen. A focused sub-task over the current screen is a sheet instead.
 <PopupPage
   title="Send"
   onBack={onBack}
-  footer={
-    <Button fullWidth onClick={onContinue}>
-      Continue
-    </Button>
-  }
+  actions={{ primary: { label: 'Continue', onClick: onContinue } }}
 >
   <SectionHeader title="From" />
   <AccountRow avatar={avatar} name="Account 1" address={address} balance="$4,212.80" />
@@ -71,7 +69,9 @@ screen. A focused sub-task over the current screen is a sheet instead.
 
 The same header, body and footer in a bordered card, in a centred 500px column (the extension's
 full-page tab). The footer sits under the content. Variants that get a `frame` prop use
-`FramePage`, which picks the popup or tab shell.
+`FramePage`, which picks the popup or tab shell. All three accept `actions` and a `notice`
+descriptor. Use `actions` for ordinary screen actions; `customFooter` is a deliberate escape
+hatch for a composition those descriptors cannot express. The types prevent passing both.
 
 ```tsx
 <FramePage frame={frame} title="Choose asset" onBack={onBack}>
@@ -101,7 +101,8 @@ truncated with `truncateMiddle`.
   have none; `navigates` without a real `onClick` draws nothing and lint (`no-dead-chevron`) and
   the promote report flag it.
 - **Row actions on the rail.** The action group hangs 8px past the row, so its last glyph lines up
-  with the rail like a chevron or value. An important action is not a bare `+`: see Post-action.
+  with the rail like a chevron or value. An important action is not a bare `+`: use a labelled
+  `Button` in its block or the footer.
 - **Second-line notes** ("Last sent 2 Oct") go in the caption (`note`), not under a section label.
 
 ```tsx
@@ -119,7 +120,11 @@ truncated with `truncateMiddle`.
 
 ## Review sheet
 
-The amount, key-value rows and one action. Popup: a bottom sheet. Tab: a centred dialog. Labels
+The amount, key-value rows and typed `actions`. This inline Playground demo draws a bottom
+sheet in popup and a centred dialog in tab. It keeps the header and actions in reach while the
+bounded body scrolls. It does not provide production modal focus management or focus trapping:
+use `Sheet` + `SheetHeader` from `@leather.io/ui` in product code, with `PageActions` in its
+`footer` (see [Footer actions](#footer-actions)). Labels
 are `ink.text-secondary` because the reader is deciding; values are `label.02` (never mono, no
 `tabular-nums`). Fiat goes in the row caption. The amount goes in `amount` (drawn by
 `AmountDisplay`, so it matches the send form); the recipient uses `AddressDisplayer`. `ReviewRow`
@@ -131,11 +136,8 @@ also works on a review page.
   title="Review"
   onClose={onClose}
   amount={{ amount: '0.00500000', symbol: 'sBTC', fiat: '~ $325.00' }}
-  action={
-    <Button fullWidth onClick={onSend}>
-      Send
-    </Button>
-  }
+  actions={{ primary: { label: 'Send', onClick: onSend, pending: isSending } }}
+  callout={warningMessage ? { variant: 'warning', message: warningMessage } : undefined}
 >
   <ReviewRow
     label="Fee"
@@ -178,9 +180,10 @@ whose label lines up with the row values. Not a page title.
 ## Inline info
 
 `InfoLabel` puts the explanation behind an info icon (a `BasicTooltip`, focusable by keyboard).
-`HelperText` is the one helper sentence a screen may show; it is a `p`, so it wraps with
-`text-wrap: pretty` (no single word alone on the last line; set globally by the panda preset,
-headings get `balance`). A sentence in a `span` needs `textWrap="pretty"`.
+`HelperText` keeps concise decision or safety context visible; there is no fixed sentence
+quota. Only optional background belongs behind the tooltip or disclosure. Required information
+must remain visible. It is a `p`, so it wraps with `text-wrap: pretty` (no single word alone on
+the last line; set globally by the panda preset, headings get `balance`). A sentence in a `span` needs `textWrap="pretty"`.
 
 **Icons next to words** use `InlineIcon` from `@leather.io/ui`, placed inside the text element:
 it inherits the text's ink through `currentColor` (or takes a lighter step with `tone`), is 16px
@@ -205,23 +208,91 @@ above a list. Never a Callout dropped between rows as a note: use `HelperText` o
 
 ## Footer actions
 
-The screen's actions (Continue, Send, Save, Add address, Done) live in the page footer, not as
-small row or header actions. At most one `solid` button. A management screen has no solid: like
-the account switcher's **Add wallet + Manage**, "Add …" is an `outline` button with
-`iconStart={<PlusIcon />}` beside a second outline action, each `flex={1}`, `space.04` apart.
-Never two competing primaries: Save and Done together is one action too many; finish the task
-with one, and move the other choice earlier in the flow.
+The screen's actions (Continue, Send, Save, Add address, Done) live in the footer. Import
+`PageActions` from `shared/recipes/page-actions`; page shells render it from `actions`.
+
+- `primary` is required; `secondary` is optional and renders before it. Each descriptor takes
+  `label`, `onClick`, optional `disabled`, `pending` and `iconStart`. Only `primary` takes
+  `intent: 'danger'` for a destructive confirm.
+- The default `mode="task"` renders one solid primary and an outline secondary. Never pair
+  competing finishers such as Save and Done; choose the action that finishes the task.
+- `mode="management"` renders both as outline actions. For Add address + Manage, the labelled
+  Add action includes `PlusIcon`; the recipe owns equal columns and the `space.04` gap.
+- If either descriptor is `pending`, both actions are disabled while that action shows its busy
+  state. Long labels wrap without changing the shared action hierarchy.
+- For a native form, use `type: 'submit'` and `form: 'form-id'` on the primary and handle
+  submission on that form. The button can remain in the footer outside the form body; Enter
+  and native validation still work. Ordinary command actions require `onClick` and remain
+  `type="button"`. Do not submit manually from both `onClick` and the form's `onSubmit`.
+- Use `customFooter` only when a deliberate composition cannot use the descriptors. It is
+  mutually exclusive with `actions`, rather than the default way to add buttons.
 
 ```tsx
-<FramePage frame={frame} title="Address book" onBack={onBack} footer={
-  <>
-    <Button variant="outline" flex={1} iconStart={<PlusIcon />} onClick={onAdd}>Add address</Button>
-    <Button variant="outline" flex={1} onClick={onManage}>Manage</Button>
-  </>
-}>
+<FramePage
+  frame={frame}
+  title="Address book"
+  onBack={onBack}
+  actions={{
+    mode: 'management',
+    secondary: { label: 'Add address', iconStart: PlusIcon, onClick: onAdd },
+    primary: { label: 'Manage', onClick: onManage },
+  }}
+>
+  {children}
+</FramePage>
 ```
 
+Use the same `PageActions` as a real `Sheet` footer. `Sheet` supplies the modal behavior and
+footer placement; don't add a second `PageFooter` around the actions.
+
+```tsx
+import { PageActions } from '~/pages/playground/shared/recipes/page-actions';
+
+import { Sheet, SheetHeader } from '@leather.io/ui';
+
+<Sheet
+  title="Edit fee"
+  description="Choose the transaction fee"
+  isShowing={isShowing}
+  onClose={onClose}
+  header={<SheetHeader title="Edit fee" />}
+  footer={
+    <PageActions
+      secondary={{ label: 'Cancel', onClick: onClose }}
+      primary={{ label: 'Save', onClick: onSave, disabled: !isValid, pending: isSaving }}
+    />
+  }
+>
+  {content}
+</Sheet>;
+```
+
+The import above is for the web Playground. When moving a composition into product code, move
+its shared action recipe with it or use the existing app composition that fits the workflow.
+
 `/playground/recipes?recipe=footer-actions`
+
+## Page notice
+
+Pass `notice={{ variant: 'error', message: '…' }}` to `FramePage`, `PopupPage` or `TabPage` for a
+persistent issue at the start of the body. In `ReviewSheet`, use the same descriptor as `callout`;
+it renders under the amount or headline. Variants match `Callout`: `default`, `info`, `success`,
+`warning`, `error`.
+
+`PageNotice` cancels the recipe's `space.05` gutter to reach the full region width. Let the shell
+place it; don't wrap it in more padding or inset it between rows. Direct use requires a parent
+with that same gutter. Errors use `role="alert"`; the other variants use `role="status"`.
+
+```tsx
+<FramePage
+  frame={frame}
+  title="Send"
+  notice={{ variant: 'error', message: 'Unable to estimate the fee. Try again.' }}
+  actions={{ primary: { label: 'Continue', onClick: onContinue, disabled: true } }}
+>
+  {children}
+</FramePage>
+```
 
 ## Address QR
 
@@ -302,7 +373,7 @@ parenthesized protocol or redundant group headings. The typed recipe prevents fr
 titles within this composition. Semantic repetition elsewhere still needs visual review; no
 static lint guarantee is claimed.
 
-**Next fresh Receive test traps:** repeating the task verb in the body; placing the protocol in
+**Checks from the Receive review:** repeating the task verb in the body; placing the protocol in
 brackets; differing chooser/detail protocol labels; adding headings to the three-row list;
 recomposing the shared address block with different gaps or address width.
 The post-review A/B edits demonstrate the approved pattern, not fresh-agent adherence to it.

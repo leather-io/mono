@@ -17,13 +17,16 @@ the code disagree, the code wins. Note the mismatch in the PR so it can be fixed
 - `packages/tokens/README.md`: the ink text ladder.
 - `packages/ui/src/exports.web.ts` and `packages/ui/src/native.ts`: everything the ui package exports.
 - `docs/design/recipes.md`: page shells, rows, review sheet, amount, section header and inline info.
-  Compose screens from these. Variants differ in concept, not in how a row is built.
+  Compose screens from these. Use typed page actions and notices; spacing belongs to the recipes.
+  Variants are for consequential workflow or UX trade-offs, not cosmetic differences.
 - `docs/design/explore.md`: the protocol for exploring a feature (today's flow first, recreated
-  faithfully and diffed with `pnpm design:fidelity`, then 2–3 variants).
+  faithfully and diffed with `pnpm design:fidelity`, then one coherent feature with its states
+  for a fixed brief; alternatives only for consequential choices).
 - `apps/extension/AGENTS.md`, `apps/web/AGENTS.md`: platform sizes, input and what to verify.
 
 **When no pattern fits**, don't invent a one-off. Follow the escalation step in `explore.md`:
-show options to design, then the answer becomes a recipe or a component.
+bring the missing pattern and a focused proposal to design, with alternatives only for
+consequential choices. The answer becomes a recipe or a component.
 
 ## Specs
 
@@ -71,6 +74,19 @@ styles; nested numbers and labels go a size smaller than their parent.
 Use them for padding, gaps and margins. Radii are `xs`, `sm`, `md`, `lg` and `round`. A page has
 one horizontal gutter (`space.05` in the popup): rows, inputs and header icon glyphs all sit on it.
 
+**Compositions.** In the web Playground, `FramePage`, `PopupPage` and `TabPage` accept typed
+`actions` (`primary`, optional `secondary`, `mode: 'task' | 'management'`) and a `notice`
+descriptor (`variant`, `message`). Task mode has one solid primary; management mode has outline
+actions. Either action pending disables both. Use `customFooter` only as a deliberate escape
+hatch; the types make it mutually exclusive with `actions`. `PageNotice` spans the full region by
+cancelling the shell gutter, so don't add an inset wrapper.
+
+Inline `ReviewSheet` takes `actions` and a typed `callout`, with a bounded scrolling body. It is a
+Playground visual demo, without production modal focus behavior. In product code, use real
+`Sheet` + `SheetHeader`; `PageActions` can go directly in `Sheet.footer`. Promote shared recipes
+with the composition, or use the existing app composition when it fits the workflow better.
+Examples and imports: `docs/design/recipes.md#footer-actions`.
+
 **Components.**
 
 | Job                   | Web (`@leather.io/ui`)                                    | Native (`@leather.io/ui/native`)    |
@@ -116,14 +132,19 @@ A destructive confirm, and every other job: `docs/design/i-need-to.md`.
 
 ## Copy and density
 
-UI copy is not documentation. Hold every screen to this budget:
+Keep UI copy concise enough to scan while leaving the information needed to decide visible:
 
 - Title: 5 words or fewer. Buttons: 1–3 words, verb first ("Send", "Review", "Remove wallet").
   Screen actions (Add, Save, Done) sit in the footer; never two competing primaries. A
   follow-up after a task is a footer choice requiring product review.
-- At most one helper sentence visible per screen. Explanations go behind `BasicTooltip` or
-  "Learn more".
-- Review screens: labels and numbers in key-value rows, not sentences.
+- Keep needed decision and safety context visible in `ink.text-secondary`; use as much concise
+  context as the task requires. Optional background can go behind `BasicTooltip` or "Learn more".
+  Never move required information into a tooltip to meet a sentence quota.
+- Keep label hierarchy clear. A body heading below a task title adds distinct information; it
+  does not repeat the task. Receive uses the asset identity below the single “Receive” header,
+  as established in the owner review on 26 Oct 2026 (`recipes.md#receive-asset-identity`).
+- Review facts use labels and values in key-value rows; keep required risk and decision context
+  visible alongside them.
 - After screenshotting, do a subtraction pass. Remove each element that doesn't change a
   decision, then count words again (`pnpm design:words <url>`).
 

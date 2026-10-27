@@ -16,6 +16,7 @@ export default defineProject({
     ...defaultVitestUnitTestingConfig.test,
     include: ['app/**/*.spec.{ts,tsx}', 'app/**/*.test.{ts,tsx}', 'workers/**/*.spec.ts'],
     environmentMatchGlobs: [
+      ['app/pages/playground/shared/recipes/**/*.spec.tsx', 'jsdom'],
       ['app/features/bitcoin-staking/**/*.spec.tsx', 'jsdom'],
       ['app/pages/multisig/account/components/propose-transaction-modal.spec.tsx', 'jsdom'],
     ],

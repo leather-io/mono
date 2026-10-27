@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import { useSearchParams } from 'react-router';
 
 import { Stack, styled } from 'leather-styles/jsx';
 
@@ -6,9 +7,9 @@ import {
   AddressDisplayer,
   Avatar,
   BtcAvatarIcon,
-  Button,
   CopyIcon,
   ItemLayout,
+  PlusIcon,
   Pressable,
   StxAvatarIcon,
 } from '@leather.io/ui';
@@ -50,11 +51,7 @@ function PopupPageDemo() {
     <PopupPage
       title="Addresses"
       onClose={noop}
-      footer={
-        <Button fullWidth onClick={noop}>
-          Add address
-        </Button>
-      }
+      actions={{ primary: { label: 'Add address', onClick: noop } }}
     >
       <AddressRow name="Alex" address={mock.recipient.address} onClick={noop} />
     </PopupPage>
@@ -99,25 +96,41 @@ function ListRowDemo({ frame }: DemoProps) {
 }
 
 function ReviewSheetDemo({ frame }: DemoProps) {
+  const [params] = useSearchParams();
+  const stress = params.get('stress') === 'long';
+  const pending = params.get('state') === 'pending';
   return (
     <ReviewSheet
       frame={frame}
       title="Review"
       onClose={noop}
       amount={{ amount: mock.send.amount, symbol: mock.send.symbol, fiat: mock.send.fiat }}
-      action={
-        <Button fullWidth onClick={noop}>
-          Send
-        </Button>
+      actions={{ primary: { label: 'Send', onClick: noop, pending } }}
+      callout={
+        stress
+          ? {
+              variant: 'error',
+              message:
+                'Unable to send to this destination. Check the address and network before trying again.',
+            }
+          : undefined
       }
     >
       <ReviewSection>
         <ReviewRow label="To" value={<AddressDisplayer address={mock.recipient.address} />} />
+        {stress ? (
+          <ReviewRow
+            label="Account"
+            value="Treasury account for operations, payments, and long-term reserves held for the next financial year"
+          />
+        ) : null}
       </ReviewSection>
       <ReviewDivider />
       <ReviewSection>
         <ReviewRow label="Fee" value={mock.send.fee} caption={mock.send.feeFiat} />
         <ReviewRow label="Total" value={mock.send.total} caption={mock.send.totalFiat} />
+        {stress ? <ReviewRow label="Available" value={mock.send.available} /> : null}
+        {stress ? <ReviewRow label="Arrival" value={mock.send.time} /> : null}
       </ReviewSection>
     </ReviewSheet>
   );
@@ -151,18 +164,39 @@ function SectionHeaderDemo({ frame }: DemoProps) {
 }
 
 function FooterActionsDemo({ frame }: DemoProps) {
+  const [params] = useSearchParams();
+  const stress = params.get('stress') === 'long';
+  const pending = params.get('state') === 'pending';
   return (
     <FramePage
       frame={frame}
       title="Address book"
       onClose={noop}
-      footer={
-        <Button fullWidth onClick={noop}>
-          Add address
-        </Button>
+      actions={{
+        mode: 'management',
+        primary: { label: stress ? 'Manage saved addresses' : 'Manage', onClick: noop, pending },
+        secondary: {
+          label: stress ? 'Add another saved address' : 'Add address',
+          onClick: noop,
+          iconStart: <PlusIcon />,
+        },
+      }}
+      notice={
+        stress
+          ? {
+              variant: 'error',
+              message: 'Unable to save this address. Check the address and try again.',
+            }
+          : undefined
       }
     >
-      <AddressRow name="Alex" address={mock.recipient.address} />
+      {stress ? (
+        mock.contacts.map(contact => (
+          <AddressRow key={contact.address} name={contact.name} address={contact.address} />
+        ))
+      ) : (
+        <AddressRow name="Alex" address={mock.recipient.address} />
+      )}
     </FramePage>
   );
 }
@@ -217,11 +251,7 @@ function ReceiveAssetIdentityDemo({ frame }: DemoProps) {
       frame={frame}
       title="Receive"
       onBack={noop}
-      footer={
-        <Button fullWidth iconStart={<CopyIcon />} onClick={noop}>
-          Copy address
-        </Button>
-      }
+      actions={{ primary: { label: 'Copy address', iconStart: <CopyIcon />, onClick: noop } }}
     >
       <ReceiveAddressBlock
         protocol="segwit"

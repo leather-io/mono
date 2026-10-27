@@ -4,8 +4,10 @@ This is the protocol for exploring a feature in the Playground, whether you're a
 developer. The template is `apps/web/app/pages/playground/shared/exploration/`;
 `areas/receive-example/` is a complete fixture-only worked example.
 
-The output is 2–3 variants that differ in concept, each built from the same
-[recipes](./recipes.md), shown next to the real flow they would replace.
+For a fixed feature brief, build one coherent feature with its required states, using the shared
+[recipes](./recipes.md), shown next to the real flow it would replace. Explore multiple variants
+only when there is a consequential workflow or UX trade-off to decide. Cosmetic spacing choices
+come from the recipes, rather than A/B screens.
 
 ## Frames
 
@@ -78,8 +80,9 @@ switcher while selected. Use it for approval screens.
 
 ## 2. Name the structure explicitly
 
-- Name the structural axes in one line each, for example "asset first or recipient first", or
-  "review as a sheet or as a page". Say which axis each variant takes.
+- When a consequential choice remains, name the structural axes in one line each, for example
+  "asset first or recipient first", or "review as a sheet or as a page". Say which axis each
+  variant takes. A fixed brief needs no invented alternative.
 - For every step today, say whether it's **kept**, **changed** or **cut**. In the config:
   - Each screen has a `job`.
   - A variant can override a job (`jobs`).
@@ -114,11 +117,19 @@ say so in the concept's open questions.
 - Every reference gets one line on what you took ("source → our version") and the screens it
   shaped. It goes in `references.byVariant` and shows under "Pulled from".
 
-## 5. Variants: 2–3, different in concept, same recipes
+## 5. One coherent feature; variants for consequential choices
 
-- Each variant is a different bet, not a different style.
+- A fixed brief produces one feature with the required loading, empty, error, pending and success
+  states where applicable. Use the existing variant folder/config structure for that one result.
+- Make two or more variants only to compare a consequential workflow or UX trade-off. State the
+  choice and its consequence. Do not create cosmetic variants to reach a count. The Receive
+  review on 26 Oct fixed address spacing in `ReceiveAddressBlock`; those gaps are recipe defaults,
+  not an A/B decision.
 - Compose screens from [recipes.md](./recipes.md) and `@leather.io/ui`, so the quality matches
-  across variants and only the concept differs.
+  across the feature and any meaningful alternatives. Use typed `actions` and `notice` on page
+  shells, `actions` and `callout` on the inline `ReviewSheet`, and the shared spacing recipes.
+  Use real `Sheet` for production modal behavior, with `PageActions` in its footer where it fits.
+  `customFooter` is a deliberate escape hatch, not the ordinary button composition.
 - Keep screen components in `variants/<x>/<x>-screens.tsx` and a variant's own pieces in
   `<x>-layout.tsx`. Pieces two or more variants share go in the area's `shared/` folder, with
   its own `DEVIATIONS.md`.
@@ -161,8 +172,10 @@ DEVIATIONS.md in every folder (each row is checked against the nearest one above
    popup-only). Approval screens also get `frame=request-window`.
 2. Critique it against [review-checklist.md](./review-checklist.md) steps 2–5, and the copy budget
    in the `leather-ui` skill.
-3. Count the words, then do a subtraction pass: remove anything that doesn't change a decision.
-   Count again and record before and after.
+3. Count the words, then remove repetition and optional background that does not change a
+   decision. Keep needed decision and safety context visible; disclosures are for optional
+   background. Preserve label hierarchy and don't repeat the task heading in the body. Count again
+   and record before and after; a sentence quota must not hide required information.
 4. Run `pnpm --filter @leather.io/web typecheck` and
    `npx eslint app/pages/playground/areas/<area>` from `apps/web` (aim for 0 warnings), then the
    promote report. A typecheck catches imports that don't exist on web (see
@@ -173,9 +186,11 @@ DEVIATIONS.md in every folder (each row is checked against the nearest one above
 
 If no recipe and no row in [i-need-to.md](./i-need-to.md) fits, don't ship a one-off.
 
-1. Build 2–3 options as screens in the Playground.
-2. List them in the variant's NOTES.md under "Needs design".
-3. Raise them with design (Fab, or `#design-system`).
+1. Describe the missing pattern and the workflow it must support in the variant's NOTES.md under
+   "Needs design".
+2. Build a focused proposal with its required states. Add alternatives only when they expose a
+   consequential workflow or UX trade-off.
+3. Raise the proposal and any consequential choices with design (Fab, or `#design-system`).
 
 The answer becomes a recipe or a component, and the variant then uses it.
 

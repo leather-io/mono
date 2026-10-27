@@ -17,7 +17,9 @@ import type { ReactNode } from 'react';
 
 import { Box, Flex, Stack } from 'leather-styles/jsx';
 
+import { PageActions, type PageFooterContentProps } from './page-actions';
 import { PageFooter, PageHeader, type PageHeaderProps, pageGutter } from './page-header';
+import { PageNotice, type PageNoticeProps } from './page-notice';
 import { defineRecipeMeta } from './recipe-meta';
 
 export const popupPageMeta = defineRecipeMeta({
@@ -38,19 +40,23 @@ export const popupPageMeta = defineRecipeMeta({
   ],
 });
 
-export interface PopupPageProps extends PageHeaderProps {
-  footer?: ReactNode;
+interface PopupPageContentProps extends PageHeaderProps {
+  notice?: PageNoticeProps;
   // Stays fixed under the header while the body scrolls.
   pinned?: ReactNode;
   children: ReactNode;
 }
+
+export type PopupPageProps = PopupPageContentProps & PageFooterContentProps;
 
 export function PopupPage({
   title,
   onBack,
   onClose,
   trailing,
-  footer,
+  actions,
+  customFooter,
+  notice,
   pinned,
   children,
 }: PopupPageProps) {
@@ -71,12 +77,19 @@ export function PopupPage({
         flex="1"
         minHeight={0}
         overflowY="auto"
+        css={{ '& > *': { flexShrink: 0 } }}
         data-gutter=""
         data-page-body=""
       >
+        {notice ? <PageNotice {...notice} /> : null}
         {children}
       </Stack>
-      {footer ? <PageFooter>{footer}</PageFooter> : null}
+      {actions ? (
+        <PageFooter>
+          <PageActions {...actions} />
+        </PageFooter>
+      ) : null}
+      {customFooter ? <PageFooter>{customFooter}</PageFooter> : null}
     </Flex>
   );
 }

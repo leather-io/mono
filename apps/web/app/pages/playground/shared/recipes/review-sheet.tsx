@@ -27,6 +27,9 @@ import { Caption, DashedHr, SheetHeader } from '@leather.io/ui';
 import type { FrameId } from '../exploration/frame';
 import { AmountDisplay, type AmountDisplayProps } from './amount-display';
 import { InfoLabel } from './inline-info';
+import { PageActions, type PageActionsProps } from './page-actions';
+import { PageFooter } from './page-header';
+import { PageNotice, type PageNoticeProps } from './page-notice';
 import { defineRecipeMeta } from './recipe-meta';
 
 export const reviewSheetMeta = defineRecipeMeta({
@@ -35,7 +38,7 @@ export const reviewSheetMeta = defineRecipeMeta({
     'apps/extension/src/app/pages/send/send-crypto-asset-form/form/send-form-confirmation.layout.tsx, components/info-card/info-card.tsx',
   useWhen: [
     'Confirming a task: the amount (AmountDisplay via `amount`), grouped facts, one solid action',
-    'The recipient: RecipientSummary in the first ReviewSection',
+    'The recipient: ReviewRow with an AddressDisplayer or the existing product identity component in the first ReviewSection',
     'ReviewSection per question the reader asks (recipient; amounts and fee); ReviewDivider between them',
     'ReviewRow nested for a breakdown under a value (fee parts, locked vs available)',
     'callout: a risk about this send, edge to edge under the headline',
@@ -63,23 +66,56 @@ interface ReviewRowProps {
 export function ReviewRow({ label, value, caption, info, nested = false }: ReviewRowProps) {
   if (nested)
     return (
-      <Flex justifyContent="space-between" alignItems="flex-start" gap="space.04" pl="space.03">
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
+      <Flex
+        justifyContent="space-between"
+        alignItems="flex-start"
+        gap="space.04"
+        pl="space.03"
+        minWidth={0}
+      >
+        <styled.span
+          textStyle="caption.01"
+          color="ink.text-subdued"
+          minWidth={0}
+          overflowWrap="anywhere"
+        >
           {label}
         </styled.span>
-        <styled.span textStyle="label.03" color="ink.text-secondary" textAlign="right">
+        <styled.span
+          textStyle="label.03"
+          color="ink.text-secondary"
+          textAlign="right"
+          minWidth={0}
+          overflowWrap="anywhere"
+        >
           {value}
         </styled.span>
       </Flex>
     );
   return (
-    <Flex justifyContent="space-between" alignItems="flex-start" gap="space.04">
+    <Flex
+      justifyContent="space-between"
+      alignItems="flex-start"
+      gap="space.04"
+      minWidth={0}
+      css={{ '& > *': { minWidth: 0, overflowWrap: 'anywhere' } }}
+    >
       <InfoLabel label={label} info={info} />
       <Stack gap="0" alignItems="flex-end" textAlign="right" minWidth={0}>
-        <styled.span textStyle="label.02" color="ink.text-primary">
+        <styled.span
+          textStyle="label.02"
+          color="ink.text-primary"
+          maxWidth="100%"
+          whiteSpace="normal"
+          overflowWrap="anywhere"
+        >
           {value}
         </styled.span>
-        {caption ? <Caption>{caption}</Caption> : null}
+        {caption ? (
+          <Caption maxWidth="100%" whiteSpace="normal" overflowWrap="anywhere">
+            {caption}
+          </Caption>
+        ) : null}
       </Stack>
     </Flex>
   );
@@ -98,7 +134,7 @@ export function ReviewDivider() {
 interface ReviewSheetProps {
   frame: FrameId;
   title: string;
-  action: ReactNode;
+  actions: PageActionsProps;
   children: ReactNode;
   // The amount the review is about, drawn with AmountDisplay so the amount →
   // fiat spacing matches the send form.
@@ -106,7 +142,7 @@ interface ReviewSheetProps {
   // Anything else that leads the review (an NFT, a contract). Prefer `amount`.
   headline?: ReactNode;
   // A Callout about this review. Drawn edge to edge under the headline.
-  callout?: ReactNode;
+  callout?: PageNoticeProps;
   onClose?(): void;
 }
 
@@ -115,7 +151,7 @@ interface ReviewSheetProps {
 export function ReviewSheet({
   frame,
   title,
-  action,
+  actions,
   children,
   amount,
   headline,
@@ -140,6 +176,8 @@ export function ReviewSheet({
         gap="0"
         width="100%"
         maxWidth="pageWidth"
+        maxHeight="100%"
+        minHeight={0}
         bg="ink.background-primary"
         borderWidth={1}
         borderStyle="solid"
@@ -148,17 +186,28 @@ export function ReviewSheet({
         borderBottomRadius={isPopup ? 'none' : 'lg'}
         overflow="hidden"
       >
-        <SheetHeader title={title} onClose={onClose} />
-        {amount || headline ? (
-          <Box px="space.05">{amount ? <AmountDisplay {...amount} /> : headline}</Box>
-        ) : null}
-        {callout ? <Box mb="space.05">{callout}</Box> : null}
-        <Stack gap="space.04" px="space.05" data-gutter="">
-          {children}
+        <Box flexShrink={0}>
+          <SheetHeader title={title} onClose={onClose} />
+        </Box>
+        <Stack
+          gap="space.04"
+          px="space.05"
+          minHeight={0}
+          overflowY="auto"
+          data-review-body=""
+          css={{ '& > *': { flexShrink: 0 } }}
+        >
+          {amount || headline ? (
+            <Box>{amount ? <AmountDisplay {...amount} /> : headline}</Box>
+          ) : null}
+          {callout ? <PageNotice {...callout} /> : null}
+          <Stack gap="space.04" data-gutter="">
+            {children}
+          </Stack>
         </Stack>
-        <Flex gap="space.04" p="space.05">
-          {action}
-        </Flex>
+        <PageFooter sticky={false}>
+          <PageActions {...actions} />
+        </PageFooter>
       </Stack>
     </Flex>
   );

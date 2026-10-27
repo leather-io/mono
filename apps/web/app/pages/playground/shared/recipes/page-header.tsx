@@ -26,20 +26,20 @@ export const pageGutter = 'space.05';
 const headerInset = 'space.04';
 
 export const footerActionsMeta = defineRecipeMeta({
-  name: 'Footer actions (PageFooter, the footer slot of PopupPage / TabPage)',
+  name: 'Footer actions (PageActions through PopupPage / TabPage actions)',
   mirrors:
     'apps/extension/src/app/features/dialogs/switch-account-sheet/switch-account-sheet.tsx (Add wallet + Manage), components/layout/card/components/button-row.tsx',
   useWhen: [
     'The screen-level actions: Continue, Send, Save, Add address, Done. They live in the footer, not as small row or header actions',
     'At most one solid Button per screen (pnpm design:words counts them). A management screen (address book, accounts) has no solid: "Add …" is outline with iconStart PlusIcon, next to "Manage" (as Add wallet does)',
-    'Two actions side by side, each flex 1, space.04 apart',
-    'A choice after a finished task ("Save to address book" / "Not this time"): PostActionPrompt',
+    'Typed primary and secondary actions: equal columns, readable labels, one solid action and shared pending disabling',
+    'A choice after a finished task belongs in PageActions only when the feature brief calls for it',
   ],
   dontUseWhen: [
     {
       situation:
         'Two competing primaries (Save and Done together, View details and Copy ID both solid)',
-      use: 'one solid that finishes the task; the other is outline or ghost, or a PostActionPrompt choice',
+      use: 'one primary descriptor that finishes the task and an optional secondary outline action',
     },
     { situation: 'A per-item action (copy, edit one contact)', use: 'list-row actions' },
   ],
@@ -106,26 +106,27 @@ interface PageFooterProps {
 }
 
 export function PageFooter({ children, sticky = true }: PageFooterProps) {
-  if (!sticky)
-    return (
-      <Flex gap="space.04" p={pageGutter} mt="auto" data-page-footer="">
-        {children}
-      </Flex>
-    );
   return (
-    <Flex
+    <Grid
+      gridAutoFlow="column"
+      gridAutoColumns="minmax(0, 1fr)"
       gap="space.04"
       p={pageGutter}
       mt="auto"
-      position="sticky"
-      bottom="0"
-      zIndex={1}
+      position={sticky ? 'sticky' : undefined}
+      bottom={sticky ? '0' : undefined}
+      zIndex={sticky ? 1 : undefined}
       flexShrink={0}
-      bg="ink.background-primary"
-      boxShadow="contentOverflowFade"
+      minWidth={0}
+      css={{
+        '& > *': { minWidth: 0, maxWidth: '100%', overflowWrap: 'anywhere', whiteSpace: 'normal' },
+        '& > button': { height: 'auto', minHeight: '48px' },
+      }}
+      bg={sticky ? 'ink.background-primary' : undefined}
+      boxShadow={sticky ? 'contentOverflowFade' : undefined}
       data-page-footer=""
     >
       {children}
-    </Flex>
+    </Grid>
   );
 }

@@ -1,11 +1,13 @@
 # I need to…
 
 Look up the job you're doing and use the component listed next to it. Every snippet below compiles
-against the current `@leather.io/ui` API. The **Seen in** paths point at real usages you can copy.
+against the current `@leather.io/ui` and local recipe APIs. The **Seen in** paths point at real usages you can copy.
 
 On web (extension and web app), import from `@leather.io/ui`. On native (mobile), import from
 `@leather.io/ui/native`. Layout primitives (`Box`, `Flex`, `Stack`, `styled`) come from
 `leather-styles/jsx` on web, and from `@leather.io/ui/native` on native.
+Recipes under `~/pages/playground/shared/recipes/` are local to the web Playground, not package
+exports; move them with a promoted composition when needed.
 
 If an intent is missing, or the answer is "it depends", that's a gap in the system. Raise it in
 `#design-system` instead of building something one-off.
@@ -31,7 +33,7 @@ If an intent is missing, or the answer is "it depends", that's a gap in the syst
 | [Explain a term or a fee](#explain-a-term-or-a-fee)                             | `BasicTooltip` (web), info sheet (native)                 |
 | [Put an icon next to text](#put-an-icon-next-to-text)                           | `InlineIcon` (web)                                        |
 | [Show which asset a screen is about](#show-which-asset-a-screen-is-about)       | Token avatar icons, `AddressQr` recipe                    |
-| [Place the screen's actions](#place-the-screens-actions)                        | The page footer (`PageFooter`)                            |
+| [Place the screen's actions](#place-the-screens-actions)                        | Typed `PageActions` in the page or `Sheet` footer         |
 | [Show a row in a list](#show-a-row-in-a-list)                                   | `ListItemBox` / `ItemLayout` (web), `Cell` (native)       |
 | [Open a focused task](#open-a-focused-task)                                     | `Sheet`                                                   |
 | [Ask someone to approve or sign](#ask-someone-to-approve-or-sign)               | `Approver`                                                |
@@ -64,19 +66,35 @@ toast.error('Transaction failed to broadcast');
 ## Confirm a risky action
 
 ```tsx
-import { Button, Sheet, SheetHeader } from '@leather.io/ui';
+import { PageActions } from '~/pages/playground/shared/recipes/page-actions';
 
-<Sheet header={<SheetHeader title="Remove wallet" />} isShowing={isShowing} onClose={onClose}>
+import { Sheet, SheetHeader } from '@leather.io/ui';
+
+<Sheet
+  title="Remove wallet"
+  description="Confirm wallet removal"
+  header={<SheetHeader title="Remove wallet" />}
+  isShowing={isShowing}
+  onClose={onClose}
+  footer={
+    <PageActions
+      secondary={{ label: 'Cancel', onClick: onClose }}
+      primary={{
+        label: 'Remove wallet',
+        intent: 'danger',
+        onClick: handleRemove,
+        pending: isRemoving,
+      }}
+    />
+  }
+>
   {/* body copy in ink.text-secondary: what happens, and that it cannot be undone */}
-  <Button variant="outline" onClick={onClose}>
-    Cancel
-  </Button>
-  <Button variant="solid" intent="danger" onClick={handleRemove}>
-    Remove wallet
-  </Button>
 </Sheet>;
 ```
 
+- `PageActions` is a web Playground recipe. Move it with a promoted composition, or use the
+  app's existing confirmation composition when it already fits. The real `Sheet` supplies modal
+  focus behavior; inline `ReviewSheet` is a visual demo only.
 - **Native:** `WarningSheetLayout` from `@/components/sheets/warning-sheet.layout`. Pass `sheetRef`,
   `title`, `description`, `onSubmit` and `variant="critical"`.
 - The confirm label repeats the verb ("Remove wallet"). Avoid "OK" and "Yes".
@@ -96,6 +114,8 @@ import { SkeletonLoader } from '@leather.io/ui';
 - Size the skeleton to match the content that replaces it, so nothing jumps when it loads.
 - For a button that is waiting on a result, use `<Button aria-busy={isSubmitting}>`. It shows a
   spinner and disables itself.
+- For typed `PageActions`, set `pending` on the descriptor. Either action pending disables
+  both, preventing a competing submission or cancel while the result is pending.
 - For a whole panel loading on web, use `LoadingSpinner`. Native has no spinner, so use skeletons.
 - **Seen in:** `apps/mobile/src/features/token/token.tsx:73` and
   `apps/extension/src/app/features/token/collectible-details-loading.tsx:16`.
@@ -138,6 +158,9 @@ import { Callout } from '@leather.io/ui';
   amount on the send review), or the full column above the list it concerns. Never an inset box
   between rows or fields: a mid-layout note is `HelperText` or a row caption. See
   `docs/design/cheatsheet.md#callout`.
+- In Playground page shells, use the typed `notice={{ variant, message }}` prop; in
+  `ReviewSheet`, use `callout={{ variant, message }}`. Their `PageNotice` cancels the shared
+  gutter for full width. Don't add an inset wrapper. See [Page notice](./recipes.md#page-notice).
 - **Native:** the API is the same, but layout props are ignored, so wrap it in a `Box` if you need spacing.
 - **Seen in:** `apps/extension/src/app/features/psbt-signer/components/psbt-descriptor-policy.tsx:157`.
 
@@ -208,6 +231,8 @@ import { Button } from '@leather.io/ui';
 ```
 
 - Use one `solid` (primary) per view, then `outline` for secondary and `ghost` for tertiary.
+  For page or sheet footer actions, prefer the [typed action recipe](#place-the-screens-actions)
+  so the composition owns hierarchy, spacing and pending behavior.
 - `intent="danger"` is only for destructive confirms. `intent="success"` exists on web only.
 - Sizes are `sm` (32px), `md` (36px) and `lg` (48px, the default). Icons go in `iconStart` and
   `iconEnd`, as a component (`iconEnd={CopyIcon}`) or an element (`iconEnd={<CopyIcon />}`); both
@@ -355,6 +380,8 @@ import { BasicTooltip, InfoCircleIcon, InlineIcon } from '@leather.io/ui';
 
 - `InlineIcon` is the span the tooltip needs (the icons don't forward a ref to `asChild`), and it
   keeps the icon on the label's line, at the label's size, no darker than the label.
+- Keep required decision and safety context visible, concise and in `ink.text-secondary`.
+  A tooltip or disclosure is for optional background, never a way to meet a sentence quota.
 - Keep a tooltip to one sentence. If the explanation needs a link or a paragraph, use `HoverCard`
   on web, or the web app's `InfoTooltipIcon`, which takes `title`, `explanation`, `learnMoreUrl`
   and `ariaLabel`.
@@ -416,31 +443,70 @@ import { BtcAvatarIcon } from '@leather.io/ui';
 
 ## Place the screen's actions
 
+Use `actions` on `FramePage`, `PopupPage` or `TabPage`. The typed recipe owns the button hierarchy,
+equal columns, `space.04` gap and wrapping; don't rebuild the footer per screen.
+
 ```tsx
-<Button variant="outline" flex={1} iconStart={<WalletPlusIcon />}>Add wallet</Button>
-<Button variant="outline" flex={1} onClick={onManage}>Manage</Button>
+import { FramePage } from '~/pages/playground/shared/recipes/tab-page';
+
+import { PlusIcon } from '@leather.io/ui';
+
+<FramePage
+  frame={frame}
+  title="Address book"
+  actions={{
+    mode: 'management',
+    secondary: { label: 'Add address', iconStart: PlusIcon, onClick: onAdd },
+    primary: { label: 'Manage', onClick: onManage },
+  }}
+>
+  {content}
+</FramePage>;
 ```
 
-- Screen-level actions (Continue, Save, Add, Done) sit in the footer, `space.04` apart, not as
-  small row or header actions.
-- One `solid` at most. Never two competing finishers (Save and Done side by side).
+- Default task mode has one solid `primary` and an optional outline `secondary`.
+  Management mode has outline actions only. Never pair competing finishers such as Save and Done.
+- Descriptors accept `label`, `onClick`, `disabled`, `pending` and `iconStart`; the primary also
+  accepts `intent: 'danger'`. If either action is pending, both are disabled.
+- For forms, a descriptor with `type: 'submit'` and `form: 'form-id'` uses the form's `onSubmit`,
+  native validation and Enter behavior. Command actions keep the default `type="button"` and
+  require `onClick`; a submit descriptor need not have a click callback.
+- `customFooter` is a deliberate escape hatch for a different composition, mutually exclusive
+  with `actions`. Ordinary actions use descriptors.
+- These are web Playground imports. Promote the shared recipe with the composition, or retain
+  the existing app footer when it better fits the production workflow.
 - **Seen in:** `apps/extension/src/app/features/dialogs/switch-account-sheet/switch-account-sheet.tsx:324`.
 
 ## Open a focused task
 
+Use the real `Sheet` for modal behavior, keyboard focus management and dismissal. Its footer can
+use the same `PageActions` directly, without another `PageFooter` wrapper:
+
 ```tsx
+import { PageActions } from '~/pages/playground/shared/recipes/page-actions';
+
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
 <Sheet
+  title="Edit fee"
+  description="Choose the transaction fee"
   isShowing={isShowing}
   onClose={onClose}
   header={<SheetHeader title="Edit fee" onClose={onClose} />}
-  footer={actions}
+  footer={
+    <PageActions
+      secondary={{ label: 'Cancel', onClick: onClose }}
+      primary={{ label: 'Save', onClick: onSave, disabled: !isValid, pending: isSaving }}
+    />
+  }
 >
   {content}
 </Sheet>;
 ```
 
+- `ReviewSheet` in the Playground draws inside a frame and keeps a bounded scrolling body with
+  reachable header and actions. It is a visual demo; it does not replace `Sheet`'s modal focus
+  behavior in product code.
 - **Native:** `const sheetRef = useRef<SheetInstance>(null)`, then `<Sheet ref={sheetRef}>`, then
   call `sheetRef.current?.present()` to open it and `dismiss()` to close it.
 

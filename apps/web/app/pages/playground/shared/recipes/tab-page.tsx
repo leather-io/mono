@@ -7,7 +7,9 @@
 import { Flex, Stack } from 'leather-styles/jsx';
 
 import type { FrameId } from '../exploration/frame';
+import { PageActions } from './page-actions';
 import { PageFooter, PageHeader, pageGutter } from './page-header';
+import { PageNotice } from './page-notice';
 import { PopupPage, type PopupPageProps } from './popup-page';
 
 type TabPageProps = PopupPageProps;
@@ -17,7 +19,9 @@ export function TabPage({
   onBack,
   onClose,
   trailing,
-  footer,
+  actions,
+  customFooter,
+  notice,
   pinned,
   children,
 }: TabPageProps) {
@@ -36,17 +40,23 @@ export function TabPage({
     >
       <PageHeader title={title} onBack={onBack} onClose={onClose} trailing={trailing} />
       <Stack gap="space.05" px={pageGutter} pb="space.05" data-gutter="" data-page-body="">
+        {notice ? <PageNotice {...notice} /> : null}
         {pinned}
         {children}
       </Stack>
-      {footer ? <PageFooter sticky={false}>{footer}</PageFooter> : null}
+      {actions ? (
+        <PageFooter sticky={false}>
+          <PageActions {...actions} />
+        </PageFooter>
+      ) : null}
+      {customFooter ? <PageFooter sticky={false}>{customFooter}</PageFooter> : null}
     </Flex>
   );
 }
 
-interface FramePageProps extends TabPageProps {
+type FramePageProps = TabPageProps & {
   frame: FrameId;
-}
+};
 
 export function FramePage({ frame, ...props }: FramePageProps) {
   return frame === 'popup' ? <PopupPage {...props} /> : <TabPage {...props} />;

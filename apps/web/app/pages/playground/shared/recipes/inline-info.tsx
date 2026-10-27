@@ -20,14 +20,14 @@ export const inlineInfoMeta = defineRecipeMeta({
   name: 'Inline info (InfoLabel, HelperText)',
   mirrors: 'apps/extension/src/app/pages/home/components/account-card.tsx (Total balance ⓘ)',
   useWhen: [
-    'InfoLabel: a label whose meaning or fee needs one sentence; the sentence is the tooltip',
-    'HelperText: the one helper sentence a screen may show (wraps with text-wrap: pretty)',
+    'InfoLabel: optional background explanation behind a label; decision-critical facts remain visible',
+    'HelperText: concise context needed for the current decision; prioritize useful information rather than a sentence quota',
     'Any icon next to words (info, lock, user, chevron): InlineIcon inside the text, same ink or lighter',
   ],
   dontUseWhen: [
     {
       situation: 'A problem the user has to act on',
-      use: 'Callout, edge to edge at the top of its region',
+      use: 'the shell notice descriptor, or PageNotice inside a padded product region',
     },
     {
       situation: 'A note between rows or fields',

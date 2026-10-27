@@ -5,13 +5,13 @@ import { Stack, styled } from 'leather-styles/jsx';
 
 import {
   BtcAvatarIcon,
-  Button,
   Caption,
   CheckmarkIcon,
   CopyIcon,
   ItemLayout,
   Pressable,
   StxAvatarIcon,
+  useClipboard,
 } from '@leather.io/ui';
 
 import type { ScreenProps } from '../../shared/exploration/exploration-config';
@@ -129,15 +129,15 @@ interface DetailScreenProps extends ScreenProps {
 
 function DetailScreen({ frame, protocol, copied = false }: DetailScreenProps) {
   const { params, go } = useReceiveNavigation();
-  const [copyError, setCopyError] = useState(false);
+  const [isCopying, setIsCopying] = useState(false);
   const entry = protocols[protocol];
+  const { onCopy, hasCopyFailed } = useClipboard(entry.address);
   async function copyAddress() {
+    setIsCopying(true);
     try {
-      await navigator.clipboard.writeText(entry.address);
-      setCopyError(false);
-      go('copied', protocol);
-    } catch {
-      setCopyError(true);
+      if (await onCopy()) go('copied', protocol);
+    } finally {
+      setIsCopying(false);
     }
   }
   return (
@@ -146,14 +146,16 @@ function DetailScreen({ frame, protocol, copied = false }: DetailScreenProps) {
       title="Receive"
       onBack={() => go('choose')}
       onClose={() => go('closed')}
-      footer={
-        <Button
-          fullWidth
-          iconStart={copied ? <CheckmarkIcon /> : <CopyIcon />}
-          onClick={() => void copyAddress()}
-        >
-          {copied ? 'Copied' : 'Copy address'}
-        </Button>
+      actions={{
+        primary: {
+          label: copied ? 'Copied' : 'Copy address',
+          iconStart: copied ? <CheckmarkIcon /> : <CopyIcon />,
+          onClick: () => void copyAddress(),
+          pending: isCopying,
+        },
+      }}
+      notice={
+        hasCopyFailed ? { variant: 'error', message: 'Unable to copy. Try again.' } : undefined
       }
     >
       <ReceiveAddressBlock
@@ -168,7 +170,6 @@ function DetailScreen({ frame, protocol, copied = false }: DetailScreenProps) {
                 Copied
               </styled.span>
             ) : null}
-            {copyError ? <HelperText centered>Unable to copy. Try again.</HelperText> : null}
           </>
         }
       />
@@ -199,11 +200,7 @@ export function ClosedScreen({ frame }: ScreenProps) {
     <FramePage
       frame={frame}
       title="Account"
-      footer={
-        <Button fullWidth onClick={() => go('choose')}>
-          Receive
-        </Button>
-      }
+      actions={{ primary: { label: 'Receive', onClick: () => go('choose') } }}
     >
       <styled.p textStyle="label.01" color="ink.text-primary">
         {accountName(params.get('stress') === 'long')}
