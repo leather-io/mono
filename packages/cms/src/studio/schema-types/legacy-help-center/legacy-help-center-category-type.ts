@@ -62,7 +62,7 @@ export const legacyHelpCenterPage = defineType({
     select: {
       categories: 'categories',
     },
-    prepare(selection) {
+    prepare(selection: { categories: unknown[] | undefined }) {
       const { categories } = selection;
       return {
         title: `${categories ? categories.length : 0} Category Help Center Page`,

@@ -1,5 +1,5 @@
 import { StacksQueryPrefixes } from '../../query-prefixes';
-import { StacksClient } from '../stacks-client';
+import { type StacksClient } from '../stacks-client';
 
 export function createGetStacksNetworkBlockTimeQueryOptions(client: StacksClient) {
   return {
