@@ -6,9 +6,7 @@
     "@babel/runtime",
     "@testing-library/jest-dom",
     "@testing-library/react",
-    "chalk",
     "dotenv",
-    "lint-staged",
     "@sanity/eslint-config-studio",
     "@leather.io/rpc",
     "conventional-changelog-conventionalcommits",
@@ -30,7 +28,6 @@
     "*/**/tsdown.config*.ts",
     "*/**/panda.config.ts",
     "*/**/postcss.config.cjs",
-    ".husky/**",
     ".agents/**",
     ".claude/**",
     "apps/extension/src/app/store/active/active.actions.ts",
@@ -134,7 +131,7 @@
       "ignoreDependencies": ["@types/dompurify"]
     },
     "packages/ui": {
-      "entry": ["src/index.ts!", "src/native.ts!", "src/exports.web.ts!"],
+      "entry": ["src/index.ts!", "src/native.ts!", "src/exports.web.ts!", "src/svg.native.d.ts!"],
       "metro": false,
       "ignoreDependencies": [
         "@expo/vector-icons",

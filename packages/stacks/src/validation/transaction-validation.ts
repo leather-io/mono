@@ -1,4 +1,4 @@
-import { ChainId, Money } from '@leather.io/models';
+import { type ChainId, type Money } from '@leather.io/models';
 
 import {
   isValidAddressChain,

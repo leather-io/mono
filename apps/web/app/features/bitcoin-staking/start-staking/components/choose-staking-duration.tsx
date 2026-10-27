@@ -97,7 +97,7 @@ export function ChooseStakingDuration({ estimatedUnlockDate }: ChooseStakingDura
           <styled.span textStyle="caption.01" fontWeight={500}>
             {chooseDuration.exitTitle}
           </styled.span>
-          <styled.span textStyle="caption.01" color="ink.text-subdued">
+          <styled.span textStyle="caption.01" color="ink.text-secondary">
             {chooseDuration.exitDescription}
           </styled.span>
         </Stack>

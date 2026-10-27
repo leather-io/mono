@@ -7,7 +7,6 @@ import {
   baseCurrencyAmountInQuote,
   createBaseCryptoAssetBalance,
   createMoney,
-  hasStacksAddress,
 } from '@leather.io/utils';
 
 import { Sip10AssetService } from '../assets/sip10-asset.service';
@@ -131,7 +130,7 @@ export class Sip10BalancesService {
     request: AccountRequest,
     signal?: AbortSignal
   ): Promise<Sip10AddressBalance> {
-    if (!hasStacksAddress(request.account)) {
+    if (!request.account.stacks) {
       return {
         quote: createBaseCryptoAssetBalance(
           createMoney(0, this.settingsService.getSettings().quoteCurrency)

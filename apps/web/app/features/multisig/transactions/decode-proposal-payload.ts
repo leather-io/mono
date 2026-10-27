@@ -1,4 +1,4 @@
-import { getPsbtDetails, psbtBase64ToHex } from '@leather.io/bitcoin';
+import { createBitcoinAddress, getPsbtDetails, psbtBase64ToHex } from '@leather.io/bitcoin';
 import type { AuthNetworkId, Money, Sip10Asset } from '@leather.io/models';
 import { decodeStxTransactionPayload } from '@leather.io/stacks';
 import { assertUnreachable, createMoney } from '@leather.io/utils';
@@ -44,7 +44,7 @@ export function decodeProposalPayload(
       const networkMode = resolveBtcNetworkMode(context.network);
       const { psbtOutputs, fee } = getPsbtDetails({
         psbtHex: psbtBase64ToHex(rawPayload),
-        psbtAddresses: [context.multisigAddress],
+        psbtAddresses: [createBitcoinAddress(context.multisigAddress)],
         networkMode,
       });
       const recipientOutput = psbtOutputs.find(

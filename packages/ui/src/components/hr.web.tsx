@@ -1,5 +1,5 @@
 import { styled } from 'leather-styles/jsx';
-import { HTMLStyledProps } from 'leather-styles/types';
+import { type HTMLStyledProps } from 'leather-styles/types';
 
 export type HrProps = HTMLStyledProps<'hr'>;
 

@@ -32,11 +32,6 @@
       "count": 1
     }
   },
-  "app/components/confirmations/confirmation-steps.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "app/components/connect-card/connect-card.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -406,17 +401,11 @@
   "app/features/bitcoin-staking/start-staking/components/staking-confirmation-steps.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 2
     }
   },
   "app/features/bitcoin-staking/start-staking/start-staking.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 4
-    },
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 1
+      "count": 3
     }
   },
   "app/features/bitcoin-staking/start-staking/utils/staking-form-schema.spec.ts": {
@@ -503,9 +492,6 @@
   "app/features/bitcoin-staking/update-staking/update-staking.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 5
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
     },
     "no-restricted-syntax": {
       "count": 7
@@ -940,22 +926,6 @@
       "count": 1
     }
   },
-  "app/pages/playground/areas/staking-states/staking-mock-data.ts": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 9
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    }
-  },
-  "app/pages/playground/areas/staking-states/staking-surface.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    }
-  },
   "app/pages/portfolio/components/portfolio-chart.spec.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
@@ -1264,9 +1234,6 @@
   "app/store/addresses.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    },
-    "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 1
     }
   },
   "app/store/quote-currency.ts": {
