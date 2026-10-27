@@ -1,7 +1,7 @@
 // The two rails' shared chrome: a sticky full-height column that collapses to
 // a thin strip, its collapse button, and the small controls the left rail is
 // made of (list buttons, segmented choices, switches, key hints). Canvas-only.
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 import { Box, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
 
@@ -19,17 +19,33 @@ export const plainPressable = {
 export function useRailOpen(key: string) {
   const storageKey = `leather.exploration.${key}-rail`;
   // The canvas renders client-only (WhenClient), so storage is readable here.
-  const [open, setOpen] = useState(() => {
+  const [narrow, setNarrow] = useState(() => window.innerWidth < 1024);
+  const [choices, setChoices] = useState(() => {
     try {
-      return window.localStorage.getItem(storageKey) !== 'closed';
+      return {
+        wide: window.localStorage.getItem(storageKey) !== 'closed',
+        narrow: window.localStorage.getItem(`${storageKey}.narrow`) === 'open',
+      };
     } catch {
-      return true;
+      return { wide: true, narrow: false };
     }
   });
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 1023px)');
+    function resize(event: MediaQueryListEvent) {
+      setNarrow(event.matches);
+    }
+    media.addEventListener('change', resize);
+    return () => media.removeEventListener('change', resize);
+  }, []);
+  const open = narrow ? choices.narrow : choices.wide;
   function set(next: boolean) {
-    setOpen(next);
+    setChoices(previous => ({ ...previous, [narrow ? 'narrow' : 'wide']: next }));
     try {
-      window.localStorage.setItem(storageKey, next ? 'open' : 'closed');
+      window.localStorage.setItem(
+        narrow ? `${storageKey}.narrow` : storageKey,
+        next ? 'open' : 'closed'
+      );
     } catch {
       // Storage unavailable: the choice lasts until reload.
     }

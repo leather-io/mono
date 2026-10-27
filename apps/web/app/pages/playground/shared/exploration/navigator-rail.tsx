@@ -48,8 +48,12 @@ export function isToday<V extends string, S extends string>(
   config: ExplorationConfig<V, S>,
   params: ExplorationParams<V, S>
 ) {
-  if (params.overview) return false;
+  if (params.overview || !hasToday(config)) return false;
   return params.actual || params.variant === recreatedToday(config);
+}
+
+export function hasToday<V extends string, S extends string>(config: ExplorationConfig<V, S>) {
+  return Boolean(recreatedToday(config)) || todaySteps(config.today).length > 0;
 }
 
 interface NavigatorRailProps<V extends string, S extends string> {
@@ -129,13 +133,15 @@ export function NavigatorRail<V extends string, S extends string>({
             onChange={theme => onChange({ theme })}
           />
           <Stack gap="0" pt="space.01">
-            <Toggle
-              label="Compare with today"
-              checked={params.compare && !params.actual && !overview}
-              disabled={params.actual || overview}
-              shortcut="c"
-              onChange={compare => onChange({ compare })}
-            />
+            {hasToday(config) ? (
+              <Toggle
+                label="Compare with today"
+                checked={params.compare && !params.actual && !overview}
+                disabled={params.actual || overview}
+                shortcut="c"
+                onChange={compare => onChange({ compare })}
+              />
+            ) : null}
             <Toggle
               label="Show hotspots"
               checked={showHotspots && !params.actual && !params.sheet && !overview}
@@ -149,22 +155,24 @@ export function NavigatorRail<V extends string, S extends string>({
       }
     >
       <Stack gap="space.05" pb="space.05">
-        <Stack gap="0">
-          <RailHeading>Today</RailHeading>
-          <Stack gap="1px" px="space.02">
-            <RailItem
-              data-item="today"
-              selected={today}
-              onSelect={onSelectToday}
-              title={recreatedToday(config) ? 'Recreated flow' : 'Screenshots'}
-              hint={
-                recreatedToday(config)
-                  ? 'The shipped flow, recreated and checked against the captures'
-                  : 'The shipped extension, captured'
-              }
-            />
+        {hasToday(config) ? (
+          <Stack gap="0">
+            <RailHeading>Today</RailHeading>
+            <Stack gap="1px" px="space.02">
+              <RailItem
+                data-item="today"
+                selected={today}
+                onSelect={onSelectToday}
+                title={recreatedToday(config) ? 'Recreated flow' : 'Screenshots'}
+                hint={
+                  recreatedToday(config)
+                    ? 'The shipped flow, recreated and checked against the captures'
+                    : 'The shipped extension, captured'
+                }
+              />
+            </Stack>
           </Stack>
-        </Stack>
+        ) : null}
         <Stack gap="0">
           <RailHeading>Variants</RailHeading>
           <Stack gap="1px" px="space.02">

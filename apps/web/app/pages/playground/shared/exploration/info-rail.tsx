@@ -9,7 +9,7 @@ import { Assumptions } from './assumptions';
 import { ConceptDetails, HowWeGotHere } from './concept-panel';
 import { type ExplorationConfig, conceptIds } from './exploration-config';
 import { Inspiration, type InspirationItem } from './inspiration';
-import { isToday } from './navigator-rail';
+import { hasToday, isToday } from './navigator-rail';
 import { Rail } from './rail';
 import { ColumnLabel, RailDisclosure } from './section';
 import type { ExplorationParams } from './use-exploration-params';
@@ -72,8 +72,12 @@ function description<V extends string, S extends string>(
   params: ExplorationParams<V, S>,
   today: boolean
 ) {
-  if (params.overview)
-    return `Every contact sheet, today first, then ${conceptIds(config).length} concepts. Click a heading to open a concept, or a frame to open that screen.`;
+  if (params.overview) {
+    const count = conceptIds(config).length;
+    const concepts = `${count} ${count === 1 ? 'concept' : 'concepts'}`;
+    const contents = hasToday(config) ? `Today’s flow, then ${concepts}` : concepts;
+    return `${contents}. Click a heading to open a concept, or a frame to open that screen.`;
+  }
   if (today && params.actual)
     return 'Real screenshots of the shipped flow: the reference every concept is judged against.';
   return config.variants[params.variant].module.meta.summary;

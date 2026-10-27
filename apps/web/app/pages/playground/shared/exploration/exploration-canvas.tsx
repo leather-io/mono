@@ -37,7 +37,14 @@ import {
 import { DeviceFrame, frameIds, frameLayout, frameSizeIds, frameSizes, themeIds } from './frame';
 import { InfoRail } from './info-rail';
 import { LightboxProvider } from './lightbox';
-import { NavigatorRail, type ViewId, currentStep, currentView, isToday } from './navigator-rail';
+import {
+  NavigatorRail,
+  type ViewId,
+  currentStep,
+  currentView,
+  hasToday,
+  isToday,
+} from './navigator-rail';
 import { Kbd, plainPressable, useRailOpen } from './rail';
 import { ScaleToFit } from './scale-to-fit';
 import { CanvasBoundary, ScreenBoundary } from './screen-boundary';
@@ -312,7 +319,7 @@ function SingleScreen<V extends string, S extends string>({
               />
             </ClickThrough>
           </Stack>
-          {params.compare ? (
+          {params.compare && hasToday(config) ? (
             <TodayRail
               today={config.today}
               job={screenJob(config, params.variant, params.screen)}
@@ -552,7 +559,7 @@ function ContactSheet<V extends string, S extends string>({
   return (
     <Stack gap="space.07" p="space.05">
       <SheetGrid items={conceptItems(config, params, params.variant, onOpenScreen)} />
-      {params.compare ? (
+      {params.compare && hasToday(config) ? (
         <Stack
           gap="space.04"
           borderTopWidth={1}
@@ -589,27 +596,29 @@ function Overview<V extends string, S extends string>({
   const recreated = recreatedToday(config);
   return (
     <Stack gap="space.07" p="space.05">
-      <Stack as="section" gap="space.04" data-overview="today">
-        <SheetHeading
-          title="Today"
-          meta={recreated ? 'Recreated flow' : 'Screenshots'}
-          onOpen={onOpenToday}
-        />
-        {recreated ? (
-          <SheetGrid dense items={conceptItems(config, params, recreated, onOpenScreen)} />
-        ) : (
-          <TodaySheet config={config} params={params} dense onOpen={onOpenStep} />
-        )}
-      </Stack>
-      {conceptIds(config).map(variant => (
+      {hasToday(config) ? (
+        <Stack as="section" gap="space.04" data-overview="today">
+          <SheetHeading
+            title="Today"
+            meta={recreated ? 'Recreated flow' : 'Screenshots'}
+            onOpen={onOpenToday}
+          />
+          {recreated ? (
+            <SheetGrid dense items={conceptItems(config, params, recreated, onOpenScreen)} />
+          ) : (
+            <TodaySheet config={config} params={params} dense onOpen={onOpenStep} />
+          )}
+        </Stack>
+      ) : null}
+      {conceptIds(config).map((variant, index) => (
         <Stack
           as="section"
           key={variant}
           gap="space.04"
-          borderTopWidth={1}
+          borderTopWidth={hasToday(config) || index > 0 ? 1 : 0}
           borderTopStyle="solid"
           borderColor="ink.border-default"
-          pt="space.06"
+          pt={hasToday(config) || index > 0 ? 'space.06' : '0'}
           data-overview={variant}
         >
           <SheetHeading
@@ -735,6 +744,10 @@ export function ExplorationCanvas<V extends string, S extends string>({
 
   // An old link to the left-out baseline lands on Today's screenshots.
   useEffect(() => {
+    if (!hasToday(config) && params.actual) {
+      update({ overview: true, actual: false, compare: false });
+      return;
+    }
     if (!params.overview && !params.actual && params.variant === hidden)
       update({ actual: true, variant: concepts[0] });
   });
@@ -786,7 +799,7 @@ export function ExplorationCanvas<V extends string, S extends string>({
 
   // [ and ]: Today, then each concept.
   function moveVariant(delta: number) {
-    const entries: (V | 'today')[] = ['today', ...concepts];
+    const entries: (V | 'today')[] = hasToday(config) ? ['today', ...concepts] : concepts;
     const current = today ? 'today' : params.variant;
     const next = params.overview ? entries[0] : cycle(entries, current, delta);
     if (next === 'today') selectToday();
@@ -813,7 +826,7 @@ export function ExplorationCanvas<V extends string, S extends string>({
     else if (key === '[') moveVariant(-1);
     else if (key === 'o') selectView('overview');
     else if (key === 's') selectView(view === 'single' ? 'sheet' : 'single');
-    else if (key === 'c' && !params.actual && !params.overview)
+    else if (key === 'c' && hasToday(config) && !params.actual && !params.overview)
       update({ compare: !params.compare });
     else if (key === 'd') update({ theme: cycle(themeIds, params.theme, 1) });
     else if (key === 'f' && view === 'single')
