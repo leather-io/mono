@@ -26,11 +26,18 @@ const decisiveReviewStates = new Set(['APPROVED', 'CHANGES_REQUESTED', 'DISMISSE
 
 const sensitivePathPatterns = [
   /^packages\/(?:bitcoin|crypto|stacks|rpc|provider|sdk)\//,
-  /^apps\/extension\/src\/(?:background|content-scripts|inpage)\//,
-  /(?:^|\/)[^/]*(?:keychain|signing|secret-key|mnemonic)[^/]*\//,
+  /^apps\/extension\/src\/(?:background|content-scripts|inpage|shared\/crypto)\//,
+  /^apps\/extension\/src\/app\/store\/(?:in-memory-key|software-keys)\//,
+  /^apps\/extension\/src\/app\/pages\/rpc-[^/]+\//,
+  /^apps\/extension\/(?:manifest\.config|vite\.config|inpage|content-script)\.ts$/,
+  /^apps\/extension\/tooling\//,
+  /^apps\/mobile\/src\/store\/secure-store\//,
+  /(?:^|\/)[^/]*(?:keychain|signing|signer|secret-key|mnemonic)[^/]*(?:\/|$)/i,
   /^\.github\//,
+  /^\.claude\//,
+  /^\.mcp\.json$/,
+  /(?:^|\/)CLAUDE\.md$/,
   /^pnpm-(?:lock|workspace)\.yaml$/,
-  /(?:^|\/)manifest\.(?:json|ts)$/,
 ];
 
 const tierSchema = {
@@ -95,10 +102,16 @@ export function formatClaudeArgs(args) {
   return args.map(quoteArg).join(' ');
 }
 
+function isSensitivePath(path) {
+  return sensitivePathPatterns.some(pattern => pattern.test(path));
+}
+
 export function findSensitiveFiles(files) {
-  return files
-    .map(file => file.filename)
-    .filter(filename => sensitivePathPatterns.some(pattern => pattern.test(filename)));
+  return files.flatMap(file =>
+    [file.previous_filename, file.filename].filter(
+      path => typeof path === 'string' && isSensitivePath(path)
+    )
+  );
 }
 
 function findHiddenDiffs(files) {
@@ -119,6 +132,7 @@ export function buildPrompt(pullRequest, files) {
     description: pullRequest.body ?? '',
     files: files.map(file => ({
       path: file.filename,
+      previousPath: file.previous_filename,
       status: file.status,
       additions: file.additions,
       deletions: file.deletions,

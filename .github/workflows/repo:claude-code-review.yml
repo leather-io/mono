@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read # checks out the base commit for the review script
+      contents: read
       pull-requests: read # reads the pull request, its files and its review threads
     outputs:
       reviewable: ${{ steps.prepare.outputs.reviewable }}
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: read # checks out the pull request head for Claude to read
+      contents: read
       pull-requests: read # lets claude-code-action read the pull request
     strategy:
       fail-fast: false
@@ -110,7 +110,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read # checks out the base commit for the review script
+      contents: read
     outputs:
       has-work: ${{ steps.collect.outputs.has-work }}
     steps:
@@ -153,7 +153,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: read # checks out the pull request head for Claude to read
+      contents: read
       pull-requests: read # lets claude-code-action read the pull request
     outputs:
       verdicts: ${{ steps.claude.outputs.structured_output }}
@@ -192,7 +192,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read # checks out the base commit for the review script
+      contents: read
       pull-requests: write # posts review threads and resolves fixed ones
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
