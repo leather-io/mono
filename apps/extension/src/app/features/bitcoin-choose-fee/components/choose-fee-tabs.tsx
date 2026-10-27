@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Box, Stack, type StackProps } from 'leather-styles/jsx';
 
 import { Tabs } from '@leather.io/ui';
@@ -29,10 +30,13 @@ export function ChooseFeeTabs(props: ChooseFeeTabsProps) {
         onValueChange={tab => analytics.page('view', 'custom-fee-tab-' + tab)}
       >
         <Tabs.List>
-          <Tabs.Trigger value={CustomFeeTabs.Recommended} data-testid="tab-recommended">
+          <Tabs.Trigger
+            value={CustomFeeTabs.Recommended}
+            data-testid={SharedComponentsSelectors.FeeTabRecommended}
+          >
             Recommended
           </Tabs.Trigger>
-          <Tabs.Trigger value="custom" data-testid="tab-custom">
+          <Tabs.Trigger value="custom" data-testid={SharedComponentsSelectors.FeeTabCustom}>
             Custom
           </Tabs.Trigger>
         </Tabs.List>

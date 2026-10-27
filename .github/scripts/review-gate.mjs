@@ -1,6 +1,7 @@
-import { writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { buildClaudeArgs, claudeModel, runClaude } from './claude.mjs';
 import {
   createGitHubRequest,
   neutraliseMentions,
@@ -10,7 +11,6 @@ import {
   writeSummary,
 } from './github.mjs';
 
-export const claudeModel = 'claude-opus-5-5';
 export const decisionContext = 'review-gate/decision';
 export const gateContext = 'review-gate';
 const trustedStatusCreator = 'github-actions[bot]';
@@ -26,11 +26,18 @@ const decisiveReviewStates = new Set(['APPROVED', 'CHANGES_REQUESTED', 'DISMISSE
 
 const sensitivePathPatterns = [
   /^packages\/(?:bitcoin|crypto|stacks|rpc|provider|sdk)\//,
-  /^apps\/extension\/src\/(?:background|content-scripts|inpage)\//,
-  /(?:^|\/)[^/]*(?:keychain|signing|secret-key|mnemonic)[^/]*\//,
+  /^apps\/extension\/src\/(?:background|content-scripts|inpage|shared\/crypto)\//,
+  /^apps\/extension\/src\/app\/store\/(?:in-memory-key|software-keys)\//,
+  /^apps\/extension\/src\/app\/pages\/rpc-[^/]+\//,
+  /^apps\/extension\/(?:manifest\.config|vite\.config|inpage|content-script)\.ts$/,
+  /^apps\/extension\/tooling\//,
+  /^apps\/mobile\/src\/store\/secure-store\//,
+  /(?:^|\/)[^/]*(?:keychain|signing|signer|secret-key|mnemonic)[^/]*(?:\/|$)/i,
   /^\.github\//,
+  /^\.claude\//,
+  /^\.mcp\.json$/,
+  /(?:^|\/)CLAUDE\.md$/,
   /^pnpm-(?:lock|workspace)\.yaml$/,
-  /(?:^|\/)manifest\.(?:json|ts)$/,
 ];
 
 const tierSchema = {
@@ -69,41 +76,45 @@ In reason, name the specific files or behaviour that decided it, in one or two s
 
 In summary, state the deciding point in at most 100 characters. It is shown on the pull request next to the decision.`;
 
-export function buildClaudeArgs(systemPromptPath) {
-  return [
-    '--model',
-    claudeModel,
-    '--effort',
-    'high',
-    '--tools',
-    '',
-    '--setting-sources',
-    '',
-    '--strict-mcp-config',
-    '--system-prompt-file',
-    systemPromptPath,
-    '--json-schema',
-    JSON.stringify(tierSchema),
-  ];
+const systemPromptFile = 'review-gate-system-prompt.md';
+const promptFile = 'review-gate-prompt.md';
+
+export function buildClassifierArgs(systemPromptPath) {
+  return buildClaudeArgs({ systemPromptPath, schema: tierSchema });
 }
 
-function quoteArg(arg) {
-  return /^[\w./:-]+$/.test(arg) ? arg : `'${arg.replaceAll("'", "'\\''")}'`;
-}
-
-export function formatClaudeArgs(args) {
-  return args.map(quoteArg).join(' ');
+function isSensitivePath(path) {
+  return sensitivePathPatterns.some(pattern => pattern.test(path));
 }
 
 export function findSensitiveFiles(files) {
-  return files
-    .map(file => file.filename)
-    .filter(filename => sensitivePathPatterns.some(pattern => pattern.test(filename)));
+  return files.flatMap(file =>
+    [file.previous_filename, file.filename].filter(
+      path => typeof path === 'string' && isSensitivePath(path)
+    )
+  );
 }
 
-function findHiddenDiffs(files) {
+const assetExtensionPattern =
+  /\.(?:png|jpe?g|gif|webp|avif|ico|bmp|woff2?|ttf|otf|eot|mp4|webm|mov|mp3|wav|pdf)$/i;
+
+export function needsBaseBlob(file) {
+  return (
+    file.patch === undefined &&
+    file.status === 'renamed' &&
+    file.additions + file.deletions === 0 &&
+    !assetExtensionPattern.test(file.filename)
+  );
+}
+
+export function findHiddenDiffs(files, baseBlobs = new Map()) {
   return files
-    .filter(file => file.patch === undefined && file.additions + file.deletions > 0)
+    .filter(file => {
+      if (file.patch !== undefined || file.status === 'removed') return false;
+      if (file.additions + file.deletions > 0) return true;
+      if (needsBaseBlob(file)) return baseBlobs.get(file.previous_filename) !== file.sha;
+      return !assetExtensionPattern.test(file.filename);
+    })
     .map(file => file.filename);
 }
 
@@ -119,6 +130,7 @@ export function buildPrompt(pullRequest, files) {
     description: pullRequest.body ?? '',
     files: files.map(file => ({
       path: file.filename,
+      previousPath: file.previous_filename,
       status: file.status,
       additions: file.additions,
       deletions: file.deletions,
@@ -128,7 +140,7 @@ export function buildPrompt(pullRequest, files) {
   return `Classify this pull request. It is given as JSON.\n\n${JSON.stringify(payload, null, 2)}`;
 }
 
-export function decideByRules(pullRequest, files) {
+export function decideByRules(pullRequest, files, baseBlobs) {
   const sensitiveFiles = findSensitiveFiles(files);
   if (sensitiveFiles.length > 0) {
     return {
@@ -146,7 +158,7 @@ export function decideByRules(pullRequest, files) {
       summary: `Changes ${files.length} files, more than the ${maxChangedFiles} the classifier reads.`,
     };
   }
-  const hiddenDiffs = findHiddenDiffs(files);
+  const hiddenDiffs = findHiddenDiffs(files, baseBlobs);
   if (hiddenDiffs.length > 0) {
     return {
       reviews: 2,
@@ -245,8 +257,11 @@ function formatReviewCount(reviews) {
   return `${reviews} review${reviews === 1 ? '' : 's'} required`;
 }
 
+const fallbackMarker = ' (fallback)';
+
 export function describeDecision(decision) {
-  const description = `${formatReviewCount(decision.reviews)}: ${decision.summary}`;
+  const marker = decision.source === 'fallback' ? fallbackMarker : '';
+  const description = `${formatReviewCount(decision.reviews)}${marker}: ${decision.summary}`;
   return description.length > maxStatusDescriptionLength
     ? `${description.slice(0, maxStatusDescriptionLength - 3)}...`
     : description;
@@ -256,9 +271,12 @@ export function requiredApprovals(statuses) {
   const decisions = statuses.filter(
     status => status.context === decisionContext && status.creator?.login === trustedStatusCreator
   );
+  const answered = decisions.filter(
+    status => !status.description?.startsWith(`${formatReviewCount(2)}${fallbackMarker}:`)
+  );
   const allowSingleReview =
-    decisions.length > 0 &&
-    decisions.every(
+    answered.length > 0 &&
+    answered.every(
       status =>
         status.state === 'success' && status.description?.startsWith(`${formatReviewCount(1)}:`)
     );
@@ -305,6 +323,13 @@ export function createGitHubClient({ token, repository }) {
     getPullRequest(number) {
       return request(`/pulls/${number}`);
     },
+    async listBaseBlobs(sha) {
+      const tree = await request(`/git/trees/${sha}?recursive=1`);
+      if (tree.truncated) return new Map();
+      return new Map(
+        tree.tree.filter(entry => entry.type === 'blob').map(entry => [entry.path, entry.sha])
+      );
+    },
     listFiles(number) {
       return requestAllPages(`/pulls/${number}/files`);
     },
@@ -345,9 +370,12 @@ async function runPrepare() {
   const headSha = readRequiredEnv('HEAD_SHA');
   const files = await github.listFiles(number);
   const pullRequest = await github.getPullRequest(number);
+  const baseBlobs = files.some(needsBaseBlob)
+    ? await github.listBaseBlobs(pullRequest.base.sha)
+    : undefined;
   const ruleDecision =
     pullRequest.head.sha === headSha
-      ? decideByRules(pullRequest, files)
+      ? decideByRules(pullRequest, files, baseBlobs)
       : {
           reviews: 2,
           confidence: 'high',
@@ -358,10 +386,19 @@ async function runPrepare() {
     writeOutput('rule-decision', JSON.stringify(ruleDecision));
     return;
   }
-  const systemPromptPath = join(readRequiredEnv('RUNNER_TEMP'), 'review-gate-system-prompt.md');
-  writeFileSync(systemPromptPath, systemPrompt);
-  writeOutput('prompt', buildPrompt(pullRequest, files));
-  writeOutput('claude-args', formatClaudeArgs(buildClaudeArgs(systemPromptPath)));
+  const runnerTemp = readRequiredEnv('RUNNER_TEMP');
+  writeFileSync(join(runnerTemp, systemPromptFile), systemPrompt);
+  writeFileSync(join(runnerTemp, promptFile), buildPrompt(pullRequest, files));
+}
+
+async function runAsk() {
+  const runnerTemp = readRequiredEnv('RUNNER_TEMP');
+  const answer = await runClaude({
+    args: buildClassifierArgs(join(runnerTemp, systemPromptFile)),
+    prompt: readFileSync(join(runnerTemp, promptFile), 'utf8'),
+    cwd: mkdtempSync(join(runnerTemp, 'review-gate-')),
+  });
+  writeOutput('structured-output', JSON.stringify(answer));
 }
 
 function runDecide() {
@@ -433,6 +470,12 @@ async function runGate() {
   }
 }
 
-const modes = { prepare: runPrepare, decide: runDecide, record: runRecord, gate: runGate };
+const modes = {
+  prepare: runPrepare,
+  ask: runAsk,
+  decide: runDecide,
+  record: runRecord,
+  gate: runGate,
+};
 
 runMode(import.meta.url, modes);

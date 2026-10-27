@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 import { motion, useAnimationControls } from 'framer-motion';
 import { Box, Flex, VStack, styled } from 'leather-styles/jsx';
 
@@ -140,7 +141,7 @@ export function ConnectAccountLayout({
               <Button
                 key="confirm"
                 onClick={() => void userApprovesGetAddresses()}
-                data-testid="get-addresses-approve-button"
+                data-testid={ConnectAccountSelectors.ApproveBtn}
               >
                 Confirm
               </Button>,

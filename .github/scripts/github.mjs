@@ -55,8 +55,15 @@ export function createGitHubRequest({ token, repository }) {
   return { request, requestAllPages, graphql };
 }
 
+const codePattern = /(```[\s\S]*?```|`[^`\n]*`)/;
+
 export function neutraliseMentions(text) {
-  return text.replace(/@(?=[\w-])/g, '@\u200b');
+  return text
+    .split(codePattern)
+    .map((part, index) =>
+      index % 2 === 1 ? part : part.replace(/@(?=[\w-])(?![\w-]*\.[\w.-]*\/)/g, '@\u200b')
+    )
+    .join('');
 }
 
 export function readRequiredEnv(name) {
