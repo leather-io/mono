@@ -1,0 +1,22 @@
+name: install-claude-code
+description: Install the Claude Code CLI pinned in this action's lockfile for the review gate and Claude review
+
+outputs:
+  path:
+    description: Absolute path of the installed claude executable
+    value: ${{ steps.install.outputs.path }}
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      with:
+        node-version: '22'
+
+    - name: install-claude-code-cli
+      id: install
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: |
+        npm ci --no-audit --no-fund
+        echo "path=$PWD/node_modules/.bin/claude" >> "$GITHUB_OUTPUT"

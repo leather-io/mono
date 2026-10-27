@@ -19,7 +19,7 @@ import {
   planReview,
   toThread,
 } from './claude-review.mjs';
-import { claudeModel } from './review-gate.mjs';
+import { claudeModel } from './claude.mjs';
 
 function finding(path, line, overrides = {}) {
   return { path, line, severity: 'medium', title: `Bug at ${line}`, body: 'Breaks.', ...overrides };

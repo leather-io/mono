@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { describe, it } from 'node:test';
 
 import {
-  buildClaudeArgs,
+  buildClassifierArgs,
   buildPrompt,
   decideByRules,
   decisionCommentHeading,
@@ -14,7 +14,6 @@ import {
   findApprovers,
   findDecisionComment,
   findSensitiveFiles,
-  formatClaudeArgs,
   formatDecisionComment,
   hasWriteAccess,
   parseDecision,
@@ -168,16 +167,18 @@ describe('buildPrompt', () => {
   });
 });
 
-describe('formatClaudeArgs', () => {
-  it('quotes empty values and the schema for the shell', () => {
-    const args = formatClaudeArgs(buildClaudeArgs('/tmp/system.md'));
-    assert.match(args, /--tools '' --setting-sources ''/);
-    assert.match(args, /--system-prompt-file \/tmp\/system\.md/);
-    assert.match(args, /--json-schema '\{"type":"object"/);
-  });
-
-  it('escapes single quotes', () => {
-    assert.equal(formatClaudeArgs(["it's"]), `'it'\\''s'`);
+describe('buildClassifierArgs', () => {
+  it('gives the classifier no tools and the review count schema', () => {
+    const args = buildClassifierArgs('/tmp/system.md');
+    assert.equal(args[args.indexOf('--tools') + 1], '');
+    assert.equal(args.includes('--allowedTools'), false);
+    assert.equal(args[args.indexOf('--system-prompt-file') + 1], '/tmp/system.md');
+    assert.deepEqual(JSON.parse(args[args.indexOf('--json-schema') + 1]).required, [
+      'reviews',
+      'confidence',
+      'reason',
+      'summary',
+    ]);
   });
 });
 

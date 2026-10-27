@@ -25,8 +25,6 @@ jobs:
       pull-requests: read # reads the pull request, its files and its review threads
     outputs:
       reviewable: ${{ steps.prepare.outputs.reviewable }}
-      finder-args: ${{ steps.prepare.outputs.finder-args }}
-      verifier-args: ${{ steps.prepare.outputs.verifier-args }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -60,7 +58,6 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: read
-      pull-requests: read # lets claude-code-action read the pull request
     strategy:
       fail-fast: false
       matrix:
@@ -68,7 +65,13 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
           ref: ${{ github.event.pull_request.head.sha }}
+          path: pr-head
           persist-credentials: false
 
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
@@ -76,29 +79,18 @@ jobs:
           name: claude-review-context
           path: ${{ runner.temp }}/claude-review
 
-      - name: find-issues
-        id: claude
-        uses: anthropics/claude-code-action@374f254f5efaf968abfe15d399fd90972e8138b9 # v1.0.251
-        with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          github_token: ${{ github.token }}
-          claude_args: ${{ needs.prepare.outputs.finder-args }}
-          prompt: >-
-            Your focus is ${{ matrix.angle }}. Read angle-${{ matrix.angle }}.md in
-            ${{ runner.temp }}/claude-review for what it covers, then review the pull request
-            described by pull-request.json and diff.patch in the same directory.
+      - uses: $/.github/actions/install-claude-code
+        id: claude-cli
 
-      - name: save-findings
+      - name: find-issues
         env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CLAUDE_BIN: ${{ steps.claude-cli.outputs.path }}
           ANGLE: ${{ matrix.angle }}
-          STRUCTURED_OUTPUT: ${{ steps.claude.outputs.structured_output }}
-        run: |
-          if [ -z "$STRUCTURED_OUTPUT" ]; then
-            echo "::error::The $ANGLE review returned no findings JSON."
-            exit 1
-          fi
-          mkdir -p "$RUNNER_TEMP/findings"
-          printf '%s' "$STRUCTURED_OUTPUT" > "$RUNNER_TEMP/findings/$ANGLE.json"
+          CONTEXT_DIR: ${{ runner.temp }}/claude-review
+          FINDINGS_DIR: ${{ runner.temp }}/findings
+          HEAD_DIR: ${{ github.workspace }}/pr-head
+        run: node .github/scripts/claude-review.mjs find
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -157,13 +149,18 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: read
-      pull-requests: read # lets claude-code-action read the pull request
     outputs:
-      verdicts: ${{ steps.claude.outputs.structured_output }}
+      verdicts: ${{ steps.claude.outputs.verdicts }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
           ref: ${{ github.event.pull_request.head.sha }}
+          path: pr-head
           persist-credentials: false
 
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
@@ -176,17 +173,17 @@ jobs:
           name: claude-review-candidates
           path: ${{ runner.temp }}/claude-review
 
+      - uses: $/.github/actions/install-claude-code
+        id: claude-cli
+
       - name: verify-findings
         id: claude
-        uses: anthropics/claude-code-action@374f254f5efaf968abfe15d399fd90972e8138b9 # v1.0.251
-        with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          github_token: ${{ github.token }}
-          claude_args: ${{ needs.prepare.outputs.verifier-args }}
-          prompt: >-
-            Verify the candidate findings in candidates.json and check the resolvable
-            threads in threads.json, both in ${{ runner.temp }}/claude-review, against the pull
-            request described by pull-request.json and diff.patch in the same directory.
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CLAUDE_BIN: ${{ steps.claude-cli.outputs.path }}
+          CONTEXT_DIR: ${{ runner.temp }}/claude-review
+          HEAD_DIR: ${{ github.workspace }}/pr-head
+        run: node .github/scripts/claude-review.mjs verify
 
   post:
     name: post

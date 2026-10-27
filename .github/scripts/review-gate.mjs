@@ -1,6 +1,7 @@
-import { writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { buildClaudeArgs, claudeModel, runClaude } from './claude.mjs';
 import {
   createGitHubRequest,
   neutraliseMentions,
@@ -10,7 +11,6 @@ import {
   writeSummary,
 } from './github.mjs';
 
-export const claudeModel = 'claude-opus-5-5';
 export const decisionContext = 'review-gate/decision';
 export const gateContext = 'review-gate';
 const trustedStatusCreator = 'github-actions[bot]';
@@ -76,30 +76,11 @@ In reason, name the specific files or behaviour that decided it, in one or two s
 
 In summary, state the deciding point in at most 100 characters. It is shown on the pull request next to the decision.`;
 
-export function buildClaudeArgs(systemPromptPath) {
-  return [
-    '--model',
-    claudeModel,
-    '--effort',
-    'high',
-    '--tools',
-    '',
-    '--setting-sources',
-    '',
-    '--strict-mcp-config',
-    '--system-prompt-file',
-    systemPromptPath,
-    '--json-schema',
-    JSON.stringify(tierSchema),
-  ];
-}
+const systemPromptFile = 'review-gate-system-prompt.md';
+const promptFile = 'review-gate-prompt.md';
 
-function quoteArg(arg) {
-  return /^[\w./:-]+$/.test(arg) ? arg : `'${arg.replaceAll("'", "'\\''")}'`;
-}
-
-export function formatClaudeArgs(args) {
-  return args.map(quoteArg).join(' ');
+export function buildClassifierArgs(systemPromptPath) {
+  return buildClaudeArgs({ systemPromptPath, schema: tierSchema });
 }
 
 function isSensitivePath(path) {
@@ -378,10 +359,19 @@ async function runPrepare() {
     writeOutput('rule-decision', JSON.stringify(ruleDecision));
     return;
   }
-  const systemPromptPath = join(readRequiredEnv('RUNNER_TEMP'), 'review-gate-system-prompt.md');
-  writeFileSync(systemPromptPath, systemPrompt);
-  writeOutput('prompt', buildPrompt(pullRequest, files));
-  writeOutput('claude-args', formatClaudeArgs(buildClaudeArgs(systemPromptPath)));
+  const runnerTemp = readRequiredEnv('RUNNER_TEMP');
+  writeFileSync(join(runnerTemp, systemPromptFile), systemPrompt);
+  writeFileSync(join(runnerTemp, promptFile), buildPrompt(pullRequest, files));
+}
+
+async function runAsk() {
+  const runnerTemp = readRequiredEnv('RUNNER_TEMP');
+  const answer = await runClaude({
+    args: buildClassifierArgs(join(runnerTemp, systemPromptFile)),
+    prompt: readFileSync(join(runnerTemp, promptFile), 'utf8'),
+    cwd: mkdtempSync(join(runnerTemp, 'review-gate-')),
+  });
+  writeOutput('structured-output', JSON.stringify(answer));
 }
 
 function runDecide() {
@@ -453,6 +443,12 @@ async function runGate() {
   }
 }
 
-const modes = { prepare: runPrepare, decide: runDecide, record: runRecord, gate: runGate };
+const modes = {
+  prepare: runPrepare,
+  ask: runAsk,
+  decide: runDecide,
+  record: runRecord,
+  gate: runGate,
+};
 
 runMode(import.meta.url, modes);
