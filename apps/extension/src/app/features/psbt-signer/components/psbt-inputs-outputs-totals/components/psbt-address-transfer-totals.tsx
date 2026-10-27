@@ -33,7 +33,7 @@ export function PsbtAddressTransferTotals({
           hoverLabel={addressTaproot}
           subtitle={truncateMiddle(addressTaproot)}
           subValue={formatCurrency(calculateBitcoinFiatValue(addressTaprootTotal))}
-          value={formatCurrency(addressTaprootTotal)}
+          value={formatCurrency(addressNativeSegwitTotal)}
         />
       ) : null}
     </>
