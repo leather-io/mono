@@ -176,7 +176,7 @@ export function CopyAddress({
   function onKeyActivate(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      onCopy();
+      void onCopy();
     }
   }
 
@@ -192,7 +192,7 @@ export function CopyAddress({
         <styled.span
           role="button"
           tabIndex={0}
-          onClick={onCopy}
+          onClick={() => void onCopy()}
           onKeyDown={onKeyActivate}
           title="Copy address"
           display="inline"
@@ -235,7 +235,7 @@ export function CopyAddress({
     <styled.button
       className="group"
       type="button"
-      onClick={onCopy}
+      onClick={() => void onCopy()}
       title="Copy address"
       display="inline-flex"
       alignItems="center"

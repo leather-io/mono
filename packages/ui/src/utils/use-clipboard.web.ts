@@ -2,26 +2,59 @@ import { useEffect, useRef, useState } from 'react';
 
 interface UiClipboard {
   value: string;
-  onCopy(): void;
+  onCopy(): Promise<boolean>;
   hasCopied: boolean;
+  hasCopyFailed: boolean;
 }
 
-function copyToClipboard(value: string) {
-  if (!navigator.clipboard) return;
-  void navigator.clipboard.writeText(value);
-}
+const copiedFeedbackDuration = 1250;
 
 export function useClipboard(value: string): UiClipboard {
   const [hasCopied, setHasCopied] = useState(false);
-  const timers = useRef<number[]>([]);
+  const [hasCopyFailed, setHasCopyFailed] = useState(false);
+  const mounted = useRef(false);
+  const request = useRef(0);
+  const timer = useRef<number | undefined>(undefined);
 
-  function onCopy() {
-    copyToClipboard(value);
-    setHasCopied(true);
-    timers.current.push(window.setTimeout(() => setHasCopied(false), 1250));
+  function clearTimer() {
+    window.clearTimeout(timer.current);
+    timer.current = undefined;
   }
 
-  useEffect(() => () => timers.current.forEach(timer => clearTimeout(timer)), []);
+  async function onCopy() {
+    const activeRequest = ++request.current;
+    clearTimer();
+    setHasCopied(false);
+    setHasCopyFailed(false);
 
-  return { value, onCopy, hasCopied };
+    try {
+      if (!navigator.clipboard) {
+        setHasCopyFailed(true);
+        return false;
+      }
+      await navigator.clipboard.writeText(value);
+      if (!mounted.current || request.current !== activeRequest) return false;
+      setHasCopied(true);
+      timer.current = window.setTimeout(() => {
+        if (mounted.current && request.current === activeRequest) setHasCopied(false);
+      }, copiedFeedbackDuration);
+      return true;
+    } catch {
+      if (mounted.current && request.current === activeRequest) setHasCopyFailed(true);
+      return false;
+    }
+  }
+
+  useEffect(() => {
+    mounted.current = true;
+    setHasCopied(false);
+    setHasCopyFailed(false);
+    return () => {
+      mounted.current = false;
+      request.current += 1;
+      clearTimer();
+    };
+  }, [value]);
+
+  return { value, onCopy, hasCopied, hasCopyFailed };
 }

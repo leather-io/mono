@@ -1,4 +1,4 @@
-import { type ComponentType, type ReactElement, isValidElement } from 'react';
+import { type ComponentType, type ReactElement, cloneElement, isValidElement } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 import { isNullish } from 'remeda';
@@ -235,8 +235,13 @@ export function Button(props: ButtonProps) {
 Button.displayName = 'Button';
 
 function renderIcon(icon: ComponentType<IconProps> | ReactElement | undefined, props: IconProps) {
-  if (isValidElement(icon) || isNullish(icon)) {
-    return icon;
+  if (isNullish(icon)) return icon;
+  if (isValidElement(icon)) {
+    if (typeof icon.type === 'string' || !isValidElement<IconProps>(icon)) return icon;
+    return cloneElement<IconProps>(icon, {
+      color: icon.props.color ?? props.color,
+      variant: icon.props.variant ?? props.variant,
+    });
   }
   const IconComponent = icon;
   return <IconComponent {...props} />;

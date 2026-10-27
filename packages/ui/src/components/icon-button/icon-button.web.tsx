@@ -20,12 +20,12 @@ export function IconButton({ icon, label, disabled, ...rest }: IconButtonProps) 
     <Button
       key={label}
       color="ink.text-primary"
-      px={label ? 'space.01' : 'space.02'}
-      py={label ? 'space.01' : 'space.02'}
-      height={label ? 'auto' : undefined}
+      px={label ? 'space.01' : '0'}
+      py={label ? 'space.01' : '0'}
+      height={label ? 'auto' : 'headerContainerHeight'}
       textStyle="label.02"
       variant="ghost"
-      width={label ? 'iconButtonWithLabelWidth' : 'unset'}
+      width={label ? 'iconButtonWithLabelWidth' : 'headerContainerHeight'}
       outline="none"
       opacity={disabled ? '0.5' : '1'}
       disabled={disabled}
