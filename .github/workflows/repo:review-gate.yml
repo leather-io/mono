@@ -2,14 +2,14 @@ name: repo:review-gate
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
   pull_request_review:
     types: [submitted, dismissed]
 
 permissions: {}
 
 concurrency:
-  group: review-gate-${{ github.event.pull_request.number }}
+  group: review-gate-${{ github.event_name }}-${{ github.event.pull_request.number }}
   cancel-in-progress: false
 
 jobs:
@@ -17,6 +17,7 @@ jobs:
     name: classify
     if: >-
       github.event_name == 'pull_request' &&
+      (github.event.action != 'edited' || github.event.changes.base != null) &&
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 15

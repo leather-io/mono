@@ -30,7 +30,7 @@ function file(filename, overrides = {}) {
 
 function review(login, state, overrides = {}) {
   return {
-    user: { login },
+    user: { login, type: 'User' },
     state,
     commit_id: 'head',
     ...overrides,
@@ -206,6 +206,13 @@ describe('findApprovers', () => {
   it('ignores the author', () => {
     assert.deepEqual(findApprovers([review('author', 'APPROVED')], context), []);
   });
+
+  it('ignores approvals from bots and apps', () => {
+    const reviews = [
+      review('claude[bot]', 'APPROVED', { user: { login: 'claude[bot]', type: 'Bot' } }),
+    ];
+    assert.deepEqual(findApprovers(reviews, context), []);
+  });
 });
 
 describe('hasWriteAccess', () => {
@@ -247,10 +254,10 @@ describe('requiredApprovals', () => {
     assert.equal(requiredApprovals([forged]), 2);
   });
 
-  it('uses the newest decision first', () => {
+  it('requires 2 approvals when any decision on the head requires 2', () => {
     const statuses = [
-      status(describeDecision({ reviews: 2, reason: 'new' })),
-      status(describeDecision({ reviews: 1, reason: 'old' })),
+      status(describeDecision({ reviews: 1, reason: 'newer' })),
+      status(describeDecision({ reviews: 2, reason: 'older' })),
     ];
     assert.equal(requiredApprovals(statuses), 2);
   });

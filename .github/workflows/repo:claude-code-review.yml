@@ -2,68 +2,224 @@ name: repo:claude-code-review
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review]
     paths-ignore:
       - '**/*.md'
       - 'docs/**'
       - '.changeset/**'
 
-# GITHUB_TOKEN only needs to read the repository; the review job elevates to
-# pull-requests:write + id-token:write for claude-code-action's PR commenting
-# and OIDC exchange.
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: claude-review-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  changes:
-    name: changes
+  prepare:
+    name: prepare
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
-      pull-requests: read # paths-filter reads changed files via the PR API
+      contents: read # checks out the base commit for the review script
+      pull-requests: read # reads the pull request, its files and its review threads
     outputs:
-      workflow: ${{ steps.filter.outputs.workflow }}
-    steps:
-      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-        id: filter
-        with:
-          filters: |
-            workflow:
-              - '.github/workflows/repo:claude-code-review.yml'
-
-  review:
-    name: review
-    needs: changes
-    if: needs.changes.outputs.workflow != 'true' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    permissions:
-      pull-requests: write # post PR review comments
-      id-token: write # OIDC exchange for claude-code-action
+      reviewable: ${{ steps.prepare.outputs.reviewable }}
+      finder-args: ${{ steps.prepare.outputs.finder-args }}
+      verifier-args: ${{ steps.prepare.outputs.verifier-args }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 1
+          ref: ${{ github.event.pull_request.base.sha }}
           persist-credentials: false
 
-      - name: claude-code-review
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: build-review-context
+        id: prepare
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          CONTEXT_DIR: ${{ runner.temp }}/claude-review
+        run: node .github/scripts/claude-review.mjs prepare
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: claude-review-context
+          path: ${{ runner.temp }}/claude-review
+          retention-days: 7
+
+  find:
+    name: find-${{ matrix.angle }}
+    needs: prepare
+    if: needs.prepare.outputs.reviewable == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read # checks out the pull request head for Claude to read
+      pull-requests: read # lets claude-code-action read the pull request
+    strategy:
+      fail-fast: false
+      matrix:
+        angle: [correctness, security, wallet, conventions]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: claude-review-context
+          path: ${{ runner.temp }}/claude-review
+
+      - name: find-issues
+        id: claude
+        continue-on-error: true
         uses: anthropics/claude-code-action@374f254f5efaf968abfe15d399fd90972e8138b9 # v1.0.251
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: >-
-            --model opus
-            --allowedTools "Bash(gh pr view:*) Bash(gh pr diff:*) Bash(gh pr list:*)"
-          use_sticky_comment: true
-          classify_inline_comments: true
-          show_full_output: true
-          track_progress: true
-          prompt: |
-            Review this PR. Focus on:
-            - Bugs and correctness
-            - Security (secrets, XSS, injection, untrusted input)
-            - Violations of CLAUDE.md conventions
-            Ignore style and formatting — lint covers it.
-            Be terse. Only comment on real issues. If the PR is clean, say so in one line.
+          github_token: ${{ github.token }}
+          claude_args: ${{ needs.prepare.outputs.finder-args }}
+          prompt: >-
+            Your focus is ${{ matrix.angle }}. Read angle-${{ matrix.angle }}.md in
+            ${{ runner.temp }}/claude-review for what it covers, then review the pull request
+            described by pull-request.json and diff.patch in the same directory.
+
+      - name: save-findings
+        env:
+          ANGLE: ${{ matrix.angle }}
+          STRUCTURED_OUTPUT: ${{ steps.claude.outputs.structured_output }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/findings"
+          printf '%s' "$STRUCTURED_OUTPUT" > "$RUNNER_TEMP/findings/$ANGLE.json"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: claude-review-findings-${{ matrix.angle }}
+          path: ${{ runner.temp }}/findings
+          retention-days: 7
+
+  collect:
+    name: collect
+    needs: [prepare, find]
+    if: ${{ !cancelled() && needs.prepare.result == 'success' && needs.prepare.outputs.reviewable == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read # checks out the base commit for the review script
+    outputs:
+      has-work: ${{ steps.collect.outputs.has-work }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: claude-review-context
+          path: ${{ runner.temp }}/claude-review
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: claude-review-findings-*
+          path: ${{ runner.temp }}/claude-review/findings
+          merge-multiple: true
+
+      - name: collect-candidates
+        id: collect
+        env:
+          CONTEXT_DIR: ${{ runner.temp }}/claude-review
+        run: node .github/scripts/claude-review.mjs collect
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: claude-review-candidates
+          path: ${{ runner.temp }}/claude-review/candidates.json
+          retention-days: 7
+
+  verify:
+    name: verify
+    needs: [prepare, collect]
+    if: needs.collect.outputs.has-work == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read # checks out the pull request head for Claude to read
+      pull-requests: read # lets claude-code-action read the pull request
+    outputs:
+      verdicts: ${{ steps.claude.outputs.structured_output }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: claude-review-context
+          path: ${{ runner.temp }}/claude-review
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: claude-review-candidates
+          path: ${{ runner.temp }}/claude-review
+
+      - name: verify-findings
+        id: claude
+        uses: anthropics/claude-code-action@374f254f5efaf968abfe15d399fd90972e8138b9 # v1.0.251
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          claude_args: ${{ needs.prepare.outputs.verifier-args }}
+          prompt: >-
+            Verify the candidate findings in candidates.json and check the resolvable
+            threads in threads.json, both in ${{ runner.temp }}/claude-review, against the pull
+            request described by pull-request.json and diff.patch in the same directory.
+
+  post:
+    name: post
+    needs: [prepare, collect, verify]
+    if: ${{ !cancelled() && needs.collect.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read # checks out the base commit for the review script
+      pull-requests: write # posts review threads and resolves fixed ones
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: claude-review-context
+          path: ${{ runner.temp }}/claude-review
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: claude-review-candidates
+          path: ${{ runner.temp }}/claude-review
+
+      - name: post-review
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HAS_WORK: ${{ needs.collect.outputs.has-work }}
+          VERDICTS: ${{ needs.verify.outputs.verdicts }}
+          CONTEXT_DIR: ${{ runner.temp }}/claude-review
+        run: node .github/scripts/claude-review.mjs post

@@ -1,11 +1,15 @@
-import { randomUUID } from 'node:crypto';
-import { appendFileSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
 
-const apiUrl = process.env.GITHUB_API_URL ?? 'https://api.github.com';
-const pageSize = 100;
+import {
+  createGitHubRequest,
+  readRequiredEnv,
+  runMode,
+  writeOutput,
+  writeSummary,
+} from './github.mjs';
 
+export const claudeModel = 'claude-opus-5-5';
 export const decisionContext = 'review-gate/decision';
 const trustedStatusCreator = 'github-actions[bot]';
 const maxStatusDescriptionLength = 140;
@@ -14,6 +18,7 @@ const maxPromptBytes = 100_000;
 const maxErrorLength = 300;
 
 const writePermissions = new Set(['admin', 'write']);
+const humanAccountType = 'User';
 const decisiveReviewStates = new Set(['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED']);
 
 const sensitivePathPatterns = [
@@ -61,7 +66,7 @@ In reason, name the specific files or behaviour that decided it, in one or two s
 export function buildClaudeArgs(systemPromptPath) {
   return [
     '--model',
-    'opus',
+    claudeModel,
     '--effort',
     'high',
     '--tools',
@@ -206,7 +211,10 @@ export function findApprovers(reviews, { headSha, author }) {
   return [...latestByReviewer.values()]
     .filter(
       review =>
-        review.state === 'APPROVED' && review.commit_id === headSha && review.user.login !== author
+        review.state === 'APPROVED' &&
+        review.commit_id === headSha &&
+        review.user.login !== author &&
+        review.user.type === humanAccountType
     )
     .map(review => review.user.login);
 }
@@ -227,40 +235,20 @@ export function describeDecision(decision) {
 }
 
 export function requiredApprovals(statuses) {
-  const decision = statuses.find(
-    status =>
-      status.context === decisionContext &&
-      status.state === 'success' &&
-      status.creator?.login === trustedStatusCreator
+  const decisions = statuses.filter(
+    status => status.context === decisionContext && status.creator?.login === trustedStatusCreator
   );
-  return decision?.description?.startsWith(`${formatReviewCount(1)}:`) ? 1 : 2;
+  const allowSingleReview =
+    decisions.length > 0 &&
+    decisions.every(
+      status =>
+        status.state === 'success' && status.description?.startsWith(`${formatReviewCount(1)}:`)
+    );
+  return allowSingleReview ? 1 : 2;
 }
 
 export function createGitHubClient({ token, repository }) {
-  async function request(path, { method = 'GET', body } = {}) {
-    const response = await fetch(`${apiUrl}/repos/${repository}${path}`, {
-      method,
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${token}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-      body: body === undefined ? undefined : JSON.stringify(body),
-    });
-    if (method === 'DELETE' && response.status === 404) return null;
-    if (!response.ok) throw new Error(`GitHub ${method} ${path} failed with ${response.status}`);
-    return response.json();
-  }
-
-  async function requestAllPages(path) {
-    const items = [];
-    for (let page = 1; ; page++) {
-      const separator = path.includes('?') ? '&' : '?';
-      const batch = await request(`${path}${separator}per_page=${pageSize}&page=${page}`);
-      items.push(...batch);
-      if (batch.length < pageSize) return items;
-    }
-  }
+  const { request, requestAllPages } = createGitHubRequest({ token, repository });
 
   return {
     getPullRequest(number) {
@@ -282,26 +270,6 @@ export function createGitHubClient({ token, repository }) {
       return request(`/collaborators/${encodeURIComponent(login)}/permission`);
     },
   };
-}
-
-function writeOutput(name, value) {
-  const delimiter = `EOF_${randomUUID()}`;
-  appendFileSync(
-    readRequiredEnv('GITHUB_OUTPUT'),
-    `${name}<<${delimiter}\n${value}\n${delimiter}\n`
-  );
-}
-
-function writeSummary(markdown) {
-  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
-  if (summaryPath) appendFileSync(summaryPath, `${markdown}\n`);
-  console.log(markdown);
-}
-
-function readRequiredEnv(name) {
-  const value = process.env[name];
-  if (!value) throw new Error(`${name} is not set`);
-  return value;
 }
 
 function createGitHubFromEnv() {
@@ -381,15 +349,4 @@ async function runGate() {
 
 const modes = { prepare: runPrepare, decide: runDecide, record: runRecord, gate: runGate };
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const run = modes[process.argv[2]];
-  Promise.resolve()
-    .then(() => {
-      if (!run) throw new Error(`Unknown mode: ${process.argv[2]}`);
-      return run();
-    })
-    .catch(error => {
-      console.error(error);
-      process.exitCode = 1;
-    });
-}
+runMode(import.meta.url, modes);
