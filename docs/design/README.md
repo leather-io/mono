@@ -21,4 +21,12 @@ The focused CI job runs rule/script regression tests, cheatsheet freshness and t
 
 This release covers extension-shaped web UI, the web Playground and shared web UI components. It does not include historical experiments, the private-send concept, native/mobile validation, a new recipient design or an automatic production redesign. The fixture example is a toolkit demonstration and preserves no claim of a full product-flow improvement.
 
-Evidence of agent benefit must identify the frozen kit, app commit, identical task briefs and all compared outputs. A successful example alone is not a kit-versus-vanilla result.
+## Release evidence — 27 October 2026
+
+The frozen implementation `e048c31a9aeecd0b023800c1d01271e8e9a18939` was compared with the same agent configuration in the same app without the agent-facing kit. Three fixture tasks (rename account, custom networks and connected apps), two independent repetitions and two arms produced 12 builds. Shared production components, tokens and reliability fixes were identical in both arms.
+
+All 12 final builds passed the tested fixture journeys and native keyboard paths. Two blinded agent reviewers scored the final outputs at a mean of 10.00/10 with the kit and 9.83/10 without it. All six matched pairs were consensus ties. The predeclared gate for a material final-quality advantage **failed**.
+
+Initial drafts showed promising token and layout gains on the network forms and a connection confirmation. Some apparent first-draft navigation differences remain capture uncertainties. This supports evaluating the kit as an opt-in workflow pilot with review; it does not establish better final UX, faster delivery or universal reliability. The complete protocol, all checkpoints, original reviewer votes and corrected automation records are retained with the Etch project. The scores describe these bounded fixture tasks, not a population estimate or a human usability study.
+
+This evidence note was added after the comparison closed; the measured implementation remains the frozen commit above.
