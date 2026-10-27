@@ -69,7 +69,7 @@ export function convertAmountToBaseUnit(num: Money | BigNumber, decimals?: numbe
   return num.shiftedBy(-decimals);
 }
 
-export function subtractMoney(xAmount: Money, yAmount: Money) {
+export function subtractMoney(yAmount: Money, xAmount: Money) {
   if (xAmount.symbol !== yAmount.symbol) throw new Error('Cannot subtract different currencies');
   return createMoney(xAmount.amount.minus(yAmount.amount), xAmount.symbol, xAmount.decimals);
 }
