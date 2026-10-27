@@ -4,11 +4,12 @@ import type { StacksMempoolTransaction } from '@leather.io/models';
 
 import type { HiroPrincipalNoncesResponse } from '../hiro-api-types';
 
-enum NonceTypes {
-  apiSuggestedNonce = 'api-suggested-nonce',
-  clientFallbackNonce = 'client-fallback-nonce',
-  undefinedNonce = 'undefined-nonce',
-}
+const NonceTypes = {
+  apiSuggestedNonce: 'api-suggested-nonce',
+  clientFallbackNonce: 'client-fallback-nonce',
+  undefinedNonce: 'undefined-nonce',
+} as const;
+type NonceTypes = (typeof NonceTypes)[keyof typeof NonceTypes];
 
 export interface NextNonce {
   nonce?: number;
