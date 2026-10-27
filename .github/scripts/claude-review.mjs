@@ -220,19 +220,37 @@ export function collectCandidates(findingsByAngle) {
       candidates.push({ ...finding, angle });
     }
   }
+  const bySeverity = candidates.toSorted(
+    (a, b) => severities.indexOf(a.severity) - severities.indexOf(b.severity)
+  );
+  const skipped = bySeverity.slice(maxCandidates);
   return {
-    candidates: candidates
+    candidates: bySeverity
       .slice(0, maxCandidates)
       .map((candidate, index) => ({ id: `F${index + 1}`, ...candidate })),
     failedAngles,
+    skippedCount: skipped.length,
+    skippedBlockingCount: skipped.filter(candidate => blockingSeverities.has(candidate.severity))
+      .length,
   };
 }
 
-export function parseVerdicts(text) {
+function isFindingVerdict(value) {
+  return (
+    typeof value?.id === 'string' &&
+    ['confirmed', 'refuted'].includes(value.verdict) &&
+    severities.includes(value.severity) &&
+    typeof value.reason === 'string'
+  );
+}
+
+export function parseVerdicts(text, candidateIds) {
   try {
     const parsed = JSON.parse(text);
     if (!Array.isArray(parsed?.findings) || !Array.isArray(parsed?.threads)) return null;
-    return parsed;
+    if (!parsed.findings.every(isFindingVerdict)) return null;
+    const answered = new Set(parsed.findings.map(verdict => verdict.id));
+    return candidateIds.every(id => answered.has(id)) ? parsed : null;
   } catch {
     return null;
   }
@@ -275,7 +293,7 @@ export function findFixedThreads({ threads, verdicts }) {
   );
 }
 
-export function formatReviewBody({ blockingCount, notes, failedAngles }) {
+export function formatReviewBody({ blockingCount, notes, failedAngles, skippedCount = 0 }) {
   const sections = ['### Claude review'];
   if (blockingCount > 0) {
     sections.push(
@@ -292,6 +310,11 @@ export function formatReviewBody({ blockingCount, notes, failedAngles }) {
   if (failedAngles.length > 0) {
     sections.push(
       `Incomplete: the ${failedAngles.join(', ')} review did not finish. Re-run the workflow.`
+    );
+  }
+  if (skippedCount > 0) {
+    sections.push(
+      `Incomplete: ${skippedCount} lower-severity candidate finding${skippedCount === 1 ? ' was' : 's were'} not verified because of the ${maxCandidates}-finding limit.`
     );
   }
   return neutraliseMentions(sections.join('\n\n'));
@@ -386,7 +409,8 @@ function runCollect() {
   const hasWork = collected.candidates.length > 0 || threads.some(thread => thread.resolvable);
   writeOutput('has-work', hasWork ? 'true' : 'false');
   writeSummary(
-    `${collected.candidates.length} candidate findings from ${angles.length - collected.failedAngles.length} of ${angles.length} reviewers.`
+    `${collected.candidates.length} candidate findings from ${angles.length - collected.failedAngles.length} of ${angles.length} reviewers` +
+      (collected.skippedCount > 0 ? `, ${collected.skippedCount} skipped by the limit.` : '.')
   );
 }
 
@@ -395,17 +419,22 @@ async function runPost() {
   const number = Number(readRequiredEnv('PR_NUMBER'));
   const headSha = readRequiredEnv('HEAD_SHA');
   const contextDir = readRequiredEnv('CONTEXT_DIR');
-  const { candidates, failedAngles } = readJson(join(contextDir, 'candidates.json'));
+  const { candidates, failedAngles, skippedCount, skippedBlockingCount } = readJson(
+    join(contextDir, 'candidates.json')
+  );
   const threads = readJson(join(contextDir, 'threads.json'));
   const patches = readJson(join(contextDir, 'patches.json'));
   const hasWork = process.env.HAS_WORK === 'true';
   const verdicts = hasWork
-    ? parseVerdicts(process.env.VERDICTS ?? '')
+    ? parseVerdicts(
+        process.env.VERDICTS ?? '',
+        candidates.map(candidate => candidate.id)
+      )
     : { findings: [], threads: [] };
 
   if (!verdicts) {
     writeSummary(
-      'Claude review incomplete: the verifier returned no valid answer. Re-run the workflow.'
+      'Claude review incomplete: the verifier returned no valid answer for every candidate. Re-run the workflow.'
     );
     process.exitCode = 1;
     return;
@@ -414,13 +443,13 @@ async function runPost() {
   const { inline, fileLevel, notes } = planReview({ candidates, verdicts, patches });
   const blockingCount = inline.length + fileLevel.length;
 
-  if (blockingCount > 0 || notes.length > 0 || failedAngles.length > 0) {
+  if (blockingCount > 0 || notes.length > 0 || failedAngles.length > 0 || skippedCount > 0) {
     await github.request(`/pulls/${number}/reviews`, {
       method: 'POST',
       body: {
         commit_id: headSha,
         event: 'COMMENT',
-        body: formatReviewBody({ blockingCount, notes, failedAngles }),
+        body: formatReviewBody({ blockingCount, notes, failedAngles, skippedCount }),
         comments: inline.map(finding => ({
           path: finding.path,
           line: finding.line,
@@ -456,6 +485,12 @@ async function runPost() {
   );
   if (failedAngles.length > 0) {
     console.log(`::error::The ${failedAngles.join(', ')} review did not finish.`);
+    process.exitCode = 1;
+  }
+  if (skippedBlockingCount > 0) {
+    console.log(
+      `::error::${skippedBlockingCount} high or medium candidate findings were not verified because of the ${maxCandidates}-finding limit.`
+    );
     process.exitCode = 1;
   }
 }

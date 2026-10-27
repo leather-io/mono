@@ -106,6 +106,36 @@ describe('collectCandidates', () => {
     assert.deepEqual(failedAngles, []);
   });
 
+  it('keeps the most severe candidates when over the limit and counts the rest', () => {
+    const lows = Array.from({ length: 40 }, (_, index) =>
+      finding('a.ts', index + 1, { severity: 'low' })
+    );
+    const { candidates, skippedCount, skippedBlockingCount } = collectCandidates(
+      allAngles({
+        correctness: lows,
+        wallet: [finding('b.ts', 1, { severity: 'high' }), finding('b.ts', 2)],
+      })
+    );
+    assert.equal(candidates.length, 40);
+    assert.deepEqual(
+      candidates.slice(0, 2).map(candidate => [candidate.id, candidate.severity]),
+      [
+        ['F1', 'high'],
+        ['F2', 'medium'],
+      ]
+    );
+    assert.equal(skippedCount, 2);
+    assert.equal(skippedBlockingCount, 0);
+  });
+
+  it('counts skipped blocking candidates', () => {
+    const highs = Array.from({ length: 41 }, (_, index) =>
+      finding('a.ts', index + 1, { severity: 'high' })
+    );
+    const { skippedBlockingCount } = collectCandidates(allAngles({ correctness: highs }));
+    assert.equal(skippedBlockingCount, 1);
+  });
+
   it('reports angles that returned nothing usable', () => {
     const { failedAngles } = collectCandidates({ correctness: [] });
     assert.deepEqual(failedAngles, ['security', 'wallet', 'conventions']);
@@ -113,10 +143,26 @@ describe('collectCandidates', () => {
 });
 
 describe('parseVerdicts', () => {
+  const confirmed = { id: 'F1', verdict: 'confirmed', severity: 'high', reason: 'traced' };
+
   it('requires both lists', () => {
-    assert.equal(parseVerdicts('{"findings":[]}'), null);
-    assert.equal(parseVerdicts(''), null);
-    assert.deepEqual(parseVerdicts('{"findings":[],"threads":[]}'), { findings: [], threads: [] });
+    assert.equal(parseVerdicts('{"findings":[]}', []), null);
+    assert.equal(parseVerdicts('', []), null);
+    assert.deepEqual(parseVerdicts('{"findings":[],"threads":[]}', []), {
+      findings: [],
+      threads: [],
+    });
+  });
+
+  it('requires a verdict for every candidate', () => {
+    const text = JSON.stringify({ findings: [confirmed], threads: [] });
+    assert.equal(parseVerdicts(text, ['F1', 'F2']), null);
+    assert.deepEqual(parseVerdicts(text, ['F1'])?.findings, [confirmed]);
+  });
+
+  it('rejects malformed verdicts', () => {
+    const text = JSON.stringify({ findings: [{ id: 'F1', verdict: 'maybe' }], threads: [] });
+    assert.equal(parseVerdicts(text, ['F1']), null);
   });
 });
 
@@ -242,5 +288,15 @@ describe('formatReviewBody', () => {
     assert.match(body, /2 blocking findings/);
     assert.match(body, /`a\.ts:4` \*\*low: Bug at 4\*\*/);
     assert.match(body, /the wallet review did not finish/);
+  });
+
+  it('reports candidates skipped by the limit', () => {
+    const body = formatReviewBody({
+      blockingCount: 0,
+      notes: [],
+      failedAngles: [],
+      skippedCount: 3,
+    });
+    assert.match(body, /3 lower-severity candidate findings were not verified/);
   });
 });

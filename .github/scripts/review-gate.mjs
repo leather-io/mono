@@ -245,8 +245,11 @@ function formatReviewCount(reviews) {
   return `${reviews} review${reviews === 1 ? '' : 's'} required`;
 }
 
+const fallbackMarker = ' (fallback)';
+
 export function describeDecision(decision) {
-  const description = `${formatReviewCount(decision.reviews)}: ${decision.summary}`;
+  const marker = decision.source === 'fallback' ? fallbackMarker : '';
+  const description = `${formatReviewCount(decision.reviews)}${marker}: ${decision.summary}`;
   return description.length > maxStatusDescriptionLength
     ? `${description.slice(0, maxStatusDescriptionLength - 3)}...`
     : description;
@@ -256,9 +259,12 @@ export function requiredApprovals(statuses) {
   const decisions = statuses.filter(
     status => status.context === decisionContext && status.creator?.login === trustedStatusCreator
   );
+  const answered = decisions.filter(
+    status => !status.description?.startsWith(`${formatReviewCount(2)}${fallbackMarker}:`)
+  );
   const allowSingleReview =
-    decisions.length > 0 &&
-    decisions.every(
+    answered.length > 0 &&
+    answered.every(
       status =>
         status.state === 'success' && status.description?.startsWith(`${formatReviewCount(1)}:`)
     );

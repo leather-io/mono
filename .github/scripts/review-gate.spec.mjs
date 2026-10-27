@@ -241,6 +241,13 @@ describe('describeDecision', () => {
     );
   });
 
+  it('marks fallback decisions', () => {
+    assert.equal(
+      describeDecision({ reviews: 2, summary: 'no answer', source: 'fallback' }),
+      '2 reviews required (fallback): no answer'
+    );
+  });
+
   it('fits the commit status description limit', () => {
     const description = describeDecision({ reviews: 2, summary: 'x'.repeat(500) });
     assert.equal(description.length, 140);
@@ -273,6 +280,21 @@ describe('requiredApprovals', () => {
     const statuses = [
       status(describeDecision({ reviews: 1, summary: 'newer' })),
       status(describeDecision({ reviews: 2, summary: 'older' })),
+    ];
+    assert.equal(requiredApprovals(statuses), 2);
+  });
+
+  it('lets a real answer replace a fallback on the same head', () => {
+    const statuses = [
+      status(describeDecision({ reviews: 1, summary: 'copy only', source: 'model' })),
+      status(describeDecision({ reviews: 2, summary: 'no answer', source: 'fallback' })),
+    ];
+    assert.equal(requiredApprovals(statuses), 1);
+  });
+
+  it('requires 2 approvals when only fallbacks were recorded', () => {
+    const statuses = [
+      status(describeDecision({ reviews: 2, summary: 'no answer', source: 'fallback' })),
     ];
     assert.equal(requiredApprovals(statuses), 2);
   });
