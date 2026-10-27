@@ -35,7 +35,14 @@
     "test:coverage": "turbo run test:coverage",
     "test:e2e": "playwright test",
     "test:unit": "turbo run test:unit",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "design:check": "eslint -c eslint.design.config.js --no-inline-config",
+    "design:lint": "eslint apps/web/app/pages/playground/shared/recipes apps/web/app/pages/playground/areas/recipes apps/web/app/pages/playground/areas/receive-example --max-warnings 0",
+    "design:test": "node --experimental-strip-types --test eslint-rules/design-system/*.spec.js scripts/design/*.test.ts",
+    "design:align": "node --experimental-strip-types scripts/design/align.ts",
+    "design:fidelity": "node --experimental-strip-types scripts/design/today-fidelity.ts",
+    "design:promote": "node --experimental-strip-types scripts/design/promote.ts",
+    "design:words": "node --experimental-strip-types scripts/design/words-per-screen.ts"
   },
   "devDependencies": {
     "@babel/runtime": "7.26.0",

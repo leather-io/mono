@@ -1,0 +1,45 @@
+name: repo:design-toolkit
+
+on:
+  pull_request:
+    paths:
+      - 'docs/design/**'
+      - '.claude/skills/leather-ui/**'
+      - 'CLAUDE.md'
+      - 'apps/web/AGENTS.md'
+      - 'apps/extension/AGENTS.md'
+      - 'eslint-rules/design-system/**'
+      - 'scripts/design/**'
+      - 'packages/ui/**'
+      - 'packages/tokens/**'
+      - 'apps/web/app/pages/playground/**'
+      - 'eslint*.js'
+      - 'package.json'
+      - '.github/workflows/repo:design-toolkit.yml'
+  merge_group:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  design-toolkit:
+    name: design-toolkit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: $/.github/actions/provision
+        with:
+          NODE_VERSION: '22.15.0'
+      - run: pnpm turbo run build --filter='@leather.io/web^...'
+      - run: pnpm --filter @leather.io/web run prepare:build
+      - run: pnpm exec playwright install chromium --only-shell --with-deps
+      - run: pnpm design:test
+      - run: pnpm --filter @leather.io/ui run gen:cheatsheet --check
+      - run: pnpm design:lint
+      - run: pnpm --filter @leather.io/web run typecheck

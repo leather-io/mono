@@ -11,6 +11,8 @@ import reactConfig from '@leather.io/eslint-config/react';
 import { noDimensionsScreenRule } from '@leather.io/eslint-config/rules/no-dimensions-screen';
 import { noSamePackageBarrelImportRule } from '@leather.io/eslint-config/rules/no-same-package-barrel-import';
 
+import { toolkitDesignConfig } from './eslint-rules/design-system/config.js';
+
 const useQueryConfigOrKeyRule = {
   meta: {
     type: 'problem',
@@ -468,4 +470,5 @@ export default defineConfig([
       'leather/use-query-config-or-key': 'error',
     },
   },
+  toolkitDesignConfig,
 ]);

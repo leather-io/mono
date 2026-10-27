@@ -15,7 +15,8 @@
     "lint": "eslint --cache --max-warnings 0",
     "lint:fix": "pnpm lint --fix",
     "test:unit": "vitest run",
-    "typecheck": "tsc --noEmit --project ./tsconfig.native.json && tsc --noEmit --project ./tsconfig.web.json"
+    "typecheck": "tsc --noEmit --project ./tsconfig.native.json && tsc --noEmit --project ./tsconfig.web.json",
+    "gen:cheatsheet": "node --experimental-strip-types scripts/generate-cheatsheet.ts"
   },
   "exports": {
     ".": "./dist-web/exports.web.js",

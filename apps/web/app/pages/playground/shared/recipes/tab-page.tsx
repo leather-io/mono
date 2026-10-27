@@ -1,0 +1,53 @@
+// Recipe: tab page shell (extension full-page tab, desktop web). The same header,
+// body and footer as PopupPage, in a bordered card in a centred 500px column, as
+// the extension's Card does at sm+. The footer sits under the content instead of
+// sticking, and `pinned` simply leads the body (the page scrolls as a whole in a
+// tab). Same gutter as the popup (pageGutter). FramePage picks the shell for
+// the frame a screen is drawn in.
+import { Flex, Stack } from 'leather-styles/jsx';
+
+import type { FrameId } from '../exploration/frame';
+import { PageFooter, PageHeader, pageGutter } from './page-header';
+import { PopupPage, type PopupPageProps } from './popup-page';
+
+type TabPageProps = PopupPageProps;
+
+export function TabPage({
+  title,
+  onBack,
+  onClose,
+  trailing,
+  footer,
+  pinned,
+  children,
+}: TabPageProps) {
+  return (
+    <Flex
+      direction="column"
+      width="100%"
+      maxWidth="pageWidth"
+      mx="auto"
+      bg="ink.background-primary"
+      borderWidth={1}
+      borderStyle="solid"
+      borderColor="ink.border-default"
+      borderRadius="lg"
+      overflow="hidden"
+    >
+      <PageHeader title={title} onBack={onBack} onClose={onClose} trailing={trailing} />
+      <Stack gap="space.05" px={pageGutter} pb="space.05" data-gutter="" data-page-body="">
+        {pinned}
+        {children}
+      </Stack>
+      {footer ? <PageFooter sticky={false}>{footer}</PageFooter> : null}
+    </Flex>
+  );
+}
+
+interface FramePageProps extends TabPageProps {
+  frame: FrameId;
+}
+
+export function FramePage({ frame, ...props }: FramePageProps) {
+  return frame === 'popup' ? <PopupPage {...props} /> : <TabPage {...props} />;
+}

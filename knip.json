@@ -110,7 +110,8 @@
         "app/root.tsx",
         "app/routes.ts",
         "workers/app.ts",
-        "workers/csp.ts"
+        "workers/csp.ts",
+        "app/pages/playground/shared/exploration/image-urls.ts"
       ],
       "paths": {
         "~/*": ["./app/*"]
@@ -131,7 +132,14 @@
       "ignoreDependencies": ["@types/dompurify"]
     },
     "packages/ui": {
-      "entry": ["src/index.ts!", "src/native.ts!", "src/exports.web.ts!", "src/svg.native.d.ts!"],
+      "entry": [
+        "src/index.ts!",
+        "src/native.ts!",
+        "src/exports.web.ts!",
+        "src/svg.native.d.ts!",
+        "scripts/generate-cheatsheet.ts",
+        "src/components/**/*.meta.shared.ts"
+      ],
       "metro": false,
       "ignoreDependencies": [
         "@expo/vector-icons",
@@ -150,6 +158,10 @@
         "metro.config.cjs",
         "src/assets-web/splash-screen.js"
       ]
+    },
+    ".": {
+      "entry": ["scripts/design/*.ts", "eslint-rules/design-system/*.spec.js"],
+      "ignore": ["scripts/design/__fixtures__/**"]
     }
   }
 }
