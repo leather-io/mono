@@ -8,6 +8,7 @@ import {
   decisionCommentHeading,
   decisionContext,
   describeDecision,
+  describeGate,
   describeSource,
   findApprovers,
   findDecisionComment,
@@ -325,5 +326,21 @@ describe('describeSource', () => {
     assert.equal(describeSource('rules'), 'path rules');
     assert.equal(describeSource('model'), 'Claude (claude-opus-5-5)');
     assert.match(describeSource('fallback'), /^fallback/);
+  });
+});
+
+describe('describeGate', () => {
+  it('passes once enough approvals are in', () => {
+    assert.deepEqual(describeGate({ approvals: 1, required: 1 }), {
+      state: 'success',
+      description: '1 of 1 required approvals',
+    });
+  });
+
+  it('fails while approvals are missing', () => {
+    assert.deepEqual(describeGate({ approvals: 1, required: 2 }), {
+      state: 'failure',
+      description: '1 of 2 required approvals',
+    });
   });
 });

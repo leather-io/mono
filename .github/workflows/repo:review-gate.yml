@@ -91,8 +91,8 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: node .github/scripts/review-gate.mjs record
 
-  review-gate:
-    name: review-gate
+  count-approvals:
+    name: count-approvals
     needs: record
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
@@ -100,7 +100,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: read # reads labels and reviews to count approvals
-      statuses: read # reads the recorded decision for the head commit
+      statuses: write # reads the recorded decision and reports the gate result as a commit status
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -115,4 +115,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: node .github/scripts/review-gate.mjs gate

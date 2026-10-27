@@ -42,4 +42,3 @@ jobs:
         with:
           polling_interval: 0.5
           retries: 50
-          checks_exclude: review-gate
