@@ -89,8 +89,10 @@ export function structure(S: Parameters<StructureResolver>[0]) {
             ])
         ),
       S.divider(),
-      ...S.documentTypeListItems().filter(
-        listItem =>
+      ...S.documentTypeListItems().filter(listItem => {
+        const id = listItem.getId();
+        return (
+          !id ||
           ![
             'helpCenterCategory',
             'helpCenterGuide',
@@ -99,7 +101,8 @@ export function structure(S: Parameters<StructureResolver>[0]) {
             'post',
             'legacyHelpCenterCategory',
             'legacyHelpCenterPage',
-          ].includes(listItem.getId() || '')
-      ),
+          ].includes(id)
+        );
+      }),
     ]);
 }

@@ -128,7 +128,7 @@
     "uuid": "11.1.0",
     "valid-url": "1.0.9",
     "webextension-polyfill": "0.12.0",
-    "zod": "4.0.17",
+    "zod": "4.6.7",
     "zod-validation-error": "4.0.1",
     "zxcvbn": "4.4.2"
   },
@@ -138,6 +138,7 @@
     "@leather.io/panda-preset": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/test-app": "workspace:*",
+    "@leather.io/tools": "workspace:*",
     "@pandacss/dev": "1.7.1",
     "@playwright/test": "1.64.0",
     "@redux-devtools/cli": "4.0.4",
