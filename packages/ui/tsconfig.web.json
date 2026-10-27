@@ -20,6 +20,7 @@
     "src/**/*.shared.spec.ts",
     "src/web.exports.ts",
     "src/global.d.ts",
+    "src/svg.web.d.ts",
     "leather-styles/"
   ]
 }

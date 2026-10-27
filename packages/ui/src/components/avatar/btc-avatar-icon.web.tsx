@@ -1,5 +1,5 @@
 import BtcIcon from '../../assets/icons/bitcoin.svg';
-import { Avatar, AvatarProps } from './avatar.web';
+import { Avatar, type AvatarProps } from './avatar.web';
 
 export function BtcAvatarIcon(props: AvatarProps) {
   return (

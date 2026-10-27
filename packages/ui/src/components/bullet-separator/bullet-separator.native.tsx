@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { Box, BoxProps } from '../box/box.native';
-import { TextProps } from '../text/text.native';
+import { Box, type BoxProps } from '../box/box.native';
+import { type TextProps } from '../text/text.native';
 import { BulletSeparator as BulletSeparatorContainer } from './bullet-separator.shared';
 
 interface BulletOperatorProps {

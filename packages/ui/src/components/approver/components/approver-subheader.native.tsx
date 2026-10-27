@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { Box, type BoxProps } from '../../box/box.native';
 import { Text } from '../../text/text.native';

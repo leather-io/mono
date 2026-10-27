@@ -1,12 +1,12 @@
-import React, { forwardRef } from 'react';
+import { type ComponentType, type SVGProps, forwardRef } from 'react';
 
 import 'leather-styles/css';
 
-import { ColorToken, token } from 'leather-styles/tokens';
+import { type ColorToken, token } from 'leather-styles/tokens';
 
-import { IconSize, iconSizeMap } from './icon.shared';
+import { type IconSize, iconSizeMap } from './icon.shared';
 
-export interface IconProps extends React.SVGProps<SVGSVGElement> {
+export interface IconProps extends SVGProps<SVGSVGElement> {
   variant?: IconSize;
   color?: ColorToken;
 }
@@ -14,9 +14,9 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
 interface CreateWebIconParams {
   displayName: string;
   icon: {
-    small?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-    medium?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-    large?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+    small?: ComponentType<SVGProps<SVGSVGElement>>;
+    medium?: ComponentType<SVGProps<SVGSVGElement>>;
+    large?: ComponentType<SVGProps<SVGSVGElement>>;
   };
   defaultVariant?: IconSize;
 }
