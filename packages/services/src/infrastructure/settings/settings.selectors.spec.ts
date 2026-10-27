@@ -57,11 +57,6 @@ describe(selectStakingChainId.name, () => {
     expect(selectStakingChainId(userSettings)).toEqual('mainnet');
   });
 
-  it('maps the BTC Staking Testnet to private-1', () => {
-    const settings = { ...userSettings, network: defaultNetworksKeyedById['private-1'] };
-    expect(selectStakingChainId(settings)).toEqual('private-1');
-  });
-
   it('maps the staking testnet network to the staking-testnet chain', () => {
     const settings = { ...userSettings, network: defaultNetworksKeyedById.stakingTestnet };
     expect(selectStakingChainId(settings)).toEqual('staking-testnet');

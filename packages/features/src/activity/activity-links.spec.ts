@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 
 import { HIRO_EXPLORER_URL, MEMPOOL_BASE_URL } from '@leather.io/constants';
 import {
-  BITCOIN_API_BASE_URL_TESTNET3,
   HIRO_API_BASE_URL_NAKAMOTO_TESTNET,
   HIRO_API_BASE_URL_STAKING_TESTNET,
   HIRO_API_BASE_URL_TESTNET,
@@ -200,7 +199,7 @@ describe('activity-links', () => {
         id: 'txabc',
         type: 'tx',
         networkPreference: 'testnet3',
-        bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET3,
+        bitcoinUrl: defaultNetworksKeyedById.testnet.chain.bitcoin.bitcoinUrl,
       });
 
       expect(result).toBe(`${MEMPOOL_BASE_URL}/testnet/tx/txabc`);
@@ -211,7 +210,7 @@ describe('activity-links', () => {
         id: 'txabc',
         type: 'tx',
         networkPreference: 'regtest',
-        bitcoinUrl: defaultNetworksKeyedById.testnet.chain.bitcoin.bitcoinUrl,
+        bitcoinUrl: defaultNetworksKeyedById.primaryStacksTestnet.chain.bitcoin.bitcoinUrl,
       });
 
       expect(result).toBe('https://mempool.bitcoin.regtest.hiro.so/tx/txabc');

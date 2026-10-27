@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { type BitcoinNetworkModes } from '@leather.io/models';
+import { type BitcoinNetworkModes, resolveLegacyNetworkConfigurationId } from '@leather.io/models';
 import { uniqueArray } from '@leather.io/utils';
 
 import { FormErrorMessages } from '@shared/error-messages';
@@ -16,13 +16,13 @@ import { accountSchema, formatValidationErrors, getRpcParamErrors } from './vali
 export const defaultRpcSendTransferNetwork = 'mainnet';
 
 function defaultNetworkIdToBitcoinNetworkMode(networkId: string): BitcoinNetworkModes | undefined {
-  switch (networkId) {
+  switch (resolveLegacyNetworkConfigurationId(networkId)) {
     case 'mainnet':
       return 'mainnet';
-    case 'testnet3':
+    case 'testnet':
     case 'testnet4':
       return 'testnet';
-    case 'testnet':
+    case 'primaryStacksTestnet':
     case 'sbtcDevenv':
     case 'devnet':
       return 'regtest';

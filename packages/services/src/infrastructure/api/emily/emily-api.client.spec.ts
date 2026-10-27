@@ -24,9 +24,9 @@ const sbtcLimits = {
 
 const fetchWithCache = vi.fn((_key: unknown, fetchFn: () => Promise<unknown>) => fetchFn());
 
-function makeClient(mode: 'mainnet' | 'testnet' = 'mainnet') {
+function makeClient(mode: 'mainnet' | 'testnet' | 'regtest' = 'mainnet', id: string = mode) {
   const settingsService = {
-    getSettings: () => ({ network: { chain: { bitcoin: { mode } } } }),
+    getSettings: () => ({ network: { id, chain: { bitcoin: { mode } } } }),
   } as unknown as SettingsService;
   const cacheService = { fetchWithCache } as unknown as HttpCacheService;
   return new EmilyApiClient(settingsService, cacheService);
@@ -49,7 +49,27 @@ describe(EmilyApiClient.name, () => {
 
       await makeClient('testnet').getSbtcLimits();
       expect(fetchWithCache).toHaveBeenLastCalledWith(
-        ['emily-api-get-sbtc-limits', 'https://beta.sbtc-emily.com'],
+        ['emily-api-get-sbtc-limits', 'https://testnet.sbtc-emily.com'],
+        expect.any(Function)
+      );
+    });
+
+    it('uses the hosted testnet emily url for the primary stacks testnet', async () => {
+      vi.spyOn(axios, 'get').mockResolvedValue({ data: sbtcLimits });
+
+      await makeClient('regtest', 'primaryStacksTestnet').getSbtcLimits();
+      expect(fetchWithCache).toHaveBeenLastCalledWith(
+        ['emily-api-get-sbtc-limits', 'https://testnet.sbtc-emily.com'],
+        expect.any(Function)
+      );
+    });
+
+    it('uses the local emily url for the sbtc devenv', async () => {
+      vi.spyOn(axios, 'get').mockResolvedValue({ data: sbtcLimits });
+
+      await makeClient('regtest', 'sbtcDevenv').getSbtcLimits();
+      expect(fetchWithCache).toHaveBeenLastCalledWith(
+        ['emily-api-get-sbtc-limits', 'http://localhost:3031'],
         expect.any(Function)
       );
     });
@@ -95,7 +115,7 @@ describe(EmilyApiClient.name, () => {
       await makeClient('testnet').notifyDeposit(depositRequest);
 
       expect(post).toHaveBeenCalledWith(
-        'https://beta.sbtc-emily.com/deposit',
+        'https://testnet.sbtc-emily.com/deposit',
         depositRequest,
         expect.objectContaining({ timeout: 10_000 })
       );

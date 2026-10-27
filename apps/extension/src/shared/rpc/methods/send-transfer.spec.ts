@@ -156,7 +156,7 @@ describe('`sendTransfer` method', () => {
 
   test('that it supports regtest addresses', () => {
     const result = rpcSendTransferParamsSchema.safeParse({
-      network: 'testnet',
+      network: 'primaryStacksTestnet',
       account: 0,
       recipients: [
         {
@@ -166,6 +166,20 @@ describe('`sendTransfer` method', () => {
       ],
     });
     expect(result.success).toEqual(true);
+  });
+
+  test('that it validates the legacy sbtcTestnet id as the primary hiro testnet', () => {
+    const result = rpcSendTransferParamsSchema.safeParse({
+      network: 'sbtcTestnet',
+      account: 0,
+      recipients: [
+        {
+          address: 'tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d',
+          amount: '100',
+        },
+      ],
+    });
+    expect(result.success).toEqual(false);
   });
 
   test('that it accepts custom non-default network ids', () => {

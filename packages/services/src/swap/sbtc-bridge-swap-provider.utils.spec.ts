@@ -2,12 +2,15 @@ import { AxiosError, AxiosHeaders, type AxiosResponse, CanceledError } from 'axi
 import BigNumber from 'bignumber.js';
 import { describe, expect, it } from 'vitest';
 
+import { defaultNetworksKeyedById } from '@leather.io/models';
+
 import type { EmilySbtcLimitsResponse } from '../infrastructure/api/emily/emily-api.types';
 import {
   calculateSignerSweepTxFee,
   classifySbtcNotifyError,
   getRemainingSbtcSupply,
   getSbtcBridgeExecutionConstraints,
+  getSbtcWithdrawalNetworkMode,
   sbtcStacksAddressMap,
   toXOnlyPublicKeyHex,
 } from './sbtc-bridge-swap-provider.utils';
@@ -279,5 +282,23 @@ describe(toXOnlyPublicKeyHex.name, () => {
 
   it('rejects keys of any other length', () => {
     expect(() => toXOnlyPublicKeyHex('abcdef')).toThrowError('Invalid public key length');
+  });
+});
+
+describe('getSbtcWithdrawalNetworkMode', () => {
+  it('supports mainnet and bitcoin testnet networks', () => {
+    expect(getSbtcWithdrawalNetworkMode(defaultNetworksKeyedById.mainnet)).toBe('mainnet');
+    expect(getSbtcWithdrawalNetworkMode(defaultNetworksKeyedById.testnet)).toBe('testnet');
+  });
+
+  it('supports the primary stacks testnet on testnet', () => {
+    expect(getSbtcWithdrawalNetworkMode(defaultNetworksKeyedById.primaryStacksTestnet)).toBe(
+      'testnet'
+    );
+  });
+
+  it('does not support other regtest or signet networks', () => {
+    expect(getSbtcWithdrawalNetworkMode(defaultNetworksKeyedById.sbtcDevenv)).toBeNull();
+    expect(getSbtcWithdrawalNetworkMode(defaultNetworksKeyedById.signet)).toBeNull();
   });
 });

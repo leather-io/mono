@@ -101,7 +101,7 @@ describe(BitcoinTransactionsService.name, () => {
         {} as unknown as LeatherApiClient,
         mockMempoolApiClient,
         {
-          getSettings: () => ({ network: defaultNetworksKeyedById['private-1'] }),
+          getSettings: () => ({ network: defaultNetworksKeyedById.primaryStacksTestnet }),
         } as unknown as SettingsService
       );
       const mockAccount: AccountAddresses = {
