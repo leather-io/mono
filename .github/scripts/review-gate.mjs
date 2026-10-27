@@ -12,6 +12,7 @@ import {
 
 export const claudeModel = 'claude-opus-5-5';
 export const decisionContext = 'review-gate/decision';
+export const gateContext = 'review-gate';
 const trustedStatusCreator = 'github-actions[bot]';
 export const decisionCommentHeading = '### Review gate';
 const maxStatusDescriptionLength = 140;
@@ -274,6 +275,13 @@ export function describeSource(source) {
   return sourceLabels[source] ?? source;
 }
 
+export function describeGate({ approvals, required }) {
+  return {
+    state: approvals >= required ? 'success' : 'failure',
+    description: `${approvals} of ${required} required approvals`,
+  };
+}
+
 export function formatDecisionComment(decision, { headSha, runUrl }) {
   return neutraliseMentions(
     `${decisionCommentHeading}: ${formatReviewCount(decision.reviews)}\n\n${decision.reason}\n\n` +
@@ -399,20 +407,30 @@ async function runRecord() {
 async function runGate() {
   const github = createGitHubFromEnv();
   const number = Number(readRequiredEnv('PR_NUMBER'));
+  const runUrl = readRequiredEnv('RUN_URL');
   const pullRequest = await github.getPullRequest(number);
-  const [reviews, statuses] = await Promise.all([
-    github.listReviews(number),
-    github.listStatuses(pullRequest.head.sha),
-  ]);
-  const required = requiredApprovals(statuses);
-  const approvers = findApprovers(reviews, {
-    headSha: pullRequest.head.sha,
-    author: pullRequest.user.login,
-  });
-  const permissions = await Promise.all(approvers.map(login => github.getPermission(login)));
-  const approvals = permissions.filter(hasWriteAccess).length;
-  writeSummary(`${approvals} of ${required} required approvals on ${pullRequest.head.sha}.`);
-  if (approvals < required) process.exitCode = 1;
+  const headSha = pullRequest.head.sha;
+  try {
+    const [reviews, statuses] = await Promise.all([
+      github.listReviews(number),
+      github.listStatuses(headSha),
+    ]);
+    const required = requiredApprovals(statuses);
+    const approvers = findApprovers(reviews, { headSha, author: pullRequest.user.login });
+    const permissions = await Promise.all(approvers.map(login => github.getPermission(login)));
+    const approvals = permissions.filter(hasWriteAccess).length;
+    const gate = describeGate({ approvals, required });
+    await github.createStatus(headSha, { ...gate, context: gateContext, target_url: runUrl });
+    writeSummary(`${gate.description} on ${headSha}.`);
+  } catch (error) {
+    await github.createStatus(headSha, {
+      state: 'error',
+      context: gateContext,
+      description: 'Could not count approvals. Re-run the workflow.',
+      target_url: runUrl,
+    });
+    throw error;
+  }
 }
 
 const modes = { prepare: runPrepare, decide: runDecide, record: runRecord, gate: runGate };
