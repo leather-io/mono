@@ -1,11 +1,8 @@
-import type { Query, QueryKey } from '@tanstack/react-query';
+import type { Query } from '@tanstack/react-query';
 import axios from 'axios';
-import { ZodError } from 'zod';
+import { type ZodError } from 'zod';
 
-export function formatQueryZodErrors(
-  error: ZodError,
-  query: Query<unknown, unknown, unknown, QueryKey>
-) {
+export function formatQueryZodErrors(error: ZodError, query: Query<unknown, unknown, unknown>) {
   return [
     'schema_fail',
     {
