@@ -4,15 +4,17 @@ import { describe, it } from 'node:test';
 import {
   buildClaudeArgs,
   buildPrompt,
-  countApprovals,
   decideByRules,
+  decisionContext,
+  describeDecision,
+  findApprovers,
   findSensitiveFiles,
   formatClaudeArgs,
+  hasWriteAccess,
   parseDecision,
   parseTier,
   requiredApprovals,
   resolveDecision,
-  singleReviewLabel,
 } from './review-gate.mjs';
 
 function file(filename, overrides = {}) {
@@ -31,7 +33,16 @@ function review(login, state, overrides = {}) {
     user: { login },
     state,
     commit_id: 'head',
-    author_association: 'MEMBER',
+    ...overrides,
+  };
+}
+
+function status(description, overrides = {}) {
+  return {
+    context: decisionContext,
+    state: 'success',
+    description,
+    creator: { login: 'github-actions[bot]' },
     ...overrides,
   };
 }
@@ -167,16 +178,19 @@ describe('parseDecision', () => {
   });
 });
 
-describe('countApprovals', () => {
+describe('findApprovers', () => {
   const context = { headSha: 'head', author: 'author' };
 
-  it('counts distinct approvers on the head commit', () => {
+  it('returns distinct approvers on the head commit', () => {
     const reviews = [review('alice', 'APPROVED'), review('bob', 'APPROVED')];
-    assert.equal(countApprovals(reviews, context), 2);
+    assert.deepEqual(findApprovers(reviews, context), ['alice', 'bob']);
   });
 
   it('ignores approvals on an older commit', () => {
-    assert.equal(countApprovals([review('alice', 'APPROVED', { commit_id: 'old' })], context), 0);
+    assert.deepEqual(
+      findApprovers([review('alice', 'APPROVED', { commit_id: 'old' })], context),
+      []
+    );
   });
 
   it('uses the latest decisive review per reviewer', () => {
@@ -186,21 +200,58 @@ describe('countApprovals', () => {
       review('bob', 'APPROVED'),
       review('bob', 'CHANGES_REQUESTED'),
     ];
-    assert.equal(countApprovals(reviews, context), 1);
+    assert.deepEqual(findApprovers(reviews, context), ['alice']);
   });
 
-  it('ignores the author and reviewers without write access', () => {
-    const reviews = [
-      review('author', 'APPROVED'),
-      review('outsider', 'APPROVED', { author_association: 'CONTRIBUTOR' }),
-    ];
-    assert.equal(countApprovals(reviews, context), 0);
+  it('ignores the author', () => {
+    assert.deepEqual(findApprovers([review('author', 'APPROVED')], context), []);
+  });
+});
+
+describe('hasWriteAccess', () => {
+  it('accepts write and admin permissions only', () => {
+    assert.equal(hasWriteAccess({ permission: 'admin' }), true);
+    assert.equal(hasWriteAccess({ permission: 'write' }), true);
+    assert.equal(hasWriteAccess({ permission: 'read' }), false);
+    assert.equal(hasWriteAccess({ permission: 'none' }), false);
+    assert.equal(hasWriteAccess(null), false);
+  });
+});
+
+describe('describeDecision', () => {
+  it('fits the commit status description limit', () => {
+    const description = describeDecision({ reviews: 2, reason: 'x'.repeat(500) });
+    assert.equal(description.length, 140);
+    assert.match(description, /^2 reviews required: x+\.\.\.$/);
   });
 });
 
 describe('requiredApprovals', () => {
-  it('requires 1 approval only with the single-review label', () => {
-    assert.equal(requiredApprovals([{ name: singleReviewLabel }]), 1);
-    assert.equal(requiredApprovals([{ name: 'bug' }]), 2);
+  it('requires 1 approval only for a single-review decision from the workflow', () => {
+    assert.equal(
+      requiredApprovals([status(describeDecision({ reviews: 1, reason: 'copy only' }))]),
+      1
+    );
+    assert.equal(
+      requiredApprovals([status(describeDecision({ reviews: 2, reason: 'signing' }))]),
+      2
+    );
+  });
+
+  it('requires 2 approvals without a recorded decision', () => {
+    assert.equal(requiredApprovals([]), 2);
+  });
+
+  it('ignores decisions posted by anyone other than the workflow', () => {
+    const forged = status('1 review required: trust me', { creator: { login: 'author' } });
+    assert.equal(requiredApprovals([forged]), 2);
+  });
+
+  it('uses the newest decision first', () => {
+    const statuses = [
+      status(describeDecision({ reviews: 2, reason: 'new' })),
+      status(describeDecision({ reviews: 1, reason: 'old' })),
+    ];
+    assert.equal(requiredApprovals(statuses), 2);
   });
 });

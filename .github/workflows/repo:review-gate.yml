@@ -2,7 +2,7 @@ name: repo:review-gate
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
+    types: [opened, synchronize, reopened, ready_for_review]
   pull_request_review:
     types: [submitted, dismissed]
 
@@ -17,8 +17,6 @@ jobs:
     name: classify
     if: >-
       github.event_name == 'pull_request' &&
-      github.event.action != 'labeled' &&
-      github.event.action != 'unlabeled' &&
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -42,6 +40,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: node .github/scripts/review-gate.mjs prepare
 
       - name: ask-claude
@@ -62,15 +61,15 @@ jobs:
           STRUCTURED_OUTPUT: ${{ steps.claude.outputs.structured_output }}
         run: node .github/scripts/review-gate.mjs decide
 
-  label:
-    name: label
+  record:
+    name: record
     needs: classify
     if: ${{ !cancelled() && needs.classify.result != 'skipped' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
-      pull-requests: write # sets or removes the review:single label
+      statuses: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -81,22 +80,23 @@ jobs:
         with:
           node-version: '22'
 
-      - name: apply-review-label
+      - name: record-decision
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           DECISION: ${{ needs.classify.outputs.decision }}
-        run: node .github/scripts/review-gate.mjs label
+        run: node .github/scripts/review-gate.mjs record
 
   review-gate:
     name: review-gate
-    needs: label
+    needs: record
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
       pull-requests: read # reads labels and reviews to count approvals
+      statuses: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

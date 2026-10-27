@@ -6,12 +6,14 @@ import { pathToFileURL } from 'node:url';
 const apiUrl = process.env.GITHUB_API_URL ?? 'https://api.github.com';
 const pageSize = 100;
 
-export const singleReviewLabel = 'review:single';
+export const decisionContext = 'review-gate/decision';
+const trustedStatusCreator = 'github-actions[bot]';
+const maxStatusDescriptionLength = 140;
 const maxChangedFiles = 150;
 const maxPromptBytes = 100_000;
 const maxErrorLength = 300;
 
-const trustedAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+const writePermissions = new Set(['admin', 'write']);
 const decisiveReviewStates = new Set(['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED']);
 
 const sensitivePathPatterns = [
@@ -195,23 +197,43 @@ export function parseDecision(value) {
   }
 }
 
-export function countApprovals(reviews, { headSha, author }) {
+export function findApprovers(reviews, { headSha, author }) {
   const latestByReviewer = new Map();
   for (const review of reviews) {
     if (!review.user || !decisiveReviewStates.has(review.state)) continue;
     latestByReviewer.set(review.user.login, review);
   }
-  return [...latestByReviewer.values()].filter(
-    review =>
-      review.state === 'APPROVED' &&
-      review.commit_id === headSha &&
-      review.user.login !== author &&
-      trustedAssociations.has(review.author_association)
-  ).length;
+  return [...latestByReviewer.values()]
+    .filter(
+      review =>
+        review.state === 'APPROVED' && review.commit_id === headSha && review.user.login !== author
+    )
+    .map(review => review.user.login);
 }
 
-export function requiredApprovals(labels) {
-  return labels.some(label => label.name === singleReviewLabel) ? 1 : 2;
+export function hasWriteAccess(permission) {
+  return writePermissions.has(permission?.permission);
+}
+
+function formatReviewCount(reviews) {
+  return `${reviews} review${reviews === 1 ? '' : 's'} required`;
+}
+
+export function describeDecision(decision) {
+  const description = `${formatReviewCount(decision.reviews)}: ${decision.reason}`;
+  return description.length > maxStatusDescriptionLength
+    ? `${description.slice(0, maxStatusDescriptionLength - 3)}...`
+    : description;
+}
+
+export function requiredApprovals(statuses) {
+  const decision = statuses.find(
+    status =>
+      status.context === decisionContext &&
+      status.state === 'success' &&
+      status.creator?.login === trustedStatusCreator
+  );
+  return decision?.description?.startsWith(`${formatReviewCount(1)}:`) ? 1 : 2;
 }
 
 export function createGitHubClient({ token, repository }) {
@@ -250,11 +272,14 @@ export function createGitHubClient({ token, repository }) {
     listReviews(number) {
       return requestAllPages(`/pulls/${number}/reviews`);
     },
-    addLabel(number, name) {
-      return request(`/issues/${number}/labels`, { method: 'POST', body: { labels: [name] } });
+    listStatuses(sha) {
+      return requestAllPages(`/commits/${sha}/statuses`);
     },
-    removeLabel(number, name) {
-      return request(`/issues/${number}/labels/${encodeURIComponent(name)}`, { method: 'DELETE' });
+    createStatus(sha, status) {
+      return request(`/statuses/${sha}`, { method: 'POST', body: status });
+    },
+    getPermission(login) {
+      return request(`/collaborators/${encodeURIComponent(login)}/permission`);
     },
   };
 }
@@ -289,11 +314,17 @@ function createGitHubFromEnv() {
 async function runPrepare() {
   const github = createGitHubFromEnv();
   const number = Number(readRequiredEnv('PR_NUMBER'));
-  const [pullRequest, files] = await Promise.all([
-    github.getPullRequest(number),
-    github.listFiles(number),
-  ]);
-  const ruleDecision = decideByRules(pullRequest, files);
+  const headSha = readRequiredEnv('HEAD_SHA');
+  const files = await github.listFiles(number);
+  const pullRequest = await github.getPullRequest(number);
+  const ruleDecision =
+    pullRequest.head.sha === headSha
+      ? decideByRules(pullRequest, files)
+      : {
+          reviews: 2,
+          confidence: 'high',
+          reason: `The head moved from ${headSha} to ${pullRequest.head.sha} during classification.`,
+        };
   if (ruleDecision) {
     writeOutput('rule-decision', JSON.stringify(ruleDecision));
     return;
@@ -312,42 +343,43 @@ function runDecide() {
   if (decision.source === 'fallback') console.log(`::warning::${decision.reason}`);
   writeOutput('decision', JSON.stringify(decision));
   writeSummary(
-    `### ${decision.reviews} review${decision.reviews === 1 ? '' : 's'} required\n\n` +
+    `### ${formatReviewCount(decision.reviews)}\n\n` +
       `${decision.reason}\n\nDecided by: ${decision.source}, confidence: ${decision.confidence}.`
   );
 }
 
-async function runLabel() {
+async function runRecord() {
   const github = createGitHubFromEnv();
-  const number = Number(readRequiredEnv('PR_NUMBER'));
+  const headSha = readRequiredEnv('HEAD_SHA');
   const decision = parseDecision(process.env.DECISION);
-  if (decision.reviews === 1) {
-    await github.addLabel(number, singleReviewLabel);
-  } else {
-    await github.removeLabel(number, singleReviewLabel);
-  }
-  console.log(
-    `${decision.reviews} review${decision.reviews === 1 ? '' : 's'} required: ${decision.reason}`
-  );
+  await github.createStatus(headSha, {
+    state: 'success',
+    context: decisionContext,
+    description: describeDecision(decision),
+  });
+  console.log(`${formatReviewCount(decision.reviews)} on ${headSha}: ${decision.reason}`);
 }
 
 async function runGate() {
   const github = createGitHubFromEnv();
   const number = Number(readRequiredEnv('PR_NUMBER'));
-  const [pullRequest, reviews] = await Promise.all([
-    github.getPullRequest(number),
+  const pullRequest = await github.getPullRequest(number);
+  const [reviews, statuses] = await Promise.all([
     github.listReviews(number),
+    github.listStatuses(pullRequest.head.sha),
   ]);
-  const required = requiredApprovals(pullRequest.labels);
-  const approvals = countApprovals(reviews, {
+  const required = requiredApprovals(statuses);
+  const approvers = findApprovers(reviews, {
     headSha: pullRequest.head.sha,
     author: pullRequest.user.login,
   });
+  const permissions = await Promise.all(approvers.map(login => github.getPermission(login)));
+  const approvals = permissions.filter(hasWriteAccess).length;
   writeSummary(`${approvals} of ${required} required approvals on ${pullRequest.head.sha}.`);
   if (approvals < required) process.exitCode = 1;
 }
 
-const modes = { prepare: runPrepare, decide: runDecide, label: runLabel, gate: runGate };
+const modes = { prepare: runPrepare, decide: runDecide, record: runRecord, gate: runGate };
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const run = modes[process.argv[2]];
