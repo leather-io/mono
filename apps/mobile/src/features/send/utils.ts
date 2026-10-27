@@ -1,12 +1,12 @@
 import { type BtcFormSchema } from '@/features/send/forms/btc/btc-form-schema';
 import { type StxFormSchema } from '@/features/send/forms/stx/stx-form-schema';
+import { queryClient } from '@/queries/query';
 import { PayerLookupFn } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { analytics } from '@/utils/analytics';
 import { bytesToHex } from '@noble/hashes/utils';
 import { type PublicKey } from '@stacks/common';
 import { StacksNetwork } from '@stacks/network';
 import BigNumber from 'bignumber.js';
-import memoize from 'p-memoize';
 
 import type { ComplianceScreeningPoint } from '@leather.io/analytics';
 import {
@@ -15,8 +15,9 @@ import {
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import { type BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
+import { createAddressComplianceCheckQueryConfig } from '@leather.io/queries';
 import { defaultStacksFees } from '@leather.io/query';
-import { getComplianceService } from '@leather.io/services';
+import { type UserSettings, isOfflineComplianceCheckReason } from '@leather.io/services';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import {
   convertAmountToBaseUnit,
@@ -101,16 +102,20 @@ interface addressComplianceValidatorParams {
   address: string;
   shouldCheckCompliance: boolean;
   screeningPoint: ComplianceScreeningPoint;
+  settings: UserSettings;
 }
 
-async function rawAddressComplianceValidator({
+export async function addressComplianceValidator({
   address,
   shouldCheckCompliance,
   screeningPoint,
+  settings,
 }: addressComplianceValidatorParams) {
   if (!shouldCheckCompliance) return true;
 
-  const result = await getComplianceService().checkAddressCompliance(address);
+  const result = await queryClient.fetchQuery(
+    createAddressComplianceCheckQueryConfig(address, settings)
+  );
   if (result.status === 'non_compliant') {
     analytics.track('non_compliant_entity_detected', {
       address,
@@ -119,7 +124,7 @@ async function rawAddressComplianceValidator({
     });
     return false;
   }
-  if (result.status === 'unavailable') {
+  if (result.status === 'unavailable' && !isOfflineComplianceCheckReason(result.reason)) {
     analytics.track('compliance_check_unavailable', {
       address,
       reason: result.reason,
@@ -128,7 +133,3 @@ async function rawAddressComplianceValidator({
   }
   return true;
 }
-
-export const addressComplianceValidator = memoize(rawAddressComplianceValidator, {
-  cacheKey: ([argument]) => argument.address,
-});

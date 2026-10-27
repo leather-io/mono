@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   LeatherApiAddressComplianceCheck,
@@ -6,9 +6,24 @@ import {
 } from '../infrastructure/api/leather/leather-api.client';
 import { LeatherApiError } from '../infrastructure/api/leather/leather-api.error';
 import { SettingsService } from '../infrastructure/settings/settings.service';
-import { ComplianceService } from './compliance.service';
+import { ComplianceService, isOfflineComplianceCheckReason } from './compliance.service';
 
 const testAddress = 'bc1qtest';
+
+function makeTimeoutError() {
+  const timeoutError = new Error('Promise timed out after 60000 milliseconds');
+  timeoutError.name = 'TimeoutError';
+  return timeoutError;
+}
+
+function makeFlakyApi(
+  failures: Error[],
+  response: LeatherApiAddressComplianceCheck = makeCheckResponse('compliant', [])
+) {
+  const api = vi.fn<() => Promise<LeatherApiAddressComplianceCheck>>();
+  failures.forEach(failure => api.mockRejectedValueOnce(failure));
+  return api.mockResolvedValue(response);
+}
 
 function makeService(
   fetchAddressComplianceCheck: () => Promise<LeatherApiAddressComplianceCheck>,
@@ -27,6 +42,14 @@ function makeCheckResponse(
 ): LeatherApiAddressComplianceCheck {
   return { address: testAddress, status, checks };
 }
+
+describe(isOfflineComplianceCheckReason.name, () => {
+  it('recognises only the offline reason', () => {
+    expect(isOfflineComplianceCheckReason('leather_api_offline')).toBe(true);
+    expect(isOfflineComplianceCheckReason('leather_api_network_error')).toBe(false);
+    expect(isOfflineComplianceCheckReason('risk_screening_chainalysis_rate_limited')).toBe(false);
+  });
+});
 
 describe(ComplianceService.name, () => {
   describe('checkAddressCompliance', () => {
@@ -177,11 +200,18 @@ describe(ComplianceService.name, () => {
     });
 
     it('returns unavailable when the request never reaches the api', async () => {
-      const service = makeService(() => Promise.reject(new TypeError('Failed to fetch')));
+      vi.useFakeTimers();
+      try {
+        const service = makeService(() => Promise.reject(new TypeError('Failed to fetch')));
 
-      const result = await service.checkAddressCompliance(testAddress);
+        const promise = service.checkAddressCompliance(testAddress);
+        await vi.runAllTimersAsync();
+        const result = await promise;
 
-      expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_network_error' });
+        expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_network_error' });
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('returns unavailable with unknown_error for unrecognized errors', async () => {
@@ -201,6 +231,155 @@ describe(ComplianceService.name, () => {
       await expect(
         service.checkAddressCompliance(testAddress, abortController.signal)
       ).rejects.toBe(abortError);
+    });
+
+    describe('transient failure retry', () => {
+      afterEach(() => {
+        vi.useRealTimers();
+        vi.unstubAllGlobals();
+      });
+
+      it('retries once after a network error and returns the successful result', async () => {
+        vi.useFakeTimers();
+        const api = makeFlakyApi([new TypeError('Failed to fetch')]);
+        const service = makeService(api);
+
+        const promise = service.checkAddressCompliance(testAddress);
+        await vi.runAllTimersAsync();
+        const result = await promise;
+
+        expect(result).toEqual({ status: 'compliant' });
+        expect(api).toHaveBeenCalledTimes(2);
+      });
+
+      it('waits before retrying rather than retrying immediately', async () => {
+        vi.useFakeTimers();
+        const api = makeFlakyApi([new TypeError('Failed to fetch')]);
+        const service = makeService(api);
+
+        const promise = service.checkAddressCompliance(testAddress);
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(api).toHaveBeenCalledTimes(1);
+        expect(vi.getTimerCount()).toBe(1);
+
+        await vi.runAllTimersAsync();
+        await promise;
+      });
+
+      it('returns unavailable with the network reason when the retry also fails', async () => {
+        vi.useFakeTimers();
+        const api = makeFlakyApi([
+          new TypeError('Failed to fetch'),
+          new TypeError('Failed to fetch'),
+        ]);
+        const service = makeService(api);
+
+        const promise = service.checkAddressCompliance(testAddress);
+        await vi.runAllTimersAsync();
+        const result = await promise;
+
+        expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_network_error' });
+        expect(api).toHaveBeenCalledTimes(2);
+      });
+
+      it('does not retry when the api responded with an http error', async () => {
+        vi.useFakeTimers();
+        const api = makeFlakyApi([
+          new LeatherApiError(
+            'https://api.leather.io/v1/compliance/addresses/bc1qtest',
+            503,
+            'Service Unavailable'
+          ),
+        ]);
+        const service = makeService(api);
+
+        const promise = service.checkAddressCompliance(testAddress);
+        await vi.runAllTimersAsync();
+        const result = await promise;
+
+        expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_http_503' });
+        expect(api).toHaveBeenCalledTimes(1);
+      });
+
+      it('does not retry unrecognized errors', async () => {
+        vi.useFakeTimers();
+        const api = makeFlakyApi([new Error('Rate limited call undefined')]);
+        const service = makeService(api);
+
+        const promise = service.checkAddressCompliance(testAddress);
+        await vi.runAllTimersAsync();
+        const result = await promise;
+
+        expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_unknown_error' });
+        expect(api).toHaveBeenCalledTimes(1);
+      });
+
+      it('does not retry and rejects with an abort error when the caller aborted during the retry delay', async () => {
+        vi.useFakeTimers();
+        const api = makeFlakyApi([new TypeError('Failed to fetch')]);
+        const service = makeService(api);
+        const abortController = new AbortController();
+
+        const promise = service.checkAddressCompliance(testAddress, abortController.signal);
+        const assertion = expect(promise).rejects.toMatchObject({ name: 'AbortError' });
+        await vi.advanceTimersByTimeAsync(0);
+        abortController.abort();
+        await assertion;
+
+        expect(api).toHaveBeenCalledTimes(1);
+        expect(vi.getTimerCount()).toBe(0);
+      });
+
+      it('does not retry a rate limiter timeout and maps it to leather_api_timeout', async () => {
+        vi.useFakeTimers();
+        const api = makeFlakyApi([makeTimeoutError()]);
+        const service = makeService(api);
+
+        const promise = service.checkAddressCompliance(testAddress);
+        await vi.runAllTimersAsync();
+        const result = await promise;
+
+        expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_timeout' });
+        expect(api).toHaveBeenCalledTimes(1);
+      });
+
+      it('does not retry and maps a network error to leather_api_offline when the runtime reports no connectivity', async () => {
+        vi.stubGlobal('navigator', { onLine: false });
+        const api = makeFlakyApi([new TypeError('Failed to fetch')]);
+        const service = makeService(api);
+
+        const result = await service.checkAddressCompliance(testAddress);
+
+        expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_offline' });
+        expect(api).toHaveBeenCalledTimes(1);
+      });
+
+      it('keeps the unknown reason for unrecognized errors when the runtime reports no connectivity', async () => {
+        vi.stubGlobal('navigator', { onLine: false });
+        const service = makeService(() => Promise.reject(new Error('Rate limited call undefined')));
+
+        const result = await service.checkAddressCompliance(testAddress);
+
+        expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_unknown_error' });
+      });
+
+      it('keeps the http reason when the runtime reports no connectivity', async () => {
+        vi.stubGlobal('navigator', { onLine: false });
+        const service = makeService(() =>
+          Promise.reject(
+            new LeatherApiError(
+              'https://api.leather.io/v1/compliance/addresses/bc1qtest',
+              500,
+              'Internal Server Error'
+            )
+          )
+        );
+
+        const result = await service.checkAddressCompliance(testAddress);
+
+        expect(result).toEqual({ status: 'unavailable', reason: 'leather_api_http_500' });
+      });
     });
   });
 });
