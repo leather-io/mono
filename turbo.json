@@ -61,6 +61,19 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "@leather.io/tools#test:unit": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/apps/extension/tests/**",
+        "$TURBO_ROOT$/apps/extension/src/app/**/*.tsx",
+        "$TURBO_ROOT$/apps/extension/src/shared/route-urls.ts",
+        "$TURBO_ROOT$/apps/extension/src/background/messaging/rpc-methods/**",
+        "$TURBO_ROOT$/packages/rpc/src/methods/**"
+      ]
     }
   }
 }
