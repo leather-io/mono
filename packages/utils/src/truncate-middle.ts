@@ -17,7 +17,7 @@ export function truncateMiddle(input: string, offset = 5): string {
   } else {
     // Everything else
     const start = input?.substring(0, offset);
-    const end = input?.substring(input.length - offset, input.length);
+    const end = input?.substring(input.length - offset, input.length - 1);
     return `${start}…${end}`;
   }
 }
