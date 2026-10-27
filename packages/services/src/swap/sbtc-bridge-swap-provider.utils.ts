@@ -120,7 +120,7 @@ export function getSbtcWithdrawalContractCallData({
 }
 
 const depositSweepTxFeeWeightVbytes = 530;
-const withdrawalSweepTxFeeWeightVbytes = 470;
+const withdrawalSweepTxFeeWeightVbytes = 823;
 
 export function calculateSignerSweepTxFee(txType: SbtcBridgeTxType, feeRate: number): number {
   return Math.ceil(
