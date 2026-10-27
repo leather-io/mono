@@ -71,6 +71,7 @@ jobs:
     permissions:
       contents: read
       statuses: write # records the decision as a commit status on the classified head
+      pull-requests: write # keeps one review gate comment on the pull request up to date
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -87,6 +88,7 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           DECISION: ${{ needs.classify.outputs.decision }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: node .github/scripts/review-gate.mjs record
 
   review-gate:

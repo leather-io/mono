@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import {
   createGitHubRequestFromEnv,
+  neutraliseMentions,
   readRequiredEnv,
   runMode,
   writeOutput,
@@ -235,10 +236,6 @@ export function parseVerdicts(text) {
   } catch {
     return null;
   }
-}
-
-function neutraliseMentions(text) {
-  return text.replace(/@(?=[\w-])/g, '@​');
 }
 
 export function formatFindingComment(finding) {
