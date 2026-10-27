@@ -55,6 +55,10 @@ export function createGitHubRequest({ token, repository }) {
   return { request, requestAllPages, graphql };
 }
 
+export function neutraliseMentions(text) {
+  return text.replace(/@(?=[\w-])/g, '@\u200b');
+}
+
 export function readRequiredEnv(name) {
   const value = process.env[name];
   if (!value) throw new Error(`${name} is not set`);

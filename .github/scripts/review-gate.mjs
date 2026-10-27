@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import {
   createGitHubRequest,
+  neutraliseMentions,
   readRequiredEnv,
   runMode,
   writeOutput,
@@ -12,6 +13,7 @@ import {
 export const claudeModel = 'claude-opus-5-5';
 export const decisionContext = 'review-gate/decision';
 const trustedStatusCreator = 'github-actions[bot]';
+export const decisionCommentHeading = '### Review gate';
 const maxStatusDescriptionLength = 140;
 const maxChangedFiles = 150;
 const maxPromptBytes = 100_000;
@@ -262,6 +264,22 @@ export function requiredApprovals(statuses) {
   return allowSingleReview ? 1 : 2;
 }
 
+export function formatDecisionComment(decision, { headSha, runUrl }) {
+  return neutraliseMentions(
+    `${decisionCommentHeading}: ${formatReviewCount(decision.reviews)}\n\n${decision.reason}\n\n` +
+      `Decided by ${decision.source} with ${decision.confidence} confidence for ${headSha}. ` +
+      `[Run](${runUrl})`
+  );
+}
+
+export function findDecisionComment(comments) {
+  return comments.find(
+    comment =>
+      comment.user?.login === trustedStatusCreator &&
+      comment.body?.startsWith(`${decisionCommentHeading}:`)
+  );
+}
+
 export function createGitHubClient({ token, repository }) {
   const { request, requestAllPages } = createGitHubRequest({ token, repository });
 
@@ -280,6 +298,15 @@ export function createGitHubClient({ token, repository }) {
     },
     createStatus(sha, status) {
       return request(`/statuses/${sha}`, { method: 'POST', body: status });
+    },
+    listComments(number) {
+      return requestAllPages(`/issues/${number}/comments`);
+    },
+    createComment(number, body) {
+      return request(`/issues/${number}/comments`, { method: 'POST', body: { body } });
+    },
+    updateComment(id, body) {
+      return request(`/issues/comments/${id}`, { method: 'PATCH', body: { body } });
     },
     getPermission(login) {
       return request(`/collaborators/${encodeURIComponent(login)}/permission`);
@@ -335,14 +362,28 @@ function runDecide() {
 async function runRecord() {
   const github = createGitHubFromEnv();
   const headSha = readRequiredEnv('HEAD_SHA');
+  const runUrl = readRequiredEnv('RUN_URL');
+  const number = Number(readRequiredEnv('PR_NUMBER'));
   const decision = parseDecision(process.env.DECISION);
   await github.createStatus(headSha, {
     state: 'success',
     context: decisionContext,
     description: describeDecision(decision),
-    target_url: readRequiredEnv('RUN_URL'),
+    target_url: runUrl,
   });
   console.log(`${formatReviewCount(decision.reviews)} on ${headSha}: ${decision.reason}`);
+
+  try {
+    const body = formatDecisionComment(decision, { headSha, runUrl });
+    const existing = findDecisionComment(await github.listComments(number));
+    if (existing) {
+      await github.updateComment(existing.id, body);
+    } else {
+      await github.createComment(number, body);
+    }
+  } catch (error) {
+    console.log(`::warning::Could not update the review gate comment: ${describeError(error)}`);
+  }
 }
 
 async function runGate() {

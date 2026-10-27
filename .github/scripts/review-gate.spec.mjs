@@ -5,11 +5,14 @@ import {
   buildClaudeArgs,
   buildPrompt,
   decideByRules,
+  decisionCommentHeading,
   decisionContext,
   describeDecision,
   findApprovers,
+  findDecisionComment,
   findSensitiveFiles,
   formatClaudeArgs,
+  formatDecisionComment,
   hasWriteAccess,
   parseDecision,
   parseTier,
@@ -270,5 +273,45 @@ describe('requiredApprovals', () => {
       status(describeDecision({ reviews: 2, summary: 'older' })),
     ];
     assert.equal(requiredApprovals(statuses), 2);
+  });
+});
+
+describe('formatDecisionComment', () => {
+  const decision = {
+    reviews: 2,
+    confidence: 'high',
+    reason: 'Touches signing, cc @alice.',
+    summary: 'signing',
+    source: 'model',
+  };
+
+  it('starts with the heading the comment is found by', () => {
+    const body = formatDecisionComment(decision, { headSha: 'abc', runUrl: 'https://run' });
+    assert.ok(body.startsWith(`${decisionCommentHeading}: 2 reviews required`));
+    assert.match(body, /Decided by model with high confidence for abc\. \[Run\]\(https:\/\/run\)/);
+  });
+
+  it('defuses mentions in the reason', () => {
+    const body = formatDecisionComment(decision, { headSha: 'abc', runUrl: 'https://run' });
+    assert.doesNotMatch(body, /@alice/);
+  });
+});
+
+describe('findDecisionComment', () => {
+  const heading = `${decisionCommentHeading}: 1 review required`;
+
+  it('finds the workflow comment', () => {
+    const comments = [
+      { id: 1, user: { login: 'alice' }, body: 'Looks good' },
+      { id: 2, user: { login: 'github-actions[bot]' }, body: heading },
+    ];
+    assert.equal(findDecisionComment(comments)?.id, 2);
+  });
+
+  it('ignores the same heading from anyone else', () => {
+    assert.equal(
+      findDecisionComment([{ id: 1, user: { login: 'alice' }, body: heading }]),
+      undefined
+    );
   });
 });
