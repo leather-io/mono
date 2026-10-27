@@ -126,7 +126,8 @@ export function Sheet({
                 style={{
                   height: '100%',
                   maxHeight: contentMaxHeight,
-                  marginBottom: footer ? token('sizes.footerHeight') : token('spacing.space.04'),
+                  minHeight: 0,
+                  marginBottom: footer ? 0 : token('spacing.space.04'),
                   overflowY: 'auto',
                 }}
               >
@@ -135,7 +136,11 @@ export function Sheet({
             ) : (
               children
             )}
-            {footer && <SheetFooter>{footer}</SheetFooter>}
+            {footer && (
+              <SheetFooter position="static" flexShrink={0}>
+                {footer}
+              </SheetFooter>
+            )}
           </RadixDialog.Content>
         </RadixDialog.Overlay>
       </RadixDialog.Portal>
