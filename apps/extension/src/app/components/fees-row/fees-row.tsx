@@ -3,14 +3,17 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import BigNumber from 'bignumber.js';
 import { useField } from 'formik';
-import { Box } from 'leather-styles/jsx';
+import { HStack } from 'leather-styles/jsx';
 
 import { STX_DECIMALS } from '@leather.io/constants';
 import {
   type CryptoCurrency,
   FeeTypes,
+  type FlatTransactionFeeQuote,
+  type Money,
   type StacksFeeEstimate,
-  type StacksTransactionFees,
+  type StacksTransactionFeeQuote,
+  type TransactionFees,
 } from '@leather.io/models';
 import { convertAmountToBaseUnit, createMoney, isNumber, isString } from '@leather.io/utils';
 
@@ -21,8 +24,11 @@ import { CustomFeeField } from './components/custom-fee-field';
 import { FeeEstimateSelect } from './components/fee-estimate-select';
 import { FeesRowLayout } from './components/fees-row.layout';
 import { TransactionFee } from './components/transaction-fee';
+import { stxFeeCurrency } from './fees-row.constants';
 
-function toEstimate(quote: StacksTransactionFees['options']['low']): StacksFeeEstimate {
+type FeeRowQuote = StacksTransactionFeeQuote | FlatTransactionFeeQuote;
+
+function toEstimate(quote: FeeRowQuote): StacksFeeEstimate {
   return {
     fee: quote.value,
     feeRate: quote.type === 'stacksFeeRate' ? quote.rate : 0,
@@ -37,17 +43,19 @@ function toDisplayableFee(value: unknown) {
   return undefined;
 }
 
-function transactionFeesToEstimates(txFees: StacksTransactionFees): StacksFeeEstimate[] {
+function transactionFeesToEstimates(txFees: TransactionFees<FeeRowQuote>): StacksFeeEstimate[] {
   const { low, standard, high } = txFees.options;
   return [toEstimate(low), toEstimate(standard), toEstimate(high)];
 }
 
 interface FeeRowProps {
-  fees?: StacksTransactionFees;
+  fees?: TransactionFees<FeeRowQuote>;
   allowCustom?: boolean;
   isSponsored: boolean;
   defaultFeeValue?: number;
   disableFeeSelection?: boolean;
+  feeBadge?: React.ReactNode;
+  feeFiatValue?: Money | null;
 }
 export function FeesRow({
   fees,
@@ -55,6 +63,8 @@ export function FeesRow({
   allowCustom = true,
   defaultFeeValue,
   disableFeeSelection,
+  feeBadge,
+  feeFiatValue,
 }: FeeRowProps) {
   const [feeField, _, feeHelper] = useField<unknown>('fee');
   const [feeCurrencyField] = useField<CryptoCurrency>('feeCurrency');
@@ -69,13 +79,23 @@ export function FeesRow({
   const hasFeeEstimates = estimates.length > 0;
   const feeCurrencySymbol = feeCurrencyField.value;
 
-  const convertCryptoCurrencyToUsd = useConvertCryptoCurrencyToFiatAmount(feeCurrencySymbol);
+  const hasFeeFiatValue = feeFiatValue !== undefined;
+  const convertCryptoCurrencyToUsd = useConvertCryptoCurrencyToFiatAmount(
+    hasFeeFiatValue ? stxFeeCurrency : feeCurrencySymbol
+  );
 
   const feeInUsd = useMemo(() => {
+    if (hasFeeFiatValue) return feeFiatValue;
     if ((!isNumber(feeField.value) && !isString(feeField.value)) || !feeCurrencySymbol) return null;
     const feeAsMoney = createMoney(new BigNumber(feeField.value), feeCurrencySymbol);
     return convertCryptoCurrencyToUsd(feeAsMoney);
-  }, [convertCryptoCurrencyToUsd, feeCurrencySymbol, feeField.value]);
+  }, [
+    convertCryptoCurrencyToUsd,
+    feeCurrencySymbol,
+    feeField.value,
+    feeFiatValue,
+    hasFeeFiatValue,
+  ]);
 
   useEffect(() => {
     if (defaultFeeValue) {
@@ -142,17 +162,21 @@ export function FeesRow({
             setFieldWarning={(value: string) => setFieldWarning(value)}
           />
         ) : (
-          <Box
-            onClick={() => handleSelectFeeEstimateOrCustomField(FeeTypes.Custom)}
-            textAlign="right"
+          <HStack
+            gap="space.02"
+            justifyContent="flex-end"
+            onClick={
+              allowCustom ? () => handleSelectFeeEstimateOrCustomField(FeeTypes.Custom) : undefined
+            }
             width="100%"
           >
+            {feeBadge}
             <TransactionFee
               fee={toDisplayableFee(feeField.value)}
               feeCurrencySymbol={feeCurrencySymbol}
               usdAmount={feeInUsd}
             />
-          </Box>
+          </HStack>
         )
       }
       fieldWarning={fieldWarning}

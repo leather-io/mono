@@ -3,8 +3,14 @@ import { useParams } from 'react-router';
 import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transactions';
 import { Box, Stack } from 'leather-styles/jsx';
 
+import { getSbtcSponsoredTransferDetails } from '@leather.io/stacks';
 import { InfoCircleIcon } from '@leather.io/ui';
-import { baseCurrencyAmountInQuote, convertAmountToBaseUnit, sumMoney } from '@leather.io/utils';
+import {
+  baseCurrencyAmountInQuote,
+  convertAmountToBaseUnit,
+  isDefined,
+  sumMoney,
+} from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useRouteState } from '@app/common/hooks/use-route-state';
@@ -28,6 +34,7 @@ import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 import type { ProposalSentSummaryState } from '../../../sent-summary/proposal-sent-summary';
 import { stacksConfirmationRouteStateSchema } from '../../hooks/use-send-form-navigate';
 import { SendFormConfirmationLayout } from '../send-form-confirmation.layout';
+import { SbtcSponsoredSendFormConfirmation } from './sbtc-sponsored-send-form-confirmation';
 import { useProposeStacksSendTransaction } from './use-propose-stacks-send-transaction';
 
 export function StacksSendFormConfirmation() {
@@ -35,6 +42,8 @@ export function StacksSendFormConfirmation() {
     tx: txHex,
     decimals,
     showFeeChangeWarning = false,
+    sponsorship,
+    showRequoteCallout = false,
   } = useRouteState(stacksConfirmationRouteStateSchema);
   const tokenMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
 
@@ -49,6 +58,7 @@ export function StacksSendFormConfirmation() {
   const tx = deserializeTransaction(txHex);
   const sip10Payload = getSip10TransferPayload(tx);
   const isMultisigProposal = isNonSequentialMultisigTransaction(tx);
+  const sponsoredDetails = getSbtcSponsoredTransferDetails(tx);
 
   const feeWarningTooltip = showFeeChangeWarning ? (
     <BasicTooltip
@@ -117,6 +127,16 @@ export function StacksSendFormConfirmation() {
       <PageHeader title="Review" />
       <Content>
         <Page>
+          {sponsorship && sponsoredDetails && isDefined(decimals) && (
+            <SbtcSponsoredSendFormConfirmation
+              tx={tx}
+              details={sponsoredDetails}
+              sponsorship={sponsorship}
+              symbol={symbol}
+              decimals={decimals}
+              showRequoteCallout={showRequoteCallout}
+            />
+          )}
           {isTokenTransferPayload(tx.payload) && (
             <SendFormConfirmationLayout
               txValue={getTokenTransferAmount(tx.payload)}
