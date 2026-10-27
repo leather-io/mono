@@ -61,7 +61,7 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
         {...(isUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         style={{ fontSize: 'inherit', display: 'inline', whiteSpace: 'nowrap' }}
       >
-        Learn more
+        Read more
       </Link>
     </styled.span>
   );
