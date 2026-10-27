@@ -198,3 +198,5 @@ pending ones clearly pending without making them hard to read."
   - Fading the whole row with `opacity`. This is the classic one.
   - Making the amount `ink.text-non-interactive`.
   - Adding a custom yellow hex.
+  - Treating confirmation pending as a running submission, or inventing a confirmation countdown
+    (27 Oct 2026 fee-prototype review; see `i-need-to.md#fees-and-transaction-status`).

@@ -162,6 +162,11 @@ can be missed. Two `fullWidth` Buttons in a Flex row do not fit by default becau
 not shrink; use bounded grid columns. Popup screens have one vertical body scroller with
 header/footer in reach; tab pages may scroll as a whole.
 
+The 27 Oct fee-prototype review also exposed a domain-fidelity gap: passing tokens and width
+checks is not enough. Follow [Fees and transaction status](../../../docs/design/i-need-to.md#fees-and-transaction-status)
+for fee choices, Money/fiat, quote provenance, identity grouping and pending-state semantics.
+Review popup content inside its intended device frame, not stretched across the browser.
+
 1. Run `pnpm --filter @leather.io/<package> lint`. The design rules are part of it. When a design
    rule fails, its message names the replacement, so apply that. Don't add suppressions.
 2. Run `pnpm --filter @leather.io/<package> typecheck`.

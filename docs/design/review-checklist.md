@@ -56,6 +56,9 @@ design:fidelity` side-by-side attached), and the baseline has a clean state plus
 - [ ] Structure: rows are grouped by the question they answer, groups are split by a divider,
       nested values are smaller than their parent, and no small area uses more than three text
       styles.
+- [ ] Alignment changes mark distinct groups. Related subject, identity and amount read as one
+      unit; payment labels, accounts and wallets are not conflated. Related identity lines have
+      a tighter gap than the gap to the next group.
 - [ ] No single word alone on a paragraph's last line (sentences in `p`, or `textWrap="pretty"`).
 
 ## 3b. One gutter
@@ -74,6 +77,11 @@ design:fidelity` side-by-side attached), and the baseline has a clean state plus
 - [ ] Errors say what happened and what to do next. Technical detail goes behind "Details", not in
       the toast.
 - [ ] Money is formatted by `Balance` or `formatCurrency`, never by hand.
+- [ ] Fees follow the current app's information hierarchy: priority and available time estimate,
+      total fee in BTC and fiat when quoted, with rate as supporting detail. Three tiers fit as
+      stacked choices. Original, replacement total and additional fee are clearly distinguished.
+- [ ] Sample quotes and exchange rates are labelled in the preview scaffold. Missing market
+      data is shown as unavailable. Estimates do not become timing promises.
 - [ ] Copy doesn't promise outcomes: no "will earn" or "guaranteed".
 - [ ] On mobile, every string is wrapped in Lingui.
 
@@ -91,6 +99,10 @@ design:fidelity` side-by-side attached), and the baseline has a clean state plus
 - [ ] The keyboard path works: you can tab to every action, and Escape closes sheets.
 - [ ] Destructive actions have a confirm step, and that step can be cancelled.
 - [ ] Loading never shifts layout: skeletons are sized to the content.
+- [ ] Pending confirmation has explicit status and an appropriate exported indicator. Only an
+      actual request is labelled Submitting; the UI invents no confirmation progress or countdown.
+- [ ] Opening the review link preserves the intended device frame instead of stretching popup
+      content to the browser width. Preview controls remain outside the wallet canvas.
 
 ## 6. Lint and suppressions
 

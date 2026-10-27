@@ -185,6 +185,36 @@ import { formatCurrency } from '@app/common/currency-formatter';
   fiat gap is the same on send, review and sent.
 - **Seen in:** `apps/extension/src/app/features/activity-list/components/activity-row.tsx:106`.
 
+### Fees and transaction status
+
+Start with the app's information model, not just its tokens. In the 27 Oct 2026 fee-prototype
+review, a layout passed width checks but offered only two rate buttons, omitted fiat and timing,
+and presented unrelated alignment groups as one screen. The reference is the extension's
+`features/fee-editor/components/fee-rate-item.layout.tsx` and `default-fees-list.tsx`, relative to
+`apps/extension/src/app/`.
+
+- The compact fee editor stacks Slow, Standard and Fast choices, then Custom. Each choice shows
+  priority and estimated time, the total BTC fee, and rate plus fiat as supporting information.
+  Use this hierarchy without inheriting the older Send screen's bulky cards or clipping.
+- Format fee totals and additional fees as Money through the app formatter, with fiat when a
+  quote is available. A rate in sats/vB is technical information; it does not replace the fee
+  total. Keep original, new total and additional fee distinct.
+- Quote times and conversions must come from data. A prototype labels sample rates and
+  estimates outside its wallet canvas. Unknown timing or fiat is unavailable, never invented.
+- A payment label, an account and a wallet are different identities. Label the relationship
+  when it is unclear; don't invent a wallet name from an account fixture. Related identity
+  lines use `space.01`, as in `features/container/headers/popup.header.tsx`.
+- Keep a centered subject, its identity and amount together. Put the left/right facts in a
+  separate review group, divided from the subject. A centered header does not require every
+  fact to be centered.
+- Pending confirmation is a network state, not a request in flight. Use the app's exported
+  pending indicator with an explicit status and concise context; don't imply measured progress,
+  a countdown or guaranteed confirmation. An actual submission uses the busy action state.
+  See `components/bitcoin-transaction-item/bitcoin-transaction-status.tsx`.
+
+These are reusable lessons from the fee-recovery exploration, not approval of a new production
+fee flow. Product changes still need design review.
+
 ## Pick a text colour
 
 Pick the step on the ink ladder by how much the reader depends on the text, not by how much
