@@ -45,7 +45,7 @@ export function TabPage({
         minWidth={0}
         px={pageGutter}
         pb="space.05"
-        css={{ '& > *': { minWidth: 0, maxWidth: '100%' } }}
+        css={{ '& > *': { minWidth: 0 } }}
         data-gutter=""
         data-page-body=""
       >

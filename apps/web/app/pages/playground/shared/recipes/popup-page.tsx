@@ -86,7 +86,7 @@ export function PopupPage({
         minWidth={0}
         minHeight={0}
         overflowY="auto"
-        css={{ '& > *': { flexShrink: 0, minWidth: 0, maxWidth: '100%' } }}
+        css={{ '& > *': { flexShrink: 0, minWidth: 0 } }}
         data-gutter=""
         data-page-body=""
       >
