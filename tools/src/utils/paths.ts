@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import type { AppPaths } from '../changelog/types.js';
 
-function getMonorepoRoot(): string {
+export function getMonorepoRoot(): string {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   return path.resolve(__dirname, '..', '..', '..');
 }
