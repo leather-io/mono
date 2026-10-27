@@ -89,6 +89,19 @@ describe('findSensitiveFiles', () => {
     }
   });
 
+  it('matches dependency manifests and lockfiles anywhere in the repo', () => {
+    const sensitive = findSensitiveFiles([
+      file('package.json'),
+      file('apps/mobile/package.json'),
+      file('packages/ui/package.json'),
+      file('pnpm-lock.yaml'),
+      file('pnpm-workspace.yaml'),
+      file('apps/mobile/ios/Podfile.lock'),
+      file('.github/actions/install-claude-code/package-lock.json'),
+    ]);
+    assert.equal(sensitive.length, 7);
+  });
+
   it('matches Claude configuration', () => {
     const sensitive = findSensitiveFiles([
       file('.claude/settings.json'),

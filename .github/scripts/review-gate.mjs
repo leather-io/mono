@@ -37,7 +37,9 @@ const sensitivePathPatterns = [
   /^\.claude\//,
   /^\.mcp\.json$/,
   /(?:^|\/)CLAUDE\.md$/,
-  /^pnpm-(?:lock|workspace)\.yaml$/,
+  /(?:^|\/)package\.json$/,
+  /(?:^|\/)(?:pnpm-lock\.yaml|package-lock\.json|Podfile\.lock)$/,
+  /^pnpm-workspace\.yaml$/,
 ];
 
 const tierSchema = {
