@@ -1,7 +1,7 @@
-import { BitcoinNetwork } from '@leather.io/models';
+import { type BitcoinNetwork } from '@leather.io/models';
 
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
-import { BitcoinClient } from '../clients/bitcoin-client';
+import { type BitcoinClient } from '../clients/bitcoin-client';
 
 async function fetchBitcoinFeeEstimates(client: BitcoinClient, network: BitcoinNetwork) {
   if (network === 'mainnet')
