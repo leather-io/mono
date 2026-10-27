@@ -1,4 +1,7 @@
-import { FtMetadataResponse, NftMetadataResponse } from '@hirosystems/token-metadata-api-client';
+import {
+  type FtMetadataResponse,
+  type NftMetadataResponse,
+} from '@hirosystems/token-metadata-api-client';
 import type {
   AddressTransactionsWithTransfersListResponse,
   GetRawTransactionResult,
@@ -6,7 +9,7 @@ import type {
   NetworkBlockTimesResponse,
   ReadOnlyFunctionSuccessResponse,
 } from '@stacks/stacks-blockchain-api-types';
-import { ClarityAbi } from '@stacks/transactions';
+import { type ClarityAbi } from '@stacks/transactions';
 import axios from 'axios';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
@@ -110,7 +113,7 @@ export function stacksClient(basePath: string) {
       return resp.data;
     },
     async getNetworkStatus(url: string) {
-      const resp = await rateLimiter.add(() => axios.get(url, { timeout: 30000 }), {
+      const resp = await rateLimiter.add(() => axios.get<unknown>(url, { timeout: 30000 }), {
         priority: hiroApiRequestsPriorityLevels.getNetworkStatus,
         throwOnTimeout: true,
       });
