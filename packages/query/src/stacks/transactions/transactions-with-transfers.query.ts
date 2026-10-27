@@ -1,8 +1,8 @@
-import { AddressTransactionsWithTransfersListResponse } from '@stacks/stacks-blockchain-api-types';
+import { type AddressTransactionsWithTransfersListResponse } from '@stacks/stacks-blockchain-api-types';
 import { type QueryFunctionContext } from '@tanstack/react-query';
 
 import { StacksQueryPrefixes } from '../../query-prefixes';
-import { StacksClient } from '../stacks-client';
+import { type StacksClient } from '../stacks-client';
 
 const queryOptions = {
   staleTime: 60 * 1000,
@@ -45,7 +45,7 @@ export function createGetAccountTransactionsWithTransfersQueryOptions({
   return {
     enabled: !!address && !!network,
     queryKey: [StacksQueryPrefixes.GetAccountTxsWithTransfers, address, network],
-    queryFn: async ({ signal }: QueryFunctionContext) => {
+    async queryFn({ signal }: QueryFunctionContext) {
       const resp = await client.getAccountTransactionsWithTransfers(address, signal);
       // transactions_with_transfers is deprecated. When removing this **make
       // sure that the filtering is used on the new endpoints**
