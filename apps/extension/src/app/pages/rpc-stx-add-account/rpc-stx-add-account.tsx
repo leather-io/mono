@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 import { VStack, styled } from 'leather-styles/jsx';
 
 import { AddressDisplayer, Approver, Button, Callout } from '@leather.io/ui';
@@ -113,7 +114,7 @@ export function RpcStxAddAccount() {
             key="confirm"
             disabled={!canApprove}
             onClick={() => void onApprove()}
-            data-testid="stx-add-account-approve-button"
+            data-testid={ConnectAccountSelectors.StxAddAccountApproveBtn}
           >
             {isVerifyMode ? 'Verify' : 'Confirm'}
           </Button>,
