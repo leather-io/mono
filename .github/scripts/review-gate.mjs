@@ -264,10 +264,20 @@ export function requiredApprovals(statuses) {
   return allowSingleReview ? 1 : 2;
 }
 
+const sourceLabels = {
+  rules: 'path rules',
+  model: `Claude (${claudeModel})`,
+  fallback: 'fallback, because Claude gave no usable answer',
+};
+
+export function describeSource(source) {
+  return sourceLabels[source] ?? source;
+}
+
 export function formatDecisionComment(decision, { headSha, runUrl }) {
   return neutraliseMentions(
     `${decisionCommentHeading}: ${formatReviewCount(decision.reviews)}\n\n${decision.reason}\n\n` +
-      `Decided by ${decision.source} with ${decision.confidence} confidence for ${headSha}. ` +
+      `Decided by ${describeSource(decision.source)} with ${decision.confidence} confidence for ${headSha}. ` +
       `[Run](${runUrl})`
   );
 }
@@ -355,7 +365,7 @@ function runDecide() {
   writeOutput('decision', JSON.stringify(decision));
   writeSummary(
     `### ${formatReviewCount(decision.reviews)}\n\n` +
-      `${decision.reason}\n\nDecided by: ${decision.source}, confidence: ${decision.confidence}.`
+      `${decision.reason}\n\nDecided by ${describeSource(decision.source)}, confidence: ${decision.confidence}.`
   );
 }
 

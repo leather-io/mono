@@ -8,6 +8,7 @@ import {
   decisionCommentHeading,
   decisionContext,
   describeDecision,
+  describeSource,
   findApprovers,
   findDecisionComment,
   findSensitiveFiles,
@@ -288,7 +289,10 @@ describe('formatDecisionComment', () => {
   it('starts with the heading the comment is found by', () => {
     const body = formatDecisionComment(decision, { headSha: 'abc', runUrl: 'https://run' });
     assert.ok(body.startsWith(`${decisionCommentHeading}: 2 reviews required`));
-    assert.match(body, /Decided by model with high confidence for abc\. \[Run\]\(https:\/\/run\)/);
+    assert.match(
+      body,
+      /Decided by Claude \(claude-opus-5-5\) with high confidence for abc\. \[Run\]\(https:\/\/run\)/
+    );
   });
 
   it('defuses mentions in the reason', () => {
@@ -313,5 +317,13 @@ describe('findDecisionComment', () => {
       findDecisionComment([{ id: 1, user: { login: 'alice' }, body: heading }]),
       undefined
     );
+  });
+});
+
+describe('describeSource', () => {
+  it('names each decision source for people', () => {
+    assert.equal(describeSource('rules'), 'path rules');
+    assert.equal(describeSource('model'), 'Claude (claude-opus-5-5)');
+    assert.match(describeSource('fallback'), /^fallback/);
   });
 });
