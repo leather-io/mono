@@ -126,11 +126,14 @@ describe('formatClaudeArgs', () => {
 
 describe('parseTier', () => {
   it('accepts a valid answer', () => {
-    assert.deepEqual(parseTier('{"reviews":1,"confidence":"low","reason":"copy only"}'), {
-      reviews: 1,
-      confidence: 'low',
-      reason: 'copy only',
-    });
+    assert.deepEqual(
+      parseTier('{"reviews":1,"confidence":"low","reason":"copy only","summary":"copy"}'),
+      { reviews: 1, confidence: 'low', reason: 'copy only', summary: 'copy' }
+    );
+  });
+
+  it('rejects an answer without a summary', () => {
+    assert.throws(() => parseTier('{"reviews":1,"confidence":"low","reason":"copy only"}'));
   });
 
   it('rejects an out-of-range review count', () => {
@@ -142,14 +145,14 @@ describe('resolveDecision', () => {
   it('prefers the rule decision', () => {
     const decision = resolveDecision({
       ruleDecision: '{"reviews":2,"confidence":"high","reason":"lockfile"}',
-      structuredOutput: '{"reviews":1,"confidence":"high","reason":"copy"}',
+      structuredOutput: '{"reviews":1,"confidence":"high","reason":"copy","summary":"copy"}',
     });
     assert.deepEqual([decision.reviews, decision.source], [2, 'rules']);
   });
 
   it('returns the model answer', () => {
     const decision = resolveDecision({
-      structuredOutput: '{"reviews":1,"confidence":"high","reason":"copy"}',
+      structuredOutput: '{"reviews":1,"confidence":"high","reason":"copy","summary":"copy"}',
     });
     assert.deepEqual([decision.reviews, decision.source], [1, 'model']);
   });
@@ -172,7 +175,7 @@ describe('parseDecision', () => {
 
   it('keeps a valid decision', () => {
     const decision = parseDecision(
-      '{"reviews":1,"confidence":"medium","reason":"copy","source":"model"}'
+      '{"reviews":1,"confidence":"medium","reason":"copy","summary":"copy","source":"model"}'
     );
     assert.deepEqual([decision.reviews, decision.source], [1, 'model']);
   });
@@ -226,8 +229,15 @@ describe('hasWriteAccess', () => {
 });
 
 describe('describeDecision', () => {
+  it('shows the summary rather than the full reason', () => {
+    assert.equal(
+      describeDecision({ reviews: 1, reason: 'long explanation', summary: 'copy only' }),
+      '1 review required: copy only'
+    );
+  });
+
   it('fits the commit status description limit', () => {
-    const description = describeDecision({ reviews: 2, reason: 'x'.repeat(500) });
+    const description = describeDecision({ reviews: 2, summary: 'x'.repeat(500) });
     assert.equal(description.length, 140);
     assert.match(description, /^2 reviews required: x+\.\.\.$/);
   });
@@ -236,11 +246,11 @@ describe('describeDecision', () => {
 describe('requiredApprovals', () => {
   it('requires 1 approval only for a single-review decision from the workflow', () => {
     assert.equal(
-      requiredApprovals([status(describeDecision({ reviews: 1, reason: 'copy only' }))]),
+      requiredApprovals([status(describeDecision({ reviews: 1, summary: 'copy only' }))]),
       1
     );
     assert.equal(
-      requiredApprovals([status(describeDecision({ reviews: 2, reason: 'signing' }))]),
+      requiredApprovals([status(describeDecision({ reviews: 2, summary: 'signing' }))]),
       2
     );
   });
@@ -256,8 +266,8 @@ describe('requiredApprovals', () => {
 
   it('requires 2 approvals when any decision on the head requires 2', () => {
     const statuses = [
-      status(describeDecision({ reviews: 1, reason: 'newer' })),
-      status(describeDecision({ reviews: 2, reason: 'older' })),
+      status(describeDecision({ reviews: 1, summary: 'newer' })),
+      status(describeDecision({ reviews: 2, summary: 'older' })),
     ];
     assert.equal(requiredApprovals(statuses), 2);
   });
