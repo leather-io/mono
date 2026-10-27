@@ -1,11 +1,7 @@
-import {
-  allBasicConceptsQuery,
-  allPostsQuery,
-  sbtcConceptsQuery,
-  sbtcFaqQuery,
-  sbtcPoolsQuery,
-} from '.';
 import { createCmsClient } from '../client';
+import { allBasicConceptsQuery } from './basic-concepts-queries';
+import { allPostsQuery } from './legacy-posts-queries';
+import { sbtcConceptsQuery, sbtcFaqQuery, sbtcPoolsQuery } from './sbtc-page-queries';
 import {
   allBasicConceptsSchema,
   allPostsSchema,
@@ -74,7 +70,7 @@ describe('CMS Client Query Validation', () => {
       const faqSection = await client.fetch(sbtcFaqQuery);
 
       if (faqSection?.faqBuilder && faqSection.faqBuilder.length > 0) {
-        faqSection.faqBuilder.forEach((faq: any, index: number) => {
+        faqSection.faqBuilder.forEach((faq, index) => {
           expect(() => faqSchema.parse(faq)).not.toThrow(
             `FAQ at index ${index} failed schema validation`
           );
