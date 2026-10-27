@@ -202,8 +202,9 @@ and presented unrelated alignment groups as one screen. The reference is the ext
 - Quote times and conversions must come from data. A prototype labels sample rates and
   estimates outside its wallet canvas. Unknown timing or fiat is unavailable, never invented.
 - A payment label, an account and a wallet are different identities. Label the relationship
-  when it is unclear; don't invent a wallet name from an account fixture. Related identity
-  lines use `space.01`, as in `features/container/headers/popup.header.tsx`.
+  when it is unclear; don't invent a wallet name from an account fixture or repeat an Account
+  prefix on a recognizable account name. Related identity lines use `space.01`, as in
+  `features/container/headers/popup.header.tsx`.
 - Keep a centered subject, its identity and amount together. Put the left/right facts in a
   separate review group, divided from the subject. A centered header does not require every
   fact to be centered.
@@ -211,6 +212,9 @@ and presented unrelated alignment groups as one screen. The reference is the ext
   pending indicator with an explicit status and concise context; don't imply measured progress,
   a countdown or guaranteed confirmation. An actual submission uses the busy action state.
   See `components/bitcoin-transaction-item/bitcoin-transaction-status.tsx`.
+- Status title and submitted-time caption form one text column beside the indicator. The fee
+  prototype uses the exported `Spinner` in secondary ink without a filled disc, with a subtle
+  outlined surface. BTC and fiat form a tight value pair, without an extra inter-line gap.
 
 These are reusable lessons from the fee-recovery exploration, not approval of a new production
 fee flow. Product changes still need design review.
