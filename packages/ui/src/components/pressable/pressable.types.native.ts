@@ -1,8 +1,8 @@
-import { ViewStyle } from 'react-native';
+import { type ViewStyle } from 'react-native';
 import {
-  CSSTransitionDelay,
-  CSSTransitionDuration,
-  CSSTransitionTimingFunction,
+  type CSSTransitionDelay,
+  type CSSTransitionDuration,
+  type CSSTransitionTimingFunction,
 } from 'react-native-reanimated';
 
 import { type Theme } from '../../theme-native';

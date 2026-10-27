@@ -83,7 +83,7 @@
     "valid-url": "1.0.9",
     "vaul": "1.1.2",
     "vite-plugin-node-polyfills": "0.24.0",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.28.0",
