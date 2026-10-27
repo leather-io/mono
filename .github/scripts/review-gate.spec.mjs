@@ -78,6 +78,35 @@ describe('findSensitiveFiles', () => {
       'apps/extension/manifest.config.ts',
       'apps/extension/inpage.ts',
       'apps/extension/content-script.ts',
+      'apps/web/wrangler.jsonc',
+      'packages/models/src/network/network.model.ts',
+      'packages/utils/src/money/calculate-money.ts',
+      'packages/services/src/coin-selection/bitcoin-coin-selection.service.ts',
+      'apps/extension/src/shared/rpc/sign-in-message-veto.ts',
+      'apps/extension/src/shared/workers/decryption-worker.ts',
+      'apps/extension/src/shared/storage/redux-persist.ts',
+      'apps/extension/src/shared/inpage-types.ts',
+      'apps/extension/src/app/store/app-permissions/app-permissions.hooks.ts',
+      'apps/extension/src/app/store/session-restore.ts',
+      'apps/extension/src/app/pages/network/add-network.tsx',
+      'apps/extension/src/app/pages/send/send-crypto-asset-form/form/btc/use-propose-btc-send-transaction.ts',
+      'apps/mobile/src/features/approver/nonce.section.tsx',
+      'apps/mobile/src/features/browser/approver-sheet/sign-psbt.tsx',
+      'apps/mobile/src/features/browser/browser/message-routing.ts',
+      'apps/mobile/src/features/send/forms/stx/stx-form-schema.ts',
+      'apps/mobile/src/store/apps/apps.write.ts',
+      'apps/mobile/src/store/migrations/index.ts',
+      'apps/mobile/src/store/key-store.ts',
+      'apps/mobile/src/hooks/use-authentication.ts',
+      'apps/mobile/app.config.ts',
+      'apps/mobile/certs/certificate.pem',
+      'apps/web/app/root.tsx',
+      'apps/web/app/features/multisig/transactions/build-btc-transfer.ts',
+      'apps/web/app/features/multisig/network/resolve-stx-chain-id.ts',
+      'apps/web/app/features/bitcoin-staking/transactions/pox5-stake.ts',
+      'apps/web/app/features/bitcoin-staking/utils/pox5-contracts.ts',
+      'apps/web/workers/app.ts',
+      'apps/web/workers/csp.ts',
       'apps/mobile/src/store/secure-store/mnemonic-store.ts',
       'apps/mobile/src/store/secure-store/temp-mnemonic-store.ts',
       'CLAUDE.md',
@@ -122,6 +151,16 @@ describe('findSensitiveFiles', () => {
       }),
     ]);
     assert.deepEqual(sensitive, ['.github/workflows/repo:code-checks.yml']);
+  });
+
+  it('leaves display code next to the transaction files to the model', () => {
+    const sensitive = findSensitiveFiles([
+      file('apps/web/app/features/multisig/activity/multisig-transaction-activity-view.ts'),
+      file('apps/web/app/features/bitcoin-staking/components/pox5-tx-status-screen.tsx'),
+      file('apps/mobile/src/features/send/forms/stx/stx-form.tsx'),
+      file('apps/extension/src/app/pages/send/send-crypto-asset-form/form/stx/stx-send-form.tsx'),
+    ]);
+    assert.deepEqual(sensitive, []);
   });
 
   it('ignores ordinary UI and docs', () => {
