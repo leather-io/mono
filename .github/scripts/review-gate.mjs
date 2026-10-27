@@ -95,9 +95,26 @@ export function findSensitiveFiles(files) {
   );
 }
 
-function findHiddenDiffs(files) {
+const assetExtensionPattern =
+  /\.(?:png|jpe?g|gif|webp|avif|ico|bmp|woff2?|ttf|otf|eot|mp4|webm|mov|mp3|wav|pdf)$/i;
+
+export function needsBaseBlob(file) {
+  return (
+    file.patch === undefined &&
+    file.status === 'renamed' &&
+    file.additions + file.deletions === 0 &&
+    !assetExtensionPattern.test(file.filename)
+  );
+}
+
+export function findHiddenDiffs(files, baseBlobs = new Map()) {
   return files
-    .filter(file => file.patch === undefined && file.additions + file.deletions > 0)
+    .filter(file => {
+      if (file.patch !== undefined || file.status === 'removed') return false;
+      if (file.additions + file.deletions > 0) return true;
+      if (needsBaseBlob(file)) return baseBlobs.get(file.previous_filename) !== file.sha;
+      return !assetExtensionPattern.test(file.filename);
+    })
     .map(file => file.filename);
 }
 
@@ -123,7 +140,7 @@ export function buildPrompt(pullRequest, files) {
   return `Classify this pull request. It is given as JSON.\n\n${JSON.stringify(payload, null, 2)}`;
 }
 
-export function decideByRules(pullRequest, files) {
+export function decideByRules(pullRequest, files, baseBlobs) {
   const sensitiveFiles = findSensitiveFiles(files);
   if (sensitiveFiles.length > 0) {
     return {
@@ -141,7 +158,7 @@ export function decideByRules(pullRequest, files) {
       summary: `Changes ${files.length} files, more than the ${maxChangedFiles} the classifier reads.`,
     };
   }
-  const hiddenDiffs = findHiddenDiffs(files);
+  const hiddenDiffs = findHiddenDiffs(files, baseBlobs);
   if (hiddenDiffs.length > 0) {
     return {
       reviews: 2,
@@ -306,6 +323,13 @@ export function createGitHubClient({ token, repository }) {
     getPullRequest(number) {
       return request(`/pulls/${number}`);
     },
+    async listBaseBlobs(sha) {
+      const tree = await request(`/git/trees/${sha}?recursive=1`);
+      if (tree.truncated) return new Map();
+      return new Map(
+        tree.tree.filter(entry => entry.type === 'blob').map(entry => [entry.path, entry.sha])
+      );
+    },
     listFiles(number) {
       return requestAllPages(`/pulls/${number}/files`);
     },
@@ -346,9 +370,12 @@ async function runPrepare() {
   const headSha = readRequiredEnv('HEAD_SHA');
   const files = await github.listFiles(number);
   const pullRequest = await github.getPullRequest(number);
+  const baseBlobs = files.some(needsBaseBlob)
+    ? await github.listBaseBlobs(pullRequest.base.sha)
+    : undefined;
   const ruleDecision =
     pullRequest.head.sha === headSha
-      ? decideByRules(pullRequest, files)
+      ? decideByRules(pullRequest, files, baseBlobs)
       : {
           reviews: 2,
           confidence: 'high',

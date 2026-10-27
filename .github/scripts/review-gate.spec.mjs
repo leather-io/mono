@@ -148,6 +148,41 @@ describe('decideByRules', () => {
     assert.equal(decision, null);
   });
 
+  it('requires 2 reviews when a source file shows no diff, as with a NUL byte', () => {
+    const decision = decideByRules(pullRequest, [
+      file('apps/web/app/utils/format.ts', { patch: undefined, additions: 0, deletions: 0 }),
+    ]);
+    assert.equal(decision?.reviews, 2);
+  });
+
+  it('allows a pure rename whose contents match the base', () => {
+    const renamed = file('apps/web/app/utils/new.ts', {
+      previous_filename: 'apps/web/app/utils/old.ts',
+      status: 'renamed',
+      sha: 'blob-1',
+      patch: undefined,
+      additions: 0,
+      deletions: 0,
+    });
+    const same = new Map([['apps/web/app/utils/old.ts', 'blob-1']]);
+    const changed = new Map([['apps/web/app/utils/old.ts', 'blob-0']]);
+    assert.equal(decideByRules(pullRequest, [renamed], same), null);
+    assert.equal(decideByRules(pullRequest, [renamed], changed)?.reviews, 2);
+    assert.equal(decideByRules(pullRequest, [renamed])?.reviews, 2);
+  });
+
+  it('allows deleting a file without a diff', () => {
+    const decision = decideByRules(pullRequest, [
+      file('apps/web/app/utils/format.ts', {
+        status: 'removed',
+        patch: undefined,
+        additions: 0,
+        deletions: 0,
+      }),
+    ]);
+    assert.equal(decision, null);
+  });
+
   it('leaves ordinary changes to the model', () => {
     assert.equal(decideByRules(pullRequest, [file('packages/ui/src/text.tsx')]), null);
   });
