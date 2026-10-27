@@ -16,7 +16,8 @@ export const gateContext = 'review-gate';
 const trustedStatusCreator = 'github-actions[bot]';
 export const decisionCommentHeading = '### Review gate';
 const maxStatusDescriptionLength = 140;
-const maxChangedFiles = 150;
+const maxChangedFiles = 30;
+const maxChangedLines = 1000;
 const maxPromptBytes = 100_000;
 const maxErrorLength = 300;
 
@@ -156,8 +157,17 @@ export function decideByRules(pullRequest, files, baseBlobs) {
     return {
       reviews: 2,
       confidence: 'high',
-      reason: `Changes ${files.length} files, more than the ${maxChangedFiles} the classifier reads.`,
-      summary: `Changes ${files.length} files, more than the ${maxChangedFiles} the classifier reads.`,
+      reason: `Changes ${files.length} files, more than ${maxChangedFiles}.`,
+      summary: `Changes ${files.length} files, more than ${maxChangedFiles}.`,
+    };
+  }
+  const changedLines = files.reduce((sum, file) => sum + file.additions + file.deletions, 0);
+  if (changedLines > maxChangedLines) {
+    return {
+      reviews: 2,
+      confidence: 'high',
+      reason: `Changes ${changedLines} lines, more than ${maxChangedLines}.`,
+      summary: `Changes ${changedLines} lines, more than ${maxChangedLines}.`,
     };
   }
   const hiddenDiffs = findHiddenDiffs(files, baseBlobs);

@@ -140,6 +140,19 @@ describe('decideByRules', () => {
     assert.equal(decision?.reviews, 2);
   });
 
+  it('requires 2 reviews for more than 30 changed files', () => {
+    const files = Array.from({ length: 31 }, (_, index) => file(`apps/web/app/page-${index}.tsx`));
+    assert.equal(decideByRules(pullRequest, files)?.reviews, 2);
+    assert.equal(decideByRules(pullRequest, files.slice(0, 30)), null);
+  });
+
+  it('requires 2 reviews for more than 1000 changed lines', () => {
+    const large = file('apps/web/app/page.tsx', { additions: 900, deletions: 101 });
+    const limit = file('apps/web/app/page.tsx', { additions: 900, deletions: 100 });
+    assert.equal(decideByRules(pullRequest, [large])?.reviews, 2);
+    assert.equal(decideByRules(pullRequest, [limit]), null);
+  });
+
   it('requires 2 reviews when GitHub hides a diff', () => {
     const decision = decideByRules(pullRequest, [
       file('apps/web/big.json', { patch: undefined, additions: 9000 }),
