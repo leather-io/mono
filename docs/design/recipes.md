@@ -121,6 +121,37 @@ truncated with `truncateMiddle`.
 
 `/playground/recipes?recipe=list-row` · `list-row-popup-light.png`, `-popup-dark`, `-tab-light`, `-tab-dark`
 
+### Compact app identity
+
+In the 28 Oct 2026 review of the connected-app comparison, the Aster name and origin were
+separated by `space.02`. That made one identity read as two groups beside its avatar. Reuse
+`ItemLayout` with its zero-gap title/caption column instead of adding a spacious nested stack:
+
+```tsx
+<ItemLayout
+  img={<Avatar fallback="A" variant="square" />}
+  gap="space.00"
+  titleLeft={<styled.span textStyle="heading.05">Aster</styled.span>}
+  captionLeft={
+    <styled.span
+      textStyle="body.02"
+      color="ink.text-secondary"
+      whiteSpace="normal"
+      overflowWrap="anywhere"
+    >
+      app.aster.example
+    </styled.span>
+  }
+/>
+```
+
+For two short lines, these existing text styles total 48px in height, matching the default
+48px avatar. Keep the icon centered against the entire text column. For long origins, keep
+the full value available and inspect wrapping in the actual popup rather than forcing the
+block back to a fixed height. This is a reviewed recipe correction, not a change to the frozen
+comparison outputs. Evidence: project `Research/2026-10-27 Release comparison`, pair P06,
+with-kit final `ConnectionIdentity`; owner review 28 Oct 2026.
+
 ## Review sheet
 
 The amount, key-value rows and typed `actions`. This inline Playground demo draws a bottom
