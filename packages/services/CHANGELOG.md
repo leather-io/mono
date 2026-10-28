@@ -413,6 +413,29 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.66.3](https://github.com/leather-io/mono/compare/@leather.io/services-v1.66.2...@leather.io/services-v1.66.3) (2026-10-27)
+
+
+### Bug Fixes
+
+* body-parser and undici audit ([#2912](https://github.com/leather-io/mono/issues/2912)) ([2bee4e7](https://github.com/leather-io/mono/commit/2bee4e772dd95fff8406822a62225854fb708fbd))
+* enforce runtime circular dependency detection ([#2852](https://github.com/leather-io/mono/issues/2852)) ([857e0f7](https://github.com/leather-io/mono/commit/857e0f79d75025cc0da9f31a78c875fa64ed5eba))
+* sbtc sweep fee weight ([#2914](https://github.com/leather-io/mono/issues/2914)) ([a783250](https://github.com/leather-io/mono/commit/a7832501dd27646562f81e7f28b397b871f272ec))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.42.1
+    * @leather.io/constants bumped to 0.41.0
+    * @leather.io/crypto bumped to 1.13.11
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/stacks bumped to 1.22.9
+    * @leather.io/utils bumped to 0.55.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.4
+
 ## [1.66.2](https://github.com/leather-io/mono/compare/@leather.io/services-v1.66.1...@leather.io/services-v1.66.2) (2026-10-06)
 
 

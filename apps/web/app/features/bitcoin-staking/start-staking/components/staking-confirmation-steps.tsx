@@ -17,8 +17,8 @@ import { type StakingAcknowledgmentState } from '../../hooks/use-staking-acknowl
 
 interface StakingConfirmationStepsProps {
   pool: BitcoinStakingPool | null;
-  stakeAmount: number;
-  cycles: number;
+  stakeAmount: number | undefined;
+  cycles: number | undefined;
   estimatedUnlockDate: Date | null;
   acknowledgment: StakingAcknowledgmentState;
   onConfirm(): void;
@@ -36,8 +36,8 @@ export function StakingConfirmationSteps({
   isBusy = false,
   isDisabled = false,
 }: StakingConfirmationStepsProps) {
-  const stxAmount = stxToMicroStx(stakeAmount);
-  const hasCycles = Number.isInteger(cycles) && cycles > 0;
+  const stxAmount = stakeAmount === undefined ? undefined : stxToMicroStx(stakeAmount);
+  const hasCycles = cycles !== undefined && Number.isInteger(cycles) && cycles > 0;
   const content = bitcoinStakingContent.acknowledgment;
   const buttonRef = useAttentionAnimation<HTMLDivElement>(
     acknowledgment.attemptCount,
@@ -56,7 +56,7 @@ export function StakingConfirmationSteps({
       <Stack p="space.05" gap="space.02" borderBottomWidth={1} borderColor="ink.border-default">
         <styled.h2 textStyle="label.01">You&apos;ll stake</styled.h2>
         <styled.span textStyle="heading.04">
-          {stxAmount.isNaN() ? '—' : toHumanReadableMicroStx(stxAmount)}
+          {stxAmount === undefined ? '—' : toHumanReadableMicroStx(stxAmount)}
         </styled.span>
         {hasCycles && (
           <styled.span textStyle="caption.01" color="ink.text-subdued">

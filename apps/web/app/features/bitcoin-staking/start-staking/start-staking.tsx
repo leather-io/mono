@@ -72,6 +72,12 @@ interface StartStakingProps {
   signerManagerContractId?: string;
 }
 
+function parseEnteredNumber(value: unknown): number | undefined {
+  if (value === undefined || value === null || value === '') return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
 export function StartStaking({ poolSlug, signerManagerContractId }: StartStakingProps) {
   const client = usePox5StackingClient();
   const { stacksAccount } = useLeatherConnect();
@@ -181,8 +187,8 @@ function StartStakingLayout({
     })
   );
 
-  const stakeAmount = Number(formMethods.watch('amount') ?? NaN);
-  const watchedCycles = Number(formMethods.watch('cycles') ?? NaN);
+  const stakeAmount = parseEnteredNumber(formMethods.watch('amount'));
+  const watchedCycles = parseEnteredNumber(formMethods.watch('cycles'));
 
   const {
     mutate: submitStake,
@@ -226,7 +232,10 @@ function StartStakingLayout({
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
 
   const estimatedUnlockDate =
-    cycleClock && Number.isInteger(watchedCycles) && watchedCycles > 0
+    cycleClock &&
+    watchedCycles !== undefined &&
+    Number.isInteger(watchedCycles) &&
+    watchedCycles > 0
       ? cycleClock.estimatedUnlockDateForCycles(watchedCycles, new Date())
       : null;
 
