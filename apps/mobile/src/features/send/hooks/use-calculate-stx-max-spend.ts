@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import BigNumber from 'bignumber.js';
 
 import { STX_DECIMALS } from '@leather.io/constants';
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { convertAmountToBaseUnit } from '@leather.io/utils';
 
 export type CalculateStxMaxSpend = ReturnType<typeof useCalculateStxMaxSpend>;

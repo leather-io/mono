@@ -1,7 +1,10 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { StxFormSchema, useStxSendFormSchema } from '@/features/send/forms/stx/stx-form-schema';
+import {
+  type StxFormSchema,
+  useStxSendFormSchema,
+} from '@/features/send/forms/stx/stx-form-schema';
 import { useCalculateStxMaxSpend } from '@/features/send/hooks/use-calculate-stx-max-spend';
 import { useSendMax } from '@/features/send/hooks/use-send-max';
 import { useSendNavigation } from '@/features/send/navigation';
@@ -13,7 +16,7 @@ import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';
 
-import { AccountId, Money, type StacksTransactionFees } from '@leather.io/models';
+import { type AccountId, type Money, type StacksTransactionFees } from '@leather.io/models';
 import { convertAmountToBaseUnit } from '@leather.io/utils';
 
 interface UseStxFormProps {
@@ -51,8 +54,30 @@ export function useStxForm({ account, availableBalance, nonce, fees }: UseStxFor
       isSendingMax: false,
     },
   });
+  const isSendingMax = useWatch({ control: form.control, name: 'isSendingMax' });
+  const recipient = useWatch({ control: form.control, name: 'recipient' });
   const maxSpend = calculateStxMaxSpend();
-  const { onSetMax } = useSendMax(maxSpend, form);
+  const { onSetMax } = useSendMax(maxSpend, {
+    isSendingMax,
+    recipient,
+    setValue: form.setValue,
+  });
+
+  async function reviewTransaction(txHexPromise: Promise<string>) {
+    try {
+      const txHex = await txHexPromise;
+      navigate('approver', {
+        hex: txHex,
+        fingerprint: account.fingerprint,
+        accountIndex: account.accountIndex,
+      });
+    } catch {
+      displayToast({
+        title: t`Transaction failed due to an unexpected error`,
+        type: 'error',
+      });
+    }
+  }
 
   const handleSubmit = form.handleSubmit(values => {
     assertStacksSigner(stxSigner);
@@ -61,20 +86,9 @@ export function useStxForm({ account, availableBalance, nonce, fees }: UseStxFor
       amount: Number(values.amount),
     });
 
-    stxFormValuesToSerializedTransaction(values, stxSigner.publicKey, stacksNetwork)
-      .then(txHex =>
-        navigate('approver', {
-          hex: txHex,
-          fingerprint: account.fingerprint,
-          accountIndex: account.accountIndex,
-        })
-      )
-      .catch(() =>
-        displayToast({
-          title: t`Transaction failed due to an unexpected error`,
-          type: 'error',
-        })
-      );
+    void reviewTransaction(
+      stxFormValuesToSerializedTransaction(values, stxSigner.publicKey, stacksNetwork)
+    );
   });
 
   return {

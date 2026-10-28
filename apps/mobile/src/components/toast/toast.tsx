@@ -12,7 +12,7 @@ import {
   Text,
 } from '@leather.io/ui/native';
 
-import { ToastData, ToastMethods, ToastProps, ToastType } from './types';
+import { type ToastData, type ToastMethods, type ToastProps, type ToastType } from './types';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 

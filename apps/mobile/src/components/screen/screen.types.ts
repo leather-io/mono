@@ -1,4 +1,4 @@
-import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import { type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 
 export type NormalizeScrollContainerProps<Props> = Omit<
   Props,

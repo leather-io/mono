@@ -1,17 +1,17 @@
 import { t } from '@lingui/core/macro';
 
 import {
-  AccountDisplayPreference,
-  AccountDisplayPreferenceInfo,
-  CryptoAssetProtocol,
+  type AccountDisplayPreference,
+  type AccountDisplayPreferenceInfo,
+  type CryptoAssetProtocol,
 } from '@leather.io/models';
 
-enum AccountDisplayPreferenceType {
-  NativeSegwit = 'native-segwit',
-  Taproot = 'taproot',
-  Bns = 'bns',
-  Stacks = 'stacks',
-}
+const AccountDisplayPreferenceType = {
+  NativeSegwit: 'native-segwit',
+  Taproot: 'taproot',
+  Bns: 'bns',
+  Stacks: 'stacks',
+} as const;
 // moving `accountDisplayPreferencesKeyedByType` from @leather.io/constants package
 // as we need to translate the strings.
 export function getAccountDisplayPreferencesKeyedByType(): Record<

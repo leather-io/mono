@@ -1,24 +1,42 @@
 import { type ReactNode } from 'react';
 
+import { css } from 'leather-styles/css';
 import { type Tooltip as RadixTooltip } from 'radix-ui';
 
 import { Tooltip } from './tooltip.web';
 
-interface BasicTooltipProps {
+const variantClassName = {
+  sm: css({ px: 'space.01' }),
+  md: undefined,
+};
+
+interface BasicTooltipProps extends RadixTooltip.TooltipTriggerProps {
   children: ReactNode;
   label?: string | ReactNode;
   disabled?: boolean;
   side?: RadixTooltip.TooltipContentProps['side'];
-  asChild?: boolean;
+  variant?: keyof typeof variantClassName;
 }
 
-export function BasicTooltip({ children, label, disabled, side, asChild }: BasicTooltipProps) {
+export function BasicTooltip({
+  children,
+  label,
+  disabled,
+  side,
+  variant = 'md',
+  ...props
+}: BasicTooltipProps) {
   const isDisabled = !label || disabled;
   return (
     <Tooltip.Root delayDuration={400}>
-      <Tooltip.Trigger asChild={asChild}>{children}</Tooltip.Trigger>
+      <Tooltip.Trigger {...props}>{children}</Tooltip.Trigger>
       <Tooltip.Portal>
-        <Tooltip.Content hidden={isDisabled} side={side} sideOffset={5}>
+        <Tooltip.Content
+          hidden={isDisabled}
+          side={side}
+          sideOffset={5}
+          className={variantClassName[variant]}
+        >
           {label}
           <Tooltip.Arrow />
         </Tooltip.Content>

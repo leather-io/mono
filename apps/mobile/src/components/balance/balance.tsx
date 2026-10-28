@@ -3,9 +3,9 @@ import { formatCurrency as defaultFormatCurrency } from '@/utils/currency-format
 import type { ResponsiveValue } from '@shopify/restyle';
 
 import { addOperator } from '@leather.io/features';
-import { Money } from '@leather.io/models';
-import { Text, TextProps, type Theme } from '@leather.io/ui/native';
-import { FormatAmountOptions } from '@leather.io/utils';
+import { type Money } from '@leather.io/models';
+import { Text, type TextProps, type Theme } from '@leather.io/ui/native';
+import { type FormatAmountOptions } from '@leather.io/utils';
 
 import { emptyAmountPlaceholder } from './constants';
 

@@ -1,6 +1,12 @@
-import { ClarityType, ClarityValue, hexToCV, principalCV, serializeCV } from '@stacks/transactions';
+import {
+  ClarityType,
+  type ClarityValue,
+  hexToCV,
+  principalCV,
+  serializeCV,
+} from '@stacks/transactions';
 
-import { StacksClient } from '@leather.io/query';
+import { type StacksClient } from '@leather.io/query';
 
 import { parseContractId } from '../utils/contract-id';
 

@@ -4,7 +4,7 @@ import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
 import { type BitcoinFeeRates, useBitcoinFeeRates } from '@/queries/fees/bitcoin-fee-rates.query';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import {
   useBitcoinAccounts,
   useBitcoinPayerFromKeyOrigin,
@@ -17,8 +17,13 @@ import {
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import { extractAccountIndexFromDescriptor } from '@leather.io/crypto';
-import { RpcRequest, RpcResponse, createRpcSuccessResponse, sendTransfer } from '@leather.io/rpc';
-import { UtxoTotals } from '@leather.io/services';
+import {
+  type RpcRequest,
+  type RpcResponse,
+  createRpcSuccessResponse,
+  type sendTransfer,
+} from '@leather.io/rpc';
+import { type UtxoTotals } from '@leather.io/services';
 import { isDefined } from '@leather.io/utils';
 
 import { getSendTransferRecipients } from './send-transfer.utils';

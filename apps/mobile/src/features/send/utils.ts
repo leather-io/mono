@@ -1,10 +1,10 @@
 import { type BtcFormSchema } from '@/features/send/forms/btc/btc-form-schema';
 import { type StxFormSchema } from '@/features/send/forms/stx/stx-form-schema';
-import { PayerLookupFn } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { type PayerLookupFn } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { analytics } from '@/utils/analytics';
 import { bytesToHex } from '@noble/hashes/utils';
 import { type PublicKey } from '@stacks/common';
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 import BigNumber from 'bignumber.js';
 import memoize from 'p-memoize';
 
@@ -14,7 +14,7 @@ import {
   generateBitcoinUnsignedTransaction,
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
-import { type BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
+import { type BitcoinNetworkModes, type OwnedUtxo } from '@leather.io/models';
 import { getComplianceService } from '@leather.io/services';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { createMoneyFromDecimal, isError } from '@leather.io/utils';

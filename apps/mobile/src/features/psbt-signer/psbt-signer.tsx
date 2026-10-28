@@ -22,17 +22,12 @@ import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 import * as Clipboard from 'expo-clipboard';
 
-import {
-  PsbtOutputWithAddress,
-  getPsbtAsTransaction,
-  getPsbtDetails,
-  getSizeInfo,
-} from '@leather.io/bitcoin';
+import { getPsbtAsTransaction, getPsbtDetails, getSizeInfo } from '@leather.io/bitcoin';
 import { btcAsset } from '@leather.io/constants';
 import { makeActivityLink } from '@leather.io/features';
-import { AccountId, BitcoinNetworkModes, FeeTypes } from '@leather.io/models';
-import { RpcParams, signPsbt } from '@leather.io/rpc';
-import { Approver, Box, SentIcon, SheetInstance, Text } from '@leather.io/ui/native';
+import { type AccountId, type BitcoinNetworkModes, FeeTypes } from '@leather.io/models';
+import { type RpcParams, type signPsbt } from '@leather.io/rpc';
+import { Approver, Box, SentIcon, type SheetInstance, Text } from '@leather.io/ui/native';
 import {
   baseCurrencyAmountInQuoteWithFallback,
   createMoney,
@@ -134,15 +129,11 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
     [psbtHex, network, psbtAddresses]
   );
 
-  const recipients = psbtDetails.psbtOutputs
-    .filter(
-      (output): output is PsbtOutputWithAddress =>
-        !!output.address && !psbtAddresses.includes(output.address)
-    )
-    .map(output => ({
-      amount: createMoney(new BigNumber(output.value), 'BTC'),
-      address: output.address,
-    }));
+  const recipients = psbtDetails.psbtOutputs.flatMap(output => {
+    const { address } = output;
+    if (!address || psbtAddresses.includes(address)) return [];
+    return [{ amount: createMoney(new BigNumber(output.value), 'BTC'), address }];
+  });
 
   const unrecognizedOutputs = psbtDetails.psbtOutputs.filter(output => output.address === null);
 

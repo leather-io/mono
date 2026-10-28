@@ -11,6 +11,7 @@ import {
   Eye1ClosedIcon,
   Eye1Icon,
   Flag,
+  Hr,
   LockIcon,
   SettingsGearIcon,
   Switch,
@@ -24,7 +25,6 @@ import { useCanSignOut } from '@app/common/hooks/auth/use-can-sign-out';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useModifierKey } from '@app/common/hooks/use-modifier-key';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
-import { Divider } from '@app/components/layout/divider';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
 import { useAccountGateDestination } from '@app/routes/account-gate';
 import { useHasUnlockedSoftwareWallets } from '@app/store/in-memory-key/in-memory-key.selectors';
@@ -162,7 +162,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
               {isWalletUnlocked && togglePrivacyItem}
 
               {(showAdvancedMenuOptions || showLockWalletItem || showSignOutItem) &&
-                isWalletUnlocked && <Divider />}
+                isWalletUnlocked && <Hr />}
 
               {showAdvancedMenuOptions && <AdvancedMenuItems />}
 

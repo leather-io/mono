@@ -14,7 +14,12 @@ import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
-import { MarketData, Money, QuoteCurrency, type StacksTransactionFees } from '@leather.io/models';
+import {
+  type MarketData,
+  type Money,
+  type QuoteCurrency,
+  type StacksTransactionFees,
+} from '@leather.io/models';
 import { Button, StxAvatarIcon } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
@@ -140,7 +145,10 @@ export function StxForm({
           )}
         />
 
-        <Button onPress={onSubmit} disabled={!form.formState.isValid}>{t`Review`}</Button>
+        <Button
+          onPress={event => void onSubmit(event)}
+          disabled={!form.formState.isValid}
+        >{t`Review`}</Button>
       </SendFormFooter>
     </SendFormContainer>
   );

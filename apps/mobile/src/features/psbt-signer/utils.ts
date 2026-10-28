@@ -1,4 +1,4 @@
-import { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt';
+import { type TransactionInput, type TransactionOutput } from '@scure/btc-signer/psbt';
 
 import {
   extractRequiredKeyOrigins,
@@ -7,10 +7,10 @@ import {
 } from '@leather.io/bitcoin';
 import { decomposeDescriptor } from '@leather.io/crypto';
 import {
-  BitcoinNetworkModes,
+  type BitcoinNetworkModes,
   type BitcoinTransactionFees,
   FeeTypes,
-  Money,
+  type Money,
   WalletDefaultNetworkConfigurationIds,
   defaultNetworksKeyedById,
 } from '@leather.io/models';

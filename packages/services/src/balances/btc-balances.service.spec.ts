@@ -1,9 +1,11 @@
 import { initBigNumber } from '@leather.io/utils';
 
-import { SettingsService } from '../infrastructure/settings/settings.service';
-import { MarketDataService } from '../market/market-data.service';
-import { AccountRequest } from '../types';
-import { UtxosService } from '../utxos/utxos.service';
+import { type SettingsService } from '../infrastructure/settings/settings.service';
+import { type MarketDataService } from '../market/market-data.service';
+import { createTestUserSettings } from '../test/balances-settings';
+import { createMock } from '../test/create-mock';
+import { type AccountRequest } from '../types';
+import { type UtxosService } from '../utxos/utxos.service';
 import { BtcBalancesService } from './btc-balances.service';
 
 describe(BtcBalancesService.name, () => {
@@ -18,11 +20,13 @@ describe(BtcBalancesService.name, () => {
   };
   const lockedUtxo = { txid: 'lock-a', vout: 1, value: 200_000_000 };
 
-  const mockSettingsService = {
-    getSettings: () => ({ quoteCurrency: 'USD' }),
-  } as unknown as SettingsService;
+  const mockSettingsService: SettingsService = {
+    getSettings() {
+      return createTestUserSettings({ quoteCurrency: 'USD' });
+    },
+  };
 
-  const mockUtxosService = {
+  const mockUtxosService = createMock<UtxosService>({
     getAccountUtxos: vi.fn().mockResolvedValue({
       confirmed: [confirmedUtxo],
       inbound: [],
@@ -32,14 +36,14 @@ describe(BtcBalancesService.name, () => {
       available: [confirmedUtxo],
       locked: [lockedUtxo],
     }),
-  } as unknown as UtxosService;
+  });
 
-  const mockMarketDataService = {
+  const mockMarketDataService = createMock<MarketDataService>({
     getMarketData: vi.fn().mockResolvedValue({
       pair: { base: 'BTC', quote: 'USD' },
       price: { amount: initBigNumber(100), symbol: 'USD', decimals: 2 },
     }),
-  } as unknown as MarketDataService;
+  });
 
   const service = new BtcBalancesService(
     mockSettingsService,

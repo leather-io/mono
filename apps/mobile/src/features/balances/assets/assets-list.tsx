@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 
 import { Screen } from '@/components/screen/screen';
 import { useUsdcxBalance } from '@/features/balances/assets/use-usdcx-balance';
@@ -11,10 +11,10 @@ import {
 } from '@/features/balances/assets/utils/with-usdcx-bridge';
 import { UsdcxBridgeTokenCell } from '@/features/balances/stacks/usdcx-bridge-token-cell';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
+import { type useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useRouter } from 'expo-router';
 
-import { AccountId, CryptoAssetId } from '@leather.io/models';
+import { type AccountId, type CryptoAssetId } from '@leather.io/models';
 import { useTheme } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 

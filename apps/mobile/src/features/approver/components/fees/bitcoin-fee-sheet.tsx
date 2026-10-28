@@ -1,7 +1,7 @@
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 
 import { type BitcoinTransactionFees, FeeTypes, type Money } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
+import { type SheetRef } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
 
 import { BitcoinFeeOption } from './bitcoin-fee-option';

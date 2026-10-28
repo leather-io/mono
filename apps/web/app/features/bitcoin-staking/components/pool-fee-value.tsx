@@ -2,7 +2,10 @@ import { Box } from 'leather-styles/jsx';
 import { InfoTooltipIcon } from '~/components/info-tooltip-icon';
 import { EM_DASH } from '~/constants/constants';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
-import { BitcoinStakingPool, getPrimarySignerManagerContract } from '~/data/bitcoin-staking-data';
+import {
+  type BitcoinStakingPool,
+  getPrimarySignerManagerContract,
+} from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 
 import { usePox5PoolFeeQuery } from '../queries/pox5-stacking.query';

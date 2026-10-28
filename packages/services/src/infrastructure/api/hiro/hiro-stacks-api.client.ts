@@ -43,6 +43,11 @@ import {
 } from './hiro-stacks-api.types';
 import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
 
+function isNotFoundOrUnprocessableRequest(request: unknown) {
+  if (typeof request !== 'object' || request === null || !('status' in request)) return false;
+  return request.status === 404 || request.status === 422;
+}
+
 const balanceChangesResultLimit = 50;
 const stakingBondsListLimit = 10;
 
@@ -401,10 +406,7 @@ export class HiroStacksApiClient {
         );
         return res.data;
       } catch (error) {
-        if (
-          error instanceof AxiosError &&
-          (error.request?.status === 404 || error.request?.status === 422)
-        ) {
+        if (error instanceof AxiosError && isNotFoundOrUnprocessableRequest(error.request)) {
           return null;
         }
         throw error;
@@ -444,10 +446,7 @@ export class HiroStacksApiClient {
         );
         return res.data;
       } catch (error) {
-        if (
-          error instanceof AxiosError &&
-          (error.request?.status === 404 || error.request?.status === 422)
-        ) {
+        if (error instanceof AxiosError && isNotFoundOrUnprocessableRequest(error.request)) {
           return null;
         }
         throw error;

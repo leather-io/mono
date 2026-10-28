@@ -48,7 +48,11 @@ export function ApproverButtons(props: ApproverButtonsProps) {
           <Button variant="outline" flex={1} onPress={onBack}>
             {t`Cancel`}
           </Button>
-          <Button flex={1} onPress={onApproveWrapper} disabled={props.isSubmitDisabled}>
+          <Button
+            flex={1}
+            onPress={() => void onApproveWrapper()}
+            disabled={props.isSubmitDisabled}
+          >
             {approveLabel}
           </Button>
         </Approver.Actions>
@@ -60,7 +64,11 @@ export function ApproverButtons(props: ApproverButtonsProps) {
           <Button variant="outline" flex={1} onPress={onBack}>
             {t`Cancel`}
           </Button>
-          <Button flex={1} onPress={onApproveWrapper} disabled={props.isSubmitDisabled}>
+          <Button
+            flex={1}
+            onPress={() => void onApproveWrapper()}
+            disabled={props.isSubmitDisabled}
+          >
             {t`Retry`}
           </Button>
         </Approver.Actions>

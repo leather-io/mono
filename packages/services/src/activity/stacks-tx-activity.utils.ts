@@ -1,37 +1,37 @@
 import {
-  ContractCallTransaction,
-  MempoolContractCallTransaction,
-  MempoolSmartContractTransaction,
-  MempoolTokenTransferTransaction,
-  SmartContractTransaction,
-  TokenTransferTransaction,
-  TransactionEvent,
+  type ContractCallTransaction,
+  type MempoolContractCallTransaction,
+  type MempoolSmartContractTransaction,
+  type MempoolTokenTransferTransaction,
+  type SmartContractTransaction,
+  type TokenTransferTransaction,
+  type TransactionEvent,
 } from '@stacks/stacks-blockchain-api-types';
 
 import { stxAsset } from '@leather.io/constants';
 import {
-  AccountAddresses,
+  type AccountAddresses,
   ActivityLevels,
-  OnChainActivity,
+  type OnChainActivity,
   OnChainActivityStatuses,
   OnChainActivityTypes,
-  ReceiveAssetActivity,
-  SendAssetActivity,
+  type ReceiveAssetActivity,
+  type SendAssetActivity,
 } from '@leather.io/models';
 import { initBigNumber, uniqueArray } from '@leather.io/utils';
 
 import {
-  HiroStacksMempoolTransaction,
-  HiroStacksTransaction,
-  HiroTransactionEvent,
+  type HiroStacksMempoolTransaction,
+  type HiroStacksTransaction,
+  type HiroTransactionEvent,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
-  StacksAssetTransferWithInfo,
+  type StacksAssetTransferWithInfo,
   aggregateTransferReceivers,
   aggregateTransferSenders,
   sumAssetTransferAmounts,
 } from './stacks-asset-transfer.utils';
-import { isMempoolTx } from './stacks-mempool-tx.utils';
+import { getStacksTxByStatus } from './stacks-mempool-tx.utils';
 
 export function getEventsByTxId(events: TransactionEvent[]) {
   return events.reduce((acc, event) => {
@@ -43,19 +43,23 @@ export function getEventsByTxId(events: TransactionEvent[]) {
   }, new Map<string, HiroTransactionEvent[]>());
 }
 
+function readBlockTime(tx: HiroStacksTransaction) {
+  return 'block_time' in tx && typeof tx.block_time === 'number' ? tx.block_time : undefined;
+}
+
 export function mapStacksTxBlockTime(tx: HiroStacksTransaction | HiroStacksMempoolTransaction) {
-  if (isMempoolTx(tx)) {
-    return tx.receipt_time;
+  const txByStatus = getStacksTxByStatus(tx);
+  if (txByStatus.mempoolTx) {
+    return txByStatus.mempoolTx.receipt_time;
   } else {
-    return (tx as any).block_time ?? tx.burn_block_time;
+    return readBlockTime(txByStatus.confirmedTx) ?? txByStatus.confirmedTx.burn_block_time;
   }
 }
 
 export function mapStacksTxBlockHeight(
   tx: HiroStacksTransaction | HiroStacksMempoolTransaction
 ): number | undefined {
-  if (isMempoolTx(tx)) return undefined;
-  return tx.block_height;
+  return getStacksTxByStatus(tx).confirmedTx?.block_height;
 }
 
 export function mapStacksTxFee(tx: HiroStacksTransaction | HiroStacksMempoolTransaction): string {

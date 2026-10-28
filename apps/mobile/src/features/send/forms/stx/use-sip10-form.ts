@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSendMax } from '@/features/send/hooks/use-send-max';
@@ -10,7 +10,12 @@ import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';
 
-import { AccountId, Money, Sip10Asset, type StacksTransactionFees } from '@leather.io/models';
+import {
+  type AccountId,
+  type Money,
+  type Sip10Asset,
+  type StacksTransactionFees,
+} from '@leather.io/models';
 import { createTransferSip10TxHex } from '@leather.io/stacks';
 import {
   convertAmountToBaseUnit,
@@ -18,7 +23,7 @@ import {
   unitToFractionalUnit,
 } from '@leather.io/utils';
 
-import { StxFormSchema, useStxSendFormSchema } from './stx-form-schema';
+import { type StxFormSchema, useStxSendFormSchema } from './stx-form-schema';
 
 interface UseSip10FormProps {
   account: AccountId;
@@ -60,8 +65,30 @@ export function useSip10Form({ account, availableBalance, nonce, asset, fees }: 
       isSendingMax: false,
     },
   });
+  const isSendingMax = useWatch({ control: form.control, name: 'isSendingMax' });
+  const recipient = useWatch({ control: form.control, name: 'recipient' });
   const maxSpend = calculateStxMaxSpend();
-  const { onSetMax } = useSendMax(maxSpend, form);
+  const { onSetMax } = useSendMax(maxSpend, {
+    isSendingMax,
+    recipient,
+    setValue: form.setValue,
+  });
+
+  async function reviewTransaction(txHexPromise: Promise<string>) {
+    try {
+      const txHex = await txHexPromise;
+      navigate('approver', {
+        hex: txHex,
+        fingerprint: account.fingerprint,
+        accountIndex: account.accountIndex,
+      });
+    } catch {
+      displayToast({
+        title: t`Transaction failed due to an unexpected error`,
+        type: 'error',
+      });
+    }
+  }
 
   const handleSubmit = form.handleSubmit(values => {
     assertStacksSigner(stxSigner);
@@ -70,28 +97,17 @@ export function useSip10Form({ account, availableBalance, nonce, asset, fees }: 
       amount: Number(values.amount),
     });
 
-    createTransferSip10TxHex({
-      signer: stxSigner,
-      assetId: asset.assetId,
-      recipient: values.recipient,
-      amount: unitToFractionalUnit(asset.decimals)(values.amount).toNumber(),
-      nonce: nonce ?? 1,
-      memo: values.memo,
-      fee: createMoneyFromDecimal(values.fee, 'STX'),
-    })
-      .then(txHex => {
-        navigate('approver', {
-          hex: txHex,
-          fingerprint: account.fingerprint,
-          accountIndex: account.accountIndex,
-        });
+    void reviewTransaction(
+      createTransferSip10TxHex({
+        signer: stxSigner,
+        assetId: asset.assetId,
+        recipient: values.recipient,
+        amount: unitToFractionalUnit(asset.decimals)(values.amount).toNumber(),
+        nonce: nonce ?? 1,
+        memo: values.memo,
+        fee: createMoneyFromDecimal(values.fee, 'STX'),
       })
-      .catch(() =>
-        displayToast({
-          title: t`Transaction failed due to an unexpected error`,
-          type: 'error',
-        })
-      );
+    );
   });
 
   return {

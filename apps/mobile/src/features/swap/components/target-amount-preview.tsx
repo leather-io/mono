@@ -10,8 +10,8 @@ import {
 
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import { MarketData, Money } from '@leather.io/models';
-import { LiveSwapEstimate } from '@leather.io/state/swap';
+import { type MarketData, type Money } from '@leather.io/models';
+import { type LiveSwapEstimate } from '@leather.io/state/swap';
 import { AnimatedBox, Box, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
