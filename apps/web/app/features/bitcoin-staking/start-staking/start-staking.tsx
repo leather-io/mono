@@ -72,6 +72,12 @@ interface StartStakingProps {
   signerManagerContractId?: string;
 }
 
+function parseEnteredNumber(value: unknown): number | undefined {
+  if (value === undefined || value === null || value === '') return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
 export function StartStaking({ poolSlug, signerManagerContractId }: StartStakingProps) {
   const client = usePox5StackingClient();
   const { stacksAccount } = useLeatherConnect();
@@ -181,13 +187,8 @@ function StartStakingLayout({
     })
   );
 
-  const watchedAmount = formMethods.watch('amount');
-  const stakeAmount = watchedAmount === undefined ? undefined : Number(watchedAmount);
-  const watchedCyclesInput = formMethods.watch('cycles');
-  const watchedCycles =
-    watchedCyclesInput === undefined || watchedCyclesInput === null
-      ? undefined
-      : Number(watchedCyclesInput);
+  const stakeAmount = parseEnteredNumber(formMethods.watch('amount'));
+  const watchedCycles = parseEnteredNumber(formMethods.watch('cycles'));
 
   const {
     mutate: submitStake,

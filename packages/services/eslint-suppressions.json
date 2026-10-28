@@ -1,7 +1,0 @@
-{
-  "src/infrastructure/api/alex/alex-sdk.utils.ts": {
-    "@typescript-eslint/consistent-type-assertions": {
-      "count": 1
-    }
-  }
-}
