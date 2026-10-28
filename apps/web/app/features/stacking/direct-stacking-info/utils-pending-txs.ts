@@ -37,7 +37,7 @@ function findUnanchoredTransaction(
     const transactionResultCV = hexToCV(t.tx_result.hex);
     const isOk = transactionResultCV.type === ClarityType.ResponseOk;
     return isOk && isGoodTransaction(t, poxContractId);
-  }); // Casting as type is checked in `if` statement above.
+  });
 }
 /**
  * Given an array of transactions, ordered from most recent to least recent, returns the most recent
@@ -52,7 +52,7 @@ function findMempoolTransaction(
 ) {
   return transactions.filter(isMempoolContractCallTransaction).find(t => {
     return isGoodTransaction(t, poxContractId);
-  }); // Casting as type is checked in `if` statement above.
+  });
 }
 
 interface GetHasPendingTransactionArgs<T> extends PendingTransactionArgs {

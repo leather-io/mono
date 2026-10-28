@@ -89,7 +89,7 @@ export function useProposalActivityItem(
 
   const tokenContractId = payload?.type === 'sip10Transfer' ? payload.token.contractId : undefined;
   const tokenAssetQuery = useQuery({
-    ...createSip10AssetByPrincipalQueryConfig(tokenContractId ?? '', settings),
+    ...createSip10AssetByPrincipalQueryConfig(tokenContractId, settings),
     enabled: Boolean(tokenContractId),
   });
   const tokenMarketDataQuery = useQuery({

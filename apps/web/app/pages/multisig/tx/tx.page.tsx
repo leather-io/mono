@@ -101,7 +101,7 @@ export function TxDetailPage() {
 
   const onchainDetail = useBlockchainActivityByTxIdDetailQuery(
     getMultisigAccountAddresses(account.data),
-    transaction.data?.txId ?? '',
+    transaction.data?.txId ?? undefined,
     settings,
     Boolean(transaction.data?.txId && account.data)
   );

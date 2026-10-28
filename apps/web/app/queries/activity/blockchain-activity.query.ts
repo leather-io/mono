@@ -105,7 +105,7 @@ interface CachedBlockchainActivityLookup {
 export function findCachedBlockchainActivityByTxid(
   queryClient: QueryClient,
   account: AccountAddresses,
-  txid: string
+  txid: string | undefined
 ): CachedBlockchainActivityLookup | undefined {
   if (!txid) return undefined;
   const target = normalizeCachedTxid(txid);
@@ -124,7 +124,7 @@ export function findCachedBlockchainActivityByTxid(
 
 export function useBlockchainActivityByTxIdDetailQuery(
   account: AccountAddresses,
-  txid: string,
+  txid: string | undefined,
   settings: UserSettings,
   enabled: boolean
 ) {
