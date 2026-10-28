@@ -20,8 +20,8 @@ import {
   evaluateStringExpression,
   getLine,
   getPropertyName,
-  hasExportModifier,
   parseSourceFile,
+  topLevelDeclarations,
   unwrapExpression,
 } from './ts-ast.js';
 
@@ -140,20 +140,15 @@ function collectScope(sourceFile: ts.SourceFile, table: StringTable): ReaderScop
   const bindings = new Map<string, EvaluatedString>();
   const arrays = new Map<string, ts.ArrayLiteralExpression>();
   const objects = new Map<string, ts.ObjectLiteralExpression>();
-  for (const statement of sourceFile.statements) {
-    if (!ts.isVariableStatement(statement)) continue;
-    for (const declaration of statement.declarationList.declarations) {
-      if (!ts.isIdentifier(declaration.name) || !declaration.initializer) continue;
-      const initializer = unwrapExpression(declaration.initializer);
-      const evaluated = evaluateStringExpression(initializer, table, bindings);
-      if (evaluated) {
-        bindings.set(declaration.name.text, evaluated);
-        continue;
-      }
-      if (ts.isArrayLiteralExpression(initializer)) arrays.set(declaration.name.text, initializer);
-      if (ts.isObjectLiteralExpression(initializer))
-        objects.set(declaration.name.text, initializer);
+  for (const { name, initializer } of topLevelDeclarations(sourceFile)) {
+    if (!initializer) continue;
+    const evaluated = evaluateStringExpression(initializer, table, bindings);
+    if (evaluated) {
+      bindings.set(name, evaluated);
+      continue;
     }
+    if (ts.isArrayLiteralExpression(initializer)) arrays.set(name, initializer);
+    if (ts.isObjectLiteralExpression(initializer)) objects.set(name, initializer);
   }
   return { table, bindings, arrays, objects };
 }
@@ -197,13 +192,7 @@ class FeatureReader {
   }
 
   string(name: string, required = true): string | undefined {
-    const value = this.get(name, required);
-    if (!value) return undefined;
-    if (value.kind !== 'string') {
-      this.fail(`field '${name}' must be a string`);
-      return undefined;
-    }
-    return value.value;
+    return this.resolvedString(name, required)?.value;
   }
 
   resolvedString(name: string, required = true): ResolvedString | undefined {
@@ -392,16 +381,11 @@ function readFeature(
 }
 
 function findFeatureArrays(sourceFile: ts.SourceFile): ts.ArrayLiteralExpression[] {
-  const arrays: ts.ArrayLiteralExpression[] = [];
-  for (const statement of sourceFile.statements) {
-    if (!ts.isVariableStatement(statement) || !hasExportModifier(statement)) continue;
-    for (const declaration of statement.declarationList.declarations) {
-      if (!declaration.initializer) continue;
-      const initializer = unwrapExpression(declaration.initializer);
-      if (ts.isArrayLiteralExpression(initializer)) arrays.push(initializer);
-    }
-  }
-  return arrays;
+  return topLevelDeclarations(sourceFile)
+    .filter(declaration => declaration.exported)
+    .map(declaration => declaration.initializer)
+    .filter(initializer => initializer !== undefined)
+    .filter(ts.isArrayLiteralExpression);
 }
 
 export function parseFeaturesSource(

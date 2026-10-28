@@ -14,9 +14,13 @@ import {
   uncoveredFeatures,
   unkeyedRoutes,
   unroutedKeys,
+  verifyAvailability,
 } from './model.js';
+import { type SourceLocation } from './ts-ast.js';
 
 const catchAllPath = '*';
+const notDeepLinkableNote =
+  'Not deep-linkable: the screen reads router state the previous screen passes, so a bare URL redirects or fails; reproduce it through its specs.';
 
 function code(text: string): string {
   return `\`${text}\``;
@@ -30,6 +34,10 @@ function location(file: string, line: number): string {
   return `${toRepoRelative(file)}:${line}`;
 }
 
+function withLocation(name: string, found: SourceLocation | undefined): string {
+  return found ? `${code(name)} (${code(location(found.file, found.line))})` : code(name);
+}
+
 function joinOrDash(items: readonly string[]): string {
   return items.length > 0 ? items.join(', ') : '—';
 }
@@ -40,6 +48,14 @@ function table(headers: readonly string[], rows: readonly (readonly string[])[])
     `| ${headers.map(() => '---').join(' | ')} |`,
     ...rows.map(row => `| ${row.map(cell).join(' | ')} |`),
   ];
+}
+
+function section(title: string, items: readonly string[]): string[] {
+  return [`**${title}**`, '', ...items, ''];
+}
+
+function optionalSection(title: string, items: readonly string[]): string[] {
+  return items.length === 0 ? [] : section(title, items);
 }
 
 function routeRows(model: FeatureMapModel, feature: ParsedFeature): string[][] {
@@ -73,7 +89,7 @@ function routeRows(model: FeatureMapModel, feature: ParsedFeature): string[][] {
   return rows;
 }
 
-function selectorLine(model: FeatureMapModel, selector: ResolvedString): string {
+function selectorLine(selector: ResolvedString): string {
   if (!selector.ref) return code(selector.value);
   return `${code(selector.ref)} → ${code(selector.value)}`;
 }
@@ -85,113 +101,106 @@ function anchorLabel(feature: ParsedFeature): string {
   return anchor.kind;
 }
 
-function openedByLines(model: FeatureMapModel, feature: ParsedFeature): string[] {
-  const lines = ['**Opened by**', ''];
+function verifyLine(model: FeatureMapModel, feature: ParsedFeature): string {
+  const availability = verifyAvailability(feature);
+  if (!availability.verifiable) return `**Verify:** not verifiable: ${availability.reason}.`;
+  const params = feature.entry.some(point => point.kind === 'rpc')
+    ? ' (add `--params <file.json>` for request params)'
+    : '';
+  return `**Verify:** \`pnpm lt verify ${model.config.app} --feature ${feature.id}\`${params}`;
+}
+
+function openedByItems(model: FeatureMapModel, feature: ParsedFeature): string[] {
+  const items: string[] = [];
   if (feature.anchor.kind !== 'behavior') {
-    lines.push(`- start route: ${code(feature.startRoute?.value ?? '/')}`);
+    items.push(`- start route: ${code(feature.startRoute?.value ?? '/')}`);
   }
   if (feature.open.length === 0) {
-    lines.push('- open: no page-object action reveals it; follow the entry steps');
+    items.push('- open: no page-object action reveals it; follow the entry steps');
   }
   for (const action of feature.open) {
-    const found = model.pageObjectActions.get(action);
-    lines.push(
-      `- open: ${code(action)}${found ? ` (${code(location(found.file, found.line))})` : ''}`
-    );
+    items.push(`- open: ${withLocation(action, model.pageObjectActions.get(action))}`);
   }
-  lines.push('');
-  return lines;
+  return items;
+}
+
+function entryItems(feature: ParsedFeature): string[] {
+  const items = feature.entry.map((point, index) => {
+    const method = point.method ? ` (${code(point.method)})` : '';
+    return `${index + 1}. ${point.kind}${method}: ${point.steps.join(' → ')}`;
+  });
+  if (!feature.deepLinkable) items.push(notDeepLinkableNote);
+  return items;
+}
+
+function preconditionItems(model: FeatureMapModel, feature: ParsedFeature): string[] {
+  const { session, network, accountType, mocks } = feature.preconditions;
+  const items = [`- session: ${session}`];
+  if (network) items.push(`- network: ${network}`);
+  if (accountType) items.push(`- account type: ${accountType}`);
+  for (const mock of mocks) items.push(`- mock ${withLocation(mock, model.mocks.get(mock))}`);
+  return items;
+}
+
+function selectorItems(feature: ParsedFeature): string[] {
+  const { ready, others } = feature.selectors;
+  const items = ready ? [`- ready: ${selectorLine(ready)}`] : [];
+  for (const other of others) items.push(`- ${selectorLine(other)}`);
+  return items;
 }
 
 function renderFeature(model: FeatureMapModel, feature: ParsedFeature): string[] {
-  const lines: string[] = [];
-  lines.push(`### ${feature.id}`, '', feature.description, '');
-  lines.push(
-    ...table(
-      ['Field', 'Value'],
-      [
-        ['Group', `${code(feature.group)} (${code(location(feature.file, feature.line))})`],
-        ['Anchor', anchorLabel(feature)],
-        ['Gate', feature.gate],
-        ['Flags', joinOrDash(feature.flags.map(code))],
-        ['Session', feature.preconditions.session],
-        ['Network', feature.preconditions.network ?? '—'],
-        ['Account type', feature.preconditions.accountType ?? '—'],
-      ]
-    ),
-    ''
+  const summary = table(
+    ['Field', 'Value'],
+    [
+      ['Group', `${code(feature.group)} (${code(location(feature.file, feature.line))})`],
+      ['Anchor', anchorLabel(feature)],
+      ['Gate', feature.gate],
+      ['Flags', joinOrDash(feature.flags.map(code))],
+      ['Session', feature.preconditions.session],
+      ['Network', feature.preconditions.network ?? '—'],
+      ['Account type', feature.preconditions.accountType ?? '—'],
+    ]
   );
+  const placement =
+    feature.anchor.kind === 'route'
+      ? section(
+          'Routes',
+          table(
+            ['Key', 'Value', 'Mounted at', 'Gate', 'Flags', 'Router'],
+            routeRows(model, feature)
+          )
+        )
+      : section('Opened by', openedByItems(model, feature));
 
-  if (feature.anchor.kind === 'route') {
-    lines.push('**Routes**', '');
-    lines.push(
-      ...table(
-        ['Key', 'Value', 'Mounted at', 'Gate', 'Flags', 'Router'],
-        routeRows(model, feature)
-      ),
-      ''
-    );
-  } else {
-    lines.push(...openedByLines(model, feature));
-  }
-
-  if (feature.params.length > 0) {
-    lines.push('**Params**', '');
-    for (const param of feature.params)
-      lines.push(`- ${code(param.name)} = ${code(param.example)}`);
-    lines.push('');
-  }
-
-  lines.push('**Entry**', '');
-  feature.entry.forEach((point, index) => {
-    const method = point.method ? ` (${code(point.method)})` : '';
-    lines.push(`${index + 1}. ${point.kind}${method}: ${point.steps.join(' → ')}`);
-  });
-  if (!feature.deepLinkable) {
-    lines.push(
-      'Not deep-linkable: the screen reads router state the previous screen passes, so a bare URL redirects or fails; reproduce it through its specs.'
-    );
-  }
-  lines.push('');
-
-  lines.push('**Preconditions**', '');
-  lines.push(`- session: ${feature.preconditions.session}`);
-  if (feature.preconditions.network) lines.push(`- network: ${feature.preconditions.network}`);
-  if (feature.preconditions.accountType)
-    lines.push(`- account type: ${feature.preconditions.accountType}`);
-  for (const mock of feature.preconditions.mocks) {
-    const found = model.mocks.get(mock);
-    lines.push(
-      `- mock ${code(mock)}${found ? ` (${code(location(found.file, found.line))})` : ''}`
-    );
-  }
-  lines.push('');
-
-  if (feature.selectors.ready || feature.selectors.others.length > 0) {
-    lines.push('**Selectors**', '');
-    if (feature.selectors.ready) {
-      lines.push(`- ready: ${selectorLine(model, feature.selectors.ready)}`);
-    }
-    for (const other of feature.selectors.others) lines.push(`- ${selectorLine(model, other)}`);
-    lines.push('');
-  }
-
-  if (feature.actions.length > 0) {
-    lines.push('**Actions**', '');
-    for (const action of feature.actions) {
-      const found = model.pageObjectActions.get(action);
-      lines.push(`- ${code(action)}${found ? ` (${code(location(found.file, found.line))})` : ''}`);
-    }
-    lines.push('');
-  }
-
-  if (feature.specs.length > 0) {
-    lines.push('**Specs**', '');
-    for (const spec of feature.specs) lines.push(`- ${code(spec)}`);
-    lines.push('');
-  }
-
-  return lines;
+  return [
+    `### ${feature.id}`,
+    '',
+    feature.description,
+    '',
+    ...summary,
+    '',
+    verifyLine(model, feature),
+    '',
+    ...placement,
+    ...optionalSection(
+      'Params',
+      feature.params.map(param => `- ${code(param.name)} = ${code(param.example)}`)
+    ),
+    ...section('Entry', entryItems(feature)),
+    ...section('Preconditions', preconditionItems(model, feature)),
+    ...optionalSection('Selectors', selectorItems(feature)),
+    ...optionalSection(
+      'Actions',
+      feature.actions.map(
+        action => `- ${withLocation(action, model.pageObjectActions.get(action))}`
+      )
+    ),
+    ...optionalSection(
+      'Specs',
+      feature.specs.map(spec => `- ${code(spec)}`)
+    ),
+  ];
 }
 
 export function renderFeatureMap(model: FeatureMapModel): string {

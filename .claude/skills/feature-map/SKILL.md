@@ -50,10 +50,12 @@ still validated.
 
 Entries without a route carry `startRoute` (a `RouteUrls` value, default `/`) and `open`: the
 page-object action or sequence of actions (`'HomePage.goToReceiveDialog'`,
-`['SwitchAccountPage.open']`) that reveals the screen from the start route. Any public
-page-object method can be used. Leave `open` empty when no action reveals the screen (a
-form must be filled, a storage key set); the specs are then the reproduction. A routed entry may
-also set `open` when the screen only renders after an action from its route.
+`['SwitchAccountPage.open']`) that reveals the screen from the start route. Only zero-argument
+public methods of the page objects the fixtures expose (GlobalPage, HomePage, OnboardingPage,
+SendPage, SwapRevampPage, NetworkPage, SettingsPage, SwitchAccountPage) can be used. Leave `open`
+empty when no action reveals the screen (a form must be filled, a storage key set); the entry then
+says so under Verify and the specs are the reproduction. A routed entry may also set `open` when
+the screen only renders after an action from its route.
 
 ## Commands
 
@@ -64,13 +66,100 @@ pnpm lt feature-map check                                      # CI gate: entrie
 
 Run `pnpm --filter @leather.io/tools build` first if `pnpm lt` reports an unknown command.
 
+## Verify a screen
+
+`pnpm lt verify extension` opens one mapped screen in a headless Chromium with the extension loaded,
+under the preconditions the entry describes, and writes evidence an agent can read to confirm a bug
+or a fix. It reuses the Playwright fixtures, page objects and mocks; nothing is reimplemented.
+
+```bash
+pnpm lt verify extension --feature send-btc-form                       # entry decides route, session, wallet, network, flags, mocks, ready selector
+pnpm lt verify extension --feature receive-dialog                      # goes to startRoute, runs the open actions, waits for ready
+pnpm lt verify extension --feature home-tokens --account-type ledger   # software | ledger | mixed | policy; entries with accountType derive it
+pnpm lt verify extension --feature home-tokens --network testnet4      # wallet network id; entries with network derive it
+pnpm lt verify extension --feature rpc-stx-call-contract               # params come from the first test-app catalog spec for the method
+pnpm lt verify extension --route / --rpc catalog:signMessage-p2wpkh --ready current-account-display-name
+pnpm lt verify extension --feature rpc-get-addresses --params ./req.json   # or hand-written params
+pnpm lt verify extension --feature home-tokens --mocks none            # no mocks at all: every request is real
+pnpm lt verify extension --feature home-tokens --state all             # state.json slices; default active,networks,wallets
+pnpm lt verify extension --feature home-tokens --allow-console-errors  # report instead of block
+pnpm lt verify extension --feature home-tokens --build                  # run the extension test build first
+```
+
+For a `selectors` entry the run signs in, navigates to `startRoute`, calls each `open` action on the
+fixtures' page objects, then waits for `selectors.ready`. A `behavior` entry, an entry with no
+`selectors.ready`, or a dialog with no `open` action is a usage error that points at its specs. RPC
+runs drive the request through the test app on port 3000 (Playwright starts it), seed that origin as
+a connected dApp (`--no-connect-test-app` to skip), resolve catalog params against the wallet, approving
+any `getAddresses` prompt the builder needs, and capture the approver popup.
+
+Prerequisites: `LAUNCH_DARKLY_KEY` in `apps/extension/.env` (gitignored; without it the app falls back to
+a no-op flag provider, so `--flags` does nothing and flag-gated routes such as `/fund` and `/sell` never
+register, and verify exits 2 on them) and a test build in `apps/extension/dist`
+(`pnpm --filter @leather.io/extension build:test` or `--build`; a running `pnpm dev` rewrites it, so
+stop that first). `/fund` and `/sell` also need `ONRAMPER_WIDGET_HOST`, `ONRAMPER_API_KEY` and
+`ONRAMPER_SIGNING_SECRET` in that `.env` (CI reads the public `PUBLIC_ONRAMPER_*` repository variables);
+without them the widget iframe gets a relative src, the page frames the extension itself and verify
+exits 3 on a `frame-ancestors` console error. No mnemonic is needed: every session is seeded from the
+test wallet's encrypted state.
+
+Entries with `deepLinkable: false` read router state the previous screen passes (the send
+confirmations, the sent summaries, the BTC fee sheet, the swap review), so a bare URL redirects or
+throws; verify refuses them with a usage error and `extension.md` prints the reason instead of a
+command. Reproduce those through their specs.
+
+### Reading the result
+
+The CLI prints the verdict, the blocking findings and the artifact directory; `summary.json` holds the
+same data. Exit codes:
+
+| Exit | Verdict         | Meaning                                                                                                                                                                                                                                           |
+| ---- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0    | `verified`      | the ready selector appeared and nothing blocked; open `screenshot.png` and `a11y.md` and check the change is actually visible                                                                                                                     |
+| 1    | usage           | bad arguments; the message names the fix                                                                                                                                                                                                          |
+| 2    | `ready-not-met` | the ready selector never attached; `a11y.md` and `console.json` show what rendered instead                                                                                                                                                        |
+| 3    | `errors`        | a page error or console error not in `apps/extension/tests/verify/console-allowlist.ts`, a background service worker error (`background-errors.json`), a `real` request in `network.json` under mocks, or a listed mock the registry cannot apply |
+| 4    | env             | no dist, a failed `--build`, or the Playwright run died before writing `summary.json`                                                                                                                                                             |
+
+- Exit 2 and 3 are findings to fix, not flakes to rerun. Read `console.json`, `network.json` and
+  `a11y.md` before touching code.
+- A `real` request under mocks means the suite is no longer hermetic: add a mock to
+  `apps/extension/tests/mocks`, register it in `apps/extension/tests/verify/mock-registry.ts` and
+  list it in the entry's `preconditions.mocks`, never an allowlist entry. Allowlist entries are substrings of `<message text> <source url>` and only cover noise that
+  is deterministic on `dev`.
+- `--mocks none` sends every request to the real network: `real` counts are expected there and do
+  not fail the run, so say the run only proves "renders against live APIs".
+- Say explicitly when a run only proves "did not crash": the ready target is not on the changed
+  screen, or `--allow-console-errors` was used.
+- With an rpc entry, `summary.rpc` records the method, the catalog id the params came from, the popup
+  url and the response, which stays `pending` while the popup waits for approval; `rpc-request.json`
+  holds the params that were sent.
+
+Artifacts land in `apps/extension/verify-results/<feature-or-route>-<timestamp>/` (gitignored) unless
+`--out` is given:
+
+| File                     | Contents                                                                                                                                                        |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `screenshot.png`         | Full-page screenshot of the target page                                                                                                                         |
+| `a11y.md`                | `ariaSnapshot()` of the page body, the same format as a failure's `error-context.md`                                                                            |
+| `console.json`           | Every console message and page error with level, text and location                                                                                              |
+| `network.json`           | Every request, page and service worker, classified as extension, local, mocked, fallback, real, failed or other                                                 |
+| `background-errors.json` | Errors the background service worker buffered in test builds (uncaught errors, unhandled rejections, console.error)                                             |
+| `state.json`             | The requested persisted slices only; `softwareKeys.salt` and every `encryptedSecretKey` are replaced, and the session key is reported as `encryptionKeyPresent` |
+| `rpc-request.json`       | The method and params an rpc run sent                                                                                                                           |
+| `summary.json`           | Verdict, exit code, resolved inputs, ready outcome, timings, console, network and background counts, blocking findings, notes                                   |
+
+When pasting evidence into a PR, use `summary.json` and the screenshot; never paste state that
+includes key material, even redacted.
+
 ## Adding or changing an entry
 
 - Every routed `RouteUrls` key and every rpc handler file must be claimed by an entry. A nested
   sheet (`edit-tx-nonce`, `recipient-accounts`) is listed in the `routes` of the feature whose route
   mounts it.
 - `specs`, `actions` and `open` (`PageObject.method`), `preconditions.mocks` (mock functions
-  exported from `tests/mocks`) and `entry[].method` (an RPC method string) must exist; `flags` must be keys of
+  exported from `tests/mocks` and registered in `tests/verify/mock-registry.ts`, so a mock that
+  needs arguments cannot be listed) and `entry[].method` (an RPC method string) must exist; `flags` must be keys of
   `FeatureFlags`; `anchor.objects` must name exported `*Selectors` objects or members and
   `anchor.handlers` files under `rpc-methods`.
 - `selectors.ready` is the element whose presence means the screen is usable; it is required for
