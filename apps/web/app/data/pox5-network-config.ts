@@ -1,8 +1,8 @@
-import { StacksNetworkName } from '@stacks/network';
-import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
+import { type StacksNetworkName } from '@stacks/network';
+import { type NetworkMode } from '~/features/stacking/utils/stacking-network-types';
 
 import {
-  BitcoinNetworkModes,
+  type BitcoinNetworkModes,
   HIRO_API_BASE_URL_MAINNET,
   HIRO_API_BASE_URL_STAKING_TESTNET,
   WalletDefaultNetworkConfigurationIds,

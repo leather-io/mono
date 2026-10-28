@@ -1,4 +1,4 @@
-import { ProviderId, providerIdSchema } from '~/data/data';
+import { type ProviderId, providerIdSchema } from '~/data/data';
 
 import { ImgFillLoader } from '../img-loader';
 
