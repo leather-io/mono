@@ -85,8 +85,6 @@ export function getOutboundUtxos(txs: BitcoinTransaction[], fingerprint: string)
         path: vin.path ?? '',
         value: Number(vin.value),
         keyOrigin: vin.path ? getKeyOrigin(fingerprint, vin.path) : '',
-        // there's a chance the page of txs doesnt include the original, to get height but because its outbound, we know it is confirmed.
-        // in these cases, fallback to a default height
         height: txMap.get(txid)?.height ?? fallbackUtxoHeight,
       };
     })
