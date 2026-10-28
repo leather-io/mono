@@ -38,6 +38,7 @@
     "apps/extension": {
       "entry": [
         "vite.config.ts",
+        "tests/feature-map/*.features.ts",
         "tooling/vite-plugins.ts",
         "src/app/index.tsx",
         "src/background/background.ts",
@@ -51,6 +52,7 @@
         "leather-styles/*": ["./leather-styles/*"]
       },
       "ignoreDependencies": [
+        "@leather.io/tools",
         "assert",
         "browserify-fs",
         "url",
@@ -126,7 +128,10 @@
       "entry": ["src/index.ts", "src/mobile.ts"]
     },
     "tools": {
-      "entry": ["src/lt.ts"]
+      "entry": [
+        "src/lt.ts",
+        "src/feature-map/feature-entry.ts"
+      ]
     },
     "packages/utils": {
       "ignoreDependencies": ["@types/dompurify"]

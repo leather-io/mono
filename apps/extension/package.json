@@ -4,7 +4,7 @@
     "name": "Leather Wallet LLC"
   },
   "description": "Leather is a browser extension for interacting with Stacks apps",
-  "version": "6.114.0",
+  "version": "6.115.0",
   "license": "MIT",
   "repository": "leather-io/mono.git",
   "type": "module",
@@ -138,6 +138,7 @@
     "@leather.io/panda-preset": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/test-app": "workspace:*",
+    "@leather.io/tools": "workspace:*",
     "@pandacss/dev": "1.7.1",
     "@playwright/test": "1.64.0",
     "@redux-devtools/cli": "4.0.4",

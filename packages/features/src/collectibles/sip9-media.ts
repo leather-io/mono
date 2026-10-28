@@ -1,3 +1,5 @@
+import { isIncludedIn } from 'remeda';
+
 const supportedSip9ContentTypes = [
   'image/jpeg',
   'image/png',
@@ -21,8 +23,6 @@ const supportedSip9ContentTypes = [
   'model/gltf-binary',
 ] as const;
 
-const supportedContentTypesSet = new Set<string>(supportedSip9ContentTypes);
-
 export type Sip9SupportedContentType = (typeof supportedSip9ContentTypes)[number];
 
 export interface Sip9MediaInfo {
@@ -32,11 +32,8 @@ export interface Sip9MediaInfo {
   isAudio: boolean;
 }
 
-function isSupportedContentType(
-  contentType: string | null
-): contentType is Sip9SupportedContentType {
-  if (contentType === null) return false;
-  return supportedContentTypesSet.has(contentType);
+function isSupportedContentType(contentType: string | null) {
+  return isIncludedIn(contentType, supportedSip9ContentTypes);
 }
 
 function inferFromExtension(url: string): Sip9MediaInfo {
