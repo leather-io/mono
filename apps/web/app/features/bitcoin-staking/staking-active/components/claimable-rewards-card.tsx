@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { useMutation } from '@tanstack/react-query';
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import BigNumber from 'bignumber.js';
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
@@ -70,7 +71,7 @@ export function ClaimableRewardsCard({
       borderWidth={1}
       borderColor="ink.border-default"
       borderRadius="md"
-      data-testid="claimable-rewards-card"
+      data-testid={BitcoinStakingSelectors.ClaimableRewardsCard}
     >
       <HStack justifyContent="space-between" alignItems="center" gap="space.03">
         <Stack gap="space.01">
@@ -89,7 +90,7 @@ export function ClaimableRewardsCard({
               type="button"
               iconEnd={showHistory ? ChevronUpIcon : ChevronDownIcon}
               onClick={() => setShowHistory(v => !v)}
-              data-testid="toggle-rewards-history"
+              data-testid={BitcoinStakingSelectors.ToggleRewardsHistory}
             >
               {showHistory ? 'Hide history' : 'Show history'}
             </Button>
@@ -98,7 +99,7 @@ export function ClaimableRewardsCard({
             size="md"
             onClick={handleClaimClick}
             disabled={isPending || claimable.isLoading || !oldestUnclaimed}
-            data-testid="claim-rewards-button"
+            data-testid={BitcoinStakingSelectors.ClaimRewardsButton}
           >
             Claim rewards
           </Button>
@@ -113,7 +114,7 @@ export function ClaimableRewardsCard({
           px="space.04"
           bg="ink.background-secondary"
           borderRadius="sm"
-          data-testid="rewards-history"
+          data-testid={BitcoinStakingSelectors.RewardsHistory}
         >
           {claimable.byCycle.map(rewards => (
             <HStack

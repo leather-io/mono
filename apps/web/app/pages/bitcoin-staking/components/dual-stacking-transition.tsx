@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { HTMLStyledProps } from 'leather-styles/types';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
@@ -33,7 +34,7 @@ export function DualStackingTransition(props: HTMLStyledProps<'div'>) {
         <Flex alignItems="center" flexShrink={0}>
           <Button
             variant="outline"
-            data-testid="dual-stacking-transition-link"
+            data-testid={BitcoinStakingSelectors.DualStackingTransitionLink}
             onClick={() => openExternalLink(dualStackingTransition.url)}
             iconEnd={ExternalLinkIcon}
           >

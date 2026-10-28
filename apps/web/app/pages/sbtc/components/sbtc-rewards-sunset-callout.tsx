@@ -1,3 +1,4 @@
+import { SbtcSelectors } from '@tests/selectors/sbtc.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 import { HTMLStyledProps } from 'leather-styles/types';
 import { sbtcContent } from '~/content/sbtc-content';
@@ -18,7 +19,7 @@ export function SbtcRewardsSunsetCallout(props: HTMLStyledProps<'div'>) {
         justifyContent="space-between"
         alignItems={['flex-start', 'flex-start', 'center']}
         flexDirection={['column', 'column', 'row']}
-        data-testid="sbtc-rewards-sunset-callout"
+        data-testid={SbtcSelectors.RewardsSunsetCallout}
       >
         <Flex flexDirection="column" flex="1" maxWidth="65ch">
           <styled.h3 textStyle="heading.05">{rewardsSunset.title}</styled.h3>
@@ -29,7 +30,7 @@ export function SbtcRewardsSunsetCallout(props: HTMLStyledProps<'div'>) {
         <Flex alignItems="center" flexShrink={0}>
           <Button
             variant="outline"
-            data-testid="sbtc-rewards-sunset-link"
+            data-testid={SbtcSelectors.RewardsSunsetLink}
             onClick={() => openExternalLink(rewardsSunset.url)}
             iconEnd={ExternalLinkIcon}
           >

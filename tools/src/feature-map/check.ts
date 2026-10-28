@@ -9,6 +9,7 @@ import {
   claimsByRpcHandler,
   derivedGate,
   featureRouteInstances,
+  featureVocabularyOf,
   firstReference,
   isNestedOnly,
   keyForRoute,
@@ -16,6 +17,7 @@ import {
   routedKeys,
   routesForKey,
   selectorObjectOf,
+  unkeyedRequiredRoutes,
 } from './model.js';
 import { distinctMountedPaths } from './routers-parser.js';
 import { specPathFor } from './test-assets.js';
@@ -34,6 +36,20 @@ function featuresGlob(model: FeatureMapModel): string {
 
 function sortedEntries<T>(map: ReadonlyMap<string, T>): [string, T][] {
   return [...map.entries()].sort(([a], [b]) => compareStrings(a, b));
+}
+
+function optionalDir(dir: string | undefined, absent: string): string {
+  return dir === undefined ? absent : toRepoRelative(dir);
+}
+
+function checkUnkeyedRoutes(model: FeatureMapModel): string[] {
+  const routeUrls = model.config.routeUrlsObjectName;
+  return unkeyedRequiredRoutes(model).map(route =>
+    [
+      `router path '${route.mountedPath}' is mounted in ${toRepoRelative(route.file)}:${route.line} but no ${routeUrls} member has that value.`,
+      `Fix: add a member with the value '${route.mountedPath}' to ${toRepoRelative(model.config.routeUrlsFile)} and claim it from an entry in ${featuresGlob(model)}.`,
+    ].join('\n')
+  );
 }
 
 function checkUnclaimedRoutes(
@@ -146,7 +162,7 @@ function checkAnchor(model: FeatureMapModel, feature: ParsedFeature): string[] {
     for (const handler of anchor.handlers) {
       if (model.rpcHandlers.has(handler)) continue;
       errors.push(
-        `${label}: anchor handler '${handler}' is not a file in ${toRepoRelative(model.config.rpcMethodsDir)}. Fix: use one of ${[...model.rpcHandlers.keys()].join(', ')}.`
+        `${label}: anchor handler '${handler}' is not a file in ${optionalDir(model.config.rpcMethodsDir, 'this app (it has no rpc handlers)')}. Fix: use one of ${[...model.rpcHandlers.keys()].join(', ')}.`
       );
     }
   }
@@ -158,6 +174,7 @@ function checkAnchor(model: FeatureMapModel, feature: ParsedFeature): string[] {
   if (
     anchor.kind !== 'behavior' &&
     anchor.kind !== 'rpc' &&
+    model.config.readySelectorRequired !== false &&
     feature.selectors.ready === undefined
   ) {
     errors.push(
@@ -190,7 +207,7 @@ function actionError(
   const hint =
     candidates.length > 0
       ? `Methods of ${className}: ${candidates.map(name => name.split('.')[1]).join(', ')}.`
-      : `No page object named ${className} in ${toRepoRelative(model.config.pageObjectsDir)}.`;
+      : `No page object named ${className} in ${optionalDir(model.config.pageObjectsDir, 'this app (it has no page objects)')}.`;
   return `${featureLabel(feature)}: ${field} '${action}' is not a public page-object method. ${hint} Fix: use an existing method or add one to the page object.`;
 }
 
@@ -209,8 +226,12 @@ function checkFeatureReferences(model: FeatureMapModel, feature: ParsedFeature):
   const errors: string[] = [];
   const label = featureLabel(feature);
   const specsDir = toRepoRelative(model.config.specsDir);
-  const mocksDir = toRepoRelative(model.config.mocksDir);
-  const rpcDir = toRepoRelative(model.config.rpcEndpointsDir);
+  const mocksDir = optionalDir(model.config.mocksDir, 'this app (it has no mocks)');
+  const rpcDir = optionalDir(model.config.rpcEndpointsDir, 'this app (it has no rpc methods)');
+  const flagsSource =
+    model.config.featureFlagsFile === undefined
+      ? 'the flags of this app'
+      : `${model.config.featureFlagsInterfaceName} in ${toRepoRelative(model.config.featureFlagsFile)}`;
 
   errors.push(...checkAnchor(model, feature));
 
@@ -257,7 +278,7 @@ function checkFeatureReferences(model: FeatureMapModel, feature: ParsedFeature):
   for (const flag of feature.flags) {
     if (model.flags.includes(flag)) continue;
     errors.push(
-      `${label}: flag '${flag}' is not a key of ${model.config.featureFlagsInterfaceName} in ${toRepoRelative(model.config.featureFlagsFile)}. Fix: use one of ${model.flags.join(', ')}.`
+      `${label}: flag '${flag}' is not a key of ${flagsSource}. Fix: use one of ${model.flags.join(', ')}.`
     );
   }
 
@@ -295,7 +316,7 @@ function checkGates(model: FeatureMapModel, feature: ParsedFeature): string[] {
       continue;
     }
     for (const instance of instances) {
-      const gate = derivedGate(instance);
+      const gate = derivedGate(instance, featureVocabularyOf(model.config).gates);
       if (gate === feature.gate || reported.has(gate)) continue;
       reported.add(gate);
       const label = key ? routeRef(model, key) : `'${instance.mountedPath}'`;
@@ -343,6 +364,7 @@ export function checkFeatureMap(model: FeatureMapModel): CheckResult {
   }
   errors.push(...checkUnclaimedRoutes(model, routeClaims));
   errors.push(...checkOverclaimedRoutes(model, routeClaims));
+  errors.push(...checkUnkeyedRoutes(model));
   errors.push(...checkUnclaimedRpcHandlers(model, rpcClaims));
   return { errors };
 }

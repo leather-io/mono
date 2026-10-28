@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
 
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { StakingPoolAvatar } from '~/pages/bitcoin-staking/components/staking-pool-avatar';
 
@@ -42,7 +43,10 @@ function SignerManagerOptionRow({
       boxShadow={isSelected ? 'inset 0 0 0 1px {colors.ink.action-primary-default}' : 'none'}
       cursor="pointer"
       _hover={isSelected ? undefined : { bg: 'ink.component-background-hover' }}
-      data-testid={`signer-manager-option-${option.providerId}`}
+      data-testid={BitcoinStakingSelectors.SignerManagerOption.replace(
+        '[providerId]',
+        option.providerId
+      )}
     >
       <styled.input
         type="radio"

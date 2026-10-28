@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import BigNumber from 'bignumber.js';
 import { Box } from 'leather-styles/jsx';
 import { CopyAddress } from '~/components/copy-address';
@@ -161,7 +162,7 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
             value={
               <PoolTvlValue
                 signerManagerContractIds={tvlSignerManagerContractIds}
-                testId="active-pool-tvl"
+                testId={BitcoinStakingSelectors.ActivePoolTvl}
               />
             }
           />

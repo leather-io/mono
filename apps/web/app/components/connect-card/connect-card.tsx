@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { ConnectSelectors } from '@tests/selectors/connect.selectors';
 import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
 
 import { Flag } from '@leather.io/ui';
@@ -18,6 +19,7 @@ interface ConnectCardProps extends Omit<BoxProps, 'title'> {
 export function ConnectCard({ title, description, footer, children, ...props }: ConnectCardProps) {
   return (
     <Box
+      data-testid={ConnectSelectors.ConnectCard}
       bg="ink.background-primary"
       p="space.06"
       borderRadius="md"

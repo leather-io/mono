@@ -115,3 +115,44 @@ Run `pnpm --filter @leather.io/tools build` first if `pnpm lt` reports an unknow
   against the source (`.github/prompts/feature-map-fix.md`), fixes the statements it can prove
   false and opens or updates the `bot/feature-map-fix` pull request with a per-row citation; it
   closes that PR when a run finds nothing. Re-read the cited lines before merging it.
+
+## Web
+
+`pnpm lt feature-map generate --app web` writes `web.md` next to this file from
+`apps/web/tests/feature-map/*.features.ts`, and `pnpm lt feature-map check --app web` is the CI
+gate for the web app (`apps/web`, React Router 7 framework mode, SSR on Cloudflare). The web app is
+a dApp: it has no wallet of its own and talks to the extension through `@stacks/connect` and the
+Leather SDK, so a web entry describes a page, its loader and the wallet state it needs.
+
+- **Routes** are the `routes.ts` config, not JSX routers. The check reads
+  `apps/web/app/routes.ts` and the spread sub-tables (`multisig.routes.ts`,
+  `playground.routes.ts`, `bitcoin-staking.routes.ts`, including the `playgroundAreas.map`
+  expansion) and mounts every `index`, `route`, `layout` and `prefix` entry at its absolute path.
+  Entries claim routes through `RouteUrls` in `apps/web/app/route-urls.ts`, a const object whose
+  values are typed against the route paths the `react-router typegen` register emits, so renaming
+  a path in `routes.ts` fails `pnpm --filter @leather.io/web typecheck`. Every mounted path must
+  have a `RouteUrls` member (the check fails on an unkeyed path) and every member must be claimed
+  exactly once. Index routes claim the parent path (`/staking` is the `index` under the
+  `staking` prefix) and the fallback is `RouteUrls.NotFound` (`/*`).
+- **Anchors** are `route`, `selectors` and `behavior`; there is no `rpc` anchor on web.
+  `selectors.ready` is optional for web route anchors because resource routes and redirects have
+  no screen; add it whenever the page has a stable test id. Selector objects live in
+  `apps/web/tests/selectors/*.selectors.ts` and the app components reference their members
+  (templated ids keep a `[slug]`-style placeholder that the component replaces).
+- **Gates** are the layouts the route config mounts a path under: `multisigLayout`
+  (`multisig.layout.tsx` redirects to `/multisig/onboarding` without a session),
+  `playgroundLayout` (`playground.layout.tsx` 404s in production) or `none`. The root
+  `NetworkGate` is not in the route config; entries record it as `preconditions.network`
+  (`mainnet` for everything outside `/multisig`).
+- **Flags** are build conditions, not LaunchDarkly: a route registered inside
+  `import.meta.env.MODE !== 'production'` carries `flags: ['nonProductionBuild']`.
+- **Preconditions** express the Playwright `mode` fixture (`apps/web/tests/index.ts`):
+  `session` is `uninstalled` (no provider), `mock-installed` (localStorage `leather-mock-mode`
+  seeds the mock provider and the in-page MSW worker) or `mock-connected` (the fixture's
+  worker-scoped storage with the mock STX address already connected). `network` is the app's
+  network atom (`mainnet` or `testnet`). `mocks` name exports of `apps/web/app/mocks`
+  (`successHandlers` for mock mode, `seedMultisigMockSessions` for multisig); the per-test
+  localStorage flags read by `pox5-mock-overrides.ts` are named in the description. There are no
+  page objects, so `actions` and `open` stay empty and the entry steps are the reproduction.
+- **Specs** are repo-relative paths under `apps/web/tests`. Redirect specs use plain Playwright
+  without the fixture; everything else starts from `mode({ mode })`.

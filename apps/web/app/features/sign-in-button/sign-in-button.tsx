@@ -1,3 +1,4 @@
+import { ConnectSelectors } from '@tests/selectors/connect.selectors';
 import { styled } from 'leather-styles/jsx';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
 import { useLeatherConnect } from '~/store/addresses';
@@ -16,7 +17,7 @@ function NoStacksAccountsWarningDialog() {
       isShowing={Boolean(showMissingStacksKeysDialog)}
       onClose={() => setShowMissingStacksKeysDialog(false)}
     >
-      <styled.div p="space.05">
+      <styled.div p="space.05" data-testid={ConnectSelectors.MissingStacksAccountDialog}>
         <styled.h1 textStyle="heading.03">Unable to connect</styled.h1>
         <styled.p textStyle="heading.05" mt="space.03">
           Your wallet does not have a Stacks account available.

@@ -1,5 +1,6 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import BigNumber from 'bignumber.js';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
@@ -55,7 +56,11 @@ export function ChooseStakingAmount({
       />
 
       {minStake && (
-        <styled.span textStyle="caption.01" color="ink.text-subdued" data-testid="pool-min-stake">
+        <styled.span
+          textStyle="caption.01"
+          color="ink.text-subdued"
+          data-testid={BitcoinStakingSelectors.PoolMinStake}
+        >
           {bitcoinStakingContent.operatorPayout.minStakeNote(
             minStake.poolName,
             formatMinStakeStx(minStake)

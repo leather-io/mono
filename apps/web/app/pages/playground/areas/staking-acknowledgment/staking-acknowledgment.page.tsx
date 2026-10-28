@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router';
 
+import { PlaygroundSelectors } from '@tests/selectors/playground.selectors';
 import { Box, Flex, Grid, Stack, styled } from 'leather-styles/jsx';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { type BitcoinStakingPool, getStakingPoolFromSlug } from '~/data/bitcoin-staking-data';
@@ -60,7 +61,7 @@ function StakingReviewSurface({ pool, isSwitching }: StakingReviewSurfaceProps) 
   }
 
   return (
-    <Stack gap="space.06" data-testid="staking-acknowledgment-review">
+    <Stack gap="space.06" data-testid={PlaygroundSelectors.StakingAcknowledgmentReview}>
       <Stack gap="space.02">
         <styled.h1 textStyle="heading.03">
           {isSwitching ? 'Switch pool' : `Stake with ${poolLabel}`}

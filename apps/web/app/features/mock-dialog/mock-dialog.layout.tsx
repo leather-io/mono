@@ -1,3 +1,4 @@
+import { ConnectSelectors } from '@tests/selectors/connect.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 import { Dialog as RadixDialog } from 'radix-ui';
 
@@ -21,7 +22,7 @@ export function MockLeatherDialogLayout({
   return (
     <Sheet isShowing={!!payload} onClose={onClose}>
       <RadixDialog.Description />
-      <styled.div px="space.05" py="space.03">
+      <styled.div px="space.05" py="space.03" data-testid={ConnectSelectors.MockWalletDialog}>
         <Flag
           img={
             <Button variant="ghost" onClick={onClose}>
@@ -59,6 +60,7 @@ export function MockLeatherDialogLayout({
         <Flex mt="space.03">
           <Button
             width="132px"
+            data-testid={ConnectSelectors.MockWalletResolveButton}
             onClick={() => {
               onResolve();
               onClose();
@@ -70,6 +72,7 @@ export function MockLeatherDialogLayout({
             ml="space.04"
             variant="outline"
             width="132px"
+            data-testid={ConnectSelectors.MockWalletRejectButton}
             onClick={() => {
               onReject();
               onClose();

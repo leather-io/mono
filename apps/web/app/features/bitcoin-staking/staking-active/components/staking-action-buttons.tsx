@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useMutation } from '@tanstack/react-query';
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Flex, FlexProps, Stack } from 'leather-styles/jsx';
 import { StopPoolingIcon } from '~/components/icons/stop-pooling-icon';
 import { BitcoinStakingProviderId, StakingPoolSlug } from '~/data/bitcoin-staking-data';
@@ -80,7 +81,7 @@ export function StakingActionButtons({
           iconStart={<StopPoolingIcon width="16" height="16" />}
           onClick={handleUnstakeClick}
           disabled={isPending || actionsDisabled}
-          data-testid="unstake-button"
+          data-testid={BitcoinStakingSelectors.UnstakeButton}
         >
           {unstakeArmed ? 'Confirm unstake' : 'Unstake'}
         </Button>
@@ -88,7 +89,7 @@ export function StakingActionButtons({
           size="md"
           onClick={() => navigate(stakingPaths.update(poolSlug))}
           disabled={actionsDisabled}
-          data-testid="update-stake-button"
+          data-testid={BitcoinStakingSelectors.UpdateStakeButton}
         >
           Update stake
         </Button>
