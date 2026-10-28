@@ -133,5 +133,11 @@ describe(MarketDataService.name, () => {
       expect(usdUsdExchangeRate.price.amount).toEqual(initBigNumber(100));
       expect(usdUsdExchangeRate.price.symbol).toEqual('USD');
     });
+
+    it('should throw when the API has no rate for the quote currency', async () => {
+      await expect(marketDataService.getUsdExchangeRate('GBP')).rejects.toThrow(
+        'No USD exchange rate for GBP'
+      );
+    });
   });
 });

@@ -390,6 +390,29 @@ describe(getOutboundUtxos.name, () => {
     expect(originalHeightUtxos[0].height).toEqual(ORIGINAL_TX_HEIGHT);
     expect(defaultHeightUtxos[0].height).toEqual(fallbackUtxoHeight);
   });
+
+  it('skips owned vins without a txid', () => {
+    const outboundUtxos = getOutboundUtxos(
+      [
+        {
+          txid: '5',
+          vin: [
+            {
+              n: 0,
+              value: '10000',
+              address: 'bc1q123',
+              owned: true,
+              path: 'bc1q123-path',
+            },
+          ],
+          vout: [],
+        },
+      ],
+      'fingerprint'
+    );
+
+    expect(outboundUtxos).toEqual([]);
+  });
 });
 
 describe(createOwnedUtxoFromLeather.name, () => {

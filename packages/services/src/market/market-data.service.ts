@@ -97,11 +97,13 @@ export class MarketDataService {
       // Leather API returns USD/Fiat rates, need to invert to get Fiat/USD
       const usdExchangeRates = await this.leatherApiClient.fetchUsdExchangeRates({ signal });
       const usdRates: Partial<Record<string, number>> = usdExchangeRates.rates;
+      const usdToFiatRateValue = usdRates[base];
+      if (usdToFiatRateValue === undefined) throw new Error(`No USD exchange rate for ${base}`);
       const usdToFiatRate = createMarketData(
         createMarketPair('USD', base),
         createMoney(
           convertAmountToFractionalUnit(
-            initBigNumber(usdRates[base] ?? NaN),
+            initBigNumber(usdToFiatRateValue),
             currencyDecimalsMap[base]
           ),
           base
