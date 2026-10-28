@@ -15,7 +15,7 @@ import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
 import { WalletConnectionModal } from './components/wallet-connection-modal';
 import { dummyPortfolioAssets, dummyTotalBalance } from './dummy-portfolio-data';
-import { PortfolioAsset, PortfolioTable } from './portfolio-table/portfolio-table';
+import { type PortfolioAsset, PortfolioTable } from './portfolio-table/portfolio-table';
 
 function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
   const aValue = Number(a.quote.availableBalance.amount);

@@ -1,4 +1,4 @@
-import { Box, BoxProps, Flex, Stack, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, Flex, Stack, styled } from 'leather-styles/jsx';
 import { ConnectOverlayBackdrop } from '~/components/connect-card/connect-overlay';
 import { ActivityButton } from '~/features/activity-button/activity-button';
 import { Page } from '~/layouts/page/page';

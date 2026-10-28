@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 import { useLoaderData } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
@@ -7,7 +7,7 @@ import { BasicPageSectionHeading } from '~/components/basic-page/basic-page-sect
 import { RotatedArrow } from '~/components/icons/rotated-icon';
 import { Page } from '~/layouts/page/page';
 import { SbtcRewardsPageHeading } from '~/pages/sbtc/components/sbtc-rewards-page-heading';
-import { loader } from '~/pages/sbtc/sbtc.route';
+import { type loader } from '~/pages/sbtc/sbtc.route';
 import { useLeatherConnect } from '~/store/addresses';
 import { analytics } from '~/utils/analytics/analytics';
 import { openExternalLink } from '~/utils/external-links';
@@ -40,8 +40,12 @@ export function SbtcRewards(): ReactElement {
       value={{
         whenExtensionState,
         extensionStatus: status,
-        onBridgeSbtc: bridgeSbtc,
-        onSwapStxSbtc: swapStxSbtc,
+        onBridgeSbtc() {
+          void bridgeSbtc();
+        },
+        onSwapStxSbtc() {
+          void swapStxSbtc();
+        },
       }}
     >
       <Page>

@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { CYCLE_STATUS_REFETCH_INTERVAL_MS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import {
   createGetCoreInfoQueryOptions,
   createGetPoxInfoQueryOptions,

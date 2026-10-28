@@ -106,7 +106,7 @@ export function StxProposeTool() {
           );
         })}
       </Flex>
-      <Button variant="solid" size="sm" disabled={propose.isPending} onClick={submit}>
+      <Button variant="solid" size="sm" disabled={propose.isPending} onClick={() => void submit()}>
         {propose.isPending ? 'Proposing…' : 'Propose STX tx'}
       </Button>
       {statusError ? (
