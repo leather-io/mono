@@ -5,7 +5,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountCard } from '@/features/account/components/account-card';
 import { AccountBalance } from '@/features/balances/total-balance';
-import { TestId } from '@/shared/test-id';
+import { WalletSettingsSelectors } from '@/shared/selectors/wallet-settings.selectors';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
@@ -81,7 +81,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
               }}
               flex={1}
               alignItems="flex-end"
-              testID={TestId.walletListSettingsButton}
+              testID={WalletSettingsSelectors.WalletListSettingsButton}
             />
           )}
         </Box>
@@ -109,7 +109,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
               icon={account.icon}
               iconTestID={defaultIconTestId(account.icon)}
               onPress={() => onSelectAccount(account)}
-              testID={TestId.walletListAccountCard}
+              testID={WalletSettingsSelectors.WalletListAccountCard}
             />
           ))}
 
@@ -134,6 +134,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
               }}
               variant="ghost"
               disabled={isAddingAccount}
+              testID={WalletSettingsSelectors.AddAccountButton}
               iconStart={
                 isAddingAccount ? () => <SpinnerIcon /> : () => <PlusIcon variant="small" />
               }

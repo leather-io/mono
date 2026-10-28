@@ -1,6 +1,7 @@
 import { RefObject, useImperativeHandle, useRef, useState } from 'react';
 
 import { useGlobalSheets } from '@/core/global-sheet-provider';
+import { GlobalSheetSelectors } from '@/shared/selectors/global-sheets.selectors';
 
 import { Box, BulletOperator, Sheet, SheetRef, Text } from '@leather.io/ui/native';
 
@@ -46,7 +47,13 @@ export function DescriptionSheet() {
     <Sheet ref={ref}>
       {sheetData && (
         <Sheet.View gap="3">
-          <Sheet.Header leftElement={<Sheet.Title>{sheetData.title}</Sheet.Title>} />
+          <Sheet.Header
+            leftElement={
+              <Sheet.Title testID={GlobalSheetSelectors.DescriptionSheetTitle}>
+                {sheetData.title}
+              </Sheet.Title>
+            }
+          />
           <Box px="5" pb="5" gap="5">
             {sheetData.data.map(paragraph => {
               switch (paragraph.key) {

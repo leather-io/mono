@@ -18,6 +18,51 @@ import {
 
 const catchAllPath = '*';
 
+interface RenderTerms {
+  readonly intro: string;
+  readonly proofread: string;
+  readonly anchors: string;
+  readonly noOpenAction: string;
+  readonly routerColumn: string;
+  readonly notDeepLinkable: string;
+}
+
+function termsFor(model: FeatureMapModel): RenderTerms {
+  const { config } = model;
+  const testsDir = toRepoRelative(config.specsDir).replace(/\/specs$/, '');
+  if (!config.maestro) {
+    return {
+      intro:
+        'Find a feature by its route key, by a selector or by searching the descriptions for what the screen shows. Each feature lists the covering specs and the page-object actions that own the readiness waits, which is the fastest path to a reproduction.',
+      proofread: `Proofread entries when their tests change: the check validates every reference but not the prose, so whenever a spec, page object, mock or selector under ${testsDir} changes, re-read the entries that cite it and fix their steps, preconditions and description.`,
+      anchors:
+        'Anchors: a `route` entry is reached by URL; a `selectors` entry is a dialog or sheet with no URL, opened by the listed page-object action; an `rpc` entry is a dApp method whose handler opens no approver of its own; a `behavior` entry has no screen and is documented under Behaviors.',
+      noOpenAction: '- open: no page-object action reveals it; follow the entry steps',
+      routerColumn: 'Router',
+      notDeepLinkable:
+        'Not deep-linkable: the screen reads router state the previous screen passes, so a bare URL redirects or fails; reproduce it through its specs.',
+    };
+  }
+  const flowsDirs = config.maestro.flowsDirs.map(toRepoRelative).join(' or ');
+  return {
+    intro:
+      'Find a feature by its route key, by a selector (a testID, which Maestro selects with `id:`) or by searching the descriptions for what the screen shows. Each feature lists the covering Maestro flows or unit specs and the shared Maestro sub-flows a repro can `runFlow`, which is the fastest path to a reproduction.',
+    proofread: `Proofread entries when their tests change: the check validates every reference but not the prose, so whenever a Maestro flow under ${flowsDirs}, a unit spec, a screen or a selector under ${testsDir} changes, re-read the entries that cite it and fix their steps, preconditions and description.`,
+    anchors:
+      'Anchors: a `route` entry is an expo-router screen file reached by its path; a `selectors` entry is a sheet or modal with no route, revealed by the entry steps or the listed Maestro sub-flow; an `rpc` entry is an in-app-browser method answered without an approver sheet; a `behavior` entry has no screen and is documented under Behaviors.',
+    noOpenAction: '- open: no Maestro sub-flow reveals it; follow the entry steps',
+    routerColumn: 'Screen',
+    notDeepLinkable:
+      'Not deep-linkable: the screen reads params or sheet state the previous screen passes, so a bare `leather://` link fails or shows an empty screen; reproduce it through its specs or the entry steps.',
+  };
+}
+
+function actionLine(model: FeatureMapModel, action: string): string {
+  const found = model.pageObjectActions.get(action);
+  if (!found || toRepoRelative(found.file) === action) return code(action);
+  return `${code(action)} (${code(location(found.file, found.line))})`;
+}
+
 function code(text: string): string {
   return `\`${text}\``;
 }
@@ -85,25 +130,30 @@ function anchorLabel(feature: ParsedFeature): string {
   return anchor.kind;
 }
 
-function openedByLines(model: FeatureMapModel, feature: ParsedFeature): string[] {
+function openedByLines(
+  model: FeatureMapModel,
+  feature: ParsedFeature,
+  terms: RenderTerms
+): string[] {
   const lines = ['**Opened by**', ''];
   if (feature.anchor.kind !== 'behavior') {
     lines.push(`- start route: ${code(feature.startRoute?.value ?? '/')}`);
   }
   if (feature.open.length === 0) {
-    lines.push('- open: no page-object action reveals it; follow the entry steps');
+    lines.push(terms.noOpenAction);
   }
   for (const action of feature.open) {
-    const found = model.pageObjectActions.get(action);
-    lines.push(
-      `- open: ${code(action)}${found ? ` (${code(location(found.file, found.line))})` : ''}`
-    );
+    lines.push(`- open: ${actionLine(model, action)}`);
   }
   lines.push('');
   return lines;
 }
 
-function renderFeature(model: FeatureMapModel, feature: ParsedFeature): string[] {
+function renderFeature(
+  model: FeatureMapModel,
+  feature: ParsedFeature,
+  terms: RenderTerms
+): string[] {
   const lines: string[] = [];
   lines.push(`### ${feature.id}`, '', feature.description, '');
   lines.push(
@@ -126,13 +176,13 @@ function renderFeature(model: FeatureMapModel, feature: ParsedFeature): string[]
     lines.push('**Routes**', '');
     lines.push(
       ...table(
-        ['Key', 'Value', 'Mounted at', 'Gate', 'Flags', 'Router'],
+        ['Key', 'Value', 'Mounted at', 'Gate', 'Flags', terms.routerColumn],
         routeRows(model, feature)
       ),
       ''
     );
   } else {
-    lines.push(...openedByLines(model, feature));
+    lines.push(...openedByLines(model, feature, terms));
   }
 
   if (feature.params.length > 0) {
@@ -148,9 +198,7 @@ function renderFeature(model: FeatureMapModel, feature: ParsedFeature): string[]
     lines.push(`${index + 1}. ${point.kind}${method}: ${point.steps.join(' → ')}`);
   });
   if (!feature.deepLinkable) {
-    lines.push(
-      'Not deep-linkable: the screen reads router state the previous screen passes, so a bare URL redirects or fails; reproduce it through its specs.'
-    );
+    lines.push(terms.notDeepLinkable);
   }
   lines.push('');
 
@@ -178,10 +226,7 @@ function renderFeature(model: FeatureMapModel, feature: ParsedFeature): string[]
 
   if (feature.actions.length > 0) {
     lines.push('**Actions**', '');
-    for (const action of feature.actions) {
-      const found = model.pageObjectActions.get(action);
-      lines.push(`- ${code(action)}${found ? ` (${code(location(found.file, found.line))})` : ''}`);
-    }
+    for (const action of feature.actions) lines.push(`- ${actionLine(model, action)}`);
     lines.push('');
   }
 
@@ -196,6 +241,7 @@ function renderFeature(model: FeatureMapModel, feature: ParsedFeature): string[]
 
 export function renderFeatureMap(model: FeatureMapModel): string {
   const { app } = model.config;
+  const terms = termsFor(model);
   const claims = claimsByKey(model);
   const routed = routedKeys(model);
   const claimedRouted = routed.filter(key => claims.has(key));
@@ -208,19 +254,21 @@ export function renderFeatureMap(model: FeatureMapModel): string {
     '',
     `Generated by \`pnpm lt feature-map generate --app ${app}\` from \`${toRepoRelative(model.config.featuresDir)}/*.features.ts\`. The file is gitignored: change a source file and run the generator instead of editing it.`,
     '',
-    'Find a feature by its route key, by a selector or by searching the descriptions for what the screen shows. Each feature lists the covering specs and the page-object actions that own the readiness waits, which is the fastest path to a reproduction.',
+    terms.intro,
     '',
-    `Proofread entries when their tests change: the check validates every reference but not the prose, so whenever a spec, page object, mock or selector under ${toRepoRelative(model.config.specsDir).replace(/\/specs$/, '')} changes, re-read the entries that cite it and fix their steps, preconditions and description.`,
+    terms.proofread,
     '',
     `Coverage: ${model.features.length} features claim ${claimedRouted.length} of ${routed.length} routed \`${model.config.routeUrlsObjectName}\` keys and ${claimedHandlers.length} of ${model.rpcHandlers.size} rpc handlers; ${uncoveredFeatures(model).length} features have no covering spec.`,
     '',
-    'Anchors: a `route` entry is reached by URL; a `selectors` entry is a dialog or sheet with no URL, opened by the listed page-object action; an `rpc` entry is a dApp method whose handler opens no approver of its own; a `behavior` entry has no screen and is documented under Behaviors.',
+    terms.anchors,
     '',
     '## Features',
     ''
   );
 
-  for (const feature of screenFeatures(model)) lines.push(...renderFeature(model, feature));
+  for (const feature of screenFeatures(model)) {
+    lines.push(...renderFeature(model, feature, terms));
+  }
 
   const behaviors = behaviorFeatures(model);
   lines.push('## Behaviors', '');
@@ -228,7 +276,7 @@ export function renderFeatureMap(model: FeatureMapModel): string {
     'Entries with no screen of their own: what the wallet does rather than what it shows. Reproduce them through their specs.',
     ''
   );
-  for (const feature of behaviors) lines.push(...renderFeature(model, feature));
+  for (const feature of behaviors) lines.push(...renderFeature(model, feature, terms));
   if (behaviors.length === 0) lines.push('None.', '');
 
   const uncovered = uncoveredFeatures(model);
@@ -243,6 +291,8 @@ export function renderFeatureMap(model: FeatureMapModel): string {
   }
   if (uncovered.length === 0) lines.push('None.');
   lines.push('');
+
+  if (model.config.expoRouter) return lines.join('\n');
 
   const unrouted = unroutedKeys(model);
   lines.push(`## ${model.config.routeUrlsObjectName} keys no router references`, '');

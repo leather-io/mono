@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 import { Screen } from '@/components/screen/screen';
 import { MnemonicDisplay } from '@/features/wallet-manager/create-new-wallet/mnemonic-display';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
-import { TestId } from '@/shared/test-id';
+import { OnboardingSelectors } from '@/shared/selectors/onboarding.selectors';
 import { tempMnemonicStore } from '@/store/secure-store/temp-mnemonic-store';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
@@ -90,7 +90,7 @@ export default function CreateNewWallet() {
                   justifyContent="center"
                   alignItems="center"
                   gap="2"
-                  testID={TestId.walletCreationTapToReveal}
+                  testID={OnboardingSelectors.WalletCreationTapToReveal}
                 >
                   <PointerHandIcon />
                   <Box>
@@ -111,7 +111,7 @@ export default function CreateNewWallet() {
         <Button
           disabled={isHidden}
           onPress={() => void navigateAndCreateWallet()}
-          testID={TestId.walletCreationBackedUpButton}
+          testID={OnboardingSelectors.WalletCreationBackedUpButton}
         >
           {t`I've backed it up`}
         </Button>

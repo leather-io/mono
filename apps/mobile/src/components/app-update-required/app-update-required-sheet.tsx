@@ -1,4 +1,5 @@
 import { useGlobalSheets } from '@/core/global-sheet-provider';
+import { AppUpdateSelectors } from '@/shared/selectors/app-update.selectors';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
@@ -42,7 +43,11 @@ export function AppUpdateRequiredSheet({ onUpdatePress }: AppUpdateRequiredSheet
         </Box>
         <Box gap="3">
           <UpdateButton onPress={onUpdatePress} />
-          <Button variant="ghost" onPress={() => versionGuardSheetRef.current?.dismiss()}>
+          <Button
+            variant="ghost"
+            onPress={() => versionGuardSheetRef.current?.dismiss()}
+            testID={AppUpdateSelectors.MaybeLaterButton}
+          >
             {t`Maybe later`}
           </Button>
         </Box>

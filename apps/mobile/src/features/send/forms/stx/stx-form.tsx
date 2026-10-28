@@ -10,6 +10,7 @@ import { SendFormContainer, SendFormFooter } from '@/features/send/components/se
 import { locale } from '@/features/send/constants';
 import { useStxForm } from '@/features/send/forms/stx/use-stx-form';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
+import { SendSelectors } from '@/shared/selectors/send.selectors';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
@@ -137,7 +138,11 @@ export function StxForm({
           )}
         />
 
-        <Button onPress={onSubmit} disabled={!form.formState.isValid}>{t`Review`}</Button>
+        <Button
+          onPress={onSubmit}
+          disabled={!form.formState.isValid}
+          testID={SendSelectors.ReviewButton}
+        >{t`Review`}</Button>
       </SendFormFooter>
     </SendFormContainer>
   );

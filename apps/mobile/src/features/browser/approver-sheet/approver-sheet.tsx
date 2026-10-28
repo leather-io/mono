@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
+import { BrowserSelectors } from '@/shared/selectors/browser.selectors';
 import { useTheme } from '@shopify/restyle';
 
 import { RpcErrorCode, RpcResponses, createRpcErrorResponse } from '@leather.io/rpc';
@@ -71,7 +72,10 @@ export function ApproverSheet(props: ApproverSheetProps) {
   return (
     <FullHeightSheet animatedIndex={animatedIndex} sheetRef={ref}>
       {request && origin && (
-        <Box style={{ paddingTop: top + theme.spacing['5'], flex: 1 }}>
+        <Box
+          style={{ paddingTop: top + theme.spacing['5'], flex: 1 }}
+          testID={BrowserSelectors.ApproverSheet}
+        >
           <BrowserApprover
             closeApprover={closeApprover}
             request={request}

@@ -1,5 +1,7 @@
 import { Image, View } from 'react-native';
 
+import { SettingsSelectors } from '@/shared/selectors/settings.selectors';
+
 import { Pressable, useTheme } from '@leather.io/ui/native';
 
 import { type AppIcon, appIconAssets } from './app-icon.utils';
@@ -21,7 +23,7 @@ export function AppIconButton({ icon, onPress, isSelected, size }: AppIconButton
   const borderRadius = size * 0.22;
 
   return (
-    <Pressable testID={`app-icon-${icon}`} onPress={onPress}>
+    <Pressable testID={`${SettingsSelectors.AppIconOption}-${icon}`} onPress={onPress}>
       <View
         style={{
           borderColor,

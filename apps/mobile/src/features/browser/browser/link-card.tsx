@@ -1,4 +1,5 @@
 import { useToastContext } from '@/components/toast/toast-context';
+import { BrowserSelectors } from '@/shared/selectors/browser.selectors';
 import { userRemovesApp } from '@/store/apps/apps.write';
 import { App } from '@/store/apps/utils';
 import { useAppDispatch } from '@/store/utils';
@@ -41,6 +42,7 @@ export function LinkCard({ app }: LinkCardProps) {
         flexShrink={1}
         alignItems="center"
         gap="2"
+        testID={BrowserSelectors.LinkCard}
       >
         {icon}
         <Box flexShrink={1} flexDirection="column">
@@ -52,7 +54,7 @@ export function LinkCard({ app }: LinkCardProps) {
           </Text>
         </Box>
       </Pressable>
-      <Pressable onPress={onDeleteApp} p="2">
+      <Pressable onPress={onDeleteApp} p="2" testID={BrowserSelectors.LinkCardRemoveButton}>
         <CloseIcon variant="small" />
       </Pressable>
     </Box>

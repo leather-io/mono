@@ -1,4 +1,4 @@
-import { TestId } from '@/shared/test-id';
+import { HomeSelectors } from '@/shared/selectors/home.selectors';
 import { useSettings } from '@/store/settings/settings';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
@@ -22,7 +22,7 @@ export function HeaderActions() {
           label={getPrivacyLabel(privacyModePreference)}
           icon={privacyModePreference === 'visible' ? <Eye1Icon /> : <Eye1ClosedIcon />}
           onPress={() => onUpdatePrivacyMode()}
-          testID={TestId.homePrivacyButton}
+          testID={HomeSelectors.PrivacyButton}
         />
       )}
 
@@ -30,7 +30,7 @@ export function HeaderActions() {
         label={t`Settings`}
         icon={<SettingsGearIcon />}
         onPress={() => router.navigate('/settings')}
-        testID={TestId.homeSettingsButton}
+        testID={HomeSelectors.SettingsButton}
       />
     </Box>
   );

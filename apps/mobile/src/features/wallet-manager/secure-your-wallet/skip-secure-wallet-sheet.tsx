@@ -1,4 +1,5 @@
 import { WarningSheetLayout } from '@/components/sheets/warning-sheet.layout';
+import { OnboardingSelectors } from '@/shared/selectors/onboarding.selectors';
 import { t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
@@ -15,6 +16,8 @@ export function SkipSecureWalletSheet({ sheetRef, onSubmit }: SkipSecureWalletSh
       title={t`Continue without security`}
       description={t`Proceed with caution since your wallet will not be protected by your device’s native security mechanism.`}
       onSubmit={onSubmit}
+      submitTestId={OnboardingSelectors.SkipSecureWalletContinueButton}
+      cancelTestId={OnboardingSelectors.SkipSecureWalletCancelButton}
     />
   );
 }

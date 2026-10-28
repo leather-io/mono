@@ -5,6 +5,7 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { AnalyticsSheet } from '@/features/settings/analytics-sheet';
 import { AppAuthenticationSheet } from '@/features/settings/app-authentication-sheet';
 import SettingsLayout from '@/features/settings/settings-layout';
+import { SettingsSelectors } from '@/shared/selectors/settings.selectors';
 import { useSettings } from '@/store/settings/settings';
 import { SecurityLevelPreference } from '@/store/settings/utils';
 import { t } from '@lingui/core/macro';
@@ -40,6 +41,7 @@ export default function SettingsSecurityScreen() {
           onPress={() => {
             analyticsSheetRef.current?.present();
           }}
+          testID={SettingsSelectors.AnalyticsButton}
         />
         <SettingsListItem
           title={t`App authentication`}
@@ -48,6 +50,7 @@ export default function SettingsSecurityScreen() {
           onPress={() => {
             appAuthenticationSheetRef.current?.present();
           }}
+          testID={SettingsSelectors.AppAuthenticationButton}
         />
       </SettingsList>
       <AnalyticsSheet sheetRef={analyticsSheetRef} />

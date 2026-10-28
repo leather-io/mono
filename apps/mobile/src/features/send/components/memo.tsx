@@ -4,6 +4,7 @@ import { NativeSyntheticEvent, TextInputSubmitEditingEventData } from 'react-nat
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
+import { SendSelectors } from '@/shared/selectors/send.selectors';
 import { t } from '@lingui/core/macro';
 
 import {
@@ -56,6 +57,7 @@ export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: Mem
         borderRadius="sm"
         onPress={() => sheetRef.current?.present()}
         p="2"
+        testID={SendSelectors.MemoToggle}
       >
         <NoteEmptyIcon
           color={shouldMarkToggleAsInvalid ? 'red.action-primary-default' : 'ink.text-primary'}

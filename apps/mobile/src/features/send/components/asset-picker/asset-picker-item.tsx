@@ -1,6 +1,8 @@
 import { ReactElement, ReactNode, cloneElement, useRef } from 'react';
 import { View } from 'react-native';
 
+import { SendSelectors } from '@/shared/selectors/send.selectors';
+
 interface AssetPickerItemProps {
   onPress(top: number | null): void;
   children: ReactNode;
@@ -21,7 +23,7 @@ export function AssetPickerItem({ onPress, children, canAnimate }: AssetPickerIt
   }
 
   return (
-    <View ref={ref}>
+    <View ref={ref} testID={SendSelectors.AssetPickerItem}>
       {cloneElement(children as ReactElement<Partial<{ onPress(): void }>>, {
         onPress: handlePress,
       })}

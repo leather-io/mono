@@ -1,6 +1,7 @@
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { SettingsSelectors } from '@/shared/selectors/settings.selectors';
 import { useSettings } from '@/store/settings/settings';
 import { ThemePreference, defaultThemePreferences } from '@/store/settings/utils';
 import { select, t } from '@lingui/core/macro';
@@ -41,6 +42,7 @@ export function ThemeSheet({ sheetRef }: ThemeSheetProps) {
             onPress={() => onUpdateTheme(themePreference)}
             type="radio"
             isRadioSelected={settings.themePreference === themePreference}
+            testID={`${SettingsSelectors.ThemeOption}-${themePreference}`}
           />
         ))}
       </SettingsList>

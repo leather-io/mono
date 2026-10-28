@@ -1,6 +1,7 @@
 import { memo } from 'react';
 
 import { Balance } from '@/components/balance/balance';
+import { ActivitySelectors } from '@/shared/selectors/activity.selectors';
 import { t } from '@lingui/core/macro';
 import type { ResponsiveValue } from '@shopify/restyle';
 
@@ -42,6 +43,7 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
   return (
     <Cell.Root
       pressable={Boolean(activityLink)}
+      testID={ActivitySelectors.ActivityItem}
       onPress={activityLink ? () => openUrl(activityLink) : undefined}
     >
       <Cell.Icon>

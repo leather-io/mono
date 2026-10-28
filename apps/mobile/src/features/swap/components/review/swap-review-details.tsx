@@ -9,6 +9,7 @@ import {
 } from 'react-native-reanimated';
 
 import { DividerProps, Divider as RawDivider } from '@/components/divider';
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { isString } from 'remeda';
 
 import {
@@ -35,7 +36,7 @@ export function SwapReviewDetails({ children, isRefetching }: SwapReviewDetailsP
 
   return (
     <LayoutAnimationConfig skipEntering>
-      <AnimatedBox px="7" style={animatedStyle}>
+      <AnimatedBox px="7" style={animatedStyle} testID={SwapSelectors.ReviewDetails}>
         {children}
       </AnimatedBox>
     </LayoutAnimationConfig>
@@ -83,6 +84,7 @@ export function SwapReviewDetailToggle({ label, onPress }: SwapReviewDetailToggl
       right={-2}
       iconStart={SettingsGearIcon}
       onPress={onPress}
+      testID={SwapSelectors.SlippageToggle}
     >
       {label}
     </Button>

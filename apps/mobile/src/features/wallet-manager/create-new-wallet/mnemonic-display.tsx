@@ -4,6 +4,7 @@ import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.lay
 import { useToastContext } from '@/components/toast/toast-context';
 import { useWaitlistFlag } from '@/features/feature-flags';
 import { WaitlistIds } from '@/features/waitlist/ids';
+import { OnboardingSelectors } from '@/shared/selectors/onboarding.selectors';
 import { t } from '@lingui/core/macro';
 import * as Clipboard from 'expo-clipboard';
 
@@ -57,6 +58,7 @@ export function MnemonicDisplay({
             flex={1}
             style={{ borderColor: theme.colors['ink.text-primary'] }}
             variant="outline"
+            testID={OnboardingSelectors.WalletCreationCopyButton}
           >
             {t`Copy`}
           </Button>

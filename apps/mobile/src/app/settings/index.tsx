@@ -12,7 +12,7 @@ import SettingsLayout from '@/features/settings/settings-layout';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { useDeviceId } from '@/hooks/use-device-id';
-import { TestId } from '@/shared/test-id';
+import { SettingsSelectors } from '@/shared/selectors/settings.selectors';
 import { t } from '@lingui/core/macro';
 import * as Application from 'expo-application';
 import { useRouter } from 'expo-router';
@@ -61,7 +61,7 @@ export default function SettingsScreen() {
           caption={t`Add, configure and remove`}
           icon={<WalletIcon />}
           onPress={() => router.navigate('/settings/wallet')}
-          testID={TestId.settingsWalletAndAccountsButton}
+          testID={SettingsSelectors.WalletAndAccountsButton}
         />
         <Divider />
         <SettingsListItem
@@ -69,34 +69,35 @@ export default function SettingsScreen() {
           caption={t`Theme and account identifier`}
           icon={<SquareLinesBottomIcon />}
           onPress={() => router.navigate('/settings/display')}
-          testID={TestId.settingsDisplayButton}
+          testID={SettingsSelectors.DisplayButton}
         />
         <SettingsListItem
           title={t`Security`}
           caption={t`Analytics and app authentication`}
           icon={<ShieldIcon />}
           onPress={() => router.navigate('/settings/security')}
-          testID={TestId.settingsSecurityButton}
+          testID={SettingsSelectors.SecurityButton}
         />
         <SettingsListItem
           title={t`Networks`}
           caption={t`Mainnet, testnet or signet`}
           icon={<GlobeTiltedIcon />}
           onPress={() => router.navigate('/settings/networks')}
-          testID={TestId.settingsNetworkButton}
+          testID={SettingsSelectors.NetworkButton}
         />
         <SettingsListItem
           title={t`App Icon`}
           caption={t`Customize your app icon`}
           icon={<AppIcon />}
           onPress={() => appIconSheetRef.current?.present()}
+          testID={SettingsSelectors.AppIconButton}
         />
         <SettingsListItem
           title={t`Help`}
           caption={t`Get support or provide feedback`}
           icon={<SupportIcon />}
           onPress={() => router.navigate('/settings/help')}
-          testID={TestId.settingsHelpButton}
+          testID={SettingsSelectors.HelpButton}
         />
       </SettingsList>
 
@@ -104,7 +105,7 @@ export default function SettingsScreen() {
         {releaseWaitlistFeatures && (
           <Accordion
             label={t`More options`}
-            testID={TestId.settingsMoreOptionsButton}
+            testID={SettingsSelectors.MoreOptionsButton}
             content={
               <SettingsList mx="-5">
                 <SettingsListItem
@@ -113,7 +114,7 @@ export default function SettingsScreen() {
                   onPress={() => {
                     contactsSheetRef.current?.present();
                   }}
-                  testID={TestId.settingsContactsButton}
+                  testID={SettingsSelectors.ContactsButton}
                 />
                 <SettingsListItem
                   title={t`Fees`}
@@ -121,7 +122,7 @@ export default function SettingsScreen() {
                   onPress={() => {
                     feesSheetRef.current?.present();
                   }}
-                  testID={TestId.settingsFeesButton}
+                  testID={SettingsSelectors.FeesButton}
                 />
               </SettingsList>
             }
@@ -143,6 +144,7 @@ export default function SettingsScreen() {
               alignItems="center"
               justifyContent="space-between"
               onPress={handleCopyDeviceIdToClipboard}
+              testID={SettingsSelectors.DeviceIdButton}
             >
               <Text variant="caption01" color="ink.text-subdued">
                 {deviceId}
@@ -154,7 +156,7 @@ export default function SettingsScreen() {
 
         <Divider my="3" fullBleed />
 
-        <Button onPress={lockApp} variant="outline" testID={TestId.settingsLockAppButton}>
+        <Button onPress={lockApp} variant="outline" testID={SettingsSelectors.LockAppButton}>
           {t`Lock app`}
         </Button>
       </Box>

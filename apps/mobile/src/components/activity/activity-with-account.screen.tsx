@@ -1,6 +1,7 @@
 import { Screen } from '@/components/screen/screen';
 import { ActivityList } from '@/features/activity/activity-list';
 import { useActivity } from '@/queries/activity/activity.query';
+import { ActivitySelectors } from '@/shared/selectors/activity.selectors';
 import { t } from '@lingui/core/macro';
 
 import { AccountId } from '@leather.io/models';
@@ -14,7 +15,7 @@ export default function ActivityScreenWithAccount({
   const activity = useActivity(currentAccount.fingerprint, currentAccount.accountIndex);
 
   return (
-    <Screen>
+    <Screen testID={ActivitySelectors.ActivityScreen}>
       <Screen.Header leftElement={null} />
       <ActivityList data={activity} header={<Screen.Title>{t`Activity`}</Screen.Title>} />
     </Screen>

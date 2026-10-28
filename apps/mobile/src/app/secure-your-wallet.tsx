@@ -4,6 +4,7 @@ import { Screen } from '@/components/screen/screen';
 import { SkipSecureWalletSheet } from '@/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet';
 import { useAuthentication } from '@/hooks/use-authentication';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
+import { OnboardingSelectors } from '@/shared/selectors/onboarding.selectors';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
@@ -38,13 +39,19 @@ export default function SecureYourWalletScreen() {
       </Screen.ScrollView>
 
       <Screen.Footer>
-        <Button onPress={() => sheetRef.current?.present()} pb="4" variant="ghost">
+        <Button
+          onPress={() => sheetRef.current?.present()}
+          pb="4"
+          variant="ghost"
+          testID={OnboardingSelectors.SecureYourWalletSkipButton}
+        >
           {t`Skip for now`}
         </Button>
         <Button
           onPress={() => {
             void callIfEnrolled(() => createWallet({ biometrics: true }));
           }}
+          testID={OnboardingSelectors.SecureYourWalletEnableButton}
         >
           {t`Enable device security`}
         </Button>

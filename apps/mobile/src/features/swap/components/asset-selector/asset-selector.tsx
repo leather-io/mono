@@ -6,6 +6,7 @@ import { AssetSelectorItem } from '@/features/swap/components/asset-selector/ass
 import { useSwapAssetSearch } from '@/features/swap/components/asset-selector/use-swap-asset-search';
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
 import { matchQueryResult } from '@/queries/match-query-result';
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { t } from '@lingui/core/macro';
 import { ListRenderItemInfo } from '@shopify/flash-list';
 import { UseQueryResult } from '@tanstack/react-query';
@@ -60,7 +61,7 @@ export function AssetSelector({
     query.status === 'pending' || (isDefined(assets) && assets.length > 0) || isPerformingSearch;
 
   return (
-    <Box flex={1}>
+    <Box flex={1} testID={SwapSelectors.AssetSelector}>
       {showSearchHeader && (
         <AssetSelectorHeader>
           <SearchInput

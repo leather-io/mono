@@ -1,4 +1,5 @@
 import { CurrencyModeSwitcher } from '@/features/swap/components/currency-mode-switcher';
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { isDefined } from 'remeda';
 
 import { Currency, InputCurrencyMode, SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -42,7 +43,7 @@ export function AmountField({
   const showErrorMessage = isDefined(errorMessage) && !isUserInputEffectivelyZero(value);
 
   return (
-    <Box gap="3" flex={1} overflow="hidden">
+    <Box gap="3" flex={1} overflow="hidden" testID={SwapSelectors.BaseAmountField}>
       <PrimaryValue
         value={formattedValue}
         caret={<AmountFieldCaret value={value} color={caretColor} />}

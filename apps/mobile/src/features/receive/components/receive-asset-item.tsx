@@ -1,6 +1,6 @@
 import { AddressTypeBadge } from '@/components/address-type-badge';
 import { SelectedAsset } from '@/features/receive/screens/select-asset';
-import { TestId } from '@/shared/test-id';
+import { ReceiveSelectors } from '@/shared/selectors/receive.selectors';
 import { t } from '@lingui/core/macro';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
@@ -28,7 +28,7 @@ export function ReceiveAssetItem({ asset, onCopyAddress, onPress }: ReceiveAsset
       pressable={true}
       disabled={!onPress}
       onPress={onPress}
-      testID={TestId.receiveAssetItem}
+      testID={ReceiveSelectors.AssetItem}
     >
       <Cell.Icon>
         {{
@@ -53,6 +53,7 @@ export function ReceiveAssetItem({ asset, onCopyAddress, onPress }: ReceiveAsset
           mr="-2"
           icon={<CopyIcon />}
           onPress={() => onCopyAddress(asset)}
+          testID={ReceiveSelectors.AssetItemCopyButton}
         />
       </Cell.Aside>
     </Cell.Root>

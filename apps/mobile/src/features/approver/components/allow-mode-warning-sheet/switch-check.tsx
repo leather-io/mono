@@ -1,3 +1,5 @@
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
+
 import { Cell, Switch } from '@leather.io/ui/native';
 
 interface SwitchCheckProps {
@@ -9,6 +11,7 @@ export function SwitchCheck({ title, value, onValueChange }: SwitchCheckProps) {
   return (
     <Cell.Root
       pressable
+      testID={RpcStacksSelectors.AllowModeRisksSwitch}
       style={{ paddingHorizontal: 0 }}
       onPress={() => {
         onValueChange(!value);

@@ -7,6 +7,7 @@ import {
   InternalRecipientSuggestionEntry,
   RecipientSuggestionEntry,
 } from '@/features/send/components/recipient/recipient.types';
+import { SendSelectors } from '@/shared/selectors/send.selectors';
 import { useWalletByFingerprint } from '@/store/wallets/wallets.read';
 import { analytics } from '@/utils/analytics';
 import dayjs from 'dayjs';
@@ -53,6 +54,7 @@ function InternalRecipientItem({ entry, onSelect }: InternalRecipientItemProps) 
   return (
     <AccountListItem
       onPress={() => onSelect(entry.address)}
+      testID={SendSelectors.RecipientSuggestionItem}
       accountName={entry.rawAccount.name}
       walletName={wallet?.name}
       secondaryAside={
@@ -93,7 +95,12 @@ function ExternalRecipientItem({ entry, onSelect, asset }: ExternalRecipientItem
   }[asset.symbol];
 
   return (
-    <Cell.Root pressable={true} maxHeight={68} onPress={() => onSelect(entry.address)}>
+    <Cell.Root
+      pressable={true}
+      maxHeight={68}
+      onPress={() => onSelect(entry.address)}
+      testID={SendSelectors.RecipientSuggestionItem}
+    >
       <Cell.Icon>
         <Avatar icon={<ArrowTopRightIcon />} indicator={indicatorIcon} />
       </Cell.Icon>

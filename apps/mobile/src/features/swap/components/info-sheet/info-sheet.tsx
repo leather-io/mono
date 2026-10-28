@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { t } from '@lingui/core/macro';
 
 import { Box, IconButton, InfoCircleIcon, Sheet, SheetInstance } from '@leather.io/ui/native';
@@ -39,13 +40,14 @@ export function InfoSheet({ title, children }: InfoSheetProps) {
       <IconButton
         onPress={() => setOpen(true)}
         label={t`Info`}
+        testID={SwapSelectors.InfoButton}
         icon={<InfoCircleIcon variant="small" color="ink.text-subdued" />}
       />
       {open && (
         <Sheet ref={sheetRef} onDismiss={() => setOpen(false)}>
           <Sheet.View>
             <Sheet.Header leftElement={<Sheet.Title>{title}</Sheet.Title>} />
-            <Box px="5" pb="4">
+            <Box px="5" pb="4" testID={SwapSelectors.InfoSheetContent}>
               {children}
             </Box>
           </Sheet.View>

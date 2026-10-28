@@ -4,6 +4,7 @@ import { Screen } from '@/components/screen/screen';
 import { accountIconMap } from '@/features/account/components/account-avatar';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
 import SettingsLayout from '@/features/settings/settings-layout';
+import { WalletSettingsSelectors } from '@/shared/selectors/wallet-settings.selectors';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountIcon } from '@/store/accounts/accounts.write';
@@ -70,7 +71,11 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
         </Box>
       </SettingsLayout>
       <Screen.Footer>
-        <Button disabled={isSubmitDisabled} onPress={onSubmit}>
+        <Button
+          disabled={isSubmitDisabled}
+          onPress={onSubmit}
+          testID={WalletSettingsSelectors.ChooseAvatarSaveButton}
+        >
           {t`Save`}
         </Button>
       </Screen.Footer>

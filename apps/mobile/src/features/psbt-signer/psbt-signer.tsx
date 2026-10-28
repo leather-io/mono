@@ -12,6 +12,7 @@ import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.que
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/queries/transaction/bitcoin-transactions.hooks';
 import { useBitcoinBroadcastTransaction } from '@/queries/transaction/use-bitcoin-broadcast-transaction';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
+import { RpcBitcoinSelectors } from '@/shared/selectors/rpc-bitcoin.selectors';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { analytics } from '@/utils/analytics';
 import { formatCurrency } from '@/utils/currency-formatter';
@@ -296,7 +297,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
               <BitcoinOutcome amount={principalSpend} />
             </Approver.Section>
 
-            <Approver.Section>
+            <Approver.Section testID={RpcBitcoinSelectors.PsbtSignerRecipientsSection}>
               <Approver.Subheader>{t`To address`}</Approver.Subheader>
               <OutcomeAddressesCard addresses={recipients.map(r => r.address)} />
               {unrecognizedOutputs.length > 0 && (
@@ -305,11 +306,11 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
             </Approver.Section>
           </Approver.Overview>
 
-          <Approver.Section>
+          <Approver.Section testID={RpcBitcoinSelectors.PsbtSignerAccountSection}>
             <ApproverAccountCard accounts={psbtAccounts} />
           </Approver.Section>
 
-          <Approver.Section>
+          <Approver.Section testID={RpcBitcoinSelectors.PsbtSignerFeeSection}>
             <BitcoinFeeCard
               disabled={!feeEditorEnabled}
               feeType={selectedFeeType}

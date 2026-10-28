@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { HEADER_HEIGHT } from '@/shared/constants';
+import { AccountSelectors } from '@/shared/selectors/account.selectors';
 import { Account } from '@/store/accounts/accounts';
 import { getConnectedAppsToAccountIdMap, useApps } from '@/store/apps/apps.read';
 import { useSettings } from '@/store/settings/settings';
@@ -43,6 +44,7 @@ export function AccountSelectorSheetLayout({
         bg="ink.background-primary"
         px="5"
         pb="5"
+        testID={AccountSelectors.SelectorSheetHeader}
         style={{ paddingTop: top + theme.spacing['5'] }}
       >
         <PortfolioHeader />
@@ -55,6 +57,7 @@ export function AccountSelectorSheetLayout({
                 <WalletLoader fingerprint={account.fingerprint}>
                   {wallet => (
                     <AccountCard
+                      testID={AccountSelectors.SelectorSheetAccountCard}
                       isSelected={
                         !!currentAccount &&
                         account.id ===

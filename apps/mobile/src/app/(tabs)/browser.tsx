@@ -8,6 +8,7 @@ import { Browser } from '@/features/browser/browser/browser';
 import { SearchBar } from '@/features/browser/browser/search-bar/search-bar';
 import { useBrowserSearchState } from '@/features/browser/browser/use-browser-search-state';
 import { isValidUrl } from '@/features/browser/browser/utils';
+import { BrowserSelectors } from '@/shared/selectors/browser.selectors';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 import { useLocalSearchParams } from 'expo-router';
@@ -31,7 +32,7 @@ export default function BrowserScreen() {
   const { displayToast } = useToastContext();
 
   return (
-    <Box flex={1} bg="ink.background-primary">
+    <Box flex={1} bg="ink.background-primary" testID={BrowserSelectors.BrowserScreen}>
       <Browser
         webViewRef={webViewRef}
         navState={navState}

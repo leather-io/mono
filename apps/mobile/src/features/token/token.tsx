@@ -9,6 +9,7 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { TokenActivity } from '@/features/token/components/token-activity';
 import { TokenDetailsTable } from '@/features/token/components/token-details-table';
 import { TokenOverview } from '@/features/token/components/token-overview';
+import { TokenSelectors } from '@/shared/selectors/token.selectors';
 
 import { type ActivityView, type TokenBalance } from '@leather.io/features';
 import { FungibleCryptoAsset, isSwappableAsset } from '@leather.io/models';
@@ -56,7 +57,7 @@ export function Token({
   const isLoading = balance.state === 'loading' || tokenDetailsState === 'loading';
 
   return (
-    <Screen>
+    <Screen testID={TokenSelectors.TokenDetailsScreen}>
       <Screen.Header
         centerElement={<HeaderTitle title={title} />}
         rightElement={<NetworkBadge />}

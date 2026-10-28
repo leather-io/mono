@@ -2247,11 +2247,6 @@
       "count": 3
     }
   },
-  "src/shared/test-id.ts": {
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/shared/utils.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2

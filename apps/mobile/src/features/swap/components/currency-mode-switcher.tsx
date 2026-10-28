@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { emptyAmountPlaceholder } from '@/components/balance/constants';
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { formatCurrency } from '@/utils/currency-formatter';
 
 import { SecondaryAmount } from '@leather.io/state/swap';
@@ -62,6 +63,7 @@ export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: Currency
       onPress={onModeSwitch}
       hitSlop={{ top: 16, bottom: 16, left: 16, right: 24 }}
       disabled={secondaryAmount.status !== 'success'}
+      testID={SwapSelectors.CurrencyModeSwitcher}
     >
       {renderContent()}
     </Pressable>

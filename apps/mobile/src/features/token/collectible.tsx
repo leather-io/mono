@@ -3,6 +3,7 @@ import { useWindowDimensions } from 'react-native';
 import { Screen } from '@/components/screen/screen';
 import { HeaderSubtitle } from '@/components/screen/screen-header/components/header-title';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { TokenSelectors } from '@/shared/selectors/token.selectors';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
@@ -26,7 +27,7 @@ export function useCollectibleHeight() {
 export function Collectible({ name, details, children }: CollectibleProps) {
   const collection = details && 'collection' in details ? details.collection : undefined;
   return (
-    <Screen>
+    <Screen testID={TokenSelectors.CollectibleDetailsScreen}>
       <Screen.Header
         centerElement={
           <Box flexDirection="column" gap="1" alignItems="center">

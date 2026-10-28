@@ -1,5 +1,6 @@
 import { Dimensions } from 'react-native';
 
+import { ActivitySelectors } from '@/shared/selectors/activity.selectors';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
@@ -10,7 +11,14 @@ const netSize = width * 0.65;
 
 export function ActivityEmpty() {
   return (
-    <Box flexGrow={1} px="5" alignItems="center" justifyContent="center" gap="4">
+    <Box
+      flexGrow={1}
+      px="5"
+      alignItems="center"
+      justifyContent="center"
+      gap="4"
+      testID={ActivitySelectors.EmptyState}
+    >
       <Image
         style={{
           width: netSize,

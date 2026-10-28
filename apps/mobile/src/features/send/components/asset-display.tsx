@@ -6,6 +6,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { TokenBalance } from '@/features/token/components/token-balance';
+import { SendSelectors } from '@/shared/selectors/send.selectors';
 
 import { FungibleCryptoAsset, Money } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
@@ -35,7 +36,7 @@ export function AssetDisplay({
   );
 
   return (
-    <AnimatedBox entering={assetItemAnimation}>
+    <AnimatedBox entering={assetItemAnimation} testID={SendSelectors.AssetDisplay}>
       <TokenBalance
         borderColor="ink.border-default"
         borderTopStartRadius="sm"

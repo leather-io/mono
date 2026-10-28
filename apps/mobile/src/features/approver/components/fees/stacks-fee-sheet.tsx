@@ -1,4 +1,5 @@
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 
 import { FeeTypes, Money } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
@@ -36,7 +37,7 @@ export function StacksFeesSheet({
   }
 
   return (
-    <FeeSheetLayout sheetRef={sheetRef}>
+    <FeeSheetLayout sheetRef={sheetRef} testID={RpcStacksSelectors.StacksFeeSheet}>
       {feeTypes.map(feeType => {
         const fee = feeType !== FeeTypes.Custom ? fees[feeType] : currentFee;
         return (

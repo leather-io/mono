@@ -78,7 +78,7 @@ describe(parseFeaturesSource.name, () => {
     expect(result.errors).toEqual(
       expect.arrayContaining([
         `${location}: id 'Bad Id' must be kebab-case`,
-        `${location}: field 'gate' must be one of account, onboarding, ledgerStacks, ledgerBitcoin, none, got 'vip'`,
+        `${location}: field 'gate' must be one of account, onboarding, ledgerStacks, ledgerBitcoin, none, splashScreen, got 'vip'`,
         `${location}: missing field 'anchor'`,
         `${location}: missing field 'preconditions'`,
         `${location}: missing field 'selectors'`,

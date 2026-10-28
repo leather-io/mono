@@ -1,5 +1,6 @@
 import { Divider } from '@/components/divider';
 import { ClarityValueListDisplayer } from '@/features/approver/clarity-value.section';
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 import { t } from '@lingui/core/macro';
 import { ChainId } from '@stacks/network';
 import {
@@ -44,7 +45,7 @@ export function StructuredMessageSection({ messageToSign }: StructuredMessageSec
   const domainVersion = cvToDisplay(dom.value.version);
   const domainChainName = chainIdToDisplay(dom.value['chain-id']);
   return (
-    <Approver.Section>
+    <Approver.Section testID={RpcStacksSelectors.StxStructuredMessageSection}>
       <Text variant="label01">{t`Message`}</Text>
       <Box gap="4">
         <Box flexDirection="row" justifyContent="space-between">
