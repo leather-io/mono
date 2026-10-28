@@ -1,3 +1,5 @@
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
+
 import { type GetAddressesChain } from '@leather.io/rpc';
 import { Callout } from '@leather.io/ui';
 
@@ -24,7 +26,7 @@ export function GetAddressesMissingAccountCallout({
 
   return (
     <Callout
-      data-testid="get-addresses-missing-account-callout"
+      data-testid={ConnectAccountSelectors.MissingAccountCallout}
       mt="space.03"
       mb="space.05"
       width="100%"

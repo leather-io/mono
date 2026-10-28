@@ -1,11 +1,11 @@
 import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 
 import { oneWeekInMs } from '@leather.io/utils';
 
 import { StacksQueryPrefixes } from '../../../query-prefixes';
-import { StacksClient } from '../../stacks-client';
-import { FtAssetResponse } from '../token-metadata.utils';
+import { type StacksClient } from '../../stacks-client';
+import { getRequestErrorStatus } from '../request-error.utils';
+import { type FtAssetResponse } from '../token-metadata.utils';
 
 const queryOptions = {
   refetchOnMount: false,
@@ -30,12 +30,12 @@ export function createGetFungibleTokenMetadataQueryOptions({
   return {
     enabled: !!address,
     queryKey: [StacksQueryPrefixes.GetFtMetadata, address, network],
-    queryFn: async ({ signal }: QueryFunctionContext) => {
+    async queryFn({ signal }: QueryFunctionContext) {
       try {
-        const res = await client.getFtMetadata(address, signal);
-        return res as unknown as FtAssetResponse;
+        const res: FtAssetResponse = await client.getFtMetadata(address, signal);
+        return res;
       } catch (error) {
-        const status = (error as AxiosError).request?.status;
+        const status = getRequestErrorStatus(error);
         if (status === 404 || status === 422) return null;
         throw error;
       }

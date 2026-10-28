@@ -1,8 +1,8 @@
-import type { Transaction } from '@stacks/stacks-blockchain-api-types';
 import { describe, expect, it } from 'vitest';
 
 import type { StacksMempoolTransaction } from '@leather.io/models';
 
+import { createMockTokenTransferTransaction } from '../../test/mock-stacks-txs';
 import type { HiroPrincipalNoncesResponse } from '../hiro-api-types';
 import { parseAccountNoncesResponse } from './account-nonces.utils';
 
@@ -20,7 +20,7 @@ function createNonces(
 }
 
 function createConfirmedTx(nonce: number) {
-  return { nonce, sender_address: senderAddress } as Transaction;
+  return createMockTokenTransferTransaction({ nonce, sender_address: senderAddress });
 }
 
 function createPendingTx(nonce: number): StacksMempoolTransaction {
