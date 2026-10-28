@@ -1,4 +1,4 @@
-import { Container, Newable } from 'inversify';
+import { Container, type Newable } from 'inversify';
 
 import { ActivityService } from './activity/activity.service';
 import { BlockchainActivityService } from './activity/blockchain-activity.service';
@@ -22,10 +22,10 @@ import { LeatherApiClient } from './infrastructure/api/leather/leather-api.clien
 import { LeatherAuthApiClient } from './infrastructure/api/leather/leather-auth-api.client';
 import type { AuthSessionService } from './infrastructure/auth/auth-session.service';
 import { SignInService } from './infrastructure/auth/sign-in.service';
-import { HttpCacheService } from './infrastructure/cache/http-cache.service';
-import { Environment } from './infrastructure/environment';
+import { type HttpCacheService } from './infrastructure/cache/http-cache.service';
+import { type Environment } from './infrastructure/environment';
 import { installHiroPartnerFetch } from './infrastructure/hiro-partner-fetch';
-import { SettingsService } from './infrastructure/settings/settings.service';
+import { type SettingsService } from './infrastructure/settings/settings.service';
 import { Types } from './inversify.types';
 import { MarketDataService } from './market/market-data.service';
 import { MarketHistoryService } from './market/market-history.service';

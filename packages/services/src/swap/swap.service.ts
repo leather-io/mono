@@ -5,7 +5,6 @@ import { groupBy, isNonNullish, keys } from 'remeda';
 import {
   CryptoAssetBalance,
   CryptoAssetId,
-  FungibleAssetId,
   FungibleCryptoAsset,
   type Money,
   SwapAsset,
@@ -24,6 +23,7 @@ import {
   withTimeout,
 } from '@leather.io/utils';
 
+import { toFungibleAssetId } from '../assets/fungible-asset-id.utils';
 import { FungibleAssetService } from '../assets/fungible-asset.service';
 import { AccountQuotedBtcBalance, BtcBalancesService } from '../balances/btc-balances.service';
 import { Sip10AddressBalance, Sip10BalancesService } from '../balances/sip10-balances.service';
@@ -197,9 +197,10 @@ export class SwapService {
     );
 
     const assetResults = await Promise.allSettled(
-      keys(groupedAssets).map(key =>
-        this.fungibleAssetService.getVisibleAsset(deserializeAssetId(key) as FungibleAssetId)
-      )
+      keys(groupedAssets)
+        .map(key => toFungibleAssetId(deserializeAssetId(key)))
+        .filter(isNonNullish)
+        .map(assetId => this.fungibleAssetService.getVisibleAsset(assetId))
     );
 
     function assetsToSwapAssets(result: PromiseSettledResult<FungibleCryptoAsset | null>) {
@@ -235,9 +236,9 @@ export class SwapService {
           this.getSwapProviderServiceById(targetProviderAsset.providerId).getSwapQuotes(
             {
               baseAsset: baseAsset.asset,
-              baseProviderAsset: baseProviderAsset,
+              baseProviderAsset,
               targetAsset: targetAsset.asset,
-              targetProviderAsset: targetProviderAsset,
+              targetProviderAsset,
               baseAmount,
             },
             signal

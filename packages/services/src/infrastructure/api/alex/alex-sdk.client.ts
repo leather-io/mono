@@ -5,10 +5,9 @@ import { inject, injectable } from 'inversify';
 
 import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
-import { stringToAlexSdkCurrency } from './alex-sdk.utils';
 
 export type AlexSdkTokenInfo = TokenInfo;
-export type AlexSdkCurrency = Currency;
+type AlexSdkCurrency = Currency;
 type AlexSdkTxToBroadCast = TxToBroadCast;
 export type AlexSdkAMMRoute = AMMRoute;
 
@@ -27,12 +26,19 @@ export class AlexSdkClient {
     );
   }
 
+  private async toCurrency(value: string): Promise<AlexSdkCurrency> {
+    const tokens = await this.alex.fetchSwappableCurrency();
+    const token = tokens.find(({ id }) => id === value);
+    if (!token) throw new Error(`Unknown ALEX currency: ${value}`);
+    return token.id;
+  }
+
   public async getRoute(from: string, to: string): Promise<AlexSdkAMMRoute> {
-    return await this.alex.getRoute(stringToAlexSdkCurrency(from), stringToAlexSdkCurrency(to));
+    return await this.alex.getRoute(await this.toCurrency(from), await this.toCurrency(to));
   }
 
   public async getFeeRate(from: string, to: string): Promise<bigint> {
-    return await this.alex.getFeeRate(stringToAlexSdkCurrency(from), stringToAlexSdkCurrency(to));
+    return await this.alex.getFeeRate(await this.toCurrency(from), await this.toCurrency(to));
   }
 
   public async getAmountTo(
@@ -42,9 +48,9 @@ export class AlexSdkClient {
     route: AlexSdkAMMRoute
   ): Promise<bigint> {
     return await this.alex.getAmountTo(
-      stringToAlexSdkCurrency(from),
+      await this.toCurrency(from),
       amount,
-      stringToAlexSdkCurrency(to),
+      await this.toCurrency(to),
       route
     );
   }
@@ -58,8 +64,8 @@ export class AlexSdkClient {
   ): Promise<AlexSdkTxToBroadCast> {
     return await this.alex.runSwap(
       stxAddress,
-      stringToAlexSdkCurrency(from),
-      stringToAlexSdkCurrency(to),
+      await this.toCurrency(from),
+      await this.toCurrency(to),
       fromAmount,
       minToAmount
     );

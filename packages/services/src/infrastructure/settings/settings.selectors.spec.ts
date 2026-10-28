@@ -1,5 +1,5 @@
 import {
-  BitcoinNetwork,
+  type BitcoinNetwork,
   HIRO_API_BASE_URL_MAINNET,
   defaultNetworksKeyedById,
 } from '@leather.io/models';
@@ -12,7 +12,7 @@ import {
   selectStacksNetworkMode,
   selectStakingChainId,
 } from './settings.selectors';
-import { UserSettings } from './settings.service';
+import { type UserSettings } from './settings.service';
 
 const userSettings: UserSettings = {
   quoteCurrency: 'USD',

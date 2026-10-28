@@ -1,19 +1,20 @@
-import { hexToCV } from '@stacks/transactions';
-import { z } from 'zod';
+import { ClarityType, hexToCV } from '@stacks/transactions';
+import { isPlainObject } from 'remeda';
+import { type z } from 'zod';
 
 import { LEATHER_IPFS_GATEWAY_URL } from '@leather.io/constants';
 import {
   CryptoAssetCategories,
   CryptoAssetChains,
   CryptoAssetProtocols,
-  Sip9Asset,
-  Sip9Attribute,
-  Sip9Collection,
+  type Sip9Asset,
+  type Sip9Attribute,
+  type Sip9Collection,
 } from '@leather.io/models';
 import { createMoney, createMoneyFromDecimal } from '@leather.io/utils';
 
-import { gammaNftMetadataSchema } from '../infrastructure/api/gamma/gamma-api.schema';
-import { HiroMetadata } from '../infrastructure/api/hiro/hiro-stacks-api.types';
+import { type gammaNftMetadataSchema } from '../infrastructure/api/gamma/gamma-api.schema';
+import { type HiroMetadata } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
   transformHiroSip9Attributes,
   transformHiroSip9Collection,
@@ -57,12 +58,12 @@ const transformGammaAttributes = optionalize(transformGammaAttributesData);
 
 export function getNonFungibleTokenId(hex: string): number {
   const clarityValue = hexToCV(hex);
-  return clarityValue.type === 'uint' ? Number(clarityValue.value) : 0;
+  return clarityValue.type === ClarityType.UInt ? Number(clarityValue.value) : 0;
 }
 
 function encodeIpfsPath(path: string) {
   const normalized = path.replace(/^\/+/, '');
-  if (!normalized) return '';
+  if (!normalized) return undefined;
   return (
     '/' +
     normalized
@@ -78,8 +79,8 @@ function encodeIpfsPath(path: string) {
   );
 }
 
-function toLeatherIpfsUrl(url: string): string {
-  if (!url) return '';
+function toLeatherIpfsUrl(url: string | undefined): string | undefined {
+  if (!url) return undefined;
 
   // Handle ipfs://<cid>/<path> and ipfs://ipfs/<cid>/<path>
   if (url.startsWith('ipfs://')) {
@@ -88,20 +89,20 @@ function toLeatherIpfsUrl(url: string): string {
       ? withoutScheme.slice('ipfs/'.length)
       : withoutScheme;
     const [cid, ...rest] = withoutPrefix.split('/').filter(Boolean);
-    if (!cid) return '';
+    if (!cid) return undefined;
     const encodedPath = encodeIpfsPath(rest.join('/'));
-    return `${LEATHER_IPFS_GATEWAY_URL}${cid}${encodedPath}`;
+    return `${LEATHER_IPFS_GATEWAY_URL}${cid}${encodedPath ?? ''}`;
   }
 
   // Handle https://.../ipfs/<cid>/<path>
   if (url.includes('/ipfs/')) {
     const ipfsPath = url.split('/ipfs/')[1];
-    if (!ipfsPath) return '';
+    if (!ipfsPath) return undefined;
 
     const [cid, ...rest] = ipfsPath.split('/').filter(Boolean);
-    if (!cid) return '';
+    if (!cid) return undefined;
     const encodedPath = encodeIpfsPath(rest.join('/'));
-    return `${LEATHER_IPFS_GATEWAY_URL}${cid}${encodedPath}`;
+    return `${LEATHER_IPFS_GATEWAY_URL}${cid}${encodedPath ?? ''}`;
   }
 
   return url;
@@ -123,7 +124,7 @@ export function createSip9Asset(
     ? toLeatherIpfsUrl(gammaMetadata.item.asset_content.content_url)
     : undefined;
 
-  const hiroContentUrl = toLeatherIpfsUrl(hiroMetadata?.cached_image || hiroMetadata?.image || '');
+  const hiroContentUrl = toLeatherIpfsUrl(hiroMetadata?.cached_image || hiroMetadata?.image);
 
   const contentUrl = gammaContentUrl || hiroContentUrl || '';
 
@@ -133,16 +134,19 @@ export function createSip9Asset(
     transformGammaCollection(gammaMetadata?.item.collection) ||
     transformHiroSip9Collection(hiroMetadata?.properties?.collection);
 
-  const creator = gammaMetadata?.item.creator || hiroMetadata?.properties?.creator;
+  const creator =
+    readString(gammaMetadata?.item.creator) || readString(hiroMetadata?.properties?.creator);
   const floorPrice =
-    gammaMetadata?.item.collection?.floor_price_amount || hiroMetadata?.properties?.floor_price;
+    gammaMetadata?.item.collection?.floor_price_amount ||
+    readCollectionPriceAmount(hiroMetadata?.properties?.floor_price);
   const latestSale =
     gammaMetadata?.item.market_summary?.latest_sale?.price_amount ||
-    hiroMetadata?.properties?.latest_sale;
+    readCollectionPriceAmount(hiroMetadata?.properties?.latest_sale);
   const attributes =
     transformGammaAttributes(gammaMetadata?.attribute_groups) ||
     transformHiroSip9Attributes(hiroMetadata?.attributes);
-  const rarityRank = gammaMetadata?.item.rarity_rank || hiroMetadata?.properties?.rarity_rank;
+  const rarityRank =
+    gammaMetadata?.item.rarity_rank || readNumber(hiroMetadata?.properties?.rarity_rank);
 
   const resolvedCollection = collection
     ? {
@@ -174,7 +178,22 @@ export function createSip9Asset(
 
 interface CollectionPriceAmount {
   amount: number;
-  unit: 'micro_stacks' | 'stx';
+  unit: string;
+}
+
+function readString(value: unknown) {
+  return typeof value === 'string' ? value : undefined;
+}
+
+function readNumber(value: unknown) {
+  return typeof value === 'number' ? value : undefined;
+}
+
+function readCollectionPriceAmount(value: unknown): CollectionPriceAmount | undefined {
+  if (!isPlainObject(value)) return undefined;
+  const { amount, unit } = value;
+  if (typeof amount !== 'number' || typeof unit !== 'string') return undefined;
+  return { amount, unit };
 }
 
 function createStxMoneyFromCollectionPriceAmount(priceAmount: CollectionPriceAmount | undefined) {
