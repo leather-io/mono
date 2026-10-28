@@ -181,8 +181,13 @@ function StartStakingLayout({
     })
   );
 
-  const stakeAmount = Number(formMethods.watch('amount') ?? NaN);
-  const watchedCycles = Number(formMethods.watch('cycles') ?? NaN);
+  const watchedAmount = formMethods.watch('amount');
+  const stakeAmount = watchedAmount === undefined ? undefined : Number(watchedAmount);
+  const watchedCyclesInput = formMethods.watch('cycles');
+  const watchedCycles =
+    watchedCyclesInput === undefined || watchedCyclesInput === null
+      ? undefined
+      : Number(watchedCyclesInput);
 
   const {
     mutate: submitStake,
@@ -226,7 +231,10 @@ function StartStakingLayout({
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
 
   const estimatedUnlockDate =
-    cycleClock && Number.isInteger(watchedCycles) && watchedCycles > 0
+    cycleClock &&
+    watchedCycles !== undefined &&
+    Number.isInteger(watchedCycles) &&
+    watchedCycles > 0
       ? cycleClock.estimatedUnlockDateForCycles(watchedCycles, new Date())
       : null;
 
