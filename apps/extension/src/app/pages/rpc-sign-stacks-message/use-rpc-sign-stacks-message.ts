@@ -3,12 +3,16 @@ import { useMemo } from 'react';
 import { networkFromName } from '@stacks/network';
 import { deserializeCV } from '@stacks/transactions';
 
-import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
+import {
+  RpcErrorCode,
+  createRpcErrorResponse,
+  createRpcSuccessResponse,
+  stxSignMessageTypeSchema,
+} from '@leather.io/rpc';
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import {
   type SignedMessageType,
-  isSignableMessageType,
   isStructuredMessageType,
   isUtf8MessageType,
 } from '@shared/signature/signature-types';
@@ -70,9 +74,11 @@ export function useRpcSignStacksMessageParams() {
   const messageType = initialSearchParams.get('messageType');
   const domain = initialSearchParams.get('domain');
 
-  if (!requestId || !message || !origin || !isSignableMessageType(messageType))
+  const parsedMessageType = stxSignMessageTypeSchema.safeParse(messageType);
+
+  if (!requestId || !message || !origin || !parsedMessageType.success)
     throw new Error('Missing required parameters for Stacks signing message request');
-  const signableMessageType: SignedMessageType = messageType;
+  const signableMessageType: SignedMessageType = parsedMessageType.data;
 
   return useMemo(
     () => ({
