@@ -142,7 +142,6 @@
         "src/native.ts!",
         "src/exports.web.ts!",
         "src/svg.native.d.ts!",
-        "scripts/generate-cheatsheet.ts",
         "src/components/**/*.meta.shared.ts"
       ],
       "metro": false,

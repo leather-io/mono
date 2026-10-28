@@ -6,7 +6,7 @@ import { registerHooks } from 'node:module';
 import path from 'node:path';
 import { format, resolveConfig } from 'prettier';
 
-import type { ComponentMeta } from '../src/utils/component-meta.shared.ts';
+import type { ComponentMeta } from '../../packages/ui/src/utils/component-meta.shared.ts';
 
 // Meta files import their helper without an extension (bundler style). Node's
 // type stripping needs one, so retry relative imports with `.ts`.
@@ -21,7 +21,7 @@ registerHooks({
   },
 });
 
-const root = path.resolve(import.meta.dirname, '../../..');
+const root = path.resolve(import.meta.dirname, '../..');
 const outFile = path.join(root, 'docs/design/cheatsheet.md');
 const metaFiles = globSync('packages/ui/src/components/**/*.meta.shared.ts', { cwd: root }).sort();
 

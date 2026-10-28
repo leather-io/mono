@@ -175,6 +175,23 @@ describe('promote report on the off-system fixture', () => {
     for (const heading of ['## 1.', '## 2.', '## 3.', '## 4.', '## 5.', '## 6.'])
       assert.ok(markdown.includes(heading), heading);
   });
+
+  it('escapes backslashes before pipes in Markdown table cells', () => {
+    const token = result.scan.tokens[0];
+    assert.ok(token);
+    for (const [input, expected] of [
+      [String.raw`one\|two`, String.raw`one\\\|two`],
+      [String.raw`one\\|two`, String.raw`one\\\\\|two`],
+      [String.raw`one\two`, String.raw`one\\two`],
+      ['one|two\nthree', String.raw`one\|two three`],
+    ]) {
+      const markdown = renderMarkdown({
+        ...result,
+        scan: { ...result.scan, tokens: [{ ...token, property: input }] },
+      });
+      assert.ok(markdown.includes(` | ${expected} | `), markdown);
+    }
+  });
 });
 
 describe('promote report on an area with variants and shared/', () => {

@@ -6,6 +6,7 @@ import { thresholds } from './components.ts';
 
 const cell = (value: unknown) =>
   String(value ?? '')
+    .replace(/\\/g, '\\\\')
     .replace(/\|/g, '\\|')
     .replace(/\n/g, ' ');
 const code = (value: string) => `\`${value.replace(/`/g, "'")}\``;
