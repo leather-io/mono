@@ -1,5 +1,5 @@
-import { InputSizing } from '@leather.io/bitcoin';
-import { AccountAddresses } from '@leather.io/models';
+import { type InputSizing } from '@leather.io/bitcoin';
+import { type AccountAddresses } from '@leather.io/models';
 
 export function getInputSizing(account: AccountAddresses): InputSizing | undefined {
   const { bitcoin } = account;

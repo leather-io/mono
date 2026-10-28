@@ -1,4 +1,4 @@
-import { HiroPageRequest, HiroPageResponse } from './hiro-stacks-api.types';
+import { type HiroPageRequest, type HiroPageResponse } from './hiro-stacks-api.types';
 
 interface HiroSomePagesRequest {
   allPages?: undefined;
