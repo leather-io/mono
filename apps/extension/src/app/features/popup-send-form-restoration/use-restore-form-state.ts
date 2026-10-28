@@ -2,9 +2,10 @@ import { useNavigate } from 'react-router';
 
 import { z } from 'zod';
 
+import { useOnMount } from '@leather.io/ui';
+
 import { getActiveTab } from '@shared/utils/get-active-tab';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { isPopupMode } from '@app/common/utils';
 
 // Would rather use the `useAsync` hook to call this promise, however this is

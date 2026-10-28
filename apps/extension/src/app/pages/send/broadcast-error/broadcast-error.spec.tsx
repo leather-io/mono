@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type * as LeatherUi from '@leather.io/ui';
+
 import { BroadcastError } from './broadcast-error';
 
 const h = vi.hoisted((): { state: unknown } => ({ state: null }));
@@ -12,14 +14,18 @@ vi.mock('react-router', () => ({
 
 vi.mock('@shared/utils/analytics', () => ({ analytics: { track: vi.fn() } }));
 
-vi.mock('@leather.io/ui', () => ({
-  Sheet({ children }: { children: React.ReactNode }) {
-    return <div>{children}</div>;
-  },
-  SheetHeader() {
-    return null;
-  },
-}));
+vi.mock('@leather.io/ui', async importOriginal => {
+  const actual = await importOriginal<typeof LeatherUi>();
+  return {
+    useOnMount: actual.useOnMount,
+    Sheet({ children }: { children: React.ReactNode }) {
+      return <div>{children}</div>;
+    },
+    SheetHeader() {
+      return null;
+    },
+  };
+});
 
 vi.mock('./components/broadcast-error.layout', () => ({
   BroadcastErrorLayout({ title, errorPayload }: { title: string; errorPayload: React.ReactNode }) {

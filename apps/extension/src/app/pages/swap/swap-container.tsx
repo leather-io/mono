@@ -7,12 +7,12 @@ import {
   useLiveSwapEstimate,
   useSwapContext,
 } from '@leather.io/state/swap';
+import { LoadingSpinner } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useSwapAvailability } from '@app/common/hooks/use-swap-availability';
-import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 
