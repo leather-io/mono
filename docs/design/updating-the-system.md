@@ -34,9 +34,9 @@ new model ships.
    - Count the existing hits:
      `pnpm exec eslint -c eslint.design.config.js --no-inline-config apps/extension/src apps/web/app apps/mobile/src packages/ui/src`.
    - If the count is small (under about 10), fix them in the same PR and enforce the rule at 0.
-   - If it's larger, run `pnpm exec eslint --suppress-rule design-system/<rule>` once per package in
-     the PR that introduces the rule. That's the only time entries get added. After that,
-     `--prune-suppressions` only removes them.
+   - If it's larger, enable the rule only on a clean, explicitly scoped set of files, then widen
+     that scope as existing violations are fixed. Do not add suppression entries or inline
+     disables. The existing suppression baseline may only shrink with `--prune-suppressions`.
    - If the fix needs a token that doesn't exist yet, such as shadows or motion, add the token
      first. A message that points at nothing teaches nothing.
 

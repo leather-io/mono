@@ -162,11 +162,11 @@ remaining deviation has a reason.
    needs a reason, and no row can be stale.
 7. **Move the code to the product folder.** Delete the Playground area in the same PR when it's
    an exploration area.
-8. **Run lint at error level.** `pnpm exec eslint -c eslint.design.config.js <product folder>` must
-   pass with no errors. If a rule still flags a documented deviation, disable it on that line and
-   cite the DEVIATIONS.md row:
-   `// eslint-disable-next-line design-system/no-raw-color -- DEVIATIONS.md: #7A5CFA`.
-   Nothing else gets a disable comment.
+8. **Run lint at error level.** `pnpm design:check <product folder>` must pass with no errors.
+   A documented deviation explains a design choice; it does not exempt the code from lint.
+   Fix the flagged composition, use supported tokens and components, or propose a focused change
+   to the shared rule when it rejects a valid pattern. Do not add inline disables or suppression
+   entries. The command ignores inline lint configuration.
 9. **Designer review.** Fab reviews the moved screen against the sketch and signs off the ledger.
 
 ## Limits
