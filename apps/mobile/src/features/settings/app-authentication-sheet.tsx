@@ -23,10 +23,7 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
   async function onUpdateAppAuth() {
     try {
       const result = await authenticate();
-      if (!result) {
-        // Do nothing if result is undefined, as that means it's already handled by useAuthentication hook
-        return;
-      }
+      if (!result) return;
 
       if (result.success) {
         settings.changeSecurityLevelPreference(

@@ -50,10 +50,7 @@ function isSendActivity(activity: Activity) {
 }
 
 function hasReceivers(activity: SendAssetActivity) {
-  return (
-    // Items from the API response sometimes erroneously contain no receivers or empty strings
-    isDefined(activity.receivers[0]) && activity.receivers[0].length !== 0
-  );
+  return isDefined(activity.receivers[0]) && activity.receivers[0].length !== 0;
 }
 
 function isRelevantSendActivity(asset: FungibleCryptoAsset) {

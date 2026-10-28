@@ -342,12 +342,12 @@ msgid "Another address {shortenedPcAddress} will transfer"
 msgstr "Another address {shortenedPcAddress} will transfer"
 
 #: src/app/settings/security/index.tsx:45
-#: src/features/settings/app-authentication-sheet.tsx:56
-#: src/features/settings/app-authentication-sheet.tsx:61
+#: src/features/settings/app-authentication-sheet.tsx:53
+#: src/features/settings/app-authentication-sheet.tsx:58
 msgid "App authentication"
 msgstr "App authentication"
 
-#: src/features/settings/app-authentication-sheet.tsx:36
+#: src/features/settings/app-authentication-sheet.tsx:33
 msgid "App authorization updated"
 msgstr "App authorization updated"
 
@@ -825,8 +825,8 @@ msgstr "Export xPub"
 msgid "Failed"
 msgstr "Failed"
 
-#: src/features/settings/app-authentication-sheet.tsx:41
-#: src/features/settings/app-authentication-sheet.tsx:47
+#: src/features/settings/app-authentication-sheet.tsx:38
+#: src/features/settings/app-authentication-sheet.tsx:44
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
@@ -1506,7 +1506,7 @@ msgstr "Renewal height"
 msgid "Request approval for transactions"
 msgstr "Request approval for transactions"
 
-#: src/features/settings/app-authentication-sheet.tsx:62
+#: src/features/settings/app-authentication-sheet.tsx:59
 msgid "Require biometrics or PIN"
 msgstr "Require biometrics or PIN"
 
