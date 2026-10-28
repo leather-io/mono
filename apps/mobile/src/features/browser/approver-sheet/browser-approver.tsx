@@ -2,7 +2,7 @@ import { useAppByOrigin } from '@/store/apps/apps.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 
 import {
-  RpcResponses,
+  type RpcResponses,
   getAddresses,
   sendTransfer,
   signMessage,
@@ -34,7 +34,7 @@ import { TransferSip9NftApprover } from './stx/transfer-sip9-nft/transfer-sip9-n
 import { TransferSip10FtApprover } from './stx/transfer-sip10-ft/transfer-sip10-ft';
 import { TransferStxApprover } from './stx/transfer-stx/transfer-stx';
 import { getAccountIdFromConnectedApp, getAccountIdFromRequestParams } from './stx/utils';
-import { BrowserMessage } from './utils';
+import { type BrowserMessage } from './utils';
 
 interface BrowserApproverProps {
   request: BrowserMessage;
@@ -203,7 +203,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
     case stxCallContract.method: {
       const accountId = getAccountIdFromRequestParams({
         params: props.request.params,
-        app: app,
+        app,
         stacksSigners,
       });
       return (
@@ -227,7 +227,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
     case stxDeployContract.method: {
       const accountId = getAccountIdFromRequestParams({
         params: props.request.params,
-        app: app,
+        app,
         stacksSigners,
       });
       return (

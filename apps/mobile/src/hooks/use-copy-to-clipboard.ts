@@ -10,12 +10,12 @@ interface UseCopyToClipboardOptions {
   successStateDuration?: number;
 }
 
-export function useCopyToClipboard(value: string, options: UseCopyToClipboardOptions = {}) {
+export function useCopyToClipboard(value: string | null, options: UseCopyToClipboardOptions = {}) {
   const { successStateDuration = defaultSuccessStateDuration } = options;
   const [status, setStatus] = useState<UseCopyToClipboardStatus>('idle');
 
   const onCopy = useCallback(async () => {
-    if (value.trim() === '') return;
+    if (!value || value.trim() === '') return;
 
     try {
       await Clipboard.setStringAsync(value);

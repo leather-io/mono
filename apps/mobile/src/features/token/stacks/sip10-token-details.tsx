@@ -3,9 +3,9 @@ import { useSip10ActivityByAssetId } from '@/queries/activity/sip10-activity.que
 import { useSip10BalanceByAssetId } from '@/queries/balance/sip10-balance.query';
 import { t } from '@lingui/core/macro';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { Sip10AvatarIcon } from '@leather.io/ui/native';
-import { SerializedCryptoAssetId, deserializeAssetId } from '@leather.io/utils';
+import { type SerializedCryptoAssetId, deserializeAssetId } from '@leather.io/utils';
 
 import { TokenLoading } from '../components/token-loading';
 import { Token } from '../token';
@@ -26,18 +26,18 @@ export function Sip10TokenDetails({ assetId, account }: Sip10TokenDetailsProps) 
     return <TokenLoading />;
   }
   const isError = balance.state === 'error' || (balance.state === 'success' && !asset);
-  if (isError) {
+  if (isError || !asset) {
     return <ErrorFallbackTab />;
   }
 
-  const { name, imageCanonicalUri } = asset!;
+  const { name, imageCanonicalUri } = asset;
 
   return (
     <Token
       icon={
         <Sip10AvatarIcon contractId={assetId} imageCanonicalUri={imageCanonicalUri} name={name} />
       }
-      asset={asset!}
+      asset={asset}
       balance={balance}
       activity={activity}
       title={name}

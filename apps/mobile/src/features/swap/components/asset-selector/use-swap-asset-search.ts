@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
 
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 import { useDebouncedValue } from '@leather.io/ui/native';
 
 export function useSwapAssetSearch(data: AccountSwapAsset[] | undefined) {
