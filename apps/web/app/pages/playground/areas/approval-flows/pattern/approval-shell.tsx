@@ -29,7 +29,7 @@ import {
   ApprovalLaunchOverlay,
   ApprovalLaunchStateProvider,
 } from './approval-launch';
-import { type ApprovalLaunch, useApprovalOptions } from './approval-options';
+import { type ApprovalTitleStyle, useApprovalOptions } from './approval-options';
 import { ExactAmount } from './approval-rows';
 import { approvalDivider, approvalInteractiveTrigger } from './approval-surface';
 import type { ApprovalAccount } from './approval-types';
@@ -130,16 +130,22 @@ interface ApprovalShellProps {
   children: ReactNode;
   footer?: ReactNode;
   overlay?: ReactNode;
+  isBackgroundInert?: boolean;
 }
 
-export function ApprovalShell({ children, footer, overlay }: ApprovalShellProps) {
+export function ApprovalShell({
+  children,
+  footer,
+  overlay,
+  isBackgroundInert,
+}: ApprovalShellProps) {
   const [signer, setSignerState] = useState<ApprovalAccount | undefined>();
   const [identity, setIdentityState] = useState<ApprovalIdentity | undefined>();
   const [intent, setIntentState] = useState<DirectionIntentProps | undefined>();
-  const { launch, containers, isConnect } = useApprovalOptions();
-  const [finishedLaunch, setFinishedLaunch] = useState<ApprovalLaunch | undefined>();
+  const { hasLaunch, containers, isConnect } = useApprovalOptions();
+  const [isLaunchDone, setLaunchDone] = useState(false);
   const hasAccountSlot = Children.toArray(children).some(isAccountSlotSection);
-  const isLaunching = launch !== 'off' && finishedLaunch !== launch;
+  const isLaunching = hasLaunch && !isLaunchDone;
   return (
     <ApprovalSignerContext.Provider
       value={{
@@ -166,19 +172,31 @@ export function ApprovalShell({ children, footer, overlay }: ApprovalShellProps)
           bg="ink.background-primary"
           color="ink.text-primary"
           data-approval-containers={containers}
+          data-approval-shell=""
         >
-          <Box flex="1" minHeight={0} overflowY="auto" className={hiddenScrollbar}>
+          <Box
+            flex="1"
+            minHeight={0}
+            overflowY="auto"
+            className={hiddenScrollbar}
+            inert={isBackgroundInert}
+            aria-hidden={isBackgroundInert || undefined}
+          >
             {children}
           </Box>
-          {footer}
+          <Box
+            flexShrink={0}
+            inert={isBackgroundInert}
+            aria-hidden={isBackgroundInert || undefined}
+          >
+            {footer}
+          </Box>
           {overlay}
           {isLaunching && (
             <ApprovalLaunchOverlay
-              key={launch}
-              launch={launch}
               identity={identity}
               isConnect={isConnect}
-              onDone={() => setFinishedLaunch(launch)}
+              onDone={() => setLaunchDone(true)}
             />
           )}
         </Flex>
@@ -208,41 +226,43 @@ export function ApprovalIntent({ title, kind, icon }: ApprovalIntentProps) {
   return <BaselineIntent title={title} kind={kind} icon={icon} />;
 }
 
-function BaselineIntent({ title, kind, icon }: ApprovalIntentProps) {
+const approvalTitleStyles: Record<ApprovalTitleStyle, string> = {
+  current: css({ textStyle: 'heading.03' }),
+  large: css({ textStyle: 'heading.04' }),
+  marche: css({
+    textStyle: 'heading.03',
+    textTransform: 'none',
+    fontSize: '24px',
+    lineHeight: '1.2',
+  }),
+  proposed: css({ textStyle: 'heading.05' }),
+};
+
+interface ApprovalTitleProps {
+  title: string;
+}
+
+export function ApprovalTitle({ title }: ApprovalTitleProps) {
   const { titleStyle } = useApprovalOptions();
   const titleRef = useApprovalTitleFocus();
+  return (
+    <styled.h1
+      ref={titleRef}
+      tabIndex={-1}
+      outline="none"
+      className={approvalTitleStyles[titleStyle]}
+    >
+      {title}
+    </styled.h1>
+  );
+}
+
+function BaselineIntent({ title, kind, icon }: ApprovalIntentProps) {
   return (
     <Stack gap="space.03" px="space.05" pt="space.05" pb="space.04" data-approval-zone="intent">
       {icon}
       <Stack gap="space.01">
-        {titleStyle === 'current' && (
-          <styled.h1 ref={titleRef} tabIndex={-1} outline="none" textStyle="heading.03">
-            {title}
-          </styled.h1>
-        )}
-        {titleStyle === 'large' && (
-          <styled.h1 ref={titleRef} tabIndex={-1} outline="none" textStyle="heading.04">
-            {title}
-          </styled.h1>
-        )}
-        {titleStyle === 'marche' && (
-          <styled.h1
-            ref={titleRef}
-            tabIndex={-1}
-            outline="none"
-            textStyle="heading.03"
-            textTransform="none"
-            fontSize="24px"
-            lineHeight="1.2"
-          >
-            {title}
-          </styled.h1>
-        )}
-        {titleStyle === 'proposed' && (
-          <styled.h1 ref={titleRef} tabIndex={-1} outline="none" textStyle="heading.05">
-            {title}
-          </styled.h1>
-        )}
+        <ApprovalTitle title={title} />
         {kind && (
           <styled.p textStyle="caption.01" color="ink.text-subdued">
             {kind}

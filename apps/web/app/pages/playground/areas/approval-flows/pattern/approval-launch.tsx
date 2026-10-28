@@ -15,8 +15,6 @@ import {
 import { css } from 'leather-styles/css';
 import { Box, Flex } from 'leather-styles/jsx';
 
-import { LeatherLettermarkIcon } from '@leather.io/ui';
-
 import {
   AccountAvatar,
   type IdentityPairRing,
@@ -24,11 +22,8 @@ import {
   RequesterIcon,
   identityPairTileSize,
 } from './approval-identity';
-import { type ApprovalLaunch, useApprovalOptions } from './approval-options';
+import { useApprovalOptions } from './approval-options';
 import type { ApprovalAccount } from './approval-types';
-
-type ApprovalLaunchStyle = Exclude<ApprovalLaunch, 'off'>;
-type ApprovalSplashStyle = Exclude<ApprovalLaunchStyle, 'handshake'>;
 
 export interface ApprovalIdentity {
   origin: string;
@@ -41,7 +36,6 @@ const launchViewBox = '0 0 156 151';
 const launchStrokeWidth = 21;
 const launchPatch = { x: 39, y: 1, width: 31, height: 15 };
 const launchDrawWidth = 80;
-const launchMarkSize = 56;
 const launchSafetyTimeoutMs = 3000;
 
 const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
@@ -88,17 +82,14 @@ const dockTimeline = {
 const launchKeyframes = `
 @keyframes approvalLaunchFade { from { opacity: 1; } to { opacity: 0; } }
 @keyframes approvalLaunchDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-@keyframes approvalLaunchSettleMark { from { transform: scale(1); } to { transform: scale(0.92); } }
 @keyframes approvalLaunchSettleDraw { from { transform: scale(1); } to { transform: scale(0.85); } }
-.approval-launch-cover-mark { animation: approvalLaunchFade 200ms cubic-bezier(0.25, 0, 0.5, 1) 250ms both; }
 .approval-launch-cover-draw { animation: approvalLaunchFade 220ms cubic-bezier(0.345, 0, 0.356, 1) 720ms both; }
-.approval-launch-settle-mark { animation: approvalLaunchSettleMark 200ms cubic-bezier(0.25, 0, 0.5, 1) 250ms both; }
 .approval-launch-settle-draw { animation: approvalLaunchSettleDraw 220ms cubic-bezier(0.345, 0, 0.356, 1) 720ms both; }
 .approval-launch-stroke { stroke-dasharray: 1 1; animation: approvalLaunchDraw 640ms cubic-bezier(0.264, 0, 0.414, 1) both; }
 .approval-launch-ghost { animation: approvalLaunchFade 40ms linear 640ms both; }
 @media (prefers-reduced-motion: reduce) {
-  .approval-launch-cover-mark, .approval-launch-cover-draw { animation: approvalLaunchFade 150ms linear 150ms both; }
-  .approval-launch-settle-mark, .approval-launch-settle-draw { animation: none; }
+  .approval-launch-cover-draw { animation: approvalLaunchFade 150ms linear 150ms both; }
+  .approval-launch-settle-draw { animation: none; }
   .approval-launch-stroke { animation: none; stroke-dashoffset: 0; }
   .approval-launch-ghost { animation: none; opacity: 0; }
 }
@@ -184,11 +175,10 @@ function LaunchDrawnMark() {
 }
 
 interface SplashOverlayProps {
-  launch: ApprovalSplashStyle;
   onDone(): void;
 }
 
-function SplashOverlay({ launch, onDone }: SplashOverlayProps) {
+function SplashOverlay({ onDone }: SplashOverlayProps) {
   const { isDone, finish } = useLaunchCompletion(onDone);
 
   function onAnimationEnd(event: AnimationEvent<HTMLDivElement>) {
@@ -199,10 +189,10 @@ function SplashOverlay({ launch, onDone }: SplashOverlayProps) {
 
   return (
     <Flex
-      className={`approval-launch-cover-${launch}`}
+      className="approval-launch-cover-draw"
       onAnimationEnd={onAnimationEnd}
       aria-hidden
-      data-approval-launch={launch}
+      data-approval-launch="draw"
       position="absolute"
       inset="0"
       zIndex={20}
@@ -212,15 +202,7 @@ function SplashOverlay({ launch, onDone }: SplashOverlayProps) {
       color="ink.text-primary"
     >
       <style>{launchKeyframes}</style>
-      {launch === 'mark' && (
-        <LeatherLettermarkIcon
-          className="approval-launch-settle-mark"
-          color="ink.text-primary"
-          width={launchMarkSize}
-          height={launchMarkSize}
-        />
-      )}
-      {launch === 'draw' && <LaunchDrawnMark />}
+      <LaunchDrawnMark />
     </Flex>
   );
 }
@@ -778,21 +760,14 @@ function HandshakeOverlay({ identity, isConnect, onDone }: HandshakeOverlayProps
 }
 
 interface ApprovalLaunchOverlayProps {
-  launch: ApprovalLaunchStyle;
   identity?: ApprovalIdentity;
   isConnect: boolean;
   onDone(): void;
 }
 
-export function ApprovalLaunchOverlay({
-  launch,
-  identity,
-  isConnect,
-  onDone,
-}: ApprovalLaunchOverlayProps) {
-  if (launch === 'handshake' && isConnect && identity?.account) {
+export function ApprovalLaunchOverlay({ identity, isConnect, onDone }: ApprovalLaunchOverlayProps) {
+  if (isConnect && identity?.account) {
     return <HandshakeOverlay identity={identity} isConnect onDone={onDone} />;
   }
-  if (launch === 'handshake') return <SplashOverlay launch="mark" onDone={onDone} />;
-  return <SplashOverlay launch={launch} onDone={onDone} />;
+  return <SplashOverlay onDone={onDone} />;
 }

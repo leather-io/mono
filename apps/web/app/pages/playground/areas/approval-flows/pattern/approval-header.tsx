@@ -66,15 +66,20 @@ function HeaderNote({ note }: HeaderNoteProps) {
 
 interface HeaderSiteProps {
   origin: string;
+  isInternal?: boolean;
   note?: string;
 }
 
-function HeaderSite({ origin, note }: HeaderSiteProps) {
+function HeaderSite({ origin, isInternal, note }: HeaderSiteProps) {
   return (
     <>
       <RequesterIcon origin={origin} />
       <Stack gap="0" flex="1" minWidth={0}>
-        <OriginName origin={origin} />
+        {isInternal ? (
+          <styled.span textStyle="label.02">Leather</styled.span>
+        ) : (
+          <OriginName origin={origin} />
+        )}
         {note && <HeaderNote note={note} />}
       </Stack>
     </>
@@ -83,12 +88,19 @@ function HeaderSite({ origin, note }: HeaderSiteProps) {
 
 interface HeaderSiteAndAccountProps {
   origin: string;
+  isInternal?: boolean;
   account: ApprovalAccount;
   note?: string;
   isFilledCard: boolean;
 }
 
-function HeaderSiteAndAccount({ origin, account, note, isFilledCard }: HeaderSiteAndAccountProps) {
+function HeaderSiteAndAccount({
+  origin,
+  isInternal,
+  account,
+  note,
+  isFilledCard,
+}: HeaderSiteAndAccountProps) {
   return (
     <>
       <RequesterAccountPair
@@ -97,7 +109,11 @@ function HeaderSiteAndAccount({ origin, account, note, isFilledCard }: HeaderSit
         ring={isFilledCard ? 'secondary' : 'primary'}
       />
       <Stack gap="0" flex="1" minWidth={0}>
-        <OriginName origin={origin} />
+        {isInternal ? (
+          <styled.span textStyle="label.02">Leather</styled.span>
+        ) : (
+          <OriginName origin={origin} />
+        )}
         <AccountCaption account={account} />
         {note && <HeaderNote note={note} />}
       </Stack>
@@ -148,12 +164,17 @@ export function ApprovalHeader({
         {headerAccount ? (
           <HeaderSiteAndAccount
             origin={siteOrigin}
+            isInternal={requester.source === 'internal'}
             account={headerAccount}
             note={note}
             isFilledCard={headerSurface === 'card' && containers === 'groups'}
           />
         ) : (
-          <HeaderSite origin={siteOrigin} note={note} />
+          <HeaderSite
+            origin={siteOrigin}
+            isInternal={requester.source === 'internal'}
+            note={note}
+          />
         )}
         {trailing ?? <NetworkChip network={network} />}
       </Flex>

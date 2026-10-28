@@ -1,8 +1,8 @@
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { approvalDirections, findApprovalDirection } from '../directions/direction-registry';
+import { findApprovalDirection } from '../directions/direction-registry';
 import type { Scenario } from '../scenarios/scenario';
-import { useCanvasSettings } from './canvas-settings';
+import { useCanvasSettings, useComparedDirections } from './canvas-settings';
 import { CaptureFrame } from './capture-frame';
 import { PopupFrame } from './popup-frame';
 import { ScenarioRender } from './scenario-render';
@@ -46,13 +46,14 @@ function SingleDirectionFrames({ scenario }: FrameRowProps) {
 
 function AllDirectionFrames({ scenario }: FrameRowProps) {
   const { theme, showActivity } = useCanvasSettings();
+  const directions = useComparedDirections();
   const isHistory = showActivity && scenario.history !== undefined;
   return (
     <Stack gap="space.02" width="100%">
       <styled.h2 textStyle="label.02">{scenario.label}</styled.h2>
       <Flex gap="space.05" alignItems="flex-start" flexWrap="wrap">
         <FrameCapture scenario={scenario} />
-        {approvalDirections.map(item => (
+        {directions.map(item => (
           <PopupFrame
             key={item.id}
             caption={isHistory ? `${item.name} · then in activity` : item.name}

@@ -201,8 +201,8 @@ const issueEntries: ApprovalIssueEntry[] = [
     short: 'Pre-empt the Ledger blind-signing wall',
     link: 'sub-issue',
     status: 'addressed',
-    how: 'Before you press Sign, one line says the Ledger will ask for blind signing and warn you, and that the limits shown still apply on-chain. The device step and a device rejection stay inside the approval.',
-    gap: 'Predicting the prompt needs a check that doesn’t exist yet. The line goes once the Ledger app fix ships.',
+    how: 'A short hint prepares you to open the Stacks app and review on the Ledger. The device step and rejection stay inside the approval, with the decoded request available throughout. Warnings appear only when supported by verified app and payload behaviour.',
+    gap: 'Exact warning prompts and supported payloads need physical-device validation. The current code does not establish a blind-signing toggle or a reliable prediction check; generic payload errors must not prescribe that setting.',
     asks: [
       { ask: 'A pre-signing notice that the device warning is expected', status: 'addressed' },
       { ask: 'Reassure with what Leather decoded', status: 'addressed' },

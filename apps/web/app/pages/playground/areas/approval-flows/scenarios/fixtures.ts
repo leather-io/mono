@@ -98,7 +98,7 @@ export const feeUnderOneCent = '< $0.01';
 export const stxRecipient = 'SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB';
 
 export const vaultProposalSigned =
-  'Your signature is included: Propose signs the commitment and the transaction with Account 1’s key, and nothing moves yet.';
+  'Propose signs a commitment with Account 1’s key. Transaction signatures are collected separately; nothing moves yet.';
 
 export const vaultBroadcastRule = 'It can be broadcast once 2 of 3 Team Treasury signers approve.';
 

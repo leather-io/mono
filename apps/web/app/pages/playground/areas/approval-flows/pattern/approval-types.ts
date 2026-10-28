@@ -37,6 +37,7 @@ type ApprovalConnection = 'connected' | 'not-connected';
 type ApprovalTransport = 'walletconnect';
 
 export interface ApprovalRequester {
+  source?: 'internal';
   context?: ApprovalIdentityContext;
   origin: string;
   frameOrigin?: string;

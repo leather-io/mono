@@ -558,9 +558,6 @@ export function HandshakeGuarantee({ kind, label, isWeak, children }: DirectionG
         <ApprovalGuaranteeIcon kind={kind} isWeak={false} />
       </StatementLane>
       <styled.p textStyle="caption.01" color="ink.text-subdued" textWrapStyle="pretty">
-        <styled.span textStyle="label.03" color="ink.text-primary">
-          {label}.
-        </styled.span>{' '}
         {children}
       </styled.p>
     </Flex>

@@ -40,12 +40,13 @@ import {
 import { type Decision, decisions } from '../approval-flows.content';
 import { approvalEventSpecs } from '../approval-flows.events';
 import { approvalIssues, githubIssueUrl } from '../approval-flows.issues';
-import { approvalDirections } from '../directions/direction-registry';
+import type { ApprovalDirection } from '../pattern/approval-direction';
 import { approvalSurface } from '../pattern/approval-surface';
 import { AboutAnatomy } from './about-anatomy';
 import { useAboutNavigation, useAboutSectionObserver } from './about-navigation';
 import { useCanvasNavigation } from './canvas-navigation';
-import { useCanvasSettings } from './canvas-settings';
+import { useActiveDirections, useCanvasSettings, useDiscardedDirections } from './canvas-settings';
+import { ConceptControls } from './canvas-toolbar';
 import { IssuesOverview, statusSummary } from './issues-panel';
 import { Kbd } from './kbd';
 import { ScaledCapture, popupWidth } from './scaled-frame';
@@ -580,7 +581,11 @@ function OthersSection() {
   );
 }
 
-function DirectionsSection() {
+interface DirectionsListProps {
+  directions: ApprovalDirection[];
+}
+
+function DirectionsList({ directions }: DirectionsListProps) {
   const { direction, discardedDirections, update } = useCanvasSettings();
   const { setView } = useCanvasNavigation();
   function open(id: string) {
@@ -588,75 +593,92 @@ function DirectionsSection() {
     setView('screens');
   }
   return (
-    <AboutSectionBlock id="directions" lede={aboutDirectionsLede}>
-      <Stack gap="0" borderTopWidth={1} borderColor="ink.border-default">
-        {approvalDirections.map((item, index) => {
-          const note = aboutDirectionNotes.find(entry => entry.directionId === item.id);
-          const isDiscarded = discardedDirections.includes(item.id);
-          return (
-            <Flex
-              key={item.id}
-              gap="space.04"
-              py="space.05"
-              borderBottomWidth={1}
-              borderColor="ink.border-default"
-              alignItems="flex-start"
-              opacity={isDiscarded ? 0.72 : 1}
+    <Stack gap="0" borderTopWidth={1} borderColor="ink.border-default">
+      {directions.map((item, index) => {
+        const note = aboutDirectionNotes.find(entry => entry.directionId === item.id);
+        const isDiscarded = discardedDirections.includes(item.id);
+        return (
+          <Flex
+            key={item.id}
+            gap="space.04"
+            py="space.05"
+            borderBottomWidth={1}
+            borderColor="ink.border-default"
+            alignItems="flex-start"
+            opacity={isDiscarded ? 0.72 : 1}
+          >
+            <styled.span
+              textStyle="heading.05"
+              color="ink.text-subdued"
+              width="28px"
+              flexShrink={0}
             >
-              <styled.span
-                textStyle="heading.05"
-                color="ink.text-subdued"
-                width="28px"
-                flexShrink={0}
-              >
-                {index + 1}
-              </styled.span>
-              <Stack gap="space.02" flex="1" minWidth="0">
-                <Flex gap="space.02" alignItems="center" flexWrap="wrap">
-                  <styled.h3 textStyle="label.01">{item.name}</styled.h3>
-                  {isDiscarded && (
-                    <styled.span
-                      textStyle="caption.02"
-                      color="ink.text-subdued"
-                      px="space.02"
-                      borderWidth={1}
-                      borderStyle="dashed"
-                      borderColor="ink.border-default"
-                      borderRadius="round"
-                    >
-                      Discarded
-                    </styled.span>
-                  )}
-                  {item.id === direction && <Badge label="Selected" variant="default" />}
-                </Flex>
-                <styled.p textStyle="body.02">{item.description}</styled.p>
-                {note && (
-                  <styled.p textStyle="body.02" color="ink.text-subdued">
-                    {note.borrowed}
-                  </styled.p>
-                )}
-                <Flex gap="space.03" rowGap="space.01" flexWrap="wrap" alignItems="baseline">
-                  <styled.span textStyle="caption.01" color="ink.text-subdued">
-                    Inspired by {item.inspiration}
+              {index + 1}
+            </styled.span>
+            <Stack gap="space.02" flex="1" minWidth="0">
+              <Flex gap="space.02" alignItems="center" flexWrap="wrap">
+                <styled.h3 textStyle="label.01">{item.name}</styled.h3>
+                {isDiscarded && (
+                  <styled.span
+                    textStyle="caption.02"
+                    color="ink.text-subdued"
+                    px="space.02"
+                    borderWidth={1}
+                    borderStyle="dashed"
+                    borderColor="ink.border-default"
+                    borderRadius="round"
+                  >
+                    Archived
                   </styled.span>
-                  {note?.sources.map(source => (
-                    <ExternalLink key={source.url} href={source.url}>
-                      {source.label}
-                    </ExternalLink>
-                  ))}
-                </Flex>
-                <Flex pt="space.01">
-                  <ScreenChip
-                    label="See it in Screens"
-                    title={`Show every screen in ${item.name}`}
-                    onOpen={() => open(item.id)}
-                  />
-                </Flex>
-              </Stack>
-            </Flex>
-          );
-        })}
-      </Stack>
+                )}
+                {item.id === direction && <Badge label="Selected" variant="default" />}
+              </Flex>
+              <styled.p textStyle="body.02">{item.description}</styled.p>
+              {note && (
+                <styled.p textStyle="body.02" color="ink.text-subdued">
+                  {note.borrowed}
+                </styled.p>
+              )}
+              <Flex gap="space.03" rowGap="space.01" flexWrap="wrap" alignItems="baseline">
+                <styled.span textStyle="caption.01" color="ink.text-subdued">
+                  Inspired by {item.inspiration}
+                </styled.span>
+                {note?.sources.map(source => (
+                  <ExternalLink key={source.url} href={source.url}>
+                    {source.label}
+                  </ExternalLink>
+                ))}
+              </Flex>
+              <Flex pt="space.01">
+                <ScreenChip
+                  label="See it in Screens"
+                  title={`Show every screen in ${item.name}`}
+                  onOpen={() => open(item.id)}
+                />
+              </Flex>
+            </Stack>
+          </Flex>
+        );
+      })}
+    </Stack>
+  );
+}
+
+function DirectionsSection() {
+  const activeDirections = useActiveDirections();
+  const archivedDirections = useDiscardedDirections();
+  return (
+    <AboutSectionBlock id="directions" lede={aboutDirectionsLede}>
+      <ConceptControls />
+      <DirectionsList directions={activeDirections} />
+      {archivedDirections.length > 0 && (
+        <styled.details>
+          <styled.summary textStyle="label.03" py="space.03" cursor="pointer">
+            Archived concepts · {archivedDirections.length}
+          </styled.summary>
+          <DirectionsList directions={archivedDirections} />
+        </styled.details>
+      )}
     </AboutSectionBlock>
   );
 }

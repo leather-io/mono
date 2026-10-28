@@ -106,9 +106,9 @@ function SimulatedSwap({ dryRun }: SimulatedSwapProps) {
         <ApprovalCaution
           title="This swap is likely to fail"
           source={`${dryRunSource} at block ${dryRunBlock}`}
+          details="The dry run returns 0.00712 sBTC, below the 0.00735 sBTC minimum. A failed call is recorded on Stacks."
         >
-          The pool would send 0.00712 sBTC, less than the 0.00735 sBTC minimum this swap allows, so
-          the call would stop. A failed call is still recorded on Stacks and still charges the fee.
+          The result is below your minimum. You still pay the fee if it fails.
         </ApprovalCaution>
       )}
       <ApprovalSection label="What moves">
@@ -208,10 +208,10 @@ function HighSlippageSwap() {
       />
       <ApprovalCaution
         title={`You could get ${slippage.percent} less than expected`}
-        source="The swap’s minimum and Bitflow’s quote"
+        source="the swap’s minimum and Bitflow’s quote"
+        details={`This trade moves the pool’s price by ${slippage.priceImpact}. The minimum, rather than the quote, is enforced on-chain.`}
       >
-        The swap accepts anything down to its minimum, and this trade alone moves the pool’s price
-        by {slippage.priceImpact}. Most swaps allow 0.5 to 1%.
+        You accept as little as {slippage.minimum} sBTC. Check the minimum before approving.
       </ApprovalCaution>
       <ApprovalSection label="What moves">
         <ApprovalAssetRow

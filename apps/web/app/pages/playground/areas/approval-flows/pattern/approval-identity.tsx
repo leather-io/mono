@@ -17,7 +17,6 @@ import {
 import { ApprovalAccountIcon } from './approval-account-icon';
 import { type DirectionAccountPickerProps, useApprovalDirection } from './approval-direction';
 import { displayOrigin, splitOrigin, truncateMiddle } from './approval-format';
-import { useApprovalOptions } from './approval-options';
 import { approvalIconTile, approvalInteractiveRow } from './approval-surface';
 import type { ApprovalAccount, ApprovalNetwork, ApprovalRequester } from './approval-types';
 
@@ -120,9 +119,7 @@ interface NetworkChipProps {
 }
 
 export function NetworkChip({ network }: NetworkChipProps) {
-  const { networkLabel } = useApprovalOptions();
   const isMainnet = network.id === 'mainnet';
-  if (isMainnet && networkLabel === 'non-mainnet') return null;
   if (isMainnet) {
     return (
       <styled.span textStyle="caption.01" color="ink.text-subdued" flexShrink={0}>

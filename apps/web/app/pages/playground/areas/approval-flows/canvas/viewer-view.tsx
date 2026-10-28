@@ -3,11 +3,15 @@ import { type ReactNode, useEffect, useRef } from 'react';
 import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
+import { CloseIcon } from '@leather.io/ui';
+
 import { findApprovalDirection } from '../directions/direction-registry';
 import type { ApprovalDirection } from '../pattern/approval-direction';
+import { LedgerPreviewControls } from '../pattern/approval-ledger-device';
+import { SbtcFeePreviewControls } from '../scenarios/sbtc-fee-flow-scenarios';
 import type { Scenario } from '../scenarios/scenario';
 import { useCanvasNavigation } from './canvas-navigation';
-import { useActiveDirections, useCanvasSettings, useComparedDirections } from './canvas-settings';
+import { formFactorSizes, useCanvasSettings, useComparedDirections } from './canvas-settings';
 import { ViewerIssues } from './issues-panel';
 import { Kbd } from './kbd';
 import { ScaledCapture, ScenarioFrame, popupHeight, popupWidth } from './scaled-frame';
@@ -69,13 +73,11 @@ function ViewerButton({ isPressed, isDisabled, title, onClick, children }: Viewe
   );
 }
 
-function BackButton() {
-  const { isCompare } = useCanvasSettings();
-  const { closeViewer, viewerOrigin } = useCanvasNavigation();
-  const screensLabel = isCompare ? 'Screens, compared' : 'Screens';
+function CloseViewerButton() {
+  const { closeViewer } = useCanvasNavigation();
   return (
-    <ViewerButton onClick={closeViewer} title="Back to where you came from">
-      ← {viewerOrigin ? 'About' : screensLabel} <Kbd>Esc</Kbd>
+    <ViewerButton onClick={closeViewer} title="Close viewer (Esc)">
+      <CloseIcon variant="small" /> Close viewer <Kbd>Esc</Kbd>
     </ViewerButton>
   );
 }
@@ -104,16 +106,9 @@ interface ViewerTogglesProps {
 }
 
 function ViewerToggles({ hasHistory }: ViewerTogglesProps) {
-  const { isViewerCompare, showToday, showActivity, update } = useCanvasSettings();
+  const { showToday, showActivity, update } = useCanvasSettings();
   return (
     <Flex gap="space.02" alignItems="center" flexWrap="wrap">
-      <ViewerButton
-        isPressed={isViewerCompare}
-        onClick={() => update({ isViewerCompare: !isViewerCompare })}
-        title="Show every direction side by side"
-      >
-        Compare <Kbd>c</Kbd>
-      </ViewerButton>
       <ViewerButton
         isPressed={showToday}
         onClick={() => update({ showToday: !showToday })}
@@ -130,56 +125,6 @@ function ViewerToggles({ hasHistory }: ViewerTogglesProps) {
           Then in activity <Kbd>a</Kbd>
         </ViewerButton>
       )}
-    </Flex>
-  );
-}
-
-function DirectionTabs() {
-  const { direction, update } = useCanvasSettings();
-  const active = findApprovalDirection(direction);
-  const activeDirections = useActiveDirections();
-  const tabs = activeDirections.some(item => item.id === active.id)
-    ? activeDirections
-    : [...activeDirections, active];
-  return (
-    <Flex
-      role="tablist"
-      aria-label="Direction"
-      className={hiddenScrollbar}
-      overflowX="auto"
-      gap="space.01"
-      borderBottomWidth={1}
-      borderColor="ink.border-default"
-      flexShrink={0}
-    >
-      {tabs.map(item => {
-        const isSelected = item.id === active.id;
-        return (
-          <styled.button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={isSelected}
-            title={item.description}
-            onClick={() => update({ direction: item.id })}
-            display="flex"
-            alignItems="center"
-            gap="space.02"
-            textStyle="label.03"
-            px="space.03"
-            py="space.02"
-            mb="-1px"
-            borderBottomWidth={2}
-            borderColor={isSelected ? 'ink.text-primary' : 'transparent'}
-            color={isSelected ? 'ink.text-primary' : 'ink.text-subdued'}
-            whiteSpace="nowrap"
-            cursor="pointer"
-            _hover={{ color: 'ink.text-primary' }}
-          >
-            {item.name}
-          </styled.button>
-        );
-      })}
     </Flex>
   );
 }
@@ -208,24 +153,31 @@ interface ViewerPanelProps {
   entry: ViewerEntry;
   index: number;
   count: number;
-  direction: ApprovalDirection;
 }
 
-function ViewerSidePanel({ entry, index, count, direction }: ViewerPanelProps) {
+function ViewerSidePanel({ entry, index, count }: ViewerPanelProps) {
+  const { direction } = useCanvasSettings();
   return (
     <Stack
       as="aside"
-      width="300px"
+      aria-label="Screen details"
+      width={{ base: '100%', lg: '320px' }}
       flexShrink={0}
       gap="space.05"
-      overflowY="auto"
+      overflowY={{ base: 'visible', lg: 'auto' }}
       className={hiddenScrollbar}
-      pb="space.04"
+      bg="ink.background-secondary"
+      borderLeftWidth={{ base: 0, lg: 1 }}
+      borderTopWidth={{ base: 1, lg: 0 }}
+      borderColor="ink.border-default"
+      p="space.05"
     >
       <Flex>
-        <BackButton />
+        <CloseViewerButton />
       </Flex>
       <ScreenMeta entry={entry} index={index} count={count} />
+      <LedgerPreviewControls scenarioId={entry.scenario.id} />
+      <SbtcFeePreviewControls scenarioId={entry.scenario.id} />
       <styled.p
         textStyle="body.02"
         color="ink.text-primary"
@@ -239,14 +191,8 @@ function ViewerSidePanel({ entry, index, count, direction }: ViewerPanelProps) {
       <ViewerWhy scenarioId={entry.scenario.id} />
       <StepButtons index={index} count={count} />
       <ViewerToggles hasHistory={entry.scenario.history !== undefined} />
-      <Stack gap="space.01" borderTopWidth={1} borderColor="ink.border-default" pt="space.04">
-        <styled.span textStyle="label.03">{direction.name}</styled.span>
-        <styled.p textStyle="caption.01" color="ink.text-subdued">
-          {direction.description} Inspired by {direction.inspiration}.
-        </styled.p>
-      </Stack>
       <ViewerDecisions scenarioId={entry.scenario.id} />
-      <ViewerMeasurement events={entry.scenario.events} directionId={direction.id} />
+      <ViewerMeasurement events={entry.scenario.events} directionId={direction} />
     </Stack>
   );
 }
@@ -254,7 +200,7 @@ function ViewerSidePanel({ entry, index, count, direction }: ViewerPanelProps) {
 function ViewerInfoBar({ entry, index, count }: ViewerPanelProps) {
   return (
     <Flex gap="space.05" rowGap="space.03" alignItems="center" flexWrap="wrap" flexShrink={0}>
-      <BackButton />
+      <CloseViewerButton />
       <Box flex="1" minWidth="240px">
         <ScreenMeta entry={entry} index={index} count={count} />
       </Box>
@@ -271,6 +217,10 @@ function ViewerInfoBar({ entry, index, count }: ViewerPanelProps) {
       >
         {entry.scenario.note}
       </styled.p>
+      <Box width="100%">
+        <LedgerPreviewControls scenarioId={entry.scenario.id} />
+        <SbtcFeePreviewControls scenarioId={entry.scenario.id} />
+      </Box>
     </Flex>
   );
 }
@@ -316,7 +266,7 @@ function toStageItems(
     ...today,
     ...directions.map(direction => ({
       id: direction.id,
-      caption: hasActivity ? `${direction.name} · approval` : direction.name,
+      caption: isCompare ? direction.name : 'Approval',
       direction,
     })),
     ...histories,
@@ -329,7 +279,9 @@ interface ViewerStageProps {
 }
 
 function ViewerStage({ scenario, selected }: ViewerStageProps) {
-  const { theme, isViewerCompare, showToday, showActivity, update } = useCanvasSettings();
+  const { theme, isViewerCompare, showToday, showActivity, formFactor, update } =
+    useCanvasSettings();
+  const frameSize = formFactorSizes[formFactor];
   const stageRef = useRef<HTMLDivElement>(null);
   const { width, height } = useElementSize(stageRef);
   const compared = useComparedDirections();
@@ -339,8 +291,14 @@ function ViewerStage({ scenario, selected }: ViewerStageProps) {
     showActivity,
   });
   const count = items.length;
-  const widthScale = (width - stageGap * (count - 1)) / (count * popupWidth);
-  const heightScale = (height - captionHeight) / popupHeight;
+  const showCaptions = count > 1;
+  const totalFrameWidth = items.reduce(
+    (total, item) => total + (item.direction ? frameSize.width : popupWidth),
+    0
+  );
+  const tallestFrame = Math.max(frameSize.height, showToday ? popupHeight : 0);
+  const widthScale = (width - stageGap * (count - 1)) / totalFrameWidth;
+  const heightScale = (height - (showCaptions ? captionHeight : 0)) / tallestFrame;
   const scale = Math.max(
     0.1,
     Math.floor(Math.min(widthScale, heightScale, maxStageScale) * 1000) / 1000
@@ -354,24 +312,29 @@ function ViewerStage({ scenario, selected }: ViewerStageProps) {
             const isSelected = isViewerCompare && direction?.id === selected.id;
             return (
               <Stack key={item.id} gap="0" flexShrink={0} data-viewer-item={item.id}>
-                <styled.button
-                  type="button"
-                  disabled={!direction}
-                  onClick={() => {
-                    if (direction) update({ direction: direction.id });
-                  }}
-                  textAlign="left"
-                  textStyle="caption.02"
-                  color={isSelected ? 'ink.text-primary' : 'ink.text-subdued'}
-                  fontWeight={isSelected ? 600 : 400}
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                  textOverflow="ellipsis"
-                  cursor={direction ? 'pointer' : 'default'}
-                  style={{ height: captionHeight, maxWidth: Math.round(popupWidth * scale) }}
-                >
-                  {item.caption}
-                </styled.button>
+                {showCaptions && (
+                  <styled.button
+                    type="button"
+                    disabled={!direction}
+                    onClick={() => {
+                      if (direction) update({ direction: direction.id });
+                    }}
+                    textAlign="left"
+                    textStyle="caption.02"
+                    color={isSelected ? 'ink.text-primary' : 'ink.text-subdued'}
+                    fontWeight={isSelected ? 600 : 400}
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    cursor={direction ? 'pointer' : 'default'}
+                    style={{
+                      height: captionHeight,
+                      maxWidth: Math.round((direction ? frameSize.width : popupWidth) * scale),
+                    }}
+                  >
+                    {item.caption}
+                  </styled.button>
+                )}
                 {direction ? (
                   <ScenarioFrame
                     key={`${scenario.id}-${item.id}`}
@@ -380,6 +343,8 @@ function ViewerStage({ scenario, selected }: ViewerStageProps) {
                     scale={scale}
                     theme={theme}
                     thumbId={`viewer-${scenario.id}--${item.id}`}
+                    width={frameSize.width}
+                    height={frameSize.height}
                     isInteractive
                     isSolo={!isViewerCompare && !item.isHistory}
                     isHistory={item.isHistory}
@@ -491,35 +456,23 @@ export function ViewerView({ sections }: ViewerViewProps) {
   if (!entry) return null;
   return (
     <Flex
-      direction="column"
-      gap="space.03"
-      pt="space.04"
-      pb="space.03"
-      style={{ height: 'calc(100vh - var(--canvas-toolbar-height, 0px))' }}
+      direction={{ base: 'column', lg: 'row' }}
+      height={{ base: 'auto', lg: 'calc(100vh - var(--canvas-toolbar-height, 0px))' }}
     >
-      <Flex flex="1" minHeight="0" gap="space.06">
-        <Stack flex="1" minWidth="0" gap="space.03">
-          {isViewerCompare && (
-            <ViewerInfoBar
-              entry={entry}
-              index={index}
-              count={entries.length}
-              direction={selected}
-            />
-          )}
-          <DirectionTabs />
-          <ViewerStage scenario={entry.scenario} selected={selected} />
-        </Stack>
-        {!isViewerCompare && (
-          <ViewerSidePanel
-            entry={entry}
-            index={index}
-            count={entries.length}
-            direction={selected}
-          />
-        )}
-      </Flex>
-      <Filmstrip entry={entry} direction={selected} />
+      <Stack
+        flex="1"
+        minWidth="0"
+        minHeight={{ base: '680px', lg: '0' }}
+        gap="space.03"
+        px={{ base: 'space.05', lg: 'space.08' }}
+        pt="space.04"
+        pb="space.03"
+      >
+        {isViewerCompare && <ViewerInfoBar entry={entry} index={index} count={entries.length} />}
+        <ViewerStage scenario={entry.scenario} selected={selected} />
+        <Filmstrip entry={entry} direction={selected} />
+      </Stack>
+      {!isViewerCompare && <ViewerSidePanel entry={entry} index={index} count={entries.length} />}
     </Flex>
   );
 }

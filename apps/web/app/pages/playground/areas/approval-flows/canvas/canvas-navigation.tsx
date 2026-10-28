@@ -14,12 +14,14 @@ import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { ChevronsRightIcon } from '@leather.io/ui';
 
 import { approvalDirections, findApprovalDirection } from '../directions/direction-registry';
+import { prototypeUrl } from '../journeys/journey-navigation';
 import {
   type CanvasThumbSize,
   type CanvasView,
   activeDirectionsFor,
   useCanvasSettings,
 } from './canvas-settings';
+import { ConceptPicker } from './concept-picker';
 import { Kbd } from './kbd';
 
 interface CanvasNavItem {
@@ -429,6 +431,10 @@ export function CanvasNavigationProvider({ groups, children }: CanvasNavigationP
   const setView = useCallback(
     (next: CanvasView) => {
       if (next === view) return;
+      if (next === 'journeys') {
+        window.location.assign(prototypeUrl(window.location.search));
+        return;
+      }
       if (next === 'viewer') {
         const target = activeId && order.includes(activeId) ? activeId : order[0];
         if (target) openViewer(target);
@@ -532,7 +538,10 @@ export function CanvasNavigationProvider({ groups, children }: CanvasNavigationP
         return;
       }
       if (view === 'about') {
-        if (key === 'r') replay();
+        if (key === 'r') {
+          event.preventDefault();
+          replay();
+        }
         if (key === ']') cycleDirection(1);
         if (key === '[') cycleDirection(-1);
         const aboutDirection = activeDirections[directionKeys.indexOf(key)];
@@ -541,7 +550,10 @@ export function CanvasNavigationProvider({ groups, children }: CanvasNavigationP
       }
       if (key === 'j') move(1);
       if (key === 'k') move(-1);
-      if (key === 'r') replay();
+      if (key === 'r') {
+        event.preventDefault();
+        replay();
+      }
       const isMatrix = view === 'screens' && isCompare;
       if (!isMatrix) {
         if (key === ']') cycleDirection(1);
@@ -1140,6 +1152,7 @@ export function CanvasRail({
       bg="ink.background-secondary"
     >
       <Stack gap="space.03" px="space.04" pt="space.04" pb="space.03">
+        <ConceptPicker />
         <Flex alignItems="center" justifyContent="space-between" gap="space.02">
           <Flex alignItems="baseline" gap="space.02" minWidth={0}>
             <styled.span textStyle="label.02">{label}</styled.span>
@@ -1180,7 +1193,15 @@ export function CanvasNarrowNavigation({ picker }: CanvasNarrowNavigationProps) 
   const { filteredGroups, activeId, jumpTo } = useCanvasNavigation();
   if (picker) {
     return (
-      <Flex display={{ base: 'flex', lg: 'none' }} gap="space.03" alignItems="center">
+      <Flex
+        display={{ base: 'flex', lg: 'none' }}
+        gap="space.03"
+        alignItems="center"
+        flexWrap="wrap"
+      >
+        <Box width="100%">
+          <ConceptPicker />
+        </Box>
         {picker}
         <IssuesButton isCompact />
         <Box display={{ base: 'none', md: 'block' }} flexShrink={0}>
@@ -1190,7 +1211,10 @@ export function CanvasNarrowNavigation({ picker }: CanvasNarrowNavigationProps) 
     );
   }
   return (
-    <Flex display={{ base: 'flex', lg: 'none' }} gap="space.03" alignItems="center">
+    <Flex display={{ base: 'flex', lg: 'none' }} gap="space.03" alignItems="center" flexWrap="wrap">
+      <Box width="100%">
+        <ConceptPicker />
+      </Box>
       <CanvasSearchField />
       <styled.select
         aria-label="Jump to a screen"

@@ -1,22 +1,17 @@
 import { type ReactNode, createContext, useContext, useState } from 'react';
 
 export type ApprovalTitleStyle = 'proposed' | 'large' | 'marche' | 'current';
-export type ApprovalNetworkLabel = 'always' | 'non-mainnet';
-export type ApprovalAccountPlacement = 'body' | 'footer' | 'header';
-export type ApprovalLaunch = 'off' | 'mark' | 'draw' | 'handshake';
+type ApprovalAccountPlacement = 'body' | 'header';
 export type ApprovalHeaderSurface = 'divider' | 'plain' | 'card';
 export type ApprovalHeaderRadius = 'sm' | 'md' | 'lg' | 'xl';
-export type ApprovalFooterEdge = 'line' | 'gradient' | 'fade';
 export type ApprovalContainers = 'groups' | 'interactive';
 
 interface ApprovalOptions {
   titleStyle: ApprovalTitleStyle;
-  networkLabel: ApprovalNetworkLabel;
   accountPlacement: ApprovalAccountPlacement;
-  launch: ApprovalLaunch;
+  hasLaunch: boolean;
   headerSurface: ApprovalHeaderSurface;
   headerRadius: ApprovalHeaderRadius;
-  footerEdge: ApprovalFooterEdge;
   containers: ApprovalContainers;
   isConnect: boolean;
   isSolo: boolean;
@@ -45,12 +40,10 @@ function writeDetailsOpen(isOpen: boolean) {
 
 const defaultApprovalOptions: ApprovalOptions = {
   titleStyle: 'current',
-  networkLabel: 'always',
-  accountPlacement: 'body',
-  launch: 'off',
+  accountPlacement: 'header',
+  hasLaunch: false,
   headerSurface: 'divider',
   headerRadius: 'md',
-  footerEdge: 'gradient',
   containers: 'groups',
   isConnect: false,
   isSolo: false,
@@ -64,12 +57,9 @@ const ApprovalOptionsContext = createContext<ApprovalOptions>(defaultApprovalOpt
 
 interface ApprovalOptionsProviderProps {
   titleStyle: ApprovalTitleStyle;
-  networkLabel: ApprovalNetworkLabel;
-  accountPlacement?: ApprovalAccountPlacement;
-  launch?: ApprovalLaunch;
+  hasLaunch?: boolean;
   headerSurface?: ApprovalHeaderSurface;
   headerRadius?: ApprovalHeaderRadius;
-  footerEdge?: ApprovalFooterEdge;
   containers?: ApprovalContainers;
   isConnect?: boolean;
   isSolo?: boolean;
@@ -78,12 +68,9 @@ interface ApprovalOptionsProviderProps {
 
 export function ApprovalOptionsProvider({
   titleStyle,
-  networkLabel,
-  accountPlacement = 'body',
-  launch = 'off',
+  hasLaunch = false,
   headerSurface = 'divider',
   headerRadius = 'md',
-  footerEdge = 'gradient',
   containers = 'groups',
   isConnect = false,
   isSolo = false,
@@ -94,12 +81,10 @@ export function ApprovalOptionsProvider({
     <ApprovalOptionsContext.Provider
       value={{
         titleStyle,
-        networkLabel,
-        accountPlacement,
-        launch,
+        accountPlacement: 'header',
+        hasLaunch,
         headerSurface,
         headerRadius,
-        footerEdge,
         containers,
         isConnect,
         isSolo,
@@ -121,18 +106,18 @@ export function useApprovalOptions() {
 
 interface ApprovalOptionsOverrideProps {
   accountPlacement: ApprovalAccountPlacement;
-  launch: ApprovalLaunch;
+  hasLaunch: boolean;
   children: ReactNode;
 }
 
 export function ApprovalOptionsOverride({
   accountPlacement,
-  launch,
+  hasLaunch,
   children,
 }: ApprovalOptionsOverrideProps) {
   const options = useApprovalOptions();
   return (
-    <ApprovalOptionsContext.Provider value={{ ...options, accountPlacement, launch }}>
+    <ApprovalOptionsContext.Provider value={{ ...options, accountPlacement, hasLaunch }}>
       {children}
     </ApprovalOptionsContext.Provider>
   );

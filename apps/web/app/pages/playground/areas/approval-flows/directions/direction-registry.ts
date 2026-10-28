@@ -7,7 +7,7 @@ import { phantomDirection } from './phantom-direction';
 import { receiptDirection } from './receipt-direction';
 import { tactileDirection } from './tactile-direction';
 
-export const proposalDirection: ApprovalDirection = {
+const proposalDirection: ApprovalDirection = {
   id: 'proposal',
   name: 'Baseline',
   description: 'The reference pattern: plain sections, icon lane, quiet guarantee line.',
@@ -25,8 +25,10 @@ export const approvalDirections: ApprovalDirection[] = [
   phantomDirection,
 ];
 
-export const defaultDiscardedDirectionIds = [phantomDirection.id];
+export const defaultDiscardedDirectionIds = approvalDirections
+  .filter(direction => direction.id !== handshakeDirection.id)
+  .map(direction => direction.id);
 
 export function findApprovalDirection(id: string | null) {
-  return approvalDirections.find(direction => direction.id === id) ?? proposalDirection;
+  return approvalDirections.find(direction => direction.id === id) ?? handshakeDirection;
 }

@@ -4,31 +4,42 @@ import {
   approvalDirections,
   defaultDiscardedDirectionIds,
   findApprovalDirection,
-  proposalDirection,
 } from '../directions/direction-registry';
+import { handshakeDirection } from '../directions/handshake-direction';
 import type {
-  ApprovalAccountPlacement,
-  ApprovalContainers,
-  ApprovalFooterEdge,
   ApprovalHeaderRadius,
   ApprovalHeaderSurface,
-  ApprovalLaunch,
-  ApprovalNetworkLabel,
   ApprovalTitleStyle,
 } from '../pattern/approval-options';
 
 type CanvasTheme = 'light' | 'dark';
-export type CanvasView = 'screens' | 'viewer' | 'frames' | 'about' | 'primitives';
+export type CanvasView =
+  | 'screens'
+  | 'viewer'
+  | 'frames'
+  | 'about'
+  | 'primitives'
+  | 'activity'
+  | 'journeys';
 export type CanvasThumbSize = 's' | 'm' | 'l';
+export type CanvasFormFactor = 'extension' | 'phone' | 'small-phone' | 'web';
+
+interface CanvasFrameSize {
+  width: number;
+  height: number;
+}
+
+export const formFactorSizes: Record<CanvasFormFactor, CanvasFrameSize> = {
+  extension: { width: 390, height: 756 },
+  phone: { width: 390, height: 844 },
+  'small-phone': { width: 360, height: 640 },
+  web: { width: 560, height: 756 },
+};
 
 interface CanvasSettings {
   titleStyle: ApprovalTitleStyle;
-  networkLabel: ApprovalNetworkLabel;
-  accountPlacement: ApprovalAccountPlacement;
   headerSurface: ApprovalHeaderSurface;
   headerRadius: ApprovalHeaderRadius;
-  footerEdge: ApprovalFooterEdge;
-  containers: ApprovalContainers;
   theme: CanvasTheme;
   isCompare: boolean;
   direction: string;
@@ -36,7 +47,7 @@ interface CanvasSettings {
   showToday: boolean;
   view: CanvasView;
   thumbSize: CanvasThumbSize;
-  launch: ApprovalLaunch;
+  formFactor: CanvasFormFactor;
   isViewerCompare: boolean;
   showActivity: boolean;
   hiddenDirections: string[];
@@ -50,7 +61,7 @@ interface CanvasSettingsValue extends CanvasSettings {
   setDirectionDiscarded(id: string, isDiscarded: boolean): void;
 }
 
-const discardedStorageKey = 'leather.approval-canvas.discarded';
+const discardedStorageKey = 'leather.approval-canvas.handshake-focus.discarded';
 
 function readDiscardedDirections() {
   try {
@@ -74,20 +85,16 @@ function writeDiscardedDirections(ids: string[]) {
 
 const initialCanvasSettings: CanvasSettings = {
   titleStyle: 'current',
-  networkLabel: 'always',
-  accountPlacement: 'body',
   headerSurface: 'divider',
   headerRadius: 'md',
-  footerEdge: 'gradient',
-  containers: 'groups',
   theme: 'light',
   isCompare: false,
-  direction: proposalDirection.id,
+  direction: handshakeDirection.id,
   screen: null,
-  showToday: true,
+  showToday: false,
   view: 'screens',
-  thumbSize: 'm',
-  launch: 'off',
+  thumbSize: 'l',
+  formFactor: 'extension',
   isViewerCompare: false,
   showActivity: false,
   hiddenDirections: [],
@@ -106,12 +113,6 @@ function readTitleStyle(value: string | null): ApprovalTitleStyle {
   return initialCanvasSettings.titleStyle;
 }
 
-function readAccountPlacement(value: string | null): ApprovalAccountPlacement {
-  if (value === 'footer') return 'footer';
-  if (value === 'header') return 'header';
-  return initialCanvasSettings.accountPlacement;
-}
-
 function readHeaderSurface(value: string | null): ApprovalHeaderSurface {
   if (value === 'plain') return 'plain';
   if (value === 'card') return 'card';
@@ -125,18 +126,9 @@ function readHeaderRadius(value: string | null): ApprovalHeaderRadius {
   return initialCanvasSettings.headerRadius;
 }
 
-function readFooterEdge(value: string | null): ApprovalFooterEdge {
-  if (value === 'line') return 'line';
-  if (value === 'fade') return 'fade';
-  return initialCanvasSettings.footerEdge;
-}
-
-function readContainers(value: string | null): ApprovalContainers {
-  if (value === 'interactive') return 'interactive';
-  return initialCanvasSettings.containers;
-}
-
 function readView(value: string | null): CanvasView {
+  if (value === 'journeys') return 'journeys';
+  if (value === 'activity') return 'activity';
   if (value === 'viewer') return 'viewer';
   if (value === 'frames') return 'frames';
   if (value === 'about') return 'about';
@@ -152,25 +144,26 @@ function readIsCompare(view: string | null, compare: string | null) {
 
 function readShowToday(view: CanvasView, value: string | null) {
   if (view === 'frames') return value === 'show';
-  return value !== 'hide';
+  return value === 'show';
 }
 
 function serializeToday(settings: CanvasSettings) {
   if (settings.view === 'frames') return settings.showToday ? 'show' : null;
-  return settings.showToday ? null : 'hide';
+  return settings.showToday ? 'show' : null;
 }
 
 function readThumbSize(value: string | null): CanvasThumbSize {
   if (value === 's') return 's';
+  if (value === 'm') return 'm';
   if (value === 'l') return 'l';
   return initialCanvasSettings.thumbSize;
 }
 
-function readLaunch(value: string | null): ApprovalLaunch {
-  if (value === 'mark') return 'mark';
-  if (value === 'draw') return 'draw';
-  if (value === 'handshake') return 'handshake';
-  return initialCanvasSettings.launch;
+function readFormFactor(value: string | null): CanvasFormFactor {
+  if (value === 'phone') return 'phone';
+  if (value === 'small-phone') return 'small-phone';
+  if (value === 'web') return 'web';
+  return initialCanvasSettings.formFactor;
 }
 
 function readHiddenDirections(value: string | null) {
@@ -204,21 +197,16 @@ function readInitialSettings(): CanvasSettings {
   const view = readView(params.get('view'));
   return {
     titleStyle: readTitleStyle(params.get('title')),
-    networkLabel:
-      params.get('network') === 'non-mainnet' ? 'non-mainnet' : initialCanvasSettings.networkLabel,
-    accountPlacement: readAccountPlacement(params.get('account')),
     headerSurface: readHeaderSurface(params.get('hsurface')),
     headerRadius: readHeaderRadius(params.get('hradius')),
-    footerEdge: readFooterEdge(params.get('fedge')),
-    containers: readContainers(params.get('containers')),
     theme: params.get('theme') === 'dark' ? 'dark' : initialCanvasSettings.theme,
     isCompare: readIsCompare(params.get('view'), params.get('compare')),
-    direction: findApprovalDirection(params.get('direction')).id,
+    direction: findApprovalDirection(params.get('direction') ?? initialCanvasSettings.direction).id,
     screen: params.get('screen') || null,
     showToday: readShowToday(view, params.get('today')),
     view,
     thumbSize: readThumbSize(params.get('size')),
-    launch: readLaunch(params.get('launch')),
+    formFactor: readFormFactor(params.get('form')),
     isViewerCompare: params.get('vcompare') === 'on',
     showActivity: params.get('activity') === 'on',
     hiddenDirections: readHiddenDirections(params.get('hide')),
@@ -238,22 +226,6 @@ function writeSettingsToUrl(settings: CanvasSettings) {
       withoutDefault(settings.titleStyle, initialCanvasSettings.titleStyle, settings.titleStyle),
     ],
     [
-      'network',
-      withoutDefault(
-        settings.networkLabel,
-        initialCanvasSettings.networkLabel,
-        settings.networkLabel
-      ),
-    ],
-    [
-      'account',
-      withoutDefault(
-        settings.accountPlacement,
-        initialCanvasSettings.accountPlacement,
-        settings.accountPlacement
-      ),
-    ],
-    [
       'hsurface',
       withoutDefault(
         settings.headerSurface,
@@ -269,14 +241,6 @@ function writeSettingsToUrl(settings: CanvasSettings) {
         settings.headerRadius
       ),
     ],
-    [
-      'fedge',
-      withoutDefault(settings.footerEdge, initialCanvasSettings.footerEdge, settings.footerEdge),
-    ],
-    [
-      'containers',
-      withoutDefault(settings.containers, initialCanvasSettings.containers, settings.containers),
-    ],
     ['theme', withoutDefault(settings.theme, initialCanvasSettings.theme, settings.theme)],
     ['compare', settings.isCompare ? 'on' : null],
     [
@@ -289,7 +253,10 @@ function writeSettingsToUrl(settings: CanvasSettings) {
       'size',
       withoutDefault(settings.thumbSize, initialCanvasSettings.thumbSize, settings.thumbSize),
     ],
-    ['launch', withoutDefault(settings.launch, initialCanvasSettings.launch, settings.launch)],
+    [
+      'form',
+      withoutDefault(settings.formFactor, initialCanvasSettings.formFactor, settings.formFactor),
+    ],
     ['vcompare', settings.isViewerCompare ? 'on' : null],
     ['activity', settings.showActivity ? 'on' : null],
     ['hide', settings.hiddenDirections.length > 0 ? settings.hiddenDirections.join(',') : null],

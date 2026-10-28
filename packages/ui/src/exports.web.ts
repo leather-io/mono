@@ -60,3 +60,8 @@ export {
   type UseAmountFieldProps,
   type CurrencySign,
 } from './hooks/use-amount-field/use-amount-field.web';
+export { SignLedgerTransaction } from './illustrations/ledger/sign-ledger-transaction.web';
+export { ConnectLedgerSuccess } from './illustrations/ledger/connect-ledger-success.web';
+export { LedgerTxRejected } from './illustrations/ledger/ledger-transaction-rejected.web';
+export { LedgerIlluDisconnected } from './illustrations/ledger/ledger-disconnected.web';
+export { ConnectLedgerErr } from './illustrations/ledger/connect-ledger-error.web';

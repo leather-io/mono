@@ -21,7 +21,7 @@ import {
 } from './approval-confirm';
 import { type ApprovalLines, useApprovalDirection } from './approval-direction';
 import { AccountAvatar, AccountLine } from './approval-identity';
-import { type ApprovalFooterEdge, useApprovalOptions } from './approval-options';
+import { useApprovalOptions } from './approval-options';
 import { ApprovalLinesText } from './approval-rows';
 import { useApprovalAccountSlot, useApprovalSigner } from './approval-shell';
 
@@ -112,41 +112,36 @@ interface ApprovalFooterProps {
   signerLabel?: string;
   confirmation?: ApprovalConfirmation;
   reversibility?: ApprovalReversibility;
+  onPrimaryClick?(): void;
+  onSecondaryClick?(): void;
 }
 
-const footerEdgeStyles: Record<ApprovalFooterEdge, string> = {
-  line: css({
-    borderTopWidth: 1,
-    borderColor: 'ink.border-default',
-    '[data-approval-containers=interactive] &': { borderTopWidth: 0 },
-  }),
-  gradient: css({
-    _before: {
-      content: '""',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      height: '1px',
-      backgroundImage:
-        'linear-gradient(90deg, token(colors.ink.background-primary) 0%, token(colors.ink.border-default) 40%, token(colors.ink.border-default) 60%, token(colors.ink.background-primary) 100%)',
-    },
-    '[data-approval-containers=interactive] &': { '&::before': { display: 'none' } },
-  }),
-  fade: css({
-    _before: {
-      content: '""',
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: '100%',
-      height: '32px',
-      pointerEvents: 'none',
-      backgroundImage:
-        'linear-gradient(to bottom, rgb(from token(colors.ink.background-primary) r g b / 0), token(colors.ink.background-primary))',
-    },
-  }),
-};
+const gradientFooterEdge = css({
+  _before: {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '1px',
+    backgroundImage:
+      'linear-gradient(90deg, token(colors.ink.background-primary) 0%, token(colors.ink.border-default) 40%, token(colors.ink.border-default) 60%, token(colors.ink.background-primary) 100%)',
+  },
+});
+
+const fadeFooterEdge = css({
+  _before: {
+    content: '""',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: '100%',
+    height: '32px',
+    pointerEvents: 'none',
+    backgroundImage:
+      'linear-gradient(to bottom, rgb(from token(colors.ink.background-primary) r g b / 0), token(colors.ink.background-primary))',
+  },
+});
 
 export function ApprovalFooter({
   primaryLabel,
@@ -162,15 +157,15 @@ export function ApprovalFooter({
   signerLabel = 'Signing with',
   confirmation,
   reversibility,
+  onPrimaryClick,
+  onSecondaryClick,
 }: ApprovalFooterProps) {
-  const { accountPlacement, footerEdge } = useApprovalOptions();
+  const { accountPlacement } = useApprovalOptions();
   const direction = useApprovalDirection();
-  const resolvedFooterEdge =
-    direction?.id === 'handshake' && footerEdge === 'gradient' ? 'fade' : footerEdge;
+  const isFadeEdge = direction?.id === 'handshake';
   const signer = useApprovalSigner();
   const hasAccountSlot = useApprovalAccountSlot();
-  const showSigner =
-    accountPlacement === 'footer' || (accountPlacement === 'body' && !hasAccountSlot);
+  const showSigner = accountPlacement === 'body' && !hasAccountSlot;
   const [isConfirmed, setIsConfirmed] = useState(false);
   const isAwaitingConfirmation = needsConfirmationField(confirmation) && !isConfirmed;
   const isDisabled = Boolean(blockedReason) || Boolean(isPrimaryDisabled) || isAwaitingConfirmation;
@@ -178,8 +173,8 @@ export function ApprovalFooter({
   return (
     <styled.footer
       data-approval-zone="footer"
-      data-footer-edge={resolvedFooterEdge}
-      className={footerEdgeStyles[resolvedFooterEdge]}
+      data-footer-edge={isFadeEdge ? 'fade' : 'gradient'}
+      className={isFadeEdge ? fadeFooterEdge : gradientFooterEdge}
       position="relative"
       px="space.05"
       pt="space.03"
@@ -252,7 +247,7 @@ export function ApprovalFooter({
         )}
         {reversibility && !blockedReason && <ReversibilityLine reversibility={reversibility} />}
         {single && isBusy && (
-          <Button variant="outline" size="lg" fullWidth>
+          <Button variant="outline" size="lg" fullWidth onClick={onSecondaryClick}>
             {secondaryLabel}
           </Button>
         )}
@@ -270,11 +265,12 @@ export function ApprovalFooter({
             isFullWidth
             armKey={armKey}
             confirmation={confirmation}
+            onClick={onPrimaryClick}
           />
         )}
         {!single && (
           <Flex gap="space.03">
-            <Button variant="outline" size="lg" flex="1">
+            <Button variant="outline" size="lg" flex="1" onClick={onSecondaryClick}>
               {secondaryLabel}
             </Button>
             <ApprovalPrimaryButton
@@ -285,6 +281,7 @@ export function ApprovalFooter({
               isFullWidth={false}
               armKey={armKey}
               confirmation={confirmation}
+              onClick={onPrimaryClick}
             />
           </Flex>
         )}

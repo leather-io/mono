@@ -76,6 +76,7 @@ function useClickGuard(armKey: string, isRequested: boolean) {
   const [armedKey, setArmedKey] = useState<string | undefined>();
   const key = `${String(isEnabled)}|${armKey}`;
   useEffect(() => {
+    setArmedKey(undefined);
     if (!isEnabled) return undefined;
     const button = ref.current;
     const animation =
@@ -105,6 +106,7 @@ interface PrimaryButtonProps {
   isBusy?: boolean;
   isFullWidth: boolean;
   armKey: string;
+  onClick?(): void;
 }
 
 function TapPrimaryButton({
@@ -114,6 +116,7 @@ function TapPrimaryButton({
   isBusy,
   isFullWidth,
   armKey,
+  onClick,
 }: PrimaryButtonProps) {
   const guard = useClickGuard(armKey, !isDisabled && !isBusy);
   return (
@@ -128,7 +131,11 @@ function TapPrimaryButton({
       data-click-guard={guard.isArmed ? 'armed' : 'waiting'}
       onKeyDown={blockEnter}
       onClick={(event: MouseEvent<HTMLButtonElement>) => {
-        if (!guard.isArmed) event.preventDefault();
+        if (!guard.isArmed) {
+          event.preventDefault();
+          return;
+        }
+        onClick?.();
       }}
     >
       {label}
@@ -160,6 +167,7 @@ function HoldPrimaryButton({
   isBusy,
   isFullWidth,
   armKey,
+  onClick,
 }: HoldPrimaryButtonProps) {
   const guard = useClickGuard(armKey, !isDisabled && !isBusy);
   const isReducedMotion = usePrefersReducedMotion();
@@ -181,6 +189,7 @@ function HoldPrimaryButton({
       stopFrame();
       setIsHolding(false);
       setIsDone(true);
+      onClick?.();
       return;
     }
     frameRef.current = window.requestAnimationFrame(tick);
@@ -201,6 +210,14 @@ function HoldPrimaryButton({
   }
 
   useEffect(() => stopFrame, []);
+
+  useEffect(() => {
+    if (frameRef.current !== undefined) window.cancelAnimationFrame(frameRef.current);
+    frameRef.current = undefined;
+    setIsHolding(false);
+    setProgress(0);
+    setIsDone(false);
+  }, [armKey, isDisabled, isBusy]);
 
   useEffect(() => {
     if (!isDone) return undefined;

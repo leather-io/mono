@@ -623,7 +623,7 @@ export const bitcoinScenarios: Scenario[] = [
     label: 'Propose an early bond exit',
     method: 'signPsbt · bond descriptor, vault pinned',
     refs: ['#2648', '#2587'],
-    note: 'A vault proposes leaving a bond before it unlocks: the two spending paths read as plain rows with this exit’s marked, and the note and Commitment row say Propose signs the commitment and Account 1’s signature on the exit in one approval. That depends on combining the two steps: today the multisig web app asks twice and other sites send the proposal unsigned. Leaving early starts on Stacks (Announce an early bond exit, under Staking and sBTC), and the exit co-signer signs only after it sees that announcement, so the screen checks it is there before Propose. The value the exit reveals is worked out from the vault’s Stacks address, so there is nothing secret to keep, and it moves to the bond details. Today’s callout says nothing is signed, which is not quite true, and shows the counterparty key and secret hash inline as hex.',
+    note: 'A vault proposes leaving a bond before it unlocks: the two spending paths read as plain rows with this exit’s marked, and the note and Commitment row say Propose signs only the proposal commitment. Account 1 adds its transaction signature in a separate review; the proposal commitment does not count toward the vault’s threshold. Leaving early starts on Stacks (Announce an early bond exit, under Staking and sBTC), and the exit co-signer signs only after it sees that announcement, so the screen checks it is there before Propose. The value the exit reveals is worked out from the vault’s Stacks address, so there is nothing secret to keep, and it moves to the bond details. Today’s callout says nothing is signed, which is not quite true, and shows the counterparty key and secret hash inline as hex.',
     render() {
       return (
         <ApprovalShell
@@ -707,7 +707,10 @@ export const bitcoinScenarios: Scenario[] = [
               value={
                 <ApprovalIdentifier>{truncateMiddle(bondCommitmentHash, 6)}</ApprovalIdentifier>
               }
-              caption={['Signed with the exit', 'Recomputed by Leather from these details']}
+              caption={[
+                'Signed to create this proposal',
+                'Recomputed by Leather from these details',
+              ]}
             />
             <ApprovalDisclosureRow
               label="Bond details"

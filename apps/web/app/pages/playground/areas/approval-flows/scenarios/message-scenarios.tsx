@@ -91,7 +91,7 @@ export const messageScenarios: Scenario[] = [
             <ApprovalRow
               label="Address type"
               value="Native SegWit"
-              caption={truncateMiddle(btcAccount1.nativeSegwit, 4)}
+              caption={`${truncateMiddle(btcAccount1.nativeSegwit, 4)} · BIP-322`}
             />
           </ApprovalSection>
           <ApprovalNote>No fee, and no bitcoin moves.</ApprovalNote>
@@ -132,7 +132,7 @@ export const messageScenarios: Scenario[] = [
             <ApprovalRow label="expires-at" value="u182400" />
             <ApprovalDisclosureRow
               label="Raw message"
-              caption={`Clarity value · hash ${truncateMiddle(structuredHash, 6)}`}
+              caption={`SIP-018 · Clarity value · hash ${truncateMiddle(structuredHash, 6)}`}
             />
           </ApprovalSection>
         </ApprovalShell>
@@ -187,7 +187,7 @@ export const messageScenarios: Scenario[] = [
     method:
       'proposed: vault propose request (PSBT + commitment) · today: signMessage over the hash',
     refs: ['#2587', '#2773'],
-    note: 'Today the first popup of a proposal shows a 64-character hash under an ownership disclaimer; here Leather decodes the proposed transaction, keeps the commitment (a sha256 over tag, vault address, PSBT and timestamp) as a quiet detail, and Propose signs it and the transaction with Account 1’s key in one approval. Unlike a plain message, which Leather refuses while a vault is connected, this request names its vault, which needs the descriptor matched to a vault added in Leather. It also needs the two steps combined (today the multisig web app asks twice and other sites send the proposal unsigned) and the web app to send the PSBT and timestamp next to the hash so Leather can recompute it, an RPC change that does not exist yet.',
+    note: 'Today the first popup of a proposal shows a 64-character hash under an ownership disclaimer; here Leather decodes the proposed transaction, keeps the commitment (a sha256 over tag, vault address, PSBT and timestamp) as a quiet detail, and Propose signs only that commitment with Account 1’s key. The proposer adds a transaction signature in a separate review, and broadcast is a third action after the threshold is met. Unlike a plain message, which Leather refuses while a vault is connected, this request names its vault, which needs the descriptor matched to a vault added in Leather. The decoded review still needs the web app to send the PSBT and timestamp next to the hash so Leather can recompute it, an RPC change that does not exist yet. The phase separation follows the current production flow.',
     render() {
       return (
         <ApprovalShell
@@ -244,7 +244,10 @@ export const messageScenarios: Scenario[] = [
             <ApprovalRow
               label="Commitment"
               value={<ApprovalIdentifier>{truncateMiddle(commitmentHash, 6)}</ApprovalIdentifier>}
-              caption={['Signed with the transaction', 'Recomputed by Leather from these details']}
+              caption={[
+                'Signed to create this proposal',
+                'Recomputed by Leather from these details',
+              ]}
             />
             <ApprovalDisclosureRow label="All details" caption="Inputs and outputs, raw PSBT" />
           </ApprovalSection>

@@ -1,7 +1,7 @@
 import { type ReactNode, createContext, useContext } from 'react';
 
 import type { ApprovalIdentityContext } from './approval-identity-context';
-import type { ApprovalAccountPlacement, ApprovalContainers } from './approval-options';
+import type { ApprovalContainers } from './approval-options';
 import type { ApprovalAccount, ApprovalNetwork, ApprovalRequester } from './approval-types';
 
 export type ApprovalLines = ReactNode | ReactNode[];
@@ -167,7 +167,6 @@ export interface DirectionHistoryStatusProps {
 }
 
 interface ApprovalDirectionOptionOverrides {
-  accountPlacement?: ApprovalAccountPlacement;
   containers?: ApprovalContainers;
 }
 

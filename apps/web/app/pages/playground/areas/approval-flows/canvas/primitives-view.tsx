@@ -94,7 +94,7 @@ export function PrimitivesView() {
       mx="auto"
     >
       <Stack gap="space.03">
-        <styled.h1 textStyle="heading.03">Handshake primitives</styled.h1>
+        <styled.h1 textStyle="heading.03">Approval primitives</styled.h1>
         <styled.p textStyle="body.02" color="ink.text-subdued" maxWidth="640px">
           The same components used in the approval forms. Labels sit above values. Outlined
           containers hold facts; filled surfaces offer an action. Try the controls to inspect their

@@ -19,9 +19,9 @@ export const handshakeDirection: ApprovalDirection = {
   id: 'handshake',
   name: 'Handshake',
   description:
-    'Connecting joins the site and your account into one pair, and that pair heads every approval in the standard Approver header, under the title. Only what you can act on is filled; amounts and read-only facts sit in outlined cards, with no divider lines. A section with one self-labelled item omits a matching outer heading. Connection prompts omit the redundant not-connected status; existing connections stay marked on the account. Labels and qualifiers share a full-width top row, with icons and values underneath. Editing uses a text action and chevron; copying and external links keep their own icons. Ignores the Account and Containers options.',
+    'The site and signing account form one pair above the action title. The header uses two identity lines; connection and transport details open from an info control beside the origin. Titles omit the default subtitle, with useful facts kept in the review body. Amounts and read-only facts sit in outlined cards. A section with one self-labelled item omits a matching outer heading. Labels and qualifiers share a full-width top row, with icons and values underneath. Editing uses a text action and chevron; copying and external links keep their own icons.',
   inspiration: 'Plaid, Ramp',
-  optionOverrides: { accountPlacement: 'header', containers: 'interactive' },
+  optionOverrides: { containers: 'interactive' },
   Header(props) {
     return <HandshakeHeader {...props} />;
   },

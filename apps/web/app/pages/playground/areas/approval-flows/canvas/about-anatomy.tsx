@@ -106,24 +106,13 @@ interface AboutAnatomyProps {
 }
 
 export function AboutAnatomy({ scenarios }: AboutAnatomyProps) {
-  const {
-    theme,
-    direction,
-    titleStyle,
-    networkLabel,
-    accountPlacement,
-    headerSurface,
-    footerEdge,
-    replayKey,
-  } = useCanvasSettings();
+  const { theme, direction, titleStyle, headerSurface, replayKey } = useCanvasSettings();
   const scenario = scenarios.find(item => item.id === aboutAnatomyScenario);
   const active = findApprovalDirection(direction);
   if (!scenario) return null;
   return (
     <Flex gap="space.08" rowGap="space.06" flexWrap="wrap" alignItems="flex-start">
-      <AnatomyMarkers
-        key={`${theme}-${direction}-${titleStyle}-${networkLabel}-${accountPlacement}-${headerSurface}-${footerEdge}-${replayKey}`}
-      >
+      <AnatomyMarkers key={`${theme}-${direction}-${titleStyle}-${headerSurface}-${replayKey}`}>
         <Box inert>
           <PopupFrame
             caption={`${scenario.label} · ${active.name}`}

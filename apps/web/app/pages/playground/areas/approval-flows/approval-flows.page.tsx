@@ -2,6 +2,7 @@ import { Box, Flex } from 'leather-styles/jsx';
 
 import { AboutNavigationProvider, AboutRail, AboutSectionPicker } from './canvas/about-navigation';
 import { AboutView } from './canvas/about-view';
+import { ActivityListView } from './canvas/activity-list-view';
 import {
   CanvasNarrowNavigation,
   type CanvasNavGroup,
@@ -17,16 +18,21 @@ import type { CanvasScreenSection } from './canvas/screen-sections';
 import { ScreensGrid } from './canvas/screens-grid';
 import { ScreensMatrix } from './canvas/screens-matrix';
 import { ViewerView } from './canvas/viewer-view';
+import { JourneyApp } from './journeys/journey-app';
+import { LedgerFlowProvider } from './pattern/approval-ledger-device';
 import { accountScenarios } from './scenarios/account-scenarios';
+import { activityListScenarios } from './scenarios/activity-list-scenarios';
 import { bitcoinScenarios } from './scenarios/bitcoin-scenarios';
 import { connectScenarios } from './scenarios/connect-scenarios';
 import { contractCallScenarios } from './scenarios/contract-call-scenarios';
+import { ledgerFlowScenarios } from './scenarios/ledger-flow-scenarios';
 import { ledgerStateScenarios } from './scenarios/ledger-state-scenarios';
 import { messageScenarios } from './scenarios/message-scenarios';
 import { permissionScenarios } from './scenarios/permission-scenarios';
 import { queueScenarios } from './scenarios/queue-scenarios';
 import { recipientNameScenarios } from './scenarios/recipient-name-scenarios';
 import { rulesScenarios } from './scenarios/rules-scenarios';
+import { SbtcFeeFlowProvider, sbtcFeeFlowScenarios } from './scenarios/sbtc-fee-flow-scenarios';
 import { sbtcScenarios } from './scenarios/sbtc-scenarios';
 import type { Scenario } from './scenarios/scenario';
 import { signTransactionScenarios } from './scenarios/sign-transaction-scenarios';
@@ -40,6 +46,7 @@ import { transferScenarios } from './scenarios/transfer-scenarios';
 import { vaultQueueScenarios } from './scenarios/vault-queue-scenarios';
 
 const screenSections: CanvasScreenSection[] = [
+  { id: 'activity-list', label: 'Activity list row', scenarios: activityListScenarios },
   { id: 'accounts', label: 'Accounts and networks', scenarios: rulesScenarios },
   { id: 'connect', label: 'Connect', scenarios: connectScenarios },
   { id: 'source', label: 'Who is asking', scenarios: sourceScenarios },
@@ -52,7 +59,12 @@ const screenSections: CanvasScreenSection[] = [
   {
     id: 'staking',
     label: 'Staking and sBTC',
-    scenarios: [...stakingScenarios, ...permissionScenarios, ...sbtcScenarios],
+    scenarios: [
+      ...stakingScenarios,
+      ...permissionScenarios,
+      ...sbtcScenarios,
+      ...sbtcFeeFlowScenarios,
+    ],
   },
   {
     id: 'transfer',
@@ -66,6 +78,7 @@ const screenSections: CanvasScreenSection[] = [
   },
   { id: 'bitcoin', label: 'Bitcoin', scenarios: bitcoinScenarios },
   { id: 'message', label: 'Messages', scenarios: messageScenarios },
+  { id: 'ledger-signing', label: 'Ledger signing journeys', scenarios: ledgerFlowScenarios },
   {
     id: 'account',
     label: 'Vault accounts',
@@ -74,7 +87,7 @@ const screenSections: CanvasScreenSection[] = [
   { id: 'state', label: 'States', scenarios: [...stateScenarios, ...queueScenarios] },
   {
     id: 'ledger',
-    label: 'Ledger and results',
+    label: 'Device screens and results',
     scenarios: [...ledgerStateScenarios, ...speedUpScenarios],
   },
 ];
@@ -102,6 +115,7 @@ function ScreensBody() {
 
 function CanvasMain() {
   const { view } = useCanvasSettings();
+  if (view === 'activity') return <ActivityListView />;
   if (view === 'primitives') return <PrimitivesView />;
   if (view === 'about') return <AboutView sections={screenSections} />;
   if (view === 'viewer') return <ViewerView sections={screenSections} />;
@@ -110,41 +124,56 @@ function CanvasMain() {
 
 function CanvasBody() {
   const { view, theme } = useCanvasSettings();
+  if (view === 'journeys') return <JourneyApp />;
   if (view === 'frames') return <FramesView sections={screenSections} />;
   const isAbout = view === 'about';
   const isPrimitives = view === 'primitives';
+  const isStandalone = isPrimitives || view === 'activity';
   return (
     <AboutNavigationProvider>
       <Flex
-        className={isPrimitives && theme === 'dark' ? 'dark' : undefined}
+        className={isStandalone && theme === 'dark' ? 'dark' : undefined}
         alignItems="flex-start"
         bg="ink.background-primary"
         color="ink.text-primary"
         minHeight="100vh"
       >
-        {!isPrimitives && (isAbout ? <AboutRail /> : <CanvasRail />)}
-        <Box flex="1" minWidth="0" px={{ base: 'space.05', lg: 'space.08' }}>
+        {!isStandalone && (isAbout ? <AboutRail /> : <CanvasRail />)}
+        <Box flex="1" minWidth="0">
           <CanvasToolbar
             navigation={
-              !isPrimitives && (
+              !isStandalone && (
                 <CanvasNarrowNavigation picker={isAbout ? <AboutSectionPicker /> : undefined} />
               )
             }
           />
-          <CanvasMain />
+          <Box px={view === 'viewer' ? '0' : { base: 'space.05', lg: 'space.08' }}>
+            <CanvasMain />
+          </Box>
         </Box>
-        {!isPrimitives && <IssuesPanel sections={screenSections} />}
+        {!isStandalone && <IssuesPanel sections={screenSections} />}
       </Flex>
     </AboutNavigationProvider>
+  );
+}
+
+function ApprovalFlowsCanvas() {
+  const { replayKey } = useCanvasSettings();
+  return (
+    <LedgerFlowProvider key={replayKey}>
+      <SbtcFeeFlowProvider>
+        <CanvasNavigationProvider groups={navigationGroups}>
+          <CanvasBody />
+        </CanvasNavigationProvider>
+      </SbtcFeeFlowProvider>
+    </LedgerFlowProvider>
   );
 }
 
 export function ApprovalFlowsPage() {
   return (
     <CanvasSettingsProvider>
-      <CanvasNavigationProvider groups={navigationGroups}>
-        <CanvasBody />
-      </CanvasNavigationProvider>
+      <ApprovalFlowsCanvas />
     </CanvasSettingsProvider>
   );
 }

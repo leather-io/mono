@@ -8,32 +8,25 @@ interface ScenarioRenderProps {
   direction: ApprovalDirection;
   isSolo?: boolean;
   isHistory?: boolean;
+  hasLaunch?: boolean;
 }
 
-export function ScenarioRender({ scenario, direction, isSolo, isHistory }: ScenarioRenderProps) {
-  const {
-    titleStyle,
-    networkLabel,
-    accountPlacement,
-    headerSurface,
-    headerRadius,
-    footerEdge,
-    containers,
-    launch,
-    replayKey,
-  } = useCanvasSettings();
-  const overrides = direction.optionOverrides;
+export function ScenarioRender({
+  scenario,
+  direction,
+  isSolo,
+  isHistory,
+  hasLaunch,
+}: ScenarioRenderProps) {
+  const { titleStyle, headerSurface, headerRadius, replayKey } = useCanvasSettings();
   return (
     <ApprovalDirectionProvider key={replayKey} direction={direction}>
       <ApprovalOptionsProvider
         titleStyle={titleStyle}
-        networkLabel={networkLabel}
-        accountPlacement={overrides?.accountPlacement ?? accountPlacement}
         headerSurface={headerSurface}
         headerRadius={headerRadius}
-        footerEdge={footerEdge}
-        containers={overrides?.containers ?? containers}
-        launch={launch}
+        containers={direction.optionOverrides?.containers}
+        hasLaunch={hasLaunch && !isHistory}
         isConnect={scenario.family === 'connect'}
         isSolo={isSolo}
       >

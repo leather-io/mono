@@ -17,8 +17,8 @@ const hiddenScrollbar = css({
   '&::-webkit-scrollbar': { display: 'none' },
 });
 
-function scaledSize(scale: number) {
-  return { width: Math.round(popupWidth * scale), height: Math.round(popupHeight * scale) };
+function scaledSize(scale: number, width = popupWidth, height = popupHeight) {
+  return { width: Math.round(width * scale), height: Math.round(height * scale) };
 }
 
 interface ScaledFrameProps {
@@ -27,6 +27,8 @@ interface ScaledFrameProps {
   thumbId: string;
   isInteractive?: boolean;
   isLazy?: boolean;
+  width?: number;
+  height?: number;
   children: ReactNode;
 }
 
@@ -36,6 +38,8 @@ function ScaledFrame({
   thumbId,
   isInteractive = false,
   isLazy = false,
+  width = popupWidth,
+  height = popupHeight,
   children,
 }: ScaledFrameProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -52,7 +56,7 @@ function ScaledFrame({
       outline="1px solid"
       outlineColor="ink.border-default"
       bg="ink.background-secondary"
-      style={scaledSize(scale)}
+      style={scaledSize(scale, width, height)}
     >
       {isNear && (
         <Box
@@ -63,13 +67,11 @@ function ScaledFrame({
           position="absolute"
           top="0"
           left="0"
-          width="popupWidth"
-          height="popupHeight"
           overflow="hidden"
           bg="ink.background-primary"
           transformOrigin="top left"
           pointerEvents={isInteractive ? 'auto' : 'none'}
-          style={{ transform: `scale(${scale})` }}
+          style={{ width, height, transform: `scale(${scale})` }}
         >
           {children}
         </Box>
@@ -88,6 +90,8 @@ interface ScenarioFrameProps {
   isLazy?: boolean;
   isSolo?: boolean;
   isHistory?: boolean;
+  width?: number;
+  height?: number;
 }
 
 function ScenarioFrameContent({
@@ -100,6 +104,8 @@ function ScenarioFrameContent({
   isLazy,
   isSolo,
   isHistory,
+  width,
+  height,
 }: ScenarioFrameProps) {
   return (
     <ScaledFrame
@@ -108,12 +114,15 @@ function ScenarioFrameContent({
       thumbId={thumbId}
       isInteractive={isInteractive}
       isLazy={isLazy}
+      width={width}
+      height={height}
     >
       <ScenarioRender
         scenario={scenario}
         direction={direction}
         isSolo={isSolo}
         isHistory={isHistory}
+        hasLaunch={isInteractive}
       />
     </ScaledFrame>
   );

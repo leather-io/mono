@@ -82,29 +82,34 @@ function ExplorerFooter() {
 }
 
 interface ApprovalHistoryShellProps {
+  footer?: ReactNode;
   state: ApprovalHistoryState;
   children: ReactNode;
 }
 
-export function ApprovalHistoryShell({ state, children }: ApprovalHistoryShellProps) {
+export function ApprovalHistoryShell({ state, children, footer }: ApprovalHistoryShellProps) {
   return (
     <ApprovalHistoryStateContext.Provider value={state}>
-      <ApprovalOptionsOverride accountPlacement="body" launch="off">
-        <ApprovalShell footer={<ExplorerFooter />}>{children}</ApprovalShell>
+      <ApprovalOptionsOverride accountPlacement="body" hasLaunch={false}>
+        <ApprovalShell footer={footer ?? <ExplorerFooter />}>{children}</ApprovalShell>
       </ApprovalOptionsOverride>
     </ApprovalHistoryStateContext.Provider>
   );
 }
 
 interface ApprovalHistoryHeaderProps {
+  onBack?(): void;
   account: ApprovalAccount;
 }
 
-export function ApprovalHistoryHeader({ account }: ApprovalHistoryHeaderProps) {
+export function ApprovalHistoryHeader({ account, onBack }: ApprovalHistoryHeaderProps) {
   useRegisterApprovalSigner(account);
   return (
     <styled.header px="space.03" pt="space.02" data-approval-zone="requester">
-      <Flex
+      <styled.button
+        type="button"
+        onClick={onBack}
+        display="flex"
         width="40px"
         height="40px"
         alignItems="center"
@@ -114,7 +119,7 @@ export function ApprovalHistoryHeader({ account }: ApprovalHistoryHeaderProps) {
         aria-label="Back"
       >
         <ArrowLeftIcon />
-      </Flex>
+      </styled.button>
     </styled.header>
   );
 }

@@ -19,9 +19,7 @@ interface NetworkPillProps {
 }
 
 function NetworkPill({ network }: NetworkPillProps) {
-  const { networkLabel } = useApprovalOptions();
   const isMainnet = network.id === 'mainnet';
-  if (isMainnet && networkLabel === 'non-mainnet') return null;
   if (isMainnet) {
     return (
       <styled.span

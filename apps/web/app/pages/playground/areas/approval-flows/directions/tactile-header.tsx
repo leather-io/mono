@@ -19,9 +19,7 @@ interface TactileNetworkProps {
 }
 
 function TactileNetwork({ network }: TactileNetworkProps) {
-  const { networkLabel } = useApprovalOptions();
   const isMainnet = network.id === 'mainnet';
-  if (isMainnet && networkLabel === 'non-mainnet') return null;
   if (isMainnet) {
     return (
       <styled.span textStyle="label.03" color="ink.text-subdued" flexShrink={0} px="space.02">

@@ -620,7 +620,7 @@ export const aboutPrinciples: AboutPrinciple[] = [
   {
     id: 'hardware',
     title: 'Rehearse the device before it speaks',
-    why: 'Ledger warnings arrive with no word from the wallet and look like something broke. Leather can predict them from the unsigned transaction, so it lists them first in the device’s order.',
+    why: 'Keep the request visible while explaining the next device action. Comparison details and known warnings can prepare the signer, but exact prompts, ordering and supported operations need validation against the installed app version.',
     sources: [ledgerGuidelines, safeVerify, coldcard],
     screens: ['ledger-preflight', 'ledger-btc-preflight', 'ledger-device', 'vault-ledger-hash'],
   },
@@ -734,7 +734,8 @@ export const aboutAhead: AboutComparison[] = [
   },
   {
     title: 'Ledger warnings before the device',
-    detail: 'Blind signing and external inputs are named before you press Sign.',
+    detail:
+      'Known device warnings are explained before signing when the payload and supported app version establish them.',
     screens: ['ledger-preflight', 'ledger-btc-preflight'],
   },
   {
@@ -752,7 +753,7 @@ interface AboutDirectionNote {
 }
 
 export const aboutDirectionsLede =
-  'Eight visual directions over the same pattern and the same facts. They’re ranked in the order of the switcher, with Baseline as the reference every other direction falls back to. Discarded directions stay here to look back at.';
+  'Handshake is the direction we’re developing. Earlier concepts are archived below as references; shared approval facts and behaviour continue to evolve in Handshake.';
 
 export const aboutDirectionNotes: AboutDirectionNote[] = [
   {
@@ -976,9 +977,9 @@ export const aboutQuestions: AboutQuestion[] = [
     screens: ['vault-ledger-hash'],
   },
   {
-    question: 'Can Leather tell that blind signing is already allowed?',
+    question: 'Which device prompts and payloads does each supported Stacks app version handle?',
     detail:
-      'Leather can predict when the Stacks app will ask for it, but not the device setting, and the device’s reason text is dropped today.',
+      'The current code checks a minimum Stacks app version but does not establish a blind-signing toggle or exact warning prediction. Validate actual prompts and error reasons on supported devices before prescribing settings or retry steps.',
     screens: ['ledger-preflight', 'ledger-rejected-payload'],
   },
   {

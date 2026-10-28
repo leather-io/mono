@@ -252,7 +252,7 @@ export const ledgerStateScenarios: Scenario[] = [
       viewed('stx_callContract', 'contract_call', 'note', true),
       decided('approve', '10_to_30s'),
     ],
-    note: 'The same review as any contract call, with one quiet line above the button: the Ledger needs blind signing on for this call and warns before approval, and the limits shown, the post conditions, still apply on-chain. Today the device warning arrives with no word from the wallet. Leather can predict the prompt exactly from the unsigned transaction (any list, tuple, buffer, optional or long text argument, and every deploy, on current Stacks apps), so the line shows only when it applies; that check does not exist yet, and the 0.27.1 rules are not public.',
+    note: 'The same contract-call review, with a quiet reminder that approval continues on the Ledger. The existing Stacks signer checks the app version before signing and shows transaction fields for device comparison. Exact prompts and supported payloads need validation on the installed app; the current code does not establish a blind-signing setting or predict every warning. Keep the post-condition limits visible without presenting them as a guarantee of what the device can display.',
     render() {
       return (
         <ApprovalShell
@@ -264,9 +264,9 @@ export const ledgerStateScenarios: Scenario[] = [
                 fiat: '$812.40',
               }}
               hint={
-                <FooterHint action={<ApprovalRowAction label="How to allow it" />}>
-                  Your Ledger needs blind signing on for this call and warns before you approve. The
-                  limits above still apply.
+                <FooterHint>
+                  Open the Stacks app on your Ledger. You’ll review the transaction on the device
+                  before signing.
                 </FooterHint>
               }
             />
@@ -441,7 +441,8 @@ export const ledgerStateScenarios: Scenario[] = [
             />
           </ApprovalSection>
           <ApprovalNote>
-            Your Ledger will also warn about blind signing. That is expected for this call.
+            Device prompts depend on the Stacks app version and transaction. Reject on your Ledger
+            if the details differ or you cannot verify the request.
           </ApprovalNote>
         </ApprovalShell>
       );
@@ -454,7 +455,7 @@ export const ledgerStateScenarios: Scenario[] = [
     method: 'stx_callContract · Ledger, payload rejected',
     refs: ['#2699'],
     events: [cautionShown('device', 'blocking'), resulted('failed', 'device_rejected')],
-    note: 'When the device rejects the payload, the screen says nothing was signed, names the Stacks app as the source and turns the likely cause into a step, with a quiet line for refusals that come with a reason. Today this is “Data Invalid” with only Close, which reads like a broken connection; Try again here restarts the device step without losing the request. The refusal arrives as Data Invalid with no reason text, while real parse errors carry one, so this screen shows only for the empty case; today Leather drops the reason.',
+    note: 'A payload error keeps the reviewed request and says that signing failed. A generic Data Invalid response does not establish a cause or a blind-signing remedy. Show the reported reason when available, check the supported Stacks app version, and return to review before retrying an unsupported or changed payload. This reference screen illustrates the recovery copy; the interactive Ledger journeys model the actual retry steps.',
     render() {
       return (
         <ApprovalShell footer={<ApprovalFooter primaryLabel="Try again" />}>
@@ -468,20 +469,21 @@ export const ledgerStateScenarios: Scenario[] = [
             title="The Stacks app refused the transaction data"
             source="Ledger Stacks app"
           >
-            Your Ledger answered, so it is connected. The Stacks app refuses this kind of call
-            unless blind signing is on.
+            Your Ledger responded, but the Stacks app could not sign this payload. The response does
+            not identify a setting that will fix it.
           </ApprovalCaution>
-          <ApprovalSection label="To fix it on your Ledger">
-            <NumberedStep number={1} title="Allow blind signing">
-              In the Stacks app, open Settings and turn on Blind signing.
+          <ApprovalSection label="Before retrying">
+            <NumberedStep number={1} title="Check the Stacks app">
+              Make sure the Stacks app is open and meets Leather’s supported version requirement.
             </NumberedStep>
-            <NumberedStep number={2} title="Try again">
-              Keep the Stacks app open and approve on the device.
+            <NumberedStep number={2} title="Review the request again">
+              If the payload remains unsupported, return to the requesting app for a corrected
+              request.
             </NumberedStep>
           </ApprovalSection>
           <ApprovalNote>
-            Still refused? If your Ledger gives a reason, Leather shows it here instead; blind
-            signing does not help with those.
+            A device rejection, an unsupported payload and a disconnected device need different
+            recovery steps. Use the reported error to choose the next action.
           </ApprovalNote>
         </ApprovalShell>
       );
@@ -680,7 +682,7 @@ export const ledgerStateScenarios: Scenario[] = [
     method: 'stx_callContract · pox-5 stake · vault account, propose',
     refs: ['#2464', '#2587'],
     events: [resulted('proposed')],
-    note: 'The result of the vault staking proposal: what was proposed, who has signed and how many signatures are needed, with nothing locked yet; today the popup closes and the web app just goes to the active page. The count starts at 1 of 2 because proposing includes your signature, as the proposal screen says. That depends on combining the two steps: today the multisig web app asks twice and other sites send the proposal unsigned, so it would start at 0 of 2. Each member shows the device they sign with, and the 2 of 3 threshold sits with the signers instead of in the header.',
+    note: 'The result of the vault staking proposal: what was proposed, who has signed and how many signatures are needed, with nothing locked yet; today the popup closes and the web app just goes to the active page. The count starts at 0 of 2: the proposal commitment was signed, but it is not a transaction signature. The proposer and another eligible signer must sign the active transaction before a member can broadcast it. Each member shows the device they sign with, and the 2 of 3 threshold sits with the signers instead of in the header.',
     render() {
       return (
         <ApprovalShell
@@ -690,7 +692,7 @@ export const ledgerStateScenarios: Scenario[] = [
           <ApprovalIntent
             icon={<PendingRingIcon />}
             title={`Staking 5,000\u00a0STX proposed to Team Treasury`}
-            kind="Fast Pool. Nothing locks until one more member signs and it is broadcast."
+            kind="Fast Pool. Commitment signed; 2 transaction signatures are still needed before broadcast."
           />
           <ApprovalSection label="What you proposed">
             <ApprovalRow
@@ -708,11 +710,11 @@ export const ledgerStateScenarios: Scenario[] = [
             <ApprovalSigners
               required={vaultRequiredSignatures}
               signers={[
-                { ...vaultYou, status: 'signed', detail: 'proposed it' },
+                { ...vaultYou, status: 'waiting', detail: 'proposed it · commitment signed' },
                 { ...vaultMember2, status: 'waiting' },
                 { ...vaultMember3, status: 'waiting' },
               ]}
-              caption="Member 2 and Member 3 can sign it in Leather. One more makes 2, then it can be broadcast."
+              caption="You and the other members sign the transaction separately. Any 2 of 3 signatures make it ready to broadcast."
             />
           </ApprovalSection>
         </ApprovalShell>

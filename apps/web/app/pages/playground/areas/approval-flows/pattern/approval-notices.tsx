@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
@@ -10,6 +10,7 @@ import {
   ErrorTriangleIcon,
   InfoCircleIcon,
   NumberedListIcon,
+  Popover,
   ShieldIcon,
   UnlockIcon,
 } from '@leather.io/ui';
@@ -184,16 +185,91 @@ export function ApprovalNote({ children, icon = 'info' }: ApprovalNoteProps) {
 interface ApprovalCautionProps {
   title: string;
   children?: ReactNode;
+  details?: ReactNode;
   source?: string;
   tone?: 'caution' | 'blocking';
+}
+
+interface ApprovalExplanationProps {
+  children: ReactNode;
+}
+
+function ApprovalExplanation({ children }: ApprovalExplanationProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const isRestoringFocus = useRef(false);
+  return (
+    <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+      <Popover.Trigger asChild>
+        <styled.button
+          type="button"
+          textStyle="caption.01"
+          color="ink.text-primary"
+          textDecoration="underline"
+          textUnderlineOffset="3px"
+          minHeight="44px"
+          px="space.01"
+          cursor="pointer"
+          onClick={event => {
+            event.preventDefault();
+            setIsOpen(true);
+          }}
+          onPointerEnter={event => {
+            if (event.pointerType === 'mouse') setIsOpen(true);
+          }}
+          onFocus={event => {
+            if (!isRestoringFocus.current && event.currentTarget.matches(':focus-visible')) {
+              setIsOpen(true);
+            }
+          }}
+        >
+          Why this matters
+        </styled.button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          side="top"
+          align="start"
+          aria-label="Why this matters"
+          onOpenAutoFocus={event => event.preventDefault()}
+          onEscapeKeyDown={event => event.stopPropagation()}
+          onCloseAutoFocus={() => {
+            isRestoringFocus.current = true;
+            queueMicrotask(() => {
+              isRestoringFocus.current = false;
+            });
+          }}
+        >
+          <Stack gap="space.02" maxWidth="280px">
+            <styled.p textStyle="caption.01" color="ink.text-primary" textWrapStyle="pretty">
+              {children}
+            </styled.p>
+            <Popover.Close asChild>
+              <styled.button
+                type="button"
+                textStyle="label.03"
+                minHeight="44px"
+                alignSelf="flex-start"
+                cursor="pointer"
+              >
+                Close
+              </styled.button>
+            </Popover.Close>
+          </Stack>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  );
 }
 
 export function ApprovalCaution({
   title,
   children,
+  details,
   source,
   tone = 'caution',
 }: ApprovalCautionProps) {
+  const direction = useApprovalDirection();
+  const hasFootnote = direction?.id === 'handshake' && tone !== 'blocking' && details;
   return (
     <Callout
       data-approval-zone="caution"
@@ -202,11 +278,15 @@ export function ApprovalCaution({
       icon={<ErrorTriangleIcon variant="small" />}
     >
       {children}
-      {source && (
-        <styled.span display="block" mt="space.01" color="ink.text-primary" opacity={0.8}>
-          Source: {source}
-        </styled.span>
-      )}
+      {source && <styled.span> Reported by {source}.</styled.span>}
+      {details &&
+        (hasFootnote ? (
+          <ApprovalExplanation>{details}</ApprovalExplanation>
+        ) : (
+          <styled.span display="block" mt="space.01">
+            {details}
+          </styled.span>
+        ))}
     </Callout>
   );
 }

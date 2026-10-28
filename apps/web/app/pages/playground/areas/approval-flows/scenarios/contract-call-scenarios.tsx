@@ -43,6 +43,7 @@ import {
   mainnet,
   vaultAccount,
   vaultBroadcastRule,
+  vaultProposalSigned,
   zest,
 } from './fixtures';
 import type { Scenario } from './scenario';
@@ -259,12 +260,12 @@ function StakeScreen({ isVault }: StakeScreenProps) {
           primaryLabel={isVault ? 'Propose' : 'Approve'}
           reversibility={isVault ? 'proposal' : undefined}
           total={{
-            label: isVault ? 'Total from vault' : 'Total spent',
+            label: isVault ? 'Fee if broadcast' : 'Total spent',
             amount: <ExactAmount value={fee} symbol="STX" />,
             fiat: feeUnderOneCent,
           }}
           secondaryTotal={{
-            label: isVault ? 'Locked, stays in the vault' : 'Locked, stays in your account',
+            label: isVault ? 'To lock once broadcast' : 'Locked, stays in your account',
             amount: <ExactAmount value="5,000.000000" symbol="STX" />,
           }}
         />
@@ -301,8 +302,7 @@ function StakeScreen({ isVault }: StakeScreenProps) {
       </ApprovalSection>
       {isVault && (
         <ApprovalNote>
-          Your signature is included: Propose signs the commitment and the transaction with Account
-          1’s key, and nothing locks yet. {vaultBroadcastRule}
+          {vaultProposalSigned} Nothing locks yet. {vaultBroadcastRule}
         </ApprovalNote>
       )}
       <ApprovalSection label="Staking" divided>
@@ -637,7 +637,7 @@ export const contractCallScenarios: Scenario[] = [
       decided('approve', '30_to_120s'),
       resulted('proposed'),
     ],
-    note: 'With a vault connected, the same request becomes a proposal: the header names the vault and who signs, the button says Propose, and one quiet line says Propose signs the commitment and the transaction with Account 1’s key, so it can be broadcast once 2 of 3 signers approve. That needs the two steps combined (today the multisig web app asks twice and other sites send the proposal unsigned), and because a Stacks signature covers the nonce, it needs the vault coordinator to fix the nonce at proposal time instead of when the proposal becomes pending. The fee is sized for a 2 of 3 transaction; today it is estimated on a single-signature transaction, and the nonce row shows the parent account’s next nonce while a placeholder is proposed.',
+    note: 'With a vault connected, the same request becomes a proposal: the header names the vault and who signs, the button says Propose, and one quiet line says Propose signs only the commitment with Account 1’s key. Every transaction signature, including the proposer’s, is collected separately once the proposal is pending; 2 of 3 are required before broadcast. A queued Stacks proposal gets its nonce only when it becomes active, matching the current coordinator. The fee is sized for a 2 of 3 transaction; today it is estimated on a single-signature transaction, and the nonce row shows the parent account’s next nonce while a placeholder is proposed.',
     render() {
       return <StakeScreen isVault />;
     },

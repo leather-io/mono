@@ -359,9 +359,11 @@ function ChangesSection({ label, trailing, children }: DirectionSectionProps) {
               </Box>
             ))}
             {outs.length > 0 && targets.length > 0 && (
-              <Rise order={outs.length}>
-                <FlowBadge />
-              </Rise>
+              <Box position="relative" zIndex={1}>
+                <Rise order={outs.length}>
+                  <FlowBadge />
+                </Rise>
+              </Box>
             )}
             {targets.map((child, index) => (
               <Box key={`target-${index}`} pt={index === 0 ? '0' : '4px'}>

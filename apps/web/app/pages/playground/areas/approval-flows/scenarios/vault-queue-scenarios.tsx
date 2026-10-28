@@ -21,11 +21,13 @@ import { ApprovalIntent, ApprovalSection, ApprovalShell } from '../pattern/appro
 import { ApprovalSigners } from '../pattern/approval-signers';
 import type { ApprovalAccount } from '../pattern/approval-types';
 import {
+  account3,
   feeUnderOneCent,
   leatherApp,
   ledgerAccount,
   mainnet,
   stxVaultRecipient,
+  testnet,
   vaultAccount,
   vaultMember2,
   vaultMember3,
@@ -149,6 +151,137 @@ function NonceClashScreen() {
         />
         <ApprovalDisclosureRow label="All details" caption="Signers, raw transaction" />
       </ApprovalSection>
+    </ApprovalShell>
+  );
+}
+
+function QueuedProposalScreen() {
+  return (
+    <ApprovalShell
+      footer={
+        <ApprovalFooter
+          primaryLabel="Sign"
+          secondaryLabel="Close"
+          blockedReason="This proposal is queued. Signing becomes available when it is active."
+        />
+      }
+    >
+      <ApprovalHeader requester={leatherApp} account={vaultAccount} network={mainnet} />
+      <ApprovalIntent
+        title="This vault proposal is queued"
+        kind="Transfer of 1,500 STX from Team Treasury"
+      />
+      <ApprovalSection label="Before you can sign">
+        <ApprovalRow
+          stacked
+          label="Waiting for the active proposal"
+          value={clashingProposal.title}
+          caption={clashingProposal.proposedBy}
+        />
+        <ApprovalRow
+          stacked
+          label="Next step"
+          value="The active proposal must be broadcast or cancelled"
+          caption="Then this proposal becomes active and gets the vault account’s next nonce."
+        />
+        <ApprovalRow
+          label="Your transaction signature"
+          value="Not requested yet"
+          caption="Creating the proposal signed a commitment only."
+        />
+      </ApprovalSection>
+      <ApprovalNote>
+        Nothing moves while this proposal is queued. Review the amount, recipient and fee again when
+        signing becomes available.
+      </ApprovalNote>
+    </ApprovalShell>
+  );
+}
+
+function BroadcastReadyScreen() {
+  return (
+    <ApprovalShell
+      footer={
+        <ApprovalFooter
+          primaryLabel="Broadcast"
+          secondaryLabel="Close"
+          signerLabel="Vault member"
+          total={transferTotal}
+          reversibility="once-confirmed"
+        />
+      }
+    >
+      <ApprovalHeader requester={leatherApp} account={vaultAccount} network={mainnet} />
+      <ApprovalIntent
+        title="Broadcast 1,500 STX from Team Treasury"
+        kind="2 of 3 signatures collected · no new signature requested"
+      />
+      <TransferMoves />
+      <ApprovalSection label="Signers" divided>
+        <ApprovalSigners
+          required={vaultRequiredSignatures}
+          signers={[
+            { ...vaultMember2, status: 'signed', detail: 'proposed it, then signed' },
+            { ...vaultYou, status: 'signed' },
+            { ...vaultMember3, status: 'not-needed' },
+          ]}
+          caption="The threshold is met. Broadcast submits the signed transaction to Stacks."
+        />
+      </ApprovalSection>
+      <ApprovalNote>
+        Nothing has been sent yet. The vault pays the 0.004200 STX fee when this transaction is
+        confirmed; your personal account pays no fee. Close leaves it ready to broadcast.
+      </ApprovalNote>
+    </ApprovalShell>
+  );
+}
+
+interface VaultContextMismatchScreenProps {
+  reason: 'signer' | 'network';
+}
+
+function VaultContextMismatchScreen({ reason }: VaultContextMismatchScreenProps) {
+  const isNetworkMismatch = reason === 'network';
+  const account = isNetworkMismatch ? vaultAccount : account3;
+  const title = isNetworkMismatch
+    ? 'This proposal is for Mainnet'
+    : `${account3.name} cannot sign for Team Treasury`;
+  const explanation = isNetworkMismatch
+    ? 'The request is on Testnet, but the vault account and proposal are on Mainnet. Close this request and open the Mainnet proposal in app.leather.io.'
+    : 'This account’s Stacks key is not in this vault account’s signing policy. Close this request and reconnect app.leather.io with Account 1, then review the proposal again.';
+  return (
+    <ApprovalShell
+      footer={<ApprovalFooter primaryLabel="Sign" secondaryLabel="Close" blockedReason={title} />}
+    >
+      <ApprovalHeader
+        requester={leatherApp}
+        account={account}
+        network={isNetworkMismatch ? testnet : mainnet}
+      />
+      <ApprovalIntent title="Review a vault transfer" kind="1,500 STX from Team Treasury" />
+      <ApprovalCaution
+        tone="blocking"
+        title={title}
+        source="Leather, from the signing policy"
+        details={
+          isNetworkMismatch
+            ? 'Leather checks the proposal’s network against the vault account’s saved network before asking for a signature. Matching the personal account alone is not enough.'
+            : 'Vault membership and signing eligibility are separate. Each vault account has its own keys and threshold; Leather checks this account’s key against that policy.'
+        }
+      >
+        {explanation}
+      </ApprovalCaution>
+      <ApprovalSection label="Vault account">
+        <ApprovalRow
+          stacked
+          label="Funds leave"
+          value="Team Treasury"
+          caption={vaultAccount.vault?.address}
+        />
+        <ApprovalRow label="Proposal network" value="Mainnet" />
+        <ApprovalRow label="Signing policy" value="2 of 3 transaction signatures" />
+      </ApprovalSection>
+      <ApprovalNote>No signature is requested, and nothing moves.</ApprovalNote>
     </ApprovalShell>
   );
 }
@@ -280,9 +413,53 @@ function LedgerHashScreen() {
 
 export const vaultQueueScenarios: Scenario[] = [
   {
+    id: 'vault-proposal-queued',
+    family: 'account',
+    label: 'Vault proposal is queued before signing',
+    method: 'Stacks multisig · queued proposal',
+    refs: ['#2587', '#2464'],
+    note: 'The current Leather coordinator keeps one active transaction per vault account. A queued Stacks proposal cannot be signed and has no assigned nonce until it becomes pending, after the active transaction is broadcast or cancelled. This screen explains that wait without implying that the commitment used to create the proposal is a transaction signature. The account’s own threshold and nonce matter here, rather than the membership of the whole vault.',
+    render() {
+      return <QueuedProposalScreen />;
+    },
+  },
+  {
+    id: 'vault-ready-to-broadcast',
+    family: 'account',
+    label: 'Vault threshold met, ready to broadcast',
+    method: 'Stacks multisig · broadcast signed transaction',
+    refs: ['#2587', '#2464'],
+    note: 'A member broadcasts the transaction only after the account’s signature threshold is met. This is a web-app confirmation, not another wallet signing request. The existing signatures, amount, recipient and vault-paid fee stay visible; the verb is Broadcast and Close leaves it ready. It follows the current useBroadcastTransaction action. This covers a classic Stacks multisig transfer; contract-based multisig execution may instead require a separate executor transaction and fee, which needs its own decoded contract-call review.',
+    render() {
+      return <BroadcastReadyScreen />;
+    },
+  },
+  {
+    id: 'vault-signer-mismatch',
+    family: 'account',
+    label: 'Connected account cannot sign for this vault',
+    method: 'stx_signTransaction · multisig signer mismatch',
+    refs: ['#2587'],
+    note: 'Adding a vault account and signing its transactions both require an eligible key. This blocks the actual co-sign step when the connected account is outside the account’s signer set, names the known eligible account, and sends the member back to reconnect before another review. The vault that pays and the personal account that signs stay separate. The prototype proposes surfacing the web-app pre-sign verification in the wallet; it does not add an in-request account switch.',
+    render() {
+      return <VaultContextMismatchScreen reason="signer" />;
+    },
+  },
+  {
+    id: 'vault-network-mismatch',
+    family: 'account',
+    label: 'Vault and proposal networks do not match',
+    method: 'stx_signTransaction · multisig network mismatch',
+    refs: ['#2587'],
+    note: 'The network belongs to the vault account and cannot be inferred from the member’s personal account. Production pre-sign verification rejects a transaction whose network differs from the account’s pinned network. The blocked review names both networks and directs the member to reopen the correct proposal; no signature is requested and no network is silently changed.',
+    render() {
+      return <VaultContextMismatchScreen reason="network" />;
+    },
+  },
+  {
     id: 'vault-nonce-clash',
     family: 'account',
-    label: 'Co-sign while another proposal has the same nonce',
+    label: 'External coordinator: proposals share a nonce',
     method: 'stx_signTransaction · multisig co-sign · nonce clash',
     refs: ['#2587', '#2464'],
     events: [
@@ -291,7 +468,7 @@ export const vaultQueueScenarios: Scenario[] = [
       decided('approve', '30_to_120s'),
       resulted('signed'),
     ],
-    note: 'A co-signer opens a proposal while another open proposal on the same vault has the same nonce. On Stacks the nonce is fixed when a proposal is made and each nonce can be used once, so whichever goes out first makes the other impossible to broadcast. The caution names the other proposal, the choice says who proposed it, when, how far it has got and what happens to the one not picked, and the footer verb follows the choice. Bitcoin vaults clash the same way when two proposals spend the same coins: once one confirms, the other’s inputs are gone, so the caution would name the shared coins instead of a nonce. Leather does not check for this today, and the proposal that loses only fails at broadcast. It needs the vault coordinator to share the vault’s open proposals with their nonces or inputs.',
+    note: 'A co-signer opens a proposal while another open proposal on the same vault has the same nonce. On Stacks the nonce is fixed when a proposal is made and each nonce can be used once, so whichever goes out first makes the other impossible to broadcast. The caution names the other proposal, the choice says who proposed it, when, how far it has got and what happens to the one not picked, and the footer verb follows the choice. Bitcoin vaults clash the same way when two proposals spend the same coins: once one confirms, the other’s inputs are gone, so the caution would name the shared coins instead of a nonce. This is an exploration for an external coordinator that allows competing active proposals. Leather’s own coordinator queues Stacks proposals and assigns the nonce only when one becomes pending, so its normal path is Vault proposal is queued before signing. Detecting external clashes needs the coordinator to share open proposal nonces or inputs.',
     render() {
       return <NonceClashScreen />;
     },

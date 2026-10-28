@@ -521,12 +521,15 @@ export const decisions: Decision[] = [
   },
   {
     id: 'proposal-steps',
-    question: 'Does proposing a vault transaction include your own signature?',
+    question: 'What does proposing a vault transaction sign?',
     options: [
-      { label: 'Yes, one approval: the commitment and your signature together', recommended: true },
-      { label: 'No, a commitment first and your signature in a second popup' },
+      {
+        label: 'A proposal commitment; review and sign the transaction when active',
+        recommended: true,
+      },
+      { label: 'Combine commitment and transaction signing after coordinator changes' },
     ],
-    why: 'Proposals from the multisig web app take two popups back to back, and proposals from other sites go out unsigned, to be signed later somewhere else. One step matches what the proposer means.',
+    why: 'The current proposal flow signs the commitment. Transaction signatures are collected separately, and a queued Stacks proposal gets its nonce only when it becomes active. Keep Propose, Sign and Broadcast distinct. Combining the first two needs a coordinator change and a new review of what is signed.',
     seeAlso: 'result-proposed',
   },
   {
@@ -565,17 +568,17 @@ export const decisions: Decision[] = [
   },
   {
     id: 'vault-queue',
-    question: 'Two open proposals on a vault use the same nonce, or the same coins',
+    question: 'How do vault approvals handle queued or competing proposals?',
     options: [
       {
-        label: 'Warn before signing, name the other proposal and let the signer pick',
+        label: 'Explain the queue; review the transaction when its nonce is assigned',
         recommended: true,
       },
-      { label: 'Let the coordinator keep one open proposal per nonce' },
+      { label: 'For external coordinators, show competing nonces or shared Bitcoin inputs' },
       { label: 'Say nothing; the one that loses fails at broadcast' },
     ],
-    why: 'On Stacks the nonce is fixed when a proposal is made, and on Bitcoin two spends of the same coins can’t both confirm, so signing one quietly kills the other. Naming the other proposal, with who proposed it and when, turns a surprise failure into a choice. A one-per-nonce queue avoids the clash but blocks urgent proposals behind slow ones.',
-    seeAlso: 'vault-nonce-clash',
+    why: 'Leather’s coordinator keeps one active transaction per vault account. Queued Stacks proposals are unsigned and receive a nonce on promotion. Show what they are waiting for. External coordinators may allow conflicting nonces, and Bitcoin spends may share inputs; those need a separate conflict review rather than being presented as the normal Leather queue.',
+    seeAlso: 'vault-proposal-queued',
   },
   {
     id: 'vault-decline',
@@ -604,17 +607,16 @@ export const decisions: Decision[] = [
   },
   {
     id: 'ledger-preflight',
-    question: 'Does Leather list the Ledger screens before you press Sign?',
+    question: 'How does Leather prepare you for the Ledger review?',
     options: [
       {
-        label:
-          'Yes, a short numbered list whenever the device will show a warning, and one hint line above the button',
+        label: 'A short device hint, with comparison details and verified warnings when available',
         recommended: true,
       },
       { label: 'Only the hint line' },
       { label: 'No, the device speaks for itself, as today' },
     ],
-    why: 'Device warnings (blind signing, external inputs, a non-default sighash) arrive with no word from the wallet and look like something went wrong. Leather can predict them from the unsigned transaction, and naming them first turns a scare into a step people expected. The list needs checking against each app version.',
+    why: 'Keep the reviewed request visible while explaining the next device action. Show known comparison fields and warnings supported by the payload and installed app. Exact prompt wording, ordering and capabilities need device validation; a generic payload error does not establish that a blind-signing setting exists or should be enabled.',
     seeAlso: 'ledger-btc-preflight',
   },
   {

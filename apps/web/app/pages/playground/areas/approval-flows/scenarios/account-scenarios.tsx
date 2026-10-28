@@ -101,7 +101,7 @@ function PolicySection({ signer, keyHolder, divided }: PolicySectionProps) {
       {signer && (
         <ApprovalCheck
           title={`${signer.name} is a signer on this vault`}
-          caption="Its Bitcoin key is key 1"
+          caption="Its Bitcoin key is key 1 · no fee to add this account"
         />
       )}
     </ApprovalSection>
@@ -121,7 +121,7 @@ function VaultAddressSection({ divided, showSiteName }: VaultAddressSectionProps
         stacked
         label="Vault address"
         value={<AddressDisplayer address={btcVaultAddress} />}
-        caption="Derived by Leather from the policy keys"
+        caption="Derived by Leather from the policy keys · Mainnet only"
       />
     </ApprovalSection>
   );
@@ -137,7 +137,7 @@ function DescriptorSection() {
 
 const vaultKind = 'Bitcoin multisig account · works on Mainnet only';
 
-const stxVaultAddress = 'SM2Z7N4VJ1Q4F6Y2HX9QZD6N8W0KXB3T5R7M4J9P';
+const stxVaultAddress = 'SM2Z7N4VJ1Q4F6Y2HX9QZD6N8W0KXB3T5R7M4J9PA';
 
 interface StacksPolicyKey {
   label: string;
@@ -296,7 +296,7 @@ export const accountScenarios: Scenario[] = [
             ))}
             <ApprovalCheck
               title={`${account1.name} is a signer on this vault`}
-              caption="Its Stacks key is key 1"
+              caption="Its Stacks key is key 1 · no fee to add this account"
             />
           </ApprovalSection>
           <ApprovalSection divided>
@@ -305,7 +305,7 @@ export const accountScenarios: Scenario[] = [
               stacked
               label="Vault address"
               value={<AddressDisplayer address={stxVaultAddress} />}
-              caption="Derived by Leather from the keys, in this order"
+              caption="Derived by Leather from the keys, in this order · Mainnet only"
             />
           </ApprovalSection>
           <ApprovalNote>
