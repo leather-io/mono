@@ -5,10 +5,7 @@ import { StxFormSchema, useStxSendFormSchema } from '@/features/send/forms/stx/s
 import { useCalculateStxMaxSpend } from '@/features/send/hooks/use-calculate-stx-max-spend';
 import { useSendMax } from '@/features/send/hooks/use-send-max';
 import { useSendNavigation } from '@/features/send/navigation';
-import {
-  calculateDefaultStacksFee,
-  stxFormValuesToSerializedTransaction,
-} from '@/features/send/utils';
+import { stxFormValuesToSerializedTransaction } from '@/features/send/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings';
@@ -16,17 +13,17 @@ import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';
 
-import { AccountId, Money } from '@leather.io/models';
+import { AccountId, Money, type StacksTransactionFees } from '@leather.io/models';
+import { convertAmountToBaseUnit } from '@leather.io/utils';
 
 interface UseStxFormProps {
   account: AccountId;
   availableBalance: Money;
   nonce: number | undefined;
+  fees: StacksTransactionFees;
 }
 
-const defaultFee = calculateDefaultStacksFee();
-
-export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps) {
+export function useStxForm({ account, availableBalance, nonce, fees }: UseStxFormProps) {
   const { displayToast } = useToastContext();
   const { navigate } = useSendNavigation();
   const stacksNetwork = useNetworkPreferenceStacksNetwork();
@@ -35,7 +32,8 @@ export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps
     account.accountIndex
   )[0];
   assertStacksSigner(stxSigner);
-  const calculateStxMaxSpend = useCalculateStxMaxSpend(availableBalance);
+  const standardFee = fees.options.standard.value;
+  const calculateStxMaxSpend = useCalculateStxMaxSpend(availableBalance, standardFee);
   const schema = useStxSendFormSchema({
     calculateStxMaxSpend,
     payerAddress: stxSigner.address,
@@ -49,7 +47,7 @@ export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps
       recipient: '',
       memo: '',
       nonce,
-      fee: defaultFee.toNumber(),
+      fee: convertAmountToBaseUnit(standardFee).toNumber(),
       isSendingMax: false,
     },
   });

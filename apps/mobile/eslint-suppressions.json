@@ -515,7 +515,7 @@
   },
   "src/features/approver/components/fees/bitcoin-fee-sheet.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/approver/components/fees/fee-sheet.layout.tsx": {
@@ -617,11 +617,6 @@
     }
   },
   "src/features/approver/nonce.section.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/features/approver/stacks-fees.section.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
@@ -738,7 +733,7 @@
   },
   "src/features/browser/approver-sheet/send-transfer.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/browser/approver-sheet/send-transfer.utils.ts": {
@@ -1047,7 +1042,7 @@
   },
   "src/features/psbt-signer/utils.ts": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/qr-scanner/qr-scanner-camera.tsx": {
@@ -2131,11 +2126,6 @@
     },
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
-    }
-  },
-  "src/queries/fees/fee-estimates.hooks.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 2
     }
   },
   "src/queries/leather-query-provider.tsx": {

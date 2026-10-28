@@ -12,7 +12,13 @@ import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
-import { MarketData, Money, QuoteCurrency, Sip10Asset } from '@leather.io/models';
+import {
+  MarketData,
+  Money,
+  QuoteCurrency,
+  Sip10Asset,
+  type StacksTransactionFees,
+} from '@leather.io/models';
 import { Button, Sip10AvatarIcon } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
@@ -23,6 +29,7 @@ interface Sip10FormProps {
   quoteBalance: Money;
   nonce: number | undefined;
   marketData: MarketData;
+  fees: StacksTransactionFees;
   quoteCurrency: QuoteCurrency;
   assetItemAnimationOffsetTop?: number | null;
   onOpenAssetPicker(): void;
@@ -36,6 +43,7 @@ export function Sip10Form({
   quoteCurrency,
   marketData,
   nonce,
+  fees,
   onOpenAssetPicker,
   asset,
 }: Sip10FormProps) {
@@ -51,6 +59,7 @@ export function Sip10Form({
     availableBalance,
     nonce,
     asset,
+    fees,
   });
 
   return (

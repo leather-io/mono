@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
-import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
+import { type BitcoinFeeRates, useBitcoinFeeRates } from '@/queries/fees/bitcoin-fee-rates.query';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
 import { App } from '@/store/apps/utils';
@@ -17,7 +17,6 @@ import {
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import { extractAccountIndexFromDescriptor } from '@leather.io/crypto';
-import { AverageBitcoinFeeRates } from '@leather.io/models';
 import { RpcRequest, RpcResponse, createRpcSuccessResponse, sendTransfer } from '@leather.io/rpc';
 import { UtxoTotals } from '@leather.io/services';
 import { isDefined } from '@leather.io/utils';
@@ -32,7 +31,7 @@ interface SendTransferApproverProps {
   accountId: string;
 }
 export function SendTransferApprover(props: SendTransferApproverProps) {
-  const { data: feeRates } = useAverageBitcoinFeeRates();
+  const { data: feeRates } = useBitcoinFeeRates();
   const { fingerprint, accountIndex } = destructAccountIdentifier(props.accountId);
   const utxos = useAccountUtxos(fingerprint, accountIndex);
 
@@ -46,7 +45,7 @@ export function SendTransferApprover(props: SendTransferApproverProps) {
 function BaseSendTransferApprover(
   props: SendTransferApproverProps & {
     utxos: UtxoTotals;
-    feeRates: AverageBitcoinFeeRates;
+    feeRates: BitcoinFeeRates;
   }
 ) {
   const { accountIdByPaymentType } = useBitcoinAccounts();
@@ -65,7 +64,7 @@ function BaseSendTransferApprover(
       bitcoinAccount.nativeSegwit &&
       generateBitcoinUnsignedTransaction({
         recipients: getSendTransferRecipients(props.request.params),
-        feeRate: props.feeRates?.halfHourFee.toNumber() ?? 1,
+        feeRate: props.feeRates.standard.rate,
         isSendingMax: false,
         utxos: props.utxos.available,
         network: getBtcSignerLibNetworkConfigByMode(networkMode),
@@ -79,7 +78,7 @@ function BaseSendTransferApprover(
       bitcoinAccount.nativeSegwit,
       networkMode,
       payerLookup,
-      props.feeRates?.halfHourFee,
+      props.feeRates.standard.rate,
       props.request.params,
       props.utxos.available,
     ]
