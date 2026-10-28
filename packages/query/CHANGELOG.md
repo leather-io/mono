@@ -779,6 +779,24 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.52.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.52.1...@leather.io/query-v2.52.2) (2026-10-27)
+
+
+### Bug Fixes
+
+* body-parser and undici audit ([#2912](https://github.com/leather-io/mono/issues/2912)) ([2bee4e7](https://github.com/leather-io/mono/commit/2bee4e772dd95fff8406822a62225854fb708fbd))
+* **query:** use numeric min for missing nonce selection ([#2848](https://github.com/leather-io/mono/issues/2848)) ([5d906d4](https://github.com/leather-io/mono/commit/5d906d42946c7f3cae42dfaa022dafd9a706dc6f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.41.0
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/stacks bumped to 1.22.9
+    * @leather.io/utils bumped to 0.55.0
+
 ## [2.52.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.52.0...@leather.io/query-v2.52.1) (2026-10-01)
 
 

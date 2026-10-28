@@ -7,16 +7,17 @@ import type {
   Sip10Asset,
 } from '@leather.io/models';
 
-import { Sip10AssetService } from '../assets/sip10-asset.service';
-import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { type Sip10AssetService } from '../assets/sip10-asset.service';
+import { type HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import type {
   HiroPrincipalTransaction,
   HiroPrincipalTransactionsResultItem,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { MarketDataService } from '../market/market-data.service';
-import { StacksProtocolService } from '../protocols/stacks-protocol.service';
-import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
-import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
+import { type MarketDataService } from '../market/market-data.service';
+import { type StacksProtocolService } from '../protocols/stacks-protocol.service';
+import { createMock } from '../test/create-mock';
+import { type BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
+import { type StacksTransactionsService } from '../transactions/stacks-transactions.service';
 import { BlockchainActivityService } from './blockchain-activity.service';
 
 const emptyCursor = { next: null, previous: null, current: null };
@@ -51,13 +52,13 @@ function btcTx(overrides: Partial<BitcoinTransaction>): BitcoinTransaction {
     txid: 'btc',
     time: 100,
     height: 900,
-    vin: [{ owned: false, value: '1000', address: 'ext' }],
+    vin: [{ owned: false, value: '1000', address: 'ext', n: 0 }],
     vout: [{ owned: true, value: '900', address: 'mine', n: 0 }],
     ...overrides,
-  } as unknown as BitcoinTransaction;
+  };
 }
 
-const sip10Asset = {
+const sip10Asset: Sip10Asset = {
   category: 'fungible',
   protocol: 'sip10',
   chain: 'stacks',
@@ -69,27 +70,43 @@ const sip10Asset = {
   contractId: 'SP.token',
   imageCanonicalUri: '',
   hasMemo: false,
-} as unknown as Sip10Asset;
+};
 
-const account = {
+const account: AccountAddresses = {
   id: { fingerprint: 'fp', accountIndex: 0 },
   stacks: { stxAddress: 'SP1' },
-  bitcoin: { type: 'fixedAddress', address: 'bc1qmine' },
-} as unknown as AccountAddresses;
+  bitcoin: { type: 'fixedAddress', address: 'bc1qmine', paymentType: 'p2wpkh' },
+};
 
 describe(BlockchainActivityService.name, () => {
-  const mockHiro = {
-    getPrincipalTransactions: vi.fn(),
-    getPrincipalBalanceChanges: vi.fn(),
-  } as unknown as HiroStacksApiClient;
-  const mockStacksTx = { getPendingTransactions: vi.fn() } as unknown as StacksTransactionsService;
-  const mockBtcTx = { getAccountTransactions: vi.fn() } as unknown as BitcoinTransactionsService;
-  const mockMarketData = { getMarketData: vi.fn() } as unknown as MarketDataService;
-  const mockSip10 = { getAsset: vi.fn() } as unknown as Sip10AssetService;
-  const mockStacksProtocol = {
-    getProtocolByAddress: vi.fn(),
-    getContractActionType: vi.fn(),
-  } as unknown as StacksProtocolService;
+  const getPrincipalTransactions = vi.fn();
+  const getPrincipalBalanceChanges = vi.fn();
+  const getPendingTransactions = vi.fn();
+  const getTransactionById = vi.fn();
+  const getAccountTransactions = vi.fn();
+  const getTransactionByTxId = vi.fn();
+  const getMarketData = vi.fn();
+  const getAsset = vi.fn();
+  const getProtocolByAddress = vi.fn();
+  const getContractActionType = vi.fn();
+  const mockHiro = createMock<HiroStacksApiClient>({
+    getPrincipalTransactions,
+    getPrincipalBalanceChanges,
+  });
+  const mockStacksTx = createMock<StacksTransactionsService>({
+    getPendingTransactions,
+    getTransactionById,
+  });
+  const mockBtcTx = createMock<BitcoinTransactionsService>({
+    getAccountTransactions,
+    getTransactionByTxId,
+  });
+  const mockMarketData = createMock<MarketDataService>({ getMarketData });
+  const mockSip10 = createMock<Sip10AssetService>({ getAsset });
+  const mockStacksProtocol = createMock<StacksProtocolService>({
+    getProtocolByAddress,
+    getContractActionType,
+  });
 
   const service = new BlockchainActivityService(
     mockHiro,
@@ -102,19 +119,19 @@ describe(BlockchainActivityService.name, () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockHiro.getPrincipalTransactions = vi
-      .fn()
+    getPrincipalTransactions
+      .mockReset()
       .mockResolvedValue({ total: 0, limit: 50, cursor: emptyCursor, results: [] });
-    mockHiro.getPrincipalBalanceChanges = vi
-      .fn()
+    getPrincipalBalanceChanges
+      .mockReset()
       .mockResolvedValue({ total: 0, limit: 50, cursor: emptyCursor, results: [] });
-    mockStacksTx.getPendingTransactions = vi.fn().mockResolvedValue([]);
-    mockBtcTx.getAccountTransactions = vi.fn().mockResolvedValue([]);
-    mockMarketData.getMarketData = vi.fn().mockRejectedValue(new Error('no quote'));
-    mockSip10.getAsset = vi.fn().mockResolvedValue(sip10Asset);
-    mockStacksProtocol.getProtocolByAddress = vi.fn().mockResolvedValue(null);
-    mockBtcTx.getTransactionByTxId = vi.fn().mockResolvedValue(null);
-    mockStacksTx.getTransactionById = vi.fn().mockResolvedValue(null);
+    getPendingTransactions.mockReset().mockResolvedValue([]);
+    getAccountTransactions.mockReset().mockResolvedValue([]);
+    getMarketData.mockReset().mockRejectedValue(new Error('no quote'));
+    getAsset.mockReset().mockResolvedValue(sip10Asset);
+    getProtocolByAddress.mockReset().mockResolvedValue(null);
+    getTransactionByTxId.mockReset().mockResolvedValue(null);
+    getTransactionById.mockReset().mockResolvedValue(null);
   });
 
   describe('getActivityByAssetId', () => {
@@ -129,12 +146,10 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('returns all Bitcoin activity with pending above confirmed for native BTC', async () => {
-      mockBtcTx.getAccountTransactions = vi
-        .fn()
-        .mockResolvedValue([
-          btcTx({ txid: 'btc-confirmed', height: 900, time: 200 }),
-          btcTx({ txid: 'btc-pending', height: undefined, time: undefined }),
-        ]);
+      getAccountTransactions.mockResolvedValue([
+        btcTx({ txid: 'btc-confirmed', height: 900, time: 200 }),
+        btcTx({ txid: 'btc-pending', height: undefined, time: undefined }),
+      ]);
       const assetId: CryptoAssetId = { protocol: 'nativeBtc', id: 'BTC' };
       const result = await service.getActivityByAssetId(account, assetId);
       expect(result.map(a => a.txid)).toEqual(['btc-pending', 'btc-confirmed']);
@@ -142,7 +157,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('keeps only txs with an STX balance change for native STX', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 2,
         limit: 50,
         cursor: emptyCursor,
@@ -173,7 +188,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('keeps only txs touching the requested SIP-10 asset via balance-changes', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -189,7 +204,7 @@ describe(BlockchainActivityService.name, () => {
           ),
         ],
       });
-      mockHiro.getPrincipalBalanceChanges = vi.fn().mockResolvedValue({
+      getPrincipalBalanceChanges.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -209,7 +224,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('skips classification for txs whose affected_balances rule the asset out', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -237,7 +252,7 @@ describe(BlockchainActivityService.name, () => {
     it('propagates cancellation instead of degrading ft changes to null', async () => {
       const controller = new AbortController();
       controller.abort();
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -253,7 +268,7 @@ describe(BlockchainActivityService.name, () => {
           ),
         ],
       });
-      mockHiro.getPrincipalBalanceChanges = vi.fn().mockResolvedValue({
+      getPrincipalBalanceChanges.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -265,7 +280,7 @@ describe(BlockchainActivityService.name, () => {
           },
         ],
       });
-      mockSip10.getAsset = vi.fn().mockRejectedValue(new Error('aborted'));
+      getAsset.mockRejectedValue(new Error('aborted'));
       await expect(
         service.getActivityByAssetId(
           account,
@@ -276,7 +291,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('emits a tx present in both the mempool and the confirmed scan exactly once', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -292,7 +307,7 @@ describe(BlockchainActivityService.name, () => {
           ),
         ],
       });
-      mockStacksTx.getPendingTransactions = vi.fn().mockResolvedValue([
+      getPendingTransactions.mockResolvedValue([
         {
           tx_id: '0xdup',
           tx_type: 'token_transfer',
@@ -322,7 +337,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('reclassifies an unmapped SIP-10 transfer contract call as receive', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -339,7 +354,7 @@ describe(BlockchainActivityService.name, () => {
           ),
         ],
       });
-      mockHiro.getPrincipalBalanceChanges = vi.fn().mockResolvedValue({
+      getPrincipalBalanceChanges.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -367,7 +382,7 @@ describe(BlockchainActivityService.name, () => {
 
   describe('getActivity', () => {
     it('stitches pending above confirmed on the first page and dedups a tx present in both', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -383,7 +398,7 @@ describe(BlockchainActivityService.name, () => {
           ),
         ],
       });
-      mockStacksTx.getPendingTransactions = vi.fn().mockResolvedValue([
+      getPendingTransactions.mockResolvedValue([
         {
           tx_id: '0xdup',
           tx_type: 'token_transfer',
@@ -412,9 +427,9 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('emits an unconfirmed BTC tx that carries a time only as pending, never in the merge', async () => {
-      mockBtcTx.getAccountTransactions = vi
-        .fn()
-        .mockResolvedValue([btcTx({ txid: 'btc-inflight', height: undefined, time: 500 })]);
+      getAccountTransactions.mockResolvedValue([
+        btcTx({ txid: 'btc-inflight', height: undefined, time: 500 }),
+      ]);
       const response = await service.getActivity({ account });
       const inflight = response.items.filter(item => item.txid === 'btc-inflight');
       expect(inflight).toHaveLength(1);
@@ -443,9 +458,12 @@ describe(BlockchainActivityService.name, () => {
               coinbase: { alt_recipient: null },
             })
       );
-      mockHiro.getPrincipalTransactions = vi
-        .fn()
-        .mockResolvedValue({ total: 8, limit: 50, cursor: emptyCursor, results });
+      getPrincipalTransactions.mockResolvedValue({
+        total: 8,
+        limit: 50,
+        cursor: emptyCursor,
+        results,
+      });
 
       const response = await service.getActivity({ account, limit: 3 });
 
@@ -466,14 +484,12 @@ describe(BlockchainActivityService.name, () => {
     }
 
     it('advances past a page whose items all map to null instead of dead-ending', async () => {
-      mockBtcTx.getAccountTransactions = vi
-        .fn()
-        .mockResolvedValue([
-          unownedBtcTx('btc-unowned-1', 1000),
-          unownedBtcTx('btc-unowned-2', 999),
-          btcTx({ txid: 'btc-owned-1', time: 500 }),
-          btcTx({ txid: 'btc-owned-2', time: 400 }),
-        ]);
+      getAccountTransactions.mockResolvedValue([
+        unownedBtcTx('btc-unowned-1', 1000),
+        unownedBtcTx('btc-unowned-2', 999),
+        btcTx({ txid: 'btc-owned-1', time: 500 }),
+        btcTx({ txid: 'btc-owned-2', time: 400 }),
+      ]);
 
       const response = await service.getActivity({ account, limit: 2 });
 
@@ -483,11 +499,9 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('stops advancing at the fetch cap when every page maps to zero activities', async () => {
-      mockBtcTx.getAccountTransactions = vi
-        .fn()
-        .mockResolvedValue(
-          Array.from({ length: 12 }, (_, i) => unownedBtcTx(`btc-unowned-${i}`, 1000 - i))
-        );
+      getAccountTransactions.mockResolvedValue(
+        Array.from({ length: 12 }, (_, i) => unownedBtcTx(`btc-unowned-${i}`, 1000 - i))
+      );
 
       const response = await service.getActivity({ account, limit: 2 });
 
@@ -503,7 +517,7 @@ describe(BlockchainActivityService.name, () => {
     }
 
     it('drops the fee-only phantom STX change on a non-STX contract call', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -527,7 +541,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('nets the fee out of a STX-moving contract call', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -551,7 +565,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('does not add the fee back on a sponsored tx (the sponsor pays it)', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -573,7 +587,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('attaches no fee to a confirmed sponsored tx the user initiated', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -598,7 +612,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('attaches no fee to a pending sponsored tx the user initiated', async () => {
-      mockStacksTx.getPendingTransactions = vi.fn().mockResolvedValue([
+      getPendingTransactions.mockResolvedValue([
         {
           tx_id: '0xpendingsponsored',
           tx_type: 'token_transfer',
@@ -616,7 +630,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('shows the transfer amount, not amount+fee, on a confirmed send', async () => {
-      mockHiro.getPrincipalTransactions = vi.fn().mockResolvedValue({
+      getPrincipalTransactions.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,
@@ -640,17 +654,17 @@ describe(BlockchainActivityService.name, () => {
   });
 
   describe('getActivityByTxId', () => {
-    const btcAccount = {
+    const btcAccount: AccountAddresses = {
       id: { fingerprint: 'fp', accountIndex: 0 },
-      bitcoin: { type: 'fixedAddress', address: 'bc1qmine' },
-    } as unknown as AccountAddresses;
-    const stxAccount = {
+      bitcoin: { type: 'fixedAddress', address: 'bc1qmine', paymentType: 'p2wpkh' },
+    };
+    const stxAccount: AccountAddresses = {
       id: { fingerprint: 'fp', accountIndex: 0 },
       stacks: { stxAddress: 'SP1' },
-    } as unknown as AccountAddresses;
+    };
 
     it('marks bitcoin ownership by the account address, not the fetched owned flags', async () => {
-      mockBtcTx.getTransactionByTxId = vi.fn().mockResolvedValue(
+      getTransactionByTxId.mockResolvedValue(
         btcTx({
           txid: 'btc-rx',
           vin: [{ owned: true, value: '1000', address: 'ext', n: 0 }],
@@ -664,7 +678,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('maps an stx receive without a balance-changes call', async () => {
-      mockStacksTx.getTransactionById = vi.fn().mockResolvedValue({
+      getTransactionById.mockResolvedValue({
         tx_id: '0xrx',
         sender: { address: 'SP2', nonce: 1 },
         sponsor: null,
@@ -693,7 +707,7 @@ describe(BlockchainActivityService.name, () => {
     });
 
     it('fetches balance changes for a contract call and reclassifies a received sip10 transfer', async () => {
-      mockStacksTx.getTransactionById = vi.fn().mockResolvedValue({
+      getTransactionById.mockResolvedValue({
         tx_id: '0xcall',
         sender: { address: 'SP2', nonce: 1 },
         sponsor: null,
@@ -714,7 +728,7 @@ describe(BlockchainActivityService.name, () => {
         type: 'contract_call',
         contract_call: { contract_id: 'SP.token', function_name: 'transfer' },
       });
-      mockHiro.getPrincipalBalanceChanges = vi.fn().mockResolvedValue({
+      getPrincipalBalanceChanges.mockResolvedValue({
         total: 1,
         limit: 50,
         cursor: emptyCursor,

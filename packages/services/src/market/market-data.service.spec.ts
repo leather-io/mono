@@ -1,18 +1,22 @@
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import { Sip10Asset } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
 import type { FungibleAssetService } from '../assets/fungible-asset.service';
-import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
-import { SettingsService } from '../infrastructure/settings/settings.service';
+import { type LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import {
+  type SettingsService,
+  type UserSettings,
+} from '../infrastructure/settings/settings.service';
+import { createMock } from '../test/create-mock';
+import { createMarketSip10Asset, createMarketUserSettings } from '../test/market-fixtures';
 import { MarketDataService } from './market-data.service';
 
 describe(MarketDataService.name, () => {
-  const mockSettingsService = {
-    getSettings: vi.fn().mockReturnValue({ quoteCurrency: 'EUR' }),
-  } as unknown as SettingsService;
+  const mockSettingsService: SettingsService = {
+    getSettings: vi.fn<() => UserSettings>().mockReturnValue(createMarketUserSettings('EUR')),
+  };
 
-  const mockLeatherApiClient = {
+  const mockLeatherApiClient = createMock<LeatherApiClient>({
     fetchNativeTokenPriceMap: vi.fn().mockReturnValue({
       STX: {
         price: 2,
@@ -32,11 +36,11 @@ describe(MarketDataService.name, () => {
         JPY: 200,
       },
     }),
-  } as unknown as LeatherApiClient;
+  });
 
-  const mockFungibleAssetService = {
+  const mockFungibleAssetService = createMock<FungibleAssetService>({
     getAsset: vi.fn().mockReturnValue(stxAsset),
-  } as unknown as FungibleAssetService;
+  });
 
   const marketDataService = new MarketDataService(
     mockSettingsService,
@@ -61,11 +65,12 @@ describe(MarketDataService.name, () => {
     });
 
     it('should return sip10 asset market data in USD', async () => {
-      const sip10MarketData = await marketDataService.getMarketDataUsd({
-        protocol: 'sip10',
-        contractId: 'SP123.some-token',
-        symbol: 'SOME',
-      } as Sip10Asset);
+      const sip10MarketData = await marketDataService.getMarketDataUsd(
+        createMarketSip10Asset({
+          contractId: 'SP123.some-token',
+          symbol: 'SOME',
+        })
+      );
 
       expect(sip10MarketData.pair.base).toEqual('SOME');
       expect(sip10MarketData.pair.quote).toEqual('USD');
@@ -88,11 +93,12 @@ describe(MarketDataService.name, () => {
     });
 
     it('should return sip10 asset market data in the users quote currency', async () => {
-      const sip10MarketData = await marketDataService.getMarketData({
-        protocol: 'sip10',
-        contractId: 'SP123.some-token',
-        symbol: 'SOME',
-      } as Sip10Asset);
+      const sip10MarketData = await marketDataService.getMarketData(
+        createMarketSip10Asset({
+          contractId: 'SP123.some-token',
+          symbol: 'SOME',
+        })
+      );
 
       expect(sip10MarketData.pair.base).toEqual('SOME');
       expect(sip10MarketData.pair.quote).toEqual('EUR');
@@ -126,6 +132,12 @@ describe(MarketDataService.name, () => {
       expect(usdUsdExchangeRate.pair.quote).toEqual('USD');
       expect(usdUsdExchangeRate.price.amount).toEqual(initBigNumber(100));
       expect(usdUsdExchangeRate.price.symbol).toEqual('USD');
+    });
+
+    it('should throw when the API has no rate for the quote currency', async () => {
+      await expect(marketDataService.getUsdExchangeRate('GBP')).rejects.toThrow(
+        'No USD exchange rate for GBP'
+      );
     });
   });
 });
