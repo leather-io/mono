@@ -135,6 +135,7 @@
     "@leather.io/panda-preset": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/test-app": "workspace:*",
+    "@leather.io/tools": "workspace:*",
     "@pandacss/dev": "1.7.1",
     "@playwright/test": "1.64.0",
     "@redux-devtools/cli": "4.0.4",

@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { entries } from 'remeda';
 
-const leatherHeaders: HeadersInit = {
+const leatherHeaders = {
   'x-partner': 'Leather',
-};
+} satisfies HeadersInit;
 
 axios.interceptors.request.use(request => {
   if (request.url?.includes('hiro.so'))
-    Object.entries(leatherHeaders).forEach(([key, value]) => request.headers.set(key, value));
+    entries(leatherHeaders).forEach(([key, value]) => request.headers.set(key, value));
 
   return request;
 });

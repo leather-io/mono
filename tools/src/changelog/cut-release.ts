@@ -2,18 +2,18 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 
 import { getAppPaths } from '../utils/paths.js';
+import { readPackageVersion } from '../utils/version.js';
 import { parseChangelog } from './parser.js';
 import type { AppName } from './types.js';
 
 const REPO_URL = 'https://github.com/leather-io/mono';
 
-function validateApp(app: string): app is AppName {
+function validateApp(app: string) {
   return app === 'mobile' || app === 'extension';
 }
 
 function readCurrentVersion(packageJsonPath: string): string {
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as { version: string };
-  return packageJson.version;
+  return readPackageVersion(packageJsonPath);
 }
 
 function readPublishedVersion(publishedVersionPath: string): string | null {
