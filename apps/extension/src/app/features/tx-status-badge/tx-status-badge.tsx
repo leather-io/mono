@@ -1,17 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { Box } from 'leather-styles/jsx';
 
-import { createGetTransactionByIdQueryOptions } from '@leather.io/query';
+import { createStacksTransactionByIdQueryConfig } from '@leather.io/queries';
 import { Badge, Spinner } from '@leather.io/ui';
 import { capitalize } from '@leather.io/utils';
 
 import { statusFromTx } from '@app/common/transactions/stacks/transaction.utils';
-import { useStacksClient } from '@app/query/stacks/stacks-client';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function TxStatusBadge({ txid }: { txid: string }) {
-  const client = useStacksClient();
+  const settings = useUserSettings();
   const { data } = useQuery({
-    ...createGetTransactionByIdQueryOptions({ client, txid }),
+    ...createStacksTransactionByIdQueryConfig(txid, settings),
     refetchInterval(query) {
       if (!query.state.data || query.state.data.status === 'pending') return 3000;
       return false;

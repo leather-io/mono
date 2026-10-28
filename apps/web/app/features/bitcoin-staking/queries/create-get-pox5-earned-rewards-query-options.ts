@@ -8,8 +8,7 @@ import {
   uintCV,
 } from '@stacks/transactions';
 import { isStackingDaoSignerManager } from '~/data/bitcoin-staking-data';
-
-import { type StacksClient } from '@leather.io/query';
+import { type StacksApiClient } from '~/utils/stacks-api-client';
 
 import { parseContractId } from '../utils/contract-id';
 
@@ -43,7 +42,7 @@ interface CreateGetPox5EarnedRewardsQueryOptionsArgs {
   signerManagerContractId: string | undefined;
   cycle: number;
   pox5ContractId: string;
-  client: Pick<StacksClient, 'callReadOnlyFunction'>;
+  client: Pick<StacksApiClient, 'callReadOnlyFunction'>;
 }
 
 export function createGetPox5EarnedRewardsQueryOptions({

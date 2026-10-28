@@ -8,6 +8,7 @@ import { HttpCacheService } from '../../cache/http-cache.service';
 
 export type AlexSdkTokenInfo = TokenInfo;
 type AlexSdkCurrency = Currency;
+export type AlexSdkLatestPrices = Partial<Record<AlexSdkCurrency, number>>;
 type AlexSdkTxToBroadCast = TxToBroadCast;
 export type AlexSdkAMMRoute = AMMRoute;
 
@@ -24,6 +25,10 @@ export class AlexSdkClient {
       ['alex-sdk-fetch-swappable-currency'],
       async () => await this.alex.fetchSwappableCurrency()
     );
+  }
+
+  public async getLatestPrices(): Promise<AlexSdkLatestPrices> {
+    return await this.alex.getLatestPrices();
   }
 
   private async toCurrency(value: string): Promise<AlexSdkCurrency> {

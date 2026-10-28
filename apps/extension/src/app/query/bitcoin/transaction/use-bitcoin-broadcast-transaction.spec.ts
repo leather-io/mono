@@ -20,6 +20,10 @@ vi.mock('@leather.io/bitcoin', () => ({
   decodeBitcoinTx: () => ({ inputs: [] }),
 }));
 
+vi.mock('@leather.io/services', () => ({
+  getMempoolApiClient: () => ({ broadcastTransaction: h.broadcastTransaction }),
+}));
+
 vi.mock('@leather.io/utils', async importOriginal => ({
   ...(await importOriginal<typeof LeatherUtils>()),
   delay: () => Promise.resolve(),
@@ -27,12 +31,6 @@ vi.mock('@leather.io/utils', async importOriginal => ({
 
 vi.mock('@shared/logger', () => ({
   logger: { error: vi.fn() },
-}));
-
-vi.mock('../clients/bitcoin-client', () => ({
-  useBitcoinClient: () => ({
-    transactionsApi: { broadcastTransaction: h.broadcastTransaction },
-  }),
 }));
 
 vi.mock('./use-check-taproot-utxos', () => ({

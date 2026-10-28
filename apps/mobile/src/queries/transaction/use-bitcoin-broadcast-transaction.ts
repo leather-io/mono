@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react';
 
+import { getMempoolApiClient } from '@leather.io/services';
 import { delay } from '@leather.io/utils';
-
-import { useBitcoinClient } from '../clients/bitcoin-client';
 
 interface BroadcastCallbackArgs {
   tx: string;
@@ -13,14 +12,13 @@ interface BroadcastCallbackArgs {
 }
 
 export function useBitcoinBroadcastTransaction() {
-  const client = useBitcoinClient();
   const [isBroadcasting, setIsBroadcasting] = useState(false);
 
   const broadcastTx = useCallback(
     async ({ tx, onResult, onError, onFinally, delayTime = 700 }: BroadcastCallbackArgs) => {
       try {
         setIsBroadcasting(true);
-        const resp = await client.transactionsApi.broadcastTransaction(tx);
+        const resp = await getMempoolApiClient().broadcastTransaction(tx);
         // simulate slower broadcast time to allow mempool refresh
         await delay(delayTime);
         if (!resp.ok) throw new Error(await resp.text());
@@ -35,7 +33,7 @@ export function useBitcoinBroadcastTransaction() {
         onFinally?.();
       }
     },
-    [client]
+    []
   );
 
   return { broadcastTx, isBroadcasting };
