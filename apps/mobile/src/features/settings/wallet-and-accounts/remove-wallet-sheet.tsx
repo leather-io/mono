@@ -3,7 +3,7 @@ import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { LEATHER_GUIDES_MOBILE_REMOVE_WALLET } from '@/shared/constants';
 import { t } from '@lingui/core/macro';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { type SheetRef } from '@leather.io/ui/native';
 
 interface RemoveWalletSheetProps {
   sheetRef: SheetRef;

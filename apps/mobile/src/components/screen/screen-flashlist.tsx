@@ -1,9 +1,9 @@
 import Animated from 'react-native-reanimated';
 
 import { useScreenScrollContext } from '@/components/screen/screen-scroll-context';
-import { NormalizeScrollContainerProps } from '@/components/screen/screen.types';
+import { type NormalizeScrollContainerProps } from '@/components/screen/screen.types';
 import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
-import { FlashList, FlashListProps } from '@shopify/flash-list';
+import { FlashList, type FlashListProps } from '@shopify/flash-list';
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList) as typeof FlashList;
 

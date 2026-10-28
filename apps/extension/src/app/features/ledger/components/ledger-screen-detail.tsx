@@ -1,8 +1,6 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { Caption, InfoCircleIcon } from '@leather.io/ui';
-
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
+import { BasicTooltip, Caption, InfoCircleIcon } from '@leather.io/ui';
 
 interface LedgerScreenDetailProps {
   children: React.ReactNode;

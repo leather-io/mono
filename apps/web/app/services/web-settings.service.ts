@@ -3,7 +3,7 @@ import { resolveNetworkConfiguration } from '~/features/multisig/network/resolve
 import { quoteCurrencyAtom } from '~/store/quote-currency';
 import { networkNameAtom } from '~/store/stacks-network';
 
-import { SettingsService } from '@leather.io/services';
+import { type SettingsService } from '@leather.io/services';
 
 export class WebSettingsService implements SettingsService {
   getSettings() {

@@ -1,4 +1,4 @@
-import { HttpCacheKey, httpCacheConfig } from './http-cache.config';
+import { type HttpCacheKey, httpCacheConfig } from './http-cache.config';
 
 export interface HttpCacheOptions {
   ttl?: number;

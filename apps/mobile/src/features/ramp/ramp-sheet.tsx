@@ -1,4 +1,4 @@
-import { RefObject, useImperativeHandle, useRef, useState } from 'react';
+import { type RefObject, useImperativeHandle, useRef, useState } from 'react';
 
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
@@ -6,7 +6,7 @@ import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 
 import { type OnramperMode } from '@leather.io/features';
 import type { FungibleCryptoAsset } from '@leather.io/models';
-import { SheetInstance } from '@leather.io/ui/native';
+import { type SheetInstance } from '@leather.io/ui/native';
 
 import { Ramp } from './ramp';
 

@@ -11,9 +11,12 @@ import {
   invalidAddress,
 } from '../mocks/mocks';
 import {
+  btcAddressNetworkPredicate,
   btcAddressNetworkValidator,
+  btcAddressPredicate,
   btcAddressValidator,
   getNetworkTypeFromAddress,
+  nonEmptyStringPredicate,
   nonEmptyStringValidator,
 } from './address-schema';
 
@@ -285,5 +288,30 @@ describe('integration with zod schema', () => {
       networkAddress: '',
     };
     expect(schema.safeParse(validDataWithEmptyAddress).success).toBe(true);
+  });
+});
+
+describe('address predicates', () => {
+  it('should reject undefined and blank values as non-empty strings', () => {
+    expect(nonEmptyStringPredicate(undefined)).toBe(false);
+    expect(nonEmptyStringPredicate('  ')).toBe(false);
+    expect(nonEmptyStringPredicate('a')).toBe(true);
+  });
+
+  it('should treat undefined and empty addresses as valid', () => {
+    expect(btcAddressPredicate(undefined)).toBe(true);
+    expect(btcAddressPredicate('')).toBe(true);
+    expect(btcAddressPredicate(invalidAddress)).toBe(false);
+    expect(btcAddressPredicate(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS)).toBe(true);
+  });
+
+  it('should check the address network', () => {
+    const isMainnetAddress = btcAddressNetworkPredicate('mainnet');
+    expect(isMainnetAddress(undefined)).toBe(true);
+    expect(isMainnetAddress(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS)).toBe(true);
+    expect(isMainnetAddress(TEST_TESNET_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS)).toBe(false);
+    expect(btcAddressNetworkPredicate('signet')(TEST_TESNET_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS)).toBe(
+      true
+    );
   });
 });

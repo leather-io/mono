@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 import { currencyDecimalsMap } from '@leather.io/constants';
-import { convertAmountToFractionalUnit } from '@leather.io/utils';
+import { convertAmountToFractionalUnit, isDefined } from '@leather.io/utils';
 
 interface MarketDataVendorWithPriceSelector {
   result: unknown;
@@ -13,6 +13,7 @@ export function pullPriceDataFromAvailableResponses(
   return responses
     .filter(({ result }) => !!result)
     .map(({ result, selector: priceSelector }) => priceSelector(result))
-    .map(val => new BigNumber(val ?? NaN))
+    .filter(isDefined)
+    .map(val => new BigNumber(val))
     .map(val => convertAmountToFractionalUnit(val, currencyDecimalsMap.USD));
 }

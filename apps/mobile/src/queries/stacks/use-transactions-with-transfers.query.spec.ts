@@ -1,8 +1,5 @@
 // TODO: ENG-8 replace this test with integration tests
-import {
-  AddressTransactionsWithTransfersListResponse,
-  Transaction,
-} from '@stacks/stacks-blockchain-api-types';
+import { type AddressTransactionsWithTransfersListResponse } from '@stacks/stacks-blockchain-api-types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -35,8 +32,37 @@ describe('useGetAccountTransactionsWithTransfersQueries', () => {
           fee_rate: '0',
           sender_address: 'SP123...',
           sponsored: false,
+          post_condition_mode: 'deny',
+          post_conditions: [],
+          anchor_mode: 'any',
+          block_hash: '0x',
+          block_height: 0,
+          block_time: 0,
+          block_time_iso: '',
+          burn_block_height: 0,
+          burn_block_time: 0,
+          burn_block_time_iso: '',
+          parent_burn_block_time: 0,
+          parent_burn_block_time_iso: '',
+          canonical: true,
+          tx_index: 0,
+          tx_status: 'success',
+          tx_result: { hex: '0x', repr: '' },
+          event_count: 0,
+          parent_block_hash: '0x',
+          is_unanchored: false,
+          microblock_hash: '0x',
+          microblock_sequence: 0,
+          microblock_canonical: true,
+          execution_cost_read_count: 0,
+          execution_cost_read_length: 0,
+          execution_cost_runtime: 0,
+          execution_cost_write_count: 0,
+          execution_cost_write_length: 0,
+          events: [],
           tx_type: 'token_transfer',
-        } as Transaction,
+          token_transfer: { recipient_address: 'SP123...', amount: '0', memo: '' },
+        },
         stx_sent: '0',
         stx_received: '0',
         stx_transfers: [],

@@ -1,11 +1,11 @@
 import {
-  BitcoinStakingProviderId,
-  StakingPoolSlug,
+  type BitcoinStakingProviderId,
+  type StakingPoolSlug,
   getStakingPoolFromSlug,
   isPoolAvailableOnNetwork,
   stakingPoolSlugSchema,
 } from '~/data/bitcoin-staking-data';
-import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
+import { type NetworkMode } from '~/features/stacking/utils/stacking-network-types';
 import { switchTargetParam } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
 interface ParseSwitchTargetSlugArgs {

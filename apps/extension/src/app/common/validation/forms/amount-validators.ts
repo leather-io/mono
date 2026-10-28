@@ -1,11 +1,13 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
 
+import { isBtcBalanceSufficient, isBtcMinimumSpend } from '@leather.io/bitcoin';
+import { BITCOIN_MINIMUM_SPEND_IN_SATS } from '@leather.io/constants';
 import type { Money, OwnedUtxo } from '@leather.io/models';
 import {
-  btcToSat,
   convertAmountToBaseUnit,
   countDecimals,
+  createMoneyFromDecimal,
   isNumber,
   satToBtc,
   stxToMicroStx,
@@ -19,8 +21,6 @@ import { formatCurrency } from '@app/common/currency-formatter';
 
 import { formatInsufficientBalanceError, formatPrecisionError } from '../../error-formatters';
 import { currencyAmountValidator, stxAmountPrecisionValidator } from './currency-validators';
-
-const minSpendAmountInSats = 546;
 
 function getFeeFromFormValues(formValues: unknown): string | number | BigNumber {
   if (typeof formValues !== 'object' || formValues === null || !('fee' in formValues)) {
@@ -44,7 +44,7 @@ interface BtcInsufficientBalanceValidatorArgs {
     recipient: string,
     utxos: OwnedUtxo[]
   ): {
-    spendableBitcoin: BigNumber;
+    amount: Money;
   };
   recipient: string;
   utxos: OwnedUtxo[];
@@ -59,9 +59,10 @@ export function btcInsufficientBalanceValidator({
       if (!value) return false;
       const maxSpend = calcMaxSpend(recipient, utxos);
       if (!maxSpend) return false;
-      const desiredSpend = new BigNumber(value);
-      if (desiredSpend.isGreaterThan(maxSpend.spendableBitcoin)) return false;
-      return true;
+      return isBtcBalanceSufficient({
+        desiredSpend: createMoneyFromDecimal(value, 'BTC'),
+        maxSpend: maxSpend.amount,
+      });
     },
     { error: FormErrorMessages.InsufficientFunds }
   );
@@ -71,11 +72,9 @@ export function btcMinimumSpendValidator() {
   return z.refine<number | undefined>(
     value => {
       if (!value) return false;
-      const desiredSpend = btcToSat(value);
-      if (desiredSpend.isLessThan(minSpendAmountInSats)) return false;
-      return true;
+      return isBtcMinimumSpend(createMoneyFromDecimal(value, 'BTC'));
     },
-    { error: `Minimum is ${satToBtc(minSpendAmountInSats).toString()}` }
+    { error: `Minimum is ${satToBtc(BITCOIN_MINIMUM_SPEND_IN_SATS).toString()}` }
   );
 }
 

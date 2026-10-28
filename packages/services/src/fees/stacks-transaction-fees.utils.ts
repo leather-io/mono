@@ -1,11 +1,11 @@
-import { PayloadType, StacksTransactionWire } from '@stacks/transactions';
+import { PayloadType, type StacksTransactionWire } from '@stacks/transactions';
 
-import { StacksTransactionFeeQuote, TransactionFeeTier } from '@leather.io/models';
+import { type StacksTransactionFeeQuote, type TransactionFeeTier } from '@leather.io/models';
 import { isSip9TransferContactCall, isSip10TransferContactCall } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
-import { HiroTransactionFeeEstimateResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { StacksFeeConfig } from '../infrastructure/app-config/app-config.service';
+import { type HiroTransactionFeeEstimateResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
+import { type StacksFeeConfig } from '../infrastructure/app-config/app-config.service';
 import { calculateFeeRate, enforceFeeBounds, enforceFeeMinimum } from './transaction-fees.utils';
 
 /*

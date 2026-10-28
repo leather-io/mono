@@ -1,10 +1,12 @@
 import type { NonFungibleTokenHolding } from '@stacks/stacks-blockchain-api-types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { type AccountAddresses, CryptoAssetProtocols, type Sip9Asset } from '@leather.io/models';
+import { type AccountAddresses, CryptoAssetProtocols } from '@leather.io/models';
 
 import type { Sip9AssetService } from '../assets/sip9-asset.service';
 import type { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { createTestSip9Asset } from '../test/assets-sip9';
+import { createMock } from '../test/create-mock';
 import { Sip9sService } from './sip9s.service';
 
 describe(Sip9sService.name, () => {
@@ -23,20 +25,18 @@ describe(Sip9sService.name, () => {
     },
   ];
 
-  const mockStacksApiClient = {
-    getNftHoldings: vi.fn().mockResolvedValue(mockNftHoldings),
-  } as unknown as HiroStacksApiClient;
+  const getNftHoldings = vi.fn().mockResolvedValue(mockNftHoldings);
+  const mockStacksApiClient = createMock<HiroStacksApiClient>({ getNftHoldings });
 
-  const mockSip9AssetService = {
-    getAsset: vi.fn().mockImplementation((assetId: string) =>
-      Promise.resolve({
-        protocol: CryptoAssetProtocols.sip9,
-        assetId,
-        name: 'Test NFT',
-        content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
-      })
-    ),
-  } as unknown as Sip9AssetService;
+  const getAsset = vi.fn().mockImplementation((assetId: string) =>
+    Promise.resolve({
+      protocol: CryptoAssetProtocols.sip9,
+      assetId,
+      name: 'Test NFT',
+      content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
+    })
+  );
+  const mockSip9AssetService = createMock<Sip9AssetService>({ getAsset });
 
   const sip9sService = new Sip9sService(mockStacksApiClient, mockSip9AssetService);
 
@@ -97,9 +97,7 @@ describe(Sip9sService.name, () => {
         stacks: { stxAddress: 'ST123' },
       };
 
-      vi.spyOn(mockSip9AssetService, 'getAsset').mockRejectedValueOnce(
-        new Error('Failed to fetch')
-      );
+      getAsset.mockRejectedValueOnce(new Error('Failed to fetch'));
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
@@ -113,12 +111,14 @@ describe(Sip9sService.name, () => {
         stacks: { stxAddress: 'ST123' },
       };
 
-      vi.spyOn(mockSip9AssetService, 'getAsset').mockResolvedValueOnce({
-        protocol: CryptoAssetProtocols.sip9,
-        assetId: 'SP000.bns-archive',
-        name: 'BNS - Archive',
-        content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
-      } as Sip9Asset);
+      getAsset.mockResolvedValueOnce(
+        createTestSip9Asset({
+          protocol: CryptoAssetProtocols.sip9,
+          assetId: 'SP000.bns-archive',
+          name: 'BNS - Archive',
+          content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
+        })
+      );
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
@@ -148,7 +148,7 @@ describe(Sip9sService.name, () => {
         },
       ];
 
-      vi.spyOn(mockStacksApiClient, 'getNftHoldings').mockResolvedValueOnce(lpHoldings);
+      getNftHoldings.mockResolvedValueOnce(lpHoldings);
 
       const account: AccountAddresses = {
         id: { fingerprint: 'fp1', accountIndex: 0 },
@@ -172,9 +172,7 @@ describe(Sip9sService.name, () => {
         stacks: { stxAddress: 'ST123' },
       };
 
-      vi.spyOn(mockStacksApiClient, 'getNftHoldings').mockRejectedValueOnce(
-        new Error('Stacks API error')
-      );
+      getNftHoldings.mockRejectedValueOnce(new Error('Stacks API error'));
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 

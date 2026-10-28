@@ -1,11 +1,12 @@
 import { type StacksNetwork } from '@stacks/network';
 import type { ClarityValue } from '@stacks/transactions';
 
+import { stxSignMessageTypeSchema } from '@leather.io/rpc';
+
 import {
   type SignedMessageType,
   type StructuredMessageDataDomain,
   type UnsignedMessage,
-  isSignableMessageType,
   isStructuredMessageType,
   isUtf8MessageType,
 } from '@shared/signature/signature-types';
@@ -55,7 +56,7 @@ export function StacksMessageSigning({
   useOnOriginTabClose(() => closeWindow());
 
   if (!tabId) return null;
-  if (!isSignableMessageType(messageType)) return null;
+  if (!stxSignMessageTypeSchema.safeParse(messageType).success) return null;
   if (!origin) return null;
 
   return (

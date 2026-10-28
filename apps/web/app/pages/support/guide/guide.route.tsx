@@ -4,9 +4,9 @@ import { cmsClient } from '~/constants/cms-client';
 import { getDeprecationRedirect } from '~/pages/redirects/shared-redirect-logic';
 import { Guide } from '~/pages/support/guide/guide';
 
-import { HelpCenterGuideBySlugQueryResult, helpCenterGuideBySlugQuery } from '@leather.io/cms';
+import { type HelpCenterGuideBySlugQueryResult, helpCenterGuideBySlugQuery } from '@leather.io/cms';
 
-import { Route } from './+types/guide.route';
+import { type Route } from './+types/guide.route';
 
 export async function loader({
   params,

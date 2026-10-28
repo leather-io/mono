@@ -3,9 +3,9 @@ import { Box } from 'leather-styles/jsx';
 
 import { createGetTransactionByIdQueryOptions } from '@leather.io/query';
 import { Badge, Spinner } from '@leather.io/ui';
+import { capitalize } from '@leather.io/utils';
 
 import { statusFromTx } from '@app/common/transactions/stacks/transaction.utils';
-import { capitalize } from '@app/common/utils';
 import { useStacksClient } from '@app/query/stacks/stacks-client';
 
 export function TxStatusBadge({ txid }: { txid: string }) {

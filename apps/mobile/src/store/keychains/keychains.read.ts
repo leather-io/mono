@@ -1,6 +1,6 @@
 import { keychainAdapter } from '@leather.io/state/keychains';
 
-import { RootState } from '..';
+import { type RootState } from '../store';
 
 export const keychainSelectors = keychainAdapter.getSelectors(
   (state: RootState) => state.keychains

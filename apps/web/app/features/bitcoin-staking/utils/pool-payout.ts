@@ -1,4 +1,4 @@
-import { BitcoinStakingPool } from '~/data/bitcoin-staking-data';
+import { type BitcoinStakingPool } from '~/data/bitcoin-staking-data';
 
 export type PoolPayoutMode = 'sbtc' | 'sbtc-or-btc' | 'btc-only';
 

@@ -12,27 +12,28 @@ const networkModeByAddressNetwork: Record<Network, BitcoinNetworkModes> = {
   [Network.regtest]: 'regtest',
 };
 
+export function nonEmptyStringPredicate(value?: string) {
+  return value !== undefined && value.trim() !== '';
+}
+
+export function btcAddressPredicate(value?: string) {
+  if (isUndefined(value) || isEmptyString(value)) return true;
+  return validate(value);
+}
+
 export function nonEmptyStringValidator(message = '') {
-  return z
-    .string()
-    .refine((value: string) => value !== undefined && value.trim() !== '', { message });
+  return z.string().refine(nonEmptyStringPredicate, { message });
 }
 
 export function btcAddressValidator() {
-  return z.string().refine(
-    (value: string) => {
-      if (isUndefined(value) || isEmptyString(value)) return true;
-      return validate(value);
-    },
-    { message: 'Bitcoin address is not valid' }
-  );
+  return z.string().refine(btcAddressPredicate, { message: 'Bitcoin address is not valid' });
 }
 
 export function getNetworkTypeFromAddress(address: string) {
   return networkModeByAddressNetwork[getAddressInfo(address).network];
 }
 
-function btcAddressNetworkValidatorFactory(network: BitcoinNetworkModes) {
+export function btcAddressNetworkPredicate(network: BitcoinNetworkModes) {
   function getAddressNetworkType(network: BitcoinNetworkModes): Network | undefined {
     // Signet uses testnet address format, this parsing is to please the
     // validation library
@@ -47,7 +48,7 @@ function btcAddressNetworkValidatorFactory(network: BitcoinNetworkModes) {
 }
 
 export function btcAddressNetworkValidator(network: BitcoinNetworkModes) {
-  return z.string().refine(btcAddressNetworkValidatorFactory(network), {
+  return z.string().refine(btcAddressNetworkPredicate(network), {
     message: 'Address is for incorrect network',
   });
 }
