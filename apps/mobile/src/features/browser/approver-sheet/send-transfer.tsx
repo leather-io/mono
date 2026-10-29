@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 
+import { ApproverButtons } from '@/features/approver/components/approver-buttons';
+import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
@@ -10,6 +12,7 @@ import {
   useBitcoinPayerFromKeyOrigin,
 } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { destructAccountIdentifier } from '@/store/utils';
+import { t } from '@lingui/core/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 
 import {
@@ -25,6 +28,7 @@ import {
   type sendTransfer,
 } from '@leather.io/rpc';
 import { type UtxoTotals } from '@leather.io/services';
+import { Approver } from '@leather.io/ui/native';
 import { isDefined } from '@leather.io/utils';
 
 import { getSendTransferRecipients } from './send-transfer.utils';
@@ -37,15 +41,56 @@ interface SendTransferApproverProps {
   accountId: string;
 }
 export function SendTransferApprover(props: SendTransferApproverProps) {
-  const { data: feeRates } = useAverageBitcoinFeeRates();
+  const feeRatesQuery = useAverageBitcoinFeeRates();
   const { fingerprint, accountIndex } = destructAccountIdentifier(props.accountId);
   const utxos = useAccountUtxos(fingerprint, accountIndex);
 
   // TODO: find a better way to handle this
   if (!utxos.value) return null;
-  if (!feeRates) return null;
+  if (feeRatesQuery.isPending) return null;
+  if (!feeRatesQuery.data) {
+    return (
+      <SendTransferFeesUnavailable
+        origin={props.app.origin}
+        params={props.request.params}
+        closeApprover={props.closeApprover}
+      />
+    );
+  }
 
-  return <BaseSendTransferApprover {...props} utxos={utxos.value} feeRates={feeRates} />;
+  return <BaseSendTransferApprover {...props} utxos={utxos.value} feeRates={feeRatesQuery.data} />;
+}
+
+interface SendTransferFeesUnavailableProps {
+  origin: string;
+  params: RpcRequest<typeof sendTransfer>['params'];
+  closeApprover(): void;
+}
+function SendTransferFeesUnavailable({
+  origin,
+  params,
+  closeApprover,
+}: SendTransferFeesUnavailableProps) {
+  const recipients = getSendTransferRecipients(params);
+  return (
+    <Approver requester={origin}>
+      <Approver.Container>
+        <Approver.Header title={t`Send token`} />
+        <Approver.Section>
+          <Approver.Subheader>{t`To address`}</Approver.Subheader>
+          <OutcomeAddressesCard addresses={recipients.map(recipient => recipient.address)} />
+        </Approver.Section>
+      </Approver.Container>
+      <Approver.Footer>
+        <ApproverButtons
+          onBack={closeApprover}
+          onClose={closeApprover}
+          onApprove={closeApprover}
+          isSubmitDisabled
+        />
+      </Approver.Footer>
+    </Approver>
+  );
 }
 
 function BaseSendTransferApprover(
@@ -70,7 +115,7 @@ function BaseSendTransferApprover(
       bitcoinAccount.nativeSegwit &&
       generateBitcoinUnsignedTransaction({
         recipients: getSendTransferRecipients(props.request.params),
-        feeRate: props.feeRates?.halfHourFee.toNumber() ?? 1,
+        feeRate: props.feeRates.halfHourFee.toNumber(),
         isSendingMax: false,
         utxos: props.utxos.available,
         network: getBtcSignerLibNetworkConfigByMode(networkMode),
@@ -84,7 +129,7 @@ function BaseSendTransferApprover(
       bitcoinAccount.nativeSegwit,
       networkMode,
       payerLookup,
-      props.feeRates?.halfHourFee,
+      props.feeRates.halfHourFee,
       props.request.params,
       props.utxos.available,
     ]

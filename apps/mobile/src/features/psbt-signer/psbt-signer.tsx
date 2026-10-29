@@ -70,13 +70,13 @@ interface PsbtSignerProps extends AccountId {
   onClose(): void;
 }
 export function PsbtSigner(props: PsbtSignerProps) {
-  const { data: feeRates } = useAverageBitcoinFeeRates();
-  if (!feeRates) return null;
-  return <BasePsbtSigner feeRates={feeRates} {...props} />;
+  const feeRatesQuery = useAverageBitcoinFeeRates();
+  if (feeRatesQuery.isPending) return null;
+  return <BasePsbtSigner feeRates={feeRatesQuery.data} {...props} />;
 }
 
 interface BasePsbtSignerProps extends PsbtSignerProps {
-  feeRates: AverageBitcoinFeeRates;
+  feeRates?: AverageBitcoinFeeRates;
 }
 function BasePsbtSigner(props: BasePsbtSignerProps) {
   const {
@@ -143,15 +143,16 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
 
   const coinSelectionUtxos = utxos.value?.available ?? [];
 
-  const fees = getBitcoinFees({
-    feeRates,
-    recipients,
-    utxos: coinSelectionUtxos,
-    isSendingMax: false,
+  const [selectedFeeType, setSelectedFeeType] = useState<FeeTypes>(() => {
+    if (!feeRates) return FeeTypes.Custom;
+    const fees = getBitcoinFees({
+      feeRates,
+      recipients,
+      utxos: coinSelectionUtxos,
+      isSendingMax: false,
+    });
+    return getFeeType({ psbtFee: psbtDetails.fee, fees });
   });
-  const [selectedFeeType, setSelectedFeeType] = useState<FeeTypes>(
-    getFeeType({ psbtFee: psbtDetails.fee, fees })
-  );
 
   const { txVBytes } = getSizeInfo({
     utxos: psbtDetails.psbtInputs,
@@ -178,6 +179,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
   // is, only append new inputs and outputs, leaving the existing ones
   // untouched.
   function onChangeFee(feeType: FeeTypes) {
+    if (!feeRates) return;
     const feeRateMap: Partial<Record<FeeTypes, number>> = {
       [FeeTypes.Low]: feeRates.hourFee.toNumber(),
       [FeeTypes.Middle]: feeRates.halfHourFee.toNumber(),
@@ -306,7 +308,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
 
           <Approver.Section>
             <BitcoinFeeCard
-              disabled={!feeEditorEnabled}
+              disabled={!feeEditorEnabled || !feeRates}
               feeType={selectedFeeType}
               amount={psbtDetails.fee}
               onPress={() => feeSheetRef.current?.present()}
