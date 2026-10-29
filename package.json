@@ -19,6 +19,8 @@
     "design:fidelity": "node --experimental-strip-types scripts/design/today-fidelity.ts",
     "design:lint": "eslint apps/web/app/pages/playground/shared/recipes apps/web/app/pages/playground/areas/recipes apps/web/app/pages/playground/areas/receive-example --max-warnings 0",
     "design:promote": "node --experimental-strip-types scripts/design/promote.ts",
+    "design:scripts:lint": "eslint -c eslint.design-scripts.config.js scripts/design --max-warnings 0 --no-inline-config",
+    "design:scripts:typecheck": "tsc -p scripts/design/tsconfig.json",
     "design:test": "node --experimental-strip-types --test eslint-rules/design-system/*.spec.js scripts/design/*.test.ts",
     "design:words": "node --experimental-strip-types scripts/design/words-per-screen.ts",
     "dev": "turbo run build:watch",
@@ -28,7 +30,7 @@
     "install:fresh": "pnpm install:clean && pnpm i",
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
     "knip": "knip",
-    "lint": "turbo run lint",
+    "lint": "pnpm design:scripts:lint && turbo run lint",
     "lint:deps": "pnpm dependency-cruiser --ignore-known .dependency-cruiser-known-violations.json .",
     "lint:filenames": "pnpm ls-lint",
     "lint:fix": "turbo run lint:fix",
@@ -42,7 +44,7 @@
     "test:coverage": "turbo run test:coverage",
     "test:e2e": "playwright test",
     "test:unit": "turbo run test:unit",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "pnpm design:scripts:typecheck && turbo run typecheck"
   },
   "devDependencies": {
     "@babel/runtime": "7.26.0",
@@ -59,6 +61,7 @@
     "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@types/jest": "29.5.14",
     "@types/node": "24.0.8",
+    "@typescript-eslint/utils": "8.47.0",
     "@vitest/coverage-v8": "2.1.9",
     "dependency-cruiser": "16.10.0",
     "dotenv": "16.4.5",

@@ -1,12 +1,16 @@
-// Loads the Leather design-system values the report measures against.
-// Primary source: the built @leather.io/tokens package (packages/tokens/dist).
-// Fallback: a leather-system.json snapshot (--system <path>), for when tokens
-// are not built.
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { type Rgba, composite, parseColour } from './colour.ts';
+import {
+  arrayValue,
+  isFunction,
+  numberValue,
+  objectValue,
+  stringMap,
+  stringValue,
+} from './values.ts';
 
 export const repoRoot = path.resolve(import.meta.dirname, '../../..');
 
@@ -62,8 +66,8 @@ function finish(
   const lookup = new Map(colourPairs.map(pair => [pair.name, pair]));
   const bgPair = lookup.get('ink.background-primary');
   const background = {
-    light: parseColour(bgPair?.light ?? '#FFFFFF')!,
-    dark: parseColour(bgPair?.dark ?? '#12100F')!,
+    light: parseColour(bgPair?.light ?? '#FFFFFF') ?? { r: 255, g: 255, b: 255, a: 1 },
+    dark: parseColour(bgPair?.dark ?? '#12100F') ?? { r: 18, g: 16, b: 15, a: 1 },
   };
   const colours = colourPairs.flatMap(pair => {
     const light = parseColour(pair.light);
@@ -84,54 +88,65 @@ function finish(
 async function fromTokensPackage(): Promise<DesignSystem | null> {
   const entry = path.join(repoRoot, 'packages/tokens/dist/index.js');
   if (!existsSync(entry)) return null;
-  const tokens = await import(pathToFileURL(entry).href);
-  const base: Record<string, string> = tokens.colorThemes.base;
-  const dark: Record<string, string> = tokens.colorThemes.dark;
+  const imported: unknown = await import(pathToFileURL(entry).href);
+  const module = objectValue(imported);
+  const themes = objectValue(module.colorThemes);
+  const base = stringMap(themes.base);
+  const dark = stringMap(themes.dark);
   const colourPairs = Object.keys(base).map(name => ({
     name,
     light: base[name],
     dark: dark[name] ?? base[name],
   }));
-  const textVariants: Record<string, { value: { fontSize: string; lineHeight: string } }> =
-    tokens.getWebTextVariants();
+  if (!isFunction(module.getWebTextVariants)) throw new Error('Missing getWebTextVariants');
+  const textVariants = objectValue(module.getWebTextVariants());
+  const tokens = objectValue(module.tokens);
   return finish('packages/tokens/dist (built @leather.io/tokens)', colourPairs, {
-    extraColourNames: Object.keys(tokens.tokens.colors ?? {}),
-    spacing: pxMap(Object.entries(tokens.tokens.spacing)),
-    radii: pxMap(Object.entries(tokens.tokens.radii)),
-    sizes: pxMap(Object.entries(tokens.tokens.sizes)),
-    textStyles: Object.entries(textVariants).map(([name, variant]) => ({
-      name,
-      fontSizePx: px(variant.value.fontSize) ?? 0,
-      lineHeightPx: px(variant.value.lineHeight) ?? 0,
-    })),
+    extraColourNames: Object.keys(objectValue(tokens.colors ?? {})),
+    spacing: pxMap(Object.entries(objectValue(tokens.spacing))),
+    radii: pxMap(Object.entries(objectValue(tokens.radii))),
+    sizes: pxMap(Object.entries(objectValue(tokens.sizes))),
+    textStyles: Object.entries(textVariants).map(([name, variant]) => {
+      const value = objectValue(objectValue(variant).value);
+      return {
+        name,
+        fontSizePx: px(stringValue(value.fontSize)) ?? 0,
+        lineHeightPx: px(stringValue(value.lineHeight)) ?? 0,
+      };
+    }),
   });
 }
 
-interface SystemJson {
-  colors: {
-    unthemed_colors?: Record<string, string>;
-    groups: { tokens: { name: string; light: string; dark: string }[] }[];
-  };
-  typography: { textStyles: { name: string; font_size_px: number; line_height_px: number }[] };
-  spacing: { web_scale: Record<string, string>; sizes: Record<string, unknown> };
-  radii: { web: Record<string, string> };
-}
-
 function fromSystemJson(file: string): DesignSystem {
-  const json: SystemJson = JSON.parse(readFileSync(file, 'utf8'));
-  const colourPairs = json.colors.groups.flatMap(group =>
-    group.tokens.map(token => ({ name: token.name, light: token.light, dark: token.dark }))
+  const parsed: unknown = JSON.parse(readFileSync(file, 'utf8'));
+  const json = objectValue(parsed);
+  const colors = objectValue(json.colors);
+  const typography = objectValue(json.typography);
+  const spacing = objectValue(json.spacing);
+  const radii = objectValue(json.radii);
+  const colourPairs = arrayValue(colors.groups).flatMap(group =>
+    arrayValue(objectValue(group).tokens).map(value => {
+      const token = objectValue(value);
+      return {
+        name: stringValue(token.name),
+        light: stringValue(token.light),
+        dark: stringValue(token.dark),
+      };
+    })
   );
   return finish(file, colourPairs, {
-    extraColourNames: Object.keys(json.colors.unthemed_colors ?? {}),
-    spacing: pxMap(Object.entries(json.spacing.web_scale)),
-    radii: pxMap(Object.entries(json.radii.web)),
-    sizes: pxMap(Object.entries(json.spacing.sizes)),
-    textStyles: json.typography.textStyles.map(style => ({
-      name: style.name,
-      fontSizePx: style.font_size_px,
-      lineHeightPx: style.line_height_px,
-    })),
+    extraColourNames: Object.keys(objectValue(colors.unthemed_colors ?? {})),
+    spacing: pxMap(Object.entries(objectValue(spacing.web_scale))),
+    radii: pxMap(Object.entries(objectValue(radii.web))),
+    sizes: pxMap(Object.entries(objectValue(spacing.sizes))),
+    textStyles: arrayValue(typography.textStyles).map(value => {
+      const style = objectValue(value);
+      return {
+        name: stringValue(style.name),
+        fontSizePx: numberValue(style.font_size_px),
+        lineHeightPx: numberValue(style.line_height_px),
+      };
+    }),
   });
 }
 

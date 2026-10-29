@@ -1,12 +1,46 @@
-// Generates docs/design/cheatsheet.md from every *.meta.shared.ts in packages/ui.
-// pnpm --filter @leather.io/ui gen:cheatsheet          writes the file
-// pnpm --filter @leather.io/ui gen:cheatsheet --check  fails CI when it is stale
 import { globSync, readFileSync, writeFileSync } from 'node:fs';
 import { registerHooks } from 'node:module';
 import path from 'node:path';
 import { format, resolveConfig } from 'prettier';
 
 import type { ComponentMeta } from '../../packages/ui/src/utils/component-meta.shared.ts';
+import { arrayValue, objectValue, stringValue } from './lib/values.ts';
+
+function componentMeta(value: unknown): ComponentMeta {
+  const meta = objectValue(value);
+  const importFrom = objectValue(meta.importFrom);
+  const web = importFrom.web;
+  const native = importFrom.native;
+  if (web !== undefined && web !== '@leather.io/ui' && web !== '@leather.io/ui/native')
+    throw new Error('Invalid web import');
+  if (native !== undefined && native !== '@leather.io/ui' && native !== '@leather.io/ui/native')
+    throw new Error('Invalid native import');
+  return {
+    name: stringValue(meta.name),
+    importFrom: {
+      ...(web === undefined ? {} : { web }),
+      ...(native === undefined ? {} : { native }),
+    },
+    useWhen: arrayValue(meta.useWhen).map(stringValue),
+    dontUseWhen: arrayValue(meta.dontUseWhen).map(value => {
+      const alternative = objectValue(value);
+      return { situation: stringValue(alternative.situation), use: stringValue(alternative.use) };
+    }),
+    replaces: arrayValue(meta.replaces).map(stringValue),
+    examples: arrayValue(meta.examples).map(value => {
+      const example = objectValue(value);
+      const platform = example.platform;
+      if (platform !== 'web' && platform !== 'native') throw new Error('Invalid example platform');
+      return {
+        title: stringValue(example.title),
+        platform,
+        code: stringValue(example.code),
+        ...(example.seenIn === undefined ? {} : { seenIn: stringValue(example.seenIn) }),
+      };
+    }),
+    ...(meta.playground === undefined ? {} : { playground: stringValue(meta.playground) }),
+  };
+}
 
 // Meta files import their helper without an extension (bundler style). Node's
 // type stripping needs one, so retry relative imports with `.ts`.
@@ -27,8 +61,9 @@ const metaFiles = globSync('packages/ui/src/components/**/*.meta.shared.ts', { c
 
 const sections: string[] = [];
 for (const file of metaFiles) {
-  const module: Record<string, ComponentMeta> = await import(path.join(root, file));
-  for (const meta of Object.values(module)) {
+  const imported: unknown = await import(path.join(root, file));
+  for (const value of Object.values(objectValue(imported))) {
+    const meta = componentMeta(value);
     const imports = Object.entries(meta.importFrom).map(
       ([platform, from]) => `${platform}: \`${from}\``
     );

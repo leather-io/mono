@@ -39,6 +39,8 @@ jobs:
       - run: pnpm turbo run build --filter='@leather.io/web^...'
       - run: pnpm --filter @leather.io/web run prepare:build
       - run: pnpm exec playwright install chromium --only-shell --with-deps
+      - run: pnpm design:scripts:lint
+      - run: pnpm design:scripts:typecheck
       - run: pnpm design:test
       - run: pnpm --filter @leather.io/ui run gen:cheatsheet --check
       - run: pnpm design:lint

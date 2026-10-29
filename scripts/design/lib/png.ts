@@ -1,6 +1,3 @@
-// Minimal PNG decode/encode for the design scripts (no image dependency in the
-// repo root). Decodes 8-bit, non-interlaced greyscale, grey+alpha, RGB, RGBA
-// and palette images to RGBA; encodes RGBA.
 import { deflateSync, inflateSync } from 'node:zlib';
 
 export interface Image {
@@ -82,10 +79,11 @@ export function decodePng(buffer: Uint8Array): Image {
     const source = i * channels;
     const target = i * 4;
     if (colourType === 3) {
+      if (!palette) throw new Error('PNG palette is missing');
       const index = pixels[source];
-      data[target] = palette![index * 3];
-      data[target + 1] = palette![index * 3 + 1];
-      data[target + 2] = palette![index * 3 + 2];
+      data[target] = palette[index * 3];
+      data[target + 1] = palette[index * 3 + 1];
+      data[target + 2] = palette[index * 3 + 2];
       data[target + 3] = transparency && index < transparency.length ? transparency[index] : 255;
     } else if (channels <= 2) {
       data[target] = data[target + 1] = data[target + 2] = pixels[source];

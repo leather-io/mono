@@ -1,27 +1,3 @@
-// Alignment: one horizontal gutter per screen, checked on the render. See
-// docs/design/review-checklist.md (Gutters) and recipes.md (page shells).
-//
-//   node scripts/design/align.ts <url...> [--urls urls.txt] [--json out.json | --json -]
-//                                [--selector '[data-frame]'] [--tolerance 1]
-//
-// For every frame (or the open sheet in it, as words-per-screen does):
-// 1. Rails. Each `[data-gutter]` element (PopupPage / TabPage bodies, the
-//    pinned region, ReviewSheet) is a rail: its content box. A screen built
-//    without the recipes falls back to the outermost containers with equal
-//    left and right padding (≥ 12px), most of the frame's width and two or
-//    more children.
-// 2. Edges. Each direct child of a rail is measured by its ink: text, icons,
-//    images, and boxes that paint a border or a fill. A hover bleed (a
-//    pseudo-element) is not ink. A child anchored left (ink within 16px of the
-//    rail's left edge) must sit on it ±tolerance; the same on the right,
-//    unless the right end is ragged left-aligned text (a wrapped address).
-//    Centred content (an amount, a helper line) is skipped.
-// 3. Rails agree. Every rail in a frame sits the same distance from the
-//    frame's left and right edges, so the pinned input, the list and the
-//    footer share one gutter.
-// 4. Header. The first and last icon glyphs in a <header> sit the same
-//    distance from the frame's edges (back vs settings), and on the rail.
-// Findings print after a summary table; any finding exits 1.
 import type { Page } from '@playwright/test';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
@@ -148,7 +124,8 @@ function measureFrames({ selector, tolerance }: { selector: string; tolerance: n
     return { left: drawn.box.left, right: drawn.box.right, rightIsRaggedText };
   }
   function label(element: Element) {
-    const text = (element as HTMLElement).innerText?.trim().replace(/\s+/g, ' ') ?? '';
+    const text =
+      element instanceof HTMLElement ? element.innerText.trim().replace(/\s+/g, ' ') : '';
     return text ? text.slice(0, 40) : `<${element.tagName.toLowerCase()}>`;
   }
   function contentBox(element: Element) {
@@ -160,7 +137,7 @@ function measureFrames({ selector, tolerance }: { selector: string; tolerance: n
     };
   }
   function fallbackRails(root: Element) {
-    const width = (root as HTMLElement).clientWidth;
+    const width = root.clientWidth;
     const candidates = Array.from(root.querySelectorAll('*')).filter(element => {
       // A header is checked on its own (step 4); it is not a content rail.
       if (!visible(element) || element.closest('header')) return false;

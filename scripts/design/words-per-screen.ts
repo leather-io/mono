@@ -1,30 +1,3 @@
-// Words per screen: visible word counts for each device frame on Playground
-// pages, so a copy budget can be checked with a number. See docs/design/explore.md.
-//
-//   node scripts/design/words-per-screen.ts <url...> [--urls urls.txt] [--json out.json | --json -]
-//                                           [--selector '[data-frame]'] [--max-primaries 1]
-//
-// Every element matching --selector (default `[data-frame]`) is one frame. Its
-// visible text (innerText, with visually hidden elements removed) is split on
-// whitespace and each token is classified:
-// - `addresses`: address-like tokens (bc1…, tb1…, SP…/ST…, sbtc…, 0x…, long
-//   hashes) and truncated ones ("SP2J…9EJ7", "bc1q...4kf2"). An address split
-//   into groups (AddressDisplayer: "SP2J 6ZY4 8GV1 …") counts as one address.
-// - `numbers`: number-only tokens (0.00500000, ~20–40, $326.30, 14).
-// - `words`: the rest. Punctuation-only tokens (·, —, →) are dropped.
-// When a sheet is open (a visible [role="dialog"] or [aria-modal="true"] in the
-// frame), only the sheet is counted: the dimmed screen behind it is excluded,
-// and `sheet` is true in the output.
-// `primaries` counts the solid buttons visible in the frame (or the open
-// sheet): a button, [role=button] or link with a label whose own fill is
-// opaque and contrasts with the surface behind it by 3:1 or more. That is
-// Button variant="solid" in light and dark, intent="danger" included; outline,
-// ghost, disabled and chip fills don't reach 3:1. A screen gets one primary
-// (docs/design/review-checklist.md); any frame over --max-primaries (default 1)
-// is listed after the table and the script exits 1.
-// Frames are labelled by the closest data-variant, data-screen, data-frame and
-// data-theme attributes. The table goes to stdout; --json writes JSON to a file,
-// and --json - prints only the JSON.
 import type { Page } from '@playwright/test';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
@@ -150,7 +123,8 @@ function readFrames({ selector, address }: { selector: string; address: string }
     );
     return candidates
       .filter(element => {
-        if (!visible(element) || (element as HTMLButtonElement).disabled) return false;
+        if (!visible(element) || (element instanceof HTMLButtonElement && element.disabled))
+          return false;
         const label = element.innerText.trim();
         if (!label) return false;
         const fill = rgba(getComputedStyle(element).backgroundColor);

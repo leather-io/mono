@@ -1,4 +1,3 @@
-// node --test scripts/design/today-fidelity.test.ts
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
@@ -16,6 +15,22 @@ function screen(blocks: { top: number; height: number; left: number; right: numb
 }
 
 describe('png', () => {
+  it('decodes an indexed pixel through its palette', () => {
+    const png = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAA1BMVEUUKDzOZ+RbAAAACklEQVR4nGNgAAAAAgABSK+kcQAAAABJRU5ErkJggg==',
+      'base64'
+    );
+    assert.deepEqual([...decodePng(png).data], [20, 40, 60, 255]);
+  });
+
+  it('rejects an indexed PNG without a palette', () => {
+    const png = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAACklEQVR4nGNgAAAAAgABSK+kcQAAAABJRU5ErkJggg==',
+      'base64'
+    );
+    assert.throws(() => decodePng(png), /PNG palette is missing/);
+  });
+
   it('round-trips RGBA through encode and decode', () => {
     const image = screen([{ top: 10, height: 5, left: 3, right: 40 }]);
     const decoded = decodePng(encodePng(image));

@@ -1,4 +1,3 @@
-// Runs every check over a Playground folder and returns one serialisable result.
 import { existsSync, globSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
@@ -262,9 +261,7 @@ function driftScore(ledger: LedgerRow[], stale: number): DriftScore {
   for (const row of ledger) counts[row.category]++;
   const total = ledger.length;
   const undocumented = ledger.filter(row => row.status === 'undocumented').length;
-  const parts = (Object.entries(counts) as [LedgerCategory, number][]).map(
-    ([category, count]) => `${category} ${count}`
-  );
+  const parts = Object.entries(counts).map(([category, count]) => `${category} ${count}`);
   return {
     total,
     counts,

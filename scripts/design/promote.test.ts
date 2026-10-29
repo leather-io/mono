@@ -1,11 +1,13 @@
-// node --test scripts/design/promote.test.ts
 import assert from 'node:assert/strict';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { before, describe, it } from 'node:test';
 
 import { type PromoteResult, analyze, parseDeviations } from './lib/analyze.ts';
 import { deltaE2000Lab } from './lib/colour.ts';
 import { renderMarkdown } from './lib/report.ts';
+import { loadDesignSystem } from './lib/system.ts';
 
 const fixture = path.join(import.meta.dirname, '__fixtures__/off-system-sketch');
 const areaFixture = path.join(import.meta.dirname, '__fixtures__/area-sketch');
@@ -257,5 +259,38 @@ describe('DEVIATIONS.md parsing', () => {
         ['13px', 'spacing'],
       ]
     );
+  });
+});
+
+describe('design system JSON', () => {
+  it('loads a snapshot and rejects malformed token structures', async () => {
+    const directory = mkdtempSync(path.join(tmpdir(), 'design-system-'));
+    const file = path.join(directory, 'system.json');
+    try {
+      writeFileSync(
+        file,
+        JSON.stringify({
+          colors: {
+            groups: [
+              { tokens: [{ name: 'ink.background-primary', light: '#FFFFFF', dark: '#12100F' }] },
+            ],
+          },
+          typography: { textStyles: [{ name: 'label.01', font_size_px: 14, line_height_px: 20 }] },
+          spacing: { web_scale: { 'space.01': '4px' }, sizes: {} },
+          radii: { web: { round: '9999px' } },
+        })
+      );
+      const system = await loadDesignSystem(file);
+      assert.equal(system.colours[0].name, 'ink.background-primary');
+      assert.equal(system.spacing['space.01'], 4);
+      assert.equal(system.textStyles[0].fontSizePx, 14);
+      writeFileSync(
+        file,
+        JSON.stringify({ colors: { groups: 'invalid' }, typography: {}, spacing: {}, radii: {} })
+      );
+      await assert.rejects(loadDesignSystem(file), /Expected an array/);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
   });
 });

@@ -1,7 +1,3 @@
-// Component analysis with the TypeScript compiler API (syntax only, no type
-// checker): which React components a folder defines, which @leather.io/ui
-// components exist, and how alike they are. Heuristic on purpose; every score
-// is printed with its reasons so a human can overrule it.
 import { existsSync, globSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import ts from 'typescript';
@@ -89,8 +85,13 @@ function containsJsx(node: ts.Node) {
 function importsOf(sf: ts.SourceFile) {
   const map = new Map<string, { module: string; imported: string }>();
   for (const statement of sf.statements) {
-    if (!ts.isImportDeclaration(statement) || !statement.importClause) continue;
-    const module = (statement.moduleSpecifier as ts.StringLiteral).text;
+    if (
+      !ts.isImportDeclaration(statement) ||
+      !statement.importClause ||
+      !ts.isStringLiteral(statement.moduleSpecifier)
+    )
+      continue;
+    const module = statement.moduleSpecifier.text;
     const clause = statement.importClause;
     if (clause.name) map.set(clause.name.text, { module, imported: 'default' });
     const bindings = clause.namedBindings;
@@ -541,8 +542,13 @@ function collectExports(file: string, into: Map<string, string>, depth = 0) {
   if (depth > 4) return;
   const sf = parse(file);
   for (const statement of sf.statements) {
-    if (ts.isExportDeclaration(statement) && statement.moduleSpecifier && !statement.isTypeOnly) {
-      const target = resolveModule(file, (statement.moduleSpecifier as ts.StringLiteral).text);
+    if (
+      ts.isExportDeclaration(statement) &&
+      statement.moduleSpecifier &&
+      ts.isStringLiteral(statement.moduleSpecifier) &&
+      !statement.isTypeOnly
+    ) {
+      const target = resolveModule(file, statement.moduleSpecifier.text);
       if (!target) continue;
       if (!statement.exportClause) collectExports(target, into, depth + 1);
       else if (ts.isNamedExports(statement.exportClause)) {
@@ -625,10 +631,11 @@ export function loadUiCatalog(): UiCatalog {
   collectExports(path.join(uiRoot, 'exports.web.ts'), exportsMap);
   const names = [...exportsMap.keys()].filter(isPascal);
   const byFile = new Map<string, Set<string>>();
-  for (const name of names) {
-    const file = exportsMap.get(name)!;
-    if (!byFile.has(file)) byFile.set(file, new Set());
-    byFile.get(file)!.add(name);
+  for (const [name, file] of exportsMap) {
+    if (!isPascal(name)) continue;
+    const wanted = byFile.get(file) ?? new Set<string>();
+    wanted.add(name);
+    byFile.set(file, wanted);
   }
   const components: ComponentInfo[] = [];
   for (const [file, wanted] of byFile) {
@@ -957,7 +964,8 @@ export function assessComponent(
       ],
     };
   }
-  const ui = catalog.components.find(component => component.name === best.ui)!;
+  const ui = catalog.components.find(component => component.name === best.ui);
+  if (!ui) throw new Error(`Missing UI component for candidate ${best.ui}`);
   // Style values the local hard-codes that ui already has (or does differently).
   for (const key of ['borderRadius', 'rounded']) {
     for (const value of local.styleValues[key] ?? []) {

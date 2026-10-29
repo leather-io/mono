@@ -1,0 +1,14 @@
+{
+  "extends": "../../packages/tsconfig-config/tsconfig.base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "composite": false,
+    "incremental": false,
+    "types": ["node"],
+    "declaration": false,
+    "declarationMap": false
+  },
+  "include": ["*.ts", "lib/**/*.ts"],
+  "exclude": ["__fixtures__"]
+}

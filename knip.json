@@ -128,10 +128,7 @@
       "entry": ["src/index.ts", "src/mobile.ts"]
     },
     "tools": {
-      "entry": [
-        "src/lt.ts",
-        "src/feature-map/feature-entry.ts"
-      ]
+      "entry": ["src/lt.ts", "src/feature-map/feature-entry.ts"]
     },
     "packages/utils": {
       "ignoreDependencies": ["@types/dompurify"]
@@ -164,7 +161,11 @@
       ]
     },
     ".": {
-      "entry": ["scripts/design/*.ts", "eslint-rules/design-system/*.spec.js"],
+      "entry": [
+        "scripts/design/*.ts",
+        "eslint-rules/design-system/*.spec.js",
+        "eslint-rules/design-system/*.d.ts"
+      ],
       "ignore": ["scripts/design/__fixtures__/**"]
     }
   }

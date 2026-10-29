@@ -1,9 +1,4 @@
-// One ESLint pass per file. The lab's design-system rules (eslint-rules/design-system)
-// run unchanged, so the report and `pnpm exec eslint -c eslint.design.config.js` agree
-// on what counts as a raw colour, a raw button, a Radix import, an undefined textStyle.
-// Small collector rules defined here add what the lint rules do not measure: the
-// colour's mode, raw sizes, and token references that do not exist.
-import { Linter } from 'eslint';
+import { TSESLint, type TSESTree } from '@typescript-eslint/utils';
 import tseslint from 'typescript-eslint';
 
 import { designSystemPlugin } from '../../../eslint-rules/design-system/index.js';
@@ -129,7 +124,7 @@ function overrideFor(component: string, prop: string): boolean {
   return (/Icon$/.test(component) || component === 'IconButton') && iconOverrideProps.has(prop);
 }
 
-type Node = any; // ESTree node from typescript-eslint
+type Node = TSESTree.Node;
 
 const colourProps = new Set([
   'color',
@@ -279,14 +274,14 @@ function calleeName(callee: Node): string | null {
   return null;
 }
 
-function jsxAttributeName(node: Node): string | null {
+function jsxAttributeName(node: TSESTree.JSXAttribute): string | null {
   return node.name?.type === 'JSXIdentifier' ? node.name.name : null;
 }
 
 // <svg>, <rect>, <div>: plain DOM elements, whose width/height are attributes, not style props.
 const isIntrinsic = (tag: string) => /^[a-z][\w-]*$/.test(tag);
 
-function jsxElementName(nameNode: Node): string | null {
+function jsxElementName(nameNode: TSESTree.JSXTagNameExpression): string | null {
   if (!nameNode) return null;
   if (nameNode.type === 'JSXIdentifier') return nameNode.name;
   if (nameNode.type === 'JSXMemberExpression')
@@ -567,7 +562,7 @@ function collectorPlugin(collected: Collected, system: DesignSystem, uiExports: 
     sizes: { kind: 'size', names: sizeNames },
   };
 
-  function checkValue(propName: string | null, valueNode: Node, ancestors: Node[]) {
+  function checkValue(propName: string | null, valueNode: Node | null, ancestors: Node[]) {
     if (!propName) return;
     const mode = modeOf(ancestors);
     const styled = inStyleContext(ancestors);
@@ -666,10 +661,10 @@ function collectorPlugin(collected: Collected, system: DesignSystem, uiExports: 
     }
   }
 
-  const collect = {
-    create(context: any) {
+  const collect: TSESLint.MinimalRuleModule = {
+    create(context) {
       return {
-        Literal(node: Node) {
+        Literal(node) {
           if (typeof node.value !== 'string') return;
           const ancestors = context.sourceCode.getAncestors(node);
           collected.strings.set(locKey(node), {
@@ -680,7 +675,7 @@ function collectorPlugin(collected: Collected, system: DesignSystem, uiExports: 
           });
           if (inStyleContext(ancestors)) checkRefs(node, node.value);
         },
-        TemplateElement(node: Node) {
+        TemplateElement(node) {
           const ancestors = context.sourceCode.getAncestors(node);
           const value = node.value.cooked ?? node.value.raw;
           collected.strings.set(locKey(node), {
@@ -691,7 +686,7 @@ function collectorPlugin(collected: Collected, system: DesignSystem, uiExports: 
           });
           if (inStyleContext(ancestors)) checkRefs(node, value);
         },
-        JSXAttribute(node: Node) {
+        JSXAttribute(node) {
           const ancestors = context.sourceCode.getAncestors(node);
           const element = ancestors[ancestors.length - 1];
           const tag = element?.type === 'JSXOpeningElement' ? jsxElementName(element.name) : null;
@@ -709,7 +704,7 @@ function collectorPlugin(collected: Collected, system: DesignSystem, uiExports: 
           }
           checkValue(jsxAttributeName(node), node.value, [...ancestors, node]);
         },
-        Property(node: Node) {
+        Property(node) {
           const ancestors = context.sourceCode.getAncestors(node);
           const name = getPropertyName(node);
           // Plain objects outside style calls only count when the value is an explicit px/rem string.
@@ -755,19 +750,19 @@ export function scanFile(
     sizes: [],
     tokens: [],
   };
-  const linter = new Linter({ configType: 'flat' });
+  const linter = new TSESLint.Linter({ configType: 'flat' });
   const messages = linter.verify(
     code,
     [
       {
         files: ['**/*.ts', '**/*.tsx'],
         languageOptions: {
-          parser: tseslint.parser as any,
+          parser: tseslint.parser,
           parserOptions: { ecmaFeatures: { jsx: true } },
         },
         plugins: {
-          'design-system': designSystemPlugin as any,
-          promote: collectorPlugin(collected, system, new Set(restyleNames)) as any,
+          'design-system': designSystemPlugin,
+          promote: collectorPlugin(collected, system, new Set(restyleNames)),
         },
         rules: {
           'promote/collect': 'error',
