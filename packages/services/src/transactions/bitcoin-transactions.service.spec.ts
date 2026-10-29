@@ -1,23 +1,27 @@
 import { describe, expect, it } from 'vitest';
 
-import { AccountAddresses, defaultNetworksKeyedById } from '@leather.io/models';
+import { type AccountAddresses, defaultNetworksKeyedById } from '@leather.io/models';
 
-import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
-import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
-import { SettingsService } from '../infrastructure/settings/settings.service';
+import { type LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import { type MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
+import { type MempoolTransaction } from '../infrastructure/api/mempool/mempool-api.schema';
+import { createMock } from '../test/create-mock';
+import {
+  createTestLeatherBitcoinTransaction,
+  createTestLeatherBitcoinTransactionsPage,
+  createTestSettingsService,
+} from '../test/transactions-fixtures';
 import { BitcoinTransactionsService } from './bitcoin-transactions.service';
 
 describe(BitcoinTransactionsService.name, () => {
   describe('getAccountTransactions', () => {
     it('deduplicates transactions with the same txid from different descriptors', async () => {
-      const duplicateTx = {
+      const duplicateTx = createTestLeatherBitcoinTransaction({
         txid: 'abc123',
-        amount: 100000,
-      };
-      const uniqueTx = {
+      });
+      const uniqueTx = createTestLeatherBitcoinTransaction({
         txid: 'def456',
-        amount: 200000,
-      };
+      });
       const nativeSegwitDescriptor = 'wpkh(...)';
       const taprootDescriptor = 'tr(...)';
       const mockAccount: AccountAddresses = {
@@ -31,20 +35,18 @@ describe(BitcoinTransactionsService.name, () => {
           taprootDescriptor,
         },
       };
-      const mockLeatherApiClient = {
-        fetchBitcoinTransactions: (descriptor: string) => {
+      const mockLeatherApiClient = createMock<LeatherApiClient>({
+        fetchBitcoinTransactions(descriptor: string) {
           const data =
             descriptor === nativeSegwitDescriptor ? [duplicateTx] : [duplicateTx, uniqueTx];
-          return Promise.resolve({ data, meta: { totalPages: 1 } });
+          return Promise.resolve(createTestLeatherBitcoinTransactionsPage(data));
         },
-      } as unknown as LeatherApiClient;
+      });
 
       const service = new BitcoinTransactionsService(
         mockLeatherApiClient,
-        {} as unknown as MempoolApiClient,
-        {
-          getSettings: () => ({ network: { chain: { bitcoin: { bitcoinNetwork: 'mainnet' } } } }),
-        } as unknown as SettingsService
+        createMock<MempoolApiClient>({}),
+        createTestSettingsService(defaultNetworksKeyedById.mainnet)
       );
       const result = await service.getAccountTransactions(mockAccount, { page: 1, pageSize: 150 });
       expect(result).toHaveLength(2);
@@ -53,20 +55,18 @@ describe(BitcoinTransactionsService.name, () => {
     });
 
     it('fetches transactions by address for a fixed-address (multisig) account', async () => {
-      const tx = { txid: 'multisig-tx', amount: 50000 };
+      const tx = createTestLeatherBitcoinTransaction({ txid: 'multisig-tx' });
       let requestedAddress: string | undefined;
-      const mockLeatherApiClient = {
-        fetchBitcoinTransactionsByAddress: (address: string) => {
+      const mockLeatherApiClient = createMock<LeatherApiClient>({
+        fetchBitcoinTransactionsByAddress(address: string) {
           requestedAddress = address;
-          return Promise.resolve({ data: [tx], meta: { totalPages: 1 } });
+          return Promise.resolve(createTestLeatherBitcoinTransactionsPage([tx]));
         },
-      } as unknown as LeatherApiClient;
+      });
       const service = new BitcoinTransactionsService(
         mockLeatherApiClient,
-        {} as unknown as MempoolApiClient,
-        {
-          getSettings: () => ({ network: { chain: { bitcoin: { bitcoinNetwork: 'mainnet' } } } }),
-        } as unknown as SettingsService
+        createMock<MempoolApiClient>({}),
+        createTestSettingsService(defaultNetworksKeyedById.mainnet)
       );
       const mockAccount: AccountAddresses = {
         id: { fingerprint: 'multisig-fp', accountIndex: 0 },
@@ -85,24 +85,27 @@ describe(BitcoinTransactionsService.name, () => {
 
     it('marks the queried address as owned for a fixed-address account on regtest', async () => {
       const vaultAddress = 'bcrt1qvault';
-      const mempoolTx = {
+      const mempoolTx: MempoolTransaction = {
         txid: 'claim-tx',
-        status: { confirmed: true, block_height: 4471, block_time: 1_700_000_000 },
+        status: {
+          confirmed: true,
+          block_height: 4471,
+          block_hash: undefined,
+          block_time: 1_700_000_000,
+        },
         fees: 153,
         vin: [
           { txid: 'lock-tx', vout: 0, prevout: { scriptpubkey_address: 'bcrt1qlock', value: 1e7 } },
         ],
         vout: [{ scriptpubkey_address: vaultAddress, value: 9_999_847 }],
       };
-      const mockMempoolApiClient = {
+      const mockMempoolApiClient = createMock<MempoolApiClient>({
         fetchAddressTransactions: () => Promise.resolve([mempoolTx]),
-      } as unknown as MempoolApiClient;
+      });
       const service = new BitcoinTransactionsService(
-        {} as unknown as LeatherApiClient,
+        createMock<LeatherApiClient>({}),
         mockMempoolApiClient,
-        {
-          getSettings: () => ({ network: defaultNetworksKeyedById.primaryStacksTestnet }),
-        } as unknown as SettingsService
+        createTestSettingsService(defaultNetworksKeyedById.primaryStacksTestnet)
       );
       const mockAccount: AccountAddresses = {
         id: { fingerprint: 'multisig-fp', accountIndex: 0 },
@@ -121,18 +124,16 @@ describe(BitcoinTransactionsService.name, () => {
 
     it('fetches from the network mempool for the signet staking testnet', async () => {
       let requestedMempoolUrl: string | undefined;
-      const mockMempoolApiClient = {
-        fetchAddressTransactions: (_address: string, mempoolUrl: string) => {
+      const mockMempoolApiClient = createMock<MempoolApiClient>({
+        fetchAddressTransactions(_address: string, mempoolUrl?: string) {
           requestedMempoolUrl = mempoolUrl;
           return Promise.resolve([]);
         },
-      } as unknown as MempoolApiClient;
+      });
       const service = new BitcoinTransactionsService(
-        {} as unknown as LeatherApiClient,
+        createMock<LeatherApiClient>({}),
         mockMempoolApiClient,
-        {
-          getSettings: () => ({ network: defaultNetworksKeyedById.btcStakingStacksTestnet }),
-        } as unknown as SettingsService
+        createTestSettingsService(defaultNetworksKeyedById.btcStakingStacksTestnet)
       );
       await service.getAddressTransactions('tb1qvault', { page: 1, pageSize: 150 });
       expect(requestedMempoolUrl).toEqual(
@@ -142,18 +143,16 @@ describe(BitcoinTransactionsService.name, () => {
 
     it('fetches from the Leather API for the default signet network', async () => {
       let requestedAddress: string | undefined;
-      const mockLeatherApiClient = {
-        fetchBitcoinTransactionsByAddress: (address: string) => {
+      const mockLeatherApiClient = createMock<LeatherApiClient>({
+        fetchBitcoinTransactionsByAddress(address: string) {
           requestedAddress = address;
-          return Promise.resolve({ data: [], meta: { totalPages: 1 } });
+          return Promise.resolve(createTestLeatherBitcoinTransactionsPage([]));
         },
-      } as unknown as LeatherApiClient;
+      });
       const service = new BitcoinTransactionsService(
         mockLeatherApiClient,
-        {} as unknown as MempoolApiClient,
-        {
-          getSettings: () => ({ network: defaultNetworksKeyedById.signet }),
-        } as unknown as SettingsService
+        createMock<MempoolApiClient>({}),
+        createTestSettingsService(defaultNetworksKeyedById.signet)
       );
       await service.getAddressTransactions('tb1qsignet', { page: 1, pageSize: 150 });
       expect(requestedAddress).toEqual('tb1qsignet');
@@ -167,9 +166,9 @@ describe(BitcoinTransactionsService.name, () => {
         },
       };
       const service = new BitcoinTransactionsService(
-        {} as unknown as LeatherApiClient,
-        {} as unknown as MempoolApiClient,
-        {} as unknown as SettingsService
+        createMock<LeatherApiClient>({}),
+        createMock<MempoolApiClient>({}),
+        createTestSettingsService(defaultNetworksKeyedById.mainnet)
       );
       const result = await service.getAccountTransactions(mockAccount, { page: 1, pageSize: 150 });
       expect(result).toEqual([]);

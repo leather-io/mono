@@ -4,6 +4,7 @@ import type {
   LeatherApiClient,
   LeatherApiProtocol,
 } from '../infrastructure/api/leather/leather-api.client';
+import { createMock } from '../test/create-mock';
 import { StacksProtocolService } from './stacks-protocol.service';
 
 const mockProtocols: Record<string, LeatherApiProtocol> = {
@@ -39,10 +40,10 @@ const mockContractMap = {
 };
 
 describe(StacksProtocolService.name, () => {
-  const mockLeatherApiClient = {
+  const mockLeatherApiClient = createMock<LeatherApiClient>({
     fetchProtocols: vi.fn().mockResolvedValue(mockProtocols),
     fetchProtocolContracts: vi.fn().mockResolvedValue(mockContractMap),
-  } as unknown as LeatherApiClient;
+  });
 
   const service = new StacksProtocolService(mockLeatherApiClient);
 

@@ -1,13 +1,16 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { type HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { createMock } from '../test/create-mock';
 import { StacksTransactionsService } from './stacks-transactions.service';
 
 describe(StacksTransactionsService.name, () => {
-  const mockStacksApiClient = {
-    getAddressMempoolTransactions: vi.fn().mockResolvedValue({ results: [] }),
-    getAddressTransactions: vi.fn().mockResolvedValue([]),
-  } as unknown as HiroStacksApiClient;
+  const getAddressMempoolTransactions = vi.fn().mockResolvedValue({ results: [] });
+  const getAddressTransactions = vi.fn().mockResolvedValue([]);
+  const mockStacksApiClient = createMock<HiroStacksApiClient>({
+    getAddressMempoolTransactions,
+    getAddressTransactions,
+  });
 
   const stacksTransactionsService = new StacksTransactionsService(mockStacksApiClient);
 
@@ -25,26 +28,24 @@ describe(StacksTransactionsService.name, () => {
     });
 
     it('filters out stale and confirmed txs from mempool txs', async () => {
-      mockStacksApiClient.getAddressMempoolTransactions = vi.fn().mockResolvedValue({
+      getAddressMempoolTransactions.mockResolvedValue({
         results: [
           { tx_id: 'txA', nonce: 1 },
           { tx_id: 'txC', nonce: 2 },
           { tx_id: 'txD', nonce: 3 },
         ],
       });
-      mockStacksApiClient.getAddressTransactions = vi
-        .fn()
-        .mockResolvedValue([
-          { tx: { tx_id: 'txA', nonce: 1 } },
-          { tx: { tx_id: 'txB', nonce: 2 } },
-        ]);
+      getAddressTransactions.mockResolvedValue([
+        { tx: { tx_id: 'txA', nonce: 1 } },
+        { tx: { tx_id: 'txB', nonce: 2 } },
+      ]);
       const pendingTxs = await stacksTransactionsService.getPendingTransactions(stacksAddress);
       expect(pendingTxs).toEqual([{ tx_id: 'txD', nonce: 3 }]);
     });
 
     it('propogates errors from API calls', async () => {
       const error = new Error('API Error');
-      mockStacksApiClient.getAddressMempoolTransactions = vi.fn().mockRejectedValue(error);
+      getAddressMempoolTransactions.mockRejectedValue(error);
 
       await expect(stacksTransactionsService.getPendingTransactions(stacksAddress)).rejects.toThrow(
         error

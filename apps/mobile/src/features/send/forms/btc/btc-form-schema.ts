@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { getErrorMessages } from '@/features/send/error-messages';
-import { CalculateBtcMaxSpend } from '@/features/send/hooks/use-calculate-btc-max-spend';
+import { type CalculateBtcMaxSpend } from '@/features/send/hooks/use-calculate-btc-max-spend';
 import { addressComplianceValidator } from '@/features/send/utils';
 import * as z from 'zod';
 
@@ -12,7 +12,7 @@ import {
   isValidBitcoinNetworkAddress,
 } from '@leather.io/bitcoin';
 import { BTC_DECIMALS } from '@leather.io/constants';
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { type BitcoinNetworkModes } from '@leather.io/models';
 import { countDecimals, createMoneyFromDecimal } from '@leather.io/utils';
 
 interface SchemaCreationParams {

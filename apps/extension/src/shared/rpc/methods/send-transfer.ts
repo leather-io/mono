@@ -1,13 +1,11 @@
 import { z } from 'zod';
 
+import { getNetworkTypeFromAddress } from '@leather.io/bitcoin';
 import { type BitcoinNetworkModes, resolveLegacyNetworkConfigurationId } from '@leather.io/models';
 import { uniqueArray } from '@leather.io/utils';
 
 import { FormErrorMessages } from '@shared/error-messages';
-import {
-  btcAddressNetworkValidator,
-  getNetworkTypeFromAddress,
-} from '@shared/forms/address-validators';
+import { btcAddressNetworkValidator } from '@shared/forms/address-validators';
 import { checkIfDigitsOnly } from '@shared/forms/amount-validators';
 import { stringField } from '@shared/forms/field-schemas';
 

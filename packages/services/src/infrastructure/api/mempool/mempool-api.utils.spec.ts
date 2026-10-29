@@ -1,6 +1,6 @@
-import { NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
+import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
 
-import { UserSettings } from '../../settings/settings.service';
+import { type UserSettings } from '../../settings/settings.service';
 import { getMempoolUrlFromUserSettings } from './mempool-api.utils';
 
 const customNetwork: NetworkConfiguration = {

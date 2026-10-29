@@ -1,6 +1,6 @@
 import {
   ClarityType,
-  ClarityValue,
+  type ClarityValue,
   hexToCV,
   noneCV,
   principalCV,
@@ -9,7 +9,7 @@ import {
 } from '@stacks/transactions';
 import { isStackingDaoSignerManager } from '~/data/bitcoin-staking-data';
 
-import { StacksClient } from '@leather.io/query';
+import { type StacksClient } from '@leather.io/query';
 
 import { parseContractId } from '../utils/contract-id';
 

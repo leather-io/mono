@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
 import { t } from '@lingui/core/macro';

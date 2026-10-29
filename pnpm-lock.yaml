@@ -204,9 +204,6 @@ importers:
       '@radix-ui/react-dialog':
         specifier: 1.0.5
         version: 1.0.5(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@radix-ui/react-tooltip':
-        specifier: 1.0.7
-        version: 1.0.7(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@radix-ui/themes':
         specifier: 2.0.3
         version: 2.0.3(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -324,12 +321,6 @@ importers:
       postcss-preset-env:
         specifier: 10.0.5
         version: 10.0.5(postcss@8.5.20)
-      prism-react-renderer:
-        specifier: 2.4.1
-        version: 2.4.1(react@19.1.0)
-      prismjs:
-        specifier: 1.30.0
-        version: 1.30.0
       punycode:
         specifier: 2.3.1
         version: 2.3.1
@@ -424,6 +415,9 @@ importers:
       '@leather.io/test-app':
         specifier: workspace:*
         version: link:../test-app
+      '@leather.io/tools':
+        specifier: workspace:*
+        version: link:../../tools
       '@pandacss/dev':
         specifier: 1.7.1
         version: 1.7.1(jsdom@26.1.0)(typescript@5.9.3)
@@ -466,9 +460,6 @@ importers:
       '@types/node':
         specifier: 24.0.8
         version: 24.0.8
-      '@types/prismjs':
-        specifier: 1.26.5
-        version: 1.26.5
       '@types/punycode':
         specifier: 2.1.4
         version: 2.1.4
@@ -1773,6 +1764,9 @@ importers:
       p-queue:
         specifier: 8.1.1
         version: 8.1.1
+      remeda:
+        specifier: 2.21.2
+        version: 2.21.2
       uuid:
         specifier: 11.1.0
         version: 11.1.0
@@ -2397,13 +2391,25 @@ importers:
       commander:
         specifier: 12.0.0
         version: 12.0.0
-    devDependencies:
-      '@types/node':
-        specifier: 24.0.8
-        version: 24.0.8
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+    devDependencies:
+      '@leather.io/prettier-config':
+        specifier: workspace:*
+        version: link:../packages/prettier-config
+      '@leather.io/test-config':
+        specifier: workspace:*
+        version: link:../packages/test-config
+      '@types/node':
+        specifier: 24.0.8
+        version: 24.0.8
+      prettier:
+        specifier: 3.5.1
+        version: 3.5.1
+      vitest:
+        specifier: 2.1.9
+        version: 2.1.9(@types/node@24.0.8)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.8.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@24.0.8)(typescript@5.9.3))(terser@5.46.0)
 
 packages:
 

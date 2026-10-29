@@ -1,6 +1,6 @@
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 import { StacksTokenBalance } from './stacks-token-balance';
 

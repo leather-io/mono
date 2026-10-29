@@ -1,4 +1,4 @@
-import { Money, StacksTx } from '@leather.io/models';
+import { type Money, type StacksTx } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 export function calculateInboundStxBalance(
@@ -26,8 +26,10 @@ export function calculateOutboundStxBalance(
   return createMoney(
     pendingTransactions.reduce((amount, tx) => {
       if (tx.sender_address === address) {
-        if (tx.tx_type === 'token_transfer') {
-          amount += Number(tx.token_transfer?.amount ?? 0);
+        const transferAmount =
+          tx.tx_type === 'token_transfer' ? tx.token_transfer?.amount : undefined;
+        if (transferAmount !== undefined) {
+          amount += Number(transferAmount);
         }
         if (!tx.sponsored) {
           amount += Number(tx.fee_rate);

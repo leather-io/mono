@@ -26,7 +26,7 @@ import {
   GlobeTiltedIcon,
   Pressable,
   SettingsGearIcon,
-  SheetInstance,
+  type SheetInstance,
   ShieldIcon,
   SquareLinesBottomIcon,
   SupportIcon,
@@ -43,7 +43,7 @@ export default function SettingsScreen() {
   const { lockApp } = useAuthContext();
   const { displayToast } = useToastContext();
   const deviceId = useDeviceId();
-  const { onCopy: onDeviceIdCopy } = useCopyToClipboard(deviceId ?? '');
+  const { onCopy: onDeviceIdCopy } = useCopyToClipboard(deviceId);
   const releaseWaitlistFeatures = useWaitlistFlag();
   function handleCopyDeviceIdToClipboard() {
     void onDeviceIdCopy();

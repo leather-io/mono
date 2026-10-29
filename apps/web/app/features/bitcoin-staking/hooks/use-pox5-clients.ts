@@ -6,7 +6,7 @@ import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { useLeatherConnect } from '~/store/addresses';
 import { fetchFn } from '~/utils/hiro-wrapped-fetch';
 
-import { StacksClient, stacksClient } from '@leather.io/query';
+import { type StacksClient, stacksClient } from '@leather.io/query';
 
 import { parseContractId } from '../utils/contract-id';
 import { getPox5ContractId } from '../utils/pox5-contracts';

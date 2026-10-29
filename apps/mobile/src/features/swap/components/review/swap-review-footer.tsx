@@ -1,4 +1,4 @@
-import { Box, HasChildren } from '@leather.io/ui/native';
+import { Box, type HasChildren } from '@leather.io/ui/native';
 
 export function SwapReviewFooter({ children }: HasChildren) {
   return (

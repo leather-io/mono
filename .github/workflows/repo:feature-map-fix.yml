@@ -1,0 +1,58 @@
+name: repo:feature-map-fix
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+# GITHUB_TOKEN default permissions disabled; jobs declare their own.
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  review-and-fix:
+    name: review-and-fix
+    if: github.ref_name == 'dev'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    permissions:
+      contents: write # create the signed fix commit on the bot/feature-map-fix branch, or delete that branch once dev is clean
+      pull-requests: write # open, update, or close the rolling feature-map pull request
+      id-token: write # OIDC exchange for claude-code-action
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: $/.github/actions/provision
+
+      - name: build-tools
+        run: pnpm --filter @leather.io/tools build
+
+      - name: review-and-fix-entries
+        uses: anthropics/claude-code-action@2dca132ff0e0c4094ce6048b422c6915a071210b # v1.0.247
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: >-
+            --model opus
+            --allowedTools "Edit(apps/extension/tests/feature-map/**) Write(tmp/**) Bash(pnpm lt feature-map check:*) Bash(pnpm --filter @leather.io/extension exec prettier:*) Bash(pnpm --filter @leather.io/extension exec eslint:*)"
+          show_full_output: true
+          prompt: |
+            Follow the instructions in .github/prompts/feature-map-fix.md.
+
+      - name: verify-entries
+        run: |
+          test -f tmp/feature-map-review.md
+          test -z "$(git ls-files --others --exclude-standard)"
+          test -z "$(git diff --name-only | grep -v '^apps/extension/tests/feature-map/' || true)"
+          pnpm lt feature-map check --app extension
+          git diff --name-only | sed 's#^apps/extension/##' | xargs -r pnpm --filter @leather.io/extension exec prettier --check
+          git diff --name-only | sed 's#^apps/extension/##' | xargs -r pnpm --filter @leather.io/extension exec eslint
+
+      - name: open-or-update-pull-request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/feature-map-fix-pr.sh

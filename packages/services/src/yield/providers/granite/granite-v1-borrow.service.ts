@@ -67,19 +67,24 @@ export class GraniteV1BorrowService implements YieldProductService {
     if (!account.stacks) {
       return [];
     }
+    const { stxAddress } = account.stacks;
 
     const aeusdcAsset = await this.fungibleAssetService.getAsset(
       { protocol: 'sip10', id: aeusdcAssetPrincipal },
       signal
     );
     const [userPosition, aeusdcMarketData, marketRates] = await Promise.all([
-      this.callStateV1GetUserPosition(account.stacks.stxAddress, signal),
+      this.callStateV1GetUserPosition(stxAddress, signal),
       this.marketDataService.getMarketData(aeusdcAsset, signal),
       this.leatherApiClient.fetchGraniteMarket(aeusdcAssetPrincipal, { signal }),
     ]);
 
+    if (!userPosition) {
+      return [];
+    }
+
     const borrowBalance = createMoney(
-      userPosition?.borrowedAmount ?? 0,
+      userPosition.borrowedAmount,
       aeusdcAsset.symbol,
       aeusdcAsset.decimals
     );
@@ -93,7 +98,7 @@ export class GraniteV1BorrowService implements YieldProductService {
     const collateral = (
       await Promise.all(
         (userPosition?.collaterals ?? []).map(collateralPrincipal =>
-          this.getCollateralAsset(account.stacks!.stxAddress, collateralPrincipal, signal)
+          this.getCollateralAsset(stxAddress, collateralPrincipal, signal)
         )
       )
     ).filter(isNonNullish);

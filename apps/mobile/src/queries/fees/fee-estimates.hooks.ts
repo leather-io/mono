@@ -1,6 +1,6 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { type UseQueryResult, useQuery } from '@tanstack/react-query';
 
-import { AverageBitcoinFeeRates } from '@leather.io/models';
+import { type AverageBitcoinFeeRates } from '@leather.io/models';
 import { createGetBitcoinFeeEstimatesQueryOptions } from '@leather.io/query';
 import { calculateMeanAverage, initBigNumber, isFulfilled, isRejected } from '@leather.io/utils';
 

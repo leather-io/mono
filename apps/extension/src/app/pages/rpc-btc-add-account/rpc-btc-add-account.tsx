@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 import { styled } from 'leather-styles/jsx';
 
 import { AddressDisplayer, Approver, Button, Callout } from '@leather.io/ui';
@@ -120,7 +121,7 @@ export function RpcBtcAddAccount() {
             key="confirm"
             disabled={!canApprove}
             onClick={() => void onApprove()}
-            data-testid="btc-add-account-approve-button"
+            data-testid={ConnectAccountSelectors.BtcAddAccountApproveBtn}
           >
             {confirmLabel}
           </Button>,

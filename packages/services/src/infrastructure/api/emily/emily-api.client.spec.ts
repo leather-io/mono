@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { HttpCacheService } from '../../cache/http-cache.service';
+import { type DefaultNetworkConfigurations, defaultNetworksKeyedById } from '@leather.io/models';
+
+import { createMock } from '../../../test/create-mock';
+import type { HttpCacheKeyArray, HttpCacheService } from '../../cache/http-cache.service';
 import type { SettingsService } from '../../settings/settings.service';
 import { EmilyApiClient } from './emily-api.client';
 import type { EmilyDepositRequest } from './emily-api.types';
@@ -22,13 +25,22 @@ const sbtcLimits = {
   accountCaps: {},
 };
 
-const fetchWithCache = vi.fn((_key: unknown, fetchFn: () => Promise<unknown>) => fetchFn());
+const fetchWithCache = vi.fn<(key: HttpCacheKeyArray, fetchFn: () => Promise<unknown>) => void>();
 
-function makeClient(mode: 'mainnet' | 'testnet' | 'regtest' = 'mainnet', id: string = mode) {
-  const settingsService = {
-    getSettings: () => ({ network: { id, chain: { bitcoin: { mode } } } }),
-  } as unknown as SettingsService;
-  const cacheService = { fetchWithCache } as unknown as HttpCacheService;
+function makeClient(networkId: DefaultNetworkConfigurations = 'mainnet') {
+  const settingsService: SettingsService = {
+    getSettings: () => ({
+      network: defaultNetworksKeyedById[networkId],
+      quoteCurrency: 'USD',
+      assetVisibility: {},
+    }),
+  };
+  const cacheService = createMock<HttpCacheService>({
+    fetchWithCache(key, fetchFn) {
+      fetchWithCache(key, fetchFn);
+      return fetchFn();
+    },
+  });
   return new EmilyApiClient(settingsService, cacheService);
 }
 
@@ -57,7 +69,7 @@ describe(EmilyApiClient.name, () => {
     it('uses the hosted testnet emily url for the primary stacks testnet', async () => {
       vi.spyOn(axios, 'get').mockResolvedValue({ data: sbtcLimits });
 
-      await makeClient('regtest', 'primaryStacksTestnet').getSbtcLimits();
+      await makeClient('primaryStacksTestnet').getSbtcLimits();
       expect(fetchWithCache).toHaveBeenLastCalledWith(
         ['emily-api-get-sbtc-limits', 'https://testnet.sbtc-emily.com'],
         expect.any(Function)
@@ -67,7 +79,7 @@ describe(EmilyApiClient.name, () => {
     it('uses the local emily url for the sbtc devenv', async () => {
       vi.spyOn(axios, 'get').mockResolvedValue({ data: sbtcLimits });
 
-      await makeClient('regtest', 'sbtcDevenv').getSbtcLimits();
+      await makeClient('sbtcDevenv').getSbtcLimits();
       expect(fetchWithCache).toHaveBeenLastCalledWith(
         ['emily-api-get-sbtc-limits', 'http://localhost:3031'],
         expect.any(Function)

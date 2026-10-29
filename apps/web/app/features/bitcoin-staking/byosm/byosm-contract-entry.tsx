@@ -10,9 +10,12 @@ import { byosmContractParam } from '~/pages/bitcoin-staking/bitcoin-staking.cons
 
 import { Button, Input } from '@leather.io/ui';
 
-import { ByosmContractFormSchema, createByosmContractFormSchema } from './byosm-contract-schema';
+import {
+  type ByosmContractFormSchema,
+  createByosmContractFormSchema,
+} from './byosm-contract-schema';
 import { getStateErrorMessage } from './byosm-error-messages';
-import { ByosmSignerManagerState } from './use-byosm-signer-manager';
+import { type ByosmSignerManagerState } from './use-byosm-signer-manager';
 
 const byosmContent = bitcoinStakingContent.byosm;
 
@@ -49,7 +52,7 @@ export function ByosmContractEntry({ state }: ByosmContractEntryProps) {
         </styled.p>
       </Stack>
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={event => void onSubmit(event)}>
         <Stack gap="space.03" alignItems="flex-start">
           <Controller
             control={control}

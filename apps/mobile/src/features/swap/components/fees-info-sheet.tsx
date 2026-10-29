@@ -1,10 +1,10 @@
 import { InfoSheet } from '@/features/swap/components/info-sheet/info-sheet';
 import { formatCurrency } from '@/utils/currency-formatter';
-import { MessageDescriptor, i18n } from '@lingui/core';
+import { type MessageDescriptor, i18n } from '@lingui/core';
 import { msg, t } from '@lingui/core/macro';
 
-import { SwapProviderId } from '@leather.io/models';
-import { LiveSwapEstimate } from '@leather.io/state/swap';
+import { type SwapProviderId } from '@leather.io/models';
+import { type LiveSwapEstimate } from '@leather.io/state/swap';
 import { Box, Text } from '@leather.io/ui/native';
 
 type SuccessLiveSwapEstimate = Extract<LiveSwapEstimate, { status: 'success' }>;

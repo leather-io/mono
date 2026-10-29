@@ -1,9 +1,9 @@
-import React from 'react';
+import type React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Screen } from '@/components/screen/screen';
 
-import { Box, HasChildren, useTheme } from '@leather.io/ui/native';
+import { Box, type HasChildren, useTheme } from '@leather.io/ui/native';
 
 interface FullHeightSheetLayoutProps extends HasChildren {
   header: React.ReactNode;

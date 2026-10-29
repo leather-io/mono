@@ -3,7 +3,7 @@ import { useAssetDescriptionQuery } from '@/queries/assets/fungible-asset-info.q
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 import { usePriceChangePercentage } from '@/queries/market-history/market-history.query';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
+import { type FungibleCryptoAsset } from '@leather.io/models';
 
 export function useGetTokenDetails({ asset }: { asset: FungibleCryptoAsset }) {
   const marketData = useMarketDataQuery(asset);

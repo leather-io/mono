@@ -3,7 +3,7 @@ import { useAsync } from 'react-async-hook';
 
 import { Box, styled } from 'leather-styles/jsx';
 
-import { Caption, DropdownMenu } from '@leather.io/ui';
+import { Caption, DropdownMenu, Hr } from '@leather.io/ui';
 import { isNumber } from '@leather.io/utils';
 
 import {
@@ -12,7 +12,6 @@ import {
   getLogSizeInBytes,
 } from '@shared/logger-storage';
 
-import { Divider } from '@app/components/layout/divider';
 import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 
 const isAnEmptyLogsArrayByteThreshold = 7;
@@ -69,7 +68,7 @@ export function AdvancedMenuItems() {
           {diagnosticLogText}
         </Caption>
       </DropdownMenu.Item>
-      <Divider />
+      <Hr />
     </Box>
   );
 }

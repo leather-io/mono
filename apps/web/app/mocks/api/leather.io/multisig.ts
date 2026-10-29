@@ -1,4 +1,5 @@
 import { HttpResponse, http } from 'msw';
+import { z } from 'zod';
 
 import type {
   AuthNetworkId,
@@ -57,6 +58,14 @@ export function makeMockSession(network: AuthNetworkId, expSeconds: number): Aut
   };
 }
 
+const mockAccessTokenPayloadSchema = z.object({
+  identity: z.object({
+    network: z.enum(['stx:mainnet', 'btc:mainnet', 'stx:testnet', 'btc:testnet', 'btc:regtest']),
+  }),
+});
+
+const mockRefreshRequestSchema = z.object({ refreshToken: z.string() });
+
 interface AuthHeaderSource {
   headers: { get(name: string): string | null };
 }
@@ -67,8 +76,8 @@ function networkFromAuthHeader(request: AuthHeaderSource): AuthNetworkId {
   if (!segment) return 'stx:mainnet';
   try {
     const json = atob(segment.replace(/-/g, '+').replace(/_/g, '/'));
-    const network = JSON.parse(json)?.identity?.network;
-    return network ?? 'stx:mainnet';
+    const payload = mockAccessTokenPayloadSchema.safeParse(JSON.parse(json));
+    return payload.success ? payload.data.identity.network : 'stx:mainnet';
   } catch {
     return 'stx:mainnet';
   }
@@ -276,8 +285,8 @@ export const multisigHandlers = [
   http.post('*/v1/auth/refresh', async ({ request }) => {
     let refreshToken = '';
     try {
-      const parsed = JSON.parse(await request.text());
-      refreshToken = parsed?.refreshToken ?? '';
+      const parsed = mockRefreshRequestSchema.safeParse(JSON.parse(await request.text()));
+      refreshToken = parsed.success ? parsed.data.refreshToken : '';
     } catch {
       refreshToken = '';
     }
