@@ -37,9 +37,10 @@ test.describe('Help Center to Support Redirects', () => {
     test(`redirects ${from} to ${to} in one hop`, async ({ request }) => {
       const response = await request.get(from, { maxRedirects: 0 });
       expect(response.status()).toBe(permanentRedirectStatus);
-      expect(response.headers()['location']).toBe(to);
+      const destination = new URL(response.headers()['location'], response.url());
+      expect(destination.href).toBe(new URL(to, response.url()).href);
 
-      const target = await request.get(to, { maxRedirects: 0 });
+      const target = await request.get(destination.href, { maxRedirects: 0 });
       expect(target.status()).toBe(200);
     });
   }

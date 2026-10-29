@@ -64,7 +64,7 @@ export const coreTokens: CoreToken[] = [
 // Earning on Stacks
 // ---------------------------------------------------------------------------------------------
 
-export interface StakingProvider {
+interface StakingProvider {
   name: string;
   logo: string;
   historicalYield: string;

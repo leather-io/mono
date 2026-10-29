@@ -5,7 +5,7 @@
  *
  * Kept free of runtime imports so `routes.ts` can read the path list.
  */
-export type LegacyPathTarget = { slug: string } | { to: `/${string}` };
+type LegacyPathTarget = { slug: string } | { to: `/${string}` };
 
 const legacyPathRedirects = new Map<string, LegacyPathTarget>([
   ['/privacy-policy', { slug: 'privacy-policy' }],

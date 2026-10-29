@@ -18,7 +18,7 @@ interface StoreButtonProps extends HTMLStyledProps<'a'> {
 }
 
 /** One outlined store pill (icon + platform name) linking to the platform's store listing. */
-export function StoreButton({ platform, tone = 'light', ...props }: StoreButtonProps) {
+function StoreButton({ platform, tone = 'light', ...props }: StoreButtonProps) {
   const { label, icon, store } = storeDetails[platform];
   const isDark = tone === 'dark';
   return (

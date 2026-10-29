@@ -8,7 +8,7 @@ export interface NewsItem {
   description: string | null;
 }
 
-export interface NewsCover {
+interface NewsCover {
   /** 720px wide, used for list rows and as the hero fallback */
   src: string;
   /** 1280px wide, for the featured slot */

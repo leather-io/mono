@@ -22,7 +22,7 @@ export type ContentGuide = NonNullable<HelpCenterGuideBySlugQueryResult>;
  * its final URL, or returns a real 404/410. Nothing redirects to a URL that
  * would itself redirect.
  */
-export type ContentSlugResolution<TPost = ContentPost, TGuide = ContentGuide> =
+type ContentSlugResolution<TPost = ContentPost, TGuide = ContentGuide> =
   | { kind: 'guide'; guide: TGuide; canonicalPath: string }
   | { kind: 'post'; post: TPost; canonicalPath: string }
   | { kind: 'redirect'; location: string }
@@ -80,7 +80,7 @@ function withSearch(location: string, request: Request) {
  * Builds the response for any resolution the current route can't render itself:
  * a single 301 to the final URL, or a 404/410 for the route's error boundary.
  */
-export function unservedContentResponse(
+function unservedContentResponse(
   resolution: ContentSlugResolution<unknown, unknown>,
   request: Request
 ) {

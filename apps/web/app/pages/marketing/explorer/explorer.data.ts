@@ -6,12 +6,12 @@ import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants'
 
 const assetDir = '/marketing/explorer';
 
-export interface ExplorerImage {
+interface ExplorerImage {
   src: string;
   alt: string;
 }
 
-export interface ExplorerPromo {
+interface ExplorerPromo {
   titleLines: [string, string];
   description: string;
   ctaLabel: string;
@@ -33,7 +33,7 @@ export interface ExplorerApp {
   logo: string;
 }
 
-export interface ExplorerTab {
+interface ExplorerTab {
   id: string;
   label: string;
   apps: ExplorerApp[];

@@ -4,7 +4,7 @@
 // URL (a served Sanity post/guide or page), never another redirect; content-slug-resolver.spec.ts
 // guards against chains. `retire` answers 410 Gone.
 
-export type LegacyContentTarget = { action: 'redirect'; to: `/${string}` } | { action: 'retire' };
+type LegacyContentTarget = { action: 'redirect'; to: `/${string}` } | { action: 'retire' };
 
 const legacyContentRedirects = new Map<string, LegacyContentTarget>([
   // Stamp Scan app listing; Stamps support ended (high confidence)

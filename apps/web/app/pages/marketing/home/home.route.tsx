@@ -1,4 +1,8 @@
-import { ChangelogStrip, fetchChangelogStrip } from '~/pages/marketing/shared/changelog-strip';
+import {
+  ChangelogStrip,
+  type ChangelogStripEntry,
+  fetchChangelogStrip,
+} from '~/pages/marketing/shared/changelog-strip';
 import { marketingHeaders, marketingMeta } from '~/pages/marketing/shared/marketing-meta';
 import { MarketingPage } from '~/pages/marketing/shared/marketing-page';
 
@@ -19,7 +23,7 @@ export function meta() {
   return marketingMeta({ title: 'Leather', path: '/' });
 }
 
-export async function loader() {
+export async function loader(): Promise<{ changelog: ChangelogStripEntry[] }> {
   return { changelog: await fetchChangelogStrip() };
 }
 
