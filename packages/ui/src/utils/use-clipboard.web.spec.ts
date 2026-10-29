@@ -24,8 +24,8 @@ function deferredWrite() {
   return { ...controls, promise };
 }
 
-function startCopy(onCopy: () => Promise<boolean>) {
-  const pending = { completion: Promise.resolve(false) };
+function startCopy(onCopy: () => Promise<boolean | undefined>) {
+  const pending = { completion: Promise.resolve<boolean | undefined>(undefined) };
   act(() => {
     pending.completion = onCopy();
   });
@@ -129,7 +129,7 @@ describe(useClipboard.name, () => {
     });
     await act(async () => {
       older.resolve();
-      expect(await olderCompletion).toBe(false);
+      expect(await olderCompletion).toBeUndefined();
     });
 
     expect(result.current.hasCopied).toBe(false);
@@ -163,28 +163,31 @@ describe(useClipboard.name, () => {
     });
     await act(async () => {
       older.reject();
-      expect(await olderCompletion).toBe(false);
+      expect(await olderCompletion).toBeUndefined();
     });
     expect(result.current.hasCopied).toBe(true);
     expect(result.current.hasCopyFailed).toBe(false);
   });
 
-  test('does not apply a pending copy result to a different selected address', async () => {
-    const deferred = deferredWrite();
-    writeText.mockReturnValue(deferred.promise);
-    const { result, rerender } = renderHook(({ value }) => useClipboard(value), {
-      initialProps: { value: 'first-address' },
-    });
-    const completion = startCopy(result.current.onCopy);
-    rerender({ value: 'second-address' });
-    await act(async () => {
-      deferred.resolve();
-      expect(await completion).toBe(false);
-    });
-    expect(result.current.value).toBe('second-address');
-    expect(result.current.hasCopied).toBe(false);
-    expect(result.current.hasCopyFailed).toBe(false);
-  });
+  test.each<'resolve' | 'reject'>(['resolve', 'reject'])(
+    'cancels a pending %s result when the selected address changes',
+    async settle => {
+      const deferred = deferredWrite();
+      writeText.mockReturnValue(deferred.promise);
+      const { result, rerender } = renderHook(({ value }) => useClipboard(value), {
+        initialProps: { value: 'first-address' },
+      });
+      const completion = startCopy(result.current.onCopy);
+      rerender({ value: 'second-address' });
+      await act(async () => {
+        deferred[settle]();
+        expect(await completion).toBeUndefined();
+      });
+      expect(result.current.value).toBe('second-address');
+      expect(result.current.hasCopied).toBe(false);
+      expect(result.current.hasCopyFailed).toBe(false);
+    }
+  );
 
   test('clears success when the selected address changes', async () => {
     writeText.mockResolvedValue();
@@ -199,14 +202,17 @@ describe(useClipboard.name, () => {
     expect(result.current.hasCopied).toBe(false);
   });
 
-  test('does not publish success or leave a timer when a pending copy unmounts', async () => {
-    const deferred = deferredWrite();
-    writeText.mockReturnValue(deferred.promise);
-    const { result, unmount } = renderHook(() => useClipboard('selected-address'));
-    const completion = startCopy(result.current.onCopy);
-    unmount();
-    deferred.resolve();
-    expect(await completion).toBe(false);
-    expect(vi.getTimerCount()).toBe(0);
-  });
+  test.each<'resolve' | 'reject'>(['resolve', 'reject'])(
+    'cancels a pending %s result without leaving a timer after unmount',
+    async settle => {
+      const deferred = deferredWrite();
+      writeText.mockReturnValue(deferred.promise);
+      const { result, unmount } = renderHook(() => useClipboard('selected-address'));
+      const completion = startCopy(result.current.onCopy);
+      unmount();
+      deferred[settle]();
+      expect(await completion).toBeUndefined();
+      expect(vi.getTimerCount()).toBe(0);
+    }
+  );
 });

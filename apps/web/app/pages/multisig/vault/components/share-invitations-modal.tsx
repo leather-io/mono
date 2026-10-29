@@ -1,3 +1,5 @@
+import { useLayoutEffect, useRef } from 'react';
+
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { CopyAddress } from '~/components/copy-address';
 import { useToast } from '~/features/toasts/use-toast';
@@ -99,13 +101,35 @@ function PendingStatus() {
   );
 }
 
-function CopyMessageButton({ message }: { message: string }) {
+function useInvitationClipboard(value: string, isShowing: boolean) {
+  const { onCopy } = useClipboard(value);
+  const lifetime = useRef({ active: false });
+
+  useLayoutEffect(() => {
+    const currentLifetime = { active: isShowing };
+    lifetime.current = currentLifetime;
+    return () => {
+      currentLifetime.active = false;
+    };
+  }, [isShowing]);
+
+  async function copy(): Promise<boolean | undefined> {
+    const currentLifetime = lifetime.current;
+    if (!currentLifetime.active) return undefined;
+    const copied = await onCopy();
+    return currentLifetime.active ? copied : undefined;
+  }
+
+  return { onCopy: copy };
+}
+
+function CopyMessageButton({ message, isShowing }: { message: string; isShowing: boolean }) {
   const { success: showToast, error: showErrorToast } = useToast();
-  const { onCopy } = useClipboard(message);
+  const { onCopy } = useInvitationClipboard(message, isShowing);
   async function copyMessage() {
     const copied = await onCopy();
-    if (copied) showToast('Invite message copied');
-    else showErrorToast('Unable to copy invite message. Try again.');
+    if (copied === true) showToast('Invite message copied');
+    if (copied === false) showErrorToast('Unable to copy invite message. Try again.');
   }
   return (
     <BasicTooltip
@@ -131,13 +155,13 @@ function CopyMessageButton({ message }: { message: string }) {
   );
 }
 
-function CopyLinkButton({ link }: { link: string }) {
+function CopyLinkButton({ link, isShowing }: { link: string; isShowing: boolean }) {
   const { success: showToast, error: showErrorToast } = useToast();
-  const { onCopy } = useClipboard(link);
+  const { onCopy } = useInvitationClipboard(link, isShowing);
   async function copyLink() {
     const copied = await onCopy();
-    if (copied) showToast('Invite link copied');
-    else showErrorToast('Unable to copy invite link. Try again.');
+    if (copied === true) showToast('Invite link copied');
+    if (copied === false) showErrorToast('Unable to copy invite link. Try again.');
   }
   return (
     <Button
@@ -165,11 +189,13 @@ function PendingInviteRow({
   member,
   creatorName,
   showDivider,
+  isShowing,
 }: {
   vault: Vault;
   member: VaultMember;
   creatorName: string | null;
   showDivider: boolean;
+  isShowing: boolean;
 }) {
   return (
     <Box
@@ -191,8 +217,11 @@ function PendingInviteRow({
         caption={<CopyAddress addr={member.address} wide />}
         action={
           <Flex alignItems="center" gap="space.02" flexShrink={0}>
-            <CopyMessageButton message={inviteMessage(vault, member, creatorName)} />
-            <CopyLinkButton link={inviteLink(vault)} />
+            <CopyMessageButton
+              message={inviteMessage(vault, member, creatorName)}
+              isShowing={isShowing}
+            />
+            <CopyLinkButton link={inviteLink(vault)} isShowing={isShowing} />
           </Flex>
         }
       />
@@ -235,6 +264,7 @@ export function ShareInvitationsModal({
                 member={member}
                 creatorName={creatorName}
                 showDivider={index > 0}
+                isShowing={isShowing}
               />
             ))}
           </Box>

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 interface UiClipboard {
   value: string;
-  onCopy(): Promise<boolean>;
+  onCopy(): Promise<boolean | undefined>;
   hasCopied: boolean;
   hasCopyFailed: boolean;
 }
@@ -21,7 +21,8 @@ export function useClipboard(value: string): UiClipboard {
     timer.current = undefined;
   }
 
-  async function onCopy() {
+  async function onCopy(): Promise<boolean | undefined> {
+    if (!mounted.current) return undefined;
     const activeRequest = ++request.current;
     clearTimer();
     setHasCopied(false);
@@ -33,14 +34,15 @@ export function useClipboard(value: string): UiClipboard {
         return false;
       }
       await navigator.clipboard.writeText(value);
-      if (!mounted.current || request.current !== activeRequest) return false;
+      if (!mounted.current || request.current !== activeRequest) return undefined;
       setHasCopied(true);
       timer.current = window.setTimeout(() => {
         if (mounted.current && request.current === activeRequest) setHasCopied(false);
       }, copiedFeedbackDuration);
       return true;
     } catch {
-      if (mounted.current && request.current === activeRequest) setHasCopyFailed(true);
+      if (!mounted.current || request.current !== activeRequest) return undefined;
+      setHasCopyFailed(true);
       return false;
     }
   }
