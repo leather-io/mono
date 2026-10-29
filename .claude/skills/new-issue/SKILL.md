@@ -147,8 +147,9 @@ it is a duplicate.
 
 Only after yes, one issue at a time.
 
-- **Full mode**: write the body to a temporary file, then
-  `gh issue create --repo leather-io/mono --web --title "<title>" --body-file <file> --label "<type>,<platform>,<areas>"`.
+- **Title and body go through files**: write each to a temporary file with the file-writing tool, never through `echo`, `printf` or a heredoc, so the shell never expands `$(...)`, backticks or `$VAR` in reporter text; in clone and text mode, URL-encode from those files the same way.
+- **Full mode**:
+  `gh issue create --repo leather-io/mono --web --title "$(cat <title-file>)" --body-file <body-file> --label "<type>,<platform>,<areas>"`.
   It opens the browser with a new issue prefilled; the person adds screenshots and submits.
 - **Clone and text mode**: give two things. A prefilled link, title and body URL-encoded:
   `https://github.com/leather-io/mono/issues/new?title=<title>&body=<body>&labels=<labels>`.
