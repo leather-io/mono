@@ -1,6 +1,3 @@
-// Load guard for /playground/*: names the file when an area fails to load,
-// instead of leaving a blank page.
-//
 // A bad import (a name the module doesn't export, e.g. a native-only icon from
 // @leather.io/ui) is a SyntaxError at module link time. On a deep link it kills
 // React Router's hydration script before React runs, so no error boundary can

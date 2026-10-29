@@ -1,8 +1,3 @@
-// Shrinks its content to the canvas width (never enlarges), so a 1280×800 tab
-// frame, or a popup next to today's capture, fits beside the two rails at
-// 1280 wide. With `fitHeight` it fits the container's height too (the single
-// screen always shows whole, above the dock). Scaled content stays
-// interactive: clicks land where they look.
 import {
   type ReactNode,
   createContext,
@@ -16,14 +11,12 @@ import { Box } from 'leather-styles/jsx';
 
 const ScaleContext = createContext(1);
 
-// The scale applied around the caller (1 = natural size).
 export function useFitScale() {
   return useContext(ScaleContext);
 }
 
 interface ScaleToFitProps {
   children: ReactNode;
-  // Leave this much of the container's width unused.
   inset?: number;
   // Also fit the container's height (the container must have one: flex: 1
   // with minHeight 0, or a fixed height).

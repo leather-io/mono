@@ -176,11 +176,13 @@ DEVIATIONS.md in every folder (each row is checked against the nearest one above
    decision. Keep needed decision and safety context visible; disclosures are for optional
    background. Preserve label hierarchy and don't repeat the task heading in the body. Count again
    and record before and after; a sentence quota must not hide required information.
-4. Run `pnpm --filter @leather.io/web typecheck` and
-   `npx eslint app/pages/playground/areas/<area>` from `apps/web` (aim for 0 warnings), then the
-   promote report. A typecheck catches imports that don't exist on web (see
-   `apps/web/AGENTS.md`); in the browser, a crash names the variant and screen, and a module that
-   fails to load names its file.
+4. From the repository root, run `pnpm --filter @leather.io/web typecheck`,
+   `pnpm --filter @leather.io/web lint`, and
+   `pnpm design:check apps/web/app/pages/playground/areas/<area>`, then the promote report.
+   Ordinary lint enforces design rules only on the owned recipes, recipe gallery and Receive
+   example; a new area needs the explicit design check too. A typecheck catches imports that
+   don't exist on web (see `apps/web/AGENTS.md`); in the browser, a crash names the variant and
+   screen, and a module that fails to load names its file.
 
 ## 8. When no pattern fits
 

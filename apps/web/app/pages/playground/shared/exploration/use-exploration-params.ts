@@ -1,11 +1,3 @@
-// All canvas state lives in the URL so any view can be deep-linked:
-//   (no v)                  Overview: every contact sheet, Today first
-//   ?v=b&screen=review&theme=dark&frame=popup   (frame: popup | request-window | tab)
-//   ?sheet=1&v=b            (contact sheet: every screen of one variant)
-//   &compare=1              (show the real step next to the concept's screen)
-//   ?v=actual&step=btc-review   (Today as screenshots: the real captures, one step)
-// `notes=1` from the first template is accepted and ignored: notes and
-// assumptions are always in the info rail now.
 import { useSearchParams } from 'react-router';
 
 import { type FrameSizeId, type ThemeId, frameSizeIds, themeIds } from './frame';
@@ -15,18 +7,14 @@ import { type FrameSizeId, type ThemeId, frameSizeIds, themeIds } from './frame'
 const todayActualId = 'actual';
 
 export interface ExplorationParams<V extends string, S extends string> {
-  // Overview: no variant selected (the default landing).
   overview: boolean;
   // The selected concept. Kept while Overview or Today's screenshots are
   // shown, so switching back returns to it.
   variant: V;
   screen: S;
-  // Today's screenshots are selected.
   actual: boolean;
-  // The real step shown while `actual` (a TodayStep name); null = first.
   step: string | null;
   theme: ThemeId;
-  // The size the canvas draws; screens get its layout (frameLayout).
   frame: FrameSizeId;
   sheet: boolean;
   compare: boolean;
@@ -79,7 +67,6 @@ export function useExplorationParams<V extends string, S extends string>({
         query.delete('notes');
         query.delete('step');
         if (merged.overview) {
-          // Remember the concept to return to.
           query.delete('v');
           query.set('from', merged.variant);
         } else if (merged.actual) {

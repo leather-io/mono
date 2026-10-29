@@ -1,18 +1,3 @@
-// Recipe: popup page shell (360/390×600). Use it for every full screen in the
-// extension popup. Not for a focused sub-task over the current screen: that is
-// a Sheet (see review-sheet.tsx).
-//
-// Scrolling, as in Phantom's send and the extension's own pages: the header
-// stays put, an optional `pinned` region under it stays put (the recipient
-// input above a list of contacts, a search field), only the body scrolls, and
-// the footer with the screen's one solid action sticks to the bottom. Never let
-// the header scroll away with the list.
-//
-// One gutter: the pinned region, the body and the footer all sit on
-// `pageGutter` (24px), and the header's icon glyphs land on the same rail (see
-// page-header.tsx). Rows, inputs and section headers are direct children of the
-// body and add no horizontal padding of their own. `data-gutter` marks the rail
-// for `pnpm design:align`.
 import type { ReactNode } from 'react';
 
 import { Box, Flex, Stack } from 'leather-styles/jsx';
@@ -42,7 +27,6 @@ export const popupPageMeta = defineRecipeMeta({
 
 interface PopupPageContentProps extends PageHeaderProps {
   notice?: PageNoticeProps;
-  // Stays fixed under the header while the body scrolls.
   pinned?: ReactNode;
   children: ReactNode;
 }

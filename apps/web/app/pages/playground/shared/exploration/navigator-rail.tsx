@@ -1,6 +1,3 @@
-// The navigation rail (first of the two left rails): Today, the variants
-// (names only), the selected one's screens in flow order with how you get to
-// each, and the view controls (view, frame, theme, compare, hotspots).
 import { Stack, styled } from 'leather-styles/jsx';
 
 import {
@@ -27,8 +24,6 @@ export function currentView(params: { overview: boolean; sheet: boolean }): View
   return params.sheet ? 'sheet' : 'single';
 }
 
-// How the user gets to a screen: its entry (from outside the flow) or the
-// screens that link to it.
 function howYouGetHere<S extends string>(
   flow: ResolvedFlow<S>,
   screen: S,
@@ -43,7 +38,6 @@ function howYouGetHere<S extends string>(
   return `From ${labelOf(first.from)} · ${first.trigger}${more}`;
 }
 
-// Today is selected: its screenshots, or the recreated baseline variant.
 export function isToday<V extends string, S extends string>(
   config: ExplorationConfig<V, S>,
   params: ExplorationParams<V, S>
@@ -208,7 +202,6 @@ interface ScreensProps<V extends string, S extends string> {
   onSelectStep(step: string): void;
 }
 
-// Today's screenshots list their steps; anything else its flow's screens.
 function Screens<V extends string, S extends string>({
   config,
   params,
@@ -320,7 +313,6 @@ const shortcutList: [string, string][] = [
   ['i', 'info rail'],
 ];
 
-// Every shortcut, in one quiet disclosure under the controls.
 function Shortcuts() {
   return (
     <styled.details>

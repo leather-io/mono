@@ -1,8 +1,3 @@
-// Today's real screenshots: the reference to judge each concept against.
-// Steps and concept screens are matched by job, so in a comparison each real
-// step reads as one of: "≈ concept <screen>", "Kept (unchanged)" (left as it
-// is on purpose), "Cut · <why>" (removed on purpose), or "Not covered" (a
-// silent drop to fix).
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { Pressable } from '@leather.io/ui';
@@ -17,10 +12,7 @@ import { Thumb } from './lightbox';
 // are 1280×800.
 const capture = { popup: { width: 360, height: 600 }, tab: { width: 1280, height: 800 } };
 
-// How the selected variant treats today's steps: which concept screens do each
-// job, and which steps it cuts.
 export interface TodayCoverage {
-  // job → concept screen labels doing it
   screensByJob: Record<string, string[]>;
   cuts: TodayCut[];
   kept: TodayKept[];
@@ -64,10 +56,6 @@ function Placeholder({ width, height, text }: { width: number; height: number; t
   );
 }
 
-// One real step drawn as a popup frame (390×600), so today's contact sheet
-// reads exactly like a concept's. The 360×600 captures are contained, not
-// cropped: the frame's background (the capture's own, in the same theme)
-// fills the sides.
 export function TodayFrame({
   today,
   step,
@@ -109,7 +97,6 @@ export function TodayFrame({
   );
 }
 
-// Tab captures are 1280×800; the rail shows them at a third.
 const tabRailWidth = 420;
 const tabRailHeight = Math.round((tabRailWidth * capture.tab.height) / capture.tab.width);
 
@@ -134,13 +121,11 @@ interface TodayRailProps {
   today: TodayConfig;
   job: string;
   notInToday?: string;
-  // The variant's `compareFlow`.
   flowId?: string | undefined;
   frame: FrameId;
   theme: ThemeId;
 }
 
-// Narrow rail next to the single screen: the real step that does the same job.
 export function TodayRail({ today, job, notInToday, flowId, frame, theme }: TodayRailProps) {
   const step = findStep(today, job, flowId);
   const width = frame === 'popup' ? capture.popup.width : tabRailWidth;
@@ -176,7 +161,6 @@ export interface NumberedStep {
   number: number;
 }
 
-// Every real step in order, numbered the way the flows number them.
 export function todaySteps(today: TodayConfig): NumberedStep[] {
   return today.flows.flatMap(flow =>
     flow.steps.map((step, index) => ({ flow, step, number: flow.startAt + index }))
@@ -188,12 +172,10 @@ interface TodayScreenProps {
   entry: NumberedStep;
   frame: FrameId;
   theme: ThemeId;
-  // Click-through: the screenshot itself advances to the next step.
   onNext?(): void;
   nextLabel?: string;
 }
 
-// One real step at full size, in place of a concept frame (Today · actual).
 export function TodayScreen({ today, entry, frame, theme, onNext, nextLabel }: TodayScreenProps) {
   const { step } = entry;
   const tab = frame === 'tab' && !step.popupOnly;

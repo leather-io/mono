@@ -1,9 +1,3 @@
-// Recipe: a receive QR with the asset's token icon in its centre. Same size and
-// ink as the extension's receive sheet
-// (apps/extension/src/app/pages/receive/components/receive-tokens.layout.tsx),
-// plus the icon: when an asset is the subject of a screen, show its token icon
-// (BtcAvatarIcon, StxAvatarIcon, SbtcAvatarIcon, UsdcxAvatarIcon, or
-// Sip10AvatarIcon / AssetAvatarIcon for others, all from @leather.io/ui).
 // The QR uses error-correction level H, so the covered centre still scans.
 import type { ReactNode } from 'react';
 import QRCode from 'react-qr-code';
@@ -31,7 +25,6 @@ export const addressQrMeta = defineRecipeMeta({
 
 interface AddressQrProps {
   address: string;
-  // The token avatar, e.g. <BtcAvatarIcon />. 40px by default (Avatar md).
   icon?: ReactNode;
   size?: number;
 }

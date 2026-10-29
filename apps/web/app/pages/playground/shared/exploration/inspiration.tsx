@@ -1,14 +1,9 @@
-// "Inspiration": every reference screen the area pulled from, across all its
-// concepts, two to a row in the info rail. Each card: the thumbnail (click to
-// enlarge), the app, what we took, and which concepts used it. The selected
-// concept's references come first. Data: the config's references.
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import type { Reference } from './exploration-config';
 import { Thumb } from './lightbox';
 import { RailDisclosure } from './section';
 
-// Two cards to a row in the info rail.
 const cardWidth = 136;
 const cardGap = 16;
 const imageHeight = 236;
@@ -22,9 +17,7 @@ function imageSrc(image: string, path: string | undefined) {
 
 export interface InspirationItem {
   reference: Reference<string>;
-  // Labels of the concepts that used it ("A", "C").
   usedBy: string[];
-  // The selected concept used it.
   current: boolean;
 }
 

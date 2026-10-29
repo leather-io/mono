@@ -1,5 +1,3 @@
-// Stand-in for a screen that isn't built (TODO) or that a variant can't express
-// ("not in today's flow"). READ-ONLY for variant builders.
 import { Flex, styled } from 'leather-styles/jsx';
 
 interface ScreenPlaceholderProps {

@@ -1,23 +1,3 @@
-// Recipe: a row in a list of assets, accounts or addresses. Pressable +
-// ItemLayout, as the extension's asset and account lists do, so hover, pressed
-// and focus-visible come with it. Each preset mirrors one shipped row, type and
-// ink included (see `mirrors` below). Not for key-value facts on a review:
-// that is ReviewRow.
-//
-// Interaction rules the base row enforces:
-// - One hover per row. Nested actions (copy, QR) sit inside the row's hover and
-//   show their own square IconButton hover on top. Never a split hover.
-// - The hover bleeds space.03 (12px) around the content; rows keep space.02
-//   above and below, so content stays 16px apart and a hover never covers the
-//   next row. Don't stack rows with a smaller gap, or other content closer than
-//   space.04 to a row.
-// - The left title is centred vertically against two-line right content
-//   (ItemLayout does this).
-// - No chevron by default. A chevron means "opens a deeper view": pass
-//   `navigates` together with the onClick that opens it. Pick rows that select
-//   and return, display rows and rows with nested actions have none. A row with
-//   `navigates` but no onClick draws no chevron, and lint
-//   (design-system/no-dead-chevron) flags it, as on round 3's address books.
 import type { ReactElement, ReactNode } from 'react';
 
 import { Box, HStack, styled } from 'leather-styles/jsx';
@@ -75,7 +55,6 @@ interface ListRowProps {
   value?: ReactNode;
   valueCaption?: ReactNode;
   isSelected?: boolean;
-  // Opens a deeper view: shows the chevron. Needs onClick.
   navigates?: boolean;
   actions?: RowAction[];
   onClick?(): void;
@@ -164,16 +143,11 @@ interface AssetRowProps {
   symbol: string;
   balance: string;
   fiat: string;
-  // An icon on the balance line (LockIcon for a partly locked balance). It
-  // inherits the line's ink and sits on the text line.
   balanceIcon?: InlineIconProps['icon'];
   navigates?: boolean;
   onClick?(): void;
 }
 
-// Asset: fiat on the right, the balance under it. Mirrors CryptoAssetItemLayout:
-// title and fiat label.01; symbol and balance label.03 in ink.text-primary
-// (not a subdued caption).
 export function AssetRow({
   icon,
   name,
@@ -219,9 +193,6 @@ interface AccountRowProps {
   onClick?(): void;
 }
 
-// Account: mirrors AccountListItemLayout. Strings go to ItemLayout as they are,
-// so its own defaults apply: name and balance label.02, address caption.01 in
-// ink.text-subdued.
 export function AccountRow({
   avatar,
   name,
@@ -246,16 +217,12 @@ interface AddressRowProps {
   address: string;
   name?: string;
   leading?: ReactNode;
-  // A second-line note after the address ("Last sent 2 Oct").
   note?: string;
-  // Opens a deeper view (contact details). A pick row leaves it off.
   navigates?: boolean;
   actions?: RowAction[];
   onClick?(): void;
 }
 
-// Address: a contact name with the truncated address under it, or the
-// truncated address alone. Same type as AccountRow. Never slice an address by hand.
 export function AddressRow({
   address,
   name,

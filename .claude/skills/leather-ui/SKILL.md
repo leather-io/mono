@@ -167,8 +167,11 @@ checks is not enough. Follow [Fees and transaction status](../../../docs/design/
 for fee choices, Money/fiat, quote provenance, identity grouping and pending-state semantics.
 Review popup content inside its intended device frame, not stretched across the browser.
 
-1. Run `pnpm --filter @leather.io/<package> lint`. The design rules are part of it. When a design
-   rule fails, its message names the replacement, so apply that. Don't add suppressions.
+1. Run `pnpm --filter @leather.io/<package> lint`. For changed web/extension feature paths, also
+   run `pnpm design:check <changed-feature-path>` from the repository root. Ordinary lint enforces
+   design rules only on the shared recipes, recipe gallery and Receive example; other features
+   need this explicit check. Mobile uses its native component and package checks. When a design
+   rule fails, apply the replacement named in its message. Don't add suppressions.
 2. Run `pnpm --filter @leather.io/<package> typecheck`.
 3. Look at it. For web or ui changes, render it in the web Playground (`pnpm dev` in `apps/web`,
    then `/playground`). Take a screenshot in light and dark, and attach before and after to the PR.

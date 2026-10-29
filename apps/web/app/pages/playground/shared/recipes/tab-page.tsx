@@ -1,9 +1,3 @@
-// Recipe: tab page shell (extension full-page tab, desktop web). The same header,
-// body and footer as PopupPage, in a bordered card in a centred 500px column, as
-// the extension's Card does at sm+. The footer sits under the content instead of
-// sticking, and `pinned` simply leads the body (the page scrolls as a whole in a
-// tab). Same gutter as the popup (pageGutter). FramePage picks the shell for
-// the frame a screen is drawn in.
 import { Flex, Stack } from 'leather-styles/jsx';
 
 import type { FrameId } from '../exploration/frame';

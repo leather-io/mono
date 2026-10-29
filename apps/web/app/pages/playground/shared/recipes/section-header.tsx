@@ -1,6 +1,3 @@
-// Recipe: a section label above a group of rows, with an optional trailing
-// action ("View all", "Edit"). Use it to split a list or a review into groups.
-// Not a page title: that lives in the page header.
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { Button } from '@leather.io/ui';

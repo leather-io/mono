@@ -1,8 +1,3 @@
-// The info rail (second of the two left rails): what's on the canvas. It
-// starts straight with the description (no title: the navigation rail names
-// the selection), then the concept, notes and assumptions, Inspiration (every
-// reference screen across the area) and "How we got here" (closed). On Today:
-// today's flows in place of the concept. On Overview: what the overview is.
 import { Stack, styled } from 'leather-styles/jsx';
 
 import { Assumptions } from './assumptions';
@@ -28,8 +23,6 @@ export function InfoRail<V extends string, S extends string>({
   onToggleOpen,
 }: InfoRailProps<V, S>) {
   const today = isToday(config, params);
-  // The variant whose concept and notes show: none on Overview or on Today's
-  // screenshots.
   const shown = params.overview || params.actual ? undefined : params.variant;
   const concept = shown ? config.concepts[shown] : undefined;
   return (

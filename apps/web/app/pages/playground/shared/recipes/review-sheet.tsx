@@ -1,23 +1,3 @@
-// Recipe: review sheet. A headline, grouped key-value rows and one action, over
-// the screen it confirms. Mirrors the extension's send review
-// (apps/extension/src/app/pages/send/send-crypto-asset-form/form/send-form-confirmation.layout.tsx):
-// amount → an optional edge-to-edge Callout → the recipient group → a dashed
-// divider → the totals group. Product code uses `Sheet` + `SheetHeader` from
-// @leather.io/ui; this inline version draws the same thing inside a Playground
-// frame, because a real Sheet portals out of it. ReviewRow also works on a page.
-//
-// Structure rules:
-// - Group rows by what they answer (who / how much / when) with ReviewSection,
-//   and split groups with ReviewDivider. Nothing floats between groups.
-// - A value's breakdown nests under it (`nested`): smaller type for the nested
-//   label and number, so the parent value stays the one that reads first.
-// - At most three text styles in one group: label, value, caption.
-// - Values are Diatype label.02, never mono and no tabular-nums: in the web
-//   build Diatype's tabular figures come from its semi-mono cut, which is how
-//   round 3's Total spend / Sending / Fee turned monospaced. Only a full
-//   address is mono (AddressDisplayer).
-// - The amount comes from AmountDisplay (`amount`), so its fiat gap matches
-//   the send form. The recipient is a RecipientSummary.
 import type { ReactNode } from 'react';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
@@ -53,16 +33,11 @@ export const reviewSheetMeta = defineRecipeMeta({
 interface ReviewRowProps {
   label: string;
   value: ReactNode;
-  // Fiat or a short qualifier under the value.
   caption?: string;
-  // One-sentence explanation behind an info icon.
   info?: string;
-  // A breakdown line under the row above: caption.01 label, label.03 value.
   nested?: boolean;
 }
 
-// The label lines up with the first line of the value, as InfoCardRow does on
-// the shipped review (a multi-line address or a caption grows downward).
 export function ReviewRow({ label, value, caption, info, nested = false }: ReviewRowProps) {
   if (nested)
     return (
@@ -121,12 +96,10 @@ export function ReviewRow({ label, value, caption, info, nested = false }: Revie
   );
 }
 
-// One group of rows that answer one question.
 export function ReviewSection({ children }: { children: ReactNode }) {
   return <Stack gap="space.03">{children}</Stack>;
 }
 
-// The dashed divider between groups (InfoCardSeparator).
 export function ReviewDivider() {
   return <DashedHr my="space.01" />;
 }
@@ -136,12 +109,8 @@ interface ReviewSheetProps {
   title: string;
   actions: PageActionsProps;
   children: ReactNode;
-  // The amount the review is about, drawn with AmountDisplay so the amount →
-  // fiat spacing matches the send form.
   amount?: Omit<AmountDisplayProps, 'size'>;
-  // Anything else that leads the review (an NFT, a contract). Prefer `amount`.
   headline?: ReactNode;
-  // A Callout about this review. Drawn edge to edge under the headline.
   callout?: PageNoticeProps;
   onClose?(): void;
 }

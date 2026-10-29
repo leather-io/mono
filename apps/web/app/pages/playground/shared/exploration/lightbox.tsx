@@ -1,5 +1,3 @@
-// Click-to-enlarge for reference images (inspiration thumbnails, real
-// extension screenshots). One overlay per page, opened through context.
 import { type ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 import { Box, Stack, styled } from 'leather-styles/jsx';
@@ -79,13 +77,10 @@ interface ThumbProps {
   caption: string;
   width: number;
   height?: number;
-  // 'cover' crops to the box from the top; 'contain' letterboxes.
   fit?: 'cover' | 'contain';
   children?: ReactNode;
 }
 
-// A reference image that opens in the lightbox. Optional children render
-// under the image (labels).
 export function Thumb({ src, caption, width, height, fit = 'cover', children }: ThumbProps) {
   const open = useContext(LightboxContext);
   return (

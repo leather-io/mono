@@ -1,12 +1,7 @@
-// The typed config behind an exploration canvas. One area = one config:
-// variants, screens, today's real flow (by job), concepts, references.
-// See docs/design/explore.md for the protocol this canvas presents.
 import type { ComponentType } from 'react';
 
 import type { FrameId, ThemeId } from './frame';
 
-// What the canvas passes to every screen. Screens render the frame's content
-// only; the canvas draws the frame around them.
 export interface ScreenProps {
   frame: FrameId;
   theme: ThemeId;
@@ -21,13 +16,10 @@ export interface ScreenProps {
 type ScreenComponent = ComponentType<ScreenProps>;
 
 interface VariantMeta {
-  // Short name shown in the top bar, e.g. "A · Two pots".
   title: string;
-  // One line: the idea this variant bets on.
   summary: string;
 }
 
-// Each variants/<x>/index.tsx exports exactly this shape.
 interface VariantModule<S extends string> {
   meta: VariantMeta;
   screens: Record<S, ScreenComponent>;
@@ -42,24 +34,16 @@ interface ExplorationScreen {
   notInToday?: string;
 }
 
-// A step of today's flow that a variant removes on purpose. The why is shown
-// under the real screenshot, so nothing is dropped silently.
 export interface TodayCut {
   step: string;
   why: string;
 }
 
-// A step of today's flow that a variant keeps as it is (no concept screen
-// redraws it). Reads "Kept (unchanged)", or "Kept · <why>".
 export interface TodayKept {
   step: string;
   why?: string;
 }
 
-// Click-through. A transition moves the single-screen view from one screen to
-// another, the way a prototype link does. `trigger` is what the reviewer reads
-// ("Tap the book icon"); `target` says which element in the rendered screen is
-// the hotspot, so no variant code changes:
 // - text: the visible text or aria-label of a button, link, tab, option or
 //   other clickable element (case-insensitive, "contains").
 // - selector: any CSS selector inside the frame, for elements without text.
@@ -77,9 +61,6 @@ export interface FlowTransition<S extends string> {
   target?: HotspotTarget;
 }
 
-// The flow a variant's screens make: their order, where it starts, and how
-// one screen leads to the next. Shown in the left rail's screen list and used
-// for click-through in the single-screen view.
 interface ExplorationFlow<S extends string> {
   // Screen order in the rail and for ←/→; defaults to config.screenIds.
   order?: S[];
@@ -90,12 +71,10 @@ interface ExplorationFlow<S extends string> {
 }
 
 interface ExplorationVariant<S extends string> {
-  // Switcher label, e.g. "A".
   label: string;
   // Top-bar title; defaults to module.meta.title.
   title?: string;
   module: VariantModule<S>;
-  // This variant gives a screen a different job than the default.
   jobs?: Partial<Record<S, string>>;
   // Which of today's flows ("Compare with today" beside a screen) to match this
   // variant's screens against: a `TodayFlow.id`, e.g. 'stx' for a concept that
@@ -109,21 +88,16 @@ interface ExplorationVariant<S extends string> {
   kept?: TodayKept[];
   // This variant's flow; each field overrides the area's `flow` (entries merge).
   flow?: ExplorationFlow<S>;
-  // Reviewer notes for this variant only, listed above the area assumptions.
   notes?: string[];
 }
 
 export interface TodayStep {
-  // Capture name, e.g. "btc-review".
   name: string;
   label: string;
   // Jobs this step does; a form can do "recipient" and "amount".
   jobs?: string[];
-  // Popup-only screens have no tab capture.
   popupOnly?: boolean;
-  // Not captured: render a placeholder instead of an image.
   missing?: boolean;
-  // Short qualifier next to the label ("synthetic").
   note?: string;
   // Every variant keeps this step as it is: reads "Kept (unchanged)", or
   // "Kept · <why>" when a string. A variant's cut still wins.
@@ -142,20 +116,12 @@ export interface TodayFlow {
 export interface TodayConfig {
   flows: TodayFlow[];
   image(name: string, frame: FrameId, theme: ThemeId): string;
-  // Tab captures exist in light only.
   tabLightOnly?: boolean;
   // Cuts every variant shares (a variant adds its own in `cuts`).
   cuts?: TodayCut[];
 }
 
-// Where a concept line comes from. Only these five kinds:
-// - notes: the variant's NOTES.md (or another file in the area).
-// - brief: the issue or brief the exploration answers.
-// - inspiration: the references / inspiration write-up.
-// - baseline: today's flow and its known UX issues.
-// - our read: an inference made while building, not in a source.
 type ConceptSourceKind = 'notes' | 'brief' | 'inspiration' | 'baseline' | 'our read';
-// A kind, optionally followed by a pointer: "brief §4", "baseline #3".
 type ConceptSource = ConceptSourceKind | `${ConceptSourceKind} ${string}`;
 
 export interface ConceptLine {
@@ -183,15 +149,12 @@ export interface Reference<S extends string> {
   // (`import.meta.glob(…, { query: '?url' })`, see imageUrls). A bare file name
   // is resolved against references.path. Omitted for text-only sources.
   image?: string;
-  // Landscape capture (desktop web): shown in a wider card.
   wide?: boolean;
-  // One line: what we took, "source → our version".
   took: string;
   screens: S[];
 }
 
 interface ReferenceGroup<S extends string> {
-  // Only set when a concept groups its references.
   label?: string;
   references: Reference<S>[];
 }
@@ -202,7 +165,6 @@ export interface ExplorationConfig<V extends string, S extends string> {
   screenIds: readonly S[];
   defaultVariant: V;
   defaultScreen: S;
-  // The variant that redraws today's flow, if the area has one.
   baselineVariant?: V;
   // The canvas lists one Today, above the variants. Which one is the config's
   // call, and the more accurate one wins:
@@ -222,21 +184,16 @@ export interface ExplorationConfig<V extends string, S extends string> {
   // `path` is only needed when images are bare file names (e.g. under
   // apps/web/public/playground/<area>/).
   references: { path?: string; byVariant: Record<V, ReferenceGroup<S>[]> };
-  // Reviewer notes, always listed in the right rail. Never inside a screen.
   assumptions?: string[];
-  // The flow every variant shares unless it sets its own (variant.flow).
   flow?: ExplorationFlow<S>;
 }
 
-// Today is the recreated baseline variant (todayEntry: 'recreated').
 export function recreatedToday<V extends string, S extends string>(
   config: ExplorationConfig<V, S>
 ): V | undefined {
   return config.todayEntry === 'recreated' ? config.baselineVariant : undefined;
 }
 
-// The concepts the canvas lists under Variants: every variant except the
-// baseline (it is either the Today entry or left out).
 export function conceptIds<V extends string, S extends string>(config: ExplorationConfig<V, S>) {
   return config.variantIds.filter(id => id !== config.baselineVariant);
 }
@@ -284,7 +241,6 @@ export interface ResolvedFlow<S extends string> {
   transitions: FlowTransition<S>[];
 }
 
-// The selected variant's flow: its own fields over the area's.
 export function variantFlow<V extends string, S extends string>(
   config: ExplorationConfig<V, S>,
   variant: V

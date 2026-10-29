@@ -1,8 +1,9 @@
 # Reviewing a UI PR (design)
 
-Lint already covers the [Never list](./never.md), so don't re-check those items by hand. Spend
-review time on the things a rule can't see. Work through the steps in order. Most PRs are settled
-by step 3.
+Confirm `pnpm design:check <changed-web-or-extension-feature-path>` passes. Ordinary package
+lint enforces design rules only on the owned recipes, recipe gallery and Receive example.
+The design check covers the automated [Never list](./never.md) rules; spend review time on the
+things a rule can't see. Work through the steps in order. Most PRs are settled by step 3.
 
 ## 1. Evidence is attached
 

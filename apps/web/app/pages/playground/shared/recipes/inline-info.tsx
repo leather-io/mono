@@ -1,13 +1,3 @@
-// Recipe: a label with its explanation behind an info icon, and the one helper
-// line a screen may show. Use InfoLabel wherever a term or a fee needs
-// explaining; the explanation goes in the tooltip, not on the screen. A problem
-// the user has to act on is an edge-to-edge Callout instead (see recipes.md):
-// never a Callout dropped between rows as a note.
-//
-// Inline icons use InlineIcon from @leather.io/ui, inside the text element: the
-// icon takes the text's ink (or a lighter step, never darker) and sits on the
-// text line at the text's size. Mirrors the extension's "Total balance ⓘ"
-// (apps/extension/src/app/pages/home/components/account-card.tsx).
 import type { ReactNode } from 'react';
 
 import { styled } from 'leather-styles/jsx';
@@ -39,9 +29,7 @@ export const inlineInfoMeta = defineRecipeMeta({
 
 interface InfoLabelProps {
   label: string;
-  // One sentence. Longer explanations belong behind "Learn more".
   info?: string;
-  // The label's type and ink. Review labels: body.02 in ink.text-secondary.
   textStyle?: 'body.02' | 'label.02' | 'caption.01';
 }
 
@@ -64,10 +52,8 @@ export function InfoLabel({ label, info, textStyle = 'body.02' }: InfoLabelProps
   );
 }
 
-// The one helper sentence a screen may show (about 60 characters at 360px).
 interface HelperTextProps {
   children: ReactNode;
-  // Centre it under a centred AmountDisplay.
   centered?: boolean;
 }
 

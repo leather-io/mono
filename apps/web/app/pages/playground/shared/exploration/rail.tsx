@@ -1,6 +1,3 @@
-// The two rails' shared chrome: a sticky full-height column that collapses to
-// a thin strip, its collapse button, and the small controls the left rail is
-// made of (list buttons, segmented choices, switches, key hints). Canvas-only.
 import { type ReactNode, useEffect, useState } from 'react';
 
 import { Box, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
@@ -65,12 +62,9 @@ interface RailProps {
   as?: 'nav' | 'aside';
 }
 
-// Collapsed, a rail is a thin strip that holds its toggle.
 const collapsedWidth = 30;
 const toggleSize = 22;
 
-// A left-hand rail. Its collapse control sits on its right edge, half over the
-// border, so it never pushes a title in; both rails do the same.
 export function Rail({
   label,
   open,
@@ -187,14 +181,11 @@ interface RailItemProps {
   leading?: ReactNode;
   title: ReactNode;
   caption?: ReactNode;
-  // Stays in the tab order but reads as a quiet secondary entry.
   muted?: boolean;
-  // Tooltip, e.g. a caption only shown while selected.
   hint?: string;
   'data-item'?: string;
 }
 
-// One row of a rail list: a real button, current one marked with aria-current.
 export function RailItem({
   selected,
   onSelect,
@@ -269,8 +260,6 @@ interface ChoiceProps<T extends string> {
   onChange(value: T): void;
 }
 
-// A segmented choice: a labelled radio group of equal-width buttons, label on
-// the left so the rail's controls stay one row each.
 export function Choice<T extends string>({
   label,
   options,
@@ -337,7 +326,6 @@ interface ToggleProps {
   onChange(checked: boolean): void;
 }
 
-// A labelled switch (role="switch").
 export function Toggle({ label, checked, disabled, shortcut, onChange }: ToggleProps) {
   return (
     <Pressable

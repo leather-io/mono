@@ -1,18 +1,3 @@
-// The exploration canvas: two rails on the left, then the canvas.
-// - navigation rail (navigator-rail.tsx): Today (one entry), the variants,
-//   the selected one's screens in flow order, view / frame / theme, compare.
-// - info rail (info-rail.tsx): the description, concept, notes & assumptions,
-//   Inspiration, "How we got here".
-// - canvas, in one of three views:
-//   - All (the landing, no variant selected): every contact sheet
-//     stacked, Today first. A heading opens that sheet, a frame that screen.
-//   - Single: one screen, fitted whole above the dock. Hotspots click through
-//     to the next screen; the Previous / Next buttons walk the flow order. With "Compare
-//     with today", the real step that does the same job sits beside it.
-//   - Contact sheet: every screen of the selection in one grid. Today's
-//     screenshots use the same grid, frames and labels as a concept.
-// An area renders <ExplorationCanvas config={…} /> and owns only its config,
-// mocks and variants. Protocol: docs/design/explore.md.
 import { type ComponentType, type ReactNode, useCallback, useEffect, useState } from 'react';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
@@ -125,7 +110,6 @@ interface NavButtonProps {
   children: ReactNode;
 }
 
-// Icon-only round button: the accessible name carries the words.
 function NavButton({ onClick, disabled, label, shortcut, children }: NavButtonProps) {
   return (
     <Pressable
@@ -156,7 +140,6 @@ function NavButton({ onClick, disabled, label, shortcut, children }: NavButtonPr
   );
 }
 
-// Previous / next in flow order, side by side at the top of the canvas.
 function StepNav({ onPrevious, onNext }: { onPrevious?(): void; onNext?(): void }) {
   return (
     <Flex justifyContent="flex-end" gap="space.02" width="100%" flexShrink={0}>
@@ -172,7 +155,6 @@ function StepNav({ onPrevious, onNext }: { onPrevious?(): void; onNext?(): void 
 
 interface FromHereProps<S extends string> {
   transitions: FlowTransition<S>[];
-  // Indexes of transitions with a hotspot on screen.
   found: Set<number>;
   labelOf(screen: S): string;
   onNavigate(to: S): void;
@@ -233,8 +215,6 @@ function FromHere<S extends string>({ transitions, found, labelOf, onNavigate }:
   );
 }
 
-// The single view fills the canvas height: nav on top, the stage (fitted, so
-// the frame always shows whole), then a line or two under it.
 function SingleLayout({
   nav,
   stage,
@@ -338,7 +318,6 @@ function SingleScreen<V extends string, S extends string>({
 
 const sheetGap = 24;
 
-// The canvas width a sheet has, kept current as the rails open and close.
 function useWidth() {
   const [element, setElement] = useState<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(0);
@@ -353,18 +332,12 @@ function useWidth() {
 
 interface SheetItem {
   key: string;
-  // "3 · Review": the same for a concept screen and a real step.
   label: string;
-  // A second line, only when comparing (how a real step fares in the concept).
   caption?: string;
   frame: ReactNode;
   onOpen(): void;
 }
 
-// The grid every contact sheet uses, concept or today: popup frames, at least
-// two to a row (three when there's room), scaled down to fit. `dense` (the
-// Overview) fits more to a row. A label or a frame opens that screen; hover
-// and focus stay inside the item.
 function SheetGrid({ items, dense = false }: { items: SheetItem[]; dense?: boolean }) {
   const [measure, width] = useWidth();
   const frameWidth = frameSizes.popup.width;
@@ -437,7 +410,6 @@ function SheetGrid({ items, dense = false }: { items: SheetItem[]; dense?: boole
   );
 }
 
-// A concept's (or the recreated Today's) screens in flow order.
 function conceptItems<V extends string, S extends string>(
   config: ExplorationConfig<V, S>,
   params: ExplorationParams<V, S>,
@@ -459,8 +431,6 @@ interface TodaySheetProps<V extends string, S extends string> extends CanvasProp
   onOpen(step: string): void;
 }
 
-// Today's screenshots as a contact sheet: one grid per flow (a flow's name
-// above it when there are several), the same frames and labels as a concept.
 function TodaySheet<V extends string, S extends string>({
   config,
   params,
@@ -503,8 +473,6 @@ interface SheetHeadingProps {
   onOpen(): void;
 }
 
-// A sheet's heading on Overview (and above today's sheet in a comparison):
-// opens that sheet.
 function SheetHeading({ title, meta, onOpen }: SheetHeadingProps) {
   return (
     <Pressable
@@ -541,8 +509,6 @@ interface SheetViewProps<V extends string, S extends string> extends CanvasProps
   onOpenToday(): void;
 }
 
-// One selection's contact sheet. With "Compare with today", today's sheet
-// follows in the same grid, each real step saying how the concept treats it.
 function ContactSheet<V extends string, S extends string>({
   config,
   params,
@@ -584,7 +550,6 @@ function ContactSheet<V extends string, S extends string>({
   );
 }
 
-// Overview: every sheet stacked, Today first, then each concept.
 function Overview<V extends string, S extends string>({
   config,
   params,
@@ -637,7 +602,6 @@ interface TodayViewProps<V extends string, S extends string> extends CanvasProps
   onStep(step: string): void;
 }
 
-// Today's screenshots, one real step (click it for the next).
 function TodayView<V extends string, S extends string>({
   config,
   params,
@@ -698,7 +662,6 @@ function canvasLabel<V extends string, S extends string>(
   return viewLabel(config, params.variant, params.screen);
 }
 
-// What the rails and canvas re-mount on.
 function selectionKey<V extends string, S extends string>(params: ExplorationParams<V, S>) {
   if (params.overview) return 'overview';
   if (params.actual) return 'actual';
@@ -720,8 +683,6 @@ function cycle<T>(list: readonly T[], current: T, delta: number) {
   return list[(index + delta + list.length) % list.length];
 }
 
-// The canvas follows the theme param too, so the rails and the real
-// screenshots sit on a matching background.
 export function ExplorationCanvas<V extends string, S extends string>({
   config,
 }: {
@@ -780,7 +741,6 @@ export function ExplorationCanvas<V extends string, S extends string>({
     }
     const sheet = view === 'sheet';
     if (!params.overview) update({ sheet });
-    // Leaving Overview: back to the concept it remembers.
     else if (params.variant === recreated) selectToday({ sheet });
     else selectVariant(params.variant === hidden ? concepts[0] : params.variant, { sheet });
   }
@@ -797,7 +757,6 @@ export function ExplorationCanvas<V extends string, S extends string>({
     if (next) go(next);
   }
 
-  // [ and ]: Today, then each concept.
   function moveVariant(delta: number) {
     const entries: (V | 'today')[] = hasToday(config) ? ['today', ...concepts] : concepts;
     const current = today ? 'today' : params.variant;

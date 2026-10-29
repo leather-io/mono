@@ -1,17 +1,3 @@
-// Recipe parts: the page header and footer shared by PopupPage and TabPage.
-// Header: back on the left, an optional title in the middle, close (or a
-// trailing action such as Send's settings menu) on the right, as in the
-// extension's PageHeader. Footer: the screen's actions (see footerActionsMeta).
-// Use them through PopupPage or TabPage; reach for them directly only in a custom shell.
-//
-// One horizontal gutter. The page body's content rail is `pageGutter` (space.05,
-// 24px) from each edge. Header icon buttons are 40px squares holding a 24px
-// glyph, so the header pads `headerInset` (space.04, 16px) on both sides and
-// the glyph lands on the rail: 16 + (40 − 24) / 2 = 24. Both icon slots are
-// always 40px wide, so a header with only a back button stays symmetric and the
-// title stays centred. Don't add a margin to one side (round 3's Send header
-// had ml space.02 on back only, so back and settings sat 8px apart).
-// `pnpm design:align` checks the rail and the header symmetry on a render.
 import type { ReactNode } from 'react';
 
 import { Flex, Grid, styled } from 'leather-styles/jsx';
@@ -20,7 +6,6 @@ import { ArrowLeftIcon, CloseIcon, IconButton } from '@leather.io/ui';
 
 import { defineRecipeMeta } from './recipe-meta';
 
-// The content gutter every popup and tab page body uses.
 export const pageGutter = 'space.05';
 // The header's own padding: an IconButton's 8px inner space makes up the rest.
 const headerInset = 'space.04';
@@ -49,12 +34,9 @@ export interface PageHeaderProps {
   title?: string;
   onBack?(): void;
   onClose?(): void;
-  // A trailing icon action in place of close (Send's settings menu). A 40px
-  // IconButton, so it mirrors back.
   trailing?: ReactNode;
 }
 
-// A 40px slot: empty or holding one IconButton.
 function HeaderSlot({ align, children }: { align: 'start' | 'end'; children: ReactNode }) {
   return (
     // Literal branches: Panda extracts styles statically, so `justifySelf={align}`
@@ -101,7 +83,6 @@ export function PageHeader({ title, onBack, onClose, trailing }: PageHeaderProps
 
 interface PageFooterProps {
   children: ReactNode;
-  // Sticky pins the footer to the bottom edge of the scroll area (popup).
   sticky?: boolean;
 }
 

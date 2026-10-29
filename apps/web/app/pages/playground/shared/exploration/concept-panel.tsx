@@ -1,5 +1,3 @@
-// Right-rail content from the area's config: the selected concept (bet, why,
-// trade-off, open questions), and "How we got here" (the journey). Canvas-only.
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 
 import type { Concept, ConceptLine, JourneyStep } from './exploration-config';

@@ -1,6 +1,3 @@
-// Composition recipes: one realistic screen per recipe, in the extension's
-// frames. Deep links: ?recipe=<id>&theme=light|dark&frame=popup|request-window|tab. Without
-// `recipe`, every recipe renders side by side. Docs: docs/design/recipes.md.
 import { useSearchParams } from 'react-router';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
@@ -40,7 +37,6 @@ function RecipeFrame({ recipe, frame, theme }: RecipeFrameProps) {
   );
 }
 
-// useWhen / dontUseWhen under the frame, so the rules travel with the demo.
 function RecipeMetaNotes({ meta }: { meta: RecipeMeta }) {
   return (
     <Stack gap="space.02" maxWidth="390px" textStyle="caption.01" color="ink.text-secondary">

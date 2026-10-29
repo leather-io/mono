@@ -1,6 +1,3 @@
-// Notes and assumptions: the product unknowns behind the screens, always in
-// the right rail. Never render this inside a screen; assumptions are reviewer
-// notes, not product UI. READ-ONLY for variant builders.
 import { Stack, styled } from 'leather-styles/jsx';
 
 import { ColumnLabel, RailDisclosure } from './section';
@@ -26,7 +23,6 @@ function NoteList({ label, items }: NoteListProps) {
 }
 
 interface AssumptionsProps {
-  // This variant's own notes, listed first.
   notes?: string[];
   assumptions?: string[];
 }

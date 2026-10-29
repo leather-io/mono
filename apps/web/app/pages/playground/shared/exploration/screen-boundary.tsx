@@ -1,11 +1,3 @@
-// Error boundaries for the exploration canvas, so a crash names what broke
-// instead of leaving a blank page:
-// - ScreenBoundary wraps one screen: the rest of the canvas or sheet keeps
-//   rendering, and the frame says which variant and screen crashed.
-// - CanvasBoundary wraps the whole canvas (config, today's flow, concept panel).
-// A bad import (a name the module doesn't export, such as a native-only icon
-// from @leather.io/ui) fails before React runs; the playground layout's load
-// guard (load-guard.tsx) reports that one.
 import { Component, type ReactNode } from 'react';
 
 import { Box, Stack, styled } from 'leather-styles/jsx';
@@ -13,7 +5,6 @@ import { Box, Stack, styled } from 'leather-styles/jsx';
 import { ScreenPlaceholder } from './screen-placeholder';
 
 interface BoundaryProps {
-  // What is rendering, e.g. "Variant A · Recipient". Shown in the message.
   label: string;
   children: ReactNode;
 }

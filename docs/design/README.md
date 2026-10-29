@@ -15,7 +15,7 @@ Use the repository's supported Node 22.15 or newer and pinned pnpm. Toolkit Type
 
 Root lint enforces the design rules on this release's recipes, recipe gallery and Receive example, with no new suppressions. `pnpm design:check <feature-path>` applies the same rules to a new web/extension feature explicitly. Production-wide and mobile enforcement are not enabled by this release.
 
-The focused CI job runs rule/script regression tests, cheatsheet freshness and the owned-surface design lint. `words`, `align` and `fidelity` run against a local dev server; they do not prove usability or replace visual review.
+The focused CI job runs rule/script regression tests, audit-script lint and typechecking, cheatsheet freshness and the owned-surface design lint. `words`, `align` and `fidelity` run against a local dev server; they do not prove usability or replace visual review.
 
 ## Scope
 

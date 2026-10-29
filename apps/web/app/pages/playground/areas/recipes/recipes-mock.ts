@@ -1,5 +1,3 @@
-// Mock values for the recipe demos. Pre-formatted strings: the recipes take
-// display values; product code formats Money with Balance + formatCurrency.
 export const recipesMock = {
   account: {
     name: 'Account 1',

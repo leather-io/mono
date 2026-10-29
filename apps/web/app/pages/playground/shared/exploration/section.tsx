@@ -1,12 +1,9 @@
-// Quiet chrome for the info rail's sections (concept, notes, inspiration, how
-// we got here). Canvas-only, never inside a screen.
 import { type ReactNode, useState } from 'react';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { ChevronDownIcon, ChevronRightIcon } from '@leather.io/ui';
 
-// Small column label used inside sections ("The bet", "Why", …).
 export function ColumnLabel({ children }: { children: ReactNode }) {
   return (
     <styled.span textStyle="label.03" color="ink.text-secondary">
@@ -15,7 +12,6 @@ export function ColumnLabel({ children }: { children: ReactNode }) {
   );
 }
 
-// Provenance tag after a line: "notes", "brief §4", "our read".
 export function SourceTag({ children }: { children: string }) {
   return (
     <styled.span textStyle="caption.02" color="ink.text-subdued" whiteSpace="nowrap">
@@ -31,8 +27,6 @@ interface RailDisclosureProps {
   children: ReactNode;
 }
 
-// A section of the right rail: a full-width heading that opens and closes,
-// separated from the next by a hairline. Keyboard: the summary is a button.
 export function RailDisclosure({
   title,
   meta,

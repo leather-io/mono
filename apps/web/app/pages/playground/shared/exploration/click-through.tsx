@@ -1,8 +1,3 @@
-// Click-through for the single-screen view. The config's transitions name a
-// hotspot in the rendered screen (by text or selector); a click on it moves to
-// the next screen, like a prototype link. A click anywhere else flashes the
-// hotspots so the reviewer sees what can be clicked (hold `h` to show them).
-// Screens can also call `onNavigate(screen)` themselves (ScreenProps).
 import { type MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box } from 'leather-styles/jsx';
@@ -91,7 +86,6 @@ interface ClickThroughProps<S extends string> {
   transitions: FlowTransition<S>[];
   showHotspots: boolean;
   onNavigate(to: S): void;
-  // Reports which transitions (by index) have a hotspot on screen.
   onCoverage?(found: Set<number>): void;
   children: ReactNode;
 }
