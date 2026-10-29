@@ -11,7 +11,7 @@ import {
   createMarketData,
   createMarketPair,
 } from '@leather.io/models';
-import { createGetAlexSwappableCurrenciesQueryOptions } from '@leather.io/query';
+import { createAlexSwappableCurrenciesQueryConfig } from '@leather.io/queries';
 import { getPrincipalFromAssetString } from '@leather.io/stacks';
 import {
   convertAmountToFractionalUnit,
@@ -20,6 +20,7 @@ import {
   sortAssetsByName,
 } from '@leather.io/utils';
 
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useStxAddressAvailableUnlockedBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useSip10AddressTransferableTokenBalances } from '@app/query/stacks/sip10/sip10-balance.hooks';
 
@@ -104,9 +105,10 @@ function useCreateSwapAsset(address: string) {
 }
 
 export function useAlexSwappableAssets(address: string) {
+  const settings = useUserSettings();
   const createSwapAsset = useCreateSwapAsset(address);
   return useQuery({
-    ...createGetAlexSwappableCurrenciesQueryOptions(),
+    ...createAlexSwappableCurrenciesQueryConfig(settings),
     select: resp => sortAssetsByName(resp.map(createSwapAsset).filter(isDefined)),
   });
 }

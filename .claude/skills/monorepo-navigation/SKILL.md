@@ -41,7 +41,6 @@ This is a Turborepo monorepo with 3 apps and packages organized in a **CLEAN arc
 |---------|------|-------|
 | `@leather.io/services` | `packages/services/` | **Orchestration only** — API calls, DI, caching, multi-service coordination |
 | `@leather.io/queries` | `packages/queries/` | React Query configurations |
-| `@leather.io/query` | `packages/query/` | Legacy query package (migrate to @leather.io/queries) |
 | `@leather.io/rpc` | `packages/rpc/` | RPC client abstraction |
 | `@leather.io/sdk` | `packages/sdk/` | SDK utilities |
 | `@leather.io/cms` | `packages/cms/` | CMS integration |

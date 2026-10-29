@@ -15,7 +15,7 @@ import { StacksRpcTransactionRequestProvider } from '@app/features/rpc-stacks-tr
 import { useUnsignedStacksTransactionForFeeEstimation } from '@app/features/rpc-stacks-transaction-request/stacks/use-unsigned-transaction-for-fee-estimation';
 import { useRpcTransactionRequest } from '@app/features/rpc-stacks-transaction-request/use-rpc-transaction-request';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
-import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useCryptoCurrencyMarketData } from '@app/query/common/market-data/market-data.hooks';
 import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 
@@ -27,7 +27,7 @@ interface RpcStxDeployContractContainerProps {
 export function RpcStxDeployContractContainer({ account }: RpcStxDeployContractContainerProps) {
   const request = useRpcTransactionRequest();
   const network = useCurrentStacksNetworkState();
-  const stxMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
+  const stxMarketData = useCryptoCurrencyMarketData('STX');
   const navigate = useNavigate();
 
   const txOptionsForFeeEstimation = useMemo(

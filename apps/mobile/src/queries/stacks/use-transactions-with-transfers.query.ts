@@ -1,38 +1,27 @@
 import { useCallback } from 'react';
 
+import { useUserSettings } from '@/hooks/use-user-settings';
 import { type AddressTransactionWithTransfers } from '@stacks/stacks-blockchain-api-types';
 import { useQueries } from '@tanstack/react-query';
 
-import { createGetAccountTransactionsWithTransfersQueryOptions } from '@leather.io/query';
+import { createStacksAddressTransactionsQueryConfig } from '@leather.io/queries';
 import { uniqueArray } from '@leather.io/utils';
 
-import { useCurrentNetworkState } from '../leather-query-provider';
-import { useStacksClient } from './stacks-client';
-
 export function useGetAccountTransactionsWithTransfersQueries(addresses: string[]) {
-  const network = useCurrentNetworkState();
-  const client = useStacksClient();
+  const settings = useUserSettings();
   const uniqueAddresses = uniqueArray(addresses);
   const queries = useQueries({
     queries: uniqueAddresses.map(address => ({
-      ...createGetAccountTransactionsWithTransfersQueryOptions({
-        address,
-        client,
-        network: network.chain.stacks.url,
-      }),
+      ...createStacksAddressTransactionsQueryConfig(address, settings),
     })),
   });
   const combinedResult = useCallback(
     () => ({
       queries,
-      totalData: queries
-        .map(result => result.data)
-        .reduce<AddressTransactionWithTransfers[]>((acc, result) => {
-          if (result?.results) {
-            return [...acc, ...result.results];
-          }
-          return acc;
-        }, []),
+      totalData: queries.flatMap((result): AddressTransactionWithTransfers[] => {
+        if (result.data) return result.data;
+        return [];
+      }),
       pending: queries.some(result => result.isPending),
     }),
     [queries]

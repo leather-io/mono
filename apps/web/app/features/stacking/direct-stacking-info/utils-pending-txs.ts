@@ -7,16 +7,18 @@ import {
   type Transaction,
 } from '@stacks/stacks-blockchain-api-types';
 import { ClarityType, type ClarityValue, hexToCV } from '@stacks/transactions';
+import { type StacksApiClient } from '~/utils/stacks-api-client';
 import { isContractCallTransaction, isMempoolContractCallTransaction } from '~/utils/transactions';
-
-import { type StacksClient } from '@leather.io/query';
 
 type TransactionPredicate = (t: ContractCallTransactionMetadata, poxContractId: string) => boolean;
 type TransactionConverter<T> = (t: ContractCallTransaction | MempoolContractCallTransaction) => T;
 
 export interface PendingTransactionArgs {
   stackingClient: StackingClient;
-  stacksClient: StacksClient;
+  stacksClient: Pick<
+    StacksApiClient,
+    'getAccountTransactionsWithTransfers' | 'getAddressMempoolTransactions'
+  >;
   address: string;
 }
 

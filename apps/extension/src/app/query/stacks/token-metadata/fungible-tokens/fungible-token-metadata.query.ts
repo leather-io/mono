@@ -1,20 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { createGetFungibleTokenMetadataQueryOptions } from '@leather.io/query';
+import { createStacksFungibleTokenMetadataQueryConfig } from '@leather.io/queries';
 
-import { useCurrentNetworkState } from '@app/query/leather-query-provider';
-
-import { useStacksClient } from '../../stacks-client';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useGetFungibleTokenMetadataQuery(address: string) {
-  const client = useStacksClient();
-  const network = useCurrentNetworkState();
-
-  return useQuery(
-    createGetFungibleTokenMetadataQueryOptions({
-      address,
-      client,
-      network: network.chain.stacks.url,
-    })
-  );
+  const settings = useUserSettings();
+  return useQuery(createStacksFungibleTokenMetadataQueryConfig(address, settings));
 }
