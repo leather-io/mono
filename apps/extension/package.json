@@ -48,7 +48,6 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/provider": "workspace:*",
     "@leather.io/queries": "workspace:*",
-    "@leather.io/query": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/services": "workspace:*",
     "@leather.io/stacks": "workspace:*",

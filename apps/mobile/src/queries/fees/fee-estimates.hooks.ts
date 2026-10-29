@@ -1,36 +1,20 @@
+import { useUserSettings } from '@/hooks/use-user-settings';
 import { type UseQueryResult, useQuery } from '@tanstack/react-query';
 
 import { type AverageBitcoinFeeRates } from '@leather.io/models';
-import { createGetBitcoinFeeEstimatesQueryOptions } from '@leather.io/query';
-import { calculateMeanAverage, initBigNumber, isFulfilled, isRejected } from '@leather.io/utils';
-
-import { useBitcoinClient } from '../clients/bitcoin-client';
-import { useLeatherNetwork } from '../leather-query-provider';
+import { createBitcoinFeeRatesQueryConfig } from '@leather.io/queries';
+import { initBigNumber } from '@leather.io/utils';
 
 export function useAverageBitcoinFeeRates(): UseQueryResult<AverageBitcoinFeeRates> {
-  const client = useBitcoinClient();
-  const network = useLeatherNetwork();
+  const settings = useUserSettings();
 
   return useQuery({
-    ...createGetBitcoinFeeEstimatesQueryOptions({
-      client,
-      network: network.chain.bitcoin.bitcoinNetwork,
-    }),
-    select(feeEstimates) {
-      if (feeEstimates.every(isRejected)) {
-        return {
-          fastestFee: initBigNumber(15),
-          halfHourFee: initBigNumber(10),
-          hourFee: initBigNumber(5),
-        };
-      }
-
-      const fees = feeEstimates.filter(isFulfilled).map(result => result.value);
-
+    ...createBitcoinFeeRatesQueryConfig(settings),
+    select(feeRates) {
       return {
-        fastestFee: calculateMeanAverage(fees.map(fee => fee.fast)).decimalPlaces(0),
-        halfHourFee: calculateMeanAverage(fees.map(fee => fee.medium)).decimalPlaces(0),
-        hourFee: calculateMeanAverage(fees.map(fee => fee.slow)).decimalPlaces(0),
+        fastestFee: initBigNumber(feeRates.high.rate),
+        halfHourFee: initBigNumber(feeRates.standard.rate),
+        hourFee: initBigNumber(feeRates.low.rate),
       };
     },
   });

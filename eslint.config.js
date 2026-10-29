@@ -218,11 +218,6 @@ export default defineConfig([
     },
   },
   {
-    name: 'query',
-    files: ['packages/query/src/**/*.{ts,tsx}'],
-    extends: [reactConfig, pluginQuery.configs['flat/recommended']],
-  },
-  {
     name: 'queries-package',
     files: ['packages/queries/src/**/*.{ts,tsx}'],
     rules: {
