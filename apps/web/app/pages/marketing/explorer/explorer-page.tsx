@@ -1,3 +1,4 @@
+import { type CSSProperties } from 'react';
 import { Link } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
@@ -14,6 +15,11 @@ import {
 } from './explorer.data';
 
 const columnPx = 'space.05';
+
+// Resting tilt of the hero stickers; the pop-in keyframes end on it
+type StickerStyle = CSSProperties & { '--sticker-rotate': string };
+const hourglassRotate: StickerStyle = { '--sticker-rotate': '16deg' };
+const creatureRotate: StickerStyle = { '--sticker-rotate': '29deg' };
 
 function isExternal(href: string) {
   return /^https?:\/\//.test(href);
@@ -54,6 +60,7 @@ function PromoBanner() {
           </styled.span>
         </Flex>
         <Box position="relative" width="120px" height="150px" flexShrink={0} aria-hidden>
+          {/* Stickers pop in (scale 1.15 → 1) and settle at a tilt, as on the Framer site */}
           <styled.img
             src={art.hourglass.src}
             alt={art.hourglass.alt}
@@ -62,6 +69,11 @@ function PromoBanner() {
             right="0"
             width="100px"
             height="100px"
+            transform="rotate(16deg)"
+            style={hourglassRotate}
+            _motionSafe={{
+              animation: 'marketingStickerPop 0.3s cubic-bezier(0.34, 1.3, 0.64, 1) 0.7s both',
+            }}
           />
           <styled.img
             src={art.creature.src}
@@ -71,6 +83,11 @@ function PromoBanner() {
             left="0"
             width="92px"
             height="95px"
+            transform="rotate(29deg)"
+            style={creatureRotate}
+            _motionSafe={{
+              animation: 'marketingStickerPop 0.25s cubic-bezier(0.34, 1.3, 0.64, 1) 0.7s both',
+            }}
           />
         </Box>
       </Flex>

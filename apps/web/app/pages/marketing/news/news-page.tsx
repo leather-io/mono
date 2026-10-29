@@ -2,6 +2,12 @@ import { useId, useState } from 'react';
 import { Link } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import {
+  listFeatureEntranceStyles,
+  listRowEntranceDelay,
+  listRowEntranceStyles,
+  useListEntrance,
+} from '~/pages/marketing/shared/list-entrance';
 import { LoadMoreButton } from '~/pages/posts/posts-index-load-more';
 
 import { type NewsItem, getNewsCover, newsListPageSize } from './news.data';
@@ -48,9 +54,9 @@ function NewsCoverImage({ slug, sizes, eager }: NewsCoverImageProps) {
   );
 }
 
-function FeaturedNews({ item }: { item: NewsItem }) {
+function FeaturedNews({ item, animate }: { item: NewsItem; animate: boolean }) {
   return (
-    <Link to={postHref(item.slug)}>
+    <Link to={postHref(item.slug)} className={animate ? listFeatureEntranceStyles : undefined}>
       <Flex
         flexDirection={{ base: 'column-reverse', md: 'row' }}
         gap={{ base: 'space.05', md: 'space.07' }}
@@ -76,9 +82,19 @@ function FeaturedNews({ item }: { item: NewsItem }) {
   );
 }
 
-function NewsRow({ item }: { item: NewsItem }) {
+interface NewsRowProps {
+  item: NewsItem;
+  /** Fade the row up on mount; `index` staggers it. */
+  entrance?: { index: number };
+}
+
+function NewsRow({ item, entrance }: NewsRowProps) {
   return (
-    <styled.li borderBottom="default">
+    <styled.li
+      borderBottom="default"
+      className={entrance ? listRowEntranceStyles : undefined}
+      style={entrance ? listRowEntranceDelay(entrance.index) : undefined}
+    >
       <Link to={postHref(item.slug)}>
         <Flex
           flexDirection={{ base: 'column', md: 'row' }}
@@ -106,6 +122,7 @@ interface NewsPageProps {
 export function NewsPage({ items }: NewsPageProps) {
   const listId = useId();
   const [visibleCount, setVisibleCount] = useState(newsListPageSize);
+  const isEntering = useListEntrance();
   const [featured, ...rest] = items;
 
   if (!featured) {
@@ -118,11 +135,11 @@ export function NewsPage({ items }: NewsPageProps) {
 
   return (
     <Box pt={{ base: 'space.05', md: 'space.07' }}>
-      <FeaturedNews item={featured} />
+      <FeaturedNews item={featured} animate={isEntering} />
 
       <styled.ul id={listId} listStyleType="none">
-        {rest.slice(0, visibleCount).map(item => (
-          <NewsRow key={item.slug} item={item} />
+        {rest.slice(0, visibleCount).map((item, index) => (
+          <NewsRow key={item.slug} item={item} entrance={isEntering ? { index } : undefined} />
         ))}
       </styled.ul>
 

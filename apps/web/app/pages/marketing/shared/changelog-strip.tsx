@@ -5,6 +5,7 @@ import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { cmsClient, marketingCmsRequestOptions, urlFor } from '~/constants/cms-client';
 
 import { MarketingTag } from './marketing-tag';
+import { Reveal } from './reveal';
 
 const StyledLink = styled(Link);
 
@@ -82,30 +83,32 @@ export function ChangelogStrip({ entries, heading = 'Changelog', ...props }: Cha
   if (!entries.length) return null;
   return (
     <styled.section aria-labelledby="changelog-strip-heading" {...props}>
-      <Flex
-        flexDir={['column', null, 'row']}
-        alignItems={[null, null, 'flex-end']}
-        justifyContent="space-between"
-        gap="space.03"
-        mb="space.06"
-      >
-        <styled.h2 id="changelog-strip-heading" textStyle="heading.03">
-          {heading}
-        </styled.h2>
-        <StyledLink
-          to="/changelog"
-          prefetch="intent"
-          alignSelf="flex-start"
-          textStyle="label.03"
-          fontSize="14px"
-          borderBottom="1px solid"
-          borderColor="ink.text-primary"
-          _hover={{ color: 'ink.action-primary-hover' }}
-          mb={[null, null, 'space.01']}
+      <Reveal>
+        <Flex
+          flexDir={['column', null, 'row']}
+          alignItems={[null, null, 'flex-end']}
+          justifyContent="space-between"
+          gap="space.03"
+          mb="space.06"
         >
-          See what’s new in Leather
-        </StyledLink>
-      </Flex>
+          <styled.h2 id="changelog-strip-heading" textStyle="heading.03">
+            {heading}
+          </styled.h2>
+          <StyledLink
+            to="/changelog"
+            prefetch="intent"
+            alignSelf="flex-start"
+            textStyle="label.03"
+            fontSize="14px"
+            borderBottom="1px solid"
+            borderColor="ink.text-primary"
+            _hover={{ color: 'ink.action-primary-hover' }}
+            mb={[null, null, 'space.01']}
+          >
+            See what’s new in Leather
+          </StyledLink>
+        </Flex>
+      </Reveal>
       <styled.ul
         display="grid"
         gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)', `repeat(${entries.length}, 1fr)`]}

@@ -3,21 +3,76 @@ import {
   type ReactNode,
   cloneElement,
   isValidElement,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from 'react';
 import { Link } from 'react-router';
 
+import { css } from 'leather-styles/css';
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
+import { Dialog as RadixDialog, VisuallyHidden } from 'radix-ui';
 
-import { CloseIcon, IconButton, Sheet } from '@leather.io/ui';
+import { CloseIcon, IconButton } from '@leather.io/ui';
 
 import { type InstallPlatform } from './install-links';
 import { StoreButtons } from './store-buttons';
 
 const StyledLink = styled(Link);
+
+const overlayStyles = css({
+  position: 'fixed',
+  inset: 0,
+  zIndex: 999,
+  bg: 'overlay',
+  '&[data-state=open]': { animation: 'fadein 0.3s cubic-bezier(0.16, 1, 0.3, 1)' },
+  '&[data-state=closed]': { animation: 'fadeout 0.2s ease-in both' },
+});
+
+// Desktop: a centred dialog that springs in (opacity, scale 0.7 → 1 and a small offset, as on
+// the Framer site). Mobile: a bottom sheet that slides up. Reduced motion: a short fade only.
+const contentStyles = css({
+  position: 'fixed',
+  zIndex: 999,
+  display: 'flex',
+  flexDirection: 'column',
+  overflowY: 'auto',
+  bg: 'ink.background-primary',
+  boxShadow: 'hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px',
+  pb: 'space.04',
+  left: 0,
+  right: 0,
+  bottom: 0,
+  maxHeight: '100dvh',
+  borderTopRadius: 'lg',
+  md: {
+    inset: 0,
+    margin: 'auto',
+    width: 'min(560px, 100vw)',
+    height: 'fit-content',
+    maxHeight: '90vh',
+    borderRadius: 'md',
+  },
+  _focus: { outline: 'none' },
+  _motionSafe: {
+    '&[data-state=open]': {
+      animation: {
+        base: 'marketingSheetIn 0.4s cubic-bezier(0.32, 0.72, 0, 1)',
+        md: 'marketingModalIn 0.4s cubic-bezier(0.34, 1.3, 0.64, 1)',
+      },
+    },
+    '&[data-state=closed]': {
+      animation: {
+        base: 'marketingSheetOut 0.25s cubic-bezier(0.32, 0.72, 0, 1) both',
+        md: 'marketingModalOut 0.2s cubic-bezier(0.4, 0, 1, 1) both',
+      },
+    },
+  },
+  _motionReduce: {
+    '&[data-state=open]': { animation: 'fadein 0.15s ease-out' },
+    '&[data-state=closed]': { animation: 'fadeout 0.15s ease-in both' },
+  },
+});
 
 interface PlatformCardProps {
   title: string;
@@ -70,7 +125,8 @@ interface InstallModalProps {
 export function InstallModal({ trigger, open, onOpenChange }: InstallModalProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const isOpen = open ?? uncontrolledOpen;
-  // The Sheet unmounts on close and has no Radix trigger to return focus to, so do it here
+  // There's no Radix trigger to return focus to, so do it ourselves once the dialog has unmounted
+  // (onCloseAutoFocus), after its exit animation and after Radix lifts aria-hidden
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
   // Layout effect: runs before the dialog moves focus inside itself
@@ -78,12 +134,6 @@ export function InstallModal({ trigger, open, onOpenChange }: InstallModalProps)
     if (isOpen && !returnFocusRef.current && document.activeElement instanceof HTMLElement) {
       returnFocusRef.current = document.activeElement;
     }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen) return;
-    returnFocusRef.current?.focus();
-    returnFocusRef.current = null;
   }, [isOpen]);
 
   function setOpen(next: boolean) {
@@ -107,63 +157,76 @@ export function InstallModal({ trigger, open, onOpenChange }: InstallModalProps)
   return (
     <>
       {triggerElement}
-      {/* Sheet reads window on render, so only mount it once opened (always client-side) */}
-      {isOpen && (
-        <Sheet
-          isShowing
-          variant="drawer"
-          maxWidth="560px"
-          title="Choose the platform"
-          description="Install Leather as a browser extension or mobile app"
-          onClose={() => setOpen(false)}
-        >
-          <Box px={['space.04', null, 'space.05']} pt={['space.05', null, 'space.05']}>
-            <Flex justifyContent="space-between" alignItems="flex-start" gap="space.04">
-              <styled.h2 textStyle="heading.02" fontSize={['32px', null, '44px']} lineHeight="0.95">
-                Choose the
-                <br />
-                platform
-              </styled.h2>
-              <Flex alignItems="center" gap="space.02" flexShrink={0}>
-                <StyledLink
-                  to="/changelog"
-                  onClick={() => {
-                    // Navigating away: don't pull focus back to the trigger
-                    returnFocusRef.current = null;
-                    setOpen(false);
-                  }}
-                  textStyle="label.03"
-                  fontSize="14px"
-                  borderBottom="1px solid"
-                  borderColor="ink.text-primary"
-                  display={['none', 'inline']}
-                >
-                  View release notes
-                </StyledLink>
-                <IconButton
-                  icon={<CloseIcon variant="small" />}
-                  aria-label="Close"
-                  onClick={() => setOpen(false)}
-                />
+      <RadixDialog.Root open={isOpen} onOpenChange={setOpen}>
+        <RadixDialog.Portal>
+          <RadixDialog.Overlay className={overlayStyles} />
+          <RadixDialog.Content
+            className={contentStyles}
+            // Focus goes back to the trigger from the effect above, not on unmount
+            onCloseAutoFocus={event => {
+              event.preventDefault();
+              returnFocusRef.current?.focus();
+              returnFocusRef.current = null;
+            }}
+          >
+            <VisuallyHidden.Root>
+              <RadixDialog.Description>
+                Install Leather as a browser extension or mobile app
+              </RadixDialog.Description>
+            </VisuallyHidden.Root>
+            <Box px={['space.04', null, 'space.05']} pt={['space.05', null, 'space.05']}>
+              <Flex justifyContent="space-between" alignItems="flex-start" gap="space.04">
+                <RadixDialog.Title asChild>
+                  <styled.h2
+                    textStyle="heading.02"
+                    fontSize={['32px', null, '44px']}
+                    lineHeight="0.95"
+                  >
+                    Choose the <br />
+                    platform
+                  </styled.h2>
+                </RadixDialog.Title>
+                <Flex alignItems="center" gap="space.02" flexShrink={0}>
+                  <StyledLink
+                    to="/changelog"
+                    onClick={() => {
+                      // Navigating away: don't pull focus back to the trigger
+                      returnFocusRef.current = null;
+                      setOpen(false);
+                    }}
+                    textStyle="label.03"
+                    fontSize="14px"
+                    borderBottom="1px solid"
+                    borderColor="ink.text-primary"
+                    display={['none', 'inline']}
+                  >
+                    View release notes
+                  </StyledLink>
+                  <IconButton
+                    icon={<CloseIcon variant="small" />}
+                    aria-label="Close"
+                    onClick={() => setOpen(false)}
+                  />
+                </Flex>
               </Flex>
-            </Flex>
-            <Grid gridTemplateColumns={['1fr', null, '1fr 1fr']} gap="space.03" mt="space.05">
-              <PlatformCard
-                title="Browser extension"
-                description="Connect to Web3 apps directly from your browser"
-                image="/marketing/shared/install-extension.webp"
-                platforms={['chrome']}
-              />
-              <PlatformCard
-                title="Mobile"
-                description="Your wallet, wherever you are"
-                image="/marketing/shared/install-mobile.webp"
-                platforms={['ios', 'android']}
-              />
-            </Grid>
-          </Box>
-        </Sheet>
-      )}
+              <Grid gridTemplateColumns={['1fr', null, '1fr 1fr']} gap="space.03" mt="space.05">
+                <PlatformCard
+                  title="Browser extension"
+                  description="Connect to Web3 apps directly from your browser"
+                  image="/marketing/shared/install-extension.webp"
+                  platforms={['chrome']}
+                />
+                <PlatformCard
+                  title="Mobile"
+                  description="Your wallet, wherever you are"
+                  image="/marketing/shared/install-mobile.webp"
+                  platforms={['ios', 'android']}
+                />
+              </Grid>
+            </Box>
+          </RadixDialog.Content>
+        </RadixDialog.Portal>
+      </RadixDialog.Root>
     </>
   );
 }

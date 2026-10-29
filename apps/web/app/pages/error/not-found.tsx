@@ -20,6 +20,9 @@ export function NotFound() {
           width={['180px', null, '200px']}
           height="auto"
           aspectRatio="440 / 429"
+          // Flies in from the top left and settles tilted, as on the Framer site
+          transform="rotate(-10deg)"
+          _motionSafe={{ animation: 'marketingFlyIn 1s cubic-bezier(0.24, 0, 0.24, 1) both' }}
         />
         <styled.h1 textStyle="heading.04" fontWeight="400" mt="space.05" maxW="300px">
           Oops! Seems like you took a wrong turn

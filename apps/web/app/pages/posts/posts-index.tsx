@@ -2,6 +2,11 @@ import { useId, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import {
+  listRowEntranceDelay,
+  listRowEntranceStyles,
+  useListEntrance,
+} from '~/pages/marketing/shared/list-entrance';
 
 import { CloseIcon, MagnifyingGlassIcon } from '@leather.io/ui';
 
@@ -21,6 +26,7 @@ export function PostsIndex({ posts }: PostsIndexProps) {
   // with history.replace, so typing never piles up history entries.
   const [query, setQuery] = useState(() => searchParams.get(searchParamKey) ?? '');
   const [visibleCount, setVisibleCount] = useState(postsIndexPageSize);
+  const isEntering = useListEntrance();
 
   const results = useMemo(() => filterPosts(posts, query), [posts, query]);
   const visibleResults = results.slice(0, visibleCount);
@@ -99,8 +105,13 @@ export function PostsIndex({ posts }: PostsIndexProps) {
         </styled.p>
       ) : (
         <styled.ul id={listId} listStyleType="none">
-          {visibleResults.map(post => (
-            <styled.li key={post.slug} borderBottom="default">
+          {visibleResults.map((post, index) => (
+            <styled.li
+              key={post.slug}
+              borderBottom="default"
+              className={isEntering ? listRowEntranceStyles : undefined}
+              style={isEntering ? listRowEntranceDelay(index) : undefined}
+            >
               <Link to={`/posts/${post.slug}`}>
                 <Flex
                   flexDirection="column"

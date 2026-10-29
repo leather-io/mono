@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
+import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { ArrowLeftIcon } from '@leather.io/ui';
 
@@ -186,14 +187,16 @@ export function HomeProviders() {
       >
         <Box>
           <Box position={[null, null, null, 'sticky']} top="space.07">
-            <HomeSectionHeading
-              id="home-providers-heading"
-              lines={['The best providers,', 'in one place.']}
-            />
-            <styled.p textStyle="body.01" mt="space.02" maxW="330px">
-              We’ve aggregated the best for you, so your assets work harder with full transparency
-              and steady yields over time.
-            </styled.p>
+            <Reveal>
+              <HomeSectionHeading
+                id="home-providers-heading"
+                lines={['The best providers,', 'in one place.']}
+              />
+              <styled.p textStyle="body.01" mt="space.02" maxW="330px">
+                We’ve aggregated the best for you, so your assets work harder with full transparency
+                and steady yields over time.
+              </styled.p>
+            </Reveal>
           </Box>
         </Box>
         <Flex flexDir="column" gap="space.07">

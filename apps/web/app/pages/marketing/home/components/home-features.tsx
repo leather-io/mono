@@ -1,5 +1,8 @@
 import { Box, Grid, styled } from 'leather-styles/jsx';
+import { LottieAnimation } from '~/pages/marketing/shared/lottie-animation';
+import { Reveal } from '~/pages/marketing/shared/reveal';
 
+import { LedgerAnimation, SpamFreeAnimation, SwapsCoins, animationsPath } from './home-animations';
 import { CheckItem, FeatureCard, HomeSection, HomeSectionHeading } from './home-layout';
 
 const largeCardAspect = '592 / 444';
@@ -8,14 +11,21 @@ const smallCardAspect = '391 / 283';
 export function HomeSwapsAndLedger() {
   return (
     <>
-      <HomeSection aria-labelledby="home-swaps-heading" mt={['space.09', null, '160px']}>
+      <HomeSection
+        aria-labelledby="home-swaps-heading"
+        mt={['space.09', null, '160px']}
+        // The tilted Spline stage overhangs its slot; never let it scroll the page sideways
+        overflowX="clip"
+      >
         <Grid
           gridTemplateColumns={['1fr', null, null, '1fr 1fr']}
           alignItems="center"
           gap={['space.05', null, null, 'space.09']}
         >
           <Box order={[1, null, null, 0]}>
-            <HomeSectionHeading id="home-swaps-heading" lines={['Decentralized', 'swaps.']} />
+            <Reveal>
+              <HomeSectionHeading id="home-swaps-heading" lines={['Decentralized', 'swaps.']} />
+            </Reveal>
             <styled.p textStyle="body.02" color="ink.text-secondary" mt="space.05" maxW="454px">
               Swap over 100 tokens. Instantly, privately, and with full control. No accounts. No
               middlemen. No limits.
@@ -34,16 +44,7 @@ export function HomeSwapsAndLedger() {
               <CheckItem>ALEX</CheckItem>
             </styled.ul>
           </Box>
-          <styled.img
-            src="/marketing/home/swaps-coins.webp"
-            alt="Hand-drawn Stacks, Bitcoin and sBTC coins tumbling through the air"
-            width="100%"
-            maxW="640px"
-            justifySelf="center"
-            height="auto"
-            style={{ aspectRatio: '1200 / 876' }}
-            loading="lazy"
-          />
+          <SwapsCoins />
         </Grid>
       </HomeSection>
 
@@ -52,12 +53,21 @@ export function HomeSwapsAndLedger() {
         aria-labelledby="home-ledger-heading"
         mt={['space.11', null, '200px']}
       >
-        <Grid gridTemplateColumns={['1fr', null, null, '3fr 2fr']}>
+        <Grid
+          gridTemplateColumns={['1fr', null, null, '3fr 2fr']}
+          alignItems="center"
+          gap={['space.07', null, null, 'space.09']}
+        >
+          <Box gridColumn={[null, null, null, '1']}>
+            <LedgerAnimation />
+          </Box>
           <Box gridColumn={[null, null, null, '2']}>
-            <HomeSectionHeading
-              id="home-ledger-heading"
-              lines={['Best in class', 'Ledger support.']}
-            />
+            <Reveal>
+              <HomeSectionHeading
+                id="home-ledger-heading"
+                lines={['Best in class', 'Ledger support.']}
+              />
+            </Reveal>
             <styled.p textStyle="body.02" color="ink.text-secondary" mt="space.05">
               Create or restore wallets in seconds, keeping all your Bitcoin and Stacks accounts in
               one secure place.
@@ -77,26 +87,38 @@ export function HomeSwapsAndLedger() {
 export function HomeWallets() {
   return (
     <HomeSection aria-labelledby="home-wallets-heading">
-      <HomeSectionHeading
-        id="home-wallets-heading"
-        lines={['All your wallets,', 'perfectly organized.']}
-      />
+      <Reveal>
+        <HomeSectionHeading
+          id="home-wallets-heading"
+          lines={['All your wallets,', 'perfectly organized.']}
+        />
+      </Reveal>
       <Grid gridTemplateColumns={['1fr', null, '1fr 1fr']} gap="space.03" mt="space.07">
         <FeatureCard
           title="Bring all your wallets"
           tag="Mobile"
           description="Create or restore wallets in seconds, keeping all your Bitcoin and Stacks accounts in one secure place."
-          image="/marketing/home/wallets-accounts.webp"
-          imageAlt="A stack of wallet cards, the front one named Wallet 4, Play & Try, holding $568"
-          imageAspect={largeCardAspect}
+          visual={
+            <LottieAnimation
+              src={`${animationsPath}/wallets-accounts.lottie.json`}
+              poster="/marketing/home/wallets-accounts.webp"
+              alt="A stack of wallet cards, the front one named Wallet 4, Play & Try, holding $568"
+              aspect={largeCardAspect}
+            />
+          }
         />
         <FeatureCard
           title="Name it your way"
           tag="Mobile"
           description="Personalize your wallets with custom names to stay organized and instantly recognize the accounts that matter most."
-          image="/marketing/home/wallets-names.webp"
-          imageAlt="A carousel of wallet avatars with the selected wallet named Ordinals"
-          imageAspect={largeCardAspect}
+          visual={
+            <LottieAnimation
+              src={`${animationsPath}/wallets-names.lottie.json`}
+              poster="/marketing/home/wallets-names.webp"
+              alt="A carousel of wallet avatars with the selected wallet named Ordinals"
+              aspect={largeCardAspect}
+            />
+          }
         />
       </Grid>
     </HomeSection>
@@ -106,22 +128,36 @@ export function HomeWallets() {
 export function HomeFullControl() {
   return (
     <HomeSection aria-labelledby="home-control-heading">
-      <HomeSectionHeading id="home-control-heading" lines={['Full control,', 'no compromise.']} />
+      <Reveal>
+        <HomeSectionHeading id="home-control-heading" lines={['Full control,', 'no compromise.']} />
+      </Reveal>
       <Grid gridTemplateColumns={['1fr', null, '1fr 1fr']} gap="space.03" mt="space.05">
         <FeatureCard
           title="Send and receive"
           description="Transfer Bitcoin, tokens, and collectibles securely and instantly, with clear transaction details every step of the way."
-          image="/marketing/home/send-and-receive.webp"
-          imageAlt="The Send screen: 50 STX from a Stacks account to a recipient"
-          imageAspect={largeCardAspect}
+          visual={
+            <LottieAnimation
+              src={`${animationsPath}/send-and-receive.lottie.json`}
+              poster="/marketing/home/send-and-receive.webp"
+              alt="The Send screen: 50 STX from a Stacks account to a recipient"
+              aspect={largeCardAspect}
+              // Lottielab state "State 1": loops 0–6.65 s; the rest of the file never shows
+              segment={[0, 665]}
+            />
+          }
         />
         <FeatureCard
           title="Your collection, beautifully organised"
           tag="Mobile"
           description="See all your tokens and stacks collectibles at a glance, designed for clarity and a clean visual experience."
-          image="/marketing/home/collection.webp"
-          imageAlt="The Tokens tab listing Stacks, Bitcoin and sBTC balances"
-          imageAspect={largeCardAspect}
+          visual={
+            <LottieAnimation
+              src={`${animationsPath}/collection.lottie.json`}
+              poster="/marketing/home/collection.webp"
+              alt="The Tokens tab listing Stacks, Bitcoin and sBTC balances"
+              aspect={largeCardAspect}
+            />
+          }
         />
       </Grid>
       <Grid
@@ -147,9 +183,14 @@ export function HomeFullControl() {
           title="Get BTC notifications"
           tag="Extension"
           description="Get instant notification every time you receive Bitcoin in your wallet."
-          image="/marketing/home/btc-notifications.webp"
-          imageAlt="A notification: BTC received 5 min ago"
-          imageAspect={smallCardAspect}
+          visual={
+            <LottieAnimation
+              src={`${animationsPath}/btc-notifications.lottie.json`}
+              poster="/marketing/home/btc-notifications.webp"
+              alt="A notification: BTC received 5 min ago"
+              aspect={smallCardAspect}
+            />
+          }
         />
       </Grid>
     </HomeSection>
@@ -159,7 +200,9 @@ export function HomeFullControl() {
 export function HomeProtection() {
   return (
     <HomeSection aria-labelledby="home-protection-heading">
-      <HomeSectionHeading id="home-protection-heading" lines={['Protection', 'at every step.']} />
+      <Reveal>
+        <HomeSectionHeading id="home-protection-heading" lines={['Protection', 'at every step.']} />
+      </Reveal>
       <Grid
         gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)', 'repeat(3, 1fr)']}
         gap="space.03"
@@ -169,16 +212,19 @@ export function HomeProtection() {
           title="Stay spam free"
           tag="Extension"
           description="Filter unwanted tokens and collectibles, keeping your wallet clean and safe."
-          image="/marketing/home/spam-free.webp"
-          imageAlt="A Hide spam toggle above a list of suspicious tokens"
-          imageAspect={smallCardAspect}
+          visual={<SpamFreeAnimation aspect={smallCardAspect} />}
         />
         <FeatureCard
           title="Review transactions"
           description="Transfer securely and instantly, with clear review step at every transaction."
-          image="/marketing/home/review-transactions.webp"
-          imageAlt="A Clarity contract call to review, with Edit and Approve buttons"
-          imageAspect={smallCardAspect}
+          visual={
+            <LottieAnimation
+              src={`${animationsPath}/review-transactions.lottie.json`}
+              poster="/marketing/home/review-transactions.webp"
+              alt="A Clarity contract call to review, with Edit and Approve buttons"
+              aspect={smallCardAspect}
+            />
+          }
         />
         <FeatureCard
           title="UTXO protection"

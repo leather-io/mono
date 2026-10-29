@@ -1,6 +1,7 @@
 import { type ReactElement } from 'react';
 
 import { Box, Grid, styled } from 'leather-styles/jsx';
+import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { MagnifyingGlassIcon, PulseIcon, ShieldIcon } from '@leather.io/ui';
 
@@ -47,10 +48,12 @@ const trustCards: TrustCard[] = [
 export function HomeTrust() {
   return (
     <HomeSection aria-labelledby="home-trust-heading">
-      <HomeSectionHeading
-        id="home-trust-heading"
-        lines={['Built on trust.', 'Safety by design.']}
-      />
+      <Reveal>
+        <HomeSectionHeading
+          id="home-trust-heading"
+          lines={['Built on trust.', 'Safety by design.']}
+        />
+      </Reveal>
       <Grid
         gridTemplateColumns={['1fr', null, null, 'repeat(3, 1fr)']}
         gap="0"
@@ -83,6 +86,9 @@ export function HomeTrust() {
               null,
               index > 0 ? '1px solid {colors.ink.border-default}' : 'none',
             ]}
+            transition="background-color 0.45s cubic-bezier(0.25, 1, 0.5, 1)"
+            _hover={{ bg: 'ink.background-secondary' }}
+            _motionReduce={{ transition: 'none' }}
             _focusVisible={{
               outline: '2px solid',
               outlineColor: 'blue.border',

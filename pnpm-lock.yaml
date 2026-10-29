@@ -1075,6 +1075,12 @@ importers:
       '@sentry/react-router':
         specifier: 9.15.0
         version: 9.15.0(@react-router/node@7.18.1(react-router@7.18.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.9.3))(encoding@0.1.13)(react-router@7.18.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+      '@splinetool/react-spline':
+        specifier: 4.1.0
+        version: 4.1.0(@splinetool/runtime@2.0.113)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@splinetool/runtime':
+        specifier: 2.0.113
+        version: 2.0.113
       '@stacks/common':
         specifier: 7.0.2
         version: 7.0.2
@@ -1120,6 +1126,9 @@ importers:
       jotai:
         specifier: 2.12.5
         version: 2.12.5(@types/react@19.1.17)(react@19.1.0)
+      lottie-web:
+        specifier: 5.13.0
+        version: 5.13.0
       mixpanel-browser:
         specifier: 2.71.1
         version: 2.71.1
@@ -8172,6 +8181,20 @@ packages:
   '@speed-highlight/core@1.2.14':
     resolution: {integrity: sha512-G4ewlBNhUtlLvrJTb88d2mdy2KRijzs4UhnlrOSRT4bmjh/IqNElZa3zkrZ+TC47TwtlDWzVLFADljF1Ijp5hA==}
 
+  '@splinetool/react-spline@4.1.0':
+    resolution: {integrity: sha512-Y379gm17gw+1nxT/YXTCJnVIWuu7tsUH1tp/YxsYb0pZnc9Gljk7Om4Kpq7WPq0bZ4zidVCxf6xn6jgDcbHifQ==}
+    peerDependencies:
+      '@splinetool/runtime': '*'
+      next: '>=14.2.0'
+      react: '*'
+      react-dom: '*'
+    peerDependenciesMeta:
+      next:
+        optional: true
+
+  '@splinetool/runtime@2.0.113':
+    resolution: {integrity: sha512-vDx28Ehpc/Cj0p3Z4EYXcCWiBIBFAFUanoeGL2gDN7FHYRjWJEaSZEoNM0+UvdA62ehFxQCPVQzDCfnxUOiKzQ==}
+
   '@stacks/auth@7.2.0':
     resolution: {integrity: sha512-u+Ky4CMQWFTPI6Au3VFcW74nSIA4Zb8YjsbOkcv0q9E6LiALyK4gozpKTxKvfW3/z1ER3z1Ky9uH/s4zY59rvg==}
 
@@ -9895,6 +9918,9 @@ packages:
   blns@2.0.4:
     resolution: {integrity: sha512-ZEZZD8DvGJhTw9oE3uLjyThFDMRQbcH011YySUK+kAcueHvaUDRfWKp7QJrQblat8WzcegWwVFuNd+XZ49LROQ==}
     engines: {node: '>= 4'}
+
+  blurhash@2.0.5:
+    resolution: {integrity: sha512-cRygWd7kGBQO3VEhPiTgq4Wc43ctsM+o46urrmPOiuAe+07fzlSB9OJVdpgDL0jPqXUVQ9ht7aq7kxOeJHRK+w==}
 
   bn.js@4.12.3:
     resolution: {integrity: sha512-fGTi3gxV/23FTYdAoUtLYp6qySe2KE3teyZitipKNRuVYcBkoP/bB3guXN/XVKUe9mxCHXnc9C4ocyz8OmgN0g==}
@@ -14622,6 +14648,10 @@ packages:
   ofetch@1.5.1:
     resolution: {integrity: sha512-2W4oUZlVaqAPAil6FUg/difl6YhqhUR7x2eZY4bQCko22UXg3hptq9KLQdqFClV+Wu85UX7hNtdGTngi/1BxcA==}
 
+  on-change@4.0.0:
+    resolution: {integrity: sha512-PTu7C9Jsz4b+sNMDpH0eZFTr7uxdOtoDWRnhaVNK50bgrrnW5nvbWI0jm5DG9qOoTnIhBzE9xoKVFPD9xgtbdg==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
   on-exit-leak-free@0.2.0:
     resolution: {integrity: sha512-dqaz3u44QbRXQooZLTUKU41ZrzYrcvLISVgbrzbyCMxpmSLJvZ3ZamIJIZ29P6OhZIkNIQKosdeM6t1LYbA9hg==}
 
@@ -15709,6 +15739,9 @@ packages:
     peerDependencies:
       '@types/react': '>=18'
       react: '>=18'
+
+  react-merge-refs@2.1.1:
+    resolution: {integrity: sha512-jLQXJ/URln51zskhgppGJ2ub7b2WFKGq3cl3NYKtlHoTG+dN2q7EzWrn3hN3EgPsTMvpR9tpq5ijdp7YwFZkag==}
 
   react-native-gesture-handler@2.28.0:
     resolution: {integrity: sha512-0msfJ1vRxXKVgTgvL+1ZOoYw3/0z1R+Ked0+udoJhyplC2jbVKIJ8Z1bzWdpQRCV3QcQ87Op0zJVE5DhKK2A0A==}
@@ -17118,6 +17151,9 @@ packages:
 
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
+
+  thumbhash@0.1.1:
+    resolution: {integrity: sha512-kH5pKeIIBPQXAOni2AiY/Cu/NKdkFREdpH+TLdM0g6WA7RriCv0kPLgP731ady67MhTAqrVG/4mnEeibVuCJcg==}
 
   tightrope@0.2.0:
     resolution: {integrity: sha512-Kw36UHxJEELq2VUqdaSGR2/8cAsPgMtvX8uGVU6Jk26O66PhXec0A5ZnRYs47btbtwPDpXXF66+Fo3vimCM9aQ==}
@@ -27186,6 +27222,21 @@ snapshots:
 
   '@speed-highlight/core@1.2.14': {}
 
+  '@splinetool/react-spline@4.1.0(@splinetool/runtime@2.0.113)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@splinetool/runtime': 2.0.113
+      blurhash: 2.0.5
+      lodash.debounce: 4.0.8
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      react-merge-refs: 2.1.1
+      thumbhash: 0.1.1
+
+  '@splinetool/runtime@2.0.113':
+    dependencies:
+      on-change: 4.0.0
+      semver-compare: 1.0.0
+
   '@stacks/auth@7.2.0(encoding@0.1.13)':
     dependencies:
       '@noble/secp256k1': 1.7.1
@@ -29744,6 +29795,8 @@ snapshots:
   blakejs@1.2.1: {}
 
   blns@2.0.4: {}
+
+  blurhash@2.0.5: {}
 
   bn.js@4.12.3: {}
 
@@ -35418,6 +35471,8 @@ snapshots:
       node-fetch-native: 1.6.7
       ufo: 1.6.4
 
+  on-change@4.0.0: {}
+
   on-exit-leak-free@0.2.0: {}
 
   on-exit-leak-free@2.1.2: {}
@@ -36658,6 +36713,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  react-merge-refs@2.1.1: {}
+
   react-native-gesture-handler@2.28.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
     dependencies:
       '@egjs/hammerjs': 2.0.17
@@ -37803,8 +37860,7 @@ snapshots:
       node-gyp-build: 4.8.4
     optional: true
 
-  semver-compare@1.0.0:
-    optional: true
+  semver-compare@1.0.0: {}
 
   semver@5.7.2: {}
 
@@ -38655,6 +38711,8 @@ snapshots:
       readable-stream: 3.6.2
 
   through@2.3.8: {}
+
+  thumbhash@0.1.1: {}
 
   tightrope@0.2.0: {}
 

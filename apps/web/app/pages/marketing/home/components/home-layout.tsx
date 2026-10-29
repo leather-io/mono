@@ -44,15 +44,26 @@ export function CheckItem({ children }: { children: ReactNode }) {
   );
 }
 
-interface FeatureCardProps {
+type FeatureCardProps = {
   title: string;
   description: string;
   tag?: string;
-  image: string;
-  imageAlt: string;
-  /** Visual aspect ratio (width / height). */
-  imageAspect: string;
-}
+} & (
+  | {
+      image: string;
+      imageAlt: string;
+      /** Visual aspect ratio (width / height). */
+      imageAspect: string;
+      visual?: never;
+    }
+  | {
+      /** Replaces the image, e.g. with an animation that keeps the image as its poster. */
+      visual: ReactNode;
+      image?: never;
+      imageAlt?: never;
+      imageAspect?: never;
+    }
+);
 
 /** Grey card with a product visual on top and title (+ platform chip) and copy below. */
 export function FeatureCard({
@@ -62,6 +73,7 @@ export function FeatureCard({
   image,
   imageAlt,
   imageAspect,
+  visual,
 }: FeatureCardProps) {
   return (
     <styled.article
@@ -71,16 +83,18 @@ export function FeatureCard({
       borderRadius="sm"
       overflow="hidden"
     >
-      <styled.img
-        src={image}
-        alt={imageAlt}
-        width="100%"
-        height="auto"
-        style={{ aspectRatio: imageAspect }}
-        objectFit="cover"
-        loading="lazy"
-        decoding="async"
-      />
+      {visual ?? (
+        <styled.img
+          src={image}
+          alt={imageAlt}
+          width="100%"
+          height="auto"
+          style={{ aspectRatio: imageAspect }}
+          objectFit="cover"
+          loading="lazy"
+          decoding="async"
+        />
+      )}
       <styled.div
         px={['space.05', null, 'space.06']}
         pt="space.05"
