@@ -3,7 +3,7 @@ import { type MetaDescriptor } from 'react-router';
 export const siteOrigin = 'https://leather.io';
 
 export const defaultMarketingDescription =
-  'Leather is a self-custodial wallet built for earning yield and managing assets in the Bitcoin ecosystem. Open-source and secure, it supports BTC, STX, Ordinals, BRC-20s, and more—giving users full control across apps, DeFi, and marketplaces.';
+  'Leather is a self-custodial wallet built for earning yield and managing assets in the Bitcoin ecosystem. Open-source and secure, it supports BTC, STX, sBTC, stablecoins and more—giving users full control across apps and DeFi.';
 
 interface MarketingMetaOptions {
   title: string;
