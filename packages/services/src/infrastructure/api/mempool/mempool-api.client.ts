@@ -102,9 +102,9 @@ export class MempoolApiClient {
       );
       return mempoolUtxoSchema.array().parse(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(['mempool-api-address-utxos', address], fetchFn);
+    return await this.cache.fetchWithCache(['mempool-api-address-utxos', address], fetchFn, {
+      skipCache,
+    });
   }
 
   public async fetchAddressTransactions(
@@ -119,9 +119,9 @@ export class MempoolApiClient {
       );
       return mempoolTransactionSchema.array().parse(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(['mempool-api-address-transactions', address], fetchFn);
+    return await this.cache.fetchWithCache(['mempool-api-address-transactions', address], fetchFn, {
+      skipCache,
+    });
   }
 
   public async fetchTransactionByTxId(
@@ -143,9 +143,9 @@ export class MempoolApiClient {
         throw error;
       }
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(['mempool-api-transaction-by-txid', txid], fetchFn);
+    return await this.cache.fetchWithCache(['mempool-api-transaction-by-txid', txid], fetchFn, {
+      skipCache,
+    });
   }
 
   public async fetchAddressBitcoinTxs(
