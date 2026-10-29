@@ -1,6 +1,6 @@
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 
-import { FeeTypes, Money } from '@leather.io/models';
+import { type FeeTypes, type Money } from '@leather.io/models';
 
 import { getStacksFeeData } from '../../utils';
 import { BaseFeeCard } from './base-fee-card';

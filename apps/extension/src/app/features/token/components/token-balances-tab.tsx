@@ -1,9 +1,9 @@
 import { Stack } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
+import { Hr } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { Divider } from '@app/components/layout/divider';
 
 import { TokenDetailsBalanceItem } from './token-details-balance-item';
 
@@ -54,7 +54,7 @@ export function TokenBalancesTab({
               />
             ))}
           </Stack>
-          <Divider />
+          <Hr />
         </>
       ) : null}
       <Stack gap="space.00" py="space.02">

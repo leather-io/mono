@@ -151,7 +151,7 @@ const pageObjectOnlySelectors = [
 
 export default defineConfig([
   {
-    files: ['{packages,apps}/**/*.{ts,tsx}'],
+    files: ['{packages,apps,tools}/**/*.{ts,tsx}'],
     extends: [baseConfig],
     plugins: {
       'leather.io': leatherPlugin,
@@ -289,6 +289,13 @@ export default defineConfig([
     name: 'test-app',
     files: ['apps/test-app/src/**/*.{ts,tsx}'],
     extends: [reactConfig],
+  },
+  {
+    name: 'tools',
+    files: ['tools/**/*.ts'],
+    rules: {
+      'no-console': 'off',
+    },
   },
   {
     name: 'react-router-apps',

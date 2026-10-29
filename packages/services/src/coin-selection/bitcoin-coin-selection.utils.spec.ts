@@ -1,4 +1,4 @@
-import { AccountAddresses } from '@leather.io/models';
+import { type AccountAddresses } from '@leather.io/models';
 
 import { getInputSizing } from './bitcoin-coin-selection.utils';
 

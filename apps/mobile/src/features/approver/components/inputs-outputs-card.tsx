@@ -1,7 +1,7 @@
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { t } from '@lingui/core/macro';
 
-import { PsbtInput, PsbtOutput } from '@leather.io/bitcoin';
+import { type PsbtInput, type PsbtOutput } from '@leather.io/bitcoin';
 import { Box, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
 

@@ -1,6 +1,6 @@
 import { Dimensions } from 'react-native';
 
-import { Box, HasChildren } from '@leather.io/ui/native';
+import { Box, type HasChildren } from '@leather.io/ui/native';
 
 interface EmptyLayoutProps extends HasChildren {
   image?: React.ReactNode;

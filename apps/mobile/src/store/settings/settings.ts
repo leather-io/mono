@@ -2,21 +2,21 @@ import { useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { AvailableLanguageCode } from '@/i18n/languages';
+import { type AvailableLanguageCode } from '@/i18n/languages';
 import { analytics } from '@/utils/analytics';
 import { whenTheme } from '@/utils/when-theme';
 import type { StacksNetwork } from '@stacks/network';
 
 import { getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
 import {
-  AccountDisplayPreference,
+  type AccountDisplayPreference,
   type AccountId,
-  AnalyticsPreference,
-  BitcoinUnit,
-  DefaultNetworkConfigurations,
-  QuoteCurrency,
+  type AnalyticsPreference,
+  type BitcoinUnit,
+  type DefaultNetworkConfigurations,
+  type QuoteCurrency,
 } from '@leather.io/models';
-import { SerializedCryptoAssetId } from '@leather.io/utils';
+import { type SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { useAppDispatch } from '../utils';
 import {
@@ -62,16 +62,16 @@ import {
 } from './settings.write';
 import { getDefaultAssetVisibilityPolicy } from './token-preset';
 import {
-  AppIconPreference,
-  CurrentAccount,
-  HapticsPreference,
-  LanguagePreferenceSource,
-  LastActiveTimestamp,
-  NotificationsPreference,
-  PrivacyModePreference,
-  SecurityLevelPreference,
-  ThemePreference,
-  TokenPreset,
+  type AppIconPreference,
+  type CurrentAccount,
+  type HapticsPreference,
+  type LanguagePreferenceSource,
+  type LastActiveTimestamp,
+  type NotificationsPreference,
+  type PrivacyModePreference,
+  type SecurityLevelPreference,
+  type ThemePreference,
+  type TokenPreset,
 } from './utils';
 
 export function useSettings() {

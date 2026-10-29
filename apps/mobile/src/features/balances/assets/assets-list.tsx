@@ -1,9 +1,9 @@
-import { ReactElement, useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 
 import { Screen } from '@/components/screen/screen';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
+import { type useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useRouter } from 'expo-router';
 
 import { type CryptoAssetId } from '@leather.io/models';

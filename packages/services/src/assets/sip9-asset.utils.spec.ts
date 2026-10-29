@@ -1,4 +1,5 @@
 import { LEATHER_IPFS_GATEWAY_URL } from '@leather.io/constants';
+import { assertExistence } from '@leather.io/utils';
 
 import { type HiroMetadata } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { type GammaNftMetadata, createSip9Asset, getNonFungibleTokenId } from './sip9-asset.utils';
@@ -139,7 +140,7 @@ describe('createSip9Asset', () => {
   });
 
   it('should transform ipfs:// URLs to the Leather IPFS gateway', () => {
-    const gammaIpfs = JSON.parse(JSON.stringify(mockGammaMetadata)) as GammaNftMetadata;
+    const gammaIpfs = structuredClone(mockGammaMetadata);
     gammaIpfs.item.asset_content.content_url = 'ipfs://QmTestCid/some/image with spaces.png';
 
     const asset = createSip9Asset(assetIdentifier, tokenId, undefined, gammaIpfs);
@@ -149,7 +150,7 @@ describe('createSip9Asset', () => {
   });
 
   it('should transform hiro image /ipfs/ URLs to the Leather IPFS gateway', () => {
-    const hiroIpfs = JSON.parse(JSON.stringify(mockHiroMetadata)) as HiroMetadata;
+    const hiroIpfs = structuredClone(mockHiroMetadata);
     hiroIpfs.cached_image = 'https://example.com/ipfs/QmHiroCid/path/to/image.png';
 
     const asset = createSip9Asset(assetIdentifier, tokenId, hiroIpfs, undefined);
@@ -169,8 +170,8 @@ describe('createSip9Asset', () => {
   });
 
   it('should fill description with empty string if missing', () => {
-    const minimalHiro = {};
-    const asset = createSip9Asset(assetIdentifier, tokenId, minimalHiro as any, undefined);
+    const minimalHiro: HiroMetadata = { sip: 16 };
+    const asset = createSip9Asset(assetIdentifier, tokenId, minimalHiro, undefined);
     expect(asset.description).toBe('');
   });
 
@@ -186,9 +187,11 @@ describe('createSip9Asset', () => {
   });
 
   it('handles STX and microSTX units when building collection prices', () => {
-    const gammaMicro = JSON.parse(JSON.stringify(mockGammaMetadata)) as GammaNftMetadata;
+    const gammaMicro = structuredClone(mockGammaMetadata);
     gammaMicro.item.collection.floor_price_amount = { amount: 1_500_000, unit: 'micro_stacks' };
-    gammaMicro.item.market_summary!.latest_sale!.price_amount = {
+    const latestSale = gammaMicro.item.market_summary?.latest_sale;
+    assertExistence(latestSale, 'expected latest sale in mock gamma metadata');
+    latestSale.price_amount = {
       amount: 2.5,
       unit: 'STX',
     };

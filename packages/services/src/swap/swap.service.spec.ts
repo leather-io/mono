@@ -1,20 +1,22 @@
 import BigNumber from 'bignumber.js';
 
 import { stxAsset } from '@leather.io/constants';
-import { SwapAsset, SwapProviderId, SwapQuote } from '@leather.io/models';
+import { type SwapAsset, type SwapProviderId, type SwapQuote } from '@leather.io/models';
 import { createMoney, getAssetId } from '@leather.io/utils';
 
-import { FungibleAssetService } from '../assets/fungible-asset.service';
-import { BtcBalancesService } from '../balances/btc-balances.service';
-import { Sip10BalancesService } from '../balances/sip10-balances.service';
-import { StxBalancesService } from '../balances/stx-balances.service';
-import { AccountRequest } from '../types';
-import { AlexSwapProviderService } from './alex-swap-provider.service';
-import { BitflowBffApiSwapProviderService } from './bitflow-bff-api-swap-provider.service';
-import { BitflowSdkSwapProviderService } from './bitflow-sdk-swap-provider.service';
-import { SbtcBridgeSwapProviderService } from './sbtc-bridge-swap-provider.service';
+import { type FungibleAssetService } from '../assets/fungible-asset.service';
+import { type BtcBalancesService } from '../balances/btc-balances.service';
+import { type Sip10BalancesService } from '../balances/sip10-balances.service';
+import { type StxBalancesService } from '../balances/stx-balances.service';
+import { createMock } from '../test/create-mock';
+import { createTestSip10Asset, createTestSwapQuote } from '../test/swap-fixtures';
+import { type AccountRequest } from '../types';
+import { type AlexSwapProviderService } from './alex-swap-provider.service';
+import { type BitflowBffApiSwapProviderService } from './bitflow-bff-api-swap-provider.service';
+import { type BitflowSdkSwapProviderService } from './bitflow-sdk-swap-provider.service';
+import { type SbtcBridgeSwapProviderService } from './sbtc-bridge-swap-provider.service';
 import { SwapService } from './swap.service';
-import { VelarSwapProviderService } from './velar-swap-provider.service';
+import { type VelarSwapProviderService } from './velar-swap-provider.service';
 
 function createStubProviderService(providerId: SwapProviderId) {
   return {
@@ -55,34 +57,32 @@ function createSwapService(
   { fungibleAssetService }: CreateSwapServiceOverrides = {}
 ) {
   return new SwapService(
-    {} as unknown as StxBalancesService,
-    {} as unknown as BtcBalancesService,
-    {} as unknown as Sip10BalancesService,
-    fungibleAssetService ?? ({} as unknown as FungibleAssetService),
-    providers.velar as unknown as VelarSwapProviderService,
-    providers.alex as unknown as AlexSwapProviderService,
-    providers.bitflowSdk as unknown as BitflowSdkSwapProviderService,
-    providers.bitflowBff as unknown as BitflowBffApiSwapProviderService,
-    providers.sbtcBridge as unknown as SbtcBridgeSwapProviderService
+    createMock<StxBalancesService>({}),
+    createMock<BtcBalancesService>({}),
+    createMock<Sip10BalancesService>({}),
+    fungibleAssetService ?? createMock<FungibleAssetService>({}),
+    createMock<VelarSwapProviderService>(providers.velar),
+    createMock<AlexSwapProviderService>(providers.alex),
+    createMock<BitflowSdkSwapProviderService>(providers.bitflowSdk),
+    createMock<BitflowBffApiSwapProviderService>(providers.bitflowBff),
+    createMock<SbtcBridgeSwapProviderService>(providers.sbtcBridge)
   );
 }
 
 function createStubSwapAsset(symbol: string, providerIds: SwapProviderId[]): SwapAsset {
   return {
-    asset: { protocol: 'nativeStx', symbol },
+    asset: createTestSip10Asset({ symbol }),
     providerAssets: providerIds.map(providerId => ({
       providerId,
       providerAssetId: `${providerId}-${symbol}`,
-      assetId: `nativeStx-${symbol}`,
+      assetId: { protocol: 'nativeStx', id: symbol },
     })),
-  } as unknown as SwapAsset;
+  };
 }
 
-function createStubSwapQuote(providerId: SwapProviderId, isExecutable = true): SwapQuote {
-  return { providerId, isExecutable } as unknown as SwapQuote;
-}
-
-const stubAccountRequest = { account: {} } as unknown as AccountRequest;
+const stubAccountRequest: AccountRequest = {
+  account: { id: { fingerprint: 'deadbeef', accountIndex: 0 } },
+};
 
 describe(SwapService.name, () => {
   describe('getSwapQuotes', () => {
@@ -92,7 +92,7 @@ describe(SwapService.name, () => {
 
     test('returns quotes from remaining providers when one provider rejects', async () => {
       const providers = createStubProviderServices();
-      const bitflowSdkQuote = createStubSwapQuote('bitflow-sdk');
+      const bitflowSdkQuote = createTestSwapQuote('bitflow-sdk');
       providers.bitflowSdk.getSwapQuotes.mockResolvedValue([bitflowSdkQuote]);
       providers.alex.getSwapQuotes.mockRejectedValue(new Error('provider down'));
       const swapService = createSwapService(providers);
@@ -115,7 +115,7 @@ describe(SwapService.name, () => {
 
     test('only queries providers present on both base and target assets', async () => {
       const providers = createStubProviderServices();
-      const bitflowSdkQuote = createStubSwapQuote('bitflow-sdk');
+      const bitflowSdkQuote = createTestSwapQuote('bitflow-sdk');
       providers.bitflowSdk.getSwapQuotes.mockResolvedValue([bitflowSdkQuote]);
       const bitflowSdkOnlyTarget = createStubSwapAsset('USDA', ['bitflow-sdk']);
       const swapService = createSwapService(providers);
@@ -140,7 +140,7 @@ describe(SwapService.name, () => {
       vi.useFakeTimers();
       try {
         const providers = createStubProviderServices();
-        const bitflowSdkQuote = createStubSwapQuote('bitflow-sdk');
+        const bitflowSdkQuote = createTestSwapQuote('bitflow-sdk');
         providers.bitflowSdk.getSwapQuotes.mockResolvedValue([bitflowSdkQuote]);
         providers.alex.getSwapQuotes.mockReturnValue(new Promise<SwapQuote[]>(() => undefined));
         const swapService = createSwapService(providers);
@@ -162,9 +162,9 @@ describe(SwapService.name, () => {
       providers.alex.getBaseProviderAssets.mockResolvedValue([
         { providerId: 'alex-sdk', providerAssetId: 'alex-stx', assetId: getAssetId(stxAsset) },
       ]);
-      const fungibleAssetService = {
+      const fungibleAssetService = createMock<FungibleAssetService>({
         getSwapAsset: vi.fn().mockResolvedValue(stxAsset),
-      } as unknown as FungibleAssetService;
+      });
       const swapService = createSwapService(providers, { fungibleAssetService });
 
       const assets = await swapService.getBaseSwapAssets();
@@ -181,7 +181,7 @@ describe(SwapService.name, () => {
   describe('getSwapExecutionData', () => {
     test('throws when quote is not executable', async () => {
       const swapService = createSwapService(createStubProviderServices());
-      const quote = createStubSwapQuote('velar-sdk', false);
+      const quote = createTestSwapQuote('velar-sdk', false);
 
       await expect(
         swapService.getSwapExecutionData(stubAccountRequest, quote, BigNumber(4))
@@ -192,7 +192,7 @@ describe(SwapService.name, () => {
       const providers = createStubProviderServices();
       providers.alex.providerId = 'velar-sdk';
       const swapService = createSwapService(providers);
-      const quote = createStubSwapQuote('alex-sdk');
+      const quote = createTestSwapQuote('alex-sdk');
 
       await expect(
         swapService.getSwapExecutionData(stubAccountRequest, quote, BigNumber(4))

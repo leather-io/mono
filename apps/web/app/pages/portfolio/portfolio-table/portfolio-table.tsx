@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 
 import {
-  ColumnDef,
-  RowData,
-  SortingState,
+  type ColumnDef,
+  type RowData,
+  type SortingState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
@@ -13,7 +13,12 @@ import { styled } from 'leather-styles/jsx';
 import { Table, rowPadding } from '~/components/table';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import { BtcAsset, CryptoAssetBalance, Sip10Asset, StxAsset } from '@leather.io/models';
+import {
+  type BtcAsset,
+  type CryptoAssetBalance,
+  type Sip10Asset,
+  type StxAsset,
+} from '@leather.io/models';
 
 import { usePortfolioEvents } from '../portfolio-events';
 import { PortfolioTableEmpty } from './portfolio-empty';
@@ -79,7 +84,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
             Asset
           </styled.p>
         ),
-        cell: info => {
+        cell(info) {
           const { asset } = info.row.original;
 
           return <AssetCell asset={asset} />;
@@ -94,7 +99,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
             Price
           </styled.p>
         ),
-        cell: () => {
+        cell() {
           return <TextCell>$0.00</TextCell>;
         },
       },
@@ -107,7 +112,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
             Allocation
           </styled.p>
         ),
-        cell: info => {
+        cell(info) {
           const { allocation } = info.row.original;
           return <TextCell>{`${allocation.toFixed(2)}%`}</TextCell>;
         },
@@ -121,7 +126,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
             24h
           </styled.p>
         ),
-        cell: () => {
+        cell() {
           return <PriceChangeCell priceChange={0} />;
         },
       },
@@ -135,7 +140,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
             Balance
           </styled.p>
         ),
-        cell: info => {
+        cell(info) {
           const { crypto, quote } = info.row.original;
           const balance = formatCurrency(crypto.availableBalance, { showCurrency: false });
           const value = formatCurrency(quote.availableBalance);

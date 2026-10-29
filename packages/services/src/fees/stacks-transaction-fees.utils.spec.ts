@@ -1,14 +1,17 @@
-import {
-  PayloadType,
-  StacksTransactionWire,
-  makeUnsignedSTXTokenTransfer,
-} from '@stacks/transactions';
+import { makeUnsignedSTXTokenTransfer } from '@stacks/transactions';
 
 import { estimateStacksTransactionByteLength } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
-import { HiroTransactionFeeEstimateResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { StacksFeeConfig } from '../infrastructure/app-config/app-config.service';
+import { type StacksFeeConfig } from '../infrastructure/app-config/app-config.service';
+import {
+  createCoinbaseTx,
+  createContractCallTx,
+  createHiroFeeEstimateResponse,
+  createSmartContractTx,
+  createTokenTransferTx,
+  createVersionedSmartContractTx,
+} from '../test/fees-stacks-transactions';
 import {
   createStacksTransactionFeeQuote,
   getStacksMinimumFeeAmount,
@@ -19,6 +22,7 @@ import {
 
 const mockStacksFeeConfig: StacksFeeConfig = {
   minimumRelayFeeRate: 1,
+  globalMaximumFee: 100000,
   transfers: {
     low: { default: 1000, minimum: 500, maximum: 5000 },
     standard: { default: 2000, minimum: 1000, maximum: 10000 },
@@ -39,80 +43,45 @@ const mockStacksFeeConfig: StacksFeeConfig = {
     standard: { default: 3000, minimum: 1500, maximum: 15000 },
     high: { default: 7500, minimum: 3000, maximum: 30000 },
   },
-} as unknown as StacksFeeConfig;
+};
 
-const mockHiroFeeEstimateResponse: HiroTransactionFeeEstimateResponse = {
+const mockHiroFeeEstimateResponse = createHiroFeeEstimateResponse({
   estimations: [{ fee: 800 }, { fee: 1600 }, { fee: 4000 }],
-} as unknown as HiroTransactionFeeEstimateResponse;
+});
 
-const mockTokenTransferTx: Partial<StacksTransactionWire> = {
-  payload: {
-    payloadType: PayloadType.TokenTransfer,
-  },
-} as StacksTransactionWire;
+const mockTokenTransferTx = createTokenTransferTx();
 
-const mockContractCallTx: Partial<StacksTransactionWire> = {
-  payload: {
-    payloadType: PayloadType.ContractCall,
-  },
-} as StacksTransactionWire;
+const mockContractCallTx = createContractCallTx();
 
-const mockContractDeployTx: Partial<StacksTransactionWire> = {
-  payload: {
-    payloadType: PayloadType.SmartContract,
-  },
-} as StacksTransactionWire;
+const mockContractDeployTx = createSmartContractTx();
 
 describe(getStacksTxPayloadTypeFees.name, () => {
   it('should return transfers config for TokenTransfer payload', () => {
-    const result = getStacksTxPayloadTypeFees(
-      mockTokenTransferTx as StacksTransactionWire,
-      mockStacksFeeConfig
-    );
+    const result = getStacksTxPayloadTypeFees(mockTokenTransferTx, mockStacksFeeConfig);
     expect(result).toEqual(mockStacksFeeConfig.transfers);
   });
 
   it('should return contractCalls config for ContractCall payload', () => {
-    const result = getStacksTxPayloadTypeFees(
-      mockContractCallTx as StacksTransactionWire,
-      mockStacksFeeConfig
-    );
+    const result = getStacksTxPayloadTypeFees(mockContractCallTx, mockStacksFeeConfig);
     expect(result).toEqual(mockStacksFeeConfig.contractCalls);
   });
 
   it('should return contractDeployments config for SmartContract payload', () => {
-    const result = getStacksTxPayloadTypeFees(
-      mockContractDeployTx as StacksTransactionWire,
-      mockStacksFeeConfig
-    );
+    const result = getStacksTxPayloadTypeFees(mockContractDeployTx, mockStacksFeeConfig);
     expect(result).toEqual(mockStacksFeeConfig.contractDeployments);
   });
 
   it('should return contractDeployments config for VersionedSmartContract payload', () => {
-    const mockVersionedContractTx: Partial<StacksTransactionWire> = {
-      payload: {
-        payloadType: PayloadType.VersionedSmartContract,
-      },
-    } as StacksTransactionWire;
+    const mockVersionedContractTx = createVersionedSmartContractTx();
 
-    const result = getStacksTxPayloadTypeFees(
-      mockVersionedContractTx as StacksTransactionWire,
-      mockStacksFeeConfig
-    );
+    const result = getStacksTxPayloadTypeFees(mockVersionedContractTx, mockStacksFeeConfig);
     expect(result).toEqual(mockStacksFeeConfig.contractDeployments);
   });
 
   it('should return transfers config as default for unknown payload type', () => {
-    const mockUnknownTx: Partial<StacksTransactionWire> = {
-      payload: {
-        payloadType: 'Unknown' as unknown as PayloadType,
-      },
-    } as StacksTransactionWire;
+    const mockUnknownTx = createCoinbaseTx();
 
-    const result = getStacksTxPayloadTypeFees(
-      mockUnknownTx as StacksTransactionWire,
-      mockStacksFeeConfig
-    );
+    const result = getStacksTxPayloadTypeFees(mockUnknownTx, mockStacksFeeConfig);
     expect(result).toEqual(mockStacksFeeConfig.transfers);
   });
 });
@@ -151,11 +120,7 @@ describe(getStacksTxFeeDefaultAmounts.name, () => {
   });
 
   it('should return default fee amounts for TokenTransfer', () => {
-    const result = getStacksTxFeeDefaultAmounts(
-      mockTokenTransferTx as StacksTransactionWire,
-      mockStacksFeeConfig,
-      200
-    );
+    const result = getStacksTxFeeDefaultAmounts(mockTokenTransferTx, mockStacksFeeConfig, 200);
 
     expect(result).toEqual({
       low: 1000,
@@ -165,11 +130,7 @@ describe(getStacksTxFeeDefaultAmounts.name, () => {
   });
 
   it('should return default fee amounts for ContractCall', () => {
-    const result = getStacksTxFeeDefaultAmounts(
-      mockContractCallTx as StacksTransactionWire,
-      mockStacksFeeConfig,
-      200
-    );
+    const result = getStacksTxFeeDefaultAmounts(mockContractCallTx, mockStacksFeeConfig, 200);
 
     expect(result).toEqual({
       low: 2000,
@@ -179,11 +140,7 @@ describe(getStacksTxFeeDefaultAmounts.name, () => {
   });
 
   it('should return default fee amounts for ContractDeploy', () => {
-    const result = getStacksTxFeeDefaultAmounts(
-      mockContractDeployTx as StacksTransactionWire,
-      mockStacksFeeConfig,
-      200
-    );
+    const result = getStacksTxFeeDefaultAmounts(mockContractDeployTx, mockStacksFeeConfig, 200);
 
     expect(result).toEqual({
       low: 5000,
@@ -214,7 +171,7 @@ describe(getStacksTxFeeBoundedEstimates.name, () => {
     const result = getStacksTxFeeBoundedEstimates(
       mockHiroFeeEstimateResponse,
       estimatedTxSize,
-      mockTokenTransferTx as StacksTransactionWire,
+      mockTokenTransferTx,
       mockStacksFeeConfig
     );
 
@@ -229,14 +186,14 @@ describe(getStacksTxFeeBoundedEstimates.name, () => {
     const bigTxSize = 6000;
     const minRelayFee = bigTxSize * mockStacksFeeConfig.minimumRelayFeeRate;
 
-    const lowFeeResponse: HiroTransactionFeeEstimateResponse = {
+    const lowFeeResponse = createHiroFeeEstimateResponse({
       estimations: [{ fee: 50 }, { fee: 100 }, { fee: 150 }],
-    } as unknown as HiroTransactionFeeEstimateResponse;
+    });
 
     const result = getStacksTxFeeBoundedEstimates(
       lowFeeResponse,
       bigTxSize,
-      mockTokenTransferTx as StacksTransactionWire,
+      mockTokenTransferTx,
       mockStacksFeeConfig
     );
 
@@ -246,14 +203,14 @@ describe(getStacksTxFeeBoundedEstimates.name, () => {
   });
 
   it('should enforce maximum bounds', () => {
-    const highFeeResponse: HiroTransactionFeeEstimateResponse = {
+    const highFeeResponse = createHiroFeeEstimateResponse({
       estimations: [{ fee: 10000 }, { fee: 20000 }, { fee: 50000 }],
-    } as unknown as HiroTransactionFeeEstimateResponse;
+    });
 
     const result = getStacksTxFeeBoundedEstimates(
       highFeeResponse,
       estimatedTxSize,
-      mockTokenTransferTx as StacksTransactionWire,
+      mockTokenTransferTx,
       mockStacksFeeConfig
     );
 
@@ -263,14 +220,14 @@ describe(getStacksTxFeeBoundedEstimates.name, () => {
   });
 
   it('should enforce minimum bounds', () => {
-    const lowFeeResponse: HiroTransactionFeeEstimateResponse = {
+    const lowFeeResponse = createHiroFeeEstimateResponse({
       estimations: [{ fee: 100 }, { fee: 200 }, { fee: 500 }],
-    } as unknown as HiroTransactionFeeEstimateResponse;
+    });
 
     const result = getStacksTxFeeBoundedEstimates(
       lowFeeResponse,
       estimatedTxSize,
-      mockTokenTransferTx as StacksTransactionWire,
+      mockTokenTransferTx,
       mockStacksFeeConfig
     );
 
@@ -280,14 +237,12 @@ describe(getStacksTxFeeBoundedEstimates.name, () => {
   });
 
   it('should handle missing API estimates gracefully', () => {
-    const emptyResponse: HiroTransactionFeeEstimateResponse = {
-      estimations: [],
-    } as unknown as HiroTransactionFeeEstimateResponse;
+    const emptyResponse = createHiroFeeEstimateResponse({ estimations: [] });
 
     const result = getStacksTxFeeBoundedEstimates(
       emptyResponse,
       estimatedTxSize,
-      mockTokenTransferTx as StacksTransactionWire,
+      mockTokenTransferTx,
       mockStacksFeeConfig
     );
 
@@ -298,17 +253,17 @@ describe(getStacksTxFeeBoundedEstimates.name, () => {
   });
 
   it('should handle partial API estimates', () => {
-    const partialResponse: HiroTransactionFeeEstimateResponse = {
+    const partialResponse = createHiroFeeEstimateResponse({
       estimations: [
         { fee: 800 },
         // Missing standard and high estimates
       ],
-    } as unknown as HiroTransactionFeeEstimateResponse;
+    });
 
     const result = getStacksTxFeeBoundedEstimates(
       partialResponse,
       estimatedTxSize,
-      mockTokenTransferTx as StacksTransactionWire,
+      mockTokenTransferTx,
       mockStacksFeeConfig
     );
 

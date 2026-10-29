@@ -1,14 +1,13 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, keepPreviousData, useQuery } from '@tanstack/react-query';
+import { type QueryFunctionContext, keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { QuoteCurrency } from '@leather.io/models';
 import { createSip10AccountBalanceQueryConfig } from '@leather.io/queries';
 import {
-  AccountRequest,
-  Sip10Balance,
-  UserSettings,
+  type AccountRequest,
+  type Sip10Balance,
+  type UserSettings,
   getSip10BalancesService,
 } from '@leather.io/services';
 import { getAssetId, isDefined, serializeAssetId } from '@leather.io/utils';
@@ -88,7 +87,7 @@ function useSip10AccountBalanceQuery(request: AccountRequest, shouldKeepPrevious
   const includesHiddenAssets = request.assets?.includeHiddenAssets ?? false;
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    quoteCurrency: fiatCurrencyPreference,
     assetVisibility: includesHiddenAssets ? {} : assetVisibility,
     defaultAssetVisibility: includesHiddenAssets ? undefined : defaultAssetVisibility,
   };

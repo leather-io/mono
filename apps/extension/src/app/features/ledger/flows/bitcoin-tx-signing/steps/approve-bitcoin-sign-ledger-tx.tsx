@@ -1,6 +1,4 @@
-import { getPsbtTxInputs, getPsbtTxOutputs } from '@leather.io/bitcoin';
-
-import { getBitcoinInputValue } from '@shared/crypto/bitcoin/bitcoin.utils';
+import { getBitcoinInputValue, getPsbtTxInputs, getPsbtTxOutputs } from '@leather.io/bitcoin';
 
 import { useLedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { ApproveLedgerOperationLayout } from '@app/features/ledger/generic-steps/approve-ledger-operation/approve-ledger-operation.layout';

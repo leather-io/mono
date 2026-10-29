@@ -8,7 +8,7 @@ interface BroadcastCallbackArgs {
   tx: string;
   delayTime?: number;
   onResult?(txid: string): void;
-  onError?(error: Error): void;
+  onError?(error: unknown): void;
   onFinally?(): void;
 }
 
@@ -28,7 +28,7 @@ export function useBitcoinBroadcastTransaction() {
         onResult?.(txid);
         return txid;
       } catch (e) {
-        onError?.(e as Error);
+        onError?.(e);
         return;
       } finally {
         setIsBroadcasting(false);

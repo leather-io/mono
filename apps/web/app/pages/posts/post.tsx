@@ -6,10 +6,10 @@ import { Flex } from 'leather-styles/jsx/flex';
 import { VStack } from 'leather-styles/jsx/vstack';
 import Markdown from '~/components/content/markdown-content';
 import { Page } from '~/layouts/page/page';
-import { loader } from '~/pages/posts/post.route';
+import { type loader } from '~/pages/posts/post.route';
 
 function formatDate(dateString: string | undefined) {
-  if (!dateString) return '';
+  if (!dateString) return null;
 
   const date = new Date(dateString);
   const formatter = new Intl.DateTimeFormat('en-US', {

@@ -14,7 +14,7 @@ import {
   getStacksTransactionFeesService,
   getSwapService,
 } from '@leather.io/services';
-import { SwapDependencies, broadcastBitcoinTransaction } from '@leather.io/state/swap';
+import { type SwapDependencies, broadcastBitcoinTransaction } from '@leather.io/state/swap';
 import { assertExistence } from '@leather.io/utils';
 
 export function useSwapDependencies(): SwapDependencies {
@@ -28,9 +28,9 @@ export function useSwapDependencies(): SwapDependencies {
   const { nativeSegwit } = bitcoinAccounts.accountIndexByPaymentType(fingerprint, accountIndex);
   const bitcoinPayer = nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 });
   const bitcoinClient = useBitcoinClient();
-  const { data: nextNonce } = useNextNonce(stacksSigner?.address ?? '');
-
   assertExistence(stacksSigner, 'Stacks signer missing during swap initialization');
+  const { data: nextNonce } = useNextNonce(stacksSigner.address);
+
   assertExistence(bitcoinPayer, 'Bitcoin payer missing during swap initialization.');
 
   return {

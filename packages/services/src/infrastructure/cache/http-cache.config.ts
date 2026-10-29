@@ -1,6 +1,6 @@
 import { daysInMs, hoursInMs, minutesInMs, secondsInMs, weeksInMs } from '@leather.io/utils';
 
-import { HttpCacheOptions } from './http-cache.service';
+import { type HttpCacheOptions } from './http-cache.service';
 
 export type HttpCacheKey =
   // BnsV2Client

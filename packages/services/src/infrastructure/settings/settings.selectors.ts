@@ -1,14 +1,14 @@
 import {
-  BitcoinNetwork,
-  BitcoinNetworkModes,
-  NetworkModes,
+  type BitcoinNetwork,
+  type BitcoinNetworkModes,
+  type NetworkModes,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
 import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
-import { SerializedCryptoAssetId } from '@leather.io/utils';
+import { type SerializedCryptoAssetId } from '@leather.io/utils';
 
 import type { paths } from '../api/leather/leather-api.types';
-import { DefaultAssetVisibilityPolicy, UserSettings } from './settings.service';
+import { type DefaultAssetVisibilityPolicy, type UserSettings } from './settings.service';
 
 type StakingChainId =
   paths['/v1/staking/addresses/{address}/bonds']['get']['parameters']['query']['chain'];

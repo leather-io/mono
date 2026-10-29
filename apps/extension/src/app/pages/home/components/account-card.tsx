@@ -4,7 +4,7 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 import { css, cx } from 'leather-styles/css';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { Flag, InfoCircleIcon, SkeletonLoader, shimmerStyles } from '@leather.io/ui';
+import { BasicTooltip, Flag, InfoCircleIcon, SkeletonLoader, shimmerStyles } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -15,7 +15,6 @@ import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 import { PrivateTextLayout } from '@app/components/privacy/private-text.layout';
 import { LockedBalanceCardLayout } from '@app/features/bonds/components/locked-balance-card';
 import { NetworkSwitcherBadge } from '@app/pages/settings/components/network-switcher';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { useHomePageState } from '../use-home-page-state';
 
