@@ -1,11 +1,16 @@
 import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
-import { Account } from '@/store/accounts/accounts';
-import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { type Account } from '@/store/accounts/accounts';
+import {
+  type NavigationProp,
+  type RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { HasChildren, useTheme } from '@leather.io/ui/native';
+import { type HasChildren, useTheme } from '@leather.io/ui/native';
 
-import type { SelectedAsset } from './screens/select-asset';
+import { type SelectedAsset } from './screens/select-asset';
 
 // Required to use a type alias: https://reactnavigation.org/docs/typescript#typechecking-the-navigator
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions

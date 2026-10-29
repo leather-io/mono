@@ -8,14 +8,13 @@ import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { Flex, Stack } from 'leather-styles/jsx';
 
 import type { StacksTransaction } from '@leather.io/models';
-import { Caption, Sheet, SheetHeader, Spinner } from '@leather.io/ui';
+import { Caption, LoadingSpinner, Sheet, SheetHeader, Spinner } from '@leather.io/ui';
 import { microStxToStx, stxToMicroStx } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { stacksValue } from '@app/common/stacks-utils';
 import { type StacksTransactionActionType } from '@app/common/transactions/stacks/transaction.utils';
-import { LoadingSpinner } from '@app/components/loading-spinner';
 import { StacksTransactionItem } from '@app/components/stacks-transaction-item/stacks-transaction-item';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useStxAddressAvailableUnlockedBalance } from '@app/query/stacks/balance/stx-balance.hooks';

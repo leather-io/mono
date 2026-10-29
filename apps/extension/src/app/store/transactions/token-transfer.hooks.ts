@@ -1,12 +1,15 @@
 import { useCallback } from 'react';
 import { useAsync } from 'react-async-hook';
 
+import type { StacksNetwork } from '@stacks/network';
 import {
   type ClarityValue,
   PostConditionMode,
   bufferCVFromString,
   contractPrincipalCV,
   createEmptyAddress,
+  fetchNonce,
+  getAddressFromPublicKey,
   noneCV,
   serializeCV,
   someCV,
@@ -18,20 +21,16 @@ import {
 import type { Sip10Asset } from '@leather.io/models';
 import {
   TransactionTypes,
+  generateStacksUnsignedTransaction,
   getStacksAssetStringParts,
   inferPrincipalTypeFromAddress,
 } from '@leather.io/stacks';
-import { createMoney, stxToMicroStx } from '@leather.io/utils';
+import { createMoney, stxToMicroStx, unitToFractionalUnit } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 import type { StacksSendFormValues, StacksTransactionFormValues } from '@shared/models/form.model';
 import { makeFtPostCondition } from '@shared/utils/post-conditions';
 
-import { ftUnshiftDecimals } from '@app/common/stacks-utils';
-import {
-  type GenerateUnsignedTransactionOptions,
-  generateUnsignedTransaction,
-} from '@app/common/transactions/stacks/generate-unsigned-txs';
 import {
   buildUnsignedPolicySip10Transfer,
   buildUnsignedPolicyStxTransfer,
@@ -56,6 +55,24 @@ function createPrincipalCV(principal: string) {
   if (principalType === 'standard') return standardPrincipalCV(principal);
 
   throw new Error(`Invalid principal: ${principal}`);
+}
+
+interface GenerateWithResolvedNonceArgs {
+  nonce?: number;
+  publicKey: string;
+  network: StacksNetwork;
+}
+
+async function generateWithResolvedNonce<T>(
+  { nonce, publicKey, network }: GenerateWithResolvedNonceArgs,
+  generate: (nonce: number | string) => Promise<T>
+) {
+  if (nonce !== undefined) return generate(nonce);
+  const fetchedNonce = await fetchNonce({
+    address: getAddressFromPublicKey(publicKey, network),
+    network,
+  });
+  return generate(fetchedNonce.toString());
 }
 
 function formValueToStxMoney(value: number | string | undefined) {
@@ -89,26 +106,24 @@ export function useGenerateStxTokenTransferUnsignedTx() {
         });
       }
 
-      const options: GenerateUnsignedTransactionOptions = {
-        publicKey: account.stxPublicKey,
-        nonce: values?.nonce ? Number(values.nonce) : nextNonce?.nonce,
-        fee: formValueToStxMoney(values?.fee)?.amount.toNumber(),
-        txData: {
-          txType: TransactionTypes.StxTokenTransfer,
-          // Using account address here as a fallback for a fee estimation
-          recipient: values?.recipient ?? account.address,
-          amount: values?.amount ? stxToMicroStx(values?.amount).toString(10) : '0',
-          memo: values?.memo || undefined,
-          network,
+      return generateWithResolvedNonce(
+        {
+          nonce: values?.nonce ? Number(values.nonce) : nextNonce?.nonce,
           publicKey: account.stxPublicKey,
-          // Coercing type here as we don't have the public key
-          // as expected by STXTransferPayload type.
-          // This code will likely need to change soon with Ledger
-          // work, and coercion allows us to remove lots of type mangling
-          // and types are out of sync with @stacks/connect
+          network,
         },
-      };
-      return generateUnsignedTransaction(options);
+        nonce =>
+          generateStacksUnsignedTransaction({
+            txType: TransactionTypes.StxTokenTransfer,
+            publicKey: account.stxPublicKey,
+            nonce,
+            fee: formValueToStxMoney(values?.fee) ?? createMoney(0, 'STX'),
+            recipient: values?.recipient ?? account.address,
+            amount: createMoney(values?.amount ? stxToMicroStx(values?.amount) : 0, 'STX'),
+            memo: values?.memo || undefined,
+            network,
+          })
+      );
     },
     [account, nextNonce, network, policy]
   );
@@ -150,7 +165,7 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
           }
           const amountInBaseUnits =
             values && 'amount' in values && values.amount
-              ? ftUnshiftDecimals(values.amount, info.decimals)
+              ? unitToFractionalUnit(info.decimals)(values.amount).toString(10)
               : undefined;
           return await buildUnsignedPolicySip10Transfer({
             policy,
@@ -177,7 +192,7 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
             ? someCV(bufferCVFromString(values.memo))
             : noneCV();
 
-        const amountAsFractionalUnit = ftUnshiftDecimals(amount, info.decimals);
+        const amountAsFractionalUnit = unitToFractionalUnit(info.decimals)(amount).toString(10);
         const postConditionOptions = {
           amount: amountAsFractionalUnit,
           contractAddress,
@@ -188,7 +203,6 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
 
         const postConditions = [makeFtPostCondition(postConditionOptions)];
 
-        // (transfer (uint principal principal) (response bool uint))
         const functionArgs: ClarityValue[] = [
           uintCV(amountAsFractionalUnit),
           createPrincipalCV(account.address),
@@ -197,24 +211,27 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
 
         functionArgs.push(memo);
 
-        const options = {
-          txData: {
-            txType: TransactionTypes.ContractCall,
-            contractAddress,
-            contractName,
-            functionName,
-            functionArgs: functionArgs.map(arg => serializeCV(arg)),
-            postConditions,
-            postConditionMode: PostConditionMode.Deny,
-            network,
+        return generateWithResolvedNonce(
+          {
+            nonce: values?.nonce ? Number(values.nonce) : nextNonce?.nonce,
             publicKey: account.stxPublicKey,
+            network,
           },
-          fee: formValueToStxMoney(values?.fee)?.amount.toNumber(),
-          publicKey: account.stxPublicKey,
-          nonce: values?.nonce ? Number(values.nonce) : nextNonce?.nonce,
-        } as const;
-
-        return generateUnsignedTransaction(options);
+          nonce =>
+            generateStacksUnsignedTransaction({
+              txType: TransactionTypes.ContractCall,
+              contractAddress,
+              contractName,
+              functionName,
+              functionArgs: functionArgs.map(arg => serializeCV(arg)),
+              postConditions,
+              postConditionMode: PostConditionMode.Deny,
+              network,
+              publicKey: account.stxPublicKey,
+              fee: formValueToStxMoney(values?.fee) ?? createMoney(0, 'STX'),
+              nonce,
+            })
+        );
       } catch (error) {
         logger.error('Failed to generate unsigned transaction', error);
         return;

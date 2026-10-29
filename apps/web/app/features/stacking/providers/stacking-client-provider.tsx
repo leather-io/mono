@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useMemo } from 'react';
+import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
 import { StackingClient } from '@stacks/stacking';
 import { validateStacksAddress as isValidStacksAddress } from '@stacks/transactions';

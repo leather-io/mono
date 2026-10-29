@@ -1,4 +1,4 @@
-import { ProviderId } from '~/data/data';
+import { type ProviderId } from '~/data/data';
 
 // Community-tranche access to Bitcoin bonds, kept separate from
 // bitcoinStakingPoolData on purpose. pox-5 has no pooling primitive: the pool

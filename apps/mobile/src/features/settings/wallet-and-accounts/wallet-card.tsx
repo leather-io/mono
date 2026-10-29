@@ -6,7 +6,7 @@ import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountCard } from '@/features/account/components/account-card';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { TestId } from '@/shared/test-id';
-import { Account } from '@/store/accounts/accounts';
+import { type Account } from '@/store/accounts/accounts';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
 import { useSettings } from '@/store/settings/settings';
@@ -14,7 +14,7 @@ import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
-import { WalletId } from '@leather.io/models';
+import { type WalletId } from '@leather.io/models';
 import {
   Box,
   Button,
@@ -27,7 +27,7 @@ import {
   Text,
 } from '@leather.io/ui/native';
 
-import { WalletViewVariant } from './types';
+import { type WalletViewVariant } from './types';
 import { getIsAccountSelected } from './utils';
 
 interface WalletCardProps extends WalletId {
@@ -43,6 +43,24 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   const router = useRouter();
   const [isAddingAccount, setIsAddingAccount] = useState(false);
   const { currentAccount } = useSettings();
+
+  async function onAddAccount() {
+    try {
+      setIsAddingAccount(true);
+      await keys.createNewAccountOfWallet(fingerprint);
+      displayToast({
+        title: t`Account created`,
+        type: 'success',
+      });
+      setIsAddingAccount(false);
+    } catch {
+      displayToast({
+        title: t`Account creation failed`,
+        type: 'error',
+      });
+      setIsAddingAccount(false);
+    }
+  }
 
   function onSelectAccount(account: Account) {
     router.navigate({
@@ -115,23 +133,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
 
           {variant === 'active' && (
             <Button
-              onPress={async () => {
-                try {
-                  setIsAddingAccount(true);
-                  await keys.createNewAccountOfWallet(fingerprint);
-                  displayToast({
-                    title: t`Account created`,
-                    type: 'success',
-                  });
-                  setIsAddingAccount(false);
-                } catch {
-                  displayToast({
-                    title: t`Account creation failed`,
-                    type: 'error',
-                  });
-                  setIsAddingAccount(false);
-                }
-              }}
+              onPress={() => void onAddAccount()}
               variant="ghost"
               disabled={isAddingAccount}
               iconStart={

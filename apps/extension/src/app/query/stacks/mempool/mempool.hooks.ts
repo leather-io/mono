@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { isStacksMempoolTransaction } from '@leather.io/models';
-import { increaseValueByOneMicroStx, isUndefined, microStxToStx } from '@leather.io/utils';
+import { increaseValueByOneMicroStx, microStxToStx } from '@leather.io/utils';
 
 import { useGetTransactionByIdListQuery } from '../transactions/transactions-by-id.query';
 import { useGetAddressMempoolTransactionsQuery } from './mempool.query';
@@ -21,7 +21,7 @@ export function useStacksPendingTransactions(address: string) {
       transactions: txs
         .map(tx => tx.data)
         .flatMap(tx => {
-          if (isUndefined(tx)) return [];
+          if (!tx) return [];
           if (droppedCache.has(tx.tx_id)) return [];
           if (!isStacksMempoolTransaction(tx) || tx.status !== 'pending') {
             // Stale txs persist in the mempool endpoint so we

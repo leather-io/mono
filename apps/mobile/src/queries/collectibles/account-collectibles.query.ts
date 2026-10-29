@@ -3,10 +3,14 @@ import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 
-import { AccountAddresses, CryptoAssetId, QuoteCurrency } from '@leather.io/models';
+import { type AccountAddresses, type CryptoAssetId } from '@leather.io/models';
 import { createAccountCollectiblesQueryConfig } from '@leather.io/queries';
-import { AccountRequest, UserSettings } from '@leather.io/services';
-import { SerializedCryptoAssetId, deserializeAssetId, matchesAssetId } from '@leather.io/utils';
+import { type AccountRequest, type UserSettings } from '@leather.io/services';
+import {
+  type SerializedCryptoAssetId,
+  deserializeAssetId,
+  matchesAssetId,
+} from '@leather.io/utils';
 
 export function useAccountCollectibleByAssetId(
   fingerprint: string,
@@ -27,7 +31,7 @@ function useAccountCollectiblesQuery(account: AccountAddresses) {
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    quoteCurrency: fiatCurrencyPreference,
     assetVisibility,
   };
   const request: AccountRequest = { account };
@@ -40,7 +44,7 @@ function useAccountCollectibleByAssetIdQuery(account: AccountAddresses, assetId:
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    quoteCurrency: fiatCurrencyPreference,
     assetVisibility,
   };
   const request: AccountRequest = { account };

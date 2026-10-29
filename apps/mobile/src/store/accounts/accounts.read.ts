@@ -5,9 +5,9 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { isDefined } from '@leather.io/utils';
 
-import type { RootState } from '..';
+import { type RootState } from '../store';
 import { accountsAdapter } from './accounts.write';
-import { AccountStatus, type AccountStore, deriveIconFromAccountId } from './utils';
+import { type AccountStatus, type AccountStore, deriveIconFromAccountId } from './utils';
 
 export function deserializeAccountId(accountId: string) {
   const [fingerprint, accountIndex] = accountId.split('/');

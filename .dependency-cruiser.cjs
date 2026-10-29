@@ -1,6 +1,6 @@
 const cleanLayers = {
   presentation: ['ui', 'features'],
-  application: ['queries', 'query', 'services'],
+  application: ['queries', 'services'],
   domain: ['models', 'bitcoin', 'stacks'],
   state: ['state'],
   foundation: ['utils', 'constants', 'tokens', 'crypto'],

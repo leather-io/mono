@@ -99,7 +99,7 @@ export class StackingDaoLstService {
     );
 
     return {
-      asset: asset,
+      asset,
       balance,
       balanceStx,
       balanceQuote: baseCurrencyAmountInQuote(balanceStx, stxMarketData),
@@ -148,6 +148,8 @@ export class StackingDaoLstService {
 
     return withdrawalResponses.map(withdrawalResponse => {
       const withdrawalData = parseStackingDaoGetWithdrawalResponseCV(withdrawalResponse);
+      const chainTip = serverStatus.chain_tip;
+      if (!chainTip) throw new Error('Hiro API status is missing the chain tip');
       const balanceStx = createMoney(withdrawalData.stxAmount, stxAsset.symbol, stxAsset.decimals);
       return {
         asset,
@@ -159,8 +161,7 @@ export class StackingDaoLstService {
         balanceStx,
         balanceQuote: baseCurrencyAmountInQuote(balanceStx, stxMarketData),
         unlockBurnHeight: withdrawalData.unlockBurnHeight,
-        burnBlocksUntilUnlock:
-          withdrawalData.unlockBurnHeight - serverStatus.chain_tip!.burn_block_height,
+        burnBlocksUntilUnlock: withdrawalData.unlockBurnHeight - chainTip.burn_block_height,
       };
     });
   }

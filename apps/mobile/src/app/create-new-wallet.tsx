@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 
 import { Screen } from '@/components/screen/screen';
@@ -12,6 +12,9 @@ import { ImageBackground } from 'expo-image';
 
 import { generateMnemonic } from '@leather.io/crypto';
 import { BlurView, Box, Button, PointerHandIcon, Pressable, Text } from '@leather.io/ui/native';
+
+import secretBlurredDarkImage from '../assets/secret-blurred-dark.png';
+import secretBlurredLightImage from '../assets/secret-blurred-light.png';
 
 function SecretBanner({ children, isHidden }: { children: ReactNode; isHidden: boolean }) {
   const { themeDerivedFromThemePreference } = useSettings();
@@ -39,8 +42,8 @@ function SecretBanner({ children, isHidden }: { children: ReactNode; isHidden: b
         contentFit="fill"
         imageStyle={{}}
         source={whenTheme({
-          light: require('../assets/secret-blurred-light.png'),
-          dark: require('../assets/secret-blurred-dark.png'),
+          light: secretBlurredLightImage,
+          dark: secretBlurredDarkImage,
         })}
         style={{
           position: 'absolute',

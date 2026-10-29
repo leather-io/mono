@@ -1,4 +1,4 @@
-import { ClarityValue, TupleCV, cvToString, getCVTypeString } from '@stacks/transactions';
+import { type ClarityValue, type TupleCV, cvToString, getCVTypeString } from '@stacks/transactions';
 
 import {
   getClarityPrincipal,

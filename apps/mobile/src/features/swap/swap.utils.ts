@@ -1,8 +1,8 @@
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
-import { BigNumber } from 'bignumber.js';
+import { type BigNumber } from 'bignumber.js';
 
-import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type Money, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { createMoneyFromDecimal, sumMoney } from '@leather.io/utils';
 
 export function getFungibleAssetDisplayName(asset: SwappableFungibleCryptoAsset) {

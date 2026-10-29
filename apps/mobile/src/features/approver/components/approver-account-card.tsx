@@ -4,10 +4,10 @@ import { AccountListItem } from '@/features/account/account-list/account-list-it
 import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { AccountBalance } from '@/features/balances/total-balance';
-import { Account } from '@/store/accounts/accounts';
+import { type Account } from '@/store/accounts/accounts';
 import { useWallets } from '@/store/wallets/wallets.read';
 
-import { AccountDisplayPreference } from '@leather.io/models';
+import { type AccountDisplayPreference } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
 interface AccountItemsProps {

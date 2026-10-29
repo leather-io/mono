@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/mobile",
-  "version": "2.115.2",
+  "version": "2.116.0",
   "type": "module",
   "scripts": {
     "1password:env:dev": "op read \"op://leather-cli/env-content/dev\" > .env",
@@ -46,7 +46,6 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/provider": "workspace:*",
     "@leather.io/queries": "workspace:*",
-    "@leather.io/query": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/services": "workspace:*",
     "@leather.io/stacks": "workspace:*",

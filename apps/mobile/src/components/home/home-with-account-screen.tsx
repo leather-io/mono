@@ -20,15 +20,15 @@ import {
   useCollectiblesAnalytics,
 } from '@/utils/analytics-hooks';
 
-import { AccountId } from '@leather.io/models';
-import { SheetInstance } from '@leather.io/ui/native';
+import { type AccountId } from '@leather.io/models';
+import { type SheetInstance } from '@leather.io/ui/native';
 
 import { AccountScreenHeader } from './account-screen-header';
 import { AssetTabs } from './components/asset-tabs';
 import { FirstTokenBanner } from './components/first-token-banner';
 import { LearnSection } from './components/learn-section';
 import { TrendingTokens } from './components/trending-tokens';
-import { ListTab } from './constants';
+import { type ListTab } from './constants';
 
 interface HomeScreenWithAccountProps {
   currentAccount: AccountId;

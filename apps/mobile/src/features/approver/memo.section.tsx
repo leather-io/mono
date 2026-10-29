@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { Approver, SheetInstance } from '@leather.io/ui/native';
+import { Approver, type SheetInstance } from '@leather.io/ui/native';
 
 import { MemoCard } from './components/memo-card';
 import { MemoSheet } from './components/memo-sheet';

@@ -2,6 +2,7 @@ import { Cl, type ClarityValue, Pc, type PostCondition } from '@stacks/transacti
 
 import type {
   BitflowBffApiPostCondition,
+  BitflowBffApiSwapParameter,
   BitflowBffApiSwapSimpleParameter,
 } from '../infrastructure/api/bitflow/bitflow-bff-api.client';
 
@@ -19,7 +20,9 @@ function isStxPostConditionType(postConditionType: string): boolean {
 function extractContractId(tokenContract: string): `${string}.${string}` {
   const separatorIndex = tokenContract.indexOf('::');
   const contractId = separatorIndex === -1 ? tokenContract : tokenContract.slice(0, separatorIndex);
-  return contractId as `${string}.${string}`;
+  const dotIndex = contractId.indexOf('.');
+  if (dotIndex === -1) throw new Error(`Invalid token contract: ${tokenContract}`);
+  return `${contractId.slice(0, dotIndex)}.${contractId.slice(dotIndex + 1)}`;
 }
 
 function buildPostConditionWithConditionCode(
@@ -105,4 +108,10 @@ export function parseSwapContractAddress(swapContract: string): {
     contractAddress: swapContract.slice(0, dotIndex),
     contractName: swapContract.slice(dotIndex + 1),
   };
+}
+
+export function isBitflowBffApiSwapSimpleParameter(
+  param: BitflowBffApiSwapParameter | BitflowBffApiSwapSimpleParameter
+) {
+  return 'max_steps' in param;
 }

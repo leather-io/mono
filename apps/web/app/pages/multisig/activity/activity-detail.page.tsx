@@ -50,14 +50,14 @@ export function ActivityDetailPage() {
 
   const activity = useBlockchainActivityByTxIdDetailQuery(
     accountAddresses,
-    txid ?? '',
+    txid,
     settings,
     Boolean(account.data && txid)
   );
 
   const backTo =
     vaultId && accountId ? multisigPaths.account(vaultId, accountId) : multisigPaths.index;
-  const onBack = canGoBack ? () => navigate(-1) : undefined;
+  const onBack = canGoBack ? () => void navigate(-1) : undefined;
 
   const sessionsRestoring = restoringBtc || restoringStx;
   const listsSettled = (!btcSession || btcVaults.isSuccess) && (!stxSession || stxVaults.isSuccess);
