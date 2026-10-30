@@ -1,7 +1,7 @@
 # Labels
 
 Snapshot of `gh label list --repo leather-io/mono --limit 100 --json name,description` taken
-2026-10-29. Refresh this file whenever labels are added, renamed or removed. In full mode, check the
+2026-10-29. Refresh this file whenever labels are added, renamed or removed. With `gh`, check the
 live list before applying a label; a label missing from the repo cannot be applied.
 
 ## Type
@@ -29,8 +29,8 @@ Exactly one per issue. The title prefix matches it.
 | `platform:web-app`   | `Web:`       | The web app at app.leather.io         |
 | `platform:packages`  | `Packages:`  | Shared packages, services and tooling |
 
-No automation sets the platform label. The skill applies it in full mode, and through the issue
-link in clone and text mode for people with triage access; otherwise a maintainer adds it at
+No automation sets the platform label. The skill applies it through `gh`, and through the issue
+link without `gh` for people with triage access; otherwise a maintainer adds it at
 triage from the title prefix.
 
 ## Area
