@@ -200,7 +200,7 @@ export class SwapService {
       keys(groupedAssets)
         .map(key => toFungibleAssetId(deserializeAssetId(key)))
         .filter(isNonNullish)
-        .map(assetId => this.fungibleAssetService.getVisibleAsset(assetId))
+        .map(assetId => this.fungibleAssetService.getSwapAsset(assetId))
     );
 
     function assetsToSwapAssets(result: PromiseSettledResult<FungibleCryptoAsset | null>) {
