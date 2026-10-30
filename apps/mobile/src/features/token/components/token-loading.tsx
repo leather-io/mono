@@ -1,6 +1,6 @@
+import { NetworkBadge } from '@/components/network-badge';
 import { Screen } from '@/components/screen/screen';
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { TokenActivity } from '@/features/token/components/token-activity';
 import { TokenDetailsTable } from '@/features/token/components/token-details-table';
 import { TokenOverview } from '@/features/token/components/token-overview';

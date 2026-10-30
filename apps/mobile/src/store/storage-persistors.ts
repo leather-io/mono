@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { type PersistConfig, createMigrate } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
-import { migrations } from './migrations';
+import { migrations } from './migrations/migrations';
 import { type RootState } from './store';
 
 export const persistConfig: PersistConfig<RootState> = {

@@ -1,7 +1,7 @@
 import { Error } from '@/components/error/error';
-import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
+import { type FetchState, toFetchState } from '@/queries/fetch-state';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';

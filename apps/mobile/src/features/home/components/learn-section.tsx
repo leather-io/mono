@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { useOpenUrl } from '@/features/browser/browser/use-open-url';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { t } from '@lingui/core/macro';
 import { useQuery } from '@tanstack/react-query';
 

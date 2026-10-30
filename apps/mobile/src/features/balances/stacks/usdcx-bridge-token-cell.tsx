@@ -1,5 +1,5 @@
-import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { TokenCell } from '@/features/token/components/token-cell';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { t } from '@lingui/core/macro';
 
 import { STACKS_BRIDGE_URL, USDCX_SYMBOL } from '@leather.io/constants';

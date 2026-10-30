@@ -1,4 +1,4 @@
-import { type FetchState } from '@/components/loading';
+import { type FetchState } from '@/queries/fetch-state';
 
 import {
   type TokenBalance,

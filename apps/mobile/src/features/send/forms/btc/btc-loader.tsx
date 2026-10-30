@@ -1,10 +1,10 @@
 import { type ReactNode } from 'react';
 
 import { Error } from '@/components/error/error';
-import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
+import { type FetchState, toFetchState } from '@/queries/fetch-state';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { useQueryClient } from '@tanstack/react-query';

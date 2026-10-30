@@ -4,12 +4,12 @@ import { renderAsset } from '@/features/balances/assets/render-assets';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance-by-account';
 import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance-by-account';
-import { useSip10SendFlag } from '@/features/feature-flags';
 import { AssetPickerItem } from '@/features/send/components/asset-picker/asset-picker-item';
 import {
   useSip10AccountBalance,
   type useSip10TotalBalance,
 } from '@/queries/balance/sip10-balance.query';
+import { useSip10SendFlag } from '@/shared/feature-flags';
 import { type ListRenderItemInfo } from '@shopify/flash-list';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';

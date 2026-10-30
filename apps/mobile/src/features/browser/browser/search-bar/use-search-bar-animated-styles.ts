@@ -1,7 +1,7 @@
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import { useAnimatedStyle } from 'react-native-reanimated';
 
-import { useTabLayoutContext } from '@/features/navigation/tab-layout-context';
+import { useTabLayoutContext } from '@/components/screen/tab-layout-context';
 
 export function useSearchBarAnimatedStyles() {
   const { height: keyboardHeight, progress } = useReanimatedKeyboardAnimation();

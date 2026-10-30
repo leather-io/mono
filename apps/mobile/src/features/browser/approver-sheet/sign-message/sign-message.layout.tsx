@@ -1,5 +1,5 @@
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
-import { ApproverButtons } from '@/features/approver/components/approver-buttons';
+import { ApproverButtons } from '@/features/approver/components/approver-buttons/approver-buttons';
 import { type Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 

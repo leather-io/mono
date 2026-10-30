@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
+import { useGetBtcNetworkFromRequestParams } from '@/features/browser/approver-sheet/use-network-from-request-params';
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
-import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
 import { type App } from '@/store/apps/utils';
 import {
   useBitcoinAccounts,

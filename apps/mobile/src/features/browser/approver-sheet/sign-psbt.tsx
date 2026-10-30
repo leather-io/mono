@@ -1,5 +1,5 @@
+import { useGetBtcNetworkFromRequestParams } from '@/features/browser/approver-sheet/use-network-from-request-params';
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
-import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
 import { deserializeAccountId } from '@/store/accounts/accounts';
 import { type App } from '@/store/apps/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';

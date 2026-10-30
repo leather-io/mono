@@ -1,6 +1,6 @@
 import { useForm, useWatch } from 'react-hook-form';
 
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import { getTransferSip10TxHex } from '@/features/approver/utils';
 import { useSendMax } from '@/features/send/hooks/use-send-max';
 import { useSendNavigation } from '@/features/send/navigation';

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { type SectionListRenderItemInfo } from 'react-native';
 
 import { SearchInput } from '@/components/search-input';
-import { useSendPasteButton } from '@/features/feature-flags';
 import { IosRecipientPasteButton } from '@/features/send/components/recipient/ios-recipient-paste-button';
 import { RecipientSelectorHeader } from '@/features/send/components/recipient/recipient-selector/recipient-selector-header';
 import { RecipientSelectorItem } from '@/features/send/components/recipient/recipient-selector/recipient-selector-item';
@@ -21,6 +20,7 @@ import {
   useRecipientSuggestions,
 } from '@/features/send/components/recipient/use-recipient-suggestions';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
+import { useSendPasteButton } from '@/shared/feature-flags';
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
 import { type ZodSchema } from 'zod';
