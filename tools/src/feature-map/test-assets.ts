@@ -12,11 +12,14 @@ import {
   collectFunctionCallees,
   collectHandlerEndpointNames,
   collectInterfaceProperties,
-  collectObjectPropertyStrings,
+  collectObjectLiteralKeys,
+  collectObjectLiteralStringPairs,
   collectPropertyAccessReferences,
+  collectStringArrayConsts,
   collectStringConstObjects,
   listFiles,
   mergeStringTables,
+  parseFilesIn,
   parseSourceFile,
 } from './ts-ast.js';
 
@@ -30,6 +33,10 @@ const rpcMethodProperty = 'method';
 const rpcEndpointFunction = 'defineRpcEndpoint';
 const rpcHandlerFunction = 'defineRpcRequestHandler';
 const selectorsObjectSuffix = 'Selectors';
+
+function isTsFile(file: string): boolean {
+  return file.endsWith('.ts');
+}
 
 export interface SelectorObject extends SourceLocation {
   readonly name: string;
@@ -53,55 +60,50 @@ export function loadRouteUrls(config: FeatureMapAppConfig): Map<string, string> 
   return values;
 }
 
-export function loadSelectorTable(config: FeatureMapAppConfig): StringTable {
-  const files = listFiles(config.selectorsDir, file => file.endsWith('.ts'));
-  return mergeStringTables(files.map(file => collectStringConstObjects(parseSourceFile(file))));
+interface SelectorAssets {
+  readonly table: StringTable;
+  readonly objects: ReadonlyMap<string, SelectorObject>;
 }
 
-export function loadSelectorObjects(config: FeatureMapAppConfig): Map<string, SelectorObject> {
+export function loadSelectors(config: FeatureMapAppConfig): SelectorAssets {
+  const tables: StringTable[] = [];
   const objects = new Map<string, SelectorObject>();
-  for (const file of listFiles(config.selectorsDir, file => file.endsWith('.ts'))) {
-    const sourceFile = parseSourceFile(file);
+  for (const sourceFile of parseFilesIn(config.selectorsDir, isTsFile)) {
     const table = collectStringConstObjects(sourceFile);
+    tables.push(table);
     for (const [name, line] of collectExportedNames(sourceFile)) {
       const members = table.get(name);
       if (!members || !name.endsWith(selectorsObjectSuffix)) continue;
-      objects.set(name, { name, file, line, members: [...members.keys()] });
+      objects.set(name, { name, file: sourceFile.fileName, line, members: [...members.keys()] });
     }
   }
-  return objects;
+  return { table: mergeStringTables(tables), objects };
 }
 
-function loadRpcEndpointNames(config: FeatureMapAppConfig): Map<string, string> {
+export function loadRpcEndpoints(config: FeatureMapAppConfig): Map<string, string> {
   const endpoints = new Map<string, string>();
-  for (const file of listFiles(config.rpcEndpointsDir, file => file.endsWith('.ts'))) {
-    const defined = collectDefinedEndpoints(
-      parseSourceFile(file),
-      rpcEndpointFunction,
-      rpcMethodProperty
-    );
+  for (const sourceFile of parseFilesIn(config.rpcEndpointsDir, isTsFile)) {
+    const defined = collectDefinedEndpoints(sourceFile, rpcEndpointFunction, rpcMethodProperty);
     for (const [name, method] of defined) endpoints.set(name, method);
   }
   return endpoints;
 }
 
-export function loadRpcHandlers(config: FeatureMapAppConfig): Map<string, RpcHandler> {
-  const endpoints = loadRpcEndpointNames(config);
+export function loadRpcHandlers(
+  config: FeatureMapAppConfig,
+  endpoints: ReadonlyMap<string, string>
+): Map<string, RpcHandler> {
   const handlers = new Map<string, RpcHandler>();
-  const files = listFiles(
+  const sourceFiles = parseFilesIn(
     config.rpcMethodsDir,
-    file => file.endsWith('.ts') && !specFilePattern.test(file)
+    file => isTsFile(file) && !specFilePattern.test(file)
   );
-  for (const file of files) {
-    const name = path.basename(file, '.ts');
-    const methods = collectHandlerEndpointNames(
-      parseSourceFile(file),
-      rpcHandlerFunction,
-      rpcMethodProperty
-    )
+  for (const sourceFile of sourceFiles) {
+    const name = path.basename(sourceFile.fileName, '.ts');
+    const methods = collectHandlerEndpointNames(sourceFile, rpcHandlerFunction, rpcMethodProperty)
       .map(endpoint => endpoints.get(endpoint))
       .filter(method => method !== undefined);
-    handlers.set(name, { name, file, line: 1, methods });
+    handlers.set(name, { name, file: sourceFile.fileName, line: 1, methods });
   }
   return handlers;
 }
@@ -114,11 +116,11 @@ export interface PageObjectAction extends SourceLocation {
 
 export function loadPageObjectActions(config: FeatureMapAppConfig): Map<string, PageObjectAction> {
   const actions = new Map<string, PageObjectAction>();
-  for (const file of listFiles(config.pageObjectsDir, file => file.endsWith('.ts'))) {
-    for (const [className, methods] of collectClassMethods(parseSourceFile(file))) {
+  for (const sourceFile of parseFilesIn(config.pageObjectsDir, isTsFile)) {
+    for (const [className, methods] of collectClassMethods(sourceFile)) {
       for (const [method, info] of methods) {
         actions.set(`${className}.${method}`, {
-          file,
+          file: sourceFile.fileName,
           line: info.line,
           className,
           requiredParameters: info.requiredParameters,
@@ -132,9 +134,9 @@ export function loadPageObjectActions(config: FeatureMapAppConfig): Map<string, 
 
 export function loadMockFunctions(config: FeatureMapAppConfig): Map<string, SourceLocation> {
   const mocks = new Map<string, SourceLocation>();
-  for (const file of listFiles(config.mocksDir, file => file.endsWith('.ts'))) {
-    for (const [name, line] of collectExportedNames(parseSourceFile(file))) {
-      mocks.set(name, { file, line });
+  for (const sourceFile of parseFilesIn(config.mocksDir, isTsFile)) {
+    for (const [name, line] of collectExportedNames(sourceFile)) {
+      mocks.set(name, { file: sourceFile.fileName, line });
     }
   }
   return mocks;
@@ -162,9 +164,8 @@ export function loadSetupMocks(
 
 export function loadSpecs(config: FeatureMapAppConfig): Map<string, SpecFile> {
   const specs = new Map<string, SpecFile>();
-  for (const file of listFiles(config.specsDir, file => specFilePattern.test(file))) {
-    const sourceFile = parseSourceFile(file);
-    const relative = toRepoRelative(file);
+  for (const sourceFile of parseFilesIn(config.specsDir, file => specFilePattern.test(file))) {
+    const relative = toRepoRelative(sourceFile.fileName);
     specs.set(relative, {
       path: relative,
       routeKeys: collectPropertyAccessReferences(sourceFile, config.routeUrlsObjectName).map(
@@ -182,14 +183,63 @@ export function loadFeatureFlags(config: FeatureMapAppConfig): string[] {
   );
 }
 
-export function loadRpcMethods(config: FeatureMapAppConfig): Set<string> {
-  const methods = new Set<string>();
-  for (const file of listFiles(config.rpcEndpointsDir, file => file.endsWith('.ts'))) {
-    for (const method of collectObjectPropertyStrings(parseSourceFile(file), rpcMethodProperty)) {
-      methods.add(method);
+const verifyMockObjectNames = ['contextMocks', 'pageMocks'] as const;
+const verifyBaseMocksName = 'baseMockNames';
+
+export function loadVerifyMockNames(config: FeatureMapAppConfig): Set<string> {
+  const sourceFile = parseSourceFile(config.verifyMockRegistryFile);
+  const names = new Set(collectStringArrayConsts(sourceFile).get(verifyBaseMocksName) ?? []);
+  for (const objectName of verifyMockObjectNames) {
+    const keys = collectObjectLiteralKeys(sourceFile, objectName);
+    if (keys === undefined) {
+      throw new Error(
+        `feature-map: ${toRepoRelative(config.verifyMockRegistryFile)} does not define an object literal '${objectName}'`
+      );
     }
+    for (const key of keys) names.add(key);
   }
-  return methods;
+  return names;
+}
+
+export function loadPersistedSliceKeys(config: FeatureMapAppConfig): string[] {
+  const arrays = collectStringArrayConsts(parseSourceFile(config.persistWhitelistFile));
+  const slices = arrays.get(config.persistWhitelistName);
+  if (!slices) {
+    throw new Error(
+      `feature-map: ${toRepoRelative(config.persistWhitelistFile)} does not define a string array '${config.persistWhitelistName}'`
+    );
+  }
+  return slices;
+}
+
+export function loadNetworkIds(config: FeatureMapAppConfig): string[] {
+  const table = collectStringConstObjects(parseSourceFile(config.networkIdsFile));
+  const ids = table.get(config.networkIdsObjectName);
+  if (!ids) {
+    throw new Error(
+      `feature-map: ${toRepoRelative(config.networkIdsFile)} does not export a '${config.networkIdsObjectName}' object`
+    );
+  }
+  return [...ids.values()];
+}
+
+const catalogIdProperty = 'id';
+
+export function loadRpcCatalog(config: FeatureMapAppConfig): Map<string, string> {
+  const catalog = new Map<string, string>();
+  const files = listFiles(
+    config.rpcCatalogDir,
+    file => file.endsWith('.ts') && !specFilePattern.test(file)
+  );
+  for (const file of files) {
+    const pairs = collectObjectLiteralStringPairs(
+      parseSourceFile(file),
+      catalogIdProperty,
+      rpcMethodProperty
+    );
+    for (const [id, method] of pairs) if (!catalog.has(id)) catalog.set(id, method);
+  }
+  return catalog;
 }
 
 const routeElementPattern = /<Routes?[\s>/]/;
@@ -209,6 +259,22 @@ export function loadRouterFiles(config: FeatureMapAppConfig): string[] {
     )
   );
   return files.filter(isRouterFile).sort();
+}
+
+export interface VerifyInputs {
+  readonly persistedSlices: readonly string[];
+  readonly networkIds: readonly string[];
+  readonly rpcCatalog: ReadonlyMap<string, string>;
+  readonly verifyMocks: ReadonlySet<string>;
+}
+
+export function loadVerifyInputs(config: FeatureMapAppConfig): VerifyInputs {
+  return {
+    persistedSlices: loadPersistedSliceKeys(config),
+    networkIds: loadNetworkIds(config),
+    rpcCatalog: loadRpcCatalog(config),
+    verifyMocks: loadVerifyMockNames(config),
+  };
 }
 
 export function loadFeatureFiles(config: FeatureMapAppConfig): string[] {

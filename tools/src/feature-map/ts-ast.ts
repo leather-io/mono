@@ -27,14 +27,43 @@ export function listFiles(dir: string, matches: (file: string) => boolean): stri
     .sort();
 }
 
-export function hasExportModifier(node: ts.Node): boolean {
-  if (!ts.canHaveModifiers(node)) return false;
-  return (ts.getModifiers(node) ?? []).some(mod => mod.kind === ts.SyntaxKind.ExportKeyword);
+export function parseFilesIn(dir: string, matches: (file: string) => boolean): ts.SourceFile[] {
+  return listFiles(dir, matches).map(file => parseSourceFile(file));
 }
 
-function hasPrivateModifier(node: ts.Node): boolean {
+function hasModifier(node: ts.Node, kind: ts.ModifierSyntaxKind): boolean {
   if (!ts.canHaveModifiers(node)) return false;
-  return (ts.getModifiers(node) ?? []).some(mod => mod.kind === ts.SyntaxKind.PrivateKeyword);
+  return (ts.getModifiers(node) ?? []).some(modifier => modifier.kind === kind);
+}
+
+export function walkDescendants(node: ts.Node, visit: (node: ts.Node) => boolean): void {
+  if (visit(node)) return;
+  ts.forEachChild(node, child => walkDescendants(child, visit));
+}
+
+export function collectDescendants<T>(
+  node: ts.Node,
+  select: (node: ts.Node) => T | undefined
+): T[] {
+  const results: T[] = [];
+  walkDescendants(node, child => {
+    const result = select(child);
+    if (result !== undefined) results.push(result);
+    return false;
+  });
+  return results;
+}
+
+export function findDescendant<T>(
+  node: ts.Node,
+  select: (node: ts.Node) => T | undefined
+): T | undefined {
+  let found: T | undefined;
+  walkDescendants(node, child => {
+    if (found === undefined) found = select(child);
+    return found !== undefined;
+  });
+  return found;
 }
 
 export function unwrapExpression(node: ts.Expression): ts.Expression {
@@ -42,6 +71,44 @@ export function unwrapExpression(node: ts.Expression): ts.Expression {
     return unwrapExpression(node.expression);
   if (ts.isParenthesizedExpression(node)) return unwrapExpression(node.expression);
   return node;
+}
+
+interface TopLevelDeclaration {
+  readonly name: string;
+  readonly node: ts.VariableDeclaration | ts.FunctionDeclaration;
+  readonly initializer?: ts.Expression;
+  readonly exported: boolean;
+}
+
+export function topLevelDeclarations(sourceFile: ts.SourceFile): TopLevelDeclaration[] {
+  const declarations: TopLevelDeclaration[] = [];
+  for (const statement of sourceFile.statements) {
+    const exported = hasModifier(statement, ts.SyntaxKind.ExportKeyword);
+    if (ts.isFunctionDeclaration(statement) && statement.name) {
+      declarations.push({ name: statement.name.text, node: statement, exported });
+      continue;
+    }
+    if (!ts.isVariableStatement(statement)) continue;
+    for (const declaration of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(declaration.name)) continue;
+      declarations.push({
+        name: declaration.name.text,
+        node: declaration,
+        initializer: declaration.initializer
+          ? unwrapExpression(declaration.initializer)
+          : undefined,
+        exported,
+      });
+    }
+  }
+  return declarations;
+}
+
+export function findTopLevelDeclaration(
+  sourceFile: ts.SourceFile,
+  name: string
+): TopLevelDeclaration | undefined {
+  return topLevelDeclarations(sourceFile).find(declaration => declaration.name === name);
 }
 
 export function getPropertyName(name: ts.PropertyName): string | undefined {
@@ -69,16 +136,10 @@ function readStringObjectLiteral(node: ts.ObjectLiteralExpression): Map<string, 
 
 export function collectStringConstObjects(sourceFile: ts.SourceFile): StringTable {
   const table: StringTable = new Map();
-  for (const statement of sourceFile.statements) {
-    if (!ts.isVariableStatement(statement)) continue;
-    for (const declaration of statement.declarationList.declarations) {
-      if (!ts.isIdentifier(declaration.name) || !declaration.initializer) continue;
-      const initializer = unwrapExpression(declaration.initializer);
-      if (!ts.isObjectLiteralExpression(initializer)) continue;
-      const values = readStringObjectLiteral(initializer);
-      if (values.size === 0) continue;
-      table.set(declaration.name.text, values);
-    }
+  for (const { name, initializer } of topLevelDeclarations(sourceFile)) {
+    if (!initializer || !ts.isObjectLiteralExpression(initializer)) continue;
+    const values = readStringObjectLiteral(initializer);
+    if (values.size > 0) table.set(name, values);
   }
   return table;
 }
@@ -177,19 +238,11 @@ export function collectPropertyAccessReferences(
   sourceFile: ts.SourceFile,
   objectName: string
 ): { key: string; line: number }[] {
-  const references: { key: string; line: number }[] = [];
-  function visit(node: ts.Node) {
-    if (
-      ts.isPropertyAccessExpression(node) &&
-      ts.isIdentifier(node.expression) &&
-      node.expression.text === objectName
-    ) {
-      references.push({ key: node.name.text, line: getLine(sourceFile, node) });
-    }
-    ts.forEachChild(node, visit);
-  }
-  visit(sourceFile);
-  return references;
+  return collectDescendants(sourceFile, node => {
+    if (!ts.isPropertyAccessExpression(node) || !ts.isIdentifier(node.expression)) return undefined;
+    if (node.expression.text !== objectName) return undefined;
+    return { key: node.name.text, line: getLine(sourceFile, node) };
+  });
 }
 
 export function collectInterfaceProperties(
@@ -208,18 +261,8 @@ export function collectInterfaceProperties(
 
 export function collectExportedNames(sourceFile: ts.SourceFile): Map<string, number> {
   const names = new Map<string, number>();
-  for (const statement of sourceFile.statements) {
-    if (!hasExportModifier(statement)) continue;
-    if (ts.isFunctionDeclaration(statement) && statement.name) {
-      names.set(statement.name.text, getLine(sourceFile, statement));
-    }
-    if (ts.isVariableStatement(statement)) {
-      for (const declaration of statement.declarationList.declarations) {
-        if (ts.isIdentifier(declaration.name)) {
-          names.set(declaration.name.text, getLine(sourceFile, declaration));
-        }
-      }
-    }
+  for (const { name, node, exported } of topLevelDeclarations(sourceFile)) {
+    if (exported) names.set(name, getLine(sourceFile, node));
   }
   return names;
 }
@@ -228,12 +271,6 @@ interface ClassMethod {
   readonly line: number;
   readonly requiredParameters: number;
   readonly isStatic: boolean;
-}
-
-function hasStaticModifier(node: ts.Node): boolean {
-  return ts.canHaveModifiers(node)
-    ? (ts.getModifiers(node) ?? []).some(modifier => modifier.kind === ts.SyntaxKind.StaticKeyword)
-    : false;
 }
 
 function countRequiredParameters(parameters: readonly ts.ParameterDeclaration[]): number {
@@ -253,12 +290,12 @@ export function collectClassMethods(
     if (!ts.isClassDeclaration(statement) || !statement.name) continue;
     const methods = new Map<string, ClassMethod>();
     for (const member of statement.members) {
-      if (hasPrivateModifier(member)) continue;
+      if (hasModifier(member, ts.SyntaxKind.PrivateKeyword)) continue;
       if (!ts.isMethodDeclaration(member) && !ts.isPropertyDeclaration(member)) continue;
       const name = getPropertyName(member.name);
       if (name === undefined) continue;
       const line = getLine(sourceFile, member);
-      const isStatic = hasStaticModifier(member);
+      const isStatic = hasModifier(member, ts.SyntaxKind.StaticKeyword);
       if (ts.isMethodDeclaration(member)) {
         methods.set(name, {
           line,
@@ -290,23 +327,14 @@ export function collectDefinedEndpoints(
   propertyName: string
 ): Map<string, string> {
   const endpoints = new Map<string, string>();
-  for (const statement of sourceFile.statements) {
-    if (!ts.isVariableStatement(statement)) continue;
-    for (const declaration of statement.declarationList.declarations) {
-      if (!ts.isIdentifier(declaration.name) || !declaration.initializer) continue;
-      const initializer = unwrapExpression(declaration.initializer);
-      if (!ts.isCallExpression(initializer)) continue;
-      if (!ts.isIdentifier(initializer.expression)) continue;
-      if (initializer.expression.text !== defineFunctionName) continue;
-      const argument = initializer.arguments[0];
-      if (!argument || !ts.isObjectLiteralExpression(argument)) continue;
-      for (const property of argument.properties) {
-        if (!ts.isPropertyAssignment(property) || getPropertyName(property.name) !== propertyName)
-          continue;
-        const value = getStringLiteralText(property.initializer);
-        if (value !== undefined) endpoints.set(declaration.name.text, value);
-      }
-    }
+  for (const { name, initializer } of topLevelDeclarations(sourceFile)) {
+    if (!initializer || !ts.isCallExpression(initializer)) continue;
+    if (!ts.isIdentifier(initializer.expression)) continue;
+    if (initializer.expression.text !== defineFunctionName) continue;
+    const argument = initializer.arguments[0];
+    if (!argument || !ts.isObjectLiteralExpression(argument)) continue;
+    const value = readStringObjectLiteral(argument).get(propertyName);
+    if (value !== undefined) endpoints.set(name, value);
   }
   return endpoints;
 }
@@ -316,27 +344,16 @@ export function collectHandlerEndpointNames(
   defineFunctionName: string,
   propertyName: string
 ): string[] {
-  const names: string[] = [];
-  function visit(node: ts.Node) {
-    if (
-      ts.isCallExpression(node) &&
-      ts.isIdentifier(node.expression) &&
-      node.expression.text === defineFunctionName
-    ) {
-      const argument = node.arguments[0];
-      if (
-        argument &&
-        ts.isPropertyAccessExpression(argument) &&
-        ts.isIdentifier(argument.expression) &&
-        argument.name.text === propertyName
-      ) {
-        names.push(argument.expression.text);
-      }
+  return collectDescendants(sourceFile, node => {
+    if (!ts.isCallExpression(node) || !ts.isIdentifier(node.expression)) return undefined;
+    if (node.expression.text !== defineFunctionName) return undefined;
+    const argument = node.arguments[0];
+    if (!argument || !ts.isPropertyAccessExpression(argument)) return undefined;
+    if (!ts.isIdentifier(argument.expression) || argument.name.text !== propertyName) {
+      return undefined;
     }
-    ts.forEachChild(node, visit);
-  }
-  visit(sourceFile);
-  return names;
+    return argument.expression.text;
+  });
 }
 
 interface FunctionCallees {
@@ -348,34 +365,77 @@ export function collectFunctionCallees(
   sourceFile: ts.SourceFile,
   functionName: string
 ): FunctionCallees | undefined {
+  const declaration = findTopLevelDeclaration(sourceFile, functionName);
+  if (!declaration || !ts.isFunctionDeclaration(declaration.node)) return undefined;
+  if (!declaration.node.body) return undefined;
+  return {
+    line: getLine(sourceFile, declaration.node),
+    callees: collectDescendants(declaration.node.body, node =>
+      ts.isCallExpression(node) && ts.isIdentifier(node.expression)
+        ? node.expression.text
+        : undefined
+    ),
+  };
+}
+
+export function collectStringArrayConsts(sourceFile: ts.SourceFile): Map<string, string[]> {
+  const arrays = new Map<string, string[]>();
   for (const statement of sourceFile.statements) {
-    if (!ts.isFunctionDeclaration(statement) || statement.name?.text !== functionName) continue;
-    if (!statement.body) return undefined;
-    const callees: string[] = [];
-    function visit(node: ts.Node) {
-      if (ts.isCallExpression(node) && ts.isIdentifier(node.expression)) {
-        callees.push(node.expression.text);
+    if (!ts.isVariableStatement(statement)) continue;
+    for (const declaration of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(declaration.name) || !declaration.initializer) continue;
+      const initializer = unwrapExpression(declaration.initializer);
+      if (!ts.isArrayLiteralExpression(initializer)) continue;
+      const items: string[] = [];
+      for (const element of initializer.elements) {
+        const text = getStringLiteralText(element);
+        if (text !== undefined) items.push(text);
       }
-      ts.forEachChild(node, visit);
+      arrays.set(declaration.name.text, items);
     }
-    visit(statement.body);
-    return { line: getLine(sourceFile, statement), callees };
+  }
+  return arrays;
+}
+
+export function collectObjectLiteralKeys(
+  sourceFile: ts.SourceFile,
+  variableName: string
+): string[] | undefined {
+  for (const statement of sourceFile.statements) {
+    if (!ts.isVariableStatement(statement)) continue;
+    for (const declaration of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== variableName) continue;
+      if (!declaration.initializer) return undefined;
+      const initializer = unwrapExpression(declaration.initializer);
+      if (!ts.isObjectLiteralExpression(initializer)) return undefined;
+      const keys: string[] = [];
+      for (const property of initializer.properties) {
+        if (!ts.isPropertyAssignment(property) && !ts.isShorthandPropertyAssignment(property))
+          continue;
+        const key = getPropertyName(property.name);
+        if (key !== undefined) keys.push(key);
+      }
+      return keys;
+    }
   }
   return undefined;
 }
 
-export function collectObjectPropertyStrings(
+export function collectObjectLiteralStringPairs(
   sourceFile: ts.SourceFile,
-  propertyName: string
-): string[] {
-  const texts: string[] = [];
+  keyProperty: string,
+  valueProperty: string
+): Map<string, string> {
+  const pairs = new Map<string, string>();
   function visit(node: ts.Node) {
-    if (ts.isPropertyAssignment(node) && getPropertyName(node.name) === propertyName) {
-      const text = getStringLiteralText(node.initializer);
-      if (text !== undefined) texts.push(text);
+    if (ts.isObjectLiteralExpression(node)) {
+      const strings = readStringObjectLiteral(node);
+      const key = strings.get(keyProperty);
+      const value = strings.get(valueProperty);
+      if (key !== undefined && value !== undefined && !pairs.has(key)) pairs.set(key, value);
     }
     ts.forEachChild(node, visit);
   }
   visit(sourceFile);
-  return texts;
+  return pairs;
 }

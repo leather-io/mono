@@ -17,7 +17,7 @@ import {
   routesForKey,
   selectorObjectOf,
 } from './model.js';
-import { distinctMountedPaths } from './routers-parser.js';
+import { type RoutedRoute, distinctMountedPaths } from './routers-parser.js';
 import { specPathFor } from './test-assets.js';
 
 interface CheckResult {
@@ -176,6 +176,25 @@ function checkSelectorRef(
   return `${featureLabel(feature)}: selectors.${field} '${selector.value}' must reference a *Selectors member (for example SendCryptoAssetSelectors.SendForm).`;
 }
 
+function openActionError(
+  model: FeatureMapModel,
+  feature: ParsedFeature,
+  action: string
+): string | undefined {
+  const found = model.pageObjectActions.get(action);
+  const exposed = model.config.verifyPageObjects;
+  if (found && !exposed.includes(found.className)) {
+    return `${featureLabel(feature)}: open action '${action}' is on ${found.className}, which verify does not expose. Fix: use a method of ${exposed.join(', ')}.`;
+  }
+  if (found && found.isStatic) {
+    return `${featureLabel(feature)}: open action '${action}' is static; verify calls instance methods on the fixtures' page objects.`;
+  }
+  if (found && found.requiredParameters > 0) {
+    return `${featureLabel(feature)}: open action '${action}' needs ${found.requiredParameters} argument${found.requiredParameters === 1 ? '' : 's'}; verify calls open actions with none. Fix: add a zero-argument page-object method that reaches the screen.`;
+  }
+  return actionError(model, feature, 'open action', action);
+}
+
 function actionError(
   model: FeatureMapModel,
   feature: ParsedFeature,
@@ -235,14 +254,31 @@ function checkFeatureReferences(model: FeatureMapModel, feature: ParsedFeature):
     if (error) errors.push(error);
   }
   for (const action of feature.open) {
-    const error = actionError(model, feature, 'open action', action);
+    const error = openActionError(model, feature, action);
     if (error) errors.push(error);
   }
 
+  const registry = toRepoRelative(model.config.verifyMockRegistryFile);
   for (const mock of feature.preconditions.mocks) {
-    if (model.mocks.has(mock)) continue;
+    if (!model.mocks.has(mock)) {
+      errors.push(
+        `${label}: mock '${mock}' is not exported from ${mocksDir}. Fix: use an exported mock function name or add the mock.`
+      );
+      continue;
+    }
+    if (model.verifyMocks.has(mock)) continue;
     errors.push(
-      `${label}: mock '${mock}' is not exported from ${mocksDir}. Fix: use an exported mock function name or add the mock.`
+      `${label}: mock '${mock}' is exported but not registered in ${registry}, so lt verify cannot apply it. Fix: add it to contextMocks or pageMocks there (wrapping any arguments) or drop it from the entry.`
+    );
+  }
+  for (const [first, second] of model.config.exclusiveMocks) {
+    if (
+      !feature.preconditions.mocks.includes(first) ||
+      !feature.preconditions.mocks.includes(second)
+    )
+      continue;
+    errors.push(
+      `${label}: mocks '${first}' and '${second}' route the same requests, so the later one wins and the other never applies. Fix: keep the one the entry's screen state needs.`
     );
   }
   errors.push(...checkRedundantMocks(model, feature));
@@ -264,47 +300,48 @@ function checkFeatureReferences(model: FeatureMapModel, feature: ParsedFeature):
   return errors;
 }
 
-function checkRouteFlags(model: FeatureMapModel, feature: ParsedFeature): string[] {
-  if (feature.anchor.kind !== 'route') return [];
-  const errors: string[] = [];
-  const reported = new Set<string>();
-  for (const { key, instances } of featureRouteInstances(model, feature)) {
-    for (const instance of instances) {
-      for (const flag of instance.flags) {
-        if (feature.flags.includes(flag) || reported.has(flag)) continue;
-        reported.add(flag);
-        const label = key ? routeRef(model, key) : `'${instance.mountedPath}'`;
-        errors.push(
-          `${featureLabel(feature)}: ${label} is mounted behind the ${flag} flag (${toRepoRelative(instance.file)}:${instance.line}) but flags does not list it. Fix: add '${flag}' to flags so verify turns it on.`
-        );
-      }
-    }
-  }
-  return errors;
+function instanceLabel(
+  model: FeatureMapModel,
+  key: string | undefined,
+  instance: RoutedRoute
+): string {
+  return key ? routeRef(model, key) : `'${instance.mountedPath}'`;
 }
 
-function checkGates(model: FeatureMapModel, feature: ParsedFeature): string[] {
+function checkRouterAgreement(model: FeatureMapModel, feature: ParsedFeature): string[] {
   if (feature.anchor.kind !== 'route') return [];
-  const errors: string[] = [];
-  const reported = new Set<string>();
+  const label = featureLabel(feature);
+  const gateErrors: string[] = [];
+  const flagErrors: string[] = [];
+  const reportedGates = new Set<string>();
+  const reportedFlags = new Set<string>();
   for (const { route, key, instances, orphan } of featureRouteInstances(model, feature)) {
     if (orphan) {
-      errors.push(
-        `${featureLabel(feature)}: route '${route.value}' is not mounted under any of this entry's routes; it only nests under other screens. Fix: move it to the entry whose route mounts it.`
+      gateErrors.push(
+        `${label}: route '${route.value}' is not mounted under any of this entry's routes; it only nests under other screens. Fix: move it to the entry whose route mounts it.`
       );
       continue;
     }
     for (const instance of instances) {
+      const mounted = instanceLabel(model, key, instance);
+      const where = `${toRepoRelative(instance.file)}:${instance.line}`;
       const gate = derivedGate(instance);
-      if (gate === feature.gate || reported.has(gate)) continue;
-      reported.add(gate);
-      const label = key ? routeRef(model, key) : `'${instance.mountedPath}'`;
-      errors.push(
-        `${featureLabel(feature)}: gate '${feature.gate}' does not match the router: ${label} mounts at '${instance.mountedPath}' behind ${gate === 'none' ? 'no gate' : `${gate}`} (${toRepoRelative(instance.file)}:${instance.line}). Fix: set gate to '${gate}' or split the entry so each one has a single gate.`
-      );
+      if (gate !== feature.gate && !reportedGates.has(gate)) {
+        reportedGates.add(gate);
+        gateErrors.push(
+          `${label}: gate '${feature.gate}' does not match the router: ${mounted} mounts at '${instance.mountedPath}' behind ${gate === 'none' ? 'no gate' : gate} (${where}). Fix: set gate to '${gate}' or split the entry so each one has a single gate.`
+        );
+      }
+      for (const flag of instance.flags) {
+        if (feature.flags.includes(flag) || reportedFlags.has(flag)) continue;
+        reportedFlags.add(flag);
+        flagErrors.push(
+          `${label}: ${mounted} is mounted behind the ${flag} flag (${where}) but flags does not list it. Fix: add '${flag}' to flags so verify turns it on.`
+        );
+      }
     }
   }
-  return errors;
+  return [...gateErrors, ...flagErrors];
 }
 
 function checkDuplicateIds(model: FeatureMapModel): string[] {
@@ -337,9 +374,7 @@ export function checkFeatureMap(model: FeatureMapModel): CheckResult {
 
   errors.push(...checkDuplicateIds(model));
   for (const feature of model.features) {
-    errors.push(...checkFeatureReferences(model, feature));
-    errors.push(...checkGates(model, feature));
-    errors.push(...checkRouteFlags(model, feature));
+    errors.push(...checkFeatureReferences(model, feature), ...checkRouterAgreement(model, feature));
   }
   errors.push(...checkUnclaimedRoutes(model, routeClaims));
   errors.push(...checkOverclaimedRoutes(model, routeClaims));

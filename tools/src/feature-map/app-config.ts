@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import { getMonorepoRoot } from '../utils/paths.js';
+import { verifyPageObjectNames } from '../verify/verify-contract.js';
 
 export interface FeatureMapAppConfig {
   readonly app: string;
@@ -10,6 +11,8 @@ export interface FeatureMapAppConfig {
   readonly routerScanDirs: readonly string[];
   readonly routerExcludeFiles: readonly string[];
   readonly importAliases: Readonly<Record<string, string>>;
+  readonly verifyPageObjects: readonly string[];
+  readonly exclusiveMocks: readonly (readonly [string, string])[];
   readonly featureFlagsFile: string;
   readonly featureFlagsInterfaceName: string;
   readonly rpcMethodsDir: string;
@@ -19,8 +22,14 @@ export interface FeatureMapAppConfig {
   readonly pageObjectsDir: string;
   readonly mocksDir: string;
   readonly setupMocksFunctionName: string;
+  readonly verifyMockRegistryFile: string;
   readonly specsDir: string;
   readonly outputFile: string;
+  readonly persistWhitelistFile: string;
+  readonly persistWhitelistName: string;
+  readonly networkIdsFile: string;
+  readonly networkIdsObjectName: string;
+  readonly rpcCatalogDir: string;
 }
 
 const supportedApps = ['extension'] as const;
@@ -37,6 +46,12 @@ function makeExtensionConfig(root: string): FeatureMapAppConfig {
       path.join(appDir, 'src/app/routes/components/modal-background-wrapper.tsx'),
     ],
     importAliases: { '@app/': path.join(appDir, 'src/app/') },
+    verifyPageObjects: verifyPageObjectNames,
+    exclusiveMocks: [
+      ['mockMixedUtxosForSend', 'mockNativeSegwitOnlyUtxosForSend'],
+      ['mockEmptyStacksBalancesRequest', 'mockMainnetTestAccountStacksBalancesRequest'],
+      ['mockMainnetTestAccountEmptyUtxosRequests', 'mockMainnetTestAccountBitcoinRequests'],
+    ],
     featureFlagsFile: path.join(appDir, 'src/app/features/feature-flags/index.tsx'),
     featureFlagsInterfaceName: 'FeatureFlags',
     rpcMethodsDir: path.join(appDir, 'src/background/messaging/rpc-methods'),
@@ -46,8 +61,14 @@ function makeExtensionConfig(root: string): FeatureMapAppConfig {
     pageObjectsDir: path.join(appDir, 'tests/page-object-models'),
     mocksDir: path.join(appDir, 'tests/mocks'),
     setupMocksFunctionName: 'setupMockApis',
+    verifyMockRegistryFile: path.join(appDir, 'tests/verify/mock-registry.ts'),
     specsDir: path.join(appDir, 'tests/specs'),
     outputFile: path.join(root, '.claude/skills/feature-map/extension.md'),
+    persistWhitelistFile: path.join(appDir, 'src/shared/storage/persist-whitelist.ts'),
+    persistWhitelistName: 'persistWhitelist',
+    networkIdsFile: path.join(root, 'packages/models/src/network/network.model.ts'),
+    networkIdsObjectName: 'WalletDefaultNetworkConfigurationIds',
+    rpcCatalogDir: path.join(root, 'apps/test-app/src/methods'),
   };
 }
 

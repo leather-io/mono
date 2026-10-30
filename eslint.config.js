@@ -332,6 +332,13 @@ export default defineConfig([
     },
   },
   {
+    name: 'extension-verify-capture',
+    files: ['apps/extension/tests/verify/**/*.{ts,tsx}'],
+    rules: {
+      'playwright/no-raw-locators': ['error', { allowed: ['body'] }],
+    },
+  },
+  {
     name: 'extension-e2e-specs-use-page-object-actions',
     files: ['apps/extension/tests/specs/**/*.{ts,tsx}'],
     rules: {

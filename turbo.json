@@ -71,7 +71,10 @@
         "$TURBO_ROOT$/apps/extension/tests/**",
         "$TURBO_ROOT$/apps/extension/src/app/**/*.tsx",
         "$TURBO_ROOT$/apps/extension/src/shared/route-urls.ts",
+        "$TURBO_ROOT$/apps/extension/src/shared/storage/persist-whitelist.ts",
         "$TURBO_ROOT$/apps/extension/src/background/messaging/rpc-methods/**",
+        "$TURBO_ROOT$/apps/test-app/src/methods/**",
+        "$TURBO_ROOT$/packages/models/src/network/network.model.ts",
         "$TURBO_ROOT$/packages/rpc/src/methods/**"
       ]
     }
