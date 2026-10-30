@@ -26,13 +26,18 @@ export interface ResolveLedgerSignableDescriptorArgs {
   accountKey: AccountDescriptorKey['key'];
 }
 
+function assertRawPublicKey(key: KeyInfo): asserts key is RawPublicKey {
+  if (!key.pubkey) throw new Error('Descriptor key has no public key');
+}
+
 function getForeignRawPublicKeys(keys: KeyInfo[], accountKey: RawPublicKey): RawPublicKey[] {
   const accountPublicKey = bytesToHex(accountKey.pubkey);
-  return keys.flatMap(key =>
-    !key.bip32 && key.pubkey && bytesToHex(key.pubkey) !== accountPublicKey
-      ? [{ ...key, pubkey: key.pubkey }]
-      : []
-  );
+  return keys
+    .filter(key => !key.bip32 && !!key.pubkey && bytesToHex(key.pubkey) !== accountPublicKey)
+    .map(key => {
+      assertRawPublicKey(key);
+      return key;
+    });
 }
 
 function resolveKeyExpression(
