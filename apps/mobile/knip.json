@@ -1,6 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "tags": ["-knipignore", "-internal"],
+  "entry": ["src/app/_layout.tsx", "tests/feature-map/*.features.ts"],
   "ignore": [
     "*/**/*.spec.ts",
     "*/**/*.test.ts",

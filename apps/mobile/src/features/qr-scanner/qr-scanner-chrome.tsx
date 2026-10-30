@@ -2,6 +2,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { QrScannerFrame } from '@/features/qr-scanner/qr-scanner-frame';
 import { HEADER_HEIGHT } from '@/shared/constants';
+import { SendSelectors } from '@/shared/selectors/send.selectors';
 import { t } from '@lingui/core/macro';
 
 import { ArrowLeftIcon, Box, IconButton, Text } from '@leather.io/ui/native';
@@ -28,7 +29,12 @@ export function QrScannerChrome({ onClose, errorMessage }: QrScannerOverlayProps
           px="3"
         >
           <Box zIndex="20">
-            <IconButton onPress={onClose} label={t`Close the scanner`} icon={<ArrowLeftIcon />} />
+            <IconButton
+              onPress={onClose}
+              label={t`Close the scanner`}
+              icon={<ArrowLeftIcon />}
+              testID={SendSelectors.QrScannerCloseButton}
+            />
           </Box>
           <Box
             alignItems="center"

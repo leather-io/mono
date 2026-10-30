@@ -6,7 +6,8 @@ import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/ful
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { QrCard } from '@/features/receive/components/qr-card';
 import { useCopyAddress } from '@/hooks/use-copy-address';
-import { TestId } from '@/shared/test-id';
+import { ReceiveSelectors } from '@/shared/selectors/receive.selectors';
+import { SharedSelectors } from '@/shared/selectors/shared.selectors';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
@@ -57,7 +58,7 @@ export function AssetDetails() {
           subtitle={account?.name}
           leftElement={
             canGoBack ? (
-              <HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />
+              <HeaderBackButton onPress={navigation.goBack} testID={SharedSelectors.BackButton} />
             ) : null
           }
         />
@@ -90,6 +91,7 @@ export function AssetDetails() {
           justifyContent="space-between"
           gap="2"
           onPress={handleCopyAddress}
+          testID={ReceiveSelectors.CopyAddressButton}
         >
           <Box flex={1}>
             <AddressDisplayer address={address} />
@@ -102,6 +104,7 @@ export function AssetDetails() {
           iconStart={ArrowOutOfBoxIcon}
           style={{ marginTop: 'auto' }}
           onPress={handleShareButtonPress}
+          testID={ReceiveSelectors.ShareButton}
         >
           {t`Share`}
         </Button>

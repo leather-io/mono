@@ -4,6 +4,7 @@ import WebView from 'react-native-webview';
 
 import { useCurrentAccount } from '@/hooks/use-current-account';
 import { getOnramperEnv } from '@/shared/environment';
+import { RampSelectors } from '@/shared/selectors/ramp.selectors';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
@@ -59,6 +60,7 @@ export function Ramp({ mode, asset }: RampProps) {
       }}
       nestedScrollEnabled
       allowsInlineMediaPlayback
+      testID={RampSelectors.WebView}
     />
   );
 }

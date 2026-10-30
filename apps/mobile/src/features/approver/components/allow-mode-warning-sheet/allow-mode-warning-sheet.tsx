@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 import { t } from '@lingui/core/macro';
 
 import {
@@ -35,7 +36,11 @@ export function AllowModeWarningSheet({ ref, onDismiss: _onDismiss }: AllowModeW
       enablePanDownToClose={false}
       backdropComponent={props => <SheetNativeBackdrop pressBehavior="none" {...props} />}
     >
-      <Sheet.View justifyContent="space-between" gap="5">
+      <Sheet.View
+        justifyContent="space-between"
+        gap="5"
+        testID={RpcStacksSelectors.AllowModeWarningSheet}
+      >
         <Sheet.Header
           leftElement={
             <Sheet.Title>{t`Careful. This transaction could drain your wallet.`}</Sheet.Title>
@@ -55,10 +60,18 @@ export function AllowModeWarningSheet({ ref, onDismiss: _onDismiss }: AllowModeW
           />
 
           <Box gap="3">
-            <Button disabled={!hasAgreedToRisks} onPress={onProceed}>
+            <Button
+              disabled={!hasAgreedToRisks}
+              onPress={onProceed}
+              testID={RpcStacksSelectors.AllowModeProceedButton}
+            >
               {t`Proceed to transaction`}
             </Button>
-            <Button onPress={onDismiss} variant="ghost">
+            <Button
+              onPress={onDismiss}
+              variant="ghost"
+              testID={RpcStacksSelectors.AllowModeDoNotProceedButton}
+            >
               {t`Do not proceed`}
             </Button>
           </Box>

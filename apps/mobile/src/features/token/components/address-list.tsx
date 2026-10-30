@@ -3,6 +3,7 @@ import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AssetType } from '@/features/receive/get-assets';
 import { type ReceiveType } from '@/features/receive/utils/get-receive-type';
 import { useCopyAddress } from '@/hooks/use-copy-address';
+import { TokenSelectors } from '@/shared/selectors/token.selectors';
 import { t } from '@lingui/core/macro';
 
 import { type Money } from '@leather.io/models';
@@ -55,7 +56,12 @@ export function AddressListItem({
     receiveSheetRef.current?.present(receiveType);
   }
   return (
-    <Cell.Root pressable={true} onPress={openReceiveSheet} mx="-5">
+    <Cell.Root
+      pressable={true}
+      onPress={openReceiveSheet}
+      mx="-5"
+      testID={TokenSelectors.AddressListItem}
+    >
       <Cell.Content>
         <Cell.Label variant="primary">
           <Text variant="label02">{name}</Text>

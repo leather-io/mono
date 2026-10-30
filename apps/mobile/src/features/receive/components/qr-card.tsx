@@ -1,5 +1,6 @@
 import QRCode from 'react-native-qrcode-svg';
 
+import { ReceiveSelectors } from '@/shared/selectors/receive.selectors';
 import { Image } from 'expo-image';
 
 import { Box, ThemeProvider } from '@leather.io/ui/native';
@@ -27,6 +28,7 @@ export function QrCard({ value }: QrCardProps) {
         alignSelf="center"
         borderRadius="md"
         elevation={8}
+        testID={ReceiveSelectors.QrCard}
       >
         <Box
           shadowColor="ink.background-overlay"

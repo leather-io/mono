@@ -1,3 +1,4 @@
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { formatCurrency } from '@/utils/currency-formatter';
 
 import { type Money, type SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -26,7 +27,7 @@ export function SwapReviewSummary({
   targetAmount,
 }: SwapReviewSummaryProps) {
   return (
-    <Box gap="3">
+    <Box gap="3" testID={SwapSelectors.ReviewSummary}>
       <Box flexDirection="row" justifyContent="center" alignItems="center">
         <AssetAvatarIcon asset={baseAsset} opacity={0.65} size="lg" />
         <Box

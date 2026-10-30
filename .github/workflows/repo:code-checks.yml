@@ -109,6 +109,9 @@ jobs:
       - name: check-feature-map
         run: pnpm --filter @leather.io/tools build && pnpm lt feature-map check
 
+      - name: check-feature-map-mobile
+        run: pnpm lt feature-map check --app mobile
+
   knip:
     name: knip
     runs-on: ubuntu-24.04

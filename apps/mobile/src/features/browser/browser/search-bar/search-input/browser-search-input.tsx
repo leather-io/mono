@@ -1,5 +1,7 @@
 import { KeyboardController } from 'react-native-keyboard-controller';
 
+import { BrowserSelectors } from '@/shared/selectors/browser.selectors';
+
 import { Box, useTheme } from '@leather.io/ui/native';
 
 import { GenericClearSearchButton } from './generic-clear-search-button';
@@ -26,9 +28,14 @@ export function BrowserSearchInput({
         onChangeText={setTextUrl}
         value={textUrl}
         onSubmitEditing={onSubmit}
+        testID={BrowserSelectors.SearchInput}
       />
       {textUrl && (
-        <GenericClearSearchButton onPress={() => setTextUrl('')} right={-theme.spacing['4']} />
+        <GenericClearSearchButton
+          onPress={() => setTextUrl('')}
+          right={-theme.spacing['4']}
+          testID={BrowserSelectors.ClearSearchButton}
+        />
       )}
     </Box>
   );

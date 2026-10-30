@@ -1,4 +1,5 @@
 import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 import { t } from '@lingui/core/macro';
 
 import { type SheetRef } from '@leather.io/ui/native';
@@ -16,6 +17,8 @@ export function MemoSheet({ sheetRef, memo, onChangeMemo }: MemoSheetProps) {
       title={t`Add memo`}
       placeholder={t`Memo`}
       submitTitle={t`Confirm`}
+      inputTestId={RpcStacksSelectors.MemoSheetInput}
+      submitTestId={RpcStacksSelectors.MemoSheetConfirmButton}
       onSubmit={value => {
         onChangeMemo(value);
         sheetRef.current?.close();

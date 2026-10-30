@@ -3,7 +3,7 @@ import { Keyboard, type TextInput as RNTextInput } from 'react-native';
 
 import { TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
-import { TestId } from '@/shared/test-id';
+import { OnboardingSelectors } from '@/shared/selectors/onboarding.selectors';
 import { tempMnemonicStore } from '@/store/secure-store/temp-mnemonic-store';
 import { t } from '@lingui/core/macro';
 import * as Clipboard from 'expo-clipboard';
@@ -95,6 +95,7 @@ export function RecoverWallet() {
         {!hidePasteButton && (
           <Button
             onPress={() => void pasteFromClipboard()}
+            testID={OnboardingSelectors.RestoreWalletPasteButton}
             style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 20 }}
             iconStart={() => <NoteEmptyIcon color="ink.background-primary" />}
           >
@@ -117,7 +118,7 @@ export function RecoverWallet() {
           autoCapitalize="none"
           textAlignVertical="top"
           autoCorrect
-          testID={TestId.restoreWalletTextInput}
+          testID={OnboardingSelectors.RestoreWalletTextInput}
         />
       </Box>
     </RecoverWalletLayout>

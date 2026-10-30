@@ -10,6 +10,7 @@ import {
 import { SpinnerIcon } from '@/components/spinner-icon';
 import { SwapReviewSummary } from '@/features/swap/components/review/swap-review-summary';
 import { HEADER_HEIGHT } from '@/shared/constants';
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { t } from '@lingui/core/macro';
 import { Trans } from '@lingui/react/macro';
 import * as Linking from 'expo-linking';
@@ -68,6 +69,7 @@ export function SwapSubmissionOverlay({
       left={0}
       bg="ink.background-primary"
       entering={FadeIn.duration(overlayEnteringAnimationDuration)}
+      testID={SwapSelectors.SubmissionOverlay}
     >
       <Box
         style={{
@@ -113,7 +115,9 @@ function SubmissionStatusMessage({ status }: SubmissionStatusMessageProps) {
 
   return (
     <AnimatedBox>
-      <Text variant="label01">{message[status]}</Text>
+      <Text variant="label01" testID={`${SwapSelectors.SubmissionStatus}-${status}`}>
+        {message[status]}
+      </Text>
     </AnimatedBox>
   );
 }
@@ -154,7 +158,13 @@ function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {
           if it persists.
         </Trans>
       </Text>
-      <Button size="sm" variant="outline" iconStart={ArrowLeftIcon} onPress={onReset}>
+      <Button
+        size="sm"
+        variant="outline"
+        iconStart={ArrowLeftIcon}
+        onPress={onReset}
+        testID={SwapSelectors.BackToReviewButton}
+      >
         {t`Back to review`}
       </Button>
     </Box>
