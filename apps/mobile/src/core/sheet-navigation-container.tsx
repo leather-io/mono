@@ -6,6 +6,7 @@ import {
   NavigationContainer,
   type NavigationContainerProps,
   NavigationIndependentTree,
+  type ParamListBase,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 
@@ -14,7 +15,7 @@ interface SheetNavigationContainerProps extends NavigationContainerProps {
 }
 
 export function SheetNavigationContainer({ base, ...props }: SheetNavigationContainerProps) {
-  const navigationRef = useNavigationContainerRef();
+  const navigationRef = useNavigationContainerRef<ParamListBase>();
   const routeNameRef = useRef<string | undefined>(undefined);
 
   return (
