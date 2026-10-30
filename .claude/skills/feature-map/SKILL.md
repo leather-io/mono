@@ -77,7 +77,7 @@ pnpm lt verify extension --feature send-btc-form                       # entry d
 pnpm lt verify extension --feature receive-dialog                      # goes to startRoute, runs the open actions, waits for ready
 pnpm lt verify extension --feature home-tokens --account-type ledger   # software | ledger | mixed | policy; entries with accountType derive it; non-software wallets are mainnet-only
 pnpm lt verify extension --feature home-tokens --network testnet4      # wallet network id; entries with network derive it; catalog rpc runs take mainnet, testnet4, signet or devnet
-pnpm lt verify extension --feature rpc-stx-call-contract               # params come from the first test-app catalog spec for the method
+pnpm lt verify extension --feature rpc-stx-call-contract               # params come from the first test-app catalog spec for the method; catalog runs refuse --locked
 pnpm lt verify extension --route / --rpc catalog:signMessage-p2wpkh --ready current-account-display-name   # a bare --rpc must be a wallet rpc method; policy accounts need --params
 pnpm lt verify extension --feature rpc-get-addresses --params ./req.json   # or hand-written params
 pnpm lt verify extension --feature home-tokens --mocks none            # no mocks at all: every request is real, flags come from the real LaunchDarkly (no --flags)
@@ -117,7 +117,7 @@ same data. Exit codes:
 | ---- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 0    | `verified`      | the ready selector appeared and nothing blocked; open `screenshot.png` and `a11y.md` and check the change is actually visible                                                                                                                     |
 | 1    | usage           | bad arguments; the message names the fix                                                                                                                                                                                                          |
-| 2    | `ready-not-met` | the ready selector never attached; `a11y.md` and `console.json` show what rendered instead                                                                                                                                                        |
+| 2    | `ready-not-met` | the ready selector never attached, or setup (sign-in, open actions) failed before the screen was reached (`ready.error` in `summary.json` says which); `a11y.md` and `console.json` show what rendered instead                                                                                                                                                        |
 | 3    | `errors`        | the rpc request answered with an error before any approver opened, a page error or console error not in `apps/extension/tests/verify/console-allowlist.ts`, a background service worker error (`background-errors.json`), a `real` request in `network.json` under mocks, or a listed mock the registry cannot apply |
 | 4    | `env`           | no dist, a dist that is not a `build:test` build, a failed `--build`, or the Playwright run died before writing `summary.json`                                                                                                                                                             |
 

@@ -194,6 +194,7 @@ const model: FeatureMapModel = {
     ['mockStacksFeeRequests', { file: 'mock-stacks-fees.ts', line: 1 }],
     ['mockCmsRequests', { file: 'mock-cms.ts', line: 1 }],
     ['mockBnsV2NameLookup', { file: 'mock-stacks-bns.ts', line: 1 }],
+    ['mockLaunchDarkly', { file: 'mock-launchdarkly.ts', line: 1 }],
   ]),
   setupMocks: undefined,
   verifyMocks: new Set([
@@ -371,6 +372,9 @@ describe(resolveVerifyRun.name, () => {
     expect(resolve({ feature: 'rpc-stx-call-contract', network: 'testnet' })).toThrowError(
       /the test-app catalog builds no 'testnet' requests/
     );
+    expect(resolve({ feature: 'rpc-stx-call-contract', locked: true })).toThrowError(
+      /--locked would leave 'stx_callContract' waiting on the unlock screen/
+    );
     expect(
       resolveVerifyRun(
         model,
@@ -413,6 +417,14 @@ describe(resolveVerifyRun.name, () => {
         context
       )
     ).toThrowError(/--flags needs mocked LaunchDarkly/);
+    expect(() =>
+      resolveVerifyRun(
+        model,
+        inputs,
+        { feature: 'home-tokens', mocks: 'mockLaunchDarkly' },
+        context
+      )
+    ).toThrowError(/verify already applies with the --flags overrides/);
   });
 
   test('connects the test app for rpc runs unless told otherwise', () => {

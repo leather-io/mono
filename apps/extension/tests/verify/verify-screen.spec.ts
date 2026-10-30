@@ -17,7 +17,7 @@ import {
 
 import { test } from '../fixtures/fixtures';
 import { type Capture, createCapture, readyLocator, waitForReady, writeArtifacts } from './capture';
-import { applyMocks } from './mock-registry';
+import { type AppliedMocks, applyMocks } from './mock-registry';
 import {
   type ResolvedRpcRequest,
   dispatchRpcRequest,
@@ -25,9 +25,10 @@ import {
   settleRpcResponse,
   testAppUrl,
 } from './rpc';
-import { establishSession } from './session';
+import { type SessionPages, establishSession } from './session';
 
 const sessionSetupTimeoutMs = 90_000;
+const setupActionTimeoutMs = 30_000;
 const providerStatusTestId = 'provider-status';
 
 type PageObjects = Readonly<Record<VerifyPageObjectName, object>>;
@@ -140,6 +141,70 @@ async function openTarget(
   return { page };
 }
 
+interface ReachedTarget {
+  readonly target: Target;
+  readonly mocks: AppliedMocks;
+}
+
+interface ReachTargetArgs {
+  readonly run: VerifyRun;
+  readonly hermetic: boolean;
+  readonly context: BrowserContext;
+  readonly page: Page;
+  readonly extensionId: string;
+  readonly onboardingPage: SessionPages['onboardingPage'];
+  readonly homePage: SessionPages['homePage'];
+  readonly pageObjects: PageObjects;
+  readonly capture: Capture;
+}
+
+async function reachTarget({
+  run,
+  hermetic,
+  context,
+  page,
+  extensionId,
+  onboardingPage,
+  homePage,
+  pageObjects,
+}: ReachTargetArgs): Promise<ReachedTarget> {
+  await prepareExtension(run, hermetic, context, page, extensionId);
+  const mocks = await applyMocks(run.mocks, context, page);
+  await establishSession(run, { extensionId, onboardingPage, homePage });
+  const target = await openTarget(run, page, context, extensionId, pageObjects);
+  return { target, mocks };
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function setupFailedOutcome(run: VerifyRun, error: unknown): VerifyReadyOutcome {
+  return {
+    selector: run.ready,
+    attached: false,
+    waitedMs: 0,
+    error: `not waited for: the screen was never reached because setup failed: ${errorMessage(error)}`,
+  };
+}
+
+async function reachTargetOrRecordFailure(args: ReachTargetArgs): Promise<ReachedTarget> {
+  try {
+    return await reachTarget(args);
+  } catch (error) {
+    await writeArtifacts({
+      run: args.run,
+      page: args.page,
+      context: args.context,
+      extensionId: args.extensionId,
+      capture: args.capture,
+      ready: setupFailedOutcome(args.run, error),
+      mocks: { applied: [], skipped: [] },
+    });
+    throw error;
+  }
+}
+
 test.describe('Verify screen', () => {
   test('opens the mapped screen and captures artifacts', async ({
     context,
@@ -156,22 +221,29 @@ test.describe('Verify screen', () => {
   }) => {
     const run = parseVerifyEnv(process.env);
     test.setTimeout(run.readyTimeoutMs + sessionSetupTimeoutMs);
+    context.setDefaultTimeout(setupActionTimeoutMs);
     const hermetic = run.mocksMode !== 'none';
     const capture: Capture = createCapture(context, hermetic);
 
-    await prepareExtension(run, hermetic, context, page, extensionId);
-    const mocks = await applyMocks(run.mocks, context, page);
-    await establishSession(run, { extensionId, onboardingPage, homePage });
-
-    const target = await openTarget(run, page, context, extensionId, {
-      GlobalPage: globalPage,
-      HomePage: homePage,
-      OnboardingPage: onboardingPage,
-      SendPage: sendPage,
-      SwapRevampPage: swapRevampPage,
-      NetworkPage: networkPage,
-      SettingsPage: settingsPage,
-      SwitchAccountPage: switchAccountPage,
+    const { target, mocks } = await reachTargetOrRecordFailure({
+      run,
+      hermetic,
+      context,
+      page,
+      extensionId,
+      onboardingPage,
+      homePage,
+      capture,
+      pageObjects: {
+        GlobalPage: globalPage,
+        HomePage: homePage,
+        OnboardingPage: onboardingPage,
+        SendPage: sendPage,
+        SwapRevampPage: swapRevampPage,
+        NetworkPage: networkPage,
+        SettingsPage: settingsPage,
+        SwitchAccountPage: switchAccountPage,
+      },
     });
 
     const ready = await readyOutcome(target, run);

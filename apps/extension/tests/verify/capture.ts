@@ -27,6 +27,7 @@ import {
   decideVerdict,
   describeRpcFailure,
   summaryFileName,
+  verifyArtifactNames,
   verifyExitCodes,
 } from '@leather.io/tools/verify-contract';
 
@@ -65,15 +66,6 @@ interface WriteArtifactsArgs {
 
 const bodySelector = 'body';
 const encryptionKeyName = 'encryptionKey';
-const artifactNames = {
-  screenshot: 'screenshot.png',
-  a11y: 'a11y.md',
-  state: 'state.json',
-  console: 'console.json',
-  network: 'network.json',
-  backgroundErrors: 'background-errors.json',
-  rpcRequest: 'rpc-request.json',
-} as const;
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
@@ -252,7 +244,10 @@ async function readBackgroundErrors(context: BrowserContext): Promise<Background
 
 async function writeScreenshot(page: Page, outDir: string): Promise<string | undefined> {
   try {
-    await page.screenshot({ path: path.join(outDir, artifactNames.screenshot), fullPage: true });
+    await page.screenshot({
+      path: path.join(outDir, verifyArtifactNames.screenshot),
+      fullPage: true,
+    });
     return undefined;
   } catch (error) {
     return errorMessage(error);
@@ -292,12 +287,12 @@ export async function writeArtifacts({
   const blocking: string[] = [];
   const screenshotError = await writeScreenshot(page, outDir);
   const artifacts: string[] = [
-    ...(screenshotError === undefined ? [artifactNames.screenshot] : []),
-    artifactNames.a11y,
-    artifactNames.state,
-    artifactNames.console,
-    artifactNames.network,
-    artifactNames.backgroundErrors,
+    ...(screenshotError === undefined ? [verifyArtifactNames.screenshot] : []),
+    verifyArtifactNames.a11y,
+    verifyArtifactNames.state,
+    verifyArtifactNames.console,
+    verifyArtifactNames.network,
+    verifyArtifactNames.backgroundErrors,
   ];
   if (screenshotError !== undefined) {
     notes.push(`screenshot.png is missing: the page could not be captured (${screenshotError}).`);
@@ -305,12 +300,12 @@ export async function writeArtifacts({
 
   const aria = await readAriaSnapshot(page);
   writeFileSync(
-    path.join(outDir, artifactNames.a11y),
+    path.join(outDir, verifyArtifactNames.a11y),
     `# Accessibility snapshot\n\nURL: ${page.url()}\n\n\`\`\`yaml\n${aria}\n\`\`\`\n`
   );
 
   const state = await readStateEvidence(page, run.stateSlices);
-  writeJson(outDir, artifactNames.state, state.evidence);
+  writeJson(outDir, verifyArtifactNames.state, state.evidence);
   notes.push(
     `state.json holds only the persisted slices ${run.stateSlices.join(', ')} (--state); softwareKeys.salt and every encryptedSecretKey are replaced; chrome.storage.session is reported as encryptionKeyPresent only.`
   );
@@ -319,15 +314,15 @@ export async function writeArtifacts({
   }
 
   await capture.settle();
-  writeJson(outDir, artifactNames.console, capture.consoleEntries);
-  writeJson(outDir, artifactNames.network, capture.network);
+  writeJson(outDir, verifyArtifactNames.console, capture.consoleEntries);
+  writeJson(outDir, verifyArtifactNames.network, capture.network);
   notes.push(
     'network.json classifications: extension and local resources, mocked = fulfilled by a route (no server address), fallback = aborted by the hermetic fallback, real = answered by a remote server, failed = aborted by the page or the network, other = non-http.'
   );
 
   const background = await readBackgroundErrors(context);
   const backgroundErrors = background.errors;
-  writeJson(outDir, artifactNames.backgroundErrors, backgroundErrors);
+  writeJson(outDir, verifyArtifactNames.backgroundErrors, backgroundErrors);
   if (background.unavailable !== undefined) {
     notes.push(
       `background-errors.json is empty because the service worker storage could not be read (${background.unavailable}); background errors are unknown for this run.`
@@ -393,8 +388,8 @@ export async function writeArtifacts({
     );
   }
   if (rpcRequest !== undefined) {
-    writeJson(outDir, artifactNames.rpcRequest, rpcRequest);
-    artifacts.push(artifactNames.rpcRequest);
+    writeJson(outDir, verifyArtifactNames.rpcRequest, rpcRequest);
+    artifacts.push(verifyArtifactNames.rpcRequest);
   }
 
   const verdict = decideVerdict({

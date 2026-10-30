@@ -185,6 +185,15 @@ export const verifyEnvKeys = {
 } as const;
 
 export const summaryFileName = 'summary.json';
+export const verifyArtifactNames = {
+  screenshot: 'screenshot.png',
+  a11y: 'a11y.md',
+  state: 'state.json',
+  console: 'console.json',
+  network: 'network.json',
+  backgroundErrors: 'background-errors.json',
+  rpcRequest: 'rpc-request.json',
+} as const;
 export const defaultReadyTimeoutMs = 30_000;
 
 const runViaCli = 'Run it through `pnpm lt verify extension …`, which sets the VERIFY_* variables.';

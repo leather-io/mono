@@ -63,6 +63,7 @@ const policyAccountType = 'policy';
 const defaultMockSet = 'default';
 const noMockSet = 'none';
 const baseMocks = ['setupMockApis', 'mockUnhandledRequests'] as const;
+const launchDarklyMock = 'mockLaunchDarkly';
 const verifyResultsDirName = 'verify-results';
 const rootRoute = '/';
 
@@ -342,6 +343,11 @@ function mocksFor(
       );
     }
     if (inputs.verifyMocks.has(name)) continue;
+    if (name === launchDarklyMock) {
+      fail(
+        `--mocks names '${launchDarklyMock}', which verify already applies with the --flags overrides on top. Fix: leave it out and pass --flags name=true|false.`
+      );
+    }
     fail(
       `--mocks names '${name}', which is exported but not registered in ${mockRegistryFile}, so verify cannot apply it. Fix: register it there or leave it out.`
     );
@@ -351,6 +357,7 @@ function mocksFor(
 
 function assertSupportedCombination(
   rpc: VerifyRpc | undefined,
+  session: VerifySession,
   accountType: VerifyAccountType,
   network: string
 ): void {
@@ -360,6 +367,11 @@ function assertSupportedCombination(
     );
   }
   if (rpc?.catalogId === undefined) return;
+  if (session === 'locked') {
+    fail(
+      `catalog builders approve a getAddresses prompt on an unlocked wallet, so --locked would leave '${rpc.method}' waiting on the unlock screen. Fix: drop --locked, or pass --params <file.json>.`
+    );
+  }
   if (accountType === policyAccountType) {
     fail(
       `catalog builders request addresses with single-sig accounts only, so --account-type ${policyAccountType} would run '${rpc.method}' on the single-sig path. Fix: pass --params <file.json> with a policy request, or use --account-type ${singleSigAccountType}.`
@@ -444,7 +456,7 @@ export function resolveVerifyRun(
   }
   const rpc = rpcFor(model, inputs, feature, options, context);
   const network = networkFor(inputs, feature, options);
-  assertSupportedCombination(rpc, accountType, network);
+  assertSupportedCombination(rpc, session, accountType, network);
   const mocks = mocksFor(model, inputs, feature, options);
   const flags = flagsFor(model, feature, options, mocks, warnings);
   if (mocks.mode === 'none') {

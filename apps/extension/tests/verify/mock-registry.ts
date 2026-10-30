@@ -8,7 +8,6 @@ import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoi
 import { mockBitflowRequests } from '@tests/mocks/mock-bitflow';
 import { mockBitcoinMainnetBroadcast } from '@tests/mocks/mock-btc-txs';
 import { mockCmsRequests } from '@tests/mocks/mock-cms';
-import { mockLaunchDarkly } from '@tests/mocks/mock-launchdarkly';
 import {
   mockEmptyLeatherApiUtxosRequest,
   mockLeatherApiRequests,
@@ -65,7 +64,6 @@ const contextMocks: Readonly<Record<string, ContextMock>> = {
   mockEmptyLeatherApiUtxosRequest,
   mockEmptyStacksBalancesRequest,
   mockEmptyStacksBalancesV2Request,
-  mockLaunchDarkly,
   mockLeatherApiRequests,
   mockMainnetAlexAssetsRequest,
   mockMainnetAlexTokenPricesRequest,

@@ -1,4 +1,4 @@
-import { execFileSync, spawnSync } from 'node:child_process';
+import { type SpawnSyncReturns, execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync } from 'node:fs';
 import path from 'node:path';
 
@@ -12,6 +12,7 @@ import {
   type VerifyRun,
   summaryFileName,
   toVerifyEnv,
+  verifyArtifactNames,
   verifyExitCodes,
   verifyVerdicts,
 } from './verify-contract.js';
@@ -35,7 +36,9 @@ function childEnvironment(run: VerifyRun): Record<string, string | undefined> {
 }
 
 function clearPreviousRun(outDir: string): void {
-  rmSync(path.join(outDir, summaryFileName), { force: true });
+  for (const name of [summaryFileName, ...Object.values(verifyArtifactNames)]) {
+    rmSync(path.join(outDir, name), { force: true });
+  }
   rmSync(path.join(outDir, playwrightOutputDirName), { recursive: true, force: true });
 }
 
@@ -87,11 +90,20 @@ function printDerived(run: VerifyRun, warnings: readonly string[]): void {
   for (const warning of warnings) console.warn(`verify: ${warning}`);
 }
 
-function runBuild(root: string): number {
+function describeExit(result: SpawnSyncReturns<Buffer>): string {
+  if (result.error) return `could not run (${result.error.message})`;
+  if (result.signal) return `was killed by ${result.signal}`;
+  return `ended with status ${result.status ?? 'unknown'}`;
+}
+
+function succeeded(result: SpawnSyncReturns<Buffer>): boolean {
+  return result.error === undefined && result.signal === null && result.status === 0;
+}
+
+function runBuild(root: string): SpawnSyncReturns<Buffer> {
   console.log(`verify: ${buildTestCommand}`);
   const [command, ...args] = buildTestCommand.split(' ');
-  const result = spawnSync(command, args, { cwd: root, stdio: 'inherit' });
-  return result.status ?? verifyExitCodes.env;
+  return spawnSync(command, args, { cwd: root, stdio: 'inherit' });
 }
 
 interface SummaryLike {
@@ -191,10 +203,8 @@ export function runVerify(app: string, options: VerifyCliOptions): number {
   printDerived(run, warnings);
 
   if (options.build) {
-    const buildStatus = runBuild(root);
-    if (buildStatus !== 0) {
-      return envFailure(`verify: ${buildTestCommand} failed with status ${buildStatus}.`);
-    }
+    const build = runBuild(root);
+    if (!succeeded(build)) return envFailure(`verify: ${buildTestCommand} ${describeExit(build)}.`);
   }
   const distError = checkDist(path.join(config.appDir, 'dist', 'manifest.json'));
   if (distError) return envFailure(distError);
@@ -222,7 +232,7 @@ export function runVerify(app: string, options: VerifyCliOptions): number {
   const summary = summaryWrittenAfter(run.outDir, startedAt) ? readSummary(run.outDir) : undefined;
   if (!summary) {
     return envFailure(
-      `verify: the run ended with status ${result.status ?? 'unknown'} before ${summaryFileName} was written. Read the Playwright output above; the usual causes are a missing dist, a stale dist from pnpm dev, a page-object action that threw, or the test app failing to start on port 3000.`
+      `verify: the Playwright run ${describeExit(result)} before ${summaryFileName} was written. Read the Playwright output above; the usual causes are a missing dist, a stale dist from pnpm dev, a page-object action that threw, or the test app failing to start on port 3000.`
     );
   }
   printResult(run, summary);
