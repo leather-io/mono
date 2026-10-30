@@ -62,9 +62,9 @@
     "dist"
   ],
   "keywords": [
-    "ledger",
     "leather",
-    "leather wallet"
+    "leather wallet",
+    "ledger"
   ],
   "prettier": "@leather.io/prettier-config",
   "publishConfig": {
