@@ -61,13 +61,19 @@ export interface VerdictInputs {
   readonly readyMet: boolean;
   readonly blockingErrorCount: number;
   readonly allowConsoleErrors: boolean;
+  readonly requestFailed: boolean;
+  readonly testBuild: boolean;
 }
 
 export function decideVerdict({
   readyMet,
   blockingErrorCount,
   allowConsoleErrors,
+  requestFailed,
+  testBuild,
 }: VerdictInputs): VerifyVerdict {
+  if (!testBuild) return 'env';
+  if (requestFailed) return 'errors';
   if (!readyMet) return 'ready-not-met';
   if (blockingErrorCount > 0 && !allowConsoleErrors) return 'errors';
   return 'verified';
@@ -112,6 +118,21 @@ export interface VerifyRpcSummary {
   readonly catalogId?: string;
   readonly popupUrl: string | null;
   readonly response: unknown;
+}
+
+function readProperty(value: unknown, key: string): unknown {
+  if (typeof value !== 'object' || value === null) return undefined;
+  return Reflect.get(value, key);
+}
+
+export function describeRpcFailure(response: unknown): string | undefined {
+  const evaluateError = readProperty(response, 'evaluateError');
+  if (typeof evaluateError === 'string') return `the request threw: ${evaluateError}`;
+  const error = readProperty(response, 'error');
+  if (error === undefined) return undefined;
+  const code = readProperty(error, 'code');
+  const message = readProperty(error, 'message');
+  return `the wallet answered with error ${typeof code === 'number' ? code : 'unknown'}: ${typeof message === 'string' ? message : JSON.stringify(error)}`;
 }
 
 export interface VerifySummary {

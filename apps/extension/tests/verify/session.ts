@@ -7,6 +7,7 @@ import type { HomePage } from '@tests/page-object-models/home.page';
 import {
   type OnboardingPage,
   getConnectedTestAppPermissionsState,
+  getTestSoftwareAccountDefaultWalletState,
   makeLedgerTestAccountWalletState,
 } from '@tests/page-object-models/onboarding.page';
 
@@ -63,9 +64,15 @@ const accountEstablishers: Readonly<Record<VerifyAccountType, AccountEstablisher
   },
 };
 
+function notificationsOffOverride(): object {
+  const { settings } = getTestSoftwareAccountDefaultWalletState();
+  return { settings: { ...settings, isNotificationsEnabled: false } };
+}
+
 function signedInOverrides(run: VerifyRun): object {
   const policyId = run.accountType === 'policy' ? makeBitcoinPolicy().id : undefined;
   return {
+    ...notificationsOffOverride(),
     ...networkStateOverride(run.network),
     ...(run.connectTestApp ? getConnectedTestAppPermissionsState({ policyId }) : {}),
   };

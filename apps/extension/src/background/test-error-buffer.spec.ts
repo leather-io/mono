@@ -1,12 +1,10 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { logger } from '@shared/logger';
+import type { logger as sharedLogger } from '@shared/logger';
 import {
   backgroundErrorsSchema,
   backgroundErrorsStorageKey,
 } from '@shared/storage/background-errors';
-
-import { initTestErrorBuffer } from './test-error-buffer';
 
 vi.mock('@shared/environment', () => ({ IS_TEST_ENV: true }));
 
@@ -31,11 +29,14 @@ async function flush() {
   for (let tick = 0; tick < 10; tick++) await new Promise(resolve => setTimeout(resolve, 0));
 }
 
-describe(initTestErrorBuffer.name, () => {
+describe('initTestErrorBuffer', () => {
   const listeners = new Map<string, Listener>();
   let session: ReturnType<typeof createSessionArea>;
+  let logger: typeof sharedLogger;
+  const originalConsoleError = globalThis.console.error;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    vi.resetModules();
     session = createSessionArea();
     listeners.clear();
     vi.stubGlobal('chrome', { storage: { session } });
@@ -45,13 +46,27 @@ describe(initTestErrorBuffer.name, () => {
       },
     });
     vi.spyOn(globalThis.console, 'error').mockImplementation(() => undefined);
+    ({ logger } = await import('@shared/logger'));
+    const { initTestErrorBuffer } = await import('./test-error-buffer');
     initTestErrorBuffer();
+    await flush();
+  });
+
+  afterEach(() => {
+    globalThis.console.error = originalConsoleError;
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   async function readRecords() {
     const stored = await session.get([backgroundErrorsStorageKey]);
     return backgroundErrorsSchema.parse(stored[backgroundErrorsStorageKey] ?? []);
   }
+
+  test('seeds an empty list so a test build is told apart from one that records nothing', async () => {
+    const stored = await session.get([backgroundErrorsStorageKey]);
+    expect(stored[backgroundErrorsStorageKey]).toEqual([]);
+  });
 
   test('records logger.error calls, console.error calls and uncaught errors in order', async () => {
     logger.error('Mempool WebSocket Error', new Error('socket closed'));

@@ -56,6 +56,9 @@ export class VerifyArgumentError extends Error {}
 
 const catalogRpcPrefix = 'catalog:';
 const defaultNetworkId = 'mainnet';
+const catalogNetworkIds = ['mainnet', 'testnet4', 'signet', 'devnet'];
+const singleSigAccountType = 'software';
+const policyAccountType = 'policy';
 
 const defaultMockSet = 'default';
 const noMockSet = 'none';
@@ -269,7 +272,15 @@ function catalogRpc(inputs: VerifyInputs, catalogId: string, options: VerifyCliO
   return { method, catalogId };
 }
 
+function assertKnownRpcMethod(model: FeatureMapModel, method: string): void {
+  if (model.rpcMethods.has(method)) return;
+  fail(
+    `--rpc names unknown method '${method}', so the wallet would answer METHOD_NOT_FOUND without opening an approver. Fix: use one of ${[...model.rpcMethods].sort(compareStrings).join(', ')}.`
+  );
+}
+
 function rpcFor(
+  model: FeatureMapModel,
   inputs: VerifyInputs,
   feature: ParsedFeature | undefined,
   options: VerifyCliOptions,
@@ -284,6 +295,7 @@ function rpcFor(
     fail('--params needs --rpc <method> (or a feature whose entry is an rpc call).');
   }
   if (method === undefined) return undefined;
+  if (options.rpc !== undefined) assertKnownRpcMethod(model, method);
   if (options.params !== undefined) {
     return { method, params: context.readParams(path.resolve(context.cwd, options.params)) };
   }
@@ -337,6 +349,52 @@ function mocksFor(
   return { mode: 'list', mocks: [...baseMocks, ...names] };
 }
 
+function assertSupportedCombination(
+  rpc: VerifyRpc | undefined,
+  accountType: VerifyAccountType,
+  network: string
+): void {
+  if (accountType !== singleSigAccountType && network !== defaultNetworkId) {
+    fail(
+      `--account-type ${accountType} only has a ${defaultNetworkId} test wallet, so --network ${network} would run without the keys or policy it names. Fix: drop --network or use --account-type ${singleSigAccountType}.`
+    );
+  }
+  if (rpc?.catalogId === undefined) return;
+  if (accountType === policyAccountType) {
+    fail(
+      `catalog builders request addresses with single-sig accounts only, so --account-type ${policyAccountType} would run '${rpc.method}' on the single-sig path. Fix: pass --params <file.json> with a policy request, or use --account-type ${singleSigAccountType}.`
+    );
+  }
+  if (!catalogNetworkIds.includes(network)) {
+    fail(
+      `the test-app catalog builds no '${network}' requests and would send a ${defaultNetworkId} one. Fix: use one of ${catalogNetworkIds.join(', ')}, or pass --params <file.json>.`
+    );
+  }
+}
+
+function flagsFor(
+  model: FeatureMapModel,
+  feature: ParsedFeature | undefined,
+  options: VerifyCliOptions,
+  mocks: ResolvedMocks,
+  warnings: string[]
+): Record<string, boolean> {
+  if (mocks.mode !== 'none') {
+    return { ...defaultFlags(feature), ...parseFlagOverrides(options.flags, model.flags) };
+  }
+  if (options.flags !== undefined) {
+    fail(
+      `--flags needs mocked LaunchDarkly, and --mocks ${noMockSet} serves the real flags. Fix: drop one of them.`
+    );
+  }
+  if (feature !== undefined && feature.flags.length > 0) {
+    warnings.push(
+      `--mocks ${noMockSet}: ${feature.flags.join(', ')} come from the real LaunchDarkly, so the screen only renders if they are on there.`
+    );
+  }
+  return {};
+}
+
 function timeoutFor(options: VerifyCliOptions): number {
   if (options.timeout === undefined) return defaultReadyTimeoutMs;
   const timeout = Number(options.timeout);
@@ -378,15 +436,17 @@ export function resolveVerifyRun(
       '--locked needs a wallet with a password; a Ledger wallet has none. Fix: drop --locked or use --account-type software.'
     );
   }
-  const flags = { ...defaultFlags(feature), ...parseFlagOverrides(options.flags, model.flags) };
   const ready = options.ready ?? feature?.selectors.ready?.value;
   if (ready === undefined) {
     warnings.push(
       '--route without --ready: the run only waits for the document, pass --ready <data-testid> to wait for the screen.'
     );
   }
-  const rpc = rpcFor(inputs, feature, options, context);
+  const rpc = rpcFor(model, inputs, feature, options, context);
+  const network = networkFor(inputs, feature, options);
+  assertSupportedCombination(rpc, accountType, network);
   const mocks = mocksFor(model, inputs, feature, options);
+  const flags = flagsFor(model, feature, options, mocks, warnings);
   if (mocks.mode === 'none') {
     warnings.push(
       '--mocks none: every request reaches the real network, so the run only proves the screen renders against live APIs.'
@@ -409,7 +469,7 @@ export function resolveVerifyRun(
       open: openFor(model, feature),
       session,
       accountType,
-      network: networkFor(inputs, feature, options),
+      network,
       connectTestApp: options.connectTestApp ?? rpc !== undefined,
       flags,
       mocksMode: mocks.mode,

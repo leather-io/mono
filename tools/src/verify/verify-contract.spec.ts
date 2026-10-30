@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import {
   type VerifyRun,
   decideVerdict,
+  describeRpcFailure,
   parseVerifyEnv,
   toVerifyEnv,
   verifyEnvKeys,
@@ -101,17 +102,21 @@ describe(parseVerifyEnv.name, () => {
 });
 
 describe(decideVerdict.name, () => {
+  const clean = {
+    readyMet: true,
+    blockingErrorCount: 0,
+    allowConsoleErrors: false,
+    requestFailed: false,
+    testBuild: true,
+  };
+
   test('maps readiness and blocking errors to the verdict and exit code table', () => {
-    expect(
-      decideVerdict({ readyMet: true, blockingErrorCount: 0, allowConsoleErrors: false })
-    ).toBe('verified');
-    expect(
-      decideVerdict({ readyMet: false, blockingErrorCount: 3, allowConsoleErrors: false })
-    ).toBe('ready-not-met');
-    expect(
-      decideVerdict({ readyMet: true, blockingErrorCount: 1, allowConsoleErrors: false })
-    ).toBe('errors');
-    expect(decideVerdict({ readyMet: true, blockingErrorCount: 1, allowConsoleErrors: true })).toBe(
+    expect(decideVerdict(clean)).toBe('verified');
+    expect(decideVerdict({ ...clean, readyMet: false, blockingErrorCount: 3 })).toBe(
+      'ready-not-met'
+    );
+    expect(decideVerdict({ ...clean, blockingErrorCount: 1 })).toBe('errors');
+    expect(decideVerdict({ ...clean, blockingErrorCount: 1, allowConsoleErrors: true })).toBe(
       'verified'
     );
     expect(verifyExitCodes).toEqual({
@@ -121,5 +126,36 @@ describe(decideVerdict.name, () => {
       errors: 3,
       env: 4,
     });
+  });
+
+  test('fails a run whose rpc request failed even when the ready selector attached', () => {
+    expect(decideVerdict({ ...clean, requestFailed: true })).toBe('errors');
+    expect(decideVerdict({ ...clean, requestFailed: true, allowConsoleErrors: true })).toBe(
+      'errors'
+    );
+    expect(decideVerdict({ ...clean, requestFailed: true, readyMet: false })).toBe('errors');
+  });
+
+  test('reports env when the dist is not a test build', () => {
+    expect(decideVerdict({ ...clean, testBuild: false })).toBe('env');
+  });
+});
+
+describe(describeRpcFailure.name, () => {
+  test('describes a JSON-RPC error response', () => {
+    expect(
+      describeRpcFailure({ jsonrpc: '2.0', error: { code: -32601, message: 'Method not found' } })
+    ).toBe('the wallet answered with error -32601: Method not found');
+  });
+
+  test('describes a request that threw in the page', () => {
+    expect(describeRpcFailure({ evaluateError: 'LeatherProvider is not available' })).toBe(
+      'the request threw: LeatherProvider is not available'
+    );
+  });
+
+  test('treats results and pending requests as no failure', () => {
+    expect(describeRpcFailure({ jsonrpc: '2.0', result: { addresses: [] } })).toBeUndefined();
+    expect(describeRpcFailure('pending')).toBeUndefined();
   });
 });

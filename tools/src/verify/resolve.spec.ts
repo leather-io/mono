@@ -86,7 +86,7 @@ const signBip322 = feature({
 const ledgerHome = feature({
   id: 'ledger-home',
   routes: [{ value: '/', ref: 'RouteUrls.Home' }],
-  preconditions: { session: 'signed-in', accountType: 'ledger', network: 'testnet4', mocks: [] },
+  preconditions: { session: 'signed-in', accountType: 'ledger', network: 'mainnet', mocks: [] },
 });
 
 const policySend = feature({
@@ -319,17 +319,17 @@ describe(resolveVerifyRun.name, () => {
   test('derives the account type and network from the entry and lets options override them', () => {
     const ledger = resolveVerifyRun(model, inputs, { feature: 'ledger-home' }, context);
     expect(ledger.run.accountType).toBe('ledger');
-    expect(ledger.run.network).toBe('testnet4');
+    expect(ledger.run.network).toBe('mainnet');
     expect(
       resolveVerifyRun(model, inputs, { feature: 'policy-send' }, context).run.accountType
     ).toBe('policy');
     const overridden = resolveVerifyRun(
       model,
       inputs,
-      { feature: 'ledger-home', accountType: 'mixed', network: 'signet' },
+      { feature: 'ledger-home', accountType: 'software', network: 'signet' },
       context
     );
-    expect(overridden.run.accountType).toBe('mixed');
+    expect(overridden.run.accountType).toBe('software');
     expect(overridden.run.network).toBe('signet');
     const paper = resolveVerifyRun(model, inputs, { feature: 'paper-wallet' }, context);
     expect(paper.run.accountType).toBe('software');
@@ -353,6 +353,66 @@ describe(resolveVerifyRun.name, () => {
     expect(resolve({ feature: 'ledger-home', locked: true })).toThrowError(
       /--locked needs a wallet with a password/
     );
+  });
+
+  test('refuses wallet, network and rpc combinations the run cannot set up', () => {
+    function resolve(options: Parameters<typeof resolveVerifyRun>[2]) {
+      return () => resolveVerifyRun(model, inputs, options, context);
+    }
+    expect(resolve({ feature: 'ledger-home', network: 'testnet4' })).toThrowError(
+      /--account-type ledger only has a mainnet test wallet/
+    );
+    expect(
+      resolve({ feature: 'home-tokens', accountType: 'mixed', network: 'signet' })
+    ).toThrowError(/--account-type mixed only has a mainnet test wallet/);
+    expect(resolve({ feature: 'rpc-stx-call-contract', accountType: 'policy' })).toThrowError(
+      /catalog builders request addresses with single-sig accounts only/
+    );
+    expect(resolve({ feature: 'rpc-stx-call-contract', network: 'testnet' })).toThrowError(
+      /the test-app catalog builds no 'testnet' requests/
+    );
+    expect(
+      resolveVerifyRun(
+        model,
+        inputs,
+        { feature: 'rpc-stx-call-contract', accountType: 'policy', params: './req.json' },
+        context
+      ).run.accountType
+    ).toBe('policy');
+    expect(
+      resolveVerifyRun(
+        model,
+        inputs,
+        { feature: 'rpc-stx-call-contract', network: 'testnet', params: './req.json' },
+        context
+      ).run.network
+    ).toBe('testnet');
+  });
+
+  test('rejects a bare --rpc method the wallet does not handle', () => {
+    expect(() =>
+      resolveVerifyRun(model, inputs, { route: '/', rpc: 'stx_signMesage' }, context)
+    ).toThrowError(
+      /--rpc names unknown method 'stx_signMesage'.*Fix: use one of getAddresses, signMessage, stx_callContract/
+    );
+  });
+
+  test('takes flags from the real LaunchDarkly under --mocks none', () => {
+    const none = resolveVerifyRun(
+      model,
+      inputs,
+      { feature: 'send-btc-form', mocks: 'none' },
+      context
+    );
+    expect(none.run.flags).toEqual({});
+    expect(() =>
+      resolveVerifyRun(
+        model,
+        inputs,
+        { feature: 'home-tokens', mocks: 'none', flags: 'releaseOnramperBuy=true' },
+        context
+      )
+    ).toThrowError(/--flags needs mocked LaunchDarkly/);
   });
 
   test('connects the test app for rpc runs unless told otherwise', () => {

@@ -25,6 +25,7 @@ import {
   type VerifyRun,
   type VerifySummary,
   decideVerdict,
+  describeRpcFailure,
   summaryFileName,
   verifyExitCodes,
 } from '@leather.io/tools/verify-contract';
@@ -218,25 +219,34 @@ async function readStateEvidence(page: Page, slices: readonly string[]): Promise
 interface BackgroundErrorsRead {
   readonly errors: string[];
   readonly unavailable?: string;
+  readonly testBuild: boolean;
 }
+
+const notTestBuild =
+  'the dist is not a WALLET_ENVIRONMENT=testing build, so the service worker records no errors; run pnpm --filter @leather.io/extension build:test or pass --build';
 
 async function readBackgroundErrors(context: BrowserContext): Promise<BackgroundErrorsRead> {
   const [worker] = context.serviceWorkers();
-  if (worker === undefined) return { errors: [], unavailable: 'no service worker is registered' };
+  if (worker === undefined) {
+    return { errors: [], unavailable: 'no service worker is registered', testBuild: true };
+  }
   try {
     const stored: unknown = await worker.evaluate(async key => {
       const area = await chrome.storage.session.get([key]);
       const value: unknown = area[key];
       return value;
     }, backgroundErrorsStorageKey);
-    if (stored === undefined) return { errors: [] };
+    if (stored === undefined) return { errors: [], unavailable: notTestBuild, testBuild: false };
     const parsed = backgroundErrorsSchema.safeParse(stored);
     if (!parsed.success) {
-      return { errors: [], unavailable: `stored records do not match the schema` };
+      return { errors: [], unavailable: `stored records do not match the schema`, testBuild: true };
     }
-    return { errors: parsed.data.map(record => `${record.ts} ${record.message}`) };
+    return {
+      errors: parsed.data.map(record => `${record.ts} ${record.message}`),
+      testBuild: true,
+    };
   } catch (error) {
-    return { errors: [], unavailable: errorMessage(error) };
+    return { errors: [], unavailable: errorMessage(error), testBuild: true };
   }
 }
 
@@ -376,6 +386,12 @@ export async function writeArtifacts({
       '--allow-console-errors downgraded the blocking findings above; the run only proves the screen did not crash.'
     );
   }
+  const rpcFailure = rpc === undefined ? undefined : describeRpcFailure(rpc.response);
+  if (rpc !== undefined && rpcFailure !== undefined) {
+    blocking.push(
+      `the ${rpc.method} request failed, so the screen was not reached through it: ${rpcFailure}`
+    );
+  }
   if (rpcRequest !== undefined) {
     writeJson(outDir, artifactNames.rpcRequest, rpcRequest);
     artifacts.push(artifactNames.rpcRequest);
@@ -385,6 +401,8 @@ export async function writeArtifacts({
     readyMet: ready.attached,
     blockingErrorCount: blocking.length,
     allowConsoleErrors: run.allowConsoleErrors,
+    requestFailed: rpcFailure !== undefined,
+    testBuild: background.testBuild,
   });
   const finishedAt = Date.now();
   const summary: VerifySummary = {

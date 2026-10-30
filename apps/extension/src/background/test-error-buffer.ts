@@ -25,6 +25,12 @@ async function appendBackgroundError(message: string) {
   await chrome.storage.session.set({ [backgroundErrorsStorageKey]: next });
 }
 
+async function seedBackgroundErrors() {
+  const stored = await chrome.storage.session.get([backgroundErrorsStorageKey]);
+  if (stored[backgroundErrorsStorageKey] !== undefined) return;
+  await chrome.storage.session.set({ [backgroundErrorsStorageKey]: [] });
+}
+
 async function appendAfter(previous: Promise<void>, message: string) {
   await previous;
   await appendBackgroundError(message).catch(() => undefined);
@@ -41,6 +47,7 @@ function enqueueBackgroundError(message: string): Promise<void> {
 export function initTestErrorBuffer() {
   if (!IS_TEST_ENV || initialised) return;
   initialised = true;
+  pendingAppend = seedBackgroundErrors().catch(() => undefined);
   self.addEventListener('error', event => {
     void enqueueBackgroundError(event.message);
   });

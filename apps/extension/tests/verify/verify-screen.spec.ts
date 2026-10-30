@@ -1,13 +1,16 @@
 import { type BrowserContext, type Page, expect } from '@playwright/test';
+import { setupMockApis } from '@tests/mocks/mock-apis';
 import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
-import type { GlobalPage } from '@tests/page-object-models/global.page';
+import { mockUnhandledRequests } from '@tests/mocks/mock-unhandled-requests';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 
 import {
   type VerifyPageObjectName,
+  type VerifyReadyOutcome,
   type VerifyRpcSummary,
   type VerifyRun,
+  describeRpcFailure,
   parseVerifyEnv,
   verifyPageObjectNames,
 } from '@leather.io/tools/verify-contract';
@@ -86,13 +89,34 @@ async function openExtensionRoot(page: Page, extensionId: string) {
 }
 
 async function prepareExtension(
+  run: VerifyRun,
   hermetic: boolean,
+  context: BrowserContext,
   page: Page,
-  extensionId: string,
-  globalPage: GlobalPage
+  extensionId: string
 ) {
-  if (hermetic) await globalPage.setupAndUseApiCalls(extensionId);
-  else await openExtensionRoot(page, extensionId);
+  if (hermetic) {
+    await mockUnhandledRequests(context);
+    await setupMockApis(context);
+    await overrideLaunchDarklyFlags(context, run.flags);
+  }
+  await openExtensionRoot(page, extensionId);
+}
+
+function failedRpcOutcome(rpc: RpcOutcome | undefined): string | undefined {
+  if (rpc === undefined || rpc.summary.popupUrl !== null) return undefined;
+  return describeRpcFailure(rpc.summary.response);
+}
+
+async function readyOutcome(target: Target, run: VerifyRun): Promise<VerifyReadyOutcome> {
+  const failure = failedRpcOutcome(target.rpc);
+  if (failure === undefined) return waitForReady(target.page, run.ready, run.readyTimeoutMs);
+  return {
+    selector: run.ready,
+    attached: false,
+    waitedMs: 0,
+    error: `not waited for: no approver opened because ${failure}`,
+  };
 }
 
 interface Target {
@@ -135,8 +159,7 @@ test.describe('Verify screen', () => {
     const hermetic = run.mocksMode !== 'none';
     const capture: Capture = createCapture(context, hermetic);
 
-    await prepareExtension(hermetic, page, extensionId, globalPage);
-    await overrideLaunchDarklyFlags(context, run.flags);
+    await prepareExtension(run, hermetic, context, page, extensionId);
     const mocks = await applyMocks(run.mocks, context, page);
     await establishSession(run, { extensionId, onboardingPage, homePage });
 
@@ -151,7 +174,7 @@ test.describe('Verify screen', () => {
       SwitchAccountPage: switchAccountPage,
     });
 
-    const ready = await waitForReady(target.page, run.ready, run.readyTimeoutMs);
+    const ready = await readyOutcome(target, run);
     await writeArtifacts({
       run,
       page: target.page,
