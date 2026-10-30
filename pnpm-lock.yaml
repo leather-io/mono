@@ -1120,6 +1120,9 @@ importers:
       jotai:
         specifier: 2.12.5
         version: 2.12.5(@types/react@19.1.17)(react@19.1.0)
+      lottie-react:
+        specifier: 2.4.1
+        version: 2.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       mixpanel-browser:
         specifier: 2.71.1
         version: 2.71.1
