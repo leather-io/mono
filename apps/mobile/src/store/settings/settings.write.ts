@@ -26,6 +26,7 @@ import {
   type SecurityLevelPreference,
   type SettingsState,
   type ThemePreference,
+  type TokenPreset,
 } from './utils';
 
 const initialState: SettingsState = {
@@ -45,6 +46,7 @@ const initialState: SettingsState = {
   languagePreference: defaultLanguage,
   languagePreferenceSource: 'system',
   assetVisibility: {},
+  tokenPreset: 'mainTokens',
   currentAccount: null,
   appIconPreference: 'default',
 };
@@ -107,6 +109,9 @@ export const settingsSlice = createSlice({
         [action.payload.assetId]: action.payload.value,
       };
     },
+    userChangedTokenPreset(state, action: PayloadAction<TokenPreset>) {
+      state.tokenPreset = action.payload;
+    },
     userChangedCurrentAccount(state, action: PayloadAction<{ account: CurrentAccount }>) {
       state.currentAccount = action.payload.account;
     },
@@ -145,6 +150,7 @@ export const {
   userChangedLanguagePreference,
   userChangedLanguagePreferenceSource,
   userChangedAssetVisibility,
+  userChangedTokenPreset,
   userChangedCurrentAccount,
   userChangedAppIconPreference,
 } = settingsSlice.actions;
