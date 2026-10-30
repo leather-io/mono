@@ -75,15 +75,7 @@ interface SwapReviewDetailToggleProps {
 
 export function SwapReviewDetailToggle({ label, onPress }: SwapReviewDetailToggleProps) {
   return (
-    <Button
-      borderRadius="md"
-      height={30}
-      size="sm"
-      variant="outline"
-      right={-2}
-      iconStart={SettingsGearIcon}
-      onPress={onPress}
-    >
+    <Button size="sm" variant="outline" right={-2} iconStart={SettingsGearIcon} onPress={onPress}>
       {label}
     </Button>
   );

@@ -44,4 +44,16 @@ export class Sip10AssetService {
       ? await this.getAsset(assetIdentifier, signal)
       : null;
   }
+
+  public async getSwapAsset(
+    assetIdentifier: string,
+    signal?: AbortSignal
+  ): Promise<Sip10Asset | null> {
+    return (await this.fungibleAssetVisibilityService.isSwapAssetVisibleById(
+      { protocol: 'sip10', id: assetIdentifier },
+      signal
+    ))
+      ? await this.getAsset(assetIdentifier, signal)
+      : null;
+  }
 }
