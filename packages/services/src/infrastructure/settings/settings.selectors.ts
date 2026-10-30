@@ -1,15 +1,14 @@
 import {
-  BitcoinNetwork,
-  BitcoinNetworkModes,
-  ChainId,
-  NetworkModes,
+  type BitcoinNetwork,
+  type BitcoinNetworkModes,
+  type NetworkModes,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
 import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
-import { SerializedCryptoAssetId } from '@leather.io/utils';
+import { type SerializedCryptoAssetId } from '@leather.io/utils';
 
 import type { paths } from '../api/leather/leather-api.types';
-import { UserSettings } from './settings.service';
+import { type UserSettings } from './settings.service';
 
 type StakingChainId =
   paths['/v1/staking/addresses/{address}/bonds']['get']['parameters']['query']['chain'];
@@ -30,7 +29,7 @@ export function selectStacksApiUrl(settings: UserSettings): string {
   return settings.network.chain.stacks.url;
 }
 
-export function selectStacksChainId(settings: UserSettings): ChainId {
+export function selectStacksChainId(settings: UserSettings): number {
   return settings.network.chain.stacks.chainId;
 }
 

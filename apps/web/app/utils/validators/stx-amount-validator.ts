@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 import { UI_IMPOSED_MAX_STACKING_AMOUNT_USTX } from '~/constants/constants';
 
 import { stxToMicroStx } from '@leather.io/utils';

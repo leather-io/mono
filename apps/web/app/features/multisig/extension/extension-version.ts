@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export const minSupportedExtensionVersion = '6.112.0';
 
 interface ParsedVersion {
@@ -35,14 +37,19 @@ interface ProductInfoProvider {
   getProductInfo(): unknown;
 }
 
-function hasProductInfo(provider: object): provider is ProductInfoProvider {
-  return 'getProductInfo' in provider && typeof provider.getProductInfo === 'function';
-}
+const productInfoProviderSchema = z.custom<ProductInfoProvider>(
+  provider =>
+    typeof provider === 'object' &&
+    provider !== null &&
+    'getProductInfo' in provider &&
+    typeof provider.getProductInfo === 'function'
+);
 
 export function readExtensionVersion(provider: unknown): string | null {
-  if (!provider || typeof provider !== 'object' || !hasProductInfo(provider)) return null;
+  const parsedProvider = productInfoProviderSchema.safeParse(provider);
+  if (!parsedProvider.success) return null;
   try {
-    const info = provider.getProductInfo();
+    const info = parsedProvider.data.getProductInfo();
     if (!info || typeof info !== 'object' || !('version' in info)) return null;
     return typeof info.version === 'string' ? info.version : null;
   } catch {

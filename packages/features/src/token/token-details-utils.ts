@@ -16,18 +16,12 @@ export function formatPriceChangeText({
   priceChangeDelta,
 }: FormatPriceChangeTextArgs) {
   const hasChangePercent = typeof changePercent === 'number' && Number.isFinite(changePercent);
-  function getChangePrefix(changePercent: number) {
-    return changePercent > 0 ? '+ ' : '';
-  }
 
   if (!hasChangePercent) return '—';
 
-  const prefix = getChangePrefix(changePercent);
-
-  if (priceChangeDelta) {
-    return `${prefix}${changePercent.toFixed(2)}% (${priceChangeDelta})`;
-  }
-  return `${prefix}${changePercent.toFixed(2)}%`;
+  const percentText = `${changePercent.toFixed(2)}%`;
+  const text = priceChangeDelta ? `${percentText} (${priceChangeDelta})` : percentText;
+  return changePercent > 0 ? `+ ${text}` : text;
 }
 
 export function formatTokenAmount(balance: Money) {

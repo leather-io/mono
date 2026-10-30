@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { Box, HasChildren, Text } from '@leather.io/ui/native';
+import { Box, type HasChildren, Text } from '@leather.io/ui/native';
 
 export function SummaryTableRoot({ children }: HasChildren) {
   return <Box>{children}</Box>;

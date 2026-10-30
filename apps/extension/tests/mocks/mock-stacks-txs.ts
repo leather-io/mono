@@ -112,6 +112,11 @@ const emptyTxsResponse = { limit: 50, offset: 0, total: 0, results: [] };
 // Hiro v3 is cursor-paginated rather than limit/offset, and the paginator reads
 // `cursor.next` unconditionally, so it needs its own empty shape.
 const emptyPrincipalTxsResponse = { results: [], cursor: { current: null, next: null } };
+const emptyNoncesResponse = {
+  next_nonce: 0,
+  last_confirmed_nonce: null,
+  mempool: { last_nonce: null, pending_nonces: [], missing_nonces: [] },
+};
 
 const mockedPrincipalReceiveTxResultItem = {
   transaction: {
@@ -147,7 +152,7 @@ const mockedPrincipalTxsResponseWithReceiveTx = {
   results: [mockedPrincipalReceiveTxResultItem],
 };
 
-const transactionWithTransfersUrl = `**/api.hiro.so/extended/v1/address/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions_with_transfers?limit=50`;
+const transactionWithTransfersUrl = `**/api.hiro.so/extended/v2/addresses/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions?limit=50&offset=0&exclude_function_args=true`;
 const mempoolUrl = `**/api.hiro.so/extended/v1/tx/mempool?address=${TEST_ACCOUNT_1_STX_ADDRESS}&limit=50`;
 
 export async function mockMainnetTestAccountStacksTxsRequests(page: Page | BrowserContext) {
@@ -168,23 +173,23 @@ export async function mockMainnetTestAccountStacksTxsRequests(page: Page | Brows
 
 export async function mockWildcardStacksTxsRequests(page: Page | BrowserContext) {
   await Promise.all([
-    page.route('**/api.hiro.so/extended/v1/address/*/transactions_with_transfers?limit=50', route =>
+    page.route('**hiro.so/extended/v2/addresses/*/transactions**', route =>
       route.fulfill({ json: emptyTxsResponse })
     ),
-    page.route('**/api.hiro.so/extended/v2/addresses/*/transactions**', route =>
+    page.route('**hiro.so/extended/v1/tx/mempool?address=*', route =>
       route.fulfill({ json: emptyTxsResponse })
     ),
-    page.route('**/api.hiro.so/extended/v1/tx/mempool?address=*', route =>
-      route.fulfill({ json: emptyTxsResponse })
-    ),
-    page.route('**/api.hiro.so/extended/v1/address/*/assets**', route =>
+    page.route('**hiro.so/extended/v1/address/*/assets**', route =>
       route.fulfill({ json: { limit: 100, offset: 0, total: 0, results: [] } })
     ),
-    page.route('**/api.hiro.so/extended/v3/principals/*/transactions**', route =>
+    page.route('**hiro.so/extended/v3/principals/*/transactions**', route =>
       route.fulfill({ json: emptyPrincipalTxsResponse })
     ),
-    page.route('**/api.hiro.so/extended/v3/principals/*/balance-changes**', route =>
+    page.route('**hiro.so/extended/v3/principals/*/balance-changes**', route =>
       route.fulfill({ json: emptyPrincipalTxsResponse })
+    ),
+    page.route('**hiro.so/extended/v3/principals/*/nonces', route =>
+      route.fulfill({ json: emptyNoncesResponse })
     ),
   ]);
 }

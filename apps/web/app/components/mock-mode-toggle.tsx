@@ -46,7 +46,7 @@ export function MockModeToggle() {
             background="ink.background-secondary"
             border="default"
             borderRadius="md"
-            onClick={handleToggle}
+            onClick={() => void handleToggle()}
           >
             <Flag
               spacing="space.02"

@@ -1,6 +1,12 @@
-import { ComponentProps } from 'react';
+import { type ComponentProps } from 'react';
 
-import { PortableText, PortableTextComponents } from '@portabletext/react';
+import {
+  PortableText,
+  type PortableTextComponents,
+  type PortableTextMarkComponentProps,
+  type PortableTextTypeComponentProps,
+} from '@portabletext/react';
+import type { SanityImageObject } from '@sanity/image-url/lib/types/types';
 import { styled } from 'leather-styles/jsx';
 import { urlFor } from '~/constants/cms-client';
 
@@ -8,15 +14,31 @@ import { contentComponents } from './content-components';
 
 const { code: Code, a: A } = contentComponents;
 
+interface CodeBlockValue {
+  _type: string;
+  language?: string;
+  code?: string;
+}
+
+interface ImageBlockValue extends SanityImageObject {
+  _type: string;
+  alt?: string;
+}
+
+interface LinkMarkValue {
+  _type: string;
+  href?: string;
+}
+
 // Reuse the same styles as markdownComponents
 const portableTextComponents: PortableTextComponents = {
   types: {
-    code: ({ value }) => (
+    code: ({ value }: PortableTextTypeComponentProps<CodeBlockValue>) => (
       <Code className={value.language ? `language-${value.language}` : undefined}>
         {value.code}
       </Code>
     ),
-    image: ({ value }) => {
+    image({ value }: PortableTextTypeComponentProps<ImageBlockValue>) {
       return (
         <styled.img
           src={urlFor(value).quality(80).format('webp').url()}
@@ -33,7 +55,7 @@ const portableTextComponents: PortableTextComponents = {
     strong: contentComponents.strong,
     em: contentComponents.em,
     code: contentComponents.code,
-    link({ children, value }) {
+    link({ children, value }: PortableTextMarkComponentProps<LinkMarkValue>) {
       return <A href={value?.href}>{children}</A>;
     },
   },

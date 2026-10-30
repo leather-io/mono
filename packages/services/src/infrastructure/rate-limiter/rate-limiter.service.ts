@@ -18,16 +18,17 @@ if (!AbortSignal.prototype.throwIfAborted) {
   };
 }
 
-function throwAbortError() {
+function throwAbortError(): never {
   const abortError = new Error('AbortError');
   abortError.name = 'AbortError';
   throw abortError;
 }
 
-export enum RateLimiterType {
-  HiroStacks,
-  Leather,
-}
+export const RateLimiterType = {
+  HiroStacks: 0,
+  Leather: 1,
+} as const;
+export type RateLimiterType = (typeof RateLimiterType)[keyof typeof RateLimiterType];
 
 export interface RateLimiterQueueOptions {
   interval: number;
@@ -58,7 +59,9 @@ export class RateLimiterService {
 
   public getLimiter(type: RateLimiterType, mode: NetworkModes): PQueue {
     const key = this.getLimiterKey(type, mode);
-    return this.limiters.get(key)!;
+    const limiter = this.limiters.get(key);
+    if (!limiter) throw new Error(`No rate limiter configured for ${key}`);
+    return limiter;
   }
 
   public async add<T>(
@@ -72,7 +75,7 @@ export class RateLimiterService {
         this.settingsService.getSettings().network.chain.bitcoin.mode
       )
     );
-    let result = undefined;
+    let result: T | void;
     try {
       result = await limiter.add(fn, options);
     } catch (error) {
@@ -81,13 +84,10 @@ export class RateLimiterService {
       }
       throw error;
     }
-    if (result === undefined) {
-      if (options?.signal?.aborted) {
-        throwAbortError();
-      } else {
-        throw new Error('Rate limited call undefined');
-      }
+    if (result !== undefined) return result;
+    if (options?.signal?.aborted) {
+      throwAbortError();
     }
-    return result as T;
+    throw new Error('Rate limited call undefined');
   }
 }

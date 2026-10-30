@@ -2,7 +2,7 @@
   "name": "@leather.io/services",
   "author": "Leather.io contact@leather.io",
   "description": "Leather Services Package",
-  "version": "1.66.2",
+  "version": "1.66.3",
   "license": "MIT",
   "homepage": "https://github.com/leather.io/mono/tree/dev/packages/services",
   "repository": {
@@ -55,7 +55,7 @@
     "reflect-metadata": "0.2.2",
     "remeda": "2.21.2",
     "uuid": "11.1.0",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

@@ -5,8 +5,7 @@ import { validateStacksAddress as isValidStacksAddress } from '@stacks/transacti
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { useLeatherConnect } from '~/store/addresses';
 import { fetchFn } from '~/utils/hiro-wrapped-fetch';
-
-import { StacksClient, stacksClient } from '@leather.io/query';
+import { type StacksApiClient, createStacksApiClient } from '~/utils/stacks-api-client';
 
 import { parseContractId } from '../utils/contract-id';
 import { getPox5ContractId } from '../utils/pox5-contracts';
@@ -14,8 +13,8 @@ import { getPox5ContractId } from '../utils/pox5-contracts';
 // Clients pinned to the configured pox-5 chain. pox-5 reads must never go
 // through the app-network clients — they would report state (balances, burn
 // heights, positions) from the wrong chain.
-export function usePox5StacksClient(): StacksClient {
-  return stacksClient(pox5NetworkConfig.apiUrl);
+export function usePox5StacksClient(): StacksApiClient {
+  return createStacksApiClient(pox5NetworkConfig.apiUrl);
 }
 
 export function usePox5StackingClient(): StackingClient | null {

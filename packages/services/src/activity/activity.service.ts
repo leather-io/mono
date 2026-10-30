@@ -8,13 +8,7 @@ import {
   OnChainActivity,
   OnChainActivityTypes,
 } from '@leather.io/models';
-import {
-  baseCurrencyAmountInQuote,
-  createMoney,
-  hasBitcoinAddress,
-  hasStacksAddress,
-  isDefined,
-} from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoney, isDefined } from '@leather.io/utils';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { Sip10AssetService } from '../assets/sip10-asset.service';
@@ -43,6 +37,11 @@ import {
 } from './stacks-tx-activity.utils';
 
 const btcTxPageRequest = { page: 1, pageSize: 750 };
+
+function readNftTokenValue(transfer: StacksAssetTransfer) {
+  if (transfer.tokenValue === undefined) throw new Error('Missing NFT token value');
+  return transfer.tokenValue;
+}
 
 @injectable()
 export class ActivityService {
@@ -131,7 +130,7 @@ export class ActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    if (!hasBitcoinAddress(account)) return [];
+    if (!account.bitcoin) return [];
 
     const [bitcoinTransactions] = await Promise.all([
       this.bitcoinTransactionsService.getAccountTransactions(account, btcTxPageRequest, signal),
@@ -154,7 +153,7 @@ export class ActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    if (!hasStacksAddress(account)) return [];
+    if (!account.stacks) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
       this.stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
@@ -189,7 +188,7 @@ export class ActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    if (!hasStacksAddress(account)) return [];
+    if (!account.stacks) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
       this.stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
@@ -230,7 +229,7 @@ export class ActivityService {
     assetId: string,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    if (!hasStacksAddress(account)) return [];
+    if (!account.stacks) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
       this.stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
@@ -324,7 +323,7 @@ export class ActivityService {
               ? await this.sip10AssetService.getAsset(transfer.assetId, signal)
               : await this.sip9AssetService.getAsset(
                   transfer.assetId,
-                  transfer.tokenValue!,
+                  readNftTokenValue(transfer),
                   signal
                 ),
         };

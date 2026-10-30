@@ -10,7 +10,7 @@ import {
 
 interface UseSecondaryAmountParams {
   state: SwapInternalState;
-  baseMarketDataQuery: UseQueryResult<unknown>;
+  baseMarketDataQuery: UseQueryResult;
   derivedAmounts: DerivedAmounts;
 }
 

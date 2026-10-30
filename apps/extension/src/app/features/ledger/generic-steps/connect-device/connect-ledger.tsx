@@ -3,10 +3,9 @@ import { Suspense, lazy, useMemo } from 'react';
 import { Box, HStack, Stack, styled } from 'leather-styles/jsx';
 
 import type { SupportedBlockchains } from '@leather.io/models';
-import { BitcoinIcon, Button, Callout, Link, StacksIcon } from '@leather.io/ui';
+import { BitcoinIcon, Button, Callout, Hr, Link, StacksIcon } from '@leather.io/ui';
 
 import { usePlatformInfo } from '@app/common/hooks/use-platform-info';
-import { Divider } from '@app/components/layout/divider';
 
 import { LedgerWrapper } from '../../components/ledger-wrapper';
 
@@ -100,13 +99,13 @@ export function ConnectLedger(props: ConnectLedgerProps) {
         </HStack>
       </Stack>
       {warning && (
-        <Box mb="space.04" mx="space.06">
+        <Box mb="space.04" width="100%">
           {warning}
         </Box>
       )}
 
       {isWindows && (
-        <Callout variant="warning" mb="space.06" mx="space.06" textAlign="left">
+        <Callout variant="warning" mb="space.06" textAlign="left">
           If you're experiencing problems connecting your Ledger, try updating the firmware to the
           latest version in Ledger Live.
         </Callout>
@@ -114,7 +113,7 @@ export function ConnectLedger(props: ConnectLedgerProps) {
 
       {showInstructions ? (
         <Stack gap="space.05" width="100%">
-          <Divider />
+          <Hr />
           <Stack alignItems="center" gap="space.01">
             <styled.span textStyle="label.03" color="ink.text-subdued">
               First time using Ledger on Leather?

@@ -1,7 +1,6 @@
 import { inject, injectable } from 'inversify';
 
 import { AccountAddresses, BitcoinTransaction } from '@leather.io/models';
-import { hasBitcoinAddress } from '@leather.io/utils';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import type { LeatherApiPageRequest } from '../infrastructure/api/leather/leather-api.pagination';
@@ -45,7 +44,7 @@ export class BitcoinTransactionsService {
     pageRequest: LeatherApiPageRequest,
     signal?: AbortSignal
   ): Promise<BitcoinTransaction[]> {
-    if (!hasBitcoinAddress(account)) return [];
+    if (!account.bitcoin) return [];
 
     if (account.bitcoin.type === 'fixedAddress') {
       return this.getAddressTransactions(account.bitcoin.address, pageRequest, signal);

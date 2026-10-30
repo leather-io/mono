@@ -8,8 +8,8 @@ import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import {
-  BitcoinStakingPool,
-  StakingPoolSlug,
+  type BitcoinStakingPool,
+  type StakingPoolSlug,
   bitcoinStakingPoolList,
   getStakingPoolFromSlug,
   isPoolAvailableOnNetwork,
@@ -36,10 +36,12 @@ import { isDefined, stxToMicroStx, truncateMiddle } from '@leather.io/utils';
 import { AvailableBalanceRow } from '../components/available-balance-row';
 import { Pox5SubmitError } from '../components/pox5-submit-error';
 import { PreparePhaseCallout } from '../components/prepare-phase-callout';
+import { StakingAcknowledgment } from '../components/staking-acknowledgment';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
 import { usePox5Position } from '../hooks/use-pox5-position';
 import { usePox5TxTracker } from '../hooks/use-pox5-tx-tracker';
-import { Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-options';
+import { useStakingAcknowledgment } from '../hooks/use-staking-acknowledgment';
+import { type Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-options';
 import {
   usePox5AvailableUnlockedBalance,
   usePox5PoxInfoQuery,
@@ -51,9 +53,12 @@ import {
   usePox5PoolFeesByProvider,
 } from '../queries/pox5-stacking.query';
 import { ChoosePayoutPreference } from '../start-staking/components/choose-payout-preference';
-import { PoolMinStake, buildPayoutPreference } from '../start-staking/utils/staking-form-schema';
+import {
+  type PoolMinStake,
+  buildPayoutPreference,
+} from '../start-staking/utils/staking-form-schema';
 import { createStakeUpdateMutationOptions } from '../transactions/pox5-mutations';
-import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
+import { type Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
 import { getBroadcastTxId } from '../transactions/pox5-tx-status';
 import { getExpectedFeeBips } from '../utils/pool-fee';
 import {
@@ -68,7 +73,7 @@ import { SidebarSummaryCard } from './components/sidebar-summary-card';
 import { parseSwitchTargetSlug } from './switch-target';
 import { createUpdateStakingSchema } from './update-staking-schema';
 import {
-  SignerManagerFacts,
+  type SignerManagerFacts,
   buildSignerManagerOptions,
   buildUpdateStakeSummaryRows,
 } from './update-staking-summary';
@@ -76,9 +81,9 @@ import { useSignerManagerPicker } from './use-signer-manager-picker';
 
 const switchContent = bitcoinStakingContent.switchSignerManager;
 
-function toInputValue(value: unknown): string | number {
+function toInputValue(value: unknown): string | number | undefined {
   if (typeof value === 'number' || typeof value === 'string') return value;
-  return '';
+  return undefined;
 }
 
 interface UpdateStakingProps {
@@ -210,7 +215,7 @@ function UpdateStakingForm({
   const navigate = useNavigate();
   const { track } = usePox5TxTracker();
   const client = usePox5StackingClientRequired();
-  const { btcPaymentAddress } = useLeatherConnect();
+  const { btcPaymentAddress, connectedWalletId } = useLeatherConnect();
 
   const { cycleClock } = usePox5CycleClock();
   const { isLoading: availableBalanceIsLoading, availableBalance } =
@@ -245,7 +250,7 @@ function UpdateStakingForm({
       pool.fixedFeeBips ?? (currentFeeQuery.data ? getExpectedFeeBips(currentFeeQuery.data) : null),
   };
 
-  const targetFacts = ((): SignerManagerFacts | null => {
+  function getTargetFacts(): SignerManagerFacts | null {
     if (!target) return null;
     if (target.pool) {
       return {
@@ -261,13 +266,15 @@ function UpdateStakingForm({
       payoutMode: customPoolPayoutMode,
       feeBips: customTargetFeeQuery.data ? getExpectedFeeBips(customTargetFeeQuery.data) : null,
     };
-  })();
+  }
+  const targetFacts = getTargetFacts();
 
   const effectivePayoutMode = targetFacts ? targetFacts.payoutMode : currentFacts.payoutMode;
-  const effectivePool = ((): BitcoinStakingPool | null => {
+  function getEffectivePool(): BitcoinStakingPool | null {
     if (target) return target.pool;
     return currentIsCustom ? null : pool;
-  })();
+  }
+  const effectivePool = getEffectivePool();
   const effectiveMinStake: PoolMinStake | undefined =
     effectivePool?.minStakeMicroStx !== undefined
       ? { poolName: effectivePool.name, minStakeMicroStx: effectivePool.minStakeMicroStx }
@@ -334,9 +341,34 @@ function UpdateStakingForm({
     error: stakeUpdateError,
   } = useMutation(createStakeUpdateMutationOptions({ wallet, client }));
 
+  const acknowledgment = useStakingAcknowledgment(
+    JSON.stringify({
+      address,
+      clientAddress: client.address,
+      connectedWalletId,
+      network: pox5NetworkConfig.contractNetworkMode,
+      currentContractId: info.signerManagerContractId,
+      targetContractId: target?.contractId,
+      selectedRowId: picker.selectedRowId,
+      customInput: picker.customInput,
+      customStatus: customState.status,
+      values: formMethods.watch(),
+      amountMicroStx: info.amountMicroStx.toString(),
+      firstRewardCycle: info.firstRewardCycle,
+      numCycles: info.numCycles,
+      feeBips: targetFacts?.feeBips,
+      effectivePayoutMode,
+      supportsMinClaim,
+      currentCycleId,
+    })
+  );
+
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
+  const confirmDisabled = isInPreparePhase || (isCustomSelected && customState.status !== 'valid');
 
   const handleUpdate = formMethods.handleSubmit(values => {
+    if (confirmDisabled || isPending) return;
+
     const increaseMicroStx = values.amountIncrease
       ? BigInt(stxToMicroStx(Number(values.amountIncrease)).toString())
       : 0n;
@@ -346,10 +378,11 @@ function UpdateStakingForm({
     // sBTC when it is off (absent calldata deletes the stored preference).
     const payoutPreference = buildPayoutPreference(values, effectivePayoutMode, supportsMinClaim);
 
-    const targetProviderId = (() => {
+    function getTargetProviderId() {
       if (!target) return pool.providerId;
       return target.pool ? target.pool.providerId : 'byosm';
-    })();
+    }
+    const targetProviderId = getTargetProviderId();
 
     submitStakeUpdate(
       {
@@ -365,7 +398,7 @@ function UpdateStakingForm({
       {
         onSuccess(result) {
           const txId = getBroadcastTxId(result);
-          const destination = (() => {
+          function getDestination() {
             if (target) {
               return target.pool
                 ? stakingPaths.active(stakingProviderIdToSlug(target.pool.providerId))
@@ -374,7 +407,8 @@ function UpdateStakingForm({
             return currentIsCustom
               ? byosmPaths.active(info.signerManagerContractId)
               : stakingPaths.active(poolSlug);
-          })();
+          }
+          const destination = getDestination();
           if (!txId) {
             void navigate(destination);
             return;
@@ -392,13 +426,14 @@ function UpdateStakingForm({
       : 0;
 
   const watchedAmountIncrease = formMethods.watch('amountIncrease');
-  const amountIncreaseForSummary = (() => {
+  function getAmountIncreaseForSummary() {
     if (typeof watchedAmountIncrease !== 'string') return 0n;
     if (!/^\d+(\.\d+)?$/.test(watchedAmountIncrease)) return 0n;
     const micro = stxToMicroStx(Number(watchedAmountIncrease));
     if (!micro.isInteger()) return 0n;
     return BigInt(micro.toString());
-  })();
+  }
+  const amountIncreaseForSummary = getAmountIncreaseForSummary();
 
   const summaryRows = buildUpdateStakeSummaryRows({
     current: currentFacts,
@@ -423,26 +458,12 @@ function UpdateStakingForm({
     currentContractId: info.signerManagerContractId,
   });
 
-  const terms = target
-    ? {
-        label: target.pool
-          ? switchContent.poolTerms(target.pool.name)
-          : switchContent.customAcknowledgment,
-        accepted: picker.termsAccepted,
-        onToggleAccepted: picker.toggleTermsAccepted,
-      }
-    : undefined;
-
-  const confirmLabel = (() => {
+  function getConfirmLabel() {
     if (isCustomSelected && customState.status !== 'valid') return switchContent.validateFirst;
     if (isSwitching) return switchContent.confirmSwitch;
     return switchContent.confirmUpdate;
-  })();
-
-  const confirmDisabled =
-    isInPreparePhase ||
-    (isSwitching && !picker.termsAccepted) ||
-    (isCustomSelected && customState.status !== 'valid');
+  }
+  const confirmLabel = getConfirmLabel();
 
   return (
     <FormProvider {...formMethods}>
@@ -476,7 +497,7 @@ function UpdateStakingForm({
                     <Input.Field
                       id="cyclesToExtend"
                       inputMode="numeric"
-                      value={toInputValue(value)}
+                      value={toInputValue(value) ?? ''}
                       onChange={input => onChange(input.target.value)}
                       onBlur={onBlur}
                       ref={ref}
@@ -508,7 +529,7 @@ function UpdateStakingForm({
                       <Input.Label>Additional STX to lock (optional)</Input.Label>
                       <Input.Field
                         id="amountIncrease"
-                        value={toInputValue(value)}
+                        value={toInputValue(value) ?? ''}
                         onChange={input => onChange(input.target.value)}
                         onBlur={onBlur}
                         ref={ref}
@@ -571,12 +592,29 @@ function UpdateStakingForm({
           <Stack gap="space.03">
             <SidebarSummaryCard
               rows={summaryRows}
-              terms={terms}
+              acknowledgment={
+                target ? (
+                  <StakingAcknowledgment
+                    pool={target.pool}
+                    acknowledgment={acknowledgment}
+                    disabled={isPending}
+                  />
+                ) : undefined
+              }
               confirmLabel={confirmLabel}
+              confirmAttemptCount={acknowledgment.attemptCount}
+              confirmError={
+                acknowledgment.isInvalid
+                  ? bitcoinStakingContent.acknowledgment.requiredMessage
+                  : undefined
+              }
               confirmDisabled={confirmDisabled}
               confirmTestId="confirm-update-stake-button"
               isBusy={isPending}
-              onConfirm={handleUpdate}
+              onConfirm={() => {
+                if (isSwitching && !acknowledgment.requireAccepted()) return;
+                void handleUpdate();
+              }}
             />
             <Pox5SubmitError error={stakeUpdateError} />
           </Stack>

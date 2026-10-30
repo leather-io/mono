@@ -12,11 +12,11 @@ import {
 } from '~/utils/validators/stx-amount-validator';
 
 import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
-import { BitcoinNetworkModes, Money } from '@leather.io/models';
+import { type BitcoinNetworkModes, type Money } from '@leather.io/models';
 import { microStxToStx, stxToMicroStx } from '@leather.io/utils';
 
-import { Pox5PayoutPreference } from '../../transactions/pox5-signer-calldata';
-import { PoolPayoutMode, canPayoutInBtc, isBtcPayoutRequired } from '../../utils/pool-payout';
+import { type Pox5PayoutPreference } from '../../transactions/pox5-signer-calldata';
+import { type PoolPayoutMode, canPayoutInBtc, isBtcPayoutRequired } from '../../utils/pool-payout';
 
 export interface PoolMinStake {
   poolName: string;
@@ -31,7 +31,7 @@ interface CreateStakingFormSchemaArgs {
   minStake?: PoolMinStake;
 }
 
-function isNumericInput(value: string | undefined): value is string {
+function isNumericInput(value: string | undefined) {
   return !!value && /^\d+(\.\d+)?$/.test(value);
 }
 
@@ -48,7 +48,7 @@ export function stxInputToMicroStx(value: string): bigint {
   return micro.isInteger() ? BigInt(micro.toString()) : 0n;
 }
 
-interface PayoutFormValues {
+export interface PayoutFormValues {
   payoutEnabled: boolean;
   rewardAddress?: string;
   maxFeeSats?: string;
@@ -101,8 +101,7 @@ export function validatePayoutSatsFields(
   supportsMinClaim: boolean,
   addIssue: (message: string, path: 'maxFeeSats' | 'minClaimSats') => void
 ) {
-  const hasValidMaxFee = !!data.maxFeeSats && /^\d+$/.test(data.maxFeeSats);
-  if (!hasValidMaxFee) {
+  if (!data.maxFeeSats || !/^\d+$/.test(data.maxFeeSats)) {
     addIssue(validationMessages.enterMaxWithdrawalFee, 'maxFeeSats');
   } else if (BigInt(data.maxFeeSats) < BigInt(MIN_MAX_WITHDRAWAL_FEE_SATS)) {
     addIssue(validationMessages.maxWithdrawalFeeTooLow, 'maxFeeSats');
@@ -139,7 +138,7 @@ export function createStakingFormSchema({
     .object({
       amount: z
         .string()
-        .optional()
+        .or(z.undefined())
         .refine(value => value !== undefined && value !== '', validationMessages.enterAmount)
         .refine(value => !value || /^\d+(\.\d+)?$/.test(value), validationMessages.invalidAmount)
         .refine(
@@ -158,7 +157,10 @@ export function createStakingFormSchema({
           validationMessages.cannotStackMoreThanBalance
         )
         .refine(
-          value => !isNumericInput(value) || meetsPoolMinStake(stxInputToMicroStx(value), minStake),
+          value =>
+            value === undefined ||
+            !isNumericInput(value) ||
+            meetsPoolMinStake(stxInputToMicroStx(value), minStake),
           minStake
             ? validationMessages.stakeBelowPoolMinimum(
                 minStake.poolName,

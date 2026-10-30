@@ -144,6 +144,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.28.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.27.2...@leather.io/tokens-v0.28.0) (2026-10-27)
+
+
+### Features
+
+* **tokens:** add ink.text-secondary and use it for decision-critical copy ([#2853](https://github.com/leather-io/mono/issues/2853)) ([9b5ff8f](https://github.com/leather-io/mono/commit/9b5ff8fafad7c678cca5d7e25ef15115ea186fac))
+
 ## [0.27.2](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.27.1...@leather.io/tokens-v0.27.2) (2026-09-29)
 
 

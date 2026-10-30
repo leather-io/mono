@@ -1,11 +1,11 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import {
   Avatar,
   Cell,
-  CellProps,
+  type CellProps,
   ChevronRightIcon,
-  IconProps,
+  type IconProps,
   RadioButton,
   Switch,
 } from '@leather.io/ui/native';

@@ -1,13 +1,16 @@
-import { StacksNetworkName } from '@stacks/network';
+import { type StacksNetworkName } from '@stacks/network';
 import { hexToCV, principalCV, serializeCV } from '@stacks/transactions';
 
-import { Pox5PayoutPreference, decodePayoutPreference } from '../transactions/pox5-signer-calldata';
+import {
+  type Pox5PayoutPreference,
+  decodePayoutPreference,
+} from '../transactions/pox5-signer-calldata';
 import { parseContractId } from '../utils/contract-id';
 
 export const payoutPreferenceFunctionNames = ['get-payout-config', 'get-pox-addr'];
 const minClaimFunctionName = 'get-payout-config';
 
-interface Pox5PayoutPreferenceResult {
+export interface Pox5PayoutPreferenceResult {
   preference: Pox5PayoutPreference | null;
   supportsMinClaim: boolean;
 }

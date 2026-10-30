@@ -10,6 +10,8 @@ import { ExitAnyTimeIcon } from '~/features/bitcoin-staking/start-staking/compon
 import { Input } from '@leather.io/ui';
 import { isDefined } from '@leather.io/utils';
 
+import { type StakingFormSchema } from '../utils/staking-form-schema';
+
 interface ChooseStakingDurationProps {
   estimatedUnlockDate: Date | null;
 }
@@ -20,7 +22,7 @@ function formatRenewalDate(date: Date | null) {
 }
 
 export function ChooseStakingDuration({ estimatedUnlockDate }: ChooseStakingDurationProps) {
-  const { control } = useFormContext();
+  const { control } = useFormContext<StakingFormSchema>();
   const { errors } = useFormState({ control, name: 'cycles' });
   const [exitIconPlayCount, setExitIconPlayCount] = useState(0);
   const { chooseDuration } = bitcoinStakingContent;
@@ -97,7 +99,7 @@ export function ChooseStakingDuration({ estimatedUnlockDate }: ChooseStakingDura
           <styled.span textStyle="caption.01" fontWeight={500}>
             {chooseDuration.exitTitle}
           </styled.span>
-          <styled.span textStyle="caption.01" color="ink.text-subdued">
+          <styled.span textStyle="caption.01" color="ink.text-secondary">
             {chooseDuration.exitDescription}
           </styled.span>
         </Stack>

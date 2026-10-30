@@ -19,25 +19,27 @@ import {
   createGetPox5StakerInfoQueryOptions,
 } from '~/features/bitcoin-staking/queries/create-get-pox5-staker-info-query-options';
 import { createGetPox5TransactionQueryOptions } from '~/features/bitcoin-staking/queries/create-get-pox5-transaction-query-options';
+import { createGetStxAddressBalanceQueryOptions } from '~/features/bitcoin-staking/queries/create-get-stx-address-balance-query-options';
 import type { PendingPox5Tx } from '~/features/bitcoin-staking/queries/get-pending-pox5-txs';
 import type { Pox5PayoutPreference } from '~/features/bitcoin-staking/transactions/pox5-signer-calldata';
 import type { Pox5TxOutcome } from '~/features/bitcoin-staking/transactions/pox5-tx-status';
 import { parseContractId } from '~/features/bitcoin-staking/utils/contract-id';
 import type { Pox5PoolFee } from '~/features/bitcoin-staking/utils/pool-fee';
 import { getPox5ContractId } from '~/features/bitcoin-staking/utils/pox5-contracts';
-import { createMockGetAddressesResponse } from '~/mocks/extension/get-addresses/get-addresses.mock';
-import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-import { fetchFn } from '~/utils/hiro-wrapped-fetch';
-
 import {
   createGetCoreInfoQueryOptions,
   createGetPoxInfoQueryOptions,
   createGetSecondsUntilNextCycleQueryOptions,
-  createGetStxAddressBalanceQueryOptions,
-  stacksClient,
-} from '@leather.io/query';
+} from '~/features/stacking/queries/create-stacking-client-query-options';
+import { createMockGetAddressesResponse } from '~/mocks/extension/get-addresses/get-addresses.mock';
+import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { fetchFn } from '~/utils/hiro-wrapped-fetch';
+import { createStacksApiClient } from '~/utils/stacks-api-client';
 
-export const mockAddresses = createMockGetAddressesResponse('playground').result.addresses;
+const mockGetAddressesResponse = createMockGetAddressesResponse('playground');
+
+export const mockAddresses =
+  'result' in mockGetAddressesResponse ? mockGetAddressesResponse.result.addresses : [];
 
 const mockStacksAddress = mockAddresses.find(address => address.symbol === 'STX')?.address ?? '';
 
@@ -55,7 +57,7 @@ const mockChainStackingClient = new StackingClient({
   client: { baseUrl: pox5NetworkConfig.apiUrl, fetch: fetchFn },
 });
 
-const mockStacksClient = stacksClient(pox5NetworkConfig.apiUrl);
+const mockStacksClient = createStacksApiClient(pox5NetworkConfig.apiUrl);
 
 const firstBurnchainBlockHeight = 666_050;
 const rewardCycleLength = 2_100;
@@ -191,7 +193,13 @@ export const mockOperatorPayoutPreference: Pox5PayoutPreference = {
 
 const mockTxId = '0x9f3b1d2c4e5a6b7c8d9e0f1a2b3c4d5e6f70819a2b3c4d5e6f708192a3b4c5d6';
 
-const mockPendingStakeTx: PendingPox5Tx = { kind: 'stake', txId: mockTxId };
+const mockPendingStakeTx: PendingPox5Tx = {
+  kind: 'stake',
+  txId: mockTxId,
+  amountMicroStx: 12_500_000_000n,
+  numCycles: 12,
+  signerManagerContractId: listedSignerManagerContractId,
+};
 
 export const mockTrackedTx: Pox5TrackedTx = {
   kind: 'stake',

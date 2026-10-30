@@ -45,7 +45,7 @@
     "compare-versions": "6.1.0",
     "remeda": "2.21.2",
     "rxjs": "7.8.2",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

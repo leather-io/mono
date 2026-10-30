@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/mobile",
-  "version": "2.115.2",
+  "version": "2.116.0",
   "type": "module",
   "scripts": {
     "1password:env:dev": "op read \"op://leather-cli/env-content/dev\" > .env",
@@ -46,7 +46,6 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/provider": "workspace:*",
     "@leather.io/queries": "workspace:*",
-    "@leather.io/query": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/services": "workspace:*",
     "@leather.io/stacks": "workspace:*",
@@ -133,7 +132,7 @@
     "redux-persist": "6.0.0",
     "remeda": "2.21.2",
     "use-debounce": "10.0.5",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@babel/core": "7.27.1",

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useUserSettings } from '~/hooks/use-user-settings';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
+import { type FungibleCryptoAsset } from '@leather.io/models';
 import { createMarketDataQueryConfig } from '@leather.io/queries';
 
 export function useMarketDataQuery(asset: FungibleCryptoAsset) {

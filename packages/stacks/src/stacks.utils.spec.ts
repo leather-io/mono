@@ -227,7 +227,8 @@ describe(getStacksBurnAddress.name, () => {
   });
 
   it('should return the Testnet address for an unknown chainId', () => {
-    const result = getStacksBurnAddress(9999 as ChainId); // Simulate an unknown chainId
+    const unknownChainId = Number(9999);
+    const result = getStacksBurnAddress(unknownChainId); // Simulate an unknown chainId
     expect(result).toBe('ST000000000000000000002AMW42H');
   });
 });

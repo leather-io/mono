@@ -2,7 +2,7 @@ import { toFetchState } from '@/components/loading';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 
-import { FungibleCryptoAsset, HistoricalPeriod, QuoteCurrency } from '@leather.io/models';
+import { type FungibleCryptoAsset, type HistoricalPeriod } from '@leather.io/models';
 import { createPriceChangePercentageQueryConfig } from '@leather.io/queries';
 import type { UserSettings } from '@leather.io/services';
 
@@ -14,7 +14,7 @@ function usePriceChangePercentageQuery(asset: FungibleCryptoAsset, period?: Hist
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    quoteCurrency: fiatCurrencyPreference,
     assetVisibility,
   };
 

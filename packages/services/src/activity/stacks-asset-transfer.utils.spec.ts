@@ -1,14 +1,20 @@
-import { PostCondition } from '@stacks/stacks-blockchain-api-types';
 import { BigNumber } from 'bignumber.js';
 
 import { CryptoAssetCategories } from '@leather.io/models';
 
 import {
-  HiroStacksMempoolTransaction,
-  HiroTransactionEvent,
-} from '../infrastructure/api/hiro/hiro-stacks-api.types';
+  createActivityContractCallTx,
+  createActivityFtAssetEvent,
+  createActivityFtPostCondition,
+  createActivityMempoolTokenTransferTx,
+  createActivityNftAssetEvent,
+  createActivityNftPostCondition,
+  createActivitySmartContractLogEvent,
+  createActivityStxAssetEvent,
+  createActivityStxPostCondition,
+} from '../test/activity-fixtures';
 import {
-  StacksAssetTransfer,
+  type StacksAssetTransfer,
   aggregateTransferReceivers,
   aggregateTransferSenders,
   getStacksAssetTransfers,
@@ -120,32 +126,25 @@ describe(aggregateTransferReceivers.name, () => {
 
 describe(mapTransferFromTxEvent.name, () => {
   it('maps stx_asset, fungible_token_asset, and non_fungible_token_asset events to asset transfers', () => {
-    const stxEvent = {
-      event_type: 'stx_asset',
+    const stxEvent = createActivityStxAssetEvent({
       asset: {
         amount: '1000',
         sender: 'ST123',
         recipient: 'ST456',
       },
-    } as HiroTransactionEvent;
-    const ftEvent = {
-      event_type: 'fungible_token_asset',
-      asset: {
-        asset_id: 'ST123.token::xyz',
-        amount: '2000',
-        sender: 'ST789',
-        recipient: 'ST012',
-      },
-    } as HiroTransactionEvent;
-    const nftEvent = {
-      event_type: 'non_fungible_token_asset',
-      asset: {
-        asset_id: 'ST123.nft::xyz',
-        value: { hex: '0x1234' },
-        sender: 'ST345',
-        recipient: 'ST678',
-      },
-    } as HiroTransactionEvent;
+    });
+    const ftEvent = createActivityFtAssetEvent({
+      asset_id: 'ST123.token::xyz',
+      amount: '2000',
+      sender: 'ST789',
+      recipient: 'ST012',
+    });
+    const nftEvent = createActivityNftAssetEvent({
+      asset_id: 'ST123.nft::xyz',
+      value: { hex: '0x1234', repr: '' },
+      sender: 'ST345',
+      recipient: 'ST678',
+    });
 
     expect(mapTransferFromTxEvent(stxEvent)).toEqual({
       assetCategory: CryptoAssetCategories.fungible,
@@ -171,20 +170,17 @@ describe(mapTransferFromTxEvent.name, () => {
   });
 
   it('returns undefined for unrecognized event_type values', () => {
-    const unrecognizedEvent = {
-      event_type: 'smart_contract_log',
-    } as HiroTransactionEvent;
+    const unrecognizedEvent = createActivitySmartContractLogEvent();
     expect(mapTransferFromTxEvent(unrecognizedEvent)).toBe(undefined);
   });
 });
 
 describe(mapTransferFromPostCondition.name, () => {
   it('maps stx post condition to transfer', () => {
-    const pc = {
-      type: 'stx',
+    const pc = createActivityStxPostCondition({
       principal: { type_id: 'principal_standard', address: 'ST123' },
       amount: '1000',
-    } as PostCondition;
+    });
     expect(mapTransferFromPostCondition(pc)).toEqual({
       assetCategory: CryptoAssetCategories.fungible,
       assetId: 'STX',
@@ -194,8 +190,7 @@ describe(mapTransferFromPostCondition.name, () => {
   });
 
   it('maps fungible post condition to transfer', () => {
-    const pc = {
-      type: 'fungible',
+    const pc = createActivityFtPostCondition({
       principal: { type_id: 'principal_standard', address: 'ST123' },
       amount: '1000',
       asset: {
@@ -203,7 +198,7 @@ describe(mapTransferFromPostCondition.name, () => {
         contract_name: 'token',
         asset_name: 'xyz',
       },
-    } as PostCondition;
+    });
     expect(mapTransferFromPostCondition(pc)).toEqual({
       assetCategory: CryptoAssetCategories.fungible,
       assetId: 'ST456.token::xyz',
@@ -213,8 +208,7 @@ describe(mapTransferFromPostCondition.name, () => {
   });
 
   it('maps non_fungible post condition to transfer', () => {
-    const pc = {
-      type: 'non_fungible',
+    const pc = createActivityNftPostCondition({
       principal: { type_id: 'principal_standard', address: 'ST123' },
       asset: {
         contract_address: 'ST456',
@@ -223,8 +217,9 @@ describe(mapTransferFromPostCondition.name, () => {
       },
       asset_value: {
         hex: '0x1234',
+        repr: '',
       },
-    } as PostCondition;
+    });
     expect(mapTransferFromPostCondition(pc)).toEqual({
       assetCategory: CryptoAssetCategories.fungible,
       assetId: 'ST456.some-nft::xyz',
@@ -236,14 +231,12 @@ describe(mapTransferFromPostCondition.name, () => {
 
 describe(getStacksAssetTransfers.name, () => {
   it('maps stx, nft, and ft transfers from PCs when tx is pending', () => {
-    const stxPc = {
-      type: 'stx',
+    const stxPc = createActivityStxPostCondition({
       principal: { type_id: 'principal_standard', address: 'ST123' },
       amount: '1000',
-    } as PostCondition;
+    });
 
-    const ftPc = {
-      type: 'fungible',
+    const ftPc = createActivityFtPostCondition({
       principal: { type_id: 'principal_standard', address: 'ST123' },
       amount: '1000',
       asset: {
@@ -251,10 +244,9 @@ describe(getStacksAssetTransfers.name, () => {
         contract_name: 'token',
         asset_name: 'xyz',
       },
-    } as PostCondition;
+    });
 
-    const nftPc = {
-      type: 'non_fungible',
+    const nftPc = createActivityNftPostCondition({
       principal: { type_id: 'principal_standard', address: 'ST123' },
       asset: {
         contract_address: 'ST789',
@@ -263,13 +255,14 @@ describe(getStacksAssetTransfers.name, () => {
       },
       asset_value: {
         hex: '0x1234',
+        repr: '',
       },
-    } as PostCondition;
+    });
 
-    const tx = {
+    const tx = createActivityMempoolTokenTransferTx({
       tx_status: 'pending',
       post_conditions: [stxPc, ftPc, nftPc],
-    } as HiroStacksMempoolTransaction;
+    });
 
     const pendingTransfers = getStacksAssetTransfers(tx, []);
 
@@ -280,16 +273,14 @@ describe(getStacksAssetTransfers.name, () => {
   });
 
   it('maps non-zero amount stx & ft transfers from PCs and takes final amount from matching events', () => {
-    const tx = {
+    const tx = createActivityContractCallTx({
       tx_status: 'success',
       post_conditions: [
-        {
-          type: 'stx',
+        createActivityStxPostCondition({
           principal: { type_id: 'principal_standard', address: 'ST123' },
           amount: '1000',
-        },
-        {
-          type: 'fungible',
+        }),
+        createActivityFtPostCondition({
           principal: { type_id: 'principal_standard', address: 'ST123' },
           amount: '2000',
           asset: {
@@ -297,9 +288,8 @@ describe(getStacksAssetTransfers.name, () => {
             contract_name: 'token-1',
             asset_name: 'TKN1',
           },
-        },
-        {
-          type: 'fungible',
+        }),
+        createActivityFtPostCondition({
           principal: { type_id: 'principal_standard', address: 'ST123' },
           amount: '2000',
           asset: {
@@ -307,41 +297,36 @@ describe(getStacksAssetTransfers.name, () => {
             contract_name: 'token-2',
             asset_name: 'TKN2',
           },
-        },
-        {
-          type: 'non_fungible',
+        }),
+        createActivityNftPostCondition({
           principal: { type_id: 'principal_standard', address: 'ST123' },
           asset: {
             contract_address: 'ST789',
             contract_name: 'nft',
             asset_name: 'abc',
           },
-          asset_value: { hex: '0x1234' },
-        },
+          asset_value: { hex: '0x1234', repr: '' },
+        }),
       ],
-    };
+    });
 
     const events = [
-      {
-        event_type: 'stx_asset',
+      createActivityStxAssetEvent({
         asset: {
           amount: '900',
           sender: 'ST123',
           recipient: 'ST456',
         },
-      },
-      {
-        event_type: 'fungible_token_asset',
-        asset: {
-          amount: '1800',
-          asset_id: 'ST456.token-1::TKN1',
-          sender: 'ST123',
-          recipient: 'ST456',
-        },
-      },
+      }),
+      createActivityFtAssetEvent({
+        amount: '1800',
+        asset_id: 'ST456.token-1::TKN1',
+        sender: 'ST123',
+        recipient: 'ST456',
+      }),
     ];
 
-    const result = getStacksAssetTransfers(tx as any, events as any);
+    const result = getStacksAssetTransfers(tx, events);
 
     expect(result).toEqual([
       {

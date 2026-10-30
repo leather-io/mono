@@ -2,7 +2,7 @@ import { Loading } from '@/components/loading/loading';
 import { TokenCell } from '@/features/token/components/token-cell';
 import { useSip10FtMetadata } from '@/queries/assets/sip10-asset.query';
 import {
-  FungiblePostConditionWire,
+  type FungiblePostConditionWire,
   PostConditionPrincipalId,
   addressToString,
 } from '@stacks/transactions';

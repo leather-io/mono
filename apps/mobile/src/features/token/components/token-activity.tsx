@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { FetchState } from '@/components/loading';
+import { type FetchState } from '@/components/loading';
 import { LoadingItem } from '@/components/loading/loading-item';
 import { Screen } from '@/components/screen/screen';
 import { ActivityItem } from '@/features/activity/activity-item';

@@ -11,12 +11,12 @@ import {
   getNativeSegwitPaymentFromAddressIndex,
 } from '@leather.io/bitcoin';
 import { type AccountId } from '@leather.io/models';
+import { getMempoolApiClient } from '@leather.io/services';
 import { reverseBytes } from '@leather.io/utils';
 
 import { type BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { analytics } from '@shared/utils/analytics';
 
-import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
@@ -137,12 +137,10 @@ export function getNativeSegwitMainnetAddressFromRootKeychain(rootKeychain: HDKe
 }
 
 export function useUpdateLedgerSpecificNativeSegwitUtxoHexForAdddressIndexZero() {
-  const bitcoinClient = useBitcoinClient();
-
   return async (tx: Psbt, inputSigningConfig: BitcoinInputSigningConfig[]) => {
     const inputsTxHex = await Promise.all(
       tx.txInputs.map(async input => {
-        const txHex: unknown = await bitcoinClient.transactionsApi.getBitcoinTransactionHex(
+        const txHex: unknown = await getMempoolApiClient().fetchTransactionHex(
           // txids are encoded onchain in reverse byte order
           Buffer.from(reverseBytes(input.hash)).toString('hex')
         );

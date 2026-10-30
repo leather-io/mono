@@ -9,10 +9,10 @@ import {
 import type { Route } from './+types/search';
 
 const supportSearchQuery = `*[
-  (_type == "helpCenterGuide" && [title, body] match $query + "*") ||
-  (_type == "post" && slug.current in $deprecationPostSlugs && [title, body, summary] match $query + "*")
+  (_type == "helpCenterGuide" && [title, body] match $searchTerm + "*") ||
+  (_type == "post" && slug.current in $deprecationPostSlugs && [title, body, summary] match $searchTerm + "*")
 ] | score(
-  boost(title match $query + "*", 3)
+  boost(title match $searchTerm + "*", 3)
 ) | order(_score desc)[0...10] {
   _id, _type, title, slug,
   "categories": *[_type == "helpCenterCategory" && ^._id in guides[]._ref]{ _id, name, slug }
@@ -24,6 +24,11 @@ interface SupportSearchDoc {
   title: string;
   slug: { _type?: 'slug'; current: string };
   categories: { _id: string; name: string; slug: { _type?: 'slug'; current: string } }[];
+}
+
+interface SupportSearchParams {
+  searchTerm: string;
+  deprecationPostSlugs: string[];
 }
 
 interface DeprecationSearchResult {
@@ -56,8 +61,8 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   const docs =
-    (await cmsClient.fetch<SupportSearchDoc[]>(supportSearchQuery, {
-      query,
+    (await cmsClient.fetch<SupportSearchDoc[], SupportSearchParams>(supportSearchQuery, {
+      searchTerm: query,
       deprecationPostSlugs,
     })) ?? [];
 

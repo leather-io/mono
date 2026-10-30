@@ -39,9 +39,6 @@
       "path": "./packages/provider/tsconfig.json"
     },
     {
-      "path": "./packages/query/tsconfig.json"
-    },
-    {
       "path": "./packages/rpc/tsconfig.json"
     },
     {
