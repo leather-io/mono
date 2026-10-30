@@ -25,7 +25,7 @@ function isInViewport(element: HTMLElement) {
   return rect.bottom > 0 && rect.top < window.innerHeight;
 }
 
-export interface RevealProps extends HTMLAttributes<HTMLElement> {
+interface RevealProps extends HTMLAttributes<HTMLElement> {
   /** Share of the element (0–1) that must be on screen before it fades in. Defaults to 0.5. */
   threshold?: number;
   /** Element to render. Defaults to `div`. */
