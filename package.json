@@ -95,6 +95,10 @@
       "dompurify@>=3.0.0 <3.4.17": ">=3.4.17 <4",
       "undici@<6.29.1": ">=6.29.1 <7",
       "undici@>=7.0.0 <7.30.1": ">=7.30.1 <8",
+      "query-string@>=9.0.0 <9.5.1": ">=9.5.1 <10",
+      "query-string@7>decode-uri-component": ">=0.5.1 <0.6.0",
+      "@walletconnect/universal-provider@2.21.5": "2.21.10",
+      "@walletconnect/types@2.21.5": "2.21.10",
       "@reown/appkit-wallet>zod": "4.6.7",
       "@sanity/codegen>zod": "4.6.7"
     },
