@@ -10,10 +10,10 @@ import Markdown from '~/components/content/markdown-content';
 import { Page } from '~/layouts/page/page';
 import { RelatedGuides } from '~/pages/support/components/related-guides';
 import { ReadingProgress } from '~/pages/support/guide/components/reading-progress';
-import { loader } from '~/pages/support/guide/guide.route';
+import { type loader } from '~/pages/support/guide/guide.route';
 
 function formatDate(dateString: string | undefined) {
-  if (!dateString) return '';
+  if (!dateString) return null;
 
   const date = new Date(dateString);
   const formatter = new Intl.DateTimeFormat('en-US', {

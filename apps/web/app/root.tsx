@@ -4,7 +4,7 @@ import { css } from 'leather-styles/css';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Buffer } from 'safe-buffer';
 
-import { HasChildren } from '@leather.io/ui';
+import { type HasChildren } from '@leather.io/ui';
 import leatherUiStyles from '@leather.io/ui/styles?url';
 
 import type { Route } from './+types/root';

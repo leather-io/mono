@@ -6,7 +6,7 @@ import { Box, useTheme } from '@leather.io/ui/native';
 
 import { GenericClearSearchButton } from './generic-clear-search-button';
 import { GenericSearchTextInput } from './generic-search-text-input';
-import { SearchInputProps } from './utils';
+import { type SearchInputProps } from './utils';
 
 export function BrowserSearchInput({
   textInputRef,
@@ -15,13 +15,16 @@ export function BrowserSearchInput({
   onSubmit,
 }: SearchInputProps) {
   const theme = useTheme();
+
+  async function dismissKeyboard() {
+    await KeyboardController.dismiss();
+  }
+
   return (
     <Box>
       <GenericSearchTextInput
         ref={textInputRef}
-        onBlur={async () => {
-          await KeyboardController.dismiss();
-        }}
+        onBlur={() => void dismissKeyboard()}
         onChangeText={setTextUrl}
         value={textUrl}
         onSubmitEditing={onSubmit}

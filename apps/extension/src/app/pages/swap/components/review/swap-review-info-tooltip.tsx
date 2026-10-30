@@ -3,9 +3,7 @@ import { type ReactNode } from 'react';
 import { css } from 'leather-styles/css';
 import { Box } from 'leather-styles/jsx';
 
-import { InfoCircleIcon } from '@leather.io/ui';
-
-import { Tooltip } from '@app/ui/components/tooltip/tooltip';
+import { InfoCircleIcon, Tooltip } from '@leather.io/ui';
 
 const leftAlignedContent = css({ textAlign: 'left' });
 

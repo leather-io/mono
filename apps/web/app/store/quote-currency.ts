@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai/index';
 import { atomWithStorage } from 'jotai/utils';
 
-import { QuoteCurrency } from '@leather.io/models';
+import { type QuoteCurrency } from '@leather.io/models';
 
 export const quoteCurrencyAtom = atomWithStorage<QuoteCurrency>('quoteCurrency', 'USD');
 

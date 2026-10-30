@@ -2,10 +2,10 @@ import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type { BtcStakingPosition } from '@leather.io/models';
+import { Hr } from '@leather.io/ui';
 
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { Content } from '@app/components/layout';
-import { Divider } from '@app/components/layout/divider';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
@@ -35,7 +35,7 @@ export function BondHistoryPage() {
 
   const endToEndDivider = (
     <Box mx={isMd ? 'space.00' : '-space.05'}>
-      <Divider />
+      <Hr />
     </Box>
   );
 

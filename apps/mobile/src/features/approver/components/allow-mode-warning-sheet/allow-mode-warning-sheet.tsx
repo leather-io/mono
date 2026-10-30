@@ -3,7 +3,14 @@ import { useState } from 'react';
 import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 import { t } from '@lingui/core/macro';
 
-import { Box, Button, Sheet, SheetNativeBackdrop, SheetRef, Text } from '@leather.io/ui/native';
+import {
+  Box,
+  Button,
+  Sheet,
+  SheetNativeBackdrop,
+  type SheetRef,
+  Text,
+} from '@leather.io/ui/native';
 
 import { BulletPoint } from './bullet-point';
 import { SwitchCheck } from './switch-check';

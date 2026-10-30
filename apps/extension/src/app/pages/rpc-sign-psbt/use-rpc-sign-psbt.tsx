@@ -31,7 +31,7 @@ import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/u
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import {
   useCalculateBitcoinFiatValue,
-  useCryptoCurrencyMarketDataMeanAverage,
+  useCryptoCurrencyMarketData,
 } from '@app/query/common/market-data/market-data.hooks';
 import { useGetAssumedZeroIndexSigningConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -67,7 +67,7 @@ export function useRpcSignPsbt() {
   const descriptorDetails = useDescriptorPsbtDetails(psbtHex, descriptor);
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
   const { refetchUtxos } = useCurrentUtxos();
-  const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
+  const btcMarketData = useCryptoCurrencyMarketData('BTC');
   const calculateBitcoinFiatValue = useCalculateBitcoinFiatValue();
   const getDefaultSigningConfig = useGetAssumedZeroIndexSigningConfig();
   const { address: addressNativeSegwit } = useCurrentAccountNativeSegwitIndexZeroPayer();

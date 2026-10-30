@@ -125,7 +125,7 @@ export function BtcForm({
         />
 
         <Button
-          onPress={onSubmit}
+          onPress={event => void onSubmit(event)}
           disabled={!form.formState.isValid}
           testID={SendSelectors.ReviewButton}
         >{t`Review`}</Button>

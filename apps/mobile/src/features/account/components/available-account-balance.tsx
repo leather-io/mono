@@ -4,7 +4,7 @@ import { useAccountUnlockedBalance } from '@/queries/balance/account-balance.que
 import { HomeSelectors } from '@/shared/selectors/home.selectors';
 import { t } from '@lingui/core/macro';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import {
   Box,
   Pressable,

@@ -7,10 +7,7 @@ import { useSettings } from '@/store/settings/settings';
 import { defaultNetworkPreferences } from '@/store/settings/utils';
 import { t } from '@lingui/core/macro';
 
-import {
-  DefaultNetworkConfigurations,
-  WalletDefaultNetworkConfigurationIds,
-} from '@leather.io/models';
+import { type DefaultNetworkConfigurations } from '@leather.io/models';
 import {
   GlobeIcon,
   PlaceholderIcon,
@@ -21,11 +18,11 @@ import { capitalize } from '@leather.io/utils';
 
 function getNetworkIcon(network: DefaultNetworkConfigurations) {
   switch (network) {
-    case WalletDefaultNetworkConfigurationIds.mainnet:
+    case 'mainnet':
       return <GlobeIcon />;
-    case WalletDefaultNetworkConfigurationIds.testnet4:
+    case 'testnet4':
       return <TestTubeIcon />;
-    case WalletDefaultNetworkConfigurationIds.signet:
+    case 'signet':
       return <PlaygroundFormsIcon />;
     default:
       return <PlaceholderIcon />;

@@ -1,9 +1,9 @@
 import {
-  HiroPoxInfoResponse,
-  HiroPrincipalStakingBond,
-  HiroStakingBond,
+  type HiroPoxInfoResponse,
+  type HiroPrincipalStakingBond,
+  type HiroStakingBond,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { LeatherApiStakingBond } from '../infrastructure/api/leather/leather-api.client';
+import { type LeatherApiStakingBond } from '../infrastructure/api/leather/leather-api.client';
 import {
   deriveBondEnrollmentWindow,
   deriveBtcStakingPositionStatus,

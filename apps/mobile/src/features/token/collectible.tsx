@@ -5,7 +5,7 @@ import { HeaderSubtitle } from '@/components/screen/screen-header/components/hea
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { TokenSelectors } from '@/shared/selectors/token.selectors';
 
-import { NonFungibleCryptoAsset } from '@leather.io/models';
+import { type NonFungibleCryptoAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
 interface CollectibleProps {

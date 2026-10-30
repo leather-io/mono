@@ -1,7 +1,7 @@
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { ApproverPermissions } from '@/features/approver/components/approver-permissions';
 import { RpcBitcoinSelectors } from '@/shared/selectors/rpc-bitcoin.selectors';
-import { Account } from '@/store/accounts/accounts';
+import { type Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';

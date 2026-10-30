@@ -1,7 +1,9 @@
 import {
   AuthType,
   ClarityVersion,
+  type FungiblePostCondition,
   PayloadType,
+  PostConditionMode,
   deserializeTransaction,
 } from '@stacks/transactions';
 import BigNumber from 'bignumber.js';
@@ -9,6 +11,7 @@ import { assert, describe, expect, it } from 'vitest';
 
 import { createMoney } from '@leather.io/utils';
 
+import { formatAssetString } from '../stacks.utils';
 import { generateStacksUnsignedTransaction, initNonce } from './generate-unsigned-transaction';
 import {
   type StacksUnsignedContractCallOptions,
@@ -47,6 +50,37 @@ describe('generateStacksUnsignedTransaction', () => {
     expect(result.payload.payloadType).toEqual(PayloadType.ContractCall);
     expect(result.auth.spendingCondition.fee).toBe(BigInt('1000'));
     expect(result.auth.spendingCondition.nonce).toBe(BigInt('1'));
+  });
+
+  it('should keep the post condition mode and encode post conditions of a contract call', async () => {
+    const postCondition: FungiblePostCondition = {
+      type: 'ft-postcondition',
+      address: 'ST1EXHZSN8MJSJ9DSG994G1V8CNKYXGMK7Z4SA6DH',
+      condition: 'gte',
+      amount: '100',
+      asset: formatAssetString({
+        contractAddress: 'ST34RKEJKQES7MXQFBT29KSJZD73QK3YNT5N56C6X',
+        contractName: 'test-asset-contract',
+        assetName: 'test-asset-name',
+      }),
+    };
+    const options: StacksUnsignedContractCallOptions = {
+      txType: TransactionTypes.ContractCall,
+      contractAddress: 'ST1EXHZSN8MJSJ9DSG994G1V8CNKYXGMK7Z4SA6DH',
+      contractName: 'hello-world',
+      functionName: 'print',
+      fee: createMoney(new BigNumber(0), 'STX'),
+      functionArgs: [],
+      nonce: 0,
+      postConditionMode: PostConditionMode.Allow,
+      postConditions: [postCondition],
+      publicKey: testPublicKey,
+    };
+
+    const result = await generateStacksUnsignedTransaction(options);
+    expect(result.postConditionMode).toEqual(PostConditionMode.Allow);
+    const postConditionValue = result.postConditions.values[0];
+    expect('amount' in postConditionValue && postConditionValue.amount).toEqual(100n);
   });
 
   it('should generate unsigned contract deploy', async () => {

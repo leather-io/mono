@@ -9,7 +9,7 @@ import { AccountBalance } from '@/features/balances/total-balance';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { AccountNameSheet } from '@/features/settings/wallet-and-accounts/account-name-sheet';
 import { WalletSettingsSelectors } from '@/shared/selectors/wallet-settings.selectors';
-import { Account, AccountLoader } from '@/store/accounts/accounts';
+import { type Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
 import { useAppDispatch } from '@/store/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
@@ -19,14 +19,14 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import {
   Box,
   Eye1ClosedIcon,
   Eye1Icon,
   HeadIcon,
   PassportIcon,
-  SheetInstance,
+  type SheetInstance,
 } from '@leather.io/ui/native';
 
 interface ConfigureAccountProps extends AccountId {

@@ -1,4 +1,4 @@
-import { MetaDescriptor } from 'react-router';
+import { type MetaDescriptor } from 'react-router';
 
 import { WhenClient } from '~/components/when-client';
 import { ByosmStaking } from '~/features/bitcoin-staking/byosm/byosm-staking';

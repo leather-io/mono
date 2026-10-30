@@ -2,7 +2,7 @@ import { WarningSheetLayout } from '@/components/sheets/warning-sheet.layout';
 import { OnboardingSelectors } from '@/shared/selectors/onboarding.selectors';
 import { t } from '@lingui/core/macro';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { type SheetRef } from '@leather.io/ui/native';
 
 interface SkipSecureWalletSheetProps {
   sheetRef: SheetRef;

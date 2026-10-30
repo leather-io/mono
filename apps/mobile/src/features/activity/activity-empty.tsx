@@ -1,5 +1,6 @@
 import { Dimensions } from 'react-native';
 
+import netImage from '@/assets/stickers/net.png';
 import { ActivitySelectors } from '@/shared/selectors/activity.selectors';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
@@ -25,7 +26,7 @@ export function ActivityEmpty() {
           height: netSize,
         }}
         contentFit="contain"
-        source={require('@/assets/stickers/net.png')}
+        source={netImage}
       />
       <Box width={186}>
         <Text textAlign="center" variant="label01">

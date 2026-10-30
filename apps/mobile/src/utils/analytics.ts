@@ -1,5 +1,5 @@
-import { store } from '@/store';
 import { selectAnalyticsPreference } from '@/store/settings/settings.read';
+import { store } from '@/store/store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Application from 'expo-application';
 import { Mixpanel } from 'mixpanel-react-native';
@@ -40,7 +40,8 @@ const mixpanelClient = process.env.EXPO_PUBLIC_MIXPANEL_TOKEN
   ? new Mixpanel(process.env.EXPO_PUBLIC_MIXPANEL_TOKEN, false)
   : getMockedMixpanel();
 
-void mixpanelClient.init().then(() => {
+async function initMixpanelClient() {
+  await mixpanelClient.init();
   const currentVersion = Application.nativeApplicationVersion || '';
   const nativeBuildVersion = Application.nativeBuildVersion || '';
   mixpanelClient.registerSuperProperties({
@@ -48,7 +49,8 @@ void mixpanelClient.init().then(() => {
     version: currentVersion,
     buildVersion: nativeBuildVersion,
   });
-});
+}
+void initMixpanelClient();
 
 export function setAnalyticsNetwork(network: Network) {
   mixpanelClient.registerSuperProperties({ network });
@@ -87,12 +89,13 @@ setupPreferenceSubscription();
 
 export const analytics = new Proxy(analyticsClient, {
   get(target, prop, receiver) {
-    const value = Reflect.get(target, prop, receiver);
+    const value: unknown = Reflect.get(target, prop, receiver);
 
     if (typeof value === 'function') {
       return (...args: unknown[]) => {
         if (!analyticsEnabled) return;
-        return value.apply(target, args);
+        const result: unknown = value.apply(target, args);
+        return result;
       };
     }
 

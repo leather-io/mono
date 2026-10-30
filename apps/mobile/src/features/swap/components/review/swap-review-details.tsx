@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import {
   Easing,
   FadeIn,
@@ -8,7 +8,7 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
-import { DividerProps, Divider as RawDivider } from '@/components/divider';
+import { type DividerProps, Divider as RawDivider } from '@/components/divider';
 import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { isString } from 'remeda';
 
@@ -16,10 +16,10 @@ import {
   AnimatedBox,
   Box,
   Button,
-  HasChildren,
+  type HasChildren,
   SettingsGearIcon,
   Text,
-  TextProps,
+  type TextProps,
 } from '@leather.io/ui/native';
 
 const LayoutTransition = LinearTransition.springify().mass(2).stiffness(700).damping(200);

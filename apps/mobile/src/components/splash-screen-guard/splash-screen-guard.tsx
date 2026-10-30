@@ -9,9 +9,9 @@ import { t } from '@lingui/core/macro';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
 
-import { Box, Button, HasChildren, useOnMount, useTheme } from '@leather.io/ui/native';
+import { Box, Button, type HasChildren, useOnMount, useTheme } from '@leather.io/ui/native';
 
-import { LeatherSplash, SplashLottieView } from '../animations/leather-splash';
+import { LeatherSplash, type SplashLottieView } from '../animations/leather-splash';
 import { AuthContext } from './use-auth-context';
 import { useAuthState } from './use-auth-state';
 

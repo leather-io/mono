@@ -10,8 +10,8 @@ import { SettingsSelectors } from '@/shared/selectors/settings.selectors';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
-import { AccountDisplayPreference } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
+import { type AccountDisplayPreference } from '@leather.io/models';
+import { type SheetRef } from '@leather.io/ui/native';
 
 import { useOpenUrl } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';

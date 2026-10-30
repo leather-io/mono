@@ -159,9 +159,6 @@ importers:
       '@leather.io/queries':
         specifier: workspace:*
         version: link:../../packages/queries
-      '@leather.io/query':
-        specifier: workspace:*
-        version: link:../../packages/query
       '@leather.io/rpc':
         specifier: workspace:*
         version: link:../../packages/rpc
@@ -204,9 +201,6 @@ importers:
       '@radix-ui/react-dialog':
         specifier: 1.0.5
         version: 1.0.5(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@radix-ui/react-tooltip':
-        specifier: 1.0.7
-        version: 1.0.7(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@radix-ui/themes':
         specifier: 2.0.3
         version: 2.0.3(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -324,12 +318,6 @@ importers:
       postcss-preset-env:
         specifier: 10.0.5
         version: 10.0.5(postcss@8.5.20)
-      prism-react-renderer:
-        specifier: 2.4.1
-        version: 2.4.1(react@19.1.0)
-      prismjs:
-        specifier: 1.30.0
-        version: 1.30.0
       punycode:
         specifier: 2.3.1
         version: 2.3.1
@@ -469,9 +457,6 @@ importers:
       '@types/node':
         specifier: 24.0.8
         version: 24.0.8
-      '@types/prismjs':
-        specifier: 1.26.5
-        version: 1.26.5
       '@types/punycode':
         specifier: 2.1.4
         version: 2.1.4
@@ -610,9 +595,6 @@ importers:
       '@leather.io/queries':
         specifier: workspace:*
         version: link:../../packages/queries
-      '@leather.io/query':
-        specifier: workspace:*
-        version: link:../../packages/query
       '@leather.io/rpc':
         specifier: workspace:*
         version: link:../../packages/rpc
@@ -1056,9 +1038,6 @@ importers:
       '@leather.io/queries':
         specifier: workspace:*
         version: link:../../packages/queries
-      '@leather.io/query':
-        specifier: workspace:*
-        version: link:../../packages/query
       '@leather.io/rpc':
         specifier: workspace:*
         version: link:../../packages/rpc
@@ -1146,6 +1125,9 @@ importers:
       nprogress:
         specifier: 0.2.0
         version: 0.2.0
+      p-queue:
+        specifier: 8.1.1
+        version: 8.1.1
       radix-ui:
         specifier: 1.4.2
         version: 1.4.2(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1712,6 +1694,9 @@ importers:
       '@leather.io/utils':
         specifier: workspace:*
         version: link:../utils
+      '@stacks/stacks-blockchain-api-types':
+        specifier: 7.14.1
+        version: 7.14.1
       '@stacks/transactions':
         specifier: 7.5.0
         version: 7.5.0(encoding@0.1.13)
@@ -1734,88 +1719,6 @@ importers:
       vitest:
         specifier: 2.1.9
         version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.8.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
-
-  packages/query:
-    dependencies:
-      '@hirosystems/token-metadata-api-client':
-        specifier: 1.2.0
-        version: 1.2.0(encoding@0.1.13)
-      '@leather.io/constants':
-        specifier: workspace:*
-        version: link:../constants
-      '@leather.io/models':
-        specifier: workspace:*
-        version: link:../models
-      '@leather.io/stacks':
-        specifier: workspace:*
-        version: link:../stacks
-      '@leather.io/utils':
-        specifier: workspace:*
-        version: link:../utils
-      '@stacks/common':
-        specifier: 7.0.2
-        version: 7.0.2
-      '@stacks/network':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
-      '@stacks/stacking':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
-      '@stacks/stacks-blockchain-api-types':
-        specifier: 7.14.1
-        version: 7.14.1
-      '@stacks/transactions':
-        specifier: 7.5.0
-        version: 7.5.0(encoding@0.1.13)
-      alex-sdk:
-        specifier: 3.1.0
-        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.5.0(encoding@0.1.13))
-      axios:
-        specifier: 1.20.0
-        version: 1.20.0
-      bignumber.js:
-        specifier: 9.1.2
-        version: 9.1.2
-      p-queue:
-        specifier: 8.1.1
-        version: 8.1.1
-      remeda:
-        specifier: 2.21.2
-        version: 2.21.2
-      uuid:
-        specifier: 11.1.0
-        version: 11.1.0
-      zod:
-        specifier: 4.6.7
-        version: 4.6.7
-    devDependencies:
-      '@leather.io/prettier-config':
-        specifier: workspace:*
-        version: link:../prettier-config
-      '@leather.io/tsconfig-config':
-        specifier: workspace:*
-        version: link:../tsconfig-config
-      '@tanstack/react-query':
-        specifier: 5.85.5
-        version: 5.85.5(react@19.2.3)
-      '@types/jsdom':
-        specifier: 21.1.3
-        version: 21.1.3
-      jsdom:
-        specifier: 26.1.0
-        version: 26.1.0
-      prettier:
-        specifier: 3.5.1
-        version: 3.5.1
-      tsdown:
-        specifier: 0.16.5
-        version: 0.16.5(@typescript/native-preview@7.0.0-dev.20251121.1)(ms@2.1.3)(synckit@0.11.11)(typescript@5.9.3)
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@26.1.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/rpc:
     dependencies:
@@ -2063,9 +1966,6 @@ importers:
       '@leather.io/models':
         specifier: workspace:*
         version: link:../models
-      '@leather.io/query':
-        specifier: workspace:*
-        version: link:../query
       '@leather.io/services':
         specifier: workspace:*
         version: link:../services
@@ -39816,43 +39716,6 @@ snapshots:
       '@types/node': 25.0.3
       happy-dom: 20.0.11
       jsdom: 23.2.0
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
-  vitest@2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@26.1.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0):
-    dependencies:
-      '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(vite@5.4.21(@types/node@25.0.3)(lightningcss@1.30.2)(terser@5.46.0))
-      '@vitest/pretty-format': 2.1.9
-      '@vitest/runner': 2.1.9
-      '@vitest/snapshot': 2.1.9
-      '@vitest/spy': 2.1.9
-      '@vitest/utils': 2.1.9
-      chai: 5.2.0
-      debug: 4.4.3(supports-color@9.4.0)
-      expect-type: 1.2.0
-      magic-string: 0.30.21
-      pathe: 1.1.2
-      std-env: 3.9.0
-      tinybench: 2.9.0
-      tinyexec: 0.3.2
-      tinypool: 1.0.2
-      tinyrainbow: 1.2.0
-      vite: 5.4.21(@types/node@25.0.3)(lightningcss@1.30.2)(terser@5.46.0)
-      vite-node: 2.1.9(@types/node@25.0.3)(lightningcss@1.30.2)(terser@5.46.0)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 25.0.3
-      happy-dom: 20.0.11
-      jsdom: 26.1.0
     transitivePeerDependencies:
       - less
       - lightningcss

@@ -2,8 +2,8 @@ import * as SecureStore from 'expo-secure-store';
 
 import { safelyReadPaddedFingerprint } from '@leather.io/crypto';
 
-import { store } from '..';
 import { selectSecurityLevelPreference } from '../settings/settings.read';
+import { store } from '../store';
 import { searchForMnemonic } from './secure-store-access';
 import { getLatestStoreKeys, getSecureStoreKeys } from './secure-store-keys';
 import {

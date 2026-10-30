@@ -56,7 +56,7 @@ export function ApproverButtons(props: ApproverButtonsProps) {
           </Button>
           <Button
             flex={1}
-            onPress={onApproveWrapper}
+            onPress={() => void onApproveWrapper()}
             disabled={props.isSubmitDisabled}
             testID={ApproverSelectors.ApproveButton}
           >
@@ -78,7 +78,7 @@ export function ApproverButtons(props: ApproverButtonsProps) {
           </Button>
           <Button
             flex={1}
-            onPress={onApproveWrapper}
+            onPress={() => void onApproveWrapper()}
             disabled={props.isSubmitDisabled}
             testID={ApproverSelectors.RetryButton}
           >

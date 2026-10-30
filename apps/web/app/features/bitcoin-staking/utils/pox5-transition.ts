@@ -1,4 +1,4 @@
-import { Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-options';
+import { type Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-options';
 
 interface GetPox5NeedsRestakeArgs {
   pox4Stacked: boolean;

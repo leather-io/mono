@@ -1,4 +1,4 @@
-import { GestureResponderEvent } from 'react-native';
+import { type GestureResponderEvent } from 'react-native';
 
 import { SharedSelectors } from '@/shared/selectors/shared.selectors';
 import { useRouter } from 'expo-router';

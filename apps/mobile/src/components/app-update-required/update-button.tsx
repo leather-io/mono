@@ -32,7 +32,11 @@ export function UpdateButton({ onPress }: UpdateButtonProps) {
   }
 
   return (
-    <Button onPress={handlePress} disabled={isLoading} testID={AppUpdateSelectors.UpdateButton}>
+    <Button
+      onPress={() => void handlePress()}
+      disabled={isLoading}
+      testID={AppUpdateSelectors.UpdateButton}
+    >
       {getStoreButtonText()}
     </Button>
   );

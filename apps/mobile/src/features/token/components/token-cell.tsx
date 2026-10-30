@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { Loading } from '@/components/loading/loading';
 import { HomeSelectors } from '@/shared/selectors/home.selectors';

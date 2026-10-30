@@ -2,7 +2,7 @@ import { useRef } from 'react';
 
 import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 
-import { Approver, SheetInstance } from '@leather.io/ui/native';
+import { Approver, type SheetInstance } from '@leather.io/ui/native';
 
 import { NonceCard } from './components/nonce-card';
 import { NonceSheet } from './components/nonce-sheet';

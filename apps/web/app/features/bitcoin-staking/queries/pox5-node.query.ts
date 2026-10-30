@@ -1,18 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
-import { CYCLE_STATUS_REFETCH_INTERVAL_MS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-
-import { Money } from '@leather.io/models';
 import {
   createGetCoreInfoQueryOptions,
   createGetPoxInfoQueryOptions,
   createGetSecondsUntilNextCycleQueryOptions,
-  createGetStxAddressBalanceQueryOptions,
-} from '@leather.io/query';
+} from '~/features/stacking/queries/create-stacking-client-query-options';
+import { CYCLE_STATUS_REFETCH_INTERVAL_MS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+
+import { type Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { usePox5ChainStackingClient, usePox5StacksClient } from '../hooks/use-pox5-clients';
+import { createGetStxAddressBalanceQueryOptions } from './create-get-stx-address-balance-query-options';
 
 // Node-info queries for the configured pox-5 chain. These mirror the pox-4
 // hooks in features/stacking/hooks/stacking.query.ts but run against the

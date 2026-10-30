@@ -118,7 +118,6 @@ To keep this package and its consumers aligned on the “builder only” pattern
 ## Relationship to Other Packages
 
 - **`@leather.io/services`** - This package wraps service calls with query configs
-- **`@leather.io/query`** (legacy) - Older package with low-level API queries, being gradually deprecated
 - **`@tanstack/react-query`** - Peer dependency, types imported but not included in runtime
 
 ## Migration from Inline Queries

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
-import { FieldError } from 'react-hook-form';
-import { NativeSyntheticEvent, TextInputSubmitEditingEventData } from 'react-native';
+import { type FieldError } from 'react-hook-form';
+import { type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from 'react-native';
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
@@ -12,7 +12,7 @@ import {
   NoteEmptyIcon,
   Pressable,
   Sheet,
-  SheetInstance,
+  type SheetInstance,
   Text,
 } from '@leather.io/ui/native';
 

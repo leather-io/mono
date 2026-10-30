@@ -16,7 +16,7 @@ import { Trans } from '@lingui/react/macro';
 import * as Linking from 'expo-linking';
 
 import { LEATHER_SUPPORT_URL } from '@leather.io/constants';
-import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type Money, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import {
   AnimatedBox,
   ArrowLeftIcon,
@@ -149,7 +149,7 @@ function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {
           <Text
             variant="body02"
             color="ink.text-subdued"
-            onPress={() => Linking.openURL(LEATHER_SUPPORT_URL)}
+            onPress={() => void Linking.openURL(LEATHER_SUPPORT_URL)}
             textDecorationLine="underline"
             textDecorationStyle="solid"
           >

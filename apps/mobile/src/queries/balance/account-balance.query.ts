@@ -3,12 +3,12 @@ import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 
-import { AccountId, QuoteCurrency } from '@leather.io/models';
+import { type AccountId, type QuoteCurrency } from '@leather.io/models';
 import {
   createAccountTotalBalanceQueryConfig,
   createAccountUnlockedBalanceQueryConfig,
 } from '@leather.io/queries';
-import { AccountRequest, UserSettings } from '@leather.io/services';
+import { type AccountRequest, type UserSettings } from '@leather.io/services';
 
 import { balanceQueryOptions } from './balance-query-options';
 

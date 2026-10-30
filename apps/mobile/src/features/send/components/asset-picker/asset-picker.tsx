@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 
 import { renderAsset } from '@/features/balances/assets/render-assets';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
@@ -8,13 +8,13 @@ import { useSip10SendFlag } from '@/features/feature-flags';
 import { AssetPickerItem } from '@/features/send/components/asset-picker/asset-picker-item';
 import {
   useSip10AccountBalance,
-  useSip10TotalBalance,
+  type useSip10TotalBalance,
 } from '@/queries/balance/sip10-balance.query';
-import { ListRenderItemInfo } from '@shopify/flash-list';
+import { type ListRenderItemInfo } from '@shopify/flash-list';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import { FungibleCryptoAsset } from '@leather.io/models';
-import { Sip10Balance } from '@leather.io/services';
+import { type FungibleCryptoAsset } from '@leather.io/models';
+import { type Sip10Balance } from '@leather.io/services';
 import { Sheet } from '@leather.io/ui/native';
 
 interface AssetListProps {

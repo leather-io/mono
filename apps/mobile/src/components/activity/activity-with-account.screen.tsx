@@ -4,7 +4,7 @@ import { useActivity } from '@/queries/activity/activity.query';
 import { ActivitySelectors } from '@/shared/selectors/activity.selectors';
 import { t } from '@lingui/core/macro';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 interface ActivityScreenWithAccountProps {
   currentAccount: AccountId;

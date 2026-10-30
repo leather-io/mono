@@ -5,6 +5,8 @@ import { Image } from 'expo-image';
 
 import { Box, ThemeProvider } from '@leather.io/ui/native';
 
+import qrLeatherLettermarkImage from './qr-leather-lettermark.png';
+
 interface QrCardProps {
   value: string;
 }
@@ -49,7 +51,7 @@ export function QrCard({ value }: QrCardProps) {
           >
             <QRCode value={value} size={qrSize} />
             <Image
-              source={require('./qr-leather-lettermark.png')}
+              source={qrLeatherLettermarkImage}
               style={{ position: 'absolute', width: logoSize, height: logoSize }}
             />
           </Box>

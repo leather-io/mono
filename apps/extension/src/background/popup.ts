@@ -1,6 +1,5 @@
 import { tokens } from '@leather.io/tokens';
-
-import { pxStringToNumber } from '@shared/utils/px-string-to-number';
+import { pxStringToNumber } from '@leather.io/utils';
 
 interface PopupOptions {
   url?: string;

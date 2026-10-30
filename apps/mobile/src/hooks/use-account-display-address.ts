@@ -1,12 +1,12 @@
 import { useAccountBnsNames } from '@/queries/bns/bns.query';
-import { AccountLookup } from '@/shared/types';
+import { type AccountLookup } from '@/shared/types';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
 import { toUnicode } from 'punycode';
 
-import { AccountDisplayPreference } from '@leather.io/models';
-import { AccountBnsName } from '@leather.io/services';
+import { type AccountDisplayPreference } from '@leather.io/models';
+import { type AccountBnsName } from '@leather.io/services';
 import { truncateMiddle } from '@leather.io/utils';
 
 interface UseAccountDisplayAddressProps extends AccountLookup {
@@ -35,11 +35,13 @@ export function useAccountDisplayAddress({
 
   switch (preference) {
     case 'native-segwit':
-      return truncateMiddle(nativeSegwitPayer?.address ?? '');
+      return nativeSegwitPayer && truncateMiddle(nativeSegwitPayer.address);
     case 'taproot':
-      return truncateMiddle(taprootPayer?.address ?? '');
-    case 'bns':
-      return formatAccountName(parseIfValidPunycode(readAccountBnsName(bnsNames)));
+      return taprootPayer && truncateMiddle(taprootPayer.address);
+    case 'bns': {
+      const bnsName = readAccountBnsName(bnsNames);
+      return bnsName && formatAccountName(parseIfValidPunycode(bnsName));
+    }
     case 'stacks':
     default:
       return truncateMiddle(stxAddress);
@@ -48,7 +50,7 @@ export function useAccountDisplayAddress({
 
 function readAccountBnsName(bnsNames: AccountBnsName[] = []) {
   const primaryName = bnsNames.find(n => n.isPrimary);
-  return primaryName ? primaryName.fullName : '';
+  return primaryName?.fullName;
 }
 
 function formatAccountName(input: string, maxLength = 20, offset = 4) {

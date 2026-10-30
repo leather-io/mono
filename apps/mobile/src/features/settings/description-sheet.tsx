@@ -1,9 +1,9 @@
-import { RefObject, useImperativeHandle, useRef, useState } from 'react';
+import { type RefObject, useImperativeHandle, useRef, useState } from 'react';
 
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { GlobalSheetSelectors } from '@/shared/selectors/global-sheets.selectors';
 
-import { Box, BulletOperator, Sheet, SheetRef, Text } from '@leather.io/ui/native';
+import { Box, BulletOperator, Sheet, type SheetRef, Text } from '@leather.io/ui/native';
 
 type DescriptionData =
   | {

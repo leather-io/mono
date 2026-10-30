@@ -1,23 +1,18 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { WalletDefaultNetworkConfigurationIds, defaultNetworksKeyedById } from '@leather.io/models';
 import { delay } from '@leather.io/utils';
 
-import { UserSettings } from '../settings/settings.service';
+import { type SettingsService } from '../settings/settings.service';
 import { RateLimiterService, RateLimiterType } from './rate-limiter.service';
 
 describe('RateLimiterService', () => {
-  const mockSettingsService = {
-    getSettings: () =>
-      ({
-        quoteCurrency: 'USD',
-        network: {
-          chain: {
-            bitcoin: {
-              mode: 'mainnet',
-            },
-          },
-        },
-      }) as unknown as UserSettings,
+  const mockSettingsService: SettingsService = {
+    getSettings: () => ({
+      quoteCurrency: 'USD',
+      network: defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.mainnet],
+      assetVisibility: {},
+    }),
   };
 
   beforeEach(async () => {

@@ -5,7 +5,7 @@ import { emptyAmountPlaceholder } from '@/components/balance/constants';
 import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import { SecondaryAmount } from '@leather.io/state/swap';
+import { type SecondaryAmount } from '@leather.io/state/swap';
 import {
   AnimatedBox,
   ArrowTopBottomIcon,

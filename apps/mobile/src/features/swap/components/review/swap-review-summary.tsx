@@ -1,7 +1,7 @@
 import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type Money, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { AssetAvatarIcon, Box, Text } from '@leather.io/ui/native';
 
 const summaryTextProps = {

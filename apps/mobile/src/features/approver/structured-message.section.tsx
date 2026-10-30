@@ -5,10 +5,10 @@ import { t } from '@lingui/core/macro';
 import { ChainId } from '@stacks/network';
 import {
   ClarityType,
-  ClarityValue,
-  StringAsciiCV,
-  TupleCV,
-  UIntCV,
+  type ClarityValue,
+  type StringAsciiCV,
+  type TupleCV,
+  type UIntCV,
   cvToString,
   deserializeCV,
 } from '@stacks/transactions';
@@ -20,11 +20,11 @@ import { capitalize } from '@leather.io/utils';
 function cvToDisplay(cv: ClarityValue): string {
   return cvToString(cv).replaceAll('"', '');
 }
-function chainIdToDisplay(chainIdCv: ClarityValue): string {
-  if (chainIdCv.type !== ClarityType.UInt) return '';
+function chainIdToDisplay(chainIdCv: ClarityValue): string | undefined {
+  if (chainIdCv.type !== ClarityType.UInt) return undefined;
   const chainIdString = cvToString(chainIdCv);
   const chainId = parseInt(chainIdString.replace('u', ''), 10);
-  if (!Object.values(ChainId).includes(chainId)) return '';
+  if (!Object.values(ChainId).includes(chainId)) return undefined;
   return capitalize(stacksChainIdToCoreNetworkMode(chainId));
 }
 

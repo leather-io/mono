@@ -1,3 +1,4 @@
+import appDisabledImage from '@/assets/stickers/app-disabled.png';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AppUpdateSelectors } from '@/shared/selectors/app-update.selectors';
 import { t } from '@lingui/core/macro';
@@ -37,7 +38,7 @@ export function AppUpdateRequiredSheet({ onUpdatePress }: AppUpdateRequiredSheet
                 transform: [{ scaleX: -1 }],
               }}
               contentFit="contain"
-              source={require('@/assets/stickers/app-disabled.png')}
+              source={appDisabledImage}
             />
           </Box>
         </Box>

@@ -5,7 +5,7 @@ import { t } from '@lingui/core/macro';
 import { capitalize } from 'remeda';
 
 import { btcAsset } from '@leather.io/constants';
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui/native';
 
 import { Token } from '../token';

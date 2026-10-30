@@ -1,3 +1,4 @@
+import ufoImage from '@/assets/stickers/ufo.png';
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
 import { Sticker } from '@/components/sticker';
@@ -24,7 +25,7 @@ export default function ConnectionsScreen() {
         alignItems="center"
         testID={BrowserSelectors.ConnectionsEmptyState}
       >
-        <Sticker source={require('@/assets/stickers/ufo.png')} />
+        <Sticker source={ufoImage} />
         <Text textAlign="center" variant="label01">
           {t`You will find the apps you are connected to here`}
         </Text>

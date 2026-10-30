@@ -1,6 +1,4 @@
-import { Badge, type BadgeProps } from '@leather.io/ui';
-
-import { BasicTooltip } from '../tooltip/basic-tooltip';
+import { Badge, type BadgeProps, BasicTooltip } from '@leather.io/ui';
 
 type TooltipSideType = 'bottom' | 'left' | 'right' | 'top';
 

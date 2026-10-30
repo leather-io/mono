@@ -1,4 +1,4 @@
-import { Pressable, PressableProps } from '@leather.io/ui/native';
+import { Pressable, type PressableProps } from '@leather.io/ui/native';
 
 interface CardProps extends PressableProps {
   onPress?(): void;

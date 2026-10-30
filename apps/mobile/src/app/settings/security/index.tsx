@@ -7,10 +7,10 @@ import { AppAuthenticationSheet } from '@/features/settings/app-authentication-s
 import SettingsLayout from '@/features/settings/settings-layout';
 import { SettingsSelectors } from '@/shared/selectors/settings.selectors';
 import { useSettings } from '@/store/settings/settings';
-import { SecurityLevelPreference } from '@/store/settings/utils';
+import { type SecurityLevelPreference } from '@/store/settings/utils';
 import { t } from '@lingui/core/macro';
 
-import { CookieIcon, KeyholeIcon, SheetInstance } from '@leather.io/ui/native';
+import { CookieIcon, KeyholeIcon, type SheetInstance } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 function getCaption(securityLevelPreference: SecurityLevelPreference) {

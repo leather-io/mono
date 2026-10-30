@@ -1,3 +1,4 @@
+import ufoImage from '@/assets/stickers/ufo.png';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
@@ -10,11 +11,7 @@ interface SwapReviewEmptyStateProps {
 export function SwapReviewEmptyState({ onBack }: SwapReviewEmptyStateProps) {
   return (
     <Box flex={1} px="7" justifyContent="center" alignItems="center" gap="5">
-      <Image
-        style={{ height: 180, width: 180 }}
-        contentFit="contain"
-        source={require('@/assets/stickers/ufo.png')}
-      />
+      <Image style={{ height: 180, width: 180 }} contentFit="contain" source={ufoImage} />
       <Box gap="2" alignItems="center">
         <Text variant="label01">{t`No quotes available`}</Text>
         <Text variant="body02" color="ink.text-subdued" textAlign="center">

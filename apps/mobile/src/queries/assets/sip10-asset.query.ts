@@ -1,4 +1,4 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { type QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { getSip10AssetService } from '@leather.io/services';
 

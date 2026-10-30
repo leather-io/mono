@@ -10,6 +10,7 @@ import { useVaultBtcCustomFee } from '~/features/multisig/transactions/use-vault
 
 import { stxAsset } from '@leather.io/constants';
 import type { AuthNetworkId, VaultAccount } from '@leather.io/models';
+import type * as LeatherUi from '@leather.io/ui';
 import { createMoney, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { ProposeTransactionModal } from './propose-transaction-modal';
@@ -62,7 +63,7 @@ vi.mock('~/features/multisig/network/normalize-btc-address', () => ({
 }));
 
 vi.mock('@leather.io/ui', async importOriginal => ({
-  ...(await importOriginal<typeof import('@leather.io/ui')>()),
+  ...(await importOriginal<typeof LeatherUi>()),
   Sheet({ children }: { children: ReactNode }) {
     return <>{children}</>;
   },

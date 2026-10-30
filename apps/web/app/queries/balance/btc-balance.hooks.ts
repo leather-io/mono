@@ -3,7 +3,7 @@ import { useUserSettings } from '~/hooks/use-user-settings';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { createBtcBalanceQueryConfig } from '@leather.io/queries';
-import { AccountRequest } from '@leather.io/services';
+import { type AccountRequest } from '@leather.io/services';
 
 function useGetBtcAccountBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();

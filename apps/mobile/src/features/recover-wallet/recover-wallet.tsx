@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef } from 'react';
-import { Keyboard, TextInput as RNTextInput } from 'react-native';
+import { Keyboard, type TextInput as RNTextInput } from 'react-native';
 
 import { TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
@@ -88,13 +88,13 @@ export function RecoverWallet() {
     <RecoverWalletLayout
       passphrase={passphrase}
       isButtonDisabled={isButtonDisabled}
-      onSubmit={onSubmit}
+      onSubmit={() => void onSubmit()}
       setPassphrase={passphrase => dispatch(setPassphrase(passphrase))}
     >
       <Box mb="3">
         {!hidePasteButton && (
           <Button
-            onPress={pasteFromClipboard}
+            onPress={() => void pasteFromClipboard()}
             testID={OnboardingSelectors.RestoreWalletPasteButton}
             style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 20 }}
             iconStart={() => <NoteEmptyIcon color="ink.background-primary" />}
@@ -109,7 +109,7 @@ export function RecoverWallet() {
           mt="5"
           value={recoveryMnemonic}
           errorMessage={errorMessage}
-          onChangeText={onChangeText}
+          onChangeText={text => void onChangeText(text)}
           placeholder={t`Enter your Secret Key`}
           inputState={inputState}
           height={172}

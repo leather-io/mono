@@ -2,7 +2,7 @@ import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
 import { OnboardingSelectors } from '@/shared/selectors/onboarding.selectors';
 import { t } from '@lingui/core/macro';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { type SheetRef } from '@leather.io/ui/native';
 
 interface RecoverWalletSheetProps {
   recoverWalletSheetRef: SheetRef;

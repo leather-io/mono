@@ -30,16 +30,16 @@ import { formatCurrency, formatPercentage } from '@/utils/currency-formatter';
 import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
 import { captureMessage } from '@sentry/react-native';
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 import { isNonNullish } from 'remeda';
 
 import {
-  LiveSwapEstimate,
+  type LiveSwapEstimate,
   PRICE_IMPACT_WARNING_THRESHOLD,
   matchLiveEstimate,
   useSwapContext,
 } from '@leather.io/state/swap';
-import { Box, Button, SheetInstance, Text } from '@leather.io/ui/native';
+import { Box, Button, type SheetInstance, Text } from '@leather.io/ui/native';
 import { ensureAsyncFunctionMinimumDuration } from '@leather.io/utils';
 
 type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'failure';
@@ -76,7 +76,7 @@ export function SwapReviewScreen({ liveEstimate, onGoBack }: SwapReviewScreenPro
         idle: () => null,
         constrained: () => null,
         loading: () => <SwapReviewLoadingState />,
-        error: liveEstimate => <SwapReviewErrorState onRetry={liveEstimate.refetch} />,
+        error: liveEstimate => <SwapReviewErrorState onRetry={() => void liveEstimate.refetch()} />,
         empty: () => <SwapReviewEmptyState onBack={onGoBack} />,
         success: liveEstimate => <SwapReviewContent liveEstimate={liveEstimate} />,
       })}
@@ -174,7 +174,7 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
           />
         )}
 
-        {showPriceImpact && (
+        {showPriceImpact && priceImpactPercentage && (
           <SwapReviewDetailRow
             label={t`Price impact`}
             value={<PriceImpactValue value={priceImpactPercentage} />}
@@ -237,9 +237,7 @@ function useSwapReviewStatusGuard(liveEstimate: LiveSwapEstimate, exitReview: ()
   }, [liveEstimate.status, exitReview]);
 }
 
-function shouldShowPriceImpact(
-  priceImpactPercentage: BigNumber | null
-): priceImpactPercentage is BigNumber {
+function shouldShowPriceImpact(priceImpactPercentage: BigNumber | null) {
   return (
     isNonNullish(priceImpactPercentage) &&
     priceImpactPercentage.isGreaterThanOrEqualTo(PRICE_IMPACT_WARNING_THRESHOLD)

@@ -8,8 +8,8 @@ import { t } from '@lingui/core/macro';
 import { capitalize } from 'remeda';
 
 import { bitcoinUnitsKeyedByName } from '@leather.io/constants';
-import { BitcoinUnit } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
+import { type BitcoinUnit } from '@leather.io/models';
+import { type SheetRef } from '@leather.io/ui/native';
 
 import { useOpenUrl } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';
