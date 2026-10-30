@@ -36,12 +36,11 @@ export class GammaApiClient {
         throw error;
       }
     }
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          ['gamma-api-get-stacks-nft', contractPrincipal, tokenId],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      ['gamma-api-get-stacks-nft', contractPrincipal, tokenId],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getStacksCollection(
@@ -62,11 +61,10 @@ export class GammaApiClient {
         throw error;
       }
     }
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          ['gamma-api-get-stacks-collection', contractPrincipal],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      ['gamma-api-get-stacks-collection', contractPrincipal],
+      fetchFn,
+      { skipCache }
+    );
   }
 }
