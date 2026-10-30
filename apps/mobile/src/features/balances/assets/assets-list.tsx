@@ -1,5 +1,6 @@
 import { type ReactElement, useMemo } from 'react';
 
+import { RefreshControl } from '@/components/refresh-control/refresh-control';
 import { Screen } from '@/components/screen/screen';
 import { useUsdcxBalance } from '@/features/balances/assets/use-usdcx-balance';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
@@ -10,7 +11,6 @@ import {
   withUsdcxBridge,
 } from '@/features/balances/assets/utils/with-usdcx-bridge';
 import { UsdcxBridgeTokenCell } from '@/features/balances/stacks/usdcx-bridge-token-cell';
-import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { type useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useRouter } from 'expo-router';
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { SpinnerIcon } from '@/components/spinner-icon';
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountCard } from '@/features/account/components/account-card';
 import { AccountBalance } from '@/features/balances/total-balance';

@@ -1,11 +1,11 @@
 import { type ReactNode } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { NetworkBadge } from '@/components/network-badge';
 import { FadingView } from '@/components/screen/screen-fading-view';
 import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { HeaderBlurOverlay } from '@/components/screen/screen-header/components/header-blur-overlay';
 import { useScreenScrollContext } from '@/components/screen/screen-scroll-context';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { HEADER_HEIGHT } from '@/shared/constants';
 
 import { Box } from '@leather.io/ui/native';

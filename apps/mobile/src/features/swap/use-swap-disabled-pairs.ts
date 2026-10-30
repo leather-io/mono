@@ -1,4 +1,4 @@
-import { useSwapSbtcBridgingFlag } from '@/features/feature-flags';
+import { useSwapSbtcBridgingFlag } from '@/shared/feature-flags';
 
 import { SBTC_ASSET_ID_MAINNET, SBTC_ASSET_ID_TESTNET } from '@leather.io/constants';
 import { type CryptoAssetId } from '@leather.io/models';

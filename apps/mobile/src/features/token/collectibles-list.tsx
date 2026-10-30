@@ -2,17 +2,17 @@ import { type ReactElement } from 'react';
 import { useWindowDimensions } from 'react-native';
 
 import { ErrorFallbackTab } from '@/components/error/error';
-import { type FetchState } from '@/components/loading/fetch-state';
+import { RefreshControl } from '@/components/refresh-control/refresh-control';
 import { Screen } from '@/components/screen/screen';
-import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { CollectiblesListLoading } from '@/features/token/components/collectibles-list-loading';
 import { EmptyCollectiblesContent } from '@/features/token/components/empty-collectibles-content';
+import { type FetchState } from '@/queries/fetch-state';
+import { useCollectibleDetailsFlag } from '@/shared/feature-flags';
 import { useRouter } from 'expo-router';
 
 import { type NonFungibleCryptoAsset } from '@leather.io/models';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { useCollectibleDetailsFlag } from '../feature-flags';
 import { Sip9 } from './stacks/sip9';
 
 interface RenderCollectibleProps {

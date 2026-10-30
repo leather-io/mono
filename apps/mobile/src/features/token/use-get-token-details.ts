@@ -1,5 +1,5 @@
-import { toFetchState } from '@/components/loading';
 import { useAssetDescriptionQuery } from '@/queries/assets/fungible-asset-info.query';
+import { toFetchState } from '@/queries/fetch-state';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 import { usePriceChangePercentage } from '@/queries/market-history/market-history.query';
 

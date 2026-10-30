@@ -3,7 +3,7 @@ import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
 import { Sticker } from '@/components/sticker';
 import { ScreenshotCard } from '@/features/browser/browser/screenshot-card';
-import { useOpenUrl } from '@/features/browser/browser/use-open-url';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { useApps } from '@/store/apps/apps.read';
 import { t } from '@lingui/core/macro';
 

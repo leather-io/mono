@@ -137,8 +137,8 @@ msgstr "Account label"
 msgid "Account name cannot be empty"
 msgstr "Account name cannot be empty"
 
-#: src/components/activity/activity-with-account.screen.tsx:19
-#: src/components/activity/activity-without-account-screen.tsx:9
+#: src/features/activity/activity-with-account.screen.tsx:19
+#: src/features/activity/activity-without-account-screen.tsx:9
 #: src/features/navigation/tab-layout.tsx:60
 #: src/features/token/components/token-activity.tsx:40
 msgid "Activity"
@@ -365,7 +365,7 @@ msgstr "App is not protected with device-level PIN or biometrics."
 msgid "App Store"
 msgstr "App Store"
 
-#: src/features/approver/components/approver-buttons/index.tsx:29
+#: src/features/approver/components/approver-buttons/approver-buttons.tsx:29
 msgid "Approve"
 msgstr "Approve"
 
@@ -478,8 +478,8 @@ msgid "Can’t send to the same address"
 msgstr "Can’t send to the same address"
 
 #: src/components/sheets/warning-sheet.layout.tsx:51
-#: src/features/approver/components/approver-buttons/index.tsx:49
-#: src/features/approver/components/approver-buttons/index.tsx:65
+#: src/features/approver/components/approver-buttons/approver-buttons.tsx:49
+#: src/features/approver/components/approver-buttons/approver-buttons.tsx:65
 #: src/features/qr-scanner/use-camera-permission.ts:39
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:31
 msgid "Cancel"
@@ -523,7 +523,7 @@ msgstr "Clear search"
 msgid "Close the scanner"
 msgstr "Close the scanner"
 
-#: src/features/approver/components/approver-buttons/index.tsx:113
+#: src/features/approver/components/approver-buttons/approver-buttons.tsx:113
 msgid "Close window"
 msgstr "Close window"
 
@@ -537,7 +537,7 @@ msgstr "Code"
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
-#: src/components/home/components/asset-tabs.tsx:30
+#: src/features/home/components/asset-tabs.tsx:30
 msgid "Collectibles"
 msgstr "Collectibles"
 
@@ -643,7 +643,7 @@ msgstr "Copy"
 msgid "Copy address"
 msgstr "Copy address"
 
-#: src/features/approver/components/approver-buttons/index.tsx:103
+#: src/features/approver/components/approver-buttons/approver-buttons.tsx:103
 msgid "Copy ID"
 msgstr "Copy ID"
 
@@ -912,7 +912,7 @@ msgstr "FREE"
 msgid "From"
 msgstr "From"
 
-#: src/components/home/components/first-token-banner.tsx:13
+#: src/features/home/components/first-token-banner.tsx:13
 msgid "Fund your wallet by buying tokens or transferring from another account."
 msgstr "Fund your wallet by buying tokens or transferring from another account."
 
@@ -942,11 +942,11 @@ msgstr "Get the latest version of the Leather app"
 msgid "Get your first NFT"
 msgstr "Get your first NFT"
 
-#: src/components/home/components/first-token-banner.tsx:11
+#: src/features/home/components/first-token-banner.tsx:11
 msgid "Get your first token"
 msgstr "Get your first token"
 
-#: src/components/home/components/learn-section.tsx:46
+#: src/features/home/components/learn-section.tsx:46
 msgid "Getting Started with Leather"
 msgstr "Getting Started with Leather"
 
@@ -1105,11 +1105,11 @@ msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
 #: src/app/settings/help/index.tsx:29
-#: src/components/home/components/learn-section.tsx:63
+#: src/features/home/components/learn-section.tsx:63
 msgid "Learn"
 msgstr "Learn"
 
-#: src/components/home/components/learn-section.tsx:51
+#: src/features/home/components/learn-section.tsx:51
 msgid "Learn more about stacking"
 msgstr "Learn more about stacking"
 
@@ -1518,7 +1518,7 @@ msgstr "Restake"
 msgid "Restore wallet"
 msgstr "Restore wallet"
 
-#: src/features/approver/components/approver-buttons/index.tsx:72
+#: src/features/approver/components/approver-buttons/approver-buttons.tsx:72
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:23
 #: src/features/swap/components/quote-preview/quote-preview-error.tsx:18
 #: src/features/swap/components/review/swap-review-error-state.tsx:22
@@ -1744,11 +1744,11 @@ msgstr "Stacks address"
 msgid "Standard"
 msgstr "Standard"
 
-#: src/features/approver/components/approver-buttons/index.tsx:31
+#: src/features/approver/components/approver-buttons/approver-buttons.tsx:31
 msgid "Submitted"
 msgstr "Submitted"
 
-#: src/features/approver/components/approver-buttons/index.tsx:30
+#: src/features/approver/components/approver-buttons/approver-buttons.tsx:30
 msgid "Submitting..."
 msgstr "Submitting..."
 
@@ -1943,11 +1943,11 @@ msgstr "Token can only have {decimals} decimals"
 msgid "Token Details"
 msgstr "Token Details"
 
-#: src/components/home/components/asset-tabs.tsx:23
+#: src/features/home/components/asset-tabs.tsx:23
 msgid "Tokens"
 msgstr "Tokens"
 
-#: src/components/home/components/trending-tokens.tsx:34
+#: src/features/home/components/trending-tokens.tsx:34
 msgid "Tokens trending across the Stacks ecosystem, ranked by recent trading activity."
 msgstr "Tokens trending across the Stacks ecosystem, ranked by recent trading activity."
 
@@ -1979,8 +1979,8 @@ msgstr "Transaction is sent!"
 msgid "Transfer from another account"
 msgstr "Transfer from another account"
 
-#: src/components/home/components/trending-tokens.tsx:30
-#: src/components/home/components/trending-tokens.tsx:45
+#: src/features/home/components/trending-tokens.tsx:30
+#: src/features/home/components/trending-tokens.tsx:45
 msgid "Trending tokens"
 msgstr "Trending tokens"
 
@@ -2083,7 +2083,7 @@ msgstr "View and manage all your wallets in one place"
 msgid "View and manage your hidden accounts"
 msgstr "View and manage your hidden accounts"
 
-#: src/features/approver/components/approver-buttons/index.tsx:109
+#: src/features/approver/components/approver-buttons/approver-buttons.tsx:109
 msgid "View details"
 msgstr "View details"
 
@@ -2116,7 +2116,7 @@ msgstr "Wallets"
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
 
-#: src/components/home/components/learn-section.tsx:50
+#: src/features/home/components/learn-section.tsx:50
 msgid "What is sBTC?"
 msgstr "What is sBTC?"
 

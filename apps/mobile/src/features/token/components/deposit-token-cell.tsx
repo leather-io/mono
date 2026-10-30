@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 
-import { Loading } from '@/components/loading';
+import { Loading } from '@/components/loading/loading';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';

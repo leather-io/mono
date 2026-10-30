@@ -17,6 +17,25 @@ function toLayers(layers) {
   return paths;
 }
 
+const mobileLayers = {
+  routes: ['app'],
+  features: ['features'],
+  components: ['components'],
+  hooks: ['hooks'],
+  core: ['core'],
+  application: ['queries', 'services'],
+  state: ['store'],
+  foundation: ['utils', 'shared', 'i18n', 'assets'],
+};
+
+function mobileFromLayer(layer) {
+  return `^apps/mobile/src/(${mobileLayers[layer].join('|')})/`;
+}
+
+function mobileToLayers(layers) {
+  return `^apps/mobile/src/(${layers.flatMap(layer => mobileLayers[layer]).join('|')})/`;
+}
+
 /** @type {import('dependency-cruiser').IConfiguration} */
 module.exports = {
   forbidden: [
@@ -154,6 +173,139 @@ module.exports = {
       to: {
         path: '^apps/web/app/features/([^/]+)',
         pathNot: '^apps/web/app/features/$1',
+      },
+    },
+    {
+      name: 'mobile-components-not-to-higher-layers',
+      severity: 'error',
+      comment:
+        'Mobile components must not import routes or features. A screen composed of feature code belongs in features/.',
+      from: {
+        path: mobileFromLayer('components'),
+      },
+      to: {
+        path: mobileToLayers(['routes', 'features']),
+        dependencyTypesNot: ['type-only'],
+      },
+    },
+    {
+      name: 'mobile-hooks-not-to-higher-layers',
+      severity: 'error',
+      comment:
+        'Mobile hooks must not import routes, features or components. A context a hook consumes belongs in core/.',
+      from: {
+        path: mobileFromLayer('hooks'),
+      },
+      to: {
+        path: mobileToLayers(['routes', 'features', 'components']),
+        dependencyTypesNot: ['type-only'],
+      },
+    },
+    {
+      name: 'mobile-core-not-to-higher-layers',
+      severity: 'error',
+      comment:
+        'Mobile core (app-level providers) must not import routes, features, components or hooks at runtime. Type-only imports of feature sheet types are allowed.',
+      from: {
+        path: mobileFromLayer('core'),
+      },
+      to: {
+        path: mobileToLayers(['routes', 'features', 'components', 'hooks']),
+        dependencyTypesNot: ['type-only'],
+      },
+    },
+    {
+      name: 'mobile-application-not-to-higher-layers',
+      severity: 'error',
+      comment:
+        'Mobile queries and services must not import routes, features, components or core. Hooks are allowed: queries take their inputs from store-backed hooks.',
+      from: {
+        path: mobileFromLayer('application'),
+      },
+      to: {
+        path: mobileToLayers(['routes', 'features', 'components', 'core']),
+        dependencyTypesNot: ['type-only'],
+      },
+    },
+    {
+      name: 'mobile-state-not-to-higher-layers',
+      severity: 'error',
+      comment:
+        'Mobile store must not import routes, features, components, hooks, core, queries or services.',
+      from: {
+        path: mobileFromLayer('state'),
+      },
+      to: {
+        path: mobileToLayers(['routes', 'features', 'components', 'hooks', 'core', 'application']),
+        dependencyTypesNot: ['type-only'],
+      },
+    },
+    {
+      name: 'mobile-foundation-not-to-higher-layers',
+      severity: 'error',
+      comment:
+        'Mobile utils, shared, i18n and assets must not import anything above them at runtime.',
+      from: {
+        path: mobileFromLayer('foundation'),
+      },
+      to: {
+        path: mobileToLayers([
+          'routes',
+          'features',
+          'components',
+          'hooks',
+          'core',
+          'application',
+          'state',
+        ]),
+        dependencyTypesNot: ['type-only'],
+      },
+    },
+    {
+      name: 'mobile-no-imports-from-routes',
+      severity: 'error',
+      comment: 'Expo Router route files are entry points. Nothing may import them.',
+      from: {
+        path: '^apps/mobile/',
+      },
+      to: {
+        path: mobileToLayers(['routes']),
+      },
+    },
+    {
+      name: 'mobile-no-barrel-imports',
+      severity: 'error',
+      comment:
+        'Mobile has no barrel files outside the router tree. Import the module that defines the export.',
+      from: {
+        path: '^apps/mobile/',
+      },
+      to: {
+        path: '^apps/mobile/src/(?!app/).*/index\\.tsx?$',
+      },
+    },
+    {
+      name: 'mobile-not-to-other-apps',
+      severity: 'error',
+      comment: 'Mobile must not import other apps. Code shared between apps belongs in a package.',
+      from: {
+        path: '^apps/mobile/',
+      },
+      to: {
+        path: '^apps/(?!mobile/)',
+      },
+    },
+    {
+      name: 'mobile-ui-native-entry-only',
+      severity: 'error',
+      comment:
+        'Mobile must import @leather.io/ui through its native entry (or its assets), never the web entry.',
+      from: {
+        path: '^apps/mobile/',
+      },
+      to: {
+        path: '^packages/ui/',
+        pathNot: ['^packages/ui/dist-native/', '^packages/ui/src/assets/'],
       },
     },
 
@@ -334,7 +486,7 @@ module.exports = {
         'section of your package.json. If this module is development only - add it to the ' +
         'from.pathNot re of the not-to-dev-dep rule in the dependency-cruiser configuration',
       from: {
-        path: '^(packages)',
+        path: '^(packages|apps/mobile)',
         pathNot: [
           '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx|ls|coffee|litcoffee|coffee[.]md)$',
           'theme-web',
@@ -342,6 +494,7 @@ module.exports = {
           'packages/cms/src/studio',
           'test-utils/',
           '[.]test-utils[.]',
+          '^apps/mobile/src/tests/',
         ],
       },
       to: {
@@ -349,7 +502,7 @@ module.exports = {
         // type only dependencies are not a problem as they don't end up in the
         // production code or are ignored by the runtime.
         dependencyTypesNot: ['type-only'],
-        pathNot: ['node_modules/@types/'],
+        pathNot: ['node_modules/@types/', 'redux-devtools-expo-dev-plugin'],
       },
     },
     {
@@ -387,10 +540,6 @@ module.exports = {
         'node_modules',
         '.pnpm-store',
         '.pnpm-local',
-        // @edgarkhanzadian: Ignoring mobile here was depcruiser doesn't work
-        // well with the `@/*` paths. Please take a look and see if there's a
-        // workaround for this
-        'apps/mobile',
         // Do not need to check Panda files (they also have circular deps)
         'apps/web/leather-styles',
         '/dist',
@@ -466,7 +615,7 @@ module.exports = {
        defaults to './tsconfig.json'.
      */
     tsConfig: {
-      fileName: 'tsconfig.json',
+      fileName: 'tsconfig.dependency-cruiser.json',
     },
 
     /* Webpack configuration to use to get resolve options from.
