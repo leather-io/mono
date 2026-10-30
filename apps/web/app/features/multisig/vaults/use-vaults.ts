@@ -36,7 +36,7 @@ export function useVault(network: AuthNetworkId, vaultId: string | undefined) {
   const session = useSession(network);
   return useQuery({
     queryKey: multisigVaultKeys.detail(network, session?.identity.address, vaultId),
-    queryFn: ({ signal }) => {
+    queryFn({ signal }) {
       if (!vaultId) throw new Error('useVault requires a vaultId');
       return getMultisigService().getVault(network, vaultId, signal);
     },

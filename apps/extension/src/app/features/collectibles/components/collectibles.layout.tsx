@@ -4,6 +4,7 @@ import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import {
   ArrowRotateClockwiseIcon,
+  BasicTooltip,
   Callout,
   DropdownMenu,
   Flag,
@@ -12,8 +13,6 @@ import {
   ItemLayout,
   SettingsSliderIcon,
 } from '@leather.io/ui';
-
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { CollectiblesEmpty } from './collectibles-empty';
 import { CollectiblesLearn } from './collectibles-learn';

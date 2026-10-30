@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
+import { defaultCurrentNetwork } from '@leather.io/models';
+
 import {
-  LeatherApiAddressComplianceCheck,
-  LeatherApiClient,
+  type LeatherApiAddressComplianceCheck,
+  type LeatherApiClient,
 } from '../infrastructure/api/leather/leather-api.client';
 import { LeatherApiError } from '../infrastructure/api/leather/leather-api.error';
-import { SettingsService } from '../infrastructure/settings/settings.service';
+import { type SettingsService } from '../infrastructure/settings/settings.service';
+import { createTestUserSettings } from '../test/balances-settings';
+import { createMock } from '../test/create-mock';
 import { ComplianceService } from './compliance.service';
 
 const testAddress = 'bc1qtest';
@@ -14,10 +18,20 @@ function makeService(
   fetchAddressComplianceCheck: () => Promise<LeatherApiAddressComplianceCheck>,
   mode: 'mainnet' | 'testnet' = 'mainnet'
 ) {
-  const mockClient = { fetchAddressComplianceCheck } as unknown as LeatherApiClient;
-  const mockSettings = {
-    getSettings: () => ({ network: { chain: { bitcoin: { mode } } } }),
-  } as unknown as SettingsService;
+  const mockClient = createMock<LeatherApiClient>({ fetchAddressComplianceCheck });
+  const mockSettings: SettingsService = {
+    getSettings() {
+      return createTestUserSettings({
+        network: {
+          ...defaultCurrentNetwork,
+          chain: {
+            ...defaultCurrentNetwork.chain,
+            bitcoin: { ...defaultCurrentNetwork.chain.bitcoin, mode },
+          },
+        },
+      });
+    },
+  };
   return new ComplianceService(mockClient, mockSettings);
 }
 

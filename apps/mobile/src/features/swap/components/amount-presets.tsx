@@ -1,7 +1,7 @@
 import { formatPercentage } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
-import { PresetPercentage } from '@leather.io/state/swap';
+import { type PresetPercentage } from '@leather.io/state/swap';
 import { Box, Button } from '@leather.io/ui/native';
 
 interface AmountPresetsProps {

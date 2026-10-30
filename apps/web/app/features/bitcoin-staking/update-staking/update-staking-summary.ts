@@ -1,14 +1,17 @@
 import { EM_DASH } from '~/constants/constants';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
-import { BitcoinStakingPool, BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
+import {
+  type BitcoinStakingPool,
+  type BitcoinStakingProviderId,
+} from '~/data/bitcoin-staking-data';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { truncateMiddle } from '@leather.io/utils';
 
 import { formatFeeBips } from '../utils/pool-fee';
-import { PoolPayoutMode, getPoolPayoutMode, getRewardsTokenLabel } from '../utils/pool-payout';
-import { SignerManagerOption } from './components/choose-signer-manager';
-import { SidebarSummaryRow } from './components/sidebar-summary-card';
+import { type PoolPayoutMode, getPoolPayoutMode, getRewardsTokenLabel } from '../utils/pool-payout';
+import { type SignerManagerOption } from './components/choose-signer-manager';
+import { type SidebarSummaryRow } from './components/sidebar-summary-card';
 
 const switchContent = bitcoinStakingContent.switchSignerManager;
 const summaryContent = switchContent.summary;

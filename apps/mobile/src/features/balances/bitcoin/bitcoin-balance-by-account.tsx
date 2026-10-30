@@ -1,6 +1,6 @@
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 import { BitcoinTokenBalance } from './bitcoin-token-balance';
 

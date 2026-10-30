@@ -30,11 +30,18 @@ type StacksActivityResultItem = HiroPrincipalTransactionsResultItem & {
   >;
 };
 
-export function isStacksActivityResultItem(
+export function toStacksActivityResultItem(
   item: HiroPrincipalTransactionsResultItem
-): item is StacksActivityResultItem {
-  const { type } = item.transaction;
-  return type === 'token_transfer' || type === 'contract_call' || type === 'smart_contract';
+): StacksActivityResultItem | undefined {
+  const { transaction } = item;
+  if (
+    transaction.type === 'token_transfer' ||
+    transaction.type === 'contract_call' ||
+    transaction.type === 'smart_contract'
+  ) {
+    return { ...item, transaction };
+  }
+  return undefined;
 }
 
 export function mapStacksActivityStatus(status: HiroPrincipalTxStatus): OnChainActivityStatus {
@@ -139,8 +146,11 @@ export type FtBalanceChangeRow = HiroBalanceChangeResultItem & {
   readonly asset: { readonly type: 'ft'; readonly identifier: string };
 };
 
-export function isFtBalanceChangeRow(row: HiroBalanceChangeResultItem): row is FtBalanceChangeRow {
-  return row.asset.type === 'ft';
+export function toFtBalanceChangeRow(
+  row: HiroBalanceChangeResultItem
+): FtBalanceChangeRow | undefined {
+  const { asset } = row;
+  return asset.type === 'ft' ? { ...row, asset } : undefined;
 }
 
 // Superset pre-filter from the raw affected_balances flags: false means the tx certainly
@@ -244,8 +254,9 @@ export function buildConfirmedStacksActivity(
   ftChanges: BlockchainActivityBalanceChange[],
   classified?: ClassifiedContractCall
 ): BlockchainActivity | null {
-  if (!isStacksActivityResultItem(result)) return null;
-  const tx = result.transaction;
+  const stacksActivityItem = toStacksActivityResultItem(result);
+  if (!stacksActivityItem) return null;
+  const tx = stacksActivityItem.transaction;
   const initiatedByUser = result.involvement === 'sender';
   // v3's balance_changes.stx.net is fee-inclusive for the fee payer, so the fee is netted
   // back out — but only when this account actually paid it: a sponsored tx's fee comes out

@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
+import { BasicTooltip } from '@leather.io/ui';
+
 import { RouteUrls } from '@shared/route-urls';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
@@ -11,7 +13,6 @@ import {
   type SwapAvailability,
   useSwapAvailability,
 } from '@app/common/hooks/use-swap-availability';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { ActionButton } from './action-button';
 import { FundButtons } from './fund-buttons';

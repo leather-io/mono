@@ -78,7 +78,7 @@ export function useUpdateVault(network: AuthNetworkId) {
   });
 }
 
-export function useUpdateVaultMember(network: AuthNetworkId, vaultId: string) {
+export function useUpdateVaultMember(network: AuthNetworkId, vaultId: string | undefined) {
   const queryClient = useQueryClient();
   const address = useSession(network)?.identity.address;
   return useMutation<

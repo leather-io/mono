@@ -5,9 +5,7 @@ import { Page } from '~/layouts/page/page';
 import { CategorySection } from '~/pages/support/components/category-section';
 import { GuideSearch } from '~/pages/support/components/guide-search';
 import { SupportFormProvider } from '~/pages/support/components/support-form-provider';
-import { loader } from '~/pages/support/help-center.route';
-
-import type { SanityImageAsset } from '@leather.io/cms';
+import { type loader } from '~/pages/support/help-center.route';
 
 export function HelpCenter() {
   const { categories } = useLoaderData<typeof loader>();
@@ -30,7 +28,7 @@ export function HelpCenter() {
               <CategorySection
                 key={category._id}
                 categoryName={category.categoryName}
-                icon={category.icon?.asset as unknown as SanityImageAsset | undefined}
+                icon={category.icon?.asset}
                 guides={category.guides}
               />
             ))}

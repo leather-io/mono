@@ -1,7 +1,7 @@
 import { bytesToHex } from '@stacks/common';
 
 import { ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
-import { BtcAddress, StxAddress, getAddresses } from '@leather.io/rpc';
+import { type BtcAddress, type StxAddress, getAddresses } from '@leather.io/rpc';
 
 interface FormatAddressesForGetAddresses {
   fingerprint: string;

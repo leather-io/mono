@@ -31,16 +31,13 @@ vi.mock('@leather.io/services', () => ({
   getBitcoinCoinSelectionService: vi.fn(),
   getBitcoinTransactionFeesService: vi.fn(),
   getMarketDataService: vi.fn(),
+  getMempoolApiClient: vi.fn(),
   getStacksTransactionFeesService: vi.fn(),
   getSwapService: vi.fn(),
 }));
 
 vi.mock('@app/common/hooks/account/use-refresh-all-account-data', () => ({
   useRefreshAllAccountData: () => vi.fn(),
-}));
-
-vi.mock('@app/query/bitcoin/clients/bitcoin-client', () => ({
-  useBitcoinClient: () => ({}),
 }));
 
 vi.mock('@app/query/stacks/nonce/account-nonces.hooks', () => ({

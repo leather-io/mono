@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { Stack, styled } from 'leather-styles/jsx';
 
-import { HasChildren, HoverCard } from '@leather.io/ui';
+import { type HasChildren, HoverCard } from '@leather.io/ui';
 
 interface BasicHoverCardProps extends HasChildren {
   title?: ReactNode;

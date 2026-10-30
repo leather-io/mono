@@ -1,5 +1,5 @@
 import { accountIconMap } from '@/features/account/components/account-avatar';
-import { AccountIcon } from '@/store/accounts/utils';
+import { type AccountIcon } from '@/store/accounts/utils';
 import { keys } from 'remeda';
 
 import { Box } from '@leather.io/ui/native';

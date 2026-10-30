@@ -27,6 +27,7 @@ export type BitflowBffApiToken = components['schemas']['TokenInfo'];
 type BitflowBffApiPairsResponse = components['schemas']['PairsResponse'];
 export type BitflowBffApiExecutionStep = components['schemas']['ExecutionStep'];
 export type BitflowBffApiQuoteResponse = components['schemas']['QuoteResponse'];
+export type BitflowBffApiSwapParameter = components['schemas']['SwapParameter'];
 export type BitflowBffApiSwapSimpleParameter = components['schemas']['SwapSimpleParameter'];
 export type BitflowBffApiPostCondition = components['schemas']['PostCondition'];
 type BitflowBffApiSwapResponse = components['schemas']['SwapResponse'];
@@ -58,20 +59,23 @@ export class BitflowBffApiClient {
     });
   }
 
-  async getPairs(inputToken: string, signal?: AbortSignal): Promise<BitflowBffApiPairsResponse> {
+  async getPairs(
+    inputToken: string,
+    signal?: AbortSignal
+  ): Promise<BitflowBffApiPairsResponse | undefined> {
     return this.cacheService.fetchWithCache(['bitflow-bff-api-pairs', inputToken], async () => {
       const { data } = await this.client.GET('/api/quotes/v1/pairs', {
         params: { query: { input_token: inputToken } },
         signal,
       });
-      return data!;
+      return data;
     });
   }
 
   async getQuote(
     params: BitflowBffApiQuoteParams,
     signal?: AbortSignal
-  ): Promise<BitflowBffApiQuoteResponse> {
+  ): Promise<BitflowBffApiQuoteResponse | undefined> {
     return this.cacheService.fetchWithCache(
       ['bitflow-bff-api-quote', params.inputToken, params.outputToken, params.amountIn],
       async () => {
@@ -85,7 +89,7 @@ export class BitflowBffApiClient {
           },
           signal,
         });
-        return data!;
+        return data;
       }
     );
   }
@@ -108,6 +112,7 @@ export class BitflowBffApiClient {
       },
       signal,
     });
-    return data!;
+    if (!data) throw new Error('Bitflow BFF API swap params request failed');
+    return data;
   }
 }

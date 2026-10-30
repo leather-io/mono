@@ -1,4 +1,4 @@
-import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
+import { type LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
 import type { MempoolTransaction } from '../infrastructure/api/mempool/mempool-api.schema';
 import {
   createBitcoinTransactionFromMempool,

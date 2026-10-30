@@ -2,11 +2,11 @@ import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 import { ReceiveFlowProvider } from '@/features/receive/receive-flow-provider';
 import { type ReceiveType } from '@/features/receive/utils/get-receive-type';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 import { ReceiveNavigator, ReceiveStack } from './navigation';
 import { AssetDetails } from './screens/asset-details';
-import { SelectAsset, SelectedAsset } from './screens/select-asset';
+import { SelectAsset, type SelectedAsset } from './screens/select-asset';
 
 interface ReceiveProps {
   selectedAsset?: SelectedAsset;

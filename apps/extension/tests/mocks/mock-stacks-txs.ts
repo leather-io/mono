@@ -152,7 +152,7 @@ const mockedPrincipalTxsResponseWithReceiveTx = {
   results: [mockedPrincipalReceiveTxResultItem],
 };
 
-const transactionWithTransfersUrl = `**/api.hiro.so/extended/v1/address/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions_with_transfers?limit=50`;
+const transactionWithTransfersUrl = `**/api.hiro.so/extended/v2/addresses/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions?limit=50&offset=0&exclude_function_args=true`;
 const mempoolUrl = `**/api.hiro.so/extended/v1/tx/mempool?address=${TEST_ACCOUNT_1_STX_ADDRESS}&limit=50`;
 
 export async function mockMainnetTestAccountStacksTxsRequests(page: Page | BrowserContext) {
@@ -173,9 +173,6 @@ export async function mockMainnetTestAccountStacksTxsRequests(page: Page | Brows
 
 export async function mockWildcardStacksTxsRequests(page: Page | BrowserContext) {
   await Promise.all([
-    page.route('**hiro.so/extended/v1/address/*/transactions_with_transfers?limit=50', route =>
-      route.fulfill({ json: emptyTxsResponse })
-    ),
     page.route('**hiro.so/extended/v2/addresses/*/transactions**', route =>
       route.fulfill({ json: emptyTxsResponse })
     ),
