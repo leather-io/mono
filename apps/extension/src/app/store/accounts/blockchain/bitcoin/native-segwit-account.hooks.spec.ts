@@ -26,10 +26,6 @@ vi.mock('@shared/utils/analytics', () => ({
   analytics: { track: vi.fn() },
 }));
 
-vi.mock('@app/query/bitcoin/clients/bitcoin-client', () => ({
-  useBitcoinClient: () => ({ transactionsApi: { getBitcoinTransactionHex: vi.fn() } }),
-}));
-
 vi.mock('@app/store/networks/networks.selectors', () => ({
   useCurrentNetwork: () => ({ chain: { bitcoin: { mode: 'mainnet' } } }),
 }));

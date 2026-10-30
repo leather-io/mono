@@ -2,23 +2,20 @@
 import { type AddressTransactionsWithTransfersListResponse } from '@stacks/stacks-blockchain-api-types';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  StacksQueryPrefixes,
-  createGetAccountTransactionsWithTransfersQueryOptions,
-} from '@leather.io/query';
+import { createStacksAddressTransactionsQueryConfig } from '@leather.io/queries';
 
 import { useGetAccountTransactionsWithTransfersQueries } from './use-transactions-with-transfers.query';
 
-vi.mock('@leather.io/query', () => ({
-  createGetAccountTransactionsWithTransfersQueryOptions: vi.fn(),
-  useCurrentNetworkState: () => ({
-    chain: {
-      stacks: {
-        url: 'https://test-api.com',
-      },
-    },
+vi.mock('@leather.io/queries', () => ({
+  createStacksAddressTransactionsQueryConfig: vi.fn(),
+}));
+
+vi.mock('@/hooks/use-user-settings', () => ({
+  useUserSettings: () => ({
+    network: { id: 'mainnet', chain: { stacks: { url: 'https://test-api.com' } } },
+    quoteCurrency: 'USD',
+    assetVisibility: {},
   }),
-  useStacksClient: () => ({}),
 }));
 
 describe('useGetAccountTransactionsWithTransfersQueries', () => {
@@ -74,19 +71,15 @@ describe('useGetAccountTransactionsWithTransfersQueries', () => {
   };
 
   it.skip('returns combined results from all queries', () => {
-    vi.mocked(createGetAccountTransactionsWithTransfersQueryOptions).mockReturnValue({
+    vi.mocked(createStacksAddressTransactionsQueryConfig).mockReturnValue({
       staleTime: 0,
       refetchInterval: 30000,
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: true,
       enabled: true,
-      queryKey: [
-        StacksQueryPrefixes.GetAccountTxsWithTransfers,
-        mockAddress,
-        'https://test-api.com',
-      ],
-      queryFn: () => Promise.resolve(mockTransactionData),
+      queryKey: ['hiro-stacks-api-client--get-address-transactions', mockAddress, 'mainnet'],
+      queryFn: () => Promise.resolve(mockTransactionData.results),
     });
 
     const result = useGetAccountTransactionsWithTransfersQueries([mockAddress]);
@@ -102,24 +95,20 @@ describe('useGetAccountTransactionsWithTransfersQueries', () => {
       'SP3XD84X3PE79SHJAZCDW1V5E9EA8JSKRBPEKAEK7',
     ];
 
-    vi.mocked(createGetAccountTransactionsWithTransfersQueryOptions).mockReturnValue({
+    vi.mocked(createStacksAddressTransactionsQueryConfig).mockReturnValue({
       staleTime: 0,
       refetchInterval: 30000,
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: true,
       enabled: true,
-      queryKey: [
-        StacksQueryPrefixes.GetAccountTxsWithTransfers,
-        mockAddress,
-        'https://test-api.com',
-      ],
-      queryFn: () => Promise.resolve(mockTransactionData),
+      queryKey: ['hiro-stacks-api-client--get-address-transactions', mockAddress, 'mainnet'],
+      queryFn: () => Promise.resolve(mockTransactionData.results),
     });
 
     const result = useGetAccountTransactionsWithTransfersQueries(multipleAddresses);
 
-    expect(createGetAccountTransactionsWithTransfersQueryOptions).toHaveBeenCalledTimes(2);
+    expect(createStacksAddressTransactionsQueryConfig).toHaveBeenCalledTimes(2);
     expect(result.queries.length).toBe(2);
   });
 

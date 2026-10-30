@@ -15,7 +15,6 @@ import {
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import { type BitcoinNetworkModes, type OwnedUtxo } from '@leather.io/models';
-import { defaultStacksFees } from '@leather.io/query';
 import { getComplianceService } from '@leather.io/services';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import {
@@ -25,10 +24,10 @@ import {
   isError,
 } from '@leather.io/utils';
 
+const defaultStacksFeeMicroStx = 3000;
+
 export function calculateDefaultStacksFee() {
-  const defaultFeeFallback = 2500;
-  const defaultFeeFallbackAsMoney = createMoney(defaultFeeFallback, 'STX');
-  return convertAmountToBaseUnit(defaultStacksFees.estimates[1]?.fee ?? defaultFeeFallbackAsMoney);
+  return convertAmountToBaseUnit(createMoney(defaultStacksFeeMicroStx, 'STX'));
 }
 
 export function isUserInputEffectivelyZero(input: string) {

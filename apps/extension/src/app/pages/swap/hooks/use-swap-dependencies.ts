@@ -13,6 +13,7 @@ import {
   getBitcoinCoinSelectionService,
   getBitcoinTransactionFeesService,
   getMarketDataService,
+  getMempoolApiClient,
   getStacksTransactionFeesService,
   getSwapService,
 } from '@leather.io/services';
@@ -25,7 +26,6 @@ import {
 import { assertExistence } from '@leather.io/utils';
 
 import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
-import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -84,7 +84,6 @@ export function useSwapDependencies(): SwapDependencies {
   const { data: nextNonce } = useNextNonce(stxAddress);
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
   const signBitcoinTx = useSignBitcoinTx({ settleOnRejection: true });
-  const bitcoinClient = useBitcoinClient();
   const refreshAllAccountData = useRefreshAllAccountData();
 
   const bitcoinNetworkMode = bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork);
@@ -157,7 +156,7 @@ export function useSwapDependencies(): SwapDependencies {
             if (!signed) throw new SwapSigningCancelledError();
             return signed;
           },
-          broadcast: (txHex: string) => broadcastBitcoinTransaction(bitcoinClient, txHex),
+          broadcast: (txHex: string) => broadcastBitcoinTransaction(getMempoolApiClient(), txHex),
         }
       : undefined,
     onSwapSubmitted() {

@@ -10,7 +10,7 @@ import { BtcAvatarIcon, Button, Callout } from '@leather.io/ui';
 import { formatCurrency } from '@app/common/currency-formatter';
 import { AvailableBalance, ButtonRow, Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useCryptoCurrencyMarketData } from '@app/query/common/market-data/market-data.hooks';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { AmountField } from '../../components/amount-field';
@@ -27,7 +27,7 @@ const symbol: CryptoCurrency = 'BTC';
 export function BtcSendForm() {
   const routeState = useSendFormRouteState();
   const isPrivate = useIsPrivateMode();
-  const marketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
+  const marketData = useCryptoCurrencyMarketData('BTC');
   const {
     balance,
     calcMaxSpend,

@@ -14,12 +14,18 @@ export * from './compliance/compliance.service';
 export * from './fees/bitcoin-transaction-fees.service';
 export * from './fees/stacks-transaction-fees.service';
 export * from './infrastructure/api/gamma/gamma-api.schema';
+export type {
+  AlexSdkLatestPrices,
+  AlexSdkTokenInfo,
+} from './infrastructure/api/alex/alex-sdk.client';
+export type { HiroFtMetadata } from './infrastructure/api/hiro/hiro-stacks-api.types';
 export * from './infrastructure/cache/http-cache.config';
 export * from './infrastructure/cache/http-cache.service';
 export * from './infrastructure/cache/http-cache.utils';
 export * from './infrastructure/api/leather/leather-api.error';
 export * from './infrastructure/api/leather/leather-auth-api.client';
 export * from './infrastructure/environment';
+export * from './infrastructure/rate-limiter/rate-limiter.service';
 export * from './infrastructure/auth/auth-session.service';
 export * from './infrastructure/auth/sign-in.types';
 export * from './infrastructure/auth/sign-in.utils';
