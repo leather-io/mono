@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router';
 
 import { useMutation } from '@tanstack/react-query';
 import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
-import { Flex, FlexProps, Stack } from 'leather-styles/jsx';
+import { Flex, type FlexProps, Stack } from 'leather-styles/jsx';
 import { StopPoolingIcon } from '~/components/icons/stop-pooling-icon';
-import { BitcoinStakingProviderId, StakingPoolSlug } from '~/data/bitcoin-staking-data';
+import { type BitcoinStakingProviderId, type StakingPoolSlug } from '~/data/bitcoin-staking-data';
 import { usePox5StackingClientRequired } from '~/features/bitcoin-staking/hooks/use-pox5-clients';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { wallet } from '~/utils/wallet';
@@ -87,7 +87,7 @@ export function StakingActionButtons({
         </Button>
         <Button
           size="md"
-          onClick={() => navigate(stakingPaths.update(poolSlug))}
+          onClick={() => void navigate(stakingPaths.update(poolSlug))}
           disabled={actionsDisabled}
           data-testid={BitcoinStakingSelectors.UpdateStakeButton}
         >

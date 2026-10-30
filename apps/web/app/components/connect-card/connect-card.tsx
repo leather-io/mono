@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { ConnectSelectors } from '@tests/selectors/connect.selectors';
-import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, Flex, styled } from 'leather-styles/jsx';
 
 import { Flag } from '@leather.io/ui';
 

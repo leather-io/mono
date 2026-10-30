@@ -3,9 +3,9 @@ import { useCallback } from 'react';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { bytesToHex } from '@stacks/common';
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 
-import { RpcRequest, stxCallContract } from '@leather.io/rpc';
+import { type RpcRequest, type stxCallContract } from '@leather.io/rpc';
 import {
   TransactionTypes,
   generateStacksUnsignedTransaction,
@@ -13,7 +13,7 @@ import {
 } from '@leather.io/stacks';
 import { useOnMount } from '@leather.io/ui/native';
 
-import { StxRequestParams } from '../utils';
+import { type StxRequestParams } from '../utils';
 
 interface UseCallContractTxHex {
   request: RpcRequest<typeof stxCallContract>;
@@ -59,7 +59,11 @@ export function useCallContractTxHex({
       network,
     ]
   );
+  async function loadTxHex() {
+    setTxHex(await getTxHex());
+  }
+
   useOnMount(() => {
-    void getTxHex().then(setTxHex);
+    void loadTxHex();
   });
 }

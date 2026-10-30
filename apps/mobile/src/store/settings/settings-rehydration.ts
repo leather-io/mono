@@ -1,21 +1,20 @@
 import { detectLanguage } from '@/i18n/detect-language';
-import { RootState } from '@/store';
-import { Action } from '@reduxjs/toolkit';
-import { REHYDRATE } from 'redux-persist';
+import { type RootState } from '@/store/store';
+import { type Action } from '@reduxjs/toolkit';
+import { type REHYDRATE } from 'redux-persist';
 
 import { deserializeAccountId } from '../accounts/accounts';
-import { SettingsState } from './utils';
+import { type SettingsState } from './utils';
 
-function isHydrateAction(action: Action): action is Action<typeof REHYDRATE> & {
+interface SettingsRehydrateAction extends Action<typeof REHYDRATE> {
   key: string;
   payload: RootState | undefined;
-} {
-  return action.type === REHYDRATE;
 }
 
-export function handleSettingsRehydration(state: any, action: Action): SettingsState {
-  if (!isHydrateAction(action)) return state;
-
+export function handleSettingsRehydration(
+  state: SettingsState,
+  action: SettingsRehydrateAction
+): SettingsState {
   const firstAccountId = action.payload?.accounts.ids?.[0];
   const firstAccountFromRehydration = firstAccountId ? deserializeAccountId(firstAccountId) : null;
 

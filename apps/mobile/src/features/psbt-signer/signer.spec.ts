@@ -26,9 +26,12 @@ async function deriveAddr(change: number, addressIndex: number) {
     child.publicKey,
     { fingerprint, path: btc.bip32Path(`m/84'/0'/0'/${change}/${addressIndex}`) },
   ];
+  const p2wpkh = btc.p2wpkh(child.publicKey, btc.NETWORK);
+  if (!p2wpkh.address) throw new Error('no address');
   return {
     publicKey: child.publicKey,
-    p2wpkh: btc.p2wpkh(child.publicKey, btc.NETWORK),
+    p2wpkh,
+    address: p2wpkh.address,
     derivation,
   };
 }
@@ -55,7 +58,7 @@ describe('signTx signAtIndex', () => {
       witnessUtxo: { script: addr0.p2wpkh.script, amount: 5_000_000n },
       bip32Derivation: [addr0.derivation],
     });
-    tx.addOutputAddress(payout.p2wpkh.address!, 4_995_000n, btc.NETWORK);
+    tx.addOutputAddress(payout.address, 4_995_000n, btc.NETWORK);
 
     const signed = await signTx(tx.toPSBT(), { signAtIndex: [0] });
     const out = btc.Transaction.fromPSBT(signed.toPSBT());
@@ -81,7 +84,7 @@ describe('signTx signAtIndex', () => {
       witnessUtxo: { script: addr1.p2wpkh.script, amount: 5_000_000n },
       bip32Derivation: [addr1.derivation],
     });
-    tx.addOutputAddress(addr0.p2wpkh.address!, 4_995_000n, btc.NETWORK);
+    tx.addOutputAddress(addr0.address, 4_995_000n, btc.NETWORK);
 
     const signed = await signTx(tx.toPSBT(), { signAtIndex: [0] });
     const out = btc.Transaction.fromPSBT(signed.toPSBT());
@@ -107,7 +110,7 @@ describe('signTx signAtIndex', () => {
       witnessUtxo: { script: addr0.p2wpkh.script, amount: 5_000_000n },
       bip32Derivation: [addr0.derivation],
     });
-    tx.addOutputAddress(payout.p2wpkh.address!, 4_995_000n, btc.NETWORK);
+    tx.addOutputAddress(payout.address, 4_995_000n, btc.NETWORK);
 
     const signed = await signTx(tx.toPSBT());
     const out = btc.Transaction.fromPSBT(signed.toPSBT());
@@ -133,7 +136,7 @@ describe('signTx signAtIndex', () => {
       witnessUtxo: { script: addr0.p2wpkh.script, amount: 5_000_000n },
       bip32Derivation: [addr0.derivation],
     });
-    tx.addOutputAddress(payout.p2wpkh.address!, 4_995_000n, btc.NETWORK);
+    tx.addOutputAddress(payout.address, 4_995_000n, btc.NETWORK);
 
     const signed = await signTx(tx.toPSBT(), { signAtIndex: [1] });
     const out = btc.Transaction.fromPSBT(signed.toPSBT());

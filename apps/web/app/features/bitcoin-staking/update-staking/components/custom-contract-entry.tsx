@@ -6,7 +6,7 @@ import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { Button, CheckmarkIcon } from '@leather.io/ui';
 
 import { getStateErrorMessage } from '../../byosm/byosm-error-messages';
-import { ByosmSignerManagerState } from '../../byosm/use-byosm-signer-manager';
+import { type ByosmSignerManagerState } from '../../byosm/use-byosm-signer-manager';
 
 const switchContent = bitcoinStakingContent.switchSignerManager;
 

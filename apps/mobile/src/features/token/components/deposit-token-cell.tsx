@@ -1,11 +1,11 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { Loading } from '@/components/loading';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
-import { FungibleCryptoAsset, Money } from '@leather.io/models';
+import { type FungibleCryptoAsset, type Money } from '@leather.io/models';
 import { Button, Cell } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 

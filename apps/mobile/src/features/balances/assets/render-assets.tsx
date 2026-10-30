@@ -1,5 +1,5 @@
 import { isSip10Balance } from '@leather.io/features';
-import { Sip10Balance } from '@leather.io/services';
+import { type Sip10Balance } from '@leather.io/services';
 
 import { Sip10TokenBalance } from '../stacks/sip10-token-balance';
 

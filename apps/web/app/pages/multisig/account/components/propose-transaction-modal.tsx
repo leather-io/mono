@@ -506,7 +506,7 @@ function BtcProposeForm({
   const balance = useVaultAccountBalance(account);
   const recipientError = getRecipientError(
     recipient,
-    Boolean(recipientAddress) && isValidBitcoinNetworkAddress(recipientAddress ?? '', mode),
+    Boolean(recipientAddress && isValidBitcoinNetworkAddress(recipientAddress, mode)),
     recipientAddress === account.multisigAddress
   );
   const amountError = getAmountError(amountInput, amount, balance.crypto);

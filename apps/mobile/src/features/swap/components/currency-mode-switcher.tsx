@@ -4,7 +4,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { emptyAmountPlaceholder } from '@/components/balance/constants';
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import { SecondaryAmount } from '@leather.io/state/swap';
+import { type SecondaryAmount } from '@leather.io/state/swap';
 import {
   AnimatedBox,
   ArrowTopBottomIcon,

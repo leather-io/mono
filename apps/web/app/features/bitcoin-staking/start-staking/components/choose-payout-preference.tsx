@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
@@ -10,8 +10,8 @@ import { LearnMoreLink } from '~/layouts/page/page';
 
 import { Badge, BtcAvatarIcon, Callout, Input, SbtcAvatarIcon } from '@leather.io/ui';
 
-import { PoolPayoutMode, canPayoutInBtc, isBtcPayoutRequired } from '../../utils/pool-payout';
-import { getSmallestValidMinClaimSats } from '../utils/staking-form-schema';
+import { type PoolPayoutMode, canPayoutInBtc, isBtcPayoutRequired } from '../../utils/pool-payout';
+import { type PayoutFormValues, getSmallestValidMinClaimSats } from '../utils/staking-form-schema';
 
 const payoutOptionGroupName = 'payoutPreference';
 
@@ -96,7 +96,7 @@ interface RewardAddressFieldProps {
 }
 
 function RewardAddressField({ label }: RewardAddressFieldProps) {
-  const { control } = useFormContext();
+  const { control } = useFormContext<PayoutFormValues>();
 
   return (
     <Box>
@@ -136,7 +136,7 @@ interface BtcOnlyPayoutProps {
 }
 
 function BtcOnlyPayout({ operatorPayout, registeredAddress }: BtcOnlyPayoutProps) {
-  const { watch } = useFormContext();
+  const { watch } = useFormContext<PayoutFormValues>();
   const watchedAddress = watch('rewardAddress');
   const addressChanged =
     registeredAddress !== undefined &&
@@ -174,7 +174,7 @@ export function ChoosePayoutPreference({
   operatorPayout,
   registeredAddress,
 }: ChoosePayoutPreferenceProps) {
-  const { control, watch } = useFormContext();
+  const { control, watch } = useFormContext<PayoutFormValues>();
   const payoutEnabled = Boolean(watch('payoutEnabled'));
   const watchedMaxFeeSats = watch('maxFeeSats');
   const { payoutPreference } = bitcoinStakingContent;

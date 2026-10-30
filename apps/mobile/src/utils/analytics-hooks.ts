@@ -7,7 +7,7 @@ import { analytics } from '@/utils/analytics';
 import { countBy, filter, identity, map, pipe } from 'remeda';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { AccountId, Money, NonFungibleCryptoAsset } from '@leather.io/models';
+import { type AccountId, type Money, type NonFungibleCryptoAsset } from '@leather.io/models';
 import { convertAmountToBaseUnit, isDefined, scaleValue } from '@leather.io/utils';
 
 function getScaledValueFromMoney(money: Money | undefined) {

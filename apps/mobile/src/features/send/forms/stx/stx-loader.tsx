@@ -7,7 +7,7 @@ import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { AccountId, MarketData, Money } from '@leather.io/models';
+import { type AccountId, type MarketData, type Money } from '@leather.io/models';
 
 interface StxData {
   availableBalance: Money;
@@ -64,7 +64,7 @@ export function StxDataLoader({ account, children }: StxDataLoaderProps) {
   }
 
   if (stxDataQuery.state === 'error') {
-    return <Error onRetry={() => queryClient.refetchQueries()} />;
+    return <Error onRetry={() => void queryClient.refetchQueries()} />;
   }
 
   return children(stxDataQuery.value);

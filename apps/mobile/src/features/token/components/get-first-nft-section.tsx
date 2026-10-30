@@ -1,3 +1,6 @@
+import btcDomainImage from '@/assets/btc-domain.png';
+import gammaMarketplaceImage from '@/assets/gamma-marketplace.png';
+import stxNftImage from '@/assets/stx-nft.png';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { t } from '@lingui/core/macro';
@@ -20,11 +23,7 @@ export function GetFirstNftSection() {
       </Box>
       <Cell.Root pressable onPress={() => openUrl(BNS_REGISTRATION_URL)}>
         <Cell.Icon borderRadius="round">
-          <Image
-            style={{ height: 40, width: 40 }}
-            contentFit="cover"
-            source={require('@/assets/btc-domain.png')}
-          />
+          <Image style={{ height: 40, width: 40 }} contentFit="cover" source={btcDomainImage} />
         </Cell.Icon>
         <Cell.Content>
           <Cell.Label variant="primary">{t`Register .btc domain`}</Cell.Label>
@@ -33,11 +32,7 @@ export function GetFirstNftSection() {
       </Cell.Root>
       <Cell.Root pressable onPress={() => receiveSheetRef.current?.present('stacks')}>
         <Cell.Icon borderRadius="round">
-          <Image
-            style={{ height: 40, width: 40 }}
-            contentFit="cover"
-            source={require('@/assets/stx-nft.png')}
-          />
+          <Image style={{ height: 40, width: 40 }} contentFit="cover" source={stxNftImage} />
         </Cell.Icon>
         <Cell.Content>
           <Cell.Label variant="primary">{t`Receive Stacks NFT`}</Cell.Label>
@@ -49,7 +44,7 @@ export function GetFirstNftSection() {
           <Image
             style={{ height: 40, width: 40 }}
             contentFit="cover"
-            source={require('@/assets/gamma-marketplace.png')}
+            source={gammaMarketplaceImage}
           />
         </Cell.Icon>
         <Cell.Content>

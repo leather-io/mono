@@ -1,4 +1,4 @@
-import { Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-options';
+import { type Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-options';
 import { getPox5NeedsRestake } from './pox5-transition';
 
 const stakerInfo: Pox5StakerInfo = {

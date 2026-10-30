@@ -153,7 +153,7 @@ function StakingReviewSurface({ pool, isSwitching }: StakingReviewSurfaceProps) 
           ) : (
             <StakingConfirmationSteps
               pool={pool}
-              stakeAmount={amountNumber}
+              stakeAmount={Number.isFinite(amountNumber) ? amountNumber : undefined}
               cycles={cycleNumber}
               estimatedUnlockDate={scheduledEnd}
               acknowledgment={acknowledgment}

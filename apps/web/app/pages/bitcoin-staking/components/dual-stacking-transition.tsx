@@ -1,6 +1,6 @@
 import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { HTMLStyledProps } from 'leather-styles/types';
+import { type HTMLStyledProps } from 'leather-styles/types';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { openExternalLink } from '~/utils/external-links';
 

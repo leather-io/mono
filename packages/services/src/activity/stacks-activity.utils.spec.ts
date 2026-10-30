@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { stxAsset } from '@leather.io/constants';
 import type {
   BlockchainActivityBalanceChange,
-  CryptoAsset,
   StacksConfirmedTransaction,
   StacksMempoolTransaction,
 } from '@leather.io/models';
@@ -11,14 +11,15 @@ import type {
   HiroPrincipalTransaction,
   HiroPrincipalTransactionsResultItem,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
+import { createActivityBalanceChange, createActivitySip10Asset } from '../test/activity-fixtures';
 import {
   buildConfirmedStacksActivity,
   buildOnchainStacksActivity,
   buildStacksActivity,
   buildStxBalanceChange,
-  isStacksActivityResultItem,
   mapStacksActivityStatus,
   reclassifySip10Transfer,
+  toStacksActivityResultItem,
 } from './stacks-activity.utils';
 
 function baseTx() {
@@ -42,51 +43,51 @@ function item(transaction: HiroPrincipalTransaction): HiroPrincipalTransactionsR
   };
 }
 
-describe('isStacksActivityResultItem', () => {
+describe('toStacksActivityResultItem', () => {
   it('keeps token_transfer, contract_call and smart_contract', () => {
     expect(
-      isStacksActivityResultItem(
+      toStacksActivityResultItem(
         item({
           ...baseTx(),
           type: 'token_transfer',
           token_transfer: { recipient: 'SP2', amount: '1', memo: null },
         })
       )
-    ).toBe(true);
+    ).toBeDefined();
     expect(
-      isStacksActivityResultItem(
+      toStacksActivityResultItem(
         item({
           ...baseTx(),
           type: 'contract_call',
           contract_call: { contract_id: 'SP.c', function_name: 'f' },
         })
       )
-    ).toBe(true);
+    ).toBeDefined();
     expect(
-      isStacksActivityResultItem(
+      toStacksActivityResultItem(
         item({
           ...baseTx(),
           type: 'smart_contract',
           smart_contract: { contract_id: 'SP.c', clarity_version: null },
         })
       )
-    ).toBe(true);
+    ).toBeDefined();
   });
 
   it('filters out coinbase, tenure_change and poison_microblock', () => {
     expect(
-      isStacksActivityResultItem(
+      toStacksActivityResultItem(
         item({ ...baseTx(), type: 'coinbase', coinbase: { alt_recipient: null } })
       )
-    ).toBe(false);
+    ).toBeUndefined();
     expect(
-      isStacksActivityResultItem(
+      toStacksActivityResultItem(
         item({ ...baseTx(), type: 'tenure_change', tenure_change: { cause: 'block_found' } })
       )
-    ).toBe(false);
-    expect(isStacksActivityResultItem(item({ ...baseTx(), type: 'poison_microblock' }))).toBe(
-      false
-    );
+    ).toBeUndefined();
+    expect(
+      toStacksActivityResultItem(item({ ...baseTx(), type: 'poison_microblock' }))
+    ).toBeUndefined();
   });
 });
 
@@ -228,10 +229,13 @@ describe(reclassifySip10Transfer.name, () => {
   const unmapped = { action: 'contract-execution' as const };
   const sender = 'SP_SENDER';
   function change(
-    protocol: CryptoAsset['protocol'],
+    protocol: 'sip10' | 'nativeStx',
     direction: BlockchainActivityBalanceChange['direction']
   ): BlockchainActivityBalanceChange {
-    return { direction, asset: { protocol } as CryptoAsset, amount: {} as never };
+    return createActivityBalanceChange({
+      direction,
+      asset: protocol === 'sip10' ? createActivitySip10Asset() : stxAsset,
+    });
   }
 
   it('reclassifies a sent SIP-10 transfer as send', () => {
@@ -534,11 +538,10 @@ describe(buildOnchainStacksActivity.name, () => {
 
   it('reclassifies a received SIP-10 transfer using the supplied ft change', () => {
     const tx = contractCall({ tx_id: '0x2' }, 'SP.token', 'transfer');
-    const ftChange: BlockchainActivityBalanceChange = {
+    const ftChange = createActivityBalanceChange({
       direction: 'received',
-      asset: { protocol: 'sip10' } as CryptoAsset,
-      amount: {} as never,
-    };
+      asset: createActivitySip10Asset(),
+    });
     const activity = buildOnchainStacksActivity(tx, stxAddress, {
       stxNet: '0',
       ftChanges: [ftChange],

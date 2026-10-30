@@ -54,11 +54,11 @@ describe('migrateFlattenKeychains', () => {
       accounts: { active: 'account-1' },
     };
 
-    const result = migrateFlattenKeychains(originalState) as any;
+    const result = migrateFlattenKeychains(originalState);
 
-    expect(result.user).toEqual({ id: '123', name: 'Test User' });
-    expect(result.settings).toEqual({ theme: 'dark', notifications: true });
-    expect(result.accounts).toEqual({ active: 'account-1' });
+    expect(result).toHaveProperty('user', { id: '123', name: 'Test User' });
+    expect(result).toHaveProperty('settings', { theme: 'dark', notifications: true });
+    expect(result).toHaveProperty('accounts', { active: 'account-1' });
     expect(result._persist).toEqual({ version: 0, rehydrated: true });
   });
 
@@ -119,11 +119,11 @@ describe('migrateFlattenKeychains', () => {
       otherData: 'preserved',
     };
 
-    const result = migrateFlattenKeychains(originalState) as any;
+    const result = migrateFlattenKeychains(originalState);
 
     expect(result.keychains.ids).toEqual([]);
     expect(result.keychains.entities).toEqual({});
-    expect(result.otherData).toBe('preserved');
+    expect(result).toHaveProperty('otherData', 'preserved');
   });
 
   test('should correctly add chain property to bitcoin entities', () => {

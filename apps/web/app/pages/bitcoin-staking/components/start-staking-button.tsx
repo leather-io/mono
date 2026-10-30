@@ -1,14 +1,14 @@
-import { ReactNode, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
-import { StakingPoolSlug, stakingProviderIdToSlug } from '~/data/bitcoin-staking-data';
+import { type StakingPoolSlug, stakingProviderIdToSlug } from '~/data/bitcoin-staking-data';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
 import { byosmPaths, stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { useLeatherConnect } from '~/store/addresses';
 
-import { Button, ButtonProps, useOnMount } from '@leather.io/ui';
+import { Button, type ButtonProps, useOnMount } from '@leather.io/ui';
 
 import { useStakingPoolLink } from './use-staking-pool-link';
 
@@ -73,20 +73,18 @@ export function StartStakingButton({ slug }: StartStakingButtonProps) {
   const [isClient, setIsClient] = useState(false);
   useOnMount(() => setIsClient(true));
 
+  async function connectAndOpenPool() {
+    await connect();
+    void navigate(stakingPaths.pool(slug));
+  }
+
   if (!isClient) {
     return <StartStakingButtonLayout aria-busy />;
   }
 
   return whenExtensionState({
     connected: <StartStakingPositionCheck slug={slug} />,
-    detected: (
-      <StartStakingButtonLayout
-        onClick={async () => {
-          await connect();
-          void navigate(stakingPaths.pool(slug));
-        }}
-      />
-    ),
+    detected: <StartStakingButtonLayout onClick={() => void connectAndOpenPool()} />,
     missing: <StartStakingButtonLayout onClick={() => setShowInstallLeatherDialog(true)} />,
   });
 }

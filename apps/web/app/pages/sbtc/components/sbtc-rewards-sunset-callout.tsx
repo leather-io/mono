@@ -1,6 +1,6 @@
 import { SbtcSelectors } from '@tests/selectors/sbtc.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
-import { HTMLStyledProps } from 'leather-styles/types';
+import { type HTMLStyledProps } from 'leather-styles/types';
 import { sbtcContent } from '~/content/sbtc-content';
 import { openExternalLink } from '~/utils/external-links';
 

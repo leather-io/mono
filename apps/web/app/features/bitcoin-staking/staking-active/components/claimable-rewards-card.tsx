@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import BigNumber from 'bignumber.js';
 import { HStack, Stack, styled } from 'leather-styles/jsx';
-import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
+import { type BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
 import { useLeatherConnect } from '~/store/addresses';
 import { wallet } from '~/utils/wallet';
 
@@ -12,7 +12,7 @@ import { Button, ChevronDownIcon, ChevronUpIcon } from '@leather.io/ui';
 
 import { Pox5SubmitError } from '../../components/pox5-submit-error';
 import { usePox5TxTracker } from '../../hooks/use-pox5-tx-tracker';
-import { Pox5ClaimableRewards } from '../../queries/pox5-stacking.query';
+import { type Pox5ClaimableRewards } from '../../queries/pox5-stacking.query';
 import { createClaimRewardsMutationOptions } from '../../transactions/pox5-mutations';
 import { getBroadcastTxId } from '../../transactions/pox5-tx-status';
 

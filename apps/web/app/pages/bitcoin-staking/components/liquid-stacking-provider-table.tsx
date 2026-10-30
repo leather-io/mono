@@ -1,7 +1,7 @@
-import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { type ReactElement, useEffect, useMemo, useState } from 'react';
 
 import {
-  ColumnDef,
+  type ColumnDef,
   type SortingState,
   flexRender,
   getCoreRowModel,
@@ -23,7 +23,7 @@ import {
 } from '~/components/table';
 import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { learnArticles } from '~/content/learn-content';
-import { LiquidStackingPool } from '~/data/data';
+import { type LiquidStackingPool } from '~/data/data';
 import { getProtocolSlugByProviderId } from '~/features/stacking/start-liquid-stacking/utils/utils-preset-protocols';
 import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';
 import { openExternalLink } from '~/utils/external-links';
@@ -59,7 +59,7 @@ export function LiquidStackingProviderTable({
           color="ink.text-primary"
           w="100%"
         >
-          {info.getValue() as string}
+          {info.row.original.name}
         </Flag>
       ),
       header: () => (
@@ -96,9 +96,9 @@ export function LiquidStackingProviderTable({
           <Flag
             display={['none', 'none', 'flex']}
             spacing="space.02"
-            img={<ChainLogoIcon symbol={info.getValue() as string} />}
+            img={<ChainLogoIcon symbol={info.row.original.payout} />}
           >
-            {info.getValue() as string}
+            {info.row.original.payout}
           </Flag>
         ),
         meta: { align: 'left' },
@@ -117,7 +117,7 @@ export function LiquidStackingProviderTable({
             />
           </styled.div>
         ),
-        cell: info => {
+        cell(info) {
           const slug = getProtocolSlugByProviderId(info.row.original.providerId);
 
           // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -128,7 +128,8 @@ export function LiquidStackingProviderTable({
           }
 
           if (isError || isUndefined(data?.lastCycle?.token.stacked_amount)) {
-            return <styled.div>{info.getValue() as string}</styled.div>;
+            const tvl = info.getValue();
+            return <styled.div>{typeof tvl === 'string' ? tvl : null}</styled.div>;
           }
 
           return (
@@ -151,7 +152,7 @@ export function LiquidStackingProviderTable({
             />
           </styled.div>
         ),
-        cell: info => {
+        cell(info) {
           const slug = getProtocolSlugByProviderId(info.row.original.providerId);
           // eslint-disable-next-line react-hooks/rules-of-hooks
           const { data, isLoading, isError } = useStackingTrackerProtocol(slug);
@@ -161,7 +162,7 @@ export function LiquidStackingProviderTable({
           }
 
           if (isError || !data?.entity.apr) {
-            return <styled.div color="black">{info.getValue() as string}</styled.div>;
+            return <styled.div color="black">{info.row.original.estApr}</styled.div>;
           }
 
           return <styled.div>{toHumanReadablePercent(data.entity.apr)}</styled.div>;
@@ -180,7 +181,7 @@ export function LiquidStackingProviderTable({
             textStyle="label.03"
           />
         ),
-        cell: info => <styled.div>{info.getValue() as string}</styled.div>,
+        cell: info => <styled.div>{info.row.original.fee}</styled.div>,
         meta: { align: 'right' },
         size: 15,
         maxSize: 15,
@@ -248,7 +249,7 @@ export function LiquidStackingProviderTable({
                   key={header.id}
                   colSpan={header.colSpan}
                   style={{ width: `${header.getSize()}%` }}
-                  textAlign={(header.column.columnDef.meta as any)?.align ?? 'left'}
+                  textAlign={header.column.columnDef.meta?.align ?? 'left'}
                 >
                   {header.isPlaceholder ? null : (
                     <styled.span
@@ -275,8 +276,7 @@ export function LiquidStackingProviderTable({
                 <styled.td
                   style={{
                     width: cell.column.getSize() + '%',
-                    textAlign:
-                      (cell.column.columnDef.meta as any)?.align === 'right' ? 'right' : 'left',
+                    textAlign: cell.column.columnDef.meta?.align === 'right' ? 'right' : 'left',
                   }}
                   px="space.04"
                   key={cell.id}

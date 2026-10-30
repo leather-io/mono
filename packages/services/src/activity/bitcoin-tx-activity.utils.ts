@@ -1,12 +1,12 @@
 import { btcAsset } from '@leather.io/constants';
 import {
-  AccountAddresses,
+  type AccountAddresses,
   ActivityLevels,
-  BitcoinTransaction,
+  type BitcoinTransaction,
   OnChainActivityStatuses,
   OnChainActivityTypes,
-  ReceiveAssetActivity,
-  SendAssetActivity,
+  type ReceiveAssetActivity,
+  type SendAssetActivity,
 } from '@leather.io/models';
 import { dateToUnixTimestamp, isDefined, sumNumbers, uniqueArray } from '@leather.io/utils';
 

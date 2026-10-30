@@ -1,12 +1,12 @@
-import { MetaDescriptor } from 'react-router';
+import { type MetaDescriptor } from 'react-router';
 
 import { cmsClient } from '~/constants/cms-client';
 import { HelpCenter } from '~/pages/support/help-center';
 import { handleSupportFormAction } from '~/utils/support/support-form-action';
 
-import { HelpCenterCategoriesQueryResult, helpCenterCategoriesQuery } from '@leather.io/cms';
+import { type HelpCenterCategoriesQueryResult, helpCenterCategoriesQuery } from '@leather.io/cms';
 
-import { Route } from './+types/help-center.route';
+import { type Route } from './+types/help-center.route';
 
 export function meta() {
   return [

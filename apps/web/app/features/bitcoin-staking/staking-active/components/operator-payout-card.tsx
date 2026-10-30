@@ -5,7 +5,7 @@ import { link as linkRecipe } from 'leather-styles/recipes';
 import { CopyAddress } from '~/components/copy-address';
 import { EM_DASH } from '~/constants/constants';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
-import { BitcoinStakingPool, OperatorBtcPayout } from '~/data/bitcoin-staking-data';
+import { type BitcoinStakingPool, type OperatorBtcPayout } from '~/data/bitcoin-staking-data';
 
 import { ArrowLeftIcon } from '@leather.io/ui';
 

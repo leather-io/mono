@@ -146,7 +146,7 @@ Leather SDK, so a web entry describes a page, its loader and the wallet state it
   (`mainnet` for everything outside `/multisig`).
 - **Flags** are build conditions, not LaunchDarkly: a route registered inside
   `import.meta.env.MODE !== 'production'` carries `flags: ['nonProductionBuild']`.
-- **Preconditions** express the Playwright `mode` fixture (`apps/web/tests/index.ts`):
+- **Preconditions** express the Playwright `mode` fixture (`apps/web/tests/fixtures.ts`):
   `session` is `uninstalled` (no provider), `mock-installed` (localStorage `leather-mock-mode`
   seeds the mock provider and the in-page MSW worker) or `mock-connected` (the fixture's
   worker-scoped storage with the mock STX address already connected). `network` is the app's

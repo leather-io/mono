@@ -4,7 +4,7 @@ import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.select
 import { css, cx } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 import { link as linkRecipe } from 'leather-styles/recipes';
-import { HTMLStyledProps } from 'leather-styles/types';
+import { type HTMLStyledProps } from 'leather-styles/types';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { InfoTooltipIcon } from '~/components/info-tooltip-icon';
 import { LearnHoverCard } from '~/components/learn-hover-card';
@@ -18,7 +18,7 @@ import {
 import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { learnArticles } from '~/content/learn-content';
 import {
-  BitcoinStakingPool,
+  type BitcoinStakingPool,
   bitcoinStakingPoolList,
   getSignerManagerContracts,
   getStakingPoolFromSlug,

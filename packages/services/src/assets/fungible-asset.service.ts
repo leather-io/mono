@@ -21,7 +21,7 @@ export class FungibleAssetService {
       case 'sip10':
         return await this.sip10AssetService.getVisibleAsset(assetId.id, signal);
       default:
-        throw new Error(`Asset not found: ${assetId.protocol}`);
+        throw new Error(`Asset not found: ${String(assetId.protocol)}`);
     }
   }
 
@@ -37,7 +37,7 @@ export class FungibleAssetService {
       case 'sip10':
         return await this.sip10AssetService.getAsset(assetId.id, signal);
       default:
-        throw new Error(`Asset not found: ${assetId.protocol}`);
+        throw new Error(`Asset not found: ${String(assetId.protocol)}`);
     }
   }
 }

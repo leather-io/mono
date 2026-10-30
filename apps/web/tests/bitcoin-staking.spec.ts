@@ -1,7 +1,7 @@
-import { Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 
-import { test } from './index';
+import { test } from './fixtures';
 
 // In mock mode the app runs its own in-page MSW worker, so per-test variants
 // are driven through localStorage flags read by pox5-mock-overrides.ts rather

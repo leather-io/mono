@@ -1,5 +1,5 @@
-import { CryptoAssetProtocol } from '@leather.io/models';
-import { SerializedCryptoAssetId } from '@leather.io/utils';
+import { type CryptoAssetProtocol } from '@leather.io/models';
+import { type SerializedCryptoAssetId } from '@leather.io/utils';
 
 export interface TokenDetailsProps {
   assetId: SerializedCryptoAssetId;
@@ -9,16 +9,9 @@ const supportedFungibleAssetProtocols = ['nativeBtc', 'nativeStx', 'sip10'] as c
 
 const supportedNonFungibleAssetProtocols = ['sip9'] as const;
 
-type SupportedFungibleAssetProtocol = (typeof supportedFungibleAssetProtocols)[number];
-type SupportedNonFungibleAssetProtocol = (typeof supportedNonFungibleAssetProtocols)[number];
-
-export function isSupportedFungibleAssetProtocol(
-  value: CryptoAssetProtocol
-): value is SupportedFungibleAssetProtocol {
-  return (supportedFungibleAssetProtocols as readonly string[]).includes(value);
+export function isSupportedFungibleAssetProtocol(value: CryptoAssetProtocol) {
+  return supportedFungibleAssetProtocols.some(protocol => protocol === value);
 }
-export function isSupportedNonFungibleAssetProtocol(
-  value: CryptoAssetProtocol
-): value is SupportedNonFungibleAssetProtocol {
-  return (supportedNonFungibleAssetProtocols as readonly string[]).includes(value);
+export function isSupportedNonFungibleAssetProtocol(value: CryptoAssetProtocol) {
+  return supportedNonFungibleAssetProtocols.some(protocol => protocol === value);
 }

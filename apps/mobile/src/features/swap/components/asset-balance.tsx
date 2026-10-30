@@ -2,7 +2,11 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { Balance } from '@/components/balance/balance';
 
-import { CryptoAssetBalance, InputCurrencyMode, whenInputCurrencyMode } from '@leather.io/models';
+import {
+  type CryptoAssetBalance,
+  type InputCurrencyMode,
+  whenInputCurrencyMode,
+} from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
 interface AssetBalanceProps {
