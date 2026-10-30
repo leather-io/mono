@@ -15,26 +15,36 @@ its title and labels. A draft is not consent for the next one.
 
 ## 1. Detect the surface
 
-Pick the first mode that works and say once which one you are in.
+Two independent checks. Say once which source you have and whether `gh` works.
 
-- **Full mode**: you can run shell commands, the working directory is a `leather-io/mono` checkout
-  (`git remote -v`), and `gh auth status` succeeds. Research runs in the checkout, dedup and
-  creation use `gh`.
-- **Clone mode**: you can run shell commands and reach github.com, but there is no checkout or no
-  `gh`. The repo is public: clone it (§2) and research there. Dedup uses the public search API;
-  the output is a link and a Markdown body.
-- **Text mode**: no shell, or the clone fails. No feature map, no anchors, no dedup; the output is
-  a link and a Markdown body, and the report says the issue still needs anchors, Decisions and
-  Verify from someone in full or clone mode.
+**Source**: where the research runs. Take the first that works.
+
+| Source        | When                                                                    | Research and feature map      | Permalink SHA                        |
+| ------------- | ----------------------------------------------------------------------- | ----------------------------- | ------------------------------------ |
+| **Checkout**  | the working directory is a `leather-io/mono` checkout (`git remote -v`) | in place                      | `git rev-parse origin/dev`, no fetch |
+| **Clone**     | no checkout, but you can run shell commands and reach github.com        | a shallow clone of `dev` (§2) | the clone's `git rev-parse HEAD`     |
+| **Text mode** | no shell, or the clone fails                                            | none: no map, no anchors      | none                                 |
+
+**GitHub**: how dedup and creation run.
+
+| GitHub      | When                      | Labels (§4)                 | Dedup (§8)        | Create (§10)                         |
+| ----------- | ------------------------- | --------------------------- | ----------------- | ------------------------------------ |
+| **`gh`**    | `gh auth status` succeeds | checked against the repo    | `gh issue list`   | `gh issue create --web`              |
+| **No `gh`** | anything else             | from `references/labels.md` | public search API | a prefilled link and a Markdown body |
+
+Text mode has no shell, so no `gh` and no dedup either; the report says the issue still needs
+anchors, Decisions and Verify from someone with a checkout or a clone.
 
 ## 2. Generate the feature map
 
-Before any research, in full and clone mode. `pnpm lt feature-map generate --help` lists the apps
-the generator supports (today `extension`); generate every one, whatever the report is about.
+Before any research, with a checkout or a clone. `pnpm lt feature-map generate --help` lists the
+apps the generator supports (today `extension`); generate every one, whatever the report is about.
 
-- **Full mode**: in the checkout, `pnpm lt feature-map generate --app extension`. If `pnpm lt`
-  reports an unknown command, run `pnpm --filter @leather.io/tools build` first.
-- **Clone mode**: a shallow clone and only the tools package's dependencies, a few seconds warm:
+- **Checkout**: in place, `pnpm lt feature-map generate --app extension`. If `pnpm lt` reports an
+  unknown command, run `pnpm --filter @leather.io/tools build` first. The map reflects the working
+  tree, which may be a branch ahead of `dev`; treat a route or spec it names as a lead and confirm
+  it at the permalink SHA (§5).
+- **Clone**: a shallow clone and only the tools package's dependencies, a few seconds warm:
 
   ```bash
   dir="$(mktemp -d)"
@@ -66,19 +76,19 @@ with the route search in §5 and name the failure in the report.
 ## 4. Classify
 
 From `references/labels.md`: the type (`bug`, `enhancement`, or none for an idea), exactly one
-`platform:*`, one to three `area:*`, and for bugs a proposed severity. In full mode cross-check
-with `gh label list --limit 100` and use only labels that exist.
+`platform:*`, one to three `area:*`, and for bugs a proposed severity. With `gh`, cross-check with
+`gh label list --limit 100` and use only labels that exist.
 
 - **Severity is proposed in your report, never put in the labels.**
 - **Critical stops the draft.** Funds at risk or a wallet compromised goes to the private channel,
   not a public issue: the Leather bug bounty on Immunefi, or for maintainers the private
   `leather-io/leather-security` repo. Say why and draft nothing public.
 
-## 5. Anchor (full and clone mode)
+## 5. Anchor (checkout or clone)
 
-Pin every permalink to one SHA: in full mode the local `git rev-parse origin/dev`, in clone mode
-the clone's `git rev-parse HEAD`.
-`https://github.com/leather-io/mono/blob/<sha>/<path>#L<n>`. In full mode never fetch; a fetch can
+Pin every permalink to one SHA: in a checkout the local `git rev-parse origin/dev`, in a clone the
+clone's `git rev-parse HEAD`.
+`https://github.com/leather-io/mono/blob/<sha>/<path>#L<n>`. In a checkout never fetch; a fetch can
 block on a hardware key. Confirm each cited line with `git show <sha>:<path>` before linking it, so
 the permalink shows what you read, not a working tree.
 
@@ -92,7 +102,7 @@ the permalink shows what you read, not a working tree.
 A cause is `### Cause (proven)` only when a reproduction ran in this session: a failing test, or a
 path you observed executing. Anything you only read is `### Cause (suspect)`.
 
-## 6. Decisions and Verify (full and clone mode)
+## 6. Decisions and Verify (checkout or clone)
 
 Both sections come from the research in §5, before drafting.
 
@@ -118,10 +128,10 @@ Both sections come from the research in §5, before drafting.
 - **One issue per unit someone can own and close.** Propose the split with a title per issue; the
   person decides.
 
-## 8. Dedup (full and clone mode)
+## 8. Dedup (checkout or clone)
 
-- **Full mode**: `gh issue list --repo leather-io/mono --search "<2-3 keywords>" --state all --limit 10`.
-- **Clone mode**:
+- **With `gh`**: `gh issue list --repo leather-io/mono --search "<2-3 keywords>" --state all --limit 10`.
+- **Without `gh`**:
   `curl -s "https://api.github.com/search/issues?q=repo:leather-io/mono+is:issue+<keywords>&per_page=10"`;
   unauthenticated search allows 10 requests a minute.
 
@@ -147,11 +157,11 @@ it is a duplicate.
 
 Only after yes, one issue at a time.
 
-- **Title and body go through files**: write each to a temporary file with the file-writing tool, never through `echo`, `printf` or a heredoc, so the shell never expands `$(...)`, backticks or `$VAR` in reporter text; in clone and text mode, URL-encode from those files the same way.
-- **Full mode**:
+- **Title and body go through files**: write each to a temporary file with the file-writing tool, never through `echo`, `printf` or a heredoc, so the shell never expands `$(...)`, backticks or `$VAR` in reporter text; without `gh`, URL-encode from those files the same way.
+- **With `gh`**:
   `gh issue create --repo leather-io/mono --web --title "$(cat <title-file>)" --body-file <body-file> --label "<type>,<platform>,<areas>"`.
   It opens the browser with a new issue prefilled; the person adds screenshots and submits.
-- **Clone and text mode**: give two things. A prefilled link, title and body URL-encoded:
+- **Without `gh`**, text mode included: give two things. A prefilled link, title and body URL-encoded:
   `https://github.com/leather-io/mono/issues/new?title=<title>&body=<body>&labels=<labels>`.
   Then the same Markdown body in one code block, ready to paste if the link fails. GitHub applies
   `labels` only for people with triage access; tell everyone else a maintainer labels it.
@@ -162,6 +172,6 @@ Only after yes, one issue at a time.
 
 ## 11. Report
 
-The mode, the issue URLs or the links you handed over, the labels per issue, the proposed severity,
+The source and whether `gh` worked, the issue URLs or the links you handed over, the labels per issue, the proposed severity,
 what stays suspect or unverified, which decisions stay open, what you redacted, which duplicates
 were close, and whether the feature map generated.
