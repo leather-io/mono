@@ -830,7 +830,7 @@ msgstr "Failed"
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:240
+#: src/features/psbt-signer/psbt-signer.tsx:242
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
 
@@ -879,7 +879,7 @@ msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
 #: src/features/approver/stx/hooks.ts:27
-#: src/features/psbt-signer/psbt-signer.tsx:205
+#: src/features/psbt-signer/psbt-signer.tsx:207
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -989,7 +989,7 @@ msgid "Hide account"
 msgstr "Hide account"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:176
-#: src/features/psbt-signer/psbt-signer.tsx:317
+#: src/features/psbt-signer/psbt-signer.tsx:319
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -1612,7 +1612,8 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:278
+#: src/features/browser/approver-sheet/send-transfer.tsx:78
+#: src/features/psbt-signer/psbt-signer.tsx:280
 msgid "Send token"
 msgstr "Send token"
 
@@ -1647,7 +1648,7 @@ msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:175
-#: src/features/psbt-signer/psbt-signer.tsx:316
+#: src/features/psbt-signer/psbt-signer.tsx:318
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1660,8 +1661,8 @@ msgstr "Show balances"
 msgid "Sign Message"
 msgstr "Sign Message"
 
-#: src/features/psbt-signer/psbt-signer.tsx:249
-#: src/features/psbt-signer/psbt-signer.tsx:278
+#: src/features/psbt-signer/psbt-signer.tsx:251
+#: src/features/psbt-signer/psbt-signer.tsx:280
 msgid "Sign transaction"
 msgstr "Sign transaction"
 
@@ -1670,7 +1671,7 @@ msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
 #: src/features/activity/translate-activity-status.ts:46
-#: src/features/psbt-signer/psbt-signer.tsx:251
+#: src/features/psbt-signer/psbt-signer.tsx:253
 msgid "Signed"
 msgstr "Signed"
 
@@ -1682,7 +1683,7 @@ msgstr "Signing"
 msgid "Signing failed"
 msgstr "Signing failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:250
+#: src/features/psbt-signer/psbt-signer.tsx:252
 msgid "Signing..."
 msgstr "Signing..."
 
@@ -1927,7 +1928,8 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 
 #: src/features/approver/components/sip10-recipient.tsx:43
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:150
-#: src/features/psbt-signer/psbt-signer.tsx:295
+#: src/features/browser/approver-sheet/send-transfer.tsx:80
+#: src/features/psbt-signer/psbt-signer.tsx:297
 msgid "To address"
 msgstr "To address"
 
@@ -1960,7 +1962,7 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:329
+#: src/features/psbt-signer/psbt-signer.tsx:331
 msgid "Total spend"
 msgstr "Total spend"
 
@@ -2181,7 +2183,7 @@ msgid "You will transfer"
 msgstr "You will transfer"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:141
-#: src/features/psbt-signer/psbt-signer.tsx:289
+#: src/features/psbt-signer/psbt-signer.tsx:291
 msgid "You’ll send"
 msgstr "You’ll send"
 

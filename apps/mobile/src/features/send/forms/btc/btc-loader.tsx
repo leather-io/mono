@@ -48,7 +48,7 @@ function useBtcData(account: AccountId): FetchState<BtcData> {
     btcBalance.state === 'loading' ||
     marketData.status === 'pending';
   const isError =
-    feeRates.status === 'error' ||
+    feeRates.isLoadingError ||
     accountUtxos.state === 'error' ||
     btcBalance.state === 'error' ||
     marketData.status == 'error';
