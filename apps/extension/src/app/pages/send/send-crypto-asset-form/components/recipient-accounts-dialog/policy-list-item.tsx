@@ -1,9 +1,9 @@
-import { useFormikContext } from 'formik';
+import { useFormContext } from 'react-hook-form';
 
 import { Caption } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
-import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
+import type { RecipientFormValues } from '@shared/models/form.model';
 
 import { AccountListItemLayout } from '@app/components/account/account-list-item.layout';
 import { AccountNameLayout } from '@app/components/account/account-name';
@@ -17,12 +17,12 @@ interface PolicyListItemProps {
   onClose(): void;
 }
 export function PolicyListItem({ policy, onClose }: PolicyListItemProps) {
-  const { setFieldValue } = useFormikContext<BitcoinSendFormValues | StacksSendFormValues>();
+  const { setValue } = useFormContext<RecipientFormValues>();
   const parent = parsePolicyParent(policy.parentAccountId);
   const displayName = usePolicyDisplayName(policy);
 
   function onSelectAccount() {
-    void setFieldValue('recipient', policy.address, false);
+    setValue('recipient', policy.address);
     onClose();
   }
 

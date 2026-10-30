@@ -1,18 +1,27 @@
-import { useField, useFormikContext } from 'formik';
+import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 
 export function useIsFieldDirty(name: string) {
-  const [field, meta] = useField(name);
-  return field.value !== meta.initialValue;
+  const { formState } = useFormContext();
+  const value: unknown = useWatch({ name });
+  const initialValue: unknown = formState.defaultValues?.[name];
+  return value !== initialValue;
+}
+
+export function useFieldError(name: string) {
+  const { getFieldState } = useFormContext();
+  const formState = useFormState({ name });
+  return getFieldState(name, formState).error?.message;
 }
 
 export function useShowFieldError(name: string) {
-  const form = useFormikContext();
-  const [_, meta] = useField(name);
+  const { getFieldState } = useFormContext();
+  const formState = useFormState({ name });
+  const { error, isTouched } = getFieldState(name, formState);
   const isDirty = useIsFieldDirty(name);
   const isFieldInFocus = document.activeElement?.getAttribute('name') === name;
 
   return !!(
-    (form.submitCount > 0 && meta.error) ||
-    (!isFieldInFocus && meta.touched && isDirty && meta.error)
+    (formState.submitCount > 0 && error) ||
+    (!isFieldInFocus && isTouched && isDirty && error)
   );
 }

@@ -1,13 +1,13 @@
 import { type ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { useController } from 'react-hook-form';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { useField } from 'formik';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { STX_DECIMALS, TOKEN_NAME_LENGTH } from '@leather.io/constants';
 import type { Money } from '@leather.io/models';
 
-import { useShowFieldError } from '@app/common/form-utils';
+import { useFieldError, useShowFieldError } from '@app/common/form-utils';
 import { linearInterpolation } from '@app/common/utils';
 import { ErrorLabel } from '@app/components/error-label';
 
@@ -53,8 +53,9 @@ export function AmountField({
   switchableAmount,
   tokenSymbol,
 }: AmountFieldProps) {
-  const [field, meta, helpers] = useField<string>('amount');
+  const { field } = useController<{ amount: string }>({ name: 'amount' });
 
+  const error = useFieldError('amount');
   const showError = useShowFieldError('amount');
   const [fontSize, setFontSize] = useState(maxFontSize);
   const [textSizeInPx, setTextSizeInPx] = useState(0);
@@ -127,7 +128,7 @@ export function AmountField({
   // TODO: could be implemented with html using padded label element
   const onClickFocusInput = useCallback(() => {
     if (isSendingMax) {
-      void helpers.setValue('');
+      field.onChange('');
       onSetIsSendingMax?.(false);
     }
 
@@ -135,7 +136,7 @@ export function AmountField({
     setTimeout(() => {
       document.getElementById(amountInputId)?.focus();
     });
-  }, [isSendingMax, helpers, onSetIsSendingMax]);
+  }, [isSendingMax, field, onSetIsSendingMax]);
 
   return (
     <Stack alignItems="center" gap={['space.04', showError ? 'space.04' : '48px']} width="100%">
@@ -185,7 +186,10 @@ export function AmountField({
             autoFocus={autofocus}
             fontWeight={500}
             autoComplete={autoComplete}
-            {...field}
+            name={field.name}
+            ref={field.ref}
+            value={field.value}
+            onBlur={field.onBlur}
             onChange={onChange}
           />
           {/*
@@ -221,7 +225,7 @@ export function AmountField({
       {showError && (
         <Flex>
           <ErrorLabel data-testid={SendCryptoAssetSelectors.AmountFieldInputErrorLabel}>
-            {meta.error}
+            {error}
           </ErrorLabel>
         </Flex>
       )}
