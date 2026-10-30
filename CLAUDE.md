@@ -142,3 +142,5 @@ pnpm --filter @leather.io/{package} typecheck
 - **Add a React Query hook** → `packages/queries/` or app-level `src/queries/`
 - **Run a single package's tests** → `pnpm --filter @leather.io/{package} test:unit`
 - **Add or fix an extension E2E test** → `apps/extension/tests`, use the `write-extension-e2e` skill
+- **File an issue** → `/new-issue`
+- **Fix an issue** → `Settled` decisions are binding, ask about every `Open` one before coding, re-check the issue's line links against current `dev`, run every Verify line before ticking Done when
