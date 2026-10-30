@@ -1,3 +1,4 @@
+import { useStxTransferFees } from '@/features/send/hooks/use-stacks-transfer-fees';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
@@ -11,4 +12,5 @@ export function usePreloadStxData(account: AccountId) {
   useStxAccountBalance(fingerprint, accountIndex);
   useStxMarketDataQuery();
   useNextNonce(address);
+  useStxTransferFees(account);
 }

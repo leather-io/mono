@@ -1,19 +1,26 @@
 import { Error } from '@/components/error/error';
 import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
+import { useStxTransferFees } from '@/features/send/hooks/use-stacks-transfer-fees';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type AccountId, type MarketData, type Money } from '@leather.io/models';
+import {
+  type AccountId,
+  type MarketData,
+  type Money,
+  type StacksTransactionFees,
+} from '@leather.io/models';
 
 interface StxData {
   availableBalance: Money;
   quoteBalance: Money;
   nonce: number | undefined;
   marketData: MarketData;
+  fees: StacksTransactionFees;
 }
 
 function useStxData(account: AccountId): FetchState<StxData> {
@@ -22,18 +29,24 @@ function useStxData(account: AccountId): FetchState<StxData> {
   const balance = useStxAccountBalance(fingerprint, accountIndex);
   const marketData = useStxMarketDataQuery();
   const nextNonce = useNextNonce(address);
+  const fees = useStxTransferFees(account);
 
   // TODO: Replace with aggregate queries once we have more flexible query API
   const isReady =
     balance.state === 'success' &&
     marketData.status === 'success' &&
-    nextNonce.status === 'success';
+    nextNonce.status === 'success' &&
+    fees.status === 'success';
   const isLoading =
     balance.state === 'loading' ||
     marketData.status === 'pending' ||
-    nextNonce.status === 'pending';
+    nextNonce.status === 'pending' ||
+    fees.status === 'pending';
   const isError =
-    balance.state === 'error' || marketData.status === 'error' || nextNonce.status === 'error';
+    balance.state === 'error' ||
+    marketData.status === 'error' ||
+    nextNonce.status === 'error' ||
+    fees.status === 'error';
 
   return toFetchState({
     data: isReady
@@ -42,6 +55,7 @@ function useStxData(account: AccountId): FetchState<StxData> {
           quoteBalance: balance.value.quote.availableUnlockedBalance,
           nonce: nextNonce.data?.nonce,
           marketData: marketData.data,
+          fees: fees.data,
         }
       : null,
     isLoading,

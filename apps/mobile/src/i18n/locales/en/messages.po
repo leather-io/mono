@@ -80,27 +80,27 @@ msgstr "{themePreference, select, light {Light} dark {Dark} system {System} othe
 msgid "<0>{assetName}</0> has no available receiving options right now."
 msgstr "<0>{assetName}</0> has no available receiving options right now."
 
-#: src/features/approver/utils.tsx:49
+#: src/features/approver/utils.tsx:54
 msgid "~1 hour+"
 msgstr "~1 hour+"
 
-#: src/features/approver/utils.tsx:51
+#: src/features/approver/utils.tsx:56
 msgid "~10 – 20min"
 msgstr "~10 – 20min"
 
-#: src/features/approver/utils.tsx:50
+#: src/features/approver/utils.tsx:55
 msgid "~30 min"
 msgstr "~30 min"
 
-#: src/features/approver/utils.tsx:61
+#: src/features/approver/utils.tsx:66
 msgid "1–2 minutes"
 msgstr "1–2 minutes"
 
-#: src/features/approver/utils.tsx:63
+#: src/features/approver/utils.tsx:68
 msgid "10 seconds"
 msgstr "10 seconds"
 
-#: src/features/approver/utils.tsx:62
+#: src/features/approver/utils.tsx:67
 msgid "20–30 seconds"
 msgstr "20–30 seconds"
 
@@ -663,9 +663,9 @@ msgstr "Creator"
 msgid "Current app version format is invalid"
 msgstr "Current app version format is invalid"
 
-#: src/features/approver/utils.tsx:40
-#: src/features/approver/utils.tsx:52
-#: src/features/approver/utils.tsx:64
+#: src/features/approver/utils.tsx:45
+#: src/features/approver/utils.tsx:57
+#: src/features/approver/utils.tsx:69
 msgid "Custom"
 msgstr "Custom"
 
@@ -830,7 +830,7 @@ msgstr "Failed"
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:240
+#: src/features/psbt-signer/psbt-signer.tsx:234
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
 
@@ -862,7 +862,7 @@ msgstr "Failed to load tokens"
 msgid "Failed to start a swap"
 msgstr "Failed to start a swap"
 
-#: src/features/approver/utils.tsx:39
+#: src/features/approver/utils.tsx:44
 msgid "Fast"
 msgstr "Fast"
 
@@ -879,7 +879,7 @@ msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
 #: src/features/approver/stx/hooks.ts:27
-#: src/features/psbt-signer/psbt-signer.tsx:205
+#: src/features/psbt-signer/psbt-signer.tsx:199
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -989,7 +989,7 @@ msgid "Hide account"
 msgstr "Hide account"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:176
-#: src/features/psbt-signer/psbt-signer.tsx:317
+#: src/features/psbt-signer/psbt-signer.tsx:311
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -1530,8 +1530,8 @@ msgid "Reveal account"
 msgstr "Reveal account"
 
 #: src/features/send/forms/btc/btc-form.tsx:129
-#: src/features/send/forms/stx/sip10-form.tsx:157
-#: src/features/send/forms/stx/stx-form.tsx:143
+#: src/features/send/forms/stx/sip10-form.tsx:161
+#: src/features/send/forms/stx/stx-form.tsx:151
 #: src/features/swap/screens/swap-form-screen.tsx:118
 msgid "Review"
 msgstr "Review"
@@ -1612,7 +1612,7 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:278
+#: src/features/psbt-signer/psbt-signer.tsx:272
 msgid "Send token"
 msgstr "Send token"
 
@@ -1647,7 +1647,7 @@ msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:175
-#: src/features/psbt-signer/psbt-signer.tsx:316
+#: src/features/psbt-signer/psbt-signer.tsx:310
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1660,8 +1660,8 @@ msgstr "Show balances"
 msgid "Sign Message"
 msgstr "Sign Message"
 
-#: src/features/psbt-signer/psbt-signer.tsx:249
-#: src/features/psbt-signer/psbt-signer.tsx:278
+#: src/features/psbt-signer/psbt-signer.tsx:243
+#: src/features/psbt-signer/psbt-signer.tsx:272
 msgid "Sign transaction"
 msgstr "Sign transaction"
 
@@ -1670,7 +1670,7 @@ msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
 #: src/features/activity/translate-activity-status.ts:46
-#: src/features/psbt-signer/psbt-signer.tsx:251
+#: src/features/psbt-signer/psbt-signer.tsx:245
 msgid "Signed"
 msgstr "Signed"
 
@@ -1682,7 +1682,7 @@ msgstr "Signing"
 msgid "Signing failed"
 msgstr "Signing failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:250
+#: src/features/psbt-signer/psbt-signer.tsx:244
 msgid "Signing..."
 msgstr "Signing..."
 
@@ -1706,7 +1706,7 @@ msgstr "Slippage"
 msgid "Slippage tolerance"
 msgstr "Slippage tolerance"
 
-#: src/features/approver/utils.tsx:37
+#: src/features/approver/utils.tsx:42
 msgid "Slow"
 msgstr "Slow"
 
@@ -1730,7 +1730,7 @@ msgstr "StackingDAO"
 #: src/features/balances/stacks/stacks-deposit-token-cell.tsx:25
 #: src/features/balances/stacks/stacks-token-balance.tsx:12
 #: src/features/receive/get-assets.ts:46
-#: src/features/send/forms/stx/stx-form.tsx:58
+#: src/features/send/forms/stx/stx-form.tsx:66
 #: src/features/swap/swap.utils.ts:9
 #: src/shared/display-preference.ts:60
 msgid "Stacks"
@@ -1740,7 +1740,7 @@ msgstr "Stacks"
 msgid "Stacks address"
 msgstr "Stacks address"
 
-#: src/features/approver/utils.tsx:38
+#: src/features/approver/utils.tsx:43
 msgid "Standard"
 msgstr "Standard"
 
@@ -1927,7 +1927,7 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 
 #: src/features/approver/components/sip10-recipient.tsx:43
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:150
-#: src/features/psbt-signer/psbt-signer.tsx:295
+#: src/features/psbt-signer/psbt-signer.tsx:289
 msgid "To address"
 msgstr "To address"
 
@@ -1960,13 +1960,13 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:329
+#: src/features/psbt-signer/psbt-signer.tsx:323
 msgid "Total spend"
 msgstr "Total spend"
 
-#: src/features/send/forms/btc/use-btc-form.ts:73
-#: src/features/send/forms/stx/use-sip10-form.ts:79
-#: src/features/send/forms/stx/use-stx-form.ts:78
+#: src/features/send/forms/btc/use-btc-form.ts:74
+#: src/features/send/forms/stx/use-sip10-form.ts:87
+#: src/features/send/forms/stx/use-stx-form.ts:76
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"
 
@@ -2024,9 +2024,9 @@ msgstr "Unable to Open Store"
 msgid "Uneconomical balance:"
 msgstr "Uneconomical balance:"
 
-#: src/features/approver/utils.tsx:41
-#: src/features/approver/utils.tsx:53
-#: src/features/approver/utils.tsx:65
+#: src/features/approver/utils.tsx:46
+#: src/features/approver/utils.tsx:58
+#: src/features/approver/utils.tsx:70
 msgid "Unknown"
 msgstr "Unknown"
 
@@ -2181,7 +2181,7 @@ msgid "You will transfer"
 msgstr "You will transfer"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:141
-#: src/features/psbt-signer/psbt-signer.tsx:289
+#: src/features/psbt-signer/psbt-signer.tsx:283
 msgid "You’ll send"
 msgstr "You’ll send"
 

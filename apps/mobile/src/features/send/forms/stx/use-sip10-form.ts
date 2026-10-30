@@ -1,10 +1,8 @@
 import { useForm, useWatch } from 'react-hook-form';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { getTransferSip10TxHex } from '@/features/approver/utils';
 import { useSendMax } from '@/features/send/hooks/use-send-max';
 import { useSendNavigation } from '@/features/send/navigation';
-import { calculateDefaultStacksFee } from '@/features/send/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings';
@@ -12,8 +10,18 @@ import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';
 
-import { type AccountId, type Money, type Sip10Asset } from '@leather.io/models';
-import { convertAmountToBaseUnit, unitToFractionalUnit } from '@leather.io/utils';
+import {
+  type AccountId,
+  type Money,
+  type Sip10Asset,
+  type StacksTransactionFees,
+} from '@leather.io/models';
+import { createTransferSip10TxHex } from '@leather.io/stacks';
+import {
+  convertAmountToBaseUnit,
+  createMoneyFromDecimal,
+  unitToFractionalUnit,
+} from '@leather.io/utils';
 
 import { type StxFormSchema, useStxSendFormSchema } from './stx-form-schema';
 
@@ -22,11 +30,10 @@ interface UseSip10FormProps {
   asset: Sip10Asset;
   availableBalance: Money;
   nonce: number | undefined;
+  fees: StacksTransactionFees;
 }
 
-const defaultFee = calculateDefaultStacksFee();
-
-export function useSip10Form({ account, availableBalance, nonce, asset }: UseSip10FormProps) {
+export function useSip10Form({ account, availableBalance, nonce, asset, fees }: UseSip10FormProps) {
   const { displayToast } = useToastContext();
   const { navigate } = useSendNavigation();
   const stacksNetwork = useNetworkPreferenceStacksNetwork();
@@ -35,6 +42,7 @@ export function useSip10Form({ account, availableBalance, nonce, asset }: UseSip
     account.accountIndex
   )[0];
   assertStacksSigner(stxSigner);
+  const standardFee = fees.options.standard.value;
 
   function calculateStxMaxSpend() {
     return convertAmountToBaseUnit(availableBalance.amount, asset.decimals);
@@ -53,7 +61,7 @@ export function useSip10Form({ account, availableBalance, nonce, asset }: UseSip
       recipient: '',
       memo: '',
       nonce,
-      fee: defaultFee.toNumber(),
+      fee: convertAmountToBaseUnit(standardFee).toNumber(),
       isSendingMax: false,
     },
   });
@@ -90,14 +98,14 @@ export function useSip10Form({ account, availableBalance, nonce, asset }: UseSip
     });
 
     void reviewTransaction(
-      getTransferSip10TxHex({
+      createTransferSip10TxHex({
         signer: stxSigner,
         assetId: asset.assetId,
         recipient: values.recipient,
         amount: unitToFractionalUnit(asset.decimals)(values.amount).toNumber(),
         nonce: nonce ?? 1,
         memo: values.memo,
-        network: stacksNetwork,
+        fee: createMoneyFromDecimal(values.fee, 'STX'),
       })
     );
   });

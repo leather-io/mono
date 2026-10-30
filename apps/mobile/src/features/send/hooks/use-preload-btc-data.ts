@@ -1,5 +1,5 @@
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
-import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
+import { useBitcoinFeeRates } from '@/queries/fees/bitcoin-fee-rates.query';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { type QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
@@ -7,7 +7,7 @@ import { type AccountId } from '@leather.io/models';
 import { getUtxosService } from '@leather.io/services';
 
 export function usePreloadBtcData(account: AccountId) {
-  useAverageBitcoinFeeRates();
+  useBitcoinFeeRates();
   useBtcMarketDataQuery();
   const { fingerprint, accountIndex } = account;
   const accountAddresses = useAccountAddresses(fingerprint, accountIndex);
