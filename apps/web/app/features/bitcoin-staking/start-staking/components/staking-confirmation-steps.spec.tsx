@@ -52,7 +52,7 @@ describe(StakingConfirmationSteps.name, () => {
     expect(checkbox).toHaveProperty('checked', false);
     expect(checkbox.hasAttribute('aria-invalid')).toBe(false);
     const link = screen.getByRole('link', { name: 'Leather terms (opens in a new tab)' });
-    expect(link.getAttribute('href')).toBe('https://leather.io/terms');
+    expect(link.getAttribute('href')).toBe('/posts/terms-of-service');
     expect(link.getAttribute('target')).toBe('_blank');
     fireEvent.click(link);
     expect(checkbox).toHaveProperty('checked', false);

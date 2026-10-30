@@ -8,6 +8,10 @@ export const cmsClient = createCmsClient({
   useCdn: false,
 });
 
+// Per-request options for non-critical marketing reads (news, posts index, changelog strip):
+// a slow Sanity response degrades the page to an empty list instead of hanging the request.
+export const marketingCmsRequestOptions = { timeout: 5_000 } as const;
+
 const builder = imageUrlBuilder(cmsClient);
 
 export function urlFor(source: SanityImageSource) {

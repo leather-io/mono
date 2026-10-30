@@ -2,13 +2,26 @@ import { expect, test } from '@playwright/test';
 
 const permanentRedirectStatus = 301;
 
-const preservedPaths = [
-  { from: '/help-center/getting-started', to: '/support/getting-started' },
-  { from: '/help-center/guide/test-guide', to: '/support/guide/test-guide' },
+// Legacy help center and support URLs resolve to their final URL in a single hop.
+const singleHopRedirects = [
+  { from: '/help-center/guide/install-leather', to: '/support/install-leather' },
+  { from: '/help-center/install-leather', to: '/support/install-leather' },
   {
-    from: '/help-center/guide/another?query=value',
-    to: '/support/guide/another?query=value',
+    from: '/help-center/guide/what-is-stacks?query=value',
+    to: '/posts/what-is-stacks?query=value',
   },
+  { from: '/help-center/search?q=fees', to: '/support/search?q=fees' },
+  { from: '/help-center/', to: '/support' },
+  { from: '/guides/send-stacks-from-app', to: '/support/send-stx' },
+  { from: '/support/guide/install-leather', to: '/support/install-leather' },
+  { from: '/support/guide/what-is-stacks', to: '/posts/what-is-stacks' },
+  { from: '/support/what-is-stacks', to: '/posts/what-is-stacks' },
+  { from: '/posts/install-leather', to: '/support/install-leather' },
+  {
+    from: '/posts/send-ordinals',
+    to: '/posts/deprecation-of-ordinals-inscriptions-support-in-leather',
+  },
+  { from: '/posts/apps-xlink', to: '/posts/brotocol' },
 ];
 
 test.describe('Help Center to Support Redirects', () => {
@@ -20,23 +33,27 @@ test.describe('Help Center to Support Redirects', () => {
     expect(page.url()).not.toContain('/help-center');
   });
 
-  for (const { from, to } of preservedPaths) {
-    test(`redirects ${from} to ${to} preserving path`, async ({ request }) => {
+  for (const { from, to } of singleHopRedirects) {
+    test(`redirects ${from} to ${to} in one hop`, async ({ request }) => {
       const response = await request.get(from, { maxRedirects: 0 });
-      const location = response.headers()['location'] ?? '';
-
       expect(response.status()).toBe(permanentRedirectStatus);
-      expect(location).toContain(to);
-      expect(location).not.toContain('/help-center');
+      const destination = new URL(response.headers()['location'], response.url());
+      expect(destination.href).toBe(new URL(to, response.url()).href);
+
+      const target = await request.get(destination.href, { maxRedirects: 0 });
+      expect(target.status()).toBe(200);
     });
   }
 
-  test('redirects /support/guide/:slug to /support/:slug', async ({ request }) => {
-    const response = await request.get('/support/guide/test-guide', { maxRedirects: 0 });
-    const location = response.headers()['location'] ?? '';
-
-    expect(response.status()).toBe(permanentRedirectStatus);
-    expect(location).toContain('/support/test-guide');
-    expect(location).not.toContain('/support/guide/');
-  });
+  for (const path of [
+    '/posts/no-such-post',
+    '/support/no-such-guide',
+    '/support/guide/no-such-guide',
+    '/help-center/a/b',
+  ]) {
+    test(`returns 404 for ${path}`, async ({ request }) => {
+      const response = await request.get(path, { maxRedirects: 0 });
+      expect(response.status()).toBe(404);
+    });
+  }
 });

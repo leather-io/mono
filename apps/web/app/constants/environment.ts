@@ -13,17 +13,12 @@ const leatherApiUrlSchema = z.url().optional();
 export const LEATHER_API_URL = leatherApiUrlSchema.parse(import.meta.env.LEATHER_API_URL);
 
 const envTargetSchema = z.enum(['development', 'branch', 'staging', 'production']);
-type EnvTarget = z.infer<typeof envTargetSchema>;
 
 export const TARGET = envTargetSchema
   .default('production')
   .parse(import.meta.env.CLOUDFLARE_ENV ?? import.meta.env.LEATHER_TARGET);
 
 // New type for the map
-type WhenEnvTargetMap<T> = Record<EnvTarget, T>;
-export function whenEnvTarget<T>(envTargetMap: WhenEnvTargetMap<T>): T {
-  return envTargetMap[TARGET];
-}
 
 declare global {
   interface ImportMetaEnv {
