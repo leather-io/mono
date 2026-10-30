@@ -32,6 +32,7 @@ export { Highlighter, type HighlighterProps } from './components/highlighting/hi
 export { HoverCard } from './components/hover-card/hover-card.web';
 export { Hr, DashedHr, type HrProps } from './components/hr.web';
 export { IconButton } from './components/icon-button/icon-button.web';
+export { InlineIcon, type InlineIconProps } from './components/inline-icon/inline-icon.web';
 export { Input } from './components/input/input.web';
 export { ItemLayout } from './components/item-layout/item-layout.web';
 export { ItemLayoutWithButtons } from './components/item-layout/item-layout-with-buttons.web';
