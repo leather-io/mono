@@ -13,6 +13,7 @@ import {
 
 export const decisionContext = 'review-gate/decision';
 export const gateContext = 'review-gate';
+const protectedBaseBranch = 'dev';
 const trustedStatusCreator = 'github-actions[bot]';
 export const decisionCommentHeading = '### Review gate';
 const maxStatusDescriptionLength = 140;
@@ -330,7 +331,23 @@ export function describeSource(source) {
   return sourceLabels[source] ?? source;
 }
 
-export function describeGate({ approvals, required }) {
+export function findSharedHeadPullRequests(pullRequests, { number, headSha }) {
+  return pullRequests
+    .filter(
+      pullRequest =>
+        pullRequest.state === 'open' &&
+        pullRequest.number !== number &&
+        pullRequest.head?.sha === headSha
+    )
+    .map(pullRequest => pullRequest.number);
+}
+
+export function describeGate({ approvals, required, sharedWith = [] }) {
+  if (sharedWith.length > 0) {
+    const others = sharedWith.map(number => `#${number}`).join(', ');
+    const description = `Head commit is also the head of ${others}. Push a commit unique to this pull request.`;
+    return { state: 'failure', description: description.slice(0, maxStatusDescriptionLength) };
+  }
   return {
     state: approvals >= required ? 'success' : 'failure',
     description: `${approvals} of ${required} required approvals`,
@@ -375,6 +392,9 @@ export function createGitHubClient({ token, repository }) {
     },
     listStatuses(sha) {
       return requestAllPages(`/commits/${sha}/statuses`);
+    },
+    listCommitPullRequests(sha) {
+      return requestAllPages(`/commits/${sha}/pulls`);
     },
     createStatus(sha, status) {
       return request(`/statuses/${sha}`, { method: 'POST', body: status });
@@ -478,22 +498,40 @@ async function runRecord() {
   }
 }
 
+async function runHold() {
+  const github = createGitHubFromEnv();
+  await github.createStatus(readRequiredEnv('HEAD_SHA'), {
+    state: 'pending',
+    context: gateContext,
+    description: 'Waiting for the review decision and approval count',
+    target_url: readRequiredEnv('RUN_URL'),
+  });
+}
+
 async function runGate() {
   const github = createGitHubFromEnv();
   const number = Number(readRequiredEnv('PR_NUMBER'));
   const runUrl = readRequiredEnv('RUN_URL');
   const pullRequest = await github.getPullRequest(number);
   const headSha = pullRequest.head.sha;
+  if (pullRequest.base.ref !== protectedBaseBranch) {
+    writeSummary(
+      `Skipped: the pull request targets ${pullRequest.base.ref}, not ${protectedBaseBranch}.`
+    );
+    return;
+  }
   try {
-    const [reviews, statuses] = await Promise.all([
+    const [reviews, statuses, commitPullRequests] = await Promise.all([
       github.listReviews(number),
       github.listStatuses(headSha),
+      github.listCommitPullRequests(headSha),
     ]);
     const required = requiredApprovals(statuses);
     const approvers = findApprovers(reviews, { headSha, author: pullRequest.user.login });
     const permissions = await Promise.all(approvers.map(login => github.getPermission(login)));
     const approvals = permissions.filter(hasWriteAccess).length;
-    const gate = describeGate({ approvals, required });
+    const sharedWith = findSharedHeadPullRequests(commitPullRequests, { number, headSha });
+    const gate = describeGate({ approvals, required, sharedWith });
     await github.createStatus(headSha, { ...gate, context: gateContext, target_url: runUrl });
     writeSummary(`${gate.description} on ${headSha}.`);
   } catch (error) {
@@ -512,6 +550,7 @@ const modes = {
   ask: runAsk,
   decide: runDecide,
   record: runRecord,
+  hold: runHold,
   gate: runGate,
 };
 

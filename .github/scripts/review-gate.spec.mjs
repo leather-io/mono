@@ -14,6 +14,7 @@ import {
   findApprovers,
   findDecisionComment,
   findSensitiveFiles,
+  findSharedHeadPullRequests,
   formatDecisionComment,
   hasWriteAccess,
   parseDecision,
@@ -517,5 +518,32 @@ describe('describeGate', () => {
       state: 'failure',
       description: '1 of 2 required approvals',
     });
+  });
+
+  it('fails when another open pull request shares the head commit', () => {
+    assert.deepEqual(describeGate({ approvals: 2, required: 1, sharedWith: [12, 34] }), {
+      state: 'failure',
+      description:
+        'Head commit is also the head of #12, #34. Push a commit unique to this pull request.',
+    });
+  });
+});
+
+describe('findSharedHeadPullRequests', () => {
+  const headSha = 'abc';
+
+  it('finds other open pull requests with the same head', () => {
+    const pullRequests = [
+      { number: 1, state: 'open', head: { sha: headSha } },
+      { number: 2, state: 'open', head: { sha: headSha } },
+      { number: 3, state: 'closed', head: { sha: headSha } },
+      { number: 4, state: 'open', head: { sha: 'def' } },
+    ];
+    assert.deepEqual(findSharedHeadPullRequests(pullRequests, { number: 1, headSha }), [2]);
+  });
+
+  it('finds nothing when the pull request is the only one', () => {
+    const pullRequests = [{ number: 1, state: 'open', head: { sha: headSha } }];
+    assert.deepEqual(findSharedHeadPullRequests(pullRequests, { number: 1, headSha }), []);
   });
 });
