@@ -16,7 +16,7 @@ import {
   safeAddressToString,
 } from '@app/common/transactions/stacks/transaction.utils';
 import { TxStatusBadge } from '@app/features/tx-status-badge/tx-status-badge';
-import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useCryptoCurrencyMarketData } from '@app/query/common/market-data/market-data.hooks';
 import { useGetFungibleTokenMetadataQuery } from '@app/query/stacks/token-metadata/fungible-tokens/fungible-token-metadata.query';
 
 import {
@@ -30,7 +30,7 @@ interface StacksChainSummaryProps {
   tx: StacksTransactionWire;
 }
 export function StxSentSummary({ txid, tx }: StacksChainSummaryProps) {
-  const tokenMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
+  const tokenMarketData = useCryptoCurrencyMarketData('STX');
 
   if (!isTokenTransferPayload(tx.payload))
     throw new Error('Impossible state, STX transfers are always of type `token_transfer`');

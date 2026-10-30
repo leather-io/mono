@@ -11,7 +11,6 @@
   "packages/prettier-config": "0.9.1",
   "packages/provider": "1.7.6",
   "packages/queries": "0.17.3",
-  "packages/query": "2.52.2",
   "packages/rpc": "2.25.4",
   "packages/sdk": "1.5.58",
   "packages/services": "1.66.3",

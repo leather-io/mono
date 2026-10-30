@@ -9,7 +9,7 @@ const stacksTestnetChainId: number = ChainId.Testnet;
 
 const LeatherNetworkContext = createContext<NetworkConfiguration | null>(null);
 
-export function useLeatherNetwork(): NetworkConfiguration {
+function useLeatherNetwork(): NetworkConfiguration {
   const leatherNetwork = useContext(LeatherNetworkContext);
 
   if (!leatherNetwork) {

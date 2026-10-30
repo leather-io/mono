@@ -18,6 +18,8 @@
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "lint": "eslint --cache --max-warnings 0",
     "lint:fix": "pnpm lint --fix",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
@@ -29,6 +31,7 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/services": "workspace:*",
     "@leather.io/utils": "workspace:*",
+    "@stacks/stacks-blockchain-api-types": "7.14.1",
     "@stacks/transactions": "7.5.0"
   },
   "devDependencies": {
