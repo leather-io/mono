@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
 import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
@@ -49,7 +50,7 @@ function PayoutOption({
       cursor={isDisabled ? 'not-allowed' : 'pointer'}
       _hover={isDisabled || isSelected ? undefined : { bg: 'ink.component-background-hover' }}
       _focusWithin={{ outline: '2px solid {colors.blue.border}', outlineOffset: '2px' }}
-      data-testid={`payout-option-${label.toLowerCase()}`}
+      data-testid={BitcoinStakingSelectors.PayoutOption.replace('[label]', label.toLowerCase())}
     >
       <styled.input
         type="radio"
@@ -144,7 +145,7 @@ function BtcOnlyPayout({ operatorPayout, registeredAddress }: BtcOnlyPayoutProps
   const { payoutPreference } = bitcoinStakingContent;
 
   return (
-    <Stack gap="space.03" data-testid="btc-only-payout">
+    <Stack gap="space.03" data-testid={BitcoinStakingSelectors.BtcOnlyPayout}>
       <RewardAddressField label={payoutPreference.btcOnlyLabel} />
       {operatorPayout && (
         <styled.span textStyle="caption.01" color="ink.text-subdued">
@@ -152,7 +153,7 @@ function BtcOnlyPayout({ operatorPayout, registeredAddress }: BtcOnlyPayoutProps
         </styled.span>
       )}
       {addressChanged && operatorPayout && (
-        <Callout variant="warning" data-testid="payout-address-changed">
+        <Callout variant="warning" data-testid={BitcoinStakingSelectors.PayoutAddressChanged}>
           {payoutPreference.registeredAddressChanged(operatorPayout.poolName)}
         </Callout>
       )}

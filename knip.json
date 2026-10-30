@@ -111,16 +111,18 @@
         "app/entry.client.tsx",
         "app/root.tsx",
         "app/routes.ts",
+        "tests/feature-map/*.features.ts",
         "workers/app.ts",
         "workers/csp.ts"
       ],
       "paths": {
-        "~/*": ["./app/*"]
+        "~/*": ["./app/*"],
+        "@tests/*": ["./tests/*"]
       },
       "typescript": {
         "config": ["tsconfig.cloudflare.json"]
       },
-      "ignoreDependencies": ["leather-styles", "@leather.io/panda-preset"],
+      "ignoreDependencies": ["leather-styles", "@leather.io/panda-preset", "@leather.io/tools"],
       "ignore": ["stubs/**", "app/layouts/nav/global-loader.styles.ts"]
     },
     "packages/provider": {

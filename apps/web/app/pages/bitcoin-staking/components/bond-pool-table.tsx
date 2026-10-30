@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { css, cx } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 import { link as linkRecipe } from 'leather-styles/recipes';
@@ -131,7 +132,10 @@ function BondPoolRow({ pool, isStakingClosed }: BondPoolRowProps) {
           disabled={isClosedForBond}
           iconEnd={isClosedForBond ? undefined : ExternalLinkIcon}
           onClick={isClosedForBond ? undefined : () => openExternalLink(pool.url)}
-          data-testid={`bond-pool-${isClosedForBond ? 'closed' : pool.access}-${pool.slug}`}
+          data-testid={BitcoinStakingSelectors.BondPoolAccess.replace(
+            '[access]',
+            isClosedForBond ? 'closed' : pool.access
+          ).replace('[slug]', pool.slug)}
         >
           {getAccessLabel({ isOpen, isClosedForBond })}
         </Button>
@@ -213,7 +217,7 @@ export function BondPoolTable(props: HTMLStyledProps<'div'>) {
             <styled.td colSpan={columnWidths.length} textAlign="center" borderTop="default">
               <styled.button
                 onClick={() => openExternalLink(bondPools.directBond.url)}
-                data-testid="direct-bond-entry-link"
+                data-testid={BitcoinStakingSelectors.DirectBondEntryLink}
                 className={cx(
                   linkRecipe({ size: 'sm' }),
                   css({

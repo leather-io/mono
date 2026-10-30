@@ -1,3 +1,4 @@
+import { ConnectSelectors } from '@tests/selectors/connect.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/when-client';
 import { useLeatherConnect } from '~/store/addresses';
@@ -14,7 +15,7 @@ export function InstallDialog() {
         isShowing={showInstallLeatherDialog}
         onClose={() => setShowInstallLeatherDialog(false)}
       >
-        <styled.div px="space.05" py="space.03">
+        <styled.div px="space.05" py="space.03" data-testid={ConnectSelectors.InstallLeatherDialog}>
           <Flag
             img={
               <Button variant="ghost" onClick={() => setShowInstallLeatherDialog(false)}>

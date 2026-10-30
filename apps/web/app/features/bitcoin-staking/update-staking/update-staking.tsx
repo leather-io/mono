@@ -3,6 +3,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import BigNumber from 'bignumber.js';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
@@ -609,7 +610,7 @@ function UpdateStakingForm({
                   : undefined
               }
               confirmDisabled={confirmDisabled}
-              confirmTestId="confirm-update-stake-button"
+              confirmTestId={BitcoinStakingSelectors.ConfirmUpdateStakeButton}
               isBusy={isPending}
               onConfirm={() => {
                 if (isSwitching && !acknowledgment.requireAccepted()) return;

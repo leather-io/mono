@@ -1,5 +1,6 @@
 import { useId } from 'react';
 
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Stack, styled } from 'leather-styles/jsx';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
@@ -80,7 +81,7 @@ export function StakingAcknowledgment({
             onChange={event => acknowledgment.setAccepted(event.target.checked)}
             aria-describedby={detailsId}
             aria-invalid={acknowledgment.isInvalid || undefined}
-            data-testid="staking-acknowledgment-checkbox"
+            data-testid={BitcoinStakingSelectors.StakingAcknowledgmentCheckbox}
             width="16px"
             height="16px"
             accentColor="ink.action-primary-default"

@@ -1193,6 +1193,9 @@ importers:
       '@leather.io/test-config':
         specifier: workspace:*
         version: link:../../packages/test-config
+      '@leather.io/tools':
+        specifier: workspace:*
+        version: link:../../tools
       '@msw/playwright':
         specifier: 0.4.5
         version: 0.4.5(msw@2.12.7(@types/node@24.0.8)(typescript@5.9.3))

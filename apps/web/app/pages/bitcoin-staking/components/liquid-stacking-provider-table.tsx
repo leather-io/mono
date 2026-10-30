@@ -8,6 +8,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { cx } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
@@ -201,7 +202,10 @@ export function LiquidStackingProviderTable({
           minW="fit-content"
           iconEnd={ExternalLinkIcon}
           onClick={() => openExternalLink(info.row.original.url)}
-          data-testid={`liquid-start-earning-${info.row.original.slug}`}
+          data-testid={BitcoinStakingSelectors.LiquidStartEarning.replace(
+            '[slug]',
+            info.row.original.slug
+          )}
         >
           {bitcoinStakingLabels.startEarning}
         </Button>

@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { css } from 'leather-styles/css';
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
@@ -15,7 +16,7 @@ export function PendingStakePanel() {
       borderWidth={1}
       borderColor="ink.border-default"
       borderRadius="md"
-      data-testid="pending-stake-panel"
+      data-testid={BitcoinStakingSelectors.PendingStakePanel}
     >
       <Avatar
         size="lg"
