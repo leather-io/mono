@@ -1,4 +1,4 @@
-import { FungibleCryptoAsset, FungibleCryptoAssetProtocol } from '@leather.io/models';
+import { type FungibleCryptoAsset, type FungibleCryptoAssetProtocol } from '@leather.io/models';
 
 export type ReceiveType = 'stacks' | 'bitcoin' | 'native-segwit' | 'taproot' | 'all';
 

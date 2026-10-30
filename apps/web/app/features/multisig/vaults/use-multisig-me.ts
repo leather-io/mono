@@ -10,7 +10,7 @@ export function useMultisigMe(network: AuthNetworkId | undefined) {
   const session = useSession(network);
   return useQuery({
     queryKey: multisigVaultKeys.me(network, session?.identity.address),
-    queryFn: ({ signal }) => {
+    queryFn({ signal }) {
       if (!network) throw new Error('useMultisigMe requires a network');
       return getMultisigService().getMe(network, signal);
     },

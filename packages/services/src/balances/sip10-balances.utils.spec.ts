@@ -1,6 +1,6 @@
 import { createMoney } from '@leather.io/utils';
 
-import { Sip10AddressBalance, Sip10Balance } from './sip10-balances.service';
+import { type Sip10AddressBalance, type Sip10Balance } from './sip10-balances.service';
 import { combineSip10Balances } from './sip10-balances.utils';
 
 const mockBaseCryptoAssetBalance = {
@@ -81,24 +81,28 @@ describe('combineSip10Balances', () => {
   });
 
   it('should handle multiple different tokens', () => {
-    const otherToken = {
+    const otherToken: Sip10Balance = {
       ...mockSip10AssetBalance,
       asset: {
         ...mockSip10AssetBalance.asset,
         symbol: 'OTHER',
       },
-    } as Sip10Balance;
+    };
 
-    const addressBalances = [
+    const addressBalances: Sip10AddressBalance[] = [
       {
+        address: 'SP000...TEST',
         sip10s: [mockSip10AssetBalance, otherToken],
+        quote: mockBaseCryptoAssetBalance,
       },
       {
+        address: 'SP001...TEST',
         sip10s: [mockSip10AssetBalance],
+        quote: mockBaseCryptoAssetBalance,
       },
     ];
 
-    const result = combineSip10Balances(addressBalances as Sip10AddressBalance[]);
+    const result = combineSip10Balances(addressBalances);
 
     expect(result.length).toBe(2);
     expect(result[0].asset.symbol).toBe('TEST');

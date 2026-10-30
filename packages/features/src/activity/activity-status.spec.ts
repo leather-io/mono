@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import type {
+  ConnectAppActivity,
   DeploySmartContractActivity,
   ExecuteSmartContractActivity,
   ReceiveAssetActivity,
   SendAssetActivity,
+  Sip9Asset,
   SwapAssetsActivity,
 } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
@@ -41,13 +43,13 @@ describe('activity-status', () => {
     });
 
     it('returns false for activity without status', () => {
-      const activity = {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
         type: 'connectApp',
         appName: 'Test App',
         appUrl: 'https://test.com',
       };
-      expect(hasActivityStatus(activity as any)).toBe(false);
+      expect(hasActivityStatus(activity)).toBe(false);
     });
   });
 
@@ -97,24 +99,27 @@ describe('activity-status', () => {
     });
 
     it('formats swapAssets label using category as fallback', () => {
-      const unknownAsset = {
-        chain: 'bitcoin' as const,
-        category: 'unknown' as const,
-        protocol: 'unknown' as const,
-        name: 'Unknown',
-        decimals: 0,
-        hasMemo: false,
+      const nftAsset: Sip9Asset = {
+        chain: 'stacks',
+        category: 'nft',
+        protocol: 'sip9',
+        assetId: 'SP123.test::nft',
+        contractId: 'SP123.test',
+        tokenId: 1,
+        name: 'Test NFT',
+        description: 'A test NFT',
+        content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
       };
       const activity: SwapAssetsActivity = {
         ...baseActivity,
         type: 'swapAssets',
         status: 'success',
-        fromAsset: unknownAsset as any,
+        fromAsset: nftAsset,
         fromAmount: initBigNumber(1),
-        toAsset: unknownAsset as any,
+        toAsset: nftAsset,
         toAmount: initBigNumber(1),
       };
-      expect(formatActivityStatusLabel(activity)).toBe('unknown → unknown');
+      expect(formatActivityStatusLabel(activity)).toBe('nft → nft');
     });
 
     it('returns Sent for successful sendAsset activity', () => {
@@ -166,25 +171,25 @@ describe('activity-status', () => {
     });
 
     it('uses fallback status for activity without status', () => {
-      const activity = {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
         type: 'connectApp',
         appName: 'Test App',
         appUrl: 'https://test.com',
       };
-      expect(formatActivityStatusLabel(activity as any)).toBe('Connected');
+      expect(formatActivityStatusLabel(activity)).toBe('Connected');
     });
   });
 
   describe('getActivityStatusIndicatorId', () => {
     it('returns hidden for activity without status', () => {
-      const activity = {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
         type: 'connectApp',
         appName: 'Test App',
         appUrl: 'https://test.com',
       };
-      expect(getActivityStatusIndicatorId(activity as any)).toBe('hidden');
+      expect(getActivityStatusIndicatorId(activity)).toBe('hidden');
     });
 
     it('returns pending for pending activity', () => {

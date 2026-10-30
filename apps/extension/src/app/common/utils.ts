@@ -57,10 +57,6 @@ export function parseIfValidPunycode(s: string) {
   }
 }
 
-export function capitalize(val: string) {
-  return val.charAt(0).toUpperCase() + val.slice(1);
-}
-
 interface LinearInterpolation {
   start: number;
   end: number;

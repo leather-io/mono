@@ -1,20 +1,20 @@
-import { ComponentPropsWithRef, ComponentType } from 'react';
+import { type ComponentPropsWithRef, type ComponentType } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 
 import {
-  BackgroundColorProps,
-  BackgroundColorShorthandProps,
-  BaseTheme,
-  BorderProps,
-  ColorProps,
-  LayoutProps,
-  OpacityProps,
-  SpacingProps,
-  SpacingShorthandProps,
-  TextShadowProps,
-  TypographyProps,
-  VariantProps,
-  VisibleProps,
+  type BackgroundColorProps,
+  type BackgroundColorShorthandProps,
+  type BaseTheme,
+  type BorderProps,
+  type ColorProps,
+  type LayoutProps,
+  type OpacityProps,
+  type SpacingProps,
+  type SpacingShorthandProps,
+  type TextShadowProps,
+  type TypographyProps,
+  type VariantProps,
+  type VisibleProps,
   backgroundColor,
   backgroundColorShorthand,
   border,
@@ -30,7 +30,7 @@ import {
   visible,
 } from '@shopify/restyle';
 
-import { Theme } from '../../theme-native';
+import { type Theme } from '../../theme-native';
 
 export type TextInputProps<Theme extends BaseTheme> = ComponentPropsWithRef<typeof RNTextInput> &
   VariantProps<Theme, 'textVariants', 'textVariant'> &
@@ -61,7 +61,7 @@ const textInputRestyleFunctions = [
   createVariant({ themeKey: 'textVariants', property: 'textVariant' }),
 ];
 
-export function createTextInput<T extends ComponentType>(TextInputComponent: T) {
+export function createTextInput(TextInputComponent: ComponentType) {
   return createRestyleComponent<TextInputProps<Theme>, Theme>(
     textInputRestyleFunctions,
     TextInputComponent

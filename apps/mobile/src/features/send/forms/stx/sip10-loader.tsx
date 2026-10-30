@@ -9,8 +9,8 @@ import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { AccountId, MarketData, Sip10Asset } from '@leather.io/models';
-import { Sip10Balance } from '@leather.io/services';
+import { type AccountId, type MarketData, type Sip10Asset } from '@leather.io/models';
+import { type Sip10Balance } from '@leather.io/services';
 
 interface Sip10SendLoaderData {
   balance: Sip10Balance;
@@ -49,7 +49,7 @@ export function Sip10DataLoader({ account, asset, children }: Sip10DataLoaderPro
   }
 
   if (isError) {
-    return <Error onRetry={() => queryClient.refetchQueries()} />;
+    return <Error onRetry={() => void queryClient.refetchQueries()} />;
   }
 
   return children({

@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
-import { Account } from '@/store/accounts/accounts';
+import { type Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
-import { AccountStatus } from '@/store/accounts/utils';
+import { type AccountStatus } from '@/store/accounts/utils';
 import {
   useBitcoinAccounts,
   useBitcoinPayerAddressFromAccountIndex,
@@ -15,7 +15,7 @@ import { useWallets } from '@/store/wallets/wallets.read';
 
 import { getDescriptorFromKeychain } from '@leather.io/bitcoin';
 import { extractAccountIndexFromPath } from '@leather.io/crypto';
-import { AccountAddresses } from '@leather.io/models';
+import { type AccountAddresses } from '@leather.io/models';
 import { createAccountAddresses, isDefined, uniqueArray } from '@leather.io/utils';
 
 type Wallets = ReturnType<typeof useWallets>;

@@ -1,4 +1,4 @@
-import { RefObject, useImperativeHandle, useRef, useState } from 'react';
+import { type RefObject, useImperativeHandle, useRef, useState } from 'react';
 
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
@@ -7,8 +7,8 @@ import { Swap } from '@/features/swap/swap';
 import { usePreloadSwapData } from '@/features/swap/use-preload-swap-data';
 import { analytics } from '@/utils/analytics';
 
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { SheetInstance, useHaptics } from '@leather.io/ui/native';
+import { type SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type SheetInstance, useHaptics } from '@leather.io/ui/native';
 
 interface SwapSheetPresentParams {
   baseAsset?: SwappableFungibleCryptoAsset;

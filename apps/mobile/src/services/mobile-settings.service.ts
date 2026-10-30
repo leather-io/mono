@@ -1,11 +1,11 @@
-import { store } from '@/store';
 import {
   selectAssetVisibility,
   selectCurrencyPreference,
   selectNetworkPreference,
 } from '@/store/settings/settings.read';
+import { store } from '@/store/store';
 
-import { SettingsService } from '@leather.io/services';
+import { type SettingsService } from '@leather.io/services';
 
 export class MobileSettingsService implements SettingsService {
   getSettings() {

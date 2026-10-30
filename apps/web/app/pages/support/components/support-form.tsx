@@ -22,11 +22,14 @@ export function SupportForm({ onSuccess, onError }: SupportFormProps) {
   useEffect(() => {
     if (!actionData) return;
 
+    async function resetAfterDelay() {
+      await delay(400);
+      reset();
+      onSuccess?.();
+    }
+
     if (actionData.success) {
-      void delay(400).then(() => {
-        reset();
-        onSuccess?.();
-      });
+      void resetAfterDelay();
     } else {
       onError?.();
     }

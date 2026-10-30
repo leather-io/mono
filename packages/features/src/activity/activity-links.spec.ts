@@ -10,6 +10,7 @@ import {
 } from '@leather.io/models';
 
 import {
+  type GetMempoolExplorerLinkArgs,
   getBitcoinExplorerLink,
   getStacksExplorerApiUrl,
   getStacksExplorerLink,
@@ -259,11 +260,12 @@ describe('activity-links', () => {
     });
 
     it('returns null for unknown network', () => {
-      const result = getBitcoinExplorerLink({
+      const args: GetMempoolExplorerLinkArgs = {
         id: 'tx123',
         type: 'tx',
-        networkPreference: 'unknown' as any,
-      });
+        networkPreference: 'mainnet',
+      };
+      const result = getBitcoinExplorerLink(Object.assign(args, { networkPreference: 'unknown' }));
 
       expect(result).toBeNull();
     });

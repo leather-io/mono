@@ -5,12 +5,10 @@ import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { Stack } from 'leather-styles/jsx';
 
 import { BitcoinError } from '@leather.io/bitcoin';
-import { Input } from '@leather.io/ui';
+import { Input, useOnMount } from '@leather.io/ui';
 import { satToBtc } from '@leather.io/utils';
 
 import type { TransferRecipient } from '@shared/models/form.model';
-
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 
 import { ErrorLabel } from '../error-label';
 import { BitcoinCustomFeeFiat } from './bitcoin-custom-fee-fiat';

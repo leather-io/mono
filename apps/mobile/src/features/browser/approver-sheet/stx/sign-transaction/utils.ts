@@ -1,4 +1,4 @@
-import { RpcRequest, stxSignTransaction } from '@leather.io/rpc';
+import { type RpcRequest, type stxSignTransaction } from '@leather.io/rpc';
 
 export function getTxHexFromRequest(request: RpcRequest<typeof stxSignTransaction>) {
   if ('txHex' in request.params) {

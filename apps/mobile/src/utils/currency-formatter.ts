@@ -1,12 +1,12 @@
 /* eslint-disable lingui/no-unlocalized-strings */
 import { captureMessage } from '@sentry/react-native';
 
-import { Money } from '@leather.io/models';
-import { FormatAmountOptions, createCurrencyFormatter, isError } from '@leather.io/utils';
+import { type Money } from '@leather.io/models';
+import { type FormatAmountOptions, createCurrencyFormatter, isError } from '@leather.io/utils';
 
 const currencyFormatter = createCurrencyFormatter({
   locale: 'en-US',
-  onError: (error, context) => {
+  onError(error, context) {
     const message =
       isError(error) && error.message
         ? `Currency formatter error: ${error.message}`

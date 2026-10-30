@@ -2,9 +2,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { Flag } from '@leather.io/ui';
-
-import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { Flag, useOnMount } from '@leather.io/ui';
 
 interface SelectedAssetFieldProps {
   icon: React.JSX.Element;

@@ -1,7 +1,7 @@
 import { normalizeSignAtIndex } from '@/features/psbt-signer/utils';
 import {
   findAccountByAddress,
-  useBitcoinAccounts,
+  type useBitcoinAccounts,
 } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { destructAccountIdentifier } from '@/store/utils';
 import { bytesToHex } from '@noble/hashes/utils';
@@ -20,8 +20,8 @@ import {
   extractFingerprintFromDescriptor,
   makeAccountIdentifer,
 } from '@leather.io/crypto';
-import { BitcoinNetworkModes } from '@leather.io/models';
-import { RpcRequests } from '@leather.io/rpc';
+import { type BitcoinNetworkModes } from '@leather.io/models';
+import { type RpcRequests } from '@leather.io/rpc';
 
 interface AddBip32DerivationFieldToInputsProps {
   psbtHex: string;
@@ -59,7 +59,7 @@ export function addBip32DerivationFieldToInputs({
     if (!bitcoinAccount) return;
 
     const accountIdx = extractAccountIndexFromDescriptor(bitcoinAccount?.descriptor);
-    const accountFingerprint = extractFingerprintFromDescriptor(bitcoinAccount?.descriptor ?? '');
+    const accountFingerprint = extractFingerprintFromDescriptor(bitcoinAccount.descriptor);
 
     const bitcoinAccountId = makeAccountIdentifer(accountFingerprint, accountIdx);
 

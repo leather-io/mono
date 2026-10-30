@@ -13,6 +13,12 @@ function parseChangelogEntry(line: string): ChangelogEntry | null {
   };
 }
 
+function entryTypeForCategory(category: 'features' | 'fixes' | 'internal') {
+  if (category === 'features') return 'feature';
+  if (category === 'fixes') return 'fix';
+  return 'internal';
+}
+
 function parseVersionSection(content: string): VersionSection | null {
   const headerMatch = content.match(/^## \[(\d+\.\d+\.\d+)\].*\((\d{4}-\d{2}-\d{2})\)/);
   if (!headerMatch) return null;
@@ -48,12 +54,7 @@ function parseVersionSection(content: string): VersionSection | null {
     if (line.startsWith('* ') && currentCategory) {
       const entry = parseChangelogEntry(line);
       if (entry) {
-        entry.type =
-          currentCategory === 'features'
-            ? 'feature'
-            : currentCategory === 'fixes'
-              ? 'fix'
-              : 'internal';
+        entry.type = entryTypeForCategory(currentCategory);
         if (currentCategory === 'features') features.push(entry);
         else if (currentCategory === 'fixes') fixes.push(entry);
         else if (currentCategory === 'internal') internal.push(entry);

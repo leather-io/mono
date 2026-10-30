@@ -2,11 +2,10 @@ import { useFormState } from 'react-hook-form';
 
 import { HStack, type HstackProps, styled } from 'leather-styles/jsx';
 
-import { Callout, InfoCircleIcon } from '@leather.io/ui';
+import { BasicTooltip, Callout, InfoCircleIcon } from '@leather.io/ui';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { SponsoredLabel } from '@app/components/sponsored-label';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 const feesInfo =
   'Higher fees increase the likelihood of your transaction getting confirmed before others. Click to learn more.';

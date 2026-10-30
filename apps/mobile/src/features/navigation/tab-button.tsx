@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { usePathname, useRouter } from 'expo-router';
-import { TabTriggerSlotProps, useTabTrigger } from 'expo-router/ui';
+import { type TabTriggerSlotProps, useTabTrigger } from 'expo-router/ui';
 
 import { Pressable, Text } from '@leather.io/ui/native';
 

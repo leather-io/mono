@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
 import { getErrorMessages } from '@/features/send/error-messages';
-import { CalculateStxMaxSpend } from '@/features/send/hooks/use-calculate-stx-max-spend';
+import { type CalculateStxMaxSpend } from '@/features/send/hooks/use-calculate-stx-max-spend';
 import { addressComplianceValidator } from '@/features/send/utils';
-import { ChainId } from '@stacks/network';
+import { type ChainId } from '@stacks/network';
 import * as z from 'zod';
 
 import { STX_DECIMALS } from '@leather.io/constants';

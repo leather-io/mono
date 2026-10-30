@@ -1,7 +1,7 @@
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 
-import { FeeTypes, Money } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
+import { FeeTypes, type Money } from '@leather.io/models';
+import { type SheetRef } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 
 import { FeeSheetLayout } from './fee-sheet.layout';
