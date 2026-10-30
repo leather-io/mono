@@ -1,39 +1,39 @@
 import { useCallback, useMemo } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
+
 import {
   type CryptoCurrency,
+  type FungibleAssetId,
   type MarketData,
   type Money,
   createMarketData,
   createMarketPair,
 } from '@leather.io/models';
-import {
-  pullPriceDataFromAvailableResponses,
-  selectBinanceUsdPrice,
-  selectCoingeckoUsdPrice,
-} from '@leather.io/query';
-import { baseCurrencyAmountInQuote, calculateMeanAverage, createMoney } from '@leather.io/utils';
+import { createMarketDataByAssetIdQueryConfig } from '@leather.io/queries';
+import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
-import { useBinanceMarketDataQuery } from './vendors/binance-market-data.query';
-import { useCoinGeckoMarketDataQuery } from './vendors/coingecko-market-data.query';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
-export function useCryptoCurrencyMarketDataMeanAverage(currency: CryptoCurrency): MarketData {
-  const { data: coingecko } = useCoinGeckoMarketDataQuery(currency);
-  const { data: binance } = useBinanceMarketDataQuery(currency);
+const cryptoCurrencyAssetIds: Record<CryptoCurrency, FungibleAssetId> = {
+  BTC: { protocol: 'nativeBtc', id: 'BTC' },
+  STX: { protocol: 'nativeStx', id: 'STX' },
+};
 
-  return useMemo(() => {
-    const priceData = pullPriceDataFromAvailableResponses([
-      { result: coingecko, selector: selectCoingeckoUsdPrice },
-      { result: binance, selector: selectBinanceUsdPrice },
-    ]);
-    const meanPrice = calculateMeanAverage(priceData);
+export function useCryptoCurrencyMarketData(currency: CryptoCurrency): MarketData {
+  const settings = useUserSettings();
+  const { data } = useQuery(
+    createMarketDataByAssetIdQueryConfig(cryptoCurrencyAssetIds[currency], settings)
+  );
 
-    return createMarketData(createMarketPair(currency, 'USD'), createMoney(meanPrice, 'USD'));
-  }, [binance, coingecko, currency]);
+  return useMemo(
+    () => data ?? createMarketData(createMarketPair(currency, 'USD'), createMoney(0, 'USD')),
+    [currency, data]
+  );
 }
 
 export function useCalculateBitcoinFiatValue() {
-  const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
+  const btcMarketData = useCryptoCurrencyMarketData('BTC');
 
   return useCallback(
     (value: Money) => baseCurrencyAmountInQuote(value, btcMarketData),

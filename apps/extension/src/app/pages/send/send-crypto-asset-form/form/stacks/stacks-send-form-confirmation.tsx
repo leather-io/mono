@@ -22,7 +22,7 @@ import {
 import { useStacksBroadcastTransaction } from '@app/common/transactions/stacks/use-stacks-broadcast-transaction';
 import { Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useCryptoCurrencyMarketData } from '@app/query/common/market-data/market-data.hooks';
 
 import type { ProposalSentSummaryState } from '../../../sent-summary/proposal-sent-summary';
 import { stacksConfirmationRouteStateSchema } from '../../hooks/use-send-form-navigate';
@@ -35,7 +35,7 @@ export function StacksSendFormConfirmation() {
     decimals,
     showFeeChangeWarning = false,
   } = useRouteState(stacksConfirmationRouteStateSchema);
-  const tokenMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
+  const tokenMarketData = useCryptoCurrencyMarketData('STX');
 
   const { symbol = 'STX' } = useParams();
 

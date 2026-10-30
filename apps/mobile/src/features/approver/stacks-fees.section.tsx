@@ -23,14 +23,14 @@ export function StacksFeesSection({ txHex, onChangeFee, disabled }: StacksFeesSe
   const { data: stxFees } = useCalculateStacksTxFees(tx);
   const fee = tx.auth.spendingCondition.fee;
   function getFeeType() {
-    const estimates = stxFees?.estimates;
-    if (Number(fee) === estimates?.[1]?.fee.amount.toNumber()) {
+    const options = stxFees?.options;
+    if (Number(fee) === options?.standard.value.amount.toNumber()) {
       return FeeTypes.Middle;
     }
-    if (Number(fee) === estimates?.[0]?.fee.amount.toNumber()) {
+    if (Number(fee) === options?.low.value.amount.toNumber()) {
       return FeeTypes.Low;
     }
-    if (Number(fee) === estimates?.[2]?.fee.amount.toNumber()) {
+    if (Number(fee) === options?.high.value.amount.toNumber()) {
       return FeeTypes.High;
     }
     return FeeTypes.Custom;
@@ -41,9 +41,9 @@ export function StacksFeesSection({ txHex, onChangeFee, disabled }: StacksFeesSe
   const [selectedFeeType, setSelectedFeeType] = useState<FeeTypes>(getFeeType());
   const zeroMoney = createMoney(0, 'STX');
   const fees = {
-    [FeeTypes.Low]: stxFees?.estimates[0]?.fee || zeroMoney,
-    [FeeTypes.Middle]: stxFees?.estimates[1]?.fee || zeroMoney,
-    [FeeTypes.High]: stxFees?.estimates[2]?.fee || zeroMoney,
+    [FeeTypes.Low]: stxFees?.options.low.value || zeroMoney,
+    [FeeTypes.Middle]: stxFees?.options.standard.value || zeroMoney,
+    [FeeTypes.High]: stxFees?.options.high.value || zeroMoney,
     [FeeTypes.Unknown]: zeroMoney,
     [FeeTypes.Custom]: zeroMoney,
   };

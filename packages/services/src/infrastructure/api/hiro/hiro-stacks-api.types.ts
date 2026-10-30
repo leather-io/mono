@@ -1,4 +1,4 @@
-import { type Metadata } from '@hirosystems/token-metadata-api-client';
+import { type FtMetadataResponse, type Metadata } from '@hirosystems/token-metadata-api-client';
 import {
   type AddressAssetsListResponse,
   type AddressBalanceResponse,
@@ -150,6 +150,7 @@ export interface HiroBalanceChangesResponse {
 export type HiroAddressBalanceResponse = AddressBalanceResponse;
 export type HiroMempoolTransactionListResponse = MempoolTransactionListResponse;
 export type HiroMetadata = Metadata;
+export type HiroFtMetadata = FtMetadataResponse;
 export type HiroTransactionEvent = TransactionEvent;
 export type HiroTransactionEventsResponse = AddressAssetsListResponse;
 export type HiroStacksTransaction = Transaction;

@@ -93,7 +93,7 @@ jobs:
       - name: build-test-dependencies
         working-directory: ./
         # We need to build these packages as the tests depend on them, listed manually for performance
-        run: pnpm turbo build --filter=@leather.io/{utils,models,bitcoin,stacks,rpc,query,constants}
+        run: pnpm turbo build --filter=@leather.io/{utils,models,bitcoin,stacks,rpc,constants}
 
       - name: get-installed-playwright-version
         id: playwright-version

@@ -24,7 +24,7 @@ const mocks = vi.hoisted(() => ({
   sendMessage: vi.fn(),
   useRpcSignPsbtParams: vi.fn(),
   useDescriptorPsbtDetails: vi.fn(),
-  useCryptoCurrencyMarketDataMeanAverage: vi.fn(),
+  useCryptoCurrencyMarketData: vi.fn(),
   calculateBitcoinFiatValue: vi.fn(),
   getDefaultSigningConfig: vi.fn(),
   signDescriptorPsbt: vi.fn(),
@@ -118,7 +118,7 @@ vi.mock('@app/query/bitcoin/utxos/utxos.hooks', () => ({
 }));
 
 vi.mock('@app/query/common/market-data/market-data.hooks', () => ({
-  useCryptoCurrencyMarketDataMeanAverage: mocks.useCryptoCurrencyMarketDataMeanAverage,
+  useCryptoCurrencyMarketData: mocks.useCryptoCurrencyMarketData,
   useCalculateBitcoinFiatValue: () => mocks.calculateBitcoinFiatValue,
 }));
 
@@ -272,7 +272,7 @@ describe(useRpcSignPsbt.name, () => {
     mocks.sendMessage.mockResolvedValue(undefined);
     mocks.useDescriptorPsbtDetails.mockReturnValue(null);
     mocks.refetchUtxos.mockResolvedValue(undefined);
-    mocks.useCryptoCurrencyMarketDataMeanAverage.mockReturnValue({
+    mocks.useCryptoCurrencyMarketData.mockReturnValue({
       price: createMoney(0, 'USD'),
     });
     mocks.calculateBitcoinFiatValue.mockReturnValue(createMoney(0, 'USD'));

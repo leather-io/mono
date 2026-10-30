@@ -77,9 +77,6 @@ export const queryClient = new QueryClient({
           error: JSON.stringify(zodIssuesSchema.safeParse(error).data?.issues),
         };
         logger.error('schema_fail', zodErrorReport);
-        // Replace with `formatQueryZodErrors` from `@leather.io/query`
-        // Example:
-        // `void analytics.track(...formatQueryZodErrors(error, query))`
         analytics.track('schema_fail', zodErrorReport);
       }
     },
