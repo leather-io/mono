@@ -1,0 +1,147 @@
+name: repo:review-gate
+
+on:
+  pull_request:
+    branches: [dev]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+permissions: {}
+
+concurrency:
+  group: review-gate-${{ github.event_name }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  hold:
+    name: hold
+    if: github.event.pull_request.base.ref == 'dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      statuses: write # marks the gate pending until this run has counted approvals
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: mark-gate-pending
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: node .github/scripts/review-gate.mjs hold
+
+  classify:
+    name: classify
+    if: >-
+      github.event_name == 'pull_request' &&
+      (github.event.action != 'edited' || github.event.changes.base != null) &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: read # reads the pull request and its diff
+    outputs:
+      decision: ${{ steps.decide.outputs.decision }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: apply-path-rules
+        id: prepare
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node .github/scripts/review-gate.mjs prepare
+
+      - uses: $/.github/actions/install-claude-code
+        id: claude-cli
+        if: steps.prepare.outputs.rule-decision == ''
+
+      - name: ask-claude
+        id: claude
+        if: steps.prepare.outputs.rule-decision == ''
+        continue-on-error: true
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CLAUDE_BIN: ${{ steps.claude-cli.outputs.path }}
+        run: node .github/scripts/review-gate.mjs ask
+
+      - name: decide-review-count
+        id: decide
+        env:
+          RULE_DECISION: ${{ steps.prepare.outputs.rule-decision }}
+          STRUCTURED_OUTPUT: ${{ steps.claude.outputs.structured-output }}
+        run: node .github/scripts/review-gate.mjs decide
+
+  record:
+    name: record
+    needs: classify
+    if: ${{ !cancelled() && needs.classify.result != 'skipped' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      statuses: write # records the decision as a commit status on the classified head
+      pull-requests: write # keeps one review gate comment on the pull request up to date
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: record-decision
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          DECISION: ${{ needs.classify.outputs.decision }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node .github/scripts/review-gate.mjs record
+
+  count-approvals:
+    name: count-approvals
+    needs: [hold, record]
+    if: ${{ !cancelled() && github.event.pull_request.base.ref == 'dev' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read # reads labels and reviews to count approvals
+      statuses: write # reads the recorded decision and reports the gate result as a commit status
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: check-approvals
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: node .github/scripts/review-gate.mjs gate
