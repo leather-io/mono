@@ -28,7 +28,7 @@ import {
   isExtendedPublicKeyExpression,
   isWshDescriptor,
   makeWshDescriptorInstance,
-  toLedgerSignableDescriptor,
+  toWalletPolicyDescriptor,
 } from './wsh-descriptor';
 
 // Testnet extended-key version bytes (tprv / tpub) — Ledger uses these on testnet.
@@ -531,58 +531,58 @@ describe('wsh-descriptor', () => {
     expect(() => compileWshDescriptor(`wsh(pk(${mainnetXpubWithUprvInBody}/0/*))`)).not.toThrow();
   });
 
-  it('builds a Ledger key expression for an xpub key by adding the origin', () => {
+  it('builds a wallet policy key expression for an xpub key by adding the origin', () => {
     const { scriptPubKey, keys } = compileWshDescriptor(descriptor);
     const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const keyOrigin = "e87a850b/84'/0'/0'";
-    const ledgerDescriptor = toLedgerSignableDescriptor(descriptor, accountKey, xpubA, keyOrigin);
+    const policyDescriptor = toWalletPolicyDescriptor(descriptor, accountKey, xpubA, keyOrigin);
 
-    expect(ledgerDescriptor).toContain(`[${keyOrigin}]${xpubA}`);
+    expect(policyDescriptor).toContain(`[${keyOrigin}]${xpubA}`);
     // Origin is metadata only — the compiled scriptPubKey is unchanged.
-    expect(bytesToHex(compileWshDescriptor(ledgerDescriptor).scriptPubKey)).toBe(
+    expect(bytesToHex(compileWshDescriptor(policyDescriptor).scriptPubKey)).toBe(
       bytesToHex(scriptPubKey)
     );
   });
 
-  it('strips the stale checksum when rewriting a checksummed descriptor for Ledger', () => {
+  it('strips the stale checksum when rewriting a checksummed descriptor for a wallet policy', () => {
     const checksummedDescriptor = `${descriptor}#${checksum(descriptor)}`;
     const { scriptPubKey, keys } = compileWshDescriptor(checksummedDescriptor);
     const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const keyOrigin = "e87a850b/84'/0'/0'";
 
-    const ledgerDescriptor = toLedgerSignableDescriptor(
+    const policyDescriptor = toWalletPolicyDescriptor(
       checksummedDescriptor,
       accountKey,
       xpubA,
       keyOrigin
     );
 
-    expect(ledgerDescriptor).toContain(`[${keyOrigin}]${xpubA}`);
-    expect(ledgerDescriptor).not.toContain('#');
-    expect(() => makeWshDescriptorInstance(ledgerDescriptor)).not.toThrow();
-    expect(bytesToHex(compileWshDescriptor(ledgerDescriptor).scriptPubKey)).toBe(
+    expect(policyDescriptor).toContain(`[${keyOrigin}]${xpubA}`);
+    expect(policyDescriptor).not.toContain('#');
+    expect(() => makeWshDescriptorInstance(policyDescriptor)).not.toThrow();
+    expect(bytesToHex(compileWshDescriptor(policyDescriptor).scriptPubKey)).toBe(
       bytesToHex(scriptPubKey)
     );
   });
 
-  it('builds a Ledger key expression for a raw pubkey by substituting the account xpub', () => {
+  it('builds a wallet policy key expression for a raw pubkey by substituting the account xpub', () => {
     const rawPubkeyDescriptor = `wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyA)})))`;
     const { scriptPubKey, keys } = compileWshDescriptor(rawPubkeyDescriptor);
     const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     expect(accountKey.bip32).toBeUndefined();
 
     const keyOrigin = "e87a850b/84'/0'/0'";
-    const ledgerDescriptor = toLedgerSignableDescriptor(
+    const policyDescriptor = toWalletPolicyDescriptor(
       rawPubkeyDescriptor,
       accountKey,
       xpubA,
       keyOrigin
     );
 
-    expect(ledgerDescriptor).toBe(`wsh(and_v(v:after(5),pk([${keyOrigin}]${xpubA}/0/0)))`);
+    expect(policyDescriptor).toBe(`wsh(and_v(v:after(5),pk([${keyOrigin}]${xpubA}/0/0)))`);
     // Substituting the account's xpub/0/0 resolves to the same pubkey, so the
     // compiled scriptPubKey is unchanged.
-    expect(bytesToHex(compileWshDescriptor(ledgerDescriptor).scriptPubKey)).toBe(
+    expect(bytesToHex(compileWshDescriptor(policyDescriptor).scriptPubKey)).toBe(
       bytesToHex(scriptPubKey)
     );
   });
@@ -591,12 +591,12 @@ describe('wsh-descriptor', () => {
     const keyOrigin = "e87a850b/84'/0'/0'";
     const { keys } = compileWshDescriptor(descriptor);
     const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
-    const ledgerDescriptor = toLedgerSignableDescriptor(descriptor, accountKey, xpubA, keyOrigin);
+    const policyDescriptor = toWalletPolicyDescriptor(descriptor, accountKey, xpubA, keyOrigin);
 
-    const { keys: ledgerKeys } = compileWshDescriptor(ledgerDescriptor);
+    const { keys: ledgerKeys } = compileWshDescriptor(policyDescriptor);
     const ledgerAccountKey = expectDefined(findAccountKeyByPubkey(ledgerKeys, pubkeyA));
-    expect(toLedgerSignableDescriptor(ledgerDescriptor, ledgerAccountKey, xpubA, keyOrigin)).toBe(
-      ledgerDescriptor
+    expect(toWalletPolicyDescriptor(policyDescriptor, ledgerAccountKey, xpubA, keyOrigin)).toBe(
+      policyDescriptor
     );
   });
 
@@ -607,8 +607,8 @@ describe('wsh-descriptor', () => {
     // The same key on two branches (same sub-path).
     const repeated = `wsh(and_v(v:pk(${xpubA}/0/0),pk(${xpubA}/0/0)))`;
 
-    const ledgerDescriptor = toLedgerSignableDescriptor(repeated, accountKey, xpubA, keyOrigin);
-    expect(ledgerDescriptor.split(`[${keyOrigin}]${xpubA}`).length - 1).toBe(2);
+    const policyDescriptor = toWalletPolicyDescriptor(repeated, accountKey, xpubA, keyOrigin);
+    expect(policyDescriptor.split(`[${keyOrigin}]${xpubA}`).length - 1).toBe(2);
   });
 
   it('rewrites every occurrence of a repeated raw-pubkey key on multiple branches', () => {
@@ -619,9 +619,9 @@ describe('wsh-descriptor', () => {
     const keyOrigin = "e87a850b/84'/0'/0'";
     const repeated = `wsh(and_v(v:pk(${pubkeyHex}),pk(${pubkeyHex})))`;
 
-    const ledgerDescriptor = toLedgerSignableDescriptor(repeated, accountKey, xpubA, keyOrigin);
-    expect(ledgerDescriptor.split(`[${keyOrigin}]${xpubA}/0/0`).length - 1).toBe(2);
-    expect(ledgerDescriptor).not.toContain(pubkeyHex);
+    const policyDescriptor = toWalletPolicyDescriptor(repeated, accountKey, xpubA, keyOrigin);
+    expect(policyDescriptor.split(`[${keyOrigin}]${xpubA}/0/0`).length - 1).toBe(2);
+    expect(policyDescriptor).not.toContain(pubkeyHex);
   });
 
   it('rewrites a testnet-versioned (tpub) account key by its descriptor location', () => {
@@ -635,14 +635,9 @@ describe('wsh-descriptor', () => {
     const keyOrigin = "e87a850b/84'/1'/0'";
 
     // xpubA (mainnet) stands in for the wallet's stored xpub — a different string.
-    const ledgerDescriptor = toLedgerSignableDescriptor(
-      tpubDescriptor,
-      accountKey,
-      xpubA,
-      keyOrigin
-    );
-    expect(ledgerDescriptor).toContain(`[${keyOrigin}]${tpub}`);
-    expect(ledgerDescriptor).not.toBe(tpubDescriptor);
+    const policyDescriptor = toWalletPolicyDescriptor(tpubDescriptor, accountKey, xpubA, keyOrigin);
+    expect(policyDescriptor).toContain(`[${keyOrigin}]${tpub}`);
+    expect(policyDescriptor).not.toBe(tpubDescriptor);
   });
 
   it('throws when the account key cannot be located in the descriptor (no silent no-op)', () => {
@@ -651,7 +646,7 @@ describe('wsh-descriptor', () => {
     const keyOrigin = "e87a850b/84'/0'/0'";
     // Descriptor uses a different key (xpubB) than the matched accountKey (xpubA).
     expect(() =>
-      toLedgerSignableDescriptor(`wsh(pk(${xpubB}/0/0))`, accountKey, xpubA, keyOrigin)
+      toWalletPolicyDescriptor(`wsh(pk(${xpubB}/0/0))`, accountKey, xpubA, keyOrigin)
     ).toThrow();
   });
 });

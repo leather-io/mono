@@ -306,7 +306,7 @@ export function stripDescriptorChecksum(descriptor: string): string {
 // branches. The compiled scriptPubKey/witness script are unchanged. No-op if the
 // matched key already carries an origin. Note: bitcoinerlab/Ledger still reject
 // the same key used with different sub-paths (e.g. `/0/*` and `/1/*`).
-export function toLedgerSignableDescriptor(
+export function toWalletPolicyDescriptor(
   descriptor: string,
   accountKey: KeyInfo,
   accountXpub: string,
@@ -320,16 +320,16 @@ export function toLedgerSignableDescriptor(
   const accountKeyString = accountKey.keyExpression.split('/')[0];
   const descriptorWithoutChecksum = stripDescriptorChecksum(descriptor);
 
-  const ledgerDescriptor = accountKey.bip32
+  const policyDescriptor = accountKey.bip32
     ? descriptorWithoutChecksum.replaceAll(accountKeyString, `[${keyOrigin}]${accountKeyString}`)
     : descriptorWithoutChecksum.replaceAll(accountKeyString, `[${keyOrigin}]${accountXpub}/0/0`);
 
   // A no-op means we couldn't locate the account key — fail loudly rather than
   // hand Ledger an unmodified descriptor it cannot sign.
-  if (ledgerDescriptor === descriptorWithoutChecksum)
-    throw new Error('Could not locate the account key in the descriptor for Ledger signing');
+  if (policyDescriptor === descriptorWithoutChecksum)
+    throw new Error('Could not locate the account key in the descriptor for wallet policy signing');
 
-  return ledgerDescriptor;
+  return policyDescriptor;
 }
 
 // Returns the indexes of every PSBT input whose `witnessUtxo` is locked by the

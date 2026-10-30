@@ -1,9 +1,8 @@
 import type { SupportedBlockchains } from '@leather.io/models';
 import { Callout } from '@leather.io/ui';
 
+import type { LatestDeviceResponse } from '@app/features/ledger/utils/generic-ledger-utils';
 import { Capitalize } from '@app/ui/utils/capitalize';
-
-import { type LatestDeviceResponse } from '../utils/generic-ledger-utils';
 
 interface RequiresChainProp {
   chain: SupportedBlockchains;

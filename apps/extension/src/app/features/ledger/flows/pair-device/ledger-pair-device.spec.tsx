@@ -1,13 +1,13 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import { HardwareWalletError } from '@leather.io/ledger';
+import { makeFakeHardwareWalletConnector } from '@leather.io/ledger/test-utils';
+
 import { LedgerPairDevice } from './ledger-pair-device';
 
-const sessionId = 'session-1';
-
 const mocks = vi.hoisted(() => ({
-  connectLedgerDeviceToApp: vi.fn(),
-  closeLedgerSession: vi.fn(),
+  pair: vi.fn(),
   onClose: vi.fn(),
 }));
 
@@ -44,16 +44,13 @@ vi.mock('../../components/ledger-title', () => ({
   },
 }));
 
-vi.mock('../../dmk/ledger-dmk.context', () => ({
-  useLedgerDmk: () => ({}),
+vi.mock('../../hardware-wallet/hardware-wallet.context', () => ({
+  useHardwareWalletConnector: () => makeFakeHardwareWalletConnector({ pair: mocks.pair }),
 }));
 
-vi.mock('../../dmk/ledger-device-connection', () => ({
-  connectLedgerDeviceToApp: mocks.connectLedgerDeviceToApp,
-}));
-
-vi.mock('../../dmk/ledger-session', () => ({
-  closeLedgerSession: mocks.closeLedgerSession,
+vi.mock('@leather.io/bitcoin', () => ({
+  makeNativeSegwitAccountDerivationPath: vi.fn(),
+  makeTaprootAccountDerivationPath: vi.fn(),
 }));
 
 function clickConnect() {
@@ -66,14 +63,13 @@ describe(LedgerPairDevice.name, () => {
     vi.clearAllMocks();
   });
 
-  test('releases the device and tells the user to restart their request once connected', async () => {
-    mocks.connectLedgerDeviceToApp.mockResolvedValue(sessionId);
+  test('pairs the device and tells the user to restart their request once connected', async () => {
+    mocks.pair.mockResolvedValue({ id: 'device-1', name: 'Nano S Plus', model: null });
 
     clickConnect();
 
     await screen.findByText('Your Ledger is connected');
-    expect(mocks.connectLedgerDeviceToApp).toHaveBeenCalledWith(expect.anything(), null);
-    expect(mocks.closeLedgerSession).toHaveBeenCalledWith(expect.anything(), sessionId);
+    expect(mocks.pair).toHaveBeenCalledWith({});
     expect(screen.queryByRole('button', { name: 'Connect Ledger' })).toBeNull();
 
     fireEvent.click(screen.getByRole('button', { name: 'Done' }));
@@ -82,12 +78,11 @@ describe(LedgerPairDevice.name, () => {
   });
 
   test('offers another attempt when the device does not connect', async () => {
-    mocks.connectLedgerDeviceToApp.mockRejectedValue(new Error('No selected device'));
+    mocks.pair.mockRejectedValue(new HardwareWalletError('no-device-selected'));
 
     clickConnect();
 
     await screen.findByText(/couldn't connect to your Ledger/);
     expect(screen.getByRole('button', { name: 'Connect Ledger' })).toBeTruthy();
-    expect(mocks.closeLedgerSession).not.toHaveBeenCalled();
   });
 });
