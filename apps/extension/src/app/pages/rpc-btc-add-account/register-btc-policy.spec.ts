@@ -50,6 +50,18 @@ describe(createBtcPolicyRegistration.name, () => {
     );
   });
 
+  test('registers a legacy stakingTestnet request on the btc staking stacks testnet', () => {
+    const registration = createBtcPolicyRegistration({
+      params: { ...baseParams, descriptor: testnetDescriptor, network: 'stakingTestnet' },
+      fingerprint: 'deadbeef',
+      accountIndex: 0,
+      networks,
+    });
+
+    expect(registration.result.address.startsWith('tb1q')).toBe(true);
+    expect(registration.addPolicyPayload.policy.networkId).toBe('btcStakingStacksTestnet');
+  });
+
   test('defaults to mainnet when the request omits network', () => {
     const registration = createBtcPolicyRegistration({
       params: baseParams,

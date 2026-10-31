@@ -3,6 +3,7 @@ import { makeAccountIdentifer } from '@leather.io/crypto';
 import {
   type NetworkConfiguration,
   WalletDefaultNetworkConfigurationIds,
+  resolveLegacyNetworkConfigurationId,
 } from '@leather.io/models';
 import { type RpcParams, type stxAddAccount } from '@leather.io/rpc';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
@@ -17,7 +18,7 @@ interface ResolveStxPolicyNetworkArgs {
 function resolveStxPolicyNetwork({ paramsNetwork, networks }: ResolveStxPolicyNetworkArgs) {
   const networkKey = paramsNetwork ?? WalletDefaultNetworkConfigurationIds.mainnet;
 
-  const network = networks[networkKey];
+  const network = networks[resolveLegacyNetworkConfigurationId(networkKey)];
   if (!network) throw new Error(`Unknown STX add account network: ${networkKey}`);
 
   return { network, networkId: network.id };

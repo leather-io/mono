@@ -57,13 +57,8 @@ describe(selectStakingChainId.name, () => {
     expect(selectStakingChainId(userSettings)).toEqual('mainnet');
   });
 
-  it('maps the BTC Staking Testnet to private-1', () => {
-    const settings = { ...userSettings, network: defaultNetworksKeyedById['private-1'] };
-    expect(selectStakingChainId(settings)).toEqual('private-1');
-  });
-
   it('maps the staking testnet network to the staking-testnet chain', () => {
-    const settings = { ...userSettings, network: defaultNetworksKeyedById.stakingTestnet };
+    const settings = { ...userSettings, network: defaultNetworksKeyedById.btcStakingStacksTestnet };
     expect(selectStakingChainId(settings)).toEqual('staking-testnet');
   });
 
@@ -72,7 +67,7 @@ describe(selectStakingChainId.name, () => {
       selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.testnet })
     ).toBeNull();
     expect(
-      selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.sbtcTestnet })
+      selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.testnet4 })
     ).toBeNull();
   });
 });
