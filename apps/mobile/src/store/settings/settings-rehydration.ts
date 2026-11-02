@@ -32,6 +32,7 @@ export function handleSettingsRehydration(
     notificationsPreference:
       action.payload?.settings.notificationsPreference ?? state.notificationsPreference,
     assetVisibility: action.payload?.settings.assetVisibility ?? state.assetVisibility,
+    tokenPreset: action.payload?.settings.tokenPreset ?? state.tokenPreset,
     languagePreference,
     currentAccount,
   };
