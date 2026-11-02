@@ -1,6 +1,9 @@
-import { StacksTx } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
+import {
+  createBalancesContractCallTx,
+  createBalancesTokenTransferTx,
+} from '../test/balances-stacks-txs';
 import { calculateInboundStxBalance, calculateOutboundStxBalance } from './stx-balances.utils';
 
 const stacksAddress = 'STACKS_ADDRESS';
@@ -14,59 +17,57 @@ describe('calculateInboundStxBalance', () => {
 
   it('should sum token transfers to the recipient address', () => {
     const pendingTxs = [
-      {
-        tx_type: 'token_transfer',
+      createBalancesTokenTransferTx({
         token_transfer: {
           recipient_address: stacksAddress,
           amount: '1000000',
+          memo: '',
         },
-      },
-      {
-        tx_type: 'token_transfer',
+      }),
+      createBalancesTokenTransferTx({
         token_transfer: {
           recipient_address: stacksAddress,
           amount: '2000000',
+          memo: '',
         },
-      },
-    ] as StacksTx[];
+      }),
+    ];
     const balance = calculateInboundStxBalance(stacksAddress, pendingTxs);
     expect(balance).toEqual(createMoney(3000000, 'STX'));
   });
 
   it('should ignore transfers to other addresses', () => {
     const pendingTxs = [
-      {
-        tx_type: 'token_transfer',
+      createBalancesTokenTransferTx({
         token_transfer: {
           recipient_address: stacksAddress,
           amount: '1000000',
+          memo: '',
         },
-      },
-      {
-        tx_type: 'token_transfer',
+      }),
+      createBalancesTokenTransferTx({
         token_transfer: {
           recipient_address: otherStacksAddress,
           amount: '2000000',
+          memo: '',
         },
-      },
-    ] as StacksTx[];
+      }),
+    ];
     const balance = calculateInboundStxBalance(stacksAddress, pendingTxs);
     expect(balance).toEqual(createMoney(1000000, 'STX'));
   });
 
   it('should ignore non-transfer txs', () => {
     const pendingTxs = [
-      {
-        tx_type: 'token_transfer',
+      createBalancesTokenTransferTx({
         token_transfer: {
           recipient_address: stacksAddress,
           amount: '2500000',
+          memo: '',
         },
-      },
-      {
-        tx_type: 'contract_call',
-      },
-    ] as StacksTx[];
+      }),
+      createBalancesContractCallTx(),
+    ];
     const balance = calculateInboundStxBalance(stacksAddress, pendingTxs);
     expect(balance).toEqual(createMoney(2500000, 'STX'));
   });
@@ -80,74 +81,69 @@ describe('calculateOutboundStxBalance', () => {
 
   it('should sum transfers and fees sent from the address', () => {
     const pendingTxs = [
-      {
-        tx_type: 'token_transfer',
+      createBalancesTokenTransferTx({
         sender_address: stacksAddress,
         fee_rate: '50000',
         token_transfer: {
           recipient_address: otherStacksAddress,
           amount: '4000000',
+          memo: '',
         },
-      },
-      {
-        tx_type: 'contract_call',
+      }),
+      createBalancesContractCallTx({
         sender_address: stacksAddress,
         fee_rate: '75000',
-      },
-    ] as StacksTx[];
+      }),
+    ];
     const balance = calculateOutboundStxBalance(stacksAddress, pendingTxs);
     expect(balance).toEqual(createMoney(4125000, 'STX'));
   });
 
   it('should ignore fees for sponsored transactions', () => {
     const pendingTxs = [
-      {
-        tx_type: 'token_transfer',
+      createBalancesTokenTransferTx({
         sender_address: stacksAddress,
         fee_rate: '50000',
         token_transfer: {
           recipient_address: otherStacksAddress,
           amount: '4000000',
+          memo: '',
         },
-      },
-      {
-        tx_type: 'contract_call',
+      }),
+      createBalancesContractCallTx({
         sender_address: stacksAddress,
         fee_rate: '75000',
-      },
-      {
-        tx_type: 'contract_call',
+      }),
+      createBalancesContractCallTx({
         sender_address: stacksAddress,
         fee_rate: '75000',
         sponsored: true,
-      },
-    ] as StacksTx[];
+      }),
+    ];
     const balance = calculateOutboundStxBalance(stacksAddress, pendingTxs);
     expect(balance).toEqual(createMoney(4125000, 'STX'));
   });
 
   it('should ignore txs sent from other addresses', () => {
     const pendingTxs = [
-      {
-        tx_type: 'contract_call',
+      createBalancesContractCallTx({
         sender_address: stacksAddress,
         fee_rate: '75000',
-      },
-      {
-        tx_type: 'token_transfer',
+      }),
+      createBalancesTokenTransferTx({
         sender_address: otherStacksAddress,
         fee_rate: '50000',
         token_transfer: {
           recipient_address: stacksAddress,
           amount: '4000000',
+          memo: '',
         },
-      },
-      {
-        tx_type: 'contract_call',
+      }),
+      createBalancesContractCallTx({
         sender_address: otherStacksAddress,
         fee_rate: '75000',
-      },
-    ] as StacksTx[];
+      }),
+    ];
     const balance = calculateOutboundStxBalance(stacksAddress, pendingTxs);
     expect(balance).toEqual(createMoney(75000, 'STX'));
   });

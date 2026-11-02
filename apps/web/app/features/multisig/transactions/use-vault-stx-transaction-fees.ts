@@ -24,7 +24,7 @@ export function useVaultStxTransactionFees({
 
   const draftQuery = useQuery({
     queryKey: ['multisig-stx-fee-draft', account, recipient, amount, asset],
-    queryFn: () => {
+    queryFn() {
       if (!account || !recipient || !amount) throw new Error('Missing transaction details');
       if (asset)
         return buildUnsignedMultisigSip10Transfer({

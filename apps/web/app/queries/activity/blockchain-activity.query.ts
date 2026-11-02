@@ -5,6 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { z } from 'zod';
 import { onchainActivityRefetchInterval } from '~/features/multisig/vaults/use-vaults';
 import { formatCurrency } from '~/utils/currency-formatter';
 
@@ -71,22 +72,28 @@ function normalizeCachedTxid(txid: string) {
   return txid.toLowerCase().replace(/^0x/, '');
 }
 
-function isBlockchainActivity(value: unknown): value is BlockchainActivity {
-  return (
+const blockchainActivitySchema = z.custom<BlockchainActivity>(
+  value =>
     typeof value === 'object' &&
     value !== null &&
     'txid' in value &&
     'balanceChanges' in value &&
     'chain' in value
-  );
+);
+
+function filterBlockchainActivities(values: unknown[]) {
+  return values.flatMap(value => {
+    const parsedActivity = blockchainActivitySchema.safeParse(value);
+    return parsedActivity.success ? [parsedActivity.data] : [];
+  });
 }
 
 function extractCachedActivities(data: unknown): BlockchainActivity[] {
-  if (Array.isArray(data)) return data.filter(isBlockchainActivity);
+  if (Array.isArray(data)) return filterBlockchainActivities(data);
   if (typeof data !== 'object' || data === null) return [];
   if ('pages' in data && Array.isArray(data.pages))
     return data.pages.flatMap(extractCachedActivities);
-  if ('items' in data && Array.isArray(data.items)) return data.items.filter(isBlockchainActivity);
+  if ('items' in data && Array.isArray(data.items)) return filterBlockchainActivities(data.items);
   return [];
 }
 
@@ -98,7 +105,7 @@ interface CachedBlockchainActivityLookup {
 export function findCachedBlockchainActivityByTxid(
   queryClient: QueryClient,
   account: AccountAddresses,
-  txid: string
+  txid: string | undefined
 ): CachedBlockchainActivityLookup | undefined {
   if (!txid) return undefined;
   const target = normalizeCachedTxid(txid);
@@ -117,7 +124,7 @@ export function findCachedBlockchainActivityByTxid(
 
 export function useBlockchainActivityByTxIdDetailQuery(
   account: AccountAddresses,
-  txid: string,
+  txid: string | undefined,
   settings: UserSettings,
   enabled: boolean
 ) {

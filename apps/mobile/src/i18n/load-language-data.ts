@@ -1,4 +1,4 @@
-import { AvailableLanguageCode } from '@/i18n/languages';
+import { type AvailableLanguageCode } from '@/i18n/languages';
 
 export async function loadLanguageData(code: AvailableLanguageCode) {
   switch (code) {

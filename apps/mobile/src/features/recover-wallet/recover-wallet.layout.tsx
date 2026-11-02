@@ -11,9 +11,9 @@ import {
   Button,
   Cell,
   ChevronRightIcon,
-  HasChildren,
+  type HasChildren,
   LockIcon,
-  SheetInstance,
+  type SheetInstance,
   Text,
 } from '@leather.io/ui/native';
 

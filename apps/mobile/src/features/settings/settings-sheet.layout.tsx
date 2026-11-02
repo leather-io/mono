@@ -3,10 +3,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   Box,
-  HasChildren,
+  type HasChildren,
   QuestionCircleIcon,
   Sheet,
-  SheetRef,
+  type SheetRef,
   TouchableOpacity,
 } from '@leather.io/ui/native';
 

@@ -1,4 +1,4 @@
-import { BitcoinTransactionFeeQuote, Money } from '@leather.io/models';
+import { type BitcoinTransactionFeeQuote, type Money } from '@leather.io/models';
 
 export function createBitcoinTransactionFeeQuote(
   fee: Money,

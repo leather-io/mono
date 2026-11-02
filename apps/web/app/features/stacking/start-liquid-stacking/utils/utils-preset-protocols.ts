@@ -1,11 +1,10 @@
-import { ProviderId } from '~/data/data';
+import { type ProviderId } from '~/data/data';
+import { typedKeys } from '~/utils/typed-keys';
 
-import { ProtocolSlug, ProtocolSlugToIdMap } from './types-preset-protocols';
+import { type ProtocolSlug, ProtocolSlugToIdMap } from './types-preset-protocols';
 
 export function getProtocolSlugByProviderId(providerId: ProviderId): ProtocolSlug | null {
   return (
-    (Object.entries(ProtocolSlugToIdMap).find(
-      ([, id]) => providerId === id
-    )?.[0] as ProtocolSlug) || null
+    typedKeys(ProtocolSlugToIdMap).find(slug => providerId === ProtocolSlugToIdMap[slug]) ?? null
   );
 }

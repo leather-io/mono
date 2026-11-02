@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react';
 
-import { Title } from '@leather.io/ui';
+import { BasicTooltip, Title } from '@leather.io/ui';
 
 import { useOnResizeListener } from '@app/common/hooks/use-on-resize-listener';
 import { useSpamFilterWithWhitelist } from '@app/common/spam-filter/use-spam-filter';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface TransactionTitleProps {
   title: string;

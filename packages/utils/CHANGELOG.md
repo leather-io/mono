@@ -368,6 +368,26 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.55.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.54.0...@leather.io/utils-v0.55.0) (2026-10-27)
+
+
+### Features
+
+* pin sBTC and USDCx after BTC and STX in token lists ([#2858](https://github.com/leather-io/mono/issues/2858)) ([12d4c39](https://github.com/leather-io/mono/commit/12d4c398445f690c714d16e4198b8a4ec47f9566))
+
+
+### Bug Fixes
+
+* enforce runtime circular dependency detection ([#2852](https://github.com/leather-io/mono/issues/2852)) ([857e0f7](https://github.com/leather-io/mono/commit/857e0f79d75025cc0da9f31a78c875fa64ed5eba))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.41.0
+    * @leather.io/models bumped to 0.63.1
+
 ## [0.54.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.53.1...@leather.io/utils-v0.54.0) (2026-09-29)
 
 

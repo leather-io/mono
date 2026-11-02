@@ -1,4 +1,4 @@
-import { AccountAddresses } from '@leather.io/models';
+import { type AccountAddresses } from '@leather.io/models';
 
 /* 
   Services request DTO for requests made in an account context

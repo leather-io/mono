@@ -164,10 +164,15 @@ export class AlexSwapProviderService implements SwapProviderService {
       throw new Error('Invalid quote provider id');
     }
 
+    const stxAddress = request.account.stacks?.stxAddress;
+    if (!stxAddress) {
+      throw new Error('Stacks address required for swap execution');
+    }
+
     const minReceiveAmount = calculateMinReceiveAmount(quote.targetAmount, slippage);
 
     const swapTx = await this.alexSdkClient.getSwapTx(
-      request.account.stacks!.stxAddress,
+      stxAddress,
       quote.providerQuoteData.baseProviderAssetId,
       quote.providerQuoteData.targetProviderAssetId,
       convertMoneyToAlexSdkAmount(quote.baseAmount),

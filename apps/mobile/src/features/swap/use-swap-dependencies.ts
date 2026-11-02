@@ -1,6 +1,5 @@
 import { signTx } from '@/features/psbt-signer/signer';
 import { useAccountRequest } from '@/hooks/use-account-request';
-import { useBitcoinClient } from '@/queries/clients/bitcoin-client';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { broadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
@@ -11,10 +10,11 @@ import {
   getBitcoinCoinSelectionService,
   getBitcoinTransactionFeesService,
   getMarketDataService,
+  getMempoolApiClient,
   getStacksTransactionFeesService,
   getSwapService,
 } from '@leather.io/services';
-import { SwapDependencies, broadcastBitcoinTransaction } from '@leather.io/state/swap';
+import { type SwapDependencies, broadcastBitcoinTransaction } from '@leather.io/state/swap';
 import { assertExistence } from '@leather.io/utils';
 
 export function useSwapDependencies(): SwapDependencies {
@@ -27,10 +27,9 @@ export function useSwapDependencies(): SwapDependencies {
   const bitcoinAccounts = useBitcoinAccounts();
   const { nativeSegwit } = bitcoinAccounts.accountIndexByPaymentType(fingerprint, accountIndex);
   const bitcoinPayer = nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 });
-  const bitcoinClient = useBitcoinClient();
-  const { data: nextNonce } = useNextNonce(stacksSigner?.address ?? '');
-
   assertExistence(stacksSigner, 'Stacks signer missing during swap initialization');
+  const { data: nextNonce } = useNextNonce(stacksSigner.address);
+
   assertExistence(bitcoinPayer, 'Bitcoin payer missing during swap initialization.');
 
   return {
@@ -52,7 +51,7 @@ export function useSwapDependencies(): SwapDependencies {
       network: networkPreference,
       bitcoinPayer,
       signBitcoinPsbt: signTx,
-      broadcast: (txHex: string) => broadcastBitcoinTransaction(bitcoinClient, txHex),
+      broadcast: (txHex: string) => broadcastBitcoinTransaction(getMempoolApiClient(), txHex),
     },
   };
 }

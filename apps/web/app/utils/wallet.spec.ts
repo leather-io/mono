@@ -1,4 +1,4 @@
-import { StxCallContractParams } from '~/utils/leather-sdk';
+import { type StxCallContractParams } from '~/utils/leather-sdk';
 
 import {
   WalletProviderUnavailableError,

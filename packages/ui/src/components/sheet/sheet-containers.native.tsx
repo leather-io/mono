@@ -1,5 +1,5 @@
-import { ComponentProps } from 'react';
-import { StyleSheet } from 'react-native';
+import { type ComponentProps } from 'react';
+import { StyleSheet, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -9,9 +9,9 @@ import {
   BottomSheetVirtualizedList,
   useBottomSheetScrollableCreator,
 } from '@gorhom/bottom-sheet';
-import { BottomSheetScrollViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types';
-import { BottomSheetViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types';
-import { FlashList, FlashListProps } from '@shopify/flash-list';
+import { type BottomSheetScrollViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types';
+import { type BottomSheetViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types';
+import { FlashList, type FlashListProps } from '@shopify/flash-list';
 
 import { useTheme } from '../../hooks/use-theme.native';
 
@@ -49,8 +49,11 @@ export function SheetScrollView({
   const styles = useSheetStyles();
   return (
     <BottomSheetScrollView
-      style={StyleSheet.flatten([styles.root, style])}
-      contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
+      style={StyleSheet.flatten<ViewStyle>([styles.root, style])}
+      contentContainerStyle={StyleSheet.flatten<ViewStyle>([
+        styles.contentContainer,
+        contentContainerStyle,
+      ])}
       {...props}
     />
   );
@@ -64,8 +67,11 @@ export function SheetSectionList({
   const styles = useSheetStyles();
   return (
     <BottomSheetSectionList
-      style={StyleSheet.flatten([styles.root, style])}
-      contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
+      style={StyleSheet.flatten<ViewStyle>([styles.root, style])}
+      contentContainerStyle={StyleSheet.flatten<ViewStyle>([
+        styles.contentContainer,
+        contentContainerStyle,
+      ])}
       {...props}
     />
   );
@@ -79,8 +85,11 @@ export function SheetVirtualizedList({
   const styles = useSheetStyles();
   return (
     <BottomSheetVirtualizedList
-      style={StyleSheet.flatten([styles.root, style])}
-      contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
+      style={StyleSheet.flatten<ViewStyle>([styles.root, style])}
+      contentContainerStyle={StyleSheet.flatten<ViewStyle>([
+        styles.contentContainer,
+        contentContainerStyle,
+      ])}
       {...props}
     />
   );

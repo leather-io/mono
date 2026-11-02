@@ -1,20 +1,22 @@
 import {
   JsonRpcErrorCode,
-  MethodParams,
-  StacksProvider,
+  type MethodParams,
+  type StacksProvider,
   disconnect,
   getSelectedProvider,
   getSelectedProviderId,
   request,
   setSelectedProviderId,
 } from '@stacks/connect';
-import { ContractIdString } from '@stacks/transactions';
+import { z } from 'zod';
 import { getLeatherMockMode } from '~/constants/environment';
-import { StxCallContractParams, leather } from '~/utils/leather-sdk';
-import { WalletAddressEntry, normalizeWalletAddresses } from '~/utils/wallet-addresses';
+import { type StxCallContractParams, leather } from '~/utils/leather-sdk';
+import { type WalletAddressEntry, normalizeWalletAddresses } from '~/utils/wallet-addresses';
 
 import { RpcErrorCode } from '@leather.io/rpc';
 import { delay } from '@leather.io/utils';
+
+const userRejectionErrorCode: number = JsonRpcErrorCode.UserRejection;
 
 export const leatherProviderId = 'LeatherProvider';
 
@@ -30,23 +32,49 @@ const connectAddressesParams: ConnectAddressesParams = {
   addresses: ['payment', 'ordinals', 'stacks'],
 };
 
+const revokePermissionsTimeoutMs = 2000;
+
 interface RawWalletProvider {
   request(method: string): Promise<unknown>;
 }
 
-const revokePermissionsTimeoutMs = 2000;
+function hasRequestFunction(value: unknown) {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'request' in value &&
+    typeof value.request === 'function'
+  );
+}
+
+const rawWalletProviderSchema = z.custom<RawWalletProvider>(hasRequestFunction);
+
+const stacksProviderSchema = z.custom<StacksProvider>(hasRequestFunction);
+
+const contractIdStringSchema = z.templateLiteral([z.string(), '.', z.string()]);
+
+async function requestWalletDisconnect(provider: RawWalletProvider) {
+  await provider.request('wallet_disconnect');
+  return true;
+}
+
+async function waitForRevokePermissionsTimeout() {
+  await delay(revokePermissionsTimeoutMs);
+  return false;
+}
 
 export async function revokeWalletPermissions(): Promise<boolean> {
   const providerId = getSelectedProviderId();
   if (!providerId || providerId === leatherProviderId) return false;
-  const provider: RawWalletProvider | undefined = getSelectedProvider();
-  if (!provider) return false;
+  const parsedProvider = rawWalletProviderSchema.safeParse(getSelectedProvider());
+  if (!parsedProvider.success) return false;
+  const provider = parsedProvider.data;
   try {
     // Only a completed wallet_disconnect revokes the session. A timeout or a
     // throw leaves it intact, and callers clear stored addresses off this.
     return await Promise.race([
-      provider.request('wallet_disconnect').then(() => true),
-      delay(revokePermissionsTimeoutMs).then(() => false),
+      requestWalletDisconnect(provider),
+      waitForRevokePermissionsTimeout(),
     ]);
   } catch {
     return false;
@@ -90,7 +118,7 @@ const userRejectionErrorCodes: number[] = [
 export function isUserRejectionError(error: unknown): boolean {
   const code = getRpcErrorCode(error);
   if (code === null) return false;
-  if (code === JsonRpcErrorCode.UserRejection) {
+  if (code === userRejectionErrorCode) {
     return getConnectedWalletId() !== leatherProviderId;
   }
   return userRejectionErrorCodes.includes(code);
@@ -138,20 +166,18 @@ export function markLeatherAsSelectedWallet(): void {
   setSelectedProviderId(leatherProviderId);
 }
 
-function isContractIdString(value: string): value is ContractIdString {
-  return value.includes('.');
-}
-
 export async function walletStxCallContract(
   params: StxCallContractParams
 ): Promise<WalletTransactionResult> {
   if (getLeatherMockMode()) return leather.stxCallContract(params);
-  const { contract } = params;
-  if (!isContractIdString(contract)) {
-    throw new Error(`Invalid contract identifier: ${contract}`);
+  const parsedContract = contractIdStringSchema.safeParse(params.contract);
+  if (!parsedContract.success) {
+    throw new Error(`Invalid contract identifier: ${params.contract}`);
   }
-  const provider: StacksProvider | undefined = getSelectedProvider();
-  if (!provider) throw new WalletProviderUnavailableError();
+  const contract = parsedContract.data;
+  const parsedProvider = stacksProviderSchema.safeParse(getSelectedProvider());
+  if (!parsedProvider.success) throw new WalletProviderUnavailableError();
+  const provider = parsedProvider.data;
   return request({ ...connectRequestOptions, provider }, 'stx_callContract', {
     ...params,
     contract,

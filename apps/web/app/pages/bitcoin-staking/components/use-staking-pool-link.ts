@@ -1,5 +1,5 @@
 import {
-  StakingPoolSlug,
+  type StakingPoolSlug,
   getPoolBySignerManager,
   stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';

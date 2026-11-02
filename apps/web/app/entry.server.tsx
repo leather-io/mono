@@ -2,7 +2,7 @@ import { renderToReadableStream } from 'react-dom/server';
 import {
   type AppLoadContext,
   type EntryContext,
-  HandleErrorFunction,
+  type HandleErrorFunction,
   ServerRouter,
 } from 'react-router';
 

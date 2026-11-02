@@ -1,7 +1,7 @@
 import { useAccounts } from '@/store/accounts/accounts.read';
 
-import { AccountId } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
+import { type AccountId } from '@leather.io/models';
+import { type SheetRef } from '@leather.io/ui/native';
 
 import { AccountSelectorSheetLayout } from './account-selector-sheet.layout';
 

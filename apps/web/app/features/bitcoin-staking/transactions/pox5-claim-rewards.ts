@@ -1,5 +1,5 @@
-import { ClarityValue, noneCV, principalCV, serializeCV, uintCV } from '@stacks/transactions';
-import { StxCallContractParams } from '~/utils/leather-sdk';
+import { type ClarityValue, noneCV, principalCV, serializeCV, uintCV } from '@stacks/transactions';
+import { type StxCallContractParams } from '~/utils/leather-sdk';
 
 // Claims target the pool's signer-manager contract, not pox-5, and are
 // per-cycle: claiming several cycles means one transaction each. The staker

@@ -1,7 +1,7 @@
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
-import { ExecutionConstraint, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type ExecutionConstraint, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 

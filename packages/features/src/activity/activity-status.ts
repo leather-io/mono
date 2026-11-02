@@ -2,9 +2,7 @@ import { type Activity, type BaseOnChainActivity, isFungibleAsset } from '@leath
 
 import type { ActivityStatusIndicatorId } from './types';
 
-export function hasActivityStatus(activity: Activity): activity is Activity & {
-  status: BaseOnChainActivity['status'];
-} {
+export function hasActivityStatus(activity: Activity) {
   return 'status' in activity;
 }
 

@@ -1,5 +1,9 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 
+interface LearnSectionLinkContext {
+  parent: { linkType?: string } | undefined;
+}
+
 export const learnSectionType = defineType({
   name: 'learnSection',
   title: 'Learn Section',
@@ -70,13 +74,13 @@ export const learnSectionType = defineType({
               name: 'guideSlug',
               title: 'Guide Slug',
               type: 'string',
-              hidden: ({ parent }) => parent?.linkType !== 'guide',
+              hidden: ({ parent }: LearnSectionLinkContext) => parent?.linkType !== 'guide',
             }),
             defineField({
               name: 'externalUrl',
               title: 'External URL',
               type: 'url',
-              hidden: ({ parent }) => parent?.linkType !== 'url',
+              hidden: ({ parent }: LearnSectionLinkContext) => parent?.linkType !== 'url',
             }),
           ],
         }),

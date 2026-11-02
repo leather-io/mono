@@ -7,11 +7,6 @@ import {
 
 export type SignedMessageType = 'utf8' | 'structured';
 
-export interface SignatureData {
-  signature: string;
-  publicKey: string;
-}
-
 export type StructuredMessageDataDomain = TupleCV<{
   name: StringAsciiCV;
   version: StringAsciiCV;
@@ -41,10 +36,6 @@ export function isStructuredMessageType(messageType: SignedMessageType) {
 
 export function isUtf8MessageType(messageType: SignedMessageType) {
   return messageType === 'utf8';
-}
-
-export function isSignableMessageType(messageType: unknown) {
-  return messageType === 'utf8' || messageType === 'structured';
 }
 
 interface WhenSignableMessageOfType<T> {

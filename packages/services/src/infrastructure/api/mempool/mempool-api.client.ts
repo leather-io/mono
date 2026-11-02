@@ -2,10 +2,11 @@ import axios, { AxiosError } from 'axios';
 import { inject } from 'inversify';
 
 import { deriveAddressesFromDescriptor } from '@leather.io/bitcoin';
+import type { BitcoinTx } from '@leather.io/models';
 
 import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
-import { selectBitcoinNetworkMode } from '../../settings/settings.selectors';
+import { selectBitcoinApiUrl, selectBitcoinNetworkMode } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { ApiRequestOptions } from '../types';
 import {
@@ -17,6 +18,15 @@ import {
   mempoolUtxoSchema,
 } from './mempool-api.schema';
 import { getMempoolUrlFromUserSettings } from './mempool-api.utils';
+
+const redactedWitness = ['reacted'];
+
+function redactVinWitness(txs: BitcoinTx[]): BitcoinTx[] {
+  return txs.map(tx => ({
+    ...tx,
+    vin: tx.vin?.map(vin => (vin ? { ...vin, witness: redactedWitness } : vin)),
+  }));
+}
 
 export class MempoolApiClient {
   constructor(
@@ -136,5 +146,37 @@ export class MempoolApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cache.fetchWithCache(['mempool-api-transaction-by-txid', txid], fetchFn);
+  }
+
+  public async fetchAddressBitcoinTxs(
+    address: string,
+    { signal }: ApiRequestOptions = {}
+  ): Promise<BitcoinTx[]> {
+    const { data } = await axios.get<BitcoinTx[]>(
+      `${selectBitcoinApiUrl(this.settings.getSettings())}/address/${address}/txs`,
+      { signal }
+    );
+    return redactVinWitness(data);
+  }
+
+  public async fetchTransactionHex(
+    txid: string,
+    { signal }: ApiRequestOptions = {}
+  ): Promise<string> {
+    const { data } = await axios.get<string>(
+      `${selectBitcoinApiUrl(this.settings.getSettings())}/tx/${txid}/hex`,
+      { responseType: 'text', signal }
+    );
+    return data;
+  }
+
+  public async broadcastTransaction(txHex: string): Promise<Response> {
+    return fetch(`${selectBitcoinApiUrl(this.settings.getSettings())}/tx`, {
+      method: 'POST',
+      body: txHex,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+    });
   }
 }

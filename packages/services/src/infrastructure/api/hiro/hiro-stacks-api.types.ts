@@ -1,18 +1,18 @@
-import { Metadata } from '@hirosystems/token-metadata-api-client';
+import { type FtMetadataResponse, type Metadata } from '@hirosystems/token-metadata-api-client';
 import {
-  AddressAssetsListResponse,
-  AddressBalanceResponse,
-  AddressTransactionWithTransfers,
-  AddressTransactionsWithTransfersListResponse,
-  MempoolTransaction,
-  MempoolTransactionListResponse,
-  NonFungibleTokenHolding,
-  ServerStatusResponse,
-  Transaction,
-  TransactionEvent,
-  TransactionFeeEstimateResponse,
+  type AddressAssetsListResponse,
+  type AddressBalanceResponse,
+  type AddressTransactionWithTransfers,
+  type AddressTransactionsWithTransfersListResponse,
+  type MempoolTransaction,
+  type MempoolTransactionListResponse,
+  type NonFungibleTokenHolding,
+  type ServerStatusResponse,
+  type Transaction,
+  type TransactionEvent,
+  type TransactionFeeEstimateResponse,
 } from '@stacks/stacks-blockchain-api-types';
-import { ClarityValue } from '@stacks/transactions';
+import { type ClarityValue } from '@stacks/transactions';
 
 export interface HiroPageRequest {
   limit: number;
@@ -150,6 +150,7 @@ export interface HiroBalanceChangesResponse {
 export type HiroAddressBalanceResponse = AddressBalanceResponse;
 export type HiroMempoolTransactionListResponse = MempoolTransactionListResponse;
 export type HiroMetadata = Metadata;
+export type HiroFtMetadata = FtMetadataResponse;
 export type HiroTransactionEvent = TransactionEvent;
 export type HiroTransactionEventsResponse = AddressAssetsListResponse;
 export type HiroStacksTransaction = Transaction;

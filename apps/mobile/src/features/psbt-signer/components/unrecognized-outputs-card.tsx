@@ -2,7 +2,7 @@ import { Balance } from '@/components/balance/balance';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { t } from '@lingui/core/macro';
 
-import { PsbtOutput } from '@leather.io/bitcoin';
+import { type PsbtOutput } from '@leather.io/bitcoin';
 import { Avatar, Cell, ErrorTriangleIcon } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
 

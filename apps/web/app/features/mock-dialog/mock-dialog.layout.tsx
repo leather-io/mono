@@ -1,12 +1,13 @@
 import { Flex, styled } from 'leather-styles/jsx';
 import { Dialog as RadixDialog } from 'radix-ui';
+import { type MockRpcRequest } from '~/mocks/extension/event-bus';
 
-import { RpcRequests } from '@leather.io/rpc';
+import { type RpcResponses } from '@leather.io/rpc';
 import { Button, CloseIcon, Flag, Sheet } from '@leather.io/ui';
 
 interface MockLeatherDialogLayoutProps {
-  payload: RpcRequests;
-  response: any;
+  payload: MockRpcRequest;
+  response: RpcResponses | null;
   onClose(): void;
   onResolve(): void;
   onReject(): void;

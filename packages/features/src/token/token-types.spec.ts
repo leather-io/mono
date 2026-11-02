@@ -67,6 +67,10 @@ describe('parseTokenDetailsAssetId', () => {
   it('returns null for invalid asset ID format', () => {
     expect(parseTokenDetailsAssetId('invalid-asset-id')).toBeNull();
   });
+
+  it('returns null for a bare protocol without an id', () => {
+    expect(parseTokenDetailsAssetId('nativeBtc')).toBeNull();
+  });
 });
 
 describe('round-trip conversion', () => {

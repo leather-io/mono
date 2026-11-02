@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { Sheet, SheetRef } from '@leather.io/ui/native';
+import { Sheet, type SheetRef } from '@leather.io/ui/native';
 
 interface RecipientQrSheetProps {
   sheetRef: SheetRef;

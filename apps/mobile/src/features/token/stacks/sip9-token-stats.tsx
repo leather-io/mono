@@ -3,7 +3,7 @@ import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuote } from '@leather.io/utils';
 

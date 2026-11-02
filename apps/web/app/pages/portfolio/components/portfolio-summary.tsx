@@ -1,7 +1,7 @@
-import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, Flex, styled } from 'leather-styles/jsx';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 
 interface PortfolioSummaryProps extends BoxProps {
   balance?: Money;

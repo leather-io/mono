@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import {
   RefreshControl as RNRefreshControl,
-  RefreshControlProps as RNRefreshControlProps,
+  type RefreshControlProps as RNRefreshControlProps,
 } from 'react-native';
 
 import { queryClient } from '@/queries/query';
@@ -14,8 +14,7 @@ function useRefreshHandler() {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     void queryClient.invalidateQueries({
-      predicate: query =>
-        !(query.queryKey[0] as string).startsWith(HttpCacheService.CACHE_KEY_PREFIX),
+      predicate: query => !String(query.queryKey[0]).startsWith(HttpCacheService.CACHE_KEY_PREFIX),
     });
     setTimeout(() => {
       setRefreshing(false);

@@ -1,4 +1,4 @@
-import { ViewMode } from '@/shared/types';
+import { type ViewMode } from '@/shared/types';
 
 import { LoadingItem } from './loading-item';
 import { LoadingWidget } from './loading-widget';

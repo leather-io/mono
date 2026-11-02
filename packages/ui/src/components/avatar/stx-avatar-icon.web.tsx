@@ -1,5 +1,5 @@
 import StacksIcon from '../../assets/icons/stacks.svg';
-import { Avatar, AvatarProps } from './avatar.web';
+import { Avatar, type AvatarProps } from './avatar.web';
 
 export function StxAvatarIcon(props: AvatarProps) {
   return (

@@ -12,7 +12,7 @@ import { makeExplorerTxLink, openExternalLink } from '~/utils/external-links';
 import { getStacksExplorerApiUrl } from '@leather.io/features';
 import { Button, ErrorCircleIcon, ExternalLinkIcon, Flag, LoadingSpinner } from '@leather.io/ui';
 
-import { Pox5TrackedTx, usePox5TxTracker } from '../hooks/use-pox5-tx-tracker';
+import { type Pox5TrackedTx, usePox5TxTracker } from '../hooks/use-pox5-tx-tracker';
 import { usePox5TransactionQuery } from '../queries/pox5-stacking.query';
 import { getPox5TxScreenState } from '../transactions/pox5-tx-status';
 

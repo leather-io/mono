@@ -1,14 +1,15 @@
-import { AccountAddresses } from '@leather.io/models';
+import { type AccountAddresses } from '@leather.io/models';
 
-import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { type HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import {
-  HiroPoxInfoResponse,
-  HiroStakingBond,
+  type HiroPoxInfoResponse,
+  type HiroStakingBond,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
-  LeatherApiClient,
-  LeatherApiStakingBond,
+  type LeatherApiClient,
+  type LeatherApiStakingBond,
 } from '../infrastructure/api/leather/leather-api.client';
+import { createMock } from '../test/create-mock';
 import { BitcoinStakingService } from './bitcoin-staking.service';
 
 const hdAccount: AccountAddresses = {
@@ -80,13 +81,13 @@ describe(BitcoinStakingService.name, () => {
   const getPrincipalStakingBonds = vi.fn();
 
   const service = new BitcoinStakingService(
-    { fetchStakingBonds } as unknown as LeatherApiClient,
-    {
+    createMock<LeatherApiClient>({ fetchStakingBonds }),
+    createMock<HiroStacksApiClient>({
       getPoxInfo,
       getStakingBond,
       getStakingBonds,
       getPrincipalStakingBonds,
-    } as unknown as HiroStacksApiClient
+    })
   );
 
   beforeEach(() => {

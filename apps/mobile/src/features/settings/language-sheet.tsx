@@ -4,14 +4,14 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
-import { AvailableLanguageCode, supportedLanguages } from '@/i18n/languages';
+import { type AvailableLanguageCode, supportedLanguages } from '@/i18n/languages';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 import { useTheme } from '@shopify/restyle';
 import { reloadAppAsync } from 'expo';
 import { entries } from 'remeda';
 
-import { Box, GlobeIcon, SheetRef, Theme } from '@leather.io/ui/native';
+import { Box, GlobeIcon, type SheetRef, type Theme } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
@@ -29,7 +29,7 @@ export function LanguageSheet({ sheetRef }: LanguageSheetProps) {
     }
     setLanguagePreference(settings, language);
     setIsSwitchingLanguages(true);
-    setTimeout(reloadAppAsync, splashDuration);
+    setTimeout(() => void reloadAppAsync(), splashDuration);
   }
 
   return (

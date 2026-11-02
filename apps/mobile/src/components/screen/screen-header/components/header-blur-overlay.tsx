@@ -1,4 +1,4 @@
-import Animated, { SharedValue, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { type SharedValue, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 
 import { useSettings } from '@/store/settings/settings';
 import { LinearGradient } from 'expo-linear-gradient';

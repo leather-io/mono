@@ -1,6 +1,6 @@
 import { SpinnerIcon } from '@/components/spinner-icon';
 
-import { Box, BoxProps } from '@leather.io/ui/native';
+import { Box, type BoxProps } from '@leather.io/ui/native';
 
 export function SendFormContainer(props: BoxProps) {
   return <Box px="5" gap="3" flex={1} {...props} />;

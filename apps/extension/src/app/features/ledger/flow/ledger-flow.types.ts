@@ -2,9 +2,10 @@ import type * as btc from '@scure/btc-signer';
 import type { StacksTransactionWire } from '@stacks/transactions';
 
 import type { SupportedBlockchains } from '@leather.io/models';
+import type { SignatureData } from '@leather.io/stacks';
 
 import type { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
-import type { SignatureData, UnsignedMessage } from '@shared/signature/signature-types';
+import type { UnsignedMessage } from '@shared/signature/signature-types';
 
 export type VerifyAddressVariant = 'btcNativeSegwit' | 'btcTaproot' | 'btcMultisig' | 'stx';
 

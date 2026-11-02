@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
-import { LearnArticle } from '~/content/learn-content';
+import { type LearnArticle } from '~/content/learn-content';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
 import { isString } from '@leather.io/utils';

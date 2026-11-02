@@ -4,7 +4,7 @@ import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { StacksFilledCircleIcon, StxAvatarIcon } from '@leather.io/ui/native';
 
 export function StacksDepositTokenCell({ accountIndex, fingerprint }: AccountId) {

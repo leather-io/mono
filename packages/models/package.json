@@ -2,7 +2,7 @@
   "name": "@leather.io/models",
   "author": "Leather.io contact@leather.io",
   "description": "Leather models and types",
-  "version": "0.63.0",
+  "version": "0.63.1",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/models",
   "repository": {
@@ -32,7 +32,7 @@
     "@stacks/blockchain-api-client": "9.4.0",
     "@stacks/stacks-blockchain-api-types": "7.14.1",
     "bignumber.js": "9.1.2",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

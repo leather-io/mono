@@ -1,5 +1,9 @@
-import { ComponentProps } from 'react';
-import Animated, { SharedValue, useAnimatedProps, useAnimatedStyle } from 'react-native-reanimated';
+import { type ComponentProps } from 'react';
+import Animated, {
+  type SharedValue,
+  useAnimatedProps,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 interface FadingViewProps extends ComponentProps<typeof Animated.View> {
   opacity: SharedValue<number>;

@@ -8,9 +8,14 @@ export function useDeviceId() {
   const [value, setValue] = useState<Awaited<DeviceId>>(null);
 
   useEffect(() => {
-    getDeviceId()
-      .then(id => setValue(id))
-      .catch(() => setValue(null));
+    async function loadDeviceId() {
+      try {
+        setValue(await getDeviceId());
+      } catch {
+        setValue(null);
+      }
+    }
+    void loadDeviceId();
   }, []);
 
   return value;

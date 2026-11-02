@@ -13,7 +13,7 @@ import { SendFormLoadingSpinner } from '@/features/send/components/send-form-lay
 import { analytics } from '@/utils/analytics';
 import { type ZodSchema } from 'zod';
 
-import { AccountId, type FungibleCryptoAsset } from '@leather.io/models';
+import { type AccountId, type FungibleCryptoAsset } from '@leather.io/models';
 
 interface RecipientProps {
   value: string;
@@ -62,7 +62,7 @@ export const Recipient = memo(
                 onQrButtonPress={onQrButtonPress}
                 asset={asset}
                 activity={data}
-                onSelectAddress={onSelectAddress}
+                onSelectAddress={address => void onSelectAddress(address)}
                 recipientSchema={recipientSchema}
                 currentAccount={currentAccount}
               />
@@ -70,7 +70,10 @@ export const Recipient = memo(
           })}
         </RecipientSheet>
         <RecipientQrSheet sheetRef={scannerSheetRef}>
-          <RecipientQrScanner onClose={closeScannerSheet} onScanned={onQrScanned} />
+          <RecipientQrScanner
+            onClose={closeScannerSheet}
+            onScanned={data => void onQrScanned(data)}
+          />
         </RecipientQrSheet>
         <RecipientGuardSheet
           sheetRef={guardSheetRef}

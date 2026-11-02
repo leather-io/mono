@@ -1,23 +1,16 @@
 import type { ClarityAbi } from '@stacks/transactions';
 import { type UseQueryResult, useQuery } from '@tanstack/react-query';
 
-import { StacksQueryPrefixes } from '@leather.io/query';
+import { createStacksContractInterfaceQueryConfig } from '@leather.io/queries';
 
-import { useStacksClient } from './stacks-client';
-
-const queryOptions = {
-  staleTime: 30 * 60 * 1000,
-  refetchOnWindowFocus: false,
-} as const;
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useGetContractInterface(
   contractAddress: string,
   contractName: string
 ): UseQueryResult<ClarityAbi> {
-  const client = useStacksClient();
-  return useQuery({
-    queryKey: [StacksQueryPrefixes.GetContractInterface, contractAddress, contractName],
-    queryFn: () => client.getContractInterface(contractAddress, contractName),
-    ...queryOptions,
-  });
+  const settings = useUserSettings();
+  return useQuery(
+    createStacksContractInterfaceQueryConfig(contractAddress, contractName, settings)
+  );
 }

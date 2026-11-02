@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transactions';
 import { Box, Stack } from 'leather-styles/jsx';
 
-import { InfoCircleIcon } from '@leather.io/ui';
+import { BasicTooltip, InfoCircleIcon } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote, convertAmountToBaseUnit, sumMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -22,8 +22,7 @@ import {
 import { useStacksBroadcastTransaction } from '@app/common/transactions/stacks/use-stacks-broadcast-transaction';
 import { Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
+import { useCryptoCurrencyMarketData } from '@app/query/common/market-data/market-data.hooks';
 
 import type { ProposalSentSummaryState } from '../../../sent-summary/proposal-sent-summary';
 import { stacksConfirmationRouteStateSchema } from '../../hooks/use-send-form-navigate';
@@ -36,7 +35,7 @@ export function StacksSendFormConfirmation() {
     decimals,
     showFeeChangeWarning = false,
   } = useRouteState(stacksConfirmationRouteStateSchema);
-  const tokenMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
+  const tokenMarketData = useCryptoCurrencyMarketData('STX');
 
   const { symbol = 'STX' } = useParams();
 

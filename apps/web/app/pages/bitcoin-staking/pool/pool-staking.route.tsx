@@ -1,4 +1,4 @@
-import { MetaDescriptor, data } from 'react-router';
+import { type MetaDescriptor, data } from 'react-router';
 
 import { stakingPoolSlugSchema } from '~/data/bitcoin-staking-data';
 import { StartStaking } from '~/features/bitcoin-staking/start-staking/start-staking';
@@ -6,7 +6,7 @@ import { StackingClientProvider } from '~/features/stacking/providers/stacking-c
 import { Page } from '~/layouts/page/page';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
-import { Route } from './+types/pool-staking.route';
+import { type Route } from './+types/pool-staking.route';
 
 export function loader({ params }: Route.LoaderArgs) {
   const { success, data: poolSlug } = stakingPoolSlugSchema.safeParse(params.slug);

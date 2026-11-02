@@ -1,4 +1,4 @@
-import { chunk, filter, pipe, take } from 'remeda';
+import { chunk, filter, isDefined, map, pipe, take } from 'remeda';
 
 import { type MarketStats, type Sip10Asset, isSip10Asset } from '@leather.io/models';
 import type { AssetListItem } from '@leather.io/services';
@@ -10,17 +10,21 @@ export interface TrendingToken extends AssetListItem {
   readonly marketStats: MarketStats;
 }
 
-export function isTrendingToken(item: AssetListItem): item is TrendingToken {
-  return (
-    isSip10Asset(item.asset) &&
-    !!item.marketStats &&
-    typeof item.marketStats.priceChange['1d'] === 'number'
-  );
+function toTrendingToken(item: AssetListItem): TrendingToken | undefined {
+  const { asset, marketStats } = item;
+  if (!isSip10Asset(asset) || !marketStats || typeof marketStats.priceChange['1d'] !== 'number') {
+    return undefined;
+  }
+  return { ...item, asset, marketStats };
+}
+
+export function isTrendingToken(item: AssetListItem) {
+  return toTrendingToken(item) !== undefined;
 }
 
 export function prepTrendingItems(items: AssetListItem[]) {
   const numRows = 3;
-  const filtered = pipe(items, filter(isTrendingToken), take(15));
+  const filtered = pipe(items, map(toTrendingToken), filter(isDefined), take(15));
   if (filtered.length === 0) return [];
   const rowSize = Math.ceil(filtered.length / numRows);
   return pipe(filtered, toColumnMajorRows(rowSize), chunk(rowSize));

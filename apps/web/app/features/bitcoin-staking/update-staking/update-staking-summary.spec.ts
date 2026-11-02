@@ -1,6 +1,6 @@
 import {
-  SignerManagerFacts,
-  UpdateStakeSummaryInput,
+  type SignerManagerFacts,
+  type UpdateStakeSummaryInput,
   buildSignerManagerOptions,
   buildUpdateStakeSummaryRows,
   currentCustomRowId,

@@ -6,7 +6,7 @@ import { useGetBnsName } from '@/queries/bns/bns.query';
 import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-preference';
 import { t } from '@lingui/core/macro';
 
-import { Sip9Asset } from '@leather.io/models';
+import { type Sip9Asset } from '@leather.io/models';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenDetailsCard } from '../components/token-details-card';

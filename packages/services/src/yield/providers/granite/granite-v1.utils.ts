@@ -1,4 +1,4 @@
-import { ClarityValue, cvToString, getCVTypeString } from '@stacks/transactions';
+import { type ClarityValue, cvToString, getCVTypeString } from '@stacks/transactions';
 
 import {
   getClarityPrincipal,
