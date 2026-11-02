@@ -25,6 +25,16 @@ export class FungibleAssetService {
     }
   }
 
+  public async getSwapAsset(
+    assetId: FungibleAssetId,
+    signal?: AbortSignal
+  ): Promise<FungibleCryptoAsset | null> {
+    if (assetId.protocol === 'sip10') {
+      return await this.sip10AssetService.getSwapAsset(assetId.id, signal);
+    }
+    return await this.getAsset(assetId, signal);
+  }
+
   public async getAsset(
     assetId: FungibleAssetId,
     signal?: AbortSignal
