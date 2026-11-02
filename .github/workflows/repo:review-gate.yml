@@ -62,12 +62,19 @@ jobs:
         with:
           node-version: '22'
 
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: paths
+        with:
+          filters: .github/review-gate/sensitive-paths.yml
+          list-files: json
+
       - name: apply-path-rules
         id: prepare
         env:
           GITHUB_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          SENSITIVE_FILES: ${{ steps.paths.outputs.sensitive_files }}
         run: node .github/scripts/review-gate.mjs prepare
 
       - uses: $/.github/actions/install-claude-code

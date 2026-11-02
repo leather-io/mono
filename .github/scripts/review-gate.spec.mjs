@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { matchesGlob } from 'node:path';
 import { describe, it } from 'node:test';
 
 import {
@@ -13,11 +15,11 @@ import {
   describeSource,
   findApprovers,
   findDecisionComment,
-  findSensitiveFiles,
   findSharedHeadPullRequests,
   formatDecisionComment,
   hasWriteAccess,
   parseDecision,
+  parseSensitiveFiles,
   parseTier,
   requiredApprovals,
   resolveDecision,
@@ -55,17 +57,27 @@ function status(description, overrides = {}) {
 
 const pullRequest = { title: 'Tweak button copy', body: null };
 
-describe('findSensitiveFiles', () => {
-  it('matches wallet packages, signing code, CI and the lockfile', () => {
-    const sensitive = findSensitiveFiles([
-      file('packages/bitcoin/src/psbt.ts'),
-      file('apps/extension/src/app/features/ledger/flows/bitcoin-tx-signing/flow.tsx'),
-      file('apps/mobile/src/store/keychains/keychains.write.ts'),
-      file('.github/workflows/repo:code-checks.yml'),
-      file('pnpm-lock.yaml'),
-      file('apps/extension/src/background/background.ts'),
-    ]);
-    assert.equal(sensitive.length, 6);
+const sensitiveGlobs = readFileSync('.github/review-gate/sensitive-paths.yml', 'utf8')
+  .split('\n')
+  .flatMap(line => {
+    const match = line.match(/^\s+- '(.+)'$/);
+    return match ? [match[1]] : [];
+  });
+
+function isSensitive(path) {
+  return sensitiveGlobs.some(glob => matchesGlob(path, glob));
+}
+
+describe('sensitive-paths.yml', () => {
+  it('only lists globs that match a file in the repo, or guard one that must not appear', () => {
+    const guardedAbsentFiles = new Set(['.mcp.json']);
+    const tracked = execFileSync('git', ['ls-files'], { encoding: 'utf8' }).trim().split('\n');
+    for (const glob of sensitiveGlobs.filter(glob => !guardedAbsentFiles.has(glob))) {
+      assert.ok(
+        tracked.some(path => matchesGlob(path, glob)),
+        `${glob} matches no tracked file`
+      );
+    }
   });
 
   it('matches the real key, signing, RPC and manifest files in the repo', () => {
@@ -115,69 +127,62 @@ describe('findSensitiveFiles', () => {
     ];
     for (const path of paths) {
       assert.ok(existsSync(path), `${path} no longer exists`);
-      assert.deepEqual(findSensitiveFiles([file(path)]), [path], path);
+      assert.ok(isSensitive(path), path);
     }
   });
 
-  it('matches dependency manifests and lockfiles anywhere in the repo', () => {
-    const sensitive = findSensitiveFiles([
-      file('package.json'),
-      file('apps/mobile/package.json'),
-      file('packages/ui/package.json'),
-      file('pnpm-lock.yaml'),
-      file('pnpm-workspace.yaml'),
-      file('apps/mobile/ios/Podfile.lock'),
-      file('tools/pnpm-workspace.yaml'),
-      file('tools/package-lock.json'),
-    ]);
-    assert.equal(sensitive.length, 8);
-  });
-
-  it('matches Claude configuration', () => {
-    const sensitive = findSensitiveFiles([
-      file('.claude/settings.json'),
-      file('.claude/skills/pr-review/SKILL.md'),
-      file('.mcp.json'),
-    ]);
-    assert.equal(sensitive.length, 3);
-  });
-
-  it('checks the old path of a rename', () => {
-    const sensitive = findSensitiveFiles([
-      file('docs/old-checks.yml', {
-        previous_filename: '.github/workflows/repo:code-checks.yml',
-        status: 'renamed',
-        additions: 0,
-        deletions: 0,
-        patch: undefined,
-      }),
-    ]);
-    assert.deepEqual(sensitive, ['.github/workflows/repo:code-checks.yml']);
+  it('matches dependency manifests, lockfiles and agent configuration anywhere', () => {
+    const paths = [
+      'package.json',
+      'apps/mobile/package.json',
+      'pnpm-lock.yaml',
+      'pnpm-workspace.yaml',
+      'tools/pnpm-workspace.yaml',
+      'apps/mobile/ios/Podfile.lock',
+      'tools/package-lock.json',
+      'apps/web/wrangler.toml',
+      '.github/workflows/repo:code-checks.yml',
+      '.claude/skills/pr-review/SKILL.md',
+      '.mcp.json',
+      'apps/test-app/CLAUDE.md',
+      'apps/mobile/src/store/keychains/keychains.write.ts',
+      'apps/mobile/src/features/UseMnemonicSheet.tsx',
+    ];
+    for (const path of paths) assert.ok(isSensitive(path), path);
   });
 
   it('leaves display code next to the transaction files to the model', () => {
-    const sensitive = findSensitiveFiles([
-      file('apps/web/app/features/multisig/activity/multisig-transaction-activity-view.ts'),
-      file('apps/web/app/features/bitcoin-staking/components/pox5-tx-status-screen.tsx'),
-      file('apps/mobile/src/features/send/forms/stx/stx-form.tsx'),
-      file('apps/extension/src/app/pages/send/send-crypto-asset-form/form/stx/stx-send-form.tsx'),
-    ]);
-    assert.deepEqual(sensitive, []);
+    const paths = [
+      'apps/web/app/features/multisig/activity/multisig-transaction-activity-view.ts',
+      'apps/web/app/features/bitcoin-staking/components/pox5-tx-status-screen.tsx',
+      'apps/mobile/src/features/send/forms/stx/stx-form.tsx',
+      'apps/extension/src/app/pages/send/send-crypto-asset-form/form/stx/stx-send-form.tsx',
+      'packages/ui/src/components/button/button.web.tsx',
+      'apps/web/app/pages/home/home.tsx',
+      'README.md',
+    ];
+    for (const path of paths) assert.ok(!isSensitive(path), path);
+  });
+});
+
+describe('parseSensitiveFiles', () => {
+  it('reads the list of matched paths', () => {
+    assert.deepEqual(parseSensitiveFiles('["pnpm-lock.yaml"]'), ['pnpm-lock.yaml']);
+    assert.deepEqual(parseSensitiveFiles('[]'), []);
   });
 
-  it('ignores ordinary UI and docs', () => {
-    const sensitive = findSensitiveFiles([
-      file('packages/ui/src/components/button/button.web.tsx'),
-      file('apps/web/app/pages/home/home.tsx'),
-      file('README.md'),
-    ]);
-    assert.deepEqual(sensitive, []);
+  it('rejects anything but an array of paths', () => {
+    assert.throws(() => parseSensitiveFiles('{}'));
+    assert.throws(() => parseSensitiveFiles('[1]'));
+    assert.throws(() => parseSensitiveFiles('not json'));
   });
 });
 
 describe('decideByRules', () => {
   it('requires 2 reviews for sensitive paths', () => {
-    const decision = decideByRules(pullRequest, [file('packages/crypto/src/derive.ts')]);
+    const decision = decideByRules(pullRequest, [file('packages/crypto/src/derive.ts')], {
+      sensitiveFiles: ['packages/crypto/src/derive.ts'],
+    });
     assert.equal(decision?.reviews, 2);
   });
 
@@ -233,8 +238,8 @@ describe('decideByRules', () => {
     });
     const same = new Map([['apps/web/app/utils/old.ts', 'blob-1']]);
     const changed = new Map([['apps/web/app/utils/old.ts', 'blob-0']]);
-    assert.equal(decideByRules(pullRequest, [renamed], same), null);
-    assert.equal(decideByRules(pullRequest, [renamed], changed)?.reviews, 2);
+    assert.equal(decideByRules(pullRequest, [renamed], { baseBlobs: same }), null);
+    assert.equal(decideByRules(pullRequest, [renamed], { baseBlobs: changed })?.reviews, 2);
     assert.equal(decideByRules(pullRequest, [renamed])?.reviews, 2);
   });
 

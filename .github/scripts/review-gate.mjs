@@ -26,49 +26,6 @@ const writePermissions = new Set(['admin', 'write']);
 const humanAccountType = 'User';
 const decisiveReviewStates = new Set(['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED']);
 
-const sensitivePathPatterns = [
-  /^packages\/(?:bitcoin|crypto|stacks|rpc|provider|sdk)\//,
-  /^packages\/models\/src\/network\//,
-  /^packages\/utils\/src\/money\//,
-  /^packages\/services\/src\/(?:transactions|coin-selection|utxos|fees|multisig|compliance)\//,
-  /^apps\/extension\/src\/(?:background|content-scripts|inpage|shared\/crypto)\//,
-  /^apps\/extension\/src\/shared\/(?:rpc|storage|permissions|signature|workers|messaging)\//,
-  /^apps\/extension\/src\/shared\/(?:messages|message-types|inpage-types)\.ts$/,
-  /^apps\/extension\/src\/app\/store\/(?:in-memory-key|software-keys|app-permissions|policy|networks|ledger)\//,
-  /^apps\/extension\/src\/app\/store\/(?:session-restore|store|index)\.ts$/,
-  /^apps\/extension\/src\/app\/common\/transactions\//,
-  /^apps\/extension\/src\/app\/features\/ledger\//,
-  /^apps\/extension\/src\/app\/pages\/network\//,
-  /^apps\/extension\/src\/app\/pages\/send\/send-crypto-asset-form\/form\/[^/]+\/use-[^/]+\.tsx?$/,
-  /^apps\/extension\/(?:manifest\.config|vite\.config|inpage|content-script)\.ts$/,
-  /^apps\/extension\/tooling\//,
-  /^apps\/mobile\/src\/features\/(?:approver|recover-wallet)\//,
-  /^apps\/mobile\/src\/features\/browser\/approver-sheet\//,
-  /^apps\/mobile\/src\/features\/browser\/browser\/(?:message-routing|use-open-url|browser)\.tsx?$/,
-  /^apps\/mobile\/src\/features\/send\/forms\/[^/]+\/(?:use-[^/]+|[^/]+-schema|[^/]+-approver)\.tsx?$/,
-  /^apps\/mobile\/src\/features\/send\/hooks\/use-calculate-[^/]+\.ts$/,
-  /^apps\/mobile\/src\/store\/(?:secure-store|apps|migrations)\//,
-  /^apps\/mobile\/src\/store\/(?:key-store|index|storage-persistors)\.ts$/,
-  /^apps\/mobile\/src\/(?:hooks\/use-authentication|features\/settings\/app-authentication-sheet|app\/secure-your-wallet)\.tsx?$/,
-  /^apps\/mobile\/app\.config\.ts$/,
-  /^apps\/mobile\/(?:certs|fastlane)\//,
-  /^apps\/web\/workers\//,
-  /^apps\/web\/app\/(?:services\/web-auth-session\.service|store\/stacks-network|entry\.client|entry\.server|root)\.tsx?$/,
-  /^apps\/web\/app\/features\/multisig\/(?:transactions|network)\//,
-  /^apps\/web\/app\/features\/bitcoin-staking\/transactions\//,
-  /^apps\/web\/app\/features\/bitcoin-staking\/utils\/(?:pox5-contracts|contract-id)\.ts$/,
-  /(?:^|\/)rpc-[^/]+\//,
-  /(?:^|\/)[^/]*(?:keychain|signing|signer|secret-key|mnemonic)[^/]*(?:\/|$)/i,
-  /(?:^|\/)wrangler\.(?:jsonc?|toml)$/,
-  /(?:^|\/)package\.json$/,
-  /(?:^|\/)(?:pnpm-lock\.yaml|package-lock\.json|Podfile\.lock)$/,
-  /(?:^|\/)pnpm-workspace\.yaml$/,
-  /^\.github\//,
-  /^\.claude\//,
-  /^\.mcp\.json$/,
-  /(?:^|\/)CLAUDE\.md$/,
-];
-
 const tierSchema = {
   type: 'object',
   properties: {
@@ -112,16 +69,12 @@ export function buildClassifierArgs(systemPromptPath) {
   return buildClaudeArgs({ systemPromptPath, schema: tierSchema });
 }
 
-function isSensitivePath(path) {
-  return sensitivePathPatterns.some(pattern => pattern.test(path));
-}
-
-export function findSensitiveFiles(files) {
-  return files.flatMap(file =>
-    [file.previous_filename, file.filename].filter(
-      path => typeof path === 'string' && isSensitivePath(path)
-    )
-  );
+export function parseSensitiveFiles(value) {
+  const parsed = JSON.parse(value);
+  if (!Array.isArray(parsed) || !parsed.every(path => typeof path === 'string')) {
+    throw new Error('The sensitive files must be a JSON array of paths.');
+  }
+  return parsed;
 }
 
 const assetExtensionPattern =
@@ -169,8 +122,7 @@ export function buildPrompt(pullRequest, files) {
   return `Classify this pull request. It is given as JSON.\n\n${JSON.stringify(payload, null, 2)}`;
 }
 
-export function decideByRules(pullRequest, files, baseBlobs) {
-  const sensitiveFiles = findSensitiveFiles(files);
+export function decideByRules(pullRequest, files, { baseBlobs, sensitiveFiles = [] } = {}) {
   if (sensitiveFiles.length > 0) {
     return {
       reviews: 2,
@@ -425,6 +377,7 @@ async function runPrepare() {
   const github = createGitHubFromEnv();
   const number = Number(readRequiredEnv('PR_NUMBER'));
   const headSha = readRequiredEnv('HEAD_SHA');
+  const sensitiveFiles = parseSensitiveFiles(readRequiredEnv('SENSITIVE_FILES'));
   const files = await github.listFiles(number);
   const pullRequest = await github.getPullRequest(number);
   const baseBlobs = files.some(needsBaseBlob)
@@ -432,7 +385,7 @@ async function runPrepare() {
     : undefined;
   const ruleDecision =
     pullRequest.head.sha === headSha
-      ? decideByRules(pullRequest, files, baseBlobs)
+      ? decideByRules(pullRequest, files, { baseBlobs, sensitiveFiles })
       : {
           reviews: 2,
           confidence: 'high',
