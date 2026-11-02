@@ -163,7 +163,7 @@ describe(SwapService.name, () => {
         { providerId: 'alex-sdk', providerAssetId: 'alex-stx', assetId: getAssetId(stxAsset) },
       ]);
       const fungibleAssetService = createMock<FungibleAssetService>({
-        getVisibleAsset: vi.fn().mockResolvedValue(stxAsset),
+        getSwapAsset: vi.fn().mockResolvedValue(stxAsset),
       });
       const swapService = createSwapService(providers, { fungibleAssetService });
 
