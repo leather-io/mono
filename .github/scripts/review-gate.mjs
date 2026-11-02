@@ -62,7 +62,7 @@ const sensitivePathPatterns = [
   /(?:^|\/)wrangler\.(?:jsonc?|toml)$/,
   /(?:^|\/)package\.json$/,
   /(?:^|\/)(?:pnpm-lock\.yaml|package-lock\.json|Podfile\.lock)$/,
-  /^pnpm-workspace\.yaml$/,
+  /(?:^|\/)pnpm-workspace\.yaml$/,
   /^\.github\//,
   /^\.claude\//,
   /^\.mcp\.json$/,

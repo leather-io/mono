@@ -1,7 +1,0 @@
-{
-  "name": "install-claude-code",
-  "private": true,
-  "dependencies": {
-    "@anthropic-ai/claude-code": "2.1.301"
-  }
-}

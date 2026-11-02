@@ -127,9 +127,10 @@ describe('findSensitiveFiles', () => {
       file('pnpm-lock.yaml'),
       file('pnpm-workspace.yaml'),
       file('apps/mobile/ios/Podfile.lock'),
-      file('.github/actions/install-claude-code/package-lock.json'),
+      file('tools/pnpm-workspace.yaml'),
+      file('tools/package-lock.json'),
     ]);
-    assert.equal(sensitive.length, 7);
+    assert.equal(sensitive.length, 8);
   });
 
   it('matches Claude configuration', () => {
