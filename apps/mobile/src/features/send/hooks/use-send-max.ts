@@ -1,24 +1,36 @@
 import { useCallback, useEffect } from 'react';
-import { useWatch } from 'react-hook-form';
+import { type SetValueConfig } from 'react-hook-form';
 
 import { usePrevious } from '@/hooks/use-previous';
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 
-export function useSendMax(maxSpend: BigNumber, form: any) {
-  const isSendingMax = useWatch({ control: form.control, name: 'isSendingMax' });
-  const recipient = useWatch({ control: form.control, name: 'recipient' });
+interface SendMaxSetValue {
+  (name: 'amount', value: string, options?: SetValueConfig): void;
+  (name: 'isSendingMax', value: boolean, options?: SetValueConfig): void;
+}
+
+interface SendMaxForm {
+  isSendingMax: boolean;
+  recipient: string;
+  setValue: SendMaxSetValue;
+}
+
+export function useSendMax(
+  maxSpend: BigNumber,
+  { isSendingMax, recipient, setValue }: SendMaxForm
+) {
   const previousRecipient = usePrevious(recipient);
 
   const setAmountToMax = useCallback(() => {
-    form.setValue('amount', maxSpend.toString(), {
+    setValue('amount', maxSpend.toString(), {
       shouldTouch: true,
       shouldDirty: true,
       shouldValidate: true,
     });
-  }, [form, maxSpend]);
+  }, [setValue, maxSpend]);
 
   function setIsSendingMax() {
-    form.setValue('isSendingMax', true, {
+    setValue('isSendingMax', true, {
       shouldTouch: true,
       shouldDirty: true,
       shouldValidate: true,
@@ -30,7 +42,7 @@ export function useSendMax(maxSpend: BigNumber, form: any) {
       setIsSendingMax();
       setAmountToMax();
     } else {
-      form.setValue('isSendingMax', false);
+      setValue('isSendingMax', false);
     }
   }
 

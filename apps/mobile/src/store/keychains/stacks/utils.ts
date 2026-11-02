@@ -1,4 +1,4 @@
-import { StacksSigner } from '@leather.io/stacks';
+import { type StacksSigner } from '@leather.io/stacks';
 
 export function assertStacksSigner(
   signer: StacksSigner | undefined

@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { Box, Sheet, SheetProps, SheetRef } from '@leather.io/ui/native';
+import { Box, Sheet, type SheetProps, type SheetRef } from '@leather.io/ui/native';
 
 interface SheetLayoutProps extends Omit<SheetProps, 'children' | 'ref'> {
   sheetRef: SheetRef;

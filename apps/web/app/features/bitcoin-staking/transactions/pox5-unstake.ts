@@ -1,10 +1,10 @@
 import {
-  ClarityValue,
+  type ClarityValue,
   contractPrincipalCV,
   postConditionToHex,
   serializeCV,
 } from '@stacks/transactions';
-import { StxCallContractParams } from '~/utils/leather-sdk';
+import { type StxCallContractParams } from '~/utils/leather-sdk';
 
 import { parseContractId } from '../utils/contract-id';
 

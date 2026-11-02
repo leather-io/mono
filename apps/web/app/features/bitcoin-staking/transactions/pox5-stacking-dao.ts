@@ -1,12 +1,12 @@
 import { contractPrincipalCV, noneCV, serializeCV, uintCV } from '@stacks/transactions';
 import { getStackingDaoWrapperContract } from '~/data/bitcoin-staking-data';
-import { StxCallContractParams } from '~/utils/leather-sdk';
+import { type StxCallContractParams } from '~/utils/leather-sdk';
 
 import { parseContractId } from '../utils/contract-id';
-import { ClaimStakerRewardsArgs, getClaimStakerRewardsOptions } from './pox5-claim-rewards';
-import { StakeArgs, getStakeOptions } from './pox5-stake';
-import { StakeUpdateArgs, getStakeUpdateOptions } from './pox5-stake-update';
-import { UnstakeArgs, getUnstakeOptions } from './pox5-unstake';
+import { type ClaimStakerRewardsArgs, getClaimStakerRewardsOptions } from './pox5-claim-rewards';
+import { type StakeArgs, getStakeOptions } from './pox5-stake';
+import { type StakeUpdateArgs, getStakeUpdateOptions } from './pox5-stake-update';
+import { type UnstakeArgs, getUnstakeOptions } from './pox5-unstake';
 
 function requireStackingDaoWrapperContract(signerManagerContractId: string): string {
   const wrapperContractId = getStackingDaoWrapperContract(signerManagerContractId);

@@ -1,6 +1,6 @@
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 
-import { FeeTypes, Money } from '@leather.io/models';
+import { type FeeTypes, type Money } from '@leather.io/models';
 
 import { getBitcoinFeeData } from '../../utils';
 import { BaseFeeCard } from './base-fee-card';

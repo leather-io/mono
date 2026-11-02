@@ -2,7 +2,7 @@ import type React from 'react';
 
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
+import { BasicTooltip } from '@leather.io/ui';
 
 interface PrivateTextLayoutProps extends HTMLStyledProps<'span'> {
   children: React.ReactNode;

@@ -1,6 +1,6 @@
-import { ReactNode, useEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 
-import { Sheet, SheetInstance } from '@leather.io/ui/native';
+import { Sheet, type SheetInstance } from '@leather.io/ui/native';
 
 interface AssetSelectorSheetProps {
   isOpen: boolean;

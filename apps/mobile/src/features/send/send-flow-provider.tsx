@@ -1,8 +1,8 @@
-import { ReactNode, createContext, useContext, useReducer } from 'react';
+import { type ReactNode, createContext, useContext, useReducer } from 'react';
 
-import { InputCurrencyMode } from '@/utils/types';
+import { type InputCurrencyMode } from '@/utils/types';
 
-import { AccountId, FungibleCryptoAsset } from '@leather.io/models';
+import { type AccountId, type FungibleCryptoAsset } from '@leather.io/models';
 
 interface SendState {
   selectedAsset: FungibleCryptoAsset | null;

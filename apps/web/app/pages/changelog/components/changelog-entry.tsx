@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import { Link } from 'react-router';
 
-import { Box, BoxProps, HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import PortableTextContent from '~/components/content/portable-text-content';
 import { urlFor } from '~/constants/cms-client';
 

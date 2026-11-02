@@ -1,7 +1,11 @@
-import { PostCondition } from '@stacks/stacks-blockchain-api-types';
+import { type PostCondition } from '@stacks/stacks-blockchain-api-types';
 import BigNumber from 'bignumber.js';
 
-import { CryptoAsset, CryptoAssetCategories, CryptoAssetCategory } from '@leather.io/models';
+import {
+  type CryptoAsset,
+  CryptoAssetCategories,
+  type CryptoAssetCategory,
+} from '@leather.io/models';
 import { isDefined, sumNumbers, uniqueArray } from '@leather.io/utils';
 
 import {
@@ -9,11 +13,11 @@ import {
   getContractPrincipalFromAddressAndName,
 } from '../assets/stacks-asset.utils';
 import {
-  HiroStacksMempoolTransaction,
-  HiroStacksTransaction,
-  HiroTransactionEvent,
+  type HiroStacksMempoolTransaction,
+  type HiroStacksTransaction,
+  type HiroTransactionEvent,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { isMempoolTx } from './stacks-mempool-tx.utils';
+import { getStacksTxByStatus } from './stacks-mempool-tx.utils';
 
 export interface StacksAssetTransfer {
   assetCategory: CryptoAssetCategory;
@@ -125,9 +129,10 @@ export function getStacksAssetTransfers(
   tx: HiroStacksTransaction | HiroStacksMempoolTransaction,
   txEvents: HiroTransactionEvent[]
 ): StacksAssetTransfer[] {
-  if (isMempoolTx(tx)) {
+  const { mempoolTx } = getStacksTxByStatus(tx);
+  if (mempoolTx) {
     // Get all pending transfers (stx, ft, nft) directly from PC
-    return tx.post_conditions.map(mapTransferFromPostCondition).filter(isDefined);
+    return mempoolTx.post_conditions.map(mapTransferFromPostCondition).filter(isDefined);
   }
   const transfers: StacksAssetTransfer[] = [];
   // If confirmed and has PCs, take transfers only from events where PC amount > 0

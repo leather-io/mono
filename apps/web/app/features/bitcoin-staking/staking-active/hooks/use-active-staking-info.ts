@@ -1,15 +1,15 @@
 import { usePox5CycleClock } from '../../hooks/use-pox5-cycle-clock';
-import { Pox5Position, usePox5Position } from '../../hooks/use-pox5-position';
+import { type Pox5Position, usePox5Position } from '../../hooks/use-pox5-position';
 import {
   usePox5PoxInfoQuery,
   usePox5SecondsUntilNextCycleQuery,
 } from '../../queries/pox5-node.query';
 import {
-  Pox5ClaimableRewards,
+  type Pox5ClaimableRewards,
   usePox5ClaimableRewards,
   usePox5PayoutPreferenceQuery,
 } from '../../queries/pox5-stacking.query';
-import { Pox5PayoutPreference } from '../../transactions/pox5-signer-calldata';
+import { type Pox5PayoutPreference } from '../../transactions/pox5-signer-calldata';
 import {
   canPayoutInBtc,
   customPoolPayoutMode,
@@ -59,12 +59,13 @@ export function useActiveStakingInfo(): UseActiveStakingInfoResult {
   const poxInfo = poxInfoQuery.data;
   const endCycle = position.info.firstRewardCycle + position.info.numCycles;
 
-  const unlockDate = (() => {
+  function getUnlockDate() {
     if (!poxInfo || !cycleClock) return null;
     const unlockBurnHeight =
       poxInfo.first_burnchain_block_height + endCycle * poxInfo.reward_cycle_length;
     return estimateDateFromBurnBlocks(unlockBurnHeight - cycleClock.currentBurnHeight, new Date());
-  })();
+  }
+  const unlockDate = getUnlockDate();
 
   return {
     isLoading: positionIsLoading,

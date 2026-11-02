@@ -1,9 +1,9 @@
 import { ErrorFallbackTab } from '@/components/error/error';
 import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
 
-import { AccountId, isSip9Asset } from '@leather.io/models';
+import { type AccountId, isSip9Asset } from '@leather.io/models';
 import { getStacksContractAssetName } from '@leather.io/stacks';
-import { SerializedCryptoAssetId } from '@leather.io/utils';
+import { type SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { TokenLoading } from '../components/token-loading';
 import { BnsDetails } from './bns-details';

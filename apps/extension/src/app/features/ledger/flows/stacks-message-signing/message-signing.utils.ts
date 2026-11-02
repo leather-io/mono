@@ -9,10 +9,9 @@ import {
 } from '@stacks/transactions';
 
 import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
+import { capitalize } from '@leather.io/utils';
 
 import { type UnsignedMessageStructured } from '@shared/signature/signature-types';
-
-import { capitalize } from '@app/common/utils';
 
 export function cvToDisplay(cv: ClarityValue): string {
   return cvToString(cv).replaceAll('"', '');

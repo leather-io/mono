@@ -1,9 +1,9 @@
 import { createContext, useCallback, useContext, useRef } from 'react';
 
-import { HasChildren } from '@leather.io/ui/native';
+import { type HasChildren } from '@leather.io/ui/native';
 
-import { Toast } from '.';
-import { ToastData, ToastMethods } from './types';
+import { Toast } from './toast';
+import { type ToastData, type ToastMethods } from './types';
 
 interface ToastContextType {
   displayToast({ title, type }: ToastData): unknown;

@@ -2,7 +2,7 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 
 import { EmptyHiddenAccounts } from './components/empty-hidden-accounts';
-import { WalletViewVariant } from './types';
+import { type WalletViewVariant } from './types';
 import { WalletCard } from './wallet-card';
 
 export function WalletsList({ variant }: { variant: WalletViewVariant }) {

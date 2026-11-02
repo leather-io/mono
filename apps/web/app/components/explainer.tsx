@@ -1,7 +1,7 @@
-import { ReactElement, ReactNode } from 'react';
+import { type ReactElement, type ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
-import { Box, Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
+import { Box, Flex, Grid, type HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
 
 // This is some pretty funky border code I am not a fan of, but didn't find an
 // easier way to handle the conditional border for the breakpoints

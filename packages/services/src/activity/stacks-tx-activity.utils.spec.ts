@@ -1,13 +1,8 @@
-import {
-  ContractCallTransaction,
-  SmartContractTransaction,
-  TokenTransferTransaction,
-  TransactionEvent,
-} from '@stacks/stacks-blockchain-api-types';
+import { type TransactionEvent } from '@stacks/stacks-blockchain-api-types';
 
 import { stxAsset } from '@leather.io/constants';
 import {
-  AccountAddresses,
+  type AccountAddresses,
   ActivityLevels,
   CryptoAssetCategories,
   OnChainActivityStatuses,
@@ -16,11 +11,16 @@ import {
 import { initBigNumber } from '@leather.io/utils';
 
 import {
-  HiroStacksMempoolTransaction,
-  HiroStacksTransaction,
-} from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { StacksAssetTransferWithInfo } from './stacks-asset-transfer.utils';
-import { isMempoolTx } from './stacks-mempool-tx.utils';
+  createActivityContractCallTx,
+  createActivityMempoolTokenTransferTx,
+  createActivitySip10Asset,
+  createActivitySmartContractLogEvent,
+  createActivitySmartContractTx,
+  createActivityTokenTransferTx,
+  removeActivityBlockTimes,
+} from '../test/activity-fixtures';
+import { type StacksAssetTransferWithInfo } from './stacks-asset-transfer.utils';
+import { getStacksTxByStatus } from './stacks-mempool-tx.utils';
 import {
   getEventsByTxId,
   mapContractCallActivity,
@@ -43,21 +43,25 @@ describe('mapTokenTransferActivity', () => {
 
   const commonTxProps = {
     tx_id: 'tx123',
-    tx_status: 'success',
+    tx_status: 'success' as const,
     token_transfer: {
       amount: '1000',
+      memo: '',
     },
   };
 
   it('maps send activity when sender matches account', () => {
-    const tx = {
-      ...commonTxProps,
-      sender_address: 'ST123',
-      token_transfer: {
-        ...commonTxProps.token_transfer,
-        recipient_address: 'ST456',
-      },
-    } as TokenTransferTransaction;
+    const tx = removeActivityBlockTimes(
+      createActivityTokenTransferTx({
+        ...commonTxProps,
+        sender_address: 'ST123',
+        token_transfer: {
+          ...commonTxProps.token_transfer,
+          recipient_address: 'ST456',
+        },
+      }),
+      ['block_time', 'burn_block_time']
+    );
 
     const result = mapTokenTransferActivity(tx, account);
 
@@ -77,14 +81,17 @@ describe('mapTokenTransferActivity', () => {
   });
 
   it('maps receive activity when recipient matches account', () => {
-    const tx = {
-      ...commonTxProps,
-      sender_address: 'ST456',
-      token_transfer: {
-        ...commonTxProps.token_transfer,
-        recipient_address: 'ST123',
-      },
-    } as TokenTransferTransaction;
+    const tx = removeActivityBlockTimes(
+      createActivityTokenTransferTx({
+        ...commonTxProps,
+        sender_address: 'ST456',
+        token_transfer: {
+          ...commonTxProps.token_transfer,
+          recipient_address: 'ST123',
+        },
+      }),
+      ['block_time', 'burn_block_time']
+    );
 
     const result = mapTokenTransferActivity(tx, account);
 
@@ -113,14 +120,18 @@ describe('mapSmartContractActivity', () => {
   };
 
   it('adds deploy activity when sender matches account', () => {
-    const tx = {
-      tx_id: 'tx123',
-      tx_status: 'success',
-      sender_address: 'ST123',
-      smart_contract: {
-        contract_id: 'ST123.my-contract',
-      },
-    } as SmartContractTransaction;
+    const tx = removeActivityBlockTimes(
+      createActivitySmartContractTx({
+        tx_id: 'tx123',
+        tx_status: 'success',
+        sender_address: 'ST123',
+        smart_contract: {
+          contract_id: 'ST123.my-contract',
+          source_code: '',
+        },
+      }),
+      ['block_time', 'burn_block_time']
+    );
 
     const result = mapSmartContractActivity(tx, account, []);
 
@@ -138,16 +149,20 @@ describe('mapSmartContractActivity', () => {
   });
 
   it('includes asset transfers if present', () => {
-    const tx = {
-      tx_id: 'tx123',
-      tx_status: 'success',
-      sender_address: 'ST123',
-      smart_contract: {
-        contract_id: 'ST123.my-contract',
-      },
-    } as SmartContractTransaction;
+    const tx = removeActivityBlockTimes(
+      createActivitySmartContractTx({
+        tx_id: 'tx123',
+        tx_status: 'success',
+        sender_address: 'ST123',
+        smart_contract: {
+          contract_id: 'ST123.my-contract',
+          source_code: '',
+        },
+      }),
+      ['block_time', 'burn_block_time']
+    );
 
-    const transfers = [
+    const transfers: StacksAssetTransferWithInfo[] = [
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'STX',
@@ -184,15 +199,19 @@ describe('mapContractCallActivity', () => {
   };
 
   it('maps execute activity when no transfers present', () => {
-    const tx = {
-      tx_id: 'tx123',
-      tx_status: 'success',
-      sender_address: 'ST123',
-      contract_call: {
-        contract_id: 'ST456.contract',
-        function_name: 'transfer',
-      },
-    } as ContractCallTransaction;
+    const tx = removeActivityBlockTimes(
+      createActivityContractCallTx({
+        tx_id: 'tx123',
+        tx_status: 'success',
+        sender_address: 'ST123',
+        contract_call: {
+          contract_id: 'ST456.contract',
+          function_name: 'transfer',
+          function_signature: '',
+        },
+      }),
+      ['block_time', 'burn_block_time']
+    );
 
     const result = mapContractCallActivity(tx, account, []);
 
@@ -211,15 +230,19 @@ describe('mapContractCallActivity', () => {
   });
 
   it('only maps transfers if present', () => {
-    const tx = {
-      tx_id: 'tx123',
-      tx_status: 'success',
-      sender_address: 'ST123',
-      contract_call: {
-        contract_id: 'ST456.contract',
-        function_name: 'transfer',
-      },
-    } as ContractCallTransaction;
+    const tx = removeActivityBlockTimes(
+      createActivityContractCallTx({
+        tx_id: 'tx123',
+        tx_status: 'success',
+        sender_address: 'ST123',
+        contract_call: {
+          contract_id: 'ST456.contract',
+          function_name: 'transfer',
+          function_signature: '',
+        },
+      }),
+      ['block_time', 'burn_block_time']
+    );
 
     const transfers = [
       {
@@ -257,10 +280,14 @@ describe('mapTxAssetTransfersToActivity', () => {
     },
   };
 
-  const tx = {
-    tx_id: 'tx123',
-    tx_status: 'success',
-  } as HiroStacksTransaction;
+  const tx = removeActivityBlockTimes(
+    createActivityTokenTransferTx({
+      tx_id: 'tx123',
+      tx_status: 'success',
+    }),
+    ['block_time', 'burn_block_time']
+  );
+  const tokenXyz = createActivitySip10Asset({ assetId: 'ST000.token::xyz' });
 
   it('maps simple asset sends and aggregates amounts and receivers', () => {
     const transfers = [
@@ -302,7 +329,7 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'ST000.token::xyz',
-        asset: { assetId: 'ST000.token::xyz' },
+        asset: tokenXyz,
         sender: 'ST456',
         receiver: 'ST123',
         tokenValue: '1000',
@@ -310,17 +337,17 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'ST000.token::xyz',
-        asset: { assetId: 'ST000.token::xyz' },
+        asset: tokenXyz,
         sender: 'ST789',
         receiver: 'ST123',
         tokenValue: '2000',
       },
-    ] as StacksAssetTransferWithInfo[];
+    ];
 
     expect(mapTxAssetTransfersToActivity(tx, account, transfers)).toEqual([
       {
         type: OnChainActivityTypes.receiveAsset,
-        asset: { assetId: 'ST000.token::xyz' },
+        asset: tokenXyz,
         amount: initBigNumber('3000'),
         senders: ['ST456', 'ST789'],
         account: account.id,
@@ -333,7 +360,7 @@ describe('mapTxAssetTransfersToActivity', () => {
   });
 
   it('maps 1 send transfer and 1 receive transfer to swap activity', () => {
-    const transfers = [
+    const transfers: StacksAssetTransferWithInfo[] = [
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'STX',
@@ -345,12 +372,12 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'ST000.token::xyz',
-        asset: { assetId: 'ST000.token::xyz' },
+        asset: tokenXyz,
         sender: 'ST456',
         receiver: 'ST123',
         tokenValue: '2000',
       },
-    ] as StacksAssetTransferWithInfo[];
+    ];
 
     const result = mapTxAssetTransfersToActivity(tx, account, transfers);
 
@@ -359,7 +386,7 @@ describe('mapTxAssetTransfersToActivity', () => {
         type: OnChainActivityTypes.swapAssets,
         fromAsset: stxAsset,
         fromAmount: initBigNumber('1000'),
-        toAsset: { assetId: 'ST000.token::xyz' },
+        toAsset: tokenXyz,
         toAmount: initBigNumber('2000'),
         account: account.id,
         txid: 'tx123',
@@ -371,7 +398,7 @@ describe('mapTxAssetTransfersToActivity', () => {
   });
 
   it('ignores complex transfers with >1 asset sent or received', () => {
-    const transfers = [
+    const transfers: StacksAssetTransferWithInfo[] = [
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'STX',
@@ -383,12 +410,12 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'TOKEN1',
-        asset: { name: 'Token1' },
+        asset: createActivitySip10Asset({ name: 'Token1' }),
         sender: 'ST123',
         receiver: 'ST456',
         tokenValue: '2000',
       },
-    ] as StacksAssetTransferWithInfo[];
+    ];
 
     const result = mapTxAssetTransfersToActivity(tx, account, transfers);
 
@@ -396,96 +423,112 @@ describe('mapTxAssetTransfersToActivity', () => {
   });
 });
 
-describe('isMempoolTx', () => {
+describe('getStacksTxByStatus', () => {
   it('returns false for success status', () => {
-    expect(isMempoolTx({ tx_status: 'success' } as HiroStacksTransaction)).toBe(false);
+    expect(
+      getStacksTxByStatus(createActivityTokenTransferTx({ tx_status: 'success' })).mempoolTx
+    ).toBeUndefined();
   });
 
   it('returns false for abort_by_post_condition', () => {
-    expect(isMempoolTx({ tx_status: 'abort_by_post_condition' } as HiroStacksTransaction)).toBe(
-      false
-    );
+    expect(
+      getStacksTxByStatus(createActivityTokenTransferTx({ tx_status: 'abort_by_post_condition' }))
+        .mempoolTx
+    ).toBeUndefined();
   });
 
   it('returns false for abort_by_response', () => {
-    expect(isMempoolTx({ tx_status: 'abort_by_response' } as HiroStacksTransaction)).toBe(false);
+    expect(
+      getStacksTxByStatus(createActivityTokenTransferTx({ tx_status: 'abort_by_response' }))
+        .mempoolTx
+    ).toBeUndefined();
   });
 
   it('returns true for pending status', () => {
-    expect(isMempoolTx({ tx_status: 'pending' } as HiroStacksMempoolTransaction)).toBe(true);
+    expect(
+      getStacksTxByStatus(createActivityMempoolTokenTransferTx({ tx_status: 'pending' })).mempoolTx
+    ).toBeDefined();
   });
 });
 
 describe('mapStacksTxStatus', () => {
   it('maps success', () => {
-    expect(mapStacksTxStatus({ tx_status: 'success' } as HiroStacksTransaction)).toBe('success');
+    expect(mapStacksTxStatus(createActivityTokenTransferTx({ tx_status: 'success' }))).toBe(
+      'success'
+    );
   });
 
   it('maps pending', () => {
-    expect(mapStacksTxStatus({ tx_status: 'pending' } as HiroStacksMempoolTransaction)).toBe(
+    expect(mapStacksTxStatus(createActivityMempoolTokenTransferTx({ tx_status: 'pending' }))).toBe(
       'pending'
     );
   });
 
   it('maps abort statuses to failed', () => {
-    expect(mapStacksTxStatus({ tx_status: 'abort_by_response' } as HiroStacksTransaction)).toBe(
-      'failed'
-    );
     expect(
-      mapStacksTxStatus({ tx_status: 'abort_by_post_condition' } as HiroStacksTransaction)
+      mapStacksTxStatus(createActivityTokenTransferTx({ tx_status: 'abort_by_response' }))
+    ).toBe('failed');
+    expect(
+      mapStacksTxStatus(createActivityTokenTransferTx({ tx_status: 'abort_by_post_condition' }))
     ).toBe('failed');
   });
 });
 
 describe('mapStacksTxBlockTime', () => {
   it('returns receipt_time for mempool tx', () => {
-    const tx = { tx_status: 'pending', receipt_time: 1700000001 } as HiroStacksMempoolTransaction;
+    const tx = createActivityMempoolTokenTransferTx({
+      tx_status: 'pending',
+      receipt_time: 1700000001,
+    });
     expect(mapStacksTxBlockTime(tx)).toBe(1700000001);
   });
 
   it('returns block_time for confirmed tx', () => {
-    const tx = {
+    const tx = createActivityTokenTransferTx({
       tx_status: 'success',
       block_time: 1700000000,
       burn_block_time: 1699999999,
-    } as unknown as HiroStacksTransaction;
+    });
     expect(mapStacksTxBlockTime(tx)).toBe(1700000000);
   });
 
   it('falls back to burn_block_time when block_time is missing', () => {
-    const tx = {
-      tx_status: 'success',
-      burn_block_time: 1699999999,
-    } as HiroStacksTransaction;
+    const tx = removeActivityBlockTimes(
+      createActivityTokenTransferTx({
+        tx_status: 'success',
+        burn_block_time: 1699999999,
+      }),
+      ['block_time']
+    );
     expect(mapStacksTxBlockTime(tx)).toBe(1699999999);
   });
 });
 
 describe('mapStacksTxBlockHeight', () => {
   it('returns block_height for confirmed tx', () => {
-    const tx = { tx_status: 'success', block_height: 500 } as HiroStacksTransaction;
+    const tx = createActivityTokenTransferTx({ tx_status: 'success', block_height: 500 });
     expect(mapStacksTxBlockHeight(tx)).toBe(500);
   });
 
   it('returns undefined for mempool tx', () => {
-    const tx = { tx_status: 'pending' } as HiroStacksMempoolTransaction;
+    const tx = createActivityMempoolTokenTransferTx({ tx_status: 'pending' });
     expect(mapStacksTxBlockHeight(tx)).toBeUndefined();
   });
 });
 
 describe('mapStacksTxFee', () => {
   it('returns fee_rate', () => {
-    expect(mapStacksTxFee({ fee_rate: '2500' } as HiroStacksTransaction)).toBe('2500');
+    expect(mapStacksTxFee(createActivityTokenTransferTx({ fee_rate: '2500' }))).toBe('2500');
   });
 });
 
 describe('getEventsByTxId', () => {
   it('groups events by tx_id', () => {
-    const events = [
-      { tx_id: '0xaaa', event_index: 0 },
-      { tx_id: '0xbbb', event_index: 0 },
-      { tx_id: '0xaaa', event_index: 1 },
-    ] as TransactionEvent[];
+    const events: TransactionEvent[] = [
+      createActivitySmartContractLogEvent({ tx_id: '0xaaa', event_index: 0 }),
+      createActivitySmartContractLogEvent({ tx_id: '0xbbb', event_index: 0 }),
+      createActivitySmartContractLogEvent({ tx_id: '0xaaa', event_index: 1 }),
+    ];
 
     const map = getEventsByTxId(events);
 

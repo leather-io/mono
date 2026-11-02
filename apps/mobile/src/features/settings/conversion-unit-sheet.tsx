@@ -5,8 +5,8 @@ import { useSettings } from '@/store/settings/settings';
 import { select, t } from '@lingui/core/macro';
 
 import { currencyNameMap } from '@leather.io/constants';
-import { QuoteCurrency } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
+import { type QuoteCurrency } from '@leather.io/models';
+import { type SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 

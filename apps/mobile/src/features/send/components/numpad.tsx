@@ -1,9 +1,9 @@
 import { useValidateInputDecimalPlaces } from '@/features/send/hooks/use-validate-input-decimal-places';
 import { analytics } from '@/utils/analytics';
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 import { funnel } from 'remeda';
 
-import { Currency } from '@leather.io/models';
+import { type Currency } from '@leather.io/models';
 import { Box, type NumpadProps, Numpad as RawNumpad } from '@leather.io/ui/native';
 
 interface SendFormNumpadProps extends NumpadProps {

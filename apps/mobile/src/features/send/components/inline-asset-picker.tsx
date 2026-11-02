@@ -3,8 +3,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AssetPicker } from '@/features/send/components/asset-picker/asset-picker';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
-import { Sheet, SheetRef } from '@leather.io/ui/native';
+import { type FungibleCryptoAsset } from '@leather.io/models';
+import { Sheet, type SheetRef } from '@leather.io/ui/native';
 
 interface InlineAssetPickerProps {
   sheetRef: SheetRef;

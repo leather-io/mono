@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { createGetAddressMempoolTransactionsQueryOptions } from '@leather.io/query';
+import { createStacksAddressMempoolTransactionsQueryConfig } from '@leather.io/queries';
 
-import { useStacksClient } from '../stacks-client';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useGetAddressMempoolTransactionsQuery(address: string) {
-  const client = useStacksClient();
-  return useQuery(createGetAddressMempoolTransactionsQueryOptions({ address, client }));
+  const settings = useUserSettings();
+  return useQuery(createStacksAddressMempoolTransactionsQueryConfig(address, settings));
 }

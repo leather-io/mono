@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 
+import lockImage from '@/assets/stickers/lock.png';
 import { Screen } from '@/components/screen/screen';
 import { SkipSecureWalletSheet } from '@/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet';
 import { useAuthentication } from '@/hooks/use-authentication';
@@ -7,7 +8,7 @@ import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
-import { Box, Button, SheetInstance, Text } from '@leather.io/ui/native';
+import { Box, Button, type SheetInstance, Text } from '@leather.io/ui/native';
 
 export default function SecureYourWalletScreen() {
   const sheetRef = useRef<SheetInstance>(null);
@@ -15,6 +16,11 @@ export default function SecureYourWalletScreen() {
   const { callIfEnrolled } = useAuthentication();
 
   const pageTitle = t`Secure your wallet`;
+
+  async function onSkipSecureWallet() {
+    sheetRef.current?.close();
+    await createWallet({ biometrics: false });
+  }
 
   return (
     <Screen>
@@ -28,11 +34,7 @@ export default function SecureYourWalletScreen() {
             </Text>
           </Box>
           <Box justifyContent="center" alignItems="center" aspectRatio={1}>
-            <Image
-              style={{ height: 270, width: 270 }}
-              source={require('@/assets/stickers/lock.png')}
-              contentFit="contain"
-            />
+            <Image style={{ height: 270, width: 270 }} source={lockImage} contentFit="contain" />
           </Box>
         </Box>
       </Screen.ScrollView>
@@ -49,13 +51,7 @@ export default function SecureYourWalletScreen() {
           {t`Enable device security`}
         </Button>
       </Screen.Footer>
-      <SkipSecureWalletSheet
-        onSubmit={async () => {
-          sheetRef.current?.close();
-          await createWallet({ biometrics: false });
-        }}
-        sheetRef={sheetRef}
-      />
+      <SkipSecureWalletSheet onSubmit={() => void onSkipSecureWallet()} sheetRef={sheetRef} />
     </Screen>
   );
 }

@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
-
 import {
   createGetAccountExtendedBalancesQueryOptions,
   createGetStatusQueryOptions,
-} from '@leather.io/query';
+} from '~/features/stacking/queries/create-stacking-client-query-options';
 
 export function useGetStatusQuery() {
   const { client } = useStackingClient();

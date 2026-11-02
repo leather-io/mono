@@ -1,6 +1,11 @@
-import { ClarityType, ClarityValue, hexToCV, principalCV, serializeCV } from '@stacks/transactions';
-
-import { StacksClient } from '@leather.io/query';
+import {
+  ClarityType,
+  type ClarityValue,
+  hexToCV,
+  principalCV,
+  serializeCV,
+} from '@stacks/transactions';
+import { type StacksApiClient } from '~/utils/stacks-api-client';
 
 import { parseContractId } from '../utils/contract-id';
 
@@ -45,7 +50,7 @@ function parseStakerInfoCV(value: ClarityValue): Pox5StakerInfo | null {
 interface CreateGetPox5StakerInfoQueryOptionsArgs {
   address: string | undefined;
   pox5ContractId: string;
-  client: StacksClient;
+  client: Pick<StacksApiClient, 'callReadOnlyFunction'>;
 }
 
 export function createGetPox5StakerInfoQueryOptions({

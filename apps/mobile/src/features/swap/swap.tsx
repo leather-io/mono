@@ -7,7 +7,7 @@ import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 
 import { stxAsset } from '@leather.io/constants';
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { SwapProvider, useLiveSwapEstimate, useSwapContext } from '@leather.io/state/swap';
 
 import { SwapFormScreen } from './screens/swap-form-screen';

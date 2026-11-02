@@ -1,5 +1,5 @@
 import { styled } from 'leather-styles/jsx';
-import { HTMLStyledProps } from 'leather-styles/types';
+import { type HTMLStyledProps } from 'leather-styles/types';
 import { bitcoinStakingFaqItems } from '~/content/bitcoin-staking-faq';
 import { sanitizeContent } from '~/utils/sanitize-content';
 

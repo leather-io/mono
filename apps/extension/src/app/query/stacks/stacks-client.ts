@@ -1,12 +1,3 @@
-import { stacksClient } from '@leather.io/query';
-
-import { useLeatherNetwork } from '../leather-query-provider';
-
-export function useStacksClient() {
-  const network = useLeatherNetwork();
-  return stacksClient(network.chain.stacks.url);
-}
-
 export async function hiroFetchWrapper(input: RequestInfo | URL, init?: RequestInit) {
   const url =
     typeof input === 'string' || input instanceof URL

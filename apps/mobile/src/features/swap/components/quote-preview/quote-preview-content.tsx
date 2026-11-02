@@ -6,8 +6,8 @@ import { formatSwapRate, sumFeesInQuoteCurrency } from '@/features/swap/swap.uti
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { LiveSwapEstimate } from '@leather.io/state/swap';
+import { type SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type LiveSwapEstimate } from '@leather.io/state/swap';
 import { AnimatedBox, Box, Text } from '@leather.io/ui/native';
 
 interface QuotePreviewContentProps {

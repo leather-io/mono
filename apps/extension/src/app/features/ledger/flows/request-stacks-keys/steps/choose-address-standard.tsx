@@ -4,6 +4,8 @@ import type { StacksDerivationPathType } from '@leather.io/stacks';
 import {
   ArrowsRepeatLeftRightIcon,
   Badge,
+  BasicTooltip,
+  Hr,
   InfoCircleIcon,
   ItemLayout,
   LedgerIcon,
@@ -14,10 +16,8 @@ import {
 
 import { analytics } from '@shared/utils/analytics';
 
-import { Divider } from '@app/components/layout/divider';
 import { useLedgerStep, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import { useLedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 const accountDiscoveryUrl = 'https://app.leather.io/posts/wallet-derivation-paths';
 
@@ -142,7 +142,7 @@ export function ChooseAddressStandard() {
           />
         </Pressable>
       </Stack>
-      <Divider mx="-space.04" width="auto" />
+      <Hr mx="-space.04" width="auto" />
       <Flex justifyContent="center" pt="space.05">
         <Link href={accountDiscoveryUrl} size="sm">
           Learn how Leather searches for accounts ↗

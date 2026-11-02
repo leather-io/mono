@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 import { LearnMoreLink, Page } from '~/layouts/page/page';

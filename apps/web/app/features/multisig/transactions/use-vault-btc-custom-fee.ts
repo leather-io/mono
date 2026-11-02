@@ -22,7 +22,7 @@ export function useVaultBtcCustomFee({
   const settings = useUserSettings();
   return useQuery({
     queryKey: ['multisig-btc-custom-fee', account, recipient, amount, feeRate, settings.network.id],
-    queryFn: ({ signal }) => {
+    queryFn({ signal }) {
       if (!recipient || !amount || feeRate === undefined)
         throw new Error('Missing transaction details');
       return getBitcoinCoinSelectionService().performCoinSelection(

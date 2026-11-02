@@ -1,8 +1,12 @@
 import { CurrencyModeSwitcher } from '@/features/swap/components/currency-mode-switcher';
 import { isDefined } from 'remeda';
 
-import { Currency, InputCurrencyMode, SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { SecondaryAmount, isUserInputEffectivelyZero } from '@leather.io/state/swap';
+import {
+  type Currency,
+  type InputCurrencyMode,
+  type SwappableFungibleCryptoAsset,
+} from '@leather.io/models';
+import { type SecondaryAmount, isUserInputEffectivelyZero } from '@leather.io/state/swap';
 import { AnimatedBox, Box, slidePair } from '@leather.io/ui/native';
 
 import { AmountFieldCaret } from './amount-field-caret';

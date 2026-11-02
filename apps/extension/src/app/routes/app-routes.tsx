@@ -3,11 +3,12 @@ import { RouterProvider } from 'react-router/dom';
 
 import * as Sentry from '@sentry/react';
 
+import { LoadingSpinner } from '@leather.io/ui';
+
 import { RouteUrls } from '@shared/route-urls';
 
 import { Content } from '@app/components/layout/layouts/content.layout';
 import { SwitchAccountLayout } from '@app/components/layout/layouts/switch-account.layout';
-import { LoadingSpinner } from '@app/components/loading-spinner';
 import { Container } from '@app/features/container/container';
 import { HomeHeader } from '@app/features/container/headers/home.header';
 import { CancelStacksTransactionSheet } from '@app/features/dialogs/transaction-action-dialog/cancel-stacks-transaction-sheet';

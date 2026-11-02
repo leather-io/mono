@@ -12,7 +12,7 @@ export type ActivityStatusIndicatorId =
 
 export interface ActivityBalances {
   operator?: string;
-  color?: string;
+  color?: 'green.action-primary-default' | 'ink.text-primary';
   crypto?: Money;
   quote?: Money;
 }

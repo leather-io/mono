@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { createGetRawTransactionByIdQueryOptions } from '@leather.io/query';
+import { createStacksRawTransactionByIdQueryConfig } from '@leather.io/queries';
 
-import { useStacksClient } from '../stacks-client';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useGetRawTransactionByIdQuery(txid: string) {
-  const client = useStacksClient();
-  return useQuery(createGetRawTransactionByIdQueryOptions({ client, txid }));
+  const settings = useUserSettings();
+  return useQuery(createStacksRawTransactionByIdQueryConfig(txid, settings));
 }

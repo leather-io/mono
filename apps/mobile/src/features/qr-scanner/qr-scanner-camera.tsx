@@ -9,7 +9,7 @@ import Animated, {
 
 import { useCameraPermission } from '@/features/qr-scanner/use-camera-permission';
 import {
-  BarcodePoint,
+  type BarcodePoint,
   type BarcodeScanningResult,
   CameraView,
   type CameraViewProps,

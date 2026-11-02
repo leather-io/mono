@@ -1,17 +1,23 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { BtcAsset, Sip10Asset, StxAsset, isBtcAsset, isStxAsset } from '@leather.io/models';
+import {
+  type BtcAsset,
+  type Sip10Asset,
+  type StxAsset,
+  isBtcAsset,
+  isStxAsset,
+} from '@leather.io/models';
 import {
   ArrowTriangleTopIcon,
   BtcAvatarIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-  HasChildren,
+  type HasChildren,
   Sip10AvatarIcon,
   StxAvatarIcon,
 } from '@leather.io/ui';
 
-import { SortState } from './utils';
+import { type SortState } from './utils';
 
 interface PriceChangeCellProps {
   priceChange: number;

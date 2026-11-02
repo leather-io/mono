@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
-import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
+import { type NetworkMode } from '~/features/stacking/utils/stacking-network-types';
+import { typedKeys } from '~/utils/typed-keys';
 
 // PoX-5 pool registry. Deliberately separate from stackingPoolData: under pox-5
 // a pool's identity is its signer-manager contract, and per-pool wrapper
@@ -194,9 +195,7 @@ const stakingPoolSlugMap = {
 
 export type StakingPoolSlug = keyof typeof stakingPoolSlugMap;
 
-export const stakingPoolSlugSchema = z.enum(
-  Object.keys(stakingPoolSlugMap) as [StakingPoolSlug, ...StakingPoolSlug[]]
-);
+export const stakingPoolSlugSchema = z.enum(typedKeys(stakingPoolSlugMap));
 
 export function getStakingPoolFromSlug(slug: StakingPoolSlug): BitcoinStakingPool {
   return bitcoinStakingPoolData[stakingPoolSlugMap[slug]];

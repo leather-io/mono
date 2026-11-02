@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import * as d3 from 'd3';
-import { Box, HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { Box, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 import { shimmerStyles } from '@leather.io/ui';
 
 import { usePortfolioEvents } from '../portfolio-events';
-import { PortfolioAsset } from '../portfolio-table/portfolio-table';
+import { type PortfolioAsset } from '../portfolio-table/portfolio-table';
 
 interface PortfolioData {
   token: string;
@@ -48,8 +48,8 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
     const isHoveredInOtherGroup = hoveredSymbol && groupedItemsRef.current.has(hoveredSymbol);
 
     d3.select(svgRef.current)
-      .selectAll('rect.bar')
-      .style('opacity', (d: any) => {
+      .selectAll<SVGRectElement, PortfolioData>('rect.bar')
+      .style('opacity', d => {
         if (!hoveredSymbol) return 1;
 
         if (d.token === 'Other' && isHoveredInOtherGroup) return 1;

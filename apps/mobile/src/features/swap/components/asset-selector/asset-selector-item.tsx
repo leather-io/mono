@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { Cell } from '@leather.io/ui/native';
 
 interface AssetListItemProps {

@@ -1,7 +1,7 @@
 import { ChainId, TransactionVersion } from '@stacks/network';
 import { describe, expect, test } from 'vitest';
 
-import { NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
+import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
 
 import { getStacksNetworkFromNetworkConfig } from './settings.read';
 

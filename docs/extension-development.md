@@ -22,12 +22,12 @@ One method to achieve this is through hard linking. Here is a step-by-step guide
    ```json
    "dependencies": {
        ...
-       "@leather.io/query": "file:../mono/packages/query"
+       "@leather.io/utils": "file:../mono/packages/utils"
        ...
    }
    ```
 
-   This change will copy all files from `../mono/packages/query` into the extension's `node_modules` and automatically run `pnpm i`.
+   This change will copy all files from `../mono/packages/utils` into the extension's `node_modules` and automatically run `pnpm i`.
 
 3. When `pnpm i` runs, it will attempt to find the package's dependencies that are set with the `workspace:` protocol. This will fail because the `extension` repository is not part of the monorepo. To fix this, override all of the dependency versions at the end of the extension's `package.json` like this:
 

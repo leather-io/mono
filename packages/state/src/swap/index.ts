@@ -64,7 +64,10 @@ export {
 export { useSwapValidation } from './hooks/use-swap-validation';
 
 export { isUserInputEffectivelyZero } from './utils/amount-operations';
-export { broadcastBitcoinTransaction } from './utils/broadcast-bitcoin-transaction';
+export {
+  type BitcoinTransactionBroadcaster,
+  broadcastBitcoinTransaction,
+} from './utils/broadcast-bitcoin-transaction';
 
 export type * from './validation/swap-validation.types';
 export type { ValidationContext } from './validation/swap-validation';

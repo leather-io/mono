@@ -1,4 +1,4 @@
-import { PostConditionPrincipalId, STXPostConditionWire } from '@stacks/transactions';
+import { PostConditionPrincipalId, type STXPostConditionWire } from '@stacks/transactions';
 
 import { Approver, Box, CircledFunctionIcon } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';

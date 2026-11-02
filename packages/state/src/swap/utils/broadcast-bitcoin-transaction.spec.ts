@@ -5,7 +5,7 @@ import { broadcastBitcoinTransaction } from './broadcast-bitcoin-transaction';
 const txHex = '0200000001deadbeef';
 
 function createBitcoinClient(broadcastTransaction: ReturnType<typeof vi.fn>) {
-  return { transactionsApi: { broadcastTransaction } };
+  return { broadcastTransaction };
 }
 
 function createResponse(status: number, body: string) {

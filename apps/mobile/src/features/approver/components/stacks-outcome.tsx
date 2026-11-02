@@ -1,7 +1,7 @@
 import { StacksTokenBalance } from '@/features/balances/stacks/stacks-token-balance';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 

@@ -1,14 +1,19 @@
 import BigNumber from 'bignumber.js';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import { BaseCryptoAssetBalance, BtcBalance, Money, StxBalance } from '@leather.io/models';
+import {
+  type BaseCryptoAssetBalance,
+  type BtcBalance,
+  type Money,
+  type StxBalance,
+} from '@leather.io/models';
 
-import { PortfolioAsset } from './portfolio-table/portfolio-table';
+import { type PortfolioAsset } from './portfolio-table/portfolio-table';
 
 function createMoney(amount: string, symbol: string, decimals: number): Money {
   return {
     amount: new BigNumber(amount),
-    symbol: symbol as any,
+    symbol,
     decimals,
   };
 }

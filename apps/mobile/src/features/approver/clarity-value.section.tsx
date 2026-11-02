@@ -1,4 +1,4 @@
-import { ClarityType, ClarityValue, cvToString } from '@stacks/transactions';
+import { ClarityType, type ClarityValue, cvToString } from '@stacks/transactions';
 
 import { Box, Text, useTheme } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';

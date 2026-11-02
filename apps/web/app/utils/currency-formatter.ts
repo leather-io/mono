@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react-router';
 
-import { Money } from '@leather.io/models';
-import { FormatAmountOptions, createCurrencyFormatter, isError } from '@leather.io/utils';
+import { type Money } from '@leather.io/models';
+import { type FormatAmountOptions, createCurrencyFormatter, isError } from '@leather.io/utils';
 
 const currencyFormatter = createCurrencyFormatter({
   locale: 'en-US',

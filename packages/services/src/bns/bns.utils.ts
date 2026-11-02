@@ -1,19 +1,17 @@
-import {
-  BufferCV,
-  ClarityType,
-  ClarityValue,
-  cvToString,
-  getCVTypeString,
-} from '@stacks/transactions';
-
-import { BnsName, BnsProfileData, BnsProfileDataAddresses } from '@leather.io/models';
+import { ClarityType, type ClarityValue, cvToString, getCVTypeString } from '@stacks/transactions';
 
 import {
-  BnsV2ApiAddressName,
-  BnsV2ApiName,
-  BnsV2ApiNameResponse,
-  BnsV2ApiZoneFile,
-  BnsV2ApiZoneFileAddress,
+  type BnsName,
+  type BnsProfileData,
+  type BnsProfileDataAddresses,
+} from '@leather.io/models';
+
+import {
+  type BnsV2ApiAddressName,
+  type BnsV2ApiName,
+  type BnsV2ApiNameResponse,
+  type BnsV2ApiZoneFile,
+  type BnsV2ApiZoneFileAddress,
 } from '../infrastructure/api/bns-v2/bns-v2-api.schema';
 
 export function isValidBnsName(res: BnsV2ApiNameResponse): boolean {
@@ -84,25 +82,28 @@ export function mapBnsProfileDataAddresses(
   };
 }
 
+function decodeBnsBufferCV(cv: ClarityValue | undefined) {
+  if (cv?.type !== ClarityType.Buffer) {
+    throw new Error('Unexpected BNS primary name response structure');
+  }
+  return Buffer.from(cv.value, 'hex').toString();
+}
+
 export function parseBnsContractGetPrimaryResponseCV(
   res: ClarityValue
 ): { name: string; namespace: string } | null {
   if (res.type === ClarityType.ResponseOk) {
     if (res.value.type === ClarityType.Tuple) {
-      const nameCV = res.value.value['name'] as BufferCV;
-      const namespaceCV = res.value.value['namespace'] as BufferCV;
       return {
-        name: Buffer.from(nameCV.value, 'hex').toString(),
-        namespace: Buffer.from(namespaceCV.value, 'hex').toString(),
+        name: decodeBnsBufferCV(res.value.value['name']),
+        namespace: decodeBnsBufferCV(res.value.value['namespace']),
       };
     } else if (res.value.type === ClarityType.OptionalSome) {
       const innerValue = res.value.value;
       if (innerValue.type === ClarityType.Tuple) {
-        const nameCV = innerValue.value['name'] as BufferCV;
-        const namespaceCV = innerValue.value['namespace'] as BufferCV;
         return {
-          name: Buffer.from(nameCV.value, 'hex').toString(),
-          namespace: Buffer.from(namespaceCV.value, 'hex').toString(),
+          name: decodeBnsBufferCV(innerValue.value['name']),
+          namespace: decodeBnsBufferCV(innerValue.value['namespace']),
         };
       }
     }

@@ -1,10 +1,10 @@
 import { BnsImage } from '@/features/collectibles/components/bns';
 import { ImageUnavailable } from '@/features/collectibles/components/image-unavailable';
 import { Sip9 as Sip9Component } from '@/features/collectibles/components/sip9';
-import { TokenDetailsProps } from '@/features/token/types';
+import { type TokenDetailsProps } from '@/features/token/types';
 import { getImageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
 
-import { Sip9Asset } from '@leather.io/models';
+import { type Sip9Asset } from '@leather.io/models';
 import { getStacksContractAssetName } from '@leather.io/stacks';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 

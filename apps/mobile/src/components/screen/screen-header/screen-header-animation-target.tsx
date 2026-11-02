@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { LayoutChangeEvent } from 'react-native';
+import { type ReactNode } from 'react';
+import { type LayoutChangeEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { useScreenScrollContext } from '@/components/screen/screen-scroll-context';

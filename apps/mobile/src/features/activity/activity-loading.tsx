@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { useWindowDimensions } from 'react-native';
 
 import { LoadingItem } from '@/components/loading/loading-item';

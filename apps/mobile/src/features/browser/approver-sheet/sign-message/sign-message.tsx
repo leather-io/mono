@@ -3,14 +3,19 @@ import { useRef, useState } from 'react';
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
 import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
 import { useAccounts } from '@/store/accounts/accounts.read';
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { destructAccountIdentifier } from '@/store/utils';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { AccountId } from '@leather.io/models';
-import { RpcRequest, RpcResponse, createRpcSuccessResponse, signMessage } from '@leather.io/rpc';
-import { SheetInstance } from '@leather.io/ui/native';
+import { type AccountId } from '@leather.io/models';
+import {
+  type RpcRequest,
+  type RpcResponse,
+  createRpcSuccessResponse,
+  type signMessage,
+} from '@leather.io/rpc';
+import { type SheetInstance } from '@leather.io/ui/native';
 
 import { signBip322Message } from './bip322-signer';
 import { SignMessageApproverLayout } from './sign-message.layout';

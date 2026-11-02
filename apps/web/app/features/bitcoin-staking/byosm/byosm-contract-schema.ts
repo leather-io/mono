@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
-import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
+import { type NetworkMode } from '~/features/stacking/utils/stacking-network-types';
 
 import { contractPrincipalSchema, stacksAddressNetwork } from '@leather.io/stacks';
 

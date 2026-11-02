@@ -1,5 +1,5 @@
 import { currencyDecimalsMap } from '@leather.io/constants';
-import { MarketPriceSnapshot } from '@leather.io/models';
+import { type MarketPriceSnapshot } from '@leather.io/models';
 import { convertAmountToFractionalUnit, createMoney, initBigNumber } from '@leather.io/utils';
 
 export function convertApiPriceSnapshots(

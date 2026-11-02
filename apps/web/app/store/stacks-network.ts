@@ -1,4 +1,4 @@
-import { StacksNetworkName, networkFrom } from '@stacks/network';
+import { type StacksNetworkName, networkFrom } from '@stacks/network';
 import { useAtom } from 'jotai/index';
 import { atomWithStorage } from 'jotai/utils';
 import { resolveNetworkConfiguration } from '~/features/multisig/network/resolve-network-configuration';

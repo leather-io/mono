@@ -9,8 +9,8 @@ import { t } from '@lingui/core/macro';
 
 import { currencyDecimalsMap } from '@leather.io/constants';
 import { whenInputCurrencyMode } from '@leather.io/models';
-import { AccountSwapAsset } from '@leather.io/services';
-import { LiveSwapEstimate, useSwapContext } from '@leather.io/state/swap';
+import { type AccountSwapAsset } from '@leather.io/services';
+import { type LiveSwapEstimate, useSwapContext } from '@leather.io/state/swap';
 import { Box, Button, Numpad } from '@leather.io/ui/native';
 
 import { AmountField } from '../components/amount-field/amount-field';

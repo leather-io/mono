@@ -1,9 +1,9 @@
 import { getErrorMessages } from '@/features/send/error-messages';
-import { Account } from '@/store/accounts/accounts';
+import { type Account } from '@/store/accounts/accounts';
 import { isDefined } from 'remeda';
-import { ZodSafeParseResult } from 'zod';
+import { type ZodSafeParseResult } from 'zod';
 
-import { FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
+import { type FungibleCryptoAsset, type SendAssetActivity } from '@leather.io/models';
 import { getBnsService } from '@leather.io/services';
 
 export function recipientSchemaResultContainsError(

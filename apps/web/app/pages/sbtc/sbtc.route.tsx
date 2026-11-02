@@ -1,4 +1,4 @@
-import { MetaDescriptor } from 'react-router';
+import { type MetaDescriptor } from 'react-router';
 
 import { cmsClient } from '~/constants/cms-client';
 import { SbtcRewards } from '~/pages/sbtc/sbtc-rewards';

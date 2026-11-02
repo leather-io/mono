@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { describe, expect, test, vi } from 'vitest';
 
-import type { RootState } from '..';
+import type { RootState } from '../store';
 import { mnemonicStore } from './mnemonic-store';
 
 vi.mock('expo-secure-store', () => ({
@@ -11,15 +11,17 @@ vi.mock('expo-secure-store', () => ({
   WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'WHEN_UNLOCKED_THIS_DEVICE_ONLY',
 }));
 
-type State = Partial<RootState>;
+interface State {
+  settings?: Pick<RootState['settings'], 'securityLevelPreference'>;
+}
 
-vi.mock('..', () => ({
+vi.mock('../store', () => ({
   store: {
     getState() {
       return {
         settings: {
           securityLevelPreference: 'insecure' as const,
-        } as State['settings'],
+        },
       } satisfies State;
     },
   },

@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native';
+import { type NativeSyntheticEvent, type TextLayoutEventData } from 'react-native';
 
-import { InputCurrencyMode } from '@/utils/types';
+import { type InputCurrencyMode } from '@/utils/types';
 
-import { CryptoCurrency, QuoteCurrency } from '@leather.io/models';
-import { Box, Text, Theme } from '@leather.io/ui/native';
+import { type CryptoCurrency, type QuoteCurrency } from '@leather.io/models';
+import { Box, Text, type Theme } from '@leather.io/ui/native';
 
 const initialLineHeight = 44;
 const topOffsetRatio = 0.27;

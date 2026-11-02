@@ -1,4 +1,4 @@
-import { HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 interface LiStxIconProps extends HTMLStyledProps<'img'> {
   size?: number;
