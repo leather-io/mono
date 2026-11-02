@@ -38,6 +38,9 @@ export function Button({
   ...props
 }: ButtonProps) {
   const { color, ...variantProps } = getButtonStyles({ size, variant, intent, disabled });
+  const iconSideStyles = hasExplicitHorizontalPadding(props)
+    ? {}
+    : getIconSideStyles({ size, hasIconStart: !!iconStart, hasIconEnd: !!iconEnd });
 
   return (
     <Pressable
@@ -49,6 +52,7 @@ export function Button({
       disabled={disabled}
       px="3"
       {...variantProps}
+      {...iconSideStyles}
       {...props}
     >
       {renderIcon(iconStart, { color, variant: 'small' })}
@@ -72,7 +76,7 @@ function renderIcon(icon: ComponentType<IconProps> | ReactElement | undefined, p
 const sizes: Record<ButtonSize, VariantProps> = {
   sm: {
     height: 32,
-    px: '3',
+    px: '4',
     gap: '1',
   },
   md: {
@@ -117,6 +121,41 @@ const disabledOverrides: Record<ButtonVariant, VariantProps> = {
   outline: { borderColor: 'ink.text-non-interactive', color: 'ink.text-non-interactive' },
   ghost: { color: 'ink.text-non-interactive' },
 };
+
+const iconSidePadding: Partial<Record<ButtonSize, VariantProps['px']>> = {
+  sm: '3',
+};
+
+const horizontalPaddingProps = [
+  'p',
+  'px',
+  'pl',
+  'pr',
+  'paddingHorizontal',
+  'paddingLeft',
+  'paddingRight',
+] as const;
+
+function hasExplicitHorizontalPadding(props: PressableProps) {
+  return horizontalPaddingProps.some(key => props[key] !== undefined);
+}
+
+function getIconSideStyles({
+  size,
+  hasIconStart,
+  hasIconEnd,
+}: {
+  size: ButtonSize;
+  hasIconStart: boolean;
+  hasIconEnd: boolean;
+}): VariantProps {
+  const padding = iconSidePadding[size];
+  if (!padding) return {};
+  return {
+    ...(hasIconStart && { pl: padding }),
+    ...(hasIconEnd && { pr: padding }),
+  };
+}
 
 function getButtonStyles({
   size,
