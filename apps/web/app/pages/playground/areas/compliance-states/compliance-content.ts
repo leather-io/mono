@@ -1,7 +1,3 @@
-// Copy and mock data for the compliance-states area. Copy follows the
-// "Compliance gate: how it behaves" spec (v5, Nov 2), extension rows.
-// Everything here is static: no screening calls, no stores.
-
 export const lockoutCopy = {
   title: 'Leather is locked',
   body: 'An address in one of your wallets is restricted, so Leather can’t show balances or make transactions.',
@@ -19,15 +15,6 @@ export const whyLockedCopy = {
   backupNote: 'Shown only for wallets created in Leather',
 };
 
-export const disputeCopy = {
-  title: 'Dispute this',
-  calloutTitle: 'Destination TBD',
-  calloutBody: 'Form, email or support link. Owner to be named by Rena.',
-  fieldLabel: 'What should we know?',
-  fieldPlaceholder: 'Tell us what happened…',
-  submit: 'Send',
-};
-
 export const recipientRefusedCopy = {
   title: 'Leather can’t send this',
   body: 'The recipient address is restricted. Nothing was sent. Your wallet isn’t affected.',
@@ -38,25 +25,91 @@ export const counterpartyRefusedCopy = {
   body: 'This transaction involves a restricted address. Nothing was signed.',
 };
 
-export const screeningUnavailableCopy = {
-  lead: 'Screening is currently unavailable, so this transaction can’t be signed. Nothing was sent. Try again in a moment or ',
+export const unavailableCopy = {
+  lead: 'This transaction can’t be completed right now. Please try again later, or ',
   linkLabel: 'contact support',
-  trail: '.',
+  trail: ' if the issue persists.',
 };
 
+export type MailKind = 'dispute' | 'support';
+
+interface MailDraft {
+  to: string;
+  subject: string;
+  body: string;
+}
+
 const supportEmail = 'support@leather.io';
-const supportSubject = 'Transaction couldn’t be screened';
-const supportBody = [
-  'Anything else we should know? (optional)',
-  '',
+
+const diagnostics = [
   '— Filled in by Leather —',
   'App version: Leather 6.x.x (extension)',
   'Platform: Chrome · macOS',
-  'Time: 2026-11-02 14:32 UTC',
-  'Error: leather_api_network_error',
-].join('\n');
+  'Time: 2026-11-03 14:32 UTC',
+];
 
-export const supportMailto = `mailto:${supportEmail}?subject=${encodeURIComponent(supportSubject)}&body=${encodeURIComponent(supportBody)}`;
+export const mailDrafts: Record<MailKind, MailDraft> = {
+  dispute: {
+    to: supportEmail,
+    subject: 'Dispute: Leather account restricted',
+    body: [
+      'Hi Leather team,',
+      '',
+      'Leather says one of my addresses is restricted, and I think this is a mistake.',
+      '',
+      'Anything else we should know? (optional)',
+      '',
+      '',
+      ...diagnostics,
+      'Reference ID: LTR-7F3K-92QD',
+    ].join('\n'),
+  },
+  support: {
+    to: supportEmail,
+    subject: 'Transaction couldn’t be completed',
+    body: [
+      'Hi Leather team,',
+      '',
+      'A transaction couldn’t be completed. Anything else we should know? (optional)',
+      '',
+      '',
+      ...diagnostics,
+      'Error: leather_api_network_error',
+      'Reference ID: LTR-4C8M-31HV',
+    ].join('\n'),
+  },
+};
+
+export function getMailto(kind: MailKind) {
+  const draft = mailDrafts[kind];
+  return `mailto:${draft.to}?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`;
+}
+
+export const onboardingCopy = {
+  tagline: ['Buy. send.', 'swap. earn.', 'grow.'],
+  subheader:
+    'Leather is a wallet for Bitcoin and Stacks, designed for security, clarity, and growth. Join 100,000+ users on your favorite platform.',
+  signInTitle: 'Sign in with your Secret Key',
+  signInDescription: 'Speed things up by pasting your entire Secret Key in one go.',
+  passwordTitle: 'Set a password',
+  passwordDescription:
+    'Your password protects your Secret Key on this device only. To access your wallet on another device, you’ll need just your Secret Key.',
+};
+
+export const mockSecretKey = [
+  'ocean',
+  'vivid',
+  'rally',
+  'timber',
+  'glove',
+  'canyon',
+  'spirit',
+  'lemon',
+  'orbit',
+  'humble',
+  'piano',
+  'marble',
+];
 
 export const mockAccount = {
   name: 'Account 1',
@@ -69,6 +122,15 @@ export const mockTokens = [
   { id: 'stx', name: 'Stacks', symbol: 'STX', fiat: '$4,270.20', amount: '4,812 STX' },
   { id: 'usdcx', name: 'USDCx', symbol: 'USDCx', fiat: '$0.00', amount: '0 USDCx' },
 ];
+
+export const mockSendForm = {
+  amount: '0.05',
+  symbol: 'BTC',
+  fiat: '~ $3,284.00 USD',
+  assetName: 'Bitcoin',
+  recipient: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx7m2k',
+  available: '0.0821 BTC',
+};
 
 export const mockSendReview = {
   amount: '0.05',
@@ -95,7 +157,4 @@ export const mockDappRequest = {
   ],
 };
 
-// How long the simulated screening takes before a verdict lands, and how
-// long Home stays on screen before the mid-session background hit.
 export const screeningDelayMs = 1600;
-export const backgroundHitDelayMs = 3000;

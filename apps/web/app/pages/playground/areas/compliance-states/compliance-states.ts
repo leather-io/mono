@@ -1,13 +1,10 @@
-// Every state the switcher lists, in recording order. 'surface' picks the
-// frame size: the action popup is 390 × 600, a dApp request window 390 × 756.
-
 export type ComplianceStateId =
+  | 'onboarding-to-lockout'
   | 'home-to-lockout'
   | 'lockout'
   | 'why-created'
   | 'why-imported'
-  | 'dispute'
-  | 'review-clean'
+  | 'dispute-email'
   | 'review-recipient-flagged'
   | 'review-own-flagged'
   | 'review-no-answer'
@@ -15,9 +12,27 @@ export type ComplianceStateId =
   | 'approve-counterparty-flagged'
   | 'approve-no-answer';
 
-type ComplianceSurface = 'popup' | 'request-window';
+type ComplianceSurface = 'popup' | 'request-window' | 'tab';
 
-export type ComplianceOutcome = 'clean' | 'refused' | 'locked' | 'no-answer' | 'transition';
+export type ComplianceOutcome = 'clean' | 'refused' | 'locked' | 'no-answer' | 'flow';
+
+export type FlowStepId =
+  | 'welcome'
+  | 'secret-key'
+  | 'password'
+  | 'home-loading'
+  | 'home'
+  | 'locked'
+  | 'email'
+  | 'send-form'
+  | 'screening'
+  | 'verdict';
+
+interface FlowStep {
+  id: FlowStepId;
+  label: string;
+  durationMs?: number;
+}
 
 export interface ComplianceState {
   id: ComplianceStateId;
@@ -26,6 +41,7 @@ export interface ComplianceState {
   surface: ComplianceSurface;
   scenario: string;
   note: string;
+  steps?: FlowStep[];
 }
 
 interface ComplianceStateGroup {
@@ -34,18 +50,46 @@ interface ComplianceStateGroup {
   states: ComplianceState[];
 }
 
+const screeningStep: FlowStep = { id: 'screening', label: 'Screening', durationMs: 1600 };
+
 export const complianceStateGroups: ComplianceStateGroup[] = [
   {
+    id: 'onboarding',
+    label: 'Onboarding · full-page tab',
+    states: [
+      {
+        id: 'onboarding-to-lockout',
+        label: 'Restore → lockout',
+        outcome: 'flow',
+        surface: 'tab',
+        scenario: 'S1 · S2',
+        note: 'The opening shot. Welcome → Use existing key → Secret Key → password, then Home loads as usual. Screening runs in the background; a few seconds later the result comes back flagged and the lockout replaces Home.',
+        steps: [
+          { id: 'welcome', label: 'Welcome', durationMs: 2600 },
+          { id: 'secret-key', label: 'Secret Key', durationMs: 3000 },
+          { id: 'password', label: 'Password', durationMs: 2600 },
+          { id: 'home-loading', label: 'Home loading', durationMs: 2000 },
+          { id: 'home', label: 'Home', durationMs: 2600 },
+          { id: 'locked', label: 'Locked' },
+        ],
+      },
+    ],
+  },
+  {
     id: 'lockout',
-    label: 'Lockout',
+    label: 'Lockout · popup',
     states: [
       {
         id: 'home-to-lockout',
         label: 'Home → lockout',
-        outcome: 'transition',
+        outcome: 'flow',
         surface: 'popup',
-        scenario: 'S2 · S3',
-        note: 'Home loads with balances while screening runs in the background. A few seconds later the result arrives flagged, and the lockout replaces Home.',
+        scenario: 'S3',
+        note: 'Mid-session hit. Home shows balances, a background rescreen comes back flagged, and the lockout replaces whatever is on screen.',
+        steps: [
+          { id: 'home', label: 'Home', durationMs: 3000 },
+          { id: 'locked', label: 'Locked' },
+        ],
       },
       {
         id: 'lockout',
@@ -53,7 +97,7 @@ export const complianceStateGroups: ComplianceStateGroup[] = [
         outcome: 'locked',
         surface: 'popup',
         scenario: 'S2 · S11',
-        note: 'Whole-app lockout, every wallet. No balances. Only two ways forward: “Why am I seeing this?” and “Dispute this”.',
+        note: 'Whole-app lockout, every wallet, no balances. Two ways forward: “Why am I seeing this?” (primary) and “Dispute this” (secondary, opens an email).',
       },
       {
         id: 'why-created',
@@ -72,12 +116,16 @@ export const complianceStateGroups: ComplianceStateGroup[] = [
         note: 'Same explanation. No backup link: the user typed the Secret Key in, so they already have it.',
       },
       {
-        id: 'dispute',
-        label: 'Dispute this',
-        outcome: 'locked',
+        id: 'dispute-email',
+        label: 'Dispute this → email',
+        outcome: 'flow',
         surface: 'popup',
         scenario: 'S11b',
-        note: 'Placeholder. The destination (form, email or support link) and its owner are still open.',
+        note: '“Dispute this” opens the user’s mail app with a pre-filled draft: subject, app version, platform, time and a reference ID. No addresses. The support address is a placeholder.',
+        steps: [
+          { id: 'locked', label: 'Locked', durationMs: 1400 },
+          { id: 'email', label: 'Email draft' },
+        ],
       },
     ],
   },
@@ -86,36 +134,39 @@ export const complianceStateGroups: ComplianceStateGroup[] = [
     label: 'Send review · popup',
     states: [
       {
-        id: 'review-clean',
-        label: 'Clean',
-        outcome: 'clean',
-        surface: 'popup',
-        scenario: 'S7',
-        note: 'Every address comes back clean. Confirm is enabled and the user sends as usual.',
-      },
-      {
         id: 'review-recipient-flagged',
         label: 'Recipient flagged',
         outcome: 'refused',
         surface: 'popup',
         scenario: 'S6',
-        note: 'Only this transaction is refused. Close is the only action. The app stays usable.',
+        note: 'Send form → Continue. Screening runs as the review screen opens, and the refusal shows before the user can send: the Confirm button is replaced by Close. Only this transaction is refused; the app stays usable.',
+        steps: [
+          { id: 'send-form', label: 'Send form', durationMs: 2600 },
+          screeningStep,
+          { id: 'verdict', label: 'Refused' },
+        ],
       },
       {
         id: 'review-own-flagged',
         label: 'Own address flagged',
-        outcome: 'transition',
+        outcome: 'locked',
         surface: 'popup',
         scenario: 'S5',
-        note: 'The review screen screens every address, including the user’s own. Own address flagged: nothing is signed and the app goes straight into the lockout.',
+        note: 'Send form → Continue. The review screen screens every address, including the user’s own. Own address flagged: nothing is signed and the app goes straight into the lockout.',
+        steps: [
+          { id: 'send-form', label: 'Send form', durationMs: 2600 },
+          screeningStep,
+          { id: 'verdict', label: 'Locked' },
+        ],
       },
       {
         id: 'review-no-answer',
         label: 'No answer',
         outcome: 'no-answer',
         surface: 'popup',
-        scenario: 'S7 · 7a',
-        note: 'No provider answered. Inline error above the footer; “contact support” opens a pre-filled email. Try again reruns the check (here it comes back clean).',
+        scenario: 'S7',
+        note: 'No provider answered. A general error sits above the footer; “contact support” opens a pre-filled email. Try again reruns the check (here it comes back clean).',
+        steps: [screeningStep, { id: 'verdict', label: 'No answer' }],
       },
     ],
   },
@@ -129,7 +180,8 @@ export const complianceStateGroups: ComplianceStateGroup[] = [
         outcome: 'clean',
         surface: 'request-window',
         scenario: 'S9',
-        note: 'Every party comes back clean. Cancel and Confirm, as today.',
+        note: 'The contrast. Every party comes back clean while the window opens, and Cancel / Confirm appear as today.',
+        steps: [screeningStep, { id: 'verdict', label: 'Clean' }],
       },
       {
         id: 'approve-counterparty-flagged',
@@ -137,15 +189,17 @@ export const complianceStateGroups: ComplianceStateGroup[] = [
         outcome: 'refused',
         surface: 'request-window',
         scenario: 'S8',
-        note: 'Another party is restricted, so this signature is refused. Close only. The app stays usable.',
+        note: 'Screening runs as the approval window opens. Another party is restricted, so the refusal shows before the user can approve: Close only. The app stays usable.',
+        steps: [screeningStep, { id: 'verdict', label: 'Refused' }],
       },
       {
         id: 'approve-no-answer',
         label: 'No answer',
         outcome: 'no-answer',
         surface: 'request-window',
-        scenario: 'S9 · 7a',
-        note: 'Same inline error as the send review, above the footer. Cancel and Try again.',
+        scenario: 'S9',
+        note: 'Same general error as the send review, above the footer. Cancel and Try again.',
+        steps: [screeningStep, { id: 'verdict', label: 'No answer' }],
       },
     ],
   },
@@ -153,7 +207,7 @@ export const complianceStateGroups: ComplianceStateGroup[] = [
 
 export const complianceStates = complianceStateGroups.flatMap(group => group.states);
 
-export const defaultComplianceStateId: ComplianceStateId = 'home-to-lockout';
+export const defaultComplianceStateId: ComplianceStateId = 'onboarding-to-lockout';
 
 export function findComplianceState(id: string | null) {
   return complianceStates.find(state => state.id === id);
@@ -162,4 +216,5 @@ export function findComplianceState(id: string | null) {
 export const surfaceLabels: Record<ComplianceSurface, string> = {
   popup: 'Extension popup · 390 × 600',
   'request-window': 'Request window · 390 × 756',
+  tab: 'Full-page tab',
 };

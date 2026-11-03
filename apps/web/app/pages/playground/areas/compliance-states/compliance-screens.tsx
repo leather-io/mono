@@ -12,11 +12,12 @@ import {
   Flag,
   IconButton,
   InfoCircleIcon,
+  Input,
   ItemLayout,
   Link,
-  LockIcon,
   QuestionCircleIcon,
   SettingsGearIcon,
+  SkeletonLoader,
   StxAvatarIcon,
   Tabs,
   UsdcxAvatarIcon,
@@ -24,10 +25,10 @@ import {
 
 import {
   counterpartyRefusedCopy,
-  disputeCopy,
   lockoutCopy,
   mockAccount,
   mockDappRequest,
+  mockSendForm,
   mockSendReview,
   mockTokens,
   recipientRefusedCopy,
@@ -40,23 +41,12 @@ import {
   PopupBody,
   PopupFooter,
   PopupHeader,
-  ScreeningUnavailableError,
+  UnavailableError,
+  useComplianceActions,
 } from './compliance-screen-parts';
-import { type ComplianceStateId } from './compliance-states';
+import lockSticker from './lock-sticker.png';
 
-interface NavigableScreenProps {
-  onNavigate(id: ComplianceStateId): void;
-}
-
-function useDelayedFlag(isActive: boolean, delayMs: number) {
-  const [done, setDone] = useState(!isActive);
-  useEffect(() => {
-    if (!isActive) return;
-    const timeout = window.setTimeout(() => setDone(true), delayMs);
-    return () => window.clearTimeout(timeout);
-  }, [isActive, delayMs]);
-  return done;
-}
+type ScreenLayout = 'popup' | 'full';
 
 function TokenAvatar({ id }: { id: string }) {
   if (id === 'btc') return <BtcAvatarIcon />;
@@ -64,117 +54,161 @@ function TokenAvatar({ id }: { id: string }) {
   return <UsdcxAvatarIcon />;
 }
 
-// Home
+function useRetry() {
+  const [phase, setPhase] = useState<'idle' | 'screening' | 'clean'>('idle');
+  useEffect(() => {
+    if (phase !== 'screening') return;
+    const timeout = window.setTimeout(() => setPhase('clean'), screeningDelayMs);
+    return () => window.clearTimeout(timeout);
+  }, [phase]);
+  return { phase, retry: () => setPhase('screening') };
+}
 
-function HomeScreen() {
+interface HomeScreenProps {
+  layout: ScreenLayout;
+  isLoading?: boolean;
+}
+export function HomeScreen({ layout, isLoading = false }: HomeScreenProps) {
+  const isFull = layout === 'full';
+  const actions = isFull
+    ? ['Buy', 'Sell', 'Send', 'Receive', 'Swap']
+    : ['Buy & Sell', 'Transfer', 'Swap'];
   return (
-    <Flex direction="column" height="100%" data-testid="compliance-home">
-      <styled.header p="space.04" flexShrink={0}>
-        <Flex alignItems="center" justifyContent="space-between" ml="space.02">
-          <Flex alignItems="center" gap="space.02">
-            <styled.span textStyle="label.01">{mockAccount.name}</styled.span>
-            <ChevronDownIcon variant="small" />
+    <Flex direction="column" height="100%" data-testid="compliance-home" data-loading={isLoading}>
+      <Box width="100%" maxWidth={isFull ? 'fullPageMaxWidth' : undefined} mx="auto">
+        <styled.header p="space.04" flexShrink={0}>
+          <Flex alignItems="center" justifyContent="space-between" ml="space.02">
+            <Flex alignItems="center" gap="space.02">
+              <styled.span textStyle="label.01">{mockAccount.name}</styled.span>
+              <ChevronDownIcon variant="small" />
+            </Flex>
+            <Flex>
+              {isFull ? null : <IconButton height="headerContainerHeight" icon={<ExpandIcon />} />}
+              <IconButton height="headerContainerHeight" icon={<SettingsGearIcon />} />
+            </Flex>
           </Flex>
-          <Flex>
-            <IconButton height="headerContainerHeight" icon={<ExpandIcon />} />
-            <IconButton height="headerContainerHeight" icon={<SettingsGearIcon />} />
-          </Flex>
-        </Flex>
-      </styled.header>
+        </styled.header>
+      </Box>
       <PopupBody>
-        <Stack px="space.05" pb="space.05" gap="space.05">
-          <Stack gap="space.02">
-            <Flag
-              reverse
-              spacing="space.01"
-              img={<InfoCircleIcon color="ink.text-subdued" display="inline" variant="small" />}
-            >
-              <styled.h2 textStyle="label.02">Total balance</styled.h2>
-            </Flag>
-            <styled.h1 textStyle="heading.02">{mockAccount.totalBalance}</styled.h1>
+        <Box width="100%" maxWidth={isFull ? 'fullPageMaxWidth' : undefined} mx="auto">
+          <Stack px="space.05" pb="space.05" gap="space.05">
+            <Stack gap="space.02">
+              <Flag
+                reverse
+                spacing="space.01"
+                img={<InfoCircleIcon color="ink.text-subdued" display="inline" variant="small" />}
+              >
+                <styled.h2 textStyle="label.02">Total balance</styled.h2>
+              </Flag>
+              <SkeletonLoader width="200px" height="46px" isLoading={isLoading}>
+                <styled.h1 textStyle="heading.02" animation="fadein 300ms ease-out">
+                  {mockAccount.totalBalance}
+                </styled.h1>
+              </SkeletonLoader>
+            </Stack>
+            <Flex gap={isFull ? 'space.04' : 'space.01'}>
+              {actions.map((label, index) => (
+                <Button
+                  key={label}
+                  minWidth={100}
+                  flexGrow={1}
+                  variant={index === 0 ? 'solid' : 'outline'}
+                >
+                  {label}
+                </Button>
+              ))}
+            </Flex>
           </Stack>
-          <Flex gap="space.01">
-            <Button minWidth={100} flexGrow={1} variant="solid">
-              Buy & Sell
-            </Button>
-            <Button minWidth={100} flexGrow={1} variant="outline">
-              Transfer
-            </Button>
-            <Button minWidth={100} flexGrow={1} variant="outline">
-              Swap
-            </Button>
-          </Flex>
-        </Stack>
-        <Tabs.Root defaultValue="tokens">
-          <Tabs.List>
-            <Tabs.Trigger value="tokens">Tokens</Tabs.Trigger>
-            <Tabs.Trigger value="collectibles">Collectibles</Tabs.Trigger>
-            <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
-          </Tabs.List>
-        </Tabs.Root>
-        <Stack gap="space.00" py="space.02">
-          {mockTokens.map(token => (
-            <Box key={token.id} px="space.05" py="space.03">
-              <ItemLayout
-                img={<TokenAvatar id={token.id} />}
-                titleLeft={token.name}
-                captionLeft={token.symbol}
-                titleRight={token.fiat}
-                captionRight={token.amount}
-              />
-            </Box>
-          ))}
-        </Stack>
+          <Tabs.Root defaultValue="tokens">
+            <Tabs.List>
+              <Tabs.Trigger value="tokens">Tokens</Tabs.Trigger>
+              <Tabs.Trigger value="collectibles">Collectibles</Tabs.Trigger>
+              <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+            </Tabs.List>
+          </Tabs.Root>
+          <Stack gap="space.00" py="space.02">
+            {mockTokens.map(token => (
+              <Box key={token.id} px="space.05" py="space.03">
+                {isLoading ? (
+                  <Flex alignItems="center" gap="space.03">
+                    <SkeletonLoader isLoading width="40px" height="40px" borderRadius="round" />
+                    <Stack gap="space.01" flex={1}>
+                      <SkeletonLoader isLoading width="96px" height="16px" />
+                      <SkeletonLoader isLoading width="48px" height="14px" />
+                    </Stack>
+                    <SkeletonLoader isLoading width="80px" height="16px" />
+                  </Flex>
+                ) : (
+                  <ItemLayout
+                    img={<TokenAvatar id={token.id} />}
+                    titleLeft={token.name}
+                    captionLeft={token.symbol}
+                    titleRight={token.fiat}
+                    captionRight={token.amount}
+                  />
+                )}
+              </Box>
+            ))}
+          </Stack>
+        </Box>
       </PopupBody>
     </Flex>
   );
 }
 
-// Lockout
-
-export function LockoutScreen({ onNavigate }: NavigableScreenProps) {
+interface LockoutScreenProps {
+  layout?: ScreenLayout;
+}
+export function LockoutScreen({ layout = 'popup' }: LockoutScreenProps) {
+  const { goTo, openMail } = useComplianceActions();
+  const isFull = layout === 'full';
   return (
-    <Flex direction="column" height="100%" data-testid="compliance-lockout">
-      <PopupHeader showLogo showSettings={false} />
-      <Flex direction="column" justifyContent="center" flex={1} px="space.05" gap="space.04">
-        <Flex
-          width="64px"
-          height="64px"
-          alignItems="center"
-          justifyContent="center"
-          borderRadius="md"
-          bg="ink.component-background-default"
-          transform="rotate(-6deg)"
-          mb="space.02"
-        >
-          <LockIcon color="ink.text-subdued" />
-        </Flex>
-        <styled.h1 textStyle="heading.03">{lockoutCopy.title}</styled.h1>
-        <styled.p textStyle="body.02" color="ink.text-secondary">
-          {lockoutCopy.body}
-        </styled.p>
+    <Flex
+      direction="column"
+      height="100%"
+      width="100%"
+      maxWidth={isFull ? '440px' : undefined}
+      mx="auto"
+      animation="fadein 240ms ease-out"
+      data-testid="compliance-lockout"
+    >
+      {isFull ? null : <PopupHeader showLogo showSettings={false} />}
+      <Box px="space.05" pt={isFull ? 'space.07' : 'space.01'}>
+        <styled.h1 textStyle="heading.03" pb="space.04">
+          {lockoutCopy.title}
+        </styled.h1>
+        <styled.p textStyle="label.01">{lockoutCopy.body}</styled.p>
+      </Box>
+      <Flex flex={1} minHeight={0} alignItems="center" justifyContent="center" py="space.03">
+        <styled.img
+          src={lockSticker}
+          alt=""
+          width={isFull ? '240px' : '184px'}
+          height={isFull ? '240px' : '184px'}
+          objectFit="contain"
+          data-testid="compliance-lock-sticker"
+        />
       </Flex>
-      <PopupFooter bordered>
-        <Stack gap="space.03">
-          <Button fullWidth onClick={() => onNavigate('why-created')}>
-            {lockoutCopy.whyCta}
-          </Button>
-          <Button fullWidth variant="outline" onClick={() => onNavigate('dispute')}>
-            {lockoutCopy.disputeCta}
-          </Button>
-        </Stack>
-      </PopupFooter>
+      <Stack px="space.05" pb="space.05" gap="space.02">
+        <Button fullWidth variant="ghost" onClick={() => openMail('dispute')}>
+          {lockoutCopy.disputeCta}
+        </Button>
+        <Button fullWidth onClick={() => goTo('why-created')}>
+          {lockoutCopy.whyCta}
+        </Button>
+      </Stack>
     </Flex>
   );
 }
 
-interface WhyLockedScreenProps extends NavigableScreenProps {
+interface WhyLockedScreenProps {
   isCreatedInLeather: boolean;
 }
-export function WhyLockedScreen({ onNavigate, isCreatedInLeather }: WhyLockedScreenProps) {
+export function WhyLockedScreen({ isCreatedInLeather }: WhyLockedScreenProps) {
+  const { goTo, openMail } = useComplianceActions();
   return (
     <Flex direction="column" height="100%" data-testid="compliance-why-locked">
-      <PopupHeader onBack={() => onNavigate('lockout')} showSettings={false} />
+      <PopupHeader onBack={() => goTo('lockout')} showSettings={false} />
       <PopupBody>
         <Stack px="space.05" gap="space.04">
           <styled.h1 textStyle="heading.03">{whyLockedCopy.title}</styled.h1>
@@ -198,7 +232,7 @@ export function WhyLockedScreen({ onNavigate, isCreatedInLeather }: WhyLockedScr
         </Stack>
       </PopupBody>
       <PopupFooter bordered>
-        <Button fullWidth variant="outline" onClick={() => onNavigate('dispute')}>
+        <Button fullWidth variant="outline" onClick={() => openMail('dispute')}>
           {lockoutCopy.disputeCta}
         </Button>
       </PopupFooter>
@@ -206,82 +240,79 @@ export function WhyLockedScreen({ onNavigate, isCreatedInLeather }: WhyLockedScr
   );
 }
 
-export function DisputeScreen({ onNavigate }: NavigableScreenProps) {
-  const [message, setMessage] = useState('');
+interface SendFormScreenProps {
+  onContinue(): void;
+}
+export function SendFormScreen({ onContinue }: SendFormScreenProps) {
   return (
-    <Flex direction="column" height="100%" data-testid="compliance-dispute">
-      <PopupHeader onBack={() => onNavigate('lockout')} showSettings={false} />
+    <Flex direction="column" height="100%" data-testid="compliance-send-form">
+      <PopupHeader title="Send" onBack={() => undefined} />
       <PopupBody>
-        <Stack px="space.05" gap="space.04">
-          <styled.h1 textStyle="heading.03">{disputeCopy.title}</styled.h1>
-          <Callout variant="warning" title={disputeCopy.calloutTitle} borderRadius="sm">
-            {disputeCopy.calloutBody}
-          </Callout>
-          <Stack gap="space.02">
-            <styled.label htmlFor="compliance-dispute-message" textStyle="label.02">
-              {disputeCopy.fieldLabel}
-            </styled.label>
-            <styled.textarea
-              id="compliance-dispute-message"
-              value={message}
-              onChange={event => setMessage(event.target.value)}
-              placeholder={disputeCopy.fieldPlaceholder}
-              rows={5}
-              resize="none"
-              p="space.04"
-              textStyle="body.02"
-              borderWidth="1px"
-              borderStyle="solid"
-              borderColor="ink.border-default"
-              borderRadius="sm"
-              bg="ink.background-primary"
-              _placeholder={{ color: 'ink.text-subdued' }}
-              _focus={{ outline: 'none', borderColor: 'ink.action-primary-default' }}
-            />
-          </Stack>
+        <Stack px="space.05" pt="space.04" alignItems="center">
+          <Flex alignItems="baseline" justifyContent="center" gap="space.02" height="55px">
+            <styled.span fontFamily="Marche" fontSize="48px" lineHeight="55px" fontWeight={500}>
+              {mockSendForm.amount}
+            </styled.span>
+            <styled.span fontFamily="Marche" fontSize="48px" lineHeight="55px">
+              {mockSendForm.symbol}
+            </styled.span>
+          </Flex>
+          <styled.span textStyle="caption.01" color="ink.text-subdued" mt="12px">
+            {mockSendForm.fiat}
+          </styled.span>
+          <Flex
+            alignItems="center"
+            borderWidth="1px"
+            borderStyle="solid"
+            borderColor="ink.border-default"
+            borderRadius="sm"
+            minHeight="64px"
+            mt="space.06"
+            mb="space.04"
+            px="space.04"
+            width="100%"
+          >
+            <Flag img={<BtcAvatarIcon />} spacing="space.03" width="100%">
+              <styled.span textStyle="label.01">{mockSendForm.assetName}</styled.span>
+            </Flag>
+          </Flex>
+          <Box width="100%">
+            <Input.Root shrink>
+              <Input.Label>Recipient</Input.Label>
+              <Input.Field id="compliance-send-recipient" value={mockSendForm.recipient} readOnly />
+            </Input.Root>
+          </Box>
         </Stack>
       </PopupBody>
-      <PopupFooter bordered>
-        <Button fullWidth disabled={message.trim().length === 0}>
-          {disputeCopy.submit}
+      <PopupFooter>
+        <Button fullWidth onClick={onContinue} data-testid="compliance-send-continue">
+          Continue
         </Button>
+        <Flex justifyContent="space-between" mt="space.03">
+          <styled.span textStyle="caption.01" color="ink.text-subdued">
+            Available balance
+          </styled.span>
+          <styled.span textStyle="caption.01">{mockSendForm.available}</styled.span>
+        </Flex>
       </PopupFooter>
     </Flex>
   );
 }
 
-// Send review (popup)
+type ReviewVerdict = 'recipient-flagged' | 'no-answer';
 
-type ReviewVerdict = 'clean' | 'recipient-flagged' | 'own-flagged' | 'no-answer';
-
-interface SendReviewScreenProps extends NavigableScreenProps {
+interface SendReviewScreenProps {
   verdict: ReviewVerdict;
-  startScreening: boolean;
+  isScreening: boolean;
 }
-export function SendReviewScreen({ verdict, startScreening, onNavigate }: SendReviewScreenProps) {
-  const [currentVerdict, setCurrentVerdict] = useState(verdict);
-  const [isScreening, setIsScreening] = useState(startScreening);
-
-  useEffect(() => {
-    if (!isScreening) return;
-    const timeout = window.setTimeout(() => setIsScreening(false), screeningDelayMs);
-    return () => window.clearTimeout(timeout);
-  }, [isScreening]);
-
-  function retry() {
-    setCurrentVerdict('clean');
-    setIsScreening(true);
-  }
-
-  if (!isScreening && currentVerdict === 'own-flagged') {
-    return <LockoutScreen onNavigate={onNavigate} />;
-  }
-
-  const isRefused = !isScreening && currentVerdict === 'recipient-flagged';
-  const isUnavailable = !isScreening && currentVerdict === 'no-answer';
+export function SendReviewScreen({ verdict, isScreening }: SendReviewScreenProps) {
+  const { phase, retry } = useRetry();
+  const showSkeleton = isScreening || phase === 'screening';
+  const isRefused = !showSkeleton && verdict === 'recipient-flagged';
+  const isUnavailable = !showSkeleton && verdict === 'no-answer' && phase === 'idle';
 
   function renderActions() {
-    if (isScreening) return <FooterActionsSkeleton count={1} />;
+    if (showSkeleton) return <FooterActionsSkeleton count={1} />;
     if (isRefused) {
       return (
         <Button fullWidth variant="outline">
@@ -309,7 +340,7 @@ export function SendReviewScreen({ verdict, startScreening, onNavigate }: SendRe
       <PopupHeader title="Review" onBack={() => undefined} />
       <PopupBody>
         {isRefused ? (
-          <Box px="space.05" pt="space.02" pb="space.05">
+          <Box px="space.05" pt="space.02" pb="space.05" animation="fadein 240ms ease-out">
             <Callout
               variant="error"
               title={recipientRefusedCopy.title}
@@ -333,44 +364,27 @@ export function SendReviewScreen({ verdict, startScreening, onNavigate }: SendRe
           ))}
         </Stack>
       </PopupBody>
-      <PopupFooter notice={isUnavailable ? <ScreeningUnavailableError /> : null}>
+      <PopupFooter notice={isUnavailable ? <UnavailableError /> : null}>
         {renderActions()}
       </PopupFooter>
     </Flex>
   );
 }
 
-// dApp "Approve transaction" (request window)
-
 type ApproveVerdict = 'clean' | 'counterparty-flagged' | 'no-answer';
 
 interface ApproveTransactionScreenProps {
   verdict: ApproveVerdict;
-  startScreening: boolean;
+  isScreening: boolean;
 }
-export function ApproveTransactionScreen({
-  verdict,
-  startScreening,
-}: ApproveTransactionScreenProps) {
-  const [currentVerdict, setCurrentVerdict] = useState(verdict);
-  const [isScreening, setIsScreening] = useState(startScreening);
-
-  useEffect(() => {
-    if (!isScreening) return;
-    const timeout = window.setTimeout(() => setIsScreening(false), screeningDelayMs);
-    return () => window.clearTimeout(timeout);
-  }, [isScreening]);
-
-  function retry() {
-    setCurrentVerdict('clean');
-    setIsScreening(true);
-  }
-
-  const isRefused = !isScreening && currentVerdict === 'counterparty-flagged';
-  const isUnavailable = !isScreening && currentVerdict === 'no-answer';
+export function ApproveTransactionScreen({ verdict, isScreening }: ApproveTransactionScreenProps) {
+  const { phase, retry } = useRetry();
+  const showSkeleton = isScreening || phase === 'screening';
+  const isRefused = !showSkeleton && verdict === 'counterparty-flagged';
+  const isUnavailable = !showSkeleton && verdict === 'no-answer' && phase === 'idle';
 
   function getActions() {
-    if (isScreening) return [<FooterActionsSkeleton key="skeleton" count={2} />];
+    if (showSkeleton) return [<FooterActionsSkeleton key="skeleton" count={2} />];
     if (isRefused) {
       return [
         <Button key="close" fullWidth variant="outline">
@@ -405,7 +419,10 @@ export function ApproveTransactionScreen({
         }
       />
       {isRefused ? (
-        <Approver.Section>
+        <Approver.Section
+          className="approver-section skip-animation"
+          animation="fadein 240ms ease-out"
+        >
           <Callout
             variant="error"
             title={counterpartyRefusedCopy.title}
@@ -430,20 +447,8 @@ export function ApproveTransactionScreen({
         </Stack>
       </Approver.Section>
       <Approver.Actions actions={getActions()}>
-        {isUnavailable ? <ScreeningUnavailableError /> : null}
+        {isUnavailable ? <UnavailableError /> : null}
       </Approver.Actions>
     </Approver>
   );
-}
-
-// Home → lockout: Home with balances, then the background result lands and
-// the lockout replaces it.
-
-interface HomeToLockoutScreenProps extends NavigableScreenProps {
-  delayMs: number;
-}
-export function HomeToLockoutScreen({ onNavigate, delayMs }: HomeToLockoutScreenProps) {
-  const isLocked = useDelayedFlag(true, delayMs);
-  if (isLocked) return <LockoutScreen onNavigate={onNavigate} />;
-  return <HomeScreen />;
 }

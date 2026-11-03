@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, createContext, useContext } from 'react';
 
 import { Box, Flex, Grid, HStack, Stack, styled } from 'leather-styles/jsx';
 
@@ -11,11 +11,28 @@ import {
   SkeletonLoader,
 } from '@leather.io/ui';
 
-import { screeningUnavailableCopy, supportMailto } from './compliance-content';
+import { type MailKind, getMailto, unavailableCopy } from './compliance-content';
+import { type ComplianceStateId } from './compliance-states';
 
-// Local stand-ins for extension-only layout pieces (PageHeader, InfoCardRow,
-// Card footer) that live in apps/extension and can't be imported here. They
-// mirror the extension's spacing and text styles.
+interface ComplianceActions {
+  goTo(id: ComplianceStateId): void;
+  openMail(kind: MailKind): void;
+}
+
+const ComplianceActionsContext = createContext<ComplianceActions>({
+  goTo() {
+    return undefined;
+  },
+  openMail() {
+    return undefined;
+  },
+});
+
+export const ComplianceActionsProvider = ComplianceActionsContext.Provider;
+
+export function useComplianceActions() {
+  return useContext(ComplianceActionsContext);
+}
 
 interface PopupHeaderProps {
   title?: string;
@@ -73,11 +90,8 @@ export function InfoRow({ label, value, isAddress }: InfoRowProps) {
   );
 }
 
-// Inline "service unavailable" error that sits directly above a footer's
-// actions (send review and dApp approval). Composed locally: the spec asks for
-// a compact, pale red treatment (icon leading, rounded) that the shared
-// Callout's error variant doesn't offer.
-export function ScreeningUnavailableError() {
+export function UnavailableError() {
+  const { openMail } = useComplianceActions();
   return (
     <Flex
       role="alert"
@@ -93,31 +107,33 @@ export function ScreeningUnavailableError() {
       bg="red.background-primary"
       color="red.text-primary"
       textAlign="left"
-      data-testid="compliance-screening-unavailable"
+      data-testid="compliance-unavailable-error"
     >
       <Box flexShrink={0} pt="1px">
         <ErrorTriangleIcon variant="small" color="red.action-primary-default" />
       </Box>
       <styled.span textStyle="caption.01">
-        {screeningUnavailableCopy.lead}
+        {unavailableCopy.lead}
         <styled.a
-          href={supportMailto}
+          href={getMailto('support')}
+          onClick={event => {
+            event.preventDefault();
+            openMail('support');
+          }}
           fontWeight={500}
           color="red.text-primary"
           textDecorationLine="underline"
           textUnderlineOffset="2px"
           data-testid="compliance-contact-support"
         >
-          {screeningUnavailableCopy.linkLabel}
+          {unavailableCopy.linkLabel}
         </styled.a>
-        {screeningUnavailableCopy.trail}
+        {unavailableCopy.trail}
       </styled.span>
     </Flex>
   );
 }
 
-// Popup footer, pinned to the bottom of the frame like the extension's Card
-// footer. Anything passed as 'notice' renders above the actions.
 interface PopupFooterProps {
   notice?: ReactNode;
   children: ReactNode;
