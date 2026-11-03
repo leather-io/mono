@@ -12,6 +12,7 @@ import { stxAsset } from '@leather.io/constants';
 import {
   type AccountAddresses,
   ActivityLevels,
+  type BaseOnChainActivity,
   type OnChainActivity,
   OnChainActivityStatuses,
   OnChainActivityTypes,
@@ -21,6 +22,7 @@ import {
 import { initBigNumber, uniqueArray } from '@leather.io/utils';
 
 import {
+  type HiroPrincipalMempoolTransaction,
   type HiroStacksMempoolTransaction,
   type HiroStacksTransaction,
   type HiroTransactionEvent,
@@ -102,6 +104,70 @@ export function mapTokenTransferActivity(
       ];
 }
 
+export function mapPendingStacksTxActivity(
+  tx: HiroPrincipalMempoolTransaction,
+  account: AccountAddresses,
+  transfers: StacksAssetTransferWithInfo[] = []
+): OnChainActivity[] {
+  const isSender = tx.sender.address === account.stacks?.stxAddress;
+  const commonProps: Omit<BaseOnChainActivity, 'type'> = {
+    timestamp: tx.receipt_time,
+    level: ActivityLevels.account,
+    account: account.id,
+    txid: tx.tx_id,
+    status: OnChainActivityStatuses.pending,
+  };
+  switch (tx.type) {
+    case 'token_transfer': {
+      const transferProps = {
+        ...commonProps,
+        asset: stxAsset,
+        amount: initBigNumber(tx.token_transfer.amount),
+      };
+      return isSender
+        ? [
+            {
+              type: OnChainActivityTypes.sendAsset,
+              receivers: [tx.token_transfer.recipient],
+              ...transferProps,
+            },
+          ]
+        : [
+            {
+              type: OnChainActivityTypes.receiveAsset,
+              senders: [tx.sender.address],
+              ...transferProps,
+            },
+          ];
+    }
+    case 'smart_contract': {
+      const activity = mapAssetTransfersToActivity(commonProps, account, transfers);
+      if (isSender) {
+        activity.push({
+          type: OnChainActivityTypes.deploySmartContract,
+          contractId: tx.smart_contract.contract_id,
+          ...commonProps,
+        });
+      }
+      return activity;
+    }
+    case 'contract_call': {
+      const activity = mapAssetTransfersToActivity(commonProps, account, transfers);
+      if (activity.length === 0 && isSender) {
+        activity.push({
+          type: OnChainActivityTypes.executeSmartContract,
+          contractId: tx.contract_call.contract_id,
+          functionName: tx.contract_call.function_name,
+          ...commonProps,
+        });
+      }
+      return activity;
+    }
+    default:
+      return [];
+  }
+}
+
 export function mapSmartContractActivity(
   tx: SmartContractTransaction | MempoolSmartContractTransaction,
   account: AccountAddresses,
@@ -150,8 +216,6 @@ export function mapTxAssetTransfersToActivity(
   account: AccountAddresses,
   transfers: StacksAssetTransferWithInfo[]
 ): OnChainActivity[] {
-  const activity = [];
-
   const commonProps = {
     timestamp: mapStacksTxBlockTime(tx),
     level: ActivityLevels.account,
@@ -159,6 +223,15 @@ export function mapTxAssetTransfersToActivity(
     txid: tx.tx_id,
     status: mapStacksTxStatus(tx),
   };
+  return mapAssetTransfersToActivity(commonProps, account, transfers);
+}
+
+function mapAssetTransfersToActivity(
+  commonProps: Omit<BaseOnChainActivity, 'type'>,
+  account: AccountAddresses,
+  transfers: StacksAssetTransferWithInfo[]
+): OnChainActivity[] {
+  const activity = [];
 
   const sends = transfers.filter(t => t.sender === account.stacks?.stxAddress);
   const receives = transfers.filter(t => t.receiver === account.stacks?.stxAddress);
