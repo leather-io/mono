@@ -84,4 +84,12 @@ export const playgroundAreas: PlaygroundArea[] = [
     issue: 2643,
     appShell: true,
   },
+  {
+    slug: 'compliance-states',
+    title: 'Compliance states',
+    description:
+      'Every extension screen from the compliance gate spec: the whole-app lockout and its two exits, and the send review and dApp approval when screening comes back clean, flagged or with no answer.',
+    status: 'exploration',
+    section: 'extension',
+  },
 ];
