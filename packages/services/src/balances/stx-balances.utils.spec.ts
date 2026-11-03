@@ -1,9 +1,9 @@
 import { createMoney } from '@leather.io/utils';
 
 import {
-  createBalancesContractCallTx,
-  createBalancesTokenTransferTx,
-} from '../test/balances-stacks-txs';
+  createTestPrincipalMempoolContractCallTx,
+  createTestPrincipalMempoolTokenTransferTx,
+} from '../test/transactions-fixtures';
 import { calculateInboundStxBalance, calculateOutboundStxBalance } from './stx-balances.utils';
 
 const stacksAddress = 'STACKS_ADDRESS';
@@ -17,18 +17,18 @@ describe('calculateInboundStxBalance', () => {
 
   it('should sum token transfers to the recipient address', () => {
     const pendingTxs = [
-      createBalancesTokenTransferTx({
+      createTestPrincipalMempoolTokenTransferTx({
         token_transfer: {
-          recipient_address: stacksAddress,
+          recipient: stacksAddress,
           amount: '1000000',
-          memo: '',
+          memo: null,
         },
       }),
-      createBalancesTokenTransferTx({
+      createTestPrincipalMempoolTokenTransferTx({
         token_transfer: {
-          recipient_address: stacksAddress,
+          recipient: stacksAddress,
           amount: '2000000',
-          memo: '',
+          memo: null,
         },
       }),
     ];
@@ -38,18 +38,18 @@ describe('calculateInboundStxBalance', () => {
 
   it('should ignore transfers to other addresses', () => {
     const pendingTxs = [
-      createBalancesTokenTransferTx({
+      createTestPrincipalMempoolTokenTransferTx({
         token_transfer: {
-          recipient_address: stacksAddress,
+          recipient: stacksAddress,
           amount: '1000000',
-          memo: '',
+          memo: null,
         },
       }),
-      createBalancesTokenTransferTx({
+      createTestPrincipalMempoolTokenTransferTx({
         token_transfer: {
-          recipient_address: otherStacksAddress,
+          recipient: otherStacksAddress,
           amount: '2000000',
-          memo: '',
+          memo: null,
         },
       }),
     ];
@@ -59,14 +59,14 @@ describe('calculateInboundStxBalance', () => {
 
   it('should ignore non-transfer txs', () => {
     const pendingTxs = [
-      createBalancesTokenTransferTx({
+      createTestPrincipalMempoolTokenTransferTx({
         token_transfer: {
-          recipient_address: stacksAddress,
+          recipient: stacksAddress,
           amount: '2500000',
-          memo: '',
+          memo: null,
         },
       }),
-      createBalancesContractCallTx(),
+      createTestPrincipalMempoolContractCallTx(),
     ];
     const balance = calculateInboundStxBalance(stacksAddress, pendingTxs);
     expect(balance).toEqual(createMoney(2500000, 'STX'));
@@ -81,17 +81,17 @@ describe('calculateOutboundStxBalance', () => {
 
   it('should sum transfers and fees sent from the address', () => {
     const pendingTxs = [
-      createBalancesTokenTransferTx({
-        sender_address: stacksAddress,
+      createTestPrincipalMempoolTokenTransferTx({
+        sender: { address: stacksAddress, nonce: 0 },
         fee_rate: '50000',
         token_transfer: {
-          recipient_address: otherStacksAddress,
+          recipient: otherStacksAddress,
           amount: '4000000',
-          memo: '',
+          memo: null,
         },
       }),
-      createBalancesContractCallTx({
-        sender_address: stacksAddress,
+      createTestPrincipalMempoolContractCallTx({
+        sender: { address: stacksAddress, nonce: 0 },
         fee_rate: '75000',
       }),
     ];
@@ -101,23 +101,23 @@ describe('calculateOutboundStxBalance', () => {
 
   it('should ignore fees for sponsored transactions', () => {
     const pendingTxs = [
-      createBalancesTokenTransferTx({
-        sender_address: stacksAddress,
+      createTestPrincipalMempoolTokenTransferTx({
+        sender: { address: stacksAddress, nonce: 0 },
         fee_rate: '50000',
         token_transfer: {
-          recipient_address: otherStacksAddress,
+          recipient: otherStacksAddress,
           amount: '4000000',
-          memo: '',
+          memo: null,
         },
       }),
-      createBalancesContractCallTx({
-        sender_address: stacksAddress,
+      createTestPrincipalMempoolContractCallTx({
+        sender: { address: stacksAddress, nonce: 0 },
         fee_rate: '75000',
       }),
-      createBalancesContractCallTx({
-        sender_address: stacksAddress,
+      createTestPrincipalMempoolContractCallTx({
+        sender: { address: stacksAddress, nonce: 0 },
         fee_rate: '75000',
-        sponsored: true,
+        sponsor: { address: otherStacksAddress, nonce: 0 },
       }),
     ];
     const balance = calculateOutboundStxBalance(stacksAddress, pendingTxs);
@@ -126,21 +126,21 @@ describe('calculateOutboundStxBalance', () => {
 
   it('should ignore txs sent from other addresses', () => {
     const pendingTxs = [
-      createBalancesContractCallTx({
-        sender_address: stacksAddress,
+      createTestPrincipalMempoolContractCallTx({
+        sender: { address: stacksAddress, nonce: 0 },
         fee_rate: '75000',
       }),
-      createBalancesTokenTransferTx({
-        sender_address: otherStacksAddress,
+      createTestPrincipalMempoolTokenTransferTx({
+        sender: { address: otherStacksAddress, nonce: 0 },
         fee_rate: '50000',
         token_transfer: {
-          recipient_address: stacksAddress,
+          recipient: stacksAddress,
           amount: '4000000',
-          memo: '',
+          memo: null,
         },
       }),
-      createBalancesContractCallTx({
-        sender_address: otherStacksAddress,
+      createTestPrincipalMempoolContractCallTx({
+        sender: { address: otherStacksAddress, nonce: 0 },
         fee_rate: '75000',
       }),
     ];

@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react';
 
 import { useUserSettings } from '@/hooks/use-user-settings';
-import { type MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
 import { useQueries } from '@tanstack/react-query';
 
 import { isStacksMempoolTransaction } from '@leather.io/models';
 import { createStacksAddressMempoolTransactionsQueryConfig } from '@leather.io/queries';
+import { type HiroPrincipalMempoolTransaction } from '@leather.io/services';
 import { uniqueArray } from '@leather.io/utils';
 
 import { useGetTransactionByIdListQuery } from '../transaction/transactions-by-id.query';
@@ -22,7 +22,7 @@ function useGetAddressMempoolTransactionsQueries(addresses: string[]) {
     () => ({
       totalData: queries
         .map(result => result.data)
-        .reduce<MempoolTransaction[]>((acc, result) => {
+        .reduce<HiroPrincipalMempoolTransaction[]>((acc, result) => {
           if (result?.results) {
             return [...acc, ...result.results];
           }
@@ -41,7 +41,7 @@ const droppedCache = new Map();
 export function useStacksPendingTransactions(addresses: string[]) {
   const query = useGetAddressMempoolTransactionsQueries(addresses);
   const pendingStacksTransactions = query.totalData.filter(
-    tx => tx.tx_status === 'pending' && !droppedCache.has(tx.tx_id)
+    tx => tx.status === 'pending' && !droppedCache.has(tx.tx_id)
   );
 
   const txs = useGetTransactionByIdListQuery(pendingStacksTransactions.map(tx => tx.tx_id));
