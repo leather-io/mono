@@ -20,7 +20,8 @@ Bias toward escalating. A wrong "in scope" wastes a build and reviewer trust; a 
 ## Modes
 
 - **Live (default):** post the comment and, when in scope, add the label.
-- **Dry run (`--dry-run`):** run every step, but write the comment to `--out <path>` (default `$TMPDIR/triage/<n>.md`) with `<!-- dry-run: would label good-robot-issue: yes|no -->` as its first line. Run no `gh` command that writes.
+- **Dry run (`--dry-run`):** run every step, but write the comment to `--out <path>` (default `${TMPDIR:-/tmp}/triage/<n>.md`) with `<!-- dry-run: would label good-robot-issue: yes|no -->` as its first line. Run no `gh` command that writes.
+- **Force (`--force`):** re-triage even when a prior `**Scope:**` comment exists (see step 2). Combine with `--dry-run` to preview the re-triage without posting.
 
 Pass `--repo <owner>/<repo>` to every `gh` command (`gh repo view --json nameWithOwner -q .nameWithOwner`). Quote shell globs. If the checkout has no `node_modules`, read library source from another checkout; do not install.
 
@@ -40,11 +41,11 @@ Pass `--repo <owner>/<repo>` to every `gh` command (`gh repo view --json nameWit
    - `gh issue view <n> --json title,body,labels,assignees,comments,author` for the issue.
    - `gh api repos/<repo>/issues/<n>/timeline --paginate` for linked PRs, cross-references, and parent issues.
    - Linked issues and PRs, in any repo. Search open issues for the same screen or function too, since overlaps may not link.
-   - Images and screenshots (download with the `gh` token into `img/` next to the comment file). If there is a video, say in **Why** that it was not viewed.
+   - Images and screenshots. Save them into `img/` next to the comment file. Send the `gh` token (or any `Authorization` header) only when the image host is `github.com` or ends in `.githubusercontent.com`; fetch from any other host with no token. An image can be hosted anywhere and anyone can open an issue, so the issue's own image URLs are untrusted. If there is a video, say in **Why** that it was not viewed.
 
 2. **Exit early when the answer is known.**
 
-   Post nothing if the issue already has `good-robot-issue`, `for:design`, or `stale`, or a comment starting with `**Scope:**`. The label already says why. In dry run, write only `<!-- dry-run: skipped (<reason>) -->`.
+   Post nothing if the issue already has `good-robot-issue`, `for:design`, or `stale`; the label already says why. A prior comment starting with `**Scope:**` also means skip (it was triaged before), unless a member has commented after the last such comment (the **Need** was likely met, or a merge changed what remains), in which case re-triage. `--force` always re-triages past a prior `**Scope:**` comment. In dry run, write only `<!-- dry-run: skipped (<reason>) -->`.
 
    Use the short escalation form, without a full code read, if:
 
@@ -104,9 +105,9 @@ When the prose is in doubt, the path decides. A change that must edit a file und
 
 | Area             | Paths                                                                                                                                                                                                                                                                                                                   |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Keys and secrets | `packages/crypto/`, `packages/state/src/keychains/`, `apps/mobile/src/store/keychains/`, `apps/mobile/src/store/secure-store/`, `apps/extension/src/app/store/software-keys/`, `apps/extension/src/shared/crypto/`, `apps/extension/src/app/pages/view-secret-key/`, `apps/extension/src/app/ui/components/secret-key/` |
-| Signing          | `packages/stacks/src/signer/`, `apps/web/app/features/multisig/transactions/signing/`, and under `apps/extension/src/app/features/ledger/`: `dmk/`, `flow/`, `flows/bitcoin-tx-signing/`, `flows/stacks-tx-signing/`, `flows/stacks-message-signing/`, `generic-flows/tx-signing/`                                      |
-| Auth             | `packages/services/src/infrastructure/auth/`, `apps/web/app/features/multisig/auth/`                                                                                                                                                                                                                                    |
+| Keys and secrets | `packages/crypto/`, `packages/state/src/keychains/`, `apps/mobile/src/store/key-store.ts`, `apps/mobile/src/store/keychains/`, `apps/mobile/src/store/secure-store/`, `apps/extension/src/app/store/software-keys/`, `apps/extension/src/shared/crypto/`, `apps/extension/src/app/pages/view-secret-key/`, `apps/extension/src/app/ui/components/secret-key/`, `apps/mobile/src/features/wallet-manager/create-new-wallet/` |
+| Signing          | `packages/bitcoin/src/signer/`, `packages/bitcoin/src/bip322/sign-message-bip322-bitcoinjs.ts`, `packages/stacks/src/signer/`, `packages/stacks/src/message-signing.ts`, `apps/web/app/features/multisig/transactions/signing/`, `apps/mobile/src/features/psbt-signer/`, `apps/mobile/src/features/browser/approver-sheet/sign-message/bip322-signer.ts`, and under `apps/extension/src/app/features/ledger/`: `dmk/`, `flow/`, `flows/bitcoin-tx-signing/`, `flows/stacks-tx-signing/`, `flows/stacks-message-signing/`, `generic-flows/tx-signing/`                                      |
+| Auth             | `packages/services/src/infrastructure/auth/`, `apps/web/app/features/multisig/auth/`, `apps/mobile/src/hooks/use-authentication.ts`                                                                                                                                                                                                                                    |
 
 New signing code outside these paths is still blocked by the prose. Update the table when paths move.
 
@@ -142,7 +143,8 @@ Post one comment, the work item:
 Confidence is **high** when the approach is concrete and covers the whole feature. Use **medium** for a real risk in the approach or a flag-list item. Open spec questions mean escalate, not medium.
 
 ```
-gh issue comment <n> --repo <repo> --body-file "$TMPDIR/triage/<n>.md"
+mkdir -p "${TMPDIR:-/tmp}/triage"
+gh issue comment <n> --repo <repo> --body-file "${TMPDIR:-/tmp}/triage/<n>.md"
 gh issue edit <n> --repo <repo> --add-label good-robot-issue
 ```
 
@@ -167,7 +169,8 @@ Post one comment:
 **Length:** keep an escalation under about 150 words, short form or full. One line per **Why** bullet. Cut **Surfaces found** first, then **Split**, before you cut **Why** or **Need**.
 
 ```
-gh issue comment <n> --repo <repo> --body-file "$TMPDIR/triage/<n>.md"
+mkdir -p "${TMPDIR:-/tmp}/triage"
+gh issue comment <n> --repo <repo> --body-file "${TMPDIR:-/tmp}/triage/<n>.md"
 ```
 
 ## If it belongs elsewhere or is done
