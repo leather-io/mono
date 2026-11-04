@@ -14,7 +14,7 @@ export function RotateAddressToggle({ isChecked, onToggle }: RotateAddressToggle
           Move remaining STX to a fresh address
         </styled.label>
         <styled.span color="ink.text-subdued" textStyle="caption.01">
-          Sends your other unlocked STX to a new account in the same transaction
+          Sends your other unlocked STX to a new account in a second transaction
         </styled.span>
       </Stack>
       <Switch.Root id="rotate-address-toggle" checked={isChecked} onCheckedChange={onToggle}>
