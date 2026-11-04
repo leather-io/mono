@@ -267,4 +267,30 @@ export const settingsFeatures = [
     description:
       'What locking does (useKeyActions.lockWallet in apps/extension/src/app/common/hooks/use-key-actions.ts): clear the wallet session in chrome.storage.session (the encryptionKey), the in-memory key store and the keychain selector caches, broadcast a wallet-lock message, call afterLock (both callers navigate to /unlock with a from route), then reload the window. Other open windows receive the message (useOnWalletLock in features/container/container.tsx), clear their in-memory keys and caches and reload, after which AccountGate shows /unlock; the window stays open (wallet-lock.spec). There is no idle timer: the wallet locks only on this action, on an extension update, or when the browser discards session storage. A locked wallet can still sign out from the settings menu. password-memory-leak.spec checks that the password is not left in the heap after locking.',
   },
+  {
+    id: 'move-to-fresh-account',
+    anchor: { kind: 'route' },
+    routes: [RouteUrls.MoveToFreshAccount],
+    params: [],
+    entry: [
+      {
+        kind: 'nav',
+        steps: [
+          'Open the settings menu (SettingsSelectors.SettingsMenuBtn) and click "Move to a fresh account" (no test id); shown only while the wallet is unlocked and the flag is on',
+        ],
+      },
+      { kind: 'deepLink', steps: ['Open #/move-to-fresh-account while the flag is on'] },
+    ],
+    gate: 'account',
+    flags: ['accountShuffle'],
+    preconditions: { session: 'signed-in', mocks: [...defaultMocks] },
+    selectors: {
+      ready: SharedComponentsSelectors.HeaderBackBtn,
+      others: [],
+    },
+    actions: [],
+    specs: [],
+    description:
+      'Proof of concept. Moves all unlocked STX, transferable SIP-10 tokens and NFTs (BNS-V2 names included) from the current Stacks account to a fresh account that has never sent (software: highest index + 1; Ledger: next index). It builds one transaction per asset with sequential nonces and STX last, signs them all, broadcasts them in order and stops at the first failure, then creates or switches to the fresh account. Not available for policy accounts. The route only exists while the accountShuffle LaunchDarkly flag is on.',
+  },
 ] as const satisfies readonly ExtensionFeatureEntry[];

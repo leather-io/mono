@@ -6,6 +6,7 @@ import { css } from 'leather-styles/css';
 import { Flex } from 'leather-styles/jsx';
 
 import {
+  ArrowRotateRightLeftIcon,
   DropdownMenu,
   ExitIcon,
   Eye1ClosedIcon,
@@ -25,6 +26,7 @@ import { useCanSignOut } from '@app/common/hooks/auth/use-can-sign-out';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useModifierKey } from '@app/common/hooks/use-modifier-key';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
+import { useFlags } from '@app/features/feature-flags';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
 import { useAccountGateDestination } from '@app/routes/account-gate';
 import { useHasUnlockedSoftwareWallets } from '@app/store/in-memory-key/in-memory-key.selectors';
@@ -56,6 +58,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
   const showLockWalletItem = canLockWallet && hasUnlockedSoftwareWallets;
   const showSignOutItem = canSignOut;
   const isWalletUnlocked = useAccountGateDestination() === null;
+  const { accountShuffle } = useFlags();
 
   const settingsItem = (
     <DropdownMenu.Item
@@ -102,6 +105,14 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
         <Flex justifyContent="space-between" textStyle="label.02">
           Manage wallets
         </Flex>
+      </Flag>
+    </DropdownMenu.Item>
+  );
+
+  const moveToFreshAccountItem = (
+    <DropdownMenu.Item onSelect={() => void navigate(RouteUrls.MoveToFreshAccount)}>
+      <Flag img={<ArrowRotateRightLeftIcon />} textStyle="label.02" width="100%">
+        Move to a fresh account
       </Flag>
     </DropdownMenu.Item>
   );
@@ -160,6 +171,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
               {isWalletUnlocked && settingsItem}
               {isWalletUnlocked && manageWalletsItem}
               {isWalletUnlocked && togglePrivacyItem}
+              {isWalletUnlocked && accountShuffle && moveToFreshAccountItem}
 
               {(showAdvancedMenuOptions || showLockWalletItem || showSignOutItem) &&
                 isWalletUnlocked && <Hr />}

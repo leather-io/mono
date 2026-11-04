@@ -21,6 +21,7 @@ export const RouteUrls = {
   ViewSecretKey: '/view-secret-key',
   Settings: '/settings',
   AllBalances: '/all-balances',
+  MoveToFreshAccount: '/move-to-fresh-account',
   AllBalancesDetail: '/all-balances/:category',
   AllBalancesBondHistory: '/all-balances/bonded/history',
   AddWallet: '/add-wallet',
