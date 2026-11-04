@@ -5,7 +5,6 @@ import {
   type AddressTransactionWithTransfers,
   type AddressTransactionsWithTransfersListResponse,
   type MempoolTransaction,
-  type NonFungibleTokenHolding,
   type ServerStatusResponse,
   type Transaction,
   type TransactionEvent,
@@ -215,7 +214,6 @@ export type HiroTransactionEvent = TransactionEvent;
 export type HiroTransactionEventsResponse = AddressAssetsListResponse;
 export type HiroStacksTransaction = Transaction;
 export type HiroStacksMempoolTransaction = MempoolTransaction;
-export type HiroNftHolding = NonFungibleTokenHolding;
 export type HiroReadOnlyFunctionResponse =
   | { okay: true; result: string }
   | { okay: false; cause: string };
@@ -248,12 +246,19 @@ export interface CallReadOnlyFunctionArgs {
   tip?: string;
 }
 
-interface HiroCursorPageResponse<T> {
+export interface HiroCursorPageResponse<T> {
   total: number;
   limit: number;
   cursor: { next: string | null; previous: string | null; current: string | null };
   results: T[];
 }
+
+export interface HiroPrincipalNftBalance {
+  readonly asset_identifier: string;
+  readonly value: { readonly hex: string; readonly repr: string };
+}
+
+export type HiroPrincipalNftBalancesResponse = HiroCursorPageResponse<HiroPrincipalNftBalance>;
 
 type HiroStakingBondStatus = 'upcoming' | 'active' | 'unlocked';
 

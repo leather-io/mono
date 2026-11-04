@@ -1,4 +1,3 @@
-import type { NonFungibleTokenHolding } from '@stacks/stacks-blockchain-api-types';
 import { injectable } from 'inversify';
 import { isNonNullish } from 'remeda';
 
@@ -6,8 +5,9 @@ import type { Sip9Asset } from '@leather.io/models';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import type { HiroPrincipalNftBalance } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { AccountRequest } from '../types';
-import { isLpToken, sortByBlockHeight } from './collectibles.utils';
+import { isLpToken } from './collectibles.utils';
 
 @injectable()
 export class Sip9sService {
@@ -23,18 +23,16 @@ export class Sip9sService {
     if (!request.account.stacks) return [];
 
     try {
-      const nftHoldings = await this.stacksApiClient.getNftHoldings(
+      const nftHoldings = await this.stacksApiClient.getPrincipalNftBalances(
         request.account.stacks.stxAddress,
-        { allPages: true, stopAfter: 10 },
+        { maxPages: 10 },
         { signal }
       );
 
       const results = await Promise.all(
         nftHoldings
           .filter(h => !isLpToken(h.asset_identifier))
-          .map(holding => ({ holding, blockHeight: holding.block_height }))
-          .sort(sortByBlockHeight)
-          .map(h => this.getOptionalSip9Asset(h.holding, signal))
+          .map(holding => this.getOptionalSip9Asset(holding, signal))
       );
       return results.filter(isNonNullish).filter(sip9 => sip9.name !== 'BNS - Archive');
     } catch {
@@ -43,7 +41,7 @@ export class Sip9sService {
   }
 
   private async getOptionalSip9Asset(
-    holding: NonFungibleTokenHolding,
+    holding: HiroPrincipalNftBalance,
     signal?: AbortSignal
   ): Promise<Sip9Asset | null> {
     try {
