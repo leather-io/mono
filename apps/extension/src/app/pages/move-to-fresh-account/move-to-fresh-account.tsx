@@ -2,8 +2,6 @@ import { Stack, styled } from 'leather-styles/jsx';
 
 import { Button, Callout, LoadingSpinner } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
-
 import { formatCurrency } from '@app/common/currency-formatter';
 import { StacksAddressDisplayer } from '@app/components/address-displayer/stacks-address-displayer';
 import { InfoCardRow, InfoCardSeparator } from '@app/components/info-card/info-card';
@@ -19,6 +17,8 @@ function MoveToFreshAccountBody() {
     isLoading,
     isMoving,
     freshAddress,
+    isLedger,
+    lockedStx,
     plan,
     planError,
     moveEverything,
@@ -45,6 +45,7 @@ function MoveToFreshAccountBody() {
 
   return (
     <Card
+      contentStyle={{ p: 'space.00' }}
       footer={
         <Button
           width="100%"
@@ -52,14 +53,14 @@ function MoveToFreshAccountBody() {
           disabled={isMoving}
           onClick={() => void moveEverything()}
         >
-          Move everything
+          Move Stacks assets
         </Button>
       }
     >
       <Stack gap="space.04" px="space.05" py="space.05" width="100%">
         <styled.p textStyle="body.02">
-          Move your assets to a new account that has never sent a transaction. Its public key is not
-          on chain yet.
+          Moves your STX, Stacks tokens and Stacks NFTs (including BNS names) to a new account that
+          has never sent a transaction. Your Bitcoin stays where it is.
         </styled.p>
         <Stack gap="space.02">
           <InfoCardRow
@@ -74,14 +75,36 @@ function MoveToFreshAccountBody() {
           {plan.nfts.map(nft => (
             <InfoCardRow key={nft.id} title="NFT" value={nft.label} />
           ))}
+          {plan.blockedNfts.length > 0 && (
+            <>
+              <InfoCardSeparator />
+              <styled.p textStyle="label.02">Stays behind</styled.p>
+              {plan.blockedNfts.map(nft => (
+                <InfoCardRow key={nft.id} title={nft.label} value={nft.reason} />
+              ))}
+            </>
+          )}
           <InfoCardSeparator />
           <InfoCardRow title="Transactions" value={String(transactionCount)} />
           <InfoCardRow title="Total fees" value={formatCurrency(plan.totalFee)} />
         </Stack>
         <Callout variant="info" title={`This sends ${transactionCount} transactions`}>
-          Each token and NFT needs its own transaction, and STX moves last. On a Ledger, you approve
-          each one on the device. Stacked STX stays at your current address. You switch to the new
-          account after everything is sent.
+          <styled.ul listStyleType="disc" pl="space.04">
+            <styled.li>Each token and NFT moves in its own transaction. STX moves last.</styled.li>
+            {isLedger && <styled.li>You approve each one on your Ledger.</styled.li>}
+            {lockedStx && (
+              <styled.li>
+                {formatCurrency(lockedStx)} of stacked STX stays at your current address.
+              </styled.li>
+            )}
+            {plan.nfts.length > 0 && (
+              <styled.li>
+                If an NFT contract blocks transfers, that NFT stays at your current address (but the
+                fee is spent).
+              </styled.li>
+            )}
+            <styled.li>You switch to the new account after everything is sent.</styled.li>
+          </styled.ul>
         </Callout>
       </Stack>
     </Card>
@@ -91,7 +114,7 @@ function MoveToFreshAccountBody() {
 export function MoveToFreshAccountPage() {
   return (
     <>
-      <PageHeader title="Move to a fresh account" onBackLocation={RouteUrls.Home} />
+      <PageHeader title="Move assets" />
       <Content>
         <Page>
           <MoveToFreshAccountBody />

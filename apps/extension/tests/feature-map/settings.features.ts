@@ -276,7 +276,7 @@ export const settingsFeatures = [
       {
         kind: 'nav',
         steps: [
-          'Open the settings menu (SettingsSelectors.SettingsMenuBtn) and click "Move to a fresh account" (no test id); shown only while the wallet is unlocked and the flag is on',
+          'Open STX token details from home, click the "..." button in the action row (token-details-more-btn) and select "Move to a fresh account" (no test id); the button shows only while the flag is on (stacks-token-details.tsx)',
         ],
       },
       { kind: 'deepLink', steps: ['Open #/move-to-fresh-account while the flag is on'] },
@@ -291,6 +291,6 @@ export const settingsFeatures = [
     actions: [],
     specs: [],
     description:
-      'Proof of concept. Moves all unlocked STX, transferable SIP-10 tokens and NFTs (BNS-V2 names included) from the current Stacks account to a fresh account that has never sent (software: highest index + 1; Ledger: next index). It builds one transaction per asset with sequential nonces and STX last, signs them all, broadcasts them in order and stops at the first failure, then creates or switches to the fresh account. Not available for policy accounts. The route only exists while the accountShuffle LaunchDarkly flag is on.',
+      'Proof of concept. Moves all unlocked STX, transferable SIP-10 tokens and NFTs (BNS-V2 names included) from the current Stacks account to a fresh account that has never sent (software: highest index + 1; Ledger: next index). NFT names come from Hiro metadata; BNS-V2 names come from get-bns-from-id, and names that are listed in the market map or sit in a manager-transferable namespace are shown as staying behind and get no transaction. It builds one transaction per asset with sequential nonces and STX last, signs them all, broadcasts them in order and stops at the first failure, then creates or switches to the fresh account. Not available for policy accounts. The route only exists while the accountShuffle LaunchDarkly flag is on.',
   },
 ] as const satisfies readonly ExtensionFeatureEntry[];

@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router';
 import { type StacksTransactionWire } from '@stacks/transactions';
 import { useQuery } from '@tanstack/react-query';
 
-import { getHiroStacksApiClient } from '@leather.io/services';
+import { getHiroStacksApiClient, getHttpCacheService } from '@leather.io/services';
 import { isDefined, isString, noop } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useSubmitTransactionCallback } from '@app/common/hooks/use-submit-stx-transaction';
+import { queryClient } from '@app/common/persistence';
 import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
@@ -28,6 +29,14 @@ import { useSignStacksTransaction } from '@app/store/transactions/transaction.ho
 import { LoadingKeys } from '@app/store/ui/ui.hooks';
 
 import { buildMovePlan } from './move-to-fresh-account.utils';
+
+const bnsNamesQueryPrefix = 'bns-service--get-account-bns-names';
+const bnsNamesRefreshDelayMs = 60_000;
+
+async function refreshBnsNames() {
+  await getHttpCacheService().clear('bns-v2-api-address-names');
+  await queryClient.invalidateQueries({ queryKey: [bnsNamesQueryPrefix] });
+}
 
 export function useMoveToFreshAccount() {
   const navigate = useNavigate();
@@ -52,6 +61,7 @@ export function useMoveToFreshAccount() {
 
   const stxBalance = useStxAccountBalance(useCurrentAccountId());
   const availableStx = stxBalance.value?.stx.availableUnlockedBalance;
+  const lockedStx = stxBalance.value?.stx.lockedBalance;
   const { sip10s, isLoading: isLoadingTokens } = useSip10AddressTransferableTokenBalances(sender);
   const nftHoldings = useQuery({
     queryKey: ['move-to-fresh-account-nft-holdings', sender],
@@ -140,7 +150,11 @@ export function useMoveToFreshAccount() {
       }
 
       switchToFreshAccount();
-      toast.success('Moved everything and switched to the fresh account', {
+      if (plan.data.nfts.length > 0) {
+        void refreshBnsNames();
+        setTimeout(() => void refreshBnsNames(), bnsNamesRefreshDelayMs);
+      }
+      toast.success('Moved your Stacks assets and switched to the fresh account', {
         duration: toastDurations.standard,
       });
       return void navigate(RouteUrls.Home);
@@ -157,6 +171,8 @@ export function useMoveToFreshAccount() {
     isLoading: isAvailable && !plan.data && !plan.error,
     isMoving,
     freshAddress: recipient,
+    isLedger: freshAccount?.type === 'ledger',
+    lockedStx: lockedStx?.amount.isGreaterThan(0) ? lockedStx : undefined,
     plan: plan.data,
     planError: plan.error?.message,
     moveEverything,

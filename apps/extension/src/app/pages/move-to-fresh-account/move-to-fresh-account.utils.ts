@@ -15,6 +15,8 @@ import {
 } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
+import { describeNft } from './move-to-fresh-account-nfts';
+
 const transferFunctionName = 'transfer';
 
 interface BuildTransferTxArgs {
@@ -134,11 +136,6 @@ export function calculateStxToMove({ availableBalance, fees }: CalculateStxToMov
   return availableBalance.minus(BigNumber.sum(0, ...fees));
 }
 
-export function getNftDisplayName(assetIdentifier: string, tokenIdRepr: string) {
-  const { contractAssetName } = getStacksAssetStringParts(assetIdentifier);
-  return `${contractAssetName} #${tokenIdRepr.replace(/^u/, '')}`;
-}
-
 async function estimateFee(tx: StacksTransactionWire) {
   const fees = await getStacksTransactionFeesService().getStacksTransactionFees(tx);
   return fees.options.standard.value.amount;
@@ -154,6 +151,12 @@ interface MoveItem {
   id: string;
   label: string;
   tx: StacksTransactionWire;
+}
+
+interface BlockedItem {
+  id: string;
+  label: string;
+  reason: string;
 }
 
 interface MovePlanToken {
@@ -199,10 +202,26 @@ export async function buildMovePlan({
     }))
   );
 
-  const nftItems: MoveItem[] = await Promise.all(
-    nfts.map(async (nft, index) => ({
+  const describedNfts = await Promise.all(
+    nfts.map(async nft => ({
+      ...nft,
       id: `${nft.assetIdentifier}:${nft.tokenIdHex}`,
-      label: getNftDisplayName(nft.assetIdentifier, nft.tokenIdRepr),
+      description: await describeNft({ ...nft, network: base.network }),
+    }))
+  );
+
+  const blockedNfts: BlockedItem[] = [];
+  const movableNfts: typeof describedNfts = [];
+  for (const nft of describedNfts) {
+    const { label, blockedReason } = nft.description;
+    if (blockedReason) blockedNfts.push({ id: nft.id, label, reason: blockedReason });
+    else movableNfts.push(nft);
+  }
+
+  const nftItems: MoveItem[] = await Promise.all(
+    movableNfts.map(async (nft, index) => ({
+      id: nft.id,
+      label: nft.description.label,
       tx: await buildNftTransferTx({
         ...base,
         nonce: startNonce + tokenItems.length + index,
@@ -239,6 +258,7 @@ export async function buildMovePlan({
   return {
     tokens: tokenItems,
     nfts: nftItems,
+    blockedNfts,
     stxAmount,
     totalFee: createMoney(BigNumber.sum(...fees), 'STX'),
     transactions: [...assetItems.map(item => item.tx), stxTx],
