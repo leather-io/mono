@@ -4,13 +4,16 @@ export type ComplianceStateId =
   | 'lockout'
   | 'why-created'
   | 'why-imported'
+  | 'key-backup'
   | 'dispute-email'
   | 'review-recipient-flagged'
   | 'review-own-flagged'
+  | 'review-multisig-member-flagged'
   | 'review-no-answer'
   | 'approve-clean'
   | 'approve-counterparty-flagged'
-  | 'approve-no-answer';
+  | 'approve-no-answer'
+  | 'approve-stacks-btc-flagged';
 
 type ComplianceSurface = 'popup' | 'request-window' | 'tab';
 
@@ -24,6 +27,8 @@ export type FlowStepId =
   | 'home'
   | 'locked'
   | 'email'
+  | 'backup-password'
+  | 'backup-reveal'
   | 'send-form'
   | 'screening'
   | 'verdict';
@@ -116,12 +121,24 @@ export const complianceStateGroups: ComplianceStateGroup[] = [
         note: 'Same explanation. No backup link: the user typed the Secret Key in, so they already have it.',
       },
       {
+        id: 'key-backup',
+        label: 'Key backup · created wallet',
+        outcome: 'flow',
+        surface: 'popup',
+        scenario: 'S11a',
+        note: 'From “Why am I seeing this?”, “Back up Wallet 1 Secret Key” asks for the password, then reveals the key the way Settings › View Secret Key does today. Settings is unreachable under the lockout, so this is the only way back to the key.',
+        steps: [
+          { id: 'backup-password', label: 'Password', durationMs: 2600 },
+          { id: 'backup-reveal', label: 'Reveal' },
+        ],
+      },
+      {
         id: 'dispute-email',
         label: 'Dispute this → email',
         outcome: 'flow',
         surface: 'popup',
         scenario: 'S11b',
-        note: '“Dispute this” opens the user’s mail app with a pre-filled draft: subject, app version, platform, time and a reference ID. No addresses. The support address is a placeholder.',
+        note: '“Dispute this” opens the user’s mail app with a pre-filled draft to compliance@leather.io (Gina, Mitchell, Rena): subject, app version, platform, time and a reference ID. No addresses yet: whether the flagged address may go in the draft is with Rena.',
         steps: [
           { id: 'locked', label: 'Locked', durationMs: 1400 },
           { id: 'email', label: 'Email draft' },
@@ -160,12 +177,21 @@ export const complianceStateGroups: ComplianceStateGroup[] = [
         ],
       },
       {
+        id: 'review-multisig-member-flagged',
+        label: 'Multisig member flagged',
+        outcome: 'refused',
+        surface: 'popup',
+        scenario: 'S8 · multisig',
+        note: 'A 2-of-3 multisig account proposes its first transaction. One member’s address is restricted, so the proposal is refused before it is created: Propose becomes Close. Agreed with Rena: refuse at first proposal, not at account creation.',
+        steps: [screeningStep, { id: 'verdict', label: 'Refused' }],
+      },
+      {
         id: 'review-no-answer',
         label: 'No answer',
         outcome: 'no-answer',
         surface: 'popup',
         scenario: 'S7',
-        note: 'No provider answered. A general error sits above the footer; “contact support” opens a pre-filled email. Try again reruns the check (here it comes back clean).',
+        note: 'No provider answered. A general error sits above the footer; “contact support” opens a pre-filled email to compliance@leather.io. Try again reruns the check (here it comes back clean).',
         steps: [screeningStep, { id: 'verdict', label: 'No answer' }],
       },
     ],
@@ -200,6 +226,15 @@ export const complianceStateGroups: ComplianceStateGroup[] = [
         scenario: 'S9',
         note: 'Same general error as the send review, above the footer. Cancel and Try again.',
         steps: [screeningStep, { id: 'verdict', label: 'No answer' }],
+      },
+      {
+        id: 'approve-stacks-btc-flagged',
+        label: 'Stacks call · own BTC flagged',
+        outcome: 'locked',
+        surface: 'request-window',
+        scenario: 'S5 · cross-chain',
+        note: 'A Stacks contract call from an account whose Bitcoin address is flagged (Werner’s case). The approval window screens the account’s BTC and STX addresses, and the flag puts the app into the lockout. Replaces today’s raw “Unable to handle request, errorCode: 1398”.',
+        steps: [screeningStep, { id: 'verdict', label: 'Locked' }],
       },
     ],
   },

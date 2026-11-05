@@ -20,9 +20,23 @@ export const recipientRefusedCopy = {
   body: 'The recipient address is restricted. Nothing was sent. Your wallet isn’t affected.',
 };
 
+export const keyBackupCopy = {
+  passwordTitle: 'Back up your Secret Key',
+  passwordBody: 'Enter your password to view Wallet 1’s Secret Key.',
+  revealTitle: 'Wallet 1 Secret Key',
+  revealBody: 'Never share it. Anyone with these words controls the funds.',
+  revealCta: 'Click to reveal',
+  doneCta: 'I’ve backed it up',
+};
+
 export const counterpartyRefusedCopy = {
   title: 'Leather can’t sign this',
   body: 'This transaction involves a restricted address. Nothing was signed.',
+};
+
+export const multisigRefusedCopy = {
+  title: 'Leather can’t propose this',
+  body: 'A member of this multisig account has a restricted address. Nothing was proposed. Your other accounts aren’t affected.',
 };
 
 export const unavailableCopy = {
@@ -39,7 +53,8 @@ interface MailDraft {
   body: string;
 }
 
-const supportEmail = 'support@leather.io';
+// Agreed with Rena (Nov 4): one compliance-owned inbox for both drafts, read by Gina, Mitchell and Rena.
+export const complianceEmail = 'compliance@leather.io';
 
 const diagnostics = [
   '— Filled in by Leather —',
@@ -50,7 +65,7 @@ const diagnostics = [
 
 export const mailDrafts: Record<MailKind, MailDraft> = {
   dispute: {
-    to: supportEmail,
+    to: complianceEmail,
     subject: 'Dispute: Leather account restricted',
     body: [
       'Hi Leather team,',
@@ -65,7 +80,7 @@ export const mailDrafts: Record<MailKind, MailDraft> = {
     ].join('\n'),
   },
   support: {
-    to: supportEmail,
+    to: complianceEmail,
     subject: 'Transaction couldn’t be completed',
     body: [
       'Hi Leather team,',
@@ -154,6 +169,30 @@ export const mockDappRequest = {
     { label: 'Amount', value: '1.2 BTC' },
     { label: 'Fee', value: '0.00004 BTC' },
     { label: 'Total spend', value: '$98,640.00' },
+  ],
+};
+
+export const mockStacksRequest = {
+  origin: 'https://dapp.example',
+  intro:
+    'Please review the contract call and associated fees. Authorize only transactions you fully understand.',
+  rows: [
+    { label: 'From', value: 'Account 1 · SP2J…9EJ7', isAddress: true },
+    { label: 'Contract', value: 'SP3K…QF2.amm-swap-pool-v1-1', isAddress: true },
+    { label: 'Function', value: 'swap-helper' },
+    { label: 'Fee', value: '0.003 STX' },
+  ],
+};
+
+export const mockMultisigReview = {
+  amount: '0.2',
+  symbol: 'BTC',
+  fiat: '$13,144.40',
+  rows: [
+    { label: 'From', value: 'Treasury · 2-of-3 multisig' },
+    { label: 'To', value: 'bc1q…7m2k', isAddress: true },
+    { label: 'Fee', value: '0.00004 BTC' },
+    { label: 'Total spend', value: '$13,147.03' },
   ],
 };
 

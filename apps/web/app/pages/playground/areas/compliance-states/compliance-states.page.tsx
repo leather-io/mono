@@ -5,6 +5,7 @@ import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { ArrowRotateClockwiseIcon, Badge, type BadgeProps, Button } from '@leather.io/ui';
 
+import { type BuildNotes, buildNotes } from './compliance-build-notes';
 import { type MailKind } from './compliance-content';
 import { MailWindow } from './compliance-mail-window';
 import {
@@ -16,6 +17,8 @@ import { ComplianceActionsProvider } from './compliance-screen-parts';
 import {
   ApproveTransactionScreen,
   HomeScreen,
+  KeyBackupPasswordScreen,
+  KeyBackupRevealScreen,
   LockoutScreen,
   SendFormScreen,
   SendReviewScreen,
@@ -73,6 +76,9 @@ function ComplianceScreen({ stateId, stepId, onAdvance }: ComplianceScreenProps)
       return <WhyLockedScreen isCreatedInLeather />;
     case 'why-imported':
       return <WhyLockedScreen isCreatedInLeather={false} />;
+    case 'key-backup':
+      if (stepId === 'backup-password') return <KeyBackupPasswordScreen onContinue={onAdvance} />;
+      return <KeyBackupRevealScreen />;
     case 'review-recipient-flagged':
       if (stepId === 'send-form') return <SendFormScreen onContinue={onAdvance} />;
       return <SendReviewScreen verdict="recipient-flagged" isScreening={isScreening} />;
@@ -80,6 +86,8 @@ function ComplianceScreen({ stateId, stepId, onAdvance }: ComplianceScreenProps)
       if (stepId === 'send-form') return <SendFormScreen onContinue={onAdvance} />;
       if (isScreening) return <SendReviewScreen verdict="recipient-flagged" isScreening />;
       return <LockoutScreen />;
+    case 'review-multisig-member-flagged':
+      return <SendReviewScreen verdict="member-flagged" isScreening={isScreening} />;
     case 'review-no-answer':
       return <SendReviewScreen verdict="no-answer" isScreening={isScreening} />;
     case 'approve-clean':
@@ -88,6 +96,9 @@ function ComplianceScreen({ stateId, stepId, onAdvance }: ComplianceScreenProps)
       return <ApproveTransactionScreen verdict="counterparty-flagged" isScreening={isScreening} />;
     case 'approve-no-answer':
       return <ApproveTransactionScreen verdict="no-answer" isScreening={isScreening} />;
+    case 'approve-stacks-btc-flagged':
+      if (isScreening) return <ApproveTransactionScreen verdict="clean" isScreening request="stacks" />;
+      return <LockoutScreen />;
     default:
       return null;
   }
@@ -181,6 +192,85 @@ function BrowserTabFrame({ children }: { children: ReactNode }) {
         {children}
       </Box>
     </Flex>
+  );
+}
+
+function BuildNotesSection({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <Stack gap="space.01">
+      <styled.h3 textStyle="label.03" color="ink.text-subdued">
+        {label}
+      </styled.h3>
+      {children}
+    </Stack>
+  );
+}
+
+function BuildNotesList({ items }: { items: string[] }) {
+  return (
+    <styled.ul display="flex" flexDirection="column" gap="space.01" pl="space.04" listStyleType="disc">
+      {items.map(item => (
+        <styled.li key={item} textStyle="caption.01" color="ink.text-secondary">
+          {item}
+        </styled.li>
+      ))}
+    </styled.ul>
+  );
+}
+
+function BuildNotesPanel({ notes }: { notes: BuildNotes }) {
+  return (
+    <styled.aside
+      display="flex"
+      flexDirection="column"
+      gap="space.04"
+      width="320px"
+      flexShrink={0}
+      height="100vh"
+      position="sticky"
+      top={0}
+      overflowY="auto"
+      p="space.05"
+      bg="ink.background-primary"
+      borderLeftWidth="1px"
+      borderLeftStyle="solid"
+      borderColor="ink.border-default"
+      data-testid="compliance-build-notes"
+    >
+      <styled.h2 textStyle="heading.05">Build notes</styled.h2>
+      <BuildNotesSection label="Trigger">
+        <styled.p textStyle="caption.01" color="ink.text-secondary">
+          {notes.trigger}
+        </styled.p>
+      </BuildNotesSection>
+      <BuildNotesSection label="Screens">
+        <styled.p textStyle="caption.01" color="ink.text-secondary">
+          {notes.screens}
+        </styled.p>
+      </BuildNotesSection>
+      <BuildNotesSection label="Result">
+        <styled.p textStyle="caption.01" color="ink.text-secondary">
+          {notes.result}
+        </styled.p>
+      </BuildNotesSection>
+      {notes.today ? (
+        <BuildNotesSection label="Today">
+          <styled.p textStyle="caption.01" color="ink.text-secondary">
+            {notes.today}
+          </styled.p>
+        </BuildNotesSection>
+      ) : null}
+      {notes.code?.length ? (
+        <BuildNotesSection label="Code">
+          <BuildNotesList items={notes.code} />
+        </BuildNotesSection>
+      ) : null}
+      {notes.open?.length ? (
+        <BuildNotesSection label="Open">
+          <BuildNotesList items={notes.open} />
+        </BuildNotesSection>
+      ) : null}
+    </styled.aside>
   );
 }
 
@@ -328,8 +418,9 @@ export function ComplianceStatesPage() {
             <Stack gap="space.02">
               <styled.h1 textStyle="heading.05">Compliance states</styled.h1>
               <styled.p textStyle="caption.01" color="ink.text-subdued">
-                Extension screens from the compliance gate spec (v5). Static mock data, no screening
-                calls. Not a production feature.
+                Extension screens for the agreed compliance model (Nov 2 sync, signed off by Rena on
+                Nov 4). Static mock data, no screening calls. Not a production feature. Build notes on
+                the right are for engineering.
               </styled.p>
             </Stack>
             {complianceStateGroups.map(group => (
@@ -434,6 +525,7 @@ export function ComplianceStatesPage() {
             </>
           )}
         </Flex>
+        {isPanelHidden ? null : <BuildNotesPanel notes={buildNotes[selected.id]} />}
       </Flex>
     </ComplianceActionsProvider>
   );
