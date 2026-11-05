@@ -1,5 +1,5 @@
 import { WarningSheetLayout } from '@/components/sheets/warning-sheet.layout';
-import { useOpenUrl } from '@/features/browser/browser/use-open-url';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { LEATHER_GUIDES_MOBILE_REMOVE_WALLET } from '@/shared/constants';
 import { t } from '@lingui/core/macro';
 

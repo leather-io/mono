@@ -1,4 +1,4 @@
-import { useOnramperBuyFlag, useOnramperSellFlag, useSwapFlag } from '@/features/feature-flags';
+import { useOnramperBuyFlag, useOnramperSellFlag, useSwapFlag } from '@/shared/feature-flags';
 import { t } from '@lingui/core/macro';
 
 import { Button, type ButtonProps } from '@leather.io/ui/native';

@@ -7,9 +7,11 @@ import {
 } from '@launchdarkly/react-native-client-sdk';
 import * as Application from 'expo-application';
 
+const launchDarklyClientId = process.env.EXPO_PUBLIC_LAUNCH_DARKLY ?? '';
+
 export const featureFlagClient = new ReactNativeLDClient(
   // TODO: do not fallback to empty string
-  process.env.EXPO_PUBLIC_LAUNCH_DARKLY ?? '',
+  launchDarklyClientId,
   AutoEnvAttributes.Enabled,
   {
     debug: false,

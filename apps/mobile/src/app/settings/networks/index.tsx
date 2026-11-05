@@ -1,6 +1,6 @@
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { useSettings } from '@/store/settings/settings';
 import { defaultNetworkPreferences } from '@/store/settings/utils';

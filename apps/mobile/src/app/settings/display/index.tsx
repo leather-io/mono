@@ -2,7 +2,6 @@ import { useRef } from 'react';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
-import { useBtcConversionUnitFlag, useInternationalizationFlag } from '@/features/feature-flags';
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
@@ -10,6 +9,7 @@ import { LanguageSheet } from '@/features/settings/language-sheet';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
 import { supportedLanguages } from '@/i18n/languages';
+import { useBtcConversionUnitFlag, useInternationalizationFlag } from '@/shared/feature-flags';
 import { useSettings } from '@/store/settings/settings';
 import { select, t } from '@lingui/core/macro';
 import { keys } from 'remeda';

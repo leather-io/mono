@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useMinimumAppVersion } from '@/features/feature-flags';
+import { useMinimumAppVersion } from '@/shared/feature-flags';
 import { isValidVersion, isVersionLessThan } from '@/utils/version-utils';
 import { t } from '@lingui/core/macro';
 import * as Application from 'expo-application';

@@ -1,4 +1,5 @@
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { userRemovesApp } from '@/store/apps/apps.write';
 import { type App } from '@/store/apps/utils';
 import { useAppDispatch } from '@/store/utils';
@@ -6,7 +7,6 @@ import { t } from '@lingui/core/macro';
 
 import { Box, CloseIcon, Pressable, Text } from '@leather.io/ui/native';
 
-import { useOpenUrl } from './use-open-url';
 import { getAppDetails } from './utils';
 
 interface LinkCardProps {

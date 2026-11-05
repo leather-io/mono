@@ -1,12 +1,12 @@
 import { memo } from 'react';
 
 import { Balance } from '@/components/balance/balance';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { t } from '@lingui/core/macro';
 
 import { type ActivityView } from '@leather.io/features';
 import { ActivityAvatarIcon, Cell } from '@leather.io/ui/native';
 
-import { useOpenUrl } from '../browser/browser/use-open-url';
 import { translateActivityStatus } from './translate-activity-status';
 
 interface ActivityItemProps {

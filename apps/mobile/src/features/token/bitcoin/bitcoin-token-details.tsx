@@ -1,6 +1,6 @@
-import { useSwapSbtcBridgingFlag } from '@/features/feature-flags';
 import { useActivityByAsset } from '@/queries/activity/activity.query';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
+import { useSwapSbtcBridgingFlag } from '@/shared/feature-flags';
 import { t } from '@lingui/core/macro';
 import { capitalize } from 'remeda';
 

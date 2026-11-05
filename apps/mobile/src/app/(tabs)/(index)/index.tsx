@@ -1,5 +1,5 @@
-import { HomeScreenWithAccount } from '@/components/home/home-with-account-screen';
-import { HomeScreenWithoutAccount } from '@/components/home/home-without-account-screen';
+import { HomeScreenWithAccount } from '@/features/home/home-with-account-screen';
+import { HomeScreenWithoutAccount } from '@/features/home/home-without-account-screen';
 import { CurrentAccountLoader } from '@/store/settings/settings';
 
 export default function HomeScreen() {

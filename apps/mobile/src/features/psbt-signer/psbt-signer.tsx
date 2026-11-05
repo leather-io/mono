@@ -1,11 +1,12 @@
 import { useMemo, useRef, useState } from 'react';
 
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
 import { BitcoinFeeCard } from '@/features/approver/components/fees/bitcoin-fee-card';
 import { InputsAndOutputsCard } from '@/features/approver/components/inputs-outputs-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
@@ -43,10 +44,9 @@ import {
   sumMoney,
 } from '@leather.io/utils';
 
-import { ApproverButtons } from '../approver/components/approver-buttons';
+import { ApproverButtons } from '../approver/components/approver-buttons/approver-buttons';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { BtcStatusRow } from '../approver/components/status-row/btc-status-row';
-import { useOpenUrl } from '../browser/browser/use-open-url';
 import { PsbtRequestNoBroadcastWarningLabel } from './components/psbt-request-no-broadcast-warning-label';
 import { PsbtRequestSighashWarningLabel } from './components/psbt-request-sighash-warning-label';
 import { PsbtRequestUnknownOutputWarningLabel } from './components/psbt-request-unknown-output-warning-label';

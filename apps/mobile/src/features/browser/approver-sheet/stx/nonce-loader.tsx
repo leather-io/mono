@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';

@@ -10,15 +10,15 @@ import { BitcoinDepositTokenCell } from '@/features/balances/bitcoin/bitcoin-dep
 import { ManageTokensSheet } from '@/features/balances/manage-tokens.sheet';
 import { StacksDepositTokenCell } from '@/features/balances/stacks/stacks-deposit-token-cell';
 import { CollectiblesList } from '@/features/token/collectibles-list';
+import {
+  useAccountScaledBalanceAnalytics,
+  useCollectiblesAnalytics,
+} from '@/hooks/use-account-analytics';
 import { useActivity } from '@/queries/activity/activity.query';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { useSettings } from '@/store/settings/settings';
-import {
-  useAccountScaledBalanceAnalytics,
-  useCollectiblesAnalytics,
-} from '@/utils/analytics-hooks';
 
 import { type AccountId } from '@leather.io/models';
 import { type SheetInstance } from '@leather.io/ui/native';

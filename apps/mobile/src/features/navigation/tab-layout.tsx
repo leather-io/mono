@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GradientBorder } from '@/components/gradient-border';
+import { TabLayoutProvider } from '@/components/screen/tab-layout-context';
 import { t } from '@lingui/core/macro';
 import { useSegments } from 'expo-router';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
@@ -17,7 +18,6 @@ import {
 } from '@leather.io/ui/native';
 
 import { TabButton } from './tab-button';
-import { TabLayoutProvider } from './tab-layout-context';
 
 const tabsWithGradientBorder = ['(index)', 'activity'];
 

@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 
-import { type FetchState } from '@/components/loading';
 import { LoadingItem } from '@/components/loading/loading-item';
 import { Screen } from '@/components/screen/screen';
 import { ActivityItem } from '@/features/activity/activity-item';
+import { type FetchState } from '@/queries/fetch-state';
 import { t } from '@lingui/core/macro';
 
 import { type ActivityView } from '@leather.io/features';

@@ -1,8 +1,8 @@
 import { ScrollView } from 'react-native-gesture-handler';
 
 import eggImage from '@/assets/stickers/egg.png';
+import { RefreshControl } from '@/components/refresh-control/refresh-control';
 import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
-import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 

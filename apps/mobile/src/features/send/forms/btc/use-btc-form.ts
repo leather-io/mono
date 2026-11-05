@@ -1,6 +1,6 @@
 import { useForm, useWatch } from 'react-hook-form';
 
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import {
   type BtcFormSchema,
   useBtcSendFormSchema,

@@ -1,8 +1,8 @@
 import { type ReactElement, useMemo } from 'react';
 
+import { RefreshControl } from '@/components/refresh-control/refresh-control';
 import { Screen } from '@/components/screen/screen';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
-import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { type useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useRouter } from 'expo-router';
 

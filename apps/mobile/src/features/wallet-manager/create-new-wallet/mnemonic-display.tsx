@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 
 import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.layout';
-import { useToastContext } from '@/components/toast/toast-context';
-import { useWaitlistFlag } from '@/features/feature-flags';
+import { useToastContext } from '@/core/toast/toast-context';
 import { WaitlistIds } from '@/features/waitlist/ids';
+import { useWaitlistFlag } from '@/shared/feature-flags';
 import { t } from '@lingui/core/macro';
 import * as Clipboard from 'expo-clipboard';
 

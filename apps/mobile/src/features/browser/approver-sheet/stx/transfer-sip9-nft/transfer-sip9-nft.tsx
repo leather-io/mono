@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx-approver.layout';
 import { getTxOptions } from '@/features/approver/utils';
 import { useBroadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';

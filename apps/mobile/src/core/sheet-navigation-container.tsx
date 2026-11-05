@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { ToastWrapper } from '@/components/toast/toast-context';
+import { ToastWrapper } from '@/core/toast/toast-context';
 import { analytics } from '@/utils/analytics';
 import {
   NavigationContainer,

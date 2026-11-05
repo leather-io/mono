@@ -1,4 +1,5 @@
 import { isProduction } from '@/shared/environment';
+import { applyAnalyticsPreference } from '@/utils/analytics';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import devToolsEnhancer from 'redux-devtools-expo-dev-plugin';
@@ -19,6 +20,7 @@ import { walletSlice } from '@leather.io/state/wallet';
 import { accountsSlice } from './accounts/accounts.write';
 import { appsSlice } from './apps/apps.write';
 // import { deleteAllMnemonics } from './secure-store/mnemonic-store';
+import { selectAnalyticsPreference } from './settings/settings.read';
 import { settingsSlice } from './settings/settings.write';
 import { persistConfig } from './storage-persistors';
 
@@ -48,6 +50,13 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+
+function syncAnalyticsPreference() {
+  applyAnalyticsPreference(selectAnalyticsPreference(store.getState()));
+}
+
+syncAnalyticsPreference();
+store.subscribe(syncAnalyticsPreference);
 
 // export function clearAllPersistedStorage(fingerprints: string[]) {
 //   void Promise.all([deleteAllMnemonics(fingerprints), AsyncStorage.clear()]);

@@ -1,5 +1,5 @@
-import { toFetchState } from '@/components/loading';
 import { useUserSettings } from '@/hooks/use-user-settings';
+import { toFetchState } from '@/queries/fetch-state';
 import { useQueries, useQuery } from '@tanstack/react-query';
 
 import {

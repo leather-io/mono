@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx-approver.layout';
 import { getTxOptions } from '@/features/approver/utils';
+import { useGetStxNetworkFromRequestParams } from '@/features/browser/approver-sheet/use-network-from-request-params';
 import { useBroadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
-import { useGetStxNetworkFromRequestParams } from '@/shared/utils';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { type App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';

@@ -1,4 +1,4 @@
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import { keychainErrorHandlers, useKeyStore } from '@/store/key-store';
 import { tempMnemonicStore } from '@/store/secure-store/temp-mnemonic-store';
 import { useSettings } from '@/store/settings/settings';

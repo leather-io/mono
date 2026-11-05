@@ -1,14 +1,14 @@
 import { ActionButtons } from '@/components/action-buttons';
 import { Balance } from '@/components/balance/balance';
 import { PriceChange } from '@/components/balance/price-change';
-import { type FetchState } from '@/components/loading';
+import { NetworkBadge } from '@/components/network-badge';
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { TokenActivity } from '@/features/token/components/token-activity';
 import { TokenDetailsTable } from '@/features/token/components/token-details-table';
 import { TokenOverview } from '@/features/token/components/token-overview';
+import { type FetchState } from '@/queries/fetch-state';
 
 import { type ActivityView, type TokenBalance } from '@leather.io/features';
 import { type FungibleCryptoAsset, isSwappableAsset } from '@leather.io/models';
