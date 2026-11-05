@@ -4,7 +4,8 @@ import { Box, Flex, Grid, HStack, Stack, styled } from 'leather-styles/jsx';
 
 import {
   ArrowLeftIcon,
-  ErrorTriangleIcon,
+  Callout,
+  type CalloutProps,
   IconButton,
   Logo,
   SettingsGearIcon,
@@ -93,29 +94,32 @@ export function InfoRow({ label, value, isAddress }: InfoRowProps) {
   );
 }
 
-export function UnavailableError() {
+// Banner bodies are short sentences; each sits on its own line so no line ends in a stray word.
+export function SentenceLines({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(?<=[.!?])\s+/).map(sentence => (
+        <styled.span key={sentence} display="block">
+          {sentence}
+        </styled.span>
+      ))}
+    </>
+  );
+}
+
+// Same full-width Callout the apps use for warnings: edge to edge, text on the content inset,
+// icon on the header icons' axis. No custom notice styles.
+export function UnavailableCallout(props: Omit<CalloutProps, 'variant' | 'title'>) {
   const { openMail } = useComplianceActions();
   return (
-    <Flex
-      role="alert"
-      gap="space.02"
-      alignItems="flex-start"
-      mb="space.04"
-      px="space.03"
-      py="space.03"
-      borderRadius="sm"
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor="red.border"
-      bg="red.background-primary"
-      color="red.text-primary"
-      textAlign="left"
+    <Callout
+      variant="warning"
+      title={unavailableCopy.title}
       data-testid="compliance-unavailable-error"
+      {...props}
     >
-      <Box flexShrink={0} pt="1px">
-        <ErrorTriangleIcon variant="small" color="red.action-primary-default" />
-      </Box>
-      <styled.span textStyle="caption.01">
+      <styled.span display="block">{unavailableCopy.body}</styled.span>
+      <styled.span display="block">
         {unavailableCopy.lead}
         <styled.a
           href={getMailto('support')}
@@ -123,8 +127,6 @@ export function UnavailableError() {
             event.preventDefault();
             openMail('support');
           }}
-          fontWeight={500}
-          color="red.text-primary"
           textDecorationLine="underline"
           textUnderlineOffset="2px"
           data-testid="compliance-contact-support"
@@ -133,7 +135,7 @@ export function UnavailableError() {
         </styled.a>
         {unavailableCopy.trail}
       </styled.span>
-    </Flex>
+    </Callout>
   );
 }
 

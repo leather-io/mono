@@ -25,7 +25,8 @@ import {
 import {
   FooterActionsSkeleton,
   InfoRow,
-  UnavailableError,
+  SentenceLines,
+  UnavailableCallout,
   useComplianceActions,
 } from '../compliance-shared/compliance-screen-parts';
 import lockSticker from '../compliance-shared/lock-sticker.png';
@@ -249,10 +250,15 @@ export function MobileSendReviewScreen({ state }: { state: MobileReviewState }) 
         <Box px="space.05" pt="space.04" pb="space.05">
           <styled.h1 textStyle="heading.03">Send token</styled.h1>
         </Box>
+        {state === 'no-answer' ? (
+          <Box pb="space.05">
+            <UnavailableCallout />
+          </Box>
+        ) : null}
         {isRefused ? (
-          <Box px="space.05" pb="space.05">
-            <Callout variant="error" title={recipientRefusedCopy.title} borderRadius="sm">
-              {recipientRefusedCopy.body}
+          <Box pb="space.05">
+            <Callout variant="error" title={recipientRefusedCopy.title}>
+              <SentenceLines text={recipientRefusedCopy.body} />
             </Callout>
           </Box>
         ) : (
@@ -298,7 +304,6 @@ export function MobileSendReviewScreen({ state }: { state: MobileReviewState }) 
           <styled.span textStyle="label.02">Total spend</styled.span>
           <styled.span textStyle="label.02">{mockSendReview.fiat}</styled.span>
         </Flex>
-        {state === 'no-answer' ? <UnavailableError /> : null}
         {renderActions()}
       </Box>
     </Flex>

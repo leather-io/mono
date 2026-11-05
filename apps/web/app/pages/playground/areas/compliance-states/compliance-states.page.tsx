@@ -5,8 +5,6 @@ import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { ArrowRotateClockwiseIcon, Badge, type BadgeProps, Button } from '@leather.io/ui';
 
-import { type BuildNotes } from '../compliance-shared/compliance-build-notes';
-import { BuildNotesContent } from '../compliance-shared/compliance-build-notes-view';
 import { type MailKind } from '../compliance-shared/compliance-content';
 import { BrowserTabFrame, ExtensionFrame } from '../compliance-shared/compliance-frames';
 import { ComplianceActionsProvider } from '../compliance-shared/compliance-screen-parts';
@@ -28,7 +26,6 @@ import {
   OnboardingSecretKey,
   OnboardingWelcome,
 } from './compliance-onboarding';
-import { buildNotes } from './compliance-state-notes';
 import {
   type ComplianceOutcome,
   type ComplianceState,
@@ -108,31 +105,6 @@ function ComplianceScreen({ stateId, stepId, onAdvance }: ComplianceScreenProps)
     default:
       return null;
   }
-}
-
-function BuildNotesPanel({ notes }: { notes: BuildNotes }) {
-  return (
-    <styled.aside
-      display="flex"
-      flexDirection="column"
-      gap="space.04"
-      width="320px"
-      flexShrink={0}
-      height="100vh"
-      position="sticky"
-      top={0}
-      overflowY="auto"
-      p="space.05"
-      bg="ink.background-primary"
-      borderLeftWidth="1px"
-      borderLeftStyle="solid"
-      borderColor="ink.border-default"
-      data-testid="compliance-build-notes"
-    >
-      <styled.h2 textStyle="heading.05">Build notes</styled.h2>
-      <BuildNotesContent notes={notes} />
-    </styled.aside>
-  );
 }
 
 interface StateRowProps {
@@ -279,9 +251,8 @@ export function ComplianceStatesPage() {
             <Stack gap="space.02">
               <styled.h1 textStyle="heading.05">Compliance states</styled.h1>
               <styled.p textStyle="caption.01" color="ink.text-subdued">
-                Extension screens for the agreed compliance model (Nov 2 sync, signed off by Rena on
-                Nov 4). Static mock data, no screening calls. Not a production feature. Build notes
-                on the right are for engineering.
+                Walkthrough of the compliance flows in the extension. Static mock data, no screening
+                calls. For every screen variant, see compliance UI.
               </styled.p>
             </Stack>
             {complianceStateGroups.map(group => (
@@ -390,7 +361,6 @@ export function ComplianceStatesPage() {
             </>
           )}
         </Flex>
-        {isPanelHidden ? null : <BuildNotesPanel notes={buildNotes[selected.id]} />}
       </Flex>
     </ComplianceActionsProvider>
   );

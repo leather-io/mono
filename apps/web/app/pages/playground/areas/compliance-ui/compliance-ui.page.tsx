@@ -4,7 +4,6 @@ import { Link } from '@leather.io/ui';
 
 import {
   type MailKind,
-  complianceEmail,
   getBackupWalletNames,
   getMailto,
   mockWallets,
@@ -31,7 +30,7 @@ import {
   MobileWhyLockedScreen,
   PhoneFrame,
 } from './compliance-mobile';
-import { Board, NotesGrid, Section, Variant } from './compliance-ui-board';
+import { Board, Section, Variant } from './compliance-ui-board';
 
 const sections = [
   { id: 'lockout', label: 'Lockout' },
@@ -39,7 +38,6 @@ const sections = [
   { id: 'refusals', label: 'Refusals' },
   { id: 'screening', label: 'Screening in progress' },
   { id: 'no-answer', label: 'No answer' },
-  { id: 'reused', label: 'Reused, no new UI' },
   { id: 'copy-deck', label: 'Copy deck' },
 ];
 
@@ -49,7 +47,7 @@ const mobileSurface = 'Phone · 390 × 844';
 const targetSections: Record<ComplianceTarget, string> = {
   lockout: 'lockout',
   'why-created': 'why-locked',
-  'key-backup': 'reused',
+  'key-backup': 'why-locked',
 };
 
 // The screens' own links jump to the matching section; email CTAs open the real mailto: draft.
@@ -79,15 +77,11 @@ function BoardHeader() {
         <styled.h1 textStyle="heading.03">Compliance UI</styled.h1>
       </Stack>
       <styled.p textStyle="body.02" color="ink.text-secondary">
-        Every new or changed screen for the agreed compliance model (Nov 2 sync, signed off by Rena
-        on Nov 4), each variant side by side on one page, with its copy and build notes. Static mock
-        data: no screening calls, no autoplay, skeletons frozen. Screens are the same components the
-        walkthrough demo renders; mobile frames are web approximations.
+        Every new or changed compliance screen, extension and mobile. Static mock data; mobile
+        frames are web approximations.
       </styled.p>
       <styled.p textStyle="body.02" color="ink.text-secondary">
-        For the flows in motion (onboarding, Home, the send form and the email drafts), see the
-        walkthrough demo at{' '}
-        <Link href="/playground/compliance-states">/playground/compliance-states</Link>.
+        Flows in motion: <Link href="/playground/compliance-states">compliance states</Link>.
       </styled.p>
       <styled.nav display="flex" gap="space.02" flexWrap="wrap" aria-label="Sections">
         {sections.map(section => (
@@ -120,18 +114,12 @@ export function ComplianceUiPage() {
         px="space.09"
         pt="space.09"
         pb="space.11"
-        // Static board: freeze the skeleton shimmer.
-        css={{ '& [data-state=loading]': { animation: 'none' } }}
         data-testid="compliance-ui-board"
       >
         <Stack gap="space.11" maxWidth="1440px" mx="auto">
           <BoardHeader />
 
-          <Section
-            id="lockout"
-            title="Lockout"
-            description="Whole-app lockout over every wallet, no balances. The same screen whether background screening, an own address on the send review, or a Stacks request from an account with a flagged BTC address set the locked flag. Two ways out: “Why am I seeing this?” and “Dispute this”."
-          >
+          <Section id="lockout" title="Lockout" description="Whole app, every wallet, no balances.">
             <Board label="Extension">
               <Variant label="Popup" surface={surfaceLabels.popup}>
                 <ExtensionFrame surface="popup">
@@ -164,21 +152,12 @@ export function ComplianceUiPage() {
                 </PhoneFrame>
               </Variant>
             </Board>
-            <NotesGrid
-              ids={[
-                'background-screening',
-                'lockout',
-                'send-review-own-flagged',
-                'approval-own-btc-flagged',
-                'mobile',
-              ]}
-            />
           </Section>
 
           <Section
             id="why-locked"
             title="Why Leather is locked"
-            description="Opened from “Why am I seeing this?”. A plain explanation, plus one “Back up <wallet> Secret Key” link per software wallet created in Leather. Imported and Ledger wallets get no link."
+            description="One backup link per wallet created in Leather."
           >
             <Board label="Extension">
               <Variant
@@ -220,13 +199,12 @@ export function ComplianceUiPage() {
                 </PhoneFrame>
               </Variant>
             </Board>
-            <NotesGrid ids={['why-locked-created', 'why-locked-imported']} />
           </Section>
 
           <Section
             id="refusals"
             title="Refusals on review and approval"
-            description="A restricted counterparty refuses only this transaction; the app stays usable. The refusal callout shows before the user can sign, and the primary action becomes Close."
+            description="Only this transaction is refused; the app stays usable."
           >
             <Board label="Extension">
               <Variant
@@ -268,20 +246,12 @@ export function ComplianceUiPage() {
                 </PhoneFrame>
               </Variant>
             </Board>
-            <NotesGrid
-              ids={[
-                'send-review-recipient-flagged',
-                'multisig-member-flagged',
-                'approval-counterparty-flagged',
-                'mobile',
-              ]}
-            />
           </Section>
 
           <Section
             id="screening"
             title="Screening in progress"
-            description="Screening runs as the review or approval opens. Details render as usual; the footer actions are skeletons until a verdict comes back, so nothing can be signed without one. Frozen here; the shipped skeleton shimmers."
+            description="Footer actions shimmer until a verdict comes back."
           >
             <Board label="Extension">
               <Variant
@@ -314,13 +284,12 @@ export function ComplianceUiPage() {
                 </PhoneFrame>
               </Variant>
             </Board>
-            <NotesGrid ids={['send-review-screening', 'approval-screening']} />
           </Section>
 
           <Section
             id="no-answer"
             title="No answer"
-            description="No provider answered, or the request failed. Signing is blocked: a general notice sits above the footer, “contact support” opens a pre-filled email, and Try again reruns the check."
+            description="Nothing is signed without a verdict."
           >
             <Board label="Extension">
               <Variant label="Send review · no answer" surface={surfaceLabels.popup}>
@@ -345,44 +314,9 @@ export function ComplianceUiPage() {
                 </PhoneFrame>
               </Variant>
             </Board>
-            <NotesGrid ids={['send-review-no-answer', 'approval-no-answer', 'mobile']} />
           </Section>
 
-          <Section
-            id="reused"
-            title="Reused, no new UI"
-            description="Two exits from the lockout that need routing, not screens."
-          >
-            <Stack gap="space.04" maxWidth="76ch" data-testid="compliance-ui-reused">
-              <Stack gap="space.01">
-                <styled.h3 textStyle="label.02">Key backup</styled.h3>
-                <styled.p textStyle="body.02" color="ink.text-secondary">
-                  “Back up &lt;wallet&gt; Secret Key” reuses the existing View Secret Key flow:
-                  extension <styled.code textStyle="code">pages/view-secret-key</styled.code>{' '}
-                  (RouteUrls.ViewSecretKey, state: {'{ fingerprint }'}), mobile{' '}
-                  <styled.code textStyle="code">
-                    /settings/wallet/configure/[wallet]/view-secret-key
-                  </styled.code>
-                  . The lockout has to let that one route through; Back returns to the lockout.
-                </styled.p>
-              </Stack>
-              <Stack gap="space.01">
-                <styled.h3 textStyle="label.02">Dispute and support</styled.h3>
-                <styled.p textStyle="body.02" color="ink.text-secondary">
-                  “Dispute this” and “contact support” are mailto: links to{' '}
-                  <styled.code textStyle="code">{complianceEmail}</styled.code> with a pre-filled
-                  subject and body (drafts in the copy deck below). No in-app form.
-                </styled.p>
-              </Stack>
-            </Stack>
-            <NotesGrid ids={['key-backup', 'dispute']} />
-          </Section>
-
-          <Section
-            id="copy-deck"
-            title="Copy deck"
-            description="Every user-facing string from compliance-shared/compliance-content.ts, grouped by screen. Keys match the exports so strings can be traced back to the code."
-          >
+          <Section id="copy-deck" title="Copy deck" description="Every string, grouped by screen.">
             <CopyDeck />
           </Section>
         </Stack>

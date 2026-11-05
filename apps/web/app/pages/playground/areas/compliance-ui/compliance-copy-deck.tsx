@@ -81,7 +81,7 @@ const copyGroups: CopyGroup[] = [
       ...entriesOf('unavailableCopy', unavailableCopy),
       {
         key: 'Rendered',
-        value: `${unavailableCopy.lead}${unavailableCopy.linkLabel}${unavailableCopy.trail}`,
+        value: `${unavailableCopy.title}. ${unavailableCopy.body} ${unavailableCopy.lead}${unavailableCopy.linkLabel}${unavailableCopy.trail}`,
       },
     ],
   },

@@ -20,7 +20,7 @@ export const whyLockedCopy = {
 
 export const recipientRefusedCopy = {
   title: 'Leather can’t send this',
-  body: 'The recipient address is restricted. Nothing was sent. Your wallet isn’t affected.',
+  body: 'This recipient is restricted, so nothing was sent. Your wallet isn’t affected.',
 };
 
 export const keyBackupCopy = {
@@ -34,12 +34,12 @@ export const keyBackupCopy = {
 
 export const counterpartyRefusedCopy = {
   title: 'Leather can’t sign this',
-  body: 'This transaction involves a restricted address. Nothing was signed.',
+  body: 'Another party is restricted, so nothing was signed. Your wallet isn’t affected.',
 };
 
 export const multisigRefusedCopy = {
   title: 'Leather can’t propose this',
-  body: 'A member of this multisig account has a restricted address. Nothing was proposed. Your other accounts aren’t affected.',
+  body: 'A member is restricted, so nothing was proposed. Your other accounts aren’t affected.',
 };
 
 // Footer actions that replace Confirm / Propose / Approve on the compliance states.
@@ -50,9 +50,11 @@ export const complianceActionCopy = {
 };
 
 export const unavailableCopy = {
-  lead: 'This transaction can’t be completed right now. Please try again later, or ',
+  title: 'Can’t complete this right now',
+  body: 'Nothing was signed. Please try again in a moment.',
+  lead: 'If this keeps happening, ',
   linkLabel: 'contact support',
-  trail: ' if the issue persists.',
+  trail: '.',
 };
 
 export type MailKind = 'dispute' | 'support';

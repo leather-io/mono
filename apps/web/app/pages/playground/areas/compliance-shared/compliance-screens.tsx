@@ -23,7 +23,8 @@ import {
   PopupBody,
   PopupFooter,
   PopupHeader,
-  UnavailableError,
+  SentenceLines,
+  UnavailableCallout,
   useComplianceActions,
 } from './compliance-screen-parts';
 import lockSticker from './lock-sticker.png';
@@ -187,17 +188,23 @@ export function SendReviewScreen({ verdict, isScreening, onRetry }: SendReviewSc
     <Flex direction="column" height="100%" data-testid="compliance-send-review">
       <PopupHeader title="Review" onBack={() => undefined} />
       <PopupBody>
+        {isUnavailable ? (
+          <Box pt="space.02" animation="fadein 240ms ease-out">
+            {/* pl lines the text up with the review rows (space.06), as the shipped send review does */}
+            <UnavailableCallout pl="space.02" />
+          </Box>
+        ) : null}
         {isRefused ? (
-          <Box px="space.05" pt="space.02" pb="space.05" animation="fadein 240ms ease-out">
+          <Box pt="space.02" pb="space.05" animation="fadein 240ms ease-out">
             <Callout
               variant="error"
               title={refusedCopy.title}
-              borderRadius="sm"
+              pl="space.02"
               data-testid={
                 isMultisig ? 'compliance-multisig-refused' : 'compliance-recipient-refused'
               }
             >
-              {refusedCopy.body}
+              <SentenceLines text={refusedCopy.body} />
             </Callout>
           </Box>
         ) : (
@@ -214,9 +221,7 @@ export function SendReviewScreen({ verdict, isScreening, onRetry }: SendReviewSc
           ))}
         </Stack>
       </PopupBody>
-      <PopupFooter notice={isUnavailable ? <UnavailableError /> : null}>
-        {renderActions()}
-      </PopupFooter>
+      <PopupFooter>{renderActions()}</PopupFooter>
     </Flex>
   );
 }
@@ -276,19 +281,24 @@ export function ApproveTransactionScreen({
           </styled.span>
         }
       />
-      {isRefused ? (
+      {isRefused || isUnavailable ? (
         <Approver.Section
           className="approver-section skip-animation"
+          px="0"
+          py="0"
           animation="fadein 240ms ease-out"
         >
-          <Callout
-            variant="error"
-            title={counterpartyRefusedCopy.title}
-            borderRadius="sm"
-            data-testid="compliance-counterparty-refused"
-          >
-            {counterpartyRefusedCopy.body}
-          </Callout>
+          {isRefused ? (
+            <Callout
+              variant="error"
+              title={counterpartyRefusedCopy.title}
+              data-testid="compliance-counterparty-refused"
+            >
+              <SentenceLines text={counterpartyRefusedCopy.body} />
+            </Callout>
+          ) : (
+            <UnavailableCallout />
+          )}
         </Approver.Section>
       ) : null}
       <Approver.Section>
@@ -304,9 +314,7 @@ export function ApproveTransactionScreen({
           ))}
         </Stack>
       </Approver.Section>
-      <Approver.Actions actions={getActions()}>
-        {isUnavailable ? <UnavailableError /> : null}
-      </Approver.Actions>
+      <Approver.Actions actions={getActions()} />
     </Approver>
   );
 }

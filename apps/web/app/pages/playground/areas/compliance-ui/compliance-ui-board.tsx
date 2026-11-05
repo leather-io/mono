@@ -1,12 +1,6 @@
 import { type ReactNode } from 'react';
 
-import { Box, Flex, Grid, Stack, styled } from 'leather-styles/jsx';
-
-import {
-  type ComplianceNoteId,
-  complianceNotes,
-} from '../compliance-shared/compliance-build-notes';
-import { BuildNotesContent } from '../compliance-shared/compliance-build-notes-view';
+import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 // Board / Section helpers, following staking-states/staking-surface.tsx: a section is a
 // heading and description over one or more boards; a board is a labelled, bordered group.
@@ -92,31 +86,6 @@ export function Variant({ label, surface, caption, children }: VariantProps) {
         ) : null}
       </Stack>
       {children}
-    </Stack>
-  );
-}
-
-export function NotesGrid({ ids }: { ids: ComplianceNoteId[] }) {
-  return (
-    <Stack gap="space.03">
-      <styled.h3 textStyle="label.02">Build notes</styled.h3>
-      <Grid gridTemplateColumns="repeat(auto-fill, minmax(320px, 1fr))" gap="space.04">
-        {ids.map(id => (
-          <Stack
-            key={id}
-            gap="space.04"
-            p="space.05"
-            bg="ink.background-primary"
-            borderWidth={1}
-            borderColor="ink.border-default"
-            borderRadius="sm"
-            data-testid={`compliance-ui-notes-${id}`}
-          >
-            <styled.h4 textStyle="heading.05">{complianceNotes[id].title}</styled.h4>
-            <BuildNotesContent notes={complianceNotes[id]} />
-          </Stack>
-        ))}
-      </Grid>
     </Stack>
   );
 }
