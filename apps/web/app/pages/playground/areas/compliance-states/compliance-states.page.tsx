@@ -1,29 +1,34 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { ArrowRotateClockwiseIcon, Badge, type BadgeProps, Button } from '@leather.io/ui';
 
-import { type BuildNotes, buildNotes } from './compliance-build-notes';
-import { type MailKind } from './compliance-content';
+import { type BuildNotes } from '../compliance-shared/compliance-build-notes';
+import { BuildNotesContent } from '../compliance-shared/compliance-build-notes-view';
+import { type MailKind } from '../compliance-shared/compliance-content';
+import { BrowserTabFrame, ExtensionFrame } from '../compliance-shared/compliance-frames';
+import { ComplianceActionsProvider } from '../compliance-shared/compliance-screen-parts';
+import {
+  ApproveTransactionScreen,
+  LockoutScreen,
+  SendReviewScreen,
+  WhyLockedScreen,
+} from '../compliance-shared/compliance-screens';
+import {
+  HomeScreen,
+  KeyBackupPasswordScreen,
+  KeyBackupRevealScreen,
+  SendFormScreen,
+} from './compliance-demo-screens';
 import { MailWindow } from './compliance-mail-window';
 import {
   OnboardingPassword,
   OnboardingSecretKey,
   OnboardingWelcome,
 } from './compliance-onboarding';
-import { ComplianceActionsProvider } from './compliance-screen-parts';
-import {
-  ApproveTransactionScreen,
-  HomeScreen,
-  KeyBackupPasswordScreen,
-  KeyBackupRevealScreen,
-  LockoutScreen,
-  SendFormScreen,
-  SendReviewScreen,
-  WhyLockedScreen,
-} from './compliance-screens';
+import { buildNotes } from './compliance-state-notes';
 import {
   type ComplianceOutcome,
   type ComplianceState,
@@ -73,9 +78,9 @@ function ComplianceScreen({ stateId, stepId, onAdvance }: ComplianceScreenProps)
     case 'dispute-email':
       return <LockoutScreen />;
     case 'why-created':
-      return <WhyLockedScreen isCreatedInLeather />;
+      return <WhyLockedScreen backupWalletNames={['Wallet 1']} />;
     case 'why-imported':
-      return <WhyLockedScreen isCreatedInLeather={false} />;
+      return <WhyLockedScreen backupWalletNames={[]} />;
     case 'key-backup':
       if (stepId === 'backup-password') return <KeyBackupPasswordScreen onContinue={onAdvance} />;
       return <KeyBackupRevealScreen />;
@@ -97,125 +102,12 @@ function ComplianceScreen({ stateId, stepId, onAdvance }: ComplianceScreenProps)
     case 'approve-no-answer':
       return <ApproveTransactionScreen verdict="no-answer" isScreening={isScreening} />;
     case 'approve-stacks-btc-flagged':
-      if (isScreening) return <ApproveTransactionScreen verdict="clean" isScreening request="stacks" />;
+      if (isScreening)
+        return <ApproveTransactionScreen verdict="clean" isScreening request="stacks" />;
       return <LockoutScreen />;
     default:
       return null;
   }
-}
-
-function ExtensionFrame({ state, children }: { state: ComplianceState; children: ReactNode }) {
-  return (
-    <Box
-      position="relative"
-      width="popupWidth"
-      height={state.surface === 'request-window' ? 'popupHeight' : 'dialogHeight'}
-      flexShrink={0}
-      overflow="hidden"
-      transform="translateZ(0)"
-      bg="ink.background-primary"
-      borderRadius="sm"
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor="ink.border-default"
-      boxShadow="0 12px 40px rgba(18, 16, 15, 0.12)"
-      data-testid="compliance-frame"
-      data-surface={state.surface}
-    >
-      <Box height="100%" overflowY="auto">
-        {children}
-      </Box>
-    </Box>
-  );
-}
-
-function BrowserTabFrame({ children }: { children: ReactNode }) {
-  return (
-    <Flex
-      direction="column"
-      width="1040px"
-      maxWidth="100%"
-      height="700px"
-      flexShrink={0}
-      overflow="hidden"
-      transform="translateZ(0)"
-      bg="ink.background-primary"
-      borderRadius="10px"
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor="ink.border-default"
-      boxShadow="0 12px 40px rgba(18, 16, 15, 0.12)"
-      data-testid="compliance-frame"
-      data-surface="tab"
-    >
-      <Flex
-        alignItems="center"
-        gap="space.03"
-        height="40px"
-        px="space.04"
-        flexShrink={0}
-        bg="ink.background-secondary"
-        borderBottomWidth="1px"
-        borderBottomStyle="solid"
-        borderColor="ink.border-default"
-      >
-        <Flex gap="6px">
-          {['#FF5F57', '#FEBC2E', '#28C840'].map(color => (
-            <Box
-              key={color}
-              width="12px"
-              height="12px"
-              borderRadius="50%"
-              style={{ backgroundColor: color }}
-            />
-          ))}
-        </Flex>
-        <Box
-          flex={1}
-          maxWidth="520px"
-          mx="auto"
-          px="space.03"
-          py="space.01"
-          borderRadius="round"
-          bg="ink.background-primary"
-          borderWidth="1px"
-          borderStyle="solid"
-          borderColor="ink.border-default"
-        >
-          <styled.span textStyle="caption.02" color="ink.text-subdued">
-            chrome-extension://…/index.html#/
-          </styled.span>
-        </Box>
-        <Box width="54px" />
-      </Flex>
-      <Box flex={1} minHeight={0} overflowY="auto">
-        {children}
-      </Box>
-    </Flex>
-  );
-}
-
-function BuildNotesSection({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <Stack gap="space.01">
-      <styled.h3 textStyle="label.03" color="ink.text-subdued">
-        {label}
-      </styled.h3>
-      {children}
-    </Stack>
-  );
-}
-
-function BuildNotesList({ items }: { items: string[] }) {
-  return (
-    <styled.ul display="flex" flexDirection="column" gap="space.01" pl="space.04" listStyleType="disc">
-      {items.map(item => (
-        <styled.li key={item} textStyle="caption.01" color="ink.text-secondary">
-          {item}
-        </styled.li>
-      ))}
-    </styled.ul>
-  );
 }
 
 function BuildNotesPanel({ notes }: { notes: BuildNotes }) {
@@ -238,38 +130,7 @@ function BuildNotesPanel({ notes }: { notes: BuildNotes }) {
       data-testid="compliance-build-notes"
     >
       <styled.h2 textStyle="heading.05">Build notes</styled.h2>
-      <BuildNotesSection label="Trigger">
-        <styled.p textStyle="caption.01" color="ink.text-secondary">
-          {notes.trigger}
-        </styled.p>
-      </BuildNotesSection>
-      <BuildNotesSection label="Screens">
-        <styled.p textStyle="caption.01" color="ink.text-secondary">
-          {notes.screens}
-        </styled.p>
-      </BuildNotesSection>
-      <BuildNotesSection label="Result">
-        <styled.p textStyle="caption.01" color="ink.text-secondary">
-          {notes.result}
-        </styled.p>
-      </BuildNotesSection>
-      {notes.today ? (
-        <BuildNotesSection label="Today">
-          <styled.p textStyle="caption.01" color="ink.text-secondary">
-            {notes.today}
-          </styled.p>
-        </BuildNotesSection>
-      ) : null}
-      {notes.code?.length ? (
-        <BuildNotesSection label="Code">
-          <BuildNotesList items={notes.code} />
-        </BuildNotesSection>
-      ) : null}
-      {notes.open?.length ? (
-        <BuildNotesSection label="Open">
-          <BuildNotesList items={notes.open} />
-        </BuildNotesSection>
-      ) : null}
+      <BuildNotesContent notes={notes} />
     </styled.aside>
   );
 }
@@ -419,8 +280,8 @@ export function ComplianceStatesPage() {
               <styled.h1 textStyle="heading.05">Compliance states</styled.h1>
               <styled.p textStyle="caption.01" color="ink.text-subdued">
                 Extension screens for the agreed compliance model (Nov 2 sync, signed off by Rena on
-                Nov 4). Static mock data, no screening calls. Not a production feature. Build notes on
-                the right are for engineering.
+                Nov 4). Static mock data, no screening calls. Not a production feature. Build notes
+                on the right are for engineering.
               </styled.p>
             </Stack>
             {complianceStateGroups.map(group => (
@@ -520,7 +381,11 @@ export function ComplianceStatesPage() {
             </>
           ) : (
             <>
-              <ExtensionFrame state={selected}>{screen}</ExtensionFrame>
+              <ExtensionFrame
+                surface={selected.surface === 'request-window' ? 'request-window' : 'popup'}
+              >
+                {screen}
+              </ExtensionFrame>
               {mailWindow}
             </>
           )}

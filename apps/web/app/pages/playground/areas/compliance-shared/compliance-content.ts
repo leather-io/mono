@@ -1,3 +1,6 @@
+// Copy deck for the compliance UI. Shared by the walkthrough demo (compliance-states)
+// and the static handoff board (compliance-ui); the board renders every string here.
+
 export const lockoutCopy = {
   title: 'Leather is locked',
   body: 'An address in one of your wallets is restricted, so Leather can’t show balances or make transactions.',
@@ -11,7 +14,7 @@ export const whyLockedCopy = {
     'Leather checks wallet addresses against sanctions and risk data. One of yours matched, so we can’t provide service in this app.',
     'Your funds stay on the blockchain and remain under your control.',
   ],
-  backupLink: 'Back up Wallet 1 Secret Key',
+  backupLink: (walletName: string) => `Back up ${walletName} Secret Key`,
   backupNote: 'Shown only for wallets created in Leather',
 };
 
@@ -37,6 +40,13 @@ export const counterpartyRefusedCopy = {
 export const multisigRefusedCopy = {
   title: 'Leather can’t propose this',
   body: 'A member of this multisig account has a restricted address. Nothing was proposed. Your other accounts aren’t affected.',
+};
+
+// Footer actions that replace Confirm / Propose / Approve on the compliance states.
+export const complianceActionCopy = {
+  close: 'Close',
+  cancel: 'Cancel',
+  tryAgain: 'Try again',
 };
 
 export const unavailableCopy = {
@@ -137,6 +147,19 @@ export const mockTokens = [
   { id: 'stx', name: 'Stacks', symbol: 'STX', fiat: '$4,270.20', amount: '4,812 STX' },
   { id: 'usdcx', name: 'USDCx', symbol: 'USDCx', fiat: '$0.00', amount: '0 USDCx' },
 ];
+
+// One wallet of each kind, for the "Why Leather is locked" multi-wallet variant: one backup
+// link per software wallet created in Leather, none for imported or Ledger wallets.
+export const mockWallets = [
+  { name: 'Wallet 1', origin: 'created' },
+  { name: 'Wallet 2', origin: 'imported' },
+  { name: 'Wallet 3', origin: 'created' },
+  { name: 'Ledger', origin: 'ledger' },
+] as const;
+
+export function getBackupWalletNames(wallets: readonly { name: string; origin: string }[]) {
+  return wallets.filter(wallet => wallet.origin === 'created').map(wallet => wallet.name);
+}
 
 export const mockSendForm = {
   amount: '0.05',

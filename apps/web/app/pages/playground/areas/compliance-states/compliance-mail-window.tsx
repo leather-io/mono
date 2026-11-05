@@ -4,7 +4,7 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { PaperPlaneIcon } from '@leather.io/ui';
 
-import { type MailKind, mailDrafts } from './compliance-content';
+import { type MailKind, mailDrafts } from '../compliance-shared/compliance-content';
 
 const systemFont = '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif';
 

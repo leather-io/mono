@@ -14,7 +14,7 @@ import {
   Link,
 } from '@leather.io/ui';
 
-import { mockSecretKey, onboardingCopy } from './compliance-content';
+import { mockSecretKey, onboardingCopy } from '../compliance-shared/compliance-content';
 
 const wordRevealIntervalMs = 140;
 const mockPassword = 'correct-horse-2026';

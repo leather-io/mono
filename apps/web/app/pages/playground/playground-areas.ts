@@ -92,4 +92,12 @@ export const playgroundAreas: PlaygroundArea[] = [
     status: 'exploration',
     section: 'extension',
   },
+  {
+    slug: 'compliance-ui',
+    title: 'Compliance UI',
+    description:
+      'Static handoff board of the new compliance UI: lockout, why locked, refusals, screening and no answer, every variant for extension and mobile on one page, with the copy deck and build notes.',
+    status: 'exploration',
+    section: 'extension',
+  },
 ];

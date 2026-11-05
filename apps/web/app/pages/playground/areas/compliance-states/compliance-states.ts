@@ -1,3 +1,7 @@
+import { type ComplianceSurface } from '../compliance-shared/compliance-frames';
+
+export { surfaceLabels } from '../compliance-shared/compliance-frames';
+
 export type ComplianceStateId =
   | 'onboarding-to-lockout'
   | 'home-to-lockout'
@@ -14,8 +18,6 @@ export type ComplianceStateId =
   | 'approve-counterparty-flagged'
   | 'approve-no-answer'
   | 'approve-stacks-btc-flagged';
-
-type ComplianceSurface = 'popup' | 'request-window' | 'tab';
 
 export type ComplianceOutcome = 'clean' | 'refused' | 'locked' | 'no-answer' | 'flow';
 
@@ -247,9 +249,3 @@ export const defaultComplianceStateId: ComplianceStateId = 'onboarding-to-lockou
 export function findComplianceState(id: string | null) {
   return complianceStates.find(state => state.id === id);
 }
-
-export const surfaceLabels: Record<ComplianceSurface, string> = {
-  popup: 'Extension popup · 390 × 600',
-  'request-window': 'Request window · 390 × 756',
-  tab: 'Full-page tab',
-};

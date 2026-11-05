@@ -12,10 +12,13 @@ import {
 } from '@leather.io/ui';
 
 import { type MailKind, getMailto, unavailableCopy } from './compliance-content';
-import { type ComplianceStateId } from './compliance-states';
+
+// Where the screens' own links lead. The demo maps these to its walkthrough states; the
+// static board scrolls to the matching section.
+export type ComplianceTarget = 'lockout' | 'why-created' | 'key-backup';
 
 interface ComplianceActions {
-  goTo(id: ComplianceStateId): void;
+  goTo(target: ComplianceTarget): void;
   openMail(kind: MailKind): void;
 }
 
