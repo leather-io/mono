@@ -217,7 +217,7 @@ function Subheader({ children }: { children: ReactNode }) {
   );
 }
 
-export type MobileReviewState = 'recipient-flagged' | 'screening' | 'no-answer';
+type MobileReviewState = 'recipient-flagged' | 'screening' | 'no-answer';
 
 // The send sheet's approver (psbt-signer.tsx on mobile): header, outcome, recipient, account,
 // fee, then a footer with Total spend and the action buttons.

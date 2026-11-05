@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-export type ExtensionSurface = 'popup' | 'request-window';
+type ExtensionSurface = 'popup' | 'request-window';
 export type ComplianceSurface = ExtensionSurface | 'tab';
 
 export const surfaceLabels: Record<ComplianceSurface, string> = {

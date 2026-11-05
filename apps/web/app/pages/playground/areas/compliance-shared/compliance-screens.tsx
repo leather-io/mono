@@ -140,7 +140,7 @@ export function WhyLockedScreen({ backupWalletNames }: WhyLockedScreenProps) {
   );
 }
 
-export type ReviewVerdict = 'recipient-flagged' | 'member-flagged' | 'no-answer';
+type ReviewVerdict = 'recipient-flagged' | 'member-flagged' | 'no-answer';
 
 interface SendReviewScreenProps {
   verdict: ReviewVerdict;
@@ -226,7 +226,7 @@ export function SendReviewScreen({ verdict, isScreening, onRetry }: SendReviewSc
   );
 }
 
-export type ApproveVerdict = 'clean' | 'counterparty-flagged' | 'no-answer';
+type ApproveVerdict = 'clean' | 'counterparty-flagged' | 'no-answer';
 
 interface ApproveTransactionScreenProps {
   verdict: ApproveVerdict;

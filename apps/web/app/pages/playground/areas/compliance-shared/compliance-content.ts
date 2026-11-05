@@ -66,7 +66,7 @@ interface MailDraft {
 }
 
 // Agreed with Rena (Nov 4): one compliance-owned inbox for both drafts, read by Gina, Mitchell and Rena.
-export const complianceEmail = 'compliance@leather.io';
+const complianceEmail = 'compliance@leather.io';
 
 const diagnostics = [
   '— Filled in by Leather —',
