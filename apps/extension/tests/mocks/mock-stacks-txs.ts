@@ -65,21 +65,18 @@ const mockedStacksConfirmedTransactions = [
 
 const mockedStacksPendingTransaction = {
   tx_id: '0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4',
-  nonce: 14,
+  sender: { address: TEST_ACCOUNT_1_STX_ADDRESS, nonce: 14 },
+  sponsor: null,
   fee_rate: '3000',
-  sender_address: TEST_ACCOUNT_1_STX_ADDRESS,
-  sponsored: false,
-  post_condition_mode: 'deny',
-  post_conditions: [],
-  anchor_mode: 'any',
-  tx_status: 'pending',
   receipt_time: 1729168336,
   receipt_time_iso: '2024-10-17T12:32:16.000Z',
-  tx_type: 'token_transfer',
+  receipt_block_height: 1000,
+  status: 'pending',
+  type: 'token_transfer',
   token_transfer: {
-    recipient_address: 'ST3WSKSKGNFCDGJN9EXF6AC9NFF69XNNFXN2DQA7E',
+    recipient: 'ST3WSKSKGNFCDGJN9EXF6AC9NFF69XNNFXN2DQA7E',
     amount: '1000000',
-    memo: '0x00000000000000000000000000000000000000000000000000000000000000000000',
+    memo: null,
   },
 };
 
@@ -102,8 +99,12 @@ const mockedStacksPendingTransactionV3 = {
 
 const mockedStacksTxsRequestWithPendingTx = {
   limit: 50,
-  offset: 0,
   total: 1,
+  cursor: {
+    next: null,
+    previous: null,
+    current: `${mockedStacksPendingTransaction.receipt_time}:${mockedStacksPendingTransaction.tx_id}`,
+  },
   results: [mockedStacksPendingTransaction],
 };
 
@@ -153,7 +154,7 @@ const mockedPrincipalTxsResponseWithReceiveTx = {
 };
 
 const transactionWithTransfersUrl = `**/api.hiro.so/extended/v2/addresses/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions?limit=50&offset=0&exclude_function_args=true`;
-const mempoolUrl = `**/api.hiro.so/extended/v1/tx/mempool?address=${TEST_ACCOUNT_1_STX_ADDRESS}&limit=50`;
+const mempoolUrl = `**/api.hiro.so/extended/v3/principals/${TEST_ACCOUNT_1_STX_ADDRESS}/mempool/transactions**`;
 
 export async function mockMainnetTestAccountStacksTxsRequests(page: Page | BrowserContext) {
   await Promise.all([
@@ -165,7 +166,7 @@ export async function mockMainnetTestAccountStacksTxsRequests(page: Page | Brows
 
     page.route(mempoolUrl, route =>
       route.fulfill({
-        json: emptyTxsResponse,
+        json: emptyPrincipalTxsResponse,
       })
     ),
   ]);
@@ -176,8 +177,8 @@ export async function mockWildcardStacksTxsRequests(page: Page | BrowserContext)
     page.route('**hiro.so/extended/v2/addresses/*/transactions**', route =>
       route.fulfill({ json: emptyTxsResponse })
     ),
-    page.route('**hiro.so/extended/v1/tx/mempool?address=*', route =>
-      route.fulfill({ json: emptyTxsResponse })
+    page.route('**hiro.so/extended/v3/principals/*/mempool/transactions**', route =>
+      route.fulfill({ json: emptyPrincipalTxsResponse })
     ),
     page.route('**hiro.so/extended/v1/address/*/assets**', route =>
       route.fulfill({ json: { limit: 100, offset: 0, total: 0, results: [] } })

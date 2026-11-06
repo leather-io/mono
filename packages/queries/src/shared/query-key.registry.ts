@@ -69,7 +69,7 @@ export const querySettingsDepsRegistry = {
   'hiro-stacks-api-client--get-raw-transaction-by-id': ['network'],
   'hiro-stacks-api-client--get-network-status': [],
   'hiro-stacks-api-client--get-ft-metadata': ['network'],
-  'hiro-stacks-api-client--get-address-mempool-transactions': ['network'],
+  'hiro-stacks-api-client--get-principal-mempool-transactions': ['network'],
   'hiro-stacks-api-client--get-address-transactions': ['network'],
   'mempool-api-client--fetch-address-bitcoin-txs': ['network'],
   'alex-sdk-client--fetch-swappable-currency': [],
