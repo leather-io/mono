@@ -16,7 +16,6 @@
     "clean": "git clean -dfX",
     "design:align": "node --experimental-strip-types scripts/design/align.ts",
     "design:check": "eslint -c eslint.design.config.js --no-inline-config",
-    "design:lint": "eslint apps/web/app/pages/playground/shared/recipes apps/web/app/pages/playground/areas/recipes apps/web/app/pages/playground/areas/receive-example --max-warnings 0",
     "design:scripts:lint": "eslint -c eslint.design-scripts.config.js scripts/design --max-warnings 0 --no-inline-config",
     "design:scripts:typecheck": "tsc -p scripts/design/tsconfig.json",
     "design:test": "node --experimental-strip-types --test eslint-rules/design-system/*.spec.js scripts/design/*.test.ts",

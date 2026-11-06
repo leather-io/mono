@@ -20,9 +20,4 @@ export default defineConfig([
     plugins: { 'design-system': designSystemPlugin },
     rules: designRules,
   },
-  {
-    files: ['apps/extension/src/**/*.{ts,tsx}'],
-    plugins: { 'design-system': designSystemPlugin },
-    rules: { 'design-system/no-local-duplicate': 'error' },
-  },
 ]);

@@ -112,8 +112,7 @@
         "app/root.tsx",
         "app/routes.ts",
         "workers/app.ts",
-        "workers/csp.ts",
-        "app/pages/playground/shared/exploration/image-urls.ts"
+        "workers/csp.ts"
       ],
       "paths": {
         "~/*": ["./app/*"]

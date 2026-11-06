@@ -1,28 +1,23 @@
 # Never
 
-Each item here is backed by a lint rule in `eslint-rules/design-system/`, or is waiting on a token
-before it can be. The lint message is the fix: it names the replacement and links back to the
-matching section of this page. If you want to add an item, follow
-[updating-the-system.md](./updating-the-system.md). Start with a type or a lint rule, and only
-write prose when neither can work.
+Each item here is backed by a lint rule in `eslint-rules/design-system/`. The lint message is the
+fix: it names the replacement and links back to the matching section of this page. If you want to
+add an item, follow [updating-the-system.md](./updating-the-system.md). Start with a type or a
+lint rule, and only write prose when neither can work.
 
 This release automatically enforces these rules on its owned recipes, gallery and example,
 with no new suppressions. Run `pnpm design:check <feature-path>` to check another web/extension
 feature explicitly. Existing product lint baselines are unchanged; mobile rollout is separate.
 
-| #   | Never                                                 | Rule                                 | Status                    |
-| --- | ----------------------------------------------------- | ------------------------------------ | ------------------------- |
-| 1   | [Raw colour](#raw-colour)                             | `design-system/no-raw-color`         | lint                      |
-| 2   | [Undefined text style](#undefined-text-style)         | `design-system/valid-text-style`     | lint                      |
-| 3   | [Raw button](#raw-button)                             | `design-system/no-raw-interactive`   | lint                      |
-| 4   | [Radix imports](#radix-imports)                       | `design-system/no-primitive-imports` | lint                      |
-| 5   | [Text opacity](#text-opacity)                         | `design-system/no-text-opacity`      | lint                      |
-| 6   | [Local duplicates](#local-duplicates)                 | `design-system/no-local-duplicate`   | lint                      |
-| 6b  | [Mono amount](#mono-amount)                           | `design-system/no-mono-amount`       | lint                      |
-| 6c  | [Dead chevron](#dead-chevron)                         | `design-system/no-dead-chevron`      | lint (Playground)         |
-| 7   | [Raw shadows](#raw-shadows)                           | `no-raw-color` with `checkShadows`   | waits on `shadows` tokens |
-| 8   | [Motion literals](#motion-literals)                   | planned `no-raw-motion`              | waits on motion tokens    |
-| 9   | [Uppercase outside Marche](#uppercase-outside-marche) | planned `no-text-transform`          | lint next                 |
+| #   | Never                                         | Rule                                 | Status            |
+| --- | --------------------------------------------- | ------------------------------------ | ----------------- |
+| 1   | [Raw colour](#raw-colour)                     | `design-system/no-raw-color`         | lint              |
+| 2   | [Undefined text style](#undefined-text-style) | `design-system/valid-text-style`     | lint              |
+| 3   | [Raw button](#raw-button)                     | `design-system/no-raw-interactive`   | lint              |
+| 4   | [Radix imports](#radix-imports)               | `design-system/no-primitive-imports` | lint              |
+| 5   | [Text opacity](#text-opacity)                 | `design-system/no-text-opacity`      | lint              |
+| 6   | [Mono amount](#mono-amount)                   | `design-system/no-mono-amount`       | lint              |
+| 7   | [Dead chevron](#dead-chevron)                 | `design-system/no-dead-chevron`      | lint (Playground) |
 
 ---
 
@@ -163,24 +158,6 @@ Use a step on the ink text ladder (ink.text-secondary, ink.text-subdued or ink.t
 **Not covered:** Opacity used to fade an element in or out (`0` or `1`), and opacity on a surface
 that has a background, such as a hover state.
 
-## Local duplicates
-
-**Rule:** Don't import an app-local copy of a component that `@leather.io/ui` already provides.
-
-**Why:** Forks drift apart. Today 22 extension files import the local `BasicTooltip` and 21 import
-the ui one. The local one opens after 300ms and the ui one after 400ms, so tooltips on the same screen
-open at different speeds.
-
-**Lint message:**
-
-```
-Use BasicTooltip or Tooltip from @leather.io/ui instead of the local copy '@app/ui/components/tooltip/basic-tooltip' — docs/design/never.md#local-duplicates
-```
-
-**Use instead:** Use the ui component. If it's missing a prop you need, add the prop in
-`packages/ui` rather than keeping the fork. Each duplicate is configured as one entry
-(`pattern`, `replacement`) in the rule options, so adding the next one is a one-line change.
-
 ## Mono amount
 
 **Rule:** Monospace is for full addresses and code only. Never set an amount, total, fee, balance
@@ -223,35 +200,3 @@ Use navigates only with an onClick that opens a deeper view, instead of a chevro
 
 **Use instead:** Drop `navigates` on pick rows (select and return), display rows and rows with
 nested actions. Add it back with the screen it opens.
-
-## Raw shadows
-
-**Rule:** Don't use raw `boxShadow` values. This is not enforced until `tokens.shadows` exists.
-
-**Why:** The same three-layer `rgba(18, 16, 15, …)` shadow is copied by hand into toast, select,
-hover-card, connect-card and three extension layouts, and the copies have already diverged.
-
-**Next step:** Add elevation tokens to `packages/tokens/src/tokens.ts`, then turn on
-`no-raw-color` with `{ checkShadows: true }`. That reports 17 call sites today.
-
-## Motion literals
-
-**Rule:** Don't use `cubic-bezier()` or millisecond values in `transition` or `animation`. This is
-not enforced until motion tokens exist.
-
-**Why:** There is only one transition token today (`all 0.2s cubic-bezier(0.23, 1, 0.32, 1)`).
-Toasts use `160ms cubic-bezier(0, 0.45, 0.6, 1)`, and about 40 other literals exist.
-
-**Next step:** Add duration and easing tokens, then write `no-raw-motion` with the message
-`Use a duration and easing token instead of …`.
-
-## Uppercase outside Marche
-
-**Rule:** Only the Marche display styles (`display.*`, `heading.02`, `heading.03`) are set in
-uppercase, and they do it themselves. Don't add `textTransform="uppercase"` anywhere else.
-
-**Why:** Uppercase Diatype reads as shouting and breaks the type pairing. There are 2 call sites
-today.
-
-**Next step:** Add a small `no-text-transform` rule with the message
-`Use heading.02 or heading.03 instead of textTransform uppercase — …`.

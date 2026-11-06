@@ -25,26 +25,10 @@ switcher while selected. Use it for approval screens.
 
 ## 1. Capture today's flow first
 
-- Screenshot the shipped flow from start to finish, in popup light, popup dark and tab. Save the
-  files as `<step>-popup.png`, `<step>-popup-dark.png` and `<step>-tab.png` inside the area
-  folder, e.g. `areas/<area>/today-actual/`, and reference captures in `areas/<area>/references/`.
-  Not in `apps/web/public/`: the area stays one folder plus one registry line.
-- Import them through Vite and pass the URLs to the config as they are:
-
-  ```ts
-  import { imageUrls } from '../../../shared/exploration/image-urls';
-
-  const today = imageUrls(
-    import.meta.glob<string>('../today-actual/*.png', {
-      eager: true,
-      query: '?url',
-      import: 'default',
-    })
-  );
-  // today.image(name, frame, theme) returns today[`${name}-${frame}${dark ? '-dark' : ''}.png`]
-  // references: { app: 'Xverse', image: refs['xverse-1.png'], … }, and no references.path
-  ```
-
+- Screenshot the shipped flow from start to finish, in popup light, popup dark and tab. Don't
+  commit the captures or reference images to the repository: host them outside it (PR attachments
+  work) and pass their URLs to the config. `today.image(name, frame, theme)` returns the URL for
+  a step, and each reference's `image` is a URL.
 - Capture at the current popup size, 390×600, without scaling.
 - Write the steps as a list and give each one its jobs: `choose-asset`, `amount`, `fee`,
   `review`, `sent`.

@@ -42,15 +42,10 @@ consequential choices. The answer becomes a recipe or a component.
 | Divider, border                | `ink.border-default` (or `border="default"`)               |
 | Error, warning, success, info  | `red`, `yellow`, `green`, `blue` + `.background-secondary` |
 
-**Text colour: the ink ladder.** Pick the step by how much the reader depends on the text.
-
-1. `ink.text-primary`: the content itself (titles, amounts, names, values).
-2. `ink.text-secondary`: text that informs a decision. This covers dialog and sheet body copy,
-   warnings, fee explanations, approval details, and labels in key-value rows on review screens.
-   Use it for any supporting text on a tinted surface.
-3. `ink.text-subdued`: metadata someone can skip, such as row captions, fiat values next to an
-   amount, and timestamps. Only use it on `ink.background-primary`.
-4. `ink.text-non-interactive`: disabled only.
+**Text colour: the ink ladder.** Pick the step by how much the reader depends on the text:
+`ink.text-primary` for the content itself, `ink.text-secondary` for text that informs a decision,
+`ink.text-subdued` for metadata someone can skip (only on `ink.background-primary`), and
+`ink.text-non-interactive` for disabled. The full rules are in `packages/tokens/README.md`.
 
 If you're unsure, use `ink.text-secondary`. Don't use opacity to make an in-between shade.
 An icon next to text matches the text's ink or is lighter, never darker: use `InlineIcon`.
@@ -76,18 +71,11 @@ styles; nested numbers and labels go a size smaller than their parent.
 Use them for padding, gaps and margins. Radii are `xs`, `sm`, `md`, `lg` and `round`. A page has
 one horizontal gutter (`space.05` in the popup): rows, inputs and header icon glyphs all sit on it.
 
-**Compositions.** In the web Playground, `FramePage`, `PopupPage` and `TabPage` accept typed
-`actions` (`primary`, optional `secondary`, `mode: 'task' | 'management'`) and a `notice`
-descriptor (`variant`, `message`). Task mode has one solid primary; management mode has outline
-actions. Either action pending disables both. Use `customFooter` only as a deliberate escape
-hatch; the types make it mutually exclusive with `actions`. `PageNotice` spans the full region by
-cancelling the shell gutter, so don't add an inset wrapper.
-
-Inline `ReviewSheet` takes `actions` and a typed `callout`, with a bounded scrolling body. It is a
-Playground visual demo, without production modal focus behavior. In product code, use real
-`Sheet` + `SheetHeader`; `PageActions` can go directly in `Sheet.footer`. Promote shared recipes
-with the composition, or use the existing app composition when it fits the workflow better.
-Examples and imports: `docs/design/recipes.md#footer-actions`.
+**Compositions.** In the web Playground, build screens from the recipes in
+`docs/design/recipes.md`. Page shells take typed `actions` and a `notice`, and the inline
+`ReviewSheet` is a visual demo, so product code uses the real `Sheet` + `SheetHeader`. The
+descriptor shapes and the `Sheet` footer are in `docs/design/i-need-to.md` ("Place the screen's
+actions", "Open a focused task").
 
 **Components.**
 
@@ -110,8 +98,7 @@ Examples and imports: `docs/design/recipes.md#footer-actions`.
 | Money                 | the app's `Balance` + `formatCurrency`                    | `Balance`                           |
 | Tooltip               | `BasicTooltip`                                            | info sheet                          |
 
-Don't use raw `<button>`, `styled.button`, `radix-ui` imports, or the extension's local tooltip.
-Lint rejects all of them.
+Don't use raw `<button>`, `styled.button` or `radix-ui` imports. Lint rejects all of them.
 
 ## Example
 
@@ -158,12 +145,10 @@ a composition. Reuse its decisions without copying known bulk or clipping proble
 
 At narrow widths, inspect every interactive state, including edit forms. Check each body
 scroller's `scrollWidth` against `clientWidth`, not only the document: nested horizontal overflow
-can be missed. Two `fullWidth` Buttons in a Flex row do not fit by default because Button does
-not shrink; use bounded grid columns. Popup screens have one vertical body scroller with
-header/footer in reach; tab pages may scroll as a whole.
+can be missed. Popup screens have one vertical body scroller with header/footer in reach; tab
+pages may scroll as a whole.
 
-The 27 Oct fee-prototype review also exposed a domain-fidelity gap: passing tokens and width
-checks is not enough. Follow [Fees and transaction status](../../../docs/design/i-need-to.md#fees-and-transaction-status)
+Passing tokens and width checks is not enough. Follow [Fees and transaction status](../../../docs/design/i-need-to.md#fees-and-transaction-status)
 for fee choices, Money/fiat, quote provenance, identity grouping and pending-state semantics.
 Review popup content inside its intended device frame, not stretched across the browser.
 
