@@ -1,6 +1,5 @@
 import {
   GetRawTransactionResult,
-  MempoolTransactionListResponse,
   NonFungibleTokenHoldingsList,
 } from '@stacks/stacks-blockchain-api-types';
 import { ClarityAbi, ClarityValue, cvToHex, hexToCV } from '@stacks/transactions';
@@ -28,11 +27,11 @@ import {
   HiroAddressTransactionsResponse,
   HiroBalanceChangesResponse,
   HiroFtMetadata,
-  HiroMempoolTransactionListResponse,
   HiroMetadata,
   HiroNftHolding,
   HiroPageRequest,
   HiroPoxInfoResponse,
+  HiroPrincipalMempoolTransactionsResponse,
   HiroPrincipalStakingBondsResponse,
   HiroPrincipalTransactionsResponse,
   HiroReadOnlyFunctionResponse,
@@ -42,12 +41,17 @@ import {
   HiroTransactionEvent,
   HiroTransactionEventsResponse,
   HiroTransactionFeeEstimateResponse,
+  HiroTransactionIncludeField,
 } from './hiro-stacks-api.types';
 import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
 
 function isNotFoundOrUnprocessableRequest(request: unknown) {
   if (typeof request !== 'object' || request === null || !('status' in request)) return false;
   return request.status === 404 || request.status === 422;
+}
+
+interface GetTransactionByIdOptions extends ApiRequestOptions {
+  include?: HiroTransactionIncludeField[];
 }
 
 const balanceChangesResultLimit = 50;
@@ -355,20 +359,23 @@ export class HiroStacksApiClient {
     );
   }
 
-  public async getAddressMempoolTransactions(
-    address: string,
+  public async getPrincipalMempoolTransactions(
+    principal: string,
+    { cursor, limit = DEFAULT_LIST_LIMIT }: { cursor?: string | null; limit?: number } = {},
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroMempoolTransactionListResponse> {
+  ): Promise<HiroPrincipalMempoolTransactionsResponse> {
     const fetchFn = async () => {
+      const params = new URLSearchParams({ limit: String(limit) });
+      if (cursor) params.set('cursor', cursor);
       const res = await this.limiter.add(
         RateLimiterType.HiroStacks,
         () =>
-          this._axios.get<MempoolTransactionListResponse>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
+          this._axios.get<HiroPrincipalMempoolTransactionsResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/principals/${principal}/mempool/transactions?${params.toString()}`,
             { signal }
           ),
         {
-          priority: hiroApiRequestsPriorityLevels.getAddressMempoolTransactions,
+          priority: hiroApiRequestsPriorityLevels.getPrincipalMempoolTransactions,
           signal,
           throwOnTimeout: true,
         }
@@ -379,8 +386,10 @@ export class HiroStacksApiClient {
       ? await fetchFn()
       : await this.cache.fetchWithCache(
           [
-            'hiro-stacks-get-address-mempool-transactions',
-            address,
+            'hiro-stacks-get-principal-mempool-transactions',
+            principal,
+            cursor ?? 'start',
+            limit,
             selectStacksChainId(this.settings.getSettings()),
           ],
           fetchFn
@@ -389,15 +398,17 @@ export class HiroStacksApiClient {
 
   public async getTransactionById(
     txid: string,
-    { signal, skipCache }: ApiRequestOptions = {}
+    { signal, skipCache, include = [] }: GetTransactionByIdOptions = {}
   ): Promise<StacksTransaction | null> {
+    const includeParam = [...include].sort().join(',');
+    const query = includeParam ? `?include=${includeParam}` : '';
     const fetchFn = async () => {
       try {
         const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             this._axios.get<StacksTransaction>(
-              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/transactions/${txid}`,
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/transactions/${txid}${query}`,
               { signal }
             ),
           {
@@ -420,6 +431,7 @@ export class HiroStacksApiClient {
           [
             'hiro-stacks-get-transaction-by-id',
             txid,
+            includeParam,
             selectStacksChainId(this.settings.getSettings()),
           ],
           fetchFn
