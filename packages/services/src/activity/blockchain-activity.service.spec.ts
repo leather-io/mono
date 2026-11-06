@@ -16,6 +16,7 @@ import type {
 import { type MarketDataService } from '../market/market-data.service';
 import { type StacksProtocolService } from '../protocols/stacks-protocol.service';
 import { createMock } from '../test/create-mock';
+import { createTestPrincipalMempoolTokenTransferTx } from '../test/transactions-fixtures';
 import { type BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import { type StacksTransactionsService } from '../transactions/stacks-transactions.service';
 import { BlockchainActivityService } from './blockchain-activity.service';
@@ -308,24 +309,20 @@ describe(BlockchainActivityService.name, () => {
         ],
       });
       getPendingTransactions.mockResolvedValue([
-        {
+        createTestPrincipalMempoolTokenTransferTx({
           tx_id: '0xdup',
-          tx_type: 'token_transfer',
-          sender_address: 'SP1',
-          sponsored: false,
+          sender: { address: 'SP1', nonce: 0 },
           fee_rate: '100',
           receipt_time: 2000,
-          token_transfer: { recipient_address: 'SP2', amount: '1000', memo: '' },
-        },
-        {
+          token_transfer: { recipient: 'SP2', amount: '1000', memo: null },
+        }),
+        createTestPrincipalMempoolTokenTransferTx({
           tx_id: '0xmempoolonly',
-          tx_type: 'token_transfer',
-          sender_address: 'SP1',
-          sponsored: false,
+          sender: { address: 'SP1', nonce: 0 },
           fee_rate: '100',
           receipt_time: 2001,
-          token_transfer: { recipient_address: 'SP3', amount: '500', memo: '' },
-        },
+          token_transfer: { recipient: 'SP3', amount: '500', memo: null },
+        }),
       ]);
       const result = await service.getActivityByAssetId(account, {
         protocol: 'nativeStx',
@@ -399,24 +396,20 @@ describe(BlockchainActivityService.name, () => {
         ],
       });
       getPendingTransactions.mockResolvedValue([
-        {
+        createTestPrincipalMempoolTokenTransferTx({
           tx_id: '0xdup',
-          tx_type: 'token_transfer',
-          sender_address: 'SP1',
-          sponsored: false,
+          sender: { address: 'SP1', nonce: 0 },
           fee_rate: '100',
           receipt_time: 2000,
-          token_transfer: { recipient_address: 'SP2', amount: '1000', memo: '' },
-        },
-        {
+          token_transfer: { recipient: 'SP2', amount: '1000', memo: null },
+        }),
+        createTestPrincipalMempoolTokenTransferTx({
           tx_id: '0xmempoolonly',
-          tx_type: 'token_transfer',
-          sender_address: 'SP1',
-          sponsored: false,
+          sender: { address: 'SP1', nonce: 0 },
           fee_rate: '100',
           receipt_time: 2001,
-          token_transfer: { recipient_address: 'SP3', amount: '500', memo: '' },
-        },
+          token_transfer: { recipient: 'SP3', amount: '500', memo: null },
+        }),
       ]);
       const response = await service.getActivity({ account });
       expect(response.items.map(item => item.txid)).toEqual(['0xmempoolonly', '0xdup']);
@@ -613,15 +606,14 @@ describe(BlockchainActivityService.name, () => {
 
     it('attaches no fee to a pending sponsored tx the user initiated', async () => {
       getPendingTransactions.mockResolvedValue([
-        {
+        createTestPrincipalMempoolTokenTransferTx({
           tx_id: '0xpendingsponsored',
-          tx_type: 'token_transfer',
-          sender_address: 'SP1',
-          sponsored: true,
+          sender: { address: 'SP1', nonce: 0 },
+          sponsor: { address: 'SP_SPONSOR', nonce: 0 },
           fee_rate: '100',
           receipt_time: 2000,
-          token_transfer: { recipient_address: 'SP2', amount: '1000', memo: '' },
-        },
+          token_transfer: { recipient: 'SP2', amount: '1000', memo: null },
+        }),
       ]);
       const result = await nativeStxActivity();
       expect(result).toHaveLength(1);

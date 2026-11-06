@@ -1,8 +1,10 @@
-import { type MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
-
 import { type StacksTx } from '@leather.io/models';
 
-import { createTestMempoolTokenTransferTransaction } from '../test/transactions-fixtures';
+import { type HiroPrincipalMempoolTransaction } from '../infrastructure/api/hiro/hiro-stacks-api.types';
+import {
+  createTestMempoolTokenTransferTransaction,
+  createTestPrincipalMempoolTokenTransferTx,
+} from '../test/transactions-fixtures';
 import {
   filterOutConfirmedTransactions,
   filterOutStaleTransactions,
@@ -14,9 +16,9 @@ describe('filterOutConfirmedTransactions', () => {
       createTestMempoolTokenTransferTransaction({ tx_id: 'tx1' }),
       createTestMempoolTokenTransferTransaction({ tx_id: 'tx2' }),
     ];
-    const mempoolTxs: MempoolTransaction[] = [
-      createTestMempoolTokenTransferTransaction({ tx_id: 'tx1' }),
-      createTestMempoolTokenTransferTransaction({ tx_id: 'tx3' }),
+    const mempoolTxs: HiroPrincipalMempoolTransaction[] = [
+      createTestPrincipalMempoolTokenTransferTx({ tx_id: 'tx1' }),
+      createTestPrincipalMempoolTokenTransferTx({ tx_id: 'tx3' }),
     ];
     const pendingTxs = mempoolTxs.filter(filterOutConfirmedTransactions(confirmedTxs));
     expect(pendingTxs.length).toBe(1);
@@ -25,9 +27,9 @@ describe('filterOutConfirmedTransactions', () => {
 
   it('can handle empty confirmed transaction lists', () => {
     const confirmedTxs: StacksTx[] = [];
-    const mempoolTxs: MempoolTransaction[] = [
-      createTestMempoolTokenTransferTransaction({ tx_id: 'tx1' }),
-      createTestMempoolTokenTransferTransaction({ tx_id: 'tx3' }),
+    const mempoolTxs: HiroPrincipalMempoolTransaction[] = [
+      createTestPrincipalMempoolTokenTransferTx({ tx_id: 'tx1' }),
+      createTestPrincipalMempoolTokenTransferTx({ tx_id: 'tx3' }),
     ];
     const pendingTxs = mempoolTxs.filter(filterOutConfirmedTransactions(confirmedTxs));
     expect(pendingTxs.length).toBe(2);
@@ -40,20 +42,28 @@ describe('filterOutStaleTransactions', () => {
       createTestMempoolTokenTransferTransaction({ nonce: 1 }),
       createTestMempoolTokenTransferTransaction({ nonce: 2 }),
     ];
-    const mempoolTxs: MempoolTransaction[] = [
-      createTestMempoolTokenTransferTransaction({ nonce: 2 }),
-      createTestMempoolTokenTransferTransaction({ nonce: 3 }),
+    const mempoolTxs: HiroPrincipalMempoolTransaction[] = [
+      createTestPrincipalMempoolTokenTransferTx({
+        sender: { address: 'SP000000000000000000002Q6VF78', nonce: 2 },
+      }),
+      createTestPrincipalMempoolTokenTransferTx({
+        sender: { address: 'SP000000000000000000002Q6VF78', nonce: 3 },
+      }),
     ];
     const pendingTxs = mempoolTxs.filter(filterOutStaleTransactions(confirmedTxs));
     expect(pendingTxs.length).toBe(1);
-    expect(pendingTxs[0].nonce).toBe(3);
+    expect(pendingTxs[0].sender.nonce).toBe(3);
   });
 
   it('can handle empty confirmed transaction lists', () => {
     const confirmedTxs: StacksTx[] = [];
-    const mempoolTxs: MempoolTransaction[] = [
-      createTestMempoolTokenTransferTransaction({ nonce: 1 }),
-      createTestMempoolTokenTransferTransaction({ nonce: 2 }),
+    const mempoolTxs: HiroPrincipalMempoolTransaction[] = [
+      createTestPrincipalMempoolTokenTransferTx({
+        sender: { address: 'SP000000000000000000002Q6VF78', nonce: 1 },
+      }),
+      createTestPrincipalMempoolTokenTransferTx({
+        sender: { address: 'SP000000000000000000002Q6VF78', nonce: 2 },
+      }),
     ];
     const pendingTxs = mempoolTxs.filter(filterOutStaleTransactions(confirmedTxs));
     expect(pendingTxs.length).toBe(2);
