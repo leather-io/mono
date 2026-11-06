@@ -75,6 +75,9 @@ function renderHookValue<T>(useHook: () => T) {
       if (value === undefined) throw new Error('Hook did not render a value');
       return value;
     },
+    unmount() {
+      act(() => root.unmount());
+    },
   };
 }
 
@@ -87,6 +90,9 @@ function makeNamedError(name: string, message = name) {
 interface SetupOptions {
   pullKeysResult?: { status: 'success' } | { status: 'failure' };
   pullKeysError?: unknown;
+  pullKeysFromDevice?(
+    app: LedgerBitcoinApp
+  ): Promise<{ status: 'success' } | { status: 'failure' }>;
   connectAppError?: unknown;
   connectApp?(options: ConnectLedgerDeviceOptions): Promise<LedgerBitcoinApp>;
   passesAdditionalVersionCheck?(appVersion: unknown): Promise<boolean>;
@@ -95,6 +101,7 @@ interface SetupOptions {
 function setupRequestKeys({
   pullKeysResult,
   pullKeysError,
+  pullKeysFromDevice: pullKeysFromDeviceOverride,
   connectAppError,
   connectApp,
   passesAdditionalVersionCheck,
@@ -103,9 +110,10 @@ function setupRequestKeys({
   const pullKeysFromDevice = pullKeysError
     ? vi.fn().mockRejectedValue(pullKeysError)
     : vi.fn().mockResolvedValue(pullKeysResult);
+  if (pullKeysFromDeviceOverride) pullKeysFromDevice.mockImplementation(pullKeysFromDeviceOverride);
   const app = makeFakeLedgerBitcoinApp();
 
-  const { getValue } = renderHookValue(() =>
+  const { getValue, unmount } = renderHookValue(() =>
     useRequestLedgerKeys<LedgerBitcoinApp>({
       chain: 'bitcoin',
       connectApp:
@@ -121,7 +129,7 @@ function setupRequestKeys({
     })
   );
 
-  return { getValue, onSuccess, pullKeysFromDevice };
+  return { getValue, unmount, onSuccess, pullKeysFromDevice };
 }
 
 describe(useRequestLedgerKeys.name, () => {
@@ -341,5 +349,83 @@ describe(useRequestLedgerKeys.name, () => {
     expect(mocks.toConnectStep).not.toHaveBeenCalled();
     expect(onSuccess).not.toHaveBeenCalled();
     expect(mocks.disconnect).not.toHaveBeenCalled();
+  });
+
+  test('ignores a second key request while the first is still in flight', async () => {
+    const connection = Promise.withResolvers<LedgerBitcoinApp>();
+    const connectApp = vi.fn(() => connection.promise);
+    const { getValue, onSuccess, pullKeysFromDevice } = setupRequestKeys({
+      pullKeysResult: { status: 'success' },
+      connectApp,
+    });
+
+    const { first, second } = await act(() => ({
+      first: getValue().requestKeys(),
+      second: getValue().requestKeys(),
+    }));
+
+    await act(async () => {
+      connection.resolve(makeFakeLedgerBitcoinApp());
+      await Promise.all([first, second]);
+    });
+
+    expect(connectApp).toHaveBeenCalledOnce();
+    expect(pullKeysFromDevice).toHaveBeenCalledOnce();
+    expect(onSuccess).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+  });
+
+  test('does nothing when the key pull settles after the flow was dismissed', async () => {
+    const pull = Promise.withResolvers<{ status: 'success' }>();
+    const reachedDevice = Promise.withResolvers<void>();
+    const { getValue, unmount, onSuccess } = setupRequestKeys({
+      pullKeysFromDevice() {
+        reachedDevice.resolve();
+        return pull.promise;
+      },
+    });
+
+    const { requesting } = await act(async () => {
+      const requesting = getValue().requestKeys();
+      await reachedDevice.promise;
+      return { requesting };
+    });
+    unmount();
+
+    await act(async () => {
+      pull.resolve({ status: 'success' });
+      await requesting;
+    });
+
+    expect(mocks.publicKeysPulledFromLedgerSuccessfully).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+  });
+
+  test('does not navigate when the key pull fails after the flow was dismissed', async () => {
+    const pull = Promise.withResolvers<{ status: 'success' }>();
+    const reachedDevice = Promise.withResolvers<void>();
+    const { getValue, unmount } = setupRequestKeys({
+      pullKeysFromDevice() {
+        reachedDevice.resolve();
+        return pull.promise;
+      },
+    });
+
+    const { requesting } = await act(async () => {
+      const requesting = getValue().requestKeys();
+      await reachedDevice.promise;
+      return { requesting };
+    });
+    unmount();
+
+    await act(async () => {
+      pull.reject({ _tag: 'DeviceDisconnectedWhileSendingError' });
+      await requesting;
+    });
+
+    expect(mocks.toDeviceDisconnectStep).not.toHaveBeenCalled();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
   });
 });
