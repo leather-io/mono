@@ -5,7 +5,7 @@ import {
   ClarityType,
   type ClarityValue,
   cvToString,
-  encodeStructuredData,
+  encodeStructuredDataBytes,
 } from '@stacks/transactions';
 
 import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
@@ -29,5 +29,5 @@ export function deriveStructuredMessageHash({
   domain,
   message,
 }: Omit<UnsignedMessageStructured, 'messageType'>) {
-  return bytesToHex(sha256(encodeStructuredData({ message, domain })));
+  return bytesToHex(sha256(encodeStructuredDataBytes({ message, domain })));
 }
