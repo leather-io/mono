@@ -32,10 +32,9 @@ export interface BitcoinLedgerAccountDetails {
   fingerprint: string;
 }
 
-function bitcoinAppNameForNetwork(network: BitcoinNetworkModes): string | null {
+function bitcoinAppNameForNetwork(network: BitcoinNetworkModes): string {
   if (network === 'mainnet') return LEDGER_APPS_MAP.BITCOIN_MAINNET;
-  if (network === 'testnet') return LEDGER_APPS_MAP.BITCOIN_TESTNET;
-  return null;
+  return LEDGER_APPS_MAP.BITCOIN_TESTNET;
 }
 
 export function connectLedgerBitcoinApp(

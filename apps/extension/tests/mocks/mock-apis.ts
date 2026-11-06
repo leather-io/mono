@@ -35,7 +35,6 @@ export async function setupMockApis(page: Page | BrowserContext) {
     page.route('https://api.hiro.so/', route => route.fulfill()),
     page.route('https://api.testnet.hiro.so/', route => route.fulfill()),
     page.route('https://api.staking-testnet.hiro.so/', route => route.fulfill()),
-    page.route('https://api.private-1.hiro.so/', route => route.fulfill()),
     mockWildcardBitcoinTxsRequests(page),
     mockWildcardStacksTxsRequests(page),
     mockMainnetTestAccountBitcoinRequests(page),

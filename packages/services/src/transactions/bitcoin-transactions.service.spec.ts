@@ -105,7 +105,7 @@ describe(BitcoinTransactionsService.name, () => {
       const service = new BitcoinTransactionsService(
         createMock<LeatherApiClient>({}),
         mockMempoolApiClient,
-        createTestSettingsService(defaultNetworksKeyedById['private-1'])
+        createTestSettingsService(defaultNetworksKeyedById.primaryStacksTestnet)
       );
       const mockAccount: AccountAddresses = {
         id: { fingerprint: 'multisig-fp', accountIndex: 0 },
@@ -133,11 +133,11 @@ describe(BitcoinTransactionsService.name, () => {
       const service = new BitcoinTransactionsService(
         createMock<LeatherApiClient>({}),
         mockMempoolApiClient,
-        createTestSettingsService(defaultNetworksKeyedById.stakingTestnet)
+        createTestSettingsService(defaultNetworksKeyedById.btcStakingStacksTestnet)
       );
       await service.getAddressTransactions('tb1qvault', { page: 1, pageSize: 150 });
       expect(requestedMempoolUrl).toEqual(
-        defaultNetworksKeyedById.stakingTestnet.chain.bitcoin.bitcoinUrl
+        defaultNetworksKeyedById.btcStakingStacksTestnet.chain.bitcoin.bitcoinUrl
       );
     });
 
