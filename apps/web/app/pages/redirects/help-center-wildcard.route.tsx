@@ -1,6 +1,14 @@
 import { type Route } from './+types/help-center-wildcard.route';
-import { helpCenterRedirectLoader } from './shared-redirect-logic';
+import { cmsContentFetchers } from './content-slug-resolver';
+import { helpCenterWildcardLoader } from './legacy-prefix-redirects';
 
-export function loader({ request }: Route.LoaderArgs) {
-  return helpCenterRedirectLoader(request);
+export { ContentErrorBoundary as ErrorBoundary } from './content-error-boundary';
+export { contentMeta as meta } from './content-error-boundary';
+
+export async function loader({ request }: Route.LoaderArgs) {
+  return helpCenterWildcardLoader(request, cmsContentFetchers);
+}
+
+export default function HelpCenterWildcardRoute() {
+  return null;
 }

@@ -1,28 +1,32 @@
-import { redirect } from 'react-router';
-
-import { cmsClient } from '~/constants/cms-client';
-import { getDeprecationRedirect } from '~/pages/redirects/shared-redirect-logic';
+import { marketingMeta } from '~/pages/marketing/shared/marketing-meta';
+import { contentMeta } from '~/pages/redirects/content-error-boundary';
+import {
+  type ContentGuide,
+  cmsContentFetchers,
+  loadGuideBySlug,
+  supportGuidePath,
+} from '~/pages/redirects/content-slug-resolver';
 import { Guide } from '~/pages/support/guide/guide';
-
-import { type HelpCenterGuideBySlugQueryResult, helpCenterGuideBySlugQuery } from '@leather.io/cms';
 
 import { type Route } from './+types/guide.route';
 
+export { ContentErrorBoundary as ErrorBoundary } from '~/pages/redirects/content-error-boundary';
+
+export function meta({ loaderData, error, params }: Route.MetaArgs) {
+  if (!loaderData) return contentMeta({ error });
+  const { guide } = loaderData;
+  return marketingMeta({
+    title: `${guide.title} – Leather`,
+    path: supportGuidePath(params.guideSlug),
+    description: guide.summary || undefined,
+  });
+}
+
 export async function loader({
   params,
-}: Route.LoaderArgs): Promise<{ guide: NonNullable<HelpCenterGuideBySlugQueryResult> } | Response> {
-  const slug = params.guideSlug;
-
-  const deprecationRedirect = getDeprecationRedirect(slug);
-  if (deprecationRedirect) return deprecationRedirect;
-
-  const guide = await cmsClient.fetch(helpCenterGuideBySlugQuery, { slug });
-
-  if (!guide) {
-    return redirect(`/posts/${slug}`);
-  }
-
-  return { guide };
+  request,
+}: Route.LoaderArgs): Promise<{ guide: ContentGuide }> {
+  return loadGuideBySlug(params.guideSlug, request, cmsContentFetchers);
 }
 
 export default function GuideRoute() {

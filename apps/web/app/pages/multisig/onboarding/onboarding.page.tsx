@@ -10,8 +10,8 @@ import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useSignOut } from '~/features/multisig/auth/use-sign-out';
 import { OutdatedExtensionCallout } from '~/features/multisig/extension/outdated-extension-callout';
 import { Page } from '~/layouts/page/page';
-import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
+import { LEATHER_EXTENSION_CHROME_STORE_URL } from '@leather.io/constants';
 import { Link as UiLink } from '@leather.io/ui';
 
 import { multisigPaths } from '../multisig.constants';
@@ -69,7 +69,7 @@ export function MultisigOnboardingPage() {
             >
               Don't have Leather yet?{' '}
               <UiLink
-                href={externalLeatherNavigator.home}
+                href={LEATHER_EXTENSION_CHROME_STORE_URL}
                 size="sm"
                 target="_blank"
                 rel="noreferrer"

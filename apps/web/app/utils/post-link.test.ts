@@ -1,24 +1,23 @@
 import { getPostHref } from './post-link';
 
 describe('getPostHref', () => {
-  it('returns correct URL for valid slug', () => {
-    const expected = import.meta.env.DEV
-      ? 'https://prosperous-combination-099461.framer.app/posts/test-slug'
-      : 'https://leather.io/posts/test-slug';
-    expect(getPostHref('test-slug')).toBe(expected);
+  it('returns the in-app post path for a slug', () => {
+    expect(getPostHref('test-slug')).toBe('/posts/test-slug');
   });
 
-  it('handles empty slug gracefully', () => {
-    const expected = import.meta.env.DEV
-      ? 'https://prosperous-combination-099461.framer.app/posts/'
-      : 'https://leather.io/posts/';
-    expect(getPostHref('')).toBe(expected);
+  it('trims whitespace around the slug', () => {
+    expect(getPostHref('  test-slug ')).toBe('/posts/test-slug');
   });
 
-  it('handles undefined slug gracefully', () => {
-    const expected = import.meta.env.DEV
-      ? 'https://prosperous-combination-099461.framer.app/posts/undefined'
-      : 'https://leather.io/posts/undefined';
-    expect(getPostHref(undefined)).toBe(expected);
+  it('handles an empty slug', () => {
+    expect(getPostHref('')).toBe('/posts/');
+  });
+
+  it('handles an undefined slug', () => {
+    expect(getPostHref(undefined)).toBe('/posts/undefined');
+  });
+
+  it('passes full URLs through unchanged', () => {
+    expect(getPostHref('https://example.com/a')).toBe('https://example.com/a');
   });
 });

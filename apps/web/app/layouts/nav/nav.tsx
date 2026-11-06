@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 import { css } from 'leather-styles/css';
 import { Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { Drawer } from 'vaul';
 import { LeatherLogo } from '~/components/icons/leather-logo';
 import { StackingIcon } from '~/components/icons/stacking-icon';
-import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
 import {
   BarsTwoIcon,
@@ -22,11 +21,19 @@ import {
 
 import { NavItem } from './nav-item.layout';
 
-function LeatherLogoHomeLink(props: HTMLStyledProps<'a'>) {
+const StyledLink = styled(Link);
+
+function LeatherLogoHomeLink(props: Omit<HTMLStyledProps<'a'>, 'href'>) {
   return (
-    <styled.a href={externalLeatherNavigator.home} display="inline-block" {...props}>
+    <StyledLink
+      to="/"
+      prefetch="intent"
+      display="inline-block"
+      aria-label="Leather home"
+      {...props}
+    >
       <LeatherLogo />
-    </styled.a>
+    </StyledLink>
   );
 }
 
@@ -45,7 +52,7 @@ function NavContents() {
         sBTC
       </NavItem>
 
-      <NavItem href={externalLeatherNavigator.apps} icon={<GridIcon variant="small" />}>
+      <NavItem href="/apps" icon={<GridIcon variant="small" />}>
         Apps
       </NavItem>
 
@@ -57,7 +64,7 @@ function NavContents() {
         <NavItem href="/changelog" icon={<ChangelogIcon variant="small" />}>
           Changelog
         </NavItem>
-        <NavItem href={externalLeatherNavigator.docs} newTab icon={<CodeIcon variant="small" />}>
+        <NavItem href="/developers" icon={<CodeIcon variant="small" />}>
           Developers
         </NavItem>
         <NavItem href="/support" icon={<SupportIcon variant="small" />}>
@@ -79,7 +86,12 @@ export function Nav() {
 
   return (
     <>
+      {/* Mobile: the logo sits above the page header, as on the Framer site */}
+      <styled.div display={['block', 'block', 'none']} px="space.04" pt="space.04">
+        <LeatherLogoHomeLink py="space.02" />
+      </styled.div>
       <styled.nav
+        aria-label="Main"
         display={['none', 'none', 'flex']}
         pos="fixed"
         height="100vh"

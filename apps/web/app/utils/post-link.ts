@@ -1,3 +1,8 @@
+/**
+ * In-app URL for a legacy post slug. Posts are served by the app at /posts/:slug (the retired
+ * Framer site's URLs), which resolves to the canonical post or help-center guide. Full URLs are
+ * passed through unchanged.
+ */
 export function getPostHref(slug?: string) {
   if (slug === undefined || slug === null) {
     slug = 'undefined';
@@ -9,9 +14,5 @@ export function getPostHref(slug?: string) {
     return trimmedSlug;
   }
 
-  if (import.meta.env.DEV) {
-    return `https://prosperous-combination-099461.framer.app/posts/${trimmedSlug}`;
-  }
-
-  return `https://leather.io/posts/${trimmedSlug}`;
+  return `/posts/${trimmedSlug}`;
 }
