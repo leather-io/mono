@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
-import { Form, Formik, type FormikHelpers } from 'formik';
 import { Stack } from 'leather-styles/jsx';
 import { debounce } from 'ts-debounce';
 import { z } from 'zod';
@@ -16,7 +16,8 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
-import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
+import { useLatestCallback } from '@app/common/hooks/use-latest-callback';
+import { createFormResolver } from '@app/common/validation/form-resolver';
 import {
   blankPasswordValidation,
   validatePassword,
@@ -66,37 +67,7 @@ export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) 
     [setPassword, navigate, mnemonicData.fingerprint, mnemonicData.mnemonic]
   );
 
-  const onSubmit = useCallback(
-    async (
-      { password }: SetPasswordFormValues,
-      { setFieldError }: FormikHelpers<SetPasswordFormValues>
-    ) => {
-      if (!password) return;
-      setLoading(true);
-      try {
-        if (hasSoftwareKeys) {
-          if (await checkPassword({ password })) {
-            await submit(password);
-            return;
-          }
-          setFieldError('password', "The password you entered doesn't match");
-          return;
-        }
-
-        if (strengthResult.meetsAllStrengthRequirements) {
-          analytics.track('submit_valid_password');
-          await submit(password);
-        }
-      } catch {
-        setFieldError('password', 'Something went wrong setting your password');
-      } finally {
-        setLoading(false);
-      }
-    },
-    [hasSoftwareKeys, checkPassword, strengthResult, submit]
-  );
-
-  const validationSchema = createFormikValidationSchema(
+  const resolver = createFormResolver<SetPasswordFormValues>(
     z.object({
       password: hasSoftwareKeys
         ? requiredStringField('Enter your password')
@@ -123,6 +94,43 @@ export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) 
           ),
     })
   );
+
+  const form = useForm<SetPasswordFormValues>({
+    defaultValues: setPasswordFormValues,
+    resolver,
+    mode: 'all',
+  });
+  const { setError } = form;
+  const { isDirty, isSubmitting, isValid } = form.formState;
+
+  const onSubmit = useCallback(
+    async ({ password }: SetPasswordFormValues) => {
+      if (!password) return;
+      setLoading(true);
+      try {
+        if (hasSoftwareKeys) {
+          if (await checkPassword({ password })) {
+            await submit(password);
+            return;
+          }
+          setError('password', { message: "The password you entered doesn't match" });
+          return;
+        }
+
+        if (strengthResult.meetsAllStrengthRequirements) {
+          analytics.track('submit_valid_password');
+          await submit(password);
+        }
+      } catch {
+        setError('password', { message: 'Something went wrong setting your password' });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [hasSoftwareKeys, checkPassword, setError, strengthResult, submit]
+  );
+
+  const submitForm = useLatestCallback(onSubmit);
   const title = hasSoftwareKeys ? 'Enter your Password' : 'Set a password';
   const description = hasSoftwareKeys
     ? 'Enter the password you set on this device.'
@@ -134,49 +142,40 @@ export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) 
         <HeaderGrid leftCol={<HeaderBackButton onBack={onBack} />} rightCol={null} />
       </Header>
       <Content>
-        <Formik
-          initialValues={setPasswordFormValues}
-          onSubmit={onSubmit}
-          validationSchema={validationSchema}
-          validateOnBlur
-          validateOnMount
-          validateOnChange
-        >
-          {({ dirty, isSubmitting, isValid }) => (
-            <Form>
-              <TwoColumnLayout
-                leftColumn={<DescriptionColumn title={title} description={description} />}
-                rightColumn={
-                  <Stack
-                    p="space.05"
-                    gap="space.04"
-                    bg="ink.background-primary"
-                    border="default"
-                    borderRadius="lg"
-                    width="100%"
-                    minWidth={['100%', null, '400px', 'twoColumnPageWidth']}
-                    flex="1"
+        <FormProvider {...form}>
+          <form onSubmit={event => void form.handleSubmit(submitForm)(event)}>
+            <TwoColumnLayout
+              leftColumn={<DescriptionColumn title={title} description={description} />}
+              rightColumn={
+                <Stack
+                  p="space.05"
+                  gap="space.04"
+                  bg="ink.background-primary"
+                  border="default"
+                  borderRadius="lg"
+                  width="100%"
+                  minWidth={['100%', null, '400px', 'twoColumnPageWidth']}
+                  flex="1"
+                >
+                  <PasswordField
+                    strengthResult={strengthResult}
+                    isDisabled={loading}
+                    showStrength={!hasSoftwareKeys}
+                  />
+                  <Button
+                    data-testid={OnboardingSelectors.SetPasswordBtn}
+                    disabled={loading || !(isDirty && isValid)}
+                    aria-busy={loading || isSubmitting}
+                    mt="space.05"
+                    type="submit"
                   >
-                    <PasswordField
-                      strengthResult={strengthResult}
-                      isDisabled={loading}
-                      showStrength={!hasSoftwareKeys}
-                    />
-                    <Button
-                      data-testid={OnboardingSelectors.SetPasswordBtn}
-                      disabled={loading || !(dirty && isValid)}
-                      aria-busy={loading || isSubmitting}
-                      mt="space.05"
-                      type="submit"
-                    >
-                      Continue
-                    </Button>
-                  </Stack>
-                }
-              />
-            </Form>
-          )}
-        </Formik>
+                    Continue
+                  </Button>
+                </Stack>
+              }
+            />
+          </form>
+        </FormProvider>
       </Content>
     </>
   );

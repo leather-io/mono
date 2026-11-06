@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
-import { useFormikContext } from 'formik';
 import { entries } from 'remeda';
 
+import type { RecipientFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
 import { useRecipientBnsName } from './use-recipient-bns-name';
@@ -22,7 +23,7 @@ export const recipientIdentifierTypes = makeIteratbleListOfRecipientIdentifierTy
 );
 
 export function useRecipientSelectFields() {
-  const { setFieldError, setFieldTouched, setFieldValue } = useFormikContext();
+  const { clearErrors, setValue } = useFormContext<RecipientFormValues>();
 
   const [selectedRecipientField, setSelectedRecipientField] =
     useState<RecipientIdentifierType>('address');
@@ -31,14 +32,12 @@ export function useRecipientSelectFields() {
   const { setBnsAddress } = useRecipientBnsName();
   const navigate = useNavigate();
 
-  const resetAllRecipientFields = useCallback(async () => {
-    void setFieldValue('recipient', '');
-    setFieldError('recipient', undefined);
-    await setFieldTouched('recipient', false);
-    void setFieldValue('recipientBnsName', '');
-    setFieldError('recipientBnsName', undefined);
-    await setFieldTouched('recipientBnsName', false);
-  }, [setFieldValue, setFieldError, setFieldTouched]);
+  const resetAllRecipientFields = useCallback(() => {
+    setValue('recipient', '');
+    clearErrors('recipient');
+    setValue('recipientBnsName', '');
+    clearErrors('recipientBnsName');
+  }, [clearErrors, setValue]);
 
   return useMemo(
     () => ({
@@ -53,15 +52,15 @@ export function useRecipientSelectFields() {
         void navigate(RouteUrls.SendCryptoAssetFormRecipientAccounts, { replace: true });
       },
 
-      async onSelectRecipientFieldType(recipientType: RecipientIdentifierType) {
-        await resetAllRecipientFields();
+      onSelectRecipientFieldType(recipientType: RecipientIdentifierType) {
+        resetAllRecipientFields();
         setBnsAddress('');
         setSelectedRecipientField(recipientType);
         setIsSelectVisible(false);
       },
 
-      async onSetIsSelectVisible(value: boolean) {
-        await resetAllRecipientFields();
+      onSetIsSelectVisible(value: boolean) {
+        resetAllRecipientFields();
         setIsSelectVisible(value);
       },
     }),
