@@ -2,7 +2,7 @@ import { useImperativeHandle, useRef, useState } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
-import { TestId } from '@/shared/test-id';
+import { SharedSelectors } from '@/shared/selectors/shared.selectors';
 
 import {
   Box,
@@ -92,7 +92,7 @@ export function Toast({ toastRef }: ToastProps) {
         zIndex="100"
         justifyContent="center"
         alignItems="center"
-        testID={TestId.toastContainer}
+        testID={SharedSelectors.ToastContainer}
       >
         {getIcon(toastData.type)}
         <Text variant="label02" color="ink.background-primary">

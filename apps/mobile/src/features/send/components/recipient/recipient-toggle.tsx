@@ -1,6 +1,7 @@
 import Animated, { withDelay, withTiming } from 'react-native-reanimated';
 
 import { AccountAvatar } from '@/features/account/components/account-avatar';
+import { SendSelectors } from '@/shared/selectors/send.selectors';
 import { t } from '@lingui/core/macro';
 
 import {
@@ -26,6 +27,7 @@ export function RecipientToggle({ onPress, onQrButtonPress, value }: RecipientTo
   return (
     <Pressable
       onPress={onPress}
+      testID={SendSelectors.RecipientToggle}
       pressEffect={{
         backgroundColor: {
           from: 'ink.background-primary',
@@ -61,6 +63,7 @@ export function RecipientToggle({ onPress, onQrButtonPress, value }: RecipientTo
               label={t`Scan a QR code`}
               icon={<QrCodeIcon />}
               onPress={() => onQrButtonPress('toggle')}
+              testID={SendSelectors.RecipientToggleQrButton}
             />
           </>
         )}

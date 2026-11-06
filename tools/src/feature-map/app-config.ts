@@ -2,6 +2,16 @@ import path from 'node:path';
 
 import { getMonorepoRoot } from '../utils/paths.js';
 
+export interface ExpoRouterConfig {
+  readonly appDir: string;
+  readonly gateComponents: Readonly<Record<string, string>>;
+}
+
+export interface MaestroConfig {
+  readonly flowsDirs: readonly string[];
+  readonly actionsDir: string;
+}
+
 export interface FeatureMapAppConfig {
   readonly app: string;
   readonly appDir: string;
@@ -11,19 +21,23 @@ export interface FeatureMapAppConfig {
   readonly routerExcludeFiles: readonly string[];
   readonly importAliases: Readonly<Record<string, string>>;
   readonly featureFlagsFile: string;
-  readonly featureFlagsInterfaceName: string;
-  readonly rpcMethodsDir: string;
+  readonly featureFlagsInterfaceName?: string;
+  readonly rpcMethodsDir?: string;
   readonly rpcEndpointsDir: string;
   readonly featuresDir: string;
   readonly selectorsDir: string;
-  readonly pageObjectsDir: string;
-  readonly mocksDir: string;
-  readonly setupMocksFunctionName: string;
+  readonly pageObjectsDir?: string;
+  readonly mocksDir?: string;
+  readonly setupMocksFunctionName?: string;
   readonly specsDir: string;
   readonly outputFile: string;
+  readonly featureFlagHooks?: readonly string[];
+  readonly rpcDispatchFiles?: readonly string[];
+  readonly expoRouter?: ExpoRouterConfig;
+  readonly maestro?: MaestroConfig;
 }
 
-const supportedApps = ['extension'] as const;
+const supportedApps = ['extension', 'mobile'] as const;
 
 function makeExtensionConfig(root: string): FeatureMapAppConfig {
   const appDir = path.join(root, 'apps', 'extension');
@@ -51,9 +65,43 @@ function makeExtensionConfig(root: string): FeatureMapAppConfig {
   };
 }
 
+function makeMobileConfig(root: string): FeatureMapAppConfig {
+  const appDir = path.join(root, 'apps', 'mobile');
+  const maestroDir = path.join(appDir, 'maestro');
+  return {
+    app: 'mobile',
+    appDir,
+    routeUrlsFile: path.join(appDir, 'src/shared/app-routes.ts'),
+    routeUrlsObjectName: 'AppRoutes',
+    routerScanDirs: [],
+    routerExcludeFiles: [],
+    importAliases: {},
+    featureFlagsFile: path.join(appDir, 'src/features/feature-flags/index.ts'),
+    rpcEndpointsDir: path.join(root, 'packages/rpc/src/methods'),
+    featuresDir: path.join(appDir, 'tests/feature-map'),
+    selectorsDir: path.join(appDir, 'src/shared/selectors'),
+    specsDir: path.join(appDir, 'src'),
+    outputFile: path.join(root, '.claude/skills/feature-map/mobile.md'),
+    featureFlagHooks: ['useBoolVariation', 'useStringVariation'],
+    rpcDispatchFiles: [
+      path.join(appDir, 'src/features/browser/browser/message-routing.ts'),
+      path.join(appDir, 'src/features/browser/approver-sheet/browser-approver.tsx'),
+    ],
+    expoRouter: {
+      appDir: path.join(appDir, 'src/app'),
+      gateComponents: { SplashScreenGuard: 'splashScreen' },
+    },
+    maestro: {
+      flowsDirs: [path.join(maestroDir, 'flows'), path.join(maestroDir, 'shared')],
+      actionsDir: path.join(maestroDir, 'shared'),
+    },
+  };
+}
+
 export function getFeatureMapAppConfig(app: string): FeatureMapAppConfig {
   const root = getMonorepoRoot();
   if (app === 'extension') return makeExtensionConfig(root);
+  if (app === 'mobile') return makeMobileConfig(root);
   throw new Error(
     `feature-map: unsupported app '${app}'. Supported apps: ${supportedApps.join(', ')}`
   );

@@ -1,7 +1,7 @@
 import { Dimensions } from 'react-native';
 
 import { AccountCard } from '@/features/account/components/account-card';
-import { TestId } from '@/shared/test-id';
+import { HomeSelectors } from '@/shared/selectors/home.selectors';
 import { t } from '@lingui/core/macro';
 
 import { PlusIcon, useTheme } from '@leather.io/ui/native';
@@ -20,7 +20,7 @@ export function CreateWalletCard({ onPress }: CreateWalletCardProps) {
       width={width}
       icon={PlusIcon}
       primaryTitle={t`Add account`}
-      testID={TestId.homeCreateWalletCard}
+      testID={HomeSelectors.CreateWalletCard}
     />
   );
 }

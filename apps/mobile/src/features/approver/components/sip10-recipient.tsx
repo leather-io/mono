@@ -1,4 +1,5 @@
 import { useGetContractInterface } from '@/queries/stacks/contract-interface.query';
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 import { t } from '@lingui/core/macro';
 import { deserializeTransaction } from '@stacks/transactions';
 
@@ -39,7 +40,7 @@ export function SipRecipient({ txHex }: { txHex: string }) {
   if (!outcome) return null;
 
   return (
-    <Approver.Section>
+    <Approver.Section testID={RpcStacksSelectors.SipRecipientSection}>
       <Approver.Subheader>{t`To address`}</Approver.Subheader>
       {outcome}
     </Approver.Section>

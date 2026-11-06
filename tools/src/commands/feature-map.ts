@@ -55,12 +55,12 @@ export function registerFeatureMapCommands(program: Command): void {
     .description(
       'Write the gitignored feature map markdown for agents from the *.features.ts sources'
     )
-    .option('--app <app>', 'App to generate (extension)', defaultApp)
+    .option('--app <app>', 'App to generate (extension, mobile)', defaultApp)
     .action(generate);
 
   featureMap
     .command('check')
     .description('Fail when a routed key or an rpc handler lacks an entry or references are broken')
-    .option('--app <app>', 'App to check (extension)', defaultApp)
+    .option('--app <app>', 'App to check (extension, mobile)', defaultApp)
     .action(check);
 }

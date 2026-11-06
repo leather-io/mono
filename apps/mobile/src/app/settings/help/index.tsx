@@ -2,6 +2,7 @@ import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import SettingsLayout from '@/features/settings/settings-layout';
+import { SettingsSelectors } from '@/shared/selectors/settings.selectors';
 import { t } from '@lingui/core/macro';
 
 import { LEATHER_GUIDES_URL, LEATHER_LEARN_URL, LEATHER_SUPPORT_URL } from '@leather.io/constants';
@@ -18,18 +19,21 @@ export default function SettingsHelpScreen() {
           caption={t`Get support or provide feedback`}
           icon={<SupportIcon />}
           onPress={() => openUrl(LEATHER_SUPPORT_URL)}
+          testID={SettingsSelectors.ContactUsButton}
         />
         <SettingsListItem
           title={t`Guides`}
           caption={t`Dive into feature details`}
           icon={<MagicBookIcon />}
           onPress={() => openUrl(LEATHER_GUIDES_URL)}
+          testID={SettingsSelectors.GuidesButton}
         />
         <SettingsListItem
           title={t`Learn`}
           caption={t`Expand your Bitcoin knowledge`}
           icon={<GraduateCapIcon />}
           onPress={() => openUrl(LEATHER_LEARN_URL)}
+          testID={SettingsSelectors.LearnButton}
         />
       </SettingsList>
     </SettingsLayout>

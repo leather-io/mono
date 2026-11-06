@@ -140,6 +140,7 @@
     "@babel/runtime": "7.26.0",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/test-config": "workspace:*",
+    "@leather.io/tools": "workspace:*",
     "@lingui/babel-plugin-lingui-macro": "5.4.0",
     "@lingui/cli": "5.4.0",
     "@lingui/conf": "5.4.0",

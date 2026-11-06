@@ -1,5 +1,5 @@
-import { TestId } from '@/shared/test-id';
+import { SharedSelectors } from '@/shared/selectors/shared.selectors';
 
 export function defaultIconTestId(icon: string) {
-  return `${TestId.defaultAccountIcon}_${icon}`;
+  return `${SharedSelectors.DefaultAccountIcon}_${icon}`;
 }

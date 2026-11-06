@@ -21,6 +21,7 @@ import {
 } from '@/features/approver/utils';
 import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 import { type Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 import {
@@ -126,7 +127,7 @@ export function BaseStxTxApproverLayout({
           {isContractCall(tx.payload) && <AllowModePostConditionWarning txHex={txHex} />}
           {broadcastedTxid && <StxStatusRow txid={broadcastedTxid} />}
 
-          <Approver.Section>
+          <Approver.Section testID={RpcStacksSelectors.StxTxAccountSection}>
             <ApproverAccountCard
               accounts={accounts.filter(
                 acc => makeAccountIdentifer(acc.fingerprint, acc.accountIndex) === accountId
@@ -136,7 +137,7 @@ export function BaseStxTxApproverLayout({
           </Approver.Section>
           {isTokenTransferPayload(tx.payload) && (
             <Approver.Overview>
-              <Approver.Section mb="-3">
+              <Approver.Section mb="-3" testID={RpcStacksSelectors.StxTxOutcomeSection}>
                 <Approver.Subheader icon={<SentIcon variant="small" />}>
                   {t`You’ll send`}
                 </Approver.Subheader>
@@ -146,7 +147,7 @@ export function BaseStxTxApproverLayout({
                 />
               </Approver.Section>
 
-              <Approver.Section>
+              <Approver.Section testID={RpcStacksSelectors.StxTxRecipientSection}>
                 <Approver.Subheader>{t`To address`}</Approver.Subheader>
 
                 <OutcomeAddressesCard addresses={[getTxRecipient(tx.payload)]} />
