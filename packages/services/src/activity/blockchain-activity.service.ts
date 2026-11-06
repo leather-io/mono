@@ -10,7 +10,6 @@ import {
   type FungibleCryptoAsset,
   type MarketData,
   type StacksTransaction,
-  type StacksTx,
 } from '@leather.io/models';
 import { assertUnreachable, createMoney, initBigNumber, isDefined } from '@leather.io/utils';
 
@@ -18,6 +17,7 @@ import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import type {
   HiroBalanceChangeResultItem,
+  HiroPrincipalMempoolTransaction,
   HiroPrincipalTransactionsResultItem,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { MarketDataService } from '../market/market-data.service';
@@ -336,12 +336,12 @@ export class BlockchainActivityService {
 
   // Classification is the only async dependency in mapping; the pure builders do the rest.
   private async mapPendingStacksTx(
-    tx: StacksTx,
+    tx: HiroPrincipalMempoolTransaction,
     stxAddress: string,
     signal?: AbortSignal
   ): Promise<BlockchainActivity | null> {
     const classified =
-      tx.tx_type === 'contract_call'
+      tx.type === 'contract_call'
         ? await this.classifyContractCall(
             tx.contract_call.contract_id,
             tx.contract_call.function_name,

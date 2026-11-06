@@ -5,6 +5,7 @@ import { type SettingsService } from '../infrastructure/settings/settings.servic
 import { type MarketDataService } from '../market/market-data.service';
 import { createTestAccountRequest } from '../test/balances-account-request';
 import { createMock } from '../test/create-mock';
+import { createTestPrincipalMempoolTokenTransferTx } from '../test/transactions-fixtures';
 import { type StacksTransactionsService } from '../transactions/stacks-transactions.service';
 import { StxBalancesService } from './stx-balances.service';
 
@@ -38,27 +39,15 @@ describe(StxBalancesService.name, () => {
   const mockMarketDataService = createMock<MarketDataService>({ getMarketData });
 
   const getPendingTransactions = vi.fn().mockResolvedValue([
-    {
-      tx_type: 'token_transfer',
-      token_transfer: {
-        recipient_address: stacksAddress1,
-        amount: '1000000',
-      },
-    },
-    {
-      tx_type: 'token_transfer',
-      token_transfer: {
-        recipient_address: stacksAddress2,
-        amount: '1000000',
-      },
-    },
-    {
-      tx_type: 'token_transfer',
-      token_transfer: {
-        recipient_address: stacksAddress3,
-        amount: '1000000',
-      },
-    },
+    createTestPrincipalMempoolTokenTransferTx({
+      token_transfer: { recipient: stacksAddress1, amount: '1000000', memo: null },
+    }),
+    createTestPrincipalMempoolTokenTransferTx({
+      token_transfer: { recipient: stacksAddress2, amount: '1000000', memo: null },
+    }),
+    createTestPrincipalMempoolTokenTransferTx({
+      token_transfer: { recipient: stacksAddress3, amount: '1000000', memo: null },
+    }),
   ]);
   const mockStacksTransactionsService = createMock<StacksTransactionsService>({
     getPendingTransactions,
