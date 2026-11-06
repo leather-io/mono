@@ -20,7 +20,7 @@ the code disagree, the code wins. Note the mismatch in the PR so it can be fixed
   Compose screens from these. Use typed page actions and notices; spacing belongs to the recipes.
   Variants are for consequential workflow or UX trade-offs, not cosmetic differences.
 - `docs/design/explore.md`: the protocol for exploring a feature (today's flow first, recreated
-  faithfully and diffed with `pnpm design:fidelity`, then one coherent feature with its states
+  faithfully, then one coherent feature with its states
   for a fixed brief; alternatives only for consequential choices).
 - `apps/extension/AGENTS.md`, `apps/web/AGENTS.md`: platform sizes, input and what to verify.
 

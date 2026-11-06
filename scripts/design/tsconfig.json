@@ -9,5 +9,5 @@
     "declaration": false,
     "declarationMap": false
   },
-  "include": ["*.ts", "lib/**/*.ts"]
+  "include": ["*.ts"]
 }

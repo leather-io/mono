@@ -13,8 +13,7 @@ things a rule can't see. Work through the steps in order. Most PRs are settled b
       wide for the extension popup.
 - [ ] If an intent wasn't covered by `i-need-to.md`, the PR says so. Treat that as a system gap,
       not a nit.
-- [ ] Playground explorations: the recreated today screens match the baseline (`pnpm
-design:fidelity` side-by-side attached), and the baseline has a clean state plus edge states.
+- [ ] Playground explorations: the recreated today screens match the baseline, and the baseline has a clean state plus edge states.
 
 ## 1b. Every change from shipped UI has a reason
 

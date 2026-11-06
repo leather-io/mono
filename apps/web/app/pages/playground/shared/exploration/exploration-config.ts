@@ -169,7 +169,7 @@ export interface ExplorationConfig<V extends string, S extends string> {
   // The canvas lists one Today, above the variants. Which one is the config's
   // call, and the more accurate one wins:
   // - 'recreated': the baselineVariant, once its screens passed the fidelity
-  //   check (`pnpm design:fidelity`, side-by-sides in its NOTES.md). It clicks
+  //   check. It clicks
   //   through like a concept; the real screenshots still back "Compare with
   //   today".
   // - 'screenshots' (default): the real captures in `today`. A baselineVariant

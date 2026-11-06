@@ -66,11 +66,9 @@ switcher while selected. Use it for approval screens.
   comes from `@leather.io/ui` or mirrors the extension's composition exactly: the same component,
   props, text styles, ink and spacing. Use the product recipes first (page shells, the list-row presets and `review-sheet`), and read the extension file a recipe names in `mirrors`.
   If no recipe covers the part, copy the extension composition and cite its path in a comment.
-- **Compare before you explore.** Recreate the today screen in the Playground, then run
-  `pnpm design:fidelity --url "<playground url of the today screen>" --baseline <capture.png> --out <dir>`.
-  It screenshots the frame, writes baseline | recreation | diff side by side, and lists each
-  block (header, button row, tabs, rows) whose height or edges differ by more than 3px. Fix
-  every difference in an unchanged part before sketching. Attach the side-by-side to NOTES.md.
+- **Compare before you explore.** Recreate the today screen in the Playground, then compare it
+  with the real capture using `?compare=1`: header, button row, tabs and rows should match in
+  height and edges. Fix every difference in an unchanged part before sketching.
 - **What drifted in round 2** (all in parts no concept changed): Transfer/Swap drawn as `md`
   buttons (the product's are `lg` outline, and the tab shows Send/Receive/Swap); the
   Tokens/Collectibles/Activity tabs inset by the page padding (they run edge to edge in the
@@ -143,7 +141,6 @@ say so in the concept's open questions.
 | Compare-with-today  | Screen jobs and cuts in the config. Check `?compare=1` on every screen        |
 | Deviations with why | `variants/<x>/DEVIATIONS.md`: one row per deviation, each with a why          |
 | Navigation          | `variants/<x>/NOTES.md`: entry points kept, moved or broken, per screen       |
-| Today fidelity      | NOTES.md: the `design:fidelity` side-by-side for each recreated today screen  |
 
 \* `source` is one of `notes`, `brief`, `inspiration`, `baseline` or `our read` (typed as
 `ConceptSource`), optionally followed by a pointer: `brief §4`, `baseline #3`.
@@ -188,17 +185,6 @@ If no recipe and no row in [i-need-to.md](./i-need-to.md) fits, don't ship a one
 The answer becomes a recipe or a component, and the variant then uses it.
 
 ## Tools
-
-**Today fidelity.** Screenshots a recreated today screen and diffs it against the baseline:
-
-```sh
-pnpm design:fidelity --url "<dev>/playground/<area>?v=today&screen=home&frame=popup" \
-  --baseline areas/<area>/today-actual/home-popup.png --out /tmp/fidelity
-```
-
-It writes `<name>-fidelity.png` (baseline | recreation | diff in red) and `<name>-fidelity.md`:
-the share of pixels that differ, and the blocks (runs of rows with ink) aligned by shape, each
-with its height and edge differences. A 390px frame is scaled to a 360px capture.
 
 **Template.** Write `<area>.config.ts` as an `ExplorationConfig`, and render
 `<ExplorationCanvas config={…} />`. It deep-links with
