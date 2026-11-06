@@ -18,8 +18,6 @@ export function useFitScale() {
 interface ScaleToFitProps {
   children: ReactNode;
   inset?: number;
-  // Also fit the container's height (the container must have one: flex: 1
-  // with minHeight 0, or a fixed height).
   fitHeight?: boolean;
 }
 

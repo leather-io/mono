@@ -60,10 +60,6 @@ interface ListRowProps {
   onClick?(): void;
 }
 
-// IconButton is a 40px square; actions sit space.01 apart. The group hangs
-// space.02 (the button's inner space) past the row's right edge, so the last
-// glyph lands on the page rail like a value or a chevron would; its square
-// hover bleeds into the gutter, as the row's hover does.
 function actionsWidth(count: number) {
   return `calc(${count} * 40px + ${count - 1} * 4px - 8px)`;
 }
@@ -100,9 +96,6 @@ function ListRow({
       </Pressable>
     );
   }
-  // Nested actions are siblings drawn over the row's right edge (a button
-  // can't contain buttons). The row's hover stays on while the pointer is on
-  // an action, through the wrapper's group hover.
   return (
     <Box className="group" position="relative" my="space.02">
       {onClick ? (

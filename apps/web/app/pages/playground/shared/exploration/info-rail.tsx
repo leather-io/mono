@@ -111,9 +111,6 @@ function TodayFlows<V extends string, S extends string>({
   );
 }
 
-// Every reference across the area's variants, once each (by image, or app and
-// line for text sources), with the variants that used it. The shown variant's
-// come first.
 function inspirationItems<V extends string, S extends string>(
   config: ExplorationConfig<V, S>,
   shown: V | undefined

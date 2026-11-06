@@ -115,8 +115,6 @@ interface ReviewSheetProps {
   onClose?(): void;
 }
 
-// Popup: a bottom sheet. Tab: a centred dialog, the way Sheet renders at md+.
-// `position: fixed` stays inside the frame (the frame is its containing block).
 export function ReviewSheet({
   frame,
   title,

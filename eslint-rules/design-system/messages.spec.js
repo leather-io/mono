@@ -3,8 +3,6 @@ import { describe, it } from 'node:test';
 
 import { designSystemRules } from './index.js';
 
-// Every design rule teaches the replacement. A message that only says "don't"
-// leaves an agent guessing, so the shape is enforced here.
 const messageShape = /^Use .+ instead .+ — \{\{link\}\}$/;
 
 describe('design-system rule messages', () => {

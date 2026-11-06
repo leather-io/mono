@@ -5,10 +5,8 @@ import { parseArgs } from 'node:util';
 
 export interface AlignFinding {
   kind: 'edge' | 'rails' | 'header';
-  // What was measured: the child's text, or "header".
   subject: string;
   detail: string;
-  // Signed distance in px (positive: inside the rail).
   delta: number;
 }
 
@@ -27,7 +25,6 @@ export interface FrameAlignment {
 
 type FrameResult = Omit<FrameAlignment, 'url' | 'index'>;
 
-// Runs in the page.
 function measureFrames({ selector, tolerance }: { selector: string; tolerance: number }) {
   const anchorReach = 16;
   const coordinates = { origin: 0, scale: 1 };
@@ -68,9 +65,6 @@ function measureFrames({ selector, tolerance }: { selector: string; tolerance: n
   function union(a: Box | null, b: Box): Box {
     return a ? { left: Math.min(a.left, b.left), right: Math.max(a.right, b.right) } : b;
   }
-  // The horizontal extent of what a child draws.
-  // Text that is meant to end on the right: right-aligned, or the end of a
-  // flex row pushed right. Ragged left-aligned text (a wrapped address) is not.
   function endsRight(node: Node, stop: Element) {
     for (
       let element = node.parentElement;
@@ -120,7 +114,6 @@ function measureFrames({ selector, tolerance }: { selector: string; tolerance: n
     const right = drawn.rightNode;
     const rightIsRaggedText =
       right !== null && right.nodeType === Node.TEXT_NODE && !endsRight(right, element);
-    // Not a spread: a DOMRect's edges are prototype getters.
     return { left: drawn.box.left, right: drawn.box.right, rightIsRaggedText };
   }
   function label(element: Element) {
@@ -139,7 +132,6 @@ function measureFrames({ selector, tolerance }: { selector: string; tolerance: n
   function fallbackRails(root: Element) {
     const width = root.clientWidth;
     const candidates = Array.from(root.querySelectorAll('*')).filter(element => {
-      // A header is checked on its own (step 4); it is not a content rail.
       if (!visible(element) || element.closest('header')) return false;
       const style = getComputedStyle(element);
       const left = parseFloat(style.paddingLeft);
@@ -164,7 +156,6 @@ function measureFrames({ selector, tolerance }: { selector: string; tolerance: n
       frame.querySelectorAll<HTMLElement>('[role="dialog"], [aria-modal="true"]')
     ).filter(visible);
     const root: HTMLElement = sheets[0] ?? frame;
-    // The frame's inner edges (its 1px border is not part of the screen).
     const outer = root.getBoundingClientRect();
     coordinates.origin = outer.left;
     coordinates.scale = root.offsetWidth > 0 ? outer.width / root.offsetWidth : 1;
@@ -214,7 +205,6 @@ function measureFrames({ selector, tolerance }: { selector: string; tolerance: n
         marked: marked.length > 0,
       };
     });
-    // Full-width rails share one inset (a centred tab card is one rail).
     const insets = rails.filter(rail => rail.left < 48 && rail.right < 48);
     for (const rail of insets) {
       const first = insets[0];
@@ -229,7 +219,6 @@ function measureFrames({ selector, tolerance }: { selector: string; tolerance: n
           delta: Math.round((rail.left - first.left) * 10) / 10,
         });
     }
-    // Header glyphs: back vs the trailing action, and on the rail.
     const header = root.querySelector('header');
     if (header && visible(header)) {
       const glyphs = Array.from(

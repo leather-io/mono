@@ -1,4 +1,3 @@
-// eslint-rules/design-system/no-text-opacity.js
 import {
   collectLeaves,
   getJsxAttribute,
@@ -91,8 +90,6 @@ export const noTextOpacityRule = {
       ObjectExpression(node) {
         const names = node.properties.map(getPropertyName);
         if (!names.includes('textStyle') && !names.includes('color')) return;
-        // Opacity next to a background dims the whole surface (a hover or
-        // pressed state), which is a different decision from text colour.
         if (surfaceProperties.some(name => names.includes(name))) return;
         for (const prop of node.properties) {
           if (getPropertyName(prop) === 'opacity' && hasPartialOpacity(prop.value)) report(prop);

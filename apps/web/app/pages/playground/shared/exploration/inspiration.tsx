@@ -8,8 +8,6 @@ const cardWidth = 136;
 const cardGap = 16;
 const imageHeight = 236;
 
-// An imported URL ("/app/…/x.png", "/assets/x-hash.png", "data:…", "https://…")
-// is used as is; a bare file name is joined to `path`.
 function imageSrc(image: string, path: string | undefined) {
   if (!path || /^(\/|[a-z][a-z0-9+.-]*:)/i.test(image)) return image;
   return `${path}/${image}`;

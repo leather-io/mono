@@ -1,4 +1,3 @@
-// eslint-rules/design-system/index.js
 import { noDeadChevronRule } from './no-dead-chevron.js';
 import { noMonoAmountRule } from './no-mono-amount.js';
 import { noPrimitiveImportsRule } from './no-primitive-imports.js';

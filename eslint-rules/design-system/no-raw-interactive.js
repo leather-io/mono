@@ -1,4 +1,3 @@
-// eslint-rules/design-system/no-raw-interactive.js
 import { getStaticString, neverLink } from './shared.js';
 
 const nativeTouchables = new Set([

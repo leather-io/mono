@@ -7,7 +7,6 @@ import { ArrowLeftIcon, CloseIcon, IconButton } from '@leather.io/ui';
 import { defineRecipeMeta } from './recipe-meta';
 
 export const pageGutter = 'space.05';
-// The header's own padding: an IconButton's 8px inner space makes up the rest.
 const headerInset = 'space.04';
 
 export const footerActionsMeta = defineRecipeMeta({
@@ -39,8 +38,6 @@ export interface PageHeaderProps {
 
 function HeaderSlot({ align, children }: { align: 'start' | 'end'; children: ReactNode }) {
   return (
-    // Literal branches: Panda extracts styles statically, so `justifySelf={align}`
-    // would generate no class (design:align caught the settings icon off-centre).
     <Flex
       justifySelf={align === 'end' ? 'end' : 'start'}
       width="40px"

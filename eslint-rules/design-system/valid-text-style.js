@@ -1,4 +1,3 @@
-// eslint-rules/design-system/valid-text-style.js
 import { collectLeaves, getPropertyName, getStaticString, neverLink } from './shared.js';
 
 function suggest(value, textStyles) {

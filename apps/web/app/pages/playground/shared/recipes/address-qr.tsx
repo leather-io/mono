@@ -1,4 +1,3 @@
-// The QR uses error-correction level H, so the covered centre still scans.
 import type { ReactNode } from 'react';
 import QRCode from 'react-qr-code';
 

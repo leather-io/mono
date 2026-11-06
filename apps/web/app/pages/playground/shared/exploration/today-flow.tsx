@@ -6,10 +6,6 @@ import type { TodayConfig, TodayCut, TodayFlow, TodayKept, TodayStep } from './e
 import { type FrameId, type ThemeId, frameSizes } from './frame';
 import { Thumb } from './lightbox';
 
-// Today's popup captures are shown in a 360×600 box: the round-1 and round-2
-// captures were taken at 360×600. A capture at the real popup size (390×600) is
-// cover-fitted, which trims ~15px of side padding from each edge. Tab captures
-// are 1280×800.
 const capture = { popup: { width: 360, height: 600 }, tab: { width: 1280, height: 800 } };
 
 export interface TodayCoverage {
@@ -100,9 +96,6 @@ export function TodayFrame({
 const tabRailWidth = 420;
 const tabRailHeight = Math.round((tabRailWidth * capture.tab.height) / capture.tab.width);
 
-// The first step that does the job. `flowId` (a variant's `compareFlow`) puts
-// that flow first, so a concept for one asset is compared with that asset's
-// real form; the other flows still answer for jobs it doesn't have.
 function findStep(today: TodayConfig, job: string, flowId?: string) {
   const flows = flowId
     ? [

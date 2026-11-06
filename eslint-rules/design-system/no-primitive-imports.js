@@ -1,7 +1,5 @@
-// eslint-rules/design-system/no-primitive-imports.js
 import { neverLink } from './shared.js';
 
-// Radix primitive -> the @leather.io/ui component that wraps it.
 const uiWrappers = {
   accordion: 'Accordion',
   dialog: 'Sheet',

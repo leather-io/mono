@@ -1,4 +1,3 @@
-// node --test scripts/design/align.test.ts
 import type { Browser, Page } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { after, before, describe, it } from 'node:test';

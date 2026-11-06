@@ -35,7 +35,6 @@ function matchesTarget(element: Element, target: HotspotTarget) {
   return true;
 }
 
-// The innermost elements in `root` that match the target.
 function findTargets(root: Element, target: HotspotTarget) {
   const all = [...root.querySelectorAll(target.selector ?? clickable)].filter(element =>
     matchesTarget(element, target)
@@ -63,7 +62,6 @@ function measureHotspots<S extends string>(
     if (!transition.target) return;
     findTargets(root, transition.target).forEach((element, position) => {
       const rect = element.getBoundingClientRect();
-      // Clip to the frame: content scrolled out of view has no hotspot.
       const top = Math.max(rect.top, origin.top);
       const bottom = Math.min(rect.bottom, origin.bottom);
       const left = Math.max(rect.left, origin.left);
@@ -109,8 +107,6 @@ export function ClickThrough<S extends string>({
     setHotspots(measureHotspots(root, transitions, scale));
   }, [transitions, scale]);
 
-  // Coverage: which transitions found a target, re-checked as the screen
-  // renders (mock sheets open, async content).
   useEffect(() => {
     const root = rootRef.current;
     if (!root || !onCoverage) return;

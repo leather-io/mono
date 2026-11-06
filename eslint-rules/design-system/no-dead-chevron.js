@@ -1,9 +1,3 @@
-// eslint-rules/design-system/no-dead-chevron.js
-//
-// A chevron promises "this opens a deeper view". The list-row recipe draws it
-// only with `navigates`; this flags `navigates` on a row that has no onClick or
-// whose onClick does nothing (`noop`, `() => undefined`, `() => {}`), as on
-// round 3's address book rows, where no detail view existed.
 import { getJsxAttribute, neverLink } from './shared.js';
 
 function isTrueAttribute(attr) {

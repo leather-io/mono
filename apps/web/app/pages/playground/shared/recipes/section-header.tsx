@@ -14,8 +14,6 @@ export function SectionHeader({ title, action }: SectionHeaderProps) {
         {title}
       </styled.h2>
       {action ? (
-        // The ghost button's padding hangs outside the column so its label lines up
-        // with the values in the rows below.
         <Button size="sm" variant="ghost" mr="-space.03" onClick={action.onClick}>
           {action.label}
         </Button>

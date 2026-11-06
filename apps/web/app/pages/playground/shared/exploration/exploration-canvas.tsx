@@ -48,8 +48,6 @@ interface CanvasProps<V extends string, S extends string> {
   params: ExplorationParams<V, S>;
 }
 
-// "Variant A · Recipient", for error messages. Falls back to the raw ids when
-// the config itself is what's broken.
 function viewLabel<V extends string, S extends string>(
   config: ExplorationConfig<V, S>,
   variant: V,
@@ -160,8 +158,6 @@ interface FromHereProps<S extends string> {
   onNavigate(to: S): void;
 }
 
-// Under the screen: every way out of it. Each is a button too, so the flow can
-// be walked even where a hotspot isn't wired.
 function FromHere<S extends string>({ transitions, found, labelOf, onNavigate }: FromHereProps<S>) {
   if (transitions.length === 0)
     return (
@@ -384,7 +380,6 @@ function SheetGrid({ items, dense = false }: { items: SheetItem[]; dense?: boole
               </styled.span>
             ) : null}
           </Stack>
-          {/* zoom (not transform) so the scaled frame takes its scaled space */}
           <Box position="relative" style={{ zoom: scale }}>
             {item.frame}
             <Pressable
@@ -697,13 +692,11 @@ export function ExplorationCanvas<V extends string, S extends string>({
 
   const recreated = recreatedToday(config);
   const concepts = conceptIds(config);
-  // A baseline that isn't the Today entry is left out of the canvas.
   const hidden = recreated ? undefined : config.baselineVariant;
   const flow = variantFlow(config, params.variant);
   const steps = todaySteps(config.today);
   const today = isToday(config, params);
 
-  // An old link to the left-out baseline lands on Today's screenshots.
   useEffect(() => {
     if (!hasToday(config) && params.actual) {
       update({ overview: true, actual: false, compare: false });
@@ -765,8 +758,6 @@ export function ExplorationCanvas<V extends string, S extends string>({
     else selectVariant(next);
   }
 
-  // Keyboard: see the shortcut list in the navigation rail's footer. Re-bound
-  // each render so the handler sees the current params.
   function onKey(event: KeyboardEvent) {
     if (event.metaKey || event.ctrlKey || event.altKey || isTyping(event.target)) return;
     const { key } = event;
@@ -878,9 +869,6 @@ export function ExplorationCanvas<V extends string, S extends string>({
             height="100vh"
             aria-label={centerLabel}
           >
-            {/* The canvas scrolls on its own and ends above a clear strip for
-                the playground's floating dock pill, so nothing ever sits under
-                it. Keyed by view so a new view starts at the top. */}
             <Box key={`${selection}-${view}`} flex="1" minHeight="0" overflowY="auto">
               <CanvasBoundary key={`${selection}-${view}-${params.screen}`} label={centerLabel}>
                 {canvas()}

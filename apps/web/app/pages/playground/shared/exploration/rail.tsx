@@ -4,18 +4,22 @@ import { Box, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
 
 import { ChevronsRightIcon, Pressable } from '@leather.io/ui';
 
-// Pressable without its hover/focus halo (it bleeds 12px past the element):
-// the canvas controls draw their own hover and focus ring.
 export const plainPressable = {
   _before: { display: 'none' },
   _focusVisible: { outline: 'focus', outlineOffset: '2px' },
 } as const;
 
-// Rail open/closed survives reloads (not in the URL: it's the reviewer's
-// workspace, not part of what a link shows).
+function storeRailChoice(storageKey: string, choice: 'open' | 'closed') {
+  try {
+    window.localStorage.setItem(storageKey, choice);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function useRailOpen(key: string) {
   const storageKey = `leather.exploration.${key}-rail`;
-  // The canvas renders client-only (WhenClient), so storage is readable here.
   const [narrow, setNarrow] = useState(() => window.innerWidth < 1024);
   const [choices, setChoices] = useState(() => {
     try {
@@ -38,14 +42,7 @@ export function useRailOpen(key: string) {
   const open = narrow ? choices.narrow : choices.wide;
   function set(next: boolean) {
     setChoices(previous => ({ ...previous, [narrow ? 'narrow' : 'wide']: next }));
-    try {
-      window.localStorage.setItem(
-        narrow ? `${storageKey}.narrow` : storageKey,
-        next ? 'open' : 'closed'
-      );
-    } catch {
-      // Storage unavailable: the choice lasts until reload.
-    }
+    storeRailChoice(narrow ? `${storageKey}.narrow` : storageKey, next ? 'open' : 'closed');
   }
   return [open, set] as const;
 }
@@ -85,7 +82,6 @@ export function Rail({
       top="0"
       height="100vh"
       flexShrink={0}
-      // The first rail's toggle overlaps the second rail's edge.
       zIndex={as === 'nav' ? 3 : 2}
       style={{ width: open ? width : collapsedWidth }}
       borderRightWidth={1}
@@ -142,8 +138,6 @@ function RailToggle({ label, open, shortcut, onToggle }: RailToggleProps) {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      // Same spot open or collapsed: half over the right border, so it never
-      // moves when the rail does.
       style={{
         width: toggleSize,
         height: toggleSize,
@@ -159,7 +153,6 @@ function RailToggle({ label, open, shortcut, onToggle }: RailToggleProps) {
       _hover={{ color: 'ink.text-primary', bg: 'ink.component-background-hover' }}
       _focusVisible={{ outline: 'focus', outlineOffset: '2px' }}
     >
-      {/* The chevrons point the way the rail will move. */}
       <Box lineHeight={0} transform={open ? 'rotate(180deg)' : undefined}>
         <ChevronsRightIcon variant="small" />
       </Box>

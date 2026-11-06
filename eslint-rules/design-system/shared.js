@@ -1,4 +1,3 @@
-// eslint-rules/design-system/shared.js
 const neverDoc = 'docs/design/never.md';
 
 export function neverLink(anchor) {
@@ -37,8 +36,6 @@ export function getJsxAttribute(openingElement, name) {
   );
 }
 
-// Expands a value into the static leaves it can take: string literals, both
-// branches of a ternary, and the values of a responsive or conditional object.
 export function collectLeaves(node, leaves = []) {
   if (!node) return leaves;
   if (node.type === 'JSXExpressionContainer') return collectLeaves(node.expression, leaves);

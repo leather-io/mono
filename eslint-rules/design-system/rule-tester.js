@@ -1,4 +1,3 @@
-// eslint-rules/design-system/rule-tester.js
 import { RuleTester } from 'eslint';
 import { describe, it } from 'node:test';
 import tseslint from 'typescript-eslint';

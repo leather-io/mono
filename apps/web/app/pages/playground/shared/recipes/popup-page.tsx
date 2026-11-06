@@ -60,7 +60,6 @@ export function PopupPage({
           {pinned}
         </Box>
       ) : null}
-      {/* pt space.01: room for a first row's 12px hover bleed above its 8px margin. */}
       <Stack
         gap="space.05"
         px={pageGutter}

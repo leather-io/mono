@@ -3,15 +3,12 @@ import { ruleTester } from './rule-tester.js';
 
 ruleTester.run('no-mono-amount', noMonoAmountRule, {
   valid: [
-    // Addresses and code stay mono.
     { code: '<styled.span textStyle="address">{letterGroup}</styled.span>' },
     { code: '<styled.code textStyle="code">{errorCode}</styled.code>' },
     { code: '<styled.span textStyle="address">{truncateMiddle(address, 4)}</styled.span>' },
     { code: '<AddressDisplayer address={address} textStyle="address" />' },
-    // Amounts in Diatype.
     { code: '<styled.span textStyle="label.02">{fee}</styled.span>' },
     { code: '<styled.span textStyle="heading.03">120.00 STX</styled.span>' },
-    // tabular-nums is only checked with checkTabular.
     { code: '<styled.span fontVariant="tabular-nums">{value}</styled.span>' },
     {
       code: '<styled.code fontVariant="tabular-nums">{address.replace(".", "\\n.")}</styled.code>',

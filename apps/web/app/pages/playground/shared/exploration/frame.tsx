@@ -1,11 +1,3 @@
-// Theme: `className="dark"` on the frame flips every Leather semantic token
-// (ink.*, red.*, …) inside it, because Panda's dark condition is `.dark &`.
-// That gives a per-frame theme while the canvas itself stays light.
-// Caveat: anything portalled to <body> (a real @leather.io/ui Sheet, Popover,
-// DropdownMenu, tooltip) escapes the frame: it renders over the whole canvas and
-// in the light theme. Mock sheets and menus inline inside the frame instead.
-// `transform` makes the frame the containing block for `position: fixed`
-// descendants, so a fixed footer or overlay stays inside the frame.
 import type { ReactNode } from 'react';
 
 import { Flex } from 'leather-styles/jsx';

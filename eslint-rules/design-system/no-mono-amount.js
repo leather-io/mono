@@ -1,32 +1,16 @@
-// eslint-rules/design-system/no-mono-amount.js
-//
-// Monospace is for full addresses and code only (AddressDisplayer's `address`
-// text style, the broadcast error's `code` block). An amount, total, fee or
-// balance in mono reads as raw data, not as money. This flags a mono font
-// (textStyle `code` / `address`, a mono fontFamily) on an element whose content
-// looks like an amount.
-//
-// With `checkTabular`, it also flags `fontVariant` / `fontVariantNumeric`
-// `tabular-nums` on an amount: in the web build Diatype's tabular figures come
-// from its semi-mono cut, so the whole value ("120.0004 STX", letters included)
-// renders monospaced. That is how round 3's review rows ended up mono.
 import { collectLeaves, getJsxName, getStaticString, neverLink } from './shared.js';
 
 const monoTextStyles = new Set(['code', 'address']);
 const monoFamily = /mono|fira|code|courier|menlo|consolas/i;
 const amountName =
   /amount|total|fee|balance|fiat|price|spend|sending|sum|value|usd|quantity|money|cost/i;
-// Content that is allowed in mono: an address, a hash, a code block.
 const monoContentName = /address|hash|txid|code|mnemonic|seed|key|group|principal|contract/i;
-// Props that carry money on value components (Balance). Not `value`: on an input
-// that is typed text (a contract id, a key), where mono can be right.
 const amountAttributes = /^(balance|amount|money|fee|total|fiat|price)$/i;
 
 function attributeValueNode(attr) {
   return attr.value ?? null;
 }
 
-// The names an expression reads from: `fee`, `send.totalSpend`, `format(amount)`.
 function namesIn(node, names = []) {
   if (!node) return names;
   switch (node.type) {
@@ -59,11 +43,9 @@ function namesIn(node, names = []) {
   }
 }
 
-// A literal that reads as a number: "120.00 STX", "$102.00", "0.0004".
 function isAmountText(text) {
   const trimmed = text.trim();
   if (!/\d/.test(trimmed)) return false;
-  // Long letter-digit runs are addresses or hashes.
   if (/[A-Za-z0-9]{20,}/.test(trimmed.replace(/\s/g, ''))) return false;
   return /^[~≈<>+\-−$€£¥]*\s*\d[\d.,\s]*\s*[A-Za-z%]{0,6}$/.test(trimmed);
 }
@@ -80,7 +62,6 @@ function looksLikeAmount(element) {
       else namesIn(child, names);
     }
   }
-  // Self-closing value components: <Balance balance={fee} textStyle="code" />.
   for (const attr of opening.attributes) {
     if (attr.type !== 'JSXAttribute' || attr.name.type !== 'JSXIdentifier') continue;
     if (amountAttributes.test(attr.name.name)) {
@@ -134,7 +115,6 @@ export const noMonoAmountRule = {
     return {
       JSXElement(element) {
         const opening = element.openingElement;
-        // AddressDisplayer owns the address style.
         if (getJsxName(opening.name) === 'AddressDisplayer') return;
         for (const attr of opening.attributes) {
           if (attr.type !== 'JSXAttribute' || attr.name.type !== 'JSXIdentifier') continue;

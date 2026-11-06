@@ -2,14 +2,10 @@ import { useSearchParams } from 'react-router';
 
 import { type FrameSizeId, type ThemeId, frameSizeIds, themeIds } from './frame';
 
-// The Today entry when it shows today's real extension (screenshots, not a
-// redraw). Reserved: no area may use it as a variant id.
 const todayActualId = 'actual';
 
 export interface ExplorationParams<V extends string, S extends string> {
   overview: boolean;
-  // The selected concept. Kept while Overview or Today's screenshots are
-  // shown, so switching back returns to it.
   variant: V;
   screen: S;
   actual: boolean;
@@ -57,8 +53,6 @@ export function useExplorationParams<V extends string, S extends string>({
 
   const params = read(searchParams);
 
-  // Functional, so several updates before a re-render (fast keys, a click
-  // that navigates and resets) each build on the last.
   function update(next: Partial<ExplorationParams<V, S>>) {
     setSearchParams(
       previous => {

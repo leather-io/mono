@@ -80,7 +80,6 @@ export function NavigatorRail<V extends string, S extends string>({
   onChange,
 }: NavigatorRailProps<V, S>) {
   const today = isToday(config, params);
-  // The All view is always popup frames, with nothing to compare or click.
   const { overview } = params;
   return (
     <Rail

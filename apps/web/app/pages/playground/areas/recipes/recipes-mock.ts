@@ -9,7 +9,6 @@ export const recipesMock = {
     address: 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE',
   },
   newAddress: 'bc1q530dz4h80kwlzywlhx2qn0k6vdtftd93c499yq',
-  // A list long enough to scroll under a pinned field.
   contacts: [
     { name: 'Alex Huth', address: 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE' },
     { name: 'Sofia Reyes', address: 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7' },

@@ -85,7 +85,6 @@ export function Thumb({ src, caption, width, height, fit = 'cover', children }: 
   const open = useContext(LightboxContext);
   return (
     <Stack gap="space.02" style={{ width }} flexShrink={0}>
-      {/* No Pressable halo: hover stays inside the image. */}
       <Pressable
         {...plainPressable}
         type="button"
