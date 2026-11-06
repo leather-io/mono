@@ -1,3 +1,4 @@
+import { getMixpanelToken } from '@/shared/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Application from 'expo-application';
 import { Mixpanel } from 'mixpanel-react-native';
@@ -34,9 +35,8 @@ function getMockedMixpanel() {
   };
 }
 
-const mixpanelClient = process.env.EXPO_PUBLIC_MIXPANEL_TOKEN
-  ? new Mixpanel(process.env.EXPO_PUBLIC_MIXPANEL_TOKEN, false)
-  : getMockedMixpanel();
+const mixpanelToken = getMixpanelToken();
+const mixpanelClient = mixpanelToken ? new Mixpanel(mixpanelToken, false) : getMockedMixpanel();
 
 async function initMixpanelClient() {
   await mixpanelClient.init();

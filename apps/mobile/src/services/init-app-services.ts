@@ -1,3 +1,5 @@
+import { getAppEnvironment, getBitflowEnv, getLeatherApiUrl } from '@/shared/environment';
+
 import { initServicesContainer } from '@leather.io/services';
 
 import { MobileHttpCacheService } from './mobile-http-cache.service';
@@ -6,15 +8,9 @@ import { MobileSettingsService } from './mobile-settings.service';
 export function initAppServices() {
   initServicesContainer({
     env: {
-      environment: process.env.EXPO_PUBLIC_NODE_ENV ?? 'development',
-      leatherApiUrl: process.env.EXPO_PUBLIC_LEATHER_API_URL,
-      bitflow: {
-        bitflowApiHost: process.env.EXPO_PUBLIC_BITFLOW_API_HOST ?? '',
-        bitflowApiKey: process.env.EXPO_PUBLIC_BITFLOW_API_KEY ?? '',
-        bitflowProviderAddress: process.env.EXPO_PUBLIC_BITFLOW_PROVIDER_ADDRESS ?? '',
-        keeperApiHost: process.env.EXPO_PUBLIC_BITFLOW_KEEPER_API_HOST ?? '',
-        keeperApiKey: process.env.EXPO_PUBLIC_BITFLOW_KEEPER_API_KEY ?? '',
-      },
+      environment: getAppEnvironment(),
+      leatherApiUrl: getLeatherApiUrl(),
+      bitflow: getBitflowEnv(),
     },
     cacheService: MobileHttpCacheService,
     settingsService: MobileSettingsService,

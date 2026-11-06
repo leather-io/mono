@@ -25,6 +25,7 @@ import { usePageViewTracking } from '@/hooks/use-page-view-tracking';
 import { useUpdateAnalyticsPlugin } from '@/hooks/use-update-analytics-plugin';
 import { queryClient } from '@/queries/query';
 import { initAppServices } from '@/services/init-app-services';
+import { getSentryDsn } from '@/shared/environment';
 import { featureFlagClient, setupFeatureFlags, useSwapFlag } from '@/shared/feature-flags';
 import { useSettings } from '@/store/settings/settings';
 import { persistor, store } from '@/store/store';
@@ -43,7 +44,7 @@ import { Box, SheetModalProvider, useOnMount } from '@leather.io/ui/native';
 dayjs.extend(relativeTime);
 
 Sentry.init({
-  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  dsn: getSentryDsn(),
   debug: false,
   tracesSampleRate: 1.0,
   enabled: !__DEV__,

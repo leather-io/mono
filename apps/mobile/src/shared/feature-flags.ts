@@ -1,3 +1,4 @@
+import { getLaunchDarklyClientId } from '@/shared/environment';
 import { getDeviceId } from '@/utils/get-device-id';
 import {
   AutoEnvAttributes,
@@ -7,7 +8,7 @@ import {
 } from '@launchdarkly/react-native-client-sdk';
 import * as Application from 'expo-application';
 
-const launchDarklyClientId = process.env.EXPO_PUBLIC_LAUNCH_DARKLY ?? '';
+const launchDarklyClientId = getLaunchDarklyClientId();
 
 export const featureFlagClient = new ReactNativeLDClient(
   // TODO: do not fallback to empty string

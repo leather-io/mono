@@ -414,6 +414,21 @@ export default defineConfig([
     },
   },
   {
+    name: 'mobile-centralized-env',
+    files: ['apps/mobile/src/**/*.{ts,tsx}'],
+    ignores: ['apps/mobile/src/shared/environment.ts', '**/*.spec.{ts,tsx}'],
+    rules: {
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'process',
+          property: 'env',
+          message: 'Read env vars through apps/mobile/src/shared/environment.ts',
+        },
+      ],
+    },
+  },
+  {
     name: 'test-files',
     files: ['**/*.spec.ts', '**/*.mocks.ts'],
     rules: {
