@@ -15,6 +15,7 @@ import {
 import { Card } from '@app/components/layout';
 
 interface SendFormConfirmationLayoutProps {
+  additionalContent?: React.ReactNode;
   recipient?: string | null;
   fee?: Money;
   totalSpend: string;
@@ -31,6 +32,7 @@ interface SendFormConfirmationLayoutProps {
   onBroadcastTransaction(): void;
 }
 export function SendFormConfirmationLayout({
+  additionalContent,
   txValue,
   txFiatValue,
   txFiatValueSymbol,
@@ -110,6 +112,7 @@ export function SendFormConfirmationLayout({
           data-testid={SendCryptoAssetSelectors.ConfirmationDetailsMemo}
         />
         {nonce && <InfoCardRow title="Nonce" value={nonce} />}
+        {additionalContent}
       </Stack>
     </Card>
   );
