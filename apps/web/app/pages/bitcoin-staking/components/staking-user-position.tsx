@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import BigNumber from 'bignumber.js';
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 import { CopyAddress } from '~/components/copy-address';
@@ -52,7 +53,7 @@ function StakingPositionRow({
       borderWidth={1}
       borderColor="ink.border-default"
       borderRadius="md"
-      data-testid="staking-user-position"
+      data-testid={BitcoinStakingSelectors.StakingUserPosition}
     >
       <HStack gap="space.04" alignItems="center" minWidth={0}>
         <StakingPoolAvatar providerId={providerId} />
@@ -101,7 +102,7 @@ export function StakingUserPosition() {
         borderWidth={1}
         borderColor="ink.border-default"
         borderRadius="md"
-        data-testid="needs-restake-banner"
+        data-testid={BitcoinStakingSelectors.NeedsRestakeBanner}
       >
         <styled.p textStyle="label.02">{bitcoinStakingContent.needsRestake.title}</styled.p>
         <styled.p textStyle="caption.01" color="ink.text-subdued">

@@ -1,6 +1,7 @@
 import { type ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { type StakingPoolSlug, stakingProviderIdToSlug } from '~/data/bitcoin-staking-data';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
@@ -40,7 +41,7 @@ function StartStakingPositionCheck({ slug }: StartStakingButtonProps) {
         <StartStakingButtonLayout
           variant="outline"
           onClick={() => void navigate(switchTo)}
-          data-testid={`switch-pool-button-${slug}`}
+          data-testid={BitcoinStakingSelectors.SwitchPoolButton.replace('[slug]', slug)}
         >
           {bitcoinStakingLabels.switchPool}
         </StartStakingButtonLayout>
@@ -60,7 +61,7 @@ function StartStakingPositionCheck({ slug }: StartStakingButtonProps) {
   return (
     <StartStakingButtonLayout
       onClick={() => void navigate(to)}
-      data-testid={`start-staking-button-${slug}`}
+      data-testid={BitcoinStakingSelectors.StartStakingButton.replace('[slug]', slug)}
     />
   );
 }

@@ -1,5 +1,6 @@
 import { type ChangeEvent, type ReactNode, useState } from 'react';
 
+import { MultisigSelectors } from '@tests/selectors/multisig.selectors';
 import BigNumber from 'bignumber.js';
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
@@ -469,7 +470,12 @@ function ProposeFormFields({
         <Button variant="ghost" onClick={onClose}>
           Cancel
         </Button>
-        <Button variant="solid" disabled={!canPropose || isProposing} onClick={onSubmit}>
+        <Button
+          variant="solid"
+          disabled={!canPropose || isProposing}
+          onClick={onSubmit}
+          data-testid={MultisigSelectors.ProposeTransactionButton}
+        >
           {isProposing ? 'Proposing…' : 'Propose transaction'}
         </Button>
       </Flex>
@@ -816,7 +822,7 @@ export function ProposeTransactionModal({
         </Flex>
       }
     >
-      <Box>
+      <Box data-testid={MultisigSelectors.ProposeTransactionSheet}>
         {isBtc ? (
           <BtcProposeForm
             account={account}

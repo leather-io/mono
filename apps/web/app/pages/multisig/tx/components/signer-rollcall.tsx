@@ -1,3 +1,4 @@
+import { MultisigSelectors } from '@tests/selectors/multisig.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { CopyAddress } from '~/components/copy-address';
 import { SignIcon } from '~/components/icons/sign-icon';
@@ -40,7 +41,14 @@ function SignerStatus({
 }) {
   if (canSign) {
     return (
-      <Button variant="solid" size="sm" disabled={busy} onClick={onSign} iconStart={<SignIcon />}>
+      <Button
+        variant="solid"
+        size="sm"
+        disabled={busy}
+        onClick={onSign}
+        iconStart={<SignIcon />}
+        data-testid={MultisigSelectors.SignTransactionButton}
+      >
         Sign
       </Button>
     );
@@ -92,6 +100,7 @@ export function SignerRollcall({
       borderStyle="solid"
       borderColor="ink.border-default"
       overflow="hidden"
+      data-testid={MultisigSelectors.SignerRollcall}
     >
       {transaction.status === 'queued' && (
         <Box
@@ -182,11 +191,24 @@ export function SignerRollcall({
           borderTopColor="ink.border-transparent"
         >
           {canCancel && (
-            <Button variant="ghost" intent="danger" size="sm" disabled={busy} onClick={onCancel}>
+            <Button
+              variant="ghost"
+              intent="danger"
+              size="sm"
+              disabled={busy}
+              onClick={onCancel}
+              data-testid={MultisigSelectors.CancelTransactionButton}
+            >
               {isCancelling ? 'Cancelling…' : 'Cancel transaction'}
             </Button>
           )}
-          <Button variant="solid" size="sm" disabled={busy || !thresholdMet} onClick={onBroadcast}>
+          <Button
+            variant="solid"
+            size="sm"
+            disabled={busy || !thresholdMet}
+            onClick={onBroadcast}
+            data-testid={MultisigSelectors.BroadcastTransactionButton}
+          >
             {isBroadcasting ? 'Broadcasting…' : 'Broadcast transaction'}
           </Button>
         </Flex>

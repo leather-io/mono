@@ -1,5 +1,6 @@
 import { Link as RouterLink, useNavigate } from 'react-router';
 
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { css, cx } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 import { link as linkRecipe } from 'leather-styles/recipes';
@@ -103,7 +104,7 @@ function StakingProviderRow({ pool }: StakingProviderRowProps) {
             pool.providerId,
             pox5NetworkConfig.contractNetworkMode
           )}
-          testId={`pool-tvl-${slug}`}
+          testId={BitcoinStakingSelectors.PoolTvl.replace('[slug]', slug)}
         />
       </styled.td>
       <styled.td px="space.04" textAlign="right" color="black">
@@ -126,7 +127,12 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
   const byosmPool = getStakingPoolFromSlug('byosm');
 
   return (
-    <Table.Root width="100%" overflowX="auto" {...props}>
+    <Table.Root
+      width="100%"
+      overflowX="auto"
+      data-testid={BitcoinStakingSelectors.StakingProviderTable}
+      {...props}
+    >
       <Table.Table tableLayout="fixed" minWidth="720px">
         <colgroup>
           {columnWidths.map((width, index) => (
@@ -178,7 +184,7 @@ export function StakingProviderTable(props: HTMLStyledProps<'div'>) {
             <styled.td colSpan={columnWidths.length} textAlign="center" borderTop="default">
               <RouterLink
                 to={stakingPaths.pool('byosm')}
-                data-testid="byosm-entry-link"
+                data-testid={BitcoinStakingSelectors.ByosmEntryLink}
                 className={cx(
                   linkRecipe({ size: 'sm' }),
                   css({

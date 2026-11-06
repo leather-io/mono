@@ -89,6 +89,7 @@
     "@cloudflare/vite-plugin": "1.28.0",
     "@cloudflare/workers-types": "4.20260111.0",
     "@leather.io/test-config": "workspace:*",
+    "@leather.io/tools": "workspace:*",
     "@msw/playwright": "0.4.5",
     "@originjs/vite-plugin-commonjs": "1.0.3",
     "@pandacss/dev": "1.7.1",

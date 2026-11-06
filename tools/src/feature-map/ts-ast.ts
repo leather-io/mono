@@ -55,7 +55,7 @@ function getStringLiteralText(node: ts.Node): string | undefined {
   return undefined;
 }
 
-function readStringObjectLiteral(node: ts.ObjectLiteralExpression): Map<string, string> {
+export function readStringObjectLiteral(node: ts.ObjectLiteralExpression): Map<string, string> {
   const values = new Map<string, string>();
   for (const prop of node.properties) {
     if (!ts.isPropertyAssignment(prop)) continue;

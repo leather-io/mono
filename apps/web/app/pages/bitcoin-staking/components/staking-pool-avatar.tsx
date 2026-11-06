@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { getProviderIconSrc } from '~/components/icons/provider-icon';
 
 import { Avatar, type AvatarProps, CodeIcon } from '@leather.io/ui';
@@ -19,7 +20,7 @@ export function StakingPoolAvatar({ providerId, size = 'lg' }: StakingPoolAvatar
       variant="square"
       size={size}
       icon={<CodeIcon color="ink.text-subdued" />}
-      data-testid="staking-pool-avatar-fallback"
+      data-testid={BitcoinStakingSelectors.StakingPoolAvatarFallback}
     />
   );
 }
