@@ -24,8 +24,8 @@ function parseSemanticVersion(version: string): SemanticVersion {
     throw new Error('Version must be in format x.y or x.y.z');
   }
 
-  const major = parseInt(parts[0] || '0', 10);
-  const minor = parseInt(parts[1] || '0', 10);
+  const major = parts[0] ? parseInt(parts[0], 10) : 0;
+  const minor = parts[1] ? parseInt(parts[1], 10) : 0;
   const patch = parts[2] ? parseInt(parts[2], 10) : 0;
 
   if (isNaN(major) || isNaN(minor) || isNaN(patch)) {

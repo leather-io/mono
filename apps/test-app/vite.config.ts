@@ -12,6 +12,13 @@ export default defineConfig({
     // Required for some libs e.g. pbkdf2
     global: 'globalThis',
   },
+  optimizeDeps: {
+    include: [
+      'vite-plugin-node-polyfills/shims/buffer',
+      'vite-plugin-node-polyfills/shims/global',
+      'vite-plugin-node-polyfills/shims/process',
+    ],
+  },
   resolve: {
     alias: [
       // Shim imports broken in polyfill package plugin. Can be removed in later

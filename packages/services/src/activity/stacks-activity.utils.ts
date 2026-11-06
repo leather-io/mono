@@ -10,13 +10,13 @@ import {
   type StacksProtocolAction,
   type StacksProtocolId,
   type StacksTransaction,
-  type StacksTx,
   isStacksMempoolTransaction,
 } from '@leather.io/models';
 import { assertUnreachable, createMoney, initBigNumber } from '@leather.io/utils';
 
 import type {
   HiroBalanceChangeResultItem,
+  HiroPrincipalMempoolTransaction,
   HiroPrincipalTransaction,
   HiroPrincipalTransactionsResultItem,
   HiroPrincipalTxStatus,
@@ -30,11 +30,18 @@ type StacksActivityResultItem = HiroPrincipalTransactionsResultItem & {
   >;
 };
 
-export function isStacksActivityResultItem(
+export function toStacksActivityResultItem(
   item: HiroPrincipalTransactionsResultItem
-): item is StacksActivityResultItem {
-  const { type } = item.transaction;
-  return type === 'token_transfer' || type === 'contract_call' || type === 'smart_contract';
+): StacksActivityResultItem | undefined {
+  const { transaction } = item;
+  if (
+    transaction.type === 'token_transfer' ||
+    transaction.type === 'contract_call' ||
+    transaction.type === 'smart_contract'
+  ) {
+    return { ...item, transaction };
+  }
+  return undefined;
 }
 
 export function mapStacksActivityStatus(status: HiroPrincipalTxStatus): OnChainActivityStatus {
@@ -139,8 +146,11 @@ export type FtBalanceChangeRow = HiroBalanceChangeResultItem & {
   readonly asset: { readonly type: 'ft'; readonly identifier: string };
 };
 
-export function isFtBalanceChangeRow(row: HiroBalanceChangeResultItem): row is FtBalanceChangeRow {
-  return row.asset.type === 'ft';
+export function toFtBalanceChangeRow(
+  row: HiroBalanceChangeResultItem
+): FtBalanceChangeRow | undefined {
+  const { asset } = row;
+  return asset.type === 'ft' ? { ...row, asset } : undefined;
 }
 
 // Superset pre-filter from the raw affected_balances flags: false means the tx certainly
@@ -180,23 +190,23 @@ export function groupFtChangesByTxId(
 }
 
 export function buildPendingStacksActivity(
-  tx: StacksTx,
+  tx: HiroPrincipalMempoolTransaction,
   stxAddress: string,
   classified?: ClassifiedContractCall
 ): BlockchainActivity | null {
-  const initiatedByUser = tx.sender_address === stxAddress;
+  const initiatedByUser = tx.sender.address === stxAddress;
   // A sponsored tx's fee is paid by the sponsor, not the sender — attach no fee then.
-  const paidFee = initiatedByUser && !tx.sponsored;
+  const paidFee = initiatedByUser && tx.sponsor === null;
   const common = {
-    timestamp: 'receipt_time' in tx ? tx.receipt_time : 0,
+    timestamp: tx.receipt_time,
     txid: tx.tx_id,
     status: 'pending' as const,
     initiatedByUser,
-    nonce: tx.nonce,
+    nonce: tx.sender.nonce,
     ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
   };
 
-  switch (tx.tx_type) {
+  switch (tx.type) {
     case 'token_transfer': {
       const stxChange = buildStxBalanceChange(
         initiatedByUser ? `-${tx.token_transfer.amount}` : tx.token_transfer.amount
@@ -205,8 +215,8 @@ export function buildPendingStacksActivity(
         common,
         core: {
           kind: 'token_transfer',
-          recipient: tx.token_transfer.recipient_address,
-          sender: tx.sender_address,
+          recipient: tx.token_transfer.recipient,
+          sender: tx.sender.address,
         },
         action: initiatedByUser ? 'send' : 'receive',
         balanceChanges: stxChange === null ? [] : [stxChange],
@@ -244,8 +254,9 @@ export function buildConfirmedStacksActivity(
   ftChanges: BlockchainActivityBalanceChange[],
   classified?: ClassifiedContractCall
 ): BlockchainActivity | null {
-  if (!isStacksActivityResultItem(result)) return null;
-  const tx = result.transaction;
+  const stacksActivityItem = toStacksActivityResultItem(result);
+  if (!stacksActivityItem) return null;
+  const tx = stacksActivityItem.transaction;
   const initiatedByUser = result.involvement === 'sender';
   // v3's balance_changes.stx.net is fee-inclusive for the fee payer, so the fee is netted
   // back out — but only when this account actually paid it: a sponsored tx's fee comes out

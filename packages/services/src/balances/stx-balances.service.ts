@@ -7,7 +7,6 @@ import {
   baseCurrencyAmountInQuote,
   createMoney,
   createStxBalance,
-  hasStacksAddress,
 } from '@leather.io/utils';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
@@ -83,7 +82,7 @@ export class StxBalancesService {
     request: AccountRequest,
     signal?: AbortSignal
   ): Promise<AddressQuotedStxBalance> {
-    if (!hasStacksAddress(request.account)) {
+    if (!request.account.stacks) {
       return {
         stx: stxAssetZeroBalance,
         quote: createStxBalance(createMoney(0, this.settingsService.getSettings().quoteCurrency)),

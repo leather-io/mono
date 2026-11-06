@@ -1,4 +1,4 @@
-import { OwnedUtxo } from '@leather.io/models';
+import { type OwnedUtxo } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import {

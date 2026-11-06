@@ -40,7 +40,7 @@ import { invalidateActivityQueries } from '@app/query/activity/blockchain-activi
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useMatchWalletUtxos } from '@app/query/bitcoin/utxos/use-match-wallet-utxos';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
-import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useCryptoCurrencyMarketData } from '@app/query/common/market-data/market-data.hooks';
 
 import type { BtcSentSummaryState } from '../../../sent-summary/btc-sent-summary';
 import {
@@ -73,7 +73,7 @@ function BtcBroadcastConfirmation({ state }: BtcBroadcastConfirmationProps) {
 
   const { refetchUtxos } = useCurrentUtxos();
 
-  const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
+  const btcMarketData = useCryptoCurrencyMarketData('BTC');
   const { broadcastTx } = useBitcoinBroadcastTransaction();
 
   const decodedTx = decodeBitcoinTx(transaction.hex);

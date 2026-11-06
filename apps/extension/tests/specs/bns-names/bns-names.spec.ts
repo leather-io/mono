@@ -17,14 +17,13 @@ test.describe('Bns v2 names', () => {
   test('that correctly shows bns v2 account name', async ({ page }) => {
     const accountName = page.getByTestId(SettingsSelectors.CurrentAccountDisplayName);
 
-    const accountNameText = await accountName.innerText();
-    test.expect(accountNameText).toEqual(ACCOUNT_ONE_NAME);
+    await test.expect(accountName).toHaveText(ACCOUNT_ONE_NAME);
     await accountName.click();
 
     const accountOneName = page.getByTestId(getSwitchAccountSheetAccountNameSelector(0));
-    const accountOneNameText = await accountOneName.innerText();
+    const accountOneNameText = accountOneName;
 
-    test.expect(accountOneNameText).toEqual(ACCOUNT_ONE_NAME);
+    await test.expect(accountOneNameText).toHaveText(ACCOUNT_ONE_NAME);
   });
 
   test('that clearing a custom account name reverts to the bns name', async ({

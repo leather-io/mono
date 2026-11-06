@@ -2,31 +2,27 @@ import type { BrowserContext, Page } from '@playwright/test';
 import { getResponseAddresses } from '@tests/leather-provider';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import {
+  type OnboardingPage,
   makeLedgerTestAccountWalletState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
 
 import type { SupportedBlockchains } from '@leather.io/models';
+import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
 const getAddressesMethods = ['getAddresses', 'stx_getAddresses'] as const;
 type GetAddressesMethods = (typeof getAddressesMethods)[number];
 
-function softwareBeforeEach() {
-  return () =>
-    test.beforeEach(
-      async ({ extensionId, onboardingPage }) =>
-        await onboardingPage.signInWithTestAccount(extensionId)
-    );
+function softwareSignIn() {
+  return (onboardingPage: OnboardingPage, extensionId: string) =>
+    onboardingPage.signInWithTestAccount(extensionId);
 }
 
-function ledgerBeforeEach(state: object) {
-  return () =>
-    test.beforeEach(
-      async ({ extensionId, onboardingPage }) =>
-        await onboardingPage.signInWithLedgerAccount(extensionId, state)
-    );
+function ledgerSignIn(state: object) {
+  return (onboardingPage: OnboardingPage, extensionId: string) =>
+    onboardingPage.signInWithLedgerAccount(extensionId, state);
 }
 
 function getExpectedResponseForKeys(keys: SupportedBlockchains[]) {
@@ -98,26 +94,28 @@ getAddressesMethods.forEach(method => {
 
     const specs = {
       softwareWallet: {
-        beforeEach: softwareBeforeEach(),
+        signIn: softwareSignIn(),
         expectedResult: getExpectedResponseForKeys(['bitcoin', 'stacks']),
       },
       ledgerWithBitcoinAndStacksKey: {
-        beforeEach: ledgerBeforeEach(makeLedgerTestAccountWalletState(['bitcoin', 'stacks'])),
+        signIn: ledgerSignIn(makeLedgerTestAccountWalletState(['bitcoin', 'stacks'])),
         expectedResult: getExpectedResponseForKeys(['bitcoin', 'stacks']),
       },
       ledgerWithStacksKeysOnly: {
-        beforeEach: ledgerBeforeEach(makeLedgerTestAccountWalletState(['stacks'])),
+        signIn: ledgerSignIn(makeLedgerTestAccountWalletState(['stacks'])),
         expectedResult: getExpectedResponseForKeys(['stacks']),
       },
       ledgerWithBitcoinKeysOnly: {
-        beforeEach: ledgerBeforeEach(makeLedgerTestAccountWalletState(['bitcoin'])),
+        signIn: ledgerSignIn(makeLedgerTestAccountWalletState(['bitcoin'])),
         expectedResult: getExpectedResponseForKeys(['bitcoin']),
       },
     } as const;
 
-    Object.entries(specs).forEach(([walletPreset, { beforeEach, expectedResult }]) => {
+    Object.entries(specs).forEach(([walletPreset, { signIn, expectedResult }]) => {
       test.describe(`${walletPreset} `, () => {
-        beforeEach();
+        test.beforeEach(async ({ extensionId, onboardingPage }) => {
+          await signIn(onboardingPage, extensionId);
+        });
 
         test('the promise resolves with addresses successfully', async ({ page, context }) => {
           await page.goto('localhost:3000');
@@ -127,7 +125,7 @@ getAddressesMethods.forEach(method => {
           await clickConnectLeatherButton(popup);
 
           const result = await getAddressesPromise;
-          if (!result) throw new Error('Expected result');
+          assertExistence(result, 'Expected result');
 
           test.expect(result).toEqual(expectedResult);
         });

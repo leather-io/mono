@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { validate } from 'bitcoin-address-validation';
 
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { createMoney, sumMoney } from '@leather.io/utils';
 
 import { BitcoinError } from '../validation/bitcoin-error';

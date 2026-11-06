@@ -1,12 +1,13 @@
 import { FadeIn, FadeOut } from 'react-native-reanimated';
 
+import walletImage from '@/assets/stickers/wallet.png';
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
 import { t } from '@lingui/core/macro';
 import { Trans } from '@lingui/react/macro';
 import { Image } from 'expo-image';
 
-import { AccountSwapAsset } from '@leather.io/services';
-import { AnimatedBox, type BoxProps, Button, Text, TextProps } from '@leather.io/ui/native';
+import { type AccountSwapAsset } from '@leather.io/services';
+import { AnimatedBox, type BoxProps, Button, Text, type TextProps } from '@leather.io/ui/native';
 
 const emptyStateHeightRatio = '55%';
 
@@ -50,7 +51,7 @@ export function AssetSelectorEmptyState({
 
   return (
     <Root>
-      <Image style={{ height: 180, width: 180 }} source={require('@/assets/stickers/wallet.png')} />
+      <Image style={{ height: 180, width: 180 }} source={walletImage} />
       <Title>{t`No assets`}</Title>
       <Description>
         {t`Add funds to your wallet to start\nswapping between currencies.`}

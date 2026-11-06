@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
+import { Box, Sheet, type SheetRef } from '@leather.io/ui/native';
 
 interface RecipientSheetProps {
   sheetRef: SheetRef;

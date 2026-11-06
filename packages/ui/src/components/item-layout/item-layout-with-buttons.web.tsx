@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { Flex, HStack, Stack, styled } from 'leather-styles/jsx';
-import { SpacingToken } from 'leather-styles/tokens';
+import { type SpacingToken } from 'leather-styles/tokens';
 
 import { pressableCaptionStyles } from '../../components/pressable/pressable.web';
 import { Flag } from '../flag/flag.web';

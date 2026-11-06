@@ -2,6 +2,9 @@ import { type BrowserContext, type Page, expect } from '@playwright/test';
 import { exampleStacksMultisigPublicKeys, exampleWshDescriptor } from '@tests/mocks/mock-policies';
 import { testFingerprint } from '@tests/page-object-models/onboarding.page';
 import { readPersistedStore } from '@tests/persisted-store';
+import { z } from 'zod';
+
+import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -61,7 +64,7 @@ test.describe('Rpc: add account in verify mode (non-whitelisted origin)', () => 
     await verifyButton.click();
 
     const result = await requestPromise;
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     expect(result.result).toMatchObject({
       added: false,
       role: 'signer',
@@ -110,7 +113,7 @@ test.describe('Rpc: add account in verify mode (non-whitelisted origin)', () => 
     await verifyButton.click();
 
     const result = await requestPromise;
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     expect(result.result).toMatchObject({
       added: false,
       role: 'signer',
@@ -170,7 +173,7 @@ test.describe('Rpc: add account in add mode (whitelisted origin)', () => {
     await confirmButton.click();
 
     const result = await requestPromise;
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     expect(result.result).toMatchObject({
       added: true,
       role: 'signer',
@@ -179,8 +182,7 @@ test.describe('Rpc: add account in add mode (whitelisted origin)', () => {
     expect(result.result?.address).toMatch(/^bc1q/);
     expect(result.result?.accountId).toBe(result.result?.address);
 
-    const address = result.result?.address;
-    if (typeof address !== 'string') throw new Error('Expected address in result');
+    const address = z.string().parse(result.result?.address);
     const expectedPolicyId = `${testFingerprint}/0/${address}/mainnet`;
     await expect.poll(() => readPersistedPolicyIds(page)).toEqual([expectedPolicyId]);
   });

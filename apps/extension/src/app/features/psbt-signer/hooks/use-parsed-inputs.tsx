@@ -3,10 +3,12 @@ import { useMemo } from 'react';
 import type { TransactionInput } from '@scure/btc-signer/psbt';
 import { bytesToHex } from '@stacks/common';
 
-import { getBitcoinInputAddress, getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
+import {
+  getBitcoinInputAddress,
+  getBitcoinInputValue,
+  getBtcSignerLibNetworkConfigByMode,
+} from '@leather.io/bitcoin';
 import { isDefined, isUndefined } from '@leather.io/utils';
-
-import { getBitcoinInputValue } from '@shared/crypto/bitcoin/bitcoin.utils';
 
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';

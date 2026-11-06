@@ -18,7 +18,7 @@ test.describe('Networks tests', () => {
 
     const bitcoinUrl = page.getByTestId(NetworkSelectors.NetworkBitcoinAddress);
 
-    test.expect(await bitcoinUrl.inputValue()).toEqual(BITCOIN_API_BASE_URL_TESTNET4);
+    await test.expect(bitcoinUrl).toHaveValue(BITCOIN_API_BASE_URL_TESTNET4);
   });
 
   test('bitcoin api dropdown relabels to Custom when values diverge from a preset', async ({
@@ -38,7 +38,7 @@ test.describe('Networks tests', () => {
     await test.expect(selector).not.toContainText('Custom');
 
     await selector.click();
-    await test.expect(page.locator('[data-testid^="bitcoin-api-option-"]')).toHaveCount(5);
+    await test.expect(page.getByTestId(/^bitcoin-api-option-/)).toHaveCount(5);
   });
 
   test('reselecting the active preset after a custom edit resets its URLs', async ({
@@ -57,7 +57,7 @@ test.describe('Networks tests', () => {
     await page.getByTestId('bitcoin-api-option-mainnet').click();
 
     await test.expect(selector).toContainText('Mainnet');
-    test.expect(await bitcoinUrl.inputValue()).toEqual(BITCOIN_API_BASE_URL_MAINNET);
+    await test.expect(bitcoinUrl).toHaveValue(BITCOIN_API_BASE_URL_MAINNET);
   });
 
   test('validation error when stacks api url is empty', async ({ networkPage }) => {
@@ -69,8 +69,8 @@ test.describe('Networks tests', () => {
     await networkPage.waitForErrorMessage();
 
     const errorMsgElement = networkPage.getErrorMessage();
-    const errorMessage = await errorMsgElement.innerText();
-    test.expect(errorMessage).toEqual(NetworkSelectors.EmptyStacksAddressError);
+    const errorMessage = errorMsgElement;
+    await test.expect(errorMessage).toHaveText(NetworkSelectors.EmptyStacksAddressError);
   });
 
   test('validation error when name is empty', async ({ networkPage }) => {
@@ -78,8 +78,8 @@ test.describe('Networks tests', () => {
     await networkPage.waitForErrorMessage();
 
     const errorMsgElement = networkPage.getErrorMessage();
-    const errorMessage = await errorMsgElement.innerText();
-    test.expect(errorMessage).toEqual(NetworkSelectors.EmptyNameError);
+    const errorMessage = errorMsgElement;
+    await test.expect(errorMessage).toHaveText(NetworkSelectors.EmptyNameError);
   });
 
   test('validation error when key is empty', async ({ networkPage }) => {
@@ -88,8 +88,8 @@ test.describe('Networks tests', () => {
     await networkPage.waitForErrorMessage();
 
     const errorMsgElement = networkPage.getErrorMessage();
-    const errorMessage = await errorMsgElement.innerText();
-    test.expect(errorMessage).toEqual(NetworkSelectors.EmptyKeyError);
+    const errorMessage = errorMsgElement;
+    await test.expect(errorMessage).toHaveText(NetworkSelectors.EmptyKeyError);
   });
 
   test('validation error when bitcoin api url is empty', async ({ networkPage }) => {
@@ -100,8 +100,8 @@ test.describe('Networks tests', () => {
     await networkPage.waitForErrorMessage();
 
     const errorMsgElement = networkPage.getErrorMessage();
-    const errorMessage = await errorMsgElement.innerText();
-    test.expect(errorMessage).toEqual(NetworkSelectors.EmptyBitcoinURLError);
+    const errorMessage = errorMsgElement;
+    await test.expect(errorMessage).toHaveText(NetworkSelectors.EmptyBitcoinURLError);
   });
 
   test('unable to fetch info from stacks node', async ({ networkPage }) => {
@@ -112,8 +112,8 @@ test.describe('Networks tests', () => {
     await networkPage.waitForErrorMessage();
 
     const errorMsgElement = networkPage.getErrorMessage();
-    const errorMessage = await errorMsgElement.innerText();
-    test.expect(errorMessage).toEqual(NetworkSelectors.NoStacksNodeFetch);
+    const errorMessage = errorMsgElement;
+    await test.expect(errorMessage).toHaveText(NetworkSelectors.NoStacksNodeFetch);
   });
 
   test('unable to fetch mempool from bitcoin node', async ({ networkPage }) => {
@@ -124,8 +124,8 @@ test.describe('Networks tests', () => {
     await networkPage.waitForErrorMessage();
 
     const errorMsgElement = networkPage.getErrorMessage();
-    const errorMessage = await errorMsgElement.innerText();
-    test.expect(errorMessage).toEqual(NetworkSelectors.NoBitcoinNodeFetch);
+    const errorMessage = errorMsgElement;
+    await test.expect(errorMessage).toHaveText(NetworkSelectors.NoBitcoinNodeFetch);
   });
 
   test('proper initial values on edit network', async ({ homePage, networkPage }) => {
@@ -141,11 +141,8 @@ test.describe('Networks tests', () => {
     await networkPage.page.getByTestId(NetworkSelectors.NetworkMenuBtn).click();
     await networkPage.page.getByTestId(NetworkSelectors.EditNetworkMenuBtn).click();
 
-    const stacksInputText = await networkPage.page
-      .getByTestId(NetworkSelectors.NetworkStacksAddress)
-      .inputValue();
-
-    test.expect(stacksInputText).toEqual('https://api.testnet.hiro.so');
+    const stacksInputText = networkPage.page.getByTestId(NetworkSelectors.NetworkStacksAddress);
+    await test.expect(stacksInputText).toHaveValue('https://api.testnet.hiro.so');
   });
 
   test('delete network', async ({ homePage, networkPage }) => {

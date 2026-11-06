@@ -43,7 +43,7 @@ export function createRpcRequestSchema<TMethod extends string, TParam extends z.
   paramsSchema?: TParam
 ) {
   // Unable to type this without the any, however the return type is corrects
-  if (!paramsSchema) return rpcBasePropsSchema.extend({ method: z.literal(method) }) as any;
+  if (!paramsSchema) return rpcBasePropsSchema.extend({ method: z.literal(method) });
 
   return rpcBasePropsSchema.extend({
     method: z.literal(method),
@@ -54,21 +54,22 @@ export function createRpcRequestSchema<TMethod extends string, TParam extends z.
 //
 // RPC Error Body
 
-export enum RpcErrorCode {
+export const RpcErrorCode = {
   // Spec defined server errors
-  PARSE_ERROR = -32700,
-  INVALID_REQUEST = -32600,
-  METHOD_NOT_FOUND = -32601,
-  INVALID_PARAMS = -32602,
-  INTERNAL_ERROR = -32603,
-  SERVER_ERROR = -32000,
+  PARSE_ERROR: -32700,
+  INVALID_REQUEST: -32600,
+  METHOD_NOT_FOUND: -32601,
+  INVALID_PARAMS: -32602,
+  INTERNAL_ERROR: -32603,
+  SERVER_ERROR: -32000,
   // Client defined errors
-  USER_REJECTION = 4001,
-  METHOD_NOT_SUPPORTED = 4002,
+  USER_REJECTION: 4001,
+  METHOD_NOT_SUPPORTED: 4002,
   // gRPC spec borrowed
-  PERMISSION_DENIED = 7,
-  UNAUTHENTICATED = 16,
-}
+  PERMISSION_DENIED: 7,
+  UNAUTHENTICATED: 16,
+} as const;
+export type RpcErrorCode = (typeof RpcErrorCode)[keyof typeof RpcErrorCode];
 const rpcErrorCodeSchema = z.enum(RpcErrorCode);
 
 export function createRpcErrorBodySchema<TErrorData extends z.ZodTypeAny>(
@@ -136,9 +137,9 @@ export function createRpcResponseSchema<
   ]);
 }
 
-export type ExtractSuccessResponse<T> = Extract<T, { result: any }>;
+export type ExtractSuccessResponse<T> = Extract<T, { result: unknown }>;
 
-export type ExtractErrorResponse<T> = Extract<T, { error: any }>;
+export type ExtractErrorResponse<T> = Extract<T, { error: unknown }>;
 
 export type RpcRequest<T extends { request: z.ZodType }> = z.infer<T['request']>;
 export type RpcParams<T extends { params: z.ZodType }> = z.infer<T['params']>;
@@ -179,32 +180,17 @@ export function defineRpcEndpoint<
   request: ReturnType<typeof createRpcRequestSchema<Method, Params>>;
   response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
 };
-export function defineRpcEndpoint<
-  Method extends string,
-  Result extends z.ZodTypeAny,
-  Error extends z.ZodType<RpcErrorBody>,
-  Params extends z.ZodTypeAny,
->(
+export function defineRpcEndpoint(
   props:
-    | { method: Method; params: Params; result: Result; error?: Error }
-    | { method: Method; result: Result; error?: Error }
-):
-  | {
-      method: Method;
-      params: Params;
-      result: Result;
-      error: Error;
-      request: ReturnType<typeof createRpcRequestSchema<Method, Params>>;
-      response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
-    }
-  | {
-      method: Method;
-      result: Result;
-      error: Error;
-      request: ReturnType<typeof createRpcRequestSchema<Method>>;
-      response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
-    } {
-  const error = (props.error ?? defaultErrorSchema) as Error;
+    | {
+        method: string;
+        params: z.ZodTypeAny;
+        result: z.ZodTypeAny;
+        error?: z.ZodType<RpcErrorBody>;
+      }
+    | { method: string; result: z.ZodTypeAny; error?: z.ZodType<RpcErrorBody> }
+) {
+  const error = props.error ?? defaultErrorSchema;
 
   if ('params' in props) {
     return {

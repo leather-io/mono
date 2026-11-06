@@ -22,6 +22,7 @@ const flagData = {
 };
 
 export async function mockLaunchDarkly(page: Page | BrowserContext) {
+  await page.route('**/events.launchdarkly.com/**', route => route.fulfill({ status: 202 }));
   await page.route(launchDarklyGoals, route =>
     route.fulfill({
       json: [],

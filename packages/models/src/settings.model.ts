@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Blockchain } from './types';
+import { type Blockchain } from './types';
 
 export const accountDisplayPreferenceSchema = z.enum(['native-segwit', 'taproot', 'bns', 'stacks']);
 export type AccountDisplayPreference = z.infer<typeof accountDisplayPreferenceSchema>;

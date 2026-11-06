@@ -1,6 +1,6 @@
 import { daysInMs, hoursInMs, minutesInMs, secondsInMs, weeksInMs } from '@leather.io/utils';
 
-import { HttpCacheOptions } from './http-cache.service';
+import { type HttpCacheOptions } from './http-cache.service';
 
 export type HttpCacheKey =
   // BnsV2Client
@@ -21,8 +21,11 @@ export type HttpCacheKey =
   | 'hiro-stacks-get-principal-transactions'
   | 'hiro-stacks-get-principal-balance-changes'
   | 'hiro-stacks-get-transaction-events'
-  | 'hiro-stacks-get-address-mempool-transactions'
+  | 'hiro-stacks-get-principal-mempool-transactions'
   | 'hiro-stacks-get-transaction-by-id'
+  | 'hiro-stacks-get-raw-transaction-by-id'
+  | 'hiro-stacks-get-contract-interface'
+  | 'hiro-stacks-get-ft-metadata'
   | 'hiro-stacks-get-nft-metadata'
   | 'hiro-stacks-get-nft-holdings'
   | 'hiro-stacks-call-read-only-function'
@@ -114,8 +117,11 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'hiro-stacks-get-principal-transactions': { ttl: secondsInMs(10) },
   'hiro-stacks-get-principal-balance-changes': { ttl: secondsInMs(10) },
   'hiro-stacks-get-transaction-events': { ttl: secondsInMs(10) },
-  'hiro-stacks-get-address-mempool-transactions': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-principal-mempool-transactions': { ttl: secondsInMs(10) },
   'hiro-stacks-get-transaction-by-id': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-raw-transaction-by-id': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-contract-interface': { ttl: minutesInMs(30) },
+  'hiro-stacks-get-ft-metadata': { ttl: weeksInMs(8) },
   'hiro-stacks-get-nft-metadata': { ttl: weeksInMs(8) },
   'hiro-stacks-get-nft-holdings': { ttl: secondsInMs(10) },
   'hiro-stacks-call-read-only-function': { ttl: secondsInMs(15) },

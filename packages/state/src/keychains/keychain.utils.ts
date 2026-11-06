@@ -1,4 +1,5 @@
-import { EntityState, EntityStateAdapter } from '@reduxjs/toolkit';
+import { type EntityState, type EntityStateAdapter } from '@reduxjs/toolkit';
+import { values } from 'remeda';
 
 import {
   extractAccountIndexFromDescriptor,
@@ -23,7 +24,7 @@ export function filterKeychainsToRemove<T extends { descriptor: string }>(
   return (state: EntityState<T, string>, removeAction: { payload: RemoveAccount }) => {
     const { fingerprint, accountIndex } = removeAction.payload;
 
-    const keyOriginPathsToRemove = Object.values(state.entities)
+    const keyOriginPathsToRemove = values(state.entities)
       .filter(filterKeychainsByFingerprint(fingerprint))
       .filter(isDefined(accountIndex) ? filterKeychainsByAccountIndex(accountIndex) : () => true)
       .map(account => extractKeyOriginPathFromDescriptor(account.descriptor));
@@ -55,8 +56,8 @@ export function filterKeychainsByStacksAccount(accountIndex: number) {
     ) === accountIndex;
 }
 
-export function findHighestAccountIndexOfFingerprint<T extends WithDescriptor>(
-  accounts: T[],
+export function findHighestAccountIndexOfFingerprint(
+  accounts: WithDescriptor[],
   fingerprint: string
 ) {
   return Math.max(

@@ -1,7 +1,7 @@
-import { ReactNode, isValidElement } from 'react';
+import { type ReactNode, isValidElement } from 'react';
 
-import { ResponsiveValue } from '@shopify/restyle';
-import { Theme } from 'native';
+import { type ResponsiveValue } from '@shopify/restyle';
+import { type Theme } from 'native';
 
 import { isString } from '@leather.io/utils';
 

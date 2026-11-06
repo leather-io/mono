@@ -42,8 +42,6 @@ Checking locally improves developer experience as it provides quick feedback on 
 
 ## Automation
 
-- Setup [➡ husky](../../docs/tools/husky.md) to schedule `commitlint` execution on commit.
-
 ## Usage
 
 - **Automatic** validation of commit message with `commitlint` on commit.\

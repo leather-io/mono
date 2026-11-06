@@ -1,6 +1,8 @@
 import type { BrowserContext, Page } from '@playwright/test';
 import { getResponseAddresses } from '@tests/leather-provider';
 
+import { assertExistence } from '@leather.io/utils';
+
 import { test } from '../../fixtures/fixtures';
 
 const topLevelUrl = 'http://127.0.0.1:3000';
@@ -16,17 +18,21 @@ async function injectIframe(page: Page, src: string) {
       new Promise((resolve, reject) => {
         const iframe = document.createElement('iframe');
         iframe.src = iframeSrc;
+        iframe.style.position = 'fixed';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
         iframe.onload = () => resolve(undefined);
         iframe.onerror = () => reject(new Error('Failed to load iframe'));
-        document.body.appendChild(iframe);
+        document.body.prepend(iframe);
       }),
     src
   );
 }
 
-function getIframe(page: Page, url: string) {
+async function getIframe(page: Page, url: string) {
   const frame = page.frames().find(candidate => candidate.url().startsWith(url));
   if (!frame) throw new Error(`No frame found for ${url}`);
+  await frame.waitForFunction(() => Boolean(window.LeatherProvider));
   return frame;
 }
 
@@ -42,7 +48,7 @@ test.describe('Rpc: cross-origin iframe requests', () => {
   }) => {
     await page.goto(topLevelUrl);
     await injectIframe(page, iframeUrl);
-    const frame = getIframe(page, iframeUrl);
+    const frame = await getIframe(page, iframeUrl);
 
     const getAddressesPromise = frame.evaluate(() =>
       window.LeatherProvider?.request('getAddresses')
@@ -62,7 +68,7 @@ test.describe('Rpc: cross-origin iframe requests', () => {
     await approveButton.click();
 
     const result = await getAddressesPromise;
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     test.expect(getResponseAddresses(result).length).toBeGreaterThan(0);
   });
 
@@ -81,7 +87,7 @@ test.describe('Rpc: cross-origin iframe requests', () => {
 
     await approveButton.click();
     const result = await getAddressesPromise;
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     test.expect(getResponseAddresses(result).length).toBeGreaterThan(0);
   });
 });

@@ -1,4 +1,4 @@
-import { CryptoAssetProtocol } from './asset.model';
+import { type CryptoAssetProtocol } from './asset.model';
 
 export interface CryptoAssetId {
   protocol: CryptoAssetProtocol;

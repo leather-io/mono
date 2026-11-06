@@ -1,5 +1,6 @@
 import type { ExpansionMap, KeyInfo } from '@bitcoinerlab/descriptors-core';
 import { bytesToHex } from '@noble/hashes/utils';
+import { entries } from 'remeda';
 
 import { makeWshDescriptorInstance } from './wsh-descriptor';
 
@@ -22,7 +23,7 @@ interface PlaceholderKey {
 }
 
 function toPlaceholderKeys(expansionMap: ExpansionMap): PlaceholderKey[] {
-  return Object.entries(expansionMap)
+  return entries(expansionMap)
     .map(([placeholder, key]) => {
       const match = placeholderKeyPattern.exec(placeholder);
       if (!match?.[1])

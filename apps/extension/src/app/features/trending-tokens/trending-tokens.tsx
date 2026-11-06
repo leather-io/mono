@@ -4,12 +4,11 @@ import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { prepTrendingItems } from '@leather.io/features';
-import { ArrowLeftIcon, IconButton, InfoCircleIcon } from '@leather.io/ui';
+import { ArrowLeftIcon, BasicTooltip, IconButton, InfoCircleIcon } from '@leather.io/ui';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { useTrendingTokensQuery } from '@app/query/asset-list/trending-tokens.query';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { TrendingTokenCard } from './trending-token-card';
 

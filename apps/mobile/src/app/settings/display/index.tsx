@@ -20,7 +20,7 @@ import {
   GlobeIcon,
   PackageSecurityIcon,
   PointerHandIcon,
-  SheetInstance,
+  type SheetInstance,
   SunInCloudIcon,
 } from '@leather.io/ui/native';
 

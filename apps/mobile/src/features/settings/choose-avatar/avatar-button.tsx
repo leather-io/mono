@@ -1,5 +1,5 @@
 import { AccountAvatar } from '@/features/account/components/account-avatar';
-import { AccountIcon } from '@/store/accounts/utils';
+import { type AccountIcon } from '@/store/accounts/utils';
 import { defaultIconTestId } from '@/utils/testing-utils';
 
 import { Pressable } from '@leather.io/ui/native';

@@ -1,4 +1,3 @@
-import type { PostCondition } from '@stacks/transactions';
 import BigNumber from 'bignumber.js';
 
 import {
@@ -6,9 +5,9 @@ import {
   type StacksContractCallSwapExecutionData,
   type StacksProtocol,
 } from '@leather.io/models';
-import { createMoney, initBigNumber } from '@leather.io/utils';
+import { createMoney, initBigNumber, isDefined } from '@leather.io/utils';
 
-import { LeatherApiSwapDex } from '../infrastructure/api/leather/leather-api.client';
+import { type LeatherApiSwapDex } from '../infrastructure/api/leather/leather-api.client';
 
 export function mapToStacksProtocol(dex: LeatherApiSwapDex): StacksProtocol {
   return {
@@ -57,22 +56,28 @@ export function hasValidMinReceiveAmountPostCondition(
 
   const { targetAsset } = executionData.quote;
 
-  function isMatchingGtePostCondition(pc: PostCondition): boolean {
-    return (
+  function readMatchingGtePostConditionAmount(pc: unknown) {
+    if (typeof pc !== 'object' || pc === null || !('type' in pc) || !('condition' in pc)) {
+      return undefined;
+    }
+    const isMatchingGtePostCondition =
       ((targetAsset.protocol === 'nativeStx' && pc.type === 'stx-postcondition') ||
         (targetAsset.protocol === 'sip10' &&
           pc.type === 'ft-postcondition' &&
+          'asset' in pc &&
           pc.asset === targetAsset.assetId)) &&
-      pc.condition === 'gte'
-    );
+      pc.condition === 'gte';
+    if (!isMatchingGtePostCondition || !('amount' in pc)) return undefined;
+    const { amount } = pc;
+    return typeof amount === 'string' || typeof amount === 'number' || typeof amount === 'bigint'
+      ? amount
+      : undefined;
   }
 
-  const totalGteAmount = (executionData.postConditions as PostCondition[])
-    .filter(isMatchingGtePostCondition)
-    .reduce(
-      (sum, pc) => ('amount' in pc ? sum.plus(initBigNumber(pc.amount)) : sum),
-      new BigNumber(0)
-    );
+  const totalGteAmount = executionData.postConditions
+    .map(readMatchingGtePostConditionAmount)
+    .filter(isDefined)
+    .reduce((sum, amount) => sum.plus(initBigNumber(amount)), new BigNumber(0));
 
   return totalGteAmount.gte(minThreshold);
 }

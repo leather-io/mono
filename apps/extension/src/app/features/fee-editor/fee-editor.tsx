@@ -1,8 +1,6 @@
 import { Center, Stack, styled } from 'leather-styles/jsx';
 
-import { Approver, Button } from '@leather.io/ui';
-
-import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { Approver, Button, useOnMount } from '@leather.io/ui';
 
 import { CustomFeeItem } from './components/custom-fee-item';
 import { DefaultFeesList } from './components/default-fees-list';

@@ -2,13 +2,14 @@ import { hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
+import { expectDefined } from '../test-utils/expect-defined';
 import { getPsbtTxInputs } from '../utils/bitcoin.utils';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
 import { getInputsToSignWithDisallowedSighash, isDisallowedSighash } from './psbt-inputs';
 
 const ownerPayment = btc.p2wpkh(hexToBytes('02'.padEnd(66, '3')), btc.NETWORK);
 const otherPayment = btc.p2wpkh(hexToBytes('03'.padEnd(66, '7')), btc.NETWORK);
-const ownerAddress = createBitcoinAddress(ownerPayment.address ?? '');
+const ownerAddress = createBitcoinAddress(expectDefined(ownerPayment.address));
 
 function buildInputs(inputSighashTypes: (number | undefined)[]) {
   const tx = new btc.Transaction();
@@ -79,7 +80,7 @@ describe(getInputsToSignWithDisallowedSighash.name, () => {
     const result = getInputsToSignWithDisallowedSighash({
       inputs,
       networkMode: 'mainnet',
-      psbtAddresses: [createBitcoinAddress(otherPayment.address ?? '')],
+      psbtAddresses: [createBitcoinAddress(expectDefined(otherPayment.address))],
     });
 
     expect(result).toEqual([]);

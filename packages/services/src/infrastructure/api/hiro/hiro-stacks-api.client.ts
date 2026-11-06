@@ -1,13 +1,13 @@
 import {
-  MempoolTransactionListResponse,
+  GetRawTransactionResult,
   NonFungibleTokenHoldingsList,
 } from '@stacks/stacks-blockchain-api-types';
-import { ClarityValue, cvToHex, hexToCV } from '@stacks/transactions';
+import { ClarityAbi, ClarityValue, cvToHex, hexToCV } from '@stacks/transactions';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
-import type { StacksTransaction } from '@leather.io/models';
+import type { StacksAccountNonces, StacksTransaction } from '@leather.io/models';
 import { generateRandomStacksAddress } from '@leather.io/stacks';
 
 import { Types } from '../../../inversify.types';
@@ -26,11 +26,12 @@ import {
   HiroAddressTransaction,
   HiroAddressTransactionsResponse,
   HiroBalanceChangesResponse,
-  HiroMempoolTransactionListResponse,
+  HiroFtMetadata,
   HiroMetadata,
   HiroNftHolding,
   HiroPageRequest,
   HiroPoxInfoResponse,
+  HiroPrincipalMempoolTransactionsResponse,
   HiroPrincipalStakingBondsResponse,
   HiroPrincipalTransactionsResponse,
   HiroReadOnlyFunctionResponse,
@@ -40,8 +41,18 @@ import {
   HiroTransactionEvent,
   HiroTransactionEventsResponse,
   HiroTransactionFeeEstimateResponse,
+  HiroTransactionIncludeField,
 } from './hiro-stacks-api.types';
 import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
+
+function isNotFoundOrUnprocessableRequest(request: unknown) {
+  if (typeof request !== 'object' || request === null || !('status' in request)) return false;
+  return request.status === 404 || request.status === 422;
+}
+
+interface GetTransactionByIdOptions extends ApiRequestOptions {
+  include?: HiroTransactionIncludeField[];
+}
 
 const balanceChangesResultLimit = 50;
 const stakingBondsListLimit = 10;
@@ -348,20 +359,23 @@ export class HiroStacksApiClient {
     );
   }
 
-  public async getAddressMempoolTransactions(
-    address: string,
+  public async getPrincipalMempoolTransactions(
+    principal: string,
+    { cursor, limit = DEFAULT_LIST_LIMIT }: { cursor?: string | null; limit?: number } = {},
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroMempoolTransactionListResponse> {
+  ): Promise<HiroPrincipalMempoolTransactionsResponse> {
     const fetchFn = async () => {
+      const params = new URLSearchParams({ limit: String(limit) });
+      if (cursor) params.set('cursor', cursor);
       const res = await this.limiter.add(
         RateLimiterType.HiroStacks,
         () =>
-          this._axios.get<MempoolTransactionListResponse>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
+          this._axios.get<HiroPrincipalMempoolTransactionsResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/principals/${principal}/mempool/transactions?${params.toString()}`,
             { signal }
           ),
         {
-          priority: hiroApiRequestsPriorityLevels.getAddressMempoolTransactions,
+          priority: hiroApiRequestsPriorityLevels.getPrincipalMempoolTransactions,
           signal,
           throwOnTimeout: true,
         }
@@ -372,8 +386,10 @@ export class HiroStacksApiClient {
       ? await fetchFn()
       : await this.cache.fetchWithCache(
           [
-            'hiro-stacks-get-address-mempool-transactions',
-            address,
+            'hiro-stacks-get-principal-mempool-transactions',
+            principal,
+            cursor ?? 'start',
+            limit,
             selectStacksChainId(this.settings.getSettings()),
           ],
           fetchFn
@@ -382,15 +398,17 @@ export class HiroStacksApiClient {
 
   public async getTransactionById(
     txid: string,
-    { signal, skipCache }: ApiRequestOptions = {}
+    { signal, skipCache, include = [] }: GetTransactionByIdOptions = {}
   ): Promise<StacksTransaction | null> {
+    const includeParam = [...include].sort().join(',');
+    const query = includeParam ? `?include=${includeParam}` : '';
     const fetchFn = async () => {
       try {
         const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             this._axios.get<StacksTransaction>(
-              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/transactions/${txid}`,
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/transactions/${txid}${query}`,
               { signal }
             ),
           {
@@ -401,10 +419,7 @@ export class HiroStacksApiClient {
         );
         return res.data;
       } catch (error) {
-        if (
-          error instanceof AxiosError &&
-          (error.request?.status === 404 || error.request?.status === 422)
-        ) {
+        if (error instanceof AxiosError && isNotFoundOrUnprocessableRequest(error.request)) {
           return null;
         }
         throw error;
@@ -416,6 +431,7 @@ export class HiroStacksApiClient {
           [
             'hiro-stacks-get-transaction-by-id',
             txid,
+            includeParam,
             selectStacksChainId(this.settings.getSettings()),
           ],
           fetchFn
@@ -444,10 +460,7 @@ export class HiroStacksApiClient {
         );
         return res.data;
       } catch (error) {
-        if (
-          error instanceof AxiosError &&
-          (error.request?.status === 404 || error.request?.status === 422)
-        ) {
+        if (error instanceof AxiosError && isNotFoundOrUnprocessableRequest(error.request)) {
           return null;
         }
         throw error;
@@ -744,6 +757,147 @@ export class HiroStacksApiClient {
           ],
           fetchFn
         );
+  }
+
+  public async getAccountNonces(
+    address: string,
+    { signal }: ApiRequestOptions = {}
+  ): Promise<StacksAccountNonces> {
+    const res = await this.limiter.add(
+      RateLimiterType.HiroStacks,
+      () =>
+        this._axios.get<StacksAccountNonces>(
+          `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/principals/${address}/nonces`,
+          { signal }
+        ),
+      {
+        priority: hiroApiRequestsPriorityLevels.getAccountNonces,
+        signal,
+        throwOnTimeout: true,
+      }
+    );
+    return res.data;
+  }
+
+  public async getRawTransactionById(
+    txid: string,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<GetRawTransactionResult> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<GetRawTransactionResult>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tx/${txid}/raw`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getRawTransactionById,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          [
+            'hiro-stacks-get-raw-transaction-by-id',
+            txid,
+            selectStacksChainId(this.settings.getSettings()),
+          ],
+          fetchFn
+        );
+  }
+
+  public async getContractInterface(
+    contractAddress: string,
+    contractName: string,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<ClarityAbi> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<ClarityAbi>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/v2/contracts/interface/${contractAddress}/${contractName}`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getContractInterface,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          [
+            'hiro-stacks-get-contract-interface',
+            contractAddress,
+            contractName,
+            selectStacksChainId(this.settings.getSettings()),
+          ],
+          fetchFn
+        );
+  }
+
+  public async getFtMetadata(
+    principal: string,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<HiroFtMetadata | null> {
+    const fetchFn = async () => {
+      try {
+        const res = await this.limiter.add(
+          RateLimiterType.HiroStacks,
+          () =>
+            this._axios.get<HiroFtMetadata>(
+              `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/ft/${principal}`,
+              { signal }
+            ),
+          {
+            priority: hiroApiRequestsPriorityLevels.getFtMetadata,
+            signal,
+            throwOnTimeout: true,
+          }
+        );
+        return res.data;
+      } catch (error) {
+        if (
+          error instanceof AxiosError &&
+          (error.response?.status === 404 || error.response?.status === 422)
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          [
+            'hiro-stacks-get-ft-metadata',
+            principal,
+            selectStacksChainId(this.settings.getSettings()),
+          ],
+          fetchFn
+        );
+  }
+
+  public async getNetworkStatus(url: string, { signal }: ApiRequestOptions = {}): Promise<unknown> {
+    const res = await this.limiter.add(
+      RateLimiterType.HiroStacks,
+      () => this._axios.get<unknown>(url, { signal }),
+      {
+        priority: hiroApiRequestsPriorityLevels.getNetworkStatus,
+        signal,
+        throwOnTimeout: true,
+      }
+    );
+    return res.data;
   }
 
   public async getApiStatus({

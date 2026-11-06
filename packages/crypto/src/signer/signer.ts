@@ -1,7 +1,5 @@
-type SignFn<T> = (tx: T, ...args: unknown[]) => Promise<T>;
-
 export interface Signer {
-  sign: SignFn<any>;
+  sign(tx: unknown, ...args: unknown[]): Promise<unknown>;
   address: string;
   publicKey: Uint8Array;
   derivationPath: string;

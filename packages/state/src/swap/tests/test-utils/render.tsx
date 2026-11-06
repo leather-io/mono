@@ -1,15 +1,20 @@
 import React from 'react';
 
+import * as btc from '@scure/btc-signer';
 import { STACKS_MAINNET } from '@stacks/network';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { MarketData, NetworkConfiguration, SwapQuote } from '@leather.io/models';
-import { AccountSwapAsset } from '@leather.io/services';
+import { type MarketData, type NetworkConfiguration, type SwapQuote } from '@leather.io/models';
+import { type AccountSwapAsset } from '@leather.io/services';
 
-import { DisabledPairRule, SwapDependencies, TrackEvent } from '../../swap-state.types';
-import { UseSwapStateProps, useSwapState } from '../../use-swap-state';
+import {
+  type DisabledPairRule,
+  type SwapDependencies,
+  type TrackEvent,
+} from '../../swap-state.types';
+import { type UseSwapStateProps, useSwapState } from '../../use-swap-state';
 import { createAccountRequest } from './fixtures';
 import {
   createStubBitcoinCoinSelectionService,
@@ -88,13 +93,13 @@ export function renderUseSwapState({
         stacks: {
           stacksSigner: createStubStacksSigner(),
           stacksNetwork: STACKS_MAINNET,
-          broadcast: () => Promise.resolve({ ok: true, txid: 'test-txid' }) as any,
+          broadcast: () => Promise.resolve({ ok: true, txid: 'test-txid' }),
           nextNonce: undefined,
         },
         bitcoin: {
           bitcoinPayer: createStubBitcoinPayer(),
           network: network ?? createStubNetwork(),
-          signBitcoinPsbt: () => ({}) as any,
+          signBitcoinPsbt: psbt => Promise.resolve(btc.Transaction.fromPSBT(psbt)),
           broadcast: () => Promise.resolve({ status: 'accepted' as const }),
         },
         ...dependencies,

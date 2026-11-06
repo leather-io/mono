@@ -2,14 +2,15 @@ import { hex } from '@scure/base';
 import * as btc from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
-import { OwnedUtxo } from '@leather.io/models';
+import { type OwnedUtxo } from '@leather.io/models';
 import { createMoney, hexToNumber } from '@leather.io/utils';
 
+import { expectDefined } from '../test-utils/expect-defined';
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { ecdsaPublicKeyToSchnorr } from '../utils/bitcoin.utils';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
 import {
-  GenerateBitcoinUnsignedTransactionArgs,
+  type GenerateBitcoinUnsignedTransactionArgs,
   generateBitcoinUnsignedTransaction,
 } from './generate-unsigned-transaction';
 
@@ -22,7 +23,7 @@ const mockResult = {
     {
       path: "m/84'/1'/0'/0/1",
       keyOrigin: "deadbeef/84'/1'/0'/0/1",
-      address: payment.address!,
+      address: expectDefined(payment.address),
       txid: 'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f',
       vout: 1,
       value: 200000,
@@ -36,7 +37,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
     feeRate: 1,
     isSendingMax: false,
     network: getBtcSignerLibNetworkConfigByMode('testnet'),
-    changeAddress: createBitcoinAddress(payment.address!),
+    changeAddress: createBitcoinAddress(expectDefined(payment.address)),
     recipients: [
       {
         address: 'tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa',
@@ -45,7 +46,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
     ],
     utxos: [
       {
-        address: payment.address!,
+        address: expectDefined(payment.address),
         path: "m/84'/1'/0'/0/0",
         keyOrigin: "deadbeef/84'/1'/0'/0/0",
         txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
@@ -53,7 +54,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
         value: 100000,
       },
       {
-        address: payment.address!,
+        address: expectDefined(payment.address),
         path: "m/84'/1'/0'/0/1",
         keyOrigin: "deadbeef/84'/1'/0'/0/1",
         txid: 'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f',
@@ -64,7 +65,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
     payerLookup(keyOrigin: string) {
       return {
         paymentType: 'p2wpkh',
-        address: createBitcoinAddress(payment.address!),
+        address: createBitcoinAddress(expectDefined(payment.address)),
         keyOrigin,
         masterKeyFingerprint: 'deadbeef',
         network: 'testnet',
@@ -89,12 +90,16 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
 
     const psbtInput = result.tx.getInput(0);
     expect(psbtInput.bip32Derivation).toHaveLength(1);
-    expect(psbtInput.bip32Derivation![0][0]).toEqual(publicKey);
-    expect(psbtInput.bip32Derivation![0][1].fingerprint).toBe(hexToNumber('deadbeef'));
-    expect(psbtInput.bip32Derivation![0][1].path).toEqual(btc.bip32Path("m/84'/1'/0'/0/1"));
+    expect(expectDefined(psbtInput.bip32Derivation)[0][0]).toEqual(publicKey);
+    expect(expectDefined(psbtInput.bip32Derivation)[0][1].fingerprint).toBe(
+      hexToNumber('deadbeef')
+    );
+    expect(expectDefined(psbtInput.bip32Derivation)[0][1].path).toEqual(
+      btc.bip32Path("m/84'/1'/0'/0/1")
+    );
     expect(psbtInput.tapInternalKey).toBeUndefined();
-    expect(psbtInput.witnessUtxo!.script).toEqual(payment.script);
-    expect(psbtInput.witnessUtxo!.amount).toBe(BigInt(200000));
+    expect(expectDefined(psbtInput.witnessUtxo).script).toEqual(payment.script);
+    expect(expectDefined(psbtInput.witnessUtxo).amount).toBe(BigInt(200000));
   });
 
   it('should add change address to output correctly', () => {
@@ -106,13 +111,13 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
     expect(result.tx.getOutput(0).amount).toBe(BigInt(150000));
     expect(result.tx.getOutput(1).script).toBeDefined();
 
-    const recipientAmount = result.tx.getOutput(0).amount!;
-    const changeAmount = result.tx.getOutput(1).amount!;
+    const recipientAmount = expectDefined(result.tx.getOutput(0).amount);
+    const changeAmount = expectDefined(result.tx.getOutput(1).amount);
     expect(recipientAmount + changeAmount + fee).toBe(inputTotal);
   });
 
   it('should throw an error if inputs are empty', () => {
-    const argsWithNoInputs: GenerateBitcoinUnsignedTransactionArgs<any> = {
+    const argsWithNoInputs: GenerateBitcoinUnsignedTransactionArgs<OwnedUtxo> = {
       ...mockArgs,
       utxos: [],
     };
@@ -127,7 +132,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
       ...mockArgs,
       utxos: [
         {
-          address: payment.address!,
+          address: expectDefined(payment.address),
           path: "m/84'/1'/0'/0/0",
           keyOrigin: "deadbeef/84'/1'/0'/0/0",
           txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
@@ -179,7 +184,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
       feeRate: 1,
       isSendingMax: false,
       network: getBtcSignerLibNetworkConfigByMode('testnet'),
-      changeAddress: createBitcoinAddress(payment.address!),
+      changeAddress: createBitcoinAddress(expectDefined(payment.address)),
       recipients: [
         {
           address: 'tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa',
@@ -188,7 +193,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
       ],
       utxos: [
         {
-          address: taprootPayment.address!,
+          address: expectDefined(taprootPayment.address),
           path: "m/86'/1'/0'/0/0",
           keyOrigin: "deadbeef/86'/1'/0'/0/0",
           txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
@@ -196,7 +201,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
           value: 100000,
         },
         {
-          address: taprootPayment.address!,
+          address: expectDefined(taprootPayment.address),
           path: "m/86'/1'/0'/0/1",
           keyOrigin: "deadbeef/86'/1'/0'/0/1",
           txid: 'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f',
@@ -207,7 +212,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
       payerLookup(keyOrigin: string) {
         return {
           paymentType: 'p2tr' as const,
-          address: createBitcoinAddress(taprootPayment.address!),
+          address: createBitcoinAddress(expectDefined(taprootPayment.address)),
           keyOrigin,
           masterKeyFingerprint: 'deadbeef',
           network: 'testnet',
@@ -226,22 +231,26 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
 
       const psbtInput = result.tx.getInput(0);
 
-      expect(hex.encode(psbtInput.txid!)).toBe(
+      expect(hex.encode(expectDefined(psbtInput.txid))).toBe(
         'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f'
       );
       expect(psbtInput.index).toBe(1);
 
       expect(psbtInput.tapInternalKey).toEqual(taprootPayment.tapInternalKey);
       expect(psbtInput.tapBip32Derivation).toHaveLength(1);
-      expect(psbtInput.tapBip32Derivation![0][0]).toEqual(ecdsaPublicKeyToSchnorr(publicKey));
-      expect(psbtInput.tapBip32Derivation![0][1].hashes).toEqual([]);
-      expect(psbtInput.tapBip32Derivation![0][1].der.fingerprint).toBe(hexToNumber('deadbeef'));
-      expect(psbtInput.tapBip32Derivation![0][1].der.path).toEqual(
+      expect(expectDefined(psbtInput.tapBip32Derivation)[0][0]).toEqual(
+        ecdsaPublicKeyToSchnorr(publicKey)
+      );
+      expect(expectDefined(psbtInput.tapBip32Derivation)[0][1].hashes).toEqual([]);
+      expect(expectDefined(psbtInput.tapBip32Derivation)[0][1].der.fingerprint).toBe(
+        hexToNumber('deadbeef')
+      );
+      expect(expectDefined(psbtInput.tapBip32Derivation)[0][1].der.path).toEqual(
         btc.bip32Path("m/86'/1'/0'/0/1")
       );
       expect(psbtInput.bip32Derivation).toBeUndefined();
-      expect(psbtInput.witnessUtxo!.script).toEqual(taprootPayment.script);
-      expect(psbtInput.witnessUtxo!.amount).toBe(BigInt(200000));
+      expect(expectDefined(psbtInput.witnessUtxo).script).toEqual(taprootPayment.script);
+      expect(expectDefined(psbtInput.witnessUtxo).amount).toBe(BigInt(200000));
 
       expect(result.tx.outputsLength).toBe(2);
       expect(result.tx.getOutput(0).amount).toBe(BigInt(150000));
@@ -252,7 +261,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
         feeRate: 1,
         isSendingMax: false,
         network: getBtcSignerLibNetworkConfigByMode('testnet'),
-        changeAddress: createBitcoinAddress(payment.address!),
+        changeAddress: createBitcoinAddress(expectDefined(payment.address)),
         recipients: [
           {
             address: 'tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa',
@@ -261,7 +270,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
         ],
         utxos: [
           {
-            address: payment.address!,
+            address: expectDefined(payment.address),
             path: "m/84'/1'/0'/0/0",
             keyOrigin: "deadbeef/84'/1'/0'/0/0",
             txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
@@ -269,7 +278,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
             value: 300000,
           },
           {
-            address: taprootPayment.address!,
+            address: expectDefined(taprootPayment.address),
             path: "m/86'/1'/0'/0/0",
             keyOrigin: "deadbeef/86'/1'/0'/0/0",
             txid: 'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f',
@@ -281,7 +290,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
           if (keyOrigin.includes("86'")) {
             return {
               paymentType: 'p2tr' as const,
-              address: createBitcoinAddress(taprootPayment.address!),
+              address: createBitcoinAddress(expectDefined(taprootPayment.address)),
               keyOrigin,
               masterKeyFingerprint: 'deadbeef',
               network: 'testnet',
@@ -291,7 +300,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
           }
           return {
             paymentType: 'p2wpkh' as const,
-            address: createBitcoinAddress(payment.address!),
+            address: createBitcoinAddress(expectDefined(payment.address)),
             keyOrigin,
             masterKeyFingerprint: 'deadbeef',
             network: 'testnet',
@@ -310,16 +319,16 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
       expect(segwitInput.index).toBe(0);
       expect(segwitInput.bip32Derivation).toBeDefined();
       expect(segwitInput.tapInternalKey).toBeUndefined();
-      expect(segwitInput.witnessUtxo!.script).toEqual(payment.script);
-      expect(segwitInput.witnessUtxo!.amount).toBe(BigInt(300000));
+      expect(expectDefined(segwitInput.witnessUtxo).script).toEqual(payment.script);
+      expect(expectDefined(segwitInput.witnessUtxo).amount).toBe(BigInt(300000));
 
       const taprootInput = result.tx.getInput(1);
       expect(taprootInput.index).toBe(1);
       expect(taprootInput.tapBip32Derivation).toBeDefined();
       expect(taprootInput.tapInternalKey).toEqual(taprootPayment.tapInternalKey);
       expect(taprootInput.bip32Derivation).toBeUndefined();
-      expect(taprootInput.witnessUtxo!.script).toEqual(taprootPayment.script);
-      expect(taprootInput.witnessUtxo!.amount).toBe(BigInt(200000));
+      expect(expectDefined(taprootInput.witnessUtxo).script).toEqual(taprootPayment.script);
+      expect(expectDefined(taprootInput.witnessUtxo).amount).toBe(BigInt(200000));
     });
 
     it('should use native segwit change address even with all taproot inputs', () => {
@@ -327,7 +336,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
 
       expect(result.tx.outputsLength).toBe(2);
 
-      const changeScript = result.tx.getOutput(1).script!;
+      const changeScript = expectDefined(result.tx.getOutput(1).script);
       expect(changeScript[0]).toBe(0x00);
       expect(changeScript[1]).toBe(0x14);
       expect(changeScript.length).toBe(22);
@@ -338,7 +347,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
         feeRate: 1,
         isSendingMax: true,
         network: getBtcSignerLibNetworkConfigByMode('testnet'),
-        changeAddress: createBitcoinAddress(payment.address!),
+        changeAddress: createBitcoinAddress(expectDefined(payment.address)),
         recipients: [
           {
             address: 'tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa',
@@ -347,7 +356,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
         ],
         utxos: [
           {
-            address: taprootPayment.address!,
+            address: expectDefined(taprootPayment.address),
             path: "m/86'/1'/0'/0/0",
             keyOrigin: "deadbeef/86'/1'/0'/0/0",
             txid: 'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f',
@@ -358,7 +367,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
         payerLookup(keyOrigin: string) {
           return {
             paymentType: 'p2tr' as const,
-            address: createBitcoinAddress(taprootPayment.address!),
+            address: createBitcoinAddress(expectDefined(taprootPayment.address)),
             keyOrigin,
             masterKeyFingerprint: 'deadbeef',
             network: 'testnet',
@@ -386,7 +395,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
         feeRate: 1,
         isSendingMax: false,
         network: getBtcSignerLibNetworkConfigByMode('testnet'),
-        changeAddress: createBitcoinAddress(payment.address!),
+        changeAddress: createBitcoinAddress(expectDefined(payment.address)),
         recipients: [
           {
             address: 'tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa',
@@ -395,7 +404,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
         ],
         utxos: [
           {
-            address: taprootPayment.address!,
+            address: expectDefined(taprootPayment.address),
             path: "m/86'/1'/0'/0/0",
             keyOrigin: "deadbeef/86'/1'/0'/0/0",
             txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
@@ -403,7 +412,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
             value: 200000,
           },
           {
-            address: taprootPayment.address!,
+            address: expectDefined(taprootPayment.address),
             path: "m/86'/1'/0'/0/1",
             keyOrigin: "deadbeef/86'/1'/0'/0/1",
             txid: 'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f',
@@ -415,7 +424,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
           if (keyOrigin === "deadbeef/86'/1'/0'/0/1") return undefined;
           return {
             paymentType: 'p2tr' as const,
-            address: createBitcoinAddress(taprootPayment.address!),
+            address: createBitcoinAddress(expectDefined(taprootPayment.address)),
             keyOrigin,
             masterKeyFingerprint: 'deadbeef',
             network: 'testnet',
@@ -437,7 +446,7 @@ describe(generateBitcoinUnsignedTransaction.name, () => {
       const singleInputValue = BigInt(200000);
       let totalOutputValue = 0n;
       for (let i = 0; i < result.tx.outputsLength; i++) {
-        totalOutputValue += result.tx.getOutput(i).amount!;
+        totalOutputValue += expectDefined(result.tx.getOutput(i).amount);
       }
       expect(totalOutputValue).toBeGreaterThan(singleInputValue);
     });

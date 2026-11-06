@@ -1,10 +1,12 @@
-import { type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
 import { readPersistedStore } from '@tests/persisted-store';
 import { getSwitchAccountSheetAccountNameSelector } from '@tests/selectors/account.selectors';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
+
+const passwordCheckTimeoutMs = 15_000;
 
 export class SwitchAccountPage {
   readonly page: Page;
@@ -15,6 +17,7 @@ export class SwitchAccountPage {
   readonly manageButton: Locator;
   readonly doneButton: Locator;
   readonly selectAccountHeader: Locator;
+  readonly passwordMismatchError: Locator;
   readonly manageWalletsHeader: Locator;
   readonly walletHeaderNames: Locator;
   readonly walletActionMenuTriggers: Locator;
@@ -29,6 +32,7 @@ export class SwitchAccountPage {
     this.manageButton = page.getByRole('button', { name: 'Manage' });
     this.doneButton = page.getByRole('button', { name: 'Done' });
     this.selectAccountHeader = page.getByRole('heading', { name: 'Select account' });
+    this.passwordMismatchError = page.getByText("The password you entered doesn't match");
     this.manageWalletsHeader = page.getByRole('heading', { name: 'Manage wallets' });
     this.walletHeaderNames = page.getByTestId(SwitchAccountSelectors.WalletHeaderName);
     this.walletActionMenuTriggers = page.getByTestId(
@@ -223,9 +227,19 @@ export class SwitchAccountPage {
   async addNewWallet(password: string) {
     await this.createNewWallet();
     await this.page.getByTestId(OnboardingSelectors.BackUpSecretKeyBtn).click();
+    await this.submitNewWalletPassword(password);
+    await this.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
+  }
+
+  async submitNewWalletPassword(password: string) {
     await this.page.getByTestId(OnboardingSelectors.NewPasswordInput).fill(password);
     await this.page.getByTestId(OnboardingSelectors.SetPasswordBtn).click();
-    await this.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
+    await expect(
+      this.page
+        .getByTestId(HomePageSelectors.HomePageContainer)
+        .or(this.passwordMismatchError)
+        .first()
+    ).toBeVisible({ timeout: passwordCheckTimeoutMs });
   }
 
   async restoreWallet(mnemonic: string, password: string) {

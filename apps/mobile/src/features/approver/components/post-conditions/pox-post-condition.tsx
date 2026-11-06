@@ -1,4 +1,4 @@
-import { PostConditionPrincipalId, PoxPostConditionWire } from '@stacks/transactions';
+import { PostConditionPrincipalId, type PoxPostConditionWire } from '@stacks/transactions';
 
 import { Approver, Box, CircledFunctionIcon } from '@leather.io/ui/native';
 

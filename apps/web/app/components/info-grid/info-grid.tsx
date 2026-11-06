@@ -1,4 +1,4 @@
-import { Flex, FlexProps, Grid, GridProps } from 'leather-styles/jsx';
+import { Flex, type FlexProps, Grid, type GridProps } from 'leather-styles/jsx';
 
 // This component is intended to share styles only. No layout based assumptions
 // should be made.

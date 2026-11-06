@@ -132,6 +132,8 @@ test.describe('All balances', () => {
       await goBack(page);
       await page.getByTestId(AllBalancesSelectors.AllBalancesPage).waitFor();
     }
+
+    await expect(page.getByTestId(AllBalancesSelectors.AllBalancesPage)).toBeVisible();
   });
 
   test('that an unknown category redirects to the all balances page', async ({

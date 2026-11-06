@@ -2,10 +2,9 @@ import { memo } from 'react';
 
 import { Balance } from '@/components/balance/balance';
 import { t } from '@lingui/core/macro';
-import type { ResponsiveValue } from '@shopify/restyle';
 
 import { type ActivityView } from '@leather.io/features';
-import { ActivityAvatarIcon, Cell, type Theme } from '@leather.io/ui/native';
+import { ActivityAvatarIcon, Cell } from '@leather.io/ui/native';
 
 import { useOpenUrl } from '../browser/browser/use-open-url';
 import { translateActivityStatus } from './translate-activity-status';
@@ -61,7 +60,7 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
             <Balance
               operator={balances.operator}
               balance={balances.quote}
-              color={balances.color as ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>}
+              color={balances.color}
               fontSize={15}
             />
           </Cell.Label>

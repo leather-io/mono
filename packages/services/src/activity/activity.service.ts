@@ -8,19 +8,14 @@ import {
   OnChainActivity,
   OnChainActivityTypes,
 } from '@leather.io/models';
-import {
-  baseCurrencyAmountInQuote,
-  createMoney,
-  hasBitcoinAddress,
-  hasStacksAddress,
-  isDefined,
-} from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoney, isDefined } from '@leather.io/utils';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { getAssetIdentifierFromContract } from '../assets/stacks-asset.utils';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import {
+  HiroPrincipalMempoolTransaction,
   HiroStacksMempoolTransaction,
   HiroStacksTransaction,
   HiroTransactionEvent,
@@ -34,15 +29,22 @@ import {
   StacksAssetTransfer,
   StacksAssetTransferWithInfo,
   getStacksAssetTransfers,
+  mapTransferFromPostCondition,
 } from './stacks-asset-transfer.utils';
 import {
   getEventsByTxId,
   mapContractCallActivity,
+  mapPendingStacksTxActivity,
   mapSmartContractActivity,
   mapTokenTransferActivity,
 } from './stacks-tx-activity.utils';
 
 const btcTxPageRequest = { page: 1, pageSize: 750 };
+
+function readNftTokenValue(transfer: StacksAssetTransfer) {
+  if (transfer.tokenValue === undefined) throw new Error('Missing NFT token value');
+  return transfer.tokenValue;
+}
 
 @injectable()
 export class ActivityService {
@@ -131,7 +133,7 @@ export class ActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    if (!hasBitcoinAddress(account)) return [];
+    if (!account.bitcoin) return [];
 
     const [bitcoinTransactions] = await Promise.all([
       this.bitcoinTransactionsService.getAccountTransactions(account, btcTxPageRequest, signal),
@@ -154,7 +156,7 @@ export class ActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    if (!hasStacksAddress(account)) return [];
+    if (!account.stacks) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
       this.stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
@@ -170,8 +172,8 @@ export class ActivityService {
       ),
     ]);
     const eventsByTxId = getEventsByTxId(txEvents);
-    const activityList: OnChainActivity[] = [];
-    for (const tx of [...pendingTxs, ...txs.map(tx => tx.tx)]) {
+    const activityList = await this.getPendingStacksActivity(pendingTxs, account, signal);
+    for (const tx of txs.map(tx => tx.tx)) {
       const txActivity = await this.getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id), account);
       if (txActivity) {
         activityList.push(
@@ -189,7 +191,7 @@ export class ActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    if (!hasStacksAddress(account)) return [];
+    if (!account.stacks) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
       this.stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
@@ -207,11 +209,8 @@ export class ActivityService {
     const stxEventsByTxId = getEventsByTxId(
       txEvents.filter(event => event.event_type === 'stx_asset' || event.event_type === 'stx_lock')
     );
-    const activityList: OnChainActivity[] = [];
-    for (const tx of [
-      ...pendingTxs,
-      ...txs.filter(tx => stxEventsByTxId.has(tx.tx.tx_id)).map(tx => tx.tx),
-    ]) {
+    const activityList = await this.getPendingStacksActivity(pendingTxs, account, signal);
+    for (const tx of txs.filter(tx => stxEventsByTxId.has(tx.tx.tx_id)).map(tx => tx.tx)) {
       const txActivity = await this.getStacksTxActivity(tx, stxEventsByTxId.get(tx.tx_id), account);
       if (txActivity) {
         activityList.push(
@@ -230,7 +229,7 @@ export class ActivityService {
     assetId: string,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    if (!hasStacksAddress(account)) return [];
+    if (!account.stacks) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
       this.stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
@@ -257,8 +256,8 @@ export class ActivityService {
           ) === assetId
       )
     );
-    const activityList: OnChainActivity[] = [];
-    for (const tx of [...pendingTxs, ...sip10AssetTxs.map(tx => tx.tx)]) {
+    const activityList = await this.getPendingStacksActivity(pendingTxs, account, signal);
+    for (const tx of sip10AssetTxs.map(tx => tx.tx)) {
       const txActivity = await this.getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id), account);
       if (txActivity) {
         activityList.push(
@@ -267,6 +266,46 @@ export class ActivityService {
       }
     }
     return activityList.sort(sortActivityByTimestampDesc);
+  }
+
+  private async getPendingStacksActivity(
+    pendingTxs: HiroPrincipalMempoolTransaction[],
+    account: AccountAddresses,
+    signal?: AbortSignal
+  ): Promise<OnChainActivity[]> {
+    const activityPerTx = await Promise.all(
+      pendingTxs.map(async tx =>
+        mapPendingStacksTxActivity(
+          tx,
+          account,
+          await this.getPendingStacksAssetTransfersWithInfo(tx, signal)
+        )
+      )
+    );
+    return await Promise.all(
+      activityPerTx.flat().map(activity => this.applyMarketData(activity, signal))
+    );
+  }
+
+  private async getPendingStacksAssetTransfersWithInfo(
+    tx: HiroPrincipalMempoolTransaction,
+    signal?: AbortSignal
+  ): Promise<StacksAssetTransferWithInfo[]> {
+    if (tx.type !== 'contract_call' && tx.type !== 'smart_contract') return [];
+    try {
+      const txWithPostConditions = await this.hiroStacksApiClient.getTransactionById(tx.tx_id, {
+        signal,
+        include: ['post_conditions'],
+      });
+      const transfers = (txWithPostConditions?.post_conditions ?? [])
+        .map(mapTransferFromPostCondition)
+        .filter(isDefined);
+      return (await Promise.all(transfers.map(t => this.addStacksTransferAsset(t, signal)))).filter(
+        isDefined
+      );
+    } catch {
+      return [];
+    }
   }
 
   private async getStacksTxActivity(
@@ -324,7 +363,7 @@ export class ActivityService {
               ? await this.sip10AssetService.getAsset(transfer.assetId, signal)
               : await this.sip9AssetService.getAsset(
                   transfer.assetId,
-                  transfer.tokenValue!,
+                  readNftTokenValue(transfer),
                   signal
                 ),
         };

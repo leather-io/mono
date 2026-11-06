@@ -3,7 +3,7 @@ import { useUserSettings } from '~/hooks/use-user-settings';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { createSip10AccountBalanceQueryConfig } from '@leather.io/queries';
-import { AccountRequest } from '@leather.io/services';
+import { type AccountRequest } from '@leather.io/services';
 
 interface UseSip10AccountBalanceOptions {
   includeHiddenAssets?: boolean;

@@ -3,8 +3,8 @@ import { type TextProps as RNTexProps } from 'react-native';
 
 import { type TextProps as RestyleTextProps, createText } from '@shopify/restyle';
 
-import { Theme } from '../../theme-native';
-import { BoxProps } from '../box/box.native';
+import { type Theme } from '../../theme-native';
+import { type BoxProps } from '../box/box.native';
 
 const RestyleText = createText<Theme>();
 

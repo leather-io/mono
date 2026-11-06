@@ -4,7 +4,7 @@ import { StxForm } from '@/features/send/forms/stx/stx-form';
 import { StxDataLoader } from '@/features/send/forms/stx/stx-loader';
 import { useSettings } from '@/store/settings/settings';
 
-import { AccountId, FungibleCryptoAsset } from '@leather.io/models';
+import { type AccountId, type FungibleCryptoAsset } from '@leather.io/models';
 
 import { Sip10Form } from '../forms/stx/sip10-form';
 import { Sip10DataLoader } from '../forms/stx/sip10-loader';

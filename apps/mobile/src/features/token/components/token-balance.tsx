@@ -1,7 +1,7 @@
 import { Balance } from '@/components/balance/balance';
 import { Loading } from '@/components/loading/loading';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { Cell } from '@leather.io/ui/native';
 
 import { TokenCell, type TokenCellProps } from './token-cell';

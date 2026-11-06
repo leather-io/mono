@@ -3,7 +3,12 @@ import { z } from 'zod';
 import { fetchFn } from '~/utils/hiro-wrapped-fetch';
 
 import { parseContractId } from '../utils/contract-id';
-import { Pox5PoolFee, decodeFeeBips, decodePendingFees, poolFeeFromBips } from '../utils/pool-fee';
+import {
+  type Pox5PoolFee,
+  decodeFeeBips,
+  decodePendingFees,
+  poolFeeFromBips,
+} from '../utils/pool-fee';
 
 const feesBipsVarName = 'fees-bips';
 const pendingFeesFunctionName = 'get-pending-fees';

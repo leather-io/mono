@@ -6,7 +6,7 @@ export interface DefaultProperties {
 }
 
 export interface AnalyticsClientInterface {
-  track(eventName: string, properties: Record<string, any>): void;
+  track(eventName: string, properties: Record<string, unknown>): void;
   identify(uniqueId: string): Promise<void>;
   setGroup(groupKey: string, groupId: string): void;
   getGroup(
@@ -16,7 +16,7 @@ export interface AnalyticsClientInterface {
     set(prop: string, to: string): void;
   };
   getPeople(): {
-    set(properties: Record<string, any>): void;
+    set(properties: Record<string, unknown>): void;
   };
 }
 

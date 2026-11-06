@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { BondsSelectors } from '@tests/selectors/bonds.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
+import { LEATHER_STACKING_URL } from '@leather.io/constants';
 import type { BtcBondEnrollmentWindow, BtcStakingPosition } from '@leather.io/models';
 import { Callout } from '@leather.io/ui';
 
-import { BITCOIN_STAKING_URL } from '@shared/constants';
 import { logger } from '@shared/logger';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -165,7 +165,7 @@ export function BondCallout() {
       title={callout.title}
       body={callout.body}
       primaryActionLabel={callout.primaryActionLabel}
-      onPrimaryAction={() => openInNewTab(BITCOIN_STAKING_URL)}
+      onPrimaryAction={() => openInNewTab(LEATHER_STACKING_URL)}
       onDismiss={() => {
         persistDismissedCallout(dismissalKey);
         setDismissedKeys(keys => [...keys, dismissalKey]);

@@ -12,6 +12,7 @@ import {
   makeNativeSegwitAccountXpub,
   makeNativeSegwitAddressPubkey,
 } from '../mocks/key-mocks';
+import { expectDefined } from '../test-utils/expect-defined';
 import {
   type FinalizeWshDescriptorPsbtResult,
   compileWshDescriptor,
@@ -209,11 +210,11 @@ describe('wsh-descriptor', () => {
     const accountKeychain = makeNativeSegwitAccountKeychain(1);
     const compiled = compileWshDescriptor(`wsh(sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7))`);
 
-    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const match = expectDefined(findAccountDescriptorKey(compiled, accountKeychain));
     expect(match.changeIndex).toBe(0);
     expect(match.addressIndex).toBe(7);
     expect(bytesToHex(match.key.pubkey)).toBe(
-      bytesToHex(accountKeychain.deriveChild(0).deriveChild(7).publicKey!)
+      bytesToHex(expectDefined(accountKeychain.deriveChild(0).deriveChild(7).publicKey))
     );
   });
 
@@ -221,7 +222,7 @@ describe('wsh-descriptor', () => {
     const accountKeychain = makeNativeSegwitAccountKeychain(1);
     const compiled = compileWshDescriptor(`wsh(multi(2,${xpubA}/1/4,${xpubB}/1/4))`);
 
-    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const match = expectDefined(findAccountDescriptorKey(compiled, accountKeychain));
     expect(match.changeIndex).toBe(1);
     expect(match.addressIndex).toBe(4);
   });
@@ -238,10 +239,10 @@ describe('wsh-descriptor', () => {
     ).derive("m/84'/0'/0'").publicExtendedKey;
     const compiled = compileWshDescriptor(`wsh(multi(2,${tpubSamePath}/0/9,${tpubCosigner}/0/9))`);
 
-    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const match = expectDefined(findAccountDescriptorKey(compiled, accountKeychain));
     expect(match.addressIndex).toBe(9);
     expect(bytesToHex(match.key.pubkey)).toBe(
-      bytesToHex(accountKeychain.deriveChild(0).deriveChild(9).publicKey!)
+      bytesToHex(expectDefined(accountKeychain.deriveChild(0).deriveChild(9).publicKey))
     );
   });
 
@@ -249,7 +250,7 @@ describe('wsh-descriptor', () => {
     const accountKeychain = makeNativeSegwitAccountKeychain(1);
     const compiled = compileWshDescriptor(`wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyA)})))`);
 
-    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const match = expectDefined(findAccountDescriptorKey(compiled, accountKeychain));
     expect(match.changeIndex).toBe(0);
     expect(match.addressIndex).toBe(0);
     expect(match.key.bip32).toBeUndefined();
@@ -257,7 +258,7 @@ describe('wsh-descriptor', () => {
 
   it('does not match a raw pubkey derived from a non-zero address index', () => {
     const accountKeychain = makeNativeSegwitAccountKeychain(1);
-    const pubkeyAtIndexOne = accountKeychain.deriveChild(0).deriveChild(1).publicKey!;
+    const pubkeyAtIndexOne = expectDefined(accountKeychain.deriveChild(0).deriveChild(1).publicKey);
     const compiled = compileWshDescriptor(
       `wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyAtIndexOne)})))`
     );
@@ -273,7 +274,7 @@ describe('wsh-descriptor', () => {
     );
     expect(compiled.keyPathIndexes).toEqual({ changeIndex: 0, addressIndex: 7 });
 
-    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const match = expectDefined(findAccountDescriptorKey(compiled, accountKeychain));
     expect(match.addressIndex).toBe(7);
   });
 
@@ -287,7 +288,7 @@ describe('wsh-descriptor', () => {
   it('rejects an extended key carrying the account pubkey but a different chain code', () => {
     const accountKeychain = makeNativeSegwitAccountKeychain(1);
     const forgedKey = new HDKey({
-      publicKey: accountKeychain.publicKey!,
+      publicKey: expectDefined(accountKeychain.publicKey),
       chainCode: new Uint8Array(32).fill(7),
     });
     expect(forgedKey.publicExtendedKey).not.toBe(accountKeychain.publicExtendedKey);
@@ -314,17 +315,22 @@ describe('wsh-descriptor', () => {
       index: 0,
       witnessUtxo: { script: scriptPubKey, amount: 20_000n },
     });
-    tx.addOutput({ script: btc.p2wpkh(signingChild.publicKey!).script, amount: 19_000n });
+    tx.addOutput({
+      script: btc.p2wpkh(expectDefined(signingChild.publicKey)).script,
+      amount: 19_000n,
+    });
 
     const [index] = getDescriptorMatchingInputIndexes(tx, scriptPubKey);
     tx.updateInput(index, { witnessScript });
 
-    const signed = tx.signIdx(signingChild.privateKey!, index);
+    const signed = tx.signIdx(expectDefined(signingChild.privateKey), index);
     expect(signed).toBe(true);
 
     const partialSig = tx.getInput(index).partialSig;
     expect(partialSig).toBeDefined();
-    expect(bytesToHex(partialSig![0][0])).toBe(bytesToHex(signingChild.publicKey!));
+    expect(bytesToHex(expectDefined(partialSig)[0][0])).toBe(
+      bytesToHex(expectDefined(signingChild.publicKey))
+    );
   });
 
   it('matches PSBT inputs locked by the descriptor scriptPubKey', () => {
@@ -340,7 +346,9 @@ describe('wsh-descriptor', () => {
       txid: hexToBytes('11'.repeat(32)),
       index: 0,
       witnessUtxo: {
-        script: btc.p2wpkh(HDKey.fromMasterSeed(new Uint8Array(32).fill(3)).publicKey!).script,
+        script: btc.p2wpkh(
+          expectDefined(HDKey.fromMasterSeed(new Uint8Array(32).fill(3)).publicKey)
+        ).script,
         amount: 10_000n,
       },
     });
@@ -439,10 +447,12 @@ describe('wsh-descriptor', () => {
 
   it('derives every wildcard at the index when sorting sortedmulti() keys, like the library', () => {
     function pubkeyAtOneOne(seedByte: number) {
-      return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte))
-        .derive("m/84'/0'/0'")
-        .deriveChild(1)
-        .deriveChild(1).publicKey!;
+      return expectDefined(
+        HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte))
+          .derive("m/84'/0'/0'")
+          .deriveChild(1)
+          .deriveChild(1).publicKey
+      );
     }
     const sortedPubkeys = [pubkeyAtOneOne(1), pubkeyAtOneOne(2)].sort((a, b) =>
       bytesToHex(a) < bytesToHex(b) ? -1 : 1
@@ -524,7 +534,7 @@ describe('wsh-descriptor', () => {
 
   it('builds a Ledger key expression for an xpub key by adding the origin', () => {
     const { scriptPubKey, keys } = compileWshDescriptor(descriptor);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const keyOrigin = "e87a850b/84'/0'/0'";
     const ledgerDescriptor = toLedgerSignableDescriptor(descriptor, accountKey, xpubA, keyOrigin);
 
@@ -538,7 +548,7 @@ describe('wsh-descriptor', () => {
   it('strips the stale checksum when rewriting a checksummed descriptor for Ledger', () => {
     const checksummedDescriptor = `${descriptor}#${checksum(descriptor)}`;
     const { scriptPubKey, keys } = compileWshDescriptor(checksummedDescriptor);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const keyOrigin = "e87a850b/84'/0'/0'";
 
     const ledgerDescriptor = toLedgerSignableDescriptor(
@@ -559,7 +569,7 @@ describe('wsh-descriptor', () => {
   it('builds a Ledger key expression for a raw pubkey by substituting the account xpub', () => {
     const rawPubkeyDescriptor = `wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyA)})))`;
     const { scriptPubKey, keys } = compileWshDescriptor(rawPubkeyDescriptor);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     expect(accountKey.bip32).toBeUndefined();
 
     const keyOrigin = "e87a850b/84'/0'/0'";
@@ -581,11 +591,11 @@ describe('wsh-descriptor', () => {
   it('does not rewrite a key that already has an origin', () => {
     const keyOrigin = "e87a850b/84'/0'/0'";
     const { keys } = compileWshDescriptor(descriptor);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const ledgerDescriptor = toLedgerSignableDescriptor(descriptor, accountKey, xpubA, keyOrigin);
 
     const { keys: ledgerKeys } = compileWshDescriptor(ledgerDescriptor);
-    const ledgerAccountKey = findAccountKeyByPubkey(ledgerKeys, pubkeyA)!;
+    const ledgerAccountKey = expectDefined(findAccountKeyByPubkey(ledgerKeys, pubkeyA));
     expect(toLedgerSignableDescriptor(ledgerDescriptor, ledgerAccountKey, xpubA, keyOrigin)).toBe(
       ledgerDescriptor
     );
@@ -593,7 +603,7 @@ describe('wsh-descriptor', () => {
 
   it('rewrites every occurrence of a repeated xpub key on multiple branches', () => {
     const { keys } = compileWshDescriptor(`wsh(pk(${xpubA}/0/0))`);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const keyOrigin = "e87a850b/84'/0'/0'";
     // The same key on two branches (same sub-path).
     const repeated = `wsh(and_v(v:pk(${xpubA}/0/0),pk(${xpubA}/0/0)))`;
@@ -605,7 +615,7 @@ describe('wsh-descriptor', () => {
   it('rewrites every occurrence of a repeated raw-pubkey key on multiple branches', () => {
     const pubkeyHex = bytesToHex(pubkeyA);
     const { keys } = compileWshDescriptor(`wsh(pk(${pubkeyHex}))`);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     expect(accountKey.bip32).toBeUndefined();
     const keyOrigin = "e87a850b/84'/0'/0'";
     const repeated = `wsh(and_v(v:pk(${pubkeyHex}),pk(${pubkeyHex})))`;
@@ -638,7 +648,7 @@ describe('wsh-descriptor', () => {
 
   it('throws when the account key cannot be located in the descriptor (no silent no-op)', () => {
     const { keys } = compileWshDescriptor(`wsh(pk(${xpubA}/0/0))`);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const keyOrigin = "e87a850b/84'/0'/0'";
     // Descriptor uses a different key (xpubB) than the matched accountKey (xpubA).
     expect(() =>
@@ -684,12 +694,16 @@ function buildPolicyTx(descriptor: string, options: BuildPolicyTxOptions) {
       index: 0,
       sequence: 0xffffffff,
       witnessUtxo: {
-        script: btc.p2wpkh(deriveAddressIndexKey(3).publicKey!).script,
+        script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(3).publicKey)).script,
         amount: 10_000n,
       },
     });
-  tx.addOutput({ script: btc.p2wpkh(deriveAddressIndexKey(1).publicKey!).script, amount: 18_000n });
-  for (const seed of options.signWith) tx.signIdx(deriveAddressIndexKey(seed).privateKey!, 0);
+  tx.addOutput({
+    script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(1).publicKey)).script,
+    amount: 18_000n,
+  });
+  for (const seed of options.signWith)
+    tx.signIdx(expectDefined(deriveAddressIndexKey(seed).privateKey), 0);
   return tx;
 }
 
@@ -759,7 +773,7 @@ function rewriteFirstPartialSig(
   rewrite: (signature: Uint8Array) => Uint8Array
 ) {
   const psbt = Psbt.fromBuffer(Buffer.from(psbtBytes));
-  const partialSig = psbt.data.inputs[0].partialSig![0];
+  const partialSig = expectDefined(psbt.data.inputs[0].partialSig)[0];
   partialSig.signature = rewrite(partialSig.signature);
   return psbt.toBuffer();
 }
@@ -1027,10 +1041,10 @@ describe('finalizeWshDescriptorPsbt', () => {
       witnessScript,
     });
     divergentTx.addOutput({
-      script: btc.p2wpkh(deriveAddressIndexKey(9).publicKey!).script,
+      script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(9).publicKey)).script,
       amount: 18_000n,
     });
-    divergentTx.signIdx(deriveAddressIndexKey(1).privateKey!, 0);
+    divergentTx.signIdx(expectDefined(deriveAddressIndexKey(1).privateKey), 0);
 
     const preimagePsbt = buildPolicyTx(singleSig, { signWith: [] }).toPSBT();
     expect(
@@ -1056,12 +1070,12 @@ describe('finalizeWshDescriptorPsbt', () => {
       index: 0,
       sequence: 0xffffffff,
       witnessUtxo: {
-        script: btc.p2wpkh(deriveAddressIndexKey(3).publicKey!).script,
+        script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(3).publicKey)).script,
         amount: 10_000n,
       },
     };
     const output = {
-      script: btc.p2wpkh(deriveAddressIndexKey(1).publicKey!).script,
+      script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(1).publicKey)).script,
       amount: 18_000n,
     };
 
@@ -1074,7 +1088,7 @@ describe('finalizeWshDescriptorPsbt', () => {
     signedTx.addInput(descriptorInput);
     signedTx.addInput(foreignInput);
     signedTx.addOutput(output);
-    signedTx.signIdx(deriveAddressIndexKey(1).privateKey!, 0);
+    signedTx.signIdx(expectDefined(deriveAddressIndexKey(1).privateKey), 0);
 
     expect(
       finalizeWshDescriptorPsbt({
@@ -1137,7 +1151,7 @@ describe('finalizeWshDescriptorPsbt', () => {
       txid: hexToBytes('11'.repeat(32)),
       index: 0,
       witnessUtxo: {
-        script: btc.p2wpkh(deriveAddressIndexKey(3).publicKey!).script,
+        script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(3).publicKey)).script,
         amount: 10_000n,
       },
     });
@@ -1166,10 +1180,13 @@ describe('finalizeWshDescriptorPsbt', () => {
     signedTx.addInput({
       txid: hexToBytes('00'.repeat(32)),
       index: 0,
-      witnessUtxo: { script: btc.p2wpkh(accountKey.publicKey!).script, amount: 20_000n },
+      witnessUtxo: {
+        script: btc.p2wpkh(expectDefined(accountKey.publicKey)).script,
+        amount: 20_000n,
+      },
     });
     signedTx.addOutput({ script: btc.p2wpkh(pubkeyA).script, amount: 18_000n });
-    signedTx.signIdx(accountKey.privateKey!, 0);
+    signedTx.signIdx(expectDefined(accountKey.privateKey), 0);
 
     const preimagePsbt = buildPolicyTx(singleSig, { signWith: [] }).toPSBT();
     expect(

@@ -1,9 +1,9 @@
-import { BitcoinAddress } from '@leather.io/models';
+import { type BitcoinAddress } from '@leather.io/models';
 import { createMoney, sumNumbers } from '@leather.io/utils';
 
 import { inferPaymentTypeFromAddress } from '../utils/bitcoin.utils';
-import { PsbtInput } from './psbt-inputs';
-import { PsbtOutput } from './psbt-outputs';
+import { type PsbtInput } from './psbt-inputs';
+import { type PsbtOutput } from './psbt-outputs';
 
 function calculateAddressInputsTotal(addresses: string[], inputs: PsbtInput[]) {
   const sumsByAddress = addresses.map(address =>

@@ -248,7 +248,7 @@ describe(flattenObject.name, () => {
     });
 
     test('handles sparse arrays', () => {
-      const input: any[] = [];
+      const input: string[] = [];
       input[0] = 'first';
       input[2] = 'third';
 

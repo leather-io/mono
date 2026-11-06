@@ -10,7 +10,7 @@ export class LeatherApiError extends Error {
     this.name = 'LeatherApiError';
   }
 
-  static isLeatherApiError(error: unknown): error is LeatherApiError {
+  static isLeatherApiError(error: unknown) {
     return error instanceof LeatherApiError;
   }
 
@@ -43,4 +43,9 @@ export async function readLeatherApiErrorData(
     return undefined;
   }
   return undefined;
+}
+
+export function assertLeatherApiData<T>(data: T | undefined): T {
+  if (data === undefined) throw new Error('Leather API returned an empty response');
+  return data;
 }

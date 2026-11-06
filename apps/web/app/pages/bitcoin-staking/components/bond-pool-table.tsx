@@ -1,7 +1,7 @@
 import { css, cx } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 import { link as linkRecipe } from 'leather-styles/recipes';
-import { HTMLStyledProps } from 'leather-styles/types';
+import { type HTMLStyledProps } from 'leather-styles/types';
 import { BasicHoverCard } from '~/components/basic-hover-card';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { ChainLogoGroup } from '~/components/icons/chain-logo-group';
@@ -13,7 +13,7 @@ import {
   theadBorderBottom,
 } from '~/components/table';
 import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
-import { BondPool, bondPoolList } from '~/data/bond-pool-data';
+import { type BondPool, bondPoolList } from '~/data/bond-pool-data';
 import { usePox5CycleClock } from '~/features/bitcoin-staking/hooks/use-pox5-cycle-clock';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { openExternalLink } from '~/utils/external-links';

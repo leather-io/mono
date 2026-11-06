@@ -1,4 +1,9 @@
-import { BaseCryptoAssetBalance, BtcBalance, Money, StxBalance } from '@leather.io/models';
+import {
+  type BaseCryptoAssetBalance,
+  type BtcBalance,
+  type Money,
+  type StxBalance,
+} from '@leather.io/models';
 
 import { subtractMoney, sumMoney } from '../money/calculate-money';
 import { createMoney } from '../money/create-money';

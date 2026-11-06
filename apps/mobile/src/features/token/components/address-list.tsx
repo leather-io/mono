@@ -5,8 +5,8 @@ import { type ReceiveType } from '@/features/receive/utils/get-receive-type';
 import { useCopyAddress } from '@/hooks/use-copy-address';
 import { t } from '@lingui/core/macro';
 
-import { Money } from '@leather.io/models';
-import { Box, Cell, HasChildren, Text } from '@leather.io/ui/native';
+import { type Money } from '@leather.io/models';
+import { Box, Cell, type HasChildren, Text } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { TokenDetailsCard } from './token-details-card';
@@ -45,11 +45,12 @@ export function AddressListItem({
   const onCopyAddress = useCopyAddress();
 
   function openReceiveSheet() {
-    const receiveType = {
+    const receiveTypeByAssetType: Record<AssetType, ReceiveType> = {
       [AssetType.Stacks]: 'stacks',
       [AssetType.Taproot]: 'taproot',
       [AssetType.NativeSegwit]: 'native-segwit',
-    }[assetType] as ReceiveType;
+    };
+    const receiveType = receiveTypeByAssetType[assetType];
 
     receiveSheetRef.current?.present(receiveType);
   }

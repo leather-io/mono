@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { typedKeys } from '~/utils/typed-keys';
 
 // Providers are partner entities that offer yeild based services
 const providers = {
@@ -55,7 +56,7 @@ const providers = {
 } as const;
 
 export type ProviderId = keyof typeof providers;
-export const providerIdSchema = z.enum(Object.keys(providers) as [ProviderId, ...ProviderId[]]);
+export const providerIdSchema = z.enum(typedKeys(providers));
 
 export interface LiquidStackingPool {
   providerId: ProviderId;

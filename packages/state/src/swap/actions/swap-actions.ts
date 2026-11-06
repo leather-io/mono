@@ -14,6 +14,13 @@ import {
 import { calculatePercentageAmount, convertMoneyToInputValue } from '../utils/amount-operations';
 import { isPairDisabled } from '../utils/disabled-pairs';
 
+const presetLabelByPercentage = {
+  0.25: '25%',
+  0.5: '50%',
+  0.75: '75%',
+  1: 'max',
+} as const satisfies Record<PresetPercentage, string>;
+
 interface CreateSwapActionsParams {
   dispatch(action: SwapActionObject): void;
   lockDerivedAmountsForNextRender(): void;
@@ -88,7 +95,7 @@ export function createSwapActions({
         type: 'SET_BASE_AMOUNT',
         payload: calculatePercentageAmount(percentageSource, percentage),
       });
-      const preset = percentage === 1 ? 'max' : (`${percentage * 100}%` as '25%' | '50%' | '75%');
+      const preset = presetLabelByPercentage[percentage];
       trackEvent('swap_amount_preset_selected', { preset });
     },
 
@@ -97,7 +104,7 @@ export function createSwapActions({
         crypto: 'quote',
         quote: 'crypto',
       } as const);
-      const nextBaseAmount = convertMoneyToInputValue(derivedAmounts[nextMode]);
+      const nextBaseAmount = convertMoneyToInputValue(derivedAmounts[nextMode]) ?? '';
       lockDerivedAmountsForNextRender();
       dispatch({
         type: 'TOGGLE_INPUT_CURRENCY_MODE',

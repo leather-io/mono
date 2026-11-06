@@ -17,8 +17,8 @@ export const minTimestampLockTime = 500_000_000;
 
 type ScriptOp = ReturnType<typeof Script.decode>[number];
 
-function isCompressedPubkey(op: ScriptOp | undefined): op is Uint8Array {
-  return op instanceof Uint8Array && op.length === 33 && (op[0] === 0x02 || op[0] === 0x03);
+function isCompressedPubkey(op: Uint8Array) {
+  return op.length === 33 && (op[0] === 0x02 || op[0] === 0x03);
 }
 
 function decodeScriptInt(op: ScriptOp | undefined): number | null {
@@ -74,7 +74,7 @@ export function parseBondLockScript(witnessScript: Uint8Array): BondLockScript |
   }
   if (decodeScriptInt(sizeOperand) !== 32) return null;
   if (!(hashOp instanceof Uint8Array) || hashOp.length !== 32) return null;
-  if (!isCompressedPubkey(covenantOp)) return null;
+  if (!(covenantOp instanceof Uint8Array) || !isCompressedPubkey(covenantOp)) return null;
 
   const multiOps = ops.slice(fixedOpsBeforeMulti);
   if (multiOps[multiOps.length - 1] !== 'CHECKMULTISIG') return null;
@@ -86,7 +86,7 @@ export function parseBondLockScript(witnessScript: Uint8Array): BondLockScript |
   if (keyOps.length !== totalKeys) return null;
   const stakerKeys: Uint8Array[] = [];
   for (const op of keyOps) {
-    if (!isCompressedPubkey(op)) return null;
+    if (!(op instanceof Uint8Array) || !isCompressedPubkey(op)) return null;
     stakerKeys.push(op);
   }
 

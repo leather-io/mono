@@ -25,7 +25,7 @@ import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 
 import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 import { type RpcParams, type sendTransfer } from '@leather.io/rpc';
-import { truncateMiddle } from '@leather.io/utils';
+import { assertExistence, truncateMiddle } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -46,7 +46,6 @@ const baseParams = {
 function clickActionButton(context: BrowserContext) {
   return async (buttonToPress: 'Cancel' | 'Approve' | 'Sign transaction') => {
     const popup = await context.waitForEvent('page');
-    await popup.waitForTimeout(1000);
     const btn = popup.getByRole('button', { name: buttonToPress });
     await btn.click();
   };
@@ -60,10 +59,9 @@ function approveAndAcceptTaprootWarning(context: BrowserContext) {
     beforeApprove?: (popup: Page) => Promise<void>
   ) => {
     const popup = await context.waitForEvent('page');
-    await popup.waitForTimeout(1000);
     await beforeApprove?.(popup);
     await popup.getByRole('button', { name: buttonToPress }).click();
-    const continueBtn = popup.locator('text="I understand, continue"');
+    const continueBtn = popup.getByText('I understand, continue', { exact: true });
     await continueBtn.click({ timeout: 10000 });
   };
 }
@@ -101,7 +99,7 @@ test.describe('RPC: sendTransfer', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('that the request can be broadcast', async ({ page, context }) => {
@@ -114,7 +112,7 @@ test.describe('RPC: sendTransfer', () => {
       }),
     ]);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -140,7 +138,7 @@ test.describe('RPC: sendTransfer', () => {
       }),
     ]);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -159,7 +157,6 @@ test.describe('RPC: sendTransfer', () => {
 
     const resultPromise = openSendTransfer(page)({ ...baseParams, broadcast: false });
     const popup = await context.waitForEvent('page');
-    await popup.waitForTimeout(1000);
     await popup.getByRole('button', { name: 'Sign transaction' }).click();
 
     const warningDialog = popup.getByTestId(SendCryptoAssetSelectors.TaprootUtxoWarningDialog);
@@ -170,7 +167,7 @@ test.describe('RPC: sendTransfer', () => {
     await popup.close();
     const result = await resultPromise;
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -191,7 +188,7 @@ test.describe('RPC: sendTransfer', () => {
       clickActionButton(context)('Cancel'),
     ]);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -272,7 +269,7 @@ test.describe('RPC: sendTransfer spend sources with mixed utxos', () => {
     await mockLeatherApiRequests(context);
     await mockMixedUtxosForSend(context);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('that the approval shows the taproot callout and per-type rows', async ({
@@ -297,7 +294,7 @@ test.describe('RPC: sendTransfer spend sources with mixed utxos', () => {
     await test.expect(popup.getByText('Native SegWit + Taproot', { exact: false })).toBeVisible();
 
     await popup.close();
-    await resultPromise;
+    await test.expect(resultPromise).resolves.toBeDefined();
   });
 
   test('that approving still shows the taproot utxo warning dialog', async ({ page, context }) => {
@@ -318,7 +315,7 @@ test.describe('RPC: sendTransfer spend sources with mixed utxos', () => {
     await test.expect(warningDialog).toHaveCount(0);
 
     await popup.close();
-    await resultPromise;
+    await test.expect(resultPromise).resolves.toBeDefined();
   });
 });
 
@@ -330,7 +327,7 @@ test.describe('RPC: sendTransfer spend sources match the signed transaction', ()
     await mockLeatherApiRequests(context);
     await mockMixedUtxosForSend(context);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('that the displayed source totals equal the amount plus the signed fee', async ({
@@ -347,7 +344,7 @@ test.describe('RPC: sendTransfer spend sources match the signed transaction', ()
     const rows = await readSpendSourceRows(popup);
 
     await popup.getByRole('button', { name: 'Sign transaction' }).click();
-    await popup.locator('text="I understand, continue"').click({ timeout: 10000 });
+    await popup.getByText('I understand, continue', { exact: true }).click({ timeout: 10000 });
 
     const result = await resultPromise;
     const signed = summarizeSignedTx(readSignedTransactionHex(result));
@@ -364,7 +361,7 @@ test.describe('RPC: sendTransfer spend sources with native segwit utxos only', (
     await mockLeatherApiRequests(context);
     await mockNativeSegwitOnlyUtxosForSend(context);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('that the approval shows no callout and a zero taproot row', async ({ page, context }) => {
@@ -385,7 +382,7 @@ test.describe('RPC: sendTransfer spend sources with native segwit utxos only', (
       .toHaveCount(0);
 
     await popup.close();
-    await resultPromise;
+    await test.expect(resultPromise).resolves.toBeDefined();
   });
 
   test('that the native segwit total equals the amount plus the signed fee', async ({
@@ -431,7 +428,7 @@ test.describe('RPC: sendTransfer with an active Bitcoin multisig policy account'
       }),
       ...getConnectedTestAppPermissionsState({ policyId: bitcoinPolicy.id }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('shows both the multisig and the signer on the propose screen', async ({
@@ -465,7 +462,7 @@ test.describe('RPC: sendTransfer with an active Bitcoin multisig policy account'
 
     // Close the popup so the pending request resolves before teardown
     await popup.close();
-    await resultPromise;
+    await test.expect(resultPromise).resolves.toBeDefined();
   });
 });
 
@@ -488,7 +485,7 @@ test.describe('RPC: sendTransfer with a software wallet alongside a Ledger walle
         },
       },
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('that it opens the send flow without prompting to connect Ledger', async ({
@@ -509,6 +506,6 @@ test.describe('RPC: sendTransfer with a software wallet alongside a Ledger walle
 
     // Close the popup so the pending request resolves before teardown
     await sendPopup.close();
-    await resultPromise;
+    await test.expect(resultPromise).resolves.toBeDefined();
   });
 });

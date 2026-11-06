@@ -64,7 +64,7 @@ export function useCreateVaultAccount(network: AuthNetworkId, vaultId: string) {
   });
 }
 
-export function useUpdateVaultAccount(network: AuthNetworkId, vaultId: string) {
+export function useUpdateVaultAccount(network: AuthNetworkId, vaultId: string | undefined) {
   const queryClient = useQueryClient();
   const address = useSession(network)?.identity.address;
   return useMutation<

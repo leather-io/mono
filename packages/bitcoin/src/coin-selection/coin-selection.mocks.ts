@@ -1,7 +1,7 @@
 import { sha256 } from '@noble/hashes/sha256';
 import { hexToBytes } from '@noble/hashes/utils';
 
-import { OwnedUtxo } from '@leather.io/models';
+import { type OwnedUtxo } from '@leather.io/models';
 
 function generateMockHex() {
   return Math.floor(Math.random() * 0xffffff)

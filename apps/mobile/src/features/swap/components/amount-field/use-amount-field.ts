@@ -1,8 +1,8 @@
 import { Easing, useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated';
 
 import { cryptoAssetColors } from '@leather.io/constants';
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { Theme, useTheme } from '@leather.io/ui/native';
+import { type SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type Theme, useTheme } from '@leather.io/ui/native';
 
 type Variant = 'initial' | 'active' | 'invalid';
 

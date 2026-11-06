@@ -1,11 +1,14 @@
-import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
+import { type QueryFunctionContext, type UseQueryOptions, skipToken } from '@tanstack/react-query';
 
 import type { Sip10Asset } from '@leather.io/models';
 import { type UserSettings, getSip10AssetService } from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
 
-export function createSip10AssetByPrincipalQueryKey(principal: string, settings: UserSettings) {
+export function createSip10AssetByPrincipalQueryKey(
+  principal: string | undefined,
+  settings: UserSettings
+) {
   return createServiceQueryKey(
     'sip10-asset-service--get-asset-by-principal',
     [principal],
@@ -13,11 +16,16 @@ export function createSip10AssetByPrincipalQueryKey(principal: string, settings:
   );
 }
 
-export function createSip10AssetByPrincipalQueryConfig(principal: string, settings: UserSettings) {
+export function createSip10AssetByPrincipalQueryConfig(
+  principal: string | undefined,
+  settings: UserSettings
+) {
   return {
     queryKey: createSip10AssetByPrincipalQueryKey(principal, settings),
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10AssetService().getAssetByPrincipal(principal, signal),
+    queryFn: principal
+      ? ({ signal }: QueryFunctionContext) =>
+          getSip10AssetService().getAssetByPrincipal(principal, signal)
+      : skipToken,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,

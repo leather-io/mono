@@ -1,21 +1,20 @@
-import { RefObject, useEffect, useState } from 'react';
+import { type RefObject, useEffect, useState } from 'react';
 import { BackHandler } from 'react-native';
 
 import BottomSheet, {
   BottomSheetModal,
   type BottomSheetModalProps,
   BottomSheetModalProvider,
-  BottomSheetProps,
+  type BottomSheetProps,
   BottomSheetTextInput,
-  SNAP_POINT_TYPE,
+  type SNAP_POINT_TYPE,
   useBottomSheetModal,
 } from '@gorhom/bottom-sheet';
-import { BottomSheetScrollViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types';
-import { BottomSheetViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types';
+import { type BottomSheetScrollViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types';
+import { type BottomSheetViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types';
 import { createBox } from '@shopify/restyle';
 
-import { Theme } from '@leather.io/ui/native';
-
+import { type Theme } from '../../theme-native';
 import { createTextInput } from '../input/text-input.native';
 import { SheetNativeBackdrop } from './sheet-backdrop.native';
 import {

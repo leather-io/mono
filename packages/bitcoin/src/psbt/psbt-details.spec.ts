@@ -2,15 +2,16 @@ import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
+import { expectDefined } from '../test-utils/expect-defined';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
 import { getPsbtDetails } from './psbt-details';
 
 const NETWORK = btc.NETWORK;
 const ownerPubKey = hexToBytes('02'.padEnd(66, '3'));
 const ownerPayment = btc.p2wpkh(ownerPubKey, NETWORK);
-const ownerAddress = createBitcoinAddress(ownerPayment.address ?? '');
+const ownerAddress = createBitcoinAddress(expectDefined(ownerPayment.address));
 const recipientAddress = createBitcoinAddress(
-  btc.p2wpkh(hexToBytes('03'.padEnd(66, '7')), NETWORK).address ?? ''
+  expectDefined(btc.p2wpkh(hexToBytes('03'.padEnd(66, '7')), NETWORK).address)
 );
 const dummyTxid = hexToBytes('a'.repeat(64));
 

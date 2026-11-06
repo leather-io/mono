@@ -1,4 +1,4 @@
-import { TxBroadcastResultRejected } from '@stacks/transactions';
+import { type TxBroadcastResultRejected } from '@stacks/transactions';
 
 export function getErrorMessage(
   reason:

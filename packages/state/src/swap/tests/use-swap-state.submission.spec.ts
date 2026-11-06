@@ -2,10 +2,10 @@ import { STACKS_MAINNET } from '@stacks/network';
 import { act, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { SwapQuote } from '@leather.io/models';
+import { type SwapQuote } from '@leather.io/models';
 import { createMoney, createMoneyFromDecimal } from '@leather.io/utils';
 
-import { SwapSubmissionResult } from '../swap-state.types';
+import { type SwapSubmissionResult } from '../swap-state.types';
 import { SwapSigningCancelledError } from '../swap-submission.errors';
 import {
   createAccountSwapAsset,
@@ -265,7 +265,7 @@ describe('useSwapState - submission', () => {
 
   describe('submit', () => {
     it('resolves with the broadcast txid and tracks submission events', async () => {
-      const trackEvent = vi.fn(() => Promise.resolve());
+      const trackEvent = vi.fn();
       const broadcast = vi.fn().mockResolvedValue({ txid: 'test-txid' });
 
       const result = renderUseSwapState({
@@ -314,7 +314,7 @@ describe('useSwapState - submission', () => {
     });
 
     it('rejects and tracks failure when broadcast fails', async () => {
-      const trackEvent = vi.fn(() => Promise.resolve());
+      const trackEvent = vi.fn();
       const onSwapSubmitted = vi.fn();
       const broadcast = vi.fn().mockRejectedValue(new Error('broadcast failed'));
 

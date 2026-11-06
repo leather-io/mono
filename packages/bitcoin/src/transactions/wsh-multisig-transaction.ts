@@ -2,7 +2,7 @@ import { base64, hex } from '@scure/base';
 import * as btc from '@scure/btc-signer';
 
 import { compileWshDescriptor } from '../descriptors/wsh-descriptor';
-import { BtcSignerNetwork } from '../utils/bitcoin.network';
+import { type BtcSignerNetwork } from '../utils/bitcoin.network';
 
 export interface WshMultisigPsbtInput {
   txid: string;

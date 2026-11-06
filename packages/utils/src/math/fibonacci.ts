@@ -11,7 +11,7 @@ function fibonacci(n = 0): number {
   return curr;
 }
 
-export function* fibonacciGenerator(startIndex = 0): IterableIterator<number> {
+export function* fibonacciGenerator(startIndex = 0): Generator<number, number> {
   let index = startIndex;
   while (index < Infinity) yield fibonacci(index++);
   return Infinity;

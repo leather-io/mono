@@ -1,7 +1,7 @@
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import { Box, Grid, styled } from 'leather-styles/jsx';
 import { urlFor } from '~/constants/cms-client';
 
-import type { SanityImageAsset } from '@leather.io/cms';
 import { ChevronRightIcon } from '@leather.io/ui';
 
 interface CategoryGuide {
@@ -12,7 +12,7 @@ interface CategoryGuide {
 
 interface CategorySectionProps {
   categoryName: string;
-  icon?: SanityImageAsset;
+  icon?: SanityImageSource;
   guides: CategoryGuide[] | null;
 }
 

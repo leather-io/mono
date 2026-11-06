@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { HTMLStyledProps } from 'leather-styles/jsx';
+import { type HTMLStyledProps } from 'leather-styles/jsx';
 
 import { ApproverProvider, useRegisterApproverChildren } from './approver-context.shared';
 import { ApproverActions } from './components/approver-actions.web';

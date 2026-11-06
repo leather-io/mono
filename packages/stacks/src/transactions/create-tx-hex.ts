@@ -1,9 +1,9 @@
 import { bytesToHex } from '@stacks/common';
 import { Pc, serializeCV } from '@stacks/transactions';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 
-import { StacksSigner } from '../signer/signer';
+import { type StacksSigner } from '../signer/signer';
 import { formatContractIdString, getStacksAssetStringParts } from '../stacks.utils';
 import { generateStacksUnsignedTransaction } from './generate-unsigned-transaction';
 import { createSip10FnArgs } from './get-contract-fn-args';
@@ -35,7 +35,7 @@ export async function createTransferSip10TxHex({
   const currentStacksAddress = signer.address;
 
   const fnArgs = createSip10FnArgs({
-    amount: amount,
+    amount,
     senderStacksAddress: currentStacksAddress,
     recipientStacksAddress: recipient,
     memo,

@@ -1,6 +1,6 @@
-import { RefObject } from 'react';
+import { type RefObject } from 'react';
 import { Pressable as RNPressable, type PressableProps as RNPressableProps } from 'react-native';
-import Animated, { AnimatedProps } from 'react-native-reanimated';
+import Animated, { type AnimatedProps } from 'react-native-reanimated';
 
 import {
   type BackgroundColorProps,
@@ -9,7 +9,7 @@ import {
   type LayoutProps,
   type OpacityProps,
   type PositionProps,
-  ShadowProps,
+  type ShadowProps,
   type SpacingProps,
   type SpacingShorthandProps,
   type VisibleProps,
@@ -25,7 +25,7 @@ import {
   visible,
 } from '@shopify/restyle';
 
-import { Theme } from '../../theme-native';
+import { type Theme } from '../../theme-native';
 
 export type PressableRestyleProps = OpacityProps<Theme> &
   VisibleProps<Theme> &

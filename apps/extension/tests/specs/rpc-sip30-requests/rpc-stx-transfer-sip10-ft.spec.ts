@@ -14,18 +14,22 @@ test.describe('RPC: stx_transferSip10Ft', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="LEO"');
-      await popup.waitForSelector('text="0.001"');
-      await popup.waitForSelector('text="transfer"');
-      await popup.waitForSelector(
-        'text="You will transfer exactly 0.001 LEO or the transaction will abort."'
-      );
+      await test.expect(popup.getByText('LEO', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('0.001', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('transfer', { exact: true })).toBeVisible();
+      await test
+        .expect(
+          popup.getByText('You will transfer exactly 0.001 LEO or the transaction will abort.', {
+            exact: true,
+          })
+        )
+        .toBeVisible();
 
       const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
@@ -33,8 +37,7 @@ test.describe('RPC: stx_transferSip10Ft', () => {
       const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6');
 
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Confirm"');
+      const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();

@@ -1,4 +1,4 @@
-import { GestureResponderEvent } from 'react-native';
+import { type GestureResponderEvent } from 'react-native';
 
 import { TestId } from '@/shared/test-id';
 import { useRouter } from 'expo-router';

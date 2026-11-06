@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { Pox5TxKind } from '../transactions/pox5-tx-status';
+import { type Pox5TxKind } from '../transactions/pox5-tx-status';
 
 export interface Pox5TrackedTx {
   kind: Pox5TxKind;

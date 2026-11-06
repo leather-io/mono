@@ -1,13 +1,14 @@
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
-import { PrivateKey } from '@stacks/common';
+import { type PrivateKey } from '@stacks/common';
 import { hashMessage } from '@stacks/encryption';
 import {
-  ClarityValue,
+  type ClarityValue,
   PubKeyEncoding,
   encodeStructuredDataBytes,
   privateKeyToPublic,
   publicKeyFromSignatureRsv,
+  publicKeyToHex,
   signMessageHashRsv,
   signStructuredData,
 } from '@stacks/transactions';
@@ -20,7 +21,7 @@ export function signMessage(message: string, privateKey: PrivateKey): SignatureD
   const hash = hashMessage(message);
   return {
     signature: signMessageHashRsv({ privateKey, messageHash: bytesToHex(hash) }),
-    publicKey: privateKeyToPublic(privateKey) as string,
+    publicKey: publicKeyToHex(privateKeyToPublic(privateKey)),
   };
 }
 
@@ -37,7 +38,7 @@ export function signStructuredDataMessage(
 
   return {
     signature,
-    publicKey: privateKeyToPublic(privateKey) as string,
+    publicKey: publicKeyToHex(privateKeyToPublic(privateKey)),
   };
 }
 

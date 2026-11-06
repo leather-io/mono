@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react';
+import { type CSSProperties } from 'react';
 import type { StyleProp, TextStyle } from 'react-native';
 
 type PrismPlatform = 'web' | 'mobile';
@@ -14,7 +14,7 @@ interface GrammaticalTokenOutputProps<Platform extends PrismPlatform> {
   style?: Platform extends 'mobile' ? StyleProp<TextStyle> : CSSProperties;
   className: string;
   children: string;
-  [otherProp: string]: any;
+  [otherProp: string]: unknown;
 }
 
 interface GrammaticalTokenInputProps<Platform extends PrismPlatform> {
@@ -22,7 +22,7 @@ interface GrammaticalTokenInputProps<Platform extends PrismPlatform> {
   style?: Platform extends 'mobile' ? StyleProp<TextStyle> : CSSProperties;
   className?: string;
   token: GrammaticalToken;
-  [otherProp: string]: any;
+  [otherProp: string]: unknown;
 }
 
 interface LineInputProps<Platform extends PrismPlatform> {
@@ -30,14 +30,14 @@ interface LineInputProps<Platform extends PrismPlatform> {
   style?: Platform extends 'mobile' ? StyleProp<TextStyle> : CSSProperties;
   className?: string;
   line: GrammaticalToken[];
-  [otherProp: string]: any;
+  [otherProp: string]: unknown;
 }
 
 interface LineOutputProps<Platform extends PrismPlatform> {
   key?: React.Key;
   style?: Platform extends 'mobile' ? StyleProp<TextStyle> : CSSProperties;
   className: string;
-  [otherProps: string]: any;
+  [otherProps: string]: unknown;
 }
 
 export interface RenderProps<Platform extends PrismPlatform> {

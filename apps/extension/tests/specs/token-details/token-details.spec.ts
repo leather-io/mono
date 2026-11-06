@@ -374,7 +374,7 @@ test.describe('Token details', () => {
       homePage,
       page,
     }) => {
-      await homePage.page.waitForSelector('[data-testid="BTC"]');
+      await homePage.page.getByTestId('BTC').waitFor();
       await page.evaluate(() => {
         window.location.hash = '#/token/btc';
       });
@@ -390,7 +390,7 @@ test.describe('Token details', () => {
       homePage,
       page,
     }) => {
-      await homePage.page.waitForSelector('[data-testid="STX"]');
+      await homePage.page.getByTestId('STX').waitFor();
       await page.evaluate(() => {
         window.location.hash = '#/token/stx';
       });
@@ -406,7 +406,7 @@ test.describe('Token details', () => {
       homePage,
       page,
     }) => {
-      await homePage.page.waitForSelector('[data-testid="BTC"]');
+      await homePage.page.getByTestId('BTC').waitFor();
       await page.evaluate(() => {
         window.location.hash =
           '#/token/sip10%7CSM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token%3A%3Asbtc-token';
@@ -420,7 +420,7 @@ test.describe('Token details', () => {
       homePage,
       page,
     }) => {
-      await homePage.page.waitForSelector('[data-testid="BTC"]');
+      await homePage.page.getByTestId('BTC').waitFor();
       await page.evaluate(() => {
         window.location.hash =
           '#/token/sip10%7CSP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc%3A%3AaeUSDC';
@@ -434,7 +434,7 @@ test.describe('Token details', () => {
       homePage,
       page,
     }) => {
-      await homePage.page.waitForSelector('[data-testid="BTC"]');
+      await homePage.page.getByTestId('BTC').waitFor();
       await page.evaluate(() => {
         window.location.hash =
           '#/token/sip10%7CSP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx%3A%3Ausdcx-token';

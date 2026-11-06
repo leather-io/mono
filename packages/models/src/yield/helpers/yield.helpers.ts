@@ -1,61 +1,45 @@
-import { StacksProtocol, StacksProtocolId } from '../../protocols/stacks-protocol.model';
-import type {
-  BitflowAmmLpPosition,
-  BitflowAmmStakingPosition,
-} from '../providers/bitflow-position.model';
-import type {
-  GraniteV1BorrowPosition,
-  GraniteV1EarnPosition,
-} from '../providers/granite-position.model';
-import type {
-  StackingDaoPooledStackingPosition,
-  StackingDaoStStxBtcPosition,
-  StackingDaoStStxPosition,
-} from '../providers/stacking-dao-position.model';
-import type { ZestBorrowMarketPosition } from '../providers/zest-position.model';
+import { z } from 'zod';
+
+import { type StacksProtocol, type StacksProtocolId } from '../../protocols/stacks-protocol.model';
 import type { YieldPosition } from '../yield-position.model';
 import {
-  YieldProduct,
+  type YieldProduct,
   YieldProductCategories,
-  YieldProductCategory,
-  YieldProductKey,
+  type YieldProductCategory,
+  type YieldProductKey,
   YieldProductKeys,
   YieldProductToProviderMap,
 } from '../yield-product.model';
 
-export function isBitflowAmmLpPosition(pos: YieldPosition): pos is BitflowAmmLpPosition {
+export function isBitflowAmmLpPosition(pos: YieldPosition) {
   return pos.product === YieldProductKeys.bitflowAmmLp;
 }
 
-export function isBitflowAmmStakingPosition(pos: YieldPosition): pos is BitflowAmmStakingPosition {
+export function isBitflowAmmStakingPosition(pos: YieldPosition) {
   return pos.product === YieldProductKeys.bitflowAmmStaking;
 }
 
-export function isZestPosition(pos: YieldPosition): pos is ZestBorrowMarketPosition {
+export function isZestPosition(pos: YieldPosition) {
   return pos.product === YieldProductKeys.zestBorrowMarket;
 }
 
-export function isGraniteEarnPosition(pos: YieldPosition): pos is GraniteV1EarnPosition {
+export function isGraniteEarnPosition(pos: YieldPosition) {
   return pos.product === YieldProductKeys.graniteV1Earn;
 }
 
-export function isGraniteBorrowPosition(pos: YieldPosition): pos is GraniteV1BorrowPosition {
+export function isGraniteBorrowPosition(pos: YieldPosition) {
   return pos.product === YieldProductKeys.graniteV1Borrow;
 }
 
-export function isStackingDaoStStxPosition(pos: YieldPosition): pos is StackingDaoStStxPosition {
+export function isStackingDaoStStxPosition(pos: YieldPosition) {
   return pos.product === YieldProductKeys.stackingDaoStstx;
 }
 
-export function isStackingDaoStStxBtcPosition(
-  pos: YieldPosition
-): pos is StackingDaoStStxBtcPosition {
+export function isStackingDaoStStxBtcPosition(pos: YieldPosition) {
   return pos.product === YieldProductKeys.stackingDaoStstxbtc;
 }
 
-export function isStackingDaoPooledPosition(
-  pos: YieldPosition
-): pos is StackingDaoPooledStackingPosition {
+export function isStackingDaoPooledPosition(pos: YieldPosition) {
   return pos.product === YieldProductKeys.stackingDaoPooledStacking;
 }
 
@@ -123,10 +107,12 @@ export function isProductInProvider(product: YieldProductKey, provider: StacksPr
   return YieldProductToProviderMap[product] === provider;
 }
 
+const yieldProductKeySchema = z.enum(YieldProductKeys);
+
 export function getProductsForProvider(provider: StacksProtocolId): YieldProductKey[] {
-  return Object.entries(YieldProductToProviderMap)
-    .filter(([_, p]) => p === provider)
-    .map(([product]) => product as YieldProductKey);
+  return yieldProductKeySchema.options.filter(
+    product => YieldProductToProviderMap[product] === provider
+  );
 }
 
 export function getProductsInCategory(
@@ -138,7 +124,7 @@ export function getProductsInCategory(
 
 export function groupPositionsByProvider(
   positions: YieldPosition[]
-): Record<StacksProtocolId, YieldPosition[]> {
+): Partial<Record<StacksProtocolId, YieldPosition[]>> {
   const grouped: Partial<Record<StacksProtocolId, YieldPosition[]>> = {};
 
   for (const position of positions) {
@@ -149,7 +135,7 @@ export function groupPositionsByProvider(
     grouped[provider].push(position);
   }
 
-  return grouped as Record<StacksProtocolId, YieldPosition[]>;
+  return grouped;
 }
 
 export function groupPositionsByCategory(

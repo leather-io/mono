@@ -5,7 +5,7 @@ import { ScreenScrollProvider } from '@/components/screen/screen-scroll-context'
 import { ScreenScrollView } from '@/components/screen/screen-scrollview';
 import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
 
-import { Box, BoxProps, HasChildren, Text } from '@leather.io/ui/native';
+import { Box, type BoxProps, type HasChildren, Text } from '@leather.io/ui/native';
 
 import { ScreenFlashlist } from './screen-flashlist';
 

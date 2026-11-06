@@ -1,5 +1,5 @@
 import { userAddsWallet, userRemovesWallet, userRenamesWallet, walletSlice } from './wallet.slice';
-import { PartialWalletStore, WalletStore } from './wallet.utils';
+import { type PartialWalletStore, type WalletStore } from './wallet.utils';
 
 describe(walletSlice.name, () => {
   const mockSoftwareWallet: PartialWalletStore = {

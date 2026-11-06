@@ -1,6 +1,6 @@
 import { TokenBalance } from '@/features/token/components/token-balance';
 
-import { Sip10Balance as Sip10BalanceType } from '@leather.io/services';
+import { type Sip10Balance as Sip10BalanceType } from '@leather.io/services';
 import { Sip10AvatarIcon } from '@leather.io/ui/native';
 
 interface Sip10TokenBalanceProps {

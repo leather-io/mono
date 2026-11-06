@@ -1,4 +1,4 @@
-import { isSignableMessageType } from '@shared/signature/signature-types';
+import { stxSignMessageTypeSchema } from '@leather.io/rpc';
 
 import { PopupHeader } from '@app/features/container/headers/popup.header';
 import { StacksMessageSigning } from '@app/features/stacks-message-signer/stacks-message-signing';
@@ -15,7 +15,7 @@ export function RpcStacksMessageSigning() {
   const payload = useRpcStacksMessagePayload();
 
   if (!requestId || !tabId) return null;
-  if (!isSignableMessageType(messageType)) return null;
+  if (!stxSignMessageTypeSchema.safeParse(messageType).success) return null;
   if (!origin) return null;
   if (!payload) return null;
 

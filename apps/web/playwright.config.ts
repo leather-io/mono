@@ -5,15 +5,13 @@ export default defineConfig({
   testMatch: '**/*.spec.ts',
   outputDir: './test-results',
 
-  // MSW, used via @msw/playwright is not fully isolated to an individual test,
-  // so this settings must be disabled
-  fullyParallel: false,
+  fullyParallel: true,
 
   forbidOnly: !!process.env.CI,
 
   retries: process.env.CI ? 2 : 0,
 
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 3 : undefined,
 
   reporter: [
     [process.env.CI ? 'github' : 'list'],
@@ -33,7 +31,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'pnpm preview',
+    command: process.env.CI ? 'pnpm exec vite preview' : 'pnpm preview',
     url: 'http://localhost:4173',
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,

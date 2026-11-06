@@ -69,7 +69,7 @@ test.describe('RPC: stx_callContract propose from a Ledger policy account', () =
       ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
       ...policyStateOverrides({ policies: [stacksPolicy] }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('propose opens the ledger signing flow and cancelling returns to the approver', async ({
@@ -82,7 +82,6 @@ test.describe('RPC: stx_callContract propose from a Ledger policy account', () =
       context.waitForEvent('page'),
       openStxCallContract(page, TEST_ACCOUNT_1_STX_ADDRESS),
     ]);
-    await popup.waitForTimeout(1500);
 
     // The approve action must not be gated for Ledger wallets
     const proposeButton = popup.getByRole('button', { name: 'Propose transaction' });

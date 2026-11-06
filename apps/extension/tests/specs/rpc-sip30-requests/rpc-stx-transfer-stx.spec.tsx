@@ -39,15 +39,15 @@ test.describe('RPC: stx_transferStx', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   function checkVisibleContent(context: BrowserContext, expectedMemo: string) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
 
-      await popup.waitForSelector('text="Account 1"');
-      await popup.waitForSelector('text="0.0001 STX"');
+      await test.expect(popup.getByText('Account 1', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('0.0001 STX', { exact: true })).toBeVisible();
       await test.expect(popup.getByText('Memo', { exact: true })).toBeVisible();
       await test.expect(popup.getByText(expectedMemo, { exact: true })).toBeVisible();
       const displayerText = await popup
@@ -56,8 +56,7 @@ test.describe('RPC: stx_transferStx', () => {
       const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB');
 
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Confirm"');
+      const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
@@ -100,21 +99,19 @@ test.describe('RPC: stx_transferStx', () => {
     return async () => {
       const popup = await context.waitForEvent('page');
 
-      await popup.waitForSelector('text="0.0001 STX"');
-      await popup.waitForSelector(`text="${standardFee.displayed}"`);
-      await popup.waitForTimeout(500);
+      await test.expect(popup.getByText('0.0001 STX', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText(standardFee.displayed, { exact: true })).toBeVisible();
 
       if (editFeeToSlow) {
         await popup.getByText('Standard', { exact: true }).click();
-        await popup.waitForSelector('text="Edit fee"');
+        await test.expect(popup.getByText('Edit fee', { exact: true })).toBeVisible();
         await popup.getByText('Slow', { exact: true }).click();
-        await popup.locator('text="Save"').click();
-        await popup.waitForSelector(`text="${slowFee.displayed}"`);
-        await popup.waitForTimeout(500);
+        await popup.getByText('Save', { exact: true }).click();
+        await test.expect(popup.getByText(slowFee.displayed, { exact: true })).toBeVisible();
       }
 
       const broadcastRequestPromise = popup.waitForRequest('**/v2/transactions');
-      await popup.locator('text="Approve"').click();
+      await popup.getByText('Approve', { exact: true }).click();
       const broadcastRequest = await broadcastRequestPromise;
 
       const requestBody = broadcastRequest.postData();
@@ -174,8 +171,10 @@ test.describe('RPC: stx_transferStx', () => {
 
     async function expectInsufficientBalanceAndClose() {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="Available balance insufficient"');
-      await test.expect(popup.locator('text="Approve"')).toHaveCount(0);
+      await test
+        .expect(popup.getByText('Available balance insufficient', { exact: true }))
+        .toBeVisible();
+      await test.expect(popup.getByText('Approve', { exact: true })).toHaveCount(0);
       await popup.close();
     }
 

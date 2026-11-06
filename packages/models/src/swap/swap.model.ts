@@ -1,6 +1,6 @@
-import { CryptoAssetId } from '../assets/asset-id.model';
-import { NativeCryptoAsset, Sip10Asset } from '../assets/asset.model';
-import { Money } from '../money.model';
+import { type CryptoAssetId } from '../assets/asset-id.model';
+import { type NativeCryptoAsset, type Sip10Asset } from '../assets/asset.model';
+import { type Money } from '../money.model';
 import type { StacksProtocol } from '../protocols/stacks-protocol.model';
 
 export type SwappableFungibleCryptoAsset = NativeCryptoAsset | Sip10Asset;

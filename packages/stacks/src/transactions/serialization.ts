@@ -1,6 +1,6 @@
 import {
   AddressHashMode,
-  StacksTransactionWire,
+  type StacksTransactionWire,
   StacksWireType,
   estimateTransactionByteLength,
   serializePayload,

@@ -1,6 +1,15 @@
+import { type ReactNode } from 'react';
+
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { Button, CheckmarkCircleIcon, CircleIcon } from '@leather.io/ui';
+import { Button } from '@leather.io/ui';
+
+import { StakingConfirmMessage } from '../../components/staking-confirm-message';
+import {
+  shakeKeyframes,
+  shakeTiming,
+  useAttentionAnimation,
+} from '../../hooks/use-attention-animation';
 
 interface SidebarSummaryValueRow {
   kind: 'value';
@@ -19,16 +28,12 @@ interface SidebarSummaryDiffRow {
 
 export type SidebarSummaryRow = SidebarSummaryValueRow | SidebarSummaryDiffRow;
 
-interface SidebarSummaryTerms {
-  label: string;
-  accepted: boolean;
-  onToggleAccepted(): void;
-}
-
 interface SidebarSummaryCardProps {
   rows: SidebarSummaryRow[];
-  terms?: SidebarSummaryTerms;
+  acknowledgment?: ReactNode;
   confirmLabel: string;
+  confirmError?: string;
+  confirmAttemptCount?: number;
   confirmDisabled?: boolean;
   confirmTestId?: string;
   isBusy?: boolean;
@@ -71,13 +76,21 @@ function SidebarSummaryRowContent({ row }: { row: SidebarSummaryRow }) {
 
 export function SidebarSummaryCard({
   rows,
-  terms,
+  acknowledgment,
   confirmLabel,
+  confirmError,
+  confirmAttemptCount = 0,
   confirmDisabled = false,
   confirmTestId,
   isBusy = false,
   onConfirm,
 }: SidebarSummaryCardProps) {
+  const buttonRef = useAttentionAnimation<HTMLDivElement>(
+    confirmAttemptCount,
+    shakeKeyframes,
+    shakeTiming
+  );
+
   return (
     <Box
       borderWidth={1}
@@ -107,35 +120,22 @@ export function SidebarSummaryCard({
       ))}
 
       <Stack gap="space.05" p="space.05" borderTopWidth={1} borderTopColor="ink.border-default">
-        {terms && (
-          <Flex
-            alignItems="flex-start"
-            gap="space.03"
-            onClick={terms.onToggleAccepted}
-            cursor="pointer"
-          >
-            <styled.button type="button" aria-pressed={terms.accepted} flexShrink={0}>
-              {terms.accepted ? (
-                <CheckmarkCircleIcon variant="medium" />
-              ) : (
-                <CircleIcon variant="medium" />
-              )}
-            </styled.button>
-            <styled.span textStyle="label.02">{terms.label}</styled.span>
-          </Flex>
-        )}
-        <Box pl={terms ? 'space.06' : undefined}>
-          <Button
-            size="md"
-            fullWidth
-            disabled={confirmDisabled || isBusy}
-            aria-busy={isBusy || undefined}
-            onClick={onConfirm}
-            data-testid={confirmTestId}
-          >
-            {confirmLabel}
-          </Button>
-        </Box>
+        {acknowledgment}
+        <Stack>
+          <styled.div ref={buttonRef}>
+            <Button
+              size="md"
+              fullWidth
+              disabled={confirmDisabled || isBusy}
+              aria-busy={isBusy || undefined}
+              onClick={onConfirm}
+              data-testid={confirmTestId}
+            >
+              {confirmLabel}
+            </Button>
+          </styled.div>
+          <StakingConfirmMessage message={confirmError} />
+        </Stack>
       </Stack>
     </Box>
   );

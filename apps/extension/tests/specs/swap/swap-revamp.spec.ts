@@ -30,7 +30,7 @@ test.describe('Swap revamp', () => {
     await expect(swapRevampPage.submissionStatus).toHaveText('Swap initiated', {
       timeout: 15_000,
     });
-    await swapRevampPage.page.waitForURL('**/activity');
+    await expect(swapRevampPage.page).toHaveURL(/\/activity$/);
   });
 
   test('that it preselects assets from the route params', async ({ swapRevampPage }) => {

@@ -1,6 +1,6 @@
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-import { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
+import { type ThunkAction, type UnknownAction } from '@reduxjs/toolkit';
 
 import {
   extractAddressIndexFromPath,
@@ -8,7 +8,7 @@ import {
   makeAccountIdentifer,
 } from '@leather.io/crypto';
 
-import type { RootState, StoreDispatch } from './index';
+import type { RootState, StoreDispatch } from './store';
 
 type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, UnknownAction>;
 

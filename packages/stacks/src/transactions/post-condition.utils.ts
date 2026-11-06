@@ -1,8 +1,8 @@
 import { hexToBytes } from '@noble/hashes/utils';
 import {
   BytesReader,
-  PostCondition,
-  PostConditionWire,
+  type PostCondition,
+  type PostConditionWire,
   deserializePostConditionWire,
   postConditionToWire,
 } from '@stacks/transactions';

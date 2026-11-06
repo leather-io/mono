@@ -1,4 +1,4 @@
-import { StacksProtocolId, StacksProtocolIds } from '../protocols/stacks-protocol.model';
+import { type StacksProtocolId, StacksProtocolIds } from '../protocols/stacks-protocol.model';
 
 export const YieldProductKeys = {
   bitflowAmmLp: 'bitflow-amm-lp',

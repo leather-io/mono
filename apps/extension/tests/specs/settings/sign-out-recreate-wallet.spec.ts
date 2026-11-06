@@ -46,14 +46,8 @@ test.describe('Recreate wallet after sign out', () => {
     await onboardingPage.signUpNewUser(passwordB);
 
     await homePage.lock();
+    await homePage.unlock(passwordB);
 
-    const passwordInput = page.getByTestId(SettingsSelectors.EnterPasswordInput);
-    await passwordInput.waitFor();
-    await passwordInput.fill(passwordB);
-    await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
-
-    await expect(page.getByTestId(SettingsSelectors.CurrentAccountDisplayName)).toBeVisible({
-      timeout: 15_000,
-    });
+    await expect(page.getByTestId(SettingsSelectors.CurrentAccountDisplayName)).toBeVisible();
   });
 });

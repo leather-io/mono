@@ -6,7 +6,7 @@ import { InfoTooltipIcon } from '~/components/info-tooltip-icon';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { EM_DASH } from '~/constants/constants';
 import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
-import { BitcoinStakingPool } from '~/data/bitcoin-staking-data';
+import { type BitcoinStakingPool } from '~/data/bitcoin-staking-data';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { StakingPoolAvatar } from '~/pages/bitcoin-staking/components/staking-pool-avatar';

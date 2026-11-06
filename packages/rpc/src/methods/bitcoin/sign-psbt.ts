@@ -1,3 +1,4 @@
+import { values } from 'remeda';
 import { z } from 'zod';
 
 import { testIsNumberOrArrayOfNumbers } from '../../rpc/helpers';
@@ -22,7 +23,7 @@ export const signatureHash = {
   SINGLE_ANYONECANPAY: 0x83,
 } as const;
 
-const validSighashValues: number[] = Object.values(signatureHash);
+const validSighashValues: number[] = values(signatureHash);
 
 const signPsbtRequestParamsSchema = z.object({
   account: z.number().optional(),

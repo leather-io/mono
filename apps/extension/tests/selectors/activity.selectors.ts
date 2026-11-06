@@ -5,6 +5,7 @@ export const ActivitySelectors = {
   ActivityItemMenuIncreaseFee: 'activity-item-menu-increase-fee',
   ActivityItemMenuCancelTransaction: 'activity-item-menu-cancel-transaction',
 
+  TransactionActionBalance: 'transaction-action-balance',
   TransactionActionFeeInput: 'transaction-action-fee-input',
   TransactionActionSheet: 'transaction-action-sheet',
   TransactionSubmitAction: 'transaction-submit-action',

@@ -1,11 +1,10 @@
 import { STACKS_MAINNET } from '@stacks/network';
 import { describe, expect, test, vi } from 'vitest';
 
-import { TransactionFeeTier } from '@leather.io/models';
-import { BitcoinCoinSelectionService, BitcoinTransactionFeesService } from '@leather.io/services';
+import { type TransactionFeeTier } from '@leather.io/models';
 import { assertExistence, createMoney } from '@leather.io/utils';
 
-import { SwapDependencies } from '../../swap-state.types';
+import { type SwapDependencies } from '../../swap-state.types';
 import { DUMMY_P2TR_RECIPIENT } from '../../swap.constants';
 import {
   createAccountRequest,
@@ -27,10 +26,11 @@ const stubMaxSpendAmount = '200000000';
 const feeTier: TransactionFeeTier = 'standard';
 
 function createBtcContext(customFee: number | null) {
+  const stubBitcoinCoinSelectionService = createStubBitcoinCoinSelectionService();
   const getBitcoinTransactionFees = vi.fn(
     createStubBitcoinTransactionFeesService().getBitcoinTransactionFees
   );
-  const calculateMaxSpend = vi.fn(createStubBitcoinCoinSelectionService().calculateMaxSpend);
+  const calculateMaxSpend = vi.fn(stubBitcoinCoinSelectionService.calculateMaxSpend);
   const accountRequest = createAccountRequest();
   const dependencies: SwapDependencies = {
     accountRequest,
@@ -44,10 +44,8 @@ function createBtcContext(customFee: number | null) {
       swapService: createStubSwapService(),
       marketDataService: createStubMarketDataService(),
       stacksTransactionFeesService: createStubStacksTransactionFeesService(),
-      bitcoinTransactionFeesService: {
-        getBitcoinTransactionFees,
-      } as unknown as BitcoinTransactionFeesService,
-      bitcoinCoinSelectionService: { calculateMaxSpend } as unknown as BitcoinCoinSelectionService,
+      bitcoinTransactionFeesService: { getBitcoinTransactionFees },
+      bitcoinCoinSelectionService: { ...stubBitcoinCoinSelectionService, calculateMaxSpend },
     },
   };
   const balance = createAccountSwapAsset({ asset: defaultBtcAsset, balance: { crypto: 100_000 } })

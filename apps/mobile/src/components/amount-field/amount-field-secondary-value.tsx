@@ -2,10 +2,10 @@ import {
   calculateSecondaryValue,
   formatSecondaryValue,
 } from '@/components/amount-field/amount-field.utils';
-import { InputCurrencyMode } from '@/utils/types';
+import { type InputCurrencyMode } from '@/utils/types';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
-import { CryptoCurrency, MarketData, QuoteCurrency } from '@leather.io/models';
+import { type CryptoCurrency, type MarketData, type QuoteCurrency } from '@leather.io/models';
 import { ArrowTopBottomIcon, Box, Pressable, Text } from '@leather.io/ui/native';
 
 interface AmountFieldSecondaryValueProps {

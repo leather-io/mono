@@ -71,9 +71,7 @@ test.describe('Home tabs', () => {
       await homePage.clickCollectiblesTab();
       await homePage.goToReceiveDialog();
 
-      const closeButton = page
-        .locator('[aria-label="Close"]')
-        .or(page.getByRole('button', { name: 'Close' }));
+      const closeButton = page.getByLabel('Close').or(page.getByRole('button', { name: 'Close' }));
       await closeButton.first().click();
 
       const collectiblesTab = page.getByTestId(HomePageSelectors.CollectiblesTabBtn);
@@ -84,9 +82,7 @@ test.describe('Home tabs', () => {
       await homePage.clickActivityTab();
       await homePage.goToReceiveDialog();
 
-      const closeButton = page
-        .locator('[aria-label="Close"]')
-        .or(page.getByRole('button', { name: 'Close' }));
+      const closeButton = page.getByLabel('Close').or(page.getByRole('button', { name: 'Close' }));
       await closeButton.first().click();
 
       const activityTab = page.getByTestId(HomePageSelectors.ActivityTabBtn);

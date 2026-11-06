@@ -4,7 +4,7 @@ import { Divider } from '@/components/divider';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import {
-  NotifyUserSheetData,
+  type NotifyUserSheetData,
   NotifyUserSheetLayout,
 } from '@/components/sheets/notify-user-sheet.layout';
 import { useToastContext } from '@/components/toast/toast-context';
@@ -23,7 +23,7 @@ import dayjs from 'dayjs';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
-import { WalletStore, userRemovesWallet, userRenamesWallet } from '@leather.io/state/wallet';
+import { type WalletStore, userRemovesWallet, userRenamesWallet } from '@leather.io/state/wallet';
 import {
   Accordion,
   ArrowOutOfBoxIcon,
@@ -32,10 +32,10 @@ import {
   Box,
   Eye1ClosedIcon,
   InboxIcon,
-  SheetInstance,
+  type SheetInstance,
   SquareLinesBottomIcon,
   Text,
-  Theme,
+  type Theme,
   TrashIcon,
 } from '@leather.io/ui/native';
 

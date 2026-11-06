@@ -16,10 +16,10 @@ import { type StyledComponent, isCssProperty, styled } from 'leather-styles/jsx'
 
 type Props = Record<string, unknown>;
 interface Recipe {
-  (props?: Props): Props;
+  (props?: Props): Record<string, string>;
   splitVariantProps(props: Props): [Props, Props];
 }
-type Slot<R extends Recipe> = keyof ReturnType<R>;
+type Slot<R extends Recipe> = Extract<keyof ReturnType<R>, string>;
 interface Options {
   forwardProps?: string[];
 }
@@ -30,13 +30,18 @@ function shouldForwardProp(prop: string, variantKeys: string[], options: Options
   );
 }
 
-export function createStyleContext<R extends Recipe>(recipe: R) {
-  const StyleContext = createContext<Record<Slot<R>, string> | null>(null);
+function getDisplayName(Component: ElementType) {
+  if (typeof Component === 'string') return undefined;
+  return Component.displayName || Component.name;
+}
 
-  function withRootProvider<P extends Record<string, unknown>>(Component: ElementType) {
-    function StyledComponent(props: P) {
+export function createStyleContext<R extends Recipe>(recipe: R) {
+  const StyleContext = createContext<Record<string, string> | null>(null);
+
+  function withRootProvider(Component: ElementType) {
+    function StyledComponent(props: Record<string, unknown>) {
       const [variantProps, otherProps] = recipe.splitVariantProps(props);
-      const slotStyles = recipe(variantProps) as Record<Slot<R>, string>;
+      const slotStyles = recipe(variantProps);
 
       return (
         <StyleContext.Provider value={slotStyles}>
@@ -52,16 +57,16 @@ export function createStyleContext<R extends Recipe>(recipe: R) {
     slot: Slot<R>,
     options?: Options
   ): ForwardRefExoticComponent<PropsWithoutRef<P> & RefAttributes<T>> {
-    const StyledComponent = styled(
+    const StyledComponent: StyledComponent<ElementType> = styled(
       Component,
       {},
       {
         shouldForwardProp: (prop, variantKeys) => shouldForwardProp(prop, variantKeys, options),
       }
-    ) as StyledComponent<ElementType>;
+    );
     const StyledSlotProvider = forwardRef<T, P>((props, ref) => {
       const [variantProps, otherProps] = recipe.splitVariantProps(props);
-      const slotStyles = recipe(variantProps) as Record<Slot<R>, string>;
+      const slotStyles = recipe(variantProps);
 
       return (
         <StyleContext.Provider value={slotStyles}>
@@ -73,9 +78,7 @@ export function createStyleContext<R extends Recipe>(recipe: R) {
         </StyleContext.Provider>
       );
     });
-    // eslint-disable-next-line
-    // @ts-expect-error
-    StyledSlotProvider.displayName = Component.displayName || Component.name;
+    StyledSlotProvider.displayName = getDisplayName(Component);
 
     return StyledSlotProvider;
   }
@@ -91,9 +94,7 @@ export function createStyleContext<R extends Recipe>(recipe: R) {
         <StyledComponent {...props} ref={ref} className={cx(slotStyles?.[slot], props.className)} />
       );
     });
-    // eslint-disable-next-line
-    // @ts-expect-error
-    StyledSlotComponent.displayName = Component.displayName || Component.name;
+    StyledSlotComponent.displayName = getDisplayName(Component);
 
     return StyledSlotComponent;
   }

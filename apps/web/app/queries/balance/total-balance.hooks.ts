@@ -1,7 +1,7 @@
 import { useGetAccountTotalBalanceQuery } from '~/store/account';
 import { useLeatherConnect } from '~/store/addresses';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 
 export function useTotalPortfolioBalance(): Money | undefined {
   const { stacksAccount, btcAccount } = useLeatherConnect();

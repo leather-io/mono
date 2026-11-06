@@ -2,10 +2,11 @@ import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
-import * as bitcoin from 'bitcoinjs-lib';
+import type * as bitcoin from 'bitcoinjs-lib';
 
 import { fingerprintAsNumberToHex } from '@leather.io/crypto';
 
+import { expectDefined } from '../test-utils/expect-defined';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
 import {
   createNativeSegwitBitcoinJsSigner,
@@ -31,7 +32,7 @@ test('emit BTC BIP-322 auth fixture (mainnet)', async () => {
   if (!child.privateKey || !child.publicKey) throw new Error('Key derivation failed');
 
   const publicKey = bytesToHex(child.publicKey);
-  const address = createBitcoinAddress(btc.p2wpkh(child.publicKey).address ?? '');
+  const address = createBitcoinAddress(expectDefined(btc.p2wpkh(child.publicKey).address));
 
   // Assert the derivation matches Leather's pinned fixtures before signing.
   // (publicKey emitted below is the /0/0 child signing key — the fixture's

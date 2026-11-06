@@ -22,8 +22,8 @@ export function isUserInputEffectivelyZero(input: string) {
   return parseFloat(input) === 0;
 }
 
-export function convertMoneyToInputValue(money: Money | null): string {
-  if (!money) return '';
+export function convertMoneyToInputValue(money: Money | null) {
+  if (!money) return undefined;
   return money.amount
     .shiftedBy(-money.decimals)
     .toFixed(money.decimals, BigNumber.ROUND_DOWN)

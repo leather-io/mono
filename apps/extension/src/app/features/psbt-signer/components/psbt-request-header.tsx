@@ -1,9 +1,8 @@
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { Flag } from '@leather.io/ui';
+import { Favicon, Flag } from '@leather.io/ui';
 
 import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
-import { Favicon } from '@app/components/favicon';
 
 interface PsbtRequestHeaderProps {
   name?: string;

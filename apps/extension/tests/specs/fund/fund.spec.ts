@@ -18,6 +18,7 @@ test.describe('Fund', () => {
       await mockEmptyLeatherApiUtxosRequest(page);
       await onboardingPage.signInWithTestAccount(extensionId);
     });
+
     test('that STX asset shows $0.00 if STX has activity', async ({ homePage }) => {
       const btcAsset = homePage.assetList.getByTestId(CoreAssetSelectors.BtcAsset);
       const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
@@ -26,6 +27,7 @@ test.describe('Fund', () => {
       await expect(stxAsset).toContainText('$0.00');
     });
   });
+
   test.describe('empty wallet', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
@@ -45,6 +47,7 @@ test.describe('Fund', () => {
 
       await expect(page).toHaveURL(/fund\/stacks/);
     });
+
     test('that BTC asset shows a buy button that forwards to fund page', async ({
       homePage,
       page,

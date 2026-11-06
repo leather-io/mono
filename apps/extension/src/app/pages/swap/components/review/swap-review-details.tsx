@@ -19,7 +19,6 @@ export function SwapReviewDetails({ children, isRefetching }: SwapReviewDetailsP
   return (
     <Flex
       direction="column"
-      px="space.05"
       gap="space.01"
       opacity={isRefetching ? 0.5 : 1}
       transition="opacity 200ms ease"
@@ -65,8 +64,6 @@ export function SwapReviewDetailToggle({ label, onClick }: SwapReviewDetailToggl
       borderRadius="md"
       variant="outline"
       onClick={onClick}
-      position="relative"
-      right={-2}
       iconStart={<SettingsGearIcon variant="small" />}
     >
       {label}

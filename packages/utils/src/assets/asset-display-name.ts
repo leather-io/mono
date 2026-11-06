@@ -1,4 +1,4 @@
-import { CryptoAsset } from '@leather.io/models';
+import { type CryptoAsset } from '@leather.io/models';
 
 import { assertUnreachable } from '../assert-unreachable';
 

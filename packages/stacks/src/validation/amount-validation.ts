@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { isDefined, stxToMicroStx } from '@leather.io/utils';
 
 import { StacksError } from './stacks-error';

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import { Stack, styled } from 'leather-styles/jsx';
 
@@ -6,9 +6,15 @@ import { Button, type ButtonProps } from '../button/button.web';
 import AccessibleIcon from './accessible-icon.web';
 
 export interface IconButtonProps extends ButtonProps {
-  icon: ReactElement<any, any>;
+  icon: ReactElement;
   label?: string;
 }
+
+function getElementDisplayName({ type }: ReactElement) {
+  if (typeof type === 'string' || !('displayName' in type)) return undefined;
+  return typeof type.displayName === 'string' ? type.displayName : undefined;
+}
+
 export function IconButton({ icon, label, disabled, ...rest }: IconButtonProps) {
   return (
     <Button
@@ -27,7 +33,7 @@ export function IconButton({ icon, label, disabled, ...rest }: IconButtonProps) 
       {...rest}
     >
       <Stack alignItems="center" gap="space.01">
-        <AccessibleIcon label={label || icon.type.displayName || 'Icon Button'}>
+        <AccessibleIcon label={label || getElementDisplayName(icon) || 'Icon Button'}>
           {icon}
         </AccessibleIcon>
         {label && <styled.span>{label}</styled.span>}

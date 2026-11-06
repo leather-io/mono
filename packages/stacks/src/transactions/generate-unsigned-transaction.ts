@@ -14,10 +14,10 @@ import { assertUnreachable } from '@leather.io/utils';
 import { cleanHex } from '../stacks.utils';
 import { ensurePostConditionWireFormat, getPostConditions } from './post-condition.utils';
 import {
-  StacksUnsignedContractCallOptions,
-  StacksUnsignedContractDeployOptions,
-  StacksUnsignedStxTokenTransferOptions,
-  StacksUnsignedTransactionOptions,
+  type StacksUnsignedContractCallOptions,
+  type StacksUnsignedContractDeployOptions,
+  type StacksUnsignedStxTokenTransferOptions,
+  type StacksUnsignedTransactionOptions,
   TransactionTypes,
   isTransactionTypeSupported,
 } from './transaction.types';
@@ -82,7 +82,7 @@ export function generateStacksUnsignedTransaction(options: StacksUnsignedTransac
 
   const isValid = isTransactionTypeSupported(txType);
 
-  if (!isValid) throw new Error(`Invalid Transaction Type: ${txType}`);
+  if (!isValid) throw new Error(`Invalid Transaction Type: ${String(txType)}`);
 
   switch (txType) {
     case TransactionTypes.StxTokenTransfer:

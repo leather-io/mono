@@ -23,9 +23,9 @@ interface UseSubmitSwapProps {
   derivedAmounts: DerivedAmounts;
   nonce: number;
   isSendingMax: boolean;
-  spendableAmountQuery: UseQueryResult<Money | null, Error>;
-  networkFeeQuery: UseQueryResult<NetworkFee, Error>;
-  quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
+  spendableAmountQuery: UseQueryResult<Money | null>;
+  networkFeeQuery: UseQueryResult<NetworkFee>;
+  quoteQuery: UseQueryResult<SwapQuoteSelectionResult>;
   dependencies: SwapDependencies;
   validation: ValidationResult;
   trackEvent: TrackEvent;
@@ -60,7 +60,7 @@ export function useSubmitSwap({
   );
 
   const { mutateAsync } = useMutation({
-    mutationFn: async () => {
+    async mutationFn() {
       if (!readiness.canSubmit) {
         throw new Error('submit() called when canSubmit=false. Use the canSubmit guard');
       }
@@ -145,9 +145,9 @@ type SwapReadinessResult =
   | { canSubmit: false };
 
 function checkSwapReadiness(
-  spendableAmountQuery: UseQueryResult<Money | null, Error>,
-  networkFeeQuery: UseQueryResult<NetworkFee, Error>,
-  quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>,
+  spendableAmountQuery: UseQueryResult<Money | null>,
+  networkFeeQuery: UseQueryResult<NetworkFee>,
+  quoteQuery: UseQueryResult<SwapQuoteSelectionResult>,
   validation: ValidationResult,
   derivedAmounts: DerivedAmounts
 ): SwapReadinessResult {

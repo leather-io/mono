@@ -25,15 +25,12 @@ test.describe('Manage transaction', () => {
     await homePage.clickActivityTab();
   });
 
-  test('that user can cancel a pending transaction', async ({ page }) => {
+  test('that user can cancel a pending transaction', async ({ homePage, page }) => {
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
     await activityList.getByTestId(ActivitySelectors.ActivityItemMenuBtn).click();
     await page.getByTestId(ActivitySelectors.ActivityItemMenuCancelTransaction).click();
 
-    const cancelActionSheet = page.getByTestId(
-      `${ActivitySelectors.TransactionActionSheet}-cancel`
-    );
-    await cancelActionSheet.getByTestId(ActivitySelectors.TransactionActionFeeInput).fill('0.004');
+    await homePage.setStacksTransactionActionFee('cancel', '0.004');
     await page.getByTestId(ActivitySelectors.TransactionSubmitAction).click();
 
     await expect(
@@ -41,17 +38,12 @@ test.describe('Manage transaction', () => {
     ).toBeVisible();
   });
 
-  test('that user can increase the fee of a pending transaction', async ({ page }) => {
+  test('that user can increase the fee of a pending transaction', async ({ homePage, page }) => {
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
     await activityList.getByTestId(ActivitySelectors.ActivityItemMenuBtn).click();
     await page.getByTestId(ActivitySelectors.ActivityItemMenuIncreaseFee).click();
 
-    const increaseFeeActionSheet = page.getByTestId(
-      `${ActivitySelectors.TransactionActionSheet}-increase-fee`
-    );
-    await increaseFeeActionSheet
-      .getByTestId(ActivitySelectors.TransactionActionFeeInput)
-      .fill('0.004');
+    await homePage.setStacksTransactionActionFee('increase-fee', '0.004');
     await page.getByTestId(ActivitySelectors.TransactionSubmitAction).click();
 
     await expect(page.getByText('Fee increased successfully', { exact: true })).toBeVisible();

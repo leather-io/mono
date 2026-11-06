@@ -3,6 +3,8 @@ import type { TestRpcResponse } from '@tests/leather-provider';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 
+import { assertExistence } from '@leather.io/utils';
+
 import { test } from '../../fixtures/fixtures';
 
 const successResponse = {
@@ -61,7 +63,7 @@ test.describe('Rpc: Open', () => {
     await assertWalletHomeOpens(popup);
 
     const result = openPromise;
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
 
     test.expect(result).toEqual({ ...successResponse, id: test.expect.any(String) });
   });
@@ -71,7 +73,7 @@ test.describe('Rpc: Open', () => {
 
     const result = await initiateOpen(page);
 
-    if (!result) throw new Error('Expected result');
+    assertExistence(result, 'Expected result');
 
     test.expect(result).toEqual({
       id: test.expect.any(String),

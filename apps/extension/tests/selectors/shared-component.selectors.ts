@@ -5,6 +5,7 @@ export const SharedComponentsSelectors = {
 
   // AccountCard
   AccountCardBalanceText: 'account-card-balance-text',
+  CardAvailableBalance: 'card-available-balance',
 
   // InfoCard
   InfoCardAssetValue: 'info-card-asset-value',
@@ -21,9 +22,12 @@ export const SharedComponentsSelectors = {
   MiddleFeeEstimateItem: 'standard-fee',
   FeesListItem: 'fee-list-item',
   FeesListItemFeeValue: 'fee-list-item-fee-value',
+  FeeTabRecommended: 'tab-recommended',
+  FeeTabCustom: 'tab-custom',
 
   // Error
   BroadcastErrorTitle: 'broadcast-error-title',
+  GenericErrorTitle: 'generic-error-title',
   HeaderBackBtn: 'header-back-button',
   HeaderCloseBtn: 'header-close-button',
 

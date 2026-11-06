@@ -1,6 +1,6 @@
 import { queryClient } from '~/constants/query-client';
 
-import { HttpCacheOptions, HttpCacheService } from '@leather.io/services';
+import { type HttpCacheOptions, HttpCacheService } from '@leather.io/services';
 
 export class WebHttpCacheService extends HttpCacheService {
   fetchWithCacheInternal<T>(

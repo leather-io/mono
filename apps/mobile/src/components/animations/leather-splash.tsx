@@ -1,8 +1,12 @@
-import { RefObject, useImperativeHandle, useRef, useState } from 'react';
+import { type RefObject, useImperativeHandle, useRef, useState } from 'react';
 import { Dimensions } from 'react-native';
 
+import lockedSplashScreenDarkAnimation from '@/assets/lottie-locked-splash-screen-dark.json';
+import lockedSplashScreenLightAnimation from '@/assets/lottie-locked-splash-screen-light.json';
+import splashScreenDarkAnimation from '@/assets/lottie-splash-screen-dark.json';
+import splashScreenLightAnimation from '@/assets/lottie-splash-screen-light.json';
 import { useSettings } from '@/store/settings/settings';
-import LottieView, { LottieViewProps } from 'lottie-react-native';
+import LottieView, { type LottieViewProps } from 'lottie-react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,12 +28,12 @@ export function LeatherSplash(props: Partial<Omit<LottieViewProps, 'ref'>> & Lea
   const [mode, setMode] = useState<LottieViewProps['renderMode']>();
 
   const lottieSource = whenTheme({
-    light: require('@/assets/lottie-splash-screen-light.json'),
-    dark: require('@/assets/lottie-splash-screen-dark.json'),
+    light: splashScreenLightAnimation,
+    dark: splashScreenDarkAnimation,
   });
   const lottieLockedSource = whenTheme({
-    light: require('@/assets/lottie-locked-splash-screen-light.json'),
-    dark: require('@/assets/lottie-locked-splash-screen-dark.json'),
+    light: lockedSplashScreenLightAnimation,
+    dark: lockedSplashScreenDarkAnimation,
   });
   useImperativeHandle(props.splashRef, () => ({
     start() {

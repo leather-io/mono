@@ -3,14 +3,13 @@ import { useCallback } from 'react';
 import BigNumber from 'bignumber.js';
 
 import { STX_DECIMALS } from '@leather.io/constants';
-import { Money } from '@leather.io/models';
-import { defaultStacksFees } from '@leather.io/query';
+import { type Money } from '@leather.io/models';
 import { convertAmountToBaseUnit, createMoney, stxToMicroStx } from '@leather.io/utils';
 
+const defaultStacksFeeMicroStx = 3000;
+
 function calculateDefaultStacksFee() {
-  const defaultFeeFallback = 2500;
-  const defaultFeeFallbackAsMoney = createMoney(defaultFeeFallback, 'STX');
-  return convertAmountToBaseUnit(defaultStacksFees.estimates[1]?.fee ?? defaultFeeFallbackAsMoney);
+  return convertAmountToBaseUnit(createMoney(defaultStacksFeeMicroStx, 'STX'));
 }
 
 export type CalculateStxMaxSpend = ReturnType<typeof useCalculateStxMaxSpend>;
