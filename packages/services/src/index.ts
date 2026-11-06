@@ -18,7 +18,11 @@ export type {
   AlexSdkLatestPrices,
   AlexSdkTokenInfo,
 } from './infrastructure/api/alex/alex-sdk.client';
-export type { HiroFtMetadata } from './infrastructure/api/hiro/hiro-stacks-api.types';
+export type {
+  HiroFtMetadata,
+  HiroPrincipalMempoolTransaction,
+  HiroPrincipalMempoolTransactionsResponse,
+} from './infrastructure/api/hiro/hiro-stacks-api.types';
 export * from './infrastructure/cache/http-cache.config';
 export * from './infrastructure/cache/http-cache.service';
 export * from './infrastructure/cache/http-cache.utils';
