@@ -133,8 +133,6 @@ say so in the concept's open questions.
 - Keep screen components in `variants/<x>/<x>-screens.tsx` and a variant's own pieces in
   `<x>-layout.tsx`. Pieces two or more variants share go in the area's `shared/` folder, with
   its own `DEVIATIONS.md`.
-- The promote report treats the screens a `-screens.tsx` file exports as compositions. Rows,
-  cards and buttons defined in it are real components and are assessed like any other.
 
 ## 6. Required outputs per variant
 
@@ -143,27 +141,20 @@ say so in the concept's open questions.
 | Rationale           | `concepts[variant]`: bet, why, trade-off, open questions, each line sourced\* |
 | Pulled-from         | `references.byVariant[variant]`: image and one line on what was taken         |
 | Compare-with-today  | Screen jobs and cuts in the config. Check `?compare=1` on every screen        |
-| Words per screen    | `variants/<x>/NOTES.md`: words and numbers per screen, before and after cuts  |
-| Deviations with why | `variants/<x>/DEVIATIONS.md`: one row per promote-ledger key, each with a why |
+| Deviations with why | `variants/<x>/DEVIATIONS.md`: one row per deviation, each with a why          |
 | Navigation          | `variants/<x>/NOTES.md`: entry points kept, moved or broken, per screen       |
 | Today fidelity      | NOTES.md: the `design:fidelity` side-by-side for each recreated today screen  |
 
 \* `source` is one of `notes`, `brief`, `inspiration`, `baseline` or `our read` (typed as
 `ConceptSource`), optionally followed by a pointer: `brief §4`, `baseline #3`.
 
-To write DEVIATIONS.md, run `pnpm design:promote <variant folder>` and copy its starter rows. A
-variant's report also scans the area's `shared/` folder, and a report on the whole area reads the
-DEVIATIONS.md in every folder (each row is checked against the nearest one above its file).
-
-- The first column must be the ledger's **Key**, such as `64px`, `InlineSheet` or `#7A5CFA`,
-  and not a description. The report only matches the exact key.
+- The first column of DEVIATIONS.md names what deviates, such as `64px`, `InlineSheet` or
+  `#7A5CFA`, and not a description.
 - **Any change from shipped UI needs a reason.** Style changes to existing patterns count, not
-  only raw values: a lighter second line, a smaller button, a bigger icon. The report lists
-  style props on ui components as restyles (`Caption.color`, `Button.size`, `LockIcon.variant`);
-  each one is reverted or gets a row with a why.
+  only raw values: a lighter second line, a smaller button, a bigger icon. Each style prop
+  changed on a ui component (`Caption.color`, `Button.size`, `LockIcon.variant`) is reverted or
+  gets a row with a why.
 - Product decisions and mock-data notes go in NOTES.md or `assumptions`, not in DEVIATIONS.md.
-  Rows that aren't deviations come back as stale.
-- You're done when the report shows 0 undocumented and 0 stale.
 
 ## 7. Quality pass before showing
 
@@ -172,17 +163,17 @@ DEVIATIONS.md in every folder (each row is checked against the nearest one above
    popup-only). Approval screens also get `frame=request-window`.
 2. Critique it against [review-checklist.md](./review-checklist.md) steps 2–5, and the copy budget
    in the `leather-ui` skill.
-3. Count the words, then remove repetition and optional background that does not change a
-   decision. Keep needed decision and safety context visible; disclosures are for optional
-   background. Preserve label hierarchy and don't repeat the task heading in the body. Count again
-   and record before and after; a sentence quota must not hide required information.
+3. Remove repetition and optional background that does not change a decision. Keep needed
+   decision and safety context visible; disclosures are for optional background. Preserve label
+   hierarchy and don't repeat the task heading in the body. A sentence quota must not hide
+   required information.
 4. From the repository root, run `pnpm --filter @leather.io/web typecheck`,
    `pnpm --filter @leather.io/web lint`, and
-   `pnpm design:check apps/web/app/pages/playground/areas/<area>`, then the promote report.
+   `pnpm design:check apps/web/app/pages/playground/areas/<area>`.
    Ordinary lint enforces design rules only on the owned recipes, recipe gallery and Receive
    example; a new area needs the explicit design check too. A typecheck catches imports that
    don't exist on web (see `apps/web/AGENTS.md`); in the browser, a crash names the variant and
-   screen, and a module that fails to load names its file.
+   screen.
 
 ## 8. When no pattern fits
 
@@ -212,25 +203,6 @@ with its height and edge differences. A 390px frame is scaled to a 360px capture
 **Template.** Write `<area>.config.ts` as an `ExplorationConfig`, and render
 `<ExplorationCanvas config={…} />`. It deep-links with
 `?v=&screen=&theme=&frame=popup|request-window|tab&sheet=1&compare=1`.
-
-**Words per screen.** Counts the visible words in every `[data-frame]`, and lists numbers and
-addresses separately:
-
-```sh
-pnpm design:words "<dev>/playground/<area>?sheet=1&v=b&theme=light"
-node scripts/design/words-per-screen.ts --urls urls.txt --json /tmp/words.json
-```
-
-- It prints a table, and writes JSON with `--json <file>`, or to stdout only with `--json -`.
-- Frames are labelled by `data-variant`, `data-screen`, `data-frame` and `data-theme`.
-- Visually hidden text and punctuation-only tokens are excluded.
-- Address-like tokens (`bc1…`, `SP…`, `sbtc…`, `0x…`, truncated `SP2J…9EJ7`) count as
-  `addresses`, not words. An address shown in groups (`AddressDisplayer`) counts once.
-- When a sheet is open (`role="dialog"`, as `ReviewSheet` renders), only the sheet is counted;
-  the dimmed screen behind it is not. The table marks those screens `(sheet)`.
-- `primaries` counts the solid buttons visible per frame (an opaque fill at 3:1 or more against
-  its surface, light or dark, danger included). A frame with more than one is listed by name
-  after the table and the script exits 1 (`--max-primaries` to change the limit).
 
 **Alignment.** Checks the one-gutter rule on the render:
 

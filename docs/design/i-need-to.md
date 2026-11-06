@@ -156,8 +156,7 @@ import { Callout } from '@leather.io/ui';
 - The variants are `default`, `info`, `success`, `warning` and `error`. Put the fix in the body copy.
 - **Edge to edge, at the top of its region:** the full width of the sheet or screen (as under the
   amount on the send review), or the full column above the list it concerns. Never an inset box
-  between rows or fields: a mid-layout note is `HelperText` or a row caption. See
-  `docs/design/cheatsheet.md#callout`.
+  between rows or fields: a mid-layout note is `HelperText` or a row caption.
 - In Playground page shells, use the typed `notice={{ variant, message }}` prop; in
   `ReviewSheet`, use `callout={{ variant, message }}`. Their `PageNotice` cancels the shared
   gutter for full width. Don't add an inset wrapper. See [Page notice](./recipes.md#page-notice).
@@ -283,7 +282,6 @@ import { Button } from '@leather.io/ui';
 - `Button` does not shrink by default. Two `fullWidth` buttons inside a `Flex` row overflow:
   use bounded grid columns as above, or explicit flexible widths. Check the actual body
   scroller, not only the document, at 390px.
-- One solid per screen is checked on the render: `pnpm design:words <url>` lists frames with more.
 - **Native:** `<Button variant="solid" onPress={…}>`. The variants match web and the intents are
   `default` and `danger`.
 - **Seen in:** `apps/extension/src/app/features/fee-editor/fee-editor.tsx:68`.

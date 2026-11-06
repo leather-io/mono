@@ -21,8 +21,7 @@ design:fidelity` side-by-side attached), and the baseline has a clean state plus
 - [ ] Unchanged parts are the real components or the extension's exact composition (recipes
       with `mirrors`), not a redraw.
 - [ ] Each style change to an existing pattern (a lighter second line, a smaller button, a bigger
-      icon, an inset tab bar) is reverted or has a `DEVIATIONS.md` row with a why. The promote
-      report lists them as restyles (`Caption.color`, `Button.size`).
+      icon, an inset tab bar) is reverted or has a `DEVIATIONS.md` row with a why.
 - [ ] Each existing path the change breaks or moves (token details, receive) is listed, with
       where it went.
 
@@ -31,8 +30,7 @@ design:fidelity` side-by-side attached), and the baseline has a clean state plus
 - [ ] Each new piece of UI maps to one row in `i-need-to.md`. If it doesn't, either the system is
       missing something (open an issue) or the PR is inventing a pattern (ask why).
 - [ ] There's one `solid` button per screen, and `intent="danger"` appears only on the destructive
-      confirm. `pnpm design:words <url>` counts solid buttons per frame (`primaries`) and exits 1
-      when a frame has more than one. Icons inside a button take its label's ink.
+      confirm. Icons inside a button take its label's ink.
 - [ ] Important actions are labelled buttons ("Save to address book"), not a bare `+` or bookmark
       icon on a row. Follow-up choices need explicit product review; never leave Save and Done competing.
 - [ ] Toasts are for transient feedback and Callouts are for problems the user must act on, not

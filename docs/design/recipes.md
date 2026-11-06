@@ -101,8 +101,8 @@ truncated with `truncateMiddle`.
 - **Left title centred** against two-line right content (ItemLayout does it).
 - **No chevron by default.** Pass `navigates` with the `onClick` that opens another screen (token
   details, a contact page) that exists in the flow. Pick rows, display rows and rows with actions
-  have none; `navigates` without a real `onClick` draws nothing and lint (`no-dead-chevron`) and
-  the promote report flag it.
+  have none; `navigates` without a real `onClick` draws nothing and lint (`no-dead-chevron`)
+  flags it.
 - **Row actions on the rail.** The action group hangs 8px past the row, so its last glyph lines up
   with the rail like a chevron or value. An important action is not a bare `+`: use a labelled
   `Button` in its block or the footer.
@@ -347,7 +347,7 @@ A recipe is added when a second exploration needs the same composition. Build it
 `@leather.io/ui` and tokens only, mirror the extension's composition (cite it in the meta's
 `mirrors`), add a demo and its meta in `areas/recipes/recipe-demos.tsx`, take the four
 screenshots, and add a section here. When a variant is promoted, the recipes it uses move with it
-into the app (or into `packages/ui` with a meta file).
+into the app (or into `packages/ui`).
 
 ## Receive asset identity
 

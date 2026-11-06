@@ -2,7 +2,6 @@ import { Outlet, data } from 'react-router';
 
 import { Box } from 'leather-styles/jsx';
 
-import { LoadGuard } from './components/load-guard';
 import { PlaygroundDock } from './components/playground-dock';
 import { playgroundEnabled } from './playground.constants';
 
@@ -19,7 +18,6 @@ export function loader() {
 export default function PlaygroundLayout() {
   return (
     <Box minHeight="100vh">
-      <LoadGuard />
       <Outlet />
       <PlaygroundDock />
     </Box>

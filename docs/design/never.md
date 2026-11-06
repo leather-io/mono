@@ -222,7 +222,7 @@ Use navigates only with an onClick that opens a deeper view, instead of a chevro
 ```
 
 **Use instead:** Drop `navigates` on pick rows (select and return), display rows and rows with
-nested actions. Add it back with the screen it opens. The promote report lists each hit.
+nested actions. Add it back with the screen it opens.
 
 ## Raw shadows
 

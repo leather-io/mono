@@ -134,13 +134,7 @@
       "ignoreDependencies": ["@types/dompurify"]
     },
     "packages/ui": {
-      "entry": [
-        "src/index.ts!",
-        "src/native.ts!",
-        "src/exports.web.ts!",
-        "src/svg.native.d.ts!",
-        "src/components/**/*.meta.shared.ts"
-      ],
+      "entry": ["src/index.ts!", "src/native.ts!", "src/exports.web.ts!", "src/svg.native.d.ts!"],
       "metro": false,
       "ignoreDependencies": [
         "@expo/vector-icons",
@@ -161,12 +155,7 @@
       ]
     },
     ".": {
-      "entry": [
-        "scripts/design/*.ts",
-        "eslint-rules/design-system/*.spec.js",
-        "eslint-rules/design-system/*.d.ts"
-      ],
-      "ignore": ["scripts/design/__fixtures__/**"]
+      "entry": ["scripts/design/*.ts", "eslint-rules/design-system/*.spec.js"]
     }
   }
 }

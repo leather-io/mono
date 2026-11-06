@@ -9,6 +9,5 @@
     "declaration": false,
     "declarationMap": false
   },
-  "include": ["*.ts", "lib/**/*.ts"],
-  "exclude": ["__fixtures__"]
+  "include": ["*.ts", "lib/**/*.ts"]
 }

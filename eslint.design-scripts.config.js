@@ -4,7 +4,6 @@ import tseslint from 'typescript-eslint';
 export default defineConfig([
   {
     files: ['scripts/design/**/*.ts'],
-    ignores: ['scripts/design/__fixtures__/**'],
     plugins: { '@typescript-eslint': tseslint.plugin },
     languageOptions: {
       parser: tseslint.parser,

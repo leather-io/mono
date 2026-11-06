@@ -15,11 +15,10 @@ on the web app.
   - **Native-only imports break web.** Some `@leather.io/ui` exports exist only in the native
     entry (`@leather.io/ui/native`), for example icons with only a `*.native.tsx` file in
     `packages/ui/src/icons/` (`UsersTwoIcon`). Importing one from `@leather.io/ui` on web is a
-    module error: the area doesn't load at all, and on a deep link the page was blank. The
-    Playground's load guard now names the failing file, but run
-    `pnpm --filter @leather.io/web typecheck` before you look, and pick icons from
+    module error: the area doesn't load at all, and on a deep link the page is blank. Run
+    `pnpm --filter @leather.io/web typecheck` to find it, and pick icons from
     `packages/ui/src/icons/index.web.ts`.
 - **Sketch mode.** The release example and recipes enforce design lint. Other features opt in with
-  `pnpm design:check <path>`; document each intentional deviation in `DEVIATIONS.md` (`docs/design/promote.md`).
+  `pnpm design:check <path>`; document each intentional deviation in `DEVIATIONS.md` (`docs/design/explore.md`).
 - **Production.** The Playground 404s on the production deploy. Nothing in `areas/` ships.
   Promote what you want to keep into product code instead.

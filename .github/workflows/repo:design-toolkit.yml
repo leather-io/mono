@@ -42,6 +42,5 @@ jobs:
       - run: pnpm design:scripts:lint
       - run: pnpm design:scripts:typecheck
       - run: pnpm design:test
-      - run: pnpm --filter @leather.io/ui run gen:cheatsheet --check
       - run: pnpm design:lint
       - run: pnpm --filter @leather.io/web run typecheck

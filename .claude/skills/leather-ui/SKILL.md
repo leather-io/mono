@@ -148,7 +148,7 @@ Keep UI copy concise enough to scan while leaving the information needed to deci
 - Review facts use labels and values in key-value rows; keep required risk and decision context
   visible alongside them.
 - After screenshotting, do a subtraction pass. Remove each element that doesn't change a
-  decision, then count words again (`pnpm design:words <url>`).
+  decision.
 
 ## Before you say done
 
@@ -175,12 +175,10 @@ Review popup content inside its intended device frame, not stretched across the 
 2. Run `pnpm --filter @leather.io/<package> typecheck`.
 3. Look at it. For web or ui changes, render it in the web Playground (`pnpm dev` in `apps/web`,
    then `/playground`). Take a screenshot in light and dark, and attach before and after to the PR.
-   For mobile, take a simulator screenshot. On Playground screens run `pnpm design:words <url>`
-   (one solid per frame) and `pnpm design:align <url>` (one gutter, symmetric header); both exit 1
-   on a finding.
+   For mobile, take a simulator screenshot. On Playground screens run `pnpm design:align <url>`
+   (one gutter, symmetric header); it exits 1 on a finding.
 4. Check the ladder. Is every piece of supporting text that informs a decision in
    `ink.text-secondary`? Is `ink.text-subdued` used only on `ink.background-primary`?
 5. If you needed something that isn't in `i-need-to.md`, say so in the PR description.
 6. In the Playground, every deviation from shipped UI, restyles included (`Caption.color`,
-   `Button.size`), needs a row in `DEVIATIONS.md`, keyed by the promote ledger's Key, with a
-   why. `pnpm design:promote <folder>` checks this. You're done at 0 undocumented and 0 stale.
+   `Button.size`), needs a row in `DEVIATIONS.md` with a why.

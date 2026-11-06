@@ -16,7 +16,7 @@ export const footerActionsMeta = defineRecipeMeta({
     'apps/extension/src/app/features/dialogs/switch-account-sheet/switch-account-sheet.tsx (Add wallet + Manage), components/layout/card/components/button-row.tsx',
   useWhen: [
     'The screen-level actions: Continue, Send, Save, Add address, Done. They live in the footer, not as small row or header actions',
-    'At most one solid Button per screen (pnpm design:words counts them). A management screen (address book, accounts) has no solid: "Add …" is outline with iconStart PlusIcon, next to "Manage" (as Add wallet does)',
+    'At most one solid Button per screen. A management screen (address book, accounts) has no solid: "Add …" is outline with iconStart PlusIcon, next to "Manage" (as Add wallet does)',
     'Typed primary and secondary actions: equal columns, readable labels, one solid action and shared pending disabling',
     'A choice after a finished task belongs in PageActions only when the feature brief calls for it',
   ],
