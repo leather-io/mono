@@ -6,21 +6,27 @@ import { describe, expect, test } from 'vitest';
 import { getFeatureMapAppConfig } from './app-config.js';
 import {
   loadMockFunctions,
+  loadNetworkIds,
+  loadPersistedSliceKeys,
   loadRouterFiles,
+  loadRpcCatalog,
+  loadRpcEndpoints,
   loadRpcHandlers,
-  loadSelectorObjects,
+  loadSelectors,
   loadSetupMocks,
+  loadVerifyMockNames,
 } from './test-assets.js';
 
 const config = getFeatureMapAppConfig('extension');
 const tempDir = mkdtempSync(path.join(tmpdir(), 'feature-map-assets-'));
 
-describe(loadSelectorObjects.name, () => {
-  test('enumerates every exported *Selectors object with its members', () => {
-    const objects = loadSelectorObjects(config);
+describe(loadSelectors.name, () => {
+  test('enumerates every exported *Selectors object with its members and values', () => {
+    const { table, objects } = loadSelectors(config);
     const switcher = objects.get('SwitchAccountSelectors');
     expect(switcher?.file.endsWith('switch-account.selectors.ts')).toBe(true);
     expect(switcher?.members).toContain('WalletHeaderName');
+    expect(table.get('SwitchAccountSelectors')?.has('WalletHeaderName')).toBe(true);
     expect(objects.has('getSwitchAccountSheetAccountNameSelector')).toBe(false);
     expect([...objects.keys()].every(name => name.endsWith('Selectors'))).toBe(true);
   });
@@ -47,7 +53,7 @@ describe(loadSetupMocks.name, () => {
 
 describe(loadRpcHandlers.name, () => {
   test('enumerates handler files by basename with the methods they register', () => {
-    const handlers = loadRpcHandlers(config);
+    const handlers = loadRpcHandlers(config, loadRpcEndpoints(config));
     expect(handlers.get('open')?.methods).toEqual(['open']);
     expect(handlers.get('supported-methods')?.methods).toEqual(['supportedMethods']);
     expect(handlers.get('open')?.file.endsWith('rpc-methods/open.ts')).toBe(true);
@@ -87,5 +93,43 @@ describe(loadRouterFiles.name, () => {
     expect(names).toContain('home.tsx');
     expect(names).toContain('rpc-stx-call-contract.routes.tsx');
     expect(names).not.toContain('modal-background-wrapper.tsx');
+  });
+});
+
+describe(loadPersistedSliceKeys.name, () => {
+  test('reads the persist whitelist as the list of slices verify may write', () => {
+    const slices = loadPersistedSliceKeys(config);
+    expect(slices).toContain('softwareKeys');
+    expect(slices).toContain('wallets');
+    expect(slices).not.toContain('all');
+  });
+});
+
+describe(loadNetworkIds.name, () => {
+  test('reads the wallet network ids from the models package', () => {
+    const ids = loadNetworkIds(config);
+    expect(ids).toContain('mainnet');
+    expect(ids).toContain('testnet4');
+  });
+});
+
+describe(loadRpcCatalog.name, () => {
+  test('maps every test-app catalog id to its rpc method', () => {
+    const catalog = loadRpcCatalog(config);
+    expect(catalog.get('stx_callContract')).toBe('stx_callContract');
+    expect(catalog.get('open-popup')).toBe('open');
+    expect(catalog.get('signMessage-p2wpkh')).toBe('signMessage');
+    expect(catalog.size).toBeGreaterThan(20);
+  });
+});
+
+describe(loadVerifyMockNames.name, () => {
+  test('reads the base mocks and the registry object keys verify can apply', () => {
+    const names = loadVerifyMockNames(config);
+    expect(names.has('setupMockApis')).toBe(true);
+    expect(names.has('mockUnhandledRequests')).toBe(true);
+    expect(names.has('mockStacksFeeRequests')).toBe(true);
+    expect(names.has('mockBitcoinMainnetBroadcast')).toBe(true);
+    expect(names.has('mockBnsV2NameLookup')).toBe(false);
   });
 });
