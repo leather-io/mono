@@ -7,14 +7,18 @@ import { groupByFour } from './address-displayer.utils.shared';
 
 export type AddressDisplayerProps = AddressDisplayerBaseProps & FlexProps;
 
-export function AddressDisplayer({ address, ...props }: AddressDisplayerProps) {
+export function AddressDisplayer({
+  address,
+  textStyle = 'address',
+  ...props
+}: AddressDisplayerProps) {
   return (
     <Flex direction="row" columnGap="1ch" flexWrap="wrap" {...props}>
       {groupByFour(address).map((letterGroup, index) => (
         <styled.span
           key={index}
           color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued'}
-          textStyle="address"
+          textStyle={textStyle}
         >
           {letterGroup}
         </styled.span>
