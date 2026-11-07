@@ -5,7 +5,7 @@ status_value() {
   local key="$2"
   if [ -f "$file" ]; then
     awk -v key="$key" '
-      /^(STATE|COMMIT|WHY|HOW|TESTED):/ {
+      /^(STATE|COMMIT|WHY|HOW|TESTED|FIXED):/ {
         inside = (index($0, key ":") == 1)
         if (inside) {
           rest = substr($0, length(key) + 2)

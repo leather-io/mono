@@ -187,13 +187,40 @@ For each worktree, in order:
 
 1. `status.sh` shows the entry `done`, a non-empty staged diff and a `TESTED:` list in the
    status file.
-2. Review the staged diff before anything leaves the machine: run the `code-review` skill at
-   `medium` against the worktree path, as a non-fork subagent with `model: "opus"`. Feed real
-   findings back to that fixer with `herdr agent prompt <agent> "<findings>"`, asking it to stage
-   the fixes, rerun verification and rewrite the status file. That counts as one of its two
-   retries.
-3. Show the person the reviewed batch (branch, subject, staged file count, review outcome) and get
-   one yes for it: pushing and opening pull requests are GitHub writes. Then, per worktree:
+2. **One review, then at most one fix round.** This is a gate, not advice: `push-as-bot.sh` and
+   `status.sh --finish` refuse a worktree until `review-round.sh check` passes.
+
+   1. Review the worktree's diff once (for a grouped brief, after its last issue: the bot commits
+      on the branch plus the staged set). Run the `code-review` skill at `medium` against the
+      worktree path, as a non-fork subagent with `model: "opus"`, so the reviewer shares nothing
+      with the fixer.
+   2. Classify every finding on its own line in a file in the run directory: `CRITICAL:` for a
+      correctness bug or a regression this diff introduces (wrong behavior, a crash, lost data or
+      funds, a security hole, existing behavior that broke); `OTHER:` for everything else
+      (simplification, style, naming, coverage, nits). When in doubt it is `OTHER`.
+   3. Record it:
+
+      ```bash
+      .claude/skills/fix-issues/scripts/review-round.sh record --run-dir "$run_dir" \
+        --branch <branch> --findings <file>
+      ```
+
+      It keeps the findings in `$run_dir/reviews/<branch>.md` and counts them in `run.json`. With
+      critical findings it prompts the fixer once with only those (`REVIEW FIXES`: fix these,
+      change nothing else, rerun verification, restage, add a `FIXED:` list). A second `record`
+      for the same branch is refused.
+
+   4. Wait for the fix round with `herdr agent wait <agent> --until idle --until done`, or rerun
+      `run-wave.sh`, which picks the fixer up again once it writes `STATE: working`. The gate
+      passes when the status file says `done` and has a `FIXED:` list.
+
+   There is no second review and no second fix round, whatever the fix round produced. `OTHER`
+   findings are never sent to the fixer; they go in the report. A fixer that comes back with
+   `Not fixed:` lines still passes the gate; say so in the report.
+
+3. Show the person the reviewed batch (branch, subject, staged file count, critical findings and
+   what `FIXED:` says) and get one yes for it: pushing and opening pull requests are GitHub
+   writes. Then, per worktree:
 
    ```bash
    .claude/skills/fix-issues/scripts/push-as-bot.sh --run-dir "$run_dir" --branch <branch>
@@ -230,8 +257,9 @@ mention, no "generated" line, no co-author trailer.
 
 Preconditions, each a one-line error: the config file, `gh` on the path, `STATE: done`
 (`staged` or `done` with `--commit-only`), a non-empty staged diff (or bot commits already on the
-branch, for a re-push), and nothing but bot commits in `origin/dev..HEAD`. Exit 3 means no bot is
-configured.
+branch, for a re-push), nothing but bot commits in `origin/dev..HEAD`, and, for a push, the
+review gate (`review-round.sh check`). `--commit-only` is not gated, so a grouped brief can commit
+issue by issue before its one review. Exit 3 means no bot is configured.
 
 **Grouped briefs**: when the fixer writes `STATE: staged`, run
 `push-as-bot.sh --run-dir "$run_dir" --branch <branch> --commit-only`, then prompt the fixer that
@@ -299,8 +327,9 @@ from `status.sh --run-dir "$run_dir" --finish` and stop:
 ## 9. Report
 
 Per issue: branch, workspace id, agent name, state (`done`, `blocked: <why>` or
-`open decisions`), staged file count, the checks the fixer's `TESTED:` list claims, review findings
-addressed or outstanding, the `Not verified:` lines from `TESTED:` (the `Needs` that could not be
+`open decisions`), staged file count, the checks the fixer's `TESTED:` list claims, the review
+(critical count, the fixer's `FIXED:` lines including any `Not fixed:`, and the `OTHER` findings
+from `$run_dir/reviews/<branch>.md` left for a follow-up), the `Not verified:` lines from `TESTED:` (the `Needs` that could not be
 met, so the PR says what was not verified end to end), and the PR URL from `run.json`, or, on the fallback path, the three finish commands.
 For bot pull requests add that fork CI needs "Approve and run" and does not run lint, typecheck or
 unit tests, and that the merge must be a squash. Then the run directory path, so a later session

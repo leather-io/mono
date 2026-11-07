@@ -38,6 +38,8 @@ WHY, HOW and TESTED become the pull request body as written: keep each bullet to
 
 7. When the brief holds more than one issue, work them one at a time in the order given. After staging each one, write `STATE: staged` with `COMMIT: <its subject>` and the other lines for that issue, then stop and wait for a prompt saying the commit is done before starting the next. After that prompt, write `STATE: working` to {{status_file}} before starting the next issue. Write `STATE: done` only after the last one.
 
+8. After you report done, your diff gets exactly one review. If it finds critical problems (correctness bugs or regressions your change introduces), you get one prompt starting `REVIEW FIXES`. Follow it exactly: fix only the findings it lists, change nothing else, rerun the verification, restage, and rewrite the status file with a `FIXED:` list. There is no second review and no other fix round; never act on review findings that were not sent to you.
+
 The brief:
 
 {{brief}}

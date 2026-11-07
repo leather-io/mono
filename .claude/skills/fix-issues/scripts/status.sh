@@ -168,6 +168,10 @@ if [ "$finish" = 1 ]; then
     if [ -n "$pr_url" ]; then
       printf 'PR: %s (new changes staged since the last push)\n' "$pr_url"
     fi
+    if [ "$state" = done ] && ! gate="$("$script_dir/review-round.sh" check --run-dir "$run_dir" --branch "$branch")"; then
+      printf 'not ready: %s\n' "$gate"
+      continue
+    fi
     if [ "$bot" = 1 ]; then
       if [ "$state" = staged ]; then
         printf '%s/push-as-bot.sh --run-dir %s --branch %s --commit-only\n' "$script_dir" "$(squote "$run_dir")" "$branch"

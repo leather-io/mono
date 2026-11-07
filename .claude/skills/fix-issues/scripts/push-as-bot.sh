@@ -105,6 +105,13 @@ if [ "$commit_only" = 1 ]; then
   esac
 else
   [ "$state" = done ] || die "status file says ${state:-nothing}; pushing needs STATE: done"
+  if ! gate="$("$script_dir/review-round.sh" check --run-dir "$run_dir" --branch "$branch")"; then
+    if [ "$dry_run" = 1 ]; then
+      say "dry-run: the review gate would stop here: $gate"
+    else
+      die "$gate"
+    fi
+  fi
 fi
 [ -n "$subject" ] || die "status file has no COMMIT: subject"
 
