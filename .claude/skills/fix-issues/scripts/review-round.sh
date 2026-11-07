@@ -3,6 +3,7 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$script_dir/lib/status-file.sh"
+. "$script_dir/lib/agent.sh"
 
 usage() {
   cat <<'EOF'
@@ -23,7 +24,7 @@ check   Exits 0 when the gate passes: a review is recorded and, if it had critic
         fixer finished its fix round (STATE: done with a FIXED: list). Otherwise prints why and
         exits 1.
 
-  --dry-run  print the herdr and file-writing commands record would run; run none
+  --dry-run  print the prompt and file-writing commands record would run; run none
 EOF
 }
 
@@ -143,7 +144,7 @@ if [ "$dry_run" = 1 ]; then
   show cp "$findings" "$review_file"
   if [ "$critical_count" -gt 0 ]; then
     show write-fix-prompt "$fix_prompt"
-    show herdr agent prompt "$agent" "\$(cat $fix_prompt)"
+    agent_prompt_command "$entry" "$fix_prompt"
   fi
   show record-review "$run_json" "$branch"
   exit 0
@@ -156,8 +157,7 @@ if [ "$critical_count" -eq 0 ]; then
   say "no critical findings: no fix round; the gate passes"
   exit 0
 fi
-command -v herdr >/dev/null || die "herdr is required to prompt $agent"
 write_fix_prompt
-herdr agent prompt "$agent" "$(cat "$fix_prompt")" >/dev/null || die "could not prompt $agent"
+agent_prompt "$run_dir" "$entry" "$fix_prompt" || die "could not prompt $agent"
 record "$now"
 say "prompted $agent with $critical_count critical findings: $fix_prompt"

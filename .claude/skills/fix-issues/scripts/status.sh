@@ -3,21 +3,22 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$script_dir/lib/status-file.sh"
+. "$script_dir/lib/agent.sh"
 
 usage() {
   cat <<'EOF'
 Usage: status.sh --run-dir <dir> [--finish] [--dry-run]
 
-Prints one row per entry in <run-dir>/run.json: issues, branch, workspace, agent, the herdr agent
-status, the status-file state (stalled when run-wave.sh gave up on it), the staged file count and
-the COMMIT subject.
+Prints one row per entry in <run-dir>/run.json: issues, branch, workspace, agent, the live agent
+status (herdr's agent status, or running/exited/held for a headless fixer), the status-file state
+(stalled when run-wave.sh gave up on it), the staged file count and the COMMIT subject.
 
   --finish   after the table, per worktree in done or staged state: the PR URL when push-as-bot.sh
              already opened one; otherwise the push-as-bot.sh command when a bot is configured
              (${XDG_CONFIG_HOME:-$HOME/.config}/fix-issues/bot.env); otherwise the commit, push and
              gh pr create commands for the person, with the PR body written to
              <run-dir>/pr/<branch>.md and a check that git can push over HTTPS with gh
-  --dry-run  print the herdr and git commands the table would run; run none
+  --dry-run  print the agent-status and git commands the table would run; run none
 
 Exits 1 when any entry is blocked or stalled, 0 otherwise.
 EOF
@@ -64,17 +65,13 @@ field() {
   jq -r --argjson i "$1" --arg f "$2" '.[$i][$f] // empty | if type == "array" then map(tostring) | join(",") else tostring end' "$run_json"
 }
 
-herdr_status() {
+live_status() {
   if [ "$dry_run" = 1 ]; then
-    show herdr agent get "$1" >&2
+    show agent-status "$(field "$1" agent)" >&2
     printf '?\n'
     return 0
   fi
-  if command -v herdr >/dev/null; then
-    herdr agent get "$1" 2>/dev/null | jq -r '.result.agent.agent_status // "gone"' || printf 'gone\n'
-  else
-    printf 'no-herdr\n'
-  fi
+  agent_status "$run_dir" "$(jq -c --argjson i "$1" '.[$i]' "$run_json")"
 }
 
 staged_count() {
@@ -118,7 +115,7 @@ print_person_commands() {
 
 count="$(jq 'length' "$run_json")"
 format='%-9s %-40s %-9s %-12s %-9s %-9s %-6s %s\n'
-printf "$format" ISSUES BRANCH WORKSPACE AGENT HERDR STATE STAGED COMMIT
+printf "$format" ISSUES BRANCH WORKSPACE AGENT LIVE STATE STAGED COMMIT
 failed=0
 done_rows=""
 i=0
@@ -129,7 +126,7 @@ while [ "$i" -lt "$count" ]; do
   state="$(entry_state "$agent" "$status_file")"
   subject="$(status_subject "$status_file")"
   printf "$format" "$(field "$i" issues)" "$(field "$i" branch)" "$(field "$i" workspace_id)" \
-    "$agent" "$(herdr_status "$agent")" "$state" "$(staged_count "$path")" "${subject:--}"
+    "$agent" "$(live_status "$i")" "$state" "$(staged_count "$path")" "${subject:--}"
   case "$state" in
     blocked|stalled) failed=1 ;;
     done|staged) done_rows="$done_rows $i" ;;
@@ -175,7 +172,7 @@ if [ "$finish" = 1 ]; then
     if [ "$bot" = 1 ]; then
       if [ "$state" = staged ]; then
         printf '%s/push-as-bot.sh --run-dir %s --branch %s --commit-only\n' "$script_dir" "$(squote "$run_dir")" "$branch"
-        printf 'herdr agent prompt %s %s\n' "$agent" "$(squote "The commit is done. Continue with the next issue in your brief.")"
+        printf '%s/prompt-agent.sh --run-dir %s --branch %s --text %s\n' "$script_dir" "$(squote "$run_dir")" "$branch" "$(squote "The commit is done. Continue with the next issue in your brief.")"
       else
         printf '%s/push-as-bot.sh --run-dir %s --branch %s\n' "$script_dir" "$(squote "$run_dir")" "$branch"
       fi
@@ -183,7 +180,7 @@ if [ "$finish" = 1 ]; then
     fi
     printf 'git -C %s commit -m %s\n' "$(squote "$path")" "$(squote "$subject")"
     if [ "$state" = staged ]; then
-      printf 'herdr agent prompt %s %s\n' "$agent" "$(squote "The commit is done. Continue with the next issue in your brief.")"
+      printf '%s/prompt-agent.sh --run-dir %s --branch %s --text %s\n' "$script_dir" "$(squote "$run_dir")" "$branch" "$(squote "The commit is done. Continue with the next issue in your brief.")"
       continue
     fi
     print_person_commands "$i" "$path" "$branch" "$subject" "$status_file"

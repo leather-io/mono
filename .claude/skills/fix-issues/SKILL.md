@@ -1,6 +1,6 @@
 ---
 name: fix-issues
-description: Take one or more GitHub issue numbers for leather-io/mono, research each one, settle the open decisions with the person in one short round per issue, write a handoff brief per issue, then run one herdr worktree and Claude agent per issue (or per group of overlapping issues) until every worktree is staged, verified and reviewed, then committed and pushed by a fork bot account with the pull request open (or, with no bot configured, the commit and push commands printed). Use when given one or more GitHub issue numbers to fix, asked to work through a batch of issues, or asked to spin up a worktree per issue.
+description: Take one or more GitHub issue numbers for leather-io/mono, research each one, settle the open decisions with the person in one short round per issue, write a handoff brief per issue, then run one git worktree and Claude fixer per issue (in herdr when available, as a headless claude -p process otherwise) (or per group of overlapping issues) until every worktree is staged, verified and reviewed, then committed and pushed by a fork bot account with the pull request open (or, with no bot configured, the commit and push commands printed). Use when given one or more GitHub issue numbers to fix, asked to work through a batch of issues, or asked to spin up a worktree per issue.
 ---
 
 # Fix issues
@@ -14,7 +14,8 @@ by a bot account to its fork with the pull request open. The person's commits ar
 hardware key, so no agent ever commits as them: without a bot configured, done means the commit
 command is printed for the person.
 
-The scripts need `jq` and, from section 6 on, `herdr`. Each takes `--help` and `--dry-run`.
+The scripts need `jq`, and from section 6 on either `herdr` or the `claude` CLI: herdr is used when
+it is there, never required. Each script takes `--help` and `--dry-run`.
 
 ## 1. Intake
 
@@ -115,11 +116,21 @@ grouping and wait for the person to confirm it before anything is created.
 
 ## 6. Spawn
 
-```bash
-command -v herdr && command -v jq
-```
+Pick the runner. `bootstrap-worktree.sh --runner auto` (the default) makes the same choice:
 
-**Without herdr**, stop here. Print each brief's path and the manual equivalent per group, then
+| Available                             | Runner     | Worktree                | Build                 | Fixer                                                 |
+| ------------------------------------- | ---------- | ----------------------- | --------------------- | ----------------------------------------------------- |
+| `herdr` on the path and `HERDR_ENV=1` | `herdr`    | `herdr worktree create` | in the workspace pane | interactive Claude agent in that pane, watchable live |
+| `claude` on the path, no herdr        | `headless` | `git worktree add`      | in the foreground     | background `claude -p` with a fixed `--session-id`    |
+| neither                               | none       | manual steps below      |                       |                                                       |
+
+The headless runner puts new worktrees in `<main checkout>-worktrees/<branch with / as ->` (change
+it with `--worktree-dir`). Its fixer's output goes to `$run_dir/agents/<agent>.out.jsonl` and
+`.err.log`, its pid to `<agent>.pid`; every later prompt (a re-prompt, the review fixes, "the
+commit is done") resumes the same session with `claude -p --resume`, so the fixer keeps its
+context. Nothing in the procedure after this section depends on which runner was used.
+
+**With neither**, stop here. Print each brief's path and the manual equivalent per group, then
 report:
 
 ```bash
@@ -130,7 +141,7 @@ cp <main checkout>/apps/mobile/.env apps/mobile/.env
 claude    # paste the fixer prompt: references/fixer-prompt.md filled from the brief
 ```
 
-**With herdr**, check disk first: `df -h <main checkout>`, and warn when free space is below 4 GB
+**Otherwise**, check disk first: `df -h <main checkout>`, and warn when free space is below 4 GB
 times the number of groups (a bootstrapped mono worktree costs roughly 3.5–4 GB). Then run the
 bootstrap once per group, **sequentially**, never in parallel (parallel bootstraps have hit ENOSPC
 and they fight for CPU):
@@ -141,17 +152,19 @@ and they fight for CPU):
   --issues 123
 ```
 
-It creates the worktree (or reuses the branch's existing one), runs `pnpm i && pnpm build` in its
-pane and checks the turbo summary, copies the `.env` files, fills the fixer prompt into
-`$run_dir/prompts/<branch>.md`, starts a Claude agent named `fix-<first issue>` in the pane (or in
-a split when the person already has a session there), prompts it and appends the entry to
-`run.json`. Every step is idempotent; re-run it after a failure.
+It creates the worktree (or reuses the branch's existing one), runs `pnpm i && pnpm build` and
+checks the turbo summary, copies the `.env` files, fills the fixer prompt into
+`$run_dir/prompts/<branch>.md`, starts the fixer named `fix-<first issue>` with that prompt (under
+herdr in a split when the person already has a session in the pane) and appends the entry, with
+its `runner`, to `run.json`. Every step is idempotent; re-run it after a failure.
 
-Pass `--hold` for every group beyond the fifth: the agent starts but is not prompted, and
-`run-wave.sh` prompts it when a slot frees up. Pass the person's usual permission flags to Claude
-after `--` (for example `-- --permission-mode auto`): nobody watches these panes, and a fixer that
-stops on an approval dialog is idle to the wave runner, which answers it with Escape. The run
-directory is always added with `--add-dir` so the fixer can write its status file.
+Pass `--hold` for every group beyond the fifth: the fixer gets no prompt yet (a headless one does
+not start at all), and `run-wave.sh` hands it the prompt when a slot frees up. Pass the person's
+usual permission flags to Claude after `--` (for example `-- --permission-mode auto`): nobody
+watches these fixers. Under herdr, one that stops on an approval dialog is idle to the wave
+runner, which answers it with Escape; a headless `claude -p` never waits on a dialog, it is denied
+the tool instead, so without the flags it ends up `blocked` or stalled. The run directory is always
+added with `--add-dir` so the fixer can write its status file.
 
 ## 7. Waves
 
@@ -170,16 +183,21 @@ reported and skipped.
 Watch it with `tail -n 20 "$run_dir/run.log"` and `scripts/status.sh --run-dir "$run_dir"`; do
 not poll agents yourself. When a grouped fixer writes `STATE: staged`, commit it with
 `push-as-bot.sh --commit-only` (section 8), or on the fallback path ask the person to commit (the
-subject is in the `COMMIT:` line), then `herdr agent prompt <agent> "The commit is done.
-Continue with the next issue in your brief."`.
+subject is in the `COMMIT:` line), then
+`scripts/prompt-agent.sh --run-dir "$run_dir" --branch <branch> --text "The commit is done.
+Continue with the next issue in your brief."`. `prompt-agent.sh` reaches either runner; never
+prompt a fixer any other way.
 
-To stop it, kill the script and its waits separately; killing the script does not reach the
-`herdr agent wait` children:
+To stop it, kill the script and then what it waits on; killing the script reaches neither the
+`herdr agent wait` children nor the headless fixers:
 
 ```bash
 kill "$(cat "$run_dir/run-wave.pid")"
 pkill -f 'herdr agent wait fix-'
+cat "$run_dir"/agents/*.pid | xargs kill
 ```
+
+The last line stops the headless fixers too; leave it out to let them finish.
 
 ## 8. Commit and push as the bot
 
@@ -210,8 +228,8 @@ For each worktree, in order:
       change nothing else, rerun verification, restage, add a `FIXED:` list). A second `record`
       for the same branch is refused.
 
-   4. Wait for the fix round with `herdr agent wait <agent> --until idle --until done`, or rerun
-      `run-wave.sh`, which picks the fixer up again once it writes `STATE: working`. The gate
+   4. Wait for the fix round by rerunning `run-wave.sh`, which picks the fixer up again once it
+      writes `STATE: working`, under either runner. The gate
       passes when the status file says `done` and has a `FIXED:` list.
 
    There is no second review and no second fix round, whatever the fix round produced. `OTHER`

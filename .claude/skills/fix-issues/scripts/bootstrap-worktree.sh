@@ -2,6 +2,7 @@
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$script_dir/lib/agent.sh"
 skill_dir="$(dirname "$script_dir")"
 template_file="$skill_dir/references/fixer-prompt.md"
 poll_seconds=10
@@ -11,11 +12,18 @@ usage() {
   cat <<'EOF'
 Usage: bootstrap-worktree.sh --run-dir <dir> --branch <branch> --brief <file> --issues <n[,n]>
                              [--base origin/dev] [--label <text>] [--agent <name>] [--model <model>]
+                             [--runner auto|herdr|headless] [--worktree-dir <dir>]
                              [--skip-build] [--hold] [--dry-run] [-- <claude args>]
 
-Creates (or reuses) a herdr worktree for <branch>, runs `pnpm i && pnpm build` in its pane, copies
-the gitignored .env files from the main checkout, fills the fixer prompt from the brief, starts a
-Claude agent in the pane, prompts it and appends the entry to <run-dir>/run.json.
+Creates (or reuses) a git worktree for <branch>, runs `pnpm i && pnpm build` in it, copies the
+gitignored .env files from the main checkout, fills the fixer prompt from the brief, starts a Claude
+fixer with that prompt and appends the entry to <run-dir>/run.json.
+
+Runners. herdr (when herdr is on the path and this runs inside herdr, HERDR_ENV=1): the worktree
+gets a herdr workspace, the build runs in its pane and the fixer is an interactive Claude agent in
+that pane. headless (anywhere `claude` is on the path): `git worktree add`, the build runs in the
+foreground, and the fixer is a background `claude -p` process with a fixed session id, so
+re-prompts resume the same conversation. auto (the default) picks herdr when available.
 
   --run-dir     run directory created by the fix-issues skill (holds run.json, status/, prompts/)
   --branch      branch to create, e.g. fix/123-fee-row-shows-zero
@@ -23,11 +31,16 @@ Claude agent in the pane, prompts it and appends the entry to <run-dir>/run.json
   --issues      comma-separated issue numbers handled in this worktree
   --base        base ref for a new branch (default origin/dev)
   --label       herdr workspace label (default: the branch)
-  --agent       herdr agent name (default: fix-<first issue>)
+  --agent       agent name (default: fix-<first issue>)
+  --runner      auto (default), herdr or headless
+  --worktree-dir  headless only: parent directory for new worktrees
+                (default: <main checkout>-worktrees next to the main checkout)
   --model       Claude model, passed to claude as --model
   --skip-build  skip `pnpm i && pnpm build`
-  --hold        start the agent but do not prompt it; run-wave.sh prompts it when a slot frees up
-  --dry-run     print every herdr, git and file-writing command; run none (read-only git lookups run)
+  --hold        do not hand the fixer its prompt yet; run-wave.sh does when a slot frees up
+                (herdr: the agent starts idle; headless: no process starts)
+  --dry-run     print every herdr, git, claude and file-writing command; run none
+                (read-only git lookups run)
   -- <args>     extra arguments passed to claude, e.g. -- --permission-mode auto
 
 Every step is idempotent: re-run the same command after a failure.
@@ -45,6 +58,8 @@ model=""
 skip_build=0
 hold=0
 dry_run=0
+runner="auto"
+worktree_dir=""
 claude_args=()
 
 while [ $# -gt 0 ]; do
@@ -59,6 +74,8 @@ while [ $# -gt 0 ]; do
     --model) model="$2"; shift 2 ;;
     --skip-build) skip_build=1; shift ;;
     --hold) hold=1; shift ;;
+    --runner) runner="$2"; shift 2 ;;
+    --worktree-dir) worktree_dir="$2"; shift 2 ;;
     --dry-run) dry_run=1; shift ;;
     -h|--help) usage; exit 0 ;;
     --) shift; claude_args=("$@"); break ;;
@@ -94,7 +111,16 @@ act() {
 [ -n "$brief" ] || die "--brief is required"
 [ -n "$issues" ] || die "--issues is required"
 command -v jq >/dev/null || die "jq is required"
-command -v herdr >/dev/null || die "herdr is required"
+case "$runner" in
+  auto) runner="$(detect_runner)" ;;
+  herdr)
+    command -v herdr >/dev/null || die "--runner herdr: herdr is not on the path"
+    [ "${HERDR_ENV:-}" = 1 ] || die "--runner herdr: not running inside herdr (HERDR_ENV is not 1)"
+    ;;
+  headless) command -v claude >/dev/null || die "--runner headless: claude is not on the path" ;;
+  *) die "--runner must be auto, herdr or headless" ;;
+esac
+[ "$runner" != none ] || die "neither herdr nor claude is available; follow the manual steps in SKILL.md section 6"
 [ -f "$brief" ] || die "brief not found: $brief"
 [ -f "$template_file" ] || die "fixer prompt template not found: $template_file"
 [ -d "$run_dir" ] || die "run directory not found: $run_dir"
@@ -106,6 +132,14 @@ run_json="$run_dir/run.json"
 status_file="$run_dir/status/$branch.md"
 prompt_file="$run_dir/prompts/$branch.md"
 built_marker="$run_dir/bootstrap/$branch.built"
+build_log="$run_dir/bootstrap/$branch.build.log"
+agent_args=()
+if [ -n "$model" ]; then
+  agent_args+=(--model "$model")
+fi
+if [ "${#claude_args[@]}" -gt 0 ]; then
+  agent_args+=("${claude_args[@]}")
+fi
 
 herdr_worktree_create() {
   herdr worktree create --cwd "$main_checkout" --branch "$branch" --base "$base" --label "$label" --no-focus
@@ -146,11 +180,8 @@ herdr_agent_by_name() {
 
 herdr_agent_start() {
   local args=(--add-dir "$run_dir")
-  if [ -n "$model" ]; then
-    args+=(--model "$model")
-  fi
-  if [ "${#claude_args[@]}" -gt 0 ]; then
-    args+=("${claude_args[@]}")
+  if [ "${#agent_args[@]}" -gt 0 ]; then
+    args+=("${agent_args[@]}")
   fi
   if [ "$dry_run" = 1 ]; then
     show herdr agent start "$agent" --kind claude --pane "$1" -- "${args[@]}"
@@ -227,6 +258,24 @@ build_succeeded() {
   '
 }
 
+agent_args_json() {
+  if [ "${#agent_args[@]}" -gt 0 ]; then
+    printf '%s\n' "${agent_args[@]}" | jq -R . | jq -s -c .
+  else
+    printf '[]\n'
+  fi
+}
+
+existing_session_id() {
+  if [ -f "$run_json" ]; then
+    jq -r --arg b "$branch" '[.[] | select(.branch == $b)] | .[0].session_id // empty' "$run_json"
+  fi
+}
+
+new_session_id() {
+  uuidgen | tr '[:upper:]' '[:lower:]'
+}
+
 record_entry() {
   local prompted="$1"
   local entry
@@ -242,10 +291,14 @@ record_entry() {
     --arg prompt_file "$prompt_file" \
     --arg base_sha "$base_sha" \
     --argjson prompted "$prompted" \
+    --arg runner "$runner" \
+    --arg session_id "$session_id" \
+    --argjson claude_args "$(agent_args_json)" \
     --arg started_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
     '{issues: ($issues | split(",") | map(tonumber)), branch: $branch, workspace_id: $workspace_id,
       pane_id: $pane_id, path: $path, agent: $agent, brief: $brief, status_file: $status_file,
-      prompt_file: $prompt_file, base_sha: $base_sha, prompted: $prompted, started_at: $started_at}')"
+      prompt_file: $prompt_file, base_sha: $base_sha, prompted: $prompted, started_at: $started_at,
+      runner: $runner, session_id: $session_id, claude_args: $claude_args}')"
   if [ "$dry_run" = 1 ]; then
     show jq --argjson entry "$entry" '[.[] | select(.branch != $entry.branch)] + [$entry]' "$run_json"
     return 0
@@ -262,76 +315,111 @@ say "base: $base @ $base_sha"
 
 workspace_id=""
 pane_id=""
+session_id=""
 checkout_path="$(existing_worktree_path)"
+say "runner: $runner"
 
-if [ -n "$checkout_path" ]; then
-  say "reusing worktree: $checkout_path"
-  if [ "$dry_run" = 1 ]; then
-    show herdr worktree list --cwd "$main_checkout"
-    workspace_id="<workspace_id>"
+if [ "$runner" = herdr ]; then
+  if [ -n "$checkout_path" ]; then
+    say "reusing worktree: $checkout_path"
+    if [ "$dry_run" = 1 ]; then
+      show herdr worktree list --cwd "$main_checkout"
+      workspace_id="<workspace_id>"
+    else
+      workspace_id="$(herdr_worktree_list | jq -r --arg p "$checkout_path" '.result.worktrees[] | select(.path == $p) | .open_workspace_id // empty')"
+      if [ -z "$workspace_id" ]; then
+        workspace_id="$(herdr_worktree_open "$checkout_path" | jq -r '.result.workspace.workspace_id // .result.workspace_id // empty')"
+      fi
+    fi
+    [ -n "$workspace_id" ] || die "no herdr workspace for $checkout_path"
+    if [ "$dry_run" = 1 ]; then
+      show herdr pane list --workspace "$workspace_id"
+      pane_id="<pane_id>"
+    else
+      pane_id="$(herdr_first_pane "$workspace_id")"
+    fi
   else
-    workspace_id="$(herdr_worktree_list | jq -r --arg p "$checkout_path" '.result.worktrees[] | select(.path == $p) | .open_workspace_id // empty')"
-    if [ -z "$workspace_id" ]; then
-      workspace_id="$(herdr_worktree_open "$checkout_path" | jq -r '.result.workspace.workspace_id // .result.workspace_id // empty')"
+    if [ "$dry_run" = 1 ]; then
+      show herdr worktree create --cwd "$main_checkout" --branch "$branch" --base "$base" --label "$label" --no-focus
+      workspace_id="<workspace_id>"
+      pane_id="<pane_id>"
+      checkout_path="<checkout_path>"
+    else
+      created="$(herdr_worktree_create)"
+      workspace_id="$(printf '%s' "$created" | jq -r '.result.workspace.workspace_id // .result.workspace_id // empty')"
+      pane_id="$(printf '%s' "$created" | jq -r '.result.root_pane.pane_id // empty')"
+      checkout_path="$(printf '%s' "$created" | jq -r '.result.checkout_path // .result.worktree.path // empty')"
     fi
   fi
-  [ -n "$workspace_id" ] || die "no herdr workspace for $checkout_path"
-  if [ "$dry_run" = 1 ]; then
-    show herdr pane list --workspace "$workspace_id"
-    pane_id="<pane_id>"
-  else
-    pane_id="$(herdr_first_pane "$workspace_id")"
-  fi
+  [ -n "$workspace_id" ] || die "could not read workspace_id"
+  [ -n "$pane_id" ] || die "could not read pane_id"
+elif [ -n "$checkout_path" ]; then
+  say "reusing worktree: $checkout_path"
 else
-  if [ "$dry_run" = 1 ]; then
-    show herdr worktree create --cwd "$main_checkout" --branch "$branch" --base "$base" --label "$label" --no-focus
-    workspace_id="<workspace_id>"
-    pane_id="<pane_id>"
-    checkout_path="<checkout_path>"
+  [ -n "$worktree_dir" ] || worktree_dir="$main_checkout-worktrees"
+  checkout_path="$worktree_dir/${branch//\//-}"
+  if git -C "$main_checkout" show-ref --verify --quiet "refs/heads/$branch"; then
+    act git -C "$main_checkout" worktree add "$checkout_path" "$branch"
   else
-    created="$(herdr_worktree_create)"
-    workspace_id="$(printf '%s' "$created" | jq -r '.result.workspace.workspace_id // .result.workspace_id // empty')"
-    pane_id="$(printf '%s' "$created" | jq -r '.result.root_pane.pane_id // empty')"
-    checkout_path="$(printf '%s' "$created" | jq -r '.result.checkout_path // .result.worktree.path // empty')"
+    act git -C "$main_checkout" worktree add --no-track -b "$branch" "$checkout_path" "$base"
   fi
 fi
-[ -n "$workspace_id" ] || die "could not read workspace_id"
-[ -n "$pane_id" ] || die "could not read pane_id"
 [ -n "$checkout_path" ] || die "could not read checkout_path"
-say "workspace: $workspace_id  pane: $pane_id  path: $checkout_path"
+say "workspace: ${workspace_id:--}  pane: ${pane_id:--}  path: $checkout_path"
 
-if [ "$skip_build" = 1 ]; then
+if [ "$runner" = herdr ]; then
+  if [ "$skip_build" = 1 ]; then
+    say "build: skipped"
+  elif [ -f "$built_marker" ]; then
+    say "build: already done ($built_marker)"
+  elif [ "$dry_run" = 1 ]; then
+    show herdr pane run "$pane_id" "pnpm i && pnpm build"
+    show herdr pane process-info --pane "$pane_id"
+    show herdr pane read "$pane_id" --source recent-unwrapped --lines 200
+    show touch "$built_marker"
+  else
+    herdr pane run "$pane_id" "pnpm i && pnpm build" >/dev/null
+    say "build: started in $pane_id"
+    waited=0
+    idle_polls=0
+    while [ "$idle_polls" -lt 2 ]; do
+      sleep "$poll_seconds"
+      waited=$((waited + poll_seconds))
+      if herdr_pane_idle "$pane_id"; then
+        idle_polls=$((idle_polls + 1))
+      else
+        idle_polls=0
+      fi
+      [ "$waited" -lt "$build_timeout_seconds" ] || die "build still running after ${build_timeout_seconds}s in $pane_id"
+    done
+    tail_text="$(herdr_pane_tail "$pane_id" 200)"
+    if ! printf '%s\n' "$tail_text" | build_succeeded; then
+      printf '%s\n' "$tail_text" | tail -n 30
+      die "build failed in $pane_id"
+    fi
+    mkdir -p "$(dirname "$built_marker")"
+    touch "$built_marker"
+    say "build: ok after ${waited}s"
+  fi
+
+elif [ "$skip_build" = 1 ]; then
   say "build: skipped"
 elif [ -f "$built_marker" ]; then
   say "build: already done ($built_marker)"
 elif [ "$dry_run" = 1 ]; then
-  show herdr pane run "$pane_id" "pnpm i && pnpm build"
-  show herdr pane process-info --pane "$pane_id"
-  show herdr pane read "$pane_id" --source recent-unwrapped --lines 200
+  show sh -c "cd $checkout_path && pnpm i && pnpm build" ">" "$build_log"
   show touch "$built_marker"
 else
-  herdr pane run "$pane_id" "pnpm i && pnpm build" >/dev/null
-  say "build: started in $pane_id"
-  waited=0
-  idle_polls=0
-  while [ "$idle_polls" -lt 2 ]; do
-    sleep "$poll_seconds"
-    waited=$((waited + poll_seconds))
-    if herdr_pane_idle "$pane_id"; then
-      idle_polls=$((idle_polls + 1))
-    else
-      idle_polls=0
-    fi
-    [ "$waited" -lt "$build_timeout_seconds" ] || die "build still running after ${build_timeout_seconds}s in $pane_id"
-  done
-  tail_text="$(herdr_pane_tail "$pane_id" 200)"
-  if ! printf '%s\n' "$tail_text" | build_succeeded; then
-    printf '%s\n' "$tail_text" | tail -n 30
-    die "build failed in $pane_id"
-  fi
   mkdir -p "$(dirname "$built_marker")"
+  say "build: running in $checkout_path, log $build_log"
+  build_ok=1
+  (cd "$checkout_path" && pnpm i && pnpm build) > "$build_log" 2>&1 || build_ok=0
+  if [ "$build_ok" = 0 ] || ! tail -n 200 "$build_log" | build_succeeded; then
+    tail -n 30 "$build_log"
+    die "build failed in $checkout_path"
+  fi
   touch "$built_marker"
-  say "build: ok after ${waited}s"
+  say "build: ok"
 fi
 
 for env_file in apps/extension/.env apps/mobile/.env; do
@@ -349,58 +437,87 @@ else
   say "prompt: $prompt_file"
 fi
 
-already_started=0
-if [ "$dry_run" = 1 ]; then
-  show herdr agent list
-else
-  named="$(herdr_agent_by_name "$agent")"
-  if [ -n "$named" ]; then
-    named_pane="$(printf '%s' "$named" | jq -r '.pane_id')"
-    case "$named_pane" in
-      "$workspace_id":*) already_started=1; pane_id="$named_pane" ;;
-      *) die "agent name $agent is live on $named_pane, outside $workspace_id; pass --agent" ;;
-    esac
+prompted=false
+if [ "$runner" = herdr ]; then
+  already_started=0
+  if [ "$dry_run" = 1 ]; then
+    show herdr agent list
   else
-    occupant="$(herdr_agent_on_pane "$pane_id")"
-    if [ -n "$occupant" ]; then
-      say "pane $pane_id already hosts $(printf '%s' "$occupant" | jq -r '.agent'); splitting"
-      pane_id="$(herdr_pane_split "$pane_id")"
+    named="$(herdr_agent_by_name "$agent")"
+    if [ -n "$named" ]; then
+      named_pane="$(printf '%s' "$named" | jq -r '.pane_id')"
+      case "$named_pane" in
+        "$workspace_id":*) already_started=1; pane_id="$named_pane" ;;
+        *) die "agent name $agent is live on $named_pane, outside $workspace_id; pass --agent" ;;
+      esac
+    else
+      occupant="$(herdr_agent_on_pane "$pane_id")"
+      if [ -n "$occupant" ]; then
+        say "pane $pane_id already hosts $(printf '%s' "$occupant" | jq -r '.agent'); splitting"
+        pane_id="$(herdr_pane_split "$pane_id")"
+      fi
     fi
   fi
-fi
 
-if [ "$already_started" = 1 ]; then
-  say "agent: $agent already running on $pane_id"
-elif [ "$dry_run" = 1 ]; then
-  herdr_agent_start "$pane_id"
-else
-  if ! start_error="$(herdr_agent_start "$pane_id")"; then
-    code="$(printf '%s' "$start_error" | jq -r '.error.code // empty' 2>/dev/null || true)"
-    case "$code" in
-      agent_pane_busy|timeout)
-        say "agent start: $code on $pane_id"
-        herdr_pane_tail "$pane_id" 30 | tail -n 30
-        pane_id="$(herdr_pane_split "$pane_id")"
-        say "retrying in $pane_id"
-        start_error="$(herdr_agent_start "$pane_id")" || die "agent start failed in $pane_id: $start_error"
-        ;;
-      *) die "agent start failed in $pane_id: $start_error" ;;
-    esac
+  if [ "$already_started" = 1 ]; then
+    say "agent: $agent already running on $pane_id"
+  elif [ "$dry_run" = 1 ]; then
+    herdr_agent_start "$pane_id"
+  else
+    if ! start_error="$(herdr_agent_start "$pane_id")"; then
+      code="$(printf '%s' "$start_error" | jq -r '.error.code // empty' 2>/dev/null || true)"
+      case "$code" in
+        agent_pane_busy|timeout)
+          say "agent start: $code on $pane_id"
+          herdr_pane_tail "$pane_id" 30 | tail -n 30
+          pane_id="$(herdr_pane_split "$pane_id")"
+          say "retrying in $pane_id"
+          start_error="$(herdr_agent_start "$pane_id")" || die "agent start failed in $pane_id: $start_error"
+          ;;
+        *) die "agent start failed in $pane_id: $start_error" ;;
+      esac
+    fi
+    say "agent: $agent started on $pane_id"
   fi
-  say "agent: $agent started on $pane_id"
-fi
 
-prompted=false
-if [ "$hold" = 1 ]; then
-  say "prompt: held for run-wave.sh"
-elif [ "$already_started" = 1 ] && [ -f "$run_json" ] &&
-  jq -e --arg b "$branch" 'any(.[]; .branch == $b and .prompted == true)' "$run_json" >/dev/null; then
-  prompted=true
-  say "prompt: already sent"
+  prompted=false
+  if [ "$hold" = 1 ]; then
+    say "prompt: held for run-wave.sh"
+  elif [ "$already_started" = 1 ] && [ -f "$run_json" ] &&
+    jq -e --arg b "$branch" 'any(.[]; .branch == $b and .prompted == true)' "$run_json" >/dev/null; then
+    prompted=true
+    say "prompt: already sent"
+  else
+    herdr_agent_prompt
+    prompted=true
+    say "prompt: sent to $agent"
+  fi
+
 else
-  herdr_agent_prompt
-  prompted=true
-  say "prompt: sent to $agent"
+  session_id="$(existing_session_id)"
+  [ -n "$session_id" ] || session_id="$(new_session_id)"
+  if [ "$dry_run" = 1 ]; then
+    if [ "$hold" = 1 ]; then
+      say "prompt: held for run-wave.sh"
+    else
+      show cd "$checkout_path"
+      show nohup claude -p --output-format json --add-dir "$run_dir" --session-id "$session_id" ${agent_args[@]+"${agent_args[@]}"} "<" "$prompt_file"
+      prompted=true
+    fi
+  elif headless_started "$run_dir" "$agent"; then
+    prompted=true
+    say "agent: $agent already started (session $session_id)"
+  elif [ "$hold" = 1 ]; then
+    say "prompt: held for run-wave.sh"
+  else
+    if [ "${#agent_args[@]}" -gt 0 ]; then
+      headless_start "$run_dir" "$agent" "$checkout_path" "$session_id" "$prompt_file" "${agent_args[@]}"
+    else
+      headless_start "$run_dir" "$agent" "$checkout_path" "$session_id" "$prompt_file"
+    fi
+    prompted=true
+    say "agent: $agent started headless, pid $(headless_pid "$run_dir" "$agent"), session $session_id"
+  fi
 fi
 
 record_entry "$prompted"

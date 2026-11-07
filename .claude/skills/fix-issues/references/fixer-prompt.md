@@ -1,14 +1,14 @@
 # Fixer prompt
 
-`bootstrap-worktree.sh` fills the template below and hands it to the worktree agent with
-`herdr agent prompt`. It reads only the lines between the two four-backtick fences. Placeholders:
+`bootstrap-worktree.sh` fills the template below and hands it to the worktree agent: with
+`herdr agent prompt` under herdr, as the first `claude -p` prompt when headless. It reads only the lines between the two four-backtick fences. Placeholders:
 `{{worktree}}`, `{{branch}}`, `{{base_sha}}` and `{{status_file}}` are replaced inline; the line
 `{{brief}}` is replaced by the brief file's content. The status file's first line is always
 `STATE: working|staged|done|blocked`; `run-wave.sh` and `status.sh` parse only that line and
 `COMMIT:`.
 
 ````text
-You are fixing a GitHub issue in a herdr worktree. Nobody is watching this pane.
+You are fixing a GitHub issue in a git worktree. Nobody is watching this session.
 
 1. Where you are. Worktree {{worktree}}, branch {{branch}}, based on origin/dev @ {{base_sha}}. CLAUDE.md in this checkout applies in full, including the no-comments rule, the verification list and the rule that mobile changes run `pnpm lingui` from apps/mobile/ first.
 

@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$script_dir/lib/agent.sh"
+
 usage() {
   cat <<'EOF'
 Usage: run-wave.sh --run-dir <dir> [--parallel 5] [--timeout-min 90] [--retries 2] [--dry-run]
 
 Runs the fixers listed in <run-dir>/run.json in waves. Keeps at most --parallel agents working,
 prompts held agents (bootstrap-worktree.sh --hold) as slots free, waits on each working agent in
-turn, and when one goes idle checks on disk that its status file says done or staged and that its
+turn (herdr agents with `herdr agent wait`, headless fixers by polling their claude -p process), and when one goes idle checks on disk that its status file says done or staged and that its
 worktree has a staged diff. An agent that stopped short gets Escape and a re-prompt, up to
 --retries times, then is marked stalled. An agent still working after --timeout-min minutes since
 its last prompt is marked stalled. Exits 0 when every agent is done, staged, blocked or stalled.
@@ -51,9 +54,15 @@ die() {
 
 [ -n "$run_dir" ] || die "--run-dir is required"
 command -v jq >/dev/null || die "jq is required"
-command -v herdr >/dev/null || die "herdr is required"
 run_json="$run_dir/run.json"
 [ -f "$run_json" ] || die "run.json not found in $run_dir"
+if jq -e 'any(.[]; (.runner // "herdr") == "herdr")' "$run_json" >/dev/null; then
+  command -v herdr >/dev/null || die "run.json has herdr entries but herdr is not on the path"
+fi
+if jq -e 'any(.[]; .runner == "headless")' "$run_json" >/dev/null; then
+  command -v claude >/dev/null || die "run.json has headless entries but claude is not on the path"
+fi
+headless_poll_seconds=30
 if [ "$parallel" -gt "$max_parallel" ]; then
   parallel="$max_parallel"
 fi
@@ -68,6 +77,14 @@ show() {
   printf '+'
   printf ' %q' "$@"
   printf '\n'
+}
+
+entry_json() {
+  jq -c --argjson i "$1" '.[$i]' "$run_json"
+}
+
+runner_of() {
+  jq -r --argjson i "$1" '.[$i].runner // "herdr"' "$run_json"
 }
 
 field() {
@@ -172,10 +189,10 @@ prompt_queued() {
   name="$(field "$i" agent)"
   prompt_file="$(field "$i" prompt_file)"
   if [ "$dry_run" = 1 ]; then
-    show herdr agent prompt "$name" "\$(cat $prompt_file)"
+    agent_prompt_command "$(entry_json "$i")" "$prompt_file"
     return 0
   fi
-  if herdr_prompt "$name" "$(cat "$prompt_file")"; then
+  if agent_prompt "$run_dir" "$(entry_json "$i")" "$prompt_file"; then
     set_prompted "$i"
     mark_prompted_now "$name"
     log "$name" "prompted from queue"
@@ -185,19 +202,25 @@ prompt_queued() {
 }
 
 reprompt() {
-  local name="$1"
-  local status_file="$2"
-  local reason="$3"
-  local tries
+  local i="$1"
+  local reason="$2"
+  local name status_file retry_file tries
+  name="$(field "$i" agent)"
+  status_file="$(field "$i" status_file)"
+  retry_file="$run_dir/prompts/$(field "$i" branch).retry.md"
   tries="$(retry_count "$name")"
   if [ "$tries" -ge "$retries" ]; then
     set_marker "$name" stalled
     log "$name" "stalled: $reason after $tries re-prompts"
     return 0
   fi
-  herdr_escape "$name"
-  sleep "$escape_settle_seconds"
-  if herdr_prompt "$name" "Finish the task in your brief, or write STATE: blocked and the reason to $status_file."; then
+  if [ "$(runner_of "$i")" = herdr ]; then
+    herdr_escape "$name"
+    sleep "$escape_settle_seconds"
+  fi
+  mkdir -p "$(dirname "$retry_file")"
+  printf 'Finish the task in your brief, or write STATE: blocked and the reason to %s.\n' "$status_file" > "$retry_file"
+  if agent_prompt "$run_dir" "$(entry_json "$i")" "$retry_file"; then
     printf '%s\n' "$((tries + 1))" > "$wave_dir/$name.retries"
     mark_prompted_now "$name"
     log "$name" "re-prompted ($((tries + 1))/$retries): $reason"
@@ -220,7 +243,7 @@ check_on_disk() {
         set_marker "$name" "$current"
         log "$name" "$current: $count staged files"
       else
-        reprompt "$name" "$status_file" "status $current but nothing staged"
+        reprompt "$i" "status $current but nothing staged"
       fi
       ;;
     blocked)
@@ -228,7 +251,7 @@ check_on_disk() {
       log "$name" "blocked: $(sed -n '2,3p' "$status_file" | tr '\n' ' ')"
       ;;
     *)
-      reprompt "$name" "$status_file" "idle with status ${current:-missing}"
+      reprompt "$i" "stopped with status ${current:-missing}"
       ;;
   esac
 }
@@ -239,8 +262,26 @@ wait_one() {
   name="$(field "$i" agent)"
   status_file="$(field "$i" status_file)"
   if [ "$dry_run" = 1 ]; then
-    show herdr agent wait "$name" --until idle --until done --timeout "$slice_ms"
+    if [ "$(runner_of "$i")" = headless ]; then
+      show kill -0 "<pid of $name>"
+    else
+      show herdr agent wait "$name" --until idle --until done --timeout "$slice_ms"
+    fi
     show git -C "$(field "$i" path)" diff --cached --name-only
+    return 0
+  fi
+  if [ "$(runner_of "$i")" = headless ]; then
+    if headless_alive "$run_dir" "$name"; then
+      headless_waiting=1
+      now="$(date +%s)"
+      started="$(since "$name")"
+      if [ $((now - started)) -ge "$timeout_seconds" ]; then
+        set_marker "$name" stalled
+        log "$name" "stalled: still running after ${timeout_min} min (pid $(headless_pid "$run_dir" "$name"))"
+      fi
+    else
+      check_on_disk "$i"
+    fi
     return 0
   fi
   if err="$(herdr_wait "$name")"; then
@@ -329,12 +370,20 @@ while :; do
     i=$((i + 1))
   done
   i=0
+  headless_waiting=0
+  herdr_waited=0
   while [ "$i" -lt "$count" ]; do
     if [ "$(agent_state "$i")" = working ]; then
+      if [ "$(runner_of "$i")" = herdr ]; then
+        herdr_waited=1
+      fi
       wait_one "$i"
     fi
     i=$((i + 1))
   done
+  if [ "$headless_waiting" = 1 ] && [ "$herdr_waited" = 0 ]; then
+    sleep "$headless_poll_seconds"
+  fi
 done
 
 i=0
