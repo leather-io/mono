@@ -5,6 +5,7 @@ import * as btc from '@scure/btc-signer';
 import {
   determineUtxosForSpend,
   determineUtxosForSpendAll,
+  getUtxoTotal,
   isTaprootPayer,
 } from '@leather.io/bitcoin';
 import { keyOriginToDerivationPath } from '@leather.io/crypto';
@@ -59,7 +60,12 @@ export function useGenerateUnsignedBitcoinTx({
           ? determineUtxosForSpendAll(determineUtxosArgs)
           : determineUtxosForSpend(determineUtxosArgs);
 
-        logger.info('Coin selection', { inputs, outputs, fee });
+        logger.info('Coin selection', {
+          inputCount: inputs.length,
+          outputCount: outputs.length,
+          totalInputValue: getUtxoTotal(inputs).toNumber(),
+          fee: fee.amount.toNumber(),
+        });
 
         if (!inputs.length) throw new Error('No inputs to sign');
         if (!outputs.length) throw new Error('No outputs to sign');

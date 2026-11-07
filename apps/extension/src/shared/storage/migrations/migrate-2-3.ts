@@ -50,7 +50,7 @@ function findDefaultAccountFingerprint(state: unknown): string {
       if (fingerprint) return fingerprint;
     } catch (error) {
       // Continue to try ledger wallet
-      logger.error('Error extracting fingerprint from Stacks descriptor:', error, stacksDescriptor);
+      logger.error('Error extracting fingerprint from Stacks descriptor:', error);
     }
   }
 
@@ -66,7 +66,7 @@ function findDefaultAccountFingerprint(state: unknown): string {
         if (fingerprint) return fingerprint;
       } catch (error) {
         // Continue to default
-        logger.error('Error extracting fingerprint from Bitcoin policy:', error, policy);
+        logger.error('Error extracting fingerprint from Bitcoin policy:', error);
       }
     }
   }
@@ -313,11 +313,7 @@ export function migrateMultiWalletSupport(state: unknown) {
                 keychainIds?.push(keyOriginPath);
               }
             } catch (error) {
-              logger.error(
-                'Error extracting key origin from Bitcoin descriptor:',
-                error,
-                descriptor
-              );
+              logger.error('Error extracting key origin from Bitcoin descriptor:', error);
             }
           }
         }

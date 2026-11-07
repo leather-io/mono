@@ -58,7 +58,7 @@ function getRpcHandler<M extends keyof RpcEndpointMap>(
 export async function rpcMessageHandler(request: RpcRequests, port: chrome.runtime.Port) {
   listenForOriginTabClose({ tabId: port.sender?.tab?.id });
 
-  logger.info(`Received RPC request ${request.method}`, request);
+  logger.info(`Received RPC request ${request.method}`, { method: request.method, id: request.id });
 
   const isRegisteredMethod =
     typeof request.method === 'string' && Object.hasOwn(rpcHandlers, request.method);
