@@ -2,6 +2,7 @@ import pino from 'pino';
 import { Subject, defer, mergeMap } from 'rxjs';
 
 import { IS_TEST_ENV } from './environment';
+import { redactLogArgs, redactLogMessage } from './logger-redaction';
 import { appendLogToBrowserStorage } from './logger-storage';
 
 const logs$ = new Subject<pino.LogEvent>();
@@ -38,16 +39,20 @@ type LoggerFnApi = (msg: string, ...args: unknown[]) => void;
 // Pino offers a handful of APIs to log messages. Here we enforce a single one,
 // described by `LoggerFnApi`
 export const logger: Record<'debug' | 'info' | 'warn' | 'error', LoggerFnApi> = {
-  debug(...args) {
-    pinoLogger.debug(...args);
+  debug(msg, ...args) {
+    if (!pinoLogger.isLevelEnabled('debug')) return;
+    pinoLogger.debug(redactLogMessage(msg), ...redactLogArgs(args));
   },
-  info(...args) {
-    pinoLogger.info(...args);
+  info(msg, ...args) {
+    if (!pinoLogger.isLevelEnabled('info')) return;
+    pinoLogger.info(redactLogMessage(msg), ...redactLogArgs(args));
   },
-  warn(...args) {
-    pinoLogger.warn(...args);
+  warn(msg, ...args) {
+    if (!pinoLogger.isLevelEnabled('warn')) return;
+    pinoLogger.warn(redactLogMessage(msg), ...redactLogArgs(args));
   },
-  error(...args) {
-    pinoLogger.error(...args);
+  error(msg, ...args) {
+    if (!pinoLogger.isLevelEnabled('error')) return;
+    pinoLogger.error(redactLogMessage(msg), ...redactLogArgs(args));
   },
 };
