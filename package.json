@@ -14,6 +14,11 @@
     "build:web": "BUILD_TARGET=web turbo run build --filter=@leather.io/web",
     "check:all": "turbo run check:all",
     "clean": "git clean -dfX",
+    "design:align": "node --experimental-strip-types scripts/design/align.ts",
+    "design:check": "eslint -c eslint.design.config.js --no-inline-config",
+    "design:scripts:lint": "eslint -c eslint.design-scripts.config.js scripts/design --max-warnings 0 --no-inline-config",
+    "design:scripts:typecheck": "tsc -p scripts/design/tsconfig.json",
+    "design:test": "node --experimental-strip-types --test eslint-rules/design-system/*.spec.js scripts/design/*.test.ts",
     "dev": "turbo run build:watch",
     "format": "turbo run format",
     "format:check": "turbo run format:check",
@@ -21,7 +26,7 @@
     "install:fresh": "pnpm install:clean && pnpm i",
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
     "knip": "knip",
-    "lint": "turbo run lint",
+    "lint": "pnpm design:scripts:lint && turbo run lint",
     "lint:deps": "pnpm dependency-cruiser --ignore-known .dependency-cruiser-known-violations.json .",
     "lint:filenames": "pnpm ls-lint",
     "lint:fix": "turbo run lint:fix",
@@ -35,7 +40,7 @@
     "test:coverage": "turbo run test:coverage",
     "test:e2e": "playwright test",
     "test:unit": "turbo run test:unit",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "pnpm design:scripts:typecheck && turbo run typecheck"
   },
   "devDependencies": {
     "@babel/runtime": "7.26.0",

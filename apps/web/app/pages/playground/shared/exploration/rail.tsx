@@ -1,0 +1,394 @@
+import { type ReactNode, useEffect, useState } from 'react';
+
+import { Box, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
+
+import { ChevronsRightIcon, Pressable } from '@leather.io/ui';
+
+export const plainPressable = {
+  _before: { display: 'none' },
+  _focusVisible: { outline: 'focus', outlineOffset: '2px' },
+} as const;
+
+function storeRailChoice(storageKey: string, choice: 'open' | 'closed') {
+  try {
+    window.localStorage.setItem(storageKey, choice);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function useRailOpen(key: string) {
+  const storageKey = `leather.exploration.${key}-rail`;
+  const [narrow, setNarrow] = useState(() => window.innerWidth < 1024);
+  const [choices, setChoices] = useState(() => {
+    try {
+      return {
+        wide: window.localStorage.getItem(storageKey) !== 'closed',
+        narrow: window.localStorage.getItem(`${storageKey}.narrow`) === 'open',
+      };
+    } catch {
+      return { wide: true, narrow: false };
+    }
+  });
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 1023px)');
+    function resize(event: MediaQueryListEvent) {
+      setNarrow(event.matches);
+    }
+    media.addEventListener('change', resize);
+    return () => media.removeEventListener('change', resize);
+  }, []);
+  const open = narrow ? choices.narrow : choices.wide;
+  function set(next: boolean) {
+    setChoices(previous => ({ ...previous, [narrow ? 'narrow' : 'wide']: next }));
+    storeRailChoice(narrow ? `${storageKey}.narrow` : storageKey, next ? 'open' : 'closed');
+  }
+  return [open, set] as const;
+}
+
+interface RailProps {
+  label: string;
+  open: boolean;
+  width: number;
+  shortcut: string;
+  onToggle(): void;
+  header?: ReactNode;
+  footer?: ReactNode;
+  children: ReactNode;
+  as?: 'nav' | 'aside';
+}
+
+const collapsedWidth = 30;
+const toggleSize = 22;
+
+export function Rail({
+  label,
+  open,
+  width,
+  shortcut,
+  onToggle,
+  header,
+  footer,
+  children,
+  as = 'nav',
+}: RailProps) {
+  return (
+    <Flex
+      as={as}
+      aria-label={label}
+      direction="column"
+      position="sticky"
+      top="0"
+      height="100vh"
+      flexShrink={0}
+      zIndex={as === 'nav' ? 3 : 2}
+      style={{ width: open ? width : collapsedWidth }}
+      borderRightWidth={1}
+      borderColor="ink.border-default"
+      bg="ink.background-primary"
+    >
+      <RailToggle label={label} open={open} shortcut={shortcut} onToggle={onToggle} />
+      {open ? (
+        <>
+          {header ? (
+            <Box px="space.04" pt="space.04" pb="space.03">
+              {header}
+            </Box>
+          ) : null}
+          <Box flex="1" overflowY="auto" minHeight="0">
+            {children}
+          </Box>
+          {footer ? (
+            <Box
+              borderTopWidth={1}
+              borderTopStyle="solid"
+              borderColor="ink.border-default"
+              px="space.04"
+              py="space.03"
+            >
+              {footer}
+            </Box>
+          ) : null}
+        </>
+      ) : null}
+    </Flex>
+  );
+}
+
+interface RailToggleProps {
+  label: string;
+  open: boolean;
+  shortcut: string;
+  onToggle(): void;
+}
+
+function RailToggle({ label, open, shortcut, onToggle }: RailToggleProps) {
+  const action = `${open ? 'Hide' : 'Show'} ${label.toLowerCase()}`;
+  return (
+    <Pressable
+      {...plainPressable}
+      type="button"
+      aria-label={action}
+      aria-expanded={open}
+      title={`${action} (${shortcut})`}
+      onClick={onToggle}
+      position="absolute"
+      zIndex={3}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      style={{
+        width: toggleSize,
+        height: toggleSize,
+        top: 16,
+        right: -toggleSize / 2,
+      }}
+      borderRadius="round"
+      borderWidth={1}
+      borderColor="ink.border-default"
+      bg="ink.background-primary"
+      color="ink.text-subdued"
+      cursor="pointer"
+      _hover={{ color: 'ink.text-primary', bg: 'ink.component-background-hover' }}
+      _focusVisible={{ outline: 'focus', outlineOffset: '2px' }}
+    >
+      <Box lineHeight={0} transform={open ? 'rotate(180deg)' : undefined}>
+        <ChevronsRightIcon variant="small" />
+      </Box>
+    </Pressable>
+  );
+}
+
+export function RailHeading({ children }: { children: ReactNode }) {
+  return (
+    <styled.h2 textStyle="label.03" color="ink.text-secondary" px="space.04" pb="space.02">
+      {children}
+    </styled.h2>
+  );
+}
+
+interface RailItemProps {
+  selected: boolean;
+  onSelect(): void;
+  leading?: ReactNode;
+  title: ReactNode;
+  caption?: ReactNode;
+  muted?: boolean;
+  hint?: string;
+  'data-item'?: string;
+}
+
+export function RailItem({
+  selected,
+  onSelect,
+  leading,
+  title,
+  caption,
+  muted,
+  hint,
+  ...rest
+}: RailItemProps) {
+  return (
+    <Pressable
+      {...plainPressable}
+      type="button"
+      aria-current={selected ? 'true' : undefined}
+      onClick={onSelect}
+      title={hint}
+      data-rail-item={rest['data-item']}
+      display="flex"
+      gap="space.02"
+      alignItems="flex-start"
+      width="100%"
+      textAlign="left"
+      px="space.03"
+      py="space.02"
+      borderRadius="xs"
+      borderLeftWidth={2}
+      borderColor={selected ? 'ink.text-primary' : 'transparent'}
+      bg={selected ? 'ink.component-background-hover' : 'transparent'}
+      color={selected || !muted ? 'ink.text-primary' : 'ink.text-secondary'}
+      cursor="pointer"
+      _hover={{ bg: 'ink.component-background-hover' }}
+      _focusVisible={{ outline: 'focus', outlineOffset: '-2px' }}
+    >
+      {leading ? (
+        <styled.span
+          textStyle="caption.02"
+          color="ink.text-subdued"
+          minWidth="16px"
+          pt="1px"
+          flexShrink={0}
+        >
+          {leading}
+        </styled.span>
+      ) : null}
+      <Stack gap="0" minWidth="0" flex="1">
+        <styled.span textStyle="label.03" color="inherit">
+          {title}
+        </styled.span>
+        {caption ? (
+          <styled.span
+            textStyle="caption.02"
+            color="ink.text-subdued"
+            lineClamp={2}
+            overflow="hidden"
+          >
+            {caption}
+          </styled.span>
+        ) : null}
+      </Stack>
+    </Pressable>
+  );
+}
+
+interface ChoiceProps<T extends string> {
+  label: string;
+  options: readonly T[];
+  labels: Record<T, string>;
+  value: T;
+  disabled?: boolean;
+  hint?: string;
+  onChange(value: T): void;
+}
+
+export function Choice<T extends string>({
+  label,
+  options,
+  labels,
+  value,
+  disabled,
+  hint,
+  onChange,
+}: ChoiceProps<T>) {
+  return (
+    <Flex
+      role="radiogroup"
+      aria-label={hint ? `${label} (${hint})` : label}
+      aria-disabled={disabled}
+      alignItems="center"
+      gap="space.02"
+      title={hint}
+    >
+      <styled.span textStyle="caption.02" color="ink.text-secondary" width="44px" flexShrink={0}>
+        {label}
+      </styled.span>
+      <Flex flex="1" p="2px" gap="2px" borderRadius="xs" bg="ink.component-background-default">
+        {options.map(option => {
+          const checked = option === value;
+          return (
+            <Pressable
+              {...plainPressable}
+              key={option}
+              type="button"
+              role="radio"
+              aria-checked={checked}
+              disabled={disabled}
+              onClick={() => onChange(option)}
+              flex="1"
+              minWidth="0"
+              justifyContent="center"
+              px="space.01"
+              py="2px"
+              textStyle="label.03"
+              whiteSpace="nowrap"
+              borderRadius="xs"
+              bg={checked ? 'ink.background-primary' : 'transparent'}
+              color={checked ? 'ink.text-primary' : 'ink.text-secondary'}
+              boxShadow={checked ? '0 1px 2px rgba(0, 0, 0, 0.12)' : undefined}
+              cursor="pointer"
+              _hover={{ color: 'ink.text-primary' }}
+              _disabled={{ opacity: 0.45, cursor: 'default' }}
+              _focusVisible={{ outline: 'focus', outlineOffset: '-2px' }}
+            >
+              {labels[option]}
+            </Pressable>
+          );
+        })}
+      </Flex>
+    </Flex>
+  );
+}
+
+interface ToggleProps {
+  label: string;
+  checked: boolean;
+  disabled?: boolean;
+  shortcut?: string;
+  onChange(checked: boolean): void;
+}
+
+export function Toggle({ label, checked, disabled, shortcut, onChange }: ToggleProps) {
+  return (
+    <Pressable
+      {...plainPressable}
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      gap="space.02"
+      width="100%"
+      py="space.01"
+      bg="transparent"
+      textAlign="left"
+      cursor="pointer"
+      _disabled={{ opacity: 0.45, cursor: 'default' }}
+      _focusVisible={{ outline: 'focus', outlineOffset: '2px' }}
+      borderRadius="xs"
+    >
+      <HStack gap="space.02">
+        <styled.span textStyle="label.03" color="ink.text-primary">
+          {label}
+        </styled.span>
+        {shortcut ? <Kbd>{shortcut}</Kbd> : null}
+      </HStack>
+      <Box
+        aria-hidden
+        position="relative"
+        width="28px"
+        height="16px"
+        borderRadius="round"
+        flexShrink={0}
+        borderWidth={1}
+        borderColor={checked ? 'ink.action-primary-default' : 'ink.border-default'}
+        bg={checked ? 'ink.action-primary-default' : 'ink.component-background-pressed'}
+        transition="background 120ms ease"
+      >
+        <Box
+          position="absolute"
+          top="1px"
+          width="12px"
+          height="12px"
+          borderRadius="round"
+          bg="ink.background-primary"
+          transition="left 120ms ease"
+          style={{ left: checked ? 13 : 1 }}
+        />
+      </Box>
+    </Pressable>
+  );
+}
+
+export function Kbd({ children }: { children: ReactNode }) {
+  return (
+    <styled.kbd
+      textStyle="caption.02"
+      color="ink.text-subdued"
+      borderWidth={1}
+      borderColor="ink.border-default"
+      borderRadius="xs"
+      px="4px"
+      minWidth="18px"
+      textAlign="center"
+      lineHeight="16px"
+      fontFamily="inherit"
+    >
+      {children}
+    </styled.kbd>
+  );
+}
