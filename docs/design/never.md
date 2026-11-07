@@ -16,8 +16,9 @@ feature explicitly. Existing product lint baselines are unchanged; mobile rollou
 | 3   | [Raw button](#raw-button)                     | `design-system/no-raw-interactive`   | lint              |
 | 4   | [Radix imports](#radix-imports)               | `design-system/no-primitive-imports` | lint              |
 | 5   | [Text opacity](#text-opacity)                 | `design-system/no-text-opacity`      | lint              |
-| 6   | [Mono amount](#mono-amount)                   | `design-system/no-mono-amount`       | lint              |
-| 7   | [Dead chevron](#dead-chevron)                 | `design-system/no-dead-chevron`      | lint (Playground) |
+| 6   | [Local duplicates](#local-duplicates)         | `design-system/no-local-duplicate`   | lint              |
+| 7   | [Mono amount](#mono-amount)                   | `design-system/no-mono-amount`       | lint              |
+| 8   | [Dead chevron](#dead-chevron)                 | `design-system/no-dead-chevron`      | lint (Playground) |
 
 ---
 
@@ -157,6 +158,24 @@ Use a step on the ink text ladder (ink.text-secondary, ink.text-subdued or ink.t
 
 **Not covered:** Opacity used to fade an element in or out (`0` or `1`), and opacity on a surface
 that has a background, such as a hover state.
+
+## Local duplicates
+
+**Rule:** Don't import an app-local copy of a component that `@leather.io/ui` already provides.
+
+**Why:** Forks drift apart. Today 22 extension files import the local `BasicTooltip` and 21 import
+the ui one. The local one opens after 300ms and the ui one after 400ms, so tooltips on the same screen
+open at different speeds.
+
+**Lint message:**
+
+```
+Use BasicTooltip or Tooltip from @leather.io/ui instead of the local copy '@app/ui/components/tooltip/basic-tooltip' — docs/design/never.md#local-duplicates
+```
+
+**Use instead:** Use the ui component. If it's missing a prop you need, add the prop in
+`packages/ui` rather than keeping the fork. Each duplicate is configured as one entry
+(`pattern`, `replacement`) in the rule options, so adding the next one is a one-line change.
 
 ## Mono amount
 

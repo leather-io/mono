@@ -1,4 +1,5 @@
 import { noDeadChevronRule } from './no-dead-chevron.js';
+import { noLocalDuplicateRule } from './no-local-duplicate.js';
 import { noMonoAmountRule } from './no-mono-amount.js';
 import { noPrimitiveImportsRule } from './no-primitive-imports.js';
 import { noRawColorRule } from './no-raw-color.js';
@@ -12,6 +13,7 @@ export const designSystemRules = {
   'no-raw-interactive': noRawInteractiveRule,
   'no-primitive-imports': noPrimitiveImportsRule,
   'no-text-opacity': noTextOpacityRule,
+  'no-local-duplicate': noLocalDuplicateRule,
   'no-mono-amount': noMonoAmountRule,
   'no-dead-chevron': noDeadChevronRule,
 };

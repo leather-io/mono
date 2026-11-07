@@ -1,7 +1,8 @@
 # Updating the design system
 
 Every rule in this system started as an incident: a review comment, a bug, or a screen that
-shipped wrong. This page covers what to do with the next one.
+shipped wrong. This page covers what to do with the next one, and the routine to follow when a
+new model ships.
 
 ## When something ships wrong
 
@@ -42,8 +43,28 @@ shipped wrong. This page covers what to do with the next one.
 4. **If it's rung 3:** add or extend the matching `i-need-to.md` section with a snippet that
    compiles.
 
+5. **Add or update a golden task** if the incident is the kind an agent would repeat. Put the
+   incident into the task's **Traps**.
+
+## When a new model ships
+
+Do this within a week of the release, before switching the team's default model.
+
+1. Run the tasks in [golden-tasks.md](./golden-tasks.md) on the current guidance, three times
+   each. Record the scores in `golden-results.csv`.
+2. Run the same tasks with the design section of `CLAUDE.md` and the `leather-ui` skill
+   removed. Keep the lint rules and `i-need-to.md`.
+3. Compare the two runs.
+   - If a line of prose doesn't change the score, remove it. Lint is still doing that job.
+   - If the score drops without the skill, keep the skill. Look at which trap reappeared, and try
+     to move that guidance one rung up the ladder.
+   - If the new model does worse with the skill than without, the skill is over-prescribing.
+     Shorten it to specs and examples, and drop the instructions about how to think.
+4. Note the outcome in the PR that changes the guidance: the model, the scores, and what was cut.
+
 ## Monthly
 
+- Run the golden tasks once and record the scores.
 - Check the suppression counts per rule. They should only go down. Pick one file with the most
   debt and fix it.
 - Read the last month's design review comments. Any comment that appears twice is an incident:

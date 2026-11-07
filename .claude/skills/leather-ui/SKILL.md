@@ -98,7 +98,8 @@ actions", "Open a focused task").
 | Money                 | the app's `Balance` + `formatCurrency`                    | `Balance`                           |
 | Tooltip               | `BasicTooltip`                                            | info sheet                          |
 
-Don't use raw `<button>`, `styled.button` or `radix-ui` imports. Lint rejects all of them.
+Don't use raw `<button>`, `styled.button`, `radix-ui` imports, or the extension's local tooltip.
+Lint rejects all of them.
 
 ## Example
 
