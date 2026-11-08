@@ -194,8 +194,6 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
     const signedDepositTx = await bitcoin.signBitcoinPsbt(deposit.transaction.toPSBT());
     signedDepositTx.finalize();
     const txid = signedDepositTx.id;
-    const broadcast = await bitcoin.broadcast(signedDepositTx.hex);
-    if (broadcast.status === 'rejected') throw new Error(broadcast.errorMessage);
     // Software wallets mutate the original transaction when signing and
     // finalizing the tx. Ledger devices return a new instance. Override tx
     // in `deposit` with the signed instance
@@ -206,20 +204,12 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
       reclaimScript: deposit.reclaimScript,
       transactionHex: signedDepositTx.hex,
     });
-    if (broadcast.status === 'unknown') {
-      return {
-        status: 'broadcast-uncertain',
-        txid,
-        errorMessage: broadcast.errorMessage,
-        notified: notification.status === 'notified',
-      };
-    }
-    if (notification.status === 'failed') {
-      const { errorMessage, httpStatus } = notification;
-      if (httpStatus === undefined)
-        return { status: 'sbtc-notification-failed', txid, errorMessage };
-      return { status: 'sbtc-notification-failed', txid, errorMessage, httpStatus };
-    }
+    if (notification.status === 'failed')
+      throw new Error(`sBTC deposit registration failed: ${notification.errorMessage}`);
+    const broadcast = await bitcoin.broadcast(signedDepositTx.hex);
+    if (broadcast.status === 'rejected') throw new Error(broadcast.errorMessage);
+    if (broadcast.status === 'unknown')
+      return { status: 'broadcast-uncertain', txid, errorMessage: broadcast.errorMessage };
     return { status: 'submitted', txid };
   },
 };
