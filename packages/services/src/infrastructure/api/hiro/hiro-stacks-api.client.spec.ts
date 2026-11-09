@@ -150,4 +150,39 @@ describe(HiroStacksApiClient.name, () => {
       );
     });
   });
+
+  describe('getRawTransactionById', () => {
+    const txid = '0xabc';
+    const rawTxResponse = { raw: '0x80800000000400' };
+
+    it('fetches the raw transaction from the v3 endpoint', async () => {
+      get.mockResolvedValue({ data: rawTxResponse });
+      const signal = new AbortController().signal;
+
+      const response = await makeClient().getRawTransactionById(txid, { signal });
+
+      expect(response).toEqual(rawTxResponse);
+      expect(get).toHaveBeenCalledWith(
+        `${mainnet.chain.stacks.url}/extended/v3/transactions/${txid}/raw`,
+        { signal }
+      );
+      expect(add).toHaveBeenCalledWith(RateLimiterType.HiroStacks, {
+        priority: hiroApiRequestsPriorityLevels.getRawTransactionById,
+        signal,
+        throwOnTimeout: true,
+      });
+      expect(fetchWithCache).toHaveBeenCalledWith(
+        ['hiro-stacks-get-raw-transaction-by-id', txid, mainnet.chain.stacks.chainId],
+        expect.any(Function)
+      );
+    });
+
+    it('bypasses the cache when skipCache is set', async () => {
+      get.mockResolvedValue({ data: rawTxResponse });
+
+      await makeClient().getRawTransactionById(txid, { skipCache: true });
+
+      expect(fetchWithCache).not.toHaveBeenCalled();
+    });
+  });
 });
