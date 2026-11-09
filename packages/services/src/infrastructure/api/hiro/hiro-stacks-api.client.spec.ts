@@ -194,7 +194,8 @@ describe(HiroStacksApiClient.name, () => {
           200,
           mainnet.chain.stacks.chainId,
         ],
-        expect.any(Function)
+        expect.any(Function),
+        { skipCache: undefined }
       );
       expect(fetchWithCache).toHaveBeenNthCalledWith(
         2,
@@ -206,7 +207,8 @@ describe(HiroStacksApiClient.name, () => {
           200,
           mainnet.chain.stacks.chainId,
         ],
-        expect.any(Function)
+        expect.any(Function),
+        { skipCache: undefined }
       );
     });
 
@@ -229,7 +231,8 @@ describe(HiroStacksApiClient.name, () => {
           200,
           mainnet.chain.stacks.chainId,
         ],
-        expect.any(Function)
+        expect.any(Function),
+        { skipCache: undefined }
       );
     });
 
@@ -238,7 +241,13 @@ describe(HiroStacksApiClient.name, () => {
 
       await makeClient().getPrincipalNftBalances(principal, { maxPages: 10 }, { skipCache: true });
 
-      expect(fetchWithCache).not.toHaveBeenCalled();
+      expect(fetchWithCache).toHaveBeenCalledTimes(2);
+      expect(fetchWithCache).toHaveBeenNthCalledWith(1, expect.any(Array), expect.any(Function), {
+        skipCache: true,
+      });
+      expect(fetchWithCache).toHaveBeenNthCalledWith(2, expect.any(Array), expect.any(Function), {
+        skipCache: true,
+      });
       expect(get).toHaveBeenCalledTimes(2);
     });
   });
