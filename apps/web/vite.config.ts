@@ -63,6 +63,11 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     // Required for some libs e.g. pbkdf2
     global: 'globalThis',
     'import.meta.env.CLOUDFLARE_ENV': JSON.stringify(process.env.CLOUDFLARE_ENV),
+    'import.meta.env.LEATHER_GUIDES_PREVIEW_URL': JSON.stringify(
+      process.env.GITHUB_HEAD_REF === 'feat/web-framer-migration'
+        ? 'https://app.gitbook.com/o/nyhK86lukP6wv7ld5oPe/sites/site_jq2ql/s/aSQhveafXrLjROsW3JZ1/~/preview/'
+        : process.env.LEATHER_GUIDES_PREVIEW_URL
+    ),
     'import.meta.env.LEATHER_PRIVATE_NETWORK_FLAVOR': JSON.stringify(
       process.env.PRIVATE_NETWORK_FLAVOR
     ),

@@ -2,6 +2,7 @@ import { type ReactElement } from 'react';
 import { Link } from 'react-router';
 
 import { Box, Grid, type HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { HELP_CENTER_URL } from '~/constants/environment';
 
 import { GlassesIcon, SupportIcon, TerminalIcon } from '@leather.io/ui';
 
@@ -18,13 +19,13 @@ const helpCards: HelpCard[] = [
   {
     title: 'Help',
     description: 'Quick answers and support for common questions.',
-    href: '/support',
+    href: HELP_CENTER_URL,
     icon: <SupportIcon />,
   },
   {
     title: 'Guides',
     description: 'Simple walkthroughs to get you started.',
-    href: '/support',
+    href: HELP_CENTER_URL,
     icon: <GlassesIcon />,
   },
   {
@@ -52,6 +53,7 @@ export function HelpCards(props: HTMLStyledProps<'nav'>) {
           <StyledLink
             key={card.title}
             to={card.href}
+            reloadDocument={card.href.startsWith('https://')}
             prefetch="intent"
             display="flex"
             flexDir={['row', null, 'column']}

@@ -1,3 +1,5 @@
+import { HELP_CENTER_URL } from '~/constants/environment';
+
 import { FooterLayout as Footer } from './footer.layout';
 
 // The single site footer (app + marketing pages), merged from the retired Framer site's footer.
@@ -6,7 +8,13 @@ function AppFooter() {
     <Footer>
       <Footer.Grid>
         <Footer.Column title="Dive deeper">
-          <Footer.InternalLink to="/support">Help Center</Footer.InternalLink>
+          {HELP_CENTER_URL.startsWith('https://') ? (
+            <Footer.Link withIcon href={HELP_CENTER_URL}>
+              Help Center
+            </Footer.Link>
+          ) : (
+            <Footer.InternalLink to={HELP_CENTER_URL}>Help Center</Footer.InternalLink>
+          )}
           <Footer.InternalLink to="/changelog">Changelog</Footer.InternalLink>
           <Footer.InternalLink to="/news">News</Footer.InternalLink>
           <Footer.Link withIcon href="https://leather.gitbook.io/">
