@@ -23,7 +23,14 @@ const mempoolResponse: HiroPrincipalMempoolTransactionsResponse = {
 };
 
 const get = vi.fn();
-const fetchWithCache = vi.fn<(key: HttpCacheKeyArray, fetchFn: () => Promise<unknown>) => void>();
+const fetchWithCache =
+  vi.fn<
+    (
+      key: HttpCacheKeyArray,
+      fetchFn: () => Promise<unknown>,
+      options?: { skipCache?: boolean }
+    ) => void
+  >();
 const add = vi.fn();
 
 function makeClient() {
@@ -32,8 +39,8 @@ function makeClient() {
     getSettings: () => ({ network: mainnet, quoteCurrency: 'USD', assetVisibility: {} }),
   };
   const cacheService = createMock<HttpCacheService>({
-    fetchWithCache(key, fetchFn) {
-      fetchWithCache(key, fetchFn);
+    fetchWithCache(key, fetchFn, options) {
+      fetchWithCache(key, fetchFn, options);
       return fetchFn();
     },
   });
@@ -84,7 +91,8 @@ describe(HiroStacksApiClient.name, () => {
           50,
           mainnet.chain.stacks.chainId,
         ],
-        expect.any(Function)
+        expect.any(Function),
+        { skipCache: undefined }
       );
     });
 
@@ -105,14 +113,17 @@ describe(HiroStacksApiClient.name, () => {
           20,
           mainnet.chain.stacks.chainId,
         ],
-        expect.any(Function)
+        expect.any(Function),
+        { skipCache: undefined }
       );
     });
 
     it('bypasses the cache when skipCache is set', async () => {
       await makeClient().getPrincipalMempoolTransactions(principal, {}, { skipCache: true });
 
-      expect(fetchWithCache).not.toHaveBeenCalled();
+      expect(fetchWithCache).toHaveBeenCalledWith(expect.any(Array), expect.any(Function), {
+        skipCache: true,
+      });
       expect(get).toHaveBeenCalledTimes(1);
     });
   });
@@ -128,7 +139,8 @@ describe(HiroStacksApiClient.name, () => {
       );
       expect(fetchWithCache).toHaveBeenCalledWith(
         ['hiro-stacks-get-transaction-by-id', txid, '', mainnet.chain.stacks.chainId],
-        expect.any(Function)
+        expect.any(Function),
+        { skipCache: undefined }
       );
     });
 
@@ -146,7 +158,8 @@ describe(HiroStacksApiClient.name, () => {
           'post_conditions,result',
           mainnet.chain.stacks.chainId,
         ],
-        expect.any(Function)
+        expect.any(Function),
+        { skipCache: undefined }
       );
     });
   });
