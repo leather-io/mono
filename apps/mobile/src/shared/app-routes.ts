@@ -1,0 +1,25 @@
+export const AppRoutes = {
+  Home: '/',
+  TokenDetails: '/[assetId]',
+  Activity: '/activity',
+  Browser: '/browser',
+  AppConnections: '/app-connections',
+  AppRecentlyViewed: '/app-recently-viewed',
+  CreateNewWallet: '/create-new-wallet',
+  GeneratingWallet: '/generating-wallet',
+  RecoverWallet: '/recover-wallet',
+  SecureYourWallet: '/secure-your-wallet',
+  Settings: '/settings',
+  SettingsDisplay: '/settings/display',
+  SettingsHelp: '/settings/help',
+  SettingsNetworks: '/settings/networks',
+  SettingsSecurity: '/settings/security',
+  SettingsWallet: '/settings/wallet',
+  SettingsHiddenAccounts: '/settings/wallet/hidden-accounts',
+  SettingsConfigureWallet: '/settings/wallet/configure/[wallet]',
+  SettingsViewSecretKey: '/settings/wallet/configure/[wallet]/view-secret-key',
+  SettingsConfigureAccount: '/settings/wallet/configure/[wallet]/[account]',
+  SettingsChooseAvatar: '/settings/wallet/configure/[wallet]/[account]/choose-avatar',
+} as const;
+
+export type AppRoutes = (typeof AppRoutes)[keyof typeof AppRoutes];

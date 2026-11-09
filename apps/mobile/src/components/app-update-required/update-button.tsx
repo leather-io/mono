@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
 
+import { AppUpdateSelectors } from '@/shared/selectors/app-update.selectors';
 import { getStoreButtonText, handleStoreRedirect } from '@/utils/app-store-utils';
 import { t } from '@lingui/core/macro';
 
@@ -31,7 +32,11 @@ export function UpdateButton({ onPress }: UpdateButtonProps) {
   }
 
   return (
-    <Button onPress={() => void handlePress()} disabled={isLoading} testID="update-app-button">
+    <Button
+      onPress={() => void handlePress()}
+      disabled={isLoading}
+      testID={AppUpdateSelectors.UpdateButton}
+    >
       {getStoreButtonText()}
     </Button>
   );

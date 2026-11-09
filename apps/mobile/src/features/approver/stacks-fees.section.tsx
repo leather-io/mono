@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 
 import { useCalculateStacksTxFees } from '@/queries/stacks/fees/fees.hooks';
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 import { AuthType, deserializeTransaction } from '@stacks/transactions';
 
 import { FeeTypes } from '@leather.io/models';
@@ -51,7 +52,7 @@ export function StacksFeesSection({ txHex, onChangeFee, disabled }: StacksFeesSe
 
   if (tx.auth.authType === AuthType.Sponsored) {
     return (
-      <Approver.Section>
+      <Approver.Section testID={RpcStacksSelectors.SponsoredFeeSection}>
         <SponsoredFeeCard />
       </Approver.Section>
     );
@@ -59,7 +60,7 @@ export function StacksFeesSection({ txHex, onChangeFee, disabled }: StacksFeesSe
 
   return (
     <>
-      <Approver.Section>
+      <Approver.Section testID={RpcStacksSelectors.StacksFeeSection}>
         <StacksFeeCard
           feeType={selectedFeeType}
           amount={feeMoney}

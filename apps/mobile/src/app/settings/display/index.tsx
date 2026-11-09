@@ -10,6 +10,7 @@ import { LanguageSheet } from '@/features/settings/language-sheet';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
 import { supportedLanguages } from '@/i18n/languages';
+import { SettingsSelectors } from '@/shared/selectors/settings.selectors';
 import { useSettings } from '@/store/settings/settings';
 import { select, t } from '@lingui/core/macro';
 import { keys } from 'remeda';
@@ -65,6 +66,7 @@ export default function SettingsDisplayScreen() {
           onPress={() => {
             themeSheetRef.current?.present();
           }}
+          testID={SettingsSelectors.ThemeButton}
         />
         {btcConversionUnitEnabled && (
           <>
@@ -75,6 +77,7 @@ export default function SettingsDisplayScreen() {
               onPress={() => {
                 bitcoinUnitSheetRef.current?.present();
               }}
+              testID={SettingsSelectors.BitcoinUnitButton}
             />
           </>
         )}
@@ -95,6 +98,7 @@ export default function SettingsDisplayScreen() {
           onPress={() => {
             conversionUnitSheetRef.current?.present();
           }}
+          testID={SettingsSelectors.ConversionUnitButton}
         />
         <SettingsListItem
           title={t`Account identifier`}
@@ -111,6 +115,7 @@ export default function SettingsDisplayScreen() {
           onPress={() => {
             accountIdentifierSheetRef.current?.present();
           }}
+          testID={SettingsSelectors.AccountIdentifierButton}
         />
         <SettingsListItem
           title={t`Haptics`}
@@ -119,6 +124,7 @@ export default function SettingsDisplayScreen() {
           type="switch"
           onSwitchValueChange={() => onUpdateHapticsPreference()}
           switchValue={hapticsPreference === 'enabled'}
+          testID={SettingsSelectors.HapticsItem}
         />
       </SettingsList>
       <ThemeSheet sheetRef={themeSheetRef} />

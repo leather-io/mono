@@ -1,6 +1,7 @@
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { SettingsSelectors } from '@/shared/selectors/settings.selectors';
 import { useSettings } from '@/store/settings/settings';
 import { select, t } from '@lingui/core/macro';
 
@@ -50,6 +51,7 @@ export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
             onPress={() => onUpdateConversionUnit(symbol)}
             type="radio"
             isRadioSelected={settings.fiatCurrencyPreference === symbol}
+            testID={`${SettingsSelectors.ConversionUnitOption}-${symbol}`}
           />
         ))}
       </SettingsList>

@@ -77,7 +77,7 @@
       ]
     },
     "apps/mobile": {
-      "entry": ["src/app/_layout.tsx"],
+      "entry": ["src/app/_layout.tsx", "tests/feature-map/*.features.ts"],
       "ignoreDependencies": [
         "expo-modules-core",
         "expo-status-bar",

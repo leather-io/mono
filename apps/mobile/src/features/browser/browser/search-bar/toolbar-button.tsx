@@ -6,9 +6,10 @@ interface ToolbarButtonProps {
   onPress(): void;
   icon: ReactNode;
   label: string;
+  testID: string;
 }
 
-export function ToolbarButton({ onPress, icon, label }: ToolbarButtonProps) {
+export function ToolbarButton({ onPress, icon, label, testID }: ToolbarButtonProps) {
   return (
     <Pressable
       onPress={onPress}
@@ -17,6 +18,7 @@ export function ToolbarButton({ onPress, icon, label }: ToolbarButtonProps) {
       flexDirection="row"
       justifyContent="center"
       alignItems="center"
+      testID={testID}
     >
       {icon}
       <Text variant="label03">{label}</Text>
